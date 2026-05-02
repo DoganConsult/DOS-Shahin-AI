@@ -105,14 +105,10 @@
           <cds-toggletip>
             <p>{{ i18n.translate('workspaceHome.modulesHelp') || 'Modules are enabled per tenant configuration. Contact admin to add more.' }}</p>
           </cds-toggletip>
-          <!-- Carbon MultiSelect — filter visible modules -->
-          <cds-dropdown size="sm"
-            [label]="i18n.translate('workspaceHome.filterModules') || 'Filter modules'"
-            [placeholder]="i18n.translate('workspaceHome.allModules') || 'All modules'">
-            <cds-dropdown-list>
-              <cds-list-item value="all" [content]="i18n.translate('workspaceHome.allModules') || 'All'"></cds-list-item>
-            </cds-dropdown-list>
-          </cds-dropdown>
+          <!-- Module filter uses Carbon Select (no ngOnChanges crash) -->
+          <cds-select size="sm" [label]="i18n.translate('workspaceHome.filterModules') || 'Filter modules'">
+            <option value="">{{ i18n.translate('workspaceHome.allModules') || 'All' }}</option>
+          </cds-select>
           <!-- OverflowMenu for module-level actions -->
           <cds-overflow-menu [flip]="dir() === 'rtl'">
             <cds-overflow-menu-option (selected)="onHeaderAction('platform-map')">
@@ -338,28 +334,17 @@
             </span>
             <div class="wh-activity-filters">
               <!-- Carbon Dropdown — module filter -->
-              <cds-dropdown
-                [label]="i18n.translate('workspaceHome.filterActivity')"
-                size="sm"
-                type="inline"
-                (selected)="onActivityFilterChange($event?.item?.content || '')">
-                <cds-dropdown-list>
-                  <cds-list-item [content]="i18n.translate('workspaceHome.all')" value=""></cds-list-item>
-                  <cds-list-item [content]="i18n.translate('workspaceHome.risk')" value="risk"></cds-list-item>
-                  <cds-list-item [content]="i18n.translate('workspaceHome.compliance')" value="compliance"></cds-list-item>
-                  <cds-list-item [content]="i18n.translate('workspaceHome.policy')" value="policy"></cds-list-item>
-                  <cds-list-item [content]="i18n.translate('workspaceHome.audit')" value="audit"></cds-list-item>
-                  <cds-list-item [content]="i18n.translate('workspaceHome.evidence')" value="evidence"></cds-list-item>
-                  <cds-list-item [content]="i18n.translate('workspaceHome.control')" value="control"></cds-list-item>
-                </cds-dropdown-list>
-              </cds-dropdown>
-              <!-- Carbon DatePicker — activity date range -->
-              <cds-date-picker
-                [label]="i18n.translate('workspaceHome.dateRange') || 'Date range'"
-                [placeholder]="'mm/dd/yyyy'"
-                [range]="true"
-                size="sm">
-              </cds-date-picker>
+              <!-- Carbon Select — activity module filter (no ngOnChanges crash) -->
+              <cds-select size="sm" [label]="i18n.translate('workspaceHome.filterActivity') || 'Filter'"
+                (valueChange)="onActivityFilterChange($event)">
+                <option value="">{{ i18n.translate('workspaceHome.all') || 'All' }}</option>
+                <option value="risk">{{ i18n.translate('workspaceHome.risk') || 'Risk' }}</option>
+                <option value="compliance">{{ i18n.translate('workspaceHome.compliance') || 'Compliance' }}</option>
+                <option value="policy">{{ i18n.translate('workspaceHome.policy') || 'Policy' }}</option>
+                <option value="audit">{{ i18n.translate('workspaceHome.audit') || 'Audit' }}</option>
+                <option value="evidence">{{ i18n.translate('workspaceHome.evidence') || 'Evidence' }}</option>
+                <option value="control">{{ i18n.translate('workspaceHome.control') || 'Control' }}</option>
+              </cds-select>
             </div>
           </div>
 
@@ -371,23 +356,23 @@
               [description]="i18n.translate('workspaceHome.changesAcrossAllModulesWillAppearHere')"
               [dir]="dir()" />
           } @else {
-            <!-- Carbon DataTable for activity -->
-            <table cdsTable [sortable]="false" [stickyHeader]="false">
-              <thead cdsTableHead>
+            <!-- Carbon DataTable — uses CSS classes to avoid getSelected crash on empty model -->
+            <table class="cds--data-table">
+              <thead>
                 <tr>
-                  <th cdsTableHeadCell>{{ i18n.translate('workspaceHome.time') || 'Time' }}</th>
-                  <th cdsTableHeadCell>{{ i18n.translate('workspaceHome.actor') || 'Actor' }}</th>
-                  <th cdsTableHeadCell>{{ i18n.translate('workspaceHome.actionCol') || 'Action' }}</th>
-                  <th cdsTableHeadCell>{{ i18n.translate('workspaceHome.entity') || 'Entity' }}</th>
+                  <th class="cds--table-header-label">{{ i18n.translate('workspaceHome.time') || 'Time' }}</th>
+                  <th class="cds--table-header-label">{{ i18n.translate('workspaceHome.actor') || 'Actor' }}</th>
+                  <th class="cds--table-header-label">{{ i18n.translate('workspaceHome.actionCol') || 'Action' }}</th>
+                  <th class="cds--table-header-label">{{ i18n.translate('workspaceHome.entity') || 'Entity' }}</th>
                 </tr>
               </thead>
-              <tbody cdsTableBody>
+              <tbody>
                 @for (row of activityEntries(); track row.id) {
-                  <tr cdsTableRow>
-                    <td cdsTableData>{{ row.timestamp | appDate:'medium' }}</td>
-                    <td cdsTableData>{{ row.actorLabel }}</td>
-                    <td cdsTableData>{{ row.action }}</td>
-                    <td cdsTableData>{{ row.entityLabel }}</td>
+                  <tr>
+                    <td>{{ row.timestamp | appDate:'medium' }}</td>
+                    <td>{{ row.actorLabel }}</td>
+                    <td>{{ row.action }}</td>
+                    <td>{{ row.entityLabel }}</td>
                   </tr>
                 }
               </tbody>
@@ -456,12 +441,10 @@
     </cds-modal-header>
     <section cdsModalContent>
       <div class="wh-settings-form">
-        <!-- ComboBox — framework picker -->
-        <cds-combo-box
-          [label]="i18n.translate('workspaceHome.defaultFramework') || 'Default Framework'"
-          [items]="[]"
-          size="sm">
-        </cds-combo-box>
+        <!-- Framework picker — cds-select (ComboBox crashes with empty items) -->
+        <cds-select size="sm" [label]="i18n.translate('workspaceHome.defaultFramework') || 'Default Framework'">
+          <option value="">{{ i18n.translate('workspaceHome.selectFramework') || 'Select...' }}</option>
+        </cds-select>
         <!-- TextInput — workspace display name -->
         <cds-label>
           {{ i18n.translate('workspaceHome.displayName') || 'Display Name' }}
