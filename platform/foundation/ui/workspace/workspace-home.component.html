@@ -37,9 +37,9 @@
 
     @if (!loadError()) {
 
-      <!-- Getting started banner (new workspace) — ExpandableTile -->
+      <!-- Getting started banner — Carbon Tile (ExpandableTile crashes via getBoundingClientRect) -->
       @if (showGettingStartedBanner()) {
-        <cds-expandable-tile class="wh-getting-started">
+        <cds-tile class="wh-getting-started">
           <div class="gs-left">
             <svg cdsIcon="information" size="24" class="gs-icon"></svg>
             <div class="gs-text">
@@ -58,33 +58,37 @@
               <svg cdsIcon="close" size="16"></svg>
             </cds-icon-button>
           </div>
-        </cds-expandable-tile>
+        </cds-tile>
       }
 
-      <!-- ══ Tenant Context — Carbon StructuredList ══ -->
+      <!-- ══ Tenant Context — Carbon StructuredList via CSS (avoids updateMaxHeight crash) ══ -->
       @if (tenantContext(); as tc) {
-        <cds-structured-list class="wh-context-list">
-          <cds-list-header>
-            <cds-list-column>{{ i18n.translate('workspaceHome.property') || 'Property' }}</cds-list-column>
-            <cds-list-column>{{ i18n.translate('workspaceHome.value') || 'Value' }}</cds-list-column>
-          </cds-list-header>
-          <cds-list-row>
-            <cds-list-column>{{ i18n.translate('workspaceHome.organization') || 'Organization' }}</cds-list-column>
-            <cds-list-column>{{ tc.orgName }}</cds-list-column>
-          </cds-list-row>
-          <cds-list-row>
-            <cds-list-column>{{ i18n.translate('workspaceHome.workspace') || 'Workspace' }}</cds-list-column>
-            <cds-list-column>{{ tc.workspaceName }}</cds-list-column>
-          </cds-list-row>
-          <cds-list-row>
-            <cds-list-column>{{ i18n.translate('workspaceHome.maturity') || 'Maturity' }}</cds-list-column>
-            <cds-list-column>{{ tc.maturityTier }}</cds-list-column>
-          </cds-list-row>
-          <cds-list-row>
-            <cds-list-column>{{ i18n.translate('workspaceHome.frameworks') || 'Frameworks' }}</cds-list-column>
-            <cds-list-column>{{ tc.frameworkCount }}</cds-list-column>
-          </cds-list-row>
-        </cds-structured-list>
+        <section class="cds--structured-list wh-context-list">
+          <div class="cds--structured-list-thead">
+            <div class="cds--structured-list-row cds--structured-list-row--header-row">
+              <div class="cds--structured-list-th">{{ i18n.translate('workspaceHome.property') || 'Property' }}</div>
+              <div class="cds--structured-list-th">{{ i18n.translate('workspaceHome.value') || 'Value' }}</div>
+            </div>
+          </div>
+          <div class="cds--structured-list-tbody">
+            <div class="cds--structured-list-row">
+              <div class="cds--structured-list-td">{{ i18n.translate('workspaceHome.organization') || 'Organization' }}</div>
+              <div class="cds--structured-list-td">{{ tc.orgName }}</div>
+            </div>
+            <div class="cds--structured-list-row">
+              <div class="cds--structured-list-td">{{ i18n.translate('workspaceHome.workspace') || 'Workspace' }}</div>
+              <div class="cds--structured-list-td">{{ tc.workspaceName }}</div>
+            </div>
+            <div class="cds--structured-list-row">
+              <div class="cds--structured-list-td">{{ i18n.translate('workspaceHome.maturity') || 'Maturity' }}</div>
+              <div class="cds--structured-list-td">{{ tc.maturityTier }}</div>
+            </div>
+            <div class="cds--structured-list-row">
+              <div class="cds--structured-list-td">{{ i18n.translate('workspaceHome.frameworks') || 'Frameworks' }}</div>
+              <div class="cds--structured-list-td">{{ tc.frameworkCount }}</div>
+            </div>
+          </div>
+        </section>
       }
 
       <!-- ══ SECTION 0: Ignite Workspace ══ -->
@@ -106,25 +110,21 @@
             <p>{{ i18n.translate('workspaceHome.modulesHelp') || 'Modules are enabled per tenant configuration. Contact admin to add more.' }}</p>
           </cds-toggletip>
           <!-- Module filter uses Carbon Select (no ngOnChanges crash) -->
-          <cds-select size="sm" [label]="i18n.translate('workspaceHome.filterModules') || 'Filter modules'">
-            <option value="">{{ i18n.translate('workspaceHome.allModules') || 'All' }}</option>
-          </cds-select>
-          <!-- OverflowMenu for module-level actions -->
-          <cds-overflow-menu [flip]="dir() === 'rtl'">
-            <cds-overflow-menu-option (selected)="onHeaderAction('platform-map')">
-              {{ i18n.translate('workspaceHome.platformMapAllPagesTools') }}
-            </cds-overflow-menu-option>
-            <cds-overflow-menu-option (selected)="refreshPage()">
-              {{ i18n.translate('workspaceHome.refresh') || 'Refresh' }}
-            </cds-overflow-menu-option>
-          </cds-overflow-menu>
+          <div class="cds--select cds--select--sm cds--select--inline">
+            <select class="cds--select-input" [attr.aria-label]="i18n.translate('workspaceHome.filterModules') || 'Filter modules'">
+              <option value="">{{ i18n.translate('workspaceHome.allModules') || 'All' }}</option>
+            </select>
+          </div>
+          <!-- Module actions — Carbon Buttons (OverflowMenu crashes via updateMaxHeight) -->
+          <button cdsButton="ghost" size="sm" (click)="onHeaderAction('platform-map')">
+            <svg cdsIcon="dashboard" size="16"></svg>
+            {{ i18n.translate('workspaceHome.platformMapAllPagesTools') || 'Platform Map' }}
+          </button>
+          <cds-icon-button description="Refresh" kind="ghost" size="sm" (click)="refreshPage()">
+            <svg cdsIcon="renew" size="16"></svg>
+          </cds-icon-button>
         </div>
         <app-module-grid />
-        <!-- Carbon ContextMenu — right-click actions on module grid -->
-        <cds-context-menu>
-          <cds-context-menu-item>{{ i18n.translate('workspaceHome.openModule') || 'Open' }}</cds-context-menu-item>
-          <cds-context-menu-item>{{ i18n.translate('workspaceHome.configureModule') || 'Configure' }}</cds-context-menu-item>
-        </cds-context-menu>
       </div>
 
       <!-- ══ Workspace Search — Carbon Search for quick find ══ -->
@@ -134,9 +134,7 @@
         (valueChange)="onSearchChange($event)">
       </cds-search>
 
-      <!-- ══ Carbon Tabs — workspace content sections ══ -->
-      <cds-tabs>
-        <cds-tab [heading]="i18n.translate('workspaceHome.overview') || 'Overview'">
+      <!-- ══ Workspace content sections ══ -->
 
       <!-- ══ SECTION 1: KPI Band (6 cards) — Carbon Grid layout ══ -->
       @if (roleConfig().executiveSnapshot) {
@@ -146,15 +144,10 @@
               <svg cdsIcon="dashboard" size="16" class="wh-section-icon" aria-hidden="true"></svg>
               {{ i18n.translate('workspaceHome.executiveSnapshot') || 'Executive Snapshot' }}
             </span>
-            <!-- Carbon Popover — KPI help -->
-            <div cdsPopover [isOpen]="false" align="bottom">
-              <cds-icon-button description="KPI info" kind="ghost" size="sm">
-                <svg cdsIcon="help" size="16"></svg>
-              </cds-icon-button>
-              <div cdsPopoverContent>
-                <p>{{ i18n.translate('workspaceHome.kpiHelp') || 'KPIs refresh based on your workspace data. Click any card to drill down.' }}</p>
-              </div>
-            </div>
+            <!-- KPI help — Carbon Tooltip (lighter than Popover, no getBoundingClientRect crash) -->
+            <cds-tooltip [description]="i18n.translate('workspaceHome.kpiHelp') || 'KPIs refresh based on your workspace data. Click any card to drill down.'">
+              <svg cdsIcon="help" size="16"></svg>
+            </cds-tooltip>
           </div>
           @if (loading()) {
             <div cdsGrid class="skeleton-kpi">
@@ -257,8 +250,6 @@
         </div>
       }
 
-        </cds-tab>
-        <cds-tab [heading]="i18n.translate('workspaceHome.frameworkProgress') || 'Progress'">
 
       <!-- ══ SECTION 3: Module Progress (Framework Coverage) ══ -->
       @if (roleConfig().programHealth) {
@@ -321,8 +312,6 @@
         </div>
       }
 
-        </cds-tab>
-        <cds-tab [heading]="i18n.translate('workspaceHome.recentActivity') || 'Activity'">
 
       <!-- ══ SECTION 4: Recent Activity ══ -->
       @if (roleConfig().activity) {
@@ -335,16 +324,19 @@
             <div class="wh-activity-filters">
               <!-- Carbon Dropdown — module filter -->
               <!-- Carbon Select — activity module filter (no ngOnChanges crash) -->
-              <cds-select size="sm" [label]="i18n.translate('workspaceHome.filterActivity') || 'Filter'"
-                (valueChange)="onActivityFilterChange($event)">
-                <option value="">{{ i18n.translate('workspaceHome.all') || 'All' }}</option>
-                <option value="risk">{{ i18n.translate('workspaceHome.risk') || 'Risk' }}</option>
-                <option value="compliance">{{ i18n.translate('workspaceHome.compliance') || 'Compliance' }}</option>
-                <option value="policy">{{ i18n.translate('workspaceHome.policy') || 'Policy' }}</option>
-                <option value="audit">{{ i18n.translate('workspaceHome.audit') || 'Audit' }}</option>
-                <option value="evidence">{{ i18n.translate('workspaceHome.evidence') || 'Evidence' }}</option>
-                <option value="control">{{ i18n.translate('workspaceHome.control') || 'Control' }}</option>
-              </cds-select>
+              <div class="cds--select cds--select--sm cds--select--inline">
+                <select class="cds--select-input"
+                  [attr.aria-label]="i18n.translate('workspaceHome.filterActivity') || 'Filter'"
+                  (change)="onActivityFilterChange($any($event.target).value)">
+                  <option value="">{{ i18n.translate('workspaceHome.all') || 'All' }}</option>
+                  <option value="risk">{{ i18n.translate('workspaceHome.risk') || 'Risk' }}</option>
+                  <option value="compliance">{{ i18n.translate('workspaceHome.compliance') || 'Compliance' }}</option>
+                  <option value="policy">{{ i18n.translate('workspaceHome.policy') || 'Policy' }}</option>
+                  <option value="audit">{{ i18n.translate('workspaceHome.audit') || 'Audit' }}</option>
+                  <option value="evidence">{{ i18n.translate('workspaceHome.evidence') || 'Evidence' }}</option>
+                  <option value="control">{{ i18n.translate('workspaceHome.control') || 'Control' }}</option>
+                </select>
+              </div>
             </div>
           </div>
 
@@ -392,9 +384,6 @@
         </div>
       }
 
-        </cds-tab>
-      </cds-tabs>
-
     } <!-- end @if (!loadError()) -->
 
   </div><!-- .wh-body -->
@@ -434,17 +423,21 @@
     </cds-toast>
   }
 
-  <!-- ══ Workspace Quick Settings Modal ══ -->
-  <cds-modal [open]="false" size="sm">
+  <!-- ══ Workspace Quick Settings Modal (rendered only when opened) ══ -->
+  @if (showQuickSettings) {
+  <cds-modal [open]="showQuickSettings" (overlaySelected)="showQuickSettings = false" size="sm">
     <cds-modal-header [showCloseButton]="true">
       <h3 cdsModalHeaderHeading>{{ i18n.translate('workspaceHome.quickSettings') || 'Quick Settings' }}</h3>
     </cds-modal-header>
     <section cdsModalContent>
       <div class="wh-settings-form">
         <!-- Framework picker — cds-select (ComboBox crashes with empty items) -->
-        <cds-select size="sm" [label]="i18n.translate('workspaceHome.defaultFramework') || 'Default Framework'">
-          <option value="">{{ i18n.translate('workspaceHome.selectFramework') || 'Select...' }}</option>
-        </cds-select>
+        <div class="cds--select cds--select--sm">
+          <label class="cds--label">{{ i18n.translate('workspaceHome.defaultFramework') || 'Default Framework' }}</label>
+          <select class="cds--select-input">
+            <option value="">{{ i18n.translate('workspaceHome.selectFramework') || 'Select...' }}</option>
+          </select>
+        </div>
         <!-- TextInput — workspace display name -->
         <cds-label>
           {{ i18n.translate('workspaceHome.displayName') || 'Display Name' }}
@@ -483,6 +476,7 @@
       </div>
     </section>
   </cds-modal>
+  }
 
 </div>
 

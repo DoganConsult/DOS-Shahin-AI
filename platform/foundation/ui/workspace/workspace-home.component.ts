@@ -217,6 +217,7 @@ export class WorkspaceHomeComponent implements OnInit, OnDestroy {
   maturityState = signal<'new' | 'active' | 'mature'>('new');
   activityFilterValue = '';
   showPlatformMap = false;
+  showQuickSettings = false;
   cardIndicators = signal<Record<string, unknown>>({});
 
   kpis = signal<KpiCardVM[]>([]);
