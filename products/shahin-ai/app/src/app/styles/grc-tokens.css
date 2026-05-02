@@ -718,77 +718,10 @@
    (migrated from primeng-overrides.css in Phase 1).
    ══════════════════════════════════════════════ */
 
-[data-theme="gray-90"],
-[data-theme="gray-100"] {
-  --p-primary-color: var(--primary);
-  --p-primary-contrast-color: var(--text-on-primary);
-  --p-surface-0: var(--surface);
-  --p-surface-50: var(--surface-ice);
-  --p-surface-100: var(--bg-2);
-  --p-surface-200: var(--surface-200);
-  --p-text-color: var(--text-heading);
-  --p-text-muted-color: var(--text-muted);
-  --p-border-radius: var(--radius-md);
-}
-
-[data-theme="gray-90"] .p-datatable,
-[data-theme="gray-100"] .p-datatable { border-color: var(--border-subtle); }
-[data-theme="gray-90"] .p-datatable .p-datatable-thead > tr > th,
-[data-theme="gray-100"] .p-datatable .p-datatable-thead > tr > th {
-  background: var(--surface-ice); color: var(--text-heading); border-color: var(--border);
-}
-[data-theme="gray-90"] .p-datatable .p-datatable-tbody > tr > td,
-[data-theme="gray-100"] .p-datatable .p-datatable-tbody > tr > td {
-  background: var(--surface); color: var(--text-body); border-color: var(--border-subtle);
-}
-[data-theme="gray-90"] .p-datatable .p-datatable-tbody > tr:hover > td,
-[data-theme="gray-100"] .p-datatable .p-datatable-tbody > tr:hover > td { background: var(--surface-ice); }
-[data-theme="gray-90"] .p-datatable .p-paginator,
-[data-theme="gray-100"] .p-datatable .p-paginator { background: var(--surface-ice); border-color: var(--border-subtle); }
-
-[data-theme="gray-90"] .p-dialog,
-[data-theme="gray-100"] .p-dialog { background: var(--surface); color: var(--text-heading); }
-[data-theme="gray-90"] .p-dialog .p-dialog-header,
-[data-theme="gray-100"] .p-dialog .p-dialog-header {
-  background: var(--surface); color: var(--text-heading); border-color: var(--border-subtle);
-}
-[data-theme="gray-90"] .p-dialog .p-dialog-content,
-[data-theme="gray-100"] .p-dialog .p-dialog-content { background: var(--surface); color: var(--text-body); }
-
-[data-theme="gray-90"] .p-inputtext,
-[data-theme="gray-100"] .p-inputtext {
-  background: var(--surface-ice); color: var(--text-heading); border-color: var(--border);
-}
-[data-theme="gray-90"] .p-dropdown,
-[data-theme="gray-100"] .p-dropdown {
-  background: var(--surface-ice); color: var(--text-heading); border-color: var(--border);
-}
-[data-theme="gray-90"] .p-dropdown-panel,
-[data-theme="gray-100"] .p-dropdown-panel { background: var(--surface); border-color: var(--border); }
-[data-theme="gray-90"] .p-dropdown-items .p-dropdown-item,
-[data-theme="gray-100"] .p-dropdown-items .p-dropdown-item { color: var(--text-body); }
-[data-theme="gray-90"] .p-dropdown-items .p-dropdown-item:hover,
-[data-theme="gray-100"] .p-dropdown-items .p-dropdown-item:hover { background: var(--surface-ice); }
-
-[data-theme="gray-90"] .p-card,
-[data-theme="gray-100"] .p-card { background: var(--surface); color: var(--text-body); }
-
-[data-theme="gray-90"] .p-toast .p-toast-message,
-[data-theme="gray-100"] .p-toast .p-toast-message { background: var(--surface-ice); border-color: var(--border); }
-
-[data-theme="gray-90"] .p-menu,
-[data-theme="gray-90"] .p-menubar,
-[data-theme="gray-100"] .p-menu,
-[data-theme="gray-100"] .p-menubar { background: var(--surface); border-color: var(--border-subtle); }
-[data-theme="gray-90"] .p-menuitem-link,
-[data-theme="gray-100"] .p-menuitem-link { color: var(--text-body); }
-[data-theme="gray-90"] .p-menuitem-link:hover,
-[data-theme="gray-100"] .p-menuitem-link:hover { background: var(--surface-ice); color: var(--text-heading); }
-
-[data-theme="gray-90"] .p-tabview .p-tabview-nav,
-[data-theme="gray-100"] .p-tabview .p-tabview-nav { background: transparent; border-color: var(--border); }
-[data-theme="gray-90"] .p-tabview .p-tabview-panels,
-[data-theme="gray-100"] .p-tabview .p-tabview-panels { background: transparent; }
+/* PrimeNG dark-mode overrides removed (72 lines).
+   Carbon cds-* components use @carbon/themes natively —
+   gray-90/gray-100 themes are applied via cds-theme attribute.
+   No manual .p-datatable/.p-dialog/.p-dropdown dark overrides needed. */
 
 /* ═══════════════════════════════════════════════════════════════════════════
    System Dark-Mode Opt-In (phase 4)

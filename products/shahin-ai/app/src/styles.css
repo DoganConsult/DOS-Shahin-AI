@@ -246,9 +246,10 @@ code {
   font-family: 'IBM Plex Sans Arabic', 'Tajawal', 'Cairo', 'Noto Sans Arabic', 'IBM Plex Sans', sans-serif;
 }
 
-.sidebar { inset-inline-start: 0; inset-inline-end: auto; }
-
-.main-content { margin-inline-start: 240px; margin-inline-end: 0; }
+/* Legacy .sidebar/.main-content removed — Carbon UIShell cds-sidenav
+   handles sidebar positioning and content offset natively.
+   Old rule `.main-content { margin-inline-start: 240px }` caused
+   horizontal overflow on mobile. */
 
 [dir="rtl"] .flex-row { flex-direction: row-reverse; }
 
@@ -258,46 +259,43 @@ code {
 
 .input { text-align: start; }
 
-/* PrimeNG Dropdown panel — global fix for appendTo="body" overlays */
-.p-dropdown-panel { min-width: 280px !important; max-width: 95vw; }
-.p-dropdown-panel .p-dropdown-items .p-dropdown-item { white-space: normal; word-break: break-word; line-height: 1.4; }
-.p-dropdown-panel .p-dropdown-items .p-dropdown-item { text-align: start; }
-.p-dropdown-panel .p-dropdown-header input { text-align: start; }
+/* PrimeNG dropdown overrides removed — workspace uses Carbon cds-dropdown.
+   Old rule `.p-dropdown-panel { min-width: 280px !important }` caused
+   horizontal overflow on narrow viewports. */
 
-/* Offline connectivity banner */
+/* Offline connectivity banner — uses logical properties, no left/right */
 .offline-banner {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  inset-block-start: 0;
+  inset-inline: 0;
   z-index: 10000;
-  padding: 8px 16px;
-  background: var(--warning-subtle, #fef3cd);
-  color: var(--warning-text, #856404);
-  border-bottom: 1px solid var(--warning-border, #ffc107);
+  padding: var(--cds-spacing-02) var(--cds-spacing-05);
+  background: var(--cds-support-warning);
+  color: var(--cds-text-on-color);
+  border-bottom: 1px solid var(--cds-border-subtle-00);
   text-align: center;
-  font-size: 0.875rem;
+  font-size: var(--cds-body-compact-01-font-size, 0.875rem);
   font-weight: 500;
 }
 
-/* ── WCAG 2.1 AA: Skip navigation link ── */
+/* ── WCAG 2.1 AA: Skip navigation link — logical properties ── */
 .skip-link {
   position: absolute;
-  top: -50px;
-  left: 0;
-  background: var(--primary-dark, #1e3a5f);
-  color: #fff;
-  padding: 8px 16px;
+  inset-block-start: -50px;
+  inset-inline-start: 0;
+  background: var(--cds-background-inverse);
+  color: var(--cds-text-inverse);
+  padding: var(--cds-spacing-02) var(--cds-spacing-05);
   z-index: 100000;
-  font-size: 0.875rem;
+  font-size: var(--cds-body-compact-01-font-size, 0.875rem);
   font-weight: 600;
   text-decoration: none;
-  border-radius: 0 0 var(--radius-sm, 4px) 0;
-  transition: top 0.2s ease;
+  border-radius: 0;
+  transition: inset-block-start 0.2s ease;
 }
 .skip-link:focus {
-  top: 0;
-  outline: 2px solid var(--primary, #4f46e5);
+  inset-block-start: 0;
+  outline: 2px solid var(--cds-focus);
   outline-offset: 2px;
 }
 

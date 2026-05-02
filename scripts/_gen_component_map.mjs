@@ -46,6 +46,33 @@ const CK_MAP = {
   'notification': ['CarbonNotificationRenderer', 'x'],
   'dialog': ['CarbonDialogRenderer', 'x'],
   'wc.skip-to-content': ['CarbonSkipToContentRenderer', 'x'],
+  // @carbon/charts-angular wrappers (file 'c')
+  'chart.alluvial':       ['CarbonChartAlluvialRenderer', 'c'],
+  'chart.area':           ['CarbonChartAreaRenderer', 'c'],
+  'chart.area.stacked':   ['CarbonChartAreaStackedRenderer', 'c'],
+  'chart.bar.grouped':    ['CarbonChartBarGroupedRenderer', 'c'],
+  'chart.bar.histogram':  ['CarbonChartBarHistogramRenderer', 'c'],
+  'chart.bar.lollipop':   ['CarbonChartBarLollipopRenderer', 'c'],
+  'chart.bar.simple':     ['CarbonChartBarSimpleRenderer', 'c'],
+  'chart.bar.stacked':    ['CarbonChartBarStackedRenderer', 'c'],
+  'chart.boxplot':        ['CarbonChartBoxplotRenderer', 'c'],
+  'chart.bubble':         ['CarbonChartBubbleRenderer', 'c'],
+  'chart.bullet':         ['CarbonChartBulletRenderer', 'c'],
+  'chart.choropleth':     ['CarbonChartChoroplethRenderer', 'c'],
+  'chart.circle-pack':    ['CarbonChartCirclePackRenderer', 'c'],
+  'chart.combo':          ['CarbonChartComboRenderer', 'c'],
+  'chart.donut':          ['CarbonChartDonutRenderer', 'c'],
+  'chart.gauge':          ['CarbonChartGaugeRenderer', 'c'],
+  'chart.heatmap':        ['CarbonChartHeatmapRenderer', 'c'],
+  'chart.line':           ['CarbonChartLineRenderer', 'c'],
+  'chart.line.stacked':   ['CarbonChartLineStackedRenderer', 'c'],
+  'chart.meter':          ['CarbonChartMeterRenderer', 'c'],
+  'chart.pie':            ['CarbonChartPieRenderer', 'c'],
+  'chart.radar':          ['CarbonChartRadarRenderer', 'c'],
+  'chart.scatter':        ['CarbonChartScatterRenderer', 'c'],
+  'chart.tree':           ['CarbonChartTreeRenderer', 'c'],
+  'chart.treemap':        ['CarbonChartTreemapRenderer', 'c'],
+  'chart.wordcloud':      ['CarbonChartWordcloudRenderer', 'c'],
 };
 
 const PLACEHOLDER = ['CarbonCatalogPlaceholderRenderer', 'x'];
@@ -138,7 +165,11 @@ out.push('');
 out.push('const REGISTRY_COMPONENT_MAP: Record<string, () => Promise<Type<any>>> = {');
 for (const r of rows) {
   const [cls, src] = rendererFor(r.carbon_key);
-  const file = src === 'p' ? './carbon-primitive-renderers' : './carbon-extended-renderers';
+  const file = src === 'p'
+    ? './carbon-primitive-renderers'
+    : src === 'c'
+      ? './carbon-chart-renderers'
+      : './carbon-extended-renderers';
   const key = r.component_key.replace(/'/g, "\\'");
   out.push(`  '${key}': () => import('${file}').then(m => m.${cls}),`);
 }

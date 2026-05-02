@@ -85,11 +85,10 @@
   --shell-status-danger-bg: #fff1f1;
   --shell-status-info-bg: #edf5ff;
 
-  --shell-sidebar-mobile-width: min(85vw, 20rem);
-  --shell-sidebar-mobile-offset: 18.125rem;
-
-  --shell-sidebar-width: 16rem;
-  --shell-sidebar-collapsed-width: 3rem;
+  /* Legacy custom sidebar tokens removed — Carbon cds-sidenav handles
+     sidebar width/collapse/mobile natively. Old --shell-sidebar-width
+     (16rem) and --shell-sidebar-mobile-offset (18.125rem) caused
+     content shifting and horizontal overflow on mobile. */
 
   --shell-topbar-height: 3rem;
   --shell-topbar-search-width: 15rem;

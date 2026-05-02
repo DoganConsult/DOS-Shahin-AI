@@ -1,7 +1,8 @@
 /* ═══════════════════════════════════════════════════════════════════════════
    Shahin GRC — Mobile Native Styles
    Applied when running inside Capacitor iOS/Android shell.
-   Optimized for touch targets, safe areas, and native-feel interactions.
+   Carbon UIShell (cds-sidenav) handles sidebar/drawer natively —
+   no custom .sidebar/.desktop-sidebar/.main-content overrides needed.
    ═══════════════════════════════════════════════════════════════════════════ */
 
 /* ──────────────────── Safe Area Insets ──────────────────── */
@@ -16,20 +17,15 @@
 
 /* ──────────────────── Capacitor-Specific Overrides ──────────────────── */
 
-/* Prevent elastic overscroll on iOS */
 html.plt-capacitor {
   overscroll-behavior: none;
   -webkit-overflow-scrolling: touch;
 }
 
-/* Status bar padding on iOS */
 html.plt-capacitor body {
   padding-top: var(--safe-top);
 }
 
-/* Bottom padding for tab bar clearance */
-html.plt-capacitor .main-content,
-html.plt-capacitor .page-container,
 html.plt-capacitor router-outlet + * {
   padding-bottom: calc(var(--tab-bar-height) + var(--safe-bottom) + 16px);
 }
@@ -38,7 +34,6 @@ html.plt-capacitor router-outlet + * {
 
 html.plt-capacitor button,
 html.plt-capacitor a.btn,
-html.plt-capacitor .p-button,
 html.plt-capacitor [role="button"] {
   min-height: 44px;
   min-width: 44px;
@@ -49,14 +44,11 @@ html.plt-capacitor .tab-item {
   min-width: 48px;
 }
 
-/* Larger touch targets for form inputs */
 html.plt-capacitor input,
 html.plt-capacitor select,
-html.plt-capacitor textarea,
-html.plt-capacitor .p-inputtext,
-html.plt-capacitor .p-dropdown {
+html.plt-capacitor textarea {
   min-height: 44px;
-  font-size: var(--font-size-md); /* Prevents iOS zoom on focus */
+  font-size: var(--font-size-md);
 }
 
 /* ──────────────────── Disable Hover Effects on Touch ──────────────────── */
@@ -81,19 +73,6 @@ html.plt-capacitor .card {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* ──────────────────── Mobile Sidebar Override ──────────────────── */
-
-/* Hide desktop sidebar on mobile native */
-html.plt-capacitor .sidebar,
-html.plt-capacitor .desktop-sidebar {
-  display: none !important;
-}
-
-html.plt-capacitor .main-content {
-  margin-inline-start: 0 !important;
-  margin-inline-end: 0 !important;
-}
-
 /* ──────────────────── Mobile Cards ──────────────────── */
 
 html.plt-capacitor .card {
@@ -105,8 +84,6 @@ html.plt-capacitor .card:active {
   transform: scale(0.98);
   transition: transform 0.1s ease;
 }
-
-/* ──────────────────── Pull-to-Refresh Spacer ──────────────────── */
 
 html.plt-capacitor .page-header {
   padding-top: 8px;
@@ -142,21 +119,17 @@ html.plt-capacitor.keyboard-open .page-container {
   }
 }
 
-/* ──────────────────── RTL Adjustments ──────────────────── */
-
-[dir="rtl"] html.plt-capacitor .swipe-action-backdrop {
-  /* Swap swipe directions for RTL */
-}
+/* ──────────────────── RTL Adjustments — logical properties ──────────────────── */
 
 [dir="rtl"] html.plt-capacitor .tab-badge {
-  right: auto;
-  left: 4px;
+  inset-inline-end: auto;
+  inset-inline-start: 4px;
 }
 
 /* ──────────────────── iOS-Specific ──────────────────── */
 
 html.plt-capacitor.plt-ios {
-  font-family: -apple-system, 'SF Pro Text', 'Tajawal', sans-serif;
+  font-family: -apple-system, 'SF Pro Text', 'IBM Plex Sans Arabic', 'Tajawal', sans-serif;
 }
 
 html.plt-capacitor.plt-ios .card {
@@ -166,11 +139,10 @@ html.plt-capacitor.plt-ios .card {
 /* ──────────────────── Android-Specific ──────────────────── */
 
 html.plt-capacitor.plt-android {
-  font-family: 'Roboto', 'Tajawal', sans-serif;
+  font-family: 'Roboto', 'IBM Plex Sans Arabic', 'Tajawal', sans-serif;
 }
 
-html.plt-capacitor.plt-android button,
-html.plt-capacitor.plt-android .p-button {
+html.plt-capacitor.plt-android button {
   text-transform: none;
   letter-spacing: 0;
 }
@@ -197,21 +169,16 @@ html.plt-capacitor.plt-android .p-button {
   }
 }
 
-/* ──────────────────── Offline Indicators ──────────────────── */
+/* ──────────────────── Offline Indicators — logical properties ──────────────────── */
 
 html.plt-capacitor.offline .card {
   border-inline-start: 3px solid #f59e0b;
 }
 
-[dir="rtl"] html.plt-capacitor.offline .card {
-  border-inline-start: none;
-  border-inline-end: 3px solid #f59e0b;
-}
-
 html.plt-capacitor .offline-cached-badge {
   position: absolute;
-  top: 4px;
-  right: 4px;
+  inset-block-start: 4px;
+  inset-inline-end: 4px;
   width: 8px;
   height: 8px;
   border-radius: 50%;
@@ -248,27 +215,14 @@ html.plt-capacitor .evidence-capture-btn:active {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   Mobile-Browser Fallback (Phase 1)
-   Apply core layout / touch-target / typography rules to mobile-browser
-   users. Capacitor-specific behaviours (safe-area, keyboard, swipe, camera,
-   tap-highlight, iOS/Android-specific fonts) remain gated to .plt-capacitor.
+   Mobile-Browser Fallback
+   Carbon UIShell handles sidebar natively — only touch targets + typography.
    ═══════════════════════════════════════════════════════════════════════════ */
 
 @media (max-width: 768px) {
-  /* Hide desktop sidebars on mobile browsers */
-  .sidebar,
-  .desktop-sidebar {
-    display: none !important;
-  }
-  .main-content {
-    margin-inline-start: 0 !important;
-    margin-inline-end: 0 !important;
-  }
-
   /* WCAG 2.5.8 touch targets */
   button,
   a.btn,
-  .p-button,
   [role="button"] {
     min-height: 44px;
     min-width: 44px;
@@ -279,11 +233,9 @@ html.plt-capacitor .evidence-capture-btn:active {
   }
   input,
   select,
-  textarea,
-  .p-inputtext,
-  .p-dropdown {
+  textarea {
     min-height: 44px;
-    font-size: var(--font-size-md); /* prevents iOS zoom on focus */
+    font-size: var(--font-size-md);
   }
 
   /* Mobile typography scale */
@@ -304,7 +256,6 @@ html.plt-capacitor .evidence-capture-btn:active {
   }
 }
 
-/* Hover/transform suppression on coarse-pointer devices, regardless of platform */
 @media (hover: none) and (pointer: coarse) {
   .card:hover,
   .btn:hover,

@@ -221,7 +221,15 @@
       "Bash(grep -rPo \"'\\(command-center|smart-grid|audit-timeline|page-masthead|matrix|context-rail|recommendation-card\\)\\\\.[^']+'\" platform/dos/migrations/public/20260503_0001*.sql)",
       "Bash(grep -rPo \"component_key.*?'\\(platform\\\\.[^']+\\)'\" platform/dos/migrations/public/20260502_0145*.sql)",
       "Bash(pnpm --filter shahin-ai-grc-frontend run build)",
-      "Bash(git status:*)"
+      "Bash(git status:*)",
+      "Bash(git commit -m ':*)",
+      "Bash(git branch:*)",
+      "Bash(git remote:*)",
+      "Bash(git add:*)",
+      "Bash(git commit --amend -m ':*)",
+      "Bash(git push:*)",
+      "Bash(ls -lhS /root/DOS-Platform/products/shahin-ai/app/dist/shahin-ai/browser/*.js)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:4173/)"
     ],
     "additionalDirectories": [
       "/tmp",

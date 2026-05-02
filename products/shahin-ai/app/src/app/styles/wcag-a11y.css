@@ -16,22 +16,22 @@
   outline: none;
 }
 
-/* Skip link for keyboard navigation (WCAG 2.4.1) */
+/* Skip link for keyboard navigation (WCAG 2.4.1) — logical properties */
 .skip-link {
   position: absolute;
-  top: -100%;
-  left: 0;
-  background: var(--primary, #0ea5e9);
-  color: #fff;
-  padding: 8px 16px;
+  inset-block-start: -100%;
+  inset-inline-start: 0;
+  background: var(--cds-background-inverse);
+  color: var(--cds-text-inverse);
+  padding: var(--cds-spacing-02) var(--cds-spacing-05);
   z-index: var(--z-skip-link);
-  font-size: var(--font-size-base);
+  font-size: var(--cds-body-compact-01-font-size, 0.875rem);
   font-weight: 600;
   text-decoration: none;
 }
 
 .skip-link:focus {
-  top: 0;
+  inset-block-start: 0;
 }
 
 /* ── Minimum touch target 44×44px (WCAG 2.5.5) ────────────── */

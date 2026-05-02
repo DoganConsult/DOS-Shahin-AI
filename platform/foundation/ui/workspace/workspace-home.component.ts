@@ -19,6 +19,31 @@ import { isCapabilityActive } from '@app/core/platform/navigation/active-modules
 import {
   NotificationModule, ModalModule, TagModule, ButtonModule,
   TooltipModule, SkeletonModule, IconModule, ProgressBarModule,
+  DialogModule,    // OverflowMenu + OverflowMenuOption (carbon_key: 'context-menu')
+  DropdownModule,  // carbon_key: 'dropdown'
+  LayerModule,     // carbon_key: 'layer'
+  GridModule,      // carbon_key: 'grid'
+  TilesModule,     // carbon_key: 'tiles' — Tile / ClickableTile / ExpandableTile
+  BreadcrumbModule,// carbon_key: 'breadcrumb'
+  TabsModule,      // carbon_key: 'tabs'
+  StructuredListModule, // carbon_key: 'structured-list'
+  TableModule,     // carbon_key: 'table' — DataTable
+  PaginationModule,// carbon_key: 'pagination'
+  InlineLoadingModule, // carbon_key: 'inline-loading'
+  SearchModule,    // carbon_key: 'search'
+  ComboBoxModule,  // carbon_key: 'combobox'
+  DatePickerModule,// carbon_key: 'datepicker'
+  InputModule,     // carbon_key: 'input' — TextInput / TextArea
+  NumberModule,    // carbon_key: 'number-input'
+  SelectModule,    // carbon_key: 'select'
+  CheckboxModule,  // carbon_key: 'checkbox'
+  RadioModule,     // carbon_key: 'radio'
+  ToggleModule,    // carbon_key: 'toggle'
+  ToggletipModule, // carbon_key: 'toggletip'
+  PopoverModule,   // carbon_key: 'popover'
+  ContextMenuModule, // carbon_key: 'context-menu'
+  FileUploaderModule, // carbon_key: 'file-uploader'
+  AccordionModule, // carbon_key: 'accordion'
 } from 'carbon-components-angular';
 import { FOUNDATION_I18N, type FoundationI18n, NoopFoundationI18n } from '../ports/i18n.port';
 import { HubConnectionsStripComponent } from '@app/shared/hub-connections/hub-connections-strip.component';
@@ -130,6 +155,31 @@ function asArray(value: unknown): Record<string, unknown>[] {
         ModalModule,        // carbon_key: 'modal'
         IconModule,         // carbon_key: 'icon'
         ProgressBarModule,  // carbon_key: 'progress-bar'
+        DialogModule,       // carbon_key: 'context-menu' — OverflowMenu / OverflowMenuOption
+        DropdownModule,     // carbon_key: 'dropdown'
+        LayerModule,        // carbon_key: 'layer'
+        GridModule,         // carbon_key: 'grid'
+        TilesModule,        // carbon_key: 'tiles' — Tile / ClickableTile / ExpandableTile
+        BreadcrumbModule,   // carbon_key: 'breadcrumb'
+        TabsModule,         // carbon_key: 'tabs'
+        StructuredListModule, // carbon_key: 'structured-list'
+        TableModule,        // carbon_key: 'table' — DataTable
+        PaginationModule,   // carbon_key: 'pagination'
+        InlineLoadingModule,// carbon_key: 'inline-loading'
+        SearchModule,       // carbon_key: 'search'
+        ComboBoxModule,     // carbon_key: 'combobox'
+        DatePickerModule,   // carbon_key: 'datepicker'
+        InputModule,        // carbon_key: 'input' — TextInput / TextArea
+        NumberModule,       // carbon_key: 'number-input'
+        SelectModule,       // carbon_key: 'select'
+        CheckboxModule,     // carbon_key: 'checkbox'
+        RadioModule,        // carbon_key: 'radio'
+        ToggleModule,       // carbon_key: 'toggle'
+        ToggletipModule,    // carbon_key: 'toggletip'
+        PopoverModule,      // carbon_key: 'popover'
+        ContextMenuModule,  // carbon_key: 'context-menu'
+        FileUploaderModule, // carbon_key: 'file-uploader'
+        AccordionModule,    // carbon_key: 'accordion'
         PageHeaderComponent, KpiCardGridComponent,
         RecentActivityTableComponent, EmptyStateComponent,
         WorkspaceIgniteCardComponent, AppDatePipe,
@@ -520,6 +570,13 @@ export class WorkspaceHomeComponent implements OnInit, OnDestroy {
       stale_evidence: this.i18n.translate('home.staleEvidence'),
     };
     return map[type] || type;
+  }
+
+  onSearchChange(term: string): void {
+    // Workspace-level search — dispatches to global search bus
+    if (term?.trim()) {
+      window.dispatchEvent(new CustomEvent('workspace:search', { detail: { term } }));
+    }
   }
 
   moduleIcon(module: string): string {

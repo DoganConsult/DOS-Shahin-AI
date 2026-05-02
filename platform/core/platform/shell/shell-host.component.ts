@@ -92,7 +92,7 @@ type ShellState = 'loading' | 'skeleton' | 'ready' | 'error' | 'error-blocking' 
          <main class="cds--content"> is Carbon's Content primitive.
          ──────────────────────────────────────────────────────────────────── -->
     <cds-header
-      [brand]="i18n.translate('shell.brand.fallback')"
+      [brand]="i18n.translate('shell.brand') || 'Shahin'"
       [name]="config()?.masthead?.moduleName || ''"
       [route]="['/workspace-home']"
       useRouter="true">
@@ -427,7 +427,7 @@ export class ShellHostComponent implements OnInit {
   readonly accountInitial = computed(() => {
     const n = this.accountUserName().trim();
     if (n) return n.charAt(0).toUpperCase();
-    return this.i18n.translate('shell.account.initial.fallback');
+    return this.i18n.translate('shell.account.initial') || 'U';
   });
 
   // Account menu — contract-driven from WorkspaceNavigationAdapter.accountMenuConfig().
