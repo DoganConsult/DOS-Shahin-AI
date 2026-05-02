@@ -9,6 +9,7 @@ import { I18nService } from '@app/core/services/ui-infra/i18n.service';
 import { provideShellIcons } from './shell/icon-registration';
 import { ProductCompositionNavSource } from './shell/nav-sources/product-composition-nav.source';
 import { COCKPIT_CONFIG, type CockpitConfigContract } from '@app/dos/contracts/cockpit-config.contract';
+import { FOUNDATION_I18N } from '@foundation-module/ui/ports/i18n.port';
 import { routes } from './app.routes';
 
 /** Default cockpit config — enables all workspace sections for every role. */
@@ -72,5 +73,8 @@ export const appConfig: ApplicationConfig = {
     // Cockpit config — enables all workspace-home sections (KPIs, actions,
     // frameworks, activity). Without this, NG0201 fires and all sections hide.
     { provide: COCKPIT_CONFIG, useValue: DEFAULT_COCKPIT_CONFIG },
+    // Foundation i18n — workspace-home uses this for all labels.
+    // Without it, NoopFoundationI18n returns Arabic fallbacks.
+    { provide: FOUNDATION_I18N, useExisting: I18nService },
   ],
 };

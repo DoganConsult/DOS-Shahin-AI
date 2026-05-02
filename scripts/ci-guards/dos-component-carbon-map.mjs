@@ -1,0 +1,54 @@
+#!/usr/bin/env node
+/**
+ * CI guard: every ApprovedComponentKey (Dos*) must have a row in
+ * dos.ui_dos_component_carbon_map mapping it to a real, Angular-usable
+ * IBM Carbon carbon_key in dos.ui_carbon_components.
+ *
+ * Fails the build if any Dos* key is missing or maps to a
+ * blocked-react-only / missing-upstream / deprecated carbon row.
+ */
+import { readFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+
+const KEYS_FILE = 'platform/ui-system/dos-ui-contracts/src/component-keys.ts';
+const src = readFileSync(KEYS_FILE, 'utf8');
+const m = src.match(/APPROVED_COMPONENT_KEYS\s*=\s*\[([\s\S]*?)\]\s*as const/);
+if (!m) { console.error('Cannot locate APPROVED_COMPONENT_KEYS in', KEYS_FILE); process.exit(2); }
+const approved = [...m[1].matchAll(/'([^']+)'/g)].map(x => x[1]);
+
+const sql = `
+  SELECT m.dos_component_key, m.carbon_key, c.runtime_status
+    FROM dos.ui_dos_component_carbon_map m
+    LEFT JOIN dos.ui_carbon_components c USING (carbon_key);
+`;
+const env = { ...process.env, PGPASSWORD: process.env.PGPASSWORD || 'dos_auth_pass_2026' };
+const out = execFileSync('psql', [
+  '-h', process.env.PGHOST || 'localhost',
+  '-U', process.env.PGUSER || 'dos_auth',
+  '-d', process.env.PGDATABASE || 'shahin_grc',
+  '-At', '-F', '|', '-c', sql,
+], { env, encoding: 'utf8' });
+
+const rows = out.trim().split('\n').filter(Boolean).map(l => {
+  const [dos_component_key, carbon_key, runtime_status] = l.split('|');
+  return { dos_component_key, carbon_key, runtime_status };
+});
+const byKey = new Map(rows.map(r => [r.dos_component_key, r]));
+
+const errors = [];
+for (const k of approved) {
+  const r = byKey.get(k);
+  if (!r) { errors.push(`MISSING map row for Dos key '${k}'`); continue; }
+  if (!['active', 'wrapper-required'].includes(r.runtime_status)) {
+    errors.push(`Dos '${k}' → carbon '${r.carbon_key}' runtime_status='${r.runtime_status}' is not Angular-usable`);
+  }
+}
+const extras = rows.filter(r => !approved.includes(r.dos_component_key));
+for (const e of extras) errors.push(`Stale map row '${e.dos_component_key}' not in APPROVED_COMPONENT_KEYS`);
+
+if (errors.length) {
+  console.error('FAIL dos-component-carbon-map:');
+  for (const e of errors) console.error('  -', e);
+  process.exit(1);
+}
+console.log(`PASS dos-component-carbon-map: ${approved.length}/${approved.length} Dos keys mapped to Angular-usable Carbon.`);

@@ -99,16 +99,19 @@
           </span>
           <!-- Carbon Tooltip — info about modules section -->
           <cds-tooltip [description]="i18n.translate('workspaceHome.modulesTooltip') || 'Active modules for your workspace'">
-            <svg cdsIcon="information" size="14"></svg>
+            <svg cdsIcon="information" size="16"></svg>
           </cds-tooltip>
           <!-- Carbon Toggletip — extended help -->
           <cds-toggletip>
             <p>{{ i18n.translate('workspaceHome.modulesHelp') || 'Modules are enabled per tenant configuration. Contact admin to add more.' }}</p>
           </cds-toggletip>
           <!-- Carbon MultiSelect — filter visible modules -->
-          <cds-dropdown type="multi" size="sm"
+          <cds-dropdown size="sm"
             [label]="i18n.translate('workspaceHome.filterModules') || 'Filter modules'"
             [placeholder]="i18n.translate('workspaceHome.allModules') || 'All modules'">
+            <cds-dropdown-list>
+              <cds-list-item value="all" [content]="i18n.translate('workspaceHome.allModules') || 'All'"></cds-list-item>
+            </cds-dropdown-list>
           </cds-dropdown>
           <!-- OverflowMenu for module-level actions -->
           <cds-overflow-menu [flip]="dir() === 'rtl'">
@@ -194,7 +197,7 @@
             </span>
             <a class="wh-section-link" [routerLink]="['/governance/actions']">
               {{ i18n.translate('workspaceHome.viewAll') }}
-              <svg cdsIcon="chevron--right" size="12" class="wh-link-chevron" aria-hidden="true"></svg>
+              <svg cdsIcon="chevron--right" size="16" class="wh-link-chevron" aria-hidden="true"></svg>
             </a>
           </div>
 
@@ -220,7 +223,7 @@
                   @if (item.dueDate) {
                     <span class="na-date">{{ item.dueDate | appDate:'medium' }}</span>
                   }
-                  <svg cdsIcon="chevron--right" size="12" class="na-go" aria-hidden="true"></svg>
+                  <svg cdsIcon="chevron--right" size="16" class="na-go" aria-hidden="true"></svg>
                 </cds-clickable-tile>
               }
             </div>
@@ -239,7 +242,7 @@
             </span>
             <a class="wh-section-link" [routerLink]="['/ai-recommendation-inbox']">
               {{ isAr() ? 'عرض الكل' : 'View All' }}
-              <svg cdsIcon="chevron--right" size="12" class="wh-link-chevron" aria-hidden="true"></svg>
+              <svg cdsIcon="chevron--right" size="16" class="wh-link-chevron" aria-hidden="true"></svg>
             </a>
           </div>
           <div class="na-list">
@@ -251,7 +254,7 @@
                 @if (nba.dueDate) {
                   <span class="na-date">{{ nba.dueDate | appDate:'medium' }}</span>
                 }
-                <svg cdsIcon="chevron--right" size="12" class="na-go" aria-hidden="true"></svg>
+                <svg cdsIcon="chevron--right" size="16" class="na-go" aria-hidden="true"></svg>
               </cds-clickable-tile>
             }
           </div>
@@ -271,7 +274,7 @@
             </span>
             <a class="wh-section-link" [routerLink]="['/compliance/frameworks']">
               {{ i18n.translate('workspaceHome.manageFrameworks') }}
-              <svg cdsIcon="chevron--right" size="12" class="wh-link-chevron" aria-hidden="true"></svg>
+              <svg cdsIcon="chevron--right" size="16" class="wh-link-chevron" aria-hidden="true"></svg>
             </a>
           </div>
 
@@ -369,7 +372,7 @@
               [dir]="dir()" />
           } @else {
             <!-- Carbon DataTable for activity -->
-            <table cdsTable [sortable]="false">
+            <table cdsTable [sortable]="false" [stickyHeader]="false">
               <thead cdsTableHead>
                 <tr>
                   <th cdsTableHeadCell>{{ i18n.translate('workspaceHome.time') || 'Time' }}</th>
@@ -429,7 +432,7 @@
                     <span class="pmap-link-title">{{ i18n.localize(link.labelEn, link.labelAr) }}</span>
                     <span class="pmap-link-desc">{{ i18n.localize(link.descEn, link.descAr) }}</span>
                   </div>
-                  <svg cdsIcon="chevron--right" size="12" class="pmap-go" aria-hidden="true"></svg>
+                  <svg cdsIcon="chevron--right" size="16" class="pmap-go" aria-hidden="true"></svg>
                 </cds-clickable-tile>
               }
             </div>

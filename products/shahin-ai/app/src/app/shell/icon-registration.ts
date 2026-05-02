@@ -72,6 +72,26 @@ import Notification16 from '@carbon/icons/es/notification/16.js';
 import UserAvatar16 from '@carbon/icons/es/user--avatar/16.js';
 import Logout16 from '@carbon/icons/es/logout/16.js';
 
+// Workspace-home + ignite-card icons (added for Carbon migration)
+import Lightning16 from '@carbon/icons/es/lightning/16.js';
+import Lightning20 from '@carbon/icons/es/lightning/20.js';
+import ChartLine16 from '@carbon/icons/es/chart--line/16.js';
+import RecentlyViewed16 from '@carbon/icons/es/recently-viewed/16.js';
+import MachineLearningModel16 from '@carbon/icons/es/machine-learning-model/16.js';
+import Information20 from '@carbon/icons/es/information/20.js';
+import Information24 from '@carbon/icons/es/information/24.js';
+import List16 from '@carbon/icons/es/list/16.js';
+import Renew16 from '@carbon/icons/es/renew/16.js';
+import Launch16 from '@carbon/icons/es/launch/16.js';
+import Warning16 from '@carbon/icons/es/warning/16.js';
+import CheckmarkFilled20 from '@carbon/icons/es/checkmark--filled/20.js';
+import Idea16 from '@carbon/icons/es/idea/16.js';
+import StarFilled16 from '@carbon/icons/es/star--filled/16.js';
+import Connect16 from '@carbon/icons/es/connect/16.js';
+import Folder16 from '@carbon/icons/es/folder/16.js';
+import Close24 from '@carbon/icons/es/close/24.js';
+import CloseFilled16 from '@carbon/icons/es/close--filled/16.js';
+
 export function provideShellIcons(): EnvironmentProviders {
   const providers: Provider[] = [
     // Carbon's IconService isn't `providedIn: 'root'` in this version, so
@@ -96,6 +116,12 @@ export function provideShellIcons(): EnvironmentProviders {
           Calendar16, View16, ViewOff16,
           CaretDown16, CaretRight16, CaretLeft16, ArrowRight16, ArrowLeft16,
           Notification16, UserAvatar16, Logout16,
+          // Workspace-home + ignite-card icons
+          Lightning16, Lightning20, ChartLine16, RecentlyViewed16,
+          MachineLearningModel16, Information20, Information24,
+          List16, Renew16, Launch16, Warning16,
+          CheckmarkFilled20, Idea16, StarFilled16,
+          Connect16, Folder16, Close24, CloseFilled16,
         ]);
       },
       deps: [IconService],

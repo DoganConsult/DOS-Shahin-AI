@@ -53,18 +53,18 @@
                   <span class="wig-plan-module">{{ i18n.localize(entry.labelEn, entry.labelAr) }}</span>
                   @if (entry.status === 'blocked') {
                     <span class="wig-plan-blocked">
-                      <svg cdsIcon="warning" size="14"></svg>
+                      <svg cdsIcon="warning" size="16"></svg>
                       {{ entry.blocker }}
                       <a *ngIf="entry.fixRoute" [routerLink]="entry.fixRoute" class="wig-fix-link">{{ i18n.translate('workspaceIgnite.fix') }}</a>
                     </span>
                   } @else if (entry.status === 'already_completed') {
                     <span class="wig-plan-done">
-                      <svg cdsIcon="checkmark--filled" size="14"></svg>
+                      <svg cdsIcon="checkmark--filled" size="16"></svg>
                       {{ i18n.translate('workspaceIgnite.alreadyDone') }}
                     </span>
                   } @else {
                     <span class="wig-plan-ready">
-                      <svg cdsIcon="checkmark" size="14"></svg>
+                      <svg cdsIcon="checkmark" size="16"></svg>
                       {{ i18n.translate('workspaceIgnite.ready') }}
                       @if (entry.wouldCreateSummary) {
                         <span class="wig-plan-creates">— {{ entry.wouldCreateSummary }}</span>
@@ -168,10 +168,10 @@
               </span>
               <span class="wig-prereq">
                 @if (row.prereqMet) {
-                  <svg cdsIcon="checkmark" size="14" class="wig-prereq-ok"></svg>
+                  <svg cdsIcon="checkmark" size="16" class="wig-prereq-ok"></svg>
                   {{ i18n.translate('workspaceIgnite.ready') }}
                 } @else {
-                  <svg cdsIcon="close" size="14" class="wig-prereq-fail"></svg>
+                  <svg cdsIcon="close" size="16" class="wig-prereq-fail"></svg>
                   <span class="wig-prereq-msg">{{ row.prereqDetails }}</span>
                 }
               </span>
@@ -193,7 +193,7 @@
                     </button>
                   } @else if ((row.status === 'blocked' || row.status === 'skipped') && row.fixRoute) {
                     <a [routerLink]="row.fixRoute" class="wig-fix-btn">
-                      <svg cdsIcon="launch" size="14"></svg>
+                      <svg cdsIcon="launch" size="16"></svg>
                       {{ i18n.translate('workspaceIgnite.fix') }}
                     </a>
                   } @else if (row.status === 'completed') {

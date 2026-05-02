@@ -229,7 +229,14 @@
       "Bash(git commit --amend -m ':*)",
       "Bash(git push:*)",
       "Bash(ls -lhS /root/DOS-Platform/products/shahin-ai/app/dist/shahin-ai/browser/*.js)",
-      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:4173/)"
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:4173/)",
+      "Bash(git reset:*)",
+      "Bash(git checkout:*)",
+      "Read(//root/DOS-Platform/**)",
+      "Read(//tmp/screenshots/**)",
+      "Bash(find /root/DOS-Platform/node_modules/.pnpm/carbon-components-angular*/node_modules/carbon-components-angular/dropdown -name \"*.js\")",
+      "Bash(find /root/DOS-Platform/node_modules/.pnpm/carbon-components-angular*/node_modules/carbon-components-angular -name \"fesm*.js\")",
+      "Bash(find /root/DOS-Platform/node_modules/.pnpm/carbon* -name \"*.d.ts\" -type f)"
     ],
     "additionalDirectories": [
       "/tmp",
