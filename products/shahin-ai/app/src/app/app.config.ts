@@ -8,7 +8,41 @@ import { provideUiOsClient, provideUiOsComponentAllowlists } from '@dos/ui-os-cl
 import { I18nService } from '@app/core/services/ui-infra/i18n.service';
 import { provideShellIcons } from './shell/icon-registration';
 import { ProductCompositionNavSource } from './shell/nav-sources/product-composition-nav.source';
+import { COCKPIT_CONFIG, type CockpitConfigContract } from '@app/dos/contracts/cockpit-config.contract';
 import { routes } from './app.routes';
+
+/** Default cockpit config — enables all workspace sections for every role. */
+const DEFAULT_COCKPIT_CONFIG: CockpitConfigContract = {
+  getRoleSections: () => ({}),
+  getRoleAliases: () => ({}),
+  getKpiModuleMap: () => [
+    { kpiId: 'complianceScore', requiredModule: 'compliance' },
+    { kpiId: 'highRisks', requiredModule: 'risk' },
+    { kpiId: 'vendorHealth', requiredModule: 'vendor' },
+    { kpiId: 'overdueActions', requiredModule: 'governance' },
+    { kpiId: 'openFindings', requiredModule: 'audit' },
+    { kpiId: 'controlsCoverage', requiredModule: 'compliance' },
+    { kpiId: 'auditReadiness', requiredModule: 'audit' },
+  ],
+  getDefaultRoleSection: () => ({
+    executiveSnapshot: true,
+    actionCenter: true,
+    programHealth: true,
+    analytics: true,
+    activity: true,
+    nextSteps: true,
+    widgetPriority: ['complianceScore', 'highRisks', 'vendorHealth', 'overdueActions', 'openFindings', 'controlsCoverage', 'auditReadiness'],
+  }),
+  getIgniteModuleOrder: () => ['foundation', 'compliance', 'risk', 'governance', 'audit', 'evidence'],
+  getIgniteModuleMeta: () => ({
+    foundation:  { labelEn: 'Foundation',  labelAr: 'الأساسيات',  icon: 'enterprise', route: '/foundation' },
+    compliance:  { labelEn: 'Compliance',  labelAr: 'الامتثال',    icon: 'security',   route: '/compliance' },
+    risk:        { labelEn: 'Risk',        labelAr: 'المخاطر',     icon: 'warning',    route: '/risk' },
+    governance:  { labelEn: 'Governance',  labelAr: 'الحوكمة',     icon: 'enterprise', route: '/governance' },
+    audit:       { labelEn: 'Audit',       labelAr: 'التدقيق',     icon: 'search',     route: '/audit' },
+    evidence:    { labelEn: 'Evidence',    labelAr: 'الأدلة',      icon: 'folder',     route: '/evidence' },
+  }),
+};
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -35,5 +69,8 @@ export const appConfig: ApplicationConfig = {
     // Register Carbon icons used by the workspace shell + nav with IconService.
     // Without this `<svg ibmIcon="…">` renders empty + console errors.
     provideShellIcons(),
+    // Cockpit config — enables all workspace-home sections (KPIs, actions,
+    // frameworks, activity). Without this, NG0201 fires and all sections hide.
+    { provide: COCKPIT_CONFIG, useValue: DEFAULT_COCKPIT_CONFIG },
   ],
 };
