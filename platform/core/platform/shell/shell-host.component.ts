@@ -168,7 +168,11 @@ type ShellState = 'loading' | 'skeleton' | 'ready' | 'error' | 'error-blocking' 
     <main class="cds--content shell-content"
           [attr.dir]="config()?.dir"
           [attr.data-mobile]="isMobile() ? 'true' : 'false'">
-    @if (shellState() === 'loading' || shellState() === 'skeleton') {
+    @if (isWorkspaceHome()) {
+      <!-- Workspace home is self-contained — render router-outlet directly,
+           no shell resolver config needed. -->
+      <router-outlet />
+    } @else if (shellState() === 'loading' || shellState() === 'skeleton') {
       <app-module-state-preset preset="loading" />
     } @else if (shellState() === 'no-permission') {
       <app-module-state-preset preset="no-permission"

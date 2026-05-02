@@ -24,9 +24,9 @@ import { FOUNDATION_I18N, type FoundationI18n, NoopFoundationI18n } from '../por
 import { HubConnectionsStripComponent } from '@app/shared/hub-connections/hub-connections-strip.component';
 
 import { PageHeaderComponent, PageHeaderAction } from '@app/shared/components/layouts/page-header.component';
-import { FoundationKpiGridComponent } from '../components/foundation-kpi-grid.component';
+import { KpiCardGridComponent } from '@app/shared/components/status-indicators/kpi-card-grid.component';
 import { RecentActivityTableComponent } from '@app/shared/components/messaging/recent-activity-table.component';
-import { FoundationEmptyStateStubComponent as EmptyStateComponent } from '../shared/foundation-shared-components';
+import { EmptyStateComponent } from '@app/shared/components/guided-interaction/feedback/empty-state.component';
 import { WorkspaceIgniteCardComponent } from './workspace-ignite-card.component';
 import { ModuleGridComponent } from '@app/shared/components/module-chrome/module-grid.component';
 import { KpiCardVM, HealthAlertVM, ActivityRowVM } from '@app/shared/models/module-overview.vm';
@@ -130,7 +130,7 @@ function asArray(value: unknown): Record<string, unknown>[] {
         ModalModule,        // carbon_key: 'modal'
         IconModule,         // carbon_key: 'icon'
         ProgressBarModule,  // carbon_key: 'progress-bar'
-        PageHeaderComponent, FoundationKpiGridComponent,
+        PageHeaderComponent, KpiCardGridComponent,
         RecentActivityTableComponent, EmptyStateComponent,
         WorkspaceIgniteCardComponent, AppDatePipe,
         ModuleGridComponent,
