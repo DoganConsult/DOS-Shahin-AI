@@ -1,0 +1,4 @@
+
+> @shahin-grc/shared-risk-types@1.0.0 build /root/DOS-AIO/packages/shared-risk-types
+> tsc -p tsconfig.build.json
+

@@ -1,0 +1,10 @@
+import type { Response } from 'express';
+import type { AuthenticatedRequest } from '@dos/types';
+export declare function getModuleConfig(req: AuthenticatedRequest, res: Response): Promise<void>;
+export declare function updateModuleConfig(req: AuthenticatedRequest, res: Response): Promise<void>;
+export declare function reseedModule(req: AuthenticatedRequest, res: Response): Promise<void>;
+export declare function getModuleHealth(req: AuthenticatedRequest, res: Response): Promise<void>;
+export declare function getDashboardAnalytics(req: AuthenticatedRequest, res: Response): Promise<void>;
+export declare function getWidgetHealth(req: AuthenticatedRequest, res: Response): Promise<void>;
+export declare function reindexModule(req: AuthenticatedRequest, res: Response): Promise<void>;
+export declare function backfillModule(req: AuthenticatedRequest, res: Response): Promise<void>;

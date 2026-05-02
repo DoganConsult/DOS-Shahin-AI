@@ -1,0 +1,116 @@
+{
+  "generatedAt": "2026-04-30T08:11:00Z",
+  "censusSource": "platform/docs/ui/ui-component-census.json",
+  "censusCommit": "e71abdeb",
+  "executiveSummary": {
+    "totalUiArtifacts": 2140,
+    "components": 2095,
+    "directives": 32,
+    "pipes": 13,
+    "routedPages": 1262,
+    "legacyDuplicate": 112,
+    "domainWidget": 14,
+    "orphanDead": 782,
+    "thirdPartyWrapper": 552,
+    "productThemeUi": 23,
+    "coreSharedUi": 12,
+    "unknownReview": 645,
+    "rawCssAttached": 919,
+    "usingUiSystem": 2,
+    "usingPrimeNg": 746,
+    "usingEcharts": 137,
+    "usingD3": 19,
+    "mobileAware": 568,
+    "rtlAware": 1002
+  },
+  "doctrine": "The estate is not to be rebuilt from scratch. The estate will be migrated by priority and classification.",
+  "p0": [
+    { "name": "ShellRendererComponent", "path": "products/shahin-ai/app/src/app/blueprint/core/platform/shell/shell-renderer.component.ts", "target": "DosAppShell + DosWorkspaceHeader + DosDesktopSidebar + DosMobileBottomNav", "risk": "medium" },
+    { "name": "AppShellComponent", "path": "products/shahin-ai/website/src/layout/app-shell.component.ts", "target": "DosAppShell", "risk": "low" },
+    { "name": "AppSidebarComponent", "path": "products/shahin-ai/website/src/layout/app-sidebar.component.ts", "target": "DosDesktopSidebar", "risk": "low" },
+    { "name": "SidebarComponent", "path": "products/shahin-ai/website/src/app/assets/shared/layout/sidebar.component.ts", "target": "DosDesktopSidebar", "risk": "low" },
+    { "name": "IntelligenceSidebarContainerComponent", "path": "products/shahin-ai/app/src/app/blueprint/features/onboarding-os/pages/containers/intelligence-sidebar-container.component.ts", "target": "DosDesktopSidebar (slot)", "risk": "medium" },
+    { "name": "WorkspaceIgniteCardComponent", "path": "products/shahin-ai/app/src/app/blueprint/pages/workspace-home/workspace-ignite-card.component.ts", "target": "DosServiceCard", "risk": "low" },
+    { "name": "ModuleMastheadComponent (website)", "path": "products/shahin-ai/website/src/app/assets/shared/components/module-chrome/module-display/module-masthead.component.ts", "target": "DosPageHeader", "risk": "low" },
+    { "name": "AgrcosDrawerComponent", "path": "products/shahin-ai/website/src/app/assets/shared/agrc-os-drawer/agrc-os-drawer.component.ts", "target": "DosMobileDrawer", "risk": "low" },
+    { "name": "EntityDetailDrawerComponent", "path": "products/shahin-ai/website/src/app/assets/shared/components/entity/entity-detail-drawer.component.ts", "target": "DosMobileDrawer / DosBottomSheet", "risk": "low" },
+    { "name": "GrcDetailDrawerComponent", "path": "products/shahin-ai/website/src/app/assets/shared/components/entity/grc-detail-drawer.component.ts", "target": "DosMobileDrawer / DosBottomSheet", "risk": "low" },
+    { "name": "DomainDetailDrawerComponent", "path": "modules/compliance/ui/features/compliance/drawers/domain-detail-drawer.component.ts", "target": "DosMobileDrawer", "risk": "low" },
+    { "name": "FrameworkDetailDrawerComponent", "path": "modules/compliance/ui/features/compliance/drawers/framework-detail-drawer.component.ts", "target": "DosMobileDrawer", "risk": "low" },
+    { "name": "GapDetailDrawerComponent", "path": "modules/compliance/ui/features/compliance/drawers/gap-detail-drawer.component.ts", "target": "DosMobileDrawer", "risk": "low" },
+    { "name": "ObligationDetailDrawerComponent", "path": "modules/compliance/ui/features/compliance/drawers/obligation-detail-drawer.component.ts", "target": "DosMobileDrawer", "risk": "low" },
+    { "name": "AiAuditDetailDrawerComponent", "path": "products/shahin-ai/app/src/app/blueprint/features/ai-governance/drawers/ai-audit-detail-drawer.component.ts", "target": "DosMobileDrawer / DosBottomSheet", "risk": "low" },
+    { "name": "EvidenceDetailDrawerComponent", "path": "products/shahin-ai/app/src/app/blueprint/features/evidence/pages/evidence/components/evidence-detail-drawer.component.ts", "target": "DosMobileDrawer", "risk": "low" },
+    { "name": "ConnectorDetailDrawerComponent", "path": "products/shahin-ai/app/src/app/blueprint/features/integrations/pages/connector-manager/components/connector-detail-drawer.component.ts", "target": "DosMobileDrawer", "risk": "low" },
+    { "name": "VendorDetailDrawerComponent", "path": "products/shahin-ai/app/src/app/blueprint/features/vendor/pages/vendor-detail-drawer.component.ts", "target": "DosMobileDrawer", "risk": "low" }
+  ],
+  "p1": [
+    { "name": "FoundationOrgDialogComponent", "path": "platform/foundation/ui/components/foundation-org-dialog.component.ts", "target": "DosBottomSheet + DosPageHeader" },
+    { "name": "FoundationUsersDialogsComponent", "path": "platform/foundation/ui/components/foundation-users-dialogs.component.ts", "target": "DosBottomSheet + DosPageHeader" },
+    { "name": "FoundationLifecycleTimelineComponent", "path": "platform/foundation/ui/pages/foundation-lifecycle-timeline.component.ts", "target": "DosResponsiveGrid + DosMetricCard (chrome only); domain timeline stays module-owned" },
+    { "name": "SetupWizardPageComponent", "path": "platform/foundation/ui/pages/setup-wizard/setup-wizard.component.ts", "target": "DosPageHeader + future DosStepper" }
+  ],
+  "domainWidgets": {
+    "count": 14,
+    "registered": 10,
+    "unregistered": 4,
+    "registryGapKeys": ["Audit.FindingsHeatmap", "Analytics.RegulatorHeatmap", "Qiyas.MaturityHeatmap", "Analytics.ConfidenceHeatmap"],
+    "consolidationCandidates": ["Risk.RiskHeatmap (3 variants)", "Compliance.ControlMatrix (heatmap variant)"]
+  },
+  "orphanGroups": [
+    { "group": "products/shahin-ai", "count": 649, "action": "re-run census with route-loader awareness; do not quarantine yet" },
+    { "group": "modules/foundation", "count": 50, "action": "first quarantine batch (≤10 oldest, no inbound import) → _archive/ui-orphans-batch-1/" },
+    { "group": "modules/compliance", "count": 32, "action": "defer to compliance vertical" },
+    { "group": "modules/workflow", "count": 18, "action": "defer to workflow vertical" },
+    { "group": "platform/foundation", "count": 16, "action": "re-census with route awareness; likely false positives" },
+    { "group": "platform/ui-system/dos-ui-system", "count": 9, "action": "scanner barrel-aware fix; expected to flip to CORE_SHARED_UI" },
+    { "group": "platform/ai", "count": 6, "action": "defer to AI wave" },
+    { "group": "modules/analytics", "count": 1, "action": "defer" },
+    { "group": "platform/dauth", "count": 1, "action": "defer" }
+  ],
+  "thirdPartyWrappers": {
+    "primeNg": { "count": 746, "decision": "keep + lazy-load; do not replace globally" },
+    "echarts": { "count": 137, "decision": "keep + lazy-load; canonicalise per domain" },
+    "d3": { "count": 19, "decision": "replace where ECharts already covers it; keep for graph-only widgets" },
+    "other": { "count": 50, "decision": "keep" }
+  },
+  "rawCssGroups": [
+    { "group": "products/shahin-ai", "count": 717, "action": "tokenise; baseline-ratchet" },
+    { "group": "modules/compliance", "count": 90, "action": "defer to compliance vertical" },
+    { "group": "platform/foundation", "count": 41, "action": "Foundation Wave B + dialogs migration" },
+    { "group": "modules/foundation", "count": 35, "action": "likely orphan; quarantine first" },
+    { "group": "modules/workflow", "count": 32, "action": "defer to workflow vertical" },
+    { "group": "platform/{dauth,dnoc,dos,dsoc}", "count": 4, "action": "defer" }
+  ],
+  "registryGaps": {
+    "coreSeeded": 16,
+    "domainSeeded": 10,
+    "domainGapsToAdd": 4,
+    "deferredCoreCapabilities": ["Stepper", "Breadcrumb (currently a slot in PageHeader)", "DataFilterBar"],
+    "registeredButUnused": ["AIWorkbenchPanel", "Agent.SquadTimeline"]
+  },
+  "waves": [
+    { "id": "A", "title": "Finish active workspace visual proof", "scope": "Capture 390/430/768/1440 screenshots of ShellHost + Foundation overview", "rollback": "n/a (capture-only)" },
+    { "id": "B", "title": "Foundation overview complete adoption", "scope": "AdaptiveCommandBar / StatusBanner / EmptyState / LoadingState slots", "rollback": "single commit revert" },
+    { "id": "C", "title": "Register 14 domain widgets in Dynamic UI", "scope": "Add 4 registry entries; consolidate 3 risk heatmap variants; activate runtime allowlist gate", "rollback": "registry flag toggle" },
+    { "id": "D", "title": "Migrate top 25 legacy duplicate shared UI components", "scope": "P0 #1-#18 + P1 #1-#4 in three commits", "rollback": "per-commit revert" },
+    { "id": "E", "title": "Quarantine highest-confidence orphan/dead components", "scope": "first 10 modules/foundation/** orphans → _archive/ui-orphans-batch-1/", "rollback": "git mv back" },
+    { "id": "F", "title": "Landing performance cleanup for D3/ECharts", "scope": "lazy-load enforcement; consolidate risk heatmap", "rollback": "single commit revert" },
+    { "id": "G", "title": "Raw CSS ratchet tightening", "scope": "RATCHET mode for new files only", "rollback": "env flag flip" }
+  ],
+  "doNotDo": [
+    "move 700 components blindly",
+    "delete ORPHAN_DEAD files without proof",
+    "refactor all CSS in one pass",
+    "migrate Risk/Compliance verticals yet",
+    "rewrite Dynamic UI",
+    "replace PrimeNG globally",
+    "touch backend / DB / migrations"
+  ],
+  "validation": {
+    "uiContractsBuild": "PASS",
+    "uiOsGuards": "5/5 PASS (BASELINE_RATCHET)",
+    "dbChanges": "NONE",
+    "backendChanges": "NONE"
+  }
+}

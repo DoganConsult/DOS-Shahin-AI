@@ -1,0 +1,4 @@
+
+> @dos/compliance-controls-service@0.1.0 build /root/DOS-AIO/services/compliance-controls-service
+> tsc -p tsconfig.json
+

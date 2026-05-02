@@ -1,0 +1,845 @@
+/* ============================================
+   CANONICAL DESIGN-TOKEN SoT — DO NOT DUPLICATE.
+   Path: products/shahin-ai/app/src/app/blueprint/styles/grc-tokens.css
+   All consumers must @import this file directly. No parallel TS/JS token store.
+   Shahin GRC Advanced — Carbon Design Tokens
+   IBM Carbon Design System — 4 themes.
+   Aligned with opt/shahin-grc design-tokens.
+   ============================================ */
+
+/* ── Dogan-OS Shell & AI Tokens (all themes) ── */
+:root {
+  /* ── Primitive RGB tuples (for rgba(var(--token), opacity) patterns) ── */
+  --color-black-rgb: 0, 0, 0;
+  --color-white-rgb: 255, 255, 255;
+  /* IBM Blue 60 — matches --primary in :root and [data-theme="white"/"gray-10"] */
+  --primary-rgb: 15, 98, 254;
+  /* Semantic color RGB companions */
+  --success-rgb: 36, 161, 72;
+  --warning-rgb: 241, 194, 27;
+  --danger-rgb: 218, 30, 40;
+  /* Extended palette RGB tokens */
+  --module-accent-yellow-rgb: 234, 179, 8;
+  --color-sky-300-rgb: 56, 189, 248;
+  --color-blue-40-rgb: 69, 137, 255;
+  --color-blue-300-rgb: 137, 180, 250;
+  --color-blue-600-rgb: 37, 99, 235;
+  --color-red-600-rgb: 220, 38, 38;
+  --color-amber-400-rgb: 251, 191, 36;
+  --color-amber-600-rgb: 217, 119, 6;
+  --color-green-300-rgb: 166, 227, 161;
+  --color-green-600-rgb: 22, 163, 74;
+  --color-orange-600-rgb: 234, 88, 12;
+  --color-pink-300-rgb: 243, 139, 168;
+  --color-violet-600-rgb: 124, 58, 237;
+  --color-purple-600-rgb: 147, 51, 234;
+  --color-gray-400-rgb: 156, 163, 175;
+  --color-gray-carbon-rgb: 198, 198, 198;
+  --color-gray-600-rgb: 111, 111, 111;
+  /* Neutral grays */
+  --color-gray-neutral-rgb: 200, 200, 200;
+  --color-gray-light-rgb: 180, 180, 180;
+  --color-gray-500-rgb: 108, 112, 134;
+  --color-slate-400-rgb: 148, 163, 184;
+  /* Dark navy */
+  --color-slate-800-rgb: 30, 41, 59;
+  --color-navy-dark-rgb: 4, 18, 37;
+  --color-navy-deep-rgb: 10, 22, 40;
+  --color-navy-mid-rgb: 6, 13, 26;
+  --color-blue-800-rgb: 30, 64, 175;
+  --color-ibm-text-rgb: 22, 22, 22;
+  --color-ibm-gray-60-rgb: 141, 141, 141;
+  --color-ibm-gray-70-rgb: 57, 57, 57;
+  --color-ibm-gray-80-rgb: 38, 38, 38;
+  --color-deep-blue-rgb: 3, 105, 161;
+  --color-blue-medium-rgb: 14, 116, 210;
+  --color-violet-500-rgb: 79, 70, 229;
+  --color-green-400-rgb: 74, 222, 128;
+  --color-green-500-rgb: 52, 211, 153;
+  --color-green-emerald-rgb: 5, 150, 105;
+  --color-amber-700-rgb: 202, 138, 4;
+  --color-orange-mid-rgb: 255, 140, 0;
+  --color-orange-risk-rgb: 255, 131, 43;
+  --color-peach-rgb: 250, 179, 135;
+  --color-gold-rgb: 200, 169, 110;
+  --color-ibm-purple-rgb: 105, 41, 196;
+  --color-catppuccin-blue-rgb: 116, 199, 236;
+  --color-catppuccin-subtext-rgb: 108, 112, 134;
+  --color-catppuccin-peach-light-rgb: 249, 226, 175;
+  --color-catppuccin-red-light-rgb: 243, 139, 168;
+  --color-catppuccin-green-light-rgb: 166, 227, 161;
+  --color-catppuccin-mauve-light-rgb: 203, 166, 247;
+  /* Light tint backgrounds */
+  --color-red-50-rgb: 254, 242, 242;
+  --color-red-100-rgb: 254, 226, 226;
+  --color-red-200-rgb: 254, 202, 202;
+  --color-green-50-rgb: 220, 252, 231;
+  --color-violet-50-rgb: 250, 245, 255;
+  --color-violet-100-rgb: 237, 233, 254;
+  --color-violet-200-rgb: 221, 214, 254;
+  --color-amber-50-rgb: 255, 251, 235;
+  --color-amber-100-rgb: 254, 243, 199;
+  --color-amber-200-rgb: 253, 230, 138;
+  --color-amber-300-rgb: 254, 249, 195;
+  --color-yellow-100-rgb: 254, 240, 138;
+  --color-orange-50-rgb: 255, 247, 237;
+  --color-orange-100-rgb: 254, 215, 170;
+  --color-blue-50-rgb: 239, 246, 255;
+  --color-blue-100-rgb: 219, 234, 254;
+  --color-blue-200-rgb: 186, 230, 253;
+  --color-sky-50-rgb: 240, 249, 255;
+  --color-slate-50-rgb: 248, 250, 252;
+  --color-slate-100-rgb: 241, 245, 249;
+  --color-slate-200-rgb: 226, 232, 240;
+  --color-yellow-50-rgb: 254, 252, 232;
+  --color-purple-100-rgb: 233, 213, 255;
+  --color-orange-200-rgb: 255, 237, 213;
+
+  --ai-confidence-high: #24a148;
+  --ai-confidence-high-bg: rgba(36, 161, 72, 0.08);
+  --ai-confidence-medium: #f1c21b;
+  --ai-confidence-medium-bg: rgba(241, 194, 27, 0.08);
+  --ai-confidence-low: #da1e28;
+  --ai-confidence-low-bg: rgba(218, 30, 40, 0.08);
+  --ai-confidence-unknown: #6f6f6f;
+  --ai-confidence-unknown-bg: rgba(111, 111, 111, 0.08);
+  --data-freshness-live: #24a148;
+  --data-freshness-live-bg: rgba(36, 161, 72, 0.08);
+  --data-freshness-recent: #0f62fe;
+  --data-freshness-recent-bg: rgba(15, 98, 254, 0.08);
+  --data-freshness-stale: #f1c21b;
+  --data-freshness-stale-bg: rgba(241, 194, 27, 0.08);
+  --data-freshness-expired: #da1e28;
+  --data-freshness-expired-bg: rgba(218, 30, 40, 0.08);
+  --shell-rail-width: 320px;
+  --shell-filter-width: 280px;
+  --shell-drawer-width: 480px;
+  --shell-masthead-height: 88px;
+  --shell-action-bar-height: 48px;
+  --shell-footer-height: 40px;
+  --deploy-saas: #0f62fe;
+  --deploy-onprem: #198038;
+  --deploy-hybrid: #8a3ffc;
+  --deploy-airgap: #6f6f6f;
+
+  --workflow-state-draft: #6f6f6f;
+  --workflow-state-draft-bg: rgba(111, 111, 111, 0.08);
+  --workflow-state-in-review: #0f62fe;
+  --workflow-state-in-review-bg: rgba(15, 98, 254, 0.08);
+  --workflow-state-approved: #24a148;
+  --workflow-state-approved-bg: rgba(36, 161, 72, 0.08);
+  --workflow-state-active: #24a148;
+  --workflow-state-active-bg: rgba(36, 161, 72, 0.08);
+  --workflow-state-rejected: #da1e28;
+  --workflow-state-rejected-bg: rgba(218, 30, 40, 0.08);
+  --workflow-state-suspended: #f1c21b;
+  --workflow-state-suspended-bg: rgba(241, 194, 27, 0.08);
+  --workflow-state-closed: #393939;
+  --workflow-state-closed-bg: rgba(57, 57, 57, 0.08);
+  --workflow-state-archived: #8d8d8d;
+  --workflow-state-archived-bg: rgba(141, 141, 141, 0.08);
+
+  --entity-health-healthy: #24a148;
+  --entity-health-healthy-bg: rgba(36, 161, 72, 0.08);
+  --entity-health-warning: #f1c21b;
+  --entity-health-warning-bg: rgba(241, 194, 27, 0.08);
+  --entity-health-critical: #da1e28;
+  --entity-health-critical-bg: rgba(218, 30, 40, 0.08);
+  --entity-health-unknown: #6f6f6f;
+  --entity-health-unknown-bg: rgba(111, 111, 111, 0.08);
+
+  --module-accent-red: #da1e28;
+  --module-accent-blue: #0f62fe;
+  --module-accent-indigo: #4f52b2;
+  --module-accent-teal: #009d9a;
+  --module-accent-purple: #8a3ffc;
+  --module-accent-orange: #eb6200;
+  --module-accent-amber: #f1c21b;
+  --module-accent-cyan: #00539a;
+  --module-accent-lime: #198038;
+  --module-accent-emerald: #24a148;
+  --module-accent-slate: #525252;
+  --module-accent-rose: #d12765;
+  --module-accent-green: #198038;
+  --module-accent-gray: #6f6f6f;
+  --module-accent-violet: #7c3aed;
+  --module-accent-sky: #0284c7;
+
+  --module-accent-red-rgb: 218, 30, 40;
+  --module-accent-blue-rgb: 15, 98, 254;
+  --module-accent-indigo-rgb: 79, 82, 178;
+  --module-accent-teal-rgb: 0, 157, 154;
+  --module-accent-purple-rgb: 138, 63, 252;
+  --module-accent-orange-rgb: 235, 98, 0;
+  --module-accent-amber-rgb: 241, 194, 27;
+  --module-accent-cyan-rgb: 0, 83, 154;
+  --module-accent-lime-rgb: 25, 128, 56;
+  --module-accent-emerald-rgb: 36, 161, 72;
+  --module-accent-slate-rgb: 82, 82, 82;
+  --module-accent-rose-rgb: 209, 39, 101;
+  --module-accent-green-rgb: 25, 128, 56;
+  --module-accent-gray-rgb: 111, 111, 111;
+  --module-accent-violet-rgb: 124, 58, 237;
+  --module-accent-sky-rgb: 2, 132, 199;
+
+  /* ── Workflow State Tokens ── */
+  --workflow-state-draft: #64748b;
+  --workflow-state-draft-bg: #f1f5f9;
+  --workflow-state-pending: #f59e0b;
+  --workflow-state-pending-bg: #fffbeb;
+  --workflow-state-in-progress: #3b82f6;
+  --workflow-state-in-progress-bg: #eff6ff;
+  --workflow-state-in-review: #8b5cf6;
+  --workflow-state-in-review-bg: #f5f3ff;
+  --workflow-state-approved: #10b981;
+  --workflow-state-approved-bg: #ecfdf5;
+  --workflow-state-rejected: #ef4444;
+  --workflow-state-rejected-bg: #fef2f2;
+  --workflow-state-closed: #6b7280;
+  --workflow-state-closed-bg: #f3f4f6;
+  --workflow-state-escalated: #f97316;
+  --workflow-state-escalated-bg: #fff7ed;
+
+  /* ── Entity Health Tokens ── */
+  --entity-health-healthy: #10b981;
+  --entity-health-healthy-bg: #ecfdf5;
+  --entity-health-warning: #f59e0b;
+  --entity-health-warning-bg: #fffbeb;
+  --entity-health-critical: #ef4444;
+  --entity-health-critical-bg: #fef2f2;
+  --entity-health-degraded: #f97316;
+  --entity-health-degraded-bg: #fff7ed;
+  --entity-health-unknown: #9ca3af;
+  --entity-health-unknown-bg: #f9fafb;
+  --entity-health-maintenance: #6366f1;
+  --entity-health-maintenance-bg: #eef2ff;
+
+  /* ── Module Accent Tokens ── */
+  --module-accent-red: #ef4444;
+  --module-accent-red-rgb: 239, 68, 68;
+  --module-accent-blue: #3b82f6;
+  --module-accent-blue-rgb: 59, 130, 246;
+  --module-accent-indigo: #6366f1;
+  --module-accent-indigo-rgb: 99, 102, 241;
+  --module-accent-teal: #14b8a6;
+  --module-accent-teal-rgb: 20, 184, 166;
+  --module-accent-purple: #a855f7;
+  --module-accent-purple-rgb: 168, 85, 247;
+  --module-accent-orange: #f97316;
+  --module-accent-orange-rgb: 249, 115, 22;
+  --module-accent-green: #22c55e;
+  --module-accent-green-rgb: 34, 197, 94;
+  --module-accent-amber: #f59e0b;
+  --module-accent-amber-rgb: 245, 158, 11;
+  --module-accent-rose: #f43f5e;
+  --module-accent-rose-rgb: 244, 63, 94;
+  --module-accent-cyan: #06b6d4;
+  --module-accent-cyan-rgb: 6, 182, 212;
+  --module-accent-sky: #0ea5e9;
+  --module-accent-sky-rgb: 14, 165, 233;
+  --module-accent-violet: #8b5cf6;
+  --module-accent-violet-rgb: 139, 92, 246;
+  --module-accent-emerald: #10b981;
+  --module-accent-emerald-rgb: 16, 185, 129;
+  --module-accent-lime: #84cc16;
+  --module-accent-lime-rgb: 132, 204, 22;
+  --module-accent-fuchsia: #d946ef;
+  --module-accent-fuchsia-rgb: 217, 70, 239;
+  --module-accent-pink: #ec4899;
+  --module-accent-pink-rgb: 236, 72, 153;
+  --module-accent-slate: #64748b;
+  --module-accent-slate-rgb: 100, 116, 139;
+  --module-accent-gray: #6b7280;
+  --module-accent-gray-rgb: 107, 114, 128;
+}
+
+/* ── Carbon White (default) ── */
+:root,
+[data-theme="white"] {
+  /* Surfaces — Carbon White / Gray 10 ── */
+  --surface: #ffffff;
+  --surface-ice: #f4f4f4;
+  --surface-sunken: #e8e8e8;
+  --bg-0: #ffffff;
+  --bg-1: #f4f4f4;
+  --bg-2: #e8e8e8;
+
+  --border: #e0e0e0;
+  --border-subtle: #e0e0e0;
+
+  /* Text — Carbon Gray 100/70/60 ── */
+  --text-heading: #161616;
+  --text-body: #525252;
+  --text-muted: #6f6f6f;
+  --text-0: #161616;
+  --text-1: #525252;
+  --text-2: #6f6f6f;
+
+  /* Primary — IBM Blue 60 ── */
+  --primary: #0f62fe;
+  --info: #0f62fe;
+
+  /* Semantic — Carbon Green 60, Yellow, Red 60 ── */
+  --success: #24a148;
+  --warning: #f1c21b;
+  --danger: #da1e28;
+  --error: #da1e28;
+
+  /* Aliases for PrimeNG / Tailwind token compat ── */
+  --surface-card: var(--surface);
+  --surface-200: #e0e0e0;
+  --surface-100: var(--surface-ice);
+  --text-color-secondary: var(--text-muted);
+  --text-secondary: var(--text-muted);
+  --yellow-600: var(--warning);
+  --blue-600: var(--primary);
+  --blue-100: #d0e2ff;
+  --blue-50: #edf5ff;
+  --green-600: var(--success);
+  --red-600: var(--error);
+
+  /* GRC semantics (Carbon-aligned) ── */
+  --risk-low: #24a148;
+  --risk-medium: #f1c21b;
+  --risk-high: #ff832b;
+  --risk-critical: #da1e28;
+
+  --control-pass: #24a148;
+  --control-fail: #da1e28;
+
+  --evidence-fresh: #24a148;
+  --evidence-stale: #f1c21b;
+  --evidence-missing: #da1e28;
+
+  /* ── Lifecycle states ── */
+  --lifecycle-identified: #64748b;
+  --lifecycle-triaged: #0ea5e9;
+  --lifecycle-in-progress: #8b5cf6;
+  --lifecycle-remediated: #f59e0b;
+  --lifecycle-verified: #10b981;
+  --lifecycle-closed: #22c55e;
+  --lifecycle-archived: #16a34a;
+
+  /* ── Platform modes ── */
+  --mode-human: #10b981;
+  --mode-hybrid: #3b82f6;
+  --mode-shadow: #f59e0b;
+  --mode-autonomous: #8b5cf6;
+
+  /* ── Role colors ── */
+  --role-executive: #7c3aed;
+  --role-compliance: #0284c7;
+  --role-risk: #d97706;
+  --role-auditor: #059669;
+  --role-control-owner: #7c3aed;
+  --role-evidence-custodian: #0891b2;
+  --role-analyst: #6366f1;
+
+  /* ── Hub colors ── */
+  --hub-governance: #6366f1;
+  --hub-risk: #ef4444;
+  --hub-compliance: #0ea5e9;
+  --hub-evidence: #8b5cf6;
+  --hub-assessment: #f59e0b;
+  --hub-vendor: #10b981;
+  --hub-bcp: #f97316;
+  --hub-identity: #6366f1;
+  --hub-integration: #14b8a6;
+
+  /* ── Severity (aliased to risk tokens) ── */
+  --severity-critical: var(--risk-critical);
+  --severity-high: var(--risk-high);
+  --severity-medium: var(--risk-medium);
+  --severity-low: var(--risk-low);
+  --severity-info: var(--info);
+
+  /* ── Opacity ── */
+  --opacity-hover: 0.08;
+  --opacity-selected: 0.12;
+  --opacity-disabled: 0.5;
+  --opacity-overlay: 0.4;
+  --opacity-overlay-heavy: 0.6;
+
+  /* ── Form field ── */
+  --field-gap: 8px;
+  --field-margin: 16px;
+  --field-error-gap: 4px;
+  --field-label-size: 0.875rem;
+  --field-label-weight: 500;
+  --field-helper-size: 0.75rem;
+  --field-required-color: var(--error);
+}
+
+/* ── Carbon Gray 10 (light, softer) ── */
+[data-theme="gray-10"] {
+  --surface: #f4f4f4;
+  --surface-ice: #ffffff;
+  --surface-sunken: #e8e8e8;
+  --bg-0: #f4f4f4;
+  --bg-1: #ffffff;
+  --bg-2: #e8e8e8;
+
+  --border: #e0e0e0;
+  --border-subtle: #e0e0e0;
+
+  --text-heading: #161616;
+  --text-body: #525252;
+  --text-muted: #6f6f6f;
+  --text-0: #161616;
+  --text-1: #525252;
+  --text-2: #6f6f6f;
+
+  --primary: #0f62fe;
+  --info: #0f62fe;
+
+  --success: #24a148;
+  --warning: #f1c21b;
+  --danger: #da1e28;
+  --error: #da1e28;
+
+  --risk-low: #24a148;
+  --risk-medium: #f1c21b;
+  --risk-high: #ff832b;
+  --risk-critical: #da1e28;
+
+  --control-pass: #24a148;
+  --control-fail: #da1e28;
+
+  --evidence-fresh: #24a148;
+  --evidence-stale: #f1c21b;
+  --evidence-missing: #da1e28;
+
+  --surface-card: var(--surface);
+  --surface-200: #e0e0e0;
+  --surface-100: var(--surface-ice);
+  --text-color-secondary: var(--text-muted);
+  --text-secondary: var(--text-muted);
+  --yellow-600: var(--warning);
+  --blue-600: var(--primary);
+  --blue-100: #d0e2ff;
+  --blue-50: #edf5ff;
+  --green-600: var(--success);
+  --red-600: var(--error);
+
+  /* ── Lifecycle states ── */
+  --lifecycle-identified: #64748b;
+  --lifecycle-triaged: #0ea5e9;
+  --lifecycle-in-progress: #8b5cf6;
+  --lifecycle-remediated: #f59e0b;
+  --lifecycle-verified: #10b981;
+  --lifecycle-closed: #22c55e;
+  --lifecycle-archived: #16a34a;
+
+  /* ── Platform modes ── */
+  --mode-human: #10b981;
+  --mode-hybrid: #3b82f6;
+  --mode-shadow: #f59e0b;
+  --mode-autonomous: #8b5cf6;
+
+  /* ── Role colors ── */
+  --role-executive: #7c3aed;
+  --role-compliance: #0284c7;
+  --role-risk: #d97706;
+  --role-auditor: #059669;
+  --role-control-owner: #7c3aed;
+  --role-evidence-custodian: #0891b2;
+  --role-analyst: #6366f1;
+
+  /* ── Hub colors ── */
+  --hub-governance: #6366f1;
+  --hub-risk: #ef4444;
+  --hub-compliance: #0ea5e9;
+  --hub-evidence: #8b5cf6;
+  --hub-assessment: #f59e0b;
+  --hub-vendor: #10b981;
+  --hub-bcp: #f97316;
+  --hub-identity: #6366f1;
+  --hub-integration: #14b8a6;
+
+  /* ── Severity (aliased to risk tokens) ── */
+  --severity-critical: var(--risk-critical);
+  --severity-high: var(--risk-high);
+  --severity-medium: var(--risk-medium);
+  --severity-low: var(--risk-low);
+  --severity-info: var(--info);
+
+  /* ── Opacity ── */
+  --opacity-hover: 0.08;
+  --opacity-selected: 0.12;
+  --opacity-disabled: 0.5;
+  --opacity-overlay: 0.4;
+  --opacity-overlay-heavy: 0.6;
+
+  /* ── Form field ── */
+  --field-gap: 8px;
+  --field-margin: 16px;
+  --field-error-gap: 4px;
+  --field-label-size: 0.875rem;
+  --field-label-weight: 500;
+  --field-helper-size: 0.75rem;
+  --field-required-color: var(--error);
+}
+
+/* ── Carbon Gray 90 (dark, softer) ── */
+[data-theme="gray-90"] {
+  --surface: #262626;
+  --surface-ice: #393939;
+  --surface-sunken: #161616;
+  --bg-0: #262626;
+  --bg-1: #393939;
+  --bg-2: #161616;
+
+  --border: #525252;
+  --border-subtle: #525252;
+
+  --text-heading: #f4f4f4;
+  --text-body: #c6c6c6;
+  --text-muted: #8d8d8d;
+  --text-0: #f4f4f4;
+  --text-1: #c6c6c6;
+  --text-2: #8d8d8d;
+
+  --primary: #78a9ff;
+  --info: #78a9ff;
+
+  --success: #42be65;
+  --warning: #f1c21b;
+  --danger: #ff8389;
+  --error: #ff8389;
+
+  --risk-low: #42be65;
+  --risk-medium: #f1c21b;
+  --risk-high: #ff832b;
+  --risk-critical: #ff8389;
+
+  --control-pass: #42be65;
+  --control-fail: #ff8389;
+
+  --evidence-fresh: #42be65;
+  --evidence-stale: #f1c21b;
+  --evidence-missing: #ff8389;
+
+  --surface-card: var(--surface);
+  --surface-200: #525252;
+  --surface-100: var(--surface-ice);
+  --text-color-secondary: var(--text-muted);
+  --text-secondary: var(--text-muted);
+  --yellow-600: var(--warning);
+  --blue-600: var(--primary);
+  --blue-100: #002d9c;
+  --blue-50: #001d6c;
+  --green-600: var(--success);
+  --red-600: var(--error);
+
+  /* ── Lifecycle states (dark mode — brighter) ── */
+  --lifecycle-identified: #94a3b8;
+  --lifecycle-triaged: #38bdf8;
+  --lifecycle-in-progress: #a78bfa;
+  --lifecycle-remediated: #fbbf24;
+  --lifecycle-verified: #34d399;
+  --lifecycle-closed: #4ade80;
+  --lifecycle-archived: #22c55e;
+
+  /* ── Platform modes (dark mode) ── */
+  --mode-human: #34d399;
+  --mode-hybrid: #60a5fa;
+  --mode-shadow: #fbbf24;
+  --mode-autonomous: #a78bfa;
+
+  /* ── Role colors (dark mode) ── */
+  --role-executive: #a78bfa;
+  --role-compliance: #38bdf8;
+  --role-risk: #fbbf24;
+  --role-auditor: #34d399;
+  --role-control-owner: #a78bfa;
+  --role-evidence-custodian: #22d3ee;
+  --role-analyst: #818cf8;
+
+  /* ── Hub colors (dark mode) ── */
+  --hub-governance: #818cf8;
+  --hub-risk: #f87171;
+  --hub-compliance: #38bdf8;
+  --hub-evidence: #a78bfa;
+  --hub-assessment: #fbbf24;
+  --hub-vendor: #34d399;
+  --hub-bcp: #fb923c;
+  --hub-identity: #818cf8;
+  --hub-integration: #2dd4bf;
+
+  /* ── Severity (aliased) ── */
+  --severity-critical: var(--risk-critical);
+  --severity-high: var(--risk-high);
+  --severity-medium: var(--risk-medium);
+  --severity-low: var(--risk-low);
+  --severity-info: var(--info);
+
+  /* ── Opacity ── */
+  --opacity-hover: 0.12;
+  --opacity-selected: 0.16;
+  --opacity-disabled: 0.5;
+  --opacity-overlay: 0.5;
+  --opacity-overlay-heavy: 0.7;
+
+  /* ── Form field ── */
+  --field-gap: 8px;
+  --field-margin: 16px;
+  --field-error-gap: 4px;
+  --field-label-size: 0.875rem;
+  --field-label-weight: 500;
+  --field-helper-size: 0.75rem;
+  --field-required-color: var(--error);
+}
+
+/* ── Carbon Gray 100 (dark, max contrast) ── */
+[data-theme="gray-100"] {
+  --surface: #161616;
+  --surface-ice: #262626;
+  --surface-sunken: #0c0c0c;
+  --bg-0: #161616;
+  --bg-1: #262626;
+  --bg-2: #0c0c0c;
+
+  --border: #525252;
+  --border-subtle: #525252;
+
+  --text-heading: #f4f4f4;
+  --text-body: #c6c6c6;
+  --text-muted: #8d8d8d;
+  --text-0: #f4f4f4;
+  --text-1: #c6c6c6;
+  --text-2: #8d8d8d;
+
+  --primary: #78a9ff;
+  --info: #78a9ff;
+
+  --success: #42be65;
+  --warning: #f1c21b;
+  --danger: #ff8389;
+  --error: #ff8389;
+
+  --risk-low: #42be65;
+  --risk-medium: #f1c21b;
+  --risk-high: #ff832b;
+  --risk-critical: #ff8389;
+
+  --control-pass: #42be65;
+  --control-fail: #ff8389;
+
+  --evidence-fresh: #42be65;
+  --evidence-stale: #f1c21b;
+  --evidence-missing: #ff8389;
+
+  --surface-card: var(--surface);
+  --surface-200: #525252;
+  --surface-100: var(--surface-ice);
+  --text-color-secondary: var(--text-muted);
+  --text-secondary: var(--text-muted);
+  --yellow-600: var(--warning);
+  --blue-600: var(--primary);
+  --blue-100: #002d9c;
+  --blue-50: #001d6c;
+  --green-600: var(--success);
+  --red-600: var(--error);
+
+  /* ── Lifecycle states (dark mode — brighter) ── */
+  --lifecycle-identified: #94a3b8;
+  --lifecycle-triaged: #38bdf8;
+  --lifecycle-in-progress: #a78bfa;
+  --lifecycle-remediated: #fbbf24;
+  --lifecycle-verified: #34d399;
+  --lifecycle-closed: #4ade80;
+  --lifecycle-archived: #22c55e;
+
+  /* ── Platform modes (dark mode) ── */
+  --mode-human: #34d399;
+  --mode-hybrid: #60a5fa;
+  --mode-shadow: #fbbf24;
+  --mode-autonomous: #a78bfa;
+
+  /* ── Role colors (dark mode) ── */
+  --role-executive: #a78bfa;
+  --role-compliance: #38bdf8;
+  --role-risk: #fbbf24;
+  --role-auditor: #34d399;
+  --role-control-owner: #a78bfa;
+  --role-evidence-custodian: #22d3ee;
+  --role-analyst: #818cf8;
+
+  /* ── Hub colors (dark mode) ── */
+  --hub-governance: #818cf8;
+  --hub-risk: #f87171;
+  --hub-compliance: #38bdf8;
+  --hub-evidence: #a78bfa;
+  --hub-assessment: #fbbf24;
+  --hub-vendor: #34d399;
+  --hub-bcp: #fb923c;
+  --hub-identity: #818cf8;
+  --hub-integration: #2dd4bf;
+
+  /* ── Severity (aliased) ── */
+  --severity-critical: var(--risk-critical);
+  --severity-high: var(--risk-high);
+  --severity-medium: var(--risk-medium);
+  --severity-low: var(--risk-low);
+  --severity-info: var(--info);
+
+  /* ── Opacity ── */
+  --opacity-hover: 0.12;
+  --opacity-selected: 0.16;
+  --opacity-disabled: 0.5;
+  --opacity-overlay: 0.5;
+  --opacity-overlay-heavy: 0.7;
+
+  /* ── Form field ── */
+  --field-gap: 8px;
+  --field-margin: 16px;
+  --field-error-gap: 4px;
+  --field-label-size: 0.875rem;
+  --field-label-weight: 500;
+  --field-helper-size: 0.75rem;
+  --field-required-color: var(--error);
+}
+
+/* ── Onboarding AI OS Tokens ── */
+:root {
+  --onb-hero-gradient: linear-gradient(135deg, #0f62fe, #1e3a5f);
+  --onb-scene-bg: var(--glass-bg, rgba(255,255,255,0.82));
+  --onb-panel-bg: var(--surface-ice, #f4f4f4);
+  --onb-milestone-active: var(--primary, #0f62fe);
+  --onb-milestone-done: var(--success, #24a148);
+  --onb-ai-pulse: rgba(15, 98, 254, 0.15);
+  --onb-ai-glow: 0 0 24px rgba(15, 98, 254, 0.18);
+}
+
+/* ══════════════════════════════════════════════
+   PrimeNG Dark Theme Overrides — Carbon Gray 90/100
+   These seed PrimeNG's internal CSS custom properties
+   for dark themes. Kept here alongside token definitions
+   (migrated from primeng-overrides.css in Phase 1).
+   ══════════════════════════════════════════════ */
+
+[data-theme="gray-90"],
+[data-theme="gray-100"] {
+  --p-primary-color: var(--primary);
+  --p-primary-contrast-color: var(--text-on-primary);
+  --p-surface-0: var(--surface);
+  --p-surface-50: var(--surface-ice);
+  --p-surface-100: var(--bg-2);
+  --p-surface-200: var(--surface-200);
+  --p-text-color: var(--text-heading);
+  --p-text-muted-color: var(--text-muted);
+  --p-border-radius: var(--radius-md);
+}
+
+[data-theme="gray-90"] .p-datatable,
+[data-theme="gray-100"] .p-datatable { border-color: var(--border-subtle); }
+[data-theme="gray-90"] .p-datatable .p-datatable-thead > tr > th,
+[data-theme="gray-100"] .p-datatable .p-datatable-thead > tr > th {
+  background: var(--surface-ice); color: var(--text-heading); border-color: var(--border);
+}
+[data-theme="gray-90"] .p-datatable .p-datatable-tbody > tr > td,
+[data-theme="gray-100"] .p-datatable .p-datatable-tbody > tr > td {
+  background: var(--surface); color: var(--text-body); border-color: var(--border-subtle);
+}
+[data-theme="gray-90"] .p-datatable .p-datatable-tbody > tr:hover > td,
+[data-theme="gray-100"] .p-datatable .p-datatable-tbody > tr:hover > td { background: var(--surface-ice); }
+[data-theme="gray-90"] .p-datatable .p-paginator,
+[data-theme="gray-100"] .p-datatable .p-paginator { background: var(--surface-ice); border-color: var(--border-subtle); }
+
+[data-theme="gray-90"] .p-dialog,
+[data-theme="gray-100"] .p-dialog { background: var(--surface); color: var(--text-heading); }
+[data-theme="gray-90"] .p-dialog .p-dialog-header,
+[data-theme="gray-100"] .p-dialog .p-dialog-header {
+  background: var(--surface); color: var(--text-heading); border-color: var(--border-subtle);
+}
+[data-theme="gray-90"] .p-dialog .p-dialog-content,
+[data-theme="gray-100"] .p-dialog .p-dialog-content { background: var(--surface); color: var(--text-body); }
+
+[data-theme="gray-90"] .p-inputtext,
+[data-theme="gray-100"] .p-inputtext {
+  background: var(--surface-ice); color: var(--text-heading); border-color: var(--border);
+}
+[data-theme="gray-90"] .p-dropdown,
+[data-theme="gray-100"] .p-dropdown {
+  background: var(--surface-ice); color: var(--text-heading); border-color: var(--border);
+}
+[data-theme="gray-90"] .p-dropdown-panel,
+[data-theme="gray-100"] .p-dropdown-panel { background: var(--surface); border-color: var(--border); }
+[data-theme="gray-90"] .p-dropdown-items .p-dropdown-item,
+[data-theme="gray-100"] .p-dropdown-items .p-dropdown-item { color: var(--text-body); }
+[data-theme="gray-90"] .p-dropdown-items .p-dropdown-item:hover,
+[data-theme="gray-100"] .p-dropdown-items .p-dropdown-item:hover { background: var(--surface-ice); }
+
+[data-theme="gray-90"] .p-card,
+[data-theme="gray-100"] .p-card { background: var(--surface); color: var(--text-body); }
+
+[data-theme="gray-90"] .p-toast .p-toast-message,
+[data-theme="gray-100"] .p-toast .p-toast-message { background: var(--surface-ice); border-color: var(--border); }
+
+[data-theme="gray-90"] .p-menu,
+[data-theme="gray-90"] .p-menubar,
+[data-theme="gray-100"] .p-menu,
+[data-theme="gray-100"] .p-menubar { background: var(--surface); border-color: var(--border-subtle); }
+[data-theme="gray-90"] .p-menuitem-link,
+[data-theme="gray-100"] .p-menuitem-link { color: var(--text-body); }
+[data-theme="gray-90"] .p-menuitem-link:hover,
+[data-theme="gray-100"] .p-menuitem-link:hover { background: var(--surface-ice); color: var(--text-heading); }
+
+[data-theme="gray-90"] .p-tabview .p-tabview-nav,
+[data-theme="gray-100"] .p-tabview .p-tabview-nav { background: transparent; border-color: var(--border); }
+[data-theme="gray-90"] .p-tabview .p-tabview-panels,
+[data-theme="gray-100"] .p-tabview .p-tabview-panels { background: transparent; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   System Dark-Mode Opt-In (phase 4)
+   For users with prefers-color-scheme: dark and NO explicit [data-theme]
+   override: flip surface / text / border tokens only. Brand-color tokens
+   (--primary, --primary-dark, --primary-darker, --primary-light, --info)
+   are deliberately NOT remapped — the hero sky-blue gradient must render
+   identically in light and dark. Users who want a fully Carbon-themed dark
+   surface (with --primary remapped to Blue-40 #78a9ff) can still opt in
+   explicitly via [data-theme="gray-90"] or [data-theme="gray-100"]; those
+   selectors have higher specificity and override this @media block.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    /* surfaces flip — fall in line with gray-90 dark surfaces */
+    --surface: #262626;
+    --surface-ice: #393939;
+    --surface-sunken: #161616;
+    --bg-0: #262626;
+    --bg-1: #393939;
+    --bg-2: #161616;
+    --surface-card: var(--surface);
+    --surface-100: var(--surface-ice);
+    --surface-200: #525252;
+
+    /* text scales for contrast on dark surfaces */
+    --text-heading: #f4f4f4;
+    --text-body: #c6c6c6;
+    --text-muted: #8d8d8d;
+    --text-0: #f4f4f4;
+    --text-1: #c6c6c6;
+    --text-2: #8d8d8d;
+    --text-color-secondary: var(--text-muted);
+    --text-secondary: var(--text-muted);
+
+    /* borders */
+    --border: #525252;
+    --border-subtle: #525252;
+
+    /* status colours rebalanced for dark backgrounds */
+    --success: #42be65;
+    --warning: #f1c21b;
+    --danger: #ff8389;
+    --error: #ff8389;
+
+    /* brand-colour tokens deliberately NOT overridden:
+         --primary, --primary-dark, --primary-darker, --primary-light,
+         --primary-lighter, --primary-lightest, --info
+       The hero gradient and any --primary-driven brand surface keep
+       their light-theme sky-blue values. */
+  }
+}
+

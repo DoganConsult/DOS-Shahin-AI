@@ -1,0 +1,19 @@
+{
+  "name": "@dos/dos-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "DOS frontend package — Angular DI tokens + a Platform Registry Explorer component. Product shells embed this for operator-level tenant/module/product views.",
+  "type": "module",
+  "main": "index.ts",
+  "types": "index.ts",
+  "sideEffects": false,
+  "exports": {
+    ".": { "types": "./index.ts", "default": "./index.ts" },
+    "./ports": { "types": "./ports/index.ts", "default": "./ports/index.ts" }
+  },
+  "peerDependencies": {
+    "@angular/core": ">=17.0.0 <20.0.0",
+    "rxjs": ">=7.0.0"
+  },
+  "dependencies": { "@dos/ports": "workspace:*" }
+}

@@ -1,0 +1,27 @@
+{
+  "extends": "../../../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "src",
+    "strict": false,
+    "declaration": true,
+    "declarationMap": false,
+    "composite": false,
+    "incremental": false,
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@dos/dauth-shared": ["../shared/src/index.ts"],
+      "@dos/types": ["../../../../packages/dos-types/dist/index.d.ts"],
+      "@dos/types/*": ["../../../../packages/dos-types/dist/*"],
+      "@dos/contracts": ["../../../../packages/dos-contracts/dist/index.d.ts"],
+      "@dos/contracts/*": ["../../../../packages/dos-contracts/dist/*"],
+      "@dos/db": ["../../../../packages/dos-db/dist/index.d.ts"],
+      "@dos/db/*": ["../../../../packages/dos-db/dist/*"],
+      "@dos/platform-core": ["../../../../packages/dos-platform-core/dist/index"],
+      "@dos/platform-core/*": ["../../../../packages/dos-platform-core/dist/*"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"]
+}

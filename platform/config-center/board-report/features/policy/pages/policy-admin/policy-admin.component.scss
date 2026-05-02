@@ -1,0 +1,101 @@
+/* Policy Admin page styles -- uses CSS custom properties from grc-tokens.css */
+
+.policy-admin {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ------------------------------------------------------------------ */
+/* Tab toolbar (above table in Categories tab)                         */
+/* ------------------------------------------------------------------ */
+
+.tab-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+}
+
+/* ------------------------------------------------------------------ */
+/* Settings panel (used by tabs 2-4, 6)                                */
+/* ------------------------------------------------------------------ */
+
+.settings-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 640px;
+  padding: 8px 0;
+}
+
+.settings-actions {
+  padding-top: 8px;
+}
+
+/* ------------------------------------------------------------------ */
+/* Form fields                                                         */
+/* ------------------------------------------------------------------ */
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-label {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--text-body);
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+}
+
+.form-field--half {
+  flex: 1;
+}
+
+/* ------------------------------------------------------------------ */
+/* Dialog form layout                                                  */
+/* ------------------------------------------------------------------ */
+
+.dialog-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ------------------------------------------------------------------ */
+/* Action buttons in table cells                                       */
+/* ------------------------------------------------------------------ */
+
+.action-btns {
+  display: flex;
+  gap: 4px;
+}
+
+/* ------------------------------------------------------------------ */
+/* Override PrimeNG TabView for consistent spacing                     */
+/* ------------------------------------------------------------------ */
+
+:host .admin-tabs {
+  .p-tabview-panels {
+    padding: 20px 0 0;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Responsive                                                          */
+/* ------------------------------------------------------------------ */
+
+@media (max-width: 640px) {
+  .form-row {
+    flex-direction: column;
+  }
+
+  .settings-panel {
+    max-width: 100%;
+  }
+}

@@ -1,0 +1,151 @@
+✅ Generated module-route-fragments.generated.ts
+❯ Building...
+✔ Building...
+Initial chunk files   | Names                             |  Raw size | Estimated transfer size
+chunk-WZAJ4LFL.js     | -                                 |   1.10 MB |               296.94 kB
+main-KUEM3PWM.js      | main                              | 273.55 kB |                50.49 kB
+chunk-BV2LMK5F.js     | -                                 | 245.37 kB |                29.69 kB
+chunk-PAWSHGPS.js     | -                                 | 188.92 kB |                54.86 kB
+styles-LEPAHXCE.css   | styles                            | 141.26 kB |                21.01 kB
+chunk-C5M4F4KZ.js     | -                                 | 114.84 kB |                15.93 kB
+chunk-3FT2IA5I.js     | -                                 |  83.77 kB |                20.74 kB
+chunk-MWUTG2NQ.js     | -                                 |  52.86 kB |                10.19 kB
+chunk-XWSS526O.js     | -                                 |  51.19 kB |                 7.19 kB
+chunk-7MWAQREV.js     | -                                 |  44.56 kB |                12.16 kB
+chunk-FB6ZFJ7D.js     | -                                 |  39.55 kB |                 6.66 kB
+chunk-7SSURWB6.js     | -                                 |  37.75 kB |                 9.02 kB
+polyfills-CJX2W33J.js | polyfills                         |  34.59 kB |                11.33 kB
+chunk-TBFW4MY7.js     | -                                 |  30.63 kB |                 5.29 kB
+chunk-VKWQN7KT.js     | -                                 |  28.82 kB |                 3.59 kB
+chunk-7JHVTBPB.js     | -                                 |  28.69 kB |                 8.31 kB
+chunk-BGX2NXAJ.js     | -                                 |  25.87 kB |                 6.39 kB
+chunk-GKQGUDS5.js     | -                                 |  22.05 kB |                 5.32 kB
+chunk-U3KHKCOS.js     | -                                 |  21.45 kB |                 6.21 kB
+chunk-ODUSPC2Q.js     | -                                 |  18.53 kB |                 5.31 kB
+chunk-EPYQ27LH.js     | -                                 |  16.28 kB |                 4.15 kB
+chunk-ELDK33M5.js     | -                                 |  14.62 kB |                 2.92 kB
+chunk-RJZYVQQT.js     | -                                 |  14.26 kB |                 3.85 kB
+chunk-LJ3UDA33.js     | -                                 |  12.96 kB |                 4.07 kB
+chunk-ADDPTYHS.js     | -                                 |  12.84 kB |                 2.48 kB
+chunk-IXBOVW7Y.js     | -                                 |  11.90 kB |                 2.30 kB
+chunk-QDQVVU7X.js     | -                                 |   9.27 kB |                 2.40 kB
+chunk-PH6FGXRV.js     | -                                 |   8.11 kB |                 2.07 kB
+chunk-KRIXCEYP.js     | -                                 |   7.18 kB |                 1.36 kB
+chunk-637S2NNF.js     | -                                 |   6.38 kB |                 1.34 kB
+chunk-ZJY2EJWS.js     | -                                 |   5.47 kB |                 1.19 kB
+chunk-KCLQRIUK.js     | -                                 |   4.92 kB |                 1.60 kB
+chunk-JAJCWPEE.js     | -                                 |   4.73 kB |                 1.58 kB
+chunk-SOZ4J7QZ.js     | -                                 |   4.48 kB |               945 bytes
+chunk-CLLXR7UI.js     | -                                 |   4.28 kB |                 1.09 kB
+chunk-ENTG7NRW.js     | -                                 |   3.76 kB |                 1.24 kB
+chunk-QAIF4H4C.js     | -                                 |   3.72 kB |               884 bytes
+chunk-LEUX5IZT.js     | -                                 |   3.50 kB |                 1.09 kB
+chunk-VGOTOULR.js     | -                                 |   3.40 kB |                 1.48 kB
+chunk-RXFQKWCV.js     | -                                 |   3.13 kB |               792 bytes
+chunk-AGTEQ7KT.js     | -                                 |   3.04 kB |                 1.16 kB
+chunk-RX5RPHUS.js     | -                                 |   3.01 kB |                 1.32 kB
+chunk-6U3DGQ7R.js     | -                                 |   2.49 kB |               962 bytes
+chunk-VAS3EGZB.js     | -                                 |   2.02 kB |               655 bytes
+chunk-5VLYEB3W.js     | -                                 |   1.78 kB |               693 bytes
+chunk-NBIFJZFR.js     | -                                 |   1.73 kB |               829 bytes
+chunk-WWX6BADO.js     | -                                 |   1.60 kB |               680 bytes
+chunk-2UZH6T47.js     | -                                 |   1.54 kB |               778 bytes
+chunk-T5HR55HJ.js     | -                                 |   1.15 kB |               428 bytes
+chunk-B7DWN25H.js     | -                                 |   1.07 kB |               454 bytes
+chunk-XDVBI5B6.js     | -                                 |   1.05 kB |               474 bytes
+chunk-4EJVVXTM.js     | -                                 |   1.03 kB |               419 bytes
+chunk-XQGSVGIR.js     | -                                 | 832 bytes |               832 bytes
+chunk-ZQBM2QJN.js     | -                                 | 828 bytes |               828 bytes
+chunk-PR5SDUU3.js     | -                                 | 792 bytes |               792 bytes
+chunk-GWYJP57F.js     | -                                 | 779 bytes |               779 bytes
+chunk-S7B3JHNY.js     | -                                 | 724 bytes |               724 bytes
+chunk-44UZE5DZ.js     | -                                 | 685 bytes |               685 bytes
+chunk-ISBR6BQC.js     | -                                 | 501 bytes |               501 bytes
+chunk-2PLNKSZO.js     | -                                 | 428 bytes |               428 bytes
+chunk-D6DVQ5ZU.js     | -                                 | 424 bytes |               424 bytes
+chunk-PPNAGKIR.js     | -                                 | 359 bytes |               359 bytes
+chunk-MTVA2HDQ.js     | -                                 | 350 bytes |               350 bytes
+chunk-DHD7FYMG.js     | -                                 |  91 bytes |                91 bytes
+chunk-ERZJG7HZ.js     | -                                 |   0 bytes |                 0 bytes
+chunk-YI6P2VAC.js     | -                                 |   0 bytes |                 0 bytes
+chunk-MDKX3GQD.js     | -                                 |   0 bytes |                 0 bytes
+chunk-4T73RDF4.js     | -                                 |   0 bytes |                 0 bytes
+chunk-6BL5UVUQ.js     | -                                 |   0 bytes |                 0 bytes
+
+                      | Initial total                     |   2.77 MB |               641.08 kB
+
+Lazy chunk files      | Names                             |  Raw size | Estimated transfer size
+chunk-3AT3COMB.js     | plotly-min                        |   4.83 MB |                 1.08 MB
+chunk-NFVPSBJG.js     | main                              |   1.46 MB |               337.86 kB
+chunk-CLWMMKXI.js     | dhtmlxgantt-es                    | 617.07 kB |               137.42 kB
+chunk-766RBJB5.js     | lottie                            | 308.15 kB |                65.56 kB
+chunk-JAG74O5K.js     | -                                 | 254.67 kB |                37.66 kB
+chunk-RZRL6HMS.js     | -                                 | 250.18 kB |                45.10 kB
+chunk-LXQEKEKD.js     | landing-component                 | 211.16 kB |                38.60 kB
+chunk-I6WB6WVO.js     | -                                 | 204.44 kB |                61.11 kB
+chunk-B35AWWO6.js     | -                                 | 177.60 kB |                47.72 kB
+chunk-ZCYBUDFR.js     | -                                 | 153.90 kB |                17.46 kB
+chunk-UTOGOXW2.js     | onboarding-review-stage-component | 101.18 kB |                17.88 kB
+chunk-L7PPU534.js     | workspace-home-component          | 100.16 kB |                18.89 kB
+chunk-UP3SKZIE.js     | sigma-cjs                         | 100.09 kB |                23.06 kB
+chunk-YQHWLQCM.js     | -                                 |  99.12 kB |                18.48 kB
+chunk-BY4R4XSV.js     | agrc-os-dashboard-component       |  98.49 kB |                17.22 kB
+...and 986 more lazy chunks files. Use "--verbose" to show all the files.
+
+Application bundle generation complete. [81.832 seconds] - 2026-04-16T21:15:04.671Z
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: OnboardingFormFieldComponent is not used within the template of OnboardingQuestionsPageComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/blueprint/features/onboarding-os/pages/onboarding-questions-page.component.ts:28:4:
+[37m      28 │     [32mOnboardingFormFieldComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: VendorsComponent is not used within the template of WorkflowHubComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/blueprint/features/workflow/pages/workflow-hub/workflow-hub.component.ts:49:62:
+[37m      49 │ ...orkflowsComponent, [32mWorkflowTemplatesComponent[37m, WorkflowChainsTa...
+         ╵                       [32m~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: InputTextarea is not used within the template of EntityLinkComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/blueprint/pages/entity-link/entity-link.component.ts:39:21:
+[37m      39 │     InputTextModule, [32mInputTextarea[37m, DropdownModule, TooltipModule,...
+         ╵                      [32m~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: StatusBadgeComponent is not used within the template of IntegrationsComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/blueprint/pages/integrations/integrations.component.ts:31:78:
+[37m      31 │ ..., PageShellComponent, GrcDataTableComponent, [32mStatusBadgeComponent[37m,
+         ╵                                                 [32m~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: AppDatePipe is not used within the template of TeamManagementComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/blueprint/pages/team-management/team-management.component.ts:66:51:
+[37m      66 │     CommonModule, FormsModule, PageShellComponent, [32mAppDatePipe[37m,
+         ╵                                                    [32m~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mModule '@shahin-grc/shared-compliance-types' used by 'src/app/blueprint/features/compliance/pages/controls-group/compliance-controls-monitoring/compliance-controls-page.component.ts' is not ESM[0m
+
+  CommonJS or AMD dependencies can cause optimization bailouts.
+  For more information see: [4mhttps://angular.dev/tools/cli/build#configuring-commonjs-dependencies[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mModule '@shahin-grc/shared-risk-types' used by 'src/app/blueprint/pages/risk-scoring/risk-scoring.component.ts' is not ESM[0m
+
+  CommonJS or AMD dependencies can cause optimization bailouts.
+  For more information see: [4mhttps://angular.dev/tools/cli/build#configuring-commonjs-dependencies[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mModule '@shahin-grc/shared-workflow-types' used by 'src/app/blueprint/features/workflow/pages/workflows/models/node-palette.ts' is not ESM[0m
+
+  CommonJS or AMD dependencies can cause optimization bailouts.
+  For more information see: [4mhttps://angular.dev/tools/cli/build#configuring-commonjs-dependencies[0m
+
+
+Output location: /root/DOS-AIO/frontend/products/shahin/dist/shahin-grc
+

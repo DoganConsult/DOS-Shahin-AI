@@ -1,0 +1,22 @@
+{
+  "serviceCode": "platform-product-service",
+  "displayName": "Platform Product Service",
+  "layer": "platform-service",
+  "ownerTeam": "platform-core",
+  "runtime": "node",
+  "dependsOn": [
+    "auth-service",
+    "tenant-service"
+  ],
+  "modules": [
+    "team",
+    "mobile"
+  ],
+  "exposes": {
+    "apiBase": "/api/platform",
+    "events": [
+      "team.created",
+      "team.member.added"
+    ]
+  }
+}

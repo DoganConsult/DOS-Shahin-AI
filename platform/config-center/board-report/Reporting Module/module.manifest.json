@@ -1,0 +1,63 @@
+{
+  "moduleCode": "reporting",
+  "displayName": "Reporting",
+  "ownerTeam": "product-shahin-ai",
+  "productCode": "shahin-ai",
+  "ownership": "module-owned",
+  "version": "1.0.0",
+  "status": "active",
+  "platformDependencies": [
+    "identity",
+    "tenancy",
+    "permissions"
+  ],
+  "seedProviders": [
+    "products/shahin/seeds/reporting-seed"
+  ],
+  "tenantDefaults": [
+    "reporting_default_schedule",
+    "reporting_export_formats"
+  ],
+  "requiredReferenceData": [
+    "report_types",
+    "report_templates"
+  ],
+  "currentSources": [
+    "/home/Dr-Dogan-AGRC-OS/backend/src/modules/reporting"
+  ],
+  "targetPath": "modules/reporting",
+  "futureService": "evidence-audit-reporting-service",
+  "frontendSources": [
+    "/home/Dr-Dogan-AGRC-OS/frontend/src/app/platform-manifests/reports.module.routes.ts"
+  ],
+  "ownedTables": [
+    "report_definitions",
+    "report_schedules",
+    "report_snapshots",
+    "report_templates"
+  ],
+  "referencedTables": [
+    "tenants",
+    "users",
+    "risks",
+    "controls",
+    "compliance_gaps",
+    "audit_trail",
+    "evidence_items"
+  ],
+  "events": {
+    "publishes": [
+      "reporting.generated",
+      "reporting.scheduled",
+      "reporting.failed"
+    ],
+    "subscribes": [
+      "compliance.posture_changed",
+      "risk.score_changed",
+      "controls.effectiveness_tested"
+    ]
+  },
+  "routeBases": [
+    "/api/reporting"
+  ]
+}

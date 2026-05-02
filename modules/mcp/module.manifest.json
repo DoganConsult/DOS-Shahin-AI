@@ -1,0 +1,39 @@
+{
+  "moduleCode": "mcp",
+  "displayName": "MCP",
+  "ownerTeam": "product-shahin-ai",
+  "productCode": "shahin-ai",
+  "ownership": "module-owned",
+  "version": "1.0.0",
+  "status": "active",
+  "platformDependencies": [
+    "identity",
+    "tenancy"
+  ],
+  "seedProviders": [],
+  "tenantDefaults": [],
+  "requiredReferenceData": [],
+  "currentSources": [
+    "/home/Dr-Dogan-AGRC-OS/backend/src/modules/mcp"
+  ],
+  "targetPath": "modules/mcp",
+  "futureService": "ai-engine-service",
+  "frontendSources": [],
+  "ownedTables": [
+    "mcp_servers",
+    "mcp_tools",
+    "mcp_resources",
+    "mcp_prompts",
+    "mcp_sessions",
+    "mcp_tool_invocations",
+    "mcp_audit_log"
+  ],
+  "referencedTables": [],
+  "events": {
+    "publishes": [],
+    "subscribes": []
+  },
+  "routeBases": [
+    "/mcp"
+  ]
+}

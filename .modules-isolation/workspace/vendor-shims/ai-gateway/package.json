@@ -1,0 +1,9 @@
+{
+  "name": "@dos/ai-gateway",
+  "version": "0.0.0-shim",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "description": "ISOLATION SHIM. Replaces platform/ai/packages/ai-gateway."
+}

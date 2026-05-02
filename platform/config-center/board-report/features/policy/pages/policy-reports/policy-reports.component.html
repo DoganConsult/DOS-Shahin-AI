@@ -1,0 +1,209 @@
+<div class="policy-reports" [dir]="dir()">
+  <app-page-header
+    titleEn="Policy Reports"
+    titleAr="تقارير السياسات"
+    subtitleEn="Generate and export policy reports across your organization"
+    subtitleAr="إنشاء وتصدير تقارير السياسات عبر مؤسستك"
+    icon="reports"
+    [isAr]="isAr()"
+    [actions]="headerActions">
+  </app-page-header>
+
+  <p-toast />
+
+  <!-- Loading skeleton -->
+  @if (loading()) {
+    <app-skeleton-loader variant="card" [count]="3" />
+  } @else {
+
+    <!-- Report Catalog Grid (shown when no report is selected) -->
+    @if (!selectedReport()) {
+      <div class="report-catalog">
+        @for (report of reports(); track report.id) {
+          <div class="report-card">
+            <div class="report-card__icon">
+              <i class="pi {{ report.icon }}"></i>
+            </div>
+            <div class="report-card__body">
+              <h3 class="report-card__name">{{ reportName(report) }}</h3>
+              <p class="report-card__desc">{{ reportDesc(report) }}</p>
+            </div>
+            <div class="report-card__actions">
+              <p-button
+                label="Generate"
+                icon="pi pi-file"
+                size="small"
+                (onClick)="selectReport(report.id)"
+                [outlined]="true" />
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Report Filters Panel (shown when a report is selected but not yet generated) -->
+    @if (selectedReport() && !reportData()) {
+      <div class="report-config">
+        <div class="report-config__header">
+          <h3 class="report-config__title">
+            <i class="pi {{ selectedReportCard()?.icon }}"></i>
+            {{ isAr() ? selectedReportCard()?.nameAr : selectedReportCard()?.name }}
+          </h3>
+          <p class="report-config__desc">
+            {{ isAr() ? selectedReportCard()?.descriptionAr : selectedReportCard()?.description }}
+          </p>
+        </div>
+
+        <div class="report-config__filters">
+          <div class="filter-row">
+            <div class="filter-field">
+              <label class="filter-label">Date From</label>
+              <p-calendar
+                [(ngModel)]="dateFrom"
+                [showIcon]="true"
+                dateFormat="yy-mm-dd"
+                placeholder="Start date"
+                styleClass="w-full" />
+            </div>
+            <div class="filter-field">
+              <label class="filter-label">Date To</label>
+              <p-calendar
+                [(ngModel)]="dateTo"
+                [showIcon]="true"
+                dateFormat="yy-mm-dd"
+                placeholder="End date"
+                styleClass="w-full" />
+            </div>
+            <div class="filter-field">
+              <label class="filter-label">Category</label>
+              <p-dropdown
+                [(ngModel)]="filterCategory"
+                [options]="categoryOptions()"
+                optionLabel="label"
+                optionValue="value"
+                placeholder="All categories"
+                [showClear]="true"
+                styleClass="w-full" />
+            </div>
+            <div class="filter-field">
+              <label class="filter-label">Status</label>
+              <p-dropdown
+                [(ngModel)]="filterStatus"
+                [options]="statusOptions"
+                optionLabel="label"
+                optionValue="value"
+                placeholder="All statuses"
+                [showClear]="true"
+                styleClass="w-full" />
+            </div>
+          </div>
+        </div>
+
+        <div class="report-config__actions">
+          <p-button
+            label="Generate Report"
+            icon="pi pi-play"
+            (onClick)="generateReport()"
+            [loading]="generating()" />
+          <p-button
+            label="Cancel"
+            icon="pi pi-times"
+            severity="secondary"
+            [outlined]="true"
+            (onClick)="cancelReport()" />
+        </div>
+      </div>
+    }
+
+    <!-- Generating skeleton -->
+    @if (generating()) {
+      <app-skeleton-loader variant="list" [count]="5" />
+    }
+
+    <!-- Report Results Area (shown after generation) -->
+    @if (reportData() && !generating()) {
+      <div class="report-results">
+        <!-- Result header with back and export controls -->
+        <div class="report-results__header">
+          <div class="report-results__title-row">
+            <p-button
+              icon="pi pi-arrow-left"
+              [text]="true"
+              label="Back to Catalog"
+              (onClick)="cancelReport()" />
+            <h3 class="report-results__title">
+              {{ isAr() ? selectedReportCard()?.nameAr : selectedReportCard()?.name }}
+            </h3>
+          </div>
+          <div class="report-results__export">
+            <p-button
+              label="CSV"
+              icon="pi pi-file"
+              size="small"
+              [outlined]="true"
+              (onClick)="exportReport('csv')" />
+            <p-button
+              label="Excel"
+              icon="pi pi-file-excel"
+              size="small"
+              [outlined]="true"
+              (onClick)="exportReport('excel')" />
+            <p-button
+              label="PDF"
+              icon="pi pi-file-pdf"
+              size="small"
+              [outlined]="true"
+              (onClick)="exportReport('pdf')" />
+          </div>
+        </div>
+
+        <!-- KPI summary strip -->
+        @if (reportKPIs().length > 0) {
+          <div class="report-kpi-strip">
+            @for (kpi of reportKPIs(); track kpi.label) {
+              <div class="report-kpi">
+                <div class="report-kpi__value">{{ kpi.value }}</div>
+                <div class="report-kpi__label">{{ kpi.label }}</div>
+              </div>
+            }
+          </div>
+        }
+
+        <!-- Data table with dynamic columns -->
+        <grc-data-table
+          [totalRecords]="reportRows().length"
+          [emptyMessage]="'No data found for the selected filters'">
+          <p-table
+            [value]="reportRows()"
+            [paginator]="reportRows().length > 15"
+            [rows]="15"
+            [rowsPerPageOptions]="[10, 15, 25, 50]"
+            styleClass="p-datatable-sm p-datatable-striped"
+            [scrollable]="true"
+            aria-label="Report data table">
+            <ng-template pTemplate="header">
+              <tr>
+                @for (col of reportColumns(); track col) {
+                  <th>{{ col }}</th>
+                }
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-row>
+              <tr>
+                @for (col of reportColumns(); track col) {
+                  <td>
+                    @if (col === 'status') {
+                      <app-status-badge [status]="row[col] ?? ''" />
+                    } @else {
+                      {{ row[col] ?? '-' }}
+                    }
+                  </td>
+                }
+              </tr>
+            </ng-template>
+          </p-table>
+        </grc-data-table>
+      </div>
+    }
+  }
+</div>

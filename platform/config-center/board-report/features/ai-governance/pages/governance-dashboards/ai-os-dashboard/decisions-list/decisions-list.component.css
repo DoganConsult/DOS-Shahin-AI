@@ -1,0 +1,14 @@
+.decisions-list { padding: 0.5rem 0; }
+.decisions-list-actions { margin-bottom: 1rem; }
+.decisions-error-box { margin: 1rem 0; padding: 1rem; border: 1px solid var(--red-200); border-radius: var(--radius); background: var(--red-50); }
+.decisions-error { color: var(--red-700); margin: 0 0 0.5rem 0; }
+.decisions-correlation { margin: 0.5rem 0 1rem 0; font-size: var(--font-size-base); color: var(--text-color-secondary); }
+.decisions-correlation code { font-size: var(--font-size-caption); background: var(--surface-200); padding: 0.2rem 0.4rem; border-radius: var(--radius-xs); }
+.correlation-label { margin-inline-end: 0.5rem; }
+.decisions-content { margin-top: 1rem; }
+.clickable-row { cursor: pointer; }
+.clickable-row:hover { background: var(--surface-100); }
+.outcome-badge { padding: 0.2rem 0.5rem; border-radius: var(--radius-xs); font-size: var(--font-size-tag); }
+.outcome-badge.allow, .outcome-badge.allowed { background: var(--green-100); color: var(--green-800); }
+.outcome-badge.block, .outcome-badge.blocked { background: var(--red-100); color: var(--red-800); }
+.outcome-badge.unknown { background: var(--surface-200); color: var(--text-color-secondary); }

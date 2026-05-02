@@ -1,0 +1,17 @@
+risk_id,control_id,framework_code,control_number,primary_risk_category,secondary_risk_category,tertiary_risk_category,inherent_likelihood,inherent_impact,inherent_risk_score,inherent_risk_level,control_effectiveness,residual_likelihood,residual_impact,residual_risk_score,residual_risk_level,risk_reduction_percent,risk_treatment,risk_owner_role,review_frequency_months
+1,1,PDPL,Art-5,PRIVACY,COMPLIANCE,REPUTATIONAL,4,5,20,critical,3,3,4,12,high,40.0,mitigate,DPO,6
+2,2,PDPL,Art-6,PRIVACY,COMPLIANCE,REPUTATIONAL,4,5,20,critical,3,3,4,12,high,40.0,mitigate,DPO,6
+3,3,PDPL,Art-10,PRIVACY,COMPLIANCE,REPUTATIONAL,4,4,16,high,3,3,3,9,medium,43.8,accept,DPO,12
+4,4,PDPL,Art-11,PRIVACY,COMPLIANCE,REPUTATIONAL,4,4,16,high,3,3,3,9,medium,43.8,accept,DPO,12
+5,5,PDPL,Art-12,CONFIDENTIALITY,PRIVACY,COMPLIANCE,4,4,16,high,3,3,3,9,medium,43.8,accept,DPO,12
+6,6,PDPL,Art-4-1,PRIVACY,COMPLIANCE,REPUTATIONAL,4,5,20,critical,3,3,4,12,high,40.0,mitigate,DPO,6
+7,7,PDPL,Art-4-2,CONFIDENTIALITY,INTEGRITY,PRIVACY,3,4,12,high,3,2,3,6,medium,50.0,accept,DPO,12
+8,8,PDPL,Art-4-3,PRIVACY,COMPLIANCE,REPUTATIONAL,3,4,12,high,3,2,3,6,medium,50.0,accept,DPO,12
+9,9,PDPL,Art-4-4,PRIVACY,COMPLIANCE,REPUTATIONAL,3,4,12,high,3,2,3,6,medium,50.0,accept,DPO,12
+10,10,PDPL,Art-31,PRIVACY,COMPLIANCE,REPUTATIONAL,4,5,20,critical,3,3,4,12,high,40.0,mitigate,DPO,6
+11,11,PDPL,Art-32,CONFIDENTIALITY,PRIVACY,COMPLIANCE,4,5,20,critical,3,3,4,12,high,40.0,mitigate,DPO,6
+12,12,PDPL,Art-25,CONFIDENTIALITY,PRIVACY,COMPLIANCE,4,4,16,high,3,3,3,9,medium,43.8,accept,DPO,12
+13,13,PDPL,Art-19,PRIVACY,COMPLIANCE,REPUTATIONAL,4,5,20,critical,3,3,4,12,high,40.0,mitigate,DPO,6
+14,14,PDPL,Art-20,CONFIDENTIALITY,PRIVACY,COMPLIANCE,3,5,15,high,3,2,4,8,medium,46.7,accept,DPO,12
+15,15,PDPL,Art-29,PRIVACY,COMPLIANCE,STRATEGIC,4,5,20,critical,3,3,4,12,high,40.0,mitigate,DPO,6
+16,16,PDPL,Art-29-IR,CONFIDENTIALITY,PRIVACY,COMPLIANCE,4,5,20,critical,3,3,4,12,high,40.0,mitigate,DPO,6

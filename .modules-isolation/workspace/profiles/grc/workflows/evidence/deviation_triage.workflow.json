@@ -1,0 +1,15 @@
+{
+  "id": "evidence.deviation_triage",
+  "module": "evidence",
+  "hook": "deviation_triage",
+  "version": "1.0.0",
+  "sla_hours": 12,
+  "actor_role_default": "evidence.module_lead",
+  "states": ["detected","triaged","routed"],
+  "initial": "detected",
+  "transitions": [{"from":"detected","to":"triaged","on":"triage","actor_role":"evidence.module_lead"},{"from":"triaged","to":"routed","on":"route","actor_role":"evidence.approver"}],
+  "audit_event_prefix": "evidence.workflow.deviation_triage",
+  "notification_targets": ["evidence.module_lead", "evidence.approver"],
+  "evidence_required_on": ["passed","published"],
+  "escalation": { "on": "sla_breach", "to": "evidence.executive_owner", "after_hours": 24 }
+}

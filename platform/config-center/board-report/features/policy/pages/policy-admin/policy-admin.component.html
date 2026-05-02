@@ -1,0 +1,304 @@
+<div class="policy-admin" [dir]="dir()">
+  <app-page-header
+    titleEn="Policy Administration"
+    titleAr="إدارة السياسات"
+    subtitleEn="Configure categories, review cycles, publication, exceptions, notifications, and retention"
+    subtitleAr="تكوين الفئات ودورات المراجعة والنشر والاستثناءات والإشعارات والاحتفاظ"
+    icon="settings"
+    [isAr]="isAr()"
+    [actions]="headerActions">
+  </app-page-header>
+
+  <p-toast />
+
+  <!-- Loading skeleton -->
+  @if (loading()) {
+    <app-skeleton-loader variant="card" [count]="2" />
+    <app-skeleton-loader variant="list" [count]="6" />
+  } @else {
+
+    <p-tabView styleClass="admin-tabs">
+
+      <!-- ============================================================ -->
+      <!-- Tab 1: Categories                                             -->
+      <!-- ============================================================ -->
+      <p-tabPanel header="Categories">
+        <div class="tab-toolbar">
+          <p-button
+            label="Add Category"
+            icon="pi pi-plus"
+            size="small"
+            (onClick)="addCategory()" />
+        </div>
+
+        @if (categories().length === 0) {
+          <app-empty-state
+            title="No categories"
+            description="Add a policy category to get started." />
+        } @else {
+          <grc-data-table
+            [totalRecords]="categories().length"
+            [emptyMessage]="'No categories'">
+            <p-table
+              [value]="categories()"
+              [paginator]="categories().length > 15"
+              [rows]="15"
+              styleClass="p-datatable-sm p-datatable-striped"
+              [scrollable]="true"
+              aria-label="Policy categories table">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>Code</th>
+                  <th>Name (EN)</th>
+                  <th>Name (AR)</th>
+                  <th>Business Domain</th>
+                  <th>Parent</th>
+                  <th>Sort Order</th>
+                  <th>Active</th>
+                  <th style="width: 120px">Actions</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-cat>
+                <tr>
+                  <td>{{ cat.code }}</td>
+                  <td>{{ cat.name_en }}</td>
+                  <td>{{ cat.name_ar }}</td>
+                  <td>{{ cat.business_domain || '-' }}</td>
+                  <td>{{ cat.parent_code || '-' }}</td>
+                  <td>{{ cat.sort_order }}</td>
+                  <td>
+                    <app-status-badge [status]="cat.is_active ? 'active' : 'inactive'" />
+                  </td>
+                  <td>
+                    <div class="action-btns">
+                      <p-button icon="pi pi-pencil" [text]="true" size="small" (onClick)="editCategory(cat)" />
+                      <p-button icon="pi pi-trash" [text]="true" size="small" severity="danger" (onClick)="deleteCategory(cat)" />
+                    </div>
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </grc-data-table>
+        }
+
+        <!-- Category Add/Edit Dialog -->
+        <p-dialog
+          [(visible)]="showCategoryDialog"
+          [header]="isNewCategory ? 'Add Category' : 'Edit Category'"
+          [modal]="true"
+          [style]="{ width: '520px' }"
+          [closable]="true">
+          <div class="dialog-form">
+            <div class="form-field">
+              <grc-form-field label="Code">
+                <input pInputText [(ngModel)]="editingCategory.code" [disabled]="!isNewCategory" class="w-full" />
+              </grc-form-field>
+            </div>
+            <div class="form-field">
+              <grc-form-field label="Name (EN)">
+                <input pInputText [(ngModel)]="editingCategory.name_en" class="w-full" />
+              </grc-form-field>
+            </div>
+            <div class="form-field">
+              <grc-form-field label="Name (AR)">
+                <input pInputText [(ngModel)]="editingCategory.name_ar" class="w-full" dir="rtl" />
+              </grc-form-field>
+            </div>
+            <div class="form-field">
+              <label class="form-label">Parent Category</label>
+              <p-dropdown
+                [(ngModel)]="editingCategory.parent_code"
+                [options]="parentOptions()"
+                optionLabel="label"
+                optionValue="value"
+                placeholder="None"
+                [showClear]="true"
+                styleClass="w-full" />
+            </div>
+            <div class="form-field">
+              <grc-form-field label="Business Domain">
+                <input pInputText [(ngModel)]="editingCategory.business_domain" class="w-full" />
+              </grc-form-field>
+            </div>
+            <div class="form-row">
+              <div class="form-field form-field--half">
+                <label class="form-label">Sort Order</label>
+                <p-inputNumber [(ngModel)]="editingCategory.sort_order" [min]="0" styleClass="w-full" />
+              </div>
+              <div class="form-field form-field--half">
+                <label class="form-label">Active</label>
+                <p-inputSwitch [(ngModel)]="editingCategory.is_active" />
+              </div>
+            </div>
+          </div>
+          <ng-template pTemplate="footer">
+            <p-button label="Cancel" severity="secondary" [outlined]="true" (onClick)="showCategoryDialog = false" />
+            <p-button label="Save" icon="pi pi-check" (onClick)="saveCategory()" [loading]="saving()" />
+          </ng-template>
+        </p-dialog>
+      </p-tabPanel>
+
+      <!-- ============================================================ -->
+      <!-- Tab 2: Review Cycles                                          -->
+      <!-- ============================================================ -->
+      <p-tabPanel header="Review Cycles">
+        <div class="settings-panel">
+          <div class="form-field">
+            <label class="form-label">Default Review Frequency</label>
+            <p-dropdown
+              [(ngModel)]="reviewCycle.default_review_frequency"
+              [options]="frequencyOptions"
+              optionLabel="label"
+              optionValue="value"
+              styleClass="w-full" />
+          </div>
+          <div class="form-field">
+            <label class="form-label">Auto-transition to "Under Review" on due date</label>
+            <p-inputSwitch [(ngModel)]="reviewCycle.auto_transition_on_due" />
+          </div>
+          <div class="form-field">
+            <label class="form-label">Review Reminder Days Before Due</label>
+            <p-inputNumber [(ngModel)]="reviewCycle.reminder_days_before" [min]="1" [max]="365" suffix=" days" styleClass="w-full" />
+          </div>
+          <div class="form-field">
+            <label class="form-label">Escalation After Overdue Days</label>
+            <p-inputNumber [(ngModel)]="reviewCycle.escalation_after_days" [min]="1" [max]="365" suffix=" days" styleClass="w-full" />
+          </div>
+          <div class="settings-actions">
+            <p-button label="Save Review Cycle Settings" icon="pi pi-save" (onClick)="saveReviewCycle()" [loading]="saving()" />
+          </div>
+        </div>
+      </p-tabPanel>
+
+      <!-- ============================================================ -->
+      <!-- Tab 3: Publication Settings                                   -->
+      <!-- ============================================================ -->
+      <p-tabPanel header="Publication Settings">
+        <div class="settings-panel">
+          <div class="form-field">
+            <label class="form-label">Default Publish Channel</label>
+            <p-dropdown
+              [(ngModel)]="publication.default_channel"
+              [options]="channelOptions"
+              optionLabel="label"
+              optionValue="value"
+              styleClass="w-full" />
+          </div>
+          <div class="form-field">
+            <label class="form-label">Default Reminder Interval</label>
+            <p-inputNumber [(ngModel)]="publication.default_reminder_interval_days" [min]="1" [max]="365" suffix=" days" styleClass="w-full" />
+          </div>
+          <div class="form-field">
+            <grc-form-field label="Escalation Role">
+              <input pInputText [(ngModel)]="publication.escalation_role" class="w-full" placeholder="e.g. compliance_officer" />
+            </grc-form-field>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Escalation After Days</label>
+            <p-inputNumber [(ngModel)]="publication.escalation_after_days" [min]="1" [max]="365" suffix=" days" styleClass="w-full" />
+          </div>
+          <div class="settings-actions">
+            <p-button label="Save Publication Settings" icon="pi pi-save" (onClick)="savePublication()" [loading]="saving()" />
+          </div>
+        </div>
+      </p-tabPanel>
+
+      <!-- ============================================================ -->
+      <!-- Tab 4: Exception Settings                                     -->
+      <!-- ============================================================ -->
+      <p-tabPanel header="Exception Settings">
+        <div class="settings-panel">
+          <div class="form-field">
+            <label class="form-label">Default Exception Max Duration</label>
+            <p-inputNumber [(ngModel)]="exceptions.max_duration_days" [min]="1" [max]="3650" suffix=" days" styleClass="w-full" />
+          </div>
+          <div class="form-field">
+            <label class="form-label">Require Compensating Controls</label>
+            <p-inputSwitch [(ngModel)]="exceptions.require_compensating_controls" />
+          </div>
+          <div class="form-field">
+            <label class="form-label">Auto-expire Exceptions</label>
+            <p-inputSwitch [(ngModel)]="exceptions.auto_expire" />
+          </div>
+          <div class="form-field">
+            <label class="form-label">Exception Renewal Limit</label>
+            <p-inputNumber [(ngModel)]="exceptions.renewal_limit" [min]="0" [max]="10" styleClass="w-full" />
+          </div>
+          <div class="settings-actions">
+            <p-button label="Save Exception Settings" icon="pi pi-save" (onClick)="saveExceptions()" [loading]="saving()" />
+          </div>
+        </div>
+      </p-tabPanel>
+
+      <!-- ============================================================ -->
+      <!-- Tab 5: Notification Rules                                     -->
+      <!-- ============================================================ -->
+      <p-tabPanel header="Notification Rules">
+        @if (notificationRules().length === 0) {
+          <app-empty-state
+            title="No notification rules"
+            description="Notification rules will appear here once configured." />
+        } @else {
+          <grc-data-table
+            [totalRecords]="notificationRules().length"
+            [emptyMessage]="'No notification rules'">
+            <p-table
+              [value]="notificationRules()"
+              styleClass="p-datatable-sm p-datatable-striped"
+              [scrollable]="true"
+              aria-label="Notification rules table">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>Event Type</th>
+                  <th>Channel</th>
+                  <th>Template</th>
+                  <th style="width: 100px">Enabled</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-rule>
+                <tr>
+                  <td>{{ eventTypeLabels[rule.event_type] || rule.event_type }}</td>
+                  <td>{{ rule.channel }}</td>
+                  <td>{{ rule.template || '-' }}</td>
+                  <td>
+                    <p-inputSwitch
+                      [ngModel]="rule.enabled"
+                      (onChange)="toggleNotification(rule)" />
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </grc-data-table>
+        }
+      </p-tabPanel>
+
+      <!-- ============================================================ -->
+      <!-- Tab 6: Retention & Compliance                                 -->
+      <!-- ============================================================ -->
+      <p-tabPanel header="Retention & Compliance">
+        <div class="settings-panel">
+          <div class="form-field">
+            <label class="form-label">Retention Period</label>
+            <p-inputNumber [(ngModel)]="retention.retention_period_days" [min]="365" [max]="36500" suffix=" days" styleClass="w-full" />
+          </div>
+          <div class="form-field">
+            <label class="form-label">Archive After</label>
+            <p-inputNumber [(ngModel)]="retention.archive_after_days" [min]="365" [max]="36500" suffix=" days" styleClass="w-full" />
+          </div>
+          <div class="form-field">
+            <label class="form-label">Auto-archive Retired Policies</label>
+            <p-inputSwitch [(ngModel)]="retention.auto_archive_retired" />
+          </div>
+          <div class="form-field">
+            <label class="form-label">Require Approval for Deletion</label>
+            <p-inputSwitch [(ngModel)]="retention.require_approval_for_deletion" />
+          </div>
+          <div class="settings-actions">
+            <p-button label="Save Retention Settings" icon="pi pi-save" (onClick)="saveRetention()" [loading]="saving()" />
+          </div>
+        </div>
+      </p-tabPanel>
+
+    </p-tabView>
+  }
+</div>

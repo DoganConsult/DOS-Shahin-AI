@@ -1,0 +1,78 @@
+# AI-OS Temporal stack — Docker-only (NO native binary).
+#
+# Brings up Temporal Server + Postgres backing store + Web UI on a private
+# bridge network. Pinned to versions known to work with @temporalio/* 1.16.x.
+#
+# Usage:
+#   docker compose -f platform/ai/deploy/temporal-stack.docker-compose.yml up -d
+#   docker compose -f platform/ai/deploy/temporal-stack.docker-compose.yml down
+#
+# After the stack is up:
+#   - Temporal gRPC frontend:  127.0.0.1:7233
+#   - Temporal Web UI:         http://127.0.0.1:8233
+#   - The ai-os namespace is auto-created by `temporalio/auto-setup`.
+#
+# The ai-engine-service worker (src/temporal/worker.ts) connects via
+# TEMPORAL_ADDRESS=127.0.0.1:7233 and TEMPORAL_NAMESPACE=ai-os by default.
+
+version: "3.9"
+
+networks:
+  ai-os-temporal:
+    driver: bridge
+
+services:
+  temporal-postgres:
+    image: postgres:16-alpine
+    container_name: ai-os-temporal-postgres
+    environment:
+      POSTGRES_USER: temporal
+      POSTGRES_PASSWORD: temporal
+      POSTGRES_DB: temporal
+    networks: [ai-os-temporal]
+    volumes:
+      - temporal_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U temporal"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  temporal:
+    image: temporalio/auto-setup:1.25.2
+    container_name: ai-os-temporal
+    depends_on:
+      temporal-postgres:
+        condition: service_healthy
+    environment:
+      DB: postgres12
+      DB_PORT: 5432
+      POSTGRES_USER: temporal
+      POSTGRES_PWD: temporal
+      POSTGRES_SEEDS: temporal-postgres
+      DEFAULT_NAMESPACE: ai-os
+      DEFAULT_NAMESPACE_RETENTION: 72h
+      DYNAMIC_CONFIG_FILE_PATH: /etc/temporal/config/dynamicconfig/development-sql.yaml
+    ports:
+      - "127.0.0.1:7233:7233"
+    networks: [ai-os-temporal]
+    healthcheck:
+      test: ["CMD-SHELL", "tctl --address temporal:7233 cluster health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+
+  temporal-ui:
+    image: temporalio/ui:2.31.2
+    container_name: ai-os-temporal-ui
+    depends_on:
+      - temporal
+    environment:
+      TEMPORAL_ADDRESS: temporal:7233
+      TEMPORAL_CORS_ORIGINS: http://localhost:3000
+    ports:
+      - "127.0.0.1:8233:8080"
+    networks: [ai-os-temporal]
+
+volumes:
+  temporal_pg_data: {}

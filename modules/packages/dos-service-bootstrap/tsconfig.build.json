@@ -1,0 +1,35 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "src",
+    "noImplicitAny": false,
+    "noEmitOnError": false,
+    "declaration": true,
+    "declarationMap": true,
+    "incremental": true,
+    "tsBuildInfoFile": "dist/.tsbuildinfo",
+    "baseUrl": ".",
+    "paths": {
+      "@dos/types": ["../dos-types/dist/index"],
+      "@dos/types/*": ["../dos-types/dist/*"],
+      "@dos/contracts": ["../dos-contracts/dist/index"],
+      "@dos/contracts/*": ["../dos-contracts/dist/*"],
+      "@dos/db": ["../dos-db/dist/index"],
+      "@dos/db/*": ["../dos-db/dist/*"],
+      "@dos/platform-core": ["../dos-platform-core/dist/index"],
+      "@dos/platform-core/*": ["../dos-platform-core/dist/*"],
+      "@dos/auth": ["../dos-auth/dist/index"],
+      "@dos/auth/*": ["../dos-auth/dist/*"],
+      "@dos/module-sdk": ["../dos-module-sdk/dist/index"],
+      "@dos/module-sdk/*": ["../dos-module-sdk/dist/*"],
+      "@dos/event-backbone": ["../dos-event-backbone/dist/index"],
+      "@dos/event-backbone/*": ["../dos-event-backbone/dist/*"],
+      "@dos/service-client": ["../dos-service-client/dist/index"],
+      "@dos/service-client/*": ["../dos-service-client/dist/*"],
+      "@dos/runtime-config": ["../dos-runtime-config/dist/index"],
+      "@dos/runtime-config/*": ["../dos-runtime-config/dist/*"]
+    }
+  },
+  "include": ["src/**/*"]
+}

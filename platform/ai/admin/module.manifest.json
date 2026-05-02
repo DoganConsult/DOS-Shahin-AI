@@ -1,0 +1,35 @@
+{
+  "$schema": "../../platform/contracts/module/module.manifest.schema.json",
+  "schemaVersion": 1,
+  "kind": "platform",
+  "moduleCode": "admin",
+  "displayName": "Platform Admin Workspace",
+  "description": "Unified platform-admin workspace fronting the 4D pillars (DOS, DAuth, DSOC, DNOC). Provides operator surface for tenant lifecycle, role assignments, audit posture, and runtime telemetry. Consumes pillar ports through @dos/ports.* — never through direct core imports. Surfaces dynamic-ui rendered configuration for tenant-scoped admin pages.",
+  "version": "1.0.0",
+  "extractable": true,
+  "selfContained": true,
+  "lifecycle": {
+    "stage": "alpha",
+    "owner": "platform-core",
+    "entitlementKey": "platform.admin",
+    "featureFlag": "platform.admin.enabled",
+    "minTenantStage": "alpha"
+  },
+  "platformDependencies": {
+    "@dos/platform-core": "^1.0.0",
+    "@dos/contracts": "^1.0.0",
+    "@dos/types": "^1.0.0"
+  },
+  "services": [
+    {
+      "code": "admin-service",
+      "path": "./services/admin-service",
+      "port": 4080
+    }
+  ],
+  "uiBindings": {
+    "dynamicUiNamespace": "platform.admin",
+    "primaryRoute": "/platform-admin",
+    "permissions": ["platform.admin.read", "platform.admin.write"]
+  }
+}

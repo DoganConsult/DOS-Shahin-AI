@@ -1,0 +1,220 @@
+<div class="policy-home" [dir]="dir()">
+  <app-page-header
+    titleEn="Policy Command Center"
+    titleAr="مركز قيادة السياسات"
+    subtitleEn="Overview of your policy landscape, pending actions, and health metrics"
+    subtitleAr="نظرة عامة على السياسات والإجراءات المعلقة ومقاييس الصحة"
+    icon="policy"
+    [isAr]="isAr()"
+    [actions]="headerActions">
+  </app-page-header>
+
+  <!-- Loading state -->
+  @if (loading()) {
+    <app-skeleton-loader variant="card" />
+    <app-skeleton-loader variant="list" [count]="6" />
+  } @else {
+    <!-- KPI Strip -->
+    <div class="kpi-strip">
+      <div class="kpi-card">
+        <div class="kpi-value">{{ totalPolicies() }}</div>
+        <div class="kpi-label">Total Policies</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value kpi-value--success">{{ publishedPct() }}%</div>
+        <div class="kpi-label">Published</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value kpi-value--error">{{ overdueReviews() }}</div>
+        <div class="kpi-label">Overdue Reviews</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value kpi-value--warning">{{ pendingApprovals() }}</div>
+        <div class="kpi-label">Pending Approvals</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value kpi-value--info">{{ ackRate() }}%</div>
+        <div class="kpi-label">Ack Rate</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value kpi-value--warning">{{ activeExceptions() }}</div>
+        <div class="kpi-label">Active Exceptions</div>
+      </div>
+    </div>
+
+    <!-- Dashboard Cards Grid -->
+    <div class="dashboard-grid">
+      <!-- 1. Pending Approvals Card -->
+      <div class="dash-card">
+        <div class="dash-card__header">
+          <h3 class="dash-card__title"><i class="pi pi-check-circle"></i> Pending Approvals</h3>
+          <span class="dash-card__count">{{ pendingApprovalItems().length }}</span>
+        </div>
+        <div class="dash-card__body">
+          @if (pendingApprovalItems().length === 0) {
+            <app-empty-state title="No pending approvals" description="All policies are up to date." />
+          } @else {
+            @for (item of pendingApprovalItems(); track item.id) {
+              <div class="list-row">
+                <div class="list-row__main">
+                  <span class="list-row__title">{{ item.title }}</span>
+                  <app-status-badge [status]="item.status" />
+                </div>
+                <span class="list-row__meta">{{ item.daysWaiting }}d waiting</span>
+              </div>
+            }
+          }
+        </div>
+      </div>
+
+      <!-- 2. Overdue Reviews Card -->
+      <div class="dash-card">
+        <div class="dash-card__header">
+          <h3 class="dash-card__title"><i class="pi pi-calendar-times"></i> Overdue Reviews</h3>
+          <span class="dash-card__count dash-card__count--error">{{ overdueReviewItems().length }}</span>
+        </div>
+        <div class="dash-card__body">
+          @if (overdueReviewItems().length === 0) {
+            <app-empty-state title="No overdue reviews" description="All review dates are current." />
+          } @else {
+            @for (item of overdueReviewItems(); track item.id) {
+              <div class="list-row">
+                <div class="list-row__main">
+                  <span class="list-row__title">{{ item.title }}</span>
+                  <span class="list-row__owner">{{ item.owner }}</span>
+                </div>
+                <div class="list-row__right">
+                  <span class="list-row__meta">Due: {{ item.dueDate | date:'mediumDate' }}</span>
+                  <span class="overdue-badge">{{ item.daysOverdue }}d overdue</span>
+                </div>
+              </div>
+            }
+          }
+        </div>
+      </div>
+
+      <!-- 3. Acknowledgment Progress Card -->
+      <div class="dash-card">
+        <div class="dash-card__header">
+          <h3 class="dash-card__title"><i class="pi pi-verified"></i> Acknowledgment Progress</h3>
+        </div>
+        <div class="dash-card__body">
+          @if (ackCampaigns().length === 0) {
+            <app-empty-state title="No active campaigns" description="No acknowledgment campaigns in progress." />
+          } @else {
+            @for (campaign of ackCampaigns(); track campaign.id) {
+              <div class="ack-row">
+                <div class="ack-row__label">
+                  <span class="ack-row__name">{{ campaign.campaignName }}</span>
+                  @if (campaign.overdueCount > 0) {
+                    <span class="overdue-badge">{{ campaign.overdueCount }} overdue</span>
+                  }
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-bar__fill" [style.width.%]="campaign.completionPct"></div>
+                </div>
+                <span class="ack-row__pct">{{ campaign.completionPct }}%</span>
+              </div>
+            }
+          }
+        </div>
+      </div>
+
+      <!-- 4. Expiring Exceptions Card -->
+      <div class="dash-card">
+        <div class="dash-card__header">
+          <h3 class="dash-card__title"><i class="pi pi-exclamation-triangle"></i> Expiring Exceptions</h3>
+          <span class="dash-card__count dash-card__count--warning">{{ expiringExceptions().length }}</span>
+        </div>
+        <div class="dash-card__body">
+          @if (expiringExceptions().length === 0) {
+            <app-empty-state title="No expiring exceptions" description="No exceptions expiring within 30 days." />
+          } @else {
+            @for (item of expiringExceptions(); track item.id) {
+              <div class="list-row">
+                <div class="list-row__main">
+                  <span class="list-row__title">{{ item.policyTitle }}</span>
+                </div>
+                <div class="list-row__right">
+                  <span class="list-row__meta">Expires: {{ item.expiryDate | date:'mediumDate' }}</span>
+                  <span class="countdown-badge" [class.countdown-badge--urgent]="item.daysRemaining <= 7">
+                    {{ item.daysRemaining }}d left
+                  </span>
+                </div>
+              </div>
+            }
+          }
+        </div>
+      </div>
+
+      <!-- 5. Stale Policies Card -->
+      <div class="dash-card">
+        <div class="dash-card__header">
+          <h3 class="dash-card__title"><i class="pi pi-history"></i> Stale Policies</h3>
+          <span class="dash-card__count">{{ stalePolicies().length }}</span>
+        </div>
+        <div class="dash-card__body">
+          @if (stalePolicies().length === 0) {
+            <app-empty-state title="No stale policies" description="All policies have been recently updated." />
+          } @else {
+            @for (item of stalePolicies(); track item.id) {
+              <div class="list-row">
+                <div class="list-row__main">
+                  <span class="list-row__title">{{ item.title }}</span>
+                  <span class="list-row__owner">{{ item.owner }}</span>
+                </div>
+                <span class="list-row__meta">Last updated: {{ item.lastUpdated | date:'mediumDate' }}</span>
+              </div>
+            }
+          }
+        </div>
+      </div>
+
+      <!-- 6. Category Distribution Card -->
+      <div class="dash-card">
+        <div class="dash-card__header">
+          <h3 class="dash-card__title"><i class="pi pi-chart-bar"></i> Category Distribution</h3>
+        </div>
+        <div class="dash-card__body">
+          @if (categoryDistribution().length === 0) {
+            <app-empty-state title="No categories" description="No policy categories found." />
+          } @else {
+            @for (cat of categoryDistribution(); track cat.category) {
+              <div class="category-row">
+                <span class="category-row__label">{{ cat.category }}</span>
+                <div class="category-row__bar-wrap">
+                  <div class="category-row__bar" [style.width]="categoryBarWidth(cat.count)"></div>
+                </div>
+                <span class="category-row__count">{{ cat.count }}</span>
+              </div>
+            }
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Activity Feed -->
+    <div class="activity-section">
+      <h3 class="activity-section__title"><i class="pi pi-clock"></i> Recent Activity</h3>
+      @if (recentActivity().length === 0) {
+        <app-empty-state title="No recent activity" description="Activity will appear here as policies are updated." />
+      } @else {
+        <div class="activity-timeline">
+          @for (item of recentActivity(); track item.id) {
+            <div class="activity-item">
+              <div class="activity-item__icon">
+                <i [class]="activityIconClass(item.icon)"></i>
+              </div>
+              <div class="activity-item__content">
+                <span class="activity-item__desc">{{ item.description }}</span>
+                <span class="activity-item__time">{{ formatTimestamp(item.timestamp) }}</span>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  <app-module-overview-kit [config]="moduleKitConfig()"></app-module-overview-kit>
+</div>

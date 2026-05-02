@@ -1,0 +1,95 @@
+{
+  "name": "@dos/module-foundation",
+  "version": "2.0.0",
+  "description": "DOS Foundation module — organization hierarchy, business units, departments, positions, locations, committees, invitations, audit trail, delegations, access reviews, ownership mappings, SoD.",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./bootstrap": {
+      "types": "./dist/bootstrap.d.ts",
+      "default": "./dist/bootstrap.js"
+    },
+    "./contracts": {
+      "types": "./dist/contracts/index.d.ts",
+      "default": "./dist/contracts/index.js"
+    },
+    "./contracts/v1": {
+      "types": "./dist/contracts/v1/index.d.ts",
+      "default": "./dist/contracts/v1/index.js"
+    },
+    "./contracts/*": {
+      "types": "./dist/contracts/*.d.ts",
+      "default": "./dist/contracts/*.js"
+    },
+    "./ports": {
+      "types": "./dist/ports/index.d.ts",
+      "default": "./dist/ports/index.js"
+    },
+    "./manifest": {
+      "types": "./dist/foundation.manifest.d.ts",
+      "default": "./dist/foundation.manifest.js"
+    },
+    "./module.manifest.json": "./module.manifest.json",
+    "./db/migrations/*": "./db/migrations/*",
+    "./db/seeds/*": "./db/seeds/*",
+    "./ui": "./ui/index.ts",
+    "./ui/*": "./ui/*"
+  },
+  "files": [
+    "dist",
+    "ui",
+    "db",
+    "config",
+    "schemas",
+    "module.manifest.json",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "node --test tests/smoke/*.test.mjs",
+    "test:smoke": "node --test tests/smoke/*.test.mjs",
+    "test:vitest": "vitest run -c ../config-center/test/platform/foundation/vitest.config.ts",
+    "test:contract": "vitest run -c ../config-center/test/platform/foundation/vitest.config.ts tests/contract",
+    "test:integration": "vitest run -c ../config-center/test/platform/foundation/vitest.config.ts tests/integration",
+    "publish:contract": "node scripts/publish-contract.mjs",
+    "verify:permissions": "node ops/scripts/verify-permissions.mjs",
+    "boot:harness": "node ops/scripts/boot-harness.mjs",
+    "ci": "node ops/scripts/ci.mjs",
+    "format": "prettier --write \"**/*.{ts,mjs,json,md}\" --ignore-path .gitignore",
+    "format:check": "prettier --check \"**/*.{ts,mjs,json,md}\" --ignore-path .gitignore",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "zod": "^3.23.8"
+  },
+  "peerDependencies": {
+    "@dos/db": "workspace:*",
+    "@dos/module-sdk": "workspace:*",
+    "@dos/platform-core": "workspace:*",
+    "@dos/service-bootstrap": "workspace:*"
+  },
+  "peerDependenciesMeta": {
+    "@dos/db": { "optional": true },
+    "@dos/module-sdk": { "optional": true },
+    "@dos/platform-core": { "optional": true },
+    "@dos/service-bootstrap": { "optional": true }
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4",
+    "vitest": "^1.6.0"
+  },
+  "dos": {
+    "moduleCode": "foundation",
+    "tier": "platform",
+    "hostService": "user-service",
+    "manifest": "module.manifest.json",
+    "entrypoint": "./dist/bootstrap.js#registerFoundation"
+  }
+}

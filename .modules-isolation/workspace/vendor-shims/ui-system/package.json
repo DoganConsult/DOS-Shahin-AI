@@ -1,0 +1,9 @@
+{
+  "name": "@dos/ui-system",
+  "version": "0.0.0-shim",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "description": "ISOLATION SHIM. Replaces platform/ui-system/dos-ui-system."
+}

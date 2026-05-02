@@ -1,0 +1,96 @@
+<div class="gov-page" [attr.dir]="dir()">
+      <app-page-header
+        titleEn="Policies" titleAr="السياسات"
+        subtitleEn="Manage governance and compliance policies — lifecycle, owners, review cycles"
+        subtitleAr="إدارة سياسات الحوكمة والامتثال — الدورة والملاك وجداول المراجعة"
+        icon="file"
+        [breadcrumbs]="[i18n.translate('policies.dashboard'), i18n.translate('policies.governance'), i18n.translate('policies.policies')]"
+        [actions]="headerActions" [isAr]="isAr()" [dir]="dir()"
+        (actionClick)="onHeaderAction($event)" />
+      <app-module-tabs-bar [tabs]="tabs" [isAr]="isAr()" />
+      <app-raci-panel entityType="policy" [entityId]="selectedPolicy?.policy_id || ''" [canEdit]="true" />
+      <div class="gov-body">
+      <p-toast />
+
+      <div class="health-strip" *ngIf="loaded">
+        <div tabindex="0" role="button" (keyup.enter)="clearFilters()" class="hs-card" (click)="clearFilters()"><div class="hs-value">{{ policies.length }}</div><div class="hs-label">{{ i18n.translate('policies.total') }}</div></div>
+        <div tabindex="0" role="button" (keyup.enter)="applyHealthFilter('published')" class="hs-card" (click)="applyHealthFilter('published')"><div class="hs-value" style="color:var(--success)">{{ publishedPct }}%</div><div class="hs-label">{{ i18n.translate('policies.published') }}</div></div>
+        <div tabindex="0" role="button" (keyup.enter)="applyHealthFilter('missing_owner')" class="hs-card" (click)="applyHealthFilter('missing_owner')"><div class="hs-value" style="color:var(--grc-amber-dark, #d97706)">{{ missingOwnerCount }}</div><div class="hs-label">{{ i18n.translate('policies.noOwner') }}</div></div>
+        <div tabindex="0" role="button" (keyup.enter)="applyHealthFilter('missing_review')" class="hs-card" (click)="applyHealthFilter('missing_review')"><div class="hs-value" style="color:var(--warning)">{{ missingReviewCount }}</div><div class="hs-label">{{ i18n.translate('policies.noReviewDate') }}</div></div>
+        <div tabindex="0" role="button" (keyup.enter)="applyHealthFilter('due_soon')" class="hs-card" (click)="applyHealthFilter('due_soon')"><div class="hs-value" style="color:var(--grc-purple, #7c3aed)">{{ dueSoonCount }}</div><div class="hs-label">{{ i18n.translate('policies.dueSoon') }}</div></div>
+        <div tabindex="0" role="button" (keyup.enter)="applyHealthFilter('overdue')" class="hs-card" (click)="applyHealthFilter('overdue')"><div class="hs-value" style="color:var(--error)">{{ overdueCount }}</div><div class="hs-label">{{ i18n.translate('policies.overdue') }}</div></div>
+      </div>
+
+      <!-- Page Toolbar -->
+      <div class="page-toolbar">
+        <div class="toolbar-primary">
+          <p-button [label]="i18n.translate('policies.addPolicy')" icon="pi pi-plus" (onClick)="openCreateDialog()" />
+          <div class="search-wrap">
+            <i class="pi pi-search search-icon"></i>
+            <input type="text" pInputText [(ngModel)]="searchTerm"
+                   [placeholder]="i18n.translate('policies.searchPolicies')" [attr.aria-label]="i18n.translate('policies.searchPolicies')"
+                   (input)="filterPolicies()" class="search-input" />
+          </div>
+        </div>
+        <div class="toolbar-secondary">
+          <p-dropdown [options]="statusFilterOptions" [(ngModel)]="statusFilter" optionLabel="label" optionValue="value"
+                      [placeholder]="i18n.translate('common.status')" (onChange)="filterPolicies()" [style]="{minWidth:'140px'}" />
+          <p-button [label]="i18n.translate('policies.export')" icon="pi pi-download" severity="secondary" [outlined]="true"
+                    (onClick)="exportCSV()" [pTooltip]="i18n.translate('policies.exportCsv')" />
+        </div>
+      </div>
+
+      <!-- Bulk Action Bar -->
+      <div class="bulk-bar" *ngIf="selectedPolicies.length > 0">
+        <span class="bulk-count">{{ selectedPolicies.length }} {{ i18n.translate('policies.selected') }}</span>
+        <p-button [label]="i18n.translate('policies.bulkApprove')" icon="pi pi-check-circle" size="small" severity="success" (onClick)="bulkApprove()" />
+        <p-button [label]="i18n.translate('policies.bulkArchive')" icon="pi pi-inbox" size="small" severity="secondary" (onClick)="bulkArchive()" />
+        <p-button icon="pi pi-times" size="small" [text]="true" (onClick)="selectedPolicies = []" [pTooltip]="i18n.translate('policies.clearSelection')" />
+      </div>
+
+      <!-- Policy Table (child component) -->
+      <app-policy-table
+        [policies]="filteredPolicies"
+        [selectedPolicies]="selectedPolicies"
+        (selectionChange)="selectedPolicies = $event"
+        (openDetail)="openDetail($event)"
+        (edit)="openEditDialog($event)"
+        (approve)="approve($event)"
+        (confirmDelete)="confirmDelete($event)"
+        (openRules)="openRulesDialog($event)" />
+
+      <div *ngIf="loaded && filteredPolicies.length === 0" class="empty-state">
+        <i class="pi pi-file empty-icon"></i>
+        <p>{{ i18n.translate('policies.noPolicies') }}</p>
+        <p class="empty-hint">{{ i18n.translate('gettingStarted.createFirstPolicy') }}</p>
+        <p-button [label]="i18n.translate('policies.addPolicy')" icon="pi pi-plus" (onClick)="openCreateDialog()" [outlined]="true" />
+      </div>
+
+      <!-- Detail Drawer (child component) -->
+      <app-policy-detail-tabs
+        [visible]="drawerVisible" [policy]="selectedPolicy"
+        [sanitizedContent]="sanitizeHtml(selectedPolicy?.content || '')"
+        [versions]="policyVersions" [versionsLoading]="versionsLoading"
+        [linkedProcedures]="linkedProcedures" [approvalRequests]="approvalRequests" [approvalsLoading]="approvalsLoading"
+        (closed)="drawerVisible = false" (viewVersion)="viewVersion($event)"
+        (createNewVersion)="createNewVersion()" (submitForApproval)="submitForApproval()"
+        (approvePolicy)="approve($event)" (rejectPolicy)="showRejectPolicyDialog = true"
+        (publishPolicy)="publishPolicy()" />
+
+      <!-- Dialogs (child component) -->
+      <app-policy-create-edit-dialog
+        [visible]="showDialog" [editMode]="editMode" [form]="form"
+        [statusOptions]="statusOptions" [categoryOptions]="policyCatOptions()"
+        [rejectVisible]="showRejectPolicyDialog" [deleteVisible]="showDeleteDialog"
+        (visibleChange)="showDialog = $event" (save)="savePolicy($event)"
+        (rejectVisibleChange)="showRejectPolicyDialog = $event" (reject)="rejectPolicy($event)"
+        (deleteVisibleChange)="showDeleteDialog = $event" (confirmDeleteAction)="deletePolicy()" />
+
+      <!-- Policy Rules Dialog (child component) -->
+      <app-policy-rules-dialog
+        [visible]="showRulesDialog" [loading]="rulesLoading" [rules]="policyRules" [executeResult]="executeResult"
+        (visibleChange)="showRulesDialog = $event" (execute)="executeRules()" />
+      </div>
+    </div>
+    <app-ai-panel module="policies" />
+    <p-confirmDialog />

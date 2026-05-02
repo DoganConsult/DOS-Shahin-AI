@@ -1,0 +1,70 @@
+# ═══════════════════════════════════════════════════════════════════
+# DOS Platform — Loki Retention Configuration
+#
+# Tiered retention policy for structured logs:
+#   Hot  (7 days)  — info/debug logs, instant access via Grafana Explore
+#   Warm (30 days) — warn logs, available for investigation
+#   Cold (1 year)  — error/fatal logs, audit/compliance retention
+#
+# Apply: mount this file as /etc/loki/retention.yaml and include it
+# in the main Loki config via `-config.expand-env=true`.
+#
+# The retention_tier label is set by Vector (see vector.toml):
+#   error/fatal → "cold", warn → "warm", info/debug → "hot"
+# ═══════════════════════════════════════════════════════════════════
+
+# Enable compactor-based retention
+compactor:
+  working_directory: /loki/compactor
+  shared_store: filesystem
+  compaction_interval: 10m
+  retention_enabled: true
+  retention_delete_delay: 2h
+  retention_delete_worker_count: 150
+
+# Per-stream retention rules
+limits_config:
+  # Default retention (hot tier — 7 days)
+  retention_period: 168h
+
+  # Per-tenant rate limits
+  per_stream_rate_limit: 3MB
+  per_stream_rate_limit_burst: 15MB
+  ingestion_rate_mb: 10
+  ingestion_burst_size_mb: 20
+  max_query_parallelism: 32
+
+  # Per-stream retention overrides
+  retention_stream:
+    # Warm tier: warn-level logs retained 30 days
+    - selector: '{retention_tier="warm"}'
+      priority: 1
+      period: 720h
+
+    # Cold tier: error/fatal logs retained 1 year (audit/compliance)
+    - selector: '{retention_tier="cold"}'
+      priority: 2
+      period: 8760h
+
+    # DAuth decisions: always retained 1 year regardless of level
+    - selector: '{service="auth-service"}'
+      priority: 3
+      period: 8760h
+
+# Storage configuration
+schema_config:
+  configs:
+    - from: "2024-01-01"
+      store: tsdb
+      object_store: filesystem
+      schema: v13
+      index:
+        prefix: dos_index_
+        period: 24h
+
+storage_config:
+  filesystem:
+    directory: /loki/chunks
+  tsdb_shipper:
+    active_index_directory: /loki/tsdb-index
+    cache_location: /loki/tsdb-cache

@@ -1,0 +1,23 @@
+{
+  "serviceCode": "asset-service",
+  "displayName": "Asset Management Service",
+  "layer": "domain-service",
+  "ownerTeam": "product-shahin-ai",
+  "runtime": "node",
+  "dependsOn": [
+    "auth-service",
+    "tenant-service",
+    "workflow-service"
+  ],
+  "modules": [
+    "asset"
+  ],
+  "exposes": {
+    "apiBase": "/api/assets",
+    "events": [
+      "asset.created",
+      "asset.updated",
+      "asset.deleted"
+    ]
+  }
+}

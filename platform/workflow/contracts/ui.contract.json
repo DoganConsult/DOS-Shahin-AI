@@ -1,0 +1,102 @@
+{
+  "moduleCode": "workflow",
+  "version": "1.0.0",
+  "title_key": "modules.workflow.title",
+  "subtitle_key": "modules.workflow.subtitle",
+  "themeTokens": [
+    { "tokenKey": "module.accent", "tokenValue": "#0f62fe", "scope": "module" },
+    { "tokenKey": "module.signature.bg", "tokenValue": "var(--surface-card)", "scope": "module" }
+  ],
+  "dataResources": [
+    { "resourceKey": "workflow.work-items.list", "resourceType": "rest", "urlOrQuery": "/api/work-items?limit=50", "permission": "workflow.task.read", "cacheTtlSec": 10, "pagination": "offset" },
+    { "resourceKey": "workflow.instances.list", "resourceType": "rest", "urlOrQuery": "/api/workflow/instances?limit=50", "permission": "workflow.instance.read", "cacheTtlSec": 10, "pagination": "offset" },
+    { "resourceKey": "workflow.templates.list", "resourceType": "rest", "urlOrQuery": "/api/workflow/templates?limit=50", "permission": "workflow.instance.read", "cacheTtlSec": 30, "pagination": "offset" },
+    { "resourceKey": "workflow.sla.breaches", "resourceType": "rest", "urlOrQuery": "/api/workflow/sla/detect-breaches", "permission": "workflow.instance.configure", "cacheTtlSec": 0 }
+  ],
+  "kpis": [],
+  "intents": [],
+  "i18nKeys": [
+    { "keyPath": "modules.workflow.title", "en": "Workflow", "ar": "سير العمل" },
+    { "keyPath": "modules.workflow.subtitle", "en": "Approvals, tasks, orchestration", "ar": "الموافقات والمهام والتنسيق" },
+    { "keyPath": "workflow.nav.overview", "en": "Overview", "ar": "نظرة عامة" },
+    { "keyPath": "workflow.nav.inbox", "en": "Inbox", "ar": "صندوق الوارد" },
+    { "keyPath": "workflow.nav.designer", "en": "Designer", "ar": "المصمم" },
+    { "keyPath": "workflow.nav.instances", "en": "Instances", "ar": "التنفيذات" },
+    { "keyPath": "workflow.nav.templates", "en": "Templates", "ar": "القوالب" },
+    { "keyPath": "workflow.nav.sla", "en": "SLA", "ar": "اتفاقية مستوى الخدمة" }
+  ],
+  "routes": [
+    {
+      "route": "/workflow",
+      "pageType": "overview",
+      "layout": "dashboard",
+      "kpiScope": "module-overview",
+      "userIntent": "monitor",
+      "titleKey": "workflow.nav.overview",
+      "signatureWidget": "workflow-command-center",
+      "dataResourceKey": "workflow.instances.list",
+      "auditEnabled": true,
+      "realtimeEnabled": false
+    },
+    {
+      "route": "/workflow/inbox",
+      "pageType": "workflow",
+      "layout": "full-page",
+      "kpiScope": "none",
+      "userIntent": "manage",
+      "titleKey": "workflow.nav.inbox",
+      "signatureWidget": "my-work-queue",
+      "dataResourceKey": "workflow.work-items.list",
+      "auditEnabled": true,
+      "realtimeEnabled": false,
+      "visibleWhenPerm": ["workflow.task.read"]
+    },
+    {
+      "route": "/workflow/builder",
+      "pageType": "workflow",
+      "layout": "full-page",
+      "kpiScope": "none",
+      "userIntent": "configure",
+      "titleKey": "workflow.nav.designer",
+      "signatureWidget": "workflow-designer-canvas",
+      "auditEnabled": true,
+      "visibleWhenPerm": ["workflow.instance.configure"]
+    },
+    {
+      "route": "/workflow/instances",
+      "pageType": "list",
+      "layout": "full-page",
+      "kpiScope": "page-local",
+      "userIntent": "monitor",
+      "titleKey": "workflow.nav.instances",
+      "signatureWidget": "workflow-instance-monitor",
+      "dataResourceKey": "workflow.instances.list",
+      "auditEnabled": true,
+      "visibleWhenPerm": ["workflow.instance.read"]
+    },
+    {
+      "route": "/workflow/templates",
+      "pageType": "list",
+      "layout": "full-page",
+      "kpiScope": "page-local",
+      "userIntent": "configure",
+      "titleKey": "workflow.nav.templates",
+      "signatureWidget": "template-gallery",
+      "dataResourceKey": "workflow.templates.list",
+      "auditEnabled": true,
+      "visibleWhenPerm": ["workflow.instance.read"]
+    },
+    {
+      "route": "/workflow/sla",
+      "pageType": "analytics",
+      "layout": "full-page",
+      "kpiScope": "page-local",
+      "userIntent": "monitor",
+      "titleKey": "workflow.nav.sla",
+      "signatureWidget": "sla-console",
+      "dataResourceKey": "workflow.sla.breaches",
+      "auditEnabled": true,
+      "visibleWhenPerm": ["workflow.instance.read"]
+    }
+  ]
+}

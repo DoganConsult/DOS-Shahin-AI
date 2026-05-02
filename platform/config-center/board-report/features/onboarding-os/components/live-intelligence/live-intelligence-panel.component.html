@@ -1,0 +1,163 @@
+<div class="intel" [class.rtl]="lang === 'ar'">
+      <!-- Header with AI pulse -->
+      <div class="intel-header">
+        <span class="intel-pulse" [class.active]="computing"></span>
+        <span class="intel-title">{{ lang === 'ar' ? 'ذكاء شاهين التشغيلي' : "Shahin's Operating Intelligence" }}</span>
+      </div>
+
+      <!-- Section 1: What Shahin Knows So Far -->
+      <div class="intel-section">
+        <div class="intel-section-head"
+             (click)="toggleSection(1)"
+             [attr.aria-expanded]="section1Open()"
+             role="button" tabindex="0"
+             (keydown.enter)="toggleSection(1)"
+             (keydown.space)="toggleSection(1)">
+          <i class="pi" [ngClass]="section1Open() ? 'pi-chevron-down' : 'pi-chevron-right'"></i>
+          <span>{{ lang === 'ar' ? 'ما يعرفه شاهين حتى الآن' : 'What Shahin Knows So Far' }}</span>
+        </div>
+        <div class="intel-section-body" *ngIf="section1Open()">
+          <!-- Computing skeleton -->
+          <div *ngIf="computing" class="intel-skeleton">
+            <div class="intel-skeleton-line"></div>
+            <div class="intel-skeleton-line short"></div>
+            <p class="intel-computing-text">
+              <i class="pi pi-spin pi-spinner"></i>
+              {{ lang === 'ar' ? 'شاهين يتعلم عن مشهدك التنظيمي...' : 'Shahin is learning about your regulatory landscape...' }}
+            </p>
+          </div>
+
+          <!-- Authorities -->
+          <ng-container *ngIf="!computing && sectorResolution?.authorities?.length > 0">
+            <div class="intel-label">
+              {{ lang === 'ar' ? 'شاهين حدد' : 'Shahin has identified' }}
+              <strong>{{ sectorResolution.authorities.length }}</strong>
+              {{ lang === 'ar' ? 'جهة رقابية' : 'regulators' }}
+            </div>
+            <div *ngFor="let a of sectorResolution.authorities" class="intel-regulator">
+              <span class="intel-reg-name">{{ lang === 'ar' ? a.name_ar : a.name_en }}</span>
+              <span class="intel-confidence-pill" *ngIf="a.confidence"
+                    [ngClass]="getConfidenceClass(a.confidence)">
+                {{ (a.confidence * 100) | number:'1.0-0' }}% {{ getConfidenceLabel(a.confidence) }}
+              </span>
+              <div class="intel-reg-reason" *ngIf="a.reason_en">{{ lang === 'ar' ? (a.reason_ar || a.reason_en) : a.reason_en }}</div>
+            </div>
+          </ng-container>
+
+          <!-- Frameworks -->
+          <ng-container *ngIf="!computing && sectorResolution?.frameworks?.length > 0">
+            <div class="intel-label" style="margin-top:0.75rem">
+              <strong>{{ sectorResolution.frameworks.length }}</strong>
+              {{ lang === 'ar' ? 'إطار تنظيمي محتمل' : 'frameworks likely apply' }}
+            </div>
+            <div *ngFor="let fw of sectorResolution.frameworks" class="intel-fw">
+              <span class="intel-fw-badge" [ngClass]="getConfidenceClass(fw.confidence)">
+                {{ getConfidenceLabel(fw.confidence) }}
+              </span>
+              <span class="intel-fw-name">{{ fw.name }}</span>
+              <span class="intel-fw-reason" *ngIf="fw.reason_en">{{ lang === 'ar' ? (fw.reason_ar || fw.reason_en) : fw.reason_en }}</span>
+            </div>
+          </ng-container>
+
+          <div *ngIf="!computing && !sectorResolution?.authorities?.length && !sectorResolution?.frameworks?.length" class="intel-empty">
+            {{ lang === 'ar' ? 'أخبر شاهين أكثر — ستظهر الاستنتاجات تلقائياً' : 'Tell Shahin more — intelligence will appear as you go' }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 2: Your Workspace Forecast -->
+      <div class="intel-section">
+        <div class="intel-section-head"
+             (click)="toggleSection(2)"
+             [attr.aria-expanded]="section2Open()"
+             role="button" tabindex="0"
+             (keydown.enter)="toggleSection(2)"
+             (keydown.space)="toggleSection(2)">
+          <i class="pi" [ngClass]="section2Open() ? 'pi-chevron-down' : 'pi-chevron-right'"></i>
+          <span>{{ lang === 'ar' ? 'توقعات مساحة عملك' : 'Your Workspace Forecast' }}</span>
+        </div>
+        <div class="intel-section-body" *ngIf="section2Open()">
+          <div class="intel-forecast" *ngIf="(sectorResolution?.controlCount > 0 || liveInference?.impactPreview?.controls > 0)">
+            <div class="intel-forecast-item">
+              <span class="intel-forecast-val" [appCountUp]="sectorResolution?.controlCount || liveInference?.impactPreview?.controls || 0"></span>
+              <span class="intel-forecast-label">{{ lang === 'ar' ? 'ضوابط' : 'Controls' }}</span>
+            </div>
+            <div class="intel-forecast-item">
+              <span class="intel-forecast-val" [appCountUp]="sectorResolution?.evidenceTaskCount || liveInference?.impactPreview?.evidenceTasks || 0"></span>
+              <span class="intel-forecast-label">{{ lang === 'ar' ? 'أدلة' : 'Evidence' }}</span>
+            </div>
+            <div class="intel-forecast-item">
+              <span class="intel-forecast-val" [appCountUp]="sectorResolution?.risks?.length || liveInference?.impactPreview?.risks || 0"></span>
+              <span class="intel-forecast-label">{{ lang === 'ar' ? 'مخاطر' : 'Risks' }}</span>
+            </div>
+            <div class="intel-forecast-item">
+              <span class="intel-forecast-val" [appCountUp]="liveInference?.impactPreview?.policies || 0"></span>
+              <span class="intel-forecast-label">{{ lang === 'ar' ? 'سياسات' : 'Policies' }}</span>
+            </div>
+            <div class="intel-forecast-item">
+              <span class="intel-forecast-val" [appCountUp]="liveInference?.impactPreview?.workflows || 0"></span>
+              <span class="intel-forecast-label">{{ lang === 'ar' ? 'سير عمل' : 'Workflows' }}</span>
+            </div>
+            <div class="intel-forecast-item">
+              <span class="intel-forecast-val" [appCountUp]="liveInference?.enabledModules?.length || 0"></span>
+              <span class="intel-forecast-label">{{ lang === 'ar' ? 'وحدات' : 'Modules' }}</span>
+            </div>
+          </div>
+          <div class="intel-sector-badge" *ngIf="sectorResolution?.sectorNameEn">
+            {{ lang === 'ar' ? sectorResolution.sectorNameAr : sectorResolution.sectorNameEn }}
+          </div>
+          <div *ngIf="sectorResolution?.controlCount > 0" class="intel-source-card">
+            <i class="pi pi-database"></i>
+            {{ lang === 'ar' ? 'مُحتسب من قاعدة البيانات التنظيمية — ليست تقديرات' : 'Computed from regulatory database — not estimates' }}
+          </div>
+          <!-- V-12: Empty state when no sector data computed yet -->
+          <div *ngIf="!sectorResolution?.controlCount && !liveInference?.impactPreview?.controls" class="intel-empty">
+            {{ lang === 'ar' ? 'أخبر شاهين أكثر — سيتنبأ بمساحة العمل' : 'Tell Shahin more — your workspace forecast will build as you go' }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3: System Readiness -->
+      <div class="intel-section">
+        <div class="intel-section-head"
+             (click)="toggleSection(3)"
+             [attr.aria-expanded]="section3Open()"
+             role="button" tabindex="0"
+             (keydown.enter)="toggleSection(3)"
+             (keydown.space)="toggleSection(3)">
+          <i class="pi" [ngClass]="section3Open() ? 'pi-chevron-down' : 'pi-chevron-right'"></i>
+          <span>{{ lang === 'ar' ? 'ثقة شاهين' : "Shahin's Confidence" }}</span>
+        </div>
+        <div class="intel-section-body" *ngIf="section3Open()">
+          <div class="intel-readiness-row">
+            <span class="intel-readiness-label">{{ lang === 'ar' ? 'الإجابات' : 'Answers' }}</span>
+            <span class="intel-readiness-val" dir="ltr">{{ answeredCount }} / {{ totalQuestions }}</span>
+          </div>
+          <div class="intel-readiness-row" *ngIf="liveInference?.automationScore !== null && liveInference?.automationScore !== undefined">
+            <span class="intel-readiness-label">{{ lang === 'ar' ? 'الأتمتة' : 'Automation' }}</span>
+            <span class="intel-readiness-val">{{ liveInference.automationScore }}%</span>
+          </div>
+          <div class="intel-readiness-row" *ngIf="liveInference?.complexity">
+            <span class="intel-readiness-label">{{ lang === 'ar' ? 'التعقيد' : 'Complexity' }}</span>
+            <p-tag [value]="liveInference.complexity" [severity]="liveInference.complexity === 'lite' ? 'success' : liveInference.complexity === 'enterprise' ? 'warning' : 'info'" />
+          </div>
+          <!-- Scores -->
+          <div *ngIf="scores.length > 0" class="intel-scores">
+            <div class="intel-label" style="margin-top:0.5rem">{{ lang === 'ar' ? 'النتائج' : 'Scores' }}</div>
+            <div *ngFor="let s of scores" class="intel-score-row">
+              <span class="intel-score-label">{{ s.scoreDomain }}</span>
+              <span class="intel-score-val" [ngClass]="s.scoreValue >= 80 ? 'score-high' : s.scoreValue >= 50 ? 'score-mid' : 'score-low'">{{ s.scoreValue | number:'1.0-0' }}<span class="intel-score-max">/{{ s.maxScore | number:'1.0-0' }}</span></span>
+              <span class="intel-score-rating" *ngIf="s.ratingLabel">{{ s.ratingLabel }}</span>
+            </div>
+          </div>
+          <!-- Recommendations -->
+          <div *ngIf="recommendations.length > 0" class="intel-recs">
+            <div class="intel-label" style="margin-top:0.5rem">{{ lang === 'ar' ? 'التوصيات' : 'Recommendations' }}</div>
+            <div *ngFor="let rec of recommendations" class="intel-rec">
+              <i class="pi pi-star"></i>
+              <span>{{ lang === 'ar' ? rec.title_ar : rec.title_en }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>

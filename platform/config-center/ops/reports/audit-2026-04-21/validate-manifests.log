@@ -1,0 +1,5 @@
+
+> dogan-ai-os-platform-target@1.0.0 validate:manifests /root/DOS-AIO
+> node scripts/validate-manifests.mjs
+
+Validated 95 manifest files under /root/DOS-AIO.

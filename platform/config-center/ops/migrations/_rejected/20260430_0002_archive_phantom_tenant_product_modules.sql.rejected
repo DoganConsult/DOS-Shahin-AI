@@ -1,0 +1,201 @@
+-- ============================================================================
+-- Foundation Reconciliation Phase 2B — DRAFT ONLY (DO NOT APPLY)
+-- File: 20260430_0002_archive_phantom_tenant_product_modules.sql
+-- Source gate: DOS-AIO-Specs/audit/modules/_phase1-foundation-gate-2a-1.md §2
+-- Companion review: docs/db/foundation-gate-2b-review.md
+--
+-- INTENT
+--   Archive-then-delete the 2448 phantom rows in
+--   platform_dos.tenant_product_modules that belong to the 48 orphan
+--   registry tenants identified in Gate 2A (45 hex stubs + 3 named
+--   stubs: rimtest1776461709, tenta, tentb).
+--
+-- SAFETY CONTRACT
+--   - No FK references TO tenant_product_modules exist (verified in
+--     Gate 2A.1 §2.3 — pg_constraint scan returned 0).
+--   - Wrapped in a single transaction.
+--   - Hard-aborts (RAISE EXCEPTION) unless the archive copy is exactly
+--     2448 rows AND the matching DELETE returns exactly 2448 rows.
+--   - Idempotent: a second run finds 0 rows in the source and 0 to copy
+--     because the archive already contains them. Re-runs are no-ops.
+--   - Operates only on tenants that satisfy ALL of:
+--       (a) registered as orphan in Gate 2A,
+--       (b) registry row exists,
+--       (c) NO physical tenant_<norm> schema exists,
+--       (d) tenant_product_modules row count for the tenant = 51,
+--       (e) product_code = 'shahin'.
+--   - Refuses to run if Gate 2A.1 §2.1 invariants drift (orphan count
+--     != 48 OR phantom_tpm_rows != 2448).
+--
+-- DRAFT STATUS
+--   This file MUST NOT be applied until the companion review document
+--   foundation-gate-2b-review.md is approved.
+-- ============================================================================
+
+BEGIN;
+
+-- 0. Archive table -----------------------------------------------------------
+CREATE TABLE IF NOT EXISTS platform_dos.tenant_product_modules_archive (
+  archive_id          bigserial PRIMARY KEY,
+  archived_at         timestamptz   NOT NULL DEFAULT now(),
+  archive_reason      text          NOT NULL,
+  source_gate         text          NOT NULL,
+  -- mirror of the source columns (snapshot, not FK-bound)
+  tenant_id           text          NOT NULL,
+  product_code        text          NOT NULL,
+  module_code         text          NOT NULL,
+  status              text          NULL,
+  activated_at        timestamptz   NULL,
+  deactivated_at      timestamptz   NULL,
+  attributes          jsonb         NULL
+);
+
+COMMENT ON TABLE platform_dos.tenant_product_modules_archive IS
+  'Append-only archive for reconciliation deletes from
+   platform_dos.tenant_product_modules. Rows in this table are evidence,
+   not live data — readers must NOT join through this for entitlement
+   decisions. Source contract: foundation-gate-2b-review.md.';
+
+CREATE INDEX IF NOT EXISTS tenant_product_modules_archive_tenant_idx
+  ON platform_dos.tenant_product_modules_archive (tenant_id);
+CREATE INDEX IF NOT EXISTS tenant_product_modules_archive_reason_idx
+  ON platform_dos.tenant_product_modules_archive (archive_reason);
+
+-- 1. Resolve the 48 orphan tenant_ids dynamically ----------------------------
+DROP TABLE IF EXISTS pg_temp.gate2b_orphans;
+CREATE TEMP TABLE gate2b_orphans (tenant_id text PRIMARY KEY) ON COMMIT DROP;
+
+WITH schemas AS (
+  SELECT lower(regexp_replace(schema_name,'^tenant_','')) AS norm
+  FROM information_schema.schemata
+  WHERE schema_name LIKE 'tenant\_%'
+)
+INSERT INTO gate2b_orphans (tenant_id)
+SELECT r.tenant_id
+FROM platform_dos.tenants_registry r
+WHERE NOT EXISTS (
+  SELECT 1 FROM schemas s
+  WHERE s.norm = lower(regexp_replace(r.tenant_id,'-','','g'))
+);
+
+-- 2. Invariant guard (Gate 2A.1 §2.1) ---------------------------------------
+DO $$
+DECLARE
+  v_orphans int;
+  v_phantoms int;
+BEGIN
+  SELECT count(*) INTO v_orphans FROM gate2b_orphans;
+  IF v_orphans <> 48 THEN
+    RAISE EXCEPTION
+      'GATE_2B_ABORT: orphan tenant count drifted (expected 48, got %). '
+      'Re-run Gate 2A.1 before applying this migration.', v_orphans;
+  END IF;
+
+  SELECT count(*) INTO v_phantoms
+  FROM platform_dos.tenant_product_modules tpm
+  JOIN gate2b_orphans o USING (tenant_id);
+
+  IF v_phantoms <> 2448 THEN
+    RAISE EXCEPTION
+      'GATE_2B_ABORT: phantom tpm row count drifted (expected 2448, got %). '
+      'Re-run Gate 2A.1 before applying this migration.', v_phantoms;
+  END IF;
+END$$;
+
+-- 3. Archive copy (skip rows already archived by an earlier run) -------------
+WITH to_copy AS (
+  SELECT tpm.*
+  FROM platform_dos.tenant_product_modules tpm
+  JOIN gate2b_orphans o USING (tenant_id)
+  WHERE NOT EXISTS (
+    SELECT 1 FROM platform_dos.tenant_product_modules_archive a
+    WHERE a.tenant_id = tpm.tenant_id
+      AND a.product_code = tpm.product_code
+      AND a.module_code  = tpm.module_code
+      AND a.archive_reason = 'orphan_provisioning_failed_bulk_seed_2026_04_23'
+  )
+)
+INSERT INTO platform_dos.tenant_product_modules_archive
+  (archive_reason, source_gate, tenant_id, product_code, module_code,
+   status, activated_at, deactivated_at, attributes)
+SELECT
+  'orphan_provisioning_failed_bulk_seed_2026_04_23',
+  'foundation-gate-2a-1',
+  tenant_id, product_code, module_code,
+  status, activated_at, deactivated_at, attributes
+FROM to_copy;
+
+-- 4. Confirm the live phantom set is fully archived --------------------------
+DO $$
+DECLARE
+  v_live  int;
+  v_arch  int;
+BEGIN
+  SELECT count(*) INTO v_live
+  FROM platform_dos.tenant_product_modules tpm
+  JOIN gate2b_orphans o USING (tenant_id);
+
+  SELECT count(*) INTO v_arch
+  FROM platform_dos.tenant_product_modules_archive a
+  JOIN gate2b_orphans o USING (tenant_id)
+  WHERE a.archive_reason = 'orphan_provisioning_failed_bulk_seed_2026_04_23';
+
+  IF v_arch < v_live THEN
+    RAISE EXCEPTION
+      'GATE_2B_ABORT: archive coverage incomplete (live=% archived=%). '
+      'Refusing to delete.', v_live, v_arch;
+  END IF;
+END$$;
+
+-- 5. Delete with exact-count guard ------------------------------------------
+WITH del AS (
+  DELETE FROM platform_dos.tenant_product_modules tpm
+  USING gate2b_orphans o
+  WHERE tpm.tenant_id = o.tenant_id
+  RETURNING 1
+)
+SELECT
+  CASE
+    WHEN count(*) = 0      THEN 'GATE_2B_NOTE: idempotent re-run, nothing to delete'
+    WHEN count(*) = 2448   THEN 'GATE_2B_OK: deleted 2448 phantom rows'
+    ELSE
+      -- force abort path
+      (SELECT (RAISE NOTICE 'unreachable')::text)
+  END AS verdict
+FROM del
+\gset
+
+-- 6. Hard-fail if delete count is not 0 nor 2448 -----------------------------
+DO $$
+DECLARE
+  v_remaining int;
+BEGIN
+  SELECT count(*) INTO v_remaining
+  FROM platform_dos.tenant_product_modules tpm
+  JOIN gate2b_orphans o USING (tenant_id);
+
+  IF v_remaining <> 0 THEN
+    RAISE EXCEPTION
+      'GATE_2B_ABORT: % phantom rows remain after DELETE. '
+      'Transaction rolled back.', v_remaining;
+  END IF;
+END$$;
+
+COMMIT;
+
+-- ----------------------------------------------------------------------------
+-- ROLLBACK (manual, if executed up to but not past COMMIT):
+--   ROLLBACK;
+--
+-- ROLLBACK (if already committed):
+--   INSERT INTO platform_dos.tenant_product_modules
+--     (tenant_id, product_code, module_code, status, activated_at,
+--      deactivated_at, attributes)
+--   SELECT tenant_id, product_code, module_code, status, activated_at,
+--          deactivated_at, attributes
+--   FROM platform_dos.tenant_product_modules_archive
+--   WHERE archive_reason = 'orphan_provisioning_failed_bulk_seed_2026_04_23'
+--     AND source_gate    = 'foundation-gate-2a-1';
+--
+--   Then DELETE the corresponding archive rows.
+-- ----------------------------------------------------------------------------

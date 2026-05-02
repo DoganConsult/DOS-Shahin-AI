@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Platform Feature Flags",
+  "type": "object",
+  "required": ["version", "flags"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "version": { "type": "string" },
+    "description": { "type": "string" },
+    "flags": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["key", "description", "type", "defaultValue", "owner", "status"],
+        "properties": {
+          "key": {
+            "type": "string",
+            "pattern": "^[a-z0-9_]+\\.[a-z0-9_]+$",
+            "description": "Dot-namespaced flag key: <module>.<feature>"
+          },
+          "description": { "type": "string" },
+          "type": { "type": "string", "enum": ["boolean", "string", "number"] },
+          "defaultValue": {},
+          "rollout": {
+            "type": "object",
+            "required": ["strategy"],
+            "properties": {
+              "strategy": {
+                "type": "string",
+                "enum": ["all", "percentage", "tenant_allowlist", "user_allowlist", "none"]
+              },
+              "percentage": { "type": "number", "minimum": 0, "maximum": 100 },
+              "allowedTenants": { "type": "array", "items": { "type": "string" } },
+              "allowedUsers": { "type": "array", "items": { "type": "string" } }
+            }
+          },
+          "owner": { "type": "string" },
+          "status": { "type": "string", "enum": ["active", "beta", "planned", "deprecated", "removed"] },
+          "tags": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,153 @@
+<p-toast />
+    <div class="cw-header">
+      <h3 style="margin:0">{{ i18n.currentLang()==='ar' ? 'سير العمل التعاوني (AI ↔ إنسان)' : 'Cooperative AI ↔ Human Workflows' }}</h3>
+      <span class="cw-badge">10 {{ i18n.currentLang()==='ar' ? 'نوع' : 'types' }}</span>
+    </div>
+
+    <div class="cw-types-grid">
+      @for (wf of workflowTypes; track wf.key) {
+        <div class="cw-type-card" [class.active]="activeType() === wf.key" (click)="selectType(wf)">
+          <div class="cw-type-icon"><i class="pi" [ngClass]="wf.icon"></i></div>
+          <div class="cw-type-info">
+            <strong>{{ i18n.currentLang()==='ar' ? wf.labelAr : wf.label }}</strong>
+            <span class="cw-type-desc">{{ wf.description }}</span>
+          </div>
+          <span class="cw-type-count" *ngIf="counts()[wf.key] !== undefined">{{ counts()[wf.key] }}</span>
+        </div>
+      }
+    </div>
+
+    <div class="cw-detail" *ngIf="activeType()">
+      <div class="cw-detail-header">
+        <h4 style="margin:0">{{ activeLabel() }}</h4>
+        <div class="cw-detail-actions">
+          <span class="p-input-icon-left">
+            <i class="pi pi-search"></i>
+            <input type="text" pInputText [(ngModel)]="searchTerm" placeholder="Search..." aria-label="Search items" (input)="filterItems()" class="cw-search" />
+          </span>
+          <button pButton icon="pi pi-refresh" class="p-button-text" pTooltip="Refresh" (click)="loadActive()"></button>
+        </div>
+      </div>
+
+      <div *ngIf="detailLoading()" class="cw-loading">
+        <i class="pi pi-spin pi-spinner" style="font-size:1.5rem;color:var(--primary-color)"></i>
+      </div>
+
+      <grc-data-table
+        *ngIf="!detailLoading()"
+        [totalRecords]="filteredItems().length"
+        [emptyMessage]="i18n.currentLang()==='ar' ? 'لا توجد عناصر' : 'No items in this workflow type'">
+      <p-table [value]="filteredItems()" [paginator]="filteredItems().length > 10" [rows]="10" styleClass="p-datatable-sm p-datatable-striped" aria-label="Cooperative workflow items">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>{{ i18n.currentLang()==='ar' ? 'المعرف' : 'ID' }}</th>
+            <th>{{ i18n.currentLang()==='ar' ? 'التفاصيل' : 'Details' }}</th>
+            <th>{{ i18n.currentLang()==='ar' ? 'الحالة' : 'Status' }}</th>
+            <th>{{ i18n.currentLang()==='ar' ? 'الثقة' : 'Confidence' }}</th>
+            <th>{{ i18n.currentLang()==='ar' ? 'تاريخ الإنشاء' : 'Created' }}</th>
+            <th style="width:200px">{{ i18n.currentLang()==='ar' ? 'إجراءات' : 'Actions' }}</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-item>
+          <tr>
+            <td><code>{{ getItemId(item) | slice:0:8 }}...</code></td>
+            <td>{{ getItemDetail(item) }}</td>
+            <td><p-tag [value]="getItemStatus(item)" [severity]="getStatusSeverity(getItemStatus(item))" /></td>
+            <td>
+              <span *ngIf="getItemConfidence(item) >= 0" class="cw-confidence">{{ getItemConfidence(item) }}%</span>
+              <span *ngIf="getItemConfidence(item) < 0">—</span>
+            </td>
+            <td>{{ getItemDate(item) }}</td>
+            <td>
+              <div class="cw-actions">
+                <button pButton icon="pi pi-eye" class="p-button-text p-button-sm" pTooltip="View detail" (click)="openDetailDialog(item)"></button>
+                <ng-container [ngSwitch]="activeType()">
+                  <ng-container *ngSwitchCase="'triage'">
+                    <button *ngIf="getItemStatus(item)==='proposed'" pButton icon="pi pi-check" label="Accept" class="p-button-success p-button-sm" [loading]="actionLoading()===getItemId(item)+'_accept'" (click)="resolveTriage(item, 'accepted')"></button>
+                    <button *ngIf="getItemStatus(item)==='proposed'" pButton icon="pi pi-times" label="Reject" class="p-button-danger p-button-outlined p-button-sm" [loading]="actionLoading()===getItemId(item)+'_reject'" (click)="resolveTriage(item, 'rejected')"></button>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'codraft'">
+                    <button *ngIf="getItemStatus(item)==='drafting'||getItemStatus(item)==='pending'" pButton icon="pi pi-pencil" label="Resolve" class="p-button-info p-button-sm" [loading]="actionLoading()===getItemId(item)+'_resolve'" (click)="resolveCoDraft(item)"></button>
+                    <button *ngIf="getItemStatus(item)==='drafting'||getItemStatus(item)==='pending'" pButton icon="pi pi-check-circle" label="Finalize" class="p-button-success p-button-sm" [loading]="actionLoading()===getItemId(item)+'_finalize'" (click)="finalizeCoDraft(item)"></button>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'evidence'">
+                    <button *ngIf="getItemStatus(item)==='staged'||getItemStatus(item)==='pending'" pButton icon="pi pi-check" label="Approve" class="p-button-success p-button-sm" [loading]="actionLoading()===getItemId(item)+'_approve'" (click)="reviewEvidence(item, 'approved')"></button>
+                    <button *ngIf="getItemStatus(item)==='staged'||getItemStatus(item)==='pending'" pButton icon="pi pi-times" label="Reject" class="p-button-danger p-button-outlined p-button-sm" [loading]="actionLoading()===getItemId(item)+'_reject'" (click)="reviewEvidence(item, 'rejected')"></button>
+                    <button *ngIf="getItemStatus(item)==='staged'||getItemStatus(item)==='pending'" pButton icon="pi pi-replay" label="Changes" class="p-button-warning p-button-outlined p-button-sm" [loading]="actionLoading()===getItemId(item)+'_changes'" (click)="reviewEvidence(item, 'request_changes')"></button>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'riskpair'">
+                    <button *ngIf="getItemStatus(item)==='agent_assessed'||getItemStatus(item)==='reviewing'" pButton icon="pi pi-shield" label="Submit" class="p-button-info p-button-sm" [loading]="actionLoading()===getItemId(item)+'_submit'" (click)="submitRiskHuman(item)"></button>
+                    <button *ngIf="getItemStatus(item)==='dialogue'||getItemStatus(item)==='human_reviewing'" pButton icon="pi pi-check" label="Finalize" class="p-button-success p-button-sm" [loading]="actionLoading()===getItemId(item)+'_finalize'" (click)="finalizeRiskPair(item)"></button>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'prescreen'">
+                    <button pButton icon="pi pi-bolt" label="Run Pre-screen" class="p-button-info p-button-sm" [loading]="actionLoading()===getItemId(item)+'_prescreen'" (click)="runPreScreen(item)"></button>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'warroom'">
+                    <button *ngIf="getItemStatus(item)==='active'||getItemStatus(item)==='open'" pButton icon="pi pi-user" label="Claim" class="p-button-warning p-button-sm" [loading]="actionLoading()===getItemId(item)+'_claim'" (click)="claimWarRoom(item)"></button>
+                    <button *ngIf="getItemStatus(item)==='active'||getItemStatus(item)==='in_progress'||getItemStatus(item)==='claimed'" pButton icon="pi pi-check" label="Resolve" class="p-button-success p-button-sm" [loading]="actionLoading()===getItemId(item)+'_resolve'" (click)="resolveWarRoom(item)"></button>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'nudge'">
+                    <button pButton icon="pi pi-bell" label="Send Nudge" class="p-button-info p-button-sm" [loading]="actionLoading()===getItemId(item)+'_nudge'" (click)="sendNudge(item)"></button>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'calibration'">
+                    <button *ngIf="getItemStatus(item)==='proposed'||getItemStatus(item)==='pending'" pButton icon="pi pi-send" label="Submit" class="p-button-info p-button-sm" [loading]="actionLoading()===getItemId(item)+'_submit'" (click)="submitCalibrationItem(item)"></button>
+                    <button *ngIf="getItemStatus(item)==='submitted'" pButton icon="pi pi-check" label="Accept" class="p-button-success p-button-sm" [loading]="actionLoading()===getItemId(item)+'_accept'" (click)="acceptCalibrationItem(item)"></button>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'auditprep'">
+                    <button *ngIf="getItemStatus(item)==='pending'||getItemStatus(item)==='in_progress'" pButton icon="pi pi-check-square" label="Ready" class="p-button-success p-button-sm" [loading]="actionLoading()===getItemId(item)+'_ready'" (click)="markAuditReady(item)"></button>
+                    <button *ngIf="getItemStatus(item)==='pending'||getItemStatus(item)==='in_progress'" pButton icon="pi pi-plus" label="Add Item" class="p-button-outlined p-button-sm" (click)="openAddAuditItem(item)"></button>
+                    <button pButton icon="pi pi-sync" label="Status" class="p-button-outlined p-button-sm" (click)="openAuditStatusDialog(item)"></button>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'standup'">
+                    <button *ngIf="getItemStatus(item)==='generated'||getItemStatus(item)==='pending'" pButton icon="pi pi-thumbs-up" label="Acknowledge" class="p-button-info p-button-sm" [loading]="actionLoading()===getItemId(item)+'_ack'" (click)="acknowledgeStandup(item)"></button>
+                  </ng-container>
+                </ng-container>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+      </grc-data-table>
+    </div>
+
+    <p-dialog [header]="i18n.currentLang()==='ar' ? 'تفاصيل العنصر' : 'Item Detail'" [(visible)]="detailDialogVisible" [modal]="true" [style]="{width:'620px','max-height':'80vh'}" [dismissableMask]="true">
+      <ng-container *ngIf="detailItem">
+        <div class="cw-detail-grid">
+          <div class="cw-detail-row"><strong>{{ i18n.currentLang()==='ar' ? 'المعرف' : 'ID' }}:</strong> <code>{{ getItemId(detailItem) }}</code></div>
+          <div class="cw-detail-row"><strong>{{ i18n.currentLang()==='ar' ? 'النوع' : 'Type' }}:</strong> {{ activeLabel() }}</div>
+          <div class="cw-detail-row"><strong>{{ i18n.currentLang()==='ar' ? 'الحالة' : 'Status' }}:</strong> <p-tag [value]="getItemStatus(detailItem)" [severity]="getStatusSeverity(getItemStatus(detailItem))" /></div>
+          <div class="cw-detail-row"><strong>{{ i18n.currentLang()==='ar' ? 'التفاصيل' : 'Details' }}:</strong> {{ getItemDetail(detailItem) }}</div>
+          <div class="cw-detail-row" *ngIf="getItemConfidence(detailItem) >= 0"><strong>{{ i18n.currentLang()==='ar' ? 'الثقة' : 'Confidence' }}:</strong> {{ getItemConfidence(detailItem) }}%</div>
+          <div class="cw-detail-row"><strong>{{ i18n.currentLang()==='ar' ? 'تاريخ الإنشاء' : 'Created' }}:</strong> {{ getItemDate(detailItem) }}</div>
+          <div class="cw-detail-row" *ngIf="detailItem.assignee || detailItem.assignedTo || detailItem.userId"><strong>{{ i18n.currentLang()==='ar' ? 'المسند إليه' : 'Assignee' }}:</strong> {{ detailItem.assignee || detailItem.assignedTo || detailItem.userId }}</div>
+          <div class="cw-detail-row" *ngIf="detailItem.agentId || detailItem.agentName"><strong>{{ i18n.currentLang()==='ar' ? 'الوكيل' : 'Agent' }}:</strong> {{ detailItem.agentName || detailItem.agentId }}</div>
+        </div>
+        <div *ngIf="detailExtra" class="cw-detail-extra">
+          <h5 style="margin:12px 0 8px">{{ i18n.currentLang()==='ar' ? 'بيانات إضافية' : 'Additional Data' }}</h5>
+          <pre class="cw-json-pre">{{ detailExtra | json }}</pre>
+        </div>
+      </ng-container>
+    </p-dialog>
+
+    <p-dialog [header]="i18n.currentLang()==='ar' ? 'إضافة عنصر فحص' : 'Add Checklist Item'" [(visible)]="addAuditItemVisible" [modal]="true" [style]="{width:'420px'}">
+      <div class="cw-detail-grid">
+        <grc-form-field [label]="i18n.currentLang()==='ar' ? 'عنوان العنصر' : 'Item title'">
+          <input pInputText [(ngModel)]="newAuditItemTitle" [placeholder]="'Enter item title...'" [style]="{'width':'100%'}" />
+        </grc-form-field>
+      </div>
+      <ng-template pTemplate="footer">
+        <button pButton [label]="i18n.currentLang()==='ar' ? 'إلغاء' : 'Cancel'" class="p-button-text" (click)="addAuditItemVisible = false"></button>
+        <button pButton icon="pi pi-plus" [label]="i18n.currentLang()==='ar' ? 'إضافة' : 'Add'" class="p-button-success" [disabled]="!newAuditItemTitle.trim()" (click)="confirmAddAuditItem()"></button>
+      </ng-template>
+    </p-dialog>
+
+    <p-dialog [header]="i18n.currentLang()==='ar' ? 'تحديث الحالة' : 'Update Status'" [(visible)]="auditStatusVisible" [modal]="true" [style]="{width:'400px'}">
+      <div class="cw-detail-grid">
+        <label>{{ i18n.currentLang()==='ar' ? 'الحالة الجديدة' : 'New status' }}</label>
+        <p-dropdown [(ngModel)]="newAuditStatus" [options]="auditStatusOptions" optionLabel="label" optionValue="value" [style]="{'width':'100%'}" />
+      </div>
+      <ng-template pTemplate="footer">
+        <button pButton [label]="i18n.currentLang()==='ar' ? 'إلغاء' : 'Cancel'" class="p-button-text" (click)="auditStatusVisible = false"></button>
+        <button pButton icon="pi pi-check" [label]="i18n.currentLang()==='ar' ? 'تحديث' : 'Update'" class="p-button-success" [disabled]="!newAuditStatus" (click)="confirmAuditStatus()"></button>
+      </ng-template>
+    </p-dialog>

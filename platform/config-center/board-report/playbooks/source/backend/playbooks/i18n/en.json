@@ -1,0 +1,11 @@
+{
+  "playbooks.title": "Playbooks",
+  "playbooks.dashboard": "Playbooks Dashboard",
+  "playbooks.empty.title": "No records found",
+  "playbooks.empty.description": "Create your first playbooks record to get started.",
+  "playbooks.loading": "Loading playbooks data...",
+  "playbooks.error.title": "Failed to load data",
+  "playbooks.error.retry": "Retry",
+  "playbooks.create": "Create New",
+  "playbooks.diagnostics": "Diagnostics"
+}

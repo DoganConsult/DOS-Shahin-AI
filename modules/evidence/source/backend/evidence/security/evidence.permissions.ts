@@ -1,0 +1,2 @@
+import { EVIDENCE_PERMISSIONS } from './evidence.security';
+export { EVIDENCE_PERMISSIONS as EVIDENCE_MODULE_PERMISSIONS };

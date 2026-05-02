@@ -1,0 +1,98 @@
+---
+# Incident resource policy — enterprise edition. Binds to dogan_enterprise
+# so on_call + incident_responder derived roles can operate without breaking
+# SoD. All deny decisions emit a canonical DAUTH_DENY_* output code that the
+# decision engine folds into authz_decision_log.reason_code.
+apiVersion: "api.cerbos.dev/v1"
+resourcePolicy:
+  version: "1"
+  resource: "incident"
+  importDerivedRoles:
+    - dogan_enterprise
+
+  rules:
+    - actions: ["incident.view", "incident.list"]
+      effect: EFFECT_ALLOW
+      derivedRoles:
+        - tenant_member
+        - auditor_readonly
+        - incident_responder
+        - on_call
+        - platform_admin
+
+    - actions: ["incident.create"]
+      effect: EFFECT_ALLOW
+      derivedRoles:
+        - tenant_member
+        - incident_responder
+        - on_call
+        - tenant_admin
+        - platform_admin
+      condition:
+        match:
+          expr: request.principal.attr.tenantId == request.resource.attr.tenantId
+
+    - actions: ["incident.update", "incident.assign", "incident.comment"]
+      effect: EFFECT_ALLOW
+      derivedRoles:
+        - incident_responder
+        - on_call
+        - owner
+        - tenant_admin
+        - platform_admin
+
+    - actions: ["incident.escalate"]
+      effect: EFFECT_ALLOW
+      derivedRoles:
+        - incident_responder
+        - on_call
+        - tenant_admin
+        - platform_admin
+        - break_glass
+
+    # Close — SoD: closer cannot be the reporter (owner)
+    - actions: ["incident.close"]
+      effect: EFFECT_ALLOW
+      derivedRoles:
+        - incident_responder
+        - tenant_admin
+      condition:
+        match:
+          all:
+            of:
+              - expr: request.resource.attr.status == "resolved"
+              - expr: request.principal.id != request.resource.attr.createdBy
+
+    - actions: ["incident.close"]
+      effect: EFFECT_DENY
+      roles: ["*"]
+      condition:
+        match:
+          expr: request.principal.id == request.resource.attr.createdBy
+      output:
+        when:
+          ruleActivated: '"DAUTH_DENY_SOD_SELF_APPROVAL"'
+
+    # Export + public disclosure — high-assurance only
+    - actions: ["incident.export", "incident.disclose"]
+      effect: EFFECT_ALLOW
+      derivedRoles:
+        - high_assurance
+        - compliance_officer
+      condition:
+        match:
+          all:
+            of:
+              - expr: request.resource.attr.status == "closed"
+              - expr: request.principal.attr.emailVerified == true
+      output:
+        expr: |
+          { "requireDualApproval": true,
+            "retainForDays": 2555 }
+
+    - actions: ["incident.delete"]
+      effect: EFFECT_ALLOW
+      derivedRoles: ["platform_admin", "break_glass"]
+      condition:
+        match:
+          expr: request.resource.attr.status != "closed"

@@ -1,0 +1,4 @@
+
+> @dos/ai-gateway-service@0.1.0 build /root/DOS-AIO/services/ai-gateway-service
+> tsc -p tsconfig.json
+

@@ -1,0 +1,27 @@
+---
+# Cerbos PDP runtime config — baseline for DAuth ABAC shadow rollout.
+# Referenced by ops/pm2 / docker-compose when launching the Cerbos PDP at
+# CERBOS_PDP_URL (port 3592). Policies are sourced from the sibling
+# ./policies directory.
+#
+# Keep this file minimal. Upgrades (HTTPS, schema registry, audit sinks)
+# layer on via env overrides in ops/env, not here.
+server:
+  httpListenAddr: ":3592"
+  grpcListenAddr: ":3593"
+storage:
+  driver: "disk"
+  disk:
+    directory: /root/DOS-AIO/ops/cerbos/policies
+    watchForChanges: true
+schema:
+  enforcement: "warn"
+audit:
+  enabled: true
+  accessLogsEnabled: true
+  decisionLogsEnabled: true
+  backend: "local"
+  local:
+    storagePath: /var/log/cerbos-audit
+engine:
+  defaultPolicyVersion: "1"

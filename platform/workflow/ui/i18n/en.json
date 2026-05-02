@@ -1,0 +1,38 @@
+{
+  "workflow": {
+    "nav": {
+      "overview": "Overview",
+      "definitions": "Definitions",
+      "builder": "Builder",
+      "designer": "Designer",
+      "templates": "Templates",
+      "instances": "Instances",
+      "approvals": "Approvals",
+      "tasks": "Tasks",
+      "inbox": "Inbox",
+      "workQueue": "Work queue",
+      "delegations": "Delegations",
+      "escalations": "Escalations",
+      "sla": "SLA",
+      "audit": "Audit",
+      "reports": "Reports",
+      "settings": "Settings"
+    },
+    "overview": {
+      "title": "Workflow operations",
+      "subtitle": "Approvals, tasks, orchestration"
+    },
+    "errors": {
+      "loadFailed": "Failed to load workflow data."
+    },
+    "emptyStates": {
+      "noItems": "No items found."
+    },
+    "actions": {
+      "create": "Create",
+      "save": "Save",
+      "cancel": "Cancel",
+      "complete": "Complete"
+    }
+  }
+}

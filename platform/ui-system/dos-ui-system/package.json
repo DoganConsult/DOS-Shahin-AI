@@ -1,0 +1,40 @@
+{
+  "name": "@dos/ui-system",
+  "version": "1.0.0",
+  "description": "DOS Platform — UI System (AppShell, MobileShell, DesktopShell, PageHeader, Tabs, MetricCard, AdaptiveCommandBar, …). Single source of truth for product UI.",
+  "private": true,
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": { "types": "./src/index.ts", "default": "./src/index.ts" },
+    "./styles.css": "./src/styles.css"
+  },
+  "files": ["dist", "src"],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "clean": "rm -rf dist"
+  },
+  "peerDependencies": {
+    "@angular/common": ">=20.0.0 <22.0.0",
+    "@angular/core": ">=20.0.0 <22.0.0",
+    "carbon-components-angular": ">=5.69.0 <7.0.0",
+    "@carbon/icons-angular": ">=11.0.0 <13.0.0",
+    "@carbon/styles": ">=1.0.0 <2.0.0"
+  },
+  "peerDependenciesMeta": {
+    "carbon-components-angular": { "optional": false },
+    "@carbon/icons-angular": { "optional": true },
+    "@carbon/styles": { "optional": false }
+  },
+  "dependencies": {
+    "@dos/design-tokens": "workspace:*",
+    "@dos/ui-contracts": "workspace:*",
+    "@dos/access-store": "workspace:*"
+  },
+  "devDependencies": {
+    "@angular/common": "^21.2.7",
+    "@angular/core": "^21.2.7",
+    "rxjs": "^7.8.1",
+    "typescript": "^5.7.0"
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "moduleCode": "action",
+  "displayName": "Action Items",
+  "ownerTeam": "product-shahin-ai",
+  "productCode": "shahin-ai",
+  "ownership": "module-owned",
+  "version": "1.0.0",
+  "status": "active",
+  "platformDependencies": [
+    "identity",
+    "tenancy",
+    "workflow",
+    "permissions",
+    "audit"
+  ],
+  "seedProviders": [
+    "products/shahin/seeds/action-seed"
+  ],
+  "tenantDefaults": [
+    "action_default_sla_hours",
+    "action_recurrence_enabled"
+  ],
+  "requiredReferenceData": [
+    "action_categories",
+    "action_priorities",
+    "action_statuses"
+  ],
+  "currentSources": [
+    "/home/Dr-Dogan-AGRC-OS/backend/src/modules/action"
+  ],
+  "targetPath": "modules/action",
+  "futureService": "remediation-action-service",
+  "frontendSources": [
+    "/home/Dr-Dogan-AGRC-OS/frontend/src/app/platform-manifests/action.module.routes.ts"
+  ],
+  "ownedTables": [
+    "action_items",
+    "action_assignments",
+    "action_audit_log",
+    "action_categories",
+    "action_comments",
+    "action_dependencies",
+    "action_evidence_links",
+    "action_history",
+    "action_notifications",
+    "action_priorities",
+    "action_recurrence_rules",
+    "action_status_transitions",
+    "action_templates",
+    "action_time_tracking"
+  ],
+  "referencedTables": [
+    "audit_trail",
+    "teams",
+    "workflows",
+    "remediation_plans",
+    "governance_action_items"
+  ],
+  "events": {
+    "publishes": [
+      "action.created",
+      "action.assigned",
+      "action.started",
+      "action.completed",
+      "action.overdue",
+      "action.escalated",
+      "action.cancelled",
+      "action.reassigned",
+      "action.verified",
+      "action.dependency_resolved",
+      "action.recurrence_triggered"
+    ],
+    "subscribes": [
+      "remediation.action_assigned",
+      "governance.action_created",
+      "audit.finding_created",
+      "incident.capa_assigned",
+      "compliance.gap_detected",
+      "workflow.status_changed",
+      "foundation.position.holder.unassigned"
+    ]
+  },
+  "routeBases": [
+    "/api/action"
+  ]
+}

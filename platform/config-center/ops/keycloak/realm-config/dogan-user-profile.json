@@ -1,0 +1,165 @@
+{
+  "attributes": [
+    {
+      "name": "username",
+      "displayName": "${username}",
+      "validations": {
+        "length": { "min": 3, "max": 255 },
+        "username-prohibited-characters": {}
+      },
+      "permissions": {
+        "view": ["admin", "user"],
+        "edit": ["admin", "user"]
+      }
+    },
+    {
+      "name": "email",
+      "displayName": "${email}",
+      "required": { "roles": ["user"] },
+      "validations": {
+        "email": {},
+        "length": { "max": 255 }
+      },
+      "permissions": {
+        "view": ["admin", "user"],
+        "edit": ["admin", "user"]
+      }
+    },
+    {
+      "name": "firstName",
+      "displayName": "${firstName}",
+      "required": { "roles": ["user"] },
+      "validations": { "length": { "min": 1, "max": 255 } },
+      "permissions": {
+        "view": ["admin", "user"],
+        "edit": ["admin", "user"]
+      }
+    },
+    {
+      "name": "lastName",
+      "displayName": "${lastName}",
+      "required": { "roles": ["user"] },
+      "validations": { "length": { "min": 1, "max": 255 } },
+      "permissions": {
+        "view": ["admin", "user"],
+        "edit": ["admin", "user"]
+      }
+    },
+    {
+      "name": "companyNameEn",
+      "displayName": "${companyNameEn}",
+      "group": "organisation",
+      "required": { "roles": ["user"] },
+      "validations": { "length": { "min": 2, "max": 255 } },
+      "permissions": {
+        "view": ["admin", "user"],
+        "edit": ["admin", "user"]
+      }
+    },
+    {
+      "name": "companyNameAr",
+      "displayName": "${companyNameAr}",
+      "group": "organisation",
+      "validations": { "length": { "min": 2, "max": 255 } },
+      "permissions": {
+        "view": ["admin", "user"],
+        "edit": ["admin", "user"]
+      }
+    },
+    {
+      "name": "country",
+      "displayName": "${country}",
+      "group": "organisation",
+      "required": { "roles": ["user"] },
+      "validations": { "length": { "min": 2, "max": 100 } },
+      "permissions": {
+        "view": ["admin", "user"],
+        "edit": ["admin", "user"]
+      }
+    },
+    {
+      "name": "phone",
+      "displayName": "${phone}",
+      "group": "organisation",
+      "validations": { "length": { "max": 32 } },
+      "permissions": {
+        "view": ["admin", "user"],
+        "edit": ["admin", "user"]
+      }
+    },
+    {
+      "name": "dos_user_id",
+      "displayName": "Dogan user id",
+      "permissions": {
+        "view": ["admin"],
+        "edit": ["admin"]
+      }
+    },
+    {
+      "name": "dos_tenant_id",
+      "displayName": "Dogan tenant id",
+      "permissions": {
+        "view": ["admin"],
+        "edit": ["admin"]
+      }
+    },
+    {
+      "name": "dos_workspace_id",
+      "displayName": "Dogan workspace id",
+      "permissions": {
+        "view": ["admin"],
+        "edit": ["admin"]
+      }
+    },
+    {
+      "name": "dos_role_profile",
+      "displayName": "Dogan role profile",
+      "permissions": {
+        "view": ["admin"],
+        "edit": ["admin"]
+      }
+    },
+    {
+      "name": "dos_bootstrap_status",
+      "displayName": "Dogan bootstrap status",
+      "permissions": {
+        "view": ["admin"],
+        "edit": ["admin"]
+      }
+    },
+    {
+      "name": "dos_product_code",
+      "displayName": "Dogan product code",
+      "validations": { "length": { "max": 64 } },
+      "permissions": {
+        "view": ["admin"],
+        "edit": ["admin"]
+      }
+    },
+    {
+      "name": "dos_acr_required",
+      "displayName": "Dogan required ACR level",
+      "validations": { "length": { "max": 16 } },
+      "permissions": {
+        "view": ["admin"],
+        "edit": ["admin"]
+      }
+    },
+    {
+      "name": "dos_risk_score",
+      "displayName": "Dogan last-computed risk score",
+      "validations": { "length": { "max": 8 } },
+      "permissions": {
+        "view": ["admin"],
+        "edit": ["admin"]
+      }
+    }
+  ],
+  "groups": [
+    {
+      "name": "organisation",
+      "displayHeader": "${organisation-details}",
+      "displayDescription": "${organisation-details-description}"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+=== typecheck:modules ===
+7112
+modules/workflow/source/backend/workflow/services/workflow-lifecycle.service.ts(26,58): error TS2307: Cannot find module '../ports/auth.port' or its corresponding type declarations.
+modules/workflow/source/backend/workflow/services/workflow-lifecycle.service.ts(41,40): error TS2307: Cannot find module '../ports/events.port' or its corresponding type declarations.
+ ELIFECYCLE  Command failed with exit code 2.
+=== build:packages ===
+> @dos/service-bootstrap@0.1.0 build /root/DOS-AIO/packages/dos-service-bootstrap
+> tsc -p tsconfig.build.json
+
+=== validate:env ===
+> tsx ops/scripts/validate-env.ts
+
+Environment example validation passed.
+=== verify:imports errcount ===
+x 630 dependency violations (630 errors, 0 warnings). 657 modules, 639 dependencies cruised.
+=== target:check ===
+> node scripts/validate-manifests.mjs
+
+Validated 95 manifest files under /root/DOS-AIO.

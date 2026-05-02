@@ -1,0 +1,448 @@
+platform/ai/services/ai-engine-service/src/domain/agrc-engine/agrc_engine.module.ts
+platform/ai/services/ai-engine-service/src/domain/agrc-engine/controllers/agrc-engine-admin.controller.ts
+platform/ai/services/ai-engine-service/src/domain/agrc-engine/controllers/agrc-engine.controller.ts
+platform/ai/services/ai-engine-service/src/domain/agrc-engine/jobs/agrc-engine-monitor.job.ts
+platform/ai/services/ai-engine-service/src/domain/agrc-engine/ports/logger.port.ts
+platform/ai/services/ai-engine-service/src/domain/agrc-engine/ports/events.port.ts
+platform/ai/services/ai-engine-service/src/domain/agrc-engine/routes/agrc-os/gates.routes.ts
+platform/ai/services/ai-engine-service/src/domain/agrc-engine/routes/agrc-os/agent-orchestration.routes.ts
+platform/ai/services/ai-engine-service/src/domain/agrc-engine/routes/agrc-os/platform-mode.routes.ts
+platform/ai/services/ai-engine-service/src/domain/agrc-engine/routes/agrc-os/role-experience.routes.ts
+platform/ai/services/ai-engine-service/src/domain/agrc-engine/routes/agrc-os/platform-features.routes.ts
+platform/ai/services/ai-engine-service/src/domain/agrc-engine/routes/agrc-os/webhooks.routes.ts
+platform/ai/services/ai-engine-service/src/domain/agrc-engine/services/agrc-os-integration.service.ts
+platform/ai/services/ai-engine-service/src/domain/agrc-engine/services/agrc-os-orchestrator.service.ts
+platform/ai/services/ai-engine-service/src/domain/agrc-engine/services/autonomous-grc-engine.service.ts
+platform/ai/services/ai-engine-service/src/domain/agrc-engine/services/quick-grc-accelerator.service.ts
+platform/ai/services/ai-engine-service/src/domain/ai-governance/ai-governance.module.ts
+platform/ai/services/ai-engine-service/src/domain/ai-governance/controllers/ai-governance-admin.controller.ts
+platform/ai/services/ai-engine-service/src/domain/ai-governance/diagnostics/ai-governance-diagnostics.service.ts
+platform/ai/services/ai-engine-service/src/domain/ai-governance/jobs/ai-governance-monitor.job.ts
+platform/ai/services/ai-engine-service/src/domain/ai-governance/ports/events.port.ts
+platform/ai/services/ai-engine-service/src/domain/ai-governance/ports/logger.port.ts
+platform/ai/services/ai-engine-service/src/domain/ai-governance/routes/ai/ai-agent-governance-phase4.routes.ts
+platform/ai/services/ai-engine-service/src/domain/ai-governance/routes/ai/ai-asset-inventory.routes.ts
+platform/ai/services/ai-engine-service/src/domain/ai-governance/routes/ai/ai-binding-governance.routes.ts
+platform/ai/services/ai-engine-service/src/domain/ai-governance/routes/ai/ai-governance-config.routes.ts
+platform/ai/services/ai-engine-service/src/domain/ai-governance/routes/ai/ai-governance-ops.routes.ts
+platform/ai/services/ai-engine-service/src/domain/ai-governance/routes/ai/ai-governance-wave1.routes.ts
+platform/ai/services/ai-engine-service/src/domain/ai-governance/routes/ai/ai-governance-wave2.routes.ts
+platform/ai/services/ai-engine-service/src/domain/ai-governance/routes/ai/ai-post-market.routes.ts
+platform/ai/services/ai-engine-service/src/domain/ai-governance/routes/ai/ai-privacy-governance.routes.ts
+platform/ai/services/ai-engine-service/src/domain/ai-governance/routes/ai/ai-supply-chain.routes.ts
+platform/ai/services/ai-engine-service/src/domain/ai-governance/routes/ai/ai-system-registry.routes.ts
+platform/ai/services/ai-engine-service/src/domain/ai-governance/routes/misc/digital-twin.routes.ts
+platform/ai/services/ai-engine-service/src/domain/ai-governance/routes/misc/model-registry.routes.ts
+platform/ai/services/ai-engine-service/src/domain/ai-governance/routes/misc/prompt-registry.routes.ts
+platform/ai/services/ai-engine-service/src/domain/ai-governance/routes/misc/red-team.routes.ts
+platform/ai/services/ai-engine-service/src/domain/ai-governance/routes/ai-evaluator.routes.ts
+platform/ai/services/ai-engine-service/src/domain/ai-governance/services/ai/compliance/ai-binding-governance.service.ts
+platform/ai/services/ai-engine-service/src/domain/ai-governance/services/ai/operations/ai-governance-dashboard.service.ts
+platform/ai/services/ai-engine-service/src/domain/ai-governance/ai_governance.module.ts
+platform/ai/services/ai-engine-service/src/domain/mcp/jobs/mcp-monitor.job.ts
+platform/ai/services/ai-engine-service/src/domain/mcp/mcp.module.ts
+platform/ai/services/ai-engine-service/src/domain/mcp/ports/auth.port.ts
+platform/ai/services/ai-engine-service/src/domain/mcp/ports/logger.port.ts
+platform/ai/services/ai-engine-service/src/domain/mcp/ports/events.port.ts
+platform/ai/services/ai-engine-service/src/domain/workflow/routes/task-board.routes.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/admin/ai-admin-control.service.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/controllers/ai.controller.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/controllers/ai-admin.controller.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/jobs/ai-monitor.job.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/ports/events.port.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/ports/logger.port.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/routes/core/ai-policy.routes.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/routes/core/ai.routes.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/routes/enhanced/ai-enhanced.routes.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/routes/governance/ai-explainability.routes.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/routes/hitl/hitl.routes.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/routes/personal/personal-agent.routes.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/routes/squad/ai-squad.routes.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/routes/squad/unified-squad.routes.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/routes/triggers/ai-trigger.routes.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/routes/admin/ai-compliance-framework.routes.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/routes/admin/ai-dpia-enhanced.routes.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/routes/admin/ai-model-experiments.routes.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/routes/admin/ai-model-risk.routes.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/routes/agents/agent-workflow.routes.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/routes/agents/agent-audit.routes.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/routes/agents/agent-delegation.routes.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/routes/agents/agent-health.routes.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/routes/agents/ai-agent-health.routes.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/routes/agents/ai-agent-performance.routes.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/routes/agents/agent-registry.routes.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/routes/ai-os/kernel.routes.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/routes/ai-os/ai-os-cockpit.routes.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/routes/copilot/copilot.routes.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/routes/ai-rbac.routes.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/llm/llm-stream.service.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/memory/memory-store.service.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/orchestration/agent-cycle-orchestrator.service.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/orchestration/ai-os-orchestrator.service.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/orchestration/agent-coordination.service.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/orchestration/agent-action-executor.service.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/orchestration/agent-orchestration.service.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/personal/personal-agent-auto-assign.service.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/personal/personal-agent-cache.service.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/personal/personal-agent-activity.service.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/personal/personal-agent-diagnostics.service.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/personal/personal-agent-approval.service.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/copilot/intent-to-query.service.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/core/ai-dashboard.service.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/activity/agent-audit.service.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/activity/agent-task-tracker.service.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/diagnostics/ai-diagnostics.service.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/agent-cooperation/conflict-detection.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/agent-cooperation/correlation.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/agent-cooperation/dependency-graph.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/agent-cooperation/execution-planner.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/gateway/llm-router.service.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/gateway/providers/azure-openai.provider.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/gateway/providers/free.provider.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/gateway/providers/openai.provider.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/gateway/providers/huggingface.provider.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/gateway/providers/lmstudio.provider.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/gateway/ai-gateway.service.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/gateway/llm-providers.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/gateway/llm.service.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/reasoning/nl-query-engine.service.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/agent-tools/shared.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/squad/agent-squad-manager.service.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/agents/core/agent-module-routing.service.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/agents/core/ai-agent-config.service.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/agents/core/agent-runner-llm.service.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/agents/core/agent-runner.service.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/agents/core/agent-tool-executor.service.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/agents/lifecycle/agent-proactive-monitor.service.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/agents/lifecycle/agent-trigger-evaluators.service.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/agents/lifecycle/agent-learning-curve.service.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/agents/lifecycle/agent-eval.service.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/agents/lifecycle/agent-health-visualization.service.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/agents/lifecycle/agent-lessons-learned.service.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/governance/circuit/ai-circuit-breaker.service.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/governance/circuit/per-agent-circuit-breaker.service.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/governance/compliance/ai-asset-discovery.service.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/workflow/ai-task-routing.service.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/workflow/proposed-action.service.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/services/workflow/ai-workflow-trigger.service.ts
+platform/ai/services/ai-engine-service/src/runtime/ai/ai.module.ts
+platform/ai/services/ai-engine-service/src/test-setup.ts
+platform/ai/services/ai-engine-service/src/connectors/code-search.connector.ts
+platform/ai/services/ai-engine-service/src/temporal/worker.ts
+platform/ai/services/ai-engine-service/src/main.ts
+platform/ai/services/ai-gateway-service/src/server.ts
+platform/ai/services/ai-governance-service/src/server.ts
+platform/ai/packages/modules-ai/ports/events.port.ts
+platform/ai/packages/modules-ai/ports/events.port.d.ts
+platform/dauth/packages/core/agent-tools.ts
+platform/dauth/packages/core/agent-tools.d.ts
+platform/dauth/packages/core/dist/core/agent-tools.d.ts
+platform/dos/modules/packs/source/backend/packs/jobs/packs-monitor.job.ts
+platform/dos/modules/packs/source/backend/packs/ports/logger.port.ts
+platform/dos/modules/packs/source/backend/packs/ports/events.port.ts
+platform/dos/modules/packs/source/backend/packs/ports/auth.port.ts
+platform/dos/modules/packs/source/backend/packs/packs.module.ts
+platform/dos/modules/packs/source/backend/packs/controllers/packs-admin.controller.ts
+platform/dos/modules/packs/source/backend/packs/controllers/packs.controller.ts
+platform/dos/modules/packs/source/ports/events.port.ts
+platform/dos/modules/packs/source/ports/events.port.d.ts
+platform/dos/modules/packs/source/ports/auth.port.d.ts
+platform/dos/modules/packs/source/ports/auth.port.ts
+platform/dos/modules/packs/ports/events.port.d.ts
+platform/dos/modules/packs/ports/auth.port.d.ts
+platform/dos/packages/core/src/agent-tools.ts
+platform/dos/shell/module-kickstart.service.ts
+platform/dsoc/packages/core/src/agent-tools.ts
+platform/dnoc/packages/core/src/agent-tools.ts
+platform/config-center/board-report/notification module/source/backend/notification/ports/events.port.ts
+platform/config-center/board-report/notification module/source/backend/notification/ports/logger.port.ts
+platform/config-center/board-report/notification module/source/backend/notification/ports/auth.port.ts
+platform/config-center/board-report/notification module/source/backend/notification/routes/notification-center.routes.ts
+platform/config-center/board-report/notification module/source/backend/notification/routes/notification-preferences.routes.ts
+platform/config-center/board-report/notification module/source/backend/notification/routes/notification.routes.ts
+platform/config-center/board-report/notification module/source/backend/notification/notification.module.ts
+platform/config-center/board-report/notification module/source/backend/notification/services/notification-rule-engine.ts
+platform/config-center/board-report/notification module/source/backend/notification/services/notification-deadline-checks.ts
+platform/config-center/board-report/notification module/source/backend/notification/services/sse-core.service.ts
+platform/config-center/board-report/notification module/source/backend/notification/services/notification.service.ts
+platform/config-center/board-report/notification module/source/backend/notification/controllers/notification-admin.controller.ts
+platform/config-center/board-report/notification module/source/backend/notification/controllers/notification.controller.ts
+platform/config-center/board-report/notification module/source/backend/notification/jobs/notification-monitor.job.ts
+platform/config-center/board-report/notification module/source/errors/index.d.ts
+platform/config-center/board-report/notification module/source/errors/index.ts
+platform/config-center/board-report/notification module/source/ports/events.port.ts
+platform/config-center/board-report/notification module/source/ports/events.port.d.ts
+platform/config-center/board-report/notification module/source/ports/auth.port.d.ts
+platform/config-center/board-report/notification module/source/ports/auth.port.ts
+platform/config-center/board-report/notification module/errors/index.d.ts
+platform/config-center/board-report/notification module/ports/events.port.d.ts
+platform/config-center/board-report/notification module/ports/auth.port.d.ts
+platform/config-center/board-report/operations-hub/operations-hub.component.ts
+platform/config-center/board-report/playbooks/source/backend/playbooks/lifecycle-registration.ts
+platform/config-center/board-report/playbooks/source/backend/playbooks/playbooks.module.ts
+platform/config-center/board-report/playbooks/source/backend/playbooks/ports/playbooks.ports.ts
+platform/config-center/board-report/playbooks/source/backend/playbooks/ports/playbooks.ports.d.ts
+platform/config-center/board-report/playbooks/source/backend/playbooks/events/playbooks.subscribers.ts
+platform/config-center/board-report/portals/source/backend/portals/controllers/portals-admin.controller.ts
+platform/config-center/board-report/portals/source/backend/portals/controllers/portals.controller.ts
+platform/config-center/board-report/portals/source/backend/portals/jobs/portals-monitor.job.ts
+platform/config-center/board-report/portals/source/backend/portals/ports/events.port.ts
+platform/config-center/board-report/portals/source/backend/portals/ports/logger.port.ts
+platform/config-center/board-report/portals/source/backend/portals/ports/auth.port.ts
+platform/config-center/board-report/portals/source/backend/portals/routes/portals.routes.ts
+platform/config-center/board-report/portals/source/backend/portals/portals.module.ts
+platform/config-center/board-report/portals/source/errors/index.d.ts
+platform/config-center/board-report/portals/source/errors/index.ts
+platform/config-center/board-report/portals/source/ports/events.port.ts
+platform/config-center/board-report/portals/source/ports/events.port.d.ts
+platform/config-center/board-report/portals/source/ports/auth.port.d.ts
+platform/config-center/board-report/portals/source/ports/auth.port.ts
+platform/config-center/board-report/portals/errors/index.d.ts
+platform/config-center/board-report/portals/ports/events.port.d.ts
+platform/config-center/board-report/portals/ports/auth.port.d.ts
+platform/config-center/board-report/Reporting Module/source/backend/reporting/ports/events.port.ts
+platform/config-center/board-report/Reporting Module/source/backend/reporting/ports/logger.port.ts
+platform/config-center/board-report/Reporting Module/source/backend/reporting/ports/auth.port.ts
+platform/config-center/board-report/Reporting Module/source/backend/reporting/routes/misc/board-reports.routes.ts
+platform/config-center/board-report/Reporting Module/source/backend/reporting/routes/report/report-ext.routes.ts
+platform/config-center/board-report/Reporting Module/source/backend/reporting/routes/report/report-generator.routes.ts
+platform/config-center/board-report/Reporting Module/source/backend/reporting/routes/report/report-hub.routes.ts
+platform/config-center/board-report/Reporting Module/source/backend/reporting/routes/report/report-scenario.routes.ts
+platform/config-center/board-report/Reporting Module/source/backend/reporting/routes/report/report.routes.ts
+platform/config-center/board-report/Reporting Module/source/backend/reporting/routes/report/report-center.routes.ts
+platform/config-center/board-report/Reporting Module/source/backend/reporting/routes/reporting/reporting-advanced.routes.ts
+platform/config-center/board-report/Reporting Module/source/backend/reporting/routes/reporting/reporting-document-advanced.routes.ts
+platform/config-center/board-report/Reporting Module/source/backend/reporting/reporting.module.ts
+platform/config-center/board-report/Reporting Module/source/backend/reporting/controllers/reporting.controller.ts
+platform/config-center/board-report/Reporting Module/source/backend/reporting/controllers/reporting-admin.controller.ts
+platform/config-center/board-report/Reporting Module/source/backend/reporting/services/misc/natural-report-generator.service.ts
+platform/config-center/board-report/Reporting Module/source/backend/reporting/services/misc/board-pack-generator.service.ts
+platform/config-center/board-report/Reporting Module/source/backend/reporting/services/report/report-stream.service.ts
+platform/config-center/board-report/Reporting Module/source/backend/reporting/jobs/reporting-monitor.job.ts
+platform/config-center/board-report/Reporting Module/source/backend/ai/services/gateway/llm.service.ts
+platform/config-center/board-report/Reporting Module/source/backend/risk/ports/logger.port.ts
+platform/config-center/board-report/Reporting Module/source/backend/ports/events.port.ts
+platform/config-center/board-report/Reporting Module/source/errors/index.d.ts
+platform/config-center/board-report/Reporting Module/source/errors/index.ts
+platform/config-center/board-report/Reporting Module/source/ports/events.port.ts
+platform/config-center/board-report/Reporting Module/source/ports/auth.port.ts
+platform/config-center/board-report/reports-hub/reports-hub.component.ts
+platform/config-center/records/source/backend/records/controllers/records.controller.ts
+platform/config-center/records/source/backend/records/controllers/records-admin.controller.ts
+platform/config-center/records/source/backend/records/jobs/records-monitor.job.ts
+platform/config-center/records/source/backend/records/ports/events.port.ts
+platform/config-center/records/source/backend/records/ports/logger.port.ts
+platform/config-center/records/source/backend/records/ports/auth.port.ts
+platform/config-center/records/source/backend/records/ports/events.port.d.ts
+platform/config-center/records/source/backend/records/ports/auth.port.d.ts
+platform/config-center/records/source/backend/records/ports/logger.port.d.ts
+platform/config-center/records/source/backend/records/routes/records.routes.ts
+platform/config-center/records/source/backend/records/records.module.ts
+platform/config-center/records/source/errors/index.d.ts
+platform/config-center/records/source/errors/index.ts
+platform/config-center/records/errors/index.d.ts
+platform/config-center/vendor-portal/vendor-portal.component.ts
+platform/config-center/integrations/errors/index.d.ts
+platform/config-center/integrations/ports/auth.port.d.ts
+platform/config-center/integrations/ports/events.port.d.ts
+platform/config-center/integrations/source/backend/incident/ports/events.port.ts
+platform/config-center/integrations/source/backend/integrations/controllers/integrations-admin.controller.ts
+platform/config-center/integrations/source/backend/integrations/controllers/integrations.controller.ts
+platform/config-center/integrations/source/backend/integrations/integrations.module.ts
+platform/config-center/integrations/source/backend/integrations/jobs/integrations-monitor.job.ts
+platform/config-center/integrations/source/backend/integrations/ports/auth.port.ts
+platform/config-center/integrations/source/backend/integrations/ports/events.port.ts
+platform/config-center/integrations/source/backend/integrations/ports/logger.port.ts
+platform/config-center/integrations/source/backend/integrations/routes/connector-health.routes.ts
+platform/config-center/integrations/source/backend/integrations/routes/connector.routes.ts
+platform/config-center/integrations/source/backend/integrations/routes/integrations.routes.ts
+platform/config-center/integrations/source/backend/integrations/routes/powerbi.routes.ts
+platform/config-center/integrations/source/backend/integrations/routes/webhook-outbound.routes.ts
+platform/config-center/integrations/source/backend/integrations/routes/webhooks-manage.routes.ts
+platform/config-center/integrations/source/backend/integrations/services/connector-evidence-mapper.service.ts
+platform/config-center/integrations/source/backend/integrations/services/connector-sync.service.ts
+platform/config-center/integrations/source/backend/integrations/services/connector.service.ts
+platform/config-center/integrations/source/backend/integrations/services/erp-connector.service.ts
+platform/config-center/integrations/source/backend/integrations/services/jira-connector.service.ts
+platform/config-center/integrations/source/backend/integrations/services/slack-connector.service.ts
+platform/config-center/integrations/source/backend/ports/events.port.ts
+platform/config-center/integrations/source/errors/index.d.ts
+platform/config-center/integrations/source/errors/index.ts
+platform/config-center/integrations/source/ports/auth.port.d.ts
+platform/config-center/integrations/source/ports/auth.port.ts
+platform/config-center/integrations/source/ports/events.port.d.ts
+platform/config-center/integrations/source/ports/events.port.ts
+platform/config-center/admin/admin-hub/admin-hub.component.ts
+platform/foundation/contracts/foundation.event-payloads.ts
+platform/foundation/interface/foundation.module.test.ts
+platform/foundation/interface/foundation.module.ts
+platform/foundation/ports/events.port.ts
+platform/foundation/ui/guards/foundation-permission.guard.ts
+platform/foundation/ui/pages/team-hub/team-hub.component.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/routes/misc/review-cycle.routes.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/routes/misc/approval-requests.routes.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/routes/misc/approval-routing.routes.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/routes/misc/autonomous-workflow.routes.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/routes/misc/cooperative-workflows.routes.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/routes/misc/journey.routes.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/routes/misc/module-ai-orchestrator.routes.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/routes/misc/task-board.routes.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/routes/misc/workflows.routes.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/routes/workflow/workflow-lookups.routes.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/routes/workflow/workflow-advanced.routes.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/routes/workflow/workflow-3level-monitoring.routes.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/routes/workflow/workflow-3level-drafts.routes.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/routes/workflow/workflow-3level-instance-ops.routes.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/routes/workflow/workflow-3level-ai.routes.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/routes/workflow/workflow-3level-controls.routes.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/routes/workflow/workflow-3level-supervisor.routes.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/routes/workflow/workflow-attachments.routes.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/routes/workflow/workflow-chain.routes.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/routes/workflow/workflow-comments.routes.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/routes/workflow/workflow-enterprise.routes.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/routes/workflow/workflow-ext.routes.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/routes/workflow/workflow-templates.routes.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/routes/workflow-core.routes.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/routes/approval-core.routes.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/routes/sla-core.routes.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/routes/task-core.routes.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/routes/template-core.routes.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/routes/schedule-core.routes.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/workflow.module.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/controllers/workflow.controller.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/controllers/workflow-admin.controller.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/services/tasks/task-auto-resolution.service.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/services/tasks/workload-balancer.service.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/services/templates/workflow-versioning.service.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/services/admin/version-rollout-admin.service.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/services/approvals/approval-routing.service.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/services/autonomous-workflow/autonomous-chain.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/services/chains/workflow-chain-executor.service.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/services/core/transition-registry.service.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/services/core/workflow-definition.service.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/services/core/workflow-sla.service.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/services/core/schedule-core.service.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/services/diagnostics/workflow-diagnostics.service.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/services/diagnostics/execution-audit-viewer.service.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/services/integration/lifecycle-bridge.service.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/services/ops/workflow-stall-recovery.service.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/events/bus/workflow.publisher.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/events/bus/workflow.consumer.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/events/bus/workflow.publishers.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/jobs/workflow-monitor.job.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/ports/events.port.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/ports/logger.port.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/ports/auth.port.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/ports/telemetry.port.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/temporal/activities/provisioning.activities.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/temporal/activities/assessment.activities.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/temporal/activities/evidence.activities.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/temporal/activities/gap.activities.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/temporal/activities/maintenance.activities.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/temporal/activities/monitoring.activities.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/temporal/activities/notification.activities.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/temporal/activities/policy.activities.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/temporal/activities/reporting.activities.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/temporal/activities/sla.activities.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/temporal/activities/risk.activities.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/temporal/activities/governance-ai.activities.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/temporal/activities/audit.activities.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/temporal/activities/indicator-monitoring.activities.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/temporal/activities/integration.activities.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/temporal/activities/rcsa-cycle.activities.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/temporal/activities/risk-intake.activities.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/temporal/activities/general.activities.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/temporal/resilience/activity-timeout.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/temporal/schedules/ensure-schedules.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/temporal/schedules/register-all-schedules.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/temporal/utils/vector-search.util.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/temporal/workers/sla.worker.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/temporal/workers/agent.worker.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/temporal/workers/compliance.worker.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/temporal/workers/general.worker.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/temporal/workers/reports.worker.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/temporal/workers/risk.worker.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/temporal/workers/provisioning.worker.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/temporal/workers/evidence.worker.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/temporal/workflows/enforcement/enforcement-schedule.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/ai/governance/governance-pipeline.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/domain/schedule.service.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/domain/workflow-sla.service.ts
+platform/workflow/_sources/modules_workflow/source/backend/workflow/modules/governance-os/platform/services/misc/logger.service.ts
+platform/workflow/_sources/modules_workflow/source/backend/admin/services/enterprise-authz.service.ts
+platform/workflow/_sources/modules_workflow/source/backend/agrc-engine/services/quick-grc-accelerator.service.ts
+platform/workflow/_sources/modules_workflow/source/backend/ai/ports/events.port.ts
+platform/workflow/_sources/modules_workflow/source/backend/audit/ports/events.port.ts
+platform/workflow/_sources/modules_workflow/source/backend/evidence/ports/events.port.ts
+platform/workflow/_sources/modules_workflow/source/backend/incident/ports/events.port.ts
+platform/workflow/_sources/modules_workflow/source/backend/risk/ports/events.port.ts
+platform/workflow/_sources/modules_workflow/source/backend/ports/events.port.ts
+platform/workflow/_sources/modules_workflow/source/backend/ports/logger.port.ts
+platform/workflow/_sources/modules_workflow/source/ai/types/dauth.ts
+platform/workflow/_sources/modules_workflow/source/errors/index.d.ts
+platform/workflow/_sources/modules_workflow/source/errors/index.ts
+platform/workflow/_sources/modules_workflow/source/ports/events.port.ts
+platform/workflow/_sources/modules_workflow/errors/index.d.ts
+platform/workflow/_sources/modules_workflow/ports/events.port.d.ts
+platform/workflow/_sources/services_workflow-service/src/routes/workflow.routes.ts
+platform/workflow/_sources/services_workflow-service/src/routes/task.routes.ts
+platform/workflow/_sources/services_workflow-service/src/routes/approval.routes.ts
+platform/workflow/_sources/services_workflow-service/src/routes/schedule.routes.ts
+platform/workflow/_sources/services_workflow-service/src/routes/template.routes.ts
+platform/workflow/_sources/services_workflow-service/src/routes/sla.routes.ts
+platform/workflow/_sources/services_workflow-service/src/routes/work-item.routes.ts
+platform/workflow/_sources/services_workflow-service/src/routes/autonomous-workflow.routes.ts
+platform/workflow/_sources/services_workflow-service/src/events/publisher.ts
+platform/workflow/_sources/services_workflow-service/src/events/consumer.ts
+platform/workflow/_sources/services_workflow-service/src/events/workflow.publishers.ts
+platform/workflow/_sources/services_workflow-service/src/domain/schedule.service.ts
+platform/workflow/_sources/services_workflow-service/src/domain/cron-executor.ts
+platform/workflow/_sources/services_workflow-service/src/server.ts
+platform/_archive/orphans-2026-05-01/analytics-hub/analytics-hub.component.ts
+platform/core/services/user-account/journey.service.ts
+services/agrc-os-service/src/server.ts
+services/analytics-reporting-service/src/server.ts
+services/analytics-service/src/server.ts
+services/asset-service/src/server.ts
+services/audit-service/src/domain/retention.service.ts
+services/audit-service/src/server.ts
+services/dashboard-widgets-service/src/server.ts
+services/dora-service/src/server.ts
+services/evidence-audit-reporting-service/src/server.ts
+services/executive-intelligence-service/src/server.ts
+services/governance-policy-service/src/server.ts
+services/integrations-service/src/server.ts
+services/notification-inbox-service/src/server.ts
+services/notification-service/src/domain/delivery/approvals/release-approval.service.ts
+services/notification-service/src/domain/delivery/compatibility/compatibility.service.ts
+services/notification-service/src/domain/delivery/cutover/cutover.service.ts
+services/notification-service/src/domain/delivery/deployment/deployment.service.ts
+services/notification-service/src/domain/delivery/gates/feature-gate.service.ts
+services/notification-service/src/domain/delivery/handover/handover-lock.service.ts
+services/notification-service/src/domain/delivery/migration/migration-tracking.service.ts
+services/notification-service/src/domain/delivery/quality/quality-gate.service.ts
+services/notification-service/src/domain/delivery/release/release-management.service.ts
+services/notification-service/src/domain/delivery/rollback/rollback.service.ts
+services/notification-service/src/domain/delivery/verification/post-deploy-verification.service.ts
+services/notification-service/src/domain/sse.service.ts
+services/notification-service/src/routes/events.routes.ts
+services/notification-service/src/server.ts
+services/platform-core-service/src/server.ts
+services/platform-product-service/src/server.ts
+services/portals-service/src/server.ts
+services/privacy-service/src/server.ts
+services/records-service/src/server.ts
+services/remediation-action-service/src/server.ts
+services/risk-incident-service/src/platform/dos/middleware/api-contract-validation.middleware.ts
+services/risk-incident-service/src/platform/dos/services/configuration-discipline.service.ts
+services/risk-incident-service/src/routes/index.ts
+services/risk-incident-service/src/server.ts
+services/sales-room-service/src/server.ts
+services/training-service/src/server.ts
+services/user-service/src/domain/department.service.ts
+services/user-service/src/domain/role-assignment.service.ts
+services/user-service/src/domain/user.service.ts
+services/user-service/src/events/consumer.ts
+services/user-service/src/events/publisher.ts
+services/user-service/src/middleware/rate-limiter.ts
+services/user-service/src/server.ts

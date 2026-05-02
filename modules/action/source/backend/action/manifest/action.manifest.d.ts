@@ -1,0 +1,21 @@
+import { ACTION_MANIFEST } from '../action.module';
+export { ACTION_MANIFEST };
+export declare const ACTION_MANIFEST_META: {
+    readonly code: string;
+    readonly version: string;
+    readonly tier: string;
+    readonly category: string;
+    readonly routeBase: string;
+    readonly eventNamespace: string;
+    readonly tablePrefix: string;
+    readonly ownedTables: string[];
+    readonly publishedEvents: string[];
+    readonly consumedEvents: string[];
+    readonly hardDeps: string[];
+    readonly softDeps: string[];
+    readonly provisioningOrder: number | undefined;
+    readonly lifecycleParticipation: true;
+    readonly uiSurfaces: readonly ["action-hub", "action-detail", "assignment-views", "recurrence-management", "dependency-tracker", "time-tracking", "diagnostics"];
+    readonly adminSurfaces: string[] | undefined;
+    readonly healthSignals: readonly ["schema_exists", "tables_exist", "overdue_actions", "stale_assignments", "recurrence_integrity"];
+};

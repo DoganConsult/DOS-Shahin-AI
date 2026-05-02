@@ -1,0 +1,163 @@
+{
+  "phase": "D",
+  "module": "onboarding-to-workspace vertical slice",
+  "scope": [
+    "registration",
+    "anchor questions",
+    "inference bundle (lookup-first, agent-assisted)",
+    "provisioning",
+    "workspace_ready handoff",
+    "first agent wave (A01, A02, A03, A05, A07)",
+    "first teammate invite + role activation",
+    "truthful 12-agent fleet surface"
+  ],
+  "matrix": [
+    {
+      "category": "correctness",
+      "criterion": "fresh-tenant golden path reaches role_assigned state end-to-end",
+      "required": true,
+      "evidence": "tests/phase-d/golden-path.test.ts :: Phase D1 — end-to-end golden path",
+      "status": "ready-to-run"
+    },
+    {
+      "category": "correctness",
+      "criterion": "A01/A02/A03/A05/A07 each produce a run row with terminal status and result_json",
+      "required": true,
+      "evidence": "D1 - creates one run per FIRST_AGENT_WAVE agent with terminal status",
+      "status": "ready-to-run"
+    },
+    {
+      "category": "correctness",
+      "criterion": "A05 evidence_requests are grounded in seeded frameworks",
+      "required": true,
+      "evidence": "D1 - A05 produces durable evidence_requests grounded in seeded frameworks",
+      "status": "ready-to-run"
+    },
+    {
+      "category": "correctness",
+      "criterion": "first teammate acceptance creates real tenant_user_memberships row with org_role_code",
+      "required": true,
+      "evidence": "D1 - first teammate invite accept real membership + role assignment",
+      "status": "ready-to-run"
+    },
+    {
+      "category": "idempotency",
+      "criterion": "replaying dispatch with same tenant+workspace+phase does not create a second cycle",
+      "required": true,
+      "evidence": "D3 - replay of the same dispatch returns already_exists",
+      "status": "ready-to-run",
+      "guardrail": "DB UNIQUE (idempotency_key) on onboarding_workspace_handoff_cycles"
+    },
+    {
+      "category": "idempotency",
+      "criterion": "re-accepting the same invite does not create a second membership",
+      "required": true,
+      "evidence": "D3 - re-accept of an invitation is a no-op",
+      "status": "ready-to-run",
+      "guardrail": "handoff_invitations state check + UNIQUE (tenant_id, user_id) on memberships"
+    },
+    {
+      "category": "idempotency",
+      "criterion": "5 concurrent dispatches yield exactly one cycle and one run per agent",
+      "required": true,
+      "evidence": "D3 - 5 concurrent dispatches for a new workspace yield exactly one cycle",
+      "status": "ready-to-run",
+      "guardrail": "DB UNIQUE constraint serializes INSERT; losers observe already_exists"
+    },
+    {
+      "category": "idempotency",
+      "criterion": "A05 rerun does not duplicate evidence_requests",
+      "required": true,
+      "evidence": "covered via D3 replay path; UNIQUE (cycle, framework, category, COALESCE(control_code,'')) on onboarding_handoff_evidence_requests",
+      "status": "ready-to-run"
+    },
+    {
+      "category": "observability",
+      "criterion": "cycle row exposes dispatch_target, agents_dispatched, last_transition_at",
+      "required": true,
+      "evidence": "D2 - handoff cycle exposes dispatch target + last_transition_at",
+      "status": "ready-to-run"
+    },
+    {
+      "category": "observability",
+      "criterion": "per-agent findings queryable by agent_id + finding_type",
+      "required": true,
+      "evidence": "D2 - per-agent findings exist and are groupable by agent_id",
+      "status": "ready-to-run"
+    },
+    {
+      "category": "observability",
+      "criterion": "lifecycle reconstructable through getHandoffResultsByWorkspace",
+      "required": true,
+      "evidence": "D2 - lifecycle is reconstructable through getHandoffResultsByWorkspace",
+      "status": "ready-to-run"
+    },
+    {
+      "category": "observability",
+      "criterion": "invitation_created / invitation_accepted / team_activated events emitted",
+      "required": true,
+      "evidence": "D2 - captured event bus recorded invitation + team activation events",
+      "status": "ready-to-run"
+    },
+    {
+      "category": "degraded-state-handling",
+      "criterion": "Temporal-required + unavailable surfaces as degraded cycle, not silent",
+      "required": true,
+      "evidence": "dispatchToRuntime sets status='degraded' + degraded_reason when ONBOARDING_TEMPORAL_DISPATCH_REQUIRED=true and Temporal is absent",
+      "status": "covered-by-code-path"
+    },
+    {
+      "category": "degraded-state-handling",
+      "criterion": "AI enrichment unavailable recorded on bundle (agent_enrichment_attempted/available, degraded_reason)",
+      "required": true,
+      "evidence": "mig 044 columns agent_enrichment_required | agent_enrichment_available | degraded_reason on onboarding_inference_bundles",
+      "status": "covered-by-code-path"
+    },
+    {
+      "category": "degraded-state-handling",
+      "criterion": "per-agent failure isolates — one agent failing does not collapse the wave",
+      "required": true,
+      "evidence": "runHandoffAgents wraps executeOne in catch and continues; overallStatus='degraded' not 'failed' when >=1 completed",
+      "status": "covered-by-code-path"
+    },
+    {
+      "category": "truthful-fleet-surface",
+      "criterion": "12 agents surfaced with live|partial|inactive; inactive have null lastRunAt + zero counters",
+      "required": true,
+      "evidence": "D2 - fleet status surface is truthful",
+      "status": "ready-to-run"
+    },
+    {
+      "category": "first-collaborator-activation",
+      "criterion": "acceptance transitions invited -> pending_acceptance -> accepted -> access_provisioned -> role_assigned",
+      "required": true,
+      "evidence": "D1 - first teammate invite path; verified via accepted.state === 'role_assigned'",
+      "status": "ready-to-run"
+    },
+    {
+      "category": "temporal-dependent-runtime",
+      "criterion": "when Temporal is configured, deterministic workflow id is reused on replay",
+      "required": false,
+      "evidence": "buildDeterministicWorkflowId(tenantId, workspaceId, phase); Temporal-attached verification is a post-release smoke test, not gated by D",
+      "status": "deferred-to-runtime-smoke"
+    },
+    {
+      "category": "tenant-safety",
+      "criterion": "no cross-tenant bleed on dispatch/read surfaces",
+      "required": true,
+      "evidence": "all WHERE clauses on cycle/run/finding/invitation/evidence_request include tenant_id; idempotency_key is namespaced by tenant",
+      "status": "covered-by-code-path"
+    }
+  ],
+  "pass_rule": "every required row must have status in { ready-to-run, covered-by-code-path } AND the golden-path test run must report passing in CI.",
+  "verdict": "release-ready pending successful execution of tests/phase-d/golden-path.test.ts on a target environment with migrations 042-049 applied. Temporal-attached smoke is post-release.",
+  "runbook": {
+    "command": "pnpm --filter onboarding-service build && pnpm exec vitest run -c vitest.phase-d.config.mjs tests/phase-d/golden-path.test.ts",
+    "preconditions": [
+      "Postgres reachable at DATABASE_URL",
+      "ops/migrations 042-049 applied",
+      "services/auth-service/migrations/009 (public.invitations) applied",
+      "onboarding-service dist/ built (tsc)"
+    ]
+  }
+}

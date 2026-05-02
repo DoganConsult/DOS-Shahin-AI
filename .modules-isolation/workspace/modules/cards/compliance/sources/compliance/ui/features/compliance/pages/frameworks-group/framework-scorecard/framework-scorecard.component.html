@@ -1,0 +1,64 @@
+<div class="fsc-root" [dir]="i18n.direction()">
+
+  <header class="fsc-header">
+    <div class="fsc-header-left">
+      <i class=" fsc-icon"></i>
+      <div>
+        <h1>{{ i18n.translate('frameworkScorecard.title') }}</h1>
+        <p>{{ i18n.translate('frameworkScorecard.subtitle') }}</p>
+      </div>
+    </div>
+    <a routerLink="/agrc-os" class="fsc-nav"><i class=""></i> {{ i18n.translate('frameworkScorecard.navBack') }}</a>
+  </header>
+
+  <!-- Framework Score Cards -->
+  <div class="fsc-score-cards">
+    <div class="fsc-fw-card" *ngFor="let fw of frameworks()" [ngClass]="getScoreClass(fw)">
+      <div class="fsc-fw-score">{{ getScore(fw) }}<small>%</small></div>
+      <div class="fsc-fw-name">{{ fw.name || fw.framework_name }}</div>
+      <div class="fsc-fw-meta">
+        <span class="fsc-fw-gaps" *ngIf="getGapCount(fw) > 0">{{ getGapCount(fw) }} {{ i18n.translate('frameworkScorecard.gaps') }}</span>
+        <span class="fsc-fw-controls">{{ fw.control_count || fw.controlCount || '—' }} {{ i18n.translate('frameworkScorecard.controls') }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts Grid -->
+  <div class="fsc-grid">
+    <section class="fsc-cell fsc-cell-gauges">
+      <div class="fsc-card">
+        <h2 class="fsc-card-title"><i class=""></i> {{ i18n.translate('frameworkScorecard.frameworkGauges') }}</h2>
+        <div class="fsc-chart-wrap fsc-chart-tall">
+          <app-echart [options]="frameworkGaugesOpts()" [ariaLabel]="i18n.translate('frameworkScorecard.ariaComplianceGauges')" />
+        </div>
+      </div>
+    </section>
+
+    <section class="fsc-cell fsc-cell-overlap">
+      <div class="fsc-card">
+        <h2 class="fsc-card-title"><i class=""></i> {{ i18n.translate('frameworkScorecard.frameworkOverlap') }}</h2>
+        <div class="fsc-chart-wrap fsc-chart-tall">
+          <app-echart [options]="overlapChordOpts()" [ariaLabel]="i18n.translate('frameworkScorecard.ariaOverlapChord')" />
+        </div>
+      </div>
+    </section>
+
+    <section class="fsc-cell fsc-cell-domains">
+      <div class="fsc-card">
+        <h2 class="fsc-card-title"><i class=""></i> {{ i18n.translate('frameworkScorecard.domainBreakdown') }}</h2>
+        <div class="fsc-chart-wrap">
+          <app-echart [options]="domainBreakdownOpts()" [ariaLabel]="i18n.translate('frameworkScorecard.ariaDomainBreakdown')" />
+        </div>
+      </div>
+    </section>
+
+    <section class="fsc-cell fsc-cell-trends">
+      <div class="fsc-card">
+        <h2 class="fsc-card-title"><i class=""></i> {{ i18n.translate('frameworkScorecard.complianceTrends') }}</h2>
+        <div class="fsc-chart-wrap">
+          <app-echart [options]="trendLinesOpts()" [ariaLabel]="i18n.translate('frameworkScorecard.ariaTrendLines')" />
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

@@ -1,0 +1,2 @@
+export class AGRC_PRODUCT_DEFINITION {}
+

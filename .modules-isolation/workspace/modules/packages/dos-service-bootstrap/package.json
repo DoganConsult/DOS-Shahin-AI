@@ -1,0 +1,86 @@
+{
+  "name": "@dos/service-bootstrap",
+  "version": "0.1.0",
+  "description": "DOS Platform — shared Express server factory. Every service uses this to boot.",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./health": {
+      "types": "./dist/health.d.ts",
+      "default": "./dist/health.js"
+    },
+    "./error-telemetry": {
+      "types": "./dist/error-telemetry.d.ts",
+      "default": "./dist/error-telemetry.js"
+    },
+    "./feature-flags": {
+      "types": "./dist/feature-flags.d.ts",
+      "default": "./dist/feature-flags.js"
+    },
+    "./csrf": {
+      "types": "./dist/csrf.d.ts",
+      "default": "./dist/csrf.js"
+    },
+    "./circuit-breaker": {
+      "types": "./dist/circuit-breaker.d.ts",
+      "default": "./dist/circuit-breaker.js"
+    },
+    "./distributed-lock": {
+      "types": "./dist/distributed-lock.d.ts",
+      "default": "./dist/distributed-lock.js"
+    },
+    "./vault": {
+      "types": "./dist/vault.d.ts",
+      "default": "./dist/vault.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@dos/dauth-core": "workspace:*",
+    "@dos/dauth-shared": "workspace:*",
+    "@dos/db": "workspace:*",
+    "@dos/module-sdk": "workspace:*",
+    "@dos/platform-core": "workspace:*",
+    "@dos/runtime-config": "workspace:*",
+    "@dos/types": "workspace:*",
+    "compression": "^1.7.4",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "express": "^4.22.0",
+    "helmet": "^8.0.0",
+    "pino": "^10.3.1",
+    "pino-http": "^10.0.0",
+    "zod-to-json-schema": "^3.25.2",
+    "@sentry/node": "^10.51.0",
+    "csrf-csrf": "^4.0.3",
+    "redlock": "^5.0.0-beta.2",
+    "ioredis": "^5.10.1",
+    "opossum": "^9.0.0",
+    "@openfeature/server-sdk": "^1.21.0",
+    "@openfeature/flagd-provider": "^0.15.0",
+    "node-vault": "^0.12.0",
+    "@elastic/ecs-pino-format": "^1.5.0"
+  },
+  "devDependencies": {
+    "@types/compression": "^1.7.5",
+    "@types/cookie-parser": "^1.4.7",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.25",
+    "@types/node": "^25.6.0",
+    "@types/opossum": "^8.1.9",
+    "@types/swagger-ui-express": "^4.1.6",
+    "@types/archiver": "^6.0.2",
+    "typescript": "^5.7.0"
+  }
+}

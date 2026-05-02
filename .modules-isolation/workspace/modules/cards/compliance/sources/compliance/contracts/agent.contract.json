@@ -1,0 +1,213 @@
+{
+  "$schema": "../../../docs/DOS-AIO-Specs/dynamic-ui-enrollment-page-experience-widgets-spec.md#202-module-agent-contract-module-owned",
+  "specVersion": "1.0.0",
+  "specSection": "20",
+  "moduleCode": "compliance",
+  "agentToneFamily": "risk-compliance-audit",
+  "agentTone": "assurance",
+  "modulePersonality": "Evidence-heavy, assurance-focused. Agent cards: control gap, missing evidence, expired obligation, policy mismatch, regulatory impact.",
+
+  "agents": [
+    {
+      "agentId": "compliance-obligation-mapper",
+      "agentKey": "compliance.obligationMapper",
+      "nameKey": "compliance.agents.obligationMapper",
+      "scope": "module",
+      "level": "L1",
+      "capabilities": ["map_obligation_to_controls", "summarize_obligation"],
+      "allowedPageTypes": ["overview", "list", "object"],
+      "allowedActions": ["read", "analyze", "draft"],
+      "permissionLevel": 3,
+      "permissions": ["compliance.read"],
+      "requiresHumanApproval": true,
+      "auditRequired": true,
+      "evidenceRequired": false,
+      "tone": "assurance"
+    },
+    {
+      "agentId": "compliance-evidence-detector",
+      "agentKey": "compliance.evidenceDetector",
+      "nameKey": "compliance.agents.evidenceDetector",
+      "scope": "module",
+      "level": "L1",
+      "capabilities": ["detect_missing_evidence", "rank_evidence_freshness"],
+      "allowedPageTypes": ["list", "object", "workflow"],
+      "allowedActions": ["read", "analyze"],
+      "permissionLevel": 2,
+      "permissions": ["compliance.read"],
+      "requiresHumanApproval": false,
+      "auditRequired": true,
+      "evidenceRequired": true,
+      "tone": "assurance"
+    },
+    {
+      "agentId": "compliance-gap-summarizer",
+      "agentKey": "compliance.gapSummarizer",
+      "nameKey": "compliance.agents.gapSummarizer",
+      "scope": "module",
+      "level": "L1",
+      "capabilities": ["summarize_control_gap", "prioritize_gaps"],
+      "allowedPageTypes": ["overview", "list", "workflow"],
+      "allowedActions": ["read", "analyze", "draft"],
+      "permissionLevel": 3,
+      "permissions": ["compliance.read"],
+      "requiresHumanApproval": true,
+      "auditRequired": true,
+      "evidenceRequired": false,
+      "tone": "assurance"
+    },
+    {
+      "agentId": "compliance-report-drafter",
+      "agentKey": "compliance.reportDrafter",
+      "nameKey": "compliance.agents.reportDrafter",
+      "scope": "module",
+      "level": "L1",
+      "capabilities": ["draft_compliance_report", "draft_regulator_reply"],
+      "allowedPageTypes": ["analytics", "object", "workflow"],
+      "allowedActions": ["read", "analyze", "draft", "propose_write"],
+      "permissionLevel": 4,
+      "permissions": ["compliance.export"],
+      "requiresHumanApproval": true,
+      "auditRequired": true,
+      "evidenceRequired": true,
+      "tone": "assurance"
+    },
+    {
+      "agentId": "compliance-framework-comparer",
+      "agentKey": "compliance.frameworkComparer",
+      "nameKey": "compliance.agents.frameworkComparer",
+      "scope": "module",
+      "level": "L1",
+      "capabilities": ["compare_frameworks", "explain_crosswalk"],
+      "allowedPageTypes": ["list", "analytics"],
+      "allowedActions": ["read", "analyze"],
+      "permissionLevel": 2,
+      "permissions": ["compliance.read"],
+      "requiresHumanApproval": false,
+      "auditRequired": true,
+      "evidenceRequired": false,
+      "tone": "assurance"
+    }
+  ],
+
+  "pageAgentExperience": [
+    {
+      "route": "/compliance",
+      "enabled": true,
+      "primaryAgent": "compliance-gap-summarizer",
+      "secondaryAgents": ["compliance-obligation-mapper", "compliance-evidence-detector"],
+      "mode": "side-panel",
+      "actions": [
+        { "id": "explain-posture", "labelKey": "compliance.agentActions.explainPosture", "permission": "compliance.read", "level": 2 },
+        { "id": "summarize-top-gaps", "labelKey": "compliance.agentActions.summarizeTopGaps", "permission": "compliance.read", "level": 3, "requiresApproval": false }
+      ]
+    },
+    {
+      "route": "/compliance/obligations",
+      "enabled": true,
+      "primaryAgent": "compliance-obligation-mapper",
+      "mode": "side-panel",
+      "actions": [
+        { "id": "map-to-controls", "labelKey": "compliance.agentActions.mapToControls", "permission": "compliance.write", "level": 4, "requiresApproval": true },
+        { "id": "summarize-obligation", "labelKey": "compliance.agentActions.summarizeObligation", "permission": "compliance.read", "level": 3 }
+      ]
+    },
+    {
+      "route": "/compliance/controls",
+      "enabled": true,
+      "primaryAgent": "compliance-evidence-detector",
+      "mode": "side-panel",
+      "actions": [
+        { "id": "detect-missing-evidence", "labelKey": "compliance.agentActions.detectMissingEvidence", "permission": "compliance.read", "level": 2 },
+        { "id": "rank-evidence-freshness", "labelKey": "compliance.agentActions.rankEvidenceFreshness", "permission": "compliance.read", "level": 2 }
+      ]
+    },
+    {
+      "route": "/compliance/gaps",
+      "enabled": true,
+      "primaryAgent": "compliance-gap-summarizer",
+      "mode": "side-panel",
+      "actions": [
+        { "id": "summarize-gap", "labelKey": "compliance.agentActions.summarizeGap", "permission": "compliance.read", "level": 3 },
+        { "id": "prioritize-gaps", "labelKey": "compliance.agentActions.prioritizeGaps", "permission": "compliance.read", "level": 3 },
+        { "id": "draft-remediation", "labelKey": "compliance.agentActions.draftRemediation", "permission": "compliance.write", "level": 4, "requiresApproval": true }
+      ]
+    },
+    {
+      "route": "/compliance/reports",
+      "enabled": true,
+      "primaryAgent": "compliance-report-drafter",
+      "mode": "workbench",
+      "actions": [
+        { "id": "draft-report", "labelKey": "compliance.agentActions.draftReport", "permission": "compliance.export", "level": 4, "requiresApproval": true },
+        { "id": "draft-regulator-reply", "labelKey": "compliance.agentActions.draftRegulatorReply", "permission": "compliance.export", "level": 4, "requiresApproval": true }
+      ]
+    },
+    {
+      "route": "/compliance/regulator",
+      "enabled": true,
+      "primaryAgent": "compliance-report-drafter",
+      "secondaryAgents": ["compliance-evidence-detector"],
+      "mode": "workbench",
+      "actions": [
+        { "id": "prepare-regulator-packet", "labelKey": "compliance.agentActions.prepareRegulatorPacket", "permission": "compliance.export", "level": 4, "requiresApproval": true }
+      ]
+    },
+    {
+      "route": "/compliance/frameworks",
+      "enabled": true,
+      "primaryAgent": "compliance-framework-comparer",
+      "mode": "side-panel",
+      "actions": [
+        { "id": "compare-frameworks", "labelKey": "compliance.agentActions.compareFrameworks", "permission": "compliance.read", "level": 2 },
+        { "id": "explain-crosswalk", "labelKey": "compliance.agentActions.explainCrosswalk", "permission": "compliance.read", "level": 2 }
+      ]
+    }
+  ],
+
+  "workflowAgents": [
+    { "transition": "assessment.complete", "agents": ["compliance-evidence-detector", "compliance-gap-summarizer"], "preApprovalChecks": ["evidence_completeness", "scope_validity"] },
+    { "transition": "gap.close", "agents": ["compliance-evidence-detector"], "preApprovalChecks": ["approved_evidence_present", "remediation_workflow_complete"] },
+    { "transition": "attestation.record", "agents": ["compliance-evidence-detector"], "preApprovalChecks": ["evidence_freshness", "sod_check"] }
+  ],
+
+  "squadAgents": [
+    {
+      "squadId": "compliance-regulator-packet-prep",
+      "members": ["compliance-evidence-detector", "compliance-gap-summarizer", "compliance-report-drafter"],
+      "rules": {
+        "analyzeAndDraftAllowed": true,
+        "writesRequireApproval": true,
+        "logEveryHandoff": true,
+        "maxDelegationDepth": 3,
+        "preventCircularDelegation": true
+      }
+    }
+  ],
+
+  "permissionLevelLegend": {
+    "0": "Read UI only",
+    "1": "Read backend data",
+    "2": "Analyze",
+    "3": "Draft",
+    "4": "Propose write (approval required)",
+    "5": "Execute approved write",
+    "6": "Scheduled automation (policy-limited)"
+  },
+
+  "agentGates": {
+    "specSection": "20.9",
+    "checks": [
+      "module has agent.contract.json",
+      "all agent actions have permission keys",
+      "all write/propose actions require human approval",
+      "every agent run writes a ledger row",
+      "every squad handoff is logged",
+      "low-confidence output is marked",
+      "evidence sources are shown",
+      "UI shows action receipt after execution",
+      "Arabic/English labels exist",
+      "auditor profile is read-only"
+    ]
+  }
+}

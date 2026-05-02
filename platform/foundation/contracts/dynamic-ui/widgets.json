@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "moduleCode": "foundation",
+  "internalContractRef": "../ui.contract.json",
+  "widgets": [
+    {
+      "widgetId": "foundation.kpi.users-total",
+      "displayNameKey": "modules.foundation.widgets.kpi.usersTotal",
+      "kind": "kpi",
+      "format": "number",
+      "dataResource": "foundation.users.list",
+      "permission": "foundation.user.read",
+      "compatibleSlots": ["product.workspace.kpis", "product.dashboard.summary", "module.foundation.overview.kpis"]
+    },
+    {
+      "widgetId": "foundation.kpi.departments-total",
+      "displayNameKey": "modules.foundation.widgets.kpi.departmentsTotal",
+      "kind": "kpi",
+      "format": "number",
+      "dataResource": "foundation.departments",
+      "permission": "foundation.read",
+      "compatibleSlots": ["product.workspace.kpis", "module.foundation.overview.kpis"]
+    },
+    {
+      "widgetId": "foundation.kpi.teams-total",
+      "displayNameKey": "modules.foundation.widgets.kpi.teamsTotal",
+      "kind": "kpi",
+      "format": "number",
+      "dataResource": "foundation.teams",
+      "permission": "foundation.read",
+      "compatibleSlots": ["product.workspace.kpis", "module.foundation.overview.kpis"]
+    },
+    {
+      "widgetId": "foundation.kpi.compliance-rate",
+      "displayNameKey": "modules.foundation.widgets.kpi.complianceRate",
+      "kind": "kpi",
+      "format": "percentage",
+      "dataResource": "foundation.overview",
+      "permission": "foundation.read",
+      "trendEnabled": true,
+      "compatibleSlots": ["product.workspace.kpis", "module.foundation.overview.kpis"]
+    },
+    {
+      "widgetId": "foundation.kpi.ownership-gaps",
+      "displayNameKey": "modules.foundation.widgets.kpi.ownershipGaps",
+      "kind": "kpi",
+      "format": "number",
+      "dataResource": "foundation.overview",
+      "permission": "foundation.read",
+      "compatibleSlots": ["product.workspace.kpis", "module.foundation.overview.kpis"]
+    },
+    {
+      "widgetId": "foundation.list.users",
+      "displayNameKey": "modules.foundation.widgets.list.users",
+      "kind": "data-list",
+      "dataResource": "foundation.users.list",
+      "permission": "foundation.user.read",
+      "shapeRef": "FoundationUserListShape",
+      "compatibleSlots": ["module.foundation.users.body", "product.shahin-ai.workspace.identityList"]
+    },
+    {
+      "widgetId": "foundation.org-tree",
+      "displayNameKey": "modules.foundation.widgets.tree.organization",
+      "kind": "tree",
+      "dataResource": "foundation.organizations",
+      "permission": "foundation.read",
+      "compatibleSlots": ["module.foundation.organization.body", "product.shahin-ai.workspace.orgTree"]
+    },
+    {
+      "widgetId": "foundation.audit.recent",
+      "displayNameKey": "modules.foundation.widgets.list.audit",
+      "kind": "data-list",
+      "dataResource": "foundation.audit",
+      "permission": "audit_trail.read",
+      "compatibleSlots": ["module.foundation.audit.body", "product.workspace.activityFeed"]
+    }
+  ],
+  "themeTokens": [
+    { "tokenKey": "module.accent",         "tokenValue": "#1f6feb",            "scope": "module" },
+    { "tokenKey": "module.signature.bg",   "tokenValue": "var(--surface-card)","scope": "module" }
+  ]
+}

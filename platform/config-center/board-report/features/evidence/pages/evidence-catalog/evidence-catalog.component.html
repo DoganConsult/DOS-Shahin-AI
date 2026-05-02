@@ -1,0 +1,362 @@
+<p-toast />
+
+<div class="catalog-page" [attr.dir]="dir()">
+
+  <!-- Page Header -->
+  <app-page-header
+    icon="book"
+    titleEn="Evidence Catalog"
+    titleAr="فهرس الأدلة"
+    subtitleEn="Centralized evidence registry with quality and freshness tracking"
+    subtitleAr="عرض مركزي لجميع سجلات الأدلة مع الجودة والحداثة"
+    [breadcrumbs]="isAr() ? ['الأدلة', 'الفهرس'] : ['Evidence', 'Catalog']"
+    [actions]="headerActions()"
+    [isAr]="isAr()"
+    (actionClick)="onHeaderAction($event)"
+    [dir]="dir()" />
+
+  <!-- KPI Cards -->
+  <section class="catalog-kpis">
+    @if (loading()) {
+      <app-skeleton-loader type="kpi-grid" [count]="7" />
+    } @else {
+      <app-kpi-card-grid [cards]="kpis()" (cardClick)="onKpiClick($event)" />
+    }
+  </section>
+
+  <!-- Toolbar: View Mode + Filters -->
+  <section class="catalog-toolbar">
+    <p-toolbar>
+      <div class="p-toolbar-group-start toolbar-filters">
+        <!-- View Mode -->
+        <p-dropdown
+          [options]="viewModeOptions"
+          [ngModel]="viewMode()"
+          (ngModelChange)="viewMode.set($event); onViewModeChange()"
+          [style]="{ minWidth: '10rem' }"
+          appendTo="body"
+          placeholder="View Mode" />
+
+        <!-- Search -->
+        <span class="p-input-icon-left search-input">
+          <i class="pi pi-search"></i>
+          <input pInputText
+            type="text"
+            [(ngModel)]="searchText"
+            (keyup.enter)="applyFilters()"
+            [placeholder]="isAr() ? 'بحث بالعنوان...' : 'Search by title...'" />
+        </span>
+
+        <!-- Evidence Type -->
+        <p-dropdown
+          [options]="evidenceTypeOptions"
+          [(ngModel)]="filterEvidenceType"
+          (onChange)="applyFilters()"
+          appendTo="body"
+          [placeholder]="isAr() ? 'نوع الدليل' : 'Evidence Type'" />
+
+        <!-- Source Type -->
+        <p-dropdown
+          [options]="sourceTypeOptions"
+          [(ngModel)]="filterSourceType"
+          (onChange)="applyFilters()"
+          appendTo="body"
+          [placeholder]="isAr() ? 'نوع المصدر' : 'Source Type'" />
+
+        <!-- Freshness -->
+        @if (viewMode() === 'table') {
+          <p-dropdown
+            [options]="freshnessOptions"
+            [(ngModel)]="filterFreshness"
+            (onChange)="applyFilters()"
+            appendTo="body"
+            [placeholder]="isAr() ? 'الحداثة' : 'Freshness'" />
+        }
+
+        <!-- Quality -->
+        @if (viewMode() === 'table') {
+          <p-dropdown
+            [options]="qualityOptions"
+            [(ngModel)]="filterQuality"
+            (onChange)="applyFilters()"
+            appendTo="body"
+            [placeholder]="isAr() ? 'الجودة' : 'Quality'" />
+        }
+
+        <!-- Status -->
+        <p-dropdown
+          [options]="statusOptions"
+          [(ngModel)]="filterStatus"
+          (onChange)="applyFilters()"
+          appendTo="body"
+          [placeholder]="isAr() ? 'الحالة' : 'Status'" />
+      </div>
+
+      <div class="p-toolbar-group-end toolbar-toggles">
+        <!-- Reusable Only Toggle -->
+        <label class="toggle-label">
+          <p-inputSwitch [(ngModel)]="filterReusableOnly" (onChange)="applyFilters()" />
+          <span>{{ isAr() ? 'قابل للاستخدام فقط' : 'Reusable Only' }}</span>
+        </label>
+
+        <!-- Expiring Soon Toggle -->
+        <label class="toggle-label">
+          <p-inputSwitch [(ngModel)]="filterExpiringSoon" (onChange)="applyFilters()" />
+          <span>{{ isAr() ? 'تنتهي قريباً' : 'Expiring Soon' }}</span>
+        </label>
+
+        <!-- Clear Filters -->
+        <p-button
+          icon="pi pi-filter-slash"
+          [label]="isAr() ? 'مسح' : 'Clear'"
+          severity="secondary"
+          [text]="true"
+          (onClick)="clearFilters()" />
+      </div>
+    </p-toolbar>
+  </section>
+
+  <!-- View Mode Indicator -->
+  @if (viewMode() !== 'table') {
+    <div class="view-mode-banner">
+      <i class="pi" [class.pi-exclamation-triangle]="viewMode() === 'stale'" [class.pi-shield]="viewMode() === 'audit-ready'"></i>
+      <span>
+        @if (viewMode() === 'stale') {
+          {{ isAr() ? 'عرض الأدلة القديمة — يتم تصفية النتائج حسب الحداثة = قديم' : 'Stale Evidence View — results filtered to freshness = stale' }}
+        } @else {
+          {{ isAr() ? 'عرض جاهز للمراجعة — الجودة = A والحداثة = حديث' : 'Audit-Ready View — quality = A and freshness = fresh' }}
+        }
+      </span>
+      <p-button
+        icon="pi pi-times"
+        [text]="true"
+        severity="secondary"
+        (onClick)="viewMode.set('table'); onViewModeChange()" />
+    </div>
+  }
+
+  <!-- Data Table -->
+  <section class="catalog-table-section">
+    @if (loading()) {
+      <app-skeleton-loader type="table" [count]="10" />
+    } @else if (items().length === 0) {
+      <app-empty-state
+        icon="book"
+        [title]="isAr() ? 'لا توجد سجلات أدلة' : 'No evidence records found'"
+        [subtitle]="isAr() ? 'عدّل الفلاتر أو أنشئ دليلاً جديداً' : 'Adjust filters or create new evidence'"
+        [actionLabel]="isAr() ? 'إنشاء دليل' : 'Create Evidence'"
+        (action)="showCreateDialog.set(true)" />
+    } @else {
+      <grc-data-table
+        [totalRecords]="totalRecords()"
+        [emptyMessage]="isAr() ? 'لا توجد نتائج' : 'No records match the current filters'">
+        <p-table
+          [value]="items()"
+          [paginator]="true"
+          [rows]="rows"
+          [totalRecords]="totalRecords()"
+          [lazy]="true"
+          (onLazyLoad)="onPageChange($event)"
+          [first]="first"
+          [rowHover]="true"
+          [showCurrentPageReport]="true"
+          [currentPageReportTemplate]="isAr() ? 'عرض {first} إلى {last} من {totalRecords} سجل' : 'Showing {first} to {last} of {totalRecords} records'"
+          styleClass="p-datatable-sm p-datatable-gridlines"
+          [attr.aria-label]="isAr() ? 'جدول فهرس الأدلة' : 'Evidence Catalog Table'">
+
+        <ng-template pTemplate="header">
+          <tr>
+            <th [pSortableColumn]="'evidence_code'" style="width: 8rem">
+              {{ isAr() ? 'الكود' : 'Code' }}
+            </th>
+            <th [pSortableColumn]="'title'">
+              {{ isAr() ? 'العنوان' : 'Title' }}
+            </th>
+            <th style="width: 7rem">
+              {{ isAr() ? 'النوع' : 'Type' }}
+            </th>
+            <th style="width: 8rem">
+              {{ isAr() ? 'المصدر' : 'Source' }}
+            </th>
+            <th style="width: 8rem">
+              {{ isAr() ? 'نظام المصدر' : 'Source System' }}
+            </th>
+            <th style="width: 8rem">
+              {{ isAr() ? 'المالك' : 'Owner' }}
+            </th>
+            <th style="width: 5rem" class="text-center">
+              {{ isAr() ? 'الروابط' : 'Links' }}
+            </th>
+            <th style="width: 6rem">
+              {{ isAr() ? 'الحداثة' : 'Freshness' }}
+            </th>
+            <th style="width: 5rem" class="text-center">
+              {{ isAr() ? 'الجودة' : 'Quality' }}
+            </th>
+            <th style="width: 7rem">
+              {{ isAr() ? 'السرية' : 'Confidentiality' }}
+            </th>
+            <th style="width: 7rem">
+              {{ isAr() ? 'صالح حتى' : 'Valid To' }}
+            </th>
+            <th style="width: 7rem">
+              {{ isAr() ? 'الحالة' : 'Status' }}
+            </th>
+            <th style="width: 4.5rem" class="text-center">
+              {{ isAr() ? 'قابل' : 'Reuse' }}
+            </th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-item>
+          <tr class="catalog-row" (click)="onRowClick(item)" tabindex="0" (keyup.enter)="onRowClick(item)">
+            <!-- Evidence Code -->
+            <td class="code-cell">
+              <span class="evidence-code">{{ item.evidence_code || item.evidence_id || '—' }}</span>
+            </td>
+
+            <!-- Title -->
+            <td>
+              <span class="evidence-title">{{ (isAr() && item.title_ar) ? item.title_ar : item.title || '—' }}</span>
+            </td>
+
+            <!-- Evidence Type -->
+            <td>
+              <p-tag [value]="formatStatus(item.evidence_type || '—')" severity="info" [rounded]="true" />
+            </td>
+
+            <!-- Source Type -->
+            <td>
+              <span class="source-label">{{ formatStatus(item.source_type || '—') }}</span>
+            </td>
+
+            <!-- Source System Name -->
+            <td>
+              <span class="source-system">{{ item.source_system_name || '—' }}</span>
+            </td>
+
+            <!-- Owner -->
+            <td>
+              <span class="owner-label">{{ item.owner_name || item.owner_user_id || '—' }}</span>
+            </td>
+
+            <!-- Linked Objects Count -->
+            <td class="text-center">
+              <span class="link-count" [class.has-links]="item.linked_count > 0">
+                {{ item.linked_count || 0 }}
+              </span>
+            </td>
+
+            <!-- Freshness Status -->
+            <td>
+              <p-tag [value]="item.freshness_status || '—'" [severity]="getFreshnessSeverity(item.freshness_status)" [rounded]="true" />
+            </td>
+
+            <!-- Quality Status -->
+            <td class="text-center">
+              <span class="quality-badge" [attr.data-tier]="item.quality_status">
+                {{ item.quality_status || '—' }}
+              </span>
+            </td>
+
+            <!-- Confidentiality -->
+            <td>
+              <span class="confidentiality-label">{{ formatStatus(item.confidentiality_level || '—') }}</span>
+            </td>
+
+            <!-- Valid To -->
+            <td>
+              <span [class.expiring-soon]="isExpiringSoon(item.valid_to)">
+                {{ formatDate(item.valid_to) }}
+              </span>
+            </td>
+
+            <!-- Status -->
+            <td>
+              <app-status-badge [status]="item.status || 'pending'" />
+            </td>
+
+            <!-- Reusable -->
+            <td class="text-center">
+              @if (item.reusable) {
+                <i class="pi pi-check-circle reuse-yes"></i>
+              } @else {
+                <i class="pi pi-minus reuse-no"></i>
+              }
+            </td>
+          </tr>
+        </ng-template>
+
+        </p-table>
+      </grc-data-table>
+    }
+  </section>
+</div>
+
+<!-- Create Evidence Dialog -->
+<p-dialog
+  [header]="isAr() ? 'إنشاء دليل جديد' : 'Create New Evidence'"
+  [(visible)]="showCreateDialog"
+  [modal]="true"
+  [style]="{ width: '32rem' }"
+  [draggable]="false"
+  [resizable]="false">
+
+  <div class="create-form">
+    <!-- Title -->
+    <div class="form-field">
+      <grc-form-field [label]="isAr() ? 'العنوان' : 'Title'" [required]="true">
+        <input pInputText [(ngModel)]="createForm.title" [placeholder]="isAr() ? 'أدخل عنوان الدليل' : 'Enter evidence title'" class="w-full" />
+      </grc-form-field>
+    </div>
+
+    <!-- Evidence Type -->
+    <div class="form-field">
+      <label>{{ isAr() ? 'نوع الدليل' : 'Evidence Type' }} *</label>
+      <p-dropdown
+        [options]="evidenceTypeOptions.slice(1)"
+        [(ngModel)]="createForm.evidence_type"
+        appendTo="body"
+        [placeholder]="isAr() ? 'اختر النوع' : 'Select type'"
+        [style]="{ width: '100%' }" />
+    </div>
+
+    <!-- Source Type -->
+    <div class="form-field">
+      <label>{{ isAr() ? 'نوع المصدر' : 'Source Type' }}</label>
+      <p-dropdown
+        [options]="sourceTypeOptions.slice(1)"
+        [(ngModel)]="createForm.source_type"
+        appendTo="body"
+        [style]="{ width: '100%' }" />
+    </div>
+
+    <!-- Confidentiality -->
+    <div class="form-field">
+      <label>{{ isAr() ? 'مستوى السرية' : 'Confidentiality Level' }}</label>
+      <p-dropdown
+        [options]="confidentialityOptions"
+        [(ngModel)]="createForm.confidentiality_level"
+        appendTo="body"
+        [style]="{ width: '100%' }" />
+    </div>
+
+    <!-- Reusable -->
+    <div class="form-field toggle-field">
+      <label>{{ isAr() ? 'قابل لإعادة الاستخدام' : 'Reusable' }}</label>
+      <p-inputSwitch [(ngModel)]="createForm.reusable" />
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <p-button
+      [label]="isAr() ? 'إلغاء' : 'Cancel'"
+      severity="secondary"
+      [text]="true"
+      (onClick)="cancelCreate()" />
+    <p-button
+      [label]="isAr() ? 'إنشاء' : 'Create'"
+      icon="pi pi-plus"
+      (onClick)="submitCreate()" />
+  </ng-template>
+</p-dialog>

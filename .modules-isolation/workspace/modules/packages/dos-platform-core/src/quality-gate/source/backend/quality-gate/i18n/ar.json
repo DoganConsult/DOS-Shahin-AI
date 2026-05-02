@@ -1,0 +1,15 @@
+{
+  "quality-gate.title": "بوابات الجودة",
+  "quality-gate.dashboard": "لوحة بوابات الجودة",
+  "quality-gate.gates": "تعريفات البوابات",
+  "quality-gate.checks": "فحوصات الجودة",
+  "quality-gate.results": "نتائج البوابات",
+  "quality-gate.diagnostics": "التشخيصات",
+  "quality-gate.admin": "إدارة بوابات الجودة",
+  "quality-gate.empty.title": "لا توجد بوابات جودة",
+  "quality-gate.empty.description": "حدد بوابات الجودة لفرض معايير الإصدار والنشر.",
+  "quality-gate.loading": "جاري تحميل بوابات الجودة...",
+  "quality-gate.error.title": "فشل تحميل بوابات الجودة",
+  "quality-gate.error.retry": "إعادة المحاولة",
+  "quality-gate.create": "إنشاء بوابة"
+}

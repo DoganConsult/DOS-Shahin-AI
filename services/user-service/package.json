@@ -1,0 +1,47 @@
+{
+  "name": "@dos/user-service",
+  "version": "0.1.0",
+  "description": "DOS Platform \u2014 User Management Service",
+  "private": true,
+  "main": "dist/server.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/server.js",
+    "dev": "tsx watch src/server.ts",
+    "clean": "rm -rf dist",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:integration": "vitest run --config vitest.integration.config.ts",
+    "openapi:dump": "node scripts/openapi-dump.mjs > openapi.json",
+    "openapi:diff": "node scripts/openapi-diff.mjs",
+    "stryker": "stryker run",
+    "check:isolation": "../../ops/scripts/check-no-bare-safequery.sh ."
+  },
+  "dependencies": {
+    "@dos/service-bootstrap": "workspace:*",
+    "@dos/runtime-config": "workspace:*",
+    "@dos/event-backbone": "workspace:*",
+    "@dos/service-client": "workspace:*",
+    "@dos/dauth-shared": "workspace:*",
+    "@dos/db": "workspace:*",
+    "@dos/types": "workspace:*",
+    "@dos/contracts": "workspace:*",
+    "@dos/module-sdk": "workspace:*",
+    "@dos/platform-core": "workspace:*",
+    "express": "^4.22.0",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@stryker-mutator/core": "^8.2.6",
+    "@stryker-mutator/vitest-runner": "^8.2.6",
+    "@types/express": "^4.17.21",
+    "@types/node": "^25.6.0",
+    "@types/supertest": "^6.0.2",
+    "@vitest/coverage-v8": "^1.6.0",
+    "supertest": "^6.3.4",
+    "tsx": "^4.7.0",
+    "typescript": "^5.7.0",
+    "vitest": "^1.6.0"
+  }
+}

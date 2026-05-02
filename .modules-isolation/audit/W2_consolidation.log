@@ -1,0 +1,106 @@
+MOVE  audit  ->  cards/audit/sources/audit
+MANIFEST  cards/audit/grc.profile.json
+MOVE  agrc-engine  ->  cards/ai_governance/sources/agrc-engine
+MOVE  mcp  ->  cards/ai_governance/sources/mcp
+MOVE  unified-squad  ->  cards/ai_governance/sources/unified-squad
+MOVE  akb  ->  cards/ai_governance/sources/akb
+MOVE  knowledge  ->  cards/ai_governance/sources/knowledge
+MOVE  knowledge-base  ->  cards/ai_governance/sources/knowledge-base
+MOVE  knowledge-hub  ->  cards/ai_governance/sources/knowledge-hub
+MOVE  local-knowledge-hub  ->  cards/ai_governance/sources/local-knowledge-hub
+MANIFEST  cards/ai_governance/grc.profile.json
+MOVE  policy  ->  cards/policy/sources/policy
+MOVE  procedures  ->  cards/policy/sources/procedures
+MANIFEST  cards/policy/grc.profile.json
+MOVE  asset  ->  cards/asset/sources/asset
+MOVE  digital-twin  ->  cards/asset/sources/digital-twin
+MOVE  operations-hub  ->  cards/asset/sources/operations-hub
+MANIFEST  cards/asset/grc.profile.json
+MOVE  ksa-regulatory  ->  cards/regulatory/sources/ksa-regulatory
+MOVE  regulation-compiler  ->  cards/regulatory/sources/regulation-compiler
+MOVE  regulatory-delta  ->  cards/regulatory/sources/regulatory-delta
+MOVE  regulatory-feeds  ->  cards/regulatory/sources/regulatory-feeds
+MOVE  frameworks  ->  cards/regulatory/sources/frameworks
+MOVE  nca-assessment  ->  cards/regulatory/sources/nca-assessment
+MOVE  sama-assessment  ->  cards/regulatory/sources/sama-assessment
+MOVE  dora  ->  cards/regulatory/sources/dora
+MOVE  dpia  ->  cards/regulatory/sources/dpia
+MOVE  regulator-portal  ->  cards/regulatory/sources/regulator-portal
+MOVE  ksa-hub  ->  cards/regulatory/sources/ksa-hub
+MANIFEST  cards/regulatory/grc.profile.json
+MOVE  risk  ->  cards/risk/sources/risk
+MOVE  model-risk  ->  cards/risk/sources/model-risk
+MANIFEST  cards/risk/grc.profile.json
+MOVE  training  ->  cards/training/sources/training
+MANIFEST  cards/training/grc.profile.json
+MOVE  qiyas  ->  cards/qiyas/sources/qiyas
+MOVE  maturity  ->  cards/qiyas/sources/maturity
+MOVE  benchmarks  ->  cards/qiyas/sources/benchmarks
+MOVE  scoring  ->  cards/qiyas/sources/scoring
+MOVE  scoring-policy  ->  cards/qiyas/sources/scoring-policy
+MOVE  scoring-policies  ->  cards/qiyas/sources/scoring-policies
+MANIFEST  cards/qiyas/grc.profile.json
+MOVE  vendor  ->  cards/vendor/sources/vendor
+MOVE  vendors  ->  cards/vendor/sources/vendors
+MOVE  vendor-hub  ->  cards/vendor/sources/vendor-hub
+MOVE  vendor-portal  ->  cards/vendor/sources/vendor-portal
+MOVE  vendor-risk-ext  ->  cards/vendor/sources/vendor-risk-ext
+MANIFEST  cards/vendor/grc.profile.json
+MOVE  controls  ->  cards/controls/sources/controls
+MANIFEST  cards/controls/grc.profile.json
+MOVE  incident  ->  cards/incident/sources/incident
+MOVE  vulnerabilities  ->  cards/incident/sources/vulnerabilities
+MANIFEST  cards/incident/grc.profile.json
+MOVE  compliance  ->  cards/compliance/sources/compliance
+MOVE  assessments  ->  cards/compliance/sources/assessments
+MANIFEST  cards/compliance/grc.profile.json
+MOVE  evidence  ->  cards/evidence/sources/evidence
+MANIFEST  cards/evidence/grc.profile.json
+MOVE  issues  ->  cards/issues/sources/issues
+MOVE  findings  ->  cards/issues/sources/findings
+MOVE  action  ->  cards/issues/sources/action
+MOVE  remediation  ->  cards/issues/sources/remediation
+MOVE  process-tasks  ->  cards/issues/sources/process-tasks
+MANIFEST  cards/issues/grc.profile.json
+MOVE  reporting  ->  cards/reporting/sources/reporting
+MOVE  analytics  ->  cards/reporting/sources/analytics
+MOVE  dashboard  ->  cards/reporting/sources/dashboard
+MOVE  agrc-dashboard  ->  cards/reporting/sources/agrc-dashboard
+MOVE  sample-reports  ->  cards/reporting/sources/sample-reports
+MOVE  widgets  ->  cards/reporting/sources/widgets
+MANIFEST  cards/reporting/grc.profile.json
+MOVE  exceptions  ->  cards/exceptions/sources/exceptions
+MANIFEST  cards/exceptions/grc.profile.json
+MOVE  bcp  ->  cards/bcp/sources/bcp
+MANIFEST  cards/bcp/grc.profile.json
+MOVE  governance  ->  cards/governance/sources/governance
+MOVE  raci-matrix  ->  cards/governance/sources/raci-matrix
+MOVE  board-report  ->  cards/governance/sources/board-report
+MOVE  ethics-integrity  ->  cards/governance/sources/ethics-integrity
+MOVE  proactive-leadership  ->  cards/governance/sources/proactive-leadership
+MANIFEST  cards/governance/grc.profile.json
+RELOCATE shell/inbox  inbox
+RELOCATE shell/inbox  notifications
+RELOCATE shell/inbox  notification-center
+RELOCATE shell/inbox  messaging
+RELOCATE shell/inbox  approval-center
+RELOCATE shell/runtime  mobile
+MOVE  privacy  ->  cards/compliance/sources/privacy
+ARCHIVE  errors
+ARCHIVE  not-found
+ARCHIVE  placeholder
+--- W2 SUMMARY ---
+Cards created: 19
+Remaining top-level entries in modules/:
+README.md
+cards
+core
+modules
+packages
+shared
+tsconfig.base.json
+tsconfig.modules.build.json
+ARCHIVE  legacy-nested-modules (was modules/modules)
+ARCHIVE  legacy-nested-packages-modules
+removed '/root/DOS-Platform/.modules-isolation/workspace/modules/core'
+removed '/root/DOS-Platform/.modules-isolation/workspace/modules/shared'

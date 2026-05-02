@@ -1,0 +1,377 @@
+<div class="page-container" [dir]="dir()">
+  <p-toast />
+
+  <app-page-header
+    titleEn="Evidence Admin"
+    titleAr="إدارة الأدلة"
+    subtitleEn="Module configuration, taxonomy, and quality rules"
+    subtitleAr="إعدادات الوحدة والتصنيفات وقواعد الجودة"
+    icon="cog"
+    [breadcrumbs]="['Evidence', isAr() ? 'الإدارة' : 'Admin']"
+    [isAr]="isAr()"
+    [dir]="dir()" />
+
+  <!-- Access Denied -->
+  @if (!hasPermission()) {
+    <div class="page-body">
+      <app-empty-state
+        variant="error"
+        [title]="isAr() ? 'الوصول مرفوض' : 'Access Denied'"
+        [description]="isAr() ? 'تحتاج إلى صلاحية evidence:manage للوصول إلى هذه الصفحة' : 'You need the evidence:manage permission to access this page'"
+        [dir]="dir()" />
+    </div>
+  }
+
+  <!-- Loading -->
+  @if (hasPermission() && loading()) {
+    <div class="page-body">
+      <app-skeleton-loader variant="card" [rows]="6" />
+    </div>
+  }
+
+  <!-- Content -->
+  @if (hasPermission() && !loading()) {
+    <div class="page-body">
+      <p-tabView [activeIndex]="activeTabIndex()" (activeIndexChange)="onTabChange($any($event))">
+
+        <!-- Tab 1: Evidence Types -->
+        <p-tabPanel [header]="isAr() ? 'أنواع الأدلة' : 'Evidence Types'">
+          <div class="tab-header-row">
+            <span class="taxonomy-count">{{ getTaxonomyEntries('evidence-types').length }} {{ isAr() ? 'نوع' : 'types' }}</span>
+            <button pButton [label]="isAr() ? 'إضافة نوع' : 'Add Type'" icon="pi pi-plus" class="p-button-sm" (click)="openAddDialog('evidence-types')"></button>
+          </div>
+
+          @if (getTaxonomyEntries('evidence-types').length === 0) {
+            <app-empty-state
+              [title]="isAr() ? 'لا توجد أنواع' : 'No Evidence Types'"
+              [description]="isAr() ? 'أضف نوع دليل جديد' : 'Add a new evidence type'"
+              [actionLabel]="isAr() ? 'إضافة' : 'Add'"
+              [dir]="dir()"
+              (action)="openAddDialog('evidence-types')" />
+          }
+
+          @if (getTaxonomyEntries('evidence-types').length > 0) {
+            <grc-data-table
+              [totalRecords]="getTaxonomyEntries('evidence-types').length"
+              [emptyMessage]="isAr() ? 'لا توجد أنواع' : 'No evidence types'">
+              <p-table aria-label="Evidence types table" [value]="getTaxonomyEntries('evidence-types')"
+                [paginator]="getTaxonomyEntries('evidence-types').length > 15" [rows]="15"
+                [rowHover]="true" styleClass="p-datatable-sm p-datatable-striped">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th>{{ isAr() ? 'الرمز' : 'Code' }}</th>
+                    <th>{{ isAr() ? 'الاسم (EN)' : 'Name (EN)' }}</th>
+                    <th>{{ isAr() ? 'الاسم (AR)' : 'Name (AR)' }}</th>
+                    <th>{{ isAr() ? 'الفئة' : 'Category' }}</th>
+                    <th>{{ isAr() ? 'الاحتفاظ' : 'Retention' }}</th>
+                    <th>{{ isAr() ? 'نظامي' : 'System' }}</th>
+                    <th>{{ isAr() ? 'الإجراءات' : 'Actions' }}</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-entry>
+                  <tr>
+                    <td class="code-cell">{{ entry.code }}</td>
+                    @if (entry.editing) {
+                      <td><input pInputText [(ngModel)]="entry.editLabelEn" class="inline-edit" /></td>
+                      <td><input pInputText [(ngModel)]="entry.editLabelAr" class="inline-edit" /></td>
+                      <td><input pInputText [(ngModel)]="entry.editCategory" class="inline-edit" /></td>
+                      <td><input pInputText [(ngModel)]="entry.editRetention" type="number" class="inline-edit narrow" /></td>
+                    } @else {
+                      <td>{{ entry.labelEn }}</td>
+                      <td>{{ entry.labelAr || '\u2014' }}</td>
+                      <td>{{ entry.category || '\u2014' }}</td>
+                      <td>{{ entry.defaultRetention ? entry.defaultRetention + 'd' : '\u2014' }}</td>
+                    }
+                    <td>
+                      @if (entry.isSystem) {
+                        <span class="system-badge">{{ isAr() ? 'نظامي' : 'System' }}</span>
+                      }
+                    </td>
+                    <td class="actions-cell">
+                      @if (entry.editing) {
+                        <button pButton icon="pi pi-check" class="p-button-text p-button-sm p-button-success"
+                          [pTooltip]="isAr() ? 'حفظ' : 'Save'" (click)="saveEditEntry('evidence-types', entry)"></button>
+                        <button pButton icon="pi pi-times" class="p-button-text p-button-sm"
+                          [pTooltip]="isAr() ? 'إلغاء' : 'Cancel'" (click)="cancelEditEntry('evidence-types', entry)"></button>
+                      } @else {
+                        <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm"
+                          [pTooltip]="isAr() ? 'تعديل' : 'Edit'"
+                          [disabled]="!!entry.isSystem"
+                          (click)="startEditEntry('evidence-types', entry)"></button>
+                        <button pButton
+                          [icon]="entry.isActive ? 'pi pi-ban' : 'pi pi-check'"
+                          class="p-button-text p-button-sm"
+                          [class.p-button-danger]="entry.isActive"
+                          [class.p-button-success]="!entry.isActive"
+                          [pTooltip]="entry.isActive ? (isAr() ? 'تعطيل' : 'Deactivate') : (isAr() ? 'تفعيل' : 'Activate')"
+                          [disabled]="!!entry.isSystem"
+                          (click)="toggleEntryActive('evidence-types', entry)">
+                        </button>
+                      }
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </grc-data-table>
+          }
+        </p-tabPanel>
+
+        <!-- Tab 2: Source Types -->
+        <p-tabPanel [header]="isAr() ? 'أنواع المصادر' : 'Source Types'">
+          <div class="tab-header-row">
+            <span class="taxonomy-count">{{ getTaxonomyEntries('source-types').length }} {{ isAr() ? 'نوع' : 'types' }}</span>
+            <button pButton [label]="isAr() ? 'إضافة' : 'Add'" icon="pi pi-plus" class="p-button-sm" (click)="openAddDialog('source-types')"></button>
+          </div>
+
+          @if (getTaxonomyEntries('source-types').length === 0) {
+            <app-empty-state [title]="isAr() ? 'لا توجد أنواع مصادر' : 'No Source Types'" [dir]="dir()"
+              [actionLabel]="isAr() ? 'إضافة' : 'Add'" (action)="openAddDialog('source-types')" />
+          }
+
+          @if (getTaxonomyEntries('source-types').length > 0) {
+            <grc-data-table
+              [totalRecords]="getTaxonomyEntries('source-types').length"
+              [emptyMessage]="isAr() ? 'لا توجد أنواع' : 'No source types'">
+              <p-table aria-label="Source types table" [value]="getTaxonomyEntries('source-types')"
+                [paginator]="getTaxonomyEntries('source-types').length > 15" [rows]="15"
+                [rowHover]="true" styleClass="p-datatable-sm p-datatable-striped">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th>{{ isAr() ? 'الرمز' : 'Code' }}</th>
+                    <th>{{ isAr() ? 'الاسم (EN)' : 'Name (EN)' }}</th>
+                    <th>{{ isAr() ? 'الاسم (AR)' : 'Name (AR)' }}</th>
+                    <th>{{ isAr() ? 'الإجراءات' : 'Actions' }}</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-entry>
+                  <tr>
+                    <td class="code-cell">{{ entry.code }}</td>
+                    @if (entry.editing) {
+                      <td><input pInputText [(ngModel)]="entry.editLabelEn" class="inline-edit" /></td>
+                      <td><input pInputText [(ngModel)]="entry.editLabelAr" class="inline-edit" /></td>
+                    } @else {
+                      <td>{{ entry.labelEn }}</td>
+                      <td>{{ entry.labelAr || '\u2014' }}</td>
+                    }
+                    <td class="actions-cell">
+                      @if (entry.editing) {
+                        <button pButton icon="pi pi-check" class="p-button-text p-button-sm p-button-success"
+                          [pTooltip]="isAr() ? 'حفظ' : 'Save'" (click)="saveEditEntry('source-types', entry)"></button>
+                        <button pButton icon="pi pi-times" class="p-button-text p-button-sm"
+                          [pTooltip]="isAr() ? 'إلغاء' : 'Cancel'" (click)="cancelEditEntry('source-types', entry)"></button>
+                      } @else {
+                        <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm"
+                          [pTooltip]="isAr() ? 'تعديل' : 'Edit'" (click)="startEditEntry('source-types', entry)"></button>
+                      }
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </grc-data-table>
+          }
+        </p-tabPanel>
+
+        <!-- Tab 3: Confidentiality Levels -->
+        <p-tabPanel [header]="isAr() ? 'مستويات السرية' : 'Confidentiality Levels'">
+          <div class="tab-header-row">
+            <span class="taxonomy-count">{{ getTaxonomyEntries('confidentiality-levels').length }} {{ isAr() ? 'مستوى' : 'levels' }}</span>
+            <button pButton [label]="isAr() ? 'إضافة' : 'Add'" icon="pi pi-plus" class="p-button-sm" (click)="openAddDialog('confidentiality-levels')"></button>
+          </div>
+
+          @if (getTaxonomyEntries('confidentiality-levels').length === 0) {
+            <app-empty-state [title]="isAr() ? 'لا توجد مستويات' : 'No Levels'" [dir]="dir()"
+              [actionLabel]="isAr() ? 'إضافة' : 'Add'" (action)="openAddDialog('confidentiality-levels')" />
+          }
+
+          @if (getTaxonomyEntries('confidentiality-levels').length > 0) {
+            <grc-data-table
+              [totalRecords]="getTaxonomyEntries('confidentiality-levels').length"
+              [emptyMessage]="isAr() ? 'لا توجد مستويات' : 'No confidentiality levels'">
+              <p-table aria-label="Confidentiality levels table" [value]="getTaxonomyEntries('confidentiality-levels')"
+                [paginator]="getTaxonomyEntries('confidentiality-levels').length > 15" [rows]="15"
+                [rowHover]="true" styleClass="p-datatable-sm p-datatable-striped">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th>{{ isAr() ? 'الرمز' : 'Code' }}</th>
+                    <th>{{ isAr() ? 'الاسم (EN)' : 'Name (EN)' }}</th>
+                    <th>{{ isAr() ? 'الاسم (AR)' : 'Name (AR)' }}</th>
+                    <th>{{ isAr() ? 'الترتيب' : 'Sort Order' }}</th>
+                    <th>{{ isAr() ? 'الإجراءات' : 'Actions' }}</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-entry>
+                  <tr>
+                    <td class="code-cell">{{ entry.code }}</td>
+                    @if (entry.editing) {
+                      <td><input pInputText [(ngModel)]="entry.editLabelEn" class="inline-edit" /></td>
+                      <td><input pInputText [(ngModel)]="entry.editLabelAr" class="inline-edit" /></td>
+                      <td><input pInputText [(ngModel)]="entry.editSortOrder" type="number" class="inline-edit narrow" /></td>
+                    } @else {
+                      <td>{{ entry.labelEn }}</td>
+                      <td>{{ entry.labelAr || '\u2014' }}</td>
+                      <td class="sort-cell">{{ entry.sortOrder }}</td>
+                    }
+                    <td class="actions-cell">
+                      @if (entry.editing) {
+                        <button pButton icon="pi pi-check" class="p-button-text p-button-sm p-button-success"
+                          [pTooltip]="isAr() ? 'حفظ' : 'Save'" (click)="saveEditEntry('confidentiality-levels', entry)"></button>
+                        <button pButton icon="pi pi-times" class="p-button-text p-button-sm"
+                          [pTooltip]="isAr() ? 'إلغاء' : 'Cancel'" (click)="cancelEditEntry('confidentiality-levels', entry)"></button>
+                      } @else {
+                        <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm"
+                          [pTooltip]="isAr() ? 'تعديل' : 'Edit'" (click)="startEditEntry('confidentiality-levels', entry)"></button>
+                      }
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </grc-data-table>
+          }
+        </p-tabPanel>
+
+        <!-- Tab 4: Quality Rules -->
+        <p-tabPanel [header]="isAr() ? 'قواعد الجودة' : 'Quality Rules'">
+          <div class="tab-header-row">
+            <span class="taxonomy-count">{{ qualityRules().length }} {{ isAr() ? 'قاعدة' : 'rules' }}</span>
+            <button pButton [label]="isAr() ? 'إضافة قاعدة' : 'Add Rule'" icon="pi pi-plus" class="p-button-sm" (click)="openAddDialog('quality-rules')"></button>
+          </div>
+
+          @if (qualityRules().length === 0) {
+            <app-empty-state
+              [title]="isAr() ? 'لا توجد قواعد' : 'No Quality Rules'"
+              [description]="isAr() ? 'أضف قاعدة جودة جديدة' : 'Add a new quality rule'"
+              [actionLabel]="isAr() ? 'إضافة' : 'Add'"
+              [dir]="dir()"
+              (action)="openAddDialog('quality-rules')" />
+          }
+
+          @if (qualityRules().length > 0) {
+            <grc-data-table
+              [totalRecords]="qualityRules().length"
+              [emptyMessage]="isAr() ? 'لا توجد قواعد' : 'No quality rules'">
+              <p-table aria-label="Quality rules table" [value]="qualityRules()"
+                [paginator]="qualityRules().length > 15" [rows]="15"
+                [rowHover]="true" styleClass="p-datatable-sm p-datatable-striped">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th>{{ isAr() ? 'رمز القاعدة' : 'Rule Code' }}</th>
+                    <th>{{ isAr() ? 'الاسم' : 'Name' }}</th>
+                    <th>{{ isAr() ? 'البعد' : 'Dimension' }}</th>
+                    <th>{{ isAr() ? 'الوزن' : 'Weight' }}</th>
+                    <th>{{ isAr() ? 'نشط' : 'Active' }}</th>
+                    <th>{{ isAr() ? 'الإجراءات' : 'Actions' }}</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-rule>
+                  <tr>
+                    <td class="code-cell">{{ rule.ruleCode }}</td>
+                    <td class="name-cell">{{ rule.name }}</td>
+                    <td><span class="dimension-badge">{{ rule.dimension }}</span></td>
+                    @if (rule.editing) {
+                      <td><input pInputText [(ngModel)]="rule.editWeight" type="number" min="0" max="10" step="0.1" class="inline-edit narrow" /></td>
+                      <td><p-inputSwitch [(ngModel)]="rule.editActive" /></td>
+                    } @else {
+                      <td class="weight-cell">{{ rule.weight }}</td>
+                      <td><app-status-badge [status]="rule.active ? 'active' : 'inactive'" /></td>
+                    }
+                    <td class="actions-cell">
+                      @if (rule.editing) {
+                        <button pButton icon="pi pi-check" class="p-button-text p-button-sm p-button-success"
+                          [pTooltip]="isAr() ? 'حفظ' : 'Save'" (click)="saveEditRule(rule)"></button>
+                        <button pButton icon="pi pi-times" class="p-button-text p-button-sm"
+                          [pTooltip]="isAr() ? 'إلغاء' : 'Cancel'" (click)="cancelEditRule(rule)"></button>
+                      } @else {
+                        <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm"
+                          [pTooltip]="isAr() ? 'تعديل' : 'Edit'" (click)="startEditRule(rule)"></button>
+                        <button pButton
+                          [icon]="rule.active ? 'pi pi-ban' : 'pi pi-check'"
+                          class="p-button-text p-button-sm"
+                          [class.p-button-danger]="rule.active"
+                          [class.p-button-success]="!rule.active"
+                          [pTooltip]="rule.active ? (isAr() ? 'تعطيل' : 'Deactivate') : (isAr() ? 'تفعيل' : 'Activate')"
+                          (click)="toggleRuleActive(rule)">
+                        </button>
+                      }
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </grc-data-table>
+          }
+        </p-tabPanel>
+
+      </p-tabView>
+    </div>
+  }
+
+  <!-- Add Entry Dialog -->
+  <p-dialog
+    [header]="addDialogTitle()"
+    [visible]="showAddDialog()"
+    (visibleChange)="showAddDialog.set($event)"
+    [modal]="true"
+    [style]="{ width: '480px' }"
+    [draggable]="false"
+    [resizable]="false"
+    [closable]="true">
+    <div class="dialog-form">
+      <div class="form-field">
+        <grc-form-field [label]="isAr() ? 'الرمز' : 'Code'" [required]="true">
+          <input pInputText [value]="addForm().code" (input)="updateAddForm('code', $any($event.target).value)" [placeholder]="isAr() ? 'رمز فريد' : 'Unique code'" />
+        </grc-form-field>
+      </div>
+
+      @if (addDialogType() === 'quality-rules') {
+        <div class="form-field">
+          <grc-form-field [label]="isAr() ? 'الاسم' : 'Name'" [required]="true">
+            <input pInputText [value]="addForm().labelEn" (input)="updateAddForm('labelEn', $any($event.target).value)" [placeholder]="isAr() ? 'اسم القاعدة' : 'Rule name'" />
+          </grc-form-field>
+        </div>
+        <div class="form-field">
+          <label>{{ isAr() ? 'البعد' : 'Dimension' }}</label>
+          <p-dropdown [options]="dimensionDropdownOptions()" [ngModel]="addForm().dimension" (ngModelChange)="updateAddForm('dimension', $event)"
+            [placeholder]="isAr() ? 'اختر البعد' : 'Select dimension'" styleClass="w-full"></p-dropdown>
+        </div>
+        <div class="form-field">
+          <grc-form-field [label]="isAr() ? 'الوزن' : 'Weight'">
+            <input pInputText [value]="addForm().weight" (input)="updateAddForm('weight', +$any($event.target).value)" type="number" min="0" max="10" step="0.1" />
+          </grc-form-field>
+        </div>
+      } @else {
+        <div class="form-field">
+          <grc-form-field [label]="isAr() ? 'الاسم (EN)' : 'Label (EN)'" [required]="true">
+            <input pInputText [value]="addForm().labelEn" (input)="updateAddForm('labelEn', $any($event.target).value)" [placeholder]="isAr() ? 'الاسم بالإنجليزية' : 'English label'" />
+          </grc-form-field>
+        </div>
+        <div class="form-field">
+          <grc-form-field [label]="isAr() ? 'الاسم (AR)' : 'Label (AR)'">
+            <input pInputText [value]="addForm().labelAr" (input)="updateAddForm('labelAr', $any($event.target).value)" [placeholder]="isAr() ? 'الاسم بالعربية' : 'Arabic label'" />
+          </grc-form-field>
+        </div>
+        @if (addDialogType() === 'evidence-types') {
+          <div class="form-field">
+            <label>{{ isAr() ? 'الفئة' : 'Category' }}</label>
+            <p-dropdown [options]="categoryDropdownOptions()" [ngModel]="addForm().category" (ngModelChange)="updateAddForm('category', $event)"
+              [placeholder]="isAr() ? 'اختر الفئة' : 'Select category'" [showClear]="true" styleClass="w-full"></p-dropdown>
+          </div>
+          <div class="form-field">
+            <grc-form-field [label]="isAr() ? 'مدة الاحتفاظ (أيام)' : 'Default Retention (days)'">
+              <input pInputText [value]="addForm().defaultRetention" (input)="updateAddForm('defaultRetention', +$any($event.target).value)" type="number" min="1" />
+            </grc-form-field>
+          </div>
+        }
+        @if (addDialogType() === 'confidentiality-levels') {
+          <div class="form-field">
+            <grc-form-field [label]="isAr() ? 'الترتيب' : 'Sort Order'">
+              <input pInputText [value]="addForm().sortOrder" (input)="updateAddForm('sortOrder', +$any($event.target).value)" type="number" min="0" />
+            </grc-form-field>
+          </div>
+        }
+      }
+    </div>
+    <ng-template pTemplate="footer">
+      <button pButton [label]="isAr() ? 'إلغاء' : 'Cancel'" icon="pi pi-times" class="p-button-text" (click)="showAddDialog.set(false)"></button>
+      <button pButton [label]="isAr() ? 'إضافة' : 'Add'" icon="pi pi-plus" [loading]="adding()" (click)="onAddEntry()"></button>
+    </ng-template>
+  </p-dialog>
+</div>

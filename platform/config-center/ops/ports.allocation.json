@@ -1,0 +1,712 @@
+{
+  "$schema": "https://dos-platform.local/schemas/ports.allocation.v1.json",
+  "version": "1.1.0",
+  "generatedBy": "ops/scripts/build-ports-allocation.mjs (Wave 0 \u2014 Phase 1 PM2 reconciliation); 1.1.0 hand-edit added enterprise-grade native daemons (vault/flagd/glitchtip)",
+  "policy": "no-delete: every existing service has a port; overlapping services keep distinct ports + distinct gateway prefixes",
+  "ranges": {
+    "shell": "3000-3099",
+    "platform-shell": "4000-4029",
+    "domain-grc": "4030-4079",
+    "platform-admin": "4080-4099",
+    "fourD-pillars": "4100-4199",
+    "ai-os": "4310-4399",
+    "external": "8000-8999"
+  },
+  "services": {
+    "product-shell": {
+      "port": 3000,
+      "cwd": "services/product-shell",
+      "script": "dist/server.js",
+      "wave": 1,
+      "gatewayPrefix": null,
+      "envFile": "product-shell"
+    },
+    "platform-app-shell": {
+      "port": 3010,
+      "cwd": "services/platform-app-shell",
+      "script": "dist/server.js",
+      "wave": 7,
+      "gatewayPrefix": null,
+      "envFile": "platform-app-shell",
+      "overlapsWith": [
+        "product-shell"
+      ],
+      "note": "Angular SPA host. /api/* in this service proxies back to gateway \u2192 no gatewayPrefix mounted to avoid loop. Reached directly on :3010."
+    },
+    "mcp-gateway-service": {
+      "port": 3011,
+      "cwd": "services/mcp-gateway-service",
+      "script": "dist/server.js",
+      "wave": 5,
+      "gatewayPrefix": "/api/mcp",
+      "envFile": "mcp-gateway-service"
+    },
+    "gateway": {
+      "port": 4000,
+      "cwd": "services/gateway",
+      "script": "dist/server.js",
+      "wave": 1,
+      "gatewayPrefix": null,
+      "envFile": "gateway",
+      "instances": 1
+    },
+    "auth-service": {
+      "port": 4001,
+      "cwd": "platform/dauth/services/auth-service",
+      "script": "dist/server.js",
+      "wave": 1,
+      "gatewayPrefix": "/api/auth",
+      "envFile": "auth-service"
+    },
+    "tenant-service": {
+      "port": 4002,
+      "cwd": "services/tenant-service",
+      "script": "dist/server.js",
+      "wave": 1,
+      "gatewayPrefix": "/api/tenants",
+      "envFile": "tenant-service"
+    },
+    "user-service": {
+      "port": 4003,
+      "cwd": "services/user-service",
+      "script": "dist/server.js",
+      "wave": 1,
+      "gatewayPrefix": "/api/users",
+      "envFile": "user-service"
+    },
+    "workflow-service": {
+      "port": 4004,
+      "cwd": "platform/workflow/_sources/services_workflow-service",
+      "script": "dist/server.js",
+      "wave": 6,
+      "gatewayPrefix": "/api/workflow",
+      "envFile": "workflow-service",
+      "additionalGatewayPrefixes": [
+        "/api/work-items",
+        "/api/autonomous",
+        "/api/playbooks",
+        "/api/workflows",
+        "/api/bulk-tasks",
+        "/api/task-board",
+        "/api/review-cycle",
+        "/api/process-tasks",
+        "/api/journey",
+        "/api/approval-requests",
+        "/api/approval-routing",
+        "/api/module-workflow",
+        "/api/module-ai-orchestrator",
+        "/api/cooperative-workflows",
+        "/api/workflow-chains",
+        "/api/approvals"
+      ]
+    },
+    "notification-service": {
+      "port": 4005,
+      "cwd": "services/notification-service",
+      "script": "dist/server.js",
+      "wave": 2,
+      "gatewayPrefix": "/api/notifications",
+      "envFile": "notification-service"
+    },
+    "audit-service": {
+      "port": 4006,
+      "cwd": "services/audit-service",
+      "script": "dist/server.js",
+      "wave": 6,
+      "gatewayPrefix": "/api/audit",
+      "envFile": "audit-service",
+      "additionalGatewayPrefixes": [
+        "/api/activity-feed"
+      ]
+    },
+    "onboarding-service": {
+      "port": 4010,
+      "cwd": "platform/foundation/Onboarding Module/services-onboarding-service",
+      "script": "dist/server.js",
+      "wave": 6,
+      "gatewayPrefix": "/api/onboarding",
+      "envFile": "onboarding-service",
+      "excluded": true,
+      "excludedReason": "RED_BLOCKED \u2014 hard-fails on Redis NOAUTH at startup (CAPTCHA + cache); also dos_app PG password mismatch. Dropped from PM2 staging until REDIS_PASSWORD wired in platform/config-center/env/onboarding-service.env and validated in packages/dos-service-bootstrap/src/validate-env.ts."
+    },
+    "privacy-service": {
+      "port": 4012,
+      "cwd": "services/privacy-service",
+      "script": "dist/server.js",
+      "wave": 5,
+      "gatewayPrefix": "/api/privacy-ops",
+      "envFile": "privacy-service",
+      "additionalGatewayPrefixes": [
+        "/api/privacy",
+        "/api/dpia"
+      ]
+    },
+    "ui-os-service": {
+      "port": 4015,
+      "cwd": "services/ui-os-service",
+      "script": "dist/server.js",
+      "wave": 2,
+      "gatewayPrefix": "/api/ui-os",
+      "envFile": "ui-os-service",
+      "supersedes": "dynamic-ui-service",
+      "note": "Canonical UI-OS service. Owns the dos.ui_* runtime/personalization/productivity/layout tables (0302–0305) and reads the dos.dynamic_ui_* catalog (0300). Replaces the disabled services/.dynamic-ui-service.skipped/ scaffold. Legacy /api/shell, /api/dashboard, /api/widgets, /api/kpi, /api/navigation prefixes are intentionally retired here per the one-source/one-path/one-way decree; FE callers will be migrated to /api/ui-os/* in subsequent waves."
+    },
+    "dashboard-widgets-service": {
+      "port": 4023,
+      "cwd": "services/dashboard-widgets-service",
+      "script": "dist/server.js",
+      "wave": 2,
+      "gatewayPrefix": null,
+      "envFile": "dashboard-widgets-service",
+      "note": "Currently fronted by /api/widgets via dynamic-ui-service routing \u2014 kept for direct calls"
+    },
+    "analytics-service": {
+      "port": 4024,
+      "cwd": "services/analytics-service",
+      "script": "dist/server.js",
+      "wave": 2,
+      "gatewayPrefix": "/api/analytics",
+      "envFile": "analytics-service"
+    },
+    "notification-inbox-service": {
+      "port": 4025,
+      "cwd": "services/notification-inbox-service",
+      "script": "dist/server.js",
+      "wave": 2,
+      "gatewayPrefix": "/api/notification",
+      "envFile": "notification-inbox-service",
+      "note": "Singular /api/notification (inbox); plural /api/notifications goes to notification-service"
+    },
+    "integrations-service": {
+      "port": 4026,
+      "cwd": "services/integrations-service",
+      "script": "dist/server.js",
+      "wave": 2,
+      "gatewayPrefix": "/api/integrations",
+      "envFile": "integrations-service",
+      "additionalGatewayPrefixes": [
+        "/api/connector-health"
+      ]
+    },
+    "risk-incident-service": {
+      "port": 4030,
+      "cwd": "services/risk-incident-service",
+      "script": "dist/server.js",
+      "wave": 6,
+      "gatewayPrefix": "/api/risk",
+      "envFile": "risk-incident-service",
+      "additionalGatewayPrefixes": [
+        "/api/incidents",
+        "/api/incident",
+        "/api/risk-incident",
+        "/api/risk-ws",
+        "/api/risk-smart",
+        "/api/risk-metrics",
+        "/api/risk-scoring",
+        "/api/risk-trends",
+        "/api/risk-quantification",
+        "/api/monte-carlo",
+        "/api/risk-peer-review",
+        "/api/issues",
+        "/api/fitch"
+      ]
+    },
+    "governance-policy-service": {
+      "port": 4031,
+      "cwd": "services/governance-policy-service",
+      "script": "dist/server.js",
+      "wave": 6,
+      "gatewayPrefix": "/api/governance",
+      "envFile": "governance-policy-service",
+      "additionalGatewayPrefixes": [
+        "/api/governance-ai",
+        "/api/governance-os",
+        "/api/governance-policy",
+        "/api/proactive-leadership",
+        "/api/policy",
+        "/api/policies",
+        "/api/policy-admin",
+        "/api/policy-analysis",
+        "/api/policy-attestation",
+        "/api/policy-code",
+        "/api/policy-coverage",
+        "/api/policy-diagnostics",
+        "/api/policy-exception",
+        "/api/policy-exceptions",
+        "/api/policy-impact",
+        "/api/policy-lifecycle",
+        "/api/policy-overview",
+        "/api/policy-publication",
+        "/api/policy-publications",
+        "/api/policy-reports",
+        "/api/policy-template",
+        "/api/compliance",
+        "/api/compliance-ws",
+        "/api/control",
+        "/api/controls",
+        "/api/frameworks",
+        "/api/compliance-attestation",
+        "/api/attestation"
+      ],
+      "note": "Hosts @dos/module-compliance via registerCompliance() + governance/policy/governance-ai/governance-os/proactive-leadership aggregators."
+    },
+    "evidence-audit-reporting-service": {
+      "port": 4032,
+      "cwd": "services/evidence-audit-reporting-service",
+      "script": "dist/server.js",
+      "wave": 6,
+      "gatewayPrefix": "/api/evidence",
+      "envFile": "evidence-audit-reporting-service",
+      "additionalGatewayPrefixes": [
+        "/api/finding",
+        "/api/export",
+        "/api/reports",
+        "/api/evidence-audit-reporting",
+        "/api/evidence-tasks"
+      ],
+      "note": "/api/reporting collides with analytics-reporting-service; gateway routes /api/reporting to analytics-reporting (canonical FE contract). Evidence's /api/reporting handlers reachable via /api/evidence-audit-reporting/reporting/*."
+    },
+    "executive-intelligence-service": {
+      "port": 4033,
+      "cwd": "services/executive-intelligence-service",
+      "script": "dist/server.js",
+      "wave": 6,
+      "gatewayPrefix": "/api/executive",
+      "envFile": "executive-intelligence-service"
+    },
+    "agrc-os-service": {
+      "port": 4035,
+      "cwd": "services/agrc-os-service",
+      "script": "dist/server.js",
+      "wave": 5,
+      "gatewayPrefix": "/api/agrc-os-service",
+      "envFile": "agrc-os-service",
+      "overlapsWith": [
+        "ai-engine-service"
+      ],
+      "note": "Distinct namespace; ai-engine still serves /api/agrc-os"
+    },
+    "records-service": {
+      "port": 4036,
+      "cwd": "services/records-service",
+      "script": "dist/server.js",
+      "wave": 6,
+      "gatewayPrefix": "/api/records",
+      "envFile": "records-service",
+      "additionalGatewayPrefixes": [
+        "/api/record"
+      ]
+    },
+    "remediation-action-service": {
+      "port": 4037,
+      "cwd": "services/remediation-action-service",
+      "script": "dist/server.js",
+      "wave": 6,
+      "gatewayPrefix": "/api/remediation",
+      "envFile": "remediation-action-service",
+      "additionalGatewayPrefixes": [
+        "/api/action",
+        "/api/remediation-action"
+      ]
+    },
+    "portals-service": {
+      "port": 4038,
+      "cwd": "services/portals-service",
+      "script": "dist/server.js",
+      "wave": 6,
+      "gatewayPrefix": "/api/portals",
+      "envFile": "portals-service",
+      "additionalGatewayPrefixes": [
+        "/api/portal"
+      ]
+    },
+    "training-service": {
+      "port": 4039,
+      "cwd": "services/training-service",
+      "script": "dist/server.js",
+      "wave": 6,
+      "gatewayPrefix": "/api/training",
+      "envFile": "training-service"
+    },
+    "dora-service": {
+      "port": 4040,
+      "cwd": "services/dora-service",
+      "script": "dist/server.js",
+      "wave": 6,
+      "gatewayPrefix": "/api/dora",
+      "envFile": "dora-service"
+    },
+    "asset-service": {
+      "port": 4041,
+      "cwd": "services/asset-service",
+      "script": "dist/server.js",
+      "wave": 6,
+      "gatewayPrefix": "/api/assets",
+      "envFile": "asset-service",
+      "additionalGatewayPrefixes": [
+        "/api/asset",
+        "/api/asset-service",
+        "/api/asset-applications",
+        "/api/asset-services",
+        "/api/asset-service-map",
+        "/api/asset-dependencies",
+        "/api/asset-criticality",
+        "/api/asset-linkage",
+        "/api/asset-classification",
+        "/api/asset-ownership",
+        "/api/asset-lifecycle",
+        "/api/asset-reports",
+        "/api/asset-admin",
+        "/api/asset-home"
+      ]
+    },
+    "sales-room-service": {
+      "port": 4047,
+      "cwd": "services/sales-room-service",
+      "script": "dist/server.js",
+      "wave": 6,
+      "gatewayPrefix": "/api/sales-room",
+      "envFile": "sales-room-service",
+      "additionalGatewayPrefixes": [
+        "/api/public/sales-room"
+      ],
+      "excluded": true,
+      "excludedReason": "RED_BLOCKED \u2014 crash-loop (4871 restarts) on EADDRINUSE :4047 due to orphan process; instability not staging-ready. Dropped from PM2 staging until single-listener guard + graceful shutdown verified.",
+      "note": "Digital sales room: public asset hub, per-prospect rooms, stateless signed preview/download URLs, AI ingestion + engagement analytics. Phase 1 = platform-owned (public schema)."
+    },
+    "analytics-reporting-service": {
+      "port": 4042,
+      "cwd": "services/analytics-reporting-service",
+      "script": "dist/server.js",
+      "wave": 6,
+      "gatewayPrefix": "/api/reporting",
+      "envFile": "analytics-reporting-service"
+    },
+    "bcp-service": {
+      "port": 4043,
+      "cwd": "platform/BCP Module/_sources/services_bcp-service",
+      "script": "dist/server.js",
+      "wave": 7,
+      "gatewayPrefix": "/api/bcp",
+      "envFile": "bcp-service",
+      "additionalGatewayPrefixes": [
+        "/api/bcp-service"
+      ]
+    },
+    "vendor-service": {
+      "port": 4044,
+      "cwd": "platform/dnoc/modules/vendor/_sources/services_vendor-service",
+      "script": "dist/server.js",
+      "wave": 7,
+      "gatewayPrefix": "/api/vendors",
+      "envFile": "vendor-service",
+      "additionalGatewayPrefixes": [
+        "/api/vendor",
+        "/api/vendor-service",
+        "/api/vendor-risk"
+      ]
+    },
+    "platform-core-service": {
+      "port": 4045,
+      "cwd": "services/platform-core-service",
+      "script": "dist/server.js",
+      "wave": 7,
+      "gatewayPrefix": "/api/platform-core",
+      "envFile": "platform-core-service",
+      "overlapsWith": [
+        "admin-service"
+      ],
+      "additionalGatewayPrefixes": [
+        "/api/mobile"
+      ],
+      "note": "Distinct namespace; deeper platform primitives. Today only /api/mobile is implemented upstream."
+    },
+    "platform-product-service": {
+      "port": 4046,
+      "cwd": "services/platform-product-service",
+      "script": "dist/server.js",
+      "wave": 7,
+      "gatewayPrefix": "/api/platform-product",
+      "envFile": "platform-product-service",
+      "overlapsWith": [
+        "admin-service"
+      ],
+      "additionalGatewayPrefixes": [
+        "/api/product",
+        "/api/knowledge",
+        "/api/operating-cockpit",
+        "/api/platform-stats"
+      ],
+      "note": "Distinct namespace; product registry surface"
+    },
+    "admin-service": {
+      "port": 4080,
+      "cwd": "platform/ai/admin/services/admin-service",
+      "script": "dist/server.js",
+      "wave": 3,
+      "gatewayPrefix": "/api/admin",
+      "envFile": "admin-service",
+      "additionalGatewayPrefixes": [
+        "/api/platform-config",
+        "/api/platform/bootstrap",
+        "/api/entitlements",
+        "/api/config-center",
+        "/api/config/products-modules",
+        "/api/access/my-permissions",
+        "/api/tenant-config",
+        "/api/tenant-home",
+        "/api/workspaces",
+        "/api/tenants/home"
+      ]
+    },
+    "dos-service": {
+      "port": 4100,
+      "cwd": "platform/dos/services/dos-service",
+      "script": "dist/server.js",
+      "wave": 3,
+      "gatewayPrefix": "/api/dos",
+      "envFile": "dos-service"
+    },
+    "dsoc-service": {
+      "port": 4101,
+      "cwd": "platform/dsoc/services/dsoc-service",
+      "script": "dist/server.js",
+      "wave": 3,
+      "gatewayPrefix": "/api/dsoc",
+      "envFile": "dsoc-service",
+      "additionalGatewayPrefixes": [
+        "/api/dsoc/port"
+      ]
+    },
+    "dnoc-service": {
+      "port": 4102,
+      "cwd": "platform/dnoc/services/dnoc-service",
+      "script": "dist/server.js",
+      "wave": 3,
+      "gatewayPrefix": "/api/dnoc",
+      "envFile": "dnoc-service",
+      "additionalGatewayPrefixes": [
+        "/api/dnoc/port"
+      ]
+    },
+    "ai-gateway-service": {
+      "port": 4310,
+      "cwd": "platform/ai/services/ai-gateway-service",
+      "script": "dist/server.js",
+      "wave": 4,
+      "gatewayPrefix": "/api/ai",
+      "envFile": "ai-gateway-service",
+      "additionalGatewayPrefixes": [
+        "/api/ai-gateway"
+      ]
+    },
+    "ai-engine-service": {
+      "port": 4311,
+      "cwd": "platform/ai/services/ai-engine-service",
+      "script": "dist/main.js",
+      "wave": 4,
+      "gatewayPrefix": "/api/ai-engine",
+      "envFile": "ai-engine-service",
+      "maxMemory": "2G",
+      "nodeArgs": "--max-old-space-size=1536 --max-semi-space-size=64 --unhandled-rejections=strict",
+      "extraEnv": {
+        "PG_POOL_MAX": "16",
+        "UV_THREADPOOL_SIZE": "16"
+      },
+      "additionalGatewayPrefixes": [
+        "/api/ai-enhanced",
+        "/api/ai-os",
+        "/api/nudges",
+        "/api/copilot",
+        "/api/copilot/public-chat",
+        "/api/copilot/public-agents",
+        "/api/agrc-os",
+        "/api/security/quantum",
+        "/api/runtime-health",
+        "/api/ai-hr",
+        "/api/sales/copilot-leads",
+        "/api/dnoc/ai",
+        "/api/dsoc/ai",
+        "/api/ai-explainability",
+        "/api/ai-compliance-framework",
+        "/api/ai-dpia",
+        "/api/ai-model-risk",
+        "/api/ai-agent-performance"
+      ],
+      "note": "Enterprise sizing \u2014 hosts LangGraph agents, RAG, MCP, OTEL, ~17 gateway prefixes. 2G OOM cap with 1.5G heap headroom; 16-slot PG pool + 16 libuv threads to absorb concurrent LLM streams without saturating shared pool."
+    },
+    "ai-governance-service": {
+      "port": 4312,
+      "cwd": "platform/ai/services/ai-governance-service",
+      "script": "dist/server.js",
+      "wave": 4,
+      "gatewayPrefix": "/api/ai-governance",
+      "envFile": "ai-governance-service"
+    },
+    "ai-temporal-worker": {
+      "port": 4313,
+      "cwd": "platform/ai/services/ai-engine-service",
+      "script": "dist/temporal/worker.js",
+      "wave": 4,
+      "gatewayPrefix": null,
+      "envFile": "ai-engine-service",
+      "maxMemory": "2G",
+      "nodeArgs": "--max-old-space-size=1536 --max-semi-space-size=64 --unhandled-rejections=strict",
+      "extraEnv": {
+        "TEMPORAL_WORKER_HEALTH_PORT": "4313",
+        "PG_POOL_MAX": "8",
+        "UV_THREADPOOL_SIZE": "16"
+      },
+      "optional": true,
+      "requires": [
+        "temporal-server"
+      ]
+    },
+    "ai-temporal-worker-2": {
+      "port": 4314,
+      "cwd": "platform/ai/services/ai-engine-service",
+      "script": "dist/temporal/worker.js",
+      "wave": 4,
+      "gatewayPrefix": null,
+      "envFile": "ai-engine-service",
+      "maxMemory": "2G",
+      "nodeArgs": "--max-old-space-size=1536 --max-semi-space-size=64 --unhandled-rejections=strict",
+      "extraEnv": {
+        "TEMPORAL_WORKER_HEALTH_PORT": "4314",
+        "PG_POOL_MAX": "8",
+        "UV_THREADPOOL_SIZE": "16"
+      },
+      "optional": true,
+      "requires": [
+        "temporal-server"
+      ]
+    },
+    "module-orchestrator-service": {
+      "port": 4150,
+      "cwd": "services/module-orchestrator-service",
+      "script": "dist/server.js",
+      "wave": 3,
+      "gatewayPrefix": "/api/module-orchestrator",
+      "envFile": "module-orchestrator-service",
+      "additionalGatewayPrefixes": [
+        "/api/module-readiness",
+        "/api/module-pool",
+        "/api/module-capabilities",
+        "/api/module-enroll"
+      ],
+      "note": "Phase-17 single-process orchestrator: readiness verdicts + pool keeper + capability broker + tenant enrollment. Backed by dos.module_readiness/_pool_slots/_capabilities/_capability_bindings/tenant_modules."
+    }
+  },
+  "oneShots": {
+    "dos-migrator": {
+      "wave": 0,
+      "cwd": ".",
+      "script": "pnpm",
+      "args": "run migrate",
+      "envFile": "dos-migrator"
+    },
+    "keycloak-bootstrap": {
+      "wave": 0,
+      "cwd": "platform/dauth",
+      "script": "node",
+      "args": "-r ts-node/register keycloak-bootstrap.service.ts",
+      "envFile": "auth-service",
+      "requires": [
+        "keycloak"
+      ]
+    }
+  },
+  "sidecars": {
+    "registry-sync": {
+      "wave": 8,
+      "ecosystem": "ops/ecosystem.registry-sync.config.js"
+    },
+    "keycloak-event-bridge": {
+      "wave": 8,
+      "ecosystem": "ops/ecosystem.registry-sync.config.js"
+    },
+    "langfuse": {
+      "wave": 8,
+      "external": true,
+      "checkPath": "/opt/langfuse/start.sh"
+    },
+    "observability": {
+      "wave": 8,
+      "ecosystem": "ops/ecosystem.observability.config.js",
+      "envFile": "observability"
+    }
+  },
+  "external": {
+    "postgres": {
+      "host": "127.0.0.1",
+      "port": 5432
+    },
+    "redis": {
+      "host": "127.0.0.1",
+      "port": 6379
+    },
+    "keycloak": {
+      "host": "127.0.0.1",
+      "port": 8180,
+      "envFile": "keycloak"
+    },
+    "temporal": {
+      "host": "127.0.0.1",
+      "port": 7233,
+      "optional": true
+    },
+    "langfuse": {
+      "host": "127.0.0.1",
+      "port": 4090,
+      "optional": true
+    },
+    "vault": {
+      "host": "127.0.0.1",
+      "port": 8200,
+      "clusterPort": 8201,
+      "envFile": "vault",
+      "systemdUnit": "vault.service",
+      "binary": "/opt/vault/bin/vault",
+      "configPath": "/etc/vault/vault.hcl",
+      "dataDir": "/data/vault",
+      "note": "HashiCorp Vault \u2014 secrets/KV+transit. 8200 API (IANA default), 8201 cluster RPC (reserved for future HA)."
+    },
+    "flagd": {
+      "host": "127.0.0.1",
+      "port": 8013,
+      "metricsPort": 8014,
+      "ofrepPort": 8016,
+      "envFile": "flagd",
+      "systemdUnit": "flagd.service",
+      "binary": "/opt/flagd/bin/flagd",
+      "configPath": "/etc/flagd/flags.json",
+      "note": "OpenFeature flagd \u2014 feature flags. 8013 gRPC eval, 8014 Prom metrics, 8016 OFREP HTTP (all upstream defaults)."
+    },
+    "glitchtip": {
+      "host": "127.0.0.1",
+      "port": 8000,
+      "envFile": "glitchtip",
+      "systemdUnit": "glitchtip-web.service",
+      "workerUnit": "glitchtip-worker.service",
+      "appDir": "/opt/glitchtip",
+      "note": "Sentry-protocol-compatible error telemetry. Reuses existing postgres + redis. Worker has no listener.",
+      "optional": true
+    },
+    "openfga": {
+      "host": "127.0.0.1",
+      "port": 8080,
+      "grpcPort": 8081,
+      "envFile": "openfga",
+      "systemdUnit": "openfga.service",
+      "note": "Already running. 8080 HTTP, 8081 gRPC \u2014 pre-existing native install."
+    },
+    "cerbos": {
+      "host": "127.0.0.1",
+      "port": 3592,
+      "grpcPort": 3593,
+      "envFile": "cerbos",
+      "systemdUnit": "cerbos.service",
+      "note": "Already running. 3592 HTTP, 3593 gRPC \u2014 pre-existing native install."
+    }
+  }
+}

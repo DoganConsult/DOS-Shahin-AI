@@ -1,0 +1,11 @@
+code,name_en,name_ar,country_code,category,jurisdiction_en,website,established_year
+QAT-QCB,Qatar Central Bank,مصرف قطر المركزي,QAT,financial,"Banking, Insurance & Capital Markets",https://qcb.gov.qa,1993
+QAT-QFCRA,Qatar Financial Centre Regulatory Authority,هيئة تنظيم مركز قطر للمال,QAT,financial,QFC Financial Services,https://qfcra.com,2005
+QAT-QFMA,Qatar Financial Markets Authority,هيئة قطر للأسواق المالية,QAT,financial,Capital Markets & Securities,https://qfma.org.qa,2005
+QAT-NCSA,National Cyber Security Agency,الوكالة الوطنية للأمن السيبراني,QAT,cybersecurity,National Cybersecurity,https://ncsa.gov.qa,2021
+QAT-CRA,Communications Regulatory Authority,هيئة تنظيم الاتصالات,QAT,telecom,Telecommunications & ICT,https://cra.gov.qa,2014
+QAT-MCIT,Ministry of Communications & Information Technology,وزارة الاتصالات وتكنولوجيا المعلومات,QAT,digital_gov,Digital Government & Data Protection,https://mcit.gov.qa,2016
+QAT-MOPH,Ministry of Public Health,وزارة الصحة العامة,QAT,healthcare,Public Health,https://moph.gov.qa,1972
+QAT-MOCI,Ministry of Commerce & Industry,وزارة التجارة والصناعة,QAT,commerce,Commerce & Consumer Protection,https://moci.gov.qa,1985
+QAT-GTA,General Tax Authority,الهيئة العامة للضرائب,QAT,tax,Tax Administration,https://gta.gov.qa,2018
+QAT-MADLSA,Ministry of Labour,وزارة العمل,QAT,labor,Labor,https://adlsa.gov.qa,2021

@@ -1,0 +1,210 @@
+<app-page-shell
+      icon="file-edit"
+      [title]="i18n.translate('dpia.title')"
+      [subtitle]="i18n.translate('dpia.subtitle')"
+      [breadcrumbs]="['Dashboard', 'DPIA']"
+      [loading]="loading">
+
+      <!-- DPIA List View -->
+      <ng-container *ngIf="!wizardMode">
+        <div class="list-toolbar">
+          <p-button [label]="i18n.translate('dpia.newDpia')"
+                    icon="pi pi-plus" (onClick)="startNewDPIA()" />
+        </div>
+        <div class="dpia-cards" *ngIf="dpiaList.length > 0">
+          <div tabindex="0" role="button" (keyup.enter)="loadDPIA(d.dpiaId)" *ngFor="let d of dpiaList" class="dpia-card" (click)="loadDPIA(d.dpiaId)">
+            <div class="dpia-card-header">
+              <h3>{{ d.title }}</h3>
+              <span class="dpia-status" [class]="'status-' + d.status">{{ d.status }}</span>
+            </div>
+            <div class="dpia-card-meta">
+              <span><i class="pi pi-calendar"></i> {{ d.createdAt | appDate:'medium' }}</span>
+              <button aria-label="Delete" class="delete-btn" (click)="deleteDPIA(d.dpiaId, $event)"><i class="pi pi-trash"></i></button>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="!loading && dpiaList.length === 0" class="empty-state">
+          <i class="pi pi-file-edit" style="font-size: 48px; color: var(--grc-purple, #7c3aed); margin-bottom: 1rem;"></i>
+          <h3>{{ i18n.translate('dpia.noDpias') }}</h3>
+          <p>{{ i18n.translate('dpia.startFirstDpia') }}</p>
+          <p-button [label]="i18n.translate('dpia.startDpia')"
+                    icon="pi pi-play" (onClick)="startNewDPIA()" styleClass="mt-3" />
+        </div>
+      </ng-container>
+
+      <!-- Wizard Mode -->
+      <ng-container *ngIf="wizardMode">
+      <div class="wizard-toolbar">
+        <button class="back-btn" (click)="exitWizard()"><i class="pi pi-arrow-left"></i> {{ i18n.translate('dpia.backToList') }}</button>
+        <span *ngIf="saving" class="save-indicator"><i class="pi pi-spin pi-spinner"></i> {{ i18n.translate('dpia.saving') }}</span>
+        <span *ngIf="!saving && activeDpiaId" class="save-indicator saved"><i class="pi pi-check"></i> {{ i18n.translate('dpia.saved') }}</span>
+      </div>
+
+      <!-- Wizard Steps -->
+      <div class="dpia-wizard-nav">
+        <button *ngFor="let step of steps; let idx = index" class="dpia-step-btn"
+                [class.active]="currentStep === idx" [class.completed]="idx < currentStep"
+                (click)="currentStep = idx">
+          <span class="dpia-step-num">{{ idx + 1 }}</span>
+          <span class="dpia-step-label">{{ i18n.localize(step.labelEn, step.labelAr) }}</span>
+        </button>
+      </div>
+
+      <!-- Step 1: Processing Activity -->
+      <div *ngIf="currentStep === 0" class="dpia-step">
+        <h3>{{ i18n.translate('dpia.processingActivityDesc') }}</h3>
+        <div class="form-grid">
+          <grc-form-field [label]="i18n.translate('dpia.activityName')">
+            <input pInputText [(ngModel)]="activity.name" class="w-full" /></grc-form-field>
+          <grc-form-field [label]="i18n.translate('dpia.department')">
+            <input pInputText [(ngModel)]="activity.department" class="w-full" /></grc-form-field>
+          <grc-form-field class="full" [label]="i18n.translate('dpia.description')">
+            <textarea pInputTextarea [(ngModel)]="activity.description" [rows]="3" class="w-full"></textarea></grc-form-field>
+          <grc-form-field [label]="i18n.translate('dpia.dataController')">
+            <input pInputText [(ngModel)]="activity.controller" class="w-full" /></grc-form-field>
+          <grc-form-field [label]="i18n.translate('dpia.dpoContact')">
+            <input pInputText [(ngModel)]="activity.dpo" class="w-full" /></grc-form-field>
+        </div>
+      </div>
+
+      <!-- Step 2: Data Inventory -->
+      <div *ngIf="currentStep === 1" class="dpia-step">
+        <h3>{{ i18n.translate('dpia.dataInventory') }}</h3>
+        <p-button [label]="i18n.translate('dpia.addCategory')" icon="pi pi-plus"
+                  (onClick)="addDataCategory()" styleClass="mb-3 p-button-sm" />
+        <grc-data-table
+          [totalRecords]="dataCategories.length"
+          [emptyMessage]="i18n.translate('dpia.noCategories') || 'No data categories added'">
+          <p-table [paginator]="true" [rows]="20" [rowsPerPageOptions]="[10,20,50]" aria-label="Data Categories table" [value]="dataCategories" styleClass="p-datatable-sm p-datatable-striped">
+            <ng-template pTemplate="header"><tr>
+              <th>{{ i18n.translate('dpia.category') }}</th>
+              <th>{{ i18n.translate('dpia.source') }}</th>
+              <th>{{ i18n.translate('dpia.storage') }}</th>
+              <th>{{ i18n.translate('dpia.retention') }}</th>
+              <th></th>
+            </tr></ng-template>
+            <ng-template pTemplate="body" let-row let-i="rowIndex"><tr>
+              <td><input pInputText [(ngModel)]="row.name" class="table-input" /></td>
+              <td><input pInputText [(ngModel)]="row.source" class="table-input" /></td>
+              <td><input pInputText [(ngModel)]="row.storage" class="table-input" /></td>
+              <td><input pInputText [(ngModel)]="row.retention" class="table-input" /></td>
+              <td><button aria-label="Delete" class="icon-btn danger" (click)="dataCategories.splice(i, 1)"><i class="pi pi-trash"></i></button></td>
+            </tr></ng-template>
+          </p-table>
+        </grc-data-table>
+      </div>
+
+      <!-- Step 3: Lawful Basis -->
+      <div *ngIf="currentStep === 2" class="dpia-step">
+        <h3>{{ i18n.translate('dpia.lawfulBasis') }}</h3>
+        <p class="step-hint">{{ i18n.translate('dpia.pdplArticle10') }}</p>
+        <div class="basis-cards">
+          <div tabindex="0" role="button" (keyup.enter)="selectedBasis = basis.value" *ngFor="let basis of lawfulBases" class="basis-card"
+               [class.selected]="selectedBasis === basis.value" (click)="selectedBasis = basis.value">
+            <div class="basis-icon">{{ basis.icon }}</div>
+            <div class="basis-label">{{ i18n.localize(basis.labelEn, basis.labelAr) }}</div>
+            <div class="basis-desc">{{ i18n.localize(basis.descEn, basis.descAr) }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 4: Necessity & Proportionality -->
+      <div *ngIf="currentStep === 3" class="dpia-step">
+        <h3>{{ i18n.translate('dpia.necessityProportionality') }}</h3>
+        <div *ngFor="let q of necessityQuestions" class="necessity-row">
+          <div class="nec-label">{{ i18n.localize(q.labelEn, q.labelAr) }}</div>
+          <div class="nec-slider">
+            <p-slider [(ngModel)]="q.score" [min]="1" [max]="5" [step]="1" />
+            <div class="nec-scale">
+              <span>1 {{ i18n.translate('dpia.weak') }}</span>
+              <span>5 {{ i18n.translate('dpia.strong') }}</span>
+            </div>
+          </div>
+          <div class="nec-value" [class.good]="q.score >= 4" [class.warn]="q.score === 3" [class.bad]="q.score <= 2">{{ q.score }}/5</div>
+        </div>
+      </div>
+
+      <!-- Step 5: Risk Assessment -->
+      <div *ngIf="currentStep === 4" class="dpia-step">
+        <h3>{{ i18n.translate('dpia.riskAssessment') }}</h3>
+        <div *ngFor="let risk of risks" class="risk-row">
+          <div class="risk-cat">{{ i18n.localize(risk.category, risk.categoryAr) }}</div>
+          <div class="risk-sliders">
+            <div class="risk-slider-group">
+              <label>{{ i18n.translate('dpia.likelihood') }}: {{ risk.likelihood }}</label>
+              <p-slider [(ngModel)]="risk.likelihood" [min]="1" [max]="5" [step]="1" (onChange)="calcRiskScore(risk)" />
+            </div>
+            <div class="risk-slider-group">
+              <label>{{ i18n.translate('dpia.impact') }}: {{ risk.impact }}</label>
+              <p-slider [(ngModel)]="risk.impact" [min]="1" [max]="5" [step]="1" (onChange)="calcRiskScore(risk)" />
+            </div>
+          </div>
+          <div class="risk-score" [style.background]="riskColor(risk.score)">{{ risk.score }}</div>
+        </div>
+      </div>
+
+      <!-- Step 6: Mitigation Measures -->
+      <div *ngIf="currentStep === 5" class="dpia-step">
+        <h3>{{ i18n.translate('dpia.mitigationMeasures') }}</h3>
+        <p class="step-hint">{{ i18n.translate('dpia.linkedPdplControls') }}</p>
+        <div *ngFor="let m of mitigations" class="mitigation-card" [class.impl]="m.status === 'implemented'" [class.planned]="m.status === 'planned'">
+          <div class="mit-header">
+            <span class="mit-code">{{ m.code }}</span>
+            <span class="mit-title">{{ i18n.localize(m.titleEn, m.titleAr) }}</span>
+          </div>
+          <div class="mit-pills">
+            <button class="pill" [class.active]="m.status === 'implemented'" (click)="m.status = 'implemented'">
+              <i class="pi pi-check"></i> {{ i18n.translate('dpia.implemented') }}
+            </button>
+            <button class="pill" [class.active]="m.status === 'planned'" (click)="m.status = 'planned'">
+              <i class="pi pi-clock"></i> {{ i18n.translate('dpia.planned') }}
+            </button>
+            <button class="pill" [class.active]="m.status === 'not_applicable'" (click)="m.status = 'not_applicable'">
+              <i class="pi pi-ban"></i> N/A
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 7: Summary & Export -->
+      <div *ngIf="currentStep === 6" class="dpia-step">
+        <h3>{{ i18n.translate('dpia.summaryExport') }}</h3>
+        <div class="summary-kpis">
+          <app-stat-card icon="shield" [value]="overallRiskRating"
+                        [label]="i18n.translate('dpia.riskRating')"
+                        [accentColor]="overallRiskRating === 'Low' ? '#16a34a' : overallRiskRating === 'Medium' ? 'var(--warning)' : 'var(--error)'" />
+          <app-stat-card icon="check-circle" [value]="complianceScore + '%'"
+                        [label]="i18n.translate('dpia.pdplCompliance')"
+                        [accentColor]="complianceScore >= 70 ? '#16a34a' : 'var(--warning)'" />
+          <app-stat-card icon="file" [value]="implementedCount + '/' + mitigations.length"
+                        [label]="i18n.translate('dpia.controlsImplemented')"
+                        accentColor="#3b82f6" />
+        </div>
+
+        <div class="recommendation-box" [class.proceed]="overallRiskRating === 'Low'" [class.conditions]="overallRiskRating === 'Medium'" [class.stop]="overallRiskRating === 'High'">
+          <i class="pi" [ngClass]="overallRiskRating === 'Low' ? 'pi-check-circle' : overallRiskRating === 'Medium' ? 'pi-exclamation-triangle' : 'pi-times-circle'"></i>
+          <div>
+            <strong>{{ i18n.translate('dpia.recommendation') }}:</strong>
+            {{ overallRiskRating === 'Low' ? i18n.translate('dpia.proceed') :
+               overallRiskRating === 'Medium' ? i18n.translate('dpia.proceedWithConditions') :
+               i18n.translate('dpia.doNotProceed') }}
+          </div>
+        </div>
+
+        <div class="export-bar">
+          <button class="export-btn pdf" (click)="exportDPIA('pdf','en')"><i class="pi pi-file-pdf"></i> PDF (English)</button>
+          <button class="export-btn pdf" (click)="exportDPIA('pdf','ar')"><i class="pi pi-file-pdf"></i> PDF (عربي)</button>
+          <button class="export-btn excel" (click)="exportDPIA('excel')"><i class="pi pi-file-excel"></i> Excel</button>
+          <button class="export-btn html" (click)="exportDPIA('html')"><i class="pi pi-globe"></i> Interactive HTML</button>
+        </div>
+      </div>
+
+      <!-- Step Navigation -->
+      <div class="step-actions">
+        <p-button *ngIf="currentStep > 0" [label]="i18n.translate('dpia.previous')"
+                  icon="pi pi-arrow-left" (onClick)="currentStep = currentStep - 1; triggerAutoSave()" styleClass="p-button-outlined" />
+        <p-button *ngIf="currentStep < steps.length - 1" [label]="i18n.translate('dpia.next')"
+                  icon="pi pi-arrow-right" iconPos="right" (onClick)="nextStep()" />
+      </div>
+      </ng-container>
+    </app-page-shell>

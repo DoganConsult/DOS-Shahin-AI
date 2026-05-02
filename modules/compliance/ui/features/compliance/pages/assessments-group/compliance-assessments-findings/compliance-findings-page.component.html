@@ -1,0 +1,225 @@
+<cds-notification></cds-notification>
+    <div class="findings-page" [dir]="i18n.direction()">
+      <div class="page-toolbar">
+        <h2>{{ scope() === 'my' ? (i18n.translate('My findings') || 'My findings') : i18n.translate('Compliance Findings') }}</h2>
+        <div class="toolbar-actions">
+          <button type="button" class="scope-btn" [class.active]="scope() === 'my'" (click)="toggleScope()">
+            <i class=""></i> {{ scope() === 'my' ? (i18n.translate('My findings') || 'My findings') : (i18n.translate('All') || 'All') }}
+          </button>
+          <select class="filter-select" [(ngModel)]="frameworkFilter" (ngModelChange)="page.set(1); reload()">
+            <option value="">{{ i18n.translate('All Frameworks') }}</option>
+            @for (f of frameworkOptions(); track f) { <option [value]="f">{{ f }}</option> }
+          </select>
+          <select class="filter-select" [(ngModel)]="severityFilter" (ngModelChange)="page.set(1); reload()">
+            <option value="">{{ i18n.translate('All Severities') }}</option>
+            <option value="critical">Critical</option>
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
+          </select>
+          <select class="filter-select" [(ngModel)]="statusFilter" (ngModelChange)="applyFilters()">
+            <option value="">{{ i18n.translate('All Statuses') }}</option>
+            <option value="open">Open</option>
+            <option value="in_progress">In Progress</option>
+            <option value="resolved">Resolved</option>
+            <option value="closed">Closed</option>
+          </select>
+          <select class="filter-select" [(ngModel)]="assignedToFilter" (ngModelChange)="applyFilters()">
+            <option value="">{{ i18n.translate('All Assignees') }}</option>
+            @for (user of foundationUsers(); track user.userId || user.id) {
+              <option [value]="user.userId || user.id">{{ user.name || user.email || user.userId || user.id }}</option>
+            }
+          </select>
+          <button cdsButton icon="" [label]="i18n.translate('Export')" [outlined]="true" severity="secondary"
+            (onClick)="exportMenu.toggle($event)" size="small" />
+          <cds-context-menu #exportMenu [model]="exportMenuItems" [popup]="true" />
+          <button class="create-btn" (click)="showCreateDialog = true">
+            <i class=""></i> {{ i18n.translate('New Finding') }}
+          </button>
+        </div>
+      </div>
+
+      <div class="health-strip">
+        <div tabindex="0" role="button" (keyup.enter)="severityFilter = ''; statusFilter = ''; reload()" class="hs-card" (click)="severityFilter = ''; statusFilter = ''; reload()">
+          <span class="hs-num">{{ totalCount() }}</span>
+          <span class="hs-label">{{ i18n.translate('Total') }}</span>
+        </div>
+        <div tabindex="0" role="button" (keyup.enter)="filterBySeverity('critical')" class="hs-card critical" (click)="filterBySeverity('critical')">
+          <span class="hs-num">{{ countBySeverity('critical') }}</span>
+          <span class="hs-label">{{ i18n.translate('Critical') }}</span>
+        </div>
+        <div tabindex="0" role="button" (keyup.enter)="filterBySeverity('high')" class="hs-card high" (click)="filterBySeverity('high')">
+          <span class="hs-num">{{ countBySeverity('high') }}</span>
+          <span class="hs-label">{{ i18n.translate('High') }}</span>
+        </div>
+        <div tabindex="0" role="button" (keyup.enter)="filterByStatus('open')" class="hs-card open" (click)="filterByStatus('open')">
+          <span class="hs-num">{{ countByStatus('open') }}</span>
+          <span class="hs-label">{{ i18n.translate('Open') }}</span>
+        </div>
+      </div>
+
+      @if (loadError()) {
+        <div class="load-error-banner" role="alert">
+          <i class=""></i>
+          <span>{{ loadError() }}</span>
+          <button type="button" class="retry-btn" (click)="loadError.set(null); reload()">{{ i18n.translate('common.retry') }}</button>
+        </div>
+      }
+
+      @if (loading()) {
+        <div class="loading-state" aria-live="polite"><i class=" pi-spinner"></i></div>
+      }
+
+      @if (!loading() && !loadError() && filtered().length === 0) {
+        <div class="empty-state"><i class=""></i><p>{{ i18n.translate('No findings found') }}</p></div>
+      }
+
+      @if (!loading() && !loadError() && totalCount() > 0) {
+        <div class="pagination-bar">
+          <span class="pagination-info">{{ i18n.translate('Showing') }} {{ pageStart() }}–{{ pageEnd() }} {{ i18n.translate('of') }} {{ totalCount() }}</span>
+          <div class="pagination-controls">
+            <select class="page-size-select" [ngModel]="pageSize()" (ngModelChange)="setPageSize($event)">
+              <option [value]="10">10</option>
+              <option [value]="25">25</option>
+              <option [value]="50">50</option>
+            </select>
+            <button class="pagination-btn" [disabled]="page() <= 1" (click)="goToPage(page() - 1)"><i class=""></i></button>
+            <span class="page-num">{{ page() }} / {{ totalPages() }}</span>
+            <button class="pagination-btn" [disabled]="page() >= totalPages()" (click)="goToPage(page() + 1)"><i class=""></i></button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table aria-label="Data Table table" class="data-table">
+            <thead>
+              <tr>
+                <th>{{ i18n.translate('Finding') }}</th>
+                <th>{{ i18n.translate('Severity') }}</th>
+                <th>{{ i18n.translate('Status') }}</th>
+                <th>{{ i18n.translate('Source') }}</th>
+                <th>{{ i18n.translate('Assigned To') }}</th>
+                <th>{{ i18n.translate('Due Date') }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (f of filtered(); track f.findingId) {
+                <tr tabindex="0" role="button" (keyup.enter)="openDetail(f)" class="clickable-row" (click)="openDetail(f)">
+                  <td class="title-cell">{{ f.title }}</td>
+                  <td><span class="severity-badge" [attr.data-severity]="f.severity">{{ f.severity }}</span></td>
+                  <td><span class="status-badge" [attr.data-status]="f.status">{{ formatStatus(f.status) }}</span></td>
+                  <td>{{ f.sourceType || '—' }}</td>
+                  <td>{{ f.assignedTo || '—' }}</td>
+                  <td class="date-cell" [class.overdue]="isOverdue(f)">{{ f.dueDate ? (f.dueDate | appDate:'medium') : '—' }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+
+      @if (selectedFinding()) {
+        <div tabindex="0" role="button" (keyup.enter)="closeDetail()" class="drawer-overlay" (click)="closeDetail()"></div>
+        <aside class="detail-drawer" [dir]="i18n.direction()">
+          <div class="drawer-header">
+            <h3>{{ selectedFinding()!.title }}</h3>
+            <button aria-label="Close" class="close-btn" (click)="closeDetail()"><i class=""></i></button>
+          </div>
+          <div class="drawer-body">
+            @if (selectedFinding()!.description) {
+              <div class="detail-section">
+                <label>{{ i18n.translate('Description') }}</label>
+                <p>{{ selectedFinding()!.description }}</p>
+              </div>
+            }
+            <div class="detail-row">
+              <div class="detail-section half">
+                <label>{{ i18n.translate('Severity') }}</label>
+                <span class="severity-badge" [attr.data-severity]="selectedFinding()!.severity">{{ selectedFinding()!.severity }}</span>
+              </div>
+              <div class="detail-section half">
+                <label>{{ i18n.translate('Status') }}</label>
+                <span class="status-badge" [attr.data-status]="selectedFinding()!.status">{{ formatStatus(selectedFinding()!.status) }}</span>
+              </div>
+            </div>
+            @if (selectedFinding()!.remediationPlan) {
+              <div class="detail-section">
+                <label>{{ i18n.translate('Remediation Plan') }}</label>
+                <p>{{ selectedFinding()!.remediationPlan }}</p>
+              </div>
+            }
+            <div class="drawer-actions">
+              <a class="action-link" [routerLink]="['/compliance/gaps']" (click)="closeDetail()">
+                <i class=""></i> {{ i18n.translate('Related Gaps') }}
+              </a>
+              <a class="action-link" [routerLink]="['/compliance/controls']" (click)="closeDetail()">
+                <i class=""></i> {{ i18n.translate('Related Controls') }}
+              </a>
+              <a class="action-link" [routerLink]="['/compliance/assessments']" (click)="closeDetail()">
+                <i class=""></i> {{ i18n.translate('Assessments') }}
+              </a>
+              <a class="action-link" [routerLink]="['/risk']" (click)="closeDetail()">
+                <i class=""></i> {{ i18n.translate('Risk Register') }}
+              </a>
+              <a class="action-link" (click)="viewAuditLog()">
+                <i class=""></i> {{ i18n.translate('Audit Log') }}
+              </a>
+            </div>
+            <div class="detail-section" style="margin-top:12px">
+              <label>{{ i18n.translate('Reassign Owner') }}</label>
+              <div style="display:flex;gap:6px">
+                <select [(ngModel)]="reassignUserId" class="field-input" style="flex:1">
+                  <option value="">—</option>
+                  @for (u of foundationUsers(); track u.user_id) { <option [value]="u.user_id">{{ u.display_name || u.email }}</option> }
+                </select>
+                <button class="action-btn primary-btn" (click)="reassignOwner()" [disabled]="!reassignUserId">{{ i18n.translate('Assign') }}</button>
+              </div>
+            </div>
+            <div class="drawer-status-actions" style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap">
+              @if (selectedFinding()!.status === 'open') {
+                <button class="action-btn primary-btn" (click)="updateStatus(selectedFinding()!, 'in_progress')"><i class=""></i> In Progress</button>
+              }
+              @if (selectedFinding()!.status === 'in_progress') {
+                <button class="action-btn success-btn" (click)="updateStatus(selectedFinding()!, 'resolved')"><i class=""></i> Resolve</button>
+              }
+              @if (selectedFinding()!.status === 'resolved') {
+                <button class="action-btn" (click)="updateStatus(selectedFinding()!, 'closed')"><i class=""></i> Close</button>
+                <button class="action-btn" (click)="updateStatus(selectedFinding()!, 'open')"><i class=""></i> Reopen</button>
+              }
+              @if (selectedFinding()!.status === 'closed') {
+                <button class="action-btn" (click)="updateStatus(selectedFinding()!, 'open')"><i class=""></i> Reopen</button>
+              }
+            </div>
+          </div>
+        </aside>
+      }
+
+      @if (showCreateDialog) {
+        <div tabindex="0" role="button" (keyup.enter)="showCreateDialog = false" class="drawer-overlay" (click)="showCreateDialog = false"></div>
+        <div class="create-dialog" [dir]="i18n.direction()">
+          <h3>{{ i18n.translate('New Finding') }}</h3>
+          <grc-form-field [label]="i18n.translate('Title')" [required]="true">
+            <input type="text" [(ngModel)]="newFinding.title" class="field-input" />
+          </grc-form-field>
+          <div class="field"><label>{{ i18n.translate('Description') }}</label><textarea [(ngModel)]="newFinding.description" class="field-input" rows="3"></textarea></div>
+          <div class="field">
+            <label>{{ i18n.translate('Severity') }}</label>
+            <select [(ngModel)]="newFinding.severity" class="field-input"><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option><option value="critical">Critical</option></select>
+          </div>
+          <div class="field">
+            <label>{{ i18n.translate('Assigned To') }}</label>
+            <select [(ngModel)]="newFinding.assignedTo" class="field-input">
+              <option value="">—</option>
+              @for (u of foundationUsers(); track u.user_id) { <option [value]="u.user_id">{{ u.display_name || u.email }}</option> }
+            </select>
+          </div>
+          <grc-form-field [label]="i18n.translate('Due Date')">
+            <input type="date" [(ngModel)]="newFinding.dueDate" class="field-input" />
+          </grc-form-field>
+          <div class="dialog-footer">
+            <button class="action-btn" (click)="showCreateDialog = false">{{ i18n.translate('Cancel') }}</button>
+            <button class="action-btn primary-btn" (click)="createNewFinding()" [disabled]="!newFinding.title">
+              <i class=""></i> {{ i18n.translate('Create') }}
+            </button>
+          </div>
+        </div>
+      }
+    </div>

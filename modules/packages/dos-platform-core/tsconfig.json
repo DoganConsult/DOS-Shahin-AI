@@ -1,0 +1,36 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "@dos/types": [
+        "../dos-types/dist/index"
+      ],
+      "@dos/types/*": [
+        "../dos-types/dist/*"
+      ],
+      "@dos/contracts": [
+        "../dos-contracts/dist/index"
+      ],
+      "@dos/contracts/*": [
+        "../dos-contracts/dist/*"
+      ],
+      "@dos/db": [
+        "../dos-db/dist/index"
+      ],
+      "@dos/db/*": [
+        "../dos-db/dist/*"
+      ]
+    }
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/ambient/**/*.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}

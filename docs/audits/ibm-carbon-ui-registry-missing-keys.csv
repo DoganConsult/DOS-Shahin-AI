@@ -1,0 +1,170 @@
+bucket,key,detail
+fallback_mapping,AssertionDashboardPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,AssessmentTemplatesPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,AssessmentsListPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,ComplianceAdminPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,ComplianceAssessmentsPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,ComplianceAttestationsPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,ComplianceCalendarPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,ComplianceCatchAll,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,ComplianceControlDetailPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,ComplianceControlsPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,ComplianceDiagnosticsPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,ComplianceEvidenceOpsPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,ComplianceEvidencePage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,ComplianceExceptionsPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,ComplianceFindingsPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,ComplianceFrameworksPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,ComplianceGapsPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,ComplianceHeatmapPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,ComplianceHome,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,ComplianceKsaPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,ComplianceObligationsPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,ComplianceOverviewPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,CompliancePosturePage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,ComplianceRegulatorPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,ComplianceRegulatoryChangesPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,ComplianceReportsPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,ComplianceRoadmapPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,ComplianceSavingsPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,ComplianceTemplatesPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,ComplianceWorkQueuePage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,ContentPackPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,ControlPosturePage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,ControlTestingPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,ControlsMonitoringPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,EsgPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,EthicsIntegrityPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,ExceptionManagerPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,FrameworkHubPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,FrameworkMappingPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,FrameworkScorecardPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,GenericModuleLifecycle,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,IntelligenceHubPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,KsaHubPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,MappingPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,MaturityJourneyPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,MaturityWizardPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,NcaAssessmentPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,ObligationDetailPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,ObligationWorkspacePage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,OntologyCatalogPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,RcsaCampaignsPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,RegistryPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,RegulationCompilerPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,RegulatoryDeltaDashboardPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,RegulatoryFeedsPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,RegulatoryReasoningStudioPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,SamaAssessmentPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,ScoringPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,ScoringPoliciesPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,ScoringPolicyDetailPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,SoxCompliancePage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,TaxonomyPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,UcfBrowserPage,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,platform.dauth.overview,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,platform.dauth.users.list,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,platform.dauth.roles.list,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,platform.dauth.perms.list,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,platform.dauth.audit.list,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,platform.ai-platform.overview,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,platform.ai-platform.gateway,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,platform.ai-platform.engine,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,platform.ai-platform.governance,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,platform.ai-platform.audit,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,platform.config-center.overview,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,platform.config-center.settings,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,platform.config-center.flags,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,platform.config-center.tokens,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,platform.config-center.audit,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,platform.dnoc.overview,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,platform.dnoc.services,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,platform.dnoc.metrics,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,platform.dnoc.alerts,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,platform.dnoc.audit,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,platform.dos-platform.overview,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,platform.dos-platform.registries,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,platform.dos-platform.schemas,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,platform.dos-platform.events,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,platform.dos-platform.audit,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,platform.dsoc.overview,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,platform.dsoc.detections,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,platform.dsoc.incidents,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,platform.dsoc.policies,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,platform.dsoc.audit,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,platform.foundation-admin.overview,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,platform.foundation-admin.organizations,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,platform.foundation-admin.persons,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,platform.foundation-admin.lifecycle,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,platform.foundation-admin.audit,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,platform.multi-tenant-mgmt.overview,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,platform.multi-tenant-mgmt.tenants,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,platform.multi-tenant-mgmt.provisioning,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,platform.multi-tenant-mgmt.quotas,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,platform.multi-tenant-mgmt.audit,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,platform.tenant-management.overview,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,platform.tenant-management.directory,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,platform.tenant-management.members,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,platform.tenant-management.profile,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,platform.tenant-management.audit,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,command-center.ai,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,command-center.cfg,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,command-center.dnoc,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,command-center.dos,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,command-center.dsoc,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,command-center.fnd,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,command-center.mtm,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,command-center.tm,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,smart-grid.ai,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,smart-grid.cfg,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,smart-grid.dnoc,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,smart-grid.dos,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,smart-grid.dsoc,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,smart-grid.fnd,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,smart-grid.mtm,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,smart-grid.tm,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,audit-timeline.ai,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,audit-timeline.cfg,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,audit-timeline.dnoc,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,audit-timeline.dos,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,audit-timeline.dsoc,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,audit-timeline.fnd,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,audit-timeline.mtm,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,audit-timeline.tm,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,command-center.identity-summary,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,audit-timeline.access,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,audit-timeline.runtime,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,audit-timeline.ui-system,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,audit-timeline.dauth,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,matrix.health,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,page-masthead.overview,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,page-masthead.settings,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,smart-grid.components,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,smart-grid.permissions,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,smart-grid.services,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,smart-grid.sessions,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+fallback_mapping,smart-grid.themes,Maps to DynamicPageHostComponent instead of dedicated Carbon renderer
+route_not_in_registry,page-masthead.overview,Used in 0157 routes but not inserted into dynamic_ui_component_registry
+route_not_in_registry,page-masthead.settings,Used in 0157 routes but not inserted into dynamic_ui_component_registry
+route_not_in_registry,smart-grid.components,Used in 0157 routes but not inserted into dynamic_ui_component_registry
+route_not_in_registry,smart-grid.permissions,Used in 0157 routes but not inserted into dynamic_ui_component_registry
+route_not_in_registry,smart-grid.services,Used in 0157 routes but not inserted into dynamic_ui_component_registry
+route_not_in_registry,smart-grid.sessions,Used in 0157 routes but not inserted into dynamic_ui_component_registry
+route_not_in_registry,smart-grid.themes,Used in 0157 routes but not inserted into dynamic_ui_component_registry
+route_not_in_registry,matrix.health,Used in 0157 routes but not inserted into dynamic_ui_component_registry
+route_not_in_registry,audit-timeline.access,Used in 0157 routes but not inserted into dynamic_ui_component_registry
+route_not_in_registry,audit-timeline.runtime,Used in 0157 routes but not inserted into dynamic_ui_component_registry
+route_not_in_registry,audit-timeline.ui-system,Used in 0157 routes but not inserted into dynamic_ui_component_registry
+widget_not_in_registry,command-center.access-summary,Used in 0157 widgets but not inserted into dynamic_ui_component_registry
+widget_not_in_registry,command-center.runtime-summary,Used in 0157 widgets but not inserted into dynamic_ui_component_registry
+widget_not_in_registry,command-center.ui-system-summary,Used in 0157 widgets but not inserted into dynamic_ui_component_registry
+widget_not_in_registry,context-rail.access,Used in 0157 widgets but not inserted into dynamic_ui_component_registry
+widget_not_in_registry,context-rail.runtime,Used in 0157 widgets but not inserted into dynamic_ui_component_registry
+widget_not_in_registry,context-rail.ui-system,Used in 0157 widgets but not inserted into dynamic_ui_component_registry
+widget_not_in_registry,recommendation-card.access-tips,Used in 0157 widgets but not inserted into dynamic_ui_component_registry
+widget_not_in_registry,recommendation-card.runtime-tips,Used in 0157 widgets but not inserted into dynamic_ui_component_registry
+widget_not_in_registry,recommendation-card.ui-system-tips,Used in 0157 widgets but not inserted into dynamic_ui_component_registry
+shahin_not_in_registry,ShahinProfilePage,Maps to ProfileComponent in COMPONENT_MAP but not in component_registry
+shahin_not_in_registry,ShahinSettingsPage,Maps to SettingsComponent in COMPONENT_MAP but not in component_registry
+shahin_not_in_registry,ShahinTenantProfilePage,Maps to TenantProfileComponent in COMPONENT_MAP but not in component_registry
+shahin_not_in_registry,ShahinTenantSettingsPage,Maps to TenantSettingsComponent in COMPONENT_MAP but not in component_registry

@@ -1,0 +1,596 @@
+{
+  "$schema": "dos-import-graph-v1",
+  "$generated": "2026-04-12T06:02:15.138Z",
+  "$source": "/home/Dr-Dogan-AGRC-OS/backend/src/modules/",
+  "summary": {
+    "total_modules": 65,
+    "direct_cross_imports": 2,
+    "modules_using_ports": 51,
+    "event_based_dependencies": 308
+  },
+  "direct_imports": [
+    {
+      "from": "admin",
+      "to": "platform",
+      "type": "direct",
+      "file": "admin/routes/entitlements.routes.ts"
+    },
+    {
+      "from": "dashboard",
+      "to": "widgets",
+      "type": "direct",
+      "file": "dashboard/services/dashboard-query.service.ts"
+    }
+  ],
+  "event_dependencies": {
+    "action": [
+      "remediation",
+      "governance",
+      "audit",
+      "incident",
+      "compliance",
+      "workflow",
+      "evidence",
+      "bcp",
+      "reporting",
+      "controls"
+    ],
+    "admin": [
+      "foundation",
+      "workflow",
+      "bootstrap"
+    ],
+    "agrc-engine": [
+      "risk",
+      "compliance",
+      "incident",
+      "audit",
+      "governance",
+      "workflow",
+      "ai"
+    ],
+    "ai": [
+      "risk",
+      "compliance",
+      "policy",
+      "audit",
+      "workflow",
+      "governance"
+    ],
+    "ai-governance": [
+      "compliance",
+      "risk",
+      "audit",
+      "workflow"
+    ],
+    "analytics": [
+      "risk",
+      "compliance",
+      "evidence",
+      "incident",
+      "audit",
+      "workflow",
+      "vendor",
+      "training",
+      "controls",
+      "bcp",
+      "policy",
+      "remediation",
+      "bootstrap",
+      "team",
+      "journey",
+      "governance"
+    ],
+    "asset": [
+      "risk",
+      "vendor",
+      "incident",
+      "compliance",
+      "workflow",
+      "controls",
+      "remediation"
+    ],
+    "attestation": [
+      "compliance",
+      "evidence"
+    ],
+    "audit": [
+      "compliance",
+      "risk",
+      "evidence",
+      "incident",
+      "vendor",
+      "workflow",
+      "controls",
+      "bcp"
+    ],
+    "bcp": [
+      "risk",
+      "incident",
+      "asset",
+      "vendor",
+      "workflow",
+      "controls",
+      "remediation"
+    ],
+    "benchmarks": [
+      "compliance",
+      "risk",
+      "asset",
+      "controls",
+      "workflow"
+    ],
+    "bootstrap": [
+      "provisioning",
+      "onboarding",
+      "workflow"
+    ],
+    "compliance": [
+      "risk",
+      "evidence",
+      "audit",
+      "policy",
+      "vendor",
+      "workflow",
+      "controls"
+    ],
+    "controls": [
+      "risk",
+      "compliance",
+      "audit",
+      "policy",
+      "workflow",
+      "evidence",
+      "incident",
+      "remediation"
+    ],
+    "dashboard": [
+      "risk",
+      "compliance",
+      "incident",
+      "controls",
+      "audit",
+      "bootstrap",
+      "team",
+      "journey"
+    ],
+    "dora": [
+      "incident",
+      "asset",
+      "vendor",
+      "bcp",
+      "workflow",
+      "compliance",
+      "controls",
+      "remediation",
+      "governance"
+    ],
+    "evidence": [
+      "compliance",
+      "audit",
+      "risk",
+      "vendor",
+      "workflow",
+      "controls"
+    ],
+    "exception": [
+      "compliance",
+      "risk",
+      "policy",
+      "workflow",
+      "audit",
+      "vendor",
+      "asset"
+    ],
+    "executive": [
+      "risk"
+    ],
+    "fitch": [
+      "risk",
+      "vendor"
+    ],
+    "foundation": [
+      "workflow"
+    ],
+    "governance": [
+      "compliance",
+      "risk",
+      "policy",
+      "audit",
+      "workflow",
+      "incident",
+      "privacy",
+      "bcp",
+      "controls",
+      "remediation"
+    ],
+    "governance-ai": [
+      "risk",
+      "compliance",
+      "controls",
+      "incident",
+      "audit",
+      "exception",
+      "workflow",
+      "ai_governance"
+    ],
+    "governance-os": [
+      "governance",
+      "workflow",
+      "audit",
+      "risk"
+    ],
+    "inbox": [
+      "workflow",
+      "governance",
+      "incident",
+      "compliance"
+    ],
+    "incident": [
+      "risk",
+      "compliance",
+      "vendor",
+      "bcp",
+      "workflow",
+      "remediation",
+      "controls",
+      "audit"
+    ],
+    "integrations": [
+      "admin",
+      "workflow"
+    ],
+    "issues": [
+      "compliance",
+      "audit",
+      "risk",
+      "incident",
+      "vendor",
+      "workflow"
+    ],
+    "journey": [
+      "compliance",
+      "risk",
+      "audit",
+      "workflow",
+      "team"
+    ],
+    "ksa-regulatory": [
+      "compliance",
+      "risk",
+      "policy"
+    ],
+    "local-knowledge": [
+      "ai",
+      "evidence"
+    ],
+    "mcp": [
+      "ai",
+      "workflow"
+    ],
+    "module-onboarding": [
+      "bootstrap"
+    ],
+    "navigation": [
+      "platform",
+      "dauth",
+      "provisioning"
+    ],
+    "notification": [
+      "risk",
+      "compliance",
+      "evidence",
+      "incident",
+      "workflow",
+      "audit",
+      "vendor",
+      "policy",
+      "exception",
+      "training",
+      "bootstrap",
+      "controls",
+      "governance"
+    ],
+    "packs": [
+      "provisioning",
+      "modules",
+      "tenants"
+    ],
+    "playbooks": [
+      "incident"
+    ],
+    "policy": [
+      "compliance",
+      "governance",
+      "risk",
+      "workflow",
+      "team",
+      "onboarding",
+      "dora",
+      "governance_ai",
+      "dashboard",
+      "navigation"
+    ],
+    "portals": [
+      "vendor",
+      "workflow"
+    ],
+    "privacy": [
+      "incident",
+      "compliance",
+      "vendor",
+      "policy",
+      "workflow",
+      "asset",
+      "exception",
+      "controls",
+      "governance"
+    ],
+    "proactive-leadership": [
+      "autonomous-grc-engine"
+    ],
+    "qiyas": [
+      "compliance",
+      "risk",
+      "governance",
+      "audit",
+      "workflow"
+    ],
+    "quality-gate": [
+      "platform",
+      "provisioning"
+    ],
+    "records": [
+      "compliance",
+      "policy",
+      "audit",
+      "workflow"
+    ],
+    "remediation": [
+      "compliance",
+      "audit",
+      "risk",
+      "incident",
+      "vendor",
+      "workflow",
+      "bcp",
+      "controls",
+      "governance"
+    ],
+    "reporting": [
+      "risk",
+      "compliance",
+      "analytics",
+      "audit",
+      "incident"
+    ],
+    "risk": [
+      "compliance",
+      "vendor",
+      "asset",
+      "incident",
+      "audit",
+      "workflow",
+      "controls",
+      "evidence",
+      "bcp"
+    ],
+    "security": [
+      "compliance",
+      "risk",
+      "asset",
+      "audit",
+      "provisioning",
+      "incident"
+    ],
+    "team": [
+      "foundation"
+    ],
+    "training": [
+      "compliance",
+      "policy",
+      "incident",
+      "workflow",
+      "audit",
+      "admin",
+      "privacy",
+      "controls",
+      "remediation"
+    ],
+    "vendor": [
+      "risk",
+      "compliance",
+      "audit",
+      "incident",
+      "bcp",
+      "workflow",
+      "evidence"
+    ],
+    "widgets": [
+      "risk",
+      "compliance",
+      "audit",
+      "evidence",
+      "incident",
+      "policy",
+      "governance",
+      "dashboard",
+      "workflow",
+      "provisioning",
+      "team",
+      "journey"
+    ],
+    "workflow": [
+      "risk",
+      "compliance",
+      "incident",
+      "evidence",
+      "audit",
+      "policy",
+      "vendor",
+      "exception",
+      "team",
+      "dashboard",
+      "navigation",
+      "provisioning",
+      "onboarding",
+      "dora",
+      "governance_ai"
+    ]
+  },
+  "port_dependencies": {
+    "action": [
+      "platform"
+    ],
+    "admin": [
+      "platform"
+    ],
+    "agrc-engine": [
+      "platform"
+    ],
+    "ai": [
+      "platform"
+    ],
+    "ai-governance": [
+      "platform"
+    ],
+    "analytics": [
+      "platform"
+    ],
+    "asset": [
+      "platform"
+    ],
+    "audit": [
+      "platform"
+    ],
+    "bcp": [
+      "platform"
+    ],
+    "bootstrap": [
+      "platform"
+    ],
+    "compliance": [
+      "platform"
+    ],
+    "config-center": [
+      "platform"
+    ],
+    "controls": [
+      "platform"
+    ],
+    "dashboard": [
+      "platform"
+    ],
+    "dora": [
+      "platform"
+    ],
+    "evidence": [
+      "platform"
+    ],
+    "exception": [
+      "platform"
+    ],
+    "foundation": [
+      "platform"
+    ],
+    "governance": [
+      "platform"
+    ],
+    "governance-ai": [
+      "platform"
+    ],
+    "governance-os": [
+      "platform"
+    ],
+    "inbox": [
+      "platform"
+    ],
+    "incident": [
+      "platform"
+    ],
+    "integrations": [
+      "platform"
+    ],
+    "issues": [
+      "platform"
+    ],
+    "journey": [
+      "platform"
+    ],
+    "knowledge": [
+      "platform"
+    ],
+    "ksa-regulatory": [
+      "platform"
+    ],
+    "local-knowledge": [
+      "platform"
+    ],
+    "navigation": [
+      "platform"
+    ],
+    "notification": [
+      "platform"
+    ],
+    "onboarding": [
+      "platform"
+    ],
+    "packs": [
+      "platform"
+    ],
+    "policy": [
+      "platform"
+    ],
+    "portals": [
+      "platform"
+    ],
+    "ports": [
+      "platform"
+    ],
+    "privacy": [
+      "platform"
+    ],
+    "proactive-leadership": [
+      "platform"
+    ],
+    "provisioning": [
+      "platform"
+    ],
+    "qiyas": [
+      "platform"
+    ],
+    "quality-gate": [
+      "platform"
+    ],
+    "records": [
+      "platform"
+    ],
+    "remediation": [
+      "platform"
+    ],
+    "reporting": [
+      "platform"
+    ],
+    "risk": [
+      "platform"
+    ],
+    "security": [
+      "platform"
+    ],
+    "team": [
+      "platform"
+    ],
+    "training": [
+      "platform"
+    ],
+    "vendor": [
+      "platform"
+    ],
+    "widgets": [
+      "platform"
+    ],
+    "workflow": [
+      "platform"
+    ]
+  }
+}

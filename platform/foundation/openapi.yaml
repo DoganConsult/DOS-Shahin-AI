@@ -1,0 +1,283 @@
+openapi: 3.0.3
+info:
+  title: DOS Foundation Module API
+  description: |
+    Public HTTP surface of the @dos/module-foundation aggregator. Mounted by
+    the user-service host at routeBase /api/foundation. All endpoints require
+    a valid bearer token and a tenant context (X-Tenant-Id header or
+    tenant-scoped token claim). Permission codes are sourced from
+    `@dos/module-foundation/contracts` (FOUNDATION_PERMISSION_CODES).
+  version: 2.0.0
+servers:
+  - url: /api/foundation
+    description: User-service-hosted aggregator
+security:
+  - bearerAuth: []
+tags:
+  - name: organizations
+  - name: business-units
+  - name: departments
+  - name: positions
+  - name: locations
+  - name: committees
+  - name: delegations
+  - name: ownership-mapping
+  - name: access-review
+  - name: bulk-invite
+  - name: audit-trail
+  - name: governance
+  - name: sod
+  - name: org-hierarchy
+  - name: health
+paths:
+  /organizations:
+    get:
+      tags: [organizations]
+      summary: List organizations
+      parameters:
+        - $ref: '#/components/parameters/Query'
+        - $ref: '#/components/parameters/Status'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/FoundationListResponse' } } } }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+    post:
+      tags: [organizations]
+      summary: Create organization (foundation.org.write)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/FoundationNodeCreateDTO' }
+      responses:
+        '201': { description: Created, content: { application/json: { schema: { $ref: '#/components/schemas/FoundationNodeResponseDTO' } } } }
+        '202': { description: Approval required, content: { application/json: { schema: { $ref: '#/components/schemas/ApprovalPendingDTO' } } } }
+        '409': { $ref: '#/components/responses/Conflict' }
+  /organizations/{id}:
+    parameters:
+      - $ref: '#/components/parameters/Id'
+    get:
+      tags: [organizations]
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/FoundationNodeResponseDTO' } } } }
+        '404': { $ref: '#/components/responses/NotFound' }
+    patch:
+      tags: [organizations]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/FoundationNodeUpdateDTO' }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/FoundationNodeResponseDTO' } } } }
+    delete:
+      tags: [organizations]
+      responses:
+        '204': { description: Deleted }
+  /organizations/{id}/children:
+    parameters:
+      - $ref: '#/components/parameters/Id'
+    get:
+      tags: [organizations]
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/FoundationListResponse' } } } }
+  /business-units:
+    get: { tags: [business-units], responses: { '200': { description: OK } } }
+    post:
+      tags: [business-units]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/FoundationNodeCreateDTO' } } } }
+      responses: { '201': { description: Created } }
+  /business-units/{id}:
+    parameters: [{ $ref: '#/components/parameters/Id' }]
+    get: { tags: [business-units], responses: { '200': { description: OK } } }
+    patch: { tags: [business-units], responses: { '200': { description: OK } } }
+    delete: { tags: [business-units], responses: { '204': { description: Deleted } } }
+  /departments:
+    get: { tags: [departments], responses: { '200': { description: OK } } }
+    post: { tags: [departments], responses: { '201': { description: Created } } }
+  /departments/{id}:
+    parameters: [{ $ref: '#/components/parameters/Id' }]
+    get: { tags: [departments], responses: { '200': { description: OK } } }
+    patch: { tags: [departments], responses: { '200': { description: OK } } }
+    delete: { tags: [departments], responses: { '204': { description: Deleted } } }
+  /positions:
+    get: { tags: [positions], responses: { '200': { description: OK } } }
+    post: { tags: [positions], responses: { '201': { description: Created } } }
+  /positions/{id}:
+    parameters: [{ $ref: '#/components/parameters/Id' }]
+    get: { tags: [positions], responses: { '200': { description: OK } } }
+    patch: { tags: [positions], responses: { '200': { description: OK } } }
+    delete: { tags: [positions], responses: { '204': { description: Deleted } } }
+  /locations:
+    get: { tags: [locations], responses: { '200': { description: OK } } }
+    post: { tags: [locations], responses: { '201': { description: Created } } }
+  /locations/{id}:
+    parameters: [{ $ref: '#/components/parameters/Id' }]
+    get: { tags: [locations], responses: { '200': { description: OK } } }
+    patch: { tags: [locations], responses: { '200': { description: OK } } }
+    delete: { tags: [locations], responses: { '204': { description: Deleted } } }
+  /committees:
+    get: { tags: [committees], responses: { '200': { description: OK } } }
+    post: { tags: [committees], responses: { '201': { description: Created } } }
+  /committees/{id}/members:
+    parameters: [{ $ref: '#/components/parameters/Id' }]
+    get: { tags: [committees], responses: { '200': { description: OK } } }
+    post: { tags: [committees], responses: { '201': { description: Created } } }
+  /delegations:
+    get: { tags: [delegations], responses: { '200': { description: OK } } }
+    post: { tags: [delegations], responses: { '201': { description: Created } } }
+  /delegations/{id}:
+    parameters: [{ $ref: '#/components/parameters/Id' }]
+    delete: { tags: [delegations], responses: { '204': { description: Revoked } } }
+  /ownership-mapping:
+    get: { tags: [ownership-mapping], responses: { '200': { description: OK } } }
+    post: { tags: [ownership-mapping], responses: { '201': { description: Created } } }
+  /access-review:
+    get: { tags: [access-review], responses: { '200': { description: OK } } }
+    post: { tags: [access-review], responses: { '201': { description: Created } } }
+  /access-review/{id}/decisions:
+    parameters: [{ $ref: '#/components/parameters/Id' }]
+    post: { tags: [access-review], responses: { '200': { description: OK } } }
+  /bulk-invite:
+    post: { tags: [bulk-invite], responses: { '202': { description: Accepted } } }
+  /audit-trail:
+    get:
+      tags: [audit-trail]
+      parameters:
+        - in: query
+          name: entityId
+          schema: { type: string }
+        - $ref: '#/components/parameters/Limit'
+      responses: { '200': { description: OK } }
+  /governance/policies:
+    get: { tags: [governance], responses: { '200': { description: OK } } }
+  /sod-check:
+    post: { tags: [sod], responses: { '200': { description: OK } } }
+  /org-hierarchy:
+    get: { tags: [org-hierarchy], responses: { '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/FoundationTreeResponseDTO' } } } } } }
+  /health:
+    get: { tags: [health], security: [], responses: { '200': { description: OK } } }
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    Id:
+      in: path
+      name: id
+      required: true
+      schema: { type: string, format: uuid }
+    Query:
+      in: query
+      name: q
+      schema: { type: string }
+    Status:
+      in: query
+      name: status
+      schema: { type: string, enum: [draft, in_review, approved, published, active, suspended, archived] }
+    Limit:
+      in: query
+      name: limit
+      schema: { type: integer, minimum: 1, maximum: 200, default: 25 }
+    Offset:
+      in: query
+      name: offset
+      schema: { type: integer, minimum: 0, default: 0 }
+  responses:
+    Unauthorized:
+      description: Missing/invalid auth
+      content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } }
+    Forbidden:
+      description: Permission denied
+      content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } }
+    NotFound:
+      description: Entity not found
+      content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } }
+    Conflict:
+      description: Conflict (duplicate code, hierarchy cycle, status transition)
+      content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } }
+  schemas:
+    FoundationEntityType:
+      type: string
+      enum: [organization, business_unit, department, position, legal_entity]
+    FoundationStatus:
+      type: string
+      enum: [draft, in_review, approved, published, active, suspended, archived]
+    FoundationNodeCreateDTO:
+      type: object
+      required: [entityType, nameEn, code]
+      properties:
+        entityType: { $ref: '#/components/schemas/FoundationEntityType' }
+        parentId:   { type: string, nullable: true }
+        nameEn:     { type: string }
+        nameAr:     { type: string, nullable: true }
+        code:       { type: string }
+        ownerId:    { type: string, nullable: true }
+        metadata:   { type: object, additionalProperties: true }
+    FoundationNodeUpdateDTO:
+      type: object
+      properties:
+        nameEn:   { type: string }
+        nameAr:   { type: string, nullable: true }
+        code:     { type: string }
+        parentId: { type: string, nullable: true }
+        ownerId:  { type: string, nullable: true }
+        status:   { $ref: '#/components/schemas/FoundationStatus' }
+        metadata: { type: object, additionalProperties: true }
+    FoundationNodeResponseDTO:
+      type: object
+      required: [id, entityType, nameEn, code, status, level, path]
+      properties:
+        id:         { type: string }
+        entityType: { $ref: '#/components/schemas/FoundationEntityType' }
+        parentId:   { type: string, nullable: true }
+        nameEn:     { type: string }
+        nameAr:     { type: string, nullable: true }
+        code:       { type: string }
+        status:     { $ref: '#/components/schemas/FoundationStatus' }
+        level:      { type: integer }
+        path:       { type: string }
+        ownerId:    { type: string, nullable: true }
+        children:
+          type: array
+          items: { $ref: '#/components/schemas/FoundationNodeResponseDTO' }
+        createdAt:  { type: string, format: date-time }
+        updatedAt:  { type: string, format: date-time }
+    FoundationTreeResponseDTO:
+      type: object
+      required: [roots, totalNodes]
+      properties:
+        roots:
+          type: array
+          items: { $ref: '#/components/schemas/FoundationNodeResponseDTO' }
+        totalNodes: { type: integer }
+    FoundationListResponse:
+      type: object
+      required: [rows, total, limit, offset]
+      properties:
+        rows:
+          type: array
+          items: { $ref: '#/components/schemas/FoundationNodeResponseDTO' }
+        total:  { type: integer }
+        limit:  { type: integer }
+        offset: { type: integer }
+    ApprovalPendingDTO:
+      type: object
+      required: [approvalTaskId, status]
+      properties:
+        approvalTaskId: { type: string }
+        status:         { type: string, enum: [pending_approval] }
+        message:        { type: string }
+    Error:
+      type: object
+      required: [code, message, status]
+      properties:
+        code:          { type: string }
+        message:       { type: string }
+        status:        { type: integer }
+        correlationId: { type: string }
+        details:       { type: object, additionalProperties: true }

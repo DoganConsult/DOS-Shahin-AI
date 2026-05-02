@@ -1,0 +1,26 @@
+/**
+ * RTL safety net — opt-in helper utilities that always use logical
+ * properties. The CI guard `ui-rtl-logical-css.mjs` enforces that
+ * new files in @dos/ui-system never use physical left/right.
+ */
+.dos-stack-h {
+  display: flex;
+  gap: var(--dos-space-3);
+  align-items: center;
+}
+
+.dos-pad-inline-4 {
+  padding-inline: var(--dos-space-4);
+}
+
+.dos-pad-block-4 {
+  padding-block: var(--dos-space-4);
+}
+
+.dos-text-start {
+  text-align: start;
+}
+
+.dos-text-end {
+  text-align: end;
+}

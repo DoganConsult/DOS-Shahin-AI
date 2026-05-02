@@ -1,0 +1,37 @@
+.ksa-regulatory-calendar {
+  .summary-card {
+    background: var(--surface-card);
+    border: 1px solid var(--surface-border);
+    transition: all 0.2s;
+
+    &:hover {
+      border-color: var(--primary-color);
+      box-shadow: 0 2px 8px rgba(var(--color-black-rgb), 0.1);
+    }
+  }
+
+  .deadline-item {
+    transition: all 0.2s;
+
+    &:hover {
+      background: var(--surface-hover);
+      box-shadow: 0 2px 4px rgba(var(--color-black-rgb), 0.05);
+    }
+
+    &.border-danger {
+      border-left-color: var(--red-500) !important;
+    }
+
+    &.border-warning {
+      border-left-color: var(--orange-500) !important;
+    }
+
+    &.border-info {
+      border-left-color: var(--blue-500) !important;
+    }
+
+    &.border-success {
+      border-left-color: var(--green-500) !important;
+    }
+  }
+}

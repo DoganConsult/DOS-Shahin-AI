@@ -1,0 +1,187 @@
+<div class="policy-impact-simulator" [attr.dir]="i18n.direction()">
+      <app-page-header
+        titleEn="Policy Impact Simulator"
+        titleAr="محاكاة تأثير السياسة"
+        subtitleEn="Simulate the cascading impact of policy changes across your GRC ecosystem"
+        subtitleAr="محاكاة التأثير المتتالي لتغييرات السياسة عبر نظام GRC الخاص بك"
+        icon="sitemap"
+        [isAr]="i18n.isAr()"
+        [dir]="i18n.direction()" />
+
+      <div class="simulator-container">
+        <!-- Policy Selection -->
+        <p-card class="policy-selector-card">
+          <div class="selector-wrapper">
+            <label for="policy-select">{{ i18n.translate('policyImpact.selectPolicy') }}</label>
+            <p-dropdown
+              id="policy-select"
+              [(ngModel)]="selectedPolicyId"
+              [options]="availablePolicies()"
+              optionLabel="name"
+              optionValue="id"
+              [placeholder]="i18n.translate('policyImpact.selectPolicyPlaceholder')"
+              [disabled]="simulating()"
+              (onChange)="onPolicySelected()"
+              [style]="{ width: '100%' }"></p-dropdown>
+            <p-button
+              [label]="i18n.translate('policyImpact.runSimulation')"
+              icon="pi pi-play"
+              [loading]="simulating()"
+              [disabled]="!selectedPolicyId || simulating()"
+              (onClick)="runSimulation()"
+              [style]="{ marginTop: '1rem', width: '100%' }" />
+          </div>
+        </p-card>
+
+        <!-- Simulation Results -->
+        @if (simulating()) {
+          <div class="simulation-status">
+            <p-progressSpinner [style]="{ width: '30px', height: '30px' }" />
+            <span>{{ i18n.translate('policyImpact.simulating') }}</span>
+          </div>
+        }
+
+        @if (simulationResult() && !simulating()) {
+          <div class="results-container">
+            <!-- Impact Summary -->
+            <p-card class="summary-card">
+              <ng-template pTemplate="header">
+                <h3>{{ i18n.translate('policyImpact.impactSummary') }}</h3>
+              </ng-template>
+              <div class="summary-stats">
+                <div class="stat-card">
+                  <div class="stat-value">{{ simulationResult()!.totalImpacted || simulationResult()!.totalImpactCount }}</div>
+                  <div class="stat-label">{{ i18n.translate('policyImpact.totalImpacted') }}</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-value" [class]="getImpactClass(simulationResult()!.highImpactCount ?? 0)">
+                    {{ simulationResult()!.highImpactCount ?? 0 }}
+                  </div>
+                  <div class="stat-label">{{ i18n.translate('policyImpact.highImpact') }}</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-value" [class]="getImpactClass(simulationResult()!.mediumImpactCount ?? 0, 'medium')">
+                    {{ simulationResult()!.mediumImpactCount ?? 0 }}
+                  </div>
+                  <div class="stat-label">{{ i18n.translate('policyImpact.mediumImpact') }}</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-value" [class]="getImpactClass(simulationResult()!.lowImpactCount ?? 0, 'low')">
+                    {{ simulationResult()!.lowImpactCount ?? 0 }}
+                  </div>
+                  <div class="stat-label">{{ i18n.translate('policyImpact.lowImpact') }}</div>
+                </div>
+              </div>
+            </p-card>
+
+            <!-- Impact Tree Visualization -->
+            <p-card class="tree-card">
+              <ng-template pTemplate="header">
+                <h3>{{ i18n.translate('policyImpact.impactTree') }}</h3>
+              </ng-template>
+              @if (impactTree().length > 0) {
+                <p-tree
+                  [value]="impactTree()"
+                  [selectionMode]="'single'"
+                  (onNodeSelect)="onNodeSelect($event)"
+                  [style]="{ width: '100%' }" />
+              } @else {
+                <app-empty-state
+                  variant="info"
+                  [title]="i18n.translate('policyImpact.noImpact')"
+                  [dir]="i18n.direction()" />
+              }
+            </p-card>
+
+            <!-- Impacted Entities Table -->
+            <p-card class="entities-card">
+              <ng-template pTemplate="header">
+                <div class="card-header-actions">
+                  <h3>{{ i18n.translate('policyImpact.impactedEntities') }}</h3>
+                  <p-button
+                    [label]="i18n.translate('common.export')"
+                    icon="pi pi-download"
+                    severity="secondary"
+                    size="small"
+                    (onClick)="exportResults()" />
+                </div>
+              </ng-template>
+              <grc-data-table
+                [totalRecords]="simulationResult()!.impactedEntities.length"
+                [emptyMessage]="i18n.translate('policyImpact.noImpactedEntities') || 'No impacted entities'">
+                <p-table
+                  [value]="simulationResult()!.impactedEntities"
+                  [paginator]="true"
+                  [rows]="20"
+                  [rowsPerPageOptions]="[10, 20, 50, 100]"
+                  [sortMode]="'multiple'"
+                  [multiSortMeta]="sortMeta()"
+                  (onSort)="onSort($event)"
+                  styleClass="p-datatable-sm">
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th [pSortableColumn]="'entityType'">
+                        {{ i18n.translate('policyImpact.entityType') }}
+                        <p-sortIcon [field]="'entityType'" />
+                      </th>
+                      <th [pSortableColumn]="'entityName'">
+                        {{ i18n.translate('common.name') }}
+                        <p-sortIcon [field]="'entityName'" />
+                      </th>
+                      <th [pSortableColumn]="'impactLevel'">
+                        {{ i18n.translate('policyImpact.impactLevel') }}
+                        <p-sortIcon [field]="'impactLevel'" />
+                      </th>
+                      <th [pSortableColumn]="'impactScore'">
+                        {{ i18n.translate('policyImpact.impactScore') }}
+                        <p-sortIcon [field]="'impactScore'" />
+                      </th>
+                      <th>{{ i18n.translate('policyImpact.impactDescription') }}</th>
+                      <th>{{ i18n.translate('common.actions') }}</th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-entity>
+                    <tr>
+                      <td>
+                        <p-tag [value]="entity.entityType" severity="info" />
+                      </td>
+                      <td>{{ entity.entityName }}</td>
+                      <td>
+                        <p-tag
+                          [value]="entity.impactLevel"
+                          [severity]="getImpactSeverity(entity.impactLevel)" />
+                      </td>
+                      <td>
+                        <span class="impact-score" [class]="getImpactScoreClass(entity.impactScore)">
+                          {{ entity.impactScore }}
+                        </span>
+                      </td>
+                      <td>
+                        <span class="impact-desc" [pTooltip]="entity.impactDescription">
+                          {{ truncate(entity.impactDescription, 60) }}
+                        </span>
+                      </td>
+                      <td>
+                        <p-button
+                          icon="pi pi-external-link"
+                          [text]="true"
+                          (onClick)="navigateToEntity(entity)"
+                          [pTooltip]="i18n.translate('common.viewDetails')" />
+                      </td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+              </grc-data-table>
+            </p-card>
+          </div>
+        }
+
+        @if (!simulationResult() && !simulating()) {
+          <app-empty-state
+            variant="default"
+            [title]="i18n.translate('policyImpact.noSimulation')"
+            [description]="i18n.translate('policyImpact.selectPolicyToStart')"
+            [dir]="i18n.direction()" />
+        }
+      </div>
+    </div>

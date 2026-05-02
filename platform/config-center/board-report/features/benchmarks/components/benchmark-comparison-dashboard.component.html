@@ -1,0 +1,177 @@
+<div class="benchmark-dashboard" [attr.dir]="i18n.direction()">
+      <app-page-header
+        titleEn="Benchmark Comparison"
+        titleAr="مقارنة المعايير"
+        subtitleEn="Compare your GRC performance against anonymized industry benchmarks"
+        subtitleAr="قارن أداء GRC الخاص بك مع معايير الصناعة المجهولة"
+        icon="chart-line"
+        [isAr]="i18n.isAr()"
+        [dir]="i18n.direction()">
+        <ng-template #actions>
+          <p-button
+            [label]="i18n.translate('common.refresh')"
+            icon="pi pi-refresh"
+            [loading]="loading()"
+            (onClick)="loadData()"
+            severity="secondary" />
+        </ng-template>
+      </app-page-header>
+
+      <!-- Opt-In Status Card -->
+      <p-card class="opt-in-card">
+        <div class="opt-in-content">
+          <div class="opt-in-info">
+            <h3>{{ i18n.translate('benchmark.participation') }}</h3>
+            <p>{{ i18n.translate('benchmark.participationDesc') }}</p>
+          </div>
+          <div class="opt-in-toggle">
+            <label>
+              <p-toggleButton
+                [(ngModel)]="optInStatus"
+                [disabled]="updatingOptIn()"
+                (onChange)="updateOptInStatus()"></p-toggleButton>
+              <span>{{ i18n.translate('benchmark.optIn') }}</span>
+            </label>
+            @if (optInStatus) {
+              <p-tag value="Active" severity="success" />
+            } @else {
+              <p-tag value="Inactive" severity="secondary" />
+            }
+          </div>
+        </div>
+      </p-card>
+
+      @if (!optInStatus) {
+        <p-card class="opt-in-required">
+          <div class="opt-in-message">
+            <i class="pi pi-info-circle"></i>
+            <div>
+              <h4>{{ i18n.translate('benchmark.optInRequired') }}</h4>
+              <p>{{ i18n.translate('benchmark.optInRequiredDesc') }}</p>
+            </div>
+          </div>
+        </p-card>
+      }
+
+      @if (optInStatus) {
+        @if (loading()) {
+          <div class="skeleton-grid">
+            @for (i of [1,2,3,4]; track i) {
+              <p-skeleton height="200px" borderRadius="10px" />
+            }
+          </div>
+        }
+
+        @if (!loading() && error()) {
+          <app-empty-state
+            variant="error"
+            [title]="i18n.translate('common.failedToLoad')"
+            [description]="error() || ''"
+            [actionLabel]="i18n.translate('common.retry')"
+            [dir]="i18n.direction()"
+            (action)="loadData()" />
+        }
+
+        @if (!loading() && !error() && latestBenchmark()) {
+          <div class="benchmark-content">
+            <!-- KPI Comparison Cards -->
+            <div class="kpi-grid">
+              @for (kpi of getKPIs(); track kpi.key) {
+                <p-card class="kpi-card">
+                  <div class="kpi-header">
+                    <span class="kpi-label">{{ kpi.label }}</span>
+                    <p-tag
+                      [value]="getComparisonLabel(kpi.yourValue, kpi.benchmarkValue)"
+                      [severity]="getComparisonSeverity(kpi.yourValue, kpi.benchmarkValue)" />
+                  </div>
+                  <div class="kpi-values">
+                    <div class="kpi-value your-value">
+                      <span class="value-label">{{ i18n.translate('benchmark.yourValue') }}</span>
+                      <span class="value-number">{{ formatKPIValue(kpi.yourValue, kpi.key) }}</span>
+                    </div>
+                    <div class="kpi-value benchmark-value">
+                      <span class="value-label">{{ i18n.translate('benchmark.benchmark') }}</span>
+                      <span class="value-number">{{ formatKPIValue(kpi.benchmarkValue, kpi.key) }}</span>
+                    </div>
+                  </div>
+                  <div class="kpi-difference">
+                    <span [class]="getDifferenceClass(kpi.yourValue, kpi.benchmarkValue)">
+                      {{ getDifferenceText(kpi.yourValue, kpi.benchmarkValue) }}
+                    </span>
+                  </div>
+                </p-card>
+              }
+            </div>
+
+            <!-- Trend Chart -->
+            @if (benchmarkHistory().length > 0) {
+              <p-card class="trend-card">
+                <ng-template pTemplate="header">
+                  <h3>{{ i18n.translate('benchmark.trendAnalysis') }}</h3>
+                </ng-template>
+                <p-chart
+                  type="line"
+                  [data]="chartData()"
+                  [options]="chartOptions()"
+                  [style]="{ height: '300px' }" />
+              </p-card>
+            }
+
+            <!-- Benchmark History Table -->
+            @if (benchmarkHistory().length > 0) {
+              <p-card class="history-card">
+                <ng-template pTemplate="header">
+                  <h3>{{ i18n.translate('benchmark.history') }}</h3>
+                </ng-template>
+                <grc-data-table
+                  [totalRecords]="benchmarkHistory().length"
+                  [emptyMessage]="i18n.translate('benchmark.noHistory') || 'No benchmark history'">
+                  <p-table
+                    [value]="benchmarkHistory()"
+                    [paginator]="true"
+                    [rows]="10"
+                    [rowsPerPageOptions]="[5, 10, 20]"
+                    styleClass="p-datatable-sm">
+                    <ng-template pTemplate="header">
+                      <tr>
+                        <th [pSortableColumn]="'aggregatedAt'">
+                          {{ i18n.translate('benchmark.date') }}
+                          <p-sortIcon [field]="'aggregatedAt'" />
+                        </th>
+                        <th>{{ i18n.translate('benchmark.participants') }}</th>
+                        <th>{{ i18n.translate('benchmark.complianceScore') }}</th>
+                        <th>{{ i18n.translate('benchmark.riskScore') }}</th>
+                        <th>{{ i18n.translate('benchmark.evidenceCoverage') }}</th>
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-item>
+                      <tr>
+                        <td>{{ item.aggregatedAt | appDate:'short' }}</td>
+                        <td>{{ item.participantCount }}</td>
+                        <td>
+                          <span class="score-value">{{ item.kpis.complianceScore }}%</span>
+                        </td>
+                        <td>
+                          <span class="score-value">{{ item.kpis.riskScore }}%</span>
+                        </td>
+                        <td>
+                          <span class="score-value">{{ item.kpis.evidenceCoverage }}%</span>
+                        </td>
+                      </tr>
+                    </ng-template>
+                  </p-table>
+                </grc-data-table>
+              </p-card>
+            }
+
+            @if (benchmarkHistory().length === 0) {
+              <app-empty-state
+                variant="info"
+                [title]="i18n.translate('benchmark.noHistory')"
+                [description]="i18n.translate('benchmark.noHistoryDesc')"
+                [dir]="i18n.direction()" />
+            }
+          </div>
+        }
+      }
+    </div>

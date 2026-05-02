@@ -1,0 +1,27 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.delegationRouter = exports.accessReviewRouter = exports.bulkInviteRouter = exports.userLifecycleRouter = exports.foundationGovernanceRouter = exports.sodCheckRouter = exports.ownershipMappingRouter = exports.committeeManagementRouter = exports.orgHierarchyRouter = exports.locationsRouter = exports.positionsRouter = exports.businessUnitsRouter = exports.organizationsRouter = exports.foundationRouter = exports.departmentRouter = exports.roleRouter = exports.teamRouter = exports.userRouter = void 0;
+var user_routes_1 = require("./user.routes");
+Object.defineProperty(exports, "userRouter", { enumerable: true, get: function () { return user_routes_1.userRouter; } });
+var team_routes_1 = require("./team.routes");
+Object.defineProperty(exports, "teamRouter", { enumerable: true, get: function () { return team_routes_1.teamRouter; } });
+var role_routes_1 = require("./role.routes");
+Object.defineProperty(exports, "roleRouter", { enumerable: true, get: function () { return role_routes_1.roleRouter; } });
+var department_routes_1 = require("./department.routes");
+Object.defineProperty(exports, "departmentRouter", { enumerable: true, get: function () { return department_routes_1.departmentRouter; } });
+var foundation_1 = require("../domain/foundation");
+Object.defineProperty(exports, "foundationRouter", { enumerable: true, get: function () { return foundation_1.foundationRouter; } });
+Object.defineProperty(exports, "organizationsRouter", { enumerable: true, get: function () { return foundation_1.organizationsRouter; } });
+Object.defineProperty(exports, "businessUnitsRouter", { enumerable: true, get: function () { return foundation_1.businessUnitsRouter; } });
+Object.defineProperty(exports, "positionsRouter", { enumerable: true, get: function () { return foundation_1.positionsRouter; } });
+Object.defineProperty(exports, "locationsRouter", { enumerable: true, get: function () { return foundation_1.locationsRouter; } });
+Object.defineProperty(exports, "orgHierarchyRouter", { enumerable: true, get: function () { return foundation_1.orgHierarchyRouter; } });
+Object.defineProperty(exports, "committeeManagementRouter", { enumerable: true, get: function () { return foundation_1.committeeManagementRouter; } });
+Object.defineProperty(exports, "ownershipMappingRouter", { enumerable: true, get: function () { return foundation_1.ownershipMappingRouter; } });
+Object.defineProperty(exports, "sodCheckRouter", { enumerable: true, get: function () { return foundation_1.sodCheckRouter; } });
+Object.defineProperty(exports, "foundationGovernanceRouter", { enumerable: true, get: function () { return foundation_1.foundationGovernanceRouter; } });
+Object.defineProperty(exports, "userLifecycleRouter", { enumerable: true, get: function () { return foundation_1.userLifecycleRouter; } });
+Object.defineProperty(exports, "bulkInviteRouter", { enumerable: true, get: function () { return foundation_1.bulkInviteRouter; } });
+Object.defineProperty(exports, "accessReviewRouter", { enumerable: true, get: function () { return foundation_1.accessReviewRouter; } });
+Object.defineProperty(exports, "delegationRouter", { enumerable: true, get: function () { return foundation_1.delegationRouter; } });
+//# sourceMappingURL=index.js.map

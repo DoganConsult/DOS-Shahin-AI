@@ -1,0 +1,84 @@
+{
+  "name": "@dos/module-compliance",
+  "version": "1.0.0",
+  "description": "DOS Compliance module — frameworks, controls, control testing, compliance mappings, assessments, gaps, attestations, regulatory submissions (KSA-NCA, SAMA, PDPL, DORA, ECC).",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./bootstrap": {
+      "types": "./dist/bootstrap.d.ts",
+      "default": "./dist/bootstrap.js"
+    },
+    "./contracts": {
+      "types": "./dist/contracts/index.d.ts",
+      "default": "./dist/contracts/index.js"
+    },
+    "./contracts/v1": {
+      "types": "./dist/contracts/v1/index.d.ts",
+      "default": "./dist/contracts/v1/index.js"
+    },
+    "./module.manifest.json": "./module.manifest.json",
+    "./contracts/ui.contract.json": "./contracts/ui.contract.json",
+    "./db/migrations/*": "./db/migrations/*",
+    "./db/seeds/*": "./db/seeds/*",
+    "./ui": "./ui/index.ts",
+    "./ui/*": "./ui/*"
+  },
+  "files": [
+    "dist",
+    "ui",
+    "contracts/ui.contract.json",
+    "db",
+    "config",
+    "schemas",
+    "module.manifest.json",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "NODE_ENV=test node --test tests/smoke/*.test.mjs tests/integration/*.test.mjs tests/contract/*.test.mjs tests/unit/*.test.mjs",
+    "test:smoke": "NODE_ENV=test node --test tests/smoke/*.test.mjs",
+    "test:integration": "NODE_ENV=test node --test tests/integration/*.test.mjs",
+    "test:contract": "NODE_ENV=test node --test tests/contract/*.test.mjs",
+    "test:unit": "NODE_ENV=test node --test tests/unit/*.test.mjs",
+    "test:coverage": "node --test --experimental-test-coverage --test-coverage-include='application/**' --test-coverage-include='infrastructure/**' --test-coverage-include='interface/**' --test-coverage-include='domain/**' --test-coverage-include='ui/**' --test-coverage-exclude='**/*.test.*' --test-coverage-exclude='**/*.spec.*' --test-coverage-exclude='**/dist/**' --test-coverage-exclude='**/_inbound/**' --test-coverage-exclude='**/_legacy/**' tests/smoke/*.test.mjs tests/integration/*.test.mjs tests/contract/*.test.mjs",
+    "verify:permissions": "node ops/scripts/verify-permissions.mjs",
+    "boot:harness": "node ops/scripts/boot-harness.mjs",
+    "ci": "node ops/scripts/ci.mjs",
+    "format": "prettier --write \"**/*.{ts,mjs,json,md}\" --ignore-path .gitignore",
+    "format:check": "prettier --check \"**/*.{ts,mjs,json,md}\" --ignore-path .gitignore",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "zod": "^3.23.8"
+  },
+  "peerDependencies": {
+    "@dos/db": "workspace:*",
+    "@dos/module-sdk": "workspace:*",
+    "@dos/platform-core": "workspace:*",
+    "@dos/types": "workspace:*"
+  },
+  "peerDependenciesMeta": {
+    "@dos/db": { "optional": true },
+    "@dos/module-sdk": { "optional": true },
+    "@dos/platform-core": { "optional": true },
+    "@dos/types": { "optional": true }
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4"
+  },
+  "dos": {
+    "moduleCode": "compliance",
+    "tier": "platform",
+    "hostService": "compliance-controls-service",
+    "manifest": "module.manifest.json",
+    "entrypoint": "./dist/bootstrap.js#registerCompliance"
+  }
+}

@@ -1,0 +1,50 @@
+module.exports = {
+  apps: [{
+    name: 'tenant-service',
+    script: 'dist/server.js',
+    instances: 1,
+    exec_mode: 'fork',
+    env: {
+      NODE_ENV: 'production',
+      PORT: 4002,
+      LOG_LEVEL: 'info',
+      DATABASE_URL: 'postgresql://dos_auth:dos_auth_pass_2026@localhost:5432/shahin_grc',
+      DB_POOL_MAX: '10',
+      AUTH_SERVICE_URL: 'http://127.0.0.1:4001',
+      SECRETS_ENCRYPTION_KEY: 'dd88a344371747f471bc5afd675cdcd3eb656ceca9532351d76c7b5a85b73776',
+      GATEWAY_ORIGIN_HMAC_SECRET: 'edaea84ef5aac336f1a948f92a21f1d81c655bccf0c383a8d04e99c692ddbd8c',
+      LEGACY_HEADER_TRUST: 'true',
+      DEFAULT_TENANT_PRODUCTS: 'shahin-ai,foundation',
+      // Phase G T1/T2 — trial defaults (read by createTrialBundle).
+      // These are temporary env-injected values until Config OS Phase B B2
+      // resolver is wired into tenant-service. Mirror in DB once ready.
+      TRIAL_PRODUCT_CODE: 'shahin-ai',
+      TRIAL_PLAN_CODE: 'trial',
+      TRIAL_DEFAULT_DAYS: '14',
+      TRIAL_GRACE_DAYS: '7',
+      TRIAL_MAX_USERS: '10',
+      TRIAL_AI_CREDITS: '1000',
+      KEYCLOAK_ISSUER: 'https://shahin-ai.com/login/realms/dogan',
+      KEYCLOAK_AUDIENCE: 'shahin-bff',
+      KEYCLOAK_JWKS_URL: 'http://127.0.0.1:8180/login/realms/dogan/protocol/openid-connect/certs',
+      // Patch 1 — self-registration policy + org-name contract.
+      DEFAULT_REGISTRATION_ROLE: 'tenant_admin',
+      REQUIRE_ORG_NAME: 'true',
+      // Patch 1 — OpenFGA tuple seeding for new tenants.
+      OPENFGA_API_URL: 'http://127.0.0.1:8080',
+      OPENFGA_STORE_ID: '01KNSF17SBJBCF4H0E4KZM15EQ',
+      OPENFGA_MODEL_ID: '01KQHTBYFQ9826QKAQ75QQ0A63',
+      TENANT_SERVICE_OPENFGA_ENFORCE: 'false',
+    },
+    node_args: '--max-old-space-size=768',
+    max_memory_restart: '1G',
+    wait_ready: true,
+    listen_timeout: 30000,
+    kill_timeout: 30000,
+    autorestart: true,
+    watch: false,
+    merge_logs: true,
+    error_file: '/var/log/dos-platform/tenant-service-error.log',
+    out_file: '/var/log/dos-platform/tenant-service-out.log',
+  }],
+};

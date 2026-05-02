@@ -1,0 +1,357 @@
+<div class="gov-page" [attr.dir]="dir()">
+      <app-page-header
+        titleEn="Committees" titleAr="اللجان"
+        subtitleEn="Governance committees, members, meetings and minutes of meeting"
+        subtitleAr="لجان الحوكمة والأعضاء والاجتماعات ومحاضر الاجتماعات"
+        icon="users"
+        [breadcrumbs]="[i18n.translate('Dashboard'), i18n.translate('Governance'), i18n.translate('Committees')]" [actions]="headerActions" [isAr]="isAr()" [dir]="dir()"
+        (actionClick)="onHeaderAction($event)" />
+      <app-module-tabs-bar [tabs]="tabs" [isAr]="isAr()" />
+      <div class="gov-body">
+      <p-toast />
+
+      <p-toolbar styleClass="mb-3">
+        <ng-template pTemplate="start">
+          <p-button [label]="i18n.translate('Add Committee')" icon="pi pi-plus" (onClick)="openCreate()" />
+          <span class="p-input-icon-left ms-3">
+            <i class="pi pi-search"></i>
+            <input type="text" pInputText [(ngModel)]="searchTerm"
+                   [placeholder]="i18n.translate('Search...')" [attr.aria-label]="i18n.translate('Search...')" (input)="filterList()" class="search-input" />
+          </span>
+        </ng-template>
+        <ng-template pTemplate="end">
+          <app-export-button module="governance-committees" [data]="filteredItems" />
+        </ng-template>
+      </p-toolbar>
+
+      <grc-data-table
+        [totalRecords]="filteredItems.length"
+        [emptyMessage]="i18n.translate('No data found')">
+        <p-table aria-label="Filtered Items table" [value]="filteredItems" [paginator]="filteredItems.length > 10" [rows]="10"
+                 styleClass="p-datatable-striped p-datatable-gridlines">
+          <ng-template pTemplate="header">
+            <tr>
+              <th pSortableColumn="name">{{ i18n.translate('Name') }}</th>
+              <th>{{ i18n.translate('Purpose') }}</th>
+              <th>{{ i18n.translate('Chair') }}</th>
+              <th>{{ i18n.translate('Members') }}</th>
+              <th>{{ i18n.translate('Schedule') }}</th>
+              <th>{{ i18n.translate('Next Meeting') }}</th>
+              <th>{{ i18n.translate('Status') }}</th>
+              <th style="width:140px">{{ i18n.translate('Actions') }}</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-item>
+            <tr tabindex="0" role="button" (keyup.enter)="openDetail(item)" class="clickable-row" (click)="openDetail(item)">
+              <td><strong>{{ item.name }}</strong></td>
+              <td class="text-ellipsis">{{ item.purpose || '—' }}</td>
+              <td>{{ item.chair ?? item.chairperson ?? '—' }}</td>
+              <td>{{ item.members?.length ?? item.member_count ?? 0 }}</td>
+              <td>{{ item.meeting_schedule || '—' }}</td>
+              <td>{{ item.next_meeting_date | appDate:'medium' }}</td>
+              <td><app-status-badge [status]="item.status ?? 'active'" /></td>
+              <td tabindex="0" role="button" (keyup.enter)="$event.stopPropagation()" (click)="$event.stopPropagation()">
+                <div class="action-btns">
+                  <button aria-label="Edit" class="icon-btn" (click)="openEdit(item)" pTooltip="Edit"><i class="pi pi-pencil"></i></button>
+                  <button aria-label="Delete" class="icon-btn danger" (click)="confirmDelete(item)" pTooltip="Delete"><i class="pi pi-trash"></i></button>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </grc-data-table>
+
+      <!-- Committee Detail Drawer -->
+      <div tabindex="0" role="button" (keyup.enter)="drawerVisible = false" class="drawer-overlay" *ngIf="drawerVisible" (click)="drawerVisible = false"></div>
+      <div class="drawer" [class.open]="drawerVisible">
+        <div class="drawer-header">
+          <h3>{{ selectedCommittee?.name }}</h3>
+          <button aria-label="Close" pButton icon="pi pi-times" class="p-button-text p-button-rounded" (click)="drawerVisible = false"></button>
+        </div>
+        <p-tabView *ngIf="selectedCommittee">
+          <p-tabPanel [header]="i18n.translate('Profile')">
+            <div class="detail-grid">
+              <div class="detail-row"><span class="detail-label">{{ i18n.translate('Purpose') }}</span><span>{{ selectedCommittee.purpose || '—' }}</span></div>
+              <div class="detail-row"><span class="detail-label">{{ i18n.translate('Schedule') }}</span><span>{{ selectedCommittee.meeting_schedule || '—' }}</span></div>
+              <div class="detail-row"><span class="detail-label">{{ i18n.translate('Chair') }}</span><span>{{ selectedCommittee.chair ?? selectedCommittee.chairperson ?? '—' }}</span></div>
+              <div class="detail-row"><span class="detail-label">{{ i18n.translate('Status') }}</span><app-status-badge [status]="selectedCommittee.status ?? 'active'" /></div>
+              <div class="detail-row"><span class="detail-label">{{ i18n.translate('Created') }}</span><span>{{ selectedCommittee.created_at | appDate:'medium' }}</span></div>
+              <div class="detail-row">
+                <span class="detail-label">{{ i18n.translate('Quorum Rule') }}</span>
+                <span>{{ selectedCommittee.quorum_rule || (i18n.translate('Simple majority (50%+1)')) }}</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">{{ i18n.translate('Quorum %') }}</span>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <input type="number" pInputText [(ngModel)]="quorumPercentage" min="0" max="100" style="width:80px" />
+                  <p-button [label]="i18n.translate('Save')" icon="pi pi-check" size="small" (onClick)="saveQuorumRule()" />
+                </div>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">{{ i18n.translate('Effectiveness') }}</span>
+                <p-tag [value]="getEffectivenessLabel()" [severity]="getEffectivenessSeverity()" />
+              </div>
+            </div>
+          </p-tabPanel>
+          <p-tabPanel [header]="i18n.translate('Charter')">
+            <div *ngIf="!charterLoading && selectedCommittee">
+              <div class="charter-section" *ngIf="selectedCommittee.charter_text">
+                <p class="charter-text">{{ selectedCommittee.charter_text }}</p>
+              </div>
+              <div *ngIf="!selectedCommittee.charter_text" class="empty-mini">
+                {{ i18n.translate('No charter defined for this committee yet') }}
+              </div>
+              <div class="field mt-3">
+                <label>{{ i18n.translate('Update Charter') }}</label>
+                <textarea pInputTextarea [(ngModel)]="charterText" [rows]="8" class="w-full"
+                          [placeholder]="i18n.translate('Enter charter, mandate, and objectives...')" [attr.aria-label]="i18n.translate('Enter charter, mandate, and objectives...')"></textarea>
+                <p-button [label]="i18n.translate('Save Charter')" icon="pi pi-save" size="small" styleClass="mt-2"
+                          (onClick)="saveCharter()" [disabled]="!charterText" />
+              </div>
+            </div>
+          </p-tabPanel>
+          <p-tabPanel [header]="i18n.translate('Members')">
+            <p-button [label]="i18n.translate('Add Member')" icon="pi pi-plus" size="small" (onClick)="showMemberDialog = true" styleClass="mb-2" />
+            <grc-data-table
+              [totalRecords]="members.length"
+              [emptyMessage]="i18n.translate('No members yet')">
+              <p-table [paginator]="true" [rows]="20" [rowsPerPageOptions]="[10,20,50]" aria-label="Members table" [value]="members" styleClass="p-datatable-sm p-datatable-striped">
+                <ng-template pTemplate="header"><tr><th>{{ i18n.translate('User') }}</th><th>{{ i18n.translate('Role') }}</th><th>{{ i18n.translate('Status') }}</th><th>{{ i18n.translate('Chair') }}</th><th style="width:100px"></th></tr></ng-template>
+                <ng-template pTemplate="body" let-m>
+                  <tr>
+                    <td>
+                      <strong>{{ resolveUser(m.user_id) }}</strong>
+                      <div style="font-size: var(--font-size-xs);color:var(--text-muted,#64748b)">{{ m.user_id }}</div>
+                    </td>
+                    <td><p-tag [value]="m.role_in_committee" severity="info" /></td>
+                    <td><p-tag [value]="m.status || 'active'" [severity]="(m.status || 'active') === 'active' ? 'success' : 'warning'" /></td>
+                    <td><i *ngIf="m.is_chair" class="pi pi-star" style="color:var(--grc-amber-dark, #d97706)"></i></td>
+                    <td>
+                      <div class="action-btns">
+                        <button aria-label="Set Chair" class="icon-btn" (click)="setChair(m)" pTooltip="Set Chair" *ngIf="!m.is_chair"><i class="pi pi-star"></i></button>
+                        <button aria-label="Remove" class="icon-btn danger" (click)="removeMember(m)" pTooltip="Remove"><i class="pi pi-trash"></i></button>
+                      </div>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </grc-data-table>
+          </p-tabPanel>
+          <p-tabPanel [header]="i18n.translate('Meetings')">
+            <p-button [label]="i18n.translate('Add Meeting')" icon="pi pi-plus" size="small" (onClick)="showMeetingDialog = true" styleClass="mb-2" />
+            <grc-data-table
+              *ngIf="!selectedMeeting"
+              [totalRecords]="meetings.length"
+              [emptyMessage]="i18n.translate('No meetings yet')">
+              <p-table [paginator]="true" [rows]="20" [rowsPerPageOptions]="[10,20,50]" aria-label="Meetings table" [value]="meetings" styleClass="p-datatable-sm p-datatable-striped">
+                <ng-template pTemplate="header"><tr><th>{{ i18n.translate('Title') }}</th><th>{{ i18n.translate('Date') }}</th><th>{{ i18n.translate('Status') }}</th><th>{{ i18n.translate('Decisions') }}</th><th style="width:80px"></th></tr></ng-template>
+                <ng-template pTemplate="body" let-m>
+                  <tr tabindex="0" role="button" (keyup.enter)="openMeetingDetail(m)" class="clickable-row" (click)="openMeetingDetail(m)">
+                    <td><strong>{{ m.title }}</strong></td>
+                    <td>{{ m.scheduled_at | appDate:'medium' }}</td>
+                    <td><app-status-badge [status]="m.status" /></td>
+                    <td>{{ m.decision_count || 0 }}</td>
+                    <td tabindex="0" role="button" (keyup.enter)="$event.stopPropagation()" (click)="$event.stopPropagation()">
+                      <button aria-label="Delete" class="icon-btn danger" (click)="deleteMeeting(m)" pTooltip="Delete"><i class="pi pi-trash"></i></button>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </grc-data-table>
+
+            <div *ngIf="selectedMeeting" class="meeting-detail-view">
+              <div class="meeting-detail-header">
+                <button class="back-btn" (click)="selectedMeeting = null"><i class="pi pi-arrow-left"></i> {{ i18n.translate('Back') }}</button>
+                <h4>{{ selectedMeeting.title }}</h4>
+              </div>
+              <p-tabView>
+                <p-tabPanel [header]="i18n.translate('Overview')">
+                  <div class="detail-grid">
+                    <div class="detail-row"><span class="detail-label">{{ i18n.translate('Date') }}</span><span>{{ selectedMeeting.scheduled_at | appDate:'medium' }}</span></div>
+                    <div class="detail-row"><span class="detail-label">{{ i18n.translate('Location') }}</span><span>{{ selectedMeeting.location || '—' }}</span></div>
+                    <div class="detail-row"><span class="detail-label">{{ i18n.translate('Duration') }}</span><span>{{ selectedMeeting.duration_minutes || '—' }} {{ i18n.translate('min') }}</span></div>
+                    <div class="detail-row"><span class="detail-label">{{ i18n.translate('Status') }}</span><app-status-badge [status]="selectedMeeting.status || 'scheduled'" /></div>
+                    <div class="detail-row"><span class="detail-label">{{ i18n.translate('Agenda Items') }}</span><span>{{ selectedMeeting.agenda_count || 0 }}</span></div>
+                    <div class="detail-row"><span class="detail-label">{{ i18n.translate('Decisions') }}</span><span>{{ selectedMeeting.decision_count || 0 }}</span></div>
+                  </div>
+                  <div class="quorum-tracker mt-3">
+                    <h4>{{ i18n.translate('Quorum Tracker') }}</h4>
+                    <div class="quorum-strip">
+                      <div class="quorum-stat">
+                        <span class="quorum-label">{{ i18n.translate('Members') }}</span>
+                        <span class="quorum-value">{{ members.length }}</span>
+                      </div>
+                      <div class="quorum-stat">
+                        <span class="quorum-label">{{ i18n.translate('Attendees') }}</span>
+                        <input type="number" pInputText [(ngModel)]="meetingAttendeeCount" min="0" [max]="members.length" class="quorum-input" />
+                      </div>
+                      <div class="quorum-stat">
+                        <span class="quorum-label">{{ i18n.translate('Required') }}</span>
+                        <span class="quorum-value">{{ getQuorumRequired() }}</span>
+                      </div>
+                      <div class="quorum-stat">
+                        <span class="quorum-label">{{ i18n.translate('Quorum') }}</span>
+                        <p-tag [value]="isQuorumMet() ? (i18n.translate('Met')) : (i18n.translate('Not Met'))"
+                               [severity]="isQuorumMet() ? 'success' : 'danger'" />
+                      </div>
+                    </div>
+                    <p-button [label]="i18n.translate('Save Attendance')" icon="pi pi-check" size="small" styleClass="mt-2"
+                              (onClick)="saveAttendance()" />
+                    <div *ngIf="!isQuorumMet() && meetingAttendeeCount > 0" class="quorum-warning mt-2">
+                      <i class="pi pi-exclamation-triangle" style="color:var(--grc-amber-dark, #d97706)"></i>
+                      {{ i18n.translate('Warning: Quorum not met. Decisions may not be valid.') }}
+                    </div>
+                  </div>
+                  <div class="meeting-status-actions mt-3">
+                    <p-button *ngIf="selectedMeeting.status !== 'completed' && selectedMeeting.status !== 'cancelled'"
+                              [label]="i18n.translate('Complete Meeting')" icon="pi pi-check" severity="success" size="small"
+                              (onClick)="updateMeetingStatus('completed')" />
+                    <p-button *ngIf="selectedMeeting.status !== 'cancelled' && selectedMeeting.status !== 'completed'"
+                              [label]="i18n.translate('Cancel Meeting')" icon="pi pi-times" severity="danger" size="small" [outlined]="true"
+                              (onClick)="updateMeetingStatus('cancelled')" styleClass="ms-2" />
+                  </div>
+                </p-tabPanel>
+                <p-tabPanel [header]="i18n.translate('Agenda')">
+                  <div class="agenda-list" *ngIf="meetingAgendaItems.length > 0">
+                    <div *ngFor="let a of meetingAgendaItems; let i = index" class="agenda-item-card">
+                      <span class="agenda-idx">#{{ i+1 }}</span>
+                      <span class="agenda-text">{{ a.title || a.description }}</span>
+                      <button aria-label="Remove" class="icon-btn danger" (click)="deleteAgendaItem(a)" pTooltip="Remove"><i class="pi pi-trash"></i></button>
+                    </div>
+                  </div>
+                  <div *ngIf="meetingAgendaItems.length === 0" class="empty-mini">{{ i18n.translate('No agenda items yet') }}</div>
+                  <div class="add-agenda-row mt-3">
+                    <input pInputText [(ngModel)]="newAgendaTitle" [placeholder]="i18n.translate('Agenda item title...')" [attr.aria-label]="i18n.translate('Agenda item title...')" class="w-full" />
+                    <p-button icon="pi pi-plus" (onClick)="addAgendaItem()" [disabled]="!newAgendaTitle" size="small" />
+                  </div>
+                </p-tabPanel>
+                <p-tabPanel [header]="i18n.translate('Minutes')">
+                  <textarea pInputTextarea [(ngModel)]="meetingMinutes" [rows]="8" class="w-full"
+                            [placeholder]="i18n.translate('Enter meeting minutes...')" [attr.aria-label]="i18n.translate('Enter meeting minutes...')"></textarea>
+                  <p-button [label]="i18n.translate('Save Minutes')" icon="pi pi-save" size="small" styleClass="mt-2"
+                            (onClick)="saveMinutes()" [disabled]="!meetingMinutes" />
+                </p-tabPanel>
+                <p-tabPanel [header]="i18n.translate('Decisions')">
+                  <grc-data-table
+                    [totalRecords]="meetingDecisions.length"
+                    [emptyMessage]="i18n.translate('No decisions yet')">
+                    <p-table [paginator]="true" [rows]="20" [rowsPerPageOptions]="[10,20,50]" aria-label="Meeting Decisions table" [value]="meetingDecisions" styleClass="p-datatable-sm p-datatable-striped">
+                      <ng-template pTemplate="header"><tr><th>{{ i18n.translate('Decision') }}</th><th>{{ i18n.translate('Status') }}</th></tr></ng-template>
+                      <ng-template pTemplate="body" let-d>
+                        <tr><td>{{ d.decision_text | slice:0:80 }}</td><td><app-status-badge [status]="d.status" /></td></tr>
+                      </ng-template>
+                    </p-table>
+                  </grc-data-table>
+                  <div class="add-agenda-row mt-3">
+                    <input pInputText [(ngModel)]="newDecisionText" [placeholder]="i18n.translate('Decision text...')" [attr.aria-label]="i18n.translate('Decision text...')" class="w-full" />
+                    <p-button icon="pi pi-plus" (onClick)="addMeetingDecision()" [disabled]="!newDecisionText" size="small" />
+                  </div>
+                </p-tabPanel>
+                <p-tabPanel [header]="i18n.translate('Actions')">
+                  <div class="actions-link-box">
+                    <i class="pi pi-bolt"></i>
+                    <a [routerLink]="['/governance/actions']" [queryParams]="{sourceType: 'meeting', sourceId: selectedMeeting.meeting_id}">
+                      {{ i18n.translate('View actions linked to this meeting') }}
+                    </a>
+                  </div>
+                </p-tabPanel>
+              </p-tabView>
+            </div>
+          </p-tabPanel>
+          <p-tabPanel [header]="i18n.translate('Decisions')">
+            <grc-data-table
+              [totalRecords]="committeeDecisions.length"
+              [emptyMessage]="i18n.translate('No decisions yet')">
+              <p-table [paginator]="true" [rows]="20" [rowsPerPageOptions]="[10,20,50]" aria-label="Committee Decisions table" [value]="committeeDecisions" styleClass="p-datatable-sm p-datatable-striped">
+                <ng-template pTemplate="header"><tr><th>{{ i18n.translate('Decision') }}</th><th>{{ i18n.translate('Status') }}</th><th>{{ i18n.translate('Date') }}</th></tr></ng-template>
+                <ng-template pTemplate="body" let-d>
+                  <tr><td>{{ d.decision_text | slice:0:60 }}{{ d.decision_text?.length > 60 ? '...' : '' }}</td><td><app-status-badge [status]="d.status" /></td><td>{{ d.created_at | appDate:'medium' }}</td></tr>
+                </ng-template>
+              </p-table>
+            </grc-data-table>
+            <div class="actions-link-box mt-3" *ngIf="selectedCommittee">
+              <i class="pi pi-bolt"></i>
+              <a [routerLink]="['/governance/actions']" [queryParams]="{sourceType: 'committee', sourceId: selectedCommittee.committee_id || selectedCommittee.id}">
+                {{ i18n.translate('View related actions') }}
+              </a>
+            </div>
+          </p-tabPanel>
+          <p-tabPanel [header]="i18n.translate('Audit')">
+            <div class="audit-link-box">
+              <i class="pi pi-history"></i>
+              <a [routerLink]="['/foundation/audit']" [queryParams]="{entityType:'committee', entityId: selectedCommittee?.committee_id || selectedCommittee?.id}">
+                {{ i18n.translate('View audit trail for this committee') }}
+              </a>
+            </div>
+          </p-tabPanel>
+        </p-tabView>
+      </div>
+
+      <!-- Add Member Dialog -->
+      <p-dialog [header]="i18n.translate('Add Member')" [(visible)]="showMemberDialog" [modal]="true" [style]="{width:'440px'}">
+        <div class="dialog-form">
+          <grc-form-field [label]="i18n.translate('User ID')">
+            <input pInputText [(ngModel)]="memberForm.user_id" class="w-full" />
+          </grc-form-field>
+          <div class="field"><label>{{ i18n.translate('Role') }}</label>
+            <p-dropdown [options]="roleOptions" [(ngModel)]="memberForm.role_in_committee" optionLabel="label" optionValue="value" styleClass="w-full" />
+          </div>
+        </div>
+        <ng-template pTemplate="footer">
+          <p-button [label]="i18n.translate('Cancel')" icon="pi pi-times" severity="secondary" [text]="true" (onClick)="showMemberDialog = false" />
+          <p-button [label]="i18n.translate('Add')" icon="pi pi-check" (onClick)="addMember()" [disabled]="!memberForm.user_id" />
+        </ng-template>
+      </p-dialog>
+
+      <!-- Add Meeting Dialog -->
+      <p-dialog [header]="i18n.translate('Add Meeting')" [(visible)]="showMeetingDialog" [modal]="true" [style]="{width:'480px'}">
+        <div class="dialog-form">
+          <grc-form-field [label]="i18n.translate('Title')">
+            <input pInputText [(ngModel)]="meetingForm.title" class="w-full" />
+          </grc-form-field>
+          <div class="field-row">
+            <grc-form-field [label]="i18n.translate('Date/Time')">
+              <input type="datetime-local" pInputText [(ngModel)]="meetingForm.scheduled_at" class="w-full" />
+            </grc-form-field>
+            <grc-form-field [label]="i18n.translate('Duration (min)')">
+              <input type="number" pInputText [(ngModel)]="meetingForm.duration_minutes" class="w-full" />
+            </grc-form-field>
+          </div>
+          <grc-form-field [label]="i18n.translate('Location')">
+            <input pInputText [(ngModel)]="meetingForm.location" class="w-full" />
+          </grc-form-field>
+        </div>
+        <ng-template pTemplate="footer">
+          <p-button [label]="i18n.translate('Cancel')" icon="pi pi-times" severity="secondary" [text]="true" (onClick)="showMeetingDialog = false" />
+          <p-button [label]="i18n.translate('Create')" icon="pi pi-check" (onClick)="createMeeting()" [disabled]="!meetingForm.title || !meetingForm.scheduled_at" />
+        </ng-template>
+      </p-dialog>
+
+      <!-- Committee Create/Edit Dialog -->
+      <p-dialog [header]="editMode ? (i18n.translate('Edit Committee')) : (i18n.translate('Add Committee'))"
+                [(visible)]="showDialog" [modal]="true" [style]="{width:'560px'}">
+        <div class="dialog-form">
+          <grc-form-field [label]="i18n.translate('Name')">
+            <input pInputText [(ngModel)]="form.name" class="w-full" />
+          </grc-form-field>
+          <div class="field"><label>{{ i18n.translate('Purpose') }}</label><textarea pInputTextarea [(ngModel)]="form.purpose" [rows]="3" class="w-full"></textarea></div>
+          <grc-form-field [label]="i18n.translate('Meeting Schedule')">
+            <input pInputText [(ngModel)]="form.meeting_schedule" class="w-full" [placeholder]="i18n.translate('Monthly, Quarterly...')" [attr.aria-label]="i18n.translate('Monthly, Quarterly...')" />
+          </grc-form-field>
+        </div>
+        <ng-template pTemplate="footer">
+          <p-button [label]="i18n.translate('Cancel')" icon="pi pi-times" severity="secondary" [text]="true" (onClick)="showDialog = false" />
+          <p-button [label]="editMode ? (i18n.translate('Save')) : (i18n.translate('Create'))" icon="pi pi-check" (onClick)="save()" [disabled]="!form.name" />
+        </ng-template>
+      </p-dialog>
+      <!-- Cross-Module Links -->
+      <div class="cross-links">
+        <button class="cross-link-btn" (click)="navigateTo('/governance/decisions')"><i class="pi pi-check-square"></i> Decisions</button>
+        <button class="cross-link-btn" (click)="navigateTo('/governance/charters')"><i class="pi pi-file-o"></i> Charters</button>
+        <button class="cross-link-btn" (click)="navigateTo('/governance/responsibilities')"><i class="pi pi-id-card"></i> Responsibilities</button>
+        <button class="cross-link-btn" (click)="navigateTo('/governance/health')"><i class="pi pi-heart"></i> Health Score</button>
+        <button class="cross-link-btn" (click)="navigateTo('/governance/actions')"><i class="pi pi-bolt"></i> Actions</button>
+      </div>
+      </div>
+    </div>
+    <p-confirmDialog />

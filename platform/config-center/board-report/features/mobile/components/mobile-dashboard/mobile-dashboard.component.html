@@ -1,0 +1,227 @@
+<div class="mobile-dashboard" appPullToRefresh (refresh)="loadDashboard()">
+
+      <!-- ─── Network Quality Banner ─── -->
+      @if (network.quality() === 'weak' || network.quality() === 'offline') {
+        <div class="network-banner" [style.background]="network.quality() === 'offline' ? 'rgba(239,68,68,0.12)' : 'rgba(245,158,11,0.12)'">
+          <span class="material-icons-outlined" [style.color]="network.qualityColor()">{{ network.qualityIcon() }}</span>
+          <span [style.color]="network.qualityColor()">
+            {{ isArabic() ? network.qualityLabel().ar : network.qualityLabel().en }}
+          </span>
+          @if (offlineSync.hasPendingChanges()) {
+            <span class="pending-badge">{{ offlineSync.queueLength() }}</span>
+          }
+        </div>
+      }
+
+      <!-- ─── Hero: Compliance Score Ring ─── -->
+      <section class="hero-card">
+        <div class="hero-greeting">
+          <span class="greeting-text">
+            {{ isArabic() ? greeting().ar : greeting().en }}
+          </span>
+          <span class="user-name">{{ userName() }}</span>
+        </div>
+
+        <div class="score-ring-container">
+          <svg class="score-ring" viewBox="0 0 120 120">
+            <circle cx="60" cy="60" r="52" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="8" />
+            <circle
+              cx="60" cy="60" r="52"
+              fill="none"
+              [attr.stroke]="scoreColor()"
+              stroke-width="8"
+              stroke-linecap="round"
+              [attr.stroke-dasharray]="scoreDash()"
+              stroke-dashoffset="0"
+              transform="rotate(-90 60 60)"
+              class="score-arc"
+            />
+            <text x="60" y="54" text-anchor="middle" fill="white" font-size="28" font-weight="900">
+              {{ data()?.complianceScore || 0 }}%
+            </text>
+            <text x="60" y="72" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="10" font-weight="600">
+              {{ isArabic() ? 'درجة الالتزام' : 'COMPLIANCE' }}
+            </text>
+          </svg>
+        </div>
+
+        <div class="hero-stats">
+          <div class="hero-stat" (click)="navigateTo('/risks')">
+            <span class="stat-value danger">{{ data()?.openRisks || 0 }}</span>
+            <span class="stat-label">{{ isArabic() ? 'مخاطر مفتوحة' : 'Open Risks' }}</span>
+          </div>
+          <div class="hero-divider"></div>
+          <div class="hero-stat" (click)="navigateTo('/controls')">
+            <span class="stat-value success">{{ data()?.controlsEffective || 0 }}</span>
+            <span class="stat-label">{{ isArabic() ? 'ضوابط فعّالة' : 'Effective Controls' }}</span>
+          </div>
+          <div class="hero-divider"></div>
+          <div class="hero-stat" (click)="navigateTo('/activity-feed')">
+            <span class="stat-value warning">{{ data()?.pendingApprovals || 0 }}</span>
+            <span class="stat-label">{{ isArabic() ? 'بانتظار الموافقة' : 'Pending Approvals' }}</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── Risk Pulse ─── -->
+      <section class="risk-pulse-card" (click)="navigateTo('/risks')">
+        <div class="pulse-header">
+          <span class="material-icons-outlined pulse-icon"
+            [class.pulse-critical]="(data()?.criticalRisks || 0) > 0">
+            monitor_heart
+          </span>
+          <span class="pulse-title">{{ isArabic() ? 'نبض المخاطر' : 'Risk Pulse' }}</span>
+          <span class="pulse-chevron material-icons-outlined">chevron_right</span>
+        </div>
+        <div class="pulse-bar-container">
+          <div class="pulse-bar">
+            <div class="pulse-fill critical" [style.width.%]="riskBarCritical()"></div>
+            <div class="pulse-fill high" [style.width.%]="riskBarHigh()"></div>
+            <div class="pulse-fill medium" [style.width.%]="riskBarMedium()"></div>
+            <div class="pulse-fill low" [style.width.%]="riskBarLow()"></div>
+          </div>
+        </div>
+        <div class="pulse-legend">
+          <span class="legend-item"><span class="legend-dot critical"></span>{{ data()?.criticalRisks || 0 }} {{ isArabic() ? 'حرج' : 'Critical' }}</span>
+          <span class="legend-item"><span class="legend-dot high"></span>{{ isArabic() ? 'عالي' : 'High' }}</span>
+          <span class="legend-item"><span class="legend-dot medium"></span>{{ isArabic() ? 'متوسط' : 'Medium' }}</span>
+        </div>
+      </section>
+
+      <!-- ─── Metric Cards (Horizontal Scroll) ─── -->
+      <section class="metric-scroll">
+        <!-- Controls -->
+        <div class="metric-card controls" (click)="navigateTo('/controls')">
+          <div class="metric-icon-wrap"><span class="material-icons-outlined">verified_user</span></div>
+          <div class="metric-body">
+            <span class="metric-value">{{ data()?.controlsTotal || 0 }}</span>
+            <span class="metric-label">{{ isArabic() ? 'الضوابط' : 'Controls' }}</span>
+          </div>
+          <div class="metric-mini">
+            @if ((data()?.controlsFailing || 0) > 0) {
+              <span class="mini-badge danger">{{ data()?.controlsFailing }} {{ isArabic() ? 'فاشل' : 'failing' }}</span>
+            }
+          </div>
+        </div>
+
+        <!-- Evidence -->
+        <div class="metric-card evidence" (click)="navigateTo('/evidence')">
+          <div class="metric-icon-wrap"><span class="material-icons-outlined">fact_check</span></div>
+          <div class="metric-body">
+            <span class="metric-value">{{ data()?.evidencePending || 0 }}</span>
+            <span class="metric-label">{{ isArabic() ? 'أدلة معلقة' : 'Evidence Due' }}</span>
+          </div>
+          <div class="metric-mini">
+            @if ((data()?.evidenceExpiring || 0) > 0) {
+              <span class="mini-badge warning">{{ data()?.evidenceExpiring }} {{ isArabic() ? 'تنتهي قريباً' : 'expiring' }}</span>
+            }
+          </div>
+        </div>
+
+        <!-- Policies -->
+        <div class="metric-card policies" (click)="navigateTo('/policies')">
+          <div class="metric-icon-wrap"><span class="material-icons-outlined">description</span></div>
+          <div class="metric-body">
+            <span class="metric-value">{{ data()?.policiesTotal || 0 }}</span>
+            <span class="metric-label">{{ isArabic() ? 'السياسات' : 'Policies' }}</span>
+          </div>
+          <div class="metric-mini">
+            @if ((data()?.policiesDraft || 0) > 0) {
+              <span class="mini-badge info">{{ data()?.policiesDraft }} {{ isArabic() ? 'مسودة' : 'drafts' }}</span>
+            }
+          </div>
+        </div>
+
+        <!-- Frameworks -->
+        <div class="metric-card frameworks" (click)="navigateTo('/frameworks')">
+          <div class="metric-icon-wrap"><span class="material-icons-outlined">hub</span></div>
+          <div class="metric-body">
+            <span class="metric-value">{{ data()?.frameworkCount || 0 }}</span>
+            <span class="metric-label">{{ isArabic() ? 'الأطر' : 'Frameworks' }}</span>
+          </div>
+        </div>
+
+        <!-- AI Agents -->
+        <div class="metric-card ai" (click)="navigateTo('/copilot')">
+          <div class="metric-icon-wrap"><span class="material-icons-outlined">smart_toy</span></div>
+          <div class="metric-body">
+            <span class="metric-value">{{ data()?.aiInsightsCount || 0 }}</span>
+            <span class="metric-label">{{ isArabic() ? 'رؤى AI' : 'AI Insights' }}</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── Upcoming Deadlines ─── -->
+      @if (data()?.upcomingDeadlines?.length) {
+        <section class="deadlines-section">
+          <h3 class="section-heading">
+            <span class="material-icons-outlined">event</span>
+            {{ isArabic() ? 'المواعيد القادمة' : 'Upcoming Deadlines' }}
+          </h3>
+          @for (deadline of data()!.upcomingDeadlines.slice(0, 5); track deadline.title) {
+            <div class="deadline-row">
+              <div class="deadline-urgency" [class]="deadline.urgency"></div>
+              <div class="deadline-info">
+                <span class="deadline-title">{{ deadline.title }}</span>
+                <span class="deadline-date">{{ deadline.dueDate | date:'mediumDate' }}</span>
+              </div>
+              <span class="deadline-type">{{ deadline.type }}</span>
+            </div>
+          }
+        </section>
+      }
+
+      <!-- ─── Live Activity Feed ─── -->
+      <section class="activity-section">
+        <h3 class="section-heading">
+          <span class="material-icons-outlined">timeline</span>
+          {{ isArabic() ? 'النشاط الأخير' : 'Recent Activity' }}
+          @if (wsService.connected()) {
+            <span class="live-dot"></span>
+          }
+        </h3>
+        @for (activity of data()?.recentActivities?.slice(0, 8) || []; track activity.timestamp) {
+          <div class="activity-row">
+            <div class="activity-icon-wrap">
+              <span class="material-icons-outlined">{{ activity.icon || 'update' }}</span>
+            </div>
+            <div class="activity-info">
+              <span class="activity-title">{{ activity.title }}</span>
+              <span class="activity-desc">{{ activity.description }}</span>
+            </div>
+            <span class="activity-time">{{ timeAgo(activity.timestamp) }}</span>
+          </div>
+        }
+        @if (!data()?.recentActivities?.length) {
+          <div class="empty-state">
+            <span class="material-icons-outlined">inbox</span>
+            <span>{{ isArabic() ? 'لا يوجد نشاط حديث' : 'No recent activity' }}</span>
+          </div>
+        }
+      </section>
+
+      <!-- ─── Quick Action FAB ─── -->
+      <div class="fab-container">
+        @if (fabOpen()) {
+          <div class="fab-backdrop" (click)="fabOpen.set(false)"></div>
+          <button class="fab-action" (click)="onScanQr()" style="--offset: 180px">
+            <span class="material-icons-outlined">qr_code_scanner</span>
+            <span class="fab-label">{{ isArabic() ? 'مسح QR' : 'Scan QR' }}</span>
+          </button>
+          <button class="fab-action" (click)="navigateTo('/evidence')" style="--offset: 120px">
+            <span class="material-icons-outlined">photo_camera</span>
+            <span class="fab-label">{{ isArabic() ? 'التقاط دليل' : 'Capture' }}</span>
+          </button>
+          <button class="fab-action" (click)="navigateTo('/activity-feed')" style="--offset: 60px">
+            <span class="material-icons-outlined">approval</span>
+            <span class="fab-label">{{ isArabic() ? 'الموافقات' : 'Approvals' }}</span>
+          </button>
+        }
+        <button class="fab-main" (click)="toggleFab()" [class.open]="fabOpen()">
+          <span class="material-icons-outlined">{{ fabOpen() ? 'close' : 'add' }}</span>
+        </button>
+      </div>
+
+      <!-- Bottom spacer for tab bar -->
+      <div style="height: 80px"></div>
+    </div>

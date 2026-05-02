@@ -1,0 +1,224 @@
+     × POST with valid shape + wrong captcha returns 400 CAPTCHA_FAILED 2ms
+[pm2 reload] Command failed: <ref *1> Error: spawnSync /bin/sh ETIMEDOUT
+ FAIL  tests/e2e/comprehensive-critical-paths.test.ts > Comprehensive E2E Critical Path Tests
+Error: browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell
+ FAIL  tests/e2e/new-user-journey.e2e.test.ts [ tests/e2e/new-user-journey.e2e.test.ts ]
+ FAIL  tests/e2e/critical-path-flows.test.ts > E2E Critical Path Tests > Performance and Reliability > meets performance benchmarks for critical paths
+Error: Test timed out in 5000ms.
+ FAIL  tests/e2e/critical-path-flows.test.ts > E2E Critical Path Tests > Error Handling and Edge Cases > handles timeout scenarios
+Error: Test timed out in 5000ms.
+ FAIL  tests/e2e/critical-path.test.ts > E2E Critical Path — Login → Tenant → GRC Operations > 2. Tenant Operations > can fetch tenant details
+AssertionError: expected 404 to be 200 // Object.is equality
+ FAIL  tests/e2e/critical-path.test.ts > E2E Critical Path — Login → Tenant → GRC Operations > 9. BCP Plans > lists BCP plans
+AssertionError: expected [ 200, 404 ] to include 500
+ FAIL  tests/e2e/critical-path.test.ts > E2E Critical Path — Login → Tenant → GRC Operations > 16. Gateway Routing Integrity > routes auth through gateway
+ FAIL  tests/e2e/critical-path.test.ts > E2E Critical Path — Login → Tenant → GRC Operations > 16. Gateway Routing Integrity > protected routes reject without token
+ FAIL  tests/e2e/critical-path.test.ts > E2E Critical Path — Login → Tenant → GRC Operations > 16. Gateway Routing Integrity > gateway proxies to downstream services
+ FAIL  tests/integration/authz-wave1.test.ts > authz-wave1 — unauthenticated calls are rejected > /api/users → 401 without auth
+ FAIL  tests/integration/authz-wave1.test.ts > authz-wave1 — unauthenticated calls are rejected > /api/tenants → 401 without auth
+ FAIL  tests/integration/authz-wave1.test.ts > authz-wave1 — unauthenticated calls are rejected > /api/audit/events → 401 without auth
+ FAIL  tests/integration/authz-wave1.test.ts > authz-wave1 — unauthenticated calls are rejected > /api/workflow/workflows → 401 without auth
+ FAIL  tests/integration/authz-wave1.test.ts > authz-wave1 — unauthenticated calls are rejected > /api/compliance/frameworks → 401 without auth
+ FAIL  tests/integration/authz-wave1.test.ts > authz-wave1 — unauthenticated calls are rejected > /api/controls → 401 without auth
+ FAIL  tests/integration/authz-wave1.test.ts > authz-wave1 — unauthenticated calls are rejected > /api/evidence → 401 without auth
+ FAIL  tests/integration/authz-wave1.test.ts > authz-wave1 — AI surface is gated before billing > GET /api/copilot does not expose an anonymous billed path
+ FAIL  tests/integration/authz-wave1.test.ts > authz-wave1 — AI surface is gated before billing > GET /api/ai does not expose an anonymous billed path
+ FAIL  tests/integration/authz-wave1.test.ts > authz-wave1 — AI surface is gated before billing > GET /api/ai-gateway does not expose an anonymous billed path
+ FAIL  tests/integration/authz-wave1.test.ts > authz-wave1 — AI surface is gated before billing > GET /api/ai-engine does not expose an anonymous billed path
+ FAIL  tests/integration/authz-wave1.test.ts > authz-wave1 — AI surface is gated before billing > GET /api/nudges does not expose an anonymous billed path
+ FAIL  tests/integration/authz-wave1.test.ts > authz-wave1 — AI surface is gated before billing > GET /api/mcp does not expose an anonymous billed path
+ FAIL  tests/integration/m4-compliance-perms-tenant.test.ts > M4 compliance+controls — unauth calls are rejected (not 200, not 500) > /api/compliance → 401/403/404 without auth
+ FAIL  tests/integration/m4-compliance-perms-tenant.test.ts > M4 compliance+controls — unauth calls are rejected (not 200, not 500) > /api/compliance/dashboard → 401/403/404 without auth
+ FAIL  tests/integration/m4-compliance-perms-tenant.test.ts > M4 compliance+controls — unauth calls are rejected (not 200, not 500) > /api/compliance/obligations → 401/403/404 without auth
+ FAIL  tests/integration/m4-compliance-perms-tenant.test.ts > M4 compliance+controls — unauth calls are rejected (not 200, not 500) > /api/compliance/remediations → 401/403/404 without auth
+ FAIL  tests/integration/m4-compliance-perms-tenant.test.ts > M4 compliance+controls — unauth calls are rejected (not 200, not 500) > /api/compliance-ws/overview → 401/403/404 without auth
+ FAIL  tests/integration/m4-compliance-perms-tenant.test.ts > M4 compliance+controls — unauth calls are rejected (not 200, not 500) > /api/controls → 401/403/404 without auth
+ FAIL  tests/integration/m4-compliance-perms-tenant.test.ts > M4 compliance+controls — unauth calls are rejected (not 200, not 500) > /api/frameworks → 401/403/404 without auth
+ FAIL  tests/integration/m4-compliance-perms-tenant.test.ts > M4 compliance+controls — unauth calls are rejected (not 200, not 500) > /api/ucf/controls → 401/403/404 without auth
+ FAIL  tests/integration/m4-compliance-perms-tenant.test.ts > M4 compliance+controls — unauth calls are rejected (not 200, not 500) > /api/framework-mapping → 401/403/404 without auth
+ FAIL  tests/integration/m4-compliance-perms-tenant.test.ts > M4 compliance+controls — unauth calls are rejected (not 200, not 500) > /api/mappings → 401/403/404 without auth
+ FAIL  tests/integration/m4-compliance-perms-tenant.test.ts > M4 compliance+controls — unauth calls are rejected (not 200, not 500) > /api/compliance-assertions → 401/403/404 without auth
+ FAIL  tests/integration/m4-compliance-perms-tenant.test.ts > M4 compliance+controls — unauth calls are rejected (not 200, not 500) > /api/compliance-attestation/campaigns → 401/403/404 without auth
+ FAIL  tests/integration/m4-compliance-perms-tenant.test.ts > M4 compliance+controls — unauth calls are rejected (not 200, not 500) > /api/lifecycle/summary → 401/403/404 without auth
+ FAIL  tests/integration/m4-compliance-perms-tenant.test.ts > M4 compliance+controls — unauth calls are rejected (not 200, not 500) > /api/nca-assessment → 401/403/404 without auth
+ FAIL  tests/integration/m4-compliance-perms-tenant.test.ts > M4 compliance+controls — unauth calls are rejected (not 200, not 500) > /api/rcsa/campaigns → 401/403/404 without auth
+ FAIL  tests/integration/m4-compliance-perms-tenant.test.ts > M4 compliance+controls — unauth calls are rejected (not 200, not 500) > /api/ksa-sector-maturity/models → 401/403/404 without auth
+ FAIL  tests/integration/m4-compliance-perms-tenant.test.ts > M4 compliance+controls — unauth calls are rejected (not 200, not 500) > /api/ksa-regulatory-changes → 401/403/404 without auth
+ FAIL  tests/integration/m4-compliance-perms-tenant.test.ts > M4 compliance+controls — unauth calls are rejected (not 200, not 500) > /api/ksa-cross-framework/summary → 401/403/404 without auth
+ FAIL  tests/integration/m4-compliance-perms-tenant.test.ts > M4 compliance+controls — unauth calls are rejected (not 200, not 500) > /api/assessment-templates → 401/403/404 without auth
+ FAIL  tests/integration/m4-compliance-perms-tenant.test.ts > M4 compliance+controls — wrong-tenant request is rejected > /api/compliance → 403/404 with wrong-tenant header (or 200 for super-admin)
+ FAIL  tests/integration/m4-compliance-perms-tenant.test.ts > M4 compliance+controls — wrong-tenant request is rejected > /api/compliance/dashboard → 403/404 with wrong-tenant header (or 200 for super-admin)
+ FAIL  tests/integration/m4-compliance-perms-tenant.test.ts > M4 compliance+controls — wrong-tenant request is rejected > /api/compliance/obligations → 403/404 with wrong-tenant header (or 200 for super-admin)
+ FAIL  tests/integration/m4-compliance-perms-tenant.test.ts > M4 compliance+controls — wrong-tenant request is rejected > /api/compliance/remediations → 403/404 with wrong-tenant header (or 200 for super-admin)
+ FAIL  tests/integration/m4-compliance-perms-tenant.test.ts > M4 compliance+controls — wrong-tenant request is rejected > /api/compliance-ws/overview → 403/404 with wrong-tenant header (or 200 for super-admin)
+ FAIL  tests/integration/m4-compliance-perms-tenant.test.ts > M4 compliance+controls — wrong-tenant request is rejected > /api/controls → 403/404 with wrong-tenant header (or 200 for super-admin)
+ FAIL  tests/integration/m4-compliance-perms-tenant.test.ts > M4 compliance+controls — wrong-tenant request is rejected > /api/frameworks → 403/404 with wrong-tenant header (or 200 for super-admin)
+ FAIL  tests/integration/m4-compliance-perms-tenant.test.ts > M4 compliance+controls — wrong-tenant request is rejected > /api/ucf/controls → 403/404 with wrong-tenant header (or 200 for super-admin)
+ FAIL  tests/integration/m4-compliance-perms-tenant.test.ts > M4 compliance+controls — wrong-tenant request is rejected > /api/framework-mapping → 403/404 with wrong-tenant header (or 200 for super-admin)
+ FAIL  tests/integration/m4-compliance-perms-tenant.test.ts > M4 compliance+controls — wrong-tenant request is rejected > /api/mappings → 403/404 with wrong-tenant header (or 200 for super-admin)
+ FAIL  tests/integration/m4-compliance-perms-tenant.test.ts > M4 compliance+controls — wrong-tenant request is rejected > /api/compliance-assertions → 403/404 with wrong-tenant header (or 200 for super-admin)
+ FAIL  tests/integration/m4-compliance-perms-tenant.test.ts > M4 compliance+controls — wrong-tenant request is rejected > /api/compliance-attestation/campaigns → 403/404 with wrong-tenant header (or 200 for super-admin)
+ FAIL  tests/integration/m4-compliance-perms-tenant.test.ts > M4 compliance+controls — wrong-tenant request is rejected > /api/lifecycle/summary → 403/404 with wrong-tenant header (or 200 for super-admin)
+ FAIL  tests/integration/m4-compliance-perms-tenant.test.ts > M4 compliance+controls — wrong-tenant request is rejected > /api/nca-assessment → 403/404 with wrong-tenant header (or 200 for super-admin)
+ FAIL  tests/integration/m4-compliance-perms-tenant.test.ts > M4 compliance+controls — wrong-tenant request is rejected > /api/rcsa/campaigns → 403/404 with wrong-tenant header (or 200 for super-admin)
+ FAIL  tests/integration/m4-compliance-perms-tenant.test.ts > M4 compliance+controls — wrong-tenant request is rejected > /api/ksa-sector-maturity/models → 403/404 with wrong-tenant header (or 200 for super-admin)
+ FAIL  tests/integration/m4-compliance-perms-tenant.test.ts > M4 compliance+controls — wrong-tenant request is rejected > /api/ksa-regulatory-changes → 403/404 with wrong-tenant header (or 200 for super-admin)
+ FAIL  tests/integration/m4-compliance-perms-tenant.test.ts > M4 compliance+controls — wrong-tenant request is rejected > /api/ksa-cross-framework/summary → 403/404 with wrong-tenant header (or 200 for super-admin)
+ FAIL  tests/integration/m4-compliance-perms-tenant.test.ts > M4 compliance+controls — wrong-tenant request is rejected > /api/assessment-templates → 403/404 with wrong-tenant header (or 200 for super-admin)
+ FAIL  tests/integration/m4-compliance-perms-tenant.test.ts > M4 compliance+controls — disabled prefixes 404 at gateway > /api/gaps returns 404 with no service reached
+ FAIL  tests/integration/m4-compliance-perms-tenant.test.ts > M4 compliance+controls — disabled prefixes 404 at gateway > /api/exceptions returns 404 with no service reached
+ FAIL  tests/integration/m4-compliance-perms-tenant.test.ts > M4 compliance+controls — disabled prefixes 404 at gateway > /api/playbooks returns 404 with no service reached
+ FAIL  tests/integration/m4-compliance-perms-tenant.test.ts > M4 compliance+controls — dynamic route guard prevents UUID cast 500 > /api/controls/tests does not 500
+ FAIL  tests/integration/m4-compliance-perms-tenant.test.ts > M4 compliance+controls — dynamic route guard prevents UUID cast 500 > /api/controls/monitoring does not 500
+ FAIL  tests/integration/m4-compliance-perms-tenant.test.ts > M4 compliance+controls — dynamic route guard prevents UUID cast 500 > /api/controls/dashboard does not 500
+ FAIL  tests/integration/m4-compliance-perms-tenant.test.ts > M4 compliance+controls — dynamic route guard prevents UUID cast 500 > /api/compliance/dashboard does not 500
+ FAIL  tests/integration/m4-compliance-perms-tenant.test.ts > M4 compliance+controls — dynamic route guard prevents UUID cast 500 > /api/compliance/obligations does not 500
+ FAIL  tests/integration/m5-evidence-reporting-perms-tenant.test.ts > M5 evidence+reporting — unauth calls are rejected > /api/evidence → 401/403/404 without auth
+ FAIL  tests/integration/m5-evidence-reporting-perms-tenant.test.ts > M5 evidence+reporting — unauth calls are rejected > /api/evidence/stats → 401/403/404 without auth
+ FAIL  tests/integration/m5-evidence-reporting-perms-tenant.test.ts > M5 evidence+reporting — unauth calls are rejected > /api/evidence-tasks → 401/403/404 without auth
+ FAIL  tests/integration/m5-evidence-reporting-perms-tenant.test.ts > M5 evidence+reporting — unauth calls are rejected > /api/reports → 401/403/404 without auth
+ FAIL  tests/integration/m5-evidence-reporting-perms-tenant.test.ts > M5 evidence+reporting — unauth calls are rejected > /api/reports/dashboard → 401/403/404 without auth
+ FAIL  tests/integration/m5-evidence-reporting-perms-tenant.test.ts > M5 evidence+reporting — unauth calls are rejected > /api/reports/catalog → 401/403/404 without auth
+ FAIL  tests/integration/m5-evidence-reporting-perms-tenant.test.ts > M5 evidence+reporting — unauth calls are rejected > /api/reports/diagnostics → 401/403/404 without auth
+ FAIL  tests/integration/m5-evidence-reporting-perms-tenant.test.ts > M5 evidence+reporting — unauth calls are rejected > /api/reports/board → 401/403/404 without auth
+ FAIL  tests/integration/m5-evidence-reporting-perms-tenant.test.ts > M5 evidence+reporting — unauth calls are rejected > /api/reports/role-profiles → 401/403/404 without auth
+ FAIL  tests/integration/m5-evidence-reporting-perms-tenant.test.ts > M5 evidence+reporting — unauth calls are rejected > /api/reports/hubs → 401/403/404 without auth
+ FAIL  tests/integration/m5-evidence-reporting-perms-tenant.test.ts > M5 evidence+reporting — unauth calls are rejected > /api/reporting → 401/403/404 without auth
+ FAIL  tests/integration/m5-evidence-reporting-perms-tenant.test.ts > M5 evidence+reporting — unauth calls are rejected > /api/reporting/diagnostics → 401/403/404 without auth
+ FAIL  tests/integration/m5-evidence-reporting-perms-tenant.test.ts > M5 evidence+reporting — wrong-tenant request is rejected > /api/evidence → 403/404 with wrong-tenant header (200 ok for super-admin)
+ FAIL  tests/integration/m5-evidence-reporting-perms-tenant.test.ts > M5 evidence+reporting — wrong-tenant request is rejected > /api/evidence/stats → 403/404 with wrong-tenant header (200 ok for super-admin)
+ FAIL  tests/integration/m5-evidence-reporting-perms-tenant.test.ts > M5 evidence+reporting — wrong-tenant request is rejected > /api/evidence-tasks → 403/404 with wrong-tenant header (200 ok for super-admin)
+ FAIL  tests/integration/m5-evidence-reporting-perms-tenant.test.ts > M5 evidence+reporting — wrong-tenant request is rejected > /api/reports → 403/404 with wrong-tenant header (200 ok for super-admin)
+ FAIL  tests/integration/m5-evidence-reporting-perms-tenant.test.ts > M5 evidence+reporting — wrong-tenant request is rejected > /api/reports/dashboard → 403/404 with wrong-tenant header (200 ok for super-admin)
+ FAIL  tests/integration/m5-evidence-reporting-perms-tenant.test.ts > M5 evidence+reporting — wrong-tenant request is rejected > /api/reports/catalog → 403/404 with wrong-tenant header (200 ok for super-admin)
+ FAIL  tests/integration/m5-evidence-reporting-perms-tenant.test.ts > M5 evidence+reporting — wrong-tenant request is rejected > /api/reports/diagnostics → 403/404 with wrong-tenant header (200 ok for super-admin)
+ FAIL  tests/integration/m5-evidence-reporting-perms-tenant.test.ts > M5 evidence+reporting — wrong-tenant request is rejected > /api/reports/board → 403/404 with wrong-tenant header (200 ok for super-admin)
+ FAIL  tests/integration/m5-evidence-reporting-perms-tenant.test.ts > M5 evidence+reporting — wrong-tenant request is rejected > /api/reports/role-profiles → 403/404 with wrong-tenant header (200 ok for super-admin)
+ FAIL  tests/integration/m5-evidence-reporting-perms-tenant.test.ts > M5 evidence+reporting — wrong-tenant request is rejected > /api/reports/hubs → 403/404 with wrong-tenant header (200 ok for super-admin)
+ FAIL  tests/integration/m5-evidence-reporting-perms-tenant.test.ts > M5 evidence+reporting — wrong-tenant request is rejected > /api/reporting → 403/404 with wrong-tenant header (200 ok for super-admin)
+ FAIL  tests/integration/m5-evidence-reporting-perms-tenant.test.ts > M5 evidence+reporting — wrong-tenant request is rejected > /api/reporting/diagnostics → 403/404 with wrong-tenant header (200 ok for super-admin)
+ FAIL  tests/integration/m5-evidence-reporting-perms-tenant.test.ts > M5 evidence+reporting — dynamic /:id guard prevents UUID cast 500 > /api/evidence/requests does not 500
+ FAIL  tests/integration/m5-evidence-reporting-perms-tenant.test.ts > M5 evidence+reporting — dynamic /:id guard prevents UUID cast 500 > /api/evidence/stats does not 500
+ FAIL  tests/integration/m5-evidence-reporting-perms-tenant.test.ts > M5 evidence+reporting — dynamic /:id guard prevents UUID cast 500 > /api/evidence/abc-not-uuid does not 500
+ FAIL  tests/integration/m5-evidence-reporting-perms-tenant.test.ts > M5 evidence+reporting — dynamic /:id guard prevents UUID cast 500 > /api/evidence/0/score does not 500
+ FAIL  tests/integration/m5-risk-peer-review-gateway.test.ts > M5 risk peer review — gateway rejects unauthenticated calls > /api/risk-peer-review/ → not 200 and not 500 without auth
+ FAIL  tests/integration/m5-risk-peer-review-gateway.test.ts > M5 risk peer review — gateway rejects unauthenticated calls > /api/risk-incident/risk/risk-peer-review/ → not 200 and not 500 without auth (nested)
+ FAIL  tests/integration/m6-evidence-reports-gateway.test.ts > M6 evidence/reports — unauth calls are rejected (not 200, not 500) > /api/evidence/ → 401/403/404 without auth
+ FAIL  tests/integration/m6-evidence-reports-gateway.test.ts > M6 evidence/reports — unauth calls are rejected (not 200, not 500) > /api/reports/ → 401/403/404 without auth
+ FAIL  tests/integration/m6-evidence-reports-gateway.test.ts > M6 evidence/reports — unauth calls are rejected (not 200, not 500) > /api/reporting/ → 401/403/404 without auth
+ FAIL  tests/integration/m6-evidence-reports-gateway.test.ts > M6 evidence/reports — unauth calls are rejected (not 200, not 500) > /api/finding/ → 401/403/404 without auth
+ FAIL  tests/integration/m6-evidence-reports-gateway.test.ts > M6 evidence/reports — unauth calls are rejected (not 200, not 500) > /api/export/ → 401/403/404 without auth
+ FAIL  tests/integration/onboarding-golden-path.test.ts > Phase 5 — onboarding golden-path route contract > Workspace entitlements via gateway (Phase 5 fix — /api/workspace prefix) > GET /api/workspace/entitlements via gateway returns 200 with activeModules
+ FAIL  tests/integration/platform-services.test.ts > Platform Service Health Checks > gateway is healthy
+ FAIL  tests/integration/platform-services.test.ts > Platform Service Health Checks > all services return correlation-id header
+ FAIL  tests/integration/platform-services.test.ts > Gateway — API Routing > routes /api/auth through gateway
+ FAIL  tests/integration/register-golden-path.test.ts > register golden path (Phase 12A regression guard) > GET /api/public/captcha/challenge returns a fresh challenge
+ FAIL  tests/integration/register-golden-path.test.ts > register golden path (Phase 12A regression guard) > empty POST returns 400 FORM_TOO_FAST (anti-bot timing guard)
+ FAIL  tests/integration/register-golden-path.test.ts > register golden path (Phase 12A regression guard) > POST with timing header + empty body returns 400 VALIDATION_ERROR
+ FAIL  tests/integration/register-golden-path.test.ts > register golden path (Phase 12A regression guard) > POST with valid shape + wrong captcha returns 400 CAPTCHA_FAILED
+ FAIL  tests/integration/register-golden-path.test.ts > register golden path (Phase 12A regression guard) > happy path with correct captcha returns 201 with a token
+ FAIL  tests/integration/register-golden-path.test.ts > register golden path (Phase 12A regression guard) > /api/public/onboarding/new-user/register never returns 504 on a valid-shape request
+ FAIL  tests/integration/service-boot-health.test.ts > Service Boot Health — All Services > gateway > returns /metrics in Prometheus format
+ FAIL  tests/integration/wave1-backend-gating.test.ts > Phase 6 — backend Wave-1 gating (gateway-enforced) > A. Disabled module prefixes return 404 > /api/risk → 404 at gateway (super-admin cannot bypass)
+ FAIL  tests/integration/wave1-backend-gating.test.ts > Phase 6 — backend Wave-1 gating (gateway-enforced) > A. Disabled module prefixes return 404 > /api/risk/anything → 404 at gateway (super-admin cannot bypass)
+ FAIL  tests/integration/wave1-backend-gating.test.ts > Phase 6 — backend Wave-1 gating (gateway-enforced) > A. Disabled module prefixes return 404 > /api/vendor → 404 at gateway (super-admin cannot bypass)
+ FAIL  tests/integration/wave1-backend-gating.test.ts > Phase 6 — backend Wave-1 gating (gateway-enforced) > A. Disabled module prefixes return 404 > /api/vendors → 404 at gateway (super-admin cannot bypass)
+ FAIL  tests/integration/wave1-backend-gating.test.ts > Phase 6 — backend Wave-1 gating (gateway-enforced) > A. Disabled module prefixes return 404 > /api/privacy → 404 at gateway (super-admin cannot bypass)
+ FAIL  tests/integration/wave1-backend-gating.test.ts > Phase 6 — backend Wave-1 gating (gateway-enforced) > A. Disabled module prefixes return 404 > /api/dora → 404 at gateway (super-admin cannot bypass)
+ FAIL  tests/integration/wave1-backend-gating.test.ts > Phase 6 — backend Wave-1 gating (gateway-enforced) > A. Disabled module prefixes return 404 > /api/records → 404 at gateway (super-admin cannot bypass)
+ FAIL  tests/integration/wave1-backend-gating.test.ts > Phase 6 — backend Wave-1 gating (gateway-enforced) > A. Disabled module prefixes return 404 > /api/ai-governance → 404 at gateway (super-admin cannot bypass)
+ FAIL  tests/integration/wave1-backend-gating.test.ts > Phase 6 — backend Wave-1 gating (gateway-enforced) > A. Disabled module prefixes return 404 > /api/bcp → 404 at gateway (super-admin cannot bypass)
+ FAIL  tests/integration/wave1-backend-gating.test.ts > Phase 6 — backend Wave-1 gating (gateway-enforced) > A. Disabled module prefixes return 404 > /api/asset → 404 at gateway (super-admin cannot bypass)
+ FAIL  tests/integration/wave1-backend-gating.test.ts > Phase 6 — backend Wave-1 gating (gateway-enforced) > A. Disabled module prefixes return 404 > /api/assets → 404 at gateway (super-admin cannot bypass)
+ FAIL  tests/integration/wave1-backend-gating.test.ts > Phase 6 — backend Wave-1 gating (gateway-enforced) > A. Disabled module prefixes return 404 > /api/training → 404 at gateway (super-admin cannot bypass)
+ FAIL  tests/integration/wave1-backend-gating.test.ts > Phase 6 — backend Wave-1 gating (gateway-enforced) > A. Disabled module prefixes return 404 > /api/qiyas → 404 at gateway (super-admin cannot bypass)
+ FAIL  tests/integration/wave1-backend-gating.test.ts > Phase 6 — backend Wave-1 gating (gateway-enforced) > A. Disabled module prefixes return 404 > /api/portals → 404 at gateway (super-admin cannot bypass)
+ FAIL  tests/integration/wave1-backend-gating.test.ts > Phase 6 — backend Wave-1 gating (gateway-enforced) > A. Disabled module prefixes return 404 > /api/incident → 404 at gateway (super-admin cannot bypass)
+ FAIL  tests/integration/wave1-backend-gating.test.ts > Phase 6 — backend Wave-1 gating (gateway-enforced) > A. Disabled module prefixes return 404 > /api/incidents → 404 at gateway (super-admin cannot bypass)
+ FAIL  tests/integration/wave1-backend-gating.test.ts > Phase 6 — backend Wave-1 gating (gateway-enforced) > A. Disabled module prefixes return 404 > /api/exception → 404 at gateway (super-admin cannot bypass)
+ FAIL  tests/integration/wave1-backend-gating.test.ts > Phase 6 — backend Wave-1 gating (gateway-enforced) > A. Disabled module prefixes return 404 > /api/remediation → 404 at gateway (super-admin cannot bypass)
+ FAIL  tests/integration/wave1-backend-gating.test.ts > Phase 6 — backend Wave-1 gating (gateway-enforced) > A. Disabled module prefixes return 404 > /api/issues → 404 at gateway (super-admin cannot bypass)
+ FAIL  tests/integration/wave1-backend-gating.test.ts > Phase 6 — backend Wave-1 gating (gateway-enforced) > A. Disabled module prefixes return 404 > /api/journey → 404 at gateway (super-admin cannot bypass)
+ FAIL  tests/integration/wave1-backend-gating.test.ts > Phase 6 — backend Wave-1 gating (gateway-enforced) > A. Disabled module prefixes return 404 > /api/local-knowledge → 404 at gateway (super-admin cannot bypass)
+ FAIL  tests/integration/wave1-backend-gating.test.ts > Phase 6 — backend Wave-1 gating (gateway-enforced) > B. AI surface is gated before billing (post-Phase-12C enablement) > GET /api/ai unauth → 401/403/404 never 200/500
+ FAIL  tests/integration/wave1-backend-gating.test.ts > Phase 6 — backend Wave-1 gating (gateway-enforced) > B. AI surface is gated before billing (post-Phase-12C enablement) > GET /api/ai-engine unauth → 401/403/404 never 200/500
+ FAIL  tests/integration/wave1-backend-gating.test.ts > Phase 6 — backend Wave-1 gating (gateway-enforced) > B. AI surface is gated before billing (post-Phase-12C enablement) > GET /api/nudges unauth → 401/403/404 never 200/500
+ FAIL  tests/integration/wave1-backend-gating.test.ts > Phase 6 — backend Wave-1 gating (gateway-enforced) > B. AI surface is gated before billing (post-Phase-12C enablement) > GET /api/mcp unauth → 401/403/404 never 200/500
+ FAIL  tests/integration/wave1-backend-gating.test.ts > Phase 6 — backend Wave-1 gating (gateway-enforced) > B. AI surface is gated before billing (post-Phase-12C enablement) > POST /api/copilot/chat → never 200 / never 500
+ FAIL  tests/integration/wave1-backend-gating.test.ts > Phase 6 — backend Wave-1 gating (gateway-enforced) > C. Wave-1 allowed prefixes still route > /api/workspace/entitlements reaches downstream (not safety-blocked)
+ FAIL  tests/integration/wave1-backend-gating.test.ts > Phase 6 — backend Wave-1 gating (gateway-enforced) > C. Wave-1 allowed prefixes still route > /api/onboarding/new-user/status reaches downstream (not safety-blocked)
+ FAIL  tests/integration/wave1-backend-gating.test.ts > Phase 6 — backend Wave-1 gating (gateway-enforced) > C. Wave-1 allowed prefixes still route > /api/compliance reaches downstream (not safety-blocked)
+ FAIL  tests/integration/wave1-backend-gating.test.ts > Phase 6 — backend Wave-1 gating (gateway-enforced) > C. Wave-1 allowed prefixes still route > /api/compliance/frameworks reaches downstream (not safety-blocked)
+ FAIL  tests/integration/wave1-backend-gating.test.ts > Phase 6 — backend Wave-1 gating (gateway-enforced) > C. Wave-1 allowed prefixes still route > /api/controls reaches downstream (not safety-blocked)
+ FAIL  tests/integration/wave1-backend-gating.test.ts > Phase 6 — backend Wave-1 gating (gateway-enforced) > C. Wave-1 allowed prefixes still route > /api/evidence reaches downstream (not safety-blocked)
+ FAIL  tests/integration/wave1-backend-gating.test.ts > Phase 6 — backend Wave-1 gating (gateway-enforced) > C. Wave-1 allowed prefixes still route > /api/audit reaches downstream (not safety-blocked)
+ FAIL  tests/integration/wave1-backend-gating.test.ts > Phase 6 — backend Wave-1 gating (gateway-enforced) > C. Wave-1 allowed prefixes still route > /api/reports reaches downstream (not safety-blocked)
+ FAIL  tests/integration/wave1-backend-gating.test.ts > Phase 6 — backend Wave-1 gating (gateway-enforced) > C. Wave-1 allowed prefixes still route > /api/reporting reaches downstream (not safety-blocked)
+ FAIL  tests/integration/wave1-backend-gating.test.ts > Phase 6 — backend Wave-1 gating (gateway-enforced) > C. Wave-1 allowed prefixes still route > /api/users reaches downstream (not safety-blocked)
+ FAIL  tests/integration/wave1-backend-gating.test.ts > Phase 6 — backend Wave-1 gating (gateway-enforced) > C. Wave-1 allowed prefixes still route > /api/tenants reaches downstream (not safety-blocked)
+ FAIL  tests/integration/wave1-backend-gating.test.ts > Phase 6 — backend Wave-1 gating (gateway-enforced) > C. Wave-1 allowed prefixes still route > /api/health reaches downstream (not safety-blocked)
+ FAIL  tests/integration/wave1-backend-gating.test.ts > Phase 6 — backend Wave-1 gating (gateway-enforced) > D. Defence-in-depth: disabled path with no auth also returns 404 > /api/risk without auth returns 404 (safety fires before auth)
+ FAIL  tests/integration/wave1-dashboard.test.ts > Phase 9 — Wave-1 dashboard backend-path proofs > A. every API the Wave-1 workspace-home page calls resolves to 200
+ FAIL  tests/integration/wave1-dashboard.test.ts > Phase 9 — Wave-1 dashboard backend-path proofs > B. every endpoint the Phase-9 cleanup removed is 404 at the gateway
+ FAIL  tests/integration/wave1-dashboard.test.ts > Phase 9 — Wave-1 dashboard backend-path proofs > F. workspace entitlements carry the platform primitives the dashboard depends on
+ FAIL  tests/integration/wave1-dashboard.test.ts > Phase 9 — Wave-1 dashboard backend-path proofs > G. dashboard-surface disabled-module probes are 404 at the gateway
+ FAIL  tests/integration/wave1-module-allowlist.test.ts > Phase 6 — Wave-1 module allowlist is the source of truth > platform-admin tenant entitlements expose only Wave-1 codes via gateway
+ FAIL  tests/service-boot/service-boot-tests.test.ts > Service Boot Health — All Services > gateway > returns /metrics in Prometheus format
+ FAIL  tests/service-boot/service-boot-tests.test.ts > Service Boot Health — All Services > gateway > sets security headers (helmet)
+TypeError: fetch failed
+Caused by: Error: connect ECONNREFUSED 127.0.0.1:4000
+Serialized Error: { errno: -111, code: 'ECONNREFUSED', syscall: 'connect', address: '127.0.0.1', port: 4000 }
+ FAIL  tests/e2e/dynamic-runtime.contract.test.ts > Dynamic Runtime Platform End-to-End Tests > Pillar 1 & 4: Intent-To-Query NLP Bridge > should successfully parse a natural language string into a structured filter payload
+AssertionError: expected '' to be truthy
+ FAIL  tests/e2e/dynamic-runtime.contract.test.ts > Dynamic Runtime Platform End-to-End Tests > Pillar 1 & 4: Intent-To-Query NLP Bridge > should fall back gracefully to keyword search if query is unrecognized or malformed
+AssertionError: expected 502 to be 200 // Object.is equality
+ FAIL  tests/e2e/dynamic-runtime.contract.test.ts > Dynamic Runtime Platform End-to-End Tests > Pillar 3: Semantic Realtime Notifications (SSE) > should successfully request an SSE single-use token
+Error: SSE token route failed: 502 {"error":"Platform gateway unavailable","path":"/api/events/sse-token"}
+ FAIL  tests/e2e/dynamic-runtime.contract.test.ts > Dynamic Runtime Platform End-to-End Tests > Pillar 3: Semantic Realtime Notifications (SSE) > should establish an SSE stream and receive the connection payload
+Error: No SSE token
+ FAIL  tests/integration/service-boot-health.test.ts > Service Boot Health — All Services > gateway > returns /health 200 with correct schema
+AssertionError: expected +0 to be 200 // Object.is equality
+ FAIL  tests/integration/service-boot-health.test.ts > Service Boot Health — All Services > gateway > returns /ready 200
+AssertionError: expected +0 to be 200 // Object.is equality
+ FAIL  tests/integration/service-boot-health.test.ts > Service Boot Health — All Services > gateway > sets security headers (helmet)
+AssertionError: expected undefined to be 'nosniff' // Object.is equality
+ FAIL  tests/integration/service-boot-health.test.ts > Service Boot Health — All Services > product-shell > returns /health 200 with correct schema
+AssertionError: expected 503 to be 200 // Object.is equality
+ FAIL  tests/integration/service-boot-health.test.ts > PM2 Process Stability > all services are "online" in PM2
+AssertionError: Services not online: expected [ 'gateway', 'gateway' ] to have a length of +0 but got 2
+ FAIL  tests/integration/service-boot-health.test.ts > PM2 Process Stability > no service has excessive restarts (> 5)
+AssertionError: Services with >5 restarts: expected [ 'gateway(54)', …(2) ] to have a length of +0 but got 3
+ FAIL  tests/integration/service-boot-health.test.ts > Service Stability — 10 minute soak > all services remain healthy after 10 minutes
+AssertionError: Services unhealthy after 10min soak: gateway, product-shell: expected [ 'gateway', 'product-shell' ] to have a length of +0 but got 2
+ FAIL  tests/integration/target-bootstrap.contract.test.ts > target bootstrap contract > keeps generated inventory aligned with the extracted target surfaces
+AssertionError: expected [] to include 'governance'
+ FAIL  tests/service-boot/memory-leak-test.test.ts > Memory Leak Tests > should maintain stable memory usage over 1 hour
+Error: Test timed out in 5000ms.
+ FAIL  tests/service-boot/memory-leak-test.test.ts > Memory Leak Tests > should handle memory pressure gracefully
+AssertionError: expected 'ok' to be 'healthy' // Object.is equality
+ FAIL  tests/service-boot/memory-leak-test.test.ts > Memory Leak Tests > should recover memory after load
+Error: Test timed out in 5000ms.
+ FAIL  tests/service-boot/memory-leak-test.test.ts > Memory Leak Tests > should not leak memory during repeated operations
+Error: Test timed out in 5000ms.
+ FAIL  tests/service-boot/memory-leak-test.test.ts > Graceful Shutdown Tests > should shutdown gracefully on SIGTERM
+Error: Test timed out in 5000ms.
+ FAIL  tests/service-boot/memory-leak-test.test.ts > Graceful Shutdown Tests > should complete in-flight requests during shutdown
+AssertionError: expected 0 to be greater than 4000
+ FAIL  tests/service-boot/memory-leak-test.test.ts > Graceful Shutdown Tests > should handle multiple shutdown signals
+Error: Test timed out in 5000ms.
+ FAIL  tests/service-boot/memory-leak-test.test.ts > Graceful Shutdown Tests > should cleanup resources on shutdown
+Error: Test timed out in 5000ms.
+ FAIL  tests/service-boot/service-boot-tests.test.ts > Service Boot Health — All Services > gateway > returns /health 200 with correct schema
+AssertionError: expected +0 to be 200 // Object.is equality
+ FAIL  tests/service-boot/service-boot-tests.test.ts > Service Boot Health — All Services > gateway > returns /ready 200
+AssertionError: expected +0 to be 200 // Object.is equality
+ FAIL  tests/service-boot/service-boot-tests.test.ts > Service Boot Health — All Services > product-shell > returns /health 200 with correct schema
+AssertionError: expected 503 to be 200 // Object.is equality
+ FAIL  tests/service-boot/service-boot-tests.test.ts > Boot Time Benchmark — each service < 3 seconds > user-service boots and responds to /health in < 3 seconds
+AssertionError: expected 503 to be 200 // Object.is equality
+ FAIL  tests/service-boot/service-boot-tests.test.ts > Boot Time Benchmark — each service < 3 seconds > notification-service boots and responds to /health in < 3 seconds
+Error: notification-service exited with code 1
+ FAIL  tests/service-boot/service-boot-tests.test.ts > PM2 Cluster Mode — Gateway > gateway runs 2 instances in cluster mode
+AssertionError: Gateway instance pid=0 should be online: expected 'errored' to be 'online' // Object.is equality
+ FAIL  tests/service-boot/service-boot-tests.test.ts > PM2 Cluster Mode — Gateway > zero-downtime reload: no failed health checks during pm2 reload gateway
+AssertionError: 28/28 health checks failed during reload: expected 28 to be +0 // Object.is equality

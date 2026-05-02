@@ -1,0 +1,335 @@
+import { createServiceServer, type ModuleRegistration } from '@dos/service-bootstrap';
+import { loadServiceConfig } from '@dos/runtime-config';
+import { createEventBackbone } from '@dos/event-backbone';
+import { logger } from '@dos/platform-core/observability';
+import { setEventBus } from '@dos/module-sdk';
+import complianceRouter from './routes/compliance.routes';
+import controlRouter from './routes/control.routes';
+import assessmentTemplatesRouter from './routes/assessment-templates.routes';
+import documentsRouter from './routes/documents.routes';
+import { 
+  routes, 
+  complianceWorkspaceRouter,
+  controlHomeRouter,
+  controlWorkQueueRouter,
+  controlDetailRouter,
+  controlCertificationRouter,
+  controlDeficiencyRouter,
+  controlReportsRouter,
+  controlWorkflowRouter,
+  complianceControlsFindingsRouter,
+  // Wave-2 M4: controls sub-routers for /api/controls/* frontend surface
+  controlAdminRouter,
+  controlMappingRouter,
+  controlMonitoringAdminRouter,
+  controlDiagnosticsRouter,
+  controlsAdminRouter,
+} from './routes/index';
+import { loadModuleRoute } from '@dos/service-bootstrap';
+
+// Wave-1 M4 — top-level Shahin FE endpoints
+// (`/api/frameworks`, `/api/ucf`, `/api/mappings`,
+// `/api/framework-mapping`) are gateway-routed to this service but
+// the default aggregator mounts them under `/api/compliance-controls/
+// compliance/frameworks|ucf|framework-mapping`. Loading the real
+// handlers here and mounting them at the Shahin-expected top-level
+// paths closes the 404 gap without a broader redesign. The compiled
+// module layout is `modules/compliance/dist/compliance/...` —
+// modules/compliance/tsconfig.json strips `source/backend` via
+// `outDir = dist` + `rootDir = source/backend`. Running
+// `pnpm run build:modules` is a prerequisite (part of the
+// release-gate build chain — see package.json build:all).
+// `loadModuleRoute` returns a graceful empty Router if the compiled
+// output is ever absent, so this is safe across environments.
+//
+// Path note: `loadModuleRoute` does `require(modulePath)` from inside
+// the loader file (packages/dos-service-bootstrap/dist/module-loader.js),
+// so the relative path resolves from THAT directory — three levels
+// up from `packages/dos-service-bootstrap/dist/` is the repo root.
+// Hence `../../../modules/...` (NOT `../../../../`).
+const frameworksTopLevelRouter = loadModuleRoute(
+  'compliance/misc/frameworks/frameworks',
+  '../../../modules/compliance/dist/backend/compliance/routes/misc/frameworks/frameworks.routes',
+);
+const ucfTopLevelRouter = loadModuleRoute(
+  'compliance/misc/frameworks/ucf',
+  '../../../modules/compliance/dist/backend/compliance/routes/misc/frameworks/ucf.routes',
+);
+const frameworkMappingTopLevelRouter = loadModuleRoute(
+  'compliance/misc/frameworks/framework-mapping',
+  '../../../modules/compliance/dist/backend/compliance/routes/misc/frameworks/framework-mapping.routes',
+);
+
+// Phase 10A aggregator-gap closure: Shahin FE calls these as top-level
+// gateway-routed prefixes (see docs/PHASE-10-ZENCODER-AUDIT.md §7.5). The
+// aggregator mounts them under /api/compliance-controls/... which is not
+// registered in the gateway, so without these top-level mounts every
+// FE request to them 404s. Each router below is loaded directly from the
+// compiled module dist; loadModuleRoute falls back to an empty Router if
+// the target is missing.
+const moduleComplianceRouter = loadModuleRoute(
+  'compliance/compliance/compliance',
+  '../../../modules/compliance/dist/backend/compliance/routes/compliance/compliance.routes',
+);
+const complianceAssertionsRouter = loadModuleRoute(
+  'compliance/compliance/compliance-assertions',
+  '../../../modules/compliance/dist/backend/compliance/routes/compliance/compliance-assertions.routes',
+);
+const complianceAttestationRouter = loadModuleRoute(
+  'compliance/compliance/compliance-attestation',
+  '../../../modules/compliance/dist/backend/compliance/routes/compliance/compliance-attestation.routes',
+);
+const controlLifecycleRouter = loadModuleRoute(
+  'compliance/control-lifecycle',
+  '../../../modules/compliance/dist/backend/compliance/routes/control-lifecycle.routes',
+);
+const ncaAssessmentRouter = loadModuleRoute(
+  'compliance/misc/assessment/nca-assessment',
+  '../../../modules/compliance/dist/backend/compliance/routes/misc/assessment/nca-assessment.routes',
+);
+const ncaExportRouter = loadModuleRoute(
+  'compliance/misc/assessment/nca-export',
+  '../../../modules/compliance/dist/backend/compliance/routes/misc/assessment/nca-export.routes',
+);
+const rcsaRouter = loadModuleRoute(
+  'compliance/misc/assessment/rcsa',
+  '../../../modules/compliance/dist/backend/compliance/routes/misc/assessment/rcsa.routes',
+);
+const samaAssessmentRouter = loadModuleRoute(
+  'compliance/misc/assessment/sama-assessment',
+  '../../../modules/compliance/dist/backend/compliance/routes/misc/assessment/sama-assessment.routes',
+);
+const ksaSectorMaturityRouter = loadModuleRoute(
+  'compliance/ksa/ksa-sector-maturity',
+  '../../../modules/compliance/dist/backend/compliance/routes/ksa/ksa-sector-maturity.routes',
+);
+const ksaRegulatoryChangesRouter = loadModuleRoute(
+  'compliance/ksa/ksa-regulatory-changes',
+  '../../../modules/compliance/dist/backend/compliance/routes/ksa/ksa-regulatory-changes.routes',
+);
+const ksaRegulatoryReportsRouter = loadModuleRoute(
+  'compliance/ksa/ksa-regulatory-reports',
+  '../../../modules/compliance/dist/backend/compliance/routes/ksa/ksa-regulatory-reports.routes',
+);
+const ksaCrossFrameworkMappingRouter = loadModuleRoute(
+  'compliance/ksa/ksa-cross-framework-mapping',
+  '../../../modules/compliance/dist/backend/compliance/routes/ksa/ksa-cross-framework-mapping.routes',
+);
+const complianceObligationsRouter = loadModuleRoute(
+  'compliance/compliance-obligations',
+  '../../../modules/compliance/dist/backend/compliance/routes/compliance-obligations.routes',
+);
+const complianceGapsRouter = loadModuleRoute(
+  'compliance/compliance/compliance-gaps',
+  '../../../modules/compliance/dist/backend/compliance/routes/compliance/compliance-gaps.routes',
+);
+// /api/controls/:id/process-cycle — the module router declares mergeParams
+// and reads req.params.id, so we mount it under a parameterised prefix so
+// the `:id` captured at the service boundary flows through to the router.
+const controlProcessCycleRouter = loadModuleRoute(
+  'compliance/misc/controls/control-process-cycle',
+  '../../../modules/compliance/dist/backend/compliance/routes/misc/controls/control-process-cycle.routes',
+);
+// /api/exceptions — exception module router; see modules/exception.
+// The module is M4-adjacent (not in M4-compliance scope per the aggregator
+// comment) but the FE surfaces the exception page at /api/exceptions*, so
+// it is mounted directly at the service boundary here. Gateway registry
+// routes /api/exceptions to compliance-controls-service.
+const exceptionRouter = loadModuleRoute(
+  'exception/exception',
+  '../../../modules/exception/dist/backend/exception/routes/exception.routes',
+);
+// Phase-12E wire-closure: top-level /api/attestation surface consumed by
+// Shahin features/attestation/services/attestation.service.ts. Handlers
+// in modules/attestation/dist/attestation/routes/attestation.routes
+// expose /campaigns, /records, /diagnostics. loadModuleRoute falls back to
+// an empty Router if the compiled dist is absent.
+// modules/attestation compiles with rootDir=source/backend, so the emitted
+// path is dist/attestation/routes/... (no intermediate 'backend/' segment).
+const attestationRouter = loadModuleRoute(
+  'attestation/attestation',
+  '../../../modules/attestation/dist/attestation/routes/attestation.routes',
+);
+// /api/local-knowledge — gateway registry routes /api/local-knowledge to
+// compliance-controls-service. Backed by modules/local-knowledge.
+const localKnowledgeRouter = loadModuleRoute(
+  'local-knowledge/local-knowledge',
+  '../../../modules/local-knowledge/dist/backend/local-knowledge/routes/local-knowledge.routes',
+);
+// /api/documents/:id/elements — regulatory document clause tree. Backed
+// by tenant.regulatory_clauses (see modules/compliance regulatory-extraction
+// service). Implemented as a service-level route file; see
+// ./routes/documents.routes imported at the top of this file.
+import { setServiceBus } from './events/publisher';
+import { registerConsumers, registerModuleConsumers } from './events/consumer';
+
+// ── Wave 2D: Module Lifecycle Hooks ──────────────────────────────────────
+
+async function loadModuleRegistrations(moduleCode: string): Promise<ModuleRegistration[]> {
+  const registrations: ModuleRegistration[] = [];
+  try {
+    const modulePath = `../../../modules/${moduleCode}/source/backend/${moduleCode}/${moduleCode}.module`;
+    const mod = require(modulePath);
+    if (mod && typeof mod.register === 'function') {
+      registrations.push({ moduleCode, register: mod.register });
+    }
+  } catch {
+    // Module not available — service works without it
+  }
+  return registrations;
+}
+
+async function invokeModuleLifecycleHooks(serviceCode: string, moduleCode: string): Promise<void> {
+  try {
+    const modulePath = `../../../modules/${moduleCode}/source/backend/${moduleCode}/${moduleCode}.module`;
+    const mod = require(modulePath);
+    if (mod?.onBoot && typeof mod.onBoot === 'function') {
+      await mod.onBoot();
+      console.log(`[${serviceCode}] Module ${moduleCode} onBoot completed`);
+    }
+    if (mod?.onReady && typeof mod.onReady === 'function') {
+      await mod.onReady();
+      console.log(`[${serviceCode}] Module ${moduleCode} onReady completed`);
+    }
+  } catch (err) {
+    console.warn(`[${serviceCode}] Module lifecycle hooks for ${moduleCode} failed (non-fatal):`, err);
+  }
+
+  try {
+    const manifestPath = `../../../modules/${moduleCode}/source/backend/${moduleCode}/manifest/${moduleCode}.manifest`;
+    const manifest = require(manifestPath);
+    if (manifest?.lifecycleParticipation) {
+      console.log(`[${serviceCode}] Module ${moduleCode} lifecycle participation confirmed`);
+    }
+  } catch {
+    // Manifest not available — non-fatal
+  }
+}
+
+const SERVICE_CODE = 'compliance-controls-service';
+
+async function main() {
+  const config = loadServiceConfig(SERVICE_CODE);
+
+  const eventBus = createEventBackbone({
+    redisUrl: config.redis.url,
+    serviceCode: SERVICE_CODE,
+    logger,
+  });
+  setEventBus(eventBus as any);
+  setServiceBus(eventBus);
+
+  registerConsumers(eventBus);
+  // Wave 2C: register module-level event subscribers
+  registerModuleConsumers(eventBus);
+  eventBus.startConsuming().catch((err: Error) => {
+    console.error(`[${SERVICE_CODE}] Consumer error:`, err);
+  });
+
+  const { start } = await createServiceServer({
+    serviceCode: SERVICE_CODE,
+    port: config.port,
+    routes: [
+      { path: '/api/compliance', router: complianceRouter },
+      // Module-level compliance.routes handles /overview, /obligations,
+      // /remediations, /gap-analysis, /controls/:id/map etc. — mounted
+      // AFTER the service-owned complianceRouter so unmatched paths
+      // (list, :id, stats, bulk) fall through to the module router.
+      { path: '/api/compliance', router: moduleComplianceRouter },
+      { path: '/api/controls', router: controlRouter },
+      { path: '/api/control', router: controlRouter },
+      // ── Wave-2 M4: controls module sub-routers ──────────────────────
+      // The Shahin FE calls /api/controls/home, /api/controls/certifications,
+      // /api/controls/deficiencies, /api/controls/monitoring, etc.
+      // These module routers define their handlers at '/' (root) so the
+      // mount path IS the full path prefix.
+      { path: '/api/controls/home', router: controlHomeRouter },
+      { path: '/api/controls/work-queue', router: controlWorkQueueRouter },
+      { path: '/api/controls/certifications', router: controlCertificationRouter },
+      { path: '/api/controls/deficiencies', router: controlDeficiencyRouter },
+      { path: '/api/controls/reports', router: controlReportsRouter },
+      { path: '/api/controls/workflow', router: controlWorkflowRouter },
+      { path: '/api/controls/admin', router: controlAdminRouter },
+      // control-mapping defines /coverage, /gaps, /duplicates under mount,
+      // PLUS /:controlId/link-risk etc. that the FE calls at /api/controls/:id/link-*
+      { path: '/api/controls/mapping', router: controlMappingRouter },
+      { path: '/api/controls', router: controlMappingRouter },
+      { path: '/api/controls/monitoring', router: controlMonitoringAdminRouter },
+      { path: '/api/controls/diagnostics', router: controlDiagnosticsRouter },
+      // controlDetailRouter reads req.params.id and defines GET / —
+      // mount under /:id/detail so path captures the control UUID.
+      { path: '/api/controls/:id/detail', router: controlDetailRouter },
+      { path: '/api/compliance-controls', router: routes },
+      { path: '/api/compliance-ws', router: complianceWorkspaceRouter },
+      // Wave-1 M4 top-level Shahin FE surface:
+      { path: '/api/frameworks', router: frameworksTopLevelRouter },
+      { path: '/api/ucf', router: ucfTopLevelRouter },
+      { path: '/api/mappings', router: frameworkMappingTopLevelRouter },
+      { path: '/api/framework-mapping', router: frameworkMappingTopLevelRouter },
+      // Phase 10A audit §7.5 closures — FE prefixes that previously 404'd:
+      { path: '/api/compliance-assertions', router: complianceAssertionsRouter },
+      { path: '/api/compliance-attestation', router: complianceAttestationRouter },
+      { path: '/api/lifecycle', router: controlLifecycleRouter },
+      { path: '/api/nca-assessment', router: ncaAssessmentRouter },
+      { path: '/api/nca-export', router: ncaExportRouter },
+      { path: '/api/rcsa', router: rcsaRouter },
+      { path: '/api/sama-assessment', router: samaAssessmentRouter },
+      { path: '/api/ksa-sector-maturity', router: ksaSectorMaturityRouter },
+      { path: '/api/ksa-regulatory-changes', router: ksaRegulatoryChangesRouter },
+      { path: '/api/ksa-regulatory-reports', router: ksaRegulatoryReportsRouter },
+      { path: '/api/ksa-cross-framework', router: ksaCrossFrameworkMappingRouter },
+      // Step-7 (compliance vertical) — assessment-templates surface,
+      // backed by tenant.assessment_templates / tenant.assessments /
+      // tenant.assessment_responses with real ai_guidance jsonb data.
+      { path: '/api/assessment-templates', router: assessmentTemplatesRouter },
+      // /api/controls/:id/process-cycle — parameterised mount so the
+      // child router (which uses mergeParams + req.params.id) can resolve
+      // the control id captured at the service boundary.
+      { path: '/api/controls/:id/process-cycle', router: controlProcessCycleRouter },
+      // /api/exceptions — exception module CRUD + workflows (approve,
+      // reject, renew, revoke, compensating-controls, risk-links,
+      // expiry-monitor, etc.). Backed by modules/exception.
+      { path: '/api/exceptions', router: exceptionRouter },
+      // Phase-12E: /api/attestation — top-level attestation surface
+      // (campaigns, records, diagnostics). Gateway registry routes
+      // /api/attestation → compliance-controls-service.
+      { path: '/api/attestation', router: attestationRouter },
+      // /api/local-knowledge — local knowledge module router (documents,
+      // chunks, embeddings, sources). Routed via gateway registry.
+      { path: '/api/local-knowledge', router: localKnowledgeRouter },
+      // /api/documents/:id/elements — regulatory document clause tree
+      // rendered from tenant.regulatory_clauses (populated by the
+      // modules/compliance regulatory-extraction pipeline).
+      { path: '/api/documents', router: documentsRouter },
+      // Note: /api/obligations (FE) resolves via /api/compliance/obligations
+      // on the moduleComplianceRouter. /api/gaps resolves via
+      // /api/compliance-ws/gaps on the workspace router. Do NOT mount
+      // compliance-obligations.routes or compliance-gaps.routes at bare
+      // /api/obligations or /api/gaps — those module routers define
+      // their paths as /obligations/... or /summary which won't line up
+      // cleanly under a top-level mount without further shim work.
+    ],
+    // Wave 2D: Module lifecycle registration
+    modules: await loadModuleRegistrations('compliance'),
+    healthChecks: {
+      database: async () => {
+        try {
+          const { query } = await import('@dos/db');
+          const result = await query('SELECT 1');
+          return !!result;
+        } catch { return false; }
+      },
+    },
+    onReady: () => {
+      // Wave 2D: invoke module onBoot hooks
+      invokeModuleLifecycleHooks(SERVICE_CODE, 'compliance').catch(() => {});
+    },
+  });
+
+  await start();
+}
+
+main().catch(err => {
+  console.error(`Failed to start ${SERVICE_CODE}:`, err);
+  process.exit(1);
+});

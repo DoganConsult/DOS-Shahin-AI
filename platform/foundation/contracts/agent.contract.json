@@ -1,0 +1,105 @@
+{
+  "$schema": "../../Dynamic UI/schemas/agent.contract.schema.json",
+  "moduleCode": "foundation",
+  "version": "1.0.0",
+  "agents": [
+    {
+      "agentId": "foundation-org-agent",
+      "nameKey": "agents.foundationOrg.name",
+      "descriptionKey": "agents.foundationOrg.description",
+      "level": "L1",
+      "scope": "module",
+      "capabilities": ["detect_org_gaps","suggest_owner","summarize_structure","prepare_org_review"],
+      "allowedPageTypes": ["overview","object","list"],
+      "allowedActions": ["read","analyze","draft"],
+      "requiresHumanApproval": true,
+      "auditRequired": true,
+      "defaultRiskLevel": "low",
+      "promptTemplateRef": "templates/foundation/org-agent.system.md"
+    },
+    {
+      "agentId": "foundation-access-agent",
+      "nameKey": "agents.foundationAccess.name",
+      "descriptionKey": "agents.foundationAccess.description",
+      "level": "L2",
+      "scope": "page",
+      "capabilities": ["explain_access","detect_sod_conflict","detect_risky_permissions","prepare_access_review","simulate_permission_change"],
+      "allowedPageTypes": ["list","object","workflow"],
+      "allowedActions": ["read","analyze","draft","start_workflow"],
+      "requiresHumanApproval": true,
+      "auditRequired": true,
+      "defaultRiskLevel": "medium",
+      "promptTemplateRef": "templates/foundation/access-agent.system.md"
+    },
+    {
+      "agentId": "foundation-committee-agent",
+      "nameKey": "agents.foundationCommittee.name",
+      "level": "L2",
+      "scope": "page",
+      "capabilities": ["prepare_meeting_brief","summarize_open_decisions","detect_quorum_issue","create_followups"],
+      "allowedPageTypes": ["list","object"],
+      "allowedActions": ["read","analyze","draft"],
+      "requiresHumanApproval": true,
+      "auditRequired": true,
+      "defaultRiskLevel": "low"
+    },
+    {
+      "agentId": "foundation-audit-scribe",
+      "nameKey": "agents.foundationAuditScribe.name",
+      "level": "L3",
+      "scope": "workflow",
+      "capabilities": ["draft_audit_summary","group_events_by_incident","extract_evidence_links"],
+      "allowedPageTypes": ["audit"],
+      "allowedActions": ["read","analyze","draft"],
+      "requiresHumanApproval": true,
+      "auditRequired": true,
+      "defaultRiskLevel": "low"
+    }
+  ],
+  "pageAgents": [
+    { "route": "/foundation",                "agentId": "foundation-org-agent",       "isPrimary": true,  "presentation": "side-panel",   "sortOrder": 10 },
+    { "route": "/foundation/organization",   "agentId": "foundation-org-agent",       "isPrimary": true,  "presentation": "side-panel",   "sortOrder": 10 },
+    { "route": "/foundation/users",          "agentId": "foundation-access-agent",    "isPrimary": true,  "presentation": "side-panel",   "sortOrder": 10 },
+    { "route": "/foundation/users/:id",      "agentId": "foundation-access-agent",    "isPrimary": true,  "presentation": "side-panel",   "sortOrder": 10 },
+    { "route": "/foundation/roles",          "agentId": "foundation-access-agent",    "isPrimary": true,  "presentation": "side-panel",   "sortOrder": 10 },
+    { "route": "/foundation/committees",     "agentId": "foundation-committee-agent", "isPrimary": true,  "presentation": "side-panel",   "sortOrder": 10 },
+    { "route": "/foundation/delegations",    "agentId": "foundation-access-agent",    "isPrimary": true,  "presentation": "side-panel",   "sortOrder": 10 },
+    { "route": "/foundation/audit",          "agentId": "foundation-audit-scribe",    "isPrimary": true,  "presentation": "side-panel",   "sortOrder": 10 }
+  ],
+  "agentActions": [
+    { "route": "/foundation/users",       "agentId": "foundation-access-agent",    "actionId": "explain-user-access",     "labelKey": "agents.actions.explainUserAccess",     "permission": "foundation.user.read",           "level": "analyze",  "riskLevel": "low",    "requiresApproval": false },
+    { "route": "/foundation/users",       "agentId": "foundation-access-agent",    "actionId": "detect-risky-permissions","labelKey": "agents.actions.detectRiskyPermissions","permission": "foundation.user.read",           "level": "analyze",  "riskLevel": "low",    "requiresApproval": false },
+    { "route": "/foundation/users",       "agentId": "foundation-access-agent",    "actionId": "prepare-access-review",   "labelKey": "agents.actions.prepareAccessReview",   "permission": "access_review:create", "level": "workflow", "riskLevel": "medium", "requiresApproval": true,  "workflowCode": "foundation.access-review.create" },
+    { "route": "/foundation/roles",       "agentId": "foundation-access-agent",    "actionId": "explain-role-risk",       "labelKey": "agents.actions.explainRoleRisk",       "permission": "foundation.admin.read",           "level": "analyze",  "riskLevel": "low",    "requiresApproval": false },
+    { "route": "/foundation/roles",       "agentId": "foundation-access-agent",    "actionId": "suggest-least-privilege", "labelKey": "agents.actions.suggestLeastPrivilege", "permission": "foundation.admin.write",           "level": "draft",    "riskLevel": "medium", "requiresApproval": true },
+    { "route": "/foundation/committees",  "agentId": "foundation-committee-agent", "actionId": "prepare-meeting-brief",   "labelKey": "agents.actions.prepareMeetingBrief",   "permission": "foundation.read",      "level": "draft",    "riskLevel": "low",    "requiresApproval": false },
+    { "route": "/foundation/committees",  "agentId": "foundation-committee-agent", "actionId": "summarize-open-decisions","labelKey": "agents.actions.summarizeOpenDecisions","permission": "foundation.read",      "level": "analyze",  "riskLevel": "low",    "requiresApproval": false },
+    { "route": "/foundation/delegations", "agentId": "foundation-access-agent",    "actionId": "check-sod-conflict",      "labelKey": "agents.actions.checkSodConflict",      "permission": "foundation.read",      "level": "analyze",  "riskLevel": "high",   "requiresApproval": true },
+    { "route": "/foundation/audit",       "agentId": "foundation-audit-scribe",    "actionId": "explain-what-happened",   "labelKey": "agents.actions.explainWhatHappened",   "permission": "audit_trail.read",           "level": "analyze",  "riskLevel": "low",    "requiresApproval": false },
+    { "route": "/foundation/audit",       "agentId": "foundation-audit-scribe",    "actionId": "group-events-by-incident","labelKey": "agents.actions.groupEventsByIncident", "permission": "audit_trail.read",           "level": "draft",    "riskLevel": "low",    "requiresApproval": false }
+  ],
+  "workflowAgents": [
+    { "workflowCode": "foundation.delegation.approval", "stepCode": "request_created",    "agentId": "foundation-access-agent", "agentActionId": "validate-delegation-scope",  "blocking": true,  "sortOrder": 1 },
+    { "workflowCode": "foundation.delegation.approval", "stepCode": "pending_approval",   "agentId": "foundation-access-agent", "agentActionId": "check-sod-conflict",         "blocking": true,  "sortOrder": 1 },
+    { "workflowCode": "foundation.delegation.approval", "stepCode": "pending_approval",   "agentId": "foundation-access-agent", "agentActionId": "prepare-approval-brief",     "blocking": false, "sortOrder": 2 },
+    { "workflowCode": "foundation.delegation.approval", "stepCode": "approved",           "agentId": "foundation-audit-scribe", "agentActionId": "write-evidence-summary",     "blocking": false, "sortOrder": 1 }
+  ],
+  "squads": [
+    {
+      "squadId": "foundation-access-review-squad",
+      "moduleCode": "foundation",
+      "nameKey": "agents.squads.accessReview.name",
+      "orchestratorAgentId": "foundation-access-agent",
+      "maxDepth": 5,
+      "preventCircularDelegation": true,
+      "ledgerRequired": true,
+      "humanApprovalRequired": true,
+      "members": [
+        { "agentId": "foundation-org-agent",      "roleInSquad": "identity",  "sortOrder": 1 },
+        { "agentId": "foundation-access-agent",   "roleInSquad": "sod",       "sortOrder": 2 },
+        { "agentId": "foundation-audit-scribe",   "roleInSquad": "audit",     "sortOrder": 3 },
+        { "agentId": "foundation-committee-agent","roleInSquad": "report",    "sortOrder": 4 }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "id": "bcp.post_approval",
+  "module": "bcp",
+  "hook": "post_approval",
+  "version": "1.0.0",
+  "sla_hours": 8,
+  "actor_role_default": "bcp.module_lead",
+  "states": ["approved","published","notified"],
+  "initial": "approved",
+  "transitions": [{"from":"approved","to":"published","on":"publish","actor_role":"bcp.module_lead"},{"from":"published","to":"notified","on":"notify"}],
+  "audit_event_prefix": "bcp.workflow.post_approval",
+  "notification_targets": ["bcp.module_lead", "bcp.approver"],
+  "evidence_required_on": ["passed","published"],
+  "escalation": { "on": "sla_breach", "to": "bcp.executive_owner", "after_hours": 16 }
+}

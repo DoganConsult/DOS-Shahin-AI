@@ -1,0 +1,17 @@
+{
+  "serviceCode": "product-shell",
+  "displayName": "Product Shell Service",
+  "layer": "edge-service",
+  "ownerTeam": "platform-core",
+  "runtime": "node",
+  "dependsOn": [
+    "auth-service",
+    "tenant-service",
+    "gateway"
+  ],
+  "modules": [],
+  "exposes": {
+    "apiBase": "/api/shell",
+    "events": []
+  }
+}

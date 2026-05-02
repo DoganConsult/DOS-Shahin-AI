@@ -1,0 +1,21 @@
+import { ASSET_MANIFEST } from '../asset.module';
+export { ASSET_MANIFEST };
+export declare const ASSET_MANIFEST_META: {
+    readonly code: string;
+    readonly version: string;
+    readonly tier: string;
+    readonly category: string;
+    readonly routeBase: string;
+    readonly eventNamespace: string;
+    readonly tablePrefix: string;
+    readonly ownedTables: string[];
+    readonly publishedEvents: string[];
+    readonly consumedEvents: string[];
+    readonly hardDeps: string[];
+    readonly softDeps: string[];
+    readonly provisioningOrder: number | undefined;
+    readonly lifecycleParticipation: true;
+    readonly uiSurfaces: readonly ["asset-inventory", "asset-detail", "classification-views", "dependency-maps", "vulnerability-tracking", "lifecycle-timeline", "criticality-dashboard", "diagnostics"];
+    readonly adminSurfaces: string[] | undefined;
+    readonly healthSignals: readonly ["schema_exists", "tables_exist", "unclassified_assets", "stale_scans", "ownership_gaps", "criticality_drift"];
+};

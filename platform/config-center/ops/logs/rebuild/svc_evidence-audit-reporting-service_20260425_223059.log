@@ -1,0 +1,4 @@
+
+> @dos/evidence-audit-reporting-service@0.1.0 build /root/DOS-AIO/services/evidence-audit-reporting-service
+> tsc -p tsconfig.json
+

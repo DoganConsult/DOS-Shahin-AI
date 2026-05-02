@@ -1,0 +1,315 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Shahin GRC — Mobile Native Styles
+   Applied when running inside Capacitor iOS/Android shell.
+   Optimized for touch targets, safe areas, and native-feel interactions.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ──────────────────── Safe Area Insets ──────────────────── */
+
+:root {
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --tab-bar-height: 64px;
+}
+
+/* ──────────────────── Capacitor-Specific Overrides ──────────────────── */
+
+/* Prevent elastic overscroll on iOS */
+html.plt-capacitor {
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Status bar padding on iOS */
+html.plt-capacitor body {
+  padding-top: var(--safe-top);
+}
+
+/* Bottom padding for tab bar clearance */
+html.plt-capacitor .main-content,
+html.plt-capacitor .page-container,
+html.plt-capacitor router-outlet + * {
+  padding-bottom: calc(var(--tab-bar-height) + var(--safe-bottom) + 16px);
+}
+
+/* ──────────────────── Touch Targets (WCAG 2.5.8) ──────────────────── */
+
+html.plt-capacitor button,
+html.plt-capacitor a.btn,
+html.plt-capacitor .p-button,
+html.plt-capacitor [role="button"] {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+html.plt-capacitor .tab-item {
+  min-height: 48px;
+  min-width: 48px;
+}
+
+/* Larger touch targets for form inputs */
+html.plt-capacitor input,
+html.plt-capacitor select,
+html.plt-capacitor textarea,
+html.plt-capacitor .p-inputtext,
+html.plt-capacitor .p-dropdown {
+  min-height: 44px;
+  font-size: var(--font-size-md); /* Prevents iOS zoom on focus */
+}
+
+/* ──────────────────── Disable Hover Effects on Touch ──────────────────── */
+
+@media (hover: none) and (pointer: coarse) {
+  .card:hover,
+  .btn:hover,
+  button:hover {
+    transform: none !important;
+    box-shadow: inherit !important;
+  }
+}
+
+/* ──────────────────── Tap Highlight ──────────────────── */
+
+html.plt-capacitor * {
+  -webkit-tap-highlight-color: rgba(var(--module-accent-blue-rgb), 0.1);
+}
+
+html.plt-capacitor .tab-item,
+html.plt-capacitor .card {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ──────────────────── Mobile Sidebar Override ──────────────────── */
+
+/* Hide desktop sidebar on mobile native */
+html.plt-capacitor .sidebar,
+html.plt-capacitor .desktop-sidebar {
+  display: none !important;
+}
+
+html.plt-capacitor .main-content {
+  margin-inline-start: 0 !important;
+  margin-inline-end: 0 !important;
+}
+
+/* ──────────────────── Mobile Cards ──────────────────── */
+
+html.plt-capacitor .card {
+  border-radius: var(--radius-lg);
+  margin: 8px 12px;
+}
+
+html.plt-capacitor .card:active {
+  transform: scale(0.98);
+  transition: transform 0.1s ease;
+}
+
+/* ──────────────────── Pull-to-Refresh Spacer ──────────────────── */
+
+html.plt-capacitor .page-header {
+  padding-top: 8px;
+}
+
+/* ──────────────────── Mobile Typography ──────────────────── */
+
+html.plt-capacitor h1 { font-size: 24px; }
+html.plt-capacitor h2 { font-size: 20px; }
+html.plt-capacitor h3 { font-size: 17px; }
+html.plt-capacitor .text-sm { font-size: 13px; }
+html.plt-capacitor .text-xs { font-size: 11px; }
+
+/* ──────────────────── Keyboard Open State ──────────────────── */
+
+html.plt-capacitor.keyboard-open .mobile-tab-bar {
+  display: none !important;
+}
+
+html.plt-capacitor.keyboard-open .page-container {
+  padding-bottom: 0 !important;
+}
+
+/* ──────────────────── Landscape Mode ──────────────────── */
+
+@media (orientation: landscape) and (max-height: 500px) {
+  html.plt-capacitor .mobile-tab-bar {
+    flex-direction: row;
+  }
+
+  html.plt-capacitor .mobile-tab-bar .tab-label {
+    display: none;
+  }
+}
+
+/* ──────────────────── RTL Adjustments ──────────────────── */
+
+[dir="rtl"] html.plt-capacitor .swipe-action-backdrop {
+  /* Swap swipe directions for RTL */
+}
+
+[dir="rtl"] html.plt-capacitor .tab-badge {
+  right: auto;
+  left: 4px;
+}
+
+/* ──────────────────── iOS-Specific ──────────────────── */
+
+html.plt-capacitor.plt-ios {
+  font-family: -apple-system, 'SF Pro Text', 'Tajawal', sans-serif;
+}
+
+html.plt-capacitor.plt-ios .card {
+  box-shadow: 0 1px 3px rgba(var(--color-black-rgb), 0.08);
+}
+
+/* ──────────────────── Android-Specific ──────────────────── */
+
+html.plt-capacitor.plt-android {
+  font-family: 'Roboto', 'Tajawal', sans-serif;
+}
+
+html.plt-capacitor.plt-android button,
+html.plt-capacitor.plt-android .p-button {
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* ──────────────────── Reduced Motion ──────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  html.plt-capacitor *,
+  html.plt-capacitor *::before,
+  html.plt-capacitor *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ──────────────────── Dark Mode (System) ──────────────────── */
+
+@media (prefers-color-scheme: dark) {
+  html.plt-capacitor {
+    --surface: #0a1628;
+    --surface-ice: #111d33;
+    --text: #e2e8f0;
+    --border-subtle: rgba(var(--color-white-rgb), 0.08);
+  }
+}
+
+/* ──────────────────── Offline Indicators ──────────────────── */
+
+html.plt-capacitor.offline .card {
+  border-inline-start: 3px solid #f59e0b;
+}
+
+[dir="rtl"] html.plt-capacitor.offline .card {
+  border-inline-start: none;
+  border-inline-end: 3px solid #f59e0b;
+}
+
+html.plt-capacitor .offline-cached-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #f59e0b;
+}
+
+/* ──────────────────── Evidence Camera UI ──────────────────── */
+
+html.plt-capacitor .evidence-capture-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(var(--color-black-rgb), 0.9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  color: white;
+}
+
+html.plt-capacitor .evidence-capture-btn {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: white;
+  border: 4px solid rgba(var(--color-white-rgb), 0.3);
+  cursor: pointer;
+}
+
+html.plt-capacitor .evidence-capture-btn:active {
+  transform: scale(0.9);
+  background: #e5e7eb;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Mobile-Browser Fallback (Phase 1)
+   Apply core layout / touch-target / typography rules to mobile-browser
+   users. Capacitor-specific behaviours (safe-area, keyboard, swipe, camera,
+   tap-highlight, iOS/Android-specific fonts) remain gated to .plt-capacitor.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  /* Hide desktop sidebars on mobile browsers */
+  .sidebar,
+  .desktop-sidebar {
+    display: none !important;
+  }
+  .main-content {
+    margin-inline-start: 0 !important;
+    margin-inline-end: 0 !important;
+  }
+
+  /* WCAG 2.5.8 touch targets */
+  button,
+  a.btn,
+  .p-button,
+  [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  .tab-item {
+    min-height: 48px;
+    min-width: 48px;
+  }
+  input,
+  select,
+  textarea,
+  .p-inputtext,
+  .p-dropdown {
+    min-height: 44px;
+    font-size: var(--font-size-md); /* prevents iOS zoom on focus */
+  }
+
+  /* Mobile typography scale */
+  h1 { font-size: 24px; }
+  h2 { font-size: 20px; }
+  h3 { font-size: 17px; }
+  .text-sm { font-size: 13px; }
+  .text-xs { font-size: 11px; }
+
+  /* Mobile cards */
+  .card {
+    border-radius: var(--radius-lg);
+    margin: 8px 12px;
+  }
+  .card:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+  }
+}
+
+/* Hover/transform suppression on coarse-pointer devices, regardless of platform */
+@media (hover: none) and (pointer: coarse) {
+  .card:hover,
+  .btn:hover,
+  button:hover {
+    transform: none !important;
+    box-shadow: inherit !important;
+  }
+}

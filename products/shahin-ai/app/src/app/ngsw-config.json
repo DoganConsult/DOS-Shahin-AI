@@ -1,0 +1,95 @@
+{
+  "$schema": "./node_modules/@angular/service-worker/config/schema.json",
+  "index": "/index.html",
+  "assetGroups": [
+    {
+      "name": "app-shell",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": [
+          "/favicon.ico",
+          "/index.html",
+          "/manifest.webmanifest",
+          "/*.css",
+          "/*.js"
+        ]
+      }
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": [
+          "/assets/**",
+          "/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2|ani|eot)"
+        ]
+      }
+    }
+  ],
+  "dataGroups": [
+    {
+      "name": "api-auth",
+      "urls": ["/api/auth/**"],
+      "cacheConfig": {
+        "strategy": "freshness",
+        "maxSize": 0,
+        "maxAge": "0s",
+        "timeout": "10s"
+      }
+    },
+    {
+      "name": "api-payment",
+      "urls": ["/api/payment/**", "/api/subscription/**"],
+      "cacheConfig": {
+        "strategy": "freshness",
+        "maxSize": 0,
+        "maxAge": "0s",
+        "timeout": "30s"
+      }
+    },
+    {
+      "name": "api-reference-data",
+      "urls": [
+        "/api/public/**",
+        "/api/regulatory-content/authorities",
+        "/api/regulatory-content/cross-map"
+      ],
+      "cacheConfig": {
+        "strategy": "performance",
+        "maxSize": 50,
+        "maxAge": "6h",
+        "timeout": "15s"
+      }
+    },
+    {
+      "name": "api-grc-data",
+      "urls": [
+        "/api/risks/**",
+        "/api/controls/**",
+        "/api/frameworks/**",
+        "/api/compliance/**",
+        "/api/audit/**",
+        "/api/vendors/**",
+        "/api/board-reports/**",
+        "/api/risk-quantification/**",
+        "/api/rcsa/**",
+        "/api/attestation/**"
+      ],
+      "cacheConfig": {
+        "strategy": "freshness",
+        "maxSize": 200,
+        "maxAge": "30m",
+        "timeout": "20s"
+      }
+    }
+  ],
+  "navigationUrls": [
+    "/**",
+    "!/**/*.*",
+    "!/**/*__*",
+    "!/**/*__*/**",
+    "!/api/**"
+  ]
+}

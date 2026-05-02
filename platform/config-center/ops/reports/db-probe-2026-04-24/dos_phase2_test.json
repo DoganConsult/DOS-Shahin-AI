@@ -1,0 +1,102 @@
+{
+    "db": "dos_phase2_test",
+    "columns": {
+        "dos.config_values": [
+            "created_at",
+            "created_by",
+            "definition_id",
+            "id",
+            "is_active",
+            "is_encrypted",
+            "notes",
+            "scope_id",
+            "scope_type",
+            "source",
+            "updated_at",
+            "updated_by",
+            "value",
+            "value_hash"
+        ],
+        "dos.feature_flags": [
+            "created_at",
+            "default_value",
+            "enabled",
+            "flag_code",
+            "is_active",
+            "module_code",
+            "name_ar",
+            "name_en",
+            "owner_layer",
+            "updated_at"
+        ],
+        "dos.config_definitions": [
+            "allowed_scopes",
+            "category",
+            "created_at",
+            "created_by",
+            "default_value",
+            "deployment_only",
+            "description",
+            "enum_values",
+            "id",
+            "is_lockable",
+            "is_overridable",
+            "is_required",
+            "is_secret",
+            "key",
+            "label",
+            "owner_domain",
+            "requires_restart",
+            "sdk_exposable",
+            "ui_exposable",
+            "updated_at",
+            "updated_by",
+            "validation_schema",
+            "value_type"
+        ],
+        "dos.platform_operation_config": [
+            "config_key",
+            "config_value",
+            "description",
+            "owner_layer",
+            "updated_at",
+            "updated_by"
+        ]
+    },
+    "trackers": {
+        "dos.schema_migrations": {
+            "rows": null,
+            "exists": false
+        },
+        "public.dos_migrations": {
+            "rows": 0,
+            "exists": true
+        },
+        "dos.service_migrations": {
+            "rows": null,
+            "exists": false
+        },
+        "dos.platform_migrations": {
+            "rows": null,
+            "exists": false
+        },
+        "public.schema_migrations": {
+            "rows": 0,
+            "exists": true
+        }
+    },
+    "timestamp": "2026-04-24T06:58:09.637628+00:00",
+    "drift_flags": {
+        "feature_flags_has_name_en": true,
+        "config_definitions_has_key": true,
+        "config_values_has_definition_id": true,
+        "config_definitions_has_config_key": false,
+        "platform_op_config_has_config_key": true
+    },
+    "seed_counts": {
+        "dos.feature_flags": 43,
+        "dos.config_definitions": 105,
+        "dos.platform_operation_config": 12
+    },
+    "classification": "canonical+untracked"
+}

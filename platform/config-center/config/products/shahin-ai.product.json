@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "productCode": "shahin-ai",
+  "manifestRef": "../../../products/shahin-ai/product.manifest.json",
+  "hosts": [
+    "shahin.local",
+    "shahin-ai.dogan-ai.os"
+  ],
+  "authMode": "cookie-session",
+  "routeMountPoint": "/",
+  "publicCompatPrefixes": [
+    "/",
+    "/login",
+    "/register",
+    "/workspace-home",
+    "/foundation",
+    "/workspace",
+    "/inbox",
+    "/profile",
+    "/settings",
+    "/tenant-profile",
+    "/tenant-settings",
+    "/api/auth",
+    "/api/access"
+  ],
+  "rolloutStage": "pre-release",
+  "notes": "Platform-side registration of Shahin-AI. The product owns its UI, navigation, theme; this file binds it into the platform composition layer."
+}

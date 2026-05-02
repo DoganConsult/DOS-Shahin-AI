@@ -1,0 +1,277 @@
+.heatmap-page {
+      padding: 1.5rem;
+      max-width: 100%;
+      overflow-x: auto;
+    }
+
+    .page-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .page-toolbar h2 {
+      margin: 0;
+      font-size: var(--font-size-2xl);
+      font-weight: 600;
+    }
+
+    .toolbar-actions {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .filter-select {
+      padding: 0.5rem 1rem;
+      border: 1px solid #ddd;
+      border-radius: var(--radius-xs);
+      background: white;
+    }
+
+    .refresh-btn {
+      padding: 0.5rem 1rem;
+      border: 1px solid #ddd;
+      border-radius: var(--radius-xs);
+      background: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .refresh-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .load-error-banner {
+      background: #fee;
+      border: 1px solid #fcc;
+      border-radius: var(--radius-xs);
+      padding: 1rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .retry-btn {
+      margin-inline-start: auto;
+      padding: 0.25rem 0.75rem;
+      background: #f00;
+      color: white;
+      border: none;
+      border-radius: var(--radius-xs);
+      cursor: pointer;
+    }
+
+    .loading-state {
+      text-align: center;
+      padding: 2rem;
+      color: #666;
+    }
+
+    .summary-section {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .summary-card {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .summary-value {
+      font-size: var(--font-size-4xl);
+      font-weight: 600;
+      color: #1976d2;
+      margin-bottom: 0.5rem;
+    }
+
+    .summary-label {
+      font-size: var(--font-size-base);
+      color: #666;
+    }
+
+    .heatmap-section {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: var(--radius);
+      padding: 1.5rem;
+    }
+
+    .heatmap-section h3 {
+      margin: 0 0 1.5rem 0;
+      font-size: var(--font-size-xl);
+      font-weight: 600;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: #666;
+    }
+
+    .heatmap-table-container {
+      overflow-x: auto;
+      margin-bottom: 1.5rem;
+    }
+
+    .heatmap-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: var(--font-size-base);
+    }
+
+    .heatmap-table thead {
+      background: #f5f5f5;
+      position: sticky;
+      top: 0;
+      z-index: var(--z-elevated, 10);
+    }
+
+    .heatmap-table th {
+      padding: 0.75rem;
+      text-align: start;
+      font-weight: 600;
+      border: 1px solid #ddd;
+    }
+
+    .heatmap-table td {
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      vertical-align: top;
+    }
+
+    .org-col {
+      min-width: 200px;
+      font-weight: 500;
+      background: #fafafa;
+    }
+
+    .org-name {
+      font-weight: 600;
+    }
+
+    .org-parent {
+      font-size: var(--font-size-sm);
+      color: #666;
+      margin-top: 0.25rem;
+    }
+
+    .framework-col {
+      min-width: 150px;
+      text-align: center;
+    }
+
+    .heatmap-cell {
+      text-align: center;
+      min-width: 150px;
+      padding: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .heatmap-cell:hover {
+      transform: scale(1.05);
+      box-shadow: 0 2px 8px rgba(var(--color-black-rgb), 0.1);
+      z-index: 5;
+      position: relative;
+    }
+
+    .heatmap-cell.excellent {
+      background: #4caf50;
+      color: white;
+    }
+
+    .heatmap-cell.good {
+      background: #8bc34a;
+      color: white;
+    }
+
+    .heatmap-cell.moderate {
+      background: #ffc107;
+      color: #333;
+    }
+
+    .heatmap-cell.poor {
+      background: #ff9800;
+      color: white;
+    }
+
+    .heatmap-cell.critical {
+      background: #f44336;
+      color: white;
+    }
+
+    .heatmap-cell.empty {
+      background: #f5f5f5;
+      color: #999;
+    }
+
+    .cell-score {
+      font-size: var(--font-size-xl);
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .cell-maturity {
+      font-size: var(--font-size-sm);
+      opacity: 0.9;
+      margin-bottom: 0.5rem;
+    }
+
+    .cell-details {
+      font-size: var(--font-size-xs);
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .cell-gaps {
+      color: #ffebee;
+      font-weight: 600;
+    }
+
+    .heatmap-legend {
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #ddd;
+    }
+
+    .legend-title {
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+
+    .legend-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .legend-color {
+      width: 24px;
+      height: 24px;
+      border-radius: var(--radius-xs);
+      border: 1px solid #ddd;
+    }
+
+    .legend-color.excellent { background: #4caf50; }
+    .legend-color.good { background: #8bc34a; }
+    .legend-color.moderate { background: #ffc107; }
+    .legend-color.poor { background: #ff9800; }
+    .legend-color.critical { background: #f44336; }

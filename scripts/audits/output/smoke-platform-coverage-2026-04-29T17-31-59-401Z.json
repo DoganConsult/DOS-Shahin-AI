@@ -1,0 +1,1010 @@
+{
+  "generatedAt": "2026-04-29T17:31:59.402Z",
+  "principals": {
+    "tenant": {
+      "sub": "66c5242e-ce91-417c-aec0-b94178c58dbb",
+      "email": "legacy_1777249007@e2e.local",
+      "tenantId": "ltcf89c3cd79100e",
+      "roles": [
+        "tenant-admin",
+        "user"
+      ]
+    },
+    "admin": {
+      "sub": "platform_admin",
+      "email": "ahmet.dogan@doganconsult.com",
+      "tenantId": "platform",
+      "roles": [
+        "platform-super-admin",
+        "admin"
+      ]
+    }
+  },
+  "apiResults": [
+    {
+      "name": "gateway/health",
+      "url": "http://127.0.0.1:4000/healthz",
+      "method": "GET",
+      "status": 404,
+      "ok": false,
+      "durationMs": 56,
+      "bodyAssertion": "n/a",
+      "parsedAs": "text",
+      "sampleBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /healthz</pre>\n</body>\n</html>\n"
+    },
+    {
+      "name": "tenant/health",
+      "url": "http://127.0.0.1:4002/healthz",
+      "method": "GET",
+      "status": 401,
+      "ok": false,
+      "durationMs": 23,
+      "bodyAssertion": "n/a",
+      "parsedAs": "json",
+      "sampleBody": "{\"error\":\"NO_CALLER\",\"code\":\"MISSING_PRINCIPAL\"}"
+    },
+    {
+      "name": "auth/health",
+      "url": "http://127.0.0.1:4001/healthz",
+      "method": "GET",
+      "status": 404,
+      "ok": true,
+      "durationMs": 26,
+      "bodyAssertion": "n/a",
+      "parsedAs": "text",
+      "sampleBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /healthz</pre>\n</body>\n</html>\n"
+    },
+    {
+      "name": "gateway/health-alt",
+      "url": "http://127.0.0.1:4000/health",
+      "method": "GET",
+      "status": 200,
+      "ok": true,
+      "durationMs": 29,
+      "bodyAssertion": "n/a",
+      "parsedAs": "json",
+      "sampleBody": "{\"ok\":true,\"service\":\"gateway\"}"
+    },
+    {
+      "name": "notification/health",
+      "url": "http://127.0.0.1:4005/healthz",
+      "method": "GET",
+      "status": 404,
+      "ok": true,
+      "durationMs": 27,
+      "bodyAssertion": "n/a",
+      "parsedAs": "text",
+      "sampleBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /healthz</pre>\n</body>\n</html>\n"
+    },
+    {
+      "name": "tenant/health-alt",
+      "url": "http://127.0.0.1:4002/health",
+      "method": "GET",
+      "status": 200,
+      "ok": true,
+      "durationMs": 29,
+      "bodyAssertion": "n/a",
+      "parsedAs": "json",
+      "sampleBody": "{\"ok\":true,\"service\":\"tenant-service\"}"
+    },
+    {
+      "name": "user/health",
+      "url": "http://127.0.0.1:4003/healthz",
+      "method": "GET",
+      "status": 404,
+      "ok": true,
+      "durationMs": 31,
+      "bodyAssertion": "n/a",
+      "parsedAs": "text",
+      "sampleBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /healthz</pre>\n</body>\n</html>\n"
+    },
+    {
+      "name": "widgets/health",
+      "url": "http://127.0.0.1:4023/healthz",
+      "method": "GET",
+      "status": 404,
+      "ok": true,
+      "durationMs": 19,
+      "bodyAssertion": "n/a",
+      "parsedAs": "text",
+      "sampleBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /healthz</pre>\n</body>\n</html>\n"
+    },
+    {
+      "name": "tenant/me",
+      "url": "http://127.0.0.1:4002/api/tenants/me",
+      "method": "GET",
+      "status": 404,
+      "ok": false,
+      "durationMs": 13,
+      "bodyAssertion": "n/a",
+      "parsedAs": "text",
+      "sampleBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /api/tenants/me</pre>\n</body>\n</html>\n"
+    },
+    {
+      "name": "analytics/health",
+      "url": "http://127.0.0.1:4024/healthz",
+      "method": "GET",
+      "status": 404,
+      "ok": true,
+      "durationMs": 19,
+      "bodyAssertion": "n/a",
+      "parsedAs": "text",
+      "sampleBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /healthz</pre>\n</body>\n</html>\n"
+    },
+    {
+      "name": "user/health-alt",
+      "url": "http://127.0.0.1:4003/health",
+      "method": "GET",
+      "status": 503,
+      "ok": false,
+      "durationMs": 46,
+      "bodyAssertion": "n/a",
+      "parsedAs": "json",
+      "sampleBody": "{\"status\":\"degraded\",\"service\":\"user-service\",\"checks\":{\"database\":\"ok\",\"redis\":\"fail\",\"schema\":\"ok\"},\"uptime\":3251.940127943,\"memoryMB\":34,\"version\":\"unknown\",\"gitSha\":\"unknown\",\"lastDeploy\":\"unknown\",\"timestamp\":\"2026-04-29T17:31:59.087Z\""
+    },
+    {
+      "name": "tenant/bootstrap",
+      "url": "http://127.0.0.1:4002/api/tenants/bootstrap",
+      "method": "GET",
+      "status": 404,
+      "ok": true,
+      "durationMs": 21,
+      "bodyAssertion": "n/a",
+      "parsedAs": "text",
+      "sampleBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /api/tenants/bootstrap</pre>\n</body>\n</html>\n"
+    },
+    {
+      "name": "tenant/entitlements",
+      "url": "http://127.0.0.1:4002/api/tenants/entitlements",
+      "method": "GET",
+      "status": 404,
+      "ok": true,
+      "durationMs": 21,
+      "bodyAssertion": "n/a",
+      "parsedAs": "text",
+      "sampleBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /api/tenants/entitlements</pre>\n</body>\n</html>\n"
+    },
+    {
+      "name": "tenant/permissions",
+      "url": "http://127.0.0.1:4002/api/tenants/permissions",
+      "method": "GET",
+      "status": 404,
+      "ok": true,
+      "durationMs": 21,
+      "bodyAssertion": "n/a",
+      "parsedAs": "text",
+      "sampleBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /api/tenants/permissions</pre>\n</body>\n</html>\n"
+    },
+    {
+      "name": "tenant/workspaces",
+      "url": "http://127.0.0.1:4002/api/tenants/workspaces",
+      "method": "GET",
+      "status": 404,
+      "ok": true,
+      "durationMs": 16,
+      "bodyAssertion": "n/a",
+      "parsedAs": "text",
+      "sampleBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /api/tenants/workspaces</pre>\n</body>\n</html>\n"
+    },
+    {
+      "name": "tenant/home/overview",
+      "url": "http://127.0.0.1:4002/api/tenants/home/overview",
+      "method": "GET",
+      "status": 404,
+      "ok": false,
+      "durationMs": 16,
+      "bodyAssertion": "n/a",
+      "parsedAs": "text",
+      "sampleBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /api/tenants/home/overview</pre>\n</body>\n</html>\n"
+    },
+    {
+      "name": "tenant/config-center/products-modules",
+      "url": "http://127.0.0.1:4002/api/config-center/products-modules",
+      "method": "GET",
+      "status": 404,
+      "ok": true,
+      "durationMs": 10,
+      "bodyAssertion": "n/a",
+      "parsedAs": "text",
+      "sampleBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /api/config-center/products-modules</pre>\n</body>\n</html>\n"
+    },
+    {
+      "name": "shell/index",
+      "url": "http://127.0.0.1:3000/",
+      "method": "GET",
+      "status": 200,
+      "ok": true,
+      "durationMs": 36,
+      "bodyAssertion": "pass",
+      "parsedAs": "text",
+      "sampleBody": "<!doctype html>\n<html lang=\"ar\" dir=\"rtl\">\n<head>\n  <meta charset=\"utf-8\">\n  <title>Shahin-AI by Dogan Consult — The KSA GRC Painkiller</title>\n  <base href=\"/\">\n  <meta name=\"viewport\" content=\"width"
+    },
+    {
+      "name": "tenant/home/activity",
+      "url": "http://127.0.0.1:4002/api/tenants/home/activity",
+      "method": "GET",
+      "status": 404,
+      "ok": true,
+      "durationMs": 20,
+      "bodyAssertion": "n/a",
+      "parsedAs": "text",
+      "sampleBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /api/tenants/home/activity</pre>\n</body>\n</html>\n"
+    },
+    {
+      "name": "foundation/aggregator",
+      "url": "http://127.0.0.1:4003/api/foundation",
+      "method": "GET",
+      "status": 401,
+      "ok": false,
+      "durationMs": 7,
+      "bodyAssertion": "n/a",
+      "parsedAs": "json",
+      "sampleBody": "{\"error\":\"Authentication required\",\"code\":\"UNAUTHENTICATED\"}"
+    },
+    {
+      "name": "tenant/navigation/tree",
+      "url": "http://127.0.0.1:4002/api/navigation/tree",
+      "method": "GET",
+      "status": 404,
+      "ok": true,
+      "durationMs": 16,
+      "bodyAssertion": "n/a",
+      "parsedAs": "text",
+      "sampleBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /api/navigation/tree</pre>\n</body>\n</html>\n"
+    },
+    {
+      "name": "foundation/organizations",
+      "url": "http://127.0.0.1:4003/api/organizations",
+      "method": "GET",
+      "status": 401,
+      "ok": false,
+      "durationMs": 5,
+      "bodyAssertion": "n/a",
+      "parsedAs": "json",
+      "sampleBody": "{\"error\":\"Authentication required\",\"code\":\"UNAUTHENTICATED\"}"
+    },
+    {
+      "name": "tenant/config-center/permissions-catalog",
+      "url": "http://127.0.0.1:4002/api/config-center/permissions-catalog",
+      "method": "GET",
+      "status": 404,
+      "ok": true,
+      "durationMs": 15,
+      "bodyAssertion": "n/a",
+      "parsedAs": "text",
+      "sampleBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /api/config-center/permissions-catalog</pre>\n</body>\n</html>\n"
+    },
+    {
+      "name": "tenant/config-center/settings",
+      "url": "http://127.0.0.1:4002/api/config-center/settings",
+      "method": "GET",
+      "status": 404,
+      "ok": true,
+      "durationMs": 14,
+      "bodyAssertion": "n/a",
+      "parsedAs": "text",
+      "sampleBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /api/config-center/settings</pre>\n</body>\n</html>\n"
+    },
+    {
+      "name": "tenant/module-kickstart-status",
+      "url": "http://127.0.0.1:4002/api/module-kickstart-status?module=foundation",
+      "method": "GET",
+      "status": 404,
+      "ok": true,
+      "durationMs": 13,
+      "bodyAssertion": "n/a",
+      "parsedAs": "text",
+      "sampleBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /api/module-kickstart-status</pre>\n</body>\n</html>\n"
+    },
+    {
+      "name": "foundation/committees",
+      "url": "http://127.0.0.1:4003/api/committees",
+      "method": "GET",
+      "status": 401,
+      "ok": false,
+      "durationMs": 4,
+      "bodyAssertion": "n/a",
+      "parsedAs": "json",
+      "sampleBody": "{\"error\":\"Authentication required\",\"code\":\"UNAUTHENTICATED\"}"
+    },
+    {
+      "name": "foundation/business-units",
+      "url": "http://127.0.0.1:4003/api/business-units",
+      "method": "GET",
+      "status": 401,
+      "ok": false,
+      "durationMs": 10,
+      "bodyAssertion": "n/a",
+      "parsedAs": "json",
+      "sampleBody": "{\"error\":\"Authentication required\",\"code\":\"UNAUTHENTICATED\"}"
+    },
+    {
+      "name": "foundation/positions",
+      "url": "http://127.0.0.1:4003/api/positions",
+      "method": "GET",
+      "status": 401,
+      "ok": false,
+      "durationMs": 9,
+      "bodyAssertion": "n/a",
+      "parsedAs": "json",
+      "sampleBody": "{\"error\":\"Authentication required\",\"code\":\"UNAUTHENTICATED\"}"
+    },
+    {
+      "name": "foundation/locations",
+      "url": "http://127.0.0.1:4003/api/locations",
+      "method": "GET",
+      "status": 401,
+      "ok": false,
+      "durationMs": 9,
+      "bodyAssertion": "n/a",
+      "parsedAs": "json",
+      "sampleBody": "{\"error\":\"Authentication required\",\"code\":\"UNAUTHENTICATED\"}"
+    },
+    {
+      "name": "foundation/org-hierarchy",
+      "url": "http://127.0.0.1:4003/api/org-hierarchy",
+      "method": "GET",
+      "status": 401,
+      "ok": false,
+      "durationMs": 10,
+      "bodyAssertion": "n/a",
+      "parsedAs": "json",
+      "sampleBody": "{\"error\":\"Authentication required\",\"code\":\"UNAUTHENTICATED\"}"
+    },
+    {
+      "name": "foundation/governance/delegations",
+      "url": "http://127.0.0.1:4003/api/governance/delegations",
+      "method": "GET",
+      "status": 401,
+      "ok": false,
+      "durationMs": 7,
+      "bodyAssertion": "n/a",
+      "parsedAs": "json",
+      "sampleBody": "{\"error\":\"Authentication required\",\"code\":\"UNAUTHENTICATED\"}"
+    },
+    {
+      "name": "foundation/delegations",
+      "url": "http://127.0.0.1:4003/api/delegations",
+      "method": "GET",
+      "status": 401,
+      "ok": false,
+      "durationMs": 5,
+      "bodyAssertion": "n/a",
+      "parsedAs": "json",
+      "sampleBody": "{\"error\":\"Authentication required\",\"code\":\"UNAUTHENTICATED\"}"
+    },
+    {
+      "name": "foundation/user-lifecycle",
+      "url": "http://127.0.0.1:4003/api/user-lifecycle",
+      "method": "GET",
+      "status": 401,
+      "ok": false,
+      "durationMs": 4,
+      "bodyAssertion": "n/a",
+      "parsedAs": "json",
+      "sampleBody": "{\"error\":\"Authentication required\",\"code\":\"UNAUTHENTICATED\"}"
+    },
+    {
+      "name": "foundation/ownership-mappings",
+      "url": "http://127.0.0.1:4003/api/ownership-mappings",
+      "method": "GET",
+      "status": 401,
+      "ok": false,
+      "durationMs": 13,
+      "bodyAssertion": "n/a",
+      "parsedAs": "json",
+      "sampleBody": "{\"error\":\"Authentication required\",\"code\":\"UNAUTHENTICATED\"}"
+    },
+    {
+      "name": "foundation/sod",
+      "url": "http://127.0.0.1:4003/api/sod",
+      "method": "GET",
+      "status": 401,
+      "ok": false,
+      "durationMs": 12,
+      "bodyAssertion": "n/a",
+      "parsedAs": "json",
+      "sampleBody": "{\"error\":\"Authentication required\",\"code\":\"UNAUTHENTICATED\"}"
+    },
+    {
+      "name": "foundation/governance",
+      "url": "http://127.0.0.1:4003/api/governance",
+      "method": "GET",
+      "status": 401,
+      "ok": false,
+      "durationMs": 12,
+      "bodyAssertion": "n/a",
+      "parsedAs": "json",
+      "sampleBody": "{\"error\":\"Authentication required\",\"code\":\"UNAUTHENTICATED\"}"
+    },
+    {
+      "name": "foundation/governance/committees",
+      "url": "http://127.0.0.1:4003/api/governance/committees",
+      "method": "GET",
+      "status": 401,
+      "ok": false,
+      "durationMs": 10,
+      "bodyAssertion": "n/a",
+      "parsedAs": "json",
+      "sampleBody": "{\"error\":\"Authentication required\",\"code\":\"UNAUTHENTICATED\"}"
+    },
+    {
+      "name": "foundation/access-reviews",
+      "url": "http://127.0.0.1:4003/api/access-reviews",
+      "method": "GET",
+      "status": 401,
+      "ok": false,
+      "durationMs": 11,
+      "bodyAssertion": "n/a",
+      "parsedAs": "json",
+      "sampleBody": "{\"error\":\"Authentication required\",\"code\":\"UNAUTHENTICATED\"}"
+    },
+    {
+      "name": "foundation/audit-trail",
+      "url": "http://127.0.0.1:4003/api/audit-trail",
+      "method": "GET",
+      "status": 401,
+      "ok": false,
+      "durationMs": 6,
+      "bodyAssertion": "n/a",
+      "parsedAs": "json",
+      "sampleBody": "{\"error\":\"Authentication required\",\"code\":\"UNAUTHENTICATED\"}"
+    },
+    {
+      "name": "foundation/profiles",
+      "url": "http://127.0.0.1:4003/api/profiles",
+      "method": "GET",
+      "status": 401,
+      "ok": false,
+      "durationMs": 6,
+      "bodyAssertion": "n/a",
+      "parsedAs": "json",
+      "sampleBody": "{\"error\":\"Authentication required\",\"code\":\"UNAUTHENTICATED\"}"
+    },
+    {
+      "name": "foundation/privacy-ops",
+      "url": "http://127.0.0.1:4003/api/privacy-ops",
+      "method": "GET",
+      "status": 401,
+      "ok": false,
+      "durationMs": 7,
+      "bodyAssertion": "n/a",
+      "parsedAs": "json",
+      "sampleBody": "{\"error\":\"Authentication required\",\"code\":\"UNAUTHENTICATED\"}"
+    },
+    {
+      "name": "users/list",
+      "url": "http://127.0.0.1:4003/api/users",
+      "method": "GET",
+      "status": 401,
+      "ok": false,
+      "durationMs": 7,
+      "bodyAssertion": "n/a",
+      "parsedAs": "json",
+      "sampleBody": "{\"error\":\"Authentication required\",\"code\":\"UNAUTHENTICATED\"}"
+    },
+    {
+      "name": "teams/list",
+      "url": "http://127.0.0.1:4003/api/teams",
+      "method": "GET",
+      "status": 401,
+      "ok": false,
+      "durationMs": 7,
+      "bodyAssertion": "n/a",
+      "parsedAs": "json",
+      "sampleBody": "{\"error\":\"Authentication required\",\"code\":\"UNAUTHENTICATED\"}"
+    },
+    {
+      "name": "roles/list",
+      "url": "http://127.0.0.1:4003/api/roles",
+      "method": "GET",
+      "status": 401,
+      "ok": false,
+      "durationMs": 7,
+      "bodyAssertion": "n/a",
+      "parsedAs": "json",
+      "sampleBody": "{\"error\":\"Authentication required\",\"code\":\"UNAUTHENTICATED\"}"
+    },
+    {
+      "name": "foundation/bulk-invite",
+      "url": "http://127.0.0.1:4003/api/bulk-invite",
+      "method": "GET",
+      "status": 401,
+      "ok": false,
+      "durationMs": 14,
+      "bodyAssertion": "n/a",
+      "parsedAs": "json",
+      "sampleBody": "{\"error\":\"Authentication required\",\"code\":\"UNAUTHENTICATED\"}"
+    },
+    {
+      "name": "foundation/invitations",
+      "url": "http://127.0.0.1:4003/api/invitations",
+      "method": "GET",
+      "status": 401,
+      "ok": false,
+      "durationMs": 14,
+      "bodyAssertion": "n/a",
+      "parsedAs": "json",
+      "sampleBody": "{\"error\":\"Authentication required\",\"code\":\"UNAUTHENTICATED\"}"
+    },
+    {
+      "name": "departments/list",
+      "url": "http://127.0.0.1:4003/api/departments",
+      "method": "GET",
+      "status": 401,
+      "ok": false,
+      "durationMs": 7,
+      "bodyAssertion": "n/a",
+      "parsedAs": "json",
+      "sampleBody": "{\"error\":\"Authentication required\",\"code\":\"UNAUTHENTICATED\"}"
+    },
+    {
+      "name": "notifications/inbox",
+      "url": "http://127.0.0.1:4005/api/inbox",
+      "method": "GET",
+      "status": 404,
+      "ok": true,
+      "durationMs": 6,
+      "bodyAssertion": "n/a",
+      "parsedAs": "text",
+      "sampleBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /api/inbox</pre>\n</body>\n</html>\n"
+    },
+    {
+      "name": "notifications/inbox/count",
+      "url": "http://127.0.0.1:4005/api/inbox/count",
+      "method": "GET",
+      "status": 404,
+      "ok": true,
+      "durationMs": 8,
+      "bodyAssertion": "n/a",
+      "parsedAs": "text",
+      "sampleBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /api/inbox/count</pre>\n</body>\n</html>\n"
+    },
+    {
+      "name": "widgets/list",
+      "url": "http://127.0.0.1:4023/api/widgets",
+      "method": "GET",
+      "status": 404,
+      "ok": true,
+      "durationMs": 7,
+      "bodyAssertion": "n/a",
+      "parsedAs": "text",
+      "sampleBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /api/widgets</pre>\n</body>\n</html>\n"
+    },
+    {
+      "name": "widgets/stats",
+      "url": "http://127.0.0.1:4023/api/widgets/stats",
+      "method": "GET",
+      "status": 404,
+      "ok": true,
+      "durationMs": 7,
+      "bodyAssertion": "n/a",
+      "parsedAs": "text",
+      "sampleBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /api/widgets/stats</pre>\n</body>\n</html>\n"
+    },
+    {
+      "name": "widgets/zones",
+      "url": "http://127.0.0.1:4023/api/widgets/zones",
+      "method": "GET",
+      "status": 404,
+      "ok": true,
+      "durationMs": 7,
+      "bodyAssertion": "n/a",
+      "parsedAs": "text",
+      "sampleBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /api/widgets/zones</pre>\n</body>\n</html>\n"
+    },
+    {
+      "name": "widgets/data/risk-heatmap",
+      "url": "http://127.0.0.1:4023/api/widgets/data/risk-heatmap",
+      "method": "GET",
+      "status": 404,
+      "ok": true,
+      "durationMs": 7,
+      "bodyAssertion": "n/a",
+      "parsedAs": "text",
+      "sampleBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /api/widgets/data/risk-heatmap</pre>\n</body>\n</html>\n"
+    },
+    {
+      "name": "notifications/stream-status",
+      "url": "http://127.0.0.1:4005/api/notifications/stream/status",
+      "method": "GET",
+      "status": 200,
+      "ok": true,
+      "durationMs": 12,
+      "bodyAssertion": "n/a",
+      "parsedAs": "json",
+      "sampleBody": "{\"connectedClients\":0}"
+    },
+    {
+      "name": "reports/control-drift",
+      "url": "http://127.0.0.1:4023/api/dashboard-reports/control-drift",
+      "method": "GET",
+      "status": 404,
+      "ok": true,
+      "durationMs": 4,
+      "bodyAssertion": "n/a",
+      "parsedAs": "text",
+      "sampleBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /api/dashboard-reports/control-drift</pre>\n</body>\n</html>\n"
+    },
+    {
+      "name": "widgets/data/compliance-trend",
+      "url": "http://127.0.0.1:4023/api/widgets/data/compliance-trend",
+      "method": "GET",
+      "status": 404,
+      "ok": true,
+      "durationMs": 7,
+      "bodyAssertion": "n/a",
+      "parsedAs": "text",
+      "sampleBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /api/widgets/data/compliance-trend</pre>\n</body>\n</html>\n"
+    },
+    {
+      "name": "tenant/me as admin",
+      "url": "http://127.0.0.1:4002/api/tenants/me",
+      "method": "GET",
+      "status": 404,
+      "ok": true,
+      "durationMs": 3,
+      "bodyAssertion": "n/a",
+      "parsedAs": "text",
+      "sampleBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /api/tenants/me</pre>\n</body>\n</html>\n"
+    },
+    {
+      "name": "notifications/ws-health",
+      "url": "http://127.0.0.1:4005/api/notifications/ws-health",
+      "method": "GET",
+      "status": 400,
+      "ok": false,
+      "durationMs": 14,
+      "bodyAssertion": "n/a",
+      "parsedAs": "json",
+      "sampleBody": "{\"error\":\"Missing x-tenant-id header\"}"
+    },
+    {
+      "name": "platform/users",
+      "url": "http://127.0.0.1:4003/api/users",
+      "method": "GET",
+      "status": 401,
+      "ok": false,
+      "durationMs": 2,
+      "bodyAssertion": "n/a",
+      "parsedAs": "json",
+      "sampleBody": "{\"error\":\"Authentication required\",\"code\":\"UNAUTHENTICATED\"}"
+    },
+    {
+      "name": "reports/evidence-queue",
+      "url": "http://127.0.0.1:4023/api/dashboard-reports/evidence-queue",
+      "method": "GET",
+      "status": 404,
+      "ok": true,
+      "durationMs": 5,
+      "bodyAssertion": "n/a",
+      "parsedAs": "text",
+      "sampleBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /api/dashboard-reports/evidence-queue</pre>\n</body>\n</html>\n"
+    },
+    {
+      "name": "reports/audit-pack",
+      "url": "http://127.0.0.1:4023/api/dashboard-reports/audit-pack",
+      "method": "GET",
+      "status": 404,
+      "ok": true,
+      "durationMs": 7,
+      "bodyAssertion": "n/a",
+      "parsedAs": "text",
+      "sampleBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /api/dashboard-reports/audit-pack</pre>\n</body>\n</html>\n"
+    },
+    {
+      "name": "reports/exceptions-aging",
+      "url": "http://127.0.0.1:4023/api/dashboard-reports/exceptions-aging",
+      "method": "GET",
+      "status": 404,
+      "ok": true,
+      "durationMs": 7,
+      "bodyAssertion": "n/a",
+      "parsedAs": "text",
+      "sampleBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /api/dashboard-reports/exceptions-aging</pre>\n</body>\n</html>\n"
+    },
+    {
+      "name": "notifications/list",
+      "url": "http://127.0.0.1:4005/api/notifications",
+      "method": "GET",
+      "status": 200,
+      "ok": true,
+      "durationMs": 21,
+      "bodyAssertion": "n/a",
+      "parsedAs": "json",
+      "sampleBody": "{\"data\":[],\"total\":0}"
+    }
+  ],
+  "apiSummary": {
+    "total": 63,
+    "passed": 32,
+    "failed": 31
+  },
+  "widgetMatrix": [
+    {
+      "widget": "authority-simulator",
+      "inSpec": false,
+      "inRegistry": false,
+      "inKeyMap": true,
+      "inBundle": false
+    },
+    {
+      "widget": "business-units-grid",
+      "inSpec": false,
+      "inRegistry": false,
+      "inKeyMap": true,
+      "inBundle": false
+    },
+    {
+      "widget": "campaign-cockpit",
+      "inSpec": false,
+      "inRegistry": false,
+      "inKeyMap": true,
+      "inBundle": false
+    },
+    {
+      "widget": "controls-coverage-grid",
+      "inSpec": false,
+      "inRegistry": false,
+      "inKeyMap": true,
+      "inBundle": false
+    },
+    {
+      "widget": "decision-room",
+      "inSpec": false,
+      "inRegistry": false,
+      "inKeyMap": true,
+      "inBundle": false
+    },
+    {
+      "widget": "departments-grid",
+      "inSpec": false,
+      "inRegistry": false,
+      "inKeyMap": true,
+      "inBundle": false
+    },
+    {
+      "widget": "evidence-vault",
+      "inSpec": false,
+      "inRegistry": false,
+      "inKeyMap": true,
+      "inBundle": true
+    },
+    {
+      "widget": "forensic-timeline",
+      "inSpec": false,
+      "inRegistry": false,
+      "inKeyMap": true,
+      "inBundle": false
+    },
+    {
+      "widget": "foundation-command-center",
+      "inSpec": false,
+      "inRegistry": false,
+      "inKeyMap": true,
+      "inBundle": false
+    },
+    {
+      "widget": "geo-coverage-map",
+      "inSpec": false,
+      "inRegistry": false,
+      "inKeyMap": true,
+      "inBundle": false
+    },
+    {
+      "widget": "identity-360",
+      "inSpec": false,
+      "inRegistry": false,
+      "inKeyMap": true,
+      "inBundle": false
+    },
+    {
+      "widget": "identity-360-list",
+      "inSpec": false,
+      "inRegistry": false,
+      "inKeyMap": true,
+      "inBundle": false
+    },
+    {
+      "widget": "lifecycle-board",
+      "inSpec": false,
+      "inRegistry": false,
+      "inKeyMap": true,
+      "inBundle": false
+    },
+    {
+      "widget": "my-work-queue",
+      "inSpec": false,
+      "inRegistry": false,
+      "inKeyMap": true,
+      "inBundle": false
+    },
+    {
+      "widget": "org-graph-canvas",
+      "inSpec": false,
+      "inRegistry": false,
+      "inKeyMap": true,
+      "inBundle": false
+    },
+    {
+      "widget": "ownership-heatmap",
+      "inSpec": false,
+      "inRegistry": false,
+      "inKeyMap": true,
+      "inBundle": false
+    },
+    {
+      "widget": "permission-matrix",
+      "inSpec": false,
+      "inRegistry": false,
+      "inKeyMap": true,
+      "inBundle": false
+    },
+    {
+      "widget": "policy-lifecycle-board",
+      "inSpec": false,
+      "inRegistry": false,
+      "inKeyMap": true,
+      "inBundle": false
+    },
+    {
+      "widget": "positions-board",
+      "inSpec": false,
+      "inRegistry": false,
+      "inKeyMap": true,
+      "inBundle": false
+    },
+    {
+      "widget": "raci-canvas",
+      "inSpec": false,
+      "inRegistry": false,
+      "inKeyMap": true,
+      "inBundle": false
+    },
+    {
+      "widget": "risk-heatmap",
+      "inSpec": false,
+      "inRegistry": false,
+      "inKeyMap": true,
+      "inBundle": true
+    },
+    {
+      "widget": "ropa-map",
+      "inSpec": false,
+      "inRegistry": false,
+      "inKeyMap": true,
+      "inBundle": false
+    },
+    {
+      "widget": "sla-console",
+      "inSpec": false,
+      "inRegistry": false,
+      "inKeyMap": true,
+      "inBundle": false
+    },
+    {
+      "widget": "taxonomy-editor",
+      "inSpec": false,
+      "inRegistry": false,
+      "inKeyMap": true,
+      "inBundle": false
+    },
+    {
+      "widget": "template-gallery",
+      "inSpec": false,
+      "inRegistry": false,
+      "inKeyMap": true,
+      "inBundle": false
+    },
+    {
+      "widget": "tenant-control-center",
+      "inSpec": false,
+      "inRegistry": false,
+      "inKeyMap": true,
+      "inBundle": false
+    },
+    {
+      "widget": "vendor-risk-portfolio",
+      "inSpec": false,
+      "inRegistry": false,
+      "inKeyMap": true,
+      "inBundle": false
+    },
+    {
+      "widget": "workflow-command-center",
+      "inSpec": false,
+      "inRegistry": false,
+      "inKeyMap": true,
+      "inBundle": false
+    },
+    {
+      "widget": "workflow-designer-canvas",
+      "inSpec": false,
+      "inRegistry": false,
+      "inKeyMap": true,
+      "inBundle": true
+    },
+    {
+      "widget": "workflow-instance-monitor",
+      "inSpec": false,
+      "inRegistry": false,
+      "inKeyMap": true,
+      "inBundle": false
+    },
+    {
+      "widget": "workspace-home-cockpit",
+      "inSpec": false,
+      "inRegistry": false,
+      "inKeyMap": true,
+      "inBundle": false
+    }
+  ],
+  "widgetSummary": {
+    "total": 31,
+    "fullyCovered": 0,
+    "missingFromBundle": [
+      "authority-simulator",
+      "business-units-grid",
+      "campaign-cockpit",
+      "controls-coverage-grid",
+      "decision-room",
+      "departments-grid",
+      "forensic-timeline",
+      "foundation-command-center",
+      "geo-coverage-map",
+      "identity-360",
+      "identity-360-list",
+      "lifecycle-board",
+      "my-work-queue",
+      "org-graph-canvas",
+      "ownership-heatmap",
+      "permission-matrix",
+      "policy-lifecycle-board",
+      "positions-board",
+      "raci-canvas",
+      "ropa-map",
+      "sla-console",
+      "taxonomy-editor",
+      "template-gallery",
+      "tenant-control-center",
+      "vendor-risk-portfolio",
+      "workflow-command-center",
+      "workflow-instance-monitor",
+      "workspace-home-cockpit"
+    ],
+    "missingFromKeyMap": [],
+    "missingFromRegistry": [
+      "authority-simulator",
+      "business-units-grid",
+      "campaign-cockpit",
+      "controls-coverage-grid",
+      "decision-room",
+      "departments-grid",
+      "evidence-vault",
+      "forensic-timeline",
+      "foundation-command-center",
+      "geo-coverage-map",
+      "identity-360",
+      "identity-360-list",
+      "lifecycle-board",
+      "my-work-queue",
+      "org-graph-canvas",
+      "ownership-heatmap",
+      "permission-matrix",
+      "policy-lifecycle-board",
+      "positions-board",
+      "raci-canvas",
+      "risk-heatmap",
+      "ropa-map",
+      "sla-console",
+      "taxonomy-editor",
+      "template-gallery",
+      "tenant-control-center",
+      "vendor-risk-portfolio",
+      "workflow-command-center",
+      "workflow-designer-canvas",
+      "workflow-instance-monitor",
+      "workspace-home-cockpit"
+    ]
+  }
+}

@@ -1,0 +1,198 @@
+
+[1m╔══════════════════════════════════════════╗[0m
+[1m║   DOS-AIO Platform Rebuild  20260425_223059  ║[0m
+[1m╚══════════════════════════════════════════╝[0m
+Log: /root/DOS-AIO/ops/logs/rebuild/rebuild_20260425_223059.log
+Root: /root/DOS-AIO
+
+[0;36m[1m══ PHASE 1: Shared Packages (Tier 1 — Foundation) ══[0m
+  → Building @dos/types...
+[0;32m  ✓ @dos/types[0m
+  → Building architecture-types...
+[0;32m  ✓ architecture-types[0m
+  → Building errors...
+[0;31m  ✗ errors (see /root/DOS-AIO/ops/logs/rebuild/pkg_errors_20260425_223059.log)[0m
+../..                                    |  WARN  Unsupported engine: wanted: {"node":">=24.14.0"} (current: {"node":"v20.18.2","pnpm":"10.33.0"})
+ ERR_PNPM_NO_SCRIPT  Missing script: build
+
+Command "build" not found.
+  → Building utils...
+[0;31m  ✗ utils (see /root/DOS-AIO/ops/logs/rebuild/pkg_utils_20260425_223059.log)[0m
+../..                                    |  WARN  Unsupported engine: wanted: {"node":">=24.14.0"} (current: {"node":"v20.18.2","pnpm":"10.33.0"})
+ ERR_PNPM_NO_SCRIPT  Missing script: build
+
+Command "build" not found.
+  → Building @shahin-grc/shared-compliance-types...
+[0;32m  ✓ @shahin-grc/shared-compliance-types[0m
+  → Building @shahin-grc/shared-risk-types...
+[0;32m  ✓ @shahin-grc/shared-risk-types[0m
+  → Building @shahin-grc/shared-workflow-types...
+[0;32m  ✓ @shahin-grc/shared-workflow-types[0m
+
+[0;36m[1m══ PHASE 1: Shared Packages (Tier 2 — Contracts & DB) ══[0m
+  → Building @dos/contracts...
+[0;32m  ✓ @dos/contracts[0m
+  → Building @dos/db...
+[0;32m  ✓ @dos/db[0m
+
+[0;36m[1m══ PHASE 1: Shared Packages (Tier 3 — Platform Core) ══[0m
+  → Building @dos/platform-core...
+[0;32m  ✓ @dos/platform-core[0m
+
+[0;36m[1m══ PHASE 1: Shared Packages (Tier 4 — SDK & Middleware) ══[0m
+  → Building @dos/event-backbone...
+[0;32m  ✓ @dos/event-backbone[0m
+  → Building @dos/runtime-config...
+[0;32m  ✓ @dos/runtime-config[0m
+  → Building @dos/service-client...
+[0;32m  ✓ @dos/service-client[0m
+  → Building @dos/module-sdk...
+[0;32m  ✓ @dos/module-sdk[0m
+  → Building @dos/service-bootstrap...
+[0;31m  ✗ @dos/service-bootstrap (see /root/DOS-AIO/ops/logs/rebuild/pkg_dos-service-bootstrap_20260425_223059.log)[0m
+  Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/events/dauth.subscribers.ts(468,31): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/events/dauth.subscribers.ts(486,31): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/events/dauth.subscribers.ts(504,31): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/events/dauth.subscribers.ts(522,31): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/events/dauth.subscribers.ts(540,31): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/events/dauth.subscribers.ts(558,31): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/events/dauth.subscribers.ts(576,31): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/events/dauth.subscribers.ts(594,31): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/events/dauth.subscribers.ts(612,31): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+ ELIFECYCLE  Command failed with exit code 2.
+
+[0;36m[1m══ PHASE 1: Shared Packages (Tier 5 — Product Layer) ══[0m
+  → Building @shahin/product...
+[0;32m  ✓ @shahin/product[0m
+[1;33m  ⚠ platform — directory missing, skip[0m
+  → Building config...
+[0;31m  ✗ config (see /root/DOS-AIO/ops/logs/rebuild/pkg_config_20260425_223059.log)[0m
+../..                                    |  WARN  Unsupported engine: wanted: {"node":">=24.14.0"} (current: {"node":"v20.18.2","pnpm":"10.33.0"})
+ ERR_PNPM_NO_SCRIPT  Missing script: build
+
+Command "build" not found.
+
+[0;36m[1m══ PHASE 2: Microservices (Group A — Core Platform) ══[0m
+  → Building auth-service...
+[0;32m  ✓ auth-service[0m
+  → Building tenant-service...
+[0;32m  ✓ tenant-service[0m
+  → Building user-service...
+[0;32m  ✓ user-service[0m
+  → Building workflow-service...
+[0;32m  ✓ workflow-service[0m
+
+[0;36m[1m══ PHASE 2: Microservices (Group B — Gateway & Shell) ══[0m
+  → Building gateway...
+[0;32m  ✓ gateway[0m
+  → Building product-shell...
+[0;32m  ✓ product-shell[0m
+
+[0;36m[1m══ PHASE 2: Microservices (Group C — Platform Services) ══[0m
+  → Building platform-core-service...
+[0;32m  ✓ platform-core-service[0m
+  → Building platform-product-service...
+[0;32m  ✓ platform-product-service[0m
+  → Building notification-service...
+[0;32m  ✓ notification-service[0m
+  → Building notification-inbox-service...
+[0;32m  ✓ notification-inbox-service[0m
+  → Building audit-service...
+[0;32m  ✓ audit-service[0m
+
+[0;36m[1m══ PHASE 2: Microservices (Group D — AI Services) ══[0m
+  → Building ai-engine-service...
+[0;32m  ✓ ai-engine-service[0m
+  → Building ai-gateway-service...
+[0;32m  ✓ ai-gateway-service[0m
+  → Building agrc-os-service...
+[0;32m  ✓ agrc-os-service[0m
+
+[0;36m[1m══ PHASE 2: Microservices (Group E — Domain Modules) ══[0m
+  → Building compliance-controls-service...
+[0;32m  ✓ compliance-controls-service[0m
+  → Building risk-incident-service...
+[0;32m  ✓ risk-incident-service[0m
+  → Building governance-policy-service...
+[0;32m  ✓ governance-policy-service[0m
+  → Building evidence-audit-reporting-service...
+[0;32m  ✓ evidence-audit-reporting-service[0m
+  → Building audit-service (verify)...
+[0;32m  ✓ audit-service (verify)[0m
+  → Building vendor-service...
+[0;32m  ✓ vendor-service[0m
+  → Building asset-service...
+[0;32m  ✓ asset-service[0m
+  → Building bcp-service...
+[0;32m  ✓ bcp-service[0m
+  → Building training-service...
+[0;32m  ✓ training-service[0m
+  → Building privacy-service...
+[0;32m  ✓ privacy-service[0m
+  → Building dora-service...
+[0;32m  ✓ dora-service[0m
+  → Building remediation-action-service...
+[0;32m  ✓ remediation-action-service[0m
+  → Building qiyas-journey-service...
+[0;32m  ✓ qiyas-journey-service[0m
+  → Building integrations-service...
+[0;32m  ✓ integrations-service[0m
+  → Building portals-service...
+[0;32m  ✓ portals-service[0m
+  → Building records-service...
+[0;32m  ✓ records-service[0m
+  → Building executive-intelligence-service...
+[0;32m  ✓ executive-intelligence-service[0m
+
+[0;36m[1m══ PHASE 2: Microservices (Group F — Analytics & Reporting) ══[0m
+  → Building analytics-service...
+[0;32m  ✓ analytics-service[0m
+  → Building analytics-reporting-service...
+[0;32m  ✓ analytics-reporting-service[0m
+  → Building dashboard-widgets-service...
+[0;32m  ✓ dashboard-widgets-service[0m
+
+[0;36m[1m══ PHASE 2: Microservices (Group G — Onboarding) ══[0m
+  → Building onboarding-service...
+[0;32m  ✓ onboarding-service[0m
+
+[0;36m[1m══ PHASE 3: Angular Frontend (shahin-grc) ══[0m
+  → Running prebuild (route fragments)...
+    route fragments: ok
+  → Building Angular production bundle...
+[0;31m  ✗ Angular SPA build failed (see /root/DOS-AIO/ops/logs/rebuild/frontend_20260425_223059.log)[0m
+
+[0;36m[1m══ PHASE 4: PM2 Reload / Start ══[0m
+  → Reloading 41 running services (zero-downtime)...
+[0;32m  ✓ PM2 reload[0m
+
+  Health check (critical services):
+[0;32m  ✓   gateway :4000 → HTTP 200[0m
+[0;32m  ✓   auth-service :4001 → HTTP 200[0m
+[0;32m  ✓   tenant-service :4002 → HTTP 200[0m
+[0;32m  ✓   user-service :4003 → HTTP 200[0m
+[0;32m  ✓   product-shell :3000 → HTTP 200[0m
+
+[0;36m[1m══ BUILD COMPLETE ══[0m
+
+[1mResults: [0;32m54 passed[0m | [0;31m5 failed[0m | [1;33m1 skipped[0m | 60 total[0m
+Full log: /root/DOS-AIO/ops/logs/rebuild/rebuild_20260425_223059.log
+
+[0;31m[1mFailed items:[0m
+  [0;31m✗ errors (see /root/DOS-AIO/ops/logs/rebuild/pkg_errors_20260425_223059.log)[0m
+  [0;31m✗ utils (see /root/DOS-AIO/ops/logs/rebuild/pkg_utils_20260425_223059.log)[0m
+  [0;31m✗ @dos/service-bootstrap (see /root/DOS-AIO/ops/logs/rebuild/pkg_dos-service-bootstrap_20260425_223059.log)[0m
+  [0;31m✗ config (see /root/DOS-AIO/ops/logs/rebuild/pkg_config_20260425_223059.log)[0m
+  [0;31m✗ Angular SPA build failed (see /root/DOS-AIO/ops/logs/rebuild/frontend_20260425_223059.log)[0m
+
+[0;31mPlatform rebuild INCOMPLETE — fix failures above and re-run[0m

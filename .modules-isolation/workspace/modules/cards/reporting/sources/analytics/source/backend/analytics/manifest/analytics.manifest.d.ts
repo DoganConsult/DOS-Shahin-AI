@@ -1,0 +1,21 @@
+import { ANALYTICS_MANIFEST } from '../analytics.module';
+export { ANALYTICS_MANIFEST };
+export declare const ANALYTICS_MANIFEST_META: {
+    readonly code: string;
+    readonly version: string;
+    readonly tier: string;
+    readonly category: string;
+    readonly routeBase: string;
+    readonly eventNamespace: string;
+    readonly tablePrefix: string;
+    readonly ownedTables: string[];
+    readonly publishedEvents: string[];
+    readonly consumedEvents: string[];
+    readonly hardDeps: string[];
+    readonly softDeps: string[];
+    readonly provisioningOrder: number | undefined;
+    readonly lifecycleParticipation: false;
+    readonly uiSurfaces: readonly ["analytics-hub", "custom-dashboards", "metric-explorer", "dataset-management", "snapshot-views", "diagnostics"];
+    readonly adminSurfaces: string[] | undefined;
+    readonly healthSignals: readonly ["schema_exists", "tables_exist", "refresh_schedule_healthy", "stale_snapshots", "cache_freshness"];
+};

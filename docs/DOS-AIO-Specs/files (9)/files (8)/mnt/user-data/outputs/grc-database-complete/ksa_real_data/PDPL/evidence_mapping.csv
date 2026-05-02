@@ -1,0 +1,65 @@
+mapping_id,control_id,framework_code,control_number,evidence_type_code,evidence_name_en,evidence_name_ar,evidence_category,is_mandatory,is_primary,display_order,min_retention_months,review_frequency_months,approval_role,format_hints,requirement_description_en
+1,1,PDPL,Art-5,CONSENT_RECORD,Consent Record,سجل الموافقة,record,True,True,1,60,12,DPO,"JSON, XLSX",Provide Consent Record demonstrating implementation of Lawful Basis Required
+2,1,PDPL,Art-5,POLICY,Policy Document,وثيقة السياسة,document,True,False,2,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Lawful Basis Required
+3,1,PDPL,Art-5,PROCEDURE,Procedure Document,وثيقة الإجراءات,document,False,False,3,36,12,Department Head,"PDF, DOCX",Provide Procedure Document demonstrating implementation of Lawful Basis Required
+4,1,PDPL,Art-5,PRIVACY_NOTICE,Privacy Notice,إشعار الخصوصية,document,False,False,4,84,12,DPO/Legal,"HTML, PDF",Provide Privacy Notice demonstrating implementation of Lawful Basis Required
+5,1,PDPL,Art-5,ROPA,Records of Processing Activities,سجل أنشطة المعالجة,record,False,False,5,60,6,DPO,"XLSX, JSON",Provide Records of Processing Activities demonstrating implementation of Lawful Basis Required
+6,2,PDPL,Art-6,CONSENT_MGMT_PLATFORM,Consent Management Platform,منصة الموافقات,artifact,True,True,1,60,1,DPO,JSON,Provide Consent Management Platform demonstrating implementation of Consent Requirements
+7,2,PDPL,Art-6,CONSENT_RECORD,Consent Record,سجل الموافقة,record,True,False,2,60,12,DPO,"JSON, XLSX",Provide Consent Record demonstrating implementation of Consent Requirements
+8,2,PDPL,Art-6,POLICY,Policy Document,وثيقة السياسة,document,False,False,3,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Consent Requirements
+9,2,PDPL,Art-6,PROCEDURE,Procedure Document,وثيقة الإجراءات,document,False,False,4,36,12,Department Head,"PDF, DOCX",Provide Procedure Document demonstrating implementation of Consent Requirements
+10,3,PDPL,Art-10,PRIVACY_NOTICE,Privacy Notice,إشعار الخصوصية,document,True,True,1,84,12,DPO/Legal,"HTML, PDF",Provide Privacy Notice demonstrating implementation of Purpose Limitation
+11,3,PDPL,Art-10,ROPA,Records of Processing Activities,سجل أنشطة المعالجة,record,True,False,2,60,6,DPO,"XLSX, JSON",Provide Records of Processing Activities demonstrating implementation of Purpose Limitation
+12,3,PDPL,Art-10,POLICY,Policy Document,وثيقة السياسة,document,False,False,3,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Purpose Limitation
+13,3,PDPL,Art-10,PROCEDURE,Procedure Document,وثيقة الإجراءات,document,False,False,4,36,12,Department Head,"PDF, DOCX",Provide Procedure Document demonstrating implementation of Purpose Limitation
+14,4,PDPL,Art-11,ROPA,Records of Processing Activities,سجل أنشطة المعالجة,record,True,True,1,60,6,DPO,"XLSX, JSON",Provide Records of Processing Activities demonstrating implementation of Data Minimization
+15,4,PDPL,Art-11,DATA_INVENTORY,Data Inventory,جرد البيانات,record,True,False,2,36,6,DPO,"XLSX, JSON",Provide Data Inventory demonstrating implementation of Data Minimization
+16,4,PDPL,Art-11,POLICY,Policy Document,وثيقة السياسة,document,False,False,3,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Data Minimization
+17,4,PDPL,Art-11,DPIA,Data Protection Impact Assessment,تقييم أثر حماية البيانات,record,False,False,4,60,12,DPO,"PDF, DOCX",Provide Data Protection Impact Assessment demonstrating implementation of Data Minimization
+18,5,PDPL,Art-12,DATA_QUALITY_REPORT,Data Quality Report,تقرير جودة البيانات,record,True,True,1,24,3,Data Steward,"PDF, XLSX",Provide Data Quality Report demonstrating implementation of Data Accuracy
+19,5,PDPL,Art-12,PROCEDURE,Procedure Document,وثيقة الإجراءات,document,True,False,2,36,12,Department Head,"PDF, DOCX",Provide Procedure Document demonstrating implementation of Data Accuracy
+20,5,PDPL,Art-12,AUDIT_LOG,Audit Trail Log,سجل التدقيق,record,False,False,3,24,3,None,"LOG, JSON",Provide Audit Trail Log demonstrating implementation of Data Accuracy
+21,6,PDPL,Art-4-1,PRIVACY_NOTICE,Privacy Notice,إشعار الخصوصية,document,True,True,1,84,12,DPO/Legal,"HTML, PDF",Provide Privacy Notice demonstrating implementation of Privacy Notice
+22,6,PDPL,Art-4-1,WEBSITE_PRIVACY_POLICY,Website Privacy Policy,سياسة الخصوصية للموقع,document,True,False,2,84,12,DPO,HTML,Provide Website Privacy Policy demonstrating implementation of Privacy Notice
+23,6,PDPL,Art-4-1,CONSENT_RECORD,Consent Record,سجل الموافقة,record,False,False,3,60,12,DPO,"JSON, XLSX",Provide Consent Record demonstrating implementation of Privacy Notice
+24,6,PDPL,Art-4-1,SCREENSHOT,System Screenshot,لقطة شاشة,artifact,False,False,4,24,3,None,"PNG, JPG, PDF",Provide System Screenshot demonstrating implementation of Privacy Notice
+25,7,PDPL,Art-4-2,DSR_PROCEDURE,DSR Procedure,إجراء DSR,document,True,True,1,36,12,DPO,PDF,Provide DSR Procedure demonstrating implementation of 30-Day Subject Access Response
+26,7,PDPL,Art-4-2,DSR_LOG,Data Subject Request Log,سجل طلبات الأصحاب,record,True,False,2,60,1,DPO,"XLSX, JSON",Provide Data Subject Request Log demonstrating implementation of 30-Day Subject Access Response
+27,7,PDPL,Art-4-2,RESPONSE_RECORDS,DSR Response Records,سجلات الاستجابة,record,False,False,3,60,1,DPO,"PDF, EMAIL",Provide DSR Response Records demonstrating implementation of 30-Day Subject Access Response
+28,7,PDPL,Art-4-2,POLICY,Policy Document,وثيقة السياسة,document,False,False,4,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of 30-Day Subject Access Response
+29,8,PDPL,Art-4-3,DSR_LOG,Data Subject Request Log,سجل طلبات الأصحاب,record,True,True,1,60,1,DPO,"XLSX, JSON",Provide Data Subject Request Log demonstrating implementation of Rectification
+30,8,PDPL,Art-4-3,PROCEDURE,Procedure Document,وثيقة الإجراءات,document,True,False,2,36,12,Department Head,"PDF, DOCX",Provide Procedure Document demonstrating implementation of Rectification
+31,8,PDPL,Art-4-3,AUDIT_LOG,Audit Trail Log,سجل التدقيق,record,False,False,3,24,3,None,"LOG, JSON",Provide Audit Trail Log demonstrating implementation of Rectification
+32,9,PDPL,Art-4-4,DSR_LOG,Data Subject Request Log,سجل طلبات الأصحاب,record,True,True,1,60,1,DPO,"XLSX, JSON",Provide Data Subject Request Log demonstrating implementation of Right to Erasure
+33,9,PDPL,Art-4-4,DESTRUCTION_CERT,Certificate of Destruction,شهادة الإتلاف,record,True,False,2,84,0,Records Manager,PDF,Provide Certificate of Destruction demonstrating implementation of Right to Erasure
+34,9,PDPL,Art-4-4,PROCEDURE,Procedure Document,وثيقة الإجراءات,document,False,False,3,36,12,Department Head,"PDF, DOCX",Provide Procedure Document demonstrating implementation of Right to Erasure
+35,9,PDPL,Art-4-4,AUDIT_LOG,Audit Trail Log,سجل التدقيق,record,False,False,4,24,3,None,"LOG, JSON",Provide Audit Trail Log demonstrating implementation of Right to Erasure
+36,10,PDPL,Art-31,ROPA,Records of Processing Activities,سجل أنشطة المعالجة,record,True,True,1,60,6,DPO,"XLSX, JSON",Provide Records of Processing Activities demonstrating implementation of ROPA Maintenance
+37,10,PDPL,Art-31,INVENTORY,Asset Inventory,جرد الأصول,record,True,False,2,36,1,None,"XLSX, CSV",Provide Asset Inventory demonstrating implementation of ROPA Maintenance
+38,10,PDPL,Art-31,POLICY,Policy Document,وثيقة السياسة,document,False,False,3,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of ROPA Maintenance
+39,10,PDPL,Art-31,PROCEDURE,Procedure Document,وثيقة الإجراءات,document,False,False,4,36,12,Department Head,"PDF, DOCX",Provide Procedure Document demonstrating implementation of ROPA Maintenance
+40,11,PDPL,Art-32,JOB_DESCRIPTION,Job Description,الوصف الوظيفي,document,True,True,1,60,24,HR,"PDF, DOCX",Provide Job Description demonstrating implementation of DPO Appointment
+41,11,PDPL,Art-32,APPOINTMENT_LETTER,Appointment Letter,خطاب التعيين,document,True,False,2,60,0,HR,PDF,Provide Appointment Letter demonstrating implementation of DPO Appointment
+42,11,PDPL,Art-32,QUALIFICATIONS,Qualifications/CV,المؤهلات,document,False,False,3,60,24,HR,PDF,Provide Qualifications/CV demonstrating implementation of DPO Appointment
+43,11,PDPL,Art-32,ORG_CHART,Organizational Chart,الهيكل التنظيمي,document,False,False,4,60,12,Executive,"PDF, VISIO",Provide Organizational Chart demonstrating implementation of DPO Appointment
+44,12,PDPL,Art-25,DPIA,Data Protection Impact Assessment,تقييم أثر حماية البيانات,record,True,True,1,60,12,DPO,"PDF, DOCX",Provide Data Protection Impact Assessment demonstrating implementation of DPIA for High-Risk Processing
+45,12,PDPL,Art-25,REPORT,Report,تقرير,record,True,False,2,36,3,Department Head,"PDF, XLSX",Provide Report demonstrating implementation of DPIA for High-Risk Processing
+46,12,PDPL,Art-25,RISK_ASSESSMENT,Risk Assessment,تقييم المخاطر,record,False,False,3,36,12,Risk Officer,"PDF, XLSX",Provide Risk Assessment demonstrating implementation of DPIA for High-Risk Processing
+47,12,PDPL,Art-25,APPROVAL_RECORD,Approval Record,سجل الموافقة,record,False,False,4,60,0,Authorizer,"PDF, EMAIL",Provide Approval Record demonstrating implementation of DPIA for High-Risk Processing
+48,13,PDPL,Art-19,POLICY,Policy Document,وثيقة السياسة,document,True,True,1,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Technical and Organizational Measures
+49,13,PDPL,Art-19,TECHNICAL_CONTROLS,Technical Controls Evidence,أدلة الضوابط الفنية,artifact,True,False,2,24,6,CISO,Various,Provide Technical Controls Evidence demonstrating implementation of Technical and Organizational Measures
+50,13,PDPL,Art-19,AUDIT_REPORT,Audit Report,تقرير التدقيق,record,False,False,3,84,12,Auditor,PDF,Provide Audit Report demonstrating implementation of Technical and Organizational Measures
+51,13,PDPL,Art-19,TEST_RESULT,Test Results,نتائج الاختبار,record,False,False,4,36,12,Test Manager,"PDF, XLSX",Provide Test Results demonstrating implementation of Technical and Organizational Measures
+52,14,PDPL,Art-20,INCIDENT_REPORT,Incident Report,تقرير الحادث,record,True,True,1,60,12,CISO,PDF,Provide Incident Report demonstrating implementation of 72-Hour SDAIA Breach Notification
+53,14,PDPL,Art-20,SDAIA_NOTIFICATION,SDAIA Breach Notification (72-hour),إشعار SDAIA (72 ساعة),record,True,False,2,84,0,DPO,"PDF, EMAIL",Provide SDAIA Breach Notification (72-hour) demonstrating implementation of 72-Hour SDAIA Breach Notification
+54,14,PDPL,Art-20,TIMELINE,Incident Timeline,الجدول الزمني للحادث,record,False,False,3,60,0,CISO,"PDF, XLSX",Provide Incident Timeline demonstrating implementation of 72-Hour SDAIA Breach Notification
+55,14,PDPL,Art-20,DATA_SUBJECT_NOTIFICATION,Data Subject Breach Notification,إشعار صاحب البيانات,record,False,False,4,60,0,DPO,"EMAIL, PDF",Provide Data Subject Breach Notification demonstrating implementation of 72-Hour SDAIA Breach Notification
+56,15,PDPL,Art-29,TRANSFER_AGREEMENT,Cross-Border Transfer Agreement,اتفاقية النقل عبر الحدود,document,True,True,1,84,12,Legal,PDF,Provide Cross-Border Transfer Agreement demonstrating implementation of Cross-Border Transfer Safeguards
+57,15,PDPL,Art-29,SCC,Standard Contractual Clauses,البنود التعاقدية الموحدة,document,True,False,2,84,24,Legal,PDF,Provide Standard Contractual Clauses demonstrating implementation of Cross-Border Transfer Safeguards
+58,15,PDPL,Art-29,BCR,Binding Corporate Rules,القواعد المؤسسية الملزمة,document,False,False,3,84,24,Legal/DPO,PDF,Provide Binding Corporate Rules demonstrating implementation of Cross-Border Transfer Safeguards
+59,15,PDPL,Art-29,ADEQUACY_DECISION,Adequacy Decision Reference,قرار الكفاية,document,False,False,4,60,12,DPO,PDF,Provide Adequacy Decision Reference demonstrating implementation of Cross-Border Transfer Safeguards
+60,15,PDPL,Art-29,DPIA,Data Protection Impact Assessment,تقييم أثر حماية البيانات,record,False,False,5,60,12,DPO,"PDF, DOCX",Provide Data Protection Impact Assessment demonstrating implementation of Cross-Border Transfer Safeguards
+61,16,PDPL,Art-29-IR,DATA_RESIDENCY_CERT,Data Residency Certification,شهادة موقع البيانات,document,True,True,1,36,12,Cloud Provider,PDF,Provide Data Residency Certification demonstrating implementation of Data Localization NDMO
+62,16,PDPL,Art-29-IR,ARCHITECTURE_DIAGRAM,Architecture Diagram,المخطط المعماري,document,True,False,2,36,12,Architect,"PNG, PDF, VISIO",Provide Architecture Diagram demonstrating implementation of Data Localization NDMO
+63,16,PDPL,Art-29-IR,POLICY,Policy Document,وثيقة السياسة,document,False,False,3,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Data Localization NDMO
+64,16,PDPL,Art-29-IR,ATTESTATION,Management Attestation,إقرار الإدارة,document,False,False,4,36,12,Executive,PDF,Provide Management Attestation demonstrating implementation of Data Localization NDMO

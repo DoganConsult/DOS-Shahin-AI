@@ -1,0 +1,2 @@
+import { TRAINING_PERMISSIONS } from './training.security';
+export { TRAINING_PERMISSIONS as TRAINING_MODULE_PERMISSIONS };

@@ -1,0 +1,7 @@
+
+> dogan-ai-os-platform-target@1.0.0 validate:env /root/DOS-AIO
+> tsx ops/scripts/validate-env.ts
+
+Environment documentation validation failed:
+  - /root/DOS-AIO/ops/env/.env.development: missing PORT (Default service port for the stack)
+ ELIFECYCLE  Command failed with exit code 1.

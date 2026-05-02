@@ -1,0 +1,590 @@
+{
+  "audit_metadata": {
+    "audit_date": "2026-05-02",
+    "auditor": "Claude Opus 4.6 (automated, read-only)",
+    "scope": "DOS-Platform IBM Carbon Dynamic UI component registry",
+    "verdict": "FAIL",
+    "fail_reasons": [
+      "145 component_keys map to DynamicPageHostComponent fallback",
+      "Extensive PrimeNG/PrimeIcons/Material Icons forbidden usage",
+      "20 route/widget component_keys used but not registered in component_registry"
+    ]
+  },
+  "summary_metrics": {
+    "db_registry_rows_estimated": 152,
+    "frontend_component_map_keys": 209,
+    "carbon_primitive_keys_rendered": 60,
+    "shahin_dedicated_keys": 4,
+    "keys_mapped_to_dynamic_page_host": 145,
+    "carbon_primitive_renderer_classes": 60,
+    "carbon_catalog_rows": 247,
+    "forbidden_primeng_imports": "5516+",
+    "forbidden_primeicons_matches": "1867+",
+    "forbidden_material_icons_matches": "50+",
+    "route_keys_missing_from_registry": 20
+  },
+  "db_registry": {
+    "carbon_primitives": {
+      "migration": "0501",
+      "vendor": "ibm-carbon",
+      "approval_status": "approved",
+      "count": 60,
+      "status": "OK",
+      "tiers": {
+        "tier1_workspace_frame": {
+          "count": 14,
+          "keys": [
+            "UIShell", "Header", "HeaderName", "HeaderNavigation", "HeaderMenu",
+            "HeaderMenuItem", "HeaderGlobalBar", "HeaderGlobalAction", "SideNav",
+            "SideNavItems", "SideNavMenu", "SideNavMenuItem", "SideNavLink", "Content"
+          ]
+        },
+        "tier2_pages_cards_forms_tables": {
+          "count": 36,
+          "keys": [
+            "Grid", "Column", "Layer", "Breadcrumb", "Tabs", "Tab",
+            "Tile", "ClickableTile", "ExpandableTile", "Tag",
+            "DataTable", "TableToolbar", "TableToolbarSearch", "TableToolbarActions",
+            "TableBatchActions", "Pagination", "StructuredList",
+            "Search", "Dropdown", "ComboBox", "MultiSelect", "DatePicker",
+            "TextInput", "TextArea", "NumberInput", "Select", "Checkbox", "Radio", "Toggle",
+            "Button", "IconButton", "OverflowMenu", "OverflowMenuOption",
+            "Modal", "InlineNotification", "ToastNotification"
+          ]
+        },
+        "tier3_enterprise_polish": {
+          "count": 10,
+          "keys": [
+            "Tooltip", "Toggletip", "Popover", "ProgressBar", "InlineLoading",
+            "SkeletonText", "SkeletonPlaceholder", "ContextMenu", "FileUploader", "Accordion"
+          ]
+        }
+      }
+    },
+    "dna_archetype_keys": {
+      "migration": "0147",
+      "backclassified_via": "0148",
+      "vendor": "ibm-carbon",
+      "approval_status": "approved",
+      "count": 24,
+      "status": "OK",
+      "keys": [
+        {
+          "key": "command-center.ai",
+          "carbon_key": "tiles"
+        },
+        {
+          "key": "command-center.cfg",
+          "carbon_key": "tiles"
+        },
+        {
+          "key": "command-center.dnoc",
+          "carbon_key": "tiles"
+        },
+        {
+          "key": "command-center.dos",
+          "carbon_key": "tiles"
+        },
+        {
+          "key": "command-center.dsoc",
+          "carbon_key": "tiles"
+        },
+        {
+          "key": "command-center.fnd",
+          "carbon_key": "tiles"
+        },
+        {
+          "key": "command-center.mtm",
+          "carbon_key": "tiles"
+        },
+        {
+          "key": "command-center.tm",
+          "carbon_key": "tiles"
+        },
+        {
+          "key": "smart-grid.ai",
+          "carbon_key": "table"
+        },
+        {
+          "key": "smart-grid.cfg",
+          "carbon_key": "table"
+        },
+        {
+          "key": "smart-grid.dnoc",
+          "carbon_key": "table"
+        },
+        {
+          "key": "smart-grid.dos",
+          "carbon_key": "table"
+        },
+        {
+          "key": "smart-grid.dsoc",
+          "carbon_key": "table"
+        },
+        {
+          "key": "smart-grid.fnd",
+          "carbon_key": "table"
+        },
+        {
+          "key": "smart-grid.mtm",
+          "carbon_key": "table"
+        },
+        {
+          "key": "smart-grid.tm",
+          "carbon_key": "table"
+        },
+        {
+          "key": "audit-timeline.ai",
+          "carbon_key": "structured-list"
+        },
+        {
+          "key": "audit-timeline.cfg",
+          "carbon_key": "structured-list"
+        },
+        {
+          "key": "audit-timeline.dnoc",
+          "carbon_key": "structured-list"
+        },
+        {
+          "key": "audit-timeline.dos",
+          "carbon_key": "structured-list"
+        },
+        {
+          "key": "audit-timeline.dsoc",
+          "carbon_key": "structured-list"
+        },
+        {
+          "key": "audit-timeline.fnd",
+          "carbon_key": "structured-list"
+        },
+        {
+          "key": "audit-timeline.mtm",
+          "carbon_key": "structured-list"
+        },
+        {
+          "key": "audit-timeline.tm",
+          "carbon_key": "structured-list"
+        }
+      ]
+    },
+    "compliance_page_keys": {
+      "migration": "0500",
+      "vendor": "ibm-carbon",
+      "approval_status": "approved",
+      "count": 63,
+      "status": "OK",
+      "keys": [
+        "AssertionDashboardPage",
+        "AssessmentTemplatesPage",
+        "AssessmentsListPage",
+        "ComplianceAdminPage",
+        "ComplianceAssessmentsPage",
+        "ComplianceAttestationsPage",
+        "ComplianceCalendarPage",
+        "ComplianceCatchAll",
+        "ComplianceControlDetailPage",
+        "ComplianceControlsPage",
+        "ComplianceDiagnosticsPage",
+        "ComplianceEvidenceOpsPage",
+        "ComplianceEvidencePage",
+        "ComplianceExceptionsPage",
+        "ComplianceFindingsPage",
+        "ComplianceFrameworksPage",
+        "ComplianceGapsPage",
+        "ComplianceHeatmapPage",
+        "ComplianceHome",
+        "ComplianceKsaPage",
+        "ComplianceObligationsPage",
+        "ComplianceOverviewPage",
+        "CompliancePosturePage",
+        "ComplianceRegulatorPage",
+        "ComplianceRegulatoryChangesPage",
+        "ComplianceReportsPage",
+        "ComplianceRoadmapPage",
+        "ComplianceSavingsPage",
+        "ComplianceTemplatesPage",
+        "ComplianceWorkQueuePage",
+        "ContentPackPage",
+        "ControlPosturePage",
+        "ControlTestingPage",
+        "ControlsMonitoringPage",
+        "EsgPage",
+        "EthicsIntegrityPage",
+        "ExceptionManagerPage",
+        "FrameworkHubPage",
+        "FrameworkMappingPage",
+        "FrameworkScorecardPage",
+        "GenericModuleLifecycle",
+        "IntelligenceHubPage",
+        "KsaHubPage",
+        "MappingPage",
+        "MaturityJourneyPage",
+        "MaturityWizardPage",
+        "NcaAssessmentPage",
+        "ObligationDetailPage",
+        "ObligationWorkspacePage",
+        "OntologyCatalogPage",
+        "RcsaCampaignsPage",
+        "RegistryPage",
+        "RegulationCompilerPage",
+        "RegulatoryDeltaDashboardPage",
+        "RegulatoryFeedsPage",
+        "RegulatoryReasoningStudioPage",
+        "SamaAssessmentPage",
+        "ScoringPage",
+        "ScoringPoliciesPage",
+        "ScoringPolicyDetailPage",
+        "SoxCompliancePage",
+        "TaxonomyPage",
+        "UcfBrowserPage"
+      ]
+    },
+    "dauth_route_keys": {
+      "migration": "0145",
+      "vendor": "ibm-carbon",
+      "approval_status": "approved",
+      "count": 5,
+      "status": "OK",
+      "keys": [
+        "platform.dauth.overview",
+        "platform.dauth.users.list",
+        "platform.dauth.roles.list",
+        "platform.dauth.perms.list",
+        "platform.dauth.audit.list"
+      ]
+    }
+  },
+  "carbon_catalog": {
+    "table": "dos.ui_carbon_components",
+    "core": {
+      "migration": "0148",
+      "source": "carbon-components-angular@5.69.0",
+      "rows": 58
+    },
+    "ecosystem": {
+      "migration": "0150",
+      "categories": {
+        "charts_carbon_charts_angular": 25,
+        "icons_and_pictograms": 2,
+        "web_components": 25,
+        "ibm_products": 46,
+        "ibm_products_web_components": 6,
+        "ai_suite": 5
+      },
+      "rows": 108
+    },
+    "total_rows": 247
+  },
+  "carbon_primitive_renderers": {
+    "file": "carbon-primitive-renderers.ts",
+    "lines": 837,
+    "count": 60,
+    "all_valid": true,
+    "framework": "Angular standalone components, ChangeDetectionStrategy.OnPush",
+    "import_source": "carbon-components-angular",
+    "renderers": [
+      { "key": "UIShell", "class": "CarbonUIShellRenderer", "selector": "cds-header" },
+      { "key": "Header", "class": "CarbonHeaderRenderer", "selector": "cds-header" },
+      { "key": "HeaderName", "class": "CarbonHeaderNameRenderer", "selector": "cds-header" },
+      { "key": "HeaderNavigation", "class": "CarbonHeaderNavigationRenderer", "selector": "cds-header-navigation" },
+      { "key": "HeaderMenu", "class": "CarbonHeaderMenuRenderer", "selector": "cds-header-menu" },
+      { "key": "HeaderMenuItem", "class": "CarbonHeaderMenuItemRenderer", "selector": "cds-header-item" },
+      { "key": "HeaderGlobalBar", "class": "CarbonHeaderGlobalBarRenderer", "selector": "cds-header-global" },
+      { "key": "HeaderGlobalAction", "class": "CarbonHeaderGlobalActionRenderer", "selector": "cds-header-action" },
+      { "key": "SideNav", "class": "CarbonSideNavRenderer", "selector": "cds-sidenav" },
+      { "key": "SideNavItems", "class": "CarbonSideNavItemsRenderer", "selector": "cds-sidenav" },
+      { "key": "SideNavMenu", "class": "CarbonSideNavMenuRenderer", "selector": "cds-sidenav-menu" },
+      { "key": "SideNavMenuItem", "class": "CarbonSideNavMenuItemRenderer", "selector": "cds-sidenav-item" },
+      { "key": "SideNavLink", "class": "CarbonSideNavLinkRenderer", "selector": "cds-sidenav-item" },
+      { "key": "Content", "class": "CarbonContentRenderer", "selector": "cds--content (CSS class)" },
+      { "key": "Grid", "class": "CarbonGridRenderer", "selector": "cdsGrid (directive)" },
+      { "key": "Column", "class": "CarbonColumnRenderer", "selector": "cdsCol (directive)" },
+      { "key": "Layer", "class": "CarbonLayerRenderer", "selector": "cdsLayer (directive)" },
+      { "key": "Breadcrumb", "class": "CarbonBreadcrumbRenderer", "selector": "cds-breadcrumb" },
+      { "key": "Tabs", "class": "CarbonTabsRenderer", "selector": "cds-tabs / cds-tab" },
+      { "key": "Tab", "class": "CarbonTabRenderer", "selector": "cds-tabs / cds-tab" },
+      { "key": "Tile", "class": "CarbonTileRenderer", "selector": "cds-tile" },
+      { "key": "ClickableTile", "class": "CarbonClickableTileRenderer", "selector": "cds-clickable-tile" },
+      { "key": "ExpandableTile", "class": "CarbonExpandableTileRenderer", "selector": "cds-expandable-tile" },
+      { "key": "Tag", "class": "CarbonTagRenderer", "selector": "cds-tag" },
+      { "key": "InlineNotification", "class": "CarbonInlineNotificationRenderer", "selector": "cds-notification" },
+      { "key": "ToastNotification", "class": "CarbonToastNotificationRenderer", "selector": "cds-toast" },
+      { "key": "ProgressBar", "class": "CarbonProgressBarRenderer", "selector": "cds-progress-bar" },
+      { "key": "InlineLoading", "class": "CarbonInlineLoadingRenderer", "selector": "cds-inline-loading" },
+      { "key": "SkeletonText", "class": "CarbonSkeletonTextRenderer", "selector": "cds-skeleton-text" },
+      { "key": "SkeletonPlaceholder", "class": "CarbonSkeletonPlaceholderRenderer", "selector": "cds-skeleton-placeholder" },
+      { "key": "DataTable", "class": "CarbonDataTableRenderer", "selector": "cds-table-container / cdsTable / cdsTableHead / cdsTableBody / cdsTableRow / cdsTableData / cdsTableHeadCell" },
+      { "key": "TableToolbar", "class": "CarbonTableToolbarRenderer", "selector": "cds-table-toolbar" },
+      { "key": "TableToolbarSearch", "class": "CarbonTableToolbarSearchRenderer", "selector": "cds-table-toolbar-search" },
+      { "key": "TableToolbarActions", "class": "CarbonTableToolbarActionsRenderer", "selector": "cds-table-toolbar-actions" },
+      { "key": "TableBatchActions", "class": "CarbonTableBatchActionsRenderer", "selector": "cds-table-toolbar-actions" },
+      { "key": "Pagination", "class": "CarbonPaginationRenderer", "selector": "cds-pagination" },
+      { "key": "StructuredList", "class": "CarbonStructuredListRenderer", "selector": "cds-structured-list / cds-list-header / cds-list-column / cds-list-row" },
+      { "key": "Search", "class": "CarbonSearchRenderer", "selector": "cds-search" },
+      { "key": "Dropdown", "class": "CarbonDropdownRenderer", "selector": "cds-dropdown" },
+      { "key": "ComboBox", "class": "CarbonComboBoxRenderer", "selector": "cds-combo-box" },
+      { "key": "MultiSelect", "class": "CarbonMultiSelectRenderer", "selector": "cds-dropdown type=\"multi\"" },
+      { "key": "DatePicker", "class": "CarbonDatePickerRenderer", "selector": "cds-date-picker" },
+      { "key": "TextInput", "class": "CarbonTextInputRenderer", "selector": "cds-label / cdsText" },
+      { "key": "TextArea", "class": "CarbonTextAreaRenderer", "selector": "cds-textarea-label / cdsTextArea" },
+      { "key": "NumberInput", "class": "CarbonNumberInputRenderer", "selector": "cds-number" },
+      { "key": "Select", "class": "CarbonSelectRenderer", "selector": "cds-select" },
+      { "key": "Checkbox", "class": "CarbonCheckboxRenderer", "selector": "cds-checkbox" },
+      { "key": "Radio", "class": "CarbonRadioRenderer", "selector": "cds-radio-group / cds-radio" },
+      { "key": "Toggle", "class": "CarbonToggleRenderer", "selector": "cds-toggle" },
+      { "key": "Button", "class": "CarbonButtonRenderer", "selector": "cdsButton (directive)" },
+      { "key": "IconButton", "class": "CarbonIconButtonRenderer", "selector": "cds-icon-button" },
+      { "key": "OverflowMenu", "class": "CarbonOverflowMenuRenderer", "selector": "cds-overflow-menu" },
+      { "key": "OverflowMenuOption", "class": "CarbonOverflowMenuOptionRenderer", "selector": "cds-overflow-menu-option" },
+      { "key": "ContextMenu", "class": "CarbonContextMenuRenderer", "selector": "cds-context-menu" },
+      { "key": "Modal", "class": "CarbonModalRenderer", "selector": "cds-modal / cds-modal-header / cdsModalContent / cdsModalContentText" },
+      { "key": "Tooltip", "class": "CarbonTooltipRenderer", "selector": "cds-tooltip" },
+      { "key": "Toggletip", "class": "CarbonToggletipRenderer", "selector": "cds-toggletip" },
+      { "key": "Popover", "class": "CarbonPopoverRenderer", "selector": "cdsPopover (directive)" },
+      { "key": "FileUploader", "class": "CarbonFileUploaderRenderer", "selector": "cds-file-uploader" },
+      { "key": "Accordion", "class": "CarbonAccordionRenderer", "selector": "cds-accordion / cds-accordion-item" }
+    ]
+  },
+  "component_map_reconciliation": {
+    "file": "component-map.ts",
+    "lines": 258,
+    "total_keys": 209,
+    "breakdown": {
+      "carbon_primitive_renderers": {
+        "count": 60,
+        "status": "PASS"
+      },
+      "dynamic_page_host_fallback": {
+        "count": 145,
+        "status": "FAIL",
+        "rule_violated": "No Carbon key may map to DynamicPageHostComponent"
+      },
+      "shahin_dedicated": {
+        "count": 4,
+        "status": "PASS",
+        "mappings": [
+          { "key": "ShahinProfilePage", "component": "ProfileComponent" },
+          { "key": "ShahinSettingsPage", "component": "SettingsComponent" },
+          { "key": "ShahinTenantProfilePage", "component": "TenantProfileComponent" },
+          { "key": "ShahinTenantSettingsPage", "component": "TenantSettingsComponent" }
+        ]
+      }
+    },
+    "fallback_keys": {
+      "compliance_pages": [
+        "AssertionDashboardPage", "AssessmentTemplatesPage", "AssessmentsListPage",
+        "ComplianceAdminPage", "ComplianceAssessmentsPage", "ComplianceAttestationsPage",
+        "ComplianceCalendarPage", "ComplianceCatchAll", "ComplianceControlDetailPage",
+        "ComplianceControlsPage", "ComplianceDiagnosticsPage", "ComplianceEvidenceOpsPage",
+        "ComplianceEvidencePage", "ComplianceExceptionsPage", "ComplianceFindingsPage",
+        "ComplianceFrameworksPage", "ComplianceGapsPage", "ComplianceHeatmapPage",
+        "ComplianceHome", "ComplianceKsaPage", "ComplianceObligationsPage",
+        "ComplianceOverviewPage", "CompliancePosturePage", "ComplianceRegulatorPage",
+        "ComplianceRegulatoryChangesPage", "ComplianceReportsPage", "ComplianceRoadmapPage",
+        "ComplianceSavingsPage", "ComplianceTemplatesPage", "ComplianceWorkQueuePage",
+        "ContentPackPage", "ControlPosturePage", "ControlTestingPage",
+        "ControlsMonitoringPage", "EsgPage", "EthicsIntegrityPage",
+        "ExceptionManagerPage", "FrameworkHubPage", "FrameworkMappingPage",
+        "FrameworkScorecardPage", "GenericModuleLifecycle", "IntelligenceHubPage",
+        "KsaHubPage", "MappingPage", "MaturityJourneyPage",
+        "MaturityWizardPage", "NcaAssessmentPage", "ObligationDetailPage",
+        "ObligationWorkspacePage", "OntologyCatalogPage", "RcsaCampaignsPage",
+        "RegistryPage", "RegulationCompilerPage", "RegulatoryDeltaDashboardPage",
+        "RegulatoryFeedsPage", "RegulatoryReasoningStudioPage", "SamaAssessmentPage",
+        "ScoringPage", "ScoringPoliciesPage", "ScoringPolicyDetailPage",
+        "SoxCompliancePage", "TaxonomyPage", "UcfBrowserPage"
+      ],
+      "dauth_route_keys": [
+        "platform.dauth.overview", "platform.dauth.users.list",
+        "platform.dauth.roles.list", "platform.dauth.perms.list",
+        "platform.dauth.audit.list"
+      ],
+      "platform_dna_route_keys": [
+        "platform.ai-platform.overview", "platform.ai-platform.gateway",
+        "platform.ai-platform.engine", "platform.ai-platform.governance",
+        "platform.ai-platform.audit",
+        "platform.config-center.overview", "platform.config-center.settings",
+        "platform.config-center.flags", "platform.config-center.tokens",
+        "platform.config-center.audit",
+        "platform.dnoc.overview", "platform.dnoc.services",
+        "platform.dnoc.metrics", "platform.dnoc.alerts",
+        "platform.dnoc.audit",
+        "platform.dos-platform.overview", "platform.dos-platform.registries",
+        "platform.dos-platform.schemas", "platform.dos-platform.events",
+        "platform.dos-platform.audit",
+        "platform.dsoc.overview", "platform.dsoc.detections",
+        "platform.dsoc.incidents", "platform.dsoc.policies",
+        "platform.dsoc.audit",
+        "platform.foundation-admin.overview", "platform.foundation-admin.organizations",
+        "platform.foundation-admin.persons", "platform.foundation-admin.lifecycle",
+        "platform.foundation-admin.audit",
+        "platform.multi-tenant-mgmt.overview", "platform.multi-tenant-mgmt.tenants",
+        "platform.multi-tenant-mgmt.provisioning", "platform.multi-tenant-mgmt.quotas",
+        "platform.multi-tenant-mgmt.audit",
+        "platform.tenant-management.overview", "platform.tenant-management.directory",
+        "platform.tenant-management.members", "platform.tenant-management.profile",
+        "platform.tenant-management.audit"
+      ],
+      "dna_archetype_keys": [
+        "command-center.ai", "command-center.cfg", "command-center.dnoc",
+        "command-center.dos", "command-center.dsoc", "command-center.fnd",
+        "command-center.mtm", "command-center.tm",
+        "smart-grid.ai", "smart-grid.cfg", "smart-grid.dnoc",
+        "smart-grid.dos", "smart-grid.dsoc", "smart-grid.fnd",
+        "smart-grid.mtm", "smart-grid.tm",
+        "audit-timeline.ai", "audit-timeline.cfg", "audit-timeline.dnoc",
+        "audit-timeline.dos", "audit-timeline.dsoc", "audit-timeline.fnd",
+        "audit-timeline.mtm", "audit-timeline.tm"
+      ],
+      "additional_widget_route_keys": [
+        "command-center.identity-summary",
+        "audit-timeline.access", "audit-timeline.runtime",
+        "audit-timeline.ui-system", "audit-timeline.dauth",
+        "matrix.health",
+        "page-masthead.overview", "page-masthead.settings",
+        "smart-grid.components", "smart-grid.permissions",
+        "smart-grid.services", "smart-grid.sessions",
+        "smart-grid.themes"
+      ]
+    }
+  },
+  "route_widget_coverage": {
+    "keys_in_routes_not_in_registry": {
+      "source_migration": "0157",
+      "route_keys": [
+        "page-masthead.overview", "page-masthead.settings",
+        "smart-grid.components", "smart-grid.permissions",
+        "smart-grid.services", "smart-grid.sessions",
+        "smart-grid.themes", "matrix.health",
+        "audit-timeline.access", "audit-timeline.runtime",
+        "audit-timeline.ui-system"
+      ],
+      "widget_keys": [
+        "command-center.access-summary", "command-center.runtime-summary",
+        "command-center.ui-system-summary",
+        "context-rail.access", "context-rail.runtime", "context-rail.ui-system",
+        "recommendation-card.access-tips", "recommendation-card.runtime-tips",
+        "recommendation-card.ui-system-tips"
+      ],
+      "total": 20
+    },
+    "dauth_widget_keys": {
+      "source_migration": "0146",
+      "keys": [
+        "command-center.identity-summary", "smart-grid.users", "smart-grid.roles",
+        "context-rail.user-360", "context-rail.role-coverage",
+        "matrix.permissions", "audit-timeline.dauth", "recommendation-card.identity"
+      ]
+    },
+    "shahin_keys_not_in_registry": {
+      "source_migration": "0503_0001",
+      "keys": [
+        "ShahinProfilePage", "ShahinSettingsPage",
+        "ShahinTenantProfilePage", "ShahinTenantSettingsPage"
+      ],
+      "note": "Map to dedicated components in COMPONENT_MAP; function correctly despite registry gap"
+    }
+  },
+  "forbidden_ui_usage": {
+    "primeng": {
+      "import_matches": "5516+",
+      "source_files_affected": "841+",
+      "severity": "CRITICAL",
+      "major_modules": [
+        "TableModule", "InputTextarea", "DropdownModule", "ButtonModule",
+        "ToolbarModule", "DialogModule", "CalendarModule", "ToastModule",
+        "ConfirmDialogModule", "MultiSelectModule"
+      ],
+      "key_areas": [
+        "platform/workflow/*", "platform/ai/*", "platform/dnoc/*",
+        "platform/dauth/ui/login/*", "modules/risk/*", "modules/compliance/*"
+      ]
+    },
+    "primeicons": {
+      "template_matches": "1867+",
+      "severity": "HIGH",
+      "key_areas": [
+        "risk-workspace", "approval-center", "dashboard", "governance-actions",
+        "framework-scorecard", "control-posture", "report-center", "landing pages"
+      ]
+    },
+    "material_icons": {
+      "matches": "50+",
+      "severity": "MEDIUM",
+      "css_class": "material-icons-outlined",
+      "key_areas": [
+        "mobile-tab-bar", "mobile-settings", "mobile-onboarding",
+        "evidence-camera", "mobile-dashboard"
+      ]
+    },
+    "not_found": [
+      "Angular Material (mat-icon, MatIconModule)",
+      "Custom sidebar/header/drawer patterns bypassing Carbon shell"
+    ]
+  },
+  "build_check": {
+    "status": "BLOCKED",
+    "reason": "Read-only audit; no build was executed",
+    "build_command": "pnpm --filter shahin-ai-grc-frontend run build"
+  },
+  "risks": [
+    {
+      "id": "R1",
+      "risk": "DynamicPageHostComponent fallback",
+      "severity": "CRITICAL",
+      "count": 145,
+      "description": "69.4% of COMPONENT_MAP keys use the generic fallback instead of dedicated Carbon renderers"
+    },
+    {
+      "id": "R2",
+      "risk": "PrimeNG forbidden usage",
+      "severity": "CRITICAL",
+      "count": "5516+ imports",
+      "description": "PrimeNG is deeply embedded across ~841 source files"
+    },
+    {
+      "id": "R3",
+      "risk": "PrimeIcons forbidden usage",
+      "severity": "HIGH",
+      "count": "1867+ matches",
+      "description": "PrimeIcons (pi-*) used throughout HTML templates"
+    },
+    {
+      "id": "R4",
+      "risk": "Route keys missing from registry",
+      "severity": "HIGH",
+      "count": 20,
+      "description": "Migration 0157 uses component_keys in routes/widgets without inserting them into the registry"
+    },
+    {
+      "id": "R5",
+      "risk": "Material Icons usage",
+      "severity": "MEDIUM",
+      "count": "50+",
+      "description": "Material Icons used in mobile components"
+    },
+    {
+      "id": "R6",
+      "risk": "Shahin keys not in registry",
+      "severity": "LOW",
+      "count": 4,
+      "description": "Shahin pages work via COMPONENT_MAP but are not in the DB registry"
+    },
+    {
+      "id": "R7",
+      "risk": "Build not verified",
+      "severity": "LOW",
+      "count": null,
+      "description": "Read-only audit; build was not executed"
+    }
+  ],
+  "recommendations": [
+    "Create dedicated Carbon renderers for the 145 DynamicPageHostComponent keys",
+    "Run migration to register the 20 missing route/widget keys from 0157",
+    "Plan PrimeNG deprecation roadmap (5516+ imports across 841 files)",
+    "Replace PrimeIcons with @carbon/icons-angular (1867+ pi-* references)",
+    "Evaluate Material Icons in mobile layer",
+    "Register the 4 Shahin keys in the component_registry",
+    "Execute build verification (pnpm --filter shahin-ai-grc-frontend run build)"
+  ]
+}

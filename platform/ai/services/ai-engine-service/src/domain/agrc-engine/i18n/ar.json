@@ -1,0 +1,14 @@
+{
+  "agrc-engine.title": "محرك AGRC",
+  "agrc-engine.dashboard": "لوحة المحرك",
+  "agrc-engine.orchestration": "التنسيق",
+  "agrc-engine.automation": "قواعد الأتمتة",
+  "agrc-engine.monitoring": "مراقبة المحرك",
+  "agrc-engine.diagnostics": "التشخيصات",
+  "agrc-engine.admin": "إدارة المحرك",
+  "agrc-engine.empty.title": "لا توجد مهام محرك نشطة",
+  "agrc-engine.empty.description": "يقوم محرك AGRC بتنسيق الأتمتة والذكاء عبر الوحدات.",
+  "agrc-engine.loading": "جاري تحميل بيانات المحرك...",
+  "agrc-engine.error.title": "فشل تحميل بيانات المحرك",
+  "agrc-engine.error.retry": "إعادة المحاولة"
+}

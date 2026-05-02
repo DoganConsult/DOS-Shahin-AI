@@ -1,0 +1,52 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - img "Shahin" [ref=e5]
+    - heading "Create your Shahin workspace" [level=1] [ref=e6]
+  - generic [ref=e8]:
+    - generic [ref=e9]:
+      - generic [ref=e10]:
+        - generic [ref=e11]: Email *
+        - textbox "Email" [ref=e13]
+      - generic [ref=e14]:
+        - generic [ref=e15]: Password *
+        - generic [ref=e17]:
+          - textbox "Password" [ref=e18]
+          - button "Show password" [ref=e19]
+      - generic [ref=e20]:
+        - generic [ref=e21]: Confirm password *
+        - generic [ref=e23]:
+          - textbox "Confirm password" [ref=e24]
+          - button "Show password" [ref=e25]
+      - generic [ref=e26]:
+        - generic [ref=e27]: First name
+        - textbox "First name" [ref=e29]
+      - generic [ref=e30]:
+        - generic [ref=e31]: Last name
+        - textbox "Last name" [ref=e33]
+      - generic [ref=e34]:
+        - generic [ref=e35]: Company name (English) *
+        - textbox "Company name (English)" [ref=e37]
+      - generic [ref=e38]:
+        - generic [ref=e39]: Company name (Arabic)
+        - textbox "Company name (Arabic)" [ref=e41]
+      - generic [ref=e42]:
+        - generic [ref=e43]: Your full name *
+        - textbox "Your full name" [ref=e45]
+      - generic [ref=e46]:
+        - generic [ref=e47]: I accept the terms of service and privacy policy *
+        - generic [ref=e49]:
+          - checkbox "I accept the terms of service and privacy policy" [ref=e50]
+          - text: I accept the terms of service and privacy policy
+      - generic [ref=e51]:
+        - link "Back to sign in" [ref=e55] [cursor=pointer]:
+          - /url: /realms/dogan/login-actions/authenticate?client_id=shahin-bff&tab_id=7RaN5yrIyrk&client_data=eyJydSI6Imh0dHBzOi8vc2hhaGluLWFpLmNvbS9hcGkvYXV0aC9vaWRjL2NhbGxiYWNrIiwicnQiOiJjb2RlIiwic3QiOiJudXZrYUhCdzhfd2ZrNUtrbDZFMU54UWZ1T1VlVUgwaSJ9
+        - button "Create an account" [ref=e57]
+    - paragraph [ref=e58]: "* Required fields"
+  - contentinfo [ref=e59]:
+    - paragraph [ref=e60]:
+      - link "Terms of service" [ref=e61] [cursor=pointer]:
+        - /url: https://shahin-ai.com/legal/terms
+      - text: ·
+      - link "Privacy policy" [ref=e62] [cursor=pointer]:
+        - /url: https://shahin-ai.com/legal/privacy
+    - paragraph [ref=e63]: Secured by Shahin Identity, powered by Dogan

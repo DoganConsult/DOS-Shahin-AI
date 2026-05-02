@@ -1,0 +1,144 @@
+/* ==========================================================
+   RTL Depth Stylesheet — F14 i18n/Arabic RTL Gap Closure
+   Deep logical-property RTL enforcement for Dogan-AI Platform.
+   Uses CSS logical properties (inline-start/end) throughout.
+   ========================================================== */
+
+/* ── Document direction is set via html[dir=rtl] globally ── */
+
+/* ── Typography — Arabic font priority ─────────────────── */
+:lang(ar),
+[dir="rtl"] {
+  font-family: 'IBM Plex Sans Arabic', 'Tajawal', 'Inter', sans-serif;
+  letter-spacing: 0;
+  word-spacing: 0.05em;
+}
+
+/* ── Icon fonts — Carbon icons use inline SVG, no font-family override needed ── */
+
+/* ── Logical margin/padding — replace physical left/right ── */
+[dir="rtl"] .ml-auto { margin-inline-start: auto; margin-inline-end: 0; }
+[dir="rtl"] .mr-auto { margin-inline-end: auto; margin-inline-start: 0; }
+[dir="rtl"] .text-left { text-align: start; }
+[dir="rtl"] .text-right { text-align: end; }
+
+/* ── PrimeNG sidebar RTL ────────────────────────────────── */
+[dir="rtl"] .p-sidebar-left {
+  right: 0;
+  left: auto;
+}
+
+[dir="rtl"] .p-sidebar-right {
+  left: 0;
+  right: auto;
+}
+
+/* ── PrimeNG dialog RTL centering ───────────────────────── */
+[dir="rtl"] .p-dialog .p-dialog-title {
+  text-align: start;
+}
+
+/* ── PrimeNG menu/dropdown RTL ──────────────────────────── */
+[dir="rtl"] .p-menu .p-menuitem-icon {
+  margin-inline-start: 0.5rem;
+  margin-inline-end: 0;
+}
+
+[dir="rtl"] .p-dropdown-panel {
+  text-align: start;
+}
+
+/* ── PrimeNG table RTL ──────────────────────────────────── */
+[dir="rtl"] .p-datatable .p-datatable-thead > tr > th,
+[dir="rtl"] .p-datatable .p-datatable-tbody > tr > td {
+  text-align: start;
+}
+
+[dir="rtl"] .p-datatable .p-sortable-column-icon {
+  margin-inline-start: 0;
+  margin-inline-end: 0.5rem;
+}
+
+/* ── Toast notifications RTL ────────────────────────────── */
+[dir="rtl"] .p-toast {
+  right: auto;
+  left: 20px;
+}
+
+/* ── Input groups RTL ───────────────────────────────────── */
+[dir="rtl"] .p-inputgroup-addon:first-child {
+  border-radius: 0 var(--border-radius) var(--border-radius) 0;
+}
+
+[dir="rtl"] .p-inputgroup-addon:last-child {
+  border-radius: var(--border-radius) 0 0 var(--border-radius);
+}
+
+/* ── Breadcrumbs RTL ────────────────────────────────────── */
+[dir="rtl"] .p-breadcrumb ul li .p-breadcrumb-chevron {
+  transform: scaleX(-1);
+}
+
+/* ── Stepper RTL ────────────────────────────────────────── */
+[dir="rtl"] .p-steps .p-steps-item::before {
+  right: 0;
+  left: auto;
+  width: calc(100% - 45px);
+}
+
+/* ── Scrollbar RTL ──────────────────────────────────────── */
+[dir="rtl"] {
+  scrollbar-gutter: stable both-edges;
+}
+
+/* ── Navigation sidebar — icon + label spacing RTL ─────── */
+[dir="rtl"] .nav-item .nav-icon {
+  margin-inline-start: 0.75rem;
+  margin-inline-end: 0;
+}
+
+/* ── Badge positioning RTL ──────────────────────────────── */
+[dir="rtl"] .p-badge {
+  right: auto;
+  left: -4px;
+}
+
+/* ── Avatar initials RTL ────────────────────────────────── */
+[dir="rtl"] .p-avatar {
+  direction: ltr;
+}
+
+/* ── Number inputs — always LTR ─────────────────────────── */
+[dir="rtl"] input[type="number"],
+[dir="rtl"] input[type="tel"],
+[dir="rtl"] input[type="email"],
+[dir="rtl"] input[type="url"] {
+  direction: ltr;
+  text-align: end;
+}
+
+/* ── Code blocks — always LTR ───────────────────────────── */
+[dir="rtl"] pre,
+[dir="rtl"] code {
+  direction: ltr;
+  text-align: start;
+  unicode-bidi: embed;
+}
+
+/* ── Chart labels — echart/d3 RTL alignment ─────────────── */
+[dir="rtl"] .echarts-tooltip {
+  text-align: start;
+}
+
+/* ── Arabic numeral display ─────────────────────────────── */
+:lang(ar) .arabic-numerals {
+  font-feature-settings: 'east' 1;
+}
+
+/* ── Print RTL ──────────────────────────────────────────── */
+@media print {
+  [dir="rtl"] {
+    direction: rtl;
+    unicode-bidi: embed;
+  }
+}

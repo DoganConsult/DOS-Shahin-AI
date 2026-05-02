@@ -1,0 +1,40 @@
+{
+  "serviceCode": "ai-engine-service",
+  "displayName": "AI Engine Service",
+  "layer": "platform-service",
+  "ownerTeam": "platform-ai",
+  "runtime": "node",
+  "dependsOn": [
+    "auth-service",
+    "tenant-service",
+    "ai-gateway-service"
+  ],
+  "modules": [
+    "ai",
+    "ai-governance",
+    "agrc-engine",
+    "mcp"
+  ],
+  "exposes": {
+    "apiBase": "/api/ai-engine",
+    "events": [
+      "ai.agent.started",
+      "ai.agent.completed",
+      "ai.agent.failed",
+      "ai.proposal.created",
+      "ai.proposal.approved",
+      "ai.proposal.rejected",
+      "ai.delegation.granted",
+      "ai.delegation.revoked",
+      "ai.delegation.action_executed",
+      "ai.copilot.action",
+      "ai.copilot.suggestion",
+      "ai.circuit_breaker.opened",
+      "ai.circuit_breaker.closed",
+      "ai.drift.detected",
+      "ai.cost.threshold_exceeded",
+      "ai.kill_switch.activated",
+      "ai.autonomy.level_changed"
+    ]
+  }
+}

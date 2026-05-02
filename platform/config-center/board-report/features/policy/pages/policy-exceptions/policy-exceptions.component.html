@@ -1,0 +1,269 @@
+<div class="page-shell" [attr.dir]="dir()">
+  <app-page-header
+    titleEn="Policy Exceptions"
+    titleAr="استثناءات السياسات"
+    subtitleEn="Manage policy exception requests, approvals, and renewals"
+    subtitleAr="إدارة طلبات استثناء السياسات والموافقات والتجديدات"
+    icon="shield"
+    [breadcrumbs]="[i18n.translate('common.dashboard'), i18n.translate('common.policies'), i18n.translate('common.exceptions')]"
+    [actions]="headerActions"
+    [isAr]="isAr()"
+    [dir]="dir()"
+    (actionClick)="onHeaderAction($event)" />
+
+  <div class="page-body">
+    <p-toast />
+    <p-confirmDialog />
+
+    <!-- KPI Strip -->
+    <div class="kpi-strip" *ngIf="!loading()">
+      <div class="kpi-card">
+        <div class="kpi-value kpi-active">{{ kpiActive() }}</div>
+        <div class="kpi-label">Active</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value kpi-pending">{{ kpiPending() }}</div>
+        <div class="kpi-label">Pending</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value kpi-expiring">{{ kpiExpiringSoon() }}</div>
+        <div class="kpi-label">Expiring Soon</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value kpi-rejected">{{ kpiRejected() }}</div>
+        <div class="kpi-label">Rejected</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value">{{ kpiTotal() }}</div>
+        <div class="kpi-label">Total</div>
+      </div>
+    </div>
+
+    <!-- Filters toolbar -->
+    <div class="filter-toolbar" *ngIf="!loading() && exceptions().length > 0">
+      <p-dropdown
+        [options]="statusOptions"
+        [ngModel]="statusFilter()"
+        (ngModelChange)="statusFilter.set($event)"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="All Statuses"
+        [style]="{ minWidth: '160px' }" />
+      <p-dropdown
+        [options]="priorityOptions"
+        [ngModel]="priorityFilter()"
+        (ngModelChange)="priorityFilter.set($event)"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="All Priorities"
+        [style]="{ minWidth: '160px' }" />
+      <div class="search-wrap">
+        <i class="pi pi-search search-icon"></i>
+        <input pInputText [ngModel]="policyFilter()" (ngModelChange)="policyFilter.set($event)"
+          placeholder="Search by policy..." class="search-input" />
+      </div>
+    </div>
+
+    <!-- Loading skeleton -->
+    <div *ngIf="loading()" class="skeleton-block">
+      <div class="skeleton-row" *ngFor="let i of [1,2,3,4,5]"></div>
+    </div>
+
+    <!-- Empty state -->
+    <div *ngIf="!loading() && exceptions().length === 0" class="empty-state">
+      <i class="pi pi-shield empty-icon"></i>
+      <p>No policy exceptions found</p>
+      <p class="empty-hint">Request an exception when a policy cannot be fully implemented.</p>
+      <p-button label="Request Exception" icon="pi pi-plus" [outlined]="true" (onClick)="openRequestDialog()" />
+    </div>
+
+    <!-- Exceptions table -->
+    <grc-data-table
+      *ngIf="!loading()"
+      [totalRecords]="filteredExceptions().length"
+      [emptyMessage]="'No exceptions match the current filters'">
+      <p-table
+        [value]="filteredExceptions()"
+        [paginator]="filteredExceptions().length > 15"
+        [rows]="15"
+        [rowsPerPageOptions]="[10, 15, 30]"
+        styleClass="p-datatable-sm p-datatable-striped"
+        [scrollable]="true"
+        aria-label="Policy exceptions table">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Policy</th>
+            <th>Clause Scope</th>
+            <th>Reason</th>
+            <th>Requested By</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th>Expiry Date</th>
+            <th>Compensating Controls</th>
+            <th>Created</th>
+            <th style="width: 200px">Actions</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-e>
+          <tr>
+            <td class="text-semibold">{{ e.policyTitle || '-' }}</td>
+            <td>{{ truncate(e.clauseScope, 40) }}</td>
+            <td>{{ truncate(e.reason, 40) }}</td>
+            <td>{{ e.requestedBy }}</td>
+            <td>
+              <p-tag [value]="e.priority" [severity]="prioritySeverity(e.priority)" />
+            </td>
+            <td>
+              <p-tag [value]="e.status" [severity]="statusSeverity(e.status)" />
+            </td>
+            <td>{{ e.expiryDate ? (e.expiryDate | date:'mediumDate') : '-' }}</td>
+            <td>{{ truncate(e.compensatingControls, 40) }}</td>
+            <td>{{ e.createdAt | date:'mediumDate' }}</td>
+            <td>
+              <div class="action-group">
+                <!-- Pending actions -->
+                <ng-container *ngIf="e.status === 'pending'">
+                  <p-button icon="pi pi-check" [text]="true" size="small" severity="success"
+                    label="Approve" pTooltip="Approve exception" (onClick)="openApproveDialog(e)" />
+                  <p-button icon="pi pi-times" [text]="true" size="small" severity="danger"
+                    label="Reject" pTooltip="Reject exception" (onClick)="openRejectDialog(e)" />
+                </ng-container>
+                <!-- Approved actions -->
+                <ng-container *ngIf="e.status === 'approved'">
+                  <p-button icon="pi pi-refresh" [text]="true" size="small"
+                    label="Renew" pTooltip="Renew exception" (onClick)="renewException(e)" />
+                  <p-button icon="pi pi-lock" [text]="true" size="small" severity="secondary"
+                    label="Close" pTooltip="Close exception" (onClick)="closeException(e)" />
+                </ng-container>
+                <!-- Expired actions -->
+                <ng-container *ngIf="e.status === 'expired'">
+                  <p-button icon="pi pi-refresh" [text]="true" size="small"
+                    label="Renew" pTooltip="Renew exception" (onClick)="renewException(e)" />
+                </ng-container>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </grc-data-table>
+
+    <!-- Request Exception Dialog -->
+    <p-dialog
+      header="Request Exception"
+      [(visible)]="showRequestDialog"
+      [modal]="true"
+      [style]="{ width: '560px' }"
+      [closable]="true">
+      <div class="form-grid">
+        <div class="form-field">
+          <label>Policy <span class="required">*</span></label>
+          <p-dropdown
+            [options]="policies()"
+            [(ngModel)]="requestForm.policyId"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Select policy"
+            [filter]="true"
+            [showClear]="true"
+            [style]="{ width: '100%' }" />
+        </div>
+        <div class="form-field">
+          <label>Clause Scope</label>
+          <textarea pInputTextarea [(ngModel)]="requestForm.clauseScope" rows="2" class="w-full"
+            placeholder="Specify the clause or section this exception applies to"></textarea>
+        </div>
+        <div class="form-field">
+          <label>Reason <span class="required">*</span></label>
+          <textarea pInputTextarea [(ngModel)]="requestForm.reason" rows="3" class="w-full"
+            placeholder="Why is this exception needed?"></textarea>
+        </div>
+        <div class="form-field">
+          <label>Business Justification</label>
+          <textarea pInputTextarea [(ngModel)]="requestForm.businessJustification" rows="2" class="w-full"
+            placeholder="Business case for the exception"></textarea>
+        </div>
+        <div class="form-field">
+          <label>Compensating Controls</label>
+          <textarea pInputTextarea [(ngModel)]="requestForm.compensatingControls" rows="2" class="w-full"
+            placeholder="Alternative controls in place to mitigate risk"></textarea>
+        </div>
+        <div class="form-field">
+          <label>Risk Assessment</label>
+          <textarea pInputTextarea [(ngModel)]="requestForm.riskAssessment" rows="2" class="w-full"
+            placeholder="Residual risk assessment for this exception"></textarea>
+        </div>
+        <div class="form-field">
+          <label>Priority</label>
+          <p-dropdown
+            [options]="priorityFormOptions"
+            [(ngModel)]="requestForm.priority"
+            optionLabel="label"
+            optionValue="value"
+            [style]="{ width: '100%' }" />
+        </div>
+      </div>
+      <ng-template pTemplate="footer">
+        <p-button label="Cancel" [text]="true" (onClick)="showRequestDialog.set(false)" />
+        <p-button label="Submit Request" icon="pi pi-check" (onClick)="submitRequest()"
+          [disabled]="!requestForm.policyId || !requestForm.reason" />
+      </ng-template>
+    </p-dialog>
+
+    <!-- Approve Dialog -->
+    <p-dialog
+      header="Approve Exception"
+      [(visible)]="showApproveDialog"
+      [modal]="true"
+      [style]="{ width: '480px' }"
+      [closable]="true">
+      <div class="form-grid">
+        <div class="form-field">
+          <label>Comment</label>
+          <textarea pInputTextarea [(ngModel)]="approveForm.comment" rows="2" class="w-full"
+            placeholder="Optional approval comment"></textarea>
+        </div>
+        <div class="form-field">
+          <label>Conditions</label>
+          <textarea pInputTextarea [(ngModel)]="approveForm.conditions" rows="2" class="w-full"
+            placeholder="Conditions attached to this approval"></textarea>
+        </div>
+        <div class="form-field">
+          <label>Expiry Date <span class="required">*</span></label>
+          <p-calendar [(ngModel)]="approveForm.expiryDate" [showIcon]="true"
+            placeholder="Select expiry date" [style]="{ width: '100%' }" [minDate]="minDate" />
+        </div>
+      </div>
+      <ng-template pTemplate="footer">
+        <p-button label="Cancel" [text]="true" (onClick)="showApproveDialog.set(false)" />
+        <p-button label="Approve" icon="pi pi-check" severity="success" (onClick)="submitApproval()"
+          [disabled]="!approveForm.expiryDate" />
+      </ng-template>
+    </p-dialog>
+
+    <!-- Reject Dialog -->
+    <p-dialog
+      header="Reject Exception"
+      [(visible)]="showRejectDialog"
+      [modal]="true"
+      [style]="{ width: '480px' }"
+      [closable]="true">
+      <div class="form-grid">
+        <div class="form-field">
+          <label>Reason <span class="required">*</span></label>
+          <textarea pInputTextarea [(ngModel)]="rejectForm.reason" rows="3" class="w-full"
+            placeholder="Reason for rejecting this exception"></textarea>
+        </div>
+        <div class="form-field">
+          <label>Comment</label>
+          <textarea pInputTextarea [(ngModel)]="rejectForm.comment" rows="2" class="w-full"
+            placeholder="Additional comments"></textarea>
+        </div>
+      </div>
+      <ng-template pTemplate="footer">
+        <p-button label="Cancel" [text]="true" (onClick)="showRejectDialog.set(false)" />
+        <p-button label="Reject" icon="pi pi-times" severity="danger" (onClick)="submitRejection()"
+          [disabled]="!rejectForm.reason" />
+      </ng-template>
+    </p-dialog>
+  </div>
+</div>

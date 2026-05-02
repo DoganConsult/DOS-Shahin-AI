@@ -1,0 +1,120 @@
+code,name_en,name_ar,category,retention_months,review_months,approval,format
+POLICY,Policy Document,وثيقة السياسة,document,36,12,Executive Management,"PDF, DOCX"
+PROCEDURE,Procedure Document,وثيقة الإجراءات,document,36,12,Department Head,"PDF, DOCX"
+STANDARD,Technical Standard,المعيار الفني,document,36,12,CISO,"PDF, DOCX"
+STRATEGY_DOC,Strategy Document,وثيقة الاستراتيجية,document,60,12,Authorizing Official,PDF
+ROADMAP,Implementation Roadmap,خارطة الطريق,document,60,6,Executive,"PDF, XLSX"
+ATTESTATION,Management Attestation,إقرار الإدارة,document,36,12,Executive,PDF
+CONTRACT,Contract/Agreement,عقد,document,84,12,Legal,PDF
+SLA,Service Level Agreement,اتفاقية مستوى الخدمة,document,84,12,Legal,PDF
+CERTIFICATE,Certificate,شهادة,document,36,12,None,PDF
+BCP_DRP,BCP/DRP Plan,خطة استمرارية الأعمال,document,36,12,Executive,"PDF, DOCX"
+BOARD_CHARTER,Board Charter,ميثاق مجلس الإدارة,document,84,24,Board,PDF
+COMMITTEE_CHARTER,Committee Charter,ميثاق اللجنة,document,60,12,Board,PDF
+JOB_DESCRIPTION,Job Description,الوصف الوظيفي,document,60,24,HR,"PDF, DOCX"
+ORG_CHART,Organizational Chart,الهيكل التنظيمي,document,60,12,Executive,"PDF, VISIO"
+RACI_MATRIX,RACI Matrix,مصفوفة RACI,document,36,12,Department Head,"XLSX, PDF"
+PRIVACY_NOTICE,Privacy Notice,إشعار الخصوصية,document,84,12,DPO/Legal,"HTML, PDF"
+ROPA,Records of Processing Activities,سجل أنشطة المعالجة,record,60,6,DPO,"XLSX, JSON"
+DPIA,Data Protection Impact Assessment,تقييم أثر حماية البيانات,record,60,12,DPO,"PDF, DOCX"
+RISK_METHODOLOGY,Risk Methodology,منهجية المخاطر,document,60,24,CISO/Risk,PDF
+RISK_ASSESSMENT,Risk Assessment,تقييم المخاطر,record,36,12,Risk Officer,"PDF, XLSX"
+RISK_REGISTER,Risk Register,سجل المخاطر,record,60,3,CISO,"XLSX, JSON"
+RISK_TREATMENT_PLAN,Risk Treatment Plan,خطة معالجة المخاطر,record,36,6,CISO,"PDF, XLSX"
+INVENTORY,Asset Inventory,جرد الأصول,record,36,1,None,"XLSX, CSV"
+CMDB_EXPORT,CMDB Export,تصدير CMDB,artifact,24,1,None,"XLSX, JSON"
+CLASSIFICATION_SCHEME,Classification Scheme,مخطط التصنيف,document,60,24,CISO,PDF
+AUDIT_REPORT,Audit Report,تقرير التدقيق,record,84,12,Auditor,PDF
+MEETING_MINUTES,Meeting Minutes,محضر الاجتماع,record,60,1,Chair,"PDF, DOCX"
+APPROVAL_RECORD,Approval Record,سجل الموافقة,record,60,0,Authorizer,"PDF, EMAIL"
+TRAINING_RECORD,Training Record,سجل التدريب,record,60,12,HR,"PDF, XLSX"
+COMMUNICATION_RECORD,Communication Record,سجل الاتصالات,record,36,12,None,"PDF, EMAIL"
+REPORT,Report,تقرير,record,36,3,Department Head,"PDF, XLSX"
+REVIEW_REPORT,Review Report,تقرير المراجعة,record,60,12,Reviewer,PDF
+INCIDENT_REPORT,Incident Report,تقرير الحادث,record,60,12,CISO,PDF
+INCIDENT_RESPONSE_PLAN,Incident Response Plan,خطة الاستجابة للحوادث,document,36,12,CISO,PDF
+NCA_NOTIFICATION,NCA Notification,إشعار NCA,record,84,0,CISO,"PDF, EMAIL"
+SAMA_NOTIFICATION,SAMA Notification (4-hour),إشعار SAMA (4 ساعات),record,84,0,CISO,"PDF, EMAIL"
+SDAIA_NOTIFICATION,SDAIA Breach Notification (72-hour),إشعار SDAIA (72 ساعة),record,84,0,DPO,"PDF, EMAIL"
+TIMELINE,Incident Timeline,الجدول الزمني للحادث,record,60,0,CISO,"PDF, XLSX"
+TEST_RESULT,Test Results,نتائج الاختبار,record,36,12,Test Manager,"PDF, XLSX"
+PENTEST_REPORT,Penetration Test Report,تقرير اختبار الاختراق,record,36,12,CISO,PDF
+SCAN_REPORT,Vulnerability Scan Report,تقرير فحص الثغرات,record,24,1,None,"PDF, JSON"
+PATCH_REPORT,Patch Management Report,تقرير إدارة التحديثات,record,24,1,None,"PDF, XLSX"
+REMEDIATION_PLAN,Remediation Plan,خطة المعالجة,record,36,3,CISO,"PDF, XLSX"
+REMEDIATION_REPORT,Remediation Report,تقرير المعالجة,record,36,3,CISO,"PDF, XLSX"
+CONFIGURATION,Configuration File/Export,ملف التكوين,artifact,24,6,None,"XML, JSON, YAML"
+BASELINE_CONFIG,Baseline Configuration,التكوين الأساسي,document,36,12,CISO,"PDF, JSON"
+DNS_RECORDS,DNS Records (SPF/DKIM/DMARC),سجلات DNS,artifact,24,12,None,TXT
+FIREWALL_CONFIG,Firewall Configuration,تكوين الجدار الناري,artifact,24,6,None,"TXT, JSON"
+NETWORK_DIAGRAM,Network Diagram,مخطط الشبكة,document,36,12,Architect,"PNG, PDF, VISIO"
+ARCHITECTURE_DIAGRAM,Architecture Diagram,المخطط المعماري,document,36,12,Architect,"PNG, PDF, VISIO"
+ARCHITECTURE_DOC,Architecture Document,وثيقة البنية,document,36,12,Architect,PDF
+DIAGRAM,Diagram,مخطط,document,36,12,Architect,"PNG, PDF"
+SCREENSHOT,System Screenshot,لقطة شاشة,artifact,24,3,None,"PNG, JPG, PDF"
+DASHBOARD,Dashboard,لوحة المتابعة,artifact,24,1,None,"PNG, PDF"
+LOG,System Log,سجل النظام,record,12,1,None,"LOG, JSON, CSV"
+AUDIT_LOG,Audit Trail Log,سجل التدقيق,record,24,3,None,"LOG, JSON"
+ACCESS_LOG,Access Log,سجل الوصول,record,12,1,None,"LOG, CSV"
+BACKUP_REPORT,Backup Report,تقرير النسخ الاحتياطي,record,12,1,None,"PDF, XLSX"
+BACKUP_PLAN,Backup Plan,خطة النسخ الاحتياطي,document,36,12,IT Director,PDF
+BCP_TEST,BCP Test Result,نتائج اختبار BCP,record,36,12,BCM Manager,PDF
+ACCESS_REVIEW,Access Review,مراجعة الصلاحيات,record,24,6,System Owner,"PDF, XLSX"
+DESTRUCTION_CERT,Certificate of Destruction,شهادة الإتلاف,record,84,0,Records Manager,PDF
+BADGE_RECORDS,Badge Access Records,سجلات البطاقات,record,24,3,None,"CSV, PDF"
+CCTV_RECORDS,CCTV Records,سجلات الكاميرات,record,6,1,None,Video
+CONSENT_RECORD,Consent Record,سجل الموافقة,record,60,12,DPO,"JSON, XLSX"
+CONSENT_MGMT_PLATFORM,Consent Management Platform,منصة الموافقات,artifact,60,1,DPO,JSON
+DSR_LOG,Data Subject Request Log,سجل طلبات الأصحاب,record,60,1,DPO,"XLSX, JSON"
+DSR_PROCEDURE,DSR Procedure,إجراء DSR,document,36,12,DPO,PDF
+RESPONSE_RECORDS,DSR Response Records,سجلات الاستجابة,record,60,1,DPO,"PDF, EMAIL"
+DATA_INVENTORY,Data Inventory,جرد البيانات,record,36,6,DPO,"XLSX, JSON"
+DATA_QUALITY_REPORT,Data Quality Report,تقرير جودة البيانات,record,24,3,Data Steward,"PDF, XLSX"
+DATA_RESIDENCY_CERT,Data Residency Certification,شهادة موقع البيانات,document,36,12,Cloud Provider,PDF
+DATA_SUBJECT_NOTIFICATION,Data Subject Breach Notification,إشعار صاحب البيانات,record,60,0,DPO,"EMAIL, PDF"
+TRANSFER_AGREEMENT,Cross-Border Transfer Agreement,اتفاقية النقل عبر الحدود,document,84,12,Legal,PDF
+SCC,Standard Contractual Clauses,البنود التعاقدية الموحدة,document,84,24,Legal,PDF
+BCR,Binding Corporate Rules,القواعد المؤسسية الملزمة,document,84,24,Legal/DPO,PDF
+ADEQUACY_DECISION,Adequacy Decision Reference,قرار الكفاية,document,60,12,DPO,PDF
+MDM_CONFIG,MDM Configuration,تكوين MDM,artifact,24,6,None,JSON
+TECHNICAL_CONTROLS,Technical Controls Evidence,أدلة الضوابط الفنية,artifact,24,6,CISO,Various
+CHANGE_RECORD,Change Management Record,سجل التغيير,record,24,1,CAB,"PDF, JSON"
+CAB_MINUTES,CAB Meeting Minutes,محضر CAB,record,24,1,Chair,PDF
+QUALIFICATIONS,Qualifications/CV,المؤهلات,document,60,24,HR,PDF
+APPOINTMENT_LETTER,Appointment Letter,خطاب التعيين,document,60,0,HR,PDF
+REPORTING_LINE,Reporting Line Document,وثيقة خط الرفع,document,60,12,HR,PDF
+BOARD_APPROVAL,Board Approval,موافقة مجلس الإدارة,record,84,0,Board,PDF
+BUDGET_APPROVAL,Budget Approval,موافقة الميزانية,record,60,12,CFO,PDF
+ACTION_PLAN,Action Plan,خطة العمل,document,36,6,Manager,"PDF, XLSX"
+QUESTIONNAIRE,Vendor Questionnaire,استبيان المورد,record,36,12,Procurement,"PDF, XLSX"
+DUE_DILIGENCE,Due Diligence Report,تقرير العناية الواجبة,record,60,12,Procurement,PDF
+SLA_COMPLIANCE,SLA Compliance Report,تقرير امتثال SLA,record,24,1,None,"PDF, XLSX"
+SAMA_APPROVAL,SAMA Outsourcing Approval,موافقة SAMA على التعهيد,document,84,0,SAMA,PDF
+ASSESSMENT_REPORT,Assessment Report,تقرير التقييم,record,36,12,Assessor,PDF
+EXIT_PLAN,Cloud Exit Plan,خطة الخروج,document,60,12,CIO,PDF
+CLOUD_CONTRACT,Cloud Service Contract,عقد الخدمة السحابية,document,84,12,Legal,PDF
+PROJECT_CHARTER,Project Charter,ميثاق المشروع,document,36,0,PMO,PDF
+METHODOLOGY,Methodology Document,وثيقة المنهجية,document,60,24,Department Head,PDF
+CHECKLIST,Checklist,قائمة التحقق,document,36,12,None,"PDF, XLSX"
+CAMPAIGN_REPORT,Awareness Campaign Report,تقرير حملة التوعية,record,36,12,CISO,PDF
+QUIZ_RESULTS,Quiz/Test Results,نتائج الاختبارات,record,36,12,HR,"XLSX, PDF"
+TRAINING_PROGRAM,Training Program,برنامج التدريب,document,36,12,HR/CISO,PDF
+CERTIFICATES,Certificates of Completion,شهادات الإكمال,document,60,0,None,PDF
+SKILLS_MATRIX,Skills Matrix,مصفوفة المهارات,document,36,12,HR,XLSX
+FINDINGS,Audit Findings,نتائج التدقيق,record,60,12,Auditor,"PDF, XLSX"
+AUDIT_PLAN,Audit Plan,خطة التدقيق,document,60,12,Internal Auditor,PDF
+AOC,Attestation of Compliance (PCI),شهادة الامتثال PCI,document,36,12,QSA,PDF
+ROC,Report on Compliance (PCI),تقرير الامتثال PCI,document,36,12,QSA,PDF
+COMPLIANCE_REPORT,Compliance Report,تقرير الامتثال,record,60,12,Compliance Officer,PDF
+SAMA_REPORT,SAMA Quarterly Report,تقرير SAMA الربعي,record,60,3,CISO,"PDF, XLSX"
+EVIDENCE,Generic Evidence,دليل عام,record,36,12,Department Head,Various
+SHIFT_RECORDS,SOC Shift Records,سجلات نوبات SOC,record,12,1,SOC Manager,"PDF, XLSX"
+TI_REPORTS,Threat Intelligence Reports,تقارير الاستخبارات,record,12,1,None,"PDF, JSON"
+CODE_REVIEW_REPORT,Code Review Report,تقرير مراجعة الكود,record,24,1,Tech Lead,"PDF, JSON"
+CODE_REVIEW,Code Review,مراجعة الكود,record,24,1,Tech Lead,JSON
+SAST_REPORT,SAST Report,تقرير SAST,record,24,1,None,"PDF, JSON"
+DAST_REPORT,DAST Report,تقرير DAST,record,24,1,None,"PDF, JSON"
+SCREENING_RECORD,Background Screening Record,سجل الفحص الأمني,record,60,0,HR,PDF
+HR_RECORDS,HR Records,سجلات الموارد البشرية,record,84,12,HR,"PDF, JSON"
+PCI_AOC,PCI Attestation of Compliance,شهادة الامتثال PCI,document,36,12,QSA,PDF
+WEBSITE_PRIVACY_POLICY,Website Privacy Policy,سياسة الخصوصية للموقع,document,84,12,DPO,HTML

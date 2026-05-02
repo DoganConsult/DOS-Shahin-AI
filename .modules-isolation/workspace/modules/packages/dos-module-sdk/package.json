@@ -1,0 +1,46 @@
+{
+  "name": "@dos/module-sdk",
+  "version": "1.0.0",
+  "description": "DOS Module SDK — single import surface for building platform modules. Replaces 20+ relative-path imports with one package.",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "default": "./dist/index.js" },
+    "./db": { "types": "./dist/db.d.ts", "default": "./dist/db.js" },
+    "./auth": { "types": "./dist/auth.d.ts", "default": "./dist/auth.js" },
+    "./events": { "types": "./dist/events.d.ts", "default": "./dist/events.js" },
+    "./lifecycle": { "types": "./dist/lifecycle.d.ts", "default": "./dist/lifecycle.js" },
+    "./logger": { "types": "./dist/logger.d.ts", "default": "./dist/logger.js" },
+    "./errors": { "types": "./dist/errors.d.ts", "default": "./dist/errors.js" },
+    "./audit": { "types": "./dist/audit.d.ts", "default": "./dist/audit.js" },
+    "./http": { "types": "./dist/http.d.ts", "default": "./dist/http.js" },
+    "./manifest": { "types": "./dist/manifest.d.ts", "default": "./dist/manifest.js" },
+    "./testing": { "types": "./dist/testing.d.ts", "default": "./dist/testing.js" },
+    "./types": { "types": "./dist/types.d.ts", "default": "./dist/types.js" },
+    "./validation": { "types": "./dist/validation.d.ts", "default": "./dist/validation.js" },
+    "./tenant": { "types": "./dist/tenant.d.ts", "default": "./dist/tenant.js" },
+    "./pagination": { "types": "./dist/pagination.d.ts", "default": "./dist/pagination.js" },
+    "./date": { "types": "./dist/date.d.ts", "default": "./dist/date.js" },
+    "./repository": { "types": "./dist/repository.d.ts", "default": "./dist/repository.js" },
+    "./module-utils": { "types": "./dist/module-utils.d.ts", "default": "./dist/module-utils.js" }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@dos/types": "workspace:*",
+    "@dos/contracts": "workspace:*",
+    "@dos/db": "workspace:*"
+  },
+  "peerDependencies": {
+    "express": ">=4.0.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "express": "^4.22.1",
+    "typescript": "^5.7.0"
+  }
+}

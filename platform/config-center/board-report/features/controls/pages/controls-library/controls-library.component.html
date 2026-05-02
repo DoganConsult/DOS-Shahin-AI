@@ -1,0 +1,326 @@
+<!-- Controls Library — Enhanced Master List -->
+<div class="controls-library" [attr.dir]="dir()">
+
+  <!-- Page Header -->
+  <header class="page-header">
+    <div class="page-header__title-row">
+      <i class="pi pi-book" aria-hidden="true"></i>
+      <h2 class="page-header__title">
+        {{ isAr() ? 'مكتبة الضوابط' : 'Controls Library' }}
+      </h2>
+      @if (!loading()) {
+        <span class="total-badge">{{ totalRecords() }}</span>
+      }
+    </div>
+    <p class="page-header__subtitle">
+      {{ isAr() ? 'عرض وإدارة جميع الضوابط مع تصفية وتجميع متقدم' : 'View and manage all controls with advanced filtering and grouping' }}
+    </p>
+  </header>
+
+  <!-- Filter Bar -->
+  <section class="filter-bar" [attr.aria-label]="isAr() ? 'شريط التصفية' : 'Filter Bar'">
+    <div class="filter-bar__filters">
+      <!-- Status -->
+      <div class="filter-item">
+        <label class="filter-label">{{ isAr() ? 'الحالة' : 'Status' }}</label>
+        <cds-dropdown></cds-dropdown>
+      </div>
+
+      <!-- Control Type -->
+      <div class="filter-item">
+        <label class="filter-label">{{ isAr() ? 'نوع الضابط' : 'Control Type' }}</label>
+        <cds-dropdown></cds-dropdown>
+      </div>
+
+      <!-- Automation Level -->
+      <div class="filter-item">
+        <label class="filter-label">{{ isAr() ? 'مستوى الأتمتة' : 'Automation Level' }}</label>
+        <cds-dropdown></cds-dropdown>
+      </div>
+
+      <!-- Toggle Filters -->
+      <div class="filter-toggles">
+        <label class="toggle-item">
+          <cds-toggle></cds-toggle>
+          <span>{{ isAr() ? 'رئيسية فقط' : 'Key Controls' }}</span>
+        </label>
+        <label class="toggle-item">
+          <cds-toggle></cds-toggle>
+          <span>{{ isAr() ? 'غير مرتبطة' : 'Unmapped Only' }}</span>
+        </label>
+        <label class="toggle-item">
+          <cds-toggle></cds-toggle>
+          <span>{{ isAr() ? 'فاشلة فقط' : 'Failing Only' }}</span>
+        </label>
+      </div>
+
+      <!-- Reset -->
+      <button
+        pButton
+        type="button"
+        class="p-button-text p-button-sm reset-btn"
+        icon="pi pi-filter-slash"
+        [label]="isAr() ? 'إعادة تعيين' : 'Reset'"
+        (click)="resetFilters()"></button>
+    </div>
+
+    <!-- View Mode + Actions -->
+    <div class="filter-bar__actions">
+      <p-selectButton
+        [options]="viewModeOptions()"
+        [ngModel]="viewMode()"
+        (ngModelChange)="onViewModeChange($event)"
+        optionLabel="label"
+        optionValue="value"
+        styleClass="view-mode-select" />
+
+      <div class="export-group">
+        <button
+          pButton
+          type="button"
+          class="p-button-outlined p-button-sm"
+          icon="pi pi-download"
+          [label]="isAr() ? 'CSV' : 'CSV'"
+          (click)="exportControls('csv')"></button>
+        <button
+          pButton
+          type="button"
+          class="p-button-outlined p-button-sm"
+          icon="pi pi-file-excel"
+          [label]="isAr() ? 'Excel' : 'Excel'"
+          (click)="exportControls('xlsx')"></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Loading State -->
+  @if (loading()) {
+    <app-skeleton-loader variant="list" [count]="8" />
+  }
+
+  <!-- Error State -->
+  @if (!loading() && error()) {
+    <app-empty-state
+      variant="error"
+      [title]="isAr() ? 'فشل تحميل المكتبة' : 'Failed to load library'"
+      [description]="isAr() ? 'تحقق من الاتصال وحاول مرة أخرى' : 'Check your connection and try again'"
+      [actionLabel]="isAr() ? 'إعادة المحاولة' : 'Retry'"
+      [dir]="dir()"
+      (action)="loadData()" />
+  }
+
+  <!-- Loaded Content -->
+  @if (!loading() && !error()) {
+
+    @if (controls().length === 0) {
+      <app-empty-state
+        [title]="isAr() ? 'لا توجد ضوابط' : 'No controls found'"
+        [description]="isAr() ? 'جرّب تغيير المرشحات أو أضف ضابطاً جديداً' : 'Try adjusting your filters or add a new control'"
+        [dir]="dir()" />
+    } @else {
+
+      <!-- TABLE VIEW (default) -->
+      @if (viewMode() === 'table') {
+        <grc-data-table
+          [title]="isAr() ? 'مكتبة الضوابط' : 'Controls Library'"
+          [totalRecords]="totalRecords()"
+          [loading]="false">
+          <p-table
+            [value]="controls()"
+            [rows]="pageSize()"
+            [(selection)]="selectedControls"
+            dataKey="id"
+            styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines"
+            [scrollable]="true"
+            scrollHeight="flex"
+            [attr.aria-label]="isAr() ? 'جدول مكتبة الضوابط' : 'Controls Library Table'">
+            <ng-template pTemplate="header">
+              <tr>
+                <th style="width: 3rem">
+                  <p-tableHeaderCheckbox />
+                </th>
+                <th [pSortableColumn]="'controlCode'">
+                  {{ isAr() ? 'الرمز' : 'Code' }}
+                  <p-sortIcon [field]="'controlCode'" />
+                </th>
+                <th [pSortableColumn]="'title'">
+                  {{ isAr() ? 'العنوان' : 'Title' }}
+                  <p-sortIcon [field]="'title'" />
+                </th>
+                <th>{{ isAr() ? 'العائلة' : 'Family' }}</th>
+                <th>{{ isAr() ? 'النوع' : 'Type' }}</th>
+                <th>{{ isAr() ? 'الأتمتة' : 'Automation' }}</th>
+                <th>{{ isAr() ? 'المالك' : 'Owner' }}</th>
+                <th style="width: 5rem; text-align: center">{{ isAr() ? 'رئيسي' : 'Key' }}</th>
+                <th>{{ isAr() ? 'فعالية التصميم' : 'Design' }}</th>
+                <th>{{ isAr() ? 'فعالية التشغيل' : 'Operating' }}</th>
+                <th>{{ isAr() ? 'آخر اختبار' : 'Last Test' }}</th>
+                <th>{{ isAr() ? 'الاختبار التالي' : 'Next Test' }}</th>
+                <th style="width: 4rem; text-align: center">{{ isAr() ? 'قصور' : 'Def.' }}</th>
+                <th style="width: 4rem; text-align: center">{{ isAr() ? 'مخاطر' : 'Risks' }}</th>
+                <th style="width: 4rem; text-align: center">{{ isAr() ? 'التزامات' : 'Oblig.' }}</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-row>
+              <tr>
+                <td>
+                  <p-tableCheckbox [value]="row" />
+                </td>
+                <td>
+                  <a class="control-code-link" [routerLink]="['/controls', row.id]">{{ row.controlCode || '\u2014' }}</a>
+                </td>
+                <td>
+                  <a class="control-link" [routerLink]="['/controls', row.id]">{{ row.title || '\u2014' }}</a>
+                </td>
+                <td>{{ row.familyName || '\u2014' }}</td>
+                <td>{{ row.controlType || '\u2014' }}</td>
+                <td>
+                  @if (row.automationLevel) {
+                    <app-status-badge [status]="row.automationLevel" />
+                  } @else {
+                    <span class="text-muted">\u2014</span>
+                  }
+                </td>
+                <td>{{ row.owner || '\u2014' }}</td>
+                <td class="center-cell">
+                  @if (row.keyControl) {
+                    <i class="pi pi-key key-icon" [pTooltip]="isAr() ? 'ضابط رئيسي' : 'Key Control'" aria-hidden="true"></i>
+                  }
+                </td>
+                <td><app-status-badge [status]="effectivenessStatus(row.designEffective)" /></td>
+                <td><app-status-badge [status]="effectivenessStatus(row.operatingEffective)" /></td>
+                <td>{{ formatDate(row.lastTestedAt) }}</td>
+                <td>{{ formatDate(row.nextTestDueAt) }}</td>
+                <td class="center-cell count-cell">{{ row.deficiencyCount ?? 0 }}</td>
+                <td class="center-cell count-cell">{{ row.riskCount ?? 0 }}</td>
+                <td class="center-cell count-cell">{{ row.mappedObligationCount ?? 0 }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </grc-data-table>
+      }
+
+      <!-- GROUPED BY FAMILY -->
+      @if (viewMode() === 'family') {
+        @for (group of groupedByFamily(); track group[0]) {
+          <div class="group-section">
+            <h3 class="group-title">
+              <i class="pi pi-folder" aria-hidden="true"></i>
+              {{ group[0] }}
+              <span class="group-count">{{ group[1].length }}</span>
+            </h3>
+            <p-table
+              [value]="group[1]"
+              styleClass="p-datatable-sm p-datatable-striped"
+              [attr.aria-label]="group[0]">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>{{ isAr() ? 'الرمز' : 'Code' }}</th>
+                  <th>{{ isAr() ? 'العنوان' : 'Title' }}</th>
+                  <th>{{ isAr() ? 'النوع' : 'Type' }}</th>
+                  <th>{{ isAr() ? 'المالك' : 'Owner' }}</th>
+                  <th>{{ isAr() ? 'الحالة' : 'Status' }}</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-row>
+                <tr>
+                  <td><a class="control-code-link" [routerLink]="['/controls', row.id]">{{ row.controlCode || '\u2014' }}</a></td>
+                  <td><a class="control-link" [routerLink]="['/controls', row.id]">{{ row.title || '\u2014' }}</a></td>
+                  <td>{{ row.controlType || '\u2014' }}</td>
+                  <td>{{ row.owner || '\u2014' }}</td>
+                  <td><app-status-badge [status]="row.status || 'unknown'" /></td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        }
+      }
+
+      <!-- GROUPED BY OWNER -->
+      @if (viewMode() === 'owner') {
+        @for (group of groupedByOwner(); track group[0]) {
+          <div class="group-section">
+            <h3 class="group-title">
+              <i class="pi pi-user" aria-hidden="true"></i>
+              {{ group[0] }}
+              <span class="group-count">{{ group[1].length }}</span>
+            </h3>
+            <p-table
+              [value]="group[1]"
+              styleClass="p-datatable-sm p-datatable-striped"
+              [attr.aria-label]="group[0]">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>{{ isAr() ? 'الرمز' : 'Code' }}</th>
+                  <th>{{ isAr() ? 'العنوان' : 'Title' }}</th>
+                  <th>{{ isAr() ? 'العائلة' : 'Family' }}</th>
+                  <th>{{ isAr() ? 'النوع' : 'Type' }}</th>
+                  <th>{{ isAr() ? 'الحالة' : 'Status' }}</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-row>
+                <tr>
+                  <td><a class="control-code-link" [routerLink]="['/controls', row.id]">{{ row.controlCode || '\u2014' }}</a></td>
+                  <td><a class="control-link" [routerLink]="['/controls', row.id]">{{ row.title || '\u2014' }}</a></td>
+                  <td>{{ row.familyName || '\u2014' }}</td>
+                  <td>{{ row.controlType || '\u2014' }}</td>
+                  <td><app-status-badge [status]="row.status || 'unknown'" /></td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        }
+      }
+
+      <!-- KEY CONTROLS ONLY -->
+      @if (viewMode() === 'key-only') {
+        @if (keyControlsOnly().length === 0) {
+          <app-empty-state
+            [title]="isAr() ? 'لا توجد ضوابط رئيسية' : 'No key controls'"
+            [description]="isAr() ? 'لم يتم تحديد أي ضابط كرئيسي' : 'No controls have been marked as key controls'"
+            [dir]="dir()" />
+        } @else {
+          <p-table
+            [value]="keyControlsOnly()"
+            [rows]="pageSize()"
+            styleClass="p-datatable-sm p-datatable-striped"
+            [attr.aria-label]="isAr() ? 'جدول الضوابط الرئيسية' : 'Key Controls Table'">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>{{ isAr() ? 'الرمز' : 'Code' }}</th>
+                <th>{{ isAr() ? 'العنوان' : 'Title' }}</th>
+                <th>{{ isAr() ? 'العائلة' : 'Family' }}</th>
+                <th>{{ isAr() ? 'المالك' : 'Owner' }}</th>
+                <th>{{ isAr() ? 'فعالية التصميم' : 'Design' }}</th>
+                <th>{{ isAr() ? 'فعالية التشغيل' : 'Operating' }}</th>
+                <th>{{ isAr() ? 'قصور' : 'Deficiencies' }}</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-row>
+              <tr>
+                <td><a class="control-code-link" [routerLink]="['/controls', row.id]">{{ row.controlCode || '\u2014' }}</a></td>
+                <td><a class="control-link" [routerLink]="['/controls', row.id]">{{ row.title || '\u2014' }}</a></td>
+                <td>{{ row.familyName || '\u2014' }}</td>
+                <td>{{ row.owner || '\u2014' }}</td>
+                <td><app-status-badge [status]="effectivenessStatus(row.designEffective)" /></td>
+                <td><app-status-badge [status]="effectivenessStatus(row.operatingEffective)" /></td>
+                <td class="center-cell count-cell">{{ row.deficiencyCount ?? 0 }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        }
+      }
+
+      <!-- Paginator (table view only) -->
+      @if (viewMode() === 'table' && totalRecords() > pageSize()) {
+        <p-paginator
+          [rows]="pageSize()"
+          [totalRecords]="totalRecords()"
+          [rowsPerPageOptions]="pageSizeOptions"
+          [first]="(page() - 1) * pageSize()"
+          (onPageChange)="onPageChange($event)"
+          styleClass="library-paginator" />
+      }
+    }
+  }
+</div>

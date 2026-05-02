@@ -1,0 +1,103 @@
+{
+  "kind": "business",
+  "moduleCode": "analytics",
+  "displayName": "Analytics",
+  "ownerTeam": "product-shahin-ai",
+  "productCode": "shahin-ai",
+  "ownership": "module-owned",
+  "version": "1.0.0",
+  "status": "active",
+  "lifecycle": {
+    "stage": "ga",
+    "owner": "product-shahin-ai",
+    "entitlementKey": "module.analytics",
+    "featureFlag": "module.analytics.enabled",
+    "minTenantStage": "ga"
+  },
+  "platformDependencies": [
+    "identity",
+    "tenancy"
+  ],
+  "seedProviders": [
+    "products/shahin/seeds/analytics-seed"
+  ],
+  "tenantDefaults": [
+    "analytics_refresh_interval_minutes",
+    "analytics_retention_days"
+  ],
+  "requiredReferenceData": [
+    "analytics_metric_definitions"
+  ],
+  "currentSources": [
+    "modules/analytics/source/backend/analytics"
+  ],
+  "targetPath": "modules/analytics",
+  "futureService": "analytics-reporting-service",
+  "frontendSources": [
+    "modules/analytics/source/frontend/analytics/analytics.routes.ts"
+  ],
+  "ownedTables": [
+    "analytics_dashboards",
+    "analytics_datasets",
+    "analytics_metrics",
+    "analytics_queries",
+    "analytics_refresh_schedules",
+    "analytics_snapshots",
+    "analytics_widgets",
+    "analytics_cache"
+  ],
+  "referencedTables": [
+    "audit_trail",
+    "teams"
+  ],
+  "events": {
+    "publishes": [
+      "analytics.kpi_snapshot_generated",
+      "analytics.benchmark_updated",
+      "analytics.anomaly_detected",
+      "analytics.report_generated",
+      "analytics.engagement_score_changed",
+      "analytics.prediction_updated"
+    ],
+    "subscribes": [
+      "risk.score_changed",
+      "risk.assessment_completed",
+      "risk.exceeded_appetite",
+      "compliance.posture_changed",
+      "compliance.assessment_completed",
+      "evidence.collected",
+      "incident.classified",
+      "incident.created",
+      "incident.sla_breached",
+      "audit.finding_created",
+      "audit.status_changed",
+      "workflow.instance_completed",
+      "vendor.sla_breached",
+      "vendor.risk_changed",
+      "vendor.onboarded",
+      "training.assignment_overdue",
+      "training.compliance_gap",
+      "control.effectiveness_low",
+      "bcp.rto_rpo_drift",
+      "policy.status_changed",
+      "remediation.task_completed",
+      "bootstrap.session_resolved",
+      "bootstrap.context_loaded",
+      "bootstrap.first_run_completed",
+      "bootstrap.resolution_slow",
+      "team.created",
+      "team.member_added",
+      "team.archived",
+      "journey.milestone_achieved",
+      "journey.maturity_level_changed",
+      "journey.roadmap_created",
+      "compliance.framework_gap_identified",
+      "controls.deficiency_detected",
+      "governance.health_score_updated",
+      "bcp.maturity_regression"
+    ]
+  },
+  "routeBases": [
+    "/api/analytics"
+  ]
+}

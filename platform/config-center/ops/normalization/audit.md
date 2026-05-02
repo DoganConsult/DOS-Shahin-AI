@@ -1,0 +1,328 @@
+# Catalog Audit
+Generated: 2026-04-20T22:41:14.924Z
+Total issues: **312** (0 errors, 312 warnings)
+
+## altered-without-create (10)
+
+- **approval_matrix_rules** — only ALTER sites: ops/migrations/023_fix_template_tables.sql
+- **audit_trail_global** — only ALTER sites: ops/migrations/201_hybrid_layer_conflict_renames.sql
+- **kri_data_points** — only ALTER sites: ops/migrations/tenant/109_risk_production_readiness.sql, ops/migrations/tenant/110_key_risk_indicators.sql
+- **risk_pair_reviews** — only ALTER sites: ops/migrations/tenant/109_risk_production_readiness.sql
+- **risk_peer_reviews** — only ALTER sites: ops/migrations/tenant/109_risk_production_readiness.sql
+- **tenant_entitlement_profile** — only ALTER sites: ops/migrations/056_tenant_entitlement_profile_split_down.sql
+- **tenant_module_entitlement_registry** — only ALTER sites: ops/migrations/201_hybrid_layer_conflict_renames.sql
+- **workflow_approvals** — only ALTER sites: ops/migrations/tenant/022_reconcile_workflow_tables.sql, modules/workflow/source/backend/workflow/migrations/001_workflow_tables.sql
+- **workflow_instances** — only ALTER sites: ops/migrations/tenant/022_reconcile_workflow_tables.sql, modules/workflow/source/backend/workflow/migrations/001_workflow_tables.sql
+- **workflow_tasks** — only ALTER sites: ops/migrations/tenant/022_reconcile_workflow_tables.sql
+
+## cross-schema-duplicate (41)
+
+- **access_profiles** — schemas: dos,public
+- **ai_model_registry** — schemas: __TENANT_SCHEMA__,dos
+- **assets** — schemas: __TENANT_SCHEMA__,dos
+- **audit_findings** — schemas: __TENANT_SCHEMA__,dos
+- **audit_plans** — schemas: __TENANT_SCHEMA__,dos
+- **bcp_plans** — schemas: __TENANT_SCHEMA__,dos
+- **compliance_frameworks** — schemas: __TENANT_SCHEMA__,dos
+- **config_runtime_overrides** — schemas: dos,public
+- **controls** — schemas: __TENANT_SCHEMA__,dos
+- **dashboards** — schemas: __TENANT_SCHEMA__,dos
+- **departments** — schemas: __TENANT_SCHEMA__,dos
+- **dora_assessments** — schemas: __TENANT_SCHEMA__,dos
+- **feature_flags** — schemas: __TENANT_SCHEMA__,dos
+- **functional_roles** — schemas: __TENANT_SCHEMA__,dos
+- **inbox_items** — schemas: __TENANT_SCHEMA__,dos
+- **incidents** — schemas: __TENANT_SCHEMA__,dos
+- **job_registry** — schemas: dos,public
+- **login_attempts** — schemas: dos,public
+- **navigation_registry** — schemas: __TENANT_SCHEMA__,dos
+- **notifications** — schemas: __TENANT_SCHEMA__,dos
+- **onboarding_journeys** — schemas: __TENANT_SCHEMA__,dos
+- **policies** — schemas: __TENANT_SCHEMA__,dos
+- **privacy_assessments** — schemas: __TENANT_SCHEMA__,dos
+- **product_registry** — schemas: dos,public
+- **remediation_actions** — schemas: __TENANT_SCHEMA__,dos
+- **risks** — schemas: __TENANT_SCHEMA__,dos
+- **runtime_config** — schemas: dos,public
+- **sessions** — schemas: dos,public
+- **sod_rules** — schemas: dos,public
+- **team_members** — schemas: __TENANT_SCHEMA__,dos
+- **team_raci_assignments** — schemas: __TENANT_SCHEMA__,dos
+- **teams** — schemas: __TENANT_SCHEMA__,dos
+- **tenants** — schemas: dos,public
+- **training_courses** — schemas: __TENANT_SCHEMA__,dos
+- **user_access_profiles** — schemas: dos,public
+- **user_mfa** — schemas: dos,public
+- **user_role_assignments** — schemas: __TENANT_SCHEMA__,dos
+- **users** — schemas: dos,public
+- **workflow_sla_configs** — schemas: __TENANT_SCHEMA__,dos
+- **workflow_templates** — schemas: __TENANT_SCHEMA__,dos
+- **workspaces** — schemas: __TENANT_SCHEMA__,dos
+
+## intra-schema-duplicate (260)
+
+- **action_categories** — __TENANT_SCHEMA__:2
+- **action_kpis** — __TENANT_SCHEMA__:2
+- **action_logs** — __TENANT_SCHEMA__:2
+- **action_settings** — __TENANT_SCHEMA__:2
+- **action_versions** — __TENANT_SCHEMA__:2
+- **ai_model_registry** — __TENANT_SCHEMA__:2
+- **analytics_benchmarks** — __TENANT_SCHEMA__:2
+- **analytics_dashboards** — __TENANT_SCHEMA__:2
+- **analytics_data_sources** — __TENANT_SCHEMA__:2
+- **analytics_kpis** — __TENANT_SCHEMA__:2
+- **analytics_reports** — __TENANT_SCHEMA__:2
+- **analytics_settings** — __TENANT_SCHEMA__:2
+- **analytics_snapshots** — __TENANT_SCHEMA__:2
+- **analytics_widgets** — __TENANT_SCHEMA__:2
+- **asset_kpis** — __TENANT_SCHEMA__:2
+- **asset_settings** — __TENANT_SCHEMA__:2
+- **asset_versions** — __TENANT_SCHEMA__:2
+- **attestation_campaigns** — __TENANT_SCHEMA__:2
+- **attestation_kpis** — __TENANT_SCHEMA__:2
+- **attestation_logs** — __TENANT_SCHEMA__:2
+- **attestation_settings** — __TENANT_SCHEMA__:2
+- **attestation_templates** — __TENANT_SCHEMA__:2
+- **attestation_versions** — __TENANT_SCHEMA__:2
+- **audit_engagements** — __TENANT_SCHEMA__:2
+- **audit_findings** — __TENANT_SCHEMA__:2
+- **audit_plans** — __TENANT_SCHEMA__:2
+- **audit_risk_assessments** — __TENANT_SCHEMA__:2
+- **audit_schedules** — __TENANT_SCHEMA__:2
+- **audit_settings** — __TENANT_SCHEMA__:2
+- **audit_universe** — __TENANT_SCHEMA__:3
+- **audit_versions** — __TENANT_SCHEMA__:2
+- **bcp_dependencies** — __TENANT_SCHEMA__:2
+- **bcp_exercises** — __TENANT_SCHEMA__:2
+- **bcp_plans** — __TENANT_SCHEMA__:2
+- **bcp_scenarios** — __TENANT_SCHEMA__:2
+- **bcp_settings** — __TENANT_SCHEMA__:2
+- **bcp_versions** — __TENANT_SCHEMA__:2
+- **benchmarks_kpis** — __TENANT_SCHEMA__:2
+- **benchmarks_logs** — __TENANT_SCHEMA__:2
+- **benchmarks_settings** — __TENANT_SCHEMA__:2
+- **benchmarks_versions** — __TENANT_SCHEMA__:2
+- **compliance_assessments** — __TENANT_SCHEMA__:2
+- **compliance_attestations** — __TENANT_SCHEMA__:2
+- **compliance_evidence_links** — __TENANT_SCHEMA__:2
+- **compliance_exceptions** — __TENANT_SCHEMA__:2
+- **compliance_gaps** — __TENANT_SCHEMA__:2
+- **compliance_obligations** — __TENANT_SCHEMA__:2
+- **compliance_programs** — __TENANT_SCHEMA__:2
+- **compliance_regulatory_changes** — __TENANT_SCHEMA__:2
+- **compliance_requirements** — __TENANT_SCHEMA__:2
+- **compliance_settings** — __TENANT_SCHEMA__:2
+- **compliance_versions** — __TENANT_SCHEMA__:2
+- **controls** — __TENANT_SCHEMA__:2
+- **controls_automation** — __TENANT_SCHEMA__:2
+- **controls_kpis** — __TENANT_SCHEMA__:2
+- **controls_library** — __TENANT_SCHEMA__:2
+- **controls_mapping** — __TENANT_SCHEMA__:2
+- **controls_monitoring** — __TENANT_SCHEMA__:2
+- **controls_settings** — __TENANT_SCHEMA__:2
+- **controls_testing** — __TENANT_SCHEMA__:2
+- **controls_versions** — __TENANT_SCHEMA__:2
+- **dashboard_configs** — __TENANT_SCHEMA__:2
+- **dashboard_layouts** — __TENANT_SCHEMA__:2
+- **dashboard_settings** — __TENANT_SCHEMA__:2
+- **dashboard_sharing** — __TENANT_SCHEMA__:2
+- **dashboard_versions** — __TENANT_SCHEMA__:2
+- **dora_kpis** — __TENANT_SCHEMA__:2
+- **dora_settings** — __TENANT_SCHEMA__:2
+- **dora_versions** — __TENANT_SCHEMA__:2
+- **evidence_freshness** — __TENANT_SCHEMA__:2
+- **evidence_items** — __TENANT_SCHEMA__:2
+- **evidence_links** — __TENANT_SCHEMA__:2
+- **evidence_requests** — __TENANT_SCHEMA__:3
+- **evidence_reviews** — __TENANT_SCHEMA__:2
+- **evidence_schedules** — __TENANT_SCHEMA__:2
+- **evidence_settings** — __TENANT_SCHEMA__:2
+- **evidence_versions** — __TENANT_SCHEMA__:2
+- **exception_approvals** — __TENANT_SCHEMA__:2
+- **exception_categories** — __TENANT_SCHEMA__:2
+- **exception_kpis** — __TENANT_SCHEMA__:2
+- **exception_settings** — __TENANT_SCHEMA__:2
+- **exception_versions** — __TENANT_SCHEMA__:2
+- **executive_kpis** — __TENANT_SCHEMA__:2
+- **executive_logs** — __TENANT_SCHEMA__:2
+- **executive_settings** — __TENANT_SCHEMA__:2
+- **executive_versions** — __TENANT_SCHEMA__:2
+- **feature_flags** — dos:2
+- **fitch_assessments** — __TENANT_SCHEMA__:2
+- **fitch_kpis** — __TENANT_SCHEMA__:2
+- **fitch_logs** — __TENANT_SCHEMA__:2
+- **fitch_settings** — __TENANT_SCHEMA__:2
+- **fitch_versions** — __TENANT_SCHEMA__:2
+- **governance_ai_kpis** — __TENANT_SCHEMA__:2
+- **governance_ai_logs** — __TENANT_SCHEMA__:2
+- **governance_ai_settings** — __TENANT_SCHEMA__:2
+- **governance_ai_versions** — __TENANT_SCHEMA__:2
+- **governance_change_log** — __TENANT_SCHEMA__:2
+- **governance_charters** — __TENANT_SCHEMA__:2
+- **governance_committees** — __TENANT_SCHEMA__:2
+- **governance_compliance_map** — __TENANT_SCHEMA__:2
+- **governance_delegations** — __TENANT_SCHEMA__:2
+- **governance_escalation_rules** — __TENANT_SCHEMA__:2
+- **governance_health_scores** — __TENANT_SCHEMA__:2
+- **governance_kpis** — __TENANT_SCHEMA__:2
+- **governance_mandates** — __TENANT_SCHEMA__:2
+- **governance_meetings** — __TENANT_SCHEMA__:2
+- **governance_os_kpis** — __TENANT_SCHEMA__:2
+- **governance_os_logs** — __TENANT_SCHEMA__:2
+- **governance_os_settings** — __TENANT_SCHEMA__:2
+- **governance_os_versions** — __TENANT_SCHEMA__:2
+- **governance_settings** — __TENANT_SCHEMA__:2
+- **governance_tasks** — __TENANT_SCHEMA__:2
+- **governance_versions** — __TENANT_SCHEMA__:2
+- **grc_query_kpis** — __TENANT_SCHEMA__:2
+- **grc_query_logs** — __TENANT_SCHEMA__:2
+- **grc_query_settings** — __TENANT_SCHEMA__:2
+- **grc_query_versions** — __TENANT_SCHEMA__:2
+- **inbox_filters** — __TENANT_SCHEMA__:2
+- **inbox_settings** — __TENANT_SCHEMA__:2
+- **incident_categories** — __TENANT_SCHEMA__:3
+- **incident_investigations** — __TENANT_SCHEMA__:2
+- **incident_lessons** — __TENANT_SCHEMA__:2
+- **incident_settings** — __TENANT_SCHEMA__:2
+- **incident_versions** — __TENANT_SCHEMA__:2
+- **incidents** — __TENANT_SCHEMA__:2
+- **integrations_api_keys** — __TENANT_SCHEMA__:2
+- **integrations_connectors** — __TENANT_SCHEMA__:2
+- **integrations_field_mappings** — __TENANT_SCHEMA__:2
+- **integrations_settings** — __TENANT_SCHEMA__:2
+- **integrations_versions** — __TENANT_SCHEMA__:2
+- **integrations_webhooks** — __TENANT_SCHEMA__:2
+- **issues_kpis** — __TENANT_SCHEMA__:2
+- **issues_settings** — __TENANT_SCHEMA__:2
+- **issues_versions** — __TENANT_SCHEMA__:2
+- **journey_kpis** — __TENANT_SCHEMA__:2
+- **journey_settings** — __TENANT_SCHEMA__:2
+- **journey_versions** — __TENANT_SCHEMA__:2
+- **knowledge_ai_suggestions** — __TENANT_SCHEMA__:2
+- **knowledge_articles** — __TENANT_SCHEMA__:3
+- **knowledge_categories** — __TENANT_SCHEMA__:3
+- **knowledge_comments** — __TENANT_SCHEMA__:2
+- **knowledge_feedback** — __TENANT_SCHEMA__:2
+- **knowledge_settings** — __TENANT_SCHEMA__:2
+- **knowledge_tags** — __TENANT_SCHEMA__:2
+- **knowledge_versions** — __TENANT_SCHEMA__:2
+- **ksa_regulatory_kpis** — __TENANT_SCHEMA__:2
+- **ksa_regulatory_settings** — __TENANT_SCHEMA__:2
+- **ksa_regulatory_versions** — __TENANT_SCHEMA__:2
+- **local_knowledge_kpis** — __TENANT_SCHEMA__:2
+- **local_knowledge_settings** — __TENANT_SCHEMA__:2
+- **local_knowledge_versions** — __TENANT_SCHEMA__:2
+- **login_attempts** — dos:2
+- **lookup_cities** — public:2
+- **lookup_countries** — public:2
+- **lookup_employee_ranges** — public:2
+- **lookup_frameworks** — public:2
+- **lookup_languages** — public:2
+- **lookup_org_types** — public:2
+- **lookup_sectors** — public:2
+- **lookup_timezones** — public:2
+- **mcp_logs** — __TENANT_SCHEMA__:2
+- **mobile_kpis** — __TENANT_SCHEMA__:2
+- **mobile_logs** — __TENANT_SCHEMA__:2
+- **mobile_settings** — __TENANT_SCHEMA__:2
+- **mobile_versions** — __TENANT_SCHEMA__:2
+- **module_registry** — dos:2
+- **notification_delivery_log** — __TENANT_SCHEMA__:2
+- **notification_digests** — __TENANT_SCHEMA__:2
+- **notification_preferences** — __TENANT_SCHEMA__:2
+- **notification_rules** — __TENANT_SCHEMA__:2
+- **notification_settings** — __TENANT_SCHEMA__:2
+- **notification_subscriptions** — __TENANT_SCHEMA__:2
+- **notification_templates** — __TENANT_SCHEMA__:2
+- **notification_versions** — __TENANT_SCHEMA__:2
+- **onboarding_framework_rules** — public:2
+- **onboarding_module_rules** — public:2
+- **onboarding_persona_rules** — public:2
+- **onboarding_regulator_rules** — public:2
+- **operating_cockpit_alerts** — __TENANT_SCHEMA__:2
+- **operating_cockpit_kpis** — __TENANT_SCHEMA__:2
+- **operating_cockpit_logs** — __TENANT_SCHEMA__:2
+- **operating_cockpit_metrics** — __TENANT_SCHEMA__:2
+- **operating_cockpit_settings** — __TENANT_SCHEMA__:2
+- **operating_cockpit_versions** — __TENANT_SCHEMA__:2
+- **platform_operation_config** — dos:2
+- **playbooks_kpis** — __TENANT_SCHEMA__:2
+- **playbooks_logs** — __TENANT_SCHEMA__:2
+- **playbooks_settings** — __TENANT_SCHEMA__:2
+- **playbooks_versions** — __TENANT_SCHEMA__:2
+- **policy_acknowledgements** — __TENANT_SCHEMA__:2
+- **policy_approvals** — __TENANT_SCHEMA__:2
+- **policy_exceptions** — __TENANT_SCHEMA__:2
+- **policy_review_cycles** — __TENANT_SCHEMA__:2
+- **policy_settings** — __TENANT_SCHEMA__:2
+- **policy_versions** — __TENANT_SCHEMA__:2
+- **portals_kpis** — __TENANT_SCHEMA__:2
+- **portals_settings** — __TENANT_SCHEMA__:2
+- **portals_versions** — __TENANT_SCHEMA__:2
+- **privacy_consent_records** — __TENANT_SCHEMA__:2
+- **privacy_processing_activities** — __TENANT_SCHEMA__:2
+- **privacy_settings** — __TENANT_SCHEMA__:2
+- **privacy_versions** — __TENANT_SCHEMA__:2
+- **proactive_leadership_kpis** — __TENANT_SCHEMA__:2
+- **proactive_leadership_logs** — __TENANT_SCHEMA__:2
+- **proactive_leadership_settings** — __TENANT_SCHEMA__:2
+- **proactive_leadership_versions** — __TENANT_SCHEMA__:2
+- **product_registry** — dos:2
+- **qiyas_kpis** — __TENANT_SCHEMA__:2
+- **qiyas_settings** — __TENANT_SCHEMA__:2
+- **qiyas_versions** — __TENANT_SCHEMA__:2
+- **records_kpis** — __TENANT_SCHEMA__:2
+- **records_logs** — __TENANT_SCHEMA__:2
+- **records_settings** — __TENANT_SCHEMA__:2
+- **records_versions** — __TENANT_SCHEMA__:2
+- **remediation_kpis** — __TENANT_SCHEMA__:2
+- **remediation_settings** — __TENANT_SCHEMA__:2
+- **remediation_tasks** — __TENANT_SCHEMA__:2
+- **remediation_versions** — __TENANT_SCHEMA__:2
+- **reporting_settings** — __TENANT_SCHEMA__:2
+- **reporting_templates** — __TENANT_SCHEMA__:2
+- **reporting_versions** — __TENANT_SCHEMA__:2
+- **risk_scenarios** — __TENANT_SCHEMA__:2
+- **risk_score_history** — public:4
+- **risk_scoring_models** — __TENANT_SCHEMA__:5
+- **risks** — __TENANT_SCHEMA__:2
+- **system_events** — dos:2
+- **team_capacity** — __TENANT_SCHEMA__:2
+- **team_members** — __TENANT_SCHEMA__:3
+- **team_org_chart** — __TENANT_SCHEMA__:2
+- **team_raci_assignments** — __TENANT_SCHEMA__:2
+- **team_settings** — __TENANT_SCHEMA__:2
+- **team_skills** — __TENANT_SCHEMA__:2
+- **team_versions** — __TENANT_SCHEMA__:2
+- **teams** — __TENANT_SCHEMA__:2
+- **tenant_product_activation** — dos:2
+- **training_kpis** — __TENANT_SCHEMA__:2
+- **training_settings** — __TENANT_SCHEMA__:2
+- **training_versions** — __TENANT_SCHEMA__:2
+- **vendor_assessments** — __TENANT_SCHEMA__:2
+- **vendor_contracts** — __TENANT_SCHEMA__:2
+- **vendor_fourth_party** — __TENANT_SCHEMA__:2
+- **vendor_kpis** — __TENANT_SCHEMA__:2
+- **vendor_monitoring** — __TENANT_SCHEMA__:2
+- **vendor_profiles** — __TENANT_SCHEMA__:2
+- **vendor_settings** — __TENANT_SCHEMA__:2
+- **vendor_sla_tracking** — __TENANT_SCHEMA__:2
+- **vendor_versions** — __TENANT_SCHEMA__:2
+- **widgets_kpis** — __TENANT_SCHEMA__:2
+- **widgets_logs** — __TENANT_SCHEMA__:2
+- **widgets_settings** — __TENANT_SCHEMA__:2
+- **widgets_versions** — __TENANT_SCHEMA__:2
+- **workflow_approvals** — __TENANT_SCHEMA__:2
+- **workflow_escalations** — __TENANT_SCHEMA__:2
+- **workflow_instances** — __TENANT_SCHEMA__:2
+- **workflow_settings** — __TENANT_SCHEMA__:2
+- **workflow_steps** — __TENANT_SCHEMA__:2
+- **workflow_templates** — __TENANT_SCHEMA__:2
+- **workflow_transitions** — __TENANT_SCHEMA__:2
+- **workflow_versions** — __TENANT_SCHEMA__:2
+- **workflows** — __TENANT_SCHEMA__:2
+
+## orphan-constraint (1)
+
+- **tenant_migrations** — constraint PRIMARY KEY references column checksum not present in table
+

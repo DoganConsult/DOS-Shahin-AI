@@ -1,0 +1,26 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.setTenantMigrationsByStatus = exports.setTenantMigrationsFailed = exports.initTenantMigrationLedgerMetrics = exports.setClickHouseHealth = exports.setClickHouseBufferDepth = exports.recordClickHouseFlush = exports.recordClickHouseInsert = exports.recordRegistrationAttempt = exports.setOutboxLagSeconds = exports.setOutboxPending = exports.recordOutboxDead = exports.recordOutboxFailure = exports.recordOutboxPublished = exports.metricsMiddleware = exports.getMetricsText = exports.recordDbQuery = exports.recordCacheMiss = exports.recordCacheHit = exports.recordRateLimitCheck = exports.recordRateLimitRejection = exports.getContentType = void 0;
+var prometheus_service_1 = require("./prometheus.service");
+Object.defineProperty(exports, "getContentType", { enumerable: true, get: function () { return prometheus_service_1.getContentType; } });
+Object.defineProperty(exports, "recordRateLimitRejection", { enumerable: true, get: function () { return prometheus_service_1.recordRateLimitRejection; } });
+Object.defineProperty(exports, "recordRateLimitCheck", { enumerable: true, get: function () { return prometheus_service_1.recordRateLimitCheck; } });
+Object.defineProperty(exports, "recordCacheHit", { enumerable: true, get: function () { return prometheus_service_1.recordCacheHit; } });
+Object.defineProperty(exports, "recordCacheMiss", { enumerable: true, get: function () { return prometheus_service_1.recordCacheMiss; } });
+Object.defineProperty(exports, "recordDbQuery", { enumerable: true, get: function () { return prometheus_service_1.recordDbQuery; } });
+Object.defineProperty(exports, "getMetricsText", { enumerable: true, get: function () { return prometheus_service_1.getMetricsText; } });
+Object.defineProperty(exports, "metricsMiddleware", { enumerable: true, get: function () { return prometheus_service_1.metricsMiddleware; } });
+Object.defineProperty(exports, "recordOutboxPublished", { enumerable: true, get: function () { return prometheus_service_1.recordOutboxPublished; } });
+Object.defineProperty(exports, "recordOutboxFailure", { enumerable: true, get: function () { return prometheus_service_1.recordOutboxFailure; } });
+Object.defineProperty(exports, "recordOutboxDead", { enumerable: true, get: function () { return prometheus_service_1.recordOutboxDead; } });
+Object.defineProperty(exports, "setOutboxPending", { enumerable: true, get: function () { return prometheus_service_1.setOutboxPending; } });
+Object.defineProperty(exports, "setOutboxLagSeconds", { enumerable: true, get: function () { return prometheus_service_1.setOutboxLagSeconds; } });
+Object.defineProperty(exports, "recordRegistrationAttempt", { enumerable: true, get: function () { return prometheus_service_1.recordRegistrationAttempt; } });
+Object.defineProperty(exports, "recordClickHouseInsert", { enumerable: true, get: function () { return prometheus_service_1.recordClickHouseInsert; } });
+Object.defineProperty(exports, "recordClickHouseFlush", { enumerable: true, get: function () { return prometheus_service_1.recordClickHouseFlush; } });
+Object.defineProperty(exports, "setClickHouseBufferDepth", { enumerable: true, get: function () { return prometheus_service_1.setClickHouseBufferDepth; } });
+Object.defineProperty(exports, "setClickHouseHealth", { enumerable: true, get: function () { return prometheus_service_1.setClickHouseHealth; } });
+Object.defineProperty(exports, "initTenantMigrationLedgerMetrics", { enumerable: true, get: function () { return prometheus_service_1.initTenantMigrationLedgerMetrics; } });
+Object.defineProperty(exports, "setTenantMigrationsFailed", { enumerable: true, get: function () { return prometheus_service_1.setTenantMigrationsFailed; } });
+Object.defineProperty(exports, "setTenantMigrationsByStatus", { enumerable: true, get: function () { return prometheus_service_1.setTenantMigrationsByStatus; } });
+//# sourceMappingURL=prometheus.js.map

@@ -1,0 +1,32 @@
+{
+  "module": "workflow-notifications",
+  "phase": "Phase 2 / Module 4",
+  "completedAt": "2026-04-25T17:18:32.180449Z",
+  "verdict": "PASS",
+  "tenant": "shahin_visitors",
+  "user": "tenantadmin@shahin-ai.local",
+  "role": "tenant_admin",
+  "issuer": "https://auth.shahin-ai.com/realms/dogan",
+  "endpointCount": 2,
+  "passCount": 2,
+  "failCount": 0,
+  "failingEndpoints": [],
+  "endpoints": [
+    {
+      "name": "notifications",
+      "path": "/api/notifications",
+      "status": 200,
+      "ms": 55,
+      "verdict": "PASS",
+      "sample": "data: list[0]"
+    },
+    {
+      "name": "notificationsLimited",
+      "path": "/api/notifications?limit=20",
+      "status": 200,
+      "ms": 53,
+      "verdict": "PASS",
+      "sample": "data: list[0]"
+    }
+  ]
+}

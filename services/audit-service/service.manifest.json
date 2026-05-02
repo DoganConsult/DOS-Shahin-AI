@@ -1,0 +1,12 @@
+{
+  "serviceCode": "audit-service",
+  "displayName": "audit-service",
+  "layer": "platform-service",
+  "ownerTeam": "platform-core",
+  "runtime": "node",
+  "dependsOn": ["auth-service","tenant-service"],
+  "modules": [],
+  "exposes": {
+    "apiBase": "/api/audit-core"
+  }
+}

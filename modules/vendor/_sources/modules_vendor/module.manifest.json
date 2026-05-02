@@ -1,0 +1,130 @@
+{
+  "moduleCode": "vendor",
+  "displayName": "Vendor Risk Management",
+  "ownerTeam": "product-shahin-ai",
+  "productCode": "shahin-ai",
+  "ownership": "module-owned",
+  "version": "1.0.0",
+  "status": "active",
+  "platformDependencies": [
+    "identity",
+    "tenancy",
+    "workflow",
+    "permissions",
+    "audit"
+  ],
+  "seedProviders": [
+    "products/shahin/seeds/vendor-seed"
+  ],
+  "tenantDefaults": [
+    "vendor_dd_cycle_days",
+    "vendor_sla_default_hours"
+  ],
+  "requiredReferenceData": [
+    "vendor_categories",
+    "vendor_risk_tiers",
+    "vendor_statuses"
+  ],
+  "currentSources": [
+    "/home/Dr-Dogan-AGRC-OS/backend/src/modules/vendor"
+  ],
+  "targetPath": "modules/vendor",
+  "futureService": "vendor-service",
+  "frontendSources": [
+    "/home/Dr-Dogan-AGRC-OS/frontend/src/app/platform-manifests/vendor.module.routes.ts"
+  ],
+  "ownedTables": [
+    "vendor_admin_config",
+    "vendor_assessments",
+    "vendor_audit_log",
+    "vendor_bcp_requirements",
+    "vendor_benchmark_cohorts",
+    "vendor_concentration_analysis",
+    "vendor_contacts",
+    "vendor_crypto_assessment",
+    "vendor_dd_steps",
+    "vendor_documents",
+    "vendor_due_diligence",
+    "vendor_engagement_milestones",
+    "vendor_engagement_scores",
+    "vendor_engagements",
+    "vendor_exceptions",
+    "vendor_findings",
+    "vendor_fourth_party_risk",
+    "vendor_issues",
+    "vendor_monitoring_signals",
+    "vendor_obligations",
+    "vendor_offboarding",
+    "vendor_offboarding_checklist",
+    "vendor_portal_messages",
+    "vendor_portal_tokens",
+    "vendor_questionnaire_submissions",
+    "vendor_risk_assessments",
+    "vendor_risks",
+    "vendor_shared_responsibility",
+    "vendor_sla_breach_log",
+    "vendor_sla_definitions",
+    "vendor_sla_measurements",
+    "vendor_subcontractors",
+    "vendor_team_distribution",
+    "vendor_training_requirements"
+  ],
+  "referencedTables": [
+    "audit_trail",
+    "teams",
+    "workflows",
+    "risk_assessments",
+    "compliance_frameworks",
+    "assets"
+  ],
+  "events": {
+    "publishes": [
+      "vendor.onboarded",
+      "vendor.assessment_due",
+      "vendor.dd_initiated",
+      "vendor.dd_completed",
+      "vendor.dd_expired",
+      "vendor.risk_changed",
+      "vendor.risk_propagated",
+      "vendor.sla_breached",
+      "vendor.sla_warning",
+      "vendor.concentration_high",
+      "vendor.fourth_party_flagged",
+      "vendor.contract_expiring",
+      "vendor.contract_updated",
+      "vendor.engagement_created",
+      "vendor.engagement_score_low",
+      "vendor.exception_requested",
+      "vendor.exception_approved",
+      "vendor.exception_rejected",
+      "vendor.evidence_auto_satisfied",
+      "vendor.evidence_rejected",
+      "vendor.issue_created",
+      "vendor.issue_escalated",
+      "vendor.monitoring_signal",
+      "vendor.offboarding_initiated",
+      "vendor.portal_token_issued",
+      "vendor.posture_recalculated",
+      "vendor.questionnaire_distributed",
+      "vendor.questionnaire_submitted",
+      "vendor.questionnaire_overdue",
+      "vendor.gate_blocked",
+      "vendor.audit_finding_propagated",
+      "vendor.cascade_risk_assessed",
+      "vendor.compliance_gap_propagated",
+      "vendor.framework_sync_triggered"
+    ],
+    "subscribes": [
+      "risk.score_changed",
+      "compliance.gap_detected",
+      "audit.finding_created",
+      "incident.classified",
+      "bcp.crisis_declared",
+      "workflow.status_changed",
+      "foundation.position.holder.unassigned"
+    ]
+  },
+  "routeBases": [
+    "/api/vendor"
+  ]
+}

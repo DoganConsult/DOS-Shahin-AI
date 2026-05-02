@@ -1,0 +1,38 @@
+{
+  "workflow": {
+    "nav": {
+      "overview": "نظرة عامة",
+      "definitions": "التعريفات",
+      "builder": "المنشئ",
+      "designer": "المصمم",
+      "templates": "القوالب",
+      "instances": "التنفيذات",
+      "approvals": "الموافقات",
+      "tasks": "المهام",
+      "inbox": "صندوق الوارد",
+      "workQueue": "قائمة العمل",
+      "delegations": "التفويضات",
+      "escalations": "التصعيدات",
+      "sla": "اتفاقية مستوى الخدمة",
+      "audit": "التدقيق",
+      "reports": "التقارير",
+      "settings": "الإعدادات"
+    },
+    "overview": {
+      "title": "عمليات سير العمل",
+      "subtitle": "الموافقات والمهام والتنسيق"
+    },
+    "errors": {
+      "loadFailed": "تعذر تحميل بيانات سير العمل."
+    },
+    "emptyStates": {
+      "noItems": "لا توجد عناصر."
+    },
+    "actions": {
+      "create": "إنشاء",
+      "save": "حفظ",
+      "cancel": "إلغاء",
+      "complete": "إكمال"
+    }
+  }
+}

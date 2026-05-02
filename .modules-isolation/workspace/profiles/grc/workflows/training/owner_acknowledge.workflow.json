@@ -1,0 +1,15 @@
+{
+  "id": "training.owner_acknowledge",
+  "module": "training",
+  "hook": "owner_acknowledge",
+  "version": "1.0.0",
+  "sla_hours": 48,
+  "actor_role_default": "training.module_lead",
+  "states": ["pending","acknowledged","escalated"],
+  "initial": "pending",
+  "transitions": [{"from":"pending","to":"acknowledged","on":"ack","actor_role":"training.module_lead"},{"from":"pending","to":"escalated","on":"sla_breach","actor_role":"training.executive_owner"}],
+  "audit_event_prefix": "training.workflow.owner_acknowledge",
+  "notification_targets": ["training.module_lead", "training.approver"],
+  "evidence_required_on": ["passed","published"],
+  "escalation": { "on": "sla_breach", "to": "training.executive_owner", "after_hours": 96 }
+}

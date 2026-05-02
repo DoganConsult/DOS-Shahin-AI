@@ -1,0 +1,28 @@
+import { InjectionToken, Provider } from '@angular/core';
+/**
+ * Configuration for AccessStore. Products provide this once at bootstrap
+ * to point AccessStore at their gateway's session/permission endpoints.
+ *
+ * Defaults assume same-origin requests against the standard DOS gateway
+ * routes (`/api/access/my-permissions`, `/api/tenants/me`).
+ */
+export interface AccessStoreConfig {
+    /**
+     * Base URL prefix prepended to every request. Empty string means
+     * same-origin (the typical SPA case).
+     */
+    baseUrl?: string;
+    /** Override for `GET <baseUrl>/api/access/my-permissions`. */
+    myPermissionsPath?: string;
+    /** Override for `GET <baseUrl>/api/tenants/me`. */
+    mePath?: string;
+    /**
+     * Where to redirect on a 401 from any session call. Empty string
+     * disables the redirect (the consumer handles 401 themselves).
+     */
+    loginRedirectUrl?: string;
+}
+export declare const ACCESS_STORE_CONFIG: InjectionToken<AccessStoreConfig>;
+export declare const DEFAULT_ACCESS_STORE_CONFIG: Required<AccessStoreConfig>;
+/** Ergonomic provider helper for product bootstrap files. */
+export declare function provideAccessStore(config?: AccessStoreConfig): Provider;

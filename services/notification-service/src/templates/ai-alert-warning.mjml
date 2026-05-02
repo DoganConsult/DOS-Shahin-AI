@@ -1,0 +1,27 @@
+<mj-text align="{{ textAlign }}" font-size="13px" font-weight="600" color="#b45309" letter-spacing="1px" text-transform="uppercase" padding-bottom="4px">
+  {{ t.severityLabel }}
+</mj-text>
+<mj-text align="{{ textAlign }}" font-size="20px" font-weight="700" color="#111827" padding-bottom="8px">
+  {{ t.title }}
+</mj-text>
+<mj-text align="{{ textAlign }}">
+  {{ t.body }}
+</mj-text>
+<mj-table padding="14px 0" font-size="13px">
+  <tr style="background-color:#fffbeb;border:1px solid #fcd34d;">
+    <td style="padding:14px 16px;">
+      <div style="color:#78350f;font-weight:600;padding-bottom:4px">{{ t.ruleLabel }}</div>
+      <div style="color:#374151;padding-bottom:8px">{{ ruleName }}</div>
+      <div style="color:#78350f;font-weight:600;padding-bottom:4px">{{ t.tenantLabel }}</div>
+      <div style="color:#374151;padding-bottom:8px">{{ tenantId }}</div>
+      <div style="color:#78350f;font-weight:600;padding-bottom:4px">{{ t.metricLabel }}</div>
+      <div style="color:#374151">{{ metricSummary }}</div>
+    </td>
+  </tr>
+</mj-table>
+<mj-button href="{{ alertUrl }}" align="{{ textAlign }}" background-color="#b45309" padding-top="20px">
+  {{ t.cta }}
+</mj-button>
+<mj-text align="{{ textAlign }}" css-class="muted" padding-top="12px">
+  {{ t.throttleNote }}
+</mj-text>

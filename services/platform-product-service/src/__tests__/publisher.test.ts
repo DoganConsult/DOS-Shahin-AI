@@ -1,0 +1,32 @@
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+
+const mockPublish = vi.fn().mockResolvedValue('evt-id');
+
+vi.mock('@dos/event-backbone', () => ({
+  RedisStreamEventBus: vi.fn(),
+  createEventBackbone: vi.fn(),
+}));
+
+import { setServiceBus, publishProductLicenseActivated, publishProductLicenseUpgraded, publishProductLicenseExpiring } from '../events/publisher';
+
+describe('platform-product-service publisher', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    setServiceBus({ publish: mockPublish } as any);
+  });
+
+  it('publishProductLicenseActivated publishes event', async () => {
+    await publishProductLicenseActivated('t1', 'entity-1', 'arg2', 'arg3', 'arg4');
+    expect(mockPublish).toHaveBeenCalled();
+  });
+
+  it('publishProductLicenseUpgraded publishes event', async () => {
+    await publishProductLicenseUpgraded('t1', 'entity-1', 'arg2', 'arg3', 'arg4');
+    expect(mockPublish).toHaveBeenCalled();
+  });
+
+  it('publishProductLicenseExpiring publishes event', async () => {
+    await publishProductLicenseExpiring('t1', 'entity-1', 'arg2', 'arg3', 'arg4');
+    expect(mockPublish).toHaveBeenCalled();
+  });
+});

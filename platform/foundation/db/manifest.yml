@@ -1,0 +1,29 @@
+module: foundation
+migrations:
+  - file: 20260424_0100_foundation_zero_blocker.sql
+    description: Foundation zero-blocker pass (tables, permissions, roles, bindings)
+    down: 20260424_0100_foundation_zero_blocker_down.sql
+  - file: 20260425_0002_foundation_schema_alignment.sql
+    description: Foundation schema alignment part 1
+  - file: 20260425_0003_foundation_schema_alignment_part2.sql
+    description: Foundation schema alignment part 2
+seeds:
+  - source: public.lookup_*
+    provider: onboarding-service
+    note: Consumer-owned lookup catalogue (countries, cities, sectors, timezones, languages, frameworks, org_types, employee_ranges)
+ownedTables:
+  - dos.organizations
+  - dos.business_units
+  - dos.positions
+  - dos.position_assignments
+  - dos.locations
+  - dos.location_bu_map
+  - dos.committees
+  - dos.committee_members
+  - dos.ownership_mappings
+  - dos.invitations
+  - dos.audit_trail
+  - dos.permissions
+  - dos.functional_roles
+  - dos.role_permissions
+  - dos.governance_decisions

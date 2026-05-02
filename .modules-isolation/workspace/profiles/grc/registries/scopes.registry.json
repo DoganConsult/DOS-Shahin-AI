@@ -1,0 +1,10 @@
+{
+  "scopes": [
+    { "code": "org",            "level": 1, "description": "Whole organization" },
+    { "code": "business_unit",  "level": 2, "description": "Business unit" },
+    { "code": "department",     "level": 3, "description": "Department" },
+    { "code": "team",           "level": 4, "description": "Team" },
+    { "code": "position",       "level": 5, "description": "Position / job role" },
+    { "code": "own",            "level": 6, "description": "Records owned by the actor" }
+  ]
+}

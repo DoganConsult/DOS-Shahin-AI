@@ -1,0 +1,53 @@
+{
+  "moduleCode": "attestation",
+  "displayName": "Attestation Management",
+  "ownerTeam": "product-shahin-ai",
+  "productCode": "shahin-ai",
+  "ownership": "module-owned",
+  "version": "1.0.0",
+  "status": "active",
+  "platformDependencies": [
+    "identity",
+    "tenancy",
+    "workflow"
+  ],
+  "seedProviders": [
+    "products/shahin/seeds/attestation-seed"
+  ],
+  "tenantDefaults": [
+    "attestation_campaign_default_days"
+  ],
+  "requiredReferenceData": [
+    "attestation_templates"
+  ],
+  "currentSources": [
+    "/home/Dr-Dogan-AGRC-OS/backend/src/modules/attestation"
+  ],
+  "targetPath": "modules/attestation",
+  "futureService": "compliance-controls-service",
+  "frontendSources": [
+    "/home/Dr-Dogan-AGRC-OS/frontend/src/app/platform-manifests/attestation.module.routes.ts"
+  ],
+  "ownedTables": [
+    "attestation_campaigns",
+    "attestation_records",
+    "attestation_evidence_links"
+  ],
+  "referencedTables": [
+    "users",
+    "evidence"
+  ],
+  "events": {
+    "publishes": [
+      "attestation.campaign_created",
+      "attestation.record_reviewed"
+    ],
+    "subscribes": [
+      "compliance.control_updated",
+      "foundation.position.holder.assigned"
+    ]
+  },
+  "routeBases": [
+    "/api/attestation"
+  ]
+}

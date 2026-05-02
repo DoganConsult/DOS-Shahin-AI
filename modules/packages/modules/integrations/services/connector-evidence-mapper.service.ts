@@ -1,0 +1,166 @@
+import { catchHandler, EC } from '@dos/platform-core/resilience';
+import { logger } from '../ports/logger.port';
+import { safeQuery, tenantSchema } from '../ports/database.port';
+import { eventBus } from '../ports/events.port';
+import { toErrorMessage } from '@dos/module-sdk';
+import { getFirstRow } from '@dos/db';
+
+export interface ConnectorEvidenceMapping {
+  mapping_id: string;
+  connector_type: string;
+  output_type: string;
+  evidence_type: string;
+  control_id_pattern: string | null;
+  auto_submit: boolean;
+  enabled: boolean;
+}
+
+export async function mapConnectorOutputToEvidence(tenantId: string, syncPayload: {
+  connectorType: string;
+  connectionId: string;
+  recordsFetched: number;
+  recordsNew: number;
+}): Promise<{ matched: number; submitted: number; errors: number }> {
+  const schema = tenantSchema(tenantId);
+  let matched = 0, submitted = 0, errors = 0;
+
+  try {
+    // Get enabled mappings for this connector type
+    const mappings = await safeQuery(
+      `SELECT mapping_id, connector_type, output_type, evidence_type, control_id_pattern, submit_status
+       FROM "${schema}".connector_evidence_mappings
+       WHERE connector_type = $1 AND enabled = TRUE AND auto_submit = TRUE`,
+      [syncPayload.connectorType]
+    );
+
+    if (mappings.rows.length === 0) return { matched: 0, submitted: 0, errors: 0 };
+
+    for (const mapping of mappings.rows) {
+      // Find pending evidence tasks that match this evidence type
+      const controlFilter = mapping.control_id_pattern
+        ? ` AND et.control_id LIKE '${mapping.control_id_pattern.replace(/'/g, "''")}'`
+        : '';
+
+      const pendingTasks = await safeQuery(
+        `SELECT et.task_id, et.control_id, et.evidence_requirement_id
+         FROM "${schema}".evidence_tasks et
+         WHERE et.status IN ('pending', 'Open', 'overdue')${controlFilter}
+         LIMIT 50`,
+        []
+      );
+
+      matched += pendingTasks.rows.length;
+
+      for (const task of pendingTasks.rows) {
+        try {
+          // Create evidence submission linked to the connector sync
+          await safeQuery(
+            `INSERT INTO "${schema}".evidence (
+               title, description, status, evidence_type, source_type, source_id,
+               linked_entity_type, linked_entity_id, created_by, created_at
+             ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW())`,
+            [
+              `[Auto] ${mapping.evidence_type} from ${syncPayload.connectorType}`,
+              `Automatically collected via ${syncPayload.connectorType} connector sync (connection: ${syncPayload.connectionId}). Records: ${syncPayload.recordsFetched} fetched, ${syncPayload.recordsNew} new.`,
+              mapping.submit_status || 'pending_review',
+              mapping.evidence_type,
+              `connector_${syncPayload.connectorType}`,
+              syncPayload.connectionId,
+              'control',
+              task.control_id,
+              'agrc-os-connector',
+            ]
+          );
+
+          // Update evidence task status
+          await safeQuery(
+            `UPDATE "${schema}".evidence_tasks SET status = 'In Progress', updated_at = NOW()
+             WHERE task_id = $1 AND status IN ('pending', 'Open', 'overdue')`,
+            [task.task_id]
+          ).catch(catchHandler(EC.EVENT_BUS, {}));
+
+          submitted++;
+
+          // Publish evidence submitted and auto-collected events
+          await eventBus.publish(({
+                      eventType: 'evidence.submitted',
+                      tenantId,
+                      sourceService: 'connector-evidence-mapper',
+                      severity: 'info',
+                      entityType: 'evidence',
+                      entityId: task.control_id,
+                      payload: {
+                        connectorType: syncPayload.connectorType,
+                        connectionId: syncPayload.connectionId,
+                        evidenceType: mapping.evidence_type,
+                        controlId: task.control_id,
+                        taskId: task.task_id,
+                        autoCollected: true,
+                      },
+                    } as any));
+          await eventBus.publish(({
+                      eventType: 'evidence.auto_collected',
+                      tenantId,
+                      sourceService: 'connector-evidence-mapper',
+                      severity: 'info',
+                      entityType: 'evidence',
+                      entityId: task.control_id,
+                      payload: {
+                        connectorType: syncPayload.connectorType,
+                        connectionId: syncPayload.connectionId,
+                        evidenceType: mapping.evidence_type,
+                        controlId: task.control_id,
+                        taskId: task.task_id,
+                      },
+                    } as any));
+        } catch (err) {
+          errors++;
+          logger.warn(`[ConnectorEvidence] Failed to submit evidence for task ${task.task_id}: ${toErrorMessage(err)}`);
+        }
+      }
+    }
+
+    if (submitted > 0) {
+      logger.info(`[ConnectorEvidence] Auto-collected ${submitted} evidence items from ${syncPayload.connectorType} sync`);
+    }
+  } catch (err) {
+    logger.warn(`[ConnectorEvidence] mapConnectorOutputToEvidence failed: ${toErrorMessage(err)}`);
+  }
+
+  return { matched, submitted, errors };
+}
+
+export async function getConnectorEvidenceMappings(tenantId: string): Promise<ConnectorEvidenceMapping[]> {
+  const schema = tenantSchema(tenantId);
+  const result = await safeQuery(
+    `SELECT mapping_id, connector_type, output_type, evidence_type, control_id_pattern, auto_submit, enabled
+     FROM "${schema}".connector_evidence_mappings ORDER BY connector_type, output_type`,
+    []
+  );
+  return result.rows;
+}
+
+export async function createConnectorEvidenceMapping(tenantId: string, input: {
+  connectorType: string;
+  outputType: string;
+  evidenceType: string;
+  controlIdPattern?: string;
+}): Promise<ConnectorEvidenceMapping | null> {
+  const schema = tenantSchema(tenantId);
+  try {
+    const result = await safeQuery(
+      `INSERT INTO "${schema}".connector_evidence_mappings
+         (connector_type, output_type, evidence_type, control_id_pattern)
+       VALUES ($1, $2, $3, $4)
+       ON CONFLICT (connector_type, output_type, evidence_type) DO UPDATE
+         SET control_id_pattern = COALESCE($4, connector_evidence_mappings.control_id_pattern),
+             updated_at = NOW()
+       RETURNING *`,
+      [input.connectorType, input.outputType, input.evidenceType, input.controlIdPattern || null]
+    );
+    return getFirstRow(result) || null;
+  } catch (err) {
+    logger.warn(`[ConnectorEvidence] createMapping failed: ${toErrorMessage(err)}`);
+    return null;
+  }
+}

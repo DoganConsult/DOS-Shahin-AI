@@ -1,0 +1,18 @@
+{
+  "bcp.title": "Business Continuity",
+  "bcp.dashboard": "BCP Dashboard",
+  "bcp.plans": "Continuity Plans",
+  "bcp.bia": "Business Impact Analysis",
+  "bcp.crisisEvents": "Crisis Events",
+  "bcp.findings": "BCM Findings",
+  "bcp.metrics": "BCM Metrics",
+  "bcp.services": "Business Services",
+  "bcp.diagnostics": "Diagnostics",
+  "bcp.admin": "BCP Admin",
+  "bcp.empty.title": "No continuity plans",
+  "bcp.empty.description": "Create your first business continuity plan to prepare for operational disruptions.",
+  "bcp.loading": "Loading BCP data...",
+  "bcp.error.title": "Failed to load BCP data",
+  "bcp.error.retry": "Retry",
+  "bcp.create": "Create Plan"
+}

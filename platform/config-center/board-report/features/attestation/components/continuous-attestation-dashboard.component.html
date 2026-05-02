@@ -1,0 +1,197 @@
+<div class="attestation-dashboard" [attr.dir]="i18n.direction()">
+      <app-page-header
+        titleEn="Continuous Attestation"
+        titleAr="الإقرار المستمر"
+        subtitleEn="Monitor framework and control readiness for audit attestation"
+        subtitleAr="راقب جاهزية الأطر والضوابط للإقرار التدقيقي"
+        icon="file-check"
+        [isAr]="i18n.isAr()"
+        [dir]="i18n.direction()">
+        <ng-template #actions>
+          <p-button
+            [label]="i18n.translate('common.refresh')"
+            icon="pi pi-refresh"
+            [loading]="loading()"
+            (onClick)="loadData()"
+            severity="secondary" />
+        </ng-template>
+      </app-page-header>
+
+      @if (loading()) {
+        <div class="skeleton-grid">
+          @for (i of [1,2,3,4]; track i) {
+            <p-skeleton height="120px" borderRadius="10px" />
+          }
+        </div>
+      }
+
+      @if (!loading() && error()) {
+        <app-empty-state
+          variant="error"
+          [title]="i18n.translate('common.failedToLoad')"
+          [description]="error() || ''"
+          [actionLabel]="i18n.translate('common.retry')"
+          [dir]="i18n.direction()"
+          (action)="loadData()" />
+      }
+
+      @if (!loading() && !error()) {
+        <!-- Framework Readiness Overview -->
+        <div class="frameworks-section">
+          <h3 class="section-title">{{ i18n.translate('attestation.frameworkReadiness') }}</h3>
+          @if (frameworks().length === 0) {
+            <app-empty-state
+              variant="default"
+              [title]="i18n.translate('attestation.noFrameworks')"
+              [description]="i18n.translate('attestation.noFrameworksDesc')"
+              [dir]="i18n.direction()" />
+          } @else {
+            <div class="framework-grid">
+              @for (fw of frameworks(); track fw.frameworkId) {
+                <p-card class="framework-card" [class]="getReadinessClass(fw.overallScore)">
+                  <div class="framework-header">
+                    <h4>{{ i18n.localize(fw.frameworkName, fw.frameworkName) }}</h4>
+                    <p-tag
+                      [value]="fw.readinessLevel"
+                      [severity]="getReadinessSeverity(fw.readinessLevel)" />
+                  </div>
+                  <div class="framework-score">
+                    <div class="score-value">{{ fw.overallScore }}%</div>
+                    <p-progressBar [value]="fw.overallScore" [showValue]="false" />
+                  </div>
+                  <div class="framework-stats">
+                    <div class="stat-item">
+                      <span class="stat-label">{{ i18n.translate('common.controls') }}</span>
+                      <span class="stat-value">{{ fw.controlCount }}</span>
+                    </div>
+                    <div class="stat-item">
+                      <span class="stat-label">{{ i18n.translate('attestation.compliant') }}</span>
+                      <span class="stat-value success">{{ fw.compliantCount }}</span>
+                    </div>
+                    <div class="stat-item">
+                      <span class="stat-label">{{ i18n.translate('attestation.partial') }}</span>
+                      <span class="stat-value warning">{{ fw.partialCount }}</span>
+                    </div>
+                    <div class="stat-item">
+                      <span class="stat-label">{{ i18n.translate('attestation.nonCompliant') }}</span>
+                      <span class="stat-value danger">{{ fw.nonCompliantCount }}</span>
+                    </div>
+                  </div>
+                  <div class="framework-actions">
+                    <p-button
+                      [label]="i18n.translate('attestation.generateDraft')"
+                      icon="pi pi-file-edit"
+                      [loading]="generatingDraft() === fw.frameworkId"
+                      (onClick)="generateFrameworkDraft(fw.frameworkId)"
+                      [disabled]="generatingDraft() !== null"
+                      size="small" />
+                  </div>
+                </p-card>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Selected Framework Controls -->
+        @if (selectedFrameworkId()) {
+          <div class="controls-section">
+            <h3 class="section-title">
+              {{ i18n.translate('attestation.controlsFor') }} {{ getFrameworkName(selectedFrameworkId()!) }}
+              <p-button
+                icon="pi pi-times"
+                [text]="true"
+                severity="secondary"
+                (onClick)="selectedFrameworkId.set(null)"
+                [style]="{ marginLeft: '0.5rem' }" />
+            </h3>
+            @if (controls().length === 0) {
+              <app-empty-state
+                variant="default"
+                [title]="i18n.translate('attestation.noControls')"
+                [dir]="i18n.direction()" />
+            } @else {
+              <grc-data-table
+                [totalRecords]="controls().length"
+                [emptyMessage]="i18n.translate('attestation.noControls') || 'No controls found'">
+                <p-table
+                  [value]="controls()"
+                  [paginator]="true"
+                  [rows]="20"
+                  [rowsPerPageOptions]="[10, 20, 50]"
+                  styleClass="p-datatable-sm">
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th>{{ i18n.translate('common.controlCode') }}</th>
+                      <th>{{ i18n.translate('common.readinessScore') }}</th>
+                      <th>{{ i18n.translate('attestation.evidenceScore') }}</th>
+                      <th>{{ i18n.translate('attestation.testScore') }}</th>
+                      <th>{{ i18n.translate('common.status') }}</th>
+                      <th>{{ i18n.translate('common.actions') }}</th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-control>
+                    <tr>
+                      <td>{{ control.controlCode }}</td>
+                      <td>
+                        <div class="score-cell">
+                          <span class="score-value">{{ control.overallScore }}%</span>
+                          <p-progressBar [value]="control.overallScore" [showValue]="false" [style]="{ height: '4px' }" />
+                        </div>
+                      </td>
+                      <td>{{ control.evidenceScore }}%</td>
+                      <td>{{ control.testScore }}%</td>
+                      <td>
+                        <p-tag
+                          [value]="control.readinessLevel"
+                          [severity]="getReadinessSeverity(control.readinessLevel)" />
+                      </td>
+                      <td>
+                        <p-button
+                          icon="pi pi-file-edit"
+                          [text]="true"
+                          [loading]="generatingDraft() === control.controlId"
+                          (onClick)="generateControlDraft(control.controlId)"
+                          [disabled]="generatingDraft() !== null"
+                          [pTooltip]="i18n.translate('attestation.generateDraft')" />
+                      </td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+              </grc-data-table>
+            }
+          </div>
+        }
+      }
+
+      <!-- Draft Preview Dialog -->
+      <p-dialog
+        [visible]="showDraftDialog()" (visibleChange)="showDraftDialog.set($event)"
+        [header]="i18n.translate('attestation.attestationDraft')"
+        [modal]="true"
+        [style]="{ width: '80vw', maxWidth: '900px' }"
+        [draggable]="false">
+        @if (currentDraft()) {
+          <div class="draft-content">
+            <div class="draft-meta">
+              <p-tag
+                [value]="currentDraft()!.readinessScore + '% ' + i18n.translate('common.readiness')"
+                [severity]="getReadinessSeverity(getReadinessLevel(currentDraft()!.readinessScore))" />
+              <span class="draft-date">
+                {{ i18n.translate('common.generatedAt') }}: {{ currentDraft()!.generatedAt | appDate:'short' }}
+              </span>
+            </div>
+            <div class="draft-text" [innerHTML]="formatDraftContent(currentDraft()!.content)"></div>
+          </div>
+          <ng-template pTemplate="footer">
+            <p-button
+              [label]="i18n.translate('common.close')"
+              (onClick)="showDraftDialog.set(false)"
+              severity="secondary" />
+            <p-button
+              [label]="i18n.translate('common.download')"
+              icon="pi pi-download"
+              (onClick)="downloadDraft()" />
+          </ng-template>
+        }
+      </p-dialog>
+    </div>

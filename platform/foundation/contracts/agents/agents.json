@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "moduleCode": "foundation",
+  "internalContractRef": "../agent.contract.json",
+  "agents": [
+    {
+      "agentId": "foundation-org-agent",
+      "scope": "module",
+      "level": "L1",
+      "nameKey": "agents.foundationOrg.name",
+      "descriptionKey": "agents.foundationOrg.description",
+      "capabilities": ["detect_org_gaps", "suggest_owner", "summarize_structure", "prepare_org_review"],
+      "allowedActions": ["read", "analyze", "draft"],
+      "requiresHumanApproval": true,
+      "auditRequired": true,
+      "defaultRiskLevel": "low"
+    },
+    {
+      "agentId": "foundation-access-agent",
+      "scope": "module",
+      "level": "L2",
+      "nameKey": "agents.foundationAccess.name",
+      "descriptionKey": "agents.foundationAccess.description",
+      "capabilities": ["explain_access", "detect_sod_conflict", "detect_risky_permissions", "prepare_access_review", "simulate_permission_change"],
+      "allowedActions": ["read", "analyze", "draft", "start_workflow"],
+      "requiresHumanApproval": true,
+      "auditRequired": true,
+      "defaultRiskLevel": "medium"
+    },
+    {
+      "agentId": "foundation-committee-agent",
+      "scope": "module",
+      "level": "L2",
+      "nameKey": "agents.foundationCommittee.name",
+      "capabilities": ["prepare_meeting_brief", "summarize_open_decisions", "detect_quorum_issue", "create_followups"],
+      "allowedActions": ["read", "analyze", "draft"],
+      "requiresHumanApproval": true,
+      "auditRequired": true,
+      "defaultRiskLevel": "low"
+    },
+    {
+      "agentId": "foundation-audit-scribe",
+      "scope": "module",
+      "level": "L3",
+      "nameKey": "agents.foundationAuditScribe.name",
+      "capabilities": ["draft_audit_summary", "group_events_by_incident", "extract_evidence_links"],
+      "allowedActions": ["read", "analyze", "draft"],
+      "requiresHumanApproval": true,
+      "auditRequired": true,
+      "defaultRiskLevel": "low"
+    }
+  ],
+  "squads": [
+    {
+      "squadId": "foundation-access-review-squad",
+      "nameKey": "agents.squads.accessReview.name",
+      "orchestratorAgentId": "foundation-access-agent",
+      "members": ["foundation-org-agent", "foundation-access-agent", "foundation-audit-scribe", "foundation-committee-agent"],
+      "humanApprovalRequired": true,
+      "ledgerRequired": true,
+      "preventCircularDelegation": true,
+      "maxDepth": 5
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "strict": true,
+    "noImplicitAny": false,
+    "useUnknownInCatchVariables": false,
+    "outDir": "dist",
+    "noEmit": false,
+    "noEmitOnError": false,
+    "composite": true,
+    "declaration": true,
+    "declarationMap": false,
+    "sourceMap": true,
+    "tsBuildInfoFile": "./dist/.tsbuildinfo",
+    "baseUrl": ".",
+    "paths": {
+      "@dos/types": ["../dos-types/dist/index"],
+      "@dos/types/*": ["../dos-types/dist/*"],
+      "@dos/contracts": ["../dos-contracts/dist/index"],
+      "@dos/contracts/*": ["../dos-contracts/dist/*"],
+      "@dos/db": ["../dos-db/dist/index"],
+      "@dos/db/*": ["../dos-db/dist/*"]
+    }
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/ambient/**/*.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "**/__tests__/**",
+    "src/foundation/source/**",
+    "src/foundation/legacy/**",
+    "src/quality-gate/source/**",
+    "src/settings/config-center/source/**",
+    "src/observability/platform-stats/source/**",
+    "src/integrations/source/**",
+    "src/settings/config/source/**",
+    "src/observability/advanced-logging.ts",
+    "src/observability/health-metrics-tracing.ts"
+  ]
+}

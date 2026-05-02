@@ -1,0 +1,13 @@
+code,name_en,data_sensitivity,consumer_protection_applies
+B2B,Business-to-Business,high,False
+B2C,Business-to-Consumer,very_high,True
+B2G,Business-to-Government,very_high,False
+B2B2C,Marketplace / Platform,very_high,True
+C2C,Consumer-to-Consumer Platform,very_high,True
+SAAS,SaaS / Cloud Service,very_high,True
+FINTECH,FinTech / Digital Finance,very_high,True
+MANUFACTURING,Manufacturing / Production,medium,False
+DISTRIBUTION,Distribution / Logistics,medium,False
+PROFESSIONAL_SERVICES,Professional Services,high,False
+FRANCHISE,Franchise,high,True
+PUBLIC_SERVICE,Public Service Delivery,very_high,True

@@ -1,0 +1,120 @@
+.risk-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+      gap: var(--space-md);
+    }
+
+    /* Colored left border based on severity */
+
+    .risk-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-sm);
+    }
+    .risk-title {
+      font-size: var(--font-size-md);
+      font-weight: 600;
+      margin: 0;
+      color: var(--text);
+    }
+    .risk-desc {
+      font-size: var(--font-size-base);
+      color: var(--text-muted);
+      margin-bottom: var(--space-md);
+      line-height: 1.5;
+    }
+
+    /* Styled metric indicators */
+    .risk-metrics {
+      display: flex;
+      gap: var(--space-lg);
+      margin-bottom: var(--space-md);
+    }
+    .metric {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .metric-label {
+      font-size: var(--font-size-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .metric-value {
+      font-size: var(--font-size-xl);
+      font-weight: 700;
+      color: var(--text);
+    }
+    .metric-max {
+      font-size: var(--font-size-sm);
+      font-weight: 400;
+      color: var(--text-muted);
+    }
+
+    .risk-badges {
+      display: flex;
+      gap: var(--space-sm);
+      flex-wrap: wrap;
+    }
+
+    .search-input {
+      min-width: 250px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: var(--space-2xl);
+    }
+    .text-muted {
+      color: var(--text-muted);
+    }
+    .mt-2 {
+      margin-top: var(--space-sm);
+    }
+    .mb-3 {
+      margin-bottom: var(--space-md);
+    }
+
+    .p-input-icon-left {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }
+    .p-input-icon-left > i {
+      position: absolute;
+      inset-inline-start: 12px;
+      color: var(--text-muted);
+      z-index: var(--z-base);
+    }
+    .p-input-icon-left > input {
+      padding-inline-start: 36px;
+    }
+    .ms-3 { margin-inline-start: 12px; }
+    .risk-top-actions { display: flex; align-items: center; gap: var(--space-xs); }
+    .icon-btn {
+      background: none; border: none; cursor: pointer; color: var(--text-muted);
+      padding: 4px; border-radius: var(--radius-sm); transition: all 150ms; font-size: var(--font-size-base);
+    }
+    .icon-btn:hover { background: var(--surface-ice); color: var(--primary-dark); }
+    .icon-btn.danger:hover { background: rgba(var(--module-accent-red-rgb), 0.08); color: var(--error); }
+    .risk-owner { font-size: var(--font-size-sm); color: var(--text-muted); margin-top: var(--space-sm); display: flex; align-items: center; gap: var(--space-xs); }
+    .dialog-form { display: flex; flex-direction: column; gap: var(--space-md); }
+    .field { display: flex; flex-direction: column; gap: var(--space-xs); }
+    .field label { font-size: var(--font-size-sm); font-weight: var(--font-medium); color: var(--text-muted); }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md); }
+    .w-full { width: 100%; }
+    .me-2 { margin-inline-end: var(--space-sm); }
+    .mt-3 { margin-top: var(--space-md); }
+    .heatmap-grid { display: flex; flex-direction: column; gap: 2px; max-width: 400px; }
+    .heatmap-row { display: flex; gap: 2px; align-items: center; }
+    .heatmap-label { width: 24px; text-align: center; font-size: var(--font-size-xs); font-weight: var(--font-medium); color: var(--text-muted); }
+    .heatmap-cell { width: 60px; height: 48px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 150ms; }
+    .heatmap-cell:hover { transform: scale(1.05); }
+    .heatmap-count { font-weight: var(--font-bold); font-size: var(--font-size-md); }
+    .heatmap-axis { width: 60px; text-align: center; font-size: var(--font-size-xs); font-weight: var(--font-medium); color: var(--text-muted); }
+    .drawer-details { display: flex; flex-direction: column; gap: var(--space-sm); }
+    .detail-row { display: flex; justify-content: space-between; padding: var(--space-xs) 0; border-bottom: 1px solid var(--border-subtle); }
+    .detail-label { font-weight: var(--font-medium); font-size: var(--font-size-sm); color: var(--text-muted); }

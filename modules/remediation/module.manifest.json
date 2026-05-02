@@ -1,0 +1,82 @@
+{
+  "moduleCode": "remediation",
+  "displayName": "Remediation",
+  "ownerTeam": "product-shahin-ai",
+  "productCode": "shahin-ai",
+  "ownership": "module-owned",
+  "version": "1.0.0",
+  "status": "active",
+  "platformDependencies": [
+    "identity",
+    "tenancy",
+    "workflow",
+    "permissions",
+    "audit"
+  ],
+  "seedProviders": [
+    "products/shahin/seeds/remediation-seed"
+  ],
+  "tenantDefaults": [
+    "remediation_default_sla_hours",
+    "remediation_auto_escalation"
+  ],
+  "requiredReferenceData": [
+    "remediation_templates",
+    "remediation_statuses"
+  ],
+  "currentSources": [
+    "/home/Dr-Dogan-AGRC-OS/backend/src/modules/remediation"
+  ],
+  "targetPath": "modules/remediation",
+  "futureService": "remediation-action-service",
+  "frontendSources": [
+    "/home/Dr-Dogan-AGRC-OS/frontend/src/app/platform-manifests/remediation.module.routes.ts"
+  ],
+  "ownedTables": [
+    "remediation_actions",
+    "remediation_audit_log",
+    "remediation_evidence_links",
+    "remediation_milestones",
+    "remediation_plans",
+    "remediation_progress",
+    "remediation_source_links",
+    "remediation_status_history",
+    "remediation_teams",
+    "remediation_templates",
+    "remediation_verification_results"
+  ],
+  "referencedTables": [
+    "audit_trail",
+    "teams",
+    "workflows",
+    "compliance_gaps",
+    "risk_assessments",
+    "audit_findings"
+  ],
+  "events": {
+    "publishes": [
+      "remediation.plan_created",
+      "remediation.plan_approved",
+      "remediation.action_assigned",
+      "remediation.action_completed",
+      "remediation.milestone_reached",
+      "remediation.overdue",
+      "remediation.verified",
+      "remediation.closed",
+      "remediation.progress_updated",
+      "remediation.escalated"
+    ],
+    "subscribes": [
+      "compliance.gap_detected",
+      "audit.finding_created",
+      "risk.residual_high",
+      "incident.capa_assigned",
+      "vendor.issue_created",
+      "workflow.status_changed",
+      "foundation.org.manager.changed"
+    ]
+  },
+  "routeBases": [
+    "/api/remediation"
+  ]
+}

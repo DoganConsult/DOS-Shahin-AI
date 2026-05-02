@@ -1,0 +1,264 @@
+# =============================================================================
+# Prometheus recording rules + multi-window multi-burn-rate alerts
+# Generated from docs/sre/slo-catalogue.yaml (manually maintained).
+# =============================================================================
+# Record the 30-day rolling SLI for every tier-1 service, then alert on two
+# burn-rate windows per Google SRE workbook ("Alerting on SLOs" ch. 5).
+#
+# Target: 30-day error budget; alert on:
+#   fast : 14.4x burn over 1h (short 5m) -> critical, paging
+#   slow : 6x   burn over 6h (short 30m) -> warning, no page
+#
+# Append this file to prometheus.yml rule_files:
+#   rule_files:
+#     - alerts.yml
+#     - rules/slo.yml
+# =============================================================================
+
+groups:
+
+  # ─── Recording rules ─────────────────────────────────────────────────────
+  - name: dos_slo_recording
+    interval: 30s
+    rules:
+
+      # Per-service 5m + 1h + 6h error rates for availability SLOs.
+      # Emit one series per {service} so a single query powers the dashboard.
+      - record: dos:slo:availability_error_rate:5m
+        expr: |
+          sum by (service) (
+            rate(http_requests_total{service=~"gateway|auth-service|tenant-service|user-service|ai-gateway-service|ai-engine-service|workflow-service|compliance-controls-service|risk-incident-service|evidence-audit-reporting-service",code=~"5.."}[5m])
+          )
+          /
+          sum by (service) (
+            rate(http_requests_total{service=~"gateway|auth-service|tenant-service|user-service|ai-gateway-service|ai-engine-service|workflow-service|compliance-controls-service|risk-incident-service|evidence-audit-reporting-service"}[5m])
+          )
+
+      - record: dos:slo:availability_error_rate:1h
+        expr: |
+          sum by (service) (
+            rate(http_requests_total{service=~"gateway|auth-service|tenant-service|user-service|ai-gateway-service|ai-engine-service|workflow-service|compliance-controls-service|risk-incident-service|evidence-audit-reporting-service",code=~"5.."}[1h])
+          )
+          /
+          sum by (service) (
+            rate(http_requests_total{service=~"gateway|auth-service|tenant-service|user-service|ai-gateway-service|ai-engine-service|workflow-service|compliance-controls-service|risk-incident-service|evidence-audit-reporting-service"}[1h])
+          )
+
+      - record: dos:slo:availability_error_rate:6h
+        expr: |
+          sum by (service) (
+            rate(http_requests_total{service=~"gateway|auth-service|tenant-service|user-service|ai-gateway-service|ai-engine-service|workflow-service|compliance-controls-service|risk-incident-service|evidence-audit-reporting-service",code=~"5.."}[6h])
+          )
+          /
+          sum by (service) (
+            rate(http_requests_total{service=~"gateway|auth-service|tenant-service|user-service|ai-gateway-service|ai-engine-service|workflow-service|compliance-controls-service|risk-incident-service|evidence-audit-reporting-service"}[6h])
+          )
+
+      - record: dos:slo:availability_error_rate:30m
+        expr: |
+          sum by (service) (
+            rate(http_requests_total{service=~"gateway|auth-service|tenant-service|user-service|ai-gateway-service|ai-engine-service|workflow-service|compliance-controls-service|risk-incident-service|evidence-audit-reporting-service",code=~"5.."}[30m])
+          )
+          /
+          sum by (service) (
+            rate(http_requests_total{service=~"gateway|auth-service|tenant-service|user-service|ai-gateway-service|ai-engine-service|workflow-service|compliance-controls-service|risk-incident-service|evidence-audit-reporting-service"}[30m])
+          )
+
+      # Per-service 30d SLI — used for dashboard cards + status-page calc.
+      - record: dos:slo:availability_sli:30d
+        expr: |
+          1 - (
+            sum by (service) (
+              rate(http_requests_total{service=~"gateway|auth-service|tenant-service|user-service|ai-gateway-service|ai-engine-service|workflow-service|compliance-controls-service|risk-incident-service|evidence-audit-reporting-service",code=~"5.."}[30d])
+            )
+            /
+            sum by (service) (
+              rate(http_requests_total{service=~"gateway|auth-service|tenant-service|user-service|ai-gateway-service|ai-engine-service|workflow-service|compliance-controls-service|risk-incident-service|evidence-audit-reporting-service"}[30d])
+            )
+          )
+
+      # Latency p95 over 30d (recorded, not alerted — latency SLO alerts below).
+      - record: dos:slo:latency_p95:30d
+        expr: |
+          histogram_quantile(0.95,
+            sum by (service, le) (
+              rate(http_request_duration_seconds_bucket{service=~"gateway|auth-service|ai-gateway-service|ai-engine-service|workflow-service"}[30d])
+            )
+          )
+
+      # Aggregate platform availability — powers status.<domain> overall pill.
+      - record: dos:slo:platform_availability_sli:30d
+        expr: |
+          min(
+            dos:slo:availability_sli:30d{service=~"gateway|auth-service|tenant-service|compliance-controls-service|risk-incident-service|evidence-audit-reporting-service"}
+          )
+
+  # ─── Burn-rate alerts (multi-window, multi-burn-rate) ────────────────────
+  # One pair (fast+slow) per tier-1 service. Keep expressions explicit rather
+  # than templated so Prometheus rule-eval stays fast and the alert labels
+  # are easy to route in alertmanager.yml.
+  - name: dos_slo_burn_rate
+    rules:
+
+      - alert: SLOBurnFast_Gateway
+        expr: |
+          dos:slo:availability_error_rate:5m{service="gateway"}  > (14.4 * 0.001)
+          and
+          dos:slo:availability_error_rate:1h{service="gateway"}  > (14.4 * 0.001)
+        for: 2m
+        labels:
+          severity: critical
+          service: gateway
+          slo: availability
+          burn_rate: fast
+          team: platform-core
+        annotations:
+          summary: "Gateway SLO fast burn — budget exhaust in ~50 min at current rate"
+          description: "5m + 1h error rate exceed 14.4x the 99.9% SLO budget."
+          runbook_url: "https://github.com/DoganConsult/DOS/blob/main/ops/docs/runbooks/slo-breach.md"
+          slo_target: "99.9%"
+
+      - alert: SLOBurnSlow_Gateway
+        expr: |
+          dos:slo:availability_error_rate:30m{service="gateway"} > (6 * 0.001)
+          and
+          dos:slo:availability_error_rate:6h{service="gateway"}  > (6 * 0.001)
+        for: 15m
+        labels:
+          severity: warning
+          service: gateway
+          slo: availability
+          burn_rate: slow
+          team: platform-core
+        annotations:
+          summary: "Gateway SLO slow burn — budget exhaust in ~5 days at current rate"
+          description: "30m + 6h error rate exceed 6x the 99.9% SLO budget."
+          runbook_url: "https://github.com/DoganConsult/DOS/blob/main/ops/docs/runbooks/slo-breach.md"
+
+      - alert: SLOBurnFast_Auth
+        expr: |
+          dos:slo:availability_error_rate:5m{service="auth-service"} > (14.4 * 0.0005)
+          and
+          dos:slo:availability_error_rate:1h{service="auth-service"} > (14.4 * 0.0005)
+        for: 2m
+        labels:
+          severity: critical
+          service: auth-service
+          slo: availability
+          burn_rate: fast
+          team: security
+        annotations:
+          summary: "Auth-service SLO fast burn — identity is critical path"
+          description: "5m + 1h error rate exceed 14.4x the 99.95% SLO budget."
+          runbook_url: "https://github.com/DoganConsult/DOS/blob/main/ops/docs/runbooks/slo-breach.md"
+          slo_target: "99.95%"
+
+      - alert: SLOBurnFast_Tenant
+        expr: |
+          dos:slo:availability_error_rate:5m{service="tenant-service"} > (14.4 * 0.001)
+          and
+          dos:slo:availability_error_rate:1h{service="tenant-service"} > (14.4 * 0.001)
+        for: 2m
+        labels:
+          severity: critical
+          service: tenant-service
+          slo: availability
+          burn_rate: fast
+          team: platform-core
+        annotations:
+          summary: "Tenant-service SLO fast burn"
+          runbook_url: "https://github.com/DoganConsult/DOS/blob/main/ops/docs/runbooks/slo-breach.md"
+
+      - alert: SLOBurnFast_AIGateway
+        expr: |
+          dos:slo:availability_error_rate:5m{service="ai-gateway-service"} > (14.4 * 0.005)
+          and
+          dos:slo:availability_error_rate:1h{service="ai-gateway-service"} > (14.4 * 0.005)
+        for: 2m
+        labels:
+          severity: critical
+          service: ai-gateway-service
+          slo: availability
+          burn_rate: fast
+          team: platform-ai
+        annotations:
+          summary: "AI-gateway SLO fast burn — check Anthropic provider + fallback"
+          description: "Budget is 99.5% so upstream (Anthropic) dependency is included. Check provider status + retry budgets."
+          runbook_url: "https://github.com/DoganConsult/DOS/blob/main/ops/docs/runbooks/slo-breach.md"
+
+      - alert: SLOBurnFast_Workflow
+        expr: |
+          dos:slo:availability_error_rate:5m{service="workflow-service"} > (14.4 * 0.001)
+          and
+          dos:slo:availability_error_rate:1h{service="workflow-service"} > (14.4 * 0.001)
+        for: 2m
+        labels:
+          severity: critical
+          service: workflow-service
+          slo: availability
+          burn_rate: fast
+          team: product-shahin
+        annotations:
+          summary: "Workflow-service SLO fast burn — check Temporal worker + DB"
+          runbook_url: "https://github.com/DoganConsult/DOS/blob/main/ops/docs/runbooks/slo-breach.md"
+
+      - alert: SLOBurnFast_Compliance
+        expr: |
+          dos:slo:availability_error_rate:5m{service="compliance-controls-service"} > (14.4 * 0.001)
+          and
+          dos:slo:availability_error_rate:1h{service="compliance-controls-service"} > (14.4 * 0.001)
+        for: 2m
+        labels:
+          severity: critical
+          service: compliance-controls-service
+          slo: availability
+          burn_rate: fast
+          team: product-shahin
+        annotations:
+          summary: "Compliance-controls SLO fast burn"
+          runbook_url: "https://github.com/DoganConsult/DOS/blob/main/ops/docs/runbooks/slo-breach.md"
+
+      - alert: SLOBurnFast_Risk
+        expr: |
+          dos:slo:availability_error_rate:5m{service="risk-incident-service"} > (14.4 * 0.001)
+          and
+          dos:slo:availability_error_rate:1h{service="risk-incident-service"} > (14.4 * 0.001)
+        for: 2m
+        labels:
+          severity: critical
+          service: risk-incident-service
+          slo: availability
+          burn_rate: fast
+          team: product-shahin
+        annotations:
+          summary: "Risk-incident SLO fast burn"
+          runbook_url: "https://github.com/DoganConsult/DOS/blob/main/ops/docs/runbooks/slo-breach.md"
+
+      - alert: SLOBurnFast_Evidence
+        expr: |
+          dos:slo:availability_error_rate:5m{service="evidence-audit-reporting-service"} > (14.4 * 0.001)
+          and
+          dos:slo:availability_error_rate:1h{service="evidence-audit-reporting-service"} > (14.4 * 0.001)
+        for: 2m
+        labels:
+          severity: critical
+          service: evidence-audit-reporting-service
+          slo: availability
+          burn_rate: fast
+          team: product-shahin
+        annotations:
+          summary: "Evidence-audit-reporting SLO fast burn"
+          runbook_url: "https://github.com/DoganConsult/DOS/blob/main/ops/docs/runbooks/slo-breach.md"
+
+      # ─── Platform-level aggregate ──────────────────────────────────────
+      - alert: PlatformAvailabilityBelowSLO
+        expr: dos:slo:platform_availability_sli:30d < 0.999
+        for: 10m
+        labels:
+          severity: critical
+          slo: platform_availability
+          team: platform-core
+        annotations:
+          summary: "Platform 30d availability below 99.9% — customer-visible SLO breached"
+          description: "Aggregate of gateway + auth + tenant + compliance + risk + evidence is under the published SLA."
+          runbook_url: "https://github.com/DoganConsult/DOS/blob/main/ops/docs/runbooks/slo-breach.md"

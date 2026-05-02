@@ -1,0 +1,6 @@
+{
+  "name": "@dos/legacy-utils",
+  "version": "0.0.1",
+  "private": true,
+  "description": "DOS Platform \u2014 legacy util helpers (compat shim). Superseded by @dos/platform-core utilities."
+}

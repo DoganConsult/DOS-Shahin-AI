@@ -1,0 +1,87 @@
+
+> @dos/service-bootstrap@0.1.0 build /root/DOS-AIO/packages/dos-service-bootstrap
+> tsc -p tsconfig.build.json
+
+../../platform/dauth/packages/core/access/access.resolver.ts(51,7): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/access/access.resolver.ts(54,7): error TS2322: Type '(string | undefined)[]' is not assignable to type 'string[]'.
+  Type 'string | undefined' is not assignable to type 'string'.
+    Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/access/access.resolver.ts(104,9): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/access/access.resolver.ts(107,9): error TS2322: Type '(string | undefined)[]' is not assignable to type 'string[]'.
+  Type 'string | undefined' is not assignable to type 'string'.
+    Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/access/access.resolver.ts(171,7): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/csrf/csrf.subscribers.ts(12,31): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/csrf/csrf.subscribers.ts(43,13): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/csrf/csrf.subscribers.ts(64,13): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/events/dauth.subscribers.ts(13,33): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/events/dauth.subscribers.ts(54,31): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/events/dauth.subscribers.ts(96,32): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/events/dauth.subscribers.ts(112,32): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/events/dauth.subscribers.ts(128,32): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/events/dauth.subscribers.ts(154,31): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/events/dauth.subscribers.ts(172,31): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/events/dauth.subscribers.ts(190,32): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/events/dauth.subscribers.ts(216,31): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/events/dauth.subscribers.ts(234,31): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/events/dauth.subscribers.ts(252,31): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/events/dauth.subscribers.ts(270,31): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/events/dauth.subscribers.ts(288,31): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/events/dauth.subscribers.ts(306,31): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/events/dauth.subscribers.ts(326,31): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/events/dauth.subscribers.ts(342,31): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/events/dauth.subscribers.ts(358,31): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/events/dauth.subscribers.ts(376,32): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/events/dauth.subscribers.ts(389,32): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/events/dauth.subscribers.ts(402,31): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/events/dauth.subscribers.ts(420,31): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/events/dauth.subscribers.ts(436,31): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/events/dauth.subscribers.ts(452,31): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/events/dauth.subscribers.ts(468,31): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/events/dauth.subscribers.ts(486,31): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/events/dauth.subscribers.ts(504,31): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/events/dauth.subscribers.ts(522,31): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/events/dauth.subscribers.ts(540,31): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/events/dauth.subscribers.ts(558,31): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/events/dauth.subscribers.ts(576,31): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/events/dauth.subscribers.ts(594,31): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+../../platform/dauth/packages/core/events/dauth.subscribers.ts(612,31): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+ ELIFECYCLE  Command failed with exit code 2.

@@ -1,0 +1,182 @@
+.report-form-container {
+      max-width: 600px;
+    }
+
+    .dialog-form {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+    .field label {
+      font-size: var(--font-size-sm);
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    .w-full {
+      width: 100%;
+    }
+    .form-actions {
+      display: flex;
+      gap: var(--space-sm);
+      margin-top: var(--space-sm);
+    }
+
+    .triage-header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-md);
+    }
+    .triage-icon {
+      font-size: var(--font-size-2xl);
+      color: var(--primary);
+    }
+    .triage-header h3 {
+      margin: 0;
+      font-size: var(--font-size-lg);
+      font-weight: 600;
+      color: var(--text);
+    }
+    .triage-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: var(--space-md);
+    }
+    .triage-metric {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+    .metric-label {
+      font-size: var(--font-size-sm);
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .metric-value {
+      font-size: var(--font-size-md);
+      font-weight: 700;
+      color: var(--text);
+    }
+    .framework-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+    .recommendations {
+      margin-top: var(--space-lg);
+    }
+    .rec-list {
+      padding-inline-start: 20px;
+      margin-top: var(--space-sm);
+    }
+    .rec-list li {
+      margin-bottom: 6px;
+      font-size: var(--font-size-base);
+      color: var(--text);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: var(--space-2xl);
+    }
+    .text-muted {
+      color: var(--text-muted);
+    }
+    .text-center {
+      text-align: center;
+    }
+    .mt-2 {
+      margin-top: var(--space-sm);
+    }
+    .cross-links-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 12px;
+      padding: 8px 0;
+    }
+    .cross-link-card {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 16px;
+      border: 1px solid var(--surface-border, var(--border-subtle));
+      border-radius: var(--radius-md);
+      background: var(--surface-card, #fff);
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.15s;
+      cursor: pointer;
+    }
+    .cross-link-card:hover {
+      box-shadow: var(--shadow-md);
+      border-color: var(--primary-500, var(--primary));
+      transform: translateY(-2px);
+    }
+    .cross-link-card i {
+      font-size: var(--font-size-xl);
+      color: var(--primary-500, var(--primary));
+      margin-bottom: 4px;
+    }
+    .cross-link-card span {
+      font-size: var(--font-size-base);
+      font-weight: 600;
+    }
+    .cross-link-card small {
+      font-size: var(--font-size-xs);
+      color: var(--text-color-secondary, var(--text-muted));
+    }
+
+    .pipeline-strip {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .pipe-card {
+      flex: 1;
+      min-width: 120px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px 12px;
+      border-radius: var(--radius-md);
+      background: var(--surface-card, #fff);
+      border: 1px solid var(--surface-border, var(--border-subtle));
+      cursor: default;
+    }
+    .pipe-card.danger { border-color: var(--error); background: rgba(var(--color-red-600-rgb), .06); }
+    .pipe-card.warning { border-color: var(--warning); background: rgba(var(--color-amber-600-rgb), .06); }
+    .pipe-card.info { border-color: var(--grc-purple, #7c3aed); background: rgba(var(--color-violet-600-rgb), .06); }
+    .pipe-num { font-size: var(--font-size-2xl); font-weight: 800; }
+    .pipe-label { font-size: var(--font-size-xs); font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: .4px; margin-top: 2px; }
+    .pipe-card.danger .pipe-num { color: var(--error); }
+    .pipe-card.warning .pipe-num { color: var(--warning); }
+    .pipe-card.info .pipe-num { color: var(--grc-purple, #7c3aed); }
+
+    .pipeline-section { margin-bottom: 24px; }
+    .section-header { display: flex; align-items: center; gap: 8px; font-size: var(--font-size-base); font-weight: 700; margin-bottom: 10px; }
+    .breach-hours { color: var(--error); font-weight: 700; }
+
+    .rca-card {
+      padding: 14px 16px;
+      border: 1px solid var(--surface-border, var(--border-subtle));
+      border-radius: var(--radius);
+      margin-bottom: 10px;
+      background: var(--surface-card, #fff);
+    }
+    .rca-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    .rca-desc { font-size: var(--font-size-sm); color: var(--text-muted); margin: 4px 0 8px; }
+    .rca-actions { display: flex; flex-direction: column; gap: 4px; font-size: var(--font-size-sm); }
+
+    .sla-config-section { margin-top: 20px; }
+    .sla-grid { display: flex; gap: 16px; flex-wrap: wrap; }
+    .sla-item { display: flex; flex-direction: column; align-items: center; padding: 10px 18px; border-radius: var(--radius); border: 1px solid var(--surface-border, var(--border-subtle)); }
+    .sla-sev { font-size: var(--font-size-sm); font-weight: 700; text-transform: capitalize; }
+    .sla-val { font-size: var(--font-size-lg); font-weight: 800; color: var(--text); }

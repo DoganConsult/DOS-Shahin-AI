@@ -1,0 +1,19 @@
+{
+  "serviceCode": "user-service",
+  "displayName": "User Service",
+  "layer": "platform-service",
+  "ownerTeam": "platform-core",
+  "runtime": "node",
+  "dependsOn": [
+    "auth-service",
+    "tenant-service"
+  ],
+  "modules": [
+    "user",
+    "person",
+    "profile"
+  ],
+  "exposes": {
+    "apiBase": "/api/users"
+  }
+}

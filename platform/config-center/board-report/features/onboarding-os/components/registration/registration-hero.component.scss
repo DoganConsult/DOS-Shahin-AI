@@ -1,0 +1,112 @@
+:host { display: contents; }
+
+/* ── Registration-specific overrides ── */
+.req { color: var(--error, #da1e28); }
+.auth-input-error { border-color: var(--error, #da1e28) !important; }
+
+/* ── Section labels (matches login pattern) ── */
+.reg-section-label {
+  display: flex; align-items: center; gap: 0.4rem;
+  font-size: var(--font-size-caption); font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.06em; color: var(--text-muted, #6f6f6f);
+  margin-bottom: 0.875rem; padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-subtle, rgba(var(--color-black-rgb), 0.08));
+}
+.reg-section-label i { font-size: var(--font-size-tag); color: var(--primary, var(--carbon-blue-60, #0f62fe)); }
+
+/* ── Two-column row ── */
+.reg-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 0.25rem; }
+@media (max-width: 640px) { .reg-row { grid-template-columns: 1fr; } }
+
+/* ── Language toggle (topbar) ── */
+.reg-lang-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: var(--font-size-sm); font-weight: var(--font-medium);
+  color: var(--text-muted); background: var(--surface); border: 1.5px solid var(--border-primary);
+  padding: 5px 14px; border-radius: var(--radius-sm); cursor: pointer;
+  transition: all 200ms;
+}
+.reg-lang-btn:hover { border-color: var(--primary); color: var(--primary); }
+
+/* ── Email status hints ── */
+.auth-field-hint { font-size: var(--font-size-xs, 0.75rem); margin-top: 4px; display: flex; align-items: center; gap: 4px; }
+.auth-field-hint.checking { color: var(--text-muted); }
+.auth-field-hint.available { color: var(--success, #198038); }
+
+/* ── Company detection banner ── */
+.reg-detection {
+  margin-top: 6px; padding: 8px 12px; border-radius: var(--radius-sm, 6px);
+  background: color-mix(in srgb, var(--info, #0ea5e9) 6%, transparent);
+  border: 1px solid color-mix(in srgb, var(--info, #0ea5e9) 15%, transparent);
+  font-size: var(--font-size-sm, 0.875rem); display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+}
+.reg-detect-btn {
+  background: none; border: 1px solid var(--border-primary, #d1d5db); border-radius: var(--radius-sm, 6px);
+  padding: 2px 12px; cursor: pointer; font-size: var(--font-size-xs, 0.75rem); font-weight: 600;
+}
+.reg-detect-btn.yes { color: var(--success, #198038); border-color: var(--success, #198038); }
+.reg-detect-btn.no { color: var(--text-muted); }
+.reg-detect-btn:hover { opacity: 0.8; }
+
+/* ── Password strength (matches login style) ── */
+.auth-pw-strength { margin-top: 8px; display: flex; align-items: center; gap: 8px; }
+.auth-pw-bar { flex: 1; height: 4px; background: var(--border-subtle, #e5e7eb); border-radius: 2px; overflow: hidden; }
+.auth-pw-fill { height: 100%; border-radius: 2px; transition: width 300ms, background 300ms; }
+.auth-pw-fill.weak { background: var(--error, #da1e28); }
+.auth-pw-fill.fair { background: var(--warning, #f1c21b); }
+.auth-pw-fill.good { background: var(--primary, var(--carbon-blue-60, #0f62fe)); }
+.auth-pw-fill.strong { background: var(--success, #198038); }
+.reg-strength-label { font-size: var(--font-size-xs, 0.75rem); color: var(--text-muted); font-weight: 600; }
+
+/* ── Consent block ── */
+.reg-consent-block { margin-bottom: 1.25rem; }
+.reg-checkbox-label {
+  display: flex; align-items: flex-start; gap: 8px;
+  font-size: var(--font-size-sm, 0.875rem); color: var(--text-body, #374151);
+  cursor: pointer; line-height: 1.5;
+}
+.reg-checkbox-label input[type="checkbox"] {
+  accent-color: var(--primary, var(--carbon-blue-60, #0f62fe)); margin-top: 3px; flex-shrink: 0;
+  width: 16px; height: 16px;
+}
+
+/* ── Loading overlay ── */
+.reg-loading-overlay {
+  position: absolute; inset: 0; z-index: var(--z-elevated, 10);
+  background: rgba(var(--color-white-rgb), 0.92); backdrop-filter: blur(4px);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  border-radius: var(--radius, 8px); gap: 1rem;
+}
+.reg-loading-icon {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: var(--primary, var(--carbon-blue-60, #0f62fe)); color: #fff;
+  display: flex; align-items: center; justify-content: center; font-size: var(--font-size-2xl);
+  animation: loading-pulse 1.5s ease-in-out infinite;
+}
+.reg-loading-text { font-size: var(--font-size-body-sm); font-weight: 600; color: var(--text-heading, #161616); margin: 0; }
+.reg-loading-bar { width: 200px; height: 4px; border-radius: 2px; background: var(--border-subtle, rgba(var(--color-black-rgb), 0.08)); overflow: hidden; }
+.reg-loading-fill { height: 100%; width: 40%; border-radius: 2px; background: var(--primary, var(--carbon-blue-60, #0f62fe)); animation: loading-progress 1.8s ease-in-out infinite; }
+
+/* ── Framework badges on brand side ── */
+.reg-frameworks-strip {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 0.4rem; margin-top: 1.5rem;
+}
+.reg-fw-tag {
+  display: inline-block; padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-pill, 20px); font-size: 0.68rem; font-weight: 600;
+  background: rgba(var(--color-white-rgb), 0.15); color: #fff;
+  border: 1px solid rgba(var(--color-white-rgb), 0.25); letter-spacing: 0.02em;
+}
+
+@keyframes loading-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.08); opacity: 0.85; }
+}
+@keyframes loading-progress {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(350%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reg-loading-icon, .reg-loading-fill { animation: none !important; }
+}

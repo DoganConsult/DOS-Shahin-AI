@@ -1,0 +1,295 @@
+sector,sector_name,framework,framework_name,applicability,category
+BANKING,Banking,NCA-ECC,NCA Essential Cybersecurity Controls,mandatory,cybersecurity
+BANKING,Banking,PDPL,Personal Data Protection Law,mandatory,privacy
+BANKING,Banking,SAMA-CSF,SAMA Cyber Security Framework,mandatory,financial
+BANKING,Banking,SAMA-AML,SAMA AML/CFT Rules,mandatory,financial
+BANKING,Banking,SAMA-ITGF,SAMA IT Governance Framework,mandatory,financial
+BANKING,Banking,SAMA-BCM,SAMA Business Continuity Framework,mandatory,financial
+BANKING,Banking,ZATCA-EINV,ZATCA E-Invoicing,mandatory,tax
+BANKING,Banking,ZATCA-VAT,ZATCA VAT Regulations,mandatory,tax
+BANKING,Banking,MOCI-COMPANIES,Saudi Companies Law M/132,mandatory,commerce
+BANKING,Banking,MHRSD-LABOR,Saudi Labor Law,mandatory,labor
+BANKING,Banking,MHRSD-SAUDIZATION,Nitaqat Saudization Program,mandatory,labor
+BANKING,Banking,NCNICC,NCA National Cybersecurity Controls for CNI,mandatory,cybersecurity
+BANKING,Banking,SAMA-PSR,SAMA Payment Services Regulations,conditional,financial
+BANKING,Banking,PCI-DSS,PCI DSS,conditional,international
+BANKING,Banking,SWIFT-CSP,SWIFT Customer Security Programme,conditional,international
+BANKING,Banking,CMA-CG,CMA Corporate Governance Regulations,conditional,governance
+BANKING,Banking,ISO27001,ISO/IEC 27001,voluntary,international
+BANKING,Banking,ISO22301,ISO 22301 BCM,voluntary,international
+BANKING,Banking,NIST-CSF,NIST Cybersecurity Framework,voluntary,international
+BANKING,Banking,SOC2,SOC 2 Type II,voluntary,international
+INSURANCE,Insurance,NCA-ECC,NCA Essential Cybersecurity Controls,mandatory,cybersecurity
+INSURANCE,Insurance,PDPL,Personal Data Protection Law,mandatory,privacy
+INSURANCE,Insurance,SAMA-CSF,SAMA Cyber Security Framework,mandatory,financial
+INSURANCE,Insurance,SAMA-AML,SAMA AML/CFT Rules,mandatory,financial
+INSURANCE,Insurance,SAMA-ITGF,SAMA IT Governance Framework,mandatory,financial
+INSURANCE,Insurance,ZATCA-EINV,ZATCA E-Invoicing,mandatory,tax
+INSURANCE,Insurance,ZATCA-VAT,ZATCA VAT Regulations,mandatory,tax
+INSURANCE,Insurance,MOCI-COMPANIES,Saudi Companies Law M/132,mandatory,commerce
+INSURANCE,Insurance,MHRSD-LABOR,Saudi Labor Law,mandatory,labor
+INSURANCE,Insurance,MHRSD-SAUDIZATION,Nitaqat Saudization Program,mandatory,labor
+INSURANCE,Insurance,NCNICC,NCA National Cybersecurity Controls for CNI,mandatory,cybersecurity
+INSURANCE,Insurance,CMA-CG,CMA Corporate Governance Regulations,conditional,governance
+INSURANCE,Insurance,ISO27001,ISO/IEC 27001,voluntary,international
+INSURANCE,Insurance,ISO22301,ISO 22301 BCM,voluntary,international
+INSURANCE,Insurance,NIST-CSF,NIST Cybersecurity Framework,voluntary,international
+CAPITAL_MARKETS,Capital Markets,NCA-ECC,NCA Essential Cybersecurity Controls,mandatory,cybersecurity
+CAPITAL_MARKETS,Capital Markets,PDPL,Personal Data Protection Law,mandatory,privacy
+CAPITAL_MARKETS,Capital Markets,CMA-CG,CMA Corporate Governance Regulations,mandatory,governance
+CAPITAL_MARKETS,Capital Markets,CMA-IC,CMA Internal Controls,mandatory,governance
+CAPITAL_MARKETS,Capital Markets,CMA-DISCLOSURE,CMA Disclosure Rules,mandatory,governance
+CAPITAL_MARKETS,Capital Markets,ZATCA-EINV,ZATCA E-Invoicing,mandatory,tax
+CAPITAL_MARKETS,Capital Markets,ZATCA-VAT,ZATCA VAT Regulations,mandatory,tax
+CAPITAL_MARKETS,Capital Markets,MOCI-COMPANIES,Saudi Companies Law M/132,mandatory,commerce
+CAPITAL_MARKETS,Capital Markets,MHRSD-LABOR,Saudi Labor Law,mandatory,labor
+CAPITAL_MARKETS,Capital Markets,MHRSD-SAUDIZATION,Nitaqat Saudization Program,mandatory,labor
+CAPITAL_MARKETS,Capital Markets,NCNICC,NCA National Cybersecurity Controls for CNI,mandatory,cybersecurity
+CAPITAL_MARKETS,Capital Markets,SAMA-AML,SAMA AML/CFT Rules,conditional,financial
+CAPITAL_MARKETS,Capital Markets,ISO27001,ISO/IEC 27001,voluntary,international
+CAPITAL_MARKETS,Capital Markets,NIST-CSF,NIST Cybersecurity Framework,voluntary,international
+CAPITAL_MARKETS,Capital Markets,SOC2,SOC 2 Type II,voluntary,international
+FINTECH,FinTech,NCA-ECC,NCA Essential Cybersecurity Controls,mandatory,cybersecurity
+FINTECH,FinTech,NCA-CCC,NCA Cloud Cybersecurity Controls,mandatory,cybersecurity
+FINTECH,FinTech,PDPL,Personal Data Protection Law,mandatory,privacy
+FINTECH,FinTech,SAMA-CSF,SAMA Cyber Security Framework,mandatory,financial
+FINTECH,FinTech,SAMA-PSR,SAMA Payment Services Regulations,mandatory,financial
+FINTECH,FinTech,ZATCA-EINV,ZATCA E-Invoicing,mandatory,tax
+FINTECH,FinTech,MOCI-ECOM,MoCI E-Commerce Law,mandatory,commerce
+FINTECH,FinTech,MOCI-CONSUMER,MoCI Consumer Protection,mandatory,commerce
+FINTECH,FinTech,MHRSD-LABOR,Saudi Labor Law,mandatory,labor
+FINTECH,FinTech,NCNICC,NCA National Cybersecurity Controls for CNI,mandatory,cybersecurity
+FINTECH,FinTech,PCI-DSS,PCI DSS,conditional,international
+FINTECH,FinTech,SAMA-AML,SAMA AML/CFT Rules,conditional,financial
+FINTECH,FinTech,ISO27001,ISO/IEC 27001,voluntary,international
+FINTECH,FinTech,SOC2,SOC 2 Type II,voluntary,international
+FINTECH,FinTech,ISO27017,ISO/IEC 27017 (Cloud),voluntary,international
+PAYMENT,Payment Services,NCA-ECC,NCA Essential Cybersecurity Controls,mandatory,cybersecurity
+PAYMENT,Payment Services,PDPL,Personal Data Protection Law,mandatory,privacy
+PAYMENT,Payment Services,SAMA-CSF,SAMA Cyber Security Framework,mandatory,financial
+PAYMENT,Payment Services,SAMA-PSR,SAMA Payment Services Regulations,mandatory,financial
+PAYMENT,Payment Services,SAMA-AML,SAMA AML/CFT Rules,mandatory,financial
+PAYMENT,Payment Services,PCI-DSS,PCI DSS,mandatory,international
+PAYMENT,Payment Services,ZATCA-EINV,ZATCA E-Invoicing,mandatory,tax
+PAYMENT,Payment Services,MOCI-CONSUMER,MoCI Consumer Protection,mandatory,commerce
+PAYMENT,Payment Services,MHRSD-LABOR,Saudi Labor Law,mandatory,labor
+PAYMENT,Payment Services,NCNICC,NCA National Cybersecurity Controls for CNI,mandatory,cybersecurity
+PAYMENT,Payment Services,NCA-CCC,NCA Cloud Cybersecurity Controls,conditional,cybersecurity
+PAYMENT,Payment Services,ISO27001,ISO/IEC 27001,voluntary,international
+PAYMENT,Payment Services,SOC2,SOC 2 Type II,voluntary,international
+HEALTHCARE,Healthcare,NCA-ECC,NCA Essential Cybersecurity Controls,mandatory,cybersecurity
+HEALTHCARE,Healthcare,PDPL,Personal Data Protection Law,mandatory,privacy
+HEALTHCARE,Healthcare,MOH-HIS,MOH Health Information Systems,mandatory,healthcare
+HEALTHCARE,Healthcare,MOH-PATIENT-SAFETY,MOH Patient Safety,mandatory,healthcare
+HEALTHCARE,Healthcare,CBAHI,CBAHI Hospital Accreditation,mandatory,healthcare
+HEALTHCARE,Healthcare,ZATCA-EINV,ZATCA E-Invoicing,mandatory,tax
+HEALTHCARE,Healthcare,MOCI-COMPANIES,Saudi Companies Law M/132,mandatory,commerce
+HEALTHCARE,Healthcare,MHRSD-LABOR,Saudi Labor Law,mandatory,labor
+HEALTHCARE,Healthcare,MHRSD-SAUDIZATION,Nitaqat Saudization Program,mandatory,labor
+HEALTHCARE,Healthcare,NCNICC,NCA National Cybersecurity Controls for CNI,mandatory,cybersecurity
+HEALTHCARE,Healthcare,NCA-CCC,NCA Cloud Cybersecurity Controls,conditional,cybersecurity
+HEALTHCARE,Healthcare,ISO27001,ISO/IEC 27001,voluntary,international
+HEALTHCARE,Healthcare,ISO22301,ISO 22301 BCM,voluntary,international
+HEALTHCARE,Healthcare,ISO9001,ISO 9001 Quality,voluntary,international
+PHARMACEUTICAL,Pharmaceutical,NCA-ECC,NCA Essential Cybersecurity Controls,mandatory,cybersecurity
+PHARMACEUTICAL,Pharmaceutical,PDPL,Personal Data Protection Law,mandatory,privacy
+PHARMACEUTICAL,Pharmaceutical,SFDA-PHARMA,SFDA Pharmaceutical (GMP),mandatory,healthcare
+PHARMACEUTICAL,Pharmaceutical,ZATCA-EINV,ZATCA E-Invoicing,mandatory,tax
+PHARMACEUTICAL,Pharmaceutical,ZATCA-VAT,ZATCA VAT Regulations,mandatory,tax
+PHARMACEUTICAL,Pharmaceutical,MOCI-COMPANIES,Saudi Companies Law M/132,mandatory,commerce
+PHARMACEUTICAL,Pharmaceutical,MHRSD-LABOR,Saudi Labor Law,mandatory,labor
+PHARMACEUTICAL,Pharmaceutical,MHRSD-SAUDIZATION,Nitaqat Saudization Program,mandatory,labor
+PHARMACEUTICAL,Pharmaceutical,NCNICC,NCA National Cybersecurity Controls for CNI,mandatory,cybersecurity
+PHARMACEUTICAL,Pharmaceutical,NCA-OTCC,NCA Operational Technology Controls,conditional,cybersecurity
+PHARMACEUTICAL,Pharmaceutical,ISO27001,ISO/IEC 27001,voluntary,international
+PHARMACEUTICAL,Pharmaceutical,ISO9001,ISO 9001 Quality,voluntary,international
+MEDICAL_DEVICES,Medical Devices,NCA-ECC,NCA Essential Cybersecurity Controls,mandatory,cybersecurity
+MEDICAL_DEVICES,Medical Devices,PDPL,Personal Data Protection Law,mandatory,privacy
+MEDICAL_DEVICES,Medical Devices,SFDA-MD,SFDA Medical Devices,mandatory,healthcare
+MEDICAL_DEVICES,Medical Devices,ZATCA-EINV,ZATCA E-Invoicing,mandatory,tax
+MEDICAL_DEVICES,Medical Devices,ZATCA-VAT,ZATCA VAT Regulations,mandatory,tax
+MEDICAL_DEVICES,Medical Devices,MOCI-COMPANIES,Saudi Companies Law M/132,mandatory,commerce
+MEDICAL_DEVICES,Medical Devices,MHRSD-LABOR,Saudi Labor Law,mandatory,labor
+MEDICAL_DEVICES,Medical Devices,MHRSD-SAUDIZATION,Nitaqat Saudization Program,mandatory,labor
+MEDICAL_DEVICES,Medical Devices,NCNICC,NCA National Cybersecurity Controls for CNI,mandatory,cybersecurity
+MEDICAL_DEVICES,Medical Devices,ISO27001,ISO/IEC 27001,voluntary,international
+MEDICAL_DEVICES,Medical Devices,ISO9001,ISO 9001 Quality,voluntary,international
+FOOD,Food & Beverages,NCA-ECC,NCA Essential Cybersecurity Controls,mandatory,cybersecurity
+FOOD,Food & Beverages,PDPL,Personal Data Protection Law,mandatory,privacy
+FOOD,Food & Beverages,ZATCA-EINV,ZATCA E-Invoicing,mandatory,tax
+FOOD,Food & Beverages,ZATCA-VAT,ZATCA VAT Regulations,mandatory,tax
+FOOD,Food & Beverages,MOCI-COMPANIES,Saudi Companies Law M/132,mandatory,commerce
+FOOD,Food & Beverages,MOCI-CONSUMER,MoCI Consumer Protection,mandatory,commerce
+FOOD,Food & Beverages,MHRSD-LABOR,Saudi Labor Law,mandatory,labor
+FOOD,Food & Beverages,MHRSD-SAUDIZATION,Nitaqat Saudization Program,mandatory,labor
+FOOD,Food & Beverages,NCNICC,NCA National Cybersecurity Controls for CNI,mandatory,cybersecurity
+FOOD,Food & Beverages,ISO9001,ISO 9001 Quality,voluntary,international
+GOVERNMENT,Government,NCA-ECC,NCA Essential Cybersecurity Controls,mandatory,cybersecurity
+GOVERNMENT,Government,NCA-CSCC,NCA Critical Systems Cybersecurity Controls,mandatory,cybersecurity
+GOVERNMENT,Government,PDPL,Personal Data Protection Law,mandatory,privacy
+GOVERNMENT,Government,DGA-DCC,DGA Data Cybersecurity Controls,mandatory,data
+GOVERNMENT,Government,NDMO-DM,NDMO Data Management,mandatory,data
+GOVERNMENT,Government,MHRSD-LABOR,Saudi Labor Law,mandatory,labor
+GOVERNMENT,Government,NCA-CCC,NCA Cloud Cybersecurity Controls,conditional,cybersecurity
+GOVERNMENT,Government,NCA-OTCC,NCA Operational Technology Controls,conditional,cybersecurity
+GOVERNMENT,Government,ISO27001,ISO/IEC 27001,voluntary,international
+GOVERNMENT,Government,ISO22301,ISO 22301 BCM,voluntary,international
+TELECOM,Telecommunications,NCA-ECC,NCA Essential Cybersecurity Controls,mandatory,cybersecurity
+TELECOM,Telecommunications,NCA-CSCC,NCA Critical Systems Cybersecurity Controls,mandatory,cybersecurity
+TELECOM,Telecommunications,PDPL,Personal Data Protection Law,mandatory,privacy
+TELECOM,Telecommunications,CST-CRF,CST Cybersecurity Regulatory Framework,mandatory,telecom
+TELECOM,Telecommunications,ZATCA-EINV,ZATCA E-Invoicing,mandatory,tax
+TELECOM,Telecommunications,ZATCA-VAT,ZATCA VAT Regulations,mandatory,tax
+TELECOM,Telecommunications,MOCI-COMPANIES,Saudi Companies Law M/132,mandatory,commerce
+TELECOM,Telecommunications,MOCI-CONSUMER,MoCI Consumer Protection,mandatory,commerce
+TELECOM,Telecommunications,MHRSD-LABOR,Saudi Labor Law,mandatory,labor
+TELECOM,Telecommunications,MHRSD-SAUDIZATION,Nitaqat Saudization Program,mandatory,labor
+TELECOM,Telecommunications,NCNICC,NCA National Cybersecurity Controls for CNI,mandatory,cybersecurity
+TELECOM,Telecommunications,NCA-CCC,NCA Cloud Cybersecurity Controls,conditional,cybersecurity
+TELECOM,Telecommunications,ISO27001,ISO/IEC 27001,voluntary,international
+TELECOM,Telecommunications,ISO22301,ISO 22301 BCM,voluntary,international
+TELECOM,Telecommunications,ISO27017,ISO/IEC 27017 (Cloud),voluntary,international
+CLOUD_IT,Cloud / IT Services,NCA-ECC,NCA Essential Cybersecurity Controls,mandatory,cybersecurity
+CLOUD_IT,Cloud / IT Services,NCA-CCC,NCA Cloud Cybersecurity Controls,mandatory,cybersecurity
+CLOUD_IT,Cloud / IT Services,PDPL,Personal Data Protection Law,mandatory,privacy
+CLOUD_IT,Cloud / IT Services,CST-CLOUD,CST Cloud Computing Regulatory Framework,mandatory,telecom
+CLOUD_IT,Cloud / IT Services,ZATCA-EINV,ZATCA E-Invoicing,mandatory,tax
+CLOUD_IT,Cloud / IT Services,MOCI-COMPANIES,Saudi Companies Law M/132,mandatory,commerce
+CLOUD_IT,Cloud / IT Services,MHRSD-LABOR,Saudi Labor Law,mandatory,labor
+CLOUD_IT,Cloud / IT Services,NCNICC,NCA National Cybersecurity Controls for CNI,mandatory,cybersecurity
+CLOUD_IT,Cloud / IT Services,ISO27001,ISO/IEC 27001,voluntary,international
+CLOUD_IT,Cloud / IT Services,ISO27017,ISO/IEC 27017 (Cloud),voluntary,international
+CLOUD_IT,Cloud / IT Services,ISO27018,ISO/IEC 27018 (Cloud Privacy),voluntary,international
+CLOUD_IT,Cloud / IT Services,SOC2,SOC 2 Type II,voluntary,international
+ENERGY,Energy & Utilities,NCA-ECC,NCA Essential Cybersecurity Controls,mandatory,cybersecurity
+ENERGY,Energy & Utilities,NCA-CSCC,NCA Critical Systems Cybersecurity Controls,mandatory,cybersecurity
+ENERGY,Energy & Utilities,NCA-OTCC,NCA Operational Technology Controls,mandatory,cybersecurity
+ENERGY,Energy & Utilities,PDPL,Personal Data Protection Law,mandatory,privacy
+ENERGY,Energy & Utilities,ZATCA-EINV,ZATCA E-Invoicing,mandatory,tax
+ENERGY,Energy & Utilities,ZATCA-VAT,ZATCA VAT Regulations,mandatory,tax
+ENERGY,Energy & Utilities,MOCI-COMPANIES,Saudi Companies Law M/132,mandatory,commerce
+ENERGY,Energy & Utilities,MHRSD-LABOR,Saudi Labor Law,mandatory,labor
+ENERGY,Energy & Utilities,MHRSD-SAUDIZATION,Nitaqat Saudization Program,mandatory,labor
+ENERGY,Energy & Utilities,NCNICC,NCA National Cybersecurity Controls for CNI,mandatory,cybersecurity
+ENERGY,Energy & Utilities,NCA-CCC,NCA Cloud Cybersecurity Controls,conditional,cybersecurity
+ENERGY,Energy & Utilities,ISO27001,ISO/IEC 27001,voluntary,international
+ENERGY,Energy & Utilities,ISO22301,ISO 22301 BCM,voluntary,international
+OIL_GAS,Oil & Gas,NCA-ECC,NCA Essential Cybersecurity Controls,mandatory,cybersecurity
+OIL_GAS,Oil & Gas,NCA-CSCC,NCA Critical Systems Cybersecurity Controls,mandatory,cybersecurity
+OIL_GAS,Oil & Gas,NCA-OTCC,NCA Operational Technology Controls,mandatory,cybersecurity
+OIL_GAS,Oil & Gas,PDPL,Personal Data Protection Law,mandatory,privacy
+OIL_GAS,Oil & Gas,ZATCA-EINV,ZATCA E-Invoicing,mandatory,tax
+OIL_GAS,Oil & Gas,ZATCA-VAT,ZATCA VAT Regulations,mandatory,tax
+OIL_GAS,Oil & Gas,MOCI-COMPANIES,Saudi Companies Law M/132,mandatory,commerce
+OIL_GAS,Oil & Gas,MHRSD-LABOR,Saudi Labor Law,mandatory,labor
+OIL_GAS,Oil & Gas,MHRSD-SAUDIZATION,Nitaqat Saudization Program,mandatory,labor
+OIL_GAS,Oil & Gas,NCNICC,NCA National Cybersecurity Controls for CNI,mandatory,cybersecurity
+OIL_GAS,Oil & Gas,ISO27001,ISO/IEC 27001,voluntary,international
+OIL_GAS,Oil & Gas,ISO22301,ISO 22301 BCM,voluntary,international
+RETAIL,Retail,NCA-ECC,NCA Essential Cybersecurity Controls,mandatory,cybersecurity
+RETAIL,Retail,PDPL,Personal Data Protection Law,mandatory,privacy
+RETAIL,Retail,ZATCA-EINV,ZATCA E-Invoicing,mandatory,tax
+RETAIL,Retail,ZATCA-VAT,ZATCA VAT Regulations,mandatory,tax
+RETAIL,Retail,MOCI-COMPANIES,Saudi Companies Law M/132,mandatory,commerce
+RETAIL,Retail,MOCI-CONSUMER,MoCI Consumer Protection,mandatory,commerce
+RETAIL,Retail,MHRSD-LABOR,Saudi Labor Law,mandatory,labor
+RETAIL,Retail,MHRSD-SAUDIZATION,Nitaqat Saudization Program,mandatory,labor
+RETAIL,Retail,PCI-DSS,PCI DSS,conditional,international
+RETAIL,Retail,NCNICC,NCA National Cybersecurity Controls for CNI,conditional,cybersecurity
+RETAIL,Retail,ISO9001,ISO 9001 Quality,voluntary,international
+ECOMMERCE,E-Commerce,NCA-ECC,NCA Essential Cybersecurity Controls,mandatory,cybersecurity
+ECOMMERCE,E-Commerce,PDPL,Personal Data Protection Law,mandatory,privacy
+ECOMMERCE,E-Commerce,ZATCA-EINV,ZATCA E-Invoicing,mandatory,tax
+ECOMMERCE,E-Commerce,ZATCA-VAT,ZATCA VAT Regulations,mandatory,tax
+ECOMMERCE,E-Commerce,MOCI-COMPANIES,Saudi Companies Law M/132,mandatory,commerce
+ECOMMERCE,E-Commerce,MOCI-ECOM,MoCI E-Commerce Law,mandatory,commerce
+ECOMMERCE,E-Commerce,MOCI-CONSUMER,MoCI Consumer Protection,mandatory,commerce
+ECOMMERCE,E-Commerce,MHRSD-LABOR,Saudi Labor Law,mandatory,labor
+ECOMMERCE,E-Commerce,MHRSD-SAUDIZATION,Nitaqat Saudization Program,mandatory,labor
+ECOMMERCE,E-Commerce,PCI-DSS,PCI DSS,conditional,international
+ECOMMERCE,E-Commerce,NCNICC,NCA National Cybersecurity Controls for CNI,conditional,cybersecurity
+ECOMMERCE,E-Commerce,NCA-CCC,NCA Cloud Cybersecurity Controls,conditional,cybersecurity
+ECOMMERCE,E-Commerce,ISO27001,ISO/IEC 27001,voluntary,international
+ECOMMERCE,E-Commerce,ISO27017,ISO/IEC 27017 (Cloud),voluntary,international
+MANUFACTURING,Manufacturing,NCA-ECC,NCA Essential Cybersecurity Controls,mandatory,cybersecurity
+MANUFACTURING,Manufacturing,PDPL,Personal Data Protection Law,mandatory,privacy
+MANUFACTURING,Manufacturing,ZATCA-EINV,ZATCA E-Invoicing,mandatory,tax
+MANUFACTURING,Manufacturing,ZATCA-VAT,ZATCA VAT Regulations,mandatory,tax
+MANUFACTURING,Manufacturing,MOCI-COMPANIES,Saudi Companies Law M/132,mandatory,commerce
+MANUFACTURING,Manufacturing,MHRSD-LABOR,Saudi Labor Law,mandatory,labor
+MANUFACTURING,Manufacturing,MHRSD-SAUDIZATION,Nitaqat Saudization Program,mandatory,labor
+MANUFACTURING,Manufacturing,NCA-OTCC,NCA Operational Technology Controls,conditional,cybersecurity
+MANUFACTURING,Manufacturing,NCNICC,NCA National Cybersecurity Controls for CNI,conditional,cybersecurity
+MANUFACTURING,Manufacturing,ISO9001,ISO 9001 Quality,voluntary,international
+MANUFACTURING,Manufacturing,ISO27001,ISO/IEC 27001,voluntary,international
+CONSTRUCTION,Construction,NCA-ECC,NCA Essential Cybersecurity Controls,mandatory,cybersecurity
+CONSTRUCTION,Construction,PDPL,Personal Data Protection Law,mandatory,privacy
+CONSTRUCTION,Construction,ZATCA-EINV,ZATCA E-Invoicing,mandatory,tax
+CONSTRUCTION,Construction,ZATCA-VAT,ZATCA VAT Regulations,mandatory,tax
+CONSTRUCTION,Construction,MOCI-COMPANIES,Saudi Companies Law M/132,mandatory,commerce
+CONSTRUCTION,Construction,MHRSD-LABOR,Saudi Labor Law,mandatory,labor
+CONSTRUCTION,Construction,MHRSD-SAUDIZATION,Nitaqat Saudization Program,mandatory,labor
+CONSTRUCTION,Construction,ISO9001,ISO 9001 Quality,voluntary,international
+CONSTRUCTION,Construction,ISO27001,ISO/IEC 27001,voluntary,international
+TOURISM,Tourism & Hospitality,NCA-ECC,NCA Essential Cybersecurity Controls,mandatory,cybersecurity
+TOURISM,Tourism & Hospitality,PDPL,Personal Data Protection Law,mandatory,privacy
+TOURISM,Tourism & Hospitality,ZATCA-EINV,ZATCA E-Invoicing,mandatory,tax
+TOURISM,Tourism & Hospitality,ZATCA-VAT,ZATCA VAT Regulations,mandatory,tax
+TOURISM,Tourism & Hospitality,MOCI-COMPANIES,Saudi Companies Law M/132,mandatory,commerce
+TOURISM,Tourism & Hospitality,MOCI-CONSUMER,MoCI Consumer Protection,mandatory,commerce
+TOURISM,Tourism & Hospitality,MHRSD-LABOR,Saudi Labor Law,mandatory,labor
+TOURISM,Tourism & Hospitality,MHRSD-SAUDIZATION,Nitaqat Saudization Program,mandatory,labor
+TOURISM,Tourism & Hospitality,ISO9001,ISO 9001 Quality,voluntary,international
+EDUCATION,Education,NCA-ECC,NCA Essential Cybersecurity Controls,mandatory,cybersecurity
+EDUCATION,Education,PDPL,Personal Data Protection Law,mandatory,privacy
+EDUCATION,Education,MOCI-COMPANIES,Saudi Companies Law M/132,mandatory,commerce
+EDUCATION,Education,MHRSD-LABOR,Saudi Labor Law,mandatory,labor
+EDUCATION,Education,MHRSD-SAUDIZATION,Nitaqat Saudization Program,mandatory,labor
+EDUCATION,Education,NCNICC,NCA National Cybersecurity Controls for CNI,conditional,cybersecurity
+EDUCATION,Education,ISO27001,ISO/IEC 27001,voluntary,international
+EDUCATION,Education,ISO9001,ISO 9001 Quality,voluntary,international
+TRANSPORT,Transport & Logistics,NCA-ECC,NCA Essential Cybersecurity Controls,mandatory,cybersecurity
+TRANSPORT,Transport & Logistics,PDPL,Personal Data Protection Law,mandatory,privacy
+TRANSPORT,Transport & Logistics,ZATCA-EINV,ZATCA E-Invoicing,mandatory,tax
+TRANSPORT,Transport & Logistics,ZATCA-VAT,ZATCA VAT Regulations,mandatory,tax
+TRANSPORT,Transport & Logistics,MOCI-COMPANIES,Saudi Companies Law M/132,mandatory,commerce
+TRANSPORT,Transport & Logistics,MHRSD-LABOR,Saudi Labor Law,mandatory,labor
+TRANSPORT,Transport & Logistics,MHRSD-SAUDIZATION,Nitaqat Saudization Program,mandatory,labor
+TRANSPORT,Transport & Logistics,NCA-OTCC,NCA Operational Technology Controls,conditional,cybersecurity
+TRANSPORT,Transport & Logistics,NCNICC,NCA National Cybersecurity Controls for CNI,conditional,cybersecurity
+TRANSPORT,Transport & Logistics,ISO9001,ISO 9001 Quality,voluntary,international
+MINING,Mining,NCA-ECC,NCA Essential Cybersecurity Controls,mandatory,cybersecurity
+MINING,Mining,PDPL,Personal Data Protection Law,mandatory,privacy
+MINING,Mining,ZATCA-EINV,ZATCA E-Invoicing,mandatory,tax
+MINING,Mining,ZATCA-VAT,ZATCA VAT Regulations,mandatory,tax
+MINING,Mining,MOCI-COMPANIES,Saudi Companies Law M/132,mandatory,commerce
+MINING,Mining,MHRSD-LABOR,Saudi Labor Law,mandatory,labor
+MINING,Mining,MHRSD-SAUDIZATION,Nitaqat Saudization Program,mandatory,labor
+MINING,Mining,NCA-OTCC,NCA Operational Technology Controls,conditional,cybersecurity
+MINING,Mining,NCNICC,NCA National Cybersecurity Controls for CNI,conditional,cybersecurity
+MINING,Mining,ISO9001,ISO 9001 Quality,voluntary,international
+REAL_ESTATE,Real Estate,NCA-ECC,NCA Essential Cybersecurity Controls,mandatory,cybersecurity
+REAL_ESTATE,Real Estate,PDPL,Personal Data Protection Law,mandatory,privacy
+REAL_ESTATE,Real Estate,ZATCA-EINV,ZATCA E-Invoicing,mandatory,tax
+REAL_ESTATE,Real Estate,ZATCA-VAT,ZATCA VAT Regulations,mandatory,tax
+REAL_ESTATE,Real Estate,MOCI-COMPANIES,Saudi Companies Law M/132,mandatory,commerce
+REAL_ESTATE,Real Estate,MHRSD-LABOR,Saudi Labor Law,mandatory,labor
+REAL_ESTATE,Real Estate,MHRSD-SAUDIZATION,Nitaqat Saudization Program,mandatory,labor
+REAL_ESTATE,Real Estate,SAMA-AML,SAMA AML/CFT Rules,conditional,financial
+REAL_ESTATE,Real Estate,ISO9001,ISO 9001 Quality,voluntary,international
+PROFESSIONAL,Professional Services,NCA-ECC,NCA Essential Cybersecurity Controls,mandatory,cybersecurity
+PROFESSIONAL,Professional Services,PDPL,Personal Data Protection Law,mandatory,privacy
+PROFESSIONAL,Professional Services,ZATCA-EINV,ZATCA E-Invoicing,mandatory,tax
+PROFESSIONAL,Professional Services,ZATCA-VAT,ZATCA VAT Regulations,mandatory,tax
+PROFESSIONAL,Professional Services,MOCI-COMPANIES,Saudi Companies Law M/132,mandatory,commerce
+PROFESSIONAL,Professional Services,MHRSD-LABOR,Saudi Labor Law,mandatory,labor
+PROFESSIONAL,Professional Services,ISO27001,ISO/IEC 27001,voluntary,international
+PROFESSIONAL,Professional Services,ISO9001,ISO 9001 Quality,voluntary,international
+MEDIA,Media & Entertainment,NCA-ECC,NCA Essential Cybersecurity Controls,mandatory,cybersecurity
+MEDIA,Media & Entertainment,PDPL,Personal Data Protection Law,mandatory,privacy
+MEDIA,Media & Entertainment,ZATCA-EINV,ZATCA E-Invoicing,mandatory,tax
+MEDIA,Media & Entertainment,ZATCA-VAT,ZATCA VAT Regulations,mandatory,tax
+MEDIA,Media & Entertainment,MOCI-COMPANIES,Saudi Companies Law M/132,mandatory,commerce
+MEDIA,Media & Entertainment,MHRSD-LABOR,Saudi Labor Law,mandatory,labor
+MEDIA,Media & Entertainment,MHRSD-SAUDIZATION,Nitaqat Saudization Program,mandatory,labor
+MEDIA,Media & Entertainment,ISO27001,ISO/IEC 27001,voluntary,international

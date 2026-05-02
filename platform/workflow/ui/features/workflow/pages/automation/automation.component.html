@@ -1,0 +1,182 @@
+<app-page-shell
+      icon="bolt"
+      [title]="i18n.translate('automation.title')"
+      [subtitle]="i18n.translate('automation.subtitle')"
+      [breadcrumbs]="['Dashboard', 'Automation']"
+      [loading]="loading">
+
+      <!-- Stats Row -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-icon sky"><i class="pi pi-bolt"></i></div>
+          <div class="stat-value">{{ rules.length }}</div>
+          <div class="stat-label">{{ i18n.translate('automation.activeRules') }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon green"><i class="pi pi-check-circle"></i></div>
+          <div class="stat-value">{{ getLogCountByStatus('success') }}</div>
+          <div class="stat-label">{{ i18n.translate('automation.successful') }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon red"><i class="pi pi-times-circle"></i></div>
+          <div class="stat-value">{{ getLogCountByStatus('failed') }}</div>
+          <div class="stat-label">{{ i18n.translate('automation.failed') }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon purple"><i class="pi pi-sitemap"></i></div>
+          <div class="stat-value">{{ getUniqueModules().length }}</div>
+          <div class="stat-label">{{ i18n.translate('automation.modulesCovered') }}</div>
+        </div>
+      </div>
+
+      <p-tabView [(activeIndex)]="activeTab">
+        <!-- Tab 1: Rules -->
+        <p-tabPanel [header]="i18n.translate('automation.automationRules')">
+          <div class="toolbar-row">
+            <p-dropdown [(ngModel)]="moduleFilter" [options]="moduleOptions" optionLabel="label" optionValue="value"
+                        [placeholder]="i18n.translate('automation.allModules')"
+                        [showClear]="true" (onChange)="filterRules()" [style]="{'min-width':'180px'}" />
+            <div class="toolbar-actions">
+              <p-button [label]="i18n.translate('automation.seedDefaults')" icon="pi pi-download"
+                        severity="secondary" [text]="true" (onClick)="seedDefaults()" *ngIf="rules.length === 0" />
+              <p-button [label]="i18n.translate('automation.addRule')" icon="pi pi-plus"
+                        (onClick)="openCreateDialog()" />
+            </div>
+          </div>
+
+          <div class="rules-grid">
+            <div class="rule-card" *ngFor="let rule of filteredRules" [class.disabled]="!rule.enabled">
+              <div class="rule-header">
+                <div class="rule-module-badge" [ngClass]="'mod-' + rule.module">{{ rule.module }}</div>
+                <div class="rule-event-badge">{{ rule.event }}</div>
+                <p-inputSwitch [(ngModel)]="rule.enabled" (onChange)="toggleRule(rule)" />
+              </div>
+              <h3 class="rule-name">{{ rule.name }}</h3>
+              <p class="rule-desc" *ngIf="rule.description">{{ rule.description }}</p>
+              <div class="rule-meta">
+                <span *ngIf="rule.lifecycle_phase" class="phase-badge">{{ rule.lifecycle_phase }}</span>
+                <span class="priority-badge">P{{ rule.priority }}</span>
+              </div>
+              <div class="rule-actions-list">
+                <div *ngFor="let action of rule.actions" class="action-chip">
+                  <i class="pi" [ngClass]="getActionIcon(action.type)"></i>
+                  <span>{{ action.type.replace('_', ' ') }}</span>
+                </div>
+              </div>
+              <div class="rule-conditions" *ngIf="rule.conditions && hasConditions(rule.conditions)">
+                <span class="cond-label">{{ i18n.translate('automation.conditions') }}:</span>
+                <span class="cond-text">{{ formatConditions(rule.conditions) }}</span>
+              </div>
+              <div class="rule-footer">
+                <button aria-label="Edit" class="icon-btn" (click)="editRule(rule)" pTooltip="Edit"><i class="pi pi-pencil"></i></button>
+                <button aria-label="Delete" class="icon-btn danger" (click)="deleteRule(rule)" pTooltip="Delete"><i class="pi pi-trash"></i></button>
+              </div>
+            </div>
+            <div *ngIf="filteredRules.length === 0" class="empty-state">
+              <i class="pi pi-bolt" style="font-size:40px;color:var(--text-muted, #94a3b8)"></i>
+              <p>{{ i18n.translate('automation.noRulesYet') }}</p>
+              <p-button [label]="i18n.translate('automation.seedDefaultRules')" icon="pi pi-download"
+                        (onClick)="seedDefaults()" />
+            </div>
+          </div>
+        </p-tabPanel>
+
+        <!-- Tab 2: Execution Log -->
+        <p-tabPanel [header]="i18n.translate('automation.executionLog')">
+          <grc-data-table
+            [totalRecords]="logEntries.length"
+            emptyMessage="{{ i18n.translate('automation.noLogsYet') }}">
+            <p-table aria-label="Log Entries table" [value]="logEntries" [paginator]="logEntries.length > 15" [rows]="15" styleClass="p-datatable-sm p-datatable-striped">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>{{ i18n.translate('automation.time') }}</th>
+                  <th>{{ i18n.translate('automation.module') }}</th>
+                  <th>{{ i18n.translate('automation.event') }}</th>
+                  <th>{{ i18n.translate('automation.entity') }}</th>
+                  <th>{{ i18n.translate('automation.actions') }}</th>
+                  <th>{{ i18n.translate('automation.status') }}</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-entry>
+                <tr>
+                  <td>{{ entry.created_at | appDate:'short' }}</td>
+                  <td><span class="rule-module-badge small" [ngClass]="'mod-' + entry.module">{{ entry.module }}</span></td>
+                  <td><span class="rule-event-badge small">{{ entry.event }}</span></td>
+                  <td class="entity-cell">{{ entry.entity_type }} <span class="entity-id">#{{ entry.entity_id?.slice(0,8) }}</span></td>
+                  <td>
+                    <span *ngFor="let a of entry.actions_executed || []" class="action-chip small">
+                      <i class="pi" [ngClass]="getActionIcon(a.type)"></i> {{ a.type }}
+                    </span>
+                  </td>
+                  <td>
+                    <p-tag [value]="entry.status" [severity]="entry.status === 'success' ? 'success' : 'danger'" [rounded]="true" />
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </grc-data-table>
+        </p-tabPanel>
+
+        <!-- Tab 3: Coverage Map -->
+        <p-tabPanel [header]="i18n.translate('automation.coverageMap')">
+          <div class="coverage-grid">
+            <div *ngFor="let mod of allModules" class="coverage-card" [class.covered]="getModuleRuleCount(mod.value) > 0">
+              <div class="coverage-icon" [ngClass]="'mod-' + mod.value">
+                <i class="pi" [ngClass]="mod.icon"></i>
+              </div>
+              <div class="coverage-info">
+                <h4 class="coverage-module">{{ mod.label }}</h4>
+                <span class="coverage-count">{{ getModuleRuleCount(mod.value) }} {{ i18n.translate('automation.rules') }}</span>
+                <div class="coverage-events">
+                  <span *ngFor="let ev of getModuleEvents(mod.value)" class="event-dot" [pTooltip]="ev">{{ ev }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </p-tabPanel>
+      </p-tabView>
+
+      <!-- Create/Edit Rule Dialog -->
+      <p-dialog [header]="editingRule ? i18n.translate('automation.editRule') : i18n.translate('automation.createRule')"
+                [(visible)]="showDialog" [modal]="true" [style]="{width:'560px'}">
+        <div class="dialog-form">
+          <grc-form-field [label]="i18n.translate('automation.name')">
+            <input pInputText [(ngModel)]="formData.name" class="w-full" />
+          </grc-form-field>
+          <grc-form-field [label]="i18n.translate('automation.description')">
+            <input pInputText [(ngModel)]="formData.description" class="w-full" />
+          </grc-form-field>
+          <div class="field-row">
+            <grc-form-field [label]="i18n.translate('automation.module')">
+              <p-dropdown [(ngModel)]="formData.module" [options]="moduleOptions" optionLabel="label" optionValue="value" styleClass="w-full" />
+            </grc-form-field>
+            <grc-form-field [label]="i18n.translate('automation.event')">
+              <p-dropdown [(ngModel)]="formData.event" [options]="eventOptions" optionLabel="label" optionValue="value" styleClass="w-full" />
+            </grc-form-field>
+          </div>
+          <div class="field-row">
+            <grc-form-field [label]="i18n.translate('automation.lifecyclePhase')">
+              <p-dropdown [(ngModel)]="formData.lifecycle_phase" [options]="phaseOptions" optionLabel="label" optionValue="value" [showClear]="true" styleClass="w-full" />
+            </grc-form-field>
+            <grc-form-field [label]="i18n.translate('automation.priority')">
+              <input pInputText [(ngModel)]="formData.priority" type="number" class="w-full" />
+            </grc-form-field>
+          </div>
+          <grc-form-field [label]="i18n.translate('automation.actionType')">
+            <p-dropdown [(ngModel)]="formData.actionType" [options]="actionTypeOptions" optionLabel="label" optionValue="value" styleClass="w-full" />
+          </grc-form-field>
+          <grc-form-field *ngIf="formData.actionType === 'notify_role' || formData.actionType === 'require_approval'"
+            [label]="i18n.translate('automation.targetRole')">
+            <p-dropdown [(ngModel)]="formData.actionRole" [options]="roleOptions" optionLabel="label" optionValue="value" styleClass="w-full" />
+          </grc-form-field>
+          <grc-form-field *ngIf="formData.actionType === 'create_task'"
+            [label]="i18n.translate('automation.taskTitle')">
+            <input pInputText [(ngModel)]="formData.actionTitle" class="w-full" placeholder="Follow up: [entity type] [entity id]" aria-label="Follow up: [entity type] [entity id]" />
+          </grc-form-field>
+        </div>
+        <ng-template pTemplate="footer">
+          <p-button [label]="i18n.translate('common.cancel')" severity="secondary" [text]="true" (onClick)="showDialog=false" />
+          <p-button [label]="i18n.translate('common.save')" icon="pi pi-check" (onClick)="saveRule()" />
+        </ng-template>
+      </p-dialog>
+    </app-page-shell>

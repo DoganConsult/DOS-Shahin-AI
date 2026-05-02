@@ -1,0 +1,16 @@
+{
+  "name": "@dos/modules-standalone",
+  "version": "0.0.0-preview",
+  "private": true,
+  "description": "Standalone preview workspace for DOS-AIO modules/, isolated from the platform.",
+  "scripts": {
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "verify:imports": "depcruise --config .dependency-cruiser.cjs modules vendor-shims"
+  },
+  "packageManager": "pnpm@9.0.0",
+  "devDependencies": {
+    "dependency-cruiser": "^16.0.0",
+    "typescript": "^5.4.0"
+  }
+}

@@ -1,0 +1,115 @@
+<!-- Controls Reports — Report Catalog & Generation -->
+<div class="controls-reports" [attr.dir]="dir()">
+
+  <!-- Loading State -->
+  @if (loading()) {
+    <app-skeleton-loader variant="list" [count]="8" />
+  }
+
+  <!-- Error State -->
+  @if (!loading() && error()) {
+    <app-empty-state
+      variant="error"
+      [title]="isAr() ? 'فشل تحميل كتالوج التقارير' : 'Failed to load report catalog'"
+      [description]="isAr() ? 'تحقق من الاتصال وحاول مرة أخرى' : 'Check your connection and try again'"
+      [actionLabel]="isAr() ? 'إعادة المحاولة' : 'Retry'"
+      [dir]="dir()"
+      (action)="loadData()" />
+  }
+
+  <!-- Loaded Content -->
+  @if (!loading() && !error()) {
+
+    <!-- Page Title -->
+    <div class="page-title-row">
+      <h2 class="page-title">{{ isAr() ? 'تقارير الضوابط' : 'Controls Reports' }}</h2>
+      <p class="page-subtitle">{{ isAr() ? 'اختر نوع التقرير لإنشائه وتنزيله' : 'Select a report type to generate and download' }}</p>
+    </div>
+
+    <!-- Report Catalog Grid -->
+    <section class="report-grid" [attr.aria-label]="isAr() ? 'كتالوج التقارير' : 'Report Catalog'">
+      @for (report of reports(); track report.id) {
+        <div class="report-card" (click)="openGenerateDialog(report)" role="button" tabindex="0"
+          (keydown.enter)="openGenerateDialog(report)">
+          <div class="report-card__icon-wrap">
+            <i class="pi {{ report.icon }}" aria-hidden="true"></i>
+          </div>
+          <div class="report-card__content">
+            <h3 class="report-card__title">{{ isAr() ? report.titleAr : report.titleEn }}</h3>
+            <p class="report-card__desc">{{ isAr() ? report.descAr : report.descEn }}</p>
+          </div>
+          <div class="report-card__action">
+            <button pButton
+              class="p-button-sm p-button-outlined"
+              [label]="isAr() ? 'إنشاء' : 'Generate'"
+              icon="pi pi-file-export"
+              (click)="$event.stopPropagation(); openGenerateDialog(report)">
+            </button>
+          </div>
+        </div>
+      }
+
+      @if (!reports().length) {
+        <app-empty-state
+          [title]="isAr() ? 'لا توجد تقارير متاحة' : 'No reports available'"
+          [dir]="dir()" />
+      }
+    </section>
+  }
+
+  <!-- Generate Report Dialog -->
+  <p-dialog
+    [header]="isAr()
+      ? 'إنشاء تقرير: ' + (selectedReport()?.titleAr || '')
+      : 'Generate Report: ' + (selectedReport()?.titleEn || '')"
+    [(visible)]="showGenerateDialog"
+    [modal]="true"
+    [style]="{ width: '480px' }"
+    [closable]="true"
+    [draggable]="false">
+    <div class="dialog-form">
+      <grc-form-field
+        [label]="isAr() ? 'التنسيق' : 'Format'">
+        <p-dropdown
+          [(ngModel)]="selectedFormat"
+          [options]="formatOptions"
+          optionLabel="label"
+          optionValue="value"
+          styleClass="w-full">
+        </p-dropdown>
+      </grc-form-field>
+
+      <div class="form-row">
+        <grc-form-field
+          [label]="isAr() ? 'من تاريخ' : 'Date From'">
+          <p-calendar [(ngModel)]="dateFrom" dateFormat="yy-mm-dd" styleClass="w-full" />
+        </grc-form-field>
+        <grc-form-field
+          [label]="isAr() ? 'إلى تاريخ' : 'Date To'">
+          <p-calendar [(ngModel)]="dateTo" dateFormat="yy-mm-dd" styleClass="w-full" />
+        </grc-form-field>
+      </div>
+
+      <grc-form-field
+        [label]="isAr() ? 'إطار العمل (اختياري)' : 'Framework (optional)'">
+        <input pInputText [(ngModel)]="selectedFramework" class="w-full"
+          [placeholder]="isAr() ? 'معرف الإطار' : 'Framework ID'" />
+      </grc-form-field>
+    </div>
+
+    <ng-template pTemplate="footer">
+      <button pButton
+        class="p-button-text"
+        [label]="isAr() ? 'إلغاء' : 'Cancel'"
+        (click)="showGenerateDialog.set(false)">
+      </button>
+      <button pButton
+        class="p-button-primary"
+        [label]="isAr() ? 'إنشاء وتنزيل' : 'Generate & Download'"
+        icon="pi pi-download"
+        [loading]="generating()"
+        (click)="generateReport()">
+      </button>
+    </ng-template>
+  </p-dialog>
+</div>

@@ -1,0 +1,324 @@
+<app-page-shell
+  icon="microchip-ai"
+  [title]="i18n.translate('aiOs.dashboardTitle')"
+  [subtitle]="i18n.translate('aiOs.dashboardSubtitle')"
+  [breadcrumbs]="[i18n.translate('nav.dashboard'), i18n.translate('aiOs.dashboardTitle') || 'AI OS Dashboard']"
+  [loading]="loading()">
+
+  <p-toast />
+
+  <div class="ai-os-root" [dir]="i18n.direction()">
+
+    <!-- ═══════════════ HEADER ═══════════════ -->
+    <header class="ai-os-header">
+      <div class="ai-os-header-left">
+        <div class="ai-os-logo-ring">
+          <i class="pi pi-microchip-ai"></i>
+        </div>
+        <div>
+          <h1>{{ i18n.translate('aiOs.dashboardTitle') }}</h1>
+          <p class="ai-os-sub">{{ i18n.translate('aiOs.dashboardSubtitle') }}</p>
+        </div>
+      </div>
+      <div>
+        <button pButton
+          icon="pi pi-refresh"
+          [label]="i18n.translate('aiOs.refresh')"
+          class="p-button-outlined p-button-sm"
+          (click)="onRefresh()">
+        </button>
+        <span class="ai-os-last-updated" *ngIf="lastUpdated()">
+          {{ i18n.translate('aiOs.lastUpdated') }}: {{ lastUpdated() }}
+        </span>
+      </div>
+    </header>
+
+    <!-- Error banner: correlation + Retry -->
+    <div *ngIf="error()" class="ai-os-error-box">
+      <i class="pi pi-exclamation-triangle"></i>
+      <span>{{ error() }}</span>
+      <span *ngIf="correlationId()" class="ai-os-correlation">
+        <span class="correlation-label">{{ i18n.translate('common.correlationId') || 'Correlation ID' }}:</span>
+        <code>{{ correlationId() }}</code>
+      </span>
+      <button pButton [label]="i18n.translate('common.retry') || 'Retry'" class="p-button-sm p-button-outlined" (click)="loadAll()"></button>
+    </div>
+
+    <!-- ═══════════════ MAIN GRID ═══════════════ -->
+    <div class="ai-os-grid">
+
+      <!-- ── 1. Guard Decisions ── -->
+      <section class="ai-os-cell-guard">
+        <div class="ai-os-panel">
+          <h2 class="ai-os-panel-title">
+            <i class="pi pi-shield"></i>
+            {{ i18n.translate('aiOs.guardDecisions') }}
+            <a routerLink="/ai-os-dashboard/decisions" class="ai-os-panel-link">
+              {{ i18n.translate('aiOs.viewDecisions') || 'View decisions' }}
+            </a>
+          </h2>
+          <div class="guard-cards" *ngIf="guardDecisions().length > 0">
+            <div class="guard-card" *ngFor="let gd of guardDecisions()">
+              <div class="guard-card-type">{{ gd.check_type || gd.checkType || gd.type || '—' }}</div>
+              <div class="guard-card-counts">
+                <div class="guard-count">
+                  <span class="guard-count-value allow">{{ gd.allow_count || gd.allowCount || 0 }}</span>
+                  <span class="guard-count-label">{{ i18n.translate('aiOs.allow') }}</span>
+                </div>
+                <div class="guard-count">
+                  <span class="guard-count-value block">{{ gd.block_count || gd.blockCount || 0 }}</span>
+                  <span class="guard-count-label">{{ i18n.translate('aiOs.block') }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ai-os-empty" *ngIf="guardDecisions().length === 0">
+            <i class="pi pi-shield"></i>
+            <span>{{ i18n.translate('aiOs.noData') }}</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── 2. Agent Eval SLO ── -->
+      <section class="ai-os-cell-eval">
+        <div class="ai-os-panel">
+          <h2 class="ai-os-panel-title">
+            <i class="pi pi-check-circle"></i>
+            {{ i18n.translate('aiOs.evalSlo') }}
+          </h2>
+          <div class="slo-tags" *ngIf="evalSloAgents().length > 0">
+            <div class="slo-tag"
+                 *ngFor="let agent of evalSloAgents()"
+                 [ngClass]="agent.passing ? 'passing' : 'breach'">
+              <span class="slo-dot"></span>
+              <span>{{ agent.agentId || agent.agent_id || agent.name || '—' }}</span>
+              <span>— {{ agent.passing ? i18n.translate('aiOs.passing') : i18n.translate('aiOs.breach') }}</span>
+            </div>
+          </div>
+          <div class="ai-os-empty" *ngIf="evalSloAgents().length === 0">
+            <i class="pi pi-check-circle"></i>
+            <span>{{ i18n.translate('aiOs.noData') }}</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── 3. Gateway Health ── -->
+      <section class="ai-os-cell-gateway">
+        <div class="ai-os-panel">
+          <h2 class="ai-os-panel-title">
+            <i class="pi pi-server"></i>
+            {{ i18n.translate('aiOs.gatewayHealth') }}
+          </h2>
+          <div class="gateway-stats" *ngIf="gatewayHealth()">
+            <div class="gateway-row">
+              <span class="gateway-label">{{ i18n.translate('aiOs.circuitBreaker') }}</span>
+              <span class="cb-state" [ngClass]="getCbClass(gatewayHealth()?.circuitBreakerState || gatewayHealth()?.circuitBreaker)">
+                {{ (gatewayHealth()?.circuitBreakerState || gatewayHealth()?.circuitBreaker || 'closed') | uppercase }}
+              </span>
+            </div>
+            <div class="gateway-row">
+              <span class="gateway-label">{{ i18n.translate('aiOs.activeRequests') }}</span>
+              <span class="gateway-value">{{ gatewayHealth()?.activeRequests || gatewayHealth()?.concurrentRequests || 0 }}</span>
+            </div>
+            <div class="gateway-row">
+              <span class="gateway-label">{{ i18n.translate('aiOs.totalRequests') }}</span>
+              <span class="gateway-value">{{ gatewayHealth()?.totalRequests || 0 }}</span>
+            </div>
+          </div>
+          <div class="ai-os-empty" *ngIf="!gatewayHealth()">
+            <i class="pi pi-server"></i>
+            <span>{{ i18n.translate('aiOs.noData') }}</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── 4. LLM Usage & Budget ── -->
+      <section class="ai-os-cell-budget">
+        <div class="ai-os-panel">
+          <h2 class="ai-os-panel-title">
+            <i class="pi pi-dollar"></i>
+            {{ i18n.translate('aiOs.llmUsage') }}
+          </h2>
+          <div class="budget-items" *ngIf="usageSummary() || budgetStatus()">
+            <!-- Token usage bar -->
+            <div>
+              <div class="budget-item-label">
+                <span>{{ i18n.translate('aiOs.tokenUsage') }}</span>
+                <span>{{ usageSummary()?.totalTokens || 0 }} / {{ budgetStatus()?.monthlyTokenLimit || '∞' }}</span>
+              </div>
+              <div class="budget-bar-track">
+                <div class="budget-bar-fill"
+                     [ngClass]="getBudgetBarClass(budgetPct(usageSummary()?.totalTokens || 0, budgetStatus()?.monthlyTokenLimit || 0))"
+                     [style.width.%]="budgetPct(usageSummary()?.totalTokens || 0, budgetStatus()?.monthlyTokenLimit || 0)">
+                </div>
+              </div>
+            </div>
+            <!-- Cost bar -->
+            <div>
+              <div class="budget-item-label">
+                <span>{{ i18n.translate('aiOs.costUsage') }}</span>
+                <span>${{ (usageSummary()?.totalCost || 0) | number:'1.2-2' }} / ${{ budgetStatus()?.monthlyCostLimit || '∞' }}</span>
+              </div>
+              <div class="budget-bar-track">
+                <div class="budget-bar-fill"
+                     [ngClass]="getBudgetBarClass(budgetPct(usageSummary()?.totalCost || 0, budgetStatus()?.monthlyCostLimit || 0))"
+                     [style.width.%]="budgetPct(usageSummary()?.totalCost || 0, budgetStatus()?.monthlyCostLimit || 0)">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ai-os-empty" *ngIf="!usageSummary() && !budgetStatus()">
+            <i class="pi pi-dollar"></i>
+            <span>{{ i18n.translate('aiOs.noData') }}</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── 5. Memory Health ── -->
+      <section class="ai-os-cell-memory">
+        <div class="ai-os-panel">
+          <h2 class="ai-os-panel-title">
+            <i class="pi pi-database"></i>
+            {{ i18n.translate('aiOs.memoryHealth') }}
+          </h2>
+          <div class="memory-stats" *ngIf="memoryHealth()">
+            <div class="memory-stat">
+              <div class="memory-stat-value">{{ memoryHealth()?.activeMemories || memoryHealth()?.active || 0 }}</div>
+              <div class="memory-stat-label">{{ i18n.translate('aiOs.activeMemories') }}</div>
+            </div>
+            <div class="memory-stat">
+              <div class="memory-stat-value">{{ memoryHealth()?.compactionStatus || memoryHealth()?.compaction || '—' }}</div>
+              <div class="memory-stat-label">{{ i18n.translate('aiOs.compaction') }}</div>
+            </div>
+            <div class="memory-stat">
+              <div class="memory-stat-value">{{ memoryHealth()?.expiredCount || memoryHealth()?.expired || 0 }}</div>
+              <div class="memory-stat-label">{{ i18n.translate('aiOs.expired') }}</div>
+            </div>
+          </div>
+          <div class="ai-os-empty" *ngIf="!memoryHealth()">
+            <i class="pi pi-database"></i>
+            <span>{{ i18n.translate('aiOs.noData') }}</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── 6. Trace Explorer ── -->
+      <section class="ai-os-cell-traces">
+        <div class="ai-os-panel">
+          <h2 class="ai-os-panel-title">
+            <i class="pi pi-list"></i>
+            {{ i18n.translate('aiOs.traces') }}
+          </h2>
+
+          <!-- Filter input -->
+          <div style="margin-bottom: 10px;">
+            <input type="text" pInputText
+                   [placeholder]="i18n.translate('aiOs.filterTraces')"
+                   [ngModel]="traceFilter()"
+                   (ngModelChange)="traceFilter.set($event)"
+                   style="width: 100%; max-width: 300px; font-size: 0.8rem;" />
+          </div>
+
+          <grc-data-table
+            [totalRecords]="filteredTraces.length"
+            [emptyMessage]="i18n.translate('aiOs.noTraces')">
+            <p-table [value]="filteredTraces"
+                     [rows]="10"
+                     [paginator]="true"
+                     [rowsPerPageOptions]="[5, 10, 20]"
+                     [responsive]="true"
+                     styleClass="p-datatable-sm p-datatable-gridlines">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>{{ i18n.translate('aiOs.agentId') }}</th>
+                  <th>{{ i18n.translate('aiOs.runId') }}</th>
+                  <th>{{ i18n.translate('aiOs.status') }}</th>
+                  <th>{{ i18n.translate('aiOs.duration') }}</th>
+                  <th>{{ i18n.translate('aiOs.timestamp') }}</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-trace>
+                <tr [routerLink]="['/ai-os-dashboard', 'traces', trace.runId || trace.run_id]" style="cursor: pointer;">
+                  <td>{{ trace.agentId || trace.agent_id || '—' }}</td>
+                  <td style="font-family: monospace; font-size: 0.75rem;">{{ (trace.runId || trace.run_id || '—') | slice:0:12 }}</td>
+                  <td>
+                    <span class="trace-status"
+                          [ngClass]="(trace.status || 'pending').toLowerCase()">
+                      {{ (trace.status || 'pending') | uppercase }}
+                    </span>
+                  </td>
+                  <td>{{ formatDuration(trace.durationMs || trace.duration_ms || trace.duration) }}</td>
+                  <td>{{ formatTime(trace.timestamp || trace.created_at) }}</td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </grc-data-table>
+        </div>
+      </section>
+
+      <!-- ── 7. User Feedback ── -->
+      <section class="ai-os-cell-feed">
+        <div class="ai-os-panel">
+          <h2 class="ai-os-panel-title">
+            <i class="pi pi-star"></i>
+            {{ i18n.translate('aiOs.feedback') }}
+          </h2>
+          <div class="feedback-stats" *ngIf="feedbackSummary()">
+            <div class="feedback-rating">
+              {{ (feedbackSummary()?.averageRating || feedbackSummary()?.avgRating || 0) | number:'1.1-1' }}
+            </div>
+            <div class="feedback-stars">
+              {{ getStars(feedbackSummary()?.averageRating || feedbackSummary()?.avgRating || 0) }}
+            </div>
+            <div class="feedback-details">
+              <div class="feedback-detail">
+                <div class="feedback-detail-value">{{ feedbackSummary()?.totalSubmissions || feedbackSummary()?.total || 0 }}</div>
+                <div class="feedback-detail-label">{{ i18n.translate('aiOs.totalSubmissions') }}</div>
+              </div>
+              <div class="feedback-detail">
+                <div class="feedback-detail-value">{{ feedbackSummary()?.trend || '—' }}</div>
+                <div class="feedback-detail-label">{{ i18n.translate('aiOs.trend') }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="ai-os-empty" *ngIf="!feedbackSummary()">
+            <i class="pi pi-star"></i>
+            <span>{{ i18n.translate('aiOs.noData') }}</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── 8. Cache Performance ── -->
+      <section class="ai-os-cell-cache">
+        <div class="ai-os-panel">
+          <h2 class="ai-os-panel-title">
+            <i class="pi pi-bolt"></i>
+            {{ i18n.translate('aiOs.cachePerformance') }}
+          </h2>
+          <div class="cache-stats" *ngIf="cacheStats()">
+            <div class="cache-stat">
+              <div class="cache-stat-value highlight">
+                {{ (cacheStats()?.hitRate || cacheStats()?.hit_rate || 0) | number:'1.1-1' }}%
+              </div>
+              <div class="cache-stat-label">{{ i18n.translate('aiOs.hitRate') }}</div>
+            </div>
+            <div class="cache-stat">
+              <div class="cache-stat-value">{{ cacheStats()?.totalLookups || cacheStats()?.total_lookups || 0 }}</div>
+              <div class="cache-stat-label">{{ i18n.translate('aiOs.totalLookups') }}</div>
+            </div>
+            <div class="cache-stat">
+              <div class="cache-stat-value">{{ cacheStats()?.cacheSize || cacheStats()?.size || 0 }}</div>
+              <div class="cache-stat-label">{{ i18n.translate('aiOs.cacheSize') }}</div>
+            </div>
+          </div>
+          <div class="ai-os-empty" *ngIf="!cacheStats()">
+            <i class="pi pi-bolt"></i>
+            <span>{{ i18n.translate('aiOs.noData') }}</span>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+</app-page-shell>

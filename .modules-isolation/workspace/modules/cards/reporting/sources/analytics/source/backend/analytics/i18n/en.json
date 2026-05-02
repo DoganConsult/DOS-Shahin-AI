@@ -1,0 +1,18 @@
+{
+  "analytics.title": "Analytics",
+  "analytics.dashboard": "Analytics Dashboard",
+  "analytics.kpis": "KPI Tracking",
+  "analytics.trends": "Trend Analysis",
+  "analytics.benchmarks": "Benchmarking",
+  "analytics.heatmaps": "Risk Heatmaps",
+  "analytics.maturity": "Maturity Scoring",
+  "analytics.predictive": "Predictive Analytics",
+  "analytics.diagnostics": "Diagnostics",
+  "analytics.admin": "Analytics Admin",
+  "analytics.empty.title": "No analytics data available",
+  "analytics.empty.description": "Analytics will populate as modules generate operational data.",
+  "analytics.loading": "Loading analytics...",
+  "analytics.error.title": "Failed to load analytics",
+  "analytics.error.retry": "Retry",
+  "analytics.export": "Export Data"
+}

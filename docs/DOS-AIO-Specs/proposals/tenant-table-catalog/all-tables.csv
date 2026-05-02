@@ -1,0 +1,1379 @@
+module,owner_service,table,columns,purpose,purpose_source,has_data
+admin,tenant-service,_retired_dashboard_overrides_v1,8,"Retired/deprecated table — kept for rollback safety only",pattern,no
+admin,tenant-service,activity_feed,14,"Admin -- Activity Feed",name,no
+admin,tenant-service,activity_notifications,7,"Admin -- Activity: Notification queue/log",pattern,no
+admin,tenant-service,actor_audit_log,12,"Admin -- Actor Audit: Activity/audit log records",pattern,no
+admin,tenant-service,actor_registry,12,"Admin -- Actor Registry",name,yes
+admin,tenant-service,agrc_event_dlq,12,"Admin -- Agrc Event Dlq",name,no
+admin,tenant-service,api_ai_config,15,"Admin -- Api Ai: Configuration values",pattern,no
+admin,tenant-service,api_keys,14,"Admin -- Api: Key/identifier catalog",pattern,no
+admin,tenant-service,assessment_templates,20,"Admin -- Assessment: Template catalog",pattern,yes
+admin,tenant-service,automation_log,11,"Admin -- Automation: Activity/audit log records",pattern,no
+admin,tenant-service,automation_rules,24,"Admin -- Automation: Rules/policy definitions",pattern,yes
+admin,tenant-service,cache_dependencies,8,"Admin -- Cache: Dependency mapping",pattern,yes
+admin,tenant-service,cache_invalidation_log,7,"Admin -- Cache Invalidation: Activity/audit log records",pattern,no
+admin,tenant-service,command_palette_history,10,"Admin -- Command Palette: Historical change records",pattern,no
+admin,tenant-service,consent_records,7,"Admin -- Consent Records",name,no
+admin,tenant-service,content_pack_installations,6,"Admin -- Content Pack Installations",name,no
+admin,tenant-service,contract_tests,8,"Admin -- Contract Tests",name,no
+admin,tenant-service,cross_module_links,13,"Admin -- Cross Module: Cross-table link records",pattern,no
+admin,tenant-service,dos_agent_approvals,14,"Admin -- AI agent record (Dos Agent Approvals)",token,no
+admin,tenant-service,dos_agent_instructions,9,"Admin -- AI agent record (Dos Agent Instructions)",token,no
+admin,tenant-service,dos_agent_kernel_audit,10,"Admin -- Dos Agent Kernel: Audit-trail entries",pattern,no
+admin,tenant-service,dos_agent_memories,11,"Admin -- AI agent record (Dos Agent Memories)",token,no
+admin,tenant-service,dos_agent_metrics,9,"Admin -- Dos Agent: Metric data points",pattern,no
+admin,tenant-service,dos_agent_registry,14,"Admin -- AI agent record (Dos Agent Registry)",token,no
+admin,tenant-service,dos_agent_runs,17,"Admin -- Dos Agent: Execution run records",pattern,no
+admin,tenant-service,dos_agent_schedules,12,"Admin -- AI agent record (Dos Agent Schedules)",token,no
+admin,tenant-service,dos_agent_state_log,7,"Admin -- Dos Agent State: Activity/audit log records",pattern,no
+admin,tenant-service,dos_agent_states,5,"Admin -- Dos Agent: State-machine state catalog",pattern,no
+admin,tenant-service,dos_agent_tasks,17,"Admin -- Dos Agent: Task records",pattern,no
+admin,tenant-service,dos_agent_tool_audit,10,"Admin -- Dos Agent Tool: Audit-trail entries",pattern,no
+admin,tenant-service,dos_agent_tool_calls,8,"Admin -- AI agent record (Dos Agent Tool Calls)",token,no
+admin,tenant-service,dos_agent_watchdog_log,7,"Admin -- Dos Agent Watchdog: Activity/audit log records",pattern,no
+admin,tenant-service,email_send_log,13,"Admin -- Email Send: Activity/audit log records",pattern,no
+admin,tenant-service,enterprise_user_role_assignments,18,"Admin -- Enterprise User Role: Assignment mapping (X to Y)",pattern,yes
+admin,tenant-service,entity_dimension_assignments,9,"Admin -- Entity Dimension: Assignment mapping (X to Y)",pattern,no
+admin,tenant-service,entity_instances,10,"Admin -- Entity Instances",name,no
+admin,tenant-service,entity_lifecycle_log,11,"Admin -- Entity Lifecycle: Activity/audit log records",pattern,no
+admin,tenant-service,entity_relationships,6,"Admin -- Entity: Relationship records",pattern,no
+admin,tenant-service,entity_routing_config,12,"Admin -- Entity Routing: Configuration values",pattern,yes
+admin,tenant-service,entity_type_routing_config,10,"Admin -- Entity Type Routing: Configuration values",pattern,yes
+admin,tenant-service,entity_types,9,"Admin -- Entity Types",name,yes
+admin,tenant-service,event_processing_state,7,"Admin -- Event Processing: State-machine state",pattern,yes
+admin,tenant-service,event_subscriptions,8,"Admin -- Event: Subscription records",pattern,no
+admin,tenant-service,event_trigger_bindings,12,"Admin -- Event Trigger Bindings",name,yes
+admin,tenant-service,explainability_packs,6,"Admin -- Explainability Packs",name,no
+admin,tenant-service,favorites,7,"Admin -- Favorites",name,no
+admin,tenant-service,feature_flags,10,"Admin -- Feature Flags",name,yes
+admin,tenant-service,file_storage,18,"Admin -- File Storage",name,no
+admin,tenant-service,functional_roles,11,"Admin -- Functional: Role definitions",pattern,yes
+admin,tenant-service,grc_control_sector_mapping,6,"Admin -- Grc Control Sector: Cross-entity mapping",pattern,no
+admin,tenant-service,grc_entity_profile_mapping,9,"Admin -- Grc Entity Profile: Cross-entity mapping",pattern,no
+admin,tenant-service,grc_evidence_action_mapping,9,"Admin -- Grc Evidence Action: Cross-entity mapping",pattern,no
+admin,tenant-service,grc_evidence_sector_mapping,6,"Admin -- Grc Evidence Sector: Cross-entity mapping",pattern,no
+admin,tenant-service,grc_risk_sector_mapping,6,"Admin -- Grc Risk Sector: Cross-entity mapping",pattern,no
+admin,tenant-service,grc_roadmaps,7,"Admin -- Grc Roadmaps",name,no
+admin,tenant-service,grc_sector_lookup,7,"Admin -- Grc Sector Lookup",name,yes
+admin,tenant-service,guidance_history,8,"Admin -- Guidance: Historical change records",pattern,no
+admin,tenant-service,handoff_batches,11,"Admin -- Handoff Batches",name,yes
+admin,tenant-service,input_validation_rules,21,"Admin -- Input Validation: Rules/policy definitions",pattern,no
+admin,tenant-service,kernel_snapshots,4,"Admin -- Kernel: Point-in-time snapshots",pattern,no
+admin,tenant-service,langgraph_agent_metrics,30,"Admin -- Langgraph Agent: Metric data points",pattern,yes
+admin,tenant-service,management_responses,10,"Admin -- Management: Response records (questionnaire/survey/assessment)",pattern,no
+admin,tenant-service,memory_consent_log,8,"Admin -- Memory Consent: Activity/audit log records",pattern,no
+admin,tenant-service,message_read_status,3,"Admin -- Message Read: Status state record",pattern,no
+admin,tenant-service,metadata_records,9,"Admin -- Metadata Records",name,no
+admin,tenant-service,milestone_definitions,13,"Admin -- Milestone: Definition catalog",pattern,no
+admin,tenant-service,mode_transition_audit,15,"Admin -- Mode Transition: Audit-trail entries",pattern,no
+admin,tenant-service,module_action_definitions,15,"Admin -- Module Action: Definition catalog",pattern,no
+admin,tenant-service,module_activation_events,8,"Admin -- Module Activation: Domain event records",pattern,no
+admin,tenant-service,module_activation_policies,8,"Admin -- Module Activation Policies",name,yes
+admin,tenant-service,module_activation_status,37,"Admin -- Module Activation: Status state record",pattern,yes
+admin,tenant-service,module_admin_config,8,"Admin -- Module Admin: Configuration values",pattern,no
+admin,tenant-service,module_approval_matrices,12,"Admin -- Approval record (Module Approval Matrices)",token,no
+admin,tenant-service,module_approval_matrix,11,"Admin -- RACI/permission matrix (Module Approval Matrix)",token,no
+admin,tenant-service,module_approval_policies,10,"Admin -- Approval record (Module Approval Policies)",token,yes
+admin,tenant-service,module_audit_config,12,"Admin -- Module Audit: Configuration values",pattern,yes
+admin,tenant-service,module_automation_config,10,"Admin -- Module Automation: Configuration values",pattern,yes
+admin,tenant-service,module_certifications,20,"Admin -- Module Certifications",name,no
+admin,tenant-service,module_code_aliases,4,"Admin -- Module Code Aliases",name,yes
+admin,tenant-service,module_contact_points,14,"Admin -- Module Contact Points",name,no
+admin,tenant-service,module_dependency_graph,8,"Admin -- Module Dependency Graph",name,yes
+admin,tenant-service,module_entitlement_map,11,"Admin -- Module Entitlement Map",name,no
+admin,tenant-service,module_entitlements,12,"Admin -- Module Entitlements",name,yes
+admin,tenant-service,module_entity_links,10,"Admin -- Module Entity: Cross-table link records",pattern,no
+admin,tenant-service,module_event_log,8,"Admin -- Module Event: Activity/audit log records",pattern,no
+admin,tenant-service,module_health_checks,7,"Admin -- Module Health Checks",name,no
+admin,tenant-service,module_health_status,11,"Admin -- Module Health: Status state record",pattern,yes
+admin,tenant-service,module_inbound_events,7,"Admin -- Module Inbound: Domain event records",pattern,yes
+admin,tenant-service,module_kickstart_log,9,"Admin -- Module Kickstart: Activity/audit log records",pattern,no
+admin,tenant-service,module_lifecycle_definitions,7,"Admin -- Module Lifecycle: Definition catalog",pattern,yes
+admin,tenant-service,module_lifecycle_transitions,13,"Admin -- Module Lifecycle Transitions",name,yes
+admin,tenant-service,module_maturity_stages,11,"Admin -- Module Maturity Stages",name,no
+admin,tenant-service,module_metrics_snapshots,12,"Admin -- Module Metrics: Point-in-time snapshots",pattern,no
+admin,tenant-service,module_nav_registration,12,"Admin -- Module Nav Registration",name,no
+admin,tenant-service,module_pages,16,"Admin -- Module Pages",name,yes
+admin,tenant-service,module_preflight_runs,9,"Admin -- Module Preflight: Execution run records",pattern,no
+admin,tenant-service,module_readiness_results,8,"Admin -- Module Readiness Results",name,no
+admin,tenant-service,module_readiness_thresholds,12,"Admin -- Module Readiness: Threshold definitions",pattern,no
+admin,tenant-service,module_registry,19,"Admin -- Module Registry",name,yes
+admin,tenant-service,module_role_team_mappings,10,"Admin -- Module Role Team: Cross-entity mapping",pattern,no
+admin,tenant-service,module_runtime_health,9,"Admin -- Module Runtime Health",name,yes
+admin,tenant-service,module_settings,5,"Admin -- Module: Configuration values",pattern,no
+admin,tenant-service,module_sla_tracking,16,"Admin -- Module Sla Tracking",name,no
+admin,tenant-service,module_stale_record_checks,7,"Admin -- Module Stale Record Checks",name,no
+admin,tenant-service,module_user_contexts,8,"Admin -- User record (Module User Contexts)",token,no
+admin,tenant-service,module_workflow_profiles,9,"Admin -- Module Workflow Profiles",name,yes
+admin,tenant-service,module_workflow_registry,59,"Admin -- Module Workflow Registry",name,yes
+admin,tenant-service,modules,25,"Admin -- Modules",name,no
+admin,tenant-service,pack_certifications,11,"Admin -- Pack Certifications",name,yes
+admin,tenant-service,pack_installations,11,"Admin -- Pack Installations",name,no
+admin,tenant-service,pack_selection_decisions,12,"Admin -- Decision record (Pack Selection Decisions)",token,no
+admin,tenant-service,pack_selection_policies,14,"Admin -- Pack Selection Policies",name,yes
+admin,tenant-service,pdpl_consent_records,16,"Admin -- Pdpl Consent Records",name,no
+admin,tenant-service,performance_cache,11,"Admin -- Performance: Cached values",pattern,no
+admin,tenant-service,permissions,7,"Admin -- Permissions",name,yes
+admin,tenant-service,platform_feature_flags,9,"Admin -- Platform Feature Flags",name,no
+admin,tenant-service,platform_operation_config,10,"Admin -- Platform Operation: Configuration values",pattern,yes
+admin,tenant-service,platform_products,17,"Admin -- Platform Products",name,yes
+admin,tenant-service,platform_security_config,14,"Admin -- Platform Security: Configuration values",pattern,yes
+admin,tenant-service,procedure_versions,10,"Admin -- Procedure: Versioned record history",pattern,no
+admin,tenant-service,profile_completeness_rules,12,"Admin -- Profile Completeness: Rules/policy definitions",pattern,no
+admin,tenant-service,profile_completeness_scores,8,"Admin -- Profile Completeness Scores",name,no
+admin,tenant-service,rate_limit_config,12,"Admin -- Rate Limit: Configuration values",pattern,no
+admin,tenant-service,role_permissions,2,"Admin -- Role: Permission grants",pattern,yes
+admin,tenant-service,ropa_entries,23,"Admin -- Ropa Entries",name,no
+admin,tenant-service,route_catalog,15,"Admin -- Route Catalog",name,no
+admin,tenant-service,runtime_overrides,10,"Admin -- Runtime Overrides",name,no
+admin,tenant-service,schema_migrations,6,"Admin -- Schema Migrations",name,yes
+admin,tenant-service,search_index_config,8,"Admin -- Search Index: Configuration values",pattern,no
+admin,tenant-service,settings,10,"Admin -- Settings",name,no
+admin,tenant-service,shadow_comparisons,16,"Admin -- Shadow Comparisons",name,no
+admin,tenant-service,shell_config_overrides,8,"Admin -- Shell Config Overrides",name,no
+admin,tenant-service,signal_detector_registry,24,"Admin -- Signal Detector Registry",name,yes
+admin,tenant-service,supervisory_reviews,9,"Admin -- Supervisory Reviews",name,no
+admin,tenant-service,system_health_snapshots,13,"Admin -- System Health: Point-in-time snapshots",pattern,no
+admin,tenant-service,task_type_config,4,"Admin -- Task Type: Configuration values",pattern,yes
+admin,tenant-service,telemetry_signals,8,"Admin -- Telemetry Signals",name,no
+admin,tenant-service,tenant_security_config,9,"Admin -- Tenant Security: Configuration values",pattern,yes
+admin,tenant-service,user_access_profiles,9,"Admin -- User record (User Access Profiles)",token,yes
+admin,tenant-service,user_preferences_v2,14,"Admin -- User record (User Preferences V2)",token,no
+admin,tenant-service,user_profiles_extended,23,"Admin -- User record (User Profiles Extended)",token,no
+admin,tenant-service,user_sessions,10,"Admin -- User record (User Sessions)",token,no
+admin,tenant-service,webhook_deliveries,9,"Admin -- Webhook Deliveries",name,no
+admin,tenant-service,websocket_event_queue,7,"Admin -- Work queue records (Websocket Event Queue)",token,no
+admin,tenant-service,workflow_assignments,16,"Admin -- Workflow: Assignment mapping (X to Y)",pattern,no
+admin,tenant-service,workflow_profile_transitions,13,"Admin -- Workflow Profile Transitions",name,yes
+admin,tenant-service,workflow_sla_policies,13,"Admin -- Workflow Sla Policies",name,no
+foundation,tenant-service,access_profiles,8,"Foundation -- Access Profiles",name,yes
+foundation,tenant-service,assignment_resolution_log,10,"Foundation -- Assignment Resolution: Activity/audit log records",pattern,no
+foundation,tenant-service,business_services_catalog,23,"Foundation -- Business Services Catalog",name,no
+foundation,tenant-service,business_units,22,"Foundation -- Business Units",name,no
+foundation,tenant-service,committees,6,"Foundation -- Committee record (Committees)",token,no
+foundation,tenant-service,delegations,14,"Foundation -- Delegations",name,no
+foundation,tenant-service,departments,22,"Foundation -- Department record (Departments)",token,no
+foundation,tenant-service,effective_user_modules,6,"Foundation -- User record (Effective User Modules)",token,no
+foundation,tenant-service,effective_user_permissions,8,"Foundation -- Effective User: Permission grants",pattern,no
+foundation,tenant-service,invitations,10,"Foundation -- Invitations",name,no
+foundation,tenant-service,locations,32,"Foundation -- Location record (Locations)",token,no
+foundation,tenant-service,member_lifecycle_events,9,"Foundation -- Member Lifecycle: Domain event records",pattern,no
+foundation,tenant-service,member_profiles,12,"Foundation -- Member Profiles",name,no
+foundation,tenant-service,org_cost_center_assignments,15,"Foundation -- Org Cost Center: Assignment mapping (X to Y)",pattern,no
+foundation,tenant-service,org_custom_field_definitions,15,"Foundation -- Org Custom Field: Definition catalog",pattern,no
+foundation,tenant-service,org_dimension_values,12,"Foundation -- Org Dimension Values",name,no
+foundation,tenant-service,org_dimensions,12,"Foundation -- Org Dimensions",name,yes
+foundation,tenant-service,org_hierarchy_edges,10,"Foundation -- Org Hierarchy Edges",name,no
+foundation,tenant-service,org_hierarchy_nodes,13,"Foundation -- Org Hierarchy Nodes",name,no
+foundation,tenant-service,org_location_assignments,13,"Foundation -- Org Location: Assignment mapping (X to Y)",pattern,no
+foundation,tenant-service,org_profile,14,"Foundation -- Org Profile",name,no
+foundation,tenant-service,org_unit_role_assignments,14,"Foundation -- Org Unit Role: Assignment mapping (X to Y)",pattern,no
+foundation,tenant-service,org_validation_executions,15,"Foundation -- Org Validation Executions",name,no
+foundation,tenant-service,org_validation_patterns,11,"Foundation -- Org Validation Patterns",name,no
+foundation,tenant-service,org_validation_rules,31,"Foundation -- Org Validation: Rules/policy definitions",pattern,no
+foundation,tenant-service,organizations,22,"Foundation -- Organization record (Organizations)",token,no
+foundation,tenant-service,positions,13,"Foundation -- Position record (Positions)",token,no
+foundation,tenant-service,product_modules,15,"Foundation -- Product Modules",name,yes
+foundation,tenant-service,product_overrides,5,"Foundation -- Product Overrides",name,no
+foundation,tenant-service,products,11,"Foundation -- Products",name,no
+foundation,tenant-service,sections,13,"Foundation -- Sections",name,no
+foundation,tenant-service,sector_authority_mapping,7,"Foundation -- Sector Authority: Cross-entity mapping",pattern,no
+foundation,tenant-service,teams,23,"Foundation -- Team record (Teams)",token,yes
+foundation,tenant-service,tenant_ai_config,9,"Foundation -- Tenant Ai: Configuration values",pattern,no
+foundation,tenant-service,tenant_archetypes,7,"Foundation -- Tenant Archetypes",name,yes
+foundation,tenant-service,tenant_blueprints,10,"Foundation -- Tenant Blueprints",name,yes
+foundation,tenant-service,tenant_config_versions,7,"Foundation -- Tenant Config: Versioned record history",pattern,no
+foundation,tenant-service,tenant_domains,11,"Foundation -- Tenant Domains",name,no
+foundation,tenant-service,tenant_email_config,20,"Foundation -- Tenant Email: Configuration values",pattern,no
+foundation,tenant-service,tenant_module_entitlements,8,"Foundation -- Tenant Module Entitlements",name,yes
+foundation,tenant-service,tenant_nav_rules,14,"Foundation -- Tenant Nav: Rules/policy definitions",pattern,no
+foundation,tenant-service,tenant_page_overrides,6,"Foundation -- Tenant Page Overrides",name,no
+foundation,tenant-service,tenant_quota_config,6,"Foundation -- Tenant Quota: Configuration values",pattern,no
+foundation,tenant-service,tenant_settings,11,"Foundation -- Tenant: Configuration values",pattern,yes
+foundation,tenant-service,tenant_settings_history,7,"Foundation -- Tenant Settings: Historical change records",pattern,no
+foundation,tenant-service,user_lifecycle_events,13,"Foundation -- User Lifecycle: Domain event records",pattern,no
+onboarding,onboarding-service,access_review_campaigns,13,"Onboarding -- Campaign record (Access Review Campaigns)",token,no
+onboarding,onboarding-service,dashboard_configs,18,"Onboarding -- Dashboard Configs",name,no
+onboarding,onboarding-service,governance_committees,6,"Onboarding -- Committee record (Governance Committees)",token,no
+onboarding,onboarding-service,governance_context,12,"Onboarding -- Governance Context",name,no
+onboarding,onboarding-service,journey_certifications,10,"Onboarding -- Journey Certifications",name,yes
+onboarding,onboarding-service,journey_maturity_snapshots,9,"Onboarding -- Journey Maturity: Point-in-time snapshots",pattern,no
+onboarding,onboarding-service,journey_milestones,18,"Onboarding -- Journey Milestones",name,no
+onboarding,onboarding-service,journey_phases,20,"Onboarding -- Journey Phases",name,no
+onboarding,onboarding-service,journey_progress,12,"Onboarding -- Journey Progress",name,no
+onboarding,onboarding-service,journey_roadmaps,22,"Onboarding -- Journey Roadmaps",name,no
+onboarding,onboarding-service,module_assignments,20,"Onboarding -- Module: Assignment mapping (X to Y)",pattern,no
+onboarding,onboarding-service,onboarding_answers,8,"Onboarding -- Onboarding Answers",name,no
+onboarding,onboarding-service,onboarding_assessment_drafts,15,"Onboarding -- Onboarding Assessment: Draft records (pre-publish)",pattern,no
+onboarding,onboarding-service,onboarding_consensus,9,"Onboarding -- Onboarding Consensus",name,no
+onboarding,onboarding-service,onboarding_questions,11,"Onboarding -- Onboarding: Question catalog",pattern,no
+onboarding,onboarding-service,onboarding_seed_history,6,"Onboarding -- Onboarding Seed: Historical change records",pattern,no
+onboarding,onboarding-service,onboarding_stages,10,"Stage configuration",registry,no
+onboarding,onboarding-service,os_playbook_versions,11,"Onboarding -- Os Playbook: Versioned record history",pattern,no
+onboarding,onboarding-service,person_profiles,15,"Onboarding -- Person Profiles",name,no
+onboarding,onboarding-service,plan_item_instances,12,"Onboarding -- Plan Item Instances",name,no
+onboarding,onboarding-service,qiyas_benchmark_profiles,11,"Onboarding -- Qiyas Benchmark Profiles",name,no
+onboarding,onboarding-service,qiyas_rating_scales,10,"Onboarding -- Qiyas Rating Scales",name,no
+onboarding,onboarding-service,qiyas_scoring_methods,9,"Onboarding -- Qiyas Scoring Methods",name,no
+onboarding,onboarding-service,raci_matrices,6,"Onboarding -- Raci Matrices",name,no
+onboarding,onboarding-service,regulatory_requirements,17,"Onboarding -- Regulatory Requirements",name,no
+onboarding,onboarding-service,risk_appetite_config,13,"Onboarding -- Risk Appetite: Configuration values",pattern,no
+onboarding,onboarding-service,risk_tolerance_bands,11,"Onboarding -- Risk record (Risk Tolerance Bands)",token,no
+onboarding,onboarding-service,role_profiles,11,"Onboarding -- Role record (Role Profiles)",token,yes
+onboarding,onboarding-service,scope_dimensions,6,"Onboarding -- Scope Dimensions",name,no
+onboarding,onboarding-service,sla_config,33,"Onboarding -- Sla: Configuration values",pattern,yes
+onboarding,onboarding-service,sod_conflict_matrix,13,"Onboarding -- RACI/permission matrix (Sod Conflict Matrix)",token,yes
+onboarding,onboarding-service,team_escalation_paths,6,"Onboarding -- Team record (Team Escalation Paths)",token,yes
+onboarding,onboarding-service,user_role_assignments,19,"Onboarding -- User Role: Assignment mapping (X to Y)",pattern,no
+onboarding,onboarding-service,workspaces,5,"Onboarding -- Workspace record (Workspaces)",token,yes
+access,auth-service,access_review_items,14,"Access -- Access Review Items",name,no
+action,risk-incident-service,action_class_catalog,10,"Action -- Action Class Catalog",name,yes
+action,risk-incident-service,action_escalation_chains,8,"Action -- Action Escalation Chains",name,yes
+action,risk-incident-service,action_escalation_config,11,"Action -- Action Escalation: Configuration values",pattern,no
+action,risk-incident-service,action_gating_rules,15,"Action -- Action Gating: Rules/policy definitions",pattern,no
+action,risk-incident-service,action_item_templates,12,"Action -- Action Item: Template catalog",pattern,no
+action,risk-incident-service,action_items,45,"Action -- Action Items",name,yes
+action,risk-incident-service,action_items_legacy,19,"Action -- Action Items Legacy",name,no
+action,risk-incident-service,action_sla_escalation_log,8,"Action -- Action Sla Escalation: Activity/audit log records",pattern,no
+action,risk-incident-service,action_sla_tracking,18,"Action -- Action Sla Tracking",name,no
+action,risk-incident-service,comments,9,"Action -- Comments",name,no
+action,risk-incident-service,messages,8,"Action -- Messages",name,no
+agrc-engine,ai-gateway-service,activity_stream,9,"Agrc Engine -- Activity Stream",name,no
+agrc-engine,ai-gateway-service,agent_handoffs,10,"Agrc Engine -- AI agent record (Agent Handoffs)",token,no
+agrc-engine,ai-gateway-service,agrc_engine_dedup,6,"Agrc Engine -- Agrc Engine Dedup",name,no
+agrc-engine,ai-gateway-service,agrc_engine_runs,16,"Agrc Engine -- Agrc Engine: Execution run records",pattern,no
+agrc-engine,ai-gateway-service,assessment_items,7,"Agrc Engine -- Assessment Items",name,no
+agrc-engine,ai-gateway-service,bcp_plans,18,"Agrc Engine -- Bcp Plans",name,no
+agrc-engine,ai-gateway-service,channels,5,"Agrc Engine -- Channels",name,no
+agrc-engine,ai-gateway-service,controls,53,"Agrc Engine -- Control record (Controls)",token,no
+agrc-engine,ai-gateway-service,drawer_templates,9,"Agrc Engine -- Drawer: Template catalog",pattern,yes
+agrc-engine,ai-gateway-service,evidence,63,"Agrc Engine -- Evidence",name,no
+agrc-engine,ai-gateway-service,evidence_team_distribution,7,"Agrc Engine -- Team record (Evidence Team Distribution)",token,yes
+agrc-engine,ai-gateway-service,framework_requirements,16,"Agrc Engine -- Framework definition (Framework Requirements)",token,no
+agrc-engine,ai-gateway-service,gate_definitions,22,"Agrc Engine -- Gate: Definition catalog",pattern,yes
+agrc-engine,ai-gateway-service,gate_validation_rules,12,"Agrc Engine -- Gate Validation: Rules/policy definitions",pattern,no
+agrc-engine,ai-gateway-service,grc_raci_assignments,15,"Agrc Engine -- Grc Raci: Assignment mapping (X to Y)",pattern,no
+agrc-engine,ai-gateway-service,member_agent_shadows,18,"Agrc Engine -- AI agent record (Member Agent Shadows)",token,no
+agrc-engine,ai-gateway-service,mode_operation_log,14,"Agrc Engine -- Mode Operation: Activity/audit log records",pattern,no
+agrc-engine,ai-gateway-service,notifications,10,"Agrc Engine -- Notifications",name,yes
+agrc-engine,ai-gateway-service,policies,47,"Agrc Engine -- Policies",name,yes
+agrc-engine,ai-gateway-service,raci_matrix,20,"Agrc Engine -- RACI/permission matrix (Raci Matrix)",token,yes
+auth,auth-service,actor_access_assignments,9,"Auth -- Actor Access: Assignment mapping (X to Y)",pattern,no
+auth,auth-service,actor_role_assignments,11,"Auth -- Actor Role: Assignment mapping (X to Y)",pattern,no
+auth,auth-service,ai_governance_roles,9,"Auth -- Ai Governance: Role definitions",pattern,no
+auth,auth-service,approval_authority_matrix,12,"Auth -- RACI/permission matrix (Approval Authority Matrix)",token,no
+auth,auth-service,approval_chains,22,"Approval chain configuration",registry,no
+auth,auth-service,archetype_bundle_map,4,"Auth -- Archetype Bundle Map",name,yes
+auth,auth-service,archetype_policy_pack_map,6,"Auth -- Policy record (Archetype Policy Pack Map)",token,yes
+auth,auth-service,authentication_policies,16,"Auth -- Authentication Policies",name,no
+auth,auth-service,authority_level_catalog,9,"Auth -- Authority Level Catalog",name,yes
+auth,auth-service,authority_levels,15,"Auth -- Authority Levels",name,no
+auth,auth-service,authorization_decision_log,14,"Auth -- Authorization Decision: Activity/audit log records",pattern,no
+auth,auth-service,authorization_mismatch_log,8,"Authorization mismatch logging",registry,no
+auth,auth-service,authorization_permissions,6,"Auth -- Authorization: Permission grants",pattern,yes
+auth,auth-service,conditional_access_grants,20,"Auth -- Conditional Access Grants",name,no
+auth,auth-service,dashboard_role_bindings,8,"Auth -- Role record (Dashboard Role Bindings)",token,yes
+auth,auth-service,decision_authorities,14,"Auth -- Decision record (Decision Authorities)",token,yes
+auth,auth-service,defense_lines,6,"Auth -- Defense Lines",name,yes
+auth,auth-service,delegated_authorities,18,"Auth -- Delegated Authorities",name,no
+auth,auth-service,dogan_guardian_config,6,"Auth -- Dogan Guardian: Configuration values",pattern,yes
+auth,auth-service,dogan_guardian_events,7,"Auth -- Dogan Guardian: Domain event records",pattern,no
+auth,auth-service,external_user_scopes,7,"Auth -- User record (External User Scopes)",token,no
+auth,auth-service,field_rbac_permissions,17,"Auth -- Field Rbac: Permission grants",pattern,no
+auth,auth-service,field_rbac_role_mappings,7,"Auth -- Field Rbac Role: Cross-entity mapping",pattern,yes
+auth,auth-service,function_authorities,9,"Function authorities",registry,yes
+auth,auth-service,functional_role_bundle_items,5,"Auth -- Role record (Functional Role Bundle Items)",token,yes
+auth,auth-service,functional_role_bundles,7,"Auth -- Role record (Functional Role Bundles)",token,yes
+auth,auth-service,guard_decision_log,11,"Auth -- Guard Decision: Activity/audit log records",pattern,no
+auth,auth-service,iam_access_reviews,9,"Auth -- Iam Access Reviews",name,no
+auth,auth-service,iam_connections,13,"Auth -- Iam Connections",name,no
+auth,auth-service,iam_sync_history,11,"Auth -- Iam Sync: Historical change records",pattern,no
+auth,auth-service,module_permission_definitions,12,"Auth -- Module Permission: Definition catalog",pattern,no
+auth,auth-service,module_permissions,13,"Auth -- Module: Permission grants",pattern,no
+auth,auth-service,module_role_definitions,17,"Auth -- Module Role: Definition catalog",pattern,no
+auth,auth-service,module_role_permission_bindings,6,"Auth -- Role record (Module Role Permission Bindings)",token,no
+auth,auth-service,module_roles,11,"Auth -- Module: Role definitions",pattern,no
+auth,auth-service,module_sod_policies,8,"Auth -- Module Sod Policies",name,yes
+auth,auth-service,module_sod_rules,19,"Auth -- Module Sod: Rules/policy definitions",pattern,no
+auth,auth-service,object_scopes,3,"Auth -- Object Scopes",name,no
+auth,auth-service,permission_analytics,18,"Auth -- Permission Analytics",name,no
+auth,auth-service,permission_templates,15,"Auth -- Permission: Template catalog",pattern,yes
+auth,auth-service,permissions_legacy,12,"Auth -- Permissions Legacy",name,no
+auth,auth-service,platform_role_tenant_role_map,6,"Auth -- Role record (Platform Role Tenant Role Map)",token,yes
+auth,auth-service,policy_decision_log,11,"Auth -- Policy Decision: Activity/audit log records",pattern,yes
+auth,auth-service,product_user_entitlements,11,"Auth -- User record (Product User Entitlements)",token,yes
+auth,auth-service,rbac_config_audit,8,"Auth -- Rbac Config: Audit-trail entries",pattern,no
+auth,auth-service,role_action_map,8,"Auth -- Role record (Role Action Map)",token,no
+auth,auth-service,role_assignment_audit,10,"Auth -- Role Assignment: Audit-trail entries",pattern,no
+auth,auth-service,role_assignment_history,11,"Auth -- Role Assignment: Historical change records",pattern,no
+auth,auth-service,role_defense_line_mappings,3,"Auth -- Role Defense Line: Cross-entity mapping",pattern,yes
+auth,auth-service,role_function_map,10,"Role to function mappings",registry,yes
+auth,auth-service,role_function_permissions,14,"Auth -- Role Function: Permission grants",pattern,yes
+auth,auth-service,role_function_scope_map,7,"Auth -- Role record (Role Function Scope Map)",token,yes
+auth,auth-service,role_functions,12,"Role function mappings",registry,yes
+auth,auth-service,role_learning_states,7,"Auth -- Role Learning: State-machine state catalog",pattern,no
+auth,auth-service,role_nav_sections,8,"Auth -- Role record (Role Nav Sections)",token,yes
+auth,auth-service,role_permission_inheritance,10,"Auth -- Role record (Role Permission Inheritance)",token,yes
+auth,auth-service,role_permission_map,8,"Auth -- Role record (Role Permission Map)",token,yes
+auth,auth-service,role_permissions_legacy,8,"Auth -- Role record (Role Permissions Legacy)",token,no
+auth,auth-service,role_profile_assignments,12,"Auth -- Role Profile: Assignment mapping (X to Y)",pattern,no
+auth,auth-service,role_profile_mappings,8,"Auth -- Role Profile: Cross-entity mapping",pattern,no
+auth,auth-service,role_sla_defaults,8,"Auth -- Role record (Role Sla Defaults)",token,no
+auth,auth-service,role_team_mapping,8,"Auth -- Role Team: Cross-entity mapping",pattern,yes
+auth,auth-service,role_transition_requests,20,"Auth -- Role record (Role Transition Requests)",token,no
+auth,auth-service,role_usage_audit,15,"Auth -- Role Usage: Audit-trail entries",pattern,no
+auth,auth-service,roles,17,"System roles",registry,yes
+auth,auth-service,route_permission_mappings,12,"Auth -- Route Permission: Cross-entity mapping",pattern,no
+auth,auth-service,sign_off_authority_matrix,10,"Auth -- RACI/permission matrix (Sign Off Authority Matrix)",token,yes
+auth,auth-service,tenant_role_definitions,16,"Auth -- Tenant Role: Definition catalog",pattern,yes
+auth,auth-service,user_availability,11,"Auth -- User record (User Availability)",token,no
+auth,auth-service,user_certifications,12,"Auth -- User record (User Certifications)",token,no
+auth,auth-service,user_competencies,15,"Auth -- User record (User Competencies)",token,no
+auth,auth-service,user_function_overrides,13,"Function permission overrides",registry,no
+auth,auth-service,user_module_permissions,9,"Auth -- User Module: Permission grants",pattern,no
+auth,auth-service,user_notification_preferences,10,"Auth -- User record (User Notification Preferences)",token,no
+auth,auth-service,user_performance,21,"Auth -- User record (User Performance)",token,no
+auth,auth-service,user_responsibilities,11,"Auth -- User record (User Responsibilities)",token,no
+auth,auth-service,user_roles,15,"User role assignments",registry,no
+auth,auth-service,user_workflow_permissions,12,"Auth -- User Workflow: Permission grants",pattern,no
+auth,auth-service,workflow_role_access,7,"Auth -- Role record (Workflow Role Access)",token,yes
+auth,auth-service,workflow_step_roles,9,"Auth -- Workflow Step: Role definitions",pattern,no
+auth,auth-service,workload_snapshots,11,"Auth -- Workload: Point-in-time snapshots",pattern,no
+ai,ai-gateway-service,agent_action_history,13,"Ai -- Agent Action: Historical change records",pattern,no
+ai,ai-gateway-service,agent_activation_rules,14,"Ai -- Agent Activation: Rules/policy definitions",pattern,no
+ai,ai-gateway-service,agent_activity_log,40,"Ai -- Agent Activity: Activity/audit log records",pattern,no
+ai,ai-gateway-service,agent_anomaly_detections,21,"Ai -- AI agent record (Agent Anomaly Detections)",token,no
+ai,ai-gateway-service,agent_approvals_v2,6,"Ai -- AI agent record (Agent Approvals V2)",token,no
+ai,ai-gateway-service,agent_assignment_templates,15,"Ai -- Agent Assignment: Template catalog",pattern,no
+ai,ai-gateway-service,agent_autonomy_policies,10,"Ai -- AI agent record (Agent Autonomy Policies)",token,yes
+ai,ai-gateway-service,agent_circuit_breaker,11,"Ai -- AI agent record (Agent Circuit Breaker)",token,no
+ai,ai-gateway-service,agent_collaboration_metrics,8,"Ai -- Agent Collaboration: Metric data points",pattern,no
+ai,ai-gateway-service,agent_conflicts,19,"Ai -- AI agent record (Agent Conflicts)",token,no
+ai,ai-gateway-service,agent_context_assignments,16,"Ai -- Agent Context: Assignment mapping (X to Y)",pattern,no
+ai,ai-gateway-service,agent_correlations,6,"Ai -- AI agent record (Agent Correlations)",token,no
+ai,ai-gateway-service,agent_cycle_memory,8,"Ai -- AI agent record (Agent Cycle Memory)",token,no
+ai,ai-gateway-service,agent_cycle_summaries,9,"Ai -- Agent Cycle: Aggregated summary records",pattern,yes
+ai,ai-gateway-service,agent_dead_letter_queue,24,"Ai -- AI agent record (Agent Dead Letter Queue)",token,no
+ai,ai-gateway-service,agent_delegations,21,"Ai -- AI agent record (Agent Delegations)",token,no
+ai,ai-gateway-service,agent_dependency_config,14,"Ai -- Agent Dependency: Configuration values",pattern,no
+ai,ai-gateway-service,agent_discoveries,9,"Ai -- AI agent record (Agent Discoveries)",token,no
+ai,ai-gateway-service,agent_eval_scores,11,"Ai -- AI agent record (Agent Eval Scores)",token,no
+ai,ai-gateway-service,agent_events,8,"Ai -- Agent: Domain event records",pattern,yes
+ai,ai-gateway-service,agent_failure_patterns,21,"Ai -- AI agent record (Agent Failure Patterns)",token,no
+ai,ai-gateway-service,agent_feedback,16,"Ai -- AI agent record (Agent Feedback)",token,no
+ai,ai-gateway-service,agent_governance_audit,7,"Ai -- Agent Governance: Audit-trail entries",pattern,no
+ai,ai-gateway-service,agent_learning_events,11,"Ai -- Agent Learning: Domain event records",pattern,no
+ai,ai-gateway-service,agent_lesson_applications,8,"Ai -- AI agent record (Agent Lesson Applications)",token,no
+ai,ai-gateway-service,agent_lessons_learned,15,"Ai -- AI agent record (Agent Lessons Learned)",token,no
+ai,ai-gateway-service,agent_memories,19,"Ai -- AI agent record (Agent Memories)",token,no
+ai,ai-gateway-service,agent_mode_overrides,11,"Ai -- AI agent record (Agent Mode Overrides)",token,no
+ai,ai-gateway-service,agent_model_config,10,"Ai -- Agent Model: Configuration values",pattern,yes
+ai,ai-gateway-service,agent_model_performance_cache,16,"Ai -- Agent Model Performance: Cached values",pattern,no
+ai,ai-gateway-service,agent_patterns,11,"Ai -- AI agent record (Agent Patterns)",token,no
+ai,ai-gateway-service,agent_pending_actions,17,"Ai -- Agent Pending: Action/operation catalog",pattern,no
+ai,ai-gateway-service,agent_process_governance_rules,20,"Ai -- Agent Process Governance: Rules/policy definitions",pattern,no
+ai,ai-gateway-service,agent_profiles,21,"Ai -- AI agent record (Agent Profiles)",token,no
+ai,ai-gateway-service,agent_prompt_versions,12,"Ai -- Agent Prompt: Versioned record history",pattern,no
+ai,ai-gateway-service,agent_proposals,15,"Ai -- AI agent record (Agent Proposals)",token,no
+ai,ai-gateway-service,agent_reasoning_chain,36,"Ai -- AI agent record (Agent Reasoning Chain)",token,no
+ai,ai-gateway-service,agent_reasoning_steps,11,"Ai -- Agent Reasoning: Execution step records",pattern,yes
+ai,ai-gateway-service,agent_reasoning_traces,9,"Ai -- AI agent record (Agent Reasoning Traces)",token,yes
+ai,ai-gateway-service,agent_runs,21,"Ai -- Agent: Execution run records",pattern,no
+ai,ai-gateway-service,agent_runtime_config,14,"Ai -- Agent Runtime: Configuration values",pattern,no
+ai,ai-gateway-service,agent_sla_activation_rules,15,"Ai -- Agent Sla Activation: Rules/policy definitions",pattern,no
+ai,ai-gateway-service,agent_slo_definitions,14,"Ai -- Agent Slo: Definition catalog",pattern,no
+ai,ai-gateway-service,agent_slo_measurements,16,"Ai -- AI agent record (Agent Slo Measurements)",token,no
+ai,ai-gateway-service,agent_status_log,5,"Ai -- Agent Status: Activity/audit log records",pattern,no
+ai,ai-gateway-service,agent_steps,16,"Ai -- Agent: Execution step records",pattern,no
+ai,ai-gateway-service,agent_suggestions,10,"Ai -- AI agent record (Agent Suggestions)",token,no
+ai,ai-gateway-service,agent_tasks,18,"Ai -- Agent: Task records",pattern,no
+ai,ai-gateway-service,agent_tool_permissions,10,"Ai -- Agent Tool: Permission grants",pattern,no
+ai,ai-gateway-service,agent_trigger_chains,9,"Ai -- AI agent record (Agent Trigger Chains)",token,yes
+ai,ai-gateway-service,agent_user_feedback,8,"Ai -- AI agent record (Agent User Feedback)",token,no
+ai,ai-gateway-service,agrc_event_log,13,"Ai -- Agrc Event: Activity/audit log records",pattern,yes
+ai,ai-gateway-service,agrc_event_log_archive,8,"Ai -- Agrc Event Log Archive",name,no
+ai,ai-gateway-service,agrc_metrics_snapshots,9,"Ai -- Agrc Metrics: Point-in-time snapshots",pattern,no
+ai,ai-gateway-service,agrc_os_cycle_log,9,"Ai -- Agrc Os Cycle: Activity/audit log records",pattern,no
+ai,ai-gateway-service,ai_action_decision_log,12,"Ai -- Ai Action Decision: Activity/audit log records",pattern,no
+ai,ai-gateway-service,ai_action_policies,10,"Ai -- Ai Action Policies",name,yes
+ai,ai-gateway-service,ai_action_queue,14,"Ai -- Work queue records (Ai Action Queue)",token,no
+ai,ai-gateway-service,ai_action_results,9,"Ai -- Ai Action Results",name,no
+ai,ai-gateway-service,ai_agent_authority_scopes,15,"Ai -- AI agent record (Ai Agent Authority Scopes)",token,no
+ai,ai-gateway-service,ai_agent_bias_detection,21,"Ai -- AI agent record (Ai Agent Bias Detection)",token,no
+ai,ai-gateway-service,ai_agent_chain_of_custody,10,"Ai -- AI agent record (Ai Agent Chain Of Custody)",token,no
+ai,ai-gateway-service,ai_agent_configs,24,"Ai -- AI agent record (Ai Agent Configs)",token,no
+ai,ai-gateway-service,ai_agent_performance_metrics,13,"Ai -- Ai Agent Performance: Metric data points",pattern,no
+ai,ai-gateway-service,ai_agent_registry,21,"Ai -- AI agent record (Ai Agent Registry)",token,no
+ai,ai-gateway-service,ai_agent_session_governance,19,"Ai -- AI agent record (Ai Agent Session Governance)",token,no
+ai,ai-gateway-service,ai_agent_status_log,9,"Ai -- Ai Agent Status: Activity/audit log records",pattern,no
+ai,ai-gateway-service,ai_agent_tool_bindings,10,"Ai -- AI agent record (Ai Agent Tool Bindings)",token,no
+ai,ai-gateway-service,ai_agent_trust_scores,15,"Ai -- AI agent record (Ai Agent Trust Scores)",token,no
+ai,ai-gateway-service,ai_alert_history,16,"Ai -- Ai Alert: Historical change records",pattern,no
+ai,ai-gateway-service,ai_alert_rules,12,"Ai -- Ai Alert: Rules/policy definitions",pattern,no
+ai,ai-gateway-service,ai_alerts,18,"Ai -- Ai: Alert records",pattern,yes
+ai,ai-gateway-service,ai_analysis_cache,11,"Ai -- Ai Analysis: Cached values",pattern,no
+ai,ai-gateway-service,ai_asset_inventory,20,"Ai -- Asset record (Ai Asset Inventory)",token,no
+ai,ai-gateway-service,ai_autonomy_state,6,"Ai -- Ai Autonomy: State-machine state",pattern,no
+ai,ai-gateway-service,ai_capability_registry,15,"Ai -- Ai Capability Registry",name,yes
+ai,ai-gateway-service,ai_compliance_dashboard,18,"Ai -- Compliance record (Ai Compliance Dashboard)",token,no
+ai,ai-gateway-service,ai_compliance_framework_mapping,21,"Ai -- Ai Compliance Framework: Cross-entity mapping",pattern,no
+ai,ai-gateway-service,ai_conformity_assessments,26,"Ai -- Ai Conformity Assessments",name,no
+ai,ai-gateway-service,ai_corrective_actions,13,"Ai -- Ai Corrective: Action/operation catalog",pattern,no
+ai,ai-gateway-service,ai_counterfactual_analysis,12,"Ai -- Ai Counterfactual Analysis",name,no
+ai,ai-gateway-service,ai_data_lineage,22,"Ai -- Ai Data Lineage",name,no
+ai,ai-gateway-service,ai_data_minimization_config,11,"Ai -- Ai Data Minimization: Configuration values",pattern,no
+ai,ai-gateway-service,ai_dataset_registry,14,"Ai -- Ai Dataset Registry",name,no
+ai,ai-gateway-service,ai_declarations_of_conformity,12,"Ai -- Ai Declarations Of Conformity",name,no
+ai,ai-gateway-service,ai_dpia_assessments,32,"Ai -- Ai Dpia Assessments",name,no
+ai,ai-gateway-service,ai_dpia_review_history,13,"Ai -- Ai Dpia Review: Historical change records",pattern,no
+ai,ai-gateway-service,ai_dpia_risk_factors,10,"Ai -- Risk record (Ai Dpia Risk Factors)",token,no
+ai,ai-gateway-service,ai_drift_thresholds,10,"Ai -- Ai Drift: Threshold definitions",pattern,no
+ai,ai-gateway-service,ai_ethics_reviews,13,"Ai -- Ai Ethics Reviews",name,no
+ai,ai-gateway-service,ai_ethics_votes,7,"Ai -- Ai Ethics Votes",name,no
+ai,ai-gateway-service,ai_eu_classifications,9,"Ai -- Ai Eu Classifications",name,no
+ai,ai-gateway-service,ai_explainability_records,21,"Ai -- Ai Explainability Records",name,no
+ai,ai-gateway-service,ai_explainability_requirements,14,"Ai -- Ai Explainability Requirements",name,no
+ai,ai-gateway-service,ai_fairness_metrics,11,"Ai -- Ai Fairness: Metric data points",pattern,no
+ai,ai-gateway-service,ai_fairness_scans,9,"Ai -- Ai Fairness Scans",name,no
+ai,ai-gateway-service,ai_framework_control_catalog,13,"Ai -- Framework definition (Ai Framework Control Catalog)",token,no
+ai,ai-gateway-service,ai_framework_risk_classifications,15,"Ai -- Framework definition (Ai Framework Risk Classifications)",token,no
+ai,ai-gateway-service,ai_hitl_controls,15,"Ai -- Control record (Ai Hitl Controls)",token,no
+ai,ai-gateway-service,ai_human_overrides,13,"Ai -- Ai Human Overrides",name,no
+ai,ai-gateway-service,ai_impact_assessments,19,"Ai -- Ai Impact Assessments",name,no
+ai,ai-gateway-service,ai_incident_classifications,12,"Ai -- Incident record (Ai Incident Classifications)",token,no
+ai,ai-gateway-service,ai_inline_bias_checks,10,"Ai -- Ai Inline Bias Checks",name,no
+ai,ai-gateway-service,ai_kill_switches,15,"Ai -- Ai Kill Switches",name,no
+ai,ai-gateway-service,ai_model_cards,5,"Ai -- Ai Model Cards",name,no
+ai,ai-gateway-service,ai_model_experiments,22,"Ai -- Ai Model Experiments",name,no
+ai,ai-gateway-service,ai_model_lifecycle,17,"Ai -- Ai Model Lifecycle",name,no
+ai,ai-gateway-service,ai_model_metrics,8,"Ai -- Ai Model: Metric data points",pattern,no
+ai,ai-gateway-service,ai_model_modifications,13,"Ai -- Ai Model Modifications",name,no
+ai,ai-gateway-service,ai_model_provenance,36,"Ai -- Ai Model Provenance",name,no
+ai,ai-gateway-service,ai_model_registry,29,"Ai -- Ai Model Registry",name,no
+ai,ai-gateway-service,ai_model_risk_assessments,13,"Ai -- Risk record (Ai Model Risk Assessments)",token,no
+ai,ai-gateway-service,ai_model_risk_scores,13,"Ai -- Risk record (Ai Model Risk Scores)",token,no
+ai,ai-gateway-service,ai_monitoring_plans,12,"Ai -- Ai Monitoring Plans",name,no
+ai,ai-gateway-service,ai_observations,16,"Ai -- Ai Observations",name,no
+ai,ai-gateway-service,ai_performance_metrics,13,"Ai -- Ai Performance: Metric data points",pattern,no
+ai,ai-gateway-service,ai_policy_rule,13,"Ai -- Ai Policy: Rule/policy definition",pattern,no
+ai,ai-gateway-service,ai_privacy_impact_register,21,"Ai -- Ai Privacy Impact Register",name,no
+ai,ai-gateway-service,ai_privacy_incidents,21,"Ai -- Incident record (Ai Privacy Incidents)",token,no
+ai,ai-gateway-service,ai_profiling_register,15,"Ai -- Ai Profiling Register",name,no
+ai,ai-gateway-service,ai_prompt_registry,23,"Ai -- Prompt template/log (Ai Prompt Registry)",token,no
+ai,ai-gateway-service,ai_provider_registry,15,"Ai -- Ai Provider Registry",name,no
+ai,ai-gateway-service,ai_red_team_schedules,11,"Ai -- Team record (Ai Red Team Schedules)",token,no
+ai,ai-gateway-service,ai_regulatory_changes,13,"Ai -- Ai Regulatory Changes",name,no
+ai,ai-gateway-service,ai_review_queue,12,"Ai -- Work queue records (Ai Review Queue)",token,no
+ai,ai-gateway-service,ai_risk_models,18,"Ai -- Risk record (Ai Risk Models)",token,no
+ai,ai-gateway-service,ai_serious_incidents,19,"Ai -- Incident record (Ai Serious Incidents)",token,no
+ai,ai-gateway-service,ai_stakeholder_registry,9,"Ai -- Ai Stakeholder Registry",name,no
+ai,ai-gateway-service,ai_summaries,12,"Ai -- Ai: Aggregated summary records",pattern,no
+ai,ai-gateway-service,ai_supplier_agreements,13,"Ai -- Ai Supplier Agreements",name,no
+ai,ai-gateway-service,ai_system_logs,7,"Ai -- Ai System Logs",name,no
+ai,ai-gateway-service,ai_system_registry,49,"Ai -- Ai System Registry",name,no
+ai,ai-gateway-service,ai_technical_documentation,9,"Ai -- Ai Technical Documentation",name,no
+ai,ai-gateway-service,ai_training_data_registry,20,"Ai -- Ai Training Data Registry",name,no
+ai,ai-gateway-service,ai_transparency_metrics,18,"Ai -- Ai Transparency: Metric data points",pattern,no
+ai,ai-gateway-service,ai_trigger_config,7,"Ai -- Ai Trigger: Configuration values",pattern,no
+ai,ai-gateway-service,ai_user_complaints,12,"Ai -- User record (Ai User Complaints)",token,no
+ai,ai-gateway-service,ai_vendor_assessments,7,"Ai -- Vendor/third-party record (Ai Vendor Assessments)",token,no
+ai,ai-gateway-service,authz_decision_log,13,"Ai -- Authz Decision: Activity/audit log records",pattern,no
+ai,ai-gateway-service,automated_decision_register,19,"Ai -- Decision record (Automated Decision Register)",token,no
+ai,ai-gateway-service,automated_insights,22,"Ai -- Automated Insights",name,yes
+ai,ai-gateway-service,autonomy_progression_log,11,"Ai -- Autonomy Progression: Activity/audit log records",pattern,no
+ai,ai-gateway-service,blueprint_generation_runs,8,"Ai -- Blueprint Generation: Execution run records",pattern,no
+ai,ai-gateway-service,cockpit_signal,8,"Ai -- Cockpit Signal",name,no
+ai,ai-gateway-service,contextual_suggestions,14,"Contextual AI suggestions",registry,no
+ai,ai-gateway-service,copilot_proposed_actions,30,"Ai -- Copilot Proposed: Action/operation catalog",pattern,no
+ai,ai-gateway-service,copilot_sessions,5,"Ai -- Copilot session/turn record (Copilot Sessions)",token,no
+ai,ai-gateway-service,decision_record,17,"Ai -- Decision record (Decision Record)",token,no
+ai,ai-gateway-service,dogan_actions_log,7,"Ai -- Dogan Actions: Activity/audit log records",pattern,no
+ai,ai-gateway-service,dogan_learning_metrics,6,"Ai -- Dogan Learning: Metric data points",pattern,no
+ai,ai-gateway-service,event_trigger_binding,12,"Ai -- Event Trigger Binding",name,no
+ai,ai-gateway-service,explainability_links,9,"Ai -- Explainability: Cross-table link records",pattern,no
+ai,ai-gateway-service,findings,27,"Ai -- Finding record (Findings)",token,yes
+ai,ai-gateway-service,frameworks,22,"Ai -- Framework definition (Frameworks)",token,no
+ai,ai-gateway-service,hitl_states,11,"Ai -- Hitl: State-machine state catalog",pattern,no
+ai,ai-gateway-service,human_oversight_config,15,"Ai -- Human Oversight: Configuration values",pattern,no
+ai,ai-gateway-service,incidents,33,"Ai -- Incident record (Incidents)",token,yes
+ai,ai-gateway-service,llm_traces,20,"Ai -- Llm Traces",name,no
+ai,ai-gateway-service,llm_usage_log,16,"Ai -- Llm Usage: Activity/audit log records",pattern,no
+ai,ai-gateway-service,memory_access_log,10,"Ai -- Memory Access: Activity/audit log records",pattern,yes
+ai,ai-gateway-service,memory_summaries,9,"Ai -- Memory: Aggregated summary records",pattern,no
+ai,ai-gateway-service,module_actions,15,"Ai -- Module: Action/operation catalog",pattern,no
+ai,ai-gateway-service,module_activation_rules,12,"Ai -- Module Activation: Rules/policy definitions",pattern,no
+ai,ai-gateway-service,module_ownership_rules,15,"Ai -- Module Ownership: Rules/policy definitions",pattern,no
+ai,ai-gateway-service,pending_assignment_queue,9,"Ai -- Work queue records (Pending Assignment Queue)",token,no
+ai,ai-gateway-service,personal_agent_assignments,33,"Ai -- Personal Agent: Assignment mapping (X to Y)",pattern,no
+ai,ai-gateway-service,projects,38,"Ai -- Projects",name,no
+ai,ai-gateway-service,prompt_drift_baselines,7,"Ai -- Prompt template/log (Prompt Drift Baselines)",token,no
+ai,ai-gateway-service,prompt_injection_log,9,"Ai -- Prompt Injection: Activity/audit log records",pattern,no
+ai,ai-gateway-service,reasoning_chain_summary,19,"Ai -- Reasoning Chain: Aggregated summary view",pattern,no
+ai,ai-gateway-service,shadow_agent_config,20,"Ai -- Shadow Agent: Configuration values",pattern,no
+ai,ai-gateway-service,task_route_rule,12,"Ai -- Task Route: Rule/policy definition",pattern,no
+ai,ai-gateway-service,team_workload,20,"Ai -- Team record (Team Workload)",token,no
+ai,ai-gateway-service,tenant_llm_budgets,11,"Ai -- Tenant Llm Budgets",name,no
+ai,ai-gateway-service,unified_squad_members,16,"Ai -- Unified Squad: Member records",pattern,no
+workflow,workflow-service,agrc_runbooks,13,"AGRC runbooks",registry,no
+workflow,workflow-service,ai_step_executions,15,"Workflow -- Ai Step Executions",name,no
+workflow,workflow-service,ai_step_feedback,8,"Workflow -- Ai Step Feedback",name,no
+workflow,workflow-service,approval_history,20,"Workflow -- Approval: Historical change records",pattern,no
+workflow,workflow-service,approval_packs,13,"Workflow -- Approval record (Approval Packs)",token,no
+workflow,workflow-service,approval_requests,22,"Workflow -- Approval record (Approval Requests)",token,no
+workflow,workflow-service,approvals,10,"Workflow -- Approval record (Approvals)",token,no
+workflow,workflow-service,approver_resolution_cache,8,"Workflow -- Approver Resolution: Cached values",pattern,no
+workflow,workflow-service,auto_approval_config,9,"Workflow -- Auto Approval: Configuration values",pattern,yes
+workflow,workflow-service,automation_rules_legacy,14,"Workflow -- Automation Rules Legacy",name,no
+workflow,workflow-service,autonomous_workflow_config,8,"Workflow -- Autonomous Workflow: Configuration values",pattern,no
+workflow,workflow-service,cadence_tasks,11,"Workflow -- Cadence: Task records",pattern,no
+workflow,workflow-service,cep_event_windows,9,"Workflow -- Cep Event Windows",name,no
+workflow,workflow-service,cep_pattern_definitions,17,"Workflow -- Cep Pattern: Definition catalog",pattern,yes
+workflow,workflow-service,default_automation_templates,9,"Workflow -- Default Automation: Template catalog",pattern,yes
+workflow,workflow-service,event_consumer_cursors,5,"Workflow -- Event Consumer Cursors",name,no
+workflow,workflow-service,event_entity_sequences,4,"Workflow -- Event Entity Sequences",name,no
+workflow,workflow-service,event_idempotency_log,3,"Workflow -- Event Idempotency: Activity/audit log records",pattern,yes
+workflow,workflow-service,event_type_registry,12,"Workflow -- Event Type Registry",name,no
+workflow,workflow-service,inbound_handler_registry,10,"Workflow -- Inbound Handler Registry",name,yes
+workflow,workflow-service,process_audit_trail,12,"Workflow -- Process: Audit-trail entries",pattern,no
+workflow,workflow-service,process_metrics,31,"Workflow -- Process: Metric data points",pattern,no
+workflow,workflow-service,process_tasks,34,"Workflow -- Process: Task records",pattern,no
+workflow,workflow-service,process_templates,9,"Workflow -- Process: Template catalog",pattern,no
+workflow,workflow-service,processes,10,"Workflow -- Processes",name,no
+workflow,workflow-service,sla_auto_setup_log,25,"Workflow -- Sla Auto Setup: Activity/audit log records",pattern,no
+workflow,workflow-service,sla_breaches,14,"Workflow -- Sla Breaches",name,no
+workflow,workflow-service,sla_definitions,16,"Workflow -- Sla: Definition catalog",pattern,no
+workflow,workflow-service,sla_predictions,16,"Workflow -- Sla Predictions",name,no
+workflow,workflow-service,sla_priority_config,6,"Workflow -- Sla Priority: Configuration values",pattern,yes
+workflow,workflow-service,task_auto_resolution_rules,11,"Workflow -- Task Auto Resolution: Rules/policy definitions",pattern,yes
+workflow,workflow-service,task_routing_rules,19,"Workflow -- Task Routing: Rules/policy definitions",pattern,yes
+workflow,workflow-service,wf_approval_decisions,13,"Workflow -- Decision record (Wf Approval Decisions)",token,no
+workflow,workflow-service,workflow_acl,7,"Workflow -- Workflow Acl",name,no
+workflow,workflow-service,workflow_agent_tool_policy,9,"Workflow -- AI agent record (Workflow Agent Tool Policy)",token,no
+workflow,workflow-service,workflow_ai_agents,10,"Workflow -- AI agent record (Workflow Ai Agents)",token,yes
+workflow,workflow-service,workflow_ai_budget,13,"Workflow -- Workflow Ai Budget",name,no
+workflow,workflow-service,workflow_ai_notes,17,"Workflow -- Workflow Ai Notes",name,no
+workflow,workflow-service,workflow_ai_policy,11,"Workflow -- Policy record (Workflow Ai Policy)",token,no
+workflow,workflow-service,workflow_attachments,13,"Workflow -- Workflow: File/blob attachments",pattern,no
+workflow,workflow-service,workflow_auto_initiation,22,"Workflow -- Workflow Auto Initiation",name,no
+workflow,workflow-service,workflow_categories,11,"Workflow -- Workflow: Category taxonomy",pattern,yes
+workflow,workflow-service,workflow_chain_definitions,8,"Workflow -- Workflow Chain: Definition catalog",pattern,yes
+workflow,workflow-service,workflow_chain_instances,11,"Workflow -- Workflow Chain Instances",name,no
+workflow,workflow-service,workflow_chain_step_log,11,"Workflow -- Workflow Chain Step: Activity/audit log records",pattern,no
+workflow,workflow-service,workflow_comments,16,"Workflow -- Workflow Comments",name,no
+workflow,workflow-service,workflow_conditions,10,"Workflow -- Workflow Conditions",name,no
+workflow,workflow-service,workflow_decision_log,15,"Workflow -- Workflow Decision: Activity/audit log records",pattern,no
+workflow,workflow-service,workflow_draft_actions,18,"Workflow -- Workflow Draft: Action/operation catalog",pattern,no
+workflow,workflow-service,workflow_escalation_policies,13,"Workflow -- Workflow Escalation Policies",name,no
+workflow,workflow-service,workflow_events,12,"Workflow -- Workflow: Domain event records",pattern,no
+workflow,workflow-service,workflow_executions,17,"Workflow -- Workflow Executions",name,no
+workflow,workflow-service,workflow_executions_archive,14,"Workflow -- Workflow Executions Archive",name,no
+workflow,workflow-service,workflow_forbidden_boundaries,9,"Workflow -- Workflow Forbidden Boundaries",name,yes
+workflow,workflow-service,workflow_graph_versions,9,"Workflow -- Workflow Graph: Versioned record history",pattern,no
+workflow,workflow-service,workflow_instance_steps,15,"Workflow -- Workflow Instance: Execution step records",pattern,no
+workflow,workflow-service,workflow_instances,23,"Workflow -- Workflow Instances",name,no
+workflow,workflow-service,workflow_intervention_log,10,"Workflow -- Workflow Intervention: Activity/audit log records",pattern,no
+workflow,workflow-service,workflow_kill_switch,10,"Workflow -- Workflow Kill Switch",name,no
+workflow,workflow-service,workflow_lookup_options,13,"Workflow -- Workflow Lookup Options",name,yes
+workflow,workflow-service,workflow_mandatory_review,8,"Workflow -- Workflow Mandatory Review",name,yes
+workflow,workflow-service,workflow_mandatory_review_points,9,"Workflow -- Workflow Mandatory Review Points",name,yes
+workflow,workflow-service,workflow_profile_catalog,11,"Workflow -- Workflow Profile Catalog",name,yes
+workflow,workflow-service,workflow_profile_states,12,"Workflow -- Workflow Profile: State-machine state catalog",pattern,yes
+workflow,workflow-service,workflow_raci_config,6,"Workflow -- Workflow Raci: Configuration values",pattern,yes
+workflow,workflow-service,workflow_recommendation_catalog,11,"Workflow -- Workflow Recommendation Catalog",name,yes
+workflow,workflow-service,workflow_retention_policies,8,"Workflow -- Workflow Retention Policies",name,no
+workflow,workflow-service,workflow_rollback_log,13,"Workflow -- Workflow Rollback: Activity/audit log records",pattern,no
+workflow,workflow-service,workflow_rules,14,"Workflow -- Workflow: Rules/policy definitions",pattern,no
+workflow,workflow-service,workflow_schedules,13,"Workflow -- Workflow Schedules",name,no
+workflow,workflow-service,workflow_state_history,15,"Workflow -- Workflow State: Historical change records",pattern,no
+workflow,workflow-service,workflow_step_autonomy,10,"Workflow -- Workflow Step Autonomy",name,yes
+workflow,workflow-service,workflow_steps,32,"Workflow -- Workflow: Execution step records",pattern,no
+workflow,workflow-service,workflow_subscribers,8,"Workflow -- Workflow Subscribers",name,no
+workflow,workflow-service,workflow_task_assignments,13,"Workflow -- Workflow Task: Assignment mapping (X to Y)",pattern,no
+workflow,workflow-service,workflow_tasks,16,"Workflow -- Workflow: Task records",pattern,no
+workflow,workflow-service,workflow_templates,13,"Workflow -- Workflow: Template catalog",pattern,no
+workflow,workflow-service,workflow_timeline_entries,15,"Workflow timeline tracking",registry,no
+workflow,workflow-service,workflow_transitions,13,"Workflow -- Workflow Transitions",name,no
+workflow,workflow-service,workflow_triggers,23,"Workflow -- Workflow Triggers",name,yes
+workflow,workflow-service,workflow_versions,14,"Workflow -- Workflow: Versioned record history",pattern,no
+workflow,workflow-service,workflow_webhooks,13,"Workflow -- Workflow Webhooks",name,no
+workflow,workflow-service,workflows,17,"Workflow -- Workflows",name,yes
+ai-governance,ai-gateway-service,ai_governance_break_glass,12,"Ai Governance -- Ai Governance Break Glass",name,no
+ai-governance,ai-gateway-service,ai_governance_promotions,10,"Ai Governance -- Ai Governance Promotions",name,no
+ai-governance,ai-gateway-service,cryptographic_inventory,18,"Ai Governance -- Cryptographic Inventory",name,no
+ai-governance,ai-gateway-service,pqc_test_results,10,"Ai Governance -- Pqc Test Results",name,no
+ai-governance,ai-gateway-service,quantum_migration_plans,19,"Ai Governance -- Quantum Migration Plans",name,no
+ai-governance,ai-gateway-service,red_team_runs,9,"Ai Governance -- Red Team: Execution run records",pattern,no
+ai-governance,ai-gateway-service,simulations,7,"Ai Governance -- Simulations",name,no
+ai-governance,ai-gateway-service,tenant_ai_allowlist,14,"Ai Governance -- Tenant Ai Allowlist",name,no
+notification,notification-service,alert_instances,19,"Notification -- Alert Instances",name,no
+notification,notification-service,alert_rules,24,"Notification -- Alert: Rules/policy definitions",pattern,no
+notification,notification-service,email_inbox,25,"Notification -- Inbox queue (Email Inbox)",token,no
+notification,notification-service,email_templates,17,"Notification -- Email: Template catalog",pattern,no
+notification,notification-service,notification_preferences,21,"Notification -- Notification Preferences",name,no
+notification,notification-service,notification_preferences_legacy,3,"Notification -- Notification Preferences Legacy",name,no
+notification,notification-service,notification_queue,34,"Notification -- Work queue records (Notification Queue)",token,yes
+notification,notification-service,notifications_log,12,"Notification -- Notifications: Activity/audit log records",pattern,no
+asset,risk-incident-service,applications,27,"Asset -- Applications",name,no
+asset,risk-incident-service,asset_classification_scheme,11,"Asset -- Asset record (Asset Classification Scheme)",token,no
+asset,risk-incident-service,asset_classifications,14,"Asset -- Asset record (Asset Classifications)",token,yes
+asset,risk-incident-service,asset_dependencies,14,"Asset -- Asset: Dependency mapping",pattern,no
+asset,risk-incident-service,asset_evidence_links,7,"Asset -- Asset Evidence: Cross-table link records",pattern,no
+asset,risk-incident-service,asset_lifecycle_events,10,"Asset -- Asset Lifecycle: Domain event records",pattern,no
+asset,risk-incident-service,asset_owners,10,"Asset -- Asset: Ownership assignment",pattern,no
+asset,risk-incident-service,asset_ownership_matrix,9,"Asset -- RACI/permission matrix (Asset Ownership Matrix)",token,no
+asset,risk-incident-service,asset_vendor_links,8,"Asset -- Asset Vendor: Cross-table link records",pattern,no
+asset,risk-incident-service,assets,48,"Asset -- Asset record (Assets)",token,yes
+asset,risk-incident-service,business_services,23,"Asset -- Business Services",name,no
+asset,risk-incident-service,control_asset_links,8,"Asset -- Control Asset: Cross-table link records",pattern,no
+governance,governance-policy-service,approved_pqc_algorithms,13,"Governance -- Approved Pqc Algorithms",name,yes
+governance,governance-policy-service,authority_matrix,18,"Governance -- RACI/permission matrix (Authority Matrix)",token,no
+governance,governance-policy-service,board_attention_items,13,"Governance -- Board Attention Items",name,no
+governance,governance-policy-service,board_pack_items,9,"Governance -- Board Pack Items",name,no
+governance,governance-policy-service,board_packs,13,"Governance -- Board Packs",name,no
+governance,governance-policy-service,change_management_records,20,"Governance -- Change Management Records",name,no
+governance,governance-policy-service,committee_visibility_thresholds,9,"Governance -- Committee Visibility: Threshold definitions",pattern,no
+governance,governance-policy-service,control_exceptions,17,"Governance -- Control record (Control Exceptions)",token,no
+governance,governance-policy-service,escalation_thresholds,4,"Governance -- Escalation: Threshold definitions",pattern,no
+governance,governance-policy-service,ethics_actions,13,"Governance -- Ethics: Action/operation catalog",pattern,no
+governance,governance-policy-service,ethics_reports,17,"Governance -- Ethics Reports",name,no
+governance,governance-policy-service,evidence_actions,17,"Governance -- Evidence: Action/operation catalog",pattern,no
+governance,governance-policy-service,evidence_owners,10,"Governance -- Evidence: Ownership assignment",pattern,no
+governance,governance-policy-service,evidence_sector_mapping,7,"Governance -- Evidence Sector: Cross-entity mapping",pattern,yes
+governance,governance-policy-service,governance_ack_campaigns,7,"Governance -- Campaign record (Governance Ack Campaigns)",token,no
+governance,governance-policy-service,governance_action_items,18,"Governance -- Governance Action Items",name,no
+governance,governance-policy-service,governance_action_updates,10,"Governance -- Governance Action Updates",name,no
+governance,governance-policy-service,governance_agenda_items,15,"Governance -- Governance Agenda Items",name,no
+governance,governance-policy-service,governance_authority_levels,8,"Governance -- Governance Authority Levels",name,no
+governance,governance-policy-service,governance_auto_fire_log,9,"Governance -- Governance Auto Fire: Activity/audit log records",pattern,no
+governance,governance-policy-service,governance_bodies,21,"Governance -- Governance Bodies",name,no
+governance,governance-policy-service,governance_charters,22,"Governance -- Governance Charters",name,no
+governance,governance-policy-service,governance_committee_members,14,"Governance -- Governance Committee: Member records",pattern,no
+governance,governance-policy-service,governance_compensating_controls,10,"Governance -- Control record (Governance Compensating Controls)",token,no
+governance,governance-policy-service,governance_constitution,7,"Governance -- Governance Constitution",name,no
+governance,governance-policy-service,governance_decision_votes,11,"Governance -- Decision record (Governance Decision Votes)",token,no
+governance,governance-policy-service,governance_decisions,14,"Governance -- Decision record (Governance Decisions)",token,no
+governance,governance-policy-service,governance_delegations,21,"Governance -- Governance Delegations",name,no
+governance,governance-policy-service,governance_domains,14,"Governance -- Governance Domains",name,no
+governance,governance-policy-service,governance_enforcement_log,13,"Governance -- Governance Enforcement: Activity/audit log records",pattern,no
+governance,governance-policy-service,governance_escalation_events,11,"Governance -- Governance Escalation: Domain event records",pattern,no
+governance,governance-policy-service,governance_executive_summaries,20,"Governance -- Governance Executive: Aggregated summary records",pattern,no
+governance,governance-policy-service,governance_health_scores,16,"Governance -- Governance Health Scores",name,no
+governance,governance-policy-service,governance_health_thresholds,6,"Governance -- Governance Health: Threshold definitions",pattern,no
+governance,governance-policy-service,governance_interpreted_issues,16,"Governance -- Governance Interpreted Issues",name,yes
+governance,governance-policy-service,governance_mandate_sources,6,"Governance -- Governance Mandate Sources",name,no
+governance,governance-policy-service,governance_mandates,17,"Governance -- Governance Mandates",name,no
+governance,governance-policy-service,governance_meeting_attendees,11,"Governance -- Governance Meeting Attendees",name,no
+governance,governance-policy-service,governance_meetings,14,"Governance -- Governance Meetings",name,no
+governance,governance-policy-service,governance_objectives,16,"Governance -- Governance Objectives",name,no
+governance,governance-policy-service,governance_obligation_control_links,5,"Governance -- Governance Obligation Control: Cross-table link records",pattern,no
+governance,governance-policy-service,governance_obligation_due_dates,6,"Governance -- Governance Obligation Due Dates",name,no
+governance,governance-policy-service,governance_obligation_evidence_links,5,"Governance -- Governance Obligation Evidence: Cross-table link records",pattern,no
+governance,governance-policy-service,governance_obligation_exemptions,7,"Governance -- Governance Obligation Exemptions",name,no
+governance,governance-policy-service,governance_obligations,15,"Governance -- Governance Obligations",name,no
+governance,governance-policy-service,governance_policy_acknowledgements,11,"Governance -- Governance Policy: Acknowledgement records",pattern,no
+governance,governance-policy-service,governance_policy_approvals,12,"Governance -- Approval record (Governance Policy Approvals)",token,no
+governance,governance-policy-service,governance_policy_reviews,13,"Governance -- Policy record (Governance Policy Reviews)",token,no
+governance,governance-policy-service,governance_policy_risk_links,9,"Governance -- Governance Policy Risk: Cross-table link records",pattern,no
+governance,governance-policy-service,governance_policy_versions,10,"Governance -- Governance Policy: Versioned record history",pattern,no
+governance,governance-policy-service,governance_procedure_versions,10,"Governance -- Governance Procedure: Versioned record history",pattern,no
+governance,governance-policy-service,governance_procedures,22,"Governance -- Governance Procedures",name,no
+governance,governance-policy-service,governance_raci_assignments,6,"Governance -- Governance Raci: Assignment mapping (X to Y)",pattern,no
+governance,governance-policy-service,governance_raci_templates,10,"Governance -- Governance Raci: Template catalog",pattern,no
+governance,governance-policy-service,governance_recommendations,14,"Governance -- Governance Recommendations",name,yes
+governance,governance-policy-service,governance_registers,13,"Governance -- Governance Registers",name,no
+governance,governance-policy-service,governance_reporting_lines,13,"Governance -- Governance Reporting Lines",name,no
+governance,governance-policy-service,governance_responsibilities,10,"Governance -- Governance Responsibilities",name,no
+governance,governance-policy-service,governance_responsibility_assignments,7,"Governance -- Governance Responsibility: Assignment mapping (X to Y)",pattern,no
+governance,governance-policy-service,governance_risk_appetite,5,"Governance -- Risk record (Governance Risk Appetite)",token,no
+governance,governance-policy-service,governance_score_explanations,11,"Governance -- Governance Score Explanations",name,no
+governance,governance-policy-service,governance_signal_events,6,"Governance -- Governance Signal: Domain event records",pattern,no
+governance,governance-policy-service,governance_signal_rules,9,"Governance -- Governance Signal: Rules/policy definitions",pattern,no
+governance,governance-policy-service,governance_signals,17,"Governance -- Governance Signals",name,yes
+governance,governance-policy-service,grc_plans,10,"Governance -- Grc Plans",name,no
+governance,governance-policy-service,initiative_definitions,24,"Governance -- Initiative: Definition catalog",pattern,no
+governance,governance-policy-service,initiative_runs,21,"Governance -- Initiative: Execution run records",pattern,no
+governance,governance-policy-service,legal_entities,11,"Governance -- Legal Entities",name,no
+governance,governance-policy-service,mandate_sources,10,"Governance -- Mandate Sources",name,no
+governance,governance-policy-service,mandates,15,"Governance -- Mandates",name,no
+governance,governance-policy-service,milestone_instances,18,"Governance -- Milestone Instances",name,no
+governance,governance-policy-service,obligation_control_mappings,8,"Governance -- Obligation Control: Cross-entity mapping",pattern,no
+governance,governance-policy-service,obligation_policy_links,9,"Governance -- Obligation Policy: Cross-table link records",pattern,no
+governance,governance-policy-service,outcome_links,10,"Governance -- Outcome: Cross-table link records",pattern,no
+governance,governance-policy-service,project_assurance_links,9,"Governance -- Project Assurance: Cross-table link records",pattern,no
+governance,governance-policy-service,project_deliverables,32,"Governance -- Project Deliverables",name,no
+governance,governance-policy-service,project_exceptions,14,"Governance -- Exception record (Project Exceptions)",token,no
+governance,governance-policy-service,project_gate_reviews,10,"Governance -- Project Gate Reviews",name,no
+governance,governance-policy-service,project_milestones,12,"Governance -- Project Milestones",name,no
+governance,governance-policy-service,raci_assignments,15,"Governance -- Raci: Assignment mapping (X to Y)",pattern,no
+governance,governance-policy-service,raci_templates,13,"Governance -- Raci: Template catalog",pattern,no
+governance,governance-policy-service,resource_allocations,13,"Governance -- Location record (Resource Allocations)",token,no
+governance,governance-policy-service,responsibilities,13,"Governance -- Responsibilities",name,no
+governance,governance-policy-service,responsibility_assignments,13,"Governance -- Responsibility: Assignment mapping (X to Y)",pattern,no
+governance,governance-policy-service,responsibility_suggestions,14,"Governance -- Responsibility Suggestions",name,no
+governance,governance-policy-service,team_raci_assignments,14,"Governance -- Team Raci: Assignment mapping (X to Y)",pattern,yes
+evidence,evidence-audit-reporting-service,artifacts,12,"Evidence -- Artifacts",name,no
+evidence,evidence-audit-reporting-service,data_classifications,11,"Data classification levels",registry,no
+evidence,evidence-audit-reporting-service,digital_signatures,16,"Evidence -- Digital: Digital signatures",pattern,no
+evidence,evidence-audit-reporting-service,evidence_activity_log,10,"Evidence -- Evidence Activity: Activity/audit log records",pattern,no
+evidence,evidence-audit-reporting-service,evidence_admin_settings,6,"Evidence -- Evidence Admin: Configuration values",pattern,yes
+evidence,evidence-audit-reporting-service,evidence_attachments,9,"Evidence -- Evidence: File/blob attachments",pattern,no
+evidence,evidence-audit-reporting-service,evidence_attachments_config,6,"Evidence -- Evidence Attachments: Configuration values",pattern,no
+evidence,evidence-audit-reporting-service,evidence_auto_collection,38,"Evidence -- Evidence Auto Collection",name,yes
+evidence,evidence-audit-reporting-service,evidence_catalog,9,"Evidence -- Evidence Catalog",name,no
+evidence,evidence-audit-reporting-service,evidence_collection_jobs,10,"Evidence -- Evidence Collection: Job records",pattern,no
+evidence,evidence-audit-reporting-service,evidence_collection_log,22,"Evidence -- Evidence Collection: Activity/audit log records",pattern,no
+evidence,evidence-audit-reporting-service,evidence_collection_rules,9,"Evidence -- Evidence Collection: Rules/policy definitions",pattern,no
+evidence,evidence-audit-reporting-service,evidence_collection_runs,9,"Evidence -- Evidence Collection: Execution run records",pattern,no
+evidence,evidence-audit-reporting-service,evidence_confidentiality_levels,6,"Evidence -- Evidence Confidentiality Levels",name,yes
+evidence,evidence-audit-reporting-service,evidence_cross_validation,16,"Evidence -- Evidence Cross Validation",name,no
+evidence,evidence-audit-reporting-service,evidence_dashboard_cache,5,"Evidence -- Evidence Dashboard: Cached values",pattern,no
+evidence,evidence-audit-reporting-service,evidence_duplicate_candidates,10,"Evidence -- Evidence Duplicate Candidates",name,no
+evidence,evidence-audit-reporting-service,evidence_export_manifests,5,"Evidence -- Evidence Export Manifests",name,no
+evidence,evidence-audit-reporting-service,evidence_exports,10,"Evidence -- Evidence Exports",name,no
+evidence,evidence-audit-reporting-service,evidence_freshness_records,10,"Evidence -- Evidence Freshness Records",name,no
+evidence,evidence-audit-reporting-service,evidence_lifecycle,20,"Evidence lifecycle tracking",registry,no
+evidence,evidence-audit-reporting-service,evidence_links,8,"Evidence -- Evidence: Cross-table link records",pattern,no
+evidence,evidence-audit-reporting-service,evidence_package_items,5,"Evidence -- Evidence Package Items",name,no
+evidence,evidence-audit-reporting-service,evidence_packages,12,"Evidence -- Evidence Packages",name,no
+evidence,evidence-audit-reporting-service,evidence_provenance_records,8,"Evidence -- Evidence Provenance Records",name,no
+evidence,evidence-audit-reporting-service,evidence_quality_assessments,11,"Evidence -- Evidence Quality Assessments",name,no
+evidence,evidence-audit-reporting-service,evidence_quality_rules,7,"Evidence -- Evidence Quality: Rules/policy definitions",pattern,yes
+evidence,evidence-audit-reporting-service,evidence_rejection_reasons,6,"Evidence -- Evidence Rejection Reasons",name,yes
+evidence,evidence-audit-reporting-service,evidence_request_targets,7,"Evidence -- Evidence Request Targets",name,no
+evidence,evidence-audit-reporting-service,evidence_requests,39,"Evidence -- Evidence Requests",name,no
+evidence,evidence-audit-reporting-service,evidence_retention_rules,26,"Evidence -- Evidence Retention: Rules/policy definitions",pattern,yes
+evidence,evidence-audit-reporting-service,evidence_reuse_links,7,"Evidence -- Evidence Reuse: Cross-table link records",pattern,no
+evidence,evidence-audit-reporting-service,evidence_reviews,10,"Evidence -- Evidence Reviews",name,no
+evidence,evidence-audit-reporting-service,evidence_schedules,8,"Evidence -- Evidence Schedules",name,no
+evidence,evidence-audit-reporting-service,evidence_scores,8,"Evidence -- Evidence Scores",name,no
+evidence,evidence-audit-reporting-service,evidence_source_types,7,"Evidence -- Evidence Source Types",name,yes
+evidence,evidence-audit-reporting-service,evidence_status_log,7,"Evidence -- Evidence Status: Activity/audit log records",pattern,no
+evidence,evidence-audit-reporting-service,evidence_submissions,9,"Evidence -- Evidence Submissions",name,no
+evidence,evidence-audit-reporting-service,evidence_tags,5,"Evidence -- Evidence Tags",name,no
+evidence,evidence-audit-reporting-service,evidence_tasks,20,"Evidence -- Evidence: Task records",pattern,no
+evidence,evidence-audit-reporting-service,evidence_templates,18,"Evidence -- Evidence: Template catalog",pattern,no
+evidence,evidence-audit-reporting-service,evidence_type_catalog,16,"Evidence -- Evidence Type Catalog",name,no
+evidence,evidence-audit-reporting-service,evidence_types,10,"Evidence -- Evidence Types",name,yes
+evidence,evidence-audit-reporting-service,evidence_validation_metrics,30,"Evidence -- Evidence Validation: Metric data points",pattern,no
+evidence,evidence-audit-reporting-service,evidence_validation_rules,14,"Evidence -- Evidence Validation: Rules/policy definitions",pattern,no
+evidence,evidence-audit-reporting-service,evidence_verification_events,6,"Evidence -- Evidence Verification: Domain event records",pattern,no
+evidence,evidence-audit-reporting-service,evidence_versions,11,"Evidence -- Evidence: Versioned record history",pattern,no
+evidence,evidence-audit-reporting-service,pipeline_webhook_configs,13,"Evidence -- Pipeline Webhook Configs",name,no
+evidence,evidence-audit-reporting-service,pipeline_webhook_logs,16,"Evidence -- Pipeline Webhook Logs",name,no
+compliance,compliance-controls-service,assessment_responses,7,"Compliance -- Assessment: Response records (questionnaire/survey/assessment)",pattern,no
+compliance,compliance-controls-service,assessments,30,"Compliance -- Assessments",name,no
+compliance,compliance-controls-service,ccm_cloud_mappings,6,"Compliance -- Ccm Cloud: Cross-entity mapping",pattern,no
+compliance,compliance-controls-service,ccm_cycle_log,7,"Compliance -- Ccm Cycle: Activity/audit log records",pattern,no
+compliance,compliance-controls-service,ccm_results,7,"Compliance -- Ccm Results",name,no
+compliance,compliance-controls-service,change_tasks,16,"Compliance -- Change: Task records",pattern,no
+compliance,compliance-controls-service,change_triage_decisions,7,"Compliance -- Decision record (Change Triage Decisions)",token,no
+compliance,compliance-controls-service,compliance_activity_log,8,"Compliance -- Compliance Activity: Activity/audit log records",pattern,no
+compliance,compliance-controls-service,compliance_assertion_evidence,7,"Compliance -- Compliance Assertion: Evidence records",pattern,no
+compliance,compliance-controls-service,compliance_assertions,11,"Compliance -- Compliance record (Compliance Assertions)",token,no
+compliance,compliance-controls-service,compliance_assessments,14,"Compliance -- Compliance record (Compliance Assessments)",token,yes
+compliance,compliance-controls-service,compliance_commitments,10,"Compliance -- Compliance record (Compliance Commitments)",token,no
+compliance,compliance-controls-service,compliance_drift_baselines,6,"Compliance -- Compliance record (Compliance Drift Baselines)",token,no
+compliance,compliance-controls-service,compliance_drift_events,18,"Compliance -- Compliance Drift: Domain event records",pattern,no
+compliance,compliance-controls-service,compliance_drift_rules,19,"Compliance -- Compliance Drift: Rules/policy definitions",pattern,yes
+compliance,compliance-controls-service,compliance_findings,15,"Compliance -- Compliance: Finding records",pattern,no
+compliance,compliance-controls-service,compliance_frameworks,9,"Compliance -- Framework definition (Compliance Frameworks)",token,yes
+compliance,compliance-controls-service,compliance_gap_snapshots,13,"Compliance -- Compliance Gap: Point-in-time snapshots",pattern,no
+compliance,compliance-controls-service,compliance_gaps,23,"Compliance -- Compliance record (Compliance Gaps)",token,no
+compliance,compliance-controls-service,compliance_obligations,20,"Compliance -- Compliance record (Compliance Obligations)",token,no
+compliance,compliance-controls-service,compliance_overview_snapshots,4,"Compliance -- Compliance Overview: Point-in-time snapshots",pattern,no
+compliance,compliance-controls-service,compliance_reviews,10,"Compliance -- Compliance record (Compliance Reviews)",token,no
+compliance,compliance-controls-service,control_actions,11,"Compliance -- Control: Action/operation catalog",pattern,no
+compliance,compliance-controls-service,control_categories,10,"Compliance -- Control: Category taxonomy",pattern,no
+compliance,compliance-controls-service,control_certification_campaigns,10,"Compliance -- Campaign record (Control Certification Campaigns)",token,no
+compliance,compliance-controls-service,control_certification_requests,10,"Compliance -- Control record (Control Certification Requests)",token,no
+compliance,compliance-controls-service,control_certification_responses,10,"Compliance -- Control Certification: Response records (questionnaire/survey/assessment)",pattern,no
+compliance,compliance-controls-service,control_closure_reviews,7,"Compliance -- Control record (Control Closure Reviews)",token,no
+compliance,compliance-controls-service,control_dashboard_cache,6,"Compliance -- Control Dashboard: Cached values",pattern,no
+compliance,compliance-controls-service,control_dependencies,8,"Compliance -- Control: Dependency mapping",pattern,no
+compliance,compliance-controls-service,control_domains,6,"Control domain groupings",registry,yes
+compliance,compliance-controls-service,control_effectiveness_log,8,"Compliance -- Control Effectiveness: Activity/audit log records",pattern,no
+compliance,compliance-controls-service,control_effectiveness_scores,11,"Compliance -- Control record (Control Effectiveness Scores)",token,no
+compliance,compliance-controls-service,control_evidence_requirements,11,"Compliance -- Control record (Control Evidence Requirements)",token,no
+compliance,compliance-controls-service,control_failures,11,"Compliance -- Control record (Control Failures)",token,no
+compliance,compliance-controls-service,control_framework_mappings,9,"Compliance -- Control Framework: Cross-entity mapping",pattern,no
+compliance,compliance-controls-service,control_health_snapshots,8,"Compliance -- Control Health: Point-in-time snapshots",pattern,no
+compliance,compliance-controls-service,control_issues,13,"Compliance -- Control record (Control Issues)",token,no
+compliance,compliance-controls-service,control_mappings,8,"Compliance -- Control: Cross-entity mapping",pattern,no
+compliance,compliance-controls-service,control_monitoring_alerts,11,"Compliance -- Control Monitoring: Alert records",pattern,no
+compliance,compliance-controls-service,control_monitoring_rules,14,"Compliance -- Control Monitoring: Rules/policy definitions",pattern,no
+compliance,compliance-controls-service,control_monitoring_signals,7,"Compliance -- Control record (Control Monitoring Signals)",token,no
+compliance,compliance-controls-service,control_objectives,9,"Compliance -- Control record (Control Objectives)",token,no
+compliance,compliance-controls-service,control_obligation_mappings,8,"Compliance -- Control Obligation: Cross-entity mapping",pattern,no
+compliance,compliance-controls-service,control_operating_tests,12,"Compliance -- Control record (Control Operating Tests)",token,no
+compliance,compliance-controls-service,control_owners,9,"Compliance -- Control: Ownership assignment",pattern,no
+compliance,compliance-controls-service,control_policy_links,7,"Compliance -- Control Policy: Cross-table link records",pattern,no
+compliance,compliance-controls-service,control_remediation_actions,12,"Compliance -- Control Remediation: Action/operation catalog",pattern,no
+compliance,compliance-controls-service,control_retests,10,"Compliance -- Control record (Control Retests)",token,no
+compliance,compliance-controls-service,control_schedules,11,"Compliance -- Control record (Control Schedules)",token,no
+compliance,compliance-controls-service,control_scope_links,7,"Compliance -- Control Scope: Cross-table link records",pattern,no
+compliance,compliance-controls-service,control_status_history,9,"Compliance -- Control Status: Historical change records",pattern,no
+compliance,compliance-controls-service,control_tags,6,"Compliance -- Control record (Control Tags)",token,no
+compliance,compliance-controls-service,control_team_distribution,7,"Compliance -- Control record (Control Team Distribution)",token,yes
+compliance,compliance-controls-service,control_test_procedures,24,"Compliance -- Control record (Control Test Procedures)",token,no
+compliance,compliance-controls-service,control_test_results,18,"Compliance -- Control record (Control Test Results)",token,no
+compliance,compliance-controls-service,control_tests,8,"Compliance -- Control record (Control Tests)",token,no
+compliance,compliance-controls-service,control_training_mappings,10,"Compliance -- Control Training: Cross-entity mapping",pattern,no
+compliance,compliance-controls-service,control_workflow_links,8,"Compliance -- Control Workflow: Cross-table link records",pattern,no
+compliance,compliance-controls-service,cross_border_transfer_rules,12,"Compliance -- Cross Border Transfer: Rules/policy definitions",pattern,yes
+compliance,compliance-controls-service,crosswalk_mappings,6,"Compliance -- Crosswalk: Cross-entity mapping",pattern,no
+compliance,compliance-controls-service,csa_questionnaires,14,"Compliance -- Csa Questionnaires",name,no
+compliance,compliance-controls-service,csa_responses,17,"Compliance -- Csa: Response records (questionnaire/survey/assessment)",pattern,no
+compliance,compliance-controls-service,endpoint_config,16,"Compliance -- Endpoint: Configuration values",pattern,no
+compliance,compliance-controls-service,esg_categories,9,"Compliance -- Esg: Category taxonomy",pattern,no
+compliance,compliance-controls-service,esg_metrics,16,"Compliance -- Esg: Metric data points",pattern,no
+compliance,compliance-controls-service,framework_applicability_rules,11,"Compliance -- Framework Applicability: Rules/policy definitions",pattern,no
+compliance,compliance-controls-service,framework_cross_mappings,9,"Compliance -- Framework Cross: Cross-entity mapping",pattern,yes
+compliance,compliance-controls-service,framework_domains,12,"Compliance -- Framework definition (Framework Domains)",token,no
+compliance,compliance-controls-service,framework_module_map,5,"Compliance -- Framework definition (Framework Module Map)",token,yes
+compliance,compliance-controls-service,framework_requirement_versions,11,"Compliance -- Framework Requirement: Versioned record history",pattern,no
+compliance,compliance-controls-service,grc_maturity_sync,11,"Compliance -- Grc Maturity Sync",name,no
+compliance,compliance-controls-service,grc_qiyas_control_feedback,11,"Compliance -- Control record (Grc Qiyas Control Feedback)",token,no
+compliance,compliance-controls-service,instrument_versions,14,"Compliance -- Instrument: Versioned record history",pattern,no
+compliance,compliance-controls-service,maturity_assessments,22,"Compliance -- Maturity Assessments",name,yes
+compliance,compliance-controls-service,maturity_scores,7,"Compliance -- Maturity Scores",name,no
+compliance,compliance-controls-service,obligation_applicability_rules,9,"Compliance -- Obligation Applicability: Rules/policy definitions",pattern,no
+compliance,compliance-controls-service,obligation_assignments,11,"Compliance -- Obligation: Assignment mapping (X to Y)",pattern,no
+compliance,compliance-controls-service,obligation_control_links,8,"Compliance -- Obligation Control: Cross-table link records",pattern,no
+compliance,compliance-controls-service,obligation_due_dates,11,"Compliance -- Obligation Due Dates",name,no
+compliance,compliance-controls-service,obligation_evidence_links,8,"Compliance -- Obligation Evidence: Cross-table link records",pattern,no
+compliance,compliance-controls-service,obligation_exemptions,12,"Compliance -- Obligation Exemptions",name,no
+compliance,compliance-controls-service,obligation_scopes,9,"Compliance -- Obligation Scopes",name,no
+compliance,compliance-controls-service,obligation_status_history,9,"Compliance -- Obligation Status: Historical change records",pattern,no
+compliance,compliance-controls-service,obligation_templates,14,"Compliance -- Obligation: Template catalog",pattern,no
+compliance,compliance-controls-service,obligation_types,6,"Compliance -- Obligation Types",name,yes
+compliance,compliance-controls-service,obligation_versions,9,"Compliance -- Obligation: Versioned record history",pattern,no
+compliance,compliance-controls-service,procedures,22,"Compliance -- Procedures",name,no
+compliance,compliance-controls-service,rcsa_campaigns,11,"Compliance -- Campaign record (Rcsa Campaigns)",token,no
+compliance,compliance-controls-service,rcsa_responses,14,"Compliance -- Rcsa: Response records (questionnaire/survey/assessment)",pattern,no
+compliance,compliance-controls-service,reference_categories,13,"Compliance -- Reference: Category taxonomy",pattern,no
+compliance,compliance-controls-service,requirements,13,"Compliance -- Requirements",name,no
+compliance,compliance-controls-service,scoring_policies,8,"Compliance -- Scoring Policies",name,yes
+compliance,compliance-controls-service,ucf_control_versions,13,"Compliance -- Ucf Control: Versioned record history",pattern,no
+attestation,evidence-audit-reporting-service,attestation_campaigns,16,"Attestation -- Campaign record (Attestation Campaigns)",token,no
+attestation,evidence-audit-reporting-service,attestation_records,12,"Attestation -- Attestation Records",name,no
+audit,evidence-audit-reporting-service,audit_anomalies,8,"Audit -- Audit Anomalies",name,no
+audit,evidence-audit-reporting-service,audit_charters,14,"Audit -- Audit Charters",name,no
+audit,evidence-audit-reporting-service,audit_engagements,19,"Audit -- Audit Engagements",name,yes
+audit,evidence-audit-reporting-service,audit_finding_slas,7,"Audit -- Finding record (Audit Finding Slas)",token,yes
+audit,evidence-audit-reporting-service,audit_packages,10,"Audit -- Audit Packages",name,no
+audit,evidence-audit-reporting-service,audit_qa_reviews,10,"Audit -- Audit Qa Reviews",name,no
+audit,evidence-audit-reporting-service,audit_ratings,9,"Audit -- Audit Ratings",name,no
+audit,evidence-audit-reporting-service,audit_request_items,12,"Audit -- Audit Request Items",name,no
+audit,evidence-audit-reporting-service,audit_requests,13,"Audit -- Audit Requests",name,no
+audit,evidence-audit-reporting-service,audit_risk_scores,8,"Audit -- Risk record (Audit Risk Scores)",token,no
+audit,evidence-audit-reporting-service,audit_schedules,12,"Audit -- Audit Schedules",name,no
+audit,evidence-audit-reporting-service,audit_scopes,9,"Audit -- Audit Scopes",name,no
+audit,evidence-audit-reporting-service,audit_team_members,8,"Audit -- Audit Team: Member records",pattern,no
+audit,evidence-audit-reporting-service,audit_templates,13,"Audit -- Audit: Template catalog",pattern,no
+audit,evidence-audit-reporting-service,audit_test_plans,13,"Audit -- Audit Test Plans",name,no
+audit,evidence-audit-reporting-service,audit_time_entries,9,"Audit -- Audit Time Entries",name,no
+audit,evidence-audit-reporting-service,audit_trail,15,"Audit -- Audit Trail",name,yes
+audit,evidence-audit-reporting-service,audit_trail_archive,13,"Audit -- Audit Trail Archive",name,no
+audit,evidence-audit-reporting-service,audit_universe,14,"Audit -- Audit Universe",name,no
+audit,evidence-audit-reporting-service,audit_working_papers,14,"Audit -- Audit Working Papers",name,no
+audit,evidence-audit-reporting-service,audits,16,"Audit -- Audits",name,no
+audit,evidence-audit-reporting-service,capa_effectiveness_tests,10,"Audit -- Capa Effectiveness Tests",name,no
+audit,evidence-audit-reporting-service,closure_reviews,11,"Audit -- Closure Reviews",name,no
+audit,evidence-audit-reporting-service,external_audit_coordination,14,"Audit -- External Audit Coordination",name,no
+audit,evidence-audit-reporting-service,finding_impacts,10,"Audit -- Finding record (Finding Impacts)",token,no
+audit,evidence-audit-reporting-service,finding_root_causes,9,"Audit -- Finding record (Finding Root Causes)",token,no
+audit,evidence-audit-reporting-service,handoff_log,12,"Handoff logging",registry,no
+audit,evidence-audit-reporting-service,intervention_audit_log,10,"Intervention audit logs",registry,no
+audit,evidence-audit-reporting-service,regulatory_audit_requirements,12,"Audit -- Regulatory Audit Requirements",name,no
+audit,evidence-audit-reporting-service,repeat_findings,10,"Audit -- Repeat: Finding records",pattern,no
+analytics,evidence-audit-reporting-service,audit_plans,12,"Analytics -- Audit Plans",name,no
+analytics,evidence-audit-reporting-service,kpi_history,13,"Analytics -- Kpi: Historical change records",pattern,no
+analytics,evidence-audit-reporting-service,kpi_snapshots,8,"Analytics -- Kpi: Point-in-time snapshots",pattern,no
+analytics,evidence-audit-reporting-service,remediation_tasks,19,"Analytics -- Remediation: Task records",pattern,no
+analytics,evidence-audit-reporting-service,user_preferences,13,"Analytics -- User record (User Preferences)",token,no
+dora,compliance-controls-service,backup_restore_points,11,"Dora -- Backup Restore Points",name,no
+dora,compliance-controls-service,dora_backup_configs,20,"Dora -- Dora Backup Configs",name,no
+dora,compliance-controls-service,dora_ict_assets,21,"Dora -- Asset record (Dora Ict Assets)",token,no
+dora,compliance-controls-service,dora_ict_third_party_register,20,"Dora -- Dora Ict Third Party Register",name,no
+dora,compliance-controls-service,dora_major_incidents,27,"Dora -- Incident record (Dora Major Incidents)",token,no
+dora,compliance-controls-service,dora_resilience_tests,23,"Dora -- Dora Resilience Tests",name,no
+dora,compliance-controls-service,dora_threat_intel,19,"Dora -- Dora Threat Intel",name,no
+dora,compliance-controls-service,ict_asset_register,19,"Dora -- Asset record (Ict Asset Register)",token,no
+dora,compliance-controls-service,ict_major_incident_reports,21,"Dora -- Incident record (Ict Major Incident Reports)",token,no
+dora,compliance-controls-service,regulatory_bodies,7,"Dora -- Regulatory Bodies",name,yes
+dora,compliance-controls-service,regulatory_calendar,19,"Dora -- Regulatory Calendar",name,no
+dora,compliance-controls-service,regulatory_calendar_task_links,5,"Dora -- Regulatory Calendar Task: Cross-table link records",pattern,no
+dora,compliance-controls-service,regulatory_change_impacts,16,"Dora -- Regulatory Change Impacts",name,no
+dora,compliance-controls-service,regulatory_change_log,12,"Dora -- Regulatory Change: Activity/audit log records",pattern,no
+dora,compliance-controls-service,regulatory_changes,31,"Dora -- Regulatory Changes",name,no
+dora,compliance-controls-service,regulatory_control_mappings,10,"Dora -- Regulatory Control: Cross-entity mapping",pattern,no
+dora,compliance-controls-service,regulatory_frameworks,18,"Dora -- Framework definition (Regulatory Frameworks)",token,no
+dora,compliance-controls-service,regulatory_incident_notifications,16,"Dora -- Regulatory Incident: Notification queue/log",pattern,no
+dora,compliance-controls-service,regulatory_sla_requirements,18,"Dora -- Regulatory Sla Requirements",name,yes
+dora,compliance-controls-service,resilience_test_plans,13,"Dora -- Resilience Test Plans",name,no
+dora,compliance-controls-service,resilience_test_results,14,"Dora -- Resilience Test Results",name,no
+dora,compliance-controls-service,threat_intelligence_sharing,12,"Dora -- Threat Intelligence Sharing",name,no
+bcp,risk-incident-service,bcm_audit_log,11,"Bcp -- Bcm Audit: Activity/audit log records",pattern,no
+bcp,risk-incident-service,bcm_dependency_edges,9,"Bcp -- Bcm Dependency Edges",name,no
+bcp,risk-incident-service,bcm_dependency_maps,11,"Bcp -- Bcm Dependency Maps",name,no
+bcp,risk-incident-service,bcm_dependency_nodes,14,"Bcp -- Bcm Dependency Nodes",name,no
+bcp,risk-incident-service,bcm_findings,24,"Bcp -- Bcm: Finding records",pattern,no
+bcp,risk-incident-service,bcm_maturity_assessments,21,"Bcp -- Bcm Maturity Assessments",name,no
+bcp,risk-incident-service,bcm_recovery_strategies,24,"Bcp -- Bcm Recovery Strategies",name,yes
+bcp,risk-incident-service,bcp_activations,23,"Bcp -- Bcp Activations",name,no
+bcp,risk-incident-service,bcp_bia_templates,10,"Bcp -- Bcp Bia: Template catalog",pattern,no
+bcp,risk-incident-service,bcp_crisis_teams,9,"Bcp -- Team record (Bcp Crisis Teams)",token,no
+bcp,risk-incident-service,bcp_exercise_results,13,"Bcp -- Bcp Exercise Results",name,no
+bcp,risk-incident-service,bcp_exercise_schedule,13,"Bcp -- Bcp Exercise Schedule",name,no
+bcp,risk-incident-service,bcp_exercises,34,"Bcp -- Bcp Exercises",name,no
+bcp,risk-incident-service,bcp_recovery_step_tracking,17,"Bcp -- Bcp Recovery Step Tracking",name,no
+bcp,risk-incident-service,bcp_rto_rpo_defaults,9,"Bcp -- Bcp Rto Rpo Defaults",name,no
+bcp,risk-incident-service,bcp_team_distribution,6,"Bcp -- Team record (Bcp Team Distribution)",token,yes
+bcp,risk-incident-service,bia_assessments,30,"Bcp -- Bia Assessments",name,no
+bcp,risk-incident-service,bia_process_impacts,22,"Bcp -- Bia Process Impacts",name,no
+bcp,risk-incident-service,crisis_comm_activations,13,"Bcp -- Crisis Comm Activations",name,no
+bcp,risk-incident-service,crisis_comm_plans,26,"Bcp -- Crisis Comm Plans",name,yes
+bcp,risk-incident-service,crisis_events,26,"Bcp -- Crisis: Domain event records",pattern,no
+bcp,risk-incident-service,crisis_notification_tree,13,"Bcp -- Crisis Notification Tree",name,no
+incident,risk-incident-service,breach_reporting_records,24,"Incident -- Breach Reporting Records",name,no
+incident,risk-incident-service,case_incidents,6,"Incident -- Incident record (Case Incidents)",token,no
+incident,risk-incident-service,case_notes,10,"Incident -- Case Notes",name,no
+incident,risk-incident-service,cases,20,"Incident -- Cases",name,no
+incident,risk-incident-service,incident_assets,7,"Incident -- Asset record (Incident Assets)",token,no
+incident,risk-incident-service,incident_audit_log,12,"Incident -- Incident Audit: Activity/audit log records",pattern,no
+incident,risk-incident-service,incident_categories,9,"Incident categorization",registry,no
+incident,risk-incident-service,incident_evidence,12,"Incident -- Incident: Evidence records",pattern,no
+incident,risk-incident-service,incident_impacts,16,"Incident -- Incident record (Incident Impacts)",token,no
+incident,risk-incident-service,incident_lessons_learned,15,"Incident -- Incident record (Incident Lessons Learned)",token,no
+incident,risk-incident-service,incident_notification_templates,10,"Incident -- Incident Notification: Template catalog",pattern,no
+incident,risk-incident-service,incident_pir,28,"Incident -- Incident record (Incident Pir)",token,no
+incident,risk-incident-service,incident_policies,6,"Incident -- Incident record (Incident Policies)",token,no
+incident,risk-incident-service,incident_recurring_patterns,17,"Incident -- Incident record (Incident Recurring Patterns)",token,no
+incident,risk-incident-service,incident_regulatory_notifications,24,"Incident -- Incident Regulatory: Notification queue/log",pattern,no
+incident,risk-incident-service,incident_reportable_criteria,10,"Incident -- Incident record (Incident Reportable Criteria)",token,yes
+incident,risk-incident-service,incident_response_actions,14,"Incident -- Incident Response: Action/operation catalog",pattern,no
+incident,risk-incident-service,incident_response_teams,9,"Incident -- Incident record (Incident Response Teams)",token,no
+incident,risk-incident-service,incident_risk_links,12,"Incident -- Incident Risk: Cross-table link records",pattern,no
+incident,risk-incident-service,incident_root_causes,11,"Incident -- Incident record (Incident Root Causes)",token,no
+incident,risk-incident-service,incident_severity_matrix,12,"Incident -- RACI/permission matrix (Incident Severity Matrix)",token,no
+incident,risk-incident-service,incident_taxonomy,14,"Incident -- Incident record (Incident Taxonomy)",token,yes
+incident,risk-incident-service,incident_team_distribution,7,"Incident -- Incident record (Incident Team Distribution)",token,yes
+incident,risk-incident-service,incident_trend_cache,16,"Incident -- Incident Trend: Cached values",pattern,no
+incident,risk-incident-service,incident_triage_decisions,14,"Incident -- Decision record (Incident Triage Decisions)",token,no
+incident,risk-incident-service,incident_updates,10,"Incident -- Incident record (Incident Updates)",token,no
+incident,risk-incident-service,incident_vendors,7,"Incident -- Vendor/third-party record (Incident Vendors)",token,no
+incident,risk-incident-service,near_miss_reports,23,"Incident -- Near Miss Reports",name,no
+incident,risk-incident-service,pir_sign_offs,9,"Incident -- Pir Sign Offs",name,no
+integrations,gateway,cmdb_assets,18,"Integrations -- Asset record (Cmdb Assets)",token,no
+integrations,gateway,cmdb_connections,13,"Integrations -- Cmdb Connections",name,no
+integrations,gateway,cmdb_sync_history,10,"Integrations -- Cmdb Sync: Historical change records",pattern,no
+integrations,gateway,connector_automation_rules,11,"Integrations -- Connector Automation: Rules/policy definitions",pattern,yes
+integrations,gateway,connector_configs,14,"Integrations -- Connector Configs",name,no
+integrations,gateway,connector_dependency_graph,9,"Integrations -- Connector Dependency Graph",name,yes
+integrations,gateway,connector_evidence_mappings,10,"Integrations -- Connector Evidence: Cross-entity mapping",pattern,yes
+integrations,gateway,connector_executions,7,"Integrations -- Connector Executions",name,no
+integrations,gateway,connector_registry,22,"Integrations -- Connector Registry",name,yes
+integrations,gateway,connector_status_log,7,"Integrations -- Connector Status: Activity/audit log records",pattern,no
+integrations,gateway,entity_link_metadata,5,"Entity link metadata",registry,no
+integrations,gateway,entity_links,8,"Entity relationship links",registry,no
+integrations,gateway,erp_connections,12,"Integrations -- Erp Connections",name,no
+integrations,gateway,erp_field_mappings,9,"Integrations -- Erp Field: Cross-entity mapping",pattern,no
+integrations,gateway,erp_sync_history,10,"Integrations -- Erp Sync: Historical change records",pattern,no
+integrations,gateway,external_stakeholder_profiles,23,"Integrations -- External Stakeholder Profiles",name,no
+integrations,gateway,iam_identities,17,"Integrations -- Iam Identities",name,no
+integrations,gateway,inbound_webhook_endpoints,12,"Integrations -- Inbound Webhook Endpoints",name,no
+integrations,gateway,inbound_webhook_log,7,"Integrations -- Inbound Webhook: Activity/audit log records",pattern,no
+integrations,gateway,integration_configs,13,"Integrations -- Integration Configs",name,no
+integrations,gateway,itsm_connections,14,"Integrations -- Itsm Connections",name,no
+integrations,gateway,itsm_sync_history,11,"Integrations -- Itsm Sync: Historical change records",pattern,no
+integrations,gateway,itsm_tickets,20,"Integrations -- Itsm Tickets",name,no
+integrations,gateway,m365_connections,15,"Integrations -- M365 Connections",name,no
+integrations,gateway,m365_evidence_items,17,"Integrations -- M365 Evidence Items",name,no
+integrations,gateway,m365_sync_history,10,"Integrations -- M365 Sync: Historical change records",pattern,no
+integrations,gateway,openclaw_api_keys,17,"Integrations -- Openclaw Api: Key/identifier catalog",pattern,no
+integrations,gateway,powerbi_reports,10,"Integrations -- Powerbi Reports",name,no
+integrations,gateway,siem_connections,14,"Integrations -- Siem Connections",name,no
+integrations,gateway,siem_events,15,"Integrations -- Siem: Domain event records",pattern,no
+integrations,gateway,siem_sync_history,10,"Integrations -- Siem Sync: Historical change records",pattern,no
+integrations,gateway,vuln_scan_results,19,"Integrations -- Vuln Scan Results",name,no
+integrations,gateway,vuln_scan_sync_history,11,"Integrations -- Vuln Scan Sync: Historical change records",pattern,no
+integrations,gateway,vuln_scanner_connections,15,"Integrations -- Vuln Scanner Connections",name,no
+integrations,gateway,webhook_delivery_log,6,"Integrations -- Webhook Delivery: Activity/audit log records",pattern,no
+integrations,gateway,webhook_endpoints,13,"Integrations -- Webhook Endpoints",name,no
+integrations,gateway,webhook_retry_queue,12,"Integrations -- Work queue records (Webhook Retry Queue)",token,no
+integrations,gateway,webhook_subscriptions,9,"Integrations -- Webhook: Subscription records",pattern,no
+governance-ai,governance-policy-service,compliance_score_snapshots,14,"Governance Ai -- Compliance Score: Point-in-time snapshots",pattern,no
+governance-ai,governance-policy-service,executive_attention_items,13,"Governance Ai -- Executive Attention Items",name,no
+governance-ai,governance-policy-service,governance_ai_feedback,8,"Governance Ai -- Governance Ai Feedback",name,no
+governance-ai,governance-policy-service,governance_ai_runs,8,"Governance Ai -- Governance Ai: Execution run records",pattern,yes
+ksa-regulatory,compliance-controls-service,compliance_scores,26,"Ksa Regulatory -- Compliance record (Compliance Scores)",token,yes
+ksa-regulatory,compliance-controls-service,cross_framework_mappings,17,"Ksa Regulatory -- Cross Framework: Cross-entity mapping",pattern,no
+ksa-regulatory,compliance-controls-service,obligations,21,"Ksa Regulatory -- Obligations",name,no
+ksa-regulatory,compliance-controls-service,regulatory_change_notifications,12,"Ksa Regulatory -- Regulatory Change: Notification queue/log",pattern,no
+ksa-regulatory,compliance-controls-service,report_templates,8,"Ksa Regulatory -- Report: Template catalog",pattern,yes
+ksa-regulatory,compliance-controls-service,reports,13,"Ksa Regulatory -- Reports",name,no
+connectors,gateway,connectors,14,"Connectors -- Connectors",name,no
+vendor,risk-incident-service,contract_control_links,8,"Vendor -- Contract Control: Cross-table link records",pattern,no
+vendor,risk-incident-service,contracts,14,"Vendor -- Contracts",name,no
+vendor,risk-incident-service,vendor_admin_config,8,"Vendor -- Vendor Admin: Configuration values",pattern,yes
+vendor,risk-incident-service,vendor_assessments,12,"Vendor -- Vendor/third-party record (Vendor Assessments)",token,no
+vendor,risk-incident-service,vendor_audit_log,11,"Vendor -- Vendor Audit: Activity/audit log records",pattern,no
+vendor,risk-incident-service,vendor_bcp_requirements,11,"Vendor -- Vendor/third-party record (Vendor Bcp Requirements)",token,no
+vendor,risk-incident-service,vendor_benchmark_cohorts,11,"Vendor -- Vendor/third-party record (Vendor Benchmark Cohorts)",token,no
+vendor,risk-incident-service,vendor_concentration_analysis,18,"Vendor -- Vendor/third-party record (Vendor Concentration Analysis)",token,no
+vendor,risk-incident-service,vendor_contacts,10,"Vendor -- Vendor/third-party record (Vendor Contacts)",token,no
+vendor,risk-incident-service,vendor_crypto_assessment,13,"Vendor -- Vendor/third-party record (Vendor Crypto Assessment)",token,no
+vendor,risk-incident-service,vendor_dd_steps,16,"Vendor -- Vendor Dd: Execution step records",pattern,no
+vendor,risk-incident-service,vendor_documents,21,"Vendor -- Vendor/third-party record (Vendor Documents)",token,no
+vendor,risk-incident-service,vendor_due_diligence,22,"Vendor -- Vendor/third-party record (Vendor Due Diligence)",token,no
+vendor,risk-incident-service,vendor_due_diligence_checklists,8,"Vendor -- Vendor/third-party record (Vendor Due Diligence Checklists)",token,no
+vendor,risk-incident-service,vendor_engagement_milestones,10,"Vendor -- Vendor/third-party record (Vendor Engagement Milestones)",token,no
+vendor,risk-incident-service,vendor_engagements,19,"Vendor -- Vendor/third-party record (Vendor Engagements)",token,no
+vendor,risk-incident-service,vendor_exceptions,19,"Vendor -- Vendor/third-party record (Vendor Exceptions)",token,no
+vendor,risk-incident-service,vendor_findings,19,"Vendor -- Vendor: Finding records",pattern,no
+vendor,risk-incident-service,vendor_fourth_party_risk,20,"Vendor -- Risk record (Vendor Fourth Party Risk)",token,no
+vendor,risk-incident-service,vendor_issues,20,"Vendor -- Vendor/third-party record (Vendor Issues)",token,no
+vendor,risk-incident-service,vendor_monitoring_signals,20,"Vendor -- Vendor/third-party record (Vendor Monitoring Signals)",token,no
+vendor,risk-incident-service,vendor_obligations,12,"Vendor -- Vendor/third-party record (Vendor Obligations)",token,no
+vendor,risk-incident-service,vendor_offboarding,22,"Vendor -- Vendor/third-party record (Vendor Offboarding)",token,no
+vendor,risk-incident-service,vendor_offboarding_checklist,15,"Vendor -- Vendor/third-party record (Vendor Offboarding Checklist)",token,no
+vendor,risk-incident-service,vendor_portal_messages,13,"Vendor -- Vendor/third-party record (Vendor Portal Messages)",token,no
+vendor,risk-incident-service,vendor_portal_tokens,8,"Vendor -- Vendor Portal: Token records",pattern,no
+vendor,risk-incident-service,vendor_questionnaire_submissions,11,"Vendor -- Vendor/third-party record (Vendor Questionnaire Submissions)",token,no
+vendor,risk-incident-service,vendor_questionnaire_templates,12,"Vendor -- Vendor Questionnaire: Template catalog",pattern,no
+vendor,risk-incident-service,vendor_risk_assessments,20,"Vendor -- Risk record (Vendor Risk Assessments)",token,no
+vendor,risk-incident-service,vendor_risks,12,"Vendor -- Risk record (Vendor Risks)",token,no
+vendor,risk-incident-service,vendor_shared_responsibility,17,"Vendor -- Vendor/third-party record (Vendor Shared Responsibility)",token,no
+vendor,risk-incident-service,vendor_sla_breach_log,19,"Vendor -- Vendor Sla Breach: Activity/audit log records",pattern,no
+vendor,risk-incident-service,vendor_sla_definitions,18,"Vendor -- Vendor Sla: Definition catalog",pattern,no
+vendor,risk-incident-service,vendor_sla_measurements,16,"Vendor -- Vendor/third-party record (Vendor Sla Measurements)",token,no
+vendor,risk-incident-service,vendor_subcontractors,17,"Vendor -- Vendor/third-party record (Vendor Subcontractors)",token,no
+vendor,risk-incident-service,vendor_team_distribution,6,"Vendor -- Vendor/third-party record (Vendor Team Distribution)",token,yes
+vendor,risk-incident-service,vendor_tier_config,4,"Vendor -- Vendor Tier: Configuration values",pattern,yes
+vendor,risk-incident-service,vendor_training_requirements,10,"Vendor -- Vendor/third-party record (Vendor Training Requirements)",token,no
+dashboard,evidence-audit-reporting-service,control_design_reviews,10,"Dashboard -- Control record (Control Design Reviews)",token,no
+dashboard,evidence-audit-reporting-service,dashboard_configs_legacy,5,"Dashboard -- Dashboard Configs Legacy",name,no
+dashboard,evidence-audit-reporting-service,dashboard_layout_registry,14,"Dashboard -- Dashboard Layout Registry",name,no
+dashboard,evidence-audit-reporting-service,dashboard_overrides,16,"Dashboard -- Dashboard Overrides",name,no
+dashboard,evidence-audit-reporting-service,dashboard_registry,15,"Dashboard -- Dashboard Registry",name,yes
+dashboard,evidence-audit-reporting-service,dashboard_role_bindings_v2,7,"Dashboard -- Role record (Dashboard Role Bindings V2)",token,no
+dashboard,evidence-audit-reporting-service,dashboard_widget_registry,16,"Dashboard -- Dashboard Widget Registry",name,yes
+dashboard,evidence-audit-reporting-service,governance_policies,26,"Dashboard -- Governance Policies",name,no
+dashboard,evidence-audit-reporting-service,inline_edit_history,10,"Dashboard -- Inline Edit: Historical change records",pattern,no
+controls,compliance-controls-service,control_risk_mappings,8,"Controls -- Control Risk: Cross-entity mapping",pattern,no
+controls,compliance-controls-service,control_transition_rules,8,"Controls -- Control Transition: Rules/policy definitions",pattern,no
+controls,compliance-controls-service,control_transitions,8,"Controls -- Control record (Control Transitions)",token,no
+dashboard-editor,evidence-audit-reporting-service,dashboard_layouts,18,"Dashboard Editor -- Dashboard Layouts",name,yes
+dashboard-editor,evidence-audit-reporting-service,dashboard_shares,12,"Dashboard Editor -- Dashboard Shares",name,no
+privacy,compliance-controls-service,data_asset_owners,9,"Privacy -- Data Asset: Ownership assignment",pattern,no
+privacy,compliance-controls-service,data_asset_types,9,"Privacy -- Asset record (Data Asset Types)",token,no
+privacy,compliance-controls-service,data_assets,14,"Privacy -- Asset record (Data Assets)",token,no
+privacy,compliance-controls-service,data_domains,10,"Privacy -- Data Domains",name,no
+privacy,compliance-controls-service,data_processing_register,21,"Privacy -- Data Processing Register",name,no
+privacy,compliance-controls-service,data_quality_issues,12,"Privacy -- Data Quality Issues",name,no
+privacy,compliance-controls-service,data_quality_rules,10,"Privacy -- Data Quality: Rules/policy definitions",pattern,no
+privacy,compliance-controls-service,data_sharing_approvals,10,"Privacy -- Approval record (Data Sharing Approvals)",token,no
+privacy,compliance-controls-service,data_sharing_requests,12,"Privacy -- Data Sharing Requests",name,no
+privacy,compliance-controls-service,data_stewards,9,"Privacy -- Data Stewards",name,no
+privacy,compliance-controls-service,data_subject_requests,15,"Privacy -- Data Subject Requests",name,no
+privacy,compliance-controls-service,dpia_assessments,26,"Privacy -- Dpia Assessments",name,no
+privacy,compliance-controls-service,privacy_breaches,20,"Privacy -- Privacy Breaches",name,no
+privacy,compliance-controls-service,privacy_budget,7,"Privacy -- Privacy Budget",name,no
+privacy,compliance-controls-service,privacy_control_links,8,"Privacy -- Privacy Control: Cross-table link records",pattern,no
+privacy,compliance-controls-service,privacy_data_subject_requests,11,"Privacy -- Privacy Data Subject Requests",name,no
+privacy,compliance-controls-service,privacy_incidents,15,"Privacy -- Incident record (Privacy Incidents)",token,no
+privacy,compliance-controls-service,privacy_legal_bases,10,"Privacy -- Privacy Legal Bases",name,no
+privacy,compliance-controls-service,privacy_quarantine_ledger,14,"Privacy -- Privacy Quarantine Ledger",name,no
+privacy,compliance-controls-service,privacy_retention_policies,10,"Privacy -- Privacy Retention Policies",name,no
+privacy,compliance-controls-service,privacy_reviews,10,"Privacy -- Privacy Reviews",name,no
+records,evidence-audit-reporting-service,data_retention_policies,11,"Records -- Data Retention Policies",name,no
+records,evidence-audit-reporting-service,document_reviews,7,"Records -- Document Reviews",name,no
+records,evidence-audit-reporting-service,document_versions,9,"Records -- Document: Versioned record history",pattern,no
+records,evidence-audit-reporting-service,documents,20,"Records -- Documents",name,no
+records,evidence-audit-reporting-service,retention_rules,9,"Records -- Retention: Rules/policy definitions",pattern,no
+delegation,auth-service,delegation_chains,20,"Delegation -- Delegation Chains",name,no
+delegation,auth-service,delegation_policies,24,"Delegation -- Delegation Policies",name,no
+delegation,auth-service,delegation_rules,14,"Delegation -- Delegation: Rules/policy definitions",pattern,no
+governance-os,governance-policy-service,enforcement_gate_log,13,"Governance Os -- Enforcement Gate: Activity/audit log records",pattern,no
+governance-os,governance-policy-service,escalation_log,20,"Governance Os -- Escalation: Activity/audit log records",pattern,no
+governance-os,governance-policy-service,escalation_statuses,8,"Governance Os -- Escalation Statuses",name,no
+governance-os,governance-policy-service,exception_risk_acceptance,12,"Governance Os -- Risk record (Exception Risk Acceptance)",token,no
+governance-os,governance-policy-service,expert_packs,25,"Governance Os -- Expert Packs",name,no
+governance-os,governance-policy-service,leadership_digests,15,"Governance Os -- Leadership Digests",name,no
+governance-os,governance-policy-service,module_cross_link_rules,14,"Governance Os -- Module Cross Link: Rules/policy definitions",pattern,no
+governance-os,governance-policy-service,module_table_mappings,14,"Governance Os -- Module Table: Cross-entity mapping",pattern,no
+governance-os,governance-policy-service,module_task_type_mappings,9,"Governance Os -- Module Task Type: Cross-entity mapping",pattern,no
+governance-os,governance-policy-service,module_trigger_mappings,9,"Governance Os -- Module Trigger: Cross-entity mapping",pattern,no
+governance-os,governance-policy-service,os_approved_lessons,20,"Governance Os -- Os Approved Lessons",name,no
+governance-os,governance-policy-service,os_case_memory,20,"Governance Os -- Os Case Memory",name,no
+governance-os,governance-policy-service,os_case_timelines,7,"Governance Os -- Os Case Timelines",name,no
+governance-os,governance-policy-service,os_digest_feedback,6,"Governance Os -- Os Digest Feedback",name,no
+governance-os,governance-policy-service,os_initiative_effectiveness,14,"Governance Os -- Os Initiative Effectiveness",name,no
+governance-os,governance-policy-service,os_knowledge_articles,16,"Governance Os -- Os Knowledge Articles",name,no
+governance-os,governance-policy-service,os_knowledge_links,7,"Governance Os -- Os Knowledge: Cross-table link records",pattern,no
+governance-os,governance-policy-service,os_learning_scores,11,"Governance Os -- Os Learning Scores",name,no
+governance-os,governance-policy-service,os_lesson_candidates,19,"Governance Os -- Os Lesson Candidates",name,no
+governance-os,governance-policy-service,os_outcome_memory,12,"Governance Os -- Os Outcome Memory",name,no
+governance-os,governance-policy-service,os_pattern_signals,11,"Governance Os -- Os Pattern Signals",name,no
+governance-os,governance-policy-service,os_recommendation_feedback,7,"Governance Os -- Os Recommendation Feedback",name,no
+governance-os,governance-policy-service,os_reflection_notes,10,"Governance Os -- Os Reflection Notes",name,no
+governance-os,governance-policy-service,recommendation_triggers,10,"Governance Os -- Recommendation Triggers",name,no
+governance-os,governance-policy-service,severity_escalation_thresholds,9,"Governance Os -- Severity Escalation: Threshold definitions",pattern,no
+governance-os,governance-policy-service,sop_procedures,15,"Governance Os -- Sop Procedures",name,no
+qiyas,compliance-controls-service,enterprise_priorities,13,"Qiyas -- Enterprise Priorities",name,no
+qiyas,compliance-controls-service,executive_kpis,36,"Qiyas -- Executive: KPI definitions/data",pattern,yes
+qiyas,compliance-controls-service,metric_snapshots,12,"Qiyas -- Metric: Point-in-time snapshots",pattern,no
+qiyas,compliance-controls-service,qiyas_assessment_exports,11,"Qiyas -- Qiyas Assessment Exports",name,no
+qiyas,compliance-controls-service,qiyas_assessment_respondents,12,"Qiyas -- Qiyas Assessment Respondents",name,no
+qiyas,compliance-controls-service,qiyas_assessment_reviews,11,"Qiyas -- Qiyas Assessment Reviews",name,no
+qiyas,compliance-controls-service,qiyas_assessment_scopes,7,"Qiyas -- Qiyas Assessment Scopes",name,no
+qiyas,compliance-controls-service,qiyas_assessment_status_history,8,"Qiyas -- Qiyas Assessment Status: Historical change records",pattern,no
+qiyas,compliance-controls-service,qiyas_assessments,18,"Qiyas -- Qiyas Assessments",name,no
+qiyas,compliance-controls-service,qiyas_auto_tasks,17,"Qiyas -- Qiyas Auto: Task records",pattern,no
+qiyas,compliance-controls-service,qiyas_benchmark_cohorts,12,"Qiyas -- Qiyas Benchmark Cohorts",name,no
+qiyas,compliance-controls-service,qiyas_benchmark_comparisons,13,"Qiyas -- Qiyas Benchmark Comparisons",name,no
+qiyas,compliance-controls-service,qiyas_benchmark_datasets,19,"Qiyas -- Qiyas Benchmark Datasets",name,no
+qiyas,compliance-controls-service,qiyas_benchmark_metrics,16,"Qiyas -- Qiyas Benchmark: Metric data points",pattern,no
+qiyas,compliance-controls-service,qiyas_benchmark_percentiles,8,"Qiyas -- Qiyas Benchmark Percentiles",name,no
+qiyas,compliance-controls-service,qiyas_benchmark_results,11,"Qiyas -- Qiyas Benchmark Results",name,no
+qiyas,compliance-controls-service,qiyas_benchmark_trends,13,"Qiyas -- Qiyas Benchmark Trends",name,no
+qiyas,compliance-controls-service,qiyas_calibration_log,9,"Qiyas -- Qiyas Calibration: Activity/audit log records",pattern,no
+qiyas,compliance-controls-service,qiyas_certification_action_plans,18,"Qiyas -- Qiyas Certification Action Plans",name,no
+qiyas,compliance-controls-service,qiyas_certification_evidence_packs,18,"Qiyas -- Qiyas Certification Evidence Packs",name,no
+qiyas,compliance-controls-service,qiyas_certification_gaps,14,"Qiyas -- Qiyas Certification Gaps",name,no
+qiyas,compliance-controls-service,qiyas_certification_milestones,14,"Qiyas -- Qiyas Certification Milestones",name,no
+qiyas,compliance-controls-service,qiyas_certification_readiness,16,"Qiyas -- Qiyas Certification Readiness",name,no
+qiyas,compliance-controls-service,qiyas_certification_simulations,12,"Qiyas -- Qiyas Certification Simulations",name,no
+qiyas,compliance-controls-service,qiyas_consensus_reviews,11,"Qiyas -- Qiyas Consensus Reviews",name,no
+qiyas,compliance-controls-service,qiyas_dimension_scores,11,"Qiyas -- Qiyas Dimension Scores",name,no
+qiyas,compliance-controls-service,qiyas_dimensions,10,"Qiyas -- Qiyas Dimensions",name,no
+qiyas,compliance-controls-service,qiyas_domains,11,"Qiyas -- Qiyas Domains",name,no
+qiyas,compliance-controls-service,qiyas_evidence_chain_validations,11,"Qiyas -- Qiyas Evidence Chain Validations",name,no
+qiyas,compliance-controls-service,qiyas_evidence_coverage_analysis,10,"Qiyas -- Qiyas Evidence Coverage Analysis",name,no
+qiyas,compliance-controls-service,qiyas_evidence_quality_metrics,14,"Qiyas -- Qiyas Evidence Quality: Metric data points",pattern,no
+qiyas,compliance-controls-service,qiyas_evidence_rules,9,"Qiyas -- Qiyas Evidence: Rules/policy definitions",pattern,no
+qiyas,compliance-controls-service,qiyas_evidence_scores,13,"Qiyas -- Qiyas Evidence Scores",name,no
+qiyas,compliance-controls-service,qiyas_evidence_scoring_criteria,12,"Qiyas -- Qiyas Evidence Scoring Criteria",name,no
+qiyas,compliance-controls-service,qiyas_evidence_scoring_models,12,"Qiyas -- Qiyas Evidence Scoring Models",name,no
+qiyas,compliance-controls-service,qiyas_evidence_sufficiency_rules,11,"Qiyas -- Qiyas Evidence Sufficiency: Rules/policy definitions",pattern,no
+qiyas,compliance-controls-service,qiyas_gap_scores,10,"Qiyas -- Qiyas Gap Scores",name,no
+qiyas,compliance-controls-service,qiyas_grc_automation_rules,10,"Qiyas -- Qiyas Grc Automation: Rules/policy definitions",pattern,yes
+qiyas,compliance-controls-service,qiyas_grc_trigger_log,14,"Qiyas -- Qiyas Grc Trigger: Activity/audit log records",pattern,no
+qiyas,compliance-controls-service,qiyas_improvement_paths,13,"Qiyas -- Qiyas Improvement Paths",name,no
+qiyas,compliance-controls-service,qiyas_indicator_scores,10,"Qiyas -- Qiyas Indicator Scores",name,no
+qiyas,compliance-controls-service,qiyas_indicators,13,"Qiyas -- Qiyas Indicators",name,no
+qiyas,compliance-controls-service,qiyas_maturity_assessments,15,"Qiyas -- Qiyas Maturity Assessments",name,no
+qiyas,compliance-controls-service,qiyas_maturity_dimension_results,10,"Qiyas -- Qiyas Maturity Dimension Results",name,no
+qiyas,compliance-controls-service,qiyas_maturity_level_criteria,9,"Qiyas -- Qiyas Maturity Level Criteria",name,no
+qiyas,compliance-controls-service,qiyas_maturity_levels,9,"Qiyas -- Qiyas Maturity Levels",name,no
+qiyas,compliance-controls-service,qiyas_maturity_models,12,"Qiyas -- Qiyas Maturity Models",name,no
+qiyas,compliance-controls-service,qiyas_maturity_progression_history,10,"Qiyas -- Qiyas Maturity Progression: Historical change records",pattern,no
+qiyas,compliance-controls-service,qiyas_maturity_roadmaps,14,"Qiyas -- Qiyas Maturity Roadmaps",name,no
+qiyas,compliance-controls-service,qiyas_maturity_scores,10,"Qiyas -- Qiyas Maturity Scores",name,no
+qiyas,compliance-controls-service,qiyas_maturity_target_profiles,13,"Qiyas -- Qiyas Maturity Target Profiles",name,no
+qiyas,compliance-controls-service,qiyas_model_versions,10,"Qiyas -- Qiyas Model: Versioned record history",pattern,no
+qiyas,compliance-controls-service,qiyas_models,13,"Qiyas -- Qiyas Models",name,no
+qiyas,compliance-controls-service,qiyas_question_mappings,6,"Qiyas -- Qiyas Question: Cross-entity mapping",pattern,no
+qiyas,compliance-controls-service,qiyas_question_options,9,"Qiyas -- Qiyas Question Options",name,no
+qiyas,compliance-controls-service,qiyas_question_weights,7,"Qiyas -- Qiyas Question Weights",name,no
+qiyas,compliance-controls-service,qiyas_questions,14,"Qiyas -- Qiyas: Question catalog",pattern,no
+qiyas,compliance-controls-service,qiyas_recommendation_mappings,6,"Qiyas -- Qiyas Recommendation: Cross-entity mapping",pattern,no
+qiyas,compliance-controls-service,qiyas_recommendations,21,"Qiyas -- Qiyas Recommendations",name,no
+qiyas,compliance-controls-service,qiyas_response_attachments,10,"Qiyas -- Qiyas Response: File/blob attachments",pattern,no
+qiyas,compliance-controls-service,qiyas_response_history,10,"Qiyas -- Qiyas Response: Historical change records",pattern,no
+qiyas,compliance-controls-service,qiyas_responses,12,"Qiyas -- Qiyas: Response records (questionnaire/survey/assessment)",pattern,no
+qiyas,compliance-controls-service,qiyas_score_explanations,10,"Qiyas -- Qiyas Score Explanations",name,no
+qiyas,compliance-controls-service,qiyas_score_snapshots,11,"Qiyas -- Qiyas Score: Point-in-time snapshots",pattern,no
+qiyas,compliance-controls-service,qiyas_scores,12,"Qiyas -- Qiyas Scores",name,no
+qiyas,compliance-controls-service,qiyas_sections,12,"Qiyas -- Qiyas Sections",name,no
+qiyas,compliance-controls-service,qiyas_template_versions,9,"Qiyas -- Qiyas Template: Versioned record history",pattern,no
+qiyas,compliance-controls-service,qiyas_templates,13,"Qiyas -- Qiyas: Template catalog",pattern,no
+qiyas,compliance-controls-service,risk_appetite_statements,16,"Qiyas -- Risk record (Risk Appetite Statements)",token,no
+qiyas,compliance-controls-service,roadmap_items,24,"Qiyas -- Roadmap Items",name,no
+qiyas,compliance-controls-service,strategic_objectives,20,"Qiyas -- Strategic Objectives",name,no
+qiyas,compliance-controls-service,strategic_themes,12,"Qiyas -- Strategic Themes",name,no
+exception,compliance-controls-service,exception_approval_config,14,"Exception -- Exception Approval: Configuration values",pattern,no
+exception,compliance-controls-service,exception_gate_audit,11,"Exception -- Exception Gate: Audit-trail entries",pattern,no
+exception,compliance-controls-service,exception_gating_rules,13,"Exception -- Exception Gating: Rules/policy definitions",pattern,yes
+exception,compliance-controls-service,exceptions,23,"Exception -- Exception record (Exceptions)",token,no
+exception,compliance-controls-service,ucf_controls,21,"Exception -- Control record (Ucf Controls)",token,no
+knowledge,compliance-controls-service,knowledge_articles,14,"Knowledge -- Knowledge Articles",name,no
+risk,risk-incident-service,kri_breach_log,13,"Risk -- Kri Breach: Activity/audit log records",pattern,no
+risk,risk-incident-service,kri_data_points,9,"Risk -- Kri: Time-series data points",pattern,no
+risk,risk-incident-service,kri_tracking,15,"Risk -- Kri Tracking",name,no
+risk,risk-incident-service,kri_values,8,"Risk -- Kri Values",name,no
+risk,risk-incident-service,mitigating_control_mappings,7,"Risk -- Mitigating Control: Cross-entity mapping",pattern,no
+risk,risk-incident-service,model_inventory,19,"Risk -- Model Inventory",name,no
+risk,risk-incident-service,model_risk_scores,11,"Risk -- Risk record (Model Risk Scores)",token,no
+risk,risk-incident-service,model_validations,10,"Risk -- Model Validations",name,no
+risk,risk-incident-service,object_mappings,6,"Risk -- Object: Cross-entity mapping",pattern,no
+risk,risk-incident-service,preventive_control_mappings,7,"Risk -- Preventive Control: Cross-entity mapping",pattern,no
+risk,risk-incident-service,risk_acceptance_log,14,"Risk -- Risk Acceptance: Activity/audit log records",pattern,no
+risk,risk-incident-service,risk_assessment_items,9,"Risk -- Risk record (Risk Assessment Items)",token,no
+risk,risk-incident-service,risk_assessment_responses,11,"Risk -- Risk Assessment: Response records (questionnaire/survey/assessment)",pattern,no
+risk,risk-incident-service,risk_assessment_reviews,7,"Risk -- Risk record (Risk Assessment Reviews)",token,no
+risk,risk-incident-service,risk_assessments,16,"Risk -- Risk record (Risk Assessments)",token,no
+risk,risk-incident-service,risk_asset_links,7,"Risk -- Risk Asset: Cross-table link records",pattern,no
+risk,risk-incident-service,risk_campaigns,11,"Risk -- Campaign record (Risk Campaigns)",token,no
+risk,risk-incident-service,risk_categories,10,"Risk -- Risk: Category taxonomy",pattern,yes
+risk,risk-incident-service,risk_compliance_links,7,"Risk -- Risk Compliance: Cross-table link records",pattern,no
+risk,risk-incident-service,risk_consequences,11,"Risk -- Risk record (Risk Consequences)",token,no
+risk,risk-incident-service,risk_dashboard_cache,4,"Risk -- Risk Dashboard: Cached values",pattern,no
+risk,risk-incident-service,risk_dependencies,8,"Risk -- Risk: Dependency mapping",pattern,no
+risk,risk-incident-service,risk_escalation_log,9,"Risk -- Risk Escalation: Activity/audit log records",pattern,no
+risk,risk-incident-service,risk_evidence_links,7,"Risk -- Risk Evidence: Cross-table link records",pattern,no
+risk,risk-incident-service,risk_fair_assessments,26,"Risk -- Risk record (Risk Fair Assessments)",token,no
+risk,risk-incident-service,risk_impact_scales,11,"Risk -- Risk record (Risk Impact Scales)",token,no
+risk,risk-incident-service,risk_indicator_templates,13,"Risk -- Risk Indicator: Template catalog",pattern,no
+risk,risk-incident-service,risk_kris,22,"Risk -- Risk record (Risk Kris)",token,no
+risk,risk-incident-service,risk_likelihood_scales,10,"Risk -- Risk record (Risk Likelihood Scales)",token,no
+risk,risk-incident-service,risk_owners,9,"Risk -- Risk: Ownership assignment",pattern,no
+risk,risk-incident-service,risk_policy_links,7,"Risk -- Risk Policy: Cross-table link records",pattern,no
+risk,risk-incident-service,risk_review_log,9,"Risk -- Risk Review: Activity/audit log records",pattern,no
+risk,risk-incident-service,risk_scenario_reviews,8,"Risk -- Risk record (Risk Scenario Reviews)",token,no
+risk,risk-incident-service,risk_scenarios,16,"Risk -- Risk record (Risk Scenarios)",token,no
+risk,risk-incident-service,risk_score_history,7,"Risk -- Risk Score: Historical change records",pattern,no
+risk,risk-incident-service,risk_scoring_models,11,"Risk -- Risk record (Risk Scoring Models)",token,yes
+risk,risk-incident-service,risk_sector_applicability,8,"Risk -- Risk record (Risk Sector Applicability)",token,no
+risk,risk-incident-service,risk_status_history,11,"Risk -- Risk Status: Historical change records",pattern,no
+risk,risk-incident-service,risk_taxonomy,9,"Risk -- Risk record (Risk Taxonomy)",token,no
+risk,risk-incident-service,risk_team_distribution,7,"Risk -- Risk record (Risk Team Distribution)",token,yes
+risk,risk-incident-service,risk_threats,10,"Risk -- Risk record (Risk Threats)",token,no
+risk,risk-incident-service,risk_treatment_actions,12,"Risk -- Risk Treatment: Action/operation catalog",pattern,no
+risk,risk-incident-service,risk_treatment_reviews,7,"Risk -- Risk record (Risk Treatment Reviews)",token,no
+risk,risk-incident-service,risk_treatments,24,"Risk -- Risk record (Risk Treatments)",token,no
+risk,risk-incident-service,risk_velocity_scales,10,"Risk -- Risk record (Risk Velocity Scales)",token,no
+risk,risk-incident-service,risk_vendor_links,7,"Risk -- Risk Vendor: Cross-table link records",pattern,no
+risk,risk-incident-service,risks,54,"Risk -- Risk record (Risks)",token,no
+risk,risk-incident-service,vulnerabilities,21,"Risk -- Vulnerabilities",name,no
+risk,risk-incident-service,vulnerability_findings_map,8,"Risk -- Finding record (Vulnerability Findings Map)",token,no
+local-knowledge,compliance-controls-service,local_knowledge_access_log,17,"Local Knowledge -- Local Knowledge Access: Activity/audit log records",pattern,no
+local-knowledge,compliance-controls-service,local_knowledge_cache,13,"Local Knowledge -- Local Knowledge: Cached values",pattern,no
+local-knowledge,compliance-controls-service,local_knowledge_chunks,10,"Local Knowledge -- Local Knowledge Chunks",name,no
+local-knowledge,compliance-controls-service,local_knowledge_custody_chain,10,"Local Knowledge -- Local Knowledge Custody Chain",name,no
+local-knowledge,compliance-controls-service,local_knowledge_document_acl,12,"Local Knowledge -- Local Knowledge Document Acl",name,no
+local-knowledge,compliance-controls-service,local_knowledge_document_versions,8,"Local Knowledge -- Local Knowledge Document: Versioned record history",pattern,no
+local-knowledge,compliance-controls-service,local_knowledge_documents,26,"Local Knowledge -- Local Knowledge Documents",name,no
+local-knowledge,compliance-controls-service,local_knowledge_extractions,11,"Local Knowledge -- Local Knowledge Extractions",name,no
+local-knowledge,compliance-controls-service,local_knowledge_index,8,"Local Knowledge -- Local Knowledge Index",name,no
+local-knowledge,compliance-controls-service,local_knowledge_ingestion_log,22,"Local Knowledge -- Local Knowledge Ingestion: Activity/audit log records",pattern,no
+local-knowledge,compliance-controls-service,local_knowledge_legal_hold_audit,8,"Local Knowledge -- Local Knowledge Legal Hold: Audit-trail entries",pattern,no
+local-knowledge,compliance-controls-service,local_knowledge_published,21,"Local Knowledge -- Local Knowledge Published",name,no
+local-knowledge,compliance-controls-service,local_knowledge_source_sync_history,12,"Local Knowledge -- Local Knowledge Source Sync: Historical change records",pattern,no
+local-knowledge,compliance-controls-service,local_knowledge_sources,22,"Local Knowledge -- Local Knowledge Sources",name,no
+local-knowledge,compliance-controls-service,local_knowledge_storage_quota,10,"Local Knowledge -- Local Knowledge Storage Quota",name,no
+mcp,ai-gateway-service,mcp_agent_overrides,11,"Mcp -- AI agent record (Mcp Agent Overrides)",token,no
+mcp,ai-gateway-service,mcp_prompt_overrides,12,"Mcp -- Prompt template/log (Mcp Prompt Overrides)",token,no
+mcp,ai-gateway-service,mcp_resource_overrides,10,"Mcp -- Mcp Resource Overrides",name,no
+mcp,ai-gateway-service,mcp_tool_approval_requests,20,"Mcp -- Approval record (Mcp Tool Approval Requests)",token,no
+mcp,ai-gateway-service,mcp_tool_execution_log,36,"Mcp -- Mcp Tool Execution: Activity/audit log records",pattern,no
+mcp,ai-gateway-service,mcp_tool_overrides,17,"Mcp -- Mcp Tool Overrides",name,no
+mcp,ai-gateway-service,mcp_tool_usage_counters,12,"Mcp -- Mcp Tool Usage Counters",name,no
+mcp,ai-gateway-service,mcp_workflow_tool_bindings,28,"Mcp -- Mcp Workflow Tool Bindings",name,no
+navigation,tenant-service,navigation_audit_log,9,"Navigation -- Navigation Audit: Activity/audit log records",pattern,no
+navigation,tenant-service,navigation_items,15,"Navigation -- Navigation Items",name,yes
+navigation,tenant-service,navigation_overrides,12,"Navigation -- Navigation Overrides",name,no
+navigation,tenant-service,navigation_registry,26,"Navigation -- Navigation Registry",name,yes
+navigation,tenant-service,navigation_role_bindings,5,"Navigation -- Role record (Navigation Role Bindings)",token,yes
+navigation,tenant-service,navigation_usage_aggregates,10,"Navigation -- Navigation Usage Aggregates",name,no
+navigation,tenant-service,navigation_usage_log,8,"Navigation -- Navigation Usage: Activity/audit log records",pattern,no
+navigation,tenant-service,navigation_version_history,8,"Navigation -- Navigation Version: Historical change records",pattern,no
+provisioning,tenant-service,ninety_day_plans,6,"Provisioning -- Ninety Day Plans",name,no
+provisioning,tenant-service,provisioning_audit,9,"Provisioning -- Provisioning: Audit-trail entries",pattern,no
+provisioning,tenant-service,provisioning_jobs,17,"Provisioning -- Provisioning: Job records",pattern,no
+provisioning,tenant-service,provisioning_steps,8,"Provisioning -- Provisioning: Execution step records",pattern,no
+operating,tenant-service,operating_packs,12,"Operating -- Operating Packs",name,no
+training,compliance-controls-service,phishing_campaigns,33,"Training -- Campaign record (Phishing Campaigns)",token,no
+training,compliance-controls-service,phishing_user_results,13,"Training -- User record (Phishing User Results)",token,no
+training,compliance-controls-service,sector_training_paths,8,"Training -- Sector Training Paths",name,yes
+training,compliance-controls-service,training_assignments,27,"Training -- Training: Assignment mapping (X to Y)",pattern,no
+training,compliance-controls-service,training_audit_log,11,"Training -- Training Audit: Activity/audit log records",pattern,no
+training,compliance-controls-service,training_campaigns,36,"Training -- Campaign record (Training Campaigns)",token,no
+training,compliance-controls-service,training_catalog,20,"Training -- Training Catalog",name,no
+training,compliance-controls-service,training_certificates,8,"Training -- Training Certificates",name,no
+training,compliance-controls-service,training_certification_audit,7,"Training -- Training Certification: Audit-trail entries",pattern,no
+training,compliance-controls-service,training_certification_requirements,10,"Training -- Training Certification Requirements",name,yes
+training,compliance-controls-service,training_certifications,17,"Training -- Training Certifications",name,no
+training,compliance-controls-service,training_completion_snapshots,20,"Training -- Training Completion: Point-in-time snapshots",pattern,no
+training,compliance-controls-service,training_completions,10,"Training -- Training Completions",name,no
+training,compliance-controls-service,training_content,31,"Training -- Training Content",name,yes
+training,compliance-controls-service,training_enrollments,13,"Training -- Training Enrollments",name,no
+training,compliance-controls-service,training_programs,10,"Training -- Training Programs",name,no
+training,compliance-controls-service,training_team_distribution,6,"Training -- Team record (Training Team Distribution)",token,yes
+training,compliance-controls-service,training_user_progress,14,"Training -- User record (Training User Progress)",token,no
+training,compliance-controls-service,vendors,40,"Training -- Vendor/third-party record (Vendors)",token,yes
+policy,governance-policy-service,policy_assessment_history,9,"Policy -- Policy Assessment: Historical change records",pattern,no
+policy,governance-policy-service,policy_categories,12,"Policy -- Policy: Category taxonomy",pattern,yes
+policy,governance-policy-service,policy_control_links,9,"Policy -- Policy Control: Cross-table link records",pattern,no
+policy,governance-policy-service,policy_control_mappings,6,"Policy -- Policy Control: Cross-entity mapping",pattern,no
+policy,governance-policy-service,policy_dashboard_cache,5,"Policy -- Policy Dashboard: Cached values",pattern,no
+policy,governance-policy-service,policy_delivery_records,14,"Policy -- Policy record (Policy Delivery Records)",token,no
+policy,governance-policy-service,policy_drift_events,9,"Policy -- Policy Drift: Domain event records",pattern,no
+policy,governance-policy-service,policy_drift_snapshots,3,"Policy -- Policy Drift: Point-in-time snapshots",pattern,no
+policy,governance-policy-service,policy_exception_approvals,8,"Policy -- Approval record (Policy Exception Approvals)",token,no
+policy,governance-policy-service,policy_exception_requests,22,"Policy -- Policy record (Policy Exception Requests)",token,no
+policy,governance-policy-service,policy_gaps,7,"Policy -- Policy record (Policy Gaps)",token,no
+policy,governance-policy-service,policy_guidance,14,"Policy -- Policy record (Policy Guidance)",token,no
+policy,governance-policy-service,policy_issue_links,8,"Policy -- Policy Issue: Cross-table link records",pattern,no
+policy,governance-policy-service,policy_kpi_values,12,"Policy -- Policy record (Policy Kpi Values)",token,yes
+policy,governance-policy-service,policy_metrics,25,"Policy -- Policy: Metric data points",pattern,no
+policy,governance-policy-service,policy_mom_records,21,"Policy -- Policy record (Policy Mom Records)",token,no
+policy,governance-policy-service,policy_pack_catalog,7,"Policy -- Policy record (Policy Pack Catalog)",token,yes
+policy,governance-policy-service,policy_pack_rules,7,"Policy -- Policy Pack: Rules/policy definitions",pattern,yes
+policy,governance-policy-service,policy_process_actions,15,"Policy -- Policy Process: Action/operation catalog",pattern,no
+policy,governance-policy-service,policy_publication_audiences,7,"Policy -- Policy record (Policy Publication Audiences)",token,no
+policy,governance-policy-service,policy_publications,15,"Policy -- Policy: Published records",pattern,no
+policy,governance-policy-service,policy_risk_links,9,"Policy -- Policy Risk: Cross-table link records",pattern,no
+policy,governance-policy-service,policy_scores,6,"Policy -- Policy record (Policy Scores)",token,no
+policy,governance-policy-service,policy_templates,20,"Policy -- Policy: Template catalog",pattern,no
+policy,governance-policy-service,policy_version_diffs,9,"Policy -- Policy record (Policy Version Diffs)",token,no
+policy,governance-policy-service,policy_versions,17,"Policy -- Policy: Versioned record history",pattern,no
+policy,governance-policy-service,policy_workflow_tracker,10,"Policy -- Policy record (Policy Workflow Tracker)",token,no
+policy,governance-policy-service,policy_workflows,37,"Policy -- Policy: Workflow definitions",pattern,no
+policy,governance-policy-service,sod_rules,11,"Policy -- Sod: Rules/policy definitions",pattern,yes
+proactive-leadership,governance-policy-service,proactive_leadership_config_history,8,"Proactive Leadership -- Proactive Leadership Config: Historical change records",pattern,no
+proactive-leadership,governance-policy-service,proactive_leadership_cycles,8,"Proactive Leadership -- Proactive Leadership Cycles",name,no
+proactive-leadership,governance-policy-service,proactive_leadership_insights,13,"Proactive Leadership -- Proactive Leadership Insights",name,no
+proactive-leadership,governance-policy-service,proactive_leadership_patterns,10,"Proactive Leadership -- Proactive Leadership Patterns",name,no
+proactive-leadership,governance-policy-service,proactive_leadership_thresholds,12,"Proactive Leadership -- Proactive Leadership: Threshold definitions",pattern,no
+proactive-leadership,governance-policy-service,proactive_module_coverage,12,"Proactive Leadership -- Proactive Module Coverage",name,no
+proactive-leadership,governance-policy-service,proactive_signal_rules,17,"Proactive Leadership -- Proactive Signal: Rules/policy definitions",pattern,no
+mobile,notification-service,push_tokens,6,"Mobile -- Push: Token records",pattern,no
+quality-gate,tenant-service,qgate_ai_eval_scores,13,"Quality Gate -- Qgate Ai Eval Scores",name,no
+quality-gate,tenant-service,qgate_mutation_reports,12,"Quality Gate -- Qgate Mutation Reports",name,no
+quality-gate,tenant-service,qgate_runs,18,"Quality Gate -- Qgate: Execution run records",pattern,no
+quality-gate,tenant-service,qgate_schema_drift_log,14,"Quality Gate -- Qgate Schema Drift: Activity/audit log records",pattern,no
+quality-gate,tenant-service,qgate_stage_results,12,"Quality Gate -- Qgate Stage Results",name,no
+quality-gate,tenant-service,qgate_thresholds,8,"Quality Gate -- Qgate: Threshold definitions",pattern,no
+quality-gate,tenant-service,qgate_vrt_snapshots,10,"Quality Gate -- Qgate Vrt: Point-in-time snapshots",pattern,no
+remediation,risk-incident-service,remediation_plan_templates,11,"Remediation -- Remediation Plan: Template catalog",pattern,no
+remediation,risk-incident-service,remediation_plans,12,"Remediation -- Remediation Plans",name,yes
+remediation,risk-incident-service,remediation_sla_config,11,"Remediation -- Remediation Sla: Configuration values",pattern,no
+remediation,risk-incident-service,remediation_tracking,19,"Remediation -- Remediation Tracking",name,no
+reporting,evidence-audit-reporting-service,report_schedule_config,10,"Reporting -- Report Schedule: Configuration values",pattern,no
+reporting,evidence-audit-reporting-service,report_schedules,9,"Reporting -- Report Schedules",name,no
+reporting,evidence-audit-reporting-service,report_shares,6,"Reporting -- Report Shares",name,no
+reporting,evidence-audit-reporting-service,saved_views,12,"Reporting -- Saved Views",name,no
+reporting,evidence-audit-reporting-service,widget_registry,16,"Reporting -- Widget Registry",name,yes
+security,auth-service,security_compliance_attestations,13,"Security -- Security Compliance: Attestation records",pattern,no
+security,auth-service,security_events,15,"Security -- Security: Domain event records",pattern,no
+security,auth-service,security_posture_snapshots,10,"Security -- Security Posture: Point-in-time snapshots",pattern,no
+sod,auth-service,sod_conflict_log,16,"Sod -- Sod Conflict: Activity/audit log records",pattern,no
+sod,auth-service,sod_conflict_resolution_history,13,"Sod -- Sod Conflict Resolution: Historical change records",pattern,no
+team,tenant-service,team_collaboration_matrix,26,"Team -- RACI/permission matrix (Team Collaboration Matrix)",token,yes
+team,tenant-service,team_function_mappings,6,"Team -- Team Function: Cross-entity mapping",pattern,yes
+team,tenant-service,team_handoffs,28,"Team -- Team record (Team Handoffs)",token,no
+team,tenant-service,team_members,13,"Team -- Team: Member records",pattern,no
+team,tenant-service,team_operation_modes,8,"Team -- Team record (Team Operation Modes)",token,no
+webhooks,gateway,webhooks,7,"Webhooks -- Webhooks",name,no
+widgets,evidence-audit-reporting-service,widgets_bundles,14,"Widgets -- Widgets Bundles",name,yes
+widgets,evidence-audit-reporting-service,widgets_registry,20,"Widgets -- Widgets Registry",name,yes
+widgets,evidence-audit-reporting-service,widgets_render_log,7,"Widgets -- Widgets Render: Activity/audit log records",pattern,no
+workspace,tenant-service,workspace_feature_overrides,3,"Workspace -- Workspace record (Workspace Feature Overrides)",token,no
+workspace,tenant-service,workspace_profile,14,"Workspace -- Workspace record (Workspace Profile)",token,no
+workspace,tenant-service,workspace_profiles,7,"Workspace -- Workspace record (Workspace Profiles)",token,no
+workspace,tenant-service,workspace_provisioning_runs,8,"Workspace -- Workspace Provisioning: Execution run records",pattern,no
+workspace,tenant-service,workspace_provisioning_steps,11,"Workspace -- Workspace Provisioning: Execution step records",pattern,no
+workspace,tenant-service,workspace_seeds,13,"Workspace -- Workspace record (Workspace Seeds)",token,no
+workspace,tenant-service,workspace_state_history,6,"Workspace -- Workspace State: Historical change records",pattern,no
+workspace,tenant-service,workspace_states,5,"Workspace -- Workspace: State-machine state catalog",pattern,no

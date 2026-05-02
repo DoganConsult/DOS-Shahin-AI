@@ -1,0 +1,75 @@
+{
+  "moduleCode": "compliance",
+  "rules": [
+    {
+      "ruleCode": "cmp-sod-001",
+      "severity": "critical",
+      "conflictingRoles": [
+        "compliance.contributor",
+        "compliance.approver"
+      ],
+      "conflictingActions": [
+        "compliance.record.write",
+        "compliance.record.approve"
+      ],
+      "descriptionEn": "A user cannot both create and approve compliance records",
+      "descriptionAr": "لا يمكن للمستخدم إنشاء واعتماد سجلات compliance في نفس الوقت"
+    },
+    {
+      "ruleCode": "cmp-sod-002",
+      "severity": "high",
+      "conflictingRoles": [
+        "compliance.contributor",
+        "compliance.executive_owner"
+      ],
+      "conflictingActions": [
+        "compliance.record.write",
+        "compliance.record.delete"
+      ],
+      "descriptionEn": "A user cannot both create and delete compliance records",
+      "descriptionAr": "لا يمكن للمستخدم إنشاء وحذف سجلات compliance في نفس الوقت"
+    },
+    {
+      "ruleCode": "cmp-sod-003",
+      "severity": "critical",
+      "conflictingRoles": [
+        "compliance.contributor",
+        "compliance.approver"
+      ],
+      "conflictingActions": [
+        "assessment.record.write",
+        "assessment.record.manage"
+      ],
+      "descriptionEn": "A user cannot both perform and approve compliance assessments",
+      "descriptionAr": "لا يمكن للمستخدم إجراء واعتماد تقييمات الامتثال في نفس الوقت"
+    },
+    {
+      "ruleCode": "cmp-sod-004",
+      "severity": "critical",
+      "conflictingRoles": [
+        "compliance.contributor",
+        "compliance.approver"
+      ],
+      "conflictingActions": [
+        "attestation.record.write",
+        "attestation.record.manage"
+      ],
+      "descriptionEn": "A user cannot both submit and review compliance attestations",
+      "descriptionAr": "لا يمكن للمستخدم تقديم ومراجعة شهادات الامتثال في نفس الوقت"
+    },
+    {
+      "ruleCode": "cmp-sod-005",
+      "severity": "high",
+      "conflictingRoles": [
+        "compliance.operator",
+        "compliance.approver"
+      ],
+      "conflictingActions": [
+        "framework.record.write",
+        "compliance.control.approve"
+      ],
+      "descriptionEn": "A user cannot both modify framework mappings and approve controls",
+      "descriptionAr": "لا يمكن للمستخدم تعديل تعيينات الإطار واعتماد الضوابط في نفس الوقت"
+    }
+  ]
+}

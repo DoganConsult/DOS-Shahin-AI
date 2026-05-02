@@ -1,0 +1,19 @@
+{
+  "serviceCode": "mcp-gateway-service",
+  "version": "0.1.0",
+  "description": "Model Context Protocol gateway — per-tenant MCP server + admin API",
+  "port": 3011,
+  "transport": ["stdio", "http", "streamable-http"],
+  "ownership": "platform-owned",
+  "ownedTables": [
+    "mcp_servers",
+    "mcp_tools",
+    "mcp_resources",
+    "mcp_prompts",
+    "mcp_sessions",
+    "mcp_tool_invocations",
+    "mcp_audit_log"
+  ],
+  "routeBases": ["/api/mcp", "/mcp"],
+  "dependsOn": ["auth-service", "ai-engine-service"]
+}

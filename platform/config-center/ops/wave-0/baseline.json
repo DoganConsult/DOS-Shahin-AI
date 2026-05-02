@@ -1,0 +1,115 @@
+{
+  "generated_at": "2026-04-29T21:16:06.178Z",
+  "tenantId": "2ba4b532-3361-413c-ac6c-9c992f66bec4",
+  "count": 13,
+  "passed": 0,
+  "failed": 0,
+  "unknown": 13,
+  "totalDurationMs": 89505,
+  "results": [
+    {
+      "agentCode": "A01",
+      "durationMs": 12478,
+      "status": "unknown",
+      "actionsProposed": 0,
+      "actionsExecuted": 0,
+      "summarySnippet": "I'll help you identify the top 3 cybersecurity frameworks active in this tenant and their priority controls.\n\nLet me start by querying the frameworks in this tenant.\n\n```json\n{\n  \"tool\": \"query_framew"
+    },
+    {
+      "agentCode": "A02",
+      "durationMs": 9556,
+      "status": "unknown",
+      "actionsProposed": 0,
+      "actionsExecuted": 0,
+      "summarySnippet": "I'll help you identify users without MFA enrollment in this tenant. Let me query the user data to check MFA status.\n\n<tool_use>\n<tool_name>list_users</tool_name>\n<tool_input>\n{\n  \"tenantId\": \"2ba4b532"
+    },
+    {
+      "agentCode": "A03",
+      "durationMs": 20787,
+      "status": "unknown",
+      "actionsProposed": 0,
+      "actionsExecuted": 0,
+      "summarySnippet": "I'll help you compare NCA-ECC and ISO-27001 frameworks and identify controls that map across both. Let me start by gathering information about these frameworks.\n\n<think>\nI need to:\n1. First, check wha"
+    },
+    {
+      "agentCode": "A04",
+      "durationMs": 13846,
+      "status": "unknown",
+      "actionsProposed": 0,
+      "actionsExecuted": 0,
+      "summarySnippet": "I'll help you draft an implementation note for control NCA-ECC-2-3. Let me first retrieve the control details to ensure accuracy.\n\n<think>\nI need to:\n1. First, retrieve the control NCA-ECC-2-3 to unde"
+    },
+    {
+      "agentCode": "A05",
+      "durationMs": 9786,
+      "status": "unknown",
+      "actionsProposed": 0,
+      "actionsExecuted": 0,
+      "summarySnippet": "I'll help you summarize the open evidence requests by priority. Let me query the system to gather this information.\n\n<think>\nThe user wants a summary of open evidence requests organized by priority. I"
+    },
+    {
+      "agentCode": "A06",
+      "durationMs": 19807,
+      "status": "unknown",
+      "actionsProposed": 0,
+      "actionsExecuted": 0,
+      "summarySnippet": "I'll analyze the current risks and suggest a remediation order for the top 3 by score.\n\nLet me start by gathering the necessary data about risks and gaps in the system.\n\n<think>\nI need to:\n1. First, g"
+    },
+    {
+      "agentCode": "A07",
+      "durationMs": 590,
+      "status": "unknown",
+      "actionsProposed": 0,
+      "actionsExecuted": 0,
+      "summarySnippet": "[offline-stub] no user message"
+    },
+    {
+      "agentCode": "A08",
+      "durationMs": 421,
+      "status": "unknown",
+      "actionsProposed": 0,
+      "actionsExecuted": 0,
+      "summarySnippet": "[offline-stub] no user message"
+    },
+    {
+      "agentCode": "A09",
+      "durationMs": 441,
+      "status": "unknown",
+      "actionsProposed": 0,
+      "actionsExecuted": 0,
+      "summarySnippet": "[offline-stub] no user message"
+    },
+    {
+      "agentCode": "A10",
+      "durationMs": 454,
+      "status": "unknown",
+      "actionsProposed": 0,
+      "actionsExecuted": 0,
+      "summarySnippet": "[offline-stub] no user message"
+    },
+    {
+      "agentCode": "A11",
+      "durationMs": 486,
+      "status": "unknown",
+      "actionsProposed": 0,
+      "actionsExecuted": 0,
+      "summarySnippet": "[offline-stub] no user message"
+    },
+    {
+      "agentCode": "A12",
+      "durationMs": 438,
+      "status": "unknown",
+      "actionsProposed": 0,
+      "actionsExecuted": 0,
+      "summarySnippet": "[offline-stub] no user message"
+    },
+    {
+      "agentCode": "A13",
+      "durationMs": 415,
+      "status": "unknown",
+      "actionsProposed": 0,
+      "actionsExecuted": 0,
+      "summarySnippet": "[offline-stub] no user message"
+    }
+  ]
+}

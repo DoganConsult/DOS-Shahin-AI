@@ -1,0 +1,14 @@
+{
+  "modelVersion": "2026.04.23.0",
+  "file": "model.v2.fga",
+  "supersedes": "model.fga",
+  "deploymentNotes": [
+    "Publish via: fga model write --store-id $OPENFGA_STORE_ID --file model.v2.fga",
+    "Capture returned authorization_model_id; set as OPENFGA_MODEL_ID_CANDIDATE.",
+    "Leave OPENFGA_MODEL_ID pointing at the v1 model until DAUTH_OPENFGA_SHADOW=true soak shows <0.1% mismatch.",
+    "Then flip OPENFGA_MODEL_ID to the v2 id; keep v1 in the store for audit replay."
+  ],
+  "assertionsFile": "model.v2.assertions.yaml",
+  "owners": ["platform-identity", "platform-authz"],
+  "contract": "@dos/authz-ids/fga"
+}

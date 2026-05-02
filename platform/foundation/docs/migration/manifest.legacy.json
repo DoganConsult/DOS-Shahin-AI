@@ -1,0 +1,172 @@
+{
+  "moduleCode": "foundation",
+  "displayName": "Foundation \u2014 Organization Hierarchy",
+  "ownerTeam": "platform-dos",
+  "productCode": "dos",
+  "ownership": "module-owned",
+  "version": "2.0.0",
+  "status": "active",
+  "tier": "platform",
+  "category": "platform",
+  "routeBase": "/api/foundation",
+  "eventNamespace": "foundation",
+  "tablePrefix": "foundation_",
+  "provisioningOrder": 2,
+  "licensingTier": "starter",
+  "platformDependencies": [
+    "identity",
+    "tenancy",
+    "permissions",
+    "audit"
+  ],
+  "softDependencies": [
+    "team",
+    "workflow"
+  ],
+  "seedProviders": [
+    "db/seeds"
+  ],
+  "lifecycleHooks": {
+    "onInstall": "dist/bootstrap.js#onInstall",
+    "onActivate": "dist/bootstrap.js#onActivate",
+    "onMigrate": "dist/bootstrap.js#onMigrate",
+    "onUninstall": "dist/bootstrap.js#onUninstall"
+  },
+  "entrypoint": "dist/bootstrap.js#registerFoundation",
+  "tenantDefaults": [
+    "foundation_org_change_review_days",
+    "foundation_default_org_type"
+  ],
+  "requiredReferenceData": [
+    "countries",
+    "cities",
+    "sectors",
+    "employee_ranges",
+    "timezones",
+    "languages",
+    "frameworks",
+    "org_types"
+  ],
+  "currentSources": [
+    "modules/foundation"
+  ],
+  "targetPath": "modules/foundation",
+  "futureService": "user-service",
+  "frontendSources": [
+    "modules/foundation/ui"
+  ],
+  "ownedTables": [
+    "organizations",
+    "business_units",
+    "positions",
+    "position_assignments",
+    "locations",
+    "location_bu_map",
+    "committees",
+    "committee_members",
+    "ownership_mappings",
+    "invitations",
+    "audit_trail",
+    "permissions",
+    "functional_roles",
+    "role_permissions",
+    "departments",
+    "legal_entities",
+    "org_hierarchy_links",
+    "foundation_audit_log"
+  ],
+  "referencedTables": [
+    "tenants",
+    "users",
+    "teams",
+    "tenant_user_memberships",
+    "lookup_countries",
+    "lookup_cities",
+    "lookup_sectors",
+    "lookup_employee_ranges",
+    "lookup_timezones",
+    "lookup_languages",
+    "lookup_frameworks",
+    "lookup_org_types"
+  ],
+  "events": {
+    "publishes": [
+      "foundation.org_created",
+      "foundation.org_updated",
+      "foundation.dept_created",
+      "foundation.dept_updated",
+      "foundation.scope_changed",
+      "foundation.position.holder.assigned",
+      "foundation.position.holder.unassigned",
+      "foundation.org.manager.changed",
+      "foundation.role.assigned",
+      "foundation.role.unassigned"
+    ],
+    "subscribes": [
+      "workflow.status_changed",
+      "team.member_added",
+      "team.member_removed",
+      "onboarding.completed"
+    ]
+  },
+  "routeBases": [
+    "/api/foundation",
+    "/api/organizations",
+    "/api/business-units",
+    "/api/positions",
+    "/api/locations",
+    "/api/org-hierarchy",
+    "/api/committees",
+    "/api/ownership-mapping",
+    "/api/ownership-mappings",
+    "/api/sod",
+    "/api/governance/delegations",
+    "/api/governance/committees",
+    "/api/user-lifecycle",
+    "/api/bulk-invite",
+    "/api/access-review",
+    "/api/access-reviews",
+    "/api/delegations",
+    "/api/profiles",
+    "/api/invitations",
+    "/api/audit-trail",
+    "/api/users",
+    "/api/teams",
+    "/api/roles",
+    "/api/departments"
+  ],
+  "healthSignals": [
+    "schema_exists",
+    "tables_exist",
+    "hierarchy_integrity",
+    "orphaned_departments",
+    "unassigned_positions"
+  ],
+  "workflow": {
+    "workflowTemplateCode": "foundation_org_change",
+    "workflowSlaHours": 168,
+    "automationLevel": "semi"
+  },
+  "ai": {
+    "aiEnabled": true,
+    "aiCapabilities": [
+      "recommendations"
+    ]
+  },
+  "featureFlags": [
+    "foundation.hierarchy_visualization"
+  ],
+  "adminSurfaces": [
+    "org-structure",
+    "department-config",
+    "position-catalog"
+  ],
+  "uiSurfaces": [
+    "org-structure",
+    "department-views",
+    "position-catalog",
+    "hierarchy-visualization",
+    "diagnostics"
+  ],
+  "visibility": "internal"
+}

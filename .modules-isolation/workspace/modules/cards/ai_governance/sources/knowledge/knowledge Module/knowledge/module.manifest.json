@@ -1,0 +1,54 @@
+{
+  "moduleCode": "knowledge",
+  "displayName": "Knowledge Management",
+  "ownerTeam": "product-shahin-ai",
+  "productCode": "shahin-ai",
+  "ownership": "module-owned",
+  "version": "1.0.0",
+  "status": "active",
+  "platformDependencies": [
+    "identity",
+    "tenancy"
+  ],
+  "seedProviders": [
+    "products/shahin/seeds/knowledge-seed"
+  ],
+  "tenantDefaults": [
+    "knowledge_auto_index_enabled"
+  ],
+  "requiredReferenceData": [
+    "knowledge_categories"
+  ],
+  "currentSources": [
+    "/home/Dr-Dogan-AGRC-OS/backend/src/modules/knowledge"
+  ],
+  "targetPath": "modules/knowledge",
+  "futureService": "ai-engine-service",
+  "frontendSources": [
+    "/home/Dr-Dogan-AGRC-OS/frontend/src/app/platform-manifests/knowledge.module.routes.ts"
+  ],
+  "ownedTables": [
+    "knowledge_articles",
+    "knowledge_categories",
+    "knowledge_tags",
+    "knowledge_article_tags",
+    "knowledge_links"
+  ],
+  "referencedTables": [
+    "users",
+    "departments"
+  ],
+  "events": {
+    "publishes": [
+      "knowledge.article_created",
+      "knowledge.article_published",
+      "knowledge.article_archived"
+    ],
+    "subscribes": [
+      "foundation.scope_changed"
+    ]
+  },
+  "routeBases": [
+    "/api/knowledge"
+  ]
+}

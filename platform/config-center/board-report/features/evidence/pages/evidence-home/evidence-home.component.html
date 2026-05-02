@@ -1,0 +1,110 @@
+<div class="eh-page" [dir]="i18n.direction()">
+
+  <!-- Page Header -->
+  <header class="eh-header">
+    <h1>{{ isAr() ? 'مركز الأدلة' : 'Evidence Home' }}</h1>
+    <p class="eh-subtitle">{{ isAr() ? 'لوحة تحكم ومؤشرات الأدلة' : 'Evidence command center and KPIs' }}</p>
+  </header>
+
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="eh-body">
+      <app-skeleton-loader variant="card" />
+      <app-skeleton-loader variant="list" [rows]="5" />
+    </div>
+  }
+
+  <!-- Error State -->
+  @if (!loading() && error()) {
+    <div class="eh-body">
+      <app-empty-state
+        variant="error"
+        title="{{ isAr() ? 'فشل تحميل البيانات' : 'Failed to load data' }}"
+        description="{{ isAr() ? 'تحقق من اتصالك وحاول مرة أخرى' : 'Check your connection and try again' }}"
+        actionLabel="{{ isAr() ? 'إعادة المحاولة' : 'Retry' }}"
+        (action)="load()" />
+    </div>
+  }
+
+  <!-- Main Content -->
+  @if (!loading() && !error()) {
+    <div class="eh-body">
+
+      <!-- Primary KPI Strip (5 columns) -->
+      <section class="eh-kpi-grid eh-kpi-5">
+        @for (kpi of primaryKpis(); track kpi.labelEn) {
+          <div class="eh-kpi-card" [style.--card-accent]="'var(' + kpi.colorVar + ')'">
+            <div class="eh-kpi-icon">
+              <i class="pi {{ kpi.icon }}"></i>
+            </div>
+            <div class="eh-kpi-value">{{ kpi.value }}{{ kpi.suffix || '' }}</div>
+            <div class="eh-kpi-label">{{ isAr() ? kpi.labelAr : kpi.labelEn }}</div>
+          </div>
+        }
+      </section>
+
+      <!-- Secondary KPI Strip (3 columns) -->
+      <section class="eh-kpi-grid eh-kpi-3">
+        @for (kpi of secondaryKpis(); track kpi.labelEn) {
+          <div class="eh-kpi-card" [style.--card-accent]="'var(' + kpi.colorVar + ')'">
+            <div class="eh-kpi-icon">
+              <i class="pi {{ kpi.icon }}"></i>
+            </div>
+            <div class="eh-kpi-value">{{ kpi.value }}{{ kpi.suffix || '' }}</div>
+            <div class="eh-kpi-label">{{ isAr() ? kpi.labelAr : kpi.labelEn }}</div>
+          </div>
+        }
+      </section>
+
+      <!-- Status Breakdown -->
+      <section class="eh-section">
+        <h2 class="eh-section-title">{{ isAr() ? 'توزيع الحالات' : 'Status Breakdown' }}</h2>
+        @if (statusBreakdown().length === 0) {
+          <app-empty-state
+            title="{{ isAr() ? 'لا توجد بيانات حالة' : 'No status data' }}" />
+        } @else {
+          <div class="eh-status-table">
+            <div class="eh-st-header">
+              <span>{{ isAr() ? 'الحالة' : 'Status' }}</span>
+              <span>{{ isAr() ? 'العدد' : 'Count' }}</span>
+            </div>
+            @for (row of statusBreakdown(); track row.status) {
+              <div class="eh-st-row">
+                <span class="eh-st-status">
+                  <app-status-badge [status]="row.status" />
+                </span>
+                <span class="eh-st-count">{{ row.count }}</span>
+              </div>
+            }
+          </div>
+        }
+      </section>
+
+      <!-- Recent Activity Feed -->
+      <section class="eh-section">
+        <h2 class="eh-section-title">{{ isAr() ? 'النشاط الأخير' : 'Recent Activity' }}</h2>
+        @if (recentActivity().length === 0) {
+          <app-empty-state
+            title="{{ isAr() ? 'لا يوجد نشاط حديث' : 'No recent activity' }}" />
+        } @else {
+          <ul class="eh-activity-list">
+            @for (item of recentActivity(); track item.id) {
+              <li class="eh-activity-item">
+                <div class="eh-activity-dot"></div>
+                <div class="eh-activity-content">
+                  <span class="eh-activity-action">{{ item.action }}</span>
+                  <span class="eh-activity-entity">{{ item.entityName }}</span>
+                  <div class="eh-activity-meta">
+                    {{ item.actor }} &middot; {{ formatTime(item.timestamp) }}
+                  </div>
+                </div>
+              </li>
+            }
+          </ul>
+        }
+      </section>
+
+    </div>
+  }
+
+</div>

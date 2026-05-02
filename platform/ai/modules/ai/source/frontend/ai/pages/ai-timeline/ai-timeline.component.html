@@ -1,0 +1,38 @@
+<div class="px-6 py-4 flex flex-col gap-6 max-w-4xl mx-auto">
+  <div class="flex items-center justify-between">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Agent Timeline Feed</h1>
+    <button (click)="refreshTimeline()" class="px-4 py-2 bg-blue-600 text-white rounded shadow hover:bg-blue-700">
+      Refresh Feed
+    </button>
+  </div>
+
+  <div *ngIf="isLoading()" class="flex justify-center p-12">
+    <div class="animate-spin h-8 w-8 border-4 border-blue-500 rounded-full border-t-transparent"></div>
+  </div>
+
+  <div *ngIf="!isLoading() && timelineEvents().length === 0" class="p-8 text-center text-gray-500">
+    No timeline activity found in your Squad ecosystem.
+  </div>
+
+  <div *ngIf="!isLoading() && timelineEvents().length > 0" class="relative border-l border-gray-200 dark:border-gray-700 ml-3">
+    <div *ngFor="let item of timelineEvents()" class="mb-10 ml-6">
+      <span class="absolute flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full -left-3 ring-8 ring-white dark:ring-gray-900 dark:bg-blue-900">
+        <i [class]="getIconForStatus(item.status)"></i>
+      </span>
+      <div class="flex items-center gap-2 mb-1">
+        <h3 class="flex items-center mb-1 text-lg font-semibold text-gray-900 dark:text-white">
+          {{ item.title }}
+        </h3>
+        <span *ngIf="item.priority === 'critical'" class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">Critical</span>
+      </div>
+      <time class="block mb-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
+        <span *ngIf="item.assigned_participant_id">Assigned to: <span class="font-semibold text-gray-600">{{item.assigned_participant_id}}</span></span>
+        • Created {{ item.created_at | date:'medium' }}
+        <span *ngIf="item.due_date">• Due {{ item.due_date | date:'medium' }}</span>
+      </time>
+      <p class="mb-4 text-base font-normal text-gray-500 dark:text-gray-400">
+        Workflow ID: {{item.id}} | Status: {{item.status}}
+      </p>
+    </div>
+  </div>
+</div>

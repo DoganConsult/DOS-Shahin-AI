@@ -1,0 +1,11 @@
+{
+  "attestation.title": "Attestation",
+  "attestation.dashboard": "لوحة Attestation",
+  "attestation.empty.title": "لا توجد سجلات",
+  "attestation.empty.description": "أنشئ أول سجل attestation للبدء.",
+  "attestation.loading": "جاري تحميل بيانات attestation...",
+  "attestation.error.title": "فشل تحميل البيانات",
+  "attestation.error.retry": "إعادة المحاولة",
+  "attestation.create": "إنشاء جديد",
+  "attestation.diagnostics": "التشخيصات"
+}

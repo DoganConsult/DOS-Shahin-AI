@@ -1,0 +1,23 @@
+{
+  "serviceCode": "dashboard-widgets-service",
+  "displayName": "Dashboard and Widgets Service",
+  "layer": "domain-service",
+  "ownerTeam": "product-shahin-ai",
+  "runtime": "node",
+  "dependsOn": [
+    "auth-service",
+    "tenant-service"
+  ],
+  "modules": [
+    "dashboard",
+    "widgets",
+    "dashboard-editor"
+  ],
+  "exposes": {
+    "apiBase": "/api/dashboard",
+    "events": [
+      "dashboard.created",
+      "widget.registered"
+    ]
+  }
+}

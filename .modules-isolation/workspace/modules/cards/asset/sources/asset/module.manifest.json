@@ -1,0 +1,89 @@
+{
+  "moduleCode": "asset",
+  "displayName": "Asset Management",
+  "ownerTeam": "product-shahin-ai",
+  "productCode": "shahin-ai",
+  "ownership": "module-owned",
+  "version": "1.0.0",
+  "status": "active",
+  "platformDependencies": [
+    "identity",
+    "tenancy",
+    "workflow",
+    "permissions",
+    "audit"
+  ],
+  "seedProviders": [
+    "products/shahin/seeds/asset-seed"
+  ],
+  "tenantDefaults": [
+    "asset_classification_review_days",
+    "asset_scan_frequency_days"
+  ],
+  "requiredReferenceData": [
+    "asset_types",
+    "asset_categories",
+    "classification_levels"
+  ],
+  "currentSources": [
+    "/home/Dr-Dogan-AGRC-OS/backend/src/modules/asset"
+  ],
+  "targetPath": "modules/asset",
+  "futureService": "asset-service",
+  "frontendSources": [
+    "/home/Dr-Dogan-AGRC-OS/frontend/src/app/platform-manifests/asset.module.routes.ts"
+  ],
+  "ownedTables": [
+    "asset_categories",
+    "asset_classification_history",
+    "asset_classifications",
+    "asset_compliance_links",
+    "asset_criticality_scores",
+    "asset_custody_history",
+    "asset_dependencies",
+    "asset_documents",
+    "asset_inventory",
+    "asset_lifecycle_events",
+    "asset_locations",
+    "asset_owners",
+    "asset_risk_links",
+    "asset_scanning_schedules",
+    "asset_tags",
+    "asset_types",
+    "asset_vulnerability_links"
+  ],
+  "referencedTables": [
+    "audit_trail",
+    "teams",
+    "workflows",
+    "risk_assessments",
+    "compliance_frameworks",
+    "vendor_engagements"
+  ],
+  "events": {
+    "publishes": [
+      "asset.created",
+      "asset.classified",
+      "asset.reclassified",
+      "asset.custody_transferred",
+      "asset.decommissioned",
+      "asset.vulnerability_detected",
+      "asset.criticality_changed",
+      "asset.dependency_mapped",
+      "asset.lifecycle_event",
+      "asset.owner_assigned",
+      "asset.compliance_linked"
+    ],
+    "subscribes": [
+      "risk.score_changed",
+      "vendor.risk_changed",
+      "incident.classified",
+      "compliance.gap_detected",
+      "workflow.status_changed",
+      "foundation.position.holder.unassigned"
+    ]
+  },
+  "routeBases": [
+    "/api/asset"
+  ]
+}

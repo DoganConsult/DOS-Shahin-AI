@@ -1,0 +1,4 @@
+
+> @dos/dora-service@0.1.0 build /root/DOS-AIO/services/dora-service
+> tsc -p tsconfig.json
+

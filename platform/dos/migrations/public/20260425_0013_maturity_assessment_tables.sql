@@ -1,0 +1,113 @@
+-- =====================================================================
+-- Maturity assessment + framework routing (20260425_0013)
+--
+-- Backs the real implementation at
+--   modules/governance/source/backend/training/services/
+--     questionnaire-intelligence.service.ts
+--
+-- computeSkipSet / computeMaturityScores read from maturity_assessment_responses
+-- and join with maturity_questions + maturity_dimension_definitions.
+-- generateIntelligenceReport also reads maturity_signals for trend.
+-- recommendFrameworks / getBranchingRules read from framework_recommendation_rules
+-- and framework_branching_rules respectively.
+--
+-- Idempotent. Safe to re-run.
+-- =====================================================================
+
+BEGIN;
+
+CREATE TABLE IF NOT EXISTS dos.maturity_assessment_responses (
+  response_id       UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id         VARCHAR(64) NOT NULL,
+  assessment_id     UUID NOT NULL,
+  question_id       VARCHAR(128) NOT NULL,
+  answer            JSONB,
+  answered_by       VARCHAR(64),
+  answered_at       TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE UNIQUE INDEX IF NOT EXISTS ux_dos_maturity_assessment_responses_triple
+  ON dos.maturity_assessment_responses(tenant_id, assessment_id, question_id);
+CREATE INDEX IF NOT EXISTS idx_dos_maturity_assessment_responses_assessment
+  ON dos.maturity_assessment_responses(tenant_id, assessment_id);
+
+CREATE TABLE IF NOT EXISTS dos.maturity_signals (
+  signal_id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id         VARCHAR(64) NOT NULL,
+  signal_name       TEXT NOT NULL,
+  signal_value      DOUBLE PRECISION NOT NULL DEFAULT 0,
+  trend             TEXT,
+  recorded_at       TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_dos_maturity_signals_tenant
+  ON dos.maturity_signals(tenant_id, recorded_at DESC);
+
+CREATE TABLE IF NOT EXISTS dos.maturity_questions (
+  question_id       VARCHAR(128) PRIMARY KEY,
+  tenant_id         VARCHAR(64),
+  dimension_code    TEXT NOT NULL,
+  text              TEXT NOT NULL,
+  max_score         INTEGER NOT NULL DEFAULT 5,
+  framework_code    TEXT,
+  metadata          JSONB NOT NULL DEFAULT '{}'::jsonb
+);
+CREATE INDEX IF NOT EXISTS idx_dos_maturity_questions_dimension
+  ON dos.maturity_questions(dimension_code);
+
+CREATE TABLE IF NOT EXISTS dos.maturity_dimension_definitions (
+  dimension_code    TEXT NOT NULL,
+  tenant_id         VARCHAR(64) NOT NULL,
+  weight            DOUBLE PRECISION NOT NULL DEFAULT 1.0,
+  display_name      TEXT,
+  PRIMARY KEY (tenant_id, dimension_code)
+);
+
+CREATE TABLE IF NOT EXISTS dos.framework_recommendation_rules (
+  rule_id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id         VARCHAR(64) NOT NULL,
+  framework_code    TEXT NOT NULL,
+  title             TEXT,
+  fit_rule          JSONB NOT NULL DEFAULT '{}'::jsonb,
+  weight            DOUBLE PRECISION NOT NULL DEFAULT 1.0
+);
+CREATE UNIQUE INDEX IF NOT EXISTS ux_dos_framework_recommendation_rules_tenant_code
+  ON dos.framework_recommendation_rules(tenant_id, framework_code);
+
+CREATE TABLE IF NOT EXISTS dos.framework_branching_rules (
+  rule_id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id         VARCHAR(64) NOT NULL,
+  question_id       VARCHAR(128) NOT NULL,
+  if_answer         JSONB,
+  jump_to           VARCHAR(128),
+  skip_set          TEXT[] NOT NULL DEFAULT '{}'
+);
+CREATE INDEX IF NOT EXISTS idx_dos_framework_branching_rules_question
+  ON dos.framework_branching_rules(tenant_id, question_id);
+
+DO $grants$
+DECLARE
+  service_role TEXT;
+  tbl TEXT;
+  -- Real roles in shahin_grc — see 20260425_0010 header.
+  write_roles TEXT[] := ARRAY[
+    'dos_user', 'dos_ai', 'dos_workflow', 'dos_audit', 'dos_tenant',
+    'dos_notification', 'dos_auth', 'dos_migrator'
+  ];
+  tables TEXT[] := ARRAY[
+    'maturity_assessment_responses', 'maturity_signals',
+    'maturity_questions', 'maturity_dimension_definitions',
+    'framework_recommendation_rules', 'framework_branching_rules'
+  ];
+BEGIN
+  FOREACH service_role IN ARRAY write_roles LOOP
+    IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = service_role) THEN
+      FOREACH tbl IN ARRAY tables LOOP
+        EXECUTE format(
+          'GRANT SELECT, INSERT, UPDATE, DELETE ON dos.%I TO %I',
+          tbl, service_role
+        );
+      END LOOP;
+    END IF;
+  END LOOP;
+END $grants$;
+
+COMMIT;

@@ -1,0 +1,678 @@
+/**
+ * @dos/ui-system base utility styles.
+ *
+ * Minimal, opt-in. Real visual primitives come from @dos/design-tokens.
+ * Components in this package use these classes plus token vars only —
+ * never raw colors, raw shadows, raw radii, or physical left/right.
+ */
+
+.dos-app-shell {
+  display: grid;
+  min-height: 100dvh;
+  grid-template-rows: auto 1fr;
+  background: var(--dos-color-surface-canvas, var(--dos-color-surface-muted));
+  color: var(--dos-color-text);
+  font-family: var(--dos-font-family);
+  font-feature-settings: var(--dos-font-feature-display, 'liga' 1);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Sidebar surface — refined: subtle right border, no shadow, bone-white */
+.dos-app-shell__sidebar {
+  background: var(--dos-color-surface);
+  border-inline-end: 1px solid var(--dos-color-border-subtle);
+  padding-block: var(--dos-space-3);
+  padding-inline: var(--dos-space-2);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--dos-color-border) transparent;
+}
+.dos-app-shell__sidebar::-webkit-scrollbar { width: 6px; }
+.dos-app-shell__sidebar::-webkit-scrollbar-thumb {
+  background: var(--dos-color-border);
+  border-radius: var(--dos-radius-pill);
+}
+
+.dos-app-shell--mobile {
+  grid-template-rows: auto 1fr auto;
+  padding-block-end: var(--dos-safe-bottom);
+}
+
+.dos-app-shell--desktop {
+  grid-template-columns: var(--dos-sidebar-width) 1fr;
+  grid-template-rows: var(--dos-header-height-desktop) 1fr;
+  grid-template-areas:
+    'sidebar header'
+    'sidebar main';
+}
+
+.dos-app-shell__header { grid-area: header; }
+.dos-app-shell__sidebar { grid-area: sidebar; }
+.dos-app-shell__main { grid-area: main; overflow: auto; }
+
+/* Mobile bottom nav */
+.dos-bottom-nav {
+  position: sticky;
+  inset-block-end: 0;
+  background: var(--dos-color-surface-raised);
+  border-block-start: 1px solid var(--dos-color-border);
+  height: calc(var(--dos-bottom-nav-height) + var(--dos-safe-bottom));
+  padding-block-end: var(--dos-safe-bottom);
+  display: flex;
+  z-index: var(--dos-z-fixed);
+}
+
+.dos-bottom-nav__item {
+  flex: 1;
+  min-height: var(--dos-touch-target-min);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 0;
+  color: var(--dos-color-text-muted);
+  font-size: var(--dos-font-size-sm);
+}
+
+.dos-bottom-nav__item[aria-current='page'] {
+  color: var(--dos-color-primary);
+}
+
+.dos-workspace-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--dos-space-3);
+  padding-inline: var(--dos-space-4);
+  height: var(--dos-header-height-mobile);
+  background: var(--dos-color-surface-glass-strong, var(--dos-color-surface-raised));
+  backdrop-filter: saturate(180%) blur(8px);
+  -webkit-backdrop-filter: saturate(180%) blur(8px);
+  border-block-end: 1px solid var(--dos-color-border-subtle);
+  position: sticky;
+  inset-block-start: 0;
+  z-index: var(--dos-z-sticky);
+}
+
+@media (min-width: 1025px) {
+  .dos-workspace-header { height: var(--dos-header-height-desktop); }
+}
+
+.dos-account-menu {
+  background: var(--dos-color-surface-raised);
+  border-radius: var(--dos-radius-card);
+  box-shadow: var(--dos-shadow-popover);
+  padding: var(--dos-space-2);
+  min-width: 240px;
+}
+
+.dos-bottom-sheet {
+  position: fixed;
+  inset-inline: 0;
+  inset-block-end: 0;
+  background: var(--dos-color-surface-raised);
+  border-start-start-radius: var(--dos-radius-card);
+  border-start-end-radius: var(--dos-radius-card);
+  box-shadow: var(--dos-shadow-popover);
+  padding: var(--dos-space-4) var(--dos-space-4) calc(var(--dos-space-4) + var(--dos-safe-bottom));
+  z-index: var(--dos-z-modal);
+  max-height: 90dvh;
+  overflow: auto;
+}
+
+/* Wave H — desktop modal companion to dos-bottom-sheet. */
+.dos-desktop-dialog__overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--dos-color-overlay);
+  z-index: var(--dos-z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--dos-space-4);
+}
+
+.dos-desktop-dialog {
+  background: var(--dos-color-surface-raised);
+  color: var(--dos-color-text);
+  border-radius: var(--dos-radius-card);
+  box-shadow: var(--dos-shadow-popover);
+  width: var(--dos-desktop-dialog-width, 560px);
+  max-width: 95vw;
+  max-height: 90dvh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  overflow: hidden;
+  outline: none;
+}
+
+.dos-desktop-dialog__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--dos-space-4);
+  border-block-end: 1px solid var(--dos-color-border);
+}
+
+.dos-desktop-dialog__body {
+  padding: var(--dos-space-4);
+  overflow: auto;
+}
+
+.dos-desktop-dialog__footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--dos-space-2);
+  padding: var(--dos-space-3) var(--dos-space-4);
+  border-block-start: 1px solid var(--dos-color-border);
+}
+
+.dos-desktop-dialog__footer:empty {
+  display: none;
+}
+
+/* Wave H-2 — side-edge sliding panel for detail-drawer patterns. */
+.dos-side-drawer__overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--dos-color-overlay);
+  z-index: var(--dos-z-modal);
+  display: flex;
+  align-items: stretch;
+}
+
+.dos-side-drawer__overlay:has(> [data-position='right']) {
+  justify-content: flex-end;
+}
+
+.dos-side-drawer__overlay:has(> [data-position='left']) {
+  justify-content: flex-start;
+}
+
+.dos-side-drawer {
+  background: var(--dos-color-surface-raised);
+  color: var(--dos-color-text);
+  box-shadow: var(--dos-shadow-popover);
+  width: var(--dos-side-drawer-width, 560px);
+  max-width: 95vw;
+  height: 100dvh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  overflow: hidden;
+  outline: none;
+}
+
+.dos-side-drawer__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--dos-space-4);
+  border-block-end: 1px solid var(--dos-color-border);
+}
+
+.dos-side-drawer__body {
+  padding: var(--dos-space-4);
+  overflow: auto;
+}
+
+.dos-side-drawer__footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--dos-space-2);
+  padding: var(--dos-space-3) var(--dos-space-4);
+  border-block-start: 1px solid var(--dos-color-border);
+}
+
+.dos-side-drawer__footer:empty {
+  display: none;
+}
+
+.dos-page-header {
+  padding: var(--dos-space-6, var(--dos-space-5)) var(--dos-space-5);
+  background: var(--dos-color-surface);
+  border-radius: var(--dos-radius-lg);
+  border: 1px solid var(--dos-color-border-subtle);
+}
+
+.dos-page-header__breadcrumb {
+  font-size: var(--dos-font-size-xs);
+  color: var(--dos-color-text-subtle);
+  letter-spacing: var(--dos-letter-spacing-caps, 0.06em);
+  text-transform: uppercase;
+  font-weight: var(--dos-font-weight-medium);
+}
+
+.dos-page-header__title {
+  margin: var(--dos-space-2) 0 var(--dos-space-1);
+  font-family: var(--dos-font-family-display, var(--dos-font-family));
+  font-size: var(--dos-font-size-3xl);
+  line-height: var(--dos-line-height-tight);
+  font-weight: var(--dos-font-weight-bold);
+  letter-spacing: var(--dos-letter-spacing-display, -0.02em);
+  color: var(--dos-color-text-strong);
+}
+
+.dos-page-header__description {
+  color: var(--dos-color-text-muted);
+  font-size: var(--dos-font-size-base, var(--dos-font-size-md));
+  line-height: var(--dos-line-height-relaxed, 1.6);
+}
+
+.dos-page-header__row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--dos-space-4);
+  flex-wrap: wrap;
+}
+
+.dos-page-header__main {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.dos-page-header__actions {
+  flex: 0 0 auto;
+}
+
+.dos-tabs {
+  display: flex;
+  gap: var(--dos-space-2);
+  border-block-end: 1px solid var(--dos-color-border);
+  padding-inline: var(--dos-space-4);
+  background: var(--dos-color-surface);
+  overflow-x: auto;
+}
+
+.dos-tabs__item {
+  padding: var(--dos-space-3) var(--dos-space-3);
+  background: transparent;
+  border: 0;
+  border-block-end: 2px solid transparent;
+  color: var(--dos-color-text-muted);
+  font-size: var(--dos-font-size-sm);
+  cursor: pointer;
+  min-height: var(--dos-touch-target-min);
+}
+
+.dos-tabs__item[aria-selected='true'] {
+  color: var(--dos-color-primary);
+  border-block-end-color: var(--dos-color-primary);
+  font-weight: var(--dos-font-weight-semibold);
+}
+
+.dos-metric-card {
+  background: var(--dos-color-surface);
+  border: 1px solid var(--dos-color-border-subtle);
+  border-radius: var(--dos-radius-lg);
+  box-shadow: var(--dos-shadow-xs);
+  padding: var(--dos-space-4) var(--dos-space-5);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: box-shadow var(--dos-transition-fast, 130ms ease-out),
+              transform   var(--dos-transition-fast, 130ms ease-out),
+              border-color var(--dos-transition-fast, 130ms ease-out);
+}
+
+.dos-metric-card:hover {
+  box-shadow: var(--dos-shadow-sm);
+  border-color: var(--dos-color-border);
+}
+
+.dos-metric-card__label {
+  font-size: var(--dos-font-size-xs);
+  font-weight: var(--dos-font-weight-medium);
+  color: var(--dos-color-text-subtle);
+  letter-spacing: var(--dos-letter-spacing-caps, 0.06em);
+  text-transform: uppercase;
+  order: 0;
+}
+
+.dos-metric-card__value {
+  font-family: var(--dos-font-family-display, var(--dos-font-family));
+  font-size: var(--dos-font-size-2xl);
+  line-height: 1.15;
+  font-weight: var(--dos-font-weight-bold);
+  letter-spacing: var(--dos-letter-spacing-display, -0.02em);
+  color: var(--dos-color-text-strong);
+  font-feature-settings: var(--dos-font-feature-tabular, 'tnum' 1);
+  order: 1;
+}
+
+.dos-metric-card__delta {
+  font-size: var(--dos-font-size-xs);
+  font-weight: var(--dos-font-weight-semibold);
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  order: 2;
+}
+
+.dos-metric-card__delta--up   { color: var(--dos-color-success); }
+.dos-metric-card__delta--down { color: var(--dos-color-danger); }
+
+.dos-command-bar {
+  display: flex;
+  gap: var(--dos-space-2);
+  align-items: center;
+  padding: var(--dos-space-3) var(--dos-space-4);
+  background: var(--dos-color-surface);
+  border-block-end: 1px solid var(--dos-color-border);
+  flex-wrap: wrap;
+}
+
+.dos-command-bar__btn {
+  min-height: var(--dos-touch-target-min);
+  padding-inline: var(--dos-space-3);
+  border-radius: var(--dos-radius-md);
+  border: 1px solid var(--dos-color-border);
+  background: var(--dos-color-surface-raised);
+  color: var(--dos-color-text);
+  font-size: var(--dos-font-size-sm);
+  cursor: pointer;
+}
+
+.dos-command-bar__btn--primary {
+  background: var(--dos-color-primary);
+  color: var(--dos-color-text-inverse);
+  border-color: var(--dos-color-primary);
+}
+
+.dos-status-banner {
+  padding: var(--dos-space-3) var(--dos-space-4);
+  border-radius: var(--dos-radius-md);
+  background: var(--dos-color-primary-soft);
+  color: var(--dos-color-text);
+  font-size: var(--dos-font-size-sm);
+}
+
+.dos-empty-state, .dos-loading-state {
+  padding: var(--dos-space-8);
+  text-align: center;
+  color: var(--dos-color-text-muted);
+}
+
+.dos-fab {
+  position: fixed;
+  inset-inline-end: var(--dos-space-4);
+  inset-block-end: calc(var(--dos-bottom-nav-height) + var(--dos-space-4) + var(--dos-safe-bottom));
+  width: 56px;
+  height: 56px;
+  border-radius: var(--dos-radius-pill);
+  background: var(--dos-color-primary);
+  color: var(--dos-color-text-inverse);
+  border: 0;
+  box-shadow: var(--dos-shadow-fab);
+  z-index: var(--dos-z-fixed);
+}
+
+.dos-grid {
+  display: grid;
+  gap: var(--dos-space-4);
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 481px) {
+  .dos-grid--cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (min-width: 1025px) {
+  .dos-grid--cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .dos-grid--cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+input, textarea, select {
+  font-size: var(--dos-font-size-input-mobile);
+}
+
+/* ─── Workspace nav (B0.2) ────────────────────────────────────────────
+ * Used by DosWorkspaceNav / DosNavSection / DosNavItem.
+ * Token-only. LTR/RTL safe via padding-inline / margin-inline.
+ */
+.dos-workspace-nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dos-space-3);
+  padding: var(--dos-space-3);
+}
+
+/* ── Nav section — refined enterprise sidebar ─────────────────────── */
+.dos-nav-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-block-end: var(--dos-space-3);
+}
+.dos-nav-section + .dos-nav-section {
+  margin-block-start: var(--dos-space-2);
+  padding-block-start: var(--dos-space-3);
+  border-block-start: 1px solid var(--dos-color-border-subtle);
+}
+
+.dos-nav-section__head {
+  font-size: 0.6875rem;          /* 11px */
+  font-weight: var(--dos-font-weight-semibold);
+  letter-spacing: var(--dos-letter-spacing-caps, 0.06em);
+  text-transform: uppercase;
+  color: var(--dos-color-text-subtle);
+  padding-block: var(--dos-space-2) var(--dos-space-1);
+  padding-inline: var(--dos-space-3);
+  user-select: none;
+}
+
+.dos-nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dos-nav-section__item { margin: 0; }
+
+/* Nav item — left rail accent on active, soft hover, focus ring. */
+.dos-nav-item {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--dos-space-2);
+  background: transparent;
+  color: var(--dos-color-text);
+  border: 0;
+  border-radius: var(--dos-radius-md);
+  padding-block: 8px;
+  padding-inline: var(--dos-space-3);
+  min-height: 36px;
+  font: inherit;
+  font-size: var(--dos-font-size-md);
+  font-weight: var(--dos-font-weight-medium);
+  text-align: start;
+  cursor: pointer;
+  transition:
+    background var(--dos-transition-fast, 130ms ease-out),
+    color var(--dos-transition-fast, 130ms ease-out);
+}
+
+.dos-nav-item:hover:not(:disabled):not(.dos-nav-item--active) {
+  background: var(--dos-color-surface-muted);
+  color: var(--dos-color-text-strong);
+}
+
+.dos-nav-item:focus-visible {
+  outline: none;
+  box-shadow: var(--dos-shadow-focus, 0 0 0 3px rgba(23, 105, 179, 0.32));
+}
+
+/* Active = soft brand-tinted background + 3px leading rail.
+ * Logical inset-inline-start handles RTL automatically. */
+.dos-nav-item--active {
+  background: var(--dos-color-primary-soft);
+  color: var(--dos-color-primary-strong);
+  font-weight: var(--dos-font-weight-semibold);
+}
+.dos-nav-item--active::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block: 6px;
+  width: 3px;
+  background: var(--dos-color-primary);
+  border-radius: var(--dos-radius-pill);
+}
+
+.dos-nav-item--disabled,
+.dos-nav-item:disabled {
+  color: var(--dos-color-text-disabled, var(--dos-color-text-muted));
+  cursor: not-allowed;
+}
+
+.dos-nav-item__icon {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  color: var(--dos-color-text-subtle);
+  transition: color var(--dos-transition-fast, 130ms ease-out);
+}
+.dos-nav-item:hover:not(:disabled):not(.dos-nav-item--active) .dos-nav-item__icon {
+  color: var(--dos-color-text);
+}
+.dos-nav-item--active .dos-nav-item__icon {
+  color: var(--dos-color-primary);
+}
+
+.dos-nav-item__label {
+  flex: 1 1 auto;
+  min-width: 0;
+  text-align: start;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dos-nav-item__badge {
+  font-size: var(--dos-font-size-2xs, 0.6875rem);
+  font-weight: var(--dos-font-weight-semibold);
+  letter-spacing: 0.02em;
+  padding-block: 1px;
+  padding-inline: 6px;
+  background: var(--dos-color-accent-bg, var(--dos-color-surface-muted));
+  color: var(--dos-color-accent-text, var(--dos-color-text-muted));
+  border-radius: var(--dos-radius-pill);
+  line-height: 1.4;
+}
+
+.dos-nav-item--active .dos-nav-item__badge {
+  background: var(--dos-color-surface);
+  color: var(--dos-color-primary-strong);
+}
+
+/* ─── Workspace utility classes (B0.2) ───────────────────────────────
+ * Token-only. Used by product apps that consume @dos/ui-system; lets
+ * them avoid hand-rolling button/chip/choice styles in their own CSS
+ * (which would trip the ui-no-raw-css guard).
+ */
+
+/* Ghost icon button — transparent with hover lift. For header triggers. */
+.dos-btn-ghost {
+  background: transparent;
+  border: 0;
+  color: var(--dos-color-text);
+  font: inherit;
+  cursor: pointer;
+  min-height: var(--dos-touch-target-min);
+  padding-block: var(--dos-space-1);
+  padding-inline: var(--dos-space-2);
+  border-radius: var(--dos-radius-card);
+}
+.dos-btn-ghost:hover { background: var(--dos-color-surface-muted); }
+.dos-btn-ghost:focus-visible {
+  outline: 2px solid var(--dos-color-primary);
+  outline-offset: 2px;
+}
+
+/* Primary button — for CTAs ("Open tenant settings"). */
+.dos-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--dos-color-primary);
+  color: var(--dos-color-text-inverse);
+  border: 0;
+  border-radius: var(--dos-radius-card);
+  padding-block: var(--dos-space-2);
+  padding-inline: var(--dos-space-4);
+  min-height: var(--dos-touch-target-min);
+  font: inherit;
+  font-weight: var(--dos-font-weight-medium);
+  text-decoration: none;
+  cursor: pointer;
+}
+.dos-btn-primary:hover { filter: brightness(1.05); }
+.dos-btn-primary:focus-visible {
+  outline: 2px solid var(--dos-color-primary);
+  outline-offset: 2px;
+}
+
+/* Chip — for permission lists, tag clusters. */
+.dos-chip {
+  display: inline-block;
+  background: var(--dos-color-surface-muted);
+  color: var(--dos-color-text-muted);
+  border: 1px solid var(--dos-color-border);
+  border-radius: var(--dos-radius-pill);
+  padding-block: 2px;
+  padding-inline: var(--dos-space-2);
+  font-size: var(--dos-font-size-sm);
+}
+
+/* Chip cluster wrapper. */
+.dos-chip-cluster {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dos-space-1);
+}
+
+/* Choice card (radiogroup pattern — locale selector etc.). */
+.dos-choice {
+  flex: 1 1 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  background: var(--dos-color-surface-raised);
+  color: var(--dos-color-text);
+  border: 1px solid var(--dos-color-border);
+  border-radius: var(--dos-radius-card);
+  padding-block: var(--dos-space-3);
+  padding-inline: var(--dos-space-3);
+  cursor: pointer;
+  min-height: var(--dos-touch-target-min);
+  font: inherit;
+  text-align: start;
+}
+.dos-choice:hover { background: var(--dos-color-surface-muted); }
+.dos-choice--active {
+  background: var(--dos-color-primary);
+  color: var(--dos-color-text-inverse);
+  border-color: var(--dos-color-primary);
+}
+.dos-choice__native { font-size: var(--dos-font-size-sm); opacity: 0.85; }
+
+.dos-choice-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dos-space-2);
+}

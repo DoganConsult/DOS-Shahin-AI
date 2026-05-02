@@ -1,0 +1,112 @@
+=== verify:imports ===
+ WARN  Unsupported engine: wanted: {"node":">=24.14.0"} (current: {"node":"v20.18.2","pnpm":"10.33.0"})
+
+> dogan-ai-os-platform-target@1.0.0 verify:imports /root/DOS-AIO
+> npx dependency-cruiser --config .dependency-cruiser.cjs services/ modules/
+
+npm warn Unknown env config "verify-deps-before-run". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.
+npm warn Unknown env config "npm-globalconfig". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.
+npm warn Unknown env config "_jsr-registry". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.
+npm warn Unknown env config "shamefully-hoist". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.
+npm warn Unknown project config "shamefully-hoist". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.
+
+  ERROR: Can't open config file '.dependency-cruiser.cjs' for reading. Does it exist?
+         - You can create a config file by running 'npx dependency-cruiser --init'
+         - If you intended to run without a config file use --no-config
+
+ ELIFECYCLE  Command failed with exit code 1.
+=== typecheck:modules ===
+modules/workflow/source/data/workflow-templates/index.ts(261,8): error TS2307: Cannot find module './identity/credential-recovery.service' or its corresponding type declarations.
+modules/workflow/source/data/workflow-templates/index.ts(271,8): error TS2307: Cannot find module './identity/login-protection.service' or its corresponding type declarations.
+modules/workflow/source/data/workflow-templates/index.ts(282,8): error TS2307: Cannot find module './identity/invitation-control.service' or its corresponding type declarations.
+modules/workflow/source/data/workflow-templates/index.ts(292,8): error TS2307: Cannot find module './access/functional-role.service' or its corresponding type declarations.
+modules/workflow/source/data/workflow-templates/index.ts(302,8): error TS2307: Cannot find module './access/access-profile.service' or its corresponding type declarations.
+modules/workflow/source/data/workflow-templates/index.ts(316,8): error TS2307: Cannot find module './access/permission.service' or its corresponding type declarations.
+modules/workflow/source/data/workflow-templates/index.ts(326,8): error TS2307: Cannot find module './access/role-assignment.service' or its corresponding type declarations.
+modules/workflow/source/data/workflow-templates/index.ts(329,134): error TS2307: Cannot find module './scope/org-scope.adapter' or its corresponding type declarations.
+modules/workflow/source/data/workflow-templates/index.ts(330,150): error TS2307: Cannot find module './scope/team-scope.adapter' or its corresponding type declarations.
+modules/workflow/source/data/workflow-templates/index.ts(331,179): error TS2307: Cannot find module './scope/position-scope.adapter' or its corresponding type declarations.
+modules/workflow/source/data/workflow-templates/index.ts(332,218): error TS2307: Cannot find module './scope/ownership-scope.adapter' or its corresponding type declarations.
+modules/workflow/source/data/workflow-templates/index.ts(341,8): error TS2307: Cannot find module './authority/decision-authority.service' or its corresponding type declarations.
+modules/workflow/source/data/workflow-templates/index.ts(349,8): error TS2307: Cannot find module './authority/sign-off-authority.service' or its corresponding type declarations.
+modules/workflow/source/data/workflow-templates/index.ts(362,8): error TS2307: Cannot find module './authority/approval-matrix.service' or its corresponding type declarations.
+modules/workflow/source/data/workflow-templates/index.ts(377,8): error TS2307: Cannot find module './delegation/delegation-policy.service' or its corresponding type declarations.
+modules/workflow/source/data/workflow-templates/index.ts(384,8): error TS2307: Cannot find module './delegation/acting-on-behalf-of.service' or its corresponding type declarations.
+modules/workflow/source/data/workflow-templates/index.ts(393,8): error TS2307: Cannot find module './sod/sod-policy.service' or its corresponding type declarations.
+modules/workflow/source/data/workflow-templates/index.ts(402,8): error TS2307: Cannot find module './sod/sod-conflict-audit.service' or its corresponding type declarations.
+modules/workflow/source/data/workflow-templates/index.ts(409,8): error TS2307: Cannot find module './lifecycle-auth/self-approval.guard' or its corresponding type declarations.
+modules/workflow/source/data/workflow-templates/index.ts(419,8): error TS2307: Cannot find module './lifecycle-auth/maker-checker-policy.service' or its corresponding type declarations.
+modules/workflow/source/data/workflow-templates/index.ts(428,8): error TS2307: Cannot find module './audit/security-event.service' or its corresponding type declarations.
+modules/workflow/source/data/workflow-templates/index.ts(436,8): error TS2307: Cannot find module './audit/access-review.service' or its corresponding type declarations.
+modules/workflow/source/data/workflow-templates/index.ts(443,8): error TS2307: Cannot find module './policies/tenant-security-policy.service' or its corresponding type declarations.
+modules/workflow/source/data/workflow-templates/index.ts(458,8): error TS2307: Cannot find module './frontend-contracts/frontend-access-contract.service' or its corresponding type declarations.
+modules/workflow/source/data/workflow-templates/index.ts(469,8): error TS2307: Cannot find module './frontend-contracts/access-snapshot.contract' or its corresponding type declarations.
+modules/workflow/source/data/workflow-templates/index.ts(482,8): error TS2307: Cannot find module './registry/module-security-seeder.registry' or its corresponding type declarations.
+modules/workflow/source/data/workflow-templates/index.ts(485,29): error TS2307: Cannot find module './access/access.resolver' or its corresponding type declarations.
+modules/workflow/source/data/workflow-templates/index.ts(492,8): error TS2307: Cannot find module './access/authorization-audit.service' or its corresponding type declarations.
+modules/workflow/source/data/workflow-templates/index.ts(499,8): error TS2307: Cannot find module './access/role-profiles.service' or its corresponding type declarations.
+modules/workflow/source/data/workflow-templates/index.ts(506,8): error TS2307: Cannot find module './access/canonical-access.service' or its corresponding type declarations.
+modules/workflow/source/data/workflow-templates/index.ts(515,8): error TS2307: Cannot find module './access/security-posture.service' or its corresponding type declarations.
+modules/workflow/source/data/workflow-templates/index.ts(524,8): error TS2307: Cannot find module './scope/external-scope.adapter' or its corresponding type declarations.
+modules/workflow/source/data/workflow-templates/index.ts(542,8): error TS2307: Cannot find module './contracts/auth-error.contract' or its corresponding type declarations.
+modules/workflow/source/data/workflow-templates/index.ts(549,8): error TS2307: Cannot find module './contracts/lifecycle-auth.contract' or its corresponding type declarations.
+modules/workflow/source/data/workflow-templates/index.ts(558,8): error TS2307: Cannot find module './contracts/delegation.contract' or its corresponding type declarations.
+modules/workflow/source/data/workflow-templates/index.ts(561,30): error TS2307: Cannot find module './identity/token.service' or its corresponding type declarations.
+modules/workflow/source/data/workflow-templates/index.ts(562,47): error TS2307: Cannot find module './identity/token.service' or its corresponding type declarations.
+modules/workflow/source/platform/dos/workflows/events/workflow-event.service.ts(7,15): error TS2307: Cannot find module '../../../platform/dos/workflows/events/workflow-event.service' or its corresponding type declarations.
+packages/dos-module-sdk/src/rules-engine.ts(24,28): error TS2307: Cannot find module 'json-rules-engine' or its corresponding type declarations.
+ ELIFECYCLE  Command failed with exit code 2.
+=== validate:env ===
+ WARN  Unsupported engine: wanted: {"node":">=24.14.0"} (current: {"node":"v20.18.2","pnpm":"10.33.0"})
+
+> dogan-ai-os-platform-target@1.0.0 validate:env /root/DOS-AIO
+> tsx ops/scripts/validate-env.ts
+
+Environment documentation validation failed:
+  - /root/DOS-AIO/ops/env/.env.development: missing PORT (Default service port for the stack)
+ ELIFECYCLE  Command failed with exit code 1.
+=== validate:migrations ===
+ WARN  Unsupported engine: wanted: {"node":">=24.14.0"} (current: {"node":"v20.18.2","pnpm":"10.33.0"})
+
+> dogan-ai-os-platform-target@1.0.0 validate:migrations /root/DOS-AIO
+> node ops/scripts/validate-migrations.mjs
+
+[validate-migrations] DATABASE_URL is required.
+ ELIFECYCLE  Command failed with exit code 1.
+=== verify:schema ===
+ WARN  Unsupported engine: wanted: {"node":">=24.14.0"} (current: {"node":"v20.18.2","pnpm":"10.33.0"})
+
+> dogan-ai-os-platform-target@1.0.0 verify:schema /root/DOS-AIO
+> node ops/scripts/verify-migration-schema.mjs
+
+[verify-schema] DATABASE_URL is required.
+ ELIFECYCLE  Command failed with exit code 1.
+=== verify:data-safety ===
+ WARN  Unsupported engine: wanted: {"node":">=24.14.0"} (current: {"node":"v20.18.2","pnpm":"10.33.0"})
+
+> dogan-ai-os-platform-target@1.0.0 verify:data-safety /root/DOS-AIO
+> node ops/scripts/verify-migration-data-safety.mjs
+
+[data-safety] DATABASE_URL is required.
+ ELIFECYCLE  Command failed with exit code 1.
+=== security:secrets-scan ===
+
+=== Recommendations ===
+- Found 668 potential secrets. Move all secrets to environment variables or secret management systems.
+- Found 4330 instances of PII data. Consider encryption or data masking.
+- 1215 high-confidence PII instances found. Review data handling practices.
+- Implement regular security scanning in CI/CD pipeline.
+- Use secret scanning tools like GitGuardian or TruffleHog.
+- Enable branch protection and require code reviews for security changes.
+- Implement proper data classification and handling procedures.
+Security report generated: /root/DOS-AIO/security-report.json
+
+Security scan completed successfully.
+
+[secrets-scan] ── Report Summary ──
+  Files scanned:    21016
+  Secrets found:    668
+  Vulnerabilities:  0
+  PII instances:    4330
+
+[secrets-scan] PASS: No critical/high findings.

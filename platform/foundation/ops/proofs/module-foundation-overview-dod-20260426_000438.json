@@ -1,0 +1,117 @@
+{
+  "module": "foundation-overview",
+  "phase": "Phase 1 / Module 2",
+  "completedAt": "2026-04-25T16:04:39.050628Z",
+  "verdict": "FAIL",
+  "tenant": "shahin_visitors",
+  "user": "tenantadmin@shahin-ai.local",
+  "role": "tenant_admin",
+  "issuer": "https://auth.shahin-ai.com/realms/dogan",
+  "sliceCount": 14,
+  "passCount": 12,
+  "failCount": 2,
+  "failingSlices": [
+    "users",
+    "delegations"
+  ],
+  "endpoints": [
+    {
+      "slice": "users",
+      "status": 500,
+      "ms": 71,
+      "verdict": "FAIL",
+      "sample": "object"
+    },
+    {
+      "slice": "departments",
+      "status": 200,
+      "ms": 38,
+      "verdict": "PASS",
+      "sample": "departments: list[0]"
+    },
+    {
+      "slice": "locations",
+      "status": 200,
+      "ms": 27,
+      "verdict": "PASS",
+      "sample": "data: list[0]"
+    },
+    {
+      "slice": "organizations",
+      "status": 200,
+      "ms": 26,
+      "verdict": "PASS",
+      "sample": "data: list[0]"
+    },
+    {
+      "slice": "businessUnits",
+      "status": 200,
+      "ms": 26,
+      "verdict": "PASS",
+      "sample": "data: list[0]"
+    },
+    {
+      "slice": "roles",
+      "status": 200,
+      "ms": 41,
+      "verdict": "PASS",
+      "sample": "profiles: list[25]"
+    },
+    {
+      "slice": "audit",
+      "status": 200,
+      "ms": 25,
+      "verdict": "PASS",
+      "sample": "entries: list[0]"
+    },
+    {
+      "slice": "invitations",
+      "status": 200,
+      "ms": 26,
+      "verdict": "PASS",
+      "sample": "invitations: list[0]"
+    },
+    {
+      "slice": "teams",
+      "status": 200,
+      "ms": 28,
+      "verdict": "PASS",
+      "sample": "data: list[0]"
+    },
+    {
+      "slice": "positions",
+      "status": 200,
+      "ms": 29,
+      "verdict": "PASS",
+      "sample": "data: list[0]"
+    },
+    {
+      "slice": "committees",
+      "status": 200,
+      "ms": 27,
+      "verdict": "PASS",
+      "sample": "data: list[0]"
+    },
+    {
+      "slice": "delegations",
+      "status": 500,
+      "ms": 27,
+      "verdict": "FAIL",
+      "sample": "object"
+    },
+    {
+      "slice": "policies",
+      "status": 200,
+      "ms": 66,
+      "verdict": "PASS",
+      "sample": "data: list[0]"
+    },
+    {
+      "slice": "assets",
+      "status": 200,
+      "ms": 70,
+      "verdict": "PASS",
+      "sample": "data: list[0]"
+    }
+  ]
+}

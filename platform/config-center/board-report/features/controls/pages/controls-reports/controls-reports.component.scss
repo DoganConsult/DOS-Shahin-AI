@@ -1,0 +1,140 @@
+/**
+ * Controls Reports — Styles
+ * All colors use CSS custom properties from grc-tokens.css (Rule 7).
+ */
+
+// -- Page Container --
+.controls-reports {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px 24px;
+  min-height: 100%;
+  background: var(--surface-ground, var(--bg-0));
+}
+
+// -- Skeleton Grid --
+.skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+// -- Page Title --
+.page-title-row {
+  margin-bottom: 4px;
+}
+
+.page-title {
+  margin: 0 0 4px;
+  font-size: var(--font-size-xl, 1.25rem);
+  font-weight: 700;
+  color: var(--text-heading, var(--text-body));
+}
+
+.page-subtitle {
+  margin: 0;
+  font-size: var(--font-size-sm, 0.875rem);
+  color: var(--text-muted);
+}
+
+// -- Report Grid --
+.report-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+// -- Report Card --
+.report-card {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  background: var(--surface-card, var(--bg-0));
+  border: 1px solid var(--border-subtle, var(--border));
+  border-radius: var(--radius-md, 8px);
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+
+  &:hover {
+    border-color: var(--primary);
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--primary) 12%, transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+}
+
+.report-card__icon-wrap {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md, 8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
+  margin-bottom: 12px;
+
+  .pi {
+    font-size: var(--font-size-xl, 1.25rem);
+    color: var(--primary);
+  }
+}
+
+.report-card__content {
+  flex: 1;
+  margin-bottom: 12px;
+}
+
+.report-card__title {
+  margin: 0 0 6px;
+  font-size: var(--font-size-base, 1rem);
+  font-weight: 700;
+  color: var(--text-heading, var(--text-body));
+}
+
+.report-card__desc {
+  margin: 0;
+  font-size: var(--font-size-sm, 0.875rem);
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.report-card__action {
+  margin-top: auto;
+}
+
+// -- Dialog Form --
+.dialog-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 8px 0;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.w-full {
+  width: 100%;
+}
+
+// -- Responsive --
+@media (max-width: 768px) {
+  .controls-reports {
+    padding: 12px;
+  }
+
+  .report-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "moduleCode": "exception",
+  "displayName": "Exceptions",
+  "ownerTeam": "product-shahin-ai",
+  "productCode": "shahin-ai",
+  "ownership": "module-owned",
+  "version": "1.0.0",
+  "status": "active",
+  "platformDependencies": [
+    "identity",
+    "tenancy",
+    "workflow",
+    "permissions",
+    "audit"
+  ],
+  "seedProviders": [
+    "products/shahin/seeds/exception-seed"
+  ],
+  "tenantDefaults": [
+    "exception_default_expiry_days",
+    "exception_auto_renew_enabled"
+  ],
+  "requiredReferenceData": [
+    "exception_categories",
+    "exception_statuses"
+  ],
+  "currentSources": [
+    "/home/Dr-Dogan-AGRC-OS/backend/src/modules/exception"
+  ],
+  "targetPath": "modules/exception",
+  "futureService": "governance-policy-service",
+  "frontendSources": [
+    "/home/Dr-Dogan-AGRC-OS/frontend/src/app/platform-manifests/exception.module.routes.ts"
+  ],
+  "ownedTables": [
+    "exceptions",
+    "exception_approvals",
+    "exception_renewals",
+    "exception_justifications",
+    "exception_compensating_controls",
+    "exception_risk_links",
+    "exception_status_history"
+  ],
+  "referencedTables": [
+    "audit_trail",
+    "teams",
+    "workflows",
+    "compliance_frameworks",
+    "risk_assessments"
+  ],
+  "events": {
+    "publishes": [
+      "exception.requested",
+      "exception.approved",
+      "exception.rejected",
+      "exception.expired",
+      "exception.extended",
+      "exception.compensating_control_assigned",
+      "exception.compensating_control_removed",
+      "exception.effectiveness_updated",
+      "exception.justification_updated",
+      "exception.risk_accepted",
+      "exception.review_due"
+    ],
+    "subscribes": [
+      "compliance.gap_detected",
+      "risk.score_changed",
+      "policy.approved",
+      "workflow.status_changed",
+      "foundation.org.manager.changed"
+    ]
+  },
+  "routeBases": [
+    "/api/exception"
+  ]
+}

@@ -1,0 +1,2 @@
+import { PROACTIVE_LEADERSHIP_ROLES } from './proactive-leadership.security';
+export { PROACTIVE_LEADERSHIP_ROLES as PROACTIVE_LEADERSHIP_MODULE_ROLES };

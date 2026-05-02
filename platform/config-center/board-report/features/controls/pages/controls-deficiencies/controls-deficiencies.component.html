@@ -1,0 +1,280 @@
+<!-- Controls Deficiencies — Deficiency Management -->
+<div class="controls-deficiencies" [attr.dir]="dir()">
+
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="skeleton-strip">
+      @for (i of [1,2,3,4,5,6]; track i) {
+        <p-skeleton height="80px" borderRadius="10px" />
+      }
+    </div>
+    <p-skeleton height="40px" borderRadius="6px" />
+    <p-skeleton height="400px" borderRadius="10px" />
+  }
+
+  <!-- Error State -->
+  @if (!loading() && error()) {
+    <app-empty-state
+      variant="error"
+      [title]="isAr() ? 'فشل تحميل بيانات أوجه القصور' : 'Failed to load deficiency data'"
+      [description]="isAr() ? 'تحقق من الاتصال وحاول مرة أخرى' : 'Check your connection and try again'"
+      [actionLabel]="isAr() ? 'إعادة المحاولة' : 'Retry'"
+      [dir]="dir()"
+      (action)="loadData()" />
+  }
+
+  <!-- Loaded Content -->
+  @if (!loading() && !error()) {
+
+    <!-- Summary Strip -->
+    <section class="summary-strip" [attr.aria-label]="isAr() ? 'ملخص أوجه القصور' : 'Deficiency Summary'">
+      <div class="summary-card">
+        <div class="summary-card__icon" style="background: color-mix(in srgb, var(--error) 12%, transparent)">
+          <i class="pi pi-exclamation-triangle" style="color: var(--error)" aria-hidden="true"></i>
+        </div>
+        <div class="summary-card__content">
+          <span class="summary-card__value">{{ totalOpen() }}</span>
+          <span class="summary-card__label">{{ isAr() ? 'إجمالي المفتوحة' : 'Total Open' }}</span>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-card__icon sev-bg-critical">
+          <i class="pi pi-bolt" style="color: var(--severity-critical)" aria-hidden="true"></i>
+        </div>
+        <div class="summary-card__content">
+          <span class="summary-card__value">{{ criticalCount() }}</span>
+          <span class="summary-card__label">{{ isAr() ? 'حرج' : 'Critical' }}</span>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-card__icon sev-bg-high">
+          <i class="pi pi-arrow-up" style="color: var(--severity-high)" aria-hidden="true"></i>
+        </div>
+        <div class="summary-card__content">
+          <span class="summary-card__value">{{ highCount() }}</span>
+          <span class="summary-card__label">{{ isAr() ? 'مرتفع' : 'High' }}</span>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-card__icon sev-bg-medium">
+          <i class="pi pi-minus" style="color: var(--severity-medium)" aria-hidden="true"></i>
+        </div>
+        <div class="summary-card__content">
+          <span class="summary-card__value">{{ mediumCount() }}</span>
+          <span class="summary-card__label">{{ isAr() ? 'متوسط' : 'Medium' }}</span>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-card__icon sev-bg-low">
+          <i class="pi pi-arrow-down" style="color: var(--severity-low)" aria-hidden="true"></i>
+        </div>
+        <div class="summary-card__content">
+          <span class="summary-card__value">{{ lowCount() }}</span>
+          <span class="summary-card__label">{{ isAr() ? 'منخفض' : 'Low' }}</span>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-card__icon" style="background: color-mix(in srgb, var(--warning) 12%, transparent)">
+          <i class="pi pi-clock" style="color: var(--warning)" aria-hidden="true"></i>
+        </div>
+        <div class="summary-card__content">
+          <span class="summary-card__value">{{ overdueActions() }}</span>
+          <span class="summary-card__label">{{ isAr() ? 'إجراءات متأخرة' : 'Overdue Actions' }}</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Status Filter Tabs -->
+    <div class="status-tabs" role="tablist">
+      @for (tab of statusTabs(); track tab.value) {
+        <button
+          class="status-tab"
+          [class.status-tab--active]="activeStatusFilter() === tab.value"
+          role="tab"
+          [attr.aria-selected]="activeStatusFilter() === tab.value"
+          (click)="setStatusFilter(tab.value)">
+          {{ tab.label }}
+        </button>
+      }
+    </div>
+
+    <!-- Deficiency Table -->
+    <grc-data-table
+      [title]="isAr() ? 'أوجه القصور' : 'Deficiencies'"
+      [totalRecords]="filteredDeficiencies().length"
+      [loading]="false"
+      [emptyMessage]="isAr() ? 'لا توجد أوجه قصور' : 'No deficiencies found'">
+      <div tableToolbar>
+        <button pButton
+          class="p-button-sm p-button-primary"
+          [label]="isAr() ? 'إضافة قصور' : 'Add Deficiency'"
+          icon="pi pi-plus"
+          (click)="openCreateDialog()">
+        </button>
+      </div>
+      @if (filteredDeficiencies().length) {
+        <p-table
+          [value]="filteredDeficiencies()"
+          [paginator]="true"
+          [rows]="15"
+          [rowsPerPageOptions]="[15, 30, 50]"
+          styleClass="p-datatable-sm p-datatable-striped"
+          [attr.aria-label]="isAr() ? 'جدول أوجه القصور' : 'Deficiencies Table'">
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="width: 3rem"></th>
+              <th>{{ isAr() ? 'عنوان الضابط' : 'Control Title' }}</th>
+              <th>{{ isAr() ? 'الخطورة' : 'Severity' }}</th>
+              <th>{{ isAr() ? 'الحالة' : 'Status' }}</th>
+              <th>{{ isAr() ? 'السبب الجذري' : 'Root Cause' }}</th>
+              <th>{{ isAr() ? 'المعين إليه' : 'Assigned To' }}</th>
+              <th>{{ isAr() ? 'تاريخ الاستحقاق' : 'Due Date' }}</th>
+              <th>{{ isAr() ? 'تاريخ الإنشاء' : 'Created At' }}</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-def>
+            <tr>
+              <td>
+                <button pButton
+                  class="p-button-text p-button-sm p-button-rounded"
+                  [icon]="expandedDeficiencyId() === def.id ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+                  (click)="toggleExpansion(def.id)"
+                  [pTooltip]="isAr() ? 'عرض التفاصيل' : 'View Details'">
+                </button>
+              </td>
+              <td class="font-semibold">{{ def.controlTitle || def.controlId }}</td>
+              <td><app-status-badge [status]="def.severity" /></td>
+              <td><app-status-badge [status]="def.status" /></td>
+              <td class="truncate-cell">{{ def.rootCause || '\u2014' }}</td>
+              <td>{{ def.assignedTo || '\u2014' }}</td>
+              <td>{{ formatDate(def.dueDate) }}</td>
+              <td>{{ formatDate(def.createdAt) }}</td>
+            </tr>
+
+            <!-- Row Expansion: Remediation Actions -->
+            @if (expandedDeficiencyId() === def.id) {
+              <tr class="expansion-row">
+                <td colspan="8">
+                  <div class="expansion-content">
+                    <div class="expansion-actions">
+                      <h4 class="expansion-title">
+                        {{ isAr() ? 'إجراءات المعالجة' : 'Remediation Actions' }}
+                      </h4>
+                      @if (def.status !== 'closed') {
+                        <button pButton
+                          class="p-button-sm p-button-outlined"
+                          [label]="isAr() ? 'إغلاق القصور' : 'Close Deficiency'"
+                          icon="pi pi-check"
+                          (click)="closeDeficiency(def.id)">
+                        </button>
+                      }
+                    </div>
+                    <p class="expansion-description">
+                      <strong>{{ isAr() ? 'الوصف:' : 'Description:' }}</strong>
+                      {{ def.rootCause || (isAr() ? 'لا يوجد وصف' : 'No description available') }}
+                    </p>
+                    <app-empty-state
+                      [title]="isAr() ? 'لا توجد إجراءات معالجة بعد' : 'No remediation actions yet'"
+                      [description]="isAr() ? 'يمكن إضافة إجراءات من صفحة تفاصيل الضابط' : 'Actions can be added from the control detail page'"
+                      [dir]="dir()" />
+                  </div>
+                </td>
+              </tr>
+            }
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="8">
+                <app-empty-state
+                  [title]="isAr() ? 'لا توجد أوجه قصور' : 'No deficiencies found'"
+                  [description]="isAr() ? 'لم يتم تسجيل أي أوجه قصور في الضوابط' : 'No control deficiencies have been recorded'"
+                  [dir]="dir()" />
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      }
+    </grc-data-table>
+  }
+
+  <!-- Create Deficiency Dialog -->
+  <p-dialog
+    [header]="isAr() ? 'إضافة قصور جديد' : 'Add Deficiency'"
+    [(visible)]="showCreateDialog"
+    [modal]="true"
+    [style]="{ width: '560px' }"
+    [closable]="true"
+    [draggable]="false">
+    <form [formGroup]="form" (ngSubmit)="submitDeficiency()">
+      <div class="dialog-form">
+        <grc-form-field
+          [label]="isAr() ? 'الضابط' : 'Control'"
+          [required]="true"
+          [control]="form.controls.controlId">
+          <p-dropdown
+            formControlName="controlId"
+            [options]="controlOptions()"
+            optionLabel="label"
+            optionValue="value"
+            [placeholder]="isAr() ? 'اختر الضابط' : 'Select Control'"
+            [filter]="true"
+            styleClass="w-full">
+          </p-dropdown>
+        </grc-form-field>
+
+        <grc-form-field
+          [label]="isAr() ? 'الخطورة' : 'Severity'"
+          [required]="true"
+          [control]="form.controls.severity">
+          <p-dropdown
+            formControlName="severity"
+            [options]="severityOptions()"
+            optionLabel="label"
+            optionValue="value"
+            [placeholder]="isAr() ? 'اختر الخطورة' : 'Select Severity'"
+            styleClass="w-full">
+          </p-dropdown>
+        </grc-form-field>
+
+        <grc-form-field
+          [label]="isAr() ? 'الوصف' : 'Description'"
+          [required]="true"
+          [control]="form.controls.description">
+          <textarea pInputTextarea formControlName="description" class="w-full" rows="3"></textarea>
+        </grc-form-field>
+
+        <grc-form-field
+          [label]="isAr() ? 'السبب الجذري' : 'Root Cause'">
+          <textarea pInputTextarea formControlName="rootCause" class="w-full" rows="2"></textarea>
+        </grc-form-field>
+
+        <div class="form-row">
+          <grc-form-field
+            [label]="isAr() ? 'المعين إليه' : 'Assigned To'">
+            <input pInputText formControlName="assignedTo" class="w-full" />
+          </grc-form-field>
+          <grc-form-field
+            [label]="isAr() ? 'تاريخ الاستحقاق' : 'Due Date'">
+            <p-calendar formControlName="dueDate" dateFormat="yy-mm-dd" styleClass="w-full" />
+          </grc-form-field>
+        </div>
+      </div>
+    </form>
+
+    <ng-template pTemplate="footer">
+      <button pButton
+        class="p-button-text"
+        [label]="isAr() ? 'إلغاء' : 'Cancel'"
+        (click)="showCreateDialog.set(false)">
+      </button>
+      <button pButton
+        class="p-button-primary"
+        [label]="isAr() ? 'إضافة' : 'Add'"
+        icon="pi pi-check"
+        [loading]="creating()"
+        [disabled]="form.invalid"
+        (click)="submitDeficiency()">
+      </button>
+    </ng-template>
+  </p-dialog>
+</div>

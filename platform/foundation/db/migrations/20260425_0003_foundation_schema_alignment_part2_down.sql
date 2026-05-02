@@ -1,0 +1,10 @@
+-- Down for 20260425_0003 — schema alignment part 2 columns.
+BEGIN;
+
+ALTER TABLE IF EXISTS dos.teams DROP COLUMN IF EXISTS head_user_id;
+ALTER TABLE IF EXISTS dos.teams DROP COLUMN IF EXISTS created_by;
+ALTER TABLE IF EXISTS dos.teams DROP COLUMN IF EXISTS status;
+ALTER TABLE IF EXISTS dos.teams DROP COLUMN IF EXISTS code;
+ALTER TABLE IF EXISTS dos.teams DROP COLUMN IF EXISTS name;
+
+COMMIT;

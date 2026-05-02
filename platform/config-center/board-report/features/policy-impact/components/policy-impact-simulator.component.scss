@@ -1,0 +1,113 @@
+.policy-impact-simulator {
+      padding: 1.5rem;
+    }
+
+    .simulator-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .policy-selector-card {
+      margin-bottom: 1rem;
+    }
+
+    .selector-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .simulation-status {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      padding: 2rem;
+      background: var(--surface-ground);
+      border-radius: var(--radius);
+    }
+
+    .results-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .summary-card {
+      margin-bottom: 1rem;
+    }
+
+    .summary-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .stat-card {
+      text-align: center;
+      padding: 1rem;
+      background: var(--surface-ground);
+      border-radius: var(--radius);
+    }
+
+    .stat-value {
+      font-size: var(--font-size-4xl);
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-value.high {
+      color: var(--red-600);
+    }
+
+    .stat-value.medium {
+      color: var(--orange-600);
+    }
+
+    .stat-value.low {
+      color: var(--green-600);
+    }
+
+    .stat-label {
+      font-size: var(--font-size-body-sm);
+      color: var(--text-color-secondary);
+    }
+
+    .tree-card,
+    .entities-card {
+      margin-top: 1rem;
+    }
+
+    .card-header-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+    }
+
+    .impact-score {
+      font-weight: 600;
+      font-size: var(--font-size-body-md);
+    }
+
+    .impact-score.high {
+      color: var(--red-600);
+    }
+
+    .impact-score.medium {
+      color: var(--orange-600);
+    }
+
+    .impact-score.low {
+      color: var(--green-600);
+    }
+
+    .impact-desc {
+      display: inline-block;
+      max-width: 300px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }

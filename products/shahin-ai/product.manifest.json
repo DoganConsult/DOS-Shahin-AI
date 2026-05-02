@@ -1,0 +1,209 @@
+{
+  "$schema": "../../platform/contracts/product/product.manifest.schema.json",
+  "schemaVersion": 1,
+  "kind": "product",
+  "productCode": "shahin-ai",
+  "displayName": "Shahin-AI",
+  "description": "Shahin-AI is the first product composed on top of Dogan-AI OS. Owns its UI shell, navigation, theme, and assets; consumes platform contracts and enrolls canonical modules.",
+  "hosts": [
+    "shahin.local",
+    "shahin-ai.dogan-ai.os"
+  ],
+  "authMode": "cookie-session",
+  "lifecycle": {
+    "stage": "beta",
+    "enteredStageAt": "2026-04-29T00:00:00Z",
+    "owner": "dogan-consult",
+    "entitlementKey": "product.shahin-ai",
+    "featureFlag": "product.shahin-ai.enabled"
+  },
+  "enabledModules": [
+    { "moduleCode": "foundation",      "version": "2.0.0", "scope": "full" },
+    { "moduleCode": "risk",            "version": "1.0.0", "scope": "full" },
+    { "moduleCode": "compliance",      "version": "1.0.0", "scope": "full" },
+    { "moduleCode": "controls",        "version": "1.0.0", "scope": "full" },
+    { "moduleCode": "evidence",        "version": "1.0.0", "scope": "full" },
+    { "moduleCode": "audit",           "version": "1.0.0", "scope": "full" },
+    { "moduleCode": "policy",          "version": "1.0.0", "scope": "full" },
+    { "moduleCode": "vendor",          "version": "1.0.0", "scope": "full" },
+    { "moduleCode": "asset",           "version": "1.0.0", "scope": "full" },
+    { "moduleCode": "incident",        "version": "1.0.0", "scope": "full" },
+    { "moduleCode": "issues",          "version": "1.0.0", "scope": "full" },
+    { "moduleCode": "remediation",     "version": "1.0.0", "scope": "full" },
+    { "moduleCode": "workflow",        "version": "1.0.0", "scope": "full" },
+    { "moduleCode": "notification",    "version": "1.0.0", "scope": "full" },
+    { "moduleCode": "inbox",           "version": "1.0.0", "scope": "full" },
+    { "moduleCode": "attestation",     "version": "1.0.0", "scope": "full" },
+    { "moduleCode": "training",        "version": "1.0.0", "scope": "full" },
+    { "moduleCode": "privacy",         "version": "1.0.0", "scope": "full" },
+    { "moduleCode": "bcp",             "version": "1.0.0", "scope": "full" },
+    { "moduleCode": "dora",            "version": "1.0.0", "scope": "full" },
+    { "moduleCode": "knowledge",       "version": "1.0.0", "scope": "full" },
+    { "moduleCode": "reporting",       "version": "1.0.0", "scope": "full" },
+    { "moduleCode": "analytics",       "version": "1.0.0", "scope": "full" },
+    { "moduleCode": "onboarding",      "version": "1.0.0", "scope": "full" },
+    { "moduleCode": "action",          "version": "1.0.0", "scope": "full" },
+    { "moduleCode": "ksa-regulatory",  "version": "1.0.0", "scope": "full" },
+    { "moduleCode": "qiyas",           "version": "1.0.0", "scope": "full" },
+    { "moduleCode": "agrc-engine",     "version": "1.0.0", "scope": "full" },
+    { "moduleCode": "ai-os",           "version": "1.0.0", "scope": "full" },
+    { "moduleCode": "mcp",             "version": "1.0.0", "scope": "full" },
+    { "moduleCode": "mobile",          "version": "1.0.0", "scope": "preview" },
+    { "moduleCode": "dynamic-ui",      "version": "1.0.0", "scope": "full" }
+  ],
+  "routeComposition": {
+    "mountPoint": "/",
+    "publicCompatPrefixes": [
+      "/",
+      "/login",
+      "/register",
+      "/workspace-home",
+      "/foundation",
+      "/workspace",
+      "/inbox",
+      "/profile",
+      "/settings",
+      "/tenant-profile",
+      "/tenant-settings",
+      "/api/auth",
+      "/api/access"
+    ],
+    "redirects": []
+  },
+  "navigationComposition": {
+    "primary": [
+      { "id": "workspace-home", "label": "Workspace", "route": "/workspace-home", "icon": "home" },
+      { "id": "foundation",     "label": "Foundation", "route": "/foundation/overview", "icon": "layers", "moduleRef": "foundation" },
+      { "id": "risk",           "label": "Risk",        "route": "/workspace/modules",       "icon": "shield",   "moduleRef": "risk" },
+      { "id": "compliance",     "label": "Compliance",  "route": "/workspace/modules", "icon": "check",    "moduleRef": "compliance" },
+      { "id": "controls",       "label": "Controls",    "route": "/workspace/modules",   "icon": "lock",     "moduleRef": "controls" },
+      { "id": "evidence",       "label": "Evidence",    "route": "/workspace/modules",   "icon": "file",     "moduleRef": "evidence" },
+      { "id": "audit",          "label": "Audit",       "route": "/workspace/modules",      "icon": "clipboard","moduleRef": "audit" }
+    ],
+    "secondary": [
+      { "id": "knowledge", "label": "Knowledge", "route": "/workspace/modules", "moduleRef": "knowledge" },
+      { "id": "reporting", "label": "Reporting", "route": "/workspace/modules", "moduleRef": "reporting" }
+    ]
+  },
+  "dynamicUiEnrollment": {
+    "enrollmentRef": "dynamic-ui/enrollment.json"
+  },
+  "agentEnrollment": {
+    "enrollmentRef": "agents/enrollment.json"
+  },
+  "workflowEnrollment": {
+    "enrollmentRef": "workflows/enrollment.json"
+  },
+  "theme": {
+    "base": "@dos/theme/default",
+    "overrides": {
+      "brand.primary": "#0F4C81",
+      "brand.accent":  "#F2A900"
+    }
+  },
+  "i18n": {
+    "defaultLocale": "en",
+    "supportedLocales": ["en", "ar"]
+  },
+  "providers": {
+    "auth":          "platform-dauth",
+    "idp":           "keycloak",
+    "db":            "postgres-tenant-schema",
+    "observability": "platform-dnoc",
+    "notifications": "notification-service",
+    "storage":       "platform-storage",
+    "eventBus":      "@dos/event-backbone",
+    "secrets":       "platform-secrets",
+    "scheduler":     "platform-scheduler"
+  },
+  "trialChrome": {
+    "banner": {
+      "show": true,
+      "showWhenStatus": ["trial_pending_verification","trial_active","trial_expiring","trial_grace","trial_suspended"],
+      "tone": {
+        "trial_pending_verification": "info",
+        "trial_active":               "info",
+        "trial_expiring":             "warning",
+        "trial_grace":                "warning",
+        "trial_suspended":            "danger"
+      },
+      "title": {
+        "en": "{daysRemaining} days left in your Shahin-AI trial",
+        "ar": "متبقّي {daysRemaining} أيام في تجربة Shahin-AI"
+      },
+      "subtitleByStatus": {
+        "trial_pending_verification": {
+          "en": "Verify your email to activate your workspace.",
+          "ar": "أكّد بريدك الإلكتروني لتفعيل مساحة العمل."
+        },
+        "trial_expiring": {
+          "en": "Your trial ends soon. Convert to keep all modules.",
+          "ar": "تنتهي تجربتك قريباً. حوّل اشتراكك للحفاظ على جميع الوحدات."
+        },
+        "trial_grace": {
+          "en": "Grace period — limited access until conversion.",
+          "ar": "فترة سماح — وصول محدود حتى التحويل."
+        },
+        "trial_suspended": {
+          "en": "Trial suspended. Contact sales to re-activate.",
+          "ar": "تم تعليق التجربة. تواصل مع المبيعات لإعادة التفعيل."
+        }
+      },
+      "actions": [
+        { "id": "upgrade",     "label": { "en": "Upgrade",       "ar": "ترقية" },        "kind": "primary",   "route": "/billing/upgrade" },
+        { "id": "contact",     "label": { "en": "Contact sales", "ar": "تواصل مع المبيعات" }, "kind": "secondary", "route": "/contact-sales" }
+      ]
+    },
+    "card": {
+      "show": true,
+      "title": { "en": "Trial status", "ar": "حالة التجربة" },
+      "fields": [
+        { "key": "plan",            "label": { "en": "Plan",            "ar": "الخطة" } },
+        { "key": "status",          "label": { "en": "Status",          "ar": "الحالة" } },
+        { "key": "daysRemaining",   "label": { "en": "Days remaining",  "ar": "الأيام المتبقية" } },
+        { "key": "endsAt",          "label": { "en": "Ends",            "ar": "تنتهي" }, "format": "date" },
+        { "key": "allowedModules",  "label": { "en": "Allowed modules", "ar": "الوحدات المسموح بها" }, "format": "list" }
+      ]
+    }
+  },
+  "tenantDefaults": {
+    "locale":                         "en",
+    "timezone":                       "Asia/Riyadh",
+    "currency":                       "SAR",
+    "dateFormat":                     "yyyy-MM-dd",
+    "timeFormat":                     "24h",
+    "sessionIdleTimeoutMinutes":      30,
+    "sessionRefreshThresholdMinutes": 5,
+    "cacheStaleTtlMinutes":           10,
+    "apiRetryMaxAttempts":            3,
+    "apiRetryBackoffMs":              1000,
+    "featureFlags": {
+      "agentMesh.publicChat":   true,
+      "regulator.qiyas":        true,
+      "explorer.publicSurface": true
+    }
+  },
+  "platformDependencies": {
+    "@dos/platform-core":      "^1.0.0",
+    "@dos/module-sdk":         "^1.0.0",
+    "@dos/runtime-config":     "^1.0.0",
+    "@dos/contracts":          "^1.0.0",
+    "@dos/types":              "^1.0.0"
+  },
+  "moduleDependencies": {
+    "@dos/modules/foundation": "^1.0.0",
+    "@dos/modules/risk":       "^1.0.0",
+    "@dos/modules/compliance": "^1.0.0",
+    "@dos/modules/controls":   "^1.0.0",
+    "@dos/modules/evidence":   "^1.0.0",
+    "@dos/modules/audit":      "^1.0.0",
+    "@dos/modules/policy":     "^1.0.0",
+    "@dos/modules/workflow":   "^1.0.0",
+    "@dos/modules/dynamic-ui": "^1.0.0"
+  },
+  "metadata": {
+    "owner": "dogan-consult",
+    "createdAt": "2026-04-29T00:00:00Z",
+    "rolloutStage": "pre-release"
+  }
+}

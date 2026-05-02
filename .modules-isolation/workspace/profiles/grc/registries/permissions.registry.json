@@ -1,0 +1,905 @@
+{
+  "$comment": "Generated from grc-profile manifests. {module}.<perm> namespacing.",
+  "permissions": [
+    {
+      "code": "governance.record.read",
+      "module": "governance",
+      "verb": "record.read"
+    },
+    {
+      "code": "governance.record.write",
+      "module": "governance",
+      "verb": "record.write"
+    },
+    {
+      "code": "governance.record.approve",
+      "module": "governance",
+      "verb": "record.approve"
+    },
+    {
+      "code": "governance.record.manage",
+      "module": "governance",
+      "verb": "record.manage"
+    },
+    {
+      "code": "governance.record.delete",
+      "module": "governance",
+      "verb": "record.delete"
+    },
+    {
+      "code": "governance.record.configure",
+      "module": "governance",
+      "verb": "record.configure"
+    },
+    {
+      "code": "governance.evidence.read",
+      "module": "governance",
+      "verb": "evidence.read"
+    },
+    {
+      "code": "governance.evidence.write",
+      "module": "governance",
+      "verb": "evidence.write"
+    },
+    {
+      "code": "governance.report.read",
+      "module": "governance",
+      "verb": "report.read"
+    },
+    {
+      "code": "governance.export",
+      "module": "governance",
+      "verb": "export"
+    },
+    {
+      "code": "qiyas.record.read",
+      "module": "qiyas",
+      "verb": "record.read"
+    },
+    {
+      "code": "qiyas.record.write",
+      "module": "qiyas",
+      "verb": "record.write"
+    },
+    {
+      "code": "qiyas.record.approve",
+      "module": "qiyas",
+      "verb": "record.approve"
+    },
+    {
+      "code": "qiyas.record.manage",
+      "module": "qiyas",
+      "verb": "record.manage"
+    },
+    {
+      "code": "qiyas.record.delete",
+      "module": "qiyas",
+      "verb": "record.delete"
+    },
+    {
+      "code": "qiyas.record.configure",
+      "module": "qiyas",
+      "verb": "record.configure"
+    },
+    {
+      "code": "qiyas.evidence.read",
+      "module": "qiyas",
+      "verb": "evidence.read"
+    },
+    {
+      "code": "qiyas.evidence.write",
+      "module": "qiyas",
+      "verb": "evidence.write"
+    },
+    {
+      "code": "qiyas.report.read",
+      "module": "qiyas",
+      "verb": "report.read"
+    },
+    {
+      "code": "qiyas.export",
+      "module": "qiyas",
+      "verb": "export"
+    },
+    {
+      "code": "regulatory.record.read",
+      "module": "regulatory",
+      "verb": "record.read"
+    },
+    {
+      "code": "regulatory.record.write",
+      "module": "regulatory",
+      "verb": "record.write"
+    },
+    {
+      "code": "regulatory.record.approve",
+      "module": "regulatory",
+      "verb": "record.approve"
+    },
+    {
+      "code": "regulatory.record.manage",
+      "module": "regulatory",
+      "verb": "record.manage"
+    },
+    {
+      "code": "regulatory.record.delete",
+      "module": "regulatory",
+      "verb": "record.delete"
+    },
+    {
+      "code": "regulatory.record.configure",
+      "module": "regulatory",
+      "verb": "record.configure"
+    },
+    {
+      "code": "regulatory.evidence.read",
+      "module": "regulatory",
+      "verb": "evidence.read"
+    },
+    {
+      "code": "regulatory.evidence.write",
+      "module": "regulatory",
+      "verb": "evidence.write"
+    },
+    {
+      "code": "regulatory.report.read",
+      "module": "regulatory",
+      "verb": "report.read"
+    },
+    {
+      "code": "regulatory.export",
+      "module": "regulatory",
+      "verb": "export"
+    },
+    {
+      "code": "compliance.record.read",
+      "module": "compliance",
+      "verb": "record.read"
+    },
+    {
+      "code": "compliance.record.write",
+      "module": "compliance",
+      "verb": "record.write"
+    },
+    {
+      "code": "compliance.record.approve",
+      "module": "compliance",
+      "verb": "record.approve"
+    },
+    {
+      "code": "compliance.record.manage",
+      "module": "compliance",
+      "verb": "record.manage"
+    },
+    {
+      "code": "compliance.record.delete",
+      "module": "compliance",
+      "verb": "record.delete"
+    },
+    {
+      "code": "compliance.record.configure",
+      "module": "compliance",
+      "verb": "record.configure"
+    },
+    {
+      "code": "compliance.evidence.read",
+      "module": "compliance",
+      "verb": "evidence.read"
+    },
+    {
+      "code": "compliance.evidence.write",
+      "module": "compliance",
+      "verb": "evidence.write"
+    },
+    {
+      "code": "compliance.report.read",
+      "module": "compliance",
+      "verb": "report.read"
+    },
+    {
+      "code": "compliance.export",
+      "module": "compliance",
+      "verb": "export"
+    },
+    {
+      "code": "risk.record.read",
+      "module": "risk",
+      "verb": "record.read"
+    },
+    {
+      "code": "risk.record.write",
+      "module": "risk",
+      "verb": "record.write"
+    },
+    {
+      "code": "risk.record.approve",
+      "module": "risk",
+      "verb": "record.approve"
+    },
+    {
+      "code": "risk.record.manage",
+      "module": "risk",
+      "verb": "record.manage"
+    },
+    {
+      "code": "risk.record.delete",
+      "module": "risk",
+      "verb": "record.delete"
+    },
+    {
+      "code": "risk.record.configure",
+      "module": "risk",
+      "verb": "record.configure"
+    },
+    {
+      "code": "risk.evidence.read",
+      "module": "risk",
+      "verb": "evidence.read"
+    },
+    {
+      "code": "risk.evidence.write",
+      "module": "risk",
+      "verb": "evidence.write"
+    },
+    {
+      "code": "risk.report.read",
+      "module": "risk",
+      "verb": "report.read"
+    },
+    {
+      "code": "risk.export",
+      "module": "risk",
+      "verb": "export"
+    },
+    {
+      "code": "controls.record.read",
+      "module": "controls",
+      "verb": "record.read"
+    },
+    {
+      "code": "controls.record.write",
+      "module": "controls",
+      "verb": "record.write"
+    },
+    {
+      "code": "controls.record.approve",
+      "module": "controls",
+      "verb": "record.approve"
+    },
+    {
+      "code": "controls.record.manage",
+      "module": "controls",
+      "verb": "record.manage"
+    },
+    {
+      "code": "controls.record.delete",
+      "module": "controls",
+      "verb": "record.delete"
+    },
+    {
+      "code": "controls.record.configure",
+      "module": "controls",
+      "verb": "record.configure"
+    },
+    {
+      "code": "controls.evidence.read",
+      "module": "controls",
+      "verb": "evidence.read"
+    },
+    {
+      "code": "controls.evidence.write",
+      "module": "controls",
+      "verb": "evidence.write"
+    },
+    {
+      "code": "controls.report.read",
+      "module": "controls",
+      "verb": "report.read"
+    },
+    {
+      "code": "controls.export",
+      "module": "controls",
+      "verb": "export"
+    },
+    {
+      "code": "policy.record.read",
+      "module": "policy",
+      "verb": "record.read"
+    },
+    {
+      "code": "policy.record.write",
+      "module": "policy",
+      "verb": "record.write"
+    },
+    {
+      "code": "policy.record.approve",
+      "module": "policy",
+      "verb": "record.approve"
+    },
+    {
+      "code": "policy.record.manage",
+      "module": "policy",
+      "verb": "record.manage"
+    },
+    {
+      "code": "policy.record.delete",
+      "module": "policy",
+      "verb": "record.delete"
+    },
+    {
+      "code": "policy.record.configure",
+      "module": "policy",
+      "verb": "record.configure"
+    },
+    {
+      "code": "policy.evidence.read",
+      "module": "policy",
+      "verb": "evidence.read"
+    },
+    {
+      "code": "policy.evidence.write",
+      "module": "policy",
+      "verb": "evidence.write"
+    },
+    {
+      "code": "policy.report.read",
+      "module": "policy",
+      "verb": "report.read"
+    },
+    {
+      "code": "policy.export",
+      "module": "policy",
+      "verb": "export"
+    },
+    {
+      "code": "asset.record.read",
+      "module": "asset",
+      "verb": "record.read"
+    },
+    {
+      "code": "asset.record.write",
+      "module": "asset",
+      "verb": "record.write"
+    },
+    {
+      "code": "asset.record.approve",
+      "module": "asset",
+      "verb": "record.approve"
+    },
+    {
+      "code": "asset.record.manage",
+      "module": "asset",
+      "verb": "record.manage"
+    },
+    {
+      "code": "asset.record.delete",
+      "module": "asset",
+      "verb": "record.delete"
+    },
+    {
+      "code": "asset.record.configure",
+      "module": "asset",
+      "verb": "record.configure"
+    },
+    {
+      "code": "asset.evidence.read",
+      "module": "asset",
+      "verb": "evidence.read"
+    },
+    {
+      "code": "asset.evidence.write",
+      "module": "asset",
+      "verb": "evidence.write"
+    },
+    {
+      "code": "asset.report.read",
+      "module": "asset",
+      "verb": "report.read"
+    },
+    {
+      "code": "asset.export",
+      "module": "asset",
+      "verb": "export"
+    },
+    {
+      "code": "vendor.record.read",
+      "module": "vendor",
+      "verb": "record.read"
+    },
+    {
+      "code": "vendor.record.write",
+      "module": "vendor",
+      "verb": "record.write"
+    },
+    {
+      "code": "vendor.record.approve",
+      "module": "vendor",
+      "verb": "record.approve"
+    },
+    {
+      "code": "vendor.record.manage",
+      "module": "vendor",
+      "verb": "record.manage"
+    },
+    {
+      "code": "vendor.record.delete",
+      "module": "vendor",
+      "verb": "record.delete"
+    },
+    {
+      "code": "vendor.record.configure",
+      "module": "vendor",
+      "verb": "record.configure"
+    },
+    {
+      "code": "vendor.evidence.read",
+      "module": "vendor",
+      "verb": "evidence.read"
+    },
+    {
+      "code": "vendor.evidence.write",
+      "module": "vendor",
+      "verb": "evidence.write"
+    },
+    {
+      "code": "vendor.report.read",
+      "module": "vendor",
+      "verb": "report.read"
+    },
+    {
+      "code": "vendor.export",
+      "module": "vendor",
+      "verb": "export"
+    },
+    {
+      "code": "incident.record.read",
+      "module": "incident",
+      "verb": "record.read"
+    },
+    {
+      "code": "incident.record.write",
+      "module": "incident",
+      "verb": "record.write"
+    },
+    {
+      "code": "incident.record.approve",
+      "module": "incident",
+      "verb": "record.approve"
+    },
+    {
+      "code": "incident.record.manage",
+      "module": "incident",
+      "verb": "record.manage"
+    },
+    {
+      "code": "incident.record.delete",
+      "module": "incident",
+      "verb": "record.delete"
+    },
+    {
+      "code": "incident.record.configure",
+      "module": "incident",
+      "verb": "record.configure"
+    },
+    {
+      "code": "incident.evidence.read",
+      "module": "incident",
+      "verb": "evidence.read"
+    },
+    {
+      "code": "incident.evidence.write",
+      "module": "incident",
+      "verb": "evidence.write"
+    },
+    {
+      "code": "incident.report.read",
+      "module": "incident",
+      "verb": "report.read"
+    },
+    {
+      "code": "incident.export",
+      "module": "incident",
+      "verb": "export"
+    },
+    {
+      "code": "exceptions.record.read",
+      "module": "exceptions",
+      "verb": "record.read"
+    },
+    {
+      "code": "exceptions.record.write",
+      "module": "exceptions",
+      "verb": "record.write"
+    },
+    {
+      "code": "exceptions.record.approve",
+      "module": "exceptions",
+      "verb": "record.approve"
+    },
+    {
+      "code": "exceptions.record.manage",
+      "module": "exceptions",
+      "verb": "record.manage"
+    },
+    {
+      "code": "exceptions.record.delete",
+      "module": "exceptions",
+      "verb": "record.delete"
+    },
+    {
+      "code": "exceptions.record.configure",
+      "module": "exceptions",
+      "verb": "record.configure"
+    },
+    {
+      "code": "exceptions.evidence.read",
+      "module": "exceptions",
+      "verb": "evidence.read"
+    },
+    {
+      "code": "exceptions.evidence.write",
+      "module": "exceptions",
+      "verb": "evidence.write"
+    },
+    {
+      "code": "exceptions.report.read",
+      "module": "exceptions",
+      "verb": "report.read"
+    },
+    {
+      "code": "exceptions.export",
+      "module": "exceptions",
+      "verb": "export"
+    },
+    {
+      "code": "issues.record.read",
+      "module": "issues",
+      "verb": "record.read"
+    },
+    {
+      "code": "issues.record.write",
+      "module": "issues",
+      "verb": "record.write"
+    },
+    {
+      "code": "issues.record.approve",
+      "module": "issues",
+      "verb": "record.approve"
+    },
+    {
+      "code": "issues.record.manage",
+      "module": "issues",
+      "verb": "record.manage"
+    },
+    {
+      "code": "issues.record.delete",
+      "module": "issues",
+      "verb": "record.delete"
+    },
+    {
+      "code": "issues.record.configure",
+      "module": "issues",
+      "verb": "record.configure"
+    },
+    {
+      "code": "issues.evidence.read",
+      "module": "issues",
+      "verb": "evidence.read"
+    },
+    {
+      "code": "issues.evidence.write",
+      "module": "issues",
+      "verb": "evidence.write"
+    },
+    {
+      "code": "issues.report.read",
+      "module": "issues",
+      "verb": "report.read"
+    },
+    {
+      "code": "issues.export",
+      "module": "issues",
+      "verb": "export"
+    },
+    {
+      "code": "evidence.record.read",
+      "module": "evidence",
+      "verb": "record.read"
+    },
+    {
+      "code": "evidence.record.write",
+      "module": "evidence",
+      "verb": "record.write"
+    },
+    {
+      "code": "evidence.record.approve",
+      "module": "evidence",
+      "verb": "record.approve"
+    },
+    {
+      "code": "evidence.record.manage",
+      "module": "evidence",
+      "verb": "record.manage"
+    },
+    {
+      "code": "evidence.record.delete",
+      "module": "evidence",
+      "verb": "record.delete"
+    },
+    {
+      "code": "evidence.record.configure",
+      "module": "evidence",
+      "verb": "record.configure"
+    },
+    {
+      "code": "evidence.evidence.read",
+      "module": "evidence",
+      "verb": "evidence.read"
+    },
+    {
+      "code": "evidence.evidence.write",
+      "module": "evidence",
+      "verb": "evidence.write"
+    },
+    {
+      "code": "evidence.report.read",
+      "module": "evidence",
+      "verb": "report.read"
+    },
+    {
+      "code": "evidence.export",
+      "module": "evidence",
+      "verb": "export"
+    },
+    {
+      "code": "audit.record.read",
+      "module": "audit",
+      "verb": "record.read"
+    },
+    {
+      "code": "audit.record.write",
+      "module": "audit",
+      "verb": "record.write"
+    },
+    {
+      "code": "audit.record.approve",
+      "module": "audit",
+      "verb": "record.approve"
+    },
+    {
+      "code": "audit.record.manage",
+      "module": "audit",
+      "verb": "record.manage"
+    },
+    {
+      "code": "audit.record.delete",
+      "module": "audit",
+      "verb": "record.delete"
+    },
+    {
+      "code": "audit.record.configure",
+      "module": "audit",
+      "verb": "record.configure"
+    },
+    {
+      "code": "audit.evidence.read",
+      "module": "audit",
+      "verb": "evidence.read"
+    },
+    {
+      "code": "audit.evidence.write",
+      "module": "audit",
+      "verb": "evidence.write"
+    },
+    {
+      "code": "audit.report.read",
+      "module": "audit",
+      "verb": "report.read"
+    },
+    {
+      "code": "audit.export",
+      "module": "audit",
+      "verb": "export"
+    },
+    {
+      "code": "bcp.record.read",
+      "module": "bcp",
+      "verb": "record.read"
+    },
+    {
+      "code": "bcp.record.write",
+      "module": "bcp",
+      "verb": "record.write"
+    },
+    {
+      "code": "bcp.record.approve",
+      "module": "bcp",
+      "verb": "record.approve"
+    },
+    {
+      "code": "bcp.record.manage",
+      "module": "bcp",
+      "verb": "record.manage"
+    },
+    {
+      "code": "bcp.record.delete",
+      "module": "bcp",
+      "verb": "record.delete"
+    },
+    {
+      "code": "bcp.record.configure",
+      "module": "bcp",
+      "verb": "record.configure"
+    },
+    {
+      "code": "bcp.evidence.read",
+      "module": "bcp",
+      "verb": "evidence.read"
+    },
+    {
+      "code": "bcp.evidence.write",
+      "module": "bcp",
+      "verb": "evidence.write"
+    },
+    {
+      "code": "bcp.report.read",
+      "module": "bcp",
+      "verb": "report.read"
+    },
+    {
+      "code": "bcp.export",
+      "module": "bcp",
+      "verb": "export"
+    },
+    {
+      "code": "training.record.read",
+      "module": "training",
+      "verb": "record.read"
+    },
+    {
+      "code": "training.record.write",
+      "module": "training",
+      "verb": "record.write"
+    },
+    {
+      "code": "training.record.approve",
+      "module": "training",
+      "verb": "record.approve"
+    },
+    {
+      "code": "training.record.manage",
+      "module": "training",
+      "verb": "record.manage"
+    },
+    {
+      "code": "training.record.delete",
+      "module": "training",
+      "verb": "record.delete"
+    },
+    {
+      "code": "training.record.configure",
+      "module": "training",
+      "verb": "record.configure"
+    },
+    {
+      "code": "training.evidence.read",
+      "module": "training",
+      "verb": "evidence.read"
+    },
+    {
+      "code": "training.evidence.write",
+      "module": "training",
+      "verb": "evidence.write"
+    },
+    {
+      "code": "training.report.read",
+      "module": "training",
+      "verb": "report.read"
+    },
+    {
+      "code": "training.export",
+      "module": "training",
+      "verb": "export"
+    },
+    {
+      "code": "reporting.record.read",
+      "module": "reporting",
+      "verb": "record.read"
+    },
+    {
+      "code": "reporting.record.write",
+      "module": "reporting",
+      "verb": "record.write"
+    },
+    {
+      "code": "reporting.record.approve",
+      "module": "reporting",
+      "verb": "record.approve"
+    },
+    {
+      "code": "reporting.record.manage",
+      "module": "reporting",
+      "verb": "record.manage"
+    },
+    {
+      "code": "reporting.record.delete",
+      "module": "reporting",
+      "verb": "record.delete"
+    },
+    {
+      "code": "reporting.record.configure",
+      "module": "reporting",
+      "verb": "record.configure"
+    },
+    {
+      "code": "reporting.evidence.read",
+      "module": "reporting",
+      "verb": "evidence.read"
+    },
+    {
+      "code": "reporting.evidence.write",
+      "module": "reporting",
+      "verb": "evidence.write"
+    },
+    {
+      "code": "reporting.report.read",
+      "module": "reporting",
+      "verb": "report.read"
+    },
+    {
+      "code": "reporting.export",
+      "module": "reporting",
+      "verb": "export"
+    },
+    {
+      "code": "ai_governance.record.read",
+      "module": "ai_governance",
+      "verb": "record.read"
+    },
+    {
+      "code": "ai_governance.record.write",
+      "module": "ai_governance",
+      "verb": "record.write"
+    },
+    {
+      "code": "ai_governance.record.approve",
+      "module": "ai_governance",
+      "verb": "record.approve"
+    },
+    {
+      "code": "ai_governance.record.manage",
+      "module": "ai_governance",
+      "verb": "record.manage"
+    },
+    {
+      "code": "ai_governance.record.delete",
+      "module": "ai_governance",
+      "verb": "record.delete"
+    },
+    {
+      "code": "ai_governance.record.configure",
+      "module": "ai_governance",
+      "verb": "record.configure"
+    },
+    {
+      "code": "ai_governance.evidence.read",
+      "module": "ai_governance",
+      "verb": "evidence.read"
+    },
+    {
+      "code": "ai_governance.evidence.write",
+      "module": "ai_governance",
+      "verb": "evidence.write"
+    },
+    {
+      "code": "ai_governance.report.read",
+      "module": "ai_governance",
+      "verb": "report.read"
+    },
+    {
+      "code": "ai_governance.export",
+      "module": "ai_governance",
+      "verb": "export"
+    }
+  ]
+}

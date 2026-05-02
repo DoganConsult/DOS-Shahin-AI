@@ -1,0 +1,118 @@
+<div class="preview" [class.rtl]="lang === 'ar'" *ngIf="sections.length > 0">
+      <div class="preview-header">
+        <h3><i class="pi pi-eye"></i> {{ lang === 'ar' ? 'ما أعدّه شاهين لك' : 'What Shahin Has Prepared For You' }}</h3>
+        <p>{{ lang === 'ar'
+          ? 'كل عنصر أدناه مُحتسب من قاعدة البيانات التنظيمية بناءً على قطاعك وإجاباتك. لا قوالب. لا افتراضات. لا محاكاة.'
+          : 'Every item below is computed from the regulatory database based on your sector and answers. No templates. No defaults. No simulations.' }}</p>
+      </div>
+
+      <!-- Regulatory Chain (special rendering) -->
+      <app-regulatory-chain-visual
+        *ngIf="getChainSection() as chain"
+        [chainData]="chain.data"
+        [lang]="lang">
+      </app-regulatory-chain-visual>
+
+      <!-- Mini Cockpit Mockup -->
+      <div class="preview-cockpit" *ngIf="sections.length > 0">
+        <div class="cockpit-card cockpit-compliance">
+          <i class="pi pi-shield"></i>
+          <span class="cockpit-label">{{ lang === 'ar' ? 'الامتثال' : 'Compliance' }}</span>
+          <span class="cockpit-val" [appCountUp]="getMetric('compliance')">0</span>
+        </div>
+        <div class="cockpit-card cockpit-risk">
+          <i class="pi pi-exclamation-triangle"></i>
+          <span class="cockpit-label">{{ lang === 'ar' ? 'المخاطر' : 'Risk' }}</span>
+          <span class="cockpit-val" [appCountUp]="getMetric('risk')">0</span>
+        </div>
+        <div class="cockpit-card cockpit-evidence">
+          <i class="pi pi-folder-open"></i>
+          <span class="cockpit-label">{{ lang === 'ar' ? 'الأدلة' : 'Evidence' }}</span>
+          <span class="cockpit-val" [appCountUp]="getMetric('evidence')">0</span>
+        </div>
+        <div class="cockpit-card cockpit-agents">
+          <i class="pi pi-android"></i>
+          <span class="cockpit-label">{{ lang === 'ar' ? 'وكلاء الذكاء' : 'AI Agents' }}</span>
+          <span class="cockpit-val" [appCountUp]="getMetric('agents')">0</span>
+        </div>
+      </div>
+
+      <div class="preview-grid">
+        <div *ngFor="let sec of gridSections; let i = index"
+             class="preview-card"
+             [style.animation-delay]="(i * 120) + 'ms'">
+          <div class="preview-card-top">
+            <div class="preview-card-icon">
+              <i class="pi" [ngClass]="getSectionIcon(sec.section)"></i>
+            </div>
+            <span class="preview-card-label">{{ lang === 'ar' ? sec.label_ar : sec.label_en }}</span>
+          </div>
+          <p class="preview-card-desc">{{ lang === 'ar' ? sec.description_ar : sec.description_en }}</p>
+
+          <div class="preview-card-data" *ngIf="sec.data">
+            <!-- List type -->
+            <div *ngIf="sec.display_type === 'list'" class="preview-list">
+              <span *ngFor="let item of $any(sec.data)" class="preview-tag">{{ item.name || item.code || item }}</span>
+            </div>
+            <!-- Count grid type -->
+            <div *ngIf="sec.display_type === 'count_grid'" class="preview-counts">
+              <div *ngFor="let item of $any(sec.data)" class="preview-count-item">
+                <span class="preview-count-val" [appCountUp]="item.control_count || item.count || 0">0</span>
+                <span class="preview-count-label">{{ item.framework_code || item.label || '' }}</span>
+              </div>
+            </div>
+            <!-- Default: formatted key-value -->
+            <div *ngIf="sec.display_type !== 'list' && sec.display_type !== 'count_grid'" class="preview-kv">
+              <ng-container *ngIf="isObject(sec.data)">
+                <div *ngFor="let key of objectKeys(sec.data)" class="preview-kv-row">
+                  <span class="preview-kv-key">{{ key }}</span>
+                  <span class="preview-kv-val">{{ formatValue($any(sec.data)[key]) }}</span>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer as hero stat card -->
+      <div class="preview-footer-card" *ngIf="totalCount as totals">
+        <div class="preview-footer-inner">
+          <i class="pi pi-verified preview-verified-icon"></i>
+          <span class="preview-footer-deterministic">
+            {{ lang === 'ar' ? 'الكل مُعَدّ، الكل حقيقي' : 'all pre-configured, all real' }}
+          </span>
+        </div>
+        <div class="preview-footer-stats">
+          <span *ngIf="totals.frameworks > 0" class="preview-stat-num" [appCountUp]="totals.frameworks">0</span>
+          <span *ngIf="totals.frameworks > 0"> {{ lang === 'ar' ? 'أطر' : 'frameworks' }}</span>
+          <span *ngIf="totals.controls > 0"> · </span>
+          <span *ngIf="totals.controls > 0" class="preview-stat-num" [appCountUp]="totals.controls">0</span>
+          <span *ngIf="totals.controls > 0"> {{ lang === 'ar' ? 'ضابط' : 'controls' }}</span>
+          <span *ngIf="totals.evidence > 0"> · </span>
+          <span *ngIf="totals.evidence > 0" class="preview-stat-num" [appCountUp]="totals.evidence">0</span>
+          <span *ngIf="totals.evidence > 0"> {{ lang === 'ar' ? 'مهمة أدلة' : 'evidence tasks' }}</span>
+          <span *ngIf="totals.agents > 0"> · </span>
+          <span *ngIf="totals.agents > 0" class="preview-stat-num" [appCountUp]="totals.agents">0</span>
+          <span *ngIf="totals.agents > 0"> {{ lang === 'ar' ? 'وكيل ذكاء' : 'AI agents' }}</span>
+        </div>
+      </div>
+
+      <!-- ROI Value Projection -->
+      <div class="preview-value-projection" *ngIf="totalCount as totals">
+        <h4>{{ lang === 'ar' ? 'القيمة المتوقعة' : 'Projected Value' }}</h4>
+        <div class="projection-grid">
+          <div class="projection-item">
+            <span class="projection-val">~40%</span>
+            <span class="projection-label">{{ lang === 'ar' ? 'تقليل وقت الامتثال' : 'compliance time reduction' }}</span>
+          </div>
+          <div class="projection-item">
+            <span class="projection-val">24/7</span>
+            <span class="projection-label">{{ lang === 'ar' ? 'مراقبة مستمرة' : 'continuous monitoring' }}</span>
+          </div>
+          <div class="projection-item">
+            <span class="projection-val">{{ totals.controls > 0 ? totals.controls : '—' }}</span>
+            <span class="projection-label">{{ lang === 'ar' ? 'ضوابط مؤتمتة من اليوم الأول' : 'controls automated from day 1' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>

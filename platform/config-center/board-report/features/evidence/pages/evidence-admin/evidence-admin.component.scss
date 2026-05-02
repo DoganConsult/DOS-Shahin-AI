@@ -1,0 +1,55 @@
+/* Evidence Admin */
+.page-container { padding: 24px 28px; min-height: 100vh; background: var(--bg-0); }
+
+.page-body { margin-top: 16px; }
+
+/* Tab header row (count + add button) */
+.tab-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+
+.taxonomy-count { font-size: var(--font-size-sm, .875rem); font-weight: 600; color: var(--text-muted); }
+
+/* Table cells */
+.code-cell { font-family: var(--font-mono, monospace); font-size: var(--font-size-xs, .75rem); color: var(--text-muted); }
+.name-cell { font-weight: 600; }
+.sort-cell { text-align: center; font-weight: 600; }
+.weight-cell { text-align: center; font-weight: 700; color: var(--primary); }
+.actions-cell { display: flex; gap: 2px; }
+
+/* System badge */
+.system-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: var(--radius, 6px);
+  font-size: var(--font-size-xs, .7rem);
+  font-weight: 600;
+  background: color-mix(in srgb, var(--text-muted) 12%, transparent);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+/* Dimension badge */
+.dimension-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: var(--radius, 6px);
+  font-size: var(--font-size-xs, .75rem);
+  font-weight: 600;
+  background: color-mix(in srgb, var(--primary) 12%, transparent);
+  color: var(--primary);
+  text-transform: capitalize;
+}
+
+/* Inline edit inputs */
+.inline-edit { width: 100%; min-width: 80px; }
+.inline-edit.narrow { max-width: 80px; }
+
+/* Dialog form */
+.dialog-form { display: flex; flex-direction: column; gap: 14px; }
+.form-field { display: flex; flex-direction: column; gap: 4px; }
+.form-field label { font-size: var(--font-size-sm, .875rem); font-weight: 500; color: var(--text-body); }
+.form-field input { width: 100%; }
+.w-full { width: 100%; }
+
+/* Ensure tab panels have consistent padding */
+:host { --p-tabs-panel-padding: 16px 0 0 0; } /* PrimeNG 19 panel padding token */

@@ -1,0 +1,11 @@
+{
+  "attestation.title": "Attestation",
+  "attestation.dashboard": "Attestation Dashboard",
+  "attestation.empty.title": "No records found",
+  "attestation.empty.description": "Create your first attestation record to get started.",
+  "attestation.loading": "Loading attestation data...",
+  "attestation.error.title": "Failed to load data",
+  "attestation.error.retry": "Retry",
+  "attestation.create": "Create New",
+  "attestation.diagnostics": "Diagnostics"
+}

@@ -1,0 +1,4 @@
+
+> @dos/governance-policy-service@0.1.0 build /root/DOS-AIO/services/governance-policy-service
+> tsc -p tsconfig.json
+

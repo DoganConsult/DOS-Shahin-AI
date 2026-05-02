@@ -1,0 +1,403 @@
+<div class="page-shell" [attr.dir]="dir()">
+  <app-page-header
+    titleEn="Policy Coverage & Linkage"
+    titleAr="تغطية السياسات والربط"
+    subtitleEn="Analyze policy coverage across obligations, controls, and risks"
+    subtitleAr="تحليل تغطية السياسات عبر الالتزامات والضوابط والمخاطر"
+    icon="link"
+    [breadcrumbs]="[i18n.translate('common.dashboard'), i18n.translate('common.policies'), i18n.translate('common.coverage')]"
+    [actions]="headerActions"
+    [isAr]="isAr()"
+    [dir]="dir()" />
+
+  <div class="page-body">
+    <p-toast />
+
+    <p-tabView [(activeIndex)]="activeTab">
+      <!-- Tab 1: Obligation Coverage -->
+      <p-tabPanel header="Obligation Coverage">
+        <!-- Loading skeleton -->
+        <div *ngIf="loadingObligations()" class="skeleton-block">
+          <div class="skeleton-row" *ngFor="let i of [1,2,3,4,5]"></div>
+        </div>
+
+        <!-- Obligations table -->
+        <grc-data-table
+          *ngIf="!loadingObligations()"
+          [totalRecords]="obligations().length"
+          [emptyMessage]="'No obligation coverage data available'">
+          <p-table
+            [value]="obligations()"
+            [paginator]="obligations().length > 15"
+            [rows]="15"
+            [rowsPerPageOptions]="[10, 15, 30]"
+            styleClass="p-datatable-sm p-datatable-striped"
+            [scrollable]="true"
+            aria-label="Obligation coverage table">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Obligation</th>
+                <th>Framework</th>
+                <th style="text-align: center">Linked Policies</th>
+                <th>Coverage Status</th>
+                <th style="width: 120px">Actions</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-o>
+              <tr [class.uncovered-row]="o.status === 'uncovered'">
+                <td class="text-semibold">{{ o.title }}</td>
+                <td>{{ o.framework }}</td>
+                <td style="text-align: center">{{ o.linkedPolicies }}</td>
+                <td>
+                  <p-tag [value]="o.status" [severity]="coverageSeverity(o.status)" />
+                </td>
+                <td>
+                  <p-button *ngIf="o.status === 'uncovered'"
+                    icon="pi pi-link" [text]="true" size="small" label="Link"
+                    pTooltip="Link a policy to this obligation"
+                    (onClick)="openLinkDialog('obligation', o)" />
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </grc-data-table>
+      </p-tabPanel>
+
+      <!-- Tab 2: Control Coverage -->
+      <p-tabPanel header="Control Coverage">
+        <div *ngIf="loadingControls()" class="skeleton-block">
+          <div class="skeleton-row" *ngFor="let i of [1,2,3,4,5]"></div>
+        </div>
+
+        <grc-data-table
+          *ngIf="!loadingControls()"
+          [totalRecords]="controls().length"
+          [emptyMessage]="'No control coverage data available'">
+          <p-table
+            [value]="controls()"
+            [paginator]="controls().length > 15"
+            [rows]="15"
+            [rowsPerPageOptions]="[10, 15, 30]"
+            styleClass="p-datatable-sm p-datatable-striped"
+            [scrollable]="true"
+            aria-label="Control coverage table">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Control ID</th>
+                <th>Title</th>
+                <th>Framework</th>
+                <th style="text-align: center">Linked Policies</th>
+                <th>Coverage Status</th>
+                <th style="width: 120px">Actions</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-c>
+              <tr [class.uncovered-row]="c.status === 'uncovered'">
+                <td class="text-mono">{{ c.controlId }}</td>
+                <td class="text-semibold">{{ c.title }}</td>
+                <td>{{ c.framework }}</td>
+                <td style="text-align: center">{{ c.linkedPolicies }}</td>
+                <td>
+                  <p-tag [value]="c.status" [severity]="coverageSeverity(c.status)" />
+                </td>
+                <td>
+                  <p-button *ngIf="c.status === 'uncovered'"
+                    icon="pi pi-link" [text]="true" size="small" label="Link"
+                    pTooltip="Link a policy to this control"
+                    (onClick)="openLinkDialog('control', c)" />
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </grc-data-table>
+      </p-tabPanel>
+
+      <!-- Tab 3: Risk Coverage -->
+      <p-tabPanel header="Risk Coverage">
+        <div *ngIf="loadingRisks()" class="skeleton-block">
+          <div class="skeleton-row" *ngFor="let i of [1,2,3,4,5]"></div>
+        </div>
+
+        <grc-data-table
+          *ngIf="!loadingRisks()"
+          [totalRecords]="risks().length"
+          [emptyMessage]="'No risk coverage data available'">
+          <p-table
+            [value]="risks()"
+            [paginator]="risks().length > 15"
+            [rows]="15"
+            [rowsPerPageOptions]="[10, 15, 30]"
+            styleClass="p-datatable-sm p-datatable-striped"
+            [scrollable]="true"
+            aria-label="Risk coverage table">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Risk</th>
+                <th>Severity</th>
+                <th style="text-align: center">Linked Policies</th>
+                <th>Coverage Status</th>
+                <th style="width: 120px">Actions</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-r>
+              <tr [class.uncovered-row]="r.status === 'uncovered'">
+                <td class="text-semibold">{{ r.title }}</td>
+                <td>
+                  <p-tag [value]="r.severity" [severity]="riskSeverity(r.severity)" />
+                </td>
+                <td style="text-align: center">{{ r.linkedPolicies }}</td>
+                <td>
+                  <p-tag [value]="r.status" [severity]="coverageSeverity(r.status)" />
+                </td>
+                <td>
+                  <p-button *ngIf="r.status === 'uncovered'"
+                    icon="pi pi-link" [text]="true" size="small" label="Link"
+                    pTooltip="Link a policy to this risk"
+                    (onClick)="openLinkDialog('risk', r)" />
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </grc-data-table>
+      </p-tabPanel>
+
+      <!-- Tab 4: Gap Analysis -->
+      <p-tabPanel header="Gap Analysis">
+        <div *ngIf="loadingGaps()" class="skeleton-block">
+          <div class="skeleton-row" *ngFor="let i of [1,2,3]"></div>
+        </div>
+
+        <ng-container *ngIf="!loadingGaps()">
+          <!-- KPI Cards -->
+          <div class="gap-kpi-strip">
+            <div class="gap-kpi-card gap-kpi-error">
+              <div class="gap-kpi-value">{{ gapKpiUncoveredObligations() }}</div>
+              <div class="gap-kpi-label">Uncovered Obligations</div>
+            </div>
+            <div class="gap-kpi-card gap-kpi-error">
+              <div class="gap-kpi-value">{{ gapKpiUncoveredControls() }}</div>
+              <div class="gap-kpi-label">Uncovered Controls</div>
+            </div>
+            <div class="gap-kpi-card gap-kpi-error">
+              <div class="gap-kpi-value">{{ gapKpiUncoveredRisks() }}</div>
+              <div class="gap-kpi-label">Uncovered Risks</div>
+            </div>
+            <div class="gap-kpi-card gap-kpi-warning">
+              <div class="gap-kpi-value">{{ gapKpiPoliciesWithoutControls() }}</div>
+              <div class="gap-kpi-label">Policies Without Controls</div>
+            </div>
+            <div class="gap-kpi-card gap-kpi-warning">
+              <div class="gap-kpi-value">{{ gapKpiPoliciesWithoutRisks() }}</div>
+              <div class="gap-kpi-label">Policies Without Risks</div>
+            </div>
+          </div>
+
+          <!-- Uncovered Obligations detail -->
+          <div class="gap-section" *ngIf="gaps().uncoveredObligations.length > 0">
+            <h4 class="gap-section-title">Uncovered Obligations</h4>
+            <grc-data-table
+              [totalRecords]="gaps().uncoveredObligations.length"
+              [emptyMessage]="'No uncovered obligations'">
+              <p-table
+                [value]="gaps().uncoveredObligations"
+                [paginator]="gaps().uncoveredObligations.length > 10"
+                [rows]="10"
+                styleClass="p-datatable-sm p-datatable-striped"
+                [scrollable]="true"
+                aria-label="Uncovered obligations table">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th>Obligation</th>
+                    <th>Framework</th>
+                    <th style="width: 120px">Actions</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-item>
+                  <tr>
+                    <td class="text-semibold">{{ item.title || item.obligation_title || '-' }}</td>
+                    <td>{{ item.framework || item.framework_code || '-' }}</td>
+                    <td>
+                      <p-button icon="pi pi-link" [text]="true" size="small" label="Link"
+                        (onClick)="openLinkDialog('obligation', item)" />
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </grc-data-table>
+          </div>
+
+          <!-- Uncovered Controls detail -->
+          <div class="gap-section" *ngIf="gaps().uncoveredControls.length > 0">
+            <h4 class="gap-section-title">Uncovered Controls</h4>
+            <grc-data-table
+              [totalRecords]="gaps().uncoveredControls.length"
+              [emptyMessage]="'No uncovered controls'">
+              <p-table
+                [value]="gaps().uncoveredControls"
+                [paginator]="gaps().uncoveredControls.length > 10"
+                [rows]="10"
+                styleClass="p-datatable-sm p-datatable-striped"
+                [scrollable]="true"
+                aria-label="Uncovered controls table">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th>Control ID</th>
+                    <th>Title</th>
+                    <th>Framework</th>
+                    <th style="width: 120px">Actions</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-item>
+                  <tr>
+                    <td class="text-mono">{{ item.controlId || item.control_code || item.control_id || '-' }}</td>
+                    <td class="text-semibold">{{ item.title || item.control_title || '-' }}</td>
+                    <td>{{ item.framework || item.framework_code || '-' }}</td>
+                    <td>
+                      <p-button icon="pi pi-link" [text]="true" size="small" label="Link"
+                        (onClick)="openLinkDialog('control', item)" />
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </grc-data-table>
+          </div>
+
+          <!-- Uncovered Risks detail -->
+          <div class="gap-section" *ngIf="gaps().uncoveredRisks.length > 0">
+            <h4 class="gap-section-title">Uncovered Risks</h4>
+            <grc-data-table
+              [totalRecords]="gaps().uncoveredRisks.length"
+              [emptyMessage]="'No uncovered risks'">
+              <p-table
+                [value]="gaps().uncoveredRisks"
+                [paginator]="gaps().uncoveredRisks.length > 10"
+                [rows]="10"
+                styleClass="p-datatable-sm p-datatable-striped"
+                [scrollable]="true"
+                aria-label="Uncovered risks table">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th>Risk</th>
+                    <th>Severity</th>
+                    <th style="width: 120px">Actions</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-item>
+                  <tr>
+                    <td class="text-semibold">{{ item.title || item.risk_title || '-' }}</td>
+                    <td>
+                      <p-tag [value]="item.severity || item.risk_severity || 'medium'"
+                        [severity]="riskSeverity(item.severity || item.risk_severity || 'medium')" />
+                    </td>
+                    <td>
+                      <p-button icon="pi pi-link" [text]="true" size="small" label="Link"
+                        (onClick)="openLinkDialog('risk', item)" />
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </grc-data-table>
+          </div>
+
+          <!-- Policies Without Controls -->
+          <div class="gap-section" *ngIf="gaps().policiesWithoutControls.length > 0">
+            <h4 class="gap-section-title">Policies Without Controls</h4>
+            <grc-data-table
+              [totalRecords]="gaps().policiesWithoutControls.length"
+              [emptyMessage]="'No policies without controls'">
+              <p-table
+                [value]="gaps().policiesWithoutControls"
+                [paginator]="gaps().policiesWithoutControls.length > 10"
+                [rows]="10"
+                styleClass="p-datatable-sm p-datatable-striped"
+                [scrollable]="true"
+                aria-label="Policies without controls table">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th>Policy</th>
+                    <th>Status</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-item>
+                  <tr>
+                    <td class="text-semibold">{{ item.title || item.policy_title || '-' }}</td>
+                    <td>{{ item.status || '-' }}</td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </grc-data-table>
+          </div>
+
+          <!-- Policies Without Risks -->
+          <div class="gap-section" *ngIf="gaps().policiesWithoutRisks.length > 0">
+            <h4 class="gap-section-title">Policies Without Risks</h4>
+            <grc-data-table
+              [totalRecords]="gaps().policiesWithoutRisks.length"
+              [emptyMessage]="'No policies without risks'">
+              <p-table
+                [value]="gaps().policiesWithoutRisks"
+                [paginator]="gaps().policiesWithoutRisks.length > 10"
+                [rows]="10"
+                styleClass="p-datatable-sm p-datatable-striped"
+                [scrollable]="true"
+                aria-label="Policies without risks table">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th>Policy</th>
+                    <th>Status</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-item>
+                  <tr>
+                    <td class="text-semibold">{{ item.title || item.policy_title || '-' }}</td>
+                    <td>{{ item.status || '-' }}</td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </grc-data-table>
+          </div>
+
+          <!-- All clear message -->
+          <div *ngIf="gapKpiUncoveredObligations() === 0 && gapKpiUncoveredControls() === 0
+            && gapKpiUncoveredRisks() === 0 && gapKpiPoliciesWithoutControls() === 0
+            && gapKpiPoliciesWithoutRisks() === 0" class="all-clear">
+            <i class="pi pi-check-circle all-clear-icon"></i>
+            <p>Full coverage achieved. No gaps detected.</p>
+          </div>
+        </ng-container>
+      </p-tabPanel>
+    </p-tabView>
+
+    <!-- Link Dialog -->
+    <p-dialog
+      header="Link Policy"
+      [(visible)]="showLinkDialog"
+      [modal]="true"
+      [style]="{ width: '480px' }"
+      [closable]="true">
+      <div class="form-grid" *ngIf="linkTarget()">
+        <p class="link-target-info">
+          Link a policy to <strong>{{ linkTarget()!.title }}</strong>
+          ({{ linkTarget()!.type }})
+        </p>
+        <div class="form-field">
+          <label>Select Policy <span class="required">*</span></label>
+          <p-dropdown
+            [options]="policies()"
+            [(ngModel)]="linkPolicyId"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Select policy"
+            [filter]="true"
+            [showClear]="true"
+            [style]="{ width: '100%' }" />
+        </div>
+      </div>
+      <ng-template pTemplate="footer">
+        <p-button label="Cancel" [text]="true" (onClick)="showLinkDialog.set(false)" />
+        <p-button label="Create Link" icon="pi pi-link" (onClick)="submitLink()"
+          [disabled]="!linkPolicyId" />
+      </ng-template>
+    </p-dialog>
+  </div>
+</div>

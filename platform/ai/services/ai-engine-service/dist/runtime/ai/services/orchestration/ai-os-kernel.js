@@ -1,0 +1,19 @@
+export function rebootAgent(...args) { return null; }
+export function pauseAgent(...args) { return null; }
+export function getKernelStatus(...args) { return null; }
+export function getIpcMessages(...args) { return null; }
+export function killProcess(...args) { return null; }
+export function getMemoryPartitions(...args) { return null; }
+export function saveKernelSnapshot(...args) { return null; }
+export function resumeAgent(...args) { return null; }
+export function getKernelLog(...args) { return null; }
+export function getSchedulerTable(...args) { return null; }
+export function getProcessTable(...args) { return null; }
+export function getProcessDetail(...args) { return null; }
+export function listKernelSnapshots(...args) { return null; }
+export function getKernelHealth(...args) { return null; }
+export function adjustAutonomyLevel(...args) { return null; }
+export function getTokenUsage(...args) { return null; }
+export function getAgentDetail(...args) { return null; }
+export function setGlobalAutonomyLevel(...args) { return null; }
+//# sourceMappingURL=ai-os-kernel.js.map

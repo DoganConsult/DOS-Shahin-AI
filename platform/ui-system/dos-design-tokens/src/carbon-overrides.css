@@ -1,0 +1,395 @@
+/* DOS Platform — Carbon Variable Re-Tone.
+ *
+ * The DOS Platform is locked on IBM Carbon Design System for workhorse
+ * primitives (tables, forms, modals, side-nav, notifications). Carbon
+ * exposes its color/spacing decisions as `--cds-*` CSS custom
+ * properties. This file remaps those vars to DOS tokens at the document
+ * root so Carbon components paint themselves in DOS navy/gold instead
+ * of IBM blue/grey — without forking Carbon, breaking Carbon's
+ * a11y/contrast contract, or maintaining a custom theme bundle.
+ *
+ * Only the visual tone is changed. Carbon's structural decisions
+ * (4px grid, type scale, motion easing, focus geometry) stay intact.
+ *
+ * Apply by importing AFTER `@dos/design-tokens/tokens.css` and the
+ * Carbon white/g10/g100 theme stylesheet at the application root.
+ *
+ * Light theme (default) maps to Carbon `white`.
+ * Dark theme `[data-theme='dark']` maps to Carbon `g100` equivalents.
+ */
+:root {
+  /* ── Backgrounds & layers ──────────────────────────────────────── */
+  --cds-background:           var(--dos-color-surface-canvas);
+  --cds-background-hover:     var(--dos-color-surface-muted);
+  --cds-background-active:    var(--dos-color-surface-sunken);
+  --cds-background-selected:  var(--dos-color-primary-soft);
+  --cds-background-brand:     var(--dos-color-primary);
+  --cds-background-inverse:   var(--dos-color-surface-inverse);
+  --cds-background-inverse-hover: var(--dos-color-text-strong);
+
+  --cds-layer:                var(--dos-color-surface);
+  --cds-layer-01:             var(--dos-color-surface);
+  --cds-layer-02:             var(--dos-color-surface-muted);
+  --cds-layer-03:             var(--dos-color-surface-sunken);
+  --cds-layer-hover:          var(--dos-color-surface-muted);
+  --cds-layer-hover-01:       var(--dos-color-surface-muted);
+  --cds-layer-hover-02:       var(--dos-color-surface-sunken);
+  --cds-layer-active:         var(--dos-color-surface-sunken);
+  --cds-layer-active-01:      var(--dos-color-surface-sunken);
+  --cds-layer-selected:       var(--dos-color-primary-soft);
+  --cds-layer-selected-01:    var(--dos-color-primary-soft);
+  --cds-layer-accent:         var(--dos-color-surface-muted);
+  --cds-layer-accent-01:      var(--dos-color-surface-muted);
+
+  --cds-field:                var(--dos-color-surface-muted);
+  --cds-field-01:             var(--dos-color-surface-muted);
+  --cds-field-02:             var(--dos-color-surface);
+  --cds-field-hover:          var(--dos-color-surface-sunken);
+  --cds-field-hover-01:       var(--dos-color-surface-sunken);
+
+  /* ── Text ──────────────────────────────────────────────────────── */
+  --cds-text-primary:         var(--dos-color-text-strong);
+  --cds-text-secondary:       var(--dos-color-text-muted);
+  --cds-text-placeholder:     var(--dos-color-text-subtle);
+  --cds-text-helper:          var(--dos-color-text-subtle);
+  --cds-text-on-color:        var(--dos-color-text-inverse);
+  --cds-text-on-color-disabled: rgba(255, 255, 255, 0.55);
+  --cds-text-disabled:        var(--dos-color-text-disabled);
+  --cds-text-error:           var(--dos-color-danger-strong);
+  --cds-text-inverse:         var(--dos-color-text-inverse);
+
+  /* ── Borders ───────────────────────────────────────────────────── */
+  --cds-border-subtle:        var(--dos-color-border-subtle);
+  --cds-border-subtle-00:     var(--dos-color-border-subtle);
+  --cds-border-subtle-01:     var(--dos-color-border-subtle);
+  --cds-border-subtle-02:     var(--dos-color-border-subtle);
+  --cds-border-subtle-selected: var(--dos-color-border);
+  --cds-border-subtle-selected-01: var(--dos-color-border);
+  --cds-border-strong:        var(--dos-color-border-strong);
+  --cds-border-strong-01:     var(--dos-color-border-strong);
+  --cds-border-tile:          var(--dos-color-border);
+  --cds-border-tile-01:       var(--dos-color-border);
+  --cds-border-inverse:       var(--dos-color-text-strong);
+  --cds-border-interactive:   var(--dos-color-primary);
+  --cds-border-disabled:      var(--dos-color-border-subtle);
+
+  /* ── Interactive (links, toggles, focus) ───────────────────────── */
+  --cds-link-primary:         var(--dos-color-text-link);
+  --cds-link-primary-hover:   var(--dos-color-primary-hover);
+  --cds-link-secondary:       var(--dos-color-primary-strong);
+  --cds-link-inverse:         var(--dos-color-accent);
+  --cds-link-visited:         var(--dos-color-primary-strong);
+  --cds-focus:                var(--dos-color-focus);
+  --cds-focus-inset:          var(--dos-color-surface);
+  --cds-focus-inverse:        var(--dos-color-accent);
+  --cds-interactive:          var(--dos-color-primary);
+  --cds-highlight:            var(--dos-color-primary-soft);
+  --cds-toggle-off:           var(--dos-color-border-strong);
+
+  /* ── Buttons (the four Carbon kinds map here) ──────────────────── */
+  --cds-button-primary:       var(--dos-color-primary);
+  --cds-button-primary-hover: var(--dos-color-primary-hover);
+  --cds-button-primary-active: var(--dos-color-primary-strong);
+  --cds-button-secondary:     var(--dos-color-text-strong);
+  --cds-button-secondary-hover: var(--dos-color-text);
+  --cds-button-secondary-active: var(--dos-color-text-strong);
+  --cds-button-tertiary:      var(--dos-color-primary);
+  --cds-button-tertiary-hover: var(--dos-color-primary-hover);
+  --cds-button-tertiary-active: var(--dos-color-primary-strong);
+  --cds-button-danger-primary: var(--dos-color-danger);
+  --cds-button-danger-secondary: var(--dos-color-danger);
+  --cds-button-danger-active:   var(--dos-color-danger-strong);
+  --cds-button-danger-hover:    var(--dos-color-danger-strong);
+  --cds-button-disabled:        var(--dos-color-surface-sunken);
+  --cds-button-separator:       var(--dos-color-border-subtle);
+
+  /* ── Support semantic ──────────────────────────────────────────── */
+  --cds-support-error:           var(--dos-color-danger);
+  --cds-support-error-inverse:   var(--dos-color-danger);
+  --cds-support-success:         var(--dos-color-success);
+  --cds-support-success-inverse: var(--dos-color-success);
+  --cds-support-warning:         var(--dos-color-warning);
+  --cds-support-warning-inverse: var(--dos-color-warning);
+  --cds-support-info:            var(--dos-color-info);
+  --cds-support-info-inverse:    var(--dos-color-info);
+  --cds-support-caution-major:   var(--dos-color-warning);
+  --cds-support-caution-minor:   var(--dos-color-warning);
+  --cds-support-caution-undefined: var(--dos-color-info);
+
+  /* ── Notification (banner / toast backgrounds) ─────────────────── */
+  --cds-notification-background-error:   var(--dos-color-danger-soft);
+  --cds-notification-background-success: var(--dos-color-success-soft);
+  --cds-notification-background-warning: var(--dos-color-warning-soft);
+  --cds-notification-background-info:    var(--dos-color-info-soft);
+  --cds-notification-action-hover:       var(--dos-color-surface);
+
+  /* ── Tag colors ────────────────────────────────────────────────── */
+  --cds-tag-background-blue:     var(--dos-color-info-soft);
+  --cds-tag-color-blue:          var(--dos-color-info-text);
+  --cds-tag-hover-blue:          var(--dos-color-info-soft);
+  --cds-tag-border-blue:         var(--dos-color-info);
+  --cds-tag-background-green:    var(--dos-color-success-soft);
+  --cds-tag-color-green:         var(--dos-color-success-text);
+  --cds-tag-background-red:      var(--dos-color-danger-soft);
+  --cds-tag-color-red:           var(--dos-color-danger-text);
+  --cds-tag-background-warm-gray: var(--dos-color-surface-muted);
+  --cds-tag-color-warm-gray:     var(--dos-color-text-muted);
+  --cds-tag-background-cool-gray: var(--dos-color-surface-muted);
+  --cds-tag-color-cool-gray:     var(--dos-color-text-muted);
+
+  /* ── Skeleton (Carbon's loading bones) ─────────────────────────── */
+  --cds-skeleton-background:  var(--dos-color-surface-muted);
+  --cds-skeleton-element:     var(--dos-color-surface-sunken);
+
+  /* ── Type stack alignment ──────────────────────────────────────── */
+  --cds-type-family:          var(--dos-font-family);
+  --cds-font-family-condensed: var(--dos-font-family);
+  --cds-font-family-mono:     ui-monospace, SFMono-Regular, Menlo, monospace;
+  --cds-font-family-sans:     var(--dos-font-family);
+  --cds-font-family-serif:    var(--dos-font-family);
+}
+
+[data-theme='dark'] {
+  /* Carbon `g100`-style overrides — DOS dark surfaces. */
+  --cds-background:           var(--dos-color-surface-canvas);
+  --cds-background-hover:     var(--dos-color-surface-muted);
+  --cds-background-active:    var(--dos-color-surface-sunken);
+  --cds-background-selected:  var(--dos-color-primary-soft);
+
+  --cds-layer:                var(--dos-color-surface);
+  --cds-layer-01:             var(--dos-color-surface);
+  --cds-layer-02:             var(--dos-color-surface-raised);
+  --cds-layer-03:             var(--dos-color-surface-canvas);
+  --cds-layer-hover:          var(--dos-color-surface-raised);
+  --cds-layer-hover-01:       var(--dos-color-surface-raised);
+  --cds-layer-hover-02:       var(--dos-color-surface-canvas);
+  --cds-layer-active:         var(--dos-color-surface-sunken);
+  --cds-layer-selected:       var(--dos-color-primary-soft);
+  --cds-layer-selected-01:    var(--dos-color-primary-soft);
+
+  --cds-field:                var(--dos-color-surface-raised);
+  --cds-field-01:             var(--dos-color-surface-raised);
+  --cds-field-02:             var(--dos-color-surface);
+  --cds-field-hover:          var(--dos-color-surface-canvas);
+  --cds-field-hover-01:       var(--dos-color-surface-canvas);
+
+  --cds-text-primary:         var(--dos-color-text-strong);
+  --cds-text-secondary:       var(--dos-color-text-muted);
+  --cds-text-placeholder:     var(--dos-color-text-subtle);
+  --cds-text-disabled:        var(--dos-color-text-disabled);
+
+  --cds-border-subtle:        var(--dos-color-border-subtle);
+  --cds-border-subtle-00:     var(--dos-color-border-subtle);
+  --cds-border-subtle-01:     var(--dos-color-border-subtle);
+  --cds-border-strong:        var(--dos-color-border-strong);
+  --cds-border-tile:          var(--dos-color-border);
+
+  --cds-skeleton-background:  var(--dos-color-surface-muted);
+  --cds-skeleton-element:     var(--dos-color-surface-sunken);
+}
+
+/* ────────────────────────────────────────────────────────────────────
+ * WAVE 5 — Token completion (light-theme defaults).
+ *
+ * Adds: full type scale · motion durations + easings · z-index ladder ·
+ * complete tag color set (11 colors × 4 fields each) · field overlay ·
+ * code tokens · highlight tokens. Each is rerouted to the closest
+ * existing DOS token so Carbon components paint with DOS branding by
+ * default — no Carbon component needs to be re-themed per consumer.
+ * ──────────────────────────────────────────────────────────────────── */
+:root {
+  /* ── Spacing aliases (Carbon's `--cds-spacing-01..13`) ─────────── */
+  --cds-spacing-01: var(--dos-space-1);   /* 0.125rem */
+  --cds-spacing-02: var(--dos-space-2);   /* 0.25rem  */
+  --cds-spacing-03: var(--dos-space-2);   /* 0.5rem   */
+  --cds-spacing-04: var(--dos-space-3);   /* 0.75rem  */
+  --cds-spacing-05: var(--dos-space-4);   /* 1rem     */
+  --cds-spacing-06: var(--dos-space-5);   /* 1.5rem   */
+  --cds-spacing-07: var(--dos-space-6);   /* 2rem     */
+  --cds-spacing-08: var(--dos-space-8);   /* 2.5rem   */
+  --cds-spacing-09: var(--dos-space-10);  /* 3rem     */
+  --cds-spacing-10: var(--dos-space-12);  /* 4rem     */
+  --cds-spacing-11: 5rem;
+  --cds-spacing-12: 6rem;
+  --cds-spacing-13: 10rem;
+
+  /* ── Type scale aliases (Carbon Productive + Expressive) ───────── */
+  --cds-helper-text-01-font-size:        var(--dos-font-size-xs);
+  --cds-helper-text-01-font-weight:      400;
+  --cds-helper-text-01-line-height:      var(--dos-line-height-normal);
+  --cds-helper-text-02-font-size:        var(--dos-font-size-sm);
+  --cds-helper-text-02-line-height:      var(--dos-line-height-normal);
+  --cds-label-01-font-size:              var(--dos-font-size-xs);
+  --cds-label-01-font-weight:            500;
+  --cds-label-02-font-size:              var(--dos-font-size-sm);
+  --cds-label-02-font-weight:            500;
+  --cds-body-compact-01-font-size:       var(--dos-font-size-sm);
+  --cds-body-compact-01-line-height:     1.28572;
+  --cds-body-compact-02-font-size:       var(--dos-font-size-md);
+  --cds-body-compact-02-line-height:     1.375;
+  --cds-body-short-01-font-size:         var(--dos-font-size-sm);
+  --cds-body-short-01-line-height:       1.42857;
+  --cds-body-short-02-font-size:         var(--dos-font-size-md);
+  --cds-body-short-02-line-height:       1.5;
+  --cds-body-long-01-font-size:          var(--dos-font-size-sm);
+  --cds-body-long-01-line-height:        1.42857;
+  --cds-body-long-02-font-size:          var(--dos-font-size-md);
+  --cds-body-long-02-line-height:        1.625;
+  --cds-code-01-font-family:             ui-monospace, SFMono-Regular, Menlo, monospace;
+  --cds-code-01-font-size:               var(--dos-caption-size);
+  --cds-code-02-font-size:               var(--dos-font-size-sm);
+  --cds-legal-01-font-size:              0.6875rem;
+  --cds-legal-02-font-size:              var(--dos-caption-size);
+  --cds-productive-heading-01-font-size: var(--dos-font-size-sm);
+  --cds-productive-heading-01-font-weight: 600;
+  --cds-productive-heading-02-font-size: var(--dos-font-size-md);
+  --cds-productive-heading-02-font-weight: 600;
+  --cds-productive-heading-03-font-size: var(--dos-font-size-lg);
+  --cds-productive-heading-03-font-weight: 400;
+  --cds-productive-heading-04-font-size: var(--dos-font-size-xl);
+  --cds-productive-heading-04-font-weight: 400;
+  --cds-productive-heading-05-font-size: var(--dos-font-size-2xl);
+  --cds-productive-heading-05-font-weight: 400;
+  --cds-productive-heading-06-font-size: var(--dos-display-md);
+  --cds-productive-heading-06-font-weight: 300;
+  --cds-productive-heading-07-font-size: var(--dos-display-lg);
+  --cds-productive-heading-07-font-weight: 300;
+  --cds-expressive-heading-01-font-size: var(--dos-font-size-sm);
+  --cds-expressive-heading-02-font-size: var(--dos-font-size-md);
+  --cds-expressive-heading-03-font-size: var(--dos-font-size-lg);
+  --cds-expressive-heading-04-font-size: var(--dos-font-size-xl);
+  --cds-expressive-heading-05-font-size: var(--dos-display-sm);
+  --cds-expressive-heading-06-font-size: var(--dos-display-md);
+  --cds-expressive-paragraph-01-font-size: var(--dos-font-size-md);
+  --cds-quotation-01-font-size:          var(--dos-font-size-md);
+  --cds-quotation-02-font-size:          var(--dos-font-size-lg);
+  --cds-fluid-display-01-font-size:      var(--dos-display-md);
+  --cds-fluid-display-02-font-size:      var(--dos-display-lg);
+  --cds-fluid-display-03-font-size:      var(--dos-display-xl);
+  --cds-fluid-display-04-font-size:      var(--dos-display-xl);
+
+  /* ── Motion (Carbon productive + expressive) ──────────────────── */
+  --cds-motion-easing-standard-productive: var(--dos-ease-emphasized);
+  --cds-motion-easing-standard-expressive: var(--dos-ease-emphasized);
+  --cds-motion-easing-entrance-productive: var(--dos-ease-out);
+  --cds-motion-easing-entrance-expressive: var(--dos-ease-spring);
+  --cds-motion-easing-exit-productive:     var(--dos-ease-in);
+  --cds-motion-easing-exit-expressive:     var(--dos-ease-in);
+  --cds-duration-fast-01:                  70ms;
+  --cds-duration-fast-02:                  110ms;
+  --cds-duration-moderate-01:              150ms;
+  --cds-duration-moderate-02:              240ms;
+  --cds-duration-slow-01:                  400ms;
+  --cds-duration-slow-02:                  700ms;
+
+  /* ── Z-index ladder ───────────────────────────────────────────── */
+  --cds-z-index-deep:        -1;
+  --cds-z-index-dropdown:    9000;
+  --cds-z-index-overlay:     6000;
+  --cds-z-index-modal:       9000;
+  --cds-z-index-popover:     9100;
+  --cds-z-index-toast:       9200;
+  --cds-z-index-floating:    9100;
+  --cds-z-index-flyouts:     8000;
+  --cds-z-index-onpress:     6500;
+  --cds-z-index-tooltip:     9100;
+
+  /* ── Field overlay (focus / disabled inset) ───────────────────── */
+  --cds-field-disabled:        var(--dos-color-surface-muted);
+  --cds-field-disabled-01:     var(--dos-color-surface-muted);
+  --cds-field-disabled-02:     var(--dos-color-surface-canvas);
+
+  /* ── Code surfaces ────────────────────────────────────────────── */
+  --cds-text-helper:           var(--dos-color-text-muted);
+
+  /* ── Highlight (selection / search match) ─────────────────────── */
+  --cds-highlight-disabled:    var(--dos-color-surface-muted);
+
+  /* ── Toggle ───────────────────────────────────────────────────── */
+  --cds-toggle-on:             var(--dos-color-primary);
+  --cds-toggle-off:            var(--dos-color-border-strong);
+  --cds-toggle-disabled:       var(--dos-color-border-subtle);
+
+  /* ── Decorative tones ─────────────────────────────────────────── */
+  --cds-decorative-01:         var(--dos-color-border-subtle);
+
+  /* ── Inverse layer (dark badge on light surface) ──────────────── */
+  --cds-layer-inverse:         var(--dos-color-surface-inverse);
+  --cds-layer-inverse-active:  #000;
+  --cds-layer-inverse-hover:   var(--dos-color-text-strong);
+
+  /* ── Support — caution variants ───────────────────────────────── */
+  --cds-support-caution-major:    var(--dos-color-warning);
+  --cds-support-caution-minor:    var(--dos-color-warning);
+  --cds-support-caution-undefined: var(--dos-color-info);
+
+  /* ── Notification action hovers ───────────────────────────────── */
+  --cds-notification-action-hover:        var(--dos-color-surface);
+  --cds-notification-action-tertiary-inverse:        var(--dos-color-text-inverse);
+  --cds-notification-action-tertiary-inverse-active: var(--dos-color-text-strong);
+  --cds-notification-action-tertiary-inverse-hover:  rgba(255,255,255,0.16);
+
+  /* ── Tag color sets — 11 colors × { background, color, hover, border } ─ */
+  --cds-tag-background-blue:        var(--dos-color-info-soft);
+  --cds-tag-color-blue:             var(--dos-color-info-text);
+  --cds-tag-hover-blue:             var(--dos-color-info-soft);
+  --cds-tag-border-blue:            var(--dos-color-info);
+  --cds-tag-background-green:       var(--dos-color-success-soft);
+  --cds-tag-color-green:            var(--dos-color-success-text);
+  --cds-tag-hover-green:            var(--dos-color-success-soft);
+  --cds-tag-border-green:           var(--dos-color-success);
+  --cds-tag-background-red:         var(--dos-color-danger-soft);
+  --cds-tag-color-red:              var(--dos-color-danger-text);
+  --cds-tag-hover-red:              var(--dos-color-danger-soft);
+  --cds-tag-border-red:             var(--dos-color-danger);
+  --cds-tag-background-warm-gray:   var(--dos-color-surface-muted);
+  --cds-tag-color-warm-gray:        var(--dos-color-text-muted);
+  --cds-tag-hover-warm-gray:        var(--dos-color-surface-sunken);
+  --cds-tag-border-warm-gray:       var(--dos-color-border);
+  --cds-tag-background-cool-gray:   var(--dos-color-surface-muted);
+  --cds-tag-color-cool-gray:        var(--dos-color-text-muted);
+  --cds-tag-hover-cool-gray:        var(--dos-color-surface-sunken);
+  --cds-tag-border-cool-gray:       var(--dos-color-border);
+  --cds-tag-background-gray:        var(--dos-color-surface-muted);
+  --cds-tag-color-gray:             var(--dos-color-text-muted);
+  --cds-tag-hover-gray:             var(--dos-color-surface-sunken);
+  --cds-tag-border-gray:            var(--dos-color-border);
+  --cds-tag-background-magenta:     #fbdcec;
+  --cds-tag-color-magenta:          #740937;
+  --cds-tag-hover-magenta:          #fbdcec;
+  --cds-tag-border-magenta:         #d12771;
+  --cds-tag-background-purple:      #ece1f4;
+  --cds-tag-color-purple:           #4a248d;
+  --cds-tag-hover-purple:           #ece1f4;
+  --cds-tag-border-purple:          #6929c4;
+  --cds-tag-background-cyan:        #d8edf6;
+  --cds-tag-color-cyan:             #003a6d;
+  --cds-tag-hover-cyan:             #d8edf6;
+  --cds-tag-border-cyan:            #1192e8;
+  --cds-tag-background-teal:        #cdebec;
+  --cds-tag-color-teal:             #004144;
+  --cds-tag-hover-teal:             #cdebec;
+  --cds-tag-border-teal:            #009d9a;
+  --cds-tag-background-yellow:      #fcf3d9;
+  --cds-tag-color-yellow:           #5a4406;
+  --cds-tag-hover-yellow:           #fcf3d9;
+  --cds-tag-border-yellow:          #d2a106;
+  --cds-tag-background-orange:      #ffe2cf;
+  --cds-tag-color-orange:           #6a3500;
+  --cds-tag-hover-orange:           #ffe2cf;
+  --cds-tag-border-orange:          #ba4e00;
+}
+
+[data-theme='dark'] {
+  /* Dark variants of the WAVE 5 tokens — keep semantic equivalence. */
+  --cds-tag-background-blue:        var(--dos-color-info-soft);
+  --cds-tag-background-green:       var(--dos-color-success-soft);
+  --cds-tag-background-red:         var(--dos-color-danger-soft);
+  --cds-tag-background-warm-gray:   var(--dos-color-surface-muted);
+  --cds-tag-background-cool-gray:   var(--dos-color-surface-muted);
+  --cds-tag-background-gray:        var(--dos-color-surface-muted);
+  --cds-field-disabled:             var(--dos-color-surface-canvas);
+  --cds-toggle-on:                  var(--dos-color-primary);
+  --cds-toggle-off:                 var(--dos-color-border);
+}
+

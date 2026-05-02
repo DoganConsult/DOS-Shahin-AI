@@ -1,0 +1,2 @@
+import { LOCAL_KNOWLEDGE_PERMISSIONS } from './local-knowledge.security';
+export { LOCAL_KNOWLEDGE_PERMISSIONS as LOCAL_KNOWLEDGE_MODULE_PERMISSIONS };

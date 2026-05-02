@@ -1,0 +1,226 @@
+<app-page-shell
+  [icon]="kpiConfig()?.icon || 'chart-bar'"
+  [title]="i18n.localize(kpiConfig()?.titleEn || '', kpiConfig()?.titleAr || '')"
+  [subtitle]="i18n.localize(kpiConfig()?.subtitleEn || '', kpiConfig()?.subtitleAr || '')"
+  [breadcrumbs]="[i18n.translate('kpiDetail.dashboard'), i18n.localize(kpiConfig()?.titleEn || '', kpiConfig()?.titleAr || '')]"
+  [loading]="loading()">
+
+  <p-toast />
+  <p-confirmDialog [style]="{width: '420px'}" />
+
+  <!-- ═══ HERO BANNER ═══ -->
+  <div class="kpi-hero" [dir]="i18n.isAr() ? 'rtl' : 'ltr'">
+    <div class="kpi-hero-left">
+      <div class="kpi-hero-icon-wrap" [class]="'severity-bg-' + severityClass()">
+        <i class="pi" [ngClass]="'pi-' + (kpiConfig()?.icon || 'chart-bar')"></i>
+      </div>
+      <div class="kpi-hero-info">
+        <div class="kpi-hero-value">{{ kpiValue()?.value ?? '—' }}</div>
+        <div class="kpi-hero-label">{{ i18n.localize(kpiConfig()?.titleEn, kpiConfig()?.titleAr) }}</div>
+      </div>
+    </div>
+    <div class="kpi-hero-right">
+      <button class="back-btn" routerLink="/workspace-home">
+        <i class="pi" [ngClass]="i18n.translate('kpiDetail.backArrowIcon')"></i>
+        {{ i18n.translate('kpiDetail.backToDashboard') }}
+      </button>
+    </div>
+  </div>
+
+  <!-- ═══ HUB INTEGRATION NAVIGATION ═══ -->
+  <div class="hub-nav" [dir]="i18n.isAr() ? 'rtl' : 'ltr'" *ngIf="hubs().length > 0">
+    <div class="hub-nav-label">
+      <i class="pi pi-sitemap"></i>
+      {{ i18n.translate('kpiDetail.connectedHubs') }}
+    </div>
+    <div class="hub-chips">
+      <button class="hub-chip" *ngFor="let hub of hubs()" (click)="navigateHub(hub.route)"
+        [pTooltip]="i18n.localize(hub.labelEn, hub.labelAr)" tooltipPosition="top">
+        <i class="pi" [ngClass]="'pi-' + hub.icon"></i>
+        <span>{{ i18n.localize(hub.labelEn, hub.labelAr) }}</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ═══ STAT CARDS ROW ═══ -->
+  <div class="stats-row">
+    <div class="stat-item" *ngFor="let stat of kpiStats()">
+      <app-stat-card
+        [icon]="stat.icon"
+        [value]="stat.value"
+        [label]="i18n.localize(stat.label, stat.labelAr)"
+        [accentColor]="stat.color" />
+    </div>
+  </div>
+
+  <!-- ═══ DATA TABLE with CRUD ═══ -->
+  <div class="data-section" [dir]="i18n.isAr() ? 'rtl' : 'ltr'">
+    <div class="section-bar">
+      <h3 class="section-title">
+        <i class="pi pi-list"></i>
+        {{ i18n.translate('kpiDetail.detailedData') }}
+        <p-tag [value]="filteredItems().length + ''" severity="info" [rounded]="true" styleClass="count-tag" />
+      </h3>
+      <div class="section-actions">
+        <span class="p-input-icon-left search-wrap">
+          <i class="pi pi-search"></i>
+          <input type="text" pInputText [(ngModel)]="searchTerm"
+            [placeholder]="i18n.translate('kpiDetail.search')" [attr.aria-label]="i18n.translate('kpiDetail.search')"
+            (input)="filterItems()" class="search-input" />
+        </span>
+        <button pButton *ngIf="canCreate()" icon="pi pi-plus"
+          [label]="i18n.translate('kpiDetail.addNew')"
+          [attr.aria-label]="i18n.translate('kpiDetail.addNew')"
+          class="p-button-sm p-button-success" (click)="openCreate()"></button>
+      </div>
+    </div>
+
+    <grc-data-table
+      [totalRecords]="filteredItems().length"
+      [emptyMessage]="i18n.translate('kpiDetail.noDataAvailable')">
+      <p-table aria-label="Filtered Items table" [value]="filteredItems()" [paginator]="filteredItems().length > 10" [rows]="10"
+        [rowsPerPageOptions]="[5, 10, 25]"
+        styleClass="p-datatable-striped p-datatable-gridlines kpi-table"
+        [globalFilterFields]="['title','category','status']"
+        [rowHover]="true">
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="title" style="min-width:200px">{{ i18n.translate('kpiDetail.title') }}</th>
+            <th pSortableColumn="category">{{ i18n.translate('kpiDetail.category') }}</th>
+            <th pSortableColumn="status">{{ i18n.translate('kpiDetail.status') }}</th>
+            <th pSortableColumn="value">{{ i18n.translate('kpiDetail.value') }}</th>
+            <th *ngIf="hasOwner()" pSortableColumn="owner">{{ i18n.translate('kpiDetail.owner') }}</th>
+            <th pSortableColumn="date">{{ i18n.translate('kpiDetail.date') }}</th>
+            <th *ngIf="canEdit() || canDelete()" style="width:120px;text-align:center">{{ i18n.translate('kpiDetail.actions') }}</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-item>
+          <tr>
+            <td><strong>{{ item.title }}</strong></td>
+            <td><p-tag [value]="item.category || '—'" severity="info" [rounded]="true" /></td>
+            <td><app-status-badge [status]="item.status" /></td>
+            <td><span class="item-value" [class]="valueClass(item.value)">{{ item.value }}</span></td>
+            <td *ngIf="hasOwner()">{{ item.owner || '—' }}</td>
+            <td>{{ item.date ? (item.date | appDate:'medium') : '—' }}</td>
+            <td *ngIf="canEdit() || canDelete()" class="action-cell">
+              <button pButton *ngIf="canEdit()" icon="pi pi-pencil" class="p-button-sm p-button-text p-button-info"
+                [pTooltip]="i18n.translate('kpiDetail.edit')" [attr.aria-label]="i18n.translate('kpiDetail.edit')" (click)="openEdit(item)"></button>
+              <button pButton *ngIf="canDelete()" icon="pi pi-trash" class="p-button-sm p-button-text p-button-danger"
+                [pTooltip]="i18n.translate('kpiDetail.delete')" [attr.aria-label]="i18n.translate('kpiDetail.delete')" (click)="confirmDelete(item)"></button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </grc-data-table>
+  </div>
+
+  <!-- ═══ TIMELINE (enriched) ═══ -->
+  <div class="timeline-section" [dir]="i18n.isAr() ? 'rtl' : 'ltr'">
+    <div class="section-bar">
+      <h3 class="section-title">
+        <i class="pi pi-history"></i>
+        {{ i18n.translate('kpiDetail.eventChangeTimeline') }}
+      </h3>
+      <p-tag [value]="timelineEvents().length + (i18n.translate('kpiDetail.events'))" severity="info" [rounded]="true" />
+    </div>
+
+    <div class="timeline-container" *ngIf="timelineEvents().length > 0">
+      <div class="timeline-line"></div>
+      <div class="timeline-item" *ngFor="let event of timelineEvents()">
+        <div class="tl-dot" [class]="'tl-dot-' + actionColor(event.action)"></div>
+        <div class="tl-card">
+          <div class="tl-card-header">
+            <span class="tl-action-badge" [class]="'tl-badge-' + actionColor(event.action)">
+              {{ event.action }}
+            </span>
+            <span class="tl-time" [pTooltip]="(event.timestamp | date:'full') || ''" tooltipPosition="top">
+              {{ event.timestamp | appDate:'medium' }}
+            </span>
+          </div>
+          <div class="tl-description">
+            {{ i18n.localize(event.descriptionEn, event.descriptionAr) }}
+          </div>
+          <div class="tl-card-body">
+            <span class="tl-entity-type">
+              <i class="pi pi-tag"></i> {{ event.entityType }}
+            </span>
+            <span class="tl-entity-name" *ngIf="event.entityName">{{ event.entityName }}</span>
+            <span class="tl-entity-id">{{ event.entityId?.slice(0, 8) }}</span>
+          </div>
+          <div class="tl-card-footer" *ngIf="event.userId">
+            <i class="pi pi-user"></i>
+            <span>{{ i18n.translate('kpiDetail.user') }}: {{ event.userId?.slice(0, 8) }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-empty" *ngIf="timelineEvents().length === 0">
+      <i class="pi pi-history"></i>
+      <p>{{ i18n.translate('kpiDetail.noEventsRecordedYetEventsWillAppearHereW') }}</p>
+    </div>
+  </div>
+
+  <!-- ═══ CREATE DIALOG ═══ -->
+  <p-dialog [header]="i18n.translate('kpiDetail.createNewItem')" [(visible)]="showCreateDialog"
+    [modal]="true" [style]="{width: '520px'}" [draggable]="false" [dir]="i18n.isAr() ? 'rtl' : 'ltr'">
+    <div class="crud-form">
+      <div class="form-field" *ngFor="let f of formFields()">
+        <grc-form-field [label]="fieldLabel(f)" [required]="f.required">
+          <input *ngIf="f.type === 'text'" pInputText [(ngModel)]="formData[f.key]"
+            [placeholder]="fieldLabel(f)" [attr.aria-label]="fieldLabel(f)" class="w-full" />
+        </grc-form-field>
+        <ng-container *ngIf="f.type !== 'text'">
+          <label>{{ fieldLabel(f) }} <span *ngIf="f.required" class="req">*</span></label>
+        </ng-container>
+        <textarea *ngIf="f.type === 'textarea'" pInputTextarea [(ngModel)]="formData[f.key]"
+          [placeholder]="fieldLabel(f)" [attr.aria-label]="fieldLabel(f)" rows="3" class="w-full"></textarea>
+        <p-dropdown *ngIf="f.type === 'dropdown'" [(ngModel)]="formData[f.key]"
+          [options]="f.options || []" optionLabel="label" optionValue="value"
+          [placeholder]="i18n.translate('kpiDetail.select')" styleClass="w-full" />
+        <p-inputNumber *ngIf="f.type === 'number'" [(ngModel)]="formData[f.key]"
+          [placeholder]="fieldLabel(f)" styleClass="w-full" [min]="1" [max]="5" />
+        <p-calendar *ngIf="f.type === 'date'" [(ngModel)]="formData[f.key]"
+          [placeholder]="fieldLabel(f)" styleClass="w-full" dateFormat="yy-mm-dd" />
+      </div>
+    </div>
+    <ng-template pTemplate="footer">
+      <button pButton [label]="i18n.translate('kpiDetail.cancel')" icon="pi pi-times"
+        class="p-button-text" (click)="showCreateDialog.set(false)"></button>
+      <button pButton [label]="i18n.translate('kpiDetail.create')" icon="pi pi-check"
+        class="p-button-success" (click)="submitCreate()" [loading]="saving()"></button>
+    </ng-template>
+  </p-dialog>
+
+  <!-- ═══ EDIT DIALOG ═══ -->
+  <p-dialog [header]="i18n.translate('kpiDetail.editItem')" [(visible)]="showEditDialog"
+    [modal]="true" [style]="{width: '520px'}" [draggable]="false" [dir]="i18n.isAr() ? 'rtl' : 'ltr'">
+    <div class="crud-form">
+      <div class="form-field" *ngFor="let f of formFields()">
+        <grc-form-field [label]="fieldLabel(f)" [required]="f.required">
+          <input *ngIf="f.type === 'text'" pInputText [(ngModel)]="formData[f.key]"
+            [placeholder]="fieldLabel(f)" [attr.aria-label]="fieldLabel(f)" class="w-full" />
+        </grc-form-field>
+        <ng-container *ngIf="f.type !== 'text'">
+          <label>{{ fieldLabel(f) }} <span *ngIf="f.required" class="req">*</span></label>
+        </ng-container>
+        <textarea *ngIf="f.type === 'textarea'" pInputTextarea [(ngModel)]="formData[f.key]"
+          [placeholder]="fieldLabel(f)" [attr.aria-label]="fieldLabel(f)" rows="3" class="w-full"></textarea>
+        <p-dropdown *ngIf="f.type === 'dropdown'" [(ngModel)]="formData[f.key]"
+          [options]="f.options || []" optionLabel="label" optionValue="value"
+          [placeholder]="i18n.translate('kpiDetail.select')" styleClass="w-full" />
+        <p-inputNumber *ngIf="f.type === 'number'" [(ngModel)]="formData[f.key]"
+          [placeholder]="fieldLabel(f)" styleClass="w-full" [min]="1" [max]="5" />
+        <p-calendar *ngIf="f.type === 'date'" [(ngModel)]="formData[f.key]"
+          [placeholder]="fieldLabel(f)" styleClass="w-full" dateFormat="yy-mm-dd" />
+      </div>
+    </div>
+    <ng-template pTemplate="footer">
+      <button pButton [label]="i18n.translate('kpiDetail.cancel')" icon="pi pi-times"
+        class="p-button-text" (click)="showEditDialog.set(false)"></button>
+      <button pButton [label]="i18n.translate('kpiDetail.save')" icon="pi pi-check"
+        class="p-button-info" (click)="submitEdit()" [loading]="saving()"></button>
+    </ng-template>
+  </p-dialog>
+
+</app-page-shell>

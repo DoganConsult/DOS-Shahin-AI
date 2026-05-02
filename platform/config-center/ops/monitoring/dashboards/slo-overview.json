@@ -1,0 +1,105 @@
+{
+  "dashboard": {
+    "title": "DOS Platform \u2014 SLO Overview",
+    "uid": "dos-slo-overview",
+    "timezone": "browser",
+    "refresh": "1m",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Availability (30d)",
+        "type": "gauge",
+        "gridPos": {
+          "h": 8,
+          "w": 8,
+          "x": 0,
+          "y": 0
+        },
+        "targets": [
+          {
+            "expr": "1 - (sum(rate(dos_http_requests_total{status_code=~\"5..\"}[30d])) / sum(rate(dos_http_requests_total[30d])))",
+            "legendFormat": "Availability"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "thresholds": {
+              "steps": [
+                {
+                  "color": "red",
+                  "value": 0
+                },
+                {
+                  "color": "orange",
+                  "value": 0.99
+                },
+                {
+                  "color": "green",
+                  "value": 0.995
+                }
+              ]
+            },
+            "min": 0.95,
+            "max": 1
+          }
+        }
+      },
+      {
+        "id": 2,
+        "title": "P99 Latency (30d)",
+        "type": "gauge",
+        "gridPos": {
+          "h": 8,
+          "w": 8,
+          "x": 8,
+          "y": 0
+        },
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.99, rate(dos_http_request_duration_seconds_bucket[30d]))",
+            "legendFormat": "P99"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "thresholds": {
+              "steps": [
+                {
+                  "color": "green",
+                  "value": 0
+                },
+                {
+                  "color": "orange",
+                  "value": 2
+                },
+                {
+                  "color": "red",
+                  "value": 5
+                }
+              ]
+            },
+            "unit": "s"
+          }
+        }
+      },
+      {
+        "id": 3,
+        "title": "Error Budget Remaining",
+        "type": "stat",
+        "gridPos": {
+          "h": 8,
+          "w": 8,
+          "x": 16,
+          "y": 0
+        },
+        "targets": [
+          {
+            "expr": "0.005 - (sum(rate(dos_http_requests_total{status_code=~\"5..\"}[30d])) / sum(rate(dos_http_requests_total[30d])))",
+            "legendFormat": "Budget"
+          }
+        ]
+      }
+    ]
+  },
+  "title": "DOS SLO Overview"
+}

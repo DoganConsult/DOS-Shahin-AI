@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "moduleCode": "foundation",
+  "workflows": [
+    {
+      "workflowCode": "foundation.delegation.approval",
+      "displayNameKey": "modules.foundation.workflow.delegationApproval.name",
+      "trigger": { "kind": "event", "eventCode": "foundation.delegation.requested" },
+      "steps": [
+        { "stepCode": "request_created",  "kind": "automated", "actorRef": "agent:foundation-access-agent", "actionId": "validate-delegation-scope", "blocking": true,  "next": "pending_approval" },
+        { "stepCode": "pending_approval", "kind": "human-approval", "permission": "delegation:approve",      "next": ["approved", "rejected"] },
+        { "stepCode": "approved",         "kind": "automated", "actorRef": "agent:foundation-audit-scribe", "actionId": "write-evidence-summary",   "blocking": false, "terminal": true },
+        { "stepCode": "rejected",         "kind": "terminal",  "terminal": true }
+      ]
+    },
+    {
+      "workflowCode": "foundation.access-review.create",
+      "displayNameKey": "modules.foundation.workflow.accessReview.name",
+      "trigger": { "kind": "user-action", "permission": "access_review:create" },
+      "steps": [
+        { "stepCode": "draft_campaign",   "kind": "human",    "permission": "access_review:create",   "next": "approve_campaign" },
+        { "stepCode": "approve_campaign", "kind": "human-approval", "permission": "access_review:approve", "next": "in_progress" },
+        { "stepCode": "in_progress",      "kind": "human",    "permission": "access_review:create",   "next": "completed" },
+        { "stepCode": "completed",        "kind": "terminal", "terminal": true }
+      ]
+    },
+    {
+      "workflowCode": "foundation.user.invitation",
+      "displayNameKey": "modules.foundation.workflow.userInvitation.name",
+      "trigger": { "kind": "user-action", "permission": "users:write" },
+      "steps": [
+        { "stepCode": "invite_drafted",   "kind": "human",      "permission": "users:write", "next": "invite_sent" },
+        { "stepCode": "invite_sent",      "kind": "automated",  "actorRef": "service:user-service",     "actionId": "send-invitation-email", "next": "awaiting_acceptance" },
+        { "stepCode": "awaiting_acceptance", "kind": "external","next": ["accepted", "expired"] },
+        { "stepCode": "accepted",         "kind": "terminal",   "terminal": true },
+        { "stepCode": "expired",          "kind": "terminal",   "terminal": true }
+      ]
+    }
+  ],
+  "events": [
+    { "eventCode": "foundation.user.created",            "schemaRef": "../foundation.event-payloads.ts#UserCreated" },
+    { "eventCode": "foundation.user.disabled",           "schemaRef": "../foundation.event-payloads.ts#UserDisabled" },
+    { "eventCode": "foundation.role.assigned",           "schemaRef": "../foundation.event-payloads.ts#RoleAssigned" },
+    { "eventCode": "foundation.role.revoked",            "schemaRef": "../foundation.event-payloads.ts#RoleRevoked" },
+    { "eventCode": "foundation.delegation.requested",    "schemaRef": "../foundation.event-payloads.ts#DelegationRequested" },
+    { "eventCode": "foundation.delegation.approved",     "schemaRef": "../foundation.event-payloads.ts#DelegationApproved" },
+    { "eventCode": "foundation.delegation.rejected",     "schemaRef": "../foundation.event-payloads.ts#DelegationRejected" },
+    { "eventCode": "foundation.access-review.created",   "schemaRef": "../foundation.event-payloads.ts#AccessReviewCreated" },
+    { "eventCode": "foundation.access-review.completed", "schemaRef": "../foundation.event-payloads.ts#AccessReviewCompleted" }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "serviceCode": "notification-service",
+  "displayName": "Notification Service",
+  "layer": "platform-service",
+  "ownerTeam": "platform-core",
+  "runtime": "node",
+  "dependsOn": [
+    "auth-service",
+    "tenant-service"
+  ],
+  "modules": [
+    "notification",
+    "inbox",
+    "mobile"
+  ],
+  "exposes": {
+    "apiBase": "/api/notifications"
+  }
+}

@@ -1,0 +1,49 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build output
+dist/
+out-tsc/
+.angular/
+
+# Logs
+logs/
+*.log
+pm2/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+credentials.json
+*.pem
+*.key
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Large files
+*.tar
+*.tar.gz
+*.zip
+*.tgz
+
+# PM2 logs
+**/pm2/*.log
+
+# Test output
+coverage/
+.nyc_output/
+
+# Capacitor mobile
+android/
+ios/

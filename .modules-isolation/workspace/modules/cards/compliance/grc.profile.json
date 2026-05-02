@@ -1,0 +1,102 @@
+{
+  "code": "compliance",
+  "name": "Compliance Management",
+  "card_position": 4,
+  "description": "Compliance obligations, attestations, status.",
+  "source_folders": ["compliance","assessments"],
+  "lifecycle": {
+    "states": [
+      "create","classify","assign_owner","raci_map","risk_compliance_link",
+      "workflow_approval","evidence_attach","monitor","exception_or_issue",
+      "remediate","retest_review","close","archive"
+    ],
+    "transitions": [
+      { "from": "create",                "to": "classify",            "trigger": "submitted" },
+      { "from": "classify",              "to": "assign_owner",        "trigger": "classified" },
+      { "from": "assign_owner",          "to": "raci_map",            "trigger": "owner_assigned",        "guard_permission": "compliance.record.write" },
+      { "from": "raci_map",              "to": "risk_compliance_link","trigger": "raci_set" },
+      { "from": "risk_compliance_link",  "to": "workflow_approval",   "trigger": "linked" },
+      { "from": "workflow_approval",     "to": "evidence_attach",     "trigger": "approved",              "guard_permission": "compliance.record.approve" },
+      { "from": "evidence_attach",       "to": "monitor",             "trigger": "evidence_attached",     "guard_permission": "compliance.evidence.write" },
+      { "from": "monitor",               "to": "exception_or_issue",  "trigger": "deviation_detected" },
+      { "from": "exception_or_issue",    "to": "remediate",           "trigger": "issue_opened" },
+      { "from": "remediate",             "to": "retest_review",       "trigger": "remediation_done" },
+      { "from": "retest_review",         "to": "close",               "trigger": "retest_passed" },
+      { "from": "close",                 "to": "archive",             "trigger": "retention_elapsed",     "guard_permission": "compliance.record.manage" }
+    ]
+  },
+  "workflow_hooks": [
+    { "event": "submitted",            "workflow": "compliance.intake_review",      "sla_hours": 24 },
+    { "event": "owner_assigned",       "workflow": "compliance.owner_acknowledge",  "sla_hours": 48 },
+    { "event": "approved",             "workflow": "compliance.post_approval",      "sla_hours": 8 },
+    { "event": "deviation_detected",   "workflow": "compliance.deviation_triage",   "sla_hours": 12 },
+    { "event": "remediation_done",     "workflow": "compliance.retest_review",      "sla_hours": 72 }
+  ],
+  "owner_role": {
+    "accountable": "compliance.executive_owner",
+    "responsible": "compliance.module_lead"
+  },
+  "raci": {
+    "responsible": ["compliance.module_lead", "compliance.contributor"],
+    "accountable":  "compliance.executive_owner",
+    "consulted":  ["compliance.approver", "governance.module_lead"],
+    "informed":   ["compliance.viewer", "audit.module_lead"]
+  },
+  "org_scope": ["org","business_unit","department","team","position","own"],
+  "permissions": [
+    "record.read","record.write","record.approve","record.manage",
+    "record.delete","record.configure",
+    "evidence.read","evidence.write",
+    "report.read","export"
+  ],
+  "roles": {
+    "executive_owner": { "permissions": [
+      "record.read","record.write","record.approve","record.manage",
+      "record.delete","record.configure",
+      "evidence.read","evidence.write","report.read","export"
+    ] },
+    "module_lead":    { "permissions": [
+      "record.read","record.write","record.approve","record.manage",
+      "record.configure","evidence.read","evidence.write","report.read","export"
+    ] },
+    "approver":       { "permissions": [
+      "record.read","record.write","record.approve",
+      "evidence.read","report.read"
+    ] },
+    "contributor":    { "permissions": [
+      "record.read","record.write",
+      "evidence.read","evidence.write","report.read"
+    ] },
+    "viewer":         { "permissions": [
+      "record.read","evidence.read","report.read"
+    ] }
+  },
+  "evidence_hooks": [
+    { "state": "evidence_attach", "evidence_type": "primary_artifact", "required": true,  "expiry_days": 365 },
+    { "state": "remediate",       "evidence_type": "remediation_proof", "required": true,  "expiry_days": 365 },
+    { "state": "retest_review",   "evidence_type": "retest_result",     "required": true,  "expiry_days": 365 },
+    { "state": "monitor",         "evidence_type": "monitoring_log",    "required": false, "expiry_days": 180 }
+  ],
+  "audit_events": [
+    { "event": "compliance.record.created",   "category": "create",    "fields_logged": ["id","tenant_id","actor_id","scope"] },
+    { "event": "compliance.record.updated",   "category": "update",    "fields_logged": ["id","actor_id","field_diff"] },
+    { "event": "compliance.record.approved",  "category": "approve",   "fields_logged": ["id","approver_id","decision","comment"] },
+    { "event": "compliance.record.deleted",   "category": "delete",    "fields_logged": ["id","actor_id","reason"] },
+    { "event": "compliance.record.exported",  "category": "export",    "fields_logged": ["id","actor_id","format","filter"] },
+    { "event": "compliance.record.viewed",    "category": "access",    "fields_logged": ["id","actor_id"] },
+    { "event": "compliance.record.configured","category": "configure", "fields_logged": ["actor_id","config_diff"] }
+  ],
+  "reporting": {
+    "kpis": [
+      { "code": "compliance.coverage_pct",      "name": "Coverage %"                 },
+      { "code": "compliance.on_time_closure",   "name": "On-time closure rate"       },
+      { "code": "compliance.avg_cycle_hours",   "name": "Average cycle time (hours)" }
+    ],
+    "kris": [
+      { "code": "compliance.overdue_count",     "name": "Overdue items"              },
+      { "code": "compliance.exception_rate",    "name": "Exception rate"             }
+    ],
+    "exec_pack_section": "Compliance Management"
+  },
+  "consumes": ["foundation","regulatory","governance"]
+}

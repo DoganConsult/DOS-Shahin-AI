@@ -1,0 +1,59 @@
+/* ═══════════════ FRAMEWORK SCORECARD ═══════════════ */
+.fsc-root { padding: var(--space-lg, 24px); max-width: 1440px; margin: 0 auto; }
+
+.fsc-header {
+  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;
+  padding: 20px 24px; border-radius: var(--radius-xl); margin-bottom: 20px;
+  background: linear-gradient(135deg, var(--surface, #fff) 0%, var(--surface-ice, var(--surface-ice)) 100%);
+  border: 1px solid var(--border-primary, var(--border-subtle)); box-shadow: 0 4px 24px rgba(var(--color-black-rgb), 0.04);
+}
+.fsc-header-left { display: flex; align-items: center; gap: 14px; }
+.fsc-icon { font-size: var(--font-size-3xl); color: var(--primary); }
+.fsc-header h1 { margin: 0; font-size: var(--font-size-2xl); font-weight: 800; color: var(--text-heading); }
+.fsc-header p { margin: 2px 0 0; font-size: var(--font-size-sm); color: var(--text-muted); }
+.fsc-nav {
+  display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: var(--radius);
+  background: var(--surface-ice, var(--surface-ice)); color: var(--text-body); text-decoration: none;
+  font-size: var(--font-size-sm); font-weight: 600; border: 1px solid var(--border-primary); transition: all 200ms;
+}
+.fsc-nav:hover { border-color: var(--primary); color: var(--primary); }
+
+/* ── Score Cards Row ── */
+.fsc-score-cards {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-bottom: 20px;
+}
+.fsc-fw-card {
+  padding: 16px; border-radius: var(--radius-lg); text-align: center;
+  background: var(--surface, #fff); border: 1px solid var(--border-primary);
+  box-shadow: var(--shadow-sm); transition: all 250ms;
+}
+.fsc-fw-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.fsc-fw-card.score-good { border-inline-start: 4px solid var(--success); }
+.fsc-fw-card.score-warn { border-inline-start: 4px solid var(--warning); }
+.fsc-fw-card.score-critical { border-inline-start: 4px solid var(--error); }
+.fsc-fw-score { font-size: var(--font-size-3xl); font-weight: 800; color: var(--text-heading); }
+.fsc-fw-score small { font-size: var(--font-size-base); color: var(--text-muted); }
+.fsc-fw-name { font-size: var(--font-size-sm); font-weight: 700; color: var(--text-heading); margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.fsc-fw-meta { display: flex; justify-content: center; gap: 12px; margin-top: 8px; font-size: var(--font-size-xs); color: var(--text-muted); }
+.fsc-fw-gaps { color: var(--warning); font-weight: 700; }
+
+/* ── Charts Grid ── */
+.fsc-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+}
+.fsc-card {
+  background: var(--surface, #fff); border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-sm);
+}
+.fsc-card-title {
+  margin: 0 0 12px; font-size: var(--font-size-sm); font-weight: 700; color: var(--text-heading);
+  display: flex; align-items: center; gap: 8px;
+}
+.fsc-card-title i { color: var(--primary); font-size: var(--font-size-base); }
+.fsc-chart-wrap { height: 260px; }
+.fsc-chart-tall { height: 320px; }
+
+@media (max-width: 768px) {
+  .fsc-grid { grid-template-columns: 1fr; }
+  .fsc-score-cards { grid-template-columns: repeat(2, 1fr); }
+}

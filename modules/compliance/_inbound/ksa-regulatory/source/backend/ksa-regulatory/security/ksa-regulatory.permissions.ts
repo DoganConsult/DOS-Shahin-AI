@@ -1,0 +1,2 @@
+import { KSA_REGULATORY_PERMISSIONS } from './ksa-regulatory.security';
+export { KSA_REGULATORY_PERMISSIONS as KSA_REGULATORY_MODULE_PERMISSIONS };

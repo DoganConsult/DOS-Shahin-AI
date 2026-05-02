@@ -1,0 +1,22 @@
+{
+  "serviceCode": "dora-service",
+  "displayName": "DORA Compliance Service",
+  "layer": "domain-service",
+  "ownerTeam": "product-shahin-ai",
+  "runtime": "node",
+  "dependsOn": [
+    "auth-service",
+    "tenant-service",
+    "workflow-service"
+  ],
+  "modules": [
+    "dora"
+  ],
+  "exposes": {
+    "apiBase": "/api/dora",
+    "events": [
+      "dora.assessment.created",
+      "dora.ict.risk.reported"
+    ]
+  }
+}

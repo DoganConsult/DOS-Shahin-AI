@@ -1,0 +1,71 @@
+{
+  "moduleCode": "packs",
+  "displayName": "Packs",
+  "ownerTeam": "product-shahin-ai",
+  "productCode": "shahin-ai",
+  "ownership": "module-owned",
+  "version": "1.0.0",
+  "status": "active",
+  "platformDependencies": [
+    "identity",
+    "tenancy"
+  ],
+  "seedProviders": [
+    "products/shahin/seeds/packs-seed"
+  ],
+  "tenantDefaults": [
+    "packs_auto_update_enabled"
+  ],
+  "requiredReferenceData": [
+    "pack_catalog"
+  ],
+  "currentSources": [
+    "/home/Dr-Dogan-AGRC-OS/backend/src/modules/packs"
+  ],
+  "targetPath": "modules/packs",
+  "futureService": "platform-core-service",
+  "frontendSources": [
+    "/home/Dr-Dogan-AGRC-OS/frontend/src/app/platform-manifests/packs.module.routes.ts"
+  ],
+  "ownedTables": [
+    "pack_installations",
+    "pack_registry",
+    "pack_policies",
+    "pack_versions",
+    "pack_dependencies",
+    "pack_selection_policies",
+    "pack_selection_decisions",
+    "pack_artifacts",
+    "tenant_pack_installations"
+  ],
+  "referencedTables": [
+    "tenants",
+    "modules",
+    "module_settings",
+    "onboarding_sessions",
+    "onboarding_answers",
+    "onboarding_recommendations"
+  ],
+  "events": {
+    "publishes": [
+      "packs.installed",
+      "packs.updated",
+      "packs.uninstalled",
+      "packs.install_failed",
+      "packs.compatibility_checked",
+      "packs.catalog_synced",
+      "packs.policy_evaluated",
+      "packs.health_check_completed"
+    ],
+    "subscribes": [
+      "provisioning.job.started",
+      "provisioning.job.completed",
+      "module.activated",
+      "tenant.tier.changed",
+      "foundation.scope_changed"
+    ]
+  },
+  "routeBases": [
+    "/api/packs"
+  ]
+}

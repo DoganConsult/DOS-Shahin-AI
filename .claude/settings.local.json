@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(sudo -u postgres psql -d shahin_grc -c ' *)",
+      "Bash(sudo -u postgres psql -d shahin_grc -c \"\\\\d public.grc_frameworks\")",
+      "Bash(sudo -u postgres psql -d shahin_grc -c \"\\\\d public.grc_regulators\")",
+      "Bash(sudo -u postgres psql -d shahin_grc -c \"\\\\d public.grc_sector_framework_matrix\")",
+      "Bash(sudo -u postgres psql -d shahin_grc -c \"SELECT regulator_code, regulator_name, group_code, tier, own_frameworks_count, must_comply_count FROM public.grc_regulators ORDER BY tier, regulator_code LIMIT 15;\")",
+      "Bash(sudo -u postgres psql -d shahin_grc -c \"SELECT framework_code, framework_name_en, regulator_code, framework_type, grc_pillar, controls_count FROM public.grc_frameworks ORDER BY regulator_code LIMIT 15;\")",
+      "Bash(zcat ops/backups/ai-os-cutoff-20260428_094659Z.sql.gz)",
+      "Bash(awk -F',' 'NR>1{c[$2]++} END{for\\(k in c\\) printf \"  %-12s %d\\\\n\",k,c[k]}' controls.csv)",
+      "Bash(awk -F',' 'NR>1{c[$3]++} END{for\\(k in c\\) printf \"  %-15s %d\\\\n\",k,c[k]}' \"files \\(6\\)/controls.csv\")",
+      "Bash(awk -F',' 'NR>1{c[$3]++} END{for\\(k in c\\) printf \"  %-15s %d\\\\n\",k,c[k]}' \"files \\(6\\)/mnt/user-data/outputs/grc-database-complete/g20/USA/controls.csv\")",
+      "Bash(python3 -c ' *)",
+      "Bash(sed -n '33013,33020p' DOS-AIO-Specs/_consolidated_grc_content.sql)",
+      "Bash(sed -n '33414,33420p' DOS-AIO-Specs/_consolidated_grc_content.sql)",
+      "Bash(sed -n '33919,33925p' DOS-AIO-Specs/_consolidated_grc_content.sql)",
+      "Bash(awk -F',' 'NR>1 && $1==\"1\" {c[$5]++} END{for\\(k in c\\) printf \"  %-20s %d items\\\\n\",k,c[k]}' matrix6_evidence_per_persona.csv)",
+      "Bash(awk -F',' 'NR>1 && $1==\"1\"' matrix6_evidence_per_persona.csv)",
+      "Bash(sort -t, -k5,5)",
+      "Bash(awk -F',' '{c[$5]++; if\\(c[$5]<=3\\) print $5\"\\\\t\"$6}')"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "asset.title": "Asset Management",
+  "asset.dashboard": "Asset Dashboard",
+  "asset.registry": "Asset Registry",
+  "asset.applications": "Applications",
+  "asset.services": "Services",
+  "asset.dependencies": "Dependencies",
+  "asset.criticality": "Criticality Assessment",
+  "asset.linkage": "Asset Linkage",
+  "asset.ownership": "Ownership",
+  "asset.serviceMap": "Service Map",
+  "asset.diagnostics": "Diagnostics",
+  "asset.admin": "Asset Admin",
+  "asset.empty.title": "No assets registered",
+  "asset.empty.description": "Register your first asset to begin tracking your IT landscape.",
+  "asset.loading": "Loading assets...",
+  "asset.error.title": "Failed to load assets",
+  "asset.error.retry": "Retry",
+  "asset.create": "Register Asset"
+}

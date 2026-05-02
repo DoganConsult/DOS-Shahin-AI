@@ -1,0 +1,87 @@
+{
+  "name": "@dos/module-risk",
+  "version": "2.0.0",
+  "description": "DOS Risk module — risk register, assessments, appetite, KRIs, treatments, scoring, peer review, quantification, and reporting.",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./bootstrap": {
+      "types": "./dist/bootstrap.d.ts",
+      "default": "./dist/bootstrap.js"
+    },
+    "./contracts": {
+      "types": "./dist/contracts/index.d.ts",
+      "default": "./dist/contracts/index.js"
+    },
+    "./contracts/*": {
+      "types": "./dist/contracts/*.d.ts",
+      "default": "./dist/contracts/*.js"
+    },
+    "./ports": {
+      "types": "./dist/ports/index.d.ts",
+      "default": "./dist/ports/index.js"
+    },
+    "./manifest": {
+      "types": "./dist/risk.manifest.d.ts",
+      "default": "./dist/risk.manifest.js"
+    },
+    "./module.manifest.json": "./module.manifest.json",
+    "./db/migrations/*": "./db/migrations/*",
+    "./db/public/migrations/*": "./db/public/migrations/*",
+    "./db/tenant/migrations/*": "./db/tenant/migrations/*",
+    "./ui": "./ui/index.ts",
+    "./ui/*": "./ui/*"
+  },
+  "files": [
+    "dist",
+    "ui",
+    "db",
+    "schemas",
+    "module.manifest.json",
+    "README.md",
+    "AS-BUILT.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test:vitest": "vitest run -c vitest.config.ts",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "uuid": "^11.1.0",
+    "zod": "^3.23.8"
+  },
+  "peerDependencies": {
+    "@dos/dauth-shared": "workspace:*",
+    "@dos/db": "workspace:*",
+    "@dos/module-sdk": "workspace:*",
+    "@dos/platform-core": "workspace:*",
+    "@dos/service-client": "workspace:*",
+    "@dos/service-bootstrap": "workspace:*"
+  },
+  "peerDependenciesMeta": {
+    "@dos/dauth-shared": { "optional": true },
+    "@dos/db": { "optional": true },
+    "@dos/module-sdk": { "optional": true },
+    "@dos/platform-core": { "optional": true },
+    "@dos/service-client": { "optional": true },
+    "@dos/service-bootstrap": { "optional": true }
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4",
+    "vitest": "^1.6.0"
+  },
+  "dos": {
+    "moduleCode": "risk",
+    "tier": "product",
+    "hostService": "risk-incident-service",
+    "manifest": "module.manifest.json",
+    "entrypoint": "./dist/bootstrap.js#registerRisk"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "name": "@dos/modules-ai",
+  "version": "1.0.0",
+  "description": "AI-OS — AI engine module package: ports, routes, and services consumed by ai-engine-service and other AI-aware modules.",
+  "private": true,
+  "main": "index.js",
+  "types": "index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@dos/contracts": "workspace:*",
+    "@dos/db": "workspace:*",
+    "@dos/event-backbone": "workspace:*",
+    "@dos/module-sdk": "workspace:*",
+    "@dos/platform-core": "workspace:*",
+    "@dos/types": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0"
+  }
+}

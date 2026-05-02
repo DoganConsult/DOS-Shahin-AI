@@ -1,0 +1,33 @@
+{
+  "name": "@dos/dsoc-core",
+  "version": "1.0.0",
+  "private": true,
+  "description": "DSOC Core — Security Operations Center logic. Persistent DSOCPort implementation backed by Postgres (platform_dsoc.* schema), event-bus subscriber that ingests dsoc.audit.* / dsoc.alert.* topics from every platform module.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "development": "./src/index.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@dos/types": "workspace:*",
+    "@dos/contracts": "workspace:*",
+    "@dos/ports": "workspace:*",
+    "@dos/db": "workspace:*",
+    "@dos/platform-core": "workspace:*"
+  },
+  "peerDependencies": {
+    "@dos/ports": "^1.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "vitest": "^4.1.4"
+  }
+}

@@ -1,0 +1,4 @@
+
+> @dos/notification-inbox-service@0.1.0 build /root/DOS-AIO/services/notification-inbox-service
+> tsc -p tsconfig.json
+

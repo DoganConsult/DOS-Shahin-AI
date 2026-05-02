@@ -1,0 +1,34 @@
+=== inventory:current ===
+ WARN  Unsupported engine: wanted: {"node":">=24.14.0"} (current: {"node":"v20.18.2","pnpm":"10.33.0"})
+
+> dogan-ai-os-platform-target@1.0.0 inventory:current /root/DOS-AIO
+> node scripts/inventory-current-estate.mjs
+
+Wrote migration/inventory/current-estate.generated.json
+=== validate:manifests ===
+ WARN  Unsupported engine: wanted: {"node":">=24.14.0"} (current: {"node":"v20.18.2","pnpm":"10.33.0"})
+
+> dogan-ai-os-platform-target@1.0.0 validate:manifests /root/DOS-AIO
+> node scripts/validate-manifests.mjs
+
+Validated 95 manifest files under /root/DOS-AIO.
+=== target:check ===
+ WARN  Unsupported engine: wanted: {"node":">=24.14.0"} (current: {"node":"v20.18.2","pnpm":"10.33.0"})
+
+> dogan-ai-os-platform-target@1.0.0 target:check /root/DOS-AIO
+> pnpm run inventory:current && pnpm run validate:manifests
+
+ WARN  Unsupported engine: wanted: {"node":">=24.14.0"} (current: {"node":"v20.18.2","pnpm":"10.33.0"})
+ WARN  Unsupported engine: wanted: {"node":">=24.14.0"} (current: {"node":"v20.18.2","pnpm":"10.33.0"})
+
+> dogan-ai-os-platform-target@1.0.0 inventory:current /root/DOS-AIO
+> node scripts/inventory-current-estate.mjs
+
+Wrote migration/inventory/current-estate.generated.json
+ WARN  Unsupported engine: wanted: {"node":">=24.14.0"} (current: {"node":"v20.18.2","pnpm":"10.33.0"})
+ WARN  Unsupported engine: wanted: {"node":">=24.14.0"} (current: {"node":"v20.18.2","pnpm":"10.33.0"})
+
+> dogan-ai-os-platform-target@1.0.0 validate:manifests /root/DOS-AIO
+> node scripts/validate-manifests.mjs
+
+Validated 95 manifest files under /root/DOS-AIO.

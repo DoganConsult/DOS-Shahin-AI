@@ -1,0 +1,2 @@
+import { REPORTING_PERMISSIONS } from './reporting.security';
+export { REPORTING_PERMISSIONS as REPORTING_MODULE_PERMISSIONS };

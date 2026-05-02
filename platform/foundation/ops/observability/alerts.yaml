@@ -1,0 +1,74 @@
+# Prometheus alert rules for the Foundation module.
+# Loaded by the platform observability stack (per-module alerts file).
+groups:
+  - name: foundation.availability
+    interval: 30s
+    rules:
+      - alert: FoundationApiHighErrorRate
+        expr: |
+          sum(rate(http_requests_total{job=~".*user-service.*",route=~"/api/foundation/.*",code=~"5.."}[5m]))
+          /
+          sum(rate(http_requests_total{job=~".*user-service.*",route=~"/api/foundation/.*"}[5m]))
+          > 0.02
+        for: 10m
+        labels:
+          severity: warning
+          module: foundation
+        annotations:
+          summary: Foundation API 5xx rate above 2%
+          runbook: https://runbooks/foundation/api-error-rate
+
+      - alert: FoundationApiLatencyP95
+        expr: |
+          histogram_quantile(0.95,
+            sum by (le) (rate(http_request_duration_seconds_bucket{route=~"/api/foundation/.*"}[5m]))
+          ) > 0.5
+        for: 15m
+        labels:
+          severity: warning
+          module: foundation
+        annotations:
+          summary: Foundation API p95 latency > 500ms
+
+  - name: foundation.events
+    interval: 30s
+    rules:
+      - alert: FoundationOutboxLag
+        expr: foundation_outbox_lag_seconds > 60
+        for: 5m
+        labels:
+          severity: critical
+          module: foundation
+        annotations:
+          summary: Foundation outbox publisher lag exceeds 60s
+          runbook: https://runbooks/foundation/outbox-lag
+
+      - alert: FoundationEventConsumerDLQ
+        expr: increase(foundation_event_dlq_total[10m]) > 0
+        for: 0m
+        labels:
+          severity: critical
+          module: foundation
+        annotations:
+          summary: Foundation event DLQ non-empty
+
+  - name: foundation.security
+    interval: 60s
+    rules:
+      - alert: FoundationSodViolationsRising
+        expr: increase(foundation_sod_violations_total[15m]) > 5
+        for: 0m
+        labels:
+          severity: warning
+          module: foundation
+        annotations:
+          summary: Foundation SoD violation rate elevated
+
+      - alert: FoundationApprovalsStuck
+        expr: foundation_pending_approvals_age_hours > 48
+        for: 30m
+        labels:
+          severity: warning
+          module: foundation
+        annotations:
+          summary: Foundation approvals waiting > 48h

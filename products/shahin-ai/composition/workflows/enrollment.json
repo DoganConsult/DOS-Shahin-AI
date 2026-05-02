@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "productCode": "shahin-ai",
+  "workflows": [
+    { "workflowId": "evidence-collection",   "scope": "module",   "moduleCode": "evidence" },
+    { "workflowId": "remediation-loop",      "scope": "module",   "moduleCode": "remediation" },
+    { "workflowId": "exception-management",  "scope": "module",   "moduleCode": "compliance" },
+    { "workflowId": "approval-routing",      "scope": "platform" },
+    { "workflowId": "audit-response",        "scope": "module",   "moduleCode": "audit" }
+  ]
+}

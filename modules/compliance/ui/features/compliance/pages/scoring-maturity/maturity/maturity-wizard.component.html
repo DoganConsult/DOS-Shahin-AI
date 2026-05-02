@@ -1,0 +1,154 @@
+<cds-notification></cds-notification>
+    <app-page-shell
+      icon="gauge"
+      [title]="i18n.translate('maturityWizard.title')"
+      [subtitle]="i18n.translate('maturityWizard.subtitle')"
+      [breadcrumbs]="['Dashboard', 'Maturity Assessment']"
+      [loading]="loading">
+
+      <!-- Step: Intro -->
+      <div *ngIf="step === 'intro'" class="intro-section">
+        <div class="intro-card">
+          <div class="intro-icon"><i class=""></i></div>
+          <h2>{{ i18n.translate('maturityWizard.welcome') }}</h2>
+          <p class="intro-desc">{{ i18n.translate('maturityWizard.welcomeDesc') }}</p>
+          <div class="intro-stats">
+            <div class="intro-stat" *ngFor="let c of categories">
+              <span class="stat-count">{{ c.question_count }}</span>
+              <span class="stat-label">{{ formatCategory(c.category) }}</span>
+            </div>
+          </div>
+          <button cdsButton [label]="i18n.translate('maturityWizard.startAssessment')"
+                    icon="" iconPos="right" (onClick)="startAssessment()" [loading]="starting" />
+        </div>
+      </div>
+
+      <!-- Step: Questions -->
+      <div *ngIf="step === 'questions'" class="questions-section">
+        <div class="progress-header">
+          <div class="progress-info">
+            <span class="progress-category">{{ formatCategory(currentCategory) }}</span>
+            <span class="progress-count">{{ currentQIndex + 1 }} / {{ currentQuestions.length }}</span>
+          </div>
+          <cds-progress-bar [value]="overallProgress" [showValue]="true" styleClass="progress-bar" />
+        </div>
+
+        <!-- Category Tabs -->
+        <div class="cat-tabs">
+          <button *ngFor="let c of categories; let i = index" class="cat-tab"
+                  [class.active]="c.category === currentCategory"
+                  [class.done]="completedCategories.has(c.category)"
+                  (click)="switchCategory(c.category)">
+            <i class="pi" [ngClass]="completedCategories.has(c.category) ? 'pi-check-circle' : 'pi-circle'"></i>
+            <span>{{ formatCategory(c.category) }}</span>
+          </button>
+        </div>
+
+        <!-- Current Question -->
+        <div class="question-card" *ngIf="currentQuestion">
+          <div class="question-number">Q{{ currentQuestion.sort_order }}</div>
+          <h3 class="question-text">{{ i18n.localize(currentQuestion.text_en, currentQuestion.text_ar) }}</h3>
+
+          <!-- Scale Answer (1-5 Likert) -->
+          <div *ngIf="currentQuestion.answer_type === 'scale'" class="scale-options">
+            <button *ngFor="let level of [1,2,3,4,5]" class="scale-btn"
+                    [class.selected]="answers[currentQuestion.question_id] === level"
+                    (click)="setAnswer(currentQuestion.question_id, level)">
+              <span class="scale-num">{{ level }}</span>
+              <span class="scale-label">{{ getScaleLabel(level) }}</span>
+            </button>
+          </div>
+
+          <!-- Boolean Answer -->
+          <div *ngIf="currentQuestion.answer_type === 'boolean'" class="bool-options">
+            <button class="bool-btn" [class.selected]="answers[currentQuestion.question_id] === true" (click)="setAnswer(currentQuestion.question_id, true)">
+              <i class=""></i> {{ i18n.translate('maturityWizard.yes') }}
+            </button>
+            <button class="bool-btn" [class.selected]="answers[currentQuestion.question_id] === false" (click)="setAnswer(currentQuestion.question_id, false)">
+              <i class=""></i> {{ i18n.translate('maturityWizard.no') }}
+            </button>
+          </div>
+
+          <!-- Single Choice -->
+          <div *ngIf="currentQuestion.answer_type === 'single'" class="single-options">
+            <button *ngFor="let opt of (i18n.currentLang() === 'ar' ? currentQuestion.options_ar : currentQuestion.options_en) || []; let oi = index"
+                    class="option-btn" [class.selected]="answers[currentQuestion.question_id] === opt"
+                    (click)="setAnswer(currentQuestion.question_id, opt)">
+              {{ opt }}
+            </button>
+          </div>
+
+          <!-- Multi Choice -->
+          <div *ngIf="currentQuestion.answer_type === 'multi'" class="multi-options">
+            <button *ngFor="let opt of (i18n.currentLang() === 'ar' ? currentQuestion.options_ar : currentQuestion.options_en) || []"
+                    class="option-btn" [class.selected]="isMultiSelected(currentQuestion.question_id, opt)"
+                    (click)="toggleMulti(currentQuestion.question_id, opt)">
+              <i class="pi" [ngClass]="isMultiSelected(currentQuestion.question_id, opt) ? 'pi-check-square' : 'pi-stop'"></i>
+              {{ opt }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav-buttons">
+          <button cdsButton [label]="i18n.translate('maturityWizard.previous')" icon=""
+                    severity="secondary" [text]="true" (onClick)="prevQuestion()" [disabled]="currentQIndex === 0 && categoryIndex === 0" />
+          <button cdsButton *ngIf="!isLastQuestion" [label]="i18n.translate('maturityWizard.next')" icon=""
+                    iconPos="right" (onClick)="nextQuestion()" />
+          <button cdsButton *ngIf="isLastQuestion" [label]="i18n.translate('maturityWizard.viewResults')" icon=""
+                    iconPos="right" severity="success" (onClick)="finishAssessment()" [loading]="calculating" />
+        </div>
+      </div>
+
+      <!-- Step: Results -->
+      <div *ngIf="step === 'results'" class="results-section">
+        <div class="results-header">
+          <div class="score-circle" [class.initial]="maturityLevel === 'initial'" [class.managed]="maturityLevel === 'managed'"
+               [class.defined]="maturityLevel === 'defined'" [class.measured]="maturityLevel === 'measured'" [class.optimized]="maturityLevel === 'optimized'">
+            <span class="score-value">{{ overallScore }}%</span>
+            <span class="score-level">{{ maturityLevel | uppercase }}</span>
+          </div>
+          <div class="results-info">
+            <h2>{{ i18n.translate('maturityWizard.resultsTitle') }}</h2>
+            <p>{{ i18n.translate('maturityWizard.resultsDesc') }}</p>
+            <cds-tag [value]="maturityLevel | uppercase" [severity]="getLevelSeverity()" [rounded]="true" styleClass="level-tag" />
+          </div>
+        </div>
+
+        <!-- Radar Chart -->
+        <div class="chart-container">
+          <canvas #radarChart></canvas>
+        </div>
+
+        <!-- Domain Score Cards -->
+        <div class="domain-grid">
+          <div *ngFor="let ds of domainScoreList" class="domain-card">
+            <div class="domain-name">{{ formatCategory(ds.domain) }}</div>
+            <div class="domain-bar-wrap">
+              <div class="domain-bar" [style.width.%]="ds.score"
+                   [class.low]="ds.score < 40" [class.mid]="ds.score >= 40 && ds.score < 70" [class.high]="ds.score >= 70"></div>
+            </div>
+            <span class="domain-score">{{ ds.score }}%</span>
+          </div>
+        </div>
+
+        <!-- Auto-Deploy Button -->
+        <div class="auto-deploy-section">
+          <h3><i class=""></i> {{ i18n.translate('maturityWizard.autoDeploy') }}</h3>
+          <p>{{ i18n.translate('maturityWizard.autoDeployDesc') }}</p>
+          <button cdsButton [label]="i18n.translate('maturityWizard.deployAutoSetup')"
+                    icon="" (onClick)="autoDeploy()" [loading]="deploying" severity="success" />
+          <div *ngIf="deployResult" class="deploy-result">
+            <cds-tag *ngFor="let item of deployResult" [value]="item" severity="info" styleClass="deploy-tag" />
+          </div>
+        </div>
+
+        <!-- Build workspace (provisioning) -->
+        <div class="build-workspace-section">
+          <h3><i class=""></i> {{ i18n.translate('maturityWizard.buildWorkspace') || 'Create workspace' }}</h3>
+          <p>{{ i18n.translate('maturityWizard.buildWorkspaceDesc') || 'Generate your GRC workspace from this assessment: frameworks, controls, evidence plan, and 90-day roadmap.' }}</p>
+          <button cdsButton label="Create workspace"
+                    icon="" (onClick)="buildWorkspace()" [loading]="buildingWorkspace" severity="primary" />
+        </div>
+      </div>
+    </app-page-shell>

@@ -1,0 +1,187 @@
+openapi: 3.1.0
+info:
+  title: DOS Port — Public REST Contract
+  version: 1.0.0
+  description: |
+    Canonical wire contract for `DOSPort` from `@dos/ports/dos`.
+    1:1 HTTP endpoints for the six in-process port methods. Versioned
+    via `/v1`.
+
+servers:
+  - url: '{baseUrl}/api/dos/port/v1'
+    variables:
+      baseUrl:
+        default: 'http://localhost:4100'
+
+components:
+  schemas:
+    TenantRef:
+      type: object
+      required: [tenantId, status]
+      properties:
+        tenantId: { type: string }
+        productCode: { type: string }
+        status:
+          type: string
+          enum: [active, suspended, provisioning, decommissioned]
+
+    PlatformEventEnvelope:
+      type: object
+      required: [eventType, tenantId, occurredAt, payload]
+      properties:
+        eventId: { type: string }
+        eventType: { type: string }
+        tenantId: { type: string }
+        occurredAt: { type: string, format: date-time }
+        payload:
+          type: object
+          additionalProperties: true
+        correlationId: { type: string }
+
+    ModuleDescriptor:
+      type: object
+      required: [moduleCode, version, layer, ownerTeam]
+      properties:
+        moduleCode: { type: string }
+        version: { type: string }
+        layer: { type: string, enum: [platform, product] }
+        ownerTeam: { type: string }
+
+    ProductDescriptor:
+      type: object
+      required: [productCode, version, enabled]
+      properties:
+        productCode: { type: string }
+        version: { type: string }
+        enabled: { type: boolean }
+
+    Error:
+      type: object
+      required: [code, message]
+      properties:
+        code: { type: string }
+        message: { type: string }
+        details:
+          type: object
+          additionalProperties: true
+
+paths:
+  /tenants/{tenantId}:
+    get:
+      operationId: getTenant
+      summary: 'DOSPort.getTenant(tenantId)'
+      parameters:
+        - in: path
+          name: tenantId
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Tenant record
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/TenantRef' }
+        '404':
+          description: Tenant not found
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+
+  /events:
+    post:
+      operationId: publishEvent
+      summary: 'DOSPort.publishEvent(event)'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/PlatformEventEnvelope' }
+      responses:
+        '202':
+          description: Event accepted (durable log + backbone)
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [accepted]
+                properties:
+                  accepted: { type: boolean }
+
+  /modules:
+    post:
+      operationId: registerModule
+      summary: 'DOSPort.registerModule(descriptor)'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ModuleDescriptor' }
+      responses:
+        '202':
+          description: Registration accepted
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [accepted]
+                properties:
+                  accepted: { type: boolean }
+    get:
+      operationId: listModules
+      summary: List every registered module (filter by layer).
+      parameters:
+        - in: query
+          name: layer
+          schema: { type: string, enum: [platform, product] }
+      responses:
+        '200':
+          description: Module list
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [count, modules]
+                properties:
+                  count: { type: integer }
+                  modules:
+                    type: array
+                    items: { $ref: '#/components/schemas/ModuleDescriptor' }
+
+  /modules/{moduleCode}/registered:
+    get:
+      operationId: isModuleRegistered
+      summary: 'DOSPort.isModuleRegistered(moduleCode)'
+      parameters:
+        - in: path
+          name: moduleCode
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Registration state
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [moduleCode, registered]
+                properties:
+                  moduleCode: { type: string }
+                  registered: { type: boolean }
+
+  /products:
+    get:
+      operationId: listProducts
+      summary: 'DOSPort.listProducts()'
+      responses:
+        '200':
+          description: Product list
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [count, products]
+                properties:
+                  count: { type: integer }
+                  products:
+                    type: array
+                    items: { $ref: '#/components/schemas/ProductDescriptor' }

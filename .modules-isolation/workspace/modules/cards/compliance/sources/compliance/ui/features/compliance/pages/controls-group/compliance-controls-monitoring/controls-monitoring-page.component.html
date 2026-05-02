@@ -1,0 +1,319 @@
+<app-page-shell
+      icon="shield"
+      [title]="i18n.translate('controlsMonitoring.title')"
+      [subtitle]="i18n.translate('controlsMonitoring.subtitle')"
+      [breadcrumbs]="[i18n.translate('nav.dashboard'), i18n.translate('nav.compliance'), i18n.translate('controlsMonitoring.title')]" [loading]="loading()">
+
+      <div class="load-error-banner" *ngIf="loadError()" role="alert">
+        <i class=""></i>
+        <span>{{ loadError() }}</span>
+        <button type="button" class="retry-btn" (click)="loadError.set(null); loadData()">{{ i18n.translate('common.retry') }}</button>
+      </div>
+
+      <div class="health-strip" *ngIf="!loadError() && data()">
+        <div tabindex="0" role="button" (keyup.enter)="activeTab = 0" class="hs-card danger" (click)="activeTab = 0">
+          <span class="hs-num">{{ data()!.counts.failed }}</span>
+          <span class="hs-label">{{ i18n.translate('controlsMonitoring.failedControls') }}</span>
+        </div>
+        <div tabindex="0" role="button" (keyup.enter)="activeTab = 1" class="hs-card warning" (click)="activeTab = 1">
+          <span class="hs-num">{{ data()!.counts.overdue }}</span>
+          <span class="hs-label">{{ i18n.translate('controlsMonitoring.overdueTests') }}</span>
+        </div>
+        <div tabindex="0" role="button" (keyup.enter)="activeTab = 2" class="hs-card info" (click)="activeTab = 2">
+          <span class="hs-num">{{ data()!.counts.pendingActions }}</span>
+          <span class="hs-label">{{ i18n.translate('controlsMonitoring.pendingActions') }}</span>
+        </div>
+        <div class="hs-card total">
+          <span class="hs-num">{{ totalIssues() }}</span>
+          <span class="hs-label">{{ i18n.translate('controlsMonitoring.totalIssues') }}</span>
+        </div>
+      </div>
+
+      <div class="cross-links" *ngIf="!loadError() && data()">
+        <a class="cross-link-btn" [routerLink]="['/compliance/controls']"><i class=""></i> {{ i18n.translate('controlsMonitoring.crossLinkControlsRegister') }}</a>
+        <a class="cross-link-btn" [routerLink]="['/compliance/gaps']"><i class=""></i> {{ i18n.translate('controlsMonitoring.crossLinkComplianceGaps') }}</a>
+        <a class="cross-link-btn" [routerLink]="['/compliance/posture']"><i class=""></i> {{ i18n.translate('controlsMonitoring.crossLinkPosture') }}</a>
+        <a class="cross-link-btn" [routerLink]="['/risk/home']"><i class=""></i> {{ i18n.translate('controlsMonitoring.crossLinkRisk') }}</a>
+        <a class="cross-link-btn" [routerLink]="['/audit/overview']"><i class=""></i> {{ i18n.translate('controlsMonitoring.crossLinkAudit') }}</a>
+        <a class="cross-link-btn" [routerLink]="['/foundation/evidence']"><i class=""></i> {{ i18n.translate('controlsMonitoring.crossLinkEvidence') }}</a>
+        <a class="cross-link-btn" [routerLink]="['/governance/overview']"><i class=""></i> {{ i18n.translate('controlsMonitoring.crossLinkGovernance') }}</a>
+      </div>
+
+      <cds-tabs [(activeIndex)]="activeTab" *ngIf="!loadError() && data()">
+        <cds-tab [header]="i18n.translate('controlsMonitoring.failedControls')">
+          <div class="toolbar-row">
+            <app-export-button module="controls-monitoring-failed" [data]="data()!.failedControls" />
+          </div>
+          <grc-data-table
+            [totalRecords]="data()!.failedControls.length"
+            [emptyMessage]="i18n.translate('controlsMonitoring.noFailedControls') || 'No failed controls'">
+            <table cdsTable aria-label="Data table" [value]="data()!.failedControls" [paginator]="data()!.failedControls.length > 10" [rows]="10"
+                     styleClass="p-datatable-striped p-datatable-sm">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>{{ i18n.translate('controlsMonitoring.control') }}</th>
+                  <th>{{ i18n.translate('common.status') }}</th>
+                  <th>{{ i18n.translate('controlsMonitoring.failureType') }}</th>
+                  <th>{{ i18n.translate('controlsMonitoring.severity') }}</th>
+                  <th>{{ i18n.translate('controlsMonitoring.detected') }}</th>
+                  <th>{{ i18n.translate('common.owner') }}</th>
+                  <th style="width:100px">{{ i18n.translate('common.actions') }}</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-item>
+                <tr>
+                  <td><strong>{{ item.control_title }}</strong></td>
+                  <td><app-status-badge [status]="item.test_status || item.status" /></td>
+                  <td>{{ item.failure_type ? i18n.translate('controlsMonitoring.' + item.failure_type) : i18n.translate('controlsMonitoring.defaultTestFailure') }}</td>
+                  <td>
+                    <cds-tag [value]="item.severity || 'high'"
+                           [severity]="item.severity === 'critical' ? 'danger' : item.severity === 'high' ? 'danger' : 'warning'" />
+                  </td>
+                  <td>{{ item.detected_at | appDate:'medium' }}</td>
+                  <td>{{ item.owner || i18n.translate('controlsMonitoring.defaultDash') }}</td>
+                  <td>
+                    <button type="button" [attr.aria-label]="i18n.translate('controlsMonitoring.resolveAria')" class="icon-btn" [cdsTooltip]="i18n.translate('controlsMonitoring.resolve')" (click)="openResolve(item)"><i class=""></i></button>
+                    <a class="icon-btn" [routerLink]="['/compliance/controls']" [queryParams]="{controlId: item.control_id}" [cdsTooltip]="i18n.translate('controlsMonitoring.viewControlTooltip')"><i class=""></i></a>
+                  </td>
+                </tr>
+              </ng-template>
+            </table>
+          </grc-data-table>
+        </cds-tab>
+
+        <cds-tab [header]="i18n.translate('controlsMonitoring.overdueTests')">
+          <div class="toolbar-row">
+            <app-export-button module="controls-monitoring-overdue" [data]="data()!.overdueTests" />
+          </div>
+          <grc-data-table
+            [totalRecords]="data()!.overdueTests.length"
+            [emptyMessage]="i18n.translate('controlsMonitoring.allTestsUpToDate') || 'All tests up to date'">
+            <table cdsTable aria-label="Data table" [value]="data()!.overdueTests" [paginator]="data()!.overdueTests.length > 10" [rows]="10"
+                     styleClass="p-datatable-striped p-datatable-sm">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>{{ i18n.translate('controlsMonitoring.control') }}</th>
+                  <th>{{ i18n.translate('controlsMonitoring.lastTested') }}</th>
+                  <th>{{ i18n.translate('controlsMonitoring.daysSinceTest') }}</th>
+                  <th>{{ i18n.translate('controlsMonitoring.frequency') }}</th>
+                  <th>{{ i18n.translate('controlsMonitoring.testStatus') }}</th>
+                  <th>{{ i18n.translate('common.owner') }}</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-item>
+                <tr [class.critical-row]="item.days_since_test > 90">
+                  <td><strong>{{ item.control_title }}</strong></td>
+                  <td>{{ item.last_tested_at | appDate:'medium' }}</td>
+                  <td>
+                    <span class="days-badge" [class.days-critical]="item.days_since_test > 90" [class.days-warning]="item.days_since_test <= 90">
+                      {{ item.days_since_test }} {{ i18n.translate('controlsMonitoring.daysSuffix') }}
+                    </span>
+                  </td>
+                  <td>{{ item.test_frequency ? i18n.translate('controlsMonitoring.' + item.test_frequency) : i18n.translate('controlsMonitoring.manual') }}</td>
+                  <td><app-status-badge [status]="item.test_status || 'not_tested'" /></td>
+                  <td>{{ item.owner || i18n.translate('controlsMonitoring.defaultDash') }}</td>
+                </tr>
+              </ng-template>
+            </table>
+          </grc-data-table>
+        </cds-tab>
+
+        <cds-tab [header]="i18n.translate('controlsMonitoring.auditTestResults')">
+          <grc-data-table
+            [totalRecords]="auditTestResults().length"
+            [emptyMessage]="i18n.translate('controlsMonitoring.auditTestResultsEmpty') || 'No audit test results'">
+            <table cdsTable aria-label="Audit test results" [value]="auditTestResults()" [paginator]="auditTestResults().length > 10" [rows]="10"
+                     styleClass="p-datatable-striped p-datatable-sm">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>{{ i18n.translate('controlsMonitoring.control') }}</th>
+                  <th>{{ i18n.translate('audit.testType') }}</th>
+                  <th>{{ i18n.translate('audit.result') }}</th>
+                  <th>{{ i18n.translate('audit.testedBy') }}</th>
+                  <th>{{ i18n.translate('common.date') }}</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-item>
+                <tr>
+                  <td><strong>{{ item.control_name || item.control_id }}</strong></td>
+                  <td>{{ item.test_type ? i18n.translate('controlsMonitoring.' + item.test_type) : i18n.translate('controlsMonitoring.defaultDash') }}</td>
+                  <td>
+                    <cds-tag [value]="item.status"
+                      [severity]="item.status === 'passed' ? 'success' : item.status === 'failed' ? 'danger' : 'info'" />
+                  </td>
+                  <td>{{ item.tested_by || i18n.translate('controlsMonitoring.defaultDash') }}</td>
+                  <td>{{ item.tested_at | appDate:'medium' }}</td>
+                </tr>
+              </ng-template>
+            </table>
+          </grc-data-table>
+        </cds-tab>
+
+        <cds-tab [header]="i18n.translate('controlsMonitoring.continuousAssurance')">
+          <div class="toolbar-row">
+            <button type="button" [label]="i18n.translate('common.refresh')" icon="" (click)="loadWsMonitoring()" class=" "></button>
+          </div>
+          <div class="ws-strip" *ngIf="wsMonitoring()">
+            <div class="hs-card warning"><span class="hs-num">{{ wsMonitoring()!.counts.approaching }}</span><span class="hs-label">{{ i18n.translate('controlsMonitoring.approachingSla') }}</span></div>
+            <div class="hs-card danger"><span class="hs-num">{{ wsMonitoring()!.counts.past }}</span><span class="hs-label">{{ i18n.translate('controlsMonitoring.pastSla') }}</span></div>
+            <div class="hs-card info"><span class="hs-num">{{ wsMonitoring()!.counts.expiring }}</span><span class="hs-label">{{ i18n.translate('controlsMonitoring.expiringEvidence') }}</span></div>
+          </div>
+          @if (wsMonitoring()?.approachingSla?.length) {
+            <h4 class="section-heading">{{ i18n.translate('controlsMonitoring.approachingSla') }}</h4>
+            <grc-data-table
+              [totalRecords]="wsMonitoring()!.approachingSla.length"
+              [emptyMessage]="i18n.translate('controlsMonitoring.approachingSla') || 'Approaching SLA'">
+              <table cdsTable [value]="wsMonitoring()!.approachingSla" [paginator]="wsMonitoring()!.approachingSla.length > 10" [rows]="10"
+                       styleClass="p-datatable-striped p-datatable-sm">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th>{{ i18n.translate('controlsMonitoring.control') }}</th>
+                    <th>{{ i18n.translate('controlsMonitoring.lastTestedShort') }}</th>
+                    <th>{{ i18n.translate('controlsMonitoring.daysSinceTestShort') }}</th>
+                    <th>{{ i18n.translate('controlsMonitoring.sla') }}</th>
+                    <th>{{ i18n.translate('common.owner') }}</th>
+                    <th style="width:140px">{{ i18n.translate('common.actions') }}</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-item>
+                  <tr>
+                    <td><strong>{{ item.title }}</strong></td>
+                    <td>{{ item.lastTestedAt | appDate:'medium' }}</td>
+                    <td><span class="days-badge days-warning">{{ item.daysSinceTest ?? i18n.translate('controlsMonitoring.defaultDash') }} {{ i18n.translate('controlsMonitoring.daysSuffix') }}</span></td>
+                    <td><cds-tag [value]="item.slaState || 'approaching'" severity="warning" /></td>
+                    <td>{{ item.owner || i18n.translate('controlsMonitoring.defaultDash') }}</td>
+                    <td>
+                      <a class="icon-btn" [routerLink]="['/compliance/controls']" [queryParams]="{controlId: item.controlId}" [cdsTooltip]="i18n.translate('controlsMonitoring.testNow')"><i class=""></i></a>
+                      <a class="icon-btn" [routerLink]="['/foundation/evidence']" [cdsTooltip]="i18n.translate('controlsMonitoring.uploadEvidence')"><i class=""></i></a>
+                    </td>
+                  </tr>
+                </ng-template>
+              </table>
+            </grc-data-table>
+          }
+          @if (wsMonitoring()?.pastSla?.length) {
+            <h4 class="section-heading">{{ i18n.translate('controlsMonitoring.pastSla') }}</h4>
+            <grc-data-table
+              [totalRecords]="wsMonitoring()!.pastSla.length"
+              [emptyMessage]="i18n.translate('controlsMonitoring.pastSla') || 'Past SLA'">
+              <table cdsTable [value]="wsMonitoring()!.pastSla" [paginator]="wsMonitoring()!.pastSla.length > 10" [rows]="10"
+                       styleClass="p-datatable-striped p-datatable-sm">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th>{{ i18n.translate('controlsMonitoring.control') }}</th>
+                    <th>{{ i18n.translate('controlsMonitoring.lastTestedShort') }}</th>
+                    <th>{{ i18n.translate('controlsMonitoring.daysSinceTestShort') }}</th>
+                    <th>{{ i18n.translate('common.owner') }}</th>
+                    <th style="width:140px">{{ i18n.translate('common.actions') }}</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-item>
+                  <tr class="critical-row">
+                    <td><strong>{{ item.title }}</strong></td>
+                    <td>{{ item.lastTestedAt | appDate:'medium' }}</td>
+                    <td><span class="days-badge days-critical">{{ item.daysSinceTest ?? i18n.translate('controlsMonitoring.defaultDash') }} {{ i18n.translate('controlsMonitoring.daysSuffix') }}</span></td>
+                    <td>{{ item.owner || i18n.translate('controlsMonitoring.defaultDash') }}</td>
+                    <td>
+                      <a class="icon-btn" [routerLink]="['/compliance/controls']" [queryParams]="{controlId: item.controlId}" [cdsTooltip]="i18n.translate('controlsMonitoring.testNow')"><i class=""></i></a>
+                      <a class="icon-btn" [routerLink]="['/foundation/evidence']" [cdsTooltip]="i18n.translate('controlsMonitoring.uploadEvidence')"><i class=""></i></a>
+                    </td>
+                  </tr>
+                </ng-template>
+              </table>
+            </grc-data-table>
+          }
+          @if (wsMonitoring()?.expiringEvidence?.length) {
+            <h4 class="section-heading">{{ i18n.translate('controlsMonitoring.expiringEvidence') }}</h4>
+            <grc-data-table
+              [totalRecords]="wsMonitoring()!.expiringEvidence.length"
+              [emptyMessage]="i18n.translate('controlsMonitoring.expiringEvidence') || 'Expiring Evidence'">
+              <table cdsTable [value]="wsMonitoring()!.expiringEvidence" [paginator]="wsMonitoring()!.expiringEvidence.length > 10" [rows]="10"
+                       styleClass="p-datatable-striped p-datatable-sm">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th>{{ i18n.translate('controlsMonitoring.control') }}</th>
+                    <th>{{ i18n.translate('controlsMonitoring.evidenceExpiry') }}</th>
+                    <th>{{ i18n.translate('common.owner') }}</th>
+                    <th style="width:140px">{{ i18n.translate('common.actions') }}</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-item>
+                  <tr>
+                    <td><strong>{{ item.title }}</strong></td>
+                    <td>{{ item.evidenceExpiryNext | appDate:'short' }}</td>
+                    <td>{{ item.owner || i18n.translate('controlsMonitoring.defaultDash') }}</td>
+                    <td>
+                      <a class="icon-btn" [routerLink]="['/foundation/evidence']" [cdsTooltip]="i18n.translate('controlsMonitoring.uploadEvidence')"><i class=""></i></a>
+                      <a class="icon-btn" [routerLink]="['/compliance/controls']" [queryParams]="{controlId: item.controlId}" [cdsTooltip]="i18n.translate('controlsMonitoring.viewControl')"><i class=""></i></a>
+                    </td>
+                  </tr>
+                </ng-template>
+              </table>
+            </grc-data-table>
+          }
+          @if (wsMonitoring() && !wsMonitoring()!.approachingSla?.length && !wsMonitoring()!.pastSla?.length && !wsMonitoring()!.expiringEvidence?.length) {
+            <div class="empty-state">
+              <i class=" empty-icon" style="color:var(--success)"></i>
+              <p>{{ i18n.translate('controlsMonitoring.noSlaIssues') }}</p>
+            </div>
+          }
+          <div *ngIf="wsLoadError()" class="load-error-banner" role="alert">
+            <i class=""></i>
+            <span>{{ wsLoadError() }}</span>
+            <button type="button" class="retry-btn" (click)="wsLoadError.set(null); loadWsMonitoring()">{{ i18n.translate('common.retry') }}</button>
+          </div>
+        </cds-tab>
+
+        <cds-tab [header]="i18n.translate('controlsMonitoring.remediationActions')">
+          <div class="toolbar-row">
+            <app-export-button module="controls-monitoring-actions" [data]="data()!.remediationActions" />
+          </div>
+          <grc-data-table
+            [totalRecords]="data()!.remediationActions.length"
+            [emptyMessage]="i18n.translate('controlsMonitoring.noPendingRemediation') || 'No pending remediation actions'">
+            <table cdsTable aria-label="Data table" [value]="data()!.remediationActions" [paginator]="data()!.remediationActions.length > 10" [rows]="10"
+                     styleClass="p-datatable-striped p-datatable-sm">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>{{ i18n.translate('controlsMonitoring.action') }}</th>
+                  <th>{{ i18n.translate('controlsMonitoring.control') }}</th>
+                  <th>{{ i18n.translate('common.status') }}</th>
+                  <th>{{ i18n.translate('common.priority') }}</th>
+                  <th>{{ i18n.translate('incident.assignedTo') }}</th>
+                  <th>{{ i18n.translate('common.dueDate') }}</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-item>
+                <tr [class.overdue-row]="isOverdue(item)">
+                  <td><strong>{{ item.title }}</strong></td>
+                  <td>{{ item.control_title }}</td>
+                  <td><app-status-badge [status]="item.status" /></td>
+                  <td>
+                    <cds-tag [value]="item.priority || 'medium'"
+                           [severity]="item.priority === 'critical' ? 'danger' : item.priority === 'high' ? 'danger' : 'warning'" />
+                  </td>
+                  <td>{{ item.assigned_to || i18n.translate('controlsMonitoring.defaultDash') }}</td>
+                  <td>
+                    {{ item.due_date | appDate:'medium' }}
+                    <span *ngIf="isOverdue(item)" class="overdue-badge">{{ i18n.translate('common.overdue') }}</span>
+                  </td>
+                </tr>
+              </ng-template>
+            </table>
+          </grc-data-table>
+        </cds-tab>
+      </cds-tabs>
+
+      <cds-modal [header]="i18n.translate('controlsMonitoring.resolveFailure')" [(visible)]="resolveDialogVisible" [modal]="true" [style]="{width:'480px'}">
+        <div class="resolve-form">
+          <label>{{ i18n.translate('controlsMonitoring.resolutionNote') }}</label>
+          <textarea pInputTextarea [(ngModel)]="resolutionNote" rows="4" [placeholder]="i18n.translate('controlsMonitoring.resolutionNotePlaceholder')" [attr.aria-label]="i18n.translate('controlsMonitoring.resolutionNotePlaceholder')" style="width:100%"></textarea>
+        </div>
+        <ng-template pTemplate="footer">
+          <button cdsButton [label]="i18n.translate('common.cancel')" icon="" (onClick)="resolveDialogVisible = false" [text]="true" />
+          <button cdsButton [label]="i18n.translate('controlsMonitoring.resolve')" icon="" (onClick)="submitResolve()" />
+        </ng-template>
+      </cds-modal>
+
+      <cds-notification></cds-notification>
+    </app-page-shell>

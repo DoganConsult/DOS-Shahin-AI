@@ -1,0 +1,161 @@
+export type {
+  ReleaseStatus,
+  ReleaseRiskClass,
+  DeploymentStatus,
+  RollbackStatus,
+  MigrationType,
+  MigrationStatus,
+  CompatibilityImpact,
+  QualityGateStatus,
+  FeatureGateState,
+  ReleaseDefinition,
+  DeploymentRecord,
+  RollbackRecord,
+  MigrationRecord,
+  QualityGate,
+  FeatureGate,
+  DeliveryHealthSnapshot,
+  CutoverPlan,
+  HandoverLock,
+} from './contracts/delivery.types';
+
+export {
+  createRelease,
+  getRelease,
+  getReleaseByCode,
+  listReleases,
+  advanceReleaseStatus,
+  recordApproval,
+  attachRollbackPlan,
+  cancelRelease,
+  isReleaseApproved,
+} from './release/release-management.service';
+
+export {
+  startDeployment,
+  completeDeployment,
+  failDeployment,
+  markDeploymentRolledBack,
+  getDeployment,
+  listDeployments,
+  getDeploymentsByRelease,
+  getActiveDeployment,
+} from './deployment/deployment.service';
+
+export {
+  initiateRollback,
+  advanceRollbackStatus,
+  getRollback,
+  getRollbackByDeployment,
+  listRollbacks,
+} from './rollback/rollback.service';
+
+export {
+  registerFeatureGate,
+  getFeatureGate,
+  listFeatureGates,
+  setFeatureGateState,
+  isFeatureEnabled,
+} from './gates/feature-gate.service';
+
+export {
+  registerMigration,
+  startMigration,
+  completeMigration,
+  failMigration,
+  skipMigration,
+  getMigration,
+  listMigrationsByRelease,
+  listPendingMigrations,
+  listFailedMigrations,
+  validateMigrationSafety,
+} from './migration/migration-tracking.service';
+
+export {
+  getDeliveryHealthSnapshot,
+  getDeploymentSuccessRateByEnvironment,
+  getMigrationHealthByRelease,
+} from './health/delivery-health.service';
+
+export {
+  generateDeliveryDiagnosticsReport,
+  checkReleaseReadiness,
+} from './diagnostics/delivery-diagnostics.service';
+export type { DeliveryDiagnosticsReport } from './diagnostics/delivery-diagnostics.service';
+
+export {
+  registerQualityGate,
+  evaluateQualityGate,
+  getQualityGate,
+  listQualityGatesByRelease,
+  listFailingGates,
+  isReleaseQualityApproved,
+  skipQualityGate,
+} from './quality/quality-gate.service';
+
+export {
+  registerCompatibilityRecord,
+  verifyCompatibilityRecord,
+  getCompatibilityRecord,
+  listCompatibilityByRelease,
+  listBreakingChanges,
+  validateBreakingChanges,
+} from './compatibility/compatibility.service';
+export type { CompatibilityClass, CompatibilityRecord } from './compatibility/compatibility.service';
+
+export {
+  requestApproval,
+  approveRelease,
+  rejectApproval,
+  withdrawApproval,
+  getApproval,
+  listApprovalsByRelease,
+  listPendingApprovals,
+  isFullyApproved,
+  hasRejection,
+} from './approvals/release-approval.service';
+export type { ApprovalStatus, ReleaseApproval } from './approvals/release-approval.service';
+
+export {
+  createCutoverPlan,
+  getCutoverPlan,
+  getCutoverPlanByRelease,
+  startCutover,
+  advanceCutoverCheckpoint,
+  completeCutover,
+  abortCutover,
+  getCutoverExecution,
+  listCutoverExecutionsByRelease,
+} from './cutover/cutover.service';
+export type { CutoverStatus, CutoverExecution } from './cutover/cutover.service';
+
+export {
+  startVerificationRun,
+  registerVerificationCheck,
+  recordCheckResult,
+  completeVerificationRun,
+  getVerificationRun,
+  getVerificationCheck,
+  listChecksByRun,
+  listRunsByRelease,
+} from './verification/post-deploy-verification.service';
+export type {
+  VerificationCheckStatus,
+  VerificationRunStatus,
+  VerificationCheck,
+  VerificationRun,
+} from './verification/post-deploy-verification.service';
+
+export {
+  createHandoverLock,
+  updateHandoverChecklist,
+  lockHandover,
+  validateHandoverReadiness,
+  getHandoverLock,
+  getHandoverLockByRelease,
+  registerRiskItem,
+  getRiskItem,
+  listRisksByRelease,
+  listCarryForwardRisks,
+} from './handover/handover-lock.service';
+export type { HandoverRiskItem } from './handover/handover-lock.service';

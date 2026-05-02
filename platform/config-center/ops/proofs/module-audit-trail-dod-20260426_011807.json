@@ -1,0 +1,40 @@
+{
+  "module": "audit-trail",
+  "phase": "Phase 1 / Module 8",
+  "completedAt": "2026-04-25T17:18:08.015152Z",
+  "verdict": "PASS",
+  "tenant": "shahin_visitors",
+  "user": "tenantadmin@shahin-ai.local",
+  "role": "tenant_admin",
+  "issuer": "https://auth.shahin-ai.com/realms/dogan",
+  "endpointCount": 3,
+  "passCount": 3,
+  "failCount": 0,
+  "failingEndpoints": [],
+  "endpoints": [
+    {
+      "name": "audit",
+      "path": "/api/audit-trail",
+      "status": 200,
+      "ms": 20,
+      "verdict": "PASS",
+      "sample": "entries: list[0]"
+    },
+    {
+      "name": "auditPaginated",
+      "path": "/api/audit-trail?limit=20",
+      "status": 200,
+      "ms": 22,
+      "verdict": "PASS",
+      "sample": "entries: list[0]"
+    },
+    {
+      "name": "auditDeep",
+      "path": "/api/audit-trail?limit=50&offset=0",
+      "status": 200,
+      "ms": 22,
+      "verdict": "PASS",
+      "sample": "entries: list[0]"
+    }
+  ]
+}

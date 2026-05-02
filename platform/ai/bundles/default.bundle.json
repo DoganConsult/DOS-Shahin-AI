@@ -1,0 +1,90 @@
+{
+  "$schema": "../../dos/manifests/platform-bundle.schema.json",
+  "bundleCode": "ai-os-default",
+  "moduleCode": "ai-os",
+  "displayName": "AI-OS Default Bundle",
+  "description": "Standard AI-OS deployment: ai-gateway-service (front door for /api/ai), ai-engine-service (inference + agents), ai-governance-service (policy + safety + audit). PostgreSQL persistence in the platform_ai schema; Redis for cost/quota counters and event-backbone fan-out.",
+  "version": "1.0.0",
+  "services": [
+    {
+      "code": "ai-gateway-service",
+      "path": "platform/ai/services/ai-gateway-service",
+      "required": true,
+      "ports": { "http": 4310 },
+      "dependsOnPlatform": ["dauth", "dos"],
+      "dependsOnExternal": ["postgres", "redis"]
+    },
+    {
+      "code": "ai-engine-service",
+      "path": "platform/ai/services/ai-engine-service",
+      "required": true,
+      "ports": { "http": 4311 },
+      "dependsOnPlatform": ["dauth", "dos", "ai-os"],
+      "dependsOnExternal": ["postgres", "redis"]
+    },
+    {
+      "code": "ai-governance-service",
+      "path": "platform/ai/services/ai-governance-service",
+      "required": true,
+      "ports": { "http": 4312 },
+      "dependsOnPlatform": ["dauth", "dos", "ai-os"],
+      "dependsOnExternal": ["postgres"]
+    }
+  ],
+  "packages": [
+    "@dos/ai",
+    "@dos/modules-ai",
+    "@dos/modules-ai-governance",
+    "@dos/ai-gateway",
+    "@dos/core-ai"
+  ],
+  "frontendPackages": [
+    { "name": "ai-frontend",            "path": "platform/ai/frontend/ai",            "status": "shipped-as-source" },
+    { "name": "ai-governance-frontend", "path": "platform/ai/frontend/ai-governance", "status": "shipped-as-source" },
+    { "name": "modules-ai-frontend",    "path": "platform/ai/frontend/modules-ai",    "status": "shipped-as-source" }
+  ],
+  "migrations": { "indexFile": "platform/ai/migrations/migrations-index.json" },
+  "environment": {
+    "required": [
+      "DATABASE_URL",
+      "REDIS_URL",
+      "AI_GATEWAY_PROVIDER_KEY"
+    ],
+    "optional": [
+      "AI_DEFAULT_MODEL",
+      "AI_BUDGET_LIMIT_USD",
+      "AI_AUTONOMY_DEFAULT_LEVEL",
+      "OLLAMA_BASE_URL",
+      "OLLAMA_DEFAULT_MODEL",
+      "ANTHROPIC_API_KEY",
+      "OPENAI_API_KEY",
+      "OPENROUTER_API_KEY",
+      "GROQ_API_KEY",
+      "GOOGLE_API_KEY",
+      "TOGETHER_API_KEY",
+      "CEREBRAS_API_KEY",
+      "MISTRAL_API_KEY",
+      "DEEPSEEK_API_KEY",
+      "SAMBANOVA_API_KEY",
+      "AI_PROVIDER",
+      "AI_FREE_FIRST",
+      "LANGFUSE_PUBLIC_KEY",
+      "LANGFUSE_SECRET_KEY",
+      "TEMPORAL_ADDRESS",
+      "TEMPORAL_NAMESPACE",
+      "TEMPORAL_TASK_QUEUE",
+      "TEMPORAL_ENABLED"
+    ]
+  },
+  "healthChecks": [
+    { "service": "ai-gateway-service",    "endpoint": "/api/ai/health",            "expectedStatus": 200 },
+    { "service": "ai-engine-service",     "endpoint": "/api/ai-engine/health",     "expectedStatus": 200 },
+    { "service": "ai-governance-service", "endpoint": "/api/ai-governance/health", "expectedStatus": 200 }
+  ],
+  "deployment": {
+    "runtime": "node",
+    "minNodeVersion": "20",
+    "horizontalScaling": "supported",
+    "statefulComponents": ["postgres", "redis"]
+  }
+}

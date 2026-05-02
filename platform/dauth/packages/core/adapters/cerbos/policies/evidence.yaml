@@ -1,0 +1,76 @@
+---
+# Evidence resource policy — mirrors DAuth SoD "no self-approval" and lifecycle
+# gating. Kept simple so DAuth remains the final decider; Cerbos verdicts are
+# folded into the 14-step pipeline, not treated as the whole answer.
+#
+# version: "1" — bump when a backward-incompatible rule changes. DAuth records
+# this as `policyVersion` on every decision.
+apiVersion: "api.cerbos.dev/v1"
+resourcePolicy:
+  version: "1"
+  resource: "evidence"
+  importDerivedRoles:
+    - dogan_common
+
+  rules:
+    # View — any tenant member or auditor
+    - actions: ["evidence.view", "evidence.list"]
+      effect: EFFECT_ALLOW
+      derivedRoles: ["tenant_member", "auditor_readonly", "platform_admin"]
+
+    # Create / update — editor role + tenant match
+    - actions: ["evidence.create", "evidence.update"]
+      effect: EFFECT_ALLOW
+      roles: ["evidence_editor", "evidence_admin", "tenant_admin", "platform_admin"]
+      condition:
+        match:
+          expr: request.principal.attr.tenantId == request.resource.attr.tenantId
+
+    # Submit — owner or editor
+    - actions: ["evidence.submit"]
+      effect: EFFECT_ALLOW
+      derivedRoles: ["owner"]
+      condition:
+        match:
+          expr: request.resource.attr.status == "draft"
+
+    # Approve — approver but NOT the owner (SoD: no self-approval)
+    - actions: ["evidence.approve"]
+      effect: EFFECT_ALLOW
+      derivedRoles: ["approver"]
+      condition:
+        match:
+          all:
+            of:
+              - expr: request.resource.attr.status == "submitted"
+              - expr: request.principal.id != request.resource.attr.createdBy
+
+    # Explicit deny: owner trying to approve their own evidence
+    - actions: ["evidence.approve"]
+      effect: EFFECT_DENY
+      roles: ["*"]
+      condition:
+        match:
+          expr: request.principal.id == request.resource.attr.createdBy
+      output:
+        when:
+          ruleActivated: '"DAUTH_DENY_SOD_SELF_APPROVAL"'
+
+    # Export — approver + email verified
+    - actions: ["evidence.export"]
+      effect: EFFECT_ALLOW
+      roles: ["evidence_admin", "tenant_admin"]
+      condition:
+        match:
+          all:
+            of:
+              - expr: request.resource.attr.status == "approved"
+              - expr: request.principal.attr.emailVerified == true
+
+    # Delete — only platform admin or tenant admin, and never after approval
+    - actions: ["evidence.delete"]
+      effect: EFFECT_ALLOW
+      derivedRoles: ["tenant_admin", "platform_admin"]
+      condition:
+        match:
+          expr: request.resource.attr.status != "approved"

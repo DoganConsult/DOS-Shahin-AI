@@ -1,0 +1,4 @@
+
+> @dos/agrc-os-service@0.1.0 build /root/DOS-AIO/services/agrc-os-service
+> tsc -p tsconfig.json
+

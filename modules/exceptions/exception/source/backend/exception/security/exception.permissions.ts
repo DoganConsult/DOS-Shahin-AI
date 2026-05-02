@@ -1,0 +1,2 @@
+import { EXCEPTION_PERMISSIONS } from './exception.security';
+export { EXCEPTION_PERMISSIONS as EXCEPTION_MODULE_PERMISSIONS };

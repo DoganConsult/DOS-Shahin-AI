@@ -1,0 +1,19 @@
+{
+  "identitySurfaces": [
+    "users",
+    "sessions",
+    "delegation",
+    "roles",
+    "permissions"
+  ],
+  "authModes": [
+    "password",
+    "sso",
+    "service-token"
+  ],
+  "permissionModel": [
+    "rbac",
+    "sod",
+    "tenant-scope"
+  ]
+}

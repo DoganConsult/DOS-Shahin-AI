@@ -1,0 +1,23 @@
+import type { ReleaseDefinition, ReleaseRiskClass, ReleaseStatus } from '../contracts/delivery.types';
+export declare function createRelease(input: {
+    releaseCode: string;
+    version: string;
+    riskClass: ReleaseRiskClass;
+    affectedLayers: string[];
+    affectedProducts: string[];
+    affectedModules: string[];
+    migrations: string[];
+    approvalsRequired: string[];
+    smokeTestInventory: string[];
+    supportOwner?: string;
+    cutoverWindowStart?: string;
+    cutoverWindowEnd?: string;
+}): Promise<ReleaseDefinition>;
+export declare function getRelease(releaseId: string): Promise<ReleaseDefinition | null>;
+export declare function getReleaseByCode(releaseCode: string): Promise<ReleaseDefinition | null>;
+export declare function listReleases(status?: ReleaseStatus): Promise<ReleaseDefinition[]>;
+export declare function advanceReleaseStatus(releaseId: string, newStatus: ReleaseStatus, actorId: string): Promise<ReleaseDefinition | null>;
+export declare function recordApproval(releaseId: string, approverId: string): Promise<void>;
+export declare function attachRollbackPlan(releaseId: string, rollbackPlanId: string): Promise<void>;
+export declare function cancelRelease(releaseId: string, actorId: string): Promise<void>;
+export declare function isReleaseApproved(releaseId: string): Promise<boolean>;

@@ -1,0 +1,175 @@
+{
+  "foundation": {
+    "module": {
+      "title": "الأساس"
+    },
+    "nav": {
+      "overview": "نظرة عامة",
+      "organization": "المؤسسة",
+      "businessUnits": "وحدات الأعمال",
+      "departments": "الإدارات",
+      "teams": "الفرق",
+      "users": "المستخدمون",
+      "roles": "الأدوار",
+      "positions": "المناصب",
+      "locations": "المواقع",
+      "committees": "اللجان",
+      "delegations": "التفويضات",
+      "policies": "السياسات",
+      "audit": "التدقيق",
+      "settings": "الإعدادات",
+      "permissionMatrix": "مصفوفة الصلاحيات"
+    },
+    "actions": {
+      "create": "إنشاء",
+      "edit": "تعديل",
+      "delete": "حذف",
+      "approve": "اعتماد",
+      "reject": "رفض",
+      "save": "حفظ",
+      "cancel": "إلغاء",
+      "search": "بحث",
+      "filter": "تصفية",
+      "export": "تصدير",
+      "import": "استيراد",
+      "assign": "تعيين",
+      "revoke": "إلغاء التعيين"
+    },
+    "positions": {
+      "add": "إضافة منصب",
+      "edit": "تعديل المنصب",
+      "new": "منصب جديد",
+      "empty": "لا توجد مناصب.",
+      "searchPlaceholder": "ابحث في المناصب…",
+      "titleEn": "المسمى (إنجليزي)",
+      "titleAr": "المسمى (عربي)",
+      "grade": "الدرجة",
+      "department": "الإدارة",
+      "actions": "الإجراءات",
+      "saving": "جارٍ الحفظ…"
+    },
+    "overview": {
+      "title": "الأساس — نظرة عامة",
+      "subtitle": "مركز قيادة الهيكل التنظيمي والمستخدمين والصلاحيات.",
+      "live": "مباشر",
+      "signatureWidget": "الواجهة المميزة",
+      "views": "العروض",
+      "view": {
+        "commandCenter": "مركز القيادة",
+        "recent": "النشاط الأخير"
+      },
+      "partial": "تعذّر تحميل بعض بيانات الأساسيات. يمكنك تحديث الصفحة أو متابعة إعداد المؤسسة.",
+      "partial.details": "عرض الأقسام المتأثرة",
+      "commandCenter": "مركز قيادة الأساس",
+      "dataSource": "مصدر البيانات",
+      "dataSourceLabel": "نظرة عامة على المساحة",
+      "whyContractValue": "صفحة لوحة الأساسيات",
+      "empty": {
+        "title": "لا توجد بيانات بعد",
+        "body": "ابدأ بإعداد المؤسسة والوحدات لرؤية مؤشرات الأساس.",
+        "recent": "لا يوجد نشاط حديث."
+      },
+      "contextRail": "اللوحة الجانبية",
+      "agent": "وكيل الذكاء",
+      "agent.open": "فتح الوكيل",
+      "agent.close": "إغلاق الوكيل",
+      "openCount": "المفتوح",
+      "nba": "الإجراء التالي الموصى به",
+      "nba.empty": "لا توجد إجراءات موصى بها حالياً.",
+      "nba.createOrg": "أنشئ المؤسسة الأم لبدء الهيكل التنظيمي",
+      "nba.createDept": "أضف الإدارات الأساسية لتغطية الهيكل",
+      "nba.inviteUsers": "ادعُ المستخدمين الأوائل إلى مساحتك",
+      "nba.fixOwnership": "عالج فجوات الملكية في الكيانات",
+      "whyAmISeeing": "لماذا أرى هذه الصفحة؟",
+      "whyProfile": "ملفك الوظيفي",
+      "whyProfileUnknown": "غير محدد",
+      "whyDataScope": "نطاق البيانات",
+      "whyContract": "عقد الصفحة",
+      "accessDeniedTitle": "لا تملك صلاحية عرض هذه الصفحة",
+      "accessDeniedBody": "يرجى التواصل مع مسؤول المساحة لمنحك الصلاحية المطلوبة.",
+      "activity": "نشاط"
+    },
+    "intent": {
+      "monitor": "مراقبة",
+      "manage": "إدارة",
+      "review": "مراجعة",
+      "approve": "اعتماد",
+      "investigate": "تحقيق",
+      "configure": "تهيئة",
+      "report": "تقرير"
+    },
+    "rail": {
+      "workQueue": "قائمة العمل",
+      "approvals": "الموافقات",
+      "aiPulse": "نبض الذكاء",
+      "recentActivity": "النشاط الأخير"
+    },
+    "warn": {
+      "invitations": "الدعوات"
+    },
+    "priority": {
+      "critical": "حرج",
+      "attention": "يستلزم انتباه",
+      "recommended": "موصى به"
+    },
+    "kpi": {
+      "users": {
+        "total": "المستخدمون"
+      },
+      "departments": {
+        "total": "الإدارات"
+      },
+      "teams": {
+        "total": "الفرق"
+      },
+      "vacancies": "الشواغر",
+      "complianceRate": "نسبة الامتثال",
+      "ownership": {
+        "gaps": "فجوات الملكية"
+      }
+    },
+    "delegations": {
+      "empty": "لا توجد تفويضات.",
+      "delegator": "المفوِّض",
+      "delegate": "المفوَّض إليه",
+      "type": "النوع",
+      "scope": "النطاق",
+      "expires": "تاريخ الانتهاء",
+      "noExpiry": "بدون انتهاء",
+      "actions": "الإجراءات"
+    },
+    "fields": {
+      "nameEn": "الاسم (إنجليزي)",
+      "nameAr": "الاسم (عربي)",
+      "code": "الرمز",
+      "status": "الحالة",
+      "owner": "المالك",
+      "parent": "الأصل",
+      "createdAt": "تاريخ الإنشاء",
+      "updatedAt": "تاريخ التحديث"
+    },
+    "status": {
+      "draft": "مسودة",
+      "in_review": "قيد المراجعة",
+      "approved": "معتمد",
+      "published": "منشور",
+      "active": "نشط",
+      "inactive": "غير نشط",
+      "vacant": "شاغر",
+      "expired": "منتهٍ",
+      "pending": "قيد الانتظار",
+      "suspended": "موقوف",
+      "archived": "مؤرشف"
+    },
+    "errors": {
+      "FOUNDATION_ENTITY_NOT_FOUND": "السجل المطلوب غير موجود.",
+      "FOUNDATION_ENTITY_CONFLICT": "يوجد سجل آخر بنفس الرمز.",
+      "FOUNDATION_HIERARCHY_CYCLE": "هذا التغيير ينشئ دورة في التسلسل.",
+      "FOUNDATION_PARENT_NOT_FOUND": "السجل الأصل غير موجود.",
+      "FOUNDATION_CODE_DUPLICATE": "هذا الرمز مستخدم بالفعل.",
+      "FOUNDATION_STATUS_TRANSITION_INVALID": "انتقال حالة غير صالح.",
+      "TENANT_CONTEXT_MISSING": "سياق المستأجر غير محدد.",
+      "VALIDATION_FAILED": "فشلت عملية التحقق."
+    }
+  }
+}

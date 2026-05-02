@@ -1,0 +1,10 @@
+{
+  "mode": "apply",
+  "timestamp": "20260425T071018Z",
+  "migrator": "dos_migrator@localhost/shahin_grc",
+  "tenant_count": 1,
+  "failures": 1,
+  "results": [
+    {"tenant":"tenant_shahin_visitors","status":"failed","error":"see psql output above"}
+  ]
+}

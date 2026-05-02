@@ -1,0 +1,77 @@
+{
+  "moduleCode": "governance",
+  "displayName": "Governance",
+  "ownerTeam": "product-shahin-ai",
+  "productCode": "shahin-ai",
+  "ownership": "module-owned",
+  "version": "1.0.0",
+  "status": "active",
+  "platformDependencies": [
+    "identity",
+    "tenancy",
+    "workflow",
+    "permissions",
+    "audit"
+  ],
+  "seedProviders": [
+    "products/shahin/seeds/governance-seed"
+  ],
+  "tenantDefaults": [
+    "governance_review_cycle_days",
+    "governance_escalation_mode"
+  ],
+  "requiredReferenceData": [
+    "governance_body_types",
+    "decision_categories",
+    "policy_types"
+  ],
+  "currentSources": [
+    "/home/Dr-Dogan-AGRC-OS/backend/src/modules/governance"
+  ],
+  "targetPath": "modules/governance",
+  "futureService": "governance-policy-service",
+  "frontendSources": [
+    "/home/Dr-Dogan-AGRC-OS/frontend/src/app/platform-manifests/governance.module.routes.ts"
+  ],
+  "ownedTables": [
+    "policies",
+    "policy_versions",
+    "governance_reviews",
+    "governance_decisions"
+  ],
+  "referencedTables": [
+    "tenants",
+    "users",
+    "workflow_instances",
+    "risks",
+    "compliance_gaps",
+    "audit_trail"
+  ],
+  "events": {
+    "publishes": [
+      "governance.charter_approved",
+      "governance.decision_recorded",
+      "governance.health_score_updated",
+      "governance.action_created",
+      "governance.review_completed",
+      "governance.structure_changed"
+    ],
+    "subscribes": [
+      "audit.engagement_completed",
+      "bcp.rto_rpo_drift",
+      "bcp.maturity_regression",
+      "bcp.plan_stale",
+      "bcp.bia_stale",
+      "compliance.posture_changed",
+      "incident.escalated",
+      "incident.sla_breached",
+      "privacy.impact_assessment_completed",
+      "risk.appetite_breached",
+      "foundation.role.assigned",
+      "foundation.role.unassigned"
+    ]
+  },
+  "routeBases": [
+    "/api/governance"
+  ]
+}

@@ -1,0 +1,154 @@
+/* ============================================
+   Shahin-AI GRC — PrimeNG 19 CSS Custom Properties
+   Uses PrimeNG 19's --p-* token API to set component
+   defaults WITHOUT ::ng-deep or !important.
+   Register in angular.json BEFORE primeng-overrides.css.
+   
+   Reference: https://primeng.org/theming
+   ============================================ */
+
+:root {
+  /* ── DataTable ── */
+  --p-datatable-header-background: var(--surface-ice);
+  --p-datatable-header-cell-background: var(--surface-ice);
+  --p-datatable-header-cell-color: var(--text-body);
+  --p-datatable-header-cell-border-color: var(--border);
+  --p-datatable-body-cell-background: var(--surface);
+  --p-datatable-body-cell-color: var(--text);
+  --p-datatable-body-cell-border-color: var(--border-subtle);
+  --p-datatable-body-row-hover-background: var(--surface-hover);
+  --p-datatable-paginator-background: var(--surface-sunken);
+  --p-datatable-border-radius: var(--radius);
+
+  /* ── Card ── */
+  --p-card-background: var(--surface);
+  --p-card-shadow: var(--shadow-card);
+  --p-card-border-radius: var(--radius);
+  --p-card-color: var(--text-body);
+  --p-card-title-color: var(--text-heading);
+  --p-card-title-font-weight: 700;
+  --p-card-body-padding: 24px;
+
+  /* ── ProgressBar ── */
+  --p-progressbar-background: var(--border-subtle);
+  --p-progressbar-value-background: var(--primary);
+  --p-progressbar-border-radius: var(--radius-pill);
+  --p-progressbar-height: 8px;
+
+  /* ── TabView ── */
+  --p-tabs-nav-background: transparent;
+  --p-tabs-nav-border-color: var(--border);
+  --p-tabs-tab-color: var(--text-muted);
+  --p-tabs-tab-active-color: var(--primary);
+  --p-tabs-tab-active-border-color: var(--primary);
+  --p-tabs-tab-font-weight: 500;
+  --p-tabs-tab-active-font-weight: 600;
+  --p-tabs-panels-background: transparent;
+  --p-tabs-panels-padding: 20px 0;
+
+  /* ── InputText ── */
+  --p-inputtext-background: var(--surface);
+  --p-inputtext-color: var(--text);
+  --p-inputtext-border-color: var(--border);
+  --p-inputtext-border-radius: var(--radius-sm);
+  --p-inputtext-shadow: none;
+  --p-inputtext-focus-border-color: var(--primary);
+  --p-inputtext-focus-shadow: var(--shadow-glow);
+  --p-inputtext-hover-border-color: var(--primary-light);
+  --p-inputtext-invalid-border-color: var(--error);
+  --p-inputtext-padding-x: 12px;
+  --p-inputtext-padding-y: 8px;
+
+  /* ── Button (primary) ── */
+  --p-button-primary-background: var(--primary);
+  --p-button-primary-color: var(--text-on-primary);
+  --p-button-primary-border-color: var(--primary);
+  --p-button-primary-hover-background: var(--primary-700, color-mix(in srgb, var(--primary) 85%, black));
+  --p-button-primary-active-background: var(--primary-800, color-mix(in srgb, var(--primary) 70%, black));
+  --p-button-border-radius: var(--radius-sm);
+  --p-button-font-weight: 600;
+
+  /* ── Dialog ── */
+  --p-dialog-background: var(--surface);
+  --p-dialog-border-radius: var(--radius-lg);
+  --p-dialog-shadow: var(--shadow-xl);
+  --p-dialog-header-background: var(--surface);
+  --p-dialog-header-border-color: var(--border-subtle);
+  --p-dialog-header-color: var(--text-heading);
+  --p-dialog-header-padding: 20px 24px;
+  --p-dialog-content-background: var(--surface);
+  --p-dialog-content-color: var(--text-body);
+  --p-dialog-content-padding: 24px;
+  --p-dialog-footer-background: var(--surface-sunken);
+  --p-dialog-footer-border-color: var(--border-subtle);
+  --p-dialog-footer-padding: 16px 24px;
+
+  /* ── Dropdown / Select ── */
+  --p-select-background: var(--surface);
+  --p-select-color: var(--text);
+  --p-select-border-color: var(--border);
+  --p-select-border-radius: var(--radius-sm);
+  --p-select-focus-border-color: var(--primary);
+  --p-select-hover-border-color: var(--primary-light);
+  --p-select-option-padding: 0.6rem 0.9rem;
+  --p-select-option-color: var(--text-body);
+  --p-select-option-focus-background: var(--surface-hover);
+  --p-select-option-selected-background: color-mix(in srgb, var(--primary) 8%, transparent);
+  --p-select-option-selected-color: var(--primary);
+  --p-select-overlay-background: var(--surface);
+  --p-select-overlay-border-color: var(--border-subtle);
+  --p-select-overlay-border-radius: var(--radius-lg);
+  --p-select-overlay-shadow: var(--shadow-lg);
+
+  /* ── Tooltip ── */
+  --p-tooltip-background: var(--carbon-gray-90, #262626);
+  --p-tooltip-color: var(--carbon-gray-10, #f4f4f4);
+  --p-tooltip-border-radius: var(--radius);
+  --p-tooltip-padding: 8px 14px;
+  --p-tooltip-shadow: var(--shadow-lg);
+  --p-tooltip-font-size: var(--font-size-sm);
+
+  /* ── Skeleton ── */
+  --p-skeleton-border-radius: var(--radius-sm);
+  --p-skeleton-animation-background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(var(--color-white-rgb), 0.5) 50%,
+    transparent 60%
+  );
+
+  /* ── Accordion ── */
+  --p-accordion-header-border-radius: var(--radius-sm);
+  --p-accordion-header-font-weight: 600;
+  --p-accordion-header-padding: 16px;
+  --p-accordion-content-padding: 16px;
+
+  /* ── Tag ── */
+  --p-tag-border-radius: var(--radius-pill);
+  --p-tag-font-size: var(--font-size-xs);
+  --p-tag-font-weight: 600;
+  --p-tag-padding-x: 12px;
+  --p-tag-padding-y: 4px;
+
+  /* ── Breadcrumb ── */
+  --p-breadcrumb-background: transparent;
+  --p-breadcrumb-border-color: transparent;
+  --p-breadcrumb-padding: 0;
+  --p-breadcrumb-item-color: var(--text-muted);
+  --p-breadcrumb-item-font-size: var(--font-size-sm);
+
+  /* ── Toast ── */
+  --p-toast-border-radius: var(--radius);
+  --p-toast-shadow: var(--shadow-lg);
+  --p-toast-z-index: var(--z-toast);
+
+  /* ── Menu ── */
+  --p-menu-background: var(--surface);
+  --p-menu-border-color: var(--border-subtle);
+  --p-menu-border-radius: var(--radius);
+  --p-menu-shadow: var(--shadow-lg);
+  --p-menu-item-color: var(--text-body);
+  --p-menu-item-focus-background: var(--surface-hover);
+  --p-menu-item-active-background: color-mix(in srgb, var(--primary) 8%, transparent);
+  --p-menu-item-active-color: var(--primary);
+}

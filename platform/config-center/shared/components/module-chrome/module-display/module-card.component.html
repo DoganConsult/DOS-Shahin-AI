@@ -1,0 +1,12 @@
+<a [routerLink]="route" class="module-card" [attr.aria-label]="title">
+  <div class="module-card__icon" [ngClass]="'module-card__icon--' + iconVariant">
+    <i class="pi" [ngClass]="'pi-' + icon" aria-hidden="true"></i>
+  </div>
+  <div class="module-card__content">
+    <span class="module-card__title">{{ title }}</span>
+    <span class="module-card__subtitle" *ngIf="subtitle">{{ subtitle }}</span>
+    <span class="module-card__count" *ngIf="count !== null && count !== undefined">{{ count }}</span>
+  </div>
+  <span class="module-card__action">{{ viewAllLabel }}</span>
+  <i class="pi pi-chevron-right module-card__arrow" aria-hidden="true"></i>
+</a>

@@ -1,0 +1,11 @@
+{
+  "mobile.title": "Mobile Platform",
+  "mobile.dashboard": "Mobile Platform Dashboard",
+  "mobile.empty.title": "No records found",
+  "mobile.empty.description": "Create your first mobile record to get started.",
+  "mobile.loading": "Loading mobile data...",
+  "mobile.error.title": "Failed to load data",
+  "mobile.error.retry": "Retry",
+  "mobile.create": "Create New",
+  "mobile.diagnostics": "Diagnostics"
+}

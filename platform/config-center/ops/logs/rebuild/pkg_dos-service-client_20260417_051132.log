@@ -1,0 +1,4 @@
+
+> @dos/service-client@0.1.0 build /root/DOS-AIO/packages/dos-service-client
+> tsc -p tsconfig.build.json
+

@@ -1,0 +1,11 @@
+{
+  "mobile.title": "منصة الجوال",
+  "mobile.dashboard": "لوحة منصة الجوال",
+  "mobile.empty.title": "لا توجد سجلات",
+  "mobile.empty.description": "أنشئ أول سجل للبدء.",
+  "mobile.loading": "جاري تحميل البيانات...",
+  "mobile.error.title": "فشل تحميل البيانات",
+  "mobile.error.retry": "إعادة المحاولة",
+  "mobile.create": "إنشاء جديد",
+  "mobile.diagnostics": "التشخيصات"
+}

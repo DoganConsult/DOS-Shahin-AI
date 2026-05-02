@@ -1,0 +1,36 @@
+{
+  "$schema": "../../dos/manifests/migrations-index.schema.json",
+  "moduleCode": "dsoc",
+  "ownershipModel": "physical",
+  "physicalMoveStatus": "native",
+  "currentRunner": "migration/migration-runner.ts",
+  "currentScanRoots": [
+    "platform/dsoc/migrations/public",
+    "platform/dsoc/migrations/tenant"
+  ],
+  "ownedMigrations": {
+    "public": {
+      "schema": "platform_dsoc",
+      "files": [
+        {
+          "filename": "20260422_0010_create_platform_dsoc_schema.sql",
+          "purpose": "Create platform_dsoc schema + 3 native tables (audit_log, alerts, posture_snapshots) with hot-path indexes",
+          "currentPath": "platform/dsoc/migrations/public/20260422_0010_create_platform_dsoc_schema.sql",
+          "down": "20260422_0010_create_platform_dsoc_schema_down.sql"
+        }
+      ]
+    },
+    "tenant": {
+      "schema": "per-tenant",
+      "files": []
+    }
+  },
+  "totals": {
+    "publicMigrations": 1,
+    "tenantMigrations": 0,
+    "withDownMigrations": 1,
+    "withoutDownMigrations": 0
+  },
+  "verifiedAt": "2026-04-22",
+  "verifiedBy": "DSOC Session 1 — bootstrap migration created"
+}

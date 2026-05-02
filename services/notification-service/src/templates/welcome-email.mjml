@@ -1,0 +1,15 @@
+<mj-text align="{{ textAlign }}" font-size="20px" font-weight="600" padding-bottom="8px">
+  {{ t.title }}
+</mj-text>
+<mj-text align="{{ textAlign }}">
+  {{ t.greeting }}
+</mj-text>
+<mj-text align="{{ textAlign }}">
+  {{ t.body }}
+</mj-text>
+<mj-button href="{{ workspaceUrl }}" align="{{ textAlign }}">
+  {{ t.cta }}
+</mj-button>
+<mj-text align="{{ textAlign }}" css-class="muted" padding-top="16px">
+  {{ t.footerNote }}
+</mj-text>

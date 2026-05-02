@@ -1,0 +1,38 @@
+import { safeQuery } from "@dos/db";
+
+// @death-date Phase 9 | owner: DOS | replacement: platform/dos/ai-os/ai-os-kernel.service.ts
+// Backward-compatibility re-export shim. Canonical source is now platform/dos/ai-os/.
+export {
+  getProcessTable,
+  getKernelStatus,
+  getSchedulerTable,
+  getIpcMessages,
+  getMemoryPartitions,
+  getKernelLog,
+  getKernelHealth,
+  killProcess,
+  rebootAgent,
+  pauseAgent,
+  resumeAgent,
+  adjustAutonomyLevel,
+  injectPriority,
+  killRunningAction,
+  getTokenUsage,
+  setGlobalAutonomyLevel,
+  getPriorityDirective,
+  clearPriorityDirective,
+  getProcessDetail,
+  getAgentDetail,
+  saveKernelSnapshot,
+  listKernelSnapshots,
+  type AiProcess,
+  type KernelStatus,
+  type SchedulerEntry,
+  type IpcMessage,
+  type MemoryPartition,
+  type AgentStep,
+  type ProcessDetail,
+  type AgentDetail,
+  type HealthStatus,
+  type KernelHealth,
+} from '../../ports/platform.port';

@@ -1,0 +1,89 @@
+src/domain/routing/route-catalog.ts(13,10): error TS2305: Module '"./route-catalogs/index"' has no exported member 'ROUTE_CATALOG'.
+src/domain/routing/route-catalogs/access/rbac/seed-rbac-data.ts(25,15): error TS2305: Module '"./canonical-roles"' has no exported member 'RoleDef'.
+src/domain/routing/route-catalogs/access/rbac/seed-rbac-data.ts(26,15): error TS2305: Module '"./canonical-permissions"' has no exported member 'PermDef'.
+src/domain/routing/route-catalogs/access/rbac/seed-rbac-data.ts(82,65): error TS2339: Property 'code' does not exist on type '"delete" | "admin" | "read" | "create" | "update" | "approve" | "export"'.
+  Property 'code' does not exist on type '"delete"'.
+src/domain/routing/route-catalogs/access/rbac/seed-rbac-data.ts(82,73): error TS2339: Property 'module' does not exist on type '"delete" | "admin" | "read" | "create" | "update" | "approve" | "export"'.
+  Property 'module' does not exist on type '"delete"'.
+src/domain/routing/route-catalogs/access/rbac/seed-rbac-data.ts(121,63): error TS2339: Property 'module' does not exist on type '"delete" | "admin" | "read" | "create" | "update" | "approve" | "export"'.
+  Property 'module' does not exist on type '"delete"'.
+src/domain/routing/route-catalogs/access/rbac/seed-rbac-data.ts(148,45): error TS2339: Property 'description' does not exist on type '{ readonly code: "super_admin"; readonly name: "Super Admin"; readonly level: 100; } | { readonly code: "tenant_admin"; readonly name: "Tenant Admin"; readonly level: 90; } | { readonly code: "module_admin"; readonly name: "Module Admin"; readonly level: 80; } | { ...; } | { ...; } | { ...; }'.
+  Property 'description' does not exist on type '{ readonly code: "super_admin"; readonly name: "Super Admin"; readonly level: 100; }'.
+src/domain/routing/route-catalogs/access/rbac/seed-rbac-data.ts(148,63): error TS2339: Property 'isSystem' does not exist on type '{ readonly code: "super_admin"; readonly name: "Super Admin"; readonly level: 100; } | { readonly code: "tenant_admin"; readonly name: "Tenant Admin"; readonly level: 90; } | { readonly code: "module_admin"; readonly name: "Module Admin"; readonly level: 80; } | { ...; } | { ...; } | { ...; }'.
+  Property 'isSystem' does not exist on type '{ readonly code: "super_admin"; readonly name: "Super Admin"; readonly level: 100; }'.
+src/domain/routing/route-catalogs/access/rbac/seed-rbac-data.ts(160,15): error TS2339: Property 'code' does not exist on type '"delete" | "admin" | "read" | "create" | "update" | "approve" | "export"'.
+  Property 'code' does not exist on type '"delete"'.
+src/domain/routing/route-catalogs/access/rbac/seed-rbac-data.ts(160,26): error TS2339: Property 'module' does not exist on type '"delete" | "admin" | "read" | "create" | "update" | "approve" | "export"'.
+  Property 'module' does not exist on type '"delete"'.
+src/domain/routing/route-catalogs/access/rbac/seed-rbac-data.ts(160,39): error TS2339: Property 'resource' does not exist on type '"delete" | "admin" | "read" | "create" | "update" | "approve" | "export"'.
+  Property 'resource' does not exist on type '"delete"'.
+src/domain/routing/route-catalogs/access/rbac/seed-rbac-data.ts(160,54): error TS2339: Property 'action' does not exist on type '"delete" | "admin" | "read" | "create" | "update" | "approve" | "export"'.
+  Property 'action' does not exist on type '"delete"'.
+src/domain/routing/route-catalogs/access/rbac/seed-rbac-data.ts(160,67): error TS2339: Property 'name' does not exist on type '"delete" | "admin" | "read" | "create" | "update" | "approve" | "export"'.
+  Property 'name' does not exist on type '"delete"'.
+src/domain/routing/route-catalogs/index.ts(21,8): error TS2307: Cannot find module './identity/token.service' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(28,8): error TS2307: Cannot find module './middleware/session.middleware' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(36,8): error TS2307: Cannot find module './access/access.resolver' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(64,8): error TS2307: Cannot find module './access/access-snapshot.service' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(70,8): error TS2307: Cannot find module './lifecycle-auth/lifecycle-auth.service' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(82,185): error TS2307: Cannot find module './audit/decision-log.service' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(91,8): error TS2307: Cannot find module './session/token-blacklist.service' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(101,8): error TS2307: Cannot find module './session/session.service' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(112,8): error TS2307: Cannot find module './identity/principal-resolution.service' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(113,34): error TS2307: Cannot find module './identity/principal-resolution.service' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(126,8): error TS2307: Cannot find module './identity/identity.service' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(140,8): error TS2307: Cannot find module './mfa/mfa.service' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(155,8): error TS2307: Cannot find module './delegation/delegation.service' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(159,160): error TS2307: Cannot find module './contracts/access-snapshot.contract' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(160,37): error TS2307: Cannot find module './contracts/access-snapshot.types' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(161,158): error TS2307: Cannot find module './contracts/session.contract' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(162,82): error TS2307: Cannot find module './contracts/principal-context.contract' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(163,195): error TS2307: Cannot find module './contracts/scope-resolution.contract' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(164,141): error TS2307: Cannot find module './contracts/authority-decision.contract' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(165,210): error TS2307: Cannot find module './contracts/sod-decision.contract' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(178,8): error TS2307: Cannot find module './types/dauth.types' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(189,8): error TS2307: Cannot find module './session/refresh.service' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(207,8): error TS2307: Cannot find module './identity/auth-orchestrator.service' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(214,8): error TS2307: Cannot find module './access/authorization-matrix.service' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(224,8): error TS2307: Cannot find module './delegation/delegation-automation.service' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(233,8): error TS2307: Cannot find module './access/rbac/dynamic-rbac.service' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(243,8): error TS2307: Cannot find module './session/revocation.service' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(252,8): error TS2307: Cannot find module './session/session-context.service' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(261,8): error TS2307: Cannot find module './identity/credential-recovery.service' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(271,8): error TS2307: Cannot find module './identity/login-protection.service' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(282,8): error TS2307: Cannot find module './identity/invitation-control.service' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(292,8): error TS2307: Cannot find module './access/functional-role.service' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(302,8): error TS2307: Cannot find module './access/access-profile.service' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(316,8): error TS2307: Cannot find module './access/permission.service' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(326,8): error TS2307: Cannot find module './access/role-assignment.service' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(329,134): error TS2307: Cannot find module './scope/org-scope.adapter' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(330,150): error TS2307: Cannot find module './scope/team-scope.adapter' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(331,179): error TS2307: Cannot find module './scope/position-scope.adapter' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(332,218): error TS2307: Cannot find module './scope/ownership-scope.adapter' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(341,8): error TS2307: Cannot find module './authority/decision-authority.service' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(349,8): error TS2307: Cannot find module './authority/sign-off-authority.service' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(362,8): error TS2307: Cannot find module './authority/approval-matrix.service' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(377,8): error TS2307: Cannot find module './delegation/delegation-policy.service' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(384,8): error TS2307: Cannot find module './delegation/acting-on-behalf-of.service' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(393,8): error TS2307: Cannot find module './sod/sod-policy.service' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(402,8): error TS2307: Cannot find module './sod/sod-conflict-audit.service' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(409,8): error TS2307: Cannot find module './lifecycle-auth/self-approval.guard' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(419,8): error TS2307: Cannot find module './lifecycle-auth/maker-checker-policy.service' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(428,8): error TS2307: Cannot find module './audit/security-event.service' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(436,8): error TS2307: Cannot find module './audit/access-review.service' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(443,8): error TS2307: Cannot find module './policies/tenant-security-policy.service' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(458,8): error TS2307: Cannot find module './frontend-contracts/frontend-access-contract.service' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(469,8): error TS2307: Cannot find module './frontend-contracts/access-snapshot.contract' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(482,8): error TS2307: Cannot find module './registry/module-security-seeder.registry' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(485,29): error TS2307: Cannot find module './access/access.resolver' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(492,8): error TS2307: Cannot find module './access/authorization-audit.service' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(499,8): error TS2307: Cannot find module './access/role-profiles.service' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(506,8): error TS2307: Cannot find module './access/canonical-access.service' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(515,8): error TS2307: Cannot find module './access/security-posture.service' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(524,8): error TS2307: Cannot find module './scope/external-scope.adapter' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(542,8): error TS2307: Cannot find module './contracts/auth-error.contract' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(549,8): error TS2307: Cannot find module './contracts/lifecycle-auth.contract' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(558,8): error TS2307: Cannot find module './contracts/delegation.contract' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(561,30): error TS2307: Cannot find module './identity/token.service' or its corresponding type declarations.
+src/domain/routing/route-catalogs/index.ts(562,47): error TS2307: Cannot find module './identity/token.service' or its corresponding type declarations.
+src/domain/routing/route-registrar.ts(2,10): error TS2305: Module '"../dos/http/guards/module-guard"' has no exported member 'tierGuard'.

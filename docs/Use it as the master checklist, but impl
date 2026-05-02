@@ -1,0 +1,864 @@
+Use it as the master checklist, but implement by waves.
+
+1. Core UI-OS database tables
+A. Already existing / should not duplicate
+dos.dynamic_ui_modules
+dos.dynamic_ui_routes
+dos.dynamic_ui_navigation
+dos.dynamic_ui_widgets
+dos.dynamic_ui_actions
+dos.dynamic_ui_user_preferences    -- existing partial, but may need extension
+dos.dynamic_ui_theme_tokens
+
+These remain the Dynamic UI source of truth.
+
+2. Required UI-OS runtime tables
+P0 — foundation runtime
+dos.ui_user_preferences
+dos.ui_dashboards
+dos.ui_dashboard_widgets
+dos.ui_workspace_states
+dos.ui_data_grid_states
+dos.ui_tenant_branding
+dos.ui_locales
+dos.ui_translations
+dos.ui_tours
+dos.ui_user_tours_completed
+
+Purpose:
+
+preferences
+dashboards
+dashboard widget placement
+workspace state
+grid/table state
+tenant branding
+locale registry
+runtime translations
+guided tours
+tour completion
+3. Workspace productivity tables
+P1 — enterprise workspace behavior
+dos.ui_saved_views
+dos.ui_saved_filters
+dos.ui_pinned_items
+dos.ui_recent_items
+dos.ui_favorites
+dos.ui_command_palette_items
+dos.ui_user_shortcuts
+dos.ui_announcements
+dos.ui_user_announcements_read
+dos.ui_quick_actions
+dos.ui_context_menus
+dos.ui_bulk_actions
+
+Purpose:
+
+saved views
+saved filters
+pins
+recents
+favorites
+command palette
+keyboard shortcuts
+banners/release notices
+quick actions
+right-click/context menus
+bulk actions
+4. Layout and composition tables
+P1/P2 — page/layout composition
+dos.ui_layout_templates
+dos.ui_user_layout_overrides
+dos.ui_page_layouts
+dos.ui_page_sections
+dos.ui_section_widgets
+dos.ui_responsive_breakpoints
+dos.ui_layout_versions
+dos.ui_layout_publish_history
+
+Purpose:
+
+admin-defined layouts
+user layout overrides
+page sections
+widget placement
+desktop/tablet/mobile layouts
+versioned layouts
+publish history
+5. Widget registry and instance governance
+
+You already have dos.dynamic_ui_widgets, but a full enterprise OS usually needs runtime/governance extensions:
+
+dos.ui_widget_instances
+dos.ui_widget_instance_permissions
+dos.ui_widget_data_bindings
+dos.ui_widget_refresh_policies
+dos.ui_widget_error_states
+dos.ui_widget_visibility_rules
+dos.ui_widget_personalization
+dos.ui_widget_catalog_categories
+
+Purpose:
+
+widget instances
+per-instance permissions
+API/data bindings
+refresh intervals
+error fallback state
+visibility logic
+user personalization
+catalog grouping
+6. Data grid / table enterprise tables
+
+You already listed grid state, but full enterprise grid support needs more.
+
+dos.ui_data_grid_states
+dos.ui_data_grid_column_catalog
+dos.ui_data_grid_column_permissions
+dos.ui_data_grid_saved_views
+dos.ui_data_grid_exports
+dos.ui_data_grid_bulk_jobs
+dos.ui_data_grid_inline_edit_sessions
+dos.ui_data_grid_validation_errors
+
+Purpose:
+
+columns
+column-level permissions
+saved table views
+exports
+bulk update jobs
+inline edit sessions
+validation errors
+7. Forms and dynamic form runtime
+
+For enterprise modules, forms become their own runtime.
+
+dos.ui_form_definitions
+dos.ui_form_sections
+dos.ui_form_fields
+dos.ui_form_field_rules
+dos.ui_form_validation_rules
+dos.ui_form_default_values
+dos.ui_form_submissions
+dos.ui_form_drafts
+dos.ui_form_attachments
+dos.ui_form_approval_links
+
+Purpose:
+
+dynamic forms
+field metadata
+visibility rules
+validation
+defaults
+submissions
+drafts
+attachments
+approval workflow links
+
+Important: this should integrate with module manifests, not replace module-owned business logic.
+
+8. Search and command system
+dos.ui_search_providers
+dos.ui_search_indexes
+dos.ui_search_scopes
+dos.ui_search_history
+dos.ui_search_saved_queries
+dos.ui_command_palette_items
+dos.ui_command_execution_log
+
+Purpose:
+
+global search
+module search
+record search
+saved queries
+command palette
+execution audit
+9. Notification and inbox UI tables
+
+If you want the workspace to feel like a full OS:
+
+dos.ui_notification_center_items
+dos.ui_notification_preferences
+dos.ui_notification_read_state
+dos.ui_inbox_views
+dos.ui_inbox_rules
+dos.ui_inbox_snoozes
+dos.ui_inbox_assignments
+
+Purpose:
+
+notification center
+read/unread state
+notification preferences
+inbox views
+rules
+snooze
+assignment
+10. Onboarding, guidance, help, and education
+dos.ui_tours
+dos.ui_user_tours_completed
+dos.ui_help_articles
+dos.ui_help_collections
+dos.ui_contextual_help_links
+dos.ui_empty_state_content
+dos.ui_checklists
+dos.ui_user_checklist_progress
+dos.ui_release_notes
+dos.ui_user_release_notes_read
+
+Purpose:
+
+guided tours
+help center
+context help
+empty states
+onboarding checklists
+release notes
+user progress
+11. Branding, theme, and design-token runtime
+dos.ui_tenant_branding
+dos.ui_theme_profiles
+dos.ui_theme_tokens
+dos.ui_theme_assignments
+dos.ui_brand_assets
+dos.ui_login_branding
+dos.ui_email_branding
+dos.ui_report_branding
+dos.ui_print_templates
+
+Purpose:
+
+tenant logo/colors
+theme profiles
+token overrides
+brand assets
+login branding
+email branding
+PDF/report branding
+print templates
+
+This is where Shahin, Dogan Consult, future products, and tenant-specific branding are controlled.
+
+12. i18n / localization runtime
+dos.ui_locales
+dos.ui_translations
+dos.ui_translation_namespaces
+dos.ui_translation_versions
+dos.ui_translation_overrides
+dos.ui_locale_user_preferences
+dos.ui_rtl_validation_results
+
+Purpose:
+
+supported languages
+translations
+namespaces
+versioning
+tenant overrides
+user locale
+RTL validation
+
+For your platform, Arabic/English must be first-class.
+
+13. Accessibility and device personalization
+dos.ui_accessibility_preferences
+dos.ui_device_preferences
+dos.ui_device_sessions
+dos.ui_viewport_profiles
+dos.ui_reduced_motion_preferences
+dos.ui_contrast_preferences
+dos.ui_font_scale_preferences
+
+Purpose:
+
+reduced motion
+high contrast
+font scaling
+mobile/desktop preferences
+device-specific layout memory
+14. WebOS/session behavior
+
+Only needed if you want a real desktop-like workspace.
+
+dos.ui_workspace_sessions
+dos.ui_window_states
+dos.ui_panel_states
+dos.ui_tab_states
+dos.ui_split_view_states
+dos.ui_drag_drop_layout_events
+dos.ui_clipboard_items
+dos.ui_workspace_snapshots
+dos.ui_workspace_restore_points
+
+Purpose:
+
+open windows
+open panels
+tabs
+split views
+drag/drop audit
+internal clipboard
+restore workspace
+
+Do not implement this before the normal workspace is stable.
+
+15. Security, permissions, and visibility rules
+
+You already have RBAC/DAuth/OpenFGA, but UI-OS needs visibility and audit glue.
+
+dos.ui_visibility_rules
+dos.ui_permission_bindings
+dos.ui_role_layout_assignments
+dos.ui_role_dashboard_assignments
+dos.ui_role_navigation_assignments
+dos.ui_policy_evaluation_log
+dos.ui_denied_render_log
+
+Purpose:
+
+hide/show rules
+permission bindings
+role-based dashboards
+role-based nav
+policy evaluation audit
+denied-render audit
+
+Important: UI hiding is not security. Backend authorization remains source of truth.
+
+16. Audit, versioning, publishing, and governance
+
+Enterprise UI must be governed.
+
+dos.ui_change_log
+dos.ui_publish_requests
+dos.ui_publish_approvals
+dos.ui_published_versions
+dos.ui_draft_versions
+dos.ui_rollback_points
+dos.ui_schema_validation_results
+dos.ui_contract_drift_results
+dos.ui_admin_activity_log
+
+Purpose:
+
+who changed UI config
+draft/publish flow
+approvals
+version history
+rollback
+schema validation
+drift detection
+admin audit
+
+This is critical for regulated environments.
+
+17. Experiments, feature flags, and rollout
+dos.ui_feature_flags
+dos.ui_feature_flag_assignments
+dos.ui_experiments
+dos.ui_experiment_variants
+dos.ui_experiment_assignments
+dos.ui_rollout_rules
+dos.ui_kill_switches
+
+Purpose:
+
+feature flags
+tenant/user rollout
+A/B tests
+controlled rollout
+emergency disable
+18. Analytics and UX telemetry
+dos.ui_page_view_events
+dos.ui_click_events
+dos.ui_command_events
+dos.ui_render_performance_events
+dos.ui_error_events
+dos.ui_widget_usage_events
+dos.ui_search_events
+dos.ui_funnel_events
+dos.ui_retention_snapshots
+
+Purpose:
+
+usage analytics
+click tracking
+command usage
+performance
+frontend errors
+widget usage
+search analytics
+funnels
+retention
+
+For regulated GRC, be careful not to store sensitive payloads here.
+
+19. AI/copilot UI context tables
+
+Because Dogan AI OS is AI-native, UI-OS should support AI-aware workspace context.
+
+dos.ui_ai_context_panels
+dos.ui_ai_suggestions
+dos.ui_ai_suggestion_feedback
+dos.ui_ai_action_drafts
+dos.ui_ai_workspace_memory
+dos.ui_ai_prompt_templates
+dos.ui_ai_tool_surface_bindings
+
+Purpose:
+
+AI side panels
+AI recommendations
+feedback
+drafted actions
+workspace memory
+prompt templates
+tool bindings
+20. Admin Studio / UI Manager tables
+
+If you build a real UI Manager Studio, it needs admin metadata.
+
+dos.ui_manager_projects
+dos.ui_manager_drafts
+dos.ui_manager_locks
+dos.ui_manager_review_comments
+dos.ui_manager_validation_runs
+dos.ui_manager_preview_sessions
+dos.ui_manager_import_jobs
+dos.ui_manager_export_jobs
+
+Purpose:
+
+admin editing projects
+draft locks
+review comments
+validation
+preview sessions
+import/export
+21. Full backend manager modules
+
+The backend should not be one giant service file. Full enterprise list:
+
+UiOsBootstrapManager
+UiOsPreferenceManager
+UiOsWorkspaceStateManager
+UiOsDashboardManager
+UiOsWidgetManager
+UiOsGridStateManager
+UiOsLayoutManager
+UiOsNavigationManager
+UiOsActionManager
+UiOsBrandingManager
+UiOsThemeManager
+UiOsI18nManager
+UiOsTourManager
+UiOsSearchManager
+UiOsNotificationManager
+UiOsCommandManager
+UiOsSavedViewManager
+UiOsFormManager
+UiOsAccessibilityManager
+UiOsFeatureFlagManager
+UiOsTelemetryManager
+UiOsAuditManager
+UiOsPublishManager
+UiOsValidationManager
+UiOsAiContextManager
+22. Full API surface
+Bootstrap
+GET /api/ui-os/bootstrap
+GET /api/ui-os/bootstrap/minimal
+GET /api/ui-os/bootstrap/module/:moduleCode
+GET /api/ui-os/bootstrap/route/:routeKey
+Preferences
+GET /api/ui-os/preferences
+PUT /api/ui-os/preferences
+PUT /api/ui-os/preferences/locale
+PUT /api/ui-os/preferences/theme
+PUT /api/ui-os/preferences/density
+Workspace
+GET /api/ui-os/workspace-state
+PUT /api/ui-os/workspace-state
+POST /api/ui-os/workspace-state/reset
+POST /api/ui-os/workspace-state/snapshot
+POST /api/ui-os/workspace-state/restore/:snapshotId
+Dashboards
+GET /api/ui-os/dashboards
+GET /api/ui-os/dashboards/:dashboardKey
+POST /api/ui-os/dashboards
+PUT /api/ui-os/dashboards/:dashboardKey
+PUT /api/ui-os/dashboards/:dashboardKey/layout
+DELETE /api/ui-os/dashboards/:dashboardKey
+Widgets
+GET /api/ui-os/widgets/catalog
+GET /api/ui-os/widgets/instances
+POST /api/ui-os/widgets/instances
+PUT /api/ui-os/widgets/instances/:instanceKey
+DELETE /api/ui-os/widgets/instances/:instanceKey
+POST /api/ui-os/widgets/instances/:instanceKey/refresh
+Grids
+GET /api/ui-os/grid-state/:gridKey
+PUT /api/ui-os/grid-state/:gridKey
+POST /api/ui-os/grid-state/:gridKey/reset
+GET /api/ui-os/grid-views/:gridKey
+POST /api/ui-os/grid-views/:gridKey
+Saved views / filters
+GET /api/ui-os/saved-views
+POST /api/ui-os/saved-views
+PUT /api/ui-os/saved-views/:viewId
+DELETE /api/ui-os/saved-views/:viewId
+Branding/theme
+GET /api/ui-os/branding
+PUT /api/ui-os/branding
+GET /api/ui-os/theme
+PUT /api/ui-os/theme
+POST /api/ui-os/theme/preview
+POST /api/ui-os/theme/publish
+i18n
+GET /api/ui-os/locales
+GET /api/ui-os/translations/:locale
+PUT /api/ui-os/translations/:locale
+POST /api/ui-os/translations/import
+GET /api/ui-os/translations/export/:locale
+Tours/help
+GET /api/ui-os/tours
+GET /api/ui-os/tours/:tourKey
+POST /api/ui-os/tours/:tourKey/complete
+POST /api/ui-os/tours/:tourKey/skip
+GET /api/ui-os/help/contextual
+Command/search
+GET /api/ui-os/commands
+POST /api/ui-os/commands/:commandKey/execute
+GET /api/ui-os/search
+GET /api/ui-os/search/suggestions
+POST /api/ui-os/search/saved
+Admin publishing
+GET /api/ui-os/admin/drafts
+POST /api/ui-os/admin/drafts
+PUT /api/ui-os/admin/drafts/:draftId
+POST /api/ui-os/admin/drafts/:draftId/validate
+POST /api/ui-os/admin/drafts/:draftId/submit
+POST /api/ui-os/admin/publish/:draftId
+POST /api/ui-os/admin/rollback/:versionId
+23. Full Angular renderer list
+UiOsBootstrapService
+UiOsStateStore
+UiOsPreferenceStore
+UiOsThemeStore
+UiOsI18nStore
+UiOsAccessStoreAdapter
+
+ShellRenderer
+NavigationRenderer
+ModuleRenderer
+RouteRenderer
+PageRenderer
+SectionRenderer
+DashboardRenderer
+WidgetRenderer
+ActionRenderer
+FormRenderer
+DataGridRenderer
+ChartRenderer
+ReportRenderer
+SearchRenderer
+CommandPaletteRenderer
+NotificationCenterRenderer
+TourRenderer
+HelpRenderer
+EmptyStateRenderer
+ErrorStateRenderer
+LoadingStateRenderer
+PermissionDeniedRenderer
+BrandingRenderer
+ThemeRenderer
+LocaleDirectionRenderer
+AccessibilityRenderer
+AiPanelRenderer
+24. Component registry / allowlist
+
+You need strict allowlists.
+
+PAGE_COMPONENT_MAP
+WIDGET_COMPONENT_MAP
+FORM_FIELD_COMPONENT_MAP
+ACTION_COMPONENT_MAP
+CHART_COMPONENT_MAP
+GRID_CELL_COMPONENT_MAP
+EMPTY_STATE_COMPONENT_MAP
+TOUR_STEP_COMPONENT_MAP
+AI_PANEL_COMPONENT_MAP
+
+Never render arbitrary DB-provided Angular code.
+
+25. Admin UI Manager screens
+
+Full enterprise UI Manager Studio should eventually include:
+
+Dashboard Builder
+Widget Catalog Manager
+Navigation Builder
+Page Layout Builder
+Form Builder
+Grid View Manager
+Theme/Branding Manager
+Translation Manager
+Tour Builder
+Command Palette Manager
+Announcement Manager
+Saved View Manager
+Feature Flag Manager
+Role-Based Visibility Manager
+Publish/Approval Console
+Version History / Rollback Console
+Drift Validation Console
+Preview Mode
+Import/Export Manager
+26. CI / validation guards
+
+Full enterprise guard list:
+
+ui-os-schema-guard
+ui-os-contract-shape-guard
+ui-os-component-allowlist-guard
+ui-os-no-raw-html-guard
+ui-os-no-remote-js-guard
+ui-os-permission-binding-guard
+ui-os-navigation-route-drift-guard
+ui-os-widget-component-drift-guard
+ui-os-i18n-completeness-guard
+ui-os-rtl-compatibility-guard
+ui-os-mobile-responsive-guard
+ui-os-theme-token-guard
+ui-os-accessibility-guard
+ui-os-dashboard-layout-guard
+ui-os-grid-state-guard
+ui-os-publish-version-guard
+ui-os-tenant-isolation-guard
+ui-os-audit-log-guard
+ui-os-performance-budget-guard
+27. Full enterprise table inventory
+
+Here is the full target list in one block.
+
+-- Core runtime
+dos.ui_user_preferences
+dos.ui_dashboards
+dos.ui_dashboard_widgets
+dos.ui_workspace_states
+dos.ui_data_grid_states
+dos.ui_tenant_branding
+dos.ui_locales
+dos.ui_translations
+dos.ui_tours
+dos.ui_user_tours_completed
+
+-- Productivity
+dos.ui_saved_views
+dos.ui_saved_filters
+dos.ui_pinned_items
+dos.ui_recent_items
+dos.ui_favorites
+dos.ui_command_palette_items
+dos.ui_user_shortcuts
+dos.ui_announcements
+dos.ui_user_announcements_read
+dos.ui_quick_actions
+dos.ui_context_menus
+dos.ui_bulk_actions
+
+-- Layout/composition
+dos.ui_layout_templates
+dos.ui_user_layout_overrides
+dos.ui_page_layouts
+dos.ui_page_sections
+dos.ui_section_widgets
+dos.ui_responsive_breakpoints
+dos.ui_layout_versions
+dos.ui_layout_publish_history
+
+-- Widgets
+dos.ui_widget_instances
+dos.ui_widget_instance_permissions
+dos.ui_widget_data_bindings
+dos.ui_widget_refresh_policies
+dos.ui_widget_error_states
+dos.ui_widget_visibility_rules
+dos.ui_widget_personalization
+dos.ui_widget_catalog_categories
+
+-- Data grids
+dos.ui_data_grid_column_catalog
+dos.ui_data_grid_column_permissions
+dos.ui_data_grid_saved_views
+dos.ui_data_grid_exports
+dos.ui_data_grid_bulk_jobs
+dos.ui_data_grid_inline_edit_sessions
+dos.ui_data_grid_validation_errors
+
+-- Forms
+dos.ui_form_definitions
+dos.ui_form_sections
+dos.ui_form_fields
+dos.ui_form_field_rules
+dos.ui_form_validation_rules
+dos.ui_form_default_values
+dos.ui_form_submissions
+dos.ui_form_drafts
+dos.ui_form_attachments
+dos.ui_form_approval_links
+
+-- Search/commands
+dos.ui_search_providers
+dos.ui_search_indexes
+dos.ui_search_scopes
+dos.ui_search_history
+dos.ui_search_saved_queries
+dos.ui_command_execution_log
+
+-- Notifications/inbox
+dos.ui_notification_center_items
+dos.ui_notification_preferences
+dos.ui_notification_read_state
+dos.ui_inbox_views
+dos.ui_inbox_rules
+dos.ui_inbox_snoozes
+dos.ui_inbox_assignments
+
+-- Help/onboarding
+dos.ui_help_articles
+dos.ui_help_collections
+dos.ui_contextual_help_links
+dos.ui_empty_state_content
+dos.ui_checklists
+dos.ui_user_checklist_progress
+dos.ui_release_notes
+dos.ui_user_release_notes_read
+
+-- Branding/theme
+dos.ui_theme_profiles
+dos.ui_theme_tokens
+dos.ui_theme_assignments
+dos.ui_brand_assets
+dos.ui_login_branding
+dos.ui_email_branding
+dos.ui_report_branding
+dos.ui_print_templates
+
+-- i18n
+dos.ui_translation_namespaces
+dos.ui_translation_versions
+dos.ui_translation_overrides
+dos.ui_locale_user_preferences
+dos.ui_rtl_validation_results
+
+-- Accessibility/device
+dos.ui_accessibility_preferences
+dos.ui_device_preferences
+dos.ui_device_sessions
+dos.ui_viewport_profiles
+dos.ui_reduced_motion_preferences
+dos.ui_contrast_preferences
+dos.ui_font_scale_preferences
+
+-- WebOS/session
+dos.ui_workspace_sessions
+dos.ui_window_states
+dos.ui_panel_states
+dos.ui_tab_states
+dos.ui_split_view_states
+dos.ui_drag_drop_layout_events
+dos.ui_clipboard_items
+dos.ui_workspace_snapshots
+dos.ui_workspace_restore_points
+
+-- Visibility/security
+dos.ui_visibility_rules
+dos.ui_permission_bindings
+dos.ui_role_layout_assignments
+dos.ui_role_dashboard_assignments
+dos.ui_role_navigation_assignments
+dos.ui_policy_evaluation_log
+dos.ui_denied_render_log
+
+-- Governance/publishing
+dos.ui_change_log
+dos.ui_publish_requests
+dos.ui_publish_approvals
+dos.ui_published_versions
+dos.ui_draft_versions
+dos.ui_rollback_points
+dos.ui_schema_validation_results
+dos.ui_contract_drift_results
+dos.ui_admin_activity_log
+
+-- Feature flags/experiments
+dos.ui_feature_flags
+dos.ui_feature_flag_assignments
+dos.ui_experiments
+dos.ui_experiment_variants
+dos.ui_experiment_assignments
+dos.ui_rollout_rules
+dos.ui_kill_switches
+
+-- Telemetry
+dos.ui_page_view_events
+dos.ui_click_events
+dos.ui_command_events
+dos.ui_render_performance_events
+dos.ui_error_events
+dos.ui_widget_usage_events
+dos.ui_search_events
+dos.ui_funnel_events
+dos.ui_retention_snapshots
+
+-- AI workspace
+dos.ui_ai_context_panels
+dos.ui_ai_suggestions
+dos.ui_ai_suggestion_feedback
+dos.ui_ai_action_drafts
+dos.ui_ai_workspace_memory
+dos.ui_ai_prompt_templates
+dos.ui_ai_tool_surface_bindings
+
+-- UI Manager Studio
+dos.ui_manager_projects
+dos.ui_manager_drafts
+dos.ui_manager_locks
+dos.ui_manager_review_comments
+dos.ui_manager_validation_runs
+dos.ui_manager_preview_sessions
+dos.ui_manager_import_jobs
+dos.ui_manager_export_jobs
+
+Total full enterprise target: around 130 UI-OS tables, depending on how much you merge.
+
+28. My practical recommendation
+
+Do not create 130 tables now.
+
+Use this sequence:
+
+Wave 1: 10 core runtime tables
+Wave 2: 12 productivity/layout tables
+Wave 3: dashboard/widget/grid/form runtime
+Wave 4: branding/i18n/help/tours
+Wave 5: publishing/versioning/audit
+Wave 6: feature flags/search/notifications
+Wave 7: AI workspace context
+Wave 8: WebOS session/window behavior
+Wave 9: telemetry/analytics
+Wave 10: full UI Manager Studio
+
+Best immediate enterprise build:
+
+10 core tables
++ 7 productivity tables
++ UI-OS Manager API
++ Angular renderers
++ admin dashboard builder later
+
+Final verdict: the full enterprise UI-OS can be 100+ tables and 20+ backend managers, but Shahin should start with 17 tables and the manager/renderer architecture.

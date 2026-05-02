@@ -1,0 +1,15 @@
+{
+  "id": "audit.post_approval",
+  "module": "audit",
+  "hook": "post_approval",
+  "version": "1.0.0",
+  "sla_hours": 8,
+  "actor_role_default": "audit.module_lead",
+  "states": ["approved","published","notified"],
+  "initial": "approved",
+  "transitions": [{"from":"approved","to":"published","on":"publish","actor_role":"audit.module_lead"},{"from":"published","to":"notified","on":"notify"}],
+  "audit_event_prefix": "audit.workflow.post_approval",
+  "notification_targets": ["audit.module_lead", "audit.approver"],
+  "evidence_required_on": ["passed","published"],
+  "escalation": { "on": "sla_breach", "to": "audit.executive_owner", "after_hours": 16 }
+}

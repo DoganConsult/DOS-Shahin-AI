@@ -1,0 +1,10 @@
+{
+  "serviceCode": "module-orchestrator-service",
+  "displayName": "Module Orchestrator",
+  "description": "Readiness verifier API, pool-keeper, capability broker. Single process, three logical surfaces.",
+  "port": 4150,
+  "gatewayPrefix": "/api/module-orchestrator",
+  "owner": "platform",
+  "kind": "platform",
+  "dependsOn": ["postgres"]
+}

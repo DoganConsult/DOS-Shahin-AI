@@ -1,0 +1,4 @@
+
+> @dos/dauth-service@0.1.0 build /root/DOS-AIO/platform/dauth/services/auth-service
+> tsc -p tsconfig.json && node -e "require('fs').writeFileSync('dist/server.js', \"// Shim: tsc's computed rootDir spans the @dos/dauth-* workspace path aliases\\n// (under platform/dauth/packages), which nests the real entry at\\n// dist/services/auth-service/src/server.js. pm2's ecosystem.config.js\\n// points at dist/server.js — forward so the ecosystem path stays valid\\n// across clean rebuilds.\\nrequire('./services/auth-service/src/server.js');\\n\")"
+

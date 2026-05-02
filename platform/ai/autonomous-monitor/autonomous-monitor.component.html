@@ -1,0 +1,157 @@
+<div class="mon-root" [dir]="i18n.direction()">
+
+  <!-- ═══════════════ CONTROL ROOM HEADER ═══════════════ -->
+  <header class="mon-header">
+    <div class="mon-header-left">
+      <div class="mon-logo-ring" [ngClass]="'ring-' + healthStatus()">
+        <i class="pi pi-microchip-ai"></i>
+      </div>
+      <div>
+        <h1>{{ i18n.translate('autonomousMonitor.title') }}</h1>
+        <p class="mon-sub">{{ i18n.translate('autonomousMonitor.subtitle') }}</p>
+      </div>
+    </div>
+    <div class="mon-header-right">
+      <div class="mon-autonomous-badge" [ngClass]="'badge-' + healthStatus()">
+        <span class="mon-auto-dot"></span>
+        <span>{{ i18n.translate('autonomousMonitor.systemAutonomous') }}</span>
+      </div>
+      <button class="mon-btn-run" (click)="runEngine()">
+        <i class="pi pi-play"></i>
+        {{ i18n.translate('autonomousMonitor.runCycle') }}
+      </button>
+      <a routerLink="/agrc-os" class="mon-nav-btn"><i class="pi pi-arrow-left"></i> AGRC-OS</a>
+    </div>
+  </header>
+
+  <!-- ═══════════════ LIVE TICKER STRIP ═══════════════ -->
+  <div class="mon-ticker-strip">
+    <div class="mon-ticker-item">
+      <span class="mon-tick-label">{{ i18n.translate('autonomousMonitor.cycles') }}</span>
+      <span class="mon-tick-value mon-ticker-animate">{{ cycleCounter() }}</span>
+    </div>
+    <div class="mon-ticker-divider"></div>
+    <div class="mon-ticker-item">
+      <span class="mon-tick-label">{{ i18n.translate('autonomousMonitor.status') }}</span>
+      <span class="mon-tick-value mon-tick-status" [ngClass]="'st-' + healthStatus()">{{ healthStatus() | uppercase }}</span>
+    </div>
+    <div class="mon-ticker-divider"></div>
+    <div class="mon-ticker-item">
+      <span class="mon-tick-label">{{ i18n.translate('autonomousMonitor.lastCycle') }}</span>
+      <span class="mon-tick-value">{{ autonomousStatus()?.lastCycleMs || 0 }}ms</span>
+    </div>
+    <div class="mon-ticker-divider"></div>
+    <div class="mon-ticker-item">
+      <span class="mon-tick-label">{{ i18n.translate('autonomousMonitor.actionsToday') }}</span>
+      <span class="mon-tick-value">{{ autonomousStatus()?.actionsToday || metrics()?.eventCount || 0 }}</span>
+    </div>
+    <div class="mon-ticker-divider"></div>
+    <div class="mon-ticker-item">
+      <span class="mon-tick-label">{{ i18n.translate('autonomousMonitor.enforcements') }}</span>
+      <span class="mon-tick-value">{{ metrics()?.enforcementRate || 0 }}</span>
+    </div>
+    <div class="mon-ticker-divider"></div>
+    <div class="mon-ticker-item">
+      <span class="mon-tick-label">{{ i18n.translate('autonomousMonitor.updated') }}</span>
+      <span class="mon-tick-value mon-tick-time" aria-live="polite">{{ lastUpdated() }}</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════ MAIN GRID ═══════════════ -->
+  <div class="mon-grid">
+
+    <!-- Enforcement Actions Stream -->
+    <section class="mon-cell mon-cell-stream">
+      <div class="mon-panel">
+        <h2 class="mon-panel-title"><i class="pi pi-bolt"></i> {{ i18n.translate('autonomousMonitor.enforcementStream') }}</h2>
+        <div class="mon-stream">
+          <div class="mon-stream-item" *ngFor="let e of enforcementStream()" [class.blocked]="!e.allowed">
+            <span class="mon-si-time">{{ getTimeSince(e.created_at) }}</span>
+            <span class="mon-si-badge" [class.badge-allow]="e.allowed" [class.badge-block]="!e.allowed">
+              {{ e.allowed ? 'ALLOW' : 'BLOCK' }}
+            </span>
+            <span class="mon-si-type">{{ e.gate_type || e.eventType || '—' }}</span>
+            <span class="mon-si-subject">{{ e.subject_name || e.subject_id || '—' }}</span>
+          </div>
+          <div class="mon-empty" *ngIf="enforcementStream().length === 0">
+            <i class="pi pi-shield"></i>
+            <span>{{ i18n.translate('autonomousMonitor.noEnforcementActions') }}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Signal Ingestion Rate -->
+    <section class="mon-cell mon-cell-signal">
+      <div class="mon-panel">
+        <h2 class="mon-panel-title"><i class="pi pi-wifi"></i> {{ i18n.translate('autonomousMonitor.signalIngestionRate') }}</h2>
+        <div class="mon-chart-wrap">
+          <app-echart [options]="signalRateOpts()" ariaLabel="Signal ingestion rate" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Cycle History -->
+    <section class="mon-cell mon-cell-cycles">
+      <div class="mon-panel">
+        <h2 class="mon-panel-title"><i class="pi pi-history"></i> {{ i18n.translate('autonomousMonitor.cycleHistory') }}</h2>
+        <div class="mon-chart-wrap">
+          <app-echart [options]="cycleHistoryOpts()" ariaLabel="Cycle duration history" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Agent Status Grid -->
+    <section class="mon-cell mon-cell-agents">
+      <div class="mon-panel">
+        <h2 class="mon-panel-title"><i class="pi pi-users"></i> {{ i18n.translate('autonomousMonitor.agentMesh') }}</h2>
+        <div class="mon-agent-mesh" *ngIf="agentStatus()?.agents?.length > 0">
+          <div class="mon-agent-node" *ngFor="let agent of agentStatus().agents"
+               [class.node-active]="agent.status === 'active'"
+               [class.node-stale]="agent.status === 'stale'"
+               [class.node-idle]="agent.status === 'idle'">
+            <div class="mon-an-pulse"></div>
+            <div class="mon-an-id">{{ agent.id }}</div>
+            <div class="mon-an-name">{{ agent.name }}</div>
+            <div class="mon-an-actions">{{ agent.actionsToday || 0 }}</div>
+            <div class="mon-an-time" *ngIf="agent.minsAgo !== null">{{ agent.minsAgo }}m</div>
+            <div class="mon-an-time" *ngIf="agent.minsAgo === null">—</div>
+          </div>
+        </div>
+        <div class="mon-empty" *ngIf="!agentStatus()?.agents?.length">
+          <i class="pi pi-users"></i><span>{{ i18n.translate('autonomousMonitor.agentDataNotAvailable') }}</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Agent Performance Chart -->
+    <section class="mon-cell mon-cell-perf">
+      <div class="mon-panel">
+        <h2 class="mon-panel-title"><i class="pi pi-chart-bar"></i> {{ i18n.translate('autonomousMonitor.agentPerformance') }}</h2>
+        <div class="mon-chart-wrap">
+          <app-echart [options]="agentPerformanceOpts()" ariaLabel="Agent performance bar chart" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Decision Trace -->
+    <section class="mon-cell mon-cell-trace">
+      <div class="mon-panel">
+        <h2 class="mon-panel-title"><i class="pi pi-sitemap"></i> {{ i18n.translate('autonomousMonitor.decisionTrace') }}</h2>
+        <div class="mon-trace-list">
+          <div class="mon-trace-item" *ngFor="let h of history().slice(0, 10)">
+            <div class="mon-tr-dot" [class.tr-ok]="h.success !== false" [class.tr-fail]="h.success === false"></div>
+            <div class="mon-tr-info">
+              <span class="mon-tr-time">{{ (h.executed_at || h.timestamp) | appDate:'short' }}</span>
+              <span class="mon-tr-detail">{{ h.actions_taken || h.actionsTaken || 0 }} actions · {{ h.duration_ms || h.durationMs || 0 }}ms</span>
+            </div>
+            <span class="mon-tr-badge" [class.tr-ok]="h.success !== false" [class.tr-fail]="h.success === false">
+              {{ h.success === false ? 'FAIL' : 'OK' }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>

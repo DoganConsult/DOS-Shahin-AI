@@ -1,0 +1,31 @@
+{
+  "generated_at": "2026-04-30T02:28:10.346Z",
+  "tenantId": "2ba4b532-3361-413c-ac6c-9c992f66bec4",
+  "count": 10,
+  "completed": 10,
+  "failed": 0,
+  "unknown": 0,
+  "durations": [
+    1593,
+    1709,
+    1741,
+    1764,
+    1835,
+    1961,
+    2352,
+    2477,
+    2547,
+    3190
+  ],
+  "p50_ms": 1961,
+  "p95_ms": 3190,
+  "smokeScoresLanded": 10,
+  "smokeScoresPassing": 10,
+  "dsocCompletedRows": 0,
+  "agentExecutionsRows": 10,
+  "agentExecutionsCompleted": 10,
+  "negativeTest": {
+    "decision": "deny",
+    "policyCode": "POL.TENANT.ISOLATION"
+  }
+}

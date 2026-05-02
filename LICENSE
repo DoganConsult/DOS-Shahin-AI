@@ -1,0 +1,77 @@
+Copyright (c) 2024-2026 Dogan Consult. All rights reserved.
+
+Dogan AI OS (DOS) — Shahin AGRC Platform
+Proprietary and Confidential Commercial Software.
+
+NOTICE
+
+This repository and all source code, configuration, documentation,
+database migrations, test suites, event contracts, module manifests,
+AI agent definitions, and associated artefacts contained herein
+(collectively, the "Software") are the proprietary and confidential
+property of Dogan Consult ("Licensor"). The Software is provided under
+a commercial license and is not open-source software.
+
+PERMITTED USE
+
+1. Access to this repository is granted only to individuals and
+   entities that have executed a written licensing, employment,
+   contractor, or mutual non-disclosure agreement with Licensor.
+2. Authorised users may view, clone, build, run, test, and modify the
+   Software solely for the purposes set out in their agreement with
+   Licensor (for example: authorised deployment, internal evaluation
+   under an active proof-of-concept, paid support engagement, or
+   authorised contribution).
+3. Any use beyond those stated purposes requires the prior written
+   consent of Licensor.
+
+PROHIBITED USE
+
+Unless separately and explicitly authorised by Licensor in writing,
+you may not:
+
+1. Distribute, sublicense, publish, sell, lease, rent, or otherwise
+   transfer the Software, in whole or in part, to any third party.
+2. Host the Software as a service, offer the Software to third parties
+   under a different name, or incorporate the Software into a
+   competing product.
+3. Remove, alter, or obscure any copyright, trademark, attribution,
+   licence, or other proprietary notice.
+4. Reverse-engineer, decompile, or otherwise attempt to derive the
+   source code of any binary distribution, beyond the rights expressly
+   granted in your agreement or by applicable law.
+5. Use the Software or its documentation to train machine-learning
+   models intended to replicate or supersede the Software, except with
+   Licensor's prior written consent.
+
+THIRD-PARTY DEPENDENCIES
+
+The Software incorporates third-party open-source components. Each
+such component is licensed under its own terms. A bill of materials
+enumerating the runtime third-party dependencies and their licences is
+published alongside each release of the Software as part of the
+Software Bill of Materials process. Nothing in this notice restricts
+your rights under the original licence of any third-party open-source
+component.
+
+NO WARRANTY
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS, COPYRIGHT HOLDERS, OR LICENSOR BE
+LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN
+ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF, OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+CONTACT
+
+Licensing enquiries and commercial terms: contact Dogan Consult at the
+address published with each official release.
+
+Security vulnerabilities: see /SECURITY.md and the machine-readable
+/.well-known/security.txt served by every running gateway instance.
+
+This notice does not grant any rights under any patent, trademark,
+trade-dress, or publicity right of Licensor or its affiliates.

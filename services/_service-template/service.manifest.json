@@ -1,0 +1,9 @@
+{
+  "serviceCode": "_service-template",
+  "version": "1.0.0",
+  "domains": [
+    "governance"
+  ],
+  "dependencies": [],
+  "apiPrefix": "/api/core/_service-template"
+}

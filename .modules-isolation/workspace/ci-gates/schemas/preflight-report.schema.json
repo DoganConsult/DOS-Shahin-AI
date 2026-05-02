@@ -1,0 +1,434 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://dos-platform/ci/preflight-report.schema.json",
+  "title": "UI-System + Dynamic-UI Preflight Report",
+  "type": "object",
+  "required": [
+    "task_lock",
+    "canonical_path",
+    "baseline_state",
+    "source_of_truth",
+    "ui_system_preflight",
+    "dynamic_ui_preflight",
+    "accepted_fixes",
+    "change_plan",
+    "build_gates",
+    "route_wiring_rule",
+    "db_rbac_runtime_rule",
+    "responsive_rtl",
+    "fake_green_check",
+    "report_contract",
+    "decision"
+  ],
+  "properties": {
+    "task_lock": {
+      "type": "object",
+      "required": [
+        "wave",
+        "task_type",
+        "out_of_scope"
+      ],
+      "properties": {
+        "wave": {
+          "type": "string"
+        },
+        "task_type": {
+          "enum": [
+            "audit_only",
+            "ui_compile_repair",
+            "ui_system_adoption",
+            "dynamic_ui_contract_repair",
+            "route_wiring",
+            "backend_api_repair",
+            "db_migration",
+            "deployment",
+            "e2e_validation",
+            "module_enrolment"
+          ]
+        },
+        "out_of_scope": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        }
+      }
+    },
+    "canonical_path": {
+      "type": "object",
+      "required": [
+        "repo_root",
+        "canonical_package_path",
+        "package_name",
+        "build_command",
+        "duplicate_paths_found"
+      ],
+      "properties": {
+        "repo_root": {
+          "type": "string"
+        },
+        "canonical_package_path": {
+          "type": "string"
+        },
+        "package_name": {
+          "type": "string"
+        },
+        "build_command": {
+          "type": "string"
+        },
+        "duplicate_paths_found": {
+          "type": "boolean"
+        }
+      }
+    },
+    "baseline_state": {
+      "type": "object",
+      "required": [
+        "baseline_command",
+        "baseline_error_count",
+        "git_status_summary"
+      ],
+      "properties": {
+        "baseline_command": {
+          "type": "string"
+        },
+        "baseline_error_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "git_status_summary": {
+          "type": "string"
+        }
+      }
+    },
+    "source_of_truth": {
+      "type": "object",
+      "required": [
+        "i18n",
+        "toast",
+        "resolver",
+        "route_navigation",
+        "permissions",
+        "ui_system_components",
+        "dynamic_ui",
+        "manifest"
+      ],
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "ui_system_preflight": {
+      "type": "object",
+      "required": [
+        "components",
+        "wrapper_layer",
+        "responsive_checked",
+        "rtl_checked",
+        "mobile_safe_area_checked"
+      ],
+      "properties": {
+        "components": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "vendor",
+              "carbon_key",
+              "component_key",
+              "source",
+              "validation_status"
+            ],
+            "properties": {
+              "vendor": {
+                "const": "ibm-carbon"
+              },
+              "carbon_key": {
+                "type": "string",
+                "minLength": 1
+              },
+              "component_key": {
+                "type": "string",
+                "minLength": 1
+              },
+              "source": {
+                "enum": [
+                  "route",
+                  "page",
+                  "widget",
+                  "view",
+                  "navigation"
+                ]
+              },
+              "route_key": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "page_key": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "widget_key": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "validation_status": {
+                "enum": [
+                  "valid",
+                  "invalid"
+                ]
+              },
+              "failure_reason": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        },
+        "wrapper_layer": {
+          "enum": [
+            "@dos/ui-system",
+            "none"
+          ]
+        },
+        "responsive_checked": {
+          "type": "boolean"
+        },
+        "rtl_checked": {
+          "type": "boolean"
+        },
+        "mobile_safe_area_checked": {
+          "type": "boolean"
+        }
+      }
+    },
+    "dynamic_ui_preflight": {
+      "type": "object",
+      "required": [
+        "module_manifest_checked",
+        "navigation_contract_checked",
+        "routing_contract_checked",
+        "permissions_contract_checked",
+        "widget_contract_checked",
+        "component_registry_checked",
+        "db_runtime_checked",
+        "resolver_checked"
+      ],
+      "additionalProperties": {
+        "type": "boolean"
+      }
+    },
+    "accepted_fixes": {
+      "type": "object",
+      "required": [
+        "allowed_used",
+        "forbidden_used"
+      ],
+      "properties": {
+        "allowed_used": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "forbidden_used": {
+          "type": "array",
+          "maxItems": 0
+        }
+      }
+    },
+    "change_plan": {
+      "type": "object",
+      "required": [
+        "planned_files",
+        "ui_system_files",
+        "dynamic_ui_files",
+        "rejected_files"
+      ],
+      "properties": {
+        "planned_files": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "path",
+              "reason"
+            ],
+            "properties": {
+              "path": {
+                "type": "string"
+              },
+              "reason": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "ui_system_files": {
+          "type": "array"
+        },
+        "dynamic_ui_files": {
+          "type": "array"
+        },
+        "rejected_files": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "build_gates": {
+      "type": "object",
+      "required": [
+        "commands",
+        "results"
+      ],
+      "properties": {
+        "commands": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "results": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "pass",
+              "fail"
+            ]
+          },
+          "minItems": 1
+        }
+      }
+    },
+    "route_wiring_rule": {
+      "type": "object",
+      "required": [
+        "foundation_module_build_green",
+        "spa_build_green",
+        "route_matches_contract",
+        "nav_matches_contract",
+        "component_keys_resolve",
+        "permissions_resolve",
+        "unauthorized_falls_closed",
+        "rollback_simple"
+      ],
+      "additionalProperties": {
+        "type": "boolean"
+      }
+    },
+    "db_rbac_runtime_rule": {
+      "type": "object",
+      "required": [
+        "staging_rehearsed",
+        "sql_reviewed",
+        "rollback_present",
+        "prod_approved",
+        "tenant_impact_known",
+        "dynamic_ui_matches_contracts",
+        "permissions_in_rbac",
+        "no_orphan_rows"
+      ],
+      "additionalProperties": {
+        "type": "boolean"
+      }
+    },
+    "responsive_rtl": {
+      "type": "object",
+      "required": [
+        "widths_checked",
+        "behaviors_checked"
+      ],
+      "properties": {
+        "widths_checked": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "390",
+              "430",
+              "768",
+              "1440"
+            ]
+          },
+          "minItems": 4
+        },
+        "behaviors_checked": {
+          "type": "array",
+          "minItems": 1
+        }
+      }
+    },
+    "fake_green_check": {
+      "type": "object",
+      "required": [
+        "used_skipped_tests",
+        "used_any_casts",
+        "used_dollarany",
+        "used_fake_services",
+        "used_hidden_route_disablement",
+        "used_build_exclusions",
+        "used_tsconfig_loosen",
+        "used_ts_ignore",
+        "used_ui_guard_bypass",
+        "used_dynamic_ui_bypass"
+      ],
+      "additionalProperties": {
+        "const": false
+      }
+    },
+    "report_contract": {
+      "type": "object",
+      "required": [
+        "files_changed",
+        "baseline_error_count",
+        "final_error_count",
+        "build_commands_run",
+        "next_wave_safe"
+      ],
+      "properties": {
+        "files_changed": {
+          "type": "array"
+        },
+        "baseline_error_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "final_error_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "build_commands_run": {
+          "type": "array",
+          "minItems": 1
+        },
+        "next_wave_safe": {
+          "type": "boolean"
+        },
+        "next_blocker": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "decision": {
+      "enum": [
+        "GO",
+        "NO-GO",
+        "PARTIAL"
+      ]
+    }
+  }
+}

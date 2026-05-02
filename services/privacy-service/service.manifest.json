@@ -1,0 +1,22 @@
+{
+  "serviceCode": "privacy-service",
+  "displayName": "Privacy Management Service",
+  "layer": "domain-service",
+  "ownerTeam": "product-shahin-ai",
+  "runtime": "node",
+  "dependsOn": [
+    "auth-service",
+    "tenant-service",
+    "workflow-service"
+  ],
+  "modules": [
+    "privacy"
+  ],
+  "exposes": {
+    "apiBase": "/api/privacy",
+    "events": [
+      "privacy.impact.assessed",
+      "privacy.dsar.submitted"
+    ]
+  }
+}

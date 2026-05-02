@@ -1,0 +1,15 @@
+{
+  "tenantModel": "multi-tenant",
+  "configLayers": [
+    "environment",
+    "deployment",
+    "product",
+    "tenant"
+  ],
+  "isolationBoundaries": [
+    "database-schema",
+    "permission-scope",
+    "route-context",
+    "object-storage-prefix"
+  ]
+}

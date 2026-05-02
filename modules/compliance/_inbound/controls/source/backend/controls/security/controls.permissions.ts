@@ -1,0 +1,2 @@
+import { CONTROLS_PERMISSIONS } from './controls.security';
+export { CONTROLS_PERMISSIONS as CONTROLS_MODULE_PERMISSIONS };

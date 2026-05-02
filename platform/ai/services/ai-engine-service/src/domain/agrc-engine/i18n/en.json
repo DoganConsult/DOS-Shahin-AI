@@ -1,0 +1,14 @@
+{
+  "agrc-engine.title": "AGRC Engine",
+  "agrc-engine.dashboard": "Engine Dashboard",
+  "agrc-engine.orchestration": "Orchestration",
+  "agrc-engine.automation": "Automation Rules",
+  "agrc-engine.monitoring": "Engine Monitoring",
+  "agrc-engine.diagnostics": "Diagnostics",
+  "agrc-engine.admin": "Engine Admin",
+  "agrc-engine.empty.title": "No engine tasks active",
+  "agrc-engine.empty.description": "The AGRC engine orchestrates cross-module automation and intelligence.",
+  "agrc-engine.loading": "Loading engine data...",
+  "agrc-engine.error.title": "Failed to load engine data",
+  "agrc-engine.error.retry": "Retry"
+}

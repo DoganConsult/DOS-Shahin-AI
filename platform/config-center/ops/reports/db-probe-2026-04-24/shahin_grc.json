@@ -1,0 +1,82 @@
+{
+    "db": "shahin_grc",
+    "columns": {
+        "dos.config_values": [
+            "config_key",
+            "definition_id",
+            "id",
+            "is_active",
+            "scope_type",
+            "tenant_id",
+            "updated_at",
+            "updated_by",
+            "value"
+        ],
+        "dos.feature_flags": [
+            "created_at",
+            "display_name",
+            "enabled",
+            "flag_code",
+            "module_code"
+        ],
+        "dos.config_definitions": [
+            "category",
+            "config_key",
+            "created_at",
+            "data_type",
+            "default_value",
+            "deployment_only",
+            "description",
+            "display_name",
+            "id",
+            "is_secret",
+            "key",
+            "module_code",
+            "ui_exposable"
+        ],
+        "dos.platform_operation_config": [
+            "config",
+            "config_key",
+            "config_value",
+            "created_at",
+            "id",
+            "operation_key"
+        ]
+    },
+    "trackers": {
+        "dos.schema_migrations": {
+            "rows": null,
+            "exists": false
+        },
+        "public.dos_migrations": {
+            "rows": 0,
+            "exists": true
+        },
+        "dos.service_migrations": {
+            "rows": null,
+            "exists": false
+        },
+        "dos.platform_migrations": {
+            "rows": null,
+            "exists": false
+        },
+        "public.schema_migrations": {
+            "rows": 25,
+            "exists": true
+        }
+    },
+    "timestamp": "2026-04-24T06:58:09.879533+00:00",
+    "drift_flags": {
+        "feature_flags_has_name_en": false,
+        "config_definitions_has_key": true,
+        "config_values_has_definition_id": true,
+        "config_definitions_has_config_key": true,
+        "platform_op_config_has_config_key": true
+    },
+    "seed_counts": {
+        "dos.feature_flags": 0,
+        "dos.config_definitions": 31,
+        "dos.platform_operation_config": 0
+    },
+    "classification": "drifted+untracked"
+}

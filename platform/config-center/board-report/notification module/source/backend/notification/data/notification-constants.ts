@@ -1,0 +1,46 @@
+export const NOTIFICATION_STATUSES = ['pending', 'sent', 'delivered', 'read', 'failed', 'archived'] as const;
+
+export const NOTIFICATION_DEFAULT_STATUS: typeof NOTIFICATION_STATUSES[number] = 'pending';
+
+export const NOTIFICATION_TERMINAL_STATUSES = ['archived'] as const;
+
+export const NOTIFICATION_LIMITS = {
+  MAX_TITLE_LENGTH: 500,
+  MAX_DESCRIPTION_LENGTH: 10000,
+  MAX_TAGS: 20,
+  MAX_RECIPIENTS_PER_BATCH: 10000,
+  MAX_BODY_LENGTH: 50000,
+  MAX_RETRIES: 3,
+  MAX_TEMPLATES: 500,
+  MAX_EXPORT_ROWS: 50000,
+} as const;
+
+export const NOTIFICATION_TIMEOUTS = {
+  DEFAULT_SLA_HOURS: 1,
+  ESCALATION_AFTER_HOURS: 0.5,
+  REMINDER_BEFORE_HOURS: 0.25,
+  AUTO_ARCHIVE_AFTER_DAYS: 90,
+  SESSION_TIMEOUT_MINUTES: 30,
+  DELIVERY_TIMEOUT_SECONDS: 30,
+  DIGEST_INTERVAL_MINUTES: 60,
+} as const;
+
+export const NOTIFICATION_SLA_DEFAULTS = {
+  critical: 0.1,
+  high: 0.5,
+  medium: 1,
+  low: 4,
+} as const;
+
+export const NOTIFICATION_FILE_RULES = {
+  ALLOWED_MIME_TYPES: ['application/pdf', 'image/png', 'image/jpeg'],
+  MAX_FILE_SIZE_MB: 5,
+  MAX_FILES_PER_ENTITY: 3,
+} as const;
+
+export const NOTIFICATION_BUSINESS_THRESHOLDS = {
+  DELIVERY_RATE_WARNING: 95,
+  DELIVERY_RATE_CRITICAL: 80,
+  BOUNCE_RATE_WARNING: 5,
+  STALE_AFTER_DAYS: 30,
+} as const;

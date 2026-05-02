@@ -1,0 +1,21 @@
+export function updateProviderCompliance(...args) { return null; }
+export function getProvenanceById(...args) { return null; }
+export function updateAgreementStatus(...args) { return null; }
+export function checkExpiringAgreements(...args) { return null; }
+export function listProviders(...args) { return null; }
+export function recordModelModification(...args) { return null; }
+export function listSupplierAgreements(...args) { return null; }
+export function registerModelProvenance(...args) { return null; }
+export function getLineageById(...args) { return null; }
+export function createSupplierAgreement(...args) { return null; }
+export function trackDataLineage(...args) { return null; }
+export function checkDataSovereignty(...args) { return null; }
+export function getModificationById(...args) { return null; }
+export function getSubstantialModifications(...args) { return null; }
+export function getAgreementById(...args) { return null; }
+export function getProviderById(...args) { return null; }
+export function listModelModifications(...args) { return null; }
+export function assessSupplyChainRisk(...args) { return null; }
+export function registerProvider(...args) { return null; }
+export function generateAiBom(...args) { return null; }
+//# sourceMappingURL=ai-supply-chain.js.map

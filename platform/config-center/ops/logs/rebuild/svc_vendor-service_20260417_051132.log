@@ -1,0 +1,4 @@
+
+> vendor-service@0.1.0 build /root/DOS-AIO/services/vendor-service
+> tsc -p tsconfig.json
+

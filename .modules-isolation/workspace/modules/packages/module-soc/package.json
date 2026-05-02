@@ -1,0 +1,26 @@
+{
+  "name": "@dos/module-soc",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Security-ops surface that product modules consume. Modules MUST NOT import @dos/dsoc-* directly \u2014 they import from this package. Product shell adapts the underlying DSOC platform module.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "development": "./src/index.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "@dos/ports": "workspace:*"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc -p tsconfig.build.json --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0"
+  }
+}

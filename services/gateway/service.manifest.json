@@ -1,0 +1,20 @@
+{
+  "serviceCode": "gateway",
+  "displayName": "Gateway",
+  "layer": "edge-service",
+  "ownerTeam": "platform-core",
+  "runtime": "node",
+  "dependsOn": [
+    "auth-service",
+    "tenant-service",
+    "user-service"
+  ],
+  "modules": [
+    "integrations",
+    "connectors",
+    "portals"
+  ],
+  "exposes": {
+    "apiBase": "/"
+  }
+}

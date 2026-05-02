@@ -1,0 +1,4 @@
+../..                                    |  WARN  Unsupported engine: wanted: {"node":">=24.14.0"} (current: {"node":"v20.18.2","pnpm":"10.33.0"})
+ ERR_PNPM_NO_SCRIPT  Missing script: build
+
+Command "build" not found.

@@ -1,0 +1,632 @@
+<app-page-shell
+  icon="exclamation-triangle"
+  [title]="L().pageTitle"
+  [subtitle]="L().pageSubtitle"
+  [breadcrumbs]="['Dashboard', L().pageTitle]"
+  [loading]="loading()">
+
+  <p-toast />
+
+  <!-- ═══ RISK HEADER KPI BAND ═══ -->
+  <div class="risk-header" *ngIf="overview()">
+    <div class="risk-kpi-band">
+      <app-stat-card [label]="L().totalRisks" [value]="sum()?.totalRisks || 0" icon="pi pi-list" severity="info" (click)="tabIndex = 1" />
+      <app-stat-card [label]="L().highRisks" [value]="sum()?.highRisks || 0" icon="pi pi-arrow-up" severity="warning" (click)="tabIndex = 1" />
+      <app-stat-card [label]="L().criticalRisks" [value]="sum()?.criticalRisks || 0" icon="pi pi-exclamation-circle" severity="danger" (click)="tabIndex = 1" />
+      <app-stat-card [label]="L().overdueTreatments" [value]="sum()?.overdueTreatments || 0" icon="pi pi-clock" severity="warning" (click)="tabIndex = 3" />
+      <app-stat-card [label]="L().appetiteBreaches" [value]="sum()?.appetiteBreaches || 0" icon="pi pi-ban" severity="danger" (click)="tabIndex = 5" />
+      <app-stat-card [label]="L().risksWithoutOwner" [value]="sum()?.risksWithoutOwner || 0" icon="pi pi-user-minus" severity="info" (click)="tabIndex = 1" />
+    </div>
+
+    <!-- Header actions -->
+    <p-toolbar styleClass="risk-toolbar">
+      <ng-template pTemplate="start">
+        <p-button [label]="L().createRisk" icon="pi pi-plus" (onClick)="openCreateRiskDialog()" styleClass="me-2" />
+        <p-button [label]="L().launchReview" icon="pi pi-refresh" severity="secondary" [outlined]="true" (onClick)="launchReview()" styleClass="me-2" />
+        <p-button [label]="L().exportRegister" icon="pi pi-download" severity="secondary" [outlined]="true" (onClick)="exportRegister()" />
+      </ng-template>
+      <ng-template pTemplate="end">
+        <p-dropdown [options]="categoryFilterOptions" [(ngModel)]="categoryFilter" optionLabel="label" optionValue="value"
+                    [placeholder]="L().filterByCategory" (onChange)="onFilterChange()" [style]="{minWidth:'180px'}" styleClass="me-2" />
+        <span class="p-input-icon-left">
+          <i class="pi pi-search"></i>
+          <input type="text" pInputText [(ngModel)]="searchTerm" [placeholder]="L().search" (input)="onSearchChange()" class="search-input" />
+        </span>
+      </ng-template>
+    </p-toolbar>
+  </div>
+
+  <!-- ═══ TABBED WORK AREA ═══ -->
+  <p-tabView [(activeIndex)]="tabIndex" (onChange)="onTabChange($event.index)" styleClass="risk-tabs">
+
+    <!-- ═══ TAB 0: RISK OVERVIEW ═══ -->
+    <p-tabPanel [header]="L().overview">
+      <div *ngIf="overview(); let ov">
+
+        <!-- Distribution by category -->
+        <h4 class="section-title">{{ L().distribution }}</h4>
+        <div class="distribution-grid">
+          <div *ngFor="let cat of ov.distribution.byCategory" class="dist-card" (click)="filterByCategory(cat.category)">
+            <span class="dist-label">{{ cat.category | titlecase }}</span>
+            <span class="dist-count">{{ cat.count }}</span>
+            <div class="dist-bar">
+              <div class="dist-bar-fill" [style.width.%]="catPercent(cat.count)" [style.background]="catColor(cat.category)"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Distribution by severity -->
+        <div class="severity-chips">
+          <div *ngFor="let sev of ov.distribution.bySeverity" class="sev-chip" [class]="'sev-' + sev.severity">
+            <span class="sev-label">{{ sev.severity | titlecase }}</span>
+            <span class="sev-count">{{ sev.count }}</span>
+          </div>
+        </div>
+
+        <!-- Top exposure list -->
+        <h4 class="section-title mt-lg">{{ L().topExposure }}</h4>
+        <grc-data-table
+          [totalRecords]="ov.topRisks.length"
+          [emptyMessage]="L().emptyRisks || 'No top risks'">
+          <p-table [value]="ov.topRisks" [rows]="10" styleClass="p-datatable-sm p-datatable-striped">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>{{ L().title }}</th>
+                <th>{{ L().category }}</th>
+                <th>{{ L().owner }}</th>
+                <th>{{ L().inherentScore }}</th>
+                <th>{{ L().residualScore }}</th>
+                <th>{{ L().treatmentStatus }}</th>
+                <th>{{ L().status }}</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-risk>
+              <tr class="clickable-row" (click)="openRiskDetail(risk.riskId)">
+                <td class="font-semibold">{{ risk.title }}</td>
+                <td><p-tag [value]="risk.category" [severity]="catSeverity(risk.category)" [rounded]="true" /></td>
+                <td>
+                  <span *ngIf="risk.ownerTeamName" class="team-badge"><i class="pi pi-users"></i> {{ risk.ownerTeamName }}</span>
+                  <span *ngIf="!risk.ownerTeamName && risk.owner">{{ risk.owner }}</span>
+                  <span *ngIf="!risk.ownerTeamName && !risk.owner">—</span>
+                </td>
+                <td><span class="score-pill" [class]="scoreClass(risk.inherentScore)">{{ risk.inherentScore }}</span></td>
+                <td><span class="score-pill" [class]="scoreClass(risk.residualScore)">{{ risk.residualScore }}</span></td>
+                <td><app-status-badge [status]="risk.treatmentStatus || 'untreated'" /></td>
+                <td><app-status-badge [status]="risk.status" /></td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </grc-data-table>
+        <div *ngIf="ov.topRisks.length === 0" class="empty-section">
+          <i class="pi pi-inbox"></i>
+          <p>{{ L().emptyRisks }}</p>
+          <p-button [label]="L().createRisk" icon="pi pi-plus" (onClick)="openCreateRiskDialog()" />
+        </div>
+
+        <!-- Escalation summary -->
+        <h4 class="section-title mt-lg">{{ L().escalationSummary }}</h4>
+        <div class="escalation-grid">
+          <div *ngFor="let esc of ov.escalationSummary" class="escalation-card">
+            <span class="esc-count">{{ esc.count }}</span>
+            <span class="esc-label">{{ esc.label }}</span>
+          </div>
+        </div>
+      </div>
+    </p-tabPanel>
+
+    <!-- ═══ TAB 1: RISK REGISTER ═══ -->
+    <p-tabPanel [header]="L().register">
+      <p-toolbar styleClass="mb-3">
+        <ng-template pTemplate="start">
+          <p-dropdown [options]="statusFilterOptions" [(ngModel)]="statusFilter" optionLabel="label" optionValue="value"
+                      [placeholder]="L().filterByStatus" (onChange)="loadRegister()" [style]="{minWidth:'160px'}" styleClass="me-2" />
+          <p-dropdown [options]="categoryFilterOptions" [(ngModel)]="registerCatFilter" optionLabel="label" optionValue="value"
+                      [placeholder]="L().filterByCategory" (onChange)="loadRegister()" [style]="{minWidth:'160px'}" />
+        </ng-template>
+        <ng-template pTemplate="end">
+          <span class="register-count">{{ registerData().length }} {{ L().risks }}</span>
+        </ng-template>
+      </p-toolbar>
+
+      <grc-data-table
+        [totalRecords]="registerData().length"
+        [emptyMessage]="L().emptyRegister || 'No risks in register'">
+        <p-table [value]="registerData()" [rows]="20" [paginator]="true" [rowsPerPageOptions]="[10,20,50]"
+                 styleClass="p-datatable-sm p-datatable-gridlines" [globalFilterFields]="['title','category','owner']">
+          <ng-template pTemplate="header">
+            <tr>
+              <th pSortableColumn="riskId" style="width:80px">ID <p-sortIcon field="riskId" /></th>
+              <th pSortableColumn="title">{{ L().title }} <p-sortIcon field="title" /></th>
+              <th pSortableColumn="category">{{ L().category }} <p-sortIcon field="category" /></th>
+              <th>{{ L().owner }}</th>
+              <th pSortableColumn="status">{{ L().status }} <p-sortIcon field="status" /></th>
+              <th pSortableColumn="inherentScore" style="width:90px">{{ L().inherent }} <p-sortIcon field="inherentScore" /></th>
+              <th pSortableColumn="residualScore" style="width:90px">{{ L().residual }} <p-sortIcon field="residualScore" /></th>
+              <th>{{ L().treatment }}</th>
+              <th style="width:100px">{{ L().actions }}</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-risk>
+            <tr>
+              <td class="font-mono text-xs">{{ risk.riskId }}</td>
+              <td class="font-semibold clickable" (click)="openRiskDetail(risk.riskId)">{{ risk.title }}</td>
+              <td><p-tag [value]="risk.category" [rounded]="true" /></td>
+              <td>{{ risk.owner || '—' }}</td>
+              <td><app-status-badge [status]="risk.status" /></td>
+              <td class="text-center"><span class="score-pill" [class]="scoreClass(risk.inherentScore)">{{ risk.inherentScore }}</span></td>
+              <td class="text-center"><span class="score-pill" [class]="scoreClass(risk.residualScore)">{{ risk.residualScore }}</span></td>
+              <td><app-status-badge [status]="risk.treatmentStatus || 'untreated'" /></td>
+              <td>
+                <div class="row-actions">
+                  <button class="icon-btn" (click)="openEditRiskDialog(risk)" pTooltip="Edit" aria-label="Edit"><i class="pi pi-pencil"></i></button>
+                  <button class="icon-btn" (click)="openRiskDetail(risk.riskId)" pTooltip="Detail" aria-label="Detail"><i class="pi pi-eye"></i></button>
+                  <button class="icon-btn" (click)="escalateRisk(risk)" pTooltip="Escalate" aria-label="Escalate"><i class="pi pi-arrow-up-right"></i></button>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </grc-data-table>
+
+      <div *ngIf="registerData().length === 0 && !registerLoading" class="empty-section">
+        <i class="pi pi-inbox"></i>
+        <p>{{ L().emptyRegister }}</p>
+        <p-button [label]="L().createRisk" icon="pi pi-plus" (onClick)="openCreateRiskDialog()" styleClass="me-2" />
+        <p-button [label]="L().importBaseline" icon="pi pi-upload" severity="secondary" [outlined]="true" />
+      </div>
+    </p-tabPanel>
+
+    <!-- ═══ TAB 2: HEATMAP ═══ -->
+    <p-tabPanel [header]="L().heatmap">
+      <div class="heatmap-controls mb-3">
+        <p-button [label]="L().inherentView" [severity]="heatmapMode === 'inherent' ? 'primary' : 'secondary'" [outlined]="heatmapMode !== 'inherent'" (onClick)="switchHeatmapMode('inherent')" styleClass="me-2" />
+        <p-button [label]="L().residualView" [severity]="heatmapMode === 'residual' ? 'primary' : 'secondary'" [outlined]="heatmapMode !== 'residual'" (onClick)="switchHeatmapMode('residual')" />
+      </div>
+
+      <div class="heatmap-layout" *ngIf="heatmapData()">
+        <div class="heatmap-container">
+          <div class="heatmap-ylabel">{{ L().impact }}</div>
+          <div class="heatmap-main">
+            <div *ngFor="let row of [5,4,3,2,1]" class="heatmap-row">
+              <div class="heatmap-axis-label">{{ heatmapData()!.labels.impact[row - 1] || row }}</div>
+              <div *ngFor="let col of [1,2,3,4,5]" class="heatmap-cell"
+                [style.background]="getHeatmapCellColor(row, col)"
+                [class.heatmap-cell-active]="getHeatmapCellCount(col, row) > 0"
+                (click)="openHeatmapCell(col, row)"
+                [pTooltip]="'L:' + col + ' × I:' + row + ' = ' + (row*col)">
+                <span *ngIf="getHeatmapCellCount(col, row) > 0" class="heatmap-count">{{ getHeatmapCellCount(col, row) }}</span>
+              </div>
+            </div>
+            <div class="heatmap-row heatmap-xlabel-row">
+              <div class="heatmap-axis-label"></div>
+              <div *ngFor="let col of [1,2,3,4,5]" class="heatmap-xlabel">{{ heatmapData()!.labels.likelihood[col - 1] || col }}</div>
+            </div>
+            <div class="heatmap-xlabel-title">{{ L().likelihood }}</div>
+          </div>
+        </div>
+
+        <!-- Heatmap summary -->
+        <div class="heatmap-summary">
+          <div class="hm-stat"><span class="hm-stat-count danger">{{ heatmapData()!.summary.critical }}</span><span class="hm-stat-label">{{ L().criticalRisks }}</span></div>
+          <div class="hm-stat"><span class="hm-stat-count warning">{{ heatmapData()!.summary.high }}</span><span class="hm-stat-label">{{ L().highRisks }}</span></div>
+          <div class="hm-stat"><span class="hm-stat-count info">{{ heatmapData()!.summary.medium }}</span><span class="hm-stat-label">{{ L().mediumRisks }}</span></div>
+          <div class="hm-stat"><span class="hm-stat-count success">{{ heatmapData()!.summary.low }}</span><span class="hm-stat-label">{{ L().lowRisks }}</span></div>
+        </div>
+      </div>
+
+      <!-- Cell detail panel -->
+      <p-dialog [header]="L().cellDetail" [(visible)]="cellDetailVisible" [modal]="true" [style]="{width:'600px'}">
+        <grc-data-table
+          [totalRecords]="cellDetailRisks.length"
+          [emptyMessage]="L().noData || 'No risks in this cell'">
+          <p-table [value]="cellDetailRisks" [rows]="10" styleClass="p-datatable-sm">
+            <ng-template pTemplate="header">
+              <tr><th>{{ L().title }}</th><th>{{ L().owner }}</th><th>{{ L().status }}</th></tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-r>
+              <tr class="clickable-row" (click)="openRiskDetail(r.riskId); cellDetailVisible=false">
+                <td class="font-semibold">{{ r.title }}</td>
+                <td>{{ r.owner || '—' }}</td>
+                <td><app-status-badge [status]="r.status" /></td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </grc-data-table>
+      </p-dialog>
+
+      <div *ngIf="!heatmapData()" class="empty-section">
+        <i class="pi pi-th-large"></i>
+        <p>{{ L().emptyHeatmap }}</p>
+      </div>
+    </p-tabPanel>
+
+    <!-- ═══ TAB 3: TREATMENTS ═══ -->
+    <p-tabPanel [header]="L().treatments">
+      <div class="treatment-view-toggle mb-3">
+        <p-button [label]="L().listView" [severity]="treatmentView === 'list' ? 'primary' : 'secondary'" [outlined]="treatmentView !== 'list'" (onClick)="treatmentView='list'" icon="pi pi-list" styleClass="me-2" />
+        <p-button [label]="L().boardView" [severity]="treatmentView === 'board' ? 'primary' : 'secondary'" [outlined]="treatmentView !== 'board'" (onClick)="treatmentView='board'; loadTreatmentBoard()" icon="pi pi-th-large" styleClass="me-2" />
+        <p-button [label]="L().createTreatment" icon="pi pi-plus" severity="secondary" [outlined]="true" (onClick)="openCreateTreatmentDialog()" />
+      </div>
+
+      <!-- List view -->
+      <div *ngIf="treatmentView === 'list'">
+        <grc-data-table
+          [totalRecords]="treatmentsData().length"
+          [emptyMessage]="L().emptyTreatments || 'No treatments'">
+          <p-table [value]="treatmentsData()" [rows]="20" [paginator]="true" styleClass="p-datatable-sm p-datatable-striped">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>ID</th>
+                <th>{{ L().linkedRisk }}</th>
+                <th>{{ L().owner }}</th>
+                <th>{{ L().strategy }}</th>
+                <th>{{ L().targetDate }}</th>
+                <th>{{ L().status }}</th>
+                <th>{{ L().overdue }}</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-t>
+              <tr [class.overdue-row]="t.overdue">
+                <td class="font-mono text-xs">{{ t.treatmentId }}</td>
+                <td>{{ t.linkedRiskTitle || t.linkedRiskId || '—' }}</td>
+                <td>{{ t.owner || '—' }}</td>
+                <td><p-tag [value]="t.strategy || 'mitigate'" [rounded]="true" /></td>
+                <td>{{ t.targetDate | date:'mediumDate' }}</td>
+                <td><app-status-badge [status]="t.status" /></td>
+                <td><i *ngIf="t.overdue" class="pi pi-exclamation-triangle text-danger"></i></td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </grc-data-table>
+        <div *ngIf="treatmentsData().length === 0" class="empty-section">
+          <i class="pi pi-wrench"></i>
+          <p>{{ L().emptyTreatments }}</p>
+          <p-button [label]="L().createTreatment" icon="pi pi-plus" (onClick)="openCreateTreatmentDialog()" />
+        </div>
+      </div>
+
+      <!-- Board view -->
+      <div *ngIf="treatmentView === 'board' && treatmentBoard()" class="treatment-board">
+        <div *ngFor="let col of boardColumns" class="board-column">
+          <div class="board-column-header" [class]="'board-' + col.key">
+            <span class="board-col-title">{{ col.label }}</span>
+            <span class="board-col-count">{{ (treatmentBoard()?.[col.key] || []).length }}</span>
+          </div>
+          <div class="board-column-body">
+            <div *ngFor="let card of (treatmentBoard()?.[col.key] || [])" class="board-card" [class.overdue-card]="card.overdue">
+              <div class="board-card-title">{{ card.title || card.linkedRiskTitle || 'Treatment' }}</div>
+              <div class="board-card-meta">
+                <span *ngIf="card.owner"><i class="pi pi-user"></i> {{ card.owner }}</span>
+                <span *ngIf="card.targetDate"><i class="pi pi-calendar"></i> {{ card.targetDate | date:'shortDate' }}</span>
+              </div>
+            </div>
+            <div *ngIf="!(treatmentBoard()?.[col.key]?.length)" class="board-empty">—</div>
+          </div>
+        </div>
+      </div>
+    </p-tabPanel>
+
+    <!-- ═══ TAB 4: KRIs & TRENDS ═══ -->
+    <p-tabPanel [header]="L().kriTrends">
+      <div class="kri-toolbar mb-3">
+        <p-button [label]="L().createKRI" icon="pi pi-plus" severity="secondary" [outlined]="true" (onClick)="openCreateKRIDialog()" />
+      </div>
+
+      <!-- KRI Register -->
+      <h4 class="section-title">{{ L().kriRegister }}</h4>
+      <grc-data-table
+        [totalRecords]="krisData().length"
+        [emptyMessage]="L().emptyKRI || 'No KRIs defined'">
+        <p-table [value]="krisData()" [rows]="20" styleClass="p-datatable-sm p-datatable-striped">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>{{ L().name }}</th>
+              <th>{{ L().linkedRisk }}</th>
+              <th>{{ L().owner }}</th>
+              <th>{{ L().threshold }}</th>
+              <th>{{ L().currentValue }}</th>
+              <th>{{ L().status }}</th>
+              <th>{{ L().trend }}</th>
+              <th>{{ L().lastUpdated }}</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-kri>
+            <tr>
+              <td class="font-semibold">{{ kri.name }}</td>
+              <td>{{ kri.linkedCategory || '—' }}</td>
+              <td>{{ kri.owner || '—' }}</td>
+              <td class="text-xs">R:{{ kri.threshold.red }} A:{{ kri.threshold.amber }} G:{{ kri.threshold.green }}</td>
+              <td><span class="score-pill" [class]="kriStatusClass(kri.status)">{{ kri.currentValue }}</span></td>
+              <td><p-tag [value]="kri.status" [severity]="kriTagSeverity(kri.status)" [rounded]="true" /></td>
+              <td>
+                <i *ngIf="kri.trend === 'up'" class="pi pi-arrow-up text-danger"></i>
+                <i *ngIf="kri.trend === 'down'" class="pi pi-arrow-down text-success"></i>
+                <i *ngIf="kri.trend === 'stable'" class="pi pi-minus text-muted"></i>
+              </td>
+              <td class="text-xs">{{ kri.lastUpdated | date:'shortDate' }}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </grc-data-table>
+      <div *ngIf="krisData().length === 0" class="empty-section">
+        <i class="pi pi-chart-line"></i>
+        <p>{{ L().emptyKRI }}</p>
+        <p-button [label]="L().createKRI" icon="pi pi-plus" (onClick)="openCreateKRIDialog()" />
+      </div>
+
+      <!-- Breach log -->
+      <h4 class="section-title mt-lg">{{ L().breachLog }}</h4>
+      <grc-data-table
+        [totalRecords]="breachLog().length"
+        [emptyMessage]="L().noBreaches || 'No breaches recorded'">
+        <p-table [value]="breachLog()" [rows]="10" styleClass="p-datatable-sm">
+          <ng-template pTemplate="header">
+            <tr><th>KRI</th><th>{{ L().date }}</th><th>{{ L().value }}</th><th>{{ L().threshold }}</th><th>{{ L().owner }}</th><th>{{ L().status }}</th></tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-b>
+            <tr>
+              <td>{{ b.kriName }}</td>
+              <td>{{ b.breachDate | date:'shortDate' }}</td>
+              <td class="font-semibold text-danger">{{ b.value }}</td>
+              <td>{{ b.threshold }}</td>
+              <td>{{ b.owner || '—' }}</td>
+              <td><app-status-badge [status]="b.status" /></td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </grc-data-table>
+
+      <!-- Review cadence -->
+      <h4 class="section-title mt-lg">{{ L().reviewCadence }}</h4>
+      <div *ngIf="reviewCadence()" class="cadence-summary">
+        <div class="cadence-stat"><span class="cadence-value success">{{ reviewCadence()!.onTime }}</span><span class="cadence-label">{{ L().onTime }}</span></div>
+        <div class="cadence-stat"><span class="cadence-value warning">{{ reviewCadence()!.overdue }}</span><span class="cadence-label">{{ L().overdue }}</span></div>
+        <div class="cadence-stat"><span class="cadence-value danger">{{ reviewCadence()!.stale }}</span><span class="cadence-label">{{ L().stale }}</span></div>
+      </div>
+    </p-tabPanel>
+
+    <!-- ═══ TAB 5: RISK APPETITE ═══ -->
+    <p-tabPanel [header]="L().appetite">
+      <!-- Appetite settings -->
+      <h4 class="section-title">{{ L().appetiteSettings }}</h4>
+      <div *ngIf="appetiteConfig()" class="appetite-settings">
+        <div class="appetite-meta">
+          <span><strong>{{ L().model }}:</strong> {{ appetiteConfig()!.appetiteModel || 'category_threshold' }}</span>
+          <span *ngIf="appetiteConfig()!.lastApprovalDate"><strong>{{ L().lastApproved }}:</strong> {{ appetiteConfig()!.lastApprovalDate | date:'mediumDate' }}</span>
+          <span *ngIf="appetiteConfig()!.approvingAuthority"><strong>{{ L().authority }}:</strong> {{ appetiteConfig()!.approvingAuthority }}</span>
+        </div>
+        <grc-data-table
+          [totalRecords]="(appetiteConfig()!.thresholdsByCategory || []).length"
+          [emptyMessage]="'No thresholds configured'">
+          <p-table [value]="appetiteConfig()!.thresholdsByCategory || []" [rows]="10" styleClass="p-datatable-sm">
+            <ng-template pTemplate="header">
+              <tr><th>{{ L().category }}</th><th>{{ L().threshold }}</th><th>{{ L().severity }}</th></tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-t>
+              <tr>
+                <td>{{ t.category | titlecase }}</td>
+                <td><span class="score-pill" [class]="scoreClass(t.threshold)">{{ t.threshold }}</span></td>
+                <td><p-tag [value]="t.severity" [rounded]="true" /></td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </grc-data-table>
+      </div>
+      <div *ngIf="!appetiteConfig()" class="empty-section">
+        <i class="pi pi-sliders-h"></i>
+        <p>{{ L().emptyAppetite }}</p>
+        <p-button [label]="L().configureAppetite" icon="pi pi-cog" />
+      </div>
+
+      <!-- Appetite breaches -->
+      <h4 class="section-title mt-lg">{{ L().appetiteBreaches }}</h4>
+      <grc-data-table
+        [totalRecords]="appetiteBreaches().length"
+        [emptyMessage]="L().noBreaches || 'No appetite breaches'">
+        <p-table [value]="appetiteBreaches()" [rows]="20" styleClass="p-datatable-sm p-datatable-striped">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>{{ L().risk }}</th>
+              <th>{{ L().category }}</th>
+              <th>{{ L().residualScore }}</th>
+              <th>{{ L().threshold }}</th>
+              <th>{{ L().breach }}</th>
+              <th>{{ L().owner }}</th>
+              <th>{{ L().escalation }}</th>
+              <th>{{ L().actions }}</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-b>
+            <tr>
+              <td class="font-semibold">{{ b.riskTitle }}</td>
+              <td><p-tag [value]="b.category" [rounded]="true" /></td>
+              <td class="text-center"><span class="score-pill score-danger">{{ b.residualScore }}</span></td>
+              <td class="text-center">{{ b.appetiteThreshold }}</td>
+              <td class="text-center font-semibold text-danger">+{{ b.breachAmount }}</td>
+              <td>{{ b.owner || '—' }}</td>
+              <td><app-status-badge [status]="b.escalationStatus" /></td>
+              <td>
+                <div class="row-actions">
+                  <button class="icon-btn" (click)="requestAcceptance(b.riskId)" pTooltip="Request Acceptance" aria-label="Request Acceptance"><i class="pi pi-check-circle"></i></button>
+                  <button class="icon-btn" (click)="escalateRisk(b)" pTooltip="Escalate" aria-label="Escalate"><i class="pi pi-arrow-up-right"></i></button>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </grc-data-table>
+
+      <!-- Acceptance queue -->
+      <h4 class="section-title mt-lg">{{ L().acceptanceQueue }}</h4>
+      <grc-data-table
+        [totalRecords]="acceptanceQueue().length"
+        [emptyMessage]="L().noAcceptancePending || 'No acceptance requests pending'">
+        <p-table [value]="acceptanceQueue()" [rows]="10" styleClass="p-datatable-sm">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>{{ L().risk }}</th>
+              <th>{{ L().category }}</th>
+              <th>{{ L().residualScore }}</th>
+              <th>{{ L().status }}</th>
+              <th>{{ L().actions }}</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-q>
+            <tr>
+              <td class="font-semibold">{{ q.riskTitle }}</td>
+              <td><p-tag [value]="q.category" [rounded]="true" /></td>
+              <td class="text-center"><span class="score-pill" [class]="scoreClass(q.residualScore)">{{ q.residualScore }}</span></td>
+              <td><app-status-badge [status]="q.status" /></td>
+              <td>
+                <div class="row-actions">
+                  <button class="icon-btn" (click)="approveAcceptance(q.riskId, 'accepted')" pTooltip="Accept" aria-label="Accept"><i class="pi pi-check"></i></button>
+                  <button class="icon-btn danger" (click)="approveAcceptance(q.riskId, 'rejected')" pTooltip="Reject" aria-label="Reject"><i class="pi pi-times"></i></button>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </grc-data-table>
+
+      <!-- Appetite trends -->
+      <h4 class="section-title mt-lg">{{ L().appetiteTrend }}</h4>
+      <div *ngIf="appetiteTrends().length > 0" class="appetite-trend-grid">
+        <div *ngFor="let at of appetiteTrends()" class="appetite-trend-card">
+          <span class="at-category">{{ at.category | titlecase }}</span>
+          <span class="at-breaches">{{ at.breachCount }} {{ L().breaches }}</span>
+          <span class="at-accepted">{{ at.acceptedCount }} {{ L().accepted }}</span>
+        </div>
+      </div>
+    </p-tabPanel>
+
+  </p-tabView>
+
+  <!-- ═══ CREATE/EDIT RISK DIALOG ═══ -->
+  <p-dialog [header]="editMode ? L().editRisk : L().createRisk" [(visible)]="riskDialogVisible" [modal]="true" [style]="{width:'600px'}">
+    <div class="dialog-form">
+      <grc-form-field [label]="L().title">
+        <input pInputText [(ngModel)]="riskForm.title" class="w-full" />
+      </grc-form-field>
+      <div class="field"><label>{{ L().description }}</label><textarea pInputTextarea [(ngModel)]="riskForm.description" [rows]="3" class="w-full"></textarea></div>
+      <div class="field-row">
+        <div class="field"><label>{{ L().category }}</label>
+          <p-dropdown [(ngModel)]="riskForm.category" [options]="riskCategoryOptions" optionLabel="label" optionValue="value" styleClass="w-full" /></div>
+        <grc-form-field [label]="L().owner">
+          <input pInputText [(ngModel)]="riskForm.owner" class="w-full" />
+        </grc-form-field>
+      </div>
+      <div class="field" *ngIf="teamOptions().length">
+        <label>{{ i18n.currentLang() === 'ar' ? 'فريق المسؤول' : 'Owner Team' }}</label>
+        <p-dropdown [(ngModel)]="riskForm.owner_team_id" [options]="teamOptions()" optionLabel="label" optionValue="value"
+          [filter]="true" [showClear]="true" [placeholder]="i18n.currentLang() === 'ar' ? 'اختر الفريق...' : 'Select team...'" styleClass="w-full" />
+      </div>
+      <div class="field-row">
+        <div class="field"><label>{{ L().likelihood }}: {{ riskForm.likelihood }}</label><p-slider [(ngModel)]="riskForm.likelihood" [min]="1" [max]="5" [step]="1" /></div>
+        <div class="field"><label>{{ L().impact }}: {{ riskForm.impact }}</label><p-slider [(ngModel)]="riskForm.impact" [min]="1" [max]="5" [step]="1" /></div>
+      </div>
+      <div class="field"><label>{{ L().status }}</label>
+        <p-dropdown [(ngModel)]="riskForm.status" [options]="riskStatusOptions" optionLabel="label" optionValue="value" styleClass="w-full" /></div>
+    </div>
+    <ng-template pTemplate="footer">
+      <p-button [label]="L().cancel" icon="pi pi-times" severity="secondary" [text]="true" (onClick)="riskDialogVisible=false" />
+      <p-button [label]="L().save" icon="pi pi-check" (onClick)="saveRisk()" [disabled]="!riskForm.title" />
+    </ng-template>
+  </p-dialog>
+
+  <!-- ═══ CREATE TREATMENT DIALOG ═══ -->
+  <p-dialog [header]="L().createTreatment" [(visible)]="treatmentDialogVisible" [modal]="true" [style]="{width:'500px'}">
+    <div class="dialog-form">
+      <grc-form-field [label]="L().title">
+        <input pInputText [(ngModel)]="treatmentForm.title" class="w-full" />
+      </grc-form-field>
+      <div class="field-row">
+        <grc-form-field [label]="L().owner">
+          <input pInputText [(ngModel)]="treatmentForm.owner" class="w-full" />
+        </grc-form-field>
+        <grc-form-field [label]="L().targetDate">
+          <input pInputText type="date" [(ngModel)]="treatmentForm.targetDate" class="w-full" />
+        </grc-form-field>
+      </div>
+      <grc-form-field [label]="L().linkedRisk">
+        <input pInputText [(ngModel)]="treatmentForm.linkedRiskId" class="w-full" placeholder="Risk ID" />
+      </grc-form-field>
+    </div>
+    <ng-template pTemplate="footer">
+      <p-button [label]="L().cancel" severity="secondary" [text]="true" (onClick)="treatmentDialogVisible=false" />
+      <p-button [label]="L().save" icon="pi pi-check" (onClick)="saveTreatment()" [disabled]="!treatmentForm.title" />
+    </ng-template>
+  </p-dialog>
+
+  <!-- ═══ RISK DETAIL DRAWER ═══ -->
+  <app-entity-detail-drawer [(visible)]="drawerVisible" [title]="drawerRisk?.risk?.title || ''"
+    entityType="risk" [entityId]="drawerRisk?.risk?.riskId || ''">
+    <div *ngIf="drawerRisk" class="drawer-content">
+      <!-- Core fields -->
+      <div class="drawer-section">
+        <h5>{{ L().coreFields }}</h5>
+        <div class="detail-row"><span class="detail-label">{{ L().category }}</span><span><p-tag [value]="drawerRisk.risk.category" [rounded]="true" /></span></div>
+        <div class="detail-row"><span class="detail-label">{{ L().owner }}</span><span>{{ drawerRisk.risk.owner || '—' }}</span></div>
+        <div class="detail-row"><span class="detail-label">{{ L().status }}</span><span><app-status-badge [status]="drawerRisk.risk.status" /></span></div>
+        <div class="detail-row"><span class="detail-label">{{ L().description }}</span><span class="text-sm">{{ drawerRisk.risk.description }}</span></div>
+      </div>
+
+      <!-- Scoring -->
+      <div class="drawer-section">
+        <h5>{{ L().scoring }}</h5>
+        <div class="score-compare">
+          <div class="score-box">
+            <span class="score-label">{{ L().inherent }}</span>
+            <span class="score-big" [class]="scoreClass(drawerRisk.risk.inherentScore)">{{ drawerRisk.risk.inherentScore }}</span>
+            <span class="score-detail">L:{{ drawerRisk.risk.likelihood }} × I:{{ drawerRisk.risk.impact }}</span>
+          </div>
+          <div class="score-arrow"><i class="pi pi-arrow-right"></i></div>
+          <div class="score-box">
+            <span class="score-label">{{ L().residual }}</span>
+            <span class="score-big" [class]="scoreClass(drawerRisk.risk.residualScore)">{{ drawerRisk.risk.residualScore }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Linked controls -->
+      <div class="drawer-section" *ngIf="drawerRisk.linkedControls.length > 0">
+        <h5>{{ L().linkedControls }} ({{ drawerRisk.linkedControls.length }})</h5>
+        <div *ngFor="let c of drawerRisk.linkedControls" class="linked-item">
+          <span class="linked-title">{{ c.title }}</span>
+          <app-status-badge [status]="c.status" />
+        </div>
+      </div>
+
+      <!-- Linked evidence -->
+      <div class="drawer-section" *ngIf="drawerRisk.linkedEvidence.length > 0">
+        <h5>{{ L().linkedEvidence }} ({{ drawerRisk.linkedEvidence.length }})</h5>
+        <div *ngFor="let e of drawerRisk.linkedEvidence" class="linked-item">
+          <span class="linked-title">{{ e.title }}</span>
+          <app-status-badge [status]="e.status" />
+        </div>
+      </div>
+
+      <!-- Treatments -->
+      <div class="drawer-section" *ngIf="drawerRisk.treatments.length > 0">
+        <h5>{{ L().treatments }} ({{ drawerRisk.treatments.length }})</h5>
+        <div *ngFor="let t of drawerRisk.treatments" class="linked-item">
+          <span class="linked-title">{{ t.title || 'Treatment' }}</span>
+          <app-status-badge [status]="t.status" />
+        </div>
+      </div>
+
+      <!-- Governance -->
+      <div class="drawer-section">
+        <h5>{{ L().governance }}</h5>
+        <div *ngIf="drawerRisk.governance.escalationHistory.length === 0 && drawerRisk.governance.approvals.length === 0 && drawerRisk.governance.reviewTrail.length === 0" class="text-muted text-sm">
+          {{ L().noGovernanceData }}
+        </div>
+        <div *ngFor="let r of drawerRisk.governance.reviewTrail" class="linked-item">
+          <span class="linked-title">{{ r.date | date:'shortDate' }} — {{ r.reviewer }}</span>
+          <span class="text-xs">{{ r.outcome }}</span>
+        </div>
+      </div>
+    </div>
+  </app-entity-detail-drawer>
+
+</app-page-shell>
+<app-ai-panel module="risks" />

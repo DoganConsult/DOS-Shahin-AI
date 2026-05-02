@@ -1,0 +1,474 @@
+// @ts-nocheck
+import { Request as _Request, Response as _Response, Router } from 'express';
+import { emitEvent as _emitEvent } from '../../ports/events.port';
+import { swallow as _swallow, EC as _EC } from '@dos/platform-core/resilience/resilient-catch';
+import { z as _z } from 'zod';
+
+import { authenticate, requirePermission, requireAnyPermission } from '../../ports/auth.port';
+import {
+  listAssets,
+  type AssetType,
+} from '../../services/ai/registry/ai-asset-inventory.service';
+import {
+  createDraftModelVersion,
+  updateDraftModelVersion,
+  submitModelVersionForApproval,
+  approveModelVersion,
+  rejectModelVersion,
+  activateModelVersion,
+  suspendModelVersion,
+  retireModelVersion,
+  rollbackModelVersion,
+  listModelVersions,
+  getModelVersionById,
+  getActiveModelVersionForAsset,
+  deleteModelVersion,
+  type ApprovalStatus,
+  type DeploymentStatus,
+} from '../../services/misc/model-registry.service';
+import { toErrorMessage } from '@dos/module-sdk';
+
+import { validate, asyncHandler, auditMiddleware, setAuditData, automationMiddleware, moduleStack, mutationEventHook } from '../../ports/middleware.port';
+import {
+  resolveGovernedModel,
+  detectAllMismatches,
+  getEnforcementMode,
+} from "../../services/misc/model-governance-bridge.service";
+import { versionsPostBody as _versionsPostBody, versionsVersionIdPatchBody as _versionsVersionIdPatchBody, versionsVersionIdSubmitPostBody as _versionsVersionIdSubmitPostBody, versionsVersionIdApprovePostBody as _versionsVersionIdApprovePostBody, versionsVersionIdRejectPostBody as _versionsVersionIdRejectPostBody, versionsVersionIdActivatePostBody as _versionsVersionIdActivatePostBody, versionsVersionIdSuspendPostBody as _versionsVersionIdSuspendPostBody, versionsVersionIdRetirePostBody as _versionsVersionIdRetirePostBody, versionsAssetIdRollbackPostBody as _versionsAssetIdRollbackPostBody, createVersionsBody, updateVersionsBody, createSubmitBody, createApproveBody, createRejectBody, createActivateBody, createSuspendBody, createRetireBody, createRollbackBody } from '../../schemas/ai-governance.schemas';
+import { z } from "zod";
+
+// ── Zod Schemas ──────────────────────────────────────────────────────────
+import type { Router as ExpressRouter } from 'express';
+const router: ExpressRouter = Router();
+router.use(moduleStack('ai-governance'));
+router.use(auditMiddleware('ai-governance'));
+router.use(mutationEventHook('ai-governance'));
+router.use(auditMiddleware("ai-governance"));
+router.use(automationMiddleware("ai-governance"));
+
+const VALID_APPROVAL: ApprovalStatus[] = ['draft', 'submitted', 'under_review', 'approved', 'rejected', 'suspended', 'retired', 'archived'];
+const VALID_DEPLOYMENT: DeploymentStatus[] = ['not_deployed', 'staging', 'canary', 'production', 'rollback', 'decommissioned'];
+const MAX_PAGE_SIZE = 500;
+const DEFAULT_PAGE_SIZE = 100;
+
+router.get(
+  "/assets",
+  authenticate,
+  requirePermission("ai.governance.read"), validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
+    const tenantId = req.tenantId;
+    const limit = Math.min(Math.max(1, parseInt(req.query.limit as string) || DEFAULT_PAGE_SIZE), MAX_PAGE_SIZE);
+    const offset = Math.max(0, parseInt(req.query.offset as string) || 0);
+
+    const result = await listAssets(tenantId, {
+    asset_type: 'model' as AssetType,
+    limit,
+    offset,
+    });
+
+    res.json({
+    assets: result.assets,
+    total: result.total,
+    limit,
+    offset,
+    hasMore: offset + limit < result.total,
+    });
+  }),
+);
+
+router.get(
+  "/versions",
+  authenticate,
+  requirePermission("ai.governance.read"), validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
+    const tenantId = req.tenantId;
+    const limit = Math.min(Math.max(1, parseInt(req.query.limit as string) || DEFAULT_PAGE_SIZE), MAX_PAGE_SIZE);
+    const offset = Math.max(0, parseInt(req.query.offset as string) || 0);
+
+    const q: Record<string, unknown> = { limit, offset };
+
+    if (req.query.asset_id) q.asset_id = req.query.asset_id;
+
+    if (req.query.approval_status) {
+    if (!VALID_APPROVAL.includes(req.query.approval_status as ApprovalStatus)) {
+    res.status(400).json({ error: `Invalid approval_status. Allowed: ${VALID_APPROVAL.join(', ')}` }); return;
+    }
+    q.approval_status = req.query.approval_status;
+    }
+
+    if (req.query.deployment_status) {
+    if (!VALID_DEPLOYMENT.includes(req.query.deployment_status as DeploymentStatus)) {
+    res.status(400).json({ error: `Invalid deployment_status. Allowed: ${VALID_DEPLOYMENT.join(', ')}` }); return;
+    }
+    q.deployment_status = req.query.deployment_status;
+    }
+
+    if (req.query.is_active !== undefined) {
+    q.is_active = req.query.is_active === 'true';
+    }
+
+    const result = await listModelVersions(tenantId, q);
+
+    res.json({
+    versions: result.versions,
+    total: result.total,
+    limit,
+    offset,
+    hasMore: offset + limit < result.total,
+    });
+  }),
+);
+
+router.get(
+  "/versions/active/:assetId",
+  authenticate,
+  requirePermission("ai.governance.read"), validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
+    const tenantId = req.tenantId;
+    const version = await getActiveModelVersionForAsset(tenantId, req.params.assetId);
+    if (!version) { res.status(404).json({ error: "No active version found for this asset" }); return; }
+    res.json(version);
+  }),
+);
+
+router.get(
+  "/versions/:versionId",
+  authenticate,
+  requirePermission("ai.governance.read"), validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
+    const tenantId = req.tenantId;
+    const version = await getModelVersionById(tenantId, req.params.versionId);
+    if (!version) { res.status(404).json({ error: "Model version not found" }); return; }
+    res.json(version);
+  }),
+);
+
+router.post(
+  "/versions",
+  authenticate,
+  requirePermission("ai.governance.write"),
+  validate({ body: createVersionsBody }),
+  asyncHandler(async (req, res) => {
+    try {
+    const tenantId = req.tenantId;
+    const userId = req.user!.userId;
+
+    const { asset_id, provider, provider_model_id, config, change_summary, notes } = req.body;
+
+    if (!asset_id || !provider || !provider_model_id) {
+    res.status(400).json({ error: "asset_id, provider, and provider_model_id are required" }); return;
+    }
+
+    const version = await createDraftModelVersion(tenantId, {
+    asset_id,
+    provider,
+    provider_model_id,
+    config,
+    change_summary,
+    notes,
+    created_by: userId,
+    });
+
+    setAuditData(res as any, { action: "create", entityType: "model_version", entityId: version.model_version_id, afterState: version });
+    res.status(201).json(version);
+    } catch (err: unknown) {
+    if (toErrorMessage(err).includes('Parent asset not found') || toErrorMessage(err).includes('asset_type=model') ||
+    toErrorMessage(err).includes('Seeded global models are immutable')) {
+    res.status(422).json({ error: toErrorMessage(err) }); return;
+    }
+    res.status(400).json({ error: toErrorMessage(err) });
+    }
+  }),
+);
+
+router.patch(
+  "/versions/:versionId",
+  authenticate,
+  requirePermission("ai.governance.write"),
+  validate({ body: updateVersionsBody }),
+  asyncHandler(async (req, res) => {
+    try {
+    const tenantId = req.tenantId;
+    const userId = req.user!.userId;
+
+    const allowed = ['provider', 'provider_model_id', 'config', 'change_summary', 'notes'];
+    const updateInput: Record<string, unknown> = { updated_by: userId };
+    for (const key of allowed) {
+    if (req.body[key] !== undefined) updateInput[key] = req.body[key];
+    }
+
+    const version = await updateDraftModelVersion(tenantId, req.params.versionId, updateInput);
+
+    setAuditData(res as any, { action: "update", entityType: "model_version", entityId: req.params.versionId, afterState: version });
+    res.json(version);
+    } catch (err: unknown) {
+    if (toErrorMessage(err).includes('not found')) {
+    res.status(404).json({ error: toErrorMessage(err) }); return;
+    }
+    if (toErrorMessage(err).includes('Only draft') || toErrorMessage(err).includes('Seeded global models are immutable')) {
+    res.status(422).json({ error: toErrorMessage(err) }); return;
+    }
+    res.status(400).json({ error: toErrorMessage(err) });
+    }
+  }),
+);
+
+router.post(
+  "/versions/:versionId/submit",
+  authenticate,
+  requirePermission("ai.governance.write"),
+  validate({ body: createSubmitBody }),
+  asyncHandler(async (req, res) => {
+    try {
+    const tenantId = req.tenantId;
+    const userId = req.user!.userId;
+
+    const version = await submitModelVersionForApproval(tenantId, req.params.versionId, userId);
+
+    setAuditData(res as any, {
+    action: "update", entityType: "model_version", entityId: req.params.versionId,
+    afterState: { approval_status: version.approval_status },
+    });
+    res.json(version);
+    } catch (err: unknown) {
+    if (toErrorMessage(err).includes('not found')) { res.status(404).json({ error: toErrorMessage(err) }); return; }
+    if (toErrorMessage(err).includes('Only draft or rejected') || toErrorMessage(err).includes('Seeded global models are immutable')) {
+    res.status(422).json({ error: toErrorMessage(err) }); return;
+    }
+    res.status(400).json({ error: toErrorMessage(err) });
+    }
+  }),
+);
+
+router.post(
+  "/versions/:versionId/approve",
+  authenticate,
+  requireAnyPermission("ai.model.approve", "ai.agent.approve"),
+  validate({ body: createApproveBody }),
+  asyncHandler(async (req, res) => {
+    try {
+    const tenantId = req.tenantId;
+    const userId = req.user!.userId;
+
+    const version = await approveModelVersion(tenantId, req.params.versionId, userId);
+
+    setAuditData(res as any, {
+    action: "update", entityType: "model_version", entityId: req.params.versionId,
+    afterState: { approval_status: version.approval_status, approved_by: userId },
+    });
+    res.json(version);
+    } catch (err: unknown) {
+    if (toErrorMessage(err).includes('not found')) { res.status(404).json({ error: toErrorMessage(err) }); return; }
+    if (toErrorMessage(err).includes('Separation of Duties')) { res.status(403).json({ error: toErrorMessage(err), reason: 'sod_conflict' }); return; }
+    if (toErrorMessage(err).includes('Only pending_approval') || toErrorMessage(err).includes('Seeded global models are immutable')) {
+    res.status(422).json({ error: toErrorMessage(err) }); return;
+    }
+    res.status(400).json({ error: toErrorMessage(err) });
+    }
+  }),
+);
+
+router.post(
+  "/versions/:versionId/reject",
+  authenticate,
+  requireAnyPermission("ai.model.approve", "ai.agent.approve"),
+  validate({ body: createRejectBody }),
+  asyncHandler(async (req, res) => {
+    try {
+    const tenantId = req.tenantId;
+    const userId = req.user!.userId;
+
+    const version = await rejectModelVersion(tenantId, req.params.versionId, userId, req.body.notes);
+
+    setAuditData(res as any, {
+    action: "update", entityType: "model_version", entityId: req.params.versionId,
+    afterState: { approval_status: version.approval_status },
+    });
+    res.json(version);
+    } catch (err: unknown) {
+    if (toErrorMessage(err).includes('not found')) { res.status(404).json({ error: toErrorMessage(err) }); return; }
+    if (toErrorMessage(err).includes('Only pending_approval') || toErrorMessage(err).includes('Seeded global models are immutable')) {
+    res.status(422).json({ error: toErrorMessage(err) }); return;
+    }
+    res.status(400).json({ error: toErrorMessage(err) });
+    }
+  }),
+);
+
+router.post(
+  "/versions/:versionId/activate",
+  authenticate,
+  requirePermission("ai_governance.manage"),
+  validate({ body: createActivateBody }),
+  asyncHandler(async (req, res) => {
+    try {
+    const tenantId = req.tenantId;
+    const userId = req.user!.userId;
+
+    const { activated, deactivated } = await activateModelVersion(tenantId, req.params.versionId, userId);
+
+    setAuditData(res as any, {
+    action: "activate", entityType: "model_version", entityId: req.params.versionId,
+    beforeState: deactivated ? { deactivated_version: deactivated.model_version_id } : null,
+    afterState: { deployment_status: 'active', is_active: true },
+    });
+    res.json({ activated, deactivated });
+    } catch (err: unknown) {
+    if (toErrorMessage(err).includes('not found')) { res.status(404).json({ error: toErrorMessage(err) }); return; }
+    if (toErrorMessage(err).includes('Only approved') || toErrorMessage(err).includes('already active') ||
+    toErrorMessage(err).includes('archived') || toErrorMessage(err).includes('missing required ownership') ||
+    toErrorMessage(err).includes('Seeded global models are immutable')) {
+    res.status(422).json({ error: toErrorMessage(err) }); return;
+    }
+    res.status(400).json({ error: toErrorMessage(err) });
+    }
+  }),
+);
+
+router.post(
+  "/versions/:versionId/suspend",
+  authenticate,
+  requirePermission("ai_governance.manage"),
+  validate({ body: createSuspendBody }),
+  asyncHandler(async (req, res) => {
+    try {
+    const tenantId = req.tenantId;
+    const userId = req.user!.userId;
+
+    const version = await suspendModelVersion(tenantId, req.params.versionId, userId, req.body.notes);
+
+    setAuditData(res as any, {
+    action: "update", entityType: "model_version", entityId: req.params.versionId,
+    afterState: { deployment_status: 'suspended' },
+    });
+    res.json(version);
+    } catch (err: unknown) {
+    if (toErrorMessage(err).includes('not found')) { res.status(404).json({ error: toErrorMessage(err) }); return; }
+    if (toErrorMessage(err).includes('not active') || toErrorMessage(err).includes('Seeded global models are immutable')) {
+    res.status(422).json({ error: toErrorMessage(err) }); return;
+    }
+    res.status(400).json({ error: toErrorMessage(err) });
+    }
+  }),
+);
+
+router.post(
+  "/versions/:versionId/retire",
+  authenticate,
+  requirePermission("ai_governance.manage"),
+  validate({ body: createRetireBody }),
+  asyncHandler(async (req, res) => {
+    try {
+    const tenantId = req.tenantId;
+    const userId = req.user!.userId;
+
+    const version = await retireModelVersion(tenantId, req.params.versionId, userId, req.body.notes);
+
+    setAuditData(res as any, {
+    action: "update", entityType: "model_version", entityId: req.params.versionId,
+    afterState: { deployment_status: 'retired' },
+    });
+    res.json(version);
+    } catch (err: unknown) {
+    if (toErrorMessage(err).includes('not found')) { res.status(404).json({ error: toErrorMessage(err) }); return; }
+    if (toErrorMessage(err).includes('active version') || toErrorMessage(err).includes('draft version') ||
+    toErrorMessage(err).includes('pending_approval version') || toErrorMessage(err).includes('Seeded global models are immutable')) {
+    res.status(422).json({ error: toErrorMessage(err) }); return;
+    }
+    res.status(400).json({ error: toErrorMessage(err) });
+    }
+  }),
+);
+
+router.post(
+  "/versions/:assetId/rollback",
+  authenticate,
+  requirePermission("ai_governance.manage"),
+  validate({ body: createRollbackBody }),
+  asyncHandler(async (req, res) => {
+    try {
+    const tenantId = req.tenantId;
+    const userId = req.user!.userId;
+
+    const { target_version_id, notes } = req.body;
+    if (!target_version_id) {
+    res.status(400).json({ error: "target_version_id is required" }); return;
+    }
+
+    const result = await rollbackModelVersion(tenantId, req.params.assetId, target_version_id, userId, notes);
+
+    setAuditData(res as any, {
+    action: "update", entityType: "model_version", entityId: result.rollbackVersion.model_version_id,
+    afterState: {
+    deployment_status: 'active',
+    rollback_from_version_id: target_version_id,
+    version_number: result.rollbackVersion.version_number,
+    },
+    });
+    res.json(result);
+    } catch (err: unknown) {
+    if (toErrorMessage(err).includes('not found')) { res.status(404).json({ error: toErrorMessage(err) }); return; }
+    if (toErrorMessage(err).includes('does not belong') || toErrorMessage(err).includes('Only approved') ||
+    toErrorMessage(err).includes('archived') || toErrorMessage(err).includes('Seeded global models are immutable')) {
+    res.status(422).json({ error: toErrorMessage(err) }); return;
+    }
+    res.status(400).json({ error: toErrorMessage(err) });
+    }
+  }),
+);
+
+router.delete(
+  "/versions/:versionId",
+  authenticate,
+  requirePermission("ai_governance.manage"), validate({ body: genericPayloadSchema }), asyncHandler(async (req, res) => {
+    try {
+    const tenantId = req.tenantId;
+    const userId = req.user!.userId;
+
+    const deleted = await deleteModelVersion(tenantId, req.params.versionId, userId);
+    if (!deleted) { res.status(404).json({ error: "Model version not found" }); return; }
+
+    setAuditData(res as any, { action: "delete", entityType: "model_version", entityId: req.params.versionId });
+    res.json({ deleted: true, model_version_id: req.params.versionId });
+    } catch (err: unknown) {
+    if (toErrorMessage(err).includes('active version') || toErrorMessage(err).includes('Seeded global models are immutable')) {
+    res.status(422).json({ error: toErrorMessage(err) }); return;
+    }
+    res.status(500).json({ error: toErrorMessage(err) });
+    }
+  }),
+);
+
+router.get(
+  "/governance/resolve/:agentId",
+  authenticate,
+  requirePermission("ai.governance.read"), validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
+    const tenantId = req.tenantId;
+    const { task_type, input_token_estimate } = req.query;
+
+    const resolution = await resolveGovernedModel(
+    tenantId,
+    req.params.agentId,
+    task_type as string | undefined,
+    input_token_estimate ? parseInt(input_token_estimate as string) : undefined,
+    );
+
+    res.json(resolution);
+  }),
+);
+
+router.get(
+  "/governance/mismatches",
+  authenticate,
+  requirePermission("ai.governance.read"), validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
+    const tenantId = req.tenantId;
+
+    const mismatches = await detectAllMismatches(tenantId);
+
+    res.json({
+    enforcement_mode: getEnforcementMode(),
+    total: mismatches.length,
+    mismatches,
+    });
+  }),
+);
+
+export default router;
+
+let genericPayloadSchema = z.record(z.unknown());

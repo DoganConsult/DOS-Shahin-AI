@@ -1,0 +1,5 @@
+
+> dogan-ai-os-platform-target@1.0.0 validate:env /root/DOS-AIO
+> tsx ops/scripts/validate-env.ts
+
+Environment example validation passed.

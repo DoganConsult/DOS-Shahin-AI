@@ -1,0 +1,190 @@
+<app-page-shell
+      icon="cog"
+      [title]="i18n.translate('admin.title') || 'Admin'"
+      [subtitle]="i18n.translate('admin.subtitle') || 'Platform administration'"
+      [breadcrumbs]="[i18n.translate('dashboard.title') || 'Dashboard', i18n.translate('admin.title') || 'Admin']"
+      [loading]="loading()">
+      @if (error()) {
+        <p-card>
+          <p class="error-msg">{{ error() }}</p>
+          <button pButton icon="pi pi-refresh" [label]="i18n.translate('common.retry') || 'Retry'" (click)="retry()"></button>
+        </p-card>
+      } @else {
+    <div class="admin-page">
+
+      <!-- Summary Stats -->
+      <div class="cards-row">
+        <div class="stat-card">
+          <div class="stat-label">{{ i18n.translate('admin.totalTenants') }}</div>
+          <div class="stat-value">{{ stats.total }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">{{ i18n.translate('admin.activeTenants') }}</div>
+          <div class="stat-value active">{{ stats.active }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">{{ i18n.translate('admin.suspendedTenants') }}</div>
+          <div class="stat-value suspended">{{ stats.suspended }}</div>
+        </div>
+      </div>
+
+      <!-- System Health Card -->
+      <div class="cards-row">
+        <div class="stat-card">
+          <div class="stat-label">{{ i18n.translate('admin.serverUptime') }}</div>
+          <div class="stat-value">{{ formatUptime(health?.uptime || 0) }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">{{ i18n.translate('admin.dbPoolStatus') }}</div>
+          <div class="stat-value" [class.ok]="health?.dbPoolStatus === 'ok'">{{ health?.dbPoolStatus || '—' }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">{{ i18n.translate('admin.serverTime') }}</div>
+          <div class="stat-value small">{{ health?.timestamp || '—' }}</div>
+        </div>
+      </div>
+
+      <!-- Tenant List Table -->
+      <div class="section">
+        <div class="section-header">
+          <h2>{{ i18n.translate('admin.tenants') }}</h2>
+          <button pButton [label]="i18n.translate('admin.createTenant')" icon="pi pi-plus" class="p-button-sm p-button-success" (click)="createTenant()"></button>
+        </div>
+        <grc-data-table
+          [totalRecords]="tenants.length"
+          [emptyMessage]="i18n.translate('admin.noTenants')">
+          <p-table [attr.aria-label]="i18n.translate('admin.ariaTenantsTable')" [value]="tenants" [paginator]="true" [rows]="10" styleClass="p-datatable-sm p-datatable-striped">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>{{ i18n.translate('admin.id') }}</th>
+                <th>{{ i18n.translate('admin.organization') }}</th>
+                <th>{{ i18n.translate('admin.industry') }}</th>
+                <th>{{ i18n.translate('admin.plan') }}</th>
+                <th>{{ i18n.translate('admin.status') }}</th>
+                <th>{{ i18n.translate('admin.created') }}</th>
+                <th>{{ i18n.translate('admin.actions') }}</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-t>
+              <tr>
+                <td><code>{{ t.tenant_id }}</code></td>
+                <td>{{ t.org_name }}</td>
+                <td>{{ t.industry }}</td>
+                <td><p-tag [value]="t.plan" [severity]="planSeverity(t.plan)" /></td>
+                <td><p-tag [value]="t.status || 'active'" [severity]="statusSeverity(t.status)" /></td>
+                <td>{{ t.created_at | appDate:'short' }}</td>
+                <td class="actions-cell">
+                  <button pButton icon="pi pi-user" class="p-button-sm p-button-text p-button-info" [pTooltip]="i18n.translate('admin.impersonate')" (click)="impersonate(t.tenant_id)"></button>
+                  <button pButton icon="pi pi-ban" class="p-button-sm p-button-text p-button-warning" [pTooltip]="i18n.translate('admin.suspend')" (click)="suspendTenant(t.tenant_id)"></button>
+                  <button pButton icon="pi pi-trash" class="p-button-sm p-button-text p-button-danger" [pTooltip]="i18n.translate('admin.delete')" (click)="deleteTenant(t.tenant_id)"></button>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </grc-data-table>
+      </div>
+
+      <!-- Background Jobs -->
+      <div class="section">
+        <h2>{{ i18n.translate('admin.jobs') }}</h2>
+        <grc-data-table
+          [totalRecords]="jobs.length"
+          [emptyMessage]="i18n.translate('admin.noJobs')">
+          <p-table [paginator]="true" [rows]="20" [rowsPerPageOptions]="[10,20,50]" [attr.aria-label]="i18n.translate('admin.ariaJobsTable')" [value]="jobs" styleClass="p-datatable-sm">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>{{ i18n.translate('admin.jobName') }}</th>
+                <th>{{ i18n.translate('admin.schedule') }}</th>
+                <th>{{ i18n.translate('admin.enabled') }}</th>
+                <th>{{ i18n.translate('admin.lastStatus') }}</th>
+                <th>{{ i18n.translate('admin.lastRun') }}</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-j>
+              <tr>
+                <td>{{ j.job_name }}</td>
+                <td><code>{{ j.cron_expression }}</code></td>
+                <td><p-tag [value]="j.enabled ? i18n.translate('common.yes') : i18n.translate('common.no')" [severity]="j.enabled ? 'success' : 'danger'" /></td>
+                <td><p-tag [value]="j.last_status || 'pending'" [severity]="jobStatusSeverity(j.last_status)" /></td>
+                <td>{{ j.last_run_at ? (j.last_run_at | appDate:'short') : '—' }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </grc-data-table>
+      </div>
+
+      <!-- Content Packs -->
+      <div class="section">
+        <div class="section-header">
+          <h2>{{ i18n.translate('admin.contentPacks') }}</h2>
+        </div>
+        <grc-data-table
+          [totalRecords]="contentPacks.length"
+          [emptyMessage]="i18n.translate('admin.noContentPacks')">
+          <p-table [paginator]="true" [rows]="20" [rowsPerPageOptions]="[10,20,50]" [attr.aria-label]="i18n.translate('admin.ariaContentPacksTable')" [value]="contentPacks" styleClass="p-datatable-sm">
+            <ng-template pTemplate="header">
+              <tr><th>{{ i18n.translate('admin.packId') }}</th><th>{{ i18n.translate('admin.version') }}</th><th>{{ i18n.translate('admin.status') }}</th><th>{{ i18n.translate('admin.installed') }}</th><th>{{ i18n.translate('admin.actions') }}</th></tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-p>
+              <tr>
+                <td><strong>{{ p.pack_id || p.packId }}</strong></td>
+                <td><code>{{ p.version || p.installed_version || '—' }}</code></td>
+                <td><p-tag [value]="p.status || 'installed'" [severity]="p.status === 'error' ? 'danger' : 'success'" /></td>
+                <td>{{ p.installed_at | appDate:'short' }}</td>
+                <td class="actions-cell">
+                  <button pButton icon="pi pi-refresh" class="p-button-sm p-button-text p-button-info" [pTooltip]="i18n.translate('admin.upgrade')" (click)="upgradePack(p)"></button>
+                  <button pButton icon="pi pi-undo" class="p-button-sm p-button-text p-button-warning" [pTooltip]="i18n.translate('admin.rollback')" (click)="rollbackPack(p)"></button>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </grc-data-table>
+      </div>
+
+      <!-- Edition Feature Limits -->
+      <div class="section">
+        <h2>{{ i18n.translate('admin.featureLimits') }}</h2>
+        <div class="limits-grid" *ngIf="editionLimits.length > 0; else noLimits">
+          <div class="limit-card" *ngFor="let el of editionLimits">
+            <div class="limit-plan">{{ el.plan }}</div>
+            <div class="limit-detail">{{ i18n.translate('admin.users') }}: {{ el.max_users }}</div>
+            <div class="limit-detail">{{ i18n.translate('admin.frameworks') }}: {{ el.max_frameworks }}</div>
+            <div class="limit-detail">{{ i18n.translate('admin.assessments') }}: {{ el.max_assessments }}</div>
+          </div>
+        </div>
+        <ng-template #noLimits>
+          <div class="limits-grid">
+            <div class="limit-card" *ngFor="let plan of ['free','starter','professional','enterprise']">
+              <div class="limit-plan">{{ plan }}</div>
+              <div class="limit-detail">{{ i18n.translate('admin.noLimitsConfigured') }}</div>
+            </div>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+      }
+    </app-page-shell>
+    <p-toast />
+    <p-confirmDialog />
+    <p-dialog [header]="i18n.translate('admin.createTenant') || 'Create Tenant'" [(visible)]="createDialogVisible" [modal]="true" [style]="{ width: '400px' }">
+      <div style="display:flex;flex-direction:column;gap:12px;padding:8px 0">
+        <grc-form-field [label]="i18n.translate('admin.organizationName') || 'Organization Name'">
+          <input pInputText id="new-org-name" [(ngModel)]="newOrgName" [placeholder]="i18n.translate('admin.enterOrgName') || 'Enter organization name'" [attr.aria-label]="i18n.translate('admin.enterOrgName') || 'Enter organization name'" />
+        </grc-form-field>
+      </div>
+      <ng-template pTemplate="footer">
+        <button pButton [label]="i18n.translate('common.cancel') || 'Cancel'" icon="pi pi-times" class="p-button-text" (click)="createDialogVisible = false"></button>
+        <button pButton [label]="i18n.translate('common.create') || 'Create'" icon="pi pi-check" [disabled]="!newOrgName.trim()" (click)="submitCreateTenant()"></button>
+      </ng-template>
+    </p-dialog>
+    <p-dialog [header]="i18n.translate('admin.rollbackPack') || 'Rollback Content Pack'" [(visible)]="rollbackDialogVisible" [modal]="true" [style]="{ width: '400px' }">
+      <div style="display:flex;flex-direction:column;gap:12px;padding:8px 0">
+        <grc-form-field [label]="i18n.translate('admin.targetVersion') || 'Target version'">
+          <input pInputText id="rollback-version" [(ngModel)]="rollbackVersion" [placeholder]="i18n.translate('admin.versionPlaceholder')" [attr.aria-label]="i18n.translate('admin.versionPlaceholder')" />
+        </grc-form-field>
+      </div>
+      <ng-template pTemplate="footer">
+        <button pButton [label]="i18n.translate('common.cancel') || 'Cancel'" icon="pi pi-times" class="p-button-text" (click)="rollbackDialogVisible = false"></button>
+        <button pButton [label]="i18n.translate('common.confirm') || 'Confirm'" icon="pi pi-check" [disabled]="!rollbackVersion.trim()" (click)="submitRollbackPack()"></button>
+      </ng-template>
+    </p-dialog>

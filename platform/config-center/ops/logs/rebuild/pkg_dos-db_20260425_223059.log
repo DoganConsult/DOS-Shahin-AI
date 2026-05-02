@@ -1,0 +1,4 @@
+
+> @dos/db@1.0.0 build /root/DOS-AIO/packages/dos-db
+> tsc -p tsconfig.build.json
+

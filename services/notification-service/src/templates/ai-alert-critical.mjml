@@ -1,0 +1,29 @@
+<mj-text align="{{ textAlign }}" font-size="13px" font-weight="700" color="#b91c1c" letter-spacing="1px" text-transform="uppercase" padding-bottom="4px">
+  {{ t.severityLabel }}
+</mj-text>
+<mj-text align="{{ textAlign }}" font-size="22px" font-weight="800" color="#7f1d1d" padding-bottom="8px">
+  {{ t.title }}
+</mj-text>
+<mj-text align="{{ textAlign }}">
+  {{ t.body }}
+</mj-text>
+<mj-table padding="16px 0" font-size="13px">
+  <tr style="background-color:#fef2f2;border:1px solid #fecaca;">
+    <td style="padding:16px;">
+      <div style="color:#7f1d1d;font-weight:700;padding-bottom:4px">{{ t.ruleLabel }}</div>
+      <div style="color:#374151;padding-bottom:8px">{{ ruleName }}</div>
+      <div style="color:#7f1d1d;font-weight:700;padding-bottom:4px">{{ t.tenantLabel }}</div>
+      <div style="color:#374151;padding-bottom:8px">{{ tenantId }}</div>
+      <div style="color:#7f1d1d;font-weight:700;padding-bottom:4px">{{ t.metricLabel }}</div>
+      <div style="color:#374151;padding-bottom:8px">{{ metricSummary }}</div>
+      <div style="color:#7f1d1d;font-weight:700;padding-bottom:4px">{{ t.firedAtLabel }}</div>
+      <div style="color:#374151">{{ firedAt }}</div>
+    </td>
+  </tr>
+</mj-table>
+<mj-button href="{{ alertUrl }}" align="{{ textAlign }}" background-color="#b91c1c" padding-top="20px">
+  {{ t.cta }}
+</mj-button>
+<mj-text align="{{ textAlign }}" css-class="muted" padding-top="12px">
+  {{ t.ackNote }}
+</mj-text>

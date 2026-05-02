@@ -1,0 +1,27 @@
+{
+  "name": "@dos/dsoc-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "DSOC frontend package — Angular DI tokens + typed client wrappers for product shells that surface DSOC audit feeds, alert inboxes, and posture dashboards. Modules never import this directly; products wire it in.",
+  "type": "module",
+  "main": "index.ts",
+  "types": "index.ts",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./index.ts",
+      "default": "./index.ts"
+    },
+    "./ports": {
+      "types": "./ports/index.ts",
+      "default": "./ports/index.ts"
+    }
+  },
+  "peerDependencies": {
+    "@angular/core": ">=17.0.0 <20.0.0",
+    "rxjs": ">=7.0.0"
+  },
+  "dependencies": {
+    "@dos/ports": "workspace:*"
+  }
+}

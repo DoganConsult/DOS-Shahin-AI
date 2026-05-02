@@ -1,0 +1,2492 @@
+{
+  "$schema": "dos-boundary-classification-v1",
+  "$generated": "2026-04-12T06:03:51.753Z",
+  "summary": {
+    "total_dependencies": 310,
+    "by_type": {
+      "forbidden": 2,
+      "in-process": 71,
+      "event": 237
+    }
+  },
+  "classifications": [
+    {
+      "from": "action",
+      "to": "governance",
+      "type": "event",
+      "fromService": "risk-incident-service",
+      "toService": "governance-policy-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "action",
+      "to": "audit",
+      "type": "event",
+      "fromService": "risk-incident-service",
+      "toService": "evidence-audit-reporting-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "action",
+      "to": "compliance",
+      "type": "event",
+      "fromService": "risk-incident-service",
+      "toService": "compliance-controls-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "action",
+      "to": "workflow",
+      "type": "event",
+      "fromService": "risk-incident-service",
+      "toService": "workflow-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "action",
+      "to": "evidence",
+      "type": "event",
+      "fromService": "risk-incident-service",
+      "toService": "evidence-audit-reporting-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "action",
+      "to": "reporting",
+      "type": "event",
+      "fromService": "risk-incident-service",
+      "toService": "evidence-audit-reporting-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "action",
+      "to": "controls",
+      "type": "event",
+      "fromService": "risk-incident-service",
+      "toService": "compliance-controls-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "admin",
+      "to": "workflow",
+      "type": "event",
+      "fromService": "tenant-service",
+      "toService": "workflow-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "agrc-engine",
+      "to": "risk",
+      "type": "event",
+      "fromService": "ai-gateway-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "agrc-engine",
+      "to": "compliance",
+      "type": "event",
+      "fromService": "ai-gateway-service",
+      "toService": "compliance-controls-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "agrc-engine",
+      "to": "incident",
+      "type": "event",
+      "fromService": "ai-gateway-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "agrc-engine",
+      "to": "audit",
+      "type": "event",
+      "fromService": "ai-gateway-service",
+      "toService": "evidence-audit-reporting-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "agrc-engine",
+      "to": "governance",
+      "type": "event",
+      "fromService": "ai-gateway-service",
+      "toService": "governance-policy-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "agrc-engine",
+      "to": "workflow",
+      "type": "event",
+      "fromService": "ai-gateway-service",
+      "toService": "workflow-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "ai",
+      "to": "risk",
+      "type": "event",
+      "fromService": "ai-gateway-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "ai",
+      "to": "compliance",
+      "type": "event",
+      "fromService": "ai-gateway-service",
+      "toService": "compliance-controls-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "ai",
+      "to": "policy",
+      "type": "event",
+      "fromService": "ai-gateway-service",
+      "toService": "governance-policy-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "ai",
+      "to": "audit",
+      "type": "event",
+      "fromService": "ai-gateway-service",
+      "toService": "evidence-audit-reporting-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "ai",
+      "to": "workflow",
+      "type": "event",
+      "fromService": "ai-gateway-service",
+      "toService": "workflow-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "ai",
+      "to": "governance",
+      "type": "event",
+      "fromService": "ai-gateway-service",
+      "toService": "governance-policy-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "ai-governance",
+      "to": "compliance",
+      "type": "event",
+      "fromService": "ai-gateway-service",
+      "toService": "compliance-controls-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "ai-governance",
+      "to": "risk",
+      "type": "event",
+      "fromService": "ai-gateway-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "ai-governance",
+      "to": "audit",
+      "type": "event",
+      "fromService": "ai-gateway-service",
+      "toService": "evidence-audit-reporting-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "ai-governance",
+      "to": "workflow",
+      "type": "event",
+      "fromService": "ai-gateway-service",
+      "toService": "workflow-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "analytics",
+      "to": "risk",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "analytics",
+      "to": "compliance",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "compliance-controls-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "analytics",
+      "to": "incident",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "analytics",
+      "to": "workflow",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "workflow-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "analytics",
+      "to": "vendor",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "analytics",
+      "to": "training",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "compliance-controls-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "analytics",
+      "to": "controls",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "compliance-controls-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "analytics",
+      "to": "bcp",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "analytics",
+      "to": "policy",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "governance-policy-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "analytics",
+      "to": "remediation",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "analytics",
+      "to": "bootstrap",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "tenant-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "analytics",
+      "to": "team",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "tenant-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "analytics",
+      "to": "journey",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "onboarding-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "analytics",
+      "to": "governance",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "governance-policy-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "asset",
+      "to": "compliance",
+      "type": "event",
+      "fromService": "risk-incident-service",
+      "toService": "compliance-controls-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "asset",
+      "to": "workflow",
+      "type": "event",
+      "fromService": "risk-incident-service",
+      "toService": "workflow-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "asset",
+      "to": "controls",
+      "type": "event",
+      "fromService": "risk-incident-service",
+      "toService": "compliance-controls-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "attestation",
+      "to": "compliance",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "compliance-controls-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "audit",
+      "to": "compliance",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "compliance-controls-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "audit",
+      "to": "risk",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "audit",
+      "to": "incident",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "audit",
+      "to": "vendor",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "audit",
+      "to": "workflow",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "workflow-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "audit",
+      "to": "controls",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "compliance-controls-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "audit",
+      "to": "bcp",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "bcp",
+      "to": "workflow",
+      "type": "event",
+      "fromService": "risk-incident-service",
+      "toService": "workflow-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "bcp",
+      "to": "controls",
+      "type": "event",
+      "fromService": "risk-incident-service",
+      "toService": "compliance-controls-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "benchmarks",
+      "to": "risk",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "benchmarks",
+      "to": "asset",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "benchmarks",
+      "to": "workflow",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "workflow-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "bootstrap",
+      "to": "onboarding",
+      "type": "event",
+      "fromService": "tenant-service",
+      "toService": "onboarding-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "bootstrap",
+      "to": "workflow",
+      "type": "event",
+      "fromService": "tenant-service",
+      "toService": "workflow-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "compliance",
+      "to": "risk",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "compliance",
+      "to": "evidence",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "evidence-audit-reporting-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "compliance",
+      "to": "audit",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "evidence-audit-reporting-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "compliance",
+      "to": "policy",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "governance-policy-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "compliance",
+      "to": "vendor",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "compliance",
+      "to": "workflow",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "workflow-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "controls",
+      "to": "risk",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "controls",
+      "to": "audit",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "evidence-audit-reporting-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "controls",
+      "to": "policy",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "governance-policy-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "controls",
+      "to": "workflow",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "workflow-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "controls",
+      "to": "evidence",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "evidence-audit-reporting-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "controls",
+      "to": "incident",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "controls",
+      "to": "remediation",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "dashboard",
+      "to": "risk",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "dashboard",
+      "to": "compliance",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "compliance-controls-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "dashboard",
+      "to": "incident",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "dashboard",
+      "to": "controls",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "compliance-controls-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "dashboard",
+      "to": "bootstrap",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "tenant-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "dashboard",
+      "to": "team",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "tenant-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "dashboard",
+      "to": "journey",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "onboarding-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "dora",
+      "to": "incident",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "dora",
+      "to": "asset",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "dora",
+      "to": "vendor",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "dora",
+      "to": "bcp",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "dora",
+      "to": "workflow",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "workflow-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "dora",
+      "to": "remediation",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "dora",
+      "to": "governance",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "governance-policy-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "evidence",
+      "to": "compliance",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "compliance-controls-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "evidence",
+      "to": "risk",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "evidence",
+      "to": "vendor",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "evidence",
+      "to": "workflow",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "workflow-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "evidence",
+      "to": "controls",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "compliance-controls-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "exception",
+      "to": "risk",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "exception",
+      "to": "policy",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "governance-policy-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "exception",
+      "to": "workflow",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "workflow-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "exception",
+      "to": "audit",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "evidence-audit-reporting-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "exception",
+      "to": "vendor",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "exception",
+      "to": "asset",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "executive",
+      "to": "risk",
+      "type": "event",
+      "fromService": "UNKNOWN",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "foundation",
+      "to": "workflow",
+      "type": "event",
+      "fromService": "tenant-service",
+      "toService": "workflow-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "governance",
+      "to": "compliance",
+      "type": "event",
+      "fromService": "governance-policy-service",
+      "toService": "compliance-controls-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "governance",
+      "to": "risk",
+      "type": "event",
+      "fromService": "governance-policy-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "governance",
+      "to": "audit",
+      "type": "event",
+      "fromService": "governance-policy-service",
+      "toService": "evidence-audit-reporting-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "governance",
+      "to": "workflow",
+      "type": "event",
+      "fromService": "governance-policy-service",
+      "toService": "workflow-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "governance",
+      "to": "incident",
+      "type": "event",
+      "fromService": "governance-policy-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "governance",
+      "to": "privacy",
+      "type": "event",
+      "fromService": "governance-policy-service",
+      "toService": "compliance-controls-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "governance",
+      "to": "bcp",
+      "type": "event",
+      "fromService": "governance-policy-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "governance",
+      "to": "controls",
+      "type": "event",
+      "fromService": "governance-policy-service",
+      "toService": "compliance-controls-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "governance",
+      "to": "remediation",
+      "type": "event",
+      "fromService": "governance-policy-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "governance-ai",
+      "to": "risk",
+      "type": "event",
+      "fromService": "governance-policy-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "governance-ai",
+      "to": "compliance",
+      "type": "event",
+      "fromService": "governance-policy-service",
+      "toService": "compliance-controls-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "governance-ai",
+      "to": "controls",
+      "type": "event",
+      "fromService": "governance-policy-service",
+      "toService": "compliance-controls-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "governance-ai",
+      "to": "incident",
+      "type": "event",
+      "fromService": "governance-policy-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "governance-ai",
+      "to": "audit",
+      "type": "event",
+      "fromService": "governance-policy-service",
+      "toService": "evidence-audit-reporting-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "governance-ai",
+      "to": "exception",
+      "type": "event",
+      "fromService": "governance-policy-service",
+      "toService": "compliance-controls-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "governance-ai",
+      "to": "workflow",
+      "type": "event",
+      "fromService": "governance-policy-service",
+      "toService": "workflow-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "governance-ai",
+      "to": "ai_governance",
+      "type": "event",
+      "fromService": "governance-policy-service",
+      "toService": "UNKNOWN",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "governance-os",
+      "to": "workflow",
+      "type": "event",
+      "fromService": "governance-policy-service",
+      "toService": "workflow-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "governance-os",
+      "to": "audit",
+      "type": "event",
+      "fromService": "governance-policy-service",
+      "toService": "evidence-audit-reporting-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "governance-os",
+      "to": "risk",
+      "type": "event",
+      "fromService": "governance-policy-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "inbox",
+      "to": "workflow",
+      "type": "event",
+      "fromService": "notification-service",
+      "toService": "workflow-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "inbox",
+      "to": "governance",
+      "type": "event",
+      "fromService": "notification-service",
+      "toService": "governance-policy-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "inbox",
+      "to": "incident",
+      "type": "event",
+      "fromService": "notification-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "inbox",
+      "to": "compliance",
+      "type": "event",
+      "fromService": "notification-service",
+      "toService": "compliance-controls-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "incident",
+      "to": "compliance",
+      "type": "event",
+      "fromService": "risk-incident-service",
+      "toService": "compliance-controls-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "incident",
+      "to": "workflow",
+      "type": "event",
+      "fromService": "risk-incident-service",
+      "toService": "workflow-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "incident",
+      "to": "controls",
+      "type": "event",
+      "fromService": "risk-incident-service",
+      "toService": "compliance-controls-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "incident",
+      "to": "audit",
+      "type": "event",
+      "fromService": "risk-incident-service",
+      "toService": "evidence-audit-reporting-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "integrations",
+      "to": "admin",
+      "type": "event",
+      "fromService": "gateway",
+      "toService": "tenant-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "integrations",
+      "to": "workflow",
+      "type": "event",
+      "fromService": "gateway",
+      "toService": "workflow-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "issues",
+      "to": "compliance",
+      "type": "event",
+      "fromService": "risk-incident-service",
+      "toService": "compliance-controls-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "issues",
+      "to": "audit",
+      "type": "event",
+      "fromService": "risk-incident-service",
+      "toService": "evidence-audit-reporting-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "issues",
+      "to": "workflow",
+      "type": "event",
+      "fromService": "risk-incident-service",
+      "toService": "workflow-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "journey",
+      "to": "compliance",
+      "type": "event",
+      "fromService": "onboarding-service",
+      "toService": "compliance-controls-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "journey",
+      "to": "risk",
+      "type": "event",
+      "fromService": "onboarding-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "journey",
+      "to": "audit",
+      "type": "event",
+      "fromService": "onboarding-service",
+      "toService": "evidence-audit-reporting-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "journey",
+      "to": "workflow",
+      "type": "event",
+      "fromService": "onboarding-service",
+      "toService": "workflow-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "journey",
+      "to": "team",
+      "type": "event",
+      "fromService": "onboarding-service",
+      "toService": "tenant-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "ksa-regulatory",
+      "to": "risk",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "ksa-regulatory",
+      "to": "policy",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "governance-policy-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "local-knowledge",
+      "to": "ai",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "ai-gateway-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "local-knowledge",
+      "to": "evidence",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "evidence-audit-reporting-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "mcp",
+      "to": "workflow",
+      "type": "event",
+      "fromService": "ai-gateway-service",
+      "toService": "workflow-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "module-onboarding",
+      "to": "bootstrap",
+      "type": "event",
+      "fromService": "onboarding-service",
+      "toService": "tenant-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "navigation",
+      "to": "platform",
+      "type": "event",
+      "fromService": "tenant-service",
+      "toService": "UNKNOWN",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "navigation",
+      "to": "dauth",
+      "type": "event",
+      "fromService": "tenant-service",
+      "toService": "auth-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "notification",
+      "to": "risk",
+      "type": "event",
+      "fromService": "notification-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "notification",
+      "to": "compliance",
+      "type": "event",
+      "fromService": "notification-service",
+      "toService": "compliance-controls-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "notification",
+      "to": "evidence",
+      "type": "event",
+      "fromService": "notification-service",
+      "toService": "evidence-audit-reporting-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "notification",
+      "to": "incident",
+      "type": "event",
+      "fromService": "notification-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "notification",
+      "to": "workflow",
+      "type": "event",
+      "fromService": "notification-service",
+      "toService": "workflow-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "notification",
+      "to": "audit",
+      "type": "event",
+      "fromService": "notification-service",
+      "toService": "evidence-audit-reporting-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "notification",
+      "to": "vendor",
+      "type": "event",
+      "fromService": "notification-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "notification",
+      "to": "policy",
+      "type": "event",
+      "fromService": "notification-service",
+      "toService": "governance-policy-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "notification",
+      "to": "exception",
+      "type": "event",
+      "fromService": "notification-service",
+      "toService": "compliance-controls-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "notification",
+      "to": "training",
+      "type": "event",
+      "fromService": "notification-service",
+      "toService": "compliance-controls-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "notification",
+      "to": "bootstrap",
+      "type": "event",
+      "fromService": "notification-service",
+      "toService": "tenant-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "notification",
+      "to": "controls",
+      "type": "event",
+      "fromService": "notification-service",
+      "toService": "compliance-controls-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "notification",
+      "to": "governance",
+      "type": "event",
+      "fromService": "notification-service",
+      "toService": "governance-policy-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "packs",
+      "to": "provisioning",
+      "type": "event",
+      "fromService": "UNKNOWN",
+      "toService": "tenant-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "packs",
+      "to": "modules",
+      "type": "event",
+      "fromService": "UNKNOWN",
+      "toService": "UNKNOWN",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "packs",
+      "to": "tenants",
+      "type": "event",
+      "fromService": "UNKNOWN",
+      "toService": "UNKNOWN",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "policy",
+      "to": "compliance",
+      "type": "event",
+      "fromService": "governance-policy-service",
+      "toService": "compliance-controls-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "policy",
+      "to": "risk",
+      "type": "event",
+      "fromService": "governance-policy-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "policy",
+      "to": "workflow",
+      "type": "event",
+      "fromService": "governance-policy-service",
+      "toService": "workflow-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "policy",
+      "to": "team",
+      "type": "event",
+      "fromService": "governance-policy-service",
+      "toService": "tenant-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "policy",
+      "to": "onboarding",
+      "type": "event",
+      "fromService": "governance-policy-service",
+      "toService": "onboarding-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "policy",
+      "to": "dora",
+      "type": "event",
+      "fromService": "governance-policy-service",
+      "toService": "compliance-controls-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "policy",
+      "to": "governance_ai",
+      "type": "event",
+      "fromService": "governance-policy-service",
+      "toService": "UNKNOWN",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "policy",
+      "to": "dashboard",
+      "type": "event",
+      "fromService": "governance-policy-service",
+      "toService": "evidence-audit-reporting-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "policy",
+      "to": "navigation",
+      "type": "event",
+      "fromService": "governance-policy-service",
+      "toService": "tenant-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "portals",
+      "to": "vendor",
+      "type": "event",
+      "fromService": "gateway",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "portals",
+      "to": "workflow",
+      "type": "event",
+      "fromService": "gateway",
+      "toService": "workflow-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "privacy",
+      "to": "incident",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "privacy",
+      "to": "vendor",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "privacy",
+      "to": "policy",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "governance-policy-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "privacy",
+      "to": "workflow",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "workflow-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "privacy",
+      "to": "asset",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "privacy",
+      "to": "governance",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "governance-policy-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "proactive-leadership",
+      "to": "autonomous-grc-engine",
+      "type": "event",
+      "fromService": "governance-policy-service",
+      "toService": "UNKNOWN",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "qiyas",
+      "to": "risk",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "qiyas",
+      "to": "governance",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "governance-policy-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "qiyas",
+      "to": "audit",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "evidence-audit-reporting-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "qiyas",
+      "to": "workflow",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "workflow-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "quality-gate",
+      "to": "platform",
+      "type": "event",
+      "fromService": "tenant-service",
+      "toService": "UNKNOWN",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "records",
+      "to": "compliance",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "compliance-controls-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "records",
+      "to": "policy",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "governance-policy-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "records",
+      "to": "workflow",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "workflow-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "remediation",
+      "to": "compliance",
+      "type": "event",
+      "fromService": "risk-incident-service",
+      "toService": "compliance-controls-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "remediation",
+      "to": "audit",
+      "type": "event",
+      "fromService": "risk-incident-service",
+      "toService": "evidence-audit-reporting-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "remediation",
+      "to": "workflow",
+      "type": "event",
+      "fromService": "risk-incident-service",
+      "toService": "workflow-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "remediation",
+      "to": "controls",
+      "type": "event",
+      "fromService": "risk-incident-service",
+      "toService": "compliance-controls-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "remediation",
+      "to": "governance",
+      "type": "event",
+      "fromService": "risk-incident-service",
+      "toService": "governance-policy-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "reporting",
+      "to": "risk",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "reporting",
+      "to": "compliance",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "compliance-controls-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "reporting",
+      "to": "incident",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "risk",
+      "to": "compliance",
+      "type": "event",
+      "fromService": "risk-incident-service",
+      "toService": "compliance-controls-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "risk",
+      "to": "audit",
+      "type": "event",
+      "fromService": "risk-incident-service",
+      "toService": "evidence-audit-reporting-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "risk",
+      "to": "workflow",
+      "type": "event",
+      "fromService": "risk-incident-service",
+      "toService": "workflow-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "risk",
+      "to": "controls",
+      "type": "event",
+      "fromService": "risk-incident-service",
+      "toService": "compliance-controls-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "risk",
+      "to": "evidence",
+      "type": "event",
+      "fromService": "risk-incident-service",
+      "toService": "evidence-audit-reporting-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "security",
+      "to": "compliance",
+      "type": "event",
+      "fromService": "auth-service",
+      "toService": "compliance-controls-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "security",
+      "to": "risk",
+      "type": "event",
+      "fromService": "auth-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "security",
+      "to": "asset",
+      "type": "event",
+      "fromService": "auth-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "security",
+      "to": "audit",
+      "type": "event",
+      "fromService": "auth-service",
+      "toService": "evidence-audit-reporting-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "security",
+      "to": "provisioning",
+      "type": "event",
+      "fromService": "auth-service",
+      "toService": "tenant-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "security",
+      "to": "incident",
+      "type": "event",
+      "fromService": "auth-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "training",
+      "to": "policy",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "governance-policy-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "training",
+      "to": "incident",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "training",
+      "to": "workflow",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "workflow-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "training",
+      "to": "audit",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "evidence-audit-reporting-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "training",
+      "to": "admin",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "tenant-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "training",
+      "to": "remediation",
+      "type": "event",
+      "fromService": "compliance-controls-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "vendor",
+      "to": "compliance",
+      "type": "event",
+      "fromService": "risk-incident-service",
+      "toService": "compliance-controls-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "vendor",
+      "to": "audit",
+      "type": "event",
+      "fromService": "risk-incident-service",
+      "toService": "evidence-audit-reporting-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "vendor",
+      "to": "workflow",
+      "type": "event",
+      "fromService": "risk-incident-service",
+      "toService": "workflow-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "vendor",
+      "to": "evidence",
+      "type": "event",
+      "fromService": "risk-incident-service",
+      "toService": "evidence-audit-reporting-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "widgets",
+      "to": "risk",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "widgets",
+      "to": "compliance",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "compliance-controls-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "widgets",
+      "to": "incident",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "widgets",
+      "to": "policy",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "governance-policy-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "widgets",
+      "to": "governance",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "governance-policy-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "widgets",
+      "to": "workflow",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "workflow-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "widgets",
+      "to": "provisioning",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "tenant-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "widgets",
+      "to": "team",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "tenant-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "widgets",
+      "to": "journey",
+      "type": "event",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "onboarding-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "workflow",
+      "to": "risk",
+      "type": "event",
+      "fromService": "workflow-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "workflow",
+      "to": "compliance",
+      "type": "event",
+      "fromService": "workflow-service",
+      "toService": "compliance-controls-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "workflow",
+      "to": "incident",
+      "type": "event",
+      "fromService": "workflow-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "workflow",
+      "to": "evidence",
+      "type": "event",
+      "fromService": "workflow-service",
+      "toService": "evidence-audit-reporting-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "workflow",
+      "to": "audit",
+      "type": "event",
+      "fromService": "workflow-service",
+      "toService": "evidence-audit-reporting-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "workflow",
+      "to": "policy",
+      "type": "event",
+      "fromService": "workflow-service",
+      "toService": "governance-policy-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "workflow",
+      "to": "vendor",
+      "type": "event",
+      "fromService": "workflow-service",
+      "toService": "risk-incident-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "workflow",
+      "to": "exception",
+      "type": "event",
+      "fromService": "workflow-service",
+      "toService": "compliance-controls-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "workflow",
+      "to": "team",
+      "type": "event",
+      "fromService": "workflow-service",
+      "toService": "tenant-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "workflow",
+      "to": "dashboard",
+      "type": "event",
+      "fromService": "workflow-service",
+      "toService": "evidence-audit-reporting-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "workflow",
+      "to": "navigation",
+      "type": "event",
+      "fromService": "workflow-service",
+      "toService": "tenant-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "workflow",
+      "to": "provisioning",
+      "type": "event",
+      "fromService": "workflow-service",
+      "toService": "tenant-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "workflow",
+      "to": "onboarding",
+      "type": "event",
+      "fromService": "workflow-service",
+      "toService": "onboarding-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "workflow",
+      "to": "dora",
+      "type": "event",
+      "fromService": "workflow-service",
+      "toService": "compliance-controls-service",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "workflow",
+      "to": "governance_ai",
+      "type": "event",
+      "fromService": "workflow-service",
+      "toService": "UNKNOWN",
+      "reason": "Cross-service — must use event backbone"
+    },
+    {
+      "from": "admin",
+      "to": "platform",
+      "type": "forbidden",
+      "reason": "Direct cross-module import — must be replaced with port/event/API",
+      "file": "admin/routes/entitlements.routes.ts"
+    },
+    {
+      "from": "dashboard",
+      "to": "widgets",
+      "type": "forbidden",
+      "reason": "Direct cross-module import — must be replaced with port/event/API",
+      "file": "dashboard/services/dashboard-query.service.ts"
+    },
+    {
+      "from": "action",
+      "to": "remediation",
+      "type": "in-process",
+      "fromService": "risk-incident-service",
+      "toService": "risk-incident-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "action",
+      "to": "incident",
+      "type": "in-process",
+      "fromService": "risk-incident-service",
+      "toService": "risk-incident-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "action",
+      "to": "bcp",
+      "type": "in-process",
+      "fromService": "risk-incident-service",
+      "toService": "risk-incident-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "admin",
+      "to": "foundation",
+      "type": "in-process",
+      "fromService": "tenant-service",
+      "toService": "tenant-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "admin",
+      "to": "bootstrap",
+      "type": "in-process",
+      "fromService": "tenant-service",
+      "toService": "tenant-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "agrc-engine",
+      "to": "ai",
+      "type": "in-process",
+      "fromService": "ai-gateway-service",
+      "toService": "ai-gateway-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "analytics",
+      "to": "evidence",
+      "type": "in-process",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "evidence-audit-reporting-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "analytics",
+      "to": "audit",
+      "type": "in-process",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "evidence-audit-reporting-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "asset",
+      "to": "risk",
+      "type": "in-process",
+      "fromService": "risk-incident-service",
+      "toService": "risk-incident-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "asset",
+      "to": "vendor",
+      "type": "in-process",
+      "fromService": "risk-incident-service",
+      "toService": "risk-incident-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "asset",
+      "to": "incident",
+      "type": "in-process",
+      "fromService": "risk-incident-service",
+      "toService": "risk-incident-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "asset",
+      "to": "remediation",
+      "type": "in-process",
+      "fromService": "risk-incident-service",
+      "toService": "risk-incident-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "attestation",
+      "to": "evidence",
+      "type": "in-process",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "evidence-audit-reporting-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "audit",
+      "to": "evidence",
+      "type": "in-process",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "evidence-audit-reporting-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "bcp",
+      "to": "risk",
+      "type": "in-process",
+      "fromService": "risk-incident-service",
+      "toService": "risk-incident-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "bcp",
+      "to": "incident",
+      "type": "in-process",
+      "fromService": "risk-incident-service",
+      "toService": "risk-incident-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "bcp",
+      "to": "asset",
+      "type": "in-process",
+      "fromService": "risk-incident-service",
+      "toService": "risk-incident-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "bcp",
+      "to": "vendor",
+      "type": "in-process",
+      "fromService": "risk-incident-service",
+      "toService": "risk-incident-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "bcp",
+      "to": "remediation",
+      "type": "in-process",
+      "fromService": "risk-incident-service",
+      "toService": "risk-incident-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "benchmarks",
+      "to": "compliance",
+      "type": "in-process",
+      "fromService": "compliance-controls-service",
+      "toService": "compliance-controls-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "benchmarks",
+      "to": "controls",
+      "type": "in-process",
+      "fromService": "compliance-controls-service",
+      "toService": "compliance-controls-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "bootstrap",
+      "to": "provisioning",
+      "type": "in-process",
+      "fromService": "tenant-service",
+      "toService": "tenant-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "compliance",
+      "to": "controls",
+      "type": "in-process",
+      "fromService": "compliance-controls-service",
+      "toService": "compliance-controls-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "controls",
+      "to": "compliance",
+      "type": "in-process",
+      "fromService": "compliance-controls-service",
+      "toService": "compliance-controls-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "dashboard",
+      "to": "audit",
+      "type": "in-process",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "evidence-audit-reporting-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "dora",
+      "to": "compliance",
+      "type": "in-process",
+      "fromService": "compliance-controls-service",
+      "toService": "compliance-controls-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "dora",
+      "to": "controls",
+      "type": "in-process",
+      "fromService": "compliance-controls-service",
+      "toService": "compliance-controls-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "evidence",
+      "to": "audit",
+      "type": "in-process",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "evidence-audit-reporting-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "exception",
+      "to": "compliance",
+      "type": "in-process",
+      "fromService": "compliance-controls-service",
+      "toService": "compliance-controls-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "fitch",
+      "to": "risk",
+      "type": "in-process",
+      "fromService": "risk-incident-service",
+      "toService": "risk-incident-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "fitch",
+      "to": "vendor",
+      "type": "in-process",
+      "fromService": "risk-incident-service",
+      "toService": "risk-incident-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "governance",
+      "to": "policy",
+      "type": "in-process",
+      "fromService": "governance-policy-service",
+      "toService": "governance-policy-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "governance-os",
+      "to": "governance",
+      "type": "in-process",
+      "fromService": "governance-policy-service",
+      "toService": "governance-policy-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "incident",
+      "to": "risk",
+      "type": "in-process",
+      "fromService": "risk-incident-service",
+      "toService": "risk-incident-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "incident",
+      "to": "vendor",
+      "type": "in-process",
+      "fromService": "risk-incident-service",
+      "toService": "risk-incident-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "incident",
+      "to": "bcp",
+      "type": "in-process",
+      "fromService": "risk-incident-service",
+      "toService": "risk-incident-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "incident",
+      "to": "remediation",
+      "type": "in-process",
+      "fromService": "risk-incident-service",
+      "toService": "risk-incident-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "issues",
+      "to": "risk",
+      "type": "in-process",
+      "fromService": "risk-incident-service",
+      "toService": "risk-incident-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "issues",
+      "to": "incident",
+      "type": "in-process",
+      "fromService": "risk-incident-service",
+      "toService": "risk-incident-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "issues",
+      "to": "vendor",
+      "type": "in-process",
+      "fromService": "risk-incident-service",
+      "toService": "risk-incident-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "ksa-regulatory",
+      "to": "compliance",
+      "type": "in-process",
+      "fromService": "compliance-controls-service",
+      "toService": "compliance-controls-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "mcp",
+      "to": "ai",
+      "type": "in-process",
+      "fromService": "ai-gateway-service",
+      "toService": "ai-gateway-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "navigation",
+      "to": "provisioning",
+      "type": "in-process",
+      "fromService": "tenant-service",
+      "toService": "tenant-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "playbooks",
+      "to": "incident",
+      "type": "in-process",
+      "fromService": "risk-incident-service",
+      "toService": "risk-incident-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "policy",
+      "to": "governance",
+      "type": "in-process",
+      "fromService": "governance-policy-service",
+      "toService": "governance-policy-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "privacy",
+      "to": "compliance",
+      "type": "in-process",
+      "fromService": "compliance-controls-service",
+      "toService": "compliance-controls-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "privacy",
+      "to": "exception",
+      "type": "in-process",
+      "fromService": "compliance-controls-service",
+      "toService": "compliance-controls-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "privacy",
+      "to": "controls",
+      "type": "in-process",
+      "fromService": "compliance-controls-service",
+      "toService": "compliance-controls-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "qiyas",
+      "to": "compliance",
+      "type": "in-process",
+      "fromService": "compliance-controls-service",
+      "toService": "compliance-controls-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "quality-gate",
+      "to": "provisioning",
+      "type": "in-process",
+      "fromService": "tenant-service",
+      "toService": "tenant-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "records",
+      "to": "audit",
+      "type": "in-process",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "evidence-audit-reporting-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "remediation",
+      "to": "risk",
+      "type": "in-process",
+      "fromService": "risk-incident-service",
+      "toService": "risk-incident-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "remediation",
+      "to": "incident",
+      "type": "in-process",
+      "fromService": "risk-incident-service",
+      "toService": "risk-incident-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "remediation",
+      "to": "vendor",
+      "type": "in-process",
+      "fromService": "risk-incident-service",
+      "toService": "risk-incident-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "remediation",
+      "to": "bcp",
+      "type": "in-process",
+      "fromService": "risk-incident-service",
+      "toService": "risk-incident-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "reporting",
+      "to": "analytics",
+      "type": "in-process",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "evidence-audit-reporting-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "reporting",
+      "to": "audit",
+      "type": "in-process",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "evidence-audit-reporting-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "risk",
+      "to": "vendor",
+      "type": "in-process",
+      "fromService": "risk-incident-service",
+      "toService": "risk-incident-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "risk",
+      "to": "asset",
+      "type": "in-process",
+      "fromService": "risk-incident-service",
+      "toService": "risk-incident-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "risk",
+      "to": "incident",
+      "type": "in-process",
+      "fromService": "risk-incident-service",
+      "toService": "risk-incident-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "risk",
+      "to": "bcp",
+      "type": "in-process",
+      "fromService": "risk-incident-service",
+      "toService": "risk-incident-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "team",
+      "to": "foundation",
+      "type": "in-process",
+      "fromService": "tenant-service",
+      "toService": "tenant-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "training",
+      "to": "compliance",
+      "type": "in-process",
+      "fromService": "compliance-controls-service",
+      "toService": "compliance-controls-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "training",
+      "to": "privacy",
+      "type": "in-process",
+      "fromService": "compliance-controls-service",
+      "toService": "compliance-controls-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "training",
+      "to": "controls",
+      "type": "in-process",
+      "fromService": "compliance-controls-service",
+      "toService": "compliance-controls-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "vendor",
+      "to": "risk",
+      "type": "in-process",
+      "fromService": "risk-incident-service",
+      "toService": "risk-incident-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "vendor",
+      "to": "incident",
+      "type": "in-process",
+      "fromService": "risk-incident-service",
+      "toService": "risk-incident-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "vendor",
+      "to": "bcp",
+      "type": "in-process",
+      "fromService": "risk-incident-service",
+      "toService": "risk-incident-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "widgets",
+      "to": "audit",
+      "type": "in-process",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "evidence-audit-reporting-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "widgets",
+      "to": "evidence",
+      "type": "in-process",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "evidence-audit-reporting-service",
+      "reason": "Both modules in same service — can be in-process event"
+    },
+    {
+      "from": "widgets",
+      "to": "dashboard",
+      "type": "in-process",
+      "fromService": "evidence-audit-reporting-service",
+      "toService": "evidence-audit-reporting-service",
+      "reason": "Both modules in same service — can be in-process event"
+    }
+  ]
+}

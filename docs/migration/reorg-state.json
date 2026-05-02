@@ -1,0 +1,867 @@
+{
+  "started_at": "2026-04-21T19:26:45.064Z",
+  "last_update_at": "2026-04-21T19:36:09.658Z",
+  "moved": {
+    "modules/fitch/source/backend/fitch/migrations/001_initial_tables.sql": {
+      "from": "modules/fitch/source/backend/fitch/migrations/001_initial_tables.sql",
+      "to": "modules/fitch/db/tenant/migrations/001_initial_tables.sql",
+      "when": "2026-04-21T19:26:45.118Z"
+    },
+    "modules/fitch/source/backend/fitch/migrations/001_initial_tables_down.sql": {
+      "from": "modules/fitch/source/backend/fitch/migrations/001_initial_tables_down.sql",
+      "to": "modules/fitch/db/tenant/migrations/001_initial_tables_down.sql",
+      "when": "2026-04-21T19:26:45.169Z"
+    },
+    "modules/fitch/source/backend/fitch/migrations/002_enterprise_expansion.sql": {
+      "from": "modules/fitch/source/backend/fitch/migrations/002_enterprise_expansion.sql",
+      "to": "modules/fitch/db/tenant/migrations/002_enterprise_expansion.sql",
+      "when": "2026-04-21T19:26:45.220Z"
+    },
+    "modules/governance-ai/source/backend/governance-ai/migrations/001_initial_tables.sql": {
+      "from": "modules/governance-ai/source/backend/governance-ai/migrations/001_initial_tables.sql",
+      "to": "modules/governance-ai/db/tenant/migrations/001_initial_tables.sql",
+      "when": "2026-04-21T19:26:45.272Z"
+    },
+    "modules/governance-ai/source/backend/governance-ai/migrations/001_initial_tables_down.sql": {
+      "from": "modules/governance-ai/source/backend/governance-ai/migrations/001_initial_tables_down.sql",
+      "to": "modules/governance-ai/db/tenant/migrations/001_initial_tables_down.sql",
+      "when": "2026-04-21T19:26:45.325Z"
+    },
+    "modules/governance-ai/source/backend/governance-ai/migrations/002_enterprise_expansion.sql": {
+      "from": "modules/governance-ai/source/backend/governance-ai/migrations/002_enterprise_expansion.sql",
+      "to": "modules/governance-ai/db/tenant/migrations/002_enterprise_expansion.sql",
+      "when": "2026-04-21T19:26:45.379Z"
+    },
+    "modules/governance-os/source/backend/governance-os/migrations/001_initial_tables.sql": {
+      "from": "modules/governance-os/source/backend/governance-os/migrations/001_initial_tables.sql",
+      "to": "modules/governance-os/db/tenant/migrations/001_initial_tables.sql",
+      "when": "2026-04-21T19:26:45.433Z"
+    },
+    "modules/governance-os/source/backend/governance-os/migrations/001_initial_tables_down.sql": {
+      "from": "modules/governance-os/source/backend/governance-os/migrations/001_initial_tables_down.sql",
+      "to": "modules/governance-os/db/tenant/migrations/001_initial_tables_down.sql",
+      "when": "2026-04-21T19:26:45.486Z"
+    },
+    "modules/governance-os/source/backend/governance-os/migrations/002_enterprise_expansion.sql": {
+      "from": "modules/governance-os/source/backend/governance-os/migrations/002_enterprise_expansion.sql",
+      "to": "modules/governance-os/db/tenant/migrations/002_enterprise_expansion.sql",
+      "when": "2026-04-21T19:26:45.542Z"
+    },
+    "modules/governance/source/backend/governance/migrations/001_governance_tables.sql": {
+      "from": "modules/governance/source/backend/governance/migrations/001_governance_tables.sql",
+      "to": "modules/governance/db/tenant/migrations/001_governance_tables.sql",
+      "when": "2026-04-21T19:26:45.597Z"
+    },
+    "modules/governance/source/backend/governance/migrations/001_governance_tables_down.sql": {
+      "from": "modules/governance/source/backend/governance/migrations/001_governance_tables_down.sql",
+      "to": "modules/governance/db/tenant/migrations/001_governance_tables_down.sql",
+      "when": "2026-04-21T19:26:45.652Z"
+    },
+    "modules/governance/source/backend/governance/migrations/002_enterprise_expansion.sql": {
+      "from": "modules/governance/source/backend/governance/migrations/002_enterprise_expansion.sql",
+      "to": "modules/governance/db/tenant/migrations/002_enterprise_expansion.sql",
+      "when": "2026-04-21T19:26:45.707Z"
+    },
+    "modules/grc-query/source/backend/grc-query/migrations/001_initial_tables.sql": {
+      "from": "modules/grc-query/source/backend/grc-query/migrations/001_initial_tables.sql",
+      "to": "modules/grc-query/db/tenant/migrations/001_initial_tables.sql",
+      "when": "2026-04-21T19:26:45.759Z"
+    },
+    "modules/grc-query/source/backend/grc-query/migrations/001_initial_tables_down.sql": {
+      "from": "modules/grc-query/source/backend/grc-query/migrations/001_initial_tables_down.sql",
+      "to": "modules/grc-query/db/tenant/migrations/001_initial_tables_down.sql",
+      "when": "2026-04-21T19:26:45.813Z"
+    },
+    "modules/grc-query/source/backend/grc-query/migrations/002_enterprise_expansion.sql": {
+      "from": "modules/grc-query/source/backend/grc-query/migrations/002_enterprise_expansion.sql",
+      "to": "modules/grc-query/db/tenant/migrations/002_enterprise_expansion.sql",
+      "when": "2026-04-21T19:26:45.867Z"
+    },
+    "modules/inbox/source/backend/inbox/migrations/001_inbox_tables.sql": {
+      "from": "modules/inbox/source/backend/inbox/migrations/001_inbox_tables.sql",
+      "to": "modules/inbox/db/tenant/migrations/001_inbox_tables.sql",
+      "when": "2026-04-21T19:26:45.923Z"
+    },
+    "modules/inbox/source/backend/inbox/migrations/001_inbox_tables_down.sql": {
+      "from": "modules/inbox/source/backend/inbox/migrations/001_inbox_tables_down.sql",
+      "to": "modules/inbox/db/tenant/migrations/001_inbox_tables_down.sql",
+      "when": "2026-04-21T19:26:45.975Z"
+    },
+    "services/asset-service/migrations/001_asset_tables.sql": {
+      "from": "services/asset-service/migrations/001_asset_tables.sql",
+      "to": "modules/asset/db/public/migrations/001_asset_tables.sql",
+      "when": "2026-04-21T19:26:46.037Z"
+    },
+    "services/asset-service/migrations/001_asset_tables_down.sql": {
+      "from": "services/asset-service/migrations/001_asset_tables_down.sql",
+      "to": "modules/asset/db/public/migrations/001_asset_tables_down.sql",
+      "when": "2026-04-21T19:26:46.095Z"
+    },
+    "services/auth-service/migrations/001_auth_tables.sql": {
+      "from": "services/auth-service/migrations/001_auth_tables.sql",
+      "to": "modules/platform-core/db/public/migrations/001_auth_tables.sql",
+      "when": "2026-04-21T19:26:46.149Z"
+    },
+    "services/auth-service/migrations/001_auth_tables_down.sql": {
+      "from": "services/auth-service/migrations/001_auth_tables_down.sql",
+      "to": "modules/platform-core/db/public/migrations/001_auth_tables_down.sql",
+      "when": "2026-04-21T19:26:46.203Z"
+    },
+    "services/auth-service/migrations/002_expand_authz_decision_log.sql": {
+      "from": "services/auth-service/migrations/002_expand_authz_decision_log.sql",
+      "to": "modules/platform-core/db/public/migrations/002_expand_authz_decision_log.sql",
+      "when": "2026-04-21T19:26:46.262Z"
+    },
+    "services/auth-service/migrations/002_expand_authz_decision_log_down.sql": {
+      "from": "services/auth-service/migrations/002_expand_authz_decision_log_down.sql",
+      "to": "modules/platform-core/db/public/migrations/002_expand_authz_decision_log_down.sql",
+      "when": "2026-04-21T19:26:46.313Z"
+    },
+    "services/auth-service/migrations/003_refresh_token_families.sql": {
+      "from": "services/auth-service/migrations/003_refresh_token_families.sql",
+      "to": "modules/platform-core/db/public/migrations/003_refresh_token_families.sql",
+      "when": "2026-04-21T19:26:46.367Z"
+    },
+    "services/auth-service/migrations/003_refresh_token_families_down.sql": {
+      "from": "services/auth-service/migrations/003_refresh_token_families_down.sql",
+      "to": "modules/platform-core/db/public/migrations/003_refresh_token_families_down.sql",
+      "when": "2026-04-21T19:26:46.419Z"
+    },
+    "services/auth-service/migrations/004_jwt_signing_keys.sql": {
+      "from": "services/auth-service/migrations/004_jwt_signing_keys.sql",
+      "to": "modules/platform-core/db/public/migrations/004_jwt_signing_keys.sql",
+      "when": "2026-04-21T19:26:46.470Z"
+    },
+    "services/auth-service/migrations/004_jwt_signing_keys_down.sql": {
+      "from": "services/auth-service/migrations/004_jwt_signing_keys_down.sql",
+      "to": "modules/platform-core/db/public/migrations/004_jwt_signing_keys_down.sql",
+      "when": "2026-04-21T19:26:46.522Z"
+    },
+    "services/auth-service/migrations/005_scim_api_tokens.sql": {
+      "from": "services/auth-service/migrations/005_scim_api_tokens.sql",
+      "to": "modules/platform-core/db/public/migrations/005_scim_api_tokens.sql",
+      "when": "2026-04-21T19:26:46.574Z"
+    },
+    "services/auth-service/migrations/005_scim_api_tokens_down.sql": {
+      "from": "services/auth-service/migrations/005_scim_api_tokens_down.sql",
+      "to": "modules/platform-core/db/public/migrations/005_scim_api_tokens_down.sql",
+      "when": "2026-04-21T19:26:46.631Z"
+    },
+    "modules/onboarding/source/backend/onboarding/migrations/003_grc_catalog_seed.sql": {
+      "from": "modules/onboarding/source/backend/onboarding/migrations/003_grc_catalog_seed.sql",
+      "to": "modules/grc-query/db/public/migrations/003_grc_catalog_seed.sql",
+      "when": "2026-04-21T19:33:00.698Z"
+    },
+    "modules/onboarding/source/backend/onboarding/migrations/003_inference_rules_seed.sql": {
+      "from": "modules/onboarding/source/backend/onboarding/migrations/003_inference_rules_seed.sql",
+      "to": "modules/onboarding/db/public/migrations/003_inference_rules_seed.sql",
+      "when": "2026-04-21T19:33:00.751Z"
+    },
+    "modules/platform-onboarding/src/migrations/001_platform_onboarding_schema_evolution.sql": {
+      "from": "modules/platform-onboarding/src/migrations/001_platform_onboarding_schema_evolution.sql",
+      "to": "modules/platform-core/db/public/migrations/001_platform_onboarding_schema_evolution.sql",
+      "when": "2026-04-21T19:33:00.810Z"
+    },
+    "modules/platform-onboarding/src/migrations/002_repair_stuck_sessions.sql": {
+      "from": "modules/platform-onboarding/src/migrations/002_repair_stuck_sessions.sql",
+      "to": "modules/platform-core/db/public/migrations/002_repair_stuck_sessions.sql",
+      "when": "2026-04-21T19:33:00.865Z"
+    },
+    "ops/migrations/002_service_permissions.sql": {
+      "from": "ops/migrations/002_service_permissions.sql",
+      "to": "modules/platform-core/db/public/migrations/002_service_permissions.sql",
+      "when": "2026-04-21T19:33:00.918Z"
+    },
+    "ops/migrations/007_seed_config_definitions.sql": {
+      "from": "ops/migrations/007_seed_config_definitions.sql",
+      "to": "modules/platform-core/db/public/migrations/007_seed_config_definitions.sql",
+      "when": "2026-04-21T19:33:00.970Z"
+    },
+    "ops/migrations/008_soft_delete_columns.sql": {
+      "from": "ops/migrations/008_soft_delete_columns.sql",
+      "to": "modules/platform-core/db/public/migrations/008_soft_delete_columns.sql",
+      "when": "2026-04-21T19:33:01.024Z"
+    },
+    "ops/migrations/009a_seed_platform_admin.sql": {
+      "from": "ops/migrations/009a_seed_platform_admin.sql",
+      "to": "modules/platform-core/db/public/migrations/009a_seed_platform_admin.sql",
+      "when": "2026-04-21T19:33:01.077Z"
+    },
+    "ops/migrations/010_seed_framework_registry.sql": {
+      "from": "ops/migrations/010_seed_framework_registry.sql",
+      "to": "modules/platform-core/db/public/migrations/010_seed_framework_registry.sql",
+      "when": "2026-04-21T19:33:01.132Z"
+    },
+    "ops/migrations/012_fix_schema_permissions_and_grants.sql": {
+      "from": "ops/migrations/012_fix_schema_permissions_and_grants.sql",
+      "to": "modules/platform-core/db/public/migrations/012_fix_schema_permissions_and_grants.sql",
+      "when": "2026-04-21T19:33:01.187Z"
+    },
+    "ops/migrations/013_create_dos_ai_role.sql": {
+      "from": "ops/migrations/013_create_dos_ai_role.sql",
+      "to": "modules/platform-core/db/public/migrations/013_create_dos_ai_role.sql",
+      "when": "2026-04-21T19:33:01.244Z"
+    },
+    "ops/migrations/017_seed_onboarding_data.sql": {
+      "from": "ops/migrations/017_seed_onboarding_data.sql",
+      "to": "modules/platform-core/db/public/migrations/017_seed_onboarding_data.sql",
+      "when": "2026-04-21T19:33:01.298Z"
+    },
+    "ops/migrations/019_seed_lookup_and_regulatory_data.sql": {
+      "from": "ops/migrations/019_seed_lookup_and_regulatory_data.sql",
+      "to": "modules/platform-core/db/public/migrations/019_seed_lookup_and_regulatory_data.sql",
+      "when": "2026-04-21T19:33:01.358Z"
+    },
+    "ops/migrations/028_smart_questions_and_lookups.sql": {
+      "from": "ops/migrations/028_smart_questions_and_lookups.sql",
+      "to": "modules/onboarding/db/public/migrations/028_smart_questions_and_lookups.sql",
+      "when": "2026-04-21T19:33:01.413Z"
+    },
+    "ops/migrations/030_global_regulatory_expansion.sql": {
+      "from": "ops/migrations/030_global_regulatory_expansion.sql",
+      "to": "modules/onboarding/db/public/migrations/030_global_regulatory_expansion.sql",
+      "when": "2026-04-21T19:33:01.468Z"
+    },
+    "ops/migrations/031_complete_question_bank_600_plus.sql": {
+      "from": "ops/migrations/031_complete_question_bank_600_plus.sql",
+      "to": "modules/onboarding/db/public/migrations/031_complete_question_bank_600_plus.sql",
+      "when": "2026-04-21T19:33:01.522Z"
+    },
+    "ops/migrations/038_onboarding_agent_registry_seed.sql": {
+      "from": "ops/migrations/038_onboarding_agent_registry_seed.sql",
+      "to": "modules/mcp/db/public/migrations/038_onboarding_agent_registry_seed.sql",
+      "when": "2026-04-21T19:33:01.577Z"
+    },
+    "ops/migrations/041_expand_question_bank.sql": {
+      "from": "ops/migrations/041_expand_question_bank.sql",
+      "to": "modules/onboarding/db/public/migrations/041_expand_question_bank.sql",
+      "when": "2026-04-21T19:33:01.633Z"
+    },
+    "ops/migrations/050_public_onboarding_stage_tables.sql": {
+      "from": "ops/migrations/050_public_onboarding_stage_tables.sql",
+      "to": "modules/onboarding/db/public/migrations/050_public_onboarding_stage_tables.sql",
+      "when": "2026-04-21T19:33:01.686Z"
+    },
+    "ops/migrations/051_deprecate_public_onboarding_stage_tables.sql": {
+      "from": "ops/migrations/051_deprecate_public_onboarding_stage_tables.sql",
+      "to": "modules/onboarding/db/public/migrations/051_deprecate_public_onboarding_stage_tables.sql",
+      "when": "2026-04-21T19:33:01.737Z"
+    },
+    "ops/migrations/052_onboarding_question_bank_seed.sql": {
+      "from": "ops/migrations/052_onboarding_question_bank_seed.sql",
+      "to": "modules/onboarding/db/public/migrations/052_onboarding_question_bank_seed.sql",
+      "when": "2026-04-21T19:33:01.792Z"
+    },
+    "ops/migrations/055_user_bootstrap_state_view_down.sql": {
+      "from": "ops/migrations/055_user_bootstrap_state_view_down.sql",
+      "to": "modules/platform-core/db/public/migrations/055_user_bootstrap_state_view_down.sql",
+      "when": "2026-04-21T19:33:01.847Z"
+    },
+    "ops/migrations/055_user_bootstrap_state_view.sql": {
+      "from": "ops/migrations/055_user_bootstrap_state_view.sql",
+      "to": "modules/platform-core/db/public/migrations/055_user_bootstrap_state_view.sql",
+      "when": "2026-04-21T19:33:01.905Z"
+    },
+    "ops/migrations/200_layer_conflict_closure.sql": {
+      "from": "ops/migrations/200_layer_conflict_closure.sql",
+      "to": "modules/platform-core/db/tenant/migrations/200_layer_conflict_closure.sql",
+      "when": "2026-04-21T19:33:01.961Z"
+    },
+    "ops/migrations/20260418_0001_users_email_ci_uk_down.sql": {
+      "from": "ops/migrations/20260418_0001_users_email_ci_uk_down.sql",
+      "to": "modules/platform-core/db/public/migrations/20260418_0001_users_email_ci_uk_down.sql",
+      "when": "2026-04-21T19:33:02.016Z"
+    },
+    "ops/migrations/20260418_0001_users_email_ci_uk.sql": {
+      "from": "ops/migrations/20260418_0001_users_email_ci_uk.sql",
+      "to": "modules/platform-core/db/public/migrations/20260418_0001_users_email_ci_uk.sql",
+      "when": "2026-04-21T19:33:02.072Z"
+    },
+    "ops/migrations/20260418_0003_platform_outbox_index_down.sql": {
+      "from": "ops/migrations/20260418_0003_platform_outbox_index_down.sql",
+      "to": "modules/platform-core/db/public/migrations/20260418_0003_platform_outbox_index_down.sql",
+      "when": "2026-04-21T19:33:02.125Z"
+    },
+    "ops/migrations/20260418_0003_platform_outbox_index.sql": {
+      "from": "ops/migrations/20260418_0003_platform_outbox_index.sql",
+      "to": "modules/platform-core/db/public/migrations/20260418_0003_platform_outbox_index.sql",
+      "when": "2026-04-21T19:33:02.182Z"
+    },
+    "ops/migrations/20260418_0005_users_email_verified_index_down.sql": {
+      "from": "ops/migrations/20260418_0005_users_email_verified_index_down.sql",
+      "to": "modules/platform-core/db/public/migrations/20260418_0005_users_email_verified_index_down.sql",
+      "when": "2026-04-21T19:33:02.236Z"
+    },
+    "ops/migrations/20260418_0005_users_email_verified_index.sql": {
+      "from": "ops/migrations/20260418_0005_users_email_verified_index.sql",
+      "to": "modules/platform-core/db/public/migrations/20260418_0005_users_email_verified_index.sql",
+      "when": "2026-04-21T19:33:02.290Z"
+    },
+    "ops/migrations/20260418_0006_email_verification_tokens_jti_down.sql": {
+      "from": "ops/migrations/20260418_0006_email_verification_tokens_jti_down.sql",
+      "to": "modules/platform-core/db/public/migrations/20260418_0006_email_verification_tokens_jti_down.sql",
+      "when": "2026-04-21T19:33:02.344Z"
+    },
+    "ops/migrations/20260418_0006_email_verification_tokens_jti.sql": {
+      "from": "ops/migrations/20260418_0006_email_verification_tokens_jti.sql",
+      "to": "modules/platform-core/db/public/migrations/20260418_0006_email_verification_tokens_jti.sql",
+      "when": "2026-04-21T19:33:02.403Z"
+    },
+    "ops/migrations/20260418_0010_bootstrap_state_view_comment_down.sql": {
+      "from": "ops/migrations/20260418_0010_bootstrap_state_view_comment_down.sql",
+      "to": "modules/platform-core/db/public/migrations/20260418_0010_bootstrap_state_view_comment_down.sql",
+      "when": "2026-04-21T19:33:02.458Z"
+    },
+    "ops/migrations/20260418_0010_bootstrap_state_view_comment.sql": {
+      "from": "ops/migrations/20260418_0010_bootstrap_state_view_comment.sql",
+      "to": "modules/platform-core/db/public/migrations/20260418_0010_bootstrap_state_view_comment.sql",
+      "when": "2026-04-21T19:33:02.516Z"
+    },
+    "ops/migrations/20260419_0002_p95_notifications_schema_align_down.sql": {
+      "from": "ops/migrations/20260419_0002_p95_notifications_schema_align_down.sql",
+      "to": "modules/platform-core/db/_frozen/ops/migrations/20260419_0002_p95_notifications_schema_align_down.sql",
+      "when": "2026-04-21T19:33:02.571Z"
+    },
+    "ops/migrations/rollback/000_create_dos_schema.sql": {
+      "from": "ops/migrations/rollback/000_create_dos_schema.sql",
+      "to": "modules/platform-core/db/public/migrations/000_create_dos_schema_down.sql",
+      "when": "2026-04-21T19:33:02.624Z"
+    },
+    "ops/migrations/rollback/001_platform_baseline.sql": {
+      "from": "ops/migrations/rollback/001_platform_baseline.sql",
+      "to": "modules/platform-core/db/public/migrations/001_platform_baseline_down.sql",
+      "when": "2026-04-21T19:33:02.677Z"
+    },
+    "ops/migrations/rollback/002_service_permissions.sql": {
+      "from": "ops/migrations/rollback/002_service_permissions.sql",
+      "to": "modules/platform-core/db/public/migrations/002_service_permissions_down.sql",
+      "when": "2026-04-21T19:33:02.731Z"
+    },
+    "ops/migrations/rollback/003_enterprise_features.sql": {
+      "from": "ops/migrations/rollback/003_enterprise_features.sql",
+      "to": "modules/platform-core/db/public/migrations/003_enterprise_features_down.sql",
+      "when": "2026-04-21T19:33:02.783Z"
+    },
+    "ops/migrations/rollback/003_platform_admin_tables.sql": {
+      "from": "ops/migrations/rollback/003_platform_admin_tables.sql",
+      "to": "modules/platform-core/db/public/migrations/003_platform_admin_tables_down.sql",
+      "when": "2026-04-21T19:33:02.845Z"
+    },
+    "ops/migrations/rollback/004_dos_dauth_platform_layer.sql": {
+      "from": "ops/migrations/rollback/004_dos_dauth_platform_layer.sql",
+      "to": "modules/platform-core/db/public/migrations/004_dos_dauth_platform_layer_down.sql",
+      "when": "2026-04-21T19:33:02.900Z"
+    },
+    "ops/migrations/rollback/005_missing_platform_tables.sql": {
+      "from": "ops/migrations/rollback/005_missing_platform_tables.sql",
+      "to": "modules/platform-core/db/public/migrations/005_missing_platform_tables_down.sql",
+      "when": "2026-04-21T19:33:02.953Z"
+    },
+    "ops/migrations/rollback/006_missing_admin_tables.sql": {
+      "from": "ops/migrations/rollback/006_missing_admin_tables.sql",
+      "to": "modules/platform-core/db/public/migrations/006_missing_admin_tables_down.sql",
+      "when": "2026-04-21T19:33:03.008Z"
+    },
+    "ops/migrations/rollback/007_seed_config_definitions.sql": {
+      "from": "ops/migrations/rollback/007_seed_config_definitions.sql",
+      "to": "modules/platform-core/db/public/migrations/007_seed_config_definitions_down.sql",
+      "when": "2026-04-21T19:33:03.063Z"
+    },
+    "ops/migrations/rollback/008_soft_delete_columns.sql": {
+      "from": "ops/migrations/rollback/008_soft_delete_columns.sql",
+      "to": "modules/platform-core/db/public/migrations/008_soft_delete_columns_down.sql",
+      "when": "2026-04-21T19:33:03.118Z"
+    },
+    "ops/migrations/rollback/009_seed_platform_admin.sql": {
+      "from": "ops/migrations/rollback/009_seed_platform_admin.sql",
+      "to": "modules/platform-core/db/public/migrations/009_seed_platform_admin_down.sql",
+      "when": "2026-04-21T19:33:03.173Z"
+    },
+    "ops/migrations/rollback/009_service_domain_tables.sql": {
+      "from": "ops/migrations/rollback/009_service_domain_tables.sql",
+      "to": "modules/workflow/db/public/migrations/009_service_domain_tables_down.sql",
+      "when": "2026-04-21T19:33:03.229Z"
+    },
+    "ops/migrations/rollback/014_missing_endpoint_tables.sql": {
+      "from": "ops/migrations/rollback/014_missing_endpoint_tables.sql",
+      "to": "modules/platform-core/db/public/migrations/014_missing_endpoint_tables_down.sql",
+      "when": "2026-04-21T19:33:03.283Z"
+    },
+    "ops/migrations/tenant/020_row_level_security_down.sql": {
+      "from": "ops/migrations/tenant/020_row_level_security_down.sql",
+      "to": "modules/platform-core/db/tenant/migrations/020_row_level_security_down.sql",
+      "when": "2026-04-21T19:33:03.339Z"
+    },
+    "ops/migrations/tenant/020_row_level_security.sql": {
+      "from": "ops/migrations/tenant/020_row_level_security.sql",
+      "to": "modules/platform-core/db/tenant/migrations/020_row_level_security.sql",
+      "when": "2026-04-21T19:33:03.397Z"
+    },
+    "ops/migrations/tenant/024_rls_vector_stores_down.sql": {
+      "from": "ops/migrations/tenant/024_rls_vector_stores_down.sql",
+      "to": "modules/platform-core/db/tenant/migrations/024_rls_vector_stores_down.sql",
+      "when": "2026-04-21T19:33:03.453Z"
+    },
+    "ops/migrations/tenant/024_rls_vector_stores.sql": {
+      "from": "ops/migrations/tenant/024_rls_vector_stores.sql",
+      "to": "modules/platform-core/db/tenant/migrations/024_rls_vector_stores.sql",
+      "when": "2026-04-21T19:33:03.507Z"
+    },
+    "ops/migrations/tenant/035_risk_module_config_seed.sql": {
+      "from": "ops/migrations/tenant/035_risk_module_config_seed.sql",
+      "to": "modules/platform-core/db/tenant/migrations/035_risk_module_config_seed.sql",
+      "when": "2026-04-21T19:33:03.561Z"
+    },
+    "ops/migrations/tenant/036_compliance_module_config_seed.sql": {
+      "from": "ops/migrations/tenant/036_compliance_module_config_seed.sql",
+      "to": "modules/platform-core/db/tenant/migrations/036_compliance_module_config_seed.sql",
+      "when": "2026-04-21T19:33:03.616Z"
+    },
+    "ops/migrations/tenant/038_seed_baseline_handoff_roles_tenant_down.sql": {
+      "from": "ops/migrations/tenant/038_seed_baseline_handoff_roles_tenant_down.sql",
+      "to": "modules/platform-core/db/tenant/migrations/038_seed_baseline_handoff_roles_tenant_down.sql",
+      "when": "2026-04-21T19:33:03.671Z"
+    },
+    "ops/migrations/tenant/038_seed_baseline_handoff_roles_tenant.sql": {
+      "from": "ops/migrations/tenant/038_seed_baseline_handoff_roles_tenant.sql",
+      "to": "modules/platform-core/db/tenant/migrations/038_seed_baseline_handoff_roles_tenant.sql",
+      "when": "2026-04-21T19:33:03.724Z"
+    },
+    "ops/migrations/tenant/099_bootstrap_tenant_domain_tables_down.sql": {
+      "from": "ops/migrations/tenant/099_bootstrap_tenant_domain_tables_down.sql",
+      "to": "modules/platform-core/db/_frozen/ops/migrations/tenant/099_bootstrap_tenant_domain_tables_down.sql",
+      "when": "2026-04-21T19:33:03.781Z"
+    },
+    "ops/migrations/tenant/106_risk_r1_nav_and_baseline.sql": {
+      "from": "ops/migrations/tenant/106_risk_r1_nav_and_baseline.sql",
+      "to": "modules/risk/db/tenant/migrations/106_risk_r1_nav_and_baseline.sql",
+      "when": "2026-04-21T19:33:03.835Z"
+    },
+    "ops/migrations/tenant/108_incident_r1_1_sla_config.sql": {
+      "from": "ops/migrations/tenant/108_incident_r1_1_sla_config.sql",
+      "to": "modules/platform-core/db/tenant/migrations/108_incident_r1_1_sla_config.sql",
+      "when": "2026-04-21T19:33:03.889Z"
+    },
+    "ops/migrations/tenant/124_ai_tenant_id_backfill_down.sql": {
+      "from": "ops/migrations/tenant/124_ai_tenant_id_backfill_down.sql",
+      "to": "modules/platform-core/db/tenant/migrations/124_ai_tenant_id_backfill_down.sql",
+      "when": "2026-04-21T19:33:03.944Z"
+    },
+    "ops/migrations/tenant/124_ai_tenant_id_backfill.sql": {
+      "from": "ops/migrations/tenant/124_ai_tenant_id_backfill.sql",
+      "to": "modules/platform-core/db/tenant/migrations/124_ai_tenant_id_backfill.sql",
+      "when": "2026-04-21T19:33:04.000Z"
+    },
+    "ops/migrations/tenant/127_drop_mcp_stubs_down.sql": {
+      "from": "ops/migrations/tenant/127_drop_mcp_stubs_down.sql",
+      "to": "modules/mcp/db/tenant/migrations/127_drop_mcp_stubs_down.sql",
+      "when": "2026-04-21T19:33:04.057Z"
+    },
+    "ops/migrations/tenant/127_drop_mcp_stubs.sql": {
+      "from": "ops/migrations/tenant/127_drop_mcp_stubs.sql",
+      "to": "modules/mcp/db/tenant/migrations/127_drop_mcp_stubs.sql",
+      "when": "2026-04-21T19:33:04.117Z"
+    },
+    "ops/migrations/tenant/129_ai_rls_enablement.sql": {
+      "from": "ops/migrations/tenant/129_ai_rls_enablement.sql",
+      "to": "modules/platform-core/db/tenant/migrations/129_ai_rls_enablement.sql",
+      "when": "2026-04-21T19:33:04.172Z"
+    },
+    "ops/migrations/20260419_0002_p95_notifications_schema_align.sql": {
+      "from": "ops/migrations/20260419_0002_p95_notifications_schema_align.sql",
+      "to": "modules/platform-core/db/_frozen/ops/migrations/20260419_0002_p95_notifications_schema_align.sql",
+      "when": "2026-04-21T19:36:08.545Z"
+    },
+    "ops/migrations/expected-schema.sql": {
+      "from": "ops/migrations/expected-schema.sql",
+      "to": "modules/platform-core/db/_frozen/ops/migrations/expected-schema.sql",
+      "when": "2026-04-21T19:36:08.597Z"
+    },
+    "ops/migrations/tenant/000_inline_baseline.sql": {
+      "from": "ops/migrations/tenant/000_inline_baseline.sql",
+      "to": "modules/platform-core/db/_frozen/ops/migrations/tenant/000_inline_baseline.sql",
+      "when": "2026-04-21T19:36:08.647Z"
+    },
+    "ops/migrations/tenant/027_tenant_schema_tables.sql": {
+      "from": "ops/migrations/tenant/027_tenant_schema_tables.sql",
+      "to": "modules/platform-core/db/_frozen/ops/migrations/tenant/027_tenant_schema_tables.sql",
+      "when": "2026-04-21T19:36:08.699Z"
+    },
+    "ops/migrations/tenant/099_bootstrap_tenant_domain_tables.sql": {
+      "from": "ops/migrations/tenant/099_bootstrap_tenant_domain_tables.sql",
+      "to": "modules/platform-core/db/_frozen/ops/migrations/tenant/099_bootstrap_tenant_domain_tables.sql",
+      "when": "2026-04-21T19:36:08.750Z"
+    },
+    "ops/migrations/tenant/118_incident_vendor_bcp_config_tables.sql": {
+      "from": "ops/migrations/tenant/118_incident_vendor_bcp_config_tables.sql",
+      "to": "modules/platform-core/db/_frozen/ops/migrations/tenant/118_incident_vendor_bcp_config_tables.sql",
+      "when": "2026-04-21T19:36:08.800Z"
+    },
+    "services/ai-gateway-service/migrations/001_ai_gateway_bootstrap.sql": {
+      "from": "services/ai-gateway-service/migrations/001_ai_gateway_bootstrap.sql",
+      "to": "modules/platform-core/db/public/migrations/001_ai_gateway_bootstrap.sql",
+      "when": "2026-04-21T19:36:08.929Z"
+    },
+    "services/audit-service/migrations/001_audit_tables.sql": {
+      "from": "services/audit-service/migrations/001_audit_tables.sql",
+      "to": "modules/platform-core/db/_frozen/services/audit-service/migrations/001_audit_tables.sql",
+      "when": "2026-04-21T19:36:08.980Z"
+    },
+    "services/audit-service/migrations/001_audit_tables_down.sql": {
+      "from": "services/audit-service/migrations/001_audit_tables_down.sql",
+      "to": "modules/platform-core/db/_frozen/services/audit-service/migrations/001_audit_tables_down.sql",
+      "when": "2026-04-21T19:36:09.030Z"
+    },
+    "services/compliance-controls-service/migrations/001_compliance_tables.sql": {
+      "from": "services/compliance-controls-service/migrations/001_compliance_tables.sql",
+      "to": "modules/platform-core/db/_frozen/services/compliance-controls-service/migrations/001_compliance_tables.sql",
+      "when": "2026-04-21T19:36:09.080Z"
+    },
+    "services/compliance-controls-service/migrations/001_compliance_tables_down.sql": {
+      "from": "services/compliance-controls-service/migrations/001_compliance_tables_down.sql",
+      "to": "modules/platform-core/db/_frozen/services/compliance-controls-service/migrations/001_compliance_tables_down.sql",
+      "when": "2026-04-21T19:36:09.130Z"
+    },
+    "services/evidence-audit-reporting-service/migrations/001_evidence_tables.sql": {
+      "from": "services/evidence-audit-reporting-service/migrations/001_evidence_tables.sql",
+      "to": "modules/platform-core/db/_frozen/services/evidence-audit-reporting-service/migrations/001_evidence_tables.sql",
+      "when": "2026-04-21T19:36:09.184Z"
+    },
+    "services/evidence-audit-reporting-service/migrations/001_evidence_tables_down.sql": {
+      "from": "services/evidence-audit-reporting-service/migrations/001_evidence_tables_down.sql",
+      "to": "modules/platform-core/db/_frozen/services/evidence-audit-reporting-service/migrations/001_evidence_tables_down.sql",
+      "when": "2026-04-21T19:36:09.237Z"
+    },
+    "services/gateway/migrations/001_gateway_bootstrap.sql": {
+      "from": "services/gateway/migrations/001_gateway_bootstrap.sql",
+      "to": "modules/platform-core/db/public/migrations/001_gateway_bootstrap.sql",
+      "when": "2026-04-21T19:36:09.290Z"
+    },
+    "services/product-shell/migrations/001_product_shell_bootstrap.sql": {
+      "from": "services/product-shell/migrations/001_product_shell_bootstrap.sql",
+      "to": "modules/product-shell/db/public/migrations/001_product_shell_bootstrap.sql",
+      "when": "2026-04-21T19:36:09.343Z"
+    },
+    "services/remediation-action-service/migrations/001_remediation_tables.sql": {
+      "from": "services/remediation-action-service/migrations/001_remediation_tables.sql",
+      "to": "modules/platform-core/db/_frozen/services/remediation-action-service/migrations/001_remediation_tables.sql",
+      "when": "2026-04-21T19:36:09.395Z"
+    },
+    "services/remediation-action-service/migrations/001_remediation_tables_down.sql": {
+      "from": "services/remediation-action-service/migrations/001_remediation_tables_down.sql",
+      "to": "modules/platform-core/db/_frozen/services/remediation-action-service/migrations/001_remediation_tables_down.sql",
+      "when": "2026-04-21T19:36:09.447Z"
+    },
+    "services/risk-incident-service/migrations/001_risk_incident_tables.sql": {
+      "from": "services/risk-incident-service/migrations/001_risk_incident_tables.sql",
+      "to": "modules/platform-core/db/_frozen/services/risk-incident-service/migrations/001_risk_incident_tables.sql",
+      "when": "2026-04-21T19:36:09.500Z"
+    },
+    "services/risk-incident-service/migrations/001_risk_incident_tables_down.sql": {
+      "from": "services/risk-incident-service/migrations/001_risk_incident_tables_down.sql",
+      "to": "modules/platform-core/db/_frozen/services/risk-incident-service/migrations/001_risk_incident_tables_down.sql",
+      "when": "2026-04-21T19:36:09.552Z"
+    },
+    "services/workflow-service/migrations/001_workflow_tables.sql": {
+      "from": "services/workflow-service/migrations/001_workflow_tables.sql",
+      "to": "modules/platform-core/db/_frozen/services/workflow-service/migrations/001_workflow_tables.sql",
+      "when": "2026-04-21T19:36:09.607Z"
+    },
+    "services/workflow-service/migrations/001_workflow_tables_down.sql": {
+      "from": "services/workflow-service/migrations/001_workflow_tables_down.sql",
+      "to": "modules/platform-core/db/_frozen/services/workflow-service/migrations/001_workflow_tables_down.sql",
+      "when": "2026-04-21T19:36:09.658Z"
+    }
+  },
+  "skipped": {
+    "modules/action/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/action/source/backend/action/migrations/001_initial_tables.sql": "source missing (already moved?)",
+    "modules/action/source/backend/action/migrations/002_enterprise_expansion.sql": "source missing (already moved?)",
+    "modules/agrc-engine/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/ai-governance/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/ai/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/ai/db/tenant/migrations/099_extracted_from_099_bootstrap_tenant_domain_tables.sql": "already at target",
+    "modules/analytics/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/analytics/source/backend/analytics/migrations/001_analytics_tables.sql": "source missing (already moved?)",
+    "modules/analytics/source/backend/analytics/migrations/002_enterprise_expansion.sql": "source missing (already moved?)",
+    "modules/asset/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/asset/db/tenant/migrations/118_extracted_from_118_incident_vendor_bcp_config_tables.sql": "source missing (already moved?)",
+    "modules/asset/source/backend/asset/migrations/001_asset_tables.sql": "source missing (already moved?)",
+    "modules/asset/source/backend/asset/migrations/002_enterprise_expansion.sql": "source missing (already moved?)",
+    "modules/attestation/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/attestation/source/backend/attestation/migrations/001_initial_tables.sql": "source missing (already moved?)",
+    "modules/attestation/source/backend/attestation/migrations/002_enterprise_expansion.sql": "source missing (already moved?)",
+    "modules/audit/db/tenant/migrations/000_extracted_from_000_inline_baseline.sql": "already at target",
+    "modules/audit/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/audit/source/backend/audit/migrations/001_audit_tables.sql": "source missing (already moved?)",
+    "modules/audit/source/backend/audit/migrations/002_enterprise_expansion.sql": "source missing (already moved?)",
+    "modules/bcp/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/bcp/db/tenant/migrations/118_extracted_from_118_incident_vendor_bcp_config_tables.sql": "source missing (already moved?)",
+    "modules/bcp/source/backend/bcp/migrations/001_bcp_tables.sql": "source missing (already moved?)",
+    "modules/bcp/source/backend/bcp/migrations/002_enterprise_expansion.sql": "source missing (already moved?)",
+    "modules/benchmarks/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/benchmarks/source/backend/benchmarks/migrations/001_initial_tables.sql": "source missing (already moved?)",
+    "modules/benchmarks/source/backend/benchmarks/migrations/002_enterprise_expansion.sql": "source missing (already moved?)",
+    "modules/compliance/db/tenant/migrations/000_extracted_from_000_inline_baseline.sql": "already at target",
+    "modules/compliance/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/compliance/source/backend/compliance/migrations/001_compliance_tables.sql": "source missing (already moved?)",
+    "modules/compliance/source/backend/compliance/migrations/002_enterprise_expansion.sql": "source missing (already moved?)",
+    "modules/compliance/source/backend/compliance/migrations/003_advanced_controls_tables.sql": "source missing (already moved?)",
+    "modules/controls/db/tenant/migrations/000_extracted_from_000_inline_baseline.sql": "already at target",
+    "modules/controls/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/controls/source/backend/controls/migrations/001_controls_tables.sql": "source missing (already moved?)",
+    "modules/controls/source/backend/controls/migrations/002_enterprise_expansion.sql": "source missing (already moved?)",
+    "modules/dashboard-editor/source/backend/dashboard-editor/migrations/001_initial_tables.sql": "source missing (already moved?)",
+    "modules/dashboard-editor/source/backend/dashboard-editor/migrations/002_enterprise_expansion.sql": "source missing (already moved?)",
+    "modules/dashboard/db/tenant/migrations/000_extracted_from_000_inline_baseline.sql": "already at target",
+    "modules/dashboard/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/dashboard/source/backend/dashboard/migrations/001_dashboard_tables.sql": "source missing (already moved?)",
+    "modules/dashboard/source/backend/dashboard/migrations/002_enterprise_expansion.sql": "source missing (already moved?)",
+    "modules/dora/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/dora/source/backend/dora/migrations/001_dora_tables.sql": "source missing (already moved?)",
+    "modules/dora/source/backend/dora/migrations/002_enterprise_expansion.sql": "source missing (already moved?)",
+    "modules/evidence/db/tenant/migrations/000_extracted_from_000_inline_baseline.sql": "already at target",
+    "modules/evidence/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/evidence/source/backend/evidence/migrations/001_evidence_tables.sql": "source missing (already moved?)",
+    "modules/evidence/source/backend/evidence/migrations/002_enterprise_expansion.sql": "source missing (already moved?)",
+    "modules/exception/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/exception/source/backend/exception/migrations/001_exception_tables.sql": "source missing (already moved?)",
+    "modules/exception/source/backend/exception/migrations/002_enterprise_expansion.sql": "source missing (already moved?)",
+    "modules/executive/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/executive/source/backend/executive/migrations/001_initial_tables.sql": "source missing (already moved?)",
+    "modules/executive/source/backend/executive/migrations/002_enterprise_expansion.sql": "source missing (already moved?)",
+    "modules/fitch/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/governance-os/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/governance/db/tenant/migrations/000_extracted_from_000_inline_baseline.sql": "already at target",
+    "modules/governance/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/grc-query/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/inbox/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/inbox/source/backend/inbox/migrations/002_enterprise_expansion.sql": "source missing (already moved?)",
+    "modules/incident/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/incident/db/tenant/migrations/099_extracted_from_099_bootstrap_tenant_domain_tables.sql": "already at target",
+    "modules/incident/db/tenant/migrations/118_extracted_from_118_incident_vendor_bcp_config_tables.sql": "already at target",
+    "modules/incident/source/backend/incident/migrations/001_incident_tables.sql": "source missing (already moved?)",
+    "modules/incident/source/backend/incident/migrations/002_enterprise_expansion.sql": "source missing (already moved?)",
+    "modules/integrations/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/integrations/source/backend/integrations/migrations/001_initial_tables.sql": "source missing (already moved?)",
+    "modules/integrations/source/backend/integrations/migrations/002_enterprise_expansion.sql": "source missing (already moved?)",
+    "modules/issues/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/issues/source/backend/issues/migrations/001_issues_tables.sql": "source missing (already moved?)",
+    "modules/issues/source/backend/issues/migrations/002_enterprise_expansion.sql": "source missing (already moved?)",
+    "modules/journey/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/journey/source/backend/journey/migrations/001_journey_tables.sql": "source missing (already moved?)",
+    "modules/journey/source/backend/journey/migrations/002_enterprise_expansion.sql": "source missing (already moved?)",
+    "modules/knowledge/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/knowledge/source/backend/knowledge/migrations/001_initial_tables.sql": "source missing (already moved?)",
+    "modules/knowledge/source/backend/knowledge/migrations/002_enterprise_expansion.sql": "source missing (already moved?)",
+    "modules/ksa-regulatory/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/ksa-regulatory/source/backend/ksa-regulatory/migrations/001_ksa_regulatory_tables.sql": "source missing (already moved?)",
+    "modules/ksa-regulatory/source/backend/ksa-regulatory/migrations/002_enterprise_expansion.sql": "source missing (already moved?)",
+    "modules/local-knowledge/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/local-knowledge/source/backend/local-knowledge/migrations/001_local_knowledge_tables.sql": "source missing (already moved?)",
+    "modules/local-knowledge/source/backend/local-knowledge/migrations/002_enterprise_expansion.sql": "source missing (already moved?)",
+    "modules/mcp/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/mobile/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/mobile/source/backend/mobile/migrations/001_initial_tables.sql": "source missing (already moved?)",
+    "modules/mobile/source/backend/mobile/migrations/002_enterprise_expansion.sql": "source missing (already moved?)",
+    "modules/notification/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/notification/source/backend/notification/migrations/001_notification_tables.sql": "source missing (already moved?)",
+    "modules/notification/source/backend/notification/migrations/002_enterprise_expansion.sql": "source missing (already moved?)",
+    "modules/onboarding/source/backend/onboarding/migrations/001_onboarding_tables.sql": "source missing (already moved?)",
+    "modules/onboarding/source/backend/onboarding/migrations/002_inference_rules.sql": "source missing (already moved?)",
+    "modules/operating-cockpit/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/operating-cockpit/source/backend/operating-cockpit/migrations/001_initial_tables.sql": "source missing (already moved?)",
+    "modules/operating-cockpit/source/backend/operating-cockpit/migrations/002_enterprise_expansion.sql": "source missing (already moved?)",
+    "modules/packs/source/backend/packs/migrations/001_packs_tables.sql": "source missing (already moved?)",
+    "modules/platform-core/db/tenant/migrations/000_extracted_from_000_inline_baseline.sql": "already at target",
+    "modules/platform-core/db/tenant/migrations/099_extracted_from_099_bootstrap_tenant_domain_tables.sql": "already at target",
+    "modules/playbooks/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/playbooks/source/backend/playbooks/migrations/001_initial_tables.sql": "source missing (already moved?)",
+    "modules/playbooks/source/backend/playbooks/migrations/002_enterprise_expansion.sql": "source missing (already moved?)",
+    "modules/policy/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/policy/source/backend/policy/migrations/001_policy_tables.sql": "source missing (already moved?)",
+    "modules/policy/source/backend/policy/migrations/002_enterprise_expansion.sql": "source missing (already moved?)",
+    "modules/portals/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/portals/source/backend/portals/migrations/001_portals_tables.sql": "source missing (already moved?)",
+    "modules/portals/source/backend/portals/migrations/002_enterprise_expansion.sql": "source missing (already moved?)",
+    "modules/privacy/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/privacy/source/backend/privacy/migrations/001_initial_tables.sql": "source missing (already moved?)",
+    "modules/privacy/source/backend/privacy/migrations/002_enterprise_expansion.sql": "source missing (already moved?)",
+    "modules/proactive-leadership/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/proactive-leadership/source/backend/proactive-leadership/migrations/001_initial_tables.sql": "source missing (already moved?)",
+    "modules/proactive-leadership/source/backend/proactive-leadership/migrations/002_enterprise_expansion.sql": "source missing (already moved?)",
+    "modules/qiyas/db/tenant/migrations/000_extracted_from_000_inline_baseline.sql": "already at target",
+    "modules/qiyas/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/qiyas/source/backend/qiyas/migrations/001_qiyas_tables.sql": "source missing (already moved?)",
+    "modules/qiyas/source/backend/qiyas/migrations/002_enterprise_expansion.sql": "source missing (already moved?)",
+    "modules/records/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/records/source/backend/records/migrations/001_initial_tables.sql": "source missing (already moved?)",
+    "modules/records/source/backend/records/migrations/002_enterprise_expansion.sql": "source missing (already moved?)",
+    "modules/remediation/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/remediation/source/backend/remediation/migrations/001_remediation_tables.sql": "source missing (already moved?)",
+    "modules/remediation/source/backend/remediation/migrations/002_enterprise_expansion.sql": "source missing (already moved?)",
+    "modules/reporting/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/reporting/source/backend/reporting/migrations/001_reporting_tables.sql": "source missing (already moved?)",
+    "modules/reporting/source/backend/reporting/migrations/002_enterprise_expansion.sql": "source missing (already moved?)",
+    "modules/risk/db/tenant/migrations/000_extracted_from_000_inline_baseline.sql": "already at target",
+    "modules/risk/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/risk/db/tenant/migrations/099_extracted_from_099_bootstrap_tenant_domain_tables.sql": "already at target",
+    "modules/team/db/tenant/migrations/000_extracted_from_000_inline_baseline.sql": "already at target",
+    "modules/team/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/team/source/backend/team/migrations/001_team_tables.sql": "source missing (already moved?)",
+    "modules/team/source/backend/team/migrations/002_enterprise_expansion.sql": "source missing (already moved?)",
+    "modules/training/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/training/source/backend/training/migrations/001_training_tables.sql": "source missing (already moved?)",
+    "modules/training/source/backend/training/migrations/002_enterprise_expansion.sql": "source missing (already moved?)",
+    "modules/vendor/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/vendor/db/tenant/migrations/118_extracted_from_118_incident_vendor_bcp_config_tables.sql": "source missing (already moved?)",
+    "modules/vendor/source/backend/vendor/migrations/001_vendor_tables.sql": "source missing (already moved?)",
+    "modules/vendor/source/backend/vendor/migrations/002_enterprise_expansion.sql": "source missing (already moved?)",
+    "modules/widgets/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/widgets/source/backend/widgets/migrations/001_initial_tables.sql": "source missing (already moved?)",
+    "modules/widgets/source/backend/widgets/migrations/002_enterprise_expansion.sql": "source missing (already moved?)",
+    "modules/workflow/db/tenant/migrations/000_extracted_from_000_inline_baseline.sql": "already at target",
+    "modules/workflow/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql": "already at target",
+    "modules/workflow/source/backend/workflow/migrations/001_workflow_tables.sql": "source missing (already moved?)",
+    "modules/workflow/source/backend/workflow/migrations/002_enterprise_expansion.sql": "source missing (already moved?)",
+    "ops/migrations/000_create_dos_schema.sql": "source missing (already moved?)",
+    "ops/migrations/001_platform_baseline.sql": "source missing (already moved?)",
+    "ops/migrations/003a_enterprise_features.sql": "source missing (already moved?)",
+    "ops/migrations/003b_platform_admin_tables.sql": "source missing (already moved?)",
+    "ops/migrations/004_dos_dauth_platform_layer.sql": "source missing (already moved?)",
+    "ops/migrations/005_missing_platform_tables.sql": "source missing (already moved?)",
+    "ops/migrations/006_missing_admin_tables.sql": "source missing (already moved?)",
+    "ops/migrations/009b_service_domain_tables.sql": "source missing (already moved?)",
+    "ops/migrations/011_audit_plans_table.sql": "source missing (already moved?)",
+    "ops/migrations/014_missing_endpoint_tables.sql": "source missing (already moved?)",
+    "ops/migrations/015_provisioning_tables.sql": "source missing (already moved?)",
+    "ops/migrations/016_onboarding_module_tables.sql": "source missing (already moved?)",
+    "ops/migrations/018_create_lookup_tables.sql": "source missing (already moved?)",
+    "ops/migrations/021_allow_registered_tenant_status.sql": "source missing (already moved?)",
+    "ops/migrations/023_fix_template_tables.sql": "source missing (already moved?)",
+    "ops/migrations/024_onboarding_product_packs.sql": "source missing (already moved?)",
+    "ops/migrations/025_create_lookup_tables_fix.sql": "source missing (already moved?)",
+    "ops/migrations/026_create_onboarding_question_bank.sql": "source missing (already moved?)",
+    "ops/migrations/027_create_missing_dependencies.sql": "source missing (already moved?)",
+    "ops/migrations/029_hardening_infrastructure.sql": "source missing (already moved?)",
+    "ops/migrations/032_production_grade_question_infrastructure.sql": "source missing (already moved?)",
+    "ops/migrations/033_question_bank_constraints_and_answers.sql": "source missing (already moved?)",
+    "ops/migrations/040_question_tiers.sql": "source missing (already moved?)",
+    "ops/migrations/042_onboarding_effective_journey.sql": "source missing (already moved?)",
+    "ops/migrations/043_onboarding_inference_bundle.sql": "source missing (already moved?)",
+    "ops/migrations/044_onboarding_inference_b3.sql": "source missing (already moved?)",
+    "ops/migrations/045_onboarding_workspace_handoff_cycles.sql": "source missing (already moved?)",
+    "ops/migrations/046_handoff_cycle_provenance.sql": "source missing (already moved?)",
+    "ops/migrations/047_handoff_agent_runs.sql": "source missing (already moved?)",
+    "ops/migrations/048_handoff_invitations.sql": "source missing (already moved?)",
+    "ops/migrations/049_handoff_evidence_requests.sql": "source missing (already moved?)",
+    "ops/migrations/050_tenant_migrations_tracker.sql": "source missing (already moved?)",
+    "ops/migrations/051a_widen_question_tier_check.sql": "source missing (already moved?)",
+    "ops/migrations/052_platform_outbox.sql": "source missing (already moved?)",
+    "ops/migrations/053_register_idempotency_and_tenant_org_unique.sql": "source missing (already moved?)",
+    "ops/migrations/054_platform_outbox_dead_letter.sql": "source missing (already moved?)",
+    "ops/migrations/056_tenant_entitlement_profile_split.sql": "source missing (already moved?)",
+    "ops/migrations/057_provisioning_worker_fields.sql": "source missing (already moved?)",
+    "ops/migrations/058_user_view_preferences.sql": "source missing (already moved?)",
+    "ops/migrations/059_iam_identities.sql": "source missing (already moved?)",
+    "ops/migrations/201_hybrid_layer_conflict_renames.sql": "source missing (already moved?)",
+    "ops/migrations/20260418_0002_tenants_orgname_norm_uk.sql": "source missing (already moved?)",
+    "ops/migrations/20260418_0004_refresh_tokens.sql": "source missing (already moved?)",
+    "ops/migrations/20260418_0007_provisioning_jobs_worker.sql": "source missing (already moved?)",
+    "ops/migrations/20260418_0008_provisioning_step_runs.sql": "source missing (already moved?)",
+    "ops/migrations/20260418_0009_tenants_lifecycle_state.sql": "source missing (already moved?)",
+    "ops/migrations/20260418_0011_service_domain_schema_align.sql": "source missing (already moved?)",
+    "ops/migrations/20260419_0001_m2_team_role_schema_align.sql": "source missing (already moved?)",
+    "ops/migrations/20260422_0001_platform_migrations_current_path.sql": "source missing (already moved?)",
+    "ops/migrations/tenant/019_file_storage_table.sql": "source missing (already moved?)",
+    "ops/migrations/tenant/022_reconcile_workflow_tables.sql": "source missing (already moved?)",
+    "ops/migrations/tenant/030_authorization_redesign_tenant.sql": "source missing (already moved?)",
+    "ops/migrations/tenant/034_module_config_runtime.sql": "source missing (already moved?)",
+    "ops/migrations/tenant/037_platform_runtime_tables.sql": "source missing (already moved?)",
+    "ops/migrations/tenant/039_module_config_audit_hardening.sql": "source missing (already moved?)",
+    "ops/migrations/tenant/040_risk_risks_soft_delete.sql": "source missing (already moved?)",
+    "ops/migrations/tenant/041_module_entitlement_audit.sql": "source missing (already moved?)",
+    "ops/migrations/tenant/042_tenant_module_entitlements_alignment.sql": "source missing (already moved?)",
+    "ops/migrations/tenant/100_risk_operating_model.sql": "source missing (already moved?)",
+    "ops/migrations/tenant/101_incidents_ops_additions.sql": "source missing (already moved?)",
+    "ops/migrations/tenant/102_incident_governance_pipeline.sql": "source missing (already moved?)",
+    "ops/migrations/tenant/103_risk_scenarios.sql": "source missing (already moved?)",
+    "ops/migrations/tenant/104_risk_team_ownership.sql": "source missing (already moved?)",
+    "ops/migrations/tenant/105_incident_advanced_tables.sql": "source missing (already moved?)",
+    "ops/migrations/tenant/107_incident_r1_structural_hardening.sql": "source missing (already moved?)",
+    "ops/migrations/tenant/109_risk_production_readiness.sql": "source missing (already moved?)",
+    "ops/migrations/tenant/110_key_risk_indicators.sql": "source missing (already moved?)",
+    "ops/migrations/tenant/111_ai_model_risk_management_enhancement.sql": "source missing (already moved?)",
+    "ops/migrations/tenant/112_ai_model_risk_register_link.sql": "source missing (already moved?)",
+    "ops/migrations/tenant/113_risk_scoring_tables_v1.sql": "source missing (already moved?)",
+    "ops/migrations/tenant/114_risk_scoring_tables_v2.sql": "source missing (already moved?)",
+    "ops/migrations/tenant/115_risk_scoring_tables_v3.sql": "source missing (already moved?)",
+    "ops/migrations/tenant/116_incident_case_breach_enterprise_v1.sql": "source missing (already moved?)",
+    "ops/migrations/tenant/117_incident_case_breach_enterprise_v2.sql": "source missing (already moved?)",
+    "ops/migrations/tenant/119_risk_scoring_tables_v4.sql": "source missing (already moved?)",
+    "ops/migrations/tenant/120_risk_spec_alignment.sql": "source missing (already moved?)",
+    "ops/migrations/tenant/121_risk_spec_field_alignment.sql": "source missing (already moved?)",
+    "ops/migrations/tenant/122_risk_review_approval_tables.sql": "source missing (already moved?)",
+    "ops/migrations/tenant/123_force_rls_everywhere.sql": "source missing (already moved?)",
+    "ops/migrations/tenant/125_ai_dynamic_tables.sql": "source missing (already moved?)",
+    "ops/migrations/tenant/126_mcp_core_schema.sql": "source missing (already moved?)",
+    "ops/migrations/tenant/130_agent_sod_policies.sql": "source missing (already moved?)",
+    "ops/migrations/tenant/131_sod_rules.sql": "source missing (already moved?)",
+    "ops/migrations/tenant/132_sod_waivers.sql": "source missing (already moved?)",
+    "ops/migrations/tenant/163_enterprise_authorization_tables.sql": "source missing (already moved?)",
+    "ops/migrations/tenant/412_role_permission_map.sql": "source missing (already moved?)",
+    "ops/migrations/tenant/415_agent_tool_permissions.sql": "source missing (already moved?)",
+    "services/agrc-os-service/migrations/001_agrc_tables.sql": "source missing (already moved?)",
+    "services/agrc-os-service/migrations/002_agrc_agent_tables.sql": "source missing (already moved?)",
+    "services/ai-engine-service/migrations/tenant/001_ai_engine_initial_schema.sql": "source missing (already moved?)",
+    "services/ai-engine-service/migrations/tenant/002_copilot_and_performance_tables.sql": "source missing (already moved?)",
+    "services/ai-engine-service/migrations/tenant/003_agent_delegations_and_proposed_actions.sql": "source missing (already moved?)",
+    "services/ai-governance-service/migrations/001_ai_governance_entities_extend.sql": "source missing (already moved?)",
+    "services/analytics-reporting-service/migrations/001_reporting_tables.sql": "source missing (already moved?)",
+    "services/analytics-service/migrations/001_analytics_tables.sql": "source missing (already moved?)",
+    "services/auth-service/migrations/006_hash_email_verification_tokens.sql": "source missing (already moved?)",
+    "services/auth-service/migrations/007_fix_schema_drift.sql": "source missing (already moved?)",
+    "services/auth-service/migrations/008_mfa_enforcement.sql": "source missing (already moved?)",
+    "services/auth-service/migrations/009_dauth_missing_tables.sql": "source missing (already moved?)",
+    "services/auth-service/migrations/010_csrf_security_tables.sql": "source missing (already moved?)",
+    "services/auth-service/migrations/011_dauth_enterprise_ledger.sql": "source missing (already moved?)",
+    "services/bcp-service/migrations/001_bcp_tables.sql": "source missing (already moved?)",
+    "services/dashboard-widgets-service/migrations/001_dashboard_widgets_tables.sql": "source missing (already moved?)",
+    "services/dora-service/migrations/001_dora_tables.sql": "source missing (already moved?)",
+    "services/executive-intelligence-service/migrations/001_executive_tables.sql": "source missing (already moved?)",
+    "services/governance-policy-service/migrations/001_governance_tables.sql": "source missing (already moved?)",
+    "services/integrations-service/migrations/001_integrations_tables.sql": "source missing (already moved?)",
+    "services/notification-inbox-service/migrations/001_inbox_tables.sql": "source missing (already moved?)",
+    "services/notification-service/migrations/001_notification_tables.sql": "source missing (already moved?)",
+    "services/onboarding-service/migrations/001_onboarding_tables.sql": "source missing (already moved?)",
+    "services/platform-core-service/migrations/001_platform_core_tables.sql": "source missing (already moved?)",
+    "services/platform-product-service/migrations/001_product_tables.sql": "source missing (already moved?)",
+    "services/portals-service/migrations/001_portals_tables.sql": "source missing (already moved?)",
+    "services/privacy-service/migrations/001_privacy_tables.sql": "source missing (already moved?)",
+    "services/qiyas-journey-service/migrations/001_qiyas_tables.sql": "source missing (already moved?)",
+    "services/records-service/migrations/001_records_tables.sql": "source missing (already moved?)",
+    "services/tenant-service/migrations/001_tenant_tables.sql": "source missing (already moved?)",
+    "services/tenant-service/migrations/002_add_country_of_incorporation_to_public_tenants.sql": "source missing (already moved?)",
+    "services/training-service/migrations/001_training_tables.sql": "source missing (already moved?)",
+    "services/user-service/migrations/001_user_tables.sql": "source missing (already moved?)",
+    "services/user-service/migrations/002_user_role_assignments.sql": "source missing (already moved?)",
+    "services/user-service/migrations/003_user_view_preferences.sql": "source missing (already moved?)",
+    "services/user-service/migrations/004_user_rls_and_indices.sql": "source missing (already moved?)",
+    "services/vendor-service/migrations/001_vendor_tables.sql": "source missing (already moved?)",
+    "services/ai-engine-service/metadata/INFORMATION_SCHEMA.sql": "no classification and not a no-op",
+    "services/ai-engine-service/metadata/default.sql": "no classification and not a no-op",
+    "services/ai-engine-service/metadata/information_schema.sql": "no classification and not a no-op",
+    "services/ai-engine-service/metadata/system.sql": "no classification and not a no-op",
+    "services/ai-engine-service/src/domain/agrc-engine/migrations/001_agrc_engine_tables.sql": "no classification and not a no-op",
+    "services/ai-engine-service/src/domain/ai-governance/migrations/001_ai_governance_tables.sql": "no classification and not a no-op",
+    "services/ai-engine-service/src/domain/mcp/migrations/001_initial_tables.sql": "no classification and not a no-op",
+    "services/ai-engine-service/src/runtime/ai/migrations/001_initial_tables.sql": "no classification and not a no-op",
+    "services/analytics-service/clickhouse-migrations/001_analytics_base.sql": "no classification and not a no-op",
+    "services/analytics-service/clickhouse-migrations/002_schema_migrations.sql": "no classification and not a no-op",
+    "services/mcp-gateway-service/migrations/001_ownership_claim.sql": "no classification and not a no-op",
+    "services/risk-incident-service/src/domain/risk/migrations/001_risk_tables.sql": "no classification and not a no-op",
+    "services/risk-incident-service/src/domain/risk/migrations/001_risk_tables_down.sql": "down with no forward classification",
+    "services/risk-incident-service/src/domain/risk/migrations/002_enterprise_expansion.sql": "no classification and not a no-op"
+  },
+  "errors": {}
+}

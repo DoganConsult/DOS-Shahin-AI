@@ -1,0 +1,23 @@
+import type { MigrationRecord, MigrationType, CompatibilityImpact } from '../contracts/delivery.types';
+export declare function registerMigration(input: {
+    releaseId?: string;
+    migrationType: MigrationType;
+    reversible: boolean;
+    compatibilityImpact: CompatibilityImpact;
+    affectedSchemas?: string[];
+    affectedTables?: string[];
+    validationSteps?: string[];
+    rollbackNotes?: string;
+    tenantImpact?: string;
+    irreversibleApprovalId?: string;
+    tenantId?: string;
+}): Promise<MigrationRecord>;
+export declare function startMigration(migrationId: string): Promise<void>;
+export declare function completeMigration(migrationId: string): Promise<void>;
+export declare function failMigration(migrationId: string, reason: string): Promise<void>;
+export declare function skipMigration(migrationId: string): Promise<void>;
+export declare function getMigration(migrationId: string): Promise<MigrationRecord | null>;
+export declare function listMigrationsByRelease(releaseId: string): Promise<MigrationRecord[]>;
+export declare function listPendingMigrations(tenantId?: string): Promise<MigrationRecord[]>;
+export declare function listFailedMigrations(): Promise<MigrationRecord[]>;
+export declare function validateMigrationSafety(migration: MigrationRecord): string[];

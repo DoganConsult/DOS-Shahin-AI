@@ -1,0 +1,124 @@
+/* DOS Platform — Color Tokens (Enterprise grade, KSA-modern AI palette).
+ *
+ * Design philosophy: sophisticated dark navy primary with a single restrained
+ * gold accent. Surfaces are warm off-white (not cold #ffffff) for screen
+ * comfort. Text has a 4-tier hierarchy. Every semantic color has a soft
+ * companion for backgrounds and a strong companion for borders/icons.
+ *
+ * Products may override `--dos-brand-*` tokens to inject their own identity
+ * without rewriting the entire scale.
+ */
+:root {
+  /* ── Brand (override per product) ─────────────────────────────────── */
+  --dos-brand-primary:   #0f4c81;     /* deep navy — Shahin default */
+  --dos-brand-accent:    #c8a052;     /* muted gold — restrained KSA reference */
+  --dos-brand-emphasis:  #1769b3;     /* lifted brand for hover/focus */
+
+  /* ── Primary action ───────────────────────────────────────────────── */
+  --dos-color-primary:        var(--dos-brand-primary);
+  --dos-color-primary-strong: #0a3a64;
+  --dos-color-primary-soft:   #e8f1fa;
+  --dos-color-primary-hover:  var(--dos-brand-emphasis);
+
+  /* ── Accent (sparingly: trial badge, metric trend, brand mark) ─────── */
+  --dos-color-accent:       var(--dos-brand-accent);
+  --dos-color-accent-soft:  #faf3e2;
+  --dos-color-accent-text:  #6b4d12;
+  --dos-color-accent-bg:    #fffbeb;
+
+  /* ── Surfaces (warm off-white tier) ───────────────────────────────── */
+  --dos-color-surface:        #ffffff;       /* card/component */
+  --dos-color-surface-raised: #ffffff;       /* dropdown/popover */
+  --dos-color-surface-muted:  #f6f7f9;       /* page bg / strip bg */
+  --dos-color-surface-canvas: #f1f3f7;       /* app background */
+  --dos-color-surface-sunken: #ebeef3;       /* inset / well */
+  --dos-color-surface-inverse: #0f172a;      /* dark inverse */
+  --dos-color-surface-glass: rgba(255, 255, 255, 0.72);
+  --dos-color-surface-glass-strong: rgba(255, 255, 255, 0.92);
+
+  /* ── Borders (3-tier) ─────────────────────────────────────────────── */
+  --dos-color-border-subtle: #eef0f4;
+  --dos-color-border:        #e2e6ec;
+  --dos-color-border-strong: #c2c9d3;
+  --dos-color-border-focus:  var(--dos-brand-emphasis);
+
+  /* ── Text (4-tier) ────────────────────────────────────────────────── */
+  --dos-color-text-strong:   #0c1424;
+  --dos-color-text:          #18233a;
+  --dos-color-text-muted:    #515a6c;
+  --dos-color-text-subtle:   #7a8294;
+  --dos-color-text-disabled: #a8aebd;
+  --dos-color-text-inverse:  #ffffff;
+  --dos-color-text-link:     var(--dos-brand-primary);
+
+  /* ── Semantic tones (success/warning/danger/info) ─────────────────── */
+  --dos-color-success:        #167a3c;
+  --dos-color-success-strong: #0d5a2c;
+  --dos-color-success-soft:   #e7f5ec;
+  --dos-color-success-text:   #0d4a26;
+
+  --dos-color-warning:        #b3691a;
+  --dos-color-warning-strong: #8a4f10;
+  --dos-color-warning-soft:   #fdf3e3;
+  --dos-color-warning-text:   #6b3c0a;
+
+  --dos-color-danger:         #b32424;
+  --dos-color-danger-strong:  #871818;
+  --dos-color-danger-soft:    #fbe8e8;
+  --dos-color-danger-text:    #6b1414;
+
+  --dos-color-info:           #0860a8;
+  --dos-color-info-strong:    #06457a;
+  --dos-color-info-soft:      #e6f0fa;
+  --dos-color-info-text:      #053b66;
+
+  /* ── Focus ring (a11y) ────────────────────────────────────────────── */
+  --dos-color-focus:          var(--dos-brand-emphasis);
+  --dos-color-focus-ring:     rgba(23, 105, 179, 0.32);
+
+  /* ── Overlay ──────────────────────────────────────────────────────── */
+  --dos-color-overlay:        rgba(12, 20, 36, 0.48);
+  --dos-color-overlay-strong: rgba(12, 20, 36, 0.72);
+
+  /* ── Trial-state palette (Phase G T6) ─────────────────────────────── */
+  --dos-color-trial-active:   var(--dos-color-info);
+  --dos-color-trial-warning:  var(--dos-color-warning);
+  --dos-color-trial-danger:   var(--dos-color-danger);
+  --dos-color-trial-success:  var(--dos-color-success);
+}
+
+/* ── Dark theme ───────────────────────────────────────────────────────
+ * Applied via [data-theme='dark'] on <html>. Inverts surfaces and text
+ * but keeps semantic colors at perceptually-equivalent strength.
+ */
+[data-theme='dark'] {
+  --dos-color-surface:        #0f1623;
+  --dos-color-surface-raised: #182236;
+  --dos-color-surface-muted:  #0a111e;
+  --dos-color-surface-canvas: #060b15;
+  --dos-color-surface-sunken: #050912;
+  --dos-color-surface-glass:  rgba(15, 22, 35, 0.72);
+  --dos-color-surface-glass-strong: rgba(15, 22, 35, 0.92);
+
+  --dos-color-border-subtle:  #1a2436;
+  --dos-color-border:         #243248;
+  --dos-color-border-strong:  #34445e;
+
+  --dos-color-text-strong:    #f8fafc;
+  --dos-color-text:           #e8ecf3;
+  --dos-color-text-muted:     #b6bdcc;
+  --dos-color-text-subtle:    #8590a4;
+  --dos-color-text-disabled:  #5b6478;
+
+  --dos-color-primary-soft:   #1a2c43;
+  --dos-color-accent-soft:    #2c2418;
+  --dos-color-accent-bg:      #221b0f;
+
+  --dos-color-success-soft:   #133022;
+  --dos-color-warning-soft:   #2e2010;
+  --dos-color-danger-soft:    #2e1414;
+  --dos-color-info-soft:      #122638;
+
+  --dos-color-overlay:        rgba(0, 0, 0, 0.66);
+  --dos-color-overlay-strong: rgba(0, 0, 0, 0.85);
+}

@@ -1,0 +1,228 @@
+<!-- Mobile backdrop overlay -->
+<div tabindex="0" role="button" [attr.aria-label]="i18n.translate('common.close')" (keyup.enter)="sidebarService.closeMobile()" class="sidebar-backdrop"
+     *ngIf="sidebarService.mobileOpen()"
+     (click)="sidebarService.closeMobile()"></div>
+
+<nav class="sidebar"
+     aria-label="Main navigation"
+     [dir]="i18n.direction()"
+     [class.collapsed]="sidebarService.collapsed()"
+     [class.hover-expanded]="sidebarService.hoverExpanded()"
+     [class.mobile-open]="sidebarService.mobileOpen()"
+     (mouseenter)="sidebarService.onHoverEnter()"
+     (mouseleave)="sidebarService.onHoverLeave()">
+  <div class="sidebar-brand">
+    <img loading="eager" src="logoiconapphero.png" alt="Shahin-AI" class="brand-icon-img" width="28" height="28" />
+    <div class="brand-text" *ngIf="sidebarService.isVisuallyExpanded()">
+      <div class="brand-name">{{ i18n.translate('app.name') }}</div>
+      <div class="brand-sub">{{ i18n.translate('app.subtitle') }}</div>
+    </div>
+    <!-- Mobile close button -->
+    <button [attr.aria-label]="i18n.translate('common.close')" class="mobile-close-btn" *ngIf="sidebarService.isMobile()" (click)="sidebarService.closeMobile()">
+      <i class="pi pi-times"></i>
+    </button>
+  </div>
+
+  <!-- Role Context Card -->
+  <div class="role-context-card" *ngIf="sidebarService.isVisuallyExpanded()">
+    <div class="rcc-org">
+      <i class="pi pi-building rcc-org-icon"></i>
+      <span class="rcc-org-name">{{ orgName || i18n.translate('sidebarUi.organization') }}</span>
+    </div>
+    <div class="rcc-user-row">
+      <div class="rcc-avatar">{{ getUserInitial() }}</div>
+      <div class="rcc-user-info">
+        <span class="rcc-user-name">{{ userName || i18n.translate('sidebarUi.user') }}</span>
+        <span class="rcc-role-chip" [attr.data-role]="currentRole">{{ getRoleLabel() }}</span>
+      </div>
+    </div>
+    <div class="rcc-phase-row">
+      <span class="rcc-phase-label">{{ i18n.translate('sidebarUi.activePhase') }}</span>
+      <span class="rcc-phase-pill" [attr.data-phase]="sidebarService.activePhase()">
+        <span class="rcc-phase-dot"></span>
+        {{ getActivePhaseLabel() }}
+      </span>
+    </div>
+  </div>
+  <!-- Role Context Card (collapsed) -->
+  <div class="rcc-collapsed" *ngIf="!sidebarService.isVisuallyExpanded()"
+       [pTooltip]="userName + ' · ' + getRoleLabel()" tooltipPosition="right">
+    <div class="rcc-avatar-sm">{{ getUserInitial() }}</div>
+  </div>
+
+  <app-workspace-switcher *ngIf="sidebarService.isVisuallyExpanded()" (workspaceChange)="onWorkspaceChange($event)" />
+
+  <!-- Module Switcher: GRC ↔ Qiyas (only shown when tenant has both modules) -->
+  <app-module-switcher [expanded]="sidebarService.isVisuallyExpanded()" (moduleSwitch)="onModuleSwitch($event)" />
+
+  <div class="lang-row" *ngIf="sidebarService.isVisuallyExpanded()">
+    <dos-language-switcher />
+  </div>
+
+  <button class="collapse-toggle"
+          [attr.aria-label]="sidebarService.collapsed() ? i18n.translate('sidebarUi.pin') || 'Pin sidebar' : i18n.translate('sidebarUi.unpin') || 'Unpin sidebar'"
+          (click)="sidebarService.collapsed() ? sidebarService.pin() : sidebarService.unpin()"
+          [pTooltip]="!sidebarService.isVisuallyExpanded() ? i18n.translate('sidebar.expand') || 'Expand' : ''"
+          tooltipPosition="right">
+    <i class="pi" [ngClass]="sidebarService.collapsed() ? 'pi-lock-open' : 'pi-lock'" aria-hidden="true"></i>
+    <span class="pin-label" *ngIf="sidebarService.isVisuallyExpanded()">
+      {{ sidebarService.collapsed() ? i18n.translate('sidebarUi.pin') : i18n.translate('sidebarUi.unpin') }}
+    </span>
+  </button>
+
+  <!-- Mode toggle button -->
+  <button class="mode-toggle-btn" (click)="sidebarService.toggleMode()"
+          [attr.aria-label]="sidebarService.sidebarMode() === 'role' ? i18n.translate('sidebarUi.switchToProcess') || 'Switch to process view' : i18n.translate('sidebarUi.switchToWorkspace') || 'Switch to workspace view'"
+          [pTooltip]="!sidebarService.isVisuallyExpanded() ? (sidebarService.sidebarMode() === 'role' ? i18n.translate('sidebarUi.processView') : i18n.translate('sidebarUi.workspaceView')) : ''"
+          tooltipPosition="right">
+    <i class="pi" [ngClass]="sidebarService.sidebarMode() === 'role' ? 'pi-sitemap' : 'pi-th-large'" aria-hidden="true"></i>
+    <span *ngIf="sidebarService.isVisuallyExpanded()" class="mode-toggle-label">
+      {{ sidebarService.sidebarMode() === 'role' ? i18n.translate('sidebarUi.switchToProcess') : i18n.translate('sidebarUi.switchToWorkspace') }}
+    </span>
+  </button>
+
+  <ul class="nav-list">
+    <!-- ROLE MODE: focused role-based sections -->
+    <ng-container *ngIf="sidebarService.sidebarMode() === 'role'">
+      <ng-container *ngFor="let section of roleSections; let si = index">
+        <li class="nav-divider" *ngIf="si !== 0"></li>
+        <li tabindex="0" role="button"
+            [attr.aria-expanded]="section.expanded"
+            [attr.aria-label]="i18n.translate(section.label)"
+            (keyup.enter)="toggleSection(si)" class="role-section-header" (click)="toggleSection(si)" *ngIf="sidebarService.isVisuallyExpanded()">
+          <div class="role-section-header-row">
+            <i class="pi pi-{{ section.icon }} role-section-icon" aria-hidden="true"></i>
+            <span class="role-section-label">{{ i18n.translate(section.label) }}</span>
+            <span class="role-section-count" *ngIf="!section.expanded" aria-hidden="true">{{ section.items.length }}</span>
+            <i class="pi section-chevron" [ngClass]="section.expanded ? 'pi-chevron-down' : 'pi-chevron-right'" aria-hidden="true"></i>
+          </div>
+        </li>
+        <ng-container *ngIf="section.expanded || !sidebarService.isVisuallyExpanded()">
+          <li *ngFor="let item of section.items" role="none">
+            <a [routerLink]="item.route" routerLinkActive="active"
+               #sideRla="routerLinkActive"
+               role="menuitem"
+               [attr.aria-current]="sideRla.isActive ? 'page' : null"
+               [attr.aria-label]="i18n.translate(item.labelKey)"
+               [pTooltip]="!sidebarService.isVisuallyExpanded() ? i18n.translate(item.labelKey) : ''"
+               tooltipPosition="right">
+              <i class="pi" [ngClass]="getNavIcon(item.icon)" aria-hidden="true"></i>
+              <span class="nav-label" *ngIf="sidebarService.isVisuallyExpanded()">{{ i18n.translate(item.labelKey) }}</span>
+              <span class="agent-tag" *ngIf="sidebarService.isVisuallyExpanded() && item.agentId">{{ item.agentId }}</span>
+            </a>
+          </li>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+
+    <!-- LIFECYCLE MODE: full 7-phase view with module sub-grouping -->
+    <ng-container *ngIf="sidebarService.sidebarMode() === 'lifecycle'">
+      <ng-container *ngFor="let group of navGroups; let gi = index">
+        <li class="nav-divider" *ngIf="gi !== 0"></li>
+        <li class="nav-section-header" *ngIf="sidebarService.isVisuallyExpanded() && group.phase !== 'account'">
+          <div class="phase-module-card" [attr.data-phase]="group.phase">
+            <div class="phase-header-row">
+              <span class="phase-step-badge" [class.phase-step-active]="isActivePhase(group.phase)">{{ getPhaseStep(group.phase) }}</span>
+              <span class="phase-title">{{ i18n.translate(getPhaseLabel(group.phase)) }}</span>
+            </div>
+            <div class="phase-desc" *ngIf="getPhaseDescKey(group.phase)">{{ i18n.translate(getPhaseDescKey(group.phase)) }}</div>
+            <span class="start-here-badge" *ngIf="isFirstPhase(group.phase, gi)">{{ i18n.translate('lifecycle.startHere') }} →</span>
+          </div>
+        </li>
+        <li class="nav-section" *ngIf="sidebarService.isVisuallyExpanded() && group.phase === 'account'">
+          {{ i18n.translate(getPhaseLabel(group.phase)) }}
+        </li>
+        <ng-container *ngFor="let sub of group.moduleSubGroups">
+          <li tabindex="0" role="button"
+              [attr.aria-expanded]="isModuleGroupExpanded(sub.moduleGroup!)"
+              [attr.aria-label]="i18n.translate(sub.labelKey || '')"
+              (keyup.enter)="toggleModuleGroup(sub.moduleGroup!)" class="module-subgroup-header" *ngIf="sub.moduleGroup && sidebarService.isVisuallyExpanded()"
+              (click)="toggleModuleGroup(sub.moduleGroup!)">
+            <div class="msg-row">
+              <i class="pi" [ngClass]="getNavIcon(sub.icon || 'home')" aria-hidden="true"></i>
+              <span class="msg-label">{{ i18n.translate(sub.labelKey || '') }}</span>
+              <span class="msg-count" aria-hidden="true">{{ sub.items.length }}</span>
+              <i class="pi msg-chevron" [ngClass]="isModuleGroupExpanded(sub.moduleGroup!) ? 'pi-chevron-down' : 'pi-chevron-right'" aria-hidden="true"></i>
+            </div>
+          </li>
+          <ng-container *ngIf="!sub.moduleGroup || isModuleGroupExpanded(sub.moduleGroup!) || !sidebarService.isVisuallyExpanded()">
+            <li *ngFor="let item of sub.items" [class.module-subgroup-item]="!!sub.moduleGroup" role="none">
+              <a [routerLink]="item.route" routerLinkActive="active"
+                 #lcRla="routerLinkActive"
+                 role="menuitem"
+                 [attr.aria-current]="lcRla.isActive ? 'page' : null"
+                 [attr.aria-label]="i18n.translate(item.labelKey)"
+                 [pTooltip]="!sidebarService.isVisuallyExpanded() ? i18n.translate(item.labelKey) : ''"
+                 tooltipPosition="right">
+                <i class="pi" [ngClass]="getNavIcon(item.icon)" aria-hidden="true"></i>
+                <span class="nav-label" *ngIf="sidebarService.isVisuallyExpanded()">{{ i18n.translate(item.labelKey) }}</span>
+                <span class="agent-tag" *ngIf="sidebarService.isVisuallyExpanded() && item.agentId">{{ item.agentId }}</span>
+              </a>
+            </li>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+  </ul>
+
+  <!-- Notification Badge -->
+  <div class="notification-row" role="status" [attr.aria-label]="wsService.unreadCount() + ' unread notifications'" *ngIf="sidebarService.isVisuallyExpanded() && wsService.unreadCount() > 0">
+    <i class="pi pi-bell" aria-hidden="true"></i>
+    <span>{{ i18n.translate('websocket.connected') }}</span>
+    <span class="notif-badge" aria-hidden="true">{{ wsService.unreadCount() }}</span>
+  </div>
+  <div class="notif-dot" role="status" [attr.aria-label]="wsService.unreadCount() + ' unread notifications'" *ngIf="!sidebarService.isVisuallyExpanded() && wsService.unreadCount() > 0"
+       [pTooltip]="i18n.translate('sidebarUi.notifications')" tooltipPosition="right">
+    <i class="pi pi-bell" style="color: var(--primary); font-size: var(--font-size-base);" aria-hidden="true"></i>
+    <span class="notif-badge-sm" aria-hidden="true">{{ wsService.unreadCount() }}</span>
+  </div>
+
+  <!-- Training Data Indicator -->
+  <div class="training-banner" *ngIf="hasTrainingData && sidebarService.isVisuallyExpanded()">
+    <i class="pi pi-database"></i>
+    <span>{{ i18n.translate('sidebarUi.trainingDataActive') }}</span>
+  </div>
+  <div class="training-dot" *ngIf="hasTrainingData && !sidebarService.isVisuallyExpanded()" [pTooltip]="i18n.translate('sidebarUi.trainingDataActive')" tooltipPosition="right">
+    <i class="pi pi-database" style="color: var(--warning); font-size: var(--font-size-base);"></i>
+  </div>
+
+  <!-- GRC Process Phase Rail -->
+  <div class="phase-rail" *ngIf="sidebarService.isVisuallyExpanded()">
+    <div class="phase-rail-title">{{ i18n.translate('sidebarUi.grcProcess') }}</div>
+    <div class="phase-rail-steps">
+      <div tabindex="0" role="button"
+           [attr.aria-label]="i18n.translate(ph.labelKey) + (isPhaseCompleted(ph.id) ? ' (completed)' : '') + (ph.id === sidebarService.activePhase() ? ' (active)' : '')"
+           (keyup.enter)="sidebarService.navigateToPhase(ph.id)" *ngFor="let ph of lifecyclePhases; let last = last"
+           class="phase-rail-step"
+           [class.step-active]="ph.id === sidebarService.activePhase()"
+           [class.step-done]="isPhaseCompleted(ph.id)"
+           (click)="sidebarService.navigateToPhase(ph.id)">
+        <div class="prs-badge">
+          <i class="pi pi-check" *ngIf="isPhaseCompleted(ph.id)"></i>
+          <span *ngIf="!isPhaseCompleted(ph.id)">{{ ph.step }}</span>
+        </div>
+        <div class="prs-connector" *ngIf="!last" [class.prs-connector-done]="isPhaseCompleted(ph.id)"></div>
+        <span class="prs-label">{{ i18n.translate(ph.labelKey) }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- OS Status Bar -->
+  <div class="os-status-bar" *ngIf="sidebarService.isVisuallyExpanded()">
+    <span class="os-status-dot"></span>
+    <span class="os-status-label">{{ i18n.translate('sidebarUi.osStatus') }}</span>
+  </div>
+
+  <div class="sidebar-footer">
+    <!-- Platform Operation Mode Badge -->
+    <app-platform-mode-badge [collapsed]="!sidebarService.isVisuallyExpanded()" />
+
+    <button class="btn-logout" (click)="logout()"
+            [attr.aria-label]="i18n.translate('auth.logout') || 'Log out'"
+            [pTooltip]="!sidebarService.isVisuallyExpanded() ? i18n.translate('auth.logout') : ''"
+            tooltipPosition="right">
+      <i class="pi pi-sign-out" *ngIf="!sidebarService.isVisuallyExpanded()" aria-hidden="true"></i>
+      <span *ngIf="sidebarService.isVisuallyExpanded()">{{ i18n.translate('auth.logout') }}</span>
+    </button>
+  </div>
+</nav>

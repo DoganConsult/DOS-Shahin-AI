@@ -1,0 +1,11 @@
+{
+  "platform-stats.title": "PlatformStats",
+  "platform-stats.dashboard": "PlatformStats Dashboard",
+  "platform-stats.empty.title": "No records found",
+  "platform-stats.empty.description": "Create your first platform-stats record to get started.",
+  "platform-stats.loading": "Loading platform-stats data...",
+  "platform-stats.error.title": "Failed to load data",
+  "platform-stats.error.retry": "Retry",
+  "platform-stats.create": "Create New",
+  "platform-stats.diagnostics": "Diagnostics"
+}

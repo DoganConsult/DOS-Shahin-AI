@@ -1,0 +1,58 @@
+{
+  "moduleCode": "integrations",
+  "displayName": "Integrations",
+  "ownerTeam": "product-shahin-ai",
+  "productCode": "shahin-ai",
+  "ownership": "module-owned",
+  "version": "1.0.0",
+  "status": "active",
+  "platformDependencies": [
+    "identity",
+    "tenancy"
+  ],
+  "seedProviders": [
+    "products/shahin/seeds/integrations-seed"
+  ],
+  "tenantDefaults": [
+    "integrations_webhook_timeout_ms",
+    "integrations_sync_batch_size"
+  ],
+  "requiredReferenceData": [
+    "connector_types",
+    "integration_categories"
+  ],
+  "currentSources": [
+    "/home/Dr-Dogan-AGRC-OS/backend/src/modules/integrations"
+  ],
+  "targetPath": "modules/integrations",
+  "futureService": "integrations-service",
+  "frontendSources": [
+    "/home/Dr-Dogan-AGRC-OS/frontend/src/app/platform-manifests/integrations.module.routes.ts"
+  ],
+  "ownedTables": [
+    "integration_connectors",
+    "integration_configs",
+    "integration_sync_log",
+    "integration_mappings",
+    "integration_webhooks",
+    "integration_api_keys",
+    "integration_oauth_tokens",
+    "integration_schedules"
+  ],
+  "referencedTables": [
+    "audit_trail",
+    "teams"
+  ],
+  "events": {
+    "publishes": [
+      "integrations.connector_activated",
+      "integrations.connector_deactivated",
+      "integrations.sync_completed",
+      "integrations.sync_failed"
+    ],
+    "subscribes": []
+  },
+  "routeBases": [
+    "/api/integrations"
+  ]
+}

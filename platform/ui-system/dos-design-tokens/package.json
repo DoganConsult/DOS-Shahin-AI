@@ -1,0 +1,34 @@
+{
+  "name": "@dos/design-tokens",
+  "version": "1.0.0",
+  "description": "DOS Platform — design tokens (colors, typography, spacing, radius, shadows, layout, RTL). Single source of truth for visual primitives across products.",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "default": "./dist/index.js" },
+    "./tokens.css": "./src/tokens.css",
+    "./colors.css": "./src/colors.css",
+    "./spacing.css": "./src/spacing.css",
+    "./typography.css": "./src/typography.css",
+    "./display-type.css": "./src/display-type.css",
+    "./radius.css": "./src/radius.css",
+    "./shadows.css": "./src/shadows.css",
+    "./motion.css": "./src/motion.css",
+    "./gradients.css": "./src/gradients.css",
+    "./glass.css": "./src/glass.css",
+    "./density.css": "./src/density.css",
+    "./layout.css": "./src/layout.css",
+    "./carbon-overrides.css": "./src/carbon-overrides.css",
+    "./carbon-themes.css": "./src/carbon-themes.css",
+    "./rtl.css": "./src/rtl.css"
+  },
+  "files": ["dist", "src/*.css"],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "clean": "rm -rf dist"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0"
+  }
+}

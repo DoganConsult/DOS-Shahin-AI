@@ -1,0 +1,53 @@
+import { WidgetManifest } from '../../core/models/widget-manifest.model';
+
+export const PLATFORM_WIDGETS: WidgetManifest[] = [
+  {
+    id: 'platform.agrc_wiring_status',
+    key: 'agrc_wiring_status',
+    title: 'AGRC-OS Wiring Status',
+    titleAr: 'حالة توصيل AGRC-OS',
+    category: 'platform',
+    engine: 'angular',
+    component: () => import('../../../components/governance/agrc-wiring-status.widget').then(m => m.AgrcWiringStatusWidget),
+    icon: '🔌',
+    defaultSize: { cols: 3, rows: 1 },
+    schemaVersion: 1,
+  },
+  {
+    id: 'platform.engagement_pulse',
+    key: 'engagement_pulse',
+    title: 'Engagement Pulse',
+    titleAr: 'نبض التفاعل',
+    category: 'platform',
+    engine: 'angular',
+    component: () => import('../../../presentation/engagement-pulse/engagement-pulse.component').then(m => m.EngagementPulseComponent),
+    icon: '💓',
+    defaultSize: { cols: 6, rows: 2 },
+    schemaVersion: 1,
+  },
+  {
+    id: 'platform.activity_feed',
+    key: 'activity_feed',
+    title: 'Activity Feed',
+    titleAr: 'موجز النشاط',
+    category: 'platform',
+    engine: 'angular',
+    component: () => import('../../../features/standalone-widgets/activity-feed.widget').then(m => m.ActivityFeedWidgetComponent),
+    icon: '📋',
+    defaultSize: { cols: 6, rows: 2 },
+    schemaVersion: 1,
+  },
+  {
+    id: 'platform.comment_activity',
+    key: 'comment_activity',
+    title: 'Comment Activity',
+    titleAr: 'نشاط التعليقات',
+    category: 'platform',
+    engine: 'echarts',
+    component: () => import('../../../chart-infra/echart-components/specialty/comment-activity.component').then(m => m.CommentActivityComponent),
+    icon: '💬',
+    defaultSize: { cols: 3, rows: 1 },
+    schemaVersion: 1,
+  },
+
+];

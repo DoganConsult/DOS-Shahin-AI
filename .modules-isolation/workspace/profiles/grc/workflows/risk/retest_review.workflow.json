@@ -1,0 +1,15 @@
+{
+  "id": "risk.retest_review",
+  "module": "risk",
+  "hook": "retest_review",
+  "version": "1.0.0",
+  "sla_hours": 72,
+  "actor_role_default": "risk.module_lead",
+  "states": ["ready","retesting","passed","failed"],
+  "initial": "ready",
+  "transitions": [{"from":"ready","to":"retesting","on":"start_retest"},{"from":"retesting","to":"passed","on":"pass","actor_role":"risk.approver"},{"from":"retesting","to":"failed","on":"fail","actor_role":"risk.approver"}],
+  "audit_event_prefix": "risk.workflow.retest_review",
+  "notification_targets": ["risk.module_lead", "risk.approver"],
+  "evidence_required_on": ["passed","published"],
+  "escalation": { "on": "sla_breach", "to": "risk.executive_owner", "after_hours": 144 }
+}

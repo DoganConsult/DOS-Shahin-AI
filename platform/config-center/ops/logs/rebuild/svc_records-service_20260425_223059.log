@@ -1,0 +1,4 @@
+
+> @dos/records-service@0.1.0 build /root/DOS-AIO/services/records-service
+> tsc -p tsconfig.json
+

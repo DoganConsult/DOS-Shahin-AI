@@ -1,0 +1,327 @@
+{
+  "name": "@dos/platform-core",
+  "version": "1.0.0",
+  "description": "DOS Platform Core \u2014 tenancy, modules, provisioning, events, lifecycle, observability, HTTP layer, agents, workflows, operations. Product-neutral runtime.",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./contracts": {
+      "types": "./dist/contracts.d.ts",
+      "default": "./dist/contracts.js"
+    },
+    "./ports": {
+      "types": "./dist/ports.d.ts",
+      "default": "./dist/ports.js"
+    },
+    "./constants": {
+      "types": "./dist/constants/index.d.ts",
+      "default": "./dist/constants/index.js"
+    },
+    "./http": {
+      "types": "./dist/http/index.d.ts",
+      "default": "./dist/http/index.js"
+    },
+    "./http/guards/module-guard": {
+      "types": "./dist/http/guards/module-guard.d.ts",
+      "default": "./dist/http/guards/module-guard.js"
+    },
+    "./http/guards/module-guard.js": {
+      "types": "./dist/http/guards/module-guard.d.ts",
+      "default": "./dist/http/guards/module-guard.js"
+    },
+    "./events": {
+      "types": "./dist/events/index.d.ts",
+      "default": "./dist/events/index.js"
+    },
+    "./observability": {
+      "types": "./dist/observability/index.d.ts",
+      "default": "./dist/observability/index.js"
+    },
+    "./lifecycle": {
+      "types": "./dist/lifecycle/index.d.ts",
+      "default": "./dist/lifecycle/index.js"
+    },
+    "./jobs": {
+      "types": "./dist/jobs/index.d.ts",
+      "default": "./dist/jobs/index.js"
+    },
+    "./provisioning": {
+      "types": "./dist/provisioning/index.d.ts",
+      "default": "./dist/provisioning/index.js"
+    },
+    "./provisioning/product-bootstrap-hook": {
+      "types": "./dist/provisioning/product-bootstrap-hook.d.ts",
+      "default": "./dist/provisioning/product-bootstrap-hook.js"
+    },
+    "./provisioning/product-bootstrap-hook.js": {
+      "types": "./dist/provisioning/product-bootstrap-hook.d.ts",
+      "default": "./dist/provisioning/product-bootstrap-hook.js"
+    },
+    "./modules": {
+      "types": "./dist/modules/index.d.ts",
+      "default": "./dist/modules/index.js"
+    },
+    "./modules/capability-catalog": {
+      "types": "./dist/modules/capability-catalog.d.ts",
+      "default": "./dist/modules/capability-catalog.js"
+    },
+    "./modules/module-crud-registry": {
+      "types": "./dist/modules/module-crud-registry.d.ts",
+      "default": "./dist/modules/module-crud-registry.js"
+    },
+    "./modules/module-crud-registry.js": {
+      "types": "./dist/modules/module-crud-registry.d.ts",
+      "default": "./dist/modules/module-crud-registry.js"
+    },
+    "./config/platform-identity": {
+      "types": "./dist/config/platform-identity.d.ts",
+      "default": "./dist/config/platform-identity.js"
+    },
+    "./settings/unified-config.service": {
+      "types": "./dist/settings/unified-config.service.d.ts",
+      "default": "./dist/settings/unified-config.service.js"
+    },
+    "./settings/settings-resolver.service": {
+      "types": "./dist/settings/settings-resolver.service.d.ts",
+      "default": "./dist/settings/settings-resolver.service.js"
+    },
+    "./settings/config-gateway.service": {
+      "types": "./dist/settings/config-gateway.service.d.ts",
+      "default": "./dist/settings/config-gateway.service.js"
+    },
+    "./resilience": {
+      "types": "./dist/resilience/index.d.ts",
+      "default": "./dist/resilience/index.js"
+    },
+    "./resilience/resilient-catch": {
+      "types": "./dist/resilience/resilient-catch.d.ts",
+      "default": "./dist/resilience/resilient-catch.js"
+    },
+    "./workflows": {
+      "types": "./dist/workflows/index.d.ts",
+      "default": "./dist/workflows/index.js"
+    },
+    "./workflows/modes": {
+      "types": "./dist/workflows/modes.d.ts",
+      "default": "./dist/workflows/modes.js"
+    },
+    "./workflows/integration": {
+      "types": "./dist/workflows/integration.d.ts",
+      "default": "./dist/workflows/integration.js"
+    },
+    "./workflows/engine/workflow-engine.service": {
+      "types": "./dist/workflows/engine/workflow-engine.service.d.ts",
+      "default": "./dist/workflows/engine/workflow-engine.service.js"
+    },
+    "./workflows/engine/workflow-engine.service.js": {
+      "types": "./dist/workflows/engine/workflow-engine.service.d.ts",
+      "default": "./dist/workflows/engine/workflow-engine.service.js"
+    },
+    "./workflows/approvals/approval-engine.service": {
+      "types": "./dist/workflows/approvals/approval-engine.service.d.ts",
+      "default": "./dist/workflows/approvals/approval-engine.service.js"
+    },
+    "./workflows/approvals/approval-engine.service.js": {
+      "types": "./dist/workflows/approvals/approval-engine.service.d.ts",
+      "default": "./dist/workflows/approvals/approval-engine.service.js"
+    },
+    "./shell": {
+      "types": "./dist/shell/index.d.ts",
+      "default": "./dist/shell/index.js"
+    },
+    "./notifications": {
+      "types": "./dist/notifications/index.d.ts",
+      "default": "./dist/notifications/index.js"
+    },
+    "./search": {
+      "types": "./dist/search/index.d.ts",
+      "default": "./dist/search/index.js"
+    },
+    "./tenancy": {
+      "types": "./dist/tenancy/index.d.ts",
+      "default": "./dist/tenancy/index.js"
+    },
+    "./storage": {
+      "types": "./dist/storage/index.d.ts",
+      "default": "./dist/storage/index.js"
+    },
+    "./branding": {
+      "types": "./dist/branding/index.d.ts",
+      "default": "./dist/branding/index.js"
+    },
+    "./sagas": {
+      "types": "./dist/sagas/index.d.ts",
+      "default": "./dist/sagas/index.js"
+    },
+    "./shell/navigation/navigation-integration": {
+      "types": "./dist/shell/navigation/navigation-integration.d.ts",
+      "default": "./dist/shell/navigation/navigation-integration.js"
+    },
+    "./security": {
+      "types": "./dist/security/index.d.ts",
+      "default": "./dist/security/index.js"
+    },
+    "./security/services/pdpl-consent.service": {
+      "types": "./dist/security/services/pdpl-consent.service.d.ts",
+      "default": "./dist/security/services/pdpl-consent.service.js"
+    },
+    "./services/document-generation/sop-library.service": {
+      "types": "./dist/services/document-generation/sop-library.service.d.ts",
+      "default": "./dist/services/document-generation/sop-library.service.js"
+    },
+    "./settings/platform-mode-gate.service": {
+      "types": "./dist/settings/platform-mode-gate.service.d.ts",
+      "default": "./dist/settings/platform-mode-gate.service.js"
+    },
+    "./notifications/webhooks/telemetry-webhook.service": {
+      "types": "./dist/notifications/webhooks/telemetry-webhook.service.d.ts",
+      "default": "./dist/notifications/webhooks/telemetry-webhook.service.js"
+    },
+    "./core/infrastructure/incremental-resolution.service": {
+      "types": "./dist/core/infrastructure/incremental-resolution.service.d.ts",
+      "default": "./dist/core/infrastructure/incremental-resolution.service.js"
+    },
+    "./foundation": {
+      "types": "./dist/foundation/index.d.ts",
+      "default": "./dist/foundation/index.js"
+    },
+    "./foundation/foundation.service": {
+      "types": "./dist/foundation/foundation.service.d.ts",
+      "default": "./dist/foundation/foundation.service.js"
+    },
+    "./foundation/team-builder.service": {
+      "types": "./dist/foundation/team-builder.service.d.ts",
+      "default": "./dist/foundation/team-builder.service.js"
+    },
+    "./foundation/responsibility-suggest.service": {
+      "types": "./dist/foundation/responsibility-suggest.service.d.ts",
+      "default": "./dist/foundation/responsibility-suggest.service.js"
+    },
+    "./foundation/org-hierarchy-admin.service": {
+      "types": "./dist/foundation/org-hierarchy-admin.service.d.ts",
+      "default": "./dist/foundation/org-hierarchy-admin.service.js"
+    },
+    "./foundation/org-hierarchy.service": {
+      "types": "./dist/foundation/org-hierarchy.service.d.ts",
+      "default": "./dist/foundation/org-hierarchy.service.js"
+    },
+    "./foundation/org-hierarchy-ops.service": {
+      "types": "./dist/foundation/org-hierarchy-ops.service.d.ts",
+      "default": "./dist/foundation/org-hierarchy-ops.service.js"
+    },
+    "./export": {
+      "types": "./dist/export/index.d.ts",
+      "default": "./dist/export/index.js"
+    },
+    "./delivery": {
+      "types": "./dist/delivery/index.d.ts",
+      "default": "./dist/delivery/index.js"
+    },
+    "./profile/actor-identity.service": {
+      "types": "./dist/profile/actor-identity.service.d.ts",
+      "default": "./dist/profile/actor-identity.service.js"
+    },
+    "./workspace/workspace.service": {
+      "types": "./dist/workspace/workspace.service.d.ts",
+      "default": "./dist/workspace/workspace.service.js"
+    },
+    "./workspace/workspace-profile-runtime.service": {
+      "types": "./dist/workspace/workspace-profile-runtime.service.d.ts",
+      "default": "./dist/workspace/workspace-profile-runtime.service.js"
+    },
+    "./workspace/workspace-provisioning-state.service": {
+      "types": "./dist/workspace/workspace-provisioning-state.service.d.ts",
+      "default": "./dist/workspace/workspace-provisioning-state.service.js"
+    },
+    "./workspace/workspace-state.service": {
+      "types": "./dist/workspace/workspace-state.service.d.ts",
+      "default": "./dist/workspace/workspace-state.service.js"
+    },
+    "./automation": {
+      "types": "./dist/automation/index.d.ts",
+      "default": "./dist/automation/index.js"
+    },
+    "./cache/cache.service": {
+      "types": "./dist/cache/cache.service.d.ts",
+      "default": "./dist/cache/cache.service.js"
+    },
+    "./middleware/tenant-module-allowlist": {
+      "types": "./dist/middleware/tenant-module-allowlist.d.ts",
+      "default": "./dist/middleware/tenant-module-allowlist.js"
+    },
+    "./registry": {
+      "types": "./dist/registry/index.d.ts",
+      "default": "./dist/registry/index.js"
+    },
+    "./agents/contracts/agent.types": {
+      "types": "./dist/agents/contracts/agent.types.d.ts",
+      "default": "./dist/agents/contracts/agent.types.js"
+    },
+    "./agents/contracts/agent.types.js": {
+      "types": "./dist/agents/contracts/agent.types.d.ts",
+      "default": "./dist/agents/contracts/agent.types.js"
+    },
+    "./agents/handoff/handoff-queue.service": {
+      "types": "./dist/agents/handoff/handoff-queue.service.d.ts",
+      "default": "./dist/agents/handoff/handoff-queue.service.js"
+    },
+    "./agents/handoff/handoff-queue.service.js": {
+      "types": "./dist/agents/handoff/handoff-queue.service.d.ts",
+      "default": "./dist/agents/handoff/handoff-queue.service.js"
+    },
+    "./agents/registry/agent-registry.service": {
+      "types": "./dist/agents/registry/agent-registry.service.d.ts",
+      "default": "./dist/agents/registry/agent-registry.service.js"
+    },
+    "./agents/registry/agent-registry.service.js": {
+      "types": "./dist/agents/registry/agent-registry.service.d.ts",
+      "default": "./dist/agents/registry/agent-registry.service.js"
+    },
+    "./agents/tools/tool-sync-adapter.service": {
+      "types": "./dist/agents/tools/tool-sync-adapter.service.d.ts",
+      "default": "./dist/agents/tools/tool-sync-adapter.service.js"
+    },
+    "./agents/tools/tool-sync-adapter.service.js": {
+      "types": "./dist/agents/tools/tool-sync-adapter.service.d.ts",
+      "default": "./dist/agents/tools/tool-sync-adapter.service.js"
+    },
+    "./auth-host-policy": {
+      "types": "./dist/auth-host-policy.d.ts",
+      "default": "./dist/auth-host-policy.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "uuid": "^8.3.2",
+    "@dos/types": "workspace:*",
+    "@dos/contracts": "workspace:*",
+    "@dos/db": "workspace:*",
+    "@dos/event-backbone": "workspace:*",
+    "ioredis": "^5.10.1",
+    "prom-client": "^15.0.0",
+    "svg-captcha": "^1.4.0",
+    "zxcvbn": "^4.4.2"
+  },
+  "peerDependencies": {
+    "express": ">=4.0.0",
+    "zod": ">=3.0.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/zxcvbn": "^4.4.5",
+    "express": "^4.22.1",
+    "typescript": "^5.7.0",
+    "zod": "^3.25.0"
+  }
+}

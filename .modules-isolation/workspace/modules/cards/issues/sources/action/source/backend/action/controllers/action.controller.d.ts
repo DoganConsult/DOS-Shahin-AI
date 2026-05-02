@@ -1,0 +1,10 @@
+import type { Response } from 'express';
+import type { AuthenticatedRequest } from '@dos/types';
+export declare function listActionItems(req: AuthenticatedRequest, res: Response): Promise<void>;
+export declare function getActionItemById(req: AuthenticatedRequest, res: Response): Promise<void>;
+export declare function createActionItem(req: AuthenticatedRequest, res: Response): Promise<void>;
+export declare function updateActionItem(req: AuthenticatedRequest, res: Response): Promise<void>;
+export declare function dailyDigest(req: AuthenticatedRequest, res: Response): Promise<void>;
+export declare function consolidatedCenter(req: AuthenticatedRequest, res: Response): Promise<void>;
+export declare function escalateOverdue(req: AuthenticatedRequest, res: Response): Promise<void>;
+export declare function dispatch(req: AuthenticatedRequest, res: Response): Promise<void>;

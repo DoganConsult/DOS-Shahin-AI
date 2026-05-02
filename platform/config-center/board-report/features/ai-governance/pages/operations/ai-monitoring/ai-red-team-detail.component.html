@@ -1,0 +1,324 @@
+<div class="gov-page" [attr.dir]="i18n.direction()">
+
+      <!-- ═══════ KPI Strip ═══════ -->
+      <div class="kpi-strip">
+        <div class="kpi-card">
+          <span class="kpi-val">{{ totalRuns() }}</span>
+          <span class="kpi-lbl">{{ i18n.translate('ai.redTeam.totalRuns') }}</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-val">{{ passRate() | number:'1.0-1' }}%</span>
+          <span class="kpi-lbl">{{ i18n.translate('ai.redTeam.passRate') }}</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-val">{{ vulnerabilitiesFound() }}</span>
+          <span class="kpi-lbl">{{ i18n.translate('ai.redTeam.vulnerabilities') }}</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-val">{{ activeSchedules() }}</span>
+          <span class="kpi-lbl">{{ i18n.translate('ai.redTeam.activeSchedules') }}</span>
+        </div>
+      </div>
+
+      <!-- ═══════ Tab Bar ═══════ -->
+      <div class="tab-bar">
+        <button
+          class="tab-btn"
+          [class.active]="activeTab() === 'runs'"
+          (click)="activeTab.set('runs')">
+          {{ i18n.translate('ai.redTeam.runsTab') }}
+        </button>
+        <button
+          class="tab-btn"
+          [class.active]="activeTab() === 'schedules'"
+          (click)="activeTab.set('schedules')">
+          {{ i18n.translate('ai.redTeam.schedulesTab') }}
+        </button>
+      </div>
+
+      <!-- ═══════ Tab 1: Runs & Findings ═══════ -->
+      @if (activeTab() === 'runs') {
+
+        @if (runsLoading()) {
+          <div class="loading-center">
+            <p-progressSpinner strokeWidth="3" [style]="{width: '40px', height: '40px'}" />
+          </div>
+        }
+
+        @if (!runsLoading()) {
+          <grc-data-table
+            [totalRecords]="runs().length"
+            [emptyMessage]="i18n.translate('ai.redTeam.noRuns')">
+            <p-table
+              [value]="runs()"
+              [paginator]="true"
+              [rows]="10"
+              [rowsPerPageOptions]="[10, 25, 50]"
+              selectionMode="single"
+              [(selection)]="selectedRun"
+              (onRowSelect)="onRunSelected()"
+              dataKey="id"
+              styleClass="p-datatable-sm p-datatable-striped"
+              responsiveLayout="scroll">
+
+              <ng-template pTemplate="header">
+                <tr>
+                  <th pSortableColumn="model">{{ i18n.translate('ai.redTeam.model') }} <p-sortIcon field="model" /></th>
+                  <th>{{ i18n.translate('ai.redTeam.canaryPrompt') }}</th>
+                  <th pSortableColumn="status">{{ i18n.translate('ai.redTeam.status') }} <p-sortIcon field="status" /></th>
+                  <th pSortableColumn="created_at">{{ i18n.translate('ai.redTeam.createdAt') }} <p-sortIcon field="created_at" /></th>
+                </tr>
+              </ng-template>
+
+              <ng-template pTemplate="body" let-r let-rowIndex="rowIndex">
+                <tr [pSelectableRow]="r" [pSelectableRowIndex]="rowIndex">
+                  <td>{{ r.model ?? r.model_id ?? '--' }}</td>
+                  <td>
+                    <span class="truncate" [pTooltip]="r.canary_prompt ?? r.prompt_template ?? ''" tooltipPosition="top">
+                      {{ (r.canary_prompt ?? r.prompt_template ?? '--') | slice:0:60 }}
+                    </span>
+                  </td>
+                  <td>
+                    <p-tag
+                      [value]="r.status"
+                      [severity]="runStatusSeverity(r.status)" />
+                  </td>
+                  <td>{{ r.created_at | date:'short' }}</td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </grc-data-table>
+
+          <!-- Selected Run Detail Panel -->
+          @if (selectedRun) {
+            <div class="detail-panel">
+              <h3 class="section-title">{{ i18n.translate('ai.redTeam.runDetail') }}</h3>
+              <div class="detail-grid">
+                <div class="detail-field">
+                  <span class="detail-label">{{ i18n.translate('ai.redTeam.model') }}</span>
+                  <span class="detail-value">{{ selectedRun.model ?? selectedRun.model_id ?? '--' }}</span>
+                </div>
+                <div class="detail-field">
+                  <span class="detail-label">{{ i18n.translate('ai.redTeam.status') }}</span>
+                  <span class="detail-value">
+                    <p-tag [value]="selectedRun.status" [severity]="runStatusSeverity(selectedRun.status)" />
+                  </span>
+                </div>
+                <div class="detail-field" style="grid-column:1/-1;">
+                  <span class="detail-label">{{ i18n.translate('ai.redTeam.canaryPrompt') }}</span>
+                  <span class="detail-value">{{ selectedRun.canary_prompt ?? selectedRun.prompt_template ?? '--' }}</span>
+                </div>
+              </div>
+
+              <!-- Results Summary -->
+              @if (selectedRun.results) {
+                <h4 class="section-title">{{ i18n.translate('ai.redTeam.resultsSummary') }}</h4>
+                <div class="results-block">
+                  <pre class="results-json">{{ selectedRun.results | json }}</pre>
+                </div>
+              }
+
+              <!-- Findings List -->
+              @if (runFindings().length > 0) {
+                <h4 class="section-title">{{ i18n.translate('ai.redTeam.findings') }}</h4>
+                <grc-data-table
+                  [totalRecords]="runFindings().length"
+                  [emptyMessage]="i18n.translate('ai.redTeam.noFindings')">
+                  <p-table
+                    [value]="runFindings()"
+                    styleClass="p-datatable-sm p-datatable-striped"
+                    responsiveLayout="scroll">
+
+                    <ng-template pTemplate="header">
+                      <tr>
+                        <th>{{ i18n.translate('ai.redTeam.findingType') }}</th>
+                        <th>{{ i18n.translate('ai.redTeam.severity') }}</th>
+                        <th>{{ i18n.translate('ai.redTeam.description') }}</th>
+                      </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="body" let-f>
+                      <tr>
+                        <td>{{ f.type ?? f.finding_type ?? f.category ?? '--' }}</td>
+                        <td>
+                          <p-tag
+                            [value]="f.severity ?? f.risk_level ?? 'info'"
+                            [severity]="findingSeverity(f.severity ?? f.risk_level)" />
+                        </td>
+                        <td>{{ f.description ?? f.detail ?? f.message ?? '--' }}</td>
+                      </tr>
+                    </ng-template>
+                  </p-table>
+                </grc-data-table>
+              }
+
+              @if (!selectedRun.results && runFindings().length === 0) {
+                <div class="empty-state-inline">
+                  <i class="pi pi-info-circle"></i>
+                  {{ i18n.translate('ai.redTeam.noFindings') }}
+                </div>
+              }
+            </div>
+          }
+        }
+      }
+
+      <!-- ═══════ Tab 2: Schedules ═══════ -->
+      @if (activeTab() === 'schedules') {
+
+        <p-toolbar styleClass="mb-3">
+          <div class="p-toolbar-group-start"></div>
+          <div class="p-toolbar-group-end">
+            <button
+              pButton
+              [label]="i18n.translate('ai.redTeam.createSchedule')"
+              icon="pi pi-plus"
+              class="p-button-sm"
+              (click)="openScheduleDialog()">
+            </button>
+          </div>
+        </p-toolbar>
+
+        @if (schedulesLoading()) {
+          <div class="loading-center">
+            <p-progressSpinner strokeWidth="3" [style]="{width: '40px', height: '40px'}" />
+          </div>
+        }
+
+        @if (!schedulesLoading()) {
+          <grc-data-table
+            [totalRecords]="schedules().length"
+            [emptyMessage]="i18n.translate('ai.redTeam.noSchedules')">
+            <p-table
+              [value]="schedules()"
+              [paginator]="true"
+              [rows]="10"
+              styleClass="p-datatable-sm p-datatable-striped"
+              responsiveLayout="scroll">
+
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>{{ i18n.translate('ai.redTeam.scheduleName') }}</th>
+                  <th>{{ i18n.translate('ai.redTeam.model') }}</th>
+                  <th>{{ i18n.translate('ai.redTeam.frequency') }}</th>
+                  <th>{{ i18n.translate('ai.redTeam.enabled') }}</th>
+                  <th>{{ i18n.translate('ai.redTeam.promptTemplate') }}</th>
+                  <th>{{ i18n.translate('common.actions') }}</th>
+                </tr>
+              </ng-template>
+
+              <ng-template pTemplate="body" let-s>
+                <tr>
+                  <td>{{ s.name }}</td>
+                  <td>{{ s.model_id ?? '--' }}</td>
+                  <td>{{ s.frequency ?? '--' }}</td>
+                  <td>
+                    <p-tag
+                      [value]="s.enabled ? i18n.translate('common.yes') : i18n.translate('common.no')"
+                      [severity]="s.enabled ? 'success' : 'secondary'" />
+                  </td>
+                  <td>
+                    <span class="truncate" [pTooltip]="s.prompt_template ?? ''" tooltipPosition="top">
+                      {{ (s.prompt_template ?? '--') | slice:0:40 }}
+                    </span>
+                  </td>
+                  <td>
+                    <button
+                      pButton
+                      icon="pi pi-pencil"
+                      class="p-button-sm p-button-text p-button-secondary"
+                      [pTooltip]="i18n.translate('common.edit')"
+                      (click)="openScheduleDialog(s)">
+                    </button>
+                    <button
+                      pButton
+                      icon="pi pi-trash"
+                      class="p-button-sm p-button-text p-button-danger"
+                      [pTooltip]="i18n.translate('common.delete')"
+                      (click)="confirmDeleteSchedule(s)">
+                    </button>
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </grc-data-table>
+        }
+      }
+
+      <!-- ═══════ Schedule Create/Edit Dialog ═══════ -->
+      <p-dialog
+        [header]="scheduleForm.id
+          ? i18n.translate('ai.redTeam.editSchedule')
+          : i18n.translate('ai.redTeam.createSchedule')"
+        [(visible)]="scheduleDialogVisible"
+        [modal]="true"
+        [style]="{width: '540px'}"
+        [closable]="true">
+
+        <div class="detail-grid" style="margin-top:12px;">
+          <div class="detail-field">
+            <grc-form-field [label]="i18n.translate('ai.redTeam.scheduleName')">
+              <input pInputText [(ngModel)]="scheduleForm.name" class="w-full" />
+            </grc-form-field>
+          </div>
+          <div class="detail-field">
+            <grc-form-field [label]="i18n.translate('ai.redTeam.model')">
+              <input pInputText [(ngModel)]="scheduleForm.model_id" class="w-full" />
+            </grc-form-field>
+          </div>
+          <div class="detail-field">
+            <label class="detail-label">{{ i18n.translate('ai.redTeam.frequency') }}</label>
+            <p-dropdown
+              [options]="frequencyOptions"
+              [(ngModel)]="scheduleForm.frequency"
+              optionLabel="label"
+              optionValue="value"
+              [placeholder]="i18n.translate('ai.redTeam.selectFrequency')"
+              styleClass="w-full">
+            </p-dropdown>
+          </div>
+          <div class="detail-field">
+            <label class="detail-label">{{ i18n.translate('ai.redTeam.enabled') }}</label>
+            <p-dropdown
+              [options]="enabledOptions"
+              [(ngModel)]="scheduleForm.enabled"
+              optionLabel="label"
+              optionValue="value"
+              styleClass="w-full">
+            </p-dropdown>
+          </div>
+          <div class="detail-field" style="grid-column:1/-1;">
+            <label class="detail-label">{{ i18n.translate('ai.redTeam.promptTemplate') }}</label>
+            <textarea
+              pInputTextarea
+              [(ngModel)]="scheduleForm.prompt_template"
+              [rows]="4"
+              class="w-full"
+              [placeholder]="i18n.translate('ai.redTeam.promptTemplatePlaceholder')">
+            </textarea>
+          </div>
+        </div>
+
+        <ng-template pTemplate="footer">
+          <button
+            pButton
+            [label]="i18n.translate('common.cancel')"
+            icon="pi pi-times"
+            class="p-button-text"
+            (click)="scheduleDialogVisible = false">
+          </button>
+          <button
+            pButton
+            [label]="i18n.translate('common.save')"
+            icon="pi pi-check"
+            [loading]="scheduleSaving()"
+            [disabled]="!scheduleForm.name"
+            (click)="saveSchedule()">
+          </button>
+        </ng-template>
+      </p-dialog>
+
+      <!-- Confirm Dialog for delete -->
+      <p-confirmDialog />
+
+    </div>

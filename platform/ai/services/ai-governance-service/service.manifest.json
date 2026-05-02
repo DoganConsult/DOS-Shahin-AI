@@ -1,0 +1,30 @@
+{
+  "serviceCode": "ai-governance-service",
+  "displayName": "AI Governance Service",
+  "layer": "platform-service",
+  "ownerTeam": "platform-ai",
+  "runtime": "node",
+  "dependsOn": [
+    "auth-service",
+    "tenant-service",
+    "ai-gateway-service"
+  ],
+  "modules": [
+    "ai-governance"
+  ],
+  "exposes": {
+    "apiBase": "/api/ai-governance",
+    "events": [
+      "ai_governance.model_registered",
+      "ai_governance.assessment_completed",
+      "ai_governance.bias_detected",
+      "ai_governance.fairness_scored",
+      "ai_governance.ethical_review_completed",
+      "ai_governance.impact_assessed",
+      "ai_governance.monitoring_alert",
+      "ai_governance.policy_violated",
+      "ai_governance.transparency_report_generated",
+      "ai_governance.validation_completed"
+    ]
+  }
+}

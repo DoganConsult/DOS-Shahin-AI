@@ -1,0 +1,33 @@
+.sv-body { padding: 0 24px 40px; }
+    .sv-level-bar { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+    .sv-level-btn { display: flex; align-items: center; gap: 8px; padding: 10px 20px; border: 2px solid var(--surface-border); border-radius: var(--radius-lg); background: var(--surface-card); cursor: pointer; transition: all 0.2s; font-size: var(--font-size-body-sm); font-weight: 500; }
+    .sv-level-btn:hover { border-color: var(--primary-300); background: var(--primary-50); }
+    .sv-level-btn.active { border-color: var(--primary-500); background: var(--primary-50); color: var(--primary-700); }
+    .sv-level-badge { font-size: var(--font-size-xs); font-weight: 700; padding: 2px 8px; border-radius: var(--radius-lg); }
+    .sv-level-L1 { background: var(--green-100); color: var(--green-700); }
+    .sv-level-L2 { background: var(--blue-100); color: var(--blue-700); }
+    .sv-level-L3 { background: var(--purple-100); color: var(--purple-700); }
+    .sv-kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 24px; }
+    .sv-tabs { display: flex; gap: 4px; margin-bottom: 20px; border-bottom: 1px solid var(--surface-border); flex-wrap: wrap; }
+    .sv-tab { display: flex; align-items: center; gap: 6px; padding: 10px 16px; border: none; background: transparent; cursor: pointer; font-size: var(--font-size-tag); font-weight: 500; color: var(--text-color-secondary); border-bottom: 2px solid transparent; transition: all 0.15s; }
+    .sv-tab:hover { color: var(--text-color); background: var(--surface-hover); }
+    .sv-tab.active { color: var(--primary-700); border-bottom-color: var(--primary-500); font-weight: 600; }
+    .sv-tab-count { background: var(--primary-100); color: var(--primary-700); font-size: var(--font-size-xs); font-weight: 700; padding: 1px 6px; border-radius: var(--radius-md); }
+    .sv-toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .sv-toolbar h4 { margin: 0; font-size: var(--font-size-md); font-weight: 600; }
+    .sv-content-cell { max-width: 280px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--font-size-caption); }
+    .sv-overview-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 16px; }
+    .sv-card { background: var(--surface-card); border: 1px solid var(--surface-border); border-radius: var(--radius-lg); padding: 20px; }
+    .sv-card h4 { margin: 0 0 16px; font-size: var(--font-size-body-sm); font-weight: 600; display: flex; align-items: center; gap: 8px; }
+    .sv-status-list { display: flex; flex-direction: column; gap: 10px; }
+    .sv-status-row { display: flex; align-items: center; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--surface-100); }
+    .sv-budget-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+    .sv-budget-card { background: var(--surface-card); border: 1px solid var(--surface-border); border-radius: var(--radius); padding: 16px; }
+    .sv-budget-label { font-size: var(--font-size-sm); color: var(--text-color-secondary); margin-bottom: 4px; }
+    .sv-budget-value { font-size: var(--font-size-body-md); font-weight: 600; }
+    .sv-budget-bar { height: 6px; background: var(--surface-200); border-radius: 3px; margin-top: 8px; overflow: hidden; }
+    .sv-budget-fill { height: 100%; background: var(--primary-500); border-radius: 3px; transition: width 0.3s; }
+    .sv-budget-fill.sv-danger { background: var(--red-500); }
+    .sv-budget-status { display: flex; align-items: center; }
+    .sv-toolbar-actions { display: flex; gap: 6px; align-items: center; }
+    .sv-control-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }

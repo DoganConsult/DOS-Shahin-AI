@@ -1,0 +1,139 @@
+{
+  "$schema": "./manifests/migrations-index.schema.json",
+  "moduleCode": "dos",
+  "ownershipModel": "physical",
+  "physicalMoveStatus": "native",
+  "currentRunner": "migration/migration-runner.ts",
+  "currentScanRoots": [
+    "platform/dos/migrations/public",
+    "platform/dos/migrations/tenant"
+  ],
+  "ownedMigrations": {
+    "public": {
+      "schema": "platform_dos",
+      "files": [
+        {
+          "filename": "20260423_0100_create_platform_dos_schema.sql",
+          "purpose": "Create platform_dos schema + 5 native tables (tenants_registry, modules_registry, products_registry, platform_events_log, scheduled_jobs) with hot-path indexes",
+          "currentPath": "platform/dos/migrations/public/20260423_0100_create_platform_dos_schema.sql",
+          "down": "20260423_0100_create_platform_dos_schema_down.sql"
+        },
+        {
+          "filename": "20260501_0300_dynamic_ui_catalog.sql",
+          "purpose": "Phase F — DB-Driven UI Management. Creates the canonical dos.dynamic_ui_* table family (18 tables) consumed by services/dynamic-ui-service (PgDynamicUiStore) and the Dynamic UI Angular resolvers.",
+          "currentPath": "platform/dos/migrations/public/20260501_0300_dynamic_ui_catalog.sql",
+          "down": "20260501_0300_dynamic_ui_catalog_down.sql"
+        },
+        {
+          "filename": "20260501_0301_langgraph_checkpoints.sql",
+          "purpose": "Phase D — AI OS. Persists LangGraph StateGraph checkpoints written by ai-engine-service PostgresCheckpointSaver (resume-from-failure for single-agent and squad graphs).",
+          "currentPath": "platform/dos/migrations/public/20260501_0301_langgraph_checkpoints.sql",
+          "down": "20260501_0301_langgraph_checkpoints_down.sql"
+        },
+        {
+          "filename": "20260501_0302_ui_os_runtime_personalization.sql",
+          "purpose": "Phase A/F — UI-OS runtime & personalization. Adds the canonical 10 dos.ui_* tables for global user prefs, dashboards/widgets grid, workspace state, data-grid state, tenant branding, locales (seeded en/ar), translations, tours, and tour completion. Complements the dos.dynamic_ui_* catalog from 0300; never duplicates os_applications/widgets/actions/ui_navigation_nodes.",
+          "currentPath": "platform/dos/migrations/public/20260501_0302_ui_os_runtime_personalization.sql",
+          "down": "20260501_0302_ui_os_runtime_personalization_down.sql"
+        },
+        {
+          "filename": "20260501_0303_ui_os_workspace_productivity.sql",
+          "purpose": "Phase A/F — UI-OS workspace productivity. Adds 7 dos.ui_* tables for saved views, pinned items, recent items, command palette, user shortcuts, announcements, and per-user announcement read state.",
+          "currentPath": "platform/dos/migrations/public/20260501_0303_ui_os_workspace_productivity.sql",
+          "down": "20260501_0303_ui_os_workspace_productivity_down.sql"
+        },
+        {
+          "filename": "20260501_0304_ui_os_productivity_tail.sql",
+          "purpose": "Phase A/F — UI-OS productivity tail (Wave 2a). Adds 5 dos.ui_* tables that complete §3 of the master checklist: saved filters, favorites, quick actions, context menus, bulk actions.",
+          "currentPath": "platform/dos/migrations/public/20260501_0304_ui_os_productivity_tail.sql",
+          "down": "20260501_0304_ui_os_productivity_tail_down.sql"
+        },
+        {
+          "filename": "20260501_0305_ui_os_layout_composition.sql",
+          "purpose": "Phase A/F — UI-OS layout & composition (Wave 2b). Adds 8 dos.ui_* tables that close §4 of the master checklist: layout templates, user layout overrides, page layouts, page sections, section widgets, responsive breakpoints, layout versions, layout publish history.",
+          "currentPath": "platform/dos/migrations/public/20260501_0305_ui_os_layout_composition.sql",
+          "down": "20260501_0305_ui_os_layout_composition_down.sql"
+        },
+        {
+          "filename": "20260501_0306_ui_os_workspace_snapshots.sql",
+          "purpose": "Phase A/F — UI-OS workspace snapshots (Wave 4). Adds dos.ui_workspace_snapshots table backing POST /api/ui-os/workspace-state/snapshot and POST /api/ui-os/workspace-state/restore/:snapshotId.",
+          "currentPath": "platform/dos/migrations/public/20260501_0306_ui_os_workspace_snapshots.sql",
+          "down": "20260501_0306_ui_os_workspace_snapshots_down.sql"
+        },
+        {
+          "filename": "20260501_0307_ui_os_admin_publishing.sql",
+          "purpose": "Phase A/F — UI-OS admin publishing (Wave 9). Adds 4 dos.ui_* tables (ui_draft_versions, ui_published_versions, ui_rollback_points, ui_admin_activity_log) backing /api/ui-os/admin/{drafts,publish,rollback}.",
+          "currentPath": "platform/dos/migrations/public/20260501_0307_ui_os_admin_publishing.sql",
+          "down": "20260501_0307_ui_os_admin_publishing_down.sql"
+        },
+        {
+          "filename": "20260501_0308_ui_os_carbon_seed.sql",
+          "purpose": "Phase A/F — UI-OS Carbon Design System default theme seed (Wave 10c). Inserts 96 IBM Carbon `--cds-*` CSS variable tokens (background/layer, field, border, text, link, button, support, spacing, type, layout, motion) at scope='global' into the existing dos.dynamic_ui_theme_tokens catalog so /api/ui-os/branding + /api/ui-os/theme resolve a Carbon-conformant default for any tenant. Idempotent (delete-then-insert global cds-* rows).",
+          "currentPath": "platform/dos/migrations/public/20260501_0308_ui_os_carbon_seed.sql",
+          "down": "20260501_0308_ui_os_carbon_seed_down.sql"
+        },
+        {
+          "filename": "20260502_0099_ui_os_enum_types.sql",
+          "purpose": "Phase A/F — UI-OS Wave 11a-0 ENUM foundation. Creates 39 dos.ui_*_t Postgres ENUM types (perm/visibility/widget binding/grid/job/form/notification/help/theme/i18n/accessibility/webos/security/flags/telemetry/ai/manager-studio) so every fixed-domain TEXT column across drafts 0100-0130 is DKNF-compliant per the normalization framework. Idempotent (DO $$ ... duplicate_object handler).",
+          "currentPath": "platform/dos/migrations/public/20260502_0099_ui_os_enum_types.sql",
+          "down": "20260502_0099_ui_os_enum_types_down.sql"
+        },
+        {
+          "filename": "20260502_0100_widget_instances.sql",
+          "purpose": "Phase A/F — UI-OS Wave 11a-§5 Widgets. Adds 3 dos.ui_* tables: ui_widget_instances (per-tenant catalog instances), ui_widget_instance_permissions (override matrix), ui_widget_instance_role_grants (1NF child for role TEXT[]).",
+          "currentPath": "platform/dos/migrations/public/20260502_0100_widget_instances.sql",
+          "down": "20260502_0100_widget_instances_down.sql"
+        },
+        {
+          "filename": "20260502_0101_widget_data_lifecycle.sql",
+          "purpose": "Phase A/F — UI-OS Wave 11a-§5 Widgets. Adds 3 dos.ui_* tables: ui_widget_data_bindings (1:1 instance), ui_widget_refresh_policies, ui_widget_error_states. DKNF via ENUMs from 0099.",
+          "currentPath": "platform/dos/migrations/public/20260502_0101_widget_data_lifecycle.sql",
+          "down": "20260502_0101_widget_data_lifecycle_down.sql"
+        },
+        {
+          "filename": "20260502_0102_widget_visibility_personalization.sql",
+          "purpose": "Phase A/F — UI-OS Wave 11a-§5 Widgets. Adds 3 dos.ui_* tables: ui_widget_visibility_rules, ui_widget_personalization, ui_widget_catalog_categories (3NF self-FK).",
+          "currentPath": "platform/dos/migrations/public/20260502_0102_widget_visibility_personalization.sql",
+          "down": "20260502_0102_widget_visibility_personalization_down.sql"
+        },
+        { "filename": "20260502_0103_grid_columns.sql", "purpose": "Phase A/F — UI-OS Wave 11b-§6 Grids. ui_data_grid_column_catalog, ui_data_grid_column_permissions.", "currentPath": "platform/dos/migrations/public/20260502_0103_grid_columns.sql", "down": "20260502_0103_grid_columns_down.sql" },
+        { "filename": "20260502_0104_grid_views_exports.sql", "purpose": "Phase A/F — UI-OS Wave 11b-§6 Grids. ui_data_grid_saved_views, ui_data_grid_exports.", "currentPath": "platform/dos/migrations/public/20260502_0104_grid_views_exports.sql", "down": "20260502_0104_grid_views_exports_down.sql" },
+        { "filename": "20260502_0105_grid_jobs_edits.sql", "purpose": "Phase A/F — UI-OS Wave 11b-§6 Grids. ui_data_grid_bulk_jobs, ui_data_grid_inline_edit_sessions, ui_data_grid_validation_errors.", "currentPath": "platform/dos/migrations/public/20260502_0105_grid_jobs_edits.sql", "down": "20260502_0105_grid_jobs_edits_down.sql" },
+        { "filename": "20260502_0106_form_definitions.sql", "purpose": "Phase A/F — UI-OS Wave 11c-§7 Forms. ui_form_definitions, ui_form_sections, ui_form_fields.", "currentPath": "platform/dos/migrations/public/20260502_0106_form_definitions.sql", "down": "20260502_0106_form_definitions_down.sql" },
+        { "filename": "20260502_0107_form_rules.sql", "purpose": "Phase A/F — UI-OS Wave 11c-§7 Forms. ui_form_field_rules, ui_form_validation_rules, ui_form_default_values.", "currentPath": "platform/dos/migrations/public/20260502_0107_form_rules.sql", "down": "20260502_0107_form_rules_down.sql" },
+        { "filename": "20260502_0108_form_runtime.sql", "purpose": "Phase A/F — UI-OS Wave 11c-§7 Forms. ui_form_submissions, ui_form_drafts, ui_form_attachments, ui_form_approval_links.", "currentPath": "platform/dos/migrations/public/20260502_0108_form_runtime.sql", "down": "20260502_0108_form_runtime_down.sql" },
+        { "filename": "20260502_0109_search_topology.sql", "purpose": "Phase A/F — UI-OS Wave 11d-§8 Search. ui_search_providers, ui_search_indexes, ui_search_scopes, ui_search_scope_indexes.", "currentPath": "platform/dos/migrations/public/20260502_0109_search_topology.sql", "down": "20260502_0109_search_topology_down.sql" },
+        { "filename": "20260502_0110_search_runtime.sql", "purpose": "Phase A/F — UI-OS Wave 11d-§8 Search. ui_search_history, ui_search_saved_queries, ui_command_execution_log.", "currentPath": "platform/dos/migrations/public/20260502_0110_search_runtime.sql", "down": "20260502_0110_search_runtime_down.sql" },
+        { "filename": "20260502_0111_notification_center.sql", "purpose": "Phase A/F — UI-OS Wave 11e-§9 Notifications. ui_notification_center_items, ui_notification_preferences, ui_notification_read_state.", "currentPath": "platform/dos/migrations/public/20260502_0111_notification_center.sql", "down": "20260502_0111_notification_center_down.sql" },
+        { "filename": "20260502_0112_inbox.sql", "purpose": "Phase A/F — UI-OS Wave 11e-§9 Inbox. ui_inbox_views, ui_inbox_assignments, ui_inbox_rules, ui_inbox_snoozes.", "currentPath": "platform/dos/migrations/public/20260502_0112_inbox.sql", "down": "20260502_0112_inbox_down.sql" },
+        { "filename": "20260502_0113_help_articles.sql", "purpose": "Phase A/F — UI-OS Wave 11f-§10 Help. ui_help_articles, ui_help_collections, ui_help_collection_articles, ui_contextual_help_links.", "currentPath": "platform/dos/migrations/public/20260502_0113_help_articles.sql", "down": "20260502_0113_help_articles_down.sql" },
+        { "filename": "20260502_0114_onboarding_progress.sql", "purpose": "Phase A/F — UI-OS Wave 11f-§10 Onboarding. ui_checklists, ui_checklist_steps, ui_user_checklist_progress, ui_release_notes, ui_user_release_notes_read, ui_empty_state_content.", "currentPath": "platform/dos/migrations/public/20260502_0114_onboarding_progress.sql", "down": "20260502_0114_onboarding_progress_down.sql" },
+        { "filename": "20260502_0115_theme_runtime.sql", "purpose": "Phase A/F — UI-OS Wave 11g-§11 Theme. ui_theme_profiles, ui_theme_tokens, ui_theme_assignments.", "currentPath": "platform/dos/migrations/public/20260502_0115_theme_runtime.sql", "down": "20260502_0115_theme_runtime_down.sql" },
+        { "filename": "20260502_0116_brand_assets.sql", "purpose": "Phase A/F — UI-OS Wave 11g-§11 Branding. ui_brand_assets, ui_login_branding, ui_email_branding, ui_print_templates, ui_report_branding.", "currentPath": "platform/dos/migrations/public/20260502_0116_brand_assets.sql", "down": "20260502_0116_brand_assets_down.sql" },
+        { "filename": "20260502_0117_i18n_governance.sql", "purpose": "Phase A/F — UI-OS Wave 11h-§12 i18n governance. ui_translation_namespaces, ui_translation_versions, ui_translation_overrides, ui_locale_user_preferences, ui_rtl_validation_results.", "currentPath": "platform/dos/migrations/public/20260502_0117_i18n_governance.sql", "down": "20260502_0117_i18n_governance_down.sql" },
+        { "filename": "20260502_0118_accessibility_device.sql", "purpose": "Phase A/F — UI-OS Wave 11i-§13 Accessibility. ui_accessibility_preferences, ui_contrast_preferences, ui_reduced_motion_preferences, ui_font_scale_preferences, ui_device_preferences, ui_device_sessions, ui_viewport_profiles.", "currentPath": "platform/dos/migrations/public/20260502_0118_accessibility_device.sql", "down": "20260502_0118_accessibility_device_down.sql" },
+        { "filename": "20260502_0119_webos_window_panels.sql", "purpose": "Phase A/F — UI-OS Wave 11j-§14 WebOS. ui_workspace_sessions, ui_window_states, ui_panel_states, ui_tab_states.", "currentPath": "platform/dos/migrations/public/20260502_0119_webos_window_panels.sql", "down": "20260502_0119_webos_window_panels_down.sql" },
+        { "filename": "20260502_0120_webos_drag_clipboard.sql", "purpose": "Phase A/F — UI-OS Wave 11j-§14 WebOS. ui_clipboard_items, ui_drag_drop_layout_events, ui_split_view_states, ui_workspace_restore_points.", "currentPath": "platform/dos/migrations/public/20260502_0120_webos_drag_clipboard.sql", "down": "20260502_0120_webos_drag_clipboard_down.sql" },
+        { "filename": "20260502_0121_visibility_permission.sql", "purpose": "Phase A/F — UI-OS Wave 11k-§15 Visibility. ui_visibility_rules, ui_permission_bindings, ui_denied_render_log, ui_policy_evaluation_log.", "currentPath": "platform/dos/migrations/public/20260502_0121_visibility_permission.sql", "down": "20260502_0121_visibility_permission_down.sql" },
+        { "filename": "20260502_0122_role_assignments.sql", "purpose": "Phase A/F — UI-OS Wave 11k-§15 Role assignments. ui_role_dashboard_assignments, ui_role_navigation_assignments, ui_role_layout_assignments.", "currentPath": "platform/dos/migrations/public/20260502_0122_role_assignments.sql", "down": "20260502_0122_role_assignments_down.sql" },
+        { "filename": "20260502_0123_governance_publish.sql", "purpose": "Phase A/F — UI-OS Wave 11l-§16 Governance. ui_publish_requests, ui_publish_approvals, ui_published_versions (idempotent), ui_change_log.", "currentPath": "platform/dos/migrations/public/20260502_0123_governance_publish.sql", "down": "20260502_0123_governance_publish_down.sql" },
+        { "filename": "20260502_0124_governance_drafts_audit.sql", "purpose": "Phase A/F — UI-OS Wave 11l-§16 Governance drafts/audit. ui_draft_versions (idempotent), ui_rollback_points (idempotent), ui_admin_activity_log (idempotent), ui_schema_validation_results, ui_contract_drift_results.", "currentPath": "platform/dos/migrations/public/20260502_0124_governance_drafts_audit.sql", "down": "20260502_0124_governance_drafts_audit_down.sql" },
+        { "filename": "20260502_0125_feature_flags_experiments.sql", "purpose": "Phase A/F — UI-OS Wave 11m-§17 Feature flags. ui_feature_flags, ui_feature_flag_assignments, ui_rollout_rules, ui_kill_switches, ui_experiments, ui_experiment_variants, ui_experiment_assignments.", "currentPath": "platform/dos/migrations/public/20260502_0125_feature_flags_experiments.sql", "down": "20260502_0125_feature_flags_experiments_down.sql" },
+        { "filename": "20260502_0126_telemetry_render.sql", "purpose": "Phase A/F — UI-OS Wave 11n-§18 Telemetry render. ui_render_performance_events, ui_page_view_events, ui_click_events, ui_command_events.", "currentPath": "platform/dos/migrations/public/20260502_0126_telemetry_render.sql", "down": "20260502_0126_telemetry_render_down.sql" },
+        { "filename": "20260502_0127_telemetry_analytics.sql", "purpose": "Phase A/F — UI-OS Wave 11n-§18 Telemetry analytics. ui_search_events, ui_widget_usage_events, ui_funnel_events, ui_retention_snapshots, ui_error_events.", "currentPath": "platform/dos/migrations/public/20260502_0127_telemetry_analytics.sql", "down": "20260502_0127_telemetry_analytics_down.sql" },
+        { "filename": "20260502_0128_ai_workspace.sql", "purpose": "Phase A/F — UI-OS Wave 11o-§19 AI workspace. ui_ai_context_panels, ui_ai_prompt_templates, ui_ai_prompt_template_tools, ui_ai_tool_surface_bindings, ui_ai_action_drafts, ui_ai_suggestions, ui_ai_suggestion_feedback, ui_ai_workspace_memory.", "currentPath": "platform/dos/migrations/public/20260502_0128_ai_workspace.sql", "down": "20260502_0128_ai_workspace_down.sql" },
+        { "filename": "20260502_0129_manager_studio_core.sql", "purpose": "Phase A/F — UI-OS Wave 11p-§20 Manager Studio core. ui_manager_projects, ui_manager_drafts, ui_manager_locks, ui_manager_review_comments.", "currentPath": "platform/dos/migrations/public/20260502_0129_manager_studio_core.sql", "down": "20260502_0129_manager_studio_core_down.sql" },
+        { "filename": "20260502_0130_manager_studio_runs.sql", "purpose": "Phase A/F — UI-OS Wave 11p-§20 Manager Studio runs. ui_manager_validation_runs, ui_manager_preview_sessions, ui_manager_export_jobs, ui_manager_import_jobs.", "currentPath": "platform/dos/migrations/public/20260502_0130_manager_studio_runs.sql", "down": "20260502_0130_manager_studio_runs_down.sql" }
+      ]
+    },
+    "tenant": { "schema": "per-tenant", "files": [] }
+  },
+  "totals": {
+    "publicMigrations": 36,
+    "tenantMigrations": 0,
+    "withDownMigrations": 36,
+    "withoutDownMigrations": 0
+  },
+  "verifiedAt": "2026-05-02",
+  "verifiedBy": "Wave 11a-p complete. UI-OS migrations 0302-0307 (35 core), 0099 ENUM foundation (39 types), 0100-0130 §5-§20 deltas. Total dos.ui_* tables: 157 across 38 migrations. Drift floor: 150."
+}

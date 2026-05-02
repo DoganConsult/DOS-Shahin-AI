@@ -1,0 +1,250 @@
+<app-page-shell
+  icon="file-export"
+  [title]="i18n.translate('reportHub.title') || 'Report Hub'"
+  [subtitle]="i18n.translate('reportHub.subtitle') || 'Reports and analytics'"
+  [breadcrumbs]="[i18n.translate('dashboard.title') || 'Dashboard', i18n.translate('reportHub.title') || 'Report Hub']"
+  [loading]="loading()">
+  @if (error()) {
+    <p-card>
+      <p class="error-msg">{{ error() }}</p>
+      <button pButton (click)="retry()" icon="pi pi-refresh" [label]="i18n.translate('common.retry') || 'Retry'"></button>
+    </p-card>
+  } @else {
+    <div class="report-hub" [attr.dir]="i18n.direction()">
+
+      <!-- Executive Summary (compact) -->
+      <div class="summary-cards">
+        @if (summary()) {
+          <div class="summary-card">
+            <div class="card-value">{{ summary()!.overallComplianceScore }}%</div>
+            <div class="card-label">{{ i18n.translate('reportHub.compliance') }}</div>
+            <div class="card-trend" [ngClass]="getTrendClass('Compliance Score')">
+              {{ getTrendIcon('Compliance Score') }} {{ getTrendLabel('Compliance Score') }}
+            </div>
+          </div>
+          <div class="summary-card">
+            <div class="card-value">{{ summary()!.openRisksCount }}</div>
+            <div class="card-label">{{ i18n.translate('reportHub.openRisks') }}</div>
+          </div>
+          <div class="summary-card">
+            <div class="card-value">{{ summary()!.evidenceCoveragePercent }}%</div>
+            <div class="card-label">{{ i18n.translate('reportHub.evidenceCoverage') }}</div>
+          </div>
+          <div class="summary-card">
+            <div class="card-value">{{ summary()!.remediationClosureRate }}%</div>
+            <div class="card-label">{{ i18n.translate('reportHub.remediationRate') }}</div>
+          </div>
+        }
+      </div>
+
+      <!-- Main: Grid + Sidebar -->
+      <div class="hub-layout">
+        <main class="hub-main">
+          <div class="cards-grid" role="list">
+            @for (card of paginatedCards(); track card.frameworkId) {
+              <div class="cards-grid-item" role="listitem">
+                <app-framework-report-card [card]="card" />
+              </div>
+            }
+          </div>
+          @if (paginatedCards().length === 0 && frameworkCards().length === 0 && !loading()) {
+            <div class="empty-cards">{{ i18n.translate('reportHub.noFrameworks') || 'No framework data yet' }}</div>
+          }
+        </main>
+        <aside class="hub-sidebar">
+          <div class="sidebar-section">
+            <label class="sidebar-label">{{ i18n.translate('reportHub.filterByCategory') || 'Filter by Category' }}</label>
+            <select
+              class="sidebar-select"
+              [value]="categoryFilter()"
+              (change)="setCategory($any($event.target).value)"
+              [attr.aria-label]="i18n.translate('reportHub.filterByCategory')">
+              <option value="">{{ i18n.translate('reportHub.allCategories') || 'All Categories' }}</option>
+              @for (cat of categories(); track cat) {
+                <option [value]="cat">{{ cat }}</option>
+              }
+            </select>
+          </div>
+          <div class="sidebar-section">
+            <label class="sidebar-label">{{ i18n.translate('reportHub.search') || 'Search' }}</label>
+            <input
+              type="text"
+              class="sidebar-input"
+              [value]="searchFilter()"
+              (input)="setSearch($any($event.target).value)"
+              [placeholder]="i18n.translate('reportHub.searchFrameworks') || 'Search frameworks'"
+              [attr.aria-label]="i18n.translate('reportHub.search')"
+            />
+          </div>
+          <div class="sidebar-section pagination">
+            <span class="pagination-label">{{ i18n.translate('reportHub.page') || 'Page' }} {{ currentPage() }} / {{ totalPages() }}</span>
+            <div class="pagination-btns">
+              <button
+                pButton
+                icon="pi pi-chevron-left"
+                class="p-button-sm p-button-text p-button-icon-only"
+                [disabled]="currentPage() <= 1"
+                (click)="goToPage(currentPage() - 1)"
+                [attr.aria-label]="i18n.translate('common.previous') || 'Previous'"></button>
+              <button
+                pButton
+                icon="pi pi-chevron-right"
+                class="p-button-sm p-button-text p-button-icon-only"
+                [disabled]="currentPage() >= totalPages()"
+                (click)="goToPage(currentPage() + 1)"
+                [attr.aria-label]="i18n.translate('common.next') || 'Next'"></button>
+            </div>
+          </div>
+          @if (auth.hasPermission('report:write')) {
+            <a
+              pButton
+              [routerLink]="['/reports']"
+              icon="pi pi-plus"
+              class="fab-new-report"
+              [label]="i18n.translate('reportHub.newReport') || 'New report'"
+              title="{{ i18n.translate('reportHub.newReport') || 'New report' }}"></a>
+          }
+        </aside>
+      </div>
+
+      <!-- Anomaly Alerts (below grid) -->
+      @if (anomalies().length > 0) {
+        <div class="anomaly-panel">
+          <h3><i class="pi pi-exclamation-triangle"></i> {{ i18n.translate('reportHub.anomalies') }}</h3>
+          @for (alert of anomalies(); track alert.kpiName) {
+            <div class="anomaly-item">
+              <strong>{{ alert.kpiName }}</strong>:
+              {{ alert.currentValue }} ({{ i18n.translate('reportHub.expected') }}: {{ alert.expectedMean }} ± {{ alert.standardDeviation }})
+              <span class="deviation">{{ alert.deviationMagnitude }}σ</span>
+            </div>
+          }
+        </div>
+      }
+
+      <!-- Report Catalog (below) -->
+      <div class="catalog-section">
+        <h3>{{ i18n.translate('reportHub.catalog') || 'Report catalog' }}</h3>
+        <div class="filters-bar">
+          <select [(ngModel)]="filterModule" (ngModelChange)="loadCatalog()" [attr.aria-label]="i18n.translate('reportHub.filterModule')">
+            <option value="">{{ i18n.translate('reportHub.allModules') }}</option>
+            <option value="governance">{{ i18n.translate('reportHub.governance') }}</option>
+            <option value="risk">{{ i18n.translate('reportHub.risk') }}</option>
+            <option value="compliance">{{ i18n.translate('reportHub.complianceModule') }}</option>
+            <option value="audit">{{ i18n.translate('reportHub.audit') }}</option>
+            <option value="incident">{{ i18n.translate('reportHub.incident') }}</option>
+            <option value="vendor">{{ i18n.translate('reportHub.vendor') }}</option>
+            <option value="bcp">{{ i18n.translate('reportHub.bcp') }}</option>
+          </select>
+          <input
+            type="text"
+            [(ngModel)]="filterSearch"
+            (input)="loadCatalog()"
+            [placeholder]="i18n.translate('reportHub.search')"
+            [attr.aria-label]="i18n.translate('reportHub.search')"
+          />
+          <label class="shared-toggle">
+            <input type="checkbox" [(ngModel)]="filterSharedWithMe" (ngModelChange)="loadCatalog()" />
+            {{ i18n.translate('reportHub.sharedWithMe') }}
+          </label>
+        </div>
+        <div class="catalog-table" role="table" [attr.aria-label]="i18n.translate('reportHub.catalog')">
+          @for (report of reports(); track report.reportId) {
+            <div class="catalog-row" role="row" (click)="selectReport(report)" tabindex="0" (keydown.enter)="selectReport(report)">
+              <span class="report-title">{{ report.title }}</span>
+              <span class="report-module">{{ report.module }}</span>
+              <span class="report-date">{{ report.generatedAt | appDate:'medium' }}</span>
+              <span class="report-freshness" [ngClass]="'freshness-' + report.freshness">{{ report.freshness }}</span>
+            </div>
+          }
+          @if (reports().length === 0 && !loading()) {
+            <div class="empty-state">{{ i18n.translate('reportHub.noReports') }}</div>
+          }
+        </div>
+      </div>
+
+      <!-- Selected Report Detail -->
+      @if (selectedReport()) {
+        <div tabindex="0" role="button" (keyup.enter)="selectedReport.set(null)" class="report-detail-overlay" (click)="selectedReport.set(null)">
+          <div tabindex="0" role="button" (keyup.enter)="$event.stopPropagation()" class="report-detail-panel" (click)="$event.stopPropagation()">
+            <h3>{{ selectedReport()!.title }}</h3>
+            @if (aiSummary()) {
+              <div class="ai-summary">
+                <h4><i class="pi pi-sparkles"></i> {{ i18n.translate('reportHub.aiSummary') }}</h4>
+                <p>{{ aiSummary() }}</p>
+              </div>
+            }
+            <div class="detail-actions">
+              @if (auth.hasPermission('report:download')) {
+                <button (click)="downloadPDF()" class="btn-action"><i class="pi pi-file-pdf"></i> PDF</button>
+                <button (click)="downloadExcel()" class="btn-action"><i class="pi pi-file-excel"></i> Excel</button>
+              }
+              @if (auth.hasPermission('report:share')) {
+                <button (click)="openShareDialog()" class="btn-action"><i class="pi pi-share-alt"></i> {{ i18n.translate('reportHub.share') }}</button>
+                <button (click)="openEmailDialog()" class="btn-action"><i class="pi pi-envelope"></i> {{ i18n.translate('reportHub.emailReport') || 'Email report' }}</button>
+              }
+              <button (click)="selectedReport.set(null)" class="btn-close">{{ i18n.translate('common.close') }}</button>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- Email report / Forward dialog -->
+      <p-dialog
+        [header]="i18n.translate('reportHub.emailReport') || 'Email report'"
+        [visible]="showEmailDialog()"
+        (visibleChange)="showEmailDialog.set($event)"
+        [modal]="true"
+        [style]="{ width: '480px' }"
+        [closable]="!emailSending()"
+        (onHide)="closeEmailDialog()">
+        <div class="email-dialog-form" [attr.dir]="i18n.direction()">
+          <label class="field-label">{{ i18n.translate('reportHub.to') || 'To' }} <span class="required">*</span></label>
+          <textarea
+            pInputTextarea
+            [(ngModel)]="emailTo"
+            [rows]="2"
+            [placeholder]="(i18n.translate('reportHub.emailPlaceholder') || 'email1@example.com, email2@example.com')" [attr.aria-label]="(i18n.translate('reportHub.emailPlaceholder') || 'email1@example.com, email2@example.com')"
+            [disabled]="emailSending()"
+            class="full-width"></textarea>
+          <grc-form-field [label]="i18n.translate('reportHub.subject') || 'Subject'">
+            <input
+              pInputText
+              type="text"
+              [(ngModel)]="emailSubject"
+              [disabled]="emailSending()"
+              class="full-width" />
+          </grc-form-field>
+          <label class="field-label">{{ i18n.translate('reportHub.message') || 'Message' }}</label>
+          <textarea
+            pInputTextarea
+            [(ngModel)]="emailMessage"
+            [rows]="3"
+            [disabled]="emailSending()"
+            class="full-width"></textarea>
+          <label class="checkbox-label">
+            <p-checkbox [(ngModel)]="emailAttachPdf" [binary]="true" [disabled]="emailSending()" [inputId]="'email-attach-pdf'"></p-checkbox>
+            {{ i18n.translate('reportHub.attachPdf') || 'Attach PDF' }}
+          </label>
+          @if (emailError()) {
+            <p class="email-error">{{ emailError() }}</p>
+          }
+        </div>
+        <ng-template pTemplate="footer">
+          <button pButton [label]="i18n.translate('common.cancel') || 'Cancel'" class="p-button-text" (click)="closeEmailDialog()" [disabled]="emailSending()"></button>
+          <button pButton [label]="i18n.translate('common.send') || 'Send'" icon="pi pi-send" (click)="sendEmailReport()" [loading]="emailSending()"></button>
+        </ng-template>
+      </p-dialog>
+    </div>
+    <p-dialog [header]="i18n.translate('reportHub.shareReport') || 'Share Report'" [(visible)]="showShareDialog" [modal]="true" [style]="{ width: '420px' }">
+      <div style="display:flex;flex-direction:column;gap:12px;padding:8px 0">
+        <grc-form-field [label]="i18n.translate('reportHub.enterRecipients') || 'Enter recipient IDs (comma-separated)'">
+          <input pInputText id="share-recipients" [(ngModel)]="shareRecipients" placeholder="user1, user2" aria-label="user1, user2" />
+        </grc-form-field>
+      </div>
+      <ng-template pTemplate="footer">
+        <button pButton [label]="i18n.translate('common.cancel') || 'Cancel'" class="p-button-text" (click)="showShareDialog.set(false)"></button>
+        <button pButton [label]="i18n.translate('common.share') || 'Share'" icon="pi pi-share-alt" [disabled]="!shareRecipients.trim()" (click)="submitShare()"></button>
+      </ng-template>
+    </p-dialog>
+  }
+</app-page-shell>

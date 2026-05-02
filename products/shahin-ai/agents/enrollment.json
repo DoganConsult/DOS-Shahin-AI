@@ -1,0 +1,20 @@
+{
+  "$schema": "../../../platform/contracts/agents/enrollment.schema.json",
+  "schemaVersion": 1,
+  "productCode": "shahin-ai",
+  "agents": [
+    { "agentId": "A01-policy-architect",          "scope": "platform" },
+    { "agentId": "A02-control-engineer",          "scope": "platform" },
+    { "agentId": "A03-evidence-collector",        "scope": "module",   "moduleCode": "evidence" },
+    { "agentId": "A04-risk-analyst",              "scope": "module",   "moduleCode": "risk" },
+    { "agentId": "A05-audit-conductor",           "scope": "module",   "moduleCode": "audit" },
+    { "agentId": "A06-incident-responder",        "scope": "module",   "moduleCode": "incident" },
+    { "agentId": "A07-vendor-watch",              "scope": "module",   "moduleCode": "vendor" },
+    { "agentId": "A08-compliance-mapper",         "scope": "module",   "moduleCode": "compliance" },
+    { "agentId": "A09-training-coach",            "scope": "module",   "moduleCode": "training" },
+    { "agentId": "A10-privacy-steward",           "scope": "module",   "moduleCode": "privacy" },
+    { "agentId": "A11-bcp-coordinator",           "scope": "module",   "moduleCode": "bcp" },
+    { "agentId": "A12-reporting-narrator",        "scope": "module",   "moduleCode": "reporting" },
+    { "agentId": "A13-sales-development-rep",     "scope": "product" }
+  ]
+}

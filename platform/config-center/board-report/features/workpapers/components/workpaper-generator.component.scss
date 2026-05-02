@@ -1,0 +1,127 @@
+.workpaper-generator {
+      padding: 1.5rem;
+    }
+
+    .generator-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .generation-form-card {
+      margin-bottom: 1rem;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .form-group.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .form-group label {
+      font-weight: 500;
+      color: var(--text-color);
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: flex-end;
+    }
+
+    .generation-status {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      padding: 2rem;
+      background: var(--surface-ground);
+      border-radius: var(--radius);
+    }
+
+    .workpapers-card {
+      margin-top: 1rem;
+    }
+
+    .card-header-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+    }
+
+    .workpaper-content {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .workpaper-meta {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      padding: 1rem;
+      background: var(--surface-ground);
+      border-radius: var(--radius);
+    }
+
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .meta-item strong {
+      font-size: var(--font-size-tag);
+      color: var(--text-color-secondary);
+    }
+
+    .section {
+      margin-top: 1.5rem;
+    }
+
+    .section h4 {
+      margin-bottom: 1rem;
+      font-size: var(--font-size-body-md);
+      font-weight: 600;
+    }
+
+    .workpaper-actions {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: flex-end;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--surface-border);
+    }
+
+    .preview-content {
+      max-height: 70vh;
+      overflow-y: auto;
+    }
+
+    .preview-header {
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--surface-border);
+    }
+
+    .preview-header h2 {
+      margin: 0 0 0.5rem 0;
+    }
+
+    .preview-body {
+      line-height: 1.8;
+      font-family: var(--font-family);
+    }

@@ -1,0 +1,32 @@
+{
+  "name": "@dos/module-auth",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Auth surface that product modules consume. Modules MUST NOT import from @dos/dauth-* directly — they import from this package, which the product shell adapts to the underlying auth platform module (DAuth today, swappable tomorrow). Enforces product-as-gateway architecture.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./middleware": {
+      "types": "./dist/middleware.d.ts",
+      "default": "./dist/middleware.js"
+    },
+    "./access": {
+      "types": "./dist/access.d.ts",
+      "default": "./dist/access.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json"
+  },
+  "dependencies": {
+    "@dos/dauth-shared": "workspace:*",
+    "@dos/dauth-core": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0"
+  }
+}

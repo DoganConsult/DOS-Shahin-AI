@@ -1,0 +1,32 @@
+{
+  "$schema": "../../platform/contracts/product/product.manifest.schema.json",
+  "schemaVersion": 1,
+  "kind": "product",
+  "productCode": "tuwaiq-ai",
+  "displayName": "Tuwaiq-AI",
+  "description": "Scaffold-only product slot for tuwaiq-ai.com. Reserves the canonical product layout (mountPoint /products/tuwaiq-ai, kebab-case productCode, dogan-consult ownership) so workspace + tsconfig path-alias regularity can be asserted across all products. No app/ or website/ yet — promotion to alpha requires a product-owner first commit.",
+  "hosts": [
+    "tuwaiq-ai.local",
+    "tuwaiq-ai.com"
+  ],
+  "authMode": "cookie-session",
+  "lifecycle": {
+    "stage": "experimental",
+    "enteredStageAt": "2026-05-01T00:00:00Z",
+    "owner": "dogan-consult",
+    "entitlementKey": "product.tuwaiq-ai",
+    "featureFlag": "product.tuwaiq-ai.enabled"
+  },
+  "enabledModules": [],
+  "routeComposition": {
+    "mountPoint": "/products/tuwaiq-ai",
+    "publicCompatPrefixes": [],
+    "redirects": []
+  },
+  "navigationComposition": {
+    "primary": []
+  },
+  "dynamicUiEnrollment": {
+    "enrollmentRef": "dynamic-ui/enrollment.json"
+  }
+}

@@ -1,0 +1,27 @@
+
+> gateway@0.1.0 build /root/DOS-AIO/services/gateway
+> tsc -p tsconfig.json || true
+
+../../platform/core/current-source/dauth/csrf/csrf-policy.service.ts(4,54): error TS6059: File '/root/DOS-AIO/platform/core/current-source/dauth/csrf/csrf-policy.contracts.ts' is not under 'rootDir' '/root/DOS-AIO/services/gateway/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Imported via './csrf-policy.contracts' from file '/root/DOS-AIO/platform/core/current-source/dauth/csrf/csrf-policy.service.ts'
+    Imported via './csrf-policy.contracts' from file '/root/DOS-AIO/platform/core/current-source/dauth/csrf/csrf-audit.service.ts'
+    Imported via './csrf-policy.contracts' from file '/root/DOS-AIO/platform/core/current-source/dauth/csrf/session-security.service.ts'
+  File is CommonJS module because '/root/DOS-AIO/package.json' does not have field "type"
+src/middleware/csrf.middleware.ts(69,44): error TS6059: File '/root/DOS-AIO/platform/core/current-source/dauth/csrf/csrf-policy.service.ts' is not under 'rootDir' '/root/DOS-AIO/services/gateway/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Imported via '../../../../platform/core/current-source/dauth/csrf/csrf-policy.service.js' from file '/root/DOS-AIO/services/gateway/src/middleware/csrf.middleware.ts'
+    Imported via '../../../../platform/core/current-source/dauth/csrf/csrf-policy.service.js' from file '/root/DOS-AIO/services/gateway/src/routes/csrf.routes.ts'
+    Imported via '../../../../platform/core/current-source/dauth/csrf/csrf-policy.service.js' from file '/root/DOS-AIO/services/gateway/src/routes/csrf.routes.ts'
+    Imported via '../../../../platform/core/current-source/dauth/csrf/csrf-policy.service.js' from file '/root/DOS-AIO/services/gateway/src/routes/csrf.routes.ts'
+  File is CommonJS module because '/root/DOS-AIO/package.json' does not have field "type"
+src/middleware/csrf.middleware.ts(142,48): error TS6059: File '/root/DOS-AIO/platform/core/current-source/dauth/csrf/csrf-audit.service.ts' is not under 'rootDir' '/root/DOS-AIO/services/gateway/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Imported via '../../../../platform/core/current-source/dauth/csrf/csrf-audit.service.js' from file '/root/DOS-AIO/services/gateway/src/middleware/csrf.middleware.ts'
+    Imported via '../../../../platform/core/current-source/dauth/csrf/csrf-audit.service.js' from file '/root/DOS-AIO/services/gateway/src/middleware/csrf.middleware.ts'
+    Imported via '../../../../platform/core/current-source/dauth/csrf/csrf-audit.service.js' from file '/root/DOS-AIO/services/gateway/src/routes/csrf.routes.ts'
+  File is CommonJS module because '/root/DOS-AIO/package.json' does not have field "type"
+src/routes/csrf.routes.ts(35,47): error TS6059: File '/root/DOS-AIO/platform/core/current-source/dauth/csrf/csrf-diagnostics.service.ts' is not under 'rootDir' '/root/DOS-AIO/services/gateway/src'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because '/root/DOS-AIO/package.json' does not have field "type"
+src/routes/csrf.routes.ts(60,55): error TS6059: File '/root/DOS-AIO/platform/core/current-source/dauth/csrf/session-security.service.ts' is not under 'rootDir' '/root/DOS-AIO/services/gateway/src'. 'rootDir' is expected to contain all source files.
+  File is CommonJS module because '/root/DOS-AIO/package.json' does not have field "type"

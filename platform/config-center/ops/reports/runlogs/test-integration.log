@@ -1,0 +1,31 @@
+exit=1
+
+ ❯ tests/service-boot/service-boot-tests.test.ts:184:22
+    182|       // Verify health endpoint responds
+    183|       const { status } = await httpGet(testPort, '/health');
+    184|       expect(status).toBe(200);
+       |                      ^
+    185|       expect(bootTime, `${svc} boot time ${Math.round(bootTime)}ms exc…
+    186|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/24]⎯
+
+ FAIL  tests/service-boot/service-boot-tests.test.ts > Boot Time Benchmark — each service < 3 seconds > notification-service boots and responds to /health in < 3 seconds
+Error: notification-service exited with code 1
+ ❯ ChildProcess.<anonymous> tests/service-boot/service-boot-tests.test.ts:175:57
+    173|         child.on('error', (err) => { clearTimeout(timer); reject(err);…
+    174|         child.on('exit', (code) => {
+    175|           if (code !== 0) { clearTimeout(timer); reject(new Error(`${s…
+       |                                                         ^
+    176|         });
+    177|       });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/24]⎯
+
+
+ Test Files  10 failed | 40 passed (50)
+      Tests  22 failed | 1402 passed | 70 skipped (1494)
+   Start at  07:17:58
+   Duration  126.00s (transform 2.63s, setup 3.99s, import 6.64s, tests 318.04s, environment 8ms)
+
+ ELIFECYCLE  Command failed with exit code 1.

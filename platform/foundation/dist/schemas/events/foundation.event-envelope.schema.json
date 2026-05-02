@@ -1,0 +1,22 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://dos.platform/foundation/events/envelope.json",
+    "title": "Foundation Event Envelope",
+    "type": "object",
+    "required": ["event_type", "tenantId", "module", "event", "entityType", "entityId"],
+    "properties": {
+        "event_type": { "type": "string", "pattern": "^foundation\\." },
+        "tenantId": { "type": "string", "minLength": 1 },
+        "userId": { "type": "string" },
+        "module": { "const": "foundation" },
+        "event": { "type": "string" },
+        "entityType": { "type": "string" },
+        "entityId": { "type": "string" },
+        "data": { "type": "object", "additionalProperties": true },
+        "occurredAt": { "type": "string", "format": "date-time" },
+        "correlationId": { "type": "string" },
+        "causationId": { "type": "string" },
+        "version": { "type": "string", "default": "v1" }
+    },
+    "additionalProperties": true
+}

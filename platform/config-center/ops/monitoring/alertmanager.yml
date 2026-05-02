@@ -1,0 +1,67 @@
+# ═══════════════════════════════════════════════════════════════════
+# DOS Platform — Alertmanager Configuration
+# Routes Prometheus alerts to notification-service, PagerDuty, OpsGenie.
+#
+# PagerDuty/OpsGenie keys are injected at service start via
+# /usr/local/sbin/alertmanager-render-config (ExecStartPre in
+# alertmanager.service), which substitutes the <PAGERDUTY_SERVICE_KEY>
+# and <OPSGENIE_API_KEY> placeholders from /etc/alertmanager/alertmanager.env.
+# ═══════════════════════════════════════════════════════════════════
+global:
+  resolve_timeout: 5m
+  pagerduty_url: 'https://events.pagerduty.com/v2/enqueue'
+  opsgenie_api_url: 'https://api.opsgenie.com/'
+
+inhibit_rules:
+  - source_match:
+      alertname: MaintenanceMode
+    target_match_re:
+      severity: '.+'
+    equal: ['job']
+
+route:
+  receiver: default-webhook
+  group_by: ['alertname', 'job']
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+  routes:
+    - match:
+        severity: critical
+      receiver: pagerduty-critical
+      repeat_interval: 1h
+    - match:
+        severity: warning
+      receiver: opsgenie-warning
+      repeat_interval: 4h
+
+receivers:
+  - name: default-webhook
+    webhook_configs:
+      - url: 'http://127.0.0.1:4005/api/v1/webhooks/alertmanager'
+        send_resolved: true
+
+  - name: pagerduty-critical
+    # PagerDuty disabled — no PAGERDUTY_SERVICE_KEY configured
+    # pagerduty_configs:
+    #   - service_key: '<PAGERDUTY_SERVICE_KEY>'
+    #     severity: critical
+    #     description: '{{ .CommonAnnotations.summary }}'
+    #     details:
+    #       firing: '{{ .Alerts.Firing | len }}'
+    #       runbook: '{{ .CommonAnnotations.runbook_url }}'
+    webhook_configs:
+      - url: 'http://127.0.0.1:4005/api/v1/webhooks/alertmanager'
+        send_resolved: true
+
+  - name: opsgenie-warning
+    # OpsGenie disabled — no OPSGENIE_API_KEY configured
+    # opsgenie_configs:
+    #   - api_key: '<OPSGENIE_API_KEY>'
+    #     message: '{{ .CommonAnnotations.summary }}'
+    #     priority: P3
+    #     details:
+    #       runbook: '{{ .CommonAnnotations.runbook_url }}'
+    webhook_configs:
+      - url: 'http://127.0.0.1:4005/api/v1/webhooks/alertmanager'
+        send_resolved: true

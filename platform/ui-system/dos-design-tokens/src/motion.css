@@ -1,0 +1,37 @@
+/* DOS Platform — Motion Tokens (durations + easings).
+ *
+ * Use the named tokens (not raw ms) so motion stays consistent across
+ * components. Hover/focus = fast (130ms). Sheet/drawer = standard
+ * (240ms). Modal/page = slow (320ms). Reduced-motion auto-respected.
+ */
+:root {
+  /* ── Duration ─────────────────────────────────────────────────────── */
+  --dos-duration-instant: 0ms;
+  --dos-duration-fast:    130ms;     /* hover, focus, tooltip */
+  --dos-duration-normal:  220ms;     /* dropdown, popover */
+  --dos-duration-slow:    320ms;     /* modal, sheet, page */
+  --dos-duration-slower:  480ms;     /* hero reveal, sidebar collapse */
+
+  /* ── Easing curves ────────────────────────────────────────────────── */
+  --dos-ease-linear: linear;
+  --dos-ease-in:     cubic-bezier(0.4, 0, 1, 1);
+  --dos-ease-out:    cubic-bezier(0, 0, 0.2, 1);
+  --dos-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --dos-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);  /* slight overshoot */
+  --dos-ease-emphasized: cubic-bezier(0.2, 0, 0, 1);     /* Material 3 emphasized */
+
+  /* ── Composite (duration + easing) — most common ────────────────── */
+  --dos-transition-fast:  var(--dos-duration-fast) var(--dos-ease-out);
+  --dos-transition-normal:var(--dos-duration-normal) var(--dos-ease-emphasized);
+  --dos-transition-slow:  var(--dos-duration-slow) var(--dos-ease-emphasized);
+  --dos-transition-bounce:var(--dos-duration-slow) var(--dos-ease-spring);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dos-duration-fast:   0ms;
+    --dos-duration-normal: 0ms;
+    --dos-duration-slow:   0ms;
+    --dos-duration-slower: 0ms;
+  }
+}

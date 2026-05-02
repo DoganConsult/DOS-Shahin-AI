@@ -1,0 +1,15 @@
+{
+  "id": "ai_governance.retest_review",
+  "module": "ai_governance",
+  "hook": "retest_review",
+  "version": "1.0.0",
+  "sla_hours": 72,
+  "actor_role_default": "ai_governance.module_lead",
+  "states": ["ready","retesting","passed","failed"],
+  "initial": "ready",
+  "transitions": [{"from":"ready","to":"retesting","on":"start_retest"},{"from":"retesting","to":"passed","on":"pass","actor_role":"ai_governance.approver"},{"from":"retesting","to":"failed","on":"fail","actor_role":"ai_governance.approver"}],
+  "audit_event_prefix": "ai_governance.workflow.retest_review",
+  "notification_targets": ["ai_governance.module_lead", "ai_governance.approver"],
+  "evidence_required_on": ["passed","published"],
+  "escalation": { "on": "sla_breach", "to": "ai_governance.executive_owner", "after_hours": 144 }
+}

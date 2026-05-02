@@ -1,0 +1,21 @@
+{
+  "serviceCode": "portals-service",
+  "displayName": "Portals Service",
+  "layer": "domain-service",
+  "ownerTeam": "product-shahin-ai",
+  "runtime": "node",
+  "dependsOn": [
+    "auth-service",
+    "tenant-service"
+  ],
+  "modules": [
+    "portals"
+  ],
+  "exposes": {
+    "apiBase": "/api/portals",
+    "events": [
+      "portal.created",
+      "portal.published"
+    ]
+  }
+}

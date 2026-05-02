@@ -1,0 +1,323 @@
+
+> auth-service@0.1.0 build /root/DOS-AIO/services/auth-service
+> tsc -p tsconfig.json || true
+
+src/domain/access-contract.service.ts(114,72): error TS2538: Type 'unknown' cannot be used as an index type.
+src/domain/access-contract.service.ts(114,98): error TS2365: Operator '+=' cannot be applied to types 'number' and 'unknown'.
+src/domain/access/access-profile.service.ts(23,3): error TS2322: Type '{ profileCode: unknown; nameEn: unknown; nameAr: unknown; isSystem: boolean; isActive: boolean; defaultLandingPage: unknown; allowedModules: unknown; }[]' is not assignable to type 'AccessProfile[]'.
+  Type '{ profileCode: unknown; nameEn: unknown; nameAr: unknown; isSystem: boolean; isActive: boolean; defaultLandingPage: unknown; allowedModules: unknown; }' is not assignable to type 'AccessProfile'.
+    Types of property 'profileCode' are incompatible.
+      Type 'unknown' is not assignable to type 'string'.
+src/domain/access/access-profile.service.ts(46,5): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/access/access-profile.service.ts(47,5): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/access/access-profile.service.ts(48,5): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/access/access-profile.service.ts(51,5): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/access/access-profile.service.ts(52,5): error TS2740: Type '{}' is missing the following properties from type 'string[]': length, pop, push, concat, and 29 more.
+src/domain/access/access-profile.service.ts(94,3): error TS2322: Type 'unknown[]' is not assignable to type 'string[]'.
+  Type 'unknown' is not assignable to type 'string'.
+src/domain/access/access-snapshot.service.ts(56,6): error TS2352: Conversion of type 'TenantMembership' to type 'Record<string, unknown>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Index signature for type 'string' is missing in type 'TenantMembership'.
+src/domain/access/access-snapshot.service.ts(72,5): error TS2322: Type 'unknown[]' is not assignable to type 'string[]'.
+  Type 'unknown' is not assignable to type 'string'.
+src/domain/access/access-snapshot.service.ts(73,5): error TS2322: Type 'unknown[]' is not assignable to type 'string[]'.
+  Type 'unknown' is not assignable to type 'string'.
+src/domain/access/access-snapshot.service.ts(74,5): error TS2322: Type 'unknown[]' is not assignable to type 'string[]'.
+  Type 'unknown' is not assignable to type 'string'.
+src/domain/access/access-snapshot.service.ts(103,5): error TS2322: Type 'unknown[]' is not assignable to type 'string[]'.
+  Type 'unknown' is not assignable to type 'string'.
+src/domain/access/access-snapshot.service.ts(110,5): error TS2322: Type 'unknown[]' is not assignable to type 'string[]'.
+  Type 'unknown' is not assignable to type 'string'.
+src/domain/access/access-snapshot.service.ts(111,5): error TS2322: Type 'unknown[]' is not assignable to type 'string[]'.
+  Type 'unknown' is not assignable to type 'string'.
+src/domain/access/authorization-matrix.service.ts(133,3): error TS2322: Type '{ permissionCode: unknown; roleCode: unknown; source: "direct"; }[]' is not assignable to type 'ResolvedPermission[]'.
+  Type '{ permissionCode: unknown; roleCode: unknown; source: "direct"; }' is not assignable to type 'ResolvedPermission'.
+    Types of property 'permissionCode' are incompatible.
+      Type 'unknown' is not assignable to type 'string'.
+src/domain/access/authorization-matrix.service.ts(208,3): error TS2322: Type '{ permissionCode: unknown; roleCode: unknown; source: "delegation"; delegationId: unknown; }[]' is not assignable to type 'ResolvedPermission[]'.
+  Type '{ permissionCode: unknown; roleCode: unknown; source: "delegation"; delegationId: unknown; }' is not assignable to type 'ResolvedPermission'.
+    Types of property 'permissionCode' are incompatible.
+      Type 'unknown' is not assignable to type 'string'.
+src/domain/access/functional-role.service.ts(25,3): error TS2322: Type '{ roleId: unknown; roleCode: unknown; nameEn: unknown; nameAr: unknown; moduleCode: unknown; isSystem: boolean; isActive: boolean; }[]' is not assignable to type 'FunctionalRole[]'.
+  Type '{ roleId: unknown; roleCode: unknown; nameEn: unknown; nameAr: unknown; moduleCode: unknown; isSystem: boolean; isActive: boolean; }' is not assignable to type 'FunctionalRole'.
+    Types of property 'roleId' are incompatible.
+      Type 'unknown' is not assignable to type 'string'.
+src/domain/access/functional-role.service.ts(70,21): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/access/functional-role.service.ts(95,3): error TS2322: Type 'unknown[]' is not assignable to type 'string[]'.
+  Type 'unknown' is not assignable to type 'string'.
+src/domain/access/permission.service.ts(60,3): error TS2322: Type '{ permissionId: unknown; permissionCode: unknown; nameEn: unknown; nameAr: unknown; moduleCode: unknown; isSystem: unknown; isActive: unknown; }[]' is not assignable to type 'Permission[]'.
+  Type '{ permissionId: unknown; permissionCode: unknown; nameEn: unknown; nameAr: unknown; moduleCode: unknown; isSystem: unknown; isActive: unknown; }' is not assignable to type 'Permission'.
+    Types of property 'permissionId' are incompatible.
+      Type 'unknown' is not assignable to type 'string'.
+src/domain/access/permission.service.ts(181,3): error TS2322: Type '{ permissionId: unknown; permissionCode: unknown; nameEn: unknown; nameAr: unknown; moduleCode: unknown; isSystem: unknown; isActive: unknown; }[]' is not assignable to type 'Permission[]'.
+  Type '{ permissionId: unknown; permissionCode: unknown; nameEn: unknown; nameAr: unknown; moduleCode: unknown; isSystem: unknown; isActive: unknown; }' is not assignable to type 'Permission'.
+    Types of property 'permissionId' are incompatible.
+      Type 'unknown' is not assignable to type 'string'.
+src/domain/access/rbac/dynamic-rbac.service.ts(173,5): error TS2322: Type '{ permissionCode: unknown; module: unknown; active: boolean; }[]' is not assignable to type 'EffectivePermission[]'.
+  Type '{ permissionCode: unknown; module: unknown; active: boolean; }' is not assignable to type 'EffectivePermission'.
+    Types of property 'permissionCode' are incompatible.
+      Type 'unknown' is not assignable to type 'string'.
+src/domain/access/rbac/dynamic-rbac.service.ts(209,3): error TS2322: Type 'unknown[]' is not assignable to type 'string[]'.
+  Type 'unknown' is not assignable to type 'string'.
+src/domain/access/role-assignment.service.ts(40,5): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/access/role-assignment.service.ts(47,32): error TS2339: Property 'toISOString' does not exist on type 'unknown'.
+src/domain/access/role-assignment.service.ts(84,3): error TS2322: Type '{ assignmentId: unknown; userId: unknown; roleCode: unknown; moduleCode: unknown; scopeType: unknown; scopeId: unknown; isActive: boolean; validFrom: any; validTo: any; assignedBy: unknown; }[]' is not assignable to type 'RoleAssignment[]'.
+  Type '{ assignmentId: unknown; userId: unknown; roleCode: unknown; moduleCode: unknown; scopeType: unknown; scopeId: unknown; isActive: boolean; validFrom: any; validTo: any; assignedBy: unknown; }' is not assignable to type 'RoleAssignment'.
+    Types of property 'assignmentId' are incompatible.
+      Type 'unknown' is not assignable to type 'string'.
+src/domain/access/role-assignment.service.ts(92,30): error TS2339: Property 'toISOString' does not exist on type 'unknown'.
+src/domain/access/role-assignment.service.ts(93,26): error TS2339: Property 'toISOString' does not exist on type 'unknown'.
+src/domain/access/role-assignment.service.ts(109,3): error TS2322: Type '{ assignmentId: unknown; userId: unknown; roleCode: unknown; moduleCode: unknown; scopeType: unknown; scopeId: unknown; isActive: boolean; validFrom: any; validTo: any; assignedBy: unknown; }[]' is not assignable to type 'RoleAssignment[]'.
+  Type '{ assignmentId: unknown; userId: unknown; roleCode: unknown; moduleCode: unknown; scopeType: unknown; scopeId: unknown; isActive: boolean; validFrom: any; validTo: any; assignedBy: unknown; }' is not assignable to type 'RoleAssignment'.
+    Types of property 'assignmentId' are incompatible.
+      Type 'unknown' is not assignable to type 'string'.
+src/domain/access/role-assignment.service.ts(117,30): error TS2339: Property 'toISOString' does not exist on type 'unknown'.
+src/domain/access/role-assignment.service.ts(118,26): error TS2339: Property 'toISOString' does not exist on type 'unknown'.
+src/domain/actor-identity.service.ts(344,5): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/actor-identity.service.ts(345,5): error TS2322: Type 'unknown' is not assignable to type 'ActorType'.
+src/domain/actor-identity.service.ts(346,5): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/actor-identity.service.ts(347,5): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/actor-identity.service.ts(348,5): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/actor-identity.service.ts(359,5): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/actor-identity.service.ts(376,5): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/actor-identity.service.ts(383,5): error TS2740: Type '{}' is missing the following properties from type 'string[]': length, pop, push, concat, and 29 more.
+src/domain/audit/access-review.service.ts(38,5): error TS2322: Type 'unknown[]' is not assignable to type 'string[]'.
+  Type 'unknown' is not assignable to type 'string'.
+src/domain/audit/access-review.service.ts(76,3): error TS2322: Type '{ reviewId: unknown; tenantId: unknown; userId: unknown; reviewerId: unknown; status: unknown; reviewType: unknown; roleAssignments: unknown; createdAt: any; completedAt: any; }[]' is not assignable to type 'AccessReviewRequest[]'.
+  Type '{ reviewId: unknown; tenantId: unknown; userId: unknown; reviewerId: unknown; status: unknown; reviewType: unknown; roleAssignments: unknown; createdAt: any; completedAt: any; }' is not assignable to type 'AccessReviewRequest'.
+    Types of property 'reviewId' are incompatible.
+      Type 'unknown' is not assignable to type 'string'.
+src/domain/audit/access-review.service.ts(84,30): error TS2339: Property 'toISOString' does not exist on type 'unknown'.
+src/domain/audit/access-review.service.ts(85,34): error TS2339: Property 'toISOString' does not exist on type 'unknown'.
+src/domain/audit/access-review.service.ts(98,3): error TS2322: Type '{ reviewId: unknown; tenantId: unknown; userId: unknown; reviewerId: unknown; status: unknown; reviewType: unknown; roleAssignments: unknown; createdAt: any; completedAt: any; }[]' is not assignable to type 'AccessReviewRequest[]'.
+  Type '{ reviewId: unknown; tenantId: unknown; userId: unknown; reviewerId: unknown; status: unknown; reviewType: unknown; roleAssignments: unknown; createdAt: any; completedAt: any; }' is not assignable to type 'AccessReviewRequest'.
+    Types of property 'reviewId' are incompatible.
+      Type 'unknown' is not assignable to type 'string'.
+src/domain/audit/access-review.service.ts(106,30): error TS2339: Property 'toISOString' does not exist on type 'unknown'.
+src/domain/audit/access-review.service.ts(107,34): error TS2339: Property 'toISOString' does not exist on type 'unknown'.
+src/domain/audit/decision-log.service.ts(181,9): error TS2322: Type '{ logId: unknown; userId: unknown; permissionCode: unknown; moduleCode: unknown; decision: unknown; reason: unknown; matchedRole: unknown; scopeType: unknown; authorityLevel: unknown; correlationId: unknown; requestPath: unknown; requestMethod: unknown; ipAddress: unknown; userAgent: unknown; sessionId: unknown; ......' is not assignable to type 'DecisionLogEntry[]'.
+  Type '{ logId: unknown; userId: unknown; permissionCode: unknown; moduleCode: unknown; decision: unknown; reason: unknown; matchedRole: unknown; scopeType: unknown; authorityLevel: unknown; correlationId: unknown; requestPath: unknown; requestMethod: unknown; ipAddress: unknown; userAgent: unknown; sessionId: unknown; ......' is not assignable to type 'DecisionLogEntry'.
+    Types of property 'logId' are incompatible.
+      Type 'unknown' is not assignable to type 'string'.
+src/domain/audit/decision-log.service.ts(204,21): error TS2322: Type 'unknown' is not assignable to type 'number'.
+src/domain/audit/decision-log.service.ts(254,5): error TS2322: Type 'unknown' is not assignable to type 'number'.
+src/domain/audit/decision-log.service.ts(255,5): error TS2322: Type 'unknown' is not assignable to type 'number'.
+src/domain/audit/decision-log.service.ts(256,5): error TS2322: Type 'unknown' is not assignable to type 'number'.
+src/domain/audit/decision-log.service.ts(257,5): error TS2322: Type '{ permissionCode: unknown; count: unknown; }[]' is not assignable to type '{ permissionCode: string; count: number; }[]'.
+  Type '{ permissionCode: unknown; count: unknown; }' is not assignable to type '{ permissionCode: string; count: number; }'.
+    Types of property 'permissionCode' are incompatible.
+      Type 'unknown' is not assignable to type 'string'.
+src/domain/audit/security-event.service.ts(66,3): error TS2322: Type '{ eventId: unknown; tenantId: unknown; userId: unknown; eventType: unknown; ip: unknown; userAgent: unknown; metadata: unknown; createdAt: any; }[]' is not assignable to type 'SecurityEvent[]'.
+  Type '{ eventId: unknown; tenantId: unknown; userId: unknown; eventType: unknown; ip: unknown; userAgent: unknown; metadata: unknown; createdAt: any; }' is not assignable to type 'SecurityEvent'.
+    Types of property 'eventId' are incompatible.
+      Type 'unknown' is not assignable to type 'string'.
+src/domain/audit/security-event.service.ts(74,30): error TS2339: Property 'toISOString' does not exist on type 'unknown'.
+src/domain/authority/decision-authority.service.ts(30,3): error TS2322: Type '{ authorityId: unknown; userId: unknown; authorityCode: unknown; moduleCode: unknown; scopeType: unknown; scopeId: unknown; isActive: true; validFrom: any; validTo: any; }[]' is not assignable to type 'DecisionAuthority[]'.
+  Type '{ authorityId: unknown; userId: unknown; authorityCode: unknown; moduleCode: unknown; scopeType: unknown; scopeId: unknown; isActive: true; validFrom: any; validTo: any; }' is not assignable to type 'DecisionAuthority'.
+    Types of property 'authorityId' are incompatible.
+      Type 'unknown' is not assignable to type 'string'.
+src/domain/authority/decision-authority.service.ts(38,30): error TS2339: Property 'toISOString' does not exist on type 'unknown'.
+src/domain/authority/decision-authority.service.ts(39,26): error TS2339: Property 'toISOString' does not exist on type 'unknown'.
+src/domain/delegation/delegation-automation.service.ts(108,35): error TS2362: The left-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.
+src/domain/delegation/delegation-policy.service.ts(26,3): error TS2322: Type '{ policyId: unknown; roleCode: unknown; maxDurationHours: unknown; allowedScopes: unknown; allowedActions: unknown; requiresApproval: boolean; isActive: true; }[]' is not assignable to type 'DelegationPolicy[]'.
+  Type '{ policyId: unknown; roleCode: unknown; maxDurationHours: unknown; allowedScopes: unknown; allowedActions: unknown; requiresApproval: boolean; isActive: true; }' is not assignable to type 'DelegationPolicy'.
+    Types of property 'policyId' are incompatible.
+      Type 'unknown' is not assignable to type 'string'.
+src/domain/delegation/delegation-policy.service.ts(148,48): error TS2339: Property 'toISOString' does not exist on type 'unknown'.
+src/domain/delegation/delegation-policy.service.ts(267,5): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/delegation/delegation.service.ts(238,9): error TS2322: Type 'Record<string, unknown>' is not assignable to type 'AuthPayload & { delegatedBy: string; agentId: string; }'.
+  Type 'Record<string, unknown>' is missing the following properties from type 'AuthPayload': userId, email, tenantId, role
+src/domain/delegation/delegation.service.ts(640,9): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/dynamic-rbac.service.ts(173,5): error TS2322: Type '{ permissionCode: unknown; module: unknown; active: boolean; }[]' is not assignable to type 'EffectivePermission[]'.
+  Type '{ permissionCode: unknown; module: unknown; active: boolean; }' is not assignable to type 'EffectivePermission'.
+    Types of property 'permissionCode' are incompatible.
+      Type 'unknown' is not assignable to type 'string'.
+src/domain/dynamic-rbac.service.ts(209,3): error TS2322: Type 'unknown[]' is not assignable to type 'string[]'.
+  Type 'unknown' is not assignable to type 'string'.
+src/domain/email-verification.service.ts(30,7): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/email-verification.service.ts(31,7): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/email-verification.service.ts(33,42): error TS2339: Property 'toISOString' does not exist on type 'unknown'.
+src/domain/email-verification.service.ts(74,35): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'string'.
+src/domain/frontend-contracts/frontend-access-contract.service.ts(140,30): error TS2488: Type 'unknown' must have a '[Symbol.iterator]()' method that returns an iterator.
+src/domain/frontend-contracts/frontend-access-contract.service.ts(140,31): error TS2352: Conversion of type 'FullAccessSnapshot' to type 'Record<string, unknown>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Index signature for type 'string' is missing in type 'FullAccessSnapshot'.
+src/domain/frontend-contracts/frontend-access-contract.service.ts(141,25): error TS2488: Type 'unknown' must have a '[Symbol.iterator]()' method that returns an iterator.
+src/domain/frontend-contracts/frontend-access-contract.service.ts(141,26): error TS2352: Conversion of type 'FullAccessSnapshot' to type 'Record<string, unknown>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Index signature for type 'string' is missing in type 'FullAccessSnapshot'.
+src/domain/frontend-contracts/frontend-access-contract.service.ts(235,27): error TS2352: Conversion of type 'FullAccessSnapshot' to type 'Record<string, unknown>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Index signature for type 'string' is missing in type 'FullAccessSnapshot'.
+src/domain/frontend-contracts/frontend-access-contract.service.ts(245,30): error TS2488: Type 'unknown' must have a '[Symbol.iterator]()' method that returns an iterator.
+src/domain/frontend-contracts/frontend-access-contract.service.ts(245,32): error TS2352: Conversion of type 'FullAccessSnapshot' to type 'Record<string, unknown>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Index signature for type 'string' is missing in type 'FullAccessSnapshot'.
+src/domain/identity/auth-orchestrator.service.ts(164,7): error TS2322: Type 'unknown[]' is not assignable to type 'string[]'.
+  Type 'unknown' is not assignable to type 'string'.
+src/domain/identity/auth-orchestrator.service.ts(486,5): error TS2322: Type '{ tenantId: unknown; role: unknown; isPrimary: unknown; orgName: unknown; }[]' is not assignable to type '{ tenantId: string; role: string; isPrimary: boolean; orgName: string; }[]'.
+  Type '{ tenantId: unknown; role: unknown; isPrimary: unknown; orgName: unknown; }' is not assignable to type '{ tenantId: string; role: string; isPrimary: boolean; orgName: string; }'.
+    Types of property 'tenantId' are incompatible.
+      Type 'unknown' is not assignable to type 'string'.
+src/domain/identity/auth-orchestrator.service.ts(543,5): error TS2739: Type 'Record<string, unknown>' is missing the following properties from type '{ mfa_type: string; enabled: boolean; }': mfa_type, enabled
+src/domain/identity/invitation-control.service.ts(106,3): error TS2322: Type '{ invitationId: unknown; tenantId: unknown; email: unknown; roleCode: unknown; invitedBy: unknown; status: unknown; token: unknown; expiresAt: any; createdAt: any; acceptedAt: any; }[]' is not assignable to type 'Invitation[]'.
+  Type '{ invitationId: unknown; tenantId: unknown; email: unknown; roleCode: unknown; invitedBy: unknown; status: unknown; token: unknown; expiresAt: any; createdAt: any; acceptedAt: any; }' is not assignable to type 'Invitation'.
+    Types of property 'invitationId' are incompatible.
+      Type 'unknown' is not assignable to type 'string'.
+src/domain/identity/invitation-control.service.ts(114,30): error TS2339: Property 'toISOString' does not exist on type 'unknown'.
+src/domain/identity/invitation-control.service.ts(115,30): error TS2339: Property 'toISOString' does not exist on type 'unknown'.
+src/domain/identity/principal-resolution.service.ts(186,9): error TS2322: Type 'unknown[]' is not assignable to type 'string[]'.
+  Type 'unknown' is not assignable to type 'string'.
+src/domain/identity/principal-resolution.service.ts(201,9): error TS2322: Type 'unknown[]' is not assignable to type 'string[]'.
+  Type 'unknown' is not assignable to type 'string'.
+src/domain/identity/principal-resolution.service.ts(216,9): error TS2322: Type '{ scopeType: unknown; scopeId: unknown; roleCode: unknown; }[]' is not assignable to type '{ scopeType: string; scopeId: string; roleCode: string; }[]'.
+  Type '{ scopeType: unknown; scopeId: unknown; roleCode: unknown; }' is not assignable to type '{ scopeType: string; scopeId: string; roleCode: string; }'.
+    Types of property 'scopeType' are incompatible.
+      Type 'unknown' is not assignable to type 'string'.
+src/domain/identity/principal-resolution.service.ts(232,9): error TS2322: Type 'unknown[]' is not assignable to type 'string[]'.
+  Type 'unknown' is not assignable to type 'string'.
+src/domain/identity/principal-resolution.service.ts(244,9): error TS2322: Type 'unknown[]' is not assignable to type 'string[]'.
+  Type 'unknown' is not assignable to type 'string'.
+src/domain/identity/principal-resolution.service.ts(299,5): error TS2322: Type '{ tenantId: unknown; role: unknown; membershipType: unknown; status: unknown; }[]' is not assignable to type '{ tenantId: string; role: string; membershipType: string; status: string; }[]'.
+  Type '{ tenantId: unknown; role: unknown; membershipType: unknown; status: unknown; }' is not assignable to type '{ tenantId: string; role: string; membershipType: string; status: string; }'.
+    Types of property 'tenantId' are incompatible.
+      Type 'unknown' is not assignable to type 'string'.
+src/domain/identity/token.service.ts(228,17): error TS2339: Property 'type' does not exist on type '{ getActiveSigningKey: Function; getKeyByKid: Function; }'.
+src/domain/identity/token.service.ts(229,30): error TS2339: Property 'userId' does not exist on type '{ getActiveSigningKey: Function; getKeyByKid: Function; }'.
+src/domain/identity/token.service.ts(229,56): error TS2339: Property 'tenantId' does not exist on type '{ getActiveSigningKey: Function; getKeyByKid: Function; }'.
+src/domain/identity/token.service.ts(229,79): error TS2339: Property 'jti' does not exist on type '{ getActiveSigningKey: Function; getKeyByKid: Function; }'.
+src/domain/identity/token.service.ts(229,102): error TS2339: Property 'familyId' does not exist on type '{ getActiveSigningKey: Function; getKeyByKid: Function; }'.
+src/domain/identity/token.service.ts(229,125): error TS2339: Property 'exp' does not exist on type '{ getActiveSigningKey: Function; getKeyByKid: Function; }'.
+src/domain/integrations/sso-integration.service.ts(392,5): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/integrations/sso-integration.service.ts(393,5): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/integrations/sso-integration.service.ts(394,5): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/integrations/sso-integration.service.ts(395,5): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/integrations/sso-integration.service.ts(396,5): error TS2322: Type 'unknown' is not assignable to type 'number'.
+src/domain/integrations/sso-integration.service.ts(397,5): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/integrations/sso-integration.service.ts(414,5): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'string'.
+src/domain/integrations/sso-integration.service.ts(446,5): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/integrations/sso-integration.service.ts(447,5): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/integrations/sso-integration.service.ts(448,5): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/integrations/sso-integration.service.ts(449,5): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/integrations/sso-integration.service.ts(450,5): error TS2322: Type 'unknown' is not assignable to type 'number'.
+src/domain/integrations/sso-integration.service.ts(451,5): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/integrations/sso-integration.service.ts(573,5): error TS2322: Type 'unknown[]' is not assignable to type 'string[]'.
+  Type 'unknown' is not assignable to type 'string'.
+src/domain/lifecycle-auth/maker-checker-policy.service.ts(129,3): error TS2322: Type '{ decisionId: unknown; tenantId: unknown; entityType: unknown; entityId: unknown; action: unknown; makerId: unknown; checkerId: unknown; status: unknown; createdAt: any; decidedAt: any; reason: unknown; }[]' is not assignable to type 'MakerCheckerDecision[]'.
+  Type '{ decisionId: unknown; tenantId: unknown; entityType: unknown; entityId: unknown; action: unknown; makerId: unknown; checkerId: unknown; status: unknown; createdAt: any; decidedAt: any; reason: unknown; }' is not assignable to type 'MakerCheckerDecision'.
+    Types of property 'decisionId' are incompatible.
+      Type 'unknown' is not assignable to type 'string'.
+src/domain/lifecycle-auth/maker-checker-policy.service.ts(140,34): error TS2339: Property 'toISOString' does not exist on type 'unknown'.
+src/domain/lifecycle-auth/maker-checker-policy.service.ts(141,34): error TS2339: Property 'toISOString' does not exist on type 'unknown'.
+src/domain/me.service.ts(57,32): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'string'.
+src/domain/me.service.ts(63,7): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/me.service.ts(64,7): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/me.service.ts(65,7): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/me.service.ts(66,7): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/me.service.ts(67,7): error TS2322: Type 'string[] | unknown[]' is not assignable to type 'string[]'.
+  Type 'unknown[]' is not assignable to type 'string[]'.
+    Type 'unknown' is not assignable to type 'string'.
+src/domain/me.service.ts(68,7): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/me.service.ts(69,7): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/me.service.ts(70,7): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/me.service.ts(71,7): error TS2322: Type 'unknown' is not assignable to type 'boolean'.
+src/domain/me.service.ts(72,7): error TS2322: Type 'unknown' is not assignable to type 'boolean'.
+src/domain/me.service.ts(74,7): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/me.service.ts(75,7): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/me.service.ts(76,7): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/me.service.ts(78,35): error TS2339: Property 'toISOString' does not exist on type 'unknown'.
+src/domain/me.service.ts(79,40): error TS2339: Property 'toISOString' does not exist on type 'unknown'.
+src/domain/me.service.ts(116,26): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'string'.
+src/domain/me.service.ts(127,24): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'string'.
+src/domain/me.service.ts(140,5): error TS2322: Type '{ tenantId: unknown; role: unknown; isPrimary: boolean; orgName: unknown; status: unknown; }[]' is not assignable to type '{ tenantId: string; role: string; isPrimary: boolean; orgName: string; status: string; }[]'.
+  Type '{ tenantId: unknown; role: unknown; isPrimary: boolean; orgName: unknown; status: unknown; }' is not assignable to type '{ tenantId: string; role: string; isPrimary: boolean; orgName: string; status: string; }'.
+    Types of property 'tenantId' are incompatible.
+      Type 'unknown' is not assignable to type 'string'.
+src/domain/role-detail.service.ts(102,5): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/role-detail.service.ts(103,5): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/role-detail.service.ts(104,5): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/role-detail.service.ts(107,33): error TS2339: Property 'toISOString' does not exist on type 'unknown'.
+src/domain/role-detail.service.ts(108,5): error TS2322: Type '{ permissionCode: unknown; moduleCode: unknown; isActive: boolean; createdAt: any; }[]' is not assignable to type 'RolePermission[]'.
+  Type '{ permissionCode: unknown; moduleCode: unknown; isActive: boolean; createdAt: any; }' is not assignable to type 'RolePermission'.
+    Types of property 'permissionCode' are incompatible.
+      Type 'unknown' is not assignable to type 'string'.
+src/domain/role-detail.service.ts(112,32): error TS2339: Property 'toISOString' does not exist on type 'unknown'.
+src/domain/role-detail.service.ts(114,5): error TS2322: Type '{ userId: unknown; email: unknown; fullName: unknown; jobTitle: unknown; assignedAt: any; scopeType: unknown; scopeId: unknown; isPrimary: boolean; }[]' is not assignable to type 'RoleAssignee[]'.
+  Type '{ userId: unknown; email: unknown; fullName: unknown; jobTitle: unknown; assignedAt: any; scopeType: unknown; scopeId: unknown; isPrimary: boolean; }' is not assignable to type 'RoleAssignee'.
+    Types of property 'userId' are incompatible.
+      Type 'unknown' is not assignable to type 'string'.
+src/domain/role-detail.service.ts(119,34): error TS2339: Property 'toISOString' does not exist on type 'unknown'.
+src/domain/role-detail.service.ts(124,5): error TS2322: Type '{ id: unknown; delegatorUserId: unknown; delegateUserId: unknown; validFrom: any; validTo: any; delegationType: unknown; isActive: boolean; }[]' is not assignable to type 'RoleDelegation[]'.
+  Type '{ id: unknown; delegatorUserId: unknown; delegateUserId: unknown; validFrom: any; validTo: any; delegationType: unknown; isActive: boolean; }' is not assignable to type 'RoleDelegation'.
+    Types of property 'id' are incompatible.
+      Type 'unknown' is not assignable to type 'string'.
+src/domain/role-detail.service.ts(128,32): error TS2339: Property 'toISOString' does not exist on type 'unknown'.
+src/domain/role-detail.service.ts(129,28): error TS2339: Property 'toISOString' does not exist on type 'unknown'.
+src/domain/role-detail.service.ts(133,5): error TS2322: Type '{ action: unknown; timestamp: any; userId: unknown; details: unknown; }[]' is not assignable to type 'RoleAuditEntry[]'.
+  Type '{ action: unknown; timestamp: any; userId: unknown; details: unknown; }' is not assignable to type 'RoleAuditEntry'.
+    Types of property 'action' are incompatible.
+      Type 'unknown' is not assignable to type 'string'.
+src/domain/role-detail.service.ts(135,31): error TS2339: Property 'toISOString' does not exist on type 'unknown'.
+src/domain/role-detail.service.ts(159,5): error TS2322: Type '{ roleCode: unknown; name: unknown; moduleCode: unknown; isActive: boolean; permissionCount: unknown; }[]' is not assignable to type '{ roleCode: string; name: string; moduleCode: string; isActive: boolean; permissionCount: number; }[]'.
+  Type '{ roleCode: unknown; name: unknown; moduleCode: unknown; isActive: boolean; permissionCount: unknown; }' is not assignable to type '{ roleCode: string; name: string; moduleCode: string; isActive: boolean; permissionCount: number; }'.
+    Types of property 'roleCode' are incompatible.
+      Type 'unknown' is not assignable to type 'string'.
+src/domain/role-matrix.service.ts(48,14): error TS2538: Type 'unknown' cannot be used as an index type.
+src/domain/role-matrix.service.ts(85,5): error TS2322: Type 'unknown[]' is not assignable to type 'string[]'.
+  Type 'unknown' is not assignable to type 'string'.
+src/domain/role-matrix.service.ts(86,5): error TS2322: Type 'unknown[]' is not assignable to type 'string[]'.
+  Type 'unknown' is not assignable to type 'string'.
+src/domain/role-matrix.service.ts(87,5): error TS2322: Type 'unknown[]' is not assignable to type 'string[]'.
+  Type 'unknown' is not assignable to type 'string'.
+src/domain/role-matrix.service.ts(99,5): error TS2322: Type 'unknown[]' is not assignable to type 'string[]'.
+  Type 'unknown' is not assignable to type 'string'.
+src/domain/role-matrix.service.ts(112,5): error TS2322: Type 'unknown[]' is not assignable to type 'string[]'.
+  Type 'unknown' is not assignable to type 'string'.
+src/domain/scope/external-scope.adapter.ts(37,3): error TS2322: Type '{ scopeId: unknown; userId: unknown; role: unknown; entityType: unknown; entityId: unknown; permissions: any[]; }[]' is not assignable to type 'ExternalScope[]'.
+  Type '{ scopeId: unknown; userId: unknown; role: unknown; entityType: unknown; entityId: unknown; permissions: any[]; }' is not assignable to type 'ExternalScope'.
+    Types of property 'scopeId' are incompatible.
+      Type 'unknown' is not assignable to type 'string'.
+src/domain/session-bootstrap.service.ts(83,9): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/session-bootstrap.service.ts(84,9): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/session-bootstrap.service.ts(85,9): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/session-bootstrap.service.ts(86,9): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/session-bootstrap.service.ts(87,9): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/session-bootstrap.service.ts(88,9): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/session-bootstrap.service.ts(89,9): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/session-bootstrap.service.ts(90,9): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/session-bootstrap.service.ts(103,23): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/session-bootstrap.service.ts(103,53): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/session-bootstrap.service.ts(103,68): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/session-bootstrap.service.ts(119,11): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/session-bootstrap.service.ts(120,11): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/session-bootstrap.service.ts(121,11): error TS2322: Type 'unknown' is not assignable to type 'number'.
+src/domain/session-bootstrap.service.ts(122,11): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/session-bootstrap.service.ts(163,7): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/session-bootstrap.service.ts(164,7): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/session-bootstrap.service.ts(165,7): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/session-bootstrap.service.ts(166,7): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/session-bootstrap.service.ts(167,7): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/session/session-context.service.ts(7,34): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(value: string | number | Date): Date', gave the following error.
+    Argument of type 'unknown' is not assignable to parameter of type 'string | number | Date'.
+  Overload 2 of 4, '(value: string | number): Date', gave the following error.
+    Argument of type 'unknown' is not assignable to parameter of type 'string | number'.
+src/domain/session/session-context.service.ts(14,5): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/session/session-context.service.ts(15,5): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/session/session-context.service.ts(16,5): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/session/session-context.service.ts(18,5): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/session/session-context.service.ts(19,5): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/session/session-context.service.ts(20,32): error TS2339: Property 'toISOString' does not exist on type 'unknown'.
+src/domain/session/session-context.service.ts(21,41): error TS2339: Property 'toISOString' does not exist on type 'unknown'.
+src/domain/session/session.service.ts(57,32): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'string'.
+src/domain/session/session.service.ts(177,5): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/session/session.service.ts(178,5): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/session/session.service.ts(179,5): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/session/session.service.ts(180,5): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/domain/sod/sod-conflict-audit.service.ts(29,46): error TS2345: Argument of type 'unknown[]' is not assignable to parameter of type 'string[]'.
+  Type 'unknown' is not assignable to type 'string'.
+src/domain/sod/sod-conflict-audit.service.ts(64,3): error TS2322: Type '{ conflictId: unknown; userId: unknown; ruleCode: unknown; roleCodeA: unknown; roleCodeB: unknown; conflictLevel: unknown; detectedAt: any; resolvedAt: any; resolution: any; }[]' is not assignable to type 'SodConflictRecord[]'.
+  Type '{ conflictId: unknown; userId: unknown; ruleCode: unknown; roleCodeA: unknown; roleCodeB: unknown; conflictLevel: unknown; detectedAt: any; resolvedAt: any; resolution: any; }' is not assignable to type 'SodConflictRecord'.
+    Types of property 'conflictId' are incompatible.
+      Type 'unknown' is not assignable to type 'string'.
+src/domain/sod/sod-conflict-audit.service.ts(71,32): error TS2339: Property 'toISOString' does not exist on type 'unknown'.
+src/domain/sod/sod-conflict-audit.service.ts(101,62): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'string'.
+src/domain/sod/sod-policy.service.ts(31,3): error TS2322: Type '{ policyId: unknown; ruleCode: unknown; roleCodeA: unknown; roleCodeB: unknown; conflictLevel: unknown; enforcement: unknown; moduleCode: unknown; description: unknown; isActive: true; temporaryWaiverAllowed: boolean; waiverMaxDays: unknown; }[]' is not assignable to type 'SodPolicy[]'.
+  Type '{ policyId: unknown; ruleCode: unknown; roleCodeA: unknown; roleCodeB: unknown; conflictLevel: unknown; enforcement: unknown; moduleCode: unknown; description: unknown; isActive: true; temporaryWaiverAllowed: boolean; waiverMaxDays: unknown; }' is not assignable to type 'SodPolicy'.
+    Types of property 'policyId' are incompatible.
+      Type 'unknown' is not assignable to type 'string'.

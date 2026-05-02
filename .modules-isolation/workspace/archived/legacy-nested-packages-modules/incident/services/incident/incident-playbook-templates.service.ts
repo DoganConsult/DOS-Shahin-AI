@@ -1,0 +1,315 @@
+// ============================================
+// Shahin — Incident Playbook Templates
+// Predefined playbook templates for incident categories
+// Auto-executes when incident.created fires with matching category
+// ============================================
+
+import type { ProcessTaskType } from '../../ports/lifecycle.port';
+import { safeQuery } from "@dos/db";
+
+export interface PlaybookStep {
+  order: number;
+  titleEn: string;
+  titleAr: string;
+  descriptionEn: string;
+  descriptionAr: string;
+  taskType: ProcessTaskType;
+  assigneeRole?: string;
+  priority: 'critical' | 'high' | 'medium' | 'low';
+  dueInHours: number;
+  dependencies?: number[]; // step orders that must complete first
+}
+
+export interface IncidentPlaybookTemplate {
+  category: string;
+  nameEn: string;
+  nameAr: string;
+  descriptionEn: string;
+  descriptionAr: string;
+  steps: PlaybookStep[];
+}
+
+// ── Playbook Templates ───────────────────────────────────────────────────────
+
+export const INCIDENT_PLAYBOOK_TEMPLATES: IncidentPlaybookTemplate[] = [
+  {
+    category: 'data_breach',
+    nameEn: 'Data Breach Response Playbook',
+    nameAr: 'دليل عمل الاستجابة لخرق البيانات',
+    descriptionEn: 'Automated response playbook for data breach incidents. Includes containment, notification, investigation, and recovery steps.',
+    descriptionAr: 'دليل عمل استجابة تلقائي لحوادث خرق البيانات. يتضمن خطوات الاحتواء والإخطار والتحقيق والتعافي.',
+    steps: [
+      {
+        order: 1,
+        titleEn: 'Immediate Containment',
+        titleAr: 'الاحتواء الفوري',
+        descriptionEn: 'Isolate affected systems and prevent further data exfiltration. Preserve evidence for forensic analysis.',
+        descriptionAr: 'عزل الأنظمة المتأثرة ومنع المزيد من تسريب البيانات. الحفاظ على الأدلة للتحليل الجنائي.',
+        taskType: 'incident_response',
+        assigneeRole: 'it_security_officer',
+        priority: 'critical',
+        dueInHours: 2,
+      },
+      {
+        order: 2,
+        titleEn: 'Assess Breach Scope',
+        titleAr: 'تقييم نطاق الخرق',
+        descriptionEn: 'Determine what data was accessed, how many records affected, and which systems were compromised.',
+        descriptionAr: 'تحديد البيانات التي تم الوصول إليها وعدد السجلات المتأثرة والأنظمة التي تم اختراقها.',
+        taskType: 'incident_response',
+        assigneeRole: 'it_security_officer',
+        priority: 'critical',
+        dueInHours: 4,
+        dependencies: [1],
+      },
+      {
+        order: 3,
+        titleEn: 'Notify Regulatory Authorities',
+        titleAr: 'إخطار السلطات التنظيمية',
+        descriptionEn: 'Notify SDAIA/NDMO within 72 hours as required by PDPL. Prepare notification package with breach details.',
+        descriptionAr: 'إخطار سدايا/الهيئة الوطنية للبيانات خلال 72 ساعة كما هو مطلوب بموجب قانون حماية البيانات الشخصية. إعداد حزمة الإخطار مع تفاصيل الخرق.',
+        taskType: 'audit_response',
+        assigneeRole: 'privacy_officer',
+        priority: 'critical',
+        dueInHours: 72,
+        dependencies: [2],
+      },
+      {
+        order: 4,
+        titleEn: 'Notify Affected Individuals',
+        titleAr: 'إخطار الأفراد المتأثرين',
+        descriptionEn: 'Notify affected data subjects about the breach, potential impact, and remediation steps being taken.',
+        descriptionAr: 'إخطار أصحاب البيانات المتأثرين بالخرق والأثر المحتمل والخطوات التصحيحية المتخذة.',
+        taskType: 'audit_response',
+        assigneeRole: 'privacy_officer',
+        priority: 'high',
+        dueInHours: 72,
+        dependencies: [2, 3],
+      },
+      {
+        order: 5,
+        titleEn: 'Forensic Investigation',
+        titleAr: 'التحقيق الجنائي',
+        descriptionEn: 'Conduct detailed forensic analysis to identify root cause, attack vector, and timeline of the breach.',
+        descriptionAr: 'إجراء تحليل جنائي مفصل لتحديد السبب الجذري ومتجه الهجوم والجدول الزمني للخرق.',
+        taskType: 'incident_response',
+        assigneeRole: 'it_security_officer',
+        priority: 'high',
+        dueInHours: 48,
+        dependencies: [1, 2],
+      },
+      {
+        order: 6,
+        titleEn: 'Remediate Vulnerabilities',
+        titleAr: 'معالجة الثغرات',
+        descriptionEn: 'Patch vulnerabilities, close attack vectors, and strengthen security controls to prevent recurrence.',
+        descriptionAr: 'تصحيح الثغرات وإغلاق متجهات الهجوم وتعزيز ضوابط الأمان لمنع التكرار.',
+        taskType: 'remediation',
+        assigneeRole: 'it_security_officer',
+        priority: 'high',
+        dueInHours: 96,
+        dependencies: [5],
+      },
+      {
+        order: 7,
+        titleEn: 'Post-Incident Review',
+        titleAr: 'مراجعة ما بعد الحادث',
+        descriptionEn: 'Document lessons learned, update incident response procedures, and identify process improvements.',
+        descriptionAr: 'توثيق الدروس المستفادة وتحديث إجراءات الاستجابة للحوادث وتحديد تحسينات العملية.',
+        taskType: 'control_review',
+        assigneeRole: 'compliance_officer',
+        priority: 'medium',
+        dueInHours: 168,
+        dependencies: [6],
+      },
+    ],
+  },
+  {
+    category: 'system_outage',
+    nameEn: 'System Outage Response Playbook',
+    nameAr: 'دليل عمل الاستجابة لانقطاع النظام',
+    descriptionEn: 'Automated response playbook for system outage incidents. Includes triage, recovery, and business continuity steps.',
+    descriptionAr: 'دليل عمل استجابة تلقائي لحوادث انقطاع النظام. يتضمن خطوات الفرز والتعافي واستمرارية الأعمال.',
+    steps: [
+      {
+        order: 1,
+        titleEn: 'Triage and Assess Impact',
+        titleAr: 'الفرز وتقييم الأثر',
+        descriptionEn: 'Assess severity, affected systems, business impact, and estimated recovery time.',
+        descriptionAr: 'تقييم الخطورة والأنظمة المتأثرة والأثر التجاري والوقت المقدر للتعافي.',
+        taskType: 'incident_response',
+        assigneeRole: 'it_operations_lead',
+        priority: 'critical',
+        dueInHours: 1,
+      },
+      {
+        order: 2,
+        titleEn: 'Activate Business Continuity Plan',
+        titleAr: 'تفعيل خطة استمرارية الأعمال',
+        descriptionEn: 'Activate BCP procedures, switch to backup systems, and maintain critical operations.',
+        descriptionAr: 'تفعيل إجراءات خطة استمرارية الأعمال والتبديل إلى أنظمة النسخ الاحتياطي والحفاظ على العمليات الحرجة.',
+        taskType: 'incident_response',
+        assigneeRole: 'bcm_owner',
+        priority: 'critical',
+        dueInHours: 2,
+        dependencies: [1],
+      },
+      {
+        order: 3,
+        titleEn: 'Restore Primary Systems',
+        titleAr: 'استعادة الأنظمة الأساسية',
+        descriptionEn: 'Restore primary systems from backups, verify data integrity, and perform system health checks.',
+        descriptionAr: 'استعادة الأنظمة الأساسية من النسخ الاحتياطية والتحقق من سلامة البيانات وإجراء فحوصات صحة النظام.',
+        taskType: 'incident_response',
+        assigneeRole: 'it_operations_lead',
+        priority: 'critical',
+        dueInHours: 4,
+        dependencies: [1, 2],
+      },
+      {
+        order: 4,
+        titleEn: 'Root Cause Analysis',
+        titleAr: 'تحليل السبب الجذري',
+        descriptionEn: 'Investigate root cause of outage, review logs, and identify contributing factors.',
+        descriptionAr: 'التحقيق في السبب الجذري للانقطاع ومراجعة السجلات وتحديد العوامل المساهمة.',
+        taskType: 'incident_response',
+        assigneeRole: 'it_security_officer',
+        priority: 'high',
+        dueInHours: 24,
+        dependencies: [3],
+      },
+      {
+        order: 5,
+        titleEn: 'Implement Preventive Measures',
+        titleAr: 'تنفيذ التدابير الوقائية',
+        descriptionEn: 'Implement fixes, add monitoring, and strengthen resilience to prevent future outages.',
+        descriptionAr: 'تنفيذ الإصلاحات وإضافة المراقبة وتعزيز المرونة لمنع الانقطاعات المستقبلية.',
+        taskType: 'remediation',
+        assigneeRole: 'it_operations_lead',
+        priority: 'high',
+        dueInHours: 72,
+        dependencies: [4],
+      },
+      {
+        order: 6,
+        titleEn: 'Post-Outage Review',
+        titleAr: 'مراجعة ما بعد الانقطاع',
+        descriptionEn: 'Document incident timeline, recovery actions, and update BCP procedures based on lessons learned.',
+        descriptionAr: 'توثيق الجدول الزمني للحادث وإجراءات التعافي وتحديث إجراءات خطة استمرارية الأعمال بناءً على الدروس المستفادة.',
+        taskType: 'control_review',
+        assigneeRole: 'bcm_owner',
+        priority: 'medium',
+        dueInHours: 168,
+        dependencies: [5],
+      },
+    ],
+  },
+  {
+    category: 'compliance_violation',
+    nameEn: 'Compliance Violation Response Playbook',
+    nameAr: 'دليل عمل الاستجابة لانتهاك الامتثال',
+    descriptionEn: 'Automated response playbook for compliance violation incidents. Includes assessment, remediation, and reporting steps.',
+    descriptionAr: 'دليل عمل استجابة تلقائي لحوادث انتهاك الامتثال. يتضمن خطوات التقييم والمعالجة والإبلاغ.',
+    steps: [
+      {
+        order: 1,
+        titleEn: 'Assess Violation Severity',
+        titleAr: 'تقييم خطورة الانتهاك',
+        descriptionEn: 'Assess the nature and severity of the compliance violation, identify affected frameworks, and determine regulatory impact.',
+        descriptionAr: 'تقييم طبيعة وخطورة انتهاك الامتثال وتحديد الأطر المتأثرة وتحديد الأثر التنظيمي.',
+        taskType: 'control_review',
+        assigneeRole: 'compliance_officer',
+        priority: 'high',
+        dueInHours: 4,
+      },
+      {
+        order: 2,
+        titleEn: 'Document Violation Details',
+        titleAr: 'توثيق تفاصيل الانتهاك',
+        descriptionEn: 'Document violation details, affected controls, regulatory requirements breached, and evidence of non-compliance.',
+        descriptionAr: 'توثيق تفاصيل الانتهاك والضوابط المتأثرة ومتطلبات التنظيم المنتهكة وأدلة عدم الامتثال.',
+        taskType: 'audit_response',
+        assigneeRole: 'compliance_officer',
+        priority: 'high',
+        dueInHours: 8,
+        dependencies: [1],
+      },
+      {
+        order: 3,
+        titleEn: 'Notify Management and Board',
+        titleAr: 'إخطار الإدارة ومجلس الإدارة',
+        descriptionEn: 'Notify executive management and board about the compliance violation, potential penalties, and remediation plan.',
+        descriptionAr: 'إخطار الإدارة التنفيذية ومجلس الإدارة بانتهاك الامتثال والعقوبات المحتملة وخطة المعالجة.',
+        taskType: 'approval',
+        assigneeRole: 'compliance_officer',
+        priority: 'high',
+        dueInHours: 24,
+        dependencies: [2],
+      },
+      {
+        order: 4,
+        titleEn: 'Develop Remediation Plan',
+        titleAr: 'وضع خطة المعالجة',
+        descriptionEn: 'Develop detailed remediation plan with timelines, responsible parties, and success criteria to address the violation.',
+        descriptionAr: 'وضع خطة معالجة مفصلة مع الجداول الزمنية والأطراف المسؤولة ومعايير النجاح لمعالجة الانتهاك.',
+        taskType: 'remediation',
+        assigneeRole: 'compliance_officer',
+        priority: 'high',
+        dueInHours: 48,
+        dependencies: [2, 3],
+      },
+      {
+        order: 5,
+        titleEn: 'Execute Remediation Actions',
+        titleAr: 'تنفيذ إجراءات المعالجة',
+        descriptionEn: 'Execute remediation actions, implement corrective controls, and verify compliance restoration.',
+        descriptionAr: 'تنفيذ إجراءات المعالجة وتنفيذ ضوابط تصحيحية والتحقق من استعادة الامتثال.',
+        taskType: 'remediation',
+        assigneeRole: 'control_owner',
+        priority: 'high',
+        dueInHours: 120,
+        dependencies: [4],
+      },
+      {
+        order: 6,
+        titleEn: 'Verify Compliance Restoration',
+        titleAr: 'التحقق من استعادة الامتثال',
+        descriptionEn: 'Conduct verification assessment to confirm compliance has been restored and controls are effective.',
+        descriptionAr: 'إجراء تقييم التحقق للتأكد من استعادة الامتثال وفعالية الضوابط.',
+        taskType: 'verification',
+        assigneeRole: 'auditor',
+        priority: 'medium',
+        dueInHours: 168,
+        dependencies: [5],
+      },
+      {
+        order: 7,
+        titleEn: 'Update Compliance Documentation',
+        titleAr: 'تحديث وثائق الامتثال',
+        descriptionEn: 'Update compliance documentation, policies, and procedures to prevent future violations.',
+        descriptionAr: 'تحديث وثائق الامتثال والسياسات والإجراءات لمنع الانتهاكات المستقبلية.',
+        taskType: 'policy_creation',
+        assigneeRole: 'compliance_officer',
+        priority: 'medium',
+        dueInHours: 240,
+        dependencies: [6],
+      },
+    ],
+  },
+];
+
+/**
+ * Get playbook template for an incident category.
+ * Returns null if no template matches.
+ */
+export function getPlaybookTemplateForCategory(category: string): IncidentPlaybookTemplate | null {
+  const normalizedCategory = category?.toLowerCase().trim();
+  return INCIDENT_PLAYBOOK_TEMPLATES.find(t => t.category === normalizedCategory) || null;
+}
+
+/**
+ * Get all available playbook templates.
+ */
+export function getAllPlaybookTemplates(): IncidentPlaybookTemplate[] {
+  return INCIDENT_PLAYBOOK_TEMPLATES;
+}

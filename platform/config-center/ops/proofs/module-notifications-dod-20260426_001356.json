@@ -1,0 +1,15 @@
+{
+  "module": "notifications",
+  "phase": "Phase 1 / Module 7",
+  "completedAt": "2026-04-25T16:13:56.491206Z",
+  "verdict": "PASS",
+  "tenant": "shahin_visitors",
+  "user": "tenantadmin@shahin-ai.local",
+  "role": "tenant_admin",
+  "issuer": "https://auth.shahin-ai.com/realms/dogan",
+  "endpointCount": 0,
+  "passCount": 0,
+  "failCount": 0,
+  "failingEndpoints": [],
+  "endpoints": []
+}

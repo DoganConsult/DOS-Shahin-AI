@@ -1,0 +1,95 @@
+/* IBM Carbon-style design tokens for the Shahin shell/workspace.
+ * Reference: https://carbondesignsystem.com (Spacing, Type, Color tokens)
+ *
+ * Token discipline rule (Foundation-only bring-up):
+ *   - All shell/workspace layout, cards, buttons, sidebar, topbar, menu,
+ *     empty states, module cards must use these tokens.
+ *   - No hardcoded random px spacing, ad-hoc blues, or unspecified shadows
+ *     in shell-scope files.
+ *   - RTL must use logical properties (margin-inline, inset-inline-*).
+ *
+ * This file augments design-tokens.css. It does NOT introduce a new UI
+ * framework or override PrimeNG component rules.
+ */
+
+:root {
+  /* ---- 1. Color (Carbon white theme) ---------------------------------- */
+  --cds-background:           #ffffff;
+  --cds-layer-01:             #f4f4f4;
+  --cds-layer-02:             #ffffff;
+  --cds-layer-03:             #f4f4f4;
+  --cds-border-subtle-00:     #e0e0e0;
+  --cds-border-subtle-01:     #c6c6c6;
+  --cds-text-primary:         #161616;
+  --cds-text-secondary:       #525252;
+  --cds-text-placeholder:     #a8a8a8;
+  --cds-link-primary:         #0f62fe;
+  --cds-interactive:          #0f62fe;
+  --cds-button-primary:       #0f62fe;
+  --cds-button-primary-hover: #0353e9;
+  --cds-support-error:        #da1e28;
+  --cds-support-success:      #24a148;
+  --cds-support-warning:      #f1c21b;
+  --cds-support-info:         #0043ce;
+
+  /* ---- 2. Spacing scale ----------------------------------------------- */
+  --cds-spacing-01: 0.125rem; /* 2  */
+  --cds-spacing-02: 0.25rem;  /* 4  */
+  --cds-spacing-03: 0.5rem;   /* 8  */
+  --cds-spacing-04: 0.75rem;  /* 12 */
+  --cds-spacing-05: 1rem;     /* 16 */
+  --cds-spacing-06: 1.5rem;   /* 24 */
+  --cds-spacing-07: 2rem;     /* 32 */
+  --cds-spacing-08: 2.5rem;   /* 40 */
+  --cds-spacing-09: 3rem;     /* 48 */
+  --cds-spacing-10: 4rem;     /* 64 */
+
+  /* ---- 3. Layout spacing (page-level) --------------------------------- */
+  --cds-layout-01: 1rem;
+  --cds-layout-02: 1.5rem;
+  --cds-layout-03: 2rem;
+  --cds-layout-04: 3rem;
+  --cds-layout-05: 4rem;
+  --cds-layout-06: 6rem;
+  --cds-layout-07: 10rem;
+
+  /* ---- 4. Typography (IBM Plex; Arabic-safe stack first) -------------- */
+  --shell-font-family-ar: "IBM Plex Sans Arabic", "IBM Plex Sans", "Tajawal",
+                          "Noto Sans Arabic", system-ui, sans-serif;
+  --shell-font-family-en: "IBM Plex Sans", system-ui, sans-serif;
+
+  --cds-body-compact-01-size: 0.875rem;
+  --cds-body-compact-01-line: 1.2857;
+  --cds-body-01-size:         0.875rem;
+  --cds-body-01-line:         1.4286;
+  --cds-body-02-size:         1rem;
+  --cds-body-02-line:         1.5;
+  --cds-heading-01-size:      0.875rem;
+  --cds-heading-02-size:      1rem;
+  --cds-heading-03-size:      1.25rem;
+  --cds-heading-04-size:      1.75rem;
+  --cds-heading-05-size:      2rem;
+
+  /* ---- 5. Motion ------------------------------------------------------ */
+  --cds-duration-fast-01:     70ms;
+  --cds-duration-fast-02:     110ms;
+  --cds-duration-moderate-01: 150ms;
+  --cds-duration-moderate-02: 240ms;
+  --cds-easing-standard:      cubic-bezier(0.2, 0, 0.38, 0.9);
+
+  /* ---- 6. Focus ------------------------------------------------------- */
+  --cds-focus:        #0f62fe;
+  --cds-focus-inset:  inset 0 0 0 2px var(--cds-focus);
+
+  /* ---- 7. Shell-scope semantic aliases -------------------------------- */
+  --shell-page-bg:        var(--cds-layer-01);
+  --shell-card-bg:        var(--cds-layer-02);
+  --shell-card-border:    var(--cds-border-subtle-00);
+  --shell-primary-action: var(--cds-button-primary);
+  --shell-text-primary:   var(--cds-text-primary);
+  --shell-text-secondary: var(--cds-text-secondary);
+
+  /* Single, controlled elevation set for shell surfaces (no ad-hoc shadows). */
+  --shell-elevation-01: 0 1px 2px rgba(0, 0, 0, 0.08);
+  --shell-elevation-02: 0 4px 12px rgba(0, 0, 0, 0.10);
+}

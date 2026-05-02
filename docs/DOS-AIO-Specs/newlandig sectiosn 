@@ -1,0 +1,2136 @@
+
+# Landing Page vs Platform Capabilities — Full Audit
+
+## Summary
+
+| Category | Count |
+|----------|-------|
+| **Sections on landing page** | 9 active sections |
+| **Built but NOT mounted on landing page** | 7 orphan sections |
+| **Public API endpoints** | 11 endpoints |
+| **Backend services (total)** | 34 microservices |
+| **Platform capabilities NOT marketed** | 50+ features missing from landing |
+
+---
+
+## Part 1: What's ON the Landing Page Now
+
+The landing page renders **9 sections** in this order:
+
+| # | Section ID | Component | What it shows |
+|---|-----------|-----------|---------------|
+| 1 | navbar | NavbarSectionComponent | Top navigation bar with logo, links, language toggle |
+| 2 | hero | HeroSectionComponent | Full-screen hero with animated orbs, hawk logo with engine rings, title "Shahin-AI", tagline, Start/Sign-In CTAs, trust row |
+| 3 | stats | StatsSectionComponent | 6 live-from-DB stats with animated count-up: Regulators (217+), Frameworks (220+), Controls (6,288+), Cross-Mappings (62,988+), Sectors (121+), AI Agents (10) |
+| 4 | pain | PainPointsSectionComponent | 8 pain-point cards with ECharts mini-visualizations (silos, evidence, reports, ownership, manual risk, reg change, approvals, cost). Selectable with smart diagnosis bar |
+| 5 | how | HowItWorksSectionComponent | 3-step boot sequence: Boot → Configure → Autonomous, with connector lines and output chips |
+| 6 | solutions | SolutionsSectionComponent | 5-tier accordion with 56 total solution items across: Core Pain Killers (6), KSA-Specific (8), Real AI (7), Operations & Governance (10), Platform Infrastructure (16). Plus animated counter banner |
+| 7 | agents | AIAgentsSectionComponent | 12 AI agent cards (A01-A12) with live chat overlay, quick prompts per agent, calls /copilot/public-chat API |
+| 8 | ksa | KSAFeaturesSectionComponent | 3 showcase cards (NCA ECC, Regulator Heatmap, PDPL DPIA) with step-by-step flows, export format badges, sample report download links |
+| 9 | features | FeaturesSectionComponent | D3-powered capability carousel with 4 view modes (horizontal, vertical, timeline, 3D carousel). 6 core + 12 advanced capabilities. Context selector for sector/role/maturity |
+| 10 | cta | CtaSectionComponent | Final call-to-action with Start Diagnosis + Sign In buttons |
+| 11 | footer | FooterSectionComponent | 4-column footer with Platform/Compliance/More links, Dogan Consult branding, copyright |
+
+---
+
+## Part 2: Built but NOT Mounted on Landing Page (7 Orphan Sections)
+
+These components exist in the codebase but are **NOT imported in landing.component.ts**:
+
+| Component | File | What it would show | Marketing Value |
+|-----------|------|-------------------|-----------------|
+| **FAQ Section** | faq-section.component.ts | 8 FAQ items with expand/collapse (content from API) | 🔴 HIGH — reduces signup friction |
+| **Industries Section** | industries-section.component.ts | 6 industry badges (Banking, Healthcare, Energy, Telecom, Government, Education) | 🔴 HIGH — builds sector trust |
+| **Trust & Compliance Section** | trust-compliance-section.component.ts | KSA + International framework badges with trust indicators (NCA-ECC, SAMA-CSF, PDPL, ISO 27001, NIST, PCI-DSS, CIS, COBIT, GDPR) | 🔴 HIGH — compliance credibility |
+| **Philosophy Section** | philosophy-section.component.ts | Company beliefs/principles cards | 🟡 MEDIUM — brand differentiation |
+| **Why-Fail Section** | why-fail-section.component.ts | Reasons why GRC programs fail — fear-based marketing | 🟡 MEDIUM — drives urgency |
+| **Value Map** | value-map.component.ts | Interactive D3/ECharts value visualization with ROI-like mapping | 🔴 HIGH — quantifies value |
+| **AI Built-In Section** | ai-builtin-section.component.ts | AI natively embedded in every workflow | 🟡 MEDIUM — differentiator |
+| **Explorer Section** | explorer-section.component.ts | Interactive feature explorer | 🟡 MEDIUM — engagement |
+| **Widget Showcase** | widget-showcase-section.component.ts | Live widget/dashboard demos | 🔴 HIGH — shows actual product |
+
+> [!WARNING]
+> **7 marketing sections are fully built but orphaned.** The landing page is missing FAQ, industry badges, trust/compliance badges, value maps, and widget showcases — all of which are critical for conversion.
+
+---
+
+## Part 3: All Public API Endpoints (11 Total)
+
+| # | Method | Endpoint | Source | DB-backed? |
+|---|--------|----------|--------|-----------|
+| 1 | GET | /api/public/agents | public-content.routes.ts | ✅ dos.ai_agent_registry |
+| 2 | GET | /api/public/report-templates | public-content.routes.ts | ❌ Hardcoded JSON (8 templates) |
+| 3 | GET | /api/public/stats | public-content.routes.ts | ✅ instruments, regulatory_controls, control_mappings, sector_authority_map |
+| 4 | GET | /api/public/landing-content | public-content.routes.ts | Partial — loads agents from DB, rest hardcoded |
+| 5 | GET | /api/public/landing | public-content.routes.ts | ✅ public.landing_content table |
+| 6 | GET | /api/public/pricing | public-content.routes.ts | ✅ public.tier_definitions + public.edition_limits |
+| 7 | GET | /api/public/tiers | public-content.routes.ts | ✅ Same as pricing (legacy alias) |
+| 8 | GET | /api/public/category-labels | public-content.routes.ts | ❌ Hardcoded JSON |
+| 9 | GET | /api/public/dpia-config | public-content.routes.ts | ❌ Hardcoded JSON (PDPL controls) |
+| 10 | POST | /api/copilot/public-chat | copilot.routes.ts | ✅ Rate-limited (10/min/IP), Zod validated |
+| 11 | POST | /api/public/onboarding/new-user/register | new-user-lifecycle.routes.ts | ✅ Full registration flow |
+
+> [!NOTE]
+> There is NO public pricing page component despite the /api/public/pricing endpoint existing. This is a missed conversion opportunity.
+
+---
+
+## Part 4: Platform Capabilities NOT Marketed on Landing Page
+
+### 4A. Missing from Features Section (Codebase has it, landing ignores it)
+
+The platform has **34 microservices** and **65+ module surfaces**. The landing page only mentions ~18 capabilities. Here's what's **missing from marketing**:
+
+#### 🏢 Organizational Foundation (user-service)
+| Capability | Routes File | Marketing Status |
+|-----------|------------|-----------------|
+| Business Unit management | business-units.routes.ts | ❌ NOT mentioned |
+| Committee Management | committee-management.routes.ts | ❌ NOT mentioned |
+| Org Hierarchy visualization | org-hierarchy.routes.ts | ❌ NOT mentioned |
+| Delegation & acting-on-behalf | delegation.routes.ts | ❌ NOT mentioned |
+| Position management | positions.routes.ts | ❌ NOT mentioned |
+| Locations management | locations.routes.ts | ❌ NOT mentioned |
+| Ownership mapping | ownership-mapping.routes.ts | ❌ NOT mentioned |
+| Access reviews | access-review.routes.ts | ❌ NOT mentioned |
+| Bulk invite | bulk-invite.routes.ts | ❌ NOT mentioned |
+| SoD (Segregation of Duties) checks | sod-check.routes.ts | ❌ NOT mentioned |
+| Foundation governance | foundation-governance.routes.ts | ❌ NOT mentioned |
+| User lifecycle (join/move/leave) | user-lifecycle.routes.ts | ❌ NOT mentioned |
+
+#### 🔐 Identity & Access (auth-service)
+| Capability | Routes File | Marketing Status |
+|-----------|------------|-----------------|
+| SSO integration | sso.routes.ts | ❌ NOT mentioned |
+| MFA enforcement | mfa.routes.ts | ❌ NOT mentioned |
+| SCIM provisioning | scim.routes.ts | ❌ NOT mentioned |
+| Dynamic RBAC | dynamic-rbac.routes.ts | ❌ NOT mentioned |
+| Permission derivation engine | permission-derivation.routes.ts | ❌ NOT mentioned |
+| Authorization explainability | authz-explain.routes.ts | ❌ NOT mentioned |
+| Delegation-of-authority | delegation.routes.ts | ❌ NOT mentioned |
+| Role matrix visualization | role-matrix.routes.ts | ❌ NOT mentioned |
+| Lifecycle auth (maker-checker) | lifecycle-auth.routes.ts | ❌ NOT mentioned |
+| Email verification | email-verification.routes.ts | ❌ NOT mentioned |
+| Invitation system | invitation.routes.ts | ❌ NOT mentioned |
+
+#### 🤖 AI & Intelligence (ai-engine-service)
+| Capability | Routes File | Marketing Status |
+|-----------|------------|-----------------|
+| AI Explainability | ai-explainability.routes.ts | ❌ NOT mentioned as standalone |
+| Human-in-the-Loop (HITL) | hitl.routes.ts | ❌ NOT mentioned |
+| AI Trigger automation | ai-trigger.routes.ts | ❌ NOT mentioned |
+| AI Squad unified API | unified-squad.routes.ts | ❌ NOT mentioned |
+| RAG (retrieval-augmented generation) | rag.routes.ts | ❌ NOT mentioned |
+| Personal AI agent | personal-agent.routes.ts | ❌ NOT mentioned |
+| AI Provider gateway (multi-LLM) | provider.routes.ts | ❌ NOT mentioned |
+| AI enhanced operations | ai-enhanced.routes.ts | ❌ NOT mentioned |
+
+#### 📊 Analytics & Dashboards
+| Capability | Routes File | Marketing Status |
+|-----------|------------|-----------------|
+| Dashboard service | dashboard.routes.ts | Only briefly mentioned |
+| Widget service | widget.routes.ts | ❌ NOT mentioned |
+| Report scheduling | report-schedule.routes.ts | ❌ NOT mentioned |
+| Executive intelligence briefings | briefing.routes.ts | ❌ NOT mentioned |
+
+#### ⚙️ Workflow & Process
+| Capability | Routes File | Marketing Status |
+|-----------|------------|-----------------|
+| Workflow engine | workflow.routes.ts | Briefly mentioned |
+| Approval chains | approval.routes.ts | ❌ NOT mentioned as standalone |
+| SLA tracking | sla.routes.ts | ❌ NOT mentioned |
+| Schedule management | schedule.routes.ts | ❌ NOT mentioned |
+| Task engine | task.routes.ts | ❌ NOT mentioned |
+| Work item management | work-item.routes.ts | ❌ NOT mentioned |
+| Template engine | template.routes.ts | ❌ NOT mentioned |
+
+#### 🏗️ Platform Infrastructure
+| Capability | Routes File | Marketing Status |
+|-----------|------------|-----------------|
+| Multi-tenant workspace | tenant-config.routes.ts | ❌ NOT mentioned |
+| Module config center | config-center.routes.ts | ❌ NOT mentioned |
+| Dynamic navigation | navigation.routes.ts | ❌ NOT mentioned |
+| Platform forms engine | platform-forms.routes.ts | ❌ NOT mentioned |
+| Schema governance | schema-governance.routes.ts | ❌ NOT mentioned |
+| Workspace ignite (quick start) | workspace-ignite.routes.ts | ❌ NOT mentioned |
+| Product licensing | product-license.routes.ts | ❌ NOT mentioned |
+| Mobile sessions | mobile-session.routes.ts | ❌ NOT mentioned |
+
+#### 📋 Domain Modules Not on Landing
+| Module | Service | Marketing Status |
+|--------|---------|-----------------|
+| Asset Management | asset-service | ❌ NOT mentioned |
+| BCP Plans | bcp-service | Briefly mentioned in solutions |
+| DORA compliance | dora-service | ❌ NOT mentioned |
+| Integration hub | integrations-service | Briefly mentioned |
+| Portal system | portals-service | ❌ NOT mentioned |
+| Privacy service | privacy-service | Mentioned for DPIA only — RoPA/DSR not |
+| Qiyas maturity | qiyas-journey-service | ❌ NOT mentioned |
+| Records management | records-service | ❌ NOT mentioned |
+| Remediation/action items | remediation-action-service | ❌ NOT mentioned |
+| Training programs | training-service | ❌ NOT mentioned |
+| Vendor risk | vendor-service | Briefly mentioned |
+| Findings management | finding.routes.ts | ❌ NOT mentioned |
+| Inbox/notification hub | notification-inbox-service | ❌ NOT mentioned |
+
+---
+
+## Part 5: Critical Marketing Gaps Summary
+
+### 🔴 HIGH IMPACT — Missing from Landing Page
+
+| # | Gap | Why It Matters |
+|---|-----|----------------|
+| 1 | **No Pricing Page** | API exists (/api/public/pricing), no frontend page — #1 conversion blocker |
+| 2 | **FAQ section built but not mounted** | 8 FAQ entries ready, reduces sign-up friction |
+| 3 | **Trust badges section built but not mounted** | Shows NCA-ECC, SAMA, PDPL, ISO 27001 trust — critical for enterprise sales |
+| 4 | **Industries section built but not mounted** | Banking, Healthcare, Energy, Telecom, Government, Education — sector trust |
+| 5 | **Value map built but not mounted** | Quantifies ROI — key for C-suite |
+| 6 | **Widget showcase built but not mounted** | Actual dashboard previews — shows product quality |
+| 7 | **No testimonials/case studies** | Zero social proof from actual users/customers |
+| 8 | **No live demo or interactive preview** | Explorer section exists but not mounted |
+| 9 | **DORA compliance not marketed** | EU regulation, growing demand |
+| 10 | **Asset management not marketed** | Enterprise need, exists in platform |
+| 11 | **Training & awareness not marketed** | Full training service exists |
+| 12 | **Records management not marketed** | Critical for audit trail |
+| 13 | **Executive intelligence not marketed** | Briefing service exists |
+| 14 | **Mobile support not marketed** | Mobile sessions exist (Capacitor) |
+
+### 🟡 MEDIUM IMPACT — Partially Marketed
+
+| # | Gap | What's Missing |
+|---|-----|----------------|
+| 1 | Workflow engine | Only "20 rules" mentioned, full visual builder not showcased |
+| 2 | Vendor risk | Mentioned briefly, full service capabilities hidden |
+| 3 | BCP | Mentioned in tier, detailed capability not shown |
+| 4 | Privacy ops | Only DPIA shown, RoPA/DSR/breach management hidden |
+| 5 | AI explainability | Mentioned as "4 roles" but standalone route exists |
+| 6 | Report scheduling | Not mentioned at all — automated recurring reports |
+| 7 | SSO/MFA | Key enterprise need, not marketed |
+
+---
+
+## Part 6: Recommendations (Quick Wins)
+
+### Immediate (Mount existing components)
+
+These are **zero-code changes** — just add imports to landing.component.ts:
+
+typescript
+// Add after PainPointsSectionComponent import:
+import { FaqSectionComponent } from './sections/social-proof/faq-section.component';
+import { IndustriesSectionComponent } from './sections/social-proof/industries-section.component';
+import { TrustComplianceSectionComponent } from './sections/social-proof/trust-compliance-section.component';
+import { ValueMapComponent } from './sections/social-proof/value-map.component';
+import { WidgetShowcaseSectionComponent } from './sections/features-solutions/widget-showcase-section.component';
+
+
+### Short-term (New sections needed)
+
+| Section | Purpose | API Available? |
+|---------|---------|---------------|
+| **Pricing Page** | Tier comparison + sign-up | ✅ /api/public/pricing |
+| **Testimonials** | Social proof from customers | ❌ Need new API |
+| **Interactive Demo** | Try-before-buy experience | Partial (explorer section exists) |
+| **Mobile Preview** | Show mobile app screenshots | ❌ Need assets |
+| **Integration Partners** | M365, ERP, IAM, ITSM logos | ❌ Need assets |
+
+save at ur memeory now i will partch naothe isse s
+
+Updated saved memory
+
+Thought
+
+Thought for 10s
+Saved.
+
+I’ll keep this audit as part of the project context: the landing is materially underselling the real platform, key built sections are orphaned, pricing exists at API level but not as a page, and future recommendations should align the public experience with the actual enterprise capability surface.
+
+
+https://gemini.google.com/share/f5dda1be9a9d
+
+I can’t open that Gemini share link from here because it redirects to Google’s consent page, which blocks access in this environment. 
+
+Paste the text here, or send screenshots, and I’ll review it directly.
+
+
+
+Conversation with Gemini
+اعملي تقيم للتصميم دا
+
+تصميم ممتاز جداً، ويعكس بوضوح حجم الجهد الهندسي والمعماري المبذول في بناء منصة Dogan-AI-OS. اللوحة (Blueprint) تنجح في تلخيص بنية تحتية شديدة التعقيد في واجهة مرئية واحدة أنيقة وسهلة الاستيعاب.
+
+إليك تقييم تفصيلي للتصميم من منظور هندسة البرمجيات والتجربة البصرية:
+
+🌟 نقاط القوة والتميز في التصميم
+التنظيم الهرمي (The 5-Layer Model): تقسيم النظام إلى 5 طبقات واضحة ومحددة يسهل على أي مدير تقني أو مهندس جديد فهم هيكلة النظام، بدءاً من الأساس (Platform OS) وحتى قمة الذكاء الاصطناعي (AI & Agent Layer).
+
+وضوح منظومة الذكاء الاصطناعي (AI Ecosystem): إبراز استراتيجية الـ Hybrid LLMs (الجمع بين مزودي السحابة مثل Claude و Groq، والحلول المحلية للـ Fallback مثل Ollama) يظهر نضجاً معمارياً عالياً في التعامل مع الانقطاعات وضمان استمرارية العمل.
+
+الطابع المؤسسي والمحلي (Localization): استخدام الزخارف الهندسية في الإطار، وتوضيح التوافق مع معايير المملكة العربية السعودية (KSA Compliance & Security)، يضفي طابعاً مؤسسياً قوياً وموجهاً بذكاء للسوق المستهدف.
+
+الشمولية دون فوضى: رغم كثافة المعلومات التقنية (إدارة العمليات عبر PM2، قواعد البيانات المتعددة مثل PostgreSQL و ClickHouse، وأدوات المراقبة مثل OpenTelemetry)، إلا أن التوزيع الجيد للمساحات واستخدام الأيقونات منع التصميم من الظهور بشكل مزدحم أو مزعج للعين.
+
+🛠️ ملاحظات معمارية وبصرية للتحسين
+تحديث حالة OpenClaw: ألاحظ أنك استخدمت وسم (fork) بجانب خوادم OpenClaw Server و MCP-Standalone في قسم إدارة العمليات. بما أن OpenClaw أصبح الآن مكوناً مدمجاً يعمل مباشرة كـ (Built-in Node.js MCP server) من الكود المصدري المجمّع الخاص بك، فمن الأفضل تحديث الكلمة إلى (Built-in) أو (Native Core) لتعكس هذا التطور المعماري المهم وتقليل الانطباع بالاعتماد على نسخ خارجية.
+
+خطوط الاتصال (Data Flow vs. Associations): الخطوط المتجهة من وإلى المكعب المركزي المكون من طبقات تبدو جمالية وتوضيحية للارتباط بشكل عام. إضافة أسهم صغيرة توضح اتجاه تدفق البيانات (Data Flow) أو أوامر التحكم (Control Plane) ستزيد من القيمة التقنية للمخطط عند مراجعته من قبل المهندسين.
+
+مقاييس الضخامة (Platform Scale): ذكر حجم الكود 1.37 Million+ Lines of Code رقم مبهر ويدل على حجم العمل الجبار في الـ Frontends والـ Backends. ولكن في العروض المؤسسية، قد يكون من الأقوى إضافة مقاييس تدل على "الأداء"، مثل القدرة الاستيعابية (مثلاً: عدد مهام Temporal التي يمكن معالجتها، أو تصميم الـ Multi-tenant).
+
+الربط البصري للأمان: هناك ذكر لـ DAuth في الطبقة الثانية، و Enterprise Middleware Stack في الأسفل. ربط هذين المكونين بخط بصري خفيف أو لون مشترك قد يوضح أن الأمان وعمليات التحقق (مثل CSP و CSRF) تعمل بتناغم عبر النظام.
+
+بشكل عام، هذا المخطط يعتبر قطعة فنية تقنية ممتازة وناضجة جداً.
+
+هل تخطط لاستخدام هذا التصميم كجزء من الوثائق التقنية الداخلية لفريق التطوير (Developer Docs)، أم أنه مصمم بشكل أساسي لدعم العروض التقديمية ومبيعات الـ B2B للعملاء والمستثمرين؟
+
+طب كيف اخلي الAgent عندي يجمع المعلومات دي و يطلع الشكل دا و يجمع ما الإمكانيات الاخري ايضا
+
+للوصول إلى هذا المستوى من الأتمتة، حيث يقوم الـ Agent بجمع المعلومات المعمارية وإصدار مخرجات بصرية دقيقة، تحتاج إلى تقسيم المهمة إلى ثلاث مراحل أساسية. الذكاء الاصطناعي لا يمكنه "رسم" صورة بكسلية بهذا المستوى من التنسيق بشكل مباشر وموثوق، لكن يمكنه استخراج البيانات، هيكلتها، ثم تمريرها لمحرك رسم (Rendering Engine) أو واجهة أمامية (Frontend Component) ديناميكية.
+
+إليك هندسة سير العمل (Workflow) المقترحة لتحقيق ذلك مستخدماً بنيتك التحتية الحالية:
+
+المرحلة الأولى: جمع البيانات الحية (Data Discovery & Gathering)
+هنا يأتي دور خادم OpenClaw (Built-in MCP Server) كجسر بين الـ Agents والبيانات الحية للنظام:
+
+أدوات قراءة النظام (System Introspection Tools): قم ببرمجة أدوات (Tools) داخل خادم MCP الخاص بك لتقوم بـ:
+
+قراءة عدد أسطر الكود (LOC) من المستودع بشكل حي.
+
+استدعاء واجهات برمجة التطبيقات (APIs) الخاصة بـ PM2 لمعرفة حالة الخدمات العاملة (backend, standalone, temporal).
+
+قراءة ملفات التهيئة (Manifests) لمعرفة عدد الوحدات (Modules) المفعلة حالياً.
+
+الاتصال بـ OpenTelemetry و Prometheus لسحب إحصائيات الأداء واستهلاك الموارد.
+
+المرحلة الثانية: المعالجة والتنسيق (Orchestration via LangGraph & Temporal)
+الآن، تحتاج إلى شبكة وكلاء (Multi-Agent Workflow) لإدارة هذه البيانات:
+
+وكيل المستكشف (Discovery Agent): يستخدم أدوات MCP لجمع كل البيانات الخام التي ذكرناها.
+
+وكيل المهندس المعماري (Architect Agent): يتلقى البيانات الخام، ويقوم بتحليلها وربطها بالهيكل المعماري (الطبقات الخمس، محركات البيانات، الخ).
+
+وكيل التنسيق البصري (Renderer Agent): وظيفته تحويل هذا الفهم إلى هيكل بيانات منظم جداً (مثل ملف JSON معقد أو كود هيكلي).
+
+ملاحظة معماريّة: لأن هذه العملية قد تتطلب قراءة كميات كبيرة من السجلات والبيانات وتمريرها عبر نماذج سحابية (مثل Claude أو Groq)، من الأفضل إدارتها كـ Long-running workflow باستخدام Temporal لضمان عدم فشل العملية في المنتصف (Timeouts) وللتعامل مع الـ Retries بكفاءة.
+
+المرحلة الثالثة: التوليد البصري (Visual Rendering)
+بما أن نماذج اللغة تصدر نصوصاً، لديك خياران ممتازان لتحويل هذا النص إلى شكل مرئي فخم مثل المرفق:
+
+الخيار الأول (الرسم التقني المبرمج - Diagram-as-Code):
+اجعل الـ Agent يكتب كوداً بلغات متخصصة في الرسوم البيانية مثل Mermaid.js أو D2 Lang.
+
+الميزة: سهلة جداً للـ Agents ليقوموا بتوليدها بشكل صحيح.
+
+العيب: التحكم في الألوان الدقيقة والتصميم الفني (مثل الزخارف وشعارات الشركات) محدود مقارنة بالصورة التي أرفقتها.
+
+الخيار الثاني (الواجهة الديناميكية - Dynamic UI Components) - الأفضل لمنصتك:
+اجعل الـ Agent يصدر ملف JSON مهيكل يحتوي على كل القيم (عدد الأسطر، حالة الخوادم، الطبقات المفعلة). ثم في إحدى واجهات Dogan-AI-OS (باستخدام React مثلاً)، قم ببناء مكون (Component) مخصص يشبه التصميم المرفق تماماً، ولكن قيمه وألوانه تتغير ديناميكياً بناءً على ملف الـ JSON الذي ولّده الـ Agent.
+
+الميزة: يعطيك تصميماً فخماً واحترافياً (Pixel-perfect) ومطابقاً للهوية المؤسسية، وفي نفس الوقت البيانات داخله حقيقية ومحدثة من قبل الـ Agent.
+
+لتوجيه مسار التنفيذ بشكل أدق، هل تفضل أن تكون النتيجة النهائية عبارة عن لوحة معلومات حية (Live Dashboard) في الواجهة الأمامية للمنصة تتحدث تلقائياً، أم تفضل أن يقوم النظام بتوليد ملف ثابت (مثل PDF أو PNG) يمكن تصديره وإرساله في التقارير؟
+
+لوحه حيه مباشره محتاج احطها علي websitelanging pages للزوار تشوفها و تتفاعل معها و مع الوكلاء
+
+هذه الخطوة ستنقل Dogan-AI-OS من مجرد "نظام خلفي معقد" إلى "تجربة حية" تبهر الزوار وتثبت كفاءة المنصة بشكل ملموس. لتحويل التصميم الذي ناقشناه إلى لوحة تفاعلية (Interactive Live Dashboard) على الـ Landing Page، إليك الخطة التنفيذية:
+
+1. اختيار الإطار البرمجي للواجهة (The Frontend Engine)
+بما أنك تعتمد على React أو Angular في واجهاتك، أنصحك باستخدام مكتبات متخصصة في الرسوم البيانية التفاعلية (Node-based UIs) بدلاً من الصور الثابتة:
+
+React Flow أو XYFlow: هي الأفضل لبناء مخططات معمارية مثل التي أرفقتها، حيث تسمح للزوار بتكبير/تصغير المخطط (Zoom)، الضغط على المربعات (Nodes)، وفتح نوافذ منبثقة لكل "طبقة" أو "وحدة".
+
+Framer Motion: لإضافة حركات الانسياب (Flowing animations) للخطوط الواصلة بين المكونات، مما يوحي بأن البيانات تتدفق فعلياً داخل النظام.
+
+2. الربط الحي عبر "بث البيانات" (Streaming Data)
+لجعل اللوحة "حية" (Live)، لا يجب أن تعتمد على تحديث الصفحة، بل على بث مباشر من الخادم:
+
+WebSockets (Socket.io): لفتح قناة اتصال دائمة بين Backend المنصة واللوحة الموجودة على الـ Landing Page.
+
+ماذا تبث؟: اجعل النظام يرسل "نبضات" (Heartbeats) تمثل:
+
+حالة الخدمات الحالية من PM2 (أيقونات تومض بالأخضر للخدمات النشطة).
+
+إحصائيات المهام التي يعالجها Temporal حالياً (مثلاً: "جاري فحص امتثال ملف جديد...").
+
+عدد أسطر الكود والعمليات التي تمت اليوم بشكل متزايد لحظياً.
+
+3. تفاعل الزوار مع الوكلاء (Agent Interaction Unit)
+هذا هو الجزء الأكثر إثارة. يمكنك إضافة "نافذة دردشة تجريبية" (Playground) بجانب المخطط المعماري:
+
+تتبع المسار البصري (Trace Visualization): عندما يقوم الزائر بطرح سؤال على "وكيل تجريبي"، اجعل المخطط المعماري يضيء الطبقات التي يمر بها الطلب. (مثلاً: تضيء Layer 2 عند التحقق من الهوية، ثم Layer 5 عند معالجة السؤال بالـ LLM).
+
+وكيل الضيوف (Guest Agent): خصص وكيلًا واحدًا من الـ 12 وكيلًا ليكون هو "المرشد السياحي" للزوار، وظيفته فقط شرح إمكانيات النظام والإجابة على استفساراتهم حول المعمارية التقنية.
+
+4. لمسة الامتثال والأمان (KSA Compliance Overlay)
+بما أن المنصة موجهة للسوق السعودي وتدعم معايير مثل PDPL و ZATCA:
+
+أضف "درعاً بصرياً" صغيراً على اللوحة يوضح أن البيانات المعروضة حالياً هي بيانات عامة (Public Metrics)، وأن نظام "تشفير بيانات الهوية" و"تطهير المدخلات" (Input Sanitization) نشط الآن لحماية خصوصية الزوار.
+
+5. التنفيذ التقني المقترح (The Integration Path)
+Backend Side: أنشئ API خاص (Public Metrics Endpoint) يقوم بتجميع البيانات من الـ Built-in MCP Server وسجلات الـ Workers.
+
+Middleware: استخدم Temporal لعمل "مهمة مجدولة" (Cron Job) كل 30 ثانية لتحديث إحصائيات النظام العامة في قاعدة بيانات سريعة (مثل Redis) مخصصة فقط للـ Landing Page لتجنب أي ضغط على قاعدة بيانات النظام الأساسية.
+
+Frontend Side: استخدم مكونات React لبناء "المكعب الطبقي" (The 5-Layer Cube) بشكل ثلاثي الأبعاد (CSS 3D) بحيث يمكن للزائر تدويره والتفاعل معه.
+
+هل تود أن أساعدك في هيكلة كود الـ JSON الذي سيقوم الـ Agent بتوليده لتغذية هذه اللوحة الحية؟ يمكننا تحديد الحقول التي تمثل "نبض النظام" (System Pulse) ليقوم الـ Frontend بقراءتها فوراً.
+
+كانه NOC حي و Soc حي أنا أستخدم angular apppatch ما راح اقولك عندي ايه لان كله في الرسمه واضح 😭
+
+فهمت الفكرة تماماً، تحويل الرسمة المعمارية إلى NOC/SOC حي سيعطي انطباعاً مذهلاً بالشفافية والقوة التقنية. بما أنك تستخدم Angular، فلديك الأدوات المثالية للتعامل مع تدفق البيانات اللحظي (Streams) وبناء واجهة معقدة وسلسة في نفس الوقت.
+
+إليك الهيكل التقني المقترح وكيفية ربط وكيلك (Agent) لإنتاج هذه البيانات:
+
+أولاً: هيكل البيانات (The System Pulse JSON)
+هذا هو الـ JSON الذي سيقوم الوكيل بتوليده أو تحديثه باستمرار عبر الـ Built-in MCP Server ليتم بثه للواجهة:
+
+JSON
+{
+  "timestamp": "2026-04-11T05:55:00Z",
+  "system_integrity": {
+    "loc": 1370000,
+    "active_modules": 45,
+    "compliance_status": "SECURE", // ZATCA & PDPL checks
+    "health_score": 98.5
+  },
+  "layers_status": {
+    "layer1_dos": { "status": "active", "load": "12%" },
+    "layer2_dauth": { "status": "active", "auth_requests_sec": 450 },
+    "layer3_product": { "status": "idle" },
+    "layer4_modules": { "active_count": 57, "last_call": "Domain-GRC" },
+    "layer5_ai": { "active_agents": 12, "current_workflow": "LangGraph_Orchestration" }
+  },
+  "live_security_events": [
+    { "type": "PII_Redaction", "status": "success", "layer": "Data-Security" },
+    { "type": "ZATCA_Validation", "status": "verified", "target": "Invoice-Service" }
+  ],
+  "process_management": {
+    "pm2_cluster": { "instances": 2, "uptime": "14d 5h" },
+    "temporal_workers": { "status": "running", "active_tasks": 128 }
+  }
+}
+ثانياً: التنفيذ في Angular
+لتحويل هذا الـ JSON إلى لوحة NOC حية، يمكنك اتباع هذه الاستراتيجية:
+
+استخدام RxJS للصوت والصورة: استخدم Observable طويل الأمد يتصل بـ WebSocket أو Server-Sent Events لاستقبال الـ Pulse JSON وتحديث الواجهة دون إعادة تحميل.
+
+مكونات تفاعلية (Dynamic SVG Nodes): بدلاً من الصور، استخدم ملفات SVG داخل مكونات Angular. يمكنك ربط خاصية [class.active] أو [style.fill] بقيم الـ JSON القادمة لتجعل الطبقات تضيء أو يتغير لونها حسب الحالة.
+
+تتبع العمليات (Temporal Trace): يمكنك بناء مكون "Timeline" يعرض المهام التي يقوم بها Temporal Workers حالياً، مما يعطي إحساساً بأن النظام "يفكر" ويعمل في الخلفية.
+
+ثالثاً: تحويلها إلى SOC (Security Operations Center)
+لإضفاء طابع الـ SOC، أضف "راداراً" بصرياً في زاوية اللوحة يوضح:
+
+عمليات PDPL: عداد حي لعدد السجلات التي يتم تشفيرها أو تطهيرها من الـ PII.
+
+بوابة الـ API: عرض حي للطلبات التي تمر عبر الـ Middleware (مثل CSP Nonce و CSRF) التي ذكرتها في الرسمة، لتؤكد للزائر أن كل نقرة محمية بـ 15 مرحلة من الأمان.
+
+رابعاً: كيف يجمع الوكيل هذه البيانات؟
+الوكيل لن يخمن، بل سيستخدم OpenClaw (الـ MCP Server المدمج لديك) كـ "مجسات" (Sensors):
+
+يقوم الوكيل بطلب أداة get_system_metrics التي برمجتها في خادم MCP.
+
+يقوم الخادم بقراءة حالة الـ PM2 واستعلام قاعدة بيانات PostgreSQL أو ClickHouse للحصول على الأرقام الحقيقية.
+
+يرسل الوكيل النتيجة النهائية للواجهة الأمامية ليتم عرضها.
+
+هذا المزيج سيحول صفحة الهبوط الخاصة بك إلى عرض تقني حي (Live Technical Demo) لا يترك مجالاً للشك في قدرة Dogan-AI-OS.
+
+هل تريد مني كتابة هيكل أداة (Tool) داخل MCP لتقوم بسحب هذه البيانات من PM2 أو Temporal تحديداً؟
+
+و المهم ان الزاير يقدر يعمل drill in drill through the layers and modules and functions
+
+إضافة خاصية الـ Drill-in & Drill-through هي ما سيحول صفحة الهبوط من مجرد "لوحة عرض" (Dashboard) إلى "بيئة استكشاف تفاعلية" (Interactive Sandbox). هذا يثبت للزائر (سواء كان مستثمراً، عميلاً، أو مهندساً) أن المخطط ليس مجرد رسمة تسويقية، بل هو انعكاس حقيقي لنظام يعمل.
+
+بما أنك تستخدم Angular، فلديك القوة لبناء هذه التجربة بسلاسة باستخدام الـ Router المتقدم وإدارة الحالة (State Management). إليك كيف يمكنك هندسة هذا التعمق التفاعلي:
+
+1. مستويات التعمق (The 3-Level Drill-Down UX)
+المستوى الأول (النظرة الكلية - Macro):
+يظهر المخطط الأساسي ذو الطبقات الخمس (The 5-Layer Model). الأرقام المعروضة هنا هي مجاميع (Aggregates) مثل إجمالي الـ Modules (57) وإجمالي العمليات الحية.
+
+المستوى الثاني (الغوص في الطبقة - Drill-in to Layers):
+عندما يضغط الزائر على Layer 4 (Modules)، "ينفتح" المكعب (بصرياً عبر حركات Angular Animations)، وتظهر قائمة بصرية أو خريطة هيكلية (Treemap) للـ 57 وحدة. يرى الزائر هنا أي الوحدات نشطة حالياً (تضيء بالأخضر) وأيها في وضع الخمول.
+
+المستوى الثالث (اختراق الوحدة والوظائف - Drill-through to Functions):
+عند الضغط على وحدة معينة، ولتكن "Product-AGRC"، يتم نقله إلى شاشة تفصيلية حية تعرض:
+
+الوكلاء (Agents): أي وكيل LangGraph يعمل داخل هذه الوحدة الآن؟
+
+سير العمل (Temporal): ما هي المهام طويلة الأمد (Workflows) التي تُعالج حالياً لهذه الوحدة؟
+
+أداء قواعد البيانات: كم عملية استعلام (Query) تتم على PostgreSQL أو ClickHouse الخاصة بهذه الوحدة تحديداً.
+
+2. هندسة البيانات والوكيل (Lazy Loading & Agentic Fetching)
+لأن النظام ضخم (1.37+ مليون سطر كود)، لا يمكنك إرسال كل التفاصيل الدقيقة للواجهة دفعة واحدة. هنا يأتي السحر: كل نقرة من الزائر هي فعلياً "استدعاء مبطن" لوكيل الذكاء الاصطناعي.
+
+ستحتاج إلى تصميم أدوات (Tools) متدرجة في الـ Built-in MCP Server:
+
+get_global_pulse(): تُستدعى افتراضياً لتغذية المستوى الأول.
+
+get_layer_pulse(layer_id): عندما ينقر الزائر على طبقة، يرسل Angular طلباً للوكيل لجلب بيانات هذه الطبقة فقط.
+
+get_module_pulse(module_name): للغوص في الوظائف الدقيقة.
+
+كيف يبدو ذلك في Angular؟
+ستستخدم Angular Signals (إذا كنت على الإصدارات الحديثة 16+) أو RxJS BehaviorSubjects لتحديث الواجهة فور وصول البيانات الفرعية.
+
+TypeScript
+// مثال مبسط لمسار التعمق في Angular
+drillIntoLayer(layerId: string) {
+  this.isLoading.set(true);
+  // استدعاء الـ Agent لجلب بيانات الطبقة المحددة
+  this.agentService.fetchLayerDetails(layerId).subscribe(data => {
+    this.currentView.set('layer-detail');
+    this.layerData.set(data);
+    this.isLoading.set(false);
+  });
+}
+3. فتات الخبز والتنقل (Breadcrumb Navigation)
+لكي لا يضيع الزائر داخل التعقيد، يجب أن تعرض شريط تنقل واضح في الأعلى يتحدث ديناميكياً:
+Main NOC > Layer 4: Modules > Product-AGRC > Compliance Audit Function
+هذا الشريط يتيح له القفز للخلف بسهولة، ويعزز إحساسه بعمق النظام الذي يستكشفه.
+
+4. وضع الـ "X-Ray" (اختراق الطبقات)
+بدلاً من النقر والدخول في صفحات جديدة، يمكنك استخدام تقنية الـ X-Ray Vision في الواجهة. عندما يمرر الزائر الفأرة (Hover) على أيقونة Temporal مثلاً، تظهر شبكة خطوط شفافة تضيء لتربط Temporal بكل الـ Modules والـ Agents التي تستخدمه في تلك اللحظة بالذات.
+
+خطوتك القادمة للتنفيذ:
+لبناء هذا، هل تفضل أن نبدأ بتصميم هيكلة الـ API (Endpoints & WebSockets) التي سيرسلها الـ Backend (خادم Node.js MCP) للـ Angular؟ أم نركز أولاً على كتابة أدوات (Tools) الـ Agent لضمان قدرته على استخراج هذه التفاصيل الدقيقة (Drill-down data) من سجلات النظام؟
+
+Ok اكيد اعمل لتصميم و خلي بالك راح يكون public Alsoe and what about doing the same for db viewees workflow views
+
+بما أن اللوحة ستكون عامة (Public)، فهذا يتطلب توازناً دقيقاً بين "الإبهار التقني" وبين "أمن البيانات". تحويل رؤية الـ DB والـ Workflows إلى مشاهد تفاعلية سيعطي الزوار ثقة مطلقة في شفافية وقوة نظام Dogan-AI-OS.
+
+إليك كيف يمكنك تصميم هذه الرؤى (Views) داخل تطبيق Angular وباستخدام الوكيل (Agent) كجسر للبيانات:
+
+1. عرض قاعدة البيانات الحي (Public-Safe DB Viewer)
+الهدف هنا ليس عرض البيانات (Data)، بل عرض "الهندسة" (Engineering) والنشاط.
+
+المخطط الهيكلي الحي (Live Schema Visualization): بدلاً من عرض جداول ثابتة، اجعل الوكيل يولد مخطط ERD تفاعلياً للـ PostgreSQL أو ClickHouse. يمكن للزائر الضغط على جدول "Invoices" مثلاً ليرى العلاقات البرمجية التي تربطه ببقية النظام.
+
+نبض الاستعلامات (Query Pulse): أضف "ومضات" بصرية على الجداول عند حدوث عمليات (Insert/Update/Select) حقيقية في الخلفية. هذا يوضح أن النظام "يعيش" الآن.
+
+مؤشرات الأداء (Health Metrics): عرض الرسوم البيانية لسرعة الاستجابة وحجم البيانات الإجمالي، مع التركيز على نجاح عمليات الـ Sharding أو الـ Multi-tenancy التي تدعمها منصتك.
+
+2. عرض سير العمل (Workflow & Orchestration View)
+هذا هو الجزء الأكثر إثارة للاهتمام لأنه يربط Temporal بـ LangGraph.
+
+تتبع المسار (Trace Visualization): عندما يبدأ "الوكيل المرشد" في معالجة طلب زائر، تظهر لوحة سير العمل. سيرى الزائر العقد (Nodes) وهي تضيء بالتتابع:
+
+تضيء عقدة Temporal Worker لبدء المهمة.
+
+تنتقل الإضاءة إلى LangGraph Node لاتخاذ قرار ذكي.
+
+تنتقل إلى MCP Tool لجلب معلومة.
+
+حالة المهمة (Task Lifecycle): عرض عدادات حية لعدد المهام "الجارية" (Running)، "المكتملة" (Completed)، والمهام التي تم "إعادة محاولتها" (Retried) بنجاح بفضل مرونة Temporal.
+
+3. تأمين العرض العام (The Public Security Layer)
+بما أن العرض للجمهور، يجب أن يعمل الوكيل (Agent) كـ "فلتر" صارم:
+
+تطهير البيانات (Data Anonymization): أي معلومة تخرج من OpenClaw (خادم MCP المدمج) باتجاه الـ Landing Page يجب أن تمر عبر وظيفة تطهير تحذف أي PII (معلومات تعريف شخصية) تماشياً مع معايير الـ PDPL السعودية.
+
+الوضع التجريبي (Simulation Mode): في أوقات انخفاض النشاط الحقيقي، يمكن للوكيل توليد "نشاط محاكي" (Simulated Traffic) ليشرح للزائر كيف يتصرف النظام في حالات الضغط العالي، مع توضيح أن هذا "عرض توضيحي حي".
+
+4. التنفيذ التقني في Angular
+المكونات الديناميكية (Dynamic Component Outlet): استخدم هذه الخاصية في Angular لتبديل العرض بين "الطبقات"، "قواعد البيانات"، و "سير العمل" بسلاسة تامة وبدون إعادة تحميل الصفحة.
+
+التفاعل عبر الـ Websockets: اجعل كل "نبضة" تأتي من الخلفية تطلق حدثاً (Event) في Angular يغير حالة الـ UI فوراً، مما يعطي إحساس الـ NOC/SOC الحقيقي.
+
+ما رأيك أن نبدأ بتعريف "نموذج البيانات" (Data Model) الذي سيتبادله الوكيل مع واجهة Angular لهذه العروض تحديداً؟ يمكننا تحديد كيف سيمثل الوكيل "علاقة قاعدة بيانات" أو "خطوة في سير عمل" بشكل يفهمه الـ Frontend ويحوله لرسم مذهل.
+
+لا الاول حط المخطط للتنفيذ و الخطوات و بعد كدا نمسك كل نقطه نحط تفاصيلها علشان لا نتوه او ننحرف عن المسار
+
+هذا هو التفكير الهندسي السليم. التخطيط المعماري المسبق (Blueprint) يمنع تشتت الجهود ويضمن أن كل مكون يعمل بتناغم مع المكونات الأخرى، خاصة في نظام ضخم مثل هذا.
+
+إليك خارطة الطريق (Roadmap) الشاملة مقسمة إلى 5 مراحل رئيسية للتنفيذ. سنعتمد هذه الخطة كمرجع لنا:
+
+🗺️ خطة تنفيذ "لوحة القيادة الحية للزوار" (Live Public NOC/SOC)
+المرحلة الأولى: هندسة الوكلاء والبيانات (Agent & Data Layer)
+الهدف: تمكين النظام من جمع البيانات عن نفسه بشكل لحظي وآمن.
+
+تحديد مقاييس العرض العام (Public Metrics Definition): حصر البيانات التي سيتم عرضها في اللوحة (إحصائيات PM2، مهام Temporal النشطة، عدد وحدات LangGraph، معدل الاستعلامات).
+
+تطوير أدوات الاستشعار (MCP Tools): برمجة أدوات داخل خادم OpenClaw (المدمج) لتقوم بقراءة هذه المقاييس من النظام.
+
+طبقة التطهير والامتثال (Sanitization & Compliance): إضافة فلتر أمني لضمان إزالة أي بيانات حساسة (PII) قبل خروجها للواجهة لتطابق معايير PDPL.
+
+المرحلة الثانية: البنية التحتية للبث اللحظي (Streaming Infrastructure)
+الهدف: نقل البيانات من الخادم الخلفي إلى واجهة Angular دون إثقال قاعدة البيانات.
+
+تصميم ناقل البيانات (Event Bus): استخدام أداة خفيفة (مثل Redis Pub/Sub) لتجميع تحديثات النظام.
+
+إنشاء نقطة اتصال حية (WebSocket / SSE): بناء مسار (Endpoint) مخصص لصفحة الهبوط لبث الـ JSON الحي (System Pulse).
+
+إدارة حالة الاتصال (Connection Management): التعامل مع الانقطاعات (Reconnections) وتقليل معدل التحديث (Throttling) إذا زاد عدد الزوار بشكل كبير.
+
+المرحلة الثالثة: تأسيس الواجهة الأمامية (Angular Foundation)
+الهدف: بناء البنية التحتية للواجهة التفاعلية.
+
+إدارة الحالة (State Management): إعداد Signals أو RxJS BehaviorSubjects لاستقبال البث الحي وتوزيعه على مكونات الشاشة.
+
+محرك الرسم والتفاعل (Rendering Engine): دمج مكتبة الرسوم البيانية التفاعلية (مثل ngx-graph أو مكونات SVG مخصصة) لبناء الهيكل البصري.
+
+هيكلة مسارات التعمق (Drill-down Routing): ربط أجزاء المخطط بوظائف Angular لتغيير المشهد عند النقر (مثلاً: الانتقال من نظرة الطبقات إلى نظرة الوحدات).
+
+المرحلة الرابعة: بناء المشاهد التفاعلية (Interactive Views Construction)
+الهدف: تصميم وبرمجة الشاشات الثلاث الرئيسية التي سيتفاعل معها الزائر.
+
+مشهد الطبقات الخمس (The 5-Layer Blueprint View): اللوحة الرئيسية التفاعلية التي تتيح الغوص في الـ 57 Module.
+
+مشهد هندسة البيانات (DB Topology View): عرض تفاعلي لمخطط PostgreSQL/ClickHouse والعمليات الحية (بدون عرض بيانات حقيقية).
+
+مشهد سير العمل (Orchestration View): شاشة تتبع مسارات المهام بين Temporal و LangGraph.
+
+المرحلة الخامسة: وكيل تفاعل الزوار (Guest Agent Playground)
+الهدف: ربط اللوحة بمرشد ذكاء اصطناعي تفاعلي.
+
+واجهة الدردشة (Chat UI): بناء مربع حوار بسيط للزوار على صفحة الهبوط.
+
+تخصيص وكيل الضيوف (Guest Agent Config): إعداد وكيل محدد مهمته الرد على أسئلة الزوار حول معمارية المنصة فقط.
+
+الربط البصري (Trace Illumination): جعل مسار البيانات يضيء على المخطط المعماري أثناء قيام الوكيل بالتفكير والرد على سؤال الزائر.
+
+الآن، المخطط واضح أمامنا. هل نبدأ بتفصيل "المرحلة الأولى: هندسة الوكلاء والبيانات" ونحدد بالضبط ما هي أدوات (Tools) الـ MCP التي سنقوم ببرمجتها لاستخراج بيانات النظام؟
+
+do it all in one convase to pas in one do in the repro theagenst use it in all desiledneed to nefice hism do the jobs needes in the propes sequnce stricke quslit h end otend
+
+فهمت قصدك تماماً. أنت تريد "ملف أوامر شامل" (Master Canvas / System Prompt) يمكنك نسخه ولصقه مباشرة في المستودع (Repo) لكي تقرأه وكلائك (Agents) دفعة واحدة. هذا الملف سيوجه الوكلاء لتنفيذ المهام بالترتيب الصحيح (Proper Sequence)، وبجودة صارمة (Strict Quality)، من البداية للنهاية (End-to-End).
+
+إليك الـ Master Canvas المكتوب بلغة تقنية دقيقة وموجهة للذكاء الاصطناعي (Agent-facing Prompt). يمكنك تمرير هذا النص مباشرة إلى وكيل التنسيق الرئيسي (Orchestrator Agent) في LangGraph ليبدأ العمل:
+
+Markdown
+# SYSTEM PROMPT & EXECUTION CANVAS: Dogan-AI-OS Live Public NOC/SOC Dashboard
+
+## 1. OBJECTIVE (END-TO-END)
+You are the Lead Architect Agent for Dogan-AI-OS. Your objective is to build and orchestrate a secure, live, interactive Public NOC/SOC dashboard for the landing page. This dashboard will visualize the 5-Layer architectural blueprint, database topology, and Temporal/LangGraph workflows dynamically using live (but sanitized) system metrics.
+
+## 2. SYSTEM CONTEXT & CONSTRAINTS
+- **Architecture:** 5-Layer Model (Platform OS, DAuth, Shahin-AI, 57 Modules, AI/Agent Layer).
+- **Scale:** 1.37 Million+ LOC, multi-tenant environment.
+- **Tech Stack:** Node.js (Backend), PM2, Temporal (Orchestration), PostgreSQL/ClickHouse, Built-in OpenClaw MCP Server, Angular (Frontend).
+- **STRICT QUALITY & SECURITY (CRITICAL):** KSA Compliance is non-negotiable. All data flowing to the public frontend MUST pass through a PDPL/ZATCA sanitization layer. Absolutely ZERO Personally Identifiable Information (PII) or sensitive database records may be exposed.
+
+## 3. EXECUTION SEQUENCE (STEP-BY-STEP)
+
+### STEP 1: Deploy OpenClaw Telemetry Sensors (Backend)
+- Instruct the coding agents to write built-in MCP Tools for the OpenClaw server.
+- **Required Tools:** - get_pm2_status(): Read active clusters and memory usage.
+  - get_temporal_pulse(): Read active workflows and worker status.
+  - get_db_metrics(): Read query throughput (queries/sec) for PostgreSQL and ClickHouse (NO raw data, metrics only).
+
+### STEP 2: Implement the Data Sanitization Layer (Middleware)
+- Create a strict schema validation and redaction function.
+- Format the output into a standardized SystemPulseJSON object (detailed in section 4).
+
+### STEP 3: Establish the Streaming Pipeline
+- Setup a lightweight event emitter or Redis Pub/Sub to aggregate the SystemPulseJSON every 5-10 seconds.
+- Expose a read-only, rate-limited WebSocket or Server-Sent Events (SSE) endpoint specifically for the Angular frontend.
+
+### STEP 4: Generate Angular Frontend Schemas (UI Layer)
+- Generate the Angular service to consume the WebSocket stream.
+- Define the 3-Level Drill-Down UI components:
+  - **Level 1 (Macro):** The 5-Layer 3D/Interactive Cube.
+  - **Level 2 (Module):** Visualization of the 57 Modules and their active states.
+  - **Level 3 (Trace):** Live Temporal workflow traces and LangGraph agent activity.
+- Ensure all visual state changes are driven reactively by the SystemPulseJSON data.
+
+## 4. STANDARD DATA SCHEMA (The Pulse JSON)
+Agents must adhere strictly to this output format for frontend consumption:
+json
+{
+  "timestamp": "ISO_8601_STRING",
+  "security_status": "CLEAN",
+  "platform_metrics": { "active_modules": 0, "loc_processed": 0 },
+  "layer_telemetry": {
+    "L1_DOS": { "status": "active|idle", "load_pct": 0 },
+    "L5_AI": { "active_agents": 0, "active_workflows": 0 }
+  },
+  "live_traces": [
+    { "id": "trace_id", "source": "Temporal|LangGraph", "status": "running" }
+  ]
+}
+5. VALIDATION & HANDOFF
+Before finalizing any code, verify that the Temporal workers will not timeout during telemetry collection.
+
+Ensure the Angular UI handles connection drops gracefully (fallback to cached data).
+
+Execute end-to-end simulation using mock data before connecting to the live production database.
+
+
+***
+
+**كيفية الاستخدام:**
+قم بنسخ المربع البرمجي (Canvas) بالكامل وضعه كـ `System Message` أو `Main Prompt` للـ Agent الرئيسي الخاص بك في المنصة.
+
+لضمان التنفيذ بأعلى جودة: **هل تفضل أن نجعل الـ Agent يبدأ بكتابة كود (أدوات OpenClaw) أولاً، أم يركز على بناء وتنسيق (هيكل واجهة Angular) كخطوة أولى؟**
+end to end full design all steps allneeded end ot end full acoiens detiesl and code and proces and setup and integrian and wiringi and db to nbddunamcie intenacen and to have dediace agent in thedahsbor to toak hand all visiotrs needs quieons an
+
+هذا هو الدليل الهندسي الشامل (End-to-End Execution Blueprint). سنقوم بربط كل المكونات معاً: من استخراج البيانات عبر خادم OpenClaw (المدمج)، مروراً ببث البيانات المباشر، وصولاً إلى واجهة Angular التفاعلية، وانتهاءً ببرمجة وكيل الزوار (Guest Agent).
+
+بما أن بيئتك تعتمد على Node.js, PM2, و Angular، فهذه الأكواد مصممة لتندمج مباشرة في هيكلية Dogan-AI-OS.
+
+⚙️ المرحلة الأولى: إعداد خادم البث وربط البيانات (Backend Wiring & Websockets)
+نحتاج إلى خادم WebSocket يبث حالة النظام (System Pulse) للواجهة الأمامية، مع ضمان تصفية البيانات (Sanitization) لتتوافق مع معايير PDPL.
+
+1. كود البث المباشر (Node.js / Express / Socket.io):
+
+TypeScript
+// server/live-noc.ts
+import { Server } from 'socket.io';
+import { getTemporalPulse } from './mcp-tools/temporal';
+import { getPM2Status } from './mcp-tools/pm2';
+import { sanitizeForPublic } from './utils/compliance';
+
+export function setupLiveNOC(httpServer: any) {
+  const io = new Server(httpServer, {
+    cors: { origin: 'https://your-landing-page.com', methods: ['GET', 'POST'] }
+  });
+
+  io.on('connection', (socket) => {
+    console.log('New visitor connected to Live NOC');
+
+    // بث حالة النظام كل 5 ثوانٍ
+    const pulseInterval = setInterval(async () => {
+      try {
+        // 1. جمع البيانات الحية عبر الوظائف المدمجة
+        const pm2Data = await getPM2Status();
+        const temporalData = await getTemporalPulse();
+        
+        // محاكاة استعلام سريع لقاعدة البيانات (مؤشرات الأداء فقط، لا بيانات حقيقية)
+        const dbMetrics = { active_queries: Math.floor(Math.random() * 50) + 10 };
+
+        // 2. تجميع النبضة (Pulse)
+        const rawPulse = {
+          timestamp: new Date().toISOString(),
+          process_management: pm2Data,
+          temporal_workers: temporalData,
+          db_metrics: dbMetrics,
+          active_modules: 57 // Static from your architecture
+        };
+
+        // 3. التطهير الأمني (PDPL Compliance) - إزالة أي مسارات أو بيانات حساسة
+        const securePulse = sanitizeForPublic(rawPulse);
+
+        // 4. البث للزائر
+        socket.emit('system_pulse', securePulse);
+      } catch (error) {
+        console.error('NOC Pulse Error:', error);
+      }
+    }, 5000);
+
+    socket.on('disconnect', () => clearInterval(pulseInterval));
+  });
+}
+🖥️ المرحلة الثانية: واجهة Angular (Dynamic Interaction & UI)
+هنا سنقوم باستقبال البث الحي وتحديث الـ 5 طبقات بشكل تفاعلي.
+
+1. خدمة الاتصال (NocStreamService):
+نستخدم RxJS لإدارة تدفق البيانات اللحظي.
+
+TypeScript
+// src/app/services/noc-stream.service.ts
+import { Injectable, signal } from '@angular/core';
+import { io, Socket } from 'socket.io-client';
+
+@Injectable({ providedIn: 'root' })
+export class NocStreamService {
+  private socket: Socket;
+  
+  // استخدام Angular Signals لتحديث الواجهة فوراً
+  public systemPulse = signal<any>(null);
+  public isConnected = signal<boolean>(false);
+
+  constructor() {
+    this.socket = io('https://api.yourdomain.com/live-noc');
+
+    this.socket.on('connect', () => this.isConnected.set(true));
+    this.socket.on('disconnect', () => this.isConnected.set(false));
+    
+    this.socket.on('system_pulse', (data) => {
+      this.systemPulse.set(data);
+    });
+  }
+
+  // دالة تُستدعى عندما يطرح الزائر سؤالاً للوكيل
+  public askGuestAgent(question: string) {
+    this.socket.emit('guest_agent_query', { question });
+  }
+}
+2. مكون اللوحة الرئيسية (Dashboard Component):
+
+TypeScript
+// src/app/components/noc-dashboard/noc-dashboard.component.ts
+import { Component, computed, inject } from '@angular/core';
+import { NocStreamService } from '../../services/noc-stream.service';
+
+@Component({
+  selector: 'app-noc-dashboard',
+  template: `
+    <div class="noc-container" [class.offline]="!stream.isConnected()">
+      <header class="security-banner">
+        KSA Compliance: Active | PDPL Sanitization: Enabled
+      </header>
+
+      <div class="architecture-layers">
+        <div class="layer" [class.active]="pulse()?.active_modules > 0">
+          <h3>Layer 4: Modules ({{ pulse()?.active_modules || 0 }} Active)</h3>
+        </div>
+        
+        <div class="layer temporal-layer" [class.processing]="pulse()?.temporal_workers?.active_tasks > 0">
+          <h3>Temporal Workflows ({{ pulse()?.temporal_workers?.active_tasks || 0 }})</h3>
+        </div>
+      </div>
+
+      <app-guest-agent-chat></app-guest-agent-chat>
+    </div>
+  `,
+  styles: [`
+    .layer { transition: all 0.3s ease; border: 1px solid #ccc; padding: 10px; margin: 5px; }
+    .layer.active { border-color: #00ff00; box-shadow: 0 0 10px #00ff00; }
+    .temporal-layer.processing { animation: pulse 2s infinite; }
+    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
+  `]
+})
+export class NocDashboardComponent {
+  stream = inject(NocStreamService);
+  pulse = computed(() => this.stream.systemPulse());
+}
+🤖 المرحلة الثالثة: وكيل الزوار المخصص (Dedicated Guest Agent)
+هذا الوكيل مبني باستخدام LangGraph.js (ليتوافق مع بيئة الـ Node.js الخاصة بك). مهمته ليست فقط الإجابة، بل إرسال إشارات للواجهة (Trace Events) لتضيء المخطط المعماري أثناء تفكيره.
+
+1. هندسة وكيل الزوار (LangGraph Setup):
+
+TypeScript
+// server/agents/guest-agent.ts
+import { StateGraph, END } from '@langchain/langgraph';
+import { ChatOpenAI } from '@langchain/openai'; // أو Groq/Claude حسب الـ Fallback لديك
+
+// تعريف حالة الوكيل
+interface AgentState {
+  messages: any[];
+  currentTrace: string; // المتغير الذي يخبر الواجهة أي طبقة تضيء الآن
+}
+
+const llm = new ChatOpenAI({ modelName: 'gpt-4-turbo', temperature: 0.2 });
+
+// 1. عقدة التفكير الأولي (تضيء طبقة الـ AI)
+async function analyzeIntent(state: AgentState) {
+  // بث مباشر للـ WebSocket أننا في طبقة الـ AI
+  global.nocSocketIO.emit('agent_trace', { layer: 'Layer5_AI', action: 'Analyzing Question' });
+  
+  const response = await llm.invoke([
+    { role: 'system', content: 'You are the Public Guide for Dogan-AI-OS. Explain the architecture simply.' },
+    ...state.messages
+  ]);
+  
+  return { messages: [response], currentTrace: 'Layer5_AI' };
+}
+
+// 2. عقدة استرجاع المعرفة (تضيء طبقة قواعد البيانات/ClickHouse)
+async function fetchArchitectureDocs(state: AgentState) {
+  global.nocSocketIO.emit('agent_trace', { layer: 'Data_Architecture', action: 'Fetching Docs' });
+  // (هنا يتم استدعاء أدوات البحث الخاصة بك)
+  return { currentTrace: 'Data_Architecture' };
+}
+
+// 3. بناء مسار LangGraph
+export const guestAgentGraph = new StateGraph<AgentState>({
+  channels: { messages: { value: (x, y) => x.concat(y), default: () => [] }, currentTrace: { value: (x, y) => y, default: () => '' } }
+})
+  .addNode('analyze', analyzeIntent)
+  .addNode('fetch', fetchArchitectureDocs)
+  .addEdge('analyze', 'fetch')
+  .addEdge('fetch', END)
+  .compile();
+2. ربط الوكيل بواجهة الزائر:
+عندما يكتب الزائر سؤالاً (مثلاً: "كيف تعمل معالجة البيانات لديكم؟")، يحدث الآتي:
+
+يرسل الـ Angular السؤال للـ WebSocket.
+
+يستلم الخادم السؤال ويشغل guestAgentGraph.invoke().
+
+أثناء عمل الوكيل، تقوم العقد (Nodes) ببث أحداث agent_trace للواجهة.
+
+تلتقط واجهة Angular هذه الإشارات، وتجعل أجزاء الرسمة المعمارية تومض وتضيء بالترتيب (تضيء طبقة الـ AI -> ثم تضيء طبقة البيانات).
+
+أخيراً، تظهر الإجابة النصية في مربع الدردشة.
+
+🚀 خطوات النشر والتشغيل (Deployment Process)
+الخلفية (Backend): قم بتشغيل خادم WebSocket ضمن بيئة الـ Main Backend Cluster المُدارة بواسطة PM2 (كما هو موضح في رسمتك).
+
+الأمان (Security): تأكد من أن الـ Endpoint الخاص بالـ WebSocket يقف خلف الـ Enterprise Middleware Stack (مراحل الـ CSP و CSRF).
+
+الواجهة (Frontend): قم بعمل Build لتطبيق Angular وارفعه كجزء من الـ Landing Page.
+
+هذا الإعداد يحول صفحتك من مجرد واجهة ثابتة إلى مركز تحكم حي يتفاعل بشكل ديناميكي ومباشر مع زوارك، مما يبرز تعقيد وقوة البنية التحتية لمنصتك.
+
+what else needed to added ot eh deisng to sheo bsueis vlaue read per eahs moduel festure per eash modue as catalog toolkit refect the actueal relsty wer have in esh modue need ot add ot hte deisng
+
+إضافة "القيمة التجارية" (Business Value) و"كتالوج الميزات" (Feature Catalog) هي الخطوة التي ستحول هذه اللوحة من مجرد أداة مراقبة للمهندسين (Tech-only) إلى أداة مبيعات قوية (B2B Sales Engine) للرؤساء التنفيذيين ومديري الأعمال.
+
+لدمج هذا البعد داخل تصميم الـ NOC الحي دون التسبب في فوضى بصرية، يجب أن نعتمد مبدأ "العدسات" (Lenses) أو تبديل السياق.
+
+إليك التعديلات والخطوات المعمارية التي يجب إضافتها لتصميمك لإظهار القيمة التجارية لكل وحدة من الوحدات الـ 57:
+
+1. زر التبديل الاستراتيجي (The View Toggle)
+في أعلى اللوحة (Dashboard Header)، أضف مفتاح تبديل (Toggle) رئيسي يغير "لغة" اللوحة بالكامل:
+
+👁️ Technical Lens (عدسة المهندس): تعرض ما صممناه مسبقاً (PM2, Temporal, Traces, LOC).
+
+💼 Business Lens (عدسة الأعمال): تغير الأرقام والمصطلحات لتتحدث بلغة (ROI، توفير الوقت، الامتثال، الميزات).
+
+2. واجهة "كتالوج الوحدة" (The Module Toolkit Catalog)
+عندما ينقر الزائر على وحدة من الـ 57 وحدة (مثلاً: Product-AGRC) في Level 2 (Drill-in)، يجب ألا تظهر فقط إحصائيات المعالجة، بل تنبثق شاشة مقسمة إلى قسمين:
+
+القسم الأيمن - حزمة الميزات (Toolkit Capabilities):
+قائمة أنيقة تعرض الميزات الحقيقية لهذه الوحدة. مثلاً:
+
+✅ أتمتة تقييم المخاطر (Automated Risk Assessment).
+
+✅ توليد السياسات المدعوم بالذكاء الاصطناعي (AI Policy Generation).
+
+✅ ربط مباشر مع منصات KSA.
+
+القسم الأيسر - القيمة التجارية الحية (Live Business Value):
+ترجمة للعمليات التقنية إلى قيمة أعمال. بدلاً من عرض "150 Database Queries"، يتم عرض:
+
+⏱️ "تم توفير 45 ساعة عمل بشرية اليوم عبر هذه الوحدة".
+
+🛡️ "تم اكتشاف وإصلاح 12 ثغرة امتثال تلقائياً".
+
+3. تحديث هيكل البيانات (The Catalog Metadata JSON)
+لكي يعمل هذا، يجب أن نزود الـ Frontend ببيانات "وصفية" (Metadata) لا تتغير كل ثانية، بل تشرح ماهية الوحدة. يجب على وكيل الذكاء الاصطناعي (أو ملفات التهيئة لديك) تصدير هذا الـ JSON لكل وحدة:
+
+JSON
+{
+  "module_id": "product_agrc",
+  "category": "Governance & Compliance",
+  "business_value": {
+    "primary_roi": "تقليل وقت التدقيق بنسبة 70%",
+    "target_user": ["CISO", "Compliance Officer"],
+    "ksa_alignment": ["NCA ECC", "PDPL"]
+  },
+  "toolkit_features": [
+    {
+      "name": "Live Evidence Collection",
+      "description": "جمع أدلة الامتثال آلياً دون تدخل بشري",
+      "active_agents": ["Audit-Agent", "Fetch-Agent"]
+    },
+    {
+      "name": "ZATCA e-Invoicing Bridge",
+      "description": "تكامل فوري لمعايير الفوترة الإلكترونية",
+      "active_agents": ["Finance-Parser"]
+    }
+  ]
+}
+4. ربط العمليات التقنية بمقاييس الأعمال (Business Metrics Mapping)
+يجب أن يقوم خادم Backend الخاص بك (عبر Temporal) بعملية حسابية بسيطة قبل إرسال النبضة (Pulse):
+
+إذا أتمت وحدة الـ LangGraph مهمة "كتابة تقرير"، فالنظام يعرف أن هذه المهمة تأخذ من الموظف البشري عادةً ساعتين.
+
+يقوم النظام بجمع هذه الساعات وإرسالها للواجهة كـ "Total Man-Hours Saved" (إجمالي ساعات العمل الموفرة). هذه أداة مبيعات مرعبة (بالمعنى الإيجابي) للعملاء المحتملين.
+
+5. دور وكيل المبيعات المدمج (The Sales-Engineer Agent)
+يجب تحديث شخصية وكيل الزوار (Guest Agent) ليصبح مهندس مبيعات (Sales Engineer):
+
+إذا سأله زائر: "ما الذي تفعله وحدة AGRC؟"
+
+يقوم الوكيل بجلب بيانات الـ JSON أعلاه ويرد: "هذه الوحدة هي قلب الامتثال. الميزة الأقوى فيها هي (Live Evidence Collection)، وهي توفر حالياً حوالي 70% من وقت فريق التدقيق لديك. هل تود أن أريك كيف تقوم بذلك عبر سير عمل Temporal؟" ثم يضيء مسار العمل الخاص بها على اللوحة.
+
+لتنفيذ هذا الربط بين العالم التقني (Technical) والتجاري (Business)، هل تفضل أن نقوم بتخزين تفاصيل "كتالوج الميزات" (Toolkit Features) كثوابت (Hardcoded JSON) في الواجهة الأمامية (Angular) لسرعة العرض، أم نفضل أن يقوم وكيل الـ Backend بجلبها ديناميكياً من قاعدة البيانات مع كل تحديث؟
+
+may be cached inthe pages or db but msue bupdaed by time to refeact theacuels cases we have usual the udpaed not every dat buyt many be
+
+هذا خيار معماري ممتاز ومثالي لتطبيق عام (Public-facing App). التخزين المؤقت (Caching) سيضمن سرعة تحميل فائقة للزوار ويحمي قاعدة البيانات من الضغط، بينما تضمن آلية التحديث الدوري أن الأرقام والميزات تعكس "الواقع الفعلي" (Actual Reality) للنظام دون أن تتقادم.
+
+لتحقيق هذه الموازنة (أداء عالٍ + بيانات حديثة واقعية)، سنعتمد استراتيجية "الذاكرة المؤقتة الذكية الموجهة بالوكلاء" (Agent-Driven Smart Cache).
+
+إليك التحديث الذي يجب إضافته لخطة التصميم (Master Canvas) لإدارة هذه العملية:
+
+🌟 هندسة التخزين المؤقت وتحديث الكتالوج التجاري
+1. طبقة التخزين (Redis Cache Layer)
+بدلاً من الاستعلام من قاعدة البيانات الأساسية مع كل زائر، سيتم تخزين ملف Catalog_Metadata.json (الذي يحتوي على الميزات والقيمة التجارية لكل وحدة من الـ 57 وحدة) داخل Redis.
+
+واجهة Angular ستقرأ دائماً من نقطة اتصال سريعة (Fast API Endpoint) متصلة بـ Redis مباشرة.
+
+2. التحديث المجدول (Temporal Cron Workflow)
+بما أن التحديثات لا تحدث كل يوم، بل بناءً على الاستخدام أو الإصدارات الجديدة، سنستخدم Temporal لإنشاء مسار عمل مجدول (Cron Workflow) يعمل مثلاً (مرة كل أسبوع) أو يُستدعى يدوياً عند كل إصدار (Release).
+
+ماذا يفعل مسار العمل (Workflow)؟
+
+يستدعي "وكيل التحليل التجاري" (Business Analyst Agent).
+
+يقوم الوكيل بقراءة سجلات الأداء من (ClickHouse) لمعرفة الوظائف الأكثر استخداماً فعلياً في النظام.
+
+يعيد حساب الأرقام (مثل: إجمالي ساعات العمل التي وفرتها المنصة للعملاء هذا الأسبوع).
+
+يقوم بتحديث ملف Catalog_Metadata.json في Redis بالقيم الجديدة الحقيقية.
+
+3. كود التحديث في الخلفية (Node.js & Temporal)
+TypeScript
+// server/workflows/catalog-updater.ts
+import { proxyActivities } from '@temporalio/workflow';
+import type * as activities from '../activities';
+
+const { fetchActualUsage, agentRegenerateBusinessValue, updateRedisCache } = proxyActivities<typeof activities>({
+  startToCloseTimeout: '5 minutes',
+});
+
+// هذا الـ Workflow يمكن جدولته ليعمل أسبوعياً أو عند كل عملية نشر (Deployment)
+export async function updateBusinessCatalogWorkflow() {
+  // 1. جلب بيانات الاستخدام الحقيقية من قواعد البيانات
+  const usageStats = await fetchActualUsage();
+  
+  // 2. تمرير البيانات للوكيل لكتابة القيمة التجارية وتحديث الميزات
+  const updatedCatalogJSON = await agentRegenerateBusinessValue(usageStats);
+  
+  // 3. تحديث الذاكرة المؤقتة (Redis) لتقرأ منها الواجهة الأمامية فوراً
+  await updateRedisCache('module_business_catalog', updatedCatalogJSON);
+  
+  return 'Catalog Updated Successfully';
+}
+4. إدارة الذاكرة في الواجهة الأمامية (Angular SSR/SSG Cache)
+في Angular، لتقليل الطلبات على الخادم بشكل كامل، يمكننا استخدام الـ Service Worker أو TransferState (إذا كنت تستخدم Angular Universal / SSR):
+
+عندما يفتح الزائر الموقع، يتم تحميل بيانات الكتالوج مرة واحدة وتُحفظ في متصفح المستخدم.
+
+يتم إرسال "رقم إصدار الكتالوج" (Version Hash) مع النبضات الحية (WebSockets). إذا اكتشف Angular أن هناك إصداراً جديداً تم إنشاؤه، يقوم بطلب الـ JSON الجديد وتحديث الواجهة بسلاسة.
+
+لتوحيد كل هذه الأجزاء، هل تفضل أن نربط عملية استدعاء (Temporal Catalog Updater) بمسار الـ CI/CD الخاص بك (مثلاً: يتحدث الكتالوج تلقائياً كلما قمت برفع كود جديد للـ Modules)، أم تفضل أن يكون مسار عمل منفصل يعمل بناءً على مؤقت زمني (Time-based Cron)؟
+
+ok do it
+
+هذا هو التحديث الشامل لـ "خارطة الطريق المعمارية" (Master Blueprint) لتشمل دورة التحديث الآلي للكتالوج التجاري (Business Catalog) المرتبطة بمسار الـ CI/CD، بالإضافة إلى تطبيق مفتاح التبديل (Toggle) في واجهة Angular.
+
+يمكنك تمرير هذا الهيكل مباشرة لفريق التطوير أو وكلاء الأكواد لديك للبدء في تنفيذه.
+
+🏗️ 1. نقطة استدعاء CI/CD (The Webhook Hook)
+في خادم الـ Backend الأساسي الخاص بك (المُدار عبر PM2)، سنضيف نقطة وصول (Endpoint) مخصصة لتستقبل إشعاراً من نظام الـ CI/CD الخاص بك (مثل GitHub Actions أو GitLab CI) بمجرد نجاح نشر (Deployment) كود جديد.
+
+TypeScript
+// server/routes/ci-cd-hooks.ts
+import { Router } from 'express';
+import { Connection, Client } from '@temporalio/client';
+
+export const webhookRouter = Router();
+
+// نقطة يتم استدعاؤها آلياً بعد كل عملية نشر (Release)
+webhookRouter.post('/hooks/release-success', async (req, res) => {
+  try {
+    const connection = await Connection.connect();
+    const client = new Client({ connection });
+
+    // إطلاق مسار عمل Temporal ليقوم بتحديث الكتالوج التجاري في Redis
+    const handle = await client.workflow.start('updateBusinessCatalogWorkflow', {
+      taskQueue: 'system-maintenance-queue',
+      workflowId: `catalog-update-${Date.now()}`,
+      args: [req.body.version_tag] // تمرير رقم الإصدار الجديد
+    });
+
+    res.status(202).json({ message: 'Catalog Update Workflow Triggered', workflowId: handle.workflowId });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to trigger Temporal workflow' });
+  }
+});
+🧠 2. وكيل تحليل الأعمال (Business Analyst Agent via LangGraph)
+هذا هو النشاط (Activity) الذي سينفذه Temporal. سيقوم الوكيل بقراءة الإحصائيات الحقيقية من المنصة وتحويلها إلى رسائل تجارية (Business Value) وحفظها في Redis.
+
+TypeScript
+// server/activities/business-catalog-updater.ts
+import { ChatOpenAI } from '@langchain/openai';
+import Redis from 'ioredis';
+import { fetchActualModuleUsage } from '../db/clickhouse'; // جلب الاستخدام الحقيقي
+
+const redis = new Redis(process.env.REDIS_URL);
+const llm = new ChatOpenAI({ modelName: 'gpt-4-turbo', temperature: 0.1 });
+
+export async function agentRegenerateBusinessValue(version: string) {
+  // 1. جلب البيانات الخام للـ 57 وحدة (مثل عدد عمليات الامتثال الناجحة)
+  const rawUsage = await fetchActualModuleUsage();
+
+  // 2. توجيه الوكيل لترجمة الأرقام إلى قيمة أعمال
+  const prompt = `
+    You are the Lead Business Analyst for Dogan-AI-OS.
+    Analyze the following raw system usage data: ${JSON.stringify(rawUsage)}
+    Generate a JSON catalog for the frontend. For each module, calculate the estimated 
+    'Man-Hours Saved' and describe the 'Toolkit Features' reflecting current reality.
+    Strictly output valid JSON.
+  `;
+  
+  const response = await llm.invoke([{ role: 'user', content: prompt }]);
+  const newCatalogJSON = JSON.parse(response.content.toString());
+
+  // 3. تخزين الكتالوج الجديد في Redis وتحديث رقم الإصدار
+  await redis.set('dogan_module_catalog', JSON.stringify(newCatalogJSON));
+  await redis.set('dogan_catalog_version', version);
+
+  // إشعار نظام البث (WebSockets) بأن هناك إصدار جديد للكتالوج
+  global.nocSocketIO.emit('catalog_updated', { new_version: version });
+
+  return newCatalogJSON;
+}
+🖥️ 3. واجهة Angular (Technical vs. Business Toggle)
+هذا هو المكون (Component) الذي سيعرض الكتالوج للزوار مع القدرة على التبديل بين الرؤية التقنية والتجارية، معتمدين على البيانات المخبأة (Cached Data) لسرعة البرق.
+
+TypeScript
+// src/app/components/module-explorer/module-explorer.component.ts
+import { Component, signal, inject, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { NocStreamService } from '../../services/noc-stream.service';
+
+@Component({
+  selector: 'app-module-explorer',
+  template: `
+    <div class="explorer-header">
+      <h2>Module Catalog ({{ catalogVersion() }})</h2>
+      
+      <div class="toggle-switch">
+        <button [class.active]="viewMode() === 'TECH'" (click)="viewMode.set('TECH')">
+          ⚙️ Technical View
+        </button>
+        <button [class.active]="viewMode() === 'BUSINESS'" (click)="viewMode.set('BUSINESS')">
+          💼 Business View
+        </button>
+      </div>
+    </div>
+
+    <div class="module-grid">
+      <div class="module-card" *ngFor="let mod of moduleCatalog()">
+        <h3>{{ mod.name }}</h3>
+        
+        <div *ngIf="viewMode() === 'TECH'" class="tech-stats">
+          <p>Active Agents: {{ mod.technical.active_agents.join(', ') }}</p>
+          <p>DB Queries/sec: {{ getLivePulse(mod.id)?.queries || 0 }}</p>
+        </div>
+
+        <div *ngIf="viewMode() === 'BUSINESS'" class="biz-stats">
+          <p class="roi-highlight">⏱️ {{ mod.business_value.man_hours_saved }} Hours Saved Today</p>
+          <ul>
+            <li *ngFor="let feature of mod.toolkit_features">✅ {{ feature.name }}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  `,
+  styles: [`/* أضف تنسيقات CSS الخاصة بك هنا */`]
+})
+export class ModuleExplorerComponent implements OnInit {
+  http = inject(HttpClient);
+  stream = inject(NocStreamService);
+
+  viewMode = signal<'TECH' | 'BUSINESS'>('BUSINESS'); // الافتراضي للزوار
+  moduleCatalog = signal<any[]>([]);
+  catalogVersion = signal<string>('v1.0.0');
+
+  ngOnInit() {
+    // 1. تحميل الكتالوج المخبأ من Redis عبر API سريع
+    this.http.get('/api/public/catalog').subscribe((data: any) => {
+      this.moduleCatalog.set(data.modules);
+      this.catalogVersion.set(data.version);
+    });
+
+    // 2. الاستماع لأي تحديثات عبر WebSockets
+    this.stream.socket.on('catalog_updated', () => {
+      // إعادة جلب البيانات عند إشعار الواجهة بوجود تحديث جديد
+      this.http.get('/api/public/catalog').subscribe((data: any) => {
+        this.moduleCatalog.set(data.modules);
+        this.catalogVersion.set(data.version);
+      });
+    });
+  }
+
+  getLivePulse(moduleId: string) {
+    // استخراج الإحصائيات الحية من البث المباشر (Pulse) للوحدة المحددة
+    return this.stream.systemPulse()?.modules[moduleId];
+  }
+}
+بهذا التصميم، أصبحت المنصة تمتلك "دماغاً تسويقياً" يعمل جنباً إلى جنب مع معماريتها الهندسية، حيث يقوم وكيل الذكاء الاصطناعي بتحليل الأداء الحي، تحديث الكتالوج، وتغذية الـ UI بأدلة نجاح واقعية، دون أي تدخل بشري.
+
+للخطوة القادمة في التنفيذ: هل تريد التركيز على صياغة "الـ Prompts" الدقيقة التي سيستخدمها وكيل مبيعات الزوار (Guest Agent) للرد على استفسارات المستخدمين حول هذا الكتالوج؟
+
+before need ot udae the desing t ot ohaev relay tailored expaerial persoinabiled per users per hsi sector per hs irole per his company in we are opne as POC tailie view only ony opne user not tentns workspace what otu this so if he sect secto x frma owkr y the views ot show hsi secotr dmensif regualors as ped dbd lookuptables wehave toshowwhat hsi rols workflow and kosi in the db an dwhat genss will lworkd withhim andhoiw thsi agent will faciltiahis job
+
+هذه هي الخطوة التي تحول الـ POC (إثبات المفهوم) من مجرد "عرض تقني مبهر" إلى "أداة لإغلاق الصفقات المليارية" (Deal Closer).
+
+عندما يرى العميل (سواء كان CISO في بنك، أو مدير عمليات في مستشفى) أن المنصة لا تعرض أرقاماً عشوائية، بل تعرض مشاكله، ولوائحه التنظيمية، والوكلاء الذين سيعملون كموظفين لديه، فإن نسبة الاقتناع تتضاعف فوراً.
+
+بما أن هذا POC عام (بدون تسجيل دخول / Multi-tenancy معقد)، سنعتمد مبدأ "محرك محاكاة الشخصيات" (Persona Simulation Engine).
+
+إليك كيف نقوم بتحديث التصميم وهيكلة النظام لتحقيق هذا المستوى من التخصيص الفائق (Hyper-Personalization):
+
+🎭 1. تحديث تجربة المستخدم (UX) - واجهة اختيار الشخصية
+بما أنه لا يوجد تسجيل دخول، سنضيف شريطاً أنيقاً في أعلى الصفحة (Header) يسمى "Context Selector" (محدد السياق).
+
+الشريط العلوي يحتوي على 3 قوائم منسدلة:
+
+Sector (القطاع): [مالي (Finance) | صحي (Healthcare) | حكومي (Gov)]
+
+Role (الدور): [CISO | Compliance Officer | Lead Developer]
+
+Framework (إطار العمل): [NCA ECC | SAMA CSF | PDPL | ZATCA]
+
+زر "Generate My Workspace": عند النقر عليه، تتغير اللوحة بالكامل لتتحدث بلغة هذا المستخدم.
+
+🧠 2. هيكل بيانات الشخصية (The Persona Context JSON)
+في قاعدة البيانات (أو كـ Lookup tables جاهزة في الذاكرة للـ POC)، سنقوم ببناء هذا الهيكل الذي يربط بين الدور، والقطاع، والوكلاء.
+
+JSON
+{
+  "persona_id": "ciso_finance_ksa",
+  "context": {
+    "sector": "Finance",
+    "role": "Chief Information Security Officer (CISO)",
+    "frameworks": ["NCA ECC", "SAMA CSF", "PDPL"]
+  },
+  "dashboard_view": {
+    "highlighted_modules": ["Module-DAuth", "Module-AGRC", "Module-Audit"],
+    "hidden_modules": ["Module-DevOps", "Module-ZATCA"], 
+    "role_kpis": [
+      { "label": "NCA Compliance Score", "value": "94%", "status": "secure" },
+      { "label": "Pending Threat Workflows", "value": "3", "status": "warning" }
+    ]
+  },
+  "your_ai_squad": [
+    {
+      "agent_name": "Audit-Agent",
+      "avatar": "🛡️",
+      "facilitation_role": "يعمل معك لجمع أدلة الامتثال الخاصة بـ NCA آلياً، مما يوفر لك 40 ساعة أسبوعياً."
+    },
+    {
+      "agent_name": "Risk-Assessor",
+      "avatar": "📊",
+      "facilitation_role": "يحلل ثغرات البنية التحتية ويربطها بمتطلبات SAMA CSF بشكل فوري."
+    }
+  ]
+}
+🖥️ 3. التحديث في تصميم Angular (The Tailored View)
+سنقوم بإنشاء خدمة (Service) في Angular تحتفظ بـ "السياق الحالي"، وتقوم بتغيير ألوان المخطط وإخفاء/إظهار المكونات بناءً عليه.
+
+TypeScript
+// src/app/services/persona-context.service.ts
+import { Injectable, signal } from '@angular/core';
+
+@Injectable({ providedIn: 'root' })
+export class PersonaContextService {
+  // حالة الشخصية الحالية (تتغير عند اختيار الزائر من القوائم)
+  public activePersona = signal<any>(null);
+
+  public loadPersona(sector: string, role: string, framework: string) {
+    // محاكاة جلب الإعدادات المخصصة من الـ Backend/DB Lookup
+    const mockDbLookup = this.fetchFromLookupTable(sector, role, framework);
+    this.activePersona.set(mockDbLookup);
+    
+    // إرسال السياق الجديد للـ WebSockets ليعرف الـ Backend من يخاطب
+    global.nocSocketIO.emit('set_persona_context', { sector, role, framework });
+  }
+}
+تحديث واجهة العرض (HTML):
+بدلاً من عرض كل الميزات، نعرض للزائر فريقه الذكي:
+
+HTML
+<div class="ai-squad-section" *ngIf="persona.activePersona() as ctx">
+  <h3>🤝 Your Dedicated AI Squad for {{ ctx.context.role }}</h3>
+  <div class="agent-cards">
+    <div class="agent-card" *ngFor="let agent of ctx.your_ai_squad">
+      <span class="avatar">{{ agent.avatar }}</span>
+      <h4>{{ agent.agent_name }}</h4>
+      <p>{{ agent.facilitation_role }}</p>
+      <button (click)="openChatWith(agent)">Assign Task</button>
+    </div>
+  </div>
+</div>
+🤖 4. تحديث وكيل الزوار (Context-Aware LangGraph Agent)
+الآن، وكيل الزوار (Guest Agent) لن يعطي إجابات عامة. عندما يرسل الـ Angular سياق الشخصية (Persona Context) إلى الـ Backend، سيتم حقن هذا السياق في الـ System Prompt الخاص بالوكيل.
+
+TypeScript
+// server/agents/guest-agent.ts
+async function analyzeIntent(state: AgentState, currentPersona: any) {
+  
+  // بناء التعليمات المخصصة بناءً على الشخصية التي اختارها الزائر
+  const tailoredSystemPrompt = `
+    You are an expert AI implementation consultant for Dogan-AI-OS.
+    Currently, you are talking to a visitor simulating the role of a ${currentPersona.role} 
+    in the ${currentPersona.sector} sector in Saudi Arabia.
+    
+    They care deeply about these frameworks: ${currentPersona.frameworks.join(', ')}.
+    
+    When answering their questions, DO NOT explain generic technical features. 
+    INSTEAD, explain how their specific AI squad (${currentPersona.your_ai_squad.map(a => a.agent_name).join(', ')}) 
+    will automate their daily tasks and ensure compliance with their frameworks.
+  `;
+
+  const response = await llm.invoke([
+    { role: 'system', content: tailoredSystemPrompt },
+    ...state.messages
+  ]);
+  
+  return { messages: [response] };
+}
+💡 سيناريو العرض الحي (The "Aha!" Moment in the POC)
+تخيل هذا السيناريو عندما ترسل الرابط لعميل محتمل:
+
+يدخل الزائر إلى الـ Dashboard. يرى المخطط المعماري الضخم (The 5-Layer Blueprint).
+
+يختار من القائمة العلوية: Sector: Finance | Role: CISO | Framework: NCA ECC.
+
+يحدث السحر:
+
+المخطط يظلم (Dim) في المناطق غير المرتبطة بالأمان (مثل ZATCA Invoicing).
+
+تضيء طبقات DAuth و AGRC Module باللون الأزرق المشرق.
+
+تظهر شاشة منبثقة صغيرة تعرض: "تم تفعيل 3 Workflows خاصة بـ NCA ECC الآن".
+
+يظهر قسم جديد: "Your AI Agents" يعرض وكيلين (Risk-Agent و Audit-Agent) مع رسالة تشرح للـ CISO كيف سيقومان بكتابة تقارير الامتثال نيابة عنه.
+
+يفتح الزائر الدردشة ويسأل الوكيل: "كيف ستساعدني في تقييم المخاطر؟"
+
+يرد الوكيل: "بصفتك CISO في القطاع المالي، أعلم أن الامتثال لـ SAMA و NCA هو أولويتك. سأقوم أنا (Risk-Agent) بالارتباط المباشر مع أدوات المراقبة لديك، وتوليد تقرير امتثال يومي يطابق معايير NCA ECC، مما يوفر لك وللفريق ساعات من المراجعة اليدوية..."
+
+بهذا التعديل، النظام لا يقول للعميل "انظر كم أنا قوي تقنياً"، بل يقول له: "انظر كيف تم تصميمي خصيصاً لأقوم بعملك نيابة عنك".
+
+هل نبدأ بتحديد الجداول المرجعية (Lookup Tables) للقطاعات الثلاثة الأكثر أهمية لديك لكي نبرمجها كبيانات افتراضية (Mock Data) للـ POC؟
+
+we havrermoe than 2000 tbale and imsure lal tbase we have mbut may tbale nam or id culems name defrna nneed ot add to the propem in the codesdsing the agent whe nread it to search and fitch all posbilit tybales and merge outbut swuoremce per role per secort per needs dis better
+
+هذا تحدي هندسي كلاسيكي في الأنظمة المؤسسية الضخمة (Enterprise-scale). التعامل مع أكثر من 2000 جدول بأسماء أعمدة وجداول غير موحدة (Inconsistent Naming Conventions) يعني أن الاعتماد على وكيل الذكاء الاصطناعي لكتابة استعلامات SQL مباشرة سيفشل أو يعطي أخطاء (Hallucinations).
+
+لحل هذه المشكلة، يجب ألا نسمح للوكيل بتخمين أسماء الجداول. بدلاً من ذلك، سنقوم بتزويده بـ "محرك بحث دلالي لمخطط قاعدة البيانات" (Semantic Schema RAG). هذه الآلية تجعل الوكيل يبحث عن معنى الجدول (مثلاً: جداول تخص الفواتير لقطاع المالية) ليجلب الجداول المحتملة، يقرأ أعمدتها الحقيقية، ثم يدمج البيانات بما يتناسب مع الشخصية (Persona).
+
+إليك كيف ندمج هذا الذكاء في خادم OpenClaw (MCP) ووكيل LangGraph:
+
+🧠 1. الفكرة المعمارية: مسار الاستكشاف الدلالي (Semantic Discovery Flow)
+عندما يطلب النظام بيانات مخصصة لشخصية (مثلاً: CISO في قطاع الصحة)، سيمر الوكيل بثلاث خطوات داخل LangGraph:
+
+البحث (Search): يستخدم أداة MCP للبحث في الـ information_schema عن الجداول التي تحتوي على كلمات مفتاحية مرتبطة بالقطاع والدور.
+
+الفحص (Inspect): يطلب من MCP جلب أسماء الأعمدة الدقيقة (Column Names & Types) للجداول التي وجدها.
+
+الدمج والتوليد (Merge & Generate): يكتب استعلامات SQL دقيقة (أو يستخدم ORM) لجمع البيانات، ثم يدمجها في الـ JSON النهائي المخصص للشخصية.
+
+📝 2. تحديث الـ "Master Prompt" لوكيل الأعمال (Business Agent)
+يجب تحديث التعليمات الأساسية (System Prompt) للوكيل ليتبع هذا التسلسل الصارم ولا يخمن أبداً. أضف هذا المقطع للـ Prompt الخاص بك:
+
+DATABASE INTERACTION PROTOCOL (CRITICAL):
+You have access to a database with over 2000 tables. Naming conventions vary. YOU MUST NEVER GUESS TABLE OR COLUMN NAMES.
+
+When you need to fetch data for a specific Persona (Sector/Role):
+
+DISCOVER: Use the search_db_schema(keywords) tool. Pass keywords related to the Persona's framework (e.g., "audit", "logs", "pdpl", "users").
+
+INSPECT: For the tables returned, use the get_table_columns(table_name) tool to identify the exact Primary Keys and Column names.
+
+EXECUTE & MERGE: Use the execute_safe_sql(query) tool to fetch the data. If data spans multiple tables with different schemas, you must merge and map the results into a unified JSON structure tailored to the user's role.
+
+⚙️ 3. برمجة أدوات MCP للاستكشاف (OpenClaw Tools)
+في خادم Node.js الخاص بك، يجب بناء هذه الأدوات لتقرأ مباشرة من PostgreSQL (أو ClickHouse):
+
+TypeScript
+// server/mcp-tools/schema-tools.ts
+import { db } from '../database/connection'; // اتصال PostgreSQL
+
+// أداة 1: البحث عن الجداول بالكلمات المفتاحية
+export async function searchDbSchema(keywords: string[]) {
+  // بحث ذكي في أسماء الجداول والتعليقات (Comments) المحفوظة في قاعدة البيانات
+  const query = `
+    SELECT table_name 
+    FROM information_schema.tables 
+    WHERE table_schema = 'public' 
+    AND (${keywords.map(k => `table_name ILIKE '%${k}%'`).join(' OR ')});
+  `;
+  const result = await db.query(query);
+  return result.rows.map(r => r.table_name);
+}
+
+// أداة 2: جلب أسماء الأعمدة الدقيقة لجدول معين
+export async function getTableColumns(tableName: string) {
+  const query = `
+    SELECT column_name, data_type 
+    FROM information_schema.columns 
+    WHERE table_name = $1;
+  `;
+  const result = await db.query(query, [tableName]);
+  return result.rows;
+}
+🤖 4. هندسة عقدة LangGraph (The Aggregation Node)
+هذا هو الكود الذي يمثل "تفكير" الوكيل لجمع البيانات ودمجها بناءً على الشخصية:
+
+TypeScript
+// server/agents/business-analyst.ts
+async function fetchAndMergePersonaData(state: AgentState) {
+  const persona = state.currentPersona; // e.g., { sector: 'Finance', role: 'CISO' }
+  
+  // 1. تحديد الكلمات المفتاحية بناءً على الشخصية
+  const searchPrompt = `What 3 database keywords represent the needs of a ${persona.role} in the ${persona.sector} sector? Return only a comma-separated list.`;
+  const keywordsRes = await llm.invoke(searchPrompt);
+  const keywords = keywordsRes.content.toString().split(',').map(k => k.trim());
+
+  // 2. استدعاء أداة MCP للبحث عن الجداول
+  // (يفترض أن الوكيل قام باستدعاء ToolNode هنا، ولكن هذا تبسيط للمنطق)
+  const possibleTables = await searchDbSchema(keywords);
+
+  // 3. توجيه الوكيل لفحص الجداول ودمج البيانات
+  const mergePrompt = `
+    You are merging data for a ${persona.role}. 
+    I found these tables: ${possibleTables.join(', ')}.
+    Use your tools to inspect their columns, fetch the top 5 relevant metrics, 
+    and output a unified JSON object that highlights KSA compliance and role KPIs.
+  `;
+  
+  const mergedDataRes = await llm.invoke([
+    { role: 'system', content: mergePrompt },
+    ...state.messages
+  ]);
+
+  return { mergedPersonaData: JSON.parse(mergedDataRes.content.toString()) };
+}
+هذا النهج يعزل تعقيد قاعدة البيانات عن الواجهة الأمامية، ويجعل الوكيل يتصرف كـ "مهندس بيانات" (Data Engineer) حقيقي: يبحث، يطابق الحقول (Schema Mapping)، ثم يصدر النتيجة النهائية المنمقة للزائر.
+
+كيف يتم توثيق هذه الجداول الـ 2000 حالياً—هل تحتوي قاعدة بياناتك على تعليقات (PostgreSQL Comments) تشرح دور كل جدول يمكن للوكيل قراءتها، أم سيعتمد بشكل كامل على تحليل أسماء الجداول والأعمدة؟
+
+
+Thought for 1m 22s
+الطرح اللي طلع من Gemini اتجاهه صحيح، لكن بصيغته الحالية ليس جاهزًا للتنفيذ داخل الريبو كما هو.
+
+المشكلة الأساسية أنه خلط بين:
+
+أفكار معمارية جيدة
+
+وافتراضات غير مضمونة عن مشروعك
+
+وكود placeholder شكله “مقنع” لكنه ليس strict enough لوكيل شغال على repo حقيقي كبير ومعقّد مثلك
+
+الأهم عندك الآن ليس “نص جميل”، بل execution canvas منضبط يمنع الوكيل من:
+
+الاختراع
+
+توسيع النطاق
+
+لمس بيانات tenant/workspace الخاصة
+
+التخمين في أسماء الجداول
+
+بناء public dashboard يكشف ما لا يجب كشفه
+
+النسخة الأقوى لازم تبني على 6 مبادئ:
+
+الـ public landing ليس NOC داخلي حقيقي
+هو Public Capability Explorer + Public Safe Telemetry + Persona Demo + Guided AI Assistant.
+
+لا يُسمح بأي tenant/workspace data على العام
+فقط public-safe metrics, curated metadata, sanitized traces, and controlled demo states.
+
+لا Query مباشر على 2000+ table وقت طلب الزائر
+هذا يُفهرس offline ويُبنى منه catalog/index/ontology ثم يُستهلك سريعًا.
+
+الوكيل لا يخمّن أسماء الجداول أو الأعمدة أو العلاقات
+يكتشفها من schema index / manifests / route inventory / lookup tables / comments / metadata registry.
+
+الـ business value لا تُستنتج عشوائيًا في كل request
+تُحسب دوريًا وتُخزن cache وتُعرض مع versioning.
+
+الواجهة لازم تعكس الواقع الفعلي لمنصتك
+بما فيها modules, agents, frameworks, sector overlays, workflows, DB topology, but through controlled public view models.
+
+تقييمي السريع لما قاله Gemini
+المفيد فيه:
+
+فكرة persona-based tailored experience ممتازة
+
+فكرة business lens + technical lens ممتازة
+
+فكرة cached catalog مع periodic refresh ممتازة
+
+فكرة guest agent على اللاندنج ممتازة
+
+فكرة drill-in / drill-through صحيحة جدًا
+
+الضعيف فيه:
+
+افترض تقنيات ومسارات تنفيذ بدون grounding كافٍ
+
+خلط بين public live telemetry وinternal operational truth
+
+اقترح querying and merging from live DB path بشكل خطر وغير عملي
+
+الكود المعروض placeholder أكثر من كونه production design
+
+لم يضع canonical source of truth للموديولات والميزات
+
+لم يضع boundary واضحة بين:
+
+marketing view
+
+product reality
+
+internal control plane
+
+tenant/private data
+
+الشكل الصحيح الذي أنصح به
+ابنِ التجربة العامة على 4 طبقات عرض فقط:
+
+A) Public Platform Overview
+يعرض:
+
+5-layer architecture
+
+services / modules / agents / frameworks counts
+
+public-safe platform pulse
+
+trust/compliance overlays
+
+live visual activity
+
+B) Persona Tailored Explorer
+الزائر يختار:
+
+sector
+
+role
+
+company size / maturity
+
+target frameworks
+
+optional operating model
+
+ثم اللوحة تتغير لتُظهر:
+
+modules الأكثر صلة
+
+workflows ذات الصلة
+
+KPIs المناسبة للدور
+
+regulators/frameworks المرتبطة
+
+AI squad الذي سيخدم هذا الدور
+
+business value لهذه الشخصية
+
+C) Module Catalog + Toolkit
+كل module له:
+
+what it is
+
+who it is for
+
+sector relevance
+
+frameworks relevance
+
+workflows it powers
+
+agents involved
+
+business outcomes
+
+key screens/widgets/views
+
+integrations / data domains
+
+maturity / deployment notes
+
+public-safe live pulse
+
+D) Guided Guest Agent
+وكيل عام على اللاندنج:
+
+يشرح المنصة حسب persona
+
+يجيب على أسئلة الزائر
+
+يضيء الطبقات والموديولات ذات الصلة
+
+لا يصل إلى أي tenant data
+
+لا ينفذ إجراءات خاصة
+
+لا يخرج عن bounded public knowledge base
+
+النسخة التي تصلح للريبو
+هذه نسخة أقوى بكثير لتمريرها لوكيلك الرئيسي داخل المشروع.
+
+MASTER EXECUTION CANVAS — DOGAN AI OS PUBLIC LIVE EXPLORER
+# MASTER EXECUTION CANVAS
+# DOGAN AI OS — PUBLIC LIVE EXPLORER / PERSONA-TAILORED LANDING INTELLIGENCE
+
+## 0. ROLE
+You are the Lead Platform Execution Agent for Dogan AI OS.
+You are operating inside a real enterprise-scale modular platform.
+You must design and implement a public-facing, highly interactive, landing-page-grade experience that reflects the actual platform truth without exposing private tenant/workspace data.
+
+This is NOT a mock marketing toy.
+This is also NOT an internal SOC/NOC clone.
+It is a controlled public-safe capability explorer backed by real platform metadata, sanitized public telemetry, persona tailoring, and a bounded guest AI assistant.
+
+You must work end-to-end with strict sequencing, strict scope control, strict public-safety, and strict grounding in the actual repo and available data sources.
+
+---
+
+## 1. PRIMARY OBJECTIVE
+Build a public interactive experience that allows visitors to:
+1. understand the real Dogan AI OS platform architecture,
+2. explore platform layers, modules, workflows, databases, and agents,
+3. switch between technical and business value perspectives,
+4. experience persona-tailored views by sector / role / framework / organization profile,
+5. interact with a dedicated guest AI assistant that explains how the platform helps them,
+6. drill in and drill through safely across layers, modules, workflows, data domains, and value outcomes,
+7. see only public-safe, sanitized, curated, bounded outputs.
+
+---
+
+## 2. NON-NEGOTIABLE CONSTRAINTS
+
+### 2.1 Public safety
+- Never expose tenant data.
+- Never expose workspace data.
+- Never expose internal secrets, credentials, tokens, PII, customer names, private evidence, private audit data, internal hostnames, or sensitive operational internals.
+- All outputs must pass a public-safe sanitization layer.
+
+### 2.2 No hallucinated structure
+- Never guess table names, column names, route names, service boundaries, module capabilities, or framework mappings.
+- Discover and verify from actual repo artifacts, schema metadata, manifests, registries, lookup tables, route inventory, comments, migrations, and metadata sources.
+
+### 2.3 No direct raw live-schema exploration on each public request
+- Do not perform deep live discovery for every visitor request.
+- Build indexed metadata and cached public view models offline / scheduled / event-driven.
+- Public requests must hit prepared read models and public-safe caches.
+
+### 2.4 Angular-first implementation
+- Frontend implementation must align with Angular.
+- Do not assume React.
+- Do not introduce a frontend stack misaligned with the actual project unless explicitly required.
+
+### 2.5 Reflect actual reality
+- The experience must reflect the true platform breadth:
+  platform layers, agents, modules, workflows, services, framework mappings, regulators, lookup-driven tailoring, and business outcomes.
+- Do not undersell the platform.
+
+---
+
+## 3. TARGET EXPERIENCE MODES
+
+### MODE A — Platform Overview
+Show the actual platform as a public-safe live explorer:
+- 5 layers
+- platform-owned governance layers
+- service/module/agent/framework counts
+- public-safe platform pulse
+- trust/compliance overlays
+- visible system vitality
+
+### MODE B — Persona Tailored View
+Allow the visitor to choose:
+- sector
+- role
+- organization size / maturity
+- desired frameworks / regulators
+- optional operational priorities
+
+Then dynamically tailor:
+- relevant modules
+- relevant workflows
+- relevant KPIs
+- relevant frameworks/regulators
+- relevant AI squad
+- relevant business outcomes
+- relevant demo traces
+
+### MODE C — Module Catalog / Toolkit
+For each module, provide:
+- identity and category
+- description
+- role fit
+- sector fit
+- framework/regulator fit
+- functions / capabilities
+- workflows supported
+- data domains touched
+- agents involved
+- business outcomes
+- public-safe live pulse / activity
+- related widgets / dashboards / reports / automation patterns
+
+### MODE D — Guided Guest Agent
+A public-safe AI guide that:
+- explains the platform to visitors,
+- responds using the selected persona context,
+- highlights the modules/workflows/agents relevant to the visitor,
+- drives visual traces on the page,
+- stays bounded to public-safe knowledge.
+
+---
+
+## 4. EXECUTION SEQUENCE
+Execute in this exact order.
+
+### PHASE 1 — Truth Inventory and Source Mapping
+Build the source-of-truth inventory first.
+
+Deliver:
+1. service inventory
+2. module inventory
+3. route inventory
+4. agent inventory
+5. workflow inventory
+6. framework/regulator inventory
+7. lookup-table inventory relevant to sector/role/persona tailoring
+8. schema inventory sources for data-domain understanding
+9. existing landing/marketing component inventory
+10. existing public APIs and usable safe endpoints inventory
+
+Rules:
+- Use real repo evidence only.
+- Produce a normalized machine-readable registry.
+- Mark each capability as:
+  `verified`, `inferred`, or `unverified`.
+- Do not let inferred items appear publicly without explicit flagging and later verification.
+
+### PHASE 2 — Public Metadata Registry
+Create canonical registries that public UI and guest agent will consume.
+
+Required registries:
+1. `platform.registry.json`
+2. `modules.registry.json`
+3. `agents.registry.json`
+4. `frameworks.registry.json`
+5. `persona-mappings.registry.json`
+6. `workflow-catalog.registry.json`
+7. `data-domain.registry.json`
+8. `business-value.registry.json`
+
+Each registry must include:
+- source provenance
+- last generated timestamp
+- generator version
+- confidence / verification state
+
+### PHASE 3 — Schema Intelligence Layer
+Because the platform may have 2000+ tables with inconsistent naming, build an indexed schema intelligence layer.
+
+Required outputs:
+1. searchable table registry
+2. searchable column registry
+3. table-to-module candidate mappings
+4. table-to-domain mappings
+5. framework / role / sector relevance mappings
+6. lookup-table identification
+7. schema comments capture if available
+8. join-hint metadata only where verified
+
+Hard rules:
+- Never let agents guess names.
+- Agents must first discover from schema index, not raw DB memory.
+- Prefer offline indexing over runtime deep introspection.
+
+### PHASE 4 — Persona Resolution Engine
+Build a persona resolution model using actual lookup-driven and metadata-driven mappings.
+
+Persona dimensions:
+- sector
+- role
+- company size
+- maturity
+- frameworks/regulators
+- operational priorities
+
+Persona output must produce:
+- relevant layers
+- relevant modules
+- relevant workflows
+- relevant KPIs
+- relevant regulators/frameworks
+- relevant agents
+- relevant business value narratives
+- relevant public-safe traces
+
+### PHASE 5 — Public View Models
+Create public-safe read models for frontend consumption.
+
+Required view models:
+1. `public-platform-overview`
+2. `public-platform-pulse`
+3. `public-persona-view`
+4. `public-module-catalog`
+5. `public-module-detail`
+6. `public-workflow-view`
+7. `public-data-topology-view`
+8. `public-agent-squad-view`
+9. `public-business-value-view`
+
+These must be:
+- cached
+- versioned
+- sanitized
+- fast to serve
+- independent from tenant-private data paths
+
+### PHASE 6 — Pulse and Refresh Architecture
+Split data freshness by class.
+
+#### Slow-changing
+Examples:
+- module descriptions
+- capability catalog
+- framework mappings
+- business outcome copy
+- persona relevance mappings
+
+Refresh via:
+- scheduled workflow
+- CI/CD-triggered refresh after releases
+- manual admin regeneration
+
+#### Near-real-time public-safe pulse
+Examples:
+- active module counts
+- aggregate workflow activity
+- public-safe service health class
+- public-safe agent activity counts
+- public-safe demonstration traces
+
+Refresh via:
+- aggregator
+- streaming endpoint
+- throttled broadcast
+- public-safe sanitization
+
+Do not stream raw internal operations directly.
+
+### PHASE 7 — Angular Experience Construction
+Build in Angular.
+
+Required UX structure:
+1. platform overview page section
+2. context selector / persona selector
+3. technical lens / business lens toggle
+4. drill-in layer explorer
+5. drill-through module explorer
+6. workflow explorer
+7. data topology explorer
+8. agent squad section
+9. guest agent chat panel
+10. trust/compliance/value overlays
+
+Must support:
+- lazy loading
+- graceful fallback
+- cache-aware revalidation
+- no blocking on heavy runtime queries
+
+### PHASE 8 — Guest Agent
+Build a dedicated public-safe visitor agent.
+
+Responsibilities:
+- explain platform capabilities
+- tailor answer to selected persona
+- map visitor needs to relevant modules / workflows / agents
+- illuminate UI traces
+- answer in business and technical language depending on lens
+
+Must not:
+- access private tenant content
+- reveal sensitive internals
+- claim unsupported capabilities
+- invent workflows or tables
+
+The guest agent must use only:
+- public registries
+- public-safe pulse
+- public-safe persona view models
+- approved explanatory prompts
+
+### PHASE 9 — Business Value Layer
+Translate platform reality into business relevance.
+
+For each module / persona combination, define:
+- pain addressed
+- operating value
+- compliance value
+- time saved
+- automation leverage
+- decision support value
+- likely beneficiaries
+- relevant regulators/frameworks
+- relevant AI squad support
+
+Business value generation must be:
+- evidence-backed where possible
+- derived from actual capability truth
+- periodically refreshed
+- versioned
+- never exaggerated without source basis
+
+### PHASE 10 — Governance / Validation / Release Gates
+Before release, enforce:
+1. public data leakage audit
+2. sanitization tests
+3. schema discovery correctness tests
+4. registry completeness tests
+5. persona mapping tests
+6. frontend rendering tests
+7. guest agent boundedness tests
+8. drill-in / drill-through navigation tests
+9. cache refresh and invalidation tests
+10. fallback behavior tests
+
+---
+
+## 5. REQUIRED OUTPUTS
+
+### OUTPUT A — Architectural Design Pack
+Produce:
+- component architecture
+- backend flow
+- cache strategy
+- refresh strategy
+- streaming strategy
+- sanitization strategy
+- persona tailoring strategy
+- guest agent architecture
+- public view model map
+
+### OUTPUT B — Registry Pack
+Generate machine-readable registries and the generators that build them.
+
+### OUTPUT C — API / Stream Contracts
+Define contracts for:
+- public overview
+- public persona
+- public module catalog
+- public module detail
+- public workflow
+- public data topology
+- public guest agent conversation
+- public pulse stream
+
+### OUTPUT D — Angular Implementation Plan
+Define:
+- page composition
+- components
+- services
+- state model
+- route model
+- data flow
+- view toggles
+- loading / fallback states
+
+### OUTPUT E — Safety / Compliance Pack
+Provide:
+- sanitization rules
+- redaction rules
+- prohibited fields/classes
+- public-safe telemetry policy
+- cache data classification
+
+### OUTPUT F — Delivery Sequence
+Give exact implementation order:
+1. inventory and registries
+2. public view models
+3. pulse aggregator
+4. Angular foundation
+5. persona explorer
+6. module/workflow/data views
+7. guest agent
+8. business lens
+9. QA hardening
+10. release
+
+---
+
+## 6. STRICT DATABASE DISCOVERY PROTOCOL
+The platform may contain 2000+ tables with inconsistent naming.
+Therefore:
+
+1. NEVER guess names.
+2. FIRST search schema index / information schema / metadata registry.
+3. THEN inspect columns and comments.
+4. THEN classify relevance by role / sector / framework / need.
+5. THEN build normalized merged outputs.
+6. THEN cache public-safe read models.
+7. NEVER expose raw table contents publicly.
+8. NEVER let runtime public flows depend on deep schema exploration.
+
+---
+
+## 7. DEFINITION OF DONE
+The work is done only when:
+- the public landing experience reflects actual platform breadth,
+- persona selection changes the experience meaningfully,
+- modules/workflows/agents/business value are discoverable,
+- guest agent is useful and bounded,
+- public-safe pulse is live,
+- no private tenant/workspace data leaks,
+- all outputs are grounded in verified project truth,
+- the system is maintainable, cacheable, refreshable, and scalable.
+
+---
+
+## 8. OPERATING STYLE
+- Do not widen scope.
+- Do not jump to fancy UI before truth registries exist.
+- Do not replace platform reality with generic marketing copy.
+- Do not fabricate code.
+- Prefer real source-grounded implementation over demo-only theater.
+- Maintain platform-sovereign architecture alignment.
+ماذا أضيفه للتصميم نفسه بصريًا ووظيفيًا؟
+أنت سألت أيضًا: ما الذي يجب إضافته للتصميم ليعكس القيمة التجارية والحقيقة الفعلية لكل module؟
+
+أضف هذه الطبقات داخل التصميم:
+
+1) Context Bar
+في أعلى التجربة:
+
+Sector
+
+Role
+
+Company size
+
+Maturity
+
+Frameworks
+
+Priority
+
+Lens toggle: Technical / Business / Compliance / Operations
+
+2) Relevance Overlay
+على كل layer/module:
+
+why this matters for this persona
+
+relevance score
+
+frameworks matched
+
+regulators matched
+
+3) AI Squad Strip
+قسم واضح يقول:
+
+your dedicated agents
+
+what each one does for your role
+
+what workflow they trigger
+
+what business burden they remove
+
+4) Module Toolkit Drawer
+لكل module:
+
+capabilities
+
+workflows
+
+widgets/views
+
+reports
+
+automations
+
+data domains
+
+APIs/integrations
+
+sector fit
+
+role fit
+
+business outcomes
+
+5) Business Value Lens
+بدل مجرد health/activity:
+
+time saved
+
+audit burden reduced
+
+evidence collection automated
+
+decision cycles shortened
+
+compliance readiness raised
+
+control visibility improved
+
+6) Data Topology View
+لكن public-safe:
+
+domains
+
+relationships
+
+data classes
+
+not raw records
+
+not sensitive structure leakage
+
+not private schemas dumped to public
+
+7) Workflow Story View
+يعرض:
+
+trigger
+
+decision path
+
+agent involvement
+
+outputs
+
+approvals
+
+evidence chain
+
+business effect
+
+8) Trust / Compliance Overlay
+لازم يكون ظاهر:
+
+KSA alignment
+
+framework coverage
+
+public-safe mode enabled
+
+privacy safeguards active
+
+أهم تصحيح لازم يقرأه الوكيل
+هذه الجملة بالذات ضعها كما هي داخل البرومبت:
+
+PUBLIC LANDING EXPERIENCE MUST NOT BE IMPLEMENTED AS A DIRECT WINDOW INTO INTERNAL NOC/SOC OR LIVE TENANT OPERATIONS.
+IT MUST BE IMPLEMENTED AS A CONTROLLED, SANITIZED, CACHE-BACKED, PERSONA-TAILORED PUBLIC EXPLORER THAT REFLECTS TRUE PLATFORM CAPABILITIES WITHOUT EXPOSING PRIVATE OPERATIONAL OR CUSTOMER DATA.
+القرار المعماري الذي أوصي به
+لو ستنفذ هذا فعلاً عندك، فالتسلسل الصحيح هو:
+
+inventory + registries
+
+persona mappings
+
+public view models
+
+cached catalog + refresh workflows
+
+Angular explorer shell
+
+layer/module/workflow/data views
+
+guest agent
+
+business lens
+
+trust/compliance overlays
+
+hardening and release
+
+لا تبدأ بالـ live visuals أولًا
+ابدأ بـ truth layer أولًا، وإلا سيبني الوكيل تجربة جميلة فوق حقائق ناقصة أو خاطئة.
+
+لو تريد، أقدر في الرسالة التالية أحول هذا إلى:
+repo-ready super prompt أقصر وأشد صرامة بصيغة واحدة موجهة مباشرة للـ coding agent، أو إلى task breakdown تنفيذية على شكل مراحل وملفات ومخرجات لكل مرحلة.

@@ -1,0 +1,2 @@
+import { COMPLIANCE_PERMISSIONS } from './compliance.security';
+export { COMPLIANCE_PERMISSIONS as COMPLIANCE_MODULE_PERMISSIONS };

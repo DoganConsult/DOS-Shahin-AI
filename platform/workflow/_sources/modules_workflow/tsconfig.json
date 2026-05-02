@@ -1,0 +1,25 @@
+{
+  "extends": "../../../tsconfig.modules.build.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "outDir": "dist",
+    "rootDir": "source",
+    "declaration": false,
+    "strict": false,
+    "noImplicitAny": false,
+    "strictNullChecks": false
+  },
+  "include": ["source/backend/workflow/**/*.ts"],
+  "exclude": [
+    "**/node_modules",
+    "**/dist",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "source/frontend/**",
+    "source/shared/**",
+    "source/backend/workflow/temporal/**",
+    "source/backend/workflow/langgraph/**",
+    "source/backend/workflow/modules/onboarding/**",
+    "source/backend/workflow/platform/**"
+  ]
+}

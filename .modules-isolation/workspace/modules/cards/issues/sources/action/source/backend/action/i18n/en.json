@@ -1,0 +1,22 @@
+{
+  "action.title": "Actions",
+  "action.dashboard": "Action Dashboard",
+  "action.items": "Action Items",
+  "action.tracking": "Action Tracking",
+  "action.overdue": "Overdue Actions",
+  "action.diagnostics": "Diagnostics",
+  "action.admin": "Action Admin",
+  "action.empty.title": "No action items",
+  "action.empty.description": "Action items will appear here as they are created from findings, audits, and reviews.",
+  "action.loading": "Loading actions...",
+  "action.error.title": "Failed to load actions",
+  "action.error.retry": "Retry",
+  "action.create": "Create Action",
+  "action.status.draft": "Draft",
+  "action.status.open": "Open",
+  "action.status.in_progress": "In Progress",
+  "action.status.completed": "Completed",
+  "action.status.verified": "Verified",
+  "action.status.closed": "Closed",
+  "action.status.overdue": "Overdue"
+}

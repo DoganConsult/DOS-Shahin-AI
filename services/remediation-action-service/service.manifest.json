@@ -1,0 +1,24 @@
+{
+  "serviceCode": "remediation-action-service",
+  "displayName": "Remediation and Action Service",
+  "layer": "domain-service",
+  "ownerTeam": "product-shahin-ai",
+  "runtime": "node",
+  "dependsOn": [
+    "auth-service",
+    "tenant-service",
+    "workflow-service"
+  ],
+  "modules": [
+    "remediation",
+    "action"
+  ],
+  "exposes": {
+    "apiBase": "/api/remediation",
+    "events": [
+      "remediation.plan.created",
+      "action.completed",
+      "finding.resolved"
+    ]
+  }
+}

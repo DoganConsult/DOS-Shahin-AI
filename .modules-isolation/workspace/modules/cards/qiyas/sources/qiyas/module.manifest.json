@@ -1,0 +1,90 @@
+{
+  "moduleCode": "qiyas",
+  "displayName": "Qiyas Maturity Assessment",
+  "ownerTeam": "product-shahin-ai",
+  "productCode": "shahin-ai",
+  "ownership": "module-owned",
+  "version": "1.0.0",
+  "status": "active",
+  "platformDependencies": [
+    "identity",
+    "tenancy",
+    "workflow",
+    "permissions",
+    "audit"
+  ],
+  "seedProviders": [
+    "products/shahin/seeds/qiyas-seed"
+  ],
+  "tenantDefaults": [
+    "qiyas_assessment_frequency_days",
+    "qiyas_benchmark_enabled"
+  ],
+  "requiredReferenceData": [
+    "maturity_models",
+    "maturity_dimensions",
+    "benchmark_frameworks"
+  ],
+  "currentSources": [
+    "/home/Dr-Dogan-AGRC-OS/backend/src/modules/qiyas"
+  ],
+  "targetPath": "modules/qiyas",
+  "futureService": "qiyas-journey-service",
+  "frontendSources": [
+    "/home/Dr-Dogan-AGRC-OS/frontend/src/app/platform-manifests/qiyas.module.routes.ts"
+  ],
+  "ownedTables": [
+    "qiyas_assessments",
+    "qiyas_benchmarks",
+    "qiyas_capability_scores",
+    "qiyas_dimensions",
+    "qiyas_domain_scores",
+    "qiyas_evidence_links",
+    "qiyas_frameworks",
+    "qiyas_gap_analysis",
+    "qiyas_improvement_plans",
+    "qiyas_maturity_levels",
+    "qiyas_maturity_models",
+    "qiyas_peer_comparisons",
+    "qiyas_question_sets",
+    "qiyas_recommendations",
+    "qiyas_responses",
+    "qiyas_roadmap_items",
+    "qiyas_score_history",
+    "qiyas_strategy_directions",
+    "qiyas_target_profiles",
+    "qiyas_trend_analysis"
+  ],
+  "referencedTables": [
+    "audit_trail",
+    "teams",
+    "workflows",
+    "compliance_frameworks",
+    "risk_assessments",
+    "governance_health_scores"
+  ],
+  "events": {
+    "publishes": [
+      "qiyas.assessment_started",
+      "qiyas.assessment_completed",
+      "qiyas.maturity_scored",
+      "qiyas.gap_identified",
+      "qiyas.improvement_planned",
+      "qiyas.roadmap_created",
+      "qiyas.benchmark_compared",
+      "qiyas.target_set",
+      "qiyas.trend_detected",
+      "qiyas.strategy_direction_set"
+    ],
+    "subscribes": [
+      "compliance.posture_changed",
+      "risk.assessment_completed",
+      "governance.health_score_updated",
+      "audit.engagement_completed",
+      "workflow.status_changed"
+    ]
+  },
+  "routeBases": [
+    "/api/qiyas"
+  ]
+}

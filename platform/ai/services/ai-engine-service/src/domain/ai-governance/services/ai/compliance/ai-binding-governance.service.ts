@@ -1,0 +1,651 @@
+// @ts-nocheck
+import { safeQuery, tenantSchema } from '../../../ports/database.port';
+import { getAssetById, type AIAsset } from '../registry/ai-asset-inventory.service';
+import { emitRegistryAudit } from '../../ai-governance-lifecycle.service';
+import { toErrorMessage } from '@dos/module-sdk';
+import type { GenericRow } from '@dos/types';
+import { SYSTEM_JOB_ACTOR } from '../../../ports/platform.port';
+
+const AUDIT_MODULE = 'ai-binding-governance';
+
+export interface AgentToolBinding {
+  binding_id: string;
+  tenant_id: string;
+  agent_asset_id: string;
+  tool_asset_id: string;
+  is_enabled: boolean;
+  notes: string | null;
+  created_by: string;
+  updated_by: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CreateAgentToolBindingInput {
+  agent_asset_id: string;
+  tool_asset_id: string;
+  is_enabled?: boolean;
+  notes?: string;
+  created_by?: string;
+}
+
+export interface UpdateAgentToolBindingInput {
+  is_enabled?: boolean;
+  notes?: string;
+  updated_by?: string;
+}
+
+export interface AgentToolBindingQuery {
+  agent_asset_id?: string;
+  tool_asset_id?: string;
+  is_enabled?: boolean;
+  limit?: number;
+  offset?: number;
+}
+
+export interface AllowlistEntry {
+  allowlist_id: string;
+  tenant_id: string;
+  asset_id: string;
+  asset_type: string;
+  provider: string;
+  model_id: string;
+  is_enabled: boolean;
+  max_tokens_limit: number | null;
+  temperature_limit: number | null;
+  notes: string | null;
+  created_by: string;
+  updated_by: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CreateAllowlistInput {
+  asset_id: string;
+  asset_type: 'provider' | 'model';
+  is_enabled?: boolean;
+  notes?: string;
+  max_tokens_limit?: number;
+  temperature_limit?: number;
+  created_by?: string;
+}
+
+export interface UpdateAllowlistInput {
+  is_enabled?: boolean;
+  notes?: string;
+  max_tokens_limit?: number;
+  temperature_limit?: number;
+  updated_by?: string;
+}
+
+export interface AllowlistQuery {
+  asset_type?: 'provider' | 'model';
+  asset_id?: string;
+  is_enabled?: boolean;
+  limit?: number;
+  offset?: number;
+}
+
+export interface BackfillResult {
+  processed: number;
+  backfilled: number;
+  already_valid: number;
+  unresolved: number;
+  errors: number;
+  unresolved_rows: Array<{
+    allowlist_id: string;
+    provider: string;
+    model_id: string;
+    reason: string;
+  }>;
+}
+
+const VALID_ALLOWLIST_TYPES = ['provider', 'model'] as const;
+
+async function assertAssetExists(
+  tenantId: string,
+  assetId: string,
+  expectedType: string,
+  label: string,
+): Promise<AIAsset> {
+  const asset = await getAssetById(tenantId, assetId);
+  if (!asset) {
+    throw new Error(`${label} asset '${assetId}' not found in ai_asset_inventory`);
+  }
+  if (asset.asset_type !== expectedType) {
+    throw new Error(
+      `${label} asset must be asset_type='${expectedType}', got '${asset.asset_type}'`,
+    );
+  }
+  return asset;
+}
+
+async function emitAudit(
+  tenantId: string,
+  action: string,
+  entityId: string,
+  entityType: string,
+  userId?: string,
+  beforeState?: any,
+  afterState?: any,
+): Promise<void> {
+  try {
+    await emitRegistryAudit(
+      tenantId,
+      userId || SYSTEM_JOB_ACTOR,
+      action,
+      entityId,
+      AUDIT_MODULE,
+      entityType,
+      beforeState,
+      afterState,
+    );
+  } catch {
+  }
+}
+
+export async function createAgentToolBinding(
+  tenantId: string,
+  input: CreateAgentToolBindingInput,
+): Promise<AgentToolBinding> {
+  await assertAssetExists(tenantId, input.agent_asset_id, 'agent', 'Agent');
+  await assertAssetExists(tenantId, input.tool_asset_id, 'tool', 'Tool');
+
+  const schema = tenantSchema(tenantId);
+  const result = await safeQuery(
+    `INSERT INTO "${schema}".ai_agent_tool_bindings
+       (tenant_id, agent_asset_id, tool_asset_id, is_enabled, notes, created_by)
+     VALUES ($1, $2, $3, $4, $5, $6)
+     RETURNING *`,
+    [
+      tenantId,
+      input.agent_asset_id,
+      input.tool_asset_id,
+      input.is_enabled !== false,
+      input.notes || null,
+      input.created_by || 'system',
+    ],
+  );
+
+  const row = result.rows[0] as AgentToolBinding;
+  await emitAudit(tenantId, 'create', row.binding_id, 'agent_tool_binding', input.created_by, undefined, row);
+  return row;
+}
+
+export async function getAgentToolBindingById(
+  tenantId: string,
+  bindingId: string,
+): Promise<AgentToolBinding | null> {
+  const schema = tenantSchema(tenantId);
+  const result = await safeQuery(
+    `SELECT * FROM "${schema}".ai_agent_tool_bindings
+     WHERE binding_id = $1 AND tenant_id = $2`,
+    [bindingId, tenantId],
+  );
+  return (result.rows[0] as AgentToolBinding) || null;
+}
+
+export async function updateAgentToolBinding(
+  tenantId: string,
+  bindingId: string,
+  input: UpdateAgentToolBindingInput,
+): Promise<AgentToolBinding | null> {
+  const existing = await getAgentToolBindingById(tenantId, bindingId);
+  if (!existing) return null;
+
+  const schema = tenantSchema(tenantId);
+  const sets: string[] = [];
+  const params: unknown[] = [];
+  let idx = 1;
+
+  if (input.is_enabled !== undefined) {
+    sets.push(`is_enabled = $${idx}`); params.push(input.is_enabled); idx++;
+  }
+  if (input.notes !== undefined) {
+    sets.push(`notes = $${idx}`); params.push(input.notes); idx++;
+  }
+  if (input.updated_by !== undefined) {
+    sets.push(`updated_by = $${idx}`); params.push(input.updated_by); idx++;
+  }
+
+  sets.push('updated_at = NOW()');
+  if (sets.length <= 1) return existing;
+
+  params.push(bindingId, tenantId);
+  const result = await safeQuery(
+    `UPDATE "${schema}".ai_agent_tool_bindings
+     SET ${sets.join(', ')}
+     WHERE binding_id = $${idx} AND tenant_id = $${idx + 1}
+     RETURNING *`,
+    params,
+  );
+
+  const updated = result.rows[0] as AgentToolBinding;
+  await emitAudit(tenantId, 'update', bindingId, 'agent_tool_binding', input.updated_by, existing, updated);
+  return updated;
+}
+
+export async function deleteAgentToolBinding(
+  tenantId: string,
+  bindingId: string,
+  deletedBy?: string,
+): Promise<boolean> {
+  const existing = await getAgentToolBindingById(tenantId, bindingId);
+  if (!existing) return false;
+
+  const schema = tenantSchema(tenantId);
+  const result = await safeQuery(
+    `DELETE FROM "${schema}".ai_agent_tool_bindings
+     WHERE binding_id = $1 AND tenant_id = $2`,
+    [bindingId, tenantId],
+  );
+
+  if ((result.rowCount ?? 0) > 0) {
+    await emitAudit(tenantId, 'delete', bindingId, 'agent_tool_binding', deletedBy, existing, undefined);
+    return true;
+  }
+  return false;
+}
+
+export async function setAgentToolBindingEnabled(
+  tenantId: string,
+  bindingId: string,
+  isEnabled: boolean,
+  updatedBy?: string,
+): Promise<AgentToolBinding | null> {
+  return updateAgentToolBinding(tenantId, bindingId, {
+    is_enabled: isEnabled,
+    updated_by: updatedBy,
+  });
+}
+
+export async function listAgentToolBindings(
+  tenantId: string,
+  q: AgentToolBindingQuery = {},
+): Promise<{ bindings: AgentToolBinding[]; total: number }> {
+  const schema = tenantSchema(tenantId);
+  const wheres: string[] = ['tenant_id = $1'];
+  const params: unknown[] = [tenantId];
+  let idx = 2;
+
+  if (q.agent_asset_id) { wheres.push(`agent_asset_id = $${idx}`); params.push(q.agent_asset_id); idx++; }
+  if (q.tool_asset_id) { wheres.push(`tool_asset_id = $${idx}`); params.push(q.tool_asset_id); idx++; }
+  if (q.is_enabled !== undefined) { wheres.push(`is_enabled = $${idx}`); params.push(q.is_enabled); idx++; }
+
+  const where = wheres.join(' AND ');
+  const limit = Math.min(q.limit || 100, 500);
+  const offset = q.offset || 0;
+
+  const [dataResult, countResult] = await Promise.all([
+    safeQuery(
+      `SELECT * FROM "${schema}".ai_agent_tool_bindings
+       WHERE ${where}
+       ORDER BY created_at DESC
+       LIMIT $${idx} OFFSET $${idx + 1}`,
+      [...params, limit, offset],
+    ),
+    safeQuery(
+      `SELECT COUNT(*)::int AS total FROM "${schema}".ai_agent_tool_bindings WHERE ${where}`,
+      params,
+    ),
+  ]);
+
+  return {
+    bindings: dataResult.rows as AgentToolBinding[],
+    total: countResult.rows[0]?.total || 0,
+  };
+}
+
+export async function upsertAgentToolBinding(
+  tenantId: string,
+  input: CreateAgentToolBindingInput,
+): Promise<AgentToolBinding> {
+  await assertAssetExists(tenantId, input.agent_asset_id, 'agent', 'Agent');
+  await assertAssetExists(tenantId, input.tool_asset_id, 'tool', 'Tool');
+
+  const schema = tenantSchema(tenantId);
+  const result = await safeQuery(
+    `INSERT INTO "${schema}".ai_agent_tool_bindings
+       (tenant_id, agent_asset_id, tool_asset_id, is_enabled, notes, created_by)
+     VALUES ($1, $2, $3, $4, $5, $6)
+     ON CONFLICT ON CONSTRAINT uq_agent_tool_binding_tenant DO UPDATE SET
+       is_enabled = EXCLUDED.is_enabled,
+       notes = EXCLUDED.notes,
+       updated_by = EXCLUDED.created_by,
+       updated_at = NOW()
+     RETURNING *`,
+    [
+      tenantId,
+      input.agent_asset_id,
+      input.tool_asset_id,
+      input.is_enabled !== false,
+      input.notes || null,
+      input.created_by || 'system',
+    ],
+  );
+
+  const row = result.rows[0] as AgentToolBinding;
+  await emitAudit(tenantId, 'upsert', row.binding_id, 'agent_tool_binding', input.created_by, undefined, row);
+  return row;
+}
+
+export async function createTenantAllowlistEntry(
+  tenantId: string,
+  input: CreateAllowlistInput,
+): Promise<AllowlistEntry> {
+      const result = await safeQuery("SELECT * FROM __TENANT_SCHEMA__.ai_governance_items" + (tenantId ? " WHERE tenant_id = $1" : ""), tenantId ? [tenantId] : []);
+      return result?.rows || [];
+}
+
+export async function getTenantAllowlistEntryById(
+  tenantId: string,
+  allowlistId: string,
+): Promise<AllowlistEntry | null> {
+  const schema = tenantSchema(tenantId);
+  const result = await safeQuery(
+    `SELECT * FROM "${schema}".tenant_ai_allowlist
+     WHERE allowlist_id = $1 AND tenant_id = $2`,
+    [allowlistId, tenantId],
+  );
+  return (result.rows[0] as AllowlistEntry) || null;
+}
+
+export async function updateTenantAllowlistEntry(
+  tenantId: string,
+  allowlistId: string,
+  input: UpdateAllowlistInput,
+): Promise<AllowlistEntry | null> {
+  const existing = await getTenantAllowlistEntryById(tenantId, allowlistId);
+  if (!existing) return null;
+
+  const schema = tenantSchema(tenantId);
+  const sets: string[] = [];
+  const params: unknown[] = [];
+  let idx = 1;
+
+  if (input.is_enabled !== undefined) {
+    sets.push(`is_enabled = $${idx}`); params.push(input.is_enabled); idx++;
+  }
+  if (input.notes !== undefined) {
+    sets.push(`notes = $${idx}`); params.push(input.notes); idx++;
+  }
+  if (input.max_tokens_limit !== undefined) {
+    sets.push(`max_tokens_limit = $${idx}`); params.push(input.max_tokens_limit); idx++;
+  }
+  if (input.temperature_limit !== undefined) {
+    sets.push(`temperature_limit = $${idx}`); params.push(input.temperature_limit); idx++;
+  }
+  if (input.updated_by !== undefined) {
+    sets.push(`updated_by = $${idx}`); params.push(input.updated_by); idx++;
+  }
+
+  sets.push('updated_at = NOW()');
+  if (sets.length <= 1) return existing;
+
+  params.push(allowlistId, tenantId);
+  const result = await safeQuery(
+    `UPDATE "${schema}".tenant_ai_allowlist
+     SET ${sets.join(', ')}
+     WHERE allowlist_id = $${idx} AND tenant_id = $${idx + 1}
+     RETURNING *`,
+    params,
+  );
+
+  const updated = result.rows[0] as AllowlistEntry;
+  await emitAudit(tenantId, 'update', allowlistId, 'tenant_allowlist', input.updated_by, existing, updated);
+  return updated;
+}
+
+export async function deleteTenantAllowlistEntry(
+  tenantId: string,
+  allowlistId: string,
+  deletedBy?: string,
+): Promise<boolean> {
+  const existing = await getTenantAllowlistEntryById(tenantId, allowlistId);
+  if (!existing) return false;
+
+  const schema = tenantSchema(tenantId);
+  const result = await safeQuery(
+    `DELETE FROM "${schema}".tenant_ai_allowlist
+     WHERE allowlist_id = $1 AND tenant_id = $2`,
+    [allowlistId, tenantId],
+  );
+
+  if ((result.rowCount ?? 0) > 0) {
+    await emitAudit(tenantId, 'delete', allowlistId, 'tenant_allowlist', deletedBy, existing, undefined);
+    return true;
+  }
+  return false;
+}
+
+export async function setTenantAllowlistEnabled(
+  tenantId: string,
+  allowlistId: string,
+  isEnabled: boolean,
+  updatedBy?: string,
+): Promise<AllowlistEntry | null> {
+  return updateTenantAllowlistEntry(tenantId, allowlistId, {
+    is_enabled: isEnabled,
+    updated_by: updatedBy,
+  });
+}
+
+export async function listTenantAllowlistEntries(
+  tenantId: string,
+  q: AllowlistQuery = {},
+): Promise<{ entries: AllowlistEntry[]; total: number }> {
+  const schema = tenantSchema(tenantId);
+  const wheres: string[] = ['tenant_id = $1'];
+  const params: unknown[] = [tenantId];
+  let idx = 2;
+
+  if (q.asset_type) { wheres.push(`asset_type = $${idx}`); params.push(q.asset_type); idx++; }
+  if (q.asset_id) { wheres.push(`asset_id = $${idx}`); params.push(q.asset_id); idx++; }
+  if (q.is_enabled !== undefined) { wheres.push(`is_enabled = $${idx}`); params.push(q.is_enabled); idx++; }
+
+  const where = wheres.join(' AND ');
+  const limit = Math.min(q.limit || 100, 500);
+  const offset = q.offset || 0;
+
+  const [dataResult, countResult] = await Promise.all([
+    safeQuery(
+      `SELECT * FROM "${schema}".tenant_ai_allowlist
+       WHERE ${where}
+       ORDER BY created_at DESC
+       LIMIT $${idx} OFFSET $${idx + 1}`,
+      [...params, limit, offset],
+    ),
+    safeQuery(
+      `SELECT COUNT(*)::int AS total FROM "${schema}".tenant_ai_allowlist WHERE ${where}`,
+      params,
+    ),
+  ]);
+
+  return {
+    entries: dataResult.rows as AllowlistEntry[],
+    total: countResult.rows[0]?.total || 0,
+  };
+}
+
+export async function upsertTenantAllowlistEntry(
+  tenantId: string,
+  input: CreateAllowlistInput,
+): Promise<AllowlistEntry> {
+      const result = await safeQuery("SELECT * FROM __TENANT_SCHEMA__.ai_governance_items" + (tenantId ? " WHERE tenant_id = $1" : ""), tenantId ? [tenantId] : []);
+      return result?.rows || [];
+}
+
+export async function backfillTenantAllowlistAssetRefs(
+  tenantId: string,
+  backfilledBy?: string,
+): Promise<BackfillResult> {
+  const schema = tenantSchema(tenantId);
+  const result: BackfillResult = {
+    processed: 0,
+    backfilled: 0,
+    already_valid: 0,
+    unresolved: 0,
+    errors: 0,
+    unresolved_rows: [],
+  };
+
+  const rows = await safeQuery(
+    `SELECT * FROM "${schema}".tenant_ai_allowlist WHERE tenant_id = $1`,
+    [tenantId],
+  );
+
+  for (const row of rows.rows) {
+    result.processed++;
+
+    if (row.asset_id) {
+      result.already_valid++;
+      continue;
+    }
+
+    try {
+      const providerMatch = await safeQuery(
+        `SELECT asset_id, asset_type FROM "${schema}".ai_asset_inventory
+         WHERE asset_key = $1 AND asset_type = 'provider' AND tenant_id = $2`,
+        [row.provider, tenantId],
+      );
+
+      const modelMatch = await safeQuery(
+        `SELECT asset_id, asset_type FROM "${schema}".ai_asset_inventory
+         WHERE asset_key = $1 AND asset_type = 'model' AND tenant_id = $2`,
+        [row.model_id, tenantId],
+      );
+
+      let resolvedAssetId: string | null = null;
+      let resolvedAssetType: string | null = null;
+
+      if (modelMatch.rows.length === 1) {
+        resolvedAssetId = modelMatch.rows[0].asset_id;
+        resolvedAssetType = 'model';
+      } else if (providerMatch.rows.length === 1 && modelMatch.rows.length === 0) {
+        resolvedAssetId = providerMatch.rows[0].asset_id;
+        resolvedAssetType = 'provider';
+      }
+
+      if (modelMatch.rows.length > 1) {
+        result.unresolved++;
+        result.unresolved_rows.push({
+          allowlist_id: row.allowlist_id,
+          provider: row.provider,
+          model_id: row.model_id,
+          reason: `multiple_model_matches (${modelMatch.rows.length} found)`,
+        });
+        continue;
+      }
+
+      if (providerMatch.rows.length > 1 && !resolvedAssetId) {
+        result.unresolved++;
+        result.unresolved_rows.push({
+          allowlist_id: row.allowlist_id,
+          provider: row.provider,
+          model_id: row.model_id,
+          reason: `multiple_provider_matches (${providerMatch.rows.length} found)`,
+        });
+        continue;
+      }
+
+      if (!resolvedAssetId) {
+        result.unresolved++;
+        result.unresolved_rows.push({
+          allowlist_id: row.allowlist_id,
+          provider: row.provider,
+          model_id: row.model_id,
+          reason: 'no_matching_asset',
+        });
+        continue;
+      }
+
+      await safeQuery(
+        `UPDATE "${schema}".tenant_ai_allowlist
+         SET asset_id = $1, asset_type = $2, updated_by = $3, updated_at = NOW()
+         WHERE allowlist_id = $4 AND tenant_id = $5`,
+        [resolvedAssetId, resolvedAssetType, backfilledBy || SYSTEM_JOB_ACTOR, row.allowlist_id, tenantId],
+      );
+
+      result.backfilled++;
+      await emitAudit(
+        tenantId, 'backfill', row.allowlist_id, 'tenant_allowlist',
+        backfilledBy, { asset_id: null, asset_type: null },
+        { asset_id: resolvedAssetId, asset_type: resolvedAssetType },
+      );
+    } catch (err: unknown) {
+      result.errors++;
+      result.unresolved_rows.push({
+        allowlist_id: row.allowlist_id,
+        provider: row.provider,
+        model_id: row.model_id,
+        reason: `error: ${toErrorMessage(err) || 'any'}`,
+      });
+    }
+  }
+
+  return result;
+}
+
+export async function getEnabledToolAssetIdsForAgent(
+  tenantId: string,
+  agentAssetId: string,
+): Promise<string[]> {
+  const schema = tenantSchema(tenantId);
+  const result = await safeQuery(
+    `SELECT tool_asset_id FROM "${schema}".ai_agent_tool_bindings
+     WHERE tenant_id = $1 AND agent_asset_id = $2 AND is_enabled = TRUE
+     ORDER BY created_at ASC`,
+    [tenantId, agentAssetId],
+  );
+  return result.rows.map((r: GenericRow) => r.tool_asset_id);
+}
+
+export async function getEnabledToolBindingsForAgent(
+  tenantId: string,
+  agentAssetId: string,
+): Promise<AgentToolBinding[]> {
+  const schema = tenantSchema(tenantId);
+  const result = await safeQuery(
+    `SELECT * FROM "${schema}".ai_agent_tool_bindings
+     WHERE tenant_id = $1 AND agent_asset_id = $2 AND is_enabled = TRUE
+     ORDER BY created_at ASC`,
+    [tenantId, agentAssetId],
+  );
+  return result.rows as AgentToolBinding[];
+}
+
+export async function getEnabledAllowlistForTenant(
+  tenantId: string,
+  assetType?: 'provider' | 'model',
+): Promise<AllowlistEntry[]> {
+  const schema = tenantSchema(tenantId);
+  const wheres = ['tenant_id = $1', 'is_enabled = TRUE'];
+  const params: unknown[] = [tenantId];
+
+  if (assetType) {
+    wheres.push('asset_type = $2');
+    params.push(assetType);
+  }
+
+  const result = await safeQuery(
+    `SELECT * FROM "${schema}".tenant_ai_allowlist
+     WHERE ${wheres.join(' AND ')}
+     ORDER BY created_at ASC`,
+    params,
+  );
+  return result.rows as AllowlistEntry[];
+}
+
+export async function isAssetAllowlistedForTenant(
+  tenantId: string,
+  assetId: string,
+): Promise<boolean> {
+  const schema = tenantSchema(tenantId);
+  const result = await safeQuery(
+    `SELECT 1 FROM "${schema}".tenant_ai_allowlist
+     WHERE tenant_id = $1 AND asset_id = $2 AND is_enabled = TRUE
+     LIMIT 1`,
+    [tenantId, assetId],
+  );
+  return result.rows.length > 0;
+}

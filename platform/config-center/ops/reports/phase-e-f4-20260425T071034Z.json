@@ -1,0 +1,10 @@
+{
+  "mode": "apply",
+  "timestamp": "20260425T071034Z",
+  "migrator": "dos_migrator@localhost/shahin_grc",
+  "tenant_count": 1,
+  "failures": 0,
+  "results": [
+    {"tenant":"tenant_shahin_visitors","status":"applied","error":""}
+  ]
+}

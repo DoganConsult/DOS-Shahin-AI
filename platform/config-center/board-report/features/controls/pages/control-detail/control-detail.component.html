@@ -1,0 +1,285 @@
+<!-- Control Detail Page — AGRC-OS Controls Module -->
+<div [dir]="i18n.direction()">
+
+  <!-- Loading State -->
+  @if (loading()) {
+    <app-skeleton-loader [variant]="'detail'" />
+  }
+
+  <!-- Error State -->
+  @if (!loading() && error()) {
+    <app-empty-state
+      [variant]="'error'"
+      [title]="i18n.isAr() ? 'فشل تحميل الضابط' : 'Failed to load control'"
+      [description]="i18n.isAr() ? 'يرجى المحاولة مرة أخرى' : 'Please try again'"
+      [actionLabel]="i18n.isAr() ? 'إعادة المحاولة' : 'Retry'"
+      (action)="retry()" />
+  }
+
+  <!-- Content -->
+  @if (!loading() && !error() && control()) {
+
+    <!-- Sticky Header -->
+    <header class="detail-header">
+      <div class="header-top">
+        <button class="back-btn" (click)="goBack()" [attr.aria-label]="i18n.isAr() ? 'رجوع' : 'Go back'">
+          <i class="pi pi-arrow-left"></i>
+        </button>
+
+        @if (control()!.controlCode) {
+          <span class="control-code">{{ control()!.controlCode }}</span>
+        }
+
+        <h1 class="control-title">{{ control()!.title }}</h1>
+
+        <div class="header-badges">
+          @if (control()!.keyControl) {
+            <span class="key-control-badge">
+              <i class="pi pi-star-fill"></i>
+              {{ i18n.isAr() ? 'ضابط رئيسي' : 'Key Control' }}
+            </span>
+          }
+
+          @if (control()!.automationLevel) {
+            <span class="automation-badge">
+              <i class="pi pi-cog"></i>
+              {{ control()!.automationLevel }}
+            </span>
+          }
+
+          <app-status-badge [status]="control()!.status || 'draft'" />
+        </div>
+      </div>
+
+      <div class="header-meta">
+        @if (control()!.familyName) {
+          <span class="meta-item">
+            <i class="pi pi-th-large"></i> {{ control()!.familyName }}
+          </span>
+          <span class="meta-separator"></span>
+        }
+
+        @if (control()!.owner) {
+          <span class="meta-item">
+            <i class="pi pi-user"></i>
+            {{ i18n.isAr() ? 'المالك:' : 'Owner:' }} {{ control()!.owner }}
+          </span>
+          <span class="meta-separator"></span>
+        }
+
+        @if (control()!.operatorUserId) {
+          <span class="meta-item">
+            <i class="pi pi-users"></i>
+            {{ i18n.isAr() ? 'المشغل' : 'Operator' }}
+          </span>
+          <span class="meta-separator"></span>
+        }
+
+        @if (control()!.reviewerUserId) {
+          <span class="meta-item">
+            <i class="pi pi-eye"></i>
+            {{ i18n.isAr() ? 'المراجع' : 'Reviewer' }}
+          </span>
+          <span class="meta-separator"></span>
+        }
+
+        @if (control()!.nextTestDueAt) {
+          <span class="meta-item">
+            <i class="pi pi-calendar"></i>
+            {{ i18n.isAr() ? 'الاختبار التالي:' : 'Next test:' }}
+            {{ control()!.nextTestDueAt | date:'mediumDate' }}
+          </span>
+        }
+      </div>
+    </header>
+
+    <!-- Summary Strip -->
+    <section class="summary-strip">
+      <div class="summary-card" (click)="activeTab.set(3)">
+        <span class="summary-value">{{ control()!.mappedRiskCount ?? 0 }}</span>
+        <span class="summary-label">{{ i18n.isAr() ? 'المخاطر المرتبطة' : 'Mapped Risks' }}</span>
+      </div>
+      <div class="summary-card" (click)="activeTab.set(3)">
+        <span class="summary-value">{{ control()!.mappedObligationCount ?? 0 }}</span>
+        <span class="summary-label">{{ i18n.isAr() ? 'الالتزامات المرتبطة' : 'Mapped Obligations' }}</span>
+      </div>
+      <div class="summary-card" (click)="activeTab.set(3)">
+        <span class="summary-value">{{ control()!.mappedPolicyCount ?? 0 }}</span>
+        <span class="summary-label">{{ i18n.isAr() ? 'السياسات المرتبطة' : 'Mapped Policies' }}</span>
+      </div>
+      <div class="summary-card">
+        <span class="summary-value" [class.pass]="control()!.designEffective" [class.fail]="control()!.designEffective === false">
+          {{ control()!.designEffective === null || control()!.designEffective === undefined ? '--' : (control()!.designEffective ? (i18n.isAr() ? 'فعال' : 'Pass') : (i18n.isAr() ? 'غير فعال' : 'Fail')) }}
+        </span>
+        <span class="summary-label">{{ i18n.isAr() ? 'فعالية التصميم' : 'Design Effectiveness' }}</span>
+      </div>
+      <div class="summary-card">
+        <span class="summary-value" [class.pass]="control()!.operatingEffective" [class.fail]="control()!.operatingEffective === false">
+          {{ control()!.operatingEffective === null || control()!.operatingEffective === undefined ? '--' : (control()!.operatingEffective ? (i18n.isAr() ? 'فعال' : 'Pass') : (i18n.isAr() ? 'غير فعال' : 'Fail')) }}
+        </span>
+        <span class="summary-label">{{ i18n.isAr() ? 'فعالية التشغيل' : 'Operating Effectiveness' }}</span>
+      </div>
+      <div class="summary-card" (click)="activeTab.set(7)">
+        <span class="summary-value" [class.warn]="(control()!.openDeficiencyCount ?? 0) > 0">
+          {{ control()!.openDeficiencyCount ?? 0 }}
+        </span>
+        <span class="summary-label">{{ i18n.isAr() ? 'أوجه قصور مفتوحة' : 'Open Deficiencies' }}</span>
+      </div>
+      <div class="summary-card" (click)="activeTab.set(8)">
+        <app-status-badge [status]="control()!.monitoringStatus || 'inactive'" />
+        <span class="summary-label">{{ i18n.isAr() ? 'المراقبة' : 'Monitoring' }}</span>
+      </div>
+    </section>
+
+    <!-- Main Body: Tab Panel + Right Rail -->
+    <div class="detail-body">
+
+      <!-- Tab Panel -->
+      <div class="detail-content">
+        <p-tabView [(activeIndex)]="activeTabIndex" (activeIndexChange)="activeTab.set($event)">
+
+          <!-- Tab 0: Overview -->
+          <p-tabPanel [header]="i18n.isAr() ? 'نظرة عامة' : 'Overview'">
+            <app-control-overview-tab [control]="control()" />
+          </p-tabPanel>
+
+          <!-- Tab 1: Objective & Procedure -->
+          <p-tabPanel [header]="i18n.isAr() ? 'الهدف والإجراء' : 'Objective & Procedure'">
+            <app-control-objective-tab [control]="control()" />
+          </p-tabPanel>
+
+          <!-- Tab 2: Scope & Ownership -->
+          <p-tabPanel [header]="i18n.isAr() ? 'النطاق والملكية' : 'Scope & Ownership'">
+            <app-control-scope-tab [control]="control()" />
+          </p-tabPanel>
+
+          <!-- Tab 3: Mapping -->
+          <p-tabPanel [header]="i18n.isAr() ? 'الربط' : 'Mapping'">
+            <app-control-mapping-tab [control]="control()" />
+          </p-tabPanel>
+
+          <!-- Tab 4: Evidence Sources -->
+          <p-tabPanel [header]="i18n.isAr() ? 'مصادر الأدلة' : 'Evidence Sources'">
+            <app-control-evidence-tab [control]="control()" />
+          </p-tabPanel>
+
+          <!-- Tab 5: Testing History -->
+          <p-tabPanel [header]="i18n.isAr() ? 'سجل الاختبارات' : 'Testing History'">
+            <app-control-testing-tab [control]="control()" />
+          </p-tabPanel>
+
+          <!-- Tab 6: Certifications -->
+          <p-tabPanel [header]="i18n.isAr() ? 'الشهادات' : 'Certifications'">
+            <app-control-certifications-tab [control]="control()" />
+          </p-tabPanel>
+
+          <!-- Tab 7: Deficiencies & Actions -->
+          <p-tabPanel [header]="i18n.isAr() ? 'أوجه القصور' : 'Deficiencies'">
+            <app-control-deficiencies-tab [control]="control()" />
+          </p-tabPanel>
+
+          <!-- Tab 8: Monitoring Signals -->
+          <p-tabPanel [header]="i18n.isAr() ? 'إشارات المراقبة' : 'Monitoring'">
+            <app-control-monitoring-tab [control]="control()" />
+          </p-tabPanel>
+
+          <!-- Tab 9: Activity Log -->
+          <p-tabPanel [header]="i18n.isAr() ? 'سجل النشاط' : 'Activity Log'">
+            <app-control-activity-tab [control]="control()" />
+          </p-tabPanel>
+
+        </p-tabView>
+      </div>
+
+      <!-- Right Rail -->
+      <aside class="right-rail">
+
+        <!-- Quick Actions -->
+        <div class="rail-section">
+          <h4>{{ i18n.isAr() ? 'إجراءات سريعة' : 'Quick Actions' }}</h4>
+          <div class="rail-actions">
+            <button class="rail-action-btn" (click)="onEdit()">
+              <i class="pi pi-pencil"></i>
+              {{ i18n.isAr() ? 'تعديل الضابط' : 'Edit Control' }}
+            </button>
+            <button class="rail-action-btn" (click)="onTest()">
+              <i class="pi pi-check-square"></i>
+              {{ i18n.isAr() ? 'تنفيذ اختبار' : 'Run Test' }}
+            </button>
+            <button class="rail-action-btn" (click)="onCertify()">
+              <i class="pi pi-verified"></i>
+              {{ i18n.isAr() ? 'طلب شهادة' : 'Certify' }}
+            </button>
+            <button class="rail-action-btn" (click)="onFlagDeficiency()">
+              <i class="pi pi-flag"></i>
+              {{ i18n.isAr() ? 'الإبلاغ عن قصور' : 'Flag Deficiency' }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Related Issues -->
+        @if (relatedIssues().length) {
+          <div class="rail-section">
+            <h4>{{ i18n.isAr() ? 'المشكلات ذات الصلة' : 'Related Issues' }}</h4>
+            <div class="rail-issue-list">
+              @for (issue of relatedIssues(); track issue.id) {
+                <div class="rail-issue-item">{{ issue.title }}</div>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- Latest Alerts -->
+        @if (latestAlerts().length) {
+          <div class="rail-section">
+            <h4>{{ i18n.isAr() ? 'آخر التنبيهات' : 'Latest Alerts' }}</h4>
+            <div class="rail-alert-list">
+              @for (alert of latestAlerts(); track alert.alertId) {
+                <div class="rail-alert-item" [class]="'severity-' + alert.severity">
+                  <span class="alert-message">{{ alert.controlTitle || alert.alertId }}</span>
+                  <span class="alert-time">{{ alert.detectedAt | date:'short' }}</span>
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- Responsible Users -->
+        <div class="rail-section">
+          <h4>{{ i18n.isAr() ? 'المسؤولون' : 'Responsible Users' }}</h4>
+          <div class="rail-user-list">
+            @if (control()!.owner) {
+              <div class="rail-user-item">
+                <div class="user-avatar">{{ getInitial(control()!.owner!) }}</div>
+                <div class="user-info">
+                  <span class="user-name">{{ control()!.owner }}</span>
+                  <span class="user-role">{{ i18n.isAr() ? 'المالك' : 'Owner' }}</span>
+                </div>
+              </div>
+            }
+            @if (control()!.operatorUserId) {
+              <div class="rail-user-item">
+                <div class="user-avatar">O</div>
+                <div class="user-info">
+                  <span class="user-name">{{ control()!.operatorUserId }}</span>
+                  <span class="user-role">{{ i18n.isAr() ? 'المشغل' : 'Operator' }}</span>
+                </div>
+              </div>
+            }
+            @if (control()!.reviewerUserId) {
+              <div class="rail-user-item">
+                <div class="user-avatar">R</div>
+                <div class="user-info">
+                  <span class="user-name">{{ control()!.reviewerUserId }}</span>
+                  <span class="user-role">{{ i18n.isAr() ? 'المراجع' : 'Reviewer' }}</span>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+
+      </aside>
+    </div>
+
+  }
+</div>

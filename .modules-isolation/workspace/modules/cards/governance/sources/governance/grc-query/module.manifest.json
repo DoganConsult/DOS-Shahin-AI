@@ -1,0 +1,44 @@
+{
+  "moduleCode": "grc-query",
+  "displayName": "GRC Query Engine",
+  "ownerTeam": "product-shahin-ai",
+  "productCode": "shahin-ai",
+  "ownership": "module-owned",
+  "version": "1.0.0",
+  "status": "active",
+  "platformDependencies": [
+    "identity",
+    "tenancy"
+  ],
+  "seedProviders": [],
+  "tenantDefaults": [
+    "grc_query_nlq_enabled"
+  ],
+  "requiredReferenceData": [],
+  "currentSources": [
+    "/home/Dr-Dogan-AGRC-OS/backend/src/modules/grc-query"
+  ],
+  "targetPath": "modules/grc-query",
+  "futureService": "analytics-reporting-service",
+  "frontendSources": [
+    "/home/Dr-Dogan-AGRC-OS/frontend/src/app/platform-manifests/grc-query.module.routes.ts"
+  ],
+  "ownedTables": [
+    "grc_query_log",
+    "grc_saved_queries"
+  ],
+  "referencedTables": [
+    "risk_register",
+    "compliance_items",
+    "audit_plans",
+    "incidents",
+    "controls"
+  ],
+  "events": {
+    "publishes": [],
+    "subscribes": []
+  },
+  "routeBases": [
+    "/api/grc-query"
+  ]
+}

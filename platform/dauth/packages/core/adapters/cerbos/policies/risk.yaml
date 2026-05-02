@@ -1,0 +1,62 @@
+---
+apiVersion: "api.cerbos.dev/v1"
+resourcePolicy:
+  version: "1"
+  resource: "risk"
+  importDerivedRoles:
+    - dogan_enterprise
+
+  rules:
+    - actions: ["risk.view", "risk.list"]
+      effect: EFFECT_ALLOW
+      derivedRoles:
+        - tenant_member
+        - auditor_readonly
+        - risk_approver
+        - compliance_officer
+        - platform_admin
+
+    - actions: ["risk.create", "risk.update", "risk.assess"]
+      effect: EFFECT_ALLOW
+      roles: ["risk_editor", "risk_admin", "tenant_admin", "platform_admin"]
+      condition:
+        match:
+          expr: request.principal.attr.tenantId == request.resource.attr.tenantId
+
+    # Approve — SoD: approver ≠ owner, requires step-up
+    - actions: ["risk.approve"]
+      effect: EFFECT_ALLOW
+      derivedRoles: ["risk_approver", "step_up_satisfied"]
+      condition:
+        match:
+          all:
+            of:
+              - expr: request.resource.attr.status == "assessed"
+              - expr: request.principal.id != request.resource.attr.createdBy
+              - expr: |
+                  has(request.principal.attr.acr) &&
+                  (request.principal.attr.acr == "aal2" || request.principal.attr.acr == "aal3")
+
+    - actions: ["risk.approve"]
+      effect: EFFECT_DENY
+      roles: ["*"]
+      condition:
+        match:
+          expr: request.principal.id == request.resource.attr.createdBy
+      output:
+        when:
+          ruleActivated: '"DAUTH_DENY_SOD_SELF_APPROVAL"'
+
+    - actions: ["risk.accept", "risk.transfer"]
+      effect: EFFECT_ALLOW
+      derivedRoles: ["risk_approver", "tenant_admin", "high_assurance"]
+      condition:
+        match:
+          expr: request.resource.attr.status == "approved"
+      output:
+        expr: |
+          { "requireDualApproval": true }
+
+    - actions: ["risk.close"]
+      effect: EFFECT_ALLOW
+      derivedRoles: ["tenant_admin", "platform_admin"]

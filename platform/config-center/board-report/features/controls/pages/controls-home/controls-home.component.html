@@ -1,0 +1,272 @@
+<!-- Controls Home — Command Center Dashboard -->
+<div class="controls-home" [attr.dir]="dir()">
+
+  <!-- ═══ Loading State ═══════════════════════════════════════════════ -->
+  @if (loading()) {
+    <div class="skeleton-kpi-strip">
+      @for (i of [1,2,3,4,5,6]; track i) {
+        <app-skeleton-loader variant="card" />
+      }
+    </div>
+    <div class="skeleton-three-col">
+      <app-skeleton-loader variant="detail" />
+      <app-skeleton-loader variant="detail" />
+      <app-skeleton-loader variant="detail" />
+    </div>
+    <div class="skeleton-two-col">
+      <app-skeleton-loader variant="detail" />
+      <app-skeleton-loader variant="detail" />
+    </div>
+    <app-skeleton-loader variant="list" [count]="3" />
+  }
+
+  <!-- ═══ Error State ═════════════════════════════════════════════════ -->
+  @if (!loading() && error()) {
+    <app-empty-state
+      variant="error"
+      [title]="isAr() ? 'فشل تحميل البيانات' : 'Failed to load data'"
+      [description]="isAr() ? 'تحقق من الاتصال وحاول مرة أخرى' : 'Check your connection and try again'"
+      [actionLabel]="isAr() ? 'إعادة المحاولة' : 'Retry'"
+      [dir]="dir()"
+      (action)="loadData()" />
+  }
+
+  <!-- ═══ Loaded Content ══════════════════════════════════════════════ -->
+  @if (!loading() && !error() && data()) {
+
+    <!-- Row 1: KPI Strip -->
+    <section class="kpi-section" [attr.aria-label]="isAr() ? 'مؤشرات الأداء الرئيسية' : 'Key Performance Indicators'">
+      <app-kpi-card-grid [cards]="kpis()" [isAr]="isAr()" />
+    </section>
+
+    <!-- Row 2: Failed Tests | Overdue Tests | Automation Mix -->
+    <section class="three-col-section">
+
+      <!-- Failed Tests Card -->
+      <div class="section-card">
+        <div class="section-card__header">
+          <i class="pi pi-times-circle" aria-hidden="true"></i>
+          <span>{{ isAr() ? 'اختبارات فاشلة' : 'Failed Tests' }}</span>
+          <a class="section-view-all" routerLink="/controls/testing" [queryParams]="{ result: 'fail' }">
+            {{ isAr() ? 'عرض الكل' : 'View All' }}
+            <i class="pi pi-arrow-right" aria-hidden="true"></i>
+          </a>
+        </div>
+        <div class="section-card__body">
+          @if (data()!.failedTestsThisPeriod === 0) {
+            <app-empty-state
+              [title]="isAr() ? 'لا توجد اختبارات فاشلة' : 'No failed tests'"
+              [description]="isAr() ? 'جميع الاختبارات اجتازت بنجاح' : 'All tests passed this period'"
+              [dir]="dir()" />
+          } @else {
+            <grc-data-table
+              [totalRecords]="data()!.failedTestsThisPeriod"
+              [emptyMessage]="isAr() ? 'البيانات التفصيلية متاحة في صفحة الاختبارات' : 'Detailed data available on the Testing page'">
+              <p-table
+                [value]="[]"
+                [rows]="5"
+                styleClass="p-datatable-sm p-datatable-striped"
+                [attr.aria-label]="isAr() ? 'جدول الاختبارات الفاشلة' : 'Failed Tests Table'">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th>{{ isAr() ? 'الضابط' : 'Control' }}</th>
+                    <th>{{ isAr() ? 'النوع' : 'Type' }}</th>
+                    <th>{{ isAr() ? 'تاريخ الفشل' : 'Failed At' }}</th>
+                    <th>{{ isAr() ? 'الخطورة' : 'Severity' }}</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-row>
+                  <tr>
+                    <td>{{ row.controlTitle }}</td>
+                    <td>{{ row.testType }}</td>
+                    <td>{{ formatDate(row.failedAt) }}</td>
+                    <td><app-status-badge [status]="row.severity" /></td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </grc-data-table>
+          }
+        </div>
+      </div>
+
+      <!-- Overdue Tests Card -->
+      <div class="section-card">
+        <div class="section-card__header">
+          <i class="pi pi-clock" aria-hidden="true"></i>
+          <span>{{ isAr() ? 'اختبارات متأخرة' : 'Overdue Tests' }}</span>
+          <a class="section-view-all" routerLink="/controls/testing" [queryParams]="{ status: 'overdue' }">
+            {{ isAr() ? 'عرض الكل' : 'View All' }}
+            <i class="pi pi-arrow-right" aria-hidden="true"></i>
+          </a>
+        </div>
+        <div class="section-card__body">
+          @if (data()!.overdueTests === 0) {
+            <app-empty-state
+              [title]="isAr() ? 'لا توجد اختبارات متأخرة' : 'No overdue tests'"
+              [description]="isAr() ? 'جميع الاختبارات محدثة' : 'All tests are up to date'"
+              [dir]="dir()" />
+          } @else {
+            <grc-data-table
+              [totalRecords]="data()!.overdueTests"
+              [emptyMessage]="isAr() ? 'البيانات التفصيلية متاحة في صفحة الاختبارات' : 'Detailed data available on the Testing page'">
+              <p-table
+                [value]="[]"
+                [rows]="5"
+                styleClass="p-datatable-sm p-datatable-striped"
+                [attr.aria-label]="isAr() ? 'جدول الاختبارات المتأخرة' : 'Overdue Tests Table'">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th>{{ isAr() ? 'الضابط' : 'Control' }}</th>
+                    <th>{{ isAr() ? 'آخر اختبار' : 'Last Tested' }}</th>
+                    <th>{{ isAr() ? 'الموعد التالي' : 'Next Due' }}</th>
+                    <th>{{ isAr() ? 'أيام التأخر' : 'Days Overdue' }}</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-row>
+                  <tr>
+                    <td>{{ row.controlTitle }}</td>
+                    <td>{{ formatDate(row.lastTestedAt) }}</td>
+                    <td>{{ formatDate(row.nextDueAt) }}</td>
+                    <td>
+                      <span class="overdue-badge">{{ daysOverdue(row.nextDueAt) }}</span>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </grc-data-table>
+          }
+        </div>
+      </div>
+
+      <!-- Automation Mix Chart -->
+      <div class="section-card">
+        <div class="section-card__header">
+          <i class="pi pi-cog" aria-hidden="true"></i>
+          <span>{{ isAr() ? 'مزيج الأتمتة' : 'Automation Mix' }}</span>
+        </div>
+        <div class="section-card__body automation-chart-body">
+          @if (automationChartData()) {
+            <div class="chart-container donut-container">
+              <p-chart type="doughnut" [data]="automationChartData()!" [options]="automationChartOptions" />
+            </div>
+            <div class="automation-legend">
+              <div class="legend-row">
+                <span class="legend-dot" style="background: var(--severity-high)"></span>
+                <span class="legend-label">{{ isAr() ? 'يدوي' : 'Manual' }}</span>
+                <span class="legend-value">{{ automationPct(data()!.automationMix.manual) }}</span>
+              </div>
+              <div class="legend-row">
+                <span class="legend-dot" style="background: var(--warning)"></span>
+                <span class="legend-label">{{ isAr() ? 'شبه آلي' : 'Semi-Auto' }}</span>
+                <span class="legend-value">{{ automationPct(data()!.automationMix.semiAutomated) }}</span>
+              </div>
+              <div class="legend-row">
+                <span class="legend-dot" style="background: var(--success)"></span>
+                <span class="legend-label">{{ isAr() ? 'آلي' : 'Automated' }}</span>
+                <span class="legend-value">{{ automationPct(data()!.automationMix.automated) }}</span>
+              </div>
+            </div>
+          } @else {
+            <app-empty-state
+              [title]="isAr() ? 'لا توجد بيانات' : 'No data'"
+              [dir]="dir()" />
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- Row 3: Health Trend | Recent Alerts -->
+    <section class="two-col-section">
+
+      <!-- Control Health Trend (12 Weeks) -->
+      <div class="section-card">
+        <div class="section-card__header">
+          <i class="pi pi-chart-line" aria-hidden="true"></i>
+          <span>{{ isAr() ? 'اتجاه صحة الضوابط' : 'Control Health Trend' }}</span>
+        </div>
+        <div class="section-card__body">
+          @if (healthTrendData()) {
+            <div class="chart-container trend-container">
+              <p-chart type="line" [data]="healthTrendData()!" [options]="healthTrendOptions" />
+            </div>
+          } @else {
+            <app-empty-state
+              [title]="isAr() ? 'لا توجد بيانات اتجاه' : 'No trend data'"
+              [description]="isAr() ? 'ستتوفر البيانات بعد عدة أسابيع من المراقبة' : 'Data will be available after several weeks of monitoring'"
+              [dir]="dir()" />
+          }
+        </div>
+      </div>
+
+      <!-- Recent Monitoring Alerts -->
+      <div class="section-card">
+        <div class="section-card__header">
+          <i class="pi pi-bell" aria-hidden="true"></i>
+          <span>{{ isAr() ? 'تنبيهات المراقبة الأخيرة' : 'Recent Monitoring Alerts' }}</span>
+          <a class="section-view-all" routerLink="/controls/monitoring">
+            {{ isAr() ? 'عرض الكل' : 'View All' }}
+            <i class="pi pi-arrow-right" aria-hidden="true"></i>
+          </a>
+        </div>
+        <div class="section-card__body">
+          @if (!data()!.recentAlerts?.length) {
+            <app-empty-state
+              [title]="isAr() ? 'لا توجد تنبيهات' : 'No recent alerts'"
+              [description]="isAr() ? 'جميع الضوابط تعمل ضمن الحدود الطبيعية' : 'All controls operating within normal thresholds'"
+              [dir]="dir()" />
+          } @else {
+            <ul class="alert-list" role="list">
+              @for (alert of data()!.recentAlerts; track alert.id) {
+                <li class="alert-item" role="listitem">
+                  <span class="alert-severity-dot" [ngClass]="severityClass(alert.severity)"></span>
+                  <div class="alert-content">
+                    <span class="alert-message">{{ alert.message }}</span>
+                    <span class="alert-meta">
+                      <app-status-badge [status]="alert.severity" />
+                      <span class="alert-date">{{ formatDate(alert.createdAt) }}</span>
+                    </span>
+                  </div>
+                </li>
+              }
+            </ul>
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- Row 4: Unmapped Controls Warning -->
+    @if (data()!.unmappedControlCount > 0) {
+      <section class="unmapped-warning-card" role="alert">
+        <div class="unmapped-warning__icon">
+          <i class="pi pi-exclamation-triangle" aria-hidden="true"></i>
+        </div>
+        <div class="unmapped-warning__body">
+          <h4 class="unmapped-warning__title">
+            {{ isAr() ? 'ضوابط بدون مخاطر مرتبطة' : 'Unmapped Controls Warning' }}
+          </h4>
+          <p class="unmapped-warning__desc">
+            @if (isAr()) {
+              يوجد <strong>{{ data()!.unmappedControlCount }}</strong> ضابط بدون مخاطر مرتبطة. يجب ربط كل ضابط بمخاطر واحدة على الأقل لضمان التغطية الكاملة.
+            } @else {
+              <strong>{{ data()!.unmappedControlCount }}</strong> controls have no mapped risks. Every control should be linked to at least one risk to ensure full coverage.
+            }
+          </p>
+        </div>
+        <a class="unmapped-warning__action" routerLink="/controls/mapping">
+          {{ isAr() ? 'مراجعة التعيين' : 'Review Mapping' }}
+          <i class="pi pi-arrow-right" aria-hidden="true"></i>
+        </a>
+      </section>
+    }
+  }
+
+  <!-- ═══ Empty Data State ════════════════════════════════════════════ -->
+  @if (!loading() && !error() && !data()) {
+    <app-empty-state
+      [title]="isAr() ? 'لا توجد بيانات ضوابط' : 'No controls data'"
+      [description]="isAr() ? 'ابدأ بإضافة ضوابط إلى مكتبتك' : 'Get started by adding controls to your library'"
+      [actionLabel]="isAr() ? 'إنشاء ضابط' : 'Create Control'"
+      [dir]="dir()"
+      (action)="loadData()" />
+  }
+</div>

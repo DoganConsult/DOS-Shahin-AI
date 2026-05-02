@@ -1,0 +1,218 @@
+
+> dogan-ai-os-platform-target@1.0.0 build:services /root/DOS-AIO
+> pnpm -r --sort --workspace-concurrency=1 --filter './services/*' run build
+
+Scope: 36 of 56 workspace projects
+
+> agrc-os-service@0.1.0 build /root/DOS-AIO/services/agrc-os-service
+> tsc -p tsconfig.json
+
+
+> ai-engine-service@0.1.0 build /root/DOS-AIO/services/ai-engine-service
+> tsc -p tsconfig.json && node ../../ops/scripts/fix-esm-relative-imports.mjs dist
+
+
+> ai-gateway-service@0.1.0 build /root/DOS-AIO/services/ai-gateway-service
+> tsc -p tsconfig.json
+
+
+> ai-governance-service@0.1.0 build /root/DOS-AIO/services/ai-governance-service
+> tsc -p tsconfig.json
+
+
+> analytics-reporting-service@0.1.0 build /root/DOS-AIO/services/analytics-reporting-service
+> tsc -p tsconfig.json
+
+
+> analytics-service@0.1.0 build /root/DOS-AIO/services/analytics-service
+> tsc -p tsconfig.json
+
+
+> asset-service@0.1.0 build /root/DOS-AIO/services/asset-service
+> tsc -p tsconfig.json
+
+
+> audit-service@0.1.0 build /root/DOS-AIO/services/audit-service
+> tsc -p tsconfig.json
+
+
+> auth-service@0.1.0 build /root/DOS-AIO/services/auth-service
+> tsc -p tsconfig.json
+
+
+> bcp-service@0.1.0 build /root/DOS-AIO/services/bcp-service
+> tsc -p tsconfig.json
+
+
+> compliance-controls-service@0.1.0 build /root/DOS-AIO/services/compliance-controls-service
+> tsc -p tsconfig.json
+
+
+> dashboard-widgets-service@0.1.0 build /root/DOS-AIO/services/dashboard-widgets-service
+> tsc -p tsconfig.json
+
+
+> dora-service@0.1.0 build /root/DOS-AIO/services/dora-service
+> tsc -p tsconfig.json
+
+
+> evidence-audit-reporting-service@0.1.0 build /root/DOS-AIO/services/evidence-audit-reporting-service
+> tsc -p tsconfig.json
+
+
+> executive-intelligence-service@0.1.0 build /root/DOS-AIO/services/executive-intelligence-service
+> tsc -p tsconfig.json
+
+
+> gateway@0.1.0 build /root/DOS-AIO/services/gateway
+> tsc -p tsconfig.json
+
+src/domain/routing/route-catalog.ts(13,10): error TS2305: Module '"./route-catalogs/index"' has no exported member 'ROUTE_CATALOG'.
+src/domain/routing/route-catalogs/access/rbac/seed-rbac-data.ts(25,15): error TS2305: Module '"./canonical-roles"' has no exported member 'RoleDef'.
+src/domain/routing/route-catalogs/access/rbac/seed-rbac-data.ts(26,15): error TS2305: Module '"./canonical-permissions"' has no exported member 'PermDef'.
+src/domain/routing/route-catalogs/access/rbac/seed-rbac-data.ts(82,65): error TS2339: Property 'code' does not exist on type '"delete" | "admin" | "read" | "create" | "update" | "approve" | "export"'.
+  Property 'code' does not exist on type '"delete"'.
+src/domain/routing/route-catalogs/access/rbac/seed-rbac-data.ts(82,73): error TS2339: Property 'module' does not exist on type '"delete" | "admin" | "read" | "create" | "update" | "approve" | "export"'.
+  Property 'module' does not exist on type '"delete"'.
+src/domain/routing/route-catalogs/access/rbac/seed-rbac-data.ts(121,63): error TS2339: Property 'module' does not exist on type '"delete" | "admin" | "read" | "create" | "update" | "approve" | "export"'.
+  Property 'module' does not exist on type '"delete"'.
+src/domain/routing/route-catalogs/access/rbac/seed-rbac-data.ts(148,45): error TS2339: Property 'description' does not exist on type '{ readonly code: "super_admin"; readonly name: "Super Admin"; readonly level: 100; } | { readonly code: "tenant_admin"; readonly name: "Tenant Admin"; readonly level: 90; } | { readonly code: "module_admin"; readonly name: "Module Admin"; readonly level: 80; } | { ...; } | { ...; } | { ...; }'.
+  Property 'description' does not exist on type '{ readonly code: "super_admin"; readonly name: "Super Admin"; readonly level: 100; }'.
+src/domain/routing/route-catalogs/access/rbac/seed-rbac-data.ts(148,63): error TS2339: Property 'isSystem' does not exist on type '{ readonly code: "super_admin"; readonly name: "Super Admin"; readonly level: 100; } | { readonly code: "tenant_admin"; readonly name: "Tenant Admin"; readonly level: 90; } | { readonly code: "module_admin"; readonly name: "Module Admin"; readonly level: 80; } | { ...; } | { ...; } | { ...; }'.
+  Property 'isSystem' does not exist on type '{ readonly code: "super_admin"; readonly name: "Super Admin"; readonly level: 100; }'.
+src/domain/routing/route-catalogs/access/rbac/seed-rbac-data.ts(160,15): error TS2339: Property 'code' does not exist on type '"delete" | "admin" | "read" | "create" | "update" | "approve" | "export"'.
+  Property 'code' does not exist on type '"delete"'.
+src/domain/routing/route-catalogs/access/rbac/seed-rbac-data.ts(160,26): error TS2339: Property 'module' does not exist on type '"delete" | "admin" | "read" | "create" | "update" | "approve" | "export"'.
+  Property 'module' does not exist on type '"delete"'.
+src/domain/routing/route-catalogs/access/rbac/seed-rbac-data.ts(160,39): error TS2339: Property 'resource' does not exist on type '"delete" | "admin" | "read" | "create" | "update" | "approve" | "export"'.
+  Property 'resource' does not exist on type '"delete"'.
+src/domain/routing/route-catalogs/access/rbac/seed-rbac-data.ts(160,54): error TS2339: Property 'action' does not exist on type '"delete" | "admin" | "read" | "create" | "update" | "approve" | "export"'.
+  Property 'action' does not exist on type '"delete"'.
+src/domain/routing/route-catalogs/access/rbac/seed-rbac-data.ts(160,67): error TS2339: Property 'name' does not exist on type '"delete" | "admin" | "read" | "create" | "update" | "approve" | "export"'.
+  Property 'name' does not exist on type '"delete"'.
+src/domain/routing/route-catalogs/index.ts(12,3): error TS2305: Module '"./identity/token"' has no exported member 'generateAccessToken'.
+src/domain/routing/route-catalogs/index.ts(13,3): error TS2305: Module '"./identity/token"' has no exported member 'verifyAccessToken'.
+src/domain/routing/route-catalogs/index.ts(14,3): error TS2305: Module '"./identity/token"' has no exported member 'decodeTokenUnsafe'.
+src/domain/routing/route-catalogs/index.ts(15,3): error TS2305: Module '"./identity/token"' has no exported member 'getAccessTokenExpirySeconds'.
+src/domain/routing/route-catalogs/index.ts(16,3): error TS2305: Module '"./identity/token"' has no exported member 'generateRefreshToken'.
+src/domain/routing/route-catalogs/index.ts(17,3): error TS2305: Module '"./identity/token"' has no exported member 'verifyRefreshToken'.
+src/domain/routing/route-catalogs/index.ts(18,3): error TS2305: Module '"./identity/token"' has no exported member 'setRefreshTokenCookie'.
+src/domain/routing/route-catalogs/index.ts(19,3): error TS2305: Module '"./identity/token"' has no exported member 'clearRefreshTokenCookie'.
+src/domain/routing/route-catalogs/index.ts(20,8): error TS2305: Module '"./identity/token"' has no exported member 'AuthPayload'.
+src/domain/routing/route-catalogs/index.ts(25,3): error TS2305: Module '"./middleware/session"' has no exported member 'authenticate'.
+src/domain/routing/route-catalogs/index.ts(26,3): error TS2305: Module '"./middleware/session"' has no exported member 'authenticateToken'.
+src/domain/routing/route-catalogs/index.ts(27,3): error TS2305: Module '"./middleware/session"' has no exported member 'optionalAuthenticate'.
+src/domain/routing/route-catalogs/index.ts(32,3): error TS2305: Module '"./access/access"' has no exported member 'requirePermission'.
+src/domain/routing/route-catalogs/index.ts(33,3): error TS2305: Module '"./access/access"' has no exported member 'requireAnyPermission'.
+src/domain/routing/route-catalogs/index.ts(34,3): error TS2305: Module '"./access/access"' has no exported member 'requireSuperAdmin'.
+src/domain/routing/route-catalogs/index.ts(35,3): error TS2305: Module '"./access/access"' has no exported member 'invalidatePermissionCache'.
+src/domain/routing/route-catalogs/index.ts(60,3): error TS2724: '"./access/access-snapshot"' has no exported member named 'getAccessSnapshot'. Did you mean 'AccessSnapshot'?
+src/domain/routing/route-catalogs/index.ts(61,3): error TS2305: Module '"./access/access-snapshot"' has no exported member 'provisionAccessFromRole'.
+src/domain/routing/route-catalogs/index.ts(62,3): error TS2305: Module '"./access/access-snapshot"' has no exported member 'canPerform'.
+src/domain/routing/route-catalogs/index.ts(63,3): error TS2724: '"./access/access-snapshot"' has no exported member named 'accessSnapshotService'. Did you mean 'AccessSnapshot'?
+src/domain/routing/route-catalogs/index.ts(68,3): error TS2305: Module '"./lifecycle-auth/lifecycle-auth"' has no exported member 'evaluateLifecycleTransition'.
+src/domain/routing/route-catalogs/index.ts(69,8): error TS2305: Module '"./lifecycle-auth/lifecycle-auth"' has no exported member 'LifecycleAuthResult'.
+src/domain/routing/route-catalogs/index.ts(95,3): error TS2305: Module '"./session/session"' has no exported member 'createSession'.
+src/domain/routing/route-catalogs/index.ts(96,3): error TS2305: Module '"./session/session"' has no exported member 'refreshSession'.
+src/domain/routing/route-catalogs/index.ts(97,3): error TS2305: Module '"./session/session"' has no exported member 'destroySession'.
+src/domain/routing/route-catalogs/index.ts(98,3): error TS2305: Module '"./session/session"' has no exported member 'isSessionValid'.
+src/domain/routing/route-catalogs/index.ts(99,8): error TS2305: Module '"./session/session"' has no exported member 'SessionCreateInput'.
+src/domain/routing/route-catalogs/index.ts(100,8): error TS2724: '"./session/session"' has no exported member named 'SessionTokens'. Did you mean 'SessionTokenPair'?
+src/domain/routing/route-catalogs/index.ts(130,3): error TS2305: Module '"./mfa/mfa"' has no exported member 'getMfaStatus'.
+src/domain/routing/route-catalogs/index.ts(131,3): error TS2305: Module '"./mfa/mfa"' has no exported member 'isMfaRequired'.
+src/domain/routing/route-catalogs/index.ts(132,3): error TS2305: Module '"./mfa/mfa"' has no exported member 'createEmailChallenge'.
+src/domain/routing/route-catalogs/index.ts(133,3): error TS2305: Module '"./mfa/mfa"' has no exported member 'verifyEmailChallenge'.
+src/domain/routing/route-catalogs/index.ts(134,3): error TS2305: Module '"./mfa/mfa"' has no exported member 'enableMfa'.
+src/domain/routing/route-catalogs/index.ts(135,3): error TS2305: Module '"./mfa/mfa"' has no exported member 'disableMfa'.
+src/domain/routing/route-catalogs/index.ts(136,3): error TS2305: Module '"./mfa/mfa"' has no exported member 'enableTotp'.
+src/domain/routing/route-catalogs/index.ts(137,3): error TS2305: Module '"./mfa/mfa"' has no exported member 'verifyTotp'.
+src/domain/routing/route-catalogs/index.ts(138,8): error TS2305: Module '"./mfa/mfa"' has no exported member 'MfaType'.
+src/domain/routing/route-catalogs/index.ts(139,8): error TS2305: Module '"./mfa/mfa"' has no exported member 'MfaStatus'.
+src/domain/routing/route-catalogs/index.ts(144,3): error TS2724: '"./delegation/delegation"' has no exported member named 'createDelegationGrant'. Did you mean 'DelegationGrant'?
+src/domain/routing/route-catalogs/index.ts(145,3): error TS2724: '"./delegation/delegation"' has no exported member named 'revokeDelegationGrant'. Did you mean 'DelegationGrant'?
+src/domain/routing/route-catalogs/index.ts(146,3): error TS2305: Module '"./delegation/delegation"' has no exported member 'validateDelegation'.
+src/domain/routing/route-catalogs/index.ts(147,3): error TS2305: Module '"./delegation/delegation"' has no exported member 'generateDelegatedToken'.
+src/domain/routing/route-catalogs/index.ts(148,3): error TS2305: Module '"./delegation/delegation"' has no exported member 'executeDelegatedAction'.
+src/domain/routing/route-catalogs/index.ts(149,3): error TS2305: Module '"./delegation/delegation"' has no exported member 'registerDelegationScope'.
+src/domain/routing/route-catalogs/index.ts(150,3): error TS2305: Module '"./delegation/delegation"' has no exported member 'registerActionScopeMapping'.
+src/domain/routing/route-catalogs/index.ts(151,3): error TS2305: Module '"./delegation/delegation"' has no exported member 'getScopeRequiredPermissions'.
+src/domain/routing/route-catalogs/index.ts(152,3): error TS2305: Module '"./delegation/delegation"' has no exported member 'getActionScope'.
+src/domain/routing/route-catalogs/index.ts(154,8): error TS2724: '"./delegation/delegation"' has no exported member named 'DelegationScope'. Did you mean 'DelegationScopeCode'?
+src/domain/routing/route-catalogs/index.ts(159,15): error TS2724: '"./contracts/access-snapshot"' has no exported member named 'FullAccessSnapshot'. Did you mean 'AccessSnapshot'?
+src/domain/routing/route-catalogs/index.ts(159,40): error TS2305: Module '"./contracts/access-snapshot"' has no exported member 'ActorInfo'.
+src/domain/routing/route-catalogs/index.ts(159,56): error TS2305: Module '"./contracts/access-snapshot"' has no exported member 'TenantMembership'.
+src/domain/routing/route-catalogs/index.ts(159,79): error TS2305: Module '"./contracts/access-snapshot"' has no exported member 'ScopeBinding'.
+src/domain/routing/route-catalogs/index.ts(159,120): error TS2305: Module '"./contracts/access-snapshot"' has no exported member 'LandingHint'.
+src/domain/routing/route-catalogs/index.ts(159,138): error TS2305: Module '"./contracts/access-snapshot"' has no exported member 'AuditTraceMeta'.
+src/domain/routing/route-catalogs/index.ts(169,8): error TS2305: Module '"./types/dauth"' has no exported member 'SessionStatus'.
+src/domain/routing/route-catalogs/index.ts(170,8): error TS2305: Module '"./types/dauth"' has no exported member 'RefreshTokenFamilyStatus'.
+src/domain/routing/route-catalogs/index.ts(171,8): error TS2305: Module '"./types/dauth"' has no exported member 'InvitationStatus'.
+src/domain/routing/route-catalogs/index.ts(172,8): error TS2305: Module '"./types/dauth"' has no exported member 'SecurityEventType'.
+src/domain/routing/route-catalogs/index.ts(173,8): error TS2305: Module '"./types/dauth"' has no exported member 'SessionContext'.
+src/domain/routing/route-catalogs/index.ts(174,8): error TS2305: Module '"./types/dauth"' has no exported member 'RefreshTokenFamily'.
+src/domain/routing/route-catalogs/index.ts(175,8): error TS2305: Module '"./types/dauth"' has no exported member 'SecurityPolicyConfig'.
+src/domain/routing/route-catalogs/index.ts(176,8): error TS2305: Module '"./types/dauth"' has no exported member 'AccessReviewRequest'.
+src/domain/routing/route-catalogs/index.ts(177,8): error TS2305: Module '"./types/dauth"' has no exported member 'MakerCheckerDecision'.
+src/domain/routing/route-catalogs/index.ts(329,27): error TS2305: Module '"./scope/org-scope"' has no exported member 'expandOrgScope'.
+src/domain/routing/route-catalogs/index.ts(329,43): error TS2305: Module '"./scope/org-scope"' has no exported member 'expandOrgScopeFlat'.
+src/domain/routing/route-catalogs/index.ts(329,63): error TS2305: Module '"./scope/org-scope"' has no exported member 'isWithinOrgScope'.
+src/domain/routing/route-catalogs/index.ts(329,81): error TS2305: Module '"./scope/org-scope"' has no exported member 'getAllOrganizations'.
+src/domain/routing/route-catalogs/index.ts(329,102): error TS2305: Module '"./scope/org-scope"' has no exported member 'resolveOrgHierarchyGraph'.
+src/domain/routing/route-catalogs/index.ts(330,28): error TS2305: Module '"./scope/team-scope"' has no exported member 'resolveTeamMembership'.
+src/domain/routing/route-catalogs/index.ts(330,51): error TS2305: Module '"./scope/team-scope"' has no exported member 'getTeamMembers'.
+src/domain/routing/route-catalogs/index.ts(330,67): error TS2305: Module '"./scope/team-scope"' has no exported member 'expandTeamScope'.
+src/domain/routing/route-catalogs/index.ts(330,84): error TS2305: Module '"./scope/team-scope"' has no exported member 'isWithinTeamScope'.
+src/domain/routing/route-catalogs/index.ts(330,103): error TS2305: Module '"./scope/team-scope"' has no exported member 'getTeamDepartment'.
+src/domain/routing/route-catalogs/index.ts(330,122): error TS2305: Module '"./scope/team-scope"' has no exported member 'getTeamsByDepartment'.
+src/domain/routing/route-catalogs/index.ts(331,32): error TS2305: Module '"./scope/position-scope"' has no exported member 'getPositionHierarchy'.
+src/domain/routing/route-catalogs/index.ts(331,54): error TS2305: Module '"./scope/position-scope"' has no exported member 'getSubordinatePositions'.
+src/domain/routing/route-catalogs/index.ts(331,79): error TS2305: Module '"./scope/position-scope"' has no exported member 'isWithinPositionScope'.
+src/domain/routing/route-catalogs/index.ts(331,102): error TS2305: Module '"./scope/position-scope"' has no exported member 'getPositionDepartment'.
+src/domain/routing/route-catalogs/index.ts(331,125): error TS2305: Module '"./scope/position-scope"' has no exported member 'getPositionsByDepartment'.
+src/domain/routing/route-catalogs/index.ts(331,151): error TS2305: Module '"./scope/position-scope"' has no exported member 'getReportsToPosition'.
+src/domain/routing/route-catalogs/index.ts(332,33): error TS2305: Module '"./scope/ownership-scope"' has no exported member 'isEntityOwner'.
+src/domain/routing/route-catalogs/index.ts(332,48): error TS2305: Module '"./scope/ownership-scope"' has no exported member 'isPrimaryOwner'.
+src/domain/routing/route-catalogs/index.ts(332,64): error TS2305: Module '"./scope/ownership-scope"' has no exported member 'getEntityOwners'.
+src/domain/routing/route-catalogs/index.ts(332,81): error TS2305: Module '"./scope/ownership-scope"' has no exported member 'getOwnedEntityIds'.
+src/domain/routing/route-catalogs/index.ts(332,100): error TS2305: Module '"./scope/ownership-scope"' has no exported member 'assignControlOwnership'.
+src/domain/routing/route-catalogs/index.ts(332,124): error TS2305: Module '"./scope/ownership-scope"' has no exported member 'assignRiskOwnership'.
+src/domain/routing/route-catalogs/index.ts(332,145): error TS2305: Module '"./scope/ownership-scope"' has no exported member 'revokeControlOwnership'.
+src/domain/routing/route-catalogs/index.ts(332,169): error TS2305: Module '"./scope/ownership-scope"' has no exported member 'revokeRiskOwnership'.
+src/domain/routing/route-catalogs/index.ts(332,195): error TS2305: Module '"./scope/ownership-scope"' has no exported member 'OwnershipRecord'.
+src/domain/routing/route-catalogs/index.ts(464,3): error TS2305: Module '"./frontend-contracts/access-snapshot"' has no exported member 'hasAuthority'.
+src/domain/routing/route-catalogs/index.ts(465,3): error TS2305: Module '"./frontend-contracts/access-snapshot"' has no exported member 'getAllowedModules'.
+src/domain/routing/route-catalogs/index.ts(466,3): error TS2305: Module '"./frontend-contracts/access-snapshot"' has no exported member 'getLandingPage'.
+src/domain/routing/route-catalogs/index.ts(467,3): error TS2305: Module '"./frontend-contracts/access-snapshot"' has no exported member 'isModuleVisible'.
+src/domain/routing/route-catalogs/index.ts(468,3): error TS2305: Module '"./frontend-contracts/access-snapshot"' has no exported member 'getScopeBindings'.
+src/domain/routing/route-catalogs/index.ts(485,10): error TS2305: Module '"./access/access"' has no exported member 'requireRole'.
+src/domain/routing/route-catalogs/index.ts(520,3): error TS2305: Module '"./scope/external-scope"' has no exported member 'isWithinExternalScope'.
+src/domain/routing/route-catalogs/index.ts(521,3): error TS2305: Module '"./scope/external-scope"' has no exported member 'hasExternalPermission'.
+src/domain/routing/route-catalogs/index.ts(522,3): error TS2305: Module '"./scope/external-scope"' has no exported member 'getExternalEntityIds'.
+src/domain/routing/route-catalogs/index.ts(523,8): error TS2305: Module '"./scope/external-scope"' has no exported member 'ExternalScope'.
+src/domain/routing/route-catalogs/index.ts(528,3): error TS2724: '"./contracts/auth-errors"' has no exported member named 'AuthErrorBase'. Did you mean 'AUTH_ERRORS'?
+src/domain/routing/route-catalogs/index.ts(529,3): error TS2305: Module '"./contracts/auth-errors"' has no exported member 'AuthErrorResponse'.
+src/domain/routing/route-catalogs/index.ts(530,3): error TS2305: Module '"./contracts/auth-errors"' has no exported member 'UnauthenticatedError'.
+src/domain/routing/route-catalogs/index.ts(531,3): error TS2305: Module '"./contracts/auth-errors"' has no exported member 'ForbiddenError'.
+src/domain/routing/route-catalogs/index.ts(532,3): error TS2305: Module '"./contracts/auth-errors"' has no exported member 'TokenExpiredError'.
+src/domain/routing/route-catalogs/index.ts(533,3): error TS2305: Module '"./contracts/auth-errors"' has no exported member 'SessionRevokedError'.
+src/domain/routing/route-catalogs/index.ts(534,3): error TS2305: Module '"./contracts/auth-errors"' has no exported member 'TenantInactiveError'.
+src/domain/routing/route-catalogs/index.ts(535,3): error TS2305: Module '"./contracts/auth-errors"' has no exported member 'SoDBlockedError'.
+src/domain/routing/route-catalogs/index.ts(536,3): error TS2305: Module '"./contracts/auth-errors"' has no exported member 'SelfApprovalBlockedError'.
+src/domain/routing/route-catalogs/index.ts(537,3): error TS2305: Module '"./contracts/auth-errors"' has no exported member 'LifecycleDeniedError'.
+src/domain/routing/route-catalogs/index.ts(538,3): error TS2305: Module '"./contracts/auth-errors"' has no exported member 'AuthorityInsufficientError'.
+src/domain/routing/route-catalogs/index.ts(539,3): error TS2305: Module '"./contracts/auth-errors"' has no exported member 'DelegationInvalidError'.
+src/domain/routing/route-catalogs/index.ts(540,3): error TS2305: Module '"./contracts/auth-errors"' has no exported member 'ClearanceDeniedError'.
+src/domain/routing/route-catalogs/index.ts(541,3): error TS2305: Module '"./contracts/auth-errors"' has no exported member 'ModuleNotLicensedError'.
+src/domain/routing/route-catalogs/index.ts(546,3): error TS2305: Module '"./contracts/lifecycle-auth"' has no exported member 'LifecycleTransitionRequest'.
+src/domain/routing/route-catalogs/index.ts(547,3): error TS2305: Module '"./contracts/lifecycle-auth"' has no exported member 'TransitionCheckResult'.
+src/domain/routing/route-catalogs/index.ts(548,3): error TS2305: Module '"./contracts/lifecycle-auth"' has no exported member 'LifecycleAuthDecision'.
+src/domain/routing/route-catalogs/index.ts(561,10): error TS2305: Module '"./identity/token"' has no exported member 'getJwtSecret'.
+src/domain/routing/route-catalogs/index.ts(562,10): error TS2305: Module '"./identity/token"' has no exported member 'getJwtSecret'.
+/root/DOS-AIO/services/gateway:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  gateway@0.1.0 build: `tsc -p tsconfig.json`
+Exit status 2
+
+> governance-policy-service@0.1.0 build /root/DOS-AIO/services/governance-policy-service
+> tsc -p tsconfig.json
+
+ ELIFECYCLE  Command failed with exit code 2.

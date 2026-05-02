@@ -1,0 +1,51 @@
+<div class="widget-box"
+         [class.mode-compact]="displayMode === 'compact'"
+         [class.mode-expanded]="displayMode === 'expanded'"
+         [style.grid-column]="'span ' + width"
+         [style.grid-row]="'span ' + height">
+      <div class="widget-header" [class.header-compact]="displayMode === 'compact'">
+        <span class="widget-icon">{{ icon }}</span>
+        <span class="widget-title">{{ i18n.localize(nameEn, nameAr) }}</span>
+        <app-pulse-indicator
+          [lastUpdated]="lastUpdated"
+          [errorState]="error">
+        </app-pulse-indicator>
+        <button class="refresh-btn" (click)="retry.emit()" title="Refresh">&#x21bb;</button>
+        <button class="drilldown-btn" (click)="drillDown.emit()" title="Details">&#x25B6;</button>
+      </div>
+      <div class="widget-body"
+           [class.body-compact]="displayMode === 'compact'"
+           [class.widget-body--loading]="loading"
+           [class.data-flash]="dataUpdated">
+        <ng-container *ngIf="loading; else loadedState">
+          <div class="skeleton-shimmer skeleton-main" [style.height]="skeletonMainHeight"></div>
+          <div class="skeleton-shimmer skeleton-line" style="width: 80%"></div>
+          <div class="skeleton-shimmer skeleton-line" style="width: 60%"></div>
+        </ng-container>
+        <ng-template #loadedState>
+          <ng-container *ngIf="error; else contentState">
+            <div class="error-state">
+              <span class="error-icon">⚠️</span>
+              <p class="error-msg">{{ i18n.translate('widget.loadError') || 'Failed to load widget' }}</p>
+              <button class="retry-btn" (click)="retry.emit()">{{ i18n.translate('widget.retry') || 'Retry' }}</button>
+            </div>
+          </ng-container>
+          <ng-template #contentState>
+            <ng-template #outlet></ng-template>
+          </ng-template>
+        </ng-template>
+      </div>
+      <div class="resize-handle" *ngIf="showResizeHandle"
+           (mousedown)="onResizeStart($event)"
+           (touchstart)="onResizeStart($event)"
+           title="Resize">
+        <span class="resize-dots">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        </span>
+      </div>
+      <div class="resize-overlay" *ngIf="isResizing">
+        <span class="resize-dimensions">{{ resizeColSpan }} × {{ resizeRowSpan }}</span>
+      </div>
+    </div>

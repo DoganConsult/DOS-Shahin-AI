@@ -1,0 +1,31 @@
+<div class="grc-hub" [dir]="i18n.dir()">
+  <header class="hub-toolbar">
+    <h2>{{ i18n.isArabic() ? 'مركز الذكاء' : 'AI Hub' }}</h2>
+    <p class="muted">
+      {{ i18n.isArabic() ? 'بيانات حيّة من /ai-engine.' : 'Live data from /ai-engine.' }}
+    </p>
+  </header>
+
+  <ng-container [ngSwitch]="state()">
+    <p-card *ngSwitchCase="'loading'">
+      <p>{{ i18n.isArabic() ? 'جارِ التحميل…' : 'Loading…' }}</p>
+    </p-card>
+    <p-card *ngSwitchCase="'error'" styleClass="state-error">
+      <pre class="mono">{{ error() }}</pre>
+    </p-card>
+    <div *ngSwitchCase="'ready'" class="kpi-grid">
+      <p-card>
+        <h3>service</h3>
+        <p class="kpi">{{ summary()?.['service'] }}</p>
+      </p-card>
+      <p-card>
+        <h3>version</h3>
+        <p class="kpi">{{ summary()?.['version'] }}</p>
+      </p-card>
+      <p-card>
+        <h3>mounts</h3>
+        <p class="kpi">{{ summary()?.['mounts'] }}</p>
+      </p-card>
+    </div>
+  </ng-container>
+</div>

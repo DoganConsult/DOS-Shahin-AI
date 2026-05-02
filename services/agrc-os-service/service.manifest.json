@@ -1,0 +1,22 @@
+{
+  "serviceCode": "agrc-os-service",
+  "displayName": "AGRC OS Service",
+  "layer": "platform-service",
+  "ownerTeam": "platform-ai",
+  "runtime": "node",
+  "dependsOn": [
+    "auth-service",
+    "tenant-service",
+    "ai-gateway-service"
+  ],
+  "modules": [
+    "agrc-engine"
+  ],
+  "exposes": {
+    "apiBase": "/api/agrc",
+    "events": [
+      "agrc.analysis.completed",
+      "agrc.recommendation.generated"
+    ]
+  }
+}

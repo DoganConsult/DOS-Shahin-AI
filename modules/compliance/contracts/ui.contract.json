@@ -1,0 +1,1295 @@
+{
+  "$schema": "../../../docs/DOS-AIO-Specs/dynamic-ui-enrollment-page-experience-widgets-spec.md#2-module-ui-contract-module-owned",
+  "specVersion": "1.0.0",
+  "moduleCode": "compliance",
+  "displayName": { "en": "Compliance", "ar": "الامتثال" },
+
+  "moduleStyleTokens": {
+    "moduleCode": "compliance",
+    "accent": "navy",
+    "accentSecondary": "saffron",
+    "icon": "fact_check",
+    "mood": "formal, assurance-heavy, evidence-driven",
+    "pageDensity": "comfortable",
+    "surfaceStyle": "assurance",
+    "signatureWidgets": [
+      "control-library-matrix",
+      "obligation-map",
+      "assessment-cockpit",
+      "evidence-binder",
+      "gap-remediation-board",
+      "framework-mapping"
+    ],
+    "agentTone": "assurance",
+    "defaultPageLayout": "full-page",
+    "mobileVariant": "bottom-sheet"
+  },
+
+  "theme": {
+    "accent": "navy",
+    "accentSecondary": "saffron",
+    "icon": "fact_check",
+    "density": "comfortable",
+    "surface": "enterprise-light"
+  },
+
+  "navigation": [
+    { "route": "/compliance",                 "labelKey": "compliance.nav.label",        "icon": "fact_check",    "order": 1, "permission": "compliance.read" },
+    { "route": "/compliance/frameworks",      "labelKey": "compliance.nav.frameworks",   "icon": "menu_book",     "order": 2, "permission": "compliance.read" },
+    { "route": "/compliance/obligations",     "labelKey": "compliance.nav.obligations",  "icon": "rule",          "order": 3, "permission": "compliance.read" },
+    { "route": "/compliance/controls",        "labelKey": "compliance.nav.controls",     "icon": "checklist",     "order": 4, "permission": "compliance.read" },
+    { "route": "/compliance/assessments",     "labelKey": "compliance.nav.assessments",  "icon": "fact_check",    "order": 5, "permission": "compliance.read" },
+    { "route": "/compliance/evidence",        "labelKey": "compliance.nav.evidence",     "icon": "folder_zip",    "order": 6, "permission": "compliance.read" },
+    { "route": "/compliance/gaps",            "labelKey": "compliance.nav.gaps",         "icon": "report",        "order": 7, "permission": "compliance.read" },
+    { "route": "/compliance/attestations",    "labelKey": "compliance.nav.attestations", "icon": "verified",      "order": 8, "permission": "compliance.read" },
+    { "route": "/compliance/reports",         "labelKey": "compliance.nav.reports",      "icon": "summarize",     "order": 9, "permission": "compliance.export" },
+    { "route": "/compliance/regulator",       "labelKey": "compliance.nav.regulator",    "icon": "account_balance","order":10, "permission": "compliance.export" },
+    { "route": "/compliance/diagnostics",     "labelKey": "compliance.nav.diagnostics",  "icon": "monitor_heart", "order":11, "permission": "compliance.admin" }
+  ],
+
+  "routes": [
+    {
+      "route": "/compliance",
+      "componentKey": "ComplianceOverviewPage",
+      "titleKey": "compliance.overview.title",
+      "permission": "compliance.read",
+      "dataResource": "compliance.overview",
+      "pageType": "overview",
+      "layout": "dashboard",
+      "kpiScope": "module-overview",
+      "signatureWidget": "command-center",
+      "secondaryWidgets": ["obligation-map", "gap-remediation-board"],
+      "userIntent": "monitor",
+      "audienceProfiles": ["tenant_owner", "auditor", "department_manager", "viewer"],
+      "realtimeEnabled": true,
+      "workflowEnabled": true,
+      "auditEnabled": true,
+      "agentEnabled": true,
+      "mobileVariant": "kpi-stack"
+    },
+    {
+      "route": "/compliance/frameworks",
+      "componentKey": "ComplianceFrameworksPage",
+      "titleKey": "compliance.nav.frameworks",
+      "permission": "compliance.read",
+      "dataResource": "compliance.frameworks",
+      "pageType": "list",
+      "layout": "full-page",
+      "kpiScope": "none",
+      "signatureWidget": "framework-mapping",
+      "secondaryWidgets": ["smart-data-grid"],
+      "userIntent": "manage",
+      "audienceProfiles": ["tenant_owner", "auditor"],
+      "realtimeEnabled": false,
+      "workflowEnabled": false,
+      "auditEnabled": true,
+      "agentEnabled": true,
+      "mobileVariant": "stacked-cards"
+    },
+    {
+      "route": "/compliance/obligations",
+      "componentKey": "ComplianceObligationsPage",
+      "titleKey": "compliance.nav.obligations",
+      "permission": "compliance.read",
+      "dataResource": "compliance.obligations",
+      "pageType": "list",
+      "layout": "full-page",
+      "kpiScope": "none",
+      "signatureWidget": "obligation-map",
+      "secondaryWidgets": ["smart-data-grid"],
+      "userIntent": "manage",
+      "audienceProfiles": ["tenant_owner", "auditor", "department_manager"],
+      "realtimeEnabled": false,
+      "workflowEnabled": true,
+      "auditEnabled": true,
+      "agentEnabled": true,
+      "mobileVariant": "stacked-cards"
+    },
+    {
+      "route": "/compliance/controls",
+      "componentKey": "ComplianceControlsPage",
+      "titleKey": "compliance.nav.controls",
+      "permission": "compliance.read",
+      "dataResource": "compliance.controls",
+      "pageType": "list",
+      "layout": "full-page",
+      "kpiScope": "none",
+      "signatureWidget": "control-library-matrix",
+      "secondaryWidgets": ["smart-data-grid"],
+      "userIntent": "manage",
+      "audienceProfiles": ["tenant_owner", "auditor", "department_manager"],
+      "realtimeEnabled": false,
+      "workflowEnabled": true,
+      "auditEnabled": true,
+      "agentEnabled": true,
+      "mobileVariant": "stacked-cards"
+    },
+    {
+      "route": "/compliance/controls/:id",
+      "componentKey": "ComplianceControlDetailPage",
+      "titleKey": "compliance.controls.detail.title",
+      "permission": "compliance.read",
+      "dataResource": "compliance.controls.detail",
+      "pageType": "object",
+      "layout": "object-page",
+      "kpiScope": "none",
+      "signatureWidget": "entity-360",
+      "secondaryWidgets": ["evidence-drawer", "audit-timeline"],
+      "userIntent": "manage",
+      "audienceProfiles": ["tenant_owner", "auditor", "department_manager"],
+      "realtimeEnabled": true,
+      "workflowEnabled": true,
+      "auditEnabled": true,
+      "agentEnabled": true,
+      "mobileVariant": "bottom-sheet"
+    },
+    {
+      "route": "/compliance/assessments",
+      "componentKey": "ComplianceAssessmentsPage",
+      "titleKey": "compliance.nav.assessments",
+      "permission": "compliance.read",
+      "dataResource": "compliance.assessments",
+      "pageType": "workflow",
+      "layout": "full-page",
+      "kpiScope": "none",
+      "signatureWidget": "assessment-cockpit",
+      "secondaryWidgets": ["workflow-canvas", "decision-preview-panel"],
+      "userIntent": "review",
+      "audienceProfiles": ["tenant_owner", "auditor"],
+      "realtimeEnabled": true,
+      "workflowEnabled": true,
+      "auditEnabled": true,
+      "agentEnabled": true,
+      "mobileVariant": "stepper"
+    },
+    {
+      "route": "/compliance/evidence",
+      "componentKey": "ComplianceEvidencePage",
+      "titleKey": "compliance.nav.evidence",
+      "permission": "compliance.read",
+      "dataResource": "compliance.evidence",
+      "pageType": "list",
+      "layout": "full-page",
+      "kpiScope": "none",
+      "signatureWidget": "evidence-binder",
+      "secondaryWidgets": ["smart-data-grid", "evidence-drawer"],
+      "userIntent": "manage",
+      "audienceProfiles": ["tenant_owner", "auditor", "department_manager"],
+      "realtimeEnabled": false,
+      "workflowEnabled": true,
+      "auditEnabled": true,
+      "agentEnabled": true,
+      "mobileVariant": "stacked-cards"
+    },
+    {
+      "route": "/compliance/gaps",
+      "componentKey": "ComplianceGapsPage",
+      "titleKey": "compliance.nav.gaps",
+      "permission": "compliance.read",
+      "dataResource": "compliance.gaps",
+      "pageType": "workflow",
+      "layout": "full-page",
+      "kpiScope": "none",
+      "signatureWidget": "gap-remediation-board",
+      "secondaryWidgets": ["workflow-canvas", "recommendation-card"],
+      "userIntent": "review",
+      "audienceProfiles": ["tenant_owner", "auditor", "department_manager"],
+      "realtimeEnabled": true,
+      "workflowEnabled": true,
+      "auditEnabled": true,
+      "agentEnabled": true,
+      "mobileVariant": "stacked-cards"
+    },
+    {
+      "route": "/compliance/attestations",
+      "componentKey": "ComplianceAttestationsPage",
+      "titleKey": "compliance.nav.attestations",
+      "permission": "compliance.read",
+      "dataResource": "compliance.attestations",
+      "pageType": "workflow",
+      "layout": "full-page",
+      "kpiScope": "none",
+      "signatureWidget": "smart-data-grid",
+      "secondaryWidgets": ["workflow-canvas", "decision-preview-panel"],
+      "userIntent": "approve",
+      "audienceProfiles": ["tenant_owner", "auditor"],
+      "realtimeEnabled": true,
+      "workflowEnabled": true,
+      "auditEnabled": true,
+      "agentEnabled": true,
+      "mobileVariant": "stepper"
+    },
+    {
+      "route": "/compliance/reports",
+      "componentKey": "ComplianceReportsPage",
+      "titleKey": "compliance.nav.reports",
+      "permission": "compliance.export",
+      "dataResource": "compliance.reports",
+      "pageType": "analytics",
+      "layout": "report",
+      "kpiScope": "page-local",
+      "signatureWidget": "report-composer",
+      "secondaryWidgets": ["evidence-drawer", "audit-timeline"],
+      "userIntent": "report",
+      "audienceProfiles": ["tenant_owner", "auditor"],
+      "realtimeEnabled": false,
+      "workflowEnabled": false,
+      "auditEnabled": true,
+      "agentEnabled": true,
+      "mobileVariant": "stacked-cards"
+    },
+    {
+      "route": "/compliance/regulator",
+      "componentKey": "ComplianceRegulatorPage",
+      "titleKey": "compliance.nav.regulator",
+      "permission": "compliance.export",
+      "dataResource": "compliance.regulator",
+      "pageType": "object",
+      "layout": "split-view",
+      "kpiScope": "page-local",
+      "signatureWidget": "framework-mapping",
+      "secondaryWidgets": ["audit-timeline", "evidence-drawer"],
+      "userIntent": "report",
+      "audienceProfiles": ["tenant_owner", "auditor"],
+      "realtimeEnabled": false,
+      "workflowEnabled": true,
+      "auditEnabled": true,
+      "agentEnabled": true,
+      "mobileVariant": "bottom-sheet"
+    },
+    {
+      "route": "/compliance/ksa",
+      "componentKey": "ComplianceKsaPage",
+      "titleKey": "compliance.nav.ksa",
+      "permission": "compliance.read",
+      "dataResource": "compliance.ksa",
+      "pageType": "analytics",
+      "layout": "dashboard",
+      "kpiScope": "page-local",
+      "signatureWidget": "framework-mapping",
+      "secondaryWidgets": ["smart-data-grid"],
+      "userIntent": "monitor",
+      "audienceProfiles": ["tenant_owner", "auditor"],
+      "realtimeEnabled": false,
+      "workflowEnabled": false,
+      "auditEnabled": true,
+      "agentEnabled": true,
+      "mobileVariant": "stacked-cards"
+    },
+    {
+      "route": "/compliance/diagnostics",
+      "componentKey": "ComplianceDiagnosticsPage",
+      "titleKey": "compliance.nav.diagnostics",
+      "permission": "compliance.admin",
+      "dataResource": "compliance.diagnostics",
+      "pageType": "settings",
+      "layout": "full-page",
+      "kpiScope": "none",
+      "signatureWidget": "smart-data-grid",
+      "secondaryWidgets": ["audit-timeline"],
+      "userIntent": "investigate",
+      "audienceProfiles": ["tenant_owner"],
+      "realtimeEnabled": true,
+      "workflowEnabled": false,
+      "auditEnabled": true,
+      "agentEnabled": false,
+      "mobileVariant": "stacked-cards"
+    },
+    {
+      "route": "/compliance/overview",
+      "componentKey": "ComplianceOverviewPage",
+      "titleKey": "compliance.overview.title",
+      "permission": "compliance.read",
+      "dataResource": "compliance.overview",
+      "pageType": "overview",
+      "layout": "dashboard",
+      "kpiScope": "module-overview",
+      "signatureWidget": "command-center",
+      "secondaryWidgets": ["obligation-map", "gap-remediation-board"],
+      "userIntent": "monitor",
+      "audienceProfiles": ["tenant_owner", "auditor", "department_manager", "viewer"],
+      "realtimeEnabled": true,
+      "workflowEnabled": true,
+      "auditEnabled": true,
+      "agentEnabled": true,
+      "mobileVariant": "kpi-stack"
+    },
+    {
+      "route": "/compliance/posture",
+      "componentKey": "CompliancePosturePage",
+      "titleKey": "compliance.nav.posture",
+      "permission": "compliance.read",
+      "dataResource": "compliance.posture",
+      "pageType": "analytics",
+      "layout": "dashboard",
+      "kpiScope": "page-local",
+      "signatureWidget": "framework-mapping",
+      "secondaryWidgets": ["smart-data-grid"],
+      "userIntent": "monitor",
+      "audienceProfiles": ["tenant_owner", "auditor"],
+      "realtimeEnabled": true,
+      "workflowEnabled": false,
+      "auditEnabled": true,
+      "agentEnabled": true,
+      "mobileVariant": "stacked-cards"
+    },
+    {
+      "route": "/compliance/work-queue",
+      "componentKey": "ComplianceWorkQueuePage",
+      "titleKey": "compliance.nav.workQueue",
+      "permission": "compliance.read",
+      "dataResource": "compliance.workQueue",
+      "pageType": "list",
+      "layout": "full-page",
+      "kpiScope": "none",
+      "signatureWidget": "smart-data-grid",
+      "secondaryWidgets": ["recommendation-card"],
+      "userIntent": "manage",
+      "audienceProfiles": ["tenant_owner", "auditor", "department_manager"],
+      "realtimeEnabled": true,
+      "workflowEnabled": true,
+      "auditEnabled": true,
+      "agentEnabled": true,
+      "mobileVariant": "stacked-cards"
+    },
+    {
+      "route": "/compliance/calendar",
+      "componentKey": "ComplianceCalendarPage",
+      "titleKey": "compliance.nav.calendar",
+      "permission": "compliance.read",
+      "dataResource": "compliance.calendar",
+      "pageType": "list",
+      "layout": "full-page",
+      "kpiScope": "none",
+      "signatureWidget": "smart-data-grid",
+      "secondaryWidgets": [],
+      "userIntent": "monitor",
+      "audienceProfiles": ["tenant_owner", "auditor", "department_manager"],
+      "realtimeEnabled": false,
+      "workflowEnabled": false,
+      "auditEnabled": true,
+      "agentEnabled": false,
+      "mobileVariant": "stacked-cards"
+    },
+    {
+      "route": "/compliance/heatmap",
+      "componentKey": "ComplianceHeatmapPage",
+      "titleKey": "compliance.nav.heatmap",
+      "permission": "compliance.read",
+      "dataResource": "compliance.heatmap",
+      "pageType": "analytics",
+      "layout": "dashboard",
+      "kpiScope": "page-local",
+      "signatureWidget": "control-library-matrix",
+      "secondaryWidgets": ["recommendation-card"],
+      "userIntent": "monitor",
+      "audienceProfiles": ["tenant_owner", "auditor"],
+      "realtimeEnabled": false,
+      "workflowEnabled": false,
+      "auditEnabled": true,
+      "agentEnabled": true,
+      "mobileVariant": "stacked-cards"
+    },
+    {
+      "route": "/compliance/roadmap",
+      "componentKey": "ComplianceRoadmapPage",
+      "titleKey": "compliance.nav.roadmap",
+      "permission": "compliance.read",
+      "dataResource": "compliance.roadmap",
+      "pageType": "list",
+      "layout": "full-page",
+      "kpiScope": "none",
+      "signatureWidget": "gap-remediation-board",
+      "secondaryWidgets": [],
+      "userIntent": "manage",
+      "audienceProfiles": ["tenant_owner", "auditor"],
+      "realtimeEnabled": false,
+      "workflowEnabled": true,
+      "auditEnabled": true,
+      "agentEnabled": true,
+      "mobileVariant": "stacked-cards"
+    },
+    {
+      "route": "/compliance/templates",
+      "componentKey": "ComplianceTemplatesPage",
+      "titleKey": "compliance.nav.templates",
+      "permission": "compliance.read",
+      "dataResource": "compliance.templates",
+      "pageType": "list",
+      "layout": "full-page",
+      "kpiScope": "none",
+      "signatureWidget": "smart-data-grid",
+      "secondaryWidgets": [],
+      "userIntent": "manage",
+      "audienceProfiles": ["tenant_owner", "auditor"],
+      "realtimeEnabled": false,
+      "workflowEnabled": false,
+      "auditEnabled": true,
+      "agentEnabled": false,
+      "mobileVariant": "stacked-cards"
+    },
+    {
+      "route": "/compliance/obligations/:id",
+      "componentKey": "ObligationDetailPage",
+      "titleKey": "compliance.obligations.detail.title",
+      "permission": "compliance.read",
+      "dataResource": "compliance.obligations.detail",
+      "pageType": "object",
+      "layout": "object-page",
+      "kpiScope": "none",
+      "signatureWidget": "entity-360",
+      "secondaryWidgets": ["evidence-drawer", "audit-timeline"],
+      "userIntent": "manage",
+      "audienceProfiles": ["tenant_owner", "auditor", "department_manager"],
+      "realtimeEnabled": true,
+      "workflowEnabled": true,
+      "auditEnabled": true,
+      "agentEnabled": true,
+      "mobileVariant": "bottom-sheet"
+    },
+    {
+      "route": "/compliance/obligation-workspace",
+      "componentKey": "ObligationWorkspacePage",
+      "titleKey": "compliance.nav.obligationWorkspace",
+      "permission": "compliance.write",
+      "dataResource": "compliance.obligations.workspace",
+      "pageType": "workflow",
+      "layout": "split-view",
+      "kpiScope": "page-local",
+      "signatureWidget": "obligation-map",
+      "secondaryWidgets": ["workflow-canvas", "evidence-drawer"],
+      "userIntent": "manage",
+      "audienceProfiles": ["tenant_owner", "auditor", "department_manager"],
+      "realtimeEnabled": true,
+      "workflowEnabled": true,
+      "auditEnabled": true,
+      "agentEnabled": true,
+      "mobileVariant": "stepper"
+    },
+    {
+      "route": "/compliance/regulatory-changes",
+      "componentKey": "ComplianceRegulatoryChangesPage",
+      "titleKey": "compliance.nav.regulatoryChanges",
+      "permission": "compliance.read",
+      "dataResource": "compliance.regulatoryChanges",
+      "pageType": "list",
+      "layout": "full-page",
+      "kpiScope": "none",
+      "signatureWidget": "smart-data-grid",
+      "secondaryWidgets": ["recommendation-card"],
+      "userIntent": "monitor",
+      "audienceProfiles": ["tenant_owner", "auditor"],
+      "realtimeEnabled": true,
+      "workflowEnabled": false,
+      "auditEnabled": true,
+      "agentEnabled": true,
+      "mobileVariant": "stacked-cards"
+    },
+    {
+      "route": "/compliance/findings",
+      "componentKey": "ComplianceFindingsPage",
+      "titleKey": "compliance.nav.findings",
+      "permission": "compliance.read",
+      "dataResource": "compliance.findings",
+      "pageType": "list",
+      "layout": "full-page",
+      "kpiScope": "none",
+      "signatureWidget": "smart-data-grid",
+      "secondaryWidgets": ["evidence-drawer"],
+      "userIntent": "review",
+      "audienceProfiles": ["tenant_owner", "auditor"],
+      "realtimeEnabled": false,
+      "workflowEnabled": true,
+      "auditEnabled": true,
+      "agentEnabled": true,
+      "mobileVariant": "stacked-cards"
+    },
+    {
+      "route": "/compliance/exceptions",
+      "componentKey": "ComplianceExceptionsPage",
+      "titleKey": "compliance.nav.exceptions",
+      "permission": "compliance.read",
+      "dataResource": "compliance.exceptions",
+      "pageType": "workflow",
+      "layout": "full-page",
+      "kpiScope": "none",
+      "signatureWidget": "smart-data-grid",
+      "secondaryWidgets": ["decision-preview-panel", "audit-timeline"],
+      "userIntent": "approve",
+      "audienceProfiles": ["tenant_owner", "auditor"],
+      "realtimeEnabled": false,
+      "workflowEnabled": true,
+      "auditEnabled": true,
+      "agentEnabled": true,
+      "mobileVariant": "stepper"
+    },
+    {
+      "route": "/compliance/evidence-ops",
+      "componentKey": "ComplianceEvidenceOpsPage",
+      "titleKey": "compliance.nav.evidenceOps",
+      "permission": "compliance.write",
+      "dataResource": "compliance.evidence.ops",
+      "pageType": "workflow",
+      "layout": "full-page",
+      "kpiScope": "none",
+      "signatureWidget": "evidence-binder",
+      "secondaryWidgets": ["smart-data-grid", "evidence-drawer"],
+      "userIntent": "manage",
+      "audienceProfiles": ["tenant_owner", "auditor", "department_manager"],
+      "realtimeEnabled": false,
+      "workflowEnabled": true,
+      "auditEnabled": true,
+      "agentEnabled": true,
+      "mobileVariant": "stacked-cards"
+    },
+    {
+      "route": "/compliance/lifecycle",
+      "componentKey": "GenericModuleLifecycle",
+      "titleKey": "compliance.nav.lifecycle",
+      "permission": "compliance.admin",
+      "dataResource": "compliance.lifecycle",
+      "pageType": "settings",
+      "layout": "full-page",
+      "kpiScope": "none",
+      "signatureWidget": "smart-data-grid",
+      "secondaryWidgets": ["audit-timeline"],
+      "userIntent": "configure",
+      "audienceProfiles": ["tenant_owner"],
+      "realtimeEnabled": false,
+      "workflowEnabled": false,
+      "auditEnabled": true,
+      "agentEnabled": false,
+      "mobileVariant": "stacked-cards"
+    },
+    {
+      "route": "/compliance/admin",
+      "componentKey": "ComplianceAdminPage",
+      "titleKey": "compliance.nav.admin",
+      "permission": "compliance.admin",
+      "dataResource": "compliance.admin",
+      "pageType": "settings",
+      "layout": "full-page",
+      "kpiScope": "none",
+      "signatureWidget": "smart-data-grid",
+      "secondaryWidgets": ["audit-timeline"],
+      "userIntent": "configure",
+      "audienceProfiles": ["tenant_owner"],
+      "realtimeEnabled": false,
+      "workflowEnabled": false,
+      "auditEnabled": true,
+      "agentEnabled": false,
+      "mobileVariant": "stacked-cards"
+    },
+    {
+      "route": "/compliance/assertion-dashboard",
+      "componentKey": "AssertionDashboardPage",
+      "titleKey": "compliance.nav.assertionDashboard",
+      "permission": "compliance.read",
+      "dataResource": "compliance.assertions",
+      "pageType": "analytics",
+      "layout": "dashboard",
+      "kpiScope": "page-local",
+      "signatureWidget": "smart-data-grid",
+      "secondaryWidgets": ["audit-timeline"],
+      "userIntent": "monitor",
+      "audienceProfiles": ["tenant_owner", "auditor"],
+      "realtimeEnabled": true,
+      "workflowEnabled": false,
+      "auditEnabled": true,
+      "agentEnabled": true,
+      "mobileVariant": "stacked-cards"
+    },
+    {
+      "route": "/compliance/rcsa-campaigns",
+      "componentKey": "RcsaCampaignsPage",
+      "titleKey": "compliance.nav.rcsa",
+      "permission": "compliance.read",
+      "dataResource": "compliance.rcsa",
+      "pageType": "workflow",
+      "layout": "full-page",
+      "kpiScope": "none",
+      "signatureWidget": "assessment-cockpit",
+      "secondaryWidgets": ["workflow-canvas"],
+      "userIntent": "manage",
+      "audienceProfiles": ["tenant_owner", "auditor"],
+      "realtimeEnabled": false,
+      "workflowEnabled": true,
+      "auditEnabled": true,
+      "agentEnabled": true,
+      "mobileVariant": "stepper"
+    },
+    {
+      "route": "/compliance/regulatory-reasoning-studio",
+      "componentKey": "RegulatoryReasoningStudioPage",
+      "titleKey": "compliance.nav.reasoningStudio",
+      "permission": "compliance.read",
+      "dataResource": "compliance.reasoning",
+      "pageType": "analytics",
+      "layout": "split-view",
+      "kpiScope": "page-local",
+      "signatureWidget": "framework-mapping",
+      "secondaryWidgets": ["recommendation-card", "evidence-drawer"],
+      "userIntent": "investigate",
+      "audienceProfiles": ["tenant_owner", "auditor"],
+      "realtimeEnabled": true,
+      "workflowEnabled": false,
+      "auditEnabled": true,
+      "agentEnabled": true,
+      "mobileVariant": "split-collapse"
+    },
+
+    { "route": "/compliance/frameworks/hub",         "componentKey": "FrameworkHubPage",          "titleKey": "compliance.nav.frameworkHub",         "permission": "compliance.read", "dataResource": "compliance.frameworks.hub",     "pageType": "list",      "layout": "full-page",   "kpiScope": "none",       "signatureWidget": "framework-mapping",      "secondaryWidgets": ["smart-data-grid"],            "userIntent": "manage",    "audienceProfiles": ["tenant_owner", "auditor"], "realtimeEnabled": false, "workflowEnabled": false, "auditEnabled": true, "agentEnabled": true,  "mobileVariant": "stacked-cards" },
+    { "route": "/compliance/frameworks/mapping",     "componentKey": "FrameworkMappingPage",      "titleKey": "compliance.nav.frameworkMapping",     "permission": "compliance.read", "dataResource": "compliance.frameworks.mapping", "pageType": "list",      "layout": "full-page",   "kpiScope": "none",       "signatureWidget": "framework-mapping",      "secondaryWidgets": ["smart-data-grid"],            "userIntent": "manage",    "audienceProfiles": ["tenant_owner", "auditor"], "realtimeEnabled": false, "workflowEnabled": false, "auditEnabled": true, "agentEnabled": true,  "mobileVariant": "stacked-cards" },
+    { "route": "/compliance/frameworks/scorecard",   "componentKey": "FrameworkScorecardPage",    "titleKey": "compliance.nav.frameworkScorecard",   "permission": "compliance.read", "dataResource": "compliance.frameworks.scorecard","pageType": "analytics", "layout": "dashboard",   "kpiScope": "page-local", "signatureWidget": "framework-mapping",      "secondaryWidgets": ["smart-data-grid"],            "userIntent": "monitor",   "audienceProfiles": ["tenant_owner", "auditor"], "realtimeEnabled": false, "workflowEnabled": false, "auditEnabled": true, "agentEnabled": true,  "mobileVariant": "stacked-cards" },
+    { "route": "/compliance/frameworks/ucf",         "componentKey": "UcfBrowserPage",            "titleKey": "compliance.nav.ucf",                  "permission": "compliance.read", "dataResource": "compliance.frameworks.ucf",     "pageType": "list",      "layout": "full-page",   "kpiScope": "none",       "signatureWidget": "framework-mapping",      "secondaryWidgets": ["smart-data-grid"],            "userIntent": "manage",    "audienceProfiles": ["tenant_owner", "auditor"], "realtimeEnabled": false, "workflowEnabled": false, "auditEnabled": true, "agentEnabled": true,  "mobileVariant": "stacked-cards" },
+
+    { "route": "/compliance/assessments/templates",  "componentKey": "AssessmentTemplatesPage",   "titleKey": "compliance.nav.assessmentTemplates",  "permission": "compliance.read", "dataResource": "compliance.assessments.templates","pageType": "list",     "layout": "full-page",   "kpiScope": "none",       "signatureWidget": "smart-data-grid",        "secondaryWidgets": ["recommendation-card"],        "userIntent": "manage",    "audienceProfiles": ["tenant_owner", "auditor"], "realtimeEnabled": false, "workflowEnabled": false, "auditEnabled": true, "agentEnabled": true,  "mobileVariant": "stacked-cards" },
+    { "route": "/compliance/assessments/all",        "componentKey": "AssessmentsListPage",       "titleKey": "compliance.nav.assessmentsList",      "permission": "compliance.read", "dataResource": "compliance.assessments.all",    "pageType": "list",      "layout": "full-page",   "kpiScope": "none",       "signatureWidget": "smart-data-grid",        "secondaryWidgets": [],                              "userIntent": "manage",    "audienceProfiles": ["tenant_owner", "auditor"], "realtimeEnabled": false, "workflowEnabled": true,  "auditEnabled": true, "agentEnabled": true,  "mobileVariant": "stacked-cards" },
+    { "route": "/compliance/assessments/nca",        "componentKey": "NcaAssessmentPage",         "titleKey": "compliance.nav.ncaAssessment",        "permission": "compliance.read", "dataResource": "compliance.assessments.nca",    "pageType": "workflow",  "layout": "full-page",   "kpiScope": "none",       "signatureWidget": "assessment-cockpit",     "secondaryWidgets": ["workflow-canvas", "evidence-drawer"], "userIntent": "review",  "audienceProfiles": ["tenant_owner", "auditor"], "realtimeEnabled": true,  "workflowEnabled": true,  "auditEnabled": true, "agentEnabled": true,  "mobileVariant": "stepper" },
+    { "route": "/compliance/assessments/sama",       "componentKey": "SamaAssessmentPage",        "titleKey": "compliance.nav.samaAssessment",       "permission": "compliance.read", "dataResource": "compliance.assessments.sama",   "pageType": "workflow",  "layout": "full-page",   "kpiScope": "none",       "signatureWidget": "assessment-cockpit",     "secondaryWidgets": ["workflow-canvas", "evidence-drawer"], "userIntent": "review",  "audienceProfiles": ["tenant_owner", "auditor"], "realtimeEnabled": true,  "workflowEnabled": true,  "auditEnabled": true, "agentEnabled": true,  "mobileVariant": "stepper" },
+
+    { "route": "/compliance/maturity/journey",       "componentKey": "MaturityJourneyPage",       "titleKey": "compliance.nav.maturityJourney",      "permission": "compliance.read", "dataResource": "compliance.maturity.journey",   "pageType": "analytics", "layout": "dashboard",   "kpiScope": "page-local", "signatureWidget": "framework-mapping",      "secondaryWidgets": ["smart-data-grid"],            "userIntent": "monitor",   "audienceProfiles": ["tenant_owner", "auditor"], "realtimeEnabled": false, "workflowEnabled": false, "auditEnabled": true, "agentEnabled": true,  "mobileVariant": "stacked-cards" },
+    { "route": "/compliance/maturity/wizard",        "componentKey": "MaturityWizardPage",        "titleKey": "compliance.nav.maturityWizard",       "permission": "compliance.write","dataResource": "compliance.maturity.wizard",    "pageType": "workflow",  "layout": "wizard",      "kpiScope": "none",       "signatureWidget": "assessment-cockpit",     "secondaryWidgets": ["decision-preview-panel"],     "userIntent": "configure", "audienceProfiles": ["tenant_owner"],            "realtimeEnabled": false, "workflowEnabled": true,  "auditEnabled": true, "agentEnabled": true,  "mobileVariant": "stepper" },
+
+    { "route": "/compliance/scoring",                "componentKey": "ScoringPage",               "titleKey": "compliance.nav.scoring",              "permission": "compliance.read", "dataResource": "compliance.scoring",            "pageType": "analytics", "layout": "dashboard",   "kpiScope": "page-local", "signatureWidget": "framework-mapping",      "secondaryWidgets": ["smart-data-grid"],            "userIntent": "monitor",   "audienceProfiles": ["tenant_owner", "auditor"], "realtimeEnabled": false, "workflowEnabled": false, "auditEnabled": true, "agentEnabled": true,  "mobileVariant": "stacked-cards" },
+    { "route": "/compliance/scoring/policies",       "componentKey": "ScoringPoliciesPage",       "titleKey": "compliance.nav.scoringPolicies",      "permission": "compliance.read", "dataResource": "compliance.scoring.policies",   "pageType": "list",      "layout": "full-page",   "kpiScope": "none",       "signatureWidget": "smart-data-grid",        "secondaryWidgets": [],                              "userIntent": "manage",    "audienceProfiles": ["tenant_owner", "auditor"], "realtimeEnabled": false, "workflowEnabled": false, "auditEnabled": true, "agentEnabled": false, "mobileVariant": "stacked-cards" },
+    { "route": "/compliance/scoring/policy",         "componentKey": "ScoringPolicyDetailPage",   "titleKey": "compliance.nav.scoringPolicy",        "permission": "compliance.read", "dataResource": "compliance.scoring.policy",     "pageType": "object",    "layout": "object-page", "kpiScope": "none",       "signatureWidget": "entity-360",             "secondaryWidgets": ["audit-timeline"],             "userIntent": "manage",    "audienceProfiles": ["tenant_owner", "auditor"], "realtimeEnabled": false, "workflowEnabled": false, "auditEnabled": true, "agentEnabled": false, "mobileVariant": "bottom-sheet" },
+
+    { "route": "/compliance/controls/posture",       "componentKey": "ControlPosturePage",        "titleKey": "compliance.nav.controlPosture",       "permission": "compliance.read", "dataResource": "compliance.controls.posture",   "pageType": "analytics", "layout": "dashboard",   "kpiScope": "page-local", "signatureWidget": "control-library-matrix", "secondaryWidgets": ["smart-data-grid"],            "userIntent": "monitor",   "audienceProfiles": ["tenant_owner", "auditor"], "realtimeEnabled": true,  "workflowEnabled": false, "auditEnabled": true, "agentEnabled": true,  "mobileVariant": "stacked-cards" },
+    { "route": "/compliance/controls/testing",       "componentKey": "ControlTestingPage",        "titleKey": "compliance.nav.controlTesting",       "permission": "compliance.write","dataResource": "compliance.controls.testing",   "pageType": "workflow",  "layout": "full-page",   "kpiScope": "none",       "signatureWidget": "smart-data-grid",        "secondaryWidgets": ["workflow-canvas", "evidence-drawer"], "userIntent": "approve","audienceProfiles": ["tenant_owner", "auditor"], "realtimeEnabled": true,  "workflowEnabled": true,  "auditEnabled": true, "agentEnabled": true,  "mobileVariant": "stepper" },
+    { "route": "/compliance/controls/monitoring",    "componentKey": "ControlsMonitoringPage",    "titleKey": "compliance.nav.controlsMonitoring",   "permission": "compliance.read", "dataResource": "compliance.controls.monitoring","pageType": "analytics", "layout": "dashboard",   "kpiScope": "page-local", "signatureWidget": "control-library-matrix", "secondaryWidgets": ["recommendation-card"],        "userIntent": "monitor",   "audienceProfiles": ["tenant_owner", "auditor"], "realtimeEnabled": true,  "workflowEnabled": false, "auditEnabled": true, "agentEnabled": true,  "mobileVariant": "stacked-cards" },
+
+    { "route": "/compliance/regulatory/compiler",    "componentKey": "RegulationCompilerPage",    "titleKey": "compliance.nav.regulationCompiler",   "permission": "compliance.write","dataResource": "compliance.regulatory.compiler","pageType": "workflow",  "layout": "split-view",  "kpiScope": "page-local", "signatureWidget": "framework-mapping",      "secondaryWidgets": ["recommendation-card"],        "userIntent": "configure", "audienceProfiles": ["tenant_owner"],            "realtimeEnabled": false, "workflowEnabled": true,  "auditEnabled": true, "agentEnabled": true,  "mobileVariant": "split-collapse" },
+    { "route": "/compliance/regulatory/delta",       "componentKey": "RegulatoryDeltaDashboardPage","titleKey": "compliance.nav.regulatoryDelta",     "permission": "compliance.read", "dataResource": "compliance.regulatory.delta",   "pageType": "analytics", "layout": "dashboard",   "kpiScope": "page-local", "signatureWidget": "smart-data-grid",        "secondaryWidgets": ["recommendation-card"],        "userIntent": "monitor",   "audienceProfiles": ["tenant_owner", "auditor"], "realtimeEnabled": true,  "workflowEnabled": false, "auditEnabled": true, "agentEnabled": true,  "mobileVariant": "stacked-cards" },
+    { "route": "/compliance/regulatory/feeds",       "componentKey": "RegulatoryFeedsPage",       "titleKey": "compliance.nav.regulatoryFeeds",      "permission": "compliance.read", "dataResource": "compliance.regulatory.feeds",   "pageType": "list",      "layout": "full-page",   "kpiScope": "none",       "signatureWidget": "smart-data-grid",        "secondaryWidgets": [],                              "userIntent": "monitor",   "audienceProfiles": ["tenant_owner", "auditor"], "realtimeEnabled": true,  "workflowEnabled": false, "auditEnabled": true, "agentEnabled": false, "mobileVariant": "stacked-cards" },
+
+    { "route": "/compliance/exceptions/manager",     "componentKey": "ExceptionManagerPage",      "titleKey": "compliance.nav.exceptionManager",     "permission": "compliance.write","dataResource": "compliance.exceptions.manager", "pageType": "workflow",  "layout": "full-page",   "kpiScope": "none",       "signatureWidget": "smart-data-grid",        "secondaryWidgets": ["decision-preview-panel"],     "userIntent": "approve",   "audienceProfiles": ["tenant_owner", "auditor"], "realtimeEnabled": false, "workflowEnabled": true,  "auditEnabled": true, "agentEnabled": true,  "mobileVariant": "stepper" },
+
+    { "route": "/compliance/esg",                    "componentKey": "EsgPage",                   "titleKey": "compliance.nav.esg",                  "permission": "compliance.read", "dataResource": "compliance.esg",                "pageType": "analytics", "layout": "dashboard",   "kpiScope": "page-local", "signatureWidget": "framework-mapping",      "secondaryWidgets": ["smart-data-grid"],            "userIntent": "monitor",   "audienceProfiles": ["tenant_owner", "auditor"], "realtimeEnabled": false, "workflowEnabled": false, "auditEnabled": true, "agentEnabled": true,  "mobileVariant": "stacked-cards" },
+    { "route": "/compliance/ethics-integrity",       "componentKey": "EthicsIntegrityPage",       "titleKey": "compliance.nav.ethicsIntegrity",      "permission": "compliance.read", "dataResource": "compliance.ethicsIntegrity",    "pageType": "list",      "layout": "full-page",   "kpiScope": "none",       "signatureWidget": "smart-data-grid",        "secondaryWidgets": ["recommendation-card"],        "userIntent": "monitor",   "audienceProfiles": ["tenant_owner", "auditor"], "realtimeEnabled": false, "workflowEnabled": false, "auditEnabled": true, "agentEnabled": true,  "mobileVariant": "stacked-cards" },
+    { "route": "/compliance/sox",                    "componentKey": "SoxCompliancePage",         "titleKey": "compliance.nav.sox",                  "permission": "compliance.read", "dataResource": "compliance.sox",                "pageType": "analytics", "layout": "dashboard",   "kpiScope": "page-local", "signatureWidget": "control-library-matrix", "secondaryWidgets": ["smart-data-grid"],            "userIntent": "monitor",   "audienceProfiles": ["tenant_owner", "auditor"], "realtimeEnabled": false, "workflowEnabled": false, "auditEnabled": true, "agentEnabled": true,  "mobileVariant": "stacked-cards" },
+
+    { "route": "/compliance/ksa-hub",                "componentKey": "KsaHubPage",                "titleKey": "compliance.nav.ksaHub",               "permission": "compliance.read", "dataResource": "compliance.ksa.hub",            "pageType": "overview",  "layout": "dashboard",   "kpiScope": "page-local", "signatureWidget": "framework-mapping",      "secondaryWidgets": ["smart-data-grid"],            "userIntent": "monitor",   "audienceProfiles": ["tenant_owner", "auditor"], "realtimeEnabled": false, "workflowEnabled": false, "auditEnabled": true, "agentEnabled": true,  "mobileVariant": "kpi-stack" },
+    { "route": "/compliance/intelligence-hub",       "componentKey": "IntelligenceHubPage",       "titleKey": "compliance.nav.intelligenceHub",      "permission": "compliance.read", "dataResource": "compliance.intelligenceHub",    "pageType": "analytics", "layout": "dashboard",   "kpiScope": "page-local", "signatureWidget": "smart-data-grid",        "secondaryWidgets": ["recommendation-card"],        "userIntent": "monitor",   "audienceProfiles": ["tenant_owner", "auditor"], "realtimeEnabled": true,  "workflowEnabled": false, "auditEnabled": true, "agentEnabled": true,  "mobileVariant": "stacked-cards" },
+    { "route": "/compliance/content-pack",           "componentKey": "ContentPackPage",           "titleKey": "compliance.nav.contentPack",          "permission": "compliance.admin","dataResource": "compliance.contentPack",        "pageType": "settings",  "layout": "full-page",   "kpiScope": "none",       "signatureWidget": "smart-data-grid",        "secondaryWidgets": ["audit-timeline"],             "userIntent": "configure", "audienceProfiles": ["tenant_owner"],            "realtimeEnabled": false, "workflowEnabled": false, "auditEnabled": true, "agentEnabled": false, "mobileVariant": "stacked-cards" },
+
+    { "route": "/compliance/mapping",                "componentKey": "MappingPage",               "titleKey": "compliance.nav.mapping",              "permission": "compliance.read", "dataResource": "compliance.mapping",            "pageType": "list",      "layout": "full-page",   "kpiScope": "none",       "signatureWidget": "framework-mapping",      "secondaryWidgets": ["smart-data-grid"],            "userIntent": "manage",    "audienceProfiles": ["tenant_owner", "auditor"], "realtimeEnabled": false, "workflowEnabled": false, "auditEnabled": true, "agentEnabled": true,  "mobileVariant": "stacked-cards" },
+    { "route": "/compliance/taxonomy",               "componentKey": "TaxonomyPage",              "titleKey": "compliance.nav.taxonomy",             "permission": "compliance.read", "dataResource": "compliance.taxonomy",           "pageType": "list",      "layout": "full-page",   "kpiScope": "none",       "signatureWidget": "smart-data-grid",        "secondaryWidgets": [],                              "userIntent": "manage",    "audienceProfiles": ["tenant_owner", "auditor"], "realtimeEnabled": false, "workflowEnabled": false, "auditEnabled": true, "agentEnabled": false, "mobileVariant": "stacked-cards" },
+    { "route": "/compliance/registry",               "componentKey": "RegistryPage",              "titleKey": "compliance.nav.registry",             "permission": "compliance.read", "dataResource": "compliance.registry",           "pageType": "list",      "layout": "full-page",   "kpiScope": "none",       "signatureWidget": "smart-data-grid",        "secondaryWidgets": [],                              "userIntent": "manage",    "audienceProfiles": ["tenant_owner", "auditor"], "realtimeEnabled": false, "workflowEnabled": false, "auditEnabled": true, "agentEnabled": false, "mobileVariant": "stacked-cards" },
+    { "route": "/compliance/ontology",               "componentKey": "OntologyCatalogPage",       "titleKey": "compliance.nav.ontology",             "permission": "compliance.read", "dataResource": "compliance.ontology",           "pageType": "list",      "layout": "full-page",   "kpiScope": "none",       "signatureWidget": "smart-data-grid",        "secondaryWidgets": [],                              "userIntent": "manage",    "audienceProfiles": ["tenant_owner", "auditor"], "realtimeEnabled": false, "workflowEnabled": false, "auditEnabled": true, "agentEnabled": false, "mobileVariant": "stacked-cards" },
+
+    { "route": "/compliance/savings",                "componentKey": "ComplianceSavingsPage",     "titleKey": "compliance.nav.savings",              "permission": "compliance.read", "dataResource": "compliance.savings",            "pageType": "analytics", "layout": "dashboard",   "kpiScope": "page-local", "signatureWidget": "smart-data-grid",        "secondaryWidgets": [],                              "userIntent": "monitor",   "audienceProfiles": ["tenant_owner"],            "realtimeEnabled": false, "workflowEnabled": false, "auditEnabled": true, "agentEnabled": false, "mobileVariant": "stacked-cards" }
+  ],
+
+  "pageExperiences": [
+    {
+      "route": "/compliance",
+      "titleKey": "compliance.overview.title",
+      "pageType": "overview",
+      "layout": "dashboard",
+      "kpiScope": "module-overview",
+      "userIntent": "monitor",
+      "audienceProfiles": ["tenant_owner", "auditor", "department_manager", "viewer"],
+      "visibleWhen": { "permissions": ["compliance.read"] },
+      "dataScope": { "mode": "tenant" },
+      "primaryActions": [
+        { "id": "open-cockpit", "labelKey": "compliance.actions.openCockpit", "kind": "primary", "permission": "compliance.read" }
+      ],
+      "secondaryActions": [
+        { "id": "export-summary", "labelKey": "compliance.actions.exportSummary", "kind": "secondary", "permission": "compliance.export" }
+      ],
+      "defaultView": { "tableDensity": "normal" },
+      "emptyStateKey": "compliance.emptyState.overview",
+      "errorStateKey": "compliance.errorState.overview",
+      "helpKey": "compliance.help.overview"
+    },
+    {
+      "route": "/compliance/obligations",
+      "titleKey": "compliance.nav.obligations",
+      "pageType": "list",
+      "layout": "full-page",
+      "kpiScope": "none",
+      "userIntent": "manage",
+      "audienceProfiles": ["tenant_owner", "auditor", "department_manager"],
+      "visibleWhen": { "permissions": ["compliance.read"] },
+      "dataScope": { "mode": "tenant" },
+      "primaryActions": [
+        { "id": "create-obligation", "labelKey": "compliance.actions.createObligation", "kind": "primary", "permission": "compliance.write" }
+      ],
+      "secondaryActions": [
+        { "id": "export-obligations", "labelKey": "compliance.actions.exportObligations", "kind": "secondary", "permission": "compliance.export" }
+      ],
+      "defaultView": { "tableDensity": "normal", "defaultSort": "due_date:asc" },
+      "emptyStateKey": "compliance.emptyState.obligations",
+      "errorStateKey": "compliance.errorState.list",
+      "helpKey": "compliance.help.obligations"
+    },
+    {
+      "route": "/compliance/controls",
+      "titleKey": "compliance.nav.controls",
+      "pageType": "list",
+      "layout": "full-page",
+      "kpiScope": "none",
+      "userIntent": "manage",
+      "audienceProfiles": ["tenant_owner", "auditor", "department_manager"],
+      "visibleWhen": { "permissions": ["compliance.read"] },
+      "dataScope": { "mode": "tenant" },
+      "primaryActions": [
+        { "id": "create-control", "labelKey": "compliance.actions.createControl", "kind": "primary", "permission": "compliance.write" }
+      ],
+      "secondaryActions": [
+        { "id": "test-controls", "labelKey": "compliance.actions.testControls", "kind": "secondary", "permission": "compliance.write" }
+      ],
+      "defaultView": { "tableDensity": "normal" },
+      "emptyStateKey": "compliance.emptyState.controls",
+      "errorStateKey": "compliance.errorState.list",
+      "helpKey": "compliance.help.controls"
+    },
+    {
+      "route": "/compliance/assessments",
+      "titleKey": "compliance.nav.assessments",
+      "pageType": "workflow",
+      "layout": "full-page",
+      "kpiScope": "none",
+      "userIntent": "review",
+      "audienceProfiles": ["tenant_owner", "auditor"],
+      "visibleWhen": { "permissions": ["compliance.read"] },
+      "dataScope": { "mode": "tenant" },
+      "primaryActions": [
+        { "id": "start-assessment", "labelKey": "compliance.actions.startAssessment", "kind": "primary", "permission": "compliance.write" },
+        { "id": "approve-assessment", "labelKey": "compliance.actions.approveAssessment", "kind": "primary", "permission": "compliance.approve" }
+      ],
+      "secondaryActions": [
+        { "id": "export-assessment", "labelKey": "compliance.actions.exportAssessment", "kind": "secondary", "permission": "compliance.export" }
+      ],
+      "defaultView": { "tableDensity": "comfortable" },
+      "emptyStateKey": "compliance.emptyState.assessments",
+      "errorStateKey": "compliance.errorState.workflow",
+      "helpKey": "compliance.help.assessments"
+    },
+    {
+      "route": "/compliance/gaps",
+      "titleKey": "compliance.nav.gaps",
+      "pageType": "workflow",
+      "layout": "full-page",
+      "kpiScope": "none",
+      "userIntent": "review",
+      "audienceProfiles": ["tenant_owner", "auditor", "department_manager"],
+      "visibleWhen": { "permissions": ["compliance.read"] },
+      "dataScope": { "mode": "tenant" },
+      "primaryActions": [
+        { "id": "remediate-gap", "labelKey": "compliance.actions.remediateGap", "kind": "primary", "permission": "compliance.write" }
+      ],
+      "secondaryActions": [
+        { "id": "export-gaps", "labelKey": "compliance.actions.exportGaps", "kind": "secondary", "permission": "compliance.export" }
+      ],
+      "defaultView": { "tableDensity": "normal", "defaultSort": "severity:desc" },
+      "emptyStateKey": "compliance.emptyState.gaps",
+      "errorStateKey": "compliance.errorState.workflow",
+      "helpKey": "compliance.help.gaps"
+    },
+    {
+      "route": "/compliance/diagnostics",
+      "titleKey": "compliance.nav.diagnostics",
+      "pageType": "settings",
+      "layout": "full-page",
+      "kpiScope": "none",
+      "userIntent": "investigate",
+      "audienceProfiles": ["tenant_owner"],
+      "visibleWhen": { "permissions": ["compliance.admin"] },
+      "dataScope": { "mode": "tenant" },
+      "primaryActions": [
+        { "id": "run-diagnostics", "labelKey": "compliance.actions.runDiagnostics", "kind": "primary", "permission": "compliance.admin" }
+      ],
+      "secondaryActions": [],
+      "defaultView": { "tableDensity": "compact" },
+      "emptyStateKey": "compliance.emptyState.diagnostics",
+      "errorStateKey": "compliance.errorState.diagnostics"
+    }
+  ],
+
+  "realtimeSignals": {
+    "specSection": "13.2",
+    "enabledAtModuleLevel": true,
+    "signals": [
+      "compliance.pendingApprovals.count",
+      "compliance.newAuditEvents",
+      "compliance.workflowStateChanges",
+      "compliance.aiRecommendationStatus",
+      "compliance.backgroundExportStatus",
+      "compliance.attestationCampaignProgress",
+      "compliance.gapStatusChanges",
+      "compliance.regulatoryChangeAlerts"
+    ],
+    "rules": [
+      "tenant-scoped",
+      "permission-scoped",
+      "re-run resolvers on each update",
+      "graceful degradation on transport failure",
+      "observable via metrics"
+    ]
+  },
+
+  "workflowStatesSurfaced": {
+    "specSection": "14.1",
+    "states": [
+      "Draft",
+      "Pending review",
+      "Approved",
+      "Rejected",
+      "Expired",
+      "Blocked by SoD",
+      "Needs owner",
+      "Needs evidence",
+      "Ready for approval"
+    ],
+    "actionValidityLaw": "user permissions + workflow step + SoD rules + tenant scope",
+    "gatedActions": [
+      "Submit for approval",
+      "Approve",
+      "Reject",
+      "Request changes",
+      "Assign owner",
+      "Revoke",
+      "Delegate",
+      "Export evidence",
+      "Start review",
+      "Test control",
+      "Close gap",
+      "Record attestation",
+      "Submit regulator packet"
+    ]
+  },
+
+  "explainability": {
+    "specSection": "15",
+    "whyAmISeeingThis": {
+      "enabled": true,
+      "templates": {
+        "byProfile":           "compliance.explain.byProfile",
+        "byPermissionMissing": "compliance.explain.permissionMissing",
+        "byScope":             "compliance.explain.byScope",
+        "blockedBySoD":        "compliance.explain.blockedBySoD",
+        "blockedByPolicy":     "compliance.explain.blockedByPolicy"
+      },
+      "rules": [
+        "explanations must be localized",
+        "explanations must not leak restricted info",
+        "blocked states must show reason + remediation path"
+      ]
+    },
+    "decisionPreviewBeforeWrite": {
+      "specSection": "15.2",
+      "enabledFor": [
+        "control.test",
+        "control.approve",
+        "assessment.complete",
+        "assessment.approve",
+        "gap.close",
+        "attestation.record",
+        "exception.approve",
+        "framework.activate",
+        "framework.deactivate",
+        "regulator.submit"
+      ],
+      "previewFields": [
+        "beforeState",
+        "afterState",
+        "affectedEntities",
+        "riskLevel",
+        "sodImpact",
+        "workflowImpact",
+        "auditEventToBeCreated",
+        "rollbackOption"
+      ]
+    }
+  },
+
+  "evidenceFabric": {
+    "specSection": "16",
+    "enabled": true,
+    "schemaPerAction": {
+      "who": "actor identity",
+      "why": "reason text",
+      "when": "timestamp",
+      "approvalPath": "list of approvers",
+      "diff": "before/after snapshot",
+      "policyOrControlLink": "linked control/policy id",
+      "attachments": "evidence file references",
+      "aiExplanation": "if AI-assisted",
+      "correlationId": "cross-module trace id"
+    },
+    "rules": [
+      "tenant-scoped",
+      "permission-aware",
+      "queryable via approved auditor read surfaces only"
+    ]
+  },
+
+  "timeMachine": {
+    "specSection": "17",
+    "enabled": true,
+    "asOfQueriesSupported": [
+      "framework.state",
+      "control.state",
+      "obligation.state",
+      "assessment.snapshot",
+      "gap.lifecycle",
+      "attestation.history"
+    ],
+    "diffViews": [
+      "control.beforeAfter",
+      "framework.crosswalkChange",
+      "obligation.lifecycle",
+      "policy.linkChange"
+    ],
+    "rules": [
+      "uses canonical audit/evidence storage",
+      "must not expose data outside permitted scope"
+    ]
+  },
+
+  "commandPalette": {
+    "specSection": "18.1",
+    "enabledAtModuleLevel": true,
+    "shortcut": "Ctrl+K",
+    "commands": [
+      { "id": "compliance.create.obligation", "labelKey": "compliance.cmd.createObligation", "permission": "compliance.write", "kind": "create" },
+      { "id": "compliance.create.control",    "labelKey": "compliance.cmd.createControl",    "permission": "compliance.write", "kind": "create" },
+      { "id": "compliance.start.assessment",  "labelKey": "compliance.cmd.startAssessment",  "permission": "compliance.write", "kind": "run-workflow" },
+      { "id": "compliance.run.diagnostics",   "labelKey": "compliance.cmd.runDiagnostics",   "permission": "compliance.admin", "kind": "run-workflow" },
+      { "id": "compliance.generate.report",   "labelKey": "compliance.cmd.generateReport",   "permission": "compliance.export","kind": "generate-report" },
+      { "id": "compliance.go.frameworks",     "labelKey": "compliance.cmd.goFrameworks",     "permission": "compliance.read",  "kind": "go-to-route", "route": "/compliance/frameworks" },
+      { "id": "compliance.go.gaps",           "labelKey": "compliance.cmd.goGaps",           "permission": "compliance.read",  "kind": "go-to-route", "route": "/compliance/gaps" },
+      { "id": "compliance.ask.agent",         "labelKey": "compliance.cmd.askAgent",         "permission": "compliance.read",  "kind": "ask-agent" }
+    ]
+  },
+
+  "globalWorkQueue": {
+    "specSection": "18.2",
+    "enabledAtModuleLevel": true,
+    "moduleContributions": [
+      { "key": "compliance.approvals", "labelKey": "compliance.workQueue.approvals", "source": "/api/compliance-attestation/campaigns/pending" },
+      { "key": "compliance.tasksAssigned", "labelKey": "compliance.workQueue.tasksAssigned", "source": "/api/compliance/work-queue/tasks" },
+      { "key": "compliance.assessmentsDue", "labelKey": "compliance.workQueue.assessmentsDue", "source": "/api/compliance/assessments?status=due" },
+      { "key": "compliance.evidenceRequests", "labelKey": "compliance.workQueue.evidenceRequests", "source": "/api/compliance/evidence-ops?status=requested" },
+      { "key": "compliance.regulatorChanges", "labelKey": "compliance.workQueue.regulatorChanges", "source": "/api/compliance/regulatory-changes?status=open" },
+      { "key": "compliance.aiRecommendations", "labelKey": "compliance.workQueue.aiRecs", "source": "/api/compliance/ai-suggestions?actionable=true" }
+    ]
+  },
+
+  "trustCenter": {
+    "specSection": "18.3",
+    "moduleContributions": [
+      { "key": "compliance.audit.coverage", "labelKey": "compliance.trust.auditCoverage", "source": "/api/compliance/diagnostics?check=audit-coverage" },
+      { "key": "compliance.policy.enforcement", "labelKey": "compliance.trust.policyEnforcement", "source": "/api/compliance/diagnostics?check=policy-enforcement" },
+      { "key": "compliance.sod.violations", "labelKey": "compliance.trust.sodViolations", "source": "/api/compliance/diagnostics?check=sod" }
+    ]
+  },
+
+  "aiExperience": {
+    "specSection": "19",
+    "trustLayer": {
+      "specSection": "19.1",
+      "requiredFieldsOnEveryAiOutput": [
+        "source",
+        "confidence",
+        "reasoningSummary",
+        "dataUsed",
+        "lastUpdated",
+        "permissionScope",
+        "riskLevel",
+        "humanApprovalRequired"
+      ]
+    },
+    "actionReceipt": {
+      "specSection": "19.2",
+      "requiredFields": [
+        "recommendation",
+        "humanApproval",
+        "permissionCheck",
+        "sodCheck",
+        "workflowCreatedOrAdvanced",
+        "auditRecordWritten",
+        "evidenceLinked",
+        "rollbackReference"
+      ]
+    },
+    "decisionPreviewLink": {
+      "specSection": "19.3",
+      "appliesTo": "all AI-assisted sensitive writes — must route through explainability.decisionPreviewBeforeWrite"
+    },
+    "workbench": {
+      "specSection": "19.4",
+      "enabledAtModuleLevel": true,
+      "commandsByDefault": [
+        "ask",
+        "explain",
+        "summarize",
+        "detect-gaps",
+        "generate-draft",
+        "compare",
+        "simulate",
+        "prepare-approval",
+        "create-task"
+      ],
+      "rules": [
+        "available commands vary by route + profile",
+        "every command is permission-checked",
+        "every command is scoped to current entity"
+      ]
+    },
+    "arabicFirst": {
+      "specSection": "19.5",
+      "enabled": true,
+      "supports": [
+        "Arabic prompts and explanations",
+        "Arabic workflow comments and summaries",
+        "Arabic reports and exports",
+        "RTL-native interaction",
+        "English parity"
+      ]
+    },
+    "memory": {
+      "specSection": "19.6",
+      "enabled": true,
+      "namespaces": ["compliance.drafts", "compliance.findings"],
+      "governance": {
+        "visible": true,
+        "editable": true,
+        "tenantScoped": true,
+        "permissionAware": true,
+        "audited": true
+      }
+    },
+    "riskAware": {
+      "specSection": "19.7",
+      "behaviorByRisk": {
+        "low":    "normal confirm",
+        "medium": "stronger confirmation",
+        "high":   "decision preview + workflow approval",
+        "blocked":"explain SoD/policy reason"
+      },
+      "riskTiers": {
+        "low":    ["compliance.read", "compliance.export"],
+        "medium": ["compliance.write"],
+        "high":   ["compliance.approve", "compliance.admin"]
+      }
+    }
+  },
+
+  "agentExperience": {
+    "specSection": "20",
+    "agentContractFile": "./contracts/agent.contract.json",
+    "agentTone": "assurance",
+    "agentToneFamily": "risk-compliance-audit",
+    "modulePersonality": "Evidence-heavy, assurance-focused. Agent cards: control gap, missing evidence, expired obligation, policy mismatch, regulatory impact.",
+    "moduleAgents": [
+      {
+        "agentKey": "compliance.obligationMapper",
+        "labelKey": "compliance.agents.obligationMapper",
+        "skills": ["mapObligationToControls", "summarizeObligation"],
+        "permissions": ["compliance.read"]
+      },
+      {
+        "agentKey": "compliance.evidenceDetector",
+        "labelKey": "compliance.agents.evidenceDetector",
+        "skills": ["detectMissingEvidence", "rankEvidenceFreshness"],
+        "permissions": ["compliance.read"]
+      },
+      {
+        "agentKey": "compliance.gapSummarizer",
+        "labelKey": "compliance.agents.gapSummarizer",
+        "skills": ["summarizeControlGap", "prioritizeGaps"],
+        "permissions": ["compliance.read"]
+      },
+      {
+        "agentKey": "compliance.reportDrafter",
+        "labelKey": "compliance.agents.reportDrafter",
+        "skills": ["draftComplianceReport", "draftRegulatorReply"],
+        "permissions": ["compliance.export"]
+      },
+      {
+        "agentKey": "compliance.frameworkComparer",
+        "labelKey": "compliance.agents.frameworkComparer",
+        "skills": ["compareFrameworks", "explainCrosswalk"],
+        "permissions": ["compliance.read"]
+      }
+    ]
+  },
+
+  "workflowExperience": {
+    "stateMachines": ["framework", "control", "assessment", "obligation", "attestation", "gap"],
+    "transitions": [
+      "control.test", "control.approve",
+      "assessment.start", "assessment.complete", "assessment.approve",
+      "gap.remediate", "gap.close",
+      "attestation.request", "attestation.record"
+    ],
+    "decisionPreviewRequiredFor": ["assessment.approve", "gap.close", "attestation.record"]
+  },
+
+  "evidenceExperience": {
+    "binderRequired": true,
+    "showFreshness": true,
+    "showAttestationLink": true,
+    "missingEvidenceBadge": true
+  },
+
+  "auditExperience": {
+    "auditTimelineRequired": true,
+    "writeAuditMandatory": ["control.test", "control.approve", "assessment.complete", "gap.close", "attestation.record"],
+    "exportRequiresAudit": true
+  },
+
+  "permissions": {
+    "namespace": "compliance",
+    "declared": ["compliance.read", "compliance.write", "compliance.approve", "compliance.export", "compliance.admin"]
+  },
+
+  "i18n": {
+    "namespace": "compliance",
+    "locales": ["en", "ar"],
+    "rtl": true
+  },
+
+  "hardGates": {
+    "specSection": "10",
+    "checks": [
+      "/api/dynamic-ui/contract/compliance returns module contract",
+      "/api/dynamic-ui/route-catalog includes all active compliance routes",
+      "every route has pageType",
+      "every route has layout",
+      "every route has kpiScope",
+      "every route has titleKey",
+      "navigation renders from contract",
+      "overview page shows module KPIs",
+      "non-overview pages do not show overview KPIs",
+      "permissions filter navigation",
+      "SPA build passes",
+      "drift test passes"
+    ]
+  },
+
+  "pageQualityGate": {
+    "specSection": "21",
+    "checks": [
+      "moduleStyleTokens exists",
+      "every route has pageType",
+      "every route has layout",
+      "every route has kpiScope",
+      "every route has titleKey",
+      "every route has signatureWidget or explicit generic fallback",
+      "overview page uses Command Center",
+      "operational pages do not inherit overview KPI cards/strip",
+      "agent actions are permission-checked (resolver-driven)",
+      "workflow actions are state-checked (eligibility + step)",
+      "risky write actions open Decision Preview",
+      "evidence-required actions open Evidence Drawer",
+      "audit timeline exists for object/write pages",
+      "Arabic labels exist",
+      "English labels exist",
+      "RTL is tested",
+      "LTR is tested",
+      "mobile 390px is tested",
+      "desktop 1440px is tested",
+      "no raw i18n keys",
+      "no raw HTTP error text rendered to end users",
+      "no fake data",
+      "no frontend-only authorization (backend remains authoritative)",
+      "backend RLS remains authoritative",
+      "SSE/realtime channels declared where live updates are needed",
+      "Command Palette includes module/page actions derived from enrolled contracts",
+      "Why am I seeing this? reason exists for gated surfaces",
+      "build passes",
+      "drift test passes",
+      "negative permission test passes"
+    ]
+  },
+
+  "personaWorkspace": {
+    "specSection": "12",
+    "personaProfiles": [
+      { "profile": "tenant_owner",       "intent": "operating cockpit, risk, approvals, readiness", "scope": "tenant" },
+      { "profile": "platform_admin",     "intent": "platform-wide visibility", "scope": "global", "readonlyForCompliance": true },
+      { "profile": "auditor",            "intent": "read-only, audit, evidence, access review", "scope": "tenant", "readonly": true },
+      { "profile": "department_manager", "intent": "scoped users/tasks/requests", "scope": "department_scope" },
+      { "profile": "hr_manager",         "intent": "users, departments, positions, teams", "scope": "tenant" },
+      { "profile": "viewer",             "intent": "limited read-only views", "scope": "self", "readonly": true },
+      { "profile": "external_user",      "intent": "regulator portal only", "scope": "external" }
+    ],
+    "rules": [
+      "persona difference is implemented via UserContext + PageExperienceContract, not ad-hoc conditionals",
+      "persona affects: visible actions, default filters, saved views, widget variants, data scope, read-only enforcement"
+    ]
+  },
+
+  "globalVisualLanguage": {
+    "specSection": "24",
+    "coreDirection": [
+      "clean enterprise light UI",
+      "soft neutral background",
+      "high-contrast text"
+    ],
+    "tokensSource": "@dos/ui-system tokens.css",
+    "shapeAndSizing": {
+      "borderRadius": "tokens.radius.md",
+      "spacingScale": "tokens.spacing.*",
+      "elevation": "tokens.shadow.*"
+    },
+    "interactionStates": ["default", "hover", "focus", "active", "disabled", "loading", "error"]
+  },
+
+  "pageArchetypes": {
+    "specSection": "27",
+    "mapping": {
+      "overview":  { "layout": "dashboard",   "primaryComponent": "command-center",      "kpiScope": "module-overview" },
+      "list":      { "layout": "full-page",   "primaryComponent": "smart-data-grid",     "kpiScope": "none" },
+      "object":    { "layout": "object-page", "primaryComponent": "entity-360",          "kpiScope": "none" },
+      "workflow":  { "layout": "full-page",   "primaryComponent": "workflow-canvas",     "kpiScope": "none" },
+      "analytics": { "layout": "dashboard",   "primaryComponent": "smart-data-grid",     "kpiScope": "page-local" },
+      "audit":     { "layout": "full-page",   "primaryComponent": "audit-timeline",      "kpiScope": "none" },
+      "settings":  { "layout": "full-page",   "primaryComponent": "smart-data-grid",     "kpiScope": "none" },
+      "report":    { "layout": "report",      "primaryComponent": "report-composer",     "kpiScope": "page-local" }
+    }
+  },
+
+  "partBDecisions": {
+    "specSection": "30",
+    "enforce": {
+      "resolverOnlyUiPermissionGating":      "permission gating happens in resolver only — components do not embed role logic",
+      "backendRlsAsAuthority":               "frontend visibility is a hint; backend RLS is the truth",
+      "genericRendererPlusSignatureWidget":  "page = generic renderer for pageType + signature widget composed in",
+      "strictKpiHierarchy":                  "module-overview KPIs only appear on the overview page",
+      "commandPaletteFromEnrolledContracts": "command palette commands come from enrolled module contracts, not hardcoded",
+      "evidenceAuditMiddleware":             "every governed action passes through evidence + audit middleware"
+    }
+  },
+
+  "implementationPhases": {
+    "specSection": "22",
+    "moduleStatus": {
+      "Phase 1: Page Experience Contract":   "complete",
+      "Phase 2: User Context Resolver":      "platform-side",
+      "Phase 3: Widget Registry":            "in-progress (signature widgets pending)",
+      "Phase 4: Agent Action Registry":      "complete (agent.contract.json)",
+      "Phase 5: Workflow Action Registry":   "complete (workflowExperience + workflowStatesSurfaced)",
+      "Phase 6: Foundation proof pages":     "n/a (other module)",
+      "Phase 7: Apply same contract":        "in-progress",
+      "Phase 8: Global Work Queue":          "declared (globalWorkQueue.moduleContributions)",
+      "Phase 9: Command Palette":            "declared (commandPalette.commands)",
+      "Phase 10: Decision Preview + Evidence Fabric gates": "declared (explainability + evidenceFabric)"
+    }
+  },
+
+  "shellIncidentPlaybookRef": {
+    "specSection": "36",
+    "playbookFile": "../../../docs/DOS-AIO-Specs/dynamic-ui-enrollment-page-experience-widgets-spec.md#36-shahin-spa-shell-incident-playbook-p0",
+    "moduleResponsibilities": [
+      "no module fights for shell — the SPA shell is platform-owned",
+      "module contributes to shell only via this contract",
+      "incident response is a platform job; module supplies a working contract",
+      "module health endpoint must respond < 1s (handled by /api/compliance/healthz)"
+    ]
+  }
+}

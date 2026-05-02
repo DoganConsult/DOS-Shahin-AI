@@ -1,0 +1,376 @@
+groups:
+- name: dos_backend_alerts
+  rules:
+  # 1. Database Downtime
+  - alert: DatabaseDown
+    expr: pg_up == 0
+    for: 1m
+    labels:
+      severity: critical
+      team: core-infra
+    annotations:
+      summary: "PostgreSQL Database is unreachable"
+      description: "Database connection failed for more than 1 minute."
+      runbook_url: "https://github.com/DoganConsult/DOS/blob/main/ops/docs/runbooks/db-failure.md"
+
+  # 2. CPU Auto-Scale Trigger
+  - alert: HighCPUUsage
+    expr: avg(rate(node_cpu_seconds_total{mode!="idle"}[5m])) > 0.8
+    for: 3m
+    labels:
+      severity: warning
+      action: autoscale
+    annotations:
+      summary: "High CPU Usage Detected (>80%)"
+      description: "CPU load crossed scaling threshold. Pager/webhook fired to trigger PM2 or Node autoscaling sequence."
+      runbook_url: "https://github.com/DoganConsult/DOS/blob/main/ops/docs/runbooks/high-cpu.md"
+
+  # 3. SLO Fast Burn Rate (P99 Latency > 500ms)
+  - alert: SLOBurnLatency
+    expr: histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket[5m])) by (le)) > 0.5
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: "P99 Latency exceeded 500ms bounds"
+      description: "Service is burning SLA compliance limits rapidly."
+      runbook_url: "https://github.com/DoganConsult/DOS/blob/main/ops/docs/runbooks/slo-breach.md"
+
+  # 4. Service Down Metric
+  - alert: MicroserviceOffline
+    expr: up{job="microservices"} == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Microservice instance offline"
+      description: "Instance {{ $labels.instance }} has been unreachable for 1m."
+      runbook_url: "https://github.com/DoganConsult/DOS/blob/main/ops/docs/runbooks/service-down.md"
+
+  # 5. Error Rate Spike
+  - alert: ErrorRateSpike
+    expr: sum(rate(dos_errors_total[5m])) by (service) > 0.1
+    for: 3m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Error rate spike in {{ $labels.service }}"
+      description: "Error rate exceeded 0.1/s for 3 minutes in {{ $labels.service }}."
+      runbook_url: "https://github.com/DoganConsult/DOS/blob/main/ops/docs/runbooks/error-rate-spike.md"
+
+  # 6. Memory Usage High
+  - alert: HighMemoryUsage
+    expr: dos_heap_trend_slope_bytes_per_minute > 1048576
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Potential memory leak detected"
+      description: "Heap is growing at >1MB/min for 10 minutes — possible leak."
+      runbook_url: "https://github.com/DoganConsult/DOS/blob/main/ops/docs/runbooks/memory-leak.md"
+
+  # 6b. Swap Usage High — system is under memory pressure
+  - alert: SwapUsageHigh
+    expr: (node_memory_Swap_total - node_memory_Swap_free) / node_memory_Swap_total > 0.5
+    for: 5m
+    labels:
+      severity: warning
+      team: core-infra
+    annotations:
+      summary: "Swap usage exceeds 50% — system under memory pressure"
+      description: "More than 50% of swap space is used. If swap fills, OOM killer will terminate services. Investigate runaway processes or increase RAM."
+      runbook_url: "https://github.com/DoganConsult/DOS/blob/main/ops/docs/runbooks/high-swap.md"
+
+  # 7. Auth Brute Force Detection
+  - alert: AuthBruteForce
+    expr: sum(rate(dos_http_requests_total{route="/api/auth/login",status_code="401"}[5m])) > 1
+    for: 2m
+    labels:
+      severity: warning
+      team: security
+    annotations:
+      summary: "Possible brute force attack on login endpoint"
+      description: "More than 1 failed login per second sustained for 2 minutes."
+      runbook_url: "https://github.com/DoganConsult/DOS/blob/main/ops/docs/runbooks/brute-force.md"
+
+- name: new_user_journey_alerts
+  rules:
+  # Outbox lag — oldest pending row age crosses threshold.
+  - alert: OutboxLagHigh
+    expr: max(dos_outbox_lag_seconds) > 60
+    for: 5m
+    labels:
+      severity: warning
+      team: platform
+    annotations:
+      summary: "Transactional outbox lag exceeds 60s"
+      description: "Outbox publisher is behind — oldest pending row is older than 60s."
+      runbook_url: "https://github.com/DoganConsult/DOS/blob/main/ops/docs/runbooks/outbox-lag.md"
+
+  # Dead-letter queue depth.
+  - alert: OutboxDLQNonZero
+    expr: sum(increase(dos_outbox_dead_total[10m])) > 0
+    for: 10m
+    labels:
+      severity: critical
+      team: platform
+    annotations:
+      summary: "Outbox rows transitioned to dead-letter state"
+      description: "One or more outbox rows failed max_attempts and are now `dead`."
+      runbook_url: "https://github.com/DoganConsult/DOS/blob/main/ops/docs/runbooks/outbox-dlq.md"
+
+  # Registration error rate >1% over 5 min.
+  - alert: RegistrationErrorRateHigh
+    expr: |
+      (
+        sum(rate(dos_registration_requests_total{result!="success"}[5m]))
+        /
+        clamp_min(sum(rate(dos_registration_requests_total[5m])), 0.001)
+      ) > 0.01
+    for: 5m
+    labels:
+      severity: critical
+      team: platform
+    annotations:
+      summary: "Register error rate >1%"
+      description: "Public /register is rejecting more than 1% of attempts over the last 5 minutes."
+      runbook_url: "https://github.com/DoganConsult/DOS/blob/main/ops/docs/runbooks/register-errors.md"
+
+  # Registration p95 latency >1s.
+  - alert: RegistrationLatencyHigh
+    expr: histogram_quantile(0.95, sum(rate(dos_registration_duration_seconds_bucket[5m])) by (le)) > 1
+    for: 10m
+    labels:
+      severity: warning
+      team: platform
+    annotations:
+      summary: "Register p95 latency >1s"
+      description: "Public /register p95 latency is above 1s over 10 minutes — investigate DB + CAPTCHA verifier."
+      runbook_url: "https://github.com/DoganConsult/DOS/blob/main/ops/docs/runbooks/register-slow.md"
+
+  # Provisioning worker heartbeat stale — nothing processed in 2 min.
+  - alert: ProvisioningWorkerHeartbeatStale
+    expr: |
+      max(time() - dos_outbox_pending{status="pending"}) > 120
+      and
+      max(dos_outbox_pending{status="pending"}) > 0
+    for: 2m
+    labels:
+      severity: critical
+      team: platform
+    annotations:
+      summary: "Provisioning worker heartbeat stale — pending outbox not draining"
+      description: "Pending outbox has backlog but no rows transitioning to published — worker likely wedged."
+      runbook_url: "https://github.com/DoganConsult/DOS/blob/main/ops/docs/runbooks/worker-stuck.md"
+
+  - alert: OnboardingCompletionRateLow
+    expr: |
+      (
+        sum by (region, product) (rate(dos_onboarding_sessions_total{event="completed"}[30m]))
+        /
+        clamp_min(sum by (region, product) (rate(dos_onboarding_sessions_total{event="started"}[30m])), 0.001)
+      ) < 0.80
+    for: 30m
+    labels:
+      severity: warning
+      team: platform
+    annotations:
+      summary: "Onboarding completion rate below 80%"
+      description: "Completion rate over 30m is below 80% for region={{ $labels.region }}, product={{ $labels.product }}."
+      runbook_url: "https://github.com/DoganConsult/DOS/blob/main/ops/docs/runbooks/onboarding-completion-low.md"
+
+  - alert: ProvisioningFailureRateHigh
+    expr: |
+      (
+        sum by (region, product) (rate(dos_onboarding_provisioning_jobs_total{result="failed"}[15m]))
+        /
+        clamp_min(sum by (region, product) (rate(dos_onboarding_provisioning_jobs_total{result="started"}[15m])), 0.001)
+      ) > 0.05
+    for: 15m
+    labels:
+      severity: critical
+      team: platform
+    annotations:
+      summary: "Provisioning failure rate above 5%"
+      description: "Failure rate over 15m exceeded 5% for region={{ $labels.region }}, product={{ $labels.product }}."
+      runbook_url: "https://github.com/DoganConsult/DOS/blob/main/ops/docs/runbooks/provisioning-failure-rate.md"
+
+  - alert: ProvisioningDurationP95High
+    expr: |
+      histogram_quantile(
+        0.95,
+        sum(rate(dos_onboarding_provisioning_job_duration_seconds_bucket{result="completed"}[15m])) by (le, region, product)
+      ) > 1800
+    for: 15m
+    labels:
+      severity: warning
+      team: platform
+    annotations:
+      summary: "Provisioning p95 duration above 30 minutes"
+      description: "Provisioning p95 over 15m is above 30m for region={{ $labels.region }}, product={{ $labels.product }}."
+      runbook_url: "https://github.com/DoganConsult/DOS/blob/main/ops/docs/runbooks/provisioning-slow.md"
+
+  - alert: OnboardingStageBacklogHigh
+    expr: max by (region, product, stage) (dos_onboarding_stage_parked_open) > 100
+    for: 30m
+    labels:
+      severity: warning
+      team: platform
+    annotations:
+      summary: "Onboarding stage backlog high"
+      description: "More than 100 sessions are parked open on stage={{ $labels.stage }} (region={{ $labels.region }}, product={{ $labels.product }})."
+      runbook_url: "https://github.com/DoganConsult/DOS/blob/main/ops/docs/runbooks/onboarding-stage-backlog.md"
+
+  - alert: StageStallHigh
+    expr: |
+      histogram_quantile(
+        0.95,
+        sum(rate(dos_onboarding_stage_duration_seconds_bucket[15m])) by (le, region, product, stage)
+      ) > 600
+    for: 30m
+    labels:
+      severity: warning
+      team: platform
+    annotations:
+      summary: "Onboarding stage p95 dwell over 10 minutes"
+      description: "Stage={{ $labels.stage }} (region={{ $labels.region }}, product={{ $labels.product }}) p95 dwell exceeds 10m for 30m+. Likely UX friction."
+      runbook_url: "https://github.com/DoganConsult/DOS/blob/main/ops/docs/runbooks/onboarding-stage-stall.md"
+
+  # ─── user-service ─────────────────────────────────────────────────────────
+  - alert: UserServiceHealthFailing
+    expr: max_over_time(up{job="user-service"}[2m]) == 0
+    for: 2m
+    labels:
+      severity: critical
+      service: user-service
+    annotations:
+      summary: "user-service health probe failing"
+      description: "/health returning non-200 for more than 2 minutes."
+      runbook_url: "https://github.com/DoganConsult/DOS/blob/main/ops/runbooks/user-service.md"
+
+  - alert: UserServiceHigh5xxRate
+    expr: (sum(rate(dos_http_requests_total{service="user-service",status_code=~"5.."}[5m])) / sum(rate(dos_http_requests_total{service="user-service"}[5m]))) > 0.01
+    for: 5m
+    labels:
+      severity: warning
+      service: user-service
+    annotations:
+      summary: "user-service 5xx rate > 1% for 5m"
+      description: "Error budget burning. Investigate logs and recent deploys."
+      runbook_url: "https://github.com/DoganConsult/DOS/blob/main/ops/runbooks/user-service.md#high-5xx-rate"
+
+  - alert: UserServiceDBSlow
+    expr: histogram_quantile(0.99, sum(rate(user_service_db_query_duration_seconds_bucket[5m])) by (le, operation)) > 0.5
+    for: 5m
+    labels:
+      severity: warning
+      service: user-service
+    annotations:
+      summary: "user-service DB p99 > 500ms on {{ $labels.operation }}"
+      description: "Slow query suspected. Check indices and query plans for {{ $labels.operation }}."
+      runbook_url: "https://github.com/DoganConsult/DOS/blob/main/ops/runbooks/user-service.md#db-p99--500-ms"
+
+  - alert: UserServiceEventConsumerLag
+    expr: increase(user_service_event_handler_failed_total[10m]) > 5
+    for: 10m
+    labels:
+      severity: warning
+      service: user-service
+    annotations:
+      summary: "user-service event consumer failures"
+      description: "Repeated handler failures in the last 10m — consumer may be stuck or payloads malformed."
+      runbook_url: "https://github.com/DoganConsult/DOS/blob/main/ops/runbooks/user-service.md#event-consumer-lag"
+
+  - alert: UserServiceRateLimitedSurge
+    expr: increase(user_service_rate_limited_total[5m]) > 100
+    for: 5m
+    labels:
+      severity: info
+      service: user-service
+    annotations:
+      summary: "user-service rate-limit rejections spiking"
+      description: "100+ rate-limit rejections in 5m — likely abuse or a client bug."
+
+- name: clickhouse_analytics_alerts
+  rules:
+  - alert: ClickHouseUnreachable
+    expr: max(dos_clickhouse_up) == 0
+    for: 2m
+    labels:
+      severity: critical
+      team: platform
+      component: clickhouse
+    annotations:
+      summary: "ClickHouse unreachable from analytics-service"
+      description: "The dos_clickhouse_up gauge has been 0 for 2 minutes. analytics buffer will back up and eventually drop rows."
+      runbook_url: "https://github.com/DoganConsult/DOS/blob/main/ops/docs/runbooks/clickhouse-down.md"
+
+  - alert: ClickHouseFlushFailureRateHigh
+    expr: |
+      sum(rate(dos_clickhouse_flush_failures_total[5m])) by (table)
+      / clamp_min(sum(rate(dos_clickhouse_flushes_total[5m])) by (table), 0.001) > 0.1
+    for: 10m
+    labels:
+      severity: warning
+      team: platform
+      component: clickhouse
+    annotations:
+      summary: "ClickHouse flush failure rate >10% on {{ $labels.table }}"
+      description: "More than 10% of flushes to {{ $labels.table }} are failing over the last 5m. Investigate ClickHouse ingest load / network."
+      runbook_url: "https://github.com/DoganConsult/DOS/blob/main/ops/docs/runbooks/clickhouse-flush-failures.md"
+
+  - alert: ClickHouseBufferDepthHigh
+    expr: max(dos_clickhouse_buffer_depth) by (table) > 400
+    for: 5m
+    labels:
+      severity: warning
+      team: platform
+      component: clickhouse
+    annotations:
+      summary: "ClickHouse buffer near capacity on {{ $labels.table }}"
+      description: "In-memory buffer depth on {{ $labels.table }} sustained above 400 rows (MAX_BUFFER_SIZE is 500). Rows will start being dropped after failure re-queue soon."
+      runbook_url: "https://github.com/DoganConsult/DOS/blob/main/ops/docs/runbooks/clickhouse-buffer-pressure.md"
+
+  - alert: ClickHouseFlushLatencyHigh
+    expr: histogram_quantile(0.95, sum(rate(dos_clickhouse_flush_duration_seconds_bucket[5m])) by (le, table)) > 2
+    for: 10m
+    labels:
+      severity: warning
+      team: platform
+      component: clickhouse
+    annotations:
+      summary: "ClickHouse flush p95 latency > 2s on {{ $labels.table }}"
+      description: "Flushes to {{ $labels.table }} are slow; backpressure builds in the analytics-service buffer."
+      runbook_url: "https://github.com/DoganConsult/DOS/blob/main/ops/docs/runbooks/clickhouse-flush-slow.md"
+
+# ─── Tenant migration ledger health (Phase-2B 2026-04-30) ─────────────
+- name: dos_tenant_migrations
+  rules:
+  - alert: TenantMigrationsFailed
+    expr: sum(dos_tenant_migrations_failed) > 0
+    for: 5m
+    labels:
+      severity: critical
+      team: platform
+      component: tenant-migrations
+    annotations:
+      summary: "{{ $value }} failed tenant migration row(s) for >5m"
+      description: |
+        dos.tenant_migrations has failed rows. Investigate per-tenant breakdown:
+          dos_tenant_migrations_failed{tenant_id!=""}
+        See ops/scripts/superuser/3B_normalize_ownership_*.sql for the standard
+        ownership-fix runbook.
+      runbook_url: "https://github.com/DoganConsult/DOS/blob/main/ops/docs/runbooks/tenant-migrations-failed.md"
+
+  - alert: TenantMigrationsLedgerStale
+    # Refresher writes the gauge every ~30s; if it hasn't been observed in 5m
+    # the refresher (or the tenant-service) is down.
+    expr: absent(dos_tenant_migrations_by_status)
+    for: 5m
+    labels:
+      severity: warning
+      team: platform
+      component: tenant-migrations
+    annotations:
+      summary: "tenant_migrations gauge is absent for >5m"
+      description: "tenant-service refresher stopped writing dos_tenant_migrations_by_status; check tenant-service /metrics."

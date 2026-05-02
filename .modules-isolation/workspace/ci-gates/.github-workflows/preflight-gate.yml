@@ -1,0 +1,35 @@
+name: preflight-gate
+on:
+  pull_request:
+    branches: [main, release/**, claude/**]
+  push:
+    branches: [main]
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install jq + ajv-cli
+        run: |
+          sudo apt-get update && sudo apt-get install -y jq
+          npm install -g ajv-cli ajv-formats
+      - name: Locate preflight report
+        id: locate
+        run: |
+          if [ -f preflight-report.json ]; then
+            echo "report=preflight-report.json" >> $GITHUB_OUTPUT
+          elif [ -f .preflight/report.json ]; then
+            echo "report=.preflight/report.json" >> $GITHUB_OUTPUT
+          else
+            echo "::error::No preflight-report.json found at repo root or .preflight/report.json"
+            exit 1
+          fi
+      - name: Run preflight gate
+        run: bash .modules-isolation/workspace/ci-gates/preflight-gate.sh ${{ steps.locate.outputs.report }}
+      - name: Validate enrolment artefacts (if module enrolment task)
+        run: |
+          MODULE=$(jq -r '.task_lock.wave' ${{ steps.locate.outputs.report }} | sed 's/W[0-9]*-//')
+          TYPE=$(jq -r '.task_lock.task_type' ${{ steps.locate.outputs.report }})
+          if [ "$TYPE" = "module_enrolment" ] && [ -n "$MODULE" ] && [ "$MODULE" != "null" ]; then
+            bash .modules-isolation/workspace/profile-tools/validate-enrolment.sh grc "$MODULE"
+          fi

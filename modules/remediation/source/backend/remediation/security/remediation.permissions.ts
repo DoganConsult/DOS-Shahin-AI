@@ -1,0 +1,2 @@
+import { REMEDIATION_PERMISSIONS } from './remediation.security';
+export { REMEDIATION_PERMISSIONS as REMEDIATION_MODULE_PERMISSIONS };

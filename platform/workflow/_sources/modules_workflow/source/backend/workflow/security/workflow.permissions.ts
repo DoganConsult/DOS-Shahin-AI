@@ -1,0 +1,2 @@
+import { WORKFLOW_PERMISSIONS } from './workflow.security';
+export { WORKFLOW_PERMISSIONS as WORKFLOW_MODULE_PERMISSIONS };

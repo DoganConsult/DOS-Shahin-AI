@@ -1,0 +1,55 @@
+{
+  "moduleCode": "proactive-leadership",
+  "displayName": "Proactive Leadership",
+  "ownerTeam": "product-shahin-ai",
+  "productCode": "shahin-ai",
+  "ownership": "module-owned",
+  "version": "1.0.0",
+  "status": "active",
+  "platformDependencies": [
+    "identity",
+    "tenancy"
+  ],
+  "seedProviders": [
+    "products/shahin/seeds/proactive-leadership-seed"
+  ],
+  "tenantDefaults": [
+    "proactive_leadership_insight_frequency_hours"
+  ],
+  "requiredReferenceData": [
+    "leadership_insight_categories"
+  ],
+  "currentSources": [
+    "/home/Dr-Dogan-AGRC-OS/backend/src/modules/proactive-leadership"
+  ],
+  "targetPath": "modules/proactive-leadership",
+  "futureService": "executive-intelligence-service",
+  "frontendSources": [
+    "/home/Dr-Dogan-AGRC-OS/frontend/src/app/platform-manifests/proactive-leadership.module.routes.ts"
+  ],
+  "ownedTables": [
+    "proactive_leadership_configs",
+    "proactive_leadership_insights",
+    "proactive_leadership_alerts"
+  ],
+  "referencedTables": [
+    "risk_assessments",
+    "compliance_assessments",
+    "governance_bodies"
+  ],
+  "events": {
+    "publishes": [
+      "proactive_leadership.insight_generated",
+      "proactive_leadership.alert_triggered"
+    ],
+    "subscribes": [
+      "risk.assessment_completed",
+      "compliance.assessment_completed",
+      "incident.created",
+      "governance.decision_made"
+    ]
+  },
+  "routeBases": [
+    "/api/proactive-leadership"
+  ]
+}

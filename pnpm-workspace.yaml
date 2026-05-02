@@ -1,0 +1,36 @@
+packages:
+  # Platform DNA
+  - 'platform/foundation'
+  - 'platform/access/*'
+  - 'platform/ui-system/*'
+  - 'platform/workflow'
+  - 'platform/workflow/packages/*'
+  - 'platform/dauth/packages/*'
+  - 'platform/dauth/services/*'
+  - 'platform/dos/packages/*'
+  - 'platform/dos/services/*'
+  - 'platform/dsoc/packages/*'
+  - 'platform/dsoc/services/*'
+  - 'platform/dnoc/packages/*'
+  - 'platform/dnoc/services/*'
+  - 'platform/ai/packages/*'
+  - 'platform/ai/services/*'
+  - 'platform/ai/admin/services/*'
+  # Microservices
+  - 'services/*'
+  # Modules + shared workspace packages
+  - 'modules/packages/*'
+  - 'modules/risk'
+  - 'modules/qiyas'
+  - 'modules/compliance'
+  - 'modules/compliance/sdk/typescript'
+  # Products
+  - 'products/shahin-ai/app'
+  - 'products/shahin-ai/app/src/app'
+ignoredBuiltDependencies: []
+onlyBuiltDependencies:
+  - esbuild
+  - '@swc/core'
+  - better-sqlite3
+  - bcrypt
+  - sharp

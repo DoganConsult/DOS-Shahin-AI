@@ -1,0 +1,15 @@
+{
+  "quality-gate.title": "Quality Gates",
+  "quality-gate.dashboard": "Quality Gate Dashboard",
+  "quality-gate.gates": "Gate Definitions",
+  "quality-gate.checks": "Quality Checks",
+  "quality-gate.results": "Gate Results",
+  "quality-gate.diagnostics": "Diagnostics",
+  "quality-gate.admin": "Quality Gate Admin",
+  "quality-gate.empty.title": "No quality gates defined",
+  "quality-gate.empty.description": "Define quality gates to enforce release and deployment standards.",
+  "quality-gate.loading": "Loading quality gates...",
+  "quality-gate.error.title": "Failed to load quality gates",
+  "quality-gate.error.retry": "Retry",
+  "quality-gate.create": "Create Gate"
+}

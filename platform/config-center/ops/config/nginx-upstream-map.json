@@ -1,0 +1,10 @@
+{
+  "platform_gateway": "gateway",
+  "auth_service": "auth-service",
+  "tenant_service": "tenant-service",
+  "user_service": "user-service",
+  "workflow_service": "workflow-service",
+  "notification_service": "notification-service",
+  "audit_service": "audit-service",
+  "product_shahin": "product-shell"
+}

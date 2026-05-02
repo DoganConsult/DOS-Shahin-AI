@@ -1,0 +1,29 @@
+{
+  "name": "@dos/dauth-csrf",
+  "version": "0.1.0",
+  "description": "DOS Platform — DB-driven CSRF & session-security services extracted from platform/core for use by the gateway and other edge services.",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@dos/platform-core": "workspace:*",
+    "@dos/db": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "typescript": "^5.7.0"
+  }
+}

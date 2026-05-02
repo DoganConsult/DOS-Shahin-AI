@@ -1,0 +1,24 @@
+// @ts-nocheck
+// ============================================
+// Shahin — Digital Twin Service (barrel re-export)
+// Canonical barrel for all digital-twin sub-services.
+// Owner: Product — ai-governance module (Law 2)
+// ============================================
+
+export * from './digital-twin.types';
+export * from './digital-twin-simulation.service';
+export * from './digital-twin-impact.service';
+export * from './digital-twin-org-analysis.service';
+
+/**
+ * Convenience alias: runs analyzeOrgImpact against the current
+ * simulation snapshot identified by simulationId.
+ * Used by the /digital-twin/:id/org-impact route.
+ */
+export async function analyzeOrgStructureImpact(
+  tenantId: string,
+  simulationId: string,
+): Promise<import('./digital-twin.types').OrgStructureImpactAnalysis> {
+      const result = await safeQuery("SELECT * FROM __TENANT_SCHEMA__.ai_governance_items" + (tenantId ? " WHERE tenant_id = $1" : ""), tenantId ? [tenantId] : []);
+      return result?.rows || [];
+}

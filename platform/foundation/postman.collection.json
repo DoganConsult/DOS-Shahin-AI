@@ -1,0 +1,131 @@
+{
+  "info": {
+    "_postman_id": "dos-foundation-2.0.0",
+    "name": "DOS Foundation Module",
+    "description": "Foundation aggregator API. Set {{baseUrl}} = http(s)://host/api/foundation, {{token}} = bearer JWT, {{tenantId}} = active tenant. Generated from openapi.yaml.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+  },
+  "variable": [
+    { "key": "baseUrl",  "value": "http://localhost:3000/api/foundation" },
+    { "key": "token",    "value": "" },
+    { "key": "tenantId", "value": "" },
+    { "key": "id",       "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Organizations",
+      "item": [
+        { "name": "List",   "request": { "method": "GET",    "header": [{"key":"X-Tenant-Id","value":"{{tenantId}}"}], "url": "{{baseUrl}}/organizations?limit=25&offset=0" } },
+        { "name": "Create", "request": { "method": "POST",   "header": [{"key":"X-Tenant-Id","value":"{{tenantId}}"},{"key":"Content-Type","value":"application/json"}], "url": "{{baseUrl}}/organizations", "body": { "mode": "raw", "raw": "{\n  \"entityType\": \"organization\",\n  \"nameEn\": \"Acme Holdings\",\n  \"code\": \"ACME\"\n}" } } },
+        { "name": "Get",    "request": { "method": "GET",    "header": [{"key":"X-Tenant-Id","value":"{{tenantId}}"}], "url": "{{baseUrl}}/organizations/{{id}}" } },
+        { "name": "Patch",  "request": { "method": "PATCH",  "header": [{"key":"X-Tenant-Id","value":"{{tenantId}}"},{"key":"Content-Type","value":"application/json"}], "url": "{{baseUrl}}/organizations/{{id}}", "body": { "mode": "raw", "raw": "{\n  \"nameEn\": \"Acme Holdings Ltd\"\n}" } } },
+        { "name": "Delete", "request": { "method": "DELETE", "header": [{"key":"X-Tenant-Id","value":"{{tenantId}}"}], "url": "{{baseUrl}}/organizations/{{id}}" } },
+        { "name": "Children","request":{ "method": "GET",    "header": [{"key":"X-Tenant-Id","value":"{{tenantId}}"}], "url": "{{baseUrl}}/organizations/{{id}}/children" } }
+      ]
+    },
+    {
+      "name": "Business Units",
+      "item": [
+        { "name": "List",   "request": { "method": "GET",  "url": "{{baseUrl}}/business-units" } },
+        { "name": "Create", "request": { "method": "POST", "url": "{{baseUrl}}/business-units", "body": { "mode": "raw", "raw": "{\n  \"entityType\":\"business_unit\",\n  \"nameEn\":\"BU-1\",\n  \"code\":\"BU1\"\n}" } } },
+        { "name": "Get",    "request": { "method": "GET",  "url": "{{baseUrl}}/business-units/{{id}}" } },
+        { "name": "Patch",  "request": { "method": "PATCH","url": "{{baseUrl}}/business-units/{{id}}" } },
+        { "name": "Delete", "request": { "method": "DELETE","url": "{{baseUrl}}/business-units/{{id}}" } }
+      ]
+    },
+    {
+      "name": "Departments",
+      "item": [
+        { "name": "List",   "request": { "method": "GET",  "url": "{{baseUrl}}/departments" } },
+        { "name": "Create", "request": { "method": "POST", "url": "{{baseUrl}}/departments" } },
+        { "name": "Get",    "request": { "method": "GET",  "url": "{{baseUrl}}/departments/{{id}}" } }
+      ]
+    },
+    {
+      "name": "Positions",
+      "item": [
+        { "name": "List",   "request": { "method": "GET",  "url": "{{baseUrl}}/positions" } },
+        { "name": "Create", "request": { "method": "POST", "url": "{{baseUrl}}/positions" } }
+      ]
+    },
+    {
+      "name": "Locations",
+      "item": [
+        { "name": "List",   "request": { "method": "GET",  "url": "{{baseUrl}}/locations" } },
+        { "name": "Create", "request": { "method": "POST", "url": "{{baseUrl}}/locations" } }
+      ]
+    },
+    {
+      "name": "Committees",
+      "item": [
+        { "name": "List",        "request": { "method": "GET",  "url": "{{baseUrl}}/committees" } },
+        { "name": "Create",      "request": { "method": "POST", "url": "{{baseUrl}}/committees" } },
+        { "name": "ListMembers", "request": { "method": "GET",  "url": "{{baseUrl}}/committees/{{id}}/members" } },
+        { "name": "AddMember",   "request": { "method": "POST", "url": "{{baseUrl}}/committees/{{id}}/members" } }
+      ]
+    },
+    {
+      "name": "Delegations",
+      "item": [
+        { "name": "List",   "request": { "method": "GET",   "url": "{{baseUrl}}/delegations" } },
+        { "name": "Create", "request": { "method": "POST",  "url": "{{baseUrl}}/delegations" } },
+        { "name": "Revoke", "request": { "method": "DELETE","url": "{{baseUrl}}/delegations/{{id}}" } }
+      ]
+    },
+    {
+      "name": "Ownership Mapping",
+      "item": [
+        { "name": "List",   "request": { "method": "GET",  "url": "{{baseUrl}}/ownership-mapping" } },
+        { "name": "Create", "request": { "method": "POST", "url": "{{baseUrl}}/ownership-mapping" } }
+      ]
+    },
+    {
+      "name": "Access Review",
+      "item": [
+        { "name": "List",     "request": { "method": "GET",  "url": "{{baseUrl}}/access-review" } },
+        { "name": "Create",   "request": { "method": "POST", "url": "{{baseUrl}}/access-review" } },
+        { "name": "Decisions","request": { "method": "POST", "url": "{{baseUrl}}/access-review/{{id}}/decisions" } }
+      ]
+    },
+    {
+      "name": "Bulk Invite",
+      "item": [
+        { "name": "Invite", "request": { "method": "POST", "url": "{{baseUrl}}/bulk-invite" } }
+      ]
+    },
+    {
+      "name": "Audit Trail",
+      "item": [
+        { "name": "List", "request": { "method": "GET", "url": "{{baseUrl}}/audit-trail?limit=20" } }
+      ]
+    },
+    {
+      "name": "Governance",
+      "item": [
+        { "name": "Policies", "request": { "method": "GET", "url": "{{baseUrl}}/governance/policies" } }
+      ]
+    },
+    {
+      "name": "SoD",
+      "item": [
+        { "name": "Check", "request": { "method": "POST", "url": "{{baseUrl}}/sod-check" } }
+      ]
+    },
+    {
+      "name": "Org Hierarchy",
+      "item": [
+        { "name": "Tree", "request": { "method": "GET", "url": "{{baseUrl}}/org-hierarchy" } }
+      ]
+    },
+    {
+      "name": "Health",
+      "item": [
+        { "name": "Health", "request": { "method": "GET", "auth": { "type": "noauth" }, "url": "{{baseUrl}}/health" } }
+      ]
+    }
+  ]
+}

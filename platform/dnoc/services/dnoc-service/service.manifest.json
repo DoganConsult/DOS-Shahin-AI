@@ -1,0 +1,12 @@
+{
+  "serviceCode": "dnoc-service",
+  "displayName": "DNOC Service",
+  "layer": "platform-service",
+  "ownerTeam": "platform-core",
+  "runtime": "node",
+  "dependsOn": [],
+  "modules": ["dnoc"],
+  "exposes": {
+    "apiBase": "/api/dnoc"
+  }
+}

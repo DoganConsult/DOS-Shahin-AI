@@ -1,0 +1,358 @@
+openapi: 3.0.3
+info:
+  title: AI-OS Platform Plane
+  version: 1.1.0
+  description: >
+    Canonical contract for the AI-OS platform plane. Surfaces the three platform
+    AI services behind a single port-style contract:
+      - ai-gateway-service     (provider routing, quota, cost, rate limit)
+      - ai-engine-service      (inference, agents, tool calling, kernel, Temporal, LangGraph)
+      - ai-governance-service  (policy, safety, audit, redaction, evals)
+    All business modules consume AI capability through this plane; they MUST NOT
+    call external model providers directly.
+servers:
+  - url: /api/ai
+    description: AI Gateway (provider routing, quota, cost, rate limit)
+  - url: /api/ai-engine
+    description: AI Engine (inference orchestration, agents, kernel, Temporal, LangGraph)
+  - url: /api/ai-governance
+    description: AI Governance (policy, safety, audit, redaction, evals)
+tags:
+  - { name: ops,        description: Health and readiness probes }
+  - { name: agents,     description: Agent invocation and registry (A01..A13) }
+  - { name: kernel,     description: AI-OS Kernel — process table, scheduler, IPC, memory, log }
+  - { name: temporal,   description: Temporal workflow control plane (Docker-backed) }
+  - { name: langgraph,  description: LangGraph orchestration runs }
+  - { name: governance, description: Policy decisions, audit, redaction, evals }
+  - { name: gateway,    description: Provider routing, quota, cost, rate limit }
+paths:
+  /health:
+    get:
+      summary: Health probe
+      tags: [ops]
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Health' }
+  /ready:
+    get:
+      summary: Readiness probe
+      tags: [ops]
+      responses:
+        '200':
+          description: Service is ready to receive traffic
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Health' }
+
+  # ─────────────────────────── AGENTS (A01..A13) ───────────────────────────
+  /agents:
+    get:
+      summary: List all canonical agents (A01..A13)
+      tags: [agents]
+      responses:
+        '200':
+          description: Agent catalog
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: '#/components/schemas/AgentCatalogEntry' }
+  /agents/{agentCode}/invoke:
+    post:
+      summary: Synchronously invoke an agent
+      tags: [agents]
+      parameters:
+        - { name: agentCode, in: path, required: true, schema: { type: string, pattern: '^A(0[1-9]|1[0-3])$' } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AIInvokeRequest' }
+      responses:
+        '200': { description: Completed, content: { application/json: { schema: { $ref: '#/components/schemas/AIInvokeResponse' } } } }
+        '202': { description: Accepted (async/HITL),  content: { application/json: { schema: { $ref: '#/components/schemas/AIInvokeResponse' } } } }
+        '403': { description: Governance denied, content: { application/json: { schema: { $ref: '#/components/schemas/AIGovernanceDecision' } } } }
+
+  # ─────────────────────────── KERNEL ───────────────────────────
+  /kernel/status:
+    get:
+      summary: AI-OS Kernel status (state, uptime, agent count)
+      tags: [kernel]
+      responses:
+        '200': { description: Kernel status, content: { application/json: { schema: { $ref: '#/components/schemas/KernelStatus' } } } }
+  /kernel/health:
+    get:
+      summary: AI-OS Kernel health checks
+      tags: [kernel]
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/KernelHealth' } } } }
+  /kernel/processes:
+    get:
+      summary: AI-OS Kernel process table
+      tags: [kernel]
+      responses:
+        '200': { description: Process list, content: { application/json: { schema: { type: array, items: { type: object, additionalProperties: true } } } } }
+  /kernel/processes/{pid}:
+    get:
+      summary: Kernel process detail
+      tags: [kernel]
+      parameters:
+        - { name: pid, in: path, required: true, schema: { type: string } }
+      responses:
+        '200': { description: Process detail }
+  /kernel/scheduler:
+    get: { tags: [kernel], summary: Scheduler table, responses: { '200': { description: OK } } }
+  /kernel/ipc:
+    get: { tags: [kernel], summary: IPC messages,    responses: { '200': { description: OK } } }
+  /kernel/memory:
+    get: { tags: [kernel], summary: Memory partitions, responses: { '200': { description: OK } } }
+  /kernel/log:
+    get: { tags: [kernel], summary: Kernel log,      responses: { '200': { description: OK } } }
+  /kernel/snapshot:
+    post: { tags: [kernel], summary: Save kernel snapshot, responses: { '200': { description: snapshotId returned } } }
+    get:  { tags: [kernel], summary: List snapshots,       responses: { '200': { description: OK } } }
+  /kernel/agents/{agentId}/autonomy:
+    patch:
+      tags: [kernel]
+      summary: Adjust autonomy level for an agent
+      parameters:
+        - { name: agentId, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [level]
+              properties:
+                level: { type: integer, minimum: 0, maximum: 5 }
+      responses: { '204': { description: Updated } }
+  /kernel/agents/{agentId}/kill:
+    post:
+      tags: [kernel]
+      summary: Kill the currently running agent action
+      parameters:
+        - { name: agentId, in: path, required: true, schema: { type: string } }
+      responses: { '204': { description: Killed } }
+  /kernel/agents/{agentId}/pause:
+    post: { tags: [kernel], summary: Pause an agent, parameters: [ { name: agentId, in: path, required: true, schema: { type: string } } ], responses: { '204': { description: Paused } } }
+  /kernel/agents/{agentId}/resume:
+    post: { tags: [kernel], summary: Resume an agent, parameters: [ { name: agentId, in: path, required: true, schema: { type: string } } ], responses: { '204': { description: Resumed } } }
+
+  # ─────────────────────────── TEMPORAL ───────────────────────────
+  /temporal/health:
+    get:
+      summary: Temporal connection probe
+      tags: [temporal]
+      responses:
+        '200': { description: Connected, content: { application/json: { schema: { $ref: '#/components/schemas/TemporalHealth' } } } }
+        '503': { description: Unreachable }
+  /temporal/workflows/agent-invocation:
+    post:
+      summary: Start an agentInvocationWorkflow
+      tags: [temporal]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/TemporalAgentInvokeRequest' }
+      responses:
+        '202': { description: Workflow accepted, content: { application/json: { schema: { $ref: '#/components/schemas/TemporalWorkflowHandle' } } } }
+  /temporal/workflows/agent-squad:
+    post:
+      summary: Start an agentSquadWorkflow (fan-out N agents)
+      tags: [temporal]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/TemporalAgentSquadRequest' }
+      responses:
+        '202': { description: Workflow accepted, content: { application/json: { schema: { $ref: '#/components/schemas/TemporalWorkflowHandle' } } } }
+  /temporal/workflows/{workflowId}:
+    get:
+      summary: Describe a running workflow
+      tags: [temporal]
+      parameters:
+        - { name: workflowId, in: path, required: true, schema: { type: string } }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/TemporalWorkflowDescription' } } } }
+        '404': { description: Not found }
+  /temporal/workflows/{workflowId}/cancel:
+    post:
+      summary: Cancel a running workflow
+      tags: [temporal]
+      parameters:
+        - { name: workflowId, in: path, required: true, schema: { type: string } }
+      responses:
+        '200': { description: Cancelled }
+
+  # ─────────────────────────── LANGGRAPH ───────────────────────────
+  /langgraph/runs:
+    post:
+      summary: Start a LangGraph orchestration run
+      tags: [langgraph]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/LangGraphRunRequest' }
+      responses:
+        '202': { description: Accepted, content: { application/json: { schema: { $ref: '#/components/schemas/LangGraphRunHandle' } } } }
+  /langgraph/runs/{runId}:
+    get:
+      summary: Get LangGraph run status / result
+      tags: [langgraph]
+      parameters:
+        - { name: runId, in: path, required: true, schema: { type: string } }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/LangGraphRunStatus' } } } }
+
+  # ─────────────────────────── GOVERNANCE ───────────────────────────
+  /policies/decision:
+    post:
+      summary: Pre-flight governance decision for an AI action
+      tags: [governance]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [tenantId, agentCode, payload]
+              properties:
+                tenantId:  { type: string, format: uuid }
+                agentCode: { type: string }
+                payload:   { type: object, additionalProperties: true }
+      responses:
+        '200': { description: Decision, content: { application/json: { schema: { $ref: '#/components/schemas/AIGovernanceDecision' } } } }
+
+components:
+  schemas:
+    Health:
+      type: object
+      required: [status, service, version]
+      properties:
+        status:        { type: string, enum: [ok, degraded, down] }
+        service:       { type: string }
+        version:       { type: string }
+        uptimeSeconds: { type: number }
+    AgentCatalogEntry:
+      type: object
+      required: [id, name, domain, moduleCode, status]
+      properties:
+        id:         { type: string, pattern: '^A(0[1-9]|1[0-3])$' }
+        name:       { type: string }
+        domain:     { type: string }
+        moduleCode: { type: string }
+        status:     { type: string, enum: [active, disabled] }
+    AIInvokeRequest:
+      type: object
+      required: [tenantId, agentCode, input]
+      properties:
+        tenantId:      { type: string, format: uuid }
+        agentCode:     { type: string }
+        autonomyLevel: { type: integer, minimum: 0, maximum: 5 }
+        input:         { type: object, additionalProperties: true }
+        toolBudgetUsd: { type: number, minimum: 0 }
+    AIInvokeResponse:
+      type: object
+      required: [executionId, status]
+      properties:
+        executionId: { type: string, format: uuid }
+        status:      { type: string, enum: [accepted, completed, hitl_required, rejected, failed] }
+        output:      { type: object, additionalProperties: true }
+        costUsd:     { type: number }
+        usedTools:   { type: array, items: { type: string } }
+    AIGovernanceDecision:
+      type: object
+      required: [decision, reason]
+      properties:
+        decision:    { type: string, enum: [allow, deny, hitl_required, redact] }
+        reason:      { type: string }
+        policyCode:  { type: string }
+        evidenceRef: { type: string }
+    KernelStatus:
+      type: object
+      properties:
+        state:        { type: string, enum: [running, paused, stopped] }
+        uptime:       { type: number }
+        version:      { type: string }
+        agentCount:   { type: integer }
+        processCount: { type: integer }
+    KernelHealth:
+      type: object
+      properties:
+        healthy:   { type: boolean }
+        checks:    { type: object, additionalProperties: true }
+        timestamp: { type: string, format: date-time }
+    TemporalHealth:
+      type: object
+      required: [status]
+      properties:
+        status:    { type: string, enum: [ok, unreachable] }
+        service:   { type: string }
+        namespace: { type: string }
+        taskQueue: { type: string }
+        error:     { type: string }
+    TemporalAgentInvokeRequest:
+      type: object
+      required: [tenantId, agentCode]
+      properties:
+        tenantId:      { type: string, format: uuid }
+        agentCode:     { type: string, pattern: '^A(0[1-9]|1[0-3])$' }
+        autonomyLevel: { type: integer, minimum: 0, maximum: 5 }
+        input:         { type: object, additionalProperties: true }
+        toolBudgetUsd: { type: number, minimum: 0 }
+    TemporalAgentSquadRequest:
+      type: object
+      required: [tenantId, agentCodes]
+      properties:
+        tenantId:      { type: string, format: uuid }
+        agentCodes:    { type: array, items: { type: string, pattern: '^A(0[1-9]|1[0-3])$' }, minItems: 1 }
+        input:         { type: object, additionalProperties: true }
+        hitlOnFailure: { type: boolean, default: false }
+    TemporalWorkflowHandle:
+      type: object
+      required: [workflowId, runId]
+      properties:
+        workflowId: { type: string }
+        runId:      { type: string }
+    TemporalWorkflowDescription:
+      type: object
+      properties:
+        workflowId: { type: string }
+        runId:      { type: string }
+        status:     { type: string }
+        type:       { type: string }
+        taskQueue:  { type: string }
+        startTime:  { type: string, format: date-time }
+        closeTime:  { type: string, format: date-time }
+    LangGraphRunRequest:
+      type: object
+      required: [tenantId, graph, input]
+      properties:
+        tenantId: { type: string, format: uuid }
+        graph:    { type: string, description: 'LangGraph definition name (e.g. policy-review-cycle, risk-quantification)' }
+        input:    { type: object, additionalProperties: true }
+    LangGraphRunHandle:
+      type: object
+      required: [runId, graph]
+      properties:
+        runId: { type: string }
+        graph: { type: string }
+    LangGraphRunStatus:
+      type: object
+      required: [runId, status]
+      properties:
+        runId:    { type: string }
+        graph:    { type: string }
+        status:   { type: string, enum: [pending, running, completed, failed, cancelled] }
+        result:   { type: object, additionalProperties: true }
+        error:    { type: string }

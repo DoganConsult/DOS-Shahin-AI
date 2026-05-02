@@ -1,0 +1,23 @@
+import type { GenericRow } from '@dos/types/db';
+export declare function listSecurityAttestations(tenantId: string, filters?: {
+    status?: string;
+    limit?: number;
+}): Promise<GenericRow[]>;
+export declare function createSecurityAttestation(tenantId: string, data: Record<string, unknown>): Promise<GenericRow | null>;
+export declare function getLatestSecurityPosture(tenantId: string): Promise<GenericRow | null>;
+export declare function createSecurityPostureSnapshot(tenantId: string, data: Record<string, unknown>): Promise<GenericRow | null>;
+export declare function listAuthPolicies(tenantId: string): Promise<GenericRow[]>;
+export declare function getAuthPolicy(tenantId: string, policyId: string): Promise<GenericRow | null>;
+export declare function upsertAuthPolicy(tenantId: string, data: Record<string, unknown>): Promise<GenericRow | null>;
+export declare function listConditionalAccessGrants(tenantId: string, userId?: string): Promise<GenericRow[]>;
+export declare function createConditionalGrant(tenantId: string, data: Record<string, unknown>): Promise<GenericRow | null>;
+export declare function getEffectiveUserModules(tenantId: string, userId: string): Promise<GenericRow[]>;
+export declare function getEffectiveUserPermissions(tenantId: string, userId: string): Promise<GenericRow[]>;
+export declare function listDefenseLines(tenantId: string): Promise<GenericRow[]>;
+export declare function listFunctionAuthorities(tenantId: string): Promise<GenericRow[]>;
+export declare function listAuthorityLevelCatalog(tenantId: string): Promise<GenericRow[]>;
+export declare function getAuthorityMatrix(tenantId: string, roleId?: string): Promise<GenericRow[]>;
+export declare function listDelegatedAuthorities(tenantId: string, userId?: string): Promise<GenericRow[]>;
+export declare function getDelegationChain(tenantId: string, delegationId: string): Promise<GenericRow[]>;
+export declare function getSodResolutionHistory(tenantId: string, conflictId: string): Promise<GenericRow[]>;
+export declare function logSodResolution(tenantId: string, conflictId: string, resolution: string, resolvedBy: string, notes?: string): Promise<void>;

@@ -1,0 +1,36 @@
+{
+  "$schema": "../../dos/manifests/migrations-index.schema.json",
+  "moduleCode": "dnoc",
+  "ownershipModel": "physical",
+  "physicalMoveStatus": "native",
+  "currentRunner": "migration/migration-runner.ts",
+  "currentScanRoots": [
+    "platform/dnoc/migrations/public",
+    "platform/dnoc/migrations/tenant"
+  ],
+  "ownedMigrations": {
+    "public": {
+      "schema": "platform_dnoc",
+      "files": [
+        {
+          "filename": "20260422_0020_create_platform_dnoc_schema.sql",
+          "purpose": "Create platform_dnoc schema + 5 native tables (metrics, logs, traces, routes, health_checks) with hot-path indexes",
+          "currentPath": "platform/dnoc/migrations/public/20260422_0020_create_platform_dnoc_schema.sql",
+          "down": "20260422_0020_create_platform_dnoc_schema_down.sql"
+        }
+      ]
+    },
+    "tenant": {
+      "schema": "per-tenant",
+      "files": []
+    }
+  },
+  "totals": {
+    "publicMigrations": 1,
+    "tenantMigrations": 0,
+    "withDownMigrations": 1,
+    "withoutDownMigrations": 0
+  },
+  "verifiedAt": "2026-04-22",
+  "verifiedBy": "DNOC Session 1 — bootstrap migration created"
+}

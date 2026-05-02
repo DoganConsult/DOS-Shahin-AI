@@ -1,0 +1,21 @@
+{
+  "name": "@dos/legacy-errors",
+  "version": "0.0.1",
+  "private": true,
+  "description": "DOS Platform \u2014 legacy HTTP error utilities (compat shim). Superseded by @dos/platform-core/http.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "clean": "rm -rf dist"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0"
+  }
+}

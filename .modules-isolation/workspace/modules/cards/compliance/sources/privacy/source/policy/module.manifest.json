@@ -1,0 +1,108 @@
+{
+  "moduleCode": "policy",
+  "displayName": "Policy Management",
+  "ownerTeam": "product-shahin-ai",
+  "productCode": "shahin-ai",
+  "ownership": "module-owned",
+  "version": "1.0.0",
+  "status": "active",
+  "platformDependencies": [
+    "identity",
+    "tenancy",
+    "workflow",
+    "permissions",
+    "audit"
+  ],
+  "seedProviders": [
+    "products/shahin/seeds/policy-seed"
+  ],
+  "tenantDefaults": [
+    "policy_review_cycle_days",
+    "policy_auto_expiry_enabled"
+  ],
+  "requiredReferenceData": [
+    "policy_categories",
+    "policy_templates",
+    "policy_statuses"
+  ],
+  "currentSources": [
+    "/home/Dr-Dogan-AGRC-OS/backend/src/modules/policy"
+  ],
+  "targetPath": "modules/policy",
+  "futureService": "governance-policy-service",
+  "frontendSources": [
+    "/home/Dr-Dogan-AGRC-OS/frontend/src/app/platform-manifests/policy.module.routes.ts"
+  ],
+  "ownedTables": [
+    "policy_categories",
+    "policy_control_links",
+    "policy_dashboard_cache",
+    "policy_decision_log",
+    "policy_delivery_records",
+    "policy_drift_events",
+    "policy_drift_snapshots",
+    "policy_exception_approvals",
+    "policy_exception_requests",
+    "policy_assessment_history",
+    "policy_rule",
+    "policy_scope_rules",
+    "policy_acknowledgements",
+    "policy_review_cycles",
+    "policy_versions",
+    "policy_change_requests",
+    "policy_impact_assessments",
+    "policy_templates",
+    "policy_distribution_lists",
+    "policy_compliance_mappings",
+    "policy_hierarchy",
+    "policy_effectiveness_metrics",
+    "policy_attestation_records",
+    "policy_gap_analysis",
+    "policy_remediation_plans",
+    "policy_audit_log",
+    "policy_notifications"
+  ],
+  "referencedTables": [
+    "audit_trail",
+    "teams",
+    "workflows",
+    "compliance_frameworks",
+    "governance_charters"
+  ],
+  "events": {
+    "publishes": [
+      "policy.created",
+      "policy.approved",
+      "policy.published",
+      "policy.rejected",
+      "policy.expired",
+      "policy.revoked",
+      "policy.version_created",
+      "policy.review_due",
+      "policy.review_started",
+      "policy.exception_approved",
+      "policy.exception_rejected",
+      "policy.acknowledgement_required",
+      "policy.acknowledgement_received",
+      "policy.drift_detected"
+    ],
+    "subscribes": [
+      "compliance.framework_mapping_updated",
+      "governance.charter_approved",
+      "risk.assessment_completed",
+      "workflow.status_changed",
+      "team.structure_changed",
+      "onboarding.completed",
+      "workflow.instance_completed",
+      "dora.obligation_created",
+      "governance_ai.signal_detected",
+      "dashboard.widget_created",
+      "navigation.item_updated",
+      "foundation.scope_changed",
+      "foundation.org_created"
+    ]
+  },
+  "routeBases": [
+    "/api/policy"
+  ]
+}

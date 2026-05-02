@@ -1,0 +1,25 @@
+import { ModuleTabVM } from '@app/shared/models/module-overview.vm';
+
+export const AUDIT_TABS: ModuleTabVM[] = [
+  { id: 'overview',         labelEn: 'Overview',              labelAr: 'نظرة عامة',             route: '/audit/overview',            icon: 'home' },
+  { id: 'plan',             labelEn: 'Audit Plan',            labelAr: 'خطة التدقيق',           route: '/audit/plan',                icon: 'calendar' },
+  { id: 'engagements',      labelEn: 'Engagements',           labelAr: 'مهام التدقيق',          route: '/audit/engagements',         icon: 'briefcase' },
+  { id: 'findings',         labelEn: 'Findings',              labelAr: 'النتائج',               route: '/audit/findings',            icon: 'search' },
+  { id: 'capa',             labelEn: 'CAPA',                  labelAr: 'الإجراءات التصحيحية',   route: '/audit/capa',                icon: 'wrench' },
+  { id: 'validation',       labelEn: 'Validation',            labelAr: 'التحقق',                route: '/audit/validation',          icon: 'check-circle' },
+  { id: 'reports',          labelEn: 'Reports',               labelAr: 'التقارير',              route: '/audit/reports',             icon: 'file' },
+  { id: 'universe',         labelEn: 'Audit Universe',        labelAr: 'عالم التدقيق',          route: '/audit/universe',            icon: 'globe' },
+  { id: 'risk-planning',    labelEn: 'Risk Planning',         labelAr: 'تخطيط المخاطر',         route: '/audit/risk-planning',       icon: 'chart-bar' },
+  { id: 'schedules',        labelEn: 'Schedules',             labelAr: 'الجداول',               route: '/audit/schedules',           icon: 'clock' },
+  { id: 'working-papers',   labelEn: 'Working Papers',        labelAr: 'أوراق العمل',           route: '/audit/working-papers',      icon: 'file-edit' },
+  { id: 'team',             labelEn: 'Team',                  labelAr: 'الفريق',                route: '/audit/team',                icon: 'users' },
+  { id: 'repeat-findings',  labelEn: 'Repeat Findings',       labelAr: 'نتائج متكررة',          route: '/audit/repeat-findings',     icon: 'replay' },
+  { id: 'qa-reviews',       labelEn: 'QA Reviews',            labelAr: 'مراجعات الجودة',        route: '/audit/qa-reviews',          icon: 'check-square' },
+  { id: 'finding-trends',   labelEn: 'Finding Trends',        labelAr: 'اتجاهات النتائج',       route: '/audit/finding-trends',      icon: 'chart-line' },
+  { id: 'ratings',          labelEn: 'Ratings',               labelAr: 'التقييمات',             route: '/audit/ratings',             icon: 'star' },
+  { id: 'capa-effectiveness', labelEn: 'CAPA Effectiveness',  labelAr: 'فعالية التصحيح',        route: '/audit/capa-effectiveness',  icon: 'gauge' },
+  { id: 'committee',        labelEn: 'Committee Dashboard',   labelAr: 'لوحة اللجنة',           route: '/audit/committee',           icon: 'th-large' },
+  { id: 'external',         labelEn: 'External Auditors',     labelAr: 'المدققون الخارجيون',    route: '/audit/external',            icon: 'external-link' },
+  { id: 'regulatory',       labelEn: 'Regulatory',            labelAr: 'تنظيمي',                route: '/audit/regulatory',          icon: 'hammer' },
+  { id: 'test-plans',       labelEn: 'Test Plans',            labelAr: 'خطط الاختبار',          route: '/audit/test-plans',          icon: 'list-check' },
+];

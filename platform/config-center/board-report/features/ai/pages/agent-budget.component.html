@@ -1,0 +1,50 @@
+<div class="grc-hub" [dir]="i18n.dir()">
+  <header class="hub-toolbar">
+    <h2>{{ i18n.isArabic() ? 'ميزانية الوكلاء' : 'Agent Budgets' }}</h2>
+    <p class="muted">
+      {{ i18n.isArabic()
+         ? 'ملخص الإنفاق الشهري لكل وكيل مقابل السقف المعتمد.'
+         : 'Per-agent monthly spend vs approved ceiling.' }}
+    </p>
+  </header>
+
+  <ng-container [ngSwitch]="state()">
+    <p-card *ngSwitchCase="'loading'">
+      <p>{{ i18n.isArabic() ? 'جارِ التحميل…' : 'Loading…' }}</p>
+    </p-card>
+
+    <p-card *ngSwitchCase="'error'" styleClass="state-error">
+      <h3>{{ i18n.isArabic() ? 'تعذّر تحميل الميزانيات' : 'Failed to load budgets' }}</h3>
+      <pre class="mono">{{ error() }}</pre>
+    </p-card>
+
+    <p-card *ngSwitchCase="'empty'">
+      <p>{{ i18n.isArabic()
+              ? 'لم يتم تكوين أي ميزانية بعد. أضِف ميزانية شهرية لكل وكيل من إعدادات الإدارة.'
+              : 'No budgets configured yet. Add a monthly limit per agent from admin settings.' }}</p>
+    </p-card>
+
+    <p-table *ngSwitchCase="'ready'" [value]="rows()" responsiveLayout="scroll" styleClass="p-datatable-sm">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>{{ i18n.isArabic() ? 'الوكيل' : 'Agent' }}</th>
+          <th>{{ i18n.isArabic() ? 'الحد الشهري' : 'Monthly limit (USD)' }}</th>
+          <th>{{ i18n.isArabic() ? 'المُنفَق' : 'Spent (USD)' }}</th>
+          <th>{{ i18n.isArabic() ? 'المتبقّي' : 'Remaining (USD)' }}</th>
+          <th>{{ i18n.isArabic() ? 'الاستخدام' : 'Utilization' }}</th>
+          <th>{{ i18n.isArabic() ? 'الحالة' : 'Status' }}</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-r>
+        <tr>
+          <td><strong>{{ r.agentId }}</strong> — {{ r.agentName }}</td>
+          <td>{{ r.monthlyLimitUsd | number:'1.2-2' }}</td>
+          <td>{{ r.spentUsd | number:'1.2-2' }}</td>
+          <td>{{ r.remainingUsd | number:'1.2-2' }}</td>
+          <td><p-progressBar [value]="r.utilizationPct"></p-progressBar></td>
+          <td><p-tag [severity]="severity(r.status)" [value]="r.status"></p-tag></td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </ng-container>
+</div>

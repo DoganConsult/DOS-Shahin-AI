@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "kind": "SecurityDebtRegister",
+  "version": "1.0.0",
+  "owner": "platform-security",
+  "policy": {
+    "authStorage": "HTTPOnly cookie session is the only sanctioned mechanism for authentication tokens. Browser-readable storage (localStorage / sessionStorage) MUST NOT hold scopedJwt, jwt, accessToken, refreshToken, externalUserId, or any grc_* identity field.",
+    "schema": "https://schemas.doganconsult.io/policy/policy.v1.schema.json",
+    "enforcement": "deterministic"
+  },
+  "items": [
+    {
+      "id": "SEC-DEBT-0001",
+      "title": "Auth tokens written to localStorage in invitation-accept flow",
+      "severity": "P0",
+      "status": "OPEN",
+      "discoveredIn": "Batch-1 post-move scan (canonical-source restructure)",
+      "discoveredAt": "2026-04-29T03:35:00+03:00",
+      "recordedAt": "2026-04-29T07:35:00+03:00",
+      "classification": [
+        "AUTH_TOKEN_IN_BROWSER_STORAGE",
+        "POLICY_VIOLATION",
+        "PRE_EXISTING"
+      ],
+      "introducedBy": "pre-existing (predates the Batch-1 git mv; content is unchanged from the legacy 'Shahin-AI Website/frontend' tree)",
+      "file": "products/shahin-ai/app/src/app/blueprint/pages/invitations/invitation-accept.component.ts",
+      "violations": [
+        { "line": 522, "code": "localStorage.setItem('scopedJwt', res.jwt);" },
+        { "line": 523, "code": "localStorage.setItem('externalUserId', res.userId);" },
+        { "line": 575, "code": "localStorage.setItem('grc_userId', res.userId);" },
+        { "line": 576, "code": "localStorage.setItem('grc_tenantId', res.tenantId);" },
+        { "line": 577, "code": "localStorage.setItem('grc_role', res.role);" },
+        { "line": 578, "code": "localStorage.setItem('grc_userName', this.regName.trim());" },
+        { "line": 579, "code": "localStorage.setItem('grc_orgName', this.organizationName);" }
+      ],
+      "violatedKeys": [
+        "scopedJwt",
+        "externalUserId",
+        "grc_userId",
+        "grc_tenantId",
+        "grc_role",
+        "grc_userName",
+        "grc_orgName"
+      ],
+      "scope": {
+        "inBatch1": false,
+        "inBatch2": false,
+        "rationale": "Batch 1 was a pure 'git mv' of the active Shahin-AI app to products/shahin-ai/app; no functional code was touched. Batch 2 scope is the canonical Foundation-module move only. Fixing this debt requires a backend session contract + frontend auth refactor and MUST NOT be bundled into a structural batch. Track as a dedicated security batch.",
+        "doNotBundleWith": ["batch-2-foundation-move", "any structural restructure batch"]
+      },
+      "remediation": {
+        "intent": "Replace browser-storage token writes with HTTPOnly + Secure + SameSite=strict session cookies issued by the auth service; remove all client-side identity persistence; rely on /api/me for hydrated user/tenant context.",
+        "blocking": [
+          "auth-service must issue session cookie on /invitation/accept and /invitation/register",
+          "gateway must forward Set-Cookie unchanged for product-shell origin",
+          "frontend invitation-accept flow must call /api/me after success instead of reading localStorage",
+          "delete all read sites that depend on these localStorage keys (scan required before fix)"
+        ],
+        "estimateLevel": "M (cross-service: auth-service + gateway + product-shell + shahin-ai app)",
+        "regressionRisk": "HIGH — touches every authenticated route in shahin-ai"
+      },
+      "compensatingControls": {
+        "current": "none",
+        "minimumInterim": "Document the violation; ensure no NEW localStorage token writes are introduced (CI lint rule recommended)."
+      },
+      "references": {
+        "discoveryReport": "platform/docs/migration/_reports/99-final-structure-gate.md",
+        "directiveSource": "Post-Batch-1 hard checks, item 4 (user directive 2026-04-29)"
+      },
+      "doNotMarkLowPriority": true
+    }
+  ]
+}

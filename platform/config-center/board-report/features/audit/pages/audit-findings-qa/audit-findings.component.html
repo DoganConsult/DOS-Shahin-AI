@@ -1,0 +1,303 @@
+<app-page-shell icon="search"
+      [title]="i18nSvc.translate('audit.findings')"
+      [subtitle]="i18nSvc.translate('audit.auditFindingsWithRootCauseAnalysis')"
+      [loading]="loading()">
+      <p-toast />
+
+      <p-toolbar styleClass="mb-3">
+        <ng-template pTemplate="start">
+          <p-dropdown [options]="severityOptions" [(ngModel)]="severityFilter" [placeholder]="i18nSvc.translate('audit.severity')"
+            [showClear]="true" (onChange)="applyFilter()" styleClass="mr-2" />
+          <p-dropdown [options]="statusOptions" [(ngModel)]="statusFilter" [placeholder]="i18nSvc.translate('audit.status')"
+            [showClear]="true" (onChange)="applyFilter()" styleClass="mr-2" />
+          <span class="p-input-icon-left">
+            <i class="pi pi-search"></i>
+            <input pInputText [(ngModel)]="searchTerm" [placeholder]="i18nSvc.translate('audit.search')" [attr.aria-label]="i18nSvc.translate('audit.search')" (input)="applyFilter()" />
+          </span>
+        </ng-template>
+        <ng-template pTemplate="end">
+          <p-button [label]="i18nSvc.translate('audit.newFinding')" icon="pi pi-plus" (onClick)="openCreateDialog()" />
+        </ng-template>
+      </p-toolbar>
+
+      <grc-data-table
+        [totalRecords]="filtered().length"
+        [emptyMessage]="i18nSvc.translate('audit.noFindingsYet')">
+        <p-table aria-label="Data table" [value]="filtered()" [paginator]="true" [rows]="15" [rowsPerPageOptions]="[10,15,30]"
+          styleClass="p-datatable-striped">
+          <ng-template pTemplate="header">
+            <tr>
+              <th scope="col" pSortableColumn="title">{{ i18nSvc.translate('audit.titleLabel') }} <p-sortIcon field="title" /></th>
+              <th scope="col">{{ i18nSvc.translate('audit.severity') }}</th>
+              <th scope="col">{{ i18nSvc.translate('audit.status') }}</th>
+              <th scope="col">{{ i18nSvc.translate('audit.source') }}</th>
+              <th scope="col" pSortableColumn="created_at">{{ i18nSvc.translate('audit.date') }} <p-sortIcon field="created_at" /></th>
+              <th scope="col"><span class="sr-only">Actions</span></th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-f>
+            <tr tabindex="0" role="button" (keyup.enter)="openDetail(f)" class="clickable-row" (click)="openDetail(f)">
+              <td class="font-semibold">{{ f.title }}</td>
+              <td><app-status-badge [status]="f.severity" /></td>
+              <td><app-status-badge [status]="f.status" /></td>
+              <td>{{ f.source_type || '—' }}</td>
+              <td>{{ f.created_at | appDate:'medium' }}</td>
+              <td>
+                <p-button icon="pi pi-pencil" [text]="true" severity="secondary" (onClick)="openEditDialog(f); $event.stopPropagation()" />
+                <p-button icon="pi pi-trash" [text]="true" severity="danger" (onClick)="deleteItem(f.finding_id); $event.stopPropagation()" />
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </grc-data-table>
+
+      <!-- Detail Drawer -->
+      <app-entity-detail-drawer [(visible)]="drawerVisible" [title]="selectedItem?.title || ''"
+        entityType="finding" [entityId]="selectedItem?.finding_id || ''">
+        <div *ngIf="selectedItem" class="drawer-body">
+          <p-tabView>
+            <!-- Overview -->
+            <p-tabPanel [header]="i18nSvc.translate('audit.overview')">
+              <div class="detail-grid">
+                <div class="detail-item"><span class="detail-label">{{ i18nSvc.translate('audit.severity') }}</span><app-status-badge [status]="selectedItem.severity" /></div>
+                <div class="detail-item"><span class="detail-label">{{ i18nSvc.translate('audit.status') }}</span><app-status-badge [status]="selectedItem.status" /></div>
+                <div class="detail-item full"><span class="detail-label">{{ i18nSvc.translate('audit.description') }}</span><p>{{ selectedItem.description || '—' }}</p></div>
+              </div>
+
+              <!-- Owner Dropdown -->
+              <div class="detail-section">
+                <label class="section-label"><i class="pi pi-user"></i> {{ i18nSvc.translate('audit.owner') || 'Owner' }}</label>
+                <p-dropdown
+                  [options]="userOptions()"
+                  [(ngModel)]="selectedOwnerId"
+                  [filter]="true"
+                  filterBy="label"
+                  [showClear]="true"
+                  placeholder="Select owner..."
+                  styleClass="w-full"
+                  (onChange)="onOwnerChange($event.value)">
+                </p-dropdown>
+              </div>
+
+              <!-- Team Dropdown -->
+              <div class="detail-section">
+                <label class="section-label"><i class="pi pi-users"></i> {{ i18nSvc.translate('audit.team') || 'Team' }}</label>
+                <p-dropdown
+                  [options]="teamOptions()"
+                  [(ngModel)]="selectedTeamId"
+                  [filter]="true"
+                  filterBy="label"
+                  [showClear]="true"
+                  placeholder="Select team..."
+                  styleClass="w-full"
+                  (onChange)="onTeamChange($event.value)">
+                </p-dropdown>
+              </div>
+
+              <!-- Ownership Context -->
+              <div *ngIf="ownerProfile()" class="detail-section owner-context">
+                <label class="section-label">{{ i18nSvc.translate('audit.ownerDetails') || 'Owner Details' }}</label>
+                <div class="owner-card">
+                  <div class="owner-row"><i class="pi pi-user"></i><span>{{ ownerProfile()!.name }}</span></div>
+                  <div class="owner-row"><i class="pi pi-envelope"></i><span>{{ ownerProfile()!.email }}</span></div>
+                  <div *ngIf="ownerProfile()!.team" class="owner-row"><i class="pi pi-users"></i><span>{{ ownerProfile()!.team }}</span></div>
+                  <div *ngIf="ownerProfile()!.department" class="owner-row"><i class="pi pi-building"></i><span>{{ ownerProfile()!.department }}</span></div>
+                  <div *ngIf="ownerProfile()!.businessUnit" class="owner-row"><i class="pi pi-sitemap"></i><span>{{ ownerProfile()!.businessUnit }}</span></div>
+                </div>
+              </div>
+
+              <!-- Status Lifecycle Dropdown -->
+              <div *ngIf="availableTransitions().length > 0" class="detail-section">
+                <label class="section-label"><i class="pi pi-arrows-h"></i> {{ i18nSvc.translate('audit.changeStatus') || 'Change Status' }}</label>
+                <p-dropdown
+                  [options]="availableTransitions()"
+                  [(ngModel)]="pendingStatusChange"
+                  placeholder="Transition to..."
+                  styleClass="w-full"
+                  (onChange)="onStatusTransition($event.value)">
+                </p-dropdown>
+              </div>
+
+              <!-- Status Timeline -->
+              <div *ngIf="statusHistory().length > 0" class="detail-section">
+                <label class="section-label"><i class="pi pi-clock"></i> {{ i18nSvc.translate('audit.statusHistory') || 'Status History' }}</label>
+                <div class="status-timeline">
+                  <div *ngFor="let entry of statusHistory()" class="timeline-entry">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                      <div class="timeline-statuses">
+                        <app-status-badge [status]="entry.fromStatus" />
+                        <i class="pi pi-arrow-right timeline-arrow"></i>
+                        <app-status-badge [status]="entry.toStatus" />
+                      </div>
+                      <div class="timeline-meta">{{ entry.actor }} &middot; {{ entry.timestamp | appDate:'medium' }}</div>
+                      <div *ngIf="entry.reason" class="timeline-reason">{{ entry.reason }}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </p-tabPanel>
+
+            <!-- Root Cause -->
+            <p-tabPanel [header]="i18nSvc.translate('audit.rootCause')">
+              <div *ngFor="let rc of detailData()?.root_causes || []" class="sub-card">
+                <strong>{{ rc.cause_type }}</strong>
+                <p>{{ rc.description }}</p>
+                <small *ngIf="rc.analysis_method">Method: {{ rc.analysis_method }}</small>
+              </div>
+              <div *ngIf="!detailData()?.root_causes?.length" class="empty-sub">{{ i18nSvc.translate('audit.noRootCausesRecorded') }}</div>
+              <p-button [label]="i18nSvc.translate('audit.addRootCause')" icon="pi pi-plus" severity="secondary" [text]="true"
+                (onClick)="showRootCauseDialog = true" styleClass="mt-2" />
+            </p-tabPanel>
+
+            <!-- Impacts -->
+            <p-tabPanel [header]="i18nSvc.translate('audit.impact')">
+              <div *ngFor="let im of detailData()?.impacts || []" class="sub-card">
+                <strong>{{ im.impact_type }}</strong> <app-status-badge [status]="im.severity" />
+                <p>{{ im.description }}</p>
+                <span *ngIf="im.financial_impact" class="financial">{{ im.financial_impact | currency }}</span>
+              </div>
+              <div *ngIf="!detailData()?.impacts?.length" class="empty-sub">{{ i18nSvc.translate('audit.noImpactsRecorded') }}</div>
+              <p-button [label]="i18nSvc.translate('audit.addImpact')" icon="pi pi-plus" severity="secondary" [text]="true"
+                (onClick)="showImpactDialog = true" styleClass="mt-2" />
+            </p-tabPanel>
+
+            <!-- CAPA -->
+            <p-tabPanel [header]="'CAPA'">
+              <div tabindex="0" role="button" (keyup.enter)="navigateToCapa(cp.plan_id)" *ngFor="let cp of detailData()?.capa_plans || []" class="sub-card" (click)="navigateToCapa(cp.plan_id)">
+                <strong>{{ cp.title }}</strong> <app-status-badge [status]="cp.status" />
+                <p *ngIf="cp.target_date">Target: {{ cp.target_date | appDate:'medium' }}</p>
+              </div>
+              <div *ngIf="!detailData()?.capa_plans?.length" class="empty-sub">{{ i18nSvc.translate('audit.noCapaPlans') }}</div>
+              <p-button [label]="i18nSvc.translate('audit.createCapa')" icon="pi pi-plus" severity="secondary" [text]="true"
+                (onClick)="createCapaForFinding()" styleClass="mt-2" />
+            </p-tabPanel>
+
+            <!-- Closure -->
+            <p-tabPanel [header]="i18nSvc.translate('audit.closure')">
+              <div *ngFor="let cr of detailData()?.closure_reviews || []" class="sub-card">
+                <app-status-badge [status]="cr.outcome" />
+                <p>{{ cr.comments || '—' }}</p>
+                <small>{{ cr.review_date | appDate:'medium' }} · Effective: {{ cr.verified_effective ? 'Yes' : 'No' }}</small>
+              </div>
+              <div *ngIf="!detailData()?.closure_reviews?.length" class="empty-sub">{{ i18nSvc.translate('audit.noClosureReviews') }}</div>
+            </p-tabPanel>
+
+            <!-- Cross-Module Links -->
+            <p-tabPanel [header]="i18nSvc.translate('audit.crossLinks') || 'Cross Links'">
+              <div class="cross-link-actions">
+                <p-button [label]="i18nSvc.translate('audit.syncToRiskRegister') || 'Sync to Risk Register'" icon="pi pi-shield"
+                  severity="warning" [outlined]="true" (onClick)="syncToRisk()" [loading]="syncing" />
+                <p-button [label]="i18nSvc.translate('audit.linkToCompliance') || 'Link to Compliance'" icon="pi pi-verified"
+                  severity="help" [outlined]="true" (onClick)="openComplianceLinkDialog()" />
+                <p-button [label]="i18nSvc.translate('audit.viewInRiskRegister') || 'View in Risk Register'" icon="pi pi-external-link"
+                  severity="info" [text]="true" (onClick)="navigateToRisk()" />
+              </div>
+              <div class="cross-link-nav">
+                <div tabindex="0" role="button" (keyup.enter)="navigateTo('/compliance/controls')" class="cross-item" (click)="navigateTo('/compliance/controls')">
+                  <i class="pi pi-verified"></i> <span>{{ i18nSvc.translate('audit.viewControls') || 'View Controls' }}</span>
+                  <i class="pi pi-arrow-right cross-arrow"></i>
+                </div>
+                <div tabindex="0" role="button" (keyup.enter)="navigateTo('/foundation/evidence')" class="cross-item" (click)="navigateTo('/foundation/evidence')">
+                  <i class="pi pi-folder"></i> <span>{{ i18nSvc.translate('audit.viewEvidence') || 'View Evidence' }}</span>
+                  <i class="pi pi-arrow-right cross-arrow"></i>
+                </div>
+                <div tabindex="0" role="button" (keyup.enter)="navigateTo('/compliance/overview')" class="cross-item" (click)="navigateTo('/compliance/overview')">
+                  <i class="pi pi-check-square"></i> <span>{{ i18nSvc.translate('audit.viewCompliance') || 'View Compliance' }}</span>
+                  <i class="pi pi-arrow-right cross-arrow"></i>
+                </div>
+                <div tabindex="0" role="button" (keyup.enter)="navigateTo('/incidents/register')" class="cross-item" (click)="navigateTo('/incidents/register')">
+                  <i class="pi pi-exclamation-triangle"></i> <span>{{ i18nSvc.translate('audit.viewIncidents') || 'Incidents' }}</span>
+                  <i class="pi pi-arrow-right cross-arrow"></i>
+                </div>
+              </div>
+            </p-tabPanel>
+          </p-tabView>
+        </div>
+      </app-entity-detail-drawer>
+
+      <!-- Create/Edit Finding Dialog -->
+      <p-dialog [header]="editingFinding ? (i18nSvc.translate('audit.editFinding')) : (i18nSvc.translate('audit.newFinding'))"
+        [(visible)]="findingDialogVisible" [modal]="true" [style]="{ width: '520px' }">
+        <div class="form-grid">
+          <grc-form-field [label]="i18nSvc.translate('audit.titleLabel')" [required]="true">
+            <input pInputText [(ngModel)]="findingForm.title" class="w-full" />
+          </grc-form-field>
+          <div class="field"><label>{{ i18nSvc.translate('audit.description') }}</label><textarea pInputTextarea [(ngModel)]="findingForm.description" [rows]="3" class="w-full"></textarea></div>
+          <div class="field-row">
+            <div class="field"><label>{{ i18nSvc.translate('audit.severity') }}</label><p-dropdown [options]="severityOptions" [(ngModel)]="findingForm.severity" class="w-full" /></div>
+            <div class="field"><label>{{ i18nSvc.translate('audit.status') }}</label><p-dropdown [options]="statusOptions" [(ngModel)]="findingForm.status" class="w-full" /></div>
+          </div>
+        </div>
+        <ng-template pTemplate="footer">
+          <p-button [label]="i18nSvc.translate('audit.cancel')" icon="pi pi-times" severity="secondary" [text]="true" (onClick)="findingDialogVisible = false" />
+          <p-button [label]="i18nSvc.translate('audit.save')" icon="pi pi-check" (onClick)="saveFinding()" [disabled]="!findingForm.title" />
+        </ng-template>
+      </p-dialog>
+
+      <!-- Root Cause Dialog -->
+      <p-dialog [header]="i18nSvc.translate('audit.addRootCause')" [(visible)]="showRootCauseDialog" [modal]="true" [style]="{ width: '480px' }">
+        <div class="form-grid">
+          <div class="field"><label>{{ i18nSvc.translate('audit.causeType') }} *</label>
+            <p-dropdown [options]="causeTypeOptions" [(ngModel)]="rootCauseForm.cause_type" class="w-full" /></div>
+          <div class="field"><label>{{ i18nSvc.translate('audit.description') }}</label><textarea pInputTextarea [(ngModel)]="rootCauseForm.description" [rows]="3" class="w-full"></textarea></div>
+          <grc-form-field [label]="i18nSvc.translate('audit.analysisMethod')">
+            <input pInputText [(ngModel)]="rootCauseForm.analysis_method" class="w-full" />
+          </grc-form-field>
+        </div>
+        <ng-template pTemplate="footer">
+          <p-button label="Cancel" severity="secondary" [text]="true" (onClick)="showRootCauseDialog = false" />
+          <p-button label="Save" icon="pi pi-check" (onClick)="saveRootCause()" [disabled]="!rootCauseForm.cause_type" />
+        </ng-template>
+      </p-dialog>
+
+      <!-- Impact Dialog -->
+      <p-dialog [header]="i18nSvc.translate('audit.addImpact')" [(visible)]="showImpactDialog" [modal]="true" [style]="{ width: '480px' }">
+        <div class="form-grid">
+          <div class="field"><label>{{ i18nSvc.translate('audit.impactType') }} *</label>
+            <p-dropdown [options]="impactTypeOptions" [(ngModel)]="impactForm.impact_type" class="w-full" /></div>
+          <div class="field"><label>{{ i18nSvc.translate('audit.severity') }}</label><p-dropdown [options]="severityOptions" [(ngModel)]="impactForm.severity" class="w-full" /></div>
+          <div class="field"><label>{{ i18nSvc.translate('audit.description') }}</label><textarea pInputTextarea [(ngModel)]="impactForm.description" [rows]="3" class="w-full"></textarea></div>
+          <grc-form-field [label]="i18nSvc.translate('audit.financialImpact')">
+            <input pInputText type="number" [(ngModel)]="impactForm.financial_impact" class="w-full" />
+          </grc-form-field>
+        </div>
+        <ng-template pTemplate="footer">
+          <p-button label="Cancel" severity="secondary" [text]="true" (onClick)="showImpactDialog = false" />
+          <p-button label="Save" icon="pi pi-check" (onClick)="saveImpact()" [disabled]="!impactForm.impact_type" />
+        </ng-template>
+      </p-dialog>
+
+      <!-- Compliance Link Dialog -->
+      <p-dialog [header]="i18nSvc.translate('audit.linkToCompliance') || 'Link to Compliance Violation'"
+        [(visible)]="showComplianceLinkDialog" [modal]="true" [style]="{ width: '560px' }">
+        <div class="form-grid">
+          <p class="text-sm" style="color:var(--text-muted)">Select a compliance finding/violation to link this audit finding to:</p>
+          <grc-data-table
+            [totalRecords]="complianceViolations().length"
+            emptyMessage="No compliance violations found">
+            <p-table aria-label="Compliance violations" [value]="complianceViolations()" [paginator]="true" [rows]="5"
+              selectionMode="single" [(selection)]="selectedViolation" styleClass="p-datatable-sm">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>Title</th>
+                  <th>Severity</th>
+                  <th>Framework</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-v>
+                <tr [pSelectableRow]="v">
+                  <td>{{ v.title }}</td>
+                  <td><app-status-badge [status]="v.severity" /></td>
+                  <td>{{ v.framework_code || '—' }}</td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </grc-data-table>
+        </div>
+        <ng-template pTemplate="footer">
+          <p-button label="Cancel" severity="secondary" [text]="true" (onClick)="showComplianceLinkDialog = false" />
+          <p-button label="Link" icon="pi pi-link" (onClick)="linkToCompliance()" [disabled]="!selectedViolation" [loading]="linkingCompliance" />
+        </ng-template>
+      </p-dialog>
+    </app-page-shell>

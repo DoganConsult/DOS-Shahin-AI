@@ -1,0 +1,79 @@
+{
+  "moduleCode": "training",
+  "displayName": "Training & Awareness",
+  "ownerTeam": "product-shahin-ai",
+  "productCode": "shahin-ai",
+  "ownership": "module-owned",
+  "version": "1.0.0",
+  "status": "active",
+  "platformDependencies": [
+    "identity",
+    "tenancy",
+    "workflow",
+    "permissions",
+    "audit"
+  ],
+  "seedProviders": [
+    "products/shahin/seeds/training-seed"
+  ],
+  "tenantDefaults": [
+    "training_campaign_default_days",
+    "training_quiz_pass_threshold"
+  ],
+  "requiredReferenceData": [
+    "training_topics",
+    "training_course_templates"
+  ],
+  "currentSources": [
+    "/home/Dr-Dogan-AGRC-OS/backend/src/modules/training"
+  ],
+  "targetPath": "modules/training",
+  "futureService": "training-service",
+  "frontendSources": [
+    "/home/Dr-Dogan-AGRC-OS/frontend/src/app/platform-manifests/training.module.routes.ts"
+  ],
+  "ownedTables": [
+    "training_campaigns",
+    "training_assignments",
+    "training_completions",
+    "training_content",
+    "training_courses",
+    "training_certificates",
+    "training_quiz_results",
+    "training_reminders",
+    "training_requirements",
+    "training_schedules",
+    "training_topics",
+    "training_audit_log"
+  ],
+  "referencedTables": [
+    "audit_trail",
+    "teams",
+    "workflows"
+  ],
+  "events": {
+    "publishes": [
+      "training.campaign_launched",
+      "training.campaign_completed",
+      "training.assignment_created",
+      "training.assignment_completed",
+      "training.assignment_overdue",
+      "training.certificate_issued",
+      "training.quiz_passed",
+      "training.quiz_failed",
+      "training.reminder_sent",
+      "training.content_published"
+    ],
+    "subscribes": [
+      "compliance.posture_changed",
+      "policy.approved",
+      "incident.lesson_documented",
+      "workflow.status_changed",
+      "foundation.dept_created",
+      "foundation.position.holder.assigned"
+    ]
+  },
+  "routeBases": [
+    "/api/training"
+  ]
+}

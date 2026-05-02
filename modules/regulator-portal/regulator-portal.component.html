@@ -1,0 +1,283 @@
+<div class="rp-shell">
+      <!-- Header -->
+      <header class="rp-header">
+        <div class="rp-header-left">
+          <img loading="eager" src="logoiconapphero.png" alt="Shahin GRC" width="36" height="36"
+               style="border-radius:8px" />
+          <h1>Regulator Portal</h1>
+          <span class="rp-org-name" *ngIf="selectedOrg">{{ selectedOrg.name }}</span>
+        </div>
+        <button class="btn-logout" (click)="logout()">Sign Out</button>
+      </header>
+
+      <!-- Tab Navigation -->
+      <nav class="rp-tabs" role="tablist">
+        <button *ngFor="let t of tabs" class="rp-tab"
+                [class.active]="activeTab === t.id"
+                (click)="switchTab(t.id)"
+                [attr.aria-selected]="activeTab === t.id"
+                role="tab">
+          {{ t.label }}
+        </button>
+      </nav>
+
+      <!-- Loading -->
+      <div *ngIf="loading" class="rp-loading">
+        <div class="spinner"></div>
+        <p>Loading…</p>
+      </div>
+
+      <!-- Error -->
+      <div *ngIf="error" class="rp-error">
+        <p>{{ error }}</p>
+        <button class="btn-secondary" (click)="loadOrganizations()">Retry</button>
+      </div>
+
+      <!-- ═══ Organizations Tab ═══ -->
+      <section *ngIf="!loading && !error && activeTab === 'organizations'" class="rp-section">
+        <h2>Assigned Organizations</h2>
+        <div *ngIf="organizations.length === 0" class="empty-state">
+          No organizations assigned to your account.
+        </div>
+        <div class="org-grid" *ngIf="organizations.length > 0">
+          <div *ngFor="let org of organizations" class="org-card"
+               (click)="selectOrganization(org)" role="button" tabindex="0"
+               (keydown.enter)="selectOrganization(org)">
+            <div class="org-card-header">
+              <h3>{{ org.name }}</h3>
+              <span class="status-indicator" [attr.data-status]="org.status">
+                {{ org.status | titlecase }}
+              </span>
+            </div>
+            <div class="org-card-stats">
+              <div class="org-stat">
+                <span class="org-stat-label">Compliance</span>
+                <span class="org-stat-value" [class]="scoreClass(org.complianceScore)">
+                  {{ org.complianceScore }}%
+                </span>
+              </div>
+              <div class="org-stat">
+                <span class="org-stat-label">Risk Level</span>
+                <span class="org-stat-value risk-level" [attr.data-risk]="org.riskLevel">
+                  {{ org.riskLevel | titlecase }}
+                </span>
+              </div>
+              <div class="org-stat">
+                <span class="org-stat-label">Frameworks</span>
+                <span class="org-stat-value">{{ org.frameworkCount }}</span>
+              </div>
+            </div>
+            <div class="org-card-footer" *ngIf="org.lastAuditDate">
+              Last audit: {{ org.lastAuditDate | appDate:'medium' }}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ Compliance Tab ═══ -->
+      <section *ngIf="!loading && !error && activeTab === 'compliance'" class="rp-section">
+        <button class="btn-back" (click)="backToOrgs()">&larr; Back to Organizations</button>
+        <h2>Compliance Dashboard — {{ selectedOrg?.name }}</h2>
+
+        <div *ngIf="!complianceData" class="empty-state">Select an organization to view compliance data.</div>
+
+        <div *ngIf="complianceData" class="compliance-layout">
+          <!-- Summary cards -->
+          <div class="dashboard-grid">
+            <div class="stat-card">
+              <span class="stat-label">Overall Score</span>
+              <span class="stat-value" [class]="scoreClass(complianceData.overallScore)">
+                {{ complianceData.overallScore }}%
+              </span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-label">Controls Effective</span>
+              <span class="stat-value score-green">{{ complianceData.controlEffectiveness.effective }}</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-label">Controls Partial</span>
+              <span class="stat-value score-yellow">{{ complianceData.controlEffectiveness.partial }}</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-label">Controls Ineffective</span>
+              <span class="stat-value score-red">{{ complianceData.controlEffectiveness.ineffective }}</span>
+            </div>
+          </div>
+
+          <!-- Risk Posture -->
+          <div class="sub-section">
+            <h3>Risk Posture</h3>
+            <div class="risk-grid">
+              <div class="risk-item">
+                <span class="risk-count score-red">{{ complianceData.riskPosture.high }}</span>
+                <span class="risk-label">High</span>
+              </div>
+              <div class="risk-item">
+                <span class="risk-count score-yellow">{{ complianceData.riskPosture.medium }}</span>
+                <span class="risk-label">Medium</span>
+              </div>
+              <div class="risk-item">
+                <span class="risk-count score-green">{{ complianceData.riskPosture.low }}</span>
+                <span class="risk-label">Low</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Framework Coverage -->
+          <div class="sub-section">
+            <h3>Framework Coverage</h3>
+            <table aria-label="Framework Coverage table" class="rp-table" *ngIf="complianceData.frameworkCoverage.length > 0">
+              <thead>
+                <tr><th>Framework</th><th>Coverage</th><th>Status</th></tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let fw of complianceData.frameworkCoverage">
+                  <td>{{ fw.name }}</td>
+                  <td>
+                    <div class="coverage-bar">
+                      <div class="coverage-fill" [style.width.%]="fw.coverage"></div>
+                    </div>
+                    <span class="coverage-pct">{{ fw.coverage }}%</span>
+                  </td>
+                  <td>
+                    <span class="status-badge" [attr.data-status]="fw.status">{{ fw.status | titlecase }}</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ Evidence Tab ═══ -->
+      <section *ngIf="!loading && !error && activeTab === 'evidence'" class="rp-section">
+        <button class="btn-back" (click)="backToOrgs()">&larr; Back to Organizations</button>
+        <h2>Evidence Library — {{ selectedOrg?.name }}</h2>
+
+        <!-- Filters -->
+        <div class="filter-bar">
+          <input type="text" [(ngModel)]="evidenceFilter" placeholder="Filter by title or type…" aria-label="Filter by title or type…"
+                 class="filter-input" />
+          <select [(ngModel)]="evidenceStatusFilter" class="filter-select">
+            <option value="">All Statuses</option>
+            <option value="approved">Approved</option>
+            <option value="pending">Pending</option>
+            <option value="rejected">Rejected</option>
+            <option value="expired">Expired</option>
+          </select>
+        </div>
+
+        <div *ngIf="filteredEvidence.length === 0" class="empty-state">
+          No evidence artifacts found.
+        </div>
+        <table aria-label="Rp Table table" class="rp-table" *ngIf="filteredEvidence.length > 0">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Type</th>
+              <th>Framework</th>
+              <th>Control</th>
+              <th>Status</th>
+              <th>Uploaded</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let ev of filteredEvidence">
+              <td>{{ ev.title }}</td>
+              <td>{{ ev.type }}</td>
+              <td>{{ ev.frameworkRef || '—' }}</td>
+              <td>{{ ev.controlRef || '—' }}</td>
+              <td>
+                <span class="status-badge" [attr.data-status]="ev.status">{{ ev.status | titlecase }}</span>
+              </td>
+              <td>{{ ev.uploadedAt | appDate:'medium' }}</td>
+              <td>
+                <button class="btn-link" (click)="downloadEvidence(ev)">Download</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ═══ Inquiries Tab ═══ -->
+      <section *ngIf="!loading && !error && activeTab === 'inquiries'" class="rp-section">
+        <button class="btn-back" (click)="backToOrgs()">&larr; Back to Organizations</button>
+        <h2>Inquiry Channel — {{ selectedOrg?.name }}</h2>
+
+        <!-- New Inquiry Form -->
+        <div class="inquiry-form">
+          <h3>Submit New Inquiry</h3>
+          <div class="form-group">
+            <label>Type</label>
+            <select [(ngModel)]="newInquiry.requestType" class="filter-select">
+              <option value="information_request">Information Request</option>
+              <option value="clarification">Clarification</option>
+              <option value="document_request">Document Request</option>
+              <option value="compliance_question">Compliance Question</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <grc-form-field label="Subject">
+              <input type="text" [(ngModel)]="newInquiry.subject" placeholder="Inquiry subject…" aria-label="Inquiry subject…"
+                     class="form-input" />
+            </grc-form-field>
+          </div>
+          <div class="form-group">
+            <label>Details</label>
+            <textarea [(ngModel)]="newInquiry.body" rows="4" placeholder="Describe your inquiry…" aria-label="Describe your inquiry…"
+                      class="form-textarea"></textarea>
+          </div>
+          <button class="btn-primary" (click)="submitNewInquiry()"
+                  [disabled]="submittingInquiry || !newInquiry.subject.trim() || !newInquiry.body.trim()">
+            {{ submittingInquiry ? 'Submitting…' : 'Submit Inquiry' }}
+          </button>
+        </div>
+
+        <!-- Inquiry List -->
+        <div class="inquiry-list">
+          <h3>Previous Inquiries</h3>
+          <div *ngIf="inquiries.length === 0" class="empty-state">No inquiries submitted yet.</div>
+          <div *ngFor="let inq of inquiries" class="inquiry-card">
+            <div class="inquiry-header">
+              <span class="inquiry-type">{{ inq.requestType | titlecase }}</span>
+              <span class="status-badge" [attr.data-status]="inq.status">{{ inq.status | titlecase }}</span>
+              <span class="inquiry-date">{{ inq.createdAt | appDate:'short' }}</span>
+            </div>
+            <h4>{{ inq.subject }}</h4>
+            <p class="inquiry-body">{{ inq.body }}</p>
+            <div *ngIf="inq.response" class="inquiry-response">
+              <strong>Response:</strong>
+              <p>{{ inq.response }}</p>
+              <span class="inquiry-date" *ngIf="inq.respondedAt">Responded: {{ inq.respondedAt | appDate:'short' }}</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ Audit Trail Tab ═══ -->
+      <section *ngIf="!loading && !error && activeTab === 'audit-trail'" class="rp-section">
+        <button class="btn-back" (click)="backToOrgs()">&larr; Back to Organizations</button>
+        <h2>Audit Trail — {{ selectedOrg?.name }}</h2>
+
+        <div *ngIf="auditEntries.length === 0" class="empty-state">
+          No audit trail entries found.
+        </div>
+        <div class="audit-timeline" *ngIf="auditEntries.length > 0">
+          <div *ngFor="let entry of auditEntries" class="audit-entry">
+            <div class="audit-dot"></div>
+            <div class="audit-content">
+              <div class="audit-meta">
+                <span class="audit-time">{{ entry.timestamp | appDate:'medium' }}</span>
+                <span class="audit-actor">{{ entry.performedBy }}</span>
+              </div>
+              <p class="audit-action">{{ entry.action }}</p>
+              <p class="audit-detail" *ngIf="entry.details">{{ entry.details }}</p>
+              <span class="audit-entity" *ngIf="entry.entityType">
+                {{ entry.entityType }}{{ entry.entityId ? ' #' + entry.entityId.substring(0, 8) : '' }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>

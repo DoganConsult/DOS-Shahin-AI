@@ -1,0 +1,4 @@
+
+> @dos/module-sdk@1.0.0 build /root/DOS-AIO/packages/dos-module-sdk
+> tsc -p tsconfig.build.json
+

@@ -1,0 +1,48 @@
+<div class="grc-hub" [dir]="i18n.dir()">
+  <header class="hub-toolbar">
+    <h2>{{ i18n.isArabic() ? 'مقارنة الوكلاء' : 'Agent Comparison' }}</h2>
+    <p class="muted">
+      {{ i18n.isArabic() ? 'مقارنة جنبًا إلى جنب للمؤشرات لجميع الوكلاء الـ13.' : 'Side-by-side metrics for all 13 canonical agents.' }}
+    </p>
+  </header>
+
+  <ng-container [ngSwitch]="state()">
+    <p-card *ngSwitchCase="'loading'">
+      <p>{{ i18n.isArabic() ? 'جارِ التحميل…' : 'Loading…' }}</p>
+    </p-card>
+
+    <p-card *ngSwitchCase="'error'" styleClass="state-error">
+      <h3>{{ i18n.isArabic() ? 'تعذّر تحميل البيانات' : 'Failed to load data' }}</h3>
+      <pre class="mono">{{ error() }}</pre>
+    </p-card>
+
+    <p-card *ngSwitchCase="'empty'">
+      <p>{{ i18n.isArabic()
+              ? 'لا توجد بيانات لعرضها بعد.'
+              : 'No data to show yet.' }}</p>
+    </p-card>
+
+    <p-table *ngSwitchCase="'ready'" [value]="rows()" responsiveLayout="scroll" styleClass="p-datatable-sm">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>{{ i18n.isArabic() ? 'الوكيل' : 'Agent' }}</th>
+          <th>{{ i18n.isArabic() ? 'الاسم' : 'Name' }}</th>
+          <th>{{ i18n.isArabic() ? 'المجال' : 'Domain' }}</th>
+          <th>{{ i18n.isArabic() ? 'التشغيلات (24س)' : 'Runs (24h)' }}</th>
+          <th>{{ i18n.isArabic() ? 'نسبة النجاح' : 'Success %' }}</th>
+          <th>{{ i18n.isArabic() ? 'الزمن (مللي ثانية)' : 'Latency (ms)' }}</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-r>
+        <tr>
+          <td>{{ r.agentCode }}</td>
+          <td>{{ r.name }}</td>
+          <td>{{ r.domain }}</td>
+          <td>{{ r.runs24h }}</td>
+          <td>{{ r.successRate }}</td>
+          <td>{{ r.meanLatencyMs }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </ng-container>
+</div>

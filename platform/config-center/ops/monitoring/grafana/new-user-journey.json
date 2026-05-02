@@ -1,0 +1,222 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Registrations / min (all results)",
+      "datasource": "Prometheus",
+      "gridPos": { "x": 0, "y": 0, "w": 6, "h": 4 },
+      "targets": [
+        {
+          "expr": "60 * sum(rate(dos_registration_requests_total[5m]))",
+          "legendFormat": "req/min"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Success rate (5m)",
+      "datasource": "Prometheus",
+      "gridPos": { "x": 6, "y": 0, "w": 6, "h": 4 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": null },
+              { "color": "orange", "value": 0.95 },
+              { "color": "green", "value": 0.99 }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum(rate(dos_registration_requests_total{result=\"success\"}[5m])) / clamp_min(sum(rate(dos_registration_requests_total[5m])), 0.001)",
+          "legendFormat": "success"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Registration latency p50/p95/p99",
+      "datasource": "Prometheus",
+      "gridPos": { "x": 0, "y": 4, "w": 12, "h": 8 },
+      "fieldConfig": { "defaults": { "unit": "s" } },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.50, sum(rate(dos_registration_duration_seconds_bucket[5m])) by (le))",
+          "legendFormat": "p50"
+        },
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(dos_registration_duration_seconds_bucket[5m])) by (le))",
+          "legendFormat": "p95"
+        },
+        {
+          "expr": "histogram_quantile(0.99, sum(rate(dos_registration_duration_seconds_bucket[5m])) by (le))",
+          "legendFormat": "p99"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Outbox lag (oldest pending)",
+      "datasource": "Prometheus",
+      "gridPos": { "x": 12, "y": 4, "w": 12, "h": 8 },
+      "fieldConfig": { "defaults": { "unit": "s" } },
+      "targets": [
+        {
+          "expr": "max(dos_outbox_lag_seconds)",
+          "legendFormat": "lag"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Outbox pending vs dead",
+      "datasource": "Prometheus",
+      "gridPos": { "x": 0, "y": 12, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "dos_outbox_pending{status=\"pending\"}",
+          "legendFormat": "pending"
+        },
+        {
+          "expr": "dos_outbox_pending{status=\"dead\"}",
+          "legendFormat": "dead"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Outbox publish throughput / failures",
+      "datasource": "Prometheus",
+      "gridPos": { "x": 12, "y": 12, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "sum(rate(dos_outbox_published_total[5m]))",
+          "legendFormat": "published/s"
+        },
+        {
+          "expr": "sum(rate(dos_outbox_publish_failures_total[5m]))",
+          "legendFormat": "failed/s"
+        },
+        {
+          "expr": "sum(rate(dos_outbox_dead_total[5m]))",
+          "legendFormat": "dead/s"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Registration rejections by reason (5m rate)",
+      "datasource": "Prometheus",
+      "gridPos": { "x": 0, "y": 20, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "sum by (result) (rate(dos_registration_requests_total{result!=\"success\"}[5m]))",
+          "legendFormat": "{{ result }}"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "SSE active connections",
+      "datasource": "Prometheus",
+      "gridPos": { "x": 12, "y": 20, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "dos_ws_active_connections",
+          "legendFormat": "ws"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Rate-limit rejections by namespace (gateway)",
+      "datasource": "Prometheus",
+      "gridPos": { "x": 0, "y": 28, "w": 24, "h": 8 },
+      "targets": [
+        {
+          "expr": "sum by (namespace) (rate(dos_rate_limit_rejections_total[5m]))",
+          "legendFormat": "{{ namespace }}"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Onboarding sessions started vs completed (per min) by region",
+      "datasource": "Prometheus",
+      "gridPos": { "x": 0, "y": 36, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "60 * sum by (region) (rate(dos_onboarding_sessions_total{event=\"started\"}[5m]))",
+          "legendFormat": "started {{ region }}"
+        },
+        {
+          "expr": "60 * sum by (region) (rate(dos_onboarding_sessions_total{event=\"completed\"}[5m]))",
+          "legendFormat": "completed {{ region }}"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Onboarding completion rate (30m) by region",
+      "datasource": "Prometheus",
+      "gridPos": { "x": 12, "y": 36, "w": 12, "h": 8 },
+      "fieldConfig": { "defaults": { "unit": "percentunit" } },
+      "targets": [
+        {
+          "expr": "sum by (region) (rate(dos_onboarding_sessions_total{event=\"completed\"}[30m])) / clamp_min(sum by (region) (rate(dos_onboarding_sessions_total{event=\"started\"}[30m])), 0.001)",
+          "legendFormat": "{{ region }}"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Provisioning jobs: success rate + p95 duration by region",
+      "datasource": "Prometheus",
+      "gridPos": { "x": 0, "y": 44, "w": 24, "h": 8 },
+      "fieldConfig": { "defaults": { "unit": "s" } },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(dos_onboarding_provisioning_job_duration_seconds_bucket{result=\"completed\"}[15m])) by (le, region))",
+          "legendFormat": "p95 duration {{ region }}"
+        },
+        {
+          "expr": "sum by (region) (rate(dos_onboarding_provisioning_jobs_total{result=\"completed\"}[15m])) / clamp_min(sum by (region) (rate(dos_onboarding_provisioning_jobs_total{result=\"started\"}[15m])), 0.001)",
+          "legendFormat": "success rate {{ region }}"
+        }
+      ]
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": ["new-user-journey", "platform"],
+  "templating": { "list": [] },
+  "time": { "from": "now-6h", "to": "now" },
+  "timepicker": {},
+  "timezone": "",
+  "title": "New-User Journey",
+  "uid": "dos-new-user-journey",
+  "version": 1,
+  "weekStart": ""
+}

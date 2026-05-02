@@ -1,0 +1,94 @@
+{
+  "$schema": "../../../contracts/module/module.manifest.schema.json",
+  "schemaVersion": 1,
+  "kind": "platform",
+  "moduleCode": "ai-governance",
+  "displayName": "AI Governance",
+  "description": "Sub-module of AI-OS that owns AI governance: policy, safety, audit, redaction, evals, fairness, bias detection, model risk management, transparency reports.",
+  "version": "1.0.0",
+  "extractable": true,
+  "selfContained": true,
+  "lifecycle": {
+    "stage": "ga",
+    "owner": "platform-ai",
+    "entitlementKey": "platform.ai-os.governance",
+    "featureFlag": "platform.ai-os.governance.enabled",
+    "minTenantStage": "ga"
+  },
+  "platformDependencies": {
+    "@dos/platform-core": "^1.0.0",
+    "@dos/module-sdk": "^1.0.0",
+    "@dos/contracts": "^1.0.0",
+    "@dos/types": "^1.0.0",
+    "@dos/runtime-config": "^1.0.0"
+  },
+  "futureService": "ai-governance-service",
+  "metadata": {
+    "ownerTeam": "platform-ai",
+    "parentModule": "ai-os",
+    "previousLocation": "AI-OS Module/_sources/modules_ai-governance",
+    "promotedAt": "2026-04-30",
+    "migrationNote": "Promoted to kind=platform as sub-module of AI-OS. Removed product-specific productCode binding (was 'shahin-ai') and absolute foreign-machine currentSources/frontendSources paths. Migrations physically moved to platform/ai/migrations/{public,tenant}/ai-governance/.",
+    "seedProviders": [
+      "platform/ai/migrations/public/ai-governance"
+    ],
+    "tenantDefaults": [
+      "ai_gov_assessment_frequency_days",
+      "ai_gov_bias_threshold"
+    ],
+    "requiredReferenceData": [
+      "ai_model_categories",
+      "fairness_metrics",
+      "ethical_review_templates"
+    ],
+    "ownedTables": [
+      "ai_gov_assessments",
+      "ai_gov_audit_log",
+      "ai_gov_bias_reports",
+      "ai_gov_data_lineage",
+      "ai_gov_ethical_reviews",
+      "ai_gov_explainability_reports",
+      "ai_gov_fairness_metrics",
+      "ai_gov_impact_assessments",
+      "ai_gov_inventory",
+      "ai_gov_model_cards",
+      "ai_gov_monitoring_alerts",
+      "ai_gov_policies",
+      "ai_gov_registry",
+      "ai_gov_risk_assessments",
+      "ai_gov_transparency_reports",
+      "ai_gov_use_cases",
+      "ai_gov_validation_results"
+    ],
+    "referencedTables": [
+      "audit_trail",
+      "teams",
+      "workflows",
+      "compliance_frameworks",
+      "risk_assessments"
+    ],
+    "events": {
+      "publishes": [
+        "ai_governance.model_registered",
+        "ai_governance.assessment_completed",
+        "ai_governance.bias_detected",
+        "ai_governance.fairness_scored",
+        "ai_governance.ethical_review_completed",
+        "ai_governance.impact_assessed",
+        "ai_governance.monitoring_alert",
+        "ai_governance.policy_violated",
+        "ai_governance.transparency_report_generated",
+        "ai_governance.validation_completed"
+      ],
+      "subscribes": [
+        "compliance.posture_changed",
+        "risk.score_changed",
+        "audit.finding_created",
+        "workflow.status_changed"
+      ]
+    },
+    "routeBases": [
+      "/api/ai-governance"
+    ]
+  }
+}

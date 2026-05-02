@@ -1,0 +1,52 @@
+# OWASP ZAP baseline scan config for Foundation F1 endpoints (P9.Sec).
+# Run from CI with: docker run -v $(pwd):/zap/wrk ghcr.io/zaproxy/zaproxy:stable \
+#   zap-baseline.py -t https://shahin-ai.com -c modules/foundation/tests/security/zap-scan.yaml -r foundation-zap.html
+env:
+  contexts:
+    - name: foundation
+      urls:
+        - https://shahin-ai.com/api/organizations
+        - https://shahin-ai.com/api/business-units
+        - https://shahin-ai.com/api/positions
+        - https://shahin-ai.com/api/locations
+        - https://shahin-ai.com/api/committees
+        - https://shahin-ai.com/api/roles
+        - https://shahin-ai.com/api/teams
+        - https://shahin-ai.com/api/departments
+        - https://shahin-ai.com/api/invitations
+        - https://shahin-ai.com/api/audit-trail
+        - https://shahin-ai.com/api/profiles/roles
+        - https://shahin-ai.com/api/access/my-permissions
+        - https://shahin-ai.com/api/access-review
+        - https://shahin-ai.com/api/delegations
+        - https://shahin-ai.com/api/foundation/dashboard
+      authentication:
+        method: header
+        parameters:
+          name: Authorization
+          value: "Bearer ${TOKEN}"
+      technology:
+        exclude: [Db, OS]
+rules:
+  # Fail CI on high-severity findings; warn on medium; ignore informational.
+  - id: 10020    # X-Frame-Options
+    action: warn
+  - id: 10021    # X-Content-Type-Options
+    action: warn
+  - id: 10038    # CSP Header Not Set
+    action: warn
+  - id: 10096    # Timestamp Disclosure
+    action: ignore
+  - id: 40012    # Cross Site Scripting (Reflected)
+    action: fail
+  - id: 40018    # SQL Injection
+    action: fail
+  - id: 90019    # Server Side Code Injection
+    action: fail
+  - id: 90020    # Remote OS Command Injection
+    action: fail
+  - id: 10202    # Absence of Anti-CSRF Tokens
+    action: warn
+thresholds:
+  high: 0      # zero high-severity findings allowed
+  medium: 3    # up to 3 medium findings

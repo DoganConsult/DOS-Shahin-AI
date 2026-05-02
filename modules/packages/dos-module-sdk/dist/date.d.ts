@@ -1,0 +1,95 @@
+/**
+ * @dos/module-sdk date utilities
+ * Date and time helpers for module development
+ */
+export declare const MS_PER_SECOND = 1000;
+export declare const MS_PER_MINUTE: number;
+export declare const MS_PER_HOUR: number;
+export declare const MS_PER_DAY: number;
+export declare const MS_PER_WEEK: number;
+export declare const SECONDS_PER_MINUTE = 60;
+export declare const SECONDS_PER_HOUR: number;
+export declare const SECONDS_PER_DAY: number;
+export declare const SECONDS_PER_WEEK: number;
+export declare function now(): Date;
+export declare function nowISO(): string;
+export declare function nowUnixMs(): number;
+export declare function nowUnixSec(): number;
+export declare function fromUnixMs(ms: number): Date;
+export declare function fromUnixSec(sec: number): Date;
+export declare function addMilliseconds(date: Date, ms: number): Date;
+export declare function addSeconds(date: Date, seconds: number): Date;
+export declare function addMinutes(date: Date, minutes: number): Date;
+export declare function addHours(date: Date, hours: number): Date;
+export declare function addDays(date: Date, days: number): Date;
+export declare function addWeeks(date: Date, weeks: number): Date;
+export declare function addMonths(date: Date, months: number): Date;
+export declare function addYears(date: Date, years: number): Date;
+export declare function subtractMilliseconds(date: Date, ms: number): Date;
+export declare function subtractSeconds(date: Date, seconds: number): Date;
+export declare function subtractMinutes(date: Date, minutes: number): Date;
+export declare function subtractHours(date: Date, hours: number): Date;
+export declare function subtractDays(date: Date, days: number): Date;
+export declare function subtractWeeks(date: Date, weeks: number): Date;
+export declare function isBefore(date: Date, other: Date): boolean;
+export declare function isAfter(date: Date, other: Date): boolean;
+export declare function isSameDay(date1: Date, date2: Date): boolean;
+export declare function isSameMonth(date1: Date, date2: Date): boolean;
+export declare function isSameYear(date1: Date, date2: Date): boolean;
+export declare function isInPast(date: Date): boolean;
+export declare function isInFuture(date: Date): boolean;
+export declare function isToday(date: Date): boolean;
+export declare function isYesterday(date: Date): boolean;
+export declare function isTomorrow(date: Date): boolean;
+export declare function isWithinRange(date: Date, start: Date, end: Date): boolean;
+export declare function diffInMilliseconds(date1: Date, date2: Date): number;
+export declare function diffInSeconds(date1: Date, date2: Date): number;
+export declare function diffInMinutes(date1: Date, date2: Date): number;
+export declare function diffInHours(date1: Date, date2: Date): number;
+export declare function diffInDays(date1: Date, date2: Date): number;
+export declare function diffInWeeks(date1: Date, date2: Date): number;
+export declare function diffInMonths(date1: Date, date2: Date): number;
+export declare function diffInYears(date1: Date, date2: Date): number;
+export declare function startOfDay(date: Date): Date;
+export declare function endOfDay(date: Date): Date;
+export declare function startOfWeek(date: Date, weekStartsOn?: 0 | 1): Date;
+export declare function endOfWeek(date: Date, weekStartsOn?: 0 | 1): Date;
+export declare function startOfMonth(date: Date): Date;
+export declare function endOfMonth(date: Date): Date;
+export declare function startOfQuarter(date: Date): Date;
+export declare function endOfQuarter(date: Date): Date;
+export declare function startOfYear(date: Date): Date;
+export declare function endOfYear(date: Date): Date;
+export declare function formatISO(date: Date): string;
+export declare function formatISODate(date: Date): string;
+export declare function formatISOTime(date: Date): string;
+export declare function formatDateSimple(date: Date): string;
+export declare function formatTimeSimple(date: Date): string;
+export declare function formatDateTimeSimple(date: Date): string;
+export interface RelativeTimeResult {
+    value: number;
+    unit: 'second' | 'minute' | 'hour' | 'day' | 'week' | 'month' | 'year';
+    text: string;
+}
+export declare function getRelativeTime(date: Date, now?: Date): RelativeTimeResult;
+export declare function formatRelativeTime(date: Date): string;
+export declare function parseDate(value: unknown): Date | null;
+export declare function parseDateOrThrow(value: unknown, fieldName?: string): Date;
+export declare function parseDateOrDefault(value: unknown, defaultDate: Date): Date;
+export declare function getTimezoneOffset(timezone: string, date?: Date): number;
+export declare function formatInTimezone(date: Date, timezone: string, options?: Intl.DateTimeFormatOptions): string;
+export declare function isWeekend(date: Date): boolean;
+export declare function isWeekday(date: Date): boolean;
+export declare function addBusinessDays(date: Date, days: number): Date;
+export declare function countBusinessDays(start: Date, end: Date): number;
+export type DueStatus = 'on_time' | 'due_soon' | 'overdue';
+export interface DueStatusResult {
+    status: DueStatus;
+    daysRemaining: number;
+    isOverdue: boolean;
+    percentage: number;
+}
+export declare function getDueStatus(dueDate: Date, warnDays?: number): DueStatusResult;
+export type RecurrenceFrequency = 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'yearly';
+export declare function getNextOccurrence(date: Date, frequency: RecurrenceFrequency): Date;
+export declare function generateRecurrences(startDate: Date, frequency: RecurrenceFrequency, count: number): Date[];

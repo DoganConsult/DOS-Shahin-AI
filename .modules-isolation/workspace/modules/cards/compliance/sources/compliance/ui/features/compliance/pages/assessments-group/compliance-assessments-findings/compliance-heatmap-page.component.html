@@ -1,0 +1,142 @@
+<div class="heatmap-page" [dir]="i18n.direction()">
+      <div class="page-toolbar">
+        <h2>{{ i18n.translate('common.complianceHeatMap') || 'Compliance Heat Map' }}</h2>
+        <div class="toolbar-actions">
+          <select class="filter-select" [(ngModel)]="groupBy" (ngModelChange)="loadHeatMap()">
+            <option value="business_unit">{{ i18n.translate('common.businessUnit') || 'Business Unit' }}</option>
+            <option value="department">{{ i18n.translate('common.department') || 'Department' }}</option>
+          </select>
+          <button type="button" class="refresh-btn" (click)="loadHeatMap()" [disabled]="loading()">
+            <i class="" [class.pi-spin]="loading()"></i>
+            {{ i18n.translate('common.refresh') || 'Refresh' }}
+          </button>
+        </div>
+      </div>
+
+      @if (loadError()) {
+        <div class="load-error-banner" role="alert">
+          <i class=""></i>
+          <span>{{ loadError() }}</span>
+          <button type="button" class="retry-btn" (click)="loadError.set(null); loadHeatMap()">
+            {{ i18n.translate('common.retry') || 'Retry' }}
+          </button>
+        </div>
+      }
+
+      @if (loading()) {
+        <div class="loading-state" aria-live="polite">
+          <i class=" pi-spinner"></i> {{ i18n.translate('common.loading') || 'Loading...' }}
+        </div>
+      }
+
+      @if (!loading() && !loadError() && heatMapData()) {
+        <!-- Summary Cards -->
+        <div class="summary-section">
+          <div class="summary-card">
+            <div class="summary-value">{{ heatMapData()!.summary.totalBusinessUnits }}</div>
+            <div class="summary-label">{{ i18n.translate('common.businessUnits') || 'Business Units' }}</div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-value">{{ heatMapData()!.summary.totalDepartments }}</div>
+            <div class="summary-label">{{ i18n.translate('common.departments') || 'Departments' }}</div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-value">{{ heatMapData()!.summary.totalFrameworks }}</div>
+            <div class="summary-label">{{ i18n.translate('common.frameworks') || 'Frameworks' }}</div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-value">{{ heatMapData()!.summary.averageComplianceScore.toFixed(1) }}%</div>
+            <div class="summary-label">{{ i18n.translate('common.averageCompliance') || 'Average Compliance' }}</div>
+          </div>
+        </div>
+
+        <!-- Heat Map Matrix -->
+        <div class="heatmap-section">
+          <h3>
+            {{ groupBy === 'business_unit' 
+              ? (i18n.translate('common.complianceByBusinessUnit') || 'Compliance by Business Unit')
+              : (i18n.translate('common.complianceByDepartment') || 'Compliance by Department')
+            }}
+          </h3>
+
+          @if (heatMapData()!.cells.length === 0) {
+            <div class="empty-state">
+              <p>{{ i18n.translate('common.noDataAvailable') || 'No data available' }}</p>
+            </div>
+          } @else {
+            <div class="heatmap-table-container">
+              <table class="heatmap-table">
+                <thead>
+                  <tr>
+                    <th class="org-col">
+                      {{ groupBy === 'business_unit' 
+                        ? (i18n.translate('common.businessUnit') || 'Business Unit')
+                        : (i18n.translate('common.department') || 'Department')
+                      }}
+                    </th>
+                    @for (fw of heatMapData()!.frameworks; track fw.frameworkId) {
+                      <th class="framework-col">{{ fw.frameworkName }}</th>
+                    }
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (orgUnit of orgUnits(); track orgUnit.id) {
+                    <tr>
+                      <td class="org-col">
+                        <div class="org-name">{{ orgUnit.name }}</div>
+                        @if (orgUnit.parentName) {
+                          <div class="org-parent">{{ orgUnit.parentName }}</div>
+                        }
+                      </td>
+                      @for (fw of heatMapData()!.frameworks; track fw.frameworkId) {
+                        @if (getCell(orgUnit.id, fw.frameworkId); as cell) {
+                          <td class="heatmap-cell" [class]="getScoreClass(cell.complianceScore)" [title]="getCellTooltip(cell)">
+                            <div class="cell-score">{{ cell.complianceScore.toFixed(0) }}%</div>
+                            <div class="cell-maturity">{{ cell.maturityLevel }}</div>
+                            <div class="cell-details">
+                              <span class="cell-controls">{{ cell.totalControls }} {{ i18n.translate('common.controls') || 'controls' }}</span>
+                              @if (cell.criticalGaps > 0) {
+                                <span class="cell-gaps">{{ cell.criticalGaps }} {{ i18n.translate('common.criticalGaps') || 'critical' }}</span>
+                              }
+                            </div>
+                          </td>
+                        } @else {
+                          <td class="heatmap-cell empty">-</td>
+                        }
+                      }
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Legend -->
+            <div class="heatmap-legend">
+              <div class="legend-title">{{ i18n.translate('common.complianceScore') || 'Compliance Score' }}:</div>
+              <div class="legend-items">
+                <div class="legend-item">
+                  <div class="legend-color excellent"></div>
+                  <span>81-100% ({{ i18n.translate('common.optimized') || 'Optimized' }})</span>
+                </div>
+                <div class="legend-item">
+                  <div class="legend-color good"></div>
+                  <span>61-80% ({{ i18n.translate('common.managed') || 'Managed' }})</span>
+                </div>
+                <div class="legend-item">
+                  <div class="legend-color moderate"></div>
+                  <span>41-60% ({{ i18n.translate('common.defined') || 'Defined' }})</span>
+                </div>
+                <div class="legend-item">
+                  <div class="legend-color poor"></div>
+                  <span>21-40% ({{ i18n.translate('common.developing') || 'Developing' }})</span>
+                </div>
+                <div class="legend-item">
+                  <div class="legend-color critical"></div>
+                  <span>0-20% ({{ i18n.translate('common.initial') || 'Initial' }})</span>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>

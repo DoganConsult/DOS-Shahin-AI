@@ -1,0 +1,15 @@
+{
+  "id": "risk.post_approval",
+  "module": "risk",
+  "hook": "post_approval",
+  "version": "1.0.0",
+  "sla_hours": 8,
+  "actor_role_default": "risk.module_lead",
+  "states": ["approved","published","notified"],
+  "initial": "approved",
+  "transitions": [{"from":"approved","to":"published","on":"publish","actor_role":"risk.module_lead"},{"from":"published","to":"notified","on":"notify"}],
+  "audit_event_prefix": "risk.workflow.post_approval",
+  "notification_targets": ["risk.module_lead", "risk.approver"],
+  "evidence_required_on": ["passed","published"],
+  "escalation": { "on": "sla_breach", "to": "risk.executive_owner", "after_hours": 16 }
+}

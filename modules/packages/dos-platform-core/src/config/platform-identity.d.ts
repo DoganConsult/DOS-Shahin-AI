@@ -1,0 +1,35 @@
+export declare const PLATFORM_NAME_EN: string;
+export declare const PLATFORM_NAME_AR: string;
+export declare const PLATFORM_VERSION: string;
+export declare const DEFAULT_PRODUCT_KEY: string;
+export declare function getDefaultProductKey(): string;
+export declare function registerDefaultProduct(productKey: string): void;
+export declare const DB_NAME: string;
+export declare const DB_USER: string;
+export declare const DB_HOST: string;
+export declare const DB_PORT: number;
+export declare const REDIS_PREFIX: string;
+export declare const OTEL_SERVICE_NAME: string;
+export declare const METRICS_PREFIX: string;
+export declare const LANGFUSE_PROJECT: string;
+export declare const CLICKHOUSE_DATABASE: string;
+export declare const AGE_GRAPH_NAME: string;
+export declare const PGMQ_QUEUE_PREFIX: string;
+export declare const KEYCLOAK_REALM: string;
+export declare const API_TITLE: string;
+export declare const API_DESCRIPTION: string;
+export declare const API_CONTACT_NAME: string;
+export declare const API_CONTACT_EMAIL: string;
+export declare const PM2_APP_NAME: string;
+export declare const LOG_DIR: string;
+export declare const APP_ROOT: string;
+export interface RegisteredProduct {
+    productKey: string;
+    nameEn: string;
+    nameAr: string;
+    brandUrl: string;
+}
+export declare function registerProductIdentity(product: RegisteredProduct): void;
+export declare function getRegisteredProduct(productKey: string): RegisteredProduct | undefined;
+export declare function getAllRegisteredProducts(): RegisteredProduct[];
+export declare function hasRegisteredProducts(): boolean;

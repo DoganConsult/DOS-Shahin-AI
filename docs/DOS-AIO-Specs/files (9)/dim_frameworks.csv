@@ -1,0 +1,43 @@
+code,name_en,regulator,category,version,scope
+NCA-ECC,NCA Essential Cybersecurity Controls,NCA,cybersecurity,2-2024,Government + CNI + Private (per NCNICC-1:2025)
+NCA-CCC,NCA Cloud Cybersecurity Controls,NCA,cybersecurity,1.0,Cloud users + providers
+NCA-OTCC,NCA Operational Technology Controls,NCA,cybersecurity,1.0,ICS/OT operators
+NCA-CSCC,NCA Critical Systems Cybersecurity Controls,NCA,cybersecurity,1.0,Critical systems
+NCNICC,NCA National Cybersecurity Controls for CNI,NCA,cybersecurity,1-2025,ALL private sector (effective Jan 2026)
+PDPL,Personal Data Protection Law,SDAIA,privacy,2023,Anyone processing personal data of KSA residents
+PDPL-IR,PDPL Implementing Regulations,SDAIA,privacy,2024,Same as PDPL
+SAMA-CSF,SAMA Cyber Security Framework,SAMA,financial,1.0,All SAMA-regulated
+SAMA-AML,SAMA AML/CFT Rules,SAMA,financial,5.0,All SAMA-regulated
+SAMA-PSR,SAMA Payment Services Regulations,SAMA,financial,1.2,Payment service providers
+SAMA-ITGF,SAMA IT Governance Framework,SAMA,financial,1.0,All SAMA-regulated
+SAMA-BCM,SAMA Business Continuity Framework,SAMA,financial,1.0,All SAMA-regulated
+CMA-CG,CMA Corporate Governance Regulations,CMA,governance,2022,Listed companies
+CMA-IC,CMA Internal Controls,CMA,governance,2024,Listed + Capital market institutions
+CMA-DISCLOSURE,CMA Disclosure Rules,CMA,governance,2024,Listed companies
+ZATCA-EINV,ZATCA E-Invoicing,ZATCA,tax,2.0,All VAT-registered businesses
+ZATCA-VAT,ZATCA VAT Regulations,ZATCA,tax,2024,VAT-registered (revenue > SAR 375K)
+MOH-HIS,MOH Health Information Systems,MOH,healthcare,3.0,Healthcare providers
+MOH-PATIENT-SAFETY,MOH Patient Safety,MOH,healthcare,2.0,Healthcare providers
+CBAHI,CBAHI Hospital Accreditation,CBAHI,healthcare,4.0,Hospitals
+SFDA-MD,SFDA Medical Devices,SFDA,healthcare,4.1,Medical device manufacturers
+SFDA-PHARMA,SFDA Pharmaceutical (GMP),SFDA,healthcare,5.0,Pharma manufacturers
+CST-CRF,CST Cybersecurity Regulatory Framework,CST,telecom,1.0,Telecom + ICT providers
+CST-CLOUD,CST Cloud Computing Regulatory Framework,CST,telecom,3.0,Cloud service providers + customers
+DGA-DCC,DGA Data Cybersecurity Controls,DGA,data,1.0,Government + designated entities
+NDMO-DM,NDMO Data Management,NDMO,data,1.5,Government + critical sectors
+MOCI-COMPANIES,Saudi Companies Law M/132,MoCI,commerce,2022,All companies
+MOCI-ECOM,MoCI E-Commerce Law,MoCI,commerce,2019,E-commerce providers
+MOCI-CONSUMER,MoCI Consumer Protection,MoCI,commerce,2022,All B2C businesses
+MHRSD-LABOR,Saudi Labor Law,MHRSD,labor,2023,All employers
+MHRSD-SAUDIZATION,Nitaqat Saudization Program,MHRSD,labor,2024,All employers (varies by size/sector)
+ISO27001,ISO/IEC 27001,ISO,international,2022,Voluntary unless contractually required
+ISO27017,ISO/IEC 27017 (Cloud),ISO,international,2015,Cloud providers
+ISO27018,ISO/IEC 27018 (Cloud Privacy),ISO,international,2019,Cloud + PII
+ISO22301,ISO 22301 BCM,ISO,international,2019,Voluntary
+ISO9001,ISO 9001 Quality,ISO,international,2015,Voluntary
+NIST-CSF,NIST Cybersecurity Framework,NIST,international,2.0,Voluntary best practice
+PCI-DSS,PCI DSS,PCI-SSC,international,4.0,Card data handlers
+SOC2,SOC 2 Type II,AICPA,international,2017,Service organizations
+GDPR,EU GDPR,EU,international,2018,EU data subjects
+HIPAA,HIPAA,HHS-OCR,international,2013,US healthcare
+SWIFT-CSP,SWIFT Customer Security Programme,SWIFT,international,2024,SWIFT member organizations

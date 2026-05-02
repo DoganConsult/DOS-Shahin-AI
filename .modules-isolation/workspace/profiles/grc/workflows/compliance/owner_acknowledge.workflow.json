@@ -1,0 +1,15 @@
+{
+  "id": "compliance.owner_acknowledge",
+  "module": "compliance",
+  "hook": "owner_acknowledge",
+  "version": "1.0.0",
+  "sla_hours": 48,
+  "actor_role_default": "compliance.module_lead",
+  "states": ["pending","acknowledged","escalated"],
+  "initial": "pending",
+  "transitions": [{"from":"pending","to":"acknowledged","on":"ack","actor_role":"compliance.module_lead"},{"from":"pending","to":"escalated","on":"sla_breach","actor_role":"compliance.executive_owner"}],
+  "audit_event_prefix": "compliance.workflow.owner_acknowledge",
+  "notification_targets": ["compliance.module_lead", "compliance.approver"],
+  "evidence_required_on": ["passed","published"],
+  "escalation": { "on": "sla_breach", "to": "compliance.executive_owner", "after_hours": 96 }
+}

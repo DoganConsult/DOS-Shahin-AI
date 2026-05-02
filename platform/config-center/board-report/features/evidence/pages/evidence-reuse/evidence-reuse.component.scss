@@ -1,0 +1,201 @@
+/* Evidence Reuse & Linkage Page -- uses design tokens only (no hardcoded hex/rgb) */
+
+.reuse-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  background: var(--bg-0, var(--surface-ground));
+}
+
+.reuse-body {
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.skeleton-kpi {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 12px;
+}
+
+/* -- Sections -- */
+
+.reuse-section {
+  background: var(--surface-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg, 12px);
+  overflow: hidden;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.section-title {
+  margin: 0;
+  font-size: var(--font-size-md, 16px);
+  font-weight: 700;
+  color: var(--text-body);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  i {
+    font-size: var(--font-size-md, 16px);
+    color: var(--text-muted);
+  }
+}
+
+.section-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 8px;
+  border-radius: 14px;
+  font-size: var(--font-size-sm, 13px);
+  font-weight: 700;
+  background: var(--surface-100);
+  color: var(--text-muted);
+
+  &.has-items {
+    background: var(--warning);
+    color: var(--bg-0);
+  }
+}
+
+.section-filter {
+  display: flex;
+  align-items: center;
+}
+
+:host .section-filter-dropdown {
+  min-width: 200px;
+}
+
+/* -- Table Wrapper -- */
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.action-cell {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.cell-center {
+  text-align: center;
+}
+
+/* -- Evidence link text -- */
+
+.evidence-link {
+  color: var(--primary);
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: opacity 0.15s ease;
+
+  &:hover {
+    opacity: var(--opacity-hover, 0.85);
+    text-decoration: underline;
+  }
+}
+
+/* -- Reuse Count Badge -- */
+
+.reuse-count-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 6px;
+  border-radius: var(--radius-lg);
+  font-size: var(--font-size-xs, 11px);
+  font-weight: 700;
+  background: var(--surface-100);
+  color: var(--text-muted);
+
+  &.active {
+    background: color-mix(in srgb, var(--success) 15%, transparent);
+    color: var(--success);
+  }
+}
+
+/* -- Framework & Control Chips -- */
+
+.framework-chips,
+.control-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.framework-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm, 4px);
+  font-size: var(--font-size-xs, 11px);
+  font-weight: 600;
+  background: color-mix(in srgb, var(--info) 12%, transparent);
+  color: var(--info);
+}
+
+.control-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm, 4px);
+  font-size: var(--font-size-xs, 11px);
+  font-weight: 600;
+  background: var(--surface-100);
+  color: var(--text-muted);
+  font-family: var(--font-mono, monospace);
+}
+
+.more-chip {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm, 4px);
+  font-size: var(--font-size-xs, 11px);
+  font-weight: 600;
+  background: var(--surface-200);
+  color: var(--text-muted);
+}
+
+/* -- Similarity Badge -- */
+
+.similarity-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: var(--radius-md, 6px);
+  font-size: var(--font-size-xs, 11px);
+  font-weight: 700;
+}
+
+.similarity-badge[data-severity="danger"] {
+  background: color-mix(in srgb, var(--error) 12%, transparent);
+  color: var(--error);
+}
+
+.similarity-badge[data-severity="warning"] {
+  background: color-mix(in srgb, var(--warning) 12%, transparent);
+  color: var(--warning);
+}
+
+.similarity-badge[data-severity="info"] {
+  background: color-mix(in srgb, var(--info) 12%, transparent);
+  color: var(--info);
+}

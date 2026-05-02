@@ -1,0 +1,96 @@
+/* Dogan / Shahin Keycloak login theme overrides.
+   Loaded after the parent keycloak login.css via theme.properties. */
+
+:root {
+  --dogan-primary: #0f766e;
+  --dogan-primary-dark: #115e59;
+  --dogan-accent: #1e293b;
+  --dogan-bg: #f1f5f9;
+  --dogan-fg: #0f172a;
+  --dogan-muted: #64748b;
+  --dogan-error: #b91c1c;
+  --dogan-card-bg: #ffffff;
+  --dogan-card-border: #e2e8f0;
+  --dogan-radius: 12px;
+}
+
+html, body { background: var(--dogan-bg); color: var(--dogan-fg); }
+body.login-pf, body.login-pf-page {
+  background: linear-gradient(135deg, #0f172a 0%, #115e59 100%);
+}
+
+[dir="rtl"] body { font-family: "IBM Plex Sans Arabic", "Tajawal", system-ui, sans-serif; }
+
+.dogan-card {
+  background: var(--dogan-card-bg);
+  border: 1px solid var(--dogan-card-border);
+  border-radius: var(--dogan-radius);
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.18);
+  padding: 32px;
+  max-width: 460px;
+  margin: 48px auto;
+}
+
+.dogan-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+#kc-page-title {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--dogan-accent);
+  margin: 12px 0 4px;
+}
+
+.kc-logo-text, .login-pf-brand {
+  background-image: url('../img/dogan-logo.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 56px;
+  width: 100%;
+  text-indent: -9999px;
+}
+
+.btn-primary,
+.pf-c-button.pf-m-primary,
+input[type=submit].pf-c-button {
+  background: var(--dogan-primary);
+  border-color: var(--dogan-primary);
+  color: #ffffff;
+  border-radius: 8px;
+}
+.btn-primary:hover, .pf-c-button.pf-m-primary:hover {
+  background: var(--dogan-primary-dark);
+  border-color: var(--dogan-primary-dark);
+}
+
+.form-control, input.pf-c-form-control {
+  border-radius: 8px;
+  border-color: #cbd5e1;
+}
+.form-control:focus, input.pf-c-form-control:focus {
+  border-color: var(--dogan-primary);
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.18);
+}
+
+.alert-error, .pf-c-alert.pf-m-danger {
+  border-radius: 8px;
+}
+
+#kc-info, #kc-info-wrapper {
+  color: var(--dogan-muted);
+  font-size: 13px;
+  text-align: center;
+  margin-top: 16px;
+}
+
+#kc-form-buttons { margin-top: 16px; }
+
+#kc-locale {
+  position: absolute;
+  top: 16px;
+  inset-inline-end: 16px;
+  z-index: 10;
+}

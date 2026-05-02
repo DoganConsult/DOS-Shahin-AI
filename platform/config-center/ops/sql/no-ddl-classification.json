@@ -1,0 +1,963 @@
+{
+  "generatedAt": "2026-04-26T04:43:54.813Z",
+  "totals": {
+    "has_ddl_skip": 196,
+    "seed": 75,
+    "rls_policy": 4,
+    "rbac": 1,
+    "grant": 4,
+    "function": 0,
+    "trigger": 0,
+    "data_migration": 5,
+    "repair": 9,
+    "historical_only": 7,
+    "unknown": 0
+  },
+  "files": [
+    {
+      "file": "modules/platform-core/db/public/migrations/001_ai_gateway_bootstrap.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "public",
+      "classification": "historical_only",
+      "runtimeRequired": false,
+      "bytes": 180
+    },
+    {
+      "file": "modules/platform-core/db/public/migrations/001_extracted_from_001_compliance_tables.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "public",
+      "classification": "historical_only",
+      "runtimeRequired": false,
+      "bytes": 596
+    },
+    {
+      "file": "modules/platform-core/db/public/migrations/001_extracted_from_001_evidence_tables.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "public",
+      "classification": "historical_only",
+      "runtimeRequired": false,
+      "bytes": 604
+    },
+    {
+      "file": "modules/platform-core/db/public/migrations/001_extracted_from_001_remediation_tables.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "public",
+      "classification": "historical_only",
+      "runtimeRequired": false,
+      "bytes": 595
+    },
+    {
+      "file": "modules/platform-core/db/public/migrations/001_extracted_from_001_risk_incident_tables.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "public",
+      "classification": "historical_only",
+      "runtimeRequired": false,
+      "bytes": 587
+    },
+    {
+      "file": "modules/platform-core/db/public/migrations/001_gateway_bootstrap.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "public",
+      "classification": "historical_only",
+      "runtimeRequired": false,
+      "bytes": 140
+    },
+    {
+      "file": "modules/platform-core/db/public/migrations/002_add_country_of_incorporation_to_public_tenants.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "public",
+      "classification": "repair",
+      "runtimeRequired": true,
+      "bytes": 122
+    },
+    {
+      "file": "modules/platform-core/db/public/migrations/002_service_permissions.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "public",
+      "classification": "grant",
+      "runtimeRequired": true,
+      "bytes": 1935
+    },
+    {
+      "file": "modules/platform-core/db/public/migrations/007_seed_config_definitions.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "public",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 29778
+    },
+    {
+      "file": "modules/platform-core/db/public/migrations/009a_seed_platform_admin.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "public",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 1842
+    },
+    {
+      "file": "modules/platform-core/db/public/migrations/009b_seed_douhan_consult_tenant.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "public",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 8413
+    },
+    {
+      "file": "modules/platform-core/db/public/migrations/010_seed_framework_registry.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "public",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 3669
+    },
+    {
+      "file": "modules/platform-core/db/public/migrations/012_fix_schema_permissions_and_grants.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "public",
+      "classification": "grant",
+      "runtimeRequired": true,
+      "bytes": 1257
+    },
+    {
+      "file": "modules/platform-core/db/public/migrations/013_create_dos_ai_role.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "public",
+      "classification": "rbac",
+      "runtimeRequired": true,
+      "bytes": 751
+    },
+    {
+      "file": "modules/platform-core/db/public/migrations/017_seed_onboarding_data.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "public",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 39812
+    },
+    {
+      "file": "modules/platform-core/db/public/migrations/021_allow_registered_tenant_status.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "public",
+      "classification": "repair",
+      "runtimeRequired": true,
+      "bytes": 595
+    },
+    {
+      "file": "modules/platform-core/db/public/migrations/051_seed_module_and_nav_registry.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "public",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 12075
+    },
+    {
+      "file": "modules/platform-core/db/public/migrations/20260418_0010_bootstrap_state_view_comment.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "public",
+      "classification": "historical_only",
+      "runtimeRequired": false,
+      "bytes": 281
+    },
+    {
+      "file": "modules/platform-core/db/public/migrations/20260425_0001_seed_org_pack_templates.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "public",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 22557
+    },
+    {
+      "file": "modules/platform-core/db/public/migrations/20260425_0002_rename_product_key_to_shahin_ai.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "public",
+      "classification": "data_migration",
+      "runtimeRequired": true,
+      "bytes": 4017
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/020_row_level_security.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "rls_policy",
+      "runtimeRequired": true,
+      "bytes": 4736
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/024_rls_vector_stores.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "rls_policy",
+      "runtimeRequired": true,
+      "bytes": 3401
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/035_risk_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 15957
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/036_compliance_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 15228
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/038_seed_baseline_handoff_roles_tenant.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 1697
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/108_incident_r1_1_sla_config.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 1474
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/129_ai_rls_enablement.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "rls_policy",
+      "runtimeRequired": true,
+      "bytes": 4091
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/200_layer_conflict_closure.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "repair",
+      "runtimeRequired": true,
+      "bytes": 5241
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/413_action_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4328
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/414_agrc-engine_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4400
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/415_ai_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4252
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/416_ai-governance_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4442
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/417_analytics_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4376
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/418_asset_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4347
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/419_attestation_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4470
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/420_audit_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4277
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/421_bcp_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4330
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/422_benchmarks_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4388
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/423_controls_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4322
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/424_dashboard_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4370
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/425_dashboard-editor_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4493
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/426_dora_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4436
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/427_evidence_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4340
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/428_exception_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4351
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/429_executive_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4404
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/430_fitch_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4323
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/431_governance_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4358
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/432_governance-ai_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4451
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/433_governance-os_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4460
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/434_grc-query_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4390
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/435_inbox_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4286
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/436_incident_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4398
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/437_integrations_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4436
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/438_issues_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4280
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/439_journey_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4393
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/440_knowledge_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4425
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/441_ksa-regulatory_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4573
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/442_local-knowledge_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4524
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/443_mcp_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4241
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/444_mobile_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4349
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/445_notification_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4438
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/446_onboarding_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4391
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/447_operating-cockpit_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4514
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/448_packs_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4298
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/449_platform-onboarding_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4553
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/450_playbooks_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4370
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/451_policy_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4368
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/452_portals_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4367
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/453_privacy_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4371
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/454_proactive-leadership_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4598
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/455_qiyas_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4395
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/456_records_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4356
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/457_remediation_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4409
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/458_reporting_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4370
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/459_team_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4296
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/460_training_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4412
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/461_vendor_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4399
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/462_widgets_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4328
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/463_workflow_module_config_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4330
+    },
+    {
+      "file": "modules/platform-core/db/tenant/migrations/480_douhan_consult_tenant_seed.sql",
+      "module": "platform-core",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 23631
+    },
+    {
+      "file": "modules/onboarding/db/public/migrations/003_inference_rules_seed.sql",
+      "module": "onboarding",
+      "kind": "module",
+      "scope": "public",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 8971
+    },
+    {
+      "file": "modules/onboarding/db/public/migrations/028_smart_questions_and_lookups.sql",
+      "module": "onboarding",
+      "kind": "module",
+      "scope": "public",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 135043
+    },
+    {
+      "file": "modules/onboarding/db/public/migrations/030_global_regulatory_expansion.sql",
+      "module": "onboarding",
+      "kind": "module",
+      "scope": "public",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 39027
+    },
+    {
+      "file": "modules/onboarding/db/public/migrations/031_complete_question_bank_600_plus.sql",
+      "module": "onboarding",
+      "kind": "module",
+      "scope": "public",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 74241
+    },
+    {
+      "file": "modules/onboarding/db/public/migrations/041_expand_question_bank.sql",
+      "module": "onboarding",
+      "kind": "module",
+      "scope": "public",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 42326
+    },
+    {
+      "file": "modules/onboarding/db/public/migrations/051_deprecate_public_onboarding_stage_tables.sql",
+      "module": "onboarding",
+      "kind": "module",
+      "scope": "public",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 2163
+    },
+    {
+      "file": "modules/onboarding/db/public/migrations/051a_widen_question_tier_check.sql",
+      "module": "onboarding",
+      "kind": "module",
+      "scope": "public",
+      "classification": "repair",
+      "runtimeRequired": true,
+      "bytes": 1451
+    },
+    {
+      "file": "modules/onboarding/db/public/migrations/052_onboarding_question_bank_seed.sql",
+      "module": "onboarding",
+      "kind": "module",
+      "scope": "public",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 1139
+    },
+    {
+      "file": "modules/onboarding/db/public/migrations/053_onboarding_welcome_stage_label_fix.sql",
+      "module": "onboarding",
+      "kind": "module",
+      "scope": "public",
+      "classification": "data_migration",
+      "runtimeRequired": true,
+      "bytes": 1877
+    },
+    {
+      "file": "modules/onboarding/db/public/migrations/054_backfill_legacy_onboarding_answers.sql",
+      "module": "onboarding",
+      "kind": "module",
+      "scope": "public",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 5110
+    },
+    {
+      "file": "modules/onboarding/db/public/migrations/054_normalize_question_option_labels.sql",
+      "module": "onboarding",
+      "kind": "module",
+      "scope": "public",
+      "classification": "data_migration",
+      "runtimeRequired": true,
+      "bytes": 944
+    },
+    {
+      "file": "modules/onboarding/db/public/migrations/055_session_progress_journey_aware.sql",
+      "module": "onboarding",
+      "kind": "module",
+      "scope": "public",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 9233
+    },
+    {
+      "file": "modules/onboarding/db/public/migrations/057_fix_remaining_stage_labels.sql",
+      "module": "onboarding",
+      "kind": "module",
+      "scope": "public",
+      "classification": "data_migration",
+      "runtimeRequired": true,
+      "bytes": 5005
+    },
+    {
+      "file": "modules/risk/db/tenant/migrations/106_risk_r1_nav_and_baseline.sql",
+      "module": "risk",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 6964
+    },
+    {
+      "file": "modules/risk/db/tenant/migrations/123_force_rls_everywhere.sql",
+      "module": "risk",
+      "kind": "module",
+      "scope": "tenant",
+      "classification": "rls_policy",
+      "runtimeRequired": true,
+      "bytes": 2590
+    },
+    {
+      "file": "platform/dauth/migrations/public/002_repair_stuck_sessions.sql",
+      "module": "dauth",
+      "kind": "platform",
+      "scope": "public",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 4963
+    },
+    {
+      "file": "platform/dauth/migrations/public/20260425_0001_tenants_status_widen.sql",
+      "module": "dauth",
+      "kind": "platform",
+      "scope": "public",
+      "classification": "repair",
+      "runtimeRequired": true,
+      "bytes": 2010
+    },
+    {
+      "file": "platform/dauth/migrations/public/20260425_0002_register_seed_question_bank.sql",
+      "module": "dauth",
+      "kind": "platform",
+      "scope": "public",
+      "classification": "seed",
+      "runtimeRequired": true,
+      "bytes": 3008
+    },
+    {
+      "file": "platform/dauth/migrations/public/20260425_0003_onboarding_sessions_drop_dead_columns.sql",
+      "module": "dauth",
+      "kind": "platform",
+      "scope": "public",
+      "classification": "repair",
+      "runtimeRequired": true,
+      "bytes": 2282
+    },
+    {
+      "file": "platform/dauth/migrations/public/20260425_0004_onboarding_sessions_status_check.sql",
+      "module": "dauth",
+      "kind": "platform",
+      "scope": "public",
+      "classification": "repair",
+      "runtimeRequired": true,
+      "bytes": 2950
+    },
+    {
+      "file": "platform/dauth/migrations/public/20260425_0005_tenants_id_schema_guards.sql",
+      "module": "dauth",
+      "kind": "platform",
+      "scope": "public",
+      "classification": "repair",
+      "runtimeRequired": true,
+      "bytes": 5129
+    },
+    {
+      "file": "platform/dauth/migrations/public/20260425_0006_tenants_country_of_incorporation.sql",
+      "module": "dauth",
+      "kind": "platform",
+      "scope": "public",
+      "classification": "repair",
+      "runtimeRequired": true,
+      "bytes": 887
+    },
+    {
+      "file": "platform/dos/migrations/public/20260425_0004_public_users_me_columns.sql",
+      "module": "dos",
+      "kind": "platform",
+      "scope": "public",
+      "classification": "data_migration",
+      "runtimeRequired": true,
+      "bytes": 2274
+    },
+    {
+      "file": "platform/dos/migrations/public/20260425_0009_tenant_schema_grants.sql",
+      "module": "dos",
+      "kind": "platform",
+      "scope": "public",
+      "classification": "grant",
+      "runtimeRequired": true,
+      "bytes": 4730
+    },
+    {
+      "file": "platform/dos/migrations/public/20260425_0017_platform_dos_admin_grants.sql",
+      "module": "dos",
+      "kind": "platform",
+      "scope": "public",
+      "classification": "grant",
+      "runtimeRequired": true,
+      "bytes": 5011
+    }
+  ]
+}

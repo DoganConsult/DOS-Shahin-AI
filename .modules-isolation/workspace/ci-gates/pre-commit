@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Pre-commit hook: enforce preflight-gate locally.
+# Install: ln -sf $(pwd)/.modules-isolation/workspace/ci-gates/pre-commit .git/hooks/pre-commit
+set -e
+ROOT="$(git rev-parse --show-toplevel)"
+GATE="$ROOT/.modules-isolation/workspace/ci-gates/preflight-gate.sh"
+REPORT="$ROOT/preflight-report.json"
+[ -f "$REPORT" ] || REPORT="$ROOT/.preflight/report.json"
+[ -f "$GATE" ] && bash "$GATE" "$REPORT"

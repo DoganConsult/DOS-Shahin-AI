@@ -1,0 +1,9 @@
+[{"schema":"public","tbl":"ai_activity_alerts","rows":50}, 
+ {"schema":"public","tbl":"ai_agent_registry","rows":13}, 
+ {"schema":"public","tbl":"ai_alert_rules","rows":8}, 
+ {"schema":"public","tbl":"ai_employee_kpi_snapshots","rows":145}, 
+ {"schema":"public","tbl":"ai_employee_reports","rows":171}, 
+ {"schema":"public","tbl":"ai_employee_shifts","rows":749}, 
+ {"schema":"public","tbl":"ai_impact_assessments","rows":0}, 
+ {"schema":"public","tbl":"ai_smoke_scores","rows":6}, 
+ {"schema":"public","tbl":"ai_system_registry","rows":0}]

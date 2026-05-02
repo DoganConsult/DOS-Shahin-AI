@@ -1,0 +1,11 @@
+{
+  "playbooks.title": "Playbooks",
+  "playbooks.dashboard": "لوحة Playbooks",
+  "playbooks.empty.title": "لا توجد سجلات",
+  "playbooks.empty.description": "أنشئ أول سجل playbooks للبدء.",
+  "playbooks.loading": "جاري تحميل بيانات playbooks...",
+  "playbooks.error.title": "فشل تحميل البيانات",
+  "playbooks.error.retry": "إعادة المحاولة",
+  "playbooks.create": "إنشاء جديد",
+  "playbooks.diagnostics": "التشخيصات"
+}

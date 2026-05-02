@@ -1,0 +1,153 @@
+
+> dogan-ai-os-platform-target@1.0.0 build:services /root/DOS-AIO
+> pnpm -r --sort --workspace-concurrency=1 --filter './services/*' run build
+
+Scope: 36 of 56 workspace projects
+
+> agrc-os-service@0.1.0 build /root/DOS-AIO/services/agrc-os-service
+> tsc -p tsconfig.json
+
+
+> ai-engine-service@0.1.0 build /root/DOS-AIO/services/ai-engine-service
+> tsc -p tsconfig.json && node ../../ops/scripts/fix-esm-relative-imports.mjs dist
+
+
+> ai-gateway-service@0.1.0 build /root/DOS-AIO/services/ai-gateway-service
+> tsc -p tsconfig.json
+
+
+> ai-governance-service@0.1.0 build /root/DOS-AIO/services/ai-governance-service
+> tsc -p tsconfig.json
+
+
+> analytics-reporting-service@0.1.0 build /root/DOS-AIO/services/analytics-reporting-service
+> tsc -p tsconfig.json
+
+
+> analytics-service@0.1.0 build /root/DOS-AIO/services/analytics-service
+> tsc -p tsconfig.json
+
+
+> asset-service@0.1.0 build /root/DOS-AIO/services/asset-service
+> tsc -p tsconfig.json
+
+
+> audit-service@0.1.0 build /root/DOS-AIO/services/audit-service
+> tsc -p tsconfig.json
+
+
+> auth-service@0.1.0 build /root/DOS-AIO/services/auth-service
+> tsc -p tsconfig.json
+
+
+> bcp-service@0.1.0 build /root/DOS-AIO/services/bcp-service
+> tsc -p tsconfig.json
+
+
+> compliance-controls-service@0.1.0 build /root/DOS-AIO/services/compliance-controls-service
+> tsc -p tsconfig.json
+
+
+> dashboard-widgets-service@0.1.0 build /root/DOS-AIO/services/dashboard-widgets-service
+> tsc -p tsconfig.json
+
+
+> dora-service@0.1.0 build /root/DOS-AIO/services/dora-service
+> tsc -p tsconfig.json
+
+
+> evidence-audit-reporting-service@0.1.0 build /root/DOS-AIO/services/evidence-audit-reporting-service
+> tsc -p tsconfig.json
+
+
+> executive-intelligence-service@0.1.0 build /root/DOS-AIO/services/executive-intelligence-service
+> tsc -p tsconfig.json
+
+
+> gateway@0.1.0 build /root/DOS-AIO/services/gateway
+> tsc -p tsconfig.json
+
+
+> governance-policy-service@0.1.0 build /root/DOS-AIO/services/governance-policy-service
+> tsc -p tsconfig.json
+
+
+> integrations-service@0.1.0 build /root/DOS-AIO/services/integrations-service
+> tsc -p tsconfig.json
+
+
+> mcp-gateway-service@0.1.0 build /root/DOS-AIO/services/mcp-gateway-service
+> tsc -p tsconfig.json
+
+
+> notification-inbox-service@0.1.0 build /root/DOS-AIO/services/notification-inbox-service
+> tsc -p tsconfig.json
+
+
+> notification-service@0.1.0 build /root/DOS-AIO/services/notification-service
+> tsc -p tsconfig.json && pnpm run build:copy-templates
+
+
+> notification-service@0.1.0 build:copy-templates /root/DOS-AIO/services/notification-service
+> mkdir -p dist/templates && cp -R src/templates/. dist/templates/
+
+
+> onboarding-service@0.1.0 build /root/DOS-AIO/services/onboarding-service
+> tsc -p tsconfig.json
+
+
+> platform-core-service@0.1.0 build /root/DOS-AIO/services/platform-core-service
+> tsc -p tsconfig.json
+
+
+> platform-product-service@0.1.0 build /root/DOS-AIO/services/platform-product-service
+> tsc -p tsconfig.json
+
+
+> portals-service@0.1.0 build /root/DOS-AIO/services/portals-service
+> tsc -p tsconfig.json
+
+
+> privacy-service@0.1.0 build /root/DOS-AIO/services/privacy-service
+> tsc -p tsconfig.json
+
+
+> product-shell@0.1.0 build /root/DOS-AIO/services/product-shell
+> tsc -p tsconfig.json
+
+
+> qiyas-journey-service@0.1.0 build /root/DOS-AIO/services/qiyas-journey-service
+> tsc -p tsconfig.json
+
+
+> records-service@0.1.0 build /root/DOS-AIO/services/records-service
+> tsc -p tsconfig.json
+
+
+> remediation-action-service@0.1.0 build /root/DOS-AIO/services/remediation-action-service
+> tsc -p tsconfig.json
+
+
+> risk-incident-service@0.1.0 build /root/DOS-AIO/services/risk-incident-service
+> tsc -p tsconfig.json
+
+
+> tenant-service@0.1.0 build /root/DOS-AIO/services/tenant-service
+> tsc -p tsconfig.json
+
+
+> training-service@0.1.0 build /root/DOS-AIO/services/training-service
+> tsc -p tsconfig.json
+
+
+> user-service@0.1.0 build /root/DOS-AIO/services/user-service
+> tsc -p tsconfig.json
+
+
+> vendor-service@0.1.0 build /root/DOS-AIO/services/vendor-service
+> tsc -p tsconfig.json
+
+
+> workflow-service@0.1.0 build /root/DOS-AIO/services/workflow-service
+> tsc -p tsconfig.json
+

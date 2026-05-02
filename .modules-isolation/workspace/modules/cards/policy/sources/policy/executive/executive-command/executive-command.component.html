@@ -1,0 +1,180 @@
+<div class="exc-root" [dir]="i18n.direction()">
+
+  <!-- ═══════════════ HERO HEADER ═══════════════ -->
+  <header class="exc-header">
+    <div class="exc-header-left">
+      <div class="exc-logo-ring" [ngClass]="getPostureClass()">
+        <i class="pi pi-shield"></i>
+      </div>
+      <div>
+        <h1>{{ i18n.translate('executiveCommand.title') }}</h1>
+        <p class="exc-subtitle">{{ i18n.translate('executiveCommand.subtitle') }}</p>
+      </div>
+    </div>
+    <div class="exc-header-right">
+      <a routerLink="/agrc-os" class="exc-nav-btn"><i class="pi pi-microchip-ai"></i> AGRC-OS</a>
+      <div class="exc-live-badge">
+        <span class="exc-live-dot"></span>
+        {{ i18n.translate('executiveCommand.live') }}
+      </div>
+      <span class="exc-updated">{{ lastUpdated() }}</span>
+    </div>
+  </header>
+
+  <!-- ═══════════════ TOP METRICS ROW ═══════════════ -->
+  <div class="exc-metrics-row">
+    <div class="exc-metric-card exc-accent-green">
+      <div class="exc-mc-icon"><i class="pi pi-shield"></i></div>
+      <div class="exc-mc-data">
+        <span class="exc-mc-value">{{ (kpis()?.complianceScore || kpis()?.complianceScorePercent || 0) | appNumber:'decimal':'1.0-0' }}%</span>
+        <span class="exc-mc-label">{{ i18n.translate('executiveCommand.complianceScore') }}</span>
+      </div>
+    </div>
+    <div class="exc-metric-card exc-accent-red">
+      <div class="exc-mc-icon"><i class="pi pi-exclamation-triangle"></i></div>
+      <div class="exc-mc-data">
+        <span class="exc-mc-value">{{ kpis()?.openCriticalRisks || kpis()?.criticalRisks || 0 }}</span>
+        <span class="exc-mc-label">{{ i18n.translate('executiveCommand.criticalRisks') }}</span>
+      </div>
+    </div>
+    <div class="exc-metric-card exc-accent-amber">
+      <div class="exc-mc-icon"><i class="pi pi-clock"></i></div>
+      <div class="exc-mc-data">
+        <span class="exc-mc-value">{{ kpis()?.overdueControls || 0 }}</span>
+        <span class="exc-mc-label">{{ i18n.translate('executiveCommand.overdueControls') }}</span>
+      </div>
+    </div>
+    <div class="exc-metric-card exc-accent-blue">
+      <div class="exc-mc-icon"><i class="pi pi-file"></i></div>
+      <div class="exc-mc-data">
+        <span class="exc-mc-value">{{ kpis()?.evidenceCoverage || 0 | appNumber:'decimal':'1.0-0' }}%</span>
+        <span class="exc-mc-label">{{ i18n.translate('executiveCommand.evidenceCoverage') }}</span>
+      </div>
+    </div>
+    <div class="exc-metric-card exc-accent-purple">
+      <div class="exc-mc-icon"><i class="pi pi-star"></i></div>
+      <div class="exc-mc-data">
+        <span class="exc-mc-value">{{ getMaturityLabel() }}</span>
+        <span class="exc-mc-label">{{ i18n.translate('executiveCommand.maturityLevel') }}</span>
+      </div>
+    </div>
+    <div class="exc-metric-card exc-accent-teal">
+      <div class="exc-mc-icon"><i class="pi pi-calendar"></i></div>
+      <div class="exc-mc-data">
+        <span class="exc-mc-value exc-incident-counter">{{ daysSinceIncident() }}</span>
+        <span class="exc-mc-label">{{ i18n.translate('executiveCommand.daysSinceIncident') }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ MAIN GRID ═══════════════ -->
+  <div class="exc-grid">
+
+    <!-- GRC Posture Gauge (center hero) -->
+    <section class="exc-cell exc-cell-gauge">
+      <div class="exc-card exc-card-hero">
+        <h2 class="exc-card-title">{{ i18n.translate('executiveCommand.grcPostureScore') }}</h2>
+        <div class="exc-gauge-wrap">
+          <app-echart [options]="postureGaugeOpts()" ariaLabel="GRC Posture Gauge" />
+        </div>
+        <div class="exc-gauge-footer" *ngIf="predictions()?.predictions">
+          <span class="exc-pred">
+            <i class="pi pi-arrow-up-right"></i>
+            {{ i18n.translate('executiveCommand.thirtyDayForecast') }}
+            <strong>{{ predictions().predictions.complianceScore | appNumber:'decimal':'1.0-0' }}%</strong>
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 90-day Trend Sparklines -->
+    <section class="exc-cell exc-cell-trends">
+      <div class="exc-card">
+        <h2 class="exc-card-title"><i class="pi pi-chart-line"></i> {{ i18n.translate('executiveCommand.ninetyDayTrends') }}</h2>
+        <div class="exc-chart-wrap exc-chart-tall">
+          <app-echart [options]="trendSparklineOpts()" ariaLabel="90-day compliance, risk, evidence trends" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Top 5 Risks Bubble -->
+    <section class="exc-cell exc-cell-risks">
+      <div class="exc-card">
+        <h2 class="exc-card-title"><i class="pi pi-exclamation-triangle"></i> {{ i18n.translate('executiveCommand.topRisks') }}</h2>
+        <div class="exc-chart-wrap">
+          <app-echart [options]="riskBubbleOpts()" ariaLabel="Top risks scatter plot" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Evidence Freshness Heatmap -->
+    <section class="exc-cell exc-cell-evidence">
+      <div class="exc-card">
+        <h2 class="exc-card-title"><i class="pi pi-calendar"></i> {{ i18n.translate('executiveCommand.evidenceFreshness') }}</h2>
+        <div class="exc-chart-wrap exc-chart-short">
+          <app-echart [options]="evidenceHeatmapOpts()" ariaLabel="Evidence freshness calendar heatmap" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Maturity Radar -->
+    <section class="exc-cell exc-cell-maturity">
+      <div class="exc-card">
+        <h2 class="exc-card-title"><i class="pi pi-star"></i> {{ i18n.translate('executiveCommand.maturityRadar') }}</h2>
+        <div class="exc-chart-wrap">
+          <app-echart [options]="maturityRadarOpts()" ariaLabel="Maturity radar chart" />
+        </div>
+        <div class="exc-maturity-badge" *ngIf="maturity()">
+          <span class="exc-mat-level" [attr.data-level]="maturity().level">{{ getMaturityLabel() }}</span>
+          <span class="exc-mat-score">{{ maturity().aggregate | appNumber:'decimal':'1.0-0' }}%</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Benchmark Comparison -->
+    <section class="exc-cell exc-cell-benchmark" *ngIf="benchmark()">
+      <div class="exc-card">
+        <h2 class="exc-card-title"><i class="pi pi-users"></i> {{ i18n.translate('executiveCommand.industryBenchmark') }}</h2>
+        <div class="exc-bench-items">
+          <div class="exc-bench-item" *ngIf="benchmark().compliancePercentile">
+            <span class="exc-bi-label">{{ i18n.translate('executiveCommand.compliance') }}</span>
+            <div class="exc-bi-bar"><div class="exc-bi-fill" [style.width.%]="benchmark().compliancePercentile"></div></div>
+            <span class="exc-bi-pct">{{ i18n.translate('executiveCommand.top') }} {{ 100 - (benchmark().compliancePercentile || 0) }}%</span>
+          </div>
+          <div class="exc-bench-item" *ngIf="benchmark().riskPercentile">
+            <span class="exc-bi-label">{{ i18n.translate('executiveCommand.riskMgmt') }}</span>
+            <div class="exc-bi-bar"><div class="exc-bi-fill exc-fill-amber" [style.width.%]="benchmark().riskPercentile"></div></div>
+            <span class="exc-bi-pct">{{ i18n.translate('executiveCommand.top') }} {{ 100 - (benchmark().riskPercentile || 0) }}%</span>
+          </div>
+          <div class="exc-bench-item" *ngIf="benchmark().maturityPercentile">
+            <span class="exc-bi-label">{{ i18n.translate('executiveCommand.maturity') }}</span>
+            <div class="exc-bi-bar"><div class="exc-bi-fill exc-fill-purple" [style.width.%]="benchmark().maturityPercentile"></div></div>
+            <span class="exc-bi-pct">{{ i18n.translate('executiveCommand.top') }} {{ 100 - (benchmark().maturityPercentile || 0) }}%</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AGRC-OS Autonomous Status -->
+    <section class="exc-cell exc-cell-auto">
+      <div class="exc-card exc-card-dark">
+        <h2 class="exc-card-title"><i class="pi pi-microchip-ai"></i> {{ i18n.translate('executiveCommand.autonomousSystem') }}</h2>
+        <div class="exc-auto-status">
+          <div class="exc-auto-indicator" [ngClass]="'ind-' + healthStatus()">
+            <span class="exc-auto-dot"></span>
+            <span class="exc-auto-label">{{ healthStatus() | uppercase }}</span>
+          </div>
+          <div class="exc-auto-metrics" *ngIf="metrics()">
+            <div class="exc-am"><strong>{{ metrics().cycleCount || 0 }}</strong> {{ i18n.translate('executiveCommand.cycles') }}</div>
+            <div class="exc-am"><strong>{{ metrics().eventCount || 0 }}</strong> {{ i18n.translate('executiveCommand.events') }}</div>
+            <div class="exc-am"><strong>{{ metrics().enforcementRate || 0 }}</strong> {{ i18n.translate('executiveCommand.enforcements') }}</div>
+          </div>
+        </div>
+        <a routerLink="/agrc-os" class="exc-auto-link">
+          <i class="pi pi-arrow-right"></i> {{ i18n.translate('executiveCommand.openCommandCenter') }}
+        </a>
+      </div>
+    </section>
+
+  </div>
+</div>

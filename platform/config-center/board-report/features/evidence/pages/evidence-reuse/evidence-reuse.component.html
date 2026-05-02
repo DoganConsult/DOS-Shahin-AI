@@ -1,0 +1,267 @@
+<div class="reuse-page" [attr.dir]="dir()">
+
+  <app-page-header
+    titleEn="Evidence Reuse & Linkage"
+    titleAr="إعادة الاستخدام والربط"
+    subtitleEn="Manage reusable evidence, orphaned items, and duplicate candidates"
+    subtitleAr="إدارة الأدلة القابلة لإعادة الاستخدام والأدلة اليتيمة والمكررة"
+    icon="copy"
+    [actions]="headerActions"
+    [isAr]="isAr()"
+    [dir]="dir()"
+    (actionClick)="onHeaderAction($event)" />
+
+  <!-- Loading -->
+  @if (loading()) {
+    <div class="reuse-body">
+      <div class="skeleton-kpi">
+        @for (i of [1,2,3,4]; track i) {
+          <p-skeleton height="76px" borderRadius="10px" />
+        }
+      </div>
+      <app-skeleton-loader variant="card" />
+    </div>
+  }
+
+  <!-- Error -->
+  @if (!loading() && error()) {
+    <div class="reuse-body">
+      <app-empty-state
+        variant="error"
+        [title]="isAr() ? 'فشل تحميل البيانات' : 'Failed to load data'"
+        [description]="isAr() ? 'تحقق من الاتصال وحاول مرة أخرى' : 'Check your connection and try again'"
+        [actionLabel]="isAr() ? 'إعادة المحاولة' : 'Retry'"
+        [dir]="dir()"
+        (action)="loadData()" />
+    </div>
+  }
+
+  @if (!loading() && !error()) {
+    <div class="reuse-body">
+
+      <!-- KPI Strip -->
+      <app-kpi-card-grid [cards]="kpis()" [isAr]="isAr()" />
+
+      <!-- Section 1: Reuse Map -->
+      <section class="reuse-section">
+        <div class="section-header">
+          <h2 class="section-title">
+            <i class="pi pi-copy"></i>
+            {{ isAr() ? 'خريطة إعادة الاستخدام' : 'Reuse Map' }}
+          </h2>
+          <div class="section-filter">
+            <p-dropdown [options]="frameworkOptions()" [(ngModel)]="frameworkFilter"
+              optionLabel="label" optionValue="value"
+              [placeholder]="isAr() ? 'تصفية حسب الإطار' : 'Filter by Framework'"
+              [showClear]="true" styleClass="section-filter-dropdown" />
+          </div>
+        </div>
+
+        @if (filteredReuseMap().length === 0) {
+          <app-empty-state
+            variant="default"
+            [title]="isAr() ? 'لا توجد أدلة قابلة لإعادة الاستخدام' : 'No Reusable Evidence'"
+            [description]="isAr() ? 'لم يتم العثور على أدلة مرشحة لإعادة الاستخدام' : 'No evidence candidates found for reuse'"
+            [dir]="dir()" />
+        } @else {
+          <div class="table-wrap">
+            <grc-data-table
+              [totalRecords]="filteredReuseMap().length"
+              [emptyMessage]="isAr() ? 'لا توجد أدلة قابلة لإعادة الاستخدام' : 'No reusable evidence'">
+              <p-table [value]="filteredReuseMap()" [paginator]="filteredReuseMap().length > 10"
+                [rows]="10" [rowHover]="true" styleClass="p-datatable-sm">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th pSortableColumn="title">{{ isAr() ? 'العنوان' : 'Title' }} <p-sortIcon field="title" /></th>
+                    <th>{{ isAr() ? 'النوع' : 'Type' }}</th>
+                    <th pSortableColumn="reuseCount">{{ isAr() ? 'مرات الاستخدام' : 'Reuse Count' }} <p-sortIcon field="reuseCount" /></th>
+                    <th>{{ isAr() ? 'الأطر' : 'Frameworks' }}</th>
+                    <th>{{ isAr() ? 'الضوابط' : 'Controls' }}</th>
+                    <th>{{ isAr() ? 'الحالة' : 'Status' }}</th>
+                    <th>{{ isAr() ? 'الإجراءات' : 'Actions' }}</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-item>
+                  <tr>
+                    <td>
+                      <a class="evidence-link" (click)="viewDetail(item.evidenceId)">{{ item.title }}</a>
+                    </td>
+                    <td>{{ item.type || '\u2014' }}</td>
+                    <td class="cell-center">
+                      <span class="reuse-count-badge" [class.active]="item.reuseCount > 0">
+                        {{ item.reuseCount }}
+                      </span>
+                    </td>
+                    <td>
+                      <div class="framework-chips">
+                        @for (fw of item.frameworks; track fw) {
+                          <span class="framework-chip">{{ fw }}</span>
+                        }
+                        @if (item.frameworks.length === 0) {
+                          <span>\u2014</span>
+                        }
+                      </div>
+                    </td>
+                    <td>
+                      <div class="control-chips">
+                        @for (ctrl of item.controls.slice(0, 3); track ctrl) {
+                          <span class="control-chip">{{ ctrl }}</span>
+                        }
+                        @if (item.controls.length > 3) {
+                          <span class="more-chip">+{{ item.controls.length - 3 }}</span>
+                        }
+                        @if (item.controls.length === 0) {
+                          <span>\u2014</span>
+                        }
+                      </div>
+                    </td>
+                    <td>
+                      <app-status-badge [status]="item.status" [label]="formatStatus(item.status)" />
+                    </td>
+                    <td class="action-cell">
+                      @if (!item.isReusable) {
+                        <button pButton class="p-button-sm p-button-text" icon="pi pi-copy"
+                          [pTooltip]="isAr() ? 'تعيين قابل للاستخدام' : 'Mark Reusable'"
+                          (click)="markReusable(item.evidenceId)"></button>
+                      }
+                      <button pButton class="p-button-sm p-button-text" icon="pi pi-eye"
+                        [pTooltip]="isAr() ? 'عرض التفاصيل' : 'View Detail'"
+                        (click)="viewDetail(item.evidenceId)"></button>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </grc-data-table>
+          </div>
+        }
+      </section>
+
+      <!-- Section 2: Orphan Evidence -->
+      <section class="reuse-section">
+        <div class="section-header">
+          <h2 class="section-title">
+            <i class="pi pi-exclamation-circle"></i>
+            {{ isAr() ? 'الأدلة اليتيمة' : 'Orphan Evidence' }}
+          </h2>
+          <span class="section-count" [class.has-items]="orphans().length > 0">
+            {{ orphans().length }}
+          </span>
+        </div>
+
+        @if (orphans().length === 0) {
+          <app-empty-state
+            variant="default"
+            [title]="isAr() ? 'لا توجد أدلة يتيمة' : 'No Orphan Evidence'"
+            [description]="isAr() ? 'جميع الأدلة مرتبطة بضوابط أو أطر' : 'All evidence items are linked to controls or frameworks'"
+            [dir]="dir()" />
+        } @else {
+          <div class="table-wrap">
+            <grc-data-table
+              [totalRecords]="orphans().length"
+              [emptyMessage]="isAr() ? 'لا توجد أدلة يتيمة' : 'No orphan evidence'">
+              <p-table [value]="orphans()" [paginator]="orphans().length > 10"
+                [rows]="10" [rowHover]="true" styleClass="p-datatable-sm">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th pSortableColumn="title">{{ isAr() ? 'العنوان' : 'Title' }} <p-sortIcon field="title" /></th>
+                    <th>{{ isAr() ? 'النوع' : 'Type' }}</th>
+                    <th>{{ isAr() ? 'الحالة' : 'Status' }}</th>
+                    <th>{{ isAr() ? 'المالك' : 'Owner' }}</th>
+                    <th pSortableColumn="createdAt">{{ isAr() ? 'تاريخ الإنشاء' : 'Created' }} <p-sortIcon field="createdAt" /></th>
+                    <th>{{ isAr() ? 'الإجراءات' : 'Actions' }}</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-item>
+                  <tr>
+                    <td>
+                      <a class="evidence-link" (click)="viewDetail(item.evidenceId)">{{ item.title }}</a>
+                    </td>
+                    <td>{{ item.type || '\u2014' }}</td>
+                    <td>
+                      <app-status-badge [status]="item.status" [label]="formatStatus(item.status)" />
+                    </td>
+                    <td>{{ item.owner || '\u2014' }}</td>
+                    <td>{{ item.createdAt | date:'mediumDate' }}</td>
+                    <td class="action-cell">
+                      <button pButton class="p-button-sm p-button-outlined" icon="pi pi-link"
+                        [label]="isAr() ? 'ربط' : 'Link'"
+                        (click)="linkOrphan(item.evidenceId)"></button>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </grc-data-table>
+          </div>
+        }
+      </section>
+
+      <!-- Section 3: Duplicate Candidates -->
+      <section class="reuse-section">
+        <div class="section-header">
+          <h2 class="section-title">
+            <i class="pi pi-clone"></i>
+            {{ isAr() ? 'المرشحات المكررة' : 'Duplicate Candidates' }}
+          </h2>
+          <span class="section-count" [class.has-items]="duplicates().length > 0">
+            {{ duplicates().length }}
+          </span>
+        </div>
+
+        @if (duplicates().length === 0) {
+          <app-empty-state
+            variant="default"
+            [title]="isAr() ? 'لا توجد مرشحات مكررة' : 'No Duplicate Candidates'"
+            [description]="isAr() ? 'لم يتم اكتشاف أي تكرارات محتملة' : 'No potential duplicates have been detected'"
+            [dir]="dir()" />
+        } @else {
+          <div class="table-wrap">
+            <grc-data-table
+              [totalRecords]="duplicates().length"
+              [emptyMessage]="isAr() ? 'لا توجد مرشحات مكررة' : 'No duplicate candidates'">
+              <p-table [value]="duplicates()" [paginator]="duplicates().length > 10"
+                [rows]="10" [rowHover]="true" styleClass="p-datatable-sm">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th>{{ isAr() ? 'العنوان أ' : 'Evidence A' }}</th>
+                    <th>{{ isAr() ? 'العنوان ب' : 'Evidence B' }}</th>
+                    <th pSortableColumn="similarity">{{ isAr() ? 'نسبة التشابه' : 'Similarity' }} <p-sortIcon field="similarity" /></th>
+                    <th>{{ isAr() ? 'طريقة الكشف' : 'Detection' }}</th>
+                    <th>{{ isAr() ? 'الإجراءات' : 'Actions' }}</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-item>
+                  <tr>
+                    <td>
+                      <a class="evidence-link" (click)="viewDetail(item.evidenceIdA)">{{ item.titleA }}</a>
+                    </td>
+                    <td>
+                      <a class="evidence-link" (click)="viewDetail(item.evidenceIdB)">{{ item.titleB }}</a>
+                    </td>
+                    <td class="cell-center">
+                      <span class="similarity-badge" [attr.data-severity]="similaritySeverity(item.similarity)">
+                        {{ formatSimilarity(item.similarity) }}
+                      </span>
+                    </td>
+                    <td>{{ item.detectionMethod || '\u2014' }}</td>
+                    <td class="action-cell">
+                      <button pButton class="p-button-sm p-button-text p-button-warning" icon="pi pi-arrow-right-arrow-left"
+                        [pTooltip]="isAr() ? 'دمج' : 'Merge'"
+                        (click)="mergeDuplicate(item)"></button>
+                      <button pButton class="p-button-sm p-button-text p-button-secondary" icon="pi pi-times"
+                        [pTooltip]="isAr() ? 'رفض' : 'Dismiss'"
+                        (click)="dismissDuplicate(item)"></button>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </grc-data-table>
+          </div>
+        }
+      </section>
+
+    </div>
+  }
+
+  <p-confirmDialog />
+  <p-toast />
+</div>

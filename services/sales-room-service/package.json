@@ -1,0 +1,37 @@
+{
+  "name": "@dos/sales-room-service",
+  "version": "0.1.0",
+  "description": "DOS Platform — Sales Room Service (digital sales room: asset library, per-prospect rooms, signed URLs, AI ingestion, engagement analytics)",
+  "private": true,
+  "main": "dist/server.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/server.js",
+    "clean": "rm -rf dist",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@dos/contracts": "workspace:*",
+    "@dos/dauth-shared": "workspace:*",
+    "@dos/db": "workspace:*",
+    "@dos/event-backbone": "workspace:*",
+    "@dos/module-sdk": "workspace:*",
+    "@dos/platform-core": "workspace:*",
+    "@dos/runtime-config": "workspace:*",
+    "@dos/service-bootstrap": "workspace:*",
+    "@dos/service-client": "workspace:*",
+    "@dos/types": "workspace:*",
+    "busboy": "^1.6.0",
+    "express": "^4.22.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@types/busboy": "^1.5.4",
+    "@types/express": "^4.17.21",
+    "@types/node": "^25.6.0",
+    "@types/supertest": "^6.0.2",
+    "supertest": "^6.3.4",
+    "typescript": "^5.7.0",
+    "vitest": "^2.1.0"
+  }
+}

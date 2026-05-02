@@ -1,0 +1,96 @@
+{
+  "$schema": "https://dos-platform.local/schemas/ui-disposition.v1.json",
+  "version": "1.0.0",
+  "generatedAt": "2026-05-01",
+  "phase": "B0.2 UI-OS Consolidation",
+  "canonicalLocation": "platform/ui-system/dos-{design-tokens,ui-contracts,ui-system}",
+  "dispositionCodes": {
+    "promote": "Reusable primitive — moved to or recreated in @dos/ui-system.",
+    "keep-in-place": "Domain-specific or module-scoped. Stays where it is.",
+    "deprecate": "Duplicate of a UI-OS primitive. Existing call sites migrate at next touch.",
+    "deprecate-with-extraction": "Duplicate with a useful sub-pattern (e.g. i18n binding) — UI-OS picks up the reusable bit; this file is then deprecated.",
+    "extract-later": "Promotion candidate but not in this commit-window.",
+    "frozen": "Legacy file deliberately excluded from build. No edits unless ownership changes.",
+    "product-composition": "Allowed product-side composition (not a generic UI primitive)."
+  },
+  "components": [
+    { "name": "DosAppShell",            "path": "platform/ui-system/dos-ui-system/src/shell/app-shell.component.ts",         "owner": "@dos/ui-system", "category": "shell",     "disposition": "promote" },
+    { "name": "DosWorkspaceHeader",     "path": "platform/ui-system/dos-ui-system/src/shell/workspace-header.component.ts",  "owner": "@dos/ui-system", "category": "shell",     "disposition": "promote" },
+    { "name": "DosDesktopSidebar",      "path": "platform/ui-system/dos-ui-system/src/shell/desktop-sidebar.component.ts",   "owner": "@dos/ui-system", "category": "shell",     "disposition": "promote" },
+    { "name": "DosMobileBottomNav",     "path": "platform/ui-system/dos-ui-system/src/shell/mobile-bottom-nav.component.ts", "owner": "@dos/ui-system", "category": "shell",     "disposition": "promote" },
+    { "name": "DosMobileDrawer",        "path": "platform/ui-system/dos-ui-system/src/shell/mobile-drawer.component.ts",     "owner": "@dos/ui-system", "category": "shell",     "disposition": "promote" },
+    { "name": "DosBottomSheet",         "path": "platform/ui-system/dos-ui-system/src/components/bottom-sheet.component.ts", "owner": "@dos/ui-system", "category": "overlay",   "disposition": "promote" },
+    { "name": "DosAccountMenu",         "path": "platform/ui-system/dos-ui-system/src/components/account-menu.component.ts", "owner": "@dos/ui-system", "category": "overlay",   "disposition": "promote" },
+    { "name": "DosSideDrawer",          "path": "platform/ui-system/dos-ui-system/src/components/side-drawer.component.ts",  "owner": "@dos/ui-system", "category": "overlay",   "disposition": "promote" },
+    { "name": "DosDesktopDialog",       "path": "platform/ui-system/dos-ui-system/src/components/desktop-dialog.component.ts","owner": "@dos/ui-system","category": "overlay",   "disposition": "promote" },
+    { "name": "DosPageHeader",          "path": "platform/ui-system/dos-ui-system/src/components/page-header.component.ts",  "owner": "@dos/ui-system", "category": "page",      "disposition": "promote" },
+    { "name": "DosResponsiveGrid",      "path": "platform/ui-system/dos-ui-system/src/layout/responsive-grid.component.ts",  "owner": "@dos/ui-system", "category": "layout",    "disposition": "promote" },
+    { "name": "DosTabs",                "path": "platform/ui-system/dos-ui-system/src/components/tabs.component.ts",         "owner": "@dos/ui-system", "category": "page",      "disposition": "promote" },
+    { "name": "DosAdaptiveCommandBar",  "path": "platform/ui-system/dos-ui-system/src/components/adaptive-command-bar.component.ts","owner":"@dos/ui-system","category":"page","disposition":"promote" },
+    { "name": "DosMetricCard",          "path": "platform/ui-system/dos-ui-system/src/components/metric-card.component.ts",  "owner": "@dos/ui-system", "category": "card",      "disposition": "promote" },
+    { "name": "DosServiceCard",         "path": "platform/ui-system/dos-ui-system/src/components/service-card.component.ts", "owner": "@dos/ui-system", "category": "card",      "disposition": "promote" },
+    { "name": "DosChallengeCard",       "path": "platform/ui-system/dos-ui-system/src/components/challenge-card.component.ts","owner":"@dos/ui-system","category":"card","disposition":"promote" },
+    { "name": "DosStatusBanner",        "path": "platform/ui-system/dos-ui-system/src/components/status-banner.component.ts","owner": "@dos/ui-system", "category": "state",     "disposition": "promote" },
+    { "name": "DosEmptyState",          "path": "platform/ui-system/dos-ui-system/src/components/empty-state.component.ts",  "owner": "@dos/ui-system", "category": "state",     "disposition": "promote" },
+    { "name": "DosLoadingState",        "path": "platform/ui-system/dos-ui-system/src/components/loading-state.component.ts","owner": "@dos/ui-system", "category": "state",     "disposition": "promote" },
+    { "name": "DosAiAssistantFab",      "path": "platform/ui-system/dos-ui-system/src/components/ai-assistant-fab.component.ts","owner":"@dos/ui-system","category":"overlay","disposition":"promote" },
+    { "name": "DosNavItem",             "path": "platform/ui-system/dos-ui-system/src/components/nav-item.component.ts",     "owner": "@dos/ui-system", "category": "nav",       "disposition": "promote", "addedInPhase": "B0.2" },
+    { "name": "DosNavSection",          "path": "platform/ui-system/dos-ui-system/src/components/nav-section.component.ts",  "owner": "@dos/ui-system", "category": "nav",       "disposition": "promote", "addedInPhase": "B0.2" },
+    { "name": "DosWorkspaceNav",        "path": "platform/ui-system/dos-ui-system/src/components/workspace-nav.component.ts","owner": "@dos/ui-system", "category": "nav",       "disposition": "promote", "addedInPhase": "B0.2" },
+
+    { "name": "PageShellComponent",     "path": "platform/config-center/shared/components/page-chrome/page-shell.component.ts",     "owner": "platform/config-center/shared", "category": "shell",  "disposition": "deprecate", "replacedBy": "DosAppShell", "reason": "Imports @app/layout/app-shell (Path A drag — 32-module COMPONENT_MAP)." },
+    { "name": "PageHeaderComponent",    "path": "platform/config-center/shared/components/page-chrome/page-header.component.ts",    "owner": "platform/config-center/shared", "category": "page",   "disposition": "deprecate", "replacedBy": "DosPageHeader", "reason": "Duplicate of canonical DosPageHeader." },
+    { "name": "EmptyStateComponent",    "path": "platform/config-center/shared/components/guided-interaction/feedback/empty-state.component.ts","owner":"platform/config-center/shared","category":"state","disposition":"deprecate-with-extraction","replacedBy":"DosEmptyState","reason":"Duplicate; depends on I18nService — extract i18n binding into DosEmptyState input."},
+    { "name": "EntityCardComponent",    "path": "platform/config-center/shared/components/entity/entity-card.component.ts",         "owner": "platform/config-center/shared", "category": "card",   "disposition": "extract-later", "promotionTarget": "DosEntityCard", "reason": "Clean primitive (no drag); promote in next round." },
+    { "name": "GrcSectionCardComponent","path": "platform/config-center/shared/components/entity/grc-section-card.component.ts",    "owner": "platform/config-center/shared", "category": "card",   "disposition": "extract-later", "promotionTarget": "DosSectionCard", "reason": "Clean primitive; rename candidate." },
+    { "name": "KpiCardGridComponent",   "path": "platform/config-center/shared/components/dashboard/kpi-card-grid.component.ts",    "owner": "platform/config-center/shared", "category": "layout", "disposition": "extract-later", "reason": "DosResponsiveGrid + DosMetricCard cover the pattern; deprecate after usage audit." },
+    { "name": "ModuleMastheadEtAl",     "path": "platform/config-center/shared/components/module-chrome/**",                        "owner": "platform/config-center/shared", "category": "domain", "disposition": "keep-in-place" },
+    { "name": "SubscriptionUsageCard",  "path": "platform/config-center/shared/components/messaging/subscription-usage-card.component.ts","owner":"platform/config-center/shared","category":"domain","disposition":"keep-in-place" },
+    { "name": "HealthStrip",            "path": "platform/config-center/shared/components/status-indicators/health-strip.component.ts","owner":"platform/config-center/shared","category":"domain","disposition":"keep-in-place" },
+    { "name": "AiBadge",                "path": "platform/config-center/shared/components/status-indicators/badges/ai-badge.component.ts","owner":"platform/config-center/shared","category":"domain","disposition":"keep-in-place" },
+
+    { "name": "DynamicDashboardHost",   "path": "platform/config-center/shared/dynamic-ui/components/dynamic-dashboard-host.component.ts","owner":"platform/config-center/shared/dynamic-ui","category":"runtime","disposition":"keep-in-place","note":"B0.3 work — Dynamic UI service .skipped." },
+    { "name": "DynamicPageHost",        "path": "platform/config-center/shared/dynamic-ui/components/dynamic-page-host.component.ts",     "owner":"platform/config-center/shared/dynamic-ui","category":"runtime","disposition":"keep-in-place","note":"B0.3 work." },
+
+    { "name": "ShellHostComponent",      "path": "platform/core/platform/shell/shell-host.component.ts",                  "owner":"platform/core","category":"shell","disposition":"frozen","reason":"COMPONENT_MAP transitive drag = 32 modules. Defer to B0.3." },
+    { "name": "DynamicCommandPalette",   "path": "platform/core/platform/shell/dynamic-command-palette.component.ts",     "owner":"platform/core","category":"shell","disposition":"frozen" },
+    { "name": "DynamicPageContextBar",   "path": "platform/core/platform/shell/dynamic-page-context-bar.component.ts",    "owner":"platform/core","category":"shell","disposition":"frozen" },
+
+    { "name": "LegacyAppShell",  "path": "products/shahin-ai/app/src/app/layout/app-shell.component.ts",  "owner": "shahin-ai", "category": "shell", "disposition": "frozen", "reason": "Excluded from build via tsconfig.app.json. Drag chain to primeng/i18n." },
+    { "name": "LegacyAppTopbar", "path": "products/shahin-ai/app/src/app/layout/app-topbar.component.ts", "owner": "shahin-ai", "category": "shell", "disposition": "frozen" },
+    { "name": "LegacyAppSidebar","path": "products/shahin-ai/app/src/app/layout/app-sidebar.component.ts","owner": "shahin-ai", "category": "shell", "disposition": "frozen" },
+
+    { "name": "WorkspaceShellComponent",      "path": "products/shahin-ai/app/src/app/shell/workspace-shell.component.ts",      "owner": "shahin-ai", "category": "product-composition", "disposition": "product-composition", "consumes": ["DosAppShell","DosWorkspaceHeader","DosDesktopSidebar","DosWorkspaceNav","DosMobileBottomNav","DosBottomSheet","DosAccountMenu"] },
+    { "name": "WorkspaceNavigationAdapter",  "path": "products/shahin-ai/app/src/app/shell/workspace-navigation.adapter.ts",   "owner": "shahin-ai", "category": "product-composition", "disposition": "product-composition", "consumes": ["DosNavGroup","DosNavItem","DosShellNavConfig"] },
+    { "name": "WorkspaceAccessService",      "path": "products/shahin-ai/app/src/app/shell/workspace-access.service.ts",       "owner": "shahin-ai", "category": "product-stub",        "disposition": "product-composition", "swapTargetWhenAvailable": "platform/core/dauth/access/access.store.ts" },
+    { "name": "LocaleService",                "path": "products/shahin-ai/app/src/app/shell/locale.service.ts",                "owner": "shahin-ai", "category": "product-composition", "disposition": "product-composition" },
+    { "name": "tenantAdminGuard",             "path": "products/shahin-ai/app/src/app/shell/tenant-admin.guard.ts",            "owner": "shahin-ai", "category": "product-composition", "disposition": "product-composition" }
+  ],
+  "outstandingItems": [
+    {
+      "id": "promote-entity-cards",
+      "phase": "B0.2.x",
+      "description": "Promote entity-card + grc-section-card from platform/config-center/shared/components/entity/ to @dos/ui-system as DosEntityCard / DosSectionCard."
+    },
+    {
+      "id": "deprecate-call-sites",
+      "phase": "ongoing",
+      "description": "Replace app-page-shell / app-page-header / app-empty-state call sites with Dos* equivalents incrementally as their files are touched."
+    },
+    {
+      "id": "refactor-component-map",
+      "phase": "B0.3",
+      "description": "Refactor COMPONENT_MAP (32-module registry) into a deferrable singleton so shell-host.component.ts can be unfrozen in landing-only builds."
+    },
+    {
+      "id": "unskip-dynamic-ui-service",
+      "phase": "B0.3",
+      "description": "Un-skip services/.dynamic-ui-service.skipped/. Requires @dos/dynamic-ui-platform workspace package + service deployment."
+    },
+    {
+      "id": "triage-modules-packages",
+      "phase": "separate",
+      "description": "Decide whether the remaining ~22 packages under modules/packages/ (dos-platform-core, dos-types, dos-contracts, etc.) should also move to platform/. Out of B0.2 scope."
+    }
+  ]
+}

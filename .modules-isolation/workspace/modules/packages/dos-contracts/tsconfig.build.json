@@ -1,0 +1,39 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "strict": true,
+    "noEmit": false,
+    "composite": true,
+    "declaration": true,
+    "declarationMap": false,
+    "sourceMap": true,
+    "tsBuildInfoFile": "./dist/.tsbuildinfo",
+    "baseUrl": ".",
+    "paths": {
+      "@dos/types": ["../dos-types/dist/index"],
+      "@dos/types/*": ["../dos-types/dist/*"],
+      "@dos/platform-core": ["../dos-platform-core/dist/index"],
+      "@dos/platform-core/*": ["../dos-platform-core/dist/*"],
+      "@dos/module-sdk": ["../dos-module-sdk/dist/index"],
+      "@dos/module-sdk/*": ["../dos-module-sdk/dist/*"]
+    }
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "**/__tests__/**",
+    "src/platform/contract-auto-discovery.ts",
+    "src/platform/contract-registry.ts",
+    "src/platform/graph-backend.ts",
+    "src/platform/hierarchy-validator.ts",
+    "src/platform/registration-drift-validator.ts",
+    "src/platform/shadow-parity.ts"
+  ]
+}

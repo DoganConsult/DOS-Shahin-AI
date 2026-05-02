@@ -1,0 +1,307 @@
+<div class="ev-packages-page" [attr.dir]="dir()">
+  <p-toast />
+
+  <!-- Page Header -->
+  <app-page-header
+    titleEn="Packages & Exports"
+    titleAr="الحزم والتصدير"
+    subtitleEn="Create, manage, and export audit-ready evidence packages"
+    subtitleAr="إنشاء وإدارة وتصدير حزم الأدلة الجاهزة للتدقيق"
+    icon="box"
+    [breadcrumbs]="['Evidence', isAr() ? 'الحزم والتصدير' : 'Packages & Exports']"
+    [actions]="headerActions"
+    [isAr]="isAr()"
+    [dir]="dir()"
+    (actionClick)="onHeaderAction($event)" />
+
+  <!-- Loading skeleton -->
+  @if (loading()) {
+    <div class="page-body">
+      <div class="skeleton-kpi">
+        @for (i of [1,2,3,4]; track i) {
+          <p-skeleton height="76px" borderRadius="10px" />
+        }
+      </div>
+      <app-skeleton-loader [rows]="6" />
+    </div>
+  }
+
+  @if (!loading()) {
+    <div class="page-body">
+
+      <!-- KPI Strip -->
+      <app-kpi-card-grid [cards]="kpis()" [isAr]="isAr()" />
+
+      <!-- Filter Bar -->
+      <div class="filter-bar">
+        <p-dropdown
+          [options]="statusDropdownOptions()"
+          [ngModel]="filterStatus()"
+          (ngModelChange)="filterStatus.set($event); onFilterChange()"
+          [placeholder]="isAr() ? 'الحالة' : 'Status'"
+          [showClear]="true"
+          styleClass="filter-dropdown">
+        </p-dropdown>
+        <p-dropdown
+          [options]="typeDropdownOptions()"
+          [ngModel]="filterType()"
+          (ngModelChange)="filterType.set($event); onFilterChange()"
+          [placeholder]="isAr() ? 'نوع الحزمة' : 'Package Type'"
+          [showClear]="true"
+          styleClass="filter-dropdown">
+        </p-dropdown>
+        <span class="count-badge">{{ totalCount() }} {{ isAr() ? 'حزمة' : 'packages' }}</span>
+      </div>
+
+      <!-- Empty State -->
+      @if (packages().length === 0) {
+        <app-empty-state
+          [title]="isAr() ? 'لا توجد حزم' : 'No Packages'"
+          [description]="isAr() ? 'أنشئ حزمة أدلة جديدة للبدء' : 'Create a new evidence package to get started'"
+          [actionLabel]="isAr() ? 'إنشاء حزمة' : 'Create Package'"
+          [dir]="dir()"
+          (action)="openCreateDialog()" />
+      }
+
+      <!-- Package Table -->
+      @if (packages().length > 0) {
+        <p-card>
+          <grc-data-table
+            [totalRecords]="packages().length"
+            [emptyMessage]="isAr() ? 'لا توجد حزم مطابقة للفلاتر' : 'No packages match the current filters'">
+            <p-table
+              aria-label="Evidence packages table"
+              [value]="packages()"
+              [paginator]="true"
+              [rows]="15"
+              [rowHover]="true"
+              [showCurrentPageReport]="true"
+              [currentPageReportTemplate]="isAr() ? 'عرض {first} إلى {last} من {totalRecords}' : 'Showing {first} to {last} of {totalRecords}'"
+              styleClass="p-datatable-sm p-datatable-striped">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>{{ isAr() ? 'الرمز' : 'Code' }}</th>
+                  <th>{{ isAr() ? 'الاسم' : 'Name' }}</th>
+                  <th>{{ isAr() ? 'النوع' : 'Type' }}</th>
+                  <th>{{ isAr() ? 'الإطار' : 'Framework' }}</th>
+                  <th>{{ isAr() ? 'الحالة' : 'Status' }}</th>
+                  <th>{{ isAr() ? 'العناصر' : 'Items' }}</th>
+                  <th>{{ isAr() ? 'تاريخ الإنشاء' : 'Created' }}</th>
+                  <th>{{ isAr() ? 'الإجراءات' : 'Actions' }}</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-pkg>
+                <tr class="clickable-row" (click)="onRowClick(pkg)">
+                  <td class="code-cell">{{ pkg.package_code }}</td>
+                  <td class="name-cell">{{ pkg.name }}</td>
+                  <td>
+                    <span class="type-badge" [attr.data-type]="pkg.package_type">{{ formatType(pkg.package_type) }}</span>
+                  </td>
+                  <td>{{ pkg.framework || '\u2014' }}</td>
+                  <td>
+                    <app-status-badge [status]="pkg.status" />
+                  </td>
+                  <td class="count-cell">{{ pkg.item_count }}</td>
+                  <td>{{ pkg.created_at | date:'mediumDate' }}</td>
+                  <td class="actions-cell" (click)="$event.stopPropagation()">
+                    <button pButton icon="pi pi-eye" class="p-button-text p-button-sm"
+                      [pTooltip]="isAr() ? 'عرض' : 'View'"
+                      (click)="onRowClick(pkg)"></button>
+                    <button pButton icon="pi pi-download" class="p-button-text p-button-sm p-button-success"
+                      [pTooltip]="isAr() ? 'تصدير' : 'Export'"
+                      (click)="onExportPackage(pkg)"></button>
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </grc-data-table>
+        </p-card>
+      }
+    </div>
+  }
+
+  <!-- Create Package Dialog -->
+  <p-dialog
+    [header]="isAr() ? 'إنشاء حزمة جديدة' : 'Create New Package'"
+    [visible]="showCreateDialog()"
+    (visibleChange)="showCreateDialog.set($event)"
+    [modal]="true"
+    [style]="{ width: '560px' }"
+    [draggable]="false"
+    [resizable]="false">
+    <div class="create-form">
+      <div class="form-field">
+        <grc-form-field [label]="isAr() ? 'الاسم' : 'Name'" [required]="true">
+          <input pInputText
+            [value]="createForm().name"
+            (input)="updateForm('name', $any($event.target).value)"
+            [placeholder]="isAr() ? 'اسم الحزمة' : 'Package name'" />
+        </grc-form-field>
+      </div>
+      <div class="form-field">
+        <label>{{ isAr() ? 'الوصف' : 'Description' }}</label>
+        <textarea pInputTextarea
+          [value]="createForm().description"
+          (input)="updateForm('description', $any($event.target).value)"
+          [placeholder]="isAr() ? 'وصف الحزمة' : 'Package description'"
+          rows="3">
+        </textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-field half">
+          <label>{{ isAr() ? 'النوع' : 'Package Type' }}</label>
+          <p-dropdown
+            [options]="typeDropdownOptions()"
+            [ngModel]="createForm().packageType"
+            (ngModelChange)="updateForm('packageType', $event)"
+            styleClass="w-full">
+          </p-dropdown>
+        </div>
+        <div class="form-field half">
+          <label>{{ isAr() ? 'الإطار' : 'Framework' }}</label>
+          <p-dropdown
+            [options]="frameworkOptions()"
+            [ngModel]="createForm().framework"
+            (ngModelChange)="updateForm('framework', $event)"
+            [placeholder]="isAr() ? 'اختياري' : 'Optional'"
+            [showClear]="true"
+            styleClass="w-full">
+          </p-dropdown>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-field half">
+          <label>{{ isAr() ? 'تاريخ البداية' : 'Scope Start' }}</label>
+          <p-calendar
+            [ngModel]="createForm().scopeStartDate"
+            (ngModelChange)="updateForm('scopeStartDate', $event)"
+            [showIcon]="true"
+            dateFormat="yy-mm-dd"
+            [placeholder]="isAr() ? 'من تاريخ' : 'Start date'"
+            styleClass="w-full">
+          </p-calendar>
+        </div>
+        <div class="form-field half">
+          <label>{{ isAr() ? 'تاريخ النهاية' : 'Scope End' }}</label>
+          <p-calendar
+            [ngModel]="createForm().scopeEndDate"
+            (ngModelChange)="updateForm('scopeEndDate', $event)"
+            [showIcon]="true"
+            dateFormat="yy-mm-dd"
+            [placeholder]="isAr() ? 'إلى تاريخ' : 'End date'"
+            styleClass="w-full">
+          </p-calendar>
+        </div>
+      </div>
+    </div>
+    <ng-template pTemplate="footer">
+      <button pButton
+        [label]="isAr() ? 'إلغاء' : 'Cancel'"
+        icon="pi pi-times"
+        class="p-button-text"
+        (click)="showCreateDialog.set(false)">
+      </button>
+      <button pButton
+        [label]="isAr() ? 'إنشاء' : 'Create'"
+        icon="pi pi-check"
+        [loading]="creating()"
+        (click)="onCreatePackage()">
+      </button>
+    </ng-template>
+  </p-dialog>
+
+  <!-- Package Detail Drawer (right sidebar) -->
+  <p-sidebar
+    [visible]="showDrawer()"
+    (visibleChange)="showDrawer.set($event)"
+    position="right"
+    [style]="{ width: '520px' }"
+    [modal]="true">
+    <ng-template pTemplate="header">
+      <span class="drawer-title">{{ drawerDetail()?.name || (isAr() ? 'تفاصيل الحزمة' : 'Package Detail') }}</span>
+    </ng-template>
+
+    @if (drawerLoading()) {
+      <app-skeleton-loader [rows]="5" />
+    }
+
+    @if (!drawerLoading() && drawerDetail(); as detail) {
+      <div class="drawer-content">
+        <!-- Package info -->
+        <div class="drawer-meta">
+          <div class="meta-row">
+            <span class="meta-label">{{ isAr() ? 'النوع' : 'Type' }}</span>
+            <span class="type-badge" [attr.data-type]="detail.package_type">{{ formatType(detail.package_type) }}</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-label">{{ isAr() ? 'الحالة' : 'Status' }}</span>
+            <app-status-badge [status]="detail.status" />
+          </div>
+          <div class="meta-row">
+            <span class="meta-label">{{ isAr() ? 'الإطار' : 'Framework' }}</span>
+            <span>{{ detail.framework || '\u2014' }}</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-label">{{ isAr() ? 'تاريخ الإنشاء' : 'Created' }}</span>
+            <span>{{ detail.created_at | date:'medium' }}</span>
+          </div>
+          @if (detail.description) {
+            <div class="meta-desc">{{ detail.description }}</div>
+          }
+        </div>
+
+        <!-- Items list -->
+        <div class="drawer-section">
+          <h3 class="section-title">
+            {{ isAr() ? 'العناصر' : 'Items' }}
+            <span class="item-count-badge">{{ detail.items.length }}</span>
+          </h3>
+
+          @if (detail.items.length === 0) {
+            <div class="drawer-empty">{{ isAr() ? 'لا توجد عناصر في هذه الحزمة' : 'No items in this package' }}</div>
+          }
+
+          @for (item of detail.items; track item.id) {
+            <div class="drawer-item">
+              <div class="item-info">
+                <span class="item-title">{{ item.title || item.evidence_id }}</span>
+                <span class="item-type">{{ item.type }}</span>
+              </div>
+              @if (detail.status === 'draft') {
+                <button pButton icon="pi pi-times" class="p-button-text p-button-sm p-button-danger"
+                  [pTooltip]="isAr() ? 'إزالة' : 'Remove'"
+                  (click)="onRemoveItem(item)"></button>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Actions -->
+        <div class="drawer-actions">
+          @if (detail.status === 'draft') {
+            <button pButton
+              [label]="isAr() ? 'تأكيد الحزمة' : 'Finalize Package'"
+              icon="pi pi-check-circle"
+              class="p-button-success"
+              (click)="onFinalizePackage()">
+            </button>
+          }
+          <div class="export-row">
+            <p-dropdown
+              [options]="exportFormatOptions"
+              [ngModel]="selectedExportFormat()"
+              (ngModelChange)="selectedExportFormat.set($event)"
+              styleClass="export-format-dropdown">
+            </p-dropdown>
+            <button pButton
+              [label]="isAr() ? 'تصدير' : 'Export'"
+              icon="pi pi-download"
+              class="p-button-outlined"
+              (click)="onExportPackage()">
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+  </p-sidebar>
+</div>

@@ -1,0 +1,147 @@
+{
+  "generated_at": "2026-04-29T21:13:38.524011Z",
+  "db": "shahin_grc",
+  "pm2": {
+    "total": 22,
+    "online": 21,
+    "critical_for_ai": [
+      {
+        "pid": 1824324,
+        "name": "auth-service",
+        "status": "online",
+        "restarts": 5,
+        "unstable_restarts": 0,
+        "uptime_s": 12578,
+        "memory_mb": 64.4
+      },
+      {
+        "pid": 1754220,
+        "name": "langfuse",
+        "status": "online",
+        "restarts": 0,
+        "unstable_restarts": 0,
+        "uptime_s": 14763,
+        "memory_mb": 226.9
+      },
+      {
+        "pid": 2298656,
+        "name": "ai-gateway-service",
+        "status": "online",
+        "restarts": 1,
+        "unstable_restarts": 0,
+        "uptime_s": 3674,
+        "memory_mb": 71.9
+      },
+      {
+        "pid": 2210248,
+        "name": "ai-governance-service",
+        "status": "online",
+        "restarts": 2,
+        "unstable_restarts": 0,
+        "uptime_s": 6397,
+        "memory_mb": 68.9
+      },
+      {
+        "pid": 2331576,
+        "name": "gateway",
+        "status": "online",
+        "restarts": 7,
+        "unstable_restarts": 0,
+        "uptime_s": 2744,
+        "memory_mb": 70.4
+      },
+      {
+        "pid": 2333569,
+        "name": "gateway",
+        "status": "online",
+        "restarts": 7,
+        "unstable_restarts": 0,
+        "uptime_s": 2683,
+        "memory_mb": 68.6
+      },
+      {
+        "pid": 2335716,
+        "name": "tenant-service",
+        "status": "online",
+        "restarts": 4,
+        "unstable_restarts": 0,
+        "uptime_s": 2621,
+        "memory_mb": 71.4
+      },
+      {
+        "pid": 2390713,
+        "name": "ai-engine-service",
+        "status": "online",
+        "restarts": 0,
+        "unstable_restarts": 0,
+        "uptime_s": 1719,
+        "memory_mb": 184.2
+      },
+      {
+        "pid": 2407690,
+        "name": "ai-temporal-worker",
+        "status": "online",
+        "restarts": 0,
+        "unstable_restarts": 0,
+        "uptime_s": 1332,
+        "memory_mb": 175.9
+      },
+      {
+        "pid": 2412238,
+        "name": "ai-temporal-worker-2",
+        "status": "online",
+        "restarts": 0,
+        "unstable_restarts": 0,
+        "uptime_s": 1199,
+        "memory_mb": 175.9
+      }
+    ]
+  },
+  "public_ai_tables": {
+    "ai_activity_alerts": 50,
+    "ai_agent_registry": 13,
+    "ai_alert_rules": 8,
+    "ai_employee_kpi_snapshots": 145,
+    "ai_employee_reports": 171,
+    "ai_employee_shifts": 749,
+    "ai_impact_assessments": 0,
+    "ai_smoke_scores": 6,
+    "ai_system_registry": 0
+  },
+  "tenant_ai_tables_total": {
+    "ai_agent_executions": 79,
+    "ai_context_sources": 112,
+    "ai_event_producer_cursors": 20,
+    "ai_governance_policies": 20,
+    "ai_kill_switches": 65
+  },
+  "tenant_row_totals": {
+    "tenant_2ba4b5323361413cac6c9c992f66bec4": 59,
+    "tenant_2c71cc2d67284394b2c402ac087bba82": 36,
+    "tenant_76ce30e4168341d09913919227afdf1a": 60,
+    "tenant_84387f0b783a47f78cf1f844b31ad286": 36,
+    "tenant_d28556d16acd46b79b2f170ad3b5cfb8": 36,
+    "tenant_dogan": 56,
+    "tenant_f2a45bc25f31": 13
+  },
+  "env_keys": {
+    "engine": {
+      "OPENROUTER_API_KEY": true,
+      "ANTHROPIC_API_KEY": false,
+      "OLLAMA_BASE_URL": false,
+      "LANGFUSE_PUBLIC_KEY": true,
+      "LANGFUSE_SECRET_KEY": true,
+      "LANGSMITH_API_KEY": true,
+      "JWT_SECRET": true,
+      "TEMPORAL_ADDRESS": true,
+      "DAUTH_KEYCLOAK_ENFORCE": true
+    },
+    "gateway": {
+      "OPENAI_API_KEY": false,
+      "ANTHROPIC_API_KEY": false
+    },
+    "governance": {
+      "OPENAI_API_KEY": false
+    }
+  }
+}

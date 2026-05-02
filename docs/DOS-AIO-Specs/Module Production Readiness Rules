@@ -1,0 +1,112 @@
+Module Production Readiness Rules — Complete
+
+Phase 0: WHY Does This Module Exist?
+
+Rule 0.1 — Read the spec (DOS-AIO-Specs/module-patch-XX-{name}-end-to-end.md) FIRST. Understand what business problem this module solves, who uses it, what they expect to do with it.
+
+Rule 0.2 — Read MICROSERVICES-TODO.md for any extraction or decoupling tasks that affect this module.
+
+Rule 0.3 — Answer: "If a bank customer opens this module on day 1, what can they DO?" If the answer is "nothing" or "see an empty page" — the module is not ready regardless of how many files exist.
+
+Phase 1: Does the Module Deliver What the Spec Designed?
+
+Rule 1.1 — Every feature the spec lists in §2 (Module Purpose and Boundaries) must have a working service, route, and UI surface. Not defined — WORKING.
+
+Rule 1.2 — Every service the spec lists in §3 (Required Backend Services) must have real code that queries real tables. Empty files, stub functions, and TODO comments are FAIL.
+
+Rule 1.3 — Every UI surface the spec lists in §4 (Required Frontend Surfaces) must render real data from real API calls. Not mock data, not hardcoded arrays.
+
+Rule 1.4 — Every contract the spec lists in §6 (API Surface Requirements) must be:
+
+Defined as a TypeScript interface
+Used as the return type of the service
+Validated by Zod on input
+Matched field-for-field by the frontend DTO
+
+Rule 1.5 — Every workflow the spec lists in §7 must have real enforcement — not event emissions pretending to be enforcement. initiateApproval() must INSERT into approval_requests. evaluateLifecycleTransition() must query real DB tables.
+
+Phase 2: Enterprise Production Grade — No Exceptions
+
+Rule 2.1 — No stubs. Every exported function must have a real implementation. No async function doThing() {}. No return null. No // TODO. If it's exported, it works.
+
+Rule 2.2 — No mocks at runtime. No const getData = () => []. No in-memory stores pretending to be databases. No Map<string, any>() replacing real tables.
+
+Rule 2.3 — All DB-driven. Every piece of state lives in a PostgreSQL table inside the tenant schema. Not in memory, not in a JSON file, not in a global variable. If the server restarts, zero data is lost.
+
+Rule 2.4 — AI-first where spec allows. If the spec §8 lists AI capabilities (prioritization, summarization, recommendations), those must be wired to the AI engine — not just defined as aiEnabled: true in the action metadata.
+
+Rule 2.5 — Bilingual (EN + AR). Every user-facing string must have both English and Arabic translations in i18n/en.json and i18n/ar.json. No raw i18n keys visible to users.
+
+Rule 2.6 — RTL-safe. All frontend components must use [dir]="i18n.direction()" and CSS logical properties (margin-inline-start, not margin-left).
+
+Phase 3: DAuth + Workflow Enforcement — Non-Negotiable
+
+Rule 3.1 — Every state transition route MUST call evaluateLifecycleTransition() BEFORE allowing the transition. This is not optional for any module.
+
+Rule 3.2 — Protected transitions (completion, verification, closure, approval, sign-off) MUST create real approval_requests records via initiateApproval().
+
+Rule 3.3 — SoD rules MUST be defined as typed SoDRule from @dos/types and seeded into the tenant DB. The DAuth SoD engine queries these at runtime.
+
+Rule 3.4 — Approval matrix rules MUST match the module's canonical lifecycle states. Not the auto-generated template states (draft→in_review→approved→published→archived).
+
+Rule 3.5 — Permission codes MUST use module.resource.action dot notation. No colons. No generic module:write.
+
+Rule 3.6 — Viewer role MUST be read-only. Auditor role MUST be read + export only. No role gets permissions it shouldn't have.
+
+Phase 4: Runtime Wiring — Every Seam Verified
+
+Rule 4.1 — Routes MUST be in the route catalog (domain-routes.catalog.ts AND shahin-ai/route-catalogs/domain-routes.catalog.ts). If not in the catalog, the route doesn't load.
+
+Rule 4.2 — DB tables MUST exist via a numbered migration in backend/src/migrations/tenant/. The migration MUST use __TENANT_SCHEMA__ prefix and CREATE TABLE IF NOT EXISTS.
+
+Rule 4.3 — Column names in SQL queries MUST match the actual table schema. Check the baseline migration. WHERE id = $1 when the PK is action_id is a runtime crash.
+
+Rule 4.4 — Event subscribers MUST be in registerDomainModuleSubscribers() in agrc-event-subscribers.ts. If not listed there, the handlers never execute.
+
+Rule 4.5 — Event handlers MUST create records in the module's OWN table, not just workflow process_tasks. If the module has a board/list view, it reads from its own table.
+
+Rule 4.6 — Scheduled jobs MUST be registered in products/shahin-ai/jobs/index.ts via the module's getXxxJobs() function. If not imported there, jobs never run.
+
+Rule 4.7 — Frontend API service URLs MUST match the mounted route path. Not guessed, not assumed — check the catalog.
+
+Rule 4.8 — Frontend DTO field names MUST match backend service return type field-for-field. actionId ≠ id. isOverdue ≠ slaBreached. source ≠ module.
+
+Rule 4.9 — Zod validation MUST be on 100% of mutation endpoints. Every POST, PUT, PATCH, DELETE with a request body gets validate({ body: schema }). No exceptions.
+
+Phase 5: User Experience — The Module Must Be USABLE
+
+Rule 5.1 — Empty states must tell the user what to do, not just say "No data found". Different roles see different empty state messages.
+
+Rule 5.2 — Error states must show what went wrong and offer a retry action. No silent failures, no blank screens.
+
+Rule 5.3 — Loading states must be explicit. No flash of empty content before data arrives.
+
+Rule 5.4 — The module must appear in the sidebar navigation. Check navigation.config.ts for the module's nav entry.
+
+Rule 5.5 — Angular routes must be defined in platform-manifests/{module}.module.routes.ts. If no route definition, the page is unreachable.
+
+Phase 6: Observability — The Module Must Be Diagnosable
+
+Rule 6.1 — Diagnostics service must check for: overdue items, stuck items, blocked closures, unassigned items, stale drafts.
+
+Rule 6.2 — Every mutation must call setAuditData() for the audit trail. Assignment, reassignment, escalation, AI usage — all audited.
+
+Rule 6.3 — Admin service must expose SLA configuration, escalation policy, and runbook links.
+
+Rule 6.4 — AS-BUILT.md must exist in the module root with: owned artifacts, protected actions, DAuth enforcement points, diagnostics, known risks.
+
+Phase 7: Acceptance — The Module Passes Spec §14
+
+Rule 7.1 — Module-domain runtime truth is centralized in the module directory. Not scattered across other modules.
+
+Rule 7.2 — DOS and DAuth boundaries are respected. The module consumes auth — it does not reimplement it.
+
+Rule 7.3 — Protected actions cannot bypass DAuth + workflow. Tested, not assumed.
+
+Rule 7.4 — The spec's §15 FAIL conditions are checked one by one. If any is true, the module fails.
+
+Execution Order for Every Module
+
+1. Read spec (DOS-AIO-Specs/module-patch-XX)
+2. Read MICROSERVICES-TODO.md for this module
+3. Check what exists in codebase vs what spec requires

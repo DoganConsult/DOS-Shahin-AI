@@ -1,0 +1,23 @@
+business_model,business_model_name,additional_framework,framework_name,rationale
+B2C,Business-to-Consumer,MOCI-CONSUMER,MoCI Consumer Protection,Consumer protection + payment + privacy
+B2C,Business-to-Consumer,PDPL,Personal Data Protection Law,Consumer protection + payment + privacy
+B2C,Business-to-Consumer,PCI-DSS,PCI DSS,Consumer protection + payment + privacy
+B2G,Business-to-Government,DGA-DCC,DGA Data Cybersecurity Controls,Government data handling requirements
+B2G,Business-to-Government,NDMO-DM,NDMO Data Management,Government data handling requirements
+B2B2C,Marketplace / Platform,MOCI-CONSUMER,MoCI Consumer Protection,Platform liability + consumer + payment
+B2B2C,Marketplace / Platform,MOCI-ECOM,MoCI E-Commerce Law,Platform liability + consumer + payment
+B2B2C,Marketplace / Platform,PDPL,Personal Data Protection Law,Platform liability + consumer + payment
+B2B2C,Marketplace / Platform,PCI-DSS,PCI DSS,Platform liability + consumer + payment
+C2C,Consumer-to-Consumer Platform,MOCI-CONSUMER,MoCI Consumer Protection,Consumer protection on platform
+C2C,Consumer-to-Consumer Platform,MOCI-ECOM,MoCI E-Commerce Law,Consumer protection on platform
+C2C,Consumer-to-Consumer Platform,PDPL,Personal Data Protection Law,Consumer protection on platform
+SAAS,SaaS / Cloud Service,NCA-CCC,NCA Cloud Cybersecurity Controls,Cloud + multi-tenant
+SAAS,SaaS / Cloud Service,CST-CLOUD,CST Cloud Computing Regulatory Framework,Cloud + multi-tenant
+SAAS,SaaS / Cloud Service,ISO27017,ISO/IEC 27017 (Cloud),Cloud + multi-tenant
+SAAS,SaaS / Cloud Service,ISO27018,ISO/IEC 27018 (Cloud Privacy),Cloud + multi-tenant
+SAAS,SaaS / Cloud Service,SOC2,SOC 2 Type II,Cloud + multi-tenant
+FINTECH,FinTech / Digital Finance,SAMA-CSF,SAMA Cyber Security Framework,Financial services regulations
+FINTECH,FinTech / Digital Finance,SAMA-PSR,SAMA Payment Services Regulations,Financial services regulations
+FINTECH,FinTech / Digital Finance,PCI-DSS,PCI DSS,Financial services regulations
+MANUFACTURING,Manufacturing / Production,NCA-OTCC,NCA Operational Technology Controls,OT/ICS systems
+FRANCHISE,Franchise,MOCI-CONSUMER,MoCI Consumer Protection,Consumer protection on franchise sales

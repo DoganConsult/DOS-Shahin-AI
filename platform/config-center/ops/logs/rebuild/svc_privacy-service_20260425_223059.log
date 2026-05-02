@@ -1,0 +1,4 @@
+
+> @dos/privacy-service@0.1.0 build /root/DOS-AIO/services/privacy-service
+> tsc -p tsconfig.json
+

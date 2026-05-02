@@ -1,0 +1,95 @@
+{
+  "$schema": "dos-deployment-truth-v1",
+  "$generated": "2026-04-12T05:41:19.457Z",
+  "$description": "Live deployment state of the legacy monolith at /home/Dr-Dogan-AGRC-OS/",
+  "runtime": {
+    "node_version": "v24.14.1",
+    "platform": "linux x86_64",
+    "env": "production"
+  },
+  "application": {
+    "type": "monolith",
+    "root": "/home/Dr-Dogan-AGRC-OS",
+    "backend_port": 3000,
+    "process_manager": "PM2 (currently stopped)",
+    "entry_point": "backend/dist/server.js"
+  },
+  "database": {
+    "engine": "PostgreSQL 16.13",
+    "host": "localhost",
+    "port": 5432,
+    "database": "shahin_grc",
+    "user": "shahin",
+    "ssl": true,
+    "schemas": {
+      "public": {
+        "tables": 401,
+        "description": "Platform-wide tables (auth, tenants, migrations)"
+      },
+      "tenant_schemas": {
+        "count": 35,
+        "pattern": "tenant_{uuid_prefix}",
+        "tables_per_schema": 1378
+      },
+      "__tenant_schema__": {
+        "description": "Template schema for migration execution"
+      }
+    },
+    "total_tables": 1779,
+    "active_tables": 265,
+    "schema_only_tables": 1514
+  },
+  "redis": {
+    "host": "127.0.0.1",
+    "port": 6379,
+    "prefix": "shahin:",
+    "db": 0,
+    "status": "configured (service status unknown)"
+  },
+  "ingress": {
+    "type": "nginx → Cloudflare Tunnel",
+    "nginx_listen": "port 80",
+    "upstream": "127.0.0.1:3000",
+    "domain": "shahin-ai.com",
+    "tls": "Terminated at Cloudflare (not nginx)",
+    "frontend_root": "/home/Dr-Dogan-AGRC-OS/frontend/dist/shahin-ai/browser"
+  },
+  "livePorts": {
+    "3000": "dos-backend (PM2, 2 instances cluster mode)",
+    "80": "nginx reverse proxy -> 3000",
+    "8090": "MCP server",
+    "8091": "OpenClaw standalone",
+    "7233": "Temporal workflow engine",
+    "8080": "OpenFGA HTTP",
+    "8081": "OpenFGA gRPC",
+    "5432": "PostgreSQL",
+    "6379": "Redis"
+  },
+  "pm2Apps": ["dos-backend", "dos-platform", "openclaw-server"],
+  "nginx": "port 80 -> localhost:3000",
+  "newServicePortRange": "4000-4030 (reserved for target platform)",
+  "migration_system": {
+    "runner": "backend/src/migrations/runner.ts",
+    "master_migrations": 114,
+    "tenant_migrations": 652,
+    "execution": "Runs at app startup — all migrations on all tenant schemas",
+    "idempotent": true,
+    "tracking_table": "schema_migrations (per-schema)"
+  },
+  "monolith_stats": {
+    "backend_ts_files": 14399,
+    "frontend_ts_files": 5370,
+    "modules": 72,
+    "route_files": 621,
+    "total_routes": 1996,
+    "event_contracts": 61,
+    "permissions_in_db": 1094
+  },
+  "deployment_notes": [
+    "Port 3000 is used by the monolith — target platform must use different ports",
+    "Nginx routes /api/* to backend, /* to Angular frontend dist",
+    "Cloudflare tunnel handles TLS — no certs on the box",
+    "35 active tenant schemas — each gets all 652 tenant migrations at boot",
+    "PM2 manages the process (currently stopped for this session)"
+  ]
+}

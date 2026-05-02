@@ -1,0 +1,4 @@
+
+> @target/architecture-types@0.1.0 build /root/DOS-AIO/packages/architecture-types
+> tsc -p tsconfig.build.json
+

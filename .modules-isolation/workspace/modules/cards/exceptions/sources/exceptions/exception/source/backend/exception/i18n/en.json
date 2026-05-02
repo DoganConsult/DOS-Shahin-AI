@@ -1,0 +1,23 @@
+{
+  "exception.title": "Exceptions",
+  "exception.dashboard": "Exception Dashboard",
+  "exception.register": "Exception Register",
+  "exception.requests": "Exception Requests",
+  "exception.approvals": "Exception Approvals",
+  "exception.expiry": "Expiry Tracking",
+  "exception.diagnostics": "Diagnostics",
+  "exception.admin": "Exception Admin",
+  "exception.empty.title": "No exceptions registered",
+  "exception.empty.description": "Submit an exception request when a policy or control cannot be fully met.",
+  "exception.loading": "Loading exception data...",
+  "exception.error.title": "Failed to load exception data",
+  "exception.error.retry": "Retry",
+  "exception.create": "Request Exception",
+  "exception.status.draft": "Draft",
+  "exception.status.submitted": "Submitted",
+  "exception.status.under_review": "Under Review",
+  "exception.status.approved": "Approved",
+  "exception.status.rejected": "Rejected",
+  "exception.status.expired": "Expired",
+  "exception.status.archived": "Archived"
+}

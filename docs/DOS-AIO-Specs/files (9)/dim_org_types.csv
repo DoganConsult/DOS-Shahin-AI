@@ -1,0 +1,18 @@
+code,name_en,name_ar,category,legal_form
+GOV_MINISTRY,Government Ministry,وزارة حكومية,public,government
+GOV_AUTHORITY,Government Authority,هيئة حكومية,public,government
+GOV_AGENCY,Government Agency,وكالة حكومية,public,government
+SOE,State-Owned Enterprise,شركة مملوكة للدولة,public,joint_stock
+PIF_OWNED,PIF-Owned Entity,منشأة مملوكة لصندوق الاستثمارات,public,joint_stock
+JSC_LISTED,Public Joint Stock Company (Listed),شركة مساهمة مدرجة,private,joint_stock
+JSC_CLOSED,Closed Joint Stock Company,شركة مساهمة مقفلة,private,joint_stock
+LLC,Limited Liability Company,شركة ذات مسؤولية محدودة,private,llc
+SIMPLIFIED_JSC,Simplified Joint Stock Company,شركة مساهمة مبسطة,private,simplified_jsc
+PROFESSIONAL_LLC,Professional LLC,شركة مهنية,private,professional
+SOLE_PROP,Sole Proprietorship / Establishment,مؤسسة فردية,private,sole_proprietor
+FOREIGN_BRANCH,Foreign Company Branch,فرع شركة أجنبية,foreign,branch
+REGIONAL_HQ,Regional Headquarters (RHQ),مقر إقليمي,foreign,rhq
+JOINT_VENTURE,Joint Venture (Saudi-Foreign),مشروع مشترك,mixed,joint_venture
+NPO_NGO,Non-Profit / NGO,منظمة غير ربحية,non_profit,association
+COOPERATIVE,Cooperative Society,جمعية تعاونية,non_profit,cooperative
+CNI_OPERATOR,Critical National Infrastructure Operator,مشغل البنية التحتية الوطنية الحرجة,cni,varies

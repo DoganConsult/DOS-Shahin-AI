@@ -1,0 +1,22 @@
+{
+  "serviceCode": "governance-policy-service",
+  "displayName": "Governance and Policy Service",
+  "layer": "domain-service",
+  "ownerTeam": "product-shahin-ai",
+  "runtime": "node",
+  "dependsOn": [
+    "auth-service",
+    "tenant-service",
+    "workflow-service"
+  ],
+  "modules": [
+    "governance",
+    "policy",
+    "governance-ai",
+    "governance-os",
+    "proactive-leadership"
+  ],
+  "exposes": {
+    "apiBase": "/api/governance"
+  }
+}

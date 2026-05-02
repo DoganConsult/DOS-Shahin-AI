@@ -1,0 +1,375 @@
+{
+  "schema": "dos",
+  "generatedAt": "2026-04-30T03:52:24.748Z",
+  "summary": {
+    "total": 175,
+    "empty": 122,
+    "demoOnly": 2,
+    "mostlyMock": 0,
+    "criticalNullSweep": 7,
+    "singletonSeed": 0,
+    "healthy": 44
+  },
+  "findings": {
+    "empty": [
+      "access_review_items",
+      "access_reviews",
+      "action_items",
+      "agent_action_receipts",
+      "agent_evidence_links",
+      "agent_memory",
+      "agent_recommendations",
+      "agent_run_steps",
+      "agent_runs",
+      "agrc_agent_memory",
+      "agrc_agent_runs",
+      "agrc_cycles",
+      "agrc_discoveries",
+      "agrc_handoffs",
+      "agrc_proposed_actions",
+      "agrc_tasks",
+      "ai_model_registry",
+      "ai_prompt_registry",
+      "approval_matrix_rules",
+      "assets",
+      "audit_findings",
+      "audit_log_archive",
+      "audit_logs",
+      "audit_plans",
+      "bcp_plans",
+      "briefings",
+      "committee_meetings",
+      "committee_members",
+      "compliance_frameworks",
+      "compliance_requirements",
+      "component_registry",
+      "config_audit_logs",
+      "config_center_audit_log",
+      "config_locks",
+      "config_runtime_overrides",
+      "controls",
+      "dashboard_widgets",
+      "dashboards",
+      "dora_assessments",
+      "dynamic_ui_component_registry",
+      "dynamic_ui_skill_packs",
+      "dynamic_ui_tenant_overrides",
+      "dynamic_ui_user_preferences",
+      "event_dead_letter_queue",
+      "evidence",
+      "evidences",
+      "executive_briefings",
+      "framework_branching_rules",
+      "framework_recommendation_rules",
+      "governance_context",
+      "governance_decisions",
+      "governance_initiatives",
+      "governance_os_cases",
+      "governance_os_config",
+      "governance_os_learning_metrics",
+      "governance_os_learning_signals",
+      "governance_policies",
+      "inbox_items",
+      "incidents",
+      "integrations",
+      "invitations",
+      "leadership_digests",
+      "lifecycle_auth_log",
+      "location_bu_map",
+      "login_attempts",
+      "maturity_assessment_responses",
+      "maturity_assessments",
+      "maturity_dimension_definitions",
+      "maturity_questions",
+      "maturity_signals",
+      "migration_history",
+      "migration_lock",
+      "mobile_sessions",
+      "module_operating_state",
+      "module_sla_defaults",
+      "onboarding_journeys",
+      "ownership_mappings",
+      "policies",
+      "portals",
+      "position_assignments",
+      "privacy_assessments",
+      "proactive_leadership_milestones",
+      "product_licenses",
+      "product_registry",
+      "qiyas_journeys",
+      "records",
+      "remediation_actions",
+      "remediations",
+      "report_schedules",
+      "risks",
+      "runtime_config",
+      "runtime_config_history",
+      "shell_config",
+      "sod_conflict_audit",
+      "sso_identities",
+      "sso_providers",
+      "sso_role_mappings",
+      "sso_sessions",
+      "system_events",
+      "team_members",
+      "team_raci_assignments",
+      "tenant_config_versions",
+      "tenant_config_versions_legacy",
+      "tenant_dashboard_widget_pins",
+      "tenant_feature_flag_overrides",
+      "tenant_settings_legacy",
+      "training_courses",
+      "training_enrollments",
+      "training_programs",
+      "user_org_scope",
+      "user_roles",
+      "vendor_engagement_scores",
+      "vendors",
+      "widgets",
+      "work_items",
+      "workflow_approvals",
+      "workflow_instances",
+      "workflow_schedules",
+      "workflow_sla_configs",
+      "workflow_tasks",
+      "workspace_config",
+      "workspaces"
+    ],
+    "demoOnly": [
+      {
+        "table": "notifications",
+        "rows": 4,
+        "mockRows": 4
+      },
+      {
+        "table": "organizations",
+        "rows": 41,
+        "mockRows": 41
+      }
+    ],
+    "mostlyMock": [],
+    "criticalNullSweep": [
+      {
+        "table": "committees",
+        "columns": {
+          "description": "125/125 (100% NULL/empty)"
+        }
+      },
+      {
+        "table": "departments",
+        "columns": {
+          "description": "27/27 (100% NULL/empty)"
+        }
+      },
+      {
+        "table": "feature_flags",
+        "columns": {
+          "display_name": "43/43 (100% NULL/empty)"
+        }
+      },
+      {
+        "table": "job_registry",
+        "columns": {
+          "description": "10/10 (100% NULL/empty)"
+        }
+      },
+      {
+        "table": "locations",
+        "columns": {
+          "description": "125/125 (100% NULL/empty)"
+        }
+      },
+      {
+        "table": "positions",
+        "columns": {
+          "description": "249/249 (100% NULL/empty)"
+        }
+      },
+      {
+        "table": "teams",
+        "columns": {
+          "description": "3/3 (100% NULL/empty)"
+        }
+      }
+    ],
+    "singletonSeed": [],
+    "healthy": [
+      {
+        "table": "ai_agent_registry",
+        "rows": 12
+      },
+      {
+        "table": "ai_workflow_trigger_log",
+        "rows": 47
+      },
+      {
+        "table": "ai_workflow_triggers",
+        "rows": 20
+      },
+      {
+        "table": "audit_trail",
+        "rows": 492
+      },
+      {
+        "table": "business_units",
+        "rows": 128
+      },
+      {
+        "table": "config_definitions",
+        "rows": 130
+      },
+      {
+        "table": "config_values",
+        "rows": 130
+      },
+      {
+        "table": "dynamic_ui_actions",
+        "rows": 79
+      },
+      {
+        "table": "dynamic_ui_agent_actions",
+        "rows": 25
+      },
+      {
+        "table": "dynamic_ui_agent_squad_members",
+        "rows": 4
+      },
+      {
+        "table": "dynamic_ui_agent_squads",
+        "rows": 1
+      },
+      {
+        "table": "dynamic_ui_agents",
+        "rows": 15
+      },
+      {
+        "table": "dynamic_ui_data_resources",
+        "rows": 81
+      },
+      {
+        "table": "dynamic_ui_i18n_keys",
+        "rows": 134
+      },
+      {
+        "table": "dynamic_ui_intents",
+        "rows": 12
+      },
+      {
+        "table": "dynamic_ui_kpis",
+        "rows": 24
+      },
+      {
+        "table": "dynamic_ui_module_icons",
+        "rows": 11
+      },
+      {
+        "table": "dynamic_ui_module_status",
+        "rows": 12
+      },
+      {
+        "table": "dynamic_ui_modules",
+        "rows": 14
+      },
+      {
+        "table": "dynamic_ui_navigation",
+        "rows": 61
+      },
+      {
+        "table": "dynamic_ui_navigation_icons",
+        "rows": 61
+      },
+      {
+        "table": "dynamic_ui_page_agents",
+        "rows": 77
+      },
+      {
+        "table": "dynamic_ui_route_permissions",
+        "rows": 62
+      },
+      {
+        "table": "dynamic_ui_routes",
+        "rows": 70
+      },
+      {
+        "table": "dynamic_ui_shells",
+        "rows": 12
+      },
+      {
+        "table": "dynamic_ui_theme_tokens",
+        "rows": 8
+      },
+      {
+        "table": "dynamic_ui_widgets",
+        "rows": 78
+      },
+      {
+        "table": "dynamic_ui_workflow_agents",
+        "rows": 15
+      },
+      {
+        "table": "job_executions",
+        "rows": 394
+      },
+      {
+        "table": "module_registry",
+        "rows": 33
+      },
+      {
+        "table": "module_sod_rules",
+        "rows": 2
+      },
+      {
+        "table": "navigation_registry",
+        "rows": 44
+      },
+      {
+        "table": "orphan_schema_audit",
+        "rows": 98
+      },
+      {
+        "table": "platform_audit_logs",
+        "rows": 1
+      },
+      {
+        "table": "platform_migrations",
+        "rows": 323
+      },
+      {
+        "table": "platform_operation_config",
+        "rows": 12
+      },
+      {
+        "table": "schema_migrations",
+        "rows": 59
+      },
+      {
+        "table": "tenant_memberships",
+        "rows": 28
+      },
+      {
+        "table": "tenant_migrations",
+        "rows": 1726
+      },
+      {
+        "table": "tenant_product_activation",
+        "rows": 73
+      },
+      {
+        "table": "tenant_settings",
+        "rows": 2
+      },
+      {
+        "table": "tenants",
+        "rows": 32
+      },
+      {
+        "table": "users",
+        "rows": 30
+      },
+      {
+        "table": "workflow_templates",
+        "rows": 13
+      }
+    ]
+  }
+}

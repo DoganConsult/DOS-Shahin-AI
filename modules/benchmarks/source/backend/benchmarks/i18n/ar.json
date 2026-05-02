@@ -1,0 +1,11 @@
+{
+  "benchmarks.title": "المقارنات المعيارية",
+  "benchmarks.dashboard": "لوحة المقارنات المعيارية",
+  "benchmarks.empty.title": "لا توجد سجلات",
+  "benchmarks.empty.description": "أنشئ أول سجل للبدء.",
+  "benchmarks.loading": "جاري تحميل البيانات...",
+  "benchmarks.error.title": "فشل تحميل البيانات",
+  "benchmarks.error.retry": "إعادة المحاولة",
+  "benchmarks.create": "إنشاء جديد",
+  "benchmarks.diagnostics": "التشخيصات"
+}

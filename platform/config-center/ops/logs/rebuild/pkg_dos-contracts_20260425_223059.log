@@ -1,0 +1,4 @@
+
+> @dos/contracts@1.0.0 build /root/DOS-AIO/packages/dos-contracts
+> rm -rf dist && tsc -p tsconfig.build.json
+

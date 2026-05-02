@@ -1,0 +1,14 @@
+{
+  "executive.title": "Executive Command",
+  "executive.dashboard": "Executive Dashboard",
+  "executive.briefs": "Board Briefings",
+  "executive.objectives": "Strategic Objectives",
+  "executive.appetite": "Risk Appetite",
+  "executive.empty.title": "No executive data",
+  "executive.empty.description": "Generate your first executive briefing to get started.",
+  "executive.loading": "Loading executive data...",
+  "executive.error.title": "Failed to load executive data",
+  "executive.error.retry": "Retry",
+  "executive.create": "Generate Briefing",
+  "executive.diagnostics": "Diagnostics"
+}

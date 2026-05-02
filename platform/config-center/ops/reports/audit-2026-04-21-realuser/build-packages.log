@@ -1,0 +1,62 @@
+
+> dogan-ai-os-platform-target@1.0.0 build:packages /root/DOS-AIO
+> pnpm -r --sort --workspace-concurrency=1 --filter './packages/*' run build
+
+Scope: 16 of 56 workspace projects
+
+> @target/architecture-types@0.1.0 build /root/DOS-AIO/packages/architecture-types
+> tsc -p tsconfig.build.json
+
+
+> @dos/types@1.0.0 build /root/DOS-AIO/packages/dos-types
+> tsc -p tsconfig.build.json
+
+
+> @dos/contracts@1.0.0 build /root/DOS-AIO/packages/dos-contracts
+> rm -rf dist && tsc -p tsconfig.build.json
+
+
+> @dos/db@1.0.0 build /root/DOS-AIO/packages/dos-db
+> tsc -p tsconfig.build.json
+
+
+> @shahin-grc/shared-compliance-types@1.0.0 build /root/DOS-AIO/packages/shared-compliance-types
+> tsc -p tsconfig.build.json
+
+
+> @shahin-grc/shared-risk-types@1.0.0 build /root/DOS-AIO/packages/shared-risk-types
+> tsc -p tsconfig.build.json
+
+
+> @shahin-grc/shared-workflow-types@1.0.0 build /root/DOS-AIO/packages/shared-workflow-types
+> tsc -p tsconfig.build.json
+
+
+> @dos/event-backbone@0.1.0 build /root/DOS-AIO/packages/dos-event-backbone
+> tsc -p tsconfig.build.json
+
+
+> @dos/module-sdk@1.0.0 build /root/DOS-AIO/packages/dos-module-sdk
+> tsc -p tsconfig.build.json
+
+
+> @dos/platform-core@1.0.0 build /root/DOS-AIO/packages/dos-platform-core
+> tsc -p tsconfig.build.json
+
+src/contracts.ts(22,8): error TS2307: Cannot find module '@dos/contracts' or its corresponding type declarations.
+src/events/index.ts(5,8): error TS2307: Cannot find module '@dos/contracts/events' or its corresponding type declarations.
+src/lifecycle/index.ts(7,8): error TS2307: Cannot find module '@dos/contracts' or its corresponding type declarations.
+src/modules/index.ts(6,8): error TS2307: Cannot find module '@dos/contracts' or its corresponding type declarations.
+src/ports.ts(8,8): error TS2307: Cannot find module '@dos/contracts' or its corresponding type declarations.
+src/provisioning/index.ts(4,8): error TS2307: Cannot find module '@dos/contracts' or its corresponding type declarations.
+src/shell/index.ts(6,8): error TS2307: Cannot find module '@dos/contracts' or its corresponding type declarations.
+src/tenancy/index.ts(4,8): error TS2307: Cannot find module '@dos/contracts' or its corresponding type declarations.
+src/workflows/index.ts(5,8): error TS2307: Cannot find module '@dos/contracts' or its corresponding type declarations.
+/root/DOS-AIO/packages/dos-platform-core:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @dos/platform-core@1.0.0 build: `tsc -p tsconfig.build.json`
+Exit status 2
+
+> @dos/runtime-config@0.1.0 build /root/DOS-AIO/packages/dos-runtime-config
+> tsc -p tsconfig.build.json
+
+ ELIFECYCLE  Command failed with exit code 2.

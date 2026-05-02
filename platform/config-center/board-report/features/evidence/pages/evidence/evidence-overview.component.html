@@ -1,0 +1,187 @@
+<div class="ev-ov-page" [attr.dir]="dir()">
+
+      <app-page-header
+        titleEn="Evidence Overview"
+        titleAr="نظرة عامة على الأدلة"
+        subtitleEn="Evidence vault, requests, reviews, expiry and task status at a glance"
+        subtitleAr="خزينة الأدلة والطلبات والمراجعات والانتهاء وحالة المهام في لمحة"
+        icon="folder-open"
+        [breadcrumbs]="[i18n.translate('evidenceOverview.dashboard'), i18n.translate('evidenceOverview.evidence'), i18n.translate('evidenceOverview.overview')]"
+        [actions]="headerActions()"
+        [isAr]="isAr()"
+        [dir]="dir()"
+        (actionClick)="onHeaderAction($event)" />
+
+      <app-module-tabs-bar [tabs]="tabs" [isAr]="isAr()" />
+
+      <!-- Foundation Filter Bar -->
+      <div class="ev-filter-bar" [attr.dir]="dir()">
+        <cds-dropdown class="ev-filter"></cds-dropdown>
+        <cds-dropdown class="ev-filter"></cds-dropdown>
+        <cds-dropdown class="ev-filter"></cds-dropdown>
+        <cds-dropdown class="ev-filter"></cds-dropdown>
+      </div>
+
+      <div class="ev-ov-body">
+
+        @if (loading()) {
+          <div class="skeleton-kpi">
+            @for (i of [1,2,3,4,5,6]; track i) {
+              <p-skeleton height="76px" borderRadius="10px" />
+            }
+          </div>
+          <p-skeleton height="110px" borderRadius="10px" styleClass="mb-3" />
+        }
+
+        @if (!loading() && error()) {
+          <app-empty-state
+            variant="error"
+            [title]="i18n.translate('evidenceOverview.failedToLoadData')"
+            [description]="i18n.translate('evidenceOverview.checkYourConnectionAndTryAgain')"
+            [actionLabel]="i18n.translate('evidenceOverview.retry')"
+            [dir]="dir()"
+            (action)="loadData()" />
+        }
+
+        @if (!loading() && !error()) {
+          <app-kpi-card-grid
+            [cards]="kpis()"
+            [isAr]="isAr()"
+            (cardClick)="onKpiClick($event)" />
+
+          <app-health-strip
+            [alerts]="healthAlerts()"
+            [isAr]="isAr()"
+            (alertClick)="onAlertClick($event)" />
+
+          @if (stats()?.totalEvidence === 0) {
+            <app-empty-state
+              variant="default"
+              [title]="i18n.translate('evidenceOverview.noEvidenceYet')"
+              [description]="i18n.translate('gettingStarted.addEvidence')"
+              [actionLabel]="i18n.translate('evidenceOverview.uploadEvidence')"
+              [dir]="dir()"
+              (action)="navigate('/evidence/vault')" />
+          }
+
+          <app-recent-activity-table
+            [rows]="activityRows()"
+            titleEn="Recent Evidence Activity"
+            titleAr="نشاط الأدلة الأخير"
+            viewAllRoute="/evidence/vault"
+            [isAr]="isAr()"
+            (rowClick)="onActivityRowClick($event)" />
+
+          <app-module-overview-kit [config]="moduleKitConfig()" />
+        }
+      </div>
+
+      <!-- Detail Drawer -->
+      @if (selectedEvidence()) {
+        <div tabindex="0" role="button" (keyup.enter)="closeDetail()" class="drawer-overlay" (click)="closeDetail()"></div>
+        <aside class="detail-drawer" [dir]="dir()">
+          <div class="drawer-header">
+            <h3>{{ isAr() ? 'تفاصيل الدليل' : 'Evidence Detail' }}</h3>
+            <button aria-label="Close" class="close-btn" (click)="closeDetail()"><i class="pi pi-times"></i></button>
+          </div>
+          <div class="drawer-body">
+            <div class="detail-section">
+              <label>{{ isAr() ? 'العنوان' : 'Title' }}</label>
+              <p>{{ selectedEvidence()!.title || selectedEvidence()!.entity_name || '\u2014' }}</p>
+            </div>
+            @if (selectedEvidence()!.description) {
+              <div class="detail-section">
+                <label>{{ isAr() ? 'الوصف' : 'Description' }}</label>
+                <p>{{ selectedEvidence()!.description }}</p>
+              </div>
+            }
+            <div class="detail-row">
+              <div class="detail-section half">
+                <label>{{ isAr() ? 'النوع' : 'Type' }}</label>
+                <p>{{ selectedEvidence()!.evidence_type_code || selectedEvidence()!.type || '\u2014' }}</p>
+              </div>
+              <div class="detail-section half">
+                <label>{{ isAr() ? 'الحالة' : 'Status' }}</label>
+                <span class="status-badge" [attr.data-status]="selectedEvidence()!.status">{{ formatStatus(selectedEvidence()!.status) }}</span>
+              </div>
+            </div>
+
+            <!-- Owner Dropdown -->
+            <div class="detail-section">
+              <label><i class="pi pi-user"></i> {{ isAr() ? 'المالك' : 'Owner' }}</label>
+              <cds-dropdown></cds-dropdown>
+            </div>
+
+            <!-- Team Dropdown -->
+            <div class="detail-section">
+              <label><i class="pi pi-users"></i> {{ isAr() ? 'الفريق' : 'Team' }}</label>
+              <cds-dropdown></cds-dropdown>
+            </div>
+
+            <!-- Ownership Context -->
+            @if (ownerProfile()) {
+              <div class="detail-section owner-context">
+                <label>{{ isAr() ? 'بيانات المالك' : 'Owner Details' }}</label>
+                <div class="owner-card">
+                  <div class="owner-row"><i class="pi pi-user"></i><span>{{ ownerProfile()!.name }}</span></div>
+                  <div class="owner-row"><i class="pi pi-envelope"></i><span>{{ ownerProfile()!.email }}</span></div>
+                  @if (ownerProfile()!.team) {
+                    <div class="owner-row"><i class="pi pi-users"></i><span>{{ ownerProfile()!.team }}</span></div>
+                  }
+                  @if (ownerProfile()!.department) {
+                    <div class="owner-row"><i class="pi pi-building"></i><span>{{ ownerProfile()!.department }}</span></div>
+                  }
+                  @if (ownerProfile()!.businessUnit) {
+                    <div class="owner-row"><i class="pi pi-sitemap"></i><span>{{ ownerProfile()!.businessUnit }}</span></div>
+                  }
+                </div>
+              </div>
+            }
+
+            <!-- Status Lifecycle Dropdown -->
+            @if (availableTransitions().length > 0) {
+              <div class="detail-section">
+                <label><i class="pi pi-arrows-h"></i> {{ isAr() ? 'تغيير الحالة' : 'Change Status' }}</label>
+                <cds-dropdown></cds-dropdown>
+              </div>
+            }
+
+            <!-- Status Timeline -->
+            @if (statusHistory().length > 0) {
+              <div class="detail-section">
+                <label><i class="pi pi-clock"></i> {{ isAr() ? 'سجل الحالة' : 'Status History' }}</label>
+                <div class="status-timeline">
+                  @for (entry of statusHistory(); track $index) {
+                    <div class="timeline-entry">
+                      <div class="timeline-dot"></div>
+                      <div class="timeline-content">
+                        <div class="timeline-statuses">
+                          <span class="status-badge" [attr.data-status]="entry.fromStatus">{{ formatStatus(entry.fromStatus) }}</span>
+                          <i class="pi pi-arrow-right timeline-arrow"></i>
+                          <span class="status-badge" [attr.data-status]="entry.toStatus">{{ formatStatus(entry.toStatus) }}</span>
+                        </div>
+                        <div class="timeline-meta">{{ entry.actor }} &middot; {{ entry.timestamp | date:'medium' }}</div>
+                        @if (entry.reason) {
+                          <div class="timeline-reason">{{ entry.reason }}</div>
+                        }
+                      </div>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+
+            <div class="drawer-actions">
+              <button class="action-btn primary" (click)="navigate('/evidence/vault')">
+                <i class="pi pi-folder-open"></i> {{ isAr() ? 'خزينة الأدلة' : 'Evidence Vault' }}
+              </button>
+              <button class="action-btn secondary" (click)="closeDetail()">
+                <i class="pi pi-times"></i> {{ isAr() ? 'إغلاق' : 'Close' }}
+              </button>
+            </div>
+          </div>
+        </aside>
+      }
+
+      <p-toast />
+    </div>

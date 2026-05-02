@@ -1,0 +1,40 @@
+{
+  "moduleCode": "agrc-engine",
+  "displayName": "AGRC Engine",
+  "ownerTeam": "product-shahin-ai",
+  "productCode": "shahin-ai",
+  "ownership": "module-owned",
+  "version": "1.0.0",
+  "status": "active",
+  "platformDependencies": [
+    "identity",
+    "tenancy"
+  ],
+  "seedProviders": [],
+  "tenantDefaults": [],
+  "requiredReferenceData": [],
+  "currentSources": [
+    "/home/Dr-Dogan-AGRC-OS/backend/src/modules/agrc-engine"
+  ],
+  "targetPath": "modules/agrc-engine",
+  "futureService": "ai-engine-service",
+  "frontendSources": [],
+  "ownedTables": [
+    "agrc_engine_runs",
+    "agrc_engine_results",
+    "agrc_engine_config"
+  ],
+  "referencedTables": [],
+  "events": {
+    "publishes": [
+      "agrc_engine.run_started",
+      "agrc_engine.run_completed",
+      "agrc_engine.run_failed",
+      "agrc_engine.config_changed"
+    ],
+    "subscribes": []
+  },
+  "routeBases": [
+    "/api/agrc-engine"
+  ]
+}

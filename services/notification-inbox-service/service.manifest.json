@@ -1,0 +1,23 @@
+{
+  "serviceCode": "notification-inbox-service",
+  "displayName": "Notification Inbox Service",
+  "layer": "domain-service",
+  "ownerTeam": "platform-core",
+  "runtime": "node",
+  "dependsOn": [
+    "auth-service",
+    "tenant-service",
+    "notification-service"
+  ],
+  "modules": [
+    "inbox",
+    "notification"
+  ],
+  "exposes": {
+    "apiBase": "/api/inbox",
+    "events": [
+      "inbox.message.received",
+      "inbox.message.read"
+    ]
+  }
+}

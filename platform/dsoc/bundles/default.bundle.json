@@ -1,0 +1,52 @@
+{
+  "$schema": "../../dos/manifests/platform-bundle.schema.json",
+  "bundleCode": "dsoc-default",
+  "moduleCode": "dsoc",
+  "displayName": "DSOC Default Bundle",
+  "description": "Standard DSOC deployment: dsoc-service backed by @dos/dsoc-core packages with PostgreSQL persistence in the platform_dsoc schema.",
+  "version": "1.0.0",
+  "services": [
+    {
+      "code": "dsoc-service",
+      "path": "platform/dsoc/services/dsoc-service",
+      "required": true,
+      "ports": { "http": 4101 },
+      "dependsOnPlatform": ["dos"],
+      "dependsOnExternal": ["postgres", "redis"]
+    }
+  ],
+  "packages": [
+    "@dos/dsoc-core",
+    "@dos/dsoc-shared"
+  ],
+  "frontendPackages": [
+    {
+      "name": "@dos/dsoc-frontend",
+      "path": "platform/dsoc/packages/frontend",
+      "status": "shipped-as-source"
+    }
+  ],
+  "migrations": {
+    "indexFile": "platform/dsoc/migrations/migrations-index.json"
+  },
+  "environment": {
+    "required": [
+      "DATABASE_URL"
+    ],
+    "optional": [
+      "REDIS_URL",
+      "DSOC_ALERT_PAGE_THRESHOLD",
+      "DSOC_POSTURE_REFRESH_INTERVAL_SECONDS"
+    ]
+  },
+  "healthChecks": [
+    { "service": "dsoc-service", "endpoint": "/api/dsoc/health", "expectedStatus": 200 },
+    { "service": "dsoc-service", "endpoint": "/api/dsoc/ready", "expectedStatus": 200 }
+  ],
+  "deployment": {
+    "runtime": "node",
+    "minNodeVersion": "20",
+    "horizontalScaling": "supported",
+    "statefulComponents": ["postgres"]
+  }
+}

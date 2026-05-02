@@ -1,0 +1,15 @@
+{
+  "id": "vendor.post_approval",
+  "module": "vendor",
+  "hook": "post_approval",
+  "version": "1.0.0",
+  "sla_hours": 8,
+  "actor_role_default": "vendor.module_lead",
+  "states": ["approved","published","notified"],
+  "initial": "approved",
+  "transitions": [{"from":"approved","to":"published","on":"publish","actor_role":"vendor.module_lead"},{"from":"published","to":"notified","on":"notify"}],
+  "audit_event_prefix": "vendor.workflow.post_approval",
+  "notification_targets": ["vendor.module_lead", "vendor.approver"],
+  "evidence_required_on": ["passed","published"],
+  "escalation": { "on": "sla_breach", "to": "vendor.executive_owner", "after_hours": 16 }
+}

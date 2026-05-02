@@ -1,0 +1,900 @@
+ممتاز. ده يغيّر الإجابة من “تصور تنظيمي” إلى **tenant seed schema مطابق للواقع الفني الحالي** في DOS-AIO.
+
+الخلاصة التنفيذية:
+
+**Douhan Consult يمكن يتزرع اليوم بدون onboarding**
+لكن لازم نمشي على ما هو موجود فعلًا في `@dos/db` وtenant migrations الحالية، وليس نفترض جداول أو services غير موجودة.
+
+بناءً على الـ deep check اللي أرسلته، الشكل الصحيح هو:
+
+## ما هو متاح فعليًا الآن
+
+عندك بالفعل:
+
+* tenant-safe SQL layer محترم في `@dos/db`
+* `tenantScopedQuery`, `withTenantClient`, `getTenantClient`
+* tenant schema per tenant
+* RLS + FORCE RLS على عدد كبير من الجداول
+* tenant runtime tables في platform-core:
+
+  * `module_config`
+  * `user_preferences`
+  * `saved_views`
+  * `module_config_audit`
+  * `export_jobs`
+* tenant-service قائم أصلًا ويشغل:
+
+  * foundation
+  * admin
+  * team
+  * provisioning
+  * bootstrap
+  * navigation
+  * config
+  * config-center
+  * workspace
+  * quality-gate
+  * platform-stats
+  * operating-cockpit
+
+وده معناه إن المطلوب الآن ليس “اختراع schema جديد”، بل:
+
+## المطلوب الصحيح
+
+**Direct Production Tenant Seed Pack for Douhan Consult**
+
+وينقسم إلى 6 حزم:
+
+```text id="p54952"
+1. Tenant identity seed
+2. Tenant org seed
+3. Tenant user/role seed
+4. Tenant workspace/module_config seed
+5. Tenant SOP/workflow seed
+6. Tenant access/audit/openfga seed
+```
+
+---
+
+# A) Tenant Seed Model — مطابق للبنية الحالية
+
+بما إن `tenantId` يتحول إلى schema باسم `tenant_<id>`, فالاختيار لازم يكون صالح للـ allowlist.
+
+## Tenant ID الصحيح
+
+استخدم:
+
+```text id="f08138"
+tenant_id = douhan_consult
+schema = tenant_douhan_consult
+```
+
+وليس اسم فيه مسافات أو حروف كبيرة.
+
+## Tenant master seed
+
+```json id="y35291"
+{
+  "tenant_id": "douhan_consult",
+  "tenant_code": "douhan-consult",
+  "tenant_name": "Douhan Consult",
+  "display_name": "Douhan Consult",
+  "tenant_type": "internal_operator",
+  "industry": "it_consulting_ai_platform_grc_regtech",
+  "status": "active",
+  "environment": "production",
+  "country_code": "SA",
+  "timezone": "Asia/Riyadh",
+  "default_language": "en",
+  "supported_languages": ["en", "ar"],
+  "is_internal_customer_zero": true,
+  "is_demo": false,
+  "is_trial": false,
+  "is_beta": false,
+  "regulator_auditable": true,
+  "data_residency": "KSA",
+  "auth_profile": "enterprise_strict",
+  "notes": "First production-grade internal enterprise operating tenant for Douhan Consult."
+}
+```
+
+---
+
+# B) Organization Schema — seedable structure
+
+بما إن الهدف الآن هو seeding وتشغيل workspace للمستخدمين، فنحن نحتاج **org catalog** واضح، حتى لو بعض الفرق تبدأ placeholder.
+
+## 18 teams
+
+```text id="m61372"
+BOARD
+EXEC_OFFICE
+STRATEGY_GOV
+FINANCE
+HR
+SALES
+PARTNERSHIPS
+MARKETING
+PRODUCT
+PLATFORM_ENG
+AI_DATA
+CYBER_DAUTH
+GRC_CONSULTING
+DELIVERY
+CUSTOMER_SUCCESS
+PMO
+LEGAL_CONTRACTS
+OPS_ADMIN
+```
+
+## Seed manifest
+
+```json id="a76146"
+{
+  "org_units": [
+    { "code": "BOARD", "name_en": "Board of Directors", "name_ar": "مجلس الإدارة", "type": "board", "parent": null, "sort_order": 1 },
+    { "code": "EXEC_OFFICE", "name_en": "Executive Office", "name_ar": "المكتب التنفيذي", "type": "department", "parent": null, "sort_order": 2 },
+    { "code": "STRATEGY_GOV", "name_en": "Strategy & Governance", "name_ar": "الاستراتيجية والحوكمة", "type": "department", "parent": null, "sort_order": 3 },
+    { "code": "FINANCE", "name_en": "Finance", "name_ar": "المالية", "type": "department", "parent": null, "sort_order": 4 },
+    { "code": "HR", "name_en": "Human Resources", "name_ar": "الموارد البشرية", "type": "department", "parent": null, "sort_order": 5 },
+    { "code": "SALES", "name_en": "Sales", "name_ar": "المبيعات", "type": "department", "parent": null, "sort_order": 6 },
+    { "code": "PARTNERSHIPS", "name_en": "Partnerships & Alliances", "name_ar": "الشراكات والتحالفات", "type": "department", "parent": null, "sort_order": 7 },
+    { "code": "MARKETING", "name_en": "Marketing & Communications", "name_ar": "التسويق والاتصال", "type": "department", "parent": null, "sort_order": 8 },
+    { "code": "PRODUCT", "name_en": "Product Management", "name_ar": "إدارة المنتجات", "type": "department", "parent": null, "sort_order": 9 },
+    { "code": "PLATFORM_ENG", "name_en": "Platform Engineering", "name_ar": "هندسة المنصة", "type": "department", "parent": null, "sort_order": 10 },
+    { "code": "AI_DATA", "name_en": "AI & Data Engineering", "name_ar": "هندسة الذكاء الاصطناعي والبيانات", "type": "department", "parent": null, "sort_order": 11 },
+    { "code": "CYBER_DAUTH", "name_en": "Cybersecurity & DAuth", "name_ar": "الأمن السيبراني و DAuth", "type": "department", "parent": null, "sort_order": 12 },
+    { "code": "GRC_CONSULTING", "name_en": "GRC / Compliance Consulting", "name_ar": "استشارات الحوكمة والمخاطر والامتثال", "type": "department", "parent": null, "sort_order": 13 },
+    { "code": "DELIVERY", "name_en": "Delivery & Implementation", "name_ar": "التنفيذ والتسليم", "type": "department", "parent": null, "sort_order": 14 },
+    { "code": "CUSTOMER_SUCCESS", "name_en": "Customer Success & Support", "name_ar": "نجاح العملاء والدعم", "type": "department", "parent": null, "sort_order": 15 },
+    { "code": "PMO", "name_en": "Project Management Office", "name_ar": "مكتب إدارة المشاريع", "type": "department", "parent": null, "sort_order": 16 },
+    { "code": "LEGAL_CONTRACTS", "name_en": "Legal & Contracts", "name_ar": "الشؤون القانونية والعقود", "type": "department", "parent": null, "sort_order": 17 },
+    { "code": "OPS_ADMIN", "name_en": "Operations & Administration", "name_ar": "العمليات والإدارة", "type": "department", "parent": null, "sort_order": 18 }
+  ]
+}
+```
+
+---
+
+# C) Users / Positions / Headcount seed
+
+أنت حددت الآتي:
+
+* CTO = Ahmed Dogan
+* CFO = Amr Elsayed
+* CEO = placeholder الآن
+* Chairman = placeholder الآن
+* Finance = 4 أفراد
+* HR = 1
+* Sales = 3
+
+## Seed roster
+
+```json id="w87364"
+{
+  "users": [
+    {
+      "employee_code": "DC-BOARD-001",
+      "full_name": "Chairman",
+      "email": "PENDING",
+      "username": "chairman.douhan",
+      "org_unit": "BOARD",
+      "position": "CHAIRMAN",
+      "headcount_bucket": "board",
+      "seed_type": "placeholder"
+    },
+    {
+      "employee_code": "DC-EXEC-001",
+      "full_name": "CEO",
+      "email": "PENDING",
+      "username": "ceo.douhan",
+      "org_unit": "EXEC_OFFICE",
+      "position": "CEO",
+      "headcount_bucket": "board",
+      "seed_type": "placeholder"
+    },
+    {
+      "employee_code": "DC-TECH-001",
+      "full_name": "Ahmed Dogan",
+      "email": "PENDING",
+      "username": "ahmed.dogan",
+      "org_unit": "PLATFORM_ENG",
+      "position": "CTO",
+      "headcount_bucket": "board",
+      "seed_type": "named"
+    },
+    {
+      "employee_code": "DC-FIN-001",
+      "full_name": "Amr Elsayed",
+      "email": "PENDING",
+      "username": "amr.elsayed",
+      "org_unit": "FINANCE",
+      "position": "CFO",
+      "headcount_bucket": "board",
+      "seed_type": "named"
+    },
+
+    {
+      "employee_code": "DC-FIN-002",
+      "full_name": "Finance Manager",
+      "email": "PENDING",
+      "username": "finance.manager",
+      "org_unit": "FINANCE",
+      "position": "FINANCE_MANAGER",
+      "headcount_bucket": "finance",
+      "seed_type": "placeholder"
+    },
+    {
+      "employee_code": "DC-FIN-003",
+      "full_name": "Accountant",
+      "email": "PENDING",
+      "username": "accountant.douhan",
+      "org_unit": "FINANCE",
+      "position": "ACCOUNTANT",
+      "headcount_bucket": "finance",
+      "seed_type": "placeholder"
+    },
+    {
+      "employee_code": "DC-FIN-004",
+      "full_name": "Procurement Officer",
+      "email": "PENDING",
+      "username": "procurement.douhan",
+      "org_unit": "FINANCE",
+      "position": "PROCUREMENT_OFFICER",
+      "headcount_bucket": "finance",
+      "seed_type": "placeholder"
+    },
+
+    {
+      "employee_code": "DC-HR-001",
+      "full_name": "HR Officer",
+      "email": "PENDING",
+      "username": "hr.officer",
+      "org_unit": "HR",
+      "position": "HR_OFFICER",
+      "headcount_bucket": "hr",
+      "seed_type": "placeholder"
+    },
+
+    {
+      "employee_code": "DC-SALES-001",
+      "full_name": "Sales Manager",
+      "email": "PENDING",
+      "username": "sales.manager",
+      "org_unit": "SALES",
+      "position": "SALES_MANAGER",
+      "headcount_bucket": "sales",
+      "seed_type": "placeholder"
+    },
+    {
+      "employee_code": "DC-SALES-002",
+      "full_name": "Enterprise Account Executive",
+      "email": "PENDING",
+      "username": "enterprise.ae",
+      "org_unit": "SALES",
+      "position": "ENTERPRISE_ACCOUNT_EXECUTIVE",
+      "headcount_bucket": "sales",
+      "seed_type": "placeholder"
+    },
+    {
+      "employee_code": "DC-SALES-003",
+      "full_name": "Partnerships Sales Lead",
+      "email": "PENDING",
+      "username": "partnerships.sales",
+      "org_unit": "SALES",
+      "position": "PARTNERSHIPS_SALES_LEAD",
+      "headcount_bucket": "sales",
+      "seed_type": "placeholder"
+    }
+  ]
+}
+```
+
+---
+
+# D) Role and access model — لازم يركب على DAuth الحالي
+
+بما إنك عايز production-grade auditable tenant، يبقى مفيش shortcuts.
+
+## Tenant-scoped roles فقط
+
+```text id="z86812"
+douhan.board.chairman
+douhan.board.ceo
+douhan.board.cto
+douhan.board.cfo
+douhan.executive.member
+
+douhan.finance.manager
+douhan.finance.accountant
+douhan.procurement.officer
+
+douhan.hr.officer
+
+douhan.sales.manager
+douhan.sales.account_executive
+douhan.sales.partnerships_lead
+```
+
+## مهم
+
+لا تعطي أي role من دول تلقائيًا:
+
+```text id="a43737"
+platform_super_admin
+platform_root_admin
+authz_policy_override
+secrets_admin
+global_tenant_admin
+```
+
+## Initial assignments
+
+```json id="b40126"
+{
+  "role_assignments": [
+    { "username": "chairman.douhan", "role": "douhan.board.chairman", "scope": "tenant:douhan_consult" },
+    { "username": "ceo.douhan", "role": "douhan.board.ceo", "scope": "tenant:douhan_consult" },
+    { "username": "ahmed.dogan", "role": "douhan.board.cto", "scope": "tenant:douhan_consult" },
+    { "username": "amr.elsayed", "role": "douhan.board.cfo", "scope": "tenant:douhan_consult" },
+
+    { "username": "finance.manager", "role": "douhan.finance.manager", "scope": "tenant:douhan_consult" },
+    { "username": "accountant.douhan", "role": "douhan.finance.accountant", "scope": "tenant:douhan_consult" },
+    { "username": "procurement.douhan", "role": "douhan.procurement.officer", "scope": "tenant:douhan_consult" },
+
+    { "username": "hr.officer", "role": "douhan.hr.officer", "scope": "tenant:douhan_consult" },
+
+    { "username": "sales.manager", "role": "douhan.sales.manager", "scope": "tenant:douhan_consult" },
+    { "username": "enterprise.ae", "role": "douhan.sales.account_executive", "scope": "tenant:douhan_consult" },
+    { "username": "partnerships.sales", "role": "douhan.sales.partnerships_lead", "scope": "tenant:douhan_consult" }
+  ]
+}
+```
+
+---
+
+# E) Workspace and module_config seed — ده الجزء الأهم عمليًا
+
+أنت بعثت معلومة مهمة جدًا:
+`module_config` seeded حاليًا فقط لـ risk + compliance.
+باقي الموديولات table فاضي لها.
+
+إذًا لو عايز users يدخلوا النهارده ويشوفوا workspace محترم، لازم نعمل:
+
+## 1) Minimal module_config seed for Douhan Consult
+
+على الأقل لهذه modules:
+
+```text id="b65877"
+workspace
+navigation
+operating-cockpit
+platform-stats
+team
+config-center
+foundation
+admin
+```
+
+ولو موجودة UI surfaces لهذه المجالات:
+
+```text id="w63979"
+finance
+hr
+sales
+delivery
+contracts
+board
+```
+
+لكن لو modules دي ليس لها runtime config فعلي اليوم، يبقى نربطها بواجهة عامة أو dashboards موجودة، لا نكذب على runtime.
+
+## 2) saved_views seed
+
+لكل role يبقى عنده default workspace view.
+
+## 3) user_preferences seed
+
+لغة، layout، landing page، dashboard defaults.
+
+---
+
+## module_config seed draft
+
+```json id="j77184"
+{
+  "module_config_seed": [
+    {
+      "module_code": "workspace",
+      "config_type": "workspace_default",
+      "config_value": {
+        "landingRoute": "/workspace",
+        "showQuickActions": true,
+        "showAnnouncements": true,
+        "showAssignedWorkflows": true
+      }
+    },
+    {
+      "module_code": "navigation",
+      "config_type": "tenant_navigation",
+      "config_value": {
+        "items": [
+          { "code": "board_overview", "label": "Board Overview", "route": "/workspace/board", "roles": ["douhan.board.chairman", "douhan.board.ceo", "douhan.board.cto", "douhan.board.cfo"] },
+          { "code": "cto_desk", "label": "CTO Desk", "route": "/workspace/cto", "roles": ["douhan.board.cto"] },
+          { "code": "cfo_desk", "label": "CFO Desk", "route": "/workspace/cfo", "roles": ["douhan.board.cfo"] },
+          { "code": "ceo_desk", "label": "CEO Desk", "route": "/workspace/ceo", "roles": ["douhan.board.ceo"] },
+          { "code": "finance", "label": "Finance", "route": "/workspace/finance", "roles": ["douhan.board.cfo", "douhan.finance.manager", "douhan.finance.accountant", "douhan.procurement.officer"] },
+          { "code": "hr", "label": "HR", "route": "/workspace/hr", "roles": ["douhan.hr.officer"] },
+          { "code": "sales", "label": "Sales", "route": "/workspace/sales", "roles": ["douhan.sales.manager", "douhan.sales.account_executive", "douhan.sales.partnerships_lead"] },
+          { "code": "team", "label": "Team", "route": "/workspace/team", "roles": ["*"] }
+        ]
+      }
+    },
+    {
+      "module_code": "operating-cockpit",
+      "config_type": "tenant_operating_cockpit",
+      "config_value": {
+        "widgets": [
+          "company_health_score",
+          "workflow_backlog",
+          "open_actions",
+          "export_jobs",
+          "team_overview"
+        ]
+      }
+    }
+  ]
+}
+```
+
+---
+
+# F) saved_views seed
+
+```json id="v77989"
+{
+  "saved_views_seed": [
+    {
+      "view_type": "dashboard",
+      "owner_role": "douhan.board.chairman",
+      "name": "Board Overview",
+      "is_default": true,
+      "is_shared": false,
+      "config": {
+        "widgets": [
+          "company_health_score",
+          "board_decisions_pending",
+          "strategic_risks",
+          "financial_snapshot",
+          "platform_readiness",
+          "customer_pipeline"
+        ]
+      }
+    },
+    {
+      "view_type": "dashboard",
+      "owner_role": "douhan.board.cto",
+      "name": "CTO Desk",
+      "is_default": true,
+      "is_shared": false,
+      "config": {
+        "widgets": [
+          "platform_health",
+          "service_status",
+          "release_readiness",
+          "technical_blockers",
+          "authz_status"
+        ]
+      }
+    },
+    {
+      "view_type": "dashboard",
+      "owner_role": "douhan.board.cfo",
+      "name": "CFO Desk",
+      "is_default": true,
+      "is_shared": false,
+      "config": {
+        "widgets": [
+          "financial_snapshot",
+          "budget_status",
+          "expense_status",
+          "procurement_queue",
+          "valuation_tracker"
+        ]
+      }
+    },
+    {
+      "view_type": "dashboard",
+      "owner_role": "douhan.sales.manager",
+      "name": "Sales Desk",
+      "is_default": true,
+      "is_shared": false,
+      "config": {
+        "widgets": [
+          "sales_pipeline",
+          "opportunities",
+          "proposals",
+          "customer_followups"
+        ]
+      }
+    }
+  ]
+}
+```
+
+---
+
+# G) user_preferences seed
+
+```json id="s77276"
+{
+  "user_preferences_seed": [
+    {
+      "username": "ahmed.dogan",
+      "module_code": "global",
+      "preferences": {
+        "language": "en",
+        "timezone": "Asia/Riyadh",
+        "landingRoute": "/workspace/cto",
+        "theme": "enterprise_default"
+      }
+    },
+    {
+      "username": "amr.elsayed",
+      "module_code": "global",
+      "preferences": {
+        "language": "en",
+        "timezone": "Asia/Riyadh",
+        "landingRoute": "/workspace/cfo",
+        "theme": "enterprise_default"
+      }
+    }
+  ]
+}
+```
+
+---
+
+# H) SOP / workflow seed — using what exists now
+
+أنت قلت بوضوح:
+“الـ workflow هنمشي على اللي موجود دلوقتي وبعد كده نغيره واحدة واحدة”.
+
+وده القرار الصح.
+
+إذًا لا نبني workflow engine جديد.
+نعمل فقط **seed for categories + default workflow use-cases**.
+
+## Initial SOP buckets
+
+```text id="y99764"
+BOARD_DECISION
+EXEC_ACTION
+FINANCE_APPROVAL
+HR_LIFECYCLE
+SALES_PIPELINE
+CUSTOMER_POC
+PLATFORM_RELEASE
+AUTHZ_CHANGE
+CONTRACT_REVIEW
+INVESTOR_READINESS
+```
+
+## Minimal workflow templates
+
+```json id="c69953"
+{
+  "workflow_seed": [
+    {
+      "workflow_code": "BOARD_DECISION",
+      "title": "Board Decision",
+      "owner_org_unit": "BOARD",
+      "default_assignee_role": "douhan.board.chairman",
+      "steps": [
+        "draft",
+        "review",
+        "vote",
+        "approve",
+        "record_resolution",
+        "close"
+      ]
+    },
+    {
+      "workflow_code": "FINANCE_APPROVAL",
+      "title": "Finance Approval",
+      "owner_org_unit": "FINANCE",
+      "default_assignee_role": "douhan.board.cfo",
+      "steps": [
+        "request_created",
+        "manager_review",
+        "cfo_review",
+        "approved_or_rejected",
+        "close"
+      ]
+    },
+    {
+      "workflow_code": "SALES_OPPORTUNITY",
+      "title": "Sales Opportunity",
+      "owner_org_unit": "SALES",
+      "default_assignee_role": "douhan.sales.manager",
+      "steps": [
+        "lead",
+        "qualified",
+        "proposal",
+        "negotiation",
+        "won_or_lost"
+      ]
+    },
+    {
+      "workflow_code": "PLATFORM_RELEASE",
+      "title": "Platform Release",
+      "owner_org_unit": "PLATFORM_ENG",
+      "default_assignee_role": "douhan.board.cto",
+      "steps": [
+        "draft",
+        "technical_review",
+        "risk_review",
+        "release_decision",
+        "post_release_check",
+        "close"
+      ]
+    }
+  ]
+}
+```
+
+---
+
+# I) OpenFGA tuples — لازم تبدأ من أول يوم
+
+لأنك لا تريد onboarding، ولأن هذا tenant production-grade، إذًا لازم access model يكون seeded وليس manual.
+
+```text id="m76498"
+user:ahmed.dogan member tenant:douhan_consult
+user:ahmed.dogan board_cto tenant:douhan_consult
+
+user:amr.elsayed member tenant:douhan_consult
+user:amr.elsayed board_cfo tenant:douhan_consult
+
+user:chairman.douhan member tenant:douhan_consult
+user:chairman.douhan board_chairman tenant:douhan_consult
+
+user:ceo.douhan member tenant:douhan_consult
+user:ceo.douhan board_ceo tenant:douhan_consult
+
+user:finance.manager member tenant:douhan_consult
+user:finance.manager finance_manager tenant:douhan_consult
+
+user:accountant.douhan member tenant:douhan_consult
+user:accountant.douhan finance_accountant tenant:douhan_consult
+
+user:procurement.douhan member tenant:douhan_consult
+user:procurement.douhan procurement_officer tenant:douhan_consult
+
+user:hr.officer member tenant:douhan_consult
+user:hr.officer hr_officer tenant:douhan_consult
+
+user:sales.manager member tenant:douhan_consult
+user:sales.manager sales_manager tenant:douhan_consult
+
+user:enterprise.ae member tenant:douhan_consult
+user:enterprise.ae sales_ae tenant:douhan_consult
+
+user:partnerships.sales member tenant:douhan_consult
+user:partnerships.sales partnerships_sales_lead tenant:douhan_consult
+```
+
+---
+
+# J) Audit baseline — mandatory
+
+بما إنك طلبت auditable by regulators، فلازم seed نفسه يتسجل.
+
+## Audit events minimum
+
+```text id="o52247"
+tenant.seeded
+tenant.org_seeded
+tenant.roles_seeded
+tenant.users_seeded
+tenant.module_config_seeded
+tenant.workflow_seeded
+tenant.fga_seeded
+tenant.production_activation_requested
+```
+
+---
+
+# K) What is missing today and must be seeded now
+
+بناءً على deep check الذي أرسلته، هذه هي الفجوات الحقيقية التي تمنع تجربة محترمة اليوم:
+
+## 1) module_config is mostly empty
+
+إذًا:
+
+* لازم Douhan Consult يحصل على tenant-specific module_config rows
+* خصوصًا workspace/navigation/operating-cockpit/team/config-center
+
+## 2) user_preferences not seeded
+
+إذًا:
+
+* لازم landing routes, language, theme, workspace defaults
+
+## 3) saved_views not seeded
+
+إذًا:
+
+* users سيدخلون بلا dashboards واضحة
+
+## 4) tenant-aware cache keys still gap
+
+إذًا:
+
+* لا تعتمد في أول يوم على aggressive caching في هذا tenant
+* الأفضل during activation:
+
+  * تعطيل cache للمسارات الحساسة
+  * أو ضمان tenant-prefixed keys قبل استخدام كثيف
+
+## 5) export runtime exists but not fully wired
+
+إذًا:
+
+* لا تبيع export-heavy workflows كـ complete now
+* seed table موجود، لكن feature maturity لازم تظل صادقة
+
+---
+
+# L) التنفيذ الصحيح اليوم
+
+## Phase 1
+
+* Create tenant `douhan_consult`
+* Run tenant migrations
+* Seed org units
+* Seed users placeholders
+* Seed roles/permissions
+* Seed OpenFGA tuples
+
+## Phase 2
+
+* Seed `module_config`
+* Seed `saved_views`
+* Seed `user_preferences`
+* Seed baseline workflow categories/templates
+
+## Phase 3
+
+* Provision login identities
+* Assign passwords/invites
+* Test each role login
+* Check each role sees correct workspace
+
+## Phase 4
+
+* Gap log
+* أي صفحة تكسر أو ترجع 400/403/404/500 تسجل كـ hardening backlog for customer-zero
+
+---
+
+# M) Prompt مضبوط للوكيل
+
+```text id="o46729"
+Create a direct production tenant seed for Douhan Consult using the existing DOS tenant SQL model.
+
+Ground rules:
+- This is NOT onboarding.
+- This is NOT demo/trial/beta.
+- This is a direct enterprise production-grade auditable tenant activation.
+- Use the real shared tenant SQL infrastructure in @dos/db.
+- Respect tenant ID validation and schema derivation rules.
+- Use tenant_id = douhan_consult so schema becomes tenant_douhan_consult.
+- Do not invent a parallel tenant system.
+- Do not create a new board service.
+- Do not modify gateway JWT injection.
+- Do not widen scope.
+
+Use what exists:
+- @dos/db tenant.ts / withTenantClient / tenantScopedQuery
+- existing tenant migrations
+- tenant runtime tables:
+  module_config, user_preferences, saved_views, module_config_audit, export_jobs
+- existing tenant-service modules:
+  foundation, admin, team, provisioning, bootstrap, navigation, config, config-center, workspace, quality-gate, platform-stats, operating-cockpit
+
+Implement:
+1. Create tenant master seed for douhan_consult.
+2. Run tenant migrations for tenant_douhan_consult.
+3. Seed 18 org units:
+   BOARD, EXEC_OFFICE, STRATEGY_GOV, FINANCE, HR, SALES, PARTNERSHIPS, MARKETING, PRODUCT, PLATFORM_ENG, AI_DATA, CYBER_DAUTH, GRC_CONSULTING, DELIVERY, CUSTOMER_SUCCESS, PMO, LEGAL_CONTRACTS, OPS_ADMIN
+4. Seed board/executive positions:
+   CHAIRMAN, CEO, CTO, CFO
+5. Seed initial users:
+   - Ahmed Dogan = CTO
+   - Amr Elsayed = CFO
+   - Chairman placeholder
+   - CEO placeholder
+   - Finance Manager placeholder
+   - Accountant placeholder
+   - Procurement Officer placeholder
+   - HR Officer placeholder
+   - Sales Manager placeholder
+   - Enterprise Account Executive placeholder
+   - Partnerships Sales Lead placeholder
+6. Seed tenant-scoped roles only:
+   douhan.board.chairman
+   douhan.board.ceo
+   douhan.board.cto
+   douhan.board.cfo
+   douhan.executive.member
+   douhan.finance.manager
+   douhan.finance.accountant
+   douhan.procurement.officer
+   douhan.hr.officer
+   douhan.sales.manager
+   douhan.sales.account_executive
+   douhan.sales.partnerships_lead
+7. Seed role assignments for those users.
+8. Seed OpenFGA tenant-scoped tuples for those users.
+9. Seed module_config because only risk/compliance are seeded globally today.
+   Add minimal tenant-specific module_config rows for:
+   workspace, navigation, operating-cockpit, team, config-center
+10. Seed saved_views for:
+   Board Overview, CEO Desk, CTO Desk, CFO Desk, Sales Desk, HR Desk
+11. Seed user_preferences with default landing routes.
+12. Seed SOP/workflow categories and baseline templates:
+   BOARD_DECISION, FINANCE_APPROVAL, SALES_OPPORTUNITY, PLATFORM_RELEASE
+13. Write audit events proving the tenant was seeded as enterprise production-grade.
+
+Security constraints:
+- No platform_super_admin
+- No platform_root_admin
+- No authz.policy.override
+- No secrets_admin
+- No global tenant admin
+- All seeded permissions must remain tenant-scoped to douhan_consult
+
+Acceptance:
+- seed is idempotent
+- tenant exists
+- schema tenant_douhan_consult exists
+- 18 org units exist
+- users exist
+- roles and assignments exist
+- OpenFGA tuples exist
+- module_config rows exist for workspace/navigation/operating-cockpit/team/config-center
+- saved_views exist
+- user_preferences exist
+- at least one user can log in and land on the correct workspace
+- audit evidence exists
+```
+
+---
+
+# القرار النهائي
+
+بناءً على الـ deep check:
+
+**نعم، تقدر تفعّل Douhan Consult اليوم**
+لكن ليس فقط بعمل tenant وusers.
+لازم أيضًا تعمل **workspace/module_config/saved_views/user_preferences seed** لأن ده هو الجزء الناقص فعليًا في بنية المنصة الحالية.
+
+من غير ده، هيدخلوا tenant “موجود” لكن التجربة هتكون ناقصة أو مكسورة.
+
+ابعث أسماء وإيميلات:
+
+* Chairman
+* CEO
+* Ahmed Dogan
+* Amr Elsayed
+* Finance Manager
+* Accountant
+* Procurement Officer
+* HR Officer
+* Sales Manager
+* Enterprise Account Executive
+* Partnerships Sales Lead
+
+وأطلع لك النسخة النهائية كـ **seed manifest production-grade** بأسماء فعلية بدل placeholders.

@@ -1,0 +1,64 @@
+{
+  "module": "process-tasks",
+  "phase": "Phase 2 / Module 1b",
+  "completedAt": "2026-04-25T17:18:59.951826Z",
+  "verdict": "PASS",
+  "tenant": "shahin_visitors",
+  "user": "tenantadmin@shahin-ai.local",
+  "role": "tenant_admin",
+  "issuer": "https://auth.shahin-ai.com/realms/dogan",
+  "endpointCount": 6,
+  "passCount": 6,
+  "failCount": 0,
+  "failingEndpoints": [],
+  "endpoints": [
+    {
+      "name": "list",
+      "path": "/api/process-tasks",
+      "status": 200,
+      "ms": 61,
+      "verdict": "PASS",
+      "sample": "data: list[0]"
+    },
+    {
+      "name": "listLimited",
+      "path": "/api/process-tasks?limit=10",
+      "status": 200,
+      "ms": 73,
+      "verdict": "PASS",
+      "sample": "data: list[0]"
+    },
+    {
+      "name": "slaStats",
+      "path": "/api/process-tasks/sla-stats",
+      "status": 200,
+      "ms": 50,
+      "verdict": "PASS",
+      "sample": "keys: ['data', 'meta', 'success']"
+    },
+    {
+      "name": "slaByRole",
+      "path": "/api/process-tasks/sla-by-role",
+      "status": 200,
+      "ms": 50,
+      "verdict": "PASS",
+      "sample": "data: list[0]"
+    },
+    {
+      "name": "slaBreaches",
+      "path": "/api/process-tasks/sla-breaches",
+      "status": 200,
+      "ms": 50,
+      "verdict": "PASS",
+      "sample": "data: list[0]"
+    },
+    {
+      "name": "slaWarnings",
+      "path": "/api/process-tasks/sla-warnings",
+      "status": 200,
+      "ms": 47,
+      "verdict": "PASS",
+      "sample": "data: list[0]"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+=== typecheck:modules error count ===
+7064
+=== verify:imports violation count ===
+x 630 dependency violations (630 errors, 0 warnings). 657 modules, 639 dependencies cruised.
+=== build:services attempt ===
+src/domain/routing/route-catalogs/access/rbac/seed-rbac-data.ts(160,67): error TS2339: Property 'name' does not exist on type '"delete" | "admin" | "read" | "create" | "update" | "approve" | "export"'.
+  Property 'name' does not exist on type '"delete"'.
+/root/DOS-AIO/services/gateway:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  gateway@0.1.0 build: `tsc -p tsconfig.json`
+Exit status 2
+
+> governance-policy-service@0.1.0 build /root/DOS-AIO/services/governance-policy-service
+> tsc -p tsconfig.json
+
+ ELIFECYCLE  Command failed with exit code 2.

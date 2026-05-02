@@ -1,0 +1,4 @@
+
+> @shahin/product@1.0.0 build /root/DOS-AIO/packages/shahin-product
+> tsc -p tsconfig.build.json
+

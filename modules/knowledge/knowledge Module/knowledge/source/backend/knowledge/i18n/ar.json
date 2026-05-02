@@ -1,0 +1,11 @@
+{
+  "knowledge.title": "مركز المعرفة",
+  "knowledge.dashboard": "لوحة مركز المعرفة",
+  "knowledge.empty.title": "لا توجد سجلات",
+  "knowledge.empty.description": "أنشئ أول سجل للبدء.",
+  "knowledge.loading": "جاري تحميل البيانات...",
+  "knowledge.error.title": "فشل تحميل البيانات",
+  "knowledge.error.retry": "إعادة المحاولة",
+  "knowledge.create": "إنشاء جديد",
+  "knowledge.diagnostics": "التشخيصات"
+}

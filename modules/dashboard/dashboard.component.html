@@ -1,0 +1,68 @@
+<app-page-shell
+      icon="chart-bar"
+      [title]="i18n.translate('dashboard.title')"
+      [subtitle]="i18n.translate('app.tagline')"
+      [breadcrumbs]="['Dashboard']"
+      [loading]="!data">
+
+      <ng-container *ngIf="data">
+        <div aria-live="polite" class="sr-only" *ngIf="data">{{ i18n.translate('dashboard.lastUpdated') || 'Dashboard updated' }}</div>
+        <div class="last-updated-bar" *ngIf="lastUpdated()">
+          <span class="last-updated-text"><i class="pi pi-clock"></i> {{ i18n.translate('dashboard.lastUpdated') || 'Last updated' }}: {{ lastUpdated() | date:'HH:mm:ss' }}</span>
+          <button class="refresh-btn" (click)="loadDashboard()" aria-label="Refresh dashboard"><i class="pi pi-refresh"></i></button>
+        </div>
+        <!-- Hijri Date & KSA Holiday Banner -->
+        <div class="hijri-banner" *ngIf="hijriDate">
+          <div class="hijri-date">
+            <i class="pi pi-calendar"></i>
+            <span>{{ hijriDate }}</span>
+            <span class="gregorian-date">{{ today | date:'fullDate' }}</span>
+          </div>
+          <div class="holiday-badge" *ngIf="ksaHoliday">
+            <i class="pi pi-star-fill"></i>
+            <span>{{ ksaHoliday }}</span>
+          </div>
+        </div>
+
+        <!-- KPI + KSA Posture (sub-component) -->
+        <app-dashboard-stats-banner
+          [totalFrameworks]="data.summary.totalFrameworks"
+          [totalRisks]="data.summary.totalRisks"
+          [totalControls]="data.summary.totalControls"
+          [totalPolicies]="data.summary.totalPolicies"
+          [ncaScore]="ksaPosture.ncaScore"
+          [regulatorsAssessed]="ksaPosture.regulatorsAssessed"
+          [regulatorsTotal]="ksaPosture.regulatorsTotal"
+          [efficiencyRatio]="ksaPosture.efficiencyRatio"
+          [dpiaCount]="ksaPosture.dpiaCount" />
+
+        <!-- D3 Charts Row — theme-aware SVG -->
+        <div class="charts-row">
+          <div class="chart-card">
+            <div class="chart-title"><i class="pi pi-chart-pie"></i> {{ i18n.translate('dashboard.complianceScore') }}</div>
+            <div class="chart-wrap" #complianceChart></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title"><i class="pi pi-exclamation-triangle"></i> {{ i18n.translate('dashboard.risksByLevel') }}</div>
+            <div class="chart-wrap" #riskChart></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title"><i class="pi pi-check-circle"></i> {{ i18n.translate('dashboard.controlStatus') }}</div>
+            <div class="chart-wrap" #controlChart></div>
+          </div>
+        </div>
+
+        <!-- AI Agent Toolkit (sub-component) -->
+        <app-dashboard-agent-cards [agents]="agents" />
+
+        <!-- Widget Section (sub-component) -->
+        <app-dashboard-widget-catalog
+          [activeWidgets]="activeWidgets"
+          [displayMode]="displayMode"
+          (modeChanged)="onDisplayModeChange($event)"
+          (drillDown)="openDrillDown($event.widgetId, $event.payload)" />
+
+        <!-- Advanced drill-through panel -->
+        <app-drill-through-panel />
+      </ng-container>
+    </app-page-shell>

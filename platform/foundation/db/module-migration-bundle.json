@@ -1,0 +1,58 @@
+{
+  "$schema": "../../../platform/dos/migrations/schema/module-migration-bundle.schema.json",
+  "moduleCode": "foundation",
+  "version": "2.0.0",
+  "owner": "platform-dos",
+  "migrationDir": "migrations",
+  "seedDir": "seeds",
+  "targetSchemas": ["public", "dos"],
+  "ordered": [
+    {
+      "file": "20260424_0100_foundation_zero_blocker.sql",
+      "description": "Foundation core tables + 40 permissions + 8 roles + 1302 bindings + tenant schema drift repair",
+      "idempotent": true,
+      "down": "20260424_0100_foundation_zero_blocker_down.sql"
+    },
+    {
+      "file": "20260425_0002_foundation_schema_alignment.sql",
+      "description": "Foundation schema alignment part 1 (column additions + constraint fixes)",
+      "idempotent": true
+    },
+    {
+      "file": "20260425_0003_foundation_schema_alignment_part2.sql",
+      "description": "Foundation schema alignment part 2 (indexes + tenant schema drift)",
+      "idempotent": true
+    },
+    {
+      "file": "20260425_0400_foundation_workflow_template.sql",
+      "description": "P8.2 — register canonical foundation_org_change workflow template",
+      "idempotent": true
+    },
+    {
+      "file": "20260425_0500_foundation_rls.sql",
+      "description": "P8.9 — enable tenant-scoped RLS on 11 foundation dos.* tables",
+      "idempotent": true
+    },
+    {
+      "file": "20260425_0600_foundation_demo_seed.sql",
+      "description": "P7 — idempotent demo seed: org/BU/positions/locations/committees for active tenants",
+      "idempotent": true
+    }
+  ],
+  "seeds": [
+    {
+      "file": "foundation-permissions.sql",
+      "description": "Idempotent seed: dos.permissions catalogue (shipped inline in zero_blocker; placeholder retained for future edits)",
+      "phase": "post-migrate"
+    },
+    {
+      "file": "foundation-roles.sql",
+      "description": "Idempotent seed: dos.functional_roles catalogue (shipped inline in zero_blocker; placeholder retained for future edits)",
+      "phase": "post-migrate"
+    }
+  ],
+  "notes": [
+    "governance_decisions.sql is owned by the governance module, not foundation, even though F1.19 surfaces it via foundation-governance.routes.ts.",
+    "Seed files are currently empty placeholders — all seed DML is embedded in the zero_blocker migration for idempotency. Split when DML volume warrants it."
+  ]
+}

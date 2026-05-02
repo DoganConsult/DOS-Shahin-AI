@@ -1,0 +1,3 @@
+import { safeQuery } from "@dos/db";
+
+export * from './structure/governance-graph.service';

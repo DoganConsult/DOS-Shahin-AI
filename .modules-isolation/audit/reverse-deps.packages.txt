@@ -1,0 +1,6 @@
+    439 @dos/module-sdk
+     66 @dos/module-auth
+     11 @dos/module-foundation
+      3 @dos/module-compliance
+      2 @dos/module-telemetry
+      2 @dos/module-risk

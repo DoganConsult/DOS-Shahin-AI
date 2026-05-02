@@ -1,0 +1,349 @@
+<div class="ev-reports-page" [attr.dir]="dir()">
+  <p-toast />
+
+  <!-- Page Header -->
+  <app-page-header
+    titleEn="Evidence Reports"
+    titleAr="تقارير الأدلة"
+    subtitleEn="Evidence-specific reports and analytics across 6 dimensions"
+    subtitleAr="تقارير وتحليلات متخصصة بالأدلة عبر 6 أبعاد"
+    icon="chart-line"
+    [breadcrumbs]="['Evidence', isAr() ? 'التقارير' : 'Reports']"
+    [isAr]="isAr()"
+    [dir]="dir()" />
+
+  <div class="page-body">
+    <p-tabView [activeIndex]="activeTabIndex()" (activeIndexChange)="onTabChange($any($event))">
+
+      <!-- Tab 1: Aging -->
+      <p-tabPanel [header]="isAr() ? 'تقادم الأدلة' : 'Aging'">
+        <div class="tab-toolbar">
+          <h3 class="tab-title"><i class="pi pi-calendar"></i> {{ isAr() ? 'توزيع عمر الأدلة' : 'Evidence Age Distribution' }}</h3>
+          <button pButton icon="pi pi-download" [label]="isAr() ? 'تصدير CSV' : 'Export CSV'" class="p-button-outlined p-button-sm" (click)="onExportCsv()"></button>
+        </div>
+
+        @if (tabLoading() && activeTabId() === 'aging') {
+          <app-skeleton-loader [rows]="5" />
+        }
+
+        @if (!tabLoading() || activeTabId() !== 'aging') {
+          @if (agingBands().length === 0) {
+            <app-empty-state
+              [title]="isAr() ? 'لا توجد بيانات' : 'No Data'"
+              [description]="isAr() ? 'لم يتم العثور على بيانات التقادم' : 'No aging data found'"
+              [dir]="dir()" />
+          }
+
+          @if (agingBands().length > 0) {
+            <grc-data-table
+              [totalRecords]="agingBands().length"
+              [emptyMessage]="isAr() ? 'لا توجد بيانات التقادم' : 'No aging data'">
+              <p-table aria-label="Aging report table" [value]="agingBands()" [rowHover]="true"
+                styleClass="p-datatable-sm p-datatable-striped">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th>{{ isAr() ? 'الفترة' : 'Age Band' }}</th>
+                    <th>{{ isAr() ? 'العدد' : 'Count' }}</th>
+                    <th>{{ isAr() ? 'النسبة' : 'Percentage' }}</th>
+                    <th>{{ isAr() ? 'التوزيع' : 'Distribution' }}</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-row>
+                  <tr>
+                    <td class="band-cell">{{ row.band }}</td>
+                    <td class="count-cell">{{ row.count }}</td>
+                    <td>{{ row.percentage }}%</td>
+                    <td><p-progressBar [value]="row.percentage" [showValue]="false" [style]="{ height: '8px' }" /></td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </grc-data-table>
+          }
+        }
+      </p-tabPanel>
+
+      <!-- Tab 2: Backlog -->
+      <p-tabPanel [header]="isAr() ? 'المتأخرات' : 'Backlog'">
+        <div class="tab-toolbar">
+          <h3 class="tab-title"><i class="pi pi-clock"></i> {{ isAr() ? 'الطلبات المتأخرة والمراجعات المعلقة' : 'Overdue Requests & Pending Reviews' }}</h3>
+          <button pButton icon="pi pi-download" [label]="isAr() ? 'تصدير CSV' : 'Export CSV'" class="p-button-outlined p-button-sm" (click)="onExportCsv()"></button>
+        </div>
+
+        @if (tabLoading() && activeTabId() === 'backlog') {
+          <app-skeleton-loader [rows]="5" />
+        }
+
+        @if (!tabLoading() || activeTabId() !== 'backlog') {
+          @if (backlogKpis().length > 0) {
+            <app-kpi-card-grid [cards]="backlogKpis()" [isAr]="isAr()" />
+          }
+
+          @if (backlogRows().length === 0) {
+            <app-empty-state
+              [title]="isAr() ? 'لا توجد طلبات متأخرة' : 'No Overdue Requests'"
+              [description]="isAr() ? 'جميع الطلبات ضمن المواعيد' : 'All requests are within deadlines'"
+              [dir]="dir()" />
+          }
+
+          @if (backlogRows().length > 0) {
+            <p-card [header]="isAr() ? 'أقدم الطلبات المفتوحة' : 'Oldest Open Requests'">
+              <grc-data-table
+                [totalRecords]="backlogRows().length"
+                [emptyMessage]="isAr() ? 'لا توجد طلبات متأخرة' : 'No overdue requests'">
+                <p-table aria-label="Backlog table" [value]="backlogRows()" [paginator]="backlogRows().length > 15" [rows]="15"
+                  [rowHover]="true" styleClass="p-datatable-sm p-datatable-striped">
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th>{{ isAr() ? 'العنوان' : 'Title' }}</th>
+                      <th>{{ isAr() ? 'الضابط' : 'Control' }}</th>
+                      <th>{{ isAr() ? 'المسؤول' : 'Assignee' }}</th>
+                      <th>{{ isAr() ? 'الحالة' : 'Status' }}</th>
+                      <th>{{ isAr() ? 'تاريخ الاستحقاق' : 'Due Date' }}</th>
+                      <th>{{ isAr() ? 'أيام التأخر' : 'Days Overdue' }}</th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-row>
+                    <tr>
+                      <td class="name-cell">{{ row.title }}</td>
+                      <td class="code-cell">{{ row.control_id }}</td>
+                      <td>{{ row.assignee || '\u2014' }}</td>
+                      <td>{{ row.status }}</td>
+                      <td>{{ row.due_date | date:'mediumDate' }}</td>
+                      <td class="overdue-cell" [class.overdue-danger]="row.days_overdue > 14">{{ row.days_overdue }}</td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+              </grc-data-table>
+            </p-card>
+          }
+        }
+      </p-tabPanel>
+
+      <!-- Tab 3: Source Coverage -->
+      <p-tabPanel [header]="isAr() ? 'تغطية المصادر' : 'Source Coverage'">
+        <div class="tab-toolbar">
+          <h3 class="tab-title"><i class="pi pi-chart-bar"></i> {{ isAr() ? 'تغطية الأدلة حسب نوع المصدر' : 'Evidence Coverage by Source Type' }}</h3>
+          <button pButton icon="pi pi-download" [label]="isAr() ? 'تصدير CSV' : 'Export CSV'" class="p-button-outlined p-button-sm" (click)="onExportCsv()"></button>
+        </div>
+
+        @if (tabLoading() && activeTabId() === 'source-coverage') {
+          <app-skeleton-loader [rows]="5" />
+        }
+
+        @if (!tabLoading() || activeTabId() !== 'source-coverage') {
+          @if (sourceCoverageRows().length === 0) {
+            <app-empty-state
+              [title]="isAr() ? 'لا توجد بيانات' : 'No Data'"
+              [description]="isAr() ? 'لم يتم العثور على بيانات تغطية المصادر' : 'No source coverage data found'"
+              [dir]="dir()" />
+          }
+
+          @if (sourceCoverageRows().length > 0) {
+            <grc-data-table
+              [totalRecords]="sourceCoverageRows().length"
+              [emptyMessage]="isAr() ? 'لا توجد بيانات تغطية المصادر' : 'No source coverage data'">
+              <p-table aria-label="Source coverage table" [value]="sourceCoverageRows()" [rowHover]="true"
+                styleClass="p-datatable-sm p-datatable-striped">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th>{{ isAr() ? 'نوع المصدر' : 'Source Type' }}</th>
+                    <th>{{ isAr() ? 'العدد' : 'Count' }}</th>
+                    <th>{{ isAr() ? 'النسبة' : 'Percentage' }}</th>
+                    <th>{{ isAr() ? 'متوسط الجودة' : 'Avg Quality' }}</th>
+                    <th>{{ isAr() ? 'التوزيع' : 'Distribution' }}</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-row>
+                  <tr>
+                    <td class="name-cell">{{ row.source_type }}</td>
+                    <td class="count-cell">{{ row.count }}</td>
+                    <td>{{ row.percentage }}%</td>
+                    <td>
+                      <span class="quality-score" [class.quality-high]="row.avg_quality >= 80"
+                        [class.quality-mid]="row.avg_quality >= 50 && row.avg_quality < 80"
+                        [class.quality-low]="row.avg_quality < 50">
+                        {{ row.avg_quality }}%
+                      </span>
+                    </td>
+                    <td><p-progressBar [value]="row.percentage" [showValue]="false" [style]="{ height: '8px' }" /></td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </grc-data-table>
+          }
+        }
+      </p-tabPanel>
+
+      <!-- Tab 4: Reuse -->
+      <p-tabPanel [header]="isAr() ? 'إعادة الاستخدام' : 'Reuse'">
+        <div class="tab-toolbar">
+          <h3 class="tab-title"><i class="pi pi-replay"></i> {{ isAr() ? 'تحليل إعادة استخدام الأدلة' : 'Evidence Reuse Analysis' }}</h3>
+          <button pButton icon="pi pi-download" [label]="isAr() ? 'تصدير CSV' : 'Export CSV'" class="p-button-outlined p-button-sm" (click)="onExportCsv()"></button>
+        </div>
+
+        @if (tabLoading() && activeTabId() === 'reuse') {
+          <app-skeleton-loader [rows]="5" />
+        }
+
+        @if (!tabLoading() || activeTabId() !== 'reuse') {
+          @if (reuseKpis().length > 0) {
+            <app-kpi-card-grid [cards]="reuseKpis()" [isAr]="isAr()" />
+          }
+
+          @if (reuseRows().length === 0) {
+            <app-empty-state
+              [title]="isAr() ? 'لا توجد بيانات' : 'No Data'"
+              [description]="isAr() ? 'لم يتم العثور على أدلة معاد استخدامها' : 'No reused evidence found'"
+              [dir]="dir()" />
+          }
+
+          @if (reuseRows().length > 0) {
+            <p-card [header]="isAr() ? 'الأدلة الأكثر إعادة استخدام' : 'Most Reused Evidence'">
+              <grc-data-table
+                [totalRecords]="reuseRows().length"
+                [emptyMessage]="isAr() ? 'لا توجد أدلة معاد استخدامها' : 'No reused evidence'">
+                <p-table aria-label="Reuse table" [value]="reuseRows()" [paginator]="reuseRows().length > 15" [rows]="15"
+                  [rowHover]="true" styleClass="p-datatable-sm p-datatable-striped">
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th>{{ isAr() ? 'معرف الدليل' : 'Evidence ID' }}</th>
+                      <th>{{ isAr() ? 'العنوان' : 'Title' }}</th>
+                      <th>{{ isAr() ? 'النوع' : 'Type' }}</th>
+                      <th>{{ isAr() ? 'مرات الاستخدام' : 'Reuse Count' }}</th>
+                      <th>{{ isAr() ? 'الأطر' : 'Frameworks' }}</th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-row>
+                    <tr>
+                      <td class="code-cell">{{ row.evidence_id }}</td>
+                      <td class="name-cell">{{ row.title }}</td>
+                      <td>{{ row.type }}</td>
+                      <td class="count-cell reuse-count">{{ row.reuse_count }}</td>
+                      <td>
+                        @for (fw of row.frameworks; track fw) {
+                          <span class="framework-chip">{{ fw }}</span>
+                        }
+                        @if (row.frameworks.length === 0) {
+                          <span class="text-muted">&mdash;</span>
+                        }
+                      </td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+              </grc-data-table>
+            </p-card>
+          }
+        }
+      </p-tabPanel>
+
+      <!-- Tab 5: Quality -->
+      <p-tabPanel [header]="isAr() ? 'الجودة' : 'Quality'">
+        <div class="tab-toolbar">
+          <h3 class="tab-title"><i class="pi pi-star"></i> {{ isAr() ? 'توزيع مستويات الجودة' : 'Quality Tier Distribution' }}</h3>
+          <button pButton icon="pi pi-download" [label]="isAr() ? 'تصدير CSV' : 'Export CSV'" class="p-button-outlined p-button-sm" (click)="onExportCsv()"></button>
+        </div>
+
+        @if (tabLoading() && activeTabId() === 'quality') {
+          <app-skeleton-loader [rows]="4" />
+        }
+
+        @if (!tabLoading() || activeTabId() !== 'quality') {
+          @if (qualityKpis().length > 0) {
+            <app-kpi-card-grid [cards]="qualityKpis()" [isAr]="isAr()" />
+          }
+
+          @if (qualityTiers().length === 0) {
+            <app-empty-state
+              [title]="isAr() ? 'لا توجد بيانات' : 'No Data'"
+              [description]="isAr() ? 'لم يتم العثور على بيانات الجودة' : 'No quality data found'"
+              [dir]="dir()" />
+          }
+
+          @if (qualityTiers().length > 0) {
+            <grc-data-table
+              [totalRecords]="qualityTiers().length"
+              [emptyMessage]="isAr() ? 'لا توجد بيانات الجودة' : 'No quality data'">
+              <p-table aria-label="Quality tiers table" [value]="qualityTiers()" [rowHover]="true"
+                styleClass="p-datatable-sm p-datatable-striped">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th>{{ isAr() ? 'المستوى' : 'Tier' }}</th>
+                    <th>{{ isAr() ? 'العدد' : 'Count' }}</th>
+                    <th>{{ isAr() ? 'النسبة' : 'Percentage' }}</th>
+                    <th>{{ isAr() ? 'التوزيع' : 'Distribution' }}</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-row>
+                  <tr>
+                    <td>
+                      <span class="tier-badge" [attr.data-tier]="row.tier">{{ row.tier }}</span>
+                    </td>
+                    <td class="count-cell">{{ row.count }}</td>
+                    <td>{{ row.percentage }}%</td>
+                    <td><p-progressBar [value]="row.percentage" [showValue]="false" [style]="{ height: '8px' }" /></td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </grc-data-table>
+          }
+        }
+      </p-tabPanel>
+
+      <!-- Tab 6: Audit Readiness -->
+      <p-tabPanel [header]="isAr() ? 'جاهزية التدقيق' : 'Audit Readiness'">
+        <div class="tab-toolbar">
+          <h3 class="tab-title"><i class="pi pi-check-circle"></i> {{ isAr() ? 'جاهزية الأطر للتدقيق' : 'Framework Audit Readiness' }}</h3>
+          <button pButton icon="pi pi-download" [label]="isAr() ? 'تصدير CSV' : 'Export CSV'" class="p-button-outlined p-button-sm" (click)="onExportCsv()"></button>
+        </div>
+
+        @if (tabLoading() && activeTabId() === 'audit-readiness') {
+          <app-skeleton-loader [rows]="5" />
+        }
+
+        @if (!tabLoading() || activeTabId() !== 'audit-readiness') {
+          @if (auditReadinessRows().length === 0) {
+            <app-empty-state
+              [title]="isAr() ? 'لا توجد بيانات' : 'No Data'"
+              [description]="isAr() ? 'لم يتم العثور على بيانات الجاهزية' : 'No readiness data found'"
+              [dir]="dir()" />
+          }
+
+          @if (auditReadinessRows().length > 0) {
+            <grc-data-table
+              [totalRecords]="auditReadinessRows().length"
+              [emptyMessage]="isAr() ? 'لا توجد بيانات الجاهزية' : 'No readiness data'">
+              <p-table aria-label="Audit readiness table" [value]="auditReadinessRows()" [rowHover]="true"
+                styleClass="p-datatable-sm p-datatable-striped">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th>{{ isAr() ? 'الإطار' : 'Framework' }}</th>
+                    <th>{{ isAr() ? 'إجمالي الضوابط' : 'Total Controls' }}</th>
+                    <th>{{ isAr() ? 'الأدلة المكتملة' : 'Evidence Complete' }}</th>
+                    <th>{{ isAr() ? 'الجاهزية' : 'Readiness' }}</th>
+                    <th>{{ isAr() ? 'الفجوات' : 'Gaps' }}</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-row>
+                  <tr>
+                    <td class="name-cell">{{ row.framework }}</td>
+                    <td class="count-cell">{{ row.total_controls }}</td>
+                    <td class="count-cell">{{ row.evidence_complete }}</td>
+                    <td>
+                      <div class="readiness-bar">
+                        <p-progressBar [value]="row.readiness_pct" [showValue]="true" [style]="{ height: '14px' }" />
+                      </div>
+                    </td>
+                    <td>
+                      <span class="gaps-badge" [class.gaps-zero]="row.gaps === 0">{{ row.gaps }}</span>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </grc-data-table>
+          }
+        }
+      </p-tabPanel>
+
+    </p-tabView>
+  </div>
+</div>

@@ -1,0 +1,272 @@
+<cds-notification></cds-notification>
+    <div class="reg-page" [dir]="i18n.direction()">
+      <div class="page-toolbar">
+        <h2>{{ isAr() ? 'التغييرات التنظيمية' : 'Regulatory Changes' }}</h2>
+        <div class="toolbar-actions">
+          <select class="filter-select" [(ngModel)]="statusFilter" (ngModelChange)="load()">
+            <option value="">{{ isAr() ? 'كل الحالات' : 'All Statuses' }}</option>
+            <option value="new">{{ isAr() ? 'جديد' : 'New' }}</option>
+            <option value="under_review">{{ isAr() ? 'قيد المراجعة' : 'Under Review' }}</option>
+            <option value="assessed">{{ isAr() ? 'تم التقييم' : 'Assessed' }}</option>
+            <option value="action_required">{{ isAr() ? 'يتطلب إجراء' : 'Action Required' }}</option>
+            <option value="implemented">{{ isAr() ? 'مطبّق' : 'Implemented' }}</option>
+            <option value="dismissed">{{ isAr() ? 'مرفوض' : 'Dismissed' }}</option>
+          </select>
+          <select class="filter-select" [(ngModel)]="departmentFilter" (ngModelChange)="load()">
+            <option value="">{{ isAr() ? 'كل الأقسام' : 'All Departments' }}</option>
+            @for (d of departments(); track d.department_id) {
+              <option [value]="d.department_id">{{ d.name }}</option>
+            }
+          </select>
+          <button cdsButton icon="" [label]="isAr() ? 'تسجيل تغيير' : 'Log Change'" class="" (click)="showCreate = true"></button>
+        </div>
+      </div>
+
+      <div class="health-strip">
+        <div class="hs-card" (click)="statusFilter = ''; load()"><span class="hs-num">{{ items().length }}</span><span class="hs-label">Total</span></div>
+        <div class="hs-card new-card" (click)="statusFilter = 'new'; load()"><span class="hs-num">{{ countByStatus('new') }}</span><span class="hs-label">New</span></div>
+        <div class="hs-card review-card" (click)="statusFilter = 'under_review'; load()"><span class="hs-num">{{ countByStatus('under_review') }}</span><span class="hs-label">Under Review</span></div>
+        <div class="hs-card action-card" (click)="statusFilter = 'action_required'; load()"><span class="hs-num">{{ countByStatus('action_required') }}</span><span class="hs-label">Action Required</span></div>
+      </div>
+
+      @if (loading()) {
+        <div style="text-align:center;padding:48px;color:var(--text-color-secondary)"><i class=" pi-spinner"></i></div>
+      }
+
+      @if (errorMsg()) {
+        <div class="load-error-banner" role="alert">
+          <i class=""></i>
+          <span>{{ errorMsg() }}</span>
+          <button type="button" class="retry-btn" (click)="errorMsg.set(''); load()">{{ i18n.translate('common.retry') || (isAr() ? 'إعادة المحاولة' : 'Retry') }}</button>
+        </div>
+      }
+
+      @if (!loading() && !errorMsg() && filteredItems().length === 0) {
+        <div style="text-align:center;padding:48px;color:var(--text-color-secondary)">
+          <i class="" style="font-size:40px;opacity:.4;display:block;margin-bottom:12px"></i>
+          <p>{{ isAr() ? 'لا توجد تغييرات تنظيمية' : 'No regulatory changes recorded' }}</p>
+        </div>
+      }
+
+      @if (!loading() && !errorMsg() && filteredItems().length > 0) {
+        <div class="table-wrap">
+          <table class="data-table" aria-label="Regulatory changes">
+            <thead>
+              <tr>
+                <th>{{ isAr() ? 'العنوان' : 'Title' }}</th>
+                <th>{{ isAr() ? 'الجهة' : 'Regulator' }}</th>
+                <th>{{ isAr() ? 'المالك' : 'Owner' }}</th>
+                <th>{{ isAr() ? 'تاريخ السريان' : 'Effective Date' }}</th>
+                <th>{{ isAr() ? 'الخطورة' : 'Severity' }}</th>
+                <th>{{ isAr() ? 'الحالة' : 'Status' }}</th>
+                <th>{{ isAr() ? 'الضوابط المتأثرة' : 'Impacted' }}</th>
+                <th>{{ isAr() ? 'الإجراءات' : 'Actions' }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of filteredItems(); track item.change_id) {
+                <tr class="clickable-row" (click)="openDetail(item)">
+                  <td style="font-weight:500;max-width:250px">{{ item.title }}</td>
+                  <td>{{ item.regulator_code || '—' }}</td>
+                  <td>{{ item.owner_name || '—' }}</td>
+                  <td style="white-space:nowrap">{{ item.effective_date | date:'mediumDate' }}</td>
+                  <td><cds-tag [severity]="sevTag(item.severity)" [value]="item.severity || 'medium'" /></td>
+                  <td><span class="status-badge" [attr.data-status]="item.status">{{ item.status?.replace('_', ' ') }}</span></td>
+                  <td>{{ item.impact_assessment?.impacted_controls || '—' }}</td>
+                  <td class="actions-cell" (click)="$event.stopPropagation()">
+                    @if (item.status === 'new') {
+                      <button cdsButton icon="" class=" " (click)="changeStatus(item, 'under_review')"></button>
+                      <button cdsButton icon="" class=" " (click)="assessImpact(item)"></button>
+                    }
+                    @if (item.status === 'under_review' || item.status === 'assessed') {
+                      <button cdsButton icon="" class="  " (click)="changeStatus(item, 'action_required')"></button>
+                      <button cdsButton icon="" class="  " (click)="changeStatus(item, 'dismissed')"></button>
+                    }
+                    @if (item.status === 'action_required') {
+                      <button cdsButton icon="" class="  " (click)="changeStatus(item, 'implemented')"></button>
+                    }
+                    <button cdsButton icon="" class=" " (click)="viewAuditLog(item)"></button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+
+      @if (selectedItem()) {
+        <div class="drawer-overlay" (click)="selectedItem.set(null)"></div>
+        <aside class="detail-drawer" [dir]="i18n.direction()">
+          <div class="drawer-header">
+            <h3>{{ selectedItem()!.title }}</h3>
+            <button aria-label="Close" class="close-btn" (click)="selectedItem.set(null)"><i class=""></i></button>
+          </div>
+          <div class="drawer-body">
+            <div class="detail-row">
+              <div class="detail-section half"><label>Status</label><span class="status-badge" [attr.data-status]="selectedItem()!.status">{{ selectedItem()!.status?.replace('_',' ') }}</span></div>
+              <div class="detail-section half"><label>Severity</label><cds-tag [severity]="sevTag(selectedItem()!.severity)" [value]="selectedItem()!.severity || 'medium'" /></div>
+            </div>
+            <div class="detail-section"><label>Owner</label><p>{{ selectedItem()!.owner_name || '—' }}</p></div>
+            @if (selectedItem()!.description) {
+              <div class="detail-section"><label>Description</label><p>{{ selectedItem()!.description }}</p></div>
+            }
+            @if (selectedItem()!.impact_assessment) {
+              <div class="detail-section"><label>Impact Assessment (Legacy)</label>
+                <p>Controls: {{ selectedItem()!.impact_assessment?.impacted_controls || 0 }}, Gaps: {{ selectedItem()!.impact_assessment?.gap_count || 0 }}</p>
+                @if (selectedItem()!.impact_assessment?.notes) { <p style="color:var(--text-color-secondary);font-size:var(--font-size-sm)">{{ selectedItem()!.impact_assessment.notes }}</p> }
+              </div>
+            }
+            @if (loadingImpact()) {
+              <div class="detail-section"><p><i class=" pi-spinner"></i> Loading impact analysis...</p></div>
+            } @else if (impactData()) {
+              <div class="detail-section">
+                <label>Impact Summary</label>
+                <div class="impact-summary">
+                  <div class="impact-stat">
+                    <span class="stat-value">{{ impactData()!.summary?.total_controls || 0 }}</span>
+                    <span class="stat-label">Affected Controls</span>
+                  </div>
+                  <div class="impact-stat">
+                    <span class="stat-value">{{ impactData()!.summary?.total_obligations || 0 }}</span>
+                    <span class="stat-label">Affected Obligations</span>
+                  </div>
+                  <div class="impact-stat">
+                    <span class="stat-value">{{ impactData()!.summary?.critical_count || 0 }}</span>
+                    <span class="stat-label">Critical</span>
+                  </div>
+                  <div class="impact-stat">
+                    <span class="stat-value">{{ impactData()!.summary?.pending_remediation || 0 }}</span>
+                    <span class="stat-label">Pending Remediation</span>
+                  </div>
+                </div>
+              </div>
+              @if (impactData()!.affected_controls && impactData()!.affected_controls.length > 0) {
+                <div class="detail-section">
+                  <label>Affected Controls ({{ impactData()!.affected_controls.length }})</label>
+                  <div class="impact-list">
+                    @for (control of impactData()!.affected_controls; track control.control_id) {
+                      <div class="impact-item">
+                        <div class="impact-item-header">
+                          <span class="impact-item-title">{{ control.title }}</span>
+                          <cds-tag [severity]="severityTag(control.impact_severity)" [value]="control.impact_severity || 'medium'" />
+                        </div>
+                        @if (control.impact_description) {
+                          <p class="impact-item-desc">{{ control.impact_description }}</p>
+                        }
+                        <div class="impact-item-meta">
+                          <span>Status: {{ control.status }}</span>
+                          @if (control.remediation_status) {
+                            <span>Remediation: {{ control.remediation_status }}</span>
+                          }
+                          @if (control.remediation_due_date) {
+                            <span>Due: {{ control.remediation_due_date | date:'short' }}</span>
+                          }
+                        </div>
+                      </div>
+                    }
+                  </div>
+                </div>
+              }
+              @if (impactData()!.affected_obligations && impactData()!.affected_obligations.length > 0) {
+                <div class="detail-section">
+                  <label>Affected Obligations ({{ impactData()!.affected_obligations.length }})</label>
+                  <div class="impact-list">
+                    @for (obligation of impactData()!.affected_obligations; track obligation.obligation_id) {
+                      <div class="impact-item">
+                        <div class="impact-item-header">
+                          <span class="impact-item-title">{{ obligation.title_en || obligation.title_ar }}</span>
+                          <cds-tag [severity]="severityTag(obligation.impact_severity)" [value]="obligation.impact_severity || 'medium'" />
+                        </div>
+                        @if (obligation.impact_description) {
+                          <p class="impact-item-desc">{{ obligation.impact_description }}</p>
+                        }
+                        <div class="impact-item-meta">
+                          <span>Status: {{ obligation.status }}</span>
+                          @if (obligation.remediation_status) {
+                            <span>Remediation: {{ obligation.remediation_status }}</span>
+                          }
+                          @if (obligation.remediation_due_date) {
+                            <span>Due: {{ obligation.remediation_due_date | date:'short' }}</span>
+                          }
+                        </div>
+                      </div>
+                    }
+                  </div>
+                </div>
+              }
+            }
+            <div class="drawer-actions">
+              <a class="action-link" [routerLink]="['/compliance/controls']" (click)="selectedItem.set(null)"><i class=""></i> Impacted Controls</a>
+              <a class="action-link" [routerLink]="['/compliance/gaps']" (click)="selectedItem.set(null)"><i class=""></i> Related Gaps</a>
+              <a class="action-link" [routerLink]="['/compliance/frameworks']" (click)="selectedItem.set(null)"><i class=""></i> Frameworks</a>
+              <a class="action-link" (click)="viewAuditLog(selectedItem()!)"><i class=""></i> Audit Log</a>
+            </div>
+          </div>
+        </aside>
+      }
+
+      @if (showCreate) {
+        <div class="drawer-overlay" (click)="showCreate = false"></div>
+        <div class="create-dialog" [dir]="i18n.direction()">
+          <h3>{{ isAr() ? 'تسجيل تغيير تنظيمي' : 'Log Regulatory Change' }}</h3>
+          <grc-form-field [label]="isAr() ? 'العنوان' : 'Title'" [required]="true">
+            <input type="text" [(ngModel)]="newChange.title" class="field-input" />
+          </grc-form-field>
+          <div class="field"><label>{{ isAr() ? 'الوصف' : 'Description' }}</label><textarea [(ngModel)]="newChange.description" class="field-input" rows="3"></textarea></div>
+          <grc-form-field [label]="isAr() ? 'رمز الجهة' : 'Regulator Code'">
+            <input type="text" [(ngModel)]="newChange.regulatorCode" class="field-input" placeholder="NCA, SAMA, ISO..." />
+          </grc-form-field>
+          <grc-form-field [label]="isAr() ? 'تاريخ السريان' : 'Effective Date'">
+            <input type="date" [(ngModel)]="newChange.effectiveDate" class="field-input" />
+          </grc-form-field>
+          <div class="field">
+            <label>{{ isAr() ? 'الخطورة' : 'Severity' }}</label>
+            <select [(ngModel)]="newChange.severity" class="field-input"><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option><option value="critical">Critical</option></select>
+          </div>
+          <div class="field">
+            <label>{{ isAr() ? 'المالك' : 'Owner' }}</label>
+            <select [(ngModel)]="newChange.ownerUserId" class="field-input">
+              <option value="">{{ isAr() ? 'بدون مالك' : 'No Owner' }}</option>
+              @for (u of users(); track u.user_id) { <option [value]="u.user_id">{{ u.display_name || u.email }}</option> }
+            </select>
+          </div>
+          <div class="field">
+            <label>{{ isAr() ? 'القسم' : 'Department' }}</label>
+            <select [(ngModel)]="newChange.departmentId" class="field-input">
+              <option value="">—</option>
+              @for (d of departments(); track d.department_id) { <option [value]="d.department_id">{{ d.name }}</option> }
+            </select>
+          </div>
+          <div class="field">
+            <label>{{ isAr() ? 'وحدة الأعمال' : 'Business Unit' }}</label>
+            <select [(ngModel)]="newChange.businessUnitId" class="field-input">
+              <option value="">—</option>
+              @for (bu of businessUnits(); track bu.business_unit_id) { <option [value]="bu.business_unit_id">{{ bu.name }}</option> }
+            </select>
+          </div>
+          <div class="dialog-footer">
+            <button cdsButton label="Cancel" class="" (click)="showCreate = false"></button>
+            <button cdsButton [label]="isAr() ? 'حفظ' : 'Save'" icon="" (click)="createChange()" [disabled]="!newChange.title"></button>
+          </div>
+        </div>
+      }
+
+      @if (showAssess) {
+        <div class="drawer-overlay" (click)="showAssess = false"></div>
+        <div class="create-dialog" [dir]="i18n.direction()">
+          <h3>{{ isAr() ? 'تقييم الأثر' : 'Assess Impact' }}</h3>
+          <p style="margin-bottom:12px;color:var(--text-color-secondary)">{{ assessItem?.title }}</p>
+          <grc-form-field [label]="isAr() ? 'الضوابط المتأثرة' : 'Impacted Controls'">
+            <input type="number" [(ngModel)]="assessData.impactedControls" class="field-input" />
+          </grc-form-field>
+          <grc-form-field [label]="isAr() ? 'عدد الفجوات' : 'Gap Count'">
+            <input type="number" [(ngModel)]="assessData.gapCount" class="field-input" />
+          </grc-form-field>
+          <div class="field"><label>{{ isAr() ? 'ملاحظات' : 'Notes' }}</label><textarea [(ngModel)]="assessData.notes" class="field-input" rows="3"></textarea></div>
+          <div class="dialog-footer">
+            <button cdsButton label="Cancel" class="" (click)="showAssess = false"></button>
+            <button cdsButton [label]="isAr() ? 'حفظ التقييم' : 'Save Assessment'" icon="" (click)="saveAssessment()"></button>
+          </div>
+        </div>
+      }
+    </div>

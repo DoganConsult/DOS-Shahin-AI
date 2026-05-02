@@ -1,0 +1,72 @@
+<div class="px-6 py-4 flex flex-col gap-6">
+  <div class="flex items-center justify-between">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{{ 'ai.cockpit.title' | translate }}</h1>
+    <button (click)="refreshCockpit()" class="px-4 py-2 bg-blue-600 text-white rounded shadow hover:bg-blue-700">
+      {{ 'common.refresh' | translate }}
+    </button>
+  </div>
+
+  <div *ngIf="isLoading()" class="flex justify-center p-12">
+    <div class="animate-spin h-8 w-8 border-4 border-blue-500 rounded-full border-t-transparent"></div>
+  </div>
+
+  <div *ngIf="!isLoading()">
+    <!-- System Metrics Row -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow border border-gray-100 dark:border-gray-700">
+        <div class="text-sm text-gray-500 mb-1">Active AI Agents</div>
+        <div class="text-3xl font-bold text-blue-600">{{ totalAgents() }}</div>
+      </div>
+      <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow border border-gray-100 dark:border-gray-700">
+        <div class="text-sm text-gray-500 mb-1">Active Copilot Workflows</div>
+        <div class="text-3xl font-bold text-emerald-600">{{ activeWorkflows() }}</div>
+      </div>
+      <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow border border-gray-100 dark:border-gray-700">
+        <div class="text-sm text-gray-500 mb-1">Pending Human Approvals</div>
+        <div class="text-3xl font-bold text-orange-600">{{ pendingApprovals() }}</div>
+      </div>
+    </div>
+
+    <!-- Agent Roster Details -->
+    <h2 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100">Squad Roster & Monitoring</h2>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div *ngFor="let agent of agentsData()" class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 flex flex-col gap-3">
+        
+        <div class="flex justify-between items-start">
+          <div class="flex items-center gap-3">
+            <div class="h-10 w-10 flex items-center justify-center rounded-full bg-blue-100 text-blue-700 font-bold">
+              {{ agent.agentId }}
+            </div>
+            <div>
+              <h3 class="font-semibold text-gray-900 dark:text-white">{{ agent.displayName }}</h3>
+              <p class="text-xs text-gray-500 uppercase">{{ agent.role }}</p>
+            </div>
+          </div>
+          <span class="px-2 py-1 text-xs rounded-full" 
+                [ngClass]="{'bg-green-100 text-green-800': agent.status === 'active', 'bg-orange-100 text-orange-800': agent.status !== 'active'}">
+            {{ agent.status }}
+          </span>
+        </div>
+
+        <div class="bg-gray-50 dark:bg-gray-700/50 rounded p-4 grid grid-cols-2 gap-4 mt-2">
+          <div>
+            <div class="text-xs text-gray-500">24h Task Completions</div>
+            <div class="font-semibold">{{ agent.collaboration?.tasksCompleted || 0 }}</div>
+          </div>
+          <div>
+            <div class="text-xs text-gray-500">Error Rate</div>
+            <div class="font-semibold text-red-500">{{ agent.collaboration?.errorCount || 0 }}</div>
+          </div>
+          <div>
+            <div class="text-xs text-gray-500">Suggestions Given</div>
+            <div class="font-semibold">{{ agent.collaboration?.suggestionsGenerated || 0 }}</div>
+          </div>
+          <div>
+            <div class="text-xs text-gray-500">Success Rate</div>
+            <div class="font-semibold">{{ (agent.performance?.successRate || 0) | percent:'1.0-1' }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,4 @@
+
+> @dos/workflow-service@0.1.0 build /root/DOS-AIO/services/workflow-service
+> tsc -p tsconfig.json
+

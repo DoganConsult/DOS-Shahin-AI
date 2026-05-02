@@ -1,0 +1,287 @@
+<app-page-shell
+      icon="check-circle"
+      [title]="L().title"
+      [subtitle]="L().subtitle"
+      [breadcrumbs]="[i18n.translate('common.breadcrumbDashboard'), i18n.translate('common.breadcrumbRisk'), L().title]"
+      [loading]="loading()">
+
+      <app-module-tabs-bar [tabs]="tabs" [isAr]="i18n.isAr()" />
+
+      <p-toast />
+      <p-confirmDialog />
+
+      <!-- ── Health Strip ── -->
+      <div class="health-strip" *ngIf="!loading()">
+        <div class="health-card">
+          <div class="health-value">{{ total() }}</div>
+          <div class="health-label">{{ L().totalRequests }}</div>
+        </div>
+        <div class="health-card">
+          <div class="health-value" style="color:var(--grc-amber-dark, #d97706)">{{ pending() }}</div>
+          <div class="health-label">{{ L().pendingReview }}</div>
+        </div>
+        <div class="health-card">
+          <div class="health-value" style="color:var(--success)">{{ accepted() }}</div>
+          <div class="health-label">{{ L().accepted }}</div>
+        </div>
+        <div class="health-card">
+          <div class="health-value" style="color:var(--error)">{{ rejected() }}</div>
+          <div class="health-label">{{ L().rejected }}</div>
+        </div>
+        <div class="health-card">
+          <div class="health-value" style="color:var(--text-secondary, #6b7280)">{{ expiringSoon() }}</div>
+          <div class="health-label">{{ L().expiringSoon }}</div>
+        </div>
+      </div>
+
+      <!-- ── View Toggle: Active Queue / History ── -->
+      <div class="view-toggle mb-3" *ngIf="!loading()">
+        <button class="toggle-btn" [class.active]="activeTab() === 'queue'" (click)="activeTab.set('queue')">
+          <i class="pi pi-list"></i> {{ L().activeQueue }}
+        </button>
+        <button class="toggle-btn" [class.active]="activeTab() === 'history'" (click)="switchToHistory()">
+          <i class="pi pi-history"></i> {{ L().historyTab }}
+        </button>
+      </div>
+
+      <!-- ══════════════════════════════════════════ -->
+      <!-- ACTIVE QUEUE TAB                          -->
+      <!-- ══════════════════════════════════════════ -->
+      <ng-container *ngIf="activeTab() === 'queue'">
+        <div class="toolbar mb-3">
+          <p-button [label]="L().requestAcceptance" icon="pi pi-plus" severity="secondary" [outlined]="true" (onClick)="openRequestDialog()" />
+          <app-export-button module="risk-acceptance" [label]="L().export" [data]="queue()" />
+        </div>
+
+        <grc-data-table
+          [totalRecords]="queue().length"
+          [emptyMessage]="L().emptyMsg">
+          <p-table aria-label="Acceptance queue table"
+            [value]="queue()"
+            [rows]="20"
+            [paginator]="true"
+            styleClass="p-datatable-sm p-datatable-striped">
+            <ng-template pTemplate="header">
+              <tr>
+                <th pSortableColumn="riskTitle">{{ L().risk }} <p-sortIcon field="riskTitle" /></th>
+                <th>{{ L().riskContext }}</th>
+                <th>{{ L().workflow }}</th>
+                <th pSortableColumn="requestedBy">{{ L().requestedBy }} <p-sortIcon field="requestedBy" /></th>
+                <th pSortableColumn="requestedAt">{{ L().requestedDate }} <p-sortIcon field="requestedAt" /></th>
+                <th pSortableColumn="expiryDate">{{ L().expiryDate }} <p-sortIcon field="expiryDate" /></th>
+                <th>{{ L().justification }}</th>
+                <th pSortableColumn="status">{{ L().status }} <p-sortIcon field="status" /></th>
+                <th>{{ L().actions }}</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-q>
+              <tr>
+                <!-- Risk Title + Cross-link -->
+                <td>
+                  <a class="risk-link font-semibold" (click)="navigateToRisk(q.riskId)" [pTooltip]="L().viewInRegister" tooltipPosition="top">
+                    {{ q.riskTitle || q.riskId }}
+                    <i class="pi pi-external-link text-xs"></i>
+                  </a>
+                </td>
+
+                <!-- Mini Risk Context Card -->
+                <td>
+                  <div class="mini-risk-card">
+                    <p-tag [value]="q.category || '\u2014'" [rounded]="true" styleClass="text-xs" />
+                    <span class="score-pill" [class]="scoreClass(q.residualScore)" [pTooltip]="L().residualScore" tooltipPosition="top">{{ q.residualScore }}</span>
+                    <span class="context-chip" *ngIf="q.controlCount !== null && q.controlCount !== undefined" [pTooltip]="L().controlCount" tooltipPosition="top">
+                      <i class="pi pi-shield"></i> {{ q.controlCount }}
+                    </span>
+                    <span class="context-chip" *ngIf="q.treatmentCount !== null && q.treatmentCount !== undefined" [pTooltip]="L().treatmentCount" tooltipPosition="top">
+                      <i class="pi pi-wrench"></i> {{ q.treatmentCount }}
+                    </span>
+                  </div>
+                </td>
+
+                <!-- Workflow Step Indicator -->
+                <td>
+                  <div class="workflow-steps">
+                    <div class="wf-step" [class.wf-active]="getWorkflowStep(q) === 'requested'" [class.wf-done]="isWorkflowPast(q, 'requested')">
+                      <div class="wf-dot"></div>
+                      <span class="wf-label">{{ L().stepRequested }}</span>
+                    </div>
+                    <div class="wf-connector" [class.wf-connector-done]="isWorkflowPast(q, 'requested')"></div>
+                    <div class="wf-step" [class.wf-active]="getWorkflowStep(q) === 'under_review'" [class.wf-done]="isWorkflowPast(q, 'under_review')">
+                      <div class="wf-dot"></div>
+                      <span class="wf-label">{{ L().stepReview }}</span>
+                    </div>
+                    <div class="wf-connector" [class.wf-connector-done]="isWorkflowPast(q, 'under_review')"></div>
+                    <div class="wf-step" [class.wf-active]="getWorkflowStep(q) === 'decision'" [class.wf-done]="isWorkflowPast(q, 'decision')">
+                      <div class="wf-dot"></div>
+                      <span class="wf-label">{{ L().stepDecision }}</span>
+                    </div>
+                  </div>
+                </td>
+
+                <td>{{ q.requestedBy || '\u2014' }}</td>
+                <td>{{ q.requestedDate | appDate:'medium' }}</td>
+
+                <!-- Expiry with amber/red badges -->
+                <td>
+                  <div class="expiry-cell">
+                    <span>{{ (q.expiryDate || q.reviewDate) | appDate:'medium' }}</span>
+                    <span *ngIf="getExpiryBadge(q) === 'red'" class="expiry-badge expiry-red" [pTooltip]="L().expiresIn7d" tooltipPosition="top">{{ L().critical }}</span>
+                    <span *ngIf="getExpiryBadge(q) === 'amber'" class="expiry-badge expiry-amber" [pTooltip]="L().expiresIn30d" tooltipPosition="top">{{ L().warning }}</span>
+                    <p-button *ngIf="q.status === 'accepted' && isExpiringSoon(q.expiryDate || q.reviewDate)"
+                      [label]="L().renewAcceptance" icon="pi pi-refresh" severity="warning" [text]="true" size="small"
+                      (onClick)="renewAcceptance(q)" />
+                  </div>
+                </td>
+
+                <td class="reason-cell" [pTooltip]="q.comments" tooltipPosition="top">{{ q.comments | slice:0:40 }}{{ (q.comments?.length || 0) > 40 ? '\u2026' : '' }}</td>
+                <td><app-status-badge [status]="q.status" /></td>
+
+                <!-- Actions + Cross-links -->
+                <td>
+                  <div class="row-actions">
+                    <div *ngIf="q.status === 'pending'" class="action-group">
+                      <button aria-label="Confirm" class="icon-btn success" (click)="approve(q.riskId)" [pTooltip]="L().approve">
+                        <i class="pi pi-check"></i>
+                      </button>
+                      <button aria-label="Close" class="icon-btn danger" (click)="reject(q.riskId)" [pTooltip]="L().reject">
+                        <i class="pi pi-times"></i>
+                      </button>
+                    </div>
+                    <div class="cross-links">
+                      <a class="cross-link" (click)="navigateToAppetite()" [pTooltip]="L().viewAppetite" tooltipPosition="top">
+                        <i class="pi pi-bullseye"></i>
+                      </a>
+                      <a *ngIf="q.treatmentId" class="cross-link" (click)="navigateToTreatment(q.treatmentId)" [pTooltip]="L().viewTreatment" tooltipPosition="top">
+                        <i class="pi pi-wrench"></i>
+                      </a>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </grc-data-table>
+      </ng-container>
+
+      <!-- ══════════════════════════════════════════ -->
+      <!-- HISTORY TAB                               -->
+      <!-- ══════════════════════════════════════════ -->
+      <ng-container *ngIf="activeTab() === 'history'">
+        <grc-data-table
+          [totalRecords]="history().length"
+          [emptyMessage]="L().emptyHistoryMsg">
+          <p-table aria-label="Acceptance history table"
+            [value]="history()"
+            [rows]="20"
+            [paginator]="true"
+            styleClass="p-datatable-sm p-datatable-striped">
+            <ng-template pTemplate="header">
+              <tr>
+                <th pSortableColumn="riskTitle">{{ L().risk }} <p-sortIcon field="riskTitle" /></th>
+                <th pSortableColumn="category">{{ L().category }} <p-sortIcon field="category" /></th>
+                <th pSortableColumn="residualScore">{{ L().residualScore }} <p-sortIcon field="residualScore" /></th>
+                <th pSortableColumn="requestedBy">{{ L().requestedBy }} <p-sortIcon field="requestedBy" /></th>
+                <th pSortableColumn="requestedDate">{{ L().requestedDate }} <p-sortIcon field="requestedDate" /></th>
+                <th pSortableColumn="decisionDate">{{ L().decisionDate }} <p-sortIcon field="decisionDate" /></th>
+                <th>{{ L().reviewerComments }}</th>
+                <th pSortableColumn="status">{{ L().outcome }} <p-sortIcon field="status" /></th>
+                <th>{{ L().actions }}</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-h>
+              <tr>
+                <td>
+                  <a class="risk-link font-semibold" (click)="navigateToRisk(h.riskId)" [pTooltip]="L().viewInRegister" tooltipPosition="top">
+                    {{ h.riskTitle || h.riskId }}
+                    <i class="pi pi-external-link text-xs"></i>
+                  </a>
+                </td>
+                <td><p-tag [value]="h.category || '\u2014'" [rounded]="true" /></td>
+                <td class="text-center">
+                  <span class="score-pill" [class]="scoreClass(h.residualScore)">{{ h.residualScore }}</span>
+                </td>
+                <td>{{ h.requestedBy || '\u2014' }}</td>
+                <td>{{ h.requestedDate | appDate:'medium' }}</td>
+                <td>{{ (h.decisionDate || h.reviewedDate) | appDate:'medium' }}</td>
+                <td class="reason-cell" [pTooltip]="h.comments" tooltipPosition="top">{{ h.comments | slice:0:40 }}{{ (h.comments?.length || 0) > 40 ? '\u2026' : '' }}</td>
+                <td><app-status-badge [status]="h.status" /></td>
+                <td>
+                  <div class="cross-links">
+                    <a class="cross-link" (click)="navigateToRisk(h.riskId)" [pTooltip]="L().viewInRegister" tooltipPosition="top">
+                      <i class="pi pi-shield"></i>
+                    </a>
+                    <a class="cross-link" (click)="navigateToAppetite()" [pTooltip]="L().viewAppetite" tooltipPosition="top">
+                      <i class="pi pi-bullseye"></i>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </grc-data-table>
+
+        <div *ngIf="historyLoading()" class="empty-section">
+          <i class="pi pi-spin pi-spinner" style="font-size:2rem"></i>
+          <p>{{ L().loadingHistory }}</p>
+        </div>
+      </ng-container>
+
+      <!-- ══════════════════════════════════════════ -->
+      <!-- DIALOGS                                   -->
+      <!-- ══════════════════════════════════════════ -->
+      <p-dialog [header]="L().requestAcceptanceTitle" [(visible)]="requestDialogVisible" [modal]="true" [style]="{width:'520px'}">
+        <div class="dialog-form">
+          <div class="field">
+            <grc-form-field [label]="L().riskId">
+              <input pInputText [(ngModel)]="form.riskId" class="w-full" [placeholder]="L().riskIdPlaceholder" [attr.aria-label]="L().riskIdPlaceholder" />
+            </grc-form-field>
+          </div>
+          <div class="field">
+            <label>{{ L().justification }}</label>
+            <textarea pInputTextarea [(ngModel)]="form.reason" [rows]="4" class="w-full" [placeholder]="L().justificationPlaceholder" [attr.aria-label]="L().justificationPlaceholder"></textarea>
+          </div>
+        </div>
+        <ng-template pTemplate="footer">
+          <p-button [label]="L().cancel" severity="secondary" [text]="true" (onClick)="requestDialogVisible=false" />
+          <p-button [label]="L().submit" icon="pi pi-send" (onClick)="submitRequest()" [disabled]="!form.riskId || !form.reason" />
+        </ng-template>
+      </p-dialog>
+
+      <p-dialog [header]="approvalMode === 'accepted' ? L().approveTitle : L().rejectTitle" [(visible)]="approvalDialogVisible" [modal]="true" [style]="{width:'460px'}">
+        <div class="dialog-form">
+          <div class="field">
+            <label>{{ L().comments }}</label>
+            <textarea pInputTextarea [(ngModel)]="approvalComments" [rows]="3" class="w-full" [placeholder]="L().commentsPlaceholder" [attr.aria-label]="L().commentsPlaceholder"></textarea>
+          </div>
+        </div>
+        <ng-template pTemplate="footer">
+          <p-button [label]="L().cancel" severity="secondary" [text]="true" (onClick)="approvalDialogVisible=false" />
+          <p-button
+            [label]="approvalMode === 'accepted' ? L().approve : L().reject"
+            [icon]="approvalMode === 'accepted' ? 'pi pi-check' : 'pi pi-times'"
+            [severity]="approvalMode === 'accepted' ? 'success' : 'danger'"
+            (onClick)="submitApproval()" />
+        </ng-template>
+      </p-dialog>
+
+      <!-- Renew Acceptance Dialog -->
+      <p-dialog [header]="L().renewAcceptanceTitle" [(visible)]="renewDialogVisible" [modal]="true" [style]="{width:'480px'}">
+        <div class="dialog-form">
+          <div class="renew-summary" *ngIf="renewTarget">
+            <div class="mini-risk-card" style="margin-bottom:12px">
+              <strong>{{ renewTarget.riskTitle }}</strong>
+              <span class="score-pill" [class]="scoreClass(renewTarget.residualScore)">{{ renewTarget.residualScore }}</span>
+            </div>
+            <p class="text-muted text-sm">{{ L().renewExplanation }}</p>
+          </div>
+          <div class="field">
+            <label>{{ L().renewJustification }}</label>
+            <textarea pInputTextarea [(ngModel)]="renewReason" [rows]="3" class="w-full" [placeholder]="L().renewPlaceholder" [attr.aria-label]="L().renewPlaceholder"></textarea>
+          </div>
+        </div>
+        <ng-template pTemplate="footer">
+          <p-button [label]="L().cancel" severity="secondary" [text]="true" (onClick)="renewDialogVisible=false" />
+          <p-button [label]="L().submitRenewal" icon="pi pi-refresh" severity="warning" (onClick)="submitRenewal()" [disabled]="!renewReason" />
+        </ng-template>
+      </p-dialog>
+    </app-page-shell>

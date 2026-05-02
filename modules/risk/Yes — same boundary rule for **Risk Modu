@@ -1,0 +1,584 @@
+Yes — same boundary rule for **Risk Module**.
+
+Core rule:
+
+```txt id="risk-core-rule"
+Risk-owned code must live inside:
+
+/root/DOS-AIO/DOS Platform/Risk Module
+
+Not scattered inside:
+- Shahin-AI Website
+- Foundation Module
+- Compliance Module
+- Governance Module
+- Incident Module
+- root services/*
+- root packages/*
+- Dynamic UI
+- gateway
+```
+
+Use this prompt for the agent:
+
+```txt id="risk-boundary-agent"
+TASK: One-time Risk Module Boundary Consolidation — server is stopped
+
+CONTEXT:
+Production/server is stopped intentionally.
+Do not restart production until this consolidation is complete and verified.
+
+GOAL:
+Move all Risk-owned files into the canonical Risk module folder:
+
+/root/DOS-AIO/DOS Platform/Risk Module
+
+Risk must become self-contained, modular, extractable, contract-driven, and plug-and-play.
+
+NON-NEGOTIABLE RULES:
+1. No Docker.
+2. No Netlify.
+3. No Vercel.
+4. No Firebase.
+5. No Render/Railway.
+6. No new scattered files outside /root/DOS-AIO/DOS Platform.
+7. No Risk business logic inside Shahin-AI Website.
+8. No Risk business logic inside Foundation Module.
+9. No Risk business logic inside Compliance Module.
+10. No Risk business logic inside Governance Module.
+11. No Risk business logic inside Incident Module.
+12. No Risk business logic inside Dynamic UI.
+13. No Risk business logic inside gateway.
+14. No Risk business logic inside root services unless it is only a temporary host adapter importing from Risk Module.
+15. Do not create fake/mock endpoints.
+16. Do not delete files until moved/relinked and build passes.
+17. Use git mv where possible.
+18. Preserve history and do not manually copy/paste large files.
+19. Server remains stopped until final verification.
+
+CANONICAL ROOTS:
+Platform:
+  /root/DOS-AIO/DOS Platform
+
+Specs:
+  /root/DOS-AIO/DOS-AIO-Specs
+
+Risk Module:
+  /root/DOS-AIO/DOS Platform/Risk Module
+
+Shahin product root:
+  /root/DOS-AIO/DOS Platform/Shahin-AI Website
+
+Dynamic UI:
+  /root/DOS-AIO/DOS Platform/Dynamic UI
+
+EXPECTED FINAL RISK MODULE SHAPE:
+
+/root/DOS-AIO/DOS Platform/Risk Module/
+  package.json
+  module.contract.json
+  README.md
+
+  contracts/
+    risk.contract.json
+    route.contract.json
+    page.contract.json
+    api.contract.json
+    permission.contract.json
+    navigation.contract.json
+    i18n.contract.json
+    db.contract.json
+    risk-register.contract.json
+    assessment.contract.json
+    treatment.contract.json
+    kri.contract.json
+    incident-link.contract.json
+    agent.contract.json
+    workflow.contract.json
+
+  domain/
+    risks/
+    risk-register/
+    assessments/
+    inherent-risk/
+    residual-risk/
+    controls-linkage/
+    treatments/
+    mitigation-plans/
+    kris/
+    risk-appetite/
+    risk-taxonomy/
+    risk-matrix/
+    risk-events/
+    scenarios/
+    exceptions/
+    issues/
+
+  application/
+    use-cases/
+    services/
+    policies/
+
+  infrastructure/
+    repositories/
+    mappers/
+    integrations/
+
+  interface/
+    http/
+    admin/
+
+  ports/
+
+  ui/
+    pages/
+    components/
+    widgets/
+    layout/
+    routes/
+    i18n/
+    styles/
+    registry/
+
+  db/
+    migrations/
+    seeds/
+
+  permissions/
+  manifests/
+  agents/
+  workflows/
+  tests/
+  docs/
+```
+
+Phase 1 — inventory Risk-owned scattered files:
+
+```txt id="risk-phase1"
+cd /root/DOS-AIO
+
+echo "=== RISK SCATTER INVENTORY ==="
+
+grep -RIlE "risk|Risk|risk-register|risk register|inherent|residual|risk-score|risk score|risk-matrix|risk matrix|risk-appetite|risk appetite|kri|KRIs|key risk indicator|treatment|mitigation|risk-owner|risk owner|risk-assessment|scenario|bowtie|heatmap|incident-link|control-effectiveness|third-party-risk|operational-risk|cyber-risk|compliance-risk|enterprise-risk|ERM" \
+  "/root/DOS-AIO/DOS Platform/Shahin-AI Website/frontend/src" \
+  /root/DOS-AIO/services \
+  /root/DOS-AIO/packages \
+  /root/DOS-AIO/modules \
+  "/root/DOS-AIO/DOS Platform/Dynamic UI" \
+  "/root/DOS-AIO/DOS Platform" \
+  2>/dev/null \
+  | sort \
+  > /tmp/risk_scatter_inventory.txt
+
+cat /tmp/risk_scatter_inventory.txt
+
+echo "=== RISK API ROUTES ==="
+grep -RInE "risk|risk-register|risk-assessment|risk-matrix|risk-appetite|kri|treatment|mitigation|scenario|heatmap|residual|inherent|risk-owner|control-effectiveness|third-party-risk|operational-risk|cyber-risk|enterprise-risk" \
+  /root/DOS-AIO/services \
+  "/root/DOS-AIO/DOS Platform" \
+  2>/dev/null | head -1200
+
+echo "=== RISK UI ROUTES/PAGES ==="
+find "/root/DOS-AIO/DOS Platform/Shahin-AI Website/frontend/src" \
+  "/root/DOS-AIO/DOS Platform/Risk Module" \
+  -type f \
+  \( -iname "*risk*" \
+  -o -iname "*kri*" \
+  -o -iname "*treatment*" \
+  -o -iname "*mitigation*" \
+  -o -iname "*scenario*" \
+  -o -iname "*heatmap*" \
+  -o -iname "*matrix*" \
+  -o -iname "*appetite*" \
+  -o -iname "*residual*" \
+  -o -iname "*inherent*" \
+  -o -iname "*owner*" \) \
+  -print | sort
+
+echo "=== RISK I18N KEYS ==="
+grep -RInE "nav.risk|modules.risk|risk\.|risks\.|riskRegister\.|riskAssessment\.|riskMatrix\.|riskAppetite\.|kri\.|treatment\.|mitigation\.|scenario\.|heatmap\." \
+  "/root/DOS-AIO/DOS Platform/Shahin-AI Website/frontend/src" \
+  "/root/DOS-AIO/DOS Platform/Risk Module" \
+  2>/dev/null | head -1000
+```
+
+Classify every result:
+
+```txt id="risk-classify"
+A. Move into Risk Module
+Risk-owned UI, API, domain, application, DB, i18n, permissions, risk register, risk assessment, risk matrix, risk appetite, KRI, treatments, mitigation, scenarios, exceptions, risk reports, agents, workflows, routes, contracts, tests.
+
+B. Keep outside as thin host adapter
+Gateway proxy mount, PM2 config, product-shell config, Dynamic UI generic resolver, Shahin product bootstrap.
+
+C. Remove after build passes
+Duplicate old Risk code, stale route mappings, obsolete scattered files.
+
+D. Leave unrelated
+Foundation-owned, Compliance-owned, Governance-owned, Incident-owned, Evidence-owned, Asset-owned, Vendor-owned, Privacy-owned, or platform-generic files.
+
+IMPORTANT:
+Do not steal files from other modules unless they are clearly Risk-owned.
+
+Ownership boundaries:
+- Foundation owns org/users/roles/locations/positions.
+- Compliance owns controls, frameworks, requirements, obligations, attestations, compliance assessments, exceptions.
+- Governance owns governance operating model, committees, authority, decisions.
+- Incident Module owns incident lifecycle, incident response, case management.
+- Asset Module owns asset inventory.
+- Vendor/Third-Party Module owns vendor records unless TPRM is explicitly part of Risk Module.
+- Evidence Module owns generic evidence storage if already separate.
+- Risk owns risk register, risk assessments, risk scoring, risk appetite, KRIs, treatments, scenarios, risk heatmaps, residual/inherent risk, risk ownership, and risk posture.
+```
+
+Phase 2 — move Risk UI into Risk Module:
+
+```txt id="risk-ui"
+Target:
+
+/root/DOS-AIO/DOS Platform/Risk Module/ui/
+
+Move Risk-owned pages/components from Shahin SPA or scattered folders into Risk Module.
+
+Examples of what belongs in Risk Module:
+- risk-overview
+- risk-dashboard
+- risk-register
+- risk-detail
+- risk-create
+- risk-assessment
+- risk-assessment-detail
+- inherent-risk-assessment
+- residual-risk-assessment
+- risk-matrix
+- risk-heatmap
+- risk-appetite
+- risk-taxonomy
+- risk-categories
+- risk-treatment
+- treatment-plans
+- mitigation-actions
+- kri-dashboard
+- kri-library
+- kri-detail
+- risk-scenarios
+- scenario-analysis
+- bowtie-analysis
+- risk-reports
+- risk-exceptions
+- risk-owner-view
+- control-effectiveness-linkage
+- incident-risk-linkage
+- third-party-risk if owned by Risk
+- operational-risk if owned by Risk
+- cyber-risk if owned by Risk
+- risk page registry
+- risk route registry
+- risk API client wrappers
+- risk i18n files
+
+Shahin-AI Website may keep only:
+- product shell/bootstrap
+- generic Dynamic UI host
+- generated route loader
+- component allowlist importing Risk exports
+- product branding/theme
+```
+
+Phase 3 — move Risk backend into Risk Module:
+
+```txt id="risk-backend"
+Target:
+
+/root/DOS-AIO/DOS Platform/Risk Module/interface/http
+/root/DOS-AIO/DOS Platform/Risk Module/application
+/root/DOS-AIO/DOS Platform/Risk Module/domain
+/root/DOS-AIO/DOS Platform/Risk Module/infrastructure
+/root/DOS-AIO/DOS Platform/Risk Module/db
+
+Move Risk-owned route handlers/controllers/services from scattered services/modules into Risk Module.
+
+Risk Module must export a router factory, for example:
+
+createRiskRouter(deps)
+
+or the equivalent existing module pattern.
+
+A host service may keep only a thin adapter:
+
+import { createRiskRouter } from '@dos/module-risk/interface/http';
+
+app.register('/api/risk', ...)
+app.register('/api/risk/register', ...)
+app.register('/api/risk/assessments', ...)
+app.register('/api/risk/matrix', ...)
+app.register('/api/risk/heatmap', ...)
+app.register('/api/risk/appetite', ...)
+app.register('/api/risk/kris', ...)
+app.register('/api/risk/treatments', ...)
+app.register('/api/risk/mitigations', ...)
+app.register('/api/risk/scenarios', ...)
+app.register('/api/risk/reports', ...)
+
+But business logic must live in Risk Module, not user-service, gateway, or Shahin SPA.
+```
+
+Phase 4 — Risk contract becomes source of truth:
+
+```txt id="risk-contract"
+Create/update:
+
+/root/DOS-AIO/DOS Platform/Risk Module/contracts/risk.contract.json
+
+It must include:
+- moduleCode: risk
+- productKey: risk or shahingrc/risk enrollment key as currently used
+- routes
+- pages
+- API endpoints
+- permissions
+- navigation
+- i18n namespaces
+- DB migrations/seeds
+- risk taxonomy ownership
+- Dynamic UI enrollment
+- agents/workflows if present
+
+Canonical Risk routes should be:
+
+/risk/overview
+/risk/register
+/risk/register/:id
+/risk/assessments
+/risk/assessments/:id
+/risk/matrix
+/risk/heatmap
+/risk/appetite
+/risk/kris
+/risk/kris/:id
+/risk/treatments
+/risk/treatments/:id
+/risk/mitigations
+/risk/scenarios
+/risk/reports
+/risk/settings
+
+If current product uses stale prefixes such as:
+/risks
+/risk-management
+/enterprise-risk
+/governance/risk
+decide one canonical prefix and redirect/remove stale routes.
+
+Do not mix Risk navigation into Foundation or Compliance except as cross-module card/link.
+```
+
+Phase 5 — fix i18n inside Risk Module:
+
+```txt id="risk-i18n"
+Risk i18n must live under:
+
+/root/DOS-AIO/DOS Platform/Risk Module/ui/i18n/ar.json
+/root/DOS-AIO/DOS Platform/Risk Module/ui/i18n/en.json
+
+Use one namespace:
+
+risk.*
+
+Required key groups:
+- risk.nav.*
+- risk.overview.*
+- risk.register.*
+- risk.detail.*
+- risk.assessments.*
+- risk.matrix.*
+- risk.heatmap.*
+- risk.appetite.*
+- risk.kris.*
+- risk.treatments.*
+- risk.mitigations.*
+- risk.scenarios.*
+- risk.reports.*
+- risk.actions.*
+- risk.emptyStates.*
+- risk.errors.*
+- risk.filters.*
+
+Do not show raw keys to users.
+
+Do not use generic risks.* or kri.* unless a shared component requires aliases.
+```
+
+Phase 6 — package exports and boundaries:
+
+```txt id="risk-exports"
+Update package exports:
+
+/root/DOS-AIO/DOS Platform/Risk Module/package.json
+
+Exports should expose:
+- ./contract
+- ./ui
+- ./ui/routes
+- ./ui/registry
+- ./interface/http
+- ./db/migrations
+- ./permissions
+- ./agents
+- ./workflows
+
+Update tsconfig paths to import Risk from its module package, not relative scattered paths.
+
+Forbidden imports after consolidation:
+- Shahin-AI Website importing Risk via long relative paths into old scattered folders.
+- Dynamic UI importing Risk internals directly.
+- gateway importing Risk business logic.
+- Foundation Module importing Risk internals directly.
+- Compliance Module importing Risk internals directly.
+- Governance Module importing Risk internals directly.
+- Incident Module importing Risk internals directly.
+- user-service owning Risk business logic.
+
+Allowed:
+- host adapters importing Risk public exports only.
+- Dynamic UI consuming Risk contract only.
+- Shahin product consuming generated route/component registry only.
+```
+
+Phase 7 — build and test while server remains stopped:
+
+```txt id="risk-build"
+Run:
+
+cd "/root/DOS-AIO/DOS Platform/Risk Module"
+pnpm run build || true
+pnpm test || true
+
+Then from active workspace root:
+
+cd /root/DOS-AIO
+pnpm install --frozen-lockfile
+
+pnpm --filter @dos/module-risk run build
+pnpm --filter gateway run build
+pnpm --filter user-service run build || true
+pnpm --filter risk-incident-service run build || true
+
+cd "/root/DOS-AIO/DOS Platform/Shahin-AI Website/frontend"
+pnpm run build
+
+Do not restart production yet.
+```
+
+Phase 8 — boundary verification:
+
+```txt id="risk-boundary-check"
+Run:
+
+echo "=== NO RISK BUSINESS LOGIC OUTSIDE RISK MODULE ==="
+
+grep -RInE "risk|Risk|risk-register|risk-assessment|risk-matrix|risk-appetite|kri|treatment|mitigation|scenario|heatmap|residual|inherent|risk-owner|control-effectiveness|third-party-risk|operational-risk|cyber-risk|enterprise-risk" \
+  "/root/DOS-AIO/DOS Platform/Shahin-AI Website/frontend/src" \
+  /root/DOS-AIO/services \
+  /root/DOS-AIO/packages \
+  /root/DOS-AIO/modules \
+  "/root/DOS-AIO/DOS Platform/Dynamic UI" \
+  "/root/DOS-AIO/DOS Platform/Foundation Module" \
+  "/root/DOS-AIO/DOS Platform/Compliance Module" \
+  "/root/DOS-AIO/DOS Platform/Governance Module" \
+  "/root/DOS-AIO/DOS Platform/Incident Module" \
+  2>/dev/null \
+  | grep -v "/root/DOS-AIO/DOS Platform/Risk Module" \
+  | head -1000
+
+Each remaining hit must be classified:
+- allowed host adapter
+- allowed import from Risk public export
+- allowed generated registry
+- allowed cross-module link/card
+- violation to move
+```
+
+Acceptance criteria:
+
+```txt id="risk-acceptance"
+PASS only if:
+
+1. Risk Module contains all Risk-owned UI/API/domain/i18n/DB/permission/contract files.
+2. Shahin-AI Website contains no Risk business logic, only host/bootstrap/generated imports.
+3. Dynamic UI contains no Risk hardcoding, only generic resolver logic.
+4. Foundation/Compliance/Governance/Incident modules do not contain Risk business logic.
+5. Host services contain no Risk business logic, only router registration/import adapter if needed.
+6. Gateway contains no Risk business logic, only proxy/mount wiring.
+7. Risk routes are canonical and contract-owned.
+8. No visible raw i18n keys remain in Risk pages.
+9. Frontend build passes.
+10. Risk package build passes.
+11. gateway and affected host-service builds pass.
+12. No Docker/cloud deploy files added.
+13. No source-root migration performed outside this Risk consolidation.
+14. Server was not restarted before final approval.
+```
+
+Final report format:
+
+```txt id="risk-report"
+FINAL REPORT — Risk Boundary Consolidation
+
+1. Verdict:
+PASS / PARTIAL / NOT PASS
+
+2. Files moved:
+old path -> new path
+
+3. Files left outside Risk Module:
+path | reason | allowed/violation
+
+4. Risk package exports changed:
+file | exports
+
+5. Host adapters changed:
+service/file | reason
+
+6. Dynamic UI changes:
+file | generic or Risk-specific?
+
+7. Shahin SPA changes:
+file | removed/moved/host import only
+
+8. Cross-module boundaries:
+Foundation/Compliance/Governance/Incident/Asset/Vendor touched yes/no | why
+
+9. i18n keys fixed:
+key | file
+
+10. Route contract:
+old route | new route | owner
+
+11. Build results:
+command | result
+
+12. Remaining blockers:
+exact blocker only
+
+13. Explicit statements:
+- server was not restarted
+- no Docker/cloud files added
+- no mock endpoints added
+- no source-root migration performed
+```
+
+Final instruction:
+
+```txt id="risk-final-rule"
+This is not a UI patch.
+This is not endpoint silencing.
+This is a boundary correction.
+
+Risk must own Risk.
+The product only hosts it.
+Dynamic UI only resolves it.
+Gateway only routes it.
+Services only mount it.
+Other modules only link to it through contracts.
+```

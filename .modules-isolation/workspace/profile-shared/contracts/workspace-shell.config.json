@@ -1,0 +1,27 @@
+{
+  "$comment": "Renderer-side config for Shahin-AI workspace shell. The shell reads this (or calls DynamicUiClient.resolveCards()) to produce the 19-card grid.",
+  "version": "1.0.0",
+  "model": "GRC-19-card",
+  "shell": {
+    "topbar": {
+      "left":  ["org_switcher", "tenant_switcher", "search"],
+      "right": ["inbox", "notifications", "ai_assistant", "user_menu"]
+    },
+    "sidebar": {
+      "kind": "module-aware",
+      "source": "DynamicUiClient.resolveNavigation(activeModule)"
+    },
+    "main": {
+      "kind": "card-grid",
+      "source": "DynamicUiClient.resolveCards()",
+      "filter": "{ isBusinessCard: true }",
+      "order_by": "cardPosition ASC",
+      "settings_card": "{ code: 'foundation' }  -> rendered separately in settings panel"
+    }
+  },
+  "card_template": {
+    "fields_used": ["name","icon","colorToken","description","cardPosition"],
+    "footer_widgets": ["coverage_pct","overdue_count"],
+    "click_action": "navigate('/<code>')"
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "moduleCode": "privacy",
+  "displayName": "Privacy Management",
+  "ownerTeam": "product-shahin-ai",
+  "productCode": "shahin-ai",
+  "ownership": "module-owned",
+  "version": "1.0.0",
+  "status": "active",
+  "platformDependencies": [
+    "identity",
+    "tenancy",
+    "workflow",
+    "permissions",
+    "audit"
+  ],
+  "seedProviders": [
+    "products/shahin/seeds/privacy-seed"
+  ],
+  "tenantDefaults": [
+    "privacy_dsr_sla_days",
+    "privacy_breach_notification_hours"
+  ],
+  "requiredReferenceData": [
+    "privacy_categories",
+    "dsr_types",
+    "consent_purposes"
+  ],
+  "currentSources": [
+    "/home/Dr-Dogan-AGRC-OS/backend/src/modules/privacy"
+  ],
+  "targetPath": "modules/privacy",
+  "futureService": "privacy-service",
+  "frontendSources": [
+    "/home/Dr-Dogan-AGRC-OS/frontend/src/app/platform-manifests/privacy.module.routes.ts"
+  ],
+  "ownedTables": [
+    "privacy_dsrs",
+    "privacy_pia",
+    "privacy_consent_records",
+    "privacy_data_maps",
+    "privacy_breach_records",
+    "privacy_transfer_impact"
+  ],
+  "referencedTables": [
+    "audit_trail",
+    "compliance_frameworks",
+    "incidents",
+    "vendors"
+  ],
+  "events": {
+    "publishes": [
+      "privacy.dsr_received",
+      "privacy.dsr_completed",
+      "privacy.dsr_overdue",
+      "privacy.consent_given",
+      "privacy.consent_withdrawn",
+      "privacy.impact_assessment_completed",
+      "privacy.breach_detected",
+      "privacy.breach_notified",
+      "privacy.cross_border_flagged"
+    ],
+    "subscribes": [
+      "incident.breach_reported",
+      "compliance.posture_changed",
+      "vendor.dd_completed",
+      "policy.approved",
+      "workflow.status_changed",
+      "asset.created",
+      "asset.updated",
+      "exception.approved",
+      "incident.contained",
+      "incident.sla_breached",
+      "controls.effectiveness_failed",
+      "governance.health_score_updated",
+      "foundation.role.assigned",
+      "foundation.role.unassigned"
+    ]
+  },
+  "routeBases": [
+    "/api/privacy"
+  ]
+}

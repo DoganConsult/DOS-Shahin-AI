@@ -1,0 +1,317 @@
+<!-- Controls Work Queue — Tabbed Pending Items View -->
+<div class="controls-work-queue" [attr.dir]="dir()">
+
+  <!-- Page Header -->
+  <header class="page-header">
+    <div class="page-header__title-row">
+      <i class="pi pi-inbox" aria-hidden="true"></i>
+      <h2 class="page-header__title">
+        {{ isAr() ? 'قائمة المهام' : 'Work Queue' }}
+      </h2>
+      @if (!loading() && !error()) {
+        <span class="total-badge" [attr.aria-label]="isAr() ? 'إجمالي المعلقات' : 'Total pending'">
+          {{ totalPending() }}
+        </span>
+      }
+    </div>
+    <p class="page-header__subtitle">
+      {{ isAr() ? 'جميع العناصر المعلقة التي تنتظر إجراءك' : 'All pending items awaiting your action' }}
+    </p>
+  </header>
+
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="skeleton-tabs">
+      <p-skeleton width="100%" height="48px" borderRadius="8px" />
+    </div>
+    <app-skeleton-loader variant="list" [count]="6" />
+  }
+
+  <!-- Error State -->
+  @if (!loading() && error()) {
+    <app-empty-state
+      variant="error"
+      [title]="isAr() ? 'فشل تحميل قائمة المهام' : 'Failed to load work queue'"
+      [description]="isAr() ? 'تحقق من الاتصال وحاول مرة أخرى' : 'Check your connection and try again'"
+      [actionLabel]="isAr() ? 'إعادة المحاولة' : 'Retry'"
+      [dir]="dir()"
+      (action)="loadData()" />
+  }
+
+  <!-- Loaded Content -->
+  @if (!loading() && !error() && data()) {
+    <p-tabView styleClass="wq-tabview">
+
+      <!-- Tab 1: Tests Assigned to Me -->
+      <p-tabPanel>
+        <ng-template pTemplate="header">
+          <span>{{ isAr() ? 'اختبارات مُسندة إليّ' : 'Tests Assigned to Me' }}</span>
+          <p-badge [value]="'' + testsCount()" styleClass="wq-tab-badge" />
+        </ng-template>
+
+        @if (data()!.testsAssigned.length === 0) {
+          <app-empty-state
+            [title]="isAr() ? 'لا توجد اختبارات مُسندة' : 'No tests assigned'"
+            [description]="isAr() ? 'ليس لديك اختبارات معلقة حالياً' : 'You have no pending tests at this time'"
+            [dir]="dir()" />
+        } @else {
+          <grc-data-table
+            [totalRecords]="data()!.testsAssigned.length"
+            [emptyMessage]="isAr() ? 'لا توجد اختبارات مُسندة' : 'No tests assigned'">
+            <p-table
+              [value]="data()!.testsAssigned"
+              [rows]="10"
+              [paginator]="data()!.testsAssigned.length > 10"
+              styleClass="p-datatable-sm p-datatable-striped"
+              [attr.aria-label]="isAr() ? 'جدول الاختبارات المُسندة' : 'Assigned Tests Table'">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>{{ isAr() ? 'عنوان الضابط' : 'Control Title' }}</th>
+                  <th>{{ isAr() ? 'نوع الاختبار' : 'Test Type' }}</th>
+                  <th>{{ isAr() ? 'تاريخ الاستحقاق' : 'Due Date' }}</th>
+                  <th>{{ isAr() ? 'الأولوية' : 'Priority' }}</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-row>
+                <tr>
+                  <td>
+                    <a class="control-link" [routerLink]="['/controls', row.id]">{{ row.controlTitle }}</a>
+                  </td>
+                  <td>{{ row.testType }}</td>
+                  <td [class.overdue-text]="isOverdue(row.dueDate)">{{ formatDate(row.dueDate) }}</td>
+                  <td><app-status-badge [status]="row.priority || 'medium'" /></td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </grc-data-table>
+        }
+      </p-tabPanel>
+
+      <!-- Tab 2: Controls Awaiting Review -->
+      <p-tabPanel>
+        <ng-template pTemplate="header">
+          <span>{{ isAr() ? 'ضوابط بانتظار المراجعة' : 'Controls Awaiting Review' }}</span>
+          <p-badge [value]="'' + reviewCount()" styleClass="wq-tab-badge" />
+        </ng-template>
+
+        @if (data()!.controlsAwaitingReview.length === 0) {
+          <app-empty-state
+            [title]="isAr() ? 'لا توجد مراجعات معلقة' : 'No pending reviews'"
+            [description]="isAr() ? 'لا توجد ضوابط بانتظار مراجعتك' : 'No controls awaiting your review'"
+            [dir]="dir()" />
+        } @else {
+          <grc-data-table
+            [totalRecords]="data()!.controlsAwaitingReview.length"
+            [emptyMessage]="isAr() ? 'لا توجد مراجعات معلقة' : 'No pending reviews'">
+            <p-table
+              [value]="data()!.controlsAwaitingReview"
+              [rows]="10"
+              [paginator]="data()!.controlsAwaitingReview.length > 10"
+              styleClass="p-datatable-sm p-datatable-striped"
+              [attr.aria-label]="isAr() ? 'جدول الضوابط بانتظار المراجعة' : 'Controls Awaiting Review Table'">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>{{ isAr() ? 'العنوان' : 'Title' }}</th>
+                  <th>{{ isAr() ? 'تاريخ التقديم' : 'Submitted At' }}</th>
+                  <th>{{ isAr() ? 'مقدّم بواسطة' : 'Submitted By' }}</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-row>
+                <tr>
+                  <td>
+                    <a class="control-link" [routerLink]="['/controls', row.id]">{{ row.title }}</a>
+                  </td>
+                  <td>{{ formatDate(row.submittedAt) }}</td>
+                  <td>{{ row.submittedBy || '\u2014' }}</td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </grc-data-table>
+        }
+      </p-tabPanel>
+
+      <!-- Tab 3: Evidence Pending -->
+      <p-tabPanel>
+        <ng-template pTemplate="header">
+          <span>{{ isAr() ? 'أدلة معلقة' : 'Evidence Pending' }}</span>
+          <p-badge [value]="'' + evidenceCount()" styleClass="wq-tab-badge" />
+        </ng-template>
+
+        @if (data()!.evidencePending.length === 0) {
+          <app-empty-state
+            [title]="isAr() ? 'لا توجد أدلة معلقة' : 'No pending evidence'"
+            [description]="isAr() ? 'جميع الأدلة المطلوبة قد تم جمعها' : 'All required evidence has been collected'"
+            [dir]="dir()" />
+        } @else {
+          <grc-data-table
+            [totalRecords]="data()!.evidencePending.length"
+            [emptyMessage]="isAr() ? 'لا توجد أدلة معلقة' : 'No pending evidence'">
+            <p-table
+              [value]="data()!.evidencePending"
+              [rows]="10"
+              [paginator]="data()!.evidencePending.length > 10"
+              styleClass="p-datatable-sm p-datatable-striped"
+              [attr.aria-label]="isAr() ? 'جدول الأدلة المعلقة' : 'Pending Evidence Table'">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>{{ isAr() ? 'عنوان الضابط' : 'Control Title' }}</th>
+                  <th>{{ isAr() ? 'نوع الدليل' : 'Evidence Type' }}</th>
+                  <th>{{ isAr() ? 'تاريخ الاستحقاق' : 'Due Date' }}</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-row>
+                <tr>
+                  <td>
+                    <a class="control-link" [routerLink]="['/controls', row.id]">{{ row.controlTitle }}</a>
+                  </td>
+                  <td>{{ row.evidenceType }}</td>
+                  <td [class.overdue-text]="isOverdue(row.dueDate)">{{ formatDate(row.dueDate) }}</td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </grc-data-table>
+        }
+      </p-tabPanel>
+
+      <!-- Tab 4: Certifications Pending -->
+      <p-tabPanel>
+        <ng-template pTemplate="header">
+          <span>{{ isAr() ? 'شهادات معلقة' : 'Certifications Pending' }}</span>
+          <p-badge [value]="'' + certCount()" styleClass="wq-tab-badge" />
+        </ng-template>
+
+        @if (data()!.certificationsPending.length === 0) {
+          <app-empty-state
+            [title]="isAr() ? 'لا توجد شهادات معلقة' : 'No pending certifications'"
+            [description]="isAr() ? 'جميع الشهادات محدثة' : 'All certifications are up to date'"
+            [dir]="dir()" />
+        } @else {
+          <grc-data-table
+            [totalRecords]="data()!.certificationsPending.length"
+            [emptyMessage]="isAr() ? 'لا توجد شهادات معلقة' : 'No pending certifications'">
+            <p-table
+              [value]="data()!.certificationsPending"
+              [rows]="10"
+              [paginator]="data()!.certificationsPending.length > 10"
+              styleClass="p-datatable-sm p-datatable-striped"
+              [attr.aria-label]="isAr() ? 'جدول الشهادات المعلقة' : 'Pending Certifications Table'">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>{{ isAr() ? 'اسم الحملة' : 'Campaign Name' }}</th>
+                  <th>{{ isAr() ? 'عنوان الضابط' : 'Control Title' }}</th>
+                  <th>{{ isAr() ? 'الموعد النهائي' : 'Deadline' }}</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-row>
+                <tr>
+                  <td>{{ row.campaignName }}</td>
+                  <td>
+                    <a class="control-link" [routerLink]="['/controls', row.id]">{{ row.controlTitle }}</a>
+                  </td>
+                  <td [class.overdue-text]="isOverdue(row.deadline)">{{ formatDate(row.deadline) }}</td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </grc-data-table>
+        }
+      </p-tabPanel>
+
+      <!-- Tab 5: Deficiencies Awaiting Action -->
+      <p-tabPanel>
+        <ng-template pTemplate="header">
+          <span>{{ isAr() ? 'قصور بانتظار الإجراء' : 'Deficiencies Awaiting Action' }}</span>
+          <p-badge [value]="'' + defCount()" styleClass="wq-tab-badge" />
+        </ng-template>
+
+        @if (data()!.deficienciesAwaitingAction.length === 0) {
+          <app-empty-state
+            [title]="isAr() ? 'لا توجد أوجه قصور' : 'No deficiencies awaiting action'"
+            [description]="isAr() ? 'جميع أوجه القصور قد تم معالجتها' : 'All deficiencies have been addressed'"
+            [dir]="dir()" />
+        } @else {
+          <grc-data-table
+            [totalRecords]="data()!.deficienciesAwaitingAction.length"
+            [emptyMessage]="isAr() ? 'لا توجد أوجه قصور' : 'No deficiencies awaiting action'">
+            <p-table
+              [value]="data()!.deficienciesAwaitingAction"
+              [rows]="10"
+              [paginator]="data()!.deficienciesAwaitingAction.length > 10"
+              styleClass="p-datatable-sm p-datatable-striped"
+              [attr.aria-label]="isAr() ? 'جدول أوجه القصور' : 'Deficiencies Table'">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>{{ isAr() ? 'عنوان الضابط' : 'Control Title' }}</th>
+                  <th>{{ isAr() ? 'الخطورة' : 'Severity' }}</th>
+                  <th>{{ isAr() ? 'تاريخ الاستحقاق' : 'Due Date' }}</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-row>
+                <tr>
+                  <td>
+                    <a class="control-link" [routerLink]="['/controls', row.id]">{{ row.controlTitle }}</a>
+                  </td>
+                  <td><app-status-badge [status]="row.severity" /></td>
+                  <td [class.overdue-text]="isOverdue(row.dueDate)">{{ formatDate(row.dueDate) }}</td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </grc-data-table>
+        }
+      </p-tabPanel>
+
+      <!-- Tab 6: Monitoring Alerts -->
+      <p-tabPanel>
+        <ng-template pTemplate="header">
+          <span>{{ isAr() ? 'تنبيهات المراقبة' : 'Monitoring Alerts' }}</span>
+          <p-badge [value]="'' + alertCount()" styleClass="wq-tab-badge" />
+        </ng-template>
+
+        @if (data()!.monitoringAlerts.length === 0) {
+          <app-empty-state
+            [title]="isAr() ? 'لا توجد تنبيهات' : 'No monitoring alerts'"
+            [description]="isAr() ? 'جميع الضوابط تعمل ضمن الحدود الطبيعية' : 'All controls operating within normal thresholds'"
+            [dir]="dir()" />
+        } @else {
+          <grc-data-table
+            [totalRecords]="data()!.monitoringAlerts.length"
+            [emptyMessage]="isAr() ? 'لا توجد تنبيهات' : 'No monitoring alerts'">
+            <p-table
+              [value]="data()!.monitoringAlerts"
+              [rows]="10"
+              [paginator]="data()!.monitoringAlerts.length > 10"
+              styleClass="p-datatable-sm p-datatable-striped"
+              [attr.aria-label]="isAr() ? 'جدول تنبيهات المراقبة' : 'Monitoring Alerts Table'">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>{{ isAr() ? 'عنوان الضابط' : 'Control Title' }}</th>
+                  <th>{{ isAr() ? 'نوع التنبيه' : 'Alert Type' }}</th>
+                  <th>{{ isAr() ? 'الخطورة' : 'Severity' }}</th>
+                  <th>{{ isAr() ? 'تاريخ الاكتشاف' : 'Detected At' }}</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-row>
+                <tr>
+                  <td>
+                    <a class="control-link" [routerLink]="['/controls', row.id]">{{ row.controlTitle }}</a>
+                  </td>
+                  <td>{{ row.alertType }}</td>
+                  <td><app-status-badge [status]="row.severity" /></td>
+                  <td>{{ formatDate(row.detectedAt) }}</td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </grc-data-table>
+        }
+      </p-tabPanel>
+
+    </p-tabView>
+  }
+
+  <!-- Empty Data State -->
+  @if (!loading() && !error() && !data()) {
+    <app-empty-state
+      [title]="isAr() ? 'لا توجد بيانات قائمة مهام' : 'No work queue data'"
+      [description]="isAr() ? 'لم يتم العثور على عناصر معلقة' : 'No pending items found'"
+      [dir]="dir()" />
+  }
+</div>

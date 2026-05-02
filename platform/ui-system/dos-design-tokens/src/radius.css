@@ -1,0 +1,25 @@
+/* DOS Platform — Radius Tokens (progressive scale).
+ *
+ *   xs (3px)  → tag/chip
+ *   sm (5px)  → button / input
+ *   md (8px)  → card content
+ *   lg (12px) → card / surface
+ *   xl (16px) → hero / banner
+ *   2xl(24px) → large modal / sheet
+ *   pill      → fully rounded
+ */
+:root {
+  --dos-radius-xs:   3px;
+  --dos-radius-sm:   5px;
+  --dos-radius-md:   8px;
+  --dos-radius-lg:   12px;
+  --dos-radius-xl:   16px;
+  --dos-radius-2xl:  24px;
+  --dos-radius-pill: 999px;
+
+  /* Component aliases. */
+  --dos-radius-card:   var(--dos-radius-lg);
+  --dos-radius-button: var(--dos-radius-sm);
+  --dos-radius-input:  var(--dos-radius-sm);
+  --dos-radius-banner: var(--dos-radius-xl);
+}

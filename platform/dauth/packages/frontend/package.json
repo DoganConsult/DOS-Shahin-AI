@@ -1,0 +1,85 @@
+{
+  "name": "@dos/dauth-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "DAuth frontend package — Angular guards, interceptors, directives, and services that integrate product shells with the DAuth platform module. Consumers use typed imports from @dos/ports.DAuthPort at the platform boundary; this package supplies the Angular-layer glue.",
+  "type": "module",
+  "main": "index.ts",
+  "types": "index.ts",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./index.ts",
+      "default": "./index.ts"
+    },
+    "./ports": {
+      "types": "./ports/index.ts",
+      "default": "./ports/index.ts"
+    },
+    "./guards": {
+      "types": "./guards/index.ts",
+      "default": "./guards/index.ts"
+    },
+    "./interceptors": {
+      "types": "./interceptors/index.ts",
+      "default": "./interceptors/index.ts"
+    },
+    "./directives": {
+      "types": "./directives/index.ts",
+      "default": "./directives/index.ts"
+    },
+    "./session": {
+      "types": "./session/index.ts",
+      "default": "./session/index.ts"
+    },
+    "./access": {
+      "types": "./access/index.ts",
+      "default": "./access/index.ts"
+    },
+    "./mfa": {
+      "types": "./mfa/index.ts",
+      "default": "./mfa/index.ts"
+    },
+    "./authority": {
+      "types": "./authority/index.ts",
+      "default": "./authority/index.ts"
+    },
+    "./delegation": {
+      "types": "./delegation/index.ts",
+      "default": "./delegation/index.ts"
+    },
+    "./sod": {
+      "types": "./sod/index.ts",
+      "default": "./sod/index.ts"
+    },
+    "./scope": {
+      "types": "./scope/index.ts",
+      "default": "./scope/index.ts"
+    },
+    "./lifecycle": {
+      "types": "./lifecycle/index.ts",
+      "default": "./lifecycle/index.ts"
+    },
+    "./csrf": {
+      "types": "./csrf/index.ts",
+      "default": "./csrf/index.ts"
+    },
+    "./audit": {
+      "types": "./audit/index.ts",
+      "default": "./audit/index.ts"
+    },
+    "./contracts": {
+      "types": "./contracts/index.ts",
+      "default": "./contracts/index.ts"
+    }
+  },
+  "peerDependencies": {
+    "@angular/common": ">=21.0.0 <22.0.0",
+    "@angular/core": ">=21.0.0 <22.0.0",
+    "@angular/router": ">=21.0.0 <22.0.0",
+    "rxjs": ">=7.0.0"
+  },
+  "dependencies": {
+    "@dos/ports": "workspace:*"
+  }
+}

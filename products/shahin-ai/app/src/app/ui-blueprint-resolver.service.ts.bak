@@ -1,0 +1,263 @@
+import { Injectable, inject } from '@angular/core';
+import {
+  EffectiveUiState,
+  EffectiveModuleView,
+  EffectivePageView,
+  EffectiveNavItem,
+  EffectiveActionState,
+  AiModuleCapability,
+  AiMode,
+  ArchetypeCode,
+  UiRenderContext,
+  DenialReason,
+  resolveArchetype,
+} from '../../../../../platform/core/runtime/ui-state.models';
+import { PLATFORM_MODULES } from '../../../../../platform/core/runtime/ui-constants';
+import { MODULE_UI_REGISTRY } from '../../../../../platform/registries/module-ui.registry';
+import { PAGE_REGISTRY } from '../../../../../platform/registries/page.registry';
+import { ACTION_REGISTRY } from '../../../../../platform/registries/action.registry';
+import { NavigationDerivationService } from '../../../../../platform/core/platform/navigation/navigation-derivation.service';
+import { DynamicUiBootstrapService } from '../../../../../platform/core/services/platform/dynamic-ui-bootstrap.service';
+
+/**
+ * Brain of the UI. Reads all inputs, outputs EffectiveUiState.
+ * Pure computation — no HTTP calls, no signals. Called by UiRuntimeStore.resolve().
+ */
+@Injectable({ providedIn: 'root' })
+export class UiBlueprintResolverService {
+  private navDerivation = inject(NavigationDerivationService);
+  private dynamicUiBootstrap = inject(DynamicUiBootstrapService);
+
+  loadRuntimeState(ctx: UiRenderContext, apiNavMenu: unknown): EffectiveUiState {
+    const archetype = resolveArchetype(ctx);
+
+    const modules = this.resolveVisibleModules(ctx);
+    const navigation = this.resolveNavigation(ctx, apiNavMenu);
+    const pages = this.resolvePages(ctx, archetype);
+    const actions = this.resolveActions(ctx);
+    const aiCapabilities = this.resolveAiCapabilities(ctx);
+    const landingPage = this.resolveLandingPage(ctx, modules);
+
+    return {
+      archetypeCode: archetype,
+      landingPage,
+      modules,
+      pages,
+      actions,
+      widgets: [], // Widgets use existing WidgetVisibilityService
+      navigation,
+      aiCapabilities,
+      featureFlags: new Set(ctx.featureFlags),
+      resolvedAt: Date.now(),
+    };
+  }
+
+  // ── Module Resolution ────────────────────────────────────────────────
+
+  resolveVisibleModules(ctx: UiRenderContext): EffectiveModuleView[] {
+    return MODULE_UI_REGISTRY.map(entry => {
+      const reasons: DenialReason[] = [];
+      let visible = true;
+      const actionable = true;
+
+      // Platform modules don't require entitlement
+      const requiresEntitlement = !PLATFORM_MODULES.has(entry.moduleCode);
+
+      if (requiresEntitlement && !ctx.activeModules.includes(entry.moduleCode)) {
+        visible = false;
+        reasons.push({
+          category: 'entitlement',
+          code: `module_not_entitled:${entry.moduleCode}`,
+          messageEn: `Module "${entry.labelEn}" is not included in your subscription`,
+          messageAr: `الوحدة "${entry.labelAr}" غير مضمنة في اشتراكك`,
+        });
+      }
+
+      // Check base permission (moduleCode.read)
+      const readPerm = `${entry.permissionPrefix}.read`;
+      if (!ctx.permissions.has(readPerm) && !ctx.permissions.has('*')) {
+        visible = false;
+        reasons.push({
+          category: 'permission',
+          code: `missing_permission:${readPerm}`,
+          messageEn: `Missing permission: ${readPerm}`,
+          messageAr: `صلاحية مفقودة: ${readPerm}`,
+        });
+      }
+
+      return {
+        moduleCode: entry.moduleCode,
+        visible,
+        actionable: visible && actionable,
+        route: entry.defaultLandingRoute,
+        icon: entry.icon,
+        color: entry.color,
+        labelEn: entry.labelEn,
+        labelAr: entry.labelAr,
+        automationLevel: undefined, // Filled from DB module registry in Phase 3
+        reason: reasons.length ? reasons[0].messageEn : undefined,
+      };
+    });
+  }
+
+  // ── Navigation Resolution ────────────────────────────────────────────
+
+  resolveNavigation(ctx: UiRenderContext, apiNavMenu: unknown): EffectiveNavItem[] {
+    return this.navDerivation.buildSidebar(apiNavMenu, ctx);
+  }
+
+  // ── Page Resolution ──────────────────────────────────────────────────
+
+  resolvePages(ctx: UiRenderContext, archetype: ArchetypeCode): EffectivePageView[] {
+    // W11.D9.3 — read effective registry (foundation slice overlaid by live
+    // dynamic-ui rows; non-foundation pass-through). Falls back to static
+    // PAGE_REGISTRY when dynamic data hasn't loaded.
+    const registry = this.dynamicUiBootstrap.effectivePageRegistry();
+    const pages = registry.length ? registry : PAGE_REGISTRY;
+    return pages.map(entry => {
+      let allowed = true;
+      let disabledReason: string | undefined;
+
+      // Module active check (skip platform modules)
+      if (entry.requiresModuleActive && !PLATFORM_MODULES.has(entry.moduleCode)) {
+        if (!ctx.activeModules.includes(entry.moduleCode)) {
+          allowed = false;
+          disabledReason = `Module ${entry.moduleCode} not active`;
+        }
+      }
+
+      // Permission check
+      if (allowed && entry.requiresPermissions.length > 0) {
+        const missing = entry.requiresPermissions.filter(
+          p => !ctx.permissions.has(p) && !ctx.permissions.has('*')
+        );
+        if (missing.length > 0) {
+          allowed = false;
+          disabledReason = `Missing permissions: ${missing.join(', ')}`;
+        }
+      }
+
+      // Feature flag check
+      if (allowed && entry.featureFlags?.length) {
+        const missingFlags = entry.featureFlags.filter(f => !ctx.featureFlags.includes(f));
+        if (missingFlags.length > 0) {
+          allowed = false;
+          disabledReason = `Feature flags not enabled: ${missingFlags.join(', ')}`;
+        }
+      }
+
+      // Archetype check
+      if (allowed && entry.archetypeVisibility?.length) {
+        if (!entry.archetypeVisibility.includes(archetype)) {
+          allowed = false;
+          disabledReason = `Not available for ${archetype} archetype`;
+        }
+      }
+
+      return {
+        pageCode: entry.pageCode,
+        moduleCode: entry.moduleCode,
+        route: entry.route,
+        allowed,
+        hidden: !allowed && entry.navVisibility === 'entitled',
+        disabledReason,
+      };
+    });
+  }
+
+  // ── Action Resolution ────────────────────────────────────────────────
+
+  resolveActions(ctx: UiRenderContext): Record<string, EffectiveActionState> {
+    const result: Record<string, EffectiveActionState> = {};
+
+    for (const entry of ACTION_REGISTRY) {
+      let visible = true;
+      let enabled = true;
+      let mode: EffectiveActionState['mode'] = 'normal';
+      let reason: string | undefined;
+
+      // Module check (skip for generic actions with moduleCode '*')
+      if (entry.moduleCode !== '*') {
+        if (!PLATFORM_MODULES.has(entry.moduleCode) && !ctx.activeModules.includes(entry.moduleCode)) {
+          visible = false;
+          reason = `Module ${entry.moduleCode} not active`;
+        }
+      }
+
+      // Permission check
+      if (visible && entry.requiredPermissions.length > 0) {
+        const missing = entry.requiredPermissions.filter(
+          p => !ctx.permissions.has(p) && !ctx.permissions.has('*')
+        );
+        if (missing.length > 0) {
+          enabled = false;
+          reason = `Missing: ${missing.join(', ')}`;
+        }
+      }
+
+      // AI action mode
+      if (visible && entry.aiEnabled) {
+        const aiMode = this.resolveAiMode(entry.moduleCode, ctx);
+        if (aiMode === 'hidden' || aiMode === 'blocked') {
+          if (entry.actionCode.startsWith('ai.')) {
+            visible = false;
+          }
+        } else if (aiMode === 'recommend') {
+          mode = 'ai-recommend-only';
+        }
+      }
+
+      result[entry.actionCode] = { actionCode: entry.actionCode, visible, enabled, mode, reason };
+    }
+
+    return result;
+  }
+
+  // ── AI Resolution ────────────────────────────────────────────────────
+
+  resolveAiCapabilities(ctx: UiRenderContext): AiModuleCapability[] {
+    return MODULE_UI_REGISTRY.map(entry => ({
+      moduleCode: entry.moduleCode,
+      mode: this.resolveAiMode(entry.moduleCode, ctx),
+    }));
+  }
+
+  resolveAiMode(_moduleCode: string, ctx: UiRenderContext): AiMode {
+    switch (ctx.operationMode) {
+      case 'full_autonomous': return 'execute';
+      case 'shadow_agent':    return 'draft';
+      case 'hybrid':          return 'recommend';
+      case 'human':
+      default:                return 'observe';
+    }
+  }
+
+  // ── Landing Page ─────────────────────────────────────────────────────
+
+  resolveLandingPage(ctx: UiRenderContext, modules: EffectiveModuleView[]): string {
+    // Admin/owner -> workspace home
+    if (ctx.accessProfiles.includes('platform_super_admin') || ctx.accessProfiles.includes('tenant_admin')) {
+      return '/workspace-home';
+    }
+
+    // Role-based: compliance officer -> compliance module
+    if (ctx.functionalRoles.includes('compliance_officer') || ctx.functionalRoles.includes('compliance_manager')) {
+      const mod = modules.find(m => m.moduleCode === 'compliance' && m.visible);
+      if (mod) return mod.route;
+    }
+
+    // Role-based: risk manager -> risk module
+    if (ctx.functionalRoles.includes('risk_manager') || ctx.functionalRoles.includes('risk_owner')) {
+      const mod = modules.find(m => m.moduleCode === 'risk' && m.visible);
+      if (mod) return mod.route;
+    }
+
+    // Role-based: auditor -> audit module
+    if (ctx.functionalRoles.includes('auditor') || ctx.functionalRoles.includes('audit_manager')) {
+      const mod = modules.find(m => m.moduleCode === 'audit' && m.visible);
+      if (mod) return mod.route;
+    }
+
+    return '/workspace-home';
+  }
+}

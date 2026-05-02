@@ -1,0 +1,51 @@
+---
+# Shared derived roles — reused by every resource policy. Keeps
+# "who counts as reviewer / approver / owner" in one place.
+#
+# Deploy path in Cerbos: /policies/derived_roles/derived_roles.dogan.yaml
+apiVersion: "api.cerbos.dev/v1"
+derivedRoles:
+  name: dogan_common
+  definitions:
+    - name: tenant_member
+      parentRoles: ["tenant_member"]
+      condition:
+        match:
+          expr: request.principal.attr.tenantId == request.resource.attr.tenantId
+
+    - name: tenant_admin
+      parentRoles: ["tenant_admin"]
+      condition:
+        match:
+          expr: request.principal.attr.tenantId == request.resource.attr.tenantId
+
+    - name: platform_admin
+      parentRoles: ["platform_admin"]
+
+    - name: owner
+      parentRoles: ["tenant_member"]
+      condition:
+        match:
+          expr: request.principal.id == request.resource.attr.createdBy
+
+    - name: reviewer
+      parentRoles: ["tenant_member"]
+      condition:
+        match:
+          expr: |
+            has(request.resource.attr.reviewers) &&
+            request.principal.id in request.resource.attr.reviewers
+
+    - name: approver
+      parentRoles: ["tenant_member"]
+      condition:
+        match:
+          expr: |
+            has(request.resource.attr.approvers) &&
+            request.principal.id in request.resource.attr.approvers
+
+    - name: auditor_readonly
+      parentRoles: ["auditor"]
+      condition:
+        match:
+          expr: request.principal.attr.tenantId == request.resource.attr.tenantId

@@ -1,0 +1,27 @@
+{
+  "serviceCode": "tenant-service",
+  "displayName": "Tenant Service",
+  "layer": "platform-service",
+  "ownerTeam": "platform-core",
+  "runtime": "node",
+  "dependsOn": [
+    "auth-service"
+  ],
+  "modules": [
+    "foundation",
+    "admin",
+    "team",
+    "provisioning",
+    "bootstrap",
+    "navigation",
+    "config",
+    "config-center",
+    "workspace",
+    "quality-gate",
+    "platform-stats",
+    "operating-cockpit"
+  ],
+  "exposes": {
+    "apiBase": "/api/tenants"
+  }
+}

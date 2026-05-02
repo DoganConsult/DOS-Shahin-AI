@@ -1,0 +1,22 @@
+<div class="grc-hub" [dir]="i18n.dir()">
+  <header class="hub-toolbar">
+    <h2>{{ i18n.isArabic() ? 'تفاصيل الوكيل' : 'Agent Detail' }}</h2>
+    <p class="muted">{{ i18n.isArabic() ? 'الحالة الحيّة، الورديّة الحاليّة، آخر التشغيلات ومؤشرات الأداء للوكيل المحدد.' : 'Live status, current shift, recent runs and KPIs for the selected agent.' }}</p>
+  </header>
+
+  <ng-container [ngSwitch]="state()">
+    <p-card *ngSwitchCase="'loading'"><p>{{ i18n.isArabic() ? 'جارِ التحميل…' : 'Loading…' }}</p></p-card>
+    <p-card *ngSwitchCase="'error'"><pre class="mono">{{ error() }}</pre></p-card>
+    <p-card *ngSwitchCase="'empty'"><p>{{ i18n.isArabic() ? 'لم يتم العثور على وكلاء.' : 'No agents found.' }}</p></p-card>
+
+    <div *ngSwitchCase="'ready'" class="agent-grid">
+      <p-card *ngFor="let a of rows()" styleClass="agent-card">
+        <ng-template pTemplate="header"><h3>{{ a.agentCode }} — {{ a.name }}</h3></ng-template>
+        <p><strong>{{ i18n.isArabic() ? 'الحالة:' : 'Status:' }}</strong> <p-tag [value]="a.status"></p-tag></p>
+        <p *ngIf="a.lastRunAt"><strong>{{ i18n.isArabic() ? 'آخر تشغيل:' : 'Last run:' }}</strong> {{ a.lastRunAt }}</p>
+        <p><strong>{{ i18n.isArabic() ? 'تشغيلات (24س):' : 'Runs (24h):' }}</strong> {{ a.runs24h }}</p>
+        <p><strong>{{ i18n.isArabic() ? 'الزمن (مللي):' : 'Latency (ms):' }}</strong> {{ a.meanLatencyMs }}</p>
+      </p-card>
+    </div>
+  </ng-container>
+</div>

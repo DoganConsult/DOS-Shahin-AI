@@ -1,0 +1,16 @@
+-- Missing-PK reconciliation templates
+-- All statements COMMENTED OUT. Review each before uncommenting.
+-- Adding a PK acquires ACCESS EXCLUSIVE briefly; on large tables,
+-- consider ADD CONSTRAINT ... USING INDEX <concurrent-index>.
+
+-- ALTER TABLE public.ADD ADD COLUMN IF NOT EXISTS id UUID PRIMARY KEY DEFAULT gen_random_uuid();
+-- ALTER TABLE public.approval_matrix_rules ADD COLUMN IF NOT EXISTS id UUID PRIMARY KEY DEFAULT gen_random_uuid();
+-- ALTER TABLE public.dos_verification_checks ADD COLUMN IF NOT EXISTS id UUID PRIMARY KEY DEFAULT gen_random_uuid();
+-- ALTER TABLE public.ONLY ADD COLUMN IF NOT EXISTS id UUID PRIMARY KEY DEFAULT gen_random_uuid();
+-- ALTER TABLE public.password_reset_tokens ADD COLUMN IF NOT EXISTS id UUID PRIMARY KEY DEFAULT gen_random_uuid();
+-- ALTER TABLE public.risk_pair_reviews ADD COLUMN IF NOT EXISTS id UUID PRIMARY KEY DEFAULT gen_random_uuid();
+-- ALTER TABLE public.risk_peer_reviews ADD COLUMN IF NOT EXISTS id UUID PRIMARY KEY DEFAULT gen_random_uuid();
+-- ALTER TABLE public.tenant_entitlement_profile ADD COLUMN IF NOT EXISTS id UUID PRIMARY KEY DEFAULT gen_random_uuid();
+-- ALTER TABLE public.tenant_migrations ADD COLUMN IF NOT EXISTS id UUID PRIMARY KEY DEFAULT gen_random_uuid();
+-- ALTER TABLE public.tenant_module_entitlements ADD COLUMN IF NOT EXISTS id UUID PRIMARY KEY DEFAULT gen_random_uuid();
+-- ALTER TABLE public.workflow_tasks ADD COLUMN IF NOT EXISTS id UUID PRIMARY KEY DEFAULT gen_random_uuid();

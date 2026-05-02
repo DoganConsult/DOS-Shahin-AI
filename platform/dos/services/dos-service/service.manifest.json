@@ -1,0 +1,10 @@
+{
+  "serviceCode": "dos-service",
+  "displayName": "DOS Service",
+  "layer": "platform-service",
+  "ownerTeam": "platform-core",
+  "runtime": "node",
+  "dependsOn": [],
+  "modules": ["dos"],
+  "exposes": { "apiBase": "/api/dos" }
+}

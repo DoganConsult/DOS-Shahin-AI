@@ -1,0 +1,23 @@
+{
+  "serviceCode": "bcp-service",
+  "displayName": "Business Continuity Service",
+  "layer": "domain-service",
+  "ownerTeam": "product-shahin-ai",
+  "runtime": "node",
+  "dependsOn": [
+    "auth-service",
+    "tenant-service",
+    "workflow-service"
+  ],
+  "modules": [
+    "bcp"
+  ],
+  "exposes": {
+    "apiBase": "/api/bcp",
+    "events": [
+      "bcp.plan.created",
+      "bcp.plan.activated",
+      "bcp.drill.completed"
+    ]
+  }
+}

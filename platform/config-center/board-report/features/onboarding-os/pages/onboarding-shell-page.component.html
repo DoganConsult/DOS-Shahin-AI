@@ -1,0 +1,257 @@
+<!-- Registration hero (shown when not logged in) -->
+<app-registration-hero *ngIf="store.registrationMode()" (registered)="onRegistered($event)"></app-registration-hero>
+
+<ng-container *ngIf="!store.registrationMode()">
+
+<p-toast position="top-right" [style]="{'max-width': '380px'}" />
+
+<app-onboarding-exit-dialog
+  [visible]="store.showExitConfirm()"
+  [lang]="store.isAr ? 'ar' : 'en'"
+  (cancelled)="store.showExitConfirm.set(false)"
+  (confirmed)="sessionSvc.confirmExit()">
+</app-onboarding-exit-dialog>
+
+<app-onboarding-topbar
+  [lang]="store.isAr ? 'ar' : 'en'"
+  [progressPercent]="store.session()?.progress_percent ?? 0"
+  [readinessScore]="store.session()?.readiness_score ?? 0"
+  [readyThreshold]="store.uiConfig()?.thresholds?.readinessReady ?? 85"
+  [warningThreshold]="store.uiConfig()?.thresholds?.readinessWarning ?? 40"
+  [saving]="store.saving()"
+  [lastSaved]="store.lastSaved()"
+  [synced]="!!store.session()?.id"
+  [hasOfflineQueue]="store.answerSvc.hasOfflineQueue()"
+  [terminologyTerms]="store.terminologyTerms()"
+  [savingLabel]="store.t('onboarding.saving')"
+  [savedLabel]="store.t('onboarding.saved')"
+  [englishLabel]="store.t('onboarding.language.english')"
+  [arabicLabel]="store.t('onboarding.language.arabic')"
+  [emailVerified]="store.emailVerified()"
+  (toggleLang)="sessionSvc.toggleLang()"
+  (exitClicked)="store.showExitConfirm.set(true)"
+  (resendVerification)="intel.resendVerificationEmail()">
+</app-onboarding-topbar>
+
+<div class="onb-layout" [class.rtl]="store.isAr">
+  <aside class="onb-left-rail">
+    <app-onboarding-story-rail
+      [stages]="nav.storyRailStages()"
+      [activeIndex]="store.activeStageIdx()"
+      [maxReachable]="nav.maxReachableStage()"
+      [scenes]="store.scenes()"
+      [overallConfidence]="store.overallConfidence()"
+      [lang]="store.isAr ? 'ar' : 'en'"
+      (stageSelected)="goToStageWithSideEffects($event)">
+    </app-onboarding-story-rail>
+  </aside>
+
+  <main class="onb-canvas">
+    <!-- Skeleton loading -->
+    <div class="onb-skeleton-wrap" *ngIf="store.loading()" aria-busy="true" [attr.aria-label]="platform.i18n.translate('onboarding.loadingOnboardingContent')" role="status">
+      <p-skeleton width="60%" height="2rem" styleClass="mb-3" />
+      <p-skeleton width="40%" height="1rem" styleClass="mb-4" />
+      <p-skeleton width="100%" height="1.5rem" styleClass="mb-2" />
+      <p-skeleton width="100%" height="1.5rem" styleClass="mb-2" />
+      <p-skeleton width="100%" height="1.5rem" styleClass="mb-2" />
+      <p-skeleton width="100%" height="1.5rem" styleClass="mb-2" />
+      <p-skeleton width="80%" height="1.5rem" styleClass="mb-4" />
+      <p-skeleton width="100%" height="9rem" />
+    </div>
+
+    <!-- Config load error -->
+    <div class="onb-error-state" *ngIf="!store.loading() && store.configLoadError()">
+      <i class="pi pi-exclamation-circle onb-error-state__icon"></i>
+      <h3 class="onb-error-state__title">{{ store.isAr ? 'تعذّر تحميل إعدادات الخطوات' : 'Failed to load onboarding configuration' }}</h3>
+      <p class="onb-error-state__desc">{{ store.isAr ? 'يرجى المحاولة مرة أخرى أو تحديث الصفحة' : 'Please try again or refresh the page' }}</p>
+      <button pButton type="button" class="p-button-outlined" [label]="store.isAr ? 'إعادة المحاولة' : 'Retry'" icon="pi pi-refresh"
+              (click)="store.configLoadError.set(false); store.loading.set(true); sessionSvc.loadConfiguration()"></button>
+    </div>
+
+    <!-- Welcome Back Banner -->
+    <div class="onb-welcome-back" *ngIf="!store.loading() && store.isReturningSession && (nav.isQuestionStage || nav.isDedicatedComponentStage)">
+      <i class="pi pi-replay"></i>
+      <span>{{ store.isAr ? 'أهلاً بعودتك! أنت في مرحلة' : 'Welcome back! You are on' }} <strong>{{ nav.activeStage ? store.getStageLabel(nav.activeStage) : '' }}</strong></span>
+      <button class="onb-welcome-dismiss" pButton [text]="true" icon="pi pi-times" (click)="store.isReturningSession = false" [attr.aria-label]="store.isAr ? 'إغلاق' : 'Dismiss'"></button>
+    </div>
+
+    <!-- Journey Profile Selector -->
+    <app-journey-profile-selector
+      *ngIf="!store.loading() && store.journeyProfilePending() && store.journeyProfiles().length > 0 && !store.registrationMode()"
+      [profiles]="store.journeyProfiles()"
+      [selectedCode]="store.selectedProfile()?.profile_code ?? null"
+      [lang]="store.isAr ? 'ar' : 'en'"
+      (profileSelected)="sessionSvc.onProfileSelected($event)">
+    </app-journey-profile-selector>
+
+    <!-- Quick-Start Templates -->
+    <app-quick-start-selector
+      *ngIf="!store.loading() && store.journeyProfilePending() && store.quickStartTemplates().length > 0 && !store.registrationMode()"
+      [templates]="store.quickStartTemplates()"
+      [lang]="store.isAr ? 'ar' : 'en'"
+      (templateSelected)="sessionSvc.onQuickStart($event)">
+    </app-quick-start-selector>
+
+    <!-- Three-Phase Progress -->
+    <app-three-phase-progress
+      *ngIf="!store.loading() && !store.registrationMode() && !store.journeyProfilePending()"
+      [lang]="store.isAr ? 'ar' : 'en'"
+      [activeStageCode]="nav.activeStage?.stageCode ?? ''">
+    </app-three-phase-progress>
+
+    <ng-container *ngIf="!store.loading() && !store.journeyProfilePending()">
+
+      <!-- Welcome Stage -->
+      <app-onboarding-welcome *ngIf="nav.activeStage?.stageCode === 'welcome'"
+        [lang]="store.isAr ? 'ar' : 'en'" (started)="sessionSvc.saveAndContinue()">
+      </app-onboarding-welcome>
+
+      <!-- Use Case Selector -->
+      <app-use-case-selector *ngIf="nav.activeStage?.stageCode === 'use_case'"
+        [lang]="store.isAr ? 'ar' : 'en'" [selectedCode]="store.answers['use_case_primary'] || ''"
+        (selected)="onQuestionRendererAnswer({ questionCode: 'use_case_primary', value: $event }); sessionSvc.saveAndContinue()">
+      </app-use-case-selector>
+
+      <!-- Pack Selection -->
+      <app-pack-selection *ngIf="nav.activeStage?.stageCode === 'pack_selection'"
+        [lang]="store.isAr ? 'ar' : 'en'" [selectedPack]="store.answers['pack_selected'] || ''"
+        (packSelected)="onQuestionRendererAnswer({ questionCode: 'pack_selected', value: $event })">
+      </app-pack-selection>
+
+      <!-- Data Start Mode -->
+      <app-data-start-mode *ngIf="nav.activeStage?.stageCode === 'data_start_mode'"
+        [lang]="store.isAr ? 'ar' : 'en'" [selectedMode]="store.answers['data_start_mode'] || ''"
+        (modeSelected)="onQuestionRendererAnswer({ questionCode: 'data_start_mode', value: $event })">
+      </app-data-start-mode>
+
+      <!-- AI Setup -->
+      <app-ai-setup *ngIf="nav.activeStage?.stageCode === 'ai_setup'"
+        [lang]="store.isAr ? 'ar' : 'en'" [initialAutonomy]="store.answers['ai_autonomy_level'] || 'supervised'"
+        [initialBoundaries]="store.answers['ai_data_boundary'] || []"
+        (configChanged)="onQuestionRendererAnswer({ questionCode: 'ai_autonomy_level', value: $event.autonomyLevel }); onQuestionRendererAnswer({ questionCode: 'ai_data_boundary', value: $event.dataBoundaries })">
+      </app-ai-setup>
+
+      <!-- Personalization -->
+      <app-personalization *ngIf="nav.activeStage?.stageCode === 'personalization'"
+        [lang]="store.isAr ? 'ar' : 'en'"
+        (configChanged)="onQuestionRendererAnswer({ questionCode: 'workspace_theme', value: $event.theme }); onQuestionRendererAnswer({ questionCode: 'workspace_logo_url', value: $event.logoUrl }); onQuestionRendererAnswer({ questionCode: 'workspace_language', value: $event.language }); onQuestionRendererAnswer({ questionCode: 'workspace_dashboard_layout', value: $event.dashboardLayout })">
+      </app-personalization>
+
+      <!-- Readiness Check -->
+      <app-readiness-check *ngIf="nav.activeStage?.stageCode === 'readiness_check'"
+        [lang]="store.isAr ? 'ar' : 'en'" (launch)="sessionSvc.saveAndContinue()">
+      </app-readiness-check>
+
+      <!-- Navigation for dedicated component stages -->
+      <div class="onb-stage-nav-buttons" *ngIf="nav.isDedicatedComponentStage && nav.activeStage?.stageCode !== 'welcome' && nav.activeStage?.stageCode !== 'readiness_check'">
+        <button pButton [label]="store.isAr ? 'السابق' : 'Previous'" [icon]="store.isAr ? 'pi pi-chevron-right' : 'pi pi-chevron-left'" [iconPos]="store.isAr ? 'right' : 'left'" [text]="true"
+          *ngIf="store.activeStageIdx() > 0" (click)="goToStageWithSideEffects(store.activeStageIdx() - 1)"></button>
+        <span class="flex-grow-1"></span>
+        <button pButton [label]="store.isAr ? 'التالي' : 'Continue'" [icon]="store.isAr ? 'pi pi-chevron-left' : 'pi pi-chevron-right'" [iconPos]="store.isAr ? 'left' : 'right'"
+          (click)="sessionSvc.saveAndContinue()" [loading]="store.saving()"></button>
+      </div>
+
+      <!-- Question Stage Container -->
+      <app-question-stage-container *ngIf="nav.isQuestionStage && nav.activeStage"
+        [activeStage]="nav.activeStage"
+        (answerChanged)="onQuestionRendererAnswer($event)"
+        (lookupAnswerChanged)="onQuestionRendererLookupAnswer($event)"
+        (saveAndContinue)="sessionSvc.saveAndContinue()"
+        (goToPrevious)="goToStageWithSideEffects(store.activeStageIdx() - 1)"
+        (goToNext)="goToStageWithSideEffects(store.activeStageIdx() + 1)"
+        (skipStage)="nav.skipCurrentStage()"
+        (painSelectionChanged)="onPainSelectionChange($event)"
+        (suggestResponsibilities)="intel.suggestResponsibilities()"
+        (teamCsvUploaded)="intel.onTeamCsvUploaded($event)">
+      </app-question-stage-container>
+
+      <!-- Blockers Banner -->
+      <div class="onb-blockers-banner" *ngIf="nav.isReviewStage && store.blockers().length > 0">
+        <i class="pi pi-exclamation-triangle"></i>
+        <div class="onb-blockers-content">
+          <strong>{{ store.isAr ? 'مشكلات يجب حلها قبل التفعيل' : 'Issues to resolve before activation' }}</strong>
+          <ul class="onb-blockers-list">
+            <li *ngFor="let b of store.blockers()">
+              <span>{{ store.isAr ? (b.message_ar || b.message || b.blocker_code) : (b.message || b.blocker_code) }}</span>
+              <button *ngIf="b.stage_code" pButton [text]="true" [label]="store.isAr ? 'إصلاح' : 'Fix'"
+                icon="pi pi-arrow-right" class="onb-blocker-fix-btn"
+                (click)="nav.navigateToBlocker(b)"></button>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Review Stage -->
+      @defer (when nav.isReviewStage) {
+      <app-onboarding-review-stage *ngIf="nav.isReviewStage"
+        [lang]="store.isAr ? 'ar' : 'en'"
+        [emailVerified]="store.emailVerified()"
+        [review]="store.review()"
+        [reviewLoading]="store.reviewLoading()"
+        [provisioning]="store.provisioning()"
+        [provisionError]="store.provisionError()"
+        [provisionCorrelationId]="store.provisionCorrelationId()"
+        [recomputing]="store.recomputing()"
+        [governanceContext]="store.governanceContext()"
+        [moduleStates]="store.moduleStates()"
+        [inferredFacts]="store.inferredFacts()"
+        [confidenceScores]="store.confidenceScores()"
+        [regulatorExplanations]="store.regulatorExplanations()"
+        [dashboardPersonas]="store.dashboardPersonas()"
+        [workspacePreviewSections]="store.workspacePreviewSections()"
+        [legalConfirmed]="store.legalConfirmed"
+        (legalConfirmedChange)="store.legalConfirmed = $event"
+        (navigateToBlocker)="nav.navigateToBlocker($event)"
+        (inlineEdit)="sessionSvc.openInlineEdit($event.questionCode, $event.currentValue)"
+        (recompute)="intel.recomputeContext()"
+        (factConfirmed)="intel.confirmInferredFact($event)"
+        (personaConfirmed)="intel.onPersonaConfirmed($event)"
+        (backToEdit)="goToStageWithSideEffects(0)"
+        (approveAndProvision)="approveAndProvision()"
+        (retryProvision)="retryProvisionAndApprove()"
+        (moduleToggled)="intel.toggleModule($event.moduleCode, $event.state)">
+      </app-onboarding-review-stage>
+      }
+
+      <!-- Inline Edit Dialog -->
+      <div tabindex="0" role="button" (keyup.enter)="sessionSvc.cancelInlineEdit()" class="onb-inline-dialog-backdrop" *ngIf="store.inlineEditVisible" (click)="sessionSvc.cancelInlineEdit()">
+        <div tabindex="0" role="button" (keyup.enter)="$event.stopPropagation()" class="onb-inline-dialog" (click)="$event.stopPropagation()">
+          <div class="onb-inline-dialog-header">
+            <span>{{ nav.getQuestionLabel(store.inlineEditQuestionCode) }}</span>
+            <button [attr.aria-label]="platform.i18n.translate('onboarding.close')" pButton icon="pi pi-times" [text]="true" (click)="sessionSvc.cancelInlineEdit()"></button>
+          </div>
+          <div class="onb-inline-dialog-body">
+            <grc-form-field [label]="nav.getQuestionLabel(store.inlineEditQuestionCode)">
+              <input pInputText class="w-full" [(ngModel)]="store.inlineEditValue" (keyup.enter)="sessionSvc.saveInlineEdit()" />
+            </grc-form-field>
+          </div>
+          <div class="onb-inline-dialog-footer">
+            <button pButton [label]="store.isAr ? 'إلغاء' : 'Cancel'" [text]="true" (click)="sessionSvc.cancelInlineEdit()"></button>
+            <button pButton [label]="store.isAr ? 'حفظ' : 'Save'" icon="pi pi-check" (click)="sessionSvc.saveInlineEdit()" [loading]="store.saving()"></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Provision Stage Container -->
+      @defer (when nav.isProvisionStage) {
+      <app-provision-stage-container *ngIf="nav.isProvisionStage"
+        (retryProvisioning)="store.provisioningSvc.retryProvisioning(store.session()?.id ?? null)"
+        (retryPoll)="store.provisioningSvc.retryProvisioningPoll()"
+        (cancelProvisioning)="intel.cancelProvisioningJob()"
+        (techLogExpanded)="intel.checkTemporalStatus()"
+        (enterWorkspace)="store.provisioningSvc.goToWorkspace(store.session()?.id ?? null)"
+        (toggleChecklistItem)="store.provisioningSvc.toggleChecklistItem(store.session()?.id ?? null, $event)"
+        (npsRated)="intel.onNpsRated($event)">
+      </app-provision-stage-container>
+      }
+
+    </ng-container>
+  </main>
+
+  <!-- Intelligence Sidebar -->
+  <aside class="onb-right-panel" *ngIf="nav.isQuestionStage || nav.isDedicatedComponentStage">
+    <app-intelligence-sidebar-container></app-intelligence-sidebar-container>
+  </aside>
+</div>
+
+</ng-container>

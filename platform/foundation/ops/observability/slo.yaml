@@ -1,0 +1,39 @@
+# Foundation module SLO declaration.
+module: foundation
+version: 1
+slos:
+  - name: api_availability
+    description: Successful response rate on /api/foundation/*
+    target: 0.999
+    window: 30d
+    sli:
+      good: sum(rate(http_requests_total{route=~"/api/foundation/.*",code!~"5.."}[5m]))
+      total: sum(rate(http_requests_total{route=~"/api/foundation/.*"}[5m]))
+
+  - name: api_latency_p95
+    description: 95th-percentile request latency on /api/foundation/*
+    target_seconds: 0.25
+    window: 30d
+    sli:
+      metric: histogram_quantile(0.95, sum by (le) (rate(http_request_duration_seconds_bucket{route=~"/api/foundation/.*"}[5m])))
+
+  - name: outbox_freshness
+    description: Foundation outbox publisher lag stays under 30s
+    target_seconds: 30
+    window: 7d
+    sli:
+      metric: max_over_time(foundation_outbox_lag_seconds[5m])
+
+  - name: event_delivery
+    description: Foundation events delivered without DLQ
+    target: 0.999
+    window: 30d
+    sli:
+      good: sum(increase(foundation_events_published_total[5m])) - sum(increase(foundation_event_dlq_total[5m]))
+      total: sum(increase(foundation_events_published_total[5m]))
+
+errorBudgetPolicy:
+  - threshold: 0.5
+    action: notify-team
+  - threshold: 0.9
+    action: freeze-deploys

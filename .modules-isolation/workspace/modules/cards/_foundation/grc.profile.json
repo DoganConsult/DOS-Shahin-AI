@@ -1,0 +1,30 @@
+{
+  "code": "foundation",
+  "name": "Foundation / Org & Access",
+  "card_position": 0,
+  "is_business_card": false,
+  "tier": "platform",
+  "physical_home": "platform/foundation/",
+  "description": "Platform DNA. Org hierarchy + identity + access + lifecycle. Provides the substrate every business module resolves ownership against. NOT a Shahin business module card.",
+  "provides": {
+    "org_hierarchy": [
+      "organization","business_unit","department","team","position",
+      "user","role_assignment","permission","workflow_authority"
+    ],
+    "identity":   ["user","session","mfa","sod_enforcement"],
+    "access":     ["role","permission","entitlement","scope_resolver","navigation_resolver"],
+    "lifecycle":  ["create","activate","suspend","retire","archive"]
+  },
+  "consumed_by": [
+    "governance","qiyas","regulatory","compliance","risk","controls","policy",
+    "asset","vendor","incident","exceptions","issues","evidence","audit","bcp",
+    "training","reporting","ai_governance"
+  ],
+  "scopes_resolved": ["org","business_unit","department","team","position","own"],
+  "audit_events": [
+    { "event": "foundation.user.created",      "category": "create" },
+    { "event": "foundation.role.assigned",     "category": "configure" },
+    { "event": "foundation.permission.granted","category": "configure" },
+    { "event": "foundation.session.opened",    "category": "access" }
+  ]
+}

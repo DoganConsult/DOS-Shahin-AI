@@ -1,0 +1,35 @@
+<div class="grc-hub" [dir]="i18n.dir()">
+  <header class="hub-toolbar">
+    <h2>{{ i18n.isArabic() ? 'لمحة عن جناح الذكاء' : 'AI Suite Overview' }}</h2>
+    <p class="muted">
+      {{ i18n.isArabic() ? 'بيانات حيّة من /ai-engine/dashboard.' : 'Live data from /ai-engine/dashboard.' }}
+    </p>
+  </header>
+
+  <ng-container [ngSwitch]="state()">
+    <p-card *ngSwitchCase="'loading'">
+      <p>{{ i18n.isArabic() ? 'جارِ التحميل…' : 'Loading…' }}</p>
+    </p-card>
+    <p-card *ngSwitchCase="'error'" styleClass="state-error">
+      <pre class="mono">{{ error() }}</pre>
+    </p-card>
+    <div *ngSwitchCase="'ready'" class="kpi-grid">
+      <p-card>
+        <h3>agents</h3>
+        <p class="kpi">{{ summary()?.['agents'] }}</p>
+      </p-card>
+      <p-card>
+        <h3>runs24h</h3>
+        <p class="kpi">{{ summary()?.['runs24h'] }}</p>
+      </p-card>
+      <p-card>
+        <h3>pendingApprovals</h3>
+        <p class="kpi">{{ summary()?.['pendingApprovals'] }}</p>
+      </p-card>
+      <p-card>
+        <h3>openIncidents</h3>
+        <p class="kpi">{{ summary()?.['openIncidents'] }}</p>
+      </p-card>
+    </div>
+  </ng-container>
+</div>

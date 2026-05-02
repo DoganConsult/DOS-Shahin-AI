@@ -1,0 +1,46 @@
+{
+  "moduleCode": "mobile",
+  "displayName": "Mobile Platform",
+  "ownerTeam": "product-shahin-ai",
+  "productCode": "shahin-ai",
+  "ownership": "module-owned",
+  "version": "1.0.0",
+  "status": "active",
+  "platformDependencies": [
+    "identity",
+    "tenancy"
+  ],
+  "seedProviders": [],
+  "tenantDefaults": [
+    "mobile_offline_sync_enabled",
+    "mobile_biometric_auth_enabled"
+  ],
+  "requiredReferenceData": [],
+  "currentSources": [
+    "/home/Dr-Dogan-AGRC-OS/backend/src/modules/mobile"
+  ],
+  "targetPath": "modules/mobile",
+  "futureService": "platform-core-service",
+  "frontendSources": [],
+  "ownedTables": [
+    "mobile_devices",
+    "mobile_push_tokens",
+    "mobile_sync_queue"
+  ],
+  "referencedTables": [
+    "users"
+  ],
+  "events": {
+    "publishes": [
+      "mobile.device_registered",
+      "mobile.device_deregistered",
+      "mobile.sync_completed"
+    ],
+    "subscribes": [
+      "notification.push_requested"
+    ]
+  },
+  "routeBases": [
+    "/api/mobile"
+  ]
+}

@@ -1,0 +1,13 @@
+
+> dogan-ai-os-platform-target@1.0.0 test:contracts /root/DOS-AIO
+> vitest run -c vitest.contracts.config.mjs
+
+
+ RUN  v4.1.4 /root/DOS-AIO
+
+
+ Test Files  17 passed (17)
+      Tests  527 passed (527)
+   Start at  11:58:50
+   Duration  1.44s (transform 2.52s, setup 0ms, import 3.36s, tests 3.30s, environment 3ms)
+

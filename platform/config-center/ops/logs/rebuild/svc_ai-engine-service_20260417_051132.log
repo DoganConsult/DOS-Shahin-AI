@@ -1,0 +1,4 @@
+
+> ai-engine-service@0.1.0 build /root/DOS-AIO/services/ai-engine-service
+> tsc -p tsconfig.json && node ../../ops/scripts/fix-esm-relative-imports.mjs dist
+

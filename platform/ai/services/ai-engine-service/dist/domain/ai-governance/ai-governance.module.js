@@ -1,0 +1,72 @@
+import { registerModule } from '@dos/module-sdk';
+import { AI_GOVERNANCE_PERMISSIONS, AI_GOVERNANCE_ROLES, AI_GOVERNANCE_ACTIONS } from './security/ai-governance.security.js';
+import { AI_GOVERNANCE_APPROVAL_MATRIX } from './security/ai-governance.approval-matrix.js';
+export const AI_GOVERNANCE_MANIFEST = {
+    code: 'ai-governance',
+    version: '2.0.0',
+    aliases: [],
+    nameEn: 'AI Governance',
+    nameAr: 'حوكمة الذكاء الاصطناعي',
+    descriptionEn: 'AI model registry, bias detection, fairness metrics, ethical reviews, and transparency reporting.',
+    descriptionAr: 'سجل نماذج الذكاء الاصطناعي وكشف التحيز ومقاييس العدالة والمراجعات الأخلاقية وتقارير الشفافية.',
+    tier: 'domain',
+    category: 'advanced',
+    routeBase: '/api/ai-governance',
+    eventNamespace: 'ai_governance',
+    tablePrefix: 'ai_gov_',
+    ownedTables: [
+        'ai_gov_assessments', 'ai_gov_audit_log', 'ai_gov_bias_reports',
+        'ai_gov_data_lineage', 'ai_gov_ethical_reviews', 'ai_gov_explainability_reports',
+        'ai_gov_fairness_metrics', 'ai_gov_impact_assessments', 'ai_gov_inventory',
+        'ai_gov_model_cards', 'ai_gov_monitoring_alerts', 'ai_gov_policies',
+        'ai_gov_registry', 'ai_gov_risk_assessments', 'ai_gov_transparency_reports',
+        'ai_gov_use_cases', 'ai_gov_validation_results',
+    ],
+    sharedTables: [],
+    referencedTables: ['audit_trail', 'teams', 'workflows', 'compliance_frameworks', 'risk_assessments'],
+    aggregateRoots: ['ai_gov_registry', 'ai_gov_assessments', 'ai_gov_inventory', 'ai_gov_policies'],
+    publishedEvents: [
+        'ai_governance.model_registered', 'ai_governance.assessment_completed',
+        'ai_governance.bias_detected', 'ai_governance.fairness_scored',
+        'ai_governance.ethical_review_completed', 'ai_governance.impact_assessed',
+        'ai_governance.monitoring_alert', 'ai_governance.policy_violated',
+        'ai_governance.transparency_report_generated', 'ai_governance.validation_completed',
+    ],
+    consumedEvents: [
+        'compliance.posture_changed', 'risk.score_changed',
+        'audit.finding_created', 'workflow.status_changed',
+    ],
+    hardDeps: ['compliance', 'risk'],
+    softDeps: ['audit', 'evidence', 'governance'],
+    navId: 'ai-governance',
+    navChildCount: 10,
+    workflowTemplateCode: 'ai_governance_assessment',
+    workflowSlaHours: 336,
+    automationLevel: 'semi',
+    agentBinding: 'A06',
+    aiCapabilities: ['notes', 'drafts', 'recommendations', 'gate_checks'],
+    aiEnabled: true,
+    featureFlags: ['ai_governance.bias_detection', 'ai_governance.explainability', 'ai_governance.monitoring'],
+    installable: true,
+    provisioningOrder: 25,
+    licensingTier: 'enterprise',
+    visibility: 'both',
+    adminSurfaces: ['ai-model-registry', 'governance-policies', 'assessment-templates', 'monitoring-alerts'],
+    securityPermissions: AI_GOVERNANCE_PERMISSIONS,
+    securityRoles: AI_GOVERNANCE_ROLES,
+    securityActions: AI_GOVERNANCE_ACTIONS,
+    approvalRules: AI_GOVERNANCE_APPROVAL_MATRIX,
+    ownershipRules: [
+        { entityType: 'ai_gov_registry', ownerField: 'owner_id', reviewerField: 'reviewer_id', approverField: 'approver_id', assigneeField: null, orgScopeField: 'org_id', defaultOwnerRole: 'ai-governance.module_lead', canDelegate: true, delegateRoles: ['ai-governance.operator'], canReassign: true, reassignRoles: ['ai-governance.module_lead', 'ai-governance.executive_owner'], requiresApproval: true, creatorRights: 'full', externalVisible: false, rowLevelAccess: 'org' },
+        { entityType: 'ai_gov_assessments', ownerField: 'owner_id', reviewerField: 'reviewer_id', approverField: 'approver_id', assigneeField: 'assessor_id', orgScopeField: 'org_id', defaultOwnerRole: 'ai-governance.module_lead', canDelegate: true, delegateRoles: ['ai-governance.operator', 'ai-governance.contributor'], canReassign: true, reassignRoles: ['ai-governance.module_lead', 'ai-governance.executive_owner'], requiresApproval: true, creatorRights: 'full', externalVisible: false, rowLevelAccess: 'org' },
+        { entityType: 'ai_gov_inventory', ownerField: 'owner_id', reviewerField: 'reviewer_id', approverField: null, assigneeField: null, orgScopeField: 'org_id', defaultOwnerRole: 'ai-governance.module_lead', canDelegate: true, delegateRoles: ['ai-governance.operator'], canReassign: true, reassignRoles: ['ai-governance.module_lead', 'ai-governance.executive_owner'], requiresApproval: false, creatorRights: 'full', externalVisible: false, rowLevelAccess: 'org' },
+        { entityType: 'ai_gov_policies', ownerField: 'owner_id', reviewerField: 'reviewer_id', approverField: 'approver_id', assigneeField: null, orgScopeField: 'org_id', defaultOwnerRole: 'ai-governance.module_lead', canDelegate: true, delegateRoles: ['ai-governance.operator'], canReassign: true, reassignRoles: ['ai-governance.module_lead', 'ai-governance.executive_owner'], requiresApproval: true, creatorRights: 'full', externalVisible: false, rowLevelAccess: 'org' },
+    ],
+    sodRules: [
+        { ruleCode: 'ai_governance.sod.registrant_approver', descriptionEn: 'AI model registrant cannot approve their own registration', descriptionAr: 'لا يمكن لمسجل نموذج الذكاء الاصطناعي الموافقة على تسجيله', conflictingRoles: [], conflictingActions: ['ai_governance.registry.register', 'ai_governance.registry.approve'], conflictingTransitions: ['draft->approved'], severity: 'critical', enforcement: 'block', temporaryWaiverAllowed: false, waiverMaxDays: null, compensatingControls: ['dual_approval'], overrideAuthority: ['ai-governance.executive_owner'], auditObligations: ['log_sod_violation'] },
+        { ruleCode: 'ai_governance.sod.assessor_reviewer', descriptionEn: 'AI assessment conductor cannot review their own assessment', descriptionAr: 'لا يمكن لمجري تقييم الذكاء الاصطناعي مراجعة تقييمه', conflictingRoles: [], conflictingActions: ['ai_governance.assessment.conduct', 'ai_governance.assessment.review'], conflictingTransitions: ['in_progress->reviewed'], severity: 'high', enforcement: 'block', temporaryWaiverAllowed: false, waiverMaxDays: null, compensatingControls: ['independent_review'], overrideAuthority: ['ai-governance.executive_owner'], auditObligations: ['log_sod_violation'] },
+    ],
+    mcpServiceEntrypoint: 'modules/ai-governance/ai-governance.service'
+};
+registerModule(AI_GOVERNANCE_MANIFEST);
+//# sourceMappingURL=ai-governance.module.js.map

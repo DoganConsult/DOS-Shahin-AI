@@ -1,0 +1,197 @@
+/**
+ * Controls Deficiencies — Styles
+ * All colors use CSS custom properties from grc-tokens.css (Rule 7).
+ */
+
+// -- Page Container --
+.controls-deficiencies {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px 24px;
+  min-height: 100%;
+  background: var(--surface-ground, var(--bg-0));
+}
+
+// -- Skeleton Loading --
+.skeleton-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+// -- Summary Strip --
+.summary-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 12px;
+}
+
+.summary-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: var(--surface-card, var(--bg-0));
+  border: 1px solid var(--border-subtle, var(--border));
+  border-radius: var(--radius-md, 8px);
+}
+
+.summary-card__icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md, 8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  .pi { font-size: var(--font-size-xl, 1.25rem); }
+
+  &.sev-bg-critical { background: color-mix(in srgb, var(--severity-critical) 12%, transparent); }
+  &.sev-bg-high { background: color-mix(in srgb, var(--severity-high) 12%, transparent); }
+  &.sev-bg-medium { background: color-mix(in srgb, var(--severity-medium) 12%, transparent); }
+  &.sev-bg-low { background: color-mix(in srgb, var(--severity-low) 12%, transparent); }
+}
+
+.summary-card__content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.summary-card__value {
+  font-size: var(--font-size-xl, 1.25rem);
+  font-weight: 700;
+  color: var(--text-heading, var(--text-body));
+}
+
+.summary-card__label {
+  font-size: var(--font-size-sm, 0.875rem);
+  color: var(--text-muted);
+}
+
+// -- Status Filter Tabs --
+.status-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  background: var(--surface-card, var(--bg-0));
+  border: 1px solid var(--border-subtle, var(--border));
+  border-radius: var(--radius-md, 8px);
+  overflow-x: auto;
+}
+
+.status-tab {
+  padding: 8px 16px;
+  border: none;
+  border-radius: var(--radius, 6px);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: var(--font-size-sm, 0.875rem);
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s, color 0.15s;
+
+  &:hover {
+    background: color-mix(in srgb, var(--primary) 6%, transparent);
+    color: var(--text-body);
+  }
+
+  &--active {
+    background: var(--primary);
+    color: var(--primary-contrast, #fff);
+
+    &:hover {
+      background: var(--primary);
+      color: var(--primary-contrast, #fff);
+    }
+  }
+}
+
+// -- Table Helpers --
+.font-semibold {
+  font-weight: 600;
+}
+
+.truncate-cell {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// -- Expansion Row --
+.expansion-row td {
+  padding: 0 !important;
+  background: color-mix(in srgb, var(--primary) 3%, var(--bg-0));
+}
+
+.expansion-content {
+  padding: 16px 24px;
+}
+
+.expansion-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.expansion-title {
+  margin: 0;
+  font-size: var(--font-size-sm, 0.875rem);
+  font-weight: 700;
+  color: var(--text-heading, var(--text-body));
+}
+
+.expansion-description {
+  font-size: var(--font-size-sm, 0.875rem);
+  color: var(--text-muted);
+  margin: 0 0 12px;
+  line-height: 1.5;
+
+  strong {
+    color: var(--text-body);
+  }
+}
+
+// -- Dialog Form --
+.dialog-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 8px 0;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.w-full {
+  width: 100%;
+}
+
+// -- Responsive --
+@media (max-width: 768px) {
+  .controls-deficiencies {
+    padding: 12px;
+  }
+
+  .summary-strip {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .summary-strip {
+    grid-template-columns: 1fr;
+  }
+}

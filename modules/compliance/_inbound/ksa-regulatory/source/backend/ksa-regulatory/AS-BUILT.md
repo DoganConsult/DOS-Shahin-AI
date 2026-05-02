@@ -1,0 +1,20 @@
+# KSA Regulatory Module — AS-BUILT Ledger
+
+## Module Identity
+| Field | Value |
+|-------|-------|
+| Module Code | `ksa-regulatory` |
+| Spec | MP-32 (`DOS-AIO-Specs/module-patch-32-ksa-regulatory-end-to-end.md`) |
+| Layer | Core business domain module |
+| Criticality | P0 — Saudi Arabia regulatory compliance |
+| Product Owner | `shahin` |
+
+## Status
+- Security: Complete (permissions, roles, SoD, approval matrix)
+- Events: Subscribers registered
+- Diagnostics: Implemented
+- i18n: en.json + ar.json — bilingual coverage
+
+## Hardening Notes
+- i18n folder created with full EN+AR bilingual coverage
+- AS-BUILT.md created per Phase 6 Rule 6.4

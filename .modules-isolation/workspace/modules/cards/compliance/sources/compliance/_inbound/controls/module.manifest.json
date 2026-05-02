@@ -1,0 +1,102 @@
+{
+  "moduleCode": "controls",
+  "displayName": "Controls",
+  "ownerTeam": "product-shahin-ai",
+  "productCode": "shahin-ai",
+  "ownership": "module-owned",
+  "version": "1.0.0",
+  "status": "active",
+  "platformDependencies": [
+    "identity",
+    "tenancy",
+    "workflow",
+    "permissions",
+    "audit"
+  ],
+  "seedProviders": [
+    "products/shahin/seeds/controls-seed"
+  ],
+  "tenantDefaults": [
+    "controls_test_frequency_days",
+    "controls_effectiveness_threshold"
+  ],
+  "requiredReferenceData": [
+    "control_categories",
+    "control_types",
+    "control_test_templates"
+  ],
+  "currentSources": [
+    "/home/Dr-Dogan-AGRC-OS/backend/src/modules/controls"
+  ],
+  "targetPath": "modules/controls",
+  "futureService": "compliance-controls-service",
+  "frontendSources": [
+    "/home/Dr-Dogan-AGRC-OS/frontend/src/app/platform-manifests/controls.module.routes.ts"
+  ],
+  "ownedTables": [
+    "controls",
+    "control_categories",
+    "control_objectives",
+    "control_owners",
+    "control_tests",
+    "control_test_templates",
+    "control_failures",
+    "control_issues",
+    "control_remediation_actions",
+    "control_effectiveness_scores",
+    "control_risk_links",
+    "control_obligation_mappings",
+    "control_policy_links",
+    "control_status_history",
+    "control_evidence_requirements",
+    "control_certification_campaigns",
+    "control_certification_requests",
+    "control_monitoring_rules",
+    "control_monitoring_alerts",
+    "control_automation_state",
+    "control_design_metadata",
+    "control_activity_log"
+  ],
+  "referencedTables": [
+    "tenant_preferences",
+    "obligations",
+    "risks",
+    "policies",
+    "audit_findings",
+    "evidence_requests",
+    "teams"
+  ],
+  "events": {
+    "publishes": [
+      "controls.control_created",
+      "controls.control_updated",
+      "controls.control_activated",
+      "controls.control_retired",
+      "controls.control_deleted",
+      "controls.ownership_assigned",
+      "controls.test_completed",
+      "controls.test_failed",
+      "controls.effectiveness_scored",
+      "controls.deficiency_opened",
+      "controls.deficiency_closed",
+      "controls.mapping_linked",
+      "controls.mapping_unlinked",
+      "controls.certification_campaign_created",
+      "controls.certification_response_submitted",
+      "controls.monitoring_alert_triggered",
+      "controls.automation_state_changed"
+    ],
+    "subscribes": [
+      "risk.assessment_completed",
+      "compliance.obligation_updated",
+      "audit.finding_created",
+      "evidence.collected",
+      "workflow.status_changed",
+      "foundation.position.holder.unassigned",
+      "foundation.dept_created"
+    ]
+  },
+  "routeBases": [
+    "/api/controls"
+  ]
+}

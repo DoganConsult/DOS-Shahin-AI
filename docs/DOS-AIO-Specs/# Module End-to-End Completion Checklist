@@ -1,0 +1,247 @@
+# Module End-to-End Completion Checklist
+
+## Ground Rule
+
+No deferral. No “minimum viable” scope. No fake green. No partial module claims. A module is not considered complete unless its full route, API, service, DB, auth, workflow, seed data, UI, observability, and role behavior work end-to-end in the live workspace.
+
+Each module must be checked and fixed as a complete vertical slice.
+
+---
+
+## Completion Definition for Every Module
+
+A module is **DONE** only when all of the following are true:
+
+| Layer           | Required Proof                                                                     |
+| --------------- | ---------------------------------------------------------------------------------- |
+| Navigation      | Route appears only for allowed roles and opens without blank page or redirect loop |
+| Frontend Route  | Component renders with no Angular DI/runtime crash                                 |
+| API Contract    | Every API called by the page exists and returns valid JSON shape                   |
+| Gateway Routing | Gateway has correct prefix mapping to the owning service                           |
+| Service Handler | Backend handler exists, has correct middleware, and returns expected data          |
+| DB Schema       | Required public/dos/platform_dauth/tenant-schema tables and columns exist          |
+| Seed Data       | Tenant has enough realistic records to make the page useful                        |
+| AuthN           | Valid KC/DAuth token is accepted by all involved services                          |
+| AuthZ           | Role/permission rules work without platform-admin bypass                           |
+| SoD             | Separation-of-duties rules exist or are explicitly proven not applicable           |
+| Workflow        | Required tasks/approvals/events exist and execute                                  |
+| Events          | Domain events/outbox/notifications work where expected                             |
+| Observability   | Logs, metrics, and error paths are visible and correlated                          |
+| UI Quality      | No broken cards, dead buttons, missing widgets, or placeholder 404 panels          |
+| Negative Test   | Unauthorized role is blocked from write/high-risk actions                          |
+
+---
+
+## Module Report Format
+
+Each agent report must map findings to this table:
+
+| Module | Route | Frontend Caller | APIs Called | Service Owner | DB Tables | Auth Permission | Workflow/Event | Current Status | Root Cause | Fix Required | DoD Evidence |
+| ------ | ----- | --------------- | ----------- | ------------- | --------- | --------------- | -------------- | -------------- | ---------- | ------------ | ------------ |
+
+Status values:
+
+* `GREEN_WORKING`
+* `YELLOW_RENDERING_WITH_GAPS`
+* `RED_BLOCKED`
+* `MISSING_ROUTE`
+* `MISSING_API`
+* `DB_SCHEMA_DRIFT`
+* `AUTHZ_DRIFT`
+* `SEED_REQUIRED`
+* `UNKNOWN_NOT_TESTED`
+
+---
+
+## Global Foundation First
+
+Foundation must be completed before Governance, Risk, Compliance, Audit, Workflow, or AI modules.
+
+### Foundation Scope
+
+| Area            | Must Be Checked/FIXED                                            |
+| --------------- | ---------------------------------------------------------------- |
+| Tenant          | tenant row, schema, status, product key, module entitlements     |
+| Organization    | organization, business units, departments, sections, locations   |
+| Users           | list, profile, invite, create/update/read                        |
+| Teams           | teams, team membership, ownership                                |
+| Roles           | tenant roles, role profiles, assignments                         |
+| Permissions     | permission catalog, role-permission map, access contract         |
+| Access Profiles | profiles, profile assignment, UI gating                          |
+| Workspace       | workspace row/config/home overview                               |
+| Notifications   | notification list/counts works or is removed from first demo nav |
+| Audit Trail     | audit list exists and returns usable activity                    |
+
+### Foundation Endpoints to Map
+
+| Endpoint                                             | Status | Required Action |
+| ---------------------------------------------------- | ------ | --------------- |
+| `/api/access/my-permissions`                         |        |                 |
+| `/api/tenants/home/overview`                         |        |                 |
+| `/api/users`                                         |        |                 |
+| `/api/organizations`                                 |        |                 |
+| `/api/business-units`                                |        |                 |
+| `/api/foundation/departments`                        |        |                 |
+| `/api/foundation/teams`                              |        |                 |
+| `/api/positions`                                     |        |                 |
+| `/api/locations`                                     |        |                 |
+| `/api/committees`                                    |        |                 |
+| `/api/invitations`                                   |        |                 |
+| `/api/profiles/roles`                                |        |                 |
+| `/api/audit-trail?limit=20`                          |        |                 |
+| `/api/notifications`                                 |        |                 |
+| `/api/workspaces`                                    |        |                 |
+| `/api/config-center/products-modules`                |        |                 |
+| `/api/shell/config/foundation?product=agrc&role=...` |        |                 |
+
+---
+
+## Module Execution Order
+
+### Phase 1 — Foundation / Organization Layer
+
+| Module              | Must Prove                                                 |
+| ------------------- | ---------------------------------------------------------- |
+| Workspace Home      | home route, overview cards, token/session, tenant context  |
+| Foundation Overview | all slices load or fail gracefully with real routes        |
+| Organization        | org tree, business units, departments, sections, locations |
+| Users               | list, profile, create/update if included in UI             |
+| Teams               | list, create, members, ownership                           |
+| Roles & Permissions | role list, assignments, permissions, access contract       |
+| Notifications       | list/count/read state                                      |
+| Audit Trail         | recent activity and actor trace                            |
+
+### Phase 2 — Workflow Layer
+
+| Module          | Must Prove                                |
+| --------------- | ----------------------------------------- |
+| Tasks           | list, assign, complete, status changes    |
+| Approvals       | maker/checker, approval matrix, rejection |
+| Workflow Engine | transition, event, audit record           |
+| Notifications   | task/approval notifications               |
+| Delegation      | OOO/delegation if surfaced                |
+
+### Phase 3 — Governance Layer
+
+| Module          | Must Prove                              |
+| --------------- | --------------------------------------- |
+| Policies        | list, detail, create/edit, review cycle |
+| Committees      | list, membership, decisions             |
+| Decisions       | decision log, action items              |
+| Exceptions      | exception lifecycle                     |
+| Board Attention | leadership summary, hooks, escalations  |
+
+### Phase 4 — Risk Layer
+
+| Module         | Must Prove                                       |
+| -------------- | ------------------------------------------------ |
+| Risk Register  | list, detail, create/edit                        |
+| Risk Overview  | KPIs, heatmap, treatment stats                   |
+| Treatments     | plan, owner, due dates, workflow                 |
+| Quantification | scenarios, scoring, impact/likelihood            |
+| Work Queue     | assignments and status                           |
+| AI Pulse       | if visible, must have real endpoint or be hidden |
+
+### Phase 5 — Compliance / Controls Layer
+
+| Module                 | Must Prove                     |
+| ---------------------- | ------------------------------ |
+| Controls               | control catalog, status, owner |
+| Compliance Obligations | list, mappings, due dates      |
+| Frameworks             | ECC/SAMA/PDPL etc. if exposed  |
+| Testing                | test plans, results            |
+| Remediation            | action linkage to workflow     |
+
+### Phase 6 — Evidence / Audit / Reporting Layer
+
+| Module         | Must Prove                       |
+| -------------- | -------------------------------- |
+| Evidence       | upload/list/link to control/risk |
+| Audit Findings | finding lifecycle                |
+| Reports        | dashboards and exports           |
+| Audit Trail    | end-to-end actor/action trace    |
+
+### Phase 7 — Extended Business Modules
+
+| Module      | Must Prove                             |
+| ----------- | -------------------------------------- |
+| Vendor      | vendor register, risk/compliance links |
+| Asset       | asset register, owner, criticality     |
+| BCP         | plans, scenarios, tests                |
+| Training    | courses, assignments, completion       |
+| Privacy     | privacy records, PDPL workflows        |
+| DORA        | if exposed, full route/API/data        |
+| Remediation | actions, owners, due dates             |
+
+### Phase 8 — AI / Runtime / Observability
+
+| Module         | Must Prove                                 |
+| -------------- | ------------------------------------------ |
+| AI Pulse       | real endpoint, no fake widgets             |
+| Runtime Health | service-backed health, not placeholder 404 |
+| Activity Feed  | real events by module                      |
+| Agent Actions  | agent recommendations with provenance      |
+| Metrics        | Prometheus/log correlation                 |
+
+---
+
+## Fix Rules
+
+1. Fix route/API/DB contract at the source. Do not hide broken endpoints behind fake success.
+2. Use real seed data only. No dark/demo junk unrelated to Shahin.
+3. No platform-admin shortcut for tenant users.
+4. Every role must be tenant-scoped unless explicitly platform-level.
+5. Every write action must have an authorization and audit proof.
+6. Every workflow action must create or update a real workflow/task/event row.
+7. Every module must have at least one negative test.
+8. If a UI calls a legacy endpoint, either wire the endpoint correctly or change the UI to the canonical route.
+9. If a table column is missing, decide explicitly: migration vs contract change. Avoid permanent NULL shims.
+10. Do not mark production-ready until all module gates pass.
+
+---
+
+## Agent Intake Template
+
+When reports arrive, each report must be converted into:
+
+| Finding | Module | Layer | Evidence | Severity | Fix Type | Owner Service | DB Impact | Test Required |
+| ------- | ------ | ----- | -------- | -------- | -------- | ------------- | --------- | ------------- |
+
+Severity:
+
+* `P0`: blocks login/workspace/module render
+* `P1`: blocks module function or demo quality
+* `P2`: warning, cosmetic, deprecated API, observability improvement
+
+Fix type:
+
+* Route mapping
+* Frontend endpoint correction
+* Backend handler implementation
+* DB migration
+* Seed data
+* AuthZ/RBAC
+* Workflow/event
+* UI rendering
+* Observability
+
+---
+
+## Final Module DoD Template
+
+A module is complete only after this evidence exists:
+
+```text
+Module:
+Route:
+Roles tested:
+APIs tested:
+DB rows verified:
+Workflow/events verified:
+Positive test result:
+Negative test result:
+Browser screenshot:
+Logs clean:
+Remaining issues:
+Verdict: PASS / NOT PASS
+```

@@ -1,0 +1,54 @@
+{
+  "moduleCode": "playbooks",
+  "displayName": "Playbooks",
+  "ownerTeam": "product-shahin-ai",
+  "productCode": "shahin-ai",
+  "ownership": "module-owned",
+  "version": "1.0.0",
+  "status": "active",
+  "platformDependencies": [
+    "identity",
+    "tenancy",
+    "workflow"
+  ],
+  "seedProviders": [
+    "products/shahin/seeds/playbooks-seed"
+  ],
+  "tenantDefaults": [],
+  "requiredReferenceData": [
+    "playbook_templates"
+  ],
+  "currentSources": [
+    "/home/Dr-Dogan-AGRC-OS/backend/src/modules/playbooks"
+  ],
+  "targetPath": "modules/playbooks",
+  "futureService": "remediation-action-service",
+  "frontendSources": [
+    "/home/Dr-Dogan-AGRC-OS/frontend/src/app/platform-manifests/playbooks.module.routes.ts"
+  ],
+  "ownedTables": [
+    "playbook_templates",
+    "playbook_steps",
+    "playbook_executions",
+    "playbook_execution_logs"
+  ],
+  "referencedTables": [
+    "users",
+    "incidents",
+    "action_items"
+  ],
+  "events": {
+    "publishes": [
+      "playbooks.execution_started",
+      "playbooks.execution_completed",
+      "playbooks.step_completed"
+    ],
+    "subscribes": [
+      "incident.created",
+      "remediation.created"
+    ]
+  },
+  "routeBases": [
+    "/api/playbooks"
+  ]
+}

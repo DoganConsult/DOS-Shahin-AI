@@ -1,0 +1,1153 @@
+[
+  {
+    "file": "modules/onboarding/source/backend/onboarding/migrations/003_grc_catalog_seed.sql",
+    "proposed_module": "grc-query",
+    "confidence": "high",
+    "reason": "single-owner: grc-query",
+    "top_candidates": [
+      [
+        "grc-query",
+        4
+      ]
+    ],
+    "referenced_tables": [
+      "grc_sector_groups",
+      "grc_regulators",
+      "grc_frameworks",
+      "grc_sector_framework_matrix",
+      "SET"
+    ]
+  },
+  {
+    "file": "modules/onboarding/source/backend/onboarding/migrations/003_inference_rules_seed.sql",
+    "proposed_module": "onboarding",
+    "confidence": "high",
+    "reason": "single-owner: onboarding",
+    "top_candidates": [
+      [
+        "onboarding",
+        4
+      ]
+    ],
+    "referenced_tables": [
+      "onboarding_regulator_rules",
+      "onboarding_framework_rules",
+      "onboarding_module_rules",
+      "onboarding_persona_rules",
+      "SET"
+    ]
+  },
+  {
+    "file": "modules/platform-onboarding/src/migrations/001_platform_onboarding_schema_evolution.sql",
+    "proposed_module": "platform-core",
+    "confidence": "medium",
+    "reason": "dominant owner platform-core (80% of 5 refs)",
+    "top_candidates": [
+      [
+        "platform-core",
+        4
+      ],
+      [
+        "onboarding",
+        1
+      ]
+    ],
+    "referenced_tables": [
+      "onboarding_sessions",
+      "provisioning_jobs",
+      "provisioning_steps",
+      "product_key",
+      "package_version",
+      "completion_contract",
+      "contract_hash",
+      "frozen_at",
+      "execution_plan_hash",
+      "step_owner"
+    ]
+  },
+  {
+    "file": "modules/platform-onboarding/src/migrations/002_repair_stuck_sessions.sql",
+    "proposed_module": "platform-core",
+    "confidence": "low",
+    "reason": "mixed refs; top=platform-core",
+    "top_candidates": [
+      [
+        "platform-core",
+        2
+      ],
+      [
+        "onboarding",
+        2
+      ]
+    ],
+    "referenced_tables": [
+      "provisioning_jobs",
+      "onboarding_sessions",
+      "stage",
+      "onboarding_stages"
+    ]
+  },
+  {
+    "file": "ops/migrations/002_service_permissions.sql",
+    "proposed_module": "platform-core",
+    "confidence": "medium",
+    "reason": "dominant owner platform-core (88% of 8 refs)",
+    "top_candidates": [
+      [
+        "platform-core",
+        7
+      ],
+      [
+        "team",
+        1
+      ]
+    ],
+    "referenced_tables": [
+      "ON",
+      "users",
+      "tenants",
+      "tenant_user_memberships",
+      "subscriptions",
+      "seed_history",
+      "tenant_memberships",
+      "teams",
+      "team_members",
+      "SCHEMA",
+      "ALL"
+    ]
+  },
+  {
+    "file": "ops/migrations/007_seed_config_definitions.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "single-owner: platform-core",
+    "top_candidates": [
+      [
+        "platform-core",
+        3
+      ]
+    ],
+    "referenced_tables": [
+      "config_definitions",
+      "feature_flags",
+      "platform_operation_config",
+      "SET"
+    ]
+  },
+  {
+    "file": "ops/migrations/008_soft_delete_columns.sql",
+    "proposed_module": "platform-core",
+    "confidence": "low",
+    "reason": "no classifiable tables; default platform-core",
+    "top_candidates": [],
+    "referenced_tables": []
+  },
+  {
+    "file": "ops/migrations/009a_seed_platform_admin.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "single-owner: platform-core",
+    "top_candidates": [
+      [
+        "platform-core",
+        2
+      ]
+    ],
+    "referenced_tables": [
+      "tenants",
+      "users",
+      "SET"
+    ]
+  },
+  {
+    "file": "ops/migrations/010_seed_framework_registry.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "single-owner: platform-core",
+    "top_candidates": [
+      [
+        "platform-core",
+        1
+      ]
+    ],
+    "referenced_tables": [
+      "framework_registry",
+      "SET"
+    ]
+  },
+  {
+    "file": "ops/migrations/012_fix_schema_permissions_and_grants.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "single-owner: platform-core",
+    "top_candidates": [
+      [
+        "platform-core",
+        2
+      ]
+    ],
+    "referenced_tables": [
+      "ON",
+      "critical",
+      "all",
+      "ALL",
+      "users",
+      "tenants",
+      "TABLES"
+    ]
+  },
+  {
+    "file": "ops/migrations/013_create_dos_ai_role.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "single-owner: platform-core",
+    "top_candidates": [
+      [
+        "platform-core",
+        2
+      ]
+    ],
+    "referenced_tables": [
+      "ON",
+      "SCHEMA",
+      "schema_migrations",
+      "seed_history",
+      "ALL"
+    ]
+  },
+  {
+    "file": "ops/migrations/017_seed_onboarding_data.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "single-owner: platform-core",
+    "top_candidates": [
+      [
+        "platform-core",
+        5
+      ]
+    ],
+    "referenced_tables": [
+      "stage_definitions",
+      "question_bank",
+      "translations",
+      "templates",
+      "ui_configs",
+      "startup_checklist",
+      "SET"
+    ]
+  },
+  {
+    "file": "ops/migrations/019_seed_lookup_and_regulatory_data.sql",
+    "proposed_module": "platform-core",
+    "confidence": "medium",
+    "reason": "dominant owner platform-core (73% of 11 refs)",
+    "top_candidates": [
+      [
+        "platform-core",
+        8
+      ],
+      [
+        "ksa-regulatory",
+        3
+      ]
+    ],
+    "referenced_tables": [
+      "connector_configs",
+      "lookup_countries",
+      "lookup_sectors",
+      "lookup_employee_ranges",
+      "lookup_timezones",
+      "lookup_languages",
+      "lookup_frameworks",
+      "sector_isic_map",
+      "regulatory_frameworks",
+      "regulatory_controls",
+      "lookup_cities"
+    ]
+  },
+  {
+    "file": "ops/migrations/028_smart_questions_and_lookups.sql",
+    "proposed_module": "onboarding",
+    "confidence": "high",
+    "reason": "single-owner: onboarding",
+    "top_candidates": [
+      [
+        "onboarding",
+        1
+      ]
+    ],
+    "referenced_tables": [
+      "onboarding_question_bank",
+      "SET"
+    ]
+  },
+  {
+    "file": "ops/migrations/030_global_regulatory_expansion.sql",
+    "proposed_module": "onboarding",
+    "confidence": "low",
+    "reason": "mixed refs; top=onboarding",
+    "top_candidates": [
+      [
+        "onboarding",
+        2
+      ],
+      [
+        "platform-core",
+        1
+      ],
+      [
+        "ksa-regulatory",
+        1
+      ]
+    ],
+    "referenced_tables": [
+      "onboarding_regulator_rules",
+      "onboarding_framework_rules",
+      "lookup_frameworks",
+      "regulatory_frameworks",
+      "ts"
+    ]
+  },
+  {
+    "file": "ops/migrations/031_complete_question_bank_600_plus.sql",
+    "proposed_module": "onboarding",
+    "confidence": "high",
+    "reason": "single-owner: onboarding",
+    "top_candidates": [
+      [
+        "onboarding",
+        1
+      ]
+    ],
+    "referenced_tables": [
+      "onboarding_question_bank",
+      "SET"
+    ]
+  },
+  {
+    "file": "ops/migrations/038_onboarding_agent_registry_seed.sql",
+    "proposed_module": "mcp",
+    "confidence": "low",
+    "reason": "mixed refs; top=mcp",
+    "top_candidates": [
+      [
+        "mcp",
+        1
+      ],
+      [
+        "ai-governance",
+        1
+      ]
+    ],
+    "referenced_tables": [
+      "mcp_agent_registry",
+      "agent_registry"
+    ]
+  },
+  {
+    "file": "ops/migrations/041_expand_question_bank.sql",
+    "proposed_module": "onboarding",
+    "confidence": "high",
+    "reason": "single-owner: onboarding",
+    "top_candidates": [
+      [
+        "onboarding",
+        5
+      ]
+    ],
+    "referenced_tables": [
+      "onboarding_question_bank",
+      "onboarding_regulator_rules",
+      "onboarding_framework_rules",
+      "onboarding_module_rules",
+      "onboarding_persona_rules",
+      "SET"
+    ]
+  },
+  {
+    "file": "ops/migrations/050_public_onboarding_stage_tables.sql",
+    "proposed_module": "onboarding",
+    "confidence": "high",
+    "reason": "single-owner: onboarding",
+    "top_candidates": [
+      [
+        "onboarding",
+        2
+      ]
+    ],
+    "referenced_tables": [
+      "onboarding_stage_definitions",
+      "onboarding_stages"
+    ]
+  },
+  {
+    "file": "ops/migrations/051_deprecate_public_onboarding_stage_tables.sql",
+    "proposed_module": "onboarding",
+    "confidence": "medium",
+    "reason": "dominant owner onboarding (67% of 3 refs)",
+    "top_candidates": [
+      [
+        "onboarding",
+        2
+      ],
+      [
+        "platform-core",
+        1
+      ]
+    ],
+    "referenced_tables": [
+      "onboarding_stages",
+      "onboarding_stage_definitions",
+      "session_stages"
+    ]
+  },
+  {
+    "file": "ops/migrations/052_onboarding_question_bank_seed.sql",
+    "proposed_module": "onboarding",
+    "confidence": "high",
+    "reason": "single-owner: onboarding",
+    "top_candidates": [
+      [
+        "onboarding",
+        1
+      ]
+    ],
+    "referenced_tables": [
+      "onboarding_question_bank"
+    ]
+  },
+  {
+    "file": "ops/migrations/055_user_bootstrap_state_view_down.sql",
+    "proposed_module": "platform-core",
+    "confidence": "low",
+    "reason": "no classifiable tables; default platform-core",
+    "top_candidates": [],
+    "referenced_tables": []
+  },
+  {
+    "file": "ops/migrations/055_user_bootstrap_state_view.sql",
+    "proposed_module": "platform-core",
+    "confidence": "low",
+    "reason": "no classifiable tables; default platform-core",
+    "top_candidates": [],
+    "referenced_tables": [
+      "v_user_bootstrap_state",
+      "FUNCTION"
+    ]
+  },
+  {
+    "file": "ops/migrations/200_layer_conflict_closure.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "file_override in module-prefixes.yml",
+    "top_candidates": [],
+    "referenced_tables": []
+  },
+  {
+    "file": "ops/migrations/20260418_0001_users_email_ci_uk_down.sql",
+    "proposed_module": "platform-core",
+    "confidence": "low",
+    "reason": "no classifiable tables; default platform-core",
+    "top_candidates": [],
+    "referenced_tables": []
+  },
+  {
+    "file": "ops/migrations/20260418_0001_users_email_ci_uk.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "single-owner: platform-core",
+    "top_candidates": [
+      [
+        "platform-core",
+        1
+      ]
+    ],
+    "referenced_tables": [
+      "users"
+    ]
+  },
+  {
+    "file": "ops/migrations/20260418_0003_platform_outbox_index_down.sql",
+    "proposed_module": "platform-core",
+    "confidence": "low",
+    "reason": "no classifiable tables; default platform-core",
+    "top_candidates": [],
+    "referenced_tables": []
+  },
+  {
+    "file": "ops/migrations/20260418_0003_platform_outbox_index.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "single-owner: platform-core",
+    "top_candidates": [
+      [
+        "platform-core",
+        1
+      ]
+    ],
+    "referenced_tables": [
+      "platform_outbox"
+    ]
+  },
+  {
+    "file": "ops/migrations/20260418_0005_users_email_verified_index_down.sql",
+    "proposed_module": "platform-core",
+    "confidence": "low",
+    "reason": "no classifiable tables; default platform-core",
+    "top_candidates": [],
+    "referenced_tables": []
+  },
+  {
+    "file": "ops/migrations/20260418_0005_users_email_verified_index.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "single-owner: platform-core",
+    "top_candidates": [
+      [
+        "platform-core",
+        1
+      ]
+    ],
+    "referenced_tables": [
+      "users"
+    ]
+  },
+  {
+    "file": "ops/migrations/20260418_0006_email_verification_tokens_jti_down.sql",
+    "proposed_module": "platform-core",
+    "confidence": "low",
+    "reason": "no classifiable tables; default platform-core",
+    "top_candidates": [],
+    "referenced_tables": []
+  },
+  {
+    "file": "ops/migrations/20260418_0006_email_verification_tokens_jti.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "single-owner: platform-core",
+    "top_candidates": [
+      [
+        "platform-core",
+        1
+      ]
+    ],
+    "referenced_tables": [
+      "email_verification_tokens"
+    ]
+  },
+  {
+    "file": "ops/migrations/20260418_0010_bootstrap_state_view_comment_down.sql",
+    "proposed_module": "platform-core",
+    "confidence": "low",
+    "reason": "no classifiable tables; default platform-core",
+    "top_candidates": [],
+    "referenced_tables": [
+      "v_user_bootstrap_state"
+    ]
+  },
+  {
+    "file": "ops/migrations/20260418_0010_bootstrap_state_view_comment.sql",
+    "proposed_module": "platform-core",
+    "confidence": "low",
+    "reason": "no classifiable tables; default platform-core",
+    "top_candidates": [],
+    "referenced_tables": [
+      "v_user_bootstrap_state"
+    ]
+  },
+  {
+    "file": "ops/migrations/20260419_0002_p95_notifications_schema_align_down.sql",
+    "proposed_module": "platform-core/_frozen",
+    "confidence": "split-source",
+    "reason": "SPLIT source — routed to platform-core/_frozen (shards live in per-module dirs)",
+    "top_candidates": [],
+    "referenced_tables": []
+  },
+  {
+    "file": "ops/migrations/rollback/000_create_dos_schema.sql",
+    "proposed_module": "platform-core",
+    "confidence": "medium",
+    "reason": "dominant owner platform-core (97% of 35 refs)",
+    "top_candidates": [
+      [
+        "platform-core",
+        34
+      ],
+      [
+        "team",
+        1
+      ]
+    ],
+    "referenced_tables": [
+      "feature_flag_overrides",
+      "tier_definitions",
+      "email_verification_tokens",
+      "module_visibility_contracts",
+      "shell_extensions",
+      "contract_catalog",
+      "provisioning_telemetry",
+      "runtime_config",
+      "dead_letter_queue",
+      "event_traces",
+      "lifecycle_transitions",
+      "lifecycle_checkpoints",
+      "module_health_events",
+      "module_dependencies",
+      "product_registry",
+      "tenant_boundary_configs",
+      "tenant_status_transitions",
+      "seed_history",
+      "subscriptions",
+      "product_modules"
+    ]
+  },
+  {
+    "file": "ops/migrations/rollback/001_platform_baseline.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "single-owner: platform-core",
+    "top_candidates": [
+      [
+        "platform-core",
+        2
+      ]
+    ],
+    "referenced_tables": [
+      "users",
+      "tenant_memberships"
+    ]
+  },
+  {
+    "file": "ops/migrations/rollback/002_service_permissions.sql",
+    "proposed_module": "platform-core",
+    "confidence": "low",
+    "reason": "mixed refs; top=platform-core",
+    "top_candidates": [
+      [
+        "platform-core",
+        9
+      ],
+      [
+        "workflow",
+        4
+      ],
+      [
+        "audit",
+        1
+      ],
+      [
+        "notification",
+        1
+      ],
+      [
+        "team",
+        1
+      ]
+    ],
+    "referenced_tables": [
+      "ON",
+      "ALL",
+      "SCHEMA",
+      "audit_log",
+      "service",
+      "notifications",
+      "workflow_scheduled_jobs",
+      "approval_requests",
+      "workflow_approvals",
+      "workflow_tasks",
+      "workflow_instances",
+      "user_role_assignments",
+      "team_members",
+      "teams",
+      "users",
+      "tenant_user_memberships",
+      "tenants",
+      "tenant_memberships",
+      "seed_history",
+      "subscriptions"
+    ]
+  },
+  {
+    "file": "ops/migrations/rollback/003_enterprise_features.sql",
+    "proposed_module": "platform-core",
+    "confidence": "medium",
+    "reason": "dominant owner platform-core (80% of 10 refs)",
+    "top_candidates": [
+      [
+        "platform-core",
+        8
+      ],
+      [
+        "audit",
+        1
+      ],
+      [
+        "workflow",
+        1
+      ]
+    ],
+    "referenced_tables": [
+      "users",
+      "departments",
+      "audit_log_archive",
+      "sso_role_mappings",
+      "sso_identities",
+      "sso_sessions",
+      "sso_providers",
+      "job_executions",
+      "job_registry",
+      "workflow_templates"
+    ]
+  },
+  {
+    "file": "ops/migrations/rollback/003_platform_admin_tables.sql",
+    "proposed_module": "platform-core",
+    "confidence": "medium",
+    "reason": "dominant owner platform-core (83% of 23 refs)",
+    "top_candidates": [
+      [
+        "platform-core",
+        19
+      ],
+      [
+        "ai",
+        3
+      ],
+      [
+        "compliance",
+        1
+      ]
+    ],
+    "referenced_tables": [
+      "navigation_registry",
+      "module_sla_defaults",
+      "ai_prompt_registry",
+      "ai_agent_registry",
+      "ai_model_registry",
+      "workspaces",
+      "system_events",
+      "config_center_audit_log",
+      "tenant_config_versions",
+      "tenant_settings",
+      "platform_operation_config",
+      "tenant_feature_flag_overrides",
+      "feature_flags",
+      "tenant_product_activation",
+      "module_registry",
+      "product_registry",
+      "sod_rules",
+      "delegations",
+      "role_permissions",
+      "permissions"
+    ]
+  },
+  {
+    "file": "ops/migrations/rollback/004_dos_dauth_platform_layer.sql",
+    "proposed_module": "platform-core",
+    "confidence": "medium",
+    "reason": "dominant owner platform-core (93% of 15 refs)",
+    "top_candidates": [
+      [
+        "platform-core",
+        14
+      ],
+      [
+        "compliance",
+        1
+      ]
+    ],
+    "referenced_tables": [
+      "sessions",
+      "user_mfa",
+      "login_attempts",
+      "sod_conflict_audit_template",
+      "lifecycle_auth_log_template",
+      "sign_off_authorities_template",
+      "approval_matrix_rules_template",
+      "platform_audit_logs",
+      "config_audit_logs",
+      "config_locks",
+      "config_values",
+      "config_definitions",
+      "config_runtime_overrides",
+      "runtime_config_history",
+      "runtime_config"
+    ]
+  },
+  {
+    "file": "ops/migrations/rollback/005_missing_platform_tables.sql",
+    "proposed_module": "platform-core",
+    "confidence": "medium",
+    "reason": "dominant owner platform-core (81% of 63 refs)",
+    "top_candidates": [
+      [
+        "platform-core",
+        51
+      ],
+      [
+        "mcp",
+        4
+      ],
+      [
+        "onboarding",
+        3
+      ],
+      [
+        "privacy",
+        2
+      ],
+      [
+        "risk",
+        1
+      ]
+    ],
+    "referenced_tables": [
+      "platform_products",
+      "dos_verification_checks",
+      "dos_verification_runs",
+      "dos_release_approvals",
+      "dos_quality_gates",
+      "dos_releases",
+      "dos_migrations",
+      "dos_handover_risks",
+      "dos_handover_locks",
+      "dos_feature_gates",
+      "dos_cutover_executions",
+      "dos_cutover_plans",
+      "dos_compatibility_records",
+      "user_mfa",
+      "unresolved_risks",
+      "tenant_module_entitlements",
+      "slo_current_values",
+      "slo_definitions",
+      "secret_references",
+      "runbook_definitions"
+    ]
+  },
+  {
+    "file": "ops/migrations/rollback/006_missing_admin_tables.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "single-owner: platform-core",
+    "top_candidates": [
+      [
+        "platform-core",
+        2
+      ]
+    ],
+    "referenced_tables": [
+      "user_role_assignments",
+      "login_attempts"
+    ]
+  },
+  {
+    "file": "ops/migrations/rollback/007_seed_config_definitions.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "single-owner: platform-core",
+    "top_candidates": [
+      [
+        "platform-core",
+        3
+      ]
+    ],
+    "referenced_tables": [
+      "platform_operation_config",
+      "feature_flags",
+      "config_definitions"
+    ]
+  },
+  {
+    "file": "ops/migrations/rollback/008_soft_delete_columns.sql",
+    "proposed_module": "platform-core",
+    "confidence": "low",
+    "reason": "no classifiable tables; default platform-core",
+    "top_candidates": [],
+    "referenced_tables": []
+  },
+  {
+    "file": "ops/migrations/rollback/009_seed_platform_admin.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "single-owner: platform-core",
+    "top_candidates": [
+      [
+        "platform-core",
+        2
+      ]
+    ],
+    "referenced_tables": [
+      "users",
+      "tenants"
+    ]
+  },
+  {
+    "file": "ops/migrations/rollback/009_service_domain_tables.sql",
+    "proposed_module": "workflow",
+    "confidence": "low",
+    "reason": "mixed refs; top=workflow",
+    "top_candidates": [
+      [
+        "workflow",
+        5
+      ],
+      [
+        "platform-core",
+        4
+      ],
+      [
+        "audit",
+        2
+      ],
+      [
+        "training",
+        2
+      ],
+      [
+        "mobile",
+        1
+      ]
+    ],
+    "referenced_tables": [
+      "email_verification_tokens",
+      "users",
+      "audit_logs",
+      "mobile_sessions",
+      "product_licenses",
+      "agrc_tasks",
+      "qiyas_journeys",
+      "records",
+      "portals",
+      "integrations",
+      "briefings",
+      "report_schedules",
+      "widgets",
+      "dashboards",
+      "audit_findings",
+      "evidence",
+      "remediation_actions",
+      "dora_assessments",
+      "privacy_assessments",
+      "training_enrollments"
+    ]
+  },
+  {
+    "file": "ops/migrations/rollback/014_missing_endpoint_tables.sql",
+    "proposed_module": "platform-core",
+    "confidence": "medium",
+    "reason": "dominant owner platform-core (80% of 5 refs)",
+    "top_candidates": [
+      [
+        "platform-core",
+        4
+      ],
+      [
+        "team",
+        1
+      ]
+    ],
+    "referenced_tables": [
+      "users",
+      "workspace_config",
+      "component_registry",
+      "work_items",
+      "team_raci_assignments"
+    ]
+  },
+  {
+    "file": "ops/migrations/tenant/020_row_level_security_down.sql",
+    "proposed_module": "platform-core",
+    "confidence": "low",
+    "reason": "no classifiable tables; default platform-core",
+    "top_candidates": [],
+    "referenced_tables": []
+  },
+  {
+    "file": "ops/migrations/tenant/020_row_level_security.sql",
+    "proposed_module": "platform-core",
+    "confidence": "low",
+    "reason": "no classifiable tables; default platform-core",
+    "top_candidates": [],
+    "referenced_tables": []
+  },
+  {
+    "file": "ops/migrations/tenant/024_rls_vector_stores_down.sql",
+    "proposed_module": "platform-core",
+    "confidence": "low",
+    "reason": "no classifiable tables; default platform-core",
+    "top_candidates": [],
+    "referenced_tables": []
+  },
+  {
+    "file": "ops/migrations/tenant/024_rls_vector_stores.sql",
+    "proposed_module": "platform-core",
+    "confidence": "low",
+    "reason": "no classifiable tables; default platform-core",
+    "top_candidates": [],
+    "referenced_tables": []
+  },
+  {
+    "file": "ops/migrations/tenant/035_risk_module_config_seed.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "single-owner: platform-core",
+    "top_candidates": [
+      [
+        "platform-core",
+        1
+      ]
+    ],
+    "referenced_tables": [
+      "module_config",
+      "SET"
+    ]
+  },
+  {
+    "file": "ops/migrations/tenant/036_compliance_module_config_seed.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "single-owner: platform-core",
+    "top_candidates": [
+      [
+        "platform-core",
+        1
+      ]
+    ],
+    "referenced_tables": [
+      "module_config",
+      "SET"
+    ]
+  },
+  {
+    "file": "ops/migrations/tenant/038_seed_baseline_handoff_roles_tenant_down.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "single-owner: platform-core",
+    "top_candidates": [
+      [
+        "platform-core",
+        1
+      ]
+    ],
+    "referenced_tables": [
+      "roles"
+    ]
+  },
+  {
+    "file": "ops/migrations/tenant/038_seed_baseline_handoff_roles_tenant.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "single-owner: platform-core",
+    "top_candidates": [
+      [
+        "platform-core",
+        1
+      ]
+    ],
+    "referenced_tables": [
+      "roles"
+    ]
+  },
+  {
+    "file": "ops/migrations/tenant/099_bootstrap_tenant_domain_tables_down.sql",
+    "proposed_module": "platform-core/_frozen",
+    "confidence": "split-source",
+    "reason": "SPLIT source — routed to platform-core/_frozen (shards live in per-module dirs)",
+    "top_candidates": [],
+    "referenced_tables": []
+  },
+  {
+    "file": "ops/migrations/tenant/106_risk_r1_nav_and_baseline.sql",
+    "proposed_module": "risk",
+    "confidence": "medium",
+    "reason": "dominant owner risk (75% of 4 refs)",
+    "top_candidates": [
+      [
+        "risk",
+        3
+      ],
+      [
+        "platform-core",
+        1
+      ]
+    ],
+    "referenced_tables": [
+      "navigation_registry",
+      "risk_appetite_config",
+      "risk_scoring_models",
+      "risk_tolerance_bands",
+      "SET"
+    ]
+  },
+  {
+    "file": "ops/migrations/tenant/108_incident_r1_1_sla_config.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "single-owner: platform-core",
+    "top_candidates": [
+      [
+        "platform-core",
+        1
+      ]
+    ],
+    "referenced_tables": [
+      "platform_operation_config"
+    ]
+  },
+  {
+    "file": "ops/migrations/tenant/124_ai_tenant_id_backfill_down.sql",
+    "proposed_module": "platform-core",
+    "confidence": "low",
+    "reason": "no classifiable tables; default platform-core",
+    "top_candidates": [],
+    "referenced_tables": []
+  },
+  {
+    "file": "ops/migrations/tenant/124_ai_tenant_id_backfill.sql",
+    "proposed_module": "platform-core",
+    "confidence": "low",
+    "reason": "no classifiable tables; default platform-core",
+    "top_candidates": [],
+    "referenced_tables": []
+  },
+  {
+    "file": "ops/migrations/tenant/127_drop_mcp_stubs_down.sql",
+    "proposed_module": "mcp",
+    "confidence": "high",
+    "reason": "single-owner: mcp",
+    "top_candidates": [
+      [
+        "mcp",
+        2
+      ]
+    ],
+    "referenced_tables": [
+      "mcp_items",
+      "mcp_logs"
+    ]
+  },
+  {
+    "file": "ops/migrations/tenant/127_drop_mcp_stubs.sql",
+    "proposed_module": "mcp",
+    "confidence": "high",
+    "reason": "single-owner: mcp",
+    "top_candidates": [
+      [
+        "mcp",
+        2
+      ]
+    ],
+    "referenced_tables": [
+      "mcp_items",
+      "mcp_logs"
+    ]
+  },
+  {
+    "file": "ops/migrations/tenant/129_ai_rls_enablement.sql",
+    "proposed_module": "platform-core",
+    "confidence": "low",
+    "reason": "no classifiable tables; default platform-core",
+    "top_candidates": [],
+    "referenced_tables": []
+  }
+]

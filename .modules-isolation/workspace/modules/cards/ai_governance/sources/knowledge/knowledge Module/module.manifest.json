@@ -1,0 +1,53 @@
+{
+  "moduleCode": "local-knowledge",
+  "displayName": "Local Knowledge Base",
+  "ownerTeam": "product-shahin-ai",
+  "productCode": "shahin-ai",
+  "ownership": "module-owned",
+  "version": "1.0.0",
+  "status": "active",
+  "platformDependencies": [
+    "identity",
+    "tenancy"
+  ],
+  "seedProviders": [
+    "products/shahin/seeds/local-knowledge-seed"
+  ],
+  "tenantDefaults": [
+    "local_knowledge_auto_embed",
+    "local_knowledge_max_doc_size_mb"
+  ],
+  "requiredReferenceData": [
+    "document_source_types"
+  ],
+  "currentSources": [
+    "/home/Dr-Dogan-AGRC-OS/backend/src/modules/local-knowledge"
+  ],
+  "targetPath": "modules/local-knowledge",
+  "futureService": "ai-engine-service",
+  "frontendSources": [
+    "/home/Dr-Dogan-AGRC-OS/frontend/src/app/platform-manifests/local-knowledge.module.routes.ts"
+  ],
+  "ownedTables": [
+    "local_knowledge_documents",
+    "local_knowledge_chunks",
+    "local_knowledge_embeddings",
+    "local_knowledge_sources",
+    "local_knowledge_access_log"
+  ],
+  "referencedTables": [
+    "users",
+    "teams"
+  ],
+  "events": {
+    "publishes": [
+      "local_knowledge.document_ingested",
+      "local_knowledge.document_embedded",
+      "local_knowledge.source_synced"
+    ],
+    "subscribes": []
+  },
+  "routeBases": [
+    "/api/local-knowledge"
+  ]
+}

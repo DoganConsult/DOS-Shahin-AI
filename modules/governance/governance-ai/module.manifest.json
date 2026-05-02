@@ -1,0 +1,88 @@
+{
+  "moduleCode": "governance-ai",
+  "displayName": "Governance AI",
+  "ownerTeam": "product-shahin-ai",
+  "productCode": "shahin-ai",
+  "ownership": "module-owned",
+  "version": "1.0.0",
+  "status": "active",
+  "platformDependencies": [
+    "identity",
+    "tenancy",
+    "workflow",
+    "permissions",
+    "audit"
+  ],
+  "seedProviders": [
+    "products/shahin/seeds/governance-ai-seed"
+  ],
+  "tenantDefaults": [
+    "governance_ai_pipeline_enabled",
+    "governance_ai_signal_threshold"
+  ],
+  "requiredReferenceData": [
+    "signal_categories",
+    "escalation_templates",
+    "narrative_templates"
+  ],
+  "currentSources": [
+    "/home/Dr-Dogan-AGRC-OS/backend/src/modules/governance-ai"
+  ],
+  "targetPath": "modules/governance-ai",
+  "futureService": "ai-engine-service",
+  "frontendSources": [
+    "/home/Dr-Dogan-AGRC-OS/frontend/src/app/platform-manifests/governance-ai.module.routes.ts"
+  ],
+  "ownedTables": [
+    "governance_ai_signals",
+    "governance_ai_interpretations",
+    "governance_ai_escalations",
+    "governance_ai_recommendations",
+    "governance_ai_narratives",
+    "governance_ai_pipeline_runs",
+    "governance_ai_health_snapshots",
+    "governance_ai_score_explanations",
+    "governance_ai_feedback",
+    "governance_ai_audit_log"
+  ],
+  "referencedTables": [
+    "audit_trail",
+    "risk_assessments",
+    "compliance_frameworks",
+    "workflows"
+  ],
+  "events": {
+    "publishes": [
+      "governance_ai.signal_detected",
+      "governance_ai.interpretation_completed",
+      "governance_ai.escalation_triggered",
+      "governance_ai.recommendation_generated",
+      "governance_ai.narrative_generated",
+      "governance_ai.pipeline_completed",
+      "governance_ai.health_snapshot_created",
+      "governance_ai.score_recalculated",
+      "governance_ai.feedback_submitted"
+    ],
+    "subscribes": [
+      "risk.score_changed",
+      "risk.kri_threshold_breached",
+      "risk.appetite_breached",
+      "compliance.posture_changed",
+      "compliance.gap_detected",
+      "controls.effectiveness_failed",
+      "controls.test_overdue",
+      "controls.deficiency_detected",
+      "incident.classified",
+      "incident.escalated",
+      "audit.finding_created",
+      "exception.approved",
+      "exception.expired",
+      "workflow.status_changed",
+      "workflow.sla_breached",
+      "ai_governance.monitoring_alert"
+    ]
+  },
+  "routeBases": [
+    "/api/governance-ai"
+  ]
+}

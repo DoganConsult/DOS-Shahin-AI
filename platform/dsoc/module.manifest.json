@@ -1,0 +1,166 @@
+{
+  "$schema": "../../platform/contracts/module/module.manifest.schema.json",
+  "schemaVersion": 1,
+  "kind": "platform",
+  "moduleCode": "dsoc",
+  "displayName": "DSOC — Dogan Security Operations Center",
+  "description": "Centralized security audit, threat detection, and posture management for the DOS platform. Subscribes to normalized security event streams from every platform module and product, persists them in an immutable audit log, raises alerts on high-severity events, and computes per-tenant security posture snapshots.",
+  "version": "1.0.0",
+  "extractable": true,
+  "selfContained": true,
+  "lifecycle": {
+    "stage": "alpha",
+    "owner": "platform-core",
+    "entitlementKey": "platform.dsoc",
+    "featureFlag": "platform.dsoc.enabled",
+    "minTenantStage": "alpha"
+  },
+  "contracts": {
+    "openapi": "./contracts/dsoc-port.openapi.yaml"
+  },
+  "platformDependencies": {
+    "@dos/platform-core": "^1.0.0",
+    "@dos/module-sdk":    "^1.0.0",
+    "@dos/contracts":     "^1.0.0",
+    "@dos/types":         "^1.0.0"
+  },
+  "metadata": {
+    "ownerTeam": "platform-core",
+    "stability": "alpha",
+    "previousLocation": "DSOC Module",
+    "previousManifest": "platform/dsoc/manifest/platform-module.manifest.json",
+    "promotedAt": "2026-04-29",
+    "migrationNote": "Standardized to module.manifest.schema.json: replaced legacy `layer: \"platform\"` with `kind: \"platform\"`, added required `lifecycle` block, and moved all module-specific rich metadata under `metadata`. The legacy manifest is archived under _quarantine/legacy-manifests/dsoc/.",
+    "exposes": {
+      "packages": [
+        { "name": "@dos/dsoc-core",     "path": "platform/dsoc/packages/core",     "entry": "dist/index.js" },
+        { "name": "@dos/dsoc-shared",   "path": "platform/dsoc/packages/shared",   "entry": "dist/index.js" },
+        { "name": "@dos/dsoc-frontend", "path": "platform/dsoc/packages/frontend", "entry": "index.ts" }
+      ],
+      "services": [
+        { "code": "dsoc-service", "path": "platform/dsoc/services/dsoc-service", "apiBase": "/api/dsoc" }
+      ],
+      "ports": {
+        "package": "@dos/ports",
+        "subpath": "@dos/ports/dsoc",
+        "names": ["DSOCPort"],
+        "binding": "platform/dsoc/packages/core/dsoc-port.impl.ts (createDSOCPort)",
+        "status": "extracted"
+      }
+    },
+    "consumes": {
+      "platformPorts": ["@dos/ports/dos.DOSPort"],
+      "platformPackages": ["@dos/types", "@dos/contracts", "@dos/ports", "@dos/platform-core", "@dos/db", "@dos/event-backbone"]
+    },
+    "schemas": {
+      "dedicated": {
+        "name": "platform_dsoc",
+        "tables": [
+          "audit_log",
+          "alerts",
+          "posture_snapshots"
+        ]
+      }
+    },
+    "events": {
+      "publishes": [
+        "dsoc.alert.acknowledged",
+        "dsoc.alert.resolved",
+        "dsoc.posture.computed"
+      ],
+      "subscribes": [
+        "dsoc.audit.authn",
+        "dsoc.audit.authz",
+        "dsoc.audit.session",
+        "dsoc.audit.mfa",
+        "dsoc.audit.sod",
+        "dsoc.audit.delegation",
+        "dsoc.audit.config_change",
+        "dsoc.audit.data_access",
+        "dsoc.audit.threat",
+        "dsoc.audit.posture",
+        "dsoc.alert.info",
+        "dsoc.alert.low",
+        "dsoc.alert.medium",
+        "dsoc.alert.high",
+        "dsoc.alert.critical"
+      ]
+    },
+    "routes": {
+      "catalog": "platform/dsoc/services/dsoc-service/src/routes",
+      "mounts": [
+        { "file": "port/dsoc-port.routes.ts", "base": "/api/dsoc/port/v1", "catalog": "dsoc:port-rest" }
+      ]
+    },
+    "migrations": {
+      "indexFile": "platform/dsoc/migrations/migrations-index.json",
+      "ownership": "physical",
+      "physicalLocation": "platform/dsoc/migrations/{public,tenant}",
+      "physicalMoveStatus": "native"
+    },
+    "observability": {
+      "metricsPrefix": "dsoc_",
+      "healthEndpoint": "/api/dsoc/health",
+      "readinessEndpoint": "/api/dsoc/ready",
+      "tracingEnabled": true,
+      "structuredLogging": true,
+      "owningService": "dsoc-service"
+    },
+    "scheduledJobs": {
+      "registry": "platform/dsoc/jobs/index.ts",
+      "registrar": "registerDSOCJobs",
+      "depsBoundRegistrars": [
+        {
+          "name": "registerDSOCPostureJob",
+          "appliesTo": "dsoc.posture.compute",
+          "requires": "Auditlog/Alerts/Posture repositories + tenantSource()"
+        }
+      ],
+      "jobs": [
+        {
+          "name": "dsoc.retention.prune",
+          "cron": "0 */6 * * *",
+          "description": "Prune platform_dsoc.audit_log and resolved alerts beyond DSOC_*_RETENTION_DAYS every 6 hours.",
+          "currentWiring": "setInterval in dsoc-service/src/server.ts via startDSOCRetentionLoop; platform-scheduler-driven path in registerDSOCJobs() is forward-compatible."
+        },
+        {
+          "name": "dsoc.posture.compute",
+          "cron": "0 * * * *",
+          "description": "Compute + persist a posture snapshot per provisioned tenant in platform_dsoc.posture_snapshots every hour.",
+          "currentWiring": "Now wired in dsoc-service/src/server.ts via registerDSOCPostureJob; previously exported as startPostureLoop but never bound at startup."
+        }
+      ]
+    },
+    "security": {
+      "auditTarget": "self — DSOC IS the audit destination for every platform module",
+      "secretsViaEnv": true,
+      "compliance": ["SOC2", "ISO27001", "GDPR", "PDPL"]
+    },
+    "tests": {
+      "fileCount": 0,
+      "boundaryTest": "platform/dsoc/packages/core/__tests__"
+    },
+    "completionStatus": {
+      "definitionOfDone": "14-item DoD per platform module spec",
+      "session": "DSOC-Session-1 (Bootstrap)",
+      "session1Closed": [
+        "structure",
+        "manifest",
+        "bundle",
+        "schema-migration",
+        "core-package",
+        "service-bootstrap",
+        "subscriber-wiring",
+        "isolation-rule",
+        "rest-contract",
+        "frontend-package",
+        "module-shim",
+        "contract-tests",
+        "docs"
+      ],
+      "remainingExternalBlockers": [
+        "Phase 2b DAuth schema cutover (DAuth concern, not DSOC's)"
+      ]
+    }
+  }
+}

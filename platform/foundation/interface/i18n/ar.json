@@ -1,0 +1,18 @@
+{
+  "foundation.title": "الأساس",
+  "foundation.dashboard": "لوحة الأساس",
+  "foundation.organizations": "المنظمات",
+  "foundation.departments": "الأقسام",
+  "foundation.teams": "الفرق",
+  "foundation.positions": "المناصب",
+  "foundation.roles": "الأدوار الحوكمية",
+  "foundation.delegations": "التفويضات",
+  "foundation.diagnostics": "التشخيصات",
+  "foundation.admin": "إدارة الأساس",
+  "foundation.empty.title": "لا يوجد هيكل تنظيمي",
+  "foundation.empty.description": "أعد التسلسل الهرمي التنظيمي لتمكين الحوكمة وتعيين الأدوار.",
+  "foundation.loading": "جاري تحميل بيانات الأساس...",
+  "foundation.error.title": "فشل تحميل بيانات الأساس",
+  "foundation.error.retry": "إعادة المحاولة",
+  "foundation.create": "إنشاء منظمة"
+}

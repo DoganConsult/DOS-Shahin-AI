@@ -1,0 +1,1 @@
+{"version":3,"file":"attestation.ports.js","sourceRoot":"","sources":["attestation.ports.ts"],"names":[],"mappings":";;;AAAA,cAAc;AACd,8BAAkD;AAAzC,+FAAA,SAAS,OAAA;AAAE,kGAAA,YAAY,OAAA;AAChC,gDAAmE;AAA1D,2GAAA,YAAY,OAAA;AAAE,gHAAA,iBAAiB,OAAA;AACxC,gDAA+D;AAAtD,0HAAA,2BAA2B,OAAA;AACpC,gDAAuD;AAA9C,oGAAA,YAAY,OAAA;AACrB,gDAAiE;AAAxD,gGAAA,QAAQ,OAAA;AAAE,oGAAA,YAAY,OAAA"}

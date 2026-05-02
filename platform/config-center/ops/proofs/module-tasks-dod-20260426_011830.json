@@ -1,0 +1,56 @@
+{
+  "module": "tasks",
+  "phase": "Phase 2 / Module 1",
+  "completedAt": "2026-04-25T17:18:30.886396Z",
+  "verdict": "PASS",
+  "tenant": "shahin_visitors",
+  "user": "tenantadmin@shahin-ai.local",
+  "role": "tenant_admin",
+  "issuer": "https://auth.shahin-ai.com/realms/dogan",
+  "endpointCount": 5,
+  "passCount": 5,
+  "failCount": 0,
+  "failingEndpoints": [],
+  "endpoints": [
+    {
+      "name": "workflowTasks",
+      "path": "/api/workflow/tasks",
+      "status": 200,
+      "ms": 46,
+      "verdict": "PASS",
+      "sample": "data: list[0]"
+    },
+    {
+      "name": "workflowInstances",
+      "path": "/api/workflow/instances",
+      "status": 200,
+      "ms": 53,
+      "verdict": "PASS",
+      "sample": "data: list[0]"
+    },
+    {
+      "name": "approvals",
+      "path": "/api/approvals",
+      "status": 200,
+      "ms": 39,
+      "verdict": "PASS",
+      "sample": "data: list[0]"
+    },
+    {
+      "name": "approvalRequests",
+      "path": "/api/approval-requests",
+      "status": 200,
+      "ms": 48,
+      "verdict": "PASS",
+      "sample": "list[0]"
+    },
+    {
+      "name": "workflowChains",
+      "path": "/api/workflow-chains/instances",
+      "status": 200,
+      "ms": 46,
+      "verdict": "PASS",
+      "sample": "instances: list[0]"
+    }
+  ]
+}

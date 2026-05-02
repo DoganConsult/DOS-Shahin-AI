@@ -1,0 +1,23 @@
+{
+  "serviceCode": "vendor-service",
+  "displayName": "Vendor Risk Management Service",
+  "layer": "domain-service",
+  "ownerTeam": "product-shahin-ai",
+  "runtime": "node",
+  "dependsOn": [
+    "auth-service",
+    "tenant-service",
+    "workflow-service"
+  ],
+  "modules": [
+    "vendor"
+  ],
+  "exposes": {
+    "apiBase": "/api/vendor",
+    "events": [
+      "vendor.assessed",
+      "vendor.risk.flagged",
+      "vendor.contract.expiring"
+    ]
+  }
+}

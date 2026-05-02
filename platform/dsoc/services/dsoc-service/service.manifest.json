@@ -1,0 +1,12 @@
+{
+  "serviceCode": "dsoc-service",
+  "displayName": "DSOC Service",
+  "layer": "platform-service",
+  "ownerTeam": "platform-core",
+  "runtime": "node",
+  "dependsOn": [],
+  "modules": ["dsoc"],
+  "exposes": {
+    "apiBase": "/api/dsoc"
+  }
+}

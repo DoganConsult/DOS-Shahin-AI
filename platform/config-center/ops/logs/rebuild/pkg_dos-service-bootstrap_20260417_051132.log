@@ -1,0 +1,4 @@
+
+> @dos/service-bootstrap@0.1.0 build /root/DOS-AIO/packages/dos-service-bootstrap
+> tsc -p tsconfig.build.json
+

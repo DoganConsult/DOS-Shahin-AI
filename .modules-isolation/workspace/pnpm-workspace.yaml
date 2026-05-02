@@ -1,0 +1,8 @@
+packages:
+  - 'modules/packages/*'
+  - 'modules/risk'
+  - 'modules/qiyas'
+  - 'modules/compliance'
+  - 'modules/compliance/sdk/typescript'
+  - 'modules/bcp'
+  - 'vendor-shims/*'

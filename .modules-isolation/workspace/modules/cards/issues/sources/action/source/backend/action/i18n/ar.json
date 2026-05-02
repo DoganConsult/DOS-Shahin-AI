@@ -1,0 +1,22 @@
+{
+  "action.title": "الإجراءات",
+  "action.dashboard": "لوحة الإجراءات",
+  "action.items": "بنود الإجراءات",
+  "action.tracking": "تتبع الإجراءات",
+  "action.overdue": "الإجراءات المتأخرة",
+  "action.diagnostics": "التشخيصات",
+  "action.admin": "إدارة الإجراءات",
+  "action.empty.title": "لا توجد إجراءات",
+  "action.empty.description": "ستظهر الإجراءات هنا عند إنشائها من النتائج والتدقيقات والمراجعات.",
+  "action.loading": "جاري تحميل الإجراءات...",
+  "action.error.title": "فشل تحميل الإجراءات",
+  "action.error.retry": "إعادة المحاولة",
+  "action.create": "إنشاء إجراء",
+  "action.status.draft": "مسودة",
+  "action.status.open": "مفتوح",
+  "action.status.in_progress": "قيد التنفيذ",
+  "action.status.completed": "مكتمل",
+  "action.status.verified": "متحقق منه",
+  "action.status.closed": "مغلق",
+  "action.status.overdue": "متأخر"
+}

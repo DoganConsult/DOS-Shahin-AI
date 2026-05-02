@@ -1,0 +1,4 @@
+
+> platform-product-service@0.1.0 build /root/DOS-AIO/services/platform-product-service
+> tsc -p tsconfig.json
+

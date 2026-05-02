@@ -1,0 +1,95 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "title": "Agent Runs / minute",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "targets": [{ "expr": "sum(rate(dos_agent_runs_total[1m])) by (agent_id)", "legendFormat": "{{agent_id}}" }],
+      "fieldConfig": { "defaults": { "unit": "ops" } }
+    },
+    {
+      "title": "Agent Run Duration (P95)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "targets": [{ "expr": "histogram_quantile(0.95, sum(rate(dos_agent_run_duration_seconds_bucket[5m])) by (le, agent_id))", "legendFormat": "{{agent_id}} P95" }],
+      "fieldConfig": { "defaults": { "unit": "s" } }
+    },
+    {
+      "title": "Tokens Consumed (input + output)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "targets": [
+        { "expr": "sum(rate(dos_agent_tokens_total{direction='input'}[5m])) by (agent_id)", "legendFormat": "{{agent_id}} input" },
+        { "expr": "sum(rate(dos_agent_tokens_total{direction='output'}[5m])) by (agent_id)", "legendFormat": "{{agent_id}} output" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "short" } }
+    },
+    {
+      "title": "Agent Errors",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "targets": [{ "expr": "sum(rate(dos_agent_errors_total[5m])) by (agent_id, error_type)", "legendFormat": "{{agent_id}} {{error_type}}" }],
+      "fieldConfig": { "defaults": { "unit": "ops" } }
+    },
+    {
+      "title": "Inter-Agent Delegations",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 16 },
+      "targets": [{ "expr": "sum(rate(dos_agent_delegations_total[5m])) by (source_agent, target_agent, status)", "legendFormat": "{{source_agent}} -> {{target_agent}} ({{status}})" }],
+      "fieldConfig": { "defaults": { "unit": "ops" } }
+    },
+    {
+      "title": "DB Query Duration (P95)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 16 },
+      "targets": [{ "expr": "histogram_quantile(0.95, sum(rate(dos_db_query_duration_seconds_bucket[5m])) by (le, operation))", "legendFormat": "{{operation}} P95" }],
+      "fieldConfig": { "defaults": { "unit": "s" } }
+    },
+    {
+      "title": "Event Bus Throughput",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 24 },
+      "targets": [{ "expr": "sum(rate(dos_event_bus_publish_total[5m])) by (event_type, status)", "legendFormat": "{{event_type}} ({{status}})" }],
+      "fieldConfig": { "defaults": { "unit": "ops" } }
+    },
+    {
+      "title": "Circuit Breaker States",
+      "type": "stat",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 24 },
+      "targets": [{ "expr": "dos_circuit_breaker_state", "legendFormat": "{{target}}" }],
+      "fieldConfig": { "defaults": { "mappings": [{ "type": "value", "options": { "0": { "text": "CLOSED", "color": "green" }, "1": { "text": "HALF_OPEN", "color": "yellow" }, "2": { "text": "OPEN", "color": "red" } } }] } }
+    },
+    {
+      "title": "Heap Memory Trend",
+      "type": "gauge",
+      "gridPos": { "h": 8, "w": 6, "x": 0, "y": 32 },
+      "targets": [{ "expr": "dos_heap_trend_slope_bytes_per_minute", "legendFormat": "{{instance}}" }],
+      "fieldConfig": { "defaults": { "unit": "Bps", "thresholds": { "steps": [{ "value": 0, "color": "green" }, { "value": 100000, "color": "yellow" }, { "value": 500000, "color": "red" }] } } }
+    },
+    {
+      "title": "DB Pool Utilization",
+      "type": "bargauge",
+      "gridPos": { "h": 8, "w": 6, "x": 6, "y": 32 },
+      "targets": [{ "expr": "dos_db_pool_connections", "legendFormat": "{{state}}" }]
+    },
+    {
+      "title": "HTTP Request Rate",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 32 },
+      "targets": [{ "expr": "sum(rate(dos_http_requests_total[1m])) by (status_code)", "legendFormat": "{{status_code}}" }],
+      "fieldConfig": { "defaults": { "unit": "reqps" } }
+    }
+  ],
+  "schemaVersion": 39,
+  "tags": ["dos", "ai", "agents", "observability"],
+  "templating": { "list": [] },
+  "time": { "from": "now-1h", "to": "now" },
+  "title": "DOS AI Agent Mesh",
+  "uid": "dos-ai-agent-mesh"
+}

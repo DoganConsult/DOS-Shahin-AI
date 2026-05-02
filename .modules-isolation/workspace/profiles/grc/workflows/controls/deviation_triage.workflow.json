@@ -1,0 +1,15 @@
+{
+  "id": "controls.deviation_triage",
+  "module": "controls",
+  "hook": "deviation_triage",
+  "version": "1.0.0",
+  "sla_hours": 12,
+  "actor_role_default": "controls.module_lead",
+  "states": ["detected","triaged","routed"],
+  "initial": "detected",
+  "transitions": [{"from":"detected","to":"triaged","on":"triage","actor_role":"controls.module_lead"},{"from":"triaged","to":"routed","on":"route","actor_role":"controls.approver"}],
+  "audit_event_prefix": "controls.workflow.deviation_triage",
+  "notification_targets": ["controls.module_lead", "controls.approver"],
+  "evidence_required_on": ["passed","published"],
+  "escalation": { "on": "sla_breach", "to": "controls.executive_owner", "after_hours": 24 }
+}

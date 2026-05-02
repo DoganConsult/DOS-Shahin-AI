@@ -1,0 +1,32 @@
+---
+# Cerbos server config for the DOS DAuth fusion plane.
+# Serves resource policies, derived roles, and schemas from ./policies.
+# Mount read-only in production; bundle via `cerbos compile` for release.
+server:
+  httpListenAddr: ":3592"
+  grpcListenAddr: ":3593"
+  adminAPI:
+    enabled: false
+  metricsEnabled: true
+  playgroundEnabled: false
+
+storage:
+  driver: disk
+  disk:
+    directory: ./policies
+    watchForChanges: true
+
+schema:
+  enforcement: reject
+
+audit:
+  enabled: true
+  accessLogsEnabled: true
+  decisionLogsEnabled: true
+  backend: file
+  file:
+    path: stdout
+
+engine:
+  defaultPolicyVersion: "1"
+  lenientScopeSearch: false

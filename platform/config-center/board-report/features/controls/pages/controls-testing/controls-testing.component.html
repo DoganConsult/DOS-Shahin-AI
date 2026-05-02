@@ -1,0 +1,236 @@
+<!-- Controls Testing — Enhanced Test Management -->
+<div class="controls-testing" [attr.dir]="dir()">
+
+  <!-- Loading State -->
+  @if (loading()) {
+    <app-skeleton-loader variant="list" [count]="4" />
+    <app-skeleton-loader variant="detail" />
+  }
+
+  <!-- Error State -->
+  @if (!loading() && error()) {
+    <app-empty-state
+      variant="error"
+      [title]="isAr() ? 'فشل تحميل بيانات الاختبار' : 'Failed to load testing data'"
+      [description]="isAr() ? 'تحقق من الاتصال وحاول مرة أخرى' : 'Check your connection and try again'"
+      [actionLabel]="isAr() ? 'إعادة المحاولة' : 'Retry'"
+      [dir]="dir()"
+      (action)="loadData()" />
+  }
+
+  <!-- Loaded Content -->
+  @if (!loading() && !error()) {
+
+    <!-- Test Plan Overview Strip -->
+    <section class="summary-strip" [attr.aria-label]="isAr() ? 'ملخص خطة الاختبار' : 'Test Plan Overview'">
+      <div class="summary-card">
+        <div class="summary-card__icon" style="background: color-mix(in srgb, var(--primary) 12%, transparent)">
+          <i class="pi pi-calendar" style="color: var(--primary)" aria-hidden="true"></i>
+        </div>
+        <div class="summary-card__content">
+          <span class="summary-card__value">{{ scheduledThisQuarter() }}</span>
+          <span class="summary-card__label">{{ isAr() ? 'مجدولة هذا الربع' : 'Scheduled This Quarter' }}</span>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-card__icon" style="background: color-mix(in srgb, var(--info) 12%, transparent)">
+          <i class="pi pi-spin pi-spinner" style="color: var(--info)" aria-hidden="true"></i>
+        </div>
+        <div class="summary-card__content">
+          <span class="summary-card__value">{{ inProgressCount() }}</span>
+          <span class="summary-card__label">{{ isAr() ? 'قيد التنفيذ' : 'In Progress' }}</span>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-card__icon" style="background: color-mix(in srgb, var(--success) 12%, transparent)">
+          <i class="pi pi-check-circle" style="color: var(--success)" aria-hidden="true"></i>
+        </div>
+        <div class="summary-card__content">
+          <span class="summary-card__value">{{ completedCount() }}</span>
+          <span class="summary-card__label">{{ isAr() ? 'مكتملة' : 'Completed' }}</span>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-card__icon" style="background: color-mix(in srgb, var(--error) 12%, transparent)">
+          <i class="pi pi-times-circle" style="color: var(--error)" aria-hidden="true"></i>
+        </div>
+        <div class="summary-card__content">
+          <span class="summary-card__value">{{ failedCount() }}</span>
+          <span class="summary-card__label">{{ isAr() ? 'فاشلة' : 'Failed' }}</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Filter Bar -->
+    <section class="filter-bar">
+      <p-dropdown
+        [options]="testTypeOptions()"
+        [(ngModel)]="filterTestType"
+        optionLabel="label"
+        optionValue="value"
+        [placeholder]="isAr() ? 'نوع الاختبار' : 'Test Type'"
+        [showClear]="true"
+        styleClass="filter-dropdown">
+      </p-dropdown>
+      <p-dropdown
+        [options]="resultOptions()"
+        [(ngModel)]="filterResult"
+        optionLabel="label"
+        optionValue="value"
+        [placeholder]="isAr() ? 'النتيجة' : 'Result'"
+        [showClear]="true"
+        styleClass="filter-dropdown">
+      </p-dropdown>
+      <p-dropdown
+        [options]="testerOptions()"
+        [(ngModel)]="filterTester"
+        optionLabel="label"
+        optionValue="value"
+        [placeholder]="isAr() ? 'المختبر' : 'Tester'"
+        [showClear]="true"
+        styleClass="filter-dropdown">
+      </p-dropdown>
+      <button pButton
+        class="p-button-text p-button-sm"
+        [label]="isAr() ? 'مسح الفلاتر' : 'Clear Filters'"
+        icon="pi pi-filter-slash"
+        (click)="clearFilters()">
+      </button>
+    </section>
+
+    <!-- Testing Table -->
+    <grc-data-table
+      [title]="isAr() ? 'اختبارات الضوابط' : 'Control Tests'"
+      [totalRecords]="filteredTests().length"
+      [loading]="false"
+      [emptyMessage]="isAr() ? 'لا توجد اختبارات' : 'No tests found'">
+      <div tableToolbar>
+        <button pButton
+          class="p-button-sm p-button-primary"
+          [label]="isAr() ? 'إنشاء اختبار' : 'Create Test'"
+          icon="pi pi-plus"
+          (click)="openCreateDialog()">
+        </button>
+      </div>
+      @if (filteredTests().length) {
+        <p-table
+          [value]="filteredTests()"
+          [paginator]="true"
+          [rows]="15"
+          [rowsPerPageOptions]="[15, 30, 50]"
+          styleClass="p-datatable-sm p-datatable-striped"
+          [attr.aria-label]="isAr() ? 'جدول اختبارات الضوابط' : 'Control Tests Table'">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>{{ isAr() ? 'معرّف الضابط' : 'Control ID' }}</th>
+              <th>{{ isAr() ? 'نوع الاختبار' : 'Test Type' }}</th>
+              <th>{{ isAr() ? 'تاريخ الاختبار' : 'Tested At' }}</th>
+              <th>{{ isAr() ? 'المختبر' : 'Tester' }}</th>
+              <th>{{ isAr() ? 'النتيجة' : 'Result' }}</th>
+              <th>{{ isAr() ? 'مرجع الأدلة' : 'Evidence' }}</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-test>
+            <tr>
+              <td class="font-semibold">{{ test.control_id }}</td>
+              <td>{{ test.test_type || '\u2014' }}</td>
+              <td>{{ formatDate(test.testedAt) }}</td>
+              <td>{{ test.testedBy || '\u2014' }}</td>
+              <td><app-status-badge [status]="test.result || 'pending'" /></td>
+              <td>
+                @if (test.evidenceRef) {
+                  <span class="evidence-link">
+                    <i class="pi pi-paperclip" aria-hidden="true"></i>
+                    {{ isAr() ? 'مرفق' : 'Attached' }}
+                  </span>
+                } @else {
+                  <span class="text-muted">{{ isAr() ? 'لا يوجد' : 'None' }}</span>
+                }
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="6">
+                <app-empty-state
+                  [title]="isAr() ? 'لا توجد اختبارات' : 'No tests found'"
+                  [description]="isAr() ? 'أنشئ اختبار جديد للبدء' : 'Create a new test to get started'"
+                  [actionLabel]="isAr() ? 'إنشاء اختبار' : 'Create Test'"
+                  [dir]="dir()"
+                  (action)="openCreateDialog()" />
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      }
+    </grc-data-table>
+  }
+
+  <!-- Create Test Dialog -->
+  <p-dialog
+    [header]="isAr() ? 'إنشاء اختبار ضابط' : 'Create Control Test'"
+    [(visible)]="showCreateDialog"
+    [modal]="true"
+    [style]="{ width: '520px' }"
+    [closable]="true"
+    [draggable]="false">
+    <form [formGroup]="form" (ngSubmit)="submitTest()">
+      <div class="dialog-form">
+        <grc-form-field
+          [label]="isAr() ? 'الضابط' : 'Control'"
+          [required]="true"
+          [control]="form.controls.control_id">
+          <p-dropdown
+            formControlName="control_id"
+            [options]="controlOptions()"
+            optionLabel="label"
+            optionValue="value"
+            [placeholder]="isAr() ? 'اختر الضابط' : 'Select Control'"
+            [filter]="true"
+            styleClass="w-full">
+          </p-dropdown>
+        </grc-form-field>
+
+        <grc-form-field
+          [label]="isAr() ? 'نوع الاختبار / المنهجية' : 'Test Type / Methodology'"
+          [required]="true"
+          [control]="form.controls.test_type">
+          <p-dropdown
+            formControlName="test_type"
+            [options]="testTypeOptions()"
+            optionLabel="label"
+            optionValue="value"
+            [placeholder]="isAr() ? 'اختر النوع' : 'Select Type'"
+            styleClass="w-full">
+          </p-dropdown>
+        </grc-form-field>
+
+        <grc-form-field
+          [label]="isAr() ? 'ملاحظات / الأدلة المتوقعة' : 'Notes / Expected Evidence'">
+          <textarea pInputTextarea formControlName="notes" class="w-full" rows="3"></textarea>
+        </grc-form-field>
+
+        <grc-form-field
+          [label]="isAr() ? 'مرجع الأدلة' : 'Evidence Reference'">
+          <input pInputText formControlName="evidenceRef" class="w-full" />
+        </grc-form-field>
+      </div>
+    </form>
+
+    <ng-template pTemplate="footer">
+      <button pButton
+        class="p-button-text"
+        [label]="isAr() ? 'إلغاء' : 'Cancel'"
+        (click)="showCreateDialog.set(false)">
+      </button>
+      <button pButton
+        class="p-button-primary"
+        [label]="isAr() ? 'إنشاء' : 'Create'"
+        icon="pi pi-check"
+        [loading]="creating()"
+        [disabled]="form.invalid"
+        (click)="submitTest()">
+      </button>
+    </ng-template>
+  </p-dialog>
+</div>

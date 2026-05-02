@@ -1,0 +1,700 @@
+<app-page-shell
+  icon="verified"
+  [title]="L().pageTitle"
+  [subtitle]="L().pageSubtitle"
+  [breadcrumbs]="['Dashboard', L().pageTitle]"
+  [loading]="loading()">
+
+  <cds-notification></cds-notification>
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!-- COMPLIANCE HEADER — KPI METRICS BAND                          -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <div class="compliance-header" *ngIf="sum()">
+    <div class="header-kpi-band">
+      <app-stat-card icon="verified" [value]="sum()!.overallScore + '%'"
+        [label]="L().overallScore"
+        [accentColor]="scoreColor(sum()!.overallScore)" />
+      <app-stat-card icon="th-large" [value]="sum()!.activeFrameworks"
+        [label]="L().activeFrameworks" accentColor="var(--primary)" />
+      <app-stat-card icon="exclamation-triangle" [value]="sum()!.openGaps"
+        [label]="L().openGaps" accentColor="var(--red-500, #ef4444)" />
+      <app-stat-card icon="exclamation-circle" [value]="sum()!.criticalGaps"
+        [label]="L().criticalGaps" accentColor="var(--red-600, var(--error))" />
+      <app-stat-card icon="clock" [value]="sum()!.overdueActions"
+        [label]="L().overdueActions" accentColor="var(--orange-500, #f97316)" />
+      <app-stat-card icon="shield" [value]="sum()!.controlsMapped"
+        [label]="L().controlsMapped" accentColor="var(--blue-500, #3b82f6)" />
+      <app-stat-card icon="folder-open" [value]="sum()!.evidenceCoverage + '%'"
+        [label]="L().evidenceCoverage" accentColor="var(--teal-500, #14b8a6)" />
+      <app-stat-card icon="check-square" [value]="sum()!.auditReadiness + '%'"
+        [label]="L().auditReadiness"
+        [accentColor]="scoreColor(sum()!.auditReadiness)" />
+    </div>
+
+    <div class="header-actions">
+      <cds-dropdown [options]="fwFilterOptions" [(ngModel)]="fwFilter"
+        optionLabel="label" optionValue="value"
+        [placeholder]="L().filterByFramework"
+        [style]="{minWidth:'240px'}" (onChange)="onFwFilterChange()" />
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!-- TABBED WORKSPACE                                               -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <cds-tabs [(activeIndex)]="tabIndex" (activeIndexChange)="onTabChange($event)">
+
+    <!-- ═══ TAB 1: COMPLIANCE OVERVIEW ═══ -->
+    <cds-tab [header]="L().overview">
+
+      <!-- Section A: Framework Posture -->
+      <div class="section-block" *ngIf="overview()?.frameworks?.length">
+        <h3 class="section-title">{{ L().frameworkPosture }}</h3>
+        <div class="fw-posture-grid">
+          <div tabindex="0" role="button" (keyup.enter)="openFrameworkDetail(f.frameworkId)" class="fw-posture-card" *ngFor="let f of overview()!.frameworks"
+               (click)="openFrameworkDetail(f.frameworkId)">
+            <div class="fpc-header">
+              <span class="fpc-name">{{ f.frameworkName }}</span>
+              <cds-tag [value]="f.status" [severity]="f.status === 'active' ? 'success' : 'warning'" />
+            </div>
+            <div class="fpc-score" [class]="scoreClass(f.score)">{{ f.score }}%</div>
+            <cds-progress-bar [value]="f.score" [showValue]="false" styleClass="fpc-bar" />
+            <div class="fpc-stats">
+              <span>{{ L().controls }}: {{ f.implementedControls }}/{{ f.totalControls }}</span>
+              <span>{{ L().evidence }}: {{ f.evidenceCoverage }}%</span>
+              <span>{{ L().openGaps }}: {{ f.openGaps }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section B: Domain Health -->
+      <div class="section-block" *ngIf="overview()?.domains?.length">
+        <h3 class="section-title">{{ L().domainHealth }}</h3>
+        <div class="domain-health-grid">
+          <div class="dh-card" *ngFor="let d of overview()!.domains.slice(0, 12)"
+               [style.borderLeftColor]="scoreColor(d.score)">
+            <div class="dh-name">{{ i18n.localize(d.titleEn, d.titleAr) }}</div>
+            <div class="dh-score" [class]="scoreClass(d.score)">{{ d.score }}%</div>
+            <div class="dh-meta">
+              <span>{{ d.frameworkName }}</span>
+              <span>{{ d.obligationsCount }} {{ L().obligations }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section C: Priority Issues -->
+      <div class="section-block" *ngIf="overview()?.priorityIssues?.length">
+        <h3 class="section-title">{{ L().priorityIssues }}</h3>
+        <div class="priority-list">
+          <div class="priority-item" *ngFor="let issue of overview()!.priorityIssues">
+            <span class="pi-severity" [style.color]="severityColor(issue.severity)">
+              <i class=""></i>
+            </span>
+            <span class="pi-title">{{ issue.title }}</span>
+            <span class="pi-type">{{ issue.type.replace('_', ' ') }}</span>
+            <span class="pi-owner" *ngIf="issue.owner">{{ issue.owner }}</span>
+            <span class="pi-due" *ngIf="issue.dueDate">{{ issue.dueDate | appDate:'medium' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty state -->
+      <div *ngIf="!overview() && !loading()" class="empty-state">
+        <i class=" empty-icon"></i>
+        <p>{{ L().emptyFrameworks }}</p>
+        <button cdsButton [label]="i18n.translate('compliance.openOnboarding')" icon="" routerLink="/onboarding" />
+      </div>
+    </cds-tab>
+
+    <!-- ═══ TAB 2: FRAMEWORKS ═══ -->
+    <cds-tab [header]="L().frameworks">
+
+      <section cdsToolbar styleClass="mb-3">
+        <ng-template pTemplate="end">
+          <button cdsButton [label]="L().comparison" icon="" [text]="true" (onClick)="openFwComparison()" />
+        </ng-template>
+      </section>
+
+      <grc-data-table
+        [totalRecords]="frameworks().length"
+        [emptyMessage]="L().emptyFrameworks">
+        <table cdsTable aria-label="Frameworks table" [value]="frameworks()" [paginator]="frameworks().length > 12" [rows]="12"
+          styleClass="p-datatable-striped p-datatable-gridlines"
+          [globalFilterFields]="['frameworkName','category']">
+          <ng-template pTemplate="header">
+            <tr>
+              <th >{{ L().name }}</th>
+              <th>{{ L().category }}</th>
+              <th >{{ L().score }}</th>
+              <th>{{ L().controls }}</th>
+              <th>{{ L().evidence }}</th>
+              <th>{{ L().status }}</th>
+              <th style="width:100px">{{ L().action }}</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-f>
+            <tr>
+              <td><strong>{{ i18n.localize(f.nameEn, f.nameAr) }}</strong></td>
+              <td><cds-tag [value]="f.category || '—'" severity="info" /></td>
+              <td>
+                <div class="score-cell">
+                  <cds-progress-bar [value]="f.score" [showValue]="false" styleClass="fw-bar" />
+                  <span class="fw-pct" [class]="scoreClass(f.score)">{{ f.score }}%</span>
+                </div>
+              </td>
+              <td>{{ f.implementedControls }}/{{ f.totalControls }}</td>
+              <td>{{ f.evidenceCoverage }}%</td>
+              <td><app-status-badge [status]="f.status" /></td>
+              <td>
+                <button cdsButton icon="" [text]="true" size="small"
+                  [cdsTooltip]="L().details" [ariaLabel]="L().details" (onClick)="openFrameworkDetail(f.frameworkId)" />
+              </td>
+            </tr>
+          </ng-template>
+        </table>
+      </grc-data-table>
+
+      <!-- Framework Detail Drawer -->
+      <div class="detail-drawer" *ngIf="selectedFw()">
+        <div class="drawer-header">
+          <h3>{{ i18n.localize(selectedFw()!.nameEn, selectedFw()!.nameAr) }}</h3>
+          <button cdsButton icon="" [text]="true" ariaLabel="Close" (onClick)="closeFrameworkDetail()" />
+        </div>
+        <div class="drawer-body">
+          <div class="drawer-meta">
+            <p *ngIf="selectedFw()!.summaryEn">{{ i18n.localize(selectedFw()!.summaryEn, selectedFw()!.summaryAr) }}</p>
+            <div class="drawer-stats">
+              <div class="ds"><span class="ds-val" [class]="scoreClass(selectedFw()!.score)">{{ selectedFw()!.score }}%</span><span class="ds-lbl">{{ L().score }}</span></div>
+              <div class="ds"><span class="ds-val">{{ selectedFw()!.domainsCount }}</span><span class="ds-lbl">{{ L().domains }}</span></div>
+              <div class="ds"><span class="ds-val">{{ selectedFw()!.obligationsCount }}</span><span class="ds-lbl">{{ L().obligations }}</span></div>
+              <div class="ds"><span class="ds-val">{{ selectedFw()!.controlsMapped }}</span><span class="ds-lbl">{{ L().controls }}</span></div>
+              <div class="ds"><span class="ds-val">{{ selectedFw()!.evidenceCoverage }}%</span><span class="ds-lbl">{{ L().evidence }}</span></div>
+              <div class="ds"><span class="ds-val">{{ selectedFw()!.openGaps }}</span><span class="ds-lbl">{{ L().openGaps }}</span></div>
+            </div>
+          </div>
+          <h4 *ngIf="selectedFw()!.domains?.length">{{ L().domains }} ({{ selectedFw()!.domains.length }})</h4>
+          <div class="mini-list" *ngIf="selectedFw()!.domains?.length">
+            <div class="ml-item" *ngFor="let d of selectedFw()!.domains">
+              <code>{{ d.code }}</code> {{ i18n.localize(d.title_en, d.title_ar) }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comparison Dialog -->
+      <cds-modal [header]="L().comparison" [(visible)]="fwCompareVisible" [style]="{width:'90vw',maxWidth:'1100px'}" [modal]="true">
+        <grc-data-table
+          *ngIf="fwComparison().length"
+          [totalRecords]="fwComparison().length">
+          <table cdsTable aria-label="Fw Comparison table" [paginator]="true" [rows]="20" [rowsPerPageOptions]="[10,20,50]" [value]="fwComparison()" styleClass="p-datatable-striped p-datatable-gridlines">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>{{ L().framework }}</th>
+                <th>{{ L().score }}</th>
+                <th>{{ L().controls }}</th>
+                <th>{{ L().implemented }}</th>
+                <th>{{ L().evidence }}</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-f>
+              <tr>
+                <td><strong>{{ f.frameworkName }}</strong></td>
+                <td><span class="fw-pct" [class]="scoreClass(f.score)">{{ f.score }}%</span></td>
+                <td>{{ f.controlsMapped }}</td>
+                <td>{{ f.implementedControls }}/{{ f.totalControls }}</td>
+                <td>{{ f.evidenceCoverage }}%</td>
+              </tr>
+            </ng-template>
+          </table>
+        </grc-data-table>
+      </cds-modal>
+    </cds-tab>
+
+    <!-- ═══ TAB 3: DOMAINS ═══ -->
+    <cds-tab [header]="L().domains">
+
+      <section cdsToolbar styleClass="mb-3">
+        <ng-template pTemplate="start">
+          <cds-dropdown [options]="fwFilterOptions" [(ngModel)]="fwFilter"
+            optionLabel="label" optionValue="value"
+            [placeholder]="L().filterByFramework" [style]="{minWidth:'240px'}" (onChange)="loadDomains()" />
+        </ng-template>
+        <ng-template pTemplate="end">
+          <button cdsButton [label]="domainHeatView ? L().tableView : L().heatView"
+            [icon]="domainHeatView ? '' : ''" [text]="true"
+            (onClick)="toggleDomainHeat()" />
+        </ng-template>
+      </section>
+
+      <!-- Table view -->
+      <grc-data-table
+        *ngIf="!domainHeatView"
+        [totalRecords]="domains().length"
+        [emptyMessage]="L().emptyDomains">
+        <table cdsTable aria-label="Domains table" [value]="domains()" [paginator]="domains().length > 15" [rows]="15"
+          styleClass="p-datatable-striped p-datatable-gridlines">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>{{ L().code }}</th>
+              <th >{{ L().domain }}</th>
+              <th>{{ L().framework }}</th>
+              <th >{{ L().score }}</th>
+              <th>{{ L().obligations }}</th>
+              <th>{{ L().controls }}</th>
+              <th>{{ L().evidence }}</th>
+              <th>{{ L().openGaps }}</th>
+              <th style="width:80px">{{ L().action }}</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-d>
+            <tr>
+              <td><code>{{ d.code }}</code></td>
+              <td><strong>{{ i18n.localize(d.titleEn, d.titleAr) }}</strong></td>
+              <td>{{ d.frameworkName }}</td>
+              <td>
+                <div class="score-cell">
+                  <cds-progress-bar [value]="d.score" [showValue]="false" styleClass="fw-bar" />
+                  <span class="fw-pct" [class]="scoreClass(d.score)">{{ d.score }}%</span>
+                </div>
+              </td>
+              <td>{{ d.obligationsCount }}</td>
+              <td>{{ d.controlsMapped }}</td>
+              <td>{{ d.evidenceCoverage || 0 }}%</td>
+              <td>
+                <span *ngIf="d.criticalGaps" class="gap-badge critical">{{ d.criticalGaps }}</span>
+                <span *ngIf="d.openGaps && !d.criticalGaps">{{ d.openGaps }}</span>
+                <span *ngIf="!d.openGaps">—</span>
+              </td>
+              <td>
+                <button cdsButton icon="" [text]="true" size="small" [ariaLabel]="L().details" (onClick)="openDomainDetail(d.nodeId)" />
+              </td>
+            </tr>
+          </ng-template>
+        </table>
+      </grc-data-table>
+
+      <!-- Heat view -->
+      <div class="heat-grid" *ngIf="domainHeatView">
+        <div tabindex="0" role="button" (keyup.enter)="openDomainDetail(d.nodeId)" class="heat-cell" *ngFor="let d of domains()"
+             [style.background]="domainHeatColor(d.score)"
+             (click)="openDomainDetail(d.nodeId)">
+          <div class="hc-score" [class]="scoreClass(d.score)">{{ d.score }}%</div>
+          <div class="hc-name">{{ i18n.localize(d.titleEn, d.titleAr) }}</div>
+          <div class="hc-fw">{{ d.frameworkName }}</div>
+        </div>
+      </div>
+
+      <!-- Domain Detail Panel -->
+      <div class="detail-drawer" *ngIf="selectedDomain()">
+        <div class="drawer-header">
+          <h3>{{ i18n.localize(selectedDomain()!.domain.titleEn, selectedDomain()!.domain.titleAr) }}</h3>
+          <button cdsButton icon="" [text]="true" ariaLabel="Close" (onClick)="closeDomainDetail()" />
+        </div>
+        <div class="drawer-body">
+          <div class="drawer-stats">
+            <div class="ds"><span class="ds-val" [class]="scoreClass(selectedDomain()!.score)">{{ selectedDomain()!.score }}%</span><span class="ds-lbl">{{ L().score }}</span></div>
+            <div class="ds"><span class="ds-val">{{ selectedDomain()!.obligations.length }}</span><span class="ds-lbl">{{ L().obligations }}</span></div>
+            <div class="ds"><span class="ds-val">{{ selectedDomain()!.controls.length }}</span><span class="ds-lbl">{{ L().controls }}</span></div>
+            <div class="ds"><span class="ds-val">{{ selectedDomain()!.evidence.length }}</span><span class="ds-lbl">{{ L().evidence }}</span></div>
+            <div class="ds"><span class="ds-val">{{ selectedDomain()!.findings.length }}</span><span class="ds-lbl">{{ L().openGaps }}</span></div>
+          </div>
+
+          <h4>{{ L().obligations }} ({{ selectedDomain()!.obligations.length }})</h4>
+          <div class="chain-list">
+            <div class="chain-item" *ngFor="let o of selectedDomain()!.obligations">
+              <div class="ci-head">
+                <code>{{ o.code }}</code>
+                <span class="ci-title">{{ i18n.localize(o.title_en, o.title_ar) }}</span>
+                <span class="ci-badge" [class.covered]="o.covered" [class.uncovered]="!o.covered">
+                  {{ o.covered ? (i18n.translate('compliance.covered')) : (i18n.translate('compliance.uncovered')) }}
+                </span>
+              </div>
+              <div class="ci-stats">
+                {{ L().controls }}: {{ o.controlsMapped }} | {{ L().implemented }}: {{ o.controlsImplemented }}
+              </div>
+            </div>
+          </div>
+
+          <h4 *ngIf="selectedDomain()!.remediationTasks?.length">{{ i18n.translate('compliance.remediationTasks') }}</h4>
+          <div class="mini-list" *ngIf="selectedDomain()!.remediationTasks?.length">
+            <div class="ml-item" *ngFor="let t of selectedDomain()!.remediationTasks">
+              <app-status-badge [status]="t.status" /> {{ t.title }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </cds-tab>
+
+    <!-- ═══ TAB 4: OBLIGATIONS ═══ -->
+    <cds-tab [header]="L().obligations">
+
+      <section cdsToolbar styleClass="mb-3">
+        <ng-template pTemplate="start">
+          <cds-dropdown [options]="fwFilterOptions" [(ngModel)]="fwFilter"
+            optionLabel="label" optionValue="value"
+            [placeholder]="L().filterByFramework" [style]="{minWidth:'240px'}" (onChange)="loadObligations()" />
+          <span class="p-input-icon-left ml-2">
+            <i class=""></i>
+            <input type="text" pInputText [(ngModel)]="searchTerm"
+              [placeholder]="i18n.translate('compliance.search')" [attr.aria-label]="i18n.translate('compliance.search')" class="search-input" />
+          </span>
+        </ng-template>
+        <ng-template pTemplate="end">
+          <button cdsButton [label]="L().coverageMatrix" icon="" [text]="true" (onClick)="openCoverageMatrix()" />
+        </ng-template>
+      </section>
+
+      <grc-data-table
+        [totalRecords]="obligations().length"
+        [emptyMessage]="L().emptyObligations">
+        <table cdsTable aria-label="Obligations table" [value]="obligations()" [paginator]="obligations().length > 15" [rows]="15"
+          styleClass="p-datatable-striped p-datatable-gridlines"
+          [globalFilterFields]="['code','titleEn']">
+          <ng-template pTemplate="header">
+            <tr>
+              <th >{{ L().code }}</th>
+              <th>{{ L().obligation }}</th>
+              <th>{{ L().framework }}</th>
+              <th>{{ L().domain }}</th>
+              <th >{{ L().status }}</th>
+              <th>{{ L().controls }}</th>
+              <th>{{ L().evidence }}</th>
+              <th style="width:80px">{{ L().action }}</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-o>
+            <tr>
+              <td><code>{{ o.code }}</code></td>
+              <td><strong>{{ i18n.localize(o.titleEn, o.titleAr) }}</strong></td>
+              <td>{{ o.frameworkName }}</td>
+              <td>{{ i18n.localize(o.domainName, o.domainNameAr || o.domainName) }}</td>
+              <td><app-status-badge [status]="o.status" /></td>
+              <td>{{ o.controlsImplemented }}/{{ o.controlCoverage }}</td>
+              <td>{{ o.evidenceCoverage }}%</td>
+              <td>
+                <button cdsButton icon="" [text]="true" size="small" [ariaLabel]="L().details" (onClick)="openOblDetail(o.nodeId)" />
+              </td>
+            </tr>
+          </ng-template>
+        </table>
+      </grc-data-table>
+
+      <!-- Obligation Detail Panel -->
+      <div class="detail-drawer" *ngIf="selectedObl()">
+        <div class="drawer-header">
+          <h3><code>{{ selectedObl()!.obligation.code }}</code> {{ i18n.localize(selectedObl()!.obligation.titleEn, selectedObl()!.obligation.titleAr) }}</h3>
+          <button cdsButton icon="" [text]="true" ariaLabel="Close" (onClick)="closeOblDetail()" />
+        </div>
+        <div class="drawer-body">
+          <p class="obl-desc" *ngIf="selectedObl()!.obligation.descriptionEn">
+            {{ i18n.localize(selectedObl()!.obligation.descriptionEn, selectedObl()!.obligation.descriptionAr) }}
+          </p>
+          <div class="drawer-stats">
+            <div class="ds"><span class="ds-val">{{ selectedObl()!.controls.length }}</span><span class="ds-lbl">{{ L().controls }}</span></div>
+            <div class="ds"><span class="ds-val">{{ selectedObl()!.evidence.length }}</span><span class="ds-lbl">{{ L().evidence }}</span></div>
+            <div class="ds"><span class="ds-val">{{ selectedObl()!.findings.length }}</span><span class="ds-lbl">{{ L().openGaps }}</span></div>
+          </div>
+
+          <h4 *ngIf="selectedObl()!.controls.length">{{ L().controls }}</h4>
+          <div class="mini-list" *ngIf="selectedObl()!.controls.length">
+            <div class="ml-item" *ngFor="let c of selectedObl()!.controls">
+              <app-status-badge [status]="c.status" /> <strong>{{ c.title }}</strong>
+              <span class="ml-owner" *ngIf="c.owner">{{ c.owner }}</span>
+            </div>
+          </div>
+
+          <h4 *ngIf="selectedObl()!.evidence.length">{{ L().evidence }}</h4>
+          <div class="mini-list" *ngIf="selectedObl()!.evidence.length">
+            <div class="ml-item" *ngFor="let e of selectedObl()!.evidence">
+              <i class="pi" [class.pi-check-circle]="e.verified" [class.pi-circle]="!e.verified"
+                 [style.color]="e.verified ? '#16a34a' : '#9ca3af'"></i>
+              {{ e.title }}
+            </div>
+          </div>
+
+          <h4 *ngIf="selectedObl()!.remediationTasks?.length">{{ i18n.translate('compliance.remediationTasks') }}</h4>
+          <div class="mini-list" *ngIf="selectedObl()!.remediationTasks?.length">
+            <div class="ml-item" *ngFor="let t of selectedObl()!.remediationTasks">
+              <app-status-badge [status]="t.status" /> {{ t.title }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Coverage Matrix Dialog -->
+      <cds-modal [header]="L().coverageMatrix" [(visible)]="oblMatrixVisible" [style]="{width:'95vw',maxWidth:'1200px'}" [modal]="true">
+        <div *ngIf="oblCoverageMatrix()" class="matrix-summary">
+          <span>{{ i18n.translate('compliance.totalObligations') }}: <strong>{{ oblCoverageMatrix()!.totalObligations }}</strong></span>
+          <span>{{ i18n.translate('compliance.covered') }}: <strong>{{ oblCoverageMatrix()!.covered }}</strong></span>
+          <span>{{ L().implemented }}: <strong>{{ oblCoverageMatrix()!.implemented }}</strong></span>
+          <span>{{ L().evidence }}: <strong>{{ oblCoverageMatrix()!.withEvidence }}</strong></span>
+        </div>
+        <grc-data-table
+          [totalRecords]="(oblCoverageMatrix()?.matrix || []).length">
+          <table cdsTable aria-label="Matrix table" [value]="oblCoverageMatrix()?.matrix || []" [paginator]="true" [rows]="20"
+            styleClass="p-datatable-striped p-datatable-gridlines p-datatable-sm">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>{{ L().code }}</th>
+                <th>{{ L().obligation }}</th>
+                <th style="width:70px">{{ L().controls }}</th>
+                <th style="width:70px">{{ L().implemented }}</th>
+                <th style="width:70px">{{ L().evidence }}</th>
+                <th style="width:70px">{{ L().tested }}</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-row>
+              <tr>
+                <td><code>{{ row.obligationCode }}</code></td>
+                <td>{{ row.obligationTitle }}</td>
+                <td class="text-center">
+                  <i class="pi" [class.pi-check]="row.hasControl" [class.pi-times]="!row.hasControl"
+                     [style.color]="row.hasControl ? '#16a34a' : '#ef4444'"></i>
+                </td>
+                <td class="text-center">
+                  <i class="pi" [class.pi-check]="row.isImplemented" [class.pi-times]="!row.isImplemented"
+                     [style.color]="row.isImplemented ? '#16a34a' : '#ef4444'"></i>
+                </td>
+                <td class="text-center">
+                  <i class="pi" [class.pi-check]="row.hasEvidence" [class.pi-times]="!row.hasEvidence"
+                     [style.color]="row.hasEvidence ? '#16a34a' : '#ef4444'"></i>
+                </td>
+                <td class="text-center">
+                  <i class="pi" [class.pi-check]="row.isTested" [class.pi-times]="!row.isTested"
+                     [style.color]="row.isTested ? '#16a34a' : '#ef4444'"></i>
+                </td>
+              </tr>
+            </ng-template>
+          </table>
+        </grc-data-table>
+      </cds-modal>
+    </cds-tab>
+
+    <!-- ═══ TAB 5: GAP ASSESSMENT ═══ -->
+    <cds-tab [header]="L().gapAssessment">
+
+      <!-- Priority chips -->
+      <div class="gap-priority-row" *ngIf="gaps().length">
+        <div tabindex="0" role="button" (keyup.enter)="gapSeverityFilter = 'critical'; loadGaps()" class="priority-chip critical" (click)="gapSeverityFilter = 'critical'; loadGaps()">
+          <i class=""></i> {{ i18n.translate('compliance.critical') }}: {{ gapsByPriority().critical }}
+        </div>
+        <div tabindex="0" role="button" (keyup.enter)="gapSeverityFilter = 'high'; loadGaps()" class="priority-chip high" (click)="gapSeverityFilter = 'high'; loadGaps()">
+          <i class=""></i> {{ i18n.translate('compliance.high') }}: {{ gapsByPriority().high }}
+        </div>
+        <div tabindex="0" role="button" (keyup.enter)="gapSeverityFilter = 'medium'; loadGaps()" class="priority-chip medium" (click)="gapSeverityFilter = 'medium'; loadGaps()">
+          <i class=""></i> {{ i18n.translate('compliance.medium') }}: {{ gapsByPriority().medium }}
+        </div>
+        <div tabindex="0" role="button" (keyup.enter)="gapSeverityFilter = 'low'; loadGaps()" class="priority-chip low" (click)="gapSeverityFilter = 'low'; loadGaps()">
+          <i class=""></i> {{ i18n.translate('compliance.low') }}: {{ gapsByPriority().low }}
+        </div>
+        <div tabindex="0" role="button" (keyup.enter)="gapSeverityFilter = ''; loadGaps()" class="priority-chip all" *ngIf="gapSeverityFilter" (click)="gapSeverityFilter = ''; loadGaps()">
+          <i class=""></i> {{ i18n.translate('compliance.clear') }}
+        </div>
+      </div>
+
+      <section cdsToolbar styleClass="mb-3">
+        <ng-template pTemplate="start">
+          <cds-dropdown [options]="fwFilterOptions" [(ngModel)]="fwFilter"
+            optionLabel="label" optionValue="value"
+            [placeholder]="L().filterByFramework" [style]="{minWidth:'240px'}" (onChange)="loadGaps()" />
+        </ng-template>
+      </section>
+
+      <grc-data-table
+        [totalRecords]="gaps().length"
+        [emptyMessage]="L().emptyGaps">
+        <table cdsTable aria-label="Gaps table" [value]="gaps()" [paginator]="gaps().length > 15" [rows]="15"
+          styleClass="p-datatable-striped p-datatable-gridlines">
+          <ng-template pTemplate="header">
+            <tr>
+              <th >{{ L().severity }}</th>
+              <th>{{ L().obligation }}</th>
+              <th>{{ L().framework }}</th>
+              <th>{{ L().domain }}</th>
+              <th>{{ L().status }}</th>
+              <th style="width:180px">{{ L().action }}</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-g>
+            <tr>
+              <td><cds-tag [value]="g.severity" [style]="{background: severityColor(g.severity), color: '#fff'}" /></td>
+              <td>
+                <strong>{{ g.obligationCode || '—' }}</strong>
+                <br><small>{{ g.obligationTitle || g.title }}</small>
+              </td>
+              <td>{{ g.frameworkName || '—' }}</td>
+              <td>{{ g.domainName || '—' }}</td>
+              <td><app-status-badge [status]="g.status" /></td>
+              <td>
+                <div class="action-btns">
+                  <button cdsButton icon="" [text]="true" size="small" [cdsTooltip]="L().details" [ariaLabel]="L().details" (onClick)="openGapDetail(g.gapId)" />
+                  <button cdsButton icon="" [text]="true" size="small" [cdsTooltip]="L().createRemediation" [ariaLabel]="L().createRemediation" (onClick)="openNewRemDialog(g.gapId)" />
+                  <button cdsButton icon="" [text]="true" size="small" [cdsTooltip]="Close" ariaLabel="Close"
+                    *ngIf="g.status !== 'closed'" (onClick)="updateGapStatus(g.gapId, 'closed')" />
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </table>
+      </grc-data-table>
+
+      <!-- Gap Detail Drawer -->
+      <div class="detail-drawer" *ngIf="selectedGap()">
+        <div class="drawer-header">
+          <h3>{{ selectedGap()!.gap.obligationCode || 'Gap' }}: {{ selectedGap()!.gap.title }}</h3>
+          <button cdsButton icon="" [text]="true" ariaLabel="Close" (onClick)="closeGapDetail()" />
+        </div>
+        <div class="drawer-body">
+          <div class="drawer-stats">
+            <div class="ds"><cds-tag [value]="selectedGap()!.gap.severity" [style]="{background: severityColor(selectedGap()!.gap.severity), color: '#fff'}" /></div>
+            <div class="ds"><app-status-badge [status]="selectedGap()!.gap.status" /></div>
+          </div>
+          <p *ngIf="selectedGap()!.gap.description" class="gap-desc">{{ selectedGap()!.gap.description }}</p>
+          <div class="gap-chain">
+            <div class="gc-item" *ngIf="selectedGap()!.gap.frameworkName">
+              <span class="gc-label">{{ L().framework }}</span>
+              <span class="gc-val">{{ selectedGap()!.gap.frameworkName }}</span>
+            </div>
+            <div class="gc-item" *ngIf="selectedGap()!.gap.domainName">
+              <span class="gc-label">{{ L().domain }}</span>
+              <span class="gc-val">{{ selectedGap()!.gap.domainName }}</span>
+            </div>
+            <div class="gc-item" *ngIf="selectedGap()!.gap.obligationTitle">
+              <span class="gc-label">{{ L().obligation }}</span>
+              <span class="gc-val">{{ selectedGap()!.gap.obligationTitle }}</span>
+            </div>
+          </div>
+          <h4 *ngIf="selectedGap()!.linkedControls?.length">{{ L().controls }}</h4>
+          <div class="mini-list" *ngIf="selectedGap()!.linkedControls?.length">
+            <div class="ml-item" *ngFor="let c of selectedGap()!.linkedControls">
+              <app-status-badge [status]="c.status" /> {{ c.title }}
+            </div>
+          </div>
+          <h4 *ngIf="selectedGap()!.remediationTasks?.length">{{ i18n.translate('compliance.remediationTasks') }}</h4>
+          <div class="mini-list" *ngIf="selectedGap()!.remediationTasks?.length">
+            <div class="ml-item" *ngFor="let t of selectedGap()!.remediationTasks">
+              <app-status-badge [status]="t.status" /> {{ t.title }}
+              <span class="ml-owner" *ngIf="t.assigned_to">{{ t.assigned_to }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- New Remediation Dialog -->
+      <cds-modal [header]="L().createRemediation" [(visible)]="newRemDialogVisible" [style]="{width:'500px'}" [modal]="true">
+        <div class="rem-form">
+          <grc-form-field [label]="i18n.translate('compliance.taskTitle')">
+            <input type="text" pInputText [(ngModel)]="newRemTitle" class="w-full" />
+          </grc-form-field>
+        </div>
+        <ng-template pTemplate="footer">
+          <button cdsButton [label]="i18n.translate('compliance.create')" icon="" (onClick)="createRemediation()" />
+        </ng-template>
+      </cds-modal>
+    </cds-tab>
+
+    <!-- ═══ TAB 6: COMPLIANCE ROADMAP ═══ -->
+    <cds-tab [header]="L().roadmap">
+
+      <!-- Summary band -->
+      <div class="rm-summary" *ngIf="roadmap()">
+        <app-stat-card icon="map" [value]="roadmap()!.completionPercent + '%'"
+          [label]="L().completion" [accentColor]="scoreColor(roadmap()!.completionPercent)" />
+        <app-stat-card icon="list" [value]="roadmap()!.totalTasks"
+          [label]="L().totalTasks" accentColor="var(--primary)" />
+        <app-stat-card icon="check-circle" [value]="roadmap()!.completedTasks"
+          [label]="L().completedTasks" accentColor="var(--green-500, #22c55e)" />
+        <app-stat-card *ngIf="auditReadiness()" icon="check-square" [value]="auditReadiness()!.readinessScore + '%'"
+          [label]="L().readinessScore" [accentColor]="scoreColor(auditReadiness()!.readinessScore)" />
+      </div>
+
+      <!-- Audit readiness breakdown -->
+      <div class="ar-breakdown" *ngIf="auditReadiness()">
+        <h3 class="section-title">{{ L().auditReadiness }}</h3>
+        <div class="ar-bars">
+          <div class="ar-bar-row">
+            <span class="ar-label">{{ L().implemented }}</span>
+            <cds-progress-bar [value]="auditReadiness()!.implementedPct" [showValue]="true" styleClass="ar-bar" />
+          </div>
+          <div class="ar-bar-row">
+            <span class="ar-label">{{ L().tested }}</span>
+            <cds-progress-bar [value]="auditReadiness()!.testedPct" [showValue]="true" styleClass="ar-bar" />
+          </div>
+          <div class="ar-bar-row">
+            <span class="ar-label">{{ L().withEvidence }}</span>
+            <cds-progress-bar [value]="auditReadiness()!.evidencePct" [showValue]="true" styleClass="ar-bar" />
+          </div>
+          <div class="ar-bar-row">
+            <span class="ar-label">{{ L().fullyReady }}</span>
+            <cds-progress-bar [value]="auditReadiness()!.readinessScore" [showValue]="true" styleClass="ar-bar" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase cards -->
+      <div class="rm-phases" *ngIf="roadmap()?.phases?.length">
+        <h3 class="section-title">{{ i18n.translate('compliance.roadmapPhases') }}</h3>
+        <div class="phase-timeline">
+          <div class="phase-card" *ngFor="let phase of roadmap()!.phases; let i = index"
+               [class]="phaseStatusClass(phase)">
+            <div class="pc-num">{{ i + 1 }}</div>
+            <div class="pc-body">
+              <h4 class="pc-title">{{ i18n.localize(phase.nameEn, phase.nameAr) }}</h4>
+              <p class="pc-desc">{{ i18n.localize(phase.descriptionEn, phase.descriptionAr) }}</p>
+              <div class="pc-meta">
+                <span>{{ phase.estimatedWeeks }} {{ i18n.translate('compliance.weeks') }}</span>
+                <span>{{ phaseCompletion(phase) }}% {{ L().completion }}</span>
+              </div>
+              <cds-progress-bar [value]="phaseCompletion(phase)" [showValue]="false" styleClass="phase-bar" />
+              <div class="pc-milestones" *ngIf="phase.milestones?.length">
+                <div class="pc-ms" *ngFor="let ms of phase.milestones">
+                  <i class="pi" [class.pi-check-circle]="ms.completed" [class.pi-circle]="!ms.completed"
+                     [style.color]="ms.completed ? '#16a34a' : '#9ca3af'"></i>
+                  <span>{{ i18n.localize(ms.nameEn, ms.nameAr) }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Roadmap tasks table -->
+      <div class="section-block" *ngIf="roadmap()?.tasks?.length">
+        <h3 class="section-title">{{ L().tasks }}</h3>
+        <grc-data-table
+          [totalRecords]="roadmap()!.tasks.length">
+          <table cdsTable aria-label="Tasks table" [value]="roadmap()!.tasks" [paginator]="roadmap()!.tasks.length > 15" [rows]="15"
+            styleClass="p-datatable-striped p-datatable-gridlines p-datatable-sm">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>{{ L().phase }}</th>
+                <th>{{ i18n.translate('compliance.task') }}</th>
+                <th>{{ L().status }}</th>
+                <th>{{ i18n.translate('compliance.priority') }}</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-t>
+              <tr>
+                <td>{{ t.phaseType?.replace('_', ' ') }}</td>
+                <td>{{ i18n.localize(t.titleEn, t.titleAr) }}</td>
+                <td><app-status-badge [status]="t.status" /></td>
+                <td><app-status-badge [status]="t.priority" /></td>
+              </tr>
+            </ng-template>
+          </table>
+        </grc-data-table>
+      </div>
+
+      <!-- Empty -->
+      <div *ngIf="!roadmap() && !loading()" class="empty-state">
+        <i class=" empty-icon"></i>
+        <p>{{ L().emptyRoadmap }}</p>
+      </div>
+    </cds-tab>
+
+  </cds-tabs>
+</app-page-shell>
+<app-ai-panel module="compliance" />

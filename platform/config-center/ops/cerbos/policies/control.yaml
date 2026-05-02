@@ -1,0 +1,47 @@
+---
+apiVersion: "api.cerbos.dev/v1"
+resourcePolicy:
+  version: "1"
+  resource: "control"
+  importDerivedRoles:
+    - dogan_common
+
+  rules:
+    - actions: ["control.view", "control.list"]
+      effect: EFFECT_ALLOW
+      derivedRoles: ["tenant_member", "auditor_readonly", "platform_admin"]
+
+    - actions: ["control.create", "control.update"]
+      effect: EFFECT_ALLOW
+      roles: ["control_editor", "control_admin", "tenant_admin", "platform_admin"]
+      condition:
+        match:
+          expr: request.principal.attr.tenantId == request.resource.attr.tenantId
+
+    - actions: ["control.test_result.record"]
+      effect: EFFECT_ALLOW
+      roles: ["control_tester", "control_editor", "control_admin"]
+      condition:
+        match:
+          expr: request.principal.attr.tenantId == request.resource.attr.tenantId
+
+    # Sign-off — SoD: tester cannot be reviewer
+    - actions: ["control.sign_off"]
+      effect: EFFECT_ALLOW
+      derivedRoles: ["approver"]
+      condition:
+        match:
+          all:
+            of:
+              - expr: request.resource.attr.status == "tested"
+              - expr: request.principal.id != request.resource.attr.testedBy
+
+    - actions: ["control.sign_off"]
+      effect: EFFECT_DENY
+      roles: ["*"]
+      condition:
+        match:
+          expr: request.principal.id == request.resource.attr.testedBy
+      output:
+        when:
+          ruleActivated: '"DAUTH_DENY_SOD_SELF_APPROVAL"'

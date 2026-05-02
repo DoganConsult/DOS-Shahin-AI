@@ -1,0 +1,36 @@
+{
+  "version": "1.0.0",
+  "displayName": "Analytics & Reporting Service",
+  "serviceCode": "analytics-reporting-service",
+  "layer": "domain",
+  "ownerTeam": "analytics-team",
+  "domains": [
+    "governance",
+    "analytics",
+    "reporting"
+  ],
+  "dependsOn": [
+    "auth-service",
+    "tenant-service",
+    "audit-service"
+  ],
+  "modules": [
+    "analytics",
+    "reporting"
+  ],
+  "apiPrefix": "/api/core/analytics",
+  "exposes": {
+    "apiBase": "/api/core/analytics",
+    "events": [
+      "analytics.report.generated",
+      "analytics.report.scheduled",
+      "analytics.report.exported",
+      "analytics.dashboard.created",
+      "analytics.kpi.threshold.breached",
+      "reporting.report.created",
+      "reporting.report.finalized",
+      "reporting.report.distributed"
+    ]
+  },
+  "dependencies": []
+}

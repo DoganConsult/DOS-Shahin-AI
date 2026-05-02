@@ -1,0 +1,175 @@
+{
+  "foundation": {
+    "module": {
+      "title": "Foundation"
+    },
+    "nav": {
+      "overview": "Overview",
+      "organization": "Organization",
+      "businessUnits": "Business Units",
+      "departments": "Departments",
+      "teams": "Teams",
+      "users": "Users",
+      "roles": "Roles",
+      "positions": "Positions",
+      "locations": "Locations",
+      "committees": "Committees",
+      "delegations": "Delegations",
+      "policies": "Policies",
+      "audit": "Audit",
+      "settings": "Settings",
+      "permissionMatrix": "Permission Matrix"
+    },
+    "actions": {
+      "create": "Create",
+      "edit": "Edit",
+      "delete": "Delete",
+      "approve": "Approve",
+      "reject": "Reject",
+      "save": "Save",
+      "cancel": "Cancel",
+      "search": "Search",
+      "filter": "Filter",
+      "export": "Export",
+      "import": "Import",
+      "assign": "Assign",
+      "revoke": "Revoke"
+    },
+    "positions": {
+      "add": "Add Position",
+      "edit": "Edit Position",
+      "new": "New Position",
+      "empty": "No positions found.",
+      "searchPlaceholder": "Search positions…",
+      "titleEn": "Title (EN)",
+      "titleAr": "Title (AR)",
+      "grade": "Grade",
+      "department": "Department",
+      "actions": "Actions",
+      "saving": "Saving…"
+    },
+    "overview": {
+      "title": "Foundation — Overview",
+      "subtitle": "Command center for organisation, users, roles and access.",
+      "live": "Live",
+      "signatureWidget": "Signature widget",
+      "views": "Views",
+      "view": {
+        "commandCenter": "Command Center",
+        "recent": "Recent activity"
+      },
+      "partial": "Some Foundation data could not be loaded. Refresh the page or continue setting up your organisation.",
+      "partial.details": "Show affected sections",
+      "commandCenter": "Foundation Command Center",
+      "dataSource": "Data source",
+      "dataSourceLabel": "Workspace overview",
+      "whyContractValue": "Foundation dashboard page",
+      "empty": {
+        "title": "No data yet",
+        "body": "Set up the organisation and units to see Foundation KPIs.",
+        "recent": "No recent activity."
+      },
+      "contextRail": "Context rail",
+      "agent": "AI agent",
+      "agent.open": "Open agent",
+      "agent.close": "Close agent",
+      "openCount": "Open",
+      "nba": "Next-best action",
+      "nba.empty": "No recommended actions right now.",
+      "nba.createOrg": "Create the parent organisation to start your hierarchy",
+      "nba.createDept": "Add core departments to cover the structure",
+      "nba.inviteUsers": "Invite your first users to the workspace",
+      "nba.fixOwnership": "Resolve ownership gaps across entities",
+      "whyAmISeeing": "Why am I seeing this?",
+      "whyProfile": "Your profile",
+      "whyProfileUnknown": "Unknown",
+      "whyDataScope": "Data scope",
+      "whyContract": "Page contract",
+      "accessDeniedTitle": "You don't have access to this page",
+      "accessDeniedBody": "Contact your workspace administrator to request access.",
+      "activity": "activity"
+    },
+    "intent": {
+      "monitor": "Monitor",
+      "manage": "Manage",
+      "review": "Review",
+      "approve": "Approve",
+      "investigate": "Investigate",
+      "configure": "Configure",
+      "report": "Report"
+    },
+    "rail": {
+      "workQueue": "Work queue",
+      "approvals": "Approvals",
+      "aiPulse": "AI pulse",
+      "recentActivity": "Recent activity"
+    },
+    "warn": {
+      "invitations": "Invitations"
+    },
+    "priority": {
+      "critical": "Critical",
+      "attention": "Attention",
+      "recommended": "Recommended"
+    },
+    "kpi": {
+      "users": {
+        "total": "Users"
+      },
+      "departments": {
+        "total": "Departments"
+      },
+      "teams": {
+        "total": "Teams"
+      },
+      "vacancies": "Vacancies",
+      "complianceRate": "Compliance %",
+      "ownership": {
+        "gaps": "Ownership gaps"
+      }
+    },
+    "delegations": {
+      "empty": "No delegations found.",
+      "delegator": "Delegator",
+      "delegate": "Delegate",
+      "type": "Type",
+      "scope": "Scope",
+      "expires": "Expires",
+      "noExpiry": "No expiry",
+      "actions": "Actions"
+    },
+    "fields": {
+      "nameEn": "Name (English)",
+      "nameAr": "Name (Arabic)",
+      "code": "Code",
+      "status": "Status",
+      "owner": "Owner",
+      "parent": "Parent",
+      "createdAt": "Created at",
+      "updatedAt": "Updated at"
+    },
+    "status": {
+      "draft": "Draft",
+      "in_review": "In review",
+      "approved": "Approved",
+      "published": "Published",
+      "active": "Active",
+      "inactive": "Inactive",
+      "vacant": "Vacant",
+      "expired": "Expired",
+      "pending": "Pending",
+      "suspended": "Suspended",
+      "archived": "Archived"
+    },
+    "errors": {
+      "FOUNDATION_ENTITY_NOT_FOUND": "The requested record was not found.",
+      "FOUNDATION_ENTITY_CONFLICT": "A record with the same code already exists.",
+      "FOUNDATION_HIERARCHY_CYCLE": "This change would create a hierarchy cycle.",
+      "FOUNDATION_PARENT_NOT_FOUND": "Parent record not found.",
+      "FOUNDATION_CODE_DUPLICATE": "This code is already used.",
+      "FOUNDATION_STATUS_TRANSITION_INVALID": "Invalid status transition.",
+      "TENANT_CONTEXT_MISSING": "Tenant context is missing.",
+      "VALIDATION_FAILED": "Validation failed."
+    }
+  }
+}

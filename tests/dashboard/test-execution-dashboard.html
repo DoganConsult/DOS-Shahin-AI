@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Execution Dashboard | DOS-AIO</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+  <style>
+    :root {
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --bg-card: #334155;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --accent-blue: #3b82f6;
+      --accent-green: #22c55e;
+      --accent-red: #ef4444;
+      --accent-yellow: #eab308;
+      --accent-purple: #a855f7;
+      --border-color: #475569;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .status-badge {
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .status-pass {
+      background: rgba(34, 197, 94, 0.2);
+      color: var(--accent-green);
+      border: 1px solid var(--accent-green);
+    }
+
+    .status-fail {
+      background: rgba(239, 68, 68, 0.2);
+      color: var(--accent-red);
+      border: 1px solid var(--accent-red);
+    }
+
+    .status-partial {
+      background: rgba(234, 179, 8, 0.2);
+      color: var(--accent-yellow);
+      border: 1px solid var(--accent-yellow);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .card {
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      padding: 24px;
+      border: 1px solid var(--border-color);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .metric-value {
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .metric-label {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    .metric-trend {
+      font-size: 12px;
+      margin-top: 8px;
+    }
+
+    .trend-up {
+      color: var(--accent-green);
+    }
+
+    .trend-down {
+      color: var(--accent-red);
+    }
+
+    .chart-container {
+      position: relative;
+      height: 250px;
+      margin-top: 16px;
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: var(--bg-card);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 12px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+
+    .progress-green {
+      background: linear-gradient(90deg, var(--accent-green), #4ade80);
+    }
+
+    .progress-yellow {
+      background: linear-gradient(90deg, var(--accent-yellow), #facc15);
+    }
+
+    .progress-red {
+      background: linear-gradient(90deg, var(--accent-red), #f87171);
+    }
+
+    .table-container {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+    }
+
+    th, td {
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    th {
+      font-weight: 600;
+      color: var(--text-secondary);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    td {
+      font-size: 14px;
+    }
+
+    .test-pass {
+      color: var(--accent-green);
+    }
+
+    .test-fail {
+      color: var(--accent-red);
+    }
+
+    .test-skip {
+      color: var(--accent-yellow);
+    }
+
+    .coverage-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .coverage-item {
+      background: var(--bg-card);
+      padding: 16px;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .coverage-value {
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .coverage-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    .timestamp {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 8px;
+    }
+
+    .refresh-btn {
+      background: var(--accent-blue);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+
+    .refresh-btn:hover {
+      background: #2563eb;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>📊 Test Execution Dashboard</h1>
+    <div>
+      <span id="lastUpdated" class="timestamp"></span>
+      <button class="refresh-btn" onclick="refreshDashboard()">🔄 Refresh</button>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Total Tests</span>
+        <span id="totalStatus" class="status-badge status-pass">PASS</span>
+      </div>
+      <div class="metric-value" id="totalTests">0</div>
+      <div class="metric-label">Tests Executed</div>
+      <div class="progress-bar">
+        <div id="totalProgress" class="progress-fill progress-green" style="width: 0%"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Pass Rate</span>
+      </div>
+      <div class="metric-value" id="passRate">0%</div>
+      <div class="metric-label">Overall Success Rate</div>
+      <div class="progress-bar">
+        <div id="passRateProgress" class="progress-fill progress-green" style="width: 0%"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Coverage</span>
+      </div>
+      <div class="metric-value" id="coverage">0%</div>
+      <div class="metric-label">Code Coverage</div>
+      <div class="progress-bar">
+        <div id="coverageProgress" class="progress-fill progress-green" style="width: 0%"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Execution Time</span>
+      </div>
+      <div class="metric-value" id="execTime">0s</div>
+      <div class="metric-label">Total Duration</div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Test Results Over Time</span>
+      </div>
+      <div class="chart-container">
+        <canvas id="testResultsChart"></canvas>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Coverage Trends</span>
+      </div>
+      <div class="chart-container">
+        <canvas id="coverageChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Coverage by Module</span>
+      </div>
+      <div class="coverage-grid" id="coverageGrid">
+        <div class="coverage-item">
+          <div class="coverage-value" style="color: var(--accent-green)">--</div>
+          <div class="coverage-label">Foundation</div>
+        </div>
+        <div class="coverage-item">
+          <div class="coverage-value" style="color: var(--accent-green)">--</div>
+          <div class="coverage-label">Governance</div>
+        </div>
+        <div class="coverage-item">
+          <div class="coverage-value" style="color: var(--accent-green)">--</div>
+          <div class="coverage-label">Risk</div>
+        </div>
+        <div class="coverage-item">
+          <div class="coverage-value" style="color: var(--accent-green)">--</div>
+          <div class="coverage-label">Compliance</div>
+        </div>
+        <div class="coverage-item">
+          <div class="coverage-value" style="color: var(--accent-green)">--</div>
+          <div class="coverage-label">Audit</div>
+        </div>
+        <div class="coverage-item">
+          <div class="coverage-value" style="color: var(--accent-green)">--</div>
+          <div class="coverage-label">Policy</div>
+        </div>
+        <div class="coverage-item">
+          <div class="coverage-value" style="color: var(--accent-green)">--</div>
+          <div class="coverage-label">AI</div>
+        </div>
+        <div class="coverage-item">
+          <div class="coverage-value" style="color: var(--accent-green)">--</div>
+          <div class="coverage-label">Platform</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Failure Breakdown</span>
+      </div>
+      <div class="chart-container">
+        <canvas id="failureChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Recent Test Failures</span>
+    </div>
+    <div class="table-container">
+      <table id="failuresTable">
+        <thead>
+          <tr>
+            <th>Test File</th>
+            <th>Test Name</th>
+            <th>Module</th>
+            <th>Error Type</th>
+            <th>Duration</th>
+            <th>Timestamp</th>
+          </tr>
+        </thead>
+        <tbody id="failuresBody">
+          <tr>
+            <td colspan="6" style="text-align: center; color: var(--text-secondary)">No failures recorded</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    let testResultsChart = null;
+    let coverageChart = null;
+    let failureChart = null;
+
+    async function loadTestData() {
+      try {
+        const response = await fetch('./coverage/test-results.json');
+        const data = await response.json();
+        updateDashboard(data);
+      } catch (error) {
+        console.log('No test results found - running in preview mode');
+        showPreviewData();
+      }
+    }
+
+    function showPreviewData() {
+      document.getElementById('totalTests').textContent = '2,649';
+      document.getElementById('passRate').textContent = '94.2%';
+      document.getElementById('coverage').textContent = '78%';
+      document.getElementById('execTime').textContent = '45m 23s';
+
+      updateProgressBar('totalProgress', 94.2, 85);
+      updateProgressBar('passRateProgress', 94.2, 85);
+      updateProgressBar('coverageProgress', 78, 85);
+
+      document.getElementById('lastUpdated').textContent = 'Preview Mode - No Live Data';
+    }
+
+    function updateDashboard(data) {
+      const total = data.numTotalTests || 0;
+      const passed = data.numPassedTests || 0;
+      const failed = data.numFailedTests || 0;
+      const skipped = data.numSkippedTests || 0;
+      const passRate = total > 0 ? ((passed / total) * 100).toFixed(1) : 0;
+
+      document.getElementById('totalTests').textContent = total.toLocaleString();
+      document.getElementById('passRate').textContent = passRate + '%';
+      document.getElementById('execTime').textContent = formatDuration(data.testTime || 0);
+
+      const statusEl = document.getElementById('totalStatus');
+      if (passRate >= 95) {
+        statusEl.className = 'status-badge status-pass';
+        statusEl.textContent = 'PASS';
+      } else if (passRate >= 80) {
+        statusEl.className = 'status-badge status-partial';
+        statusEl.textContent = 'PARTIAL';
+      } else {
+        statusEl.className = 'status-badge status-fail';
+        statusEl.textContent = 'FAIL';
+      }
+
+      updateProgressBar('totalProgress', passRate, 85);
+      updateProgressBar('passRateProgress', passRate, 85);
+
+      document.getElementById('lastUpdated').textContent = 'Last updated: ' + new Date().toLocaleString();
+    }
+
+    function updateProgressBar(id, value, threshold) {
+      const el = document.getElementById(id);
+      el.style.width = Math.min(value, 100) + '%';
+      if (value >= threshold) {
+        el.className = 'progress-fill progress-green';
+      } else if (value >= threshold - 10) {
+        el.className = 'progress-fill progress-yellow';
+      } else {
+        el.className = 'progress-fill progress-red';
+      }
+    }
+
+    function formatDuration(ms) {
+      if (ms < 1000) return ms + 'ms';
+      const seconds = Math.floor(ms / 1000);
+      if (seconds < 60) return seconds + 's';
+      const minutes = Math.floor(seconds / 60);
+      const remainingSeconds = seconds % 60;
+      if (minutes < 60) return minutes + 'm ' + remainingSeconds + 's';
+      const hours = Math.floor(minutes / 60);
+      return hours + 'h ' + (minutes % 60) + 'm';
+    }
+
+    function refreshDashboard() {
+      location.reload();
+    }
+
+    function initCharts() {
+      const testResultsCtx = document.getElementById('testResultsChart').getContext('2d');
+      testResultsChart = new Chart(testResultsCtx, {
+        type: 'line',
+        data: {
+          labels: [],
+          datasets: [
+            {
+              label: 'Passed',
+              data: [],
+              borderColor: '#22c55e',
+              backgroundColor: 'rgba(34, 197, 94, 0.1)',
+              fill: true,
+            },
+            {
+              label: 'Failed',
+              data: [],
+              borderColor: '#ef4444',
+              backgroundColor: 'rgba(239, 68, 68, 0.1)',
+              fill: true,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'top',
+              labels: { color: '#94a3b8' },
+            },
+          },
+          scales: {
+            x: {
+              grid: { color: '#334155' },
+              ticks: { color: '#94a3b8' },
+            },
+            y: {
+              grid: { color: '#334155' },
+              ticks: { color: '#94a3b8' },
+            },
+          },
+        },
+      });
+
+      const coverageCtx = document.getElementById('coverageChart').getContext('2d');
+      coverageChart = new Chart(coverageCtx, {
+        type: 'line',
+        data: {
+          labels: [],
+          datasets: [
+            {
+              label: 'Lines',
+              data: [],
+              borderColor: '#3b82f6',
+              tension: 0.3,
+            },
+            {
+              label: 'Functions',
+              data: [],
+              borderColor: '#a855f7',
+              tension: 0.3,
+            },
+            {
+              label: 'Branches',
+              data: [],
+              borderColor: '#22c55e',
+              tension: 0.3,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'top',
+              labels: { color: '#94a3b8' },
+            },
+          },
+          scales: {
+            x: {
+              grid: { color: '#334155' },
+              ticks: { color: '#94a3b8' },
+            },
+            y: {
+              grid: { color: '#334155' },
+              ticks: { color: '#94a3b8' },
+              min: 0,
+              max: 100,
+            },
+          },
+        },
+      });
+
+      const failureCtx = document.getElementById('failureChart').getContext('2d');
+      failureChart = new Chart(failureCtx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Type Errors', 'Assertion Failures', 'Timeout', 'Network'],
+          datasets: [
+            {
+              data: [0, 0, 0, 0],
+              backgroundColor: ['#ef4444', '#f97316', '#eab308', '#8b5cf6'],
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'right',
+              labels: { color: '#94a3b8' },
+            },
+          },
+        },
+      });
+    }
+
+    initCharts();
+    loadTestData();
+    setInterval(loadTestData, 60000);
+  </script>
+</body>
+</html>

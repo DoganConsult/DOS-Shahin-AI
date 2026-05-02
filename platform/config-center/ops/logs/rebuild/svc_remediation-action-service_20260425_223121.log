@@ -1,0 +1,4 @@
+
+> @dos/remediation-action-service@0.1.0 build /root/DOS-AIO/services/remediation-action-service
+> tsc -p tsconfig.json
+

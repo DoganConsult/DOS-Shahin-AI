@@ -1,0 +1,309 @@
+<!-- Controls Admin — Administrative Configuration (7 Tabs) -->
+<div class="controls-admin" [attr.dir]="dir()">
+
+  <!-- Loading State -->
+  @if (loading()) {
+    <app-skeleton-loader variant="card" />
+    <app-skeleton-loader variant="detail" />
+  }
+
+  <!-- Error State -->
+  @if (!loading() && error()) {
+    <app-empty-state
+      variant="error"
+      [title]="isAr() ? 'فشل تحميل إعدادات الإدارة' : 'Failed to load admin settings'"
+      [description]="isAr() ? 'تحقق من الاتصال وحاول مرة أخرى' : 'Check your connection and try again'"
+      [actionLabel]="isAr() ? 'إعادة المحاولة' : 'Retry'"
+      [dir]="dir()"
+      (action)="loadData()" />
+  }
+
+  <!-- Loaded Content -->
+  @if (!loading() && !error()) {
+    <p-tabView [(activeIndex)]="activeTabIndex">
+
+      <!-- Tab 1: Taxonomy -->
+      <p-tabPanel [header]="isAr() ? 'التصنيف' : 'Taxonomy'">
+        <div class="tab-content">
+          <div class="tab-header-row">
+            <h3 class="tab-title">{{ isAr() ? 'عائلات وفئات الضوابط' : 'Control Families & Categories' }}</h3>
+          </div>
+          @if (taxonomyNodes().length) {
+            <p-tree [value]="taxonomyNodes()" [filter]="true"
+              [filterPlaceholder]="isAr() ? 'بحث...' : 'Search...'"
+              styleClass="taxonomy-tree">
+            </p-tree>
+          } @else {
+            <app-empty-state
+              [title]="isAr() ? 'لا توجد عائلات ضوابط' : 'No control families configured'"
+              [description]="isAr() ? 'أضف عائلات وفئات لتنظيم الضوابط' : 'Add families and categories to organize controls'"
+              [dir]="dir()" />
+          }
+        </div>
+      </p-tabPanel>
+
+      <!-- Tab 2: Test Templates -->
+      <p-tabPanel [header]="isAr() ? 'قوالب الاختبار' : 'Test Templates'">
+        <div class="tab-content">
+          <grc-data-table
+            [title]="isAr() ? 'قوالب الاختبار' : 'Test Templates'"
+            [totalRecords]="testTemplates().length"
+            [loading]="false"
+            [emptyMessage]="isAr() ? 'لا توجد قوالب' : 'No test templates'">
+            @if (testTemplates().length) {
+              <p-table
+                [value]="testTemplates()"
+                [paginator]="true"
+                [rows]="10"
+                styleClass="p-datatable-sm p-datatable-striped"
+                [attr.aria-label]="isAr() ? 'جدول قوالب الاختبار' : 'Test Templates Table'">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th>{{ isAr() ? 'الاسم' : 'Name' }}</th>
+                    <th>{{ isAr() ? 'نوع الاختبار' : 'Test Type' }}</th>
+                    <th>{{ isAr() ? 'المنهجية' : 'Methodology' }}</th>
+                    <th>{{ isAr() ? 'الوصف' : 'Description' }}</th>
+                    <th>{{ isAr() ? 'نشط' : 'Active' }}</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-tmpl>
+                  <tr>
+                    <td class="font-semibold">{{ tmpl.name }}</td>
+                    <td>{{ tmpl.testType }}</td>
+                    <td>{{ tmpl.methodology }}</td>
+                    <td class="truncate-cell">{{ tmpl.description || '\u2014' }}</td>
+                    <td>
+                      <span class="active-dot" [class.active-dot--on]="tmpl.active" [class.active-dot--off]="!tmpl.active">
+                        {{ tmpl.active ? (isAr() ? 'نعم' : 'Yes') : (isAr() ? 'لا' : 'No') }}
+                      </span>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            }
+          </grc-data-table>
+        </div>
+      </p-tabPanel>
+
+      <!-- Tab 3: Scoring Rules -->
+      <p-tabPanel [header]="isAr() ? 'قواعد التقييم' : 'Scoring Rules'">
+        <div class="tab-content">
+          <h3 class="tab-title">{{ isAr() ? 'تكوين تقييم الفعالية' : 'Effectiveness Scoring Configuration' }}</h3>
+          <div class="settings-grid">
+            <grc-form-field [label]="isAr() ? 'وزن التصميم (%)' : 'Design Weight (%)'">
+              <p-inputNumber
+                [ngModel]="scoringRules().designWeight"
+                (ngModelChange)="updateSetting('scoringRules', 'designWeight', $event)"
+                [min]="0" [max]="100" [showButtons]="true"
+                styleClass="w-full" />
+            </grc-form-field>
+            <grc-form-field [label]="isAr() ? 'وزن التشغيل (%)' : 'Operating Weight (%)'">
+              <p-inputNumber
+                [ngModel]="scoringRules().operatingWeight"
+                (ngModelChange)="updateSetting('scoringRules', 'operatingWeight', $event)"
+                [min]="0" [max]="100" [showButtons]="true"
+                styleClass="w-full" />
+            </grc-form-field>
+            <grc-form-field [label]="isAr() ? 'حد النجاح (%)' : 'Passing Threshold (%)'">
+              <p-inputNumber
+                [ngModel]="scoringRules().passingThreshold"
+                (ngModelChange)="updateSetting('scoringRules', 'passingThreshold', $event)"
+                [min]="0" [max]="100" [showButtons]="true"
+                styleClass="w-full" />
+            </grc-form-field>
+            <grc-form-field [label]="isAr() ? 'مضاعف الحرج' : 'Critical Multiplier'">
+              <p-inputNumber
+                [ngModel]="scoringRules().criticalMultiplier"
+                (ngModelChange)="updateSetting('scoringRules', 'criticalMultiplier', $event)"
+                [min]="1" [max]="5" [minFractionDigits]="1"
+                styleClass="w-full" />
+            </grc-form-field>
+          </div>
+          <div class="tab-actions">
+            <button pButton
+              class="p-button-primary"
+              [label]="isAr() ? 'حفظ' : 'Save'"
+              icon="pi pi-save"
+              [loading]="saving()"
+              (click)="saveScoringRules()">
+            </button>
+          </div>
+        </div>
+      </p-tabPanel>
+
+      <!-- Tab 4: Certification Settings -->
+      <p-tabPanel [header]="isAr() ? 'إعدادات الشهادات' : 'Certification Settings'">
+        <div class="tab-content">
+          <h3 class="tab-title">{{ isAr() ? 'إعدادات حملة الشهادات الافتراضية' : 'Default Campaign Settings' }}</h3>
+          <div class="settings-grid">
+            <grc-form-field [label]="isAr() ? 'مدة الحملة (أيام)' : 'Campaign Duration (days)'">
+              <p-inputNumber
+                [ngModel]="certificationDefaults().defaultDurationDays"
+                (ngModelChange)="updateSetting('certificationSettings', 'defaultDurationDays', $event)"
+                [min]="1" [max]="365" [showButtons]="true"
+                styleClass="w-full" />
+            </grc-form-field>
+            <grc-form-field [label]="isAr() ? 'تذكير قبل (أيام)' : 'Reminder Before (days)'">
+              <p-inputNumber
+                [ngModel]="certificationDefaults().reminderBeforeDays"
+                (ngModelChange)="updateSetting('certificationSettings', 'reminderBeforeDays', $event)"
+                [min]="1" [max]="30" [showButtons]="true"
+                styleClass="w-full" />
+            </grc-form-field>
+            <grc-form-field [label]="isAr() ? 'تكرار التذكير (أيام)' : 'Reminder Frequency (days)'">
+              <p-inputNumber
+                [ngModel]="certificationDefaults().reminderFrequencyDays"
+                (ngModelChange)="updateSetting('certificationSettings', 'reminderFrequencyDays', $event)"
+                [min]="1" [max]="14" [showButtons]="true"
+                styleClass="w-full" />
+            </grc-form-field>
+            <grc-form-field [label]="isAr() ? 'إغلاق تلقائي عند الانتهاء' : 'Auto-close on Expiry'">
+              <p-inputSwitch
+                [ngModel]="certificationDefaults().autoCloseOnExpiry"
+                (ngModelChange)="updateSetting('certificationSettings', 'autoCloseOnExpiry', $event)" />
+            </grc-form-field>
+          </div>
+          <div class="tab-actions">
+            <button pButton
+              class="p-button-primary"
+              [label]="isAr() ? 'حفظ' : 'Save'"
+              icon="pi pi-save"
+              [loading]="saving()"
+              (click)="saveCertificationSettings()">
+            </button>
+          </div>
+        </div>
+      </p-tabPanel>
+
+      <!-- Tab 5: Monitoring Rules -->
+      <p-tabPanel [header]="isAr() ? 'قواعد المراقبة' : 'Monitoring Rules'">
+        <div class="tab-content">
+          <h3 class="tab-title">{{ isAr() ? 'تكوين المراقبة العالمية' : 'Global Monitoring Configuration' }}</h3>
+          <div class="settings-grid">
+            <grc-form-field [label]="isAr() ? 'فترة الفحص الافتراضية (دقائق)' : 'Default Check Interval (min)'">
+              <p-inputNumber
+                [ngModel]="monitoringDefaults().defaultCheckIntervalMinutes"
+                (ngModelChange)="updateSetting('monitoringSettings', 'defaultCheckIntervalMinutes', $event)"
+                [min]="5" [max]="1440" [showButtons]="true"
+                styleClass="w-full" />
+            </grc-form-field>
+            <grc-form-field [label]="isAr() ? 'الاحتفاظ بالتنبيهات (أيام)' : 'Alert Retention (days)'">
+              <p-inputNumber
+                [ngModel]="monitoringDefaults().alertRetentionDays"
+                (ngModelChange)="updateSetting('monitoringSettings', 'alertRetentionDays', $event)"
+                [min]="7" [max]="730" [showButtons]="true"
+                styleClass="w-full" />
+            </grc-form-field>
+            <grc-form-field [label]="isAr() ? 'إنشاء مشكلة تلقائيًا للحرج' : 'Auto-create Issue on Critical'">
+              <p-inputSwitch
+                [ngModel]="monitoringDefaults().autoCreateIssueOnCritical"
+                (ngModelChange)="updateSetting('monitoringSettings', 'autoCreateIssueOnCritical', $event)" />
+            </grc-form-field>
+          </div>
+          <div class="tab-actions">
+            <button pButton
+              class="p-button-primary"
+              [label]="isAr() ? 'حفظ' : 'Save'"
+              icon="pi pi-save"
+              [loading]="saving()"
+              (click)="saveMonitoringSettings()">
+            </button>
+          </div>
+        </div>
+      </p-tabPanel>
+
+      <!-- Tab 6: Evidence Rules -->
+      <p-tabPanel [header]="isAr() ? 'قواعد الأدلة' : 'Evidence Rules'">
+        <div class="tab-content">
+          <h3 class="tab-title">{{ isAr() ? 'متطلبات نوع الأدلة' : 'Evidence Type Requirements' }}</h3>
+          <div class="settings-grid">
+            <grc-form-field [label]="isAr() ? 'الحد الأقصى لحجم الملف (ميجابايت)' : 'Max File Size (MB)'">
+              <p-inputNumber
+                [ngModel]="evidenceRules().maxFileSizeMb"
+                (ngModelChange)="updateSetting('evidenceRules', 'maxFileSizeMb', $event)"
+                [min]="1" [max]="100" [showButtons]="true"
+                styleClass="w-full" />
+            </grc-form-field>
+            <grc-form-field [label]="isAr() ? 'الاحتفاظ بالأدلة (أيام)' : 'Evidence Retention (days)'">
+              <p-inputNumber
+                [ngModel]="evidenceRules().retentionDays"
+                (ngModelChange)="updateSetting('evidenceRules', 'retentionDays', $event)"
+                [min]="30" [max]="3650" [showButtons]="true"
+                styleClass="w-full" />
+            </grc-form-field>
+            <grc-form-field [label]="isAr() ? 'التجميع التلقائي' : 'Auto-collection Enabled'">
+              <p-inputSwitch
+                [ngModel]="evidenceRules().autoCollectionEnabled"
+                (ngModelChange)="updateSetting('evidenceRules', 'autoCollectionEnabled', $event)" />
+            </grc-form-field>
+          </div>
+          <div class="required-types-section">
+            <h4 class="section-label">{{ isAr() ? 'الأنواع المطلوبة' : 'Required Types' }}</h4>
+            <div class="tag-list">
+              @for (t of evidenceRules().requiredTypes || []; track t) {
+                <span class="type-tag">{{ t }}</span>
+              }
+              @if (!(evidenceRules().requiredTypes || []).length) {
+                <span class="text-muted">{{ isAr() ? 'لم يتم تعيين أنواع' : 'No types configured' }}</span>
+              }
+            </div>
+          </div>
+          <div class="tab-actions">
+            <button pButton
+              class="p-button-primary"
+              [label]="isAr() ? 'حفظ' : 'Save'"
+              icon="pi pi-save"
+              [loading]="saving()"
+              (click)="saveEvidenceRules()">
+            </button>
+          </div>
+        </div>
+      </p-tabPanel>
+
+      <!-- Tab 7: Retention -->
+      <p-tabPanel [header]="isAr() ? 'الاحتفاظ' : 'Retention'">
+        <div class="tab-content">
+          <h3 class="tab-title">{{ isAr() ? 'إعدادات سياسة الاحتفاظ بالبيانات' : 'Data Retention Policy Settings' }}</h3>
+          <div class="settings-grid">
+            <grc-form-field [label]="isAr() ? 'نتائج الاختبار (أيام)' : 'Test Results (days)'">
+              <p-inputNumber
+                [ngModel]="retentionSettings().testResultsDays"
+                (ngModelChange)="updateSetting('retention', 'testResultsDays', $event)"
+                [min]="90" [max]="7300" [showButtons]="true"
+                styleClass="w-full" />
+            </grc-form-field>
+            <grc-form-field [label]="isAr() ? 'التنبيهات (أيام)' : 'Alerts (days)'">
+              <p-inputNumber
+                [ngModel]="retentionSettings().alertsDays"
+                (ngModelChange)="updateSetting('retention', 'alertsDays', $event)"
+                [min]="30" [max]="3650" [showButtons]="true"
+                styleClass="w-full" />
+            </grc-form-field>
+            <grc-form-field [label]="isAr() ? 'سجل التدقيق (أيام)' : 'Audit Log (days)'">
+              <p-inputNumber
+                [ngModel]="retentionSettings().auditLogDays"
+                (ngModelChange)="updateSetting('retention', 'auditLogDays', $event)"
+                [min]="365" [max]="7300" [showButtons]="true"
+                styleClass="w-full" />
+            </grc-form-field>
+            <grc-form-field [label]="isAr() ? 'الأرشفة مفعلة' : 'Archive Enabled'">
+              <p-inputSwitch
+                [ngModel]="retentionSettings().archiveEnabled"
+                (ngModelChange)="updateSetting('retention', 'archiveEnabled', $event)" />
+            </grc-form-field>
+          </div>
+          <div class="tab-actions">
+            <button pButton
+              class="p-button-primary"
+              [label]="isAr() ? 'حفظ' : 'Save'"
+              icon="pi pi-save"
+              [loading]="saving()"
+              (click)="saveRetentionSettings()">
+            </button>
+          </div>
+        </div>
+      </p-tabPanel>
+
+    </p-tabView>
+  }
+</div>

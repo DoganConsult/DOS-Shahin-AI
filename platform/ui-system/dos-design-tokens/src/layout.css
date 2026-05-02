@@ -1,0 +1,23 @@
+:root {
+  --dos-header-height-mobile: 56px;
+  --dos-header-height-desktop: 64px;
+  --dos-bottom-nav-height: 64px;
+  --dos-sidebar-width: 264px;
+  --dos-sidebar-width-collapsed: 72px;
+
+  --dos-touch-target-min: 44px;
+
+  --dos-safe-top: env(safe-area-inset-top, 0px);
+  --dos-safe-bottom: env(safe-area-inset-bottom, 0px);
+
+  --dos-z-base: 0;
+  --dos-z-sticky: 100;
+  --dos-z-fixed: 200;
+  --dos-z-overlay: 300;
+  --dos-z-modal: 400;
+  --dos-z-toast: 500;
+}
+
+html, body {
+  min-height: 100dvh;
+}

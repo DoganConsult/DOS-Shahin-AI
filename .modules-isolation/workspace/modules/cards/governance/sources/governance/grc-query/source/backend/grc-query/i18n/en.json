@@ -1,0 +1,11 @@
+{
+  "grc-query.title": "GrcQuery",
+  "grc-query.dashboard": "GrcQuery Dashboard",
+  "grc-query.empty.title": "No records found",
+  "grc-query.empty.description": "Create your first grc-query record to get started.",
+  "grc-query.loading": "Loading grc-query data...",
+  "grc-query.error.title": "Failed to load data",
+  "grc-query.error.retry": "Retry",
+  "grc-query.create": "Create New",
+  "grc-query.diagnostics": "Diagnostics"
+}

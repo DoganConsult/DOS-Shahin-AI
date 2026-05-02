@@ -1,0 +1,315 @@
+<p-toast />
+    <app-page-header
+      titleEn="AI Workflow Supervisor" titleAr="مشرف سير العمل الذكي"
+      subtitleEn="Unified 3-Level Workflow Operations Control" subtitleAr="لوحة تحكم عمليات سير العمل الموحدة"
+      icon="shield" [breadcrumbs]="['Workflows', 'Supervisor Dashboard']"
+      [isAr]="i18n.currentLang()==='ar'" [dir]="i18n.direction()" />
+
+    <div class="sv-body" [dir]="i18n.direction()">
+      <!-- Level Selector -->
+      <div class="sv-level-bar">
+        <button *ngFor="let lv of levels" class="sv-level-btn" [class.active]="activeLevel() === lv.key" (click)="activeLevel.set(lv.key)">
+          <i class="pi" [ngClass]="lv.icon"></i>
+          <span>{{ i18n.currentLang()==='ar' ? lv.labelAr : lv.labelEn }}</span>
+          <span class="sv-level-badge" [ngClass]="'sv-level-' + lv.key">{{ lv.key }}</span>
+        </button>
+      </div>
+
+      <!-- Health KPIs -->
+      <div class="sv-kpi-grid" *ngIf="health()">
+        <app-stat-card label="Active Instances" [value]="health()!.activeInstances" icon="pi-play" color="var(--primary-color)" />
+        <app-stat-card label="SLA Compliance" [value]="health()!.slaCompliance + '%'" icon="pi-check-circle" color="var(--green-500)" />
+        <app-stat-card label="AI Executions" [value]="health()!.aiExecutionCount" icon="pi-bolt" color="var(--blue-500)" />
+        <app-stat-card label="Pending Reviews" [value]="health()!.pendingReviews" icon="pi-eye" color="var(--orange-500)" />
+        <app-stat-card label="Pending Drafts" [value]="health()!.pendingDrafts" icon="pi-file-edit" color="var(--purple-500)" />
+        <app-stat-card label="Kill Switch" [value]="health()!.killSwitchActive ? 'ACTIVE' : 'OFF'" icon="pi-power-off" [color]="health()!.killSwitchActive ? 'var(--red-500)' : 'var(--green-500)'" />
+        <app-stat-card label="Budget Used" [value]="health()!.budgetUtilization + '%'" icon="pi-wallet" color="var(--teal-500)" />
+        <app-stat-card label="Interventions Today" [value]="health()!.interventionsToday" icon="pi-exclamation-triangle" color="var(--red-500)" />
+      </div>
+      <app-skeleton-loader *ngIf="loading() && !health()" variant="card" [count]="8" />
+
+      <!-- Tab Navigation -->
+      <div class="sv-tabs">
+        <button *ngFor="let tab of tabs" class="sv-tab" [class.active]="activeTab() === tab.key" (click)="activeTab.set(tab.key); loadTabData(tab.key)">
+          <i class="pi" [ngClass]="tab.icon"></i>
+          <span>{{ i18n.currentLang()==='ar' ? tab.labelAr : tab.labelEn }}</span>
+          <span class="sv-tab-count" *ngIf="tabCounts()[tab.key]">{{ tabCounts()[tab.key] }}</span>
+        </button>
+      </div>
+
+      <!-- Overview Tab -->
+      <ng-container *ngIf="activeTab() === 'overview'">
+        <div class="sv-overview-grid">
+          <div class="sv-card">
+            <h4><i class="pi pi-shield"></i> {{ i18n.currentLang()==='ar' ? 'حالة النظام' : 'System Status' }}</h4>
+            <div class="sv-status-list">
+              <div class="sv-status-row"><span>Kill Switch</span><p-tag [value]="health()?.killSwitchActive ? 'ACTIVE' : 'OFF'" [severity]="health()?.killSwitchActive ? 'danger' : 'success'" /></div>
+              <div class="sv-status-row"><span>Budget</span><p-tag [value]="(health()?.budgetUtilization || 0) + '% used'" [severity]="(health()?.budgetUtilization || 0) > 80 ? 'danger' : (health()?.budgetUtilization || 0) > 50 ? 'warning' : 'success'" /></div>
+              <div class="sv-status-row"><span>Pending Rollbacks</span><p-tag [value]="String(health()?.pendingRollbacks || 0)" [severity]="(health()?.pendingRollbacks || 0) > 0 ? 'warning' : 'success'" /></div>
+              <div class="sv-status-row"><span>Failed Instances</span><p-tag [value]="String(health()?.failedInstances || 0)" [severity]="(health()?.failedInstances || 0) > 0 ? 'danger' : 'success'" /></div>
+            </div>
+          </div>
+          <div class="sv-card">
+            <h4><i class="pi pi-chart-bar"></i> {{ i18n.currentLang()==='ar' ? 'ملخص العمليات' : 'Operations Summary' }}</h4>
+            <div class="sv-status-list">
+              <div class="sv-status-row"><span>Total Instances</span><strong>{{ health()?.totalInstances || 0 }}</strong></div>
+              <div class="sv-status-row"><span>Completed</span><strong>{{ health()?.completedInstances || 0 }}</strong></div>
+              <div class="sv-status-row"><span>Stalled</span><strong class="text-orange-500">{{ health()?.stalledInstances || 0 }}</strong></div>
+              <div class="sv-status-row"><span>Avg Completion</span><strong>{{ formatDuration(health()?.avgCompletionMs || 0) }}</strong></div>
+            </div>
+          </div>
+          <div class="sv-card">
+            <h4><i class="pi pi-sliders-h"></i> {{ i18n.currentLang()==='ar' ? 'تحكم المشرف' : 'Supervisor Controls' }}</h4>
+            <div class="sv-control-grid">
+              <button pButton icon="pi pi-pause" label="Pause Instance" class="p-button-warning p-button-sm" (click)="openSupervisorAction()"></button>
+              <a pButton icon="pi pi-chart-bar" label="Analytics" class="p-button-info p-button-sm" routerLink="/workspace/workflow/analytics"></a>
+              <a pButton icon="pi pi-shield" label="Guardrails" class="p-button-help p-button-sm" routerLink="/workspace/workflow/guardrails"></a>
+              <a pButton icon="pi pi-sitemap" label="Execution Trace" class="p-button-secondary p-button-sm" routerLink="/workspace/workflow/execution-trace"></a>
+            </div>
+          </div>
+        </div>
+        <div class="sv-card" style="margin-top: 16px">
+          <h4><i class="pi pi-share-alt"></i> {{ i18n.currentLang()==='ar' ? 'شبكة الوكلاء' : 'Agent Network Topology' }}</h4>
+          <app-graph-explorer [nodes]="agentGraphNodes()" [edges]="agentGraphEdges()" height="350px" />
+        </div>
+      </ng-container>
+
+      <!-- AI Notes Tab -->
+      <ng-container *ngIf="activeTab() === 'notes'">
+        <div class="sv-toolbar">
+          <h4>{{ i18n.currentLang()==='ar' ? 'ملاحظات الذكاء الاصطناعي المعلقة' : 'Pending AI Notes' }}</h4>
+          <div class="sv-toolbar-actions">
+            <button pButton icon="pi pi-check-circle" label="Batch Accept" class="p-button-success p-button-sm p-button-outlined" (click)="batchAcceptNotes()" [disabled]="!selectedNoteIds().length"></button>
+            <button pButton icon="pi pi-times-circle" label="Batch Reject" class="p-button-danger p-button-sm p-button-outlined" (click)="batchRejectNotes()" [disabled]="!selectedNoteIds().length"></button>
+            <button pButton icon="pi pi-refresh" class="p-button-text" (click)="loadPendingNotes()"></button>
+          </div>
+        </div>
+        <grc-data-table
+          [totalRecords]="pendingNotes().length"
+          [emptyMessage]="'No pending AI notes'">
+          <p-table [value]="pendingNotes()" styleClass="p-datatable-sm p-datatable-striped" [paginator]="true" [rows]="10"
+            [attr.aria-label]="'AI Notes Table'">
+            <ng-template pTemplate="header"><tr>
+              <th>Type</th><th>Agent</th><th>Trust</th><th>Confidence</th><th>Content</th><th>Created</th><th>Actions</th>
+            </tr></ng-template>
+            <ng-template pTemplate="body" let-note>
+              <tr>
+                <td><p-tag [value]="note.note_type" [severity]="noteTypeSeverity(note.note_type)" /></td>
+                <td>{{ note.agent_id }}</td>
+                <td><p-tag [value]="note.trust_level" [severity]="trustSeverity(note.trust_level)" /></td>
+                <td>{{ note.confidence ? (note.confidence * 100).toFixed(0) + '%' : '—' }}</td>
+                <td class="sv-content-cell">{{ summarizeContent(note.content) }}</td>
+                <td>{{ note.created_at | date:'short' }}</td>
+                <td>
+                  <button pButton icon="pi pi-check" class="p-button-success p-button-text p-button-sm" pTooltip="Accept" (click)="reviewNote(note, 'accepted')"></button>
+                  <button pButton icon="pi pi-times" class="p-button-danger p-button-text p-button-sm" pTooltip="Reject" (click)="reviewNote(note, 'rejected')"></button>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </grc-data-table>
+      </ng-container>
+
+      <!-- Draft Actions Tab -->
+      <ng-container *ngIf="activeTab() === 'drafts'">
+        <div class="sv-toolbar">
+          <h4>{{ i18n.currentLang()==='ar' ? 'مسودات الإجراءات المعلقة' : 'Pending Draft Actions' }}</h4>
+          <div class="sv-toolbar-actions">
+            <button pButton icon="pi pi-check-circle" label="Batch Accept" class="p-button-success p-button-sm p-button-outlined" (click)="batchAcceptDrafts()" [disabled]="!selectedDraftIds().length"></button>
+            <button pButton icon="pi pi-times-circle" label="Batch Reject" class="p-button-danger p-button-sm p-button-outlined" (click)="batchRejectDrafts()" [disabled]="!selectedDraftIds().length"></button>
+            <button pButton icon="pi pi-refresh" class="p-button-text" (click)="loadPendingDrafts()"></button>
+          </div>
+        </div>
+        <grc-data-table
+          [totalRecords]="pendingDrafts().length"
+          [emptyMessage]="'No pending draft actions'">
+          <p-table [value]="pendingDrafts()" styleClass="p-datatable-sm p-datatable-striped" [paginator]="true" [rows]="10"
+            [attr.aria-label]="'Draft Actions Table'">
+            <ng-template pTemplate="header"><tr>
+              <th>Type</th><th>Title</th><th>Agent</th><th>Confidence</th><th>Expires</th><th>Actions</th>
+            </tr></ng-template>
+            <ng-template pTemplate="body" let-draft>
+              <tr>
+                <td><p-tag [value]="draft.draft_type" severity="info" /></td>
+                <td>{{ draft.title }}</td>
+                <td>{{ draft.agent_id }}</td>
+                <td>{{ draft.confidence ? (draft.confidence * 100).toFixed(0) + '%' : '—' }}</td>
+                <td>{{ draft.expires_at ? (draft.expires_at | date:'short') : '—' }}</td>
+                <td>
+                  <button pButton icon="pi pi-check" class="p-button-success p-button-text p-button-sm" pTooltip="Accept" (click)="acceptDraft(draft)"></button>
+                  <button pButton icon="pi pi-times" class="p-button-danger p-button-text p-button-sm" pTooltip="Reject" (click)="showRejectDraft(draft)"></button>
+                  <button pButton icon="pi pi-arrow-right" class="p-button-text p-button-sm" pTooltip="Convert" (click)="convertDraft(draft)"></button>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </grc-data-table>
+      </ng-container>
+
+      <!-- Kill Switch Tab -->
+      <ng-container *ngIf="activeTab() === 'killswitch'">
+        <div class="sv-toolbar">
+          <h4>{{ i18n.currentLang()==='ar' ? 'مفتاح الإيقاف الطارئ' : 'Kill Switch Control' }}</h4>
+          <button pButton icon="pi pi-power-off" [label]="i18n.currentLang()==='ar' ? 'تفعيل إيقاف' : 'Activate Kill Switch'" class="p-button-danger p-button-sm" (click)="showKillSwitchDialog = true"></button>
+        </div>
+        <grc-data-table
+          [totalRecords]="killSwitches().length"
+          [emptyMessage]="'No kill switches active'">
+          <p-table [value]="killSwitches()" styleClass="p-datatable-sm p-datatable-striped" [attr.aria-label]="'Kill Switch Table'">
+            <ng-template pTemplate="header"><tr>
+              <th>Scope</th><th>Reason</th><th>Activated By</th><th>Activated At</th><th>Status</th><th>Actions</th>
+            </tr></ng-template>
+            <ng-template pTemplate="body" let-ks>
+              <tr>
+                <td><p-tag [value]="ks.scope" severity="danger" /></td>
+                <td>{{ ks.reason }}</td>
+                <td>{{ ks.activated_by }}</td>
+                <td>{{ ks.activated_at | date:'medium' }}</td>
+                <td><p-tag [value]="ks.is_active ? 'ACTIVE' : 'INACTIVE'" [severity]="ks.is_active ? 'danger' : 'success'" /></td>
+                <td>
+                  <button *ngIf="ks.is_active" pButton icon="pi pi-stop" class="p-button-warning p-button-text p-button-sm" pTooltip="Deactivate" (click)="deactivateKillSwitch(ks)"></button>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </grc-data-table>
+      </ng-container>
+
+      <!-- Rollback Tab -->
+      <ng-container *ngIf="activeTab() === 'rollback'">
+        <div class="sv-toolbar">
+          <h4>{{ i18n.currentLang()==='ar' ? 'سجل التراجع والتعويض' : 'Rollback / Compensation Log' }}</h4>
+          <button pButton icon="pi pi-refresh" class="p-button-text" (click)="loadPendingRollbacks()"></button>
+        </div>
+        <grc-data-table
+          [totalRecords]="pendingRollbacks().length"
+          [emptyMessage]="'No pending rollbacks'">
+          <p-table [value]="pendingRollbacks()" styleClass="p-datatable-sm p-datatable-striped" [paginator]="true" [rows]="10"
+            [attr.aria-label]="'Rollback Log Table'">
+            <ng-template pTemplate="header"><tr>
+              <th>Action</th><th>Compensation</th><th>Reason</th><th>Status</th><th>Initiated By</th><th>Created</th><th>Actions</th>
+            </tr></ng-template>
+            <ng-template pTemplate="body" let-rb>
+              <tr>
+                <td><p-tag [value]="rb.original_action_type" severity="info" /></td>
+                <td>{{ rb.compensating_action_type || '—' }}</td>
+                <td>{{ rb.rollback_reason }}</td>
+                <td><p-tag [value]="rb.rollback_status" [severity]="rollbackStatusSeverity(rb.rollback_status)" /></td>
+                <td>{{ rb.initiated_by }}</td>
+                <td>{{ rb.created_at | date:'short' }}</td>
+                <td>
+                  <button *ngIf="rb.rollback_status === 'pending'" pButton icon="pi pi-play" class="p-button-warning p-button-text p-button-sm" pTooltip="Execute Rollback" (click)="executeRollback(rb)"></button>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </grc-data-table>
+      </ng-container>
+
+      <!-- Budget Tab -->
+      <ng-container *ngIf="activeTab() === 'budget'">
+        <div class="sv-toolbar">
+          <h4>{{ i18n.currentLang()==='ar' ? 'ميزانية تنفيذ الذكاء الاصطناعي' : 'AI Execution Budget' }}</h4>
+          <button pButton icon="pi pi-refresh" class="p-button-text" (click)="loadBudget()"></button>
+        </div>
+        <div class="sv-budget-grid" *ngIf="budget()">
+          <div class="sv-budget-card">
+            <div class="sv-budget-label">Period</div>
+            <div class="sv-budget-value">{{ budget()!.period_type | titlecase }}</div>
+          </div>
+          <div class="sv-budget-card">
+            <div class="sv-budget-label">Executions</div>
+            <div class="sv-budget-value">{{ budget()!.current_executions }} / {{ budget()!.max_executions }}</div>
+            <div class="sv-budget-bar"><div class="sv-budget-fill" [style.width.%]="(budget()!.current_executions / budget()!.max_executions) * 100" [class.sv-danger]="budget()!.current_executions / budget()!.max_executions > 0.8"></div></div>
+          </div>
+          <div class="sv-budget-card">
+            <div class="sv-budget-label">Cost Units</div>
+            <div class="sv-budget-value">{{ budget()!.current_cost_units }} / {{ budget()!.max_cost_units }}</div>
+            <div class="sv-budget-bar"><div class="sv-budget-fill" [style.width.%]="(budget()!.current_cost_units / budget()!.max_cost_units) * 100" [class.sv-danger]="budget()!.current_cost_units / budget()!.max_cost_units > 0.8"></div></div>
+          </div>
+          <div class="sv-budget-card">
+            <div class="sv-budget-label">Period Start</div>
+            <div class="sv-budget-value">{{ budget()!.period_start | date:'short' }}</div>
+          </div>
+        </div>
+        <div *ngIf="budgetCheck()" class="sv-budget-status mt-3">
+          <p-tag [value]="budgetCheck()!.allowed ? 'WITHIN BUDGET' : 'BUDGET EXCEEDED'" [severity]="budgetCheck()!.allowed ? 'success' : 'danger'" />
+          <span class="ml-2 text-sm">{{ budgetCheck()!.reason || '' }}</span>
+        </div>
+        <app-empty-state *ngIf="!budget() && !loading()" title="No budget configured" description="Configure an AI execution budget to monitor resource usage." />
+      </ng-container>
+
+      <!-- Interventions Tab -->
+      <ng-container *ngIf="activeTab() === 'interventions'">
+        <div class="sv-toolbar">
+          <h4>{{ i18n.currentLang()==='ar' ? 'سجل التدخلات' : 'Intervention Log' }}</h4>
+          <button pButton icon="pi pi-refresh" class="p-button-text" (click)="loadInterventions()"></button>
+        </div>
+        <grc-data-table
+          [totalRecords]="interventions().length"
+          [emptyMessage]="'No interventions recorded'">
+          <p-table [value]="interventions()" styleClass="p-datatable-sm p-datatable-striped" [paginator]="true" [rows]="15"
+            [attr.aria-label]="'Intervention Log Table'">
+            <ng-template pTemplate="header"><tr>
+              <th>Type</th><th>Agent</th><th>Details</th><th>Notified</th><th>Acknowledged</th><th>Created</th><th>Actions</th>
+            </tr></ng-template>
+            <ng-template pTemplate="body" let-iv>
+              <tr>
+                <td><p-tag [value]="iv.intervention_type" [severity]="interventionSeverity(iv.intervention_type)" /></td>
+                <td>{{ iv.agent_id || '—' }}</td>
+                <td class="sv-content-cell">{{ summarizeContent(iv.details) }}</td>
+                <td>{{ iv.notified_users?.length || 0 }}</td>
+                <td>
+                  <p-tag *ngIf="iv.acknowledged_by" [value]="iv.acknowledged_by" severity="success" />
+                  <span *ngIf="!iv.acknowledged_by" class="text-orange-500">Pending</span>
+                </td>
+                <td>{{ iv.created_at | date:'short' }}</td>
+                <td>
+                  <button *ngIf="!iv.acknowledged_by" pButton icon="pi pi-check" class="p-button-success p-button-text p-button-sm" pTooltip="Acknowledge" (click)="acknowledgeIntervention(iv)"></button>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </grc-data-table>
+      </ng-container>
+
+      <!-- Kill Switch Dialog -->
+      <p-dialog [header]="i18n.currentLang()==='ar' ? 'تفعيل مفتاح الإيقاف' : 'Activate Kill Switch'" [(visible)]="showKillSwitchDialog" [modal]="true" [style]="{width: '500px'}">
+        <div class="flex flex-column gap-3">
+          <label class="font-semibold">Scope</label>
+          <p-dropdown [(ngModel)]="killSwitchForm.scope" [options]="killSwitchScopes" optionLabel="label" optionValue="value" [style]="{width:'100%'}" />
+          <label class="font-semibold">Reason</label>
+          <textarea pInputTextarea [(ngModel)]="killSwitchForm.reason" rows="3" class="w-full" placeholder="Reason for activating kill switch..."></textarea>
+        </div>
+        <ng-template pTemplate="footer">
+          <button pButton label="Cancel" class="p-button-text" (click)="showKillSwitchDialog = false"></button>
+          <button pButton label="Activate" icon="pi pi-power-off" class="p-button-danger" (click)="activateKillSwitch()" [disabled]="!killSwitchForm.reason"></button>
+        </ng-template>
+      </p-dialog>
+
+      <!-- Reject Draft Dialog -->
+      <p-dialog [header]="'Reject Draft'" [(visible)]="showRejectDialog" [modal]="true" [style]="{width: '450px'}">
+        <textarea pInputTextarea [(ngModel)]="rejectReason" rows="3" class="w-full" placeholder="Rejection reason..."></textarea>
+        <ng-template pTemplate="footer">
+          <button pButton label="Cancel" class="p-button-text" (click)="showRejectDialog = false"></button>
+          <button pButton label="Reject" class="p-button-danger" (click)="confirmRejectDraft()" [disabled]="!rejectReason"></button>
+        </ng-template>
+      </p-dialog>
+
+      <!-- Supervisor Action Dialog -->
+      <p-dialog [header]="i18n.currentLang()==='ar' ? 'إجراء المشرف' : 'Supervisor Control Action'" [(visible)]="showSupervisorDialog" [modal]="true" [style]="{width: '500px'}">
+        <div class="flex flex-column gap-3">
+          <grc-form-field label="Instance ID">
+            <input pInputText [(ngModel)]="supervisorForm.instanceId" placeholder="Workflow instance UUID" class="w-full" />
+          </grc-form-field>
+          <label class="font-semibold">Action</label>
+          <p-dropdown [(ngModel)]="supervisorForm.action" [options]="supervisorActions" optionLabel="label" optionValue="value" [style]="{width:'100%'}" />
+          <label class="font-semibold">Reason</label>
+          <textarea pInputTextarea [(ngModel)]="supervisorForm.reason" rows="3" class="w-full" placeholder="Reason for action..."></textarea>
+        </div>
+        <ng-template pTemplate="footer">
+          <button pButton label="Cancel" class="p-button-text" (click)="showSupervisorDialog = false"></button>
+          <button pButton label="Execute" icon="pi pi-play" class="p-button-warning" (click)="executeSupervisorAction()" [disabled]="!supervisorForm.instanceId || !supervisorForm.reason"></button>
+        </ng-template>
+      </p-dialog>
+    </div>

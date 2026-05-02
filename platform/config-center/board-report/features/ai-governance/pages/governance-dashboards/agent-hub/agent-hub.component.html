@@ -1,0 +1,263 @@
+<div class="agent-hub">
+      <div class="agent-hub__header">
+        <h2>{{ i18n.translate('agentHub.agentOperationsHub') }}</h2>
+        <p class="agent-hub__subtitle">{{ i18n.translate('agentHub.manageProposalsRunsShadowAgentsWorkflows') }}</p>
+      </div>
+
+      <p-tabView>
+        <!-- Tab 1: Proposals -->
+        <p-tabPanel [header]="i18n.translate('agentHub.proposals')" leftIcon="pi pi-inbox">
+          <div class="tab-toolbar">
+            <p-dropdown [options]="proposalStatusOptions" [(ngModel)]="proposalStatusFilter" (onChange)="loadProposals()" [style]="{ width: '180px' }"></p-dropdown>
+            <button pButton [label]="i18n.translate('agentHub.refresh')" icon="pi pi-refresh" class="p-button-text" (click)="loadProposals()"></button>
+          </div>
+          <grc-data-table
+            [totalRecords]="proposals().length"
+            [emptyMessage]="i18n.translate('agentHub.proposals')">
+            <p-table aria-label="Data table" [value]="proposals()" [paginator]="true" [rows]="10" styleClass="p-datatable-sm" [loading]="false">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>{{ i18n.translate('agentHub.agent') }}</th>
+                  <th>{{ i18n.translate('agentHub.type') }}</th>
+                  <th>{{ i18n.translate('agentHub.priority') }}</th>
+                  <th>{{ i18n.translate('agentHub.reason') }}</th>
+                  <th>{{ i18n.translate('agentHub.status') }}</th>
+                  <th>{{ i18n.translate('agentHub.date') }}</th>
+                  <th>{{ i18n.translate('agentHub.actions') }}</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-p>
+                <tr>
+                  <td><span class="agent-chip">{{ p.agent_id }}</span></td>
+                  <td>{{ p.type }}</td>
+                  <td><p-tag [value]="p.priority" [severity]="prioritySeverity(p.priority)"></p-tag></td>
+                  <td class="reason-cell">{{ p.reason || '—' }}</td>
+                  <td><p-tag [value]="p.status" [severity]="statusSeverity(p.status)"></p-tag></td>
+                  <td>{{ p.created_at | appDate:'short' }}</td>
+                  <td>
+                    <div class="action-btns" *ngIf="p.status === 'pending_approval'">
+                      <button pButton icon="pi pi-check" class="p-button-success p-button-sm p-button-text" (click)="openApproveDialog(p)" [pTooltip]="i18n.translate('agentHub.approve')"></button>
+                      <button pButton icon="pi pi-times" class="p-button-danger p-button-sm p-button-text" (click)="openRejectDialog(p)" [pTooltip]="i18n.translate('agentHub.reject')"></button>
+                    </div>
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </grc-data-table>
+        </p-tabPanel>
+
+        <!-- Tab 2: Run History -->
+        <p-tabPanel [header]="i18n.translate('agentHub.runHistory')" leftIcon="pi pi-history">
+          <div class="tab-toolbar">
+            <button pButton [label]="i18n.translate('agentHub.refresh')" icon="pi pi-refresh" class="p-button-text" (click)="loadRuns()"></button>
+          </div>
+          <grc-data-table
+            [totalRecords]="runs().length"
+            [emptyMessage]="i18n.translate('agentHub.runHistory')">
+            <p-table aria-label="Data table" [value]="runs()" [paginator]="true" [rows]="10" styleClass="p-datatable-sm" [loading]="false">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>{{ i18n.translate('agentHub.agent') }}</th>
+                  <th>{{ i18n.translate('agentHub.status') }}</th>
+                  <th>{{ i18n.translate('agentHub.mode') }}</th>
+                  <th>{{ i18n.translate('agentHub.proposed') }}</th>
+                  <th>{{ i18n.translate('agentHub.executed') }}</th>
+                  <th>{{ i18n.translate('agentHub.duration') }}</th>
+                  <th>{{ i18n.translate('agentHub.summary') }}</th>
+                  <th>{{ i18n.translate('agentHub.date') }}</th>
+                  <th>{{ i18n.translate('agentHub.graph') }}</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-run>
+                <tr>
+                  <td><span class="agent-chip">{{ run.agent_id || '—' }}</span></td>
+                  <td><p-tag [value]="run.status" [severity]="runStatusSeverity(run.status)"></p-tag></td>
+                  <td>{{ run.platform_mode }}</td>
+                  <td>{{ run.actions_proposed }}</td>
+                  <td>{{ run.actions_executed }}</td>
+                  <td>{{ run.duration_ms ? (run.duration_ms / 1000).toFixed(1) + 's' : '—' }}</td>
+                  <td class="summary-cell">{{ run.summary?.substring(0, 80) || '—' }}</td>
+                  <td>{{ run.created_at | appDate:'short' }}</td>
+                  <td>
+                    <button pButton icon="pi pi-sitemap" class="p-button-text p-button-sm" (click)="openGraph(run)" [pTooltip]="i18n.translate('agentHub.viewGraph')"></button>
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </grc-data-table>
+        </p-tabPanel>
+
+        <!-- Tab 3: Shadow Agents -->
+        <p-tabPanel [header]="i18n.translate('agentHub.shadowAgents')" leftIcon="pi pi-eye">
+          <div class="tab-toolbar">
+            <button pButton [label]="i18n.translate('agentHub.refresh')" icon="pi pi-refresh" class="p-button-text" (click)="loadShadowAgents()"></button>
+          </div>
+          <grc-data-table
+            [totalRecords]="shadowAgents().length"
+            [emptyMessage]="i18n.translate('agentHub.shadowAgents')">
+            <p-table [paginator]="true" [rows]="20" [rowsPerPageOptions]="[10,20,50]" aria-label="Data table" [value]="shadowAgents()" styleClass="p-datatable-sm" [loading]="false">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>{{ i18n.translate('agentHub.user') }}</th>
+                  <th>{{ i18n.translate('agentHub.enabled') }}</th>
+                  <th>{{ i18n.translate('agentHub.autonomy') }}</th>
+                  <th>{{ i18n.translate('agentHub.allowedAgents') }}</th>
+                  <th>{{ i18n.translate('agentHub.dailyLimit') }}</th>
+                  <th>{{ i18n.translate('agentHub.lastActive') }}</th>
+                  <th>{{ i18n.translate('agentHub.actions') }}</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-sa>
+                <tr>
+                  <td>{{ sa.full_name || sa.email || sa.user_id }}</td>
+                  <td><p-inputSwitch [(ngModel)]="sa.enabled" (onChange)="toggleShadowAgent(sa)"></p-inputSwitch></td>
+                  <td><p-tag [value]="sa.autonomy_level" [severity]="autonomySeverity(sa.autonomy_level)"></p-tag></td>
+                  <td>{{ sa.allowed_agents?.join(', ') || 'All' }}</td>
+                  <td>{{ sa.max_actions_per_day }}</td>
+                  <td>{{ sa.last_active_at ? (sa.last_active_at | appDate:'short') : '—' }}</td>
+                  <td>
+                    <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm" (click)="editShadowAgent(sa)" [pTooltip]="i18n.translate('agentHub.edit')"></button>
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </grc-data-table>
+        </p-tabPanel>
+
+        <!-- Tab 4: Workflow Studio -->
+        <p-tabPanel [header]="i18n.translate('agentHub.workflowStudio')" leftIcon="pi pi-sitemap">
+          <div *ngIf="!selectedRun()" class="studio-empty">
+            <i class="pi pi-sitemap" style="font-size: 48px; color: var(--text-muted)"></i>
+            <p>{{ i18n.translate('agentHub.selectARunFromRunHistoryTabToViewTheWork') }}</p>
+          </div>
+          <div *ngIf="selectedRun()" class="studio-content">
+            <div class="studio-header">
+              <h4>{{ i18n.translate('agentHub.runGraph') }}: {{ selectedRun()!.run_id.substring(0, 8) }}...</h4>
+              <p-tag [value]="selectedRun()!.status" [severity]="runStatusSeverity(selectedRun()!.status)"></p-tag>
+              <button pButton icon="pi pi-history" class="p-button-text p-button-sm" (click)="loadVersions()" [pTooltip]="i18n.translate('agentHub.versionHistory')"></button>
+              <button pButton icon="pi pi-play" class="p-button-text p-button-sm" (click)="loadPlaybackEvents()" [pTooltip]="i18n.translate('agentHub.playbackEvents')"></button>
+            </div>
+            <div class="swimlane-container">
+              <div *ngFor="let lane of swimlanes()" class="swimlane">
+                <div class="swimlane__header">
+                  <span class="swimlane__name">{{ lane.name }}</span>
+                  <span class="swimlane__count">{{ lane.nodes.length }}</span>
+                </div>
+                <div class="swimlane__nodes">
+                  <div tabindex="0" role="button" (keyup.enter)="talkToNode(node)" *ngFor="let node of lane.nodes" class="graph-node" [class]="'graph-node--' + node.status" (click)="talkToNode(node)">
+                    <div class="graph-node__icon">
+                      <i class="pi" [ngClass]="nodeIcon(node.type)"></i>
+                    </div>
+                    <div class="graph-node__info">
+                      <span class="graph-node__label">{{ node.label }}</span>
+                      <span class="graph-node__status">{{ node.status }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="playbackEvents().length > 0" class="playback-section">
+              <h5>{{ i18n.translate('agentHub.eventPlayback') }}</h5>
+              <div class="playback-timeline">
+                <div *ngFor="let ev of playbackEvents(); let i = index" class="playback-event" [class.playback-event--active]="i <= playbackIndex()">
+                  <span class="playback-event__time">{{ ev.created_at | date:'HH:mm:ss' }}</span>
+                  <span class="playback-event__type">{{ ev.event_type }}</span>
+                  <span class="playback-event__node">{{ ev.node_id || '—' }}</span>
+                </div>
+              </div>
+              <div class="playback-controls">
+                <button pButton icon="pi pi-step-backward" class="p-button-text p-button-sm" (click)="playbackStep(-1)" [disabled]="playbackIndex() <= 0"></button>
+                <span>{{ playbackIndex() + 1 }} / {{ playbackEvents().length }}</span>
+                <button pButton icon="pi pi-step-forward" class="p-button-text p-button-sm" (click)="playbackStep(1)" [disabled]="playbackIndex() >= playbackEvents().length - 1"></button>
+              </div>
+            </div>
+            <div *ngIf="graphVersions().length > 0" class="versions-section">
+              <h5>{{ i18n.translate('agentHub.versionHistory2') }} ({{ graphVersions().length }})</h5>
+              <div *ngFor="let v of graphVersions()" class="version-row">
+                <span class="version-num">v{{ v.version_number }}</span>
+                <span class="version-summary">{{ v.change_summary }}</span>
+                <span class="version-type"><p-tag [value]="v.change_type" [severity]="'info'"></p-tag></span>
+                <span class="version-time">{{ v.created_at | appDate:'short' }}</span>
+              </div>
+            </div>
+          </div>
+        </p-tabPanel>
+
+        <!-- Tab 5: Delegation & Consent -->
+        <p-tabPanel [header]="i18n.translate('agentHub.delegationConsent')" leftIcon="pi pi-shield">
+          <div class="tab-toolbar">
+            <button pButton [label]="i18n.translate('agentHub.refresh')" icon="pi pi-refresh" class="p-button-text" (click)="loadShadowAgents()"></button>
+          </div>
+          <grc-data-table
+            [totalRecords]="shadowAgents().length"
+            [emptyMessage]="i18n.translate('agentHub.delegationConsent')">
+            <p-table [paginator]="true" [rows]="20" [rowsPerPageOptions]="[10,20,50]" aria-label="Data table" [value]="shadowAgents()" styleClass="p-datatable-sm" [loading]="false">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>{{ i18n.translate('agentHub.user') }}</th>
+                  <th>{{ i18n.translate('agentHub.consent') }}</th>
+                  <th>{{ i18n.translate('agentHub.autonomy') }}</th>
+                  <th>{{ i18n.translate('agentHub.actionsToday') }}</th>
+                  <th>{{ i18n.translate('agentHub.dailyLimit') }}</th>
+                  <th>{{ i18n.translate('agentHub.actions') }}</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-sa>
+                <tr>
+                  <td>{{ sa.full_name || sa.email || sa.user_id }}</td>
+                  <td>
+                    <p-tag [value]="sa.consent_granted ? (i18n.translate('agentHub.granted')) : (i18n.translate('agentHub.notGranted'))"
+                           [severity]="sa.consent_granted ? 'success' : 'danger'"></p-tag>
+                  </td>
+                  <td><p-tag [value]="sa.autonomy_level" [severity]="autonomySeverity(sa.autonomy_level)"></p-tag></td>
+                  <td>{{ sa.actions_today || 0 }}</td>
+                  <td>{{ sa.max_actions_per_day }}</td>
+                  <td>
+                    <div class="action-btns">
+                      <button aria-label="Confirm" pButton icon="pi pi-check" class="p-button-success p-button-sm p-button-text"
+                              *ngIf="!sa.consent_granted" (click)="grantConsent(sa)" [pTooltip]="i18n.translate('agentHub.grantConsent')"></button>
+                      <button aria-label="Block" pButton icon="pi pi-ban" class="p-button-warning p-button-sm p-button-text"
+                              *ngIf="sa.consent_granted" (click)="revokeConsent(sa)" [pTooltip]="i18n.translate('agentHub.revokeConsent')"></button>
+                      <button aria-label="Delete" pButton icon="pi pi-trash" class="p-button-danger p-button-sm p-button-text"
+                              (click)="exerciseRightToForget(sa)" [pTooltip]="i18n.translate('agentHub.rightToForget')"></button>
+                      <button pButton icon="pi pi-list" class="p-button-text p-button-sm"
+                              (click)="viewDelegationRules(sa)" [pTooltip]="i18n.translate('agentHub.delegationRules')"></button>
+                    </div>
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </grc-data-table>
+        </p-tabPanel>
+      </p-tabView>
+
+      <!-- Approve/Reject Dialog -->
+      <p-dialog [(visible)]="reviewDialogVisible" [modal]="true" [style]="{ width: '400px' }" [header]="reviewAction === 'approve' ? (i18n.translate('agentHub.approveProposal')) : (i18n.translate('agentHub.rejectProposal'))">
+        <div class="review-form">
+          <label>{{ i18n.translate('agentHub.commentOptional') }}</label>
+          <textarea pInputTextarea [(ngModel)]="reviewComment" rows="3" [style]="{ width: '100%' }"></textarea>
+        </div>
+        <ng-template pTemplate="footer">
+          <button pButton [label]="i18n.translate('agentHub.cancel')" class="p-button-text" (click)="reviewDialogVisible = false"></button>
+          <button pButton [label]="reviewAction === 'approve' ? (i18n.translate('agentHub.approve')) : (i18n.translate('agentHub.reject'))"
+                  [class]="reviewAction === 'approve' ? 'p-button-success' : 'p-button-danger'"
+                  (click)="submitReview()"></button>
+        </ng-template>
+      </p-dialog>
+
+      <!-- Talk to Node Dialog -->
+      <p-dialog [(visible)]="talkDialogVisible" [modal]="true" [style]="{ width: '500px' }" [header]="i18n.translate('agentHub.talkToNode')">
+        <div class="talk-form">
+          <p class="talk-node-info">{{ i18n.translate('agentHub.node') }}: <strong>{{ talkNodeLabel }}</strong> — {{ talkNodeStatus }}</p>
+          <textarea pInputTextarea [(ngModel)]="talkQuestion" rows="3" [placeholder]="i18n.translate('agentHub.askAboutThisStep')" [attr.aria-label]="i18n.translate('agentHub.askAboutThisStep')" [style]="{ width: '100%' }"></textarea>
+          <div *ngIf="talkAnswer()" class="talk-answer">
+            <h5>{{ i18n.translate('agentHub.answer') }}</h5>
+            <p>{{ talkAnswer() }}</p>
+          </div>
+        </div>
+        <ng-template pTemplate="footer">
+          <button pButton [label]="i18n.translate('agentHub.ask')" icon="pi pi-send" (click)="submitTalkToNode()" [loading]="talkLoading()"></button>
+        </ng-template>
+      </p-dialog>
+    </div>
+    <p-confirmDialog />

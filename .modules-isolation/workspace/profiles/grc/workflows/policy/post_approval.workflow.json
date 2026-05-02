@@ -1,0 +1,15 @@
+{
+  "id": "policy.post_approval",
+  "module": "policy",
+  "hook": "post_approval",
+  "version": "1.0.0",
+  "sla_hours": 8,
+  "actor_role_default": "policy.module_lead",
+  "states": ["approved","published","notified"],
+  "initial": "approved",
+  "transitions": [{"from":"approved","to":"published","on":"publish","actor_role":"policy.module_lead"},{"from":"published","to":"notified","on":"notify"}],
+  "audit_event_prefix": "policy.workflow.post_approval",
+  "notification_targets": ["policy.module_lead", "policy.approver"],
+  "evidence_required_on": ["passed","published"],
+  "escalation": { "on": "sla_breach", "to": "policy.executive_owner", "after_hours": 16 }
+}

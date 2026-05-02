@@ -1,0 +1,82 @@
+import type { ModuleManifest } from '@dos/types';
+import { registerModule } from '@dos/module-sdk';
+import { DORA_PERMISSIONS, DORA_ROLES, DORA_ACTIONS } from './security/dora.security';
+import { DORA_APPROVAL_MATRIX } from './security/dora.approval-matrix';
+
+export const DORA_MANIFEST: ModuleManifest = {
+  code: 'dora',
+  version: '2.0.0',
+  aliases: [],
+  nameEn: 'DORA — Digital Operational Resilience',
+  nameAr: 'DORA — المرونة التشغيلية الرقمية',
+  descriptionEn: 'ICT risk management, resilience testing, third-party ICT oversight, major incident reporting, and threat intelligence sharing under DORA regulation.',
+  descriptionAr: 'إدارة مخاطر تكنولوجيا المعلومات واختبار المرونة والرقابة على أطراف ثالثة ICT وتقارير الحوادث الكبرى ومشاركة معلومات التهديدات بموجب لائحة DORA.',
+  tier: 'full',
+  category: 'operational',
+  routeBase: '/api/dora',
+  eventNamespace: 'dora',
+  tablePrefix: 'dora_',
+  ownedTables: [
+    'dora_ict_assets', 'dora_resilience_tests', 'dora_major_incidents',
+    'dora_threat_intel', 'dora_backup_configs', 'dora_third_party_register',
+    'dora_ict_risk_assessments', 'dora_incident_reports', 'dora_recovery_plans',
+    'dora_change_management', 'dora_audit_log',
+    'dora_obligations', 'dora_obligation_mappings',
+    'dora_framework_mappings', 'dora_control_mappings',
+    'dora_resilience_results', 'dora_readiness_snapshots',
+  ],
+  sharedTables: [],
+  referencedTables: ['audit_trail', 'workflows', 'assets', 'risk_assessments', 'vendor_engagements', 'incident_response_plans'],
+  aggregateRoots: ['dora_ict_assets', 'dora_resilience_tests', 'dora_major_incidents'],
+  publishedEvents: [
+    'dora.ict_asset_created', 'dora.ict_asset_updated', 'dora.ict_asset_decommissioned',
+    'dora.resilience_test_created', 'dora.resilience_test_completed', 'dora.resilience_test_failed',
+    'dora.resilience_test_overdue', 'dora.resilience_finding_created',
+    'dora.major_incident_reported', 'dora.major_incident_resolved',
+    'dora.threat_intel_received', 'dora.threat_intel_acknowledged',
+    'dora.third_party_flagged', 'dora.third_party_reviewed',
+    'dora.backup_verified', 'dora.backup_failed',
+    'dora.recovery_plan_activated', 'dora.recovery_plan_tested',
+    'dora.ict_risk_assessed', 'dora.concentration_risk_detected',
+    'dora.obligation_created', 'dora.obligation_updated', 'dora.obligation_deleted', 'dora.obligation_overdue',
+    'dora.obligation_mapping_created',
+    'dora.framework_mapping_created', 'dora.control_mapping_created',
+    'dora.status_changed', 'dora.ai_analysis_completed',
+  ],
+  consumedEvents: [
+    'risk.residual_high', 'incident.classified', 'vendor.risk_changed',
+    'asset.criticality_changed', 'bcp.crisis_declared', 'workflow.status_changed',
+  ],
+  hardDeps: ['risk', 'asset'],
+  softDeps: ['incident', 'vendor', 'bcp', 'compliance'],
+  navId: 'dora',
+  navChildCount: 7,
+  workflowTemplateCode: 'dora_resilience_assessment',
+  workflowSlaHours: 720,
+  automationLevel: 'semi',
+  agentBinding: 'A05',
+  aiCapabilities: ['notes', 'drafts', 'recommendations', 'gate_checks', 'health_monitor', 'anomaly_detection'],
+  aiEnabled: true,
+  featureFlags: ['dora.resilience_testing', 'dora.threat_intel', 'dora.ict_third_party', 'dora.concentration_risk'],
+  installable: true,
+  provisioningOrder: 25,
+  licensingTier: 'professional',
+  visibility: 'both',
+  adminSurfaces: ['dora-config', 'ict-asset-classifications', 'resilience-test-templates', 'reporting-thresholds'],
+
+  securityPermissions: DORA_PERMISSIONS,
+  securityRoles: DORA_ROLES,
+  securityActions: DORA_ACTIONS,
+  approvalRules: DORA_APPROVAL_MATRIX,
+  ownershipRules: [
+    { entityType: 'dora_ict_assets', ownerField: 'owner_id', reviewerField: 'reviewer_id', approverField: null, assigneeField: null, orgScopeField: 'department_id', defaultOwnerRole: 'dora.module_lead', canDelegate: true, delegateRoles: ['dora.operator'], canReassign: true, reassignRoles: ['dora.module_lead', 'dora.executive_owner'], requiresApproval: false, creatorRights: 'full', externalVisible: false, rowLevelAccess: 'department' },
+    { entityType: 'dora_resilience_tests', ownerField: 'owner_id', reviewerField: 'reviewer_id', approverField: 'approver_id', assigneeField: 'tester_id', orgScopeField: 'department_id', defaultOwnerRole: 'dora.module_lead', canDelegate: true, delegateRoles: ['dora.operator', 'dora.contributor'], canReassign: true, reassignRoles: ['dora.module_lead', 'dora.executive_owner'], requiresApproval: true, creatorRights: 'full', externalVisible: false, rowLevelAccess: 'department' },
+    { entityType: 'dora_major_incidents', ownerField: 'reported_by', reviewerField: 'reviewer_id', approverField: 'approver_id', assigneeField: 'handler_id', orgScopeField: 'department_id', defaultOwnerRole: 'dora.module_lead', canDelegate: true, delegateRoles: ['dora.operator'], canReassign: true, reassignRoles: ['dora.module_lead', 'dora.executive_owner'], requiresApproval: true, creatorRights: 'full', externalVisible: true, rowLevelAccess: 'org' },
+  ],
+  sodRules: [
+    { ruleCode: 'dora.sod.tester_approver', descriptionEn: 'Resilience tester cannot approve their own test results', descriptionAr: 'لا يمكن لمختبر المرونة الموافقة على نتائج اختباره', conflictingRoles: [], conflictingActions: ['dora.resilience.test', 'dora.resilience.approve'], conflictingTransitions: [], severity: 'critical', enforcement: 'block', temporaryWaiverAllowed: false, waiverMaxDays: null, compensatingControls: ['independent_review'], overrideAuthority: ['dora.executive_owner'], auditObligations: ['log_sod_violation'] },
+    { ruleCode: 'dora.sod.incident_reporter_closer', descriptionEn: 'Incident reporter cannot close their own major incident report', descriptionAr: 'لا يمكن لمبلغ الحادث إغلاق تقرير حادثه الكبير', conflictingRoles: [], conflictingActions: ['dora.incident.report', 'dora.incident.close'], conflictingTransitions: ['reported->closed'], severity: 'high', enforcement: 'block', temporaryWaiverAllowed: true, waiverMaxDays: 14, compensatingControls: ['manager_review'], overrideAuthority: ['dora.executive_owner'], auditObligations: ['log_sod_violation'] },
+  ],
+};
+
+registerModule(DORA_MANIFEST);

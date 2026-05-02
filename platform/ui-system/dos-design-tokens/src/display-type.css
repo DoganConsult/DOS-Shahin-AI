@@ -1,0 +1,82 @@
+/* DOS Platform — Display Typography (signature scale).
+ *
+ * Four-tier display scale for hero / executive surfaces. Pairs with the
+ * existing `--dos-font-size-*` body scale; the display tokens sit ABOVE
+ * 2xl and carry tighter tracking + display optical sizing.
+ *
+ * Use cases:
+ *   display-xl  → marketing hero, register/landing
+ *   display-lg  → workspace command-center title
+ *   display-md  → page hero on signature pages
+ *   display-sm  → KPI hero numerals (paired with eyebrow)
+ *
+ * Eyebrow + caption tokens give every signature surface a consistent
+ * rhythm without inventing per-component sizes.
+ *
+ * `font-feature-settings: 'tnum' 1, 'cv11' 1` — tabular numerals
+ * everywhere a number can change (KPIs, deltas, counters).
+ */
+:root {
+  /* ── Display scale ─────────────────────────────────────────────── */
+  --dos-display-xl:    3.5rem;   /* 56px — landing hero */
+  --dos-display-lg:    2.75rem;  /* 44px — workspace hero */
+  --dos-display-md:    2.25rem;  /* 36px — page hero */
+  --dos-display-sm:    1.75rem;  /* 28px — KPI hero numeral */
+
+  /* ── Display weights & tracking ────────────────────────────────── */
+  --dos-display-weight: 300;     /* light — premium feel */
+  --dos-display-weight-strong: 500;
+  --dos-display-tracking-tight: -0.02em;
+  --dos-display-tracking-normal: -0.005em;
+  --dos-display-line-tight: 1.08;
+  --dos-display-line-normal: 1.16;
+
+  /* ── Eyebrow / overline ────────────────────────────────────────── */
+  --dos-eyebrow-size:     0.6875rem;   /* 11px */
+  --dos-eyebrow-tracking: 0.16em;
+  --dos-eyebrow-weight:   600;
+  --dos-eyebrow-color:    var(--dos-color-text-subtle);
+
+  /* ── Caption ───────────────────────────────────────────────────── */
+  --dos-caption-size:   0.75rem;
+  --dos-caption-line:   1.4;
+  --dos-caption-color:  var(--dos-color-text-muted);
+
+  /* ── Numeric stacks (KPI tiles, tables, charts) ────────────────── */
+  --dos-numeric-features: 'tnum' 1, 'lnum' 1, 'cv11' 1;
+  --dos-numeric-family:   var(--dos-font-family);
+}
+
+/* Reusable utility classes (no preprocessor needed) ─────────────── */
+.dos-eyebrow {
+  font-size: var(--dos-eyebrow-size);
+  letter-spacing: var(--dos-eyebrow-tracking);
+  text-transform: uppercase;
+  font-weight: var(--dos-eyebrow-weight);
+  color: var(--dos-eyebrow-color);
+}
+
+.dos-display-xl,
+.dos-display-lg,
+.dos-display-md,
+.dos-display-sm {
+  font-family: var(--dos-font-family);
+  font-weight: var(--dos-display-weight);
+  letter-spacing: var(--dos-display-tracking-tight);
+  line-height: var(--dos-display-line-tight);
+  color: var(--dos-color-text-strong);
+  margin: 0;
+}
+.dos-display-xl { font-size: var(--dos-display-xl); }
+.dos-display-lg { font-size: var(--dos-display-lg); }
+.dos-display-md { font-size: var(--dos-display-md); }
+.dos-display-sm {
+  font-size: var(--dos-display-sm);
+  font-weight: var(--dos-display-weight-strong);
+  font-feature-settings: var(--dos-numeric-features);
+  letter-spacing: var(--dos-display-tracking-normal);
+}
+
+.dos-numeric {
+  font-feature-settings: var(--dos-numeric-features);
+}

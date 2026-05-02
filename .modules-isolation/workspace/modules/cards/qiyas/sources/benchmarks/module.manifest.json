@@ -1,0 +1,48 @@
+{
+  "moduleCode": "benchmarks",
+  "displayName": "Benchmarks",
+  "ownerTeam": "product-shahin-ai",
+  "productCode": "shahin-ai",
+  "ownership": "module-owned",
+  "version": "1.0.0",
+  "status": "active",
+  "platformDependencies": [
+    "identity",
+    "tenancy"
+  ],
+  "seedProviders": [
+    "products/shahin/seeds/benchmarks-seed"
+  ],
+  "tenantDefaults": [],
+  "requiredReferenceData": [
+    "benchmark_frameworks"
+  ],
+  "currentSources": [
+    "/home/Dr-Dogan-AGRC-OS/backend/src/modules/benchmarks"
+  ],
+  "targetPath": "modules/benchmarks",
+  "futureService": "qiyas-journey-service",
+  "frontendSources": [
+    "/home/Dr-Dogan-AGRC-OS/frontend/src/app/platform-manifests/benchmarks.module.routes.ts"
+  ],
+  "ownedTables": [
+    "benchmarks_catalog",
+    "benchmark_control_mappings",
+    "benchmark_scores",
+    "benchmark_peer_data"
+  ],
+  "referencedTables": [
+    "controls"
+  ],
+  "events": {
+    "publishes": [
+      "benchmarks.score_computed"
+    ],
+    "subscribes": [
+      "controls.effectiveness_updated"
+    ]
+  },
+  "routeBases": [
+    "/api/benchmarks"
+  ]
+}

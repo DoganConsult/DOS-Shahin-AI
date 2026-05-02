@@ -1,0 +1,15 @@
+{
+  "id": "bcp.deviation_triage",
+  "module": "bcp",
+  "hook": "deviation_triage",
+  "version": "1.0.0",
+  "sla_hours": 12,
+  "actor_role_default": "bcp.module_lead",
+  "states": ["detected","triaged","routed"],
+  "initial": "detected",
+  "transitions": [{"from":"detected","to":"triaged","on":"triage","actor_role":"bcp.module_lead"},{"from":"triaged","to":"routed","on":"route","actor_role":"bcp.approver"}],
+  "audit_event_prefix": "bcp.workflow.deviation_triage",
+  "notification_targets": ["bcp.module_lead", "bcp.approver"],
+  "evidence_required_on": ["passed","published"],
+  "escalation": { "on": "sla_breach", "to": "bcp.executive_owner", "after_hours": 24 }
+}

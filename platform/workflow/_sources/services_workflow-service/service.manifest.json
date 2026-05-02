@@ -1,0 +1,23 @@
+{
+  "serviceCode": "workflow-service",
+  "displayName": "Workflow Service",
+  "layer": "platform-service",
+  "ownerTeam": "platform-core",
+  "runtime": "node",
+  "dependsOn": [
+    "auth-service",
+    "tenant-service"
+  ],
+  "modules": [
+    "workflow",
+    "approval",
+    "process_task",
+    "raci",
+    "unified_squad",
+    "escalation",
+    "automation"
+  ],
+  "exposes": {
+    "apiBase": "/api/workflow"
+  }
+}

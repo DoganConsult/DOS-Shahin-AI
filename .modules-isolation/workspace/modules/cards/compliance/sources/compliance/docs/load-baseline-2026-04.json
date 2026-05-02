@@ -1,0 +1,37 @@
+{
+  "_comment": "Wave 6 baseline placeholder — replaced with real k6 output once a tenant token is minted at https://shahin-ai.com/login and k6 is installed in CI. Targets per SLO.md §1.2; refreshed quarterly.",
+  "wave": 6,
+  "captured_at": null,
+  "captured_by": null,
+  "base_url": null,
+  "scenario": {
+    "smoke_vus": 5,
+    "smoke_duration": "30s",
+    "load_ramping_target": 50,
+    "load_total_duration": "2m"
+  },
+  "thresholds": {
+    "smoke": {
+      "p95_ms_max": 300,
+      "p99_ms_max": 600,
+      "error_rate_max": 0.001
+    },
+    "load": {
+      "p95_ms_max": 500,
+      "p99_ms_max": 1000,
+      "error_rate_max": 0.01
+    },
+    "compliance_overview_p95_ms_max": 250,
+    "compliance_list_p95_ms_max": 300
+  },
+  "results": {
+    "p95_overall_ms": null,
+    "p99_overall_ms": null,
+    "p95_overview_ms": null,
+    "p95_list_ms": null,
+    "error_rate": null,
+    "iterations": null,
+    "vus_max": null
+  },
+  "verdict": "PENDING — run after Wave 9 production-token mint."
+}

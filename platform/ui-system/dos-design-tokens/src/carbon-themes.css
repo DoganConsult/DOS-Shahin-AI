@@ -1,0 +1,69 @@
+/* DOS Platform — Carbon theme variants (g10 + g90).
+ *
+ * Carbon ships 4 themes: white · g10 (light alt) · g90 (dark medium) ·
+ * g100 (dark). Our base sheet maps `:root` (white) and `[data-theme='dark']`
+ * (g100). This file adds the two intermediate themes:
+ *
+ *   g10  — applied via `[data-theme='g10']` — used for inverse panes
+ *          on a white surface (e.g. agent workbench docked rail).
+ *   g90  — applied via `[data-theme='g90']` — used for hero / executive
+ *          surfaces on a dark surface but lighter than g100.
+ *
+ * Apply at any nesting level — Carbon honors the closest data-attribute.
+ */
+
+/* ── g10 — light alternate (used for a slightly raised pane on white) ── */
+[data-theme='g10'] {
+  --cds-background:           #f4f4f4;
+  --cds-background-hover:     #e8e8e8;
+  --cds-background-active:    #c6c6c6;
+  --cds-background-selected:  #cacaca;
+
+  --cds-layer:                #ffffff;
+  --cds-layer-01:             #ffffff;
+  --cds-layer-02:             #f4f4f4;
+  --cds-layer-03:             #e0e0e0;
+  --cds-layer-hover-01:       #e8e8e8;
+  --cds-layer-hover-02:       #c6c6c6;
+
+  --cds-field:                #ffffff;
+  --cds-field-01:             #ffffff;
+  --cds-field-02:             #f4f4f4;
+
+  --cds-text-primary:         #161616;
+  --cds-text-secondary:       #525252;
+  --cds-text-placeholder:     #a8a8a8;
+  --cds-text-disabled:        #c6c6c6;
+
+  --cds-border-subtle:        #e0e0e0;
+  --cds-border-subtle-01:     #c6c6c6;
+  --cds-border-strong:        #8d8d8d;
+}
+
+/* ── g90 — dark medium (hero / executive on g100 surface) ── */
+[data-theme='g90'] {
+  --cds-background:           #262626;
+  --cds-background-hover:     #353535;
+  --cds-background-active:    #525252;
+  --cds-background-selected:  #393939;
+
+  --cds-layer:                #393939;
+  --cds-layer-01:             #393939;
+  --cds-layer-02:             #525252;
+  --cds-layer-03:             #6f6f6f;
+  --cds-layer-hover-01:       #4c4c4c;
+  --cds-layer-hover-02:       #636363;
+
+  --cds-field:                #393939;
+  --cds-field-01:             #393939;
+  --cds-field-02:             #525252;
+
+  --cds-text-primary:         #f4f4f4;
+  --cds-text-secondary:       #c6c6c6;
+  --cds-text-placeholder:     #6f6f6f;
+  --cds-text-disabled:        #6f6f6f;
+
+  --cds-border-subtle:        #525252;
+  --cds-border-subtle-01:     #6f6f6f;
+  --cds-border-strong:        #8d8d8d;
+}

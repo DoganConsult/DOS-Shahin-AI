@@ -1,0 +1,69 @@
+
+> dogan-ai-os-platform-target@1.0.0 build:packages /root/DOS-AIO
+> pnpm -r --sort --workspace-concurrency=1 --filter './packages/*' run build
+
+Scope: 16 of 56 workspace projects
+
+> @target/architecture-types@0.1.0 build /root/DOS-AIO/packages/architecture-types
+> tsc -p tsconfig.build.json
+
+
+> @dos/types@1.0.0 build /root/DOS-AIO/packages/dos-types
+> tsc -p tsconfig.build.json
+
+
+> @dos/contracts@1.0.0 build /root/DOS-AIO/packages/dos-contracts
+> rm -rf dist && tsc -p tsconfig.build.json
+
+
+> @dos/db@1.0.0 build /root/DOS-AIO/packages/dos-db
+> tsc -p tsconfig.build.json
+
+
+> @shahin-grc/shared-compliance-types@1.0.0 build /root/DOS-AIO/packages/shared-compliance-types
+> tsc -p tsconfig.build.json
+
+
+> @shahin-grc/shared-risk-types@1.0.0 build /root/DOS-AIO/packages/shared-risk-types
+> tsc -p tsconfig.build.json
+
+
+> @shahin-grc/shared-workflow-types@1.0.0 build /root/DOS-AIO/packages/shared-workflow-types
+> tsc -p tsconfig.build.json
+
+
+> @dos/event-backbone@0.1.0 build /root/DOS-AIO/packages/dos-event-backbone
+> tsc -p tsconfig.build.json
+
+
+> @dos/module-sdk@1.0.0 build /root/DOS-AIO/packages/dos-module-sdk
+> tsc -p tsconfig.build.json
+
+
+> @dos/platform-core@1.0.0 build /root/DOS-AIO/packages/dos-platform-core
+> tsc -p tsconfig.build.json
+
+
+> @dos/runtime-config@0.1.0 build /root/DOS-AIO/packages/dos-runtime-config
+> tsc -p tsconfig.build.json
+
+
+> @dos/auth@1.0.0 build /root/DOS-AIO/packages/dos-auth
+> tsc -p tsconfig.build.json
+
+
+> @dos/dauth-csrf@0.1.0 build /root/DOS-AIO/packages/dos-dauth-csrf
+> tsc -p tsconfig.build.json
+
+
+> @dos/service-client@0.1.0 build /root/DOS-AIO/packages/dos-service-client
+> tsc -p tsconfig.build.json
+
+
+> @shahin/product@1.0.0 build /root/DOS-AIO/packages/shahin-product
+> tsc -p tsconfig.build.json
+
+
+> @dos/service-bootstrap@0.1.0 build /root/DOS-AIO/packages/dos-service-bootstrap
+> tsc -p tsconfig.build.json
+

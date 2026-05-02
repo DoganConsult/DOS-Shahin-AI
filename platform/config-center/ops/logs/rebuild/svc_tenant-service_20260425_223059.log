@@ -1,0 +1,4 @@
+
+> @dos/tenant-service@0.1.0 build /root/DOS-AIO/services/tenant-service
+> tsc -p tsconfig.json
+

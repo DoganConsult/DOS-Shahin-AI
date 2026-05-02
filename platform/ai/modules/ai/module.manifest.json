@@ -1,0 +1,129 @@
+{
+  "$schema": "../../../contracts/module/module.manifest.schema.json",
+  "schemaVersion": 1,
+  "kind": "platform",
+  "moduleCode": "ai",
+  "displayName": "AI Engine",
+  "description": "Platform-level AI engine: agents, autonomy levels, kill switches, budgets, prompts, HITL, model configs. Consumed by every product through the AI-OS platform plane (no direct provider calls from business modules).",
+  "version": "1.0.0",
+  "extractable": true,
+  "selfContained": true,
+  "lifecycle": {
+    "stage": "ga",
+    "owner": "platform-ai",
+    "entitlementKey": "platform.ai.engine",
+    "featureFlag": "platform.ai.engine.enabled",
+    "minTenantStage": "ga"
+  },
+  "platformDependencies": {
+    "@dos/platform-core":  "^1.0.0",
+    "@dos/module-sdk":     "^1.0.0",
+    "@dos/contracts":      "^1.0.0",
+    "@dos/types":          "^1.0.0",
+    "@dos/runtime-config": "^1.0.0"
+  },
+  "futureService": "ai-engine-service",
+  "metadata": {
+    "owner": "platform-ai",
+    "ownerTeam": "platform-ai",
+    "parentModule": "ai-os",
+    "previousLocation": "AI-OS Module/_sources/modules_ai",
+    "promotedAt": "2026-04-29",
+    "promotedFrom": {
+      "productCode": "shahin-ai",
+      "ownership": "module-owned"
+    },
+    "migrationNote": "Promoted to kind=platform. Removed product-specific productCode binding (was 'shahin-ai') and absolute-path currentSources from another developer machine. AI is platform-level infrastructure consumed by every product via the AI-OS plane.",
+    "runtime": {
+      "routeBase": "/api/ai",
+      "eventNamespace": "ai",
+      "tablePrefix": "ai_",
+      "provisioningOrder": 6
+    },
+    "seedProviders": [
+      "platform/ai/migrations/tenant/ai"
+    ],
+    "tenantDefaults": [
+      "ai_budget_limit_usd",
+      "ai_autonomy_default_level"
+    ],
+    "requiredReferenceData": [
+      "ai_model_configs",
+      "ai_agent_templates"
+    ],
+    "ownedTables": [
+      "ai_agents",
+      "ai_agent_configs",
+      "ai_budgets",
+      "ai_execution_log",
+      "ai_kill_switches",
+      "ai_boundaries",
+      "ai_autonomy_levels",
+      "ai_notes",
+      "ai_drafts",
+      "ai_interventions",
+      "ai_model_configs",
+      "ai_prompt_templates",
+      "ai_context_sources",
+      "agent_model_config",
+      "prompt_injection_log",
+      "agent_delegations",
+      "agent_governance_audit",
+      "hitl_states",
+      "guard_decision_log",
+      "personal_agent_assignments",
+      "agent_activity_log",
+      "agent_cycle_summaries",
+      "agent_handoffs",
+      "agent_discoveries",
+      "agent_tool_permissions",
+      "hitl_gates",
+      "code_search_engine_registry",
+      "code_search_indexed_surface"
+    ],
+    "referencedTables": [
+      "audit_trail",
+      "teams",
+      "workflows"
+    ],
+    "events": {
+      "publishes": [
+        "ai.agent.started",
+        "ai.agent.completed",
+        "ai.agent.failed",
+        "ai.proposal.created",
+        "ai.proposal.approved",
+        "ai.proposal.rejected",
+        "ai.delegation.granted",
+        "ai.delegation.revoked",
+        "ai.delegation.action_executed",
+        "ai.copilot.action",
+        "ai.copilot.suggestion",
+        "ai.circuit_breaker.opened",
+        "ai.circuit_breaker.closed",
+        "ai.drift.detected",
+        "ai.cost.threshold_exceeded",
+        "ai.kill_switch.activated",
+        "ai.autonomy.level_changed",
+        "ai.code_search.queried",
+        "ai.code_search.engine_health_checked",
+        "ai.code_search.engine_registered",
+        "ai.code_search.engine_status_changed",
+        "ai.code_search.surface_indexed"
+      ],
+      "subscribes": [
+        "risk.record.created",
+        "risk.record.updated",
+        "compliance.assessment.completed",
+        "compliance.gap.detected",
+        "policy.document.approved",
+        "audit.finding.created",
+        "workflow.status.changed",
+        "governance.health.updated"
+      ]
+    },
+    "routeBases": [
+      "/api/ai"
+    ]
+  }
+}

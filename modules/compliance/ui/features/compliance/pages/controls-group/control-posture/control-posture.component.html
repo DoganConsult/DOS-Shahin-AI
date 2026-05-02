@@ -1,0 +1,86 @@
+<div class="cpm-root" [dir]="i18n.direction()">
+
+  <header class="cpm-header">
+    <div class="cpm-header-left">
+      <i class=" cpm-icon"></i>
+      <div>
+        <h1>{{ i18n.translate('controlPosture.title') }}</h1>
+        <p>{{ i18n.translate('controlPosture.subtitle') }}</p>
+      </div>
+    </div>
+    <a routerLink="/agrc-os" class="cpm-nav"><i class=""></i> {{ i18n.translate('controlPosture.navBack') }}</a>
+  </header>
+
+  <!-- RACI Assignments -->
+  <div style="padding: 0 28px; margin-bottom: 12px;">
+    <app-raci-panel entityType="control" entityId="" [canEdit]="true" />
+  </div>
+
+  <!-- Summary KPIs -->
+  <div class="cpm-kpi-row">
+    <div class="cpm-kpi">
+      <span class="cpm-kpi-val">{{ totalControls() }}</span>
+      <span class="cpm-kpi-lbl">{{ i18n.translate('controlPosture.totalControls') }}</span>
+    </div>
+    <div class="cpm-kpi">
+      <span class="cpm-kpi-val cpm-green">{{ activeControls() }}</span>
+      <span class="cpm-kpi-lbl">{{ i18n.translate('controlPosture.active') }}</span>
+    </div>
+    <div class="cpm-kpi">
+      <span class="cpm-kpi-val" [class.cpm-red]="stalePercent() > 20" [class.cpm-amber]="stalePercent() > 0 && stalePercent() <= 20">{{ stalePercent() }}%</span>
+      <span class="cpm-kpi-lbl">{{ i18n.translate('controlPosture.stale') }}</span>
+    </div>
+    <div class="cpm-kpi">
+      <span class="cpm-kpi-val cpm-blue">{{ testedPercent() }}%</span>
+      <span class="cpm-kpi-lbl">{{ i18n.translate('controlPosture.tested') }}</span>
+    </div>
+  </div>
+
+  <!-- Charts Grid -->
+  <div class="cpm-grid">
+    <section class="cpm-cell cpm-cell-effectiveness">
+      <div class="cpm-card">
+        <h2 class="cpm-card-title"><i class=""></i> {{ i18n.translate('controlPosture.effectivenessGrid') }}</h2>
+        <div class="cpm-chart-wrap cpm-chart-tall">
+          <app-echart [options]="effectivenessGridOpts()" [ariaLabel]="i18n.translate('controlPosture.ariaEffectivenessGrid')" />
+        </div>
+      </div>
+    </section>
+
+    <section class="cpm-cell cpm-cell-lifecycle">
+      <div class="cpm-card">
+        <h2 class="cpm-card-title"><i class=""></i> {{ i18n.translate('controlPosture.lifecycleStages') }}</h2>
+        <div class="cpm-chart-wrap">
+          <app-echart [options]="lifecyclePieOpts()" [ariaLabel]="i18n.translate('controlPosture.ariaLifecycleDonut')" />
+        </div>
+      </div>
+    </section>
+
+    <section class="cpm-cell cpm-cell-stale">
+      <div class="cpm-card">
+        <h2 class="cpm-card-title"><i class=""></i> {{ i18n.translate('controlPosture.staleAging') }}</h2>
+        <div class="cpm-chart-wrap">
+          <app-echart [options]="staleAgingOpts()" [ariaLabel]="i18n.translate('controlPosture.ariaStaleAging')" />
+        </div>
+      </div>
+    </section>
+
+    <section class="cpm-cell cpm-cell-testing">
+      <div class="cpm-card">
+        <h2 class="cpm-card-title"><i class=""></i> {{ i18n.translate('controlPosture.testingCoverage') }}</h2>
+        <div class="cpm-chart-wrap">
+          <app-echart [options]="testingCoverageOpts()" [ariaLabel]="i18n.translate('controlPosture.ariaTestingCoverage')" />
+        </div>
+      </div>
+    </section>
+
+    <section class="cpm-cell cpm-cell-sankey">
+      <div class="cpm-card">
+        <h2 class="cpm-card-title"><i class=""></i> {{ i18n.translate('controlPosture.frameworkControlCoverage') }}</h2>
+        <div class="cpm-chart-wrap cpm-chart-tall">
+          <app-echart [options]="controlSankeyOpts()" [ariaLabel]="i18n.translate('controlPosture.ariaSankeyDiagram')" />
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

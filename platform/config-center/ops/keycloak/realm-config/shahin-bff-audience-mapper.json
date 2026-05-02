@@ -1,0 +1,14 @@
+{
+  "_comment": "Audience protocol mapper for the shahin-bff client. Required so that access tokens minted for the OIDC code flow include aud=shahin-bff and pass the platform KeycloakTokenVerifier audience check (KEYCLOAK_AUDIENCE=shahin-bff). Apply with: kcadm.sh create clients/<shahin-bff-client-uuid>/protocol-mappers/models -r dogan -f shahin-bff-audience-mapper.json",
+  "name": "audience-shahin-bff",
+  "protocol": "openid-connect",
+  "protocolMapper": "oidc-audience-mapper",
+  "consentRequired": false,
+  "config": {
+    "included.client.audience": "shahin-bff",
+    "included.custom.audience": "",
+    "id.token.claim": "false",
+    "access.token.claim": "true",
+    "userinfo.token.claim": "false"
+  }
+}

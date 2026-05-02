@@ -1,0 +1,142 @@
+<div class="ksa-regulatory-calendar">
+  <cds-tile>
+    <ng-template pTemplate="header">
+      <div class="flex justify-content-between align-items-center p-3">
+        <h2 class="m-0">
+          <i class=" mr-2"></i>
+          {{ i18n.t('KSA Regulatory Calendar', 'تقويم KSA التنظيمي') }}
+        </h2>
+        <button cdsButton 
+          icon="" 
+          [loading]="loading()" 
+          (onClick)="refresh()"
+          [text]="true"
+          [rounded]="true"
+          [cdsTooltip]="Refresh calendar"
+        ></button>
+      </div>
+    </ng-template>
+
+    <!-- Summary Cards -->
+    <div class="grid mb-4">
+      <div class="col-12 md:col-3">
+        <div class="summary-card p-3 border-round">
+          <div class="text-2xl font-bold text-primary">{{ upcomingCount() }}</div>
+          <div class="text-sm text-color-secondary">Upcoming (30 days)</div>
+          <div class="text-xs text-color-secondary" [dir]="i18n.dir()">القادمة (30 يوم)</div>
+        </div>
+      </div>
+      <div class="col-12 md:col-3">
+        <div class="summary-card p-3 border-round">
+          <div class="text-2xl font-bold text-orange-500">{{ criticalCount() }}</div>
+          <div class="text-sm text-color-secondary">Critical (7 days)</div>
+          <div class="text-xs text-color-secondary" [dir]="i18n.dir()">حرجة (7 أيام)</div>
+        </div>
+      </div>
+      <div class="col-12 md:col-3">
+        <div class="summary-card p-3 border-round">
+          <div class="text-2xl font-bold text-red-500">{{ overdueCount() }}</div>
+          <div class="text-sm text-color-secondary">Overdue</div>
+          <div class="text-xs text-color-secondary" [dir]="i18n.dir()">متأخرة</div>
+        </div>
+      </div>
+      <div class="col-12 md:col-3">
+        <div class="summary-card p-3 border-round" *ngIf="complianceSummary()">
+          <div class="text-2xl font-bold" 
+               [ngClass]="{
+                 'text-green-500': complianceSummary()?.regulatoryReadiness?.overallReadiness === 'ready',
+                 'text-orange-500': complianceSummary()?.regulatoryReadiness?.overallReadiness === 'at_risk',
+                 'text-red-500': complianceSummary()?.regulatoryReadiness?.overallReadiness === 'not_ready'
+               }">
+            {{ complianceSummary()?.overallScore?.toFixed(0) || 0 }}%
+          </div>
+          <div class="text-sm text-color-secondary">Overall Readiness</div>
+          <div class="text-xs text-color-secondary" [dir]="i18n.dir()">الجاهزية الإجمالية</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="grid mb-3">
+      <div class="col-12 md:col-6">
+        <label class="block mb-2">Regulator</label>
+        <cds-dropdown
+          [options]="regulatorOptions"
+          [(ngModel)]="selectedRegulator"
+          placeholder="All Regulators"
+          [showClear]="true"
+          styleClass="w-full"
+        ></cds-dropdown>
+      </div>
+      <div class="col-12 md:col-6">
+        <label class="block mb-2">Timeframe</label>
+        <cds-dropdown
+          [options]="timeframeOptions"
+          [(ngModel)]="selectedTimeframe"
+          placeholder="Upcoming"
+          styleClass="w-full"
+        ></cds-dropdown>
+      </div>
+    </div>
+
+    <!-- Deadlines List -->
+    <div *ngIf="loading()" class="grid">
+      <div class="col-12" *ngFor="let i of [1,2,3]">
+        <cds-placeholder></cds-placeholder></p-skeleton>
+      </div>
+    </div>
+
+    <div *ngIf="!loading() && filteredDeadlines().length === 0" class="text-center p-4">
+      <i class=" text-4xl text-color-secondary mb-3"></i>
+      <p class="text-color-secondary">No regulatory deadlines found</p>
+      <p class="text-xs text-color-secondary" [dir]="i18n.dir()">لم يتم العثور على مواعيد نهائية تنظيمية</p>
+    </div>
+
+    <div *ngIf="!loading() && filteredDeadlines().length > 0" class="deadlines-list">
+      <div 
+        *ngFor="let deadline of filteredDeadlines()" 
+        class="deadline-item p-3 mb-2 border-round surface-border"
+        [class.border-left-3]="true"
+        [ngClass]="'border-' + getSeverityClass(deadline)"
+      >
+        <div class="flex justify-content-between align-items-start">
+          <div class="flex-1">
+            <div class="flex align-items-center mb-2">
+              <cds-tag 
+                [value]="getRegulatorName(deadline.regulatorCode)"
+                [severity]="getSeverityClass(deadline)"
+                class="mr-2"
+              ></cds-tag>
+              <cds-tag 
+                [value]="getSeverityLabel(deadline)"
+                severity="info"
+                class="mr-2"
+              ></cds-tag>
+              <span class="text-sm text-color-secondary">{{ deadline.frameworkCode }}</span>
+            </div>
+            <h4 class="m-0 mb-1">{{ deadline.descriptionEn }}</h4>
+            <p class="text-sm text-color-secondary m-0 mb-2" [dir]="i18n.dir()">
+              {{ deadline.descriptionAr }}
+            </p>
+            <div class="flex align-items-center gap-3 text-sm text-color-secondary">
+              <span>
+                <i class=" mr-1"></i>
+                {{ deadline.dueDate | date:'short' }}
+              </span>
+              <span *ngIf="deadline.daysUntil >= 0">
+                <i class=" mr-1"></i>
+                {{ deadline.daysUntil }} days remaining
+              </span>
+              <span *ngIf="deadline.daysUntil < 0" class="text-red-500">
+                <i class=" mr-1"></i>
+                {{ getDaysOverdue(deadline) }} days overdue
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </cds-tile>
+</div>
+
+<cds-notification></cds-notification></p-toast>

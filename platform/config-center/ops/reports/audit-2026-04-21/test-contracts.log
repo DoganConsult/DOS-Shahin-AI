@@ -1,0 +1,31 @@
+
+> dogan-ai-os-platform-target@1.0.0 test:contracts /root/DOS-AIO
+> vitest run -c vitest.contracts.config.mjs
+
+
+ RUN  v4.1.4 /root/DOS-AIO
+
+ ❯ tests/contract/service-boundary-contracts.test.ts (10 tests | 1 failed) 274ms
+     × services use @dos/db for database access (no direct pg imports) 61ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/contract/service-boundary-contracts.test.ts > Service Boundary Contracts > services use @dos/db for database access (no direct pg imports)
+AssertionError: services/workflow-service/src/domain/config/tenant-connection-resolver.ts imports pg directly instead of @dos/db
+ ❯ tests/contract/service-boundary-contracts.test.ts:73:18
+     71|         const content = fs.readFileSync(f, 'utf-8');
+     72|         if (content.includes("from 'pg'") || content.includes('from "p…
+     73|           expect.fail(`${path.relative(ROOT, f)} imports pg directly i…
+       |                  ^
+     74|         }
+     75|       }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 16 passed (17)
+      Tests  1 failed | 526 passed (527)
+   Start at  12:25:50
+   Duration  1.86s (transform 3.05s, setup 0ms, import 3.89s, tests 4.24s, environment 3ms)
+
+ ELIFECYCLE  Command failed with exit code 1.

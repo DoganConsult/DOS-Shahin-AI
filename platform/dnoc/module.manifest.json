@@ -1,0 +1,140 @@
+{
+  "$schema": "../../platform/contracts/module/module.manifest.schema.json",
+  "schemaVersion": 1,
+  "kind": "platform",
+  "moduleCode": "dnoc",
+  "displayName": "DNOC — Dogan Network & Observability Center",
+  "description": "Centralized observability for the DOS platform. Ingests metrics, logs, traces, and route registrations from every platform module and product, and exposes per-service health. Complements DSOC (security audit) and owns everything operational: what is running, how fast, how often, and how healthy.",
+  "version": "1.0.0",
+  "extractable": true,
+  "selfContained": true,
+  "lifecycle": {
+    "stage": "alpha",
+    "owner": "platform-core",
+    "entitlementKey": "platform.dnoc",
+    "featureFlag": "platform.dnoc.enabled",
+    "minTenantStage": "alpha"
+  },
+  "contracts": {
+    "openapi": "./contracts/dnoc-port.openapi.yaml"
+  },
+  "platformDependencies": {
+    "@dos/platform-core": "^1.0.0",
+    "@dos/module-sdk":    "^1.0.0",
+    "@dos/contracts":     "^1.0.0",
+    "@dos/types":         "^1.0.0"
+  },
+  "metadata": {
+    "ownerTeam": "platform-core",
+    "stability": "alpha",
+    "previousLocation": "DNOC Module",
+    "previousManifest": "platform/dnoc/manifest/platform-module.manifest.json",
+    "promotedAt": "2026-04-29",
+    "migrationNote": "Standardized to module.manifest.schema.json: replaced legacy `layer: \"platform\"` with `kind: \"platform\"`, added required `lifecycle` block, and moved all module-specific rich metadata under `metadata`. The legacy manifest is archived under _quarantine/legacy-manifests/dnoc/.",
+    "exposes": {
+      "packages": [
+        { "name": "@dos/dnoc-core",     "path": "platform/dnoc/packages/core",     "entry": "dist/index.js" },
+        { "name": "@dos/dnoc-shared",   "path": "platform/dnoc/packages/shared",   "entry": "dist/index.js" },
+        { "name": "@dos/dnoc-frontend", "path": "platform/dnoc/packages/frontend", "entry": "index.ts" }
+      ],
+      "services": [
+        { "code": "dnoc-service", "path": "platform/dnoc/services/dnoc-service", "apiBase": "/api/dnoc" }
+      ],
+      "ports": {
+        "package": "@dos/ports",
+        "subpath": "@dos/ports/dnoc",
+        "names": ["DNOCPort"],
+        "binding": "platform/dnoc/packages/core/src/dnoc-port.impl.ts (createDNOCPort)",
+        "status": "extracted"
+      }
+    },
+    "consumes": {
+      "platformPorts": ["@dos/ports/dos.DOSPort"],
+      "platformPackages": ["@dos/types", "@dos/contracts", "@dos/ports", "@dos/platform-core", "@dos/db", "@dos/event-backbone"]
+    },
+    "schemas": {
+      "dedicated": {
+        "name": "platform_dnoc",
+        "tables": [
+          "metrics",
+          "logs",
+          "traces",
+          "routes",
+          "health_checks"
+        ]
+      }
+    },
+    "events": {
+      "publishes": [
+        "dnoc.health.changed",
+        "dnoc.route.registered",
+        "dnoc.route.deregistered"
+      ],
+      "subscribes": [
+        "dnoc.metric.recorded",
+        "dnoc.log.emitted",
+        "dnoc.span.emitted"
+      ]
+    },
+    "routes": {
+      "catalog": "platform/dnoc/services/dnoc-service/src/routes",
+      "mounts": [
+        { "file": "port/dnoc-port.routes.ts", "base": "/api/dnoc/port/v1", "catalog": "dnoc:port-rest" }
+      ]
+    },
+    "migrations": {
+      "indexFile": "platform/dnoc/migrations/migrations-index.json",
+      "ownership": "physical",
+      "physicalLocation": "platform/dnoc/migrations/{public,tenant}",
+      "physicalMoveStatus": "native"
+    },
+    "observability": {
+      "metricsPrefix": "dnoc_",
+      "healthEndpoint": "/api/dnoc/health",
+      "readinessEndpoint": "/api/dnoc/ready",
+      "tracingEnabled": true,
+      "structuredLogging": true,
+      "owningService": "dnoc-service"
+    },
+    "scheduledJobs": {
+      "registry": "platform/dnoc/jobs/index.ts",
+      "registrar": "registerDNOCJobs",
+      "jobs": [
+        {
+          "name": "dnoc.retention.prune",
+          "cron": "0 */6 * * *",
+          "description": "Prune metrics/logs/traces older than DNOC_*_RETENTION_DAYS from platform_dnoc.* every 6 hours.",
+          "currentWiring": "setInterval in dnoc-service/src/server.ts via startDNOCRetentionLoop; the platform-scheduler-driven path in registerDNOCJobs() is forward-compatible."
+        }
+      ]
+    },
+    "security": {
+      "auditTarget": "DSOC via dsoc.audit.* / dsoc.alert.* — DNOC emits config_change audits for route registration",
+      "secretsViaEnv": true,
+      "compliance": ["SOC2", "ISO27001"]
+    },
+    "tests": {
+      "fileCount": 0,
+      "boundaryTest": "platform/dnoc/packages/core/src/__tests__"
+    },
+    "completionStatus": {
+      "definitionOfDone": "14-item DoD per platform module spec",
+      "session": "DNOC-Session-1 (Bootstrap)",
+      "session1Closed": [
+        "structure",
+        "manifest",
+        "bundle",
+        "schema-migration",
+        "core-package",
+        "service-bootstrap",
+        "isolation-rules",
+        "rest-contract",
+        "frontend-package",
+        "module-shim",
+        "contract-tests",
+        "docs"
+      ],
+      "remainingExternalBlockers": []
+    }
+  }
+}

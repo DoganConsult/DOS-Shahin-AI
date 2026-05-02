@@ -1,0 +1,28 @@
+{
+  "serviceCode": "compliance-controls-service",
+  "displayName": "Compliance and Controls Service",
+  "layer": "domain-service",
+  "ownerTeam": "product-shahin-ai",
+  "runtime": "node",
+  "dependsOn": [
+    "auth-service",
+    "tenant-service",
+    "workflow-service"
+  ],
+  "modules": [
+    "compliance",
+    "controls",
+    "exception",
+    "training",
+    "qiyas",
+    "dora",
+    "privacy",
+    "knowledge",
+    "local-knowledge",
+    "ksa-regulatory",
+    "benchmarks"
+  ],
+  "exposes": {
+    "apiBase": "/api/compliance"
+  }
+}

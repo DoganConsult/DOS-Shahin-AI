@@ -1,0 +1,45 @@
+import { emitEvent as _emitEvent } from '../../ports/events.port';
+import { swallow as _swallow, EC as _EC } from '@dos/platform-core/resilience/resilient-catch';
+import { z as _z } from 'zod';
+import { Router } from 'express';
+import { authenticate, requirePermission } from '../../ports/auth.port';
+
+import { validate, auditMiddleware, asyncHandler, rateLimiter, moduleStack, mutationEventHook } from '../../ports/middleware.port';
+import { updateConfigBody, createReseedBody, createReindexBody, createBackfillBody } from '../../schemas/ai-governance.schemas';
+import {
+  getModuleConfig, updateModuleConfig, reseedModule,
+  getModuleHealth, reindexModule, backfillModule,
+  getSlaConfig, getEscalationPolicy, getRunbookLinks,
+} from '../../controllers/ai-governance-admin.controller';
+import { z } from "zod";
+
+import type { Router as ExpressRouter } from 'express';
+const router: ExpressRouter = Router();
+router.use(moduleStack('ai-governance'));
+router.use(auditMiddleware('ai-governance'));
+router.use(mutationEventHook('ai-governance'));
+router.use(authenticate);
+router.use(auditMiddleware('ai-governance-admin'));
+router.use(rateLimiter({ windowMs: 60_000, maxRequests: 30, keyGenerator: (req: any) => req.ip || 'unknown' }));
+
+router.get('/config', requirePermission('ai.governance.configure'), validate({ query: z.record(z.unknown()) }), asyncHandler(getModuleConfig));
+
+router.put('/config', requirePermission('ai.governance.configure'), validate({ body: updateConfigBody }), asyncHandler(updateModuleConfig));
+
+router.post('/reseed', requirePermission('admin.system.manage'), validate({ body: createReseedBody }), asyncHandler(reseedModule));
+
+router.get('/health', requirePermission('ai.governance.read'), validate({ query: z.record(z.unknown()) }), asyncHandler(getModuleHealth));
+
+router.post('/reindex', requirePermission('admin.system.manage'), validate({ body: createReindexBody }), asyncHandler(reindexModule));
+
+router.post('/backfill', requirePermission('admin.system.manage'), validate({ body: createBackfillBody }), asyncHandler(backfillModule));
+
+router.get('/sla', requirePermission('ai.governance.configure'), validate({ query: z.record(z.unknown()) }), asyncHandler(getSlaConfig));
+
+router.get('/escalation-policy', requirePermission('ai.governance.configure'), validate({ query: z.record(z.unknown()) }), asyncHandler(getEscalationPolicy));
+
+router.get('/runbooks', requirePermission('ai.governance.read'), validate({ query: z.record(z.unknown()) }), asyncHandler(getRunbookLinks));
+
+export default router;
+
+let genericPayloadSchema = z.record(z.unknown());

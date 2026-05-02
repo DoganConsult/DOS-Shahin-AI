@@ -1,0 +1,32 @@
+export declare class ActionAutoRepo {
+    static query1(schema: string, args: unknown[]): Promise<import("pg").QueryResult<any>>;
+    static query2(schema: string, args: unknown[]): Promise<import("pg").QueryResult<any>>;
+    static query3(schema: string, args: unknown[]): Promise<import("pg").QueryResult<any>>;
+    static query4(schema: string, args: unknown[]): Promise<import("pg").QueryResult<any>>;
+    static query5(schema: string, args: unknown[]): Promise<import("pg").QueryResult<any>>;
+    static query6(schema: string, args: unknown[]): Promise<import("pg").QueryResult<any>>;
+    static query7(schema: string, args: unknown[]): Promise<import("pg").QueryResult<any>>;
+    static query8(schema: string, args: unknown[]): Promise<import("pg").QueryResult<any>>;
+    static query9(schema: string, args: unknown[]): Promise<import("pg").QueryResult<any>>;
+    static query10(schema: string, args: unknown[]): Promise<import("pg").QueryResult<any>>;
+    static query11(schema: string, args: unknown[]): Promise<import("pg").QueryResult<any>>;
+    static query12(schema: string, args: unknown[]): Promise<import("pg").QueryResult<any>>;
+    static query13(schema: string, args: unknown[]): Promise<import("pg").QueryResult<any>>;
+    static query14(schema: string, args: unknown[]): Promise<import("pg").QueryResult<any>>;
+    static query15(schema: string, args: unknown[]): Promise<import("pg").QueryResult<any>>;
+    static query16(schema: string, args: unknown[]): Promise<import("pg").QueryResult<any>>;
+    static query17(schema: string, args: unknown[]): Promise<import("pg").QueryResult<any>>;
+    static query18(schema: string, args: unknown[]): Promise<import("pg").QueryResult<any>>;
+    static query19(schema: string, args: unknown[]): Promise<import("pg").QueryResult<any>>;
+    static query20(schema: string, args: unknown[]): Promise<import("pg").QueryResult<any>>;
+    static query21(schema: string, args: unknown[]): Promise<import("pg").QueryResult<any>>;
+    static query22(schema: string, args: unknown[]): Promise<import("pg").QueryResult<any>>;
+    static query23(schema: string, args: unknown[]): Promise<import("pg").QueryResult<any>>;
+    static query24(schema: string, args: unknown[]): Promise<import("pg").QueryResult<any>>;
+    static query25(schema: string, args: unknown[]): Promise<import("pg").QueryResult<any>>;
+    static query26(schema: string, args: unknown[]): Promise<import("pg").QueryResult<any>>;
+    static query27(schema: string, args: unknown[]): Promise<import("pg").QueryResult<any>>;
+    static query28(schema: string, args: unknown[]): Promise<import("pg").QueryResult<any>>;
+    static query29(schema: string, args: unknown[]): Promise<import("pg").QueryResult<any>>;
+    static query30(schema: string, args: unknown[]): Promise<import("pg").QueryResult<any>>;
+}

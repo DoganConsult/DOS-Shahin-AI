@@ -1,0 +1,32 @@
+{
+  "serviceCode": "sales-room-service",
+  "displayName": "Sales Room Service",
+  "layer": "domain-service",
+  "ownerTeam": "product-shahin-ai",
+  "runtime": "node",
+  "status": "RED_BLOCKED",
+  "statusGrade": "RED_BLOCKED",
+  "statusSeverity": "P0",
+  "statusUpdated": "2026-04-30",
+  "statusReason": "Excluded from PM2 staging fleet (ops/ports.allocation.json -> excluded:true). Crash-loop with 4871 restarts (EADDRINUSE :4047) caused by missing single-listener guard / graceful shutdown — orphan process kept holding port across redeploys. Re-enable after: (1) idempotent listen() guard, (2) SIGTERM graceful shutdown closing the http server, (3) verified clean restart cycle in PM2.",
+  "dependsOn": [
+    "auth-service",
+    "tenant-service",
+    "audit-service",
+    "ai-gateway-service"
+  ],
+  "modules": [
+    "sales-room"
+  ],
+  "exposes": {
+    "apiBase": "/api/sales-room",
+    "events": [
+      "sales_room.asset.uploaded",
+      "sales_room.asset.ingested",
+      "sales_room.asset.failed",
+      "sales_room.room.created",
+      "sales_room.room.opened",
+      "sales_room.lead.captured"
+    ]
+  }
+}

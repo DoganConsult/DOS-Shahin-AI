@@ -1,0 +1,33 @@
+{
+  "extends": "../../../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "strict": true,
+    "outDir": "dist",
+    "noEmit": false,
+    "composite": true,
+    "declaration": true,
+    "declarationMap": false,
+    "sourceMap": true,
+    "tsBuildInfoFile": "./dist/.tsbuildinfo",
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@dos/types": ["../../../packages/dos-types/dist/index.d.ts"],
+      "@dos/types/*": ["../../../packages/dos-types/dist/*"],
+      "@dos/contracts": ["../../../packages/dos-contracts/dist/index.d.ts"],
+      "@dos/contracts/*": ["../../../packages/dos-contracts/dist/*"],
+      "@dos/db": ["../../../packages/dos-db/dist/index.d.ts"],
+      "@dos/db/*": ["../../../packages/dos-db/dist/*"]
+    }
+  },
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.test.ts",
+    "**/*.spec.ts"
+  ]
+}

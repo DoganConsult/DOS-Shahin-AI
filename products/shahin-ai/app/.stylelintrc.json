@@ -1,0 +1,22 @@
+{
+  "rules": {
+    "selector-pseudo-element-no-unknown": [true, {
+      "ignorePseudoElements": []
+    }],
+    "comment-empty-line-before": null,
+    "no-descending-specificity": null
+  },
+  "overrides": [
+    {
+      "files": ["src/app/**/*.scss", "src/app/**/*.css", "src/styles/**/*.css"],
+      "rules": {
+        "selector-pseudo-element-disallowed-list": [
+          "ng-deep",
+          "/^-/"
+        ],
+        "declaration-no-important": [true, { "severity": "error" }],
+        "no-duplicate-selectors": [true, { "severity": "warning" }]
+      }
+    }
+  ]
+}

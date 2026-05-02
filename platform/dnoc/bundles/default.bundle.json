@@ -1,0 +1,50 @@
+{
+  "$schema": "../../dos/manifests/platform-bundle.schema.json",
+  "bundleCode": "dnoc-default",
+  "moduleCode": "dnoc",
+  "displayName": "DNOC Default Bundle",
+  "description": "Standard DNOC deployment: dnoc-service backed by @dos/dnoc-core with PostgreSQL persistence in the platform_dnoc schema.",
+  "version": "1.0.0",
+  "services": [
+    {
+      "code": "dnoc-service",
+      "path": "platform/dnoc/services/dnoc-service",
+      "required": true,
+      "ports": { "http": 4102 },
+      "dependsOnPlatform": ["dos"],
+      "dependsOnExternal": ["postgres"]
+    }
+  ],
+  "packages": [
+    "@dos/dnoc-core",
+    "@dos/dnoc-shared"
+  ],
+  "frontendPackages": [
+    {
+      "name": "@dos/dnoc-frontend",
+      "path": "platform/dnoc/packages/frontend",
+      "status": "shipped-as-source"
+    }
+  ],
+  "migrations": {
+    "indexFile": "platform/dnoc/migrations/migrations-index.json"
+  },
+  "environment": {
+    "required": ["DATABASE_URL"],
+    "optional": [
+      "DNOC_METRICS_RETENTION_DAYS",
+      "DNOC_LOGS_RETENTION_DAYS",
+      "DNOC_TRACES_SAMPLE_RATE"
+    ]
+  },
+  "healthChecks": [
+    { "service": "dnoc-service", "endpoint": "/api/dnoc/health", "expectedStatus": 200 },
+    { "service": "dnoc-service", "endpoint": "/api/dnoc/ready", "expectedStatus": 200 }
+  ],
+  "deployment": {
+    "runtime": "node",
+    "minNodeVersion": "20",
+    "horizontalScaling": "supported",
+    "statefulComponents": ["postgres"]
+  }
+}

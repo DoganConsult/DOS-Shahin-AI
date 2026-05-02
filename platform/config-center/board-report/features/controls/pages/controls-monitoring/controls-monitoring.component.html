@@ -1,0 +1,194 @@
+<!-- Controls Monitoring — Continuous Monitoring Dashboard -->
+<div class="controls-monitoring" [attr.dir]="dir()">
+
+  <!-- Loading State -->
+  @if (loading()) {
+    <app-skeleton-loader variant="list" [count]="4" />
+    <app-skeleton-loader variant="card" />
+    <app-skeleton-loader variant="card" />
+  }
+
+  <!-- Error State -->
+  @if (!loading() && error()) {
+    <app-empty-state
+      variant="error"
+      [title]="isAr() ? 'فشل تحميل بيانات المراقبة' : 'Failed to load monitoring data'"
+      [description]="isAr() ? 'تحقق من الاتصال وحاول مرة أخرى' : 'Check your connection and try again'"
+      [actionLabel]="isAr() ? 'إعادة المحاولة' : 'Retry'"
+      [dir]="dir()"
+      (action)="loadData()" />
+  }
+
+  <!-- Loaded Content -->
+  @if (!loading() && !error()) {
+
+    <!-- Alert Summary Strip -->
+    <section class="summary-strip" [attr.aria-label]="isAr() ? 'ملخص التنبيهات' : 'Alert Summary'">
+      <div class="summary-card">
+        <div class="summary-card__icon" style="background: color-mix(in srgb, var(--primary) 12%, transparent)">
+          <i class="pi pi-bell" style="color: var(--primary)" aria-hidden="true"></i>
+        </div>
+        <div class="summary-card__content">
+          <span class="summary-card__value">{{ totalAlerts() }}</span>
+          <span class="summary-card__label">{{ isAr() ? 'إجمالي التنبيهات' : 'Total Alerts' }}</span>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-card__icon" style="background: color-mix(in srgb, var(--severity-critical) 12%, transparent)">
+          <i class="pi pi-bolt" style="color: var(--severity-critical)" aria-hidden="true"></i>
+        </div>
+        <div class="summary-card__content">
+          <span class="summary-card__value">{{ criticalAlerts() }}</span>
+          <span class="summary-card__label">{{ isAr() ? 'حرج' : 'Critical' }}</span>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-card__icon" style="background: color-mix(in srgb, var(--severity-high) 12%, transparent)">
+          <i class="pi pi-arrow-up" style="color: var(--severity-high)" aria-hidden="true"></i>
+        </div>
+        <div class="summary-card__content">
+          <span class="summary-card__value">{{ highAlerts() }}</span>
+          <span class="summary-card__label">{{ isAr() ? 'مرتفع' : 'High' }}</span>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-card__icon" style="background: color-mix(in srgb, var(--warning) 12%, transparent)">
+          <i class="pi pi-eye" style="color: var(--warning)" aria-hidden="true"></i>
+        </div>
+        <div class="summary-card__content">
+          <span class="summary-card__value">{{ unacknowledged() }}</span>
+          <span class="summary-card__label">{{ isAr() ? 'غير مقرّ بها' : 'Unacknowledged' }}</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Two-Column Layout: Rules Table + Chart -->
+    <section class="two-col-section">
+
+      <!-- Monitoring Rules Table -->
+      <div class="section-card">
+        <div class="section-card__header">
+          <i class="pi pi-cog" aria-hidden="true"></i>
+          <span>{{ isAr() ? 'قواعد المراقبة' : 'Monitoring Rules' }}</span>
+        </div>
+        <div class="section-card__body">
+          @if (!rules().length) {
+            <app-empty-state
+              [title]="isAr() ? 'لا توجد قواعد مراقبة' : 'No monitoring rules'"
+              [description]="isAr() ? 'قم بتعيين قواعد من صفحة الإدارة' : 'Configure rules from the Admin page'"
+              [dir]="dir()" />
+          } @else {
+            <p-table
+              [value]="rules()"
+              [paginator]="true"
+              [rows]="8"
+              styleClass="p-datatable-sm p-datatable-striped"
+              [attr.aria-label]="isAr() ? 'جدول قواعد المراقبة' : 'Monitoring Rules Table'">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>{{ isAr() ? 'اسم القاعدة' : 'Rule Name' }}</th>
+                  <th>{{ isAr() ? 'المصدر' : 'Signal Source' }}</th>
+                  <th>{{ isAr() ? 'الحد' : 'Threshold' }}</th>
+                  <th>{{ isAr() ? 'الخطورة' : 'Severity' }}</th>
+                  <th>{{ isAr() ? 'نشط' : 'Active' }}</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-rule>
+                <tr>
+                  <td class="font-semibold">{{ rule.ruleName }}</td>
+                  <td>{{ rule.signalSource || '\u2014' }}</td>
+                  <td>{{ rule.threshold ?? '\u2014' }}</td>
+                  <td><app-status-badge [status]="rule.severity" /></td>
+                  <td>
+                    <span class="active-dot" [class.active-dot--on]="rule.active" [class.active-dot--off]="!rule.active">
+                      {{ rule.active ? (isAr() ? 'نشط' : 'On') : (isAr() ? 'معطل' : 'Off') }}
+                    </span>
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          }
+        </div>
+      </div>
+
+      <!-- Health by Family Chart -->
+      <div class="section-card">
+        <div class="section-card__header">
+          <i class="pi pi-chart-bar" aria-hidden="true"></i>
+          <span>{{ isAr() ? 'صحة الضوابط حسب العائلة' : 'Health by Family' }}</span>
+        </div>
+        <div class="section-card__body chart-body">
+          @if (healthChartData()) {
+            <div class="chart-container">
+              <p-chart type="bar" [data]="healthChartData()!" [options]="healthChartOptions" />
+            </div>
+          } @else {
+            <app-empty-state
+              [title]="isAr() ? 'لا توجد بيانات للرسم البياني' : 'No chart data'"
+              [description]="isAr() ? 'ستتوفر البيانات بعد تفعيل المراقبة' : 'Data will be available after monitoring is active'"
+              [dir]="dir()" />
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- Active Alerts Table -->
+    <grc-data-table
+      [title]="isAr() ? 'التنبيهات النشطة' : 'Active Alerts'"
+      [totalRecords]="alerts().length"
+      [loading]="false"
+      [emptyMessage]="isAr() ? 'لا توجد تنبيهات نشطة' : 'No active alerts'">
+      @if (alerts().length) {
+        <p-table
+          [value]="alerts()"
+          [paginator]="true"
+          [rows]="10"
+          [rowsPerPageOptions]="[10, 25, 50]"
+          styleClass="p-datatable-sm p-datatable-striped"
+          [attr.aria-label]="isAr() ? 'جدول التنبيهات النشطة' : 'Active Alerts Table'">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>{{ isAr() ? 'عنوان الضابط' : 'Control Title' }}</th>
+              <th>{{ isAr() ? 'الخطورة' : 'Severity' }}</th>
+              <th>{{ isAr() ? 'الحالة' : 'Status' }}</th>
+              <th>{{ isAr() ? 'تاريخ الكشف' : 'Detected At' }}</th>
+              <th>{{ isAr() ? 'أقرّ بها' : 'Acknowledged By' }}</th>
+              <th>{{ isAr() ? 'إجراءات' : 'Actions' }}</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-alert>
+            <tr>
+              <td class="font-semibold">{{ alert.controlTitle || alert.controlId }}</td>
+              <td><app-status-badge [status]="alert.severity" /></td>
+              <td><app-status-badge [status]="alert.status" /></td>
+              <td>{{ formatDate(alert.detectedAt) }}</td>
+              <td>{{ alert.acknowledgedBy || '\u2014' }}</td>
+              <td>
+                @if (!alert.acknowledgedBy) {
+                  <button pButton
+                    class="p-button-sm p-button-outlined"
+                    [label]="isAr() ? 'إقرار' : 'Acknowledge'"
+                    icon="pi pi-check"
+                    (click)="acknowledgeAlert(alert.alertId)">
+                  </button>
+                } @else {
+                  <span class="text-muted">{{ isAr() ? 'تم الإقرار' : 'Acknowledged' }}</span>
+                }
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="6">
+                <app-empty-state
+                  [title]="isAr() ? 'لا توجد تنبيهات نشطة' : 'No active alerts'"
+                  [description]="isAr() ? 'جميع الضوابط تعمل ضمن الحدود الطبيعية' : 'All controls operating within thresholds'"
+                  [dir]="dir()" />
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      }
+    </grc-data-table>
+  }
+</div>

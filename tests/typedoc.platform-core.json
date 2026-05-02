@@ -1,0 +1,10 @@
+{
+  "entryPoints": ["packages/dos-platform-core/dist/index.d.ts"],
+  "tsconfig": "typedoc.platform-core.tsconfig.json",
+  "out": "docs/api/platform-core",
+  "readme": "none",
+  "excludePrivate": true,
+  "excludeProtected": false,
+  "excludeExternals": true,
+  "includeVersion": true
+}

@@ -1,0 +1,34 @@
+{
+  "name": "@dos/core-ai",
+  "version": "1.0.0",
+  "description": "AI-OS — Core AI shared library: pgvector RAG adapter and other framework-agnostic AI helpers consumable from any service or module.",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./pgvector-rag-adapter": {
+      "types": "./dist/pgvector-rag-adapter.d.ts",
+      "default": "./dist/pgvector-rag-adapter.js"
+    },
+    "./agent-loader": {
+      "types": "./dist/agent-loader.d.ts",
+      "default": "./dist/agent-loader.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@dos/db": "workspace:*",
+    "@dos/platform-core": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0"
+  },
+  "type": "module"
+}

@@ -1,0 +1,15 @@
+{
+  "id": "controls.owner_acknowledge",
+  "module": "controls",
+  "hook": "owner_acknowledge",
+  "version": "1.0.0",
+  "sla_hours": 48,
+  "actor_role_default": "controls.module_lead",
+  "states": ["pending","acknowledged","escalated"],
+  "initial": "pending",
+  "transitions": [{"from":"pending","to":"acknowledged","on":"ack","actor_role":"controls.module_lead"},{"from":"pending","to":"escalated","on":"sla_breach","actor_role":"controls.executive_owner"}],
+  "audit_event_prefix": "controls.workflow.owner_acknowledge",
+  "notification_targets": ["controls.module_lead", "controls.approver"],
+  "evidence_required_on": ["passed","published"],
+  "escalation": { "on": "sla_breach", "to": "controls.executive_owner", "after_hours": 96 }
+}

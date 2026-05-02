@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "verbatimModuleSyntax": false,
+    "isolatedModules": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "strict": false,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "@dos/types": ["packages/dos-types/src/index.ts"],
+      "@dos/types/*": ["packages/dos-types/src/*"],
+      "@dos/contracts": ["packages/dos-contracts/src/index.ts"],
+      "@dos/contracts/*": ["packages/dos-contracts/src/*"],
+      "@dos/platform-core": ["packages/dos-platform-core/src/index.ts"],
+      "@dos/platform-core/*": ["packages/dos-platform-core/src/*"],
+      "@dos/auth": ["packages/dos-auth/src/index.ts"],
+      "@dos/auth/*": ["packages/dos-auth/src/*"],
+      "@dos/db": ["packages/dos-db/src/index.ts"],
+      "@dos/db/*": ["packages/dos-db/src/*"],
+      "@dos/module-sdk": ["packages/dos-module-sdk/src/index.ts"],
+      "@dos/module-sdk/*": ["packages/dos-module-sdk/src/*"],
+      "@shahin-ai/product": ["packages/shahin-product/src/index.ts"],
+      "@shahin-ai/product/*": ["packages/shahin-product/src/*"]
+    }
+  },
+  "exclude": [
+    "node_modules",
+    "dist",
+    "build",
+    "coverage",
+    ".next",
+    ".turbo",
+    "tmp"
+  ]
+}

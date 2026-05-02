@@ -1,0 +1,100 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.invalidateContextCache = invalidateContextCache;
+exports.readGovernanceContext = readGovernanceContext;
+exports.readModuleOperatingStates = readModuleOperatingStates;
+exports.isModuleOn = isModuleOn;
+const database_port_1 = require("../../ports/database.port");
+const db_1 = require("@dos/db");
+let contextCache = new Map();
+let moduleStateCache = new Map();
+const CTX_TTL_MS = 5 * 60 * 1000;
+function invalidateContextCache(tenantId) {
+    contextCache.delete(tenantId);
+    moduleStateCache.delete(tenantId);
+}
+async function readGovernanceContext(tenantId) {
+    const cached = contextCache.get(tenantId);
+    if (cached && Date.now() - cached.fetchedAt < CTX_TTL_MS)
+        return cached.ctx;
+    try {
+        const result = await (0, database_port_1.safeQuery)(`SELECT tenant_id, context_version, complexity,
+              business_profile, regulatory_profile, framework_profile,
+              module_profile, ownership_profile, persona_profile,
+              pain_profile, automation_profile, agent_profile,
+              computed_at
+       FROM public.tenant_governance_context
+       WHERE tenant_id = $1 AND is_active = true
+       LIMIT 1`, [tenantId]);
+        if (result.rows.length === 0)
+            return null;
+        const r = (0, db_1.getFirstRow)(result);
+        const ctx = {
+            tenantId: r.tenant_id,
+            contextVersion: r.context_version,
+            complexity: r.complexity,
+            businessProfile: r.business_profile ?? {},
+            regulatoryProfile: r.regulatory_profile ?? {},
+            frameworkProfile: r.framework_profile ?? {},
+            moduleProfile: r.module_profile ?? {},
+            ownershipProfile: r.ownership_profile ?? {},
+            personaProfile: r.persona_profile ?? {},
+            painProfile: r.pain_profile ?? {},
+            automationProfile: r.automation_profile ?? {},
+            agentProfile: r.agent_profile ?? {},
+            computedAt: r.computed_at,
+        };
+        if (contextCache.size >= 200) {
+            const oldest = contextCache.keys().next().value;
+            if (oldest !== undefined)
+                contextCache.delete(oldest);
+        }
+        contextCache.set(tenantId, { ctx, fetchedAt: Date.now() });
+        return ctx;
+    }
+    catch {
+        return null;
+    }
+}
+async function readModuleOperatingStates(tenantId) {
+    const cached = moduleStateCache.get(tenantId);
+    if (cached && Date.now() - cached.fetchedAt < CTX_TTL_MS)
+        return cached.states;
+    try {
+        const result = await (0, database_port_1.safeQuery)(`SELECT module_code, state, activation_source, trial_expiry_at, is_mandatory
+       FROM public.module_operating_states
+       WHERE tenant_id = $1 AND is_active = true
+       ORDER BY priority, module_code`, [tenantId]);
+        const states = result.rows.map((r) => ({
+            moduleCode: r.module_code,
+            state: r.state,
+            activationSource: r.activation_source,
+            trialExpiryAt: r.trial_expiry_at,
+            isMandatory: !!r.is_mandatory,
+        }));
+        if (moduleStateCache.size >= 200) {
+            const oldest = moduleStateCache.keys().next().value;
+            if (oldest !== undefined)
+                moduleStateCache.delete(oldest);
+        }
+        moduleStateCache.set(tenantId, { states, fetchedAt: Date.now() });
+        return states;
+    }
+    catch {
+        return [];
+    }
+}
+function isModuleOn(states, moduleCode) {
+    const s = states.find(m => m.moduleCode === moduleCode);
+    if (!s)
+        return true;
+    if (s.state === 'on')
+        return true;
+    if (s.state === 'trial') {
+        if (!s.trialExpiryAt)
+            return true;
+        return new Date(s.trialExpiryAt) >= new Date();
+    }
+    return false;
+}
+//# sourceMappingURL=context-reader.service.js.map

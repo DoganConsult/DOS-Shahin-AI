@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+# alertmanager-render-config — ExecStartPre helper for alertmanager.service.
+# Runs as root (via the `+` prefix on ExecStartPre). Reads the env file,
+# substitutes placeholders in /etc/alertmanager/alertmanager.yml.tmpl, writes
+# /run/alertmanager/alertmanager.yml, and chowns it so the alertmanager user
+# (which the main ExecStart runs as) can read it.
+
+set -Eeuo pipefail
+
+TMPL=/etc/alertmanager/alertmanager.yml.tmpl
+OUT_DIR=/run/alertmanager
+OUT="${OUT_DIR}/alertmanager.yml"
+
+[[ -d "${OUT_DIR}" ]] || install -d -m 0750 -o alertmanager -g alertmanager "${OUT_DIR}"
+
+if [[ -f /etc/alertmanager/alertmanager.env ]]; then
+  set -a
+  # shellcheck disable=SC1091
+  . /etc/alertmanager/alertmanager.env
+  set +a
+fi
+
+: "${PAGERDUTY_SERVICE_KEY:=}"
+: "${OPSGENIE_API_KEY:=}"
+
+sed \
+  -e "s|<PAGERDUTY_SERVICE_KEY>|${PAGERDUTY_SERVICE_KEY}|g" \
+  -e "s|<OPSGENIE_API_KEY>|${OPSGENIE_API_KEY}|g" \
+  "${TMPL}" > "${OUT}"
+
+chown alertmanager:alertmanager "${OUT}"
+chmod 0640 "${OUT}"

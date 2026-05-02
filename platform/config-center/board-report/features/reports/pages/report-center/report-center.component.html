@@ -1,0 +1,226 @@
+<app-page-shell icon="file" [title]="i18n.translate('reportCenter.reportCenter')"
+      [subtitle]="isAr()
+        ? catalog.getTotalReportCount() + ' تقرير احترافي × 3 صيغ (PDF / Excel / HTML تفاعلي) — مخصص لكل دور ومحور عمل ومرحلة'
+        : catalog.getTotalReportCount() + ' professional reports × 3 formats (PDF / Excel / Interactive HTML) — tailored per role, hub & lifecycle'"
+      [breadcrumbs]="['Dashboard', 'Reports']" [loading]="false">
+
+      <!-- Stats Bar -->
+      <div class="stats-bar">
+        <div tabindex="0" role="button" (keyup.enter)="viewMode.set('role')" class="stat-pill" [class.active]="viewMode() === 'role'" (click)="viewMode.set('role')">
+          <i class="pi pi-users"></i>
+          <span class="stat-num">{{ catalog.getRoleReportCount() }}</span>
+          <span class="stat-lbl">{{ i18n.translate('reportCenter.byRole') }}</span>
+        </div>
+        <div tabindex="0" role="button" (keyup.enter)="viewMode.set('workspace')" class="stat-pill" [class.active]="viewMode() === 'workspace'" (click)="viewMode.set('workspace')">
+          <i class="pi pi-th-large"></i>
+          <span class="stat-num">{{ catalog.getWorkspaceReportCount() }}</span>
+          <span class="stat-lbl">{{ i18n.translate('reportCenter.byHub') }}</span>
+        </div>
+        <div tabindex="0" role="button" (keyup.enter)="viewMode.set('lifecycle')" class="stat-pill" [class.active]="viewMode() === 'lifecycle'" (click)="viewMode.set('lifecycle')">
+          <i class="pi pi-sync"></i>
+          <span class="stat-num">{{ catalog.getLifecycleReportCount() }}</span>
+          <span class="stat-lbl">{{ i18n.translate('reportCenter.byStage') }}</span>
+        </div>
+      </div>
+
+      <!-- Role Filter Chips -->
+      @if (viewMode() === 'role') {
+        <div class="filter-chips">
+          <button class="chip" [class.active]="activeRoleKey() === ''" (click)="activeRoleKey.set('')">
+            {{ i18n.translate('reportCenter.all') }} <span class="chip-count">{{ catalog.getRoleReportCount() }}</span>
+          </button>
+          @for (role of catalog.roles; track role.key) {
+            <button class="chip" [class.active]="activeRoleKey() === role.key"
+                    [style.--chip-color]="role.color" (click)="activeRoleKey.set(role.key)">
+              <i class="pi" [ngClass]="role.icon"></i>
+              {{ i18n.localize(role.labelEn, role.labelAr) }}
+              <span class="chip-count">{{ catalog.getReportsByRole(role.key).length }}</span>
+            </button>
+          }
+        </div>
+      }
+
+      <!-- Workspace Filter Chips -->
+      @if (viewMode() === 'workspace') {
+        <div class="filter-chips">
+          <button class="chip" [class.active]="activeHubKey() === ''" (click)="activeHubKey.set('')">
+            {{ i18n.translate('reportCenter.all') }} <span class="chip-count">{{ catalog.getWorkspaceReportCount() }}</span>
+          </button>
+          @for (hub of catalog.workspaceHubs; track hub.key) {
+            <button class="chip" [class.active]="activeHubKey() === hub.key"
+                    [style.--chip-color]="hub.color" (click)="activeHubKey.set(hub.key)">
+              <i class="pi" [ngClass]="hub.icon"></i>
+              {{ i18n.localize(hub.labelEn, hub.labelAr) }}
+              <span class="chip-count">{{ catalog.getReportsByWorkspace(hub.key).length }}</span>
+            </button>
+          }
+        </div>
+      }
+
+      <!-- Lifecycle Filter Chips -->
+      @if (viewMode() === 'lifecycle') {
+        <div class="filter-chips">
+          <button class="chip" [class.active]="activeStageKey() === ''" (click)="activeStageKey.set('')">
+            {{ i18n.translate('reportCenter.all') }} <span class="chip-count">{{ catalog.getLifecycleReportCount() }}</span>
+          </button>
+          @for (stage of catalog.lifecycleStages; track stage.key) {
+            <button class="chip" [class.active]="activeStageKey() === stage.key"
+                    [style.--chip-color]="stage.color" (click)="activeStageKey.set(stage.key)">
+              <i class="pi" [ngClass]="stage.icon"></i>
+              {{ i18n.localize(stage.labelEn, stage.labelAr) }}
+              <span class="chip-count">{{ catalog.getReportsByLifecycle(stage.key).length }}</span>
+            </button>
+          }
+        </div>
+      }
+
+      <!-- Report Grid -->
+      <div class="report-grid">
+        @for (report of filteredReports(); track report.id) {
+          <div class="report-card">
+            <div class="card-gradient" [style.background]="report.gradient">
+              <i class="pi" [ngClass]="report.icon" style="font-size: var(--font-size-3xl);color:#fff"></i>
+              <div class="card-priority">
+                <span class="priority-dot" [ngClass]="'p-' + report.priority"></span>
+                {{ report.priority }}
+              </div>
+            </div>
+            <div class="card-body">
+              <h3>{{ i18n.localize(report.titleEn, report.titleAr) }}</h3>
+              <p>{{ i18n.localize(report.descEn, report.descAr) }}</p>
+              <div class="card-meta">
+                <span class="meta-item"><i class="pi pi-file"></i> ~{{ report.estimatedPages }} {{ i18n.translate('reportCenter.pages') }}</span>
+                <span class="meta-item"><i class="pi pi-clock"></i> {{ report.frequency }}</span>
+              </div>
+              <div class="card-formats">
+                @for (fmt of report.formats; track fmt) {
+                  <span class="fmt-tag" [ngClass]="'fmt-' + fmt">{{ fmt.toUpperCase() }}</span>
+                }
+              </div>
+              <div class="card-charts">
+                @for (chart of report.charts.slice(0, 4); track chart) {
+                  <span class="chart-tag">{{ chart }}</span>
+                }
+              </div>
+            </div>
+            <div class="card-actions">
+              <button class="gen-btn" (click)="openGenerateDialog(report)">
+                <i class="pi pi-download"></i>
+                {{ i18n.translate('reportCenter.generate') }}
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Empty state -->
+      @if (filteredReports().length === 0) {
+        <div class="empty-state">
+          <i class="pi pi-inbox" style="font-size:2.5rem;color:var(--surface-400)"></i>
+          <p>{{ i18n.translate('reportCenter.noReportsMatchThisFilter') }}</p>
+        </div>
+      }
+
+      <!-- Format Features -->
+      <div class="format-features">
+        <h3>{{ i18n.translate('reportCenter.availableExportFormats') }}</h3>
+        <div class="format-grid">
+          <div class="format-card pdf-card">
+            <div class="format-icon"><i class="pi pi-file-pdf"></i></div>
+            <h4>PDF</h4>
+            <ul>
+              <li>{{ i18n.translate('reportCenter.boardreadyFormat') }}</li>
+              <li>{{ i18n.translate('reportCenter.arabicRtlSupport') }}</li>
+              <li>{{ i18n.translate('reportCenter.orgLogoBranding') }}</li>
+              <li>{{ i18n.translate('reportCenter.embeddedCharts') }}</li>
+            </ul>
+          </div>
+          <div class="format-card excel-card">
+            <div class="format-icon"><i class="pi pi-file-excel"></i></div>
+            <h4>Excel</h4>
+            <ul>
+              <li>{{ i18n.translate('reportCenter.multisheetWorkbook') }}</li>
+              <li>{{ i18n.translate('reportCenter.conditionalFormatting') }}</li>
+              <li>{{ i18n.translate('reportCenter.filterableSortable') }}</li>
+              <li>{{ i18n.translate('reportCenter.idealForAnalysts') }}</li>
+            </ul>
+          </div>
+          <div class="format-card html-card">
+            <div class="format-icon"><i class="pi pi-globe"></i></div>
+            <h4>Interactive HTML</h4>
+            <ul>
+              <li>{{ i18n.translate('reportCenter.worksOffline') }}</li>
+              <li>{{ i18n.translate('reportCenter.interactiveCharts') }}</li>
+              <li>{{ i18n.translate('reportCenter.arabicenglishToggle') }}</li>
+              <li>{{ i18n.translate('reportCenter.sortableTables') }}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scheduled Reports -->
+      <div class="schedules-section">
+        <div class="section-header">
+          <h3><i class="pi pi-calendar-clock"></i> {{ i18n.translate('reportCenter.scheduledReports') }}</h3>
+          <button class="gen-btn" (click)="showScheduleDialog = true">
+            <i class="pi pi-plus"></i> {{ i18n.translate('reportCenter.newSchedule') }}
+          </button>
+        </div>
+        @if (schedules.length > 0) {
+          <div class="schedule-list">
+            @for (s of schedules; track s) {
+              <div class="schedule-item">
+                <div class="schedule-info">
+                  <strong>{{ s.report_type || s.template_key || s.templateKey }}</strong>
+                  <code>{{ s.cron_expression || s.cronExpression }}</code>
+                </div>
+                <p-tag [value]="s.status || 'active'" [severity]="s.status === 'paused' ? 'warning' : 'success'" />
+              </div>
+            }
+          </div>
+        } @else {
+          <div class="no-schedules">{{ i18n.translate('reportCenter.noScheduledReportsYet') }}</div>
+        }
+      </div>
+
+      <!-- Schedule Dialog -->
+      <p-dialog [(visible)]="showScheduleDialog"
+                [header]="i18n.translate('reportCenter.scheduleReport')"
+                [style]="{width: '420px'}" [modal]="true">
+        <div class="gen-field">
+          <label>{{ i18n.translate('reportCenter.reportType') }}</label>
+          <p-dropdown [options]="scheduleReportOptions" [(ngModel)]="newSchedule.templateKey" styleClass="w-full" />
+        </div>
+        <div class="gen-field">
+          <grc-form-field [label]="i18n.translate('reportCenter.cronExpression')">
+            <input pInputText [(ngModel)]="newSchedule.cronExpression" placeholder="0 8 * * 1" aria-label="0 8 * * 1" class="w-full" />
+          </grc-form-field>
+        </div>
+        <ng-template pTemplate="footer">
+          <p-button [label]="i18n.translate('reportCenter.cancel')" severity="secondary" [text]="true" (onClick)="showScheduleDialog = false" />
+          <p-button [label]="i18n.translate('reportCenter.create')" icon="pi pi-check" (onClick)="createSchedule()"
+                    [disabled]="!newSchedule.templateKey || !newSchedule.cronExpression" />
+        </ng-template>
+      </p-dialog>
+
+      <!-- Generate Dialog -->
+      <p-dialog [(visible)]="generateDialogVisible"
+                [header]="generateDialogTitle"
+                [style]="{width: '480px'}" [modal]="true">
+        @if (selectedReport) {
+          <div class="gen-dialog">
+            <div class="gen-field">
+              <label>{{ i18n.translate('reportCenter.language') }}</label>
+              <p-dropdown [options]="langOptions" [(ngModel)]="exportLang" styleClass="w-full" />
+            </div>
+            <div class="gen-field">
+              <label>{{ i18n.translate('reportCenter.format') }}</label>
+              <p-dropdown [options]="formatOptions()" [(ngModel)]="exportFormat"
+                          optionLabel="label" optionValue="value" styleClass="w-full" />
+            </div>
+            <p-button [label]="i18n.translate('reportCenter.download')"
+                      icon="pi pi-download" (onClick)="downloadReport()" styleClass="w-full mt-3" />
+          </div>
+        }
+      </p-dialog>
+    </app-page-shell>

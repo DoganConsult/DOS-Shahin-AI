@@ -1,0 +1,9 @@
+
+> @dos/notification-service@0.1.0 build /root/DOS-AIO/services/notification-service
+> tsc -p tsconfig.json && pnpm run build:copy-templates
+
+../..                                    |  WARN  Unsupported engine: wanted: {"node":">=24.14.0"} (current: {"node":"v20.18.2","pnpm":"10.33.0"})
+
+> @dos/notification-service@0.1.0 build:copy-templates /root/DOS-AIO/services/notification-service
+> mkdir -p dist/templates && cp -R src/templates/. dist/templates/
+

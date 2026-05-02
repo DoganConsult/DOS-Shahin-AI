@@ -1,0 +1,11 @@
+code,name_en,name_ar,country_code,regulator_code,category,is_mandatory,version,total_controls,total_domains,domains
+UAE-IAR,Information Assurance Regulation,لائحة ضمان المعلومات,ARE,UAE-TDRA,cybersecurity,True,2.0,188,11,Strategy & Planning|Information Security Management|Asset Management|Physical Security|Operations Management|Communications Security|Access Control|Information Systems|Third Party|Information Security Incident Management|Compliance
+UAE-NESA,National Electronic Security Authority Standards,معايير الهيئة الوطنية للأمن الإلكتروني,ARE,UAE-SIA,cybersecurity,True,1.0,60,6,Governance|Asset Management|Physical Security|Operations Security|Access Control|Compliance
+UAE-PDPL,Personal Data Protection Law,قانون حماية البيانات الشخصية,ARE,UAE-MOE,privacy,True,1.0,45,6,Lawful Processing|Data Subject Rights|Cross-Border Transfer|Security|Breach Notification|DPO
+UAE-CBR-CYB,Central Bank Cybersecurity Risk Standards,معايير مخاطر الأمن السيبراني للمصرف المركزي,ARE,UAE-CBU,cybersecurity,True,2.0,95,6,Governance|Risk Management|Identity|Detection|Response|Recovery
+UAE-CBR-AML,AML/CFT Standards,معايير مكافحة غسل الأموال,ARE,UAE-CBU,aml,True,3.0,78,6,CDD|Transaction Monitoring|Reporting|Sanctions|Training|Governance
+UAE-VAT,VAT Regulations,لوائح ضريبة القيمة المضافة,ARE,UAE-FTA,tax,True,2018,42,6,Registration|Filing|Invoicing|Records|Audit|Penalties
+UAE-CT,Corporate Tax Regulations,لوائح ضريبة الشركات,ARE,UAE-FTA,tax,True,2023,38,5,Registration|Filing|Records|Transfer Pricing|Compliance
+UAE-DHA-STD,DHA Healthcare Standards,معايير الرعاية الصحية,ARE,UAE-DHA,healthcare,True,5.0,89,5,Patient Safety|Clinical Quality|Information Management|Infrastructure|HR
+UAE-DFSA-CYB,DFSA Cyber Risk Module,وحدة المخاطر السيبرانية,ARE,UAE-DFSA,cybersecurity,True,1.0,56,5,Governance|Risk Assessment|Security Operations|Incident Response|Third Party
+UAE-LAB,Labour Law Compliance,الامتثال لقانون العمل,ARE,UAE-MOHRE,labor,True,33-2021,52,6,Employment|Wages|Working Hours|Leave|Termination|Occupational Safety

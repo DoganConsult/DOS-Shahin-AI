@@ -1,0 +1,125 @@
+<app-page-shell icon="cog"
+      [title]="i18n.translate('tenantConfig.settings')"
+      [subtitle]="i18n.translate('tenantConfig.controlCenterConfigurationIntegrationsAn')"
+      [breadcrumbs]="breadcrumbs" [loading]="loading">
+
+      <p-toast />
+
+      <div class="settings-shell" [dir]="i18n.direction()">
+        <nav class="settings-nav">
+          @for (s of sections; track s.key) {
+            <button class="sn-item" [class.sn-active]="activeSection === s.key"
+              (click)="activeSection = s.key">
+              <i class="pi" [ngClass]="s.icon"></i>
+              <span>{{ i18n.localize(s.labelEn, s.labelAr) }}</span>
+            </button>
+          }
+        </nav>
+
+        <div class="settings-content">
+
+          <!-- Workspace, Entitlements, and Operation Mode sections -->
+          @if (activeSection === 'workspace' || activeSection === 'entitlements' || activeSection === 'operation-mode') {
+            <app-tenant-config-workspace
+              [activeSection]="activeSection"
+              [config]="config"
+              [dirtyFlags]="dirtyFlags"
+              [platformMode]="platformMode"
+              [platformModeSaving]="platformModeSaving()"
+              [qiyasModuleEnabled]="qiyasModuleEnabled"
+              [agrcModuleEnabled]="agrcModuleEnabled"
+              [safetyControls]="safetyControls"
+              [scopeModules]="scopeModules"
+              [platformModeOptions]="platformModeOptions"
+              (markDirty)="markDirty($event)"
+              (resetWorkspace)="resetWorkspace()"
+              (saveConfig)="saveConfig()"
+              (confirmModuleToggle)="confirmModuleToggle($event.key, $event.enabled)"
+              (setPlatformMode)="setPlatformMode($event)"
+              (confirmSaveMode)="confirmSaveMode()"
+              (navigateToAudit)="navigateToAudit($event)"
+            />
+          }
+
+          <!-- Email & Integrations section -->
+          @if (activeSection === 'email') {
+            <app-tenant-config-email
+              [emailConfig]="emailConfig"
+              [emailConfigLoading]="emailConfigLoading()"
+              [emailSaving]="emailSaving()"
+              [emailTesting]="emailTesting()"
+              [emailSendingTest]="emailSendingTest()"
+              [emailTestResult]="emailTestResult()"
+              [emailProviderOptions]="emailProviderOptions"
+              [platformApproval]="platformApproval()"
+              [platformApprovalRequesting]="platformApprovalRequesting()"
+              [dirtyFlags]="dirtyFlags"
+              (markDirty)="markDirty($event)"
+              (saveEmailConfig)="saveEmailConfig()"
+              (testEmailConfig)="testEmailConfig()"
+              (sendTestEmail)="sendTestEmail()"
+              (copyRedirectUrl)="copyRedirectUrl()"
+              (requestPlatformEmailAccess)="requestPlatformEmailAccess()"
+              (navigateToAudit)="navigateToAudit($event)"
+            />
+          }
+
+          <!-- Risk Model, RACI Matrix, and Cadence Overrides sections -->
+          @if (activeSection === 'risk' || activeSection === 'raci' || activeSection === 'cadence') {
+            <app-tenant-config-risk
+              [activeSection]="activeSection"
+              [riskModel]="riskModel"
+              [riskModelLoading]="riskModelLoading"
+              [raciMatrix]="raciMatrix"
+              [raciLoading]="raciLoading"
+              [cadenceOverrides]="cadenceOverrides"
+              [cadenceLoading]="cadenceLoading"
+              [exampleRisk]="exampleRisk"
+              [dirtyFlags]="dirtyFlags"
+              (markDirty)="markDirty($event)"
+              (saveRiskModel)="saveRiskModel()"
+              (saveRaci)="saveRaci()"
+              (saveCadenceOverrides)="saveCadenceOverrides()"
+              (addCadenceOverride)="addCadenceOverride()"
+              (removeCadenceOverride)="removeCadenceOverride($event)"
+              (navigateToAudit)="navigateToAudit($event)"
+            />
+          }
+
+          <!-- Configuration History section -->
+          @if (activeSection === 'history') {
+            <app-tenant-config-history
+              [history]="history"
+              [historySectionFilterOptions]="historySectionFilterOptions"
+              (exportConfigSnapshot)="exportConfigSnapshot()"
+            />
+          }
+
+        </div>
+      </div>
+
+      <!-- Confirmation dialog shared across all sections -->
+      <p-dialog [header]="i18n.translate('tenantConfig.confirmChange')" [(visible)]="showConfirmDialog" [style]="{width:'480px','max-width':'95vw'}" [modal]="true">
+        <div class="sc-confirm-body">
+          <i class="pi pi-exclamation-triangle" style="font-size: var(--font-size-4xl);color:#f59e0b"></i>
+          <p>{{ confirmMessage }}</p>
+        </div>
+        <ng-template pTemplate="footer">
+          <p-button [label]="i18n.translate('tenantConfig.cancel')" severity="secondary" [text]="true" (onClick)="showConfirmDialog = false" />
+          <p-button [label]="i18n.translate('tenantConfig.confirm')" icon="pi pi-check" severity="warning" (onClick)="executeConfirmedAction()" />
+        </ng-template>
+      </p-dialog>
+
+      <!-- Test email dialog -->
+      <p-dialog [header]="i18n.translate('tenantConfig.enterTestEmail') || 'Enter test email'" [(visible)]="testEmailDialogVisible" [modal]="true" [style]="{ width: '400px' }">
+        <div style="display:flex;flex-direction:column;gap:12px;padding:8px 0">
+          <grc-form-field [label]="i18n.translate('tenantConfig.emailAddress') || 'Email address'">
+            <input pInputText id="test-email-addr" [(ngModel)]="testEmailAddress" type="email" placeholder="user@example.com" aria-label="user@example.com" (keyup.enter)="submitTestEmail()" />
+          </grc-form-field>
+        </div>
+        <ng-template pTemplate="footer">
+          <button pButton [label]="i18n.translate('common.cancel') || 'Cancel'" icon="pi pi-times" class="p-button-text" (click)="testEmailDialogVisible = false"></button>
+          <button pButton [label]="i18n.translate('common.send') || 'Send'" icon="pi pi-send" [disabled]="!testEmailAddress.trim()" (click)="submitTestEmail()"></button>
+        </ng-template>
+      </p-dialog>
+    </app-page-shell>

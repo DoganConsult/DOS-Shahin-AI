@@ -1,0 +1,250 @@
+/* Evidence Work Queue -- uses design tokens only (no hardcoded hex/rgb) */
+
+.ewq-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  background: var(--bg-0);
+}
+
+.ewq-body {
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.skeleton-kpi {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 12px;
+}
+
+/* -- Filter Bar -- */
+
+.ewq-filter-bar {
+  display: flex;
+  gap: 10px;
+  padding: 12px 0;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+:host .ewq-filter {
+  min-width: 150px;
+}
+
+.ewq-clear-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm, 4px);
+  background: var(--surface-card);
+  color: var(--text-muted);
+  font-size: var(--font-size-sm, 13px);
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+
+  &:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+}
+
+/* -- Tab Bar -- */
+
+.ewq-tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 2px solid var(--border);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ewq-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: var(--font-size-sm, 13px);
+  font-weight: 600;
+  color: var(--text-muted);
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: color 0.15s ease, border-color 0.15s ease;
+
+  i {
+    font-size: var(--font-size-sm, 13px);
+  }
+
+  &:hover {
+    color: var(--text-body);
+  }
+
+  &.active {
+    color: var(--primary);
+    border-bottom-color: var(--primary);
+  }
+}
+
+.ewq-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-xs, 11px);
+  font-weight: 700;
+  background: var(--primary);
+  color: var(--bg-0);
+}
+
+/* -- Data Tables -- */
+
+.ewq-table-wrap {
+  background: var(--surface-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg, 12px);
+  overflow: hidden;
+}
+
+.action-cell {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+}
+
+.rejection-reason {
+  max-width: 280px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rejection-text {
+  color: var(--error);
+  font-style: italic;
+}
+
+/* Days remaining urgency indicator */
+.ewq-days {
+  font-weight: 600;
+
+  &.urgent {
+    color: var(--error);
+  }
+
+  &.warning {
+    color: var(--warning);
+  }
+}
+
+/* -- Detail Drawer -- */
+
+.drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: color-mix(in srgb, var(--text-body) 30%, transparent);
+  z-index: var(--z-modal-backdrop, 1040);
+}
+
+.detail-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 480px;
+  max-width: 90vw;
+  height: 100vh;
+  background: var(--surface-card);
+  z-index: var(--z-modal, 1050);
+  box-shadow: -4px 0 20px color-mix(in srgb, var(--text-body) 15%, transparent);
+  overflow-y: auto;
+}
+
+[dir="rtl"] .detail-drawer {
+  right: auto;
+  left: 0;
+  box-shadow: 4px 0 20px color-mix(in srgb, var(--text-body) 15%, transparent);
+}
+
+.drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+
+  h3 {
+    margin: 0;
+    font-size: var(--font-size-md, 16px);
+    font-weight: 600;
+    color: var(--text-body);
+  }
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: var(--font-size-lg, 18px);
+  color: var(--text-muted);
+  transition: color 0.15s ease;
+
+  &:hover {
+    color: var(--text-body);
+  }
+}
+
+.drawer-body {
+  padding: 20px;
+}
+
+.detail-section {
+  margin-bottom: 16px;
+
+  &.half {
+    flex: 1;
+  }
+
+  label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--font-size-xs, 11px);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+
+  p {
+    margin: 0;
+    font-size: var(--font-size-base, 14px);
+    line-height: 1.5;
+    color: var(--text-body);
+  }
+}
+
+.detail-row {
+  display: flex;
+  gap: 16px;
+}
+
+.drawer-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}

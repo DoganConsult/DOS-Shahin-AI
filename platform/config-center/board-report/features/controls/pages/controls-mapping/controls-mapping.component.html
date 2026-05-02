@@ -1,0 +1,233 @@
+<!-- Controls Mapping & Coverage — Coverage Analysis Dashboard -->
+<div class="controls-mapping" [attr.dir]="dir()">
+
+  <!-- Page Header -->
+  <header class="page-header">
+    <div class="page-header__title-row">
+      <i class="pi pi-sitemap" aria-hidden="true"></i>
+      <h2 class="page-header__title">
+        {{ isAr() ? 'تعيين الضوابط والتغطية' : 'Controls Mapping & Coverage' }}
+      </h2>
+    </div>
+    <p class="page-header__subtitle">
+      {{ isAr() ? 'تحليل شامل لتغطية الضوابط وفجوات التعيين' : 'Comprehensive analysis of control coverage and mapping gaps' }}
+    </p>
+  </header>
+
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="skeleton-kpi-strip">
+      @for (i of [1,2,3,4,5]; track i) {
+        <app-skeleton-loader variant="card" />
+      }
+    </div>
+    <app-skeleton-loader variant="detail" />
+    <div class="skeleton-two-col">
+      <app-skeleton-loader variant="list" [count]="5" />
+      <app-skeleton-loader variant="list" [count]="5" />
+    </div>
+    <app-skeleton-loader variant="list" [count]="5" />
+  }
+
+  <!-- Error State -->
+  @if (!loading() && error()) {
+    <app-empty-state
+      variant="error"
+      [title]="isAr() ? 'فشل تحميل بيانات التغطية' : 'Failed to load coverage data'"
+      [description]="isAr() ? 'تحقق من الاتصال وحاول مرة أخرى' : 'Check your connection and try again'"
+      [actionLabel]="isAr() ? 'إعادة المحاولة' : 'Retry'"
+      [dir]="dir()"
+      (action)="loadData()" />
+  }
+
+  <!-- Loaded Content -->
+  @if (!loading() && !error() && data()) {
+
+    <!-- KPI Strip + Health Score Gauge -->
+    <section class="kpi-and-gauge">
+      <div class="kpi-strip-section">
+        <app-kpi-card-grid [cards]="kpis()" [isAr]="isAr()" />
+      </div>
+      <div class="health-gauge-card">
+        <div class="health-gauge-card__header">
+          {{ isAr() ? 'درجة صحة التعيين' : 'Mapping Health Score' }}
+        </div>
+        <div class="health-gauge-card__body">
+          <p-knob
+            [ngModel]="healthScore()"
+            [readonly]="true"
+            [size]="120"
+            [strokeWidth]="10"
+            [valueColor]="healthScoreColor()"
+            valueTemplate="{value}%"
+            rangeColor="var(--border)" />
+          <p class="health-gauge-label">
+            @if (healthScore() >= 80) {
+              {{ isAr() ? 'صحة ممتازة' : 'Excellent Health' }}
+            } @else if (healthScore() >= 60) {
+              {{ isAr() ? 'تحتاج تحسين' : 'Needs Improvement' }}
+            } @else {
+              {{ isAr() ? 'فجوات حرجة' : 'Critical Gaps' }}
+            }
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 1: Controls with No Mapped Risks -->
+    <section class="coverage-section">
+      <div class="section-card">
+        <div class="section-card__header">
+          <i class="pi pi-exclamation-triangle" aria-hidden="true"></i>
+          <span>{{ isAr() ? 'ضوابط بدون مخاطر مرتبطة' : 'Controls with No Mapped Risks' }}</span>
+          <span class="section-count" [class.count-danger]="data()!.controlsWithNoRisks.length > 0">
+            {{ data()!.controlsWithNoRisks.length }}
+          </span>
+        </div>
+        <div class="section-card__body">
+          @if (data()!.controlsWithNoRisks.length === 0) {
+            <app-empty-state
+              [title]="isAr() ? 'جميع الضوابط مرتبطة بالمخاطر' : 'All controls are mapped to risks'"
+              [description]="isAr() ? 'تغطية ممتازة - لا توجد ضوابط بدون مخاطر' : 'Excellent coverage - no unmapped controls'"
+              [dir]="dir()" />
+          } @else {
+            <grc-data-table
+              [totalRecords]="data()!.controlsWithNoRisks.length"
+              [emptyMessage]="isAr() ? 'جميع الضوابط مرتبطة بالمخاطر' : 'All controls are mapped to risks'">
+              <p-table
+                [value]="data()!.controlsWithNoRisks"
+                [rows]="10"
+                [paginator]="data()!.controlsWithNoRisks.length > 10"
+                styleClass="p-datatable-sm p-datatable-striped"
+                [attr.aria-label]="isAr() ? 'جدول الضوابط بدون مخاطر' : 'Unmapped Controls Table'">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th>{{ isAr() ? 'معرف الضابط' : 'Control ID' }}</th>
+                    <th>{{ isAr() ? 'العنوان' : 'Title' }}</th>
+                    <th style="width: 8rem; text-align: center">{{ isAr() ? 'إجراء' : 'Action' }}</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-row>
+                  <tr>
+                    <td>
+                      <a class="control-link" [routerLink]="['/controls', row.id]">{{ row.id }}</a>
+                    </td>
+                    <td>{{ row.title }}</td>
+                    <td class="center-cell">
+                      <a class="action-link" [routerLink]="['/controls', row.id]" [queryParams]="{ tab: 'mapping' }">
+                        <i class="pi pi-link" aria-hidden="true"></i>
+                        {{ isAr() ? 'ربط' : 'Map' }}
+                      </a>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </grc-data-table>
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- Two-column: Obligations + Risks -->
+    <section class="two-col-section">
+
+      <!-- Section 2: Obligations with No Controls -->
+      <div class="section-card">
+        <div class="section-card__header">
+          <i class="pi pi-file" aria-hidden="true"></i>
+          <span>{{ isAr() ? 'التزامات بدون ضوابط' : 'Obligations with No Controls' }}</span>
+          <span class="section-count" [class.count-warning]="data()!.obligationsWithNoControls.length > 0">
+            {{ data()!.obligationsWithNoControls.length }}
+          </span>
+        </div>
+        <div class="section-card__body">
+          @if (data()!.obligationsWithNoControls.length === 0) {
+            <app-empty-state
+              [title]="isAr() ? 'جميع الالتزامات مغطاة' : 'All obligations covered'"
+              [description]="isAr() ? 'كل التزام مرتبط بضابط واحد على الأقل' : 'Every obligation is linked to at least one control'"
+              [dir]="dir()" />
+          } @else {
+            <grc-data-table
+              [totalRecords]="data()!.obligationsWithNoControls.length"
+              [emptyMessage]="isAr() ? 'جميع الالتزامات مغطاة' : 'All obligations covered'">
+              <p-table
+                [value]="data()!.obligationsWithNoControls"
+                [rows]="10"
+                [paginator]="data()!.obligationsWithNoControls.length > 10"
+                styleClass="p-datatable-sm p-datatable-striped"
+                [attr.aria-label]="isAr() ? 'جدول الالتزامات بدون ضوابط' : 'Uncovered Obligations Table'">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th>{{ isAr() ? 'معرف الالتزام' : 'Obligation ID' }}</th>
+                    <th>{{ isAr() ? 'العنوان' : 'Title' }}</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-row>
+                  <tr>
+                    <td class="obligation-id">{{ row.id }}</td>
+                    <td>{{ row.title }}</td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </grc-data-table>
+          }
+        </div>
+      </div>
+
+      <!-- Section 3: Risks with Weak Coverage -->
+      <div class="section-card">
+        <div class="section-card__header">
+          <i class="pi pi-shield" aria-hidden="true"></i>
+          <span>{{ isAr() ? 'مخاطر بتغطية ضعيفة' : 'Risks with Weak Coverage' }}</span>
+          <span class="section-count" [class.count-danger]="data()!.risksWithWeakCoverage.length > 0">
+            {{ data()!.risksWithWeakCoverage.length }}
+          </span>
+        </div>
+        <div class="section-card__body">
+          @if (data()!.risksWithWeakCoverage.length === 0) {
+            <app-empty-state
+              [title]="isAr() ? 'جميع المخاطر مغطاة بشكل كافٍ' : 'All risks adequately covered'"
+              [description]="isAr() ? 'لا توجد مخاطر ذات تغطية ضعيفة' : 'No risks with weak control coverage'"
+              [dir]="dir()" />
+          } @else {
+            <grc-data-table
+              [totalRecords]="data()!.risksWithWeakCoverage.length"
+              [emptyMessage]="isAr() ? 'جميع المخاطر مغطاة بشكل كافٍ' : 'All risks adequately covered'">
+              <p-table
+                [value]="data()!.risksWithWeakCoverage"
+                [rows]="10"
+                [paginator]="data()!.risksWithWeakCoverage.length > 10"
+                styleClass="p-datatable-sm p-datatable-striped"
+                [attr.aria-label]="isAr() ? 'جدول المخاطر بتغطية ضعيفة' : 'Weak Coverage Risks Table'">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th>{{ isAr() ? 'معرف المخاطرة' : 'Risk ID' }}</th>
+                    <th>{{ isAr() ? 'العنوان' : 'Title' }}</th>
+                    <th>{{ isAr() ? 'الحالة' : 'Status' }}</th>
+                    <th style="width: 12rem">{{ isAr() ? 'درجة التغطية' : 'Coverage Score' }}</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-row>
+                  <tr>
+                    <td class="risk-id">{{ row.id }}</td>
+                    <td>{{ row.title }}</td>
+                    <td><app-status-badge [status]="row.coverageScore < 50 ? 'critical' : 'warning'" /></td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </grc-data-table>
+          }
+        </div>
+      </div>
+
+    </section>
+  }
+
+  <!-- Empty Data State -->
+  @if (!loading() && !error() && !data()) {
+    <app-empty-state
+      [title]="isAr() ? 'لا توجد بيانات تغطية' : 'No coverage data'"
+      [description]="isAr() ? 'ابدأ بربط الضوابط بالمخاطر والالتزامات' : 'Start by mapping controls to risks and obligations'"
+      [dir]="dir()" />
+  }
+</div>

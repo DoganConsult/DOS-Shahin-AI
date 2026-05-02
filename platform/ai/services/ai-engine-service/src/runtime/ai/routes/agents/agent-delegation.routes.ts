@@ -1,0 +1,182 @@
+// @ts-nocheck
+import { Request, Response, Router } from 'express';
+
+import { emitEvent as _emitEvent } from '../../ports/events.port';
+// ============================================================
+// Shahin-Ai — Agent Delegation Routes
+// Endpoints for granting, revoking, and using agent delegation
+// to perform platform actions on behalf of users.
+// ============================================================
+
+import { z as _z } from 'zod';
+
+import { authenticate, requirePermission } from '../../ports/auth.port';
+import {
+  createDelegationGrant,
+  revokeDelegationGrant,
+  getActiveGrants,
+  getDelegationHistory,
+  DelegationScope,
+} from '../../services/delegation/agent-delegation.service';
+import { executeOnboardingAsAgent } from '../../services/agents/lifecycle/agent-onboarding-executor.service';
+import { emitModuleEvent } from '../../services/emit-event';
+import { toErrorMessage } from '@dos/module-sdk';
+import { safeQuery, tenantSchema } from '../../ports/database.port';
+
+/** Log delegation action to authz_decision_log (DAuth step 14). */
+async function auditDelegation(tenantId: string, userId: string, data: Record<string, unknown>, action: string, ip?: string): Promise<void> {
+  const schema = tenantSchema(tenantId);
+  await safeQuery(
+    `INSERT INTO "${schema}".authz_decision_log
+     (user_id, permission_code, module_code, decision, reason, record_context)
+     VALUES ($1, $2, 'governance', 'allow', $3, $4)`,
+    [userId, `delegation.${action}`, `Delegation ${action}: ${data.delegationId}`,
+     JSON.stringify({ ...data, ip, action })],
+  );
+}
+
+// ── Zod Schemas ──────────────────────────────────────────────────────────
+import { asyncHandler as _asyncHandler, validate, auditMiddleware, setAuditData, automationMiddleware, moduleStack } from '../../ports/middleware.port';
+import { swallow, EC , catchHandler } from '@dos/platform-core/resilience/resilient-catch';
+import { grantPostBody, onboardPostBody } from "../../schemas/ai.schemas";
+import { z } from "zod";
+
+import type { Router as ExpressRouter } from 'express';
+const router: ExpressRouter = Router();
+router.use(moduleStack('ai'));
+router.use(auditMiddleware("governance"));
+router.use(automationMiddleware("governance"));
+
+const VALID_SCOPES: DelegationScope[] = [
+  'onboarding', 'workspace_setup', 'policy_drafting', 'risk_seeding',
+  'control_mapping', 'evidence_upload', 'assessment',
+];
+
+// POST /api/agent-delegation/grant — User grants an agent permission to act on their behalf
+router.post('/grant', authenticate, requirePermission('admin.tenant.manage'), validate({ body: grantPostBody }), async (req: Request, res: Response) => {
+  try {
+    const { agentId, scopes, durationMinutes } = req.body;
+    const tenantId = req.tenantId;
+    const userId = req.user.userId;
+
+    if (!agentId || !scopes?.length) {
+      res.status(400).json({ error: 'agentId and scopes[] required' });
+      return;
+    }
+
+    // Validate scopes
+    const invalidScopes = scopes.filter((s: string) => !VALID_SCOPES.includes(s as DelegationScope));
+    if (invalidScopes.length) {
+      res.status(400).json({ error: `Invalid scopes: ${invalidScopes.join(', ')}`, validScopes: VALID_SCOPES });
+      return;
+    }
+
+    const grant = await createDelegationGrant(
+      tenantId, userId, agentId, scopes, durationMinutes || 60,
+    );
+    // RBAC audit trail — record delegation grant
+    auditDelegation(tenantId, userId, {
+      delegationId: (grant as any)?.id || agentId,
+      fromUserId: userId,
+      toUserId: agentId,
+      authorityId: scopes.join(','),
+      delegatedAt: new Date().toISOString(),
+      active: true,
+    }, 'create', req.ip).catch(catchHandler(EC.EVENT_BUS, {}));
+
+    setAuditData(res as any, { action: "create", entityType: "agent-delegation", entityId: (grant as any)?.id || agentId, afterState: grant });
+    swallow(EC.EVENT_BUS, emitModuleEvent({ tenantId: req.tenantId, userId: req.user!.userId, module: 'governance', event: 'created', entityType: 'agent_delegation', entityId: req.params.id || '' }), { tenantId: req.tenantId, operation: 'grcEvent:governance.agent_delegation.created' });
+    res.status(201).json(grant);
+  } catch (err: unknown) {
+    res.status(500).json({ error: toErrorMessage(err) });
+  }
+});
+
+// DELETE /api/agent-delegation/grant/:grantId — Revoke a delegation
+router.delete('/grant/:grantId', validate({ body: genericPayloadSchema }), authenticate, requirePermission('admin.tenant.manage'), async (req: Request, res: Response) => {
+  try {
+    const tenantId = req.tenantId;
+    const userId = req.user.userId;
+    await revokeDelegationGrant(tenantId, req.params.grantId, userId);
+
+    // RBAC audit trail — record delegation revocation
+    auditDelegation(tenantId, userId, {
+      delegationId: req.params.grantId,
+      fromUserId: userId,
+      toUserId: '',
+      authorityId: '',
+      active: false,
+      delegatedAt: '',
+    }, 'revoke', req.ip).catch(catchHandler(EC.EVENT_BUS, {}));
+
+    setAuditData(res as any, { action: "delete", entityType: "agent-delegation", entityId: req.params.grantId });
+    swallow(EC.EVENT_BUS, emitModuleEvent({ tenantId: req.tenantId, userId: req.user!.userId, module: 'governance', event: 'deleted', entityType: 'agent_delegation', entityId: req.params.id || '' }), { tenantId: req.tenantId, operation: 'grcEvent:governance.agent_delegation.deleted' });
+    res.json({ success: true });
+  } catch (err: unknown) {
+    res.status(500).json({ error: toErrorMessage(err) });
+  }
+});
+
+// GET /api/agent-delegation/grants — List active grants for current user
+router.get('/grants', validate({ query: z.record(z.unknown()) }), authenticate, async (req: Request, res: Response) => {
+  try {
+    const tenantId = req.tenantId;
+    const userId = req.user.userId;
+    const grants = await getActiveGrants(tenantId, userId);
+    res.json({ grants });
+  } catch (err: unknown) {
+    res.status(500).json({ error: toErrorMessage(err) });
+  }
+});
+
+// GET /api/agent-delegation/history — Delegation action history
+router.get('/history', validate({ query: z.record(z.unknown()) }), authenticate, requirePermission('delegation.chain.read'), async (req: Request, res: Response) => {
+  try {
+    const tenantId = req.tenantId;
+    const { userId, agentId, limit } = req.query;
+    const actions = await getDelegationHistory(tenantId, {
+      userId: userId as string,
+      agentId: agentId as string,
+      limit: limit ? parseInt(limit as string, 10) : undefined,
+    });
+    res.json({ actions });
+  } catch (err: unknown) {
+    res.status(500).json({ error: toErrorMessage(err) });
+  }
+});
+
+// POST /api/agent-delegation/onboard — Agent executes full onboarding on behalf of user
+router.post('/onboard', authenticate, requirePermission('admin.tenant.manage'), validate({ body: onboardPostBody }), async (req: Request, res: Response) => {
+  try {
+    const tenantId = req.tenantId;
+    const { agentId, answers, autoInfer } = req.body;
+
+    if (!agentId) {
+      res.status(400).json({ error: 'agentId required' });
+      return;
+    }
+
+    const result = await executeOnboardingAsAgent({
+      tenantId,
+      agentId,
+      answers: answers || {},
+      autoInfer: autoInfer !== false, // default true
+    });
+
+    if (!result.success) {
+      res.status(result.errors.includes('No active delegation grant') ? 403 : 500)
+        .json(result);
+      return;
+    }
+
+    setAuditData(res as any, { action: "create", entityType: "agent-delegation", entityId: agentId, afterState: result });
+    swallow(EC.EVENT_BUS, emitModuleEvent({ tenantId: req.tenantId, userId: req.user!.userId, module: 'governance', event: 'created', entityType: 'agent_delegation', entityId: '' }), { tenantId: req.tenantId, operation: 'grcEvent:governance.agent_delegation.created' });
+    res.json(result);
+  } catch (err: unknown) {
+    res.status(500).json({ error: toErrorMessage(err) });
+  }
+});
+
+export default router;
+
+let genericPayloadSchema = z.record(z.unknown());

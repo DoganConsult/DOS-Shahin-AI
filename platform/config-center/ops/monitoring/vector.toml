@@ -1,0 +1,54 @@
+# Vector centralized log shipping and retention matrix (150% observability bounds)
+# Tracks hot (Elasticsearch/Loki), warm (S3 Standard), cold (S3 Glacier)
+
+# ------------------------------------------------------------------------------
+# 1. Sources (Collecting from PM2 file logs under /var/log/dos/**)
+# ------------------------------------------------------------------------------
+[sources.microservices_logs]
+type = "file"
+include = ["/var/log/dos/**/*.log"]
+ignore_older_secs = 600
+read_from = "beginning"
+
+# ------------------------------------------------------------------------------
+# 2. Transforms (Re-affirming Redaction globally if application layer misses it)
+# ------------------------------------------------------------------------------
+[transforms.pii_filter]
+type = "remap"
+inputs = ["microservices_logs"]
+source = '''
+  # Scrub arbitrary text bodies in JSON if emails bypassed ZOD
+  .message = replace(string!(.message), r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}', "[EMAIL-REDACTED]")
+'''
+
+# ------------------------------------------------------------------------------
+# 3. Sinks (Routing logic based on retention tags)
+# ------------------------------------------------------------------------------
+
+# HOT RETENTION: 7 Days (Loki/Elasticsearch)
+[sinks.hot_store]
+type = "elasticsearch"
+inputs = ["pii_filter"]
+endpoints = ["http://elasticsearch:9200"]
+index = "dos-logs-hot-%Y-%m-%d"
+mode = "bulk"
+
+# WARM RETENTION: 30 Days (S3 Standard Bucket)
+[sinks.warm_store]
+type = "aws_s3"
+inputs = ["pii_filter"]
+region = "me-south-1"
+bucket = "dos-logs-warm-storage"
+key_prefix = "date=%Y-%m-%d/"
+encoding.codec = "json"
+batch.timeout_secs = 300
+
+# COLD RETENTION: 1 Year (S3 Glacier via AWS Lifecycle definitions matching this index prefix)
+[sinks.cold_store]
+type = "aws_s3"
+inputs = ["pii_filter"]
+region = "me-south-1"
+bucket = "dos-logs-cold-glacier"
+key_prefix = "archive=%Y-%m/"
+encoding.codec = "json"
+batch.timeout_secs = 3600

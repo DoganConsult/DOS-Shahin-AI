@@ -1,0 +1,256 @@
+<p-toast />
+    <div class="ac-page" [attr.dir]="dir()">
+      <app-page-header
+        titleEn="Approval Center" titleAr="مركز الموافقات"
+        subtitleEn="Manage approval requests, escalations, SLA tracking & team workflows"
+        subtitleAr="إدارة طلبات الموافقة والتصعيد ومستويات الخدمة"
+        icon="check-square"
+        [breadcrumbs]="[i18n.translate('approvalCenter.dashboard'), i18n.translate('approvalCenter.approvalCenter')]"
+        [actions]="headerActions" [isAr]="isAr()" [dir]="dir()"
+        (actionClick)="onHdrAction($event)" />
+      <div class="ac-body">
+
+      @if (loadError) {
+        <div class="ac-error-panel surface-card border-round p-4 text-center">
+          <i class="pi pi-exclamation-triangle text-3xl text-orange-500 mb-2" aria-hidden="true"></i>
+          <p class="font-semibold text-color-secondary">{{ i18n.translate('Failed to load approval center') }}</p>
+          <p class="text-sm text-color-secondary mt-1">{{ i18n.translate('Check connection and try again') }}</p>
+          <button pButton [label]="i18n.translate('Retry')" icon="pi pi-refresh" class="p-button-outlined mt-3" (click)="retryLoad()"></button>
+        </div>
+      } @else if (loading && !dashboard) {
+        <app-skeleton-loader variant="list" [count]="6"></app-skeleton-loader>
+      } @else {
+
+      <!-- Dashboard KPI Cards -->
+      <div class="ac-kpi-grid" *ngIf="dashboard">
+        <div class="ac-kpi"><div class="ac-kpi-icon" style="background:var(--blue-50);color:var(--primary)"><i class="pi pi-inbox"></i></div><div class="ac-kpi-body"><div class="ac-kpi-val">{{ dashboard.summary.total }}</div><div class="ac-kpi-label">{{ i18n.translate('approvalCenter.totalRequests') }}</div></div></div>
+        <div class="ac-kpi"><div class="ac-kpi-icon" style="background:var(--status-warning-bg, var(--blue-50));color:var(--severity-high)"><i class="pi pi-hourglass"></i></div><div class="ac-kpi-body"><div class="ac-kpi-val">{{ dashboard.summary.pending }}</div><div class="ac-kpi-label">{{ i18n.translate('approvalCenter.pending') }}</div></div></div>
+        <div class="ac-kpi"><div class="ac-kpi-icon" style="background:var(--blue-50);color:var(--success)"><i class="pi pi-check-circle"></i></div><div class="ac-kpi-body"><div class="ac-kpi-val">{{ dashboard.summary.approved }}</div><div class="ac-kpi-label">{{ i18n.translate('approvalCenter.approved') }}</div></div></div>
+        <div class="ac-kpi"><div class="ac-kpi-icon" style="background:var(--blue-50);color:var(--error)"><i class="pi pi-times-circle"></i></div><div class="ac-kpi-body"><div class="ac-kpi-val">{{ dashboard.summary.rejected }}</div><div class="ac-kpi-label">{{ i18n.translate('approvalCenter.rejected') }}</div></div></div>
+        <div class="ac-kpi"><div class="ac-kpi-icon" style="background:var(--status-danger-bg, var(--blue-50));color:var(--severity-critical)"><i class="pi pi-arrow-up"></i></div><div class="ac-kpi-body"><div class="ac-kpi-val">{{ dashboard.summary.escalated }}</div><div class="ac-kpi-label">{{ i18n.translate('approvalCenter.escalated') }}</div></div></div>
+        <div class="ac-kpi"><div class="ac-kpi-icon" style="background:var(--status-danger-bg, var(--blue-50));color:var(--error)"><i class="pi pi-clock"></i></div><div class="ac-kpi-body"><div class="ac-kpi-val">{{ dashboard.summary.overdue }}</div><div class="ac-kpi-label">{{ i18n.translate('approvalCenter.slaBreached') }}</div></div></div>
+        <div class="ac-kpi ac-kpi-wide"><div class="ac-kpi-icon" style="background:var(--status-info-bg, var(--blue-50));color:var(--severity-info)"><i class="pi pi-stopwatch"></i></div><div class="ac-kpi-body"><div class="ac-kpi-val">{{ dashboard.summary.avgResolutionHours }}h</div><div class="ac-kpi-label">{{ i18n.translate('approvalCenter.avgResolution') }}</div></div></div>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="ac-toolbar">
+        <div class="ac-tabs">
+          <button class="ac-tab" [class.active]="activeTab === 'all'" (click)="activeTab = 'all'; loadRequests()">{{ i18n.translate('approvalCenter.tabAll') }}</button>
+          <button class="ac-tab" [class.active]="activeTab === 'my'" (click)="activeTab = 'my'; loadMyRequests()">{{ i18n.translate('approvalCenter.tabMyQueue') }}</button>
+          <button class="ac-tab" [class.active]="activeTab === 'overdue'" (click)="activeTab = 'overdue'">{{ i18n.translate('approvalCenter.tabOverdue') }}</button>
+          <button class="ac-tab" [class.active]="activeTab === 'recent'" (click)="activeTab = 'recent'">{{ i18n.translate('approvalCenter.tabRecentDecisions') }}</button>
+        </div>
+        <button class="ac-create-btn" (click)="openCreateDialog()"><i class="pi pi-plus"></i> {{ i18n.translate('approvalCenter.newRequest') }}</button>
+      </div>
+
+      <!-- Request Cards -->
+      <div class="ac-request-list" *ngIf="(activeTab === 'all' || activeTab === 'my') && !loading">
+        <div *ngFor="let req of displayRequests" class="ac-request-card" [class.ac-overdue]="isSLABreached(req)" [class.ac-escalated]="req.status === 'escalated'">
+          <div class="ac-req-top">
+            <div class="ac-req-title-row">
+              <span class="ac-req-title">{{ req.title }}</span>
+              <p-tag [value]="req.status" [severity]="statusSeverity(req.status)" />
+              <p-tag *ngIf="req.priority" [value]="req.priority" [severity]="prioritySeverity(req.priority)" styleClass="ml-1" />
+            </div>
+            <div class="ac-req-meta">
+              <span *ngIf="req.entity_type"><i class="pi pi-link"></i> {{ req.entity_type }}</span>
+              <span *ngIf="req.requested_by"><i class="pi pi-user"></i> {{ req.requested_by }}</span>
+              <span *ngIf="req.assigned_to"><i class="pi pi-arrow-right"></i> {{ req.assigned_to }}</span>
+              <span class="ac-sla" [class.ac-sla-breached]="isSLABreached(req)" *ngIf="req.sla_deadline">
+                <i class="pi pi-clock"></i> Due: {{ req.sla_deadline | appDate:'short' }}
+                <ng-container *ngIf="req.status === 'pending' || req.status === 'assigned'">
+                  <app-sla-timer-pill [dueDate]="req.sla_deadline" [slaHours]="req.sla_hours || 24" [status]="req.status" class="ac-sla-pill" />
+                </ng-container>
+              </span>
+              <span *ngIf="req.escalation_level > 0" class="ac-escalation-badge">L{{ req.escalation_level }}</span>
+            </div>
+          </div>
+
+          <!-- Visual Timeline -->
+          <div class="ac-timeline" *ngIf="req.timeline && req.timeline.length > 0">
+            <div *ngFor="let ev of req.timeline; let last = last" class="ac-tl-item">
+              <div class="ac-tl-dot" [ngClass]="'ac-tl-' + ev.action"></div>
+              <div class="ac-tl-line" *ngIf="!last"></div>
+              <div class="ac-tl-content">
+                <span class="ac-tl-action">{{ formatAction(ev.action) }}</span>
+                <span class="ac-tl-actor">{{ ev.actor }}</span>
+                <span class="ac-tl-time">{{ ev.at | appDate:'short' }}</span>
+                <span class="ac-tl-comment" *ngIf="ev.comment">{{ ev.comment }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="ac-actions" *ngIf="req.status === 'pending' || req.status === 'escalated'">
+            <button class="ac-act-btn ac-act-accept" (click)="acceptRequest(req)" [pTooltip]="i18n.translate('approvalCenter.claimRequest')"><i class="pi pi-thumbs-up"></i> {{ i18n.translate('approvalCenter.accept') }}</button>
+            <button class="ac-act-btn ac-act-approve" (click)="openDecisionDialog(req, 'approve')"><i class="pi pi-check"></i> {{ i18n.translate('approvalCenter.approve') }}</button>
+            <button class="ac-act-btn ac-act-reject" (click)="openDecisionDialog(req, 'reject')"><i class="pi pi-times"></i> {{ i18n.translate('approvalCenter.reject') }}</button>
+            <button class="ac-act-btn ac-act-reassign" (click)="openReassignDialog(req)"><i class="pi pi-reply"></i> {{ i18n.translate('approvalCenter.reassign') }}</button>
+            <button class="ac-act-btn ac-act-escalate" (click)="escalateRequest(req)"><i class="pi pi-arrow-up"></i> {{ i18n.translate('approvalCenter.escalate') }}</button>
+          </div>
+        </div>
+        <app-empty-state
+          *ngIf="displayRequests.length === 0 && !loading"
+          [title]="i18n.currentLang()==='ar' ? 'لا توجد طلبات موافقة' : 'No approval requests'"
+          [description]="i18n.currentLang()==='ar' ? 'ستظهر الطلبات عند إنشائها أو عند تعيينها لك. جرّب إنشاء طلب جديد أو تحقق من Process Tasks.' : 'Requests will appear when created or assigned to you. Try creating a new request or check Process Tasks.'"
+          [actionLabel]="i18n.currentLang()==='ar' ? 'إنشاء طلب' : 'New request'"
+          (action)="openCreateDialog()">
+        </app-empty-state>
+      </div>
+      <div class="ac-request-list" *ngIf="(activeTab === 'all' || activeTab === 'my') && loading">
+        <app-skeleton-loader variant="list" [count]="4"></app-skeleton-loader>
+      </div>
+
+      <!-- Overdue Table -->
+      <div *ngIf="activeTab === 'overdue' && dashboard">
+        <grc-data-table
+          [totalRecords]="(dashboard.overdueRequests || []).length"
+          [emptyMessage]="i18n.translate('approvalCenter.noOverdueRequests') || 'No overdue requests'">
+          <p-table [attr.aria-label]="i18n.translate('approvalCenter.ariaOverdueTable')" [value]="dashboard.overdueRequests || []" styleClass="p-datatable-sm p-datatable-striped" [paginator]="true" [rows]="15" [rowsPerPageOptions]="[10,15,25,50]">
+            <ng-template pTemplate="header"><tr><th>{{ i18n.translate('approvalCenter.colTitle') }}</th><th>{{ i18n.translate('approvalCenter.colType') }}</th><th>{{ i18n.translate('approvalCenter.colAssignedTo') }}</th><th>{{ i18n.translate('approvalCenter.colSlaDeadline') }}</th><th>{{ i18n.translate('approvalCenter.colEscalation') }}</th><th>{{ i18n.translate('approvalCenter.colCreated') }}</th></tr></ng-template>
+            <ng-template pTemplate="body" let-r>
+              <tr class="ac-row-overdue">
+                <td><strong>{{ r.title }}</strong></td>
+                <td><p-tag [value]="r.entity_type || 'general'" severity="info" /></td>
+                <td>{{ r.assigned_to }}</td>
+                <td class="ac-sla-breached">{{ r.sla_deadline | appDate:'short' }}</td>
+                <td><span class="ac-escalation-badge" *ngIf="r.escalation_level > 0">L{{ r.escalation_level }}</span></td>
+                <td>{{ r.created_at | appDate:'medium' }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </grc-data-table>
+      </div>
+
+      <!-- Recent Decisions Table -->
+      <div *ngIf="activeTab === 'recent' && dashboard">
+        <grc-data-table
+          [totalRecords]="(dashboard.recentDecisions || []).length"
+          [emptyMessage]="i18n.translate('approvalCenter.noRecentDecisions') || 'No recent decisions'">
+          <p-table [attr.aria-label]="i18n.translate('approvalCenter.ariaRecentDecisionsTable')" [value]="dashboard.recentDecisions || []" styleClass="p-datatable-sm p-datatable-striped" [paginator]="true" [rows]="15" [rowsPerPageOptions]="[10,15,25,50]">
+            <ng-template pTemplate="header"><tr><th>{{ i18n.translate('approvalCenter.colTitle') }}</th><th>{{ i18n.translate('approvalCenter.colDecision') }}</th><th>{{ i18n.translate('approvalCenter.colType') }}</th><th>{{ i18n.translate('approvalCenter.colDecidedBy') }}</th><th>{{ i18n.translate('approvalCenter.colComment') }}</th><th>{{ i18n.translate('approvalCenter.colResolved') }}</th></tr></ng-template>
+            <ng-template pTemplate="body" let-r>
+              <tr>
+                <td><strong>{{ r.title }}</strong></td>
+                <td><p-tag [value]="r.status" [severity]="r.status === 'approved' ? 'success' : 'danger'" /></td>
+                <td>{{ r.entity_type || '-' }}</td>
+                <td>{{ r.approved_by || r.rejected_by }}</td>
+                <td class="ac-comment-cell">{{ r.decision_comment || '-' }}</td>
+                <td>{{ r.resolved_at | appDate:'short' }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </grc-data-table>
+      </div>
+
+      <!-- Team Breakdown -->
+      <div class="ac-team-section" *ngIf="dashboard?.byTeam?.length">
+        <h4 class="ac-section-title"><i class="pi pi-users"></i> {{ i18n.translate('approvalCenter.approvalsByTeam') }}</h4>
+        <div class="ac-team-grid">
+          <div *ngFor="let t of dashboard!.byTeam" class="ac-team-card">
+            <div class="ac-team-name">{{ t.teamName }}</div>
+            <div class="ac-team-stats">
+              <span>{{ i18n.translate('approvalCenter.total') }}: <strong>{{ t.total }}</strong></span>
+              <span class="ac-team-pending" *ngIf="t.pending > 0">{{ i18n.translate('approvalCenter.pending') }}: <strong>{{ t.pending }}</strong></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Entity Type Breakdown -->
+      <div class="ac-entity-section" *ngIf="dashboard?.byEntityType?.length">
+        <h4 class="ac-section-title"><i class="pi pi-th-large"></i> {{ i18n.translate('approvalCenter.byEntityType') }}</h4>
+        <div class="ac-entity-grid">
+          <div *ngFor="let e of dashboard!.byEntityType" class="ac-entity-card">
+            <span class="ac-entity-type">{{ formatLabel(e.type) }}</span>
+            <span class="ac-entity-count">{{ e.count }}</span>
+            <span class="ac-entity-pending" *ngIf="e.pending > 0">{{ e.pending }} {{ i18n.translate('approvalCenter.pending') }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Create Request Dialog -->
+      <p-dialog [header]="i18n.translate('approvalCenter.newApprovalRequest')" [(visible)]="showCreateDialog" [modal]="true" [style]="{width:'560px'}">
+        <div class="ac-dialog-form">
+          <grc-form-field [label]="i18n.translate('approvalCenter.labelTitle')" [required]="true">
+            <input pInputText [(ngModel)]="createForm.title" class="w-full" [placeholder]="i18n.translate('approvalCenter.placeholderRequestTitle')" [attr.aria-label]="i18n.translate('approvalCenter.placeholderRequestTitle')" />
+          </grc-form-field>
+          <label>{{ i18n.translate('approvalCenter.labelDescription') }}</label>
+          <textarea pInputTextarea [(ngModel)]="createForm.description" [rows]="3" class="w-full"></textarea>
+          <div class="ac-form-row">
+            <div class="ac-form-col">
+              <label>{{ i18n.translate('approvalCenter.labelEntityType') }}</label>
+              <p-dropdown [options]="entityTypeOpts" [(ngModel)]="createForm.entity_type" optionLabel="label" optionValue="value" [placeholder]="i18n.translate('approvalCenter.placeholderSelect')" class="w-full" />
+            </div>
+            <div class="ac-form-col">
+              <label>{{ i18n.translate('approvalCenter.labelPriority') }}</label>
+              <p-dropdown [options]="priorityOpts" [(ngModel)]="createForm.priority" optionLabel="label" optionValue="value" class="w-full" />
+            </div>
+          </div>
+          <div class="ac-form-row">
+            <div class="ac-form-col">
+              <grc-form-field [label]="i18n.translate('approvalCenter.labelAssignToEmail')">
+                <input pInputText [(ngModel)]="createForm.assigned_to" class="w-full" [placeholder]="i18n.translate('approvalCenter.placeholderEmail')" [attr.aria-label]="i18n.translate('approvalCenter.placeholderEmail')" />
+              </grc-form-field>
+            </div>
+            <div class="ac-form-col">
+              <label>{{ i18n.translate('approvalCenter.labelAssignToTeam') }}</label>
+              <p-dropdown [options]="teamOptions" [(ngModel)]="createForm.assigned_team_id" optionLabel="label" optionValue="value" [showClear]="true" [placeholder]="i18n.translate('approvalCenter.placeholderSelectTeam')" class="w-full" />
+            </div>
+          </div>
+          <div class="ac-form-row">
+            <div class="ac-form-col">
+              <grc-form-field [label]="i18n.translate('approvalCenter.labelSlaHours')">
+                <input pInputText [(ngModel)]="createForm.sla_hours" type="number" class="w-full" />
+              </grc-form-field>
+            </div>
+            <div class="ac-form-col">
+              <grc-form-field [label]="i18n.translate('approvalCenter.labelEscalationChain')">
+                <input pInputText [(ngModel)]="createForm.escalation_chain_str" class="w-full" [placeholder]="i18n.translate('approvalCenter.placeholderEscalationChain')" [attr.aria-label]="i18n.translate('approvalCenter.placeholderEscalationChain')" />
+              </grc-form-field>
+            </div>
+          </div>
+        </div>
+        <ng-template pTemplate="footer">
+          <p-button [label]="i18n.translate('common.cancel')" severity="secondary" (onClick)="showCreateDialog = false" />
+          <p-button [label]="i18n.translate('approvalCenter.createRequest')" icon="pi pi-check" (onClick)="submitCreate()" [disabled]="!createForm.title" />
+        </ng-template>
+      </p-dialog>
+
+      <!-- Decision Dialog (Approve/Reject) -->
+      <p-dialog [header]="decisionAction === 'approve' ? i18n.translate('approvalCenter.approveRequest') : i18n.translate('approvalCenter.rejectRequest')" [(visible)]="showDecisionDialog" [modal]="true" [style]="{width:'440px'}">
+        <div class="ac-dialog-form" *ngIf="decisionTarget">
+          <p><strong>{{ decisionTarget.title }}</strong></p>
+          <label>{{ i18n.translate('approvalCenter.labelComment') }}</label>
+          <textarea pInputTextarea [(ngModel)]="decisionComment" [rows]="3" class="w-full" [placeholder]="decisionAction === 'approve' ? i18n.translate('approvalCenter.placeholderApprovalNotes') : i18n.translate('approvalCenter.placeholderRejectionReason')" [attr.aria-label]="decisionAction === 'approve' ? i18n.translate('approvalCenter.placeholderApprovalNotes') : i18n.translate('approvalCenter.placeholderRejectionReason')"></textarea>
+        </div>
+        <ng-template pTemplate="footer">
+          <p-button [label]="i18n.translate('common.cancel')" severity="secondary" (onClick)="showDecisionDialog = false" />
+          <p-button [label]="decisionAction === 'approve' ? i18n.translate('approvalCenter.approve') : i18n.translate('approvalCenter.reject')"
+                    [icon]="decisionAction === 'approve' ? 'pi pi-check' : 'pi pi-times'"
+                    [severity]="decisionAction === 'approve' ? 'success' : 'danger'"
+                    (onClick)="submitDecision()" />
+        </ng-template>
+      </p-dialog>
+
+      <!-- Reassign Dialog -->
+      <p-dialog [header]="i18n.translate('approvalCenter.reassignRequest')" [(visible)]="showReassignDialog" [modal]="true" [style]="{width:'440px'}">
+        <div class="ac-dialog-form" *ngIf="reassignTarget">
+          <p><strong>{{ reassignTarget.title }}</strong></p>
+          <grc-form-field [label]="i18n.translate('approvalCenter.labelReassignToEmail')">
+            <input pInputText [(ngModel)]="reassignTo" class="w-full" [placeholder]="i18n.translate('approvalCenter.placeholderEmail')" [attr.aria-label]="i18n.translate('approvalCenter.placeholderEmail')" />
+          </grc-form-field>
+          <label>{{ i18n.translate('approvalCenter.labelReassignToTeam') }}</label>
+          <p-dropdown [options]="teamOptions" [(ngModel)]="reassignTeamId" optionLabel="label" optionValue="value" [showClear]="true" [placeholder]="i18n.translate('approvalCenter.placeholderSelectTeam')" class="w-full" />
+          <label>{{ i18n.translate('approvalCenter.labelComment') }}</label>
+          <textarea pInputTextarea [(ngModel)]="reassignComment" [rows]="2" class="w-full"></textarea>
+        </div>
+        <ng-template pTemplate="footer">
+          <p-button [label]="i18n.translate('common.cancel')" severity="secondary" (onClick)="showReassignDialog = false" />
+          <p-button [label]="i18n.translate('approvalCenter.reassign')" icon="pi pi-reply" (onClick)="submitReassign()" [disabled]="!reassignTo && !reassignTeamId" />
+        </ng-template>
+      </p-dialog>
+
+      }
+      </div>
+    </div>

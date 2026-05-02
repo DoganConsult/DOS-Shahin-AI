@@ -1,0 +1,84 @@
+<app-page-shell
+  icon="list"
+  [title]="i18n.translate('aiOs.decisionsListTitle') || 'Guard decisions'"
+  [subtitle]="i18n.translate('aiOs.decisionsListSubtitle') || 'View and drill into AI guard decisions'"
+  [breadcrumbs]="[i18n.translate('nav.dashboard'), i18n.translate('aiOs.dashboardTitle') || 'AI OS', i18n.translate('aiOs.decisionsListTitle') || 'Decisions']"
+  [loading]="loading()">
+
+  <div class="decisions-list" [dir]="i18n.direction()">
+    <div class="decisions-list-actions">
+      <button pButton
+        icon="pi pi-arrow-left"
+        [label]="i18n.translate('aiOs.backToDashboard') || 'Back to AI OS Dashboard'"
+        class="p-button-outlined p-button-sm"
+        (click)="goBack()">
+      </button>
+      <span *ngIf="filterAgentId()" class="filter-badge">
+        <i class="pi pi-filter"></i> {{ i18n.translate('aiOs.filterByAgent') || 'Agent' }}: {{ filterAgentId() }}
+      </span>
+    </div>
+
+    <div class="decisions-error-box" *ngIf="error()">
+      <p class="decisions-error">
+        <i class="pi pi-exclamation-triangle"></i> {{ error() }}
+      </p>
+      <p class="decisions-correlation" *ngIf="correlationId()">
+        <span class="correlation-label">{{ i18n.translate('common.correlationId') || 'Correlation ID' }}:</span>
+        <code>{{ correlationId() }}</code>
+      </p>
+      <button pButton
+        [label]="i18n.translate('common.retry') || 'Retry'"
+        icon="pi pi-refresh"
+        class="p-button-outlined p-button-sm"
+        (click)="load()">
+      </button>
+    </div>
+
+    <div *ngIf="!loading() && !error()" class="decisions-content">
+      <grc-data-table
+        [totalRecords]="decisions().length"
+        [emptyMessage]="i18n.translate('aiOs.noData') || 'No decisions found.'">
+        <p-table
+          [value]="decisions()"
+          styleClass="p-datatable-sm p-datatable-striped"
+          [tableStyle]="{ 'min-width': '50rem' }"
+          currentPageReportTemplate=""
+          [paginator]="decisions().length > 10"
+          [rows]="10"
+          [rowsPerPageOptions]="[10, 25, 50]">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>{{ i18n.translate('aiOs.decisionId') || 'Decision ID' }}</th>
+              <th>{{ i18n.translate('aiOs.agentId') || 'Agent' }}</th>
+              <th>{{ i18n.translate('aiOs.entityType') || 'Entity type' }}</th>
+              <th>{{ i18n.translate('aiOs.confidence') || 'Confidence' }}</th>
+              <th>{{ i18n.translate('aiOs.outcome') || 'Outcome' }}</th>
+              <th>{{ i18n.translate('aiOs.timestamp') || 'Time' }}</th>
+              <th></th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-d>
+            <tr (click)="goToDecision(d.id || d.decisionId || d.decision_id)" class="clickable-row">
+              <td><code>{{ d.id || d.decisionId || d.decision_id || '—' }}</code></td>
+              <td>{{ d.agentId || d.agent_id || '—' }}</td>
+              <td>{{ d.entityType || d.entity_type || '—' }}</td>
+              <td>{{ d.confidence !== null && d.confidence !== undefined ? ((d.confidence * 100) | number:'1.0-0') + '%' : '—' }}</td>
+              <td>
+                <span class="outcome-badge" [ngClass]="(getOutcomeLabel(d) || 'unknown').toLowerCase()">
+                  {{ getOutcomeLabel(d) || '—' }}
+                </span>
+              </td>
+              <td>{{ formatTime(d.timestamp || d.created_at || d.createdAt) }}</td>
+              <td>
+                <a *ngIf="d.run_id || d.runId" [routerLink]="['/ai-os-dashboard', 'traces', d.run_id || d.runId]" class="p-button-text p-button-sm" (click)="$event.stopPropagation()" [attr.aria-label]="'View trace'">
+                  <i class="pi pi-list"></i>
+                </a>
+                <button pButton icon="pi pi-arrow-right" class="p-button-text p-button-sm" (click)="goToDecision(d.id || d.decisionId || d.decision_id); $event.stopPropagation()"></button>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </grc-data-table>
+    </div>
+  </div>
+</app-page-shell>

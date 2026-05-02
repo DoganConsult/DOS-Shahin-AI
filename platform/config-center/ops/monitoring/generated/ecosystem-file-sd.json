@@ -1,0 +1,308 @@
+[
+  {
+    "targets": [
+      "127.0.0.1:4000"
+    ],
+    "labels": {
+      "service": "gateway",
+      "job": "gateway"
+    }
+  },
+  {
+    "targets": [
+      "127.0.0.1:4001"
+    ],
+    "labels": {
+      "service": "auth-service",
+      "job": "auth-service"
+    }
+  },
+  {
+    "targets": [
+      "127.0.0.1:4002"
+    ],
+    "labels": {
+      "service": "tenant-service",
+      "job": "tenant-service"
+    }
+  },
+  {
+    "targets": [
+      "127.0.0.1:4003"
+    ],
+    "labels": {
+      "service": "user-service",
+      "job": "user-service"
+    }
+  },
+  {
+    "targets": [
+      "127.0.0.1:4004"
+    ],
+    "labels": {
+      "service": "workflow-service",
+      "job": "workflow-service"
+    }
+  },
+  {
+    "targets": [
+      "127.0.0.1:4005"
+    ],
+    "labels": {
+      "service": "notification-service",
+      "job": "notification-service"
+    }
+  },
+  {
+    "targets": [
+      "127.0.0.1:4006"
+    ],
+    "labels": {
+      "service": "audit-service",
+      "job": "audit-service"
+    }
+  },
+  {
+    "targets": [
+      "127.0.0.1:4007"
+    ],
+    "labels": {
+      "service": "ai-gateway-service",
+      "job": "ai-gateway-service"
+    }
+  },
+  {
+    "targets": [
+      "127.0.0.1:4008"
+    ],
+    "labels": {
+      "service": "ai-engine-service",
+      "job": "ai-engine-service"
+    }
+  },
+  {
+    "targets": [
+      "127.0.0.1:4010"
+    ],
+    "labels": {
+      "service": "onboarding-service",
+      "job": "onboarding-service"
+    }
+  },
+  {
+    "targets": [
+      "127.0.0.1:4011"
+    ],
+    "labels": {
+      "service": "governance-policy-service",
+      "job": "governance-policy-service"
+    }
+  },
+  {
+    "targets": [
+      "127.0.0.1:4012"
+    ],
+    "labels": {
+      "service": "compliance-controls-service",
+      "job": "compliance-controls-service"
+    }
+  },
+  {
+    "targets": [
+      "127.0.0.1:4013"
+    ],
+    "labels": {
+      "service": "risk-incident-service",
+      "job": "risk-incident-service"
+    }
+  },
+  {
+    "targets": [
+      "127.0.0.1:4014"
+    ],
+    "labels": {
+      "service": "evidence-audit-reporting-service",
+      "job": "evidence-audit-reporting-service"
+    }
+  },
+  {
+    "targets": [
+      "127.0.0.1:4015"
+    ],
+    "labels": {
+      "service": "vendor-service",
+      "job": "vendor-service"
+    }
+  },
+  {
+    "targets": [
+      "127.0.0.1:4016"
+    ],
+    "labels": {
+      "service": "asset-service",
+      "job": "asset-service"
+    }
+  },
+  {
+    "targets": [
+      "127.0.0.1:4017"
+    ],
+    "labels": {
+      "service": "bcp-service",
+      "job": "bcp-service"
+    }
+  },
+  {
+    "targets": [
+      "127.0.0.1:4018"
+    ],
+    "labels": {
+      "service": "training-service",
+      "job": "training-service"
+    }
+  },
+  {
+    "targets": [
+      "127.0.0.1:4019"
+    ],
+    "labels": {
+      "service": "privacy-service",
+      "job": "privacy-service"
+    }
+  },
+  {
+    "targets": [
+      "127.0.0.1:4020"
+    ],
+    "labels": {
+      "service": "dora-service",
+      "job": "dora-service"
+    }
+  },
+  {
+    "targets": [
+      "127.0.0.1:4021"
+    ],
+    "labels": {
+      "service": "remediation-action-service",
+      "job": "remediation-action-service"
+    }
+  },
+  {
+    "targets": [
+      "127.0.0.1:4022"
+    ],
+    "labels": {
+      "service": "qiyas-journey-service",
+      "job": "qiyas-journey-service"
+    }
+  },
+  {
+    "targets": [
+      "127.0.0.1:4023"
+    ],
+    "labels": {
+      "service": "dashboard-widgets-service",
+      "job": "dashboard-widgets-service"
+    }
+  },
+  {
+    "targets": [
+      "127.0.0.1:4024"
+    ],
+    "labels": {
+      "service": "analytics-service",
+      "job": "analytics-service"
+    }
+  },
+  {
+    "targets": [
+      "127.0.0.1:4025"
+    ],
+    "labels": {
+      "service": "executive-intelligence-service",
+      "job": "executive-intelligence-service"
+    }
+  },
+  {
+    "targets": [
+      "127.0.0.1:4026"
+    ],
+    "labels": {
+      "service": "integrations-service",
+      "job": "integrations-service"
+    }
+  },
+  {
+    "targets": [
+      "127.0.0.1:4027"
+    ],
+    "labels": {
+      "service": "notification-inbox-service",
+      "job": "notification-inbox-service"
+    }
+  },
+  {
+    "targets": [
+      "127.0.0.1:4028"
+    ],
+    "labels": {
+      "service": "portals-service",
+      "job": "portals-service"
+    }
+  },
+  {
+    "targets": [
+      "127.0.0.1:4029"
+    ],
+    "labels": {
+      "service": "records-service",
+      "job": "records-service"
+    }
+  },
+  {
+    "targets": [
+      "127.0.0.1:4030"
+    ],
+    "labels": {
+      "service": "platform-product-service",
+      "job": "platform-product-service"
+    }
+  },
+  {
+    "targets": [
+      "127.0.0.1:4031"
+    ],
+    "labels": {
+      "service": "agrc-os-service",
+      "job": "agrc-os-service"
+    }
+  },
+  {
+    "targets": [
+      "127.0.0.1:4032"
+    ],
+    "labels": {
+      "service": "analytics-reporting-service",
+      "job": "analytics-reporting-service"
+    }
+  },
+  {
+    "targets": [
+      "127.0.0.1:4033"
+    ],
+    "labels": {
+      "service": "platform-core-service",
+      "job": "platform-core-service"
+    }
+  },
+  {
+    "targets": [
+      "127.0.0.1:3000"
+    ],
+    "labels": {
+      "service": "product-shell",
+      "job": "product-shell"
+    }
+  }
+]

@@ -1,0 +1,22 @@
+{
+  "serviceCode": "auth-service",
+  "displayName": "Authentication Service",
+  "layer": "platform-service",
+  "ownerTeam": "platform-core",
+  "runtime": "node",
+  "dependsOn": [],
+  "modules": [
+    "auth",
+    "dauth",
+    "identity",
+    "session",
+    "access",
+    "delegation",
+    "sod",
+    "security"
+  ],
+  "exposes": {
+    "apiBase": "/api/auth"
+  }
+}
+

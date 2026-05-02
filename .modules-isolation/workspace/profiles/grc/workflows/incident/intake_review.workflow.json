@@ -1,0 +1,15 @@
+{
+  "id": "incident.intake_review",
+  "module": "incident",
+  "hook": "intake_review",
+  "version": "1.0.0",
+  "sla_hours": 24,
+  "actor_role_default": "incident.module_lead",
+  "states": ["draft","triage","classified"],
+  "initial": "draft",
+  "transitions": [{"from":"draft","to":"triage","on":"submit"},{"from":"triage","to":"classified","on":"classify","actor_role":"incident.module_lead"}],
+  "audit_event_prefix": "incident.workflow.intake_review",
+  "notification_targets": ["incident.module_lead", "incident.approver"],
+  "evidence_required_on": ["passed","published"],
+  "escalation": { "on": "sla_breach", "to": "incident.executive_owner", "after_hours": 48 }
+}

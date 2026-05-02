@@ -1,0 +1,149 @@
+/**
+ * Controls Admin — Styles
+ * All colors use CSS custom properties from grc-tokens.css (Rule 7).
+ */
+
+// -- Page Container --
+.controls-admin {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px 24px;
+  min-height: 100%;
+  background: var(--surface-ground, var(--bg-0));
+}
+
+// -- Tab Content --
+.tab-content {
+  padding: 16px 0;
+}
+
+.tab-title {
+  margin: 0 0 16px;
+  font-size: var(--font-size-base, 1rem);
+  font-weight: 700;
+  color: var(--text-heading, var(--text-body));
+}
+
+.tab-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+// -- Settings Grid --
+.settings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+// -- Tab Actions --
+.tab-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-subtle, var(--border));
+}
+
+// -- Taxonomy Tree --
+:host .taxonomy-tree {
+  border: 1px solid var(--border-subtle, var(--border));
+  border-radius: var(--radius-md, 8px);
+  background: var(--surface-card, var(--bg-0));
+}
+
+// -- Table Helpers --
+.font-semibold {
+  font-weight: 600;
+}
+
+.truncate-cell {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.text-muted {
+  color: var(--text-muted);
+  font-size: var(--font-size-sm, 0.875rem);
+}
+
+// -- Active Dot --
+.active-dot {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-size-sm, 0.875rem);
+  font-weight: 600;
+
+  &--on {
+    color: var(--success);
+  }
+
+  &--off {
+    color: var(--text-muted);
+  }
+
+  &::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  &--on::before {
+    background: var(--success);
+  }
+
+  &--off::before {
+    background: var(--text-muted);
+  }
+}
+
+// -- Required Types Tags --
+.required-types-section {
+  margin-bottom: 16px;
+}
+
+.section-label {
+  margin: 0 0 8px;
+  font-size: var(--font-size-sm, 0.875rem);
+  font-weight: 700;
+  color: var(--text-heading, var(--text-body));
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.type-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: var(--radius-xl, 20px);
+  font-size: var(--font-size-sm, 0.875rem);
+  font-weight: 600;
+  color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
+}
+
+.w-full {
+  width: 100%;
+}
+
+// -- Responsive --
+@media (max-width: 768px) {
+  .controls-admin {
+    padding: 12px;
+  }
+
+  .settings-grid {
+    grid-template-columns: 1fr;
+  }
+}

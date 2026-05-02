@@ -1,0 +1,36 @@
+{
+  "name": "@dos/db",
+  "version": "1.0.0",
+  "description": "DOS Platform — shared database utilities, connection pool, tenant schema resolution, query helpers, Redis client.",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "default": "./dist/index.js" },
+    "./config": { "types": "./dist/config.d.ts", "default": "./dist/config.js" },
+    "./pool": { "types": "./dist/pool.d.ts", "default": "./dist/pool.js" },
+    "./query": { "types": "./dist/query.d.ts", "default": "./dist/query.js" },
+    "./tenant": { "types": "./dist/tenant.d.ts", "default": "./dist/tenant.js" },
+    "./transaction": { "types": "./dist/transaction.d.ts", "default": "./dist/transaction.js" },
+    "./master": { "types": "./dist/master.d.ts", "default": "./dist/master.js" },
+    "./utils": { "types": "./dist/utils.d.ts", "default": "./dist/utils.js" },
+    "./redis": { "types": "./dist/redis.d.ts", "default": "./dist/redis.js" },
+    "./logger": { "types": "./dist/logger.d.ts", "default": "./dist/logger.js" },
+    "./errors": { "types": "./dist/errors.d.ts", "default": "./dist/errors.js" }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@dos/types": "workspace:*",
+    "pg": "^8.13.0",
+    "ioredis": "^5.10.0",
+    "pino": "^10.3.1"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.11.0",
+    "typescript": "^5.7.0"
+  }
+}

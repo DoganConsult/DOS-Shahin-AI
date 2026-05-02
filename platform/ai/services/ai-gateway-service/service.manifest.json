@@ -1,0 +1,20 @@
+{
+  "serviceCode": "ai-gateway-service",
+  "displayName": "AI Gateway Service",
+  "layer": "platform-service",
+  "ownerTeam": "platform-ai",
+  "runtime": "node",
+  "dependsOn": [
+    "auth-service",
+    "tenant-service"
+  ],
+  "modules": [
+    "ai",
+    "ai-governance",
+    "agrc-engine",
+    "mcp"
+  ],
+  "exposes": {
+    "apiBase": "/api/ai"
+  }
+}

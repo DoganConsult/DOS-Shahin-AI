@@ -1,0 +1,15 @@
+{
+  "id": "risk.owner_acknowledge",
+  "module": "risk",
+  "hook": "owner_acknowledge",
+  "version": "1.0.0",
+  "sla_hours": 48,
+  "actor_role_default": "risk.module_lead",
+  "states": ["pending","acknowledged","escalated"],
+  "initial": "pending",
+  "transitions": [{"from":"pending","to":"acknowledged","on":"ack","actor_role":"risk.module_lead"},{"from":"pending","to":"escalated","on":"sla_breach","actor_role":"risk.executive_owner"}],
+  "audit_event_prefix": "risk.workflow.owner_acknowledge",
+  "notification_targets": ["risk.module_lead", "risk.approver"],
+  "evidence_required_on": ["passed","published"],
+  "escalation": { "on": "sla_breach", "to": "risk.executive_owner", "after_hours": 96 }
+}

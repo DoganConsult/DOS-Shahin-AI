@@ -1,0 +1,49 @@
+{
+    "db": "shahin_token_hash_fresh",
+    "columns": {
+        "dos.config_values": [
+        ],
+        "dos.feature_flags": [
+        ],
+        "dos.config_definitions": [
+        ],
+        "dos.platform_operation_config": [
+        ]
+    },
+    "trackers": {
+        "dos.schema_migrations": {
+            "rows": null,
+            "exists": false
+        },
+        "public.dos_migrations": {
+            "rows": null,
+            "exists": false
+        },
+        "dos.service_migrations": {
+            "rows": null,
+            "exists": false
+        },
+        "dos.platform_migrations": {
+            "rows": null,
+            "exists": false
+        },
+        "public.schema_migrations": {
+            "rows": 0,
+            "exists": true
+        }
+    },
+    "timestamp": "2026-04-24T06:58:10.875641+00:00",
+    "drift_flags": {
+        "feature_flags_has_name_en": false,
+        "config_definitions_has_key": false,
+        "config_values_has_definition_id": false,
+        "config_definitions_has_config_key": false,
+        "platform_op_config_has_config_key": false
+    },
+    "seed_counts": {
+        "dos.feature_flags": null,
+        "dos.config_definitions": null,
+        "dos.platform_operation_config": null
+    },
+    "classification": "not-applicable"
+}

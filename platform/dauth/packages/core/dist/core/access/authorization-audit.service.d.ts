@@ -1,0 +1,22 @@
+import type { GenericRow } from '@dos/types/db';
+export declare function logAuthorizationAudit(tenantId: string, userId: string, resource: string, action: string, decision: string, details?: Record<string, unknown>): Promise<void>;
+export declare function getAuthorizationAuditLog(tenantId: string, filters?: {
+    userId?: string;
+    resource?: string;
+    decision?: string;
+    limit?: number;
+}): Promise<GenericRow[]>;
+export declare function logDecision(tenantId: string, userId: string, permissionCode: string, granted: boolean, reason: string): Promise<void>;
+export declare function logMismatch(tenantId: string, userId: string, expectedPermission: string, actualResult: string, context?: Record<string, unknown>): Promise<void>;
+export declare function getMismatches(tenantId: string, limit?: number): Promise<GenericRow[]>;
+export declare function listAuthorizationPermissions(tenantId: string): Promise<GenericRow[]>;
+export declare function logGuardDecision(tenantId: string, guardName: string, userId: string, result: string, durationMs: number, details?: Record<string, unknown>): Promise<void>;
+export declare function logRbacConfigChange(tenantId: string, entityType: string, entityId: string, action: string, changedBy: string, before: unknown, after: unknown): Promise<void>;
+export declare function getPermissionAnalytics(tenantId: string, permissionCode?: string): Promise<GenericRow[]>;
+export declare function listPermissionTemplates(tenantId: string): Promise<GenericRow[]>;
+export declare function getPermissionTemplate(tenantId: string, templateId: string): Promise<GenericRow | null>;
+export declare function logRoleAssignmentAudit(tenantId: string, userId: string, roleId: string, action: string, performedBy: string): Promise<void>;
+export declare function getRoleAssignmentHistory(tenantId: string, userId: string): Promise<GenericRow[]>;
+export declare function logRoleUsage(tenantId: string, userId: string, roleId: string, action: string): Promise<void>;
+export declare function createRoleTransitionRequest(tenantId: string, userId: string, fromRoleId: string, toRoleId: string, reason: string, requestedBy: string): Promise<GenericRow | null>;
+export declare function decideRoleTransition(tenantId: string, requestId: string, decision: 'approved' | 'rejected', decidedBy: string): Promise<GenericRow | null>;

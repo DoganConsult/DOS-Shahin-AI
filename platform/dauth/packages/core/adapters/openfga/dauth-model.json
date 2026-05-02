@@ -1,0 +1,136 @@
+{
+  "schema_version": "1.1",
+  "type_definitions": [
+    {
+      "type": "user"
+    },
+    {
+      "type": "tenant",
+      "relations": {
+        "member": { "this": {} },
+        "admin": { "this": {} }
+      },
+      "metadata": {
+        "relations": {
+          "member": { "directly_related_user_types": [ { "type": "user" } ] },
+          "admin":  { "directly_related_user_types": [ { "type": "user" } ] }
+        }
+      }
+    },
+    {
+      "type": "team",
+      "relations": {
+        "tenant": { "this": {} },
+        "member": { "this": {} },
+        "admin": { "this": {} }
+      },
+      "metadata": {
+        "relations": {
+          "tenant": { "directly_related_user_types": [ { "type": "tenant" } ] },
+          "member": { "directly_related_user_types": [ { "type": "user" } ] },
+          "admin":  { "directly_related_user_types": [ { "type": "user" } ] }
+        }
+      }
+    },
+    {
+      "type": "department",
+      "relations": {
+        "tenant": { "this": {} },
+        "head":   { "this": {} },
+        "member": { "this": {} }
+      },
+      "metadata": {
+        "relations": {
+          "tenant": { "directly_related_user_types": [ { "type": "tenant" } ] },
+          "head":   { "directly_related_user_types": [ { "type": "user" } ] },
+          "member": { "directly_related_user_types": [ { "type": "user" } ] }
+        }
+      }
+    },
+    {
+      "type": "evidence",
+      "relations": {
+        "tenant":   { "this": {} },
+        "owner":    { "this": {} },
+        "reviewer": { "this": {} },
+        "approver": { "this": {} }
+      },
+      "metadata": {
+        "relations": {
+          "tenant":   { "directly_related_user_types": [ { "type": "tenant" } ] },
+          "owner":    { "directly_related_user_types": [ { "type": "user" } ] },
+          "reviewer": { "directly_related_user_types": [ { "type": "user" }, { "type": "team", "relation": "member" } ] },
+          "approver": { "directly_related_user_types": [ { "type": "user" }, { "type": "team", "relation": "member" } ] }
+        }
+      }
+    },
+    {
+      "type": "control",
+      "relations": {
+        "tenant":   { "this": {} },
+        "owner":    { "this": {} },
+        "tester":   { "this": {} },
+        "reviewer": { "this": {} },
+        "approver": { "this": {} }
+      },
+      "metadata": {
+        "relations": {
+          "tenant":   { "directly_related_user_types": [ { "type": "tenant" } ] },
+          "owner":    { "directly_related_user_types": [ { "type": "user" } ] },
+          "tester":   { "directly_related_user_types": [ { "type": "user" } ] },
+          "reviewer": { "directly_related_user_types": [ { "type": "user" }, { "type": "team", "relation": "member" } ] },
+          "approver": { "directly_related_user_types": [ { "type": "user" }, { "type": "team", "relation": "member" } ] }
+        }
+      }
+    },
+    {
+      "type": "policy",
+      "relations": {
+        "tenant":   { "this": {} },
+        "owner":    { "this": {} },
+        "approver": { "this": {} }
+      },
+      "metadata": {
+        "relations": {
+          "tenant":   { "directly_related_user_types": [ { "type": "tenant" } ] },
+          "owner":    { "directly_related_user_types": [ { "type": "user" } ] },
+          "approver": { "directly_related_user_types": [ { "type": "user" } ] }
+        }
+      }
+    },
+    {
+      "type": "report",
+      "relations": {
+        "tenant":   { "this": {} },
+        "owner":    { "this": {} },
+        "viewer":   { "this": {} },
+        "exporter": { "this": {} }
+      },
+      "metadata": {
+        "relations": {
+          "tenant":   { "directly_related_user_types": [ { "type": "tenant" } ] },
+          "owner":    { "directly_related_user_types": [ { "type": "user" } ] },
+          "viewer":   { "directly_related_user_types": [ { "type": "user" } ] },
+          "exporter": { "directly_related_user_types": [ { "type": "user" } ] }
+        }
+      }
+    },
+    {
+      "type": "delegation",
+      "relations": {
+        "from":                { "this": {} },
+        "to":                  { "this": {} },
+        "scope":               { "this": {} },
+        "acts_on_behalf_of":   { "this": {} }
+      },
+      "metadata": {
+        "relations": {
+          "from":              { "directly_related_user_types": [ { "type": "user" } ] },
+          "to":                { "directly_related_user_types": [ { "type": "user" } ] },
+          "scope":             { "directly_related_user_types": [ { "type": "tenant" } ] },
+          "acts_on_behalf_of": { "directly_related_user_types": [ { "type": "user" } ] }
+        }
+      }
+    }
+  ]
+}

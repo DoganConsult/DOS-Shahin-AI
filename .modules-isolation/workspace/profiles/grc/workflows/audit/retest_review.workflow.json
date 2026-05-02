@@ -1,0 +1,15 @@
+{
+  "id": "audit.retest_review",
+  "module": "audit",
+  "hook": "retest_review",
+  "version": "1.0.0",
+  "sla_hours": 72,
+  "actor_role_default": "audit.module_lead",
+  "states": ["ready","retesting","passed","failed"],
+  "initial": "ready",
+  "transitions": [{"from":"ready","to":"retesting","on":"start_retest"},{"from":"retesting","to":"passed","on":"pass","actor_role":"audit.approver"},{"from":"retesting","to":"failed","on":"fail","actor_role":"audit.approver"}],
+  "audit_event_prefix": "audit.workflow.retest_review",
+  "notification_targets": ["audit.module_lead", "audit.approver"],
+  "evidence_required_on": ["passed","published"],
+  "escalation": { "on": "sla_breach", "to": "audit.executive_owner", "after_hours": 144 }
+}

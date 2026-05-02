@@ -1,0 +1,126 @@
+<div class="proof-editor">
+      <!-- Header: premises / conclusion -->
+      <div class="proof-header">
+        <div class="field-row">
+          <grc-form-field label="Premises">
+            <input
+              class="formula-input"
+              [ngModel]="premisesStr()"
+              (ngModelChange)="onPremisesChange($event)"
+              placeholder="P, P → Q  (comma-separated)"
+            />
+          </grc-form-field>
+        </div>
+        <div class="field-row">
+          <grc-form-field label="Conclusion">
+            <input
+              class="formula-input"
+              [ngModel]="conclusionStr()"
+              (ngModelChange)="conclusionStr.set($event)"
+              placeholder="Q"
+            />
+          </grc-form-field>
+        </div>
+      </div>
+
+      <!-- Fitch-style proof lines -->
+      <div class="proof-body">
+        <div class="proof-lines">
+          @for (line of lines(); track $index; let i = $index) {
+            <div
+              class="proof-line"
+              [class.error-line]="lineHasError(i + 1)"
+              [class.assumption-line]="line.isAssumption"
+            >
+              <!-- Line number -->
+              <span class="line-num">{{ i + 1 }}</span>
+
+              <!-- Fitch bar (depth indicator) -->
+              <div class="fitch-bars">
+                @for (d of depthArray(line.depth); track d) {
+                  <div class="fitch-bar" [class.assumption-bar]="d === line.depth && line.isAssumption"></div>
+                }
+              </div>
+
+              <!-- Formula input -->
+              <input
+                class="line-formula"
+                [(ngModel)]="line.formula"
+                placeholder="Enter formula..."
+                (keydown.enter)="addLineAfter(i)"
+              />
+
+              <!-- Rule badge -->
+              <select class="rule-select" [(ngModel)]="line.rule">
+                <option value="premise">Premise</option>
+                <option value="assumption">Assumption</option>
+                <option value="reiteration">Reit</option>
+                <option value="and_intro">∧I</option>
+                <option value="and_elim">∧E</option>
+                <option value="or_intro">∨I</option>
+                <option value="or_elim">∨E</option>
+                <option value="implies_intro">→I</option>
+                <option value="implies_elim">→E</option>
+                <option value="not_intro">¬I</option>
+                <option value="not_elim">¬E</option>
+                <option value="biconditional_intro">↔I</option>
+                <option value="biconditional_elim">↔E</option>
+                <option value="bottom_intro">⊥I</option>
+                <option value="bottom_elim">⊥E</option>
+              </select>
+
+              <!-- Citations -->
+              <input
+                class="citations-input"
+                [(ngModel)]="line.citationsStr"
+                placeholder="e.g. 1,2"
+                title="Line numbers cited (comma-separated)"
+              />
+
+              <!-- Depth controls -->
+              <button class="depth-btn" (click)="increaseDepth(i)" title="Open sub-proof">&#x2192;</button>
+              <button class="depth-btn" (click)="decreaseDepth(i)" title="Close sub-proof">&#x2190;</button>
+
+              <!-- Delete line -->
+              <button class="delete-btn" (click)="removeLine(i)" title="Remove line">&times;</button>
+            </div>
+          }
+        </div>
+
+        <!-- Add line -->
+        <button class="add-line-btn" (click)="addLine()">+ Add Line</button>
+      </div>
+
+      <!-- Actions -->
+      <div class="proof-actions">
+        <button class="btn btn-primary" (click)="verify()">Verify Proof</button>
+        <button class="btn btn-secondary" (click)="clear()">Clear</button>
+      </div>
+
+      <!-- Verification result -->
+      @if (verificationResult()) {
+        <div
+          class="verification-result"
+          [class.valid]="verificationResult()!.valid && verificationResult()!.completeness === 'complete'"
+          [class.invalid]="!verificationResult()!.valid"
+          [class.incomplete]="verificationResult()!.valid && verificationResult()!.completeness === 'incomplete'"
+        >
+          <div class="result-header">
+            @if (verificationResult()!.valid && verificationResult()!.completeness === 'complete') {
+              <span class="result-icon">&#10003;</span> Proof is valid and complete!
+            } @else if (verificationResult()!.valid) {
+              <span class="result-icon">&#9888;</span> All lines valid, but proof is incomplete
+            } @else {
+              <span class="result-icon">&#10007;</span> Proof has errors
+            }
+          </div>
+          @if (verificationResult()!.errors.length > 0) {
+            <ul class="error-list">
+              @for (err of verificationResult()!.errors; track err.lineNumber) {
+                <li>Line {{ err.lineNumber }}: {{ err.message }}</li>
+              }
+            </ul>
+          }
+        </div>
+      }
+    </div>

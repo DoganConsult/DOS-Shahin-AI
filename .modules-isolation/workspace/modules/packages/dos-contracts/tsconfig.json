@@ -1,0 +1,18 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "strict": false,
+    "noImplicitAny": false,
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "@dos/types": ["../dos-types/dist/index"],
+      "@dos/types/*": ["../dos-types/dist/*"],
+      "@dos/platform-core": ["../dos-platform-core/dist/index"],
+      "@dos/platform-core/*": ["../dos-platform-core/dist/*"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}

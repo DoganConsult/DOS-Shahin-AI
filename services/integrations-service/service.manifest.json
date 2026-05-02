@@ -1,0 +1,23 @@
+{
+  "serviceCode": "integrations-service",
+  "displayName": "Integrations Service",
+  "layer": "domain-service",
+  "ownerTeam": "platform-core",
+  "runtime": "node",
+  "dependsOn": [
+    "auth-service",
+    "tenant-service"
+  ],
+  "modules": [
+    "integrations",
+    "fitch"
+  ],
+  "exposes": {
+    "apiBase": "/api/integrations",
+    "events": [
+      "integration.connected",
+      "integration.synced",
+      "integration.failed"
+    ]
+  }
+}

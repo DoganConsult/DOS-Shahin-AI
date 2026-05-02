@@ -1,0 +1,30 @@
+{
+  "name": "@dos/event-backbone",
+  "version": "0.1.0",
+  "description": "DOS Platform — broker-backed event bus with dual-publish bridge for progressive migration from in-memory EventBus.",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@dos/contracts": "workspace:*",
+    "@dos/types": "workspace:*",
+    "ioredis": "^5.10.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "typescript": "^5.7.0"
+  }
+}

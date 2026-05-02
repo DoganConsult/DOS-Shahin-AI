@@ -1,0 +1,26 @@
+{
+  "extends": "../../../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "@dos/types": ["../../../packages/dos-types/dist/index.d.ts"],
+      "@dos/types/*": ["../../../packages/dos-types/dist/*"],
+      "@dos/contracts": ["../../../packages/dos-contracts/dist/index.d.ts"],
+      "@dos/contracts/*": ["../../../packages/dos-contracts/dist/*"],
+      "@dos/db": ["../../../packages/dos-db/dist/index.d.ts"],
+      "@dos/db/*": ["../../../packages/dos-db/dist/*"],
+      "@dos/module-sdk": ["../../../packages/dos-module-sdk/dist/index"],
+      "@dos/module-sdk/*": ["../../../packages/dos-module-sdk/dist/*"]
+    }
+  },
+  "include": [
+    "src/index.ts",
+    "src/middleware.ts",
+    "src/contracts.ts",
+    "src/ports.ts",
+    "src/access/index.ts"
+  ],
+  "exclude": ["node_modules", "dist"]
+}

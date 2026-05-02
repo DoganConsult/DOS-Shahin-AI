@@ -1,0 +1,415 @@
+<div class="ewq-page" [attr.dir]="dir()">
+
+  <app-page-header
+    titleEn="My Evidence Work"
+    titleAr="مهام الأدلة الخاصة بي"
+    subtitleEn="Your assigned evidence requests, reviews, and tasks"
+    subtitleAr="طلبات ومراجعات ومهام الأدلة المسندة إليك"
+    icon="inbox"
+    [actions]="headerActions"
+    [isAr]="isAr()"
+    [dir]="dir()"
+    (actionClick)="onHeaderAction($event)" />
+
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="ewq-body">
+      <div class="skeleton-kpi">
+        @for (i of [1,2,3,4]; track i) {
+          <p-skeleton height="76px" borderRadius="10px" />
+        }
+      </div>
+      <app-skeleton-loader variant="list" [rows]="6" />
+    </div>
+  }
+
+  <!-- Error State -->
+  @if (!loading() && error()) {
+    <div class="ewq-body">
+      <app-empty-state
+        variant="error"
+        [title]="isAr() ? 'فشل تحميل قائمة العمل' : 'Failed to load work queue'"
+        [description]="isAr() ? 'تحقق من اتصالك وحاول مرة أخرى' : 'Check your connection and try again'"
+        [actionLabel]="isAr() ? 'إعادة المحاولة' : 'Retry'"
+        [dir]="dir()"
+        (action)="load()" />
+    </div>
+  }
+
+  <!-- Main Content -->
+  @if (!loading() && !error()) {
+    <div class="ewq-body">
+
+      <!-- KPI Strip -->
+      <app-kpi-card-grid
+        [cards]="kpis()"
+        [isAr]="isAr()"
+        (cardClick)="onKpiClick($event)" />
+
+      <!-- Filter Bar -->
+      <div class="ewq-filter-bar" [attr.dir]="dir()">
+        <p-dropdown [options]="statusOptions" [(ngModel)]="filterStatus" optionLabel="label" optionValue="value"
+          [placeholder]="isAr() ? 'الحالة' : 'Status'" [showClear]="true" styleClass="ewq-filter" />
+        <p-dropdown [options]="priorityOptions" [(ngModel)]="filterPriority" optionLabel="label" optionValue="value"
+          [placeholder]="isAr() ? 'الأولوية' : 'Priority'" [showClear]="true" styleClass="ewq-filter" />
+        <p-calendar [(ngModel)]="filterDueDateFrom" dateFormat="yy-mm-dd"
+          [placeholder]="isAr() ? 'من تاريخ' : 'Due From'" [showClear]="true" styleClass="ewq-filter" />
+        <p-calendar [(ngModel)]="filterDueDateTo" dateFormat="yy-mm-dd"
+          [placeholder]="isAr() ? 'إلى تاريخ' : 'Due To'" [showClear]="true" styleClass="ewq-filter" />
+        @if (hasFilters) {
+          <button class="ewq-clear-btn" (click)="clearFilters()">
+            <i class="pi pi-filter-slash"></i>
+            {{ isAr() ? 'مسح' : 'Clear' }}
+          </button>
+        }
+      </div>
+
+      <!-- Tab Bar -->
+      <nav class="ewq-tabs" role="tablist">
+        @for (tab of tabs; track tab.key) {
+          <button
+            class="ewq-tab"
+            [class.active]="activeTab() === tab.key"
+            role="tab"
+            [attr.aria-selected]="activeTab() === tab.key"
+            (click)="selectTab(tab.key)">
+            <i class="pi {{ tab.icon }}"></i>
+            {{ isAr() ? tab.labelAr : tab.labelEn }}
+            @if (tabCounts()[tab.key] > 0) {
+              <span class="ewq-badge">{{ tabCounts()[tab.key] }}</span>
+            }
+          </button>
+        }
+      </nav>
+
+      <!-- Tab: Assigned Requests -->
+      @if (activeTab() === 'assigned') {
+        @if (filteredAssigned().length === 0) {
+          <app-empty-state
+            [title]="isAr() ? 'لا توجد طلبات مسندة' : 'No assigned requests'"
+            [dir]="dir()" />
+        } @else {
+          <div class="ewq-table-wrap">
+            <grc-data-table
+              [totalRecords]="filteredAssigned().length"
+              [emptyMessage]="isAr() ? 'لا توجد طلبات مسندة' : 'No assigned requests'">
+              <p-table [value]="filteredAssigned()" [paginator]="filteredAssigned().length > 10"
+                [rows]="10" [rowHover]="true" styleClass="p-datatable-sm"
+                (onRowSelect)="openDetail($event.data)" selectionMode="single">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th pSortableColumn="title">{{ isAr() ? 'العنوان' : 'Title' }} <p-sortIcon field="title" /></th>
+                    <th pSortableColumn="control">{{ isAr() ? 'الضابط' : 'Control' }} <p-sortIcon field="control" /></th>
+                    <th pSortableColumn="dueDate">{{ isAr() ? 'تاريخ الاستحقاق' : 'Due Date' }} <p-sortIcon field="dueDate" /></th>
+                    <th>{{ isAr() ? 'الأولوية' : 'Priority' }}</th>
+                    <th>{{ isAr() ? 'الحالة' : 'Status' }}</th>
+                    <th>{{ isAr() ? 'الإجراءات' : 'Actions' }}</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-item>
+                  <tr [pSelectableRow]="item">
+                    <td>{{ item.title }}</td>
+                    <td>{{ item.control || '\u2014' }}</td>
+                    <td>{{ item.dueDate ? (item.dueDate | date:'mediumDate') : '\u2014' }}</td>
+                    <td>
+                      @if (item.priority) {
+                        <app-status-badge [status]="item.priority" />
+                      } @else {
+                        <span>\u2014</span>
+                      }
+                    </td>
+                    <td>
+                      @if (item.status) {
+                        <app-status-badge [status]="item.status" />
+                      } @else {
+                        <span>\u2014</span>
+                      }
+                    </td>
+                    <td class="action-cell">
+                      <button pButton class="p-button-sm p-button-text" icon="pi pi-check"
+                        [pTooltip]="isAr() ? 'إقرار' : 'Acknowledge'"
+                        (click)="acknowledge(item); $event.stopPropagation()"></button>
+                      <button pButton class="p-button-sm p-button-text p-button-success" icon="pi pi-send"
+                        [pTooltip]="isAr() ? 'تقديم' : 'Submit'"
+                        (click)="submit(item); $event.stopPropagation()"></button>
+                      <button pButton class="p-button-sm p-button-text p-button-secondary" icon="pi pi-share-alt"
+                        [pTooltip]="isAr() ? 'تفويض' : 'Delegate'"
+                        (click)="delegate(item); $event.stopPropagation()"></button>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </grc-data-table>
+          </div>
+        }
+      }
+
+      <!-- Tab: Pending Reviews -->
+      @if (activeTab() === 'reviews') {
+        @if (filteredReviews().length === 0) {
+          <app-empty-state
+            [title]="isAr() ? 'لا توجد مراجعات معلقة' : 'No pending reviews'"
+            [dir]="dir()" />
+        } @else {
+          <div class="ewq-table-wrap">
+            <grc-data-table
+              [totalRecords]="filteredReviews().length"
+              [emptyMessage]="isAr() ? 'لا توجد مراجعات معلقة' : 'No pending reviews'">
+              <p-table [value]="filteredReviews()" [paginator]="filteredReviews().length > 10"
+                [rows]="10" [rowHover]="true" styleClass="p-datatable-sm"
+                (onRowSelect)="openDetail($event.data)" selectionMode="single">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th pSortableColumn="title">{{ isAr() ? 'عنوان الدليل' : 'Evidence Title' }} <p-sortIcon field="title" /></th>
+                    <th pSortableColumn="submittedBy">{{ isAr() ? 'مقدم من' : 'Submitted By' }} <p-sortIcon field="submittedBy" /></th>
+                    <th pSortableColumn="ageDays">{{ isAr() ? 'العمر (أيام)' : 'Age (days)' }} <p-sortIcon field="ageDays" /></th>
+                    <th>{{ isAr() ? 'النوع' : 'Type' }}</th>
+                    <th>{{ isAr() ? 'الأولوية' : 'Priority' }}</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-item>
+                  <tr [pSelectableRow]="item">
+                    <td>{{ item.title }}</td>
+                    <td>{{ item.submittedBy || '\u2014' }}</td>
+                    <td>
+                      <span class="ewq-days" [class.urgent]="(item.ageDays ?? 0) > 5">{{ item.ageDays }}</span>
+                    </td>
+                    <td>{{ item.type || '\u2014' }}</td>
+                    <td>
+                      @if (item.priority) {
+                        <app-status-badge [status]="item.priority" />
+                      } @else {
+                        <span>\u2014</span>
+                      }
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </grc-data-table>
+          </div>
+        }
+      }
+
+      <!-- Tab: Expiring Soon -->
+      @if (activeTab() === 'expiring') {
+        @if (filteredExpiring().length === 0) {
+          <app-empty-state
+            [title]="isAr() ? 'لا توجد أدلة تنتهي قريبا' : 'No expiring evidence'"
+            [dir]="dir()" />
+        } @else {
+          <div class="ewq-table-wrap">
+            <grc-data-table
+              [totalRecords]="filteredExpiring().length"
+              [emptyMessage]="isAr() ? 'لا توجد أدلة تنتهي قريبا' : 'No expiring evidence'">
+              <p-table [value]="filteredExpiring()" [paginator]="filteredExpiring().length > 10"
+                [rows]="10" [rowHover]="true" styleClass="p-datatable-sm"
+                (onRowSelect)="openDetail($event.data)" selectionMode="single">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th pSortableColumn="title">{{ isAr() ? 'العنوان' : 'Title' }} <p-sortIcon field="title" /></th>
+                    <th pSortableColumn="validTo">{{ isAr() ? 'صالح حتى' : 'Valid To' }} <p-sortIcon field="validTo" /></th>
+                    <th pSortableColumn="daysRemaining">{{ isAr() ? 'الأيام المتبقية' : 'Days Remaining' }} <p-sortIcon field="daysRemaining" /></th>
+                    <th>{{ isAr() ? 'النوع' : 'Type' }}</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-item>
+                  <tr [pSelectableRow]="item">
+                    <td>{{ item.title }}</td>
+                    <td>{{ item.validTo ? (item.validTo | date:'mediumDate') : '\u2014' }}</td>
+                    <td>
+                      <span class="ewq-days" [class.urgent]="(item.daysRemaining ?? 0) <= 7"
+                        [class.warning]="(item.daysRemaining ?? 0) > 7 && (item.daysRemaining ?? 0) <= 14">
+                        {{ item.daysRemaining }} {{ isAr() ? 'يوم' : 'days' }}
+                      </span>
+                    </td>
+                    <td>{{ item.type || '\u2014' }}</td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </grc-data-table>
+          </div>
+        }
+      }
+
+      <!-- Tab: Rejected Items -->
+      @if (activeTab() === 'rejected') {
+        @if (filteredRejected().length === 0) {
+          <app-empty-state
+            [title]="isAr() ? 'لا توجد عناصر مرفوضة' : 'No rejected items'"
+            [dir]="dir()" />
+        } @else {
+          <div class="ewq-table-wrap">
+            <grc-data-table
+              [totalRecords]="filteredRejected().length"
+              [emptyMessage]="isAr() ? 'لا توجد عناصر مرفوضة' : 'No rejected items'">
+              <p-table [value]="filteredRejected()" [paginator]="filteredRejected().length > 10"
+                [rows]="10" [rowHover]="true" styleClass="p-datatable-sm"
+                (onRowSelect)="openDetail($event.data)" selectionMode="single">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th pSortableColumn="title">{{ isAr() ? 'العنوان' : 'Title' }} <p-sortIcon field="title" /></th>
+                    <th>{{ isAr() ? 'سبب الرفض' : 'Rejection Reason' }}</th>
+                    <th pSortableColumn="submittedDate">{{ isAr() ? 'تاريخ التقديم' : 'Submitted Date' }} <p-sortIcon field="submittedDate" /></th>
+                    <th>{{ isAr() ? 'الحالة' : 'Status' }}</th>
+                    <th>{{ isAr() ? 'الإجراءات' : 'Actions' }}</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-item>
+                  <tr [pSelectableRow]="item">
+                    <td>{{ item.title }}</td>
+                    <td class="rejection-reason">{{ item.rejectionReason || '\u2014' }}</td>
+                    <td>{{ item.submittedDate ? (item.submittedDate | date:'mediumDate') : '\u2014' }}</td>
+                    <td>
+                      <app-status-badge [status]="'rejected'" />
+                    </td>
+                    <td class="action-cell">
+                      <button pButton class="p-button-sm p-button-text p-button-success" icon="pi pi-replay"
+                        [pTooltip]="isAr() ? 'إعادة التقديم' : 'Resubmit'"
+                        (click)="submit(item); $event.stopPropagation()"></button>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </grc-data-table>
+          </div>
+        }
+      }
+
+      <!-- Tab: My Tasks -->
+      @if (activeTab() === 'tasks') {
+        @if (filteredTasks().length === 0) {
+          <app-empty-state
+            [title]="isAr() ? 'لا توجد مهام' : 'No tasks'"
+            [dir]="dir()" />
+        } @else {
+          <div class="ewq-table-wrap">
+            <grc-data-table
+              [totalRecords]="filteredTasks().length"
+              [emptyMessage]="isAr() ? 'لا توجد مهام' : 'No tasks'">
+              <p-table [value]="filteredTasks()" [paginator]="filteredTasks().length > 10"
+                [rows]="10" [rowHover]="true" styleClass="p-datatable-sm"
+                (onRowSelect)="openDetail($event.data)" selectionMode="single">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th pSortableColumn="title">{{ isAr() ? 'العنوان' : 'Title' }} <p-sortIcon field="title" /></th>
+                    <th>{{ isAr() ? 'الحالة' : 'Status' }}</th>
+                    <th pSortableColumn="dueDate">{{ isAr() ? 'تاريخ الاستحقاق' : 'Due Date' }} <p-sortIcon field="dueDate" /></th>
+                    <th>{{ isAr() ? 'الأولوية' : 'Priority' }}</th>
+                    <th>{{ isAr() ? 'الإجراءات' : 'Actions' }}</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-item>
+                  <tr [pSelectableRow]="item">
+                    <td>{{ item.title }}</td>
+                    <td>
+                      @if (item.status) {
+                        <app-status-badge [status]="item.status" />
+                      } @else {
+                        <span>\u2014</span>
+                      }
+                    </td>
+                    <td>{{ item.dueDate ? (item.dueDate | date:'mediumDate') : '\u2014' }}</td>
+                    <td>
+                      @if (item.priority) {
+                        <app-status-badge [status]="item.priority" />
+                      } @else {
+                        <span>\u2014</span>
+                      }
+                    </td>
+                    <td class="action-cell">
+                      <button pButton class="p-button-sm p-button-text" icon="pi pi-check"
+                        [pTooltip]="isAr() ? 'إقرار' : 'Acknowledge'"
+                        (click)="acknowledge(item); $event.stopPropagation()"></button>
+                      <button pButton class="p-button-sm p-button-text p-button-success" icon="pi pi-send"
+                        [pTooltip]="isAr() ? 'تقديم' : 'Submit'"
+                        (click)="submit(item); $event.stopPropagation()"></button>
+                      <button pButton class="p-button-sm p-button-text p-button-secondary" icon="pi pi-share-alt"
+                        [pTooltip]="isAr() ? 'تفويض' : 'Delegate'"
+                        (click)="delegate(item); $event.stopPropagation()"></button>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </grc-data-table>
+          </div>
+        }
+      }
+
+    </div>
+  }
+
+  <!-- Detail Drawer -->
+  @if (selectedItem()) {
+    <div tabindex="0" role="button" (keyup.enter)="closeDetail()" class="drawer-overlay" (click)="closeDetail()"></div>
+    <aside class="detail-drawer" [dir]="dir()">
+      <div class="drawer-header">
+        <h3>{{ isAr() ? 'تفاصيل المهمة' : 'Task Detail' }}</h3>
+        <button aria-label="Close" class="close-btn" (click)="closeDetail()"><i class="pi pi-times"></i></button>
+      </div>
+      <div class="drawer-body">
+        <div class="detail-section">
+          <label>{{ isAr() ? 'العنوان' : 'Title' }}</label>
+          <p>{{ selectedItem()!.title }}</p>
+        </div>
+
+        <div class="detail-row">
+          <div class="detail-section half">
+            <label>{{ isAr() ? 'الحالة' : 'Status' }}</label>
+            @if (selectedItem()!.status) {
+              <app-status-badge [status]="selectedItem()!.status!" />
+            } @else {
+              <p>\u2014</p>
+            }
+          </div>
+          <div class="detail-section half">
+            <label>{{ isAr() ? 'الأولوية' : 'Priority' }}</label>
+            @if (selectedItem()!.priority) {
+              <app-status-badge [status]="selectedItem()!.priority!" />
+            } @else {
+              <p>\u2014</p>
+            }
+          </div>
+        </div>
+
+        <div class="detail-row">
+          <div class="detail-section half">
+            <label>{{ isAr() ? 'تاريخ الاستحقاق' : 'Due Date' }}</label>
+            <p>{{ selectedItem()!.dueDate ? (selectedItem()!.dueDate | date:'mediumDate') : '\u2014' }}</p>
+          </div>
+          <div class="detail-section half">
+            <label>{{ isAr() ? 'الضابط' : 'Control' }}</label>
+            <p>{{ selectedItem()!.control || '\u2014' }}</p>
+          </div>
+        </div>
+
+        @if (selectedItem()!.submittedBy) {
+          <div class="detail-section">
+            <label>{{ isAr() ? 'مقدم من' : 'Submitted By' }}</label>
+            <p>{{ selectedItem()!.submittedBy }}</p>
+          </div>
+        }
+
+        @if (selectedItem()!.rejectionReason) {
+          <div class="detail-section">
+            <label>{{ isAr() ? 'سبب الرفض' : 'Rejection Reason' }}</label>
+            <p class="rejection-text">{{ selectedItem()!.rejectionReason }}</p>
+          </div>
+        }
+
+        <div class="drawer-actions">
+          <button pButton class="p-button-sm" icon="pi pi-check"
+            [label]="isAr() ? 'إقرار' : 'Acknowledge'"
+            (click)="acknowledge(selectedItem()!)"></button>
+          <button pButton class="p-button-sm p-button-success" icon="pi pi-send"
+            [label]="isAr() ? 'تقديم' : 'Submit'"
+            (click)="submit(selectedItem()!)"></button>
+          <button pButton class="p-button-sm p-button-secondary" icon="pi pi-share-alt"
+            [label]="isAr() ? 'تفويض' : 'Delegate'"
+            (click)="delegate(selectedItem()!)"></button>
+        </div>
+      </div>
+    </aside>
+  }
+
+  <p-toast />
+</div>

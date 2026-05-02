@@ -1,0 +1,140 @@
+mapping_id,control_id,framework_code,control_number,evidence_type_code,evidence_name_en,evidence_name_ar,evidence_category,is_mandatory,is_primary,display_order,min_retention_months,review_frequency_months,approval_role,format_hints,requirement_description_en
+1,1,SAMA-CSF,3.1.1-1,BOARD_CHARTER,Board Charter,ميثاق مجلس الإدارة,document,True,True,1,84,24,Board,PDF,Provide Board Charter demonstrating implementation of Board Oversight
+2,1,SAMA-CSF,3.1.1-1,MEETING_MINUTES,Meeting Minutes,محضر الاجتماع,record,True,False,2,60,1,Chair,"PDF, DOCX",Provide Meeting Minutes demonstrating implementation of Board Oversight
+3,1,SAMA-CSF,3.1.1-1,ATTESTATION,Management Attestation,إقرار الإدارة,document,False,False,3,36,12,Executive,PDF,Provide Management Attestation demonstrating implementation of Board Oversight
+4,1,SAMA-CSF,3.1.1-1,POLICY,Policy Document,وثيقة السياسة,document,False,False,4,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Board Oversight
+5,2,SAMA-CSF,3.1.1-2,COMMITTEE_CHARTER,Committee Charter,ميثاق اللجنة,document,True,True,1,60,12,Board,PDF,Provide Committee Charter demonstrating implementation of Cyber Security Committee
+6,2,SAMA-CSF,3.1.1-2,MEETING_MINUTES,Meeting Minutes,محضر الاجتماع,record,True,False,2,60,1,Chair,"PDF, DOCX",Provide Meeting Minutes demonstrating implementation of Cyber Security Committee
+7,2,SAMA-CSF,3.1.1-2,APPROVAL_RECORD,Approval Record,سجل الموافقة,record,False,False,3,60,0,Authorizer,"PDF, EMAIL",Provide Approval Record demonstrating implementation of Cyber Security Committee
+8,3,SAMA-CSF,3.1.2-1,STRATEGY_DOC,Strategy Document,وثيقة الاستراتيجية,document,True,True,1,60,12,Authorizing Official,PDF,Provide Strategy Document demonstrating implementation of Cyber Security Strategy
+9,3,SAMA-CSF,3.1.2-1,BOARD_APPROVAL,Board Approval,موافقة مجلس الإدارة,record,True,False,2,84,0,Board,PDF,Provide Board Approval demonstrating implementation of Cyber Security Strategy
+10,3,SAMA-CSF,3.1.2-1,ROADMAP,Implementation Roadmap,خارطة الطريق,document,False,False,3,60,6,Executive,"PDF, XLSX",Provide Implementation Roadmap demonstrating implementation of Cyber Security Strategy
+11,3,SAMA-CSF,3.1.2-1,BUDGET_APPROVAL,Budget Approval,موافقة الميزانية,record,False,False,4,60,12,CFO,PDF,Provide Budget Approval demonstrating implementation of Cyber Security Strategy
+12,4,SAMA-CSF,3.1.3-1,POLICY,Policy Document,وثيقة السياسة,document,True,True,1,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Cyber Security Policy
+13,4,SAMA-CSF,3.1.3-1,BOARD_APPROVAL,Board Approval,موافقة مجلس الإدارة,record,True,False,2,84,0,Board,PDF,Provide Board Approval demonstrating implementation of Cyber Security Policy
+14,4,SAMA-CSF,3.1.3-1,COMMUNICATION_RECORD,Communication Record,سجل الاتصالات,record,False,False,3,36,12,None,"PDF, EMAIL",Provide Communication Record demonstrating implementation of Cyber Security Policy
+15,4,SAMA-CSF,3.1.3-1,TRAINING_RECORD,Training Record,سجل التدريب,record,False,False,4,60,12,HR,"PDF, XLSX",Provide Training Record demonstrating implementation of Cyber Security Policy
+16,5,SAMA-CSF,3.1.4-1,JOB_DESCRIPTION,Job Description,الوصف الوظيفي,document,True,True,1,60,24,HR,"PDF, DOCX",Provide Job Description demonstrating implementation of CISO Appointment
+17,5,SAMA-CSF,3.1.4-1,APPOINTMENT_LETTER,Appointment Letter,خطاب التعيين,document,True,False,2,60,0,HR,PDF,Provide Appointment Letter demonstrating implementation of CISO Appointment
+18,5,SAMA-CSF,3.1.4-1,ORG_CHART,Organizational Chart,الهيكل التنظيمي,document,False,False,3,60,12,Executive,"PDF, VISIO",Provide Organizational Chart demonstrating implementation of CISO Appointment
+19,5,SAMA-CSF,3.1.4-1,QUALIFICATIONS,Qualifications/CV,المؤهلات,document,False,False,4,60,24,HR,PDF,Provide Qualifications/CV demonstrating implementation of CISO Appointment
+20,6,SAMA-CSF,3.1.5-1,METHODOLOGY,Methodology Document,وثيقة المنهجية,document,True,True,1,60,24,Department Head,PDF,Provide Methodology Document demonstrating implementation of Project Cyber Security
+21,6,SAMA-CSF,3.1.5-1,POLICY,Policy Document,وثيقة السياسة,document,True,False,2,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Project Cyber Security
+22,6,SAMA-CSF,3.1.5-1,PROJECT_CHARTER,Project Charter,ميثاق المشروع,document,False,False,3,36,0,PMO,PDF,Provide Project Charter demonstrating implementation of Project Cyber Security
+23,6,SAMA-CSF,3.1.5-1,CHECKLIST,Checklist,قائمة التحقق,document,False,False,4,36,12,None,"PDF, XLSX",Provide Checklist demonstrating implementation of Project Cyber Security
+24,7,SAMA-CSF,3.1.6-1,TRAINING_PROGRAM,Training Program,برنامج التدريب,document,True,True,1,36,12,HR/CISO,PDF,Provide Training Program demonstrating implementation of Awareness Program
+25,7,SAMA-CSF,3.1.6-1,TRAINING_RECORD,Training Record,سجل التدريب,record,True,False,2,60,12,HR,"PDF, XLSX",Provide Training Record demonstrating implementation of Awareness Program
+26,7,SAMA-CSF,3.1.6-1,CAMPAIGN_REPORT,Awareness Campaign Report,تقرير حملة التوعية,record,False,False,3,36,12,CISO,PDF,Provide Awareness Campaign Report demonstrating implementation of Awareness Program
+27,7,SAMA-CSF,3.1.6-1,QUIZ_RESULTS,Quiz/Test Results,نتائج الاختبارات,record,False,False,4,36,12,HR,"XLSX, PDF",Provide Quiz/Test Results demonstrating implementation of Awareness Program
+28,8,SAMA-CSF,3.1.7-1,TRAINING_PROGRAM,Training Program,برنامج التدريب,document,True,True,1,36,12,HR/CISO,PDF,Provide Training Program demonstrating implementation of Specialized Training
+29,8,SAMA-CSF,3.1.7-1,CERTIFICATES,Certificates of Completion,شهادات الإكمال,document,True,False,2,60,0,None,PDF,Provide Certificates of Completion demonstrating implementation of Specialized Training
+30,8,SAMA-CSF,3.1.7-1,TRAINING_RECORD,Training Record,سجل التدريب,record,False,False,3,60,12,HR,"PDF, XLSX",Provide Training Record demonstrating implementation of Specialized Training
+31,8,SAMA-CSF,3.1.7-1,SKILLS_MATRIX,Skills Matrix,مصفوفة المهارات,document,False,False,4,36,12,HR,XLSX,Provide Skills Matrix demonstrating implementation of Specialized Training
+32,9,SAMA-CSF,3.2.1-1,RISK_METHODOLOGY,Risk Methodology,منهجية المخاطر,document,True,True,1,60,24,CISO/Risk,PDF,Provide Risk Methodology demonstrating implementation of Risk Methodology
+33,9,SAMA-CSF,3.2.1-1,POLICY,Policy Document,وثيقة السياسة,document,True,False,2,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Risk Methodology
+34,9,SAMA-CSF,3.2.1-1,RISK_REGISTER,Risk Register,سجل المخاطر,record,False,False,3,60,3,CISO,"XLSX, JSON",Provide Risk Register demonstrating implementation of Risk Methodology
+35,9,SAMA-CSF,3.2.1-1,BOARD_APPROVAL,Board Approval,موافقة مجلس الإدارة,record,False,False,4,84,0,Board,PDF,Provide Board Approval demonstrating implementation of Risk Methodology
+36,10,SAMA-CSF,3.2.1-2,RISK_ASSESSMENT,Risk Assessment,تقييم المخاطر,record,True,True,1,36,12,Risk Officer,"PDF, XLSX",Provide Risk Assessment demonstrating implementation of Annual Risk Assessment
+37,10,SAMA-CSF,3.2.1-2,RISK_REGISTER,Risk Register,سجل المخاطر,record,True,False,2,60,3,CISO,"XLSX, JSON",Provide Risk Register demonstrating implementation of Annual Risk Assessment
+38,10,SAMA-CSF,3.2.1-2,REPORT,Report,تقرير,record,False,False,3,36,3,Department Head,"PDF, XLSX",Provide Report demonstrating implementation of Annual Risk Assessment
+39,10,SAMA-CSF,3.2.1-2,ACTION_PLAN,Action Plan,خطة العمل,document,False,False,4,36,6,Manager,"PDF, XLSX",Provide Action Plan demonstrating implementation of Annual Risk Assessment
+40,11,SAMA-CSF,3.2.2-1,COMPLIANCE_REPORT,Compliance Report,تقرير الامتثال,record,True,True,1,60,12,Compliance Officer,PDF,Provide Compliance Report demonstrating implementation of SAMA Compliance
+41,11,SAMA-CSF,3.2.2-1,AUDIT_REPORT,Audit Report,تقرير التدقيق,record,True,False,2,84,12,Auditor,PDF,Provide Audit Report demonstrating implementation of SAMA Compliance
+42,11,SAMA-CSF,3.2.2-1,SAMA_REPORT,SAMA Quarterly Report,تقرير SAMA الربعي,record,False,False,3,60,3,CISO,"PDF, XLSX",Provide SAMA Quarterly Report demonstrating implementation of SAMA Compliance
+43,11,SAMA-CSF,3.2.2-1,EVIDENCE,Generic Evidence,دليل عام,record,False,False,4,36,12,Department Head,Various,Provide Generic Evidence demonstrating implementation of SAMA Compliance
+44,12,SAMA-CSF,3.2.3-1,CERTIFICATE,Certificate,شهادة,document,True,True,1,36,12,None,PDF,Provide Certificate demonstrating implementation of PCI-DSS / SWIFT CSP
+45,12,SAMA-CSF,3.2.3-1,AUDIT_REPORT,Audit Report,تقرير التدقيق,record,True,False,2,84,12,Auditor,PDF,Provide Audit Report demonstrating implementation of PCI-DSS / SWIFT CSP
+46,12,SAMA-CSF,3.2.3-1,AOC,Attestation of Compliance (PCI),شهادة الامتثال PCI,document,False,False,3,36,12,QSA,PDF,Provide Attestation of Compliance (PCI) demonstrating implementation of PCI-DSS / SWIFT CSP
+47,12,SAMA-CSF,3.2.3-1,ROC,Report on Compliance (PCI),تقرير الامتثال PCI,document,False,False,4,36,12,QSA,PDF,Provide Report on Compliance (PCI) demonstrating implementation of PCI-DSS / SWIFT CSP
+48,13,SAMA-CSF,3.2.4-1,AUDIT_PLAN,Audit Plan,خطة التدقيق,document,True,True,1,60,12,Internal Auditor,PDF,Provide Audit Plan demonstrating implementation of Internal Audit
+49,13,SAMA-CSF,3.2.4-1,AUDIT_REPORT,Audit Report,تقرير التدقيق,record,True,False,2,84,12,Auditor,PDF,Provide Audit Report demonstrating implementation of Internal Audit
+50,13,SAMA-CSF,3.2.4-1,FINDINGS,Audit Findings,نتائج التدقيق,record,False,False,3,60,12,Auditor,"PDF, XLSX",Provide Audit Findings demonstrating implementation of Internal Audit
+51,13,SAMA-CSF,3.2.4-1,REMEDIATION_PLAN,Remediation Plan,خطة المعالجة,record,False,False,4,36,3,CISO,"PDF, XLSX",Provide Remediation Plan demonstrating implementation of Internal Audit
+52,14,SAMA-CSF,3.2.4-2,AUDIT_REPORT,Audit Report,تقرير التدقيق,record,True,True,1,84,12,Auditor,PDF,Provide Audit Report demonstrating implementation of Independent Review
+53,14,SAMA-CSF,3.2.4-2,CONTRACT,Contract/Agreement,عقد,document,True,False,2,84,12,Legal,PDF,Provide Contract/Agreement demonstrating implementation of Independent Review
+54,14,SAMA-CSF,3.2.4-2,QUALIFICATIONS,Qualifications/CV,المؤهلات,document,False,False,3,60,24,HR,PDF,Provide Qualifications/CV demonstrating implementation of Independent Review
+55,14,SAMA-CSF,3.2.4-2,REMEDIATION_PLAN,Remediation Plan,خطة المعالجة,record,False,False,4,36,3,CISO,"PDF, XLSX",Provide Remediation Plan demonstrating implementation of Independent Review
+56,15,SAMA-CSF,3.3.1-1,SCREENING_RECORD,Background Screening Record,سجل الفحص الأمني,record,True,True,1,60,0,HR,PDF,Provide Background Screening Record demonstrating implementation of Background Screening
+57,15,SAMA-CSF,3.3.1-1,POLICY,Policy Document,وثيقة السياسة,document,True,False,2,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Background Screening
+58,15,SAMA-CSF,3.3.1-1,HR_RECORDS,HR Records,سجلات الموارد البشرية,record,False,False,3,84,12,HR,"PDF, JSON",Provide HR Records demonstrating implementation of Background Screening
+59,15,SAMA-CSF,3.3.1-1,APPROVAL_RECORD,Approval Record,سجل الموافقة,record,False,False,4,60,0,Authorizer,"PDF, EMAIL",Provide Approval Record demonstrating implementation of Background Screening
+60,16,SAMA-CSF,3.3.2-1,POLICY,Policy Document,وثيقة السياسة,document,True,True,1,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Physical Security Controls
+61,16,SAMA-CSF,3.3.2-1,ACCESS_LOG,Access Log,سجل الوصول,record,True,False,2,12,1,None,"LOG, CSV",Provide Access Log demonstrating implementation of Physical Security Controls
+62,16,SAMA-CSF,3.3.2-1,CCTV_RECORDS,CCTV Records,سجلات الكاميرات,record,False,False,3,6,1,None,Video,Provide CCTV Records demonstrating implementation of Physical Security Controls
+63,16,SAMA-CSF,3.3.2-1,PROCEDURE,Procedure Document,وثيقة الإجراءات,document,False,False,4,36,12,Department Head,"PDF, DOCX",Provide Procedure Document demonstrating implementation of Physical Security Controls
+64,17,SAMA-CSF,3.3.3-1,INVENTORY,Asset Inventory,جرد الأصول,record,True,True,1,36,1,None,"XLSX, CSV",Provide Asset Inventory demonstrating implementation of Asset Inventory
+65,17,SAMA-CSF,3.3.3-1,CMDB_EXPORT,CMDB Export,تصدير CMDB,artifact,True,False,2,24,1,None,"XLSX, JSON",Provide CMDB Export demonstrating implementation of Asset Inventory
+66,17,SAMA-CSF,3.3.3-1,CLASSIFICATION_SCHEME,Classification Scheme,مخطط التصنيف,document,False,False,3,60,24,CISO,PDF,Provide Classification Scheme demonstrating implementation of Asset Inventory
+67,17,SAMA-CSF,3.3.3-1,POLICY,Policy Document,وثيقة السياسة,document,False,False,4,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Asset Inventory
+68,18,SAMA-CSF,3.3.4-1,ARCHITECTURE_DOC,Architecture Document,وثيقة البنية,document,True,True,1,36,12,Architect,PDF,Provide Architecture Document demonstrating implementation of Security Architecture
+69,18,SAMA-CSF,3.3.4-1,DIAGRAM,Diagram,مخطط,document,True,False,2,36,12,Architect,"PNG, PDF",Provide Diagram demonstrating implementation of Security Architecture
+70,18,SAMA-CSF,3.3.4-1,STANDARD,Technical Standard,المعيار الفني,document,False,False,3,36,12,CISO,"PDF, DOCX",Provide Technical Standard demonstrating implementation of Security Architecture
+71,18,SAMA-CSF,3.3.4-1,APPROVAL_RECORD,Approval Record,سجل الموافقة,record,False,False,4,60,0,Authorizer,"PDF, EMAIL",Provide Approval Record demonstrating implementation of Security Architecture
+72,19,SAMA-CSF,3.3.5-1,POLICY,Policy Document,وثيقة السياسة,document,True,True,1,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of User Access Lifecycle
+73,19,SAMA-CSF,3.3.5-1,ACCESS_REVIEW,Access Review,مراجعة الصلاحيات,record,True,False,2,24,6,System Owner,"PDF, XLSX",Provide Access Review demonstrating implementation of User Access Lifecycle
+74,19,SAMA-CSF,3.3.5-1,AUDIT_LOG,Audit Trail Log,سجل التدقيق,record,False,False,3,24,3,None,"LOG, JSON",Provide Audit Trail Log demonstrating implementation of User Access Lifecycle
+75,19,SAMA-CSF,3.3.5-1,REPORT,Report,تقرير,record,False,False,4,36,3,Department Head,"PDF, XLSX",Provide Report demonstrating implementation of User Access Lifecycle
+76,20,SAMA-CSF,3.3.6-1,POLICY,Policy Document,وثيقة السياسة,document,True,True,1,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Secure Development
+77,20,SAMA-CSF,3.3.6-1,CODE_REVIEW,Code Review,مراجعة الكود,record,True,False,2,24,1,Tech Lead,JSON,Provide Code Review demonstrating implementation of Secure Development
+78,20,SAMA-CSF,3.3.6-1,SAST_REPORT,SAST Report,تقرير SAST,record,False,False,3,24,1,None,"PDF, JSON",Provide SAST Report demonstrating implementation of Secure Development
+79,20,SAMA-CSF,3.3.6-1,DAST_REPORT,DAST Report,تقرير DAST,record,False,False,4,24,1,None,"PDF, JSON",Provide DAST Report demonstrating implementation of Secure Development
+80,21,SAMA-CSF,3.3.7-1,CAB_MINUTES,CAB Meeting Minutes,محضر CAB,record,True,True,1,24,1,Chair,PDF,Provide CAB Meeting Minutes demonstrating implementation of Change Advisory Board
+81,21,SAMA-CSF,3.3.7-1,CHANGE_RECORD,Change Management Record,سجل التغيير,record,True,False,2,24,1,CAB,"PDF, JSON",Provide Change Management Record demonstrating implementation of Change Advisory Board
+82,21,SAMA-CSF,3.3.7-1,RISK_ASSESSMENT,Risk Assessment,تقييم المخاطر,record,False,False,3,36,12,Risk Officer,"PDF, XLSX",Provide Risk Assessment demonstrating implementation of Change Advisory Board
+83,21,SAMA-CSF,3.3.7-1,APPROVAL_RECORD,Approval Record,سجل الموافقة,record,False,False,4,60,0,Authorizer,"PDF, EMAIL",Provide Approval Record demonstrating implementation of Change Advisory Board
+84,22,SAMA-CSF,3.3.8-1,STANDARD,Technical Standard,المعيار الفني,document,True,True,1,36,12,CISO,"PDF, DOCX",Provide Technical Standard demonstrating implementation of Encryption Standards
+85,22,SAMA-CSF,3.3.8-1,CONFIGURATION,Configuration File/Export,ملف التكوين,artifact,True,False,2,24,6,None,"XML, JSON, YAML",Provide Configuration File/Export demonstrating implementation of Encryption Standards
+86,22,SAMA-CSF,3.3.8-1,TEST_RESULT,Test Results,نتائج الاختبار,record,False,False,3,36,12,Test Manager,"PDF, XLSX",Provide Test Results demonstrating implementation of Encryption Standards
+87,22,SAMA-CSF,3.3.8-1,POLICY,Policy Document,وثيقة السياسة,document,False,False,4,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Encryption Standards
+88,23,SAMA-CSF,3.3.9-1,POLICY,Policy Document,وثيقة السياسة,document,True,True,1,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of BYOD Controls
+89,23,SAMA-CSF,3.3.9-1,MDM_CONFIG,MDM Configuration,تكوين MDM,artifact,True,False,2,24,6,None,JSON,Provide MDM Configuration demonstrating implementation of BYOD Controls
+90,23,SAMA-CSF,3.3.9-1,ATTESTATION,Management Attestation,إقرار الإدارة,document,False,False,3,36,12,Executive,PDF,Provide Management Attestation demonstrating implementation of BYOD Controls
+91,23,SAMA-CSF,3.3.9-1,TRAINING_RECORD,Training Record,سجل التدريب,record,False,False,4,60,12,HR,"PDF, XLSX",Provide Training Record demonstrating implementation of BYOD Controls
+92,24,SAMA-CSF,3.3.10-1,DESTRUCTION_CERT,Certificate of Destruction,شهادة الإتلاف,record,True,True,1,84,0,Records Manager,PDF,Provide Certificate of Destruction demonstrating implementation of Secure Disposal
+93,24,SAMA-CSF,3.3.10-1,POLICY,Policy Document,وثيقة السياسة,document,True,False,2,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Secure Disposal
+94,24,SAMA-CSF,3.3.10-1,PROCEDURE,Procedure Document,وثيقة الإجراءات,document,False,False,3,36,12,Department Head,"PDF, DOCX",Provide Procedure Document demonstrating implementation of Secure Disposal
+95,24,SAMA-CSF,3.3.10-1,AUDIT_LOG,Audit Trail Log,سجل التدقيق,record,False,False,4,24,3,None,"LOG, JSON",Provide Audit Trail Log demonstrating implementation of Secure Disposal
+96,25,SAMA-CSF,3.3.11-1,PCI_AOC,PCI Attestation of Compliance,شهادة الامتثال PCI,document,True,True,1,36,12,QSA,PDF,Provide PCI Attestation of Compliance demonstrating implementation of Payment Security
+97,25,SAMA-CSF,3.3.11-1,POLICY,Policy Document,وثيقة السياسة,document,True,False,2,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Payment Security
+98,25,SAMA-CSF,3.3.11-1,AUDIT_REPORT,Audit Report,تقرير التدقيق,record,False,False,3,84,12,Auditor,PDF,Provide Audit Report demonstrating implementation of Payment Security
+99,25,SAMA-CSF,3.3.11-1,CERTIFICATE,Certificate,شهادة,document,False,False,4,36,12,None,PDF,Provide Certificate demonstrating implementation of Payment Security
+100,26,SAMA-CSF,3.3.12-1,CONFIGURATION,Configuration File/Export,ملف التكوين,artifact,True,True,1,24,6,None,"XML, JSON, YAML",Provide Configuration File/Export demonstrating implementation of E-Banking Security
+101,26,SAMA-CSF,3.3.12-1,POLICY,Policy Document,وثيقة السياسة,document,True,False,2,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of E-Banking Security
+102,26,SAMA-CSF,3.3.12-1,AUDIT_LOG,Audit Trail Log,سجل التدقيق,record,False,False,3,24,3,None,"LOG, JSON",Provide Audit Trail Log demonstrating implementation of E-Banking Security
+103,26,SAMA-CSF,3.3.12-1,TEST_RESULT,Test Results,نتائج الاختبار,record,False,False,4,36,12,Test Manager,"PDF, XLSX",Provide Test Results demonstrating implementation of E-Banking Security
+104,27,SAMA-CSF,3.3.13-1,CONFIGURATION,Configuration File/Export,ملف التكوين,artifact,True,True,1,24,6,None,"XML, JSON, YAML",Provide Configuration File/Export demonstrating implementation of Customer MFA
+105,27,SAMA-CSF,3.3.13-1,POLICY,Policy Document,وثيقة السياسة,document,True,False,2,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Customer MFA
+106,27,SAMA-CSF,3.3.13-1,AUDIT_LOG,Audit Trail Log,سجل التدقيق,record,False,False,3,24,3,None,"LOG, JSON",Provide Audit Trail Log demonstrating implementation of Customer MFA
+107,27,SAMA-CSF,3.3.13-1,TEST_RESULT,Test Results,نتائج الاختبار,record,False,False,4,36,12,Test Manager,"PDF, XLSX",Provide Test Results demonstrating implementation of Customer MFA
+108,28,SAMA-CSF,3.3.14-1,CONFIGURATION,Configuration File/Export,ملف التكوين,artifact,True,True,1,24,6,None,"XML, JSON, YAML",Provide Configuration File/Export demonstrating implementation of SIEM 24/7 SOC
+109,28,SAMA-CSF,3.3.14-1,DASHBOARD,Dashboard,لوحة المتابعة,artifact,True,False,2,24,1,None,"PNG, PDF",Provide Dashboard demonstrating implementation of SIEM 24/7 SOC
+110,28,SAMA-CSF,3.3.14-1,INCIDENT_REPORT,Incident Report,تقرير الحادث,record,False,False,3,60,12,CISO,PDF,Provide Incident Report demonstrating implementation of SIEM 24/7 SOC
+111,28,SAMA-CSF,3.3.14-1,REPORT,Report,تقرير,record,False,False,4,36,3,Department Head,"PDF, XLSX",Provide Report demonstrating implementation of SIEM 24/7 SOC
+112,29,SAMA-CSF,3.3.15-1,INCIDENT_RESPONSE_PLAN,Incident Response Plan,خطة الاستجابة للحوادث,document,True,True,1,36,12,CISO,PDF,Provide Incident Response Plan demonstrating implementation of SAMA 4-Hour Notification
+113,29,SAMA-CSF,3.3.15-1,INCIDENT_REPORT,Incident Report,تقرير الحادث,record,True,False,2,60,12,CISO,PDF,Provide Incident Report demonstrating implementation of SAMA 4-Hour Notification
+114,29,SAMA-CSF,3.3.15-1,SAMA_NOTIFICATION,SAMA Notification (4-hour),إشعار SAMA (4 ساعات),record,False,False,3,84,0,CISO,"PDF, EMAIL",Provide SAMA Notification (4-hour) demonstrating implementation of SAMA 4-Hour Notification
+115,29,SAMA-CSF,3.3.15-1,TIMELINE,Incident Timeline,الجدول الزمني للحادث,record,False,False,4,60,0,CISO,"PDF, XLSX",Provide Incident Timeline demonstrating implementation of SAMA 4-Hour Notification
+116,30,SAMA-CSF,3.3.16-1,TI_REPORTS,Threat Intelligence Reports,تقارير الاستخبارات,record,True,True,1,12,1,None,"PDF, JSON",Provide Threat Intelligence Reports demonstrating implementation of Threat Intelligence
+117,30,SAMA-CSF,3.3.16-1,CONFIGURATION,Configuration File/Export,ملف التكوين,artifact,True,False,2,24,6,None,"XML, JSON, YAML",Provide Configuration File/Export demonstrating implementation of Threat Intelligence
+118,30,SAMA-CSF,3.3.16-1,REPORT,Report,تقرير,record,False,False,3,36,3,Department Head,"PDF, XLSX",Provide Report demonstrating implementation of Threat Intelligence
+119,30,SAMA-CSF,3.3.16-1,DASHBOARD,Dashboard,لوحة المتابعة,artifact,False,False,4,24,1,None,"PNG, PDF",Provide Dashboard demonstrating implementation of Threat Intelligence
+120,31,SAMA-CSF,3.3.17-1,SCAN_REPORT,Vulnerability Scan Report,تقرير فحص الثغرات,record,True,True,1,24,1,None,"PDF, JSON",Provide Vulnerability Scan Report demonstrating implementation of Vulnerability Management Process
+121,31,SAMA-CSF,3.3.17-1,REMEDIATION_PLAN,Remediation Plan,خطة المعالجة,record,True,False,2,36,3,CISO,"PDF, XLSX",Provide Remediation Plan demonstrating implementation of Vulnerability Management Process
+122,31,SAMA-CSF,3.3.17-1,POLICY,Policy Document,وثيقة السياسة,document,False,False,3,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Vulnerability Management Process
+123,31,SAMA-CSF,3.3.17-1,DASHBOARD,Dashboard,لوحة المتابعة,artifact,False,False,4,24,1,None,"PNG, PDF",Provide Dashboard demonstrating implementation of Vulnerability Management Process
+124,32,SAMA-CSF,3.4.1-1,RISK_ASSESSMENT,Risk Assessment,تقييم المخاطر,record,True,True,1,36,12,Risk Officer,"PDF, XLSX",Provide Risk Assessment demonstrating implementation of Vendor Risk Assessment
+125,32,SAMA-CSF,3.4.1-1,DUE_DILIGENCE,Due Diligence Report,تقرير العناية الواجبة,record,True,False,2,60,12,Procurement,PDF,Provide Due Diligence Report demonstrating implementation of Vendor Risk Assessment
+126,32,SAMA-CSF,3.4.1-1,QUESTIONNAIRE,Vendor Questionnaire,استبيان المورد,record,False,False,3,36,12,Procurement,"PDF, XLSX",Provide Vendor Questionnaire demonstrating implementation of Vendor Risk Assessment
+127,32,SAMA-CSF,3.4.1-1,REPORT,Report,تقرير,record,False,False,4,36,3,Department Head,"PDF, XLSX",Provide Report demonstrating implementation of Vendor Risk Assessment
+128,33,SAMA-CSF,3.4.1-2,CONTRACT,Contract/Agreement,عقد,document,True,True,1,84,12,Legal,PDF,Provide Contract/Agreement demonstrating implementation of Contract Cyber Security
+129,33,SAMA-CSF,3.4.1-2,SLA,Service Level Agreement,اتفاقية مستوى الخدمة,document,True,False,2,84,12,Legal,PDF,Provide Service Level Agreement demonstrating implementation of Contract Cyber Security
+130,33,SAMA-CSF,3.4.1-2,REVIEW_REPORT,Review Report,تقرير المراجعة,record,False,False,3,60,12,Reviewer,PDF,Provide Review Report demonstrating implementation of Contract Cyber Security
+131,33,SAMA-CSF,3.4.1-2,APPROVAL_RECORD,Approval Record,سجل الموافقة,record,False,False,4,60,0,Authorizer,"PDF, EMAIL",Provide Approval Record demonstrating implementation of Contract Cyber Security
+132,34,SAMA-CSF,3.4.2-1,SAMA_APPROVAL,SAMA Outsourcing Approval,موافقة SAMA على التعهيد,document,True,True,1,84,0,SAMA,PDF,Provide SAMA Outsourcing Approval demonstrating implementation of SAMA Outsourcing Approval
+133,34,SAMA-CSF,3.4.2-1,CONTRACT,Contract/Agreement,عقد,document,True,False,2,84,12,Legal,PDF,Provide Contract/Agreement demonstrating implementation of SAMA Outsourcing Approval
+134,34,SAMA-CSF,3.4.2-1,RISK_ASSESSMENT,Risk Assessment,تقييم المخاطر,record,False,False,3,36,12,Risk Officer,"PDF, XLSX",Provide Risk Assessment demonstrating implementation of SAMA Outsourcing Approval
+135,34,SAMA-CSF,3.4.2-1,REPORT,Report,تقرير,record,False,False,4,36,3,Department Head,"PDF, XLSX",Provide Report demonstrating implementation of SAMA Outsourcing Approval
+136,35,SAMA-CSF,3.4.3-1,STRATEGY_DOC,Strategy Document,وثيقة الاستراتيجية,document,True,True,1,60,12,Authorizing Official,PDF,Provide Strategy Document demonstrating implementation of Cloud Strategy Aligned with SAMA
+137,35,SAMA-CSF,3.4.3-1,POLICY,Policy Document,وثيقة السياسة,document,True,False,2,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Cloud Strategy Aligned with SAMA
+138,35,SAMA-CSF,3.4.3-1,RISK_ASSESSMENT,Risk Assessment,تقييم المخاطر,record,False,False,3,36,12,Risk Officer,"PDF, XLSX",Provide Risk Assessment demonstrating implementation of Cloud Strategy Aligned with SAMA
+139,35,SAMA-CSF,3.4.3-1,ARCHITECTURE_DIAGRAM,Architecture Diagram,المخطط المعماري,document,False,False,4,36,12,Architect,"PNG, PDF, VISIO",Provide Architecture Diagram demonstrating implementation of Cloud Strategy Aligned with SAMA

@@ -1,0 +1,27 @@
+{
+  "name": "@dos/ui-os-service",
+  "version": "0.1.0",
+  "private": true,
+  "description": "DOS UI-OS service — single canonical owner of /api/ui-os/* (bootstrap, preferences, workspace, dashboards, widgets, grids, branding, i18n, tours, commands, search, admin publishing). Replaces the disabled dynamic-ui-service skipped scaffold; consumes the dos.dynamic_ui_* catalog (0300) plus the dos.ui_* runtime/personalization/productivity/layout deltas (0302–0305).",
+  "type": "module",
+  "main": "./dist/server.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/server.js",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "pg": "^8.13.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.16.10",
+    "@types/pg": "^8.11.10",
+    "typescript": "5.4.5",
+    "vitest": "^2.1.8"
+  }
+}

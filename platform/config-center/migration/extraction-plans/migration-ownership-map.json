@@ -1,0 +1,87 @@
+{
+  "description": "Maps each service to the tables it owns. Used to split centralized migrations into per-service files.",
+  "generatedAt": "2026-04-13",
+  "services": {
+    "auth-service": {
+      "migrationFile": "platform/dauth/migrations/public/001_auth_tables.sql",
+      "tables": [
+        "public.token_blacklist", "public.sessions", "public.actors",
+        "public.access_profiles", "public.user_access_profiles", "public.access_snapshots",
+        "public.authorization_audit_log",
+        "dos.login_attempts", "dos.user_mfa", "dos.sessions",
+        "dos.access_profiles", "dos.user_access_profiles",
+        "dos.functional_roles", "dos.permissions", "dos.role_permissions",
+        "dos.delegations", "dos.sod_rules", "dos.user_role_assignments",
+        "dos.approval_matrix_rules_template", "dos.sign_off_authorities_template",
+        "dos.lifecycle_auth_log_template", "dos.sod_conflict_audit_template",
+        "dos.sso_providers", "dos.sso_sessions", "dos.sso_identities", "dos.sso_role_mappings"
+      ]
+    },
+    "tenant-service": {
+      "migrationFile": "modules/platform-core/db/public/migrations/001_tenant_tables.sql",
+      "tables": [
+        "public.tenants", "public.tenant_user_memberships",
+        "dos.tenants", "dos.tenant_memberships",
+        "public.tenant_status_transitions", "public.tenant_boundary_configs",
+        "public.tenant_module_entitlements",
+        "dos.tenant_product_activation", "dos.tenant_settings",
+        "dos.tenant_config_versions", "dos.tenant_feature_flag_overrides"
+      ]
+    },
+    "user-service": {
+      "migrationFile": "modules/platform-core/db/public/migrations/001_user_tables.sql",
+      "tables": [
+        "public.users", "public.roles",
+        "dos.users", "dos.teams", "dos.team_members", "dos.departments",
+        "public.password_reset_tokens", "public.email_verification_tokens"
+      ]
+    },
+    "workflow-service": {
+      "migrationFile": "modules/platform-core/db/public/migrations/001_extracted_from_001_workflow_tables.sql",
+      "tables": [
+        "dos.workflow_templates", "dos.workflow_approvals",
+        "dos.job_registry", "dos.job_executions",
+        "public.approval_chains", "public.approval_requests", "public.approval_steps_log"
+      ]
+    },
+    "audit-service": {
+      "migrationFile": "modules/platform-core/db/public/migrations/001_extracted_from_001_audit_tables.sql",
+      "tables": [
+        "dos.audit_log_archive", "dos.platform_audit_logs"
+      ]
+    },
+    "notification-service": {
+      "migrationFile": "modules/platform-core/db/public/migrations/001_notification_tables.sql",
+      "tables": [
+        "public.active_alerts", "public.alert_definitions", "public.alert_handler_registry"
+      ]
+    },
+    "platform-core-service": {
+      "migrationFile": "modules/platform-core/db/public/migrations/001_platform_core_tables.sql",
+      "tables": [
+        "public.schema_migrations", "public.product_modules", "public.subscriptions",
+        "public.seed_history", "public.product_registry",
+        "public.module_dependencies", "public.module_health_events",
+        "public.lifecycle_checkpoints", "public.lifecycle_transitions",
+        "public.event_traces", "public.dead_letter_queue",
+        "public.runtime_config", "public.provisioning_telemetry",
+        "public.contract_catalog", "public.shell_extensions",
+        "public.module_visibility_contracts", "public.tier_definitions",
+        "public.feature_flag_overrides", "public.platform_products",
+        "dos.config_definitions", "dos.config_values", "dos.config_locks",
+        "dos.config_audit_logs", "dos.runtime_config", "dos.runtime_config_history",
+        "dos.config_runtime_overrides", "dos.platform_operation_config",
+        "dos.system_events", "dos.product_registry", "dos.module_registry",
+        "dos.feature_flags", "dos.workspaces",
+        "dos.module_sla_defaults", "dos.navigation_registry"
+      ]
+    }
+  },
+  "centralMigrationsRetained": [
+    "modules/platform-core/db/public/migrations/000_create_dos_schema.sql",
+    "modules/platform-core/db/public/migrations/001_platform_baseline.sql",
+    "modules/platform-core/db/public/migrations/002_service_permissions.sql",
+    "modules/platform-core/db/public/migrations/007_seed_config_definitions.sql"
+  ],
+  "notes": "Central migrations remain as the golden source for initial schema creation. Per-service migrations are extracted subsets for independent deployment. Services must run after 000_create_dos_schema.sql establishes the dos schema."
+}

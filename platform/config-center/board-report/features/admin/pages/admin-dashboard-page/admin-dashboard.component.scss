@@ -1,0 +1,32 @@
+.admin-page { padding: 32px; max-width: 1200px; margin: 0 auto; }
+    .error-msg { color: var(--red-500); margin-bottom: var(--space-md); }
+    .page-title { font-size: var(--font-size-2xl); font-weight: 800; color: var(--text-heading); margin: 0 0 28px; letter-spacing: -0.02em; }
+    .cards-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 28px; }
+    .stat-card {
+      background: var(--surface); border-radius: var(--radius); padding: 22px;
+      border: 1px solid var(--border-subtle);
+      box-shadow: var(--shadow-card);
+      transition: box-shadow 200ms, transform 200ms;
+    }
+    .stat-card:hover { box-shadow: var(--shadow-card-hover); transform: translateY(-2px); }
+    .stat-label { font-size: var(--font-size-xs); color: var(--text-caption); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; margin-bottom: 8px; }
+    .stat-value { font-size: var(--font-size-2xl); font-weight: 800; color: var(--text-heading); }
+    .stat-value.ok { color: var(--status-success); }
+    .stat-value.active { color: var(--status-success); }
+    .stat-value.suspended { color: var(--status-danger, #e74c3c); }
+    .stat-value.small { font-size: var(--font-size-base); font-weight: 500; color: var(--text-body); }
+    .section { margin-bottom: 32px; }
+    .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .section h2, .section-header h2 { font-size: var(--font-size-lg); font-weight: 700; color: var(--text-heading); margin: 0 0 14px; }
+    .section-header h2 { margin: 0; }
+    .actions-cell { display: flex; gap: 4px; }
+    .empty-msg { text-align: center; color: var(--text-caption); padding: 32px; }
+    .limits-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+    .limit-card {
+      background: var(--surface); border-radius: var(--radius-sm); padding: 18px;
+      border: 1px solid var(--border-subtle); box-shadow: var(--shadow-card);
+      transition: box-shadow 200ms, transform 200ms;
+    }
+    .limit-card:hover { box-shadow: var(--shadow-card-hover); transform: translateY(-2px); }
+    .limit-plan { font-size: var(--font-size-base); font-weight: 700; color: var(--primary); text-transform: capitalize; margin-bottom: 6px; }
+    .limit-detail { font-size: var(--font-size-sm); color: var(--text-muted); }

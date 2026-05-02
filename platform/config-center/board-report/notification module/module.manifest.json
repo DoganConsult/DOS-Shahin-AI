@@ -1,0 +1,84 @@
+{
+  "moduleCode": "notification",
+  "displayName": "Notifications",
+  "ownerTeam": "product-shahin-ai",
+  "productCode": "shahin-ai",
+  "ownership": "module-owned",
+  "version": "1.0.0",
+  "status": "active",
+  "platformDependencies": [
+    "identity",
+    "tenancy"
+  ],
+  "seedProviders": [
+    "products/shahin/seeds/notification-seed"
+  ],
+  "tenantDefaults": [
+    "notification_digest_frequency_hours",
+    "notification_channels_enabled"
+  ],
+  "requiredReferenceData": [
+    "notification_templates",
+    "notification_channel_configs"
+  ],
+  "currentSources": [
+    "/home/Dr-Dogan-AGRC-OS/backend/src/modules/notification"
+  ],
+  "targetPath": "modules/notification",
+  "futureService": "notification-inbox-service",
+  "frontendSources": [
+    "/home/Dr-Dogan-AGRC-OS/frontend/src/app/platform-manifests/notification.module.routes.ts"
+  ],
+  "ownedTables": [
+    "notification_channels",
+    "notification_preferences",
+    "notification_queue",
+    "notification_templates",
+    "notification_delivery_log",
+    "notification_subscriptions",
+    "notification_digests"
+  ],
+  "referencedTables": [
+    "audit_trail",
+    "teams",
+    "users"
+  ],
+  "events": {
+    "publishes": [
+      "notification.sent",
+      "notification.bulk_sent",
+      "notification.delivery_failed",
+      "notification.read",
+      "notification.preference_changed",
+      "notification.digest_generated",
+      "notification.rule_triggered"
+    ],
+    "subscribes": [
+      "risk.score_changed",
+      "risk.kri_threshold_breached",
+      "compliance.gap_detected",
+      "compliance.posture_changed",
+      "evidence.expired",
+      "incident.classified",
+      "workflow.sla_warning",
+      "workflow.sla_breached",
+      "workflow.task_assigned",
+      "workflow.approval_requested",
+      "audit.finding_created",
+      "vendor.sla_breached",
+      "policy.approved",
+      "exception.approved",
+      "training.assignment_overdue",
+      "bootstrap.session_blocked",
+      "bootstrap.first_run_started",
+      "bootstrap.first_run_completed",
+      "bootstrap.stale_session_detected",
+      "controls.deficiency_detected",
+      "governance.health_score_updated",
+      "compliance.framework_gap_identified"
+    ]
+  },
+  "routeBases": [
+    "/api/notification"
+  ]
+}

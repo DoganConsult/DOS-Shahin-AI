@@ -1,0 +1,4 @@
+
+> @dos/product-shell@0.1.0 build /root/DOS-AIO/services/product-shell
+> tsc -p tsconfig.json
+

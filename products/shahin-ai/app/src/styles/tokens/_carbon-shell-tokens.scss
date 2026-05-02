@@ -1,0 +1,125 @@
+:root {
+  --cds-background: #ffffff;
+  --cds-layer-01: #f4f4f4;
+  --cds-layer-02: #ffffff;
+  --cds-layer-03: #f4f4f4;
+  --cds-border-subtle-00: #e0e0e0;
+  --cds-border-subtle-01: #c6c6c6;
+  --cds-text-primary: #161616;
+  --cds-text-secondary: #525252;
+  --cds-text-placeholder: #a8a8a8;
+  --cds-link-primary: #0f62fe;
+  --cds-interactive: #0f62fe;
+  --cds-button-primary: #0f62fe;
+  --cds-button-primary-hover: #0353e9;
+  --cds-support-error: #da1e28;
+  --cds-support-success: #24a148;
+  --cds-support-warning: #f1c21b;
+  --cds-support-info: #0043ce;
+
+  --cds-spacing-01: 0.125rem;
+  --cds-spacing-02: 0.25rem;
+  --cds-spacing-03: 0.5rem;
+  --cds-spacing-04: 0.75rem;
+  --cds-spacing-05: 1rem;
+  --cds-spacing-06: 1.5rem;
+  --cds-spacing-07: 2rem;
+  --cds-spacing-08: 2.5rem;
+  --cds-spacing-09: 3rem;
+  --cds-spacing-10: 4rem;
+
+  --cds-layout-01: 1rem;
+  --cds-layout-02: 1.5rem;
+  --cds-layout-03: 2rem;
+  --cds-layout-04: 3rem;
+  --cds-layout-05: 4rem;
+  --cds-layout-06: 6rem;
+  --cds-layout-07: 10rem;
+
+  --shell-font-family-ar: "IBM Plex Sans Arabic", "IBM Plex Sans", "Tajawal", "Noto Sans Arabic", system-ui, sans-serif;
+  --shell-font-family-en: "IBM Plex Sans", system-ui, sans-serif;
+
+  --cds-body-compact-01-size: 0.875rem;
+  --cds-body-compact-01-line: 1.2857;
+  --cds-body-01-size: 0.875rem;
+  --cds-body-01-line: 1.4286;
+  --cds-body-02-size: 1rem;
+  --cds-body-02-line: 1.5;
+  --cds-caption-01-size: 0.75rem;
+  --cds-caption-01-line: 1.3333;
+  --cds-heading-01-size: 0.875rem;
+  --cds-heading-02-size: 1rem;
+  --cds-heading-03-size: 1.25rem;
+  --cds-heading-04-size: 1.75rem;
+  --cds-heading-05-size: 2rem;
+
+  --cds-duration-fast-01: 70ms;
+  --cds-duration-fast-02: 110ms;
+  --cds-duration-moderate-01: 150ms;
+  --cds-duration-moderate-02: 240ms;
+  --cds-easing-standard: cubic-bezier(0.2, 0, 0.38, 0.9);
+
+  --cds-focus: #0f62fe;
+  --cds-focus-inset: inset 0 0 0 2px var(--cds-focus);
+
+  --shell-page-bg: var(--cds-layer-01);
+  --shell-card-bg: var(--cds-layer-02);
+  --shell-card-border: var(--cds-border-subtle-00);
+  --shell-primary-action: var(--cds-button-primary);
+  --shell-text-primary: var(--cds-text-primary);
+  --shell-text-secondary: var(--cds-text-secondary);
+  --shell-on-primary: #ffffff;
+
+  --shell-elevation-01: 0 1px 2px rgba(0, 0, 0, 0.08);
+  --shell-elevation-02: 0 4px 12px rgba(0, 0, 0, 0.10);
+
+  --shell-overlay: rgba(0, 0, 0, 0.45);
+  --shell-header-stack-height: 5rem;
+
+  --shell-nav-active-bg: #0f62fe1a;
+  --shell-tag-blue-bg: #0f62fe26;
+  --shell-tag-blue-text: var(--cds-support-info);
+
+  --shell-status-success-bg: #defbe6;
+  --shell-status-warning-bg: #fcf4d6;
+  --shell-status-danger-bg: #fff1f1;
+  --shell-status-info-bg: #edf5ff;
+
+  --shell-sidebar-mobile-width: min(85vw, 20rem);
+  --shell-sidebar-mobile-offset: 18.125rem;
+
+  --shell-sidebar-width: 16rem;
+  --shell-sidebar-collapsed-width: 3rem;
+
+  --shell-topbar-height: 3rem;
+  --shell-topbar-search-width: 15rem;
+  --shell-topbar-search-width-md: 11.25rem;
+  --shell-topbar-workspace-max-width: 13.75rem;
+  --shell-topbar-workspace-max-width-md: 9.375rem;
+  --shell-topbar-workspace-max-width-sm: 7.5rem;
+  --shell-topbar-dropdown-width: 11.875rem;
+  --shell-topbar-user-name-max-width: 5rem;
+
+  --shell-icon-square: 1rem;
+
+  --shell-mobile-bottom-padding: 5.5rem;
+
+  --shell-panel-left-width: 17.5rem;
+  --shell-panel-right-width: 20rem;
+
+  --shell-actionbar-search-width: 11.25rem;
+
+  --shell-kpi-card-min-width: 10rem;
+
+  --shell-grid-card-min-width: 16.25rem;
+  --shell-fw-card-min-width: 15rem;
+  --shell-pmap-card-min-width: 17.5rem;
+  --shell-module-card-min-width: 17.5rem;
+  --shell-empty-desc-max-width: 23.75rem;
+  --shell-workspace-ignite-module-min-width: 6.25rem;
+
+  --shell-border-width: 1px;
+  --shell-border-width-02: 2px;
+
+  --shell-blur-01: 1px;
+}

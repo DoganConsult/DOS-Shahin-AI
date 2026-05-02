@@ -1,0 +1,21 @@
+{
+  "name": "@dos/legacy-config",
+  "version": "0.0.1",
+  "private": true,
+  "description": "DOS Platform \u2014 legacy static config helpers (compat shim). Superseded by @dos/runtime-config and platform-modules/config-center.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "clean": "rm -rf dist"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0"
+  }
+}

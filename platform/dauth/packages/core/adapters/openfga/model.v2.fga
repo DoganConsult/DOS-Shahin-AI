@@ -1,0 +1,473 @@
+model
+  schema 1.1
+
+# ─────────────────────────────────────────────────────────────────────────────
+# DOS ReBAC model v2 — enterprise spine for Platform → Product → Module →
+# Tenant → Resource. Deploy via Write Authorization Model; capture the
+# returned authorization_model_id and publish as OPENFGA_MODEL_ID.
+#
+# Guarantees:
+#   • Every resource type resolves tenant membership through `from tenant`.
+#   • Every SoD sensitive relation uses `but not` against its counterpart.
+#   • All time-boxed grants flow through `conditioned_active`.
+#   • Model is authored against the contract in @dos/authz-ids/fga.
+# ─────────────────────────────────────────────────────────────────────────────
+
+type user
+
+# ── Platform plane ──────────────────────────────────────────────────────────
+type platform
+  relations
+    define admin: [user]
+    define support: [user]
+    define auditor: [user]
+
+type product
+  relations
+    define platform: [platform]
+    define owner: [user] or admin from platform
+    define admin: [user] or admin from platform
+    define entitled_tenant: [tenant]
+
+type module
+  relations
+    define in_product: [product]
+    define viewer: [user]
+    define editor: [user]
+    define approver: [user]
+    define admin: [user] or admin from in_product
+    define observer: [user]
+
+# ── Service plane (one entry per microservice in services/) ─────────────────
+# A `service:<service-code>` object exists for every Express service registered
+# in `platform/registry/`. Service-level grants gate gateway proxy access and
+# administrative endpoints (PM2 restart, log access, queue inspection).
+type service
+  relations
+    define platform: [platform]
+    define in_product: [product]
+    define operator: [user]
+    define consumer: [user] or member from product_tenant
+    define admin: [user] or admin from in_product or admin from platform
+    # Bridge so a tenant member of an entitled product can call the service.
+    define product_tenant: [tenant]
+    define can_invoke: consumer or operator or admin
+    define can_administer: admin or operator
+
+# ── User profile plane ──────────────────────────────────────────────────────
+# `user_profile:<userId>` is the self-owned identity surface (preferences,
+# avatar, MFA factors, sessions, audit). Distinct from `user` so that
+# tenant admins / DSOC auditors can be granted scoped read on profiles
+# without becoming the user.
+type user_profile
+  relations
+    define subject: [user]
+    define tenant: [tenant]
+    define delegate: [user with conditioned_active]
+    define auditor: [user] or auditor from tenant or auditor from platform
+    define can_view: subject or auditor or admin from tenant
+    define can_edit: subject or delegate
+    define can_administer: admin from tenant or admin from platform
+
+# ── UI surface plane (pages + components) ───────────────────────────────────
+# `page:<pageId>` and `component:<componentId>` correspond 1:1 to the
+# dynamic-ui-service registry rows (dos.ui_pages / dos.ui_components).
+# The *dosCanRender directive in @dos/ui-system reads `can_render` on the
+# relevant page/component object before mounting. Permission-vs-role split:
+# roles are bound at type `role` and projected onto pages/components via the
+# `role_grant` join (no string-role checks anywhere in product code).
+type page
+  relations
+    define module: [module]
+    define product: [product]
+    define tenant: [tenant]
+    define viewer: [user] or member from tenant or viewer from module
+    define editor: [user] or editor from module or admin from tenant
+    define admin: [user] or admin from module or admin from tenant
+    define can_render: viewer
+    define can_edit: editor
+    define can_administer: admin
+
+type component
+  relations
+    define page: [page]
+    define module: [module]
+    define tenant: [tenant]
+    define viewer: [user] or viewer from page or member from tenant
+    define operator: [user] or editor from page
+    define admin: [user] or admin from page or admin from tenant
+    define can_render: viewer
+    define can_invoke: operator
+    define can_administer: admin
+
+# ── Role + Permission catalogue (named, enumerable, audit-friendly) ─────────
+# `role:<roleCode>` is a named subject grouping (e.g. role:tenant_admin,
+# role:risk_manager, role:auditor). Users are linked via `member`. Roles
+# are bound to scope objects (tenant / product / module / page) by the
+# domain assignment table (dos.access_role_assignments) — OpenFGA stores
+# only the authoritative tuples that `dauth-openfga-reconcile.mjs` writes.
+type role
+  relations
+    define platform: [platform]
+    define tenant: [tenant]
+    define member: [user]
+    define manager: [user] or admin from tenant or admin from platform
+    define can_assume: member
+    define can_assign: manager
+
+# `permission:<permissionCode>` enumerates the verb-level capabilities the
+# UI / gateway recognises. A role -> permission grant lives in the
+# `granted_to_role` relation; a user holding the role implicitly holds the
+# permission via `can_exercise`. Direct user->permission tuples are reserved
+# for break-glass flows and emit an audit decision row.
+type permission
+  relations
+    define platform: [platform]
+    define granted_to_role: [role]
+    define granted_to_user: [user with conditioned_active]
+    define can_exercise: granted_to_user or member from granted_to_role
+
+# ── Foundation DNA plane (always-available platform capabilities) ───────────
+# `foundation_dna:<dnaCode>` is the canonical handle for an unconditional
+# Platform-DNA capability (org/identity/SoD/lifecycle/Foundation overview).
+# DNA is NEVER tenant-entitled — every authenticated user can `can_consume`
+# DNA features by default unless an explicit deny is written by DSOC.
+type foundation_dna
+  relations
+    define platform: [platform]
+    define administrator: [user] or admin from platform
+    define consumer: [user]
+    define can_consume: consumer or administrator
+    define can_administer: administrator
+
+# ── AI workspace plane (per-user AI session scope) ──────────────────────────
+# `ai_workspace:<tenantId>:<userId>` scopes per-user AI conversations,
+# threads, tools, memory and Langfuse traces. Tenant admins may audit but
+# never read prompts unless `can_audit` is granted by DAuth.
+type ai_workspace
+  relations
+    define tenant: [tenant]
+    define owner: [user]
+    define collaborator: [user]
+    define auditor: [user] or auditor from tenant
+    define ai_admin: [user] or admin from tenant or admin from platform
+    define platform: [platform]
+    define can_view: owner or collaborator
+    define can_invoke_tool: owner or collaborator
+    define can_audit: auditor
+    define can_administer: ai_admin
+
+# ── Settings planes (tenant + per-user profile) ─────────────────────────────
+# `tenant_setting:<tenantId>` — tenant admin settings surface (branding,
+# locales, defaults, lifecycle, integrations). Owner/admin only.
+type tenant_setting
+  relations
+    define tenant: [tenant]
+    define administrator: [user] or owner from tenant or admin from tenant
+    define viewer: [user] or member from tenant or auditor from tenant
+    define can_view: viewer
+    define can_edit: administrator
+    define can_administer: administrator
+
+# `profile_setting:<userId>` — Foundation profile-settings surface
+# (preferences, locale, MFA, sessions). Owned by the subject; tenant admins
+# can read for support but cannot write unless delegated.
+type profile_setting
+  relations
+    define subject: [user]
+    define tenant: [tenant]
+    define delegate: [user with conditioned_active]
+    define can_view: subject or delegate or admin from tenant
+    define can_edit: subject or delegate
+
+# ── Module lifecycle plane (workflow-governed phases) ───────────────────────
+# `module_lifecycle:<tenantId>:<moduleCode>` tracks per-tenant module phase
+# (requested → provisioning → onboarded → active → suspended → archived →
+# deprovisioning → purged). The workflow engine writes transitions; each
+# phase has its own narrowly-scoped permission verb so a tenant admin can
+# resume a suspended module without holding `can_provision` on a fresh
+# tenant, and a platform admin can purge without ever being module owner.
+#
+# Subject roles relevant to this plane:
+#   role:tenant_admin       — owns activate/suspend/resume/onboard
+#   role:tenant_owner       — additionally owns request/cancel-request
+#   role:module_owner       — owns onboard/configure/launch
+#   role:platform_admin     — owns provision/deprovision/purge/migrate
+#   role:platform_operator  — owns provision/deprovision (no purge)
+#   role:billing_admin      — owns suspend/resume on billing-trigger
+#   role:dsoc_auditor       — read-only via can_view + can_audit
+#
+# Per-phase verbs (each is a permission code in `permission:` catalogue):
+#   lifecycle.module.request          — tenant-side: ask to enable a module
+#   lifecycle.module.cancel_request   — tenant-side: rescind a request
+#   lifecycle.module.provision        — platform: spin up data + roles
+#   lifecycle.module.onboard          — tenant: complete first-run wizard
+#   lifecycle.module.configure        — tenant admin: edit runtime config
+#   lifecycle.module.activate         — tenant admin: flip to live
+#   lifecycle.module.suspend          — tenant admin / billing: pause
+#   lifecycle.module.resume           — tenant admin / billing: unpause
+#   lifecycle.module.archive          — tenant admin: read-only retire
+#   lifecycle.module.unarchive        — tenant admin: bring back from archive
+#   lifecycle.module.deprovision      — platform: tear down service binding
+#   lifecycle.module.purge            — platform admin only: wipe data
+#   lifecycle.module.migrate          — platform: bump schema/contracts
+#   lifecycle.module.audit            — auditor: read full lifecycle log
+type module_lifecycle
+  relations
+    define tenant: [tenant]
+    define module: [module]
+    # Subject bindings (filled by dauth-openfga-reconcile from
+    # dos.module_lifecycle_assignments).
+    define tenant_owner:      [user] or owner from tenant
+    define tenant_admin:      [user] or admin from tenant
+    define module_owner:      [user]
+    define billing_admin:     [user]
+    define platform_operator: [user]
+    define platform_admin:    [user] or admin from platform
+    define dsoc_auditor:      [user] or auditor from tenant or auditor from platform
+    # Generic operator (legacy) — kept for backward-compatible callers;
+    # NEW writers must use the verb-specific can_* below.
+    define operator: [user] or tenant_admin
+
+    # ── Phase-scoped permission verbs ────────────────────────────────────
+    define can_request:        tenant_owner or tenant_admin
+    define can_cancel_request: tenant_owner or tenant_admin
+    define can_provision:      platform_operator or platform_admin
+    define can_onboard:        module_owner or tenant_admin
+    define can_configure:      module_owner or tenant_admin
+    define can_activate:       tenant_admin or platform_admin
+    define can_suspend:        tenant_admin or billing_admin or platform_admin
+    define can_resume:         tenant_admin or billing_admin or platform_admin
+    define can_archive:        tenant_admin or platform_admin
+    define can_unarchive:      tenant_admin or platform_admin
+    define can_deprovision:    platform_operator or platform_admin
+    define can_purge:          platform_admin
+    define can_migrate:        platform_operator or platform_admin
+    define can_audit:          dsoc_auditor or platform_admin
+
+    # Legacy umbrella — preserved so existing callers compile; new code
+    # must use the verb above that matches the actual transition.
+    define can_transition: can_provision or can_onboard or can_configure or can_activate or can_suspend or can_resume or can_archive or can_unarchive or can_deprovision or can_purge or can_migrate
+    define can_view:       member from tenant or dsoc_auditor or platform_admin
+
+# ── SoD rule plane (Segregation of Duties) ──────────────────────────────────
+# `sod_rule:<tenantId>:<ruleCode>` materialises an SoD constraint stored in
+# `dos.sod_rules`. The OpenFGA write fails the user's role-assume request
+# when `forbids` is satisfied; DAuth is the enforcer at session-binding time.
+type sod_rule
+  relations
+    define tenant: [tenant]
+    define platform: [platform]
+    define forbids_role: [role]
+    define exempts_user: [user with conditioned_active]
+    define manager: [user] or admin from tenant or admin from platform
+    define can_manage: manager
+    define can_audit: auditor from tenant or auditor from platform
+
+# ── Organization unit plane (org structure / hierarchy) ─────────────────────
+# `org_unit:<orgUnitId>` mirrors `dos.org_units`. Hierarchy is modelled
+# via the self-referencing `parent` relation; `viewer`/`editor`/`admin`
+# inherit downward through the tree.
+type org_unit
+  relations
+    define tenant: [tenant]
+    define parent: [org_unit]
+    define head: [user]
+    define member: [user] or member from parent
+    define editor: [user] or head or editor from parent
+    define admin: [user] or admin from parent or admin from tenant
+    define can_view: member or editor or admin or auditor from tenant
+    define can_edit: editor
+    define can_administer: admin
+
+# ── Tenancy plane ───────────────────────────────────────────────────────────
+type tenant
+  relations
+    define platform: [platform]
+    define member: [user]
+    # Patch 1 — owner is the appointed legal representative / billing
+    # principal. Distinct from admin so owner-only flows (trial conversion,
+    # billing, tenant deletion) can be gated separately. Owner implies admin.
+    define owner: [user]
+    define admin: [user] or owner or admin from platform
+    define auditor: [user] or auditor from platform
+    define on_call: [user]
+
+# Patch 1 — UI-OS governance plane.
+# Targets the ui-os-service /admin draft+publish surface (see
+# services/ui-os-service/src/middleware/openfga.ts requireFga). A
+# `ui_os_tenant:<tenantId>` instance MUST be created per tenant during
+# provisioning and linked to the underlying tenant.
+type ui_os_tenant
+  relations
+    define platform: [platform]
+    define tenant: [tenant]
+    define ui_admin: [user] or admin from tenant or admin from platform
+
+# ── Org team plane (enterprise: org → 16 teams, each w/ head + roster) ─────
+# `team:<tenantId>:<teamCode>` mirrors `dos.org_teams`. Each team has a
+# single `head` (named team lead), an optional `deputy`, and a `roster`
+# of members. Hierarchy via `parent_org_unit` so a team rolls up to an
+# org unit (Finance, Engineering, Risk, …). Rosters are written by the
+# Foundation org-chart admin surface and reconciled into OpenFGA tuples
+# by `dauth-openfga-reconcile.mjs`. Every Foundation page that renders
+# org-chart nodes / team rosters consults `team.can_view`.
+type team
+  relations
+    define tenant: [tenant]
+    define parent_org_unit: [org_unit]
+    define head: [user]
+    define deputy: [user]
+    define roster: [user]
+    define auditor: [user] or auditor from tenant
+    # member ⇐ head OR deputy OR explicit roster OR tenant admin (admins
+    # see every team for governance), inheriting from parent org unit.
+    define member: [user] or head or deputy or roster or member from parent_org_unit or admin from tenant
+    define admin: [user] or admin from parent_org_unit or admin from tenant
+    define can_view:        member or auditor or admin
+    define can_edit:        head or deputy or admin
+    define can_manage_roster: head or admin
+    define can_administer:  admin
+
+type department
+  relations
+    define tenant: [tenant]
+    define head: [user]
+    define member: [user] or head or admin from tenant
+
+type project
+  relations
+    define tenant: [tenant]
+    define lead: [user]
+    define member: [user] or lead or admin from tenant
+
+# ── Generic resource + folder (hierarchical) ────────────────────────────────
+type folder
+  relations
+    define tenant: [tenant]
+    define parent: [folder]
+    define viewer: [user] or viewer from parent or member from tenant
+    define editor: [user] or editor from parent
+    define admin: [user] or admin from parent or admin from tenant
+
+type resource
+  relations
+    define tenant: [tenant]
+    define module: [module]
+    define folder: [folder]
+    define owner: [user]
+    define editor: [user] or owner or editor from folder or editor from module
+    define viewer: [user] or editor or viewer from folder or viewer from module or member from tenant
+    define approver: [user] or approver from module
+    define delegate: [user with conditioned_active]
+
+    define can_view: viewer or admin from tenant
+    define can_edit: editor but not auditor from tenant
+    define can_approve: approver but not owner
+    define can_export: approver or admin from tenant or auditor from tenant
+    define can_delete: admin from tenant
+
+# ── Domain-specific resources (explicit SoD) ────────────────────────────────
+type evidence
+  relations
+    define tenant: [tenant]
+    define module: [module]
+    define owner: [user]
+    define reviewer: [user, team#member, department#member]
+    define approver: [user, team#member]
+
+    define can_view: owner or reviewer or approver or member from tenant or admin from tenant
+    define can_submit: owner
+    define can_approve: approver but not owner
+    define can_export: approver or admin from tenant
+    define can_delete: admin from tenant
+
+type control
+  relations
+    define tenant: [tenant]
+    define module: [module]
+    define owner: [user]
+    define tester: [user]
+    define reviewer: [user, team#member]
+
+    define can_view: owner or tester or reviewer or member from tenant
+    define can_test: tester or owner
+    define can_sign_off: reviewer but not tester
+    define can_delete: admin from tenant
+
+type policy
+  relations
+    define tenant: [tenant]
+    define module: [module]
+    define owner: [user]
+    define approver: [user, team#member]
+
+    define can_view: member from tenant
+    define can_edit: owner or admin from tenant
+    define can_approve: approver but not owner
+
+type risk
+  relations
+    define tenant: [tenant]
+    define module: [module]
+    define owner: [user]
+    define assessor: [user]
+    define approver: [user]
+
+    define can_view: owner or assessor or member from tenant
+    define can_assess: assessor or owner
+    define can_approve: approver but not owner
+    define can_close: admin from tenant
+
+type report
+  relations
+    define tenant: [tenant]
+    define module: [module]
+    define owner: [user]
+    define approver: [user]
+
+    define can_view: member from tenant
+    define can_publish: approver but not owner
+    define can_export: approver or admin from tenant
+
+type incident
+  relations
+    define tenant: [tenant]
+    define module: [module]
+    define owner: [user]
+    define responder: [user] or on_call from tenant
+    define approver: [user]
+
+    define can_view: owner or responder or approver or member from tenant
+    define can_update: responder or owner
+    define can_close: approver but not owner
+
+type audit
+  relations
+    define tenant: [tenant]
+    define module: [module]
+    define owner: [user]
+    define auditor: [user] or auditor from tenant
+
+    define can_view: auditor or owner or admin from tenant
+    define can_sign: auditor but not owner
+    define can_export: auditor or admin from tenant
+
+# ── Delegation + break-glass (time-boxed) ───────────────────────────────────
+type delegation
+  relations
+    define delegator: [user]
+    define delegatee: [user]
+    define scope: [tenant]
+    define active: [user with conditioned_active]
+
+type breakglass
+  relations
+    define tenant: [tenant]
+    define grantee: [user with conditioned_active]
+    define approver: [user]
+
+# ── Conditions (OpenFGA 1.4+) ───────────────────────────────────────────────
+condition conditioned_active(current_time: timestamp, valid_from: timestamp, valid_to: timestamp) {
+  valid_from <= current_time && current_time < valid_to
+}

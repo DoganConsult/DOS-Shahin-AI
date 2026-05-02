@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DOS Platform — Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/admin/css/admin.css">
+</head>
+<body>
+
+  <div id="login-view" class="auth-page">
+    <div class="auth-brand">
+      <div class="auth-brand-inner">
+        <h1>DOS Platform</h1>
+        <p>Dogan Operating System — Enterprise multi-tenant platform for governance, risk, and compliance.</p>
+      </div>
+    </div>
+    <div class="auth-form-side">
+      <div class="auth-card" id="login-card">
+        <h2 id="login-title">Platform Admin Login</h2>
+        <p class="subtitle" id="login-subtitle">Sign in to manage platform services, tenants, and configuration.</p>
+        <div id="login-error" class="error-msg"></div>
+        <form id="login-form">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input id="email" type="email" required autocomplete="email" placeholder="admin@platform.local">
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input id="password" type="password" required autocomplete="current-password" placeholder="••••••••">
+          </div>
+          <button type="submit" class="btn btn-primary btn-full" id="login-btn">Sign In</button>
+        </form>
+        <div class="form-footer">
+          <a href="#" id="forgot-link">Forgot Password?</a>
+        </div>
+      </div>
+      <div class="auth-card" id="mfa-card" style="display:none">
+        <h2 id="mfa-title">Two-Factor Authentication</h2>
+        <p class="subtitle" id="mfa-subtitle">Enter the 6-digit code sent to your email.</p>
+        <div id="mfa-error" class="error-msg"></div>
+        <form id="mfa-form">
+          <div class="form-group">
+            <label for="mfa-code">Verification Code</label>
+            <input id="mfa-code" type="text" required maxlength="6" pattern="[0-9]{6}" placeholder="000000" autocomplete="one-time-code" inputmode="numeric" style="text-align:center;font-size:1.5rem;letter-spacing:.5rem">
+          </div>
+          <button type="submit" class="btn btn-primary btn-full" id="mfa-btn">Verify</button>
+        </form>
+        <div class="form-footer">
+          <a href="#" id="mfa-back-link">Back to Login</a>
+        </div>
+      </div>
+      <div class="auth-card" id="forgot-card" style="display:none">
+        <h2 id="forgot-title">Reset Password</h2>
+        <p class="subtitle" id="forgot-subtitle">Enter your email to receive a password reset link.</p>
+        <div id="forgot-error" class="error-msg"></div>
+        <div id="forgot-success" class="error-msg" style="color:var(--success);background:rgba(34,197,94,.1)"></div>
+        <form id="forgot-form">
+          <div class="form-group">
+            <label for="forgot-email">Email</label>
+            <input id="forgot-email" type="email" required autocomplete="email" placeholder="admin@platform.local">
+          </div>
+          <button type="submit" class="btn btn-primary btn-full" id="forgot-btn">Send Reset Link</button>
+        </form>
+        <div class="form-footer">
+          <a href="#" id="forgot-back-link">Back to Login</a>
+        </div>
+      </div>
+      <div class="auth-card" id="reset-card" style="display:none">
+        <h2 id="reset-title">Set New Password</h2>
+        <p class="subtitle" id="reset-subtitle">Enter your new password below.</p>
+        <div id="reset-error" class="error-msg"></div>
+        <div id="reset-success" class="error-msg" style="color:var(--success);background:rgba(34,197,94,.1)"></div>
+        <form id="reset-form">
+          <div class="form-group">
+            <label for="reset-token">Reset Token</label>
+            <input id="reset-token" type="text" required placeholder="Paste your reset token">
+          </div>
+          <div class="form-group">
+            <label for="reset-password">New Password</label>
+            <input id="reset-password" type="password" required minlength="8" autocomplete="new-password" placeholder="••••••••">
+          </div>
+          <div class="form-group">
+            <label for="reset-confirm">Confirm Password</label>
+            <input id="reset-confirm" type="password" required minlength="8" autocomplete="new-password" placeholder="••••••••">
+          </div>
+          <button type="submit" class="btn btn-primary btn-full" id="reset-btn">Reset Password</button>
+        </form>
+        <div class="form-footer">
+          <a href="#" id="reset-back-link">Back to Login</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="dashboard-view" class="dashboard">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h3>DOS Platform</h3>
+        <small>Administration Console</small>
+      </div>
+      <div class="sidebar-search">
+        <input type="text" id="nav-search" placeholder="Search..." class="search-input">
+      </div>
+      <nav class="sidebar-nav" id="sidebar-nav"></nav>
+      <div class="sidebar-user">
+        <div class="avatar" id="user-avatar">A</div>
+        <div class="user-info">
+          <div class="name" id="user-name">Admin</div>
+          <div class="role" id="user-role">Platform Admin</div>
+        </div>
+        <button class="logout-btn" id="logout-btn" title="Logout">&#x23FB;</button>
+      </div>
+    </aside>
+    <div class="main-content">
+      <div class="topbar">
+        <div class="topbar-left">
+          <h2 id="section-title">Platform Dashboard</h2>
+          <span class="badge" id="platform-version">v0.1.0</span>
+        </div>
+        <div class="topbar-right">
+          <div class="topbar-workspace" id="workspace-switcher" title="Current workspace">
+            <span class="ws-icon">&#x1F3E2;</span>
+            <span id="ws-name">Default</span>
+          </div>
+          <div class="topbar-alerts" id="alerts-bell" title="Alerts">
+            <span class="bell-icon">&#x1F514;</span>
+            <span class="alert-count" id="alert-count" style="display:none">0</span>
+          </div>
+          <button class="lang-switch" id="lang-btn">&#x0627;&#x0644;&#x0639;&#x0631;&#x0628;&#x064A;&#x0629;</button>
+          <div class="topbar-tenant" id="tenant-label" title="Organization"></div>
+        </div>
+      </div>
+      <div class="content-area" id="content-area"></div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal" id="modal">
+      <div class="modal-header">
+        <h3 id="modal-title"></h3>
+        <button class="modal-close" id="modal-close">&times;</button>
+      </div>
+      <div class="modal-body" id="modal-body"></div>
+    </div>
+  </div>
+
+  <div id="toast-container"></div>
+
+  <script type="module" src="/admin/js/app.js"></script>
+</body>
+</html>

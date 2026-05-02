@@ -1,0 +1,240 @@
+<div class="page-shell" [attr.dir]="dir()">
+  <app-page-header
+    titleEn="Policy Publications & Acknowledgments"
+    titleAr="نشر السياسات والإقرارات"
+    subtitleEn="Manage publication campaigns, track delivery and acknowledgment status"
+    subtitleAr="إدارة حملات النشر وتتبع حالة التسليم والإقرار"
+    icon="send"
+    [breadcrumbs]="[i18n.translate('common.dashboard'), i18n.translate('common.policies'), i18n.translate('common.publications')]"
+    [actions]="headerActions"
+    [isAr]="isAr()"
+    [dir]="dir()"
+    (actionClick)="onHeaderAction($event)" />
+
+  <div class="page-body">
+    <p-toast />
+    <p-confirmDialog />
+
+    <!-- Section 1: Publication Campaigns -->
+    <ng-container *ngIf="!selectedCampaign()">
+      <div class="section-header">
+        <h3 class="section-title">Publication Campaigns</h3>
+      </div>
+
+      <!-- Loading skeleton -->
+      <div *ngIf="loading()" class="skeleton-block">
+        <div class="skeleton-row" *ngFor="let i of [1,2,3,4,5]"></div>
+      </div>
+
+      <!-- Empty state -->
+      <div *ngIf="!loading() && campaigns().length === 0" class="empty-state">
+        <i class="pi pi-send empty-icon"></i>
+        <p>No publication campaigns found</p>
+        <p class="empty-hint">Create your first publication to distribute policies to your audience.</p>
+        <p-button label="New Publication" icon="pi pi-plus" [outlined]="true" (onClick)="openNewDialog()" />
+      </div>
+
+      <!-- Campaigns table -->
+      <grc-data-table
+        *ngIf="!loading()"
+        [totalRecords]="campaigns().length"
+        [emptyMessage]="'No publication campaigns found'">
+        <p-table
+          [value]="campaigns()"
+          [paginator]="campaigns().length > 15"
+          [rows]="15"
+          [rowsPerPageOptions]="[10, 15, 30]"
+          styleClass="p-datatable-sm p-datatable-striped"
+          [scrollable]="true"
+          aria-label="Publication campaigns table">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Campaign Name</th>
+              <th>Policy</th>
+              <th>Channel</th>
+              <th style="text-align: center">Audience</th>
+              <th>Status</th>
+              <th>Published At</th>
+              <th style="text-align: center">Sent</th>
+              <th style="text-align: center">Viewed</th>
+              <th style="text-align: center">Ack'd</th>
+              <th style="text-align: center">Completion</th>
+              <th style="width: 220px">Actions</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-c>
+            <tr>
+              <td class="text-semibold">{{ c.campaignName }}</td>
+              <td>{{ c.policyTitle }}</td>
+              <td>
+                <p-tag [value]="c.channel" severity="info" />
+              </td>
+              <td style="text-align: center">{{ c.audienceCount }}</td>
+              <td>
+                <p-tag [value]="c.status" [severity]="campaignStatusSeverity(c.status)" />
+              </td>
+              <td>{{ c.publishedAt | date:'mediumDate' }}</td>
+              <td style="text-align: center">{{ c.sent }}</td>
+              <td style="text-align: center">{{ c.viewed }}</td>
+              <td style="text-align: center">{{ c.acknowledged }}</td>
+              <td style="text-align: center">
+                <span class="completion-badge" [class.completion-high]="c.completionPct >= 80"
+                  [class.completion-mid]="c.completionPct >= 50 && c.completionPct < 80"
+                  [class.completion-low]="c.completionPct < 50">
+                  {{ c.completionPct }}%
+                </span>
+              </td>
+              <td>
+                <div class="action-group">
+                  <p-button icon="pi pi-eye" [text]="true" size="small" label="Status"
+                    pTooltip="View delivery status" (onClick)="selectCampaign(c)" />
+                  <p-button icon="pi pi-bell" [text]="true" size="small" label="Remind"
+                    pTooltip="Send reminders" (onClick)="sendReminders(c.id)"
+                    [disabled]="c.status === 'recalled'" />
+                  <p-button icon="pi pi-undo" [text]="true" size="small" severity="danger"
+                    pTooltip="Recall publication" (onClick)="recallCampaign(c)"
+                    [disabled]="c.status === 'recalled'" />
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </grc-data-table>
+    </ng-container>
+
+    <!-- Section 2: Delivery Tracking (shown when campaign selected) -->
+    <ng-container *ngIf="selectedCampaign()">
+      <div class="breadcrumb-bar">
+        <p-button icon="pi pi-arrow-left" [text]="true" label="Back to Campaigns" (onClick)="clearSelection()" />
+        <span class="bc-title">{{ selectedCampaign()!.campaignName }}</span>
+      </div>
+
+      <!-- Completion progress bar -->
+      <div class="delivery-progress-card">
+        <div class="progress-header">
+          <span class="progress-label">Acknowledgment Completion</span>
+          <span class="progress-value">{{ deliveryCompletionPct() }}%</span>
+        </div>
+        <p-progressBar [value]="deliveryCompletionPct()" [showValue]="false" />
+        <div class="progress-actions">
+          <p-button icon="pi pi-bell" label="Send Reminders" size="small" severity="warning"
+            (onClick)="sendReminders(selectedCampaign()!.id)" />
+          <p-button icon="pi pi-download" label="Export Proof" size="small" severity="secondary"
+            [outlined]="true" (onClick)="exportProof()" />
+        </div>
+      </div>
+
+      <!-- Delivery loading -->
+      <div *ngIf="deliveryLoading()" class="skeleton-block">
+        <div class="skeleton-row" *ngFor="let i of [1,2,3,4,5]"></div>
+      </div>
+
+      <!-- Delivery empty state -->
+      <div *ngIf="!deliveryLoading() && deliveryRecords().length === 0" class="empty-state">
+        <i class="pi pi-users empty-icon"></i>
+        <p>No delivery records found for this campaign</p>
+      </div>
+
+      <!-- Delivery table -->
+      <grc-data-table
+        *ngIf="!deliveryLoading()"
+        [totalRecords]="deliveryRecords().length"
+        [emptyMessage]="'No delivery records found for this campaign'">
+        <p-table
+          [value]="deliveryRecords()"
+          [paginator]="deliveryRecords().length > 15"
+          [rows]="15"
+          [rowsPerPageOptions]="[10, 15, 30, 50]"
+          styleClass="p-datatable-sm p-datatable-striped"
+          [scrollable]="true"
+          aria-label="Delivery tracking table">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>User Name</th>
+              <th>Status</th>
+              <th>Delivered At</th>
+              <th>Viewed At</th>
+              <th>Acknowledged At</th>
+              <th style="text-align: center">Reminders</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-r>
+            <tr>
+              <td class="text-semibold">{{ r.userName }}</td>
+              <td>
+                <p-tag [value]="r.status" [severity]="deliveryStatusSeverity(r.status)" />
+              </td>
+              <td>{{ r.deliveredAt ? (r.deliveredAt | date:'medium') : '-' }}</td>
+              <td>{{ r.viewedAt ? (r.viewedAt | date:'medium') : '-' }}</td>
+              <td>{{ r.acknowledgedAt ? (r.acknowledgedAt | date:'medium') : '-' }}</td>
+              <td style="text-align: center">{{ r.reminderCount }}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </grc-data-table>
+    </ng-container>
+
+    <!-- New Publication Dialog -->
+    <p-dialog
+      header="New Publication"
+      [(visible)]="showNewDialog"
+      [modal]="true"
+      [style]="{ width: '560px' }"
+      [closable]="true">
+      <div class="form-grid">
+        <div class="form-field">
+          <label>Policy <span class="required">*</span></label>
+          <p-dropdown
+            [options]="policies()"
+            [(ngModel)]="newForm.policyId"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Select policy"
+            [filter]="true"
+            [showClear]="true"
+            [style]="{ width: '100%' }" />
+        </div>
+        <div class="form-field">
+          <grc-form-field label="Campaign Name" [required]="true">
+            <input pInputText [(ngModel)]="newForm.campaignName" placeholder="Enter campaign name" class="w-full" />
+          </grc-form-field>
+        </div>
+        <div class="form-field">
+          <label>Channel <span class="required">*</span></label>
+          <p-dropdown
+            [options]="channelOptions"
+            [(ngModel)]="newForm.channel"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Select channel"
+            [style]="{ width: '100%' }" />
+        </div>
+        <div class="form-field">
+          <label>Audience Targeting</label>
+          <p-multiSelect
+            [options]="audienceOptions"
+            [(ngModel)]="newForm.audience"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Select audience"
+            [style]="{ width: '100%' }" />
+        </div>
+        <div class="form-field">
+          <label>Message</label>
+          <textarea pInputTextarea [(ngModel)]="newForm.message" rows="4" class="w-full"
+            placeholder="Optional message to include with the publication"></textarea>
+        </div>
+        <div class="form-field">
+          <label>Schedule Date (optional)</label>
+          <p-calendar [(ngModel)]="newForm.scheduleDate" [showTime]="true" [showIcon]="true"
+            placeholder="Publish immediately if not set" [style]="{ width: '100%' }" />
+        </div>
+      </div>
+      <ng-template pTemplate="footer">
+        <p-button label="Cancel" [text]="true" (onClick)="showNewDialog.set(false)" />
+        <p-button label="Create Publication" icon="pi pi-send" (onClick)="createPublication()"
+          [disabled]="!newForm.policyId || !newForm.campaignName || !newForm.channel" />
+      </ng-template>
+    </p-dialog>
+  </div>
+</div>

@@ -1,0 +1,62 @@
+# OpenFGA assertion suite for model.v2.fga.
+# Run via: fga store test --tests model.v2.assertions.yaml --store-id <id>
+# CI must execute this on every model change; no merge without green.
+
+name: DOS ReBAC v2 — core invariants
+
+model_file: ./model.v2.fga
+
+tuples:
+  - user: user:alice
+    relation: admin
+    object: tenant:t1
+  - user: user:bob
+    relation: member
+    object: tenant:t1
+  - user: user:carol
+    relation: member
+    object: tenant:t2
+
+  - user: user:bob
+    relation: owner
+    object: evidence:t1-e1
+  - user: tenant:t1
+    relation: tenant
+    object: evidence:t1-e1
+
+  - user: user:dave
+    relation: approver
+    object: evidence:t1-e1
+  - user: user:bob
+    relation: reviewer
+    object: evidence:t1-e1
+
+tests:
+  - name: tenant admin inherits view on resources
+    check:
+      - user: user:alice
+        object: evidence:t1-e1
+        assertions:
+          can_view: true
+          can_delete: true
+
+  - name: tenant member of wrong tenant is denied
+    check:
+      - user: user:carol
+        object: evidence:t1-e1
+        assertions:
+          can_view: false
+
+  - name: approver cannot approve own evidence (SoD)
+    check:
+      - user: user:bob
+        object: evidence:t1-e1
+        assertions:
+          can_approve: false
+
+  - name: separate approver can approve
+    check:
+      - user: user:dave
+        object: evidence:t1-e1
+        assertions:
+          can_approve: true

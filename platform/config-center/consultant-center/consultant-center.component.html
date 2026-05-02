@@ -1,0 +1,344 @@
+<div class="cc-shell">
+      <!-- Header -->
+      <header class="cc-header">
+        <div class="cc-header-left">
+          <img loading="eager" src="logoiconapphero.png" alt="Shahin GRC" width="36" height="36"
+               style="border-radius:8px" />
+          <h1>Consultant Command Center</h1>
+          <span class="cc-client-name" *ngIf="selectedClient">{{ selectedClient.name }}</span>
+        </div>
+        <div class="cc-header-right">
+          <button class="btn-report" (click)="downloadReport()" [disabled]="downloadingReport">
+            {{ downloadingReport ? 'Generating…' : 'Portfolio Report' }}
+          </button>
+          <button class="btn-logout" (click)="logout()">Sign Out</button>
+        </div>
+      </header>
+
+      <!-- Tab Navigation -->
+      <nav class="cc-tabs" role="tablist">
+        <button *ngFor="let t of tabs" class="cc-tab"
+                [class.active]="activeTab === t.id"
+                (click)="switchTab(t.id)"
+                [attr.aria-selected]="activeTab === t.id"
+                role="tab">
+          {{ t.label }}
+        </button>
+      </nav>
+
+      <!-- Loading -->
+      <div *ngIf="loading" class="cc-loading">
+        <div class="spinner"></div>
+        <p>Loading…</p>
+      </div>
+
+      <!-- Error -->
+      <div *ngIf="error" class="cc-error">
+        <p>{{ error }}</p>
+        <button class="btn-secondary" (click)="loadData()">Retry</button>
+      </div>
+
+      <!-- ═══ Portfolio Tab ═══ -->
+      <section *ngIf="!loading && !error && activeTab === 'portfolio'" class="cc-section">
+        <h2>Portfolio Overview</h2>
+
+        <!-- Health summary -->
+        <div class="dashboard-grid" *ngIf="portfolioHealth">
+          <div class="stat-card">
+            <span class="stat-label">Total Clients</span>
+            <span class="stat-value">{{ portfolioHealth.totalClients }}</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Avg Compliance</span>
+            <span class="stat-value" [class]="scoreClass(portfolioHealth.avgComplianceScore)">
+              {{ portfolioHealth.avgComplianceScore }}%
+            </span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Avg Engagement</span>
+            <span class="stat-value" [class]="engagementClass(portfolioHealth.avgEngagementScore)">
+              {{ portfolioHealth.avgEngagementScore }}/100
+            </span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">High Risk</span>
+            <span class="stat-value score-red">{{ portfolioHealth.highRiskClients }}</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Medium Risk</span>
+            <span class="stat-value score-yellow">{{ portfolioHealth.mediumRiskClients }}</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Low Risk</span>
+            <span class="stat-value score-green">{{ portfolioHealth.lowRiskClients }}</span>
+          </div>
+        </div>
+
+        <!-- Client list -->
+        <h3 class="sub-heading">Assigned Clients</h3>
+        <div *ngIf="clients.length === 0" class="empty-state">No clients assigned.</div>
+        <div class="client-grid" *ngIf="clients.length > 0">
+          <div *ngFor="let c of clients" class="client-card"
+               (click)="selectClient(c)" role="button" tabindex="0"
+               (keydown.enter)="selectClient(c)">
+            <div class="client-card-header">
+              <h4>{{ c.name }}</h4>
+              <span class="status-indicator" [attr.data-status]="c.status">
+                {{ c.status | titlecase }}
+              </span>
+            </div>
+            <div class="client-card-stats">
+              <div class="client-stat">
+                <span class="client-stat-label">Compliance</span>
+                <span class="client-stat-value" [class]="scoreClass(c.complianceScore)">
+                  {{ c.complianceScore }}%
+                </span>
+              </div>
+              <div class="client-stat">
+                <span class="client-stat-label">Risk</span>
+                <span class="client-stat-value risk-level" [attr.data-risk]="c.riskLevel">
+                  {{ c.riskLevel | titlecase }}
+                </span>
+              </div>
+              <div class="client-stat">
+                <span class="client-stat-label">Engagement</span>
+                <span class="client-stat-value" [class]="engagementClass(c.engagementScore)">
+                  {{ c.engagementScore }}
+                </span>
+              </div>
+            </div>
+            <div class="client-card-footer" *ngIf="c.lastAssessmentDate">
+              Last assessment: {{ c.lastAssessmentDate | appDate:'medium' }}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ Client Detail Tab ═══ -->
+      <section *ngIf="!loading && !error && activeTab === 'client-detail'" class="cc-section">
+        <button class="btn-back" (click)="backToPortfolio()">&larr; Back to Portfolio</button>
+        <h2>Client Deep-Dive — {{ selectedClient?.name }}</h2>
+
+        <div *ngIf="!selectedClient" class="empty-state">
+          Select a client from the Portfolio tab to view details.
+        </div>
+
+        <div *ngIf="selectedClient" class="client-detail-layout">
+          <div class="dashboard-grid">
+            <div class="stat-card">
+              <span class="stat-label">Compliance Score</span>
+              <span class="stat-value" [class]="scoreClass(selectedClient.complianceScore)">
+                {{ selectedClient.complianceScore }}%
+              </span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-label">Risk Level</span>
+              <span class="stat-value risk-level" [attr.data-risk]="selectedClient.riskLevel">
+                {{ selectedClient.riskLevel | titlecase }}
+              </span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-label">Engagement Score</span>
+              <span class="stat-value" [class]="engagementClass(selectedClient.engagementScore)">
+                {{ selectedClient.engagementScore }}/100
+              </span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-label">Frameworks</span>
+              <span class="stat-value">{{ selectedClient.frameworkCount }}</span>
+            </div>
+          </div>
+
+          <div class="context-switch" *ngIf="!switchingContext">
+            <button class="btn-primary" (click)="switchToClientContext()">
+              Open Client Dashboard
+            </button>
+            <p class="context-hint">Opens a scoped session for this client's full dashboard.</p>
+          </div>
+          <div class="context-switch" *ngIf="switchingContext">
+            <div class="spinner-sm"></div>
+            <span>Switching context…</span>
+          </div>
+
+          <!-- Client findings -->
+          <div class="sub-section">
+            <h3>Findings for {{ selectedClient.name }}</h3>
+            <div *ngIf="clientFindings.length === 0" class="empty-state">No findings for this client.</div>
+            <table [attr.aria-label]="'Findings for ' + selectedClient.name + ' table'" class="cc-table" *ngIf="clientFindings.length > 0">
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Severity</th>
+                  <th>Framework</th>
+                  <th>Status</th>
+                  <th>Created</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let f of clientFindings">
+                  <td>{{ f.title }}</td>
+                  <td>
+                    <span class="severity-badge" [attr.data-severity]="f.severity">
+                      {{ f.severity | titlecase }}
+                    </span>
+                  </td>
+                  <td>{{ f.frameworkRef || '—' }}</td>
+                  <td>
+                    <span class="status-badge" [attr.data-status]="f.status">{{ f.status | titlecase }}</span>
+                  </td>
+                  <td>{{ f.createdAt | appDate:'medium' }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ Benchmarks Tab ═══ -->
+      <section *ngIf="!loading && !error && activeTab === 'benchmarks'" class="cc-section">
+        <h2>Cross-Client Benchmarks</h2>
+        <div *ngIf="benchmarks.length === 0" class="empty-state">No benchmark data available.</div>
+
+        <div *ngIf="benchmarks.length > 0" class="benchmark-layout">
+          <table aria-label="Cross-Client Benchmarks table" class="cc-table">
+            <thead>
+              <tr>
+                <th>Client</th>
+                <th>Compliance Maturity</th>
+                <th>Risk Posture</th>
+                <th>Engagement Health</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let b of benchmarks">
+                <td>{{ b.clientName }}</td>
+                <td>
+                  <div class="bar-cell">
+                    <div class="bar-track">
+                      <div class="bar-fill" [style.width.%]="b.complianceMaturity"
+                           [class]="barClass(b.complianceMaturity)"></div>
+                    </div>
+                    <span class="bar-value">{{ b.complianceMaturity }}%</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="bar-cell">
+                    <div class="bar-track">
+                      <div class="bar-fill" [style.width.%]="b.riskPosture"
+                           [class]="barClass(b.riskPosture)"></div>
+                    </div>
+                    <span class="bar-value">{{ b.riskPosture }}%</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="bar-cell">
+                    <div class="bar-track">
+                      <div class="bar-fill" [style.width.%]="b.engagementHealth"
+                           [class]="barClass(b.engagementHealth)"></div>
+                    </div>
+                    <span class="bar-value">{{ b.engagementHealth }}%</span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ═══ Findings Tab ═══ -->
+      <section *ngIf="!loading && !error && activeTab === 'findings'" class="cc-section">
+        <h2>Advisory Findings</h2>
+
+        <!-- New finding form -->
+        <div class="finding-form" *ngIf="selectedClient">
+          <h3>Publish Finding for {{ selectedClient.name }}</h3>
+          <div class="form-row">
+            <grc-form-field label="Title">
+              <input type="text" [(ngModel)]="newFinding.title" class="form-input" placeholder="Finding title…" aria-label="Finding title…" />
+            </grc-form-field>
+            <div class="form-group">
+              <label>Severity</label>
+              <select [(ngModel)]="newFinding.severity" class="form-select">
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+                <option value="critical">Critical</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea [(ngModel)]="newFinding.description" rows="3" class="form-textarea"
+                      placeholder="Describe the finding…" aria-label="Describe the finding…"></textarea>
+          </div>
+          <div class="form-row">
+            <grc-form-field label="Framework Reference">
+              <input type="text" [(ngModel)]="newFinding.frameworkRef" class="form-input"
+                     placeholder="e.g. ISO 27001 A.8.1" aria-label="e.g. ISO 27001 A.8.1" />
+            </grc-form-field>
+            <grc-form-field label="Recommendation">
+              <input type="text" [(ngModel)]="newFinding.recommendation" class="form-input"
+                     placeholder="Recommended action…" aria-label="Recommended action…" />
+            </grc-form-field>
+          </div>
+          <button class="btn-primary" (click)="submitFinding()"
+                  [disabled]="publishingFinding || !newFinding.title.trim() || !newFinding.description.trim() || !newFinding.recommendation.trim()">
+            {{ publishingFinding ? 'Publishing…' : 'Publish Finding' }}
+          </button>
+        </div>
+
+        <div *ngIf="!selectedClient" class="empty-state">
+          Select a client from the Portfolio tab first to manage findings.
+        </div>
+
+        <!-- All findings for selected client -->
+        <div *ngIf="selectedClient && clientFindings.length > 0" class="sub-section">
+          <h3>Existing Findings</h3>
+          <table aria-label="Cross-Client Benchmarks table" class="cc-table">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Severity</th>
+                <th>Framework</th>
+                <th>Recommendation</th>
+                <th>Status</th>
+                <th>Created</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let f of clientFindings">
+                <td>{{ f.title }}</td>
+                <td>
+                  <span class="severity-badge" [attr.data-severity]="f.severity">{{ f.severity | titlecase }}</span>
+                </td>
+                <td>{{ f.frameworkRef || '—' }}</td>
+                <td class="td-recommendation">{{ f.recommendation }}</td>
+                <td>
+                  <span class="status-badge" [attr.data-status]="f.status">{{ f.status | titlecase }}</span>
+                </td>
+                <td>{{ f.createdAt | appDate:'medium' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ═══ Timeline Tab ═══ -->
+      <section *ngIf="!loading && !error && activeTab === 'timeline'" class="cc-section">
+        <h2>Engagement Timeline</h2>
+        <div *ngIf="timelineEvents.length === 0" class="empty-state">No timeline events yet.</div>
+        <div class="timeline" *ngIf="timelineEvents.length > 0">
+          <div *ngFor="let ev of timelineEvents" class="timeline-entry">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <div class="timeline-meta">
+                <span class="timeline-time">{{ ev.timestamp | appDate:'medium' }}</span>
+                <span class="timeline-client" *ngIf="ev.clientName">{{ ev.clientName }}</span>
+                <span class="timeline-type">{{ ev.eventType }}</span>
+              </div>
+              <p class="timeline-desc">{{ ev.description }}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>

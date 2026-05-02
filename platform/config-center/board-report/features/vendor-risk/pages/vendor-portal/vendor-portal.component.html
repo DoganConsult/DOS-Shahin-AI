@@ -1,0 +1,236 @@
+<div class="vp-shell">
+      <!-- Header -->
+      <header class="vp-header">
+        <div class="vp-header-left">
+          <img loading="eager" src="logoiconapphero.png" alt="Shahin GRC" width="36" height="36"
+               style="border-radius:8px" />
+          <h1>Vendor Portal</h1>
+          <span class="vp-vendor-name" *ngIf="profile">{{ profile.name }}</span>
+        </div>
+        <button class="btn-logout" (click)="logout()">Sign Out</button>
+      </header>
+
+      <!-- Tab Navigation -->
+      <nav class="vp-tabs" role="tablist">
+        <button *ngFor="let t of tabs" class="vp-tab"
+                [class.active]="activeTab === t.id"
+                (click)="activeTab = t.id"
+                [attr.aria-selected]="activeTab === t.id"
+                role="tab">
+          {{ t.label }}
+        </button>
+      </nav>
+
+      <!-- Loading -->
+      <div *ngIf="loading" class="vp-loading">
+        <div class="spinner"></div>
+        <p>Loading…</p>
+      </div>
+
+      <!-- Error -->
+      <div *ngIf="error" class="vp-error">
+        <p>{{ error }}</p>
+        <button class="btn-secondary" (click)="loadData()">Retry</button>
+      </div>
+
+      <!-- ═══ Dashboard Tab ═══ -->
+      <section *ngIf="!loading && !error && activeTab === 'dashboard'" class="vp-section">
+        <div class="dashboard-grid" *ngIf="compliance">
+          <div class="stat-card">
+            <span class="stat-label">Compliance Score</span>
+            <span class="stat-value" [class]="scoreClass(compliance.overallScore)">
+              {{ compliance.overallScore }}%
+            </span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Open Questionnaires</span>
+            <span class="stat-value">{{ compliance.openQuestionnaires }}</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Pending Action Items</span>
+            <span class="stat-value">{{ compliance.pendingActionItems }}</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Engagement Score</span>
+            <span class="stat-value" [class]="engagementClass(compliance.engagementScore)">
+              {{ compliance.engagementScore }}/100
+            </span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Risk Tier</span>
+            <span class="stat-value tier" [attr.data-tier]="compliance.riskTier">
+              {{ compliance.riskTier | titlecase }}
+            </span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Framework Coverage</span>
+            <span class="stat-value">{{ compliance.frameworkCoverage }}%</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ Questionnaires Tab ═══ -->
+      <section *ngIf="!loading && !error && activeTab === 'questionnaires'" class="vp-section">
+        <h2>Questionnaires</h2>
+
+        <!-- Questionnaire detail / response form -->
+        <div *ngIf="selectedQuestionnaire" class="q-detail">
+          <button class="btn-back" (click)="selectedQuestionnaire = null">&larr; Back to list</button>
+          <h3>{{ selectedQuestionnaire.title }}</h3>
+          <span class="status-badge" [attr.data-status]="selectedQuestionnaire.status">
+            {{ selectedQuestionnaire.status | titlecase }}
+          </span>
+          <p *ngIf="selectedQuestionnaire.dueDate" class="q-due">
+            Due: {{ selectedQuestionnaire.dueDate | appDate:'medium' }}
+          </p>
+
+          <div class="q-questions" *ngIf="selectedQuestionnaire.questions?.length">
+            <div *ngFor="let q of selectedQuestionnaire.questions; let i = index" class="q-item">
+              <label class="q-label">{{ i + 1 }}. {{ q.text || q.question || q.textEn || q }}</label>
+              <textarea [(ngModel)]="responseMap[i]" rows="3"
+                        placeholder="Enter your response…" aria-label="Enter your response…"
+                        [disabled]="selectedQuestionnaire.status === 'completed'"></textarea>
+            </div>
+          </div>
+
+          <button class="btn-primary" (click)="submitResponses()"
+                  [disabled]="submitting || selectedQuestionnaire.status === 'completed'">
+            {{ submitting ? 'Submitting…' : 'Submit Responses' }}
+          </button>
+        </div>
+
+        <!-- Questionnaire list -->
+        <div *ngIf="!selectedQuestionnaire">
+          <div *ngIf="questionnaires.length === 0" class="empty-state">
+            No questionnaires assigned yet.
+          </div>
+          <table aria-label="Vp Table table" class="vp-table" *ngIf="questionnaires.length > 0">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Status</th>
+                <th>Due Date</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let q of questionnaires">
+                <td>{{ q.title }}</td>
+                <td>
+                  <span class="status-badge" [attr.data-status]="q.status">
+                    {{ q.status | titlecase }}
+                  </span>
+                </td>
+                <td>{{ q.dueDate ? (q.dueDate | appDate:'medium') : '—' }}</td>
+                <td>
+                  <button class="btn-link" (click)="openQuestionnaire(q)">
+                    {{ q.status === 'completed' ? 'View' : 'Respond' }}
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ═══ Action Items Tab ═══ -->
+      <section *ngIf="!loading && !error && activeTab === 'action-items'" class="vp-section">
+        <h2>Action Items</h2>
+        <div *ngIf="actionItems.length === 0" class="empty-state">
+          No action items assigned.
+        </div>
+        <table aria-label="Action Items table" class="vp-table" *ngIf="actionItems.length > 0">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Priority</th>
+              <th>Due Date</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of actionItems">
+              <td>{{ item.title }}</td>
+              <td>
+                <span class="priority-badge" [attr.data-priority]="item.priority">
+                  {{ item.priority | titlecase }}
+                </span>
+              </td>
+              <td>{{ item.dueDate ? (item.dueDate | appDate:'medium') : '—' }}</td>
+              <td>
+                <select [ngModel]="item.status"
+                        (ngModelChange)="updateItemStatus(item, $event)"
+                        [disabled]="item.status === 'completed'">
+                  <option value="open">Open</option>
+                  <option value="in_progress">In Progress</option>
+                  <option value="completed">Completed</option>
+                </select>
+              </td>
+              <td>
+                <span *ngIf="updatingItem === item.actionItemId" class="updating">Saving…</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ═══ Documents Tab ═══ -->
+      <section *ngIf="!loading && !error && activeTab === 'documents'" class="vp-section">
+        <h2>Documents</h2>
+        <div class="doc-upload">
+          <label class="upload-label">
+            <input type="file" (change)="onFileSelected($event)" [disabled]="uploading" />
+            {{ uploading ? 'Uploading…' : 'Upload Document' }}
+          </label>
+        </div>
+        <div *ngIf="documents.length === 0" class="empty-state">
+          No documents uploaded yet.
+        </div>
+        <table aria-label="Documents table" class="vp-table" *ngIf="documents.length > 0">
+          <thead>
+            <tr>
+              <th>File Name</th>
+              <th>Type</th>
+              <th>Size</th>
+              <th>Uploaded</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let doc of documents">
+              <td>{{ doc.fileName }}</td>
+              <td>{{ doc.fileType }}</td>
+              <td>{{ formatSize(doc.fileSize) }}</td>
+              <td>{{ doc.createdAt | appDate:'medium' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ═══ Messages Tab ═══ -->
+      <section *ngIf="!loading && !error && activeTab === 'messages'" class="vp-section">
+        <h2>Messages</h2>
+        <div class="msg-list">
+          <div *ngIf="messages.length === 0" class="empty-state">
+            No messages yet. Start a conversation below.
+          </div>
+          <div *ngFor="let msg of messages" class="msg-bubble"
+               [class.msg-self]="msg.senderRole === 'vendor_contact'"
+               [class.msg-other]="msg.senderRole !== 'vendor_contact'">
+            <div class="msg-meta">
+              <strong>{{ msg.sender }}</strong>
+              <span class="msg-time">{{ msg.createdAt | appDate:'short' }}</span>
+            </div>
+            <p>{{ msg.content }}</p>
+          </div>
+        </div>
+        <div class="msg-compose">
+          <textarea [(ngModel)]="newMessage" rows="2"
+                    placeholder="Type a message…" aria-label="Type a message…"
+                    (keydown.enter)="sendMsg($event)"></textarea>
+          <button class="btn-primary" (click)="sendMsg()" [disabled]="!newMessage.trim() || sending">
+            {{ sending ? 'Sending…' : 'Send' }}
+          </button>
+        </div>
+      </section>
+    </div>

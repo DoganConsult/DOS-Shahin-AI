@@ -1,0 +1,57 @@
+{
+  "serviceCode": "ui-os-service",
+  "version": "0.1.0",
+  "domains": [
+    "ui-os",
+    "platform-dna"
+  ],
+  "dependencies": [
+    "postgres"
+  ],
+  "apiPrefix": "/api/ui-os",
+  "owns": [
+    "dos.ui_user_preferences",
+    "dos.ui_dashboards",
+    "dos.ui_dashboard_widgets",
+    "dos.ui_workspace_states",
+    "dos.ui_data_grid_states",
+    "dos.ui_tenant_branding",
+    "dos.ui_locales",
+    "dos.ui_translations",
+    "dos.ui_tours",
+    "dos.ui_user_tours_completed",
+    "dos.ui_saved_views",
+    "dos.ui_pinned_items",
+    "dos.ui_recent_items",
+    "dos.ui_command_palette_items",
+    "dos.ui_user_shortcuts",
+    "dos.ui_announcements",
+    "dos.ui_user_announcements_read",
+    "dos.ui_saved_filters",
+    "dos.ui_favorites",
+    "dos.ui_quick_actions",
+    "dos.ui_context_menus",
+    "dos.ui_bulk_actions",
+    "dos.ui_layout_templates",
+    "dos.ui_user_layout_overrides",
+    "dos.ui_page_layouts",
+    "dos.ui_page_sections",
+    "dos.ui_section_widgets",
+    "dos.ui_responsive_breakpoints",
+    "dos.ui_layout_versions",
+    "dos.ui_layout_publish_history",
+    "dos.ui_workspace_snapshots"
+  ],
+  "reads": [
+    "dos.dynamic_ui_modules",
+    "dos.dynamic_ui_navigation",
+    "dos.dynamic_ui_routes",
+    "dos.dynamic_ui_widgets",
+    "dos.dynamic_ui_actions",
+    "dos.dynamic_ui_module_status",
+    "dos.dynamic_ui_theme_tokens"
+  ],
+  "supersedes": [
+    "dynamic-ui-service"
+  ]
+}

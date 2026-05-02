@@ -1,0 +1,229 @@
+<div class="board-decisions-page">
+      <header class="page-header">
+        <div>
+          <h1>Board Decision Register</h1>
+          <span class="header-ar">سجل قرارات مجلس الإدارة</span>
+        </div>
+        <div class="header-actions">
+          <select class="filter-select" [(ngModel)]="statusFilter" (ngModelChange)="load()">
+            <option value="">All Statuses / جميع الحالات</option>
+            <option value="draft">Draft</option>
+            <option value="pending_vote">Pending Vote</option>
+            <option value="approved">Approved</option>
+            <option value="rejected">Rejected</option>
+          </select>
+          <select class="filter-select" [(ngModel)]="typeFilter" (ngModelChange)="load()">
+            <option value="">All Types / جميع الأنواع</option>
+            <option value="risk_acceptance">Risk Acceptance</option>
+            <option value="policy_approval">Policy Approval</option>
+            <option value="exception_approval">Exception Approval</option>
+            <option value="strategic">Strategic</option>
+            <option value="remediation">Remediation</option>
+            <option value="vendor">Vendor</option>
+            <option value="general">General</option>
+          </select>
+          <input class="filter-input" type="date" [(ngModel)]="dateFrom"
+                 (change)="load()" />
+          <input class="filter-input" type="date" [(ngModel)]="dateTo"
+                 (change)="load()" />
+          <button class="btn-primary" (click)="showCreate = true">+ New Decision</button>
+        </div>
+      </header>
+
+      <!-- Decision cards -->
+      <div class="decisions-grid">
+        @for (d of decisions(); track d.decisionId) {
+          <div class="decision-card" [class]="'impact-' + (d.riskImpact || 'none')"
+               (click)="viewDetail(d.decisionId)">
+            <div class="card-top">
+              <span class="decision-type">{{ formatType(d.decisionType) }}</span>
+              <span class="decision-status" [class]="'status-' + d.status">{{ d.status }}</span>
+            </div>
+            <h3 class="decision-title">{{ d.titleEn }}</h3>
+            @if (d.titleAr) {
+              <p class="decision-title-ar">{{ d.titleAr }}</p>
+            }
+            <div class="card-meta">
+              <span>{{ d.decisionDate | date:'mediumDate' }}</span>
+              @if (d.committeeName) {
+                <span>{{ d.committeeName }}</span>
+              }
+              @if (d.priority) {
+                <span class="priority-badge" [class]="'priority-' + d.priority">{{ d.priority }}</span>
+              }
+              @if (d.linkedEntityCount) {
+                <span class="entity-count">{{ d.linkedEntityCount }} linked</span>
+              }
+            </div>
+          </div>
+        }
+      </div>
+
+      @if (decisions().length === 0) {
+        <div class="empty-state">
+          <p>No board decisions recorded yet.</p>
+          <p class="rtl">لا توجد قرارات مسجلة حتى الآن.</p>
+        </div>
+      }
+
+      <!-- Detail view modal -->
+      @if (detail()) {
+        <div class="modal-overlay" (click)="detail.set(null)">
+          <div class="detail-modal" (click)="$event.stopPropagation()">
+            <div class="detail-header">
+              <h2>{{ detail()!.titleEn }}</h2>
+              @if (detail()!.titleAr) {
+                <p class="detail-title-ar">{{ detail()!.titleAr }}</p>
+              }
+              <button class="close-btn" (click)="detail.set(null)">X</button>
+            </div>
+
+            <!-- Decision info -->
+            <div class="detail-info">
+              <div class="info-row">
+                <span class="info-label">Type:</span>
+                <span>{{ formatType(detail()!.decisionType) }}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Committee:</span>
+                <span>{{ detail()!.committeeName ?? '--' }}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Date:</span>
+                <span>{{ detail()!.decisionDate | date:'mediumDate' }}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Status:</span>
+                <span class="decision-status" [class]="'status-' + detail()!.status">{{ detail()!.status }}</span>
+              </div>
+              @if (detail()!.rationaleEn) {
+                <div class="info-row full">
+                  <span class="info-label">Rationale:</span>
+                  <p>{{ detail()!.rationaleEn }}</p>
+                </div>
+              }
+            </div>
+
+            <!-- Linked entities grouped by type -->
+            <div class="linked-section">
+              <h4>Linked Entities / الكيانات المرتبطة</h4>
+              @for (group of entityGroups(); track group.type) {
+                <div class="entity-group">
+                  <span class="group-label" [class]="'group-' + group.type">
+                    {{ group.type }} ({{ group.entities.length }})
+                  </span>
+                  @for (ent of group.entities; track ent.entityId) {
+                    <div class="entity-row">
+                      <span>{{ ent.titleEn }}</span>
+                      <span class="ent-status" [class]="'status-' + ent.status">{{ ent.status }}</span>
+                    </div>
+                  }
+                </div>
+              }
+              @if (detail()!.linkedEntities.length === 0) {
+                <p class="no-data">No linked entities.</p>
+              }
+              <div class="link-actions">
+                <input class="form-input" [(ngModel)]="newLinkEntityId" placeholder="Entity ID" />
+                <select class="filter-select" [(ngModel)]="newLinkEntityType">
+                  <option value="risk">Risk</option>
+                  <option value="control">Control</option>
+                  <option value="policy">Policy</option>
+                  <option value="exception">Exception</option>
+                </select>
+                <button class="btn-secondary" (click)="addLink()">Add Link</button>
+              </div>
+            </div>
+
+            <!-- Follow-up actions -->
+            <div class="actions-section">
+              <h4>Follow-up Actions / إجراءات المتابعة</h4>
+              @for (act of detail()!.actions; track act.actionId) {
+                <div class="action-row">
+                  <span class="action-title">{{ act.titleEn }}</span>
+                  <span class="action-assignee">{{ act.assignee }}</span>
+                  <span class="action-due">{{ act.dueDate | date:'mediumDate' }}</span>
+                  <span class="action-status" [class]="'status-' + act.status">{{ act.status }}</span>
+                </div>
+              }
+              @if (detail()!.actions.length === 0) {
+                <p class="no-data">No follow-up actions.</p>
+              }
+              <div class="add-action-row">
+                <input class="form-input" [(ngModel)]="newActionTitle" placeholder="Action title" />
+                <input class="form-input" [(ngModel)]="newActionAssignee" placeholder="Assignee" />
+                <button class="btn-secondary" (click)="addAction()">Add Action</button>
+              </div>
+            </div>
+
+            <!-- Vote record -->
+            <div class="votes-section">
+              <h4>Vote Record / سجل التصويت</h4>
+              @if (detail()!.votes.length > 0) {
+                <div class="vote-summary">
+                  <span class="vote-count approve">{{ voteCount('approve') }} Approve</span>
+                  <span class="vote-count reject">{{ voteCount('reject') }} Reject</span>
+                  <span class="vote-count abstain">{{ voteCount('abstain') }} Abstain</span>
+                </div>
+                @for (v of detail()!.votes; track v.voterName) {
+                  <div class="vote-row">
+                    <span class="voter-name">{{ v.voterName }}</span>
+                    <span class="vote-badge" [class]="'vote-' + v.vote">{{ v.vote }}</span>
+                    @if (v.comment) {
+                      <span class="vote-comment">{{ v.comment }}</span>
+                    }
+                  </div>
+                }
+              } @else {
+                <p class="no-data">No votes recorded.</p>
+              }
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- Create decision modal -->
+      @if (showCreate) {
+        <div class="modal-overlay" (click)="showCreate = false">
+          <div class="modal-content" (click)="$event.stopPropagation()">
+            <h2>New Board Decision / قرار جديد</h2>
+            <grc-form-field label="Title (EN)">
+              <input [(ngModel)]="newDecision.titleEn" class="form-input" />
+            </grc-form-field>
+            <grc-form-field label="Title (AR)">
+              <input [(ngModel)]="newDecision.titleAr" class="form-input" dir="rtl" />
+            </grc-form-field>
+            <div class="form-group">
+              <label>Type</label>
+              <select [(ngModel)]="newDecision.decisionType" class="form-input">
+                <option value="risk_acceptance">Risk Acceptance</option>
+                <option value="policy_approval">Policy Approval</option>
+                <option value="exception_approval">Exception Approval</option>
+                <option value="strategic">Strategic</option>
+                <option value="general">General</option>
+              </select>
+            </div>
+            <grc-form-field label="Committee">
+              <input [(ngModel)]="newDecision.committeeName" class="form-input" />
+            </grc-form-field>
+            <div class="form-group">
+              <label>Priority</label>
+              <select [(ngModel)]="newDecision.priority" class="form-input">
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+                <option value="critical">Critical</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Rationale (EN)</label>
+              <textarea [(ngModel)]="newDecision.rationaleEn" class="form-input" rows="3"></textarea>
+            </div>
+            <div class="modal-actions">
+              <button class="btn-secondary" (click)="showCreate = false">Cancel / إلغاء</button>
+              <button class="btn-primary" (click)="create()">Create / إنشاء</button>
+            </div>
+          </div>
+        </div>
+      }
+    </div>

@@ -1,0 +1,4 @@
+// @death-date Phase 9 | owner: DOS | replacement: platform/dos/ai-os/ai-os-kernel.service.ts
+// Backward-compatibility re-export shim. Canonical source is now platform/dos/ai-os/.
+export { getProcessTable, getKernelStatus, getSchedulerTable, getIpcMessages, getMemoryPartitions, getKernelLog, getKernelHealth, killProcess, rebootAgent, pauseAgent, resumeAgent, adjustAutonomyLevel, injectPriority, killRunningAction, getTokenUsage, setGlobalAutonomyLevel, getPriorityDirective, clearPriorityDirective, getProcessDetail, getAgentDetail, saveKernelSnapshot, listKernelSnapshots, } from '../../ports/platform.port.js';
+//# sourceMappingURL=ai-os-kernel.service.js.map

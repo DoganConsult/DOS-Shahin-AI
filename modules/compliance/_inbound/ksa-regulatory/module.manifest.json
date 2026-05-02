@@ -1,0 +1,59 @@
+{
+  "moduleCode": "ksa-regulatory",
+  "displayName": "KSA Regulatory Intelligence",
+  "ownerTeam": "product-shahin-ai",
+  "productCode": "shahin-ai",
+  "ownership": "module-owned",
+  "version": "1.0.0",
+  "status": "active",
+  "platformDependencies": [
+    "identity",
+    "tenancy",
+    "workflow",
+    "permissions",
+    "audit"
+  ],
+  "seedProviders": [
+    "products/shahin/seeds/ksa-regulatory-seed"
+  ],
+  "tenantDefaults": [
+    "ksa_regulatory_scan_frequency_days"
+  ],
+  "requiredReferenceData": [
+    "ksa_regulatory_authorities",
+    "ksa_regulatory_frameworks"
+  ],
+  "currentSources": [
+    "/home/Dr-Dogan-AGRC-OS/backend/src/modules/ksa-regulatory"
+  ],
+  "targetPath": "modules/ksa-regulatory",
+  "futureService": "compliance-controls-service",
+  "frontendSources": [
+    "/home/Dr-Dogan-AGRC-OS/frontend/src/app/platform-manifests/ksa-regulatory.module.routes.ts"
+  ],
+  "ownedTables": [
+    "ksa_regulatory_readiness_snapshots"
+  ],
+  "referencedTables": [
+    "compliance_frameworks",
+    "regulatory_controls",
+    "evidence_evidences",
+    "public.lookup_ksa_regulatory_authorities",
+    "public.regulatory_frameworks",
+    "public.regulatory_changes"
+  ],
+  "events": {
+    "publishes": [
+      "ksa_regulatory.change_detected",
+      "ksa_regulatory.maturity_scored",
+      "ksa_regulatory.mapping_updated",
+      "ksa_regulatory.obligation_status_updated"
+    ],
+    "subscribes": [
+      "compliance.assessment_completed"
+    ]
+  },
+  "routeBases": [
+    "/api/ksa-regulatory"
+  ]
+}

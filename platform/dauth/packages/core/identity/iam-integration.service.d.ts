@@ -1,0 +1,10 @@
+import type { GenericRow } from '@dos/types/db';
+export declare function listIamConnections(tenantId: string): Promise<GenericRow[]>;
+export declare function getIamConnection(tenantId: string, connectionId: string): Promise<GenericRow | null>;
+export declare function createIamConnection(tenantId: string, data: Record<string, unknown>): Promise<GenericRow | null>;
+export declare function updateIamConnectionStatus(tenantId: string, connectionId: string, isActive: boolean): Promise<GenericRow | null>;
+export declare function listIamIdentities(tenantId: string, connectionId: string): Promise<GenericRow[]>;
+export declare function linkIamIdentity(tenantId: string, connectionId: string, userId: string, externalId: string, externalUsername: string): Promise<GenericRow | null>;
+export declare function listIamAccessReviews(tenantId: string, connectionId: string): Promise<GenericRow[]>;
+export declare function logIamSync(tenantId: string, connectionId: string, status: string, usersProcessed: number, errors?: unknown[]): Promise<void>;
+export declare function getIamSyncHistory(tenantId: string, connectionId: string, limit?: number): Promise<GenericRow[]>;

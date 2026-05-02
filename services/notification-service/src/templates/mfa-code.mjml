@@ -1,0 +1,12 @@
+<mj-text align="{{ textAlign }}" font-size="20px" font-weight="600" padding-bottom="8px">
+  {{ t.title }}
+</mj-text>
+<mj-text align="{{ textAlign }}">
+  {{ t.body }}
+</mj-text>
+<mj-text align="center" font-size="32px" font-weight="700" letter-spacing="6px" padding="16px 0">
+  {{ code }}
+</mj-text>
+<mj-text align="{{ textAlign }}" css-class="muted">
+  {{ t.expiryNote }}
+</mj-text>

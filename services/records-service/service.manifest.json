@@ -1,0 +1,22 @@
+{
+  "serviceCode": "records-service",
+  "displayName": "Records Management Service",
+  "layer": "domain-service",
+  "ownerTeam": "product-shahin-ai",
+  "runtime": "node",
+  "dependsOn": [
+    "auth-service",
+    "tenant-service"
+  ],
+  "modules": [
+    "records"
+  ],
+  "exposes": {
+    "apiBase": "/api/records",
+    "events": [
+      "record.created",
+      "record.archived",
+      "record.disposed"
+    ]
+  }
+}

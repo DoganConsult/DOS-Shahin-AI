@@ -1,0 +1,509 @@
+// ============================================
+// Shahin — Dashboard Widget Data Services
+// Premium Dashboard Overhaul — Task 8
+// Backend endpoints for 7 new widget types
+// ============================================
+
+import { query as _query, safeQuery, tenantSchema } from '../ports/database.port';
+import { gatewayJSON } from '../../ai/services/gateway/ai-gateway.service';
+import { getFirstRow } from '@dos/db';
+
+// ── Exceptions Aging (Task 8.3) ──
+
+export interface AgeBucket {
+  label: string;
+  minDays: number;
+  maxDays: number;
+  count: number;
+}
+
+/**
+ * Bucket exceptions by age into 4 categories.
+ * Pure function — testable without DB.
+ * Requirements: 11.1
+ */
+export function bucketExceptionsByAge(
+  items: { created_at: string }[],
+  now: Date = new Date()
+): AgeBucket[] {
+  const buckets: AgeBucket[] = [
+    { label: '0-30', minDays: 0, maxDays: 30, count: 0 },
+    { label: '31-60', minDays: 31, maxDays: 60, count: 0 },
+    { label: '61-90', minDays: 61, maxDays: 90, count: 0 },
+    { label: '90+', minDays: 91, maxDays: Infinity, count: 0 },
+  ];
+  for (const item of items) {
+    const age = Math.floor((now.getTime() - new Date(item.created_at).getTime()) / 86400000);
+    const bucket = buckets.find(b => age >= b.minDays && age <= b.maxDays);
+    if (bucket) bucket.count++;
+  }
+  return buckets;
+}
+
+export async function getExceptionsAging(tenantId: string): Promise<AgeBucket[]> {
+  const schema = tenantSchema(tenantId);
+  try {
+    const res = await safeQuery(`SELECT created_at FROM "${schema}".exceptions WHERE status = 'open' OR status = 'pending'`);
+    return bucketExceptionsByAge(res.rows);
+  } catch { return bucketExceptionsByAge([]); }
+}
+
+
+// ── Control Drift (Task 8.5) ──
+
+export interface DriftedControl {
+  controlId: string;
+  title: string;
+  baselineStatus: string;
+  currentStatus: string;
+  daysSinceDrift: number;
+}
+
+/**
+ * Detect controls that have drifted from their baseline.
+ * Pure function — testable without DB.
+ * Requirements: 12.1, 12.2
+ */
+export function detectControlDrift(
+  controls: { control_id: string; title: string; status: string; baseline_status?: string; last_status_change?: string }[],
+  now: Date = new Date()
+): DriftedControl[] {
+  return controls
+    .filter(c => c.baseline_status && c.status !== c.baseline_status)
+    .map(c => ({
+      controlId: c.control_id,
+      title: c.title,
+      baselineStatus: c.baseline_status!,
+      currentStatus: c.status,
+      daysSinceDrift: c.last_status_change
+        ? Math.floor((now.getTime() - new Date(c.last_status_change).getTime()) / 86400000)
+        : 0,
+    }));
+}
+
+export async function getControlDrift(tenantId: string): Promise<DriftedControl[]> {
+  const schema = tenantSchema(tenantId);
+  try {
+    const res = await safeQuery(`SELECT control_id, title, status, baseline_status, last_status_change FROM "${schema}".controls WHERE baseline_status IS NOT NULL`);
+    return detectControlDrift(res.rows);
+  } catch { return []; }
+}
+
+// ── Evidence Queue (Task 8.7) ──
+
+export interface EvidenceQueueItem {
+  evidenceId: string;
+  title: string;
+  dueDate: string;
+  isOverdue: boolean;
+  daysUntilDue: number;
+}
+
+/**
+ * Sort evidence queue: overdue first, then by upcoming due date.
+ * Pure function — testable without DB.
+ * Requirements: 13.2
+ */
+export function sortEvidenceQueue(
+  items: { evidence_id: string; title: string; due_date: string; assigned_to?: string }[],
+  now: Date = new Date()
+): EvidenceQueueItem[] {
+  return items
+    .map(item => {
+      const due = new Date(item.due_date);
+      const daysUntilDue = Math.floor((due.getTime() - now.getTime()) / 86400000);
+      return {
+        evidenceId: item.evidence_id,
+        title: item.title,
+        dueDate: item.due_date,
+        isOverdue: daysUntilDue < 0,
+        daysUntilDue,
+      };
+    })
+    .sort((a, b) => {
+      // Overdue first
+      if (a.isOverdue && !b.isOverdue) return -1;
+      if (!a.isOverdue && b.isOverdue) return 1;
+      // Then by days until due (ascending)
+      return a.daysUntilDue - b.daysUntilDue;
+    });
+}
+
+export async function getEvidenceQueue(tenantId: string, userId?: string): Promise<EvidenceQueueItem[]> {
+  const schema = tenantSchema(tenantId);
+  try {
+    // Parameterize userId as $1 to prevent SQL injection. Fragment
+    // template contains only $-placeholders + the quoted-identifier
+    // "${schema}" — all interpolations are static or pre-validated.
+    const whereClause = userId ? 'AND assigned_to = $1' : '';
+    const params = userId ? [userId] : [];
+    const res = await safeQuery(`SELECT evidence_id, title, due_date, assigned_to FROM "${schema}".evidence WHERE status = 'pending' ${whereClause} ORDER BY due_date`, params);
+    return sortEvidenceQueue(res.rows);
+  } catch { return []; }
+}
+
+// ── Audit Pack Status (Task 8.9) ──
+
+export interface AuditPackProgress {
+  assessmentId: string;
+  assessmentName: string;
+  totalItems: number;
+  completedItems: number;
+  progressPercent: number;
+  outstandingItems: string[];
+}
+
+/**
+ * Compute audit pack progress per assessment.
+ * Pure function — testable without DB.
+ * Requirements: 14.1
+ */
+export function computeAuditPackProgress(
+  assessments: { assessment_id: string; name: string; items: { title: string; status: string }[] }[]
+): AuditPackProgress[] {
+  return assessments.map(a => {
+    const total = a.items.length;
+    const completed = a.items.filter(i => i.status === 'completed' || i.status === 'approved').length;
+    const outstanding = a.items.filter(i => i.status !== 'completed' && i.status !== 'approved').map(i => i.title);
+    return {
+      assessmentId: a.assessment_id,
+      assessmentName: a.name,
+      totalItems: total,
+      completedItems: completed,
+      progressPercent: total > 0 ? Math.round((completed / total) * 100) : 0,
+      outstandingItems: outstanding,
+    };
+  });
+}
+
+export async function getAuditPackStatus(tenantId: string): Promise<AuditPackProgress[]> {
+  const schema = tenantSchema(tenantId);
+  try {
+    const res = await safeQuery(`SELECT assessment_id, name FROM "${schema}".assessments WHERE status = 'active'`);
+    const packs: AuditPackProgress[] = [];
+    for (const row of res.rows) {
+      const items = await safeQuery(`SELECT title, status FROM "${schema}".assessment_items WHERE assessment_id = $1`, [row.assessment_id]);
+      packs.push(...computeAuditPackProgress([{ assessment_id: row.assessment_id, name: row.name, items: items.rows }]));
+    }
+    return packs;
+  } catch { return []; }
+}
+
+// ── Risk Prediction (Task 8.11) ──
+
+export interface RiskPrediction {
+  historical: { date: string; score: number }[];
+  projected: { date: string; score: number }[];
+  insufficientData: boolean;
+}
+
+/**
+ * Simple linear regression for risk prediction.
+ * Pure function — testable without DB.
+ * Requirements: 15.1, 15.2
+ */
+export function predictRiskTrend(
+  snapshots: { snapshot_date: string; risk_score: number }[]
+): RiskPrediction {
+  if (snapshots.length < 2) {
+    return {
+      historical: snapshots.map(s => ({ date: s.snapshot_date, score: s.risk_score })),
+      projected: [],
+      insufficientData: true,
+    };
+  }
+
+  const historical = snapshots.map(s => ({ date: s.snapshot_date, score: s.risk_score }));
+
+  // Linear regression
+  const n = snapshots.length;
+  const xs = snapshots.map((_, i) => i);
+  const ys = snapshots.map(s => s.risk_score);
+  const sumX = xs.reduce((a, b) => a + b, 0);
+  const sumY = ys.reduce((a, b) => a + b, 0);
+  const sumXY = xs.reduce((a, x, i) => a + x * ys[i], 0);
+  const sumX2 = xs.reduce((a, x) => a + x * x, 0);
+  const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+  const intercept = (sumY - slope * sumX) / n;
+
+  // Project 30 days (4 weekly points)
+  const lastDate = new Date(snapshots[snapshots.length - 1].snapshot_date);
+  const projected: { date: string; score: number }[] = [];
+  for (let w = 1; w <= 4; w++) {
+    const projDate = new Date(lastDate);
+    projDate.setDate(projDate.getDate() + w * 7);
+    const projScore = Math.max(0, Math.min(100, Math.round((intercept + slope * (n - 1 + w)) * 100) / 100));
+    projected.push({ date: projDate.toISOString().split('T')[0], score: projScore });
+  }
+
+  return { historical, projected, insufficientData: false };
+}
+
+export async function getRiskPrediction(tenantId: string): Promise<RiskPrediction> {
+  const schema = tenantSchema(tenantId);
+  try {
+    const res = await safeQuery(`SELECT snapshot_date, risk_score FROM "${schema}".kpi_snapshots ORDER BY snapshot_date ASC LIMIT 52`);
+    return predictRiskTrend(res.rows);
+  } catch { return { historical: [], projected: [], insufficientData: true }; }
+}
+
+// ── AI Summary (Task 8.13) ──
+
+export interface AISummary {
+  priorities: { en: string; ar: string }[];
+  weeklyChanges: { en: string; ar: string }[];
+  recommendedActions: { en: string; ar: string }[];
+  generatedAt: string;
+}
+
+/**
+ * Build AI summary structure from KPI data.
+ * Pure function — testable without DB.
+ * Requirements: 10.1, 10.4
+ */
+export function buildAISummary(
+  kpis: { compliance_score?: number; risk_score?: number; evidence_coverage?: number; open_risks?: number; open_findings?: number; expired_evidence?: number; untreated_risks?: number }
+): AISummary {
+  const priorities: { en: string; ar: string }[] = [];
+  const weeklyChanges: { en: string; ar: string }[] = [];
+  const actions: { en: string; ar: string }[] = [];
+
+  const cs = kpis.compliance_score ?? 0;
+  const rs = kpis.risk_score ?? 0;
+  const ec = kpis.evidence_coverage ?? 0;
+  const openRisks = kpis.open_risks ?? 0;
+  const expiredEvidence = kpis.expired_evidence ?? 0;
+  const untreatedRisks = kpis.untreated_risks ?? 0;
+
+  if (cs < 70) {
+    priorities.push({ en: 'Compliance score below target (70%)', ar: 'نسبة الامتثال أقل من الهدف (70%)' });
+    actions.push({ en: 'Review and remediate non-compliant controls', ar: 'مراجعة ومعالجة الضوابط غير الممتثلة' });
+  }
+  if (rs > 15) {
+    priorities.push({ en: 'Elevated risk score requires attention', ar: 'درجة المخاطر المرتفعة تتطلب اهتماماً' });
+    actions.push({ en: 'Prioritize high-risk mitigation plans', ar: 'إعطاء الأولوية لخطط تخفيف المخاطر العالية' });
+  }
+  if (ec < 80) {
+    priorities.push({ en: 'Evidence coverage gaps detected', ar: 'تم اكتشاف فجوات في تغطية الأدلة' });
+    actions.push({ en: 'Upload missing evidence for upcoming audit', ar: 'رفع الأدلة المفقودة للتدقيق القادم' });
+  }
+  if (openRisks > 5) {
+    priorities.push({ en: `${openRisks} high-severity risks remain open`, ar: `${openRisks} مخاطر عالية الخطورة لا تزال مفتوحة` });
+    actions.push({ en: 'Escalate unresolved high risks to leadership', ar: 'تصعيد المخاطر العالية غير المحلولة للإدارة' });
+  }
+  if (expiredEvidence > 0) {
+    priorities.push({ en: `${expiredEvidence} evidence items have expired`, ar: `${expiredEvidence} عنصر أدلة منتهي الصلاحية` });
+    actions.push({ en: 'Renew expired evidence to maintain audit readiness', ar: 'تجديد الأدلة المنتهية للحفاظ على جاهزية التدقيق' });
+  }
+  if (untreatedRisks > 3) {
+    actions.push({ en: `${untreatedRisks} risks lack treatment plans — assign owners`, ar: `${untreatedRisks} مخاطر بدون خطط معالجة — عيّن مسؤولين` });
+  }
+
+  weeklyChanges.push({ en: `Compliance: ${cs}%, Risk: ${rs}, Evidence: ${ec}%`, ar: `الامتثال: ${cs}%، المخاطر: ${rs}، الأدلة: ${ec}%` });
+
+  if (priorities.length === 0) {
+    priorities.push({ en: 'All KPIs within acceptable range', ar: 'جميع مؤشرات الأداء ضمن النطاق المقبول' });
+  }
+
+  return {
+    priorities,
+    weeklyChanges,
+    recommendedActions: actions,
+    generatedAt: new Date().toISOString(),
+  };
+}
+
+export async function getIncidentDashboardWidget(tenantId: string): Promise<Record<string, unknown>> {
+  const schema = tenantSchema(tenantId);
+  try {
+    const summary = await safeQuery(`SELECT * FROM "${schema}".v_incident_dashboard_summary`);
+    const nearMiss = await safeQuery(`SELECT COUNT(*)::int AS cnt FROM "${schema}".near_miss_reports WHERE status = 'reported' AND deleted_at IS NULL`);
+    const pirs = await safeQuery(`SELECT COUNT(*)::int AS total, COUNT(*) FILTER (WHERE status IN ('in_progress','scheduled'))::int AS active FROM "${schema}".incident_pir WHERE deleted_at IS NULL`);
+    return { ...getFirstRow(summary), nearMissOpen: getFirstRow(nearMiss)?.cnt || 0, pirTotal: getFirstRow(pirs)?.total || 0, pirActive: getFirstRow(pirs)?.active || 0 };
+  } catch { return { total_incidents: 0, open_count: 0, nearMissOpen: 0, pirTotal: 0, pirActive: 0 }; }
+}
+
+export async function getBcpDashboardWidget(tenantId: string): Promise<Record<string, unknown>> {
+  const schema = tenantSchema(tenantId);
+  try {
+    const summary = await safeQuery(`SELECT * FROM "${schema}".v_bcp_dashboard_summary`);
+    const activations = await safeQuery(`SELECT COUNT(*)::int AS active FROM "${schema}".bcp_activations WHERE status = 'active'`);
+    return { ...getFirstRow(summary), activeActivations: getFirstRow(activations)?.active || 0 };
+  } catch { return { total_plans: 0, approved_count: 0, total_bias: 0, total_exercises: 0, activeActivations: 0 }; }
+}
+
+export async function getVendorDashboardWidget(tenantId: string): Promise<Record<string, unknown>> {
+  const schema = tenantSchema(tenantId);
+  try {
+    const summary = await safeQuery(`SELECT * FROM "${schema}".v_vendor_dashboard_summary`);
+    const fourthParty = await safeQuery(`SELECT COUNT(*)::int AS cnt FROM "${schema}".vendor_fourth_party_risk WHERE monitoring_status = 'active'`);
+    return { ...getFirstRow(summary), fourthPartyCount: getFirstRow(fourthParty)?.cnt || 0 };
+  } catch { return { total_vendors: 0, active_count: 0, high_risk_count: 0, open_sla_breaches: 0, fourthPartyCount: 0 }; }
+}
+
+export async function getTrainingDashboardWidget(tenantId: string): Promise<Record<string, unknown>> {
+  const schema = tenantSchema(tenantId);
+  try {
+    const summary = await safeQuery(`SELECT * FROM "${schema}".v_training_dashboard_summary`);
+    return getFirstRow(summary) || { total_campaigns: 0, active_campaigns: 0, completed_assignments: 0, overdue_assignments: 0, active_certifications: 0 };
+  } catch { return { total_campaigns: 0, active_campaigns: 0, completed_assignments: 0, overdue_assignments: 0, active_certifications: 0 }; }
+}
+
+export async function getAISummary(tenantId: string): Promise<AISummary> {
+  const schema = tenantSchema(tenantId);
+  try {
+    // Fetch comprehensive KPI data for AI analysis
+    const [kpiRes, riskRes, controlRes, incidentRes, evidenceRes] = await Promise.all([
+      safeQuery(`SELECT compliance_score, risk_score, evidence_coverage FROM "${schema}".kpi_snapshots ORDER BY snapshot_date DESC LIMIT 2`),
+      safeQuery(`SELECT COUNT(*) as total, COUNT(*) FILTER (WHERE risk_score >= 12 AND status = 'open') as high_open, COUNT(*) FILTER (WHERE treatment_status IS NULL OR treatment_status = 'none') as untreated FROM "${schema}".risks`),
+      safeQuery(`SELECT COUNT(*) as total, COUNT(*) FILTER (WHERE status = 'implemented') as implemented, COUNT(*) FILTER (WHERE test_status = 'passed') as tested FROM "${schema}".controls`),
+      safeQuery(`SELECT COUNT(*) FILTER (WHERE status = 'open') as open, COUNT(*) FILTER (WHERE severity IN ('critical', 'high') AND status = 'open') as critical_open FROM "${schema}".incidents`),
+      safeQuery(`SELECT COUNT(*) FILTER (WHERE expiry_date < NOW()) as expired, COUNT(*) FILTER (WHERE status = 'pending') as pending FROM "${schema}".evidence`),
+    ]);
+
+    const kpis = getFirstRow(kpiRes) || {};
+    const prevKpis = kpiRes.rows[1] || {};
+    const riskData = getFirstRow(riskRes) || {};
+    const controlData = getFirstRow(controlRes) || {};
+    const incidentData = getFirstRow(incidentRes) || {};
+    const evidenceData = getFirstRow(evidenceRes) || {};
+
+    // Try AI-powered summary first
+    try {
+      const context = {
+        compliance: { current: kpis.compliance_score, previous: prevKpis.compliance_score },
+        risk: { current: kpis.risk_score, previous: prevKpis.risk_score, highOpen: riskData.high_open, untreated: riskData.untreated },
+        controls: { total: controlData.total, implemented: controlData.implemented, tested: controlData.tested },
+        incidents: { open: incidentData.open, criticalOpen: incidentData.critical_open },
+        evidence: { coverage: kpis.evidence_coverage, expired: evidenceData.expired, pending: evidenceData.pending },
+      };
+
+      const aiResult = await gatewayJSON<{ priorities: { en: string; ar: string }[]; weeklyChanges: { en: string; ar: string }[]; recommendedActions: { en: string; ar: string }[] }>({
+        systemPrompt: `You are a GRC analyst for a Saudi Arabian organization. Analyze the KPI data and provide an executive dashboard summary.
+Respond in JSON: { "priorities": [{"en":"...","ar":"..."}], "weeklyChanges": [{"en":"...","ar":"..."}], "recommendedActions": [{"en":"...","ar":"..."}] }
+Keep each item concise (under 80 chars). Provide 2-4 items per category. Focus on actionable insights.`,
+        userMessage: `Current GRC metrics:\n${JSON.stringify(context, null, 2)}`,
+        maxTokens: 800,
+        temperature: 0.2,
+        tenantId,
+      });
+
+      return {
+        priorities: aiResult.priorities || [],
+        weeklyChanges: aiResult.weeklyChanges || [],
+        recommendedActions: aiResult.recommendedActions || [],
+        generatedAt: new Date().toISOString(),
+      };
+    } catch {
+      // Fall back to rule-based summary with enriched data
+      return buildAISummary({ ...kpis, open_risks: Number(riskData.high_open || 0), open_findings: Number(incidentData.open || 0), expired_evidence: Number(evidenceData.expired || 0), untreated_risks: Number(riskData.untreated || 0) });
+    }
+  } catch { return buildAISummary({}); }
+}
+
+// ── Remediation Dashboard Widget ──
+
+export async function getRemediationDashboardWidget(tenantId: string) {
+  const schema = tenantSchema(tenantId);
+  try {
+    const result = await safeQuery(`
+      SELECT
+        COUNT(*)::int AS total_tasks,
+        COUNT(*) FILTER (WHERE status IN ('open','in_progress'))::int AS open_count,
+        COUNT(*) FILTER (WHERE status = 'overdue' OR (due_date < NOW() AND status NOT IN ('completed','closed')))::int AS overdue_count,
+        COUNT(*) FILTER (WHERE status IN ('completed','closed'))::int AS closed_count,
+        ROUND(AVG(EXTRACT(EPOCH FROM (COALESCE(completed_at, NOW()) - created_at)) / 86400)::numeric, 1) AS avg_resolution_days
+      FROM "${schema}".remediation_tasks WHERE deleted_at IS NULL
+    `);
+    return result.rows[0] || { total_tasks: 0, open_count: 0, overdue_count: 0, closed_count: 0, avg_resolution_days: 0 };
+  } catch { return { total_tasks: 0, open_count: 0, overdue_count: 0, closed_count: 0, avg_resolution_days: 0 }; }
+}
+
+// ── Action Items Dashboard Widget ──
+
+export async function getActionDashboardWidget(tenantId: string) {
+  const schema = tenantSchema(tenantId);
+  try {
+    const result = await safeQuery(`
+      SELECT
+        COUNT(*)::int AS total_items,
+        COUNT(*) FILTER (WHERE status IN ('open','in_progress'))::int AS open_count,
+        COUNT(*) FILTER (WHERE due_date < NOW() AND status NOT IN ('completed','closed'))::int AS overdue_count,
+        COUNT(*) FILTER (WHERE status IN ('completed','closed'))::int AS completed_count,
+        ROUND(COUNT(*) FILTER (WHERE status IN ('completed','closed'))::numeric / NULLIF(COUNT(*), 0) * 100, 1) AS completion_rate
+      FROM "${schema}".action_items WHERE deleted_at IS NULL
+    `);
+    return result.rows[0] || { total_items: 0, open_count: 0, overdue_count: 0, completed_count: 0, completion_rate: 0 };
+  } catch { return { total_items: 0, open_count: 0, overdue_count: 0, completed_count: 0, completion_rate: 0 }; }
+}
+
+// ── Workflow Dashboard Widget ──
+
+export async function getWorkflowDashboardWidget(tenantId: string) {
+  const schema = tenantSchema(tenantId);
+  try {
+    const result = await safeQuery(`
+      SELECT
+        COUNT(*)::int AS total_instances,
+        COUNT(*) FILTER (WHERE status = 'running')::int AS active_count,
+        COUNT(*) FILTER (WHERE status = 'pending' AND created_at < NOW() - INTERVAL '48 hours')::int AS stalled_count,
+        COUNT(*) FILTER (WHERE status = 'completed')::int AS completed_count,
+        ROUND(AVG(EXTRACT(EPOCH FROM (COALESCE(completed_at, NOW()) - created_at)) / 3600)::numeric, 1) AS avg_cycle_hours
+      FROM "${schema}".workflow_instances WHERE deleted_at IS NULL
+    `);
+    return result.rows[0] || { total_instances: 0, active_count: 0, stalled_count: 0, completed_count: 0, avg_cycle_hours: 0 };
+  } catch { return { total_instances: 0, active_count: 0, stalled_count: 0, completed_count: 0, avg_cycle_hours: 0 }; }
+}
+
+// ── Asset Dashboard Widget ──
+
+export async function getAssetDashboardWidget(tenantId: string) {
+  const schema = tenantSchema(tenantId);
+  try {
+    const result = await safeQuery(`
+      SELECT
+        COUNT(*)::int AS total_assets,
+        COUNT(*) FILTER (WHERE criticality = 'critical')::int AS critical_count,
+        COUNT(*) FILTER (WHERE criticality = 'high')::int AS high_count,
+        COUNT(*) FILTER (WHERE criticality = 'medium')::int AS medium_count,
+        COUNT(*) FILTER (WHERE criticality = 'low')::int AS low_count
+      FROM "${schema}".assets WHERE deleted_at IS NULL
+    `);
+    return result.rows[0] || { total_assets: 0, critical_count: 0, high_count: 0, medium_count: 0, low_count: 0 };
+  } catch { return { total_assets: 0, critical_count: 0, high_count: 0, medium_count: 0, low_count: 0 }; }
+}
+
+// ── Integrations Dashboard Widget ──
+
+export async function getIntegrationsDashboardWidget(tenantId: string) {
+  const schema = tenantSchema(tenantId);
+  try {
+    const result = await safeQuery(`
+      SELECT
+        COUNT(*)::int AS total_integrations,
+        COUNT(*) FILTER (WHERE status = 'connected')::int AS connected_count,
+        COUNT(*) FILTER (WHERE status = 'error')::int AS failing_count,
+        MAX(last_sync_at) AS last_sync
+      FROM "${schema}".integration_configs WHERE deleted_at IS NULL
+    `);
+    return result.rows[0] || { total_integrations: 0, connected_count: 0, failing_count: 0, last_sync: null };
+  } catch { return { total_integrations: 0, connected_count: 0, failing_count: 0, last_sync: null }; }
+}
+
+// ── Admin Dashboard Widget ──
+
+export async function getAdminDashboardWidget(tenantId: string) {
+  const schema = tenantSchema(tenantId);
+  try {
+    const [users, roles, modules] = await Promise.all([
+      safeQuery(`SELECT COUNT(*)::int AS active_users FROM "${schema}".users WHERE status = 'active'`),
+      safeQuery(`SELECT COUNT(*)::int AS roles_count FROM "${schema}".roles`),
+      safeQuery(`SELECT COUNT(*)::int AS modules_enabled FROM "${schema}".module_activations WHERE active = true`),
+    ]);
+    return {
+      active_users: users.rows[0]?.active_users || 0,
+      roles_count: roles.rows[0]?.roles_count || 0,
+      modules_enabled: modules.rows[0]?.modules_enabled || 0,
+    };
+  } catch { return { active_users: 0, roles_count: 0, modules_enabled: 0 }; }
+}

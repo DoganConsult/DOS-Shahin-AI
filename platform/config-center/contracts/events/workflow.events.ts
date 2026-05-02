@@ -1,0 +1,47 @@
+// Auto-generated from legacy event extraction
+// Source: 39 events
+
+export const WORKFLOW_PUBLISHED_EVENTS = [
+  "workflow.activated",
+  "workflow.approval_completed",
+  "workflow.approval_granted",
+  "workflow.approval_rejected",
+  "workflow.approval_requested",
+  "workflow.approval_required",
+  "workflow.archived",
+  "workflow.automation_executed",
+  "workflow.cancelled",
+  "workflow.chain_completed",
+  "workflow.chain_started",
+  "workflow.completed",
+  "workflow.created",
+  "workflow.deleted",
+  "workflow.escalation_triggered",
+  "workflow.executed",
+  "workflow.failed",
+  "workflow.instance_cancelled",
+  "workflow.instance_completed",
+  "workflow.instance_created",
+  "workflow.paused",
+  "workflow.resumed",
+  "workflow.retried",
+  "workflow.simulation_completed",
+  "workflow.sla_breached",
+  "workflow.sla_recovered",
+  "workflow.sla_warning",
+  "workflow.status_changed",
+  "workflow.status.changed",
+  "workflow.step_completed",
+  "workflow.step_failed",
+  "workflow.step_skipped",
+  "workflow.step_started",
+  "workflow.task_assigned",
+  "workflow.task_completed",
+  "workflow.task_reassigned",
+  "workflow.template_instantiated",
+  "workflow.template_published",
+  "workflow.updated",
+] as const;
+
+export const WORKFLOW_CONSUMED_EVENTS = [
+] as const;

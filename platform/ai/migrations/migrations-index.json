@@ -1,0 +1,61 @@
+{
+  "$schema": "../../dos/manifests/migrations-index.schema.json",
+  "moduleCode": "ai-os",
+  "ownershipModel": "physical",
+  "physicalMoveStatus": "native",
+  "currentRunner": "migration/migration-runner.ts",
+  "currentScanRoots": [
+    "platform/ai/migrations/public",
+    "platform/ai/migrations/tenant"
+  ],
+  "subModules": ["ai", "ai-governance"],
+  "ownedMigrations": {
+    "public": {
+      "schema": "platform_ai",
+      "namespaces": {
+        "ai-governance": [
+          "001_ai_governance_entities_extend_down.sql",
+          "002_copilot_and_performance_tables.sql",
+          "002_copilot_and_performance_tables_down.sql",
+          "125_ai_dynamic_tables.sql",
+          "130_agent_sod_policies.sql",
+          "415_agent_tool_permissions.sql",
+          "500_ai_employees.sql",
+          "501_ai_employees_rls_fix.sql",
+          "502_ai_employees_null_tenant_dedup.sql",
+          "503_ai_employees_nav_seed.sql",
+          "510_copilot_leads.sql",
+          "520_phase1_cutoff_seeds.sql",
+          "521_visitor_lead_dedup_and_sales_nav.sql",
+          "530_seed_agents_a01_a13.sql",
+          "531_seed_a01_tool_perms.sql",
+          "532_grant_ai_temporal_invoke.sql"
+        ]
+      }
+    },
+    "tenant": {
+      "namespaces": {
+        "ai": [
+          "001_ai_engine_initial_schema.sql",
+          "001_ai_engine_initial_schema_down.sql",
+          "001_initial_tables.sql",
+          "027_extracted_from_027_tenant_schema_tables.sql",
+          "028_ai_decision_record_and_observations.sql",
+          "099_extracted_from_099_bootstrap_tenant_domain_tables.sql",
+          "111_ai_model_risk_management_enhancement.sql",
+          "120_ai_agent_registry_versions.sql"
+        ],
+        "ai-governance": [
+          "001_ai_governance_tables.sql",
+          "001_ai_governance_entities_extend.sql",
+          "003_agent_delegations_and_proposed_actions.sql",
+          "027_extracted_from_027_tenant_schema_tables.sql"
+        ]
+      }
+    }
+  },
+  "notes": [
+    "Migrations were physically moved on 2026-04-30 from platform/ai/modules/{ai,ai-governance}/db/{public,tenant}/migrations/ to platform/ai/migrations/{public,tenant}/{ai,ai-governance}/. Sub-module namespacing avoids filename collisions (e.g., 027_extracted_from_027_tenant_schema_tables.sql exists in both ai and ai-governance).",
+    "All ai_* and ai_gov_* tables are owned by the platform_ai schema."
+  ]
+}

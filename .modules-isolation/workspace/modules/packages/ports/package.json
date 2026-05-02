@@ -1,0 +1,43 @@
+{
+  "name": "@dos/ports",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Public port interfaces for the four DOS platform modules (DOS, DAuth, DSOC, DNOC). This package contains ONLY type definitions — no runtime code. Every cross-module interaction goes through a port declared here.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "development": "./src/index.ts",
+      "default": "./dist/index.js"
+    },
+    "./dos": {
+      "types": "./dist/dos.d.ts",
+      "development": "./src/dos.ts",
+      "default": "./dist/dos.js"
+    },
+    "./dauth": {
+      "types": "./dist/dauth.d.ts",
+      "development": "./src/dauth.ts",
+      "default": "./dist/dauth.js"
+    },
+    "./dsoc": {
+      "types": "./dist/dsoc.d.ts",
+      "development": "./src/dsoc.ts",
+      "default": "./dist/dsoc.js"
+    },
+    "./dnoc": {
+      "types": "./dist/dnoc.d.ts",
+      "development": "./src/dnoc.ts",
+      "default": "./dist/dnoc.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "vitest": "^4.1.4"
+  }
+}

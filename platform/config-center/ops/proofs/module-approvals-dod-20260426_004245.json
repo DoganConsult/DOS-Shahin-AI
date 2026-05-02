@@ -1,0 +1,32 @@
+{
+  "module": "approvals",
+  "phase": "Phase 2 / Module 2",
+  "completedAt": "2026-04-25T16:42:46.066917Z",
+  "verdict": "PASS",
+  "tenant": "shahin_visitors",
+  "user": "tenantadmin@shahin-ai.local",
+  "role": "tenant_admin",
+  "issuer": "https://auth.shahin-ai.com/realms/dogan",
+  "endpointCount": 2,
+  "passCount": 2,
+  "failCount": 0,
+  "failingEndpoints": [],
+  "endpoints": [
+    {
+      "name": "approvals",
+      "path": "/api/approvals",
+      "status": 200,
+      "ms": 55,
+      "verdict": "PASS",
+      "sample": "data: list[0]"
+    },
+    {
+      "name": "approvalRequests",
+      "path": "/api/approval-requests",
+      "status": 200,
+      "ms": 51,
+      "verdict": "PASS",
+      "sample": "list[0]"
+    }
+  ]
+}

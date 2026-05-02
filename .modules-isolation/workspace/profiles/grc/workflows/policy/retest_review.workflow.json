@@ -1,0 +1,15 @@
+{
+  "id": "policy.retest_review",
+  "module": "policy",
+  "hook": "retest_review",
+  "version": "1.0.0",
+  "sla_hours": 72,
+  "actor_role_default": "policy.module_lead",
+  "states": ["ready","retesting","passed","failed"],
+  "initial": "ready",
+  "transitions": [{"from":"ready","to":"retesting","on":"start_retest"},{"from":"retesting","to":"passed","on":"pass","actor_role":"policy.approver"},{"from":"retesting","to":"failed","on":"fail","actor_role":"policy.approver"}],
+  "audit_event_prefix": "policy.workflow.retest_review",
+  "notification_targets": ["policy.module_lead", "policy.approver"],
+  "evidence_required_on": ["passed","published"],
+  "escalation": { "on": "sla_breach", "to": "policy.executive_owner", "after_hours": 144 }
+}

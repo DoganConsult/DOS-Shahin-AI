@@ -1,0 +1,23 @@
+{
+  "serviceCode": "executive-intelligence-service",
+  "displayName": "Executive Intelligence Service",
+  "layer": "domain-service",
+  "ownerTeam": "product-shahin-ai",
+  "runtime": "node",
+  "dependsOn": [
+    "auth-service",
+    "tenant-service",
+    "analytics-service"
+  ],
+  "modules": [
+    "executive",
+    "operating-cockpit"
+  ],
+  "exposes": {
+    "apiBase": "/api/executive",
+    "events": [
+      "executive.briefing.generated",
+      "cockpit.alert.triggered"
+    ]
+  }
+}

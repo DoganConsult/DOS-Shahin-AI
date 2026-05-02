@@ -1,0 +1,241 @@
+{
+  "$schema": "../../dos/manifests/migrations-index.schema.json",
+  "moduleCode": "dauth",
+  "ownershipModel": "declared",
+  "physicalMoveStatus": "completed-in-dauth-session-2",
+  "currentRunner": "migration/migration-runner.ts",
+  "currentScanRoots": [
+    "platform/dauth/migrations/public",
+    "platform/dauth/migrations/tenant"
+  ],
+  "ownedMigrations": {
+    "public": {
+      "schema": "public + dos",
+      "files": [
+        {
+          "filename": "001_auth_tables.sql",
+          "purpose": "Core auth tables (sessions, tokens, actors, access_profiles, roles, permissions, delegations, sod_rules)",
+          "currentPath": "platform/dauth/migrations/public/001_auth_tables.sql",
+          "down": "001_auth_tables_down.sql"
+        },
+        {
+          "filename": "002_expand_authz_decision_log.sql",
+          "purpose": "Expand authz_decision_log columns",
+          "currentPath": "platform/dauth/migrations/public/002_expand_authz_decision_log.sql",
+          "down": "002_expand_authz_decision_log_down.sql"
+        },
+        {
+          "filename": "002_repair_stuck_sessions.sql",
+          "purpose": "Idempotent one-shot data repair: heals sessions with answers but progress=0, fixes invalid completed status, populates per-stage progress in onb.session_stages, queues missing provisioning jobs. Rewritten 2026-04-25 with current-schema column refs (job_status, requested_by_user_id, onb.session_stages).",
+          "currentPath": "platform/dauth/migrations/public/002_repair_stuck_sessions.sql",
+          "down": "002_repair_stuck_sessions_down.sql"
+        },
+        {
+          "filename": "002_user_role_assignments.sql",
+          "purpose": "User role assignments",
+          "currentPath": "platform/dauth/migrations/public/002_user_role_assignments.sql",
+          "down": "002_user_role_assignments_down.sql"
+        },
+        {
+          "filename": "003_refresh_token_families.sql",
+          "purpose": "Refresh token family rotation",
+          "currentPath": "platform/dauth/migrations/public/003_refresh_token_families.sql",
+          "down": "003_refresh_token_families_down.sql"
+        },
+        {
+          "filename": "004_dos_dauth_platform_layer.sql",
+          "purpose": "DAuth platform layer tables under dos schema",
+          "currentPath": "platform/dauth/migrations/public/004_dos_dauth_platform_layer.sql",
+          "down": "004_dos_dauth_platform_layer_down.sql"
+        },
+        {
+          "filename": "004_jwt_signing_keys.sql",
+          "purpose": "JWT signing key management",
+          "currentPath": "platform/dauth/migrations/public/004_jwt_signing_keys.sql",
+          "down": "004_jwt_signing_keys_down.sql"
+        },
+        {
+          "filename": "005_scim_api_tokens.sql",
+          "purpose": "SCIM provisioning API tokens",
+          "currentPath": "platform/dauth/migrations/public/005_scim_api_tokens.sql",
+          "down": "005_scim_api_tokens_down.sql"
+        },
+        {
+          "filename": "006_hash_email_verification_tokens.sql",
+          "purpose": "Hash email verification tokens",
+          "currentPath": "platform/dauth/migrations/public/006_hash_email_verification_tokens.sql",
+          "down": "006_hash_email_verification_tokens_down.sql"
+        },
+        {
+          "filename": "007_fix_schema_drift.sql",
+          "purpose": "Schema drift fixes (token_blacklist, sessions)",
+          "currentPath": "platform/dauth/migrations/public/007_fix_schema_drift.sql",
+          "down": null
+        },
+        {
+          "filename": "008_mfa_enforcement.sql",
+          "purpose": "MFA enforcement deadline column",
+          "currentPath": "platform/dauth/migrations/public/008_mfa_enforcement.sql",
+          "down": "008_mfa_enforcement_down.sql"
+        },
+        {
+          "filename": "009_dauth_missing_tables.sql",
+          "purpose": "10 missing tables: invitations, security_events, active_sessions, authz_decision_log, decision_authorities, authority_scope_bindings, delegation_chains, delegation_policies, user_availability, user_competencies",
+          "currentPath": "platform/dauth/migrations/public/009_dauth_missing_tables.sql",
+          "down": "009_dauth_missing_tables_down.sql"
+        },
+        {
+          "filename": "010_csrf_security_tables.sql",
+          "purpose": "CSRF protection tables",
+          "currentPath": "platform/dauth/migrations/public/010_csrf_security_tables.sql",
+          "down": null
+        },
+        {
+          "filename": "011_dauth_enterprise_ledger.sql",
+          "purpose": "Enterprise authorization ledger",
+          "currentPath": "platform/dauth/migrations/public/011_dauth_enterprise_ledger.sql",
+          "down": "011_dauth_enterprise_ledger_down.sql"
+        },
+        {
+          "filename": "059_iam_identities.sql",
+          "purpose": "IAM identity table (federated identities)",
+          "currentPath": "platform/dauth/migrations/public/059_iam_identities.sql",
+          "down": "059_iam_identities_down.sql"
+        },
+        {
+          "filename": "059_iam_identities_migration_root_variant.sql",
+          "purpose": "Variant for migration-root deployments",
+          "currentPath": "platform/dauth/migrations/public/059_iam_identities_migration_root_variant.sql",
+          "down": null
+        },
+        {
+          "filename": "131_sod_rules.sql",
+          "purpose": "SoD rules",
+          "currentPath": "platform/dauth/migrations/public/131_sod_rules.sql",
+          "down": null
+        },
+        {
+          "filename": "132_sod_waivers.sql",
+          "purpose": "SoD waivers",
+          "currentPath": "platform/dauth/migrations/public/132_sod_waivers.sql",
+          "down": null
+        },
+        {
+          "filename": "133_sod_tenant_dogan_reconcile.sql",
+          "purpose": "SoD reconciliation across tenants",
+          "currentPath": "platform/dauth/migrations/public/133_sod_tenant_dogan_reconcile.sql",
+          "down": null
+        },
+        {
+          "filename": "20260418_0001_users_email_ci_uk.sql",
+          "purpose": "Users email case-insensitive unique key",
+          "currentPath": "platform/dauth/migrations/public/20260418_0001_users_email_ci_uk.sql",
+          "down": "20260418_0001_users_email_ci_uk_down.sql"
+        },
+        {
+          "filename": "20260418_0004_refresh_tokens.sql",
+          "purpose": "Refresh tokens table refinement",
+          "currentPath": "platform/dauth/migrations/public/20260418_0004_refresh_tokens.sql",
+          "down": "20260418_0004_refresh_tokens_down.sql"
+        },
+        {
+          "filename": "20260418_0005_users_email_verified_index.sql",
+          "purpose": "Index on users.email_verified",
+          "currentPath": "platform/dauth/migrations/public/20260418_0005_users_email_verified_index.sql",
+          "down": "20260418_0005_users_email_verified_index_down.sql"
+        },
+        {
+          "filename": "20260418_0006_email_verification_tokens_jti.sql",
+          "purpose": "JTI column for email verification tokens",
+          "currentPath": "platform/dauth/migrations/public/20260418_0006_email_verification_tokens_jti.sql",
+          "down": "20260418_0006_email_verification_tokens_jti_down.sql"
+        },
+        {
+          "filename": "20260419_0001_m2_team_role_schema_align.sql",
+          "purpose": "M2 team-role schema alignment",
+          "currentPath": "platform/dauth/migrations/public/20260419_0001_m2_team_role_schema_align.sql",
+          "down": "20260419_0001_m2_team_role_schema_align_down.sql"
+        },
+        {
+          "filename": "20260422_0002_keycloak_bootstrap_align.sql",
+          "purpose": "Keycloak bootstrap alignment",
+          "currentPath": "platform/dauth/migrations/public/20260422_0002_keycloak_bootstrap_align.sql",
+          "down": "20260422_0002_keycloak_bootstrap_align_down.sql"
+        },
+        {
+          "filename": "20260422_0005_create_platform_dauth_schema.sql",
+          "purpose": "Create platform_dauth schema + views layer over existing dos.* / public.* tables (G8 Phase 1 \u2014 non-destructive namespace isolation)",
+          "currentPath": "platform/dauth/migrations/public/20260422_0005_create_platform_dauth_schema.sql",
+          "down": "20260422_0005_create_platform_dauth_schema_down.sql"
+        },
+        {
+          "filename": "20260423_0001_phase2b_cutover_to_platform_dauth.sql",
+          "purpose": "G8 Phase 2b \u2014 physical cutover: ALTER TABLE SET SCHEMA for all 35 DAuth-owned tables into platform_dauth + reverse compat views in dos.* / public.* for external consumers",
+          "currentPath": "platform/dauth/migrations/public/20260423_0001_phase2b_cutover_to_platform_dauth.sql",
+          "down": "20260423_0001_phase2b_cutover_to_platform_dauth_down.sql"
+        },
+        {
+          "filename": "20260425_0001_tenants_status_widen.sql",
+          "purpose": "Widen public.tenants.status CHECK to permit lifecycle states the application writes (provisioning, deleted) \u2014 fixes onboarding completion + rollback paths that were throwing on constraint violation.",
+          "currentPath": "platform/dauth/migrations/public/20260425_0001_tenants_status_widen.sql",
+          "down": "20260425_0001_tenants_status_widen_down.sql"
+        },
+        {
+          "filename": "20260425_0002_register_seed_question_bank.sql",
+          "purpose": "Reconcile question_bank \u2194 register-tenant-user.ts seed drift: add the 8 anchor-tier organization_identity questions (org.legal_name, org.company_name, org.arabic_name, org.industry, org.country, org.org_type, org.employee_band, org.owner_title) the registration seed writes. Without them the JOIN to onboarding_answers misses and stage progress can never advance.",
+          "currentPath": "platform/dauth/migrations/public/20260425_0002_register_seed_question_bank.sql",
+          "down": "20260425_0002_register_seed_question_bank_down.sql"
+        },
+        {
+          "filename": "20260425_0003_onboarding_sessions_drop_dead_columns.sql",
+          "purpose": "Drop 7 duplicate columns on public.onboarding_sessions that were never written or read by any active code path (session_status, metadata, current_stage, last_activity_at, user_id, session_code, overall_readiness_score). Each had a canonical equivalent already populated for all 46 live rows. Code references in legacy modules migrated to canonical names in the same commit.",
+          "currentPath": "platform/dauth/migrations/public/20260425_0003_onboarding_sessions_drop_dead_columns.sql",
+          "down": "20260425_0003_onboarding_sessions_drop_dead_columns_down.sql"
+        },
+        {
+          "filename": "20260425_0004_onboarding_sessions_status_check.sql",
+          "purpose": "Add CHECK constraint onboarding_sessions_status_check covering 16 user-driven FSM states from workflows/onboarding-lifecycle.ts plus reconciler-driven abandoned. Pre-checks live data, idempotent, FSM type union extended to include abandoned.",
+          "currentPath": "platform/dauth/migrations/public/20260425_0004_onboarding_sessions_status_check.sql",
+          "down": "20260425_0004_onboarding_sessions_status_check_down.sql"
+        },
+        {
+          "filename": "20260425_0005_tenants_id_schema_guards.sql",
+          "purpose": "Add DB-level guards on public.tenants: tenants_id_format_check (mirrors @dos/db TENANT_ID_REGEX) + tenants_schema_name_canonical_check (forces schema_name to match tenantSchema(tenant_id) derivation). Also drops the 7 empty hyphenated-UUID legacy orphan schemas left over from before tenantSchema() was fixed to strip hyphens. 49 populated orphans (155 tables) flagged but left for operational cleanup.",
+          "currentPath": "platform/dauth/migrations/public/20260425_0005_tenants_id_schema_guards.sql",
+          "down": "20260425_0005_tenants_id_schema_guards_down.sql"
+        }
+      ]
+    },
+    "tenant": {
+      "schema": "per-tenant",
+      "files": [
+        {
+          "filename": "030_authorization_redesign_tenant.sql",
+          "purpose": "Tenant-scoped authorization redesign",
+          "currentPath": "platform/dauth/migrations/tenant/030_authorization_redesign_tenant.sql",
+          "down": "030_authorization_redesign_tenant_down.sql"
+        },
+        {
+          "filename": "163_enterprise_authorization_tables.sql",
+          "purpose": "Enterprise authorization tables",
+          "currentPath": "platform/dauth/migrations/tenant/163_enterprise_authorization_tables.sql",
+          "down": "163_enterprise_authorization_tables_down.sql"
+        },
+        {
+          "filename": "412_role_permission_map.sql",
+          "purpose": "Tenant role-permission mapping",
+          "currentPath": "platform/dauth/migrations/tenant/412_role_permission_map.sql",
+          "down": null
+        }
+      ]
+    }
+  },
+  "totals": {
+    "publicMigrations": 32,
+    "tenantMigrations": 3,
+    "withDownMigrations": 26,
+    "withoutDownMigrations": 6
+  },
+  "verifiedAt": "2026-04-25",
+  "verifiedBy": "R7 \u2014 tenants id/schema_name DB guards + empty-orphan cleanup"
+}

@@ -1,0 +1,18 @@
+{
+  "foundation.title": "Foundation",
+  "foundation.dashboard": "Foundation Dashboard",
+  "foundation.organizations": "Organizations",
+  "foundation.departments": "Departments",
+  "foundation.teams": "Teams",
+  "foundation.positions": "Positions",
+  "foundation.roles": "Governance Roles",
+  "foundation.delegations": "Delegations",
+  "foundation.diagnostics": "Diagnostics",
+  "foundation.admin": "Foundation Admin",
+  "foundation.empty.title": "No organizational structure",
+  "foundation.empty.description": "Set up your organizational hierarchy to enable governance and role assignments.",
+  "foundation.loading": "Loading foundation data...",
+  "foundation.error.title": "Failed to load foundation data",
+  "foundation.error.retry": "Retry",
+  "foundation.create": "Create Organization"
+}

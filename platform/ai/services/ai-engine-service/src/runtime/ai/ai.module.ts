@@ -1,0 +1,94 @@
+import type { ModuleManifest } from '@dos/types';
+import { registerModule } from '@dos/module-sdk';
+import { AI_PERMISSIONS, AI_ROLES, AI_ACTIONS } from './security/ai.security';
+import { AI_APPROVAL_MATRIX } from './security/ai.approval-matrix';
+
+export const AI_MANIFEST: ModuleManifest = {
+  code: 'ai',
+  version: '2.0.0',
+  aliases: ['agrc'],
+  nameEn: 'AI Engine',
+  nameAr: 'محرك الذكاء الاصطناعي',
+  descriptionEn: 'AI agents, budget controls, kill switches, and model configuration for GRC automation.',
+  descriptionAr: 'وكلاء الذكاء الاصطناعي وضوابط الميزانية ومفاتيح الإيقاف وتكوين النماذج لأتمتة الحوكمة والمخاطر والامتثال.',
+  tier: 'platform',
+  category: 'platform',
+  routeBase: '/api/ai',
+  eventNamespace: 'ai',
+  tablePrefix: 'ai_',
+  ownedTables: [
+    'ai_agents', 'ai_agent_configs', 'ai_budgets', 'ai_execution_log',
+    'ai_kill_switches', 'ai_boundaries', 'ai_autonomy_levels',
+    'ai_notes', 'ai_drafts', 'ai_interventions', 'ai_model_configs',
+    'ai_prompt_templates', 'ai_context_sources',
+    'agent_model_config', 'prompt_injection_log',
+    'agent_delegations', 'agent_governance_audit',
+    'hitl_states', 'guard_decision_log',
+    'personal_agent_assignments',
+    'agent_activity_log', 'agent_cycle_summaries',
+    'agent_handoffs', 'agent_discoveries',
+    'agent_tool_permissions', 'hitl_gates',
+    'code_search_engine_registry', 'code_search_indexed_surface',
+    'copilot_sessions', 'copilot_messages', 'agent_performance_log',
+    'copilot_proposed_actions',
+    // AI model lifecycle tables — previously unclaimed (W1.4). Created in:
+    // ops/migrations/tenant/099_bootstrap_tenant_domain_tables.sql (ai_model_registry)
+    // ops/migrations/tenant/111_ai_model_risk_management_enhancement.sql (rest).
+    'ai_model_registry',
+    'ai_system_registry', 'ai_model_risk_scores',
+    'ai_model_lifecycle', 'ai_model_risk_assessments',
+  ],
+  sharedTables: [],
+  referencedTables: ['audit_trail', 'teams', 'workflows'],
+  aggregateRoots: ['ai_agents', 'ai_agent_configs', 'ai_execution_log'],
+  publishedEvents: [
+    'ai.agent.started', 'ai.agent.completed', 'ai.agent.failed',
+    'ai.proposal.created', 'ai.proposal.approved', 'ai.proposal.rejected',
+    'ai.delegation.granted', 'ai.delegation.revoked', 'ai.delegation.action_started', 'ai.delegation.action_executed',
+    'ai.copilot.action', 'ai.copilot.suggestion',
+    'ai.circuit_breaker.opened', 'ai.circuit_breaker.closed',
+    'ai.drift.detected', 'ai.cost.threshold_exceeded',
+    'ai.kill_switch.activated', 'ai.autonomy.level_changed',
+    'ai.code_search.queried', 'ai.code_search.engine_health_checked',
+    'ai.code_search.engine_registered', 'ai.code_search.engine_status_changed',
+    'ai.code_search.surface_indexed',
+  ],
+  consumedEvents: [
+    'risk.record.created', 'risk.record.updated',
+    'compliance.assessment.completed', 'compliance.gap.detected',
+    'policy.document.approved', 'audit.finding.created',
+    'workflow.status.changed', 'governance.health.updated',
+  ],
+  hardDeps: [],
+  softDeps: ['foundation', 'workflow'],
+  navId: 'ai',
+  navChildCount: 8,
+  workflowTemplateCode: 'ai_agent_deployment',
+  workflowSlaHours: 72,
+  automationLevel: 'semi',
+  agentBinding: 'A-AI',
+  aiCapabilities: [],
+  aiEnabled: true,
+  featureFlags: ['ai.copilot', 'ai.agents', 'ai.autonomous'],
+  installable: true,
+  provisioningOrder: 7,
+  licensingTier: 'professional',
+  visibility: 'internal',
+  adminSurfaces: ['agent-registry', 'ai-budgets', 'kill-switches', 'model-config', 'prompt-templates', 'code-search-admin'],
+
+  securityPermissions: AI_PERMISSIONS,
+  securityRoles: AI_ROLES,
+  securityActions: AI_ACTIONS,
+  approvalRules: AI_APPROVAL_MATRIX,
+  ownershipRules: [
+    { entityType: 'ai_agents', ownerField: 'created_by', reviewerField: null, approverField: null, assigneeField: null, orgScopeField: 'org_id', defaultOwnerRole: 'ai.module_lead', canDelegate: true, delegateRoles: ['ai.operator',], canReassign: true, reassignRoles: ['ai.module_lead', 'ai.executive_owner'], requiresApproval: false, creatorRights: 'full', externalVisible: false, rowLevelAccess: 'org' },
+    { entityType: 'ai_agent_configs', ownerField: 'created_by', reviewerField: 'reviewer_id', approverField: 'approver_id', assigneeField: null, orgScopeField: 'org_id', defaultOwnerRole: 'ai.module_lead', canDelegate: true, delegateRoles: ['ai.operator'], canReassign: true, reassignRoles: ['ai.module_lead', 'ai.executive_owner'], requiresApproval: true, creatorRights: 'full', externalVisible: false, rowLevelAccess: 'org' },
+  ],
+  sodRules: [
+    { ruleCode: 'ai.sod.deployer_auditor', descriptionEn: 'Agent deployer cannot audit their own deployment', descriptionAr: 'لا يمكن لناشر الوكيل تدقيق نشره', conflictingRoles: ['ai.operator', 'ai.auditor',], conflictingActions: ['ai.agent.deploy', 'ai.agent.audit'], conflictingTransitions: [], severity: 'high', enforcement: 'block', temporaryWaiverAllowed: false, waiverMaxDays: null, compensatingControls: ['independent_review'], overrideAuthority: ['ai.executive_owner'], auditObligations: ['log_sod_violation'] },
+    { ruleCode: 'ai.sod.config_deployer', descriptionEn: 'Agent configuration author cannot deploy their own config to production', descriptionAr: 'لا يمكن لمؤلف تكوين الوكيل نشر تكوينه في الإنتاج', conflictingRoles: [], conflictingActions: ['ai.config.author', 'ai.config.deploy'], conflictingTransitions: ['staging->production'], severity: 'critical', enforcement: 'block', temporaryWaiverAllowed: false, waiverMaxDays: null, compensatingControls: ['independent_review'], overrideAuthority: ['ai.executive_owner'], auditObligations: ['log_sod_violation'] },
+  ],
+    mcpServiceEntrypoint: 'modules/ai/services/ai-agent.service'
+};
+
+registerModule(AI_MANIFEST);

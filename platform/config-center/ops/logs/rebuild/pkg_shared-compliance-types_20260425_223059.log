@@ -1,0 +1,4 @@
+
+> @shahin/shared-compliance-types@1.0.0 build /root/DOS-AIO/packages/shared-compliance-types
+> tsc -p tsconfig.build.json
+

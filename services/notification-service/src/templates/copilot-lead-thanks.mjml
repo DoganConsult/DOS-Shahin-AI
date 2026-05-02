@@ -1,0 +1,25 @@
+<mj-text align="{{ textAlign }}" font-size="13px" font-weight="600" color="#1d4ed8" letter-spacing="1px" text-transform="uppercase" padding-bottom="4px">
+  {{ t.subject }}
+</mj-text>
+<mj-text align="{{ textAlign }}" font-size="20px" font-weight="700" color="#0f172a" padding-bottom="8px">
+  {{ t.title }}
+</mj-text>
+<mj-text align="{{ textAlign }}">
+  {{ t.body }}
+</mj-text>
+<mj-table padding="14px 0" font-size="13px">
+  <tr style="background-color:#eff6ff;border:1px solid #bfdbfe;">
+    <td style="padding:14px 16px;">
+      <div style="color:#1e40af;font-weight:600;padding-bottom:4px">{{ t.intentLabel }}</div>
+      <div style="color:#374151;padding-bottom:8px">{{ intentLabel }}</div>
+      <div style="color:#1e40af;font-weight:600;padding-bottom:4px">{{ t.expectLabel }}</div>
+      <div style="color:#374151">{{ t.expectText }}</div>
+    </td>
+  </tr>
+</mj-table>
+<mj-button href="{{ ctaUrl }}" align="{{ textAlign }}" background-color="#1e40af" padding-top="20px">
+  {{ t.cta }}
+</mj-button>
+<mj-text align="{{ textAlign }}" css-class="muted" padding-top="12px">
+  {{ t.legalLine }}
+</mj-text>

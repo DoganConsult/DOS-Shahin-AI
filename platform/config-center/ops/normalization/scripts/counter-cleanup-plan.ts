@@ -1,0 +1,203 @@
+#!/usr/bin/env tsx
+/**
+ * Denormalized counter cleanup planner (Phase 5).
+ *
+ * Scans catalog.yml for `denorm-counter:*` smells (integer columns whose
+ * name ends in `_count`) and proposes a policy per counter:
+ *
+ *   DROP     — replace reads with COUNT(*) on demand (cheapest, safest;
+ *              only viable if read volume is low or a view covers it).
+ *   TRIGGER  — maintain counter via AFTER INSERT/DELETE trigger on the
+ *              inferred child table. Fast reads, real-time freshness,
+ *              extra write cost + trigger-failure blast radius.
+ *   NIGHTLY  — tolerate in-flight drift, reconcile in a scheduled job.
+ *              Appropriate for dashboards / reporting counters where a
+ *              few hours of staleness is acceptable.
+ *
+ * Child-table inference: derive stem from `<stem>_count` (e.g.
+ * "discovery" for "discovery_count"), pluralize, and look for a table in
+ * the catalog that contains an `<owner_table_stem>_id` FK-shaped column.
+ *
+ * Does NOT touch the database. Produces:
+ *   ops/normalization/proposals/counter-cleanup/decisions.md
+ *   ops/normalization/proposals/counter-cleanup/<table>-<column>.sql
+ *     — trigger + view + backfill scaffold; operator picks which to apply
+ *
+ * Usage:
+ *   tsx ops/normalization/scripts/counter-cleanup-plan.ts
+ */
+
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs';
+import { join } from 'path';
+
+const REPO_ROOT = process.cwd();
+const CATALOG_PATH = join(REPO_ROOT, 'ops/normalization/catalog.yml');
+const OUT_DIR = join(REPO_ROOT, 'ops/normalization/proposals/counter-cleanup');
+
+if (!existsSync(CATALOG_PATH)) {
+  console.error('catalog.yml not found. Run catalog-build.ts first.');
+  process.exit(2);
+}
+
+interface Counter { owner: string; column: string; layer: string }
+interface CatalogLite {
+  tables: Map<string, { layer: string; columns: string[] }>;
+}
+
+function loadCatalog(): { counters: Counter[]; catalog: CatalogLite } {
+  const text = readFileSync(CATALOG_PATH, 'utf-8');
+  const counters: Counter[] = [];
+  const tables = new Map<string, { layer: string; columns: string[] }>();
+
+  let curName = '';
+  let curLayer = 'unknown';
+  let mode: 'columns' | 'smells' | null = null;
+  for (const line of text.split('\n')) {
+    const nm = line.match(/^  - name:\s*(.+)$/);
+    if (nm) {
+      curName = nm[1].trim();
+      curLayer = 'unknown';
+      mode = null;
+      tables.set(curName, { layer: curLayer, columns: [] });
+      continue;
+    }
+    const lm = line.match(/^    layer:\s*(\S+)/);
+    if (lm) {
+      curLayer = lm[1];
+      const t = tables.get(curName); if (t) t.layer = curLayer;
+      continue;
+    }
+    if (line === '    columns:') { mode = 'columns'; continue; }
+    if (line === '    smells:') { mode = 'smells'; continue; }
+    if (line.startsWith('    constraints:') || line.startsWith('    sources:') || line.startsWith('    alter_sites:') || line.startsWith('    monolith_ref:')) {
+      mode = null; continue;
+    }
+    if (mode === 'columns') {
+      const cm = line.match(/^      - \{ name:\s*([^,]+),/);
+      if (cm) tables.get(curName)?.columns.push(cm[1].trim());
+    } else if (mode === 'smells') {
+      const sm = line.match(/^      - denorm-counter:(.+)$/);
+      if (sm) counters.push({ owner: curName, column: sm[1].trim(), layer: curLayer });
+    }
+  }
+  return { counters, catalog: { tables } };
+}
+
+function singularize(s: string): string {
+  if (s.endsWith('ies')) return `${s.slice(0, -3)}y`;
+  if (s.endsWith('ses')) return s.slice(0, -2);
+  if (s.endsWith('s')) return s.slice(0, -1);
+  return s;
+}
+
+function inferChild(counter: Counter, catalog: CatalogLite): { table: string | null; fkColumn: string | null; confidence: 'high' | 'medium' | 'low' } {
+  const stem = counter.column.replace(/_count$/, '');
+  const ownerStem = singularize(counter.owner);
+  const expectedFk = `${ownerStem}_id`;
+  const candidates = [stem, `${stem}s`, `${counter.owner}_${stem}`, `${counter.owner}_${stem}s`];
+
+  for (const c of candidates) {
+    const t = catalog.tables.get(c);
+    if (!t) continue;
+    if (t.columns.includes(expectedFk)) return { table: c, fkColumn: expectedFk, confidence: 'high' };
+  }
+  // medium: any table with expectedFk
+  for (const [name, t] of catalog.tables) {
+    if (t.columns.includes(expectedFk) && name.includes(stem)) return { table: name, fkColumn: expectedFk, confidence: 'medium' };
+  }
+  return { table: null, fkColumn: null, confidence: 'low' };
+}
+
+function schemaQualifier(layer: string): string {
+  return layer === 'tenant' ? '__TENANT_SCHEMA__' : 'public';
+}
+
+function scaffold(counter: Counter, child: ReturnType<typeof inferChild>): string {
+  const q = schemaQualifier(counter.layer);
+  const owner = counter.owner;
+  const col = counter.column;
+  const lines: string[] = [];
+  lines.push(`-- Counter cleanup proposals for ${owner}.${col}`);
+  lines.push(`-- Generated by ops/normalization/scripts/counter-cleanup-plan.ts`);
+  lines.push(`-- Policy options: pick ONE. Do not apply without reviewing read-volume and trigger risk.`);
+  lines.push('');
+
+  // Option A: DROP + view
+  lines.push(`-- ═══ Option A: DROP the counter column; provide a view for on-demand COUNT(*) ═══`);
+  if (child.table && child.fkColumn) {
+    lines.push(`-- CREATE OR REPLACE VIEW ${q}.${owner}_with_counts AS`);
+    lines.push(`--   SELECT o.*, COALESCE(c.${col.replace(/_count$/, '_derived')}, 0) AS ${col}`);
+    lines.push(`--     FROM ${q}.${owner} o`);
+    lines.push(`--     LEFT JOIN (SELECT ${child.fkColumn} AS owner_id, COUNT(*) AS ${col.replace(/_count$/, '_derived')}`);
+    lines.push(`--                  FROM ${q}.${child.table} GROUP BY ${child.fkColumn}) c`);
+    lines.push(`--       ON c.owner_id = o.id;`);
+  } else {
+    lines.push(`-- (child table not inferred; operator must pick it manually)`);
+  }
+  lines.push(`-- ALTER TABLE ${q}.${owner} DROP COLUMN ${col};`);
+  lines.push('');
+
+  // Option B: TRIGGER
+  lines.push(`-- ═══ Option B: maintain via trigger on child table ═══`);
+  if (child.table && child.fkColumn) {
+    const fn = `trg_${owner}_${col}`.slice(0, 63);
+    lines.push(`-- CREATE OR REPLACE FUNCTION ${q}.${fn}() RETURNS trigger AS $$`);
+    lines.push(`-- BEGIN`);
+    lines.push(`--   IF TG_OP = 'INSERT' THEN`);
+    lines.push(`--     UPDATE ${q}.${owner} SET ${col} = COALESCE(${col},0) + 1 WHERE id = NEW.${child.fkColumn};`);
+    lines.push(`--   ELSIF TG_OP = 'DELETE' THEN`);
+    lines.push(`--     UPDATE ${q}.${owner} SET ${col} = GREATEST(COALESCE(${col},0) - 1, 0) WHERE id = OLD.${child.fkColumn};`);
+    lines.push(`--   END IF;`);
+    lines.push(`--   RETURN NULL;`);
+    lines.push(`-- END; $$ LANGUAGE plpgsql;`);
+    lines.push(`-- CREATE TRIGGER ${fn}`);
+    lines.push(`--   AFTER INSERT OR DELETE ON ${q}.${child.table}`);
+    lines.push(`--   FOR EACH ROW EXECUTE FUNCTION ${q}.${fn}();`);
+    lines.push(`-- -- Backfill after trigger is installed:`);
+    lines.push(`-- UPDATE ${q}.${owner} o SET ${col} = c.n`);
+    lines.push(`--   FROM (SELECT ${child.fkColumn} AS owner_id, COUNT(*) AS n FROM ${q}.${child.table} GROUP BY ${child.fkColumn}) c`);
+    lines.push(`--   WHERE c.owner_id = o.id;`);
+  } else {
+    lines.push(`-- (child table not inferred)`);
+  }
+  lines.push('');
+
+  // Option C: NIGHTLY
+  lines.push(`-- ═══ Option C: keep column, reconcile nightly ═══`);
+  lines.push(`-- Schedule a job (e.g. pg_cron or application scheduler) that runs:`);
+  if (child.table && child.fkColumn) {
+    lines.push(`-- UPDATE ${q}.${owner} o SET ${col} = c.n`);
+    lines.push(`--   FROM (SELECT ${child.fkColumn} AS owner_id, COUNT(*) AS n FROM ${q}.${child.table} GROUP BY ${child.fkColumn}) c`);
+    lines.push(`--   WHERE c.owner_id = o.id AND COALESCE(o.${col}, -1) IS DISTINCT FROM c.n;`);
+  } else {
+    lines.push(`-- (reconcile SQL requires the child table to be identified first)`);
+  }
+  lines.push('');
+  return lines.join('\n');
+}
+
+function main(): void {
+  mkdirSync(OUT_DIR, { recursive: true });
+  const { counters, catalog } = loadCatalog();
+  console.error(`counter-cleanup-plan: ${counters.length} denormalized counters found`);
+
+  const md: string[] = [];
+  md.push('# Denormalized Counter Cleanup — Decision Matrix');
+  md.push(`Generated: ${new Date().toISOString()}`);
+  md.push(`Total counters: **${counters.length}**`);
+  md.push('');
+  md.push('Policy codes: DROP (view-based) | TRIGGER (live) | NIGHTLY (scheduled reconcile) | KEEP (accept drift) | REVIEW');
+  md.push('');
+  md.push('| Owner table | Counter column | Layer | Inferred child | FK column | Confidence | Policy | Rationale |');
+  md.push('|---|---|---|---|---|---|---|---|');
+
+  for (const c of counters.sort((a, b) => a.owner.localeCompare(b.owner) || a.column.localeCompare(b.column))) {
+    const child = inferChild(c, catalog);
+    writeFileSync(join(OUT_DIR, `${c.owner}-${c.column}.sql`), scaffold(c, child));
+    md.push(`| ${c.owner} | ${c.column} | ${c.layer} | ${child.table ?? '_(unknown)_'} | ${child.fkColumn ?? '—'} | ${child.confidence} |  |  |`);
+  }
+  writeFileSync(join(OUT_DIR, 'decisions.md'), md.join('\n') + '\n');
+  console.error(`Wrote: ${OUT_DIR}/`);
+}
+
+main();

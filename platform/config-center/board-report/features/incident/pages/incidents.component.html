@@ -1,0 +1,363 @@
+<app-page-shell
+  icon="bell"
+  [title]="i18n.translate('nav.incidents')"
+  [subtitle]="i18n.translate('incident.title')"
+  [breadcrumbs]="['Dashboard', 'Incidents']"
+  [loading]="loading">
+  <app-raci-panel entityType="incident" entityId="" [canEdit]="true" />
+
+  <p-toast />
+
+  <p-tabView [(activeIndex)]="tabIndex">
+    <p-tabPanel [header]="i18n.translate('incident.title')">
+      <p-toolbar styleClass="mb-3">
+        <ng-template pTemplate="start">
+          <app-export-button module="incidents" [data]="incidents" />
+        </ng-template>
+        <ng-template pTemplate="end">
+          <p-button
+            [label]="i18n.translate('incident.report')"
+            icon="pi pi-plus"
+            (onClick)="showReportDialog = true" />
+        </ng-template>
+      </p-toolbar>
+
+      <p-table aria-label="Data table"
+        [value]="incidents"
+        [paginator]="true"
+        [rows]="10"
+        [rowsPerPageOptions]="[5, 10, 25]"
+        styleClass="p-datatable-striped">
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="title">{{ i18n.translate('common.name') }} <p-sortIcon field="title" /></th>
+            <th>{{ i18n.translate('incident.severity') }}</th>
+            <th>{{ i18n.translate('incident.status') }}</th>
+            <th>{{ i18n.translate('common.type') }}</th>
+            <th pSortableColumn="created_at">{{ i18n.translate('common.date') }} <p-sortIcon field="created_at" /></th>
+            <th>{{ i18n.translate('common.actions') }}</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-inc>
+          <tr>
+            <td><strong>{{ inc.title }}</strong></td>
+            <td><app-status-badge [status]="inc.severity" /></td>
+            <td><app-status-badge [status]="inc.status" /></td>
+            <td>{{ inc.category || '—' }}</td>
+            <td>{{ inc.created_at | appDate:'short' }}</td>
+            <td>
+              <p-button
+                *ngIf="inc.status === 'reported'"
+                icon="pi pi-search"
+                [pTooltip]="i18n.translate('incident.investigate')"
+                tooltipPosition="top"
+                severity="info"
+                [text]="true"
+                [rounded]="true"
+                (onClick)="investigate(inc)" />
+              <p-button
+                icon="pi pi-microchip-ai"
+                [pTooltip]="i18n.translate('ai.incidentTriage')"
+                tooltipPosition="top"
+                severity="help"
+                [text]="true"
+                [rounded]="true"
+                (onClick)="triageIncident(inc.incident_id)" />
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="6" class="text-center p-4">
+              <i class="pi pi-inbox" style="font-size: 2rem; color: var(--text-muted);"></i>
+              <p class="text-muted mt-2">{{ i18n.translate('common.noData') }}</p>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-tabPanel>
+
+    <p-tabPanel [header]="i18n.translate('incident.report')">
+      <div class="report-form-container">
+        <div class="dialog-form">
+          <div class="field">
+            <label for="incTitle">{{ i18n.translate('common.name') }}</label>
+            <input id="incTitle" type="text" pInputText
+                   [(ngModel)]="newIncident.title"
+                   [placeholder]="i18n.translate('common.name')" [attr.aria-label]="i18n.translate('common.name')"
+                   class="w-full" />
+          </div>
+          <div class="field">
+            <label for="incDesc">{{ i18n.translate('common.description') }}</label>
+            <textarea id="incDesc" pInputTextarea
+                      [(ngModel)]="newIncident.description"
+                      [placeholder]="i18n.translate('common.description')" [attr.aria-label]="i18n.translate('common.description')"
+                      [rows]="4"
+                      class="w-full"></textarea>
+          </div>
+          <div class="field">
+            <label for="incSeverity">{{ i18n.translate('incident.severity') }}</label>
+            <p-dropdown id="incSeverity"
+                        [(ngModel)]="newIncident.severity"
+                        [options]="severityOptions"
+                        optionLabel="label"
+                        optionValue="value"
+                        styleClass="w-full" />
+          </div>
+          <div class="field">
+            <label for="incCategory">{{ i18n.translate('common.type') }}</label>
+            <p-dropdown id="incCategory"
+                        [(ngModel)]="newIncident.category"
+                        [options]="categoryOptions"
+                        optionLabel="label"
+                        optionValue="value"
+                        styleClass="w-full" />
+          </div>
+          <div class="form-actions">
+            <p-button
+              [label]="i18n.translate('common.save')"
+              icon="pi pi-check"
+              (onClick)="reportNewIncident()"
+              [disabled]="!newIncident.title" />
+            <p-button
+              [label]="i18n.translate('common.cancel')"
+              icon="pi pi-times"
+              severity="secondary"
+              [text]="true"
+              (onClick)="resetForm()" />
+          </div>
+        </div>
+      </div>
+    </p-tabPanel>
+
+    <p-tabPanel [header]="i18n.translate('incident.triage')">
+      <p-card *ngIf="triageResult" styleClass="triage-card">
+        <div class="triage-header">
+          <i class="pi pi-microchip-ai triage-icon"></i>
+          <h3>{{ i18n.translate('ai.incidentTriage') }}</h3>
+        </div>
+        <div class="triage-grid">
+          <div class="triage-metric">
+            <span class="metric-label">{{ i18n.translate('incident.severity') }}</span>
+            <app-status-badge [status]="triageResult.severity" />
+          </div>
+          <div class="triage-metric">
+            <span class="metric-label">Priority</span>
+            <span class="metric-value">{{ triageResult.priority }}</span>
+          </div>
+          <div class="triage-metric" *ngIf="triageResult.affectedFrameworks?.length">
+            <span class="metric-label">Affected Frameworks</span>
+            <div class="framework-badges">
+              <app-status-badge *ngFor="let f of triageResult.affectedFrameworks" [status]="f" [label]="f" />
+            </div>
+          </div>
+        </div>
+        <div *ngIf="triageResult.recommendations?.length" class="recommendations">
+          <span class="metric-label">{{ i18n.translate('ai.recommendations') }}</span>
+          <ul class="rec-list">
+            <li *ngFor="let r of triageResult.recommendations">{{ r }}</li>
+          </ul>
+        </div>
+      </p-card>
+
+      <div *ngIf="!triageResult" class="empty-state">
+        <i class="pi pi-inbox" style="font-size: 2rem; color: var(--text-muted);"></i>
+        <p class="text-muted mt-2">{{ i18n.translate('common.noData') }}</p>
+      </div>
+    </p-tabPanel>
+
+    <p-tabPanel [header]="isAr() ? 'خط أنابيب الحوكمة' : 'Governance Pipeline'">
+      <div class="pipeline-strip" *ngIf="pipelineData">
+        <div class="pipe-card danger">
+          <span class="pipe-num">{{ pipelineData.counts.breached }}</span>
+          <span class="pipe-label">{{ isAr() ? 'تجاوز SLA' : 'SLA Breaches' }}</span>
+        </div>
+        <div class="pipe-card warning">
+          <span class="pipe-num">{{ pipelineData.counts.pendingActions }}</span>
+          <span class="pipe-label">{{ isAr() ? 'إجراءات معلقة' : 'Pending Actions' }}</span>
+        </div>
+        <div class="pipe-card info">
+          <span class="pipe-num">{{ pipelineData.counts.rootCauses }}</span>
+          <span class="pipe-label">{{ isAr() ? 'تحليل السبب الجذري' : 'Root Causes' }}</span>
+        </div>
+        <div class="pipe-card" *ngFor="let s of severityKeys">
+          <span class="pipe-num" [style.color]="severityColor(s)">{{ pipelineData.severityCounts[s] || 0 }}</span>
+          <span class="pipe-label">{{ s | titlecase }} {{ isAr() ? 'مفتوح' : 'Open' }}</span>
+        </div>
+      </div>
+
+      <div class="pipeline-section" *ngIf="pipelineData?.slaBreaches?.length">
+        <h4 class="section-header"><i class="pi pi-clock" style="color:var(--error)"></i> {{ isAr() ? 'حوادث تجاوزت SLA' : 'SLA Breached Incidents' }}</h4>
+        <p-table aria-label="Data table" [value]="pipelineData.slaBreaches" styleClass="p-datatable-striped p-datatable-sm" [paginator]="pipelineData.slaBreaches.length > 10" [rows]="10">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>{{ isAr() ? 'العنوان' : 'Title' }}</th>
+              <th>{{ isAr() ? 'الخطورة' : 'Severity' }}</th>
+              <th>{{ isAr() ? 'الحالة' : 'Status' }}</th>
+              <th>{{ isAr() ? 'الساعات المنقضية' : 'Hours Elapsed' }}</th>
+              <th>{{ isAr() ? 'SLA (ساعات)' : 'SLA (hours)' }}</th>
+              <th>{{ isAr() ? 'المسؤول' : 'Owner' }}</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-item>
+            <tr>
+              <td><strong>{{ item.title }}</strong></td>
+              <td><app-status-badge [status]="item.severity" /></td>
+              <td><app-status-badge [status]="item.status" /></td>
+              <td><span class="breach-hours">{{ item.hours_elapsed | appNumber:'decimal':'1.0-0' }}h</span></td>
+              <td>{{ slaForSeverity(item.severity) }}h</td>
+              <td>{{ item.assigned_to || item.owner || item.reported_by || '—' }}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+
+      <div class="pipeline-section" *ngIf="pipelineData?.pendingActions?.length">
+        <h4 class="section-header"><i class="pi pi-bolt" style="color:#d97706"></i> {{ isAr() ? 'إجراءات الاستجابة المعلقة' : 'Pending Response Actions' }}</h4>
+        <p-table aria-label="Data table" [value]="pipelineData.pendingActions" styleClass="p-datatable-striped p-datatable-sm" [paginator]="pipelineData.pendingActions.length > 10" [rows]="10">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>{{ isAr() ? 'الإجراء' : 'Action' }}</th>
+              <th>{{ isAr() ? 'الحادث' : 'Incident' }}</th>
+              <th>{{ isAr() ? 'الأولوية' : 'Priority' }}</th>
+              <th>{{ isAr() ? 'الحالة' : 'Status' }}</th>
+              <th>{{ isAr() ? 'المسؤول' : 'Assigned To' }}</th>
+              <th>{{ isAr() ? 'الموعد' : 'Due Date' }}</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-item>
+            <tr>
+              <td><strong>{{ item.title }}</strong></td>
+              <td>{{ item.incident_title || '—' }}</td>
+              <td><app-status-badge [status]="item.priority || 'medium'" /></td>
+              <td><app-status-badge [status]="item.status" /></td>
+              <td>{{ item.assigned_to || '—' }}</td>
+              <td>{{ item.due_date | appDate:'medium' }}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+
+      <div class="pipeline-section" *ngIf="pipelineData?.rootCauses?.length">
+        <h4 class="section-header"><i class="pi pi-search" style="color:#7c3aed"></i> {{ isAr() ? 'تحليلات السبب الجذري' : 'Root Cause Analyses' }}</h4>
+        <div class="rca-card" *ngFor="let rc of pipelineData.rootCauses">
+          <div class="rca-header">
+            <strong>{{ rc.incident_title || '—' }}</strong>
+            <app-status-badge [status]="rc.category" />
+          </div>
+          <p class="rca-desc">{{ rc.description }}</p>
+          <div class="rca-actions" *ngIf="rc.corrective_action || rc.preventive_action">
+            <span *ngIf="rc.corrective_action"><strong>{{ isAr() ? 'إجراء تصحيحي' : 'Corrective' }}:</strong> {{ rc.corrective_action }}</span>
+            <span *ngIf="rc.preventive_action"><strong>{{ isAr() ? 'إجراء وقائي' : 'Preventive' }}:</strong> {{ rc.preventive_action }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="empty-state" *ngIf="!pipelineData">
+        <i class="pi pi-check-circle" style="font-size:2rem;color:var(--success)"></i>
+        <p>{{ isAr() ? 'لا توجد مشكلات في خط الأنابيب' : 'No pipeline issues' }}</p>
+      </div>
+
+      <div class="sla-config-section" *ngIf="pipelineData?.slaConfig">
+        <h4 class="section-header"><i class="pi pi-cog" style="color:#6b7280"></i> {{ isAr() ? 'إعدادات SLA' : 'SLA Configuration' }}</h4>
+        <div class="sla-grid">
+          <div class="sla-item" *ngFor="let s of severityKeys">
+            <span class="sla-sev" [style.color]="severityColor(s)">{{ s | titlecase }}</span>
+            <span class="sla-val">{{ pipelineData.slaConfig[s] }}h</span>
+          </div>
+        </div>
+      </div>
+    </p-tabPanel>
+
+    <p-tabPanel [header]="isAr() ? 'روابط المنصة' : 'Cross-Module Links'">
+      <div class="cross-links-grid">
+        <a class="cross-link-card" routerLink="/governance/actions">
+          <i class="pi pi-bolt"></i>
+          <span>{{ isAr() ? 'إجراءات الحوكمة' : 'Governance Actions' }}</span>
+          <small>{{ isAr() ? 'تصعيد الحوادث الحرجة' : 'Escalate critical incidents' }}</small>
+        </a>
+        <a class="cross-link-card" routerLink="/risk">
+          <i class="pi pi-shield"></i>
+          <span>{{ isAr() ? 'سجل المخاطر' : 'Risk Register' }}</span>
+          <small>{{ isAr() ? 'المخاطر المرتبطة بالحوادث' : 'Incident-related risks' }}</small>
+        </a>
+        <a class="cross-link-card" routerLink="/foundation/evidence">
+          <i class="pi pi-folder-open"></i>
+          <span>{{ isAr() ? 'مستودع الأدلة' : 'Evidence Repository' }}</span>
+          <small>{{ isAr() ? 'أدلة التحقيق' : 'Investigation evidence' }}</small>
+        </a>
+        <a class="cross-link-card" routerLink="/compliance/findings">
+          <i class="pi pi-flag"></i>
+          <span>{{ isAr() ? 'نتائج الامتثال' : 'Compliance Findings' }}</span>
+          <small>{{ isAr() ? 'النتائج من الحوادث' : 'Findings from incidents' }}</small>
+        </a>
+        <a class="cross-link-card" routerLink="/audit">
+          <i class="pi pi-search"></i>
+          <span>{{ isAr() ? 'سجل التدقيق' : 'Audit Log' }}</span>
+          <small>{{ isAr() ? 'مسار التدقيق الكامل' : 'Full audit trail' }}</small>
+        </a>
+        <a class="cross-link-card" routerLink="/governance/exceptions">
+          <i class="pi pi-exclamation-circle"></i>
+          <span>{{ isAr() ? 'الاستثناءات والإعفاءات' : 'Exceptions & Waivers' }}</span>
+          <small>{{ isAr() ? 'إعفاءات الطوارئ' : 'Emergency waivers' }}</small>
+        </a>
+      </div>
+    </p-tabPanel>
+  </p-tabView>
+
+  <p-dialog
+    [header]="i18n.translate('incident.report')"
+    [(visible)]="showReportDialog"
+    [modal]="true"
+    [style]="{ width: '500px' }">
+    <div class="dialog-form">
+      <div class="field">
+        <label for="dlgTitle">{{ i18n.translate('common.name') }}</label>
+        <input id="dlgTitle" type="text" pInputText
+               [(ngModel)]="newIncident.title"
+               [placeholder]="i18n.translate('common.name')" [attr.aria-label]="i18n.translate('common.name')"
+               class="w-full" />
+      </div>
+      <div class="field">
+        <label for="dlgDesc">{{ i18n.translate('common.description') }}</label>
+        <textarea id="dlgDesc" pInputTextarea
+                  [(ngModel)]="newIncident.description"
+                  [placeholder]="i18n.translate('common.description')" [attr.aria-label]="i18n.translate('common.description')"
+                  [rows]="4"
+                  class="w-full"></textarea>
+      </div>
+      <div class="field">
+        <label for="dlgSeverity">{{ i18n.translate('incident.severity') }}</label>
+        <p-dropdown id="dlgSeverity"
+                    [(ngModel)]="newIncident.severity"
+                    [options]="severityOptions"
+                    optionLabel="label"
+                    optionValue="value"
+                    styleClass="w-full" />
+      </div>
+      <div class="field">
+        <label for="dlgCategory">{{ i18n.translate('common.type') }}</label>
+        <p-dropdown id="dlgCategory"
+                    [(ngModel)]="newIncident.category"
+                    [options]="categoryOptions"
+                    optionLabel="label"
+                    optionValue="value"
+                    styleClass="w-full" />
+      </div>
+    </div>
+    <ng-template pTemplate="footer">
+      <p-button
+        [label]="i18n.translate('common.cancel')"
+        icon="pi pi-times"
+        severity="secondary"
+        [text]="true"
+        (onClick)="showReportDialog = false" />
+      <p-button
+        [label]="i18n.translate('common.save')"
+        icon="pi pi-check"
+        (onClick)="reportNewIncident()"
+        [disabled]="!newIncident.title" />
+    </ng-template>
+  </p-dialog>
+</app-page-shell>
+<app-ai-panel module="incidents" />

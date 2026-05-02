@@ -1,0 +1,34 @@
+{
+  "name": "@dos/ai-gateway",
+  "version": "1.0.0",
+  "description": "AI-OS — AI Gateway shared library: per-module AI configuration registry and pgvector-backed vector store service. Consumed by ai-gateway-service and any backend that needs typed access to module AI config or vector storage.",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./vector-store.service": {
+      "types": "./dist/vector-store.service.d.ts",
+      "default": "./dist/vector-store.service.js"
+    },
+    "./ai-config.registry": {
+      "types": "./dist/ai-config.registry.d.ts",
+      "default": "./dist/ai-config.registry.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@dos/db": "workspace:*",
+    "@dos/platform-core": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0"
+  },
+  "type": "module"
+}

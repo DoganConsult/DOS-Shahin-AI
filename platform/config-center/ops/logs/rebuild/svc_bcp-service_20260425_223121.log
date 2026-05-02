@@ -1,0 +1,4 @@
+
+> @dos/bcp-service@0.1.0 build /root/DOS-AIO/services/bcp-service
+> tsc -p tsconfig.json
+

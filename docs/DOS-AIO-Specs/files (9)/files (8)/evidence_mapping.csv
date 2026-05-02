@@ -1,0 +1,269 @@
+mapping_id,control_id,framework_code,control_number,evidence_type_code,evidence_name_en,evidence_name_ar,evidence_category,is_mandatory,is_primary,display_order,min_retention_months,review_frequency_months,approval_role,format_hints,requirement_description_en
+1,1,NCA-ECC,1-1-1,POLICY,Policy Document,وثيقة السياسة,document,True,True,1,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Cybersecurity Strategy Definition
+2,1,NCA-ECC,1-1-1,STRATEGY_DOC,Strategy Document,وثيقة الاستراتيجية,document,True,False,2,60,12,Authorizing Official,PDF,Provide Strategy Document demonstrating implementation of Cybersecurity Strategy Definition
+3,1,NCA-ECC,1-1-1,ATTESTATION,Management Attestation,إقرار الإدارة,document,False,False,3,36,12,Executive,PDF,Provide Management Attestation demonstrating implementation of Cybersecurity Strategy Definition
+4,1,NCA-ECC,1-1-1,MEETING_MINUTES,Meeting Minutes,محضر الاجتماع,record,False,False,4,60,1,Chair,"PDF, DOCX",Provide Meeting Minutes demonstrating implementation of Cybersecurity Strategy Definition
+5,2,NCA-ECC,1-1-2,ROADMAP,Implementation Roadmap,خارطة الطريق,document,True,True,1,60,6,Executive,"PDF, XLSX",Provide Implementation Roadmap demonstrating implementation of Strategy Implementation Roadmap
+6,2,NCA-ECC,1-1-2,REPORT,Report,تقرير,record,True,False,2,36,3,Department Head,"PDF, XLSX",Provide Report demonstrating implementation of Strategy Implementation Roadmap
+7,2,NCA-ECC,1-1-2,MEETING_MINUTES,Meeting Minutes,محضر الاجتماع,record,False,False,3,60,1,Chair,"PDF, DOCX",Provide Meeting Minutes demonstrating implementation of Strategy Implementation Roadmap
+8,2,NCA-ECC,1-1-2,APPROVAL_RECORD,Approval Record,سجل الموافقة,record,False,False,4,60,0,Authorizer,"PDF, EMAIL",Provide Approval Record demonstrating implementation of Strategy Implementation Roadmap
+9,3,NCA-ECC,1-1-3,REVIEW_REPORT,Review Report,تقرير المراجعة,record,True,True,1,60,12,Reviewer,PDF,Provide Review Report demonstrating implementation of Strategy Review
+10,3,NCA-ECC,1-1-3,MEETING_MINUTES,Meeting Minutes,محضر الاجتماع,record,True,False,2,60,1,Chair,"PDF, DOCX",Provide Meeting Minutes demonstrating implementation of Strategy Review
+11,3,NCA-ECC,1-1-3,AUDIT_REPORT,Audit Report,تقرير التدقيق,record,False,False,3,84,12,Auditor,PDF,Provide Audit Report demonstrating implementation of Strategy Review
+12,4,NCA-ECC,1-2-1,ORG_CHART,Organizational Chart,الهيكل التنظيمي,document,True,True,1,60,12,Executive,"PDF, VISIO",Provide Organizational Chart demonstrating implementation of Cybersecurity Department
+13,4,NCA-ECC,1-2-1,JOB_DESCRIPTION,Job Description,الوصف الوظيفي,document,True,False,2,60,24,HR,"PDF, DOCX",Provide Job Description demonstrating implementation of Cybersecurity Department
+14,4,NCA-ECC,1-2-1,APPROVAL_RECORD,Approval Record,سجل الموافقة,record,False,False,3,60,0,Authorizer,"PDF, EMAIL",Provide Approval Record demonstrating implementation of Cybersecurity Department
+15,4,NCA-ECC,1-2-1,POLICY,Policy Document,وثيقة السياسة,document,False,False,4,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Cybersecurity Department
+16,5,NCA-ECC,1-2-2,ORG_CHART,Organizational Chart,الهيكل التنظيمي,document,True,True,1,60,12,Executive,"PDF, VISIO",Provide Organizational Chart demonstrating implementation of Cybersecurity Function Reporting
+17,5,NCA-ECC,1-2-2,REPORTING_LINE,Reporting Line Document,وثيقة خط الرفع,document,True,False,2,60,12,HR,PDF,Provide Reporting Line Document demonstrating implementation of Cybersecurity Function Reporting
+18,5,NCA-ECC,1-2-2,APPROVAL_RECORD,Approval Record,سجل الموافقة,record,False,False,3,60,0,Authorizer,"PDF, EMAIL",Provide Approval Record demonstrating implementation of Cybersecurity Function Reporting
+19,6,NCA-ECC,1-2-3,JOB_DESCRIPTION,Job Description,الوصف الوظيفي,document,True,True,1,60,24,HR,"PDF, DOCX",Provide Job Description demonstrating implementation of Cybersecurity Manager - Saudi National
+20,6,NCA-ECC,1-2-3,APPOINTMENT_LETTER,Appointment Letter,خطاب التعيين,document,True,False,2,60,0,HR,PDF,Provide Appointment Letter demonstrating implementation of Cybersecurity Manager - Saudi National
+21,6,NCA-ECC,1-2-3,QUALIFICATIONS,Qualifications/CV,المؤهلات,document,False,False,3,60,24,HR,PDF,Provide Qualifications/CV demonstrating implementation of Cybersecurity Manager - Saudi National
+22,6,NCA-ECC,1-2-3,TRAINING_RECORD,Training Record,سجل التدريب,record,False,False,4,60,12,HR,"PDF, XLSX",Provide Training Record demonstrating implementation of Cybersecurity Manager - Saudi National
+23,7,NCA-ECC,1-2-4,COMMITTEE_CHARTER,Committee Charter,ميثاق اللجنة,document,True,True,1,60,12,Board,PDF,Provide Committee Charter demonstrating implementation of Cybersecurity Steering Committee
+24,7,NCA-ECC,1-2-4,MEETING_MINUTES,Meeting Minutes,محضر الاجتماع,record,True,False,2,60,1,Chair,"PDF, DOCX",Provide Meeting Minutes demonstrating implementation of Cybersecurity Steering Committee
+25,7,NCA-ECC,1-2-4,APPROVAL_RECORD,Approval Record,سجل الموافقة,record,False,False,3,60,0,Authorizer,"PDF, EMAIL",Provide Approval Record demonstrating implementation of Cybersecurity Steering Committee
+26,8,NCA-ECC,1-3-1,POLICY,Policy Document,وثيقة السياسة,document,True,True,1,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Cybersecurity Policies
+27,8,NCA-ECC,1-3-1,PROCEDURE,Procedure Document,وثيقة الإجراءات,document,True,False,2,36,12,Department Head,"PDF, DOCX",Provide Procedure Document demonstrating implementation of Cybersecurity Policies
+28,8,NCA-ECC,1-3-1,APPROVAL_RECORD,Approval Record,سجل الموافقة,record,False,False,3,60,0,Authorizer,"PDF, EMAIL",Provide Approval Record demonstrating implementation of Cybersecurity Policies
+29,8,NCA-ECC,1-3-1,COMMUNICATION_RECORD,Communication Record,سجل الاتصالات,record,False,False,4,36,12,None,"PDF, EMAIL",Provide Communication Record demonstrating implementation of Cybersecurity Policies
+30,9,NCA-ECC,1-3-2,REVIEW_REPORT,Review Report,تقرير المراجعة,record,True,True,1,60,12,Reviewer,PDF,Provide Review Report demonstrating implementation of Policy Review
+31,9,NCA-ECC,1-3-2,POLICY,Policy Document,وثيقة السياسة,document,True,False,2,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Policy Review
+32,9,NCA-ECC,1-3-2,APPROVAL_RECORD,Approval Record,سجل الموافقة,record,False,False,3,60,0,Authorizer,"PDF, EMAIL",Provide Approval Record demonstrating implementation of Policy Review
+33,10,NCA-ECC,1-4-1,RACI_MATRIX,RACI Matrix,مصفوفة RACI,document,True,True,1,36,12,Department Head,"XLSX, PDF",Provide RACI Matrix demonstrating implementation of Defined Roles
+34,10,NCA-ECC,1-4-1,JOB_DESCRIPTION,Job Description,الوصف الوظيفي,document,True,False,2,60,24,HR,"PDF, DOCX",Provide Job Description demonstrating implementation of Defined Roles
+35,10,NCA-ECC,1-4-1,APPROVAL_RECORD,Approval Record,سجل الموافقة,record,False,False,3,60,0,Authorizer,"PDF, EMAIL",Provide Approval Record demonstrating implementation of Defined Roles
+36,11,NCA-ECC,1-4-2,REVIEW_REPORT,Review Report,تقرير المراجعة,record,True,True,1,60,12,Reviewer,PDF,Provide Review Report demonstrating implementation of Roles Review
+37,11,NCA-ECC,1-4-2,RACI_MATRIX,RACI Matrix,مصفوفة RACI,document,True,False,2,36,12,Department Head,"XLSX, PDF",Provide RACI Matrix demonstrating implementation of Roles Review
+38,11,NCA-ECC,1-4-2,MEETING_MINUTES,Meeting Minutes,محضر الاجتماع,record,False,False,3,60,1,Chair,"PDF, DOCX",Provide Meeting Minutes demonstrating implementation of Roles Review
+39,12,NCA-ECC,1-5-1,RISK_METHODOLOGY,Risk Methodology,منهجية المخاطر,document,True,True,1,60,24,CISO/Risk,PDF,Provide Risk Methodology demonstrating implementation of Risk Methodology
+40,12,NCA-ECC,1-5-1,POLICY,Policy Document,وثيقة السياسة,document,True,False,2,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Risk Methodology
+41,12,NCA-ECC,1-5-1,APPROVAL_RECORD,Approval Record,سجل الموافقة,record,False,False,3,60,0,Authorizer,"PDF, EMAIL",Provide Approval Record demonstrating implementation of Risk Methodology
+42,12,NCA-ECC,1-5-1,PROCEDURE,Procedure Document,وثيقة الإجراءات,document,False,False,4,36,12,Department Head,"PDF, DOCX",Provide Procedure Document demonstrating implementation of Risk Methodology
+43,13,NCA-ECC,1-5-2,RISK_ASSESSMENT,Risk Assessment,تقييم المخاطر,record,True,True,1,36,12,Risk Officer,"PDF, XLSX",Provide Risk Assessment demonstrating implementation of Risk Assessment
+44,13,NCA-ECC,1-5-2,RISK_REGISTER,Risk Register,سجل المخاطر,record,True,False,2,60,3,CISO,"XLSX, JSON",Provide Risk Register demonstrating implementation of Risk Assessment
+45,13,NCA-ECC,1-5-2,REPORT,Report,تقرير,record,False,False,3,36,3,Department Head,"PDF, XLSX",Provide Report demonstrating implementation of Risk Assessment
+46,13,NCA-ECC,1-5-2,MEETING_MINUTES,Meeting Minutes,محضر الاجتماع,record,False,False,4,60,1,Chair,"PDF, DOCX",Provide Meeting Minutes demonstrating implementation of Risk Assessment
+47,14,NCA-ECC,1-5-3,RISK_TREATMENT_PLAN,Risk Treatment Plan,خطة معالجة المخاطر,record,True,True,1,36,6,CISO,"PDF, XLSX",Provide Risk Treatment Plan demonstrating implementation of Risk Treatment
+48,14,NCA-ECC,1-5-3,APPROVAL_RECORD,Approval Record,سجل الموافقة,record,True,False,2,60,0,Authorizer,"PDF, EMAIL",Provide Approval Record demonstrating implementation of Risk Treatment
+49,14,NCA-ECC,1-5-3,REPORT,Report,تقرير,record,False,False,3,36,3,Department Head,"PDF, XLSX",Provide Report demonstrating implementation of Risk Treatment
+50,15,NCA-ECC,1-6-1,METHODOLOGY,Methodology Document,وثيقة المنهجية,document,True,True,1,60,24,Department Head,PDF,Provide Methodology Document demonstrating implementation of Project Cybersecurity
+51,15,NCA-ECC,1-6-1,POLICY,Policy Document,وثيقة السياسة,document,True,False,2,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Project Cybersecurity
+52,15,NCA-ECC,1-6-1,PROJECT_CHARTER,Project Charter,ميثاق المشروع,document,False,False,3,36,0,PMO,PDF,Provide Project Charter demonstrating implementation of Project Cybersecurity
+53,15,NCA-ECC,1-6-1,CHECKLIST,Checklist,قائمة التحقق,document,False,False,4,36,12,None,"PDF, XLSX",Provide Checklist demonstrating implementation of Project Cybersecurity
+54,16,NCA-ECC,1-7-1,COMPLIANCE_REPORT,Compliance Report,تقرير الامتثال,record,True,True,1,60,12,Compliance Officer,PDF,Provide Compliance Report demonstrating implementation of Compliance Management
+55,16,NCA-ECC,1-7-1,AUDIT_REPORT,Audit Report,تقرير التدقيق,record,True,False,2,84,12,Auditor,PDF,Provide Audit Report demonstrating implementation of Compliance Management
+56,16,NCA-ECC,1-7-1,POLICY,Policy Document,وثيقة السياسة,document,False,False,3,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Compliance Management
+57,16,NCA-ECC,1-7-1,EVIDENCE,Generic Evidence,دليل عام,record,False,False,4,36,12,Department Head,Various,Provide Generic Evidence demonstrating implementation of Compliance Management
+58,17,NCA-ECC,1-8-1,AUDIT_PLAN,Audit Plan,خطة التدقيق,document,True,True,1,60,12,Internal Auditor,PDF,Provide Audit Plan demonstrating implementation of Internal Audit
+59,17,NCA-ECC,1-8-1,AUDIT_REPORT,Audit Report,تقرير التدقيق,record,True,False,2,84,12,Auditor,PDF,Provide Audit Report demonstrating implementation of Internal Audit
+60,17,NCA-ECC,1-8-1,FINDINGS,Audit Findings,نتائج التدقيق,record,False,False,3,60,12,Auditor,"PDF, XLSX",Provide Audit Findings demonstrating implementation of Internal Audit
+61,17,NCA-ECC,1-8-1,REMEDIATION_PLAN,Remediation Plan,خطة المعالجة,record,False,False,4,36,3,CISO,"PDF, XLSX",Provide Remediation Plan demonstrating implementation of Internal Audit
+62,18,NCA-ECC,1-9-1,SCREENING_RECORD,Background Screening Record,سجل الفحص الأمني,record,True,True,1,60,0,HR,PDF,Provide Background Screening Record demonstrating implementation of Pre-Employment Screening
+63,18,NCA-ECC,1-9-1,POLICY,Policy Document,وثيقة السياسة,document,True,False,2,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Pre-Employment Screening
+64,18,NCA-ECC,1-9-1,HR_RECORDS,HR Records,سجلات الموارد البشرية,record,False,False,3,84,12,HR,"PDF, JSON",Provide HR Records demonstrating implementation of Pre-Employment Screening
+65,19,NCA-ECC,1-9-2,PROCEDURE,Procedure Document,وثيقة الإجراءات,document,True,True,1,36,12,Department Head,"PDF, DOCX",Provide Procedure Document demonstrating implementation of Termination Procedures
+66,19,NCA-ECC,1-9-2,CHECKLIST,Checklist,قائمة التحقق,document,True,False,2,36,12,None,"PDF, XLSX",Provide Checklist demonstrating implementation of Termination Procedures
+67,19,NCA-ECC,1-9-2,ACCESS_LOG,Access Log,سجل الوصول,record,False,False,3,12,1,None,"LOG, CSV",Provide Access Log demonstrating implementation of Termination Procedures
+68,19,NCA-ECC,1-9-2,AUDIT_LOG,Audit Trail Log,سجل التدقيق,record,False,False,4,24,3,None,"LOG, JSON",Provide Audit Trail Log demonstrating implementation of Termination Procedures
+69,20,NCA-ECC,1-10-1,TRAINING_PROGRAM,Training Program,برنامج التدريب,document,True,True,1,36,12,HR/CISO,PDF,Provide Training Program demonstrating implementation of Awareness Program
+70,20,NCA-ECC,1-10-1,TRAINING_RECORD,Training Record,سجل التدريب,record,True,False,2,60,12,HR,"PDF, XLSX",Provide Training Record demonstrating implementation of Awareness Program
+71,20,NCA-ECC,1-10-1,CAMPAIGN_REPORT,Awareness Campaign Report,تقرير حملة التوعية,record,False,False,3,36,12,CISO,PDF,Provide Awareness Campaign Report demonstrating implementation of Awareness Program
+72,20,NCA-ECC,1-10-1,QUIZ_RESULTS,Quiz/Test Results,نتائج الاختبارات,record,False,False,4,36,12,HR,"XLSX, PDF",Provide Quiz/Test Results demonstrating implementation of Awareness Program
+73,21,NCA-ECC,1-10-2,TRAINING_PROGRAM,Training Program,برنامج التدريب,document,True,True,1,36,12,HR/CISO,PDF,Provide Training Program demonstrating implementation of Specialized Training
+74,21,NCA-ECC,1-10-2,CERTIFICATES,Certificates of Completion,شهادات الإكمال,document,True,False,2,60,0,None,PDF,Provide Certificates of Completion demonstrating implementation of Specialized Training
+75,21,NCA-ECC,1-10-2,TRAINING_RECORD,Training Record,سجل التدريب,record,False,False,3,60,12,HR,"PDF, XLSX",Provide Training Record demonstrating implementation of Specialized Training
+76,21,NCA-ECC,1-10-2,SKILLS_MATRIX,Skills Matrix,مصفوفة المهارات,document,False,False,4,36,12,HR,XLSX,Provide Skills Matrix demonstrating implementation of Specialized Training
+77,22,NCA-ECC,2-1-1,POLICY,Policy Document,وثيقة السياسة,document,True,True,1,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Asset Management Requirements
+78,22,NCA-ECC,2-1-1,PROCEDURE,Procedure Document,وثيقة الإجراءات,document,True,False,2,36,12,Department Head,"PDF, DOCX",Provide Procedure Document demonstrating implementation of Asset Management Requirements
+79,22,NCA-ECC,2-1-1,APPROVAL_RECORD,Approval Record,سجل الموافقة,record,False,False,3,60,0,Authorizer,"PDF, EMAIL",Provide Approval Record demonstrating implementation of Asset Management Requirements
+80,23,NCA-ECC,2-1-2,INVENTORY,Asset Inventory,جرد الأصول,record,True,True,1,36,1,None,"XLSX, CSV",Provide Asset Inventory demonstrating implementation of Asset Inventory
+81,23,NCA-ECC,2-1-2,CMDB_EXPORT,CMDB Export,تصدير CMDB,artifact,True,False,2,24,1,None,"XLSX, JSON",Provide CMDB Export demonstrating implementation of Asset Inventory
+82,23,NCA-ECC,2-1-2,REPORT,Report,تقرير,record,False,False,3,36,3,Department Head,"PDF, XLSX",Provide Report demonstrating implementation of Asset Inventory
+83,23,NCA-ECC,2-1-2,SCREENSHOT,System Screenshot,لقطة شاشة,artifact,False,False,4,24,3,None,"PNG, JPG, PDF",Provide System Screenshot demonstrating implementation of Asset Inventory
+84,24,NCA-ECC,2-1-3,CLASSIFICATION_SCHEME,Classification Scheme,مخطط التصنيف,document,True,True,1,60,24,CISO,PDF,Provide Classification Scheme demonstrating implementation of Asset Classification
+85,24,NCA-ECC,2-1-3,INVENTORY,Asset Inventory,جرد الأصول,record,True,False,2,36,1,None,"XLSX, CSV",Provide Asset Inventory demonstrating implementation of Asset Classification
+86,24,NCA-ECC,2-1-3,POLICY,Policy Document,وثيقة السياسة,document,False,False,3,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Asset Classification
+87,25,NCA-ECC,2-1-4,INVENTORY,Asset Inventory,جرد الأصول,record,True,True,1,36,1,None,"XLSX, CSV",Provide Asset Inventory demonstrating implementation of Asset Owner
+88,25,NCA-ECC,2-1-4,RACI_MATRIX,RACI Matrix,مصفوفة RACI,document,True,False,2,36,12,Department Head,"XLSX, PDF",Provide RACI Matrix demonstrating implementation of Asset Owner
+89,25,NCA-ECC,2-1-4,APPROVAL_RECORD,Approval Record,سجل الموافقة,record,False,False,3,60,0,Authorizer,"PDF, EMAIL",Provide Approval Record demonstrating implementation of Asset Owner
+90,26,NCA-ECC,2-2-1,POLICY,Policy Document,وثيقة السياسة,document,True,True,1,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of IAM Requirements
+91,26,NCA-ECC,2-2-1,PROCEDURE,Procedure Document,وثيقة الإجراءات,document,True,False,2,36,12,Department Head,"PDF, DOCX",Provide Procedure Document demonstrating implementation of IAM Requirements
+92,26,NCA-ECC,2-2-1,APPROVAL_RECORD,Approval Record,سجل الموافقة,record,False,False,3,60,0,Authorizer,"PDF, EMAIL",Provide Approval Record demonstrating implementation of IAM Requirements
+93,26,NCA-ECC,2-2-1,STANDARD,Technical Standard,المعيار الفني,document,False,False,4,36,12,CISO,"PDF, DOCX",Provide Technical Standard demonstrating implementation of IAM Requirements
+94,27,NCA-ECC,2-2-2,CONFIGURATION,Configuration File/Export,ملف التكوين,artifact,True,True,1,24,6,None,"XML, JSON, YAML",Provide Configuration File/Export demonstrating implementation of User Identification
+95,27,NCA-ECC,2-2-2,POLICY,Policy Document,وثيقة السياسة,document,True,False,2,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of User Identification
+96,27,NCA-ECC,2-2-2,ACCESS_REVIEW,Access Review,مراجعة الصلاحيات,record,False,False,3,24,6,System Owner,"PDF, XLSX",Provide Access Review demonstrating implementation of User Identification
+97,27,NCA-ECC,2-2-2,AUDIT_LOG,Audit Trail Log,سجل التدقيق,record,False,False,4,24,3,None,"LOG, JSON",Provide Audit Trail Log demonstrating implementation of User Identification
+98,28,NCA-ECC,2-2-3,CONFIGURATION,Configuration File/Export,ملف التكوين,artifact,True,True,1,24,6,None,"XML, JSON, YAML",Provide Configuration File/Export demonstrating implementation of Multi-Factor Authentication
+99,28,NCA-ECC,2-2-3,SCREENSHOT,System Screenshot,لقطة شاشة,artifact,True,False,2,24,3,None,"PNG, JPG, PDF",Provide System Screenshot demonstrating implementation of Multi-Factor Authentication
+100,28,NCA-ECC,2-2-3,POLICY,Policy Document,وثيقة السياسة,document,False,False,3,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Multi-Factor Authentication
+101,28,NCA-ECC,2-2-3,TEST_RESULT,Test Results,نتائج الاختبار,record,False,False,4,36,12,Test Manager,"PDF, XLSX",Provide Test Results demonstrating implementation of Multi-Factor Authentication
+102,28,NCA-ECC,2-2-3,AUDIT_LOG,Audit Trail Log,سجل التدقيق,record,False,False,5,24,3,None,"LOG, JSON",Provide Audit Trail Log demonstrating implementation of Multi-Factor Authentication
+103,29,NCA-ECC,2-2-4,CONFIGURATION,Configuration File/Export,ملف التكوين,artifact,True,True,1,24,6,None,"XML, JSON, YAML",Provide Configuration File/Export demonstrating implementation of Privileged Access Management
+104,29,NCA-ECC,2-2-4,AUDIT_LOG,Audit Trail Log,سجل التدقيق,record,True,False,2,24,3,None,"LOG, JSON",Provide Audit Trail Log demonstrating implementation of Privileged Access Management
+105,29,NCA-ECC,2-2-4,ACCESS_REVIEW,Access Review,مراجعة الصلاحيات,record,False,False,3,24,6,System Owner,"PDF, XLSX",Provide Access Review demonstrating implementation of Privileged Access Management
+106,29,NCA-ECC,2-2-4,POLICY,Policy Document,وثيقة السياسة,document,False,False,4,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Privileged Access Management
+107,30,NCA-ECC,2-2-5,ACCESS_REVIEW,Access Review,مراجعة الصلاحيات,record,True,True,1,24,6,System Owner,"PDF, XLSX",Provide Access Review demonstrating implementation of Access Review
+108,30,NCA-ECC,2-2-5,REPORT,Report,تقرير,record,True,False,2,36,3,Department Head,"PDF, XLSX",Provide Report demonstrating implementation of Access Review
+109,30,NCA-ECC,2-2-5,APPROVAL_RECORD,Approval Record,سجل الموافقة,record,False,False,3,60,0,Authorizer,"PDF, EMAIL",Provide Approval Record demonstrating implementation of Access Review
+110,31,NCA-ECC,2-2-6,CONFIGURATION,Configuration File/Export,ملف التكوين,artifact,True,True,1,24,6,None,"XML, JSON, YAML",Provide Configuration File/Export demonstrating implementation of Password Standards
+111,31,NCA-ECC,2-2-6,POLICY,Policy Document,وثيقة السياسة,document,True,False,2,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Password Standards
+112,31,NCA-ECC,2-2-6,SCREENSHOT,System Screenshot,لقطة شاشة,artifact,False,False,3,24,3,None,"PNG, JPG, PDF",Provide System Screenshot demonstrating implementation of Password Standards
+113,31,NCA-ECC,2-2-6,TEST_RESULT,Test Results,نتائج الاختبار,record,False,False,4,36,12,Test Manager,"PDF, XLSX",Provide Test Results demonstrating implementation of Password Standards
+114,32,NCA-ECC,2-3-1,BASELINE_CONFIG,Baseline Configuration,التكوين الأساسي,document,True,True,1,36,12,CISO,"PDF, JSON",Provide Baseline Configuration demonstrating implementation of System Hardening
+115,32,NCA-ECC,2-3-1,SCAN_REPORT,Vulnerability Scan Report,تقرير فحص الثغرات,record,True,False,2,24,1,None,"PDF, JSON",Provide Vulnerability Scan Report demonstrating implementation of System Hardening
+116,32,NCA-ECC,2-3-1,STANDARD,Technical Standard,المعيار الفني,document,False,False,3,36,12,CISO,"PDF, DOCX",Provide Technical Standard demonstrating implementation of System Hardening
+117,32,NCA-ECC,2-3-1,TEST_RESULT,Test Results,نتائج الاختبار,record,False,False,4,36,12,Test Manager,"PDF, XLSX",Provide Test Results demonstrating implementation of System Hardening
+118,33,NCA-ECC,2-3-2,CONFIGURATION,Configuration File/Export,ملف التكوين,artifact,True,True,1,24,6,None,"XML, JSON, YAML",Provide Configuration File/Export demonstrating implementation of Anti-Malware
+119,33,NCA-ECC,2-3-2,SCAN_REPORT,Vulnerability Scan Report,تقرير فحص الثغرات,record,True,False,2,24,1,None,"PDF, JSON",Provide Vulnerability Scan Report demonstrating implementation of Anti-Malware
+120,33,NCA-ECC,2-3-2,LOG,System Log,سجل النظام,record,False,False,3,12,1,None,"LOG, JSON, CSV",Provide System Log demonstrating implementation of Anti-Malware
+121,33,NCA-ECC,2-3-2,REPORT,Report,تقرير,record,False,False,4,36,3,Department Head,"PDF, XLSX",Provide Report demonstrating implementation of Anti-Malware
+122,34,NCA-ECC,2-3-3,PATCH_REPORT,Patch Management Report,تقرير إدارة التحديثات,record,True,True,1,24,1,None,"PDF, XLSX",Provide Patch Management Report demonstrating implementation of Patch Management
+123,34,NCA-ECC,2-3-3,SCAN_REPORT,Vulnerability Scan Report,تقرير فحص الثغرات,record,True,False,2,24,1,None,"PDF, JSON",Provide Vulnerability Scan Report demonstrating implementation of Patch Management
+124,34,NCA-ECC,2-3-3,POLICY,Policy Document,وثيقة السياسة,document,False,False,3,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Patch Management
+125,34,NCA-ECC,2-3-3,CHANGE_RECORD,Change Management Record,سجل التغيير,record,False,False,4,24,1,CAB,"PDF, JSON",Provide Change Management Record demonstrating implementation of Patch Management
+126,35,NCA-ECC,2-4-1,CONFIGURATION,Configuration File/Export,ملف التكوين,artifact,True,True,1,24,6,None,"XML, JSON, YAML",Provide Configuration File/Export demonstrating implementation of Email Security Requirements
+127,35,NCA-ECC,2-4-1,DNS_RECORDS,DNS Records (SPF/DKIM/DMARC),سجلات DNS,artifact,True,False,2,24,12,None,TXT,Provide DNS Records (SPF/DKIM/DMARC) demonstrating implementation of Email Security Requirements
+128,35,NCA-ECC,2-4-1,POLICY,Policy Document,وثيقة السياسة,document,False,False,3,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Email Security Requirements
+129,35,NCA-ECC,2-4-1,TEST_RESULT,Test Results,نتائج الاختبار,record,False,False,4,36,12,Test Manager,"PDF, XLSX",Provide Test Results demonstrating implementation of Email Security Requirements
+130,36,NCA-ECC,2-4-2,CONFIGURATION,Configuration File/Export,ملف التكوين,artifact,True,True,1,24,6,None,"XML, JSON, YAML",Provide Configuration File/Export demonstrating implementation of Email Anti-Phishing
+131,36,NCA-ECC,2-4-2,LOG,System Log,سجل النظام,record,True,False,2,12,1,None,"LOG, JSON, CSV",Provide System Log demonstrating implementation of Email Anti-Phishing
+132,36,NCA-ECC,2-4-2,REPORT,Report,تقرير,record,False,False,3,36,3,Department Head,"PDF, XLSX",Provide Report demonstrating implementation of Email Anti-Phishing
+133,36,NCA-ECC,2-4-2,TRAINING_RECORD,Training Record,سجل التدريب,record,False,False,4,60,12,HR,"PDF, XLSX",Provide Training Record demonstrating implementation of Email Anti-Phishing
+134,37,NCA-ECC,2-4-3,CONFIGURATION,Configuration File/Export,ملف التكوين,artifact,True,True,1,24,6,None,"XML, JSON, YAML",Provide Configuration File/Export demonstrating implementation of Email Archiving
+135,37,NCA-ECC,2-4-3,POLICY,Policy Document,وثيقة السياسة,document,True,False,2,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Email Archiving
+136,37,NCA-ECC,2-4-3,BACKUP_REPORT,Backup Report,تقرير النسخ الاحتياطي,record,False,False,3,12,1,None,"PDF, XLSX",Provide Backup Report demonstrating implementation of Email Archiving
+137,38,NCA-ECC,2-5-1,NETWORK_DIAGRAM,Network Diagram,مخطط الشبكة,document,True,True,1,36,12,Architect,"PNG, PDF, VISIO",Provide Network Diagram demonstrating implementation of Network Segregation
+138,38,NCA-ECC,2-5-1,FIREWALL_CONFIG,Firewall Configuration,تكوين الجدار الناري,artifact,True,False,2,24,6,None,"TXT, JSON",Provide Firewall Configuration demonstrating implementation of Network Segregation
+139,38,NCA-ECC,2-5-1,POLICY,Policy Document,وثيقة السياسة,document,False,False,3,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Network Segregation
+140,38,NCA-ECC,2-5-1,SCREENSHOT,System Screenshot,لقطة شاشة,artifact,False,False,4,24,3,None,"PNG, JPG, PDF",Provide System Screenshot demonstrating implementation of Network Segregation
+141,39,NCA-ECC,2-5-2,CONFIGURATION,Configuration File/Export,ملف التكوين,artifact,True,True,1,24,6,None,"XML, JSON, YAML",Provide Configuration File/Export demonstrating implementation of Wireless Security
+142,39,NCA-ECC,2-5-2,SCAN_REPORT,Vulnerability Scan Report,تقرير فحص الثغرات,record,True,False,2,24,1,None,"PDF, JSON",Provide Vulnerability Scan Report demonstrating implementation of Wireless Security
+143,39,NCA-ECC,2-5-2,POLICY,Policy Document,وثيقة السياسة,document,False,False,3,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Wireless Security
+144,40,NCA-ECC,2-5-3,CONFIGURATION,Configuration File/Export,ملف التكوين,artifact,True,True,1,24,6,None,"XML, JSON, YAML",Provide Configuration File/Export demonstrating implementation of DNS Security
+145,40,NCA-ECC,2-5-3,SCREENSHOT,System Screenshot,لقطة شاشة,artifact,True,False,2,24,3,None,"PNG, JPG, PDF",Provide System Screenshot demonstrating implementation of DNS Security
+146,40,NCA-ECC,2-5-3,POLICY,Policy Document,وثيقة السياسة,document,False,False,3,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of DNS Security
+147,40,NCA-ECC,2-5-3,LOG,System Log,سجل النظام,record,False,False,4,12,1,None,"LOG, JSON, CSV",Provide System Log demonstrating implementation of DNS Security
+148,41,NCA-ECC,2-5-4,CONFIGURATION,Configuration File/Export,ملف التكوين,artifact,True,True,1,24,6,None,"XML, JSON, YAML",Provide Configuration File/Export demonstrating implementation of APT Protection
+149,41,NCA-ECC,2-5-4,LOG,System Log,سجل النظام,record,True,False,2,12,1,None,"LOG, JSON, CSV",Provide System Log demonstrating implementation of APT Protection
+150,41,NCA-ECC,2-5-4,REPORT,Report,تقرير,record,False,False,3,36,3,Department Head,"PDF, XLSX",Provide Report demonstrating implementation of APT Protection
+151,41,NCA-ECC,2-5-4,SCAN_REPORT,Vulnerability Scan Report,تقرير فحص الثغرات,record,False,False,4,24,1,None,"PDF, JSON",Provide Vulnerability Scan Report demonstrating implementation of APT Protection
+152,42,NCA-ECC,2-6-1,CONFIGURATION,Configuration File/Export,ملف التكوين,artifact,True,True,1,24,6,None,"XML, JSON, YAML",Provide Configuration File/Export demonstrating implementation of Mobile Device Management
+153,42,NCA-ECC,2-6-1,INVENTORY,Asset Inventory,جرد الأصول,record,True,False,2,36,1,None,"XLSX, CSV",Provide Asset Inventory demonstrating implementation of Mobile Device Management
+154,42,NCA-ECC,2-6-1,POLICY,Policy Document,وثيقة السياسة,document,False,False,3,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Mobile Device Management
+155,43,NCA-ECC,2-6-2,POLICY,Policy Document,وثيقة السياسة,document,True,True,1,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of BYOD Policy
+156,43,NCA-ECC,2-6-2,PROCEDURE,Procedure Document,وثيقة الإجراءات,document,True,False,2,36,12,Department Head,"PDF, DOCX",Provide Procedure Document demonstrating implementation of BYOD Policy
+157,43,NCA-ECC,2-6-2,TRAINING_RECORD,Training Record,سجل التدريب,record,False,False,3,60,12,HR,"PDF, XLSX",Provide Training Record demonstrating implementation of BYOD Policy
+158,43,NCA-ECC,2-6-2,ATTESTATION,Management Attestation,إقرار الإدارة,document,False,False,4,36,12,Executive,PDF,Provide Management Attestation demonstrating implementation of BYOD Policy
+159,44,NCA-ECC,2-7-1,CLASSIFICATION_SCHEME,Classification Scheme,مخطط التصنيف,document,True,True,1,60,24,CISO,PDF,Provide Classification Scheme demonstrating implementation of Data Classification (NDMO)
+160,44,NCA-ECC,2-7-1,POLICY,Policy Document,وثيقة السياسة,document,True,False,2,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Data Classification (NDMO)
+161,44,NCA-ECC,2-7-1,INVENTORY,Asset Inventory,جرد الأصول,record,False,False,3,36,1,None,"XLSX, CSV",Provide Asset Inventory demonstrating implementation of Data Classification (NDMO)
+162,44,NCA-ECC,2-7-1,TRAINING_RECORD,Training Record,سجل التدريب,record,False,False,4,60,12,HR,"PDF, XLSX",Provide Training Record demonstrating implementation of Data Classification (NDMO)
+163,45,NCA-ECC,2-7-2,CONFIGURATION,Configuration File/Export,ملف التكوين,artifact,True,True,1,24,6,None,"XML, JSON, YAML",Provide Configuration File/Export demonstrating implementation of DLP Implementation
+164,45,NCA-ECC,2-7-2,LOG,System Log,سجل النظام,record,True,False,2,12,1,None,"LOG, JSON, CSV",Provide System Log demonstrating implementation of DLP Implementation
+165,45,NCA-ECC,2-7-2,REPORT,Report,تقرير,record,False,False,3,36,3,Department Head,"PDF, XLSX",Provide Report demonstrating implementation of DLP Implementation
+166,45,NCA-ECC,2-7-2,INCIDENT_REPORT,Incident Report,تقرير الحادث,record,False,False,4,60,12,CISO,PDF,Provide Incident Report demonstrating implementation of DLP Implementation
+167,46,NCA-ECC,2-7-3,DESTRUCTION_CERT,Certificate of Destruction,شهادة الإتلاف,record,True,True,1,84,0,Records Manager,PDF,Provide Certificate of Destruction demonstrating implementation of Data Disposal
+168,46,NCA-ECC,2-7-3,POLICY,Policy Document,وثيقة السياسة,document,True,False,2,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Data Disposal
+169,46,NCA-ECC,2-7-3,PROCEDURE,Procedure Document,وثيقة الإجراءات,document,False,False,3,36,12,Department Head,"PDF, DOCX",Provide Procedure Document demonstrating implementation of Data Disposal
+170,46,NCA-ECC,2-7-3,AUDIT_LOG,Audit Trail Log,سجل التدقيق,record,False,False,4,24,3,None,"LOG, JSON",Provide Audit Trail Log demonstrating implementation of Data Disposal
+171,47,NCA-ECC,2-8-1,STANDARD,Technical Standard,المعيار الفني,document,True,True,1,36,12,CISO,"PDF, DOCX",Provide Technical Standard demonstrating implementation of Cryptography Standards
+172,47,NCA-ECC,2-8-1,CONFIGURATION,Configuration File/Export,ملف التكوين,artifact,True,False,2,24,6,None,"XML, JSON, YAML",Provide Configuration File/Export demonstrating implementation of Cryptography Standards
+173,47,NCA-ECC,2-8-1,POLICY,Policy Document,وثيقة السياسة,document,False,False,3,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Cryptography Standards
+174,47,NCA-ECC,2-8-1,TEST_RESULT,Test Results,نتائج الاختبار,record,False,False,4,36,12,Test Manager,"PDF, XLSX",Provide Test Results demonstrating implementation of Cryptography Standards
+175,48,NCA-ECC,2-8-2,POLICY,Policy Document,وثيقة السياسة,document,True,True,1,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Key Management
+176,48,NCA-ECC,2-8-2,PROCEDURE,Procedure Document,وثيقة الإجراءات,document,True,False,2,36,12,Department Head,"PDF, DOCX",Provide Procedure Document demonstrating implementation of Key Management
+177,48,NCA-ECC,2-8-2,AUDIT_LOG,Audit Trail Log,سجل التدقيق,record,False,False,3,24,3,None,"LOG, JSON",Provide Audit Trail Log demonstrating implementation of Key Management
+178,48,NCA-ECC,2-8-2,CONFIGURATION,Configuration File/Export,ملف التكوين,artifact,False,False,4,24,6,None,"XML, JSON, YAML",Provide Configuration File/Export demonstrating implementation of Key Management
+179,49,NCA-ECC,2-9-1,POLICY,Policy Document,وثيقة السياسة,document,True,True,1,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Backup Strategy (3-2-1)
+180,49,NCA-ECC,2-9-1,BACKUP_PLAN,Backup Plan,خطة النسخ الاحتياطي,document,True,False,2,36,12,IT Director,PDF,Provide Backup Plan demonstrating implementation of Backup Strategy (3-2-1)
+181,49,NCA-ECC,2-9-1,CONFIGURATION,Configuration File/Export,ملف التكوين,artifact,False,False,3,24,6,None,"XML, JSON, YAML",Provide Configuration File/Export demonstrating implementation of Backup Strategy (3-2-1)
+182,49,NCA-ECC,2-9-1,REPORT,Report,تقرير,record,False,False,4,36,3,Department Head,"PDF, XLSX",Provide Report demonstrating implementation of Backup Strategy (3-2-1)
+183,50,NCA-ECC,2-9-2,TEST_RESULT,Test Results,نتائج الاختبار,record,True,True,1,36,12,Test Manager,"PDF, XLSX",Provide Test Results demonstrating implementation of Backup Testing
+184,50,NCA-ECC,2-9-2,REPORT,Report,تقرير,record,True,False,2,36,3,Department Head,"PDF, XLSX",Provide Report demonstrating implementation of Backup Testing
+185,50,NCA-ECC,2-9-2,MEETING_MINUTES,Meeting Minutes,محضر الاجتماع,record,False,False,3,60,1,Chair,"PDF, DOCX",Provide Meeting Minutes demonstrating implementation of Backup Testing
+186,51,NCA-ECC,2-10-1,SCAN_REPORT,Vulnerability Scan Report,تقرير فحص الثغرات,record,True,True,1,24,1,None,"PDF, JSON",Provide Vulnerability Scan Report demonstrating implementation of Vulnerability Scanning
+187,51,NCA-ECC,2-10-1,REPORT,Report,تقرير,record,True,False,2,36,3,Department Head,"PDF, XLSX",Provide Report demonstrating implementation of Vulnerability Scanning
+188,51,NCA-ECC,2-10-1,REMEDIATION_PLAN,Remediation Plan,خطة المعالجة,record,False,False,3,36,3,CISO,"PDF, XLSX",Provide Remediation Plan demonstrating implementation of Vulnerability Scanning
+189,52,NCA-ECC,2-10-2,SCAN_REPORT,Vulnerability Scan Report,تقرير فحص الثغرات,record,True,True,1,24,1,None,"PDF, JSON",Provide Vulnerability Scan Report demonstrating implementation of Vulnerability Remediation SLA
+190,52,NCA-ECC,2-10-2,REMEDIATION_REPORT,Remediation Report,تقرير المعالجة,record,True,False,2,36,3,CISO,"PDF, XLSX",Provide Remediation Report demonstrating implementation of Vulnerability Remediation SLA
+191,52,NCA-ECC,2-10-2,CHANGE_RECORD,Change Management Record,سجل التغيير,record,False,False,3,24,1,CAB,"PDF, JSON",Provide Change Management Record demonstrating implementation of Vulnerability Remediation SLA
+192,53,NCA-ECC,2-11-1,PENTEST_REPORT,Penetration Test Report,تقرير اختبار الاختراق,record,True,True,1,36,12,CISO,PDF,Provide Penetration Test Report demonstrating implementation of Annual Pen Test
+193,53,NCA-ECC,2-11-1,CONTRACT,Contract/Agreement,عقد,document,True,False,2,84,12,Legal,PDF,Provide Contract/Agreement demonstrating implementation of Annual Pen Test
+194,53,NCA-ECC,2-11-1,REMEDIATION_PLAN,Remediation Plan,خطة المعالجة,record,False,False,3,36,3,CISO,"PDF, XLSX",Provide Remediation Plan demonstrating implementation of Annual Pen Test
+195,54,NCA-ECC,2-12-1,CONFIGURATION,Configuration File/Export,ملف التكوين,artifact,True,True,1,24,6,None,"XML, JSON, YAML",Provide Configuration File/Export demonstrating implementation of Centralized Logging (SIEM)
+196,54,NCA-ECC,2-12-1,LOG,System Log,سجل النظام,record,True,False,2,12,1,None,"LOG, JSON, CSV",Provide System Log demonstrating implementation of Centralized Logging (SIEM)
+197,54,NCA-ECC,2-12-1,REPORT,Report,تقرير,record,False,False,3,36,3,Department Head,"PDF, XLSX",Provide Report demonstrating implementation of Centralized Logging (SIEM)
+198,54,NCA-ECC,2-12-1,DASHBOARD,Dashboard,لوحة المتابعة,artifact,False,False,4,24,1,None,"PNG, PDF",Provide Dashboard demonstrating implementation of Centralized Logging (SIEM)
+199,55,NCA-ECC,2-12-2,LOG,System Log,سجل النظام,record,True,True,1,12,1,None,"LOG, JSON, CSV",Provide System Log demonstrating implementation of 24/7 SOC Monitoring
+200,55,NCA-ECC,2-12-2,REPORT,Report,تقرير,record,True,False,2,36,3,Department Head,"PDF, XLSX",Provide Report demonstrating implementation of 24/7 SOC Monitoring
+201,55,NCA-ECC,2-12-2,INCIDENT_REPORT,Incident Report,تقرير الحادث,record,False,False,3,60,12,CISO,PDF,Provide Incident Report demonstrating implementation of 24/7 SOC Monitoring
+202,55,NCA-ECC,2-12-2,SHIFT_RECORDS,SOC Shift Records,سجلات نوبات SOC,record,False,False,4,12,1,SOC Manager,"PDF, XLSX",Provide SOC Shift Records demonstrating implementation of 24/7 SOC Monitoring
+203,56,NCA-ECC,2-13-1,INCIDENT_RESPONSE_PLAN,Incident Response Plan,خطة الاستجابة للحوادث,document,True,True,1,36,12,CISO,PDF,Provide Incident Response Plan demonstrating implementation of Incident Response Plan
+204,56,NCA-ECC,2-13-1,TEST_RESULT,Test Results,نتائج الاختبار,record,True,False,2,36,12,Test Manager,"PDF, XLSX",Provide Test Results demonstrating implementation of Incident Response Plan
+205,56,NCA-ECC,2-13-1,POLICY,Policy Document,وثيقة السياسة,document,False,False,3,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Incident Response Plan
+206,56,NCA-ECC,2-13-1,TRAINING_RECORD,Training Record,سجل التدريب,record,False,False,4,60,12,HR,"PDF, XLSX",Provide Training Record demonstrating implementation of Incident Response Plan
+207,57,NCA-ECC,2-13-2,INCIDENT_REPORT,Incident Report,تقرير الحادث,record,True,True,1,60,12,CISO,PDF,Provide Incident Report demonstrating implementation of Incident Reporting to NCA
+208,57,NCA-ECC,2-13-2,NCA_NOTIFICATION,NCA Notification,إشعار NCA,record,True,False,2,84,0,CISO,"PDF, EMAIL",Provide NCA Notification demonstrating implementation of Incident Reporting to NCA
+209,57,NCA-ECC,2-13-2,TIMELINE,Incident Timeline,الجدول الزمني للحادث,record,False,False,3,60,0,CISO,"PDF, XLSX",Provide Incident Timeline demonstrating implementation of Incident Reporting to NCA
+210,57,NCA-ECC,2-13-2,AUDIT_LOG,Audit Trail Log,سجل التدقيق,record,False,False,4,24,3,None,"LOG, JSON",Provide Audit Trail Log demonstrating implementation of Incident Reporting to NCA
+211,58,NCA-ECC,2-14-1,ACCESS_LOG,Access Log,سجل الوصول,record,True,True,1,12,1,None,"LOG, CSV",Provide Access Log demonstrating implementation of Physical Access Control
+212,58,NCA-ECC,2-14-1,POLICY,Policy Document,وثيقة السياسة,document,True,False,2,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Physical Access Control
+213,58,NCA-ECC,2-14-1,BADGE_RECORDS,Badge Access Records,سجلات البطاقات,record,False,False,3,24,3,None,"CSV, PDF",Provide Badge Access Records demonstrating implementation of Physical Access Control
+214,58,NCA-ECC,2-14-1,CCTV_RECORDS,CCTV Records,سجلات الكاميرات,record,False,False,4,6,1,None,Video,Provide CCTV Records demonstrating implementation of Physical Access Control
+215,59,NCA-ECC,2-15-1,CONFIGURATION,Configuration File/Export,ملف التكوين,artifact,True,True,1,24,6,None,"XML, JSON, YAML",Provide Configuration File/Export demonstrating implementation of Web Application Firewall
+216,59,NCA-ECC,2-15-1,LOG,System Log,سجل النظام,record,True,False,2,12,1,None,"LOG, JSON, CSV",Provide System Log demonstrating implementation of Web Application Firewall
+217,59,NCA-ECC,2-15-1,POLICY,Policy Document,وثيقة السياسة,document,False,False,3,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Web Application Firewall
+218,59,NCA-ECC,2-15-1,TEST_RESULT,Test Results,نتائج الاختبار,record,False,False,4,36,12,Test Manager,"PDF, XLSX",Provide Test Results demonstrating implementation of Web Application Firewall
+219,60,NCA-ECC,2-15-2,POLICY,Policy Document,وثيقة السياسة,document,True,True,1,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Secure SDLC
+220,60,NCA-ECC,2-15-2,CODE_REVIEW_REPORT,Code Review Report,تقرير مراجعة الكود,record,True,False,2,24,1,Tech Lead,"PDF, JSON",Provide Code Review Report demonstrating implementation of Secure SDLC
+221,60,NCA-ECC,2-15-2,SAST_REPORT,SAST Report,تقرير SAST,record,False,False,3,24,1,None,"PDF, JSON",Provide SAST Report demonstrating implementation of Secure SDLC
+222,60,NCA-ECC,2-15-2,DAST_REPORT,DAST Report,تقرير DAST,record,False,False,4,24,1,None,"PDF, JSON",Provide DAST Report demonstrating implementation of Secure SDLC
+223,61,NCA-ECC,3-1-1,BCP_DRP,BCP/DRP Plan,خطة استمرارية الأعمال,document,True,True,1,36,12,Executive,"PDF, DOCX",Provide BCP/DRP Plan demonstrating implementation of BCM Cybersecurity
+224,61,NCA-ECC,3-1-1,RISK_ASSESSMENT,Risk Assessment,تقييم المخاطر,record,True,False,2,36,12,Risk Officer,"PDF, XLSX",Provide Risk Assessment demonstrating implementation of BCM Cybersecurity
+225,61,NCA-ECC,3-1-1,POLICY,Policy Document,وثيقة السياسة,document,False,False,3,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of BCM Cybersecurity
+226,61,NCA-ECC,3-1-1,TEST_RESULT,Test Results,نتائج الاختبار,record,False,False,4,36,12,Test Manager,"PDF, XLSX",Provide Test Results demonstrating implementation of BCM Cybersecurity
+227,62,NCA-ECC,3-1-2,BCP_DRP,BCP/DRP Plan,خطة استمرارية الأعمال,document,True,True,1,36,12,Executive,"PDF, DOCX",Provide BCP/DRP Plan demonstrating implementation of DR Plan Annual Testing
+228,62,NCA-ECC,3-1-2,BCP_TEST,BCP Test Result,نتائج اختبار BCP,record,True,False,2,36,12,BCM Manager,PDF,Provide BCP Test Result demonstrating implementation of DR Plan Annual Testing
+229,62,NCA-ECC,3-1-2,REPORT,Report,تقرير,record,False,False,3,36,3,Department Head,"PDF, XLSX",Provide Report demonstrating implementation of DR Plan Annual Testing
+230,62,NCA-ECC,3-1-2,MEETING_MINUTES,Meeting Minutes,محضر الاجتماع,record,False,False,4,60,1,Chair,"PDF, DOCX",Provide Meeting Minutes demonstrating implementation of DR Plan Annual Testing
+231,63,NCA-ECC,3-1-3,TEST_RESULT,Test Results,نتائج الاختبار,record,True,True,1,36,12,Test Manager,"PDF, XLSX",Provide Test Results demonstrating implementation of Cyber Resilience Testing
+232,63,NCA-ECC,3-1-3,REPORT,Report,تقرير,record,True,False,2,36,3,Department Head,"PDF, XLSX",Provide Report demonstrating implementation of Cyber Resilience Testing
+233,63,NCA-ECC,3-1-3,INCIDENT_REPORT,Incident Report,تقرير الحادث,record,False,False,3,60,12,CISO,PDF,Provide Incident Report demonstrating implementation of Cyber Resilience Testing
+234,64,NCA-ECC,3-1-4,ARCHITECTURE_DIAGRAM,Architecture Diagram,المخطط المعماري,document,True,True,1,36,12,Architect,"PNG, PDF, VISIO",Provide Architecture Diagram demonstrating implementation of DR Site for Critical Systems
+235,64,NCA-ECC,3-1-4,TEST_RESULT,Test Results,نتائج الاختبار,record,True,False,2,36,12,Test Manager,"PDF, XLSX",Provide Test Results demonstrating implementation of DR Site for Critical Systems
+236,64,NCA-ECC,3-1-4,CONTRACT,Contract/Agreement,عقد,document,False,False,3,84,12,Legal,PDF,Provide Contract/Agreement demonstrating implementation of DR Site for Critical Systems
+237,64,NCA-ECC,3-1-4,REPORT,Report,تقرير,record,False,False,4,36,3,Department Head,"PDF, XLSX",Provide Report demonstrating implementation of DR Site for Critical Systems
+238,65,NCA-ECC,4-1-1,RISK_ASSESSMENT,Risk Assessment,تقييم المخاطر,record,True,True,1,36,12,Risk Officer,"PDF, XLSX",Provide Risk Assessment demonstrating implementation of Third-Party Risk Assessment
+239,65,NCA-ECC,4-1-1,DUE_DILIGENCE,Due Diligence Report,تقرير العناية الواجبة,record,True,False,2,60,12,Procurement,PDF,Provide Due Diligence Report demonstrating implementation of Third-Party Risk Assessment
+240,65,NCA-ECC,4-1-1,QUESTIONNAIRE,Vendor Questionnaire,استبيان المورد,record,False,False,3,36,12,Procurement,"PDF, XLSX",Provide Vendor Questionnaire demonstrating implementation of Third-Party Risk Assessment
+241,65,NCA-ECC,4-1-1,REPORT,Report,تقرير,record,False,False,4,36,3,Department Head,"PDF, XLSX",Provide Report demonstrating implementation of Third-Party Risk Assessment
+242,66,NCA-ECC,4-1-2,CONTRACT,Contract/Agreement,عقد,document,True,True,1,84,12,Legal,PDF,Provide Contract/Agreement demonstrating implementation of Third-Party Contracts
+243,66,NCA-ECC,4-1-2,SLA,Service Level Agreement,اتفاقية مستوى الخدمة,document,True,False,2,84,12,Legal,PDF,Provide Service Level Agreement demonstrating implementation of Third-Party Contracts
+244,66,NCA-ECC,4-1-2,REVIEW_REPORT,Review Report,تقرير المراجعة,record,False,False,3,60,12,Reviewer,PDF,Provide Review Report demonstrating implementation of Third-Party Contracts
+245,66,NCA-ECC,4-1-2,APPROVAL_RECORD,Approval Record,سجل الموافقة,record,False,False,4,60,0,Authorizer,"PDF, EMAIL",Provide Approval Record demonstrating implementation of Third-Party Contracts
+246,67,NCA-ECC,4-1-3,AUDIT_REPORT,Audit Report,تقرير التدقيق,record,True,True,1,84,12,Auditor,PDF,Provide Audit Report demonstrating implementation of Third-Party Monitoring
+247,67,NCA-ECC,4-1-3,REPORT,Report,تقرير,record,True,False,2,36,3,Department Head,"PDF, XLSX",Provide Report demonstrating implementation of Third-Party Monitoring
+248,67,NCA-ECC,4-1-3,SLA_COMPLIANCE,SLA Compliance Report,تقرير امتثال SLA,record,False,False,3,24,1,None,"PDF, XLSX",Provide SLA Compliance Report demonstrating implementation of Third-Party Monitoring
+249,67,NCA-ECC,4-1-3,MEETING_MINUTES,Meeting Minutes,محضر الاجتماع,record,False,False,4,60,1,Chair,"PDF, DOCX",Provide Meeting Minutes demonstrating implementation of Third-Party Monitoring
+250,68,NCA-ECC,4-1-4,INCIDENT_REPORT,Incident Report,تقرير الحادث,record,True,True,1,60,12,CISO,PDF,Provide Incident Report demonstrating implementation of Third-Party Incidents
+251,68,NCA-ECC,4-1-4,NCA_NOTIFICATION,NCA Notification,إشعار NCA,record,True,False,2,84,0,CISO,"PDF, EMAIL",Provide NCA Notification demonstrating implementation of Third-Party Incidents
+252,68,NCA-ECC,4-1-4,REMEDIATION_PLAN,Remediation Plan,خطة المعالجة,record,False,False,3,36,3,CISO,"PDF, XLSX",Provide Remediation Plan demonstrating implementation of Third-Party Incidents
+253,69,NCA-ECC,4-2-1,POLICY,Policy Document,وثيقة السياسة,document,True,True,1,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Cloud Cybersecurity per CCC
+254,69,NCA-ECC,4-2-1,STANDARD,Technical Standard,المعيار الفني,document,True,False,2,36,12,CISO,"PDF, DOCX",Provide Technical Standard demonstrating implementation of Cloud Cybersecurity per CCC
+255,69,NCA-ECC,4-2-1,RISK_ASSESSMENT,Risk Assessment,تقييم المخاطر,record,False,False,3,36,12,Risk Officer,"PDF, XLSX",Provide Risk Assessment demonstrating implementation of Cloud Cybersecurity per CCC
+256,69,NCA-ECC,4-2-1,ARCHITECTURE_DIAGRAM,Architecture Diagram,المخطط المعماري,document,False,False,4,36,12,Architect,"PNG, PDF, VISIO",Provide Architecture Diagram demonstrating implementation of Cloud Cybersecurity per CCC
+257,70,NCA-ECC,4-2-2,CLOUD_CONTRACT,Cloud Service Contract,عقد الخدمة السحابية,document,True,True,1,84,12,Legal,PDF,Provide Cloud Service Contract demonstrating implementation of Data Localization (NDMO)
+258,70,NCA-ECC,4-2-2,DATA_RESIDENCY_CERT,Data Residency Certification,شهادة موقع البيانات,document,True,False,2,36,12,Cloud Provider,PDF,Provide Data Residency Certification demonstrating implementation of Data Localization (NDMO)
+259,70,NCA-ECC,4-2-2,POLICY,Policy Document,وثيقة السياسة,document,False,False,3,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Data Localization (NDMO)
+260,70,NCA-ECC,4-2-2,ATTESTATION,Management Attestation,إقرار الإدارة,document,False,False,4,36,12,Executive,PDF,Provide Management Attestation demonstrating implementation of Data Localization (NDMO)
+261,71,NCA-ECC,4-2-3,ASSESSMENT_REPORT,Assessment Report,تقرير التقييم,record,True,True,1,36,12,Assessor,PDF,Provide Assessment Report demonstrating implementation of Cloud Provider Assessment
+262,71,NCA-ECC,4-2-3,DUE_DILIGENCE,Due Diligence Report,تقرير العناية الواجبة,record,True,False,2,60,12,Procurement,PDF,Provide Due Diligence Report demonstrating implementation of Cloud Provider Assessment
+263,71,NCA-ECC,4-2-3,CERTIFICATE,Certificate,شهادة,document,False,False,3,36,12,None,PDF,Provide Certificate demonstrating implementation of Cloud Provider Assessment
+264,71,NCA-ECC,4-2-3,AUDIT_REPORT,Audit Report,تقرير التدقيق,record,False,False,4,84,12,Auditor,PDF,Provide Audit Report demonstrating implementation of Cloud Provider Assessment
+265,72,NCA-ECC,4-2-4,EXIT_PLAN,Cloud Exit Plan,خطة الخروج,document,True,True,1,60,12,CIO,PDF,Provide Cloud Exit Plan demonstrating implementation of Cloud Exit Strategy
+266,72,NCA-ECC,4-2-4,TEST_RESULT,Test Results,نتائج الاختبار,record,True,False,2,36,12,Test Manager,"PDF, XLSX",Provide Test Results demonstrating implementation of Cloud Exit Strategy
+267,72,NCA-ECC,4-2-4,POLICY,Policy Document,وثيقة السياسة,document,False,False,3,36,12,Executive Management,"PDF, DOCX",Provide Policy Document demonstrating implementation of Cloud Exit Strategy
+268,72,NCA-ECC,4-2-4,CONTRACT,Contract/Agreement,عقد,document,False,False,4,84,12,Legal,PDF,Provide Contract/Agreement demonstrating implementation of Cloud Exit Strategy

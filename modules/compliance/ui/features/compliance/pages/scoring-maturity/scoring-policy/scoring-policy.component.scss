@@ -1,0 +1,193 @@
+:host { display: block; padding: var(--space-lg, 24px); }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-lg, 24px);
+    }
+    .header-left { display: flex; align-items: baseline; gap: 12px; }
+    .page-title {
+      font-size: var(--font-size-2xl);
+      font-weight: 700;
+      color: var(--text-heading, #1e293b);
+      margin: 0;
+    }
+    .policy-count {
+      font-size: var(--font-size-sm, 0.875rem);
+      color: var(--text-muted, #94a3b8);
+      background: var(--surface-ice, #f0f9ff);
+      padding: 2px 10px;
+      border-radius: var(--radius-md, 8px);
+    }
+
+    /* Loading */
+    .loading-state {
+      text-align: center;
+      padding: var(--space-2xl, 48px);
+      color: var(--text-muted, #94a3b8);
+    }
+    .loading-icon { font-size: var(--font-size-4xl); display: block; margin-bottom: var(--space-md, 16px); }
+
+    /* Empty */
+    .empty-state {
+      text-align: center;
+      padding: var(--space-2xl, 48px);
+      color: var(--text-muted, #94a3b8);
+    }
+    .empty-icon { font-size: var(--font-size-6xl); margin-bottom: var(--space-md, 16px); display: block; }
+    .empty-msg { text-align: center; color: var(--text-muted, #94a3b8); padding: var(--space-xl, 32px); }
+
+    /* Table helpers */
+    .text-muted { color: var(--text-muted, #94a3b8); }
+    .weight-valid { color: var(--success-dark, #16a34a); font-weight: 600; }
+    .weight-invalid { color: var(--error, #dc2626); font-weight: 600; }
+
+    /* Action buttons */
+    .action-btns { display: flex; gap: 4px; }
+    .icon-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-muted, #94a3b8);
+      padding: 6px;
+      border-radius: var(--radius-sm, 4px);
+      transition: all 150ms;
+      font-size: var(--font-size-base, 1rem);
+    }
+    .icon-btn:hover { background: var(--status-info-bg, var(--status-info-bg, #e0f2fe)); color: var(--primary-darker, #0369a1); }
+    .icon-btn.edit-btn:hover { background: var(--status-info-bg, var(--status-info-bg, #e0f2fe)); color: var(--primary-darker, #0369a1); }
+    .icon-btn.apply-btn:hover { background: var(--status-success-bg, #dcfce7); color: var(--success-dark, #16a34a); }
+    .icon-btn.delete-btn:hover { background: #fee2e2; color: var(--error, #dc2626); }
+
+    /* Dialog form */
+    .dialog-form { display: flex; flex-direction: column; gap: 16px; }
+    .field { display: flex; flex-direction: column; gap: 4px; }
+    .field label {
+      font-size: var(--font-size-sm, 0.875rem);
+      font-weight: 600;
+      color: var(--text-muted, #94a3b8);
+    }
+    .w-full { width: 100%; }
+    .field-row-inline { display: flex; align-items: center; gap: 8px; }
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: var(--font-size-sm, 0.875rem);
+      color: var(--text-heading, #1e293b);
+      cursor: pointer;
+    }
+    .checkbox-label input[type="checkbox"] { cursor: pointer; }
+
+    /* Weights */
+    .weights-section {
+      border: 1px solid var(--border-subtle, #e2e8f0);
+      border-radius: var(--radius-md, 8px);
+      padding: 16px;
+      background: var(--surface-ice, #f8fafc);
+    }
+    .weights-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .section-label {
+      font-size: var(--font-size-sm, 0.875rem);
+      font-weight: 700;
+      color: var(--text-heading, #1e293b);
+    }
+    .weight-row {
+      display: grid;
+      grid-template-columns: 1fr 140px 36px;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .weight-domain { flex: 1; }
+    .weight-value { width: 140px; }
+    .no-weights-msg {
+      text-align: center;
+      color: var(--text-muted, #94a3b8);
+      font-size: var(--font-size-sm, 0.875rem);
+      padding: 16px;
+    }
+    .weight-total {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-subtle, #e2e8f0);
+      font-size: var(--font-size-sm, 0.875rem);
+      font-weight: 600;
+    }
+    .weight-hint {
+      font-weight: 400;
+      font-size: var(--font-size-xs, 0.75rem);
+      color: var(--error, #dc2626);
+    }
+    .weight-hint.weight-ok { color: var(--success-dark, #16a34a); }
+
+    /* Delete */
+    .delete-confirm {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .delete-warn-icon {
+      font-size: var(--font-size-2xl);
+      color: #f59e0b;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    /* Apply */
+    .apply-policy-name {
+      font-size: var(--font-size-sm, 0.875rem);
+      color: var(--text-muted, #94a3b8);
+      margin: 0;
+    }
+    .apply-result { margin-top: 8px; }
+    .result-card {
+      background: var(--surface-ice, #f0f9ff);
+      border: 1px solid var(--border-subtle, #e2e8f0);
+      border-radius: var(--radius-md, 8px);
+      padding: 16px;
+      text-align: center;
+    }
+    .result-label {
+      font-size: var(--font-size-sm, 0.875rem);
+      color: var(--text-muted, #94a3b8);
+      margin-bottom: 4px;
+    }
+    .result-score {
+      font-size: var(--font-size-4xl);
+      font-weight: 700;
+      color: var(--primary, var(--primary, var(--primary, #2563eb)));
+    }
+    .result-meta {
+      font-size: var(--font-size-xs, 0.75rem);
+      color: var(--text-muted, #94a3b8);
+      margin-top: 8px;
+    }
+
+    /* Error banner */
+    .error-banner {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: var(--error, #dc2626);
+      padding: 10px 16px;
+      border-radius: var(--radius-md, 8px);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: var(--font-size-sm, 0.875rem);
+      z-index: var(--z-modal);
+      box-shadow: 0 4px 12px rgba(var(--color-black-rgb), 0.1);
+    }

@@ -1,0 +1,44 @@
+{
+  "name": "dos-platform",
+  "version": "0.0.0",
+  "private": true,
+  "description": "DOS Platform monorepo (platform DNA + services + modules + products).",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=24.14.1",
+    "pnpm": ">=9.15.0"
+  },
+  "packageManager": "pnpm@9.15.4",
+  "scripts": {
+    "build": "pnpm -r --filter \"./platform/**\" --filter \"./modules/packages/**\" --filter \"./services/**\" --filter \"./products/**\" run build",
+    "test": "pnpm -r run test",
+    "typecheck": "pnpm -r run typecheck",
+    "lint": "pnpm -r run lint",
+    "clean": "find . -name node_modules -type d -prune -exec rm -rf {} + ; find . -name dist -type d -prune -exec rm -rf {} +",
+    "foundation:gate": "pnpm --filter @dos/module-foundation build && pnpm --filter shahin-ai-grc-frontend build && bash scripts/ci-guards/foundation-gate.sh",
+    "dynamic-ui:gates": "node scripts/ci-guards/carbon-dynamic-ui-coherence.mjs && node scripts/ci-guards/dynamic-ui-loader-resolvability.mjs && COMPONENT_MAP_ENFORCE=1 node scripts/ci-guards/component-map-coverage.mjs"
+  },
+  "devDependencies": {
+    "typescript": "5.4.5"
+  },
+  "pnpm": {
+    "peerDependencyRules": {
+      "allowedVersions": {
+        "@carbon/icons-angular>@angular/core": "21",
+        "@carbon/icons-angular>@angular/common": "21",
+        "@carbon/icons-angular>@angular/compiler": "21",
+        "@carbon/charts-angular>@angular/core": "21",
+        "@carbon/charts-angular>@angular/common": "21",
+        "@carbon/charts-angular>@angular/compiler": "21",
+        "@carbon/charts-angular>zone.js": "0.15"
+      },
+      "ignoreMissing": [
+        "@angular/compiler"
+      ]
+    },
+    "overrides": {
+      "glob": "^13.0.0",
+      "uuid": "^11.0.0"
+    }
+  }
+}

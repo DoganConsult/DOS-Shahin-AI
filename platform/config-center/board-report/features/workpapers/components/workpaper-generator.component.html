@@ -1,0 +1,262 @@
+<div class="workpaper-generator" [attr.dir]="i18n.direction()">
+      <app-page-header
+        titleEn="Workpaper Generator"
+        titleAr="مولد أوراق العمل"
+        subtitleEn="Automatically generate comprehensive audit workpapers with traceability"
+        subtitleAr="إنشاء أوراق عمل التدقيق الشاملة تلقائياً مع إمكانية التتبع"
+        icon="file-pdf"
+        [isAr]="i18n.isAr()"
+        [dir]="i18n.direction()" />
+
+      <div class="generator-container">
+        <!-- Generation Form -->
+        <p-card class="generation-form-card">
+          <ng-template pTemplate="header">
+            <h3>{{ i18n.translate('workpaper.generationSettings') }}</h3>
+          </ng-template>
+          <div class="form-grid">
+            <div class="form-group">
+              <grc-form-field [label]="i18n.translate('workpaper.auditId')">
+                <input pInputText
+                  id="audit-id"
+                  [(ngModel)]="generationRequest.auditId"
+                  [placeholder]="i18n.translate('workpaper.auditIdPlaceholder')"
+                  [disabled]="generating()" />
+              </grc-form-field>
+            </div>
+            <div class="form-group">
+              <label for="framework-id">{{ i18n.translate('workpaper.frameworkId') }}</label>
+              <p-dropdown
+                id="framework-id"
+                [(ngModel)]="generationRequest.frameworkId"
+                [options]="availableFrameworks()"
+                optionLabel="name"
+                optionValue="id"
+                [placeholder]="i18n.translate('workpaper.selectFramework')"
+                [disabled]="generating()"></p-dropdown>
+            </div>
+            <div class="form-group">
+              <label for="include-tests">
+                <input
+                  type="checkbox"
+                  id="include-tests"
+                  [(ngModel)]="generationRequest.includeTestProcedures"
+                  [disabled]="generating()" />
+                {{ i18n.translate('workpaper.includeTestProcedures') }}
+              </label>
+            </div>
+            <div class="form-group">
+              <label for="include-evidence">
+                <input
+                  type="checkbox"
+                  id="include-evidence"
+                  [(ngModel)]="generationRequest.includeEvidence"
+                  [disabled]="generating()" />
+                {{ i18n.translate('workpaper.includeEvidence') }}
+              </label>
+            </div>
+            <div class="form-group full-width">
+              <label for="notes">{{ i18n.translate('workpaper.additionalNotes') }}</label>
+              <textarea pInputTextarea
+                id="notes"
+                [(ngModel)]="generationRequest.notes"
+                [rows]="3"
+                [placeholder]="i18n.translate('workpaper.notesPlaceholder')"
+                [disabled]="generating()"></textarea>
+            </div>
+          </div>
+          <div class="form-actions">
+            <p-button
+              [label]="i18n.translate('workpaper.generateWorkpapers')"
+              icon="pi pi-file-pdf"
+              [loading]="generating()"
+              [disabled]="!canGenerate()"
+              (onClick)="generateWorkpapers()" />
+            <p-button
+              [label]="i18n.translate('common.clear')"
+              icon="pi pi-times"
+              severity="secondary"
+              [disabled]="generating()"
+              (onClick)="clearForm()" />
+          </div>
+        </p-card>
+
+        <!-- Generation Status -->
+        @if (generating()) {
+          <div class="generation-status">
+            <p-progressSpinner [style]="{ width: '30px', height: '30px' }" />
+            <span>{{ i18n.translate('workpaper.generating') }}</span>
+          </div>
+        }
+
+        <!-- Empty State (no workpapers generated yet) -->
+        @if (!generating() && generatedWorkpapers().length === 0) {
+          <app-empty-state
+            variant="info"
+            [title]="i18n.translate('workpaper.generateWorkpapers')"
+            [description]="i18n.translate('workpaper.notesPlaceholder')" />
+        }
+
+        <!-- Generated Workpapers -->
+        @if (generatedWorkpapers().length > 0 && !generating()) {
+          <p-card class="workpapers-card">
+            <ng-template pTemplate="header">
+              <div class="card-header-actions">
+                <h3>{{ i18n.translate('workpaper.generatedWorkpapers') }} ({{ generatedWorkpapers().length }})</h3>
+                <p-button
+                  [label]="i18n.translate('workpaper.downloadAll')"
+                  icon="pi pi-download"
+                  severity="secondary"
+                  size="small"
+                  (onClick)="downloadAll()" />
+              </div>
+            </ng-template>
+            <p-tabView>
+              @for (workpaper of generatedWorkpapers(); track workpaper.workpaperId) {
+                <p-tabPanel [header]="workpaper.workpaperTitle || workpaper.controlTitle">
+                  <div class="workpaper-content">
+                    <!-- Workpaper Metadata -->
+                    <div class="workpaper-meta">
+                      <div class="meta-item">
+                        <strong>{{ i18n.translate('workpaper.workpaperId') }}:</strong>
+                        <span>{{ workpaper.workpaperId }}</span>
+                      </div>
+                      <div class="meta-item">
+                        <strong>{{ i18n.translate('workpaper.generatedAt') }}:</strong>
+                        <span>{{ workpaper.generatedAt | appDate:'short' }}</span>
+                      </div>
+                      <div class="meta-item">
+                        <strong>{{ i18n.translate('workpaper.controlsCount') }}:</strong>
+                        <span>{{ (workpaper.controls || []).length }}</span>
+                      </div>
+                      <div class="meta-item">
+                        <strong>{{ i18n.translate('workpaper.evidenceCount') }}:</strong>
+                        <span>{{ workpaper.evidence.length }}</span>
+                      </div>
+                    </div>
+
+                    <!-- Controls Table -->
+                    <div class="section">
+                      <h4>{{ i18n.translate('workpaper.controls') }}</h4>
+                      <grc-data-table
+                        [totalRecords]="(workpaper.controls || []).length"
+                        [emptyMessage]="i18n.translate('common.noData') || 'No controls'">
+                        <p-table
+                          [value]="workpaper.controls || []"
+                          [paginator]="true"
+                          [rows]="10"
+                          styleClass="p-datatable-sm">
+                          <ng-template pTemplate="header">
+                            <tr>
+                              <th>{{ i18n.translate('common.controlCode') }}</th>
+                              <th>{{ i18n.translate('common.title') }}</th>
+                              <th>{{ i18n.translate('workpaper.testStatus') }}</th>
+                              <th>{{ i18n.translate('workpaper.evidenceStatus') }}</th>
+                            </tr>
+                          </ng-template>
+                          <ng-template pTemplate="body" let-control>
+                            <tr>
+                              <td>{{ control.controlCode }}</td>
+                              <td>{{ control.controlTitle }}</td>
+                              <td>
+                                <p-tag
+                                  [value]="control.testStatus"
+                                  [severity]="getTestStatusSeverity(control.testStatus)" />
+                              </td>
+                              <td>
+                                <p-tag
+                                  [value]="control.evidenceStatus"
+                                  [severity]="getEvidenceStatusSeverity(control.evidenceStatus)" />
+                              </td>
+                            </tr>
+                          </ng-template>
+                        </p-table>
+                      </grc-data-table>
+                    </div>
+
+                    <!-- Traceability Matrix -->
+                    @if ((workpaper.traceabilityMatrix || []).length > 0) {
+                      <div class="section">
+                        <h4>{{ i18n.translate('workpaper.traceabilityMatrix') }}</h4>
+                        <grc-data-table
+                          [totalRecords]="(workpaper.traceabilityMatrix || []).length"
+                          [emptyMessage]="i18n.translate('common.noData') || 'No traceability data'">
+                          <p-table
+                            [value]="workpaper.traceabilityMatrix || []"
+                            [paginator]="true"
+                            [rows]="20"
+                            styleClass="p-datatable-sm">
+                            <ng-template pTemplate="header">
+                              <tr>
+                                <th>{{ i18n.translate('common.controlCode') }}</th>
+                                <th>{{ i18n.translate('workpaper.testProcedure') }}</th>
+                                <th>{{ i18n.translate('workpaper.evidenceId') }}</th>
+                                <th>{{ i18n.translate('workpaper.testResult') }}</th>
+                              </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-row>
+                              <tr>
+                                <td>{{ row.controlCode }}</td>
+                                <td>{{ row.testProcedureName }}</td>
+                                <td>{{ row.evidenceId || '—' }}</td>
+                                <td>
+                                  <p-tag
+                                    [value]="row.testResult"
+                                    [severity]="getTestResultSeverity(row.testResult)" />
+                                </td>
+                              </tr>
+                            </ng-template>
+                          </p-table>
+                        </grc-data-table>
+                      </div>
+                    }
+
+                    <!-- Actions -->
+                    <div class="workpaper-actions">
+                      <p-button
+                        [label]="i18n.translate('common.download')"
+                        icon="pi pi-download"
+                        (onClick)="downloadWorkpaper(workpaper)" />
+                      <p-button
+                        [label]="i18n.translate('workpaper.viewFull')"
+                        icon="pi pi-eye"
+                        severity="secondary"
+                        (onClick)="viewWorkpaper(workpaper)" />
+                    </div>
+                  </div>
+                </p-tabPanel>
+              }
+            </p-tabView>
+          </p-card>
+        }
+      </div>
+
+      <!-- Workpaper Preview Dialog -->
+      <p-dialog
+        [visible]="showPreviewDialog()"
+        (visibleChange)="showPreviewDialog.set($event)"
+        [header]="i18n.translate('workpaper.workpaperPreview')"
+        [modal]="true"
+        [style]="{ width: '90vw', maxWidth: '1200px' }"
+        [draggable]="false">
+        @if (previewWorkpaper()) {
+          <div class="preview-content">
+            <div class="preview-header">
+              <h2>{{ previewWorkpaper()!.workpaperTitle }}</h2>
+              <p>{{ previewWorkpaper()!.generatedAt | appDate:'long' }}</p>
+            </div>
+            <div class="preview-body" [innerHTML]="formatWorkpaperContent(previewWorkpaper()!)"></div>
+          </div>
+          <ng-template pTemplate="footer">
+            <p-button
+              [label]="i18n.translate('common.close')"
+              (onClick)="showPreviewDialog.set(false)"
+              severity="secondary" />
+            <p-button
+              [label]="i18n.translate('common.download')"
+              icon="pi pi-download"
+              (onClick)="downloadWorkpaper(previewWorkpaper()!)" />
+          </ng-template>
+        }
+      </p-dialog>
+    </div>

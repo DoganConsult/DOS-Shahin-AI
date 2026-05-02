@@ -1,0 +1,100 @@
+model
+  schema 1.1
+
+# DAuth ReBAC model.
+# Each type declares the relations that objects of that type participate in,
+# plus the `can_<action>` relations that collapse deep graph walks into a
+# single query for the decision engine.
+#
+# Deploy path: write this model to OpenFGA via the `Write Authorization Model`
+# API, capture the returned `authorization_model_id`, and set it as
+# OPENFGA_MODEL_ID. Never change a model in place — always publish a new
+# version and flip the env var.
+
+type user
+
+type tenant
+  relations
+    define member: [user]
+    define admin: [user]
+
+type team
+  relations
+    define tenant: [tenant]
+    define member: [user] or admin from tenant
+    define admin: [user] or admin from tenant
+
+type department
+  relations
+    define tenant: [tenant]
+    define head: [user]
+    define member: [user] or head or admin from tenant
+
+type evidence
+  relations
+    define tenant: [tenant]
+    define owner: [user]
+    define reviewer: [user, team#member, department#member]
+    define approver: [user, team#member]
+
+    define can_view: owner or reviewer or approver or member from tenant or admin from tenant
+    define can_submit: owner
+    define can_approve: approver but not owner     # SoD: approver ≠ owner
+    define can_export: approver or admin from tenant
+    define can_delete: admin from tenant
+
+type control
+  relations
+    define tenant: [tenant]
+    define owner: [user]
+    define tester: [user]
+    define reviewer: [user, team#member]
+
+    define can_view: owner or tester or reviewer or member from tenant
+    define can_test: tester or owner
+    define can_sign_off: reviewer but not tester   # SoD: reviewer ≠ tester
+    define can_delete: admin from tenant
+
+type policy
+  relations
+    define tenant: [tenant]
+    define owner: [user]
+    define approver: [user, team#member]
+
+    define can_view: member from tenant
+    define can_edit: owner or admin from tenant
+    define can_approve: approver but not owner     # SoD: approver ≠ owner
+
+type risk
+  relations
+    define tenant: [tenant]
+    define owner: [user]
+    define assessor: [user]
+
+    define can_view: owner or assessor or member from tenant
+    define can_assess: assessor or owner
+    define can_close: admin from tenant
+
+type report
+  relations
+    define tenant: [tenant]
+    define owner: [user]
+    define approver: [user]
+
+    define can_view: member from tenant
+    define can_publish: approver but not owner
+    define can_export: approver or admin from tenant
+
+# Delegation — `acts_on_behalf_of` lets an agent inherit a user's can_*
+# relations transparently. The decision engine still wraps with SoD and
+# tenant checks; OpenFGA only answers "does this delegation exist?".
+type delegation
+  relations
+    define from: [user]
+    define to: [user]
+    define scope: [tenant]
+    define active: [user] with condition_active
+
+condition condition_active(valid_from: timestamp, valid_to: timestamp) {
+  valid_from <= now() && now() < valid_to
+}

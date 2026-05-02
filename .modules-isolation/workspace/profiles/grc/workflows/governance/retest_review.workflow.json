@@ -1,0 +1,15 @@
+{
+  "id": "governance.retest_review",
+  "module": "governance",
+  "hook": "retest_review",
+  "version": "1.0.0",
+  "sla_hours": 72,
+  "actor_role_default": "governance.module_lead",
+  "states": ["ready","retesting","passed","failed"],
+  "initial": "ready",
+  "transitions": [{"from":"ready","to":"retesting","on":"start_retest"},{"from":"retesting","to":"passed","on":"pass","actor_role":"governance.approver"},{"from":"retesting","to":"failed","on":"fail","actor_role":"governance.approver"}],
+  "audit_event_prefix": "governance.workflow.retest_review",
+  "notification_targets": ["governance.module_lead", "governance.approver"],
+  "evidence_required_on": ["passed","published"],
+  "escalation": { "on": "sla_breach", "to": "governance.executive_owner", "after_hours": 144 }
+}

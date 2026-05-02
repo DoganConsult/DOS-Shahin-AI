@@ -1,0 +1,11 @@
+export { authenticate, requirePermission } from '@dos/module-auth';
+export { evaluateLifecycleTransition } from '@dos/module-auth';
+export type { LifecycleAuthResult } from '@dos/module-auth';
+export { evaluateSod } from '@dos/module-auth';
+export type { SodCheckResult } from '@dos/module-auth';
+export { checkSelfApproval } from '@dos/module-auth';
+export { validateDelegation } from '@dos/module-auth';
+export type { DelegationScope } from '@dos/module-auth';
+export { evaluateDelegatedAccess } from '@dos/module-auth';
+export type { ActingOnBehalfOfContext } from '@dos/module-auth';
+export { canPerform } from '@dos/module-auth/access';

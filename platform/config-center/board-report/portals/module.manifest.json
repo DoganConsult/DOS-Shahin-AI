@@ -1,0 +1,61 @@
+{
+  "moduleCode": "portals",
+  "displayName": "External Portals",
+  "ownerTeam": "product-shahin-ai",
+  "productCode": "shahin-ai",
+  "ownership": "module-owned",
+  "version": "1.0.0",
+  "status": "active",
+  "platformDependencies": [
+    "identity",
+    "tenancy"
+  ],
+  "seedProviders": [
+    "products/shahin/seeds/portals-seed"
+  ],
+  "tenantDefaults": [
+    "portals_session_timeout_minutes",
+    "portals_token_expiry_hours"
+  ],
+  "requiredReferenceData": [
+    "portal_types",
+    "portal_page_templates"
+  ],
+  "currentSources": [
+    "/home/Dr-Dogan-AGRC-OS/backend/src/modules/portals"
+  ],
+  "targetPath": "modules/portals",
+  "futureService": "portals-service",
+  "frontendSources": [
+    "/home/Dr-Dogan-AGRC-OS/frontend/src/app/platform-manifests/portals.module.routes.ts"
+  ],
+  "ownedTables": [
+    "portal_configs",
+    "portal_users",
+    "portal_sessions",
+    "portal_pages",
+    "portal_tokens",
+    "portal_invitations"
+  ],
+  "referencedTables": [
+    "teams",
+    "vendors",
+    "workflows"
+  ],
+  "events": {
+    "publishes": [
+      "portals.user_registered",
+      "portals.session_started",
+      "portals.content_published",
+      "portals.invitation_sent",
+      "portals.access_revoked"
+    ],
+    "subscribes": [
+      "vendor.portal_token_issued",
+      "workflow.status_changed"
+    ]
+  },
+  "routeBases": [
+    "/api/portals"
+  ]
+}

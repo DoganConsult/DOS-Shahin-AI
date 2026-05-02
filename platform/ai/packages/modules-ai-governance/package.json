@@ -1,0 +1,24 @@
+{
+  "name": "@dos/modules-ai-governance",
+  "version": "1.0.0",
+  "description": "AI-OS — AI governance module package: ports, routes, services, and controllers consumed by ai-governance-service.",
+  "private": true,
+  "main": "ai-governance.js",
+  "types": "ai-governance.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@dos/contracts": "workspace:*",
+    "@dos/db": "workspace:*",
+    "@dos/event-backbone": "workspace:*",
+    "@dos/module-sdk": "workspace:*",
+    "@dos/platform-core": "workspace:*",
+    "@dos/types": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0"
+  }
+}

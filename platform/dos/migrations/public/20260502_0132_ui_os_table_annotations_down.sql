@@ -1,0 +1,23 @@
+-- Strip the 20 table comments added by 0132. Idempotent.
+BEGIN;
+COMMENT ON TABLE dos.ui_manager_projects          IS NULL;
+COMMENT ON TABLE dos.ui_manager_drafts            IS NULL;
+COMMENT ON TABLE dos.ui_manager_locks             IS NULL;
+COMMENT ON TABLE dos.ui_manager_review_comments   IS NULL;
+COMMENT ON TABLE dos.ui_manager_validation_runs   IS NULL;
+COMMENT ON TABLE dos.ui_manager_preview_sessions  IS NULL;
+COMMENT ON TABLE dos.ui_manager_import_jobs       IS NULL;
+COMMENT ON TABLE dos.ui_manager_export_jobs       IS NULL;
+COMMENT ON TABLE dos.ui_ai_context_panels         IS NULL;
+COMMENT ON TABLE dos.ui_ai_suggestions            IS NULL;
+COMMENT ON TABLE dos.ui_ai_suggestion_feedback    IS NULL;
+COMMENT ON TABLE dos.ui_ai_action_drafts          IS NULL;
+COMMENT ON TABLE dos.ui_ai_workspace_memory       IS NULL;
+COMMENT ON TABLE dos.ui_ai_prompt_templates       IS NULL;
+COMMENT ON TABLE dos.ui_ai_prompt_template_tools  IS NULL;
+COMMENT ON TABLE dos.ui_ai_tool_surface_bindings  IS NULL;
+COMMENT ON TABLE dos.ui_user_preferences          IS NULL;
+COMMENT ON TABLE dos.ui_workspace_states          IS NULL;
+COMMENT ON TABLE dos.ui_dashboards                IS NULL;
+COMMENT ON TABLE dos.ui_dashboard_widgets         IS NULL;
+COMMIT;

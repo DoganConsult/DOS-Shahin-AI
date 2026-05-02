@@ -1,0 +1,264 @@
+openapi: 3.1.0
+info:
+  title: DAuth Port — Public REST Contract
+  version: 1.0.0
+  description: |
+    Canonical wire contract for `DAuthPort` from `@dos/ports/dauth`.
+    Every method of the in-process port has an exact 1:1 HTTP endpoint
+    here so consumers in different processes (other platform modules,
+    products in separate runtimes, external clients) call DAuth without
+    any deviation from the typed port surface.
+
+    Versioned via the `v1` prefix in the base path. Increment to `v2`
+    only on a MAJOR `@dos/ports` bump (see packages/ports/COMPATIBILITY.md).
+
+servers:
+  - url: '{baseUrl}/api/dauth/port/v1'
+    variables:
+      baseUrl:
+        default: 'http://localhost:4001'
+        description: 'auth-service base URL (typically resolved via DOSPort.discovery)'
+
+security:
+  - bearerAuth: []
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    DAuthPrincipal:
+      type: object
+      required: [userId, tenantId, roles, scopes]
+      properties:
+        userId: { type: string }
+        tenantId: { type: string }
+        roles: { type: array, items: { type: string } }
+        scopes: { type: array, items: { type: string } }
+        attributes:
+          type: object
+          additionalProperties: true
+
+    DAuthSession:
+      type: object
+      required: [sessionId, principal, mfaSatisfied, issuedAt, expiresAt]
+      properties:
+        sessionId: { type: string }
+        principal: { $ref: '#/components/schemas/DAuthPrincipal' }
+        mfaSatisfied: { type: boolean }
+        issuedAt: { type: string, format: date-time }
+        expiresAt: { type: string, format: date-time }
+
+    DAuthAccessRequest:
+      type: object
+      required: [principal, action, resource]
+      properties:
+        principal: { $ref: '#/components/schemas/DAuthPrincipal' }
+        action: { type: string }
+        resource:
+          type: object
+          required: [type]
+          properties:
+            type: { type: string }
+            id: { type: string }
+        context:
+          type: object
+          additionalProperties: true
+
+    DAuthAccessResult:
+      type: object
+      required: [decision, decisionId, reasonCodes, evaluatedAt]
+      properties:
+        decision: { type: string, enum: [allow, deny] }
+        decisionId: { type: string }
+        reasonCodes: { type: array, items: { type: string } }
+        obligations:
+          type: object
+          additionalProperties: true
+        policyVersion: { type: string }
+        evaluatedAt: { type: string, format: date-time }
+
+    DAuthAuthorityCheck:
+      type: object
+      required: [principal, authorityCode]
+      properties:
+        principal: { $ref: '#/components/schemas/DAuthPrincipal' }
+        authorityCode: { type: string }
+        targetEntity:
+          type: object
+          required: [type, id]
+          properties:
+            type: { type: string }
+            id: { type: string }
+
+    DAuthDelegationContext:
+      type: object
+      required: [delegationId, grantedBy, grantedTo, scope, validFrom, validUntil]
+      properties:
+        delegationId: { type: string }
+        grantedBy: { type: string }
+        grantedTo: { type: string }
+        scope: { type: array, items: { type: string } }
+        validFrom: { type: string, format: date-time }
+        validUntil: { type: string, format: date-time }
+
+    DAuthSoDResult:
+      type: object
+      required: [conflict, ruleCodes]
+      properties:
+        conflict: { type: boolean }
+        ruleCodes: { type: array, items: { type: string } }
+        advisory: { type: string }
+
+    Error:
+      type: object
+      required: [code, message]
+      properties:
+        code: { type: string }
+        message: { type: string }
+        details:
+          type: object
+          additionalProperties: true
+
+paths:
+  /sessions/validate:
+    post:
+      operationId: validateSession
+      summary: 'DAuthPort.validateSession(token)'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [token]
+              properties:
+                token: { type: string }
+      responses:
+        '200':
+          description: Valid session
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/DAuthSession' }
+        '404':
+          description: Token unknown / expired / revoked
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+
+  /access/check:
+    post:
+      operationId: checkAccess
+      summary: 'DAuthPort.checkAccess(request)'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/DAuthAccessRequest' }
+      responses:
+        '200':
+          description: Decision
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/DAuthAccessResult' }
+
+  /authority/check:
+    post:
+      operationId: checkAuthority
+      summary: 'DAuthPort.checkAuthority(check)'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/DAuthAuthorityCheck' }
+      responses:
+        '200':
+          description: Boolean result
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [holds]
+                properties:
+                  holds: { type: boolean }
+
+  /delegations/active:
+    post:
+      operationId: getActiveDelegations
+      summary: 'DAuthPort.getActiveDelegations(principal)'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [principal]
+              properties:
+                principal: { $ref: '#/components/schemas/DAuthPrincipal' }
+      responses:
+        '200':
+          description: Active delegations for principal
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/DAuthDelegationContext' }
+
+  /sod/evaluate:
+    post:
+      operationId: evaluateSoD
+      summary: 'DAuthPort.evaluateSoD(principal, proposedGrants)'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [principal, proposedGrants]
+              properties:
+                principal: { $ref: '#/components/schemas/DAuthPrincipal' }
+                proposedGrants:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      roleCode: { type: string }
+                      permissionCode: { type: string }
+      responses:
+        '200':
+          description: SoD evaluation
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/DAuthSoDResult' }
+
+  /sessions/{sessionId}/revoke:
+    post:
+      operationId: revokeSession
+      summary: 'DAuthPort.revokeSession(sessionId, reason)'
+      parameters:
+        - in: path
+          name: sessionId
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [reason]
+              properties:
+                reason: { type: string }
+      responses:
+        '200':
+          description: Whether a live session was revoked
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [revoked]
+                properties:
+                  revoked: { type: boolean }

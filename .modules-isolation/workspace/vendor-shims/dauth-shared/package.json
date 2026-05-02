@@ -1,0 +1,9 @@
+{
+  "name": "@dos/dauth-shared",
+  "version": "0.0.0-shim",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "description": "ISOLATION SHIM. Replaces platform/dauth/packages/shared. Provides type-only and runtime no-op stubs so modules/ can build standalone."
+}

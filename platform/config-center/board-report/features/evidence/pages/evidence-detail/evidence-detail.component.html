@@ -1,0 +1,484 @@
+<div class="detail-page" [attr.dir]="dir()">
+
+  <!-- Loading -->
+  @if (loading()) {
+    <div class="detail-loading">
+      <p-skeleton height="100px" borderRadius="10px" styleClass="mb-3" />
+      <div class="skeleton-kpi">
+        @for (i of [1,2,3,4]; track i) {
+          <p-skeleton height="76px" borderRadius="10px" />
+        }
+      </div>
+      <p-skeleton height="40px" borderRadius="6px" styleClass="mb-3" />
+      <app-skeleton-loader variant="detail" />
+    </div>
+  }
+
+  <!-- Error -->
+  @if (!loading() && error()) {
+    <app-empty-state
+      variant="error"
+      [title]="isAr() ? 'فشل تحميل تفاصيل الدليل' : 'Failed to load evidence detail'"
+      [description]="isAr() ? 'تحقق من الاتصال وحاول مرة أخرى' : 'Check your connection and try again'"
+      [actionLabel]="isAr() ? 'إعادة المحاولة' : 'Retry'"
+      [dir]="dir()"
+      (action)="retry()" />
+  }
+
+  <!-- Main content -->
+  @if (!loading() && !error() && evidence()) {
+
+    <!-- Sticky Header -->
+    <div class="detail-header">
+      <div class="header-top">
+        <button class="back-btn" (click)="onHeaderAction('back')">
+          <i class="pi pi-arrow-left"></i>
+        </button>
+        <span class="evidence-code">{{ code() }}</span>
+        <h1 class="evidence-title">{{ title() }}</h1>
+      </div>
+      <div class="header-badges">
+        <span class="type-badge">
+          <i class="pi pi-tag"></i>
+          {{ formatStatus(evidenceType()) }}
+        </span>
+        <app-status-badge [status]="status()" [label]="formatStatus(status())" />
+        <span class="freshness-badge" [attr.data-severity]="freshnessSeverity(freshnessBadge())">
+          <i class="pi pi-refresh"></i>
+          {{ isAr() ? 'الحداثة' : 'Freshness' }}: {{ formatStatus(freshnessBadge()) }}
+        </span>
+        <span class="quality-badge" [attr.data-severity]="qualityScoreSeverity(overallQualityScore()) === 'success' ? 'success' : qualityScoreSeverity(overallQualityScore())">
+          <i class="pi pi-star"></i>
+          {{ isAr() ? 'الجودة' : 'Quality' }}: {{ overallQualityScore() }}%
+        </span>
+        <span class="owner-label">
+          <i class="pi pi-user"></i> {{ ownerName() }}
+        </span>
+      </div>
+    </div>
+
+    <!-- KPI Strip -->
+    <div class="kpi-strip">
+      <app-kpi-card-grid [cards]="kpis()" [isAr]="isAr()" />
+    </div>
+
+    <!-- Last Review Date -->
+    @if (lastReviewDate()) {
+      <div class="last-review-info">
+        <i class="pi pi-calendar"></i>
+        {{ isAr() ? 'آخر مراجعة' : 'Last Review' }}:
+        {{ lastReviewDate() | date:'mediumDate' }}
+      </div>
+    }
+
+    <!-- Content Layout: Main + Right Rail -->
+    <div class="content-layout">
+
+      <!-- Main Column -->
+      <div class="main-column">
+
+        <!-- Tab bar -->
+        <div class="tab-bar">
+          @for (tab of tabs; track tab.id) {
+            <button
+              class="tab-btn"
+              [class.active]="activeTab() === tab.id"
+              (click)="selectTab(tab.id)">
+              <i class="pi {{ tab.icon }}"></i>
+              {{ isAr() ? tab.labelAr : tab.labelEn }}
+            </button>
+          }
+        </div>
+
+        <!-- Tab content -->
+        <div class="tab-content">
+
+          <!-- Overview tab -->
+          @if (activeTab() === 'overview') {
+            <div class="overview-grid">
+              @if (description()) {
+                <div class="field-block full">
+                  <label>{{ isAr() ? 'الوصف' : 'Description' }}</label>
+                  <p>{{ description() }}</p>
+                </div>
+              }
+              <div class="field-block">
+                <label>{{ isAr() ? 'النوع' : 'Type' }}</label>
+                <p>{{ evidence()!['evidence_type'] || evidence()!['type'] || '--' }}</p>
+              </div>
+              <div class="field-block">
+                <label>{{ isAr() ? 'المصدر' : 'Source' }}</label>
+                <p>{{ evidence()!['source'] || evidence()!['evidence_source'] || '--' }}</p>
+              </div>
+              <div class="field-block">
+                <label>{{ isAr() ? 'المالك' : 'Owner' }}</label>
+                <p>{{ ownerName() }}</p>
+              </div>
+              <div class="field-block">
+                <label>{{ isAr() ? 'الفريق' : 'Team' }}</label>
+                <p>{{ evidence()!['team_name'] || evidence()!['team'] || '--' }}</p>
+              </div>
+              <div class="field-block">
+                <label>{{ isAr() ? 'تاريخ الإنشاء' : 'Created' }}</label>
+                <p>{{ (evidence()!['created_at'] || evidence()!['createdUtc']) | date:'mediumDate' }}</p>
+              </div>
+              <div class="field-block">
+                <label>{{ isAr() ? 'آخر تحديث' : 'Last Updated' }}</label>
+                <p>{{ (evidence()!['updated_at'] || evidence()!['updatedUtc']) | date:'mediumDate' }}</p>
+              </div>
+              <div class="field-block">
+                <label>{{ isAr() ? 'تاريخ الانتهاء' : 'Expiry Date' }}</label>
+                <p>{{ (evidence()!['expiry_date'] || evidence()!['expires_at']) | date:'mediumDate' }}</p>
+              </div>
+              <div class="field-block">
+                <label>{{ isAr() ? 'الإطار' : 'Framework' }}</label>
+                <p>{{ evidence()!['framework_code'] || evidence()!['framework'] || '--' }}</p>
+              </div>
+              <div class="field-block">
+                <label>{{ isAr() ? 'قابل لإعادة الاستخدام' : 'Reusable' }}</label>
+                <p>{{ evidence()!['is_reusable'] ? (isAr() ? 'نعم' : 'Yes') : (isAr() ? 'لا' : 'No') }}</p>
+              </div>
+            </div>
+          }
+
+          <!-- Files & Versions tab -->
+          @if (activeTab() === 'files') {
+            @if (files().length === 0) {
+              <app-empty-state
+                variant="default"
+                [title]="isAr() ? 'لا توجد ملفات' : 'No Files'"
+                [description]="isAr() ? 'لم يتم رفع أي ملفات لهذا الدليل بعد' : 'No files have been uploaded for this evidence yet'"
+                [dir]="dir()" />
+            } @else {
+              <grc-data-table
+                [totalRecords]="files().length"
+                [emptyMessage]="isAr() ? 'لا توجد ملفات' : 'No files'">
+                <p-table [value]="files()" [rowHover]="true" styleClass="p-datatable-sm">
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th>{{ isAr() ? 'اسم الملف' : 'File Name' }}</th>
+                      <th>{{ isAr() ? 'النسخة' : 'Version' }}</th>
+                      <th>{{ isAr() ? 'الحجم' : 'Size' }}</th>
+                      <th>{{ isAr() ? 'رُفع بواسطة' : 'Uploaded By' }}</th>
+                      <th>{{ isAr() ? 'تاريخ الرفع' : 'Upload Date' }}</th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-file>
+                    <tr>
+                      <td>
+                        <i class="pi pi-file"></i>
+                        {{ file['file_name'] || file['fileName'] || file['name'] || '--' }}
+                      </td>
+                      <td>{{ file['version'] || file['version_number'] || '1' }}</td>
+                      <td>{{ formatFileSize(file['file_size_bytes'] || file['fileSizeBytes'] || file['size']) }}</td>
+                      <td>{{ file['uploaded_by'] || file['uploadedByUserId'] || '--' }}</td>
+                      <td>{{ (file['uploaded_at'] || file['uploadedUtc'] || file['created_at']) | date:'medium' }}</td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+              </grc-data-table>
+            }
+          }
+
+          <!-- Provenance Timeline tab -->
+          @if (activeTab() === 'provenance') {
+            @if (provenanceEvents().length === 0) {
+              <app-empty-state
+                variant="default"
+                [title]="isAr() ? 'لا يوجد سجل مصدر' : 'No Provenance Data'"
+                [description]="isAr() ? 'لم يتم تسجيل أي أحداث مصدر لهذا الدليل' : 'No provenance events have been recorded for this evidence'"
+                [dir]="dir()" />
+            } @else {
+              <div class="timeline">
+                @for (event of provenanceEvents(); track $index) {
+                  <div class="timeline-entry">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-body">
+                      <div class="timeline-head">
+                        <strong>{{ event['event_type'] || event['action'] || event['type'] || 'Event' }}</strong>
+                        <span class="timeline-date">{{ (event['timestamp'] || event['created_at'] || event['event_date']) | date:'medium' }}</span>
+                      </div>
+                      @if (event['description'] || event['details'] || event['notes']) {
+                        <p class="timeline-note">{{ event['description'] || event['details'] || event['notes'] }}</p>
+                      }
+                      @if (event['actor'] || event['performed_by'] || event['user']) {
+                        <span class="timeline-actor">
+                          <i class="pi pi-user"></i>
+                          {{ event['actor'] || event['performed_by'] || event['user'] }}
+                        </span>
+                      }
+                      @if (event['source'] || event['system']) {
+                        <span class="timeline-source">
+                          <i class="pi pi-server"></i>
+                          {{ event['source'] || event['system'] }}
+                        </span>
+                      }
+                    </div>
+                  </div>
+                }
+              </div>
+            }
+          }
+
+          <!-- Quality Assessment tab -->
+          @if (activeTab() === 'quality') {
+            <div class="quality-section">
+              <!-- Overall Score -->
+              <div class="quality-overall">
+                <div class="quality-overall-label">
+                  {{ isAr() ? 'النتيجة الإجمالية للجودة' : 'Overall Quality Score' }}
+                </div>
+                <div class="quality-overall-score" [style.color]="qualityScoreColor(overallQualityScore())">
+                  {{ overallQualityScore() }}%
+                </div>
+                <p-progressBar [value]="overallQualityScore()" [showValue]="false" styleClass="quality-progress-overall" />
+              </div>
+
+              <!-- Individual Dimensions -->
+              <div class="quality-dimensions">
+                @for (dim of qualityDimensions(); track dim.key) {
+                  <div class="quality-dim-card">
+                    <div class="dim-header">
+                      <span class="dim-label">{{ isAr() ? dim.labelAr : dim.labelEn }}</span>
+                      <span class="dim-score" [style.color]="qualityScoreColor(dim.score)">
+                        {{ dim.score }}%
+                      </span>
+                    </div>
+                    <p-progressBar [value]="dim.score" [showValue]="false" styleClass="quality-progress" />
+                  </div>
+                }
+              </div>
+
+              @if (noQualityData()) {
+                <app-empty-state
+                  variant="default"
+                  [title]="isAr() ? 'لا توجد بيانات جودة' : 'No Quality Data'"
+                  [description]="isAr() ? 'لم يتم تقييم جودة هذا الدليل بعد' : 'Quality assessment has not been performed for this evidence yet'"
+                  [dir]="dir()" />
+              }
+            </div>
+          }
+
+          <!-- Linked Entities tab -->
+          @if (activeTab() === 'links') {
+            @if (evidenceLinks().length === 0) {
+              <app-empty-state
+                variant="default"
+                [title]="isAr() ? 'لا توجد كيانات مرتبطة' : 'No Linked Entities'"
+                [description]="isAr() ? 'لم يتم ربط هذا الدليل بأي ضوابط أو مخاطر أو أطر' : 'This evidence is not linked to any controls, risks, or frameworks'"
+                [dir]="dir()" />
+            } @else {
+              <grc-data-table
+                [totalRecords]="evidenceLinks().length"
+                [emptyMessage]="isAr() ? 'لا توجد كيانات مرتبطة' : 'No linked entities'">
+                <p-table [value]="evidenceLinks()" [rowHover]="true" styleClass="p-datatable-sm"
+                  [paginator]="evidenceLinks().length > 10" [rows]="10">
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th>{{ isAr() ? 'النوع' : 'Type' }}</th>
+                      <th>{{ isAr() ? 'المرجع' : 'Reference' }}</th>
+                      <th>{{ isAr() ? 'العنوان' : 'Title' }}</th>
+                      <th>{{ isAr() ? 'نوع الربط' : 'Link Type' }}</th>
+                      <th>{{ isAr() ? 'تاريخ الربط' : 'Linked At' }}</th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-link>
+                    <tr>
+                      <td>
+                        <app-status-badge [status]="link['object_type'] || link['entity_type'] || 'unknown'" />
+                      </td>
+                      <td class="cell-code">{{ link['object_ref'] || link['entity_ref'] || link['object_id'] || '--' }}</td>
+                      <td>{{ link['object_title'] || link['title'] || '--' }}</td>
+                      <td>{{ link['link_type'] || '--' }}</td>
+                      <td>{{ (link['linked_at'] || link['created_at']) | date:'mediumDate' }}</td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+              </grc-data-table>
+            }
+          }
+
+          <!-- Status History tab -->
+          @if (activeTab() === 'history') {
+            @if (statusHistory().length === 0) {
+              <app-empty-state
+                variant="default"
+                [title]="isAr() ? 'لا يوجد سجل حالة' : 'No Status History'"
+                [description]="isAr() ? 'لم يتم تسجيل أي تغييرات في الحالة لهذا الدليل بعد' : 'No status changes have been recorded for this evidence yet'"
+                [dir]="dir()" />
+            } @else {
+              <div class="timeline">
+                @for (entry of statusHistory(); track $index) {
+                  <div class="timeline-entry">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-body">
+                      <div class="timeline-head">
+                        <app-status-badge [status]="entry['from_status'] || entry['fromStatus'] || ''"
+                          [label]="formatStatus(entry['from_status'] || entry['fromStatus'] || '')" />
+                        <i class="pi pi-arrow-right timeline-arrow"></i>
+                        <app-status-badge [status]="entry['to_status'] || entry['toStatus'] || ''"
+                          [label]="formatStatus(entry['to_status'] || entry['toStatus'] || '')" />
+                      </div>
+                      <div class="timeline-meta">
+                        {{ entry['actor_name'] || entry['actor'] || entry['changed_by'] || 'System' }}
+                        &middot;
+                        {{ (entry['changed_at'] || entry['timestamp'] || entry['created_at']) | date:'medium' }}
+                      </div>
+                      @if (entry['reason'] || entry['notes']) {
+                        <p class="timeline-note">{{ entry['reason'] || entry['notes'] }}</p>
+                      }
+                    </div>
+                  </div>
+                }
+              </div>
+            }
+          }
+
+          <!-- Reuse History tab -->
+          @if (activeTab() === 'reuse') {
+            @if (reuseLinks().length === 0) {
+              <app-empty-state
+                variant="default"
+                [title]="isAr() ? 'لا يوجد سجل إعادة استخدام' : 'No Reuse History'"
+                [description]="isAr() ? 'لم يتم إعادة استخدام هذا الدليل في أي ضوابط أو أطر أخرى بعد' : 'This evidence has not been reused across any other controls or frameworks yet'"
+                [dir]="dir()" />
+            } @else {
+              <grc-data-table
+                [totalRecords]="reuseLinks().length"
+                [emptyMessage]="isAr() ? 'لا يوجد سجل إعادة استخدام' : 'No reuse history'">
+                <p-table [value]="reuseLinks()" [rowHover]="true" styleClass="p-datatable-sm"
+                  [paginator]="reuseLinks().length > 10" [rows]="10">
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th>{{ isAr() ? 'معرف الضابط المستهدف' : 'Target Control ID' }}</th>
+                      <th>{{ isAr() ? 'رمز الإطار المستهدف' : 'Target Framework' }}</th>
+                      <th>{{ isAr() ? 'نوع إعادة الاستخدام' : 'Reuse Type' }}</th>
+                      <th>{{ isAr() ? 'أنشئ بواسطة' : 'Created By' }}</th>
+                      <th>{{ isAr() ? 'تاريخ الإنشاء' : 'Created At' }}</th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-link>
+                    <tr>
+                      <td class="cell-code">{{ link['target_control_id'] || link['object_ref'] || link['object_id'] || '--' }}</td>
+                      <td>{{ link['target_framework_code'] || link['framework_code'] || '--' }}</td>
+                      <td>{{ formatStatus(link['reuse_type'] || link['link_type'] || '--') }}</td>
+                      <td>{{ link['created_by'] || link['actor'] || '--' }}</td>
+                      <td>{{ (link['created_at'] || link['linked_at']) | date:'mediumDate' }}</td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+              </grc-data-table>
+            }
+          }
+
+          <!-- Package Membership tab -->
+          @if (activeTab() === 'packages') {
+            @if (packageMemberships().length === 0) {
+              <app-empty-state
+                variant="default"
+                [title]="isAr() ? 'لا توجد حزم' : 'No Package Memberships'"
+                [description]="isAr() ? 'هذا الدليل ليس جزءاً من أي حزمة تصدير أو تدقيق بعد' : 'This evidence is not part of any export or audit packages yet'"
+                [dir]="dir()" />
+            } @else {
+              <grc-data-table
+                [totalRecords]="packageMemberships().length"
+                [emptyMessage]="isAr() ? 'لا توجد حزم' : 'No package memberships'">
+                <p-table [value]="packageMemberships()" [rowHover]="true" styleClass="p-datatable-sm"
+                  [paginator]="packageMemberships().length > 10" [rows]="10"
+                  selectionMode="single" (onRowSelect)="navigateToPackage($event.data['package_id'] || $event.data['id'])">
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th>{{ isAr() ? 'اسم الحزمة' : 'Package Name' }}</th>
+                      <th>{{ isAr() ? 'النوع' : 'Type' }}</th>
+                      <th>{{ isAr() ? 'الحالة' : 'Status' }}</th>
+                      <th>{{ isAr() ? 'تاريخ الإضافة' : 'Added At' }}</th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-pkg>
+                    <tr [pSelectableRow]="pkg" class="cursor-pointer">
+                      <td>{{ pkg['name'] || pkg['package_name'] || '--' }}</td>
+                      <td>{{ formatStatus(pkg['package_type'] || pkg['type'] || '--') }}</td>
+                      <td>
+                        <app-status-badge [status]="pkg['status'] || 'unknown'" [label]="formatStatus(pkg['status'] || 'unknown')" />
+                      </td>
+                      <td>{{ (pkg['added_at'] || pkg['created_at']) | date:'mediumDate' }}</td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+              </grc-data-table>
+            }
+          }
+
+        </div>
+      </div>
+
+      <!-- Right Rail: Quick Actions -->
+      <aside class="right-rail">
+        <h3 class="rail-title">{{ isAr() ? 'إجراءات سريعة' : 'Quick Actions' }}</h3>
+
+        <!-- Transition Status -->
+        @if (availableTransitions().length > 0) {
+          <div class="rail-section">
+            <label class="rail-label">{{ isAr() ? 'تغيير الحالة' : 'Transition Status' }}</label>
+            <p-dropdown
+              [options]="availableTransitions()"
+              [(ngModel)]="pendingStatusChange"
+              [placeholder]="isAr() ? 'الانتقال إلى...' : 'Transition to...'"
+              styleClass="w-full" />
+            <button pButton class="p-button-sm rail-action-btn"
+              icon="pi pi-arrows-h"
+              [label]="isAr() ? 'تطبيق' : 'Apply'"
+              [disabled]="!pendingStatusChange"
+              (click)="onStatusTransition(pendingStatusChange)"></button>
+          </div>
+        }
+
+        <!-- Link Entity -->
+        <div class="rail-section">
+          <button pButton class="p-button-sm p-button-outlined rail-action-btn"
+            icon="pi pi-link"
+            [label]="isAr() ? 'ربط كيان' : 'Link Entity'"
+            (click)="linkEntity()"></button>
+        </div>
+
+        <!-- Mark Reusable -->
+        <div class="rail-section">
+          <button pButton class="p-button-sm p-button-outlined p-button-success rail-action-btn"
+            icon="pi pi-copy"
+            [label]="isAr() ? 'تعيين قابل لإعادة الاستخدام' : 'Mark Reusable'"
+            (click)="markReusable()"></button>
+        </div>
+
+        <!-- Add to Package -->
+        <div class="rail-section">
+          <button pButton class="p-button-sm p-button-outlined p-button-info rail-action-btn"
+            icon="pi pi-box"
+            [label]="isAr() ? 'إضافة إلى حزمة' : 'Add to Package'"
+            (click)="addToPackage()"></button>
+        </div>
+
+        <!-- Metadata Summary -->
+        <div class="rail-section rail-metadata">
+          <label class="rail-label">{{ isAr() ? 'ملخص' : 'Summary' }}</label>
+          <div class="meta-row">
+            <span class="meta-key">{{ isAr() ? 'المعرف' : 'ID' }}</span>
+            <span class="meta-value cell-code">{{ code() }}</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-key">{{ isAr() ? 'النوع' : 'Type' }}</span>
+            <span class="meta-value">{{ formatStatus(evidenceType()) }}</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-key">{{ isAr() ? 'الحالة' : 'Status' }}</span>
+            <span class="meta-value">
+              <app-status-badge [status]="status()" [label]="formatStatus(status())" />
+            </span>
+          </div>
+        </div>
+      </aside>
+
+    </div>
+  }
+
+  <p-toast />
+</div>

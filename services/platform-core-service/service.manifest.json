@@ -1,0 +1,30 @@
+{
+  "version": "1.0.0",
+  "displayName": "Platform Core Service",
+  "serviceCode": "platform-core-service",
+  "layer": "platform",
+  "ownerTeam": "platform-team",
+  "domains": [
+    "platform",
+    "mobile"
+  ],
+  "dependsOn": [
+    "auth-service",
+    "tenant-service",
+    "notification-service"
+  ],
+  "modules": [
+    "mobile"
+  ],
+  "apiPrefix": "/api/core/mobile",
+  "exposes": {
+    "apiBase": "/api/core/mobile",
+    "events": [
+      "platform.mobile.session.started",
+      "platform.mobile.session.ended",
+      "platform.mobile.push.registered",
+      "platform.config.updated"
+    ]
+  },
+  "dependencies": []
+}

@@ -1,0 +1,4 @@
+
+> portals-service@0.1.0 build /root/DOS-AIO/services/portals-service
+> tsc -p tsconfig.json
+

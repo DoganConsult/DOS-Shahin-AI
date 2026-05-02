@@ -1,0 +1,73 @@
+{
+  "moduleCode": "evidence",
+  "displayName": "Evidence",
+  "ownerTeam": "product-shahin-ai",
+  "productCode": "shahin-ai",
+  "ownership": "module-owned",
+  "version": "1.0.0",
+  "status": "active",
+  "platformDependencies": [
+    "identity",
+    "tenancy",
+    "workflow",
+    "permissions",
+    "audit"
+  ],
+  "seedProviders": [
+    "products/shahin/seeds/evidence-seed"
+  ],
+  "tenantDefaults": [
+    "evidence_retention_days",
+    "evidence_auto_collect_enabled"
+  ],
+  "requiredReferenceData": [
+    "evidence_types",
+    "evidence_quality_criteria"
+  ],
+  "currentSources": [
+    "/home/Dr-Dogan-AGRC-OS/backend/src/modules/evidence"
+  ],
+  "targetPath": "modules/evidence",
+  "futureService": "evidence-audit-reporting-service",
+  "frontendSources": [
+    "/home/Dr-Dogan-AGRC-OS/frontend/src/app/platform-manifests/evidence.module.routes.ts"
+  ],
+  "ownedTables": [
+    "evidence_items",
+    "evidence_requests",
+    "evidence_reviews",
+    "evidence_packages",
+    "evidence_connectors",
+    "evidence_retention_policies",
+    "evidence_tasks"
+  ],
+  "referencedTables": [
+    "tenants",
+    "users",
+    "controls",
+    "compliance_mappings",
+    "workflow_instances",
+    "audit_trail"
+  ],
+  "events": {
+    "publishes": [
+      "evidence.collected",
+      "evidence.auto_collected",
+      "evidence.expired",
+      "evidence.coverage_low",
+      "evidence.review_completed",
+      "evidence.review_rejected",
+      "evidence.request_created",
+      "evidence.request_fulfilled"
+    ],
+    "subscribes": [
+      "compliance.assessment_completed",
+      "audit.finding_created",
+      "controls.effectiveness_failed",
+      "foundation.position.holder.unassigned"
+    ]
+  },
+  "routeBases": [
+    "/api/evidence"
+  ]
+}

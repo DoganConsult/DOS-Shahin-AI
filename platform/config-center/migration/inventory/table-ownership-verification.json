@@ -1,0 +1,1687 @@
+{
+  "$generated": "2026-04-12T05:12:30.198Z",
+  "summary": {
+    "verified": 614,
+    "likely": 146,
+    "uncertain": 31,
+    "conflicted": 107,
+    "unreferenced": 881,
+    "total": 1779
+  },
+  "mismatches": [
+    {
+      "table_name": "agent_correlations",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "ai"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "ai-gateway-service",
+      "code_owner_module": "ai"
+    },
+    {
+      "table_name": "agent_cycle_summaries",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "ai"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "ai-gateway-service",
+      "code_owner_module": "ai"
+    },
+    {
+      "table_name": "agent_discoveries",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "ai"
+      ],
+      "code_readers": [
+        "ai"
+      ],
+      "writer_count": 1,
+      "reader_count": 1,
+      "code_owner_service": "ai-gateway-service",
+      "code_owner_module": "ai"
+    },
+    {
+      "table_name": "agent_handoffs",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "agrc-engine",
+        "ai",
+        "admin"
+      ],
+      "code_readers": [
+        "admin"
+      ],
+      "writer_count": 3,
+      "reader_count": 1,
+      "code_owner_service": "ai-gateway-service",
+      "code_owner_module": "agrc-engine"
+    },
+    {
+      "table_name": "ai_governance_break_glass",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "ai-governance"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "ai-gateway-service",
+      "code_owner_module": "ai-governance"
+    },
+    {
+      "table_name": "ai_governance_promotions",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "ai-governance"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "ai-gateway-service",
+      "code_owner_module": "ai-governance"
+    },
+    {
+      "table_name": "ai_trigger_config",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "ai"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "ai-gateway-service",
+      "code_owner_module": "ai"
+    },
+    {
+      "table_name": "approvals",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "workflow"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "workflow-service",
+      "code_owner_module": "workflow"
+    },
+    {
+      "table_name": "attestation_campaigns",
+      "assigned_service": "evidence-audit-reporting-service",
+      "assigned_module": "attestation",
+      "confidence": "conflicted",
+      "code_writers": [
+        "attestation",
+        "compliance",
+        "policy"
+      ],
+      "code_readers": [],
+      "writer_count": 3,
+      "reader_count": 0,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "attestation"
+    },
+    {
+      "table_name": "attestation_campaigns",
+      "assigned_service": "evidence-audit-reporting-service",
+      "assigned_module": "attestation",
+      "confidence": "conflicted",
+      "code_writers": [
+        "attestation",
+        "compliance",
+        "policy"
+      ],
+      "code_readers": [],
+      "writer_count": 3,
+      "reader_count": 0,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "attestation"
+    },
+    {
+      "table_name": "attestation_records",
+      "assigned_service": "evidence-audit-reporting-service",
+      "assigned_module": "attestation",
+      "confidence": "conflicted",
+      "code_writers": [
+        "attestation",
+        "compliance",
+        "policy"
+      ],
+      "code_readers": [],
+      "writer_count": 3,
+      "reader_count": 0,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "attestation"
+    },
+    {
+      "table_name": "attestation_records",
+      "assigned_service": "evidence-audit-reporting-service",
+      "assigned_module": "attestation",
+      "confidence": "conflicted",
+      "code_writers": [
+        "attestation",
+        "compliance",
+        "policy"
+      ],
+      "code_readers": [],
+      "writer_count": 3,
+      "reader_count": 0,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "attestation"
+    },
+    {
+      "table_name": "audit_engagements",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "audit"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "evidence-audit-reporting-service",
+      "code_owner_module": "audit"
+    },
+    {
+      "table_name": "audit_findings",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "analytics"
+      ],
+      "code_readers": [
+        "agrc-engine"
+      ],
+      "writer_count": 1,
+      "reader_count": 1,
+      "code_owner_service": "evidence-audit-reporting-service",
+      "code_owner_module": "analytics"
+    },
+    {
+      "table_name": "audit_packages",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "audit"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "evidence-audit-reporting-service",
+      "code_owner_module": "audit"
+    },
+    {
+      "table_name": "bcp_plans",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "agrc-engine",
+        "bcp"
+      ],
+      "code_readers": [],
+      "writer_count": 2,
+      "reader_count": 0,
+      "code_owner_service": "ai-gateway-service",
+      "code_owner_module": "agrc-engine"
+    },
+    {
+      "table_name": "committees",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "foundation",
+        "governance"
+      ],
+      "code_readers": [],
+      "writer_count": 2,
+      "reader_count": 0,
+      "code_owner_service": "tenant-service",
+      "code_owner_module": "foundation"
+    },
+    {
+      "table_name": "compliance_scores",
+      "assigned_service": "compliance-controls-service",
+      "assigned_module": "ksa-regulatory",
+      "confidence": "conflicted",
+      "code_writers": [
+        "ksa-regulatory"
+      ],
+      "code_readers": [
+        "ksa-regulatory"
+      ],
+      "writer_count": 1,
+      "reader_count": 1,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "ksa-regulatory"
+    },
+    {
+      "table_name": "contract_tests",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "admin"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "tenant-service",
+      "code_owner_module": "admin"
+    },
+    {
+      "table_name": "controls",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "agrc-engine",
+        "ai",
+        "analytics",
+        "compliance",
+        "controls",
+        "evidence",
+        "governance",
+        "governance-ai",
+        "onboarding",
+        "policy",
+        "training",
+        "admin"
+      ],
+      "code_readers": [
+        "agrc-engine",
+        "ai-governance",
+        "compliance",
+        "governance-ai",
+        "qiyas"
+      ],
+      "writer_count": 12,
+      "reader_count": 5,
+      "code_owner_service": "ai-gateway-service",
+      "code_owner_module": "agrc-engine"
+    },
+    {
+      "table_name": "cross_framework_mappings",
+      "assigned_service": "compliance-controls-service",
+      "assigned_module": "ksa-regulatory",
+      "confidence": "conflicted",
+      "code_writers": [
+        "ksa-regulatory"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "ksa-regulatory"
+    },
+    {
+      "table_name": "dashboard_layouts",
+      "assigned_service": "evidence-audit-reporting-service",
+      "assigned_module": "dashboard-editor",
+      "confidence": "conflicted",
+      "code_writers": [
+        "dashboard-editor",
+        "onboarding",
+        "packs",
+        "provisioning"
+      ],
+      "code_readers": [],
+      "writer_count": 4,
+      "reader_count": 0,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "dashboard-editor"
+    },
+    {
+      "table_name": "dashboard_role_bindings",
+      "assigned_service": "auth-service",
+      "assigned_module": "auth",
+      "confidence": "conflicted",
+      "code_writers": [
+        "packs",
+        "provisioning"
+      ],
+      "code_readers": [],
+      "writer_count": 2,
+      "reader_count": 0,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "packs"
+    },
+    {
+      "table_name": "dashboard_shares",
+      "assigned_service": "evidence-audit-reporting-service",
+      "assigned_module": "dashboard-editor",
+      "confidence": "conflicted",
+      "code_writers": [
+        "dashboard-editor"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "dashboard-editor"
+    },
+    {
+      "table_name": "evidence",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "agrc-engine",
+        "analytics",
+        "audit",
+        "compliance",
+        "evidence",
+        "integrations",
+        "ksa-regulatory",
+        "reporting",
+        "admin"
+      ],
+      "code_readers": [
+        "evidence"
+      ],
+      "writer_count": 9,
+      "reader_count": 1,
+      "code_owner_service": "ai-gateway-service",
+      "code_owner_module": "agrc-engine"
+    },
+    {
+      "table_name": "evidence_catalog",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "evidence"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "evidence-audit-reporting-service",
+      "code_owner_module": "evidence"
+    },
+    {
+      "table_name": "evidence_schedules",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "evidence",
+        "onboarding"
+      ],
+      "code_readers": [],
+      "writer_count": 2,
+      "reader_count": 0,
+      "code_owner_service": "evidence-audit-reporting-service",
+      "code_owner_module": "evidence"
+    },
+    {
+      "table_name": "findings",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "ai",
+        "audit",
+        "compliance",
+        "remediation",
+        "vendor"
+      ],
+      "code_readers": [
+        "ai",
+        "compliance"
+      ],
+      "writer_count": 5,
+      "reader_count": 2,
+      "code_owner_service": "ai-gateway-service",
+      "code_owner_module": "ai"
+    },
+    {
+      "table_name": "frameworks",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "ai",
+        "analytics",
+        "compliance",
+        "governance",
+        "ksa-regulatory",
+        "onboarding"
+      ],
+      "code_readers": [
+        "agrc-engine",
+        "ai-governance",
+        "compliance",
+        "onboarding"
+      ],
+      "writer_count": 6,
+      "reader_count": 4,
+      "code_owner_service": "ai-gateway-service",
+      "code_owner_module": "ai"
+    },
+    {
+      "table_name": "governance_committees",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "onboarding"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "onboarding-service",
+      "code_owner_module": "onboarding"
+    },
+    {
+      "table_name": "grc_plans",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "governance"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "governance-policy-service",
+      "code_owner_module": "governance"
+    },
+    {
+      "table_name": "incidents",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "ai",
+        "ai-governance",
+        "incident",
+        "training",
+        "vendor"
+      ],
+      "code_readers": [
+        "agrc-engine",
+        "ai-governance"
+      ],
+      "writer_count": 5,
+      "reader_count": 2,
+      "code_owner_service": "ai-gateway-service",
+      "code_owner_module": "ai"
+    },
+    {
+      "table_name": "instrument_structure",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "compliance"
+      ],
+      "code_readers": [
+        "agrc-engine",
+        "ai",
+        "compliance",
+        "governance",
+        "training"
+      ],
+      "writer_count": 1,
+      "reader_count": 5,
+      "code_owner_service": "compliance-controls-service",
+      "code_owner_module": "compliance"
+    },
+    {
+      "table_name": "integrations",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "integrations"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "gateway",
+      "code_owner_module": "integrations"
+    },
+    {
+      "table_name": "job_executions",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "admin"
+      ],
+      "code_readers": [
+        "admin"
+      ],
+      "writer_count": 1,
+      "reader_count": 1,
+      "code_owner_service": "tenant-service",
+      "code_owner_module": "admin"
+    },
+    {
+      "table_name": "job_registry",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "admin"
+      ],
+      "code_readers": [
+        "ai",
+        "admin"
+      ],
+      "writer_count": 1,
+      "reader_count": 2,
+      "code_owner_service": "tenant-service",
+      "code_owner_module": "admin"
+    },
+    {
+      "table_name": "journey_milestones",
+      "assigned_service": "onboarding-service",
+      "assigned_module": "onboarding",
+      "confidence": "conflicted",
+      "code_writers": [
+        "journey"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "journey"
+    },
+    {
+      "table_name": "journey_phases",
+      "assigned_service": "onboarding-service",
+      "assigned_module": "onboarding",
+      "confidence": "conflicted",
+      "code_writers": [
+        "journey"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "journey"
+    },
+    {
+      "table_name": "journey_roadmaps",
+      "assigned_service": "onboarding-service",
+      "assigned_module": "onboarding",
+      "confidence": "conflicted",
+      "code_writers": [
+        "journey"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "journey"
+    },
+    {
+      "table_name": "kpi_snapshots",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "analytics"
+      ],
+      "code_readers": [
+        "agrc-engine",
+        "reporting"
+      ],
+      "writer_count": 1,
+      "reader_count": 2,
+      "code_owner_service": "evidence-audit-reporting-service",
+      "code_owner_module": "analytics"
+    },
+    {
+      "table_name": "local_knowledge_access_log",
+      "assigned_service": "compliance-controls-service",
+      "assigned_module": "local-knowledge",
+      "confidence": "conflicted",
+      "code_writers": [
+        "local-knowledge"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "local-knowledge"
+    },
+    {
+      "table_name": "local_knowledge_chunks",
+      "assigned_service": "compliance-controls-service",
+      "assigned_module": "local-knowledge",
+      "confidence": "conflicted",
+      "code_writers": [
+        "local-knowledge"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "local-knowledge"
+    },
+    {
+      "table_name": "local_knowledge_custody_chain",
+      "assigned_service": "compliance-controls-service",
+      "assigned_module": "local-knowledge",
+      "confidence": "conflicted",
+      "code_writers": [
+        "local-knowledge"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "local-knowledge"
+    },
+    {
+      "table_name": "local_knowledge_document_versions",
+      "assigned_service": "compliance-controls-service",
+      "assigned_module": "local-knowledge",
+      "confidence": "conflicted",
+      "code_writers": [
+        "local-knowledge"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "local-knowledge"
+    },
+    {
+      "table_name": "local_knowledge_documents",
+      "assigned_service": "compliance-controls-service",
+      "assigned_module": "local-knowledge",
+      "confidence": "conflicted",
+      "code_writers": [
+        "local-knowledge"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "local-knowledge"
+    },
+    {
+      "table_name": "local_knowledge_index",
+      "assigned_service": "compliance-controls-service",
+      "assigned_module": "local-knowledge",
+      "confidence": "conflicted",
+      "code_writers": [
+        "local-knowledge"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "local-knowledge"
+    },
+    {
+      "table_name": "local_knowledge_ingestion_log",
+      "assigned_service": "compliance-controls-service",
+      "assigned_module": "local-knowledge",
+      "confidence": "conflicted",
+      "code_writers": [
+        "local-knowledge"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "local-knowledge"
+    },
+    {
+      "table_name": "local_knowledge_legal_hold_audit",
+      "assigned_service": "compliance-controls-service",
+      "assigned_module": "local-knowledge",
+      "confidence": "conflicted",
+      "code_writers": [
+        "local-knowledge"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "local-knowledge"
+    },
+    {
+      "table_name": "local_knowledge_published",
+      "assigned_service": "compliance-controls-service",
+      "assigned_module": "local-knowledge",
+      "confidence": "conflicted",
+      "code_writers": [
+        "local-knowledge"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "local-knowledge"
+    },
+    {
+      "table_name": "local_knowledge_sources",
+      "assigned_service": "compliance-controls-service",
+      "assigned_module": "local-knowledge",
+      "confidence": "conflicted",
+      "code_writers": [
+        "local-knowledge"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "local-knowledge"
+    },
+    {
+      "table_name": "local_knowledge_storage_quota",
+      "assigned_service": "compliance-controls-service",
+      "assigned_module": "local-knowledge",
+      "confidence": "conflicted",
+      "code_writers": [
+        "local-knowledge"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "local-knowledge"
+    },
+    {
+      "table_name": "model_inventory",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "risk"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "risk-incident-service",
+      "code_owner_module": "risk"
+    },
+    {
+      "table_name": "model_risk_scores",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "risk"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "risk-incident-service",
+      "code_owner_module": "risk"
+    },
+    {
+      "table_name": "model_validations",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "risk"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "risk-incident-service",
+      "code_owner_module": "risk"
+    },
+    {
+      "table_name": "module_activation_status",
+      "assigned_service": "tenant-service",
+      "assigned_module": "admin",
+      "confidence": "conflicted",
+      "code_writers": [
+        "packs"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "packs"
+    },
+    {
+      "table_name": "notifications",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "agrc-engine",
+        "ai",
+        "governance",
+        "incident",
+        "notification",
+        "workflow"
+      ],
+      "code_readers": [],
+      "writer_count": 6,
+      "reader_count": 0,
+      "code_owner_service": "ai-gateway-service",
+      "code_owner_module": "agrc-engine"
+    },
+    {
+      "table_name": "object_mappings",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "risk"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "risk-incident-service",
+      "code_owner_module": "risk"
+    },
+    {
+      "table_name": "obligations",
+      "assigned_service": "compliance-controls-service",
+      "assigned_module": "ksa-regulatory",
+      "confidence": "conflicted",
+      "code_writers": [
+        "ksa-regulatory",
+        "onboarding"
+      ],
+      "code_readers": [
+        "dora",
+        "ksa-regulatory"
+      ],
+      "writer_count": 2,
+      "reader_count": 2,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "ksa-regulatory"
+    },
+    {
+      "table_name": "pack_installations",
+      "assigned_service": "tenant-service",
+      "assigned_module": "admin",
+      "confidence": "conflicted",
+      "code_writers": [
+        "packs"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "packs"
+    },
+    {
+      "table_name": "pack_selection_decisions",
+      "assigned_service": "tenant-service",
+      "assigned_module": "admin",
+      "confidence": "conflicted",
+      "code_writers": [
+        "packs"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "packs"
+    },
+    {
+      "table_name": "policies",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "agrc-engine",
+        "ai",
+        "analytics",
+        "governance",
+        "onboarding",
+        "policy",
+        "remediation",
+        "training"
+      ],
+      "code_readers": [
+        "agrc-engine",
+        "packs"
+      ],
+      "writer_count": 8,
+      "reader_count": 2,
+      "code_owner_service": "ai-gateway-service",
+      "code_owner_module": "agrc-engine"
+    },
+    {
+      "table_name": "policy_decision_log",
+      "assigned_service": "auth-service",
+      "assigned_module": "auth",
+      "confidence": "conflicted",
+      "code_writers": [
+        "packs"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "packs"
+    },
+    {
+      "table_name": "policy_versions",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "policy"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "governance-policy-service",
+      "code_owner_module": "policy"
+    },
+    {
+      "table_name": "proactive_leadership_config_history",
+      "assigned_service": "governance-policy-service",
+      "assigned_module": "proactive-leadership",
+      "confidence": "conflicted",
+      "code_writers": [
+        "proactive-leadership"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "proactive-leadership"
+    },
+    {
+      "table_name": "proactive_leadership_cycles",
+      "assigned_service": "governance-policy-service",
+      "assigned_module": "proactive-leadership",
+      "confidence": "conflicted",
+      "code_writers": [
+        "proactive-leadership"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "proactive-leadership"
+    },
+    {
+      "table_name": "proactive_leadership_insights",
+      "assigned_service": "governance-policy-service",
+      "assigned_module": "proactive-leadership",
+      "confidence": "conflicted",
+      "code_writers": [
+        "proactive-leadership"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "proactive-leadership"
+    },
+    {
+      "table_name": "proactive_leadership_patterns",
+      "assigned_service": "governance-policy-service",
+      "assigned_module": "proactive-leadership",
+      "confidence": "conflicted",
+      "code_writers": [
+        "proactive-leadership"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "proactive-leadership"
+    },
+    {
+      "table_name": "proactive_leadership_thresholds",
+      "assigned_service": "governance-policy-service",
+      "assigned_module": "proactive-leadership",
+      "confidence": "conflicted",
+      "code_writers": [
+        "proactive-leadership"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "proactive-leadership"
+    },
+    {
+      "table_name": "procedures",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "compliance"
+      ],
+      "code_readers": [
+        "governance"
+      ],
+      "writer_count": 1,
+      "reader_count": 1,
+      "code_owner_service": "compliance-controls-service",
+      "code_owner_module": "compliance"
+    },
+    {
+      "table_name": "provisioning_job_lookup",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "admin"
+      ],
+      "code_readers": [
+        "admin"
+      ],
+      "writer_count": 1,
+      "reader_count": 1,
+      "code_owner_service": "tenant-service",
+      "code_owner_module": "admin"
+    },
+    {
+      "table_name": "qgate_ai_eval_scores",
+      "assigned_service": "tenant-service",
+      "assigned_module": "quality-gate",
+      "confidence": "conflicted",
+      "code_writers": [
+        "quality-gate"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "quality-gate"
+    },
+    {
+      "table_name": "qgate_mutation_reports",
+      "assigned_service": "tenant-service",
+      "assigned_module": "quality-gate",
+      "confidence": "conflicted",
+      "code_writers": [
+        "quality-gate"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "quality-gate"
+    },
+    {
+      "table_name": "qgate_runs",
+      "assigned_service": "tenant-service",
+      "assigned_module": "quality-gate",
+      "confidence": "conflicted",
+      "code_writers": [
+        "quality-gate"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "quality-gate"
+    },
+    {
+      "table_name": "qgate_schema_drift_log",
+      "assigned_service": "tenant-service",
+      "assigned_module": "quality-gate",
+      "confidence": "conflicted",
+      "code_writers": [
+        "quality-gate"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "quality-gate"
+    },
+    {
+      "table_name": "qgate_stage_results",
+      "assigned_service": "tenant-service",
+      "assigned_module": "quality-gate",
+      "confidence": "conflicted",
+      "code_writers": [
+        "quality-gate"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "quality-gate"
+    },
+    {
+      "table_name": "qgate_thresholds",
+      "assigned_service": "tenant-service",
+      "assigned_module": "quality-gate",
+      "confidence": "conflicted",
+      "code_writers": [
+        "quality-gate"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "quality-gate"
+    },
+    {
+      "table_name": "raci_matrices",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "onboarding"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "onboarding-service",
+      "code_owner_module": "onboarding"
+    },
+    {
+      "table_name": "red_team_runs",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "ai-governance"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "ai-gateway-service",
+      "code_owner_module": "ai-governance"
+    },
+    {
+      "table_name": "regulatory_change_notifications",
+      "assigned_service": "compliance-controls-service",
+      "assigned_module": "ksa-regulatory",
+      "confidence": "conflicted",
+      "code_writers": [
+        "ksa-regulatory"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "ksa-regulatory"
+    },
+    {
+      "table_name": "regulatory_delta_impacts",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "compliance"
+      ],
+      "code_readers": [
+        "compliance"
+      ],
+      "writer_count": 1,
+      "reader_count": 1,
+      "code_owner_service": "compliance-controls-service",
+      "code_owner_module": "compliance"
+    },
+    {
+      "table_name": "regulatory_deltas",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "compliance"
+      ],
+      "code_readers": [
+        "compliance"
+      ],
+      "writer_count": 1,
+      "reader_count": 1,
+      "code_owner_service": "compliance-controls-service",
+      "code_owner_module": "compliance"
+    },
+    {
+      "table_name": "remediation_tasks",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "analytics",
+        "compliance",
+        "remediation",
+        "workflow"
+      ],
+      "code_readers": [],
+      "writer_count": 4,
+      "reader_count": 0,
+      "code_owner_service": "evidence-audit-reporting-service",
+      "code_owner_module": "analytics"
+    },
+    {
+      "table_name": "reports",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "ksa-regulatory",
+        "reporting"
+      ],
+      "code_readers": [],
+      "writer_count": 2,
+      "reader_count": 0,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "ksa-regulatory"
+    },
+    {
+      "table_name": "risk_tolerance_bands",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "onboarding"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "onboarding-service",
+      "code_owner_module": "onboarding"
+    },
+    {
+      "table_name": "scope_dimensions",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "onboarding",
+        "admin"
+      ],
+      "code_readers": [],
+      "writer_count": 2,
+      "reader_count": 0,
+      "code_owner_service": "onboarding-service",
+      "code_owner_module": "onboarding"
+    },
+    {
+      "table_name": "seed_history",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "admin"
+      ],
+      "code_readers": [
+        "admin"
+      ],
+      "writer_count": 1,
+      "reader_count": 1,
+      "code_owner_service": "tenant-service",
+      "code_owner_module": "admin"
+    },
+    {
+      "table_name": "simulations",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "ai-governance"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "ai-gateway-service",
+      "code_owner_module": "ai-governance"
+    },
+    {
+      "table_name": "startup_checklists",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "bootstrap",
+        "onboarding"
+      ],
+      "code_readers": [
+        "onboarding"
+      ],
+      "writer_count": 2,
+      "reader_count": 1,
+      "code_owner_service": "tenant-service",
+      "code_owner_module": "bootstrap"
+    },
+    {
+      "table_name": "subscriptions",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "admin"
+      ],
+      "code_readers": [
+        "admin"
+      ],
+      "writer_count": 1,
+      "reader_count": 1,
+      "code_owner_service": "tenant-service",
+      "code_owner_module": "admin"
+    },
+    {
+      "table_name": "tenant_blueprints",
+      "assigned_service": "tenant-service",
+      "assigned_module": "foundation",
+      "confidence": "conflicted",
+      "code_writers": [
+        "packs"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "packs"
+    },
+    {
+      "table_name": "tenant_blueprints",
+      "assigned_service": "tenant-service",
+      "assigned_module": "foundation",
+      "confidence": "conflicted",
+      "code_writers": [
+        "packs"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "packs"
+    },
+    {
+      "table_name": "tenant_security_config",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "admin"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "tenant-service",
+      "code_owner_module": "admin"
+    },
+    {
+      "table_name": "tenants",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "admin",
+        "ai",
+        "onboarding"
+      ],
+      "code_readers": [
+        "admin",
+        "agrc-engine",
+        "ai",
+        "analytics",
+        "compliance",
+        "exception",
+        "onboarding",
+        "reporting",
+        "training",
+        "workflow"
+      ],
+      "writer_count": 3,
+      "reader_count": 10,
+      "code_owner_service": "tenant-service",
+      "code_owner_module": "admin"
+    },
+    {
+      "table_name": "ucf_controls",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "exception"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "compliance-controls-service",
+      "code_owner_module": "exception"
+    },
+    {
+      "table_name": "users",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "admin",
+        "ai",
+        "foundation",
+        "integrations",
+        "onboarding",
+        "workflow"
+      ],
+      "code_readers": [
+        "admin",
+        "agrc-engine",
+        "ai",
+        "compliance",
+        "dashboard-editor",
+        "governance",
+        "onboarding",
+        "reporting",
+        "workflow"
+      ],
+      "writer_count": 6,
+      "reader_count": 9,
+      "code_owner_service": "tenant-service",
+      "code_owner_module": "admin"
+    },
+    {
+      "table_name": "vendors",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "training",
+        "vendor"
+      ],
+      "code_readers": [
+        "agrc-engine",
+        "analytics"
+      ],
+      "writer_count": 2,
+      "reader_count": 2,
+      "code_owner_service": "compliance-controls-service",
+      "code_owner_module": "training"
+    },
+    {
+      "table_name": "vulnerabilities",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "risk",
+        "security"
+      ],
+      "code_readers": [],
+      "writer_count": 2,
+      "reader_count": 0,
+      "code_owner_service": "risk-incident-service",
+      "code_owner_module": "risk"
+    },
+    {
+      "table_name": "webhook_deliveries",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "admin"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "tenant-service",
+      "code_owner_module": "admin"
+    },
+    {
+      "table_name": "widget_registry",
+      "assigned_service": "evidence-audit-reporting-service",
+      "assigned_module": "reporting",
+      "confidence": "conflicted",
+      "code_writers": [
+        "packs"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "packs"
+    },
+    {
+      "table_name": "widgets_bundles",
+      "assigned_service": "evidence-audit-reporting-service",
+      "assigned_module": "widgets",
+      "confidence": "conflicted",
+      "code_writers": [
+        "widgets"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "widgets"
+    },
+    {
+      "table_name": "widgets_registry",
+      "assigned_service": "evidence-audit-reporting-service",
+      "assigned_module": "widgets",
+      "confidence": "conflicted",
+      "code_writers": [
+        "widgets"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "widgets"
+    },
+    {
+      "table_name": "widgets_render_log",
+      "assigned_service": "evidence-audit-reporting-service",
+      "assigned_module": "widgets",
+      "confidence": "conflicted",
+      "code_writers": [
+        "widgets"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "widgets"
+    },
+    {
+      "table_name": "workflow_executions",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "workflow"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "workflow-service",
+      "code_owner_module": "workflow"
+    },
+    {
+      "table_name": "workflow_instances",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "workflow",
+        "admin"
+      ],
+      "code_readers": [],
+      "writer_count": 2,
+      "reader_count": 0,
+      "code_owner_service": "workflow-service",
+      "code_owner_module": "workflow"
+    },
+    {
+      "table_name": "workflow_templates",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "packs",
+        "provisioning",
+        "workflow"
+      ],
+      "code_readers": [],
+      "writer_count": 3,
+      "reader_count": 0,
+      "code_owner_service": "UNKNOWN",
+      "code_owner_module": "packs"
+    },
+    {
+      "table_name": "workspace_activation_log",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "onboarding"
+      ],
+      "code_readers": [],
+      "writer_count": 1,
+      "reader_count": 0,
+      "code_owner_service": "onboarding-service",
+      "code_owner_module": "onboarding"
+    },
+    {
+      "table_name": "workspaces",
+      "assigned_service": "UNRESOLVED",
+      "assigned_module": "UNKNOWN",
+      "confidence": "conflicted",
+      "code_writers": [
+        "onboarding",
+        "admin"
+      ],
+      "code_readers": [
+        "admin",
+        "foundation"
+      ],
+      "writer_count": 2,
+      "reader_count": 2,
+      "code_owner_service": "onboarding-service",
+      "code_owner_module": "onboarding"
+    }
+  ],
+  "confidence_breakdown": {
+    "verified_pct": "34.5%",
+    "likely_pct": "8.2%",
+    "uncertain_pct": "1.7%",
+    "conflicted_pct": "6.0%",
+    "unreferenced_pct": "49.5%"
+  }
+}

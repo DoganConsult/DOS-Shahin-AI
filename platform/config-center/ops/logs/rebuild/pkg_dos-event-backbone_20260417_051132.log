@@ -1,0 +1,4 @@
+
+> @dos/event-backbone@0.1.0 build /root/DOS-AIO/packages/dos-event-backbone
+> tsc -p tsconfig.build.json
+

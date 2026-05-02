@@ -1,0 +1,240 @@
+/**
+ * foundation — canonical module contract
+ *
+ * Single source of truth for nav tree, page registry, and API surface.
+ * Consumed by:
+ *   - scripts/publish-contract.mjs  → Dynamic UI seeds JSON
+ *   - tests/smoke/dynamic-ui-drift.test.mjs  → drift gate
+ *   - platform/dos registry import  → DB seed
+ */
+
+export interface FoundationPage {
+  pageCode: string;
+  route: string;
+  component: string;
+  readiness: 'production' | 'beta' | 'alpha';
+  permission: string;
+  apis?: string[];
+}
+
+export interface FoundationNav {
+  pageCode: string;
+  labelKey: string;
+  icon: string;
+  order: number;
+  permission: string;
+  group?: string;
+}
+
+export interface FoundationContract {
+  identity: {
+    code: string;
+    version: string;
+    titleKey: string;
+  };
+  nav: FoundationNav[];
+  pages: FoundationPage[];
+}
+
+export const FOUNDATION_CONTRACT: FoundationContract = {
+  identity: {
+    code: 'foundation',
+    version: '2.0.0',
+    titleKey: 'modules.foundation.title',
+  },
+
+  nav: [
+    { pageCode: 'foundation.overview',         labelKey: 'modules.foundation.nav.overview',         icon: 'layout-dashboard', order: 10,  permission: 'foundation.read',        group: 'organization' },
+    { pageCode: 'foundation.organization',     labelKey: 'modules.foundation.nav.organization',     icon: 'sitemap',          order: 20,  permission: 'foundation.read',        group: 'organization' },
+    { pageCode: 'foundation.business-units',   labelKey: 'modules.foundation.nav.businessUnits',    icon: 'building',         order: 30,  permission: 'foundation.read',        group: 'organization' },
+    { pageCode: 'foundation.departments',      labelKey: 'modules.foundation.nav.departments',      icon: 'users',            order: 40,  permission: 'foundation.read',        group: 'organization' },
+    { pageCode: 'foundation.positions',        labelKey: 'modules.foundation.nav.positions',        icon: 'id-card',          order: 50,  permission: 'foundation.read',        group: 'organization' },
+    { pageCode: 'foundation.locations',        labelKey: 'modules.foundation.nav.locations',        icon: 'map-pin',          order: 60,  permission: 'foundation.read',        group: 'organization' },
+    { pageCode: 'foundation.users',            labelKey: 'modules.foundation.nav.users',            icon: 'user',             order: 70,  permission: 'foundation.user.read',   group: 'identity' },
+    { pageCode: 'foundation.teams',            labelKey: 'modules.foundation.nav.teams',            icon: 'users-group',      order: 80,  permission: 'foundation.read',        group: 'identity' },
+    { pageCode: 'foundation.roles',            labelKey: 'modules.foundation.nav.roles',            icon: 'key',              order: 90,  permission: 'foundation.admin.read',  group: 'identity' },
+    { pageCode: 'foundation.permissions',      labelKey: 'modules.foundation.nav.permissions',      icon: 'shield-check',     order: 100, permission: 'foundation.admin.read',  group: 'identity' },
+    { pageCode: 'foundation.committees',       labelKey: 'modules.foundation.nav.committees',       icon: 'gavel',            order: 110, permission: 'foundation.read',        group: 'governance' },
+    { pageCode: 'foundation.delegations',      labelKey: 'modules.foundation.nav.delegations',      icon: 'share',            order: 120, permission: 'foundation.read',        group: 'governance' },
+    { pageCode: 'foundation.access-review',    labelKey: 'modules.foundation.nav.accessReview',     icon: 'clipboard-check',  order: 130, permission: 'access_review.read',     group: 'governance' },
+    { pageCode: 'foundation.policies',         labelKey: 'modules.foundation.nav.policies',         icon: 'file-shield',      order: 140, permission: 'foundation.read',        group: 'governance' },
+    { pageCode: 'foundation.audit',            labelKey: 'modules.foundation.nav.audit',            icon: 'history',          order: 150, permission: 'audit_trail.read',       group: 'governance' },
+    { pageCode: 'foundation.ownership',        labelKey: 'modules.foundation.nav.ownership',        icon: 'tag',              order: 160, permission: 'foundation.read',        group: 'governance' },
+    { pageCode: 'foundation.sod',              labelKey: 'modules.foundation.nav.sod',              icon: 'shield-x',         order: 170, permission: 'foundation.write',       group: 'governance' },
+    { pageCode: 'foundation.hierarchy-viz',    labelKey: 'modules.foundation.nav.hierarchyViz',     icon: 'git-branch',       order: 180, permission: 'organization.read',      group: 'organization' },
+    { pageCode: 'foundation.user-lifecycle',   labelKey: 'modules.foundation.nav.userLifecycle',    icon: 'activity',         order: 190, permission: 'user.write',             group: 'identity' },
+    { pageCode: 'foundation.reference-data',   labelKey: 'modules.foundation.nav.referenceData',    icon: 'database',         order: 200, permission: 'foundation.read',        group: 'governance' },
+    { pageCode: 'foundation.diagnostics',      labelKey: 'modules.foundation.nav.diagnostics',      icon: 'stethoscope',      order: 210, permission: 'foundation.read',        group: 'governance' },
+  ],
+
+  pages: [
+    {
+      pageCode: 'foundation.overview',
+      route: '/foundation/overview',
+      component: 'FoundationOverviewComponent',
+      readiness: 'production',
+      permission: 'foundation.read',
+      apis: ['/api/foundation/dashboard', '/api/foundation/lookups'],
+    },
+    {
+      pageCode: 'foundation.organization',
+      route: '/foundation/organization',
+      component: 'FoundationOrganizationComponent',
+      readiness: 'production',
+      permission: 'foundation.read',
+      apis: ['/api/organizations'],
+    },
+    {
+      pageCode: 'foundation.business-units',
+      route: '/foundation/business-units',
+      component: 'FoundationBusinessUnitsComponent',
+      readiness: 'production',
+      permission: 'foundation.read',
+      apis: ['/api/business-units'],
+    },
+    {
+      pageCode: 'foundation.departments',
+      route: '/foundation/departments',
+      component: 'FoundationDepartmentsComponent',
+      readiness: 'production',
+      permission: 'foundation.read',
+      apis: ['/api/foundation/departments'],
+    },
+    {
+      pageCode: 'foundation.positions',
+      route: '/foundation/positions',
+      component: 'FoundationPositionsComponent',
+      readiness: 'production',
+      permission: 'foundation.read',
+      apis: ['/api/positions'],
+    },
+    {
+      pageCode: 'foundation.locations',
+      route: '/foundation/locations',
+      component: 'FoundationLocationsComponent',
+      readiness: 'production',
+      permission: 'foundation.read',
+      apis: ['/api/locations'],
+    },
+    {
+      pageCode: 'foundation.users',
+      route: '/foundation/users',
+      component: 'FoundationUsersComponent',
+      readiness: 'production',
+      permission: 'foundation.user.read',
+      apis: ['/api/users'],
+    },
+    {
+      pageCode: 'foundation.teams',
+      route: '/foundation/teams',
+      component: 'FoundationTeamsComponent',
+      readiness: 'production',
+      permission: 'foundation.read',
+      apis: ['/api/foundation/teams'],
+    },
+    {
+      pageCode: 'foundation.roles',
+      route: '/foundation/roles',
+      component: 'FoundationRolesComponent',
+      readiness: 'production',
+      permission: 'foundation.admin.read',
+      apis: ['/api/foundation/roles'],
+    },
+    {
+      pageCode: 'foundation.permissions',
+      route: '/foundation/permissions',
+      component: 'FoundationPermissionMatrixComponent',
+      readiness: 'production',
+      permission: 'foundation.admin.read',
+      apis: ['/api/permissions'],
+    },
+    {
+      pageCode: 'foundation.committees',
+      route: '/foundation/committees',
+      component: 'FoundationCommitteesComponent',
+      readiness: 'production',
+      permission: 'foundation.read',
+      apis: ['/api/committees'],
+    },
+    {
+      pageCode: 'foundation.delegations',
+      route: '/foundation/delegations',
+      component: 'FoundationDelegationsComponent',
+      readiness: 'production',
+      permission: 'foundation.read',
+      apis: ['/api/governance/delegations'],
+    },
+    {
+      pageCode: 'foundation.access-review',
+      route: '/foundation/access-review',
+      component: 'FoundationAccessReviewComponent',
+      readiness: 'production',
+      permission: 'access_review.read',
+      apis: ['/api/access-review/campaigns'],
+    },
+    {
+      pageCode: 'foundation.policies',
+      route: '/foundation/policies',
+      component: 'FoundationDataProcessingComponent',
+      readiness: 'production',
+      permission: 'foundation.read',
+      apis: ['/api/governance/policies'],
+    },
+    {
+      pageCode: 'foundation.audit',
+      route: '/foundation/audit',
+      component: 'FoundationAuditTrailPage',
+      readiness: 'production',
+      permission: 'audit_trail.read',
+      apis: ['/api/audit-trail'],
+    },
+    {
+      pageCode: 'foundation.ownership',
+      route: '/foundation/ownership',
+      component: 'FoundationOwnershipMappingComponent',
+      readiness: 'production',
+      permission: 'foundation.read',
+      apis: ['/api/ownership-mappings'],
+    },
+    {
+      pageCode: 'foundation.sod',
+      route: '/foundation/sod',
+      component: 'FoundationSodConfigComponent',
+      readiness: 'production',
+      permission: 'foundation.write',
+      apis: ['/api/sod/rules'],
+    },
+    {
+      pageCode: 'foundation.hierarchy-viz',
+      route: '/foundation/hierarchy-viz',
+      component: 'FoundationOrgCanvasComponent',
+      readiness: 'production',
+      permission: 'organization.read',
+      apis: ['/api/org-hierarchy'],
+    },
+    {
+      pageCode: 'foundation.user-lifecycle',
+      route: '/foundation/user-lifecycle',
+      component: 'FoundationUserLifecyclePage',
+      readiness: 'production',
+      permission: 'user.write',
+      apis: ['/api/user-lifecycle'],
+    },
+    {
+      pageCode: 'foundation.reference-data',
+      route: '/foundation/reference-data',
+      component: 'FoundationReferenceDataComponent',
+      readiness: 'production',
+      permission: 'foundation.read',
+      apis: ['/api/reference-data'],
+    },
+    {
+      pageCode: 'foundation.diagnostics',
+      route: '/foundation/diagnostics',
+      component: 'FoundationDiagnosticsPage',
+      readiness: 'production',
+      permission: 'foundation.read',
+      apis: ['/api/foundation/health'],
+    },
+  ],
+};

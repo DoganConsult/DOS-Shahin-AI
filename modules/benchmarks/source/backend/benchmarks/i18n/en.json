@@ -1,0 +1,11 @@
+{
+  "benchmarks.title": "Benchmarks",
+  "benchmarks.dashboard": "Benchmarks Dashboard",
+  "benchmarks.empty.title": "No records found",
+  "benchmarks.empty.description": "Create your first benchmarks record to get started.",
+  "benchmarks.loading": "Loading benchmarks data...",
+  "benchmarks.error.title": "Failed to load data",
+  "benchmarks.error.retry": "Retry",
+  "benchmarks.create": "Create New",
+  "benchmarks.diagnostics": "Diagnostics"
+}

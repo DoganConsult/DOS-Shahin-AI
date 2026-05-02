@@ -1,0 +1,26 @@
+code,name_en,name_ar,primary_regulator,isic_code
+BANKING,Banking,المصرفية,SAMA,K641
+INSURANCE,Insurance,التأمين,SAMA,K65
+CAPITAL_MARKETS,Capital Markets,أسواق المال,CMA,K66
+FINTECH,FinTech,التقنية المالية,SAMA,K662
+PAYMENT,Payment Services,خدمات الدفع,SAMA,K6492
+HEALTHCARE,Healthcare,الرعاية الصحية,MOH,Q86
+PHARMACEUTICAL,Pharmaceutical,المستحضرات الصيدلانية,SFDA,C21
+MEDICAL_DEVICES,Medical Devices,الأجهزة الطبية,SFDA,C325
+FOOD,Food & Beverages,الأغذية والمشروبات,SFDA,C10
+GOVERNMENT,Government,حكومي,DGA,O84
+TELECOM,Telecommunications,الاتصالات,CST,J61
+CLOUD_IT,Cloud / IT Services,خدمات السحابة وتقنية المعلومات,CST,J62
+ENERGY,Energy & Utilities,الطاقة والمرافق,Ministry of Energy,D
+OIL_GAS,Oil & Gas,النفط والغاز,Ministry of Energy,B06
+RETAIL,Retail,التجزئة,MoCI,G47
+ECOMMERCE,E-Commerce,التجارة الإلكترونية,MoCI,G479
+MANUFACTURING,Manufacturing,التصنيع,MIM,C
+CONSTRUCTION,Construction,البناء,MOMRAH,F
+TOURISM,Tourism & Hospitality,السياحة والضيافة,Ministry of Tourism,I
+EDUCATION,Education,التعليم,MoE,P
+TRANSPORT,Transport & Logistics,النقل والخدمات اللوجستية,Ministry of Transport,H
+MINING,Mining,التعدين,MIM,B
+REAL_ESTATE,Real Estate,العقارات,MOMRAH,L
+PROFESSIONAL,Professional Services,الخدمات المهنية,MoCI,M
+MEDIA,Media & Entertainment,الإعلام والترفيه,GCAM,J59

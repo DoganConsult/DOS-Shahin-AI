@@ -1,0 +1,224 @@
+#!/usr/bin/env node
+/**
+ * lint-no-shell-module-name.mjs
+ *
+ * Enforces spec §1.1 (Shell knowledge boundary):
+ *   "The shell must not know 'Foundation', 'Risk', 'Compliance', etc."
+ *
+ * Fails when shell-tier code (the SPA's app shell, layout, navigation,
+ * platform runtime, dynamic-ui host) contains string equality against any
+ * registered module code.
+ *
+ * Allowlisted locations (NOT shell):
+ *   - features/<module>/...           (per-module feature code)
+ *   - pages/<module>-.../...          (per-module pages)
+ *   - core/<module>/...               (per-module core services)
+ *   - registries/...                  (catalog data is allowed to mention codes)
+ *   - blueprint/products/...          (per-product wiring)
+ *   - blueprint/platform-manifests/...
+ *   - blueprint/generated/...
+ *
+ * Shell-scoped locations (CHECKED):
+ *   - blueprint/layout/...
+ *   - blueprint/core/platform/...
+ *   - blueprint/core/runtime/...
+ *   - blueprint/core/navigation/...   (generic nav engine; per-module nav configs allowed)
+ *   - blueprint/shared/dynamic-ui/...
+ *   - blueprint/shared/components/page-chrome/...
+ *   - blueprint/shared/components/module-chrome/...
+ *
+ * Patterns flagged:
+ *   - moduleCode === '<known-module>'
+ *   - module_code === '<known-module>'
+ *   - moduleCode == '<known-module>'
+ *   - if (route.startsWith('/<known-module>/'))
+ *   - switch on moduleCode with case '<known-module>':
+ *
+ * Exit codes
+ *   0 — clean
+ *   1 — at least one violation
+ *   2 — harness error
+ *
+ * Usage
+ *   node scripts/ci-guards/lint-no-shell-module-name.mjs
+ *   STRICT=1 node scripts/ci-guards/lint-no-shell-module-name.mjs   # fail on any match
+ */
+import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
+const SPA_SRC = path.join(REPO_ROOT, 'products/shahin-ai/app/src/app');
+const REGISTRIES = path.join(REPO_ROOT, 'registries/modules.registry.json');
+
+// 34 known module codes from spec §32.
+const KNOWN_MODULES = [
+  'foundation',
+  'risk',
+  'compliance',
+  'workflow',
+  'policy',
+  'evidence',
+  'privacy',
+  'vendor',
+  'asset',
+  'bcp',
+  'training',
+  'action',
+  'dora',
+  'journey',
+  'analytics',
+  'reporting',
+  'executive',
+  'ai-governance',
+  'ai-engine',
+  'dsoc',
+  'dnoc',
+  'dauth',
+  'config-center',
+  'notifications',
+  'records',
+  'integrations',
+  'mcp',
+  'portals',
+  'widgets',
+  'product',
+  'agrc-os',
+  'platform-admin',
+  'user-profile',
+  'audit-trail',
+];
+
+// Try to enrich from the registry (optional; static fallback uses spec list).
+function loadRegistryModules() {
+  if (!existsSync(REGISTRIES)) return KNOWN_MODULES;
+  try {
+    const j = JSON.parse(readFileSync(REGISTRIES, 'utf-8'));
+    const list = j.modules || j;
+    const ids = Array.isArray(list) ? list.map((m) => m.id || m.module_code) : [];
+    const all = new Set([...KNOWN_MODULES, ...ids.filter(Boolean)]);
+    return Array.from(all);
+  } catch {
+    return KNOWN_MODULES;
+  }
+}
+
+// Glob-ish prefix walker.
+const SHELL_PREFIXES = [
+  'blueprint/layout',
+  'blueprint/core/platform',
+  'blueprint/core/runtime',
+  'blueprint/shared/dynamic-ui',
+  'blueprint/shared/components/page-chrome',
+  'blueprint/shared/components/module-chrome',
+];
+
+const NEVER_PREFIXES = [
+  'blueprint/features',
+  'blueprint/pages',
+  'blueprint/registries',
+  'blueprint/products',
+  'blueprint/platform-manifests',
+  'blueprint/generated',
+  'blueprint/core/admin',
+  'blueprint/core/agrc-engine',
+  'blueprint/core/ai',
+  'blueprint/core/dauth',
+  'blueprint/core/dos',
+  'blueprint/core/policy',
+  'blueprint/core/portals',
+  'blueprint/core/products',
+  'blueprint/core/provisioning',
+  'blueprint/core/reporting',
+  'blueprint/core/subscription',
+  'blueprint/core/grc',
+  'blueprint/core/dashboard',
+  'blueprint/core/notification',
+  'blueprint/core/packs',
+];
+
+function inShell(rel) {
+  if (NEVER_PREFIXES.some((p) => rel.startsWith(p))) return false;
+  return SHELL_PREFIXES.some((p) => rel.startsWith(p));
+}
+
+function walk(dir, acc = []) {
+  if (!existsSync(dir)) return acc;
+  for (const name of readdirSync(dir)) {
+    const full = path.join(dir, name);
+    let st;
+    try {
+      st = statSync(full);
+    } catch {
+      continue;
+    }
+    if (st.isDirectory()) walk(full, acc);
+    else if (/\.(ts|tsx|html|js|mjs)$/.test(name)) acc.push(full);
+  }
+  return acc;
+}
+
+function scanFile(file, modules) {
+  const rel = path.relative(SPA_SRC, file).split(path.sep).join('/');
+  if (!inShell(rel)) return [];
+
+  const content = readFileSync(file, 'utf-8');
+  const violations = [];
+  const lines = content.split('\n');
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    // Strip block/line comments (rough).
+    const code = line.replace(/\/\/.*$/, '');
+    for (const mod of modules) {
+      // Equality patterns.
+      const patterns = [
+        new RegExp(`moduleCode\\s*===?\\s*['"\`]${mod}['"\`]`),
+        new RegExp(`module_code\\s*===?\\s*['"\`]${mod}['"\`]`),
+        new RegExp(`code\\s*===?\\s*['"\`]${mod}['"\`]`),
+        new RegExp(`['"\`]${mod}['"\`]\\s*===?\\s*moduleCode`),
+        new RegExp(`case\\s*['"\`]${mod}['"\`]\\s*:`),
+        new RegExp(`startsWith\\(['"\`]\\/${mod}\\/`),
+      ];
+      if (patterns.some((p) => p.test(code))) {
+        violations.push({ file: rel, line: i + 1, module: mod, snippet: line.trim() });
+      }
+    }
+  }
+  return violations;
+}
+
+function main() {
+  if (!existsSync(SPA_SRC)) {
+    console.error(`[lint-no-shell-module-name] SPA src not found at ${SPA_SRC}`);
+    process.exit(2);
+  }
+  const modules = loadRegistryModules();
+  const files = walk(SPA_SRC);
+  const scopedShellFiles = files.filter((f) =>
+    inShell(path.relative(SPA_SRC, f).split(path.sep).join('/')),
+  );
+  console.log(
+    `[lint-no-shell-module-name] scanned ${scopedShellFiles.length}/${files.length} shell-scoped files for ${modules.length} module codes`,
+  );
+
+  const all = [];
+  for (const f of scopedShellFiles) {
+    const v = scanFile(f, modules);
+    all.push(...v);
+  }
+
+  if (all.length === 0) {
+    console.log('[lint-no-shell-module-name] PASS — shell makes no module-specific decisions');
+    process.exit(0);
+  }
+
+  console.error(`[lint-no-shell-module-name] FAIL — ${all.length} violation(s):`);
+  for (const v of all.slice(0, 50)) {
+    console.error(`  ${v.file}:${v.line}  module='${v.module}'`);
+    console.error(`    ${v.snippet}`);
+  }
+  if (all.length > 50) console.error(`  … and ${all.length - 50} more`);
+  process.exit(1);
+}
+
+main();

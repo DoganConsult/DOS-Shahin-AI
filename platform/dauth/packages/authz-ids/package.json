@@ -1,0 +1,21 @@
+{
+  "name": "@dos/authz-ids",
+  "version": "1.0.0",
+  "description": "DOS Platform — canonical identifier contracts fusing Keycloak, Postgres, OpenFGA, and Cerbos. Single source of truth for user/tenant/product/module/resource IDs and JWT claim shape. Zero runtime deps.",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "default": "./dist/index.js" },
+    "./claims": { "types": "./dist/claims.d.ts", "default": "./dist/claims.js" },
+    "./ids": { "types": "./dist/ids.d.ts", "default": "./dist/ids.js" },
+    "./urn": { "types": "./dist/urn.d.ts", "default": "./dist/urn.js" },
+    "./fga": { "types": "./dist/fga.d.ts", "default": "./dist/fga.js" },
+    "./reason-codes": { "types": "./dist/reason-codes.d.ts", "default": "./dist/reason-codes.js" }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "clean": "rm -rf dist"
+  },
+  "files": ["dist", "README.md"]
+}

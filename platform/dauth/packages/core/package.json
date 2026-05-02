@@ -1,0 +1,40 @@
+{
+  "name": "@dos/dauth-core",
+  "version": "1.0.0",
+  "description": "DAuth Core Authority and Access Logic",
+  "main": "dist/core/index.js",
+  "types": "dist/core/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/core/index.d.ts",
+      "default": "./dist/core/index.js"
+    },
+    "./*": {
+      "types": "./dist/core/*.d.ts",
+      "default": "./dist/core/*.js"
+    }
+  },
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@dos/types": "workspace:*",
+    "@dos/contracts": "workspace:*",
+    "@dos/db": "workspace:*",
+    "@dos/ports": "workspace:*",
+    "@dos/module-sdk": "workspace:*",
+    "@dos/platform-core": "workspace:*",
+    "@dos/dauth-shared": "workspace:*",
+    "express": "^4.22.1"
+  },
+  "peerDependencies": {
+    "@dos/ports": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.25",
+    "@types/node": "^25.6.0",
+    "typescript": "^5.7.0",
+    "vitest": "^4.1.4"
+  }
+}

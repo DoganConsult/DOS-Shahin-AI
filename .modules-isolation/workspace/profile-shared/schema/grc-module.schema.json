@@ -1,0 +1,158 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://shahin-ai.dos/grc-module.schema.json",
+  "title": "Shahin-AI GRC Module Profile",
+  "description": "Mandatory declaration each business module must publish in its grc.profile.json.",
+  "type": "object",
+  "required": [
+    "code", "name", "card_position", "lifecycle", "workflow_hooks",
+    "owner_role", "raci", "org_scope", "permissions", "roles",
+    "evidence_hooks", "audit_events", "reporting"
+  ],
+  "properties": {
+    "code": { "type": "string", "pattern": "^[a-z][a-z0-9_]+$" },
+    "name": { "type": "string" },
+    "card_position": { "type": "integer", "minimum": 1, "maximum": 18 },
+    "description": { "type": "string" },
+
+    "lifecycle": {
+      "type": "object",
+      "required": ["states", "transitions"],
+      "properties": {
+        "states": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "create", "classify", "assign_owner", "raci_map",
+              "risk_compliance_link", "workflow_approval",
+              "evidence_attach", "monitor", "exception_or_issue",
+              "remediate", "retest_review", "close", "archive"
+            ]
+          }
+        },
+        "transitions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["from", "to", "trigger"],
+            "properties": {
+              "from": { "type": "string" },
+              "to": { "type": "string" },
+              "trigger": { "type": "string" },
+              "guard_permission": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+
+    "workflow_hooks": {
+      "type": "array",
+      "description": "Workflow engine integration points",
+      "items": {
+        "type": "object",
+        "required": ["event", "workflow"],
+        "properties": {
+          "event": { "type": "string" },
+          "workflow": { "type": "string" },
+          "sla_hours": { "type": "integer" }
+        }
+      }
+    },
+
+    "owner_role": {
+      "type": "object",
+      "required": ["accountable", "responsible"],
+      "properties": {
+        "accountable": { "type": "string", "description": "Final authority — RACI A" },
+        "responsible": { "type": "string", "description": "Day-to-day owner — RACI R" }
+      }
+    },
+
+    "raci": {
+      "type": "object",
+      "description": "RACI/RAPID mapping for the module's primary record",
+      "properties": {
+        "responsible": { "type": "array", "items": { "type": "string" } },
+        "accountable": { "type": "string" },
+        "consulted":   { "type": "array", "items": { "type": "string" } },
+        "informed":    { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["responsible", "accountable"]
+    },
+
+    "org_scope": {
+      "type": "array",
+      "description": "Allowed scoping levels (org → BU → dept → team → position → own)",
+      "items": { "enum": ["org", "business_unit", "department", "team", "position", "own"] }
+    },
+
+    "permissions": {
+      "type": "array",
+      "description": "Standard permission codes — module prefix is added at runtime",
+      "items": {
+        "enum": [
+          "record.read", "record.write", "record.approve",
+          "record.manage", "record.delete", "record.configure",
+          "evidence.read", "evidence.write",
+          "report.read", "export"
+        ]
+      }
+    },
+
+    "roles": {
+      "type": "object",
+      "required": ["executive_owner", "module_lead", "approver", "contributor", "viewer"],
+      "properties": {
+        "executive_owner": { "type": "object", "properties": { "permissions": { "type": "array" } } },
+        "module_lead":     { "type": "object", "properties": { "permissions": { "type": "array" } } },
+        "approver":        { "type": "object", "properties": { "permissions": { "type": "array" } } },
+        "contributor":     { "type": "object", "properties": { "permissions": { "type": "array" } } },
+        "viewer":          { "type": "object", "properties": { "permissions": { "type": "array" } } }
+      }
+    },
+
+    "evidence_hooks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["state", "evidence_type"],
+        "properties": {
+          "state": { "type": "string" },
+          "evidence_type": { "type": "string" },
+          "required": { "type": "boolean" },
+          "expiry_days": { "type": "integer" }
+        }
+      }
+    },
+
+    "audit_events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["event", "category"],
+        "properties": {
+          "event": { "type": "string" },
+          "category": { "enum": ["create", "update", "approve", "delete", "export", "access", "configure"] },
+          "fields_logged": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+
+    "reporting": {
+      "type": "object",
+      "required": ["kpis"],
+      "properties": {
+        "kpis":  { "type": "array", "items": { "type": "object", "required": ["code", "name"] } },
+        "kris":  { "type": "array", "items": { "type": "object", "required": ["code", "name"] } },
+        "exec_pack_section": { "type": "string" }
+      }
+    },
+
+    "consumes": {
+      "type": "array",
+      "description": "Cross-module dependencies (other module codes this one reads/links to)",
+      "items": { "type": "string" }
+    }
+  }
+}

@@ -1,0 +1,2 @@
+import { NOTIFICATION_PERMISSIONS } from './notification.security';
+export { NOTIFICATION_PERMISSIONS as NOTIFICATION_MODULE_PERMISSIONS };

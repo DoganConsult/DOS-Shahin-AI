@@ -1,0 +1,80 @@
+{
+  "moduleCode": "widgets",
+  "displayName": "Widgets",
+  "ownerTeam": "product-shahin-ai",
+  "productCode": "shahin-ai",
+  "ownership": "module-owned",
+  "version": "1.0.0",
+  "status": "active",
+  "platformDependencies": [
+    "identity",
+    "tenancy"
+  ],
+  "seedProviders": [
+    "products/shahin/seeds/widgets-seed"
+  ],
+  "tenantDefaults": [
+    "widgets_custom_enabled"
+  ],
+  "requiredReferenceData": [
+    "widget_types"
+  ],
+  "currentSources": [
+    "/home/Dr-Dogan-AGRC-OS/backend/src/modules/widgets"
+  ],
+  "targetPath": "modules/widgets",
+  "futureService": "dashboard-widgets-service",
+  "frontendSources": [
+    "/home/Dr-Dogan-AGRC-OS/frontend/src/app/platform-manifests/widgets.module.routes.ts"
+  ],
+  "ownedTables": [
+    "widgets_registry",
+    "widgets_bundles",
+    "widgets_render_log"
+  ],
+  "referencedTables": [
+    "risks",
+    "controls",
+    "findings",
+    "evidence",
+    "action_items",
+    "policies",
+    "assessments",
+    "maturity_scores",
+    "qiyas_recommendations",
+    "risk_kris",
+    "privacy_incidents",
+    "privacy_reviews",
+    "remediation_tasks",
+    "agrc_engine_runs"
+  ],
+  "events": {
+    "publishes": [
+      "widgets.record.created",
+      "widgets.record.updated",
+      "widgets.record.deleted",
+      "widgets.status.changed"
+    ],
+    "subscribes": [
+      "risk.score_changed",
+      "risk.record.created",
+      "risk.record.updated",
+      "compliance.posture_changed",
+      "compliance.assessment_completed",
+      "audit.finding_created",
+      "audit.record.updated",
+      "evidence.record.created",
+      "evidence.record.deleted",
+      "incident.record.created",
+      "incident.status_changed",
+      "policy.record.updated",
+      "governance.decision_made",
+      "dashboard.layout.changed",
+      "workflow.status_changed",
+      "provisioning.completed"
+    ]
+  },
+  "routeBases": [
+    "/api/widgets"
+  ]
+}

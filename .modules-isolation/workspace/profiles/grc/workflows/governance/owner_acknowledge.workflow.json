@@ -1,0 +1,15 @@
+{
+  "id": "governance.owner_acknowledge",
+  "module": "governance",
+  "hook": "owner_acknowledge",
+  "version": "1.0.0",
+  "sla_hours": 48,
+  "actor_role_default": "governance.module_lead",
+  "states": ["pending","acknowledged","escalated"],
+  "initial": "pending",
+  "transitions": [{"from":"pending","to":"acknowledged","on":"ack","actor_role":"governance.module_lead"},{"from":"pending","to":"escalated","on":"sla_breach","actor_role":"governance.executive_owner"}],
+  "audit_event_prefix": "governance.workflow.owner_acknowledge",
+  "notification_targets": ["governance.module_lead", "governance.approver"],
+  "evidence_required_on": ["passed","published"],
+  "escalation": { "on": "sla_breach", "to": "governance.executive_owner", "after_hours": 96 }
+}

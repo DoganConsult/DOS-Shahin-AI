@@ -1,0 +1,68 @@
+---
+apiVersion: "api.cerbos.dev/v1"
+resourcePolicy:
+  version: "1"
+  resource: "audit"
+  importDerivedRoles:
+    - dogan_enterprise
+
+  rules:
+    - actions: ["audit.view", "audit.list"]
+      effect: EFFECT_ALLOW
+      derivedRoles:
+        - auditor_readonly
+        - compliance_officer
+        - tenant_admin
+        - platform_admin
+
+    - actions: ["audit.create", "audit.plan"]
+      effect: EFFECT_ALLOW
+      derivedRoles: ["compliance_officer", "tenant_admin", "platform_admin"]
+
+    - actions: ["audit.field_work", "audit.collect_evidence"]
+      effect: EFFECT_ALLOW
+      derivedRoles: ["auditor_readonly", "compliance_officer"]
+      condition:
+        match:
+          expr: request.resource.attr.status == "in_progress"
+
+    # Sign — SoD: signer cannot be owner, requires high assurance
+    - actions: ["audit.sign"]
+      effect: EFFECT_ALLOW
+      derivedRoles: ["auditor_readonly", "compliance_officer", "high_assurance"]
+      condition:
+        match:
+          all:
+            of:
+              - expr: request.resource.attr.status == "review"
+              - expr: request.principal.id != request.resource.attr.createdBy
+              - expr: |
+                  has(request.principal.attr.acr) && request.principal.attr.acr == "aal3"
+      output:
+        expr: |
+          { "requireDualApproval": true,
+            "retainForDays": 2555 }
+
+    - actions: ["audit.sign"]
+      effect: EFFECT_DENY
+      roles: ["*"]
+      condition:
+        match:
+          expr: request.principal.id == request.resource.attr.createdBy
+      output:
+        when:
+          ruleActivated: '"DAUTH_DENY_SOD_SELF_APPROVAL"'
+
+    - actions: ["audit.export"]
+      effect: EFFECT_ALLOW
+      derivedRoles: ["auditor_readonly", "compliance_officer", "tenant_admin"]
+      condition:
+        match:
+          all:
+            of:
+              - expr: request.resource.attr.status == "signed"
+              - expr: request.principal.attr.emailVerified == true
+
+    - actions: ["audit.legal_hold.set", "audit.legal_hold.release"]
+      effect: EFFECT_ALLOW
+      derivedRoles: ["legal_hold_manager", "platform_admin"]

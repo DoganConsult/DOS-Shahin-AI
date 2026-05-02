@@ -1,0 +1,19 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "strict": true,
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "@dos/types": ["../dos-types/dist/index"],
+      "@dos/types/*": ["../dos-types/dist/*"],
+      "@dos/contracts": ["../dos-contracts/dist/index"],
+      "@dos/contracts/*": ["../dos-contracts/dist/*"],
+      "@dos/db": ["../dos-db/dist/index"],
+      "@dos/db/*": ["../dos-db/dist/*"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}

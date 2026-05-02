@@ -1,0 +1,61 @@
+{
+  "$schema": "./seed-baseline.schema.json",
+  "description": "Phase 16.2 — expected row counts per reference table after a clean seed. Run 'pnpm run migrate' then 'pnpm run seed:post-check' which cross-references this file. If real row counts differ by more than the tolerance, the deploy gate blocks.",
+  "tolerance": 2,
+  "tables": [
+    {
+      "table": "public.countries",
+      "minRows": 240,
+      "expectedRows": 249,
+      "description": "ISO 3166-1 countries + territories."
+    },
+    {
+      "table": "public.sectors",
+      "minRows": 20,
+      "expectedRows": 28,
+      "description": "Economic sector taxonomy (banking, energy, health, etc.)."
+    },
+    {
+      "table": "public.regulatory_authorities",
+      "minRows": 20,
+      "expectedRows": 30,
+      "description": "KSA + GCC + international regulators."
+    },
+    {
+      "table": "public.grc_frameworks",
+      "minRows": 25,
+      "expectedRows": 40,
+      "description": "Framework catalogue — ISO, NIST, KSA NCA, etc."
+    },
+    {
+      "table": "public.onb_stage_definitions",
+      "minRows": 8,
+      "expectedRows": 12,
+      "description": "Onboarding stage definitions (core + express)."
+    },
+    {
+      "table": "public.default_roles",
+      "minRows": 8,
+      "expectedRows": 12,
+      "description": "Default RBAC role catalogue (tenant_admin, tenant_owner, analyst…)."
+    },
+    {
+      "table": "public.canonical_permissions",
+      "minRows": 80,
+      "expectedRows": 120,
+      "description": "Canonical permission catalogue."
+    },
+    {
+      "table": "public.ucf_controls",
+      "minRows": 200,
+      "expectedRows": 300,
+      "description": "Unified Control Framework baseline."
+    },
+    {
+      "table": "public.platform_modules",
+      "minRows": 50,
+      "expectedRows": 72,
+      "description": "Registered platform modules."
+    }
+  ]
+}

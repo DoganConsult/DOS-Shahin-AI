@@ -1,0 +1,1787 @@
+{
+  "generatedAt": "2026-04-12T09:40:00Z",
+  "purpose": "Maps every frontend .ts file from modules/*/source/frontend/ to its target in frontend/modules/*/. Used by M2.2b for extraction.",
+  "totalFiles": 129,
+  "byModule": {
+    "governance": 106,
+    "onboarding": 23
+  },
+  "byMilestone": {
+    "after-M3": 106,
+    "M2": 23
+  },
+  "files": [
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/governance-module-integrity.test.ts",
+      "targetPath": "frontend/modules/governance/governance/governance-module-integrity.test.ts",
+      "module": "governance",
+      "fileType": "spec",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "No external rewiring needed \u2014 internal module code"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/governance.constants.ts",
+      "targetPath": "frontend/modules/governance/governance/governance.constants.ts",
+      "module": "governance",
+      "fileType": "other",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Rewrite @app/shared/* \u2192 @shell/shared/* (shell shared components)"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/governance.types.ts",
+      "targetPath": "frontend/modules/governance/governance/governance.types.ts",
+      "module": "governance",
+      "fileType": "other",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "No external rewiring needed \u2014 internal module code"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/index.ts",
+      "targetPath": "frontend/modules/governance/governance/index.ts",
+      "module": "governance",
+      "fileType": "other",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Rewrite @app/api \u2192 Angular HttpClient via gateway"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/admin/governance-admin.component.spec.ts",
+      "targetPath": "frontend/modules/governance/governance/admin/governance-admin.component.spec.ts",
+      "module": "governance",
+      "fileType": "spec",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/admin/governance-admin.component.ts",
+      "targetPath": "frontend/modules/governance/governance/admin/governance-admin.component.ts",
+      "module": "governance",
+      "fileType": "component",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/security/governance-dashboard-map.ts",
+      "targetPath": "frontend/modules/governance/governance/security/governance-dashboard-map.ts",
+      "module": "governance",
+      "fileType": "other",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "No external rewiring needed \u2014 internal module code"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/components/decision-traceability-graph.component.spec.ts",
+      "targetPath": "frontend/modules/governance/governance/components/decision-traceability-graph.component.spec.ts",
+      "module": "governance",
+      "fileType": "spec",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/components/decision-traceability-graph.component.ts",
+      "targetPath": "frontend/modules/governance/governance/components/decision-traceability-graph.component.ts",
+      "module": "governance",
+      "fileType": "component",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/components/governance-activity-feed.component.spec.ts",
+      "targetPath": "frontend/modules/governance/governance/components/governance-activity-feed.component.spec.ts",
+      "module": "governance",
+      "fileType": "spec",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/components/governance-activity-feed.component.ts",
+      "targetPath": "frontend/modules/governance/governance/components/governance-activity-feed.component.ts",
+      "module": "governance",
+      "fileType": "component",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Rewrite @app/shared/* \u2192 @shell/shared/* (shell shared components)",
+        "Rewrite @app/core/services/ui-infra/i18n \u2192 @shell/core/i18n.service",
+        "Angular import \u2014 requires Angular workspace deps"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/components/governance-framework-grid.component.spec.ts",
+      "targetPath": "frontend/modules/governance/governance/components/governance-framework-grid.component.spec.ts",
+      "module": "governance",
+      "fileType": "spec",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/components/governance-framework-grid.component.ts",
+      "targetPath": "frontend/modules/governance/governance/components/governance-framework-grid.component.ts",
+      "module": "governance",
+      "fileType": "component",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Rewrite @app/shared/* \u2192 @shell/shared/* (shell shared components)",
+        "Rewrite @app/core/models/* \u2192 @dos/types",
+        "Rewrite @app/core/services/ui-infra/i18n \u2192 @shell/core/i18n.service",
+        "Angular import \u2014 requires Angular workspace deps",
+        "PrimeNG modules needed: table"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/components/governance-kpi-strip.component.spec.ts",
+      "targetPath": "frontend/modules/governance/governance/components/governance-kpi-strip.component.spec.ts",
+      "module": "governance",
+      "fileType": "spec",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/components/governance-kpi-strip.component.ts",
+      "targetPath": "frontend/modules/governance/governance/components/governance-kpi-strip.component.ts",
+      "module": "governance",
+      "fileType": "component",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Rewrite @app/core/services/ui-infra/i18n \u2192 @shell/core/i18n.service",
+        "Angular import \u2014 requires Angular workspace deps"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/components/index.ts",
+      "targetPath": "frontend/modules/governance/governance/components/index.ts",
+      "module": "governance",
+      "fileType": "other",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "No external rewiring needed \u2014 internal module code"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/components/sod-analytics-tab.component.spec.ts",
+      "targetPath": "frontend/modules/governance/governance/components/sod-analytics-tab.component.spec.ts",
+      "module": "governance",
+      "fileType": "spec",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/components/sod-analytics-tab.component.ts",
+      "targetPath": "frontend/modules/governance/governance/components/sod-analytics-tab.component.ts",
+      "module": "governance",
+      "fileType": "component",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Rewrite @app/core/models/* \u2192 @dos/types",
+        "Rewrite @app/core/services/ui-infra/i18n \u2192 @shell/core/i18n.service",
+        "Angular import \u2014 requires Angular workspace deps",
+        "PrimeNG modules needed: accordion, button, chart, dropdown"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/components/sod-conflicts-table.component.spec.ts",
+      "targetPath": "frontend/modules/governance/governance/components/sod-conflicts-table.component.spec.ts",
+      "module": "governance",
+      "fileType": "spec",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/components/sod-conflicts-table.component.ts",
+      "targetPath": "frontend/modules/governance/governance/components/sod-conflicts-table.component.ts",
+      "module": "governance",
+      "fileType": "component",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Rewrite @app/shared/* \u2192 @shell/shared/* (shell shared components)",
+        "Rewrite @app/core/services/ui-infra/i18n \u2192 @shell/core/i18n.service",
+        "Angular import \u2014 requires Angular workspace deps",
+        "PrimeNG modules needed: table, tag, tooltip"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/components/sod-filter-bar.component.spec.ts",
+      "targetPath": "frontend/modules/governance/governance/components/sod-filter-bar.component.spec.ts",
+      "module": "governance",
+      "fileType": "spec",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/components/sod-filter-bar.component.ts",
+      "targetPath": "frontend/modules/governance/governance/components/sod-filter-bar.component.ts",
+      "module": "governance",
+      "fileType": "component",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Rewrite @app/shared/* \u2192 @shell/shared/* (shell shared components)",
+        "Rewrite @app/core/services/ui-infra/i18n \u2192 @shell/core/i18n.service",
+        "Angular import \u2014 requires Angular workspace deps",
+        "PrimeNG modules needed: button, dropdown, inputtext"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/components/sod-resolution-dialog.component.spec.ts",
+      "targetPath": "frontend/modules/governance/governance/components/sod-resolution-dialog.component.spec.ts",
+      "module": "governance",
+      "fileType": "spec",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/components/sod-resolution-dialog.component.ts",
+      "targetPath": "frontend/modules/governance/governance/components/sod-resolution-dialog.component.ts",
+      "module": "governance",
+      "fileType": "component",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Rewrite @app/core/models/* \u2192 @dos/types",
+        "Rewrite @app/core/services/ui-infra/i18n \u2192 @shell/core/i18n.service",
+        "Angular import \u2014 requires Angular workspace deps",
+        "PrimeNG modules needed: accordion, button, card, dialog, dropdown, inputtext, tag, timeline"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/services/governance-ai.types.ts",
+      "targetPath": "frontend/modules/governance/governance/services/governance-ai.types.ts",
+      "module": "governance",
+      "fileType": "other",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "No external rewiring needed \u2014 internal module code"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/services/governance-api.service.spec.ts",
+      "targetPath": "frontend/modules/governance/governance/services/governance-api.service.spec.ts",
+      "module": "governance",
+      "fileType": "spec",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/services/governance-api.service.ts",
+      "targetPath": "frontend/modules/governance/governance/services/governance-api.service.ts",
+      "module": "governance",
+      "fileType": "service",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace",
+        "Rewrite environment import \u2192 frontend/src/environments/environment.ts"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/services/governance-api.types.ts",
+      "targetPath": "frontend/modules/governance/governance/services/governance-api.types.ts",
+      "module": "governance",
+      "fileType": "service",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "No external rewiring needed \u2014 internal module code"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/services/governance-assessment.types.ts",
+      "targetPath": "frontend/modules/governance/governance/services/governance-assessment.types.ts",
+      "module": "governance",
+      "fileType": "other",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "No external rewiring needed \u2014 internal module code"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/services/governance-committee.types.ts",
+      "targetPath": "frontend/modules/governance/governance/services/governance-committee.types.ts",
+      "module": "governance",
+      "fileType": "other",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "No external rewiring needed \u2014 internal module code"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/services/governance-policy.types.ts",
+      "targetPath": "frontend/modules/governance/governance/services/governance-policy.types.ts",
+      "module": "governance",
+      "fileType": "other",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "No external rewiring needed \u2014 internal module code"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/services/governance-structure.types.ts",
+      "targetPath": "frontend/modules/governance/governance/services/governance-structure.types.ts",
+      "module": "governance",
+      "fileType": "other",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "No external rewiring needed \u2014 internal module code"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/contracts/governance.contracts.ts",
+      "targetPath": "frontend/modules/governance/governance/contracts/governance.contracts.ts",
+      "module": "governance",
+      "fileType": "other",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "No external rewiring needed \u2014 internal module code"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/state/governance.state.ts",
+      "targetPath": "frontend/modules/governance/governance/state/governance.state.ts",
+      "module": "governance",
+      "fileType": "state",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/dashboards/governance-dashboard.component.spec.ts",
+      "targetPath": "frontend/modules/governance/governance/dashboards/governance-dashboard.component.spec.ts",
+      "module": "governance",
+      "fileType": "spec",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/dashboards/governance-dashboard.component.ts",
+      "targetPath": "frontend/modules/governance/governance/dashboards/governance-dashboard.component.ts",
+      "module": "governance",
+      "fileType": "component",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/testing/governance.test-utils.ts",
+      "targetPath": "frontend/modules/governance/governance/testing/governance.test-utils.ts",
+      "module": "governance",
+      "fileType": "other",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "No external rewiring needed \u2014 internal module code"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/diagnostics/governance-diagnostics.component.spec.ts",
+      "targetPath": "frontend/modules/governance/governance/diagnostics/governance-diagnostics.component.spec.ts",
+      "module": "governance",
+      "fileType": "spec",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/diagnostics/governance-diagnostics.component.ts",
+      "targetPath": "frontend/modules/governance/governance/diagnostics/governance-diagnostics.component.ts",
+      "module": "governance",
+      "fileType": "component",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/widgets/governance-widget.component.spec.ts",
+      "targetPath": "frontend/modules/governance/governance/widgets/governance-widget.component.spec.ts",
+      "module": "governance",
+      "fileType": "spec",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/widgets/governance-widget.component.ts",
+      "targetPath": "frontend/modules/governance/governance/widgets/governance-widget.component.ts",
+      "module": "governance",
+      "fileType": "component",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/governance-oversight/governance-acknowledgements.component.spec.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/governance-oversight/governance-acknowledgements.component.spec.ts",
+      "module": "governance",
+      "fileType": "spec",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/governance-oversight/governance-acknowledgements.component.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/governance-oversight/governance-acknowledgements.component.ts",
+      "module": "governance",
+      "fileType": "component",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Rewrite @app/core/services/api-client \u2192 Angular HttpClient with gateway base URL",
+        "Rewrite @app/shared/* \u2192 @shell/shared/* (shell shared components)",
+        "Rewrite @app/core/services/ui-infra/i18n \u2192 @shell/core/i18n.service",
+        "Angular import \u2014 requires Angular workspace deps",
+        "PrimeNG modules needed: api, button, dialog, dropdown, inputtext, table, tag, toast, tooltip"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/governance-oversight/governance-policy-reviews.component.spec.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/governance-oversight/governance-policy-reviews.component.spec.ts",
+      "module": "governance",
+      "fileType": "spec",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/governance-oversight/governance-policy-reviews.component.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/governance-oversight/governance-policy-reviews.component.ts",
+      "module": "governance",
+      "fileType": "component",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Rewrite @app/core/services/api-client \u2192 Angular HttpClient with gateway base URL",
+        "Rewrite @app/shared/* \u2192 @shell/shared/* (shell shared components)",
+        "Rewrite @app/core/services/ui-infra/i18n \u2192 @shell/core/i18n.service",
+        "Angular import \u2014 requires Angular workspace deps",
+        "PrimeNG modules needed: api, button, dialog, dropdown, inputtext, inputtextarea, table, tabview, tag, toast, tooltip"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/governance-oversight/governance-raci-templates.component.spec.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/governance-oversight/governance-raci-templates.component.spec.ts",
+      "module": "governance",
+      "fileType": "spec",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/governance-oversight/governance-raci-templates.component.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/governance-oversight/governance-raci-templates.component.ts",
+      "module": "governance",
+      "fileType": "component",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Rewrite @app/core/services/api-client \u2192 Angular HttpClient with gateway base URL",
+        "Rewrite @app/shared/* \u2192 @shell/shared/* (shell shared components)",
+        "Rewrite @app/core/services/ui-infra/i18n \u2192 @shell/core/i18n.service",
+        "Angular import \u2014 requires Angular workspace deps",
+        "PrimeNG modules needed: api, button, dialog, dropdown, inputtext, inputtextarea, table, tag, toast, tooltip"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/governance-oversight/governance-raci.component.spec.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/governance-oversight/governance-raci.component.spec.ts",
+      "module": "governance",
+      "fileType": "spec",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/governance-oversight/governance-raci.component.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/governance-oversight/governance-raci.component.ts",
+      "module": "governance",
+      "fileType": "component",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Rewrite @app/core/services/api-client \u2192 Angular HttpClient with gateway base URL",
+        "Rewrite @app/shared/* \u2192 @shell/shared/* (shell shared components)",
+        "Rewrite @app/core/services/ui-infra/i18n \u2192 @shell/core/i18n.service",
+        "Angular import \u2014 requires Angular workspace deps",
+        "PrimeNG modules needed: api, button, dialog, dropdown, inputtext, table, tabview, tag, toast, tooltip"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/governance-oversight/governance-responsibilities.component.spec.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/governance-oversight/governance-responsibilities.component.spec.ts",
+      "module": "governance",
+      "fileType": "spec",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/governance-oversight/governance-responsibilities.component.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/governance-oversight/governance-responsibilities.component.ts",
+      "module": "governance",
+      "fileType": "component",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Rewrite @app/core/services/api-client \u2192 Angular HttpClient with gateway base URL",
+        "Rewrite @app/shared/* \u2192 @shell/shared/* (shell shared components)",
+        "Rewrite @app/core/services/ui-infra/i18n \u2192 @shell/core/i18n.service",
+        "Angular import \u2014 requires Angular workspace deps",
+        "PrimeNG modules needed: api, button, dialog, dropdown, inputtext, inputtextarea, table, tag, toast, tooltip"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/governance-oversight/governance-reviews.component.spec.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/governance-oversight/governance-reviews.component.spec.ts",
+      "module": "governance",
+      "fileType": "spec",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/governance-oversight/governance-reviews.component.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/governance-oversight/governance-reviews.component.ts",
+      "module": "governance",
+      "fileType": "component",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Rewrite @app/core/services/api-client \u2192 Angular HttpClient with gateway base URL",
+        "Rewrite @app/shared/* \u2192 @shell/shared/* (shell shared components)",
+        "Rewrite @app/core/services/ui-infra/i18n \u2192 @shell/core/i18n.service",
+        "Angular import \u2014 requires Angular workspace deps",
+        "PrimeNG modules needed: api, button, dialog, dropdown, inputtext, inputtextarea, table, tag, toast, tooltip"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/governance-oversight/governance-structure.component.spec.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/governance-oversight/governance-structure.component.spec.ts",
+      "module": "governance",
+      "fileType": "spec",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/governance-oversight/governance-structure.component.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/governance-oversight/governance-structure.component.ts",
+      "module": "governance",
+      "fileType": "component",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Rewrite @app/core/services/api-client \u2192 Angular HttpClient with gateway base URL",
+        "Rewrite @app/shared/* \u2192 @shell/shared/* (shell shared components)",
+        "Rewrite @app/core/services/ui-infra/i18n \u2192 @shell/core/i18n.service",
+        "Angular import \u2014 requires Angular workspace deps",
+        "PrimeNG modules needed: api, button, dialog, dropdown, inputtext, inputtextarea, table, tabview, tag, toast, tooltip"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/governance-planning/governance-charters.component.spec.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/governance-planning/governance-charters.component.spec.ts",
+      "module": "governance",
+      "fileType": "spec",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/governance-planning/governance-charters.component.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/governance-planning/governance-charters.component.ts",
+      "module": "governance",
+      "fileType": "component",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Rewrite @app/core/services/api-client \u2192 Angular HttpClient with gateway base URL",
+        "Rewrite @app/shared/* \u2192 @shell/shared/* (shell shared components)",
+        "Rewrite @app/core/services/ui-infra/i18n \u2192 @shell/core/i18n.service",
+        "Angular import \u2014 requires Angular workspace deps",
+        "PrimeNG modules needed: api, button, dialog, dropdown, inputtext, inputtextarea, table, tag, toast, tooltip"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/governance-planning/governance-initiatives.component.spec.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/governance-planning/governance-initiatives.component.spec.ts",
+      "module": "governance",
+      "fileType": "spec",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/governance-planning/governance-initiatives.component.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/governance-planning/governance-initiatives.component.ts",
+      "module": "governance",
+      "fileType": "component",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Rewrite @app/shared/* \u2192 @shell/shared/* (shell shared components)",
+        "Rewrite @app/core/models/* \u2192 @dos/types",
+        "Rewrite @app/core/services/ui-infra/i18n \u2192 @shell/core/i18n.service",
+        "Rewrite @app/api \u2192 Angular HttpClient via gateway",
+        "Angular import \u2014 requires Angular workspace deps",
+        "PrimeNG modules needed: api, button, dialog, dropdown, inputtext, skeleton, table, tag, toast, tooltip",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/governance-planning/governance-mandates.component.spec.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/governance-planning/governance-mandates.component.spec.ts",
+      "module": "governance",
+      "fileType": "spec",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/governance-planning/governance-mandates.component.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/governance-planning/governance-mandates.component.ts",
+      "module": "governance",
+      "fileType": "component",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Rewrite @app/core/services/api-client \u2192 Angular HttpClient with gateway base URL",
+        "Rewrite @app/shared/* \u2192 @shell/shared/* (shell shared components)",
+        "Rewrite @app/core/services/ui-infra/i18n \u2192 @shell/core/i18n.service",
+        "Angular import \u2014 requires Angular workspace deps",
+        "PrimeNG modules needed: api, button, dialog, dropdown, inputtext, inputtextarea, table, tag, toast, tooltip"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/governance-planning/governance-milestones.component.spec.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/governance-planning/governance-milestones.component.spec.ts",
+      "module": "governance",
+      "fileType": "spec",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/governance-planning/governance-milestones.component.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/governance-planning/governance-milestones.component.ts",
+      "module": "governance",
+      "fileType": "component",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Rewrite @app/shared/* \u2192 @shell/shared/* (shell shared components)",
+        "Rewrite @app/core/models/* \u2192 @dos/types",
+        "Rewrite @app/core/services/ui-infra/i18n \u2192 @shell/core/i18n.service",
+        "Rewrite @app/api \u2192 Angular HttpClient via gateway",
+        "Angular import \u2014 requires Angular workspace deps",
+        "PrimeNG modules needed: api, button, dialog, dropdown, inputtext, skeleton, table, tag, toast, tooltip",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/governance-planning/governance-objectives.component.spec.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/governance-planning/governance-objectives.component.spec.ts",
+      "module": "governance",
+      "fileType": "spec",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/governance-planning/governance-objectives.component.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/governance-planning/governance-objectives.component.ts",
+      "module": "governance",
+      "fileType": "component",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Rewrite @app/core/services/api-client \u2192 Angular HttpClient with gateway base URL",
+        "Rewrite @app/shared/* \u2192 @shell/shared/* (shell shared components)",
+        "Rewrite @app/core/services/ui-infra/i18n \u2192 @shell/core/i18n.service",
+        "Angular import \u2014 requires Angular workspace deps",
+        "PrimeNG modules needed: api, button, dialog, dropdown, inputtext, inputtextarea, progressbar, table, tag, toast, tooltip"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/governance-planning/governance-obligations.component.spec.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/governance-planning/governance-obligations.component.spec.ts",
+      "module": "governance",
+      "fileType": "spec",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/governance-planning/governance-obligations.component.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/governance-planning/governance-obligations.component.ts",
+      "module": "governance",
+      "fileType": "component",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Rewrite @app/core/services/api-client \u2192 Angular HttpClient with gateway base URL",
+        "Rewrite @app/shared/* \u2192 @shell/shared/* (shell shared components)",
+        "Rewrite @app/core/services/ui-infra/i18n \u2192 @shell/core/i18n.service",
+        "Angular import \u2014 requires Angular workspace deps",
+        "PrimeNG modules needed: api, button, dialog, dropdown, inputtext, inputtextarea, table, tag, toast, tooltip"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/lifecycle/lifecycle-stage.page.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/lifecycle/lifecycle-stage.page.ts",
+      "module": "governance",
+      "fileType": "other",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/ninety-day-plan/ninety-day-plan.component.spec.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/ninety-day-plan/ninety-day-plan.component.spec.ts",
+      "module": "governance",
+      "fileType": "spec",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/ninety-day-plan/ninety-day-plan.component.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/ninety-day-plan/ninety-day-plan.component.ts",
+      "module": "governance",
+      "fileType": "component",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Rewrite @app/core/services/api-client \u2192 Angular HttpClient with gateway base URL",
+        "Rewrite @app/shared/* \u2192 @shell/shared/* (shell shared components)",
+        "Rewrite @app/core/services/ui-infra/i18n \u2192 @shell/core/i18n.service",
+        "Rewrite @app/api \u2192 Angular HttpClient via gateway",
+        "Angular import \u2014 requires Angular workspace deps",
+        "PrimeNG modules needed: button, card, skeleton, tag, timeline",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/raci-matrix/raci-matrix.component.spec.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/raci-matrix/raci-matrix.component.spec.ts",
+      "module": "governance",
+      "fileType": "spec",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/raci-matrix/raci-matrix.component.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/raci-matrix/raci-matrix.component.ts",
+      "module": "governance",
+      "fileType": "component",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Rewrite @app/shared/* \u2192 @shell/shared/* (shell shared components)",
+        "Rewrite @app/core/services/ui-infra/i18n \u2192 @shell/core/i18n.service",
+        "Rewrite @app/api \u2192 Angular HttpClient via gateway",
+        "Angular import \u2014 requires Angular workspace deps",
+        "PrimeNG modules needed: api, button, dialog, dropdown, inputtext, inputtextarea, table, tag, toast, toolbar, tooltip",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/raci-matrix/raci-matrix.pbt.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/raci-matrix/raci-matrix.pbt.ts",
+      "module": "governance",
+      "fileType": "other",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "No external rewiring needed \u2014 internal module code"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/activity-stream/activity-stream.component.spec.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/activity-stream/activity-stream.component.spec.ts",
+      "module": "governance",
+      "fileType": "spec",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/activity-stream/activity-stream.component.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/activity-stream/activity-stream.component.ts",
+      "module": "governance",
+      "fileType": "component",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Rewrite @app/core/services/api-client \u2192 Angular HttpClient with gateway base URL",
+        "Rewrite @app/shared/* \u2192 @shell/shared/* (shell shared components)",
+        "Rewrite @app/core/services/ui-infra/i18n \u2192 @shell/core/i18n.service",
+        "Angular import \u2014 requires Angular workspace deps",
+        "PrimeNG modules needed: button, dropdown, inputtext, table, tag, toolbar"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/board-decisions/board-decisions.component.spec.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/board-decisions/board-decisions.component.spec.ts",
+      "module": "governance",
+      "fileType": "spec",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/board-decisions/board-decisions.component.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/board-decisions/board-decisions.component.ts",
+      "module": "governance",
+      "fileType": "component",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Rewrite @app/core/models/* \u2192 @dos/types",
+        "Angular import \u2014 requires Angular workspace deps"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/board-decisions/governance-board-packs.component.spec.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/board-decisions/governance-board-packs.component.spec.ts",
+      "module": "governance",
+      "fileType": "spec",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/board-decisions/governance-board-packs.component.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/board-decisions/governance-board-packs.component.ts",
+      "module": "governance",
+      "fileType": "component",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Rewrite @app/core/services/api-client \u2192 Angular HttpClient with gateway base URL",
+        "Rewrite @app/shared/* \u2192 @shell/shared/* (shell shared components)",
+        "Rewrite @app/core/models/* \u2192 @dos/types",
+        "Rewrite @app/core/services/ui-infra/i18n \u2192 @shell/core/i18n.service",
+        "Angular import \u2014 requires Angular workspace deps",
+        "PrimeNG modules needed: api, button, dialog, dropdown, inputtext, table, tag, toast, tooltip"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/board-decisions/governance-committees.component.spec.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/board-decisions/governance-committees.component.spec.ts",
+      "module": "governance",
+      "fileType": "spec",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/board-decisions/governance-committees.component.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/board-decisions/governance-committees.component.ts",
+      "module": "governance",
+      "fileType": "component",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Rewrite @app/core/services/api-client \u2192 Angular HttpClient with gateway base URL",
+        "Rewrite @app/shared/* \u2192 @shell/shared/* (shell shared components)",
+        "Rewrite @app/core/models/* \u2192 @dos/types",
+        "Rewrite @app/core/services/ui-infra/i18n \u2192 @shell/core/i18n.service",
+        "Angular import \u2014 requires Angular workspace deps",
+        "PrimeNG modules needed: api, button, confirmdialog, dialog, dropdown, inputtext, inputtextarea, table, tabview, tag, toast, toolbar, tooltip",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/board-decisions/governance-decisions.component.spec.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/board-decisions/governance-decisions.component.spec.ts",
+      "module": "governance",
+      "fileType": "spec",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/board-decisions/governance-decisions.component.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/board-decisions/governance-decisions.component.ts",
+      "module": "governance",
+      "fileType": "component",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Rewrite @app/core/services/api-client \u2192 Angular HttpClient with gateway base URL",
+        "Rewrite @app/shared/* \u2192 @shell/shared/* (shell shared components)",
+        "Rewrite @app/core/services/ui-infra/i18n \u2192 @shell/core/i18n.service",
+        "Angular import \u2014 requires Angular workspace deps",
+        "PrimeNG modules needed: api, button, dialog, dropdown, inputtext, inputtextarea, table, tabview, tag, toast, toolbar, tooltip"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/board-decisions/governance-delegations.component.spec.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/board-decisions/governance-delegations.component.spec.ts",
+      "module": "governance",
+      "fileType": "spec",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/board-decisions/governance-delegations.component.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/board-decisions/governance-delegations.component.ts",
+      "module": "governance",
+      "fileType": "component",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Rewrite @app/core/services/api-client \u2192 Angular HttpClient with gateway base URL",
+        "Rewrite @app/shared/* \u2192 @shell/shared/* (shell shared components)",
+        "Rewrite @app/core/models/* \u2192 @dos/types",
+        "Rewrite @app/core/services/ui-infra/i18n \u2192 @shell/core/i18n.service",
+        "Angular import \u2014 requires Angular workspace deps",
+        "PrimeNG modules needed: api, button, dialog, dropdown, inputtext, inputtextarea, table, tabview, tag, toast, tooltip"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/business-calendar/business-calendar.component.spec.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/business-calendar/business-calendar.component.spec.ts",
+      "module": "governance",
+      "fileType": "spec",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/business-calendar/business-calendar.component.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/business-calendar/business-calendar.component.ts",
+      "module": "governance",
+      "fileType": "component",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Rewrite @app/core/services/api-client \u2192 Angular HttpClient with gateway base URL",
+        "Rewrite @app/shared/* \u2192 @shell/shared/* (shell shared components)",
+        "Rewrite @app/api \u2192 Angular HttpClient via gateway",
+        "Angular import \u2014 requires Angular workspace deps",
+        "PrimeNG modules needed: api, button, dialog, dropdown, inputtext, inputtextarea, table, tag, toast, toolbar, tooltip",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/cadence-calendar/cadence-calendar.component.spec.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/cadence-calendar/cadence-calendar.component.spec.ts",
+      "module": "governance",
+      "fileType": "spec",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/cadence-calendar/cadence-calendar.component.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/cadence-calendar/cadence-calendar.component.ts",
+      "module": "governance",
+      "fileType": "component",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Rewrite @app/shared/* \u2192 @shell/shared/* (shell shared components)",
+        "Rewrite @app/core/services/ui-infra/i18n \u2192 @shell/core/i18n.service",
+        "Angular import \u2014 requires Angular workspace deps",
+        "PrimeNG modules needed: button, card, dropdown, table, tag, tooltip",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/comment/comment.component.spec.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/comment/comment.component.spec.ts",
+      "module": "governance",
+      "fileType": "spec",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/comment/comment.component.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/comment/comment.component.ts",
+      "module": "governance",
+      "fileType": "component",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Rewrite @app/shared/* \u2192 @shell/shared/* (shell shared components)",
+        "Rewrite @app/core/services/ui-infra/i18n \u2192 @shell/core/i18n.service",
+        "Rewrite @app/api \u2192 Angular HttpClient via gateway",
+        "Angular import \u2014 requires Angular workspace deps",
+        "PrimeNG modules needed: button, dropdown, tag, toolbar"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/governance-operations/governance-actions.component.spec.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/governance-operations/governance-actions.component.spec.ts",
+      "module": "governance",
+      "fileType": "spec",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/governance-operations/governance-actions.component.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/governance-operations/governance-actions.component.ts",
+      "module": "governance",
+      "fileType": "component",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Rewrite @app/core/services/api-client \u2192 Angular HttpClient with gateway base URL",
+        "Rewrite @app/shared/* \u2192 @shell/shared/* (shell shared components)",
+        "Rewrite @app/core/models/* \u2192 @dos/types",
+        "Rewrite @app/core/services/ui-infra/i18n \u2192 @shell/core/i18n.service",
+        "Rewrite @app/api \u2192 Angular HttpClient via gateway",
+        "Angular import \u2014 requires Angular workspace deps",
+        "PrimeNG modules needed: api, button, confirmdialog, dialog, dropdown, inputtext, inputtextarea, table, tabview, tag, toast, tooltip",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/governance-operations/governance-digests.component.spec.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/governance-operations/governance-digests.component.spec.ts",
+      "module": "governance",
+      "fileType": "spec",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/governance-operations/governance-digests.component.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/governance-operations/governance-digests.component.ts",
+      "module": "governance",
+      "fileType": "component",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Rewrite @app/shared/* \u2192 @shell/shared/* (shell shared components)",
+        "Rewrite @app/core/models/* \u2192 @dos/types",
+        "Rewrite @app/core/services/ui-infra/i18n \u2192 @shell/core/i18n.service",
+        "Rewrite @app/api \u2192 Angular HttpClient via gateway",
+        "Angular import \u2014 requires Angular workspace deps",
+        "PrimeNG modules needed: api, button, card, dialog, dropdown, inputnumber, skeleton, table, tag, toast, tooltip",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/governance-operations/governance-executive-summaries.component.spec.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/governance-operations/governance-executive-summaries.component.spec.ts",
+      "module": "governance",
+      "fileType": "spec",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/governance-operations/governance-executive-summaries.component.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/governance-operations/governance-executive-summaries.component.ts",
+      "module": "governance",
+      "fileType": "component",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Rewrite @app/core/services/api-client \u2192 Angular HttpClient with gateway base URL",
+        "Rewrite @app/shared/* \u2192 @shell/shared/* (shell shared components)",
+        "Rewrite @app/core/services/ui-infra/i18n \u2192 @shell/core/i18n.service",
+        "Angular import \u2014 requires Angular workspace deps",
+        "PrimeNG modules needed: api, button, dialog, dropdown, inputtext, inputtextarea, table, tag, toast, tooltip"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/governance-operations/governance-health.component.spec.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/governance-operations/governance-health.component.spec.ts",
+      "module": "governance",
+      "fileType": "spec",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/governance-operations/governance-health.component.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/governance-operations/governance-health.component.ts",
+      "module": "governance",
+      "fileType": "component",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Rewrite @app/core/services/api-client \u2192 Angular HttpClient with gateway base URL",
+        "Rewrite @app/shared/* \u2192 @shell/shared/* (shell shared components)",
+        "Rewrite @app/core/services/ui-infra/i18n \u2192 @shell/core/i18n.service",
+        "Angular import \u2014 requires Angular workspace deps",
+        "PrimeNG modules needed: api, button, progressbar, tag, toast"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/governance-operations/governance-hub.component.spec.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/governance-operations/governance-hub.component.spec.ts",
+      "module": "governance",
+      "fileType": "spec",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/governance-operations/governance-hub.component.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/governance-operations/governance-hub.component.ts",
+      "module": "governance",
+      "fileType": "component",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Rewrite @app/shared/* \u2192 @shell/shared/* (shell shared components)",
+        "Rewrite @app/core/models/* \u2192 @dos/types",
+        "Rewrite @app/core/services/ui-infra/i18n \u2192 @shell/core/i18n.service",
+        "Rewrite @app/api \u2192 Angular HttpClient via gateway",
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/governance-operations/governance-overview.component.spec.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/governance-operations/governance-overview.component.spec.ts",
+      "module": "governance",
+      "fileType": "spec",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/governance-operations/governance-overview.component.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/governance-operations/governance-overview.component.ts",
+      "module": "governance",
+      "fileType": "component",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Rewrite @app/core/services/api-client \u2192 Angular HttpClient with gateway base URL",
+        "Rewrite @app/shared/* \u2192 @shell/shared/* (shell shared components)",
+        "Rewrite @app/core/models/* \u2192 @dos/types",
+        "Rewrite @app/core/services/ui-infra/i18n \u2192 @shell/core/i18n.service",
+        "Rewrite @app/api \u2192 Angular HttpClient via gateway",
+        "Angular import \u2014 requires Angular workspace deps",
+        "PrimeNG modules needed: api, skeleton, toast",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/governance-operations/sod-conflicts-page.component.spec.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/governance-operations/sod-conflicts-page.component.spec.ts",
+      "module": "governance",
+      "fileType": "spec",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/pages/governance-operations/sod-conflicts-page.component.ts",
+      "targetPath": "frontend/modules/governance/governance/pages/governance-operations/sod-conflicts-page.component.ts",
+      "module": "governance",
+      "fileType": "component",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "Rewrite @app/shared/* \u2192 @shell/shared/* (shell shared components)",
+        "Rewrite @app/core/models/* \u2192 @dos/types",
+        "Rewrite @app/core/services/ui-infra/i18n \u2192 @shell/core/i18n.service",
+        "Angular import \u2014 requires Angular workspace deps",
+        "PrimeNG modules needed: api, tabview, toast"
+      ]
+    },
+    {
+      "sourcePath": "modules/governance/source/frontend/governance/workflows/governance-lifecycle.ts",
+      "targetPath": "frontend/modules/governance/governance/workflows/governance-lifecycle.ts",
+      "module": "governance",
+      "fileType": "other",
+      "deferred": true,
+      "deferredReason": "Governance is after M3, not scheduled",
+      "milestone": "after-M3",
+      "rewiringNotes": [
+        "No external rewiring needed \u2014 internal module code"
+      ]
+    },
+    {
+      "sourcePath": "modules/onboarding/source/frontend/onboarding/index.ts",
+      "targetPath": "frontend/modules/onboarding/onboarding/index.ts",
+      "module": "onboarding",
+      "fileType": "other",
+      "deferred": false,
+      "deferredReason": null,
+      "milestone": "M2",
+      "rewiringNotes": [
+        "No external rewiring needed \u2014 internal module code"
+      ]
+    },
+    {
+      "sourcePath": "modules/onboarding/source/frontend/onboarding/security/index.ts",
+      "targetPath": "frontend/modules/onboarding/onboarding/security/index.ts",
+      "module": "onboarding",
+      "fileType": "other",
+      "deferred": false,
+      "deferredReason": null,
+      "milestone": "M2",
+      "rewiringNotes": [
+        "No external rewiring needed \u2014 internal module code"
+      ]
+    },
+    {
+      "sourcePath": "modules/onboarding/source/frontend/onboarding/security/onboarding-action-visibility.ts",
+      "targetPath": "frontend/modules/onboarding/onboarding/security/onboarding-action-visibility.ts",
+      "module": "onboarding",
+      "fileType": "other",
+      "deferred": false,
+      "deferredReason": null,
+      "milestone": "M2",
+      "rewiringNotes": [
+        "No external rewiring needed \u2014 internal module code"
+      ]
+    },
+    {
+      "sourcePath": "modules/onboarding/source/frontend/onboarding/security/onboarding-dashboard-map.ts",
+      "targetPath": "frontend/modules/onboarding/onboarding/security/onboarding-dashboard-map.ts",
+      "module": "onboarding",
+      "fileType": "other",
+      "deferred": false,
+      "deferredReason": null,
+      "milestone": "M2",
+      "rewiringNotes": [
+        "No external rewiring needed \u2014 internal module code"
+      ]
+    },
+    {
+      "sourcePath": "modules/onboarding/source/frontend/onboarding/services/onboarding-api.service.spec.ts",
+      "targetPath": "frontend/modules/onboarding/onboarding/services/onboarding-api.service.spec.ts",
+      "module": "onboarding",
+      "fileType": "spec",
+      "deferred": false,
+      "deferredReason": null,
+      "milestone": "M2",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps"
+      ]
+    },
+    {
+      "sourcePath": "modules/onboarding/source/frontend/onboarding/services/onboarding-api.service.ts",
+      "targetPath": "frontend/modules/onboarding/onboarding/services/onboarding-api.service.ts",
+      "module": "onboarding",
+      "fileType": "service",
+      "deferred": false,
+      "deferredReason": null,
+      "milestone": "M2",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace",
+        "Rewrite environment import \u2192 frontend/src/environments/environment.ts"
+      ]
+    },
+    {
+      "sourcePath": "modules/onboarding/source/frontend/onboarding/state/onboarding.state.ts",
+      "targetPath": "frontend/modules/onboarding/onboarding/state/onboarding.state.ts",
+      "module": "onboarding",
+      "fileType": "state",
+      "deferred": false,
+      "deferredReason": null,
+      "milestone": "M2",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps"
+      ]
+    },
+    {
+      "sourcePath": "modules/onboarding/source/frontend/onboarding/testing/onboarding.test-utils.ts",
+      "targetPath": "frontend/modules/onboarding/onboarding/testing/onboarding.test-utils.ts",
+      "module": "onboarding",
+      "fileType": "other",
+      "deferred": false,
+      "deferredReason": null,
+      "milestone": "M2",
+      "rewiringNotes": [
+        "No external rewiring needed \u2014 internal module code"
+      ]
+    },
+    {
+      "sourcePath": "modules/onboarding/source/frontend/onboarding/widgets/onboarding-widget.component.spec.ts",
+      "targetPath": "frontend/modules/onboarding/onboarding/widgets/onboarding-widget.component.spec.ts",
+      "module": "onboarding",
+      "fileType": "spec",
+      "deferred": false,
+      "deferredReason": null,
+      "milestone": "M2",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/onboarding/source/frontend/onboarding/widgets/onboarding-widget.component.ts",
+      "targetPath": "frontend/modules/onboarding/onboarding/widgets/onboarding-widget.component.ts",
+      "module": "onboarding",
+      "fileType": "component",
+      "deferred": false,
+      "deferredReason": null,
+      "milestone": "M2",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/onboarding/source/frontend/onboarding/workflows/onboarding-lifecycle.ts",
+      "targetPath": "frontend/modules/onboarding/onboarding/workflows/onboarding-lifecycle.ts",
+      "module": "onboarding",
+      "fileType": "other",
+      "deferred": false,
+      "deferredReason": null,
+      "milestone": "M2",
+      "rewiringNotes": [
+        "No external rewiring needed \u2014 internal module code"
+      ]
+    },
+    {
+      "sourcePath": "modules/onboarding/source/frontend/onboarding/admin/onboarding-admin.component.spec.ts",
+      "targetPath": "frontend/modules/onboarding/onboarding/admin/onboarding-admin.component.spec.ts",
+      "module": "onboarding",
+      "fileType": "spec",
+      "deferred": false,
+      "deferredReason": null,
+      "milestone": "M2",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/onboarding/source/frontend/onboarding/admin/onboarding-admin.component.ts",
+      "targetPath": "frontend/modules/onboarding/onboarding/admin/onboarding-admin.component.ts",
+      "module": "onboarding",
+      "fileType": "component",
+      "deferred": false,
+      "deferredReason": null,
+      "milestone": "M2",
+      "rewiringNotes": [
+        "Rewrite @app/core/models/* \u2192 @dos/types",
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/onboarding/source/frontend/onboarding/components/index.ts",
+      "targetPath": "frontend/modules/onboarding/onboarding/components/index.ts",
+      "module": "onboarding",
+      "fileType": "other",
+      "deferred": false,
+      "deferredReason": null,
+      "milestone": "M2",
+      "rewiringNotes": [
+        "No external rewiring needed \u2014 internal module code"
+      ]
+    },
+    {
+      "sourcePath": "modules/onboarding/source/frontend/onboarding/contracts/onboarding.contracts.ts",
+      "targetPath": "frontend/modules/onboarding/onboarding/contracts/onboarding.contracts.ts",
+      "module": "onboarding",
+      "fileType": "other",
+      "deferred": false,
+      "deferredReason": null,
+      "milestone": "M2",
+      "rewiringNotes": [
+        "No external rewiring needed \u2014 internal module code"
+      ]
+    },
+    {
+      "sourcePath": "modules/onboarding/source/frontend/onboarding/dashboards/onboarding-dashboard.component.spec.ts",
+      "targetPath": "frontend/modules/onboarding/onboarding/dashboards/onboarding-dashboard.component.spec.ts",
+      "module": "onboarding",
+      "fileType": "spec",
+      "deferred": false,
+      "deferredReason": null,
+      "milestone": "M2",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/onboarding/source/frontend/onboarding/dashboards/onboarding-dashboard.component.ts",
+      "targetPath": "frontend/modules/onboarding/onboarding/dashboards/onboarding-dashboard.component.ts",
+      "module": "onboarding",
+      "fileType": "component",
+      "deferred": false,
+      "deferredReason": null,
+      "milestone": "M2",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/onboarding/source/frontend/onboarding/diagnostics/onboarding-diagnostics.component.spec.ts",
+      "targetPath": "frontend/modules/onboarding/onboarding/diagnostics/onboarding-diagnostics.component.spec.ts",
+      "module": "onboarding",
+      "fileType": "spec",
+      "deferred": false,
+      "deferredReason": null,
+      "milestone": "M2",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/onboarding/source/frontend/onboarding/diagnostics/onboarding-diagnostics.component.ts",
+      "targetPath": "frontend/modules/onboarding/onboarding/diagnostics/onboarding-diagnostics.component.ts",
+      "module": "onboarding",
+      "fileType": "component",
+      "deferred": false,
+      "deferredReason": null,
+      "milestone": "M2",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/onboarding/source/frontend/onboarding/pages/onboarding-hub.component.spec.ts",
+      "targetPath": "frontend/modules/onboarding/onboarding/pages/onboarding-hub.component.spec.ts",
+      "module": "onboarding",
+      "fileType": "spec",
+      "deferred": false,
+      "deferredReason": null,
+      "milestone": "M2",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/onboarding/source/frontend/onboarding/pages/onboarding-hub.component.ts",
+      "targetPath": "frontend/modules/onboarding/onboarding/pages/onboarding-hub.component.ts",
+      "module": "onboarding",
+      "fileType": "component",
+      "deferred": false,
+      "deferredReason": null,
+      "milestone": "M2",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/onboarding/source/frontend/onboarding/pages/quick-grc-accelerator/quick-grc-accelerator.component.spec.ts",
+      "targetPath": "frontend/modules/onboarding/onboarding/pages/quick-grc-accelerator/quick-grc-accelerator.component.spec.ts",
+      "module": "onboarding",
+      "fileType": "spec",
+      "deferred": false,
+      "deferredReason": null,
+      "milestone": "M2",
+      "rewiringNotes": [
+        "Angular import \u2014 requires Angular workspace deps",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    },
+    {
+      "sourcePath": "modules/onboarding/source/frontend/onboarding/pages/quick-grc-accelerator/quick-grc-accelerator.component.ts",
+      "targetPath": "frontend/modules/onboarding/onboarding/pages/quick-grc-accelerator/quick-grc-accelerator.component.ts",
+      "module": "onboarding",
+      "fileType": "component",
+      "deferred": false,
+      "deferredReason": null,
+      "milestone": "M2",
+      "rewiringNotes": [
+        "Rewrite @app/shared/* \u2192 @shell/shared/* (shell shared components)",
+        "Angular import \u2014 requires Angular workspace deps",
+        "PrimeNG modules needed: api, button, card, confirmdialog, progressbar, skeleton, tag, toast, tooltip",
+        "Uses RxJS operators \u2014 available via Angular workspace"
+      ]
+    }
+  ]
+}

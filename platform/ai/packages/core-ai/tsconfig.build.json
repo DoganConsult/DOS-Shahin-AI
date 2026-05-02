@@ -1,0 +1,21 @@
+{
+  "extends": "../../../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "noEmit": false,
+    "composite": true,
+    "declaration": true,
+    "sourceMap": true,
+    "tsBuildInfoFile": "./dist/.tsbuildinfo",
+    "baseUrl": ".",
+    "paths": {
+      "@dos/db": ["../../../../packages/dos-db/dist/index"],
+      "@dos/db/*": ["../../../../packages/dos-db/dist/*"],
+      "@dos/platform-core": ["../../../../packages/dos-platform-core/dist/index"],
+      "@dos/platform-core/*": ["../../../../packages/dos-platform-core/dist/*"]
+    }
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist", "**/*.test.ts"]
+}

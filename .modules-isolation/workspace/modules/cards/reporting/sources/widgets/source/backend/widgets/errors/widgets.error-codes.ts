@@ -1,0 +1,43 @@
+import type { ModuleErrorCode } from '../../../shared/error-catalog.types';
+
+export const WIDGETS_ERROR_CODES = {
+  HEALTH_NOT_FOUND: { code: 'WIDGETS.HEALTH_NOT_FOUND', httpStatus: 404, messageEn: 'Health not found', messageAr: 'Health غير موجود' },
+  HEALTH_ALREADY_EXISTS: { code: 'WIDGETS.HEALTH_ALREADY_EXISTS', httpStatus: 409, messageEn: 'Health already exists', messageAr: 'Health موجود بالفعل' },
+  HEALTH_VALIDATION_FAILED: { code: 'WIDGETS.HEALTH_VALIDATION_FAILED', httpStatus: 400, messageEn: 'Health validation failed', messageAr: 'فشل التحقق من Health' },
+  RENDER_NOT_FOUND: { code: 'WIDGETS.RENDER_NOT_FOUND', httpStatus: 404, messageEn: 'Render not found', messageAr: 'Render غير موجود' },
+  RENDER_ALREADY_EXISTS: { code: 'WIDGETS.RENDER_ALREADY_EXISTS', httpStatus: 409, messageEn: 'Render already exists', messageAr: 'Render موجود بالفعل' },
+  RENDER_VALIDATION_FAILED: { code: 'WIDGETS.RENDER_VALIDATION_FAILED', httpStatus: 400, messageEn: 'Render validation failed', messageAr: 'فشل التحقق من Render' },
+  PUBLICATION_NOT_FOUND: { code: 'WIDGETS.PUBLICATION_NOT_FOUND', httpStatus: 404, messageEn: 'Publication not found', messageAr: 'Publication غير موجود' },
+  PUBLICATION_ALREADY_EXISTS: { code: 'WIDGETS.PUBLICATION_ALREADY_EXISTS', httpStatus: 409, messageEn: 'Publication already exists', messageAr: 'Publication موجود بالفعل' },
+  PUBLICATION_VALIDATION_FAILED: { code: 'WIDGETS.PUBLICATION_VALIDATION_FAILED', httpStatus: 400, messageEn: 'Publication validation failed', messageAr: 'فشل التحقق من Publication' },
+  SUMMARY_NOT_FOUND: { code: 'WIDGETS.SUMMARY_NOT_FOUND', httpStatus: 404, messageEn: 'Summary not found', messageAr: 'Summary غير موجود' },
+  SUMMARY_ALREADY_EXISTS: { code: 'WIDGETS.SUMMARY_ALREADY_EXISTS', httpStatus: 409, messageEn: 'Summary already exists', messageAr: 'Summary موجود بالفعل' },
+  SUMMARY_VALIDATION_FAILED: { code: 'WIDGETS.SUMMARY_VALIDATION_FAILED', httpStatus: 400, messageEn: 'Summary validation failed', messageAr: 'فشل التحقق من Summary' },
+  TOP_BREACHED_KRIS_NOT_FOUND: { code: 'WIDGETS.TOP_BREACHED_KRIS_NOT_FOUND', httpStatus: 404, messageEn: 'Top Breached Kris not found', messageAr: 'Top Breached Kris غير موجود' },
+  TOP_BREACHED_KRIS_ALREADY_EXISTS: { code: 'WIDGETS.TOP_BREACHED_KRIS_ALREADY_EXISTS', httpStatus: 409, messageEn: 'Top Breached Kris already exists', messageAr: 'Top Breached Kris موجود بالفعل' },
+  TOP_BREACHED_KRIS_VALIDATION_FAILED: { code: 'WIDGETS.TOP_BREACHED_KRIS_VALIDATION_FAILED', httpStatus: 400, messageEn: 'Top Breached Kris validation failed', messageAr: 'فشل التحقق من Top Breached Kris' },
+  POLICY_REVIEW_DEBT_NOT_FOUND: { code: 'WIDGETS.POLICY_REVIEW_DEBT_NOT_FOUND', httpStatus: 404, messageEn: 'Policy Review Debt not found', messageAr: 'Policy Review Debt غير موجود' },
+  POLICY_REVIEW_DEBT_ALREADY_EXISTS: { code: 'WIDGETS.POLICY_REVIEW_DEBT_ALREADY_EXISTS', httpStatus: 409, messageEn: 'Policy Review Debt already exists', messageAr: 'Policy Review Debt موجود بالفعل' },
+  POLICY_REVIEW_DEBT_VALIDATION_FAILED: { code: 'WIDGETS.POLICY_REVIEW_DEBT_VALIDATION_FAILED', httpStatus: 400, messageEn: 'Policy Review Debt validation failed', messageAr: 'فشل التحقق من Policy Review Debt' },
+  ENGINE_TREND_NOT_FOUND: { code: 'WIDGETS.ENGINE_TREND_NOT_FOUND', httpStatus: 404, messageEn: 'Engine Trend not found', messageAr: 'Engine Trend غير موجود' },
+  ENGINE_TREND_ALREADY_EXISTS: { code: 'WIDGETS.ENGINE_TREND_ALREADY_EXISTS', httpStatus: 409, messageEn: 'Engine Trend already exists', messageAr: 'Engine Trend موجود بالفعل' },
+  ENGINE_TREND_VALIDATION_FAILED: { code: 'WIDGETS.ENGINE_TREND_VALIDATION_FAILED', httpStatus: 400, messageEn: 'Engine Trend validation failed', messageAr: 'فشل التحقق من Engine Trend' },
+  CATALOG_NOT_FOUND: { code: 'WIDGETS.CATALOG_NOT_FOUND', httpStatus: 404, messageEn: 'Catalog not found', messageAr: 'Catalog غير موجود' },
+  CATALOG_ALREADY_EXISTS: { code: 'WIDGETS.CATALOG_ALREADY_EXISTS', httpStatus: 409, messageEn: 'Catalog already exists', messageAr: 'Catalog موجود بالفعل' },
+  CATALOG_VALIDATION_FAILED: { code: 'WIDGETS.CATALOG_VALIDATION_FAILED', httpStatus: 400, messageEn: 'Catalog validation failed', messageAr: 'فشل التحقق من Catalog' },
+  BUNDLES_NOT_FOUND: { code: 'WIDGETS.BUNDLES_NOT_FOUND', httpStatus: 404, messageEn: 'Bundles not found', messageAr: 'Bundles غير موجود' },
+  BUNDLES_ALREADY_EXISTS: { code: 'WIDGETS.BUNDLES_ALREADY_EXISTS', httpStatus: 409, messageEn: 'Bundles already exists', messageAr: 'Bundles موجود بالفعل' },
+  BUNDLES_VALIDATION_FAILED: { code: 'WIDGETS.BUNDLES_VALIDATION_FAILED', httpStatus: 400, messageEn: 'Bundles validation failed', messageAr: 'فشل التحقق من Bundles' },
+  STATS_NOT_FOUND: { code: 'WIDGETS.STATS_NOT_FOUND', httpStatus: 404, messageEn: 'Stats not found', messageAr: 'Stats غير موجود' },
+  STATS_ALREADY_EXISTS: { code: 'WIDGETS.STATS_ALREADY_EXISTS', httpStatus: 409, messageEn: 'Stats already exists', messageAr: 'Stats موجود بالفعل' },
+  STATS_VALIDATION_FAILED: { code: 'WIDGETS.STATS_VALIDATION_FAILED', httpStatus: 400, messageEn: 'Stats validation failed', messageAr: 'فشل التحقق من Stats' },
+
+  UNAUTHORIZED: { code: 'WIDGETS.UNAUTHORIZED', httpStatus: 403, messageEn: 'Insufficient permissions for widgets operation', messageAr: 'صلاحيات غير كافية لعملية widgets' },
+  INVALID_STATE_TRANSITION: { code: 'WIDGETS.INVALID_STATE_TRANSITION', httpStatus: 422, messageEn: 'Invalid state transition', messageAr: 'انتقال حالة غير صالح' },
+  DEPENDENCY_CONFLICT: { code: 'WIDGETS.DEPENDENCY_CONFLICT', httpStatus: 409, messageEn: 'Cannot modify due to dependent records', messageAr: 'لا يمكن التعديل بسبب سجلات تابعة' },
+  BULK_OPERATION_PARTIAL: { code: 'WIDGETS.BULK_OPERATION_PARTIAL', httpStatus: 207, messageEn: 'Bulk operation completed with partial failures', messageAr: 'اكتملت العملية المجمعة مع إخفاقات جزئية' },
+  EXPORT_FAILED: { code: 'WIDGETS.EXPORT_FAILED', httpStatus: 500, messageEn: 'Export operation failed', messageAr: 'فشلت عملية التصدير' },
+  IMPORT_VALIDATION_FAILED: { code: 'WIDGETS.IMPORT_VALIDATION_FAILED', httpStatus: 400, messageEn: 'Import data validation failed', messageAr: 'فشل التحقق من بيانات الاستيراد' },
+} as const satisfies Record<string, ModuleErrorCode>;
+
+export type WidgetsErrorCode = keyof typeof WIDGETS_ERROR_CODES;

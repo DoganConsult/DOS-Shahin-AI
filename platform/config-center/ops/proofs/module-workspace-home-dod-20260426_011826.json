@@ -1,0 +1,182 @@
+{
+  "module": "workspace-home",
+  "phase": "Phase 1 / Module 1",
+  "completedAt": "2026-04-25T17:18:27.055099Z",
+  "verdict": "PASS",
+  "tenant": "shahin_visitors",
+  "user": "tenantadmin@shahin-ai.local",
+  "role": "tenant_admin",
+  "issuer": "https://auth.shahin-ai.com/realms/dogan",
+  "endpoints": [
+    {
+      "path": "/api/access/my-permissions",
+      "status": 200,
+      "ms": 76,
+      "shape": {
+        "permission_count": 584,
+        "data_keys": [
+          "accessProfiles",
+          "actor",
+          "dashboards",
+          "decisionAuthorities",
+          "generatedAt",
+          "landingPage",
+          "modules",
+          "permissions",
+          "roles",
+          "scopeBindings",
+          "tenant",
+          "version"
+        ]
+      }
+    },
+    {
+      "path": "/api/foundation/access-snapshot",
+      "status": 200,
+      "ms": 27,
+      "shape": {
+        "data_keys": [
+          "actor",
+          "audit",
+          "currentPosition",
+          "currentRoleProfile",
+          "deniedActions",
+          "escalations",
+          "inheritedPolicies",
+          "managerChain",
+          "orgScope",
+          "pendingApprovals",
+          "slaBreaches"
+        ]
+      }
+    },
+    {
+      "path": "/api/tenant-home/overview",
+      "status": 200,
+      "ms": 43,
+      "slices_present": {
+        "context": true,
+        "kpis": true,
+        "kpiTrends": true,
+        "summary": true,
+        "actionCenter": true,
+        "programHealth": true,
+        "lifecycle": true,
+        "activity": true
+      },
+      "leaf_checks": [
+        {
+          "field": "context.workspaceId",
+          "present": true,
+          "value_type": "str",
+          "value_is_null": false
+        },
+        {
+          "field": "context.orgName",
+          "present": true,
+          "value_type": "str",
+          "value_is_null": false
+        },
+        {
+          "field": "context.industry",
+          "present": true,
+          "value_type": "str",
+          "value_is_null": false
+        },
+        {
+          "field": "context.country",
+          "present": true,
+          "value_type": "str",
+          "value_is_null": false
+        },
+        {
+          "field": "kpis.complianceScore",
+          "present": true,
+          "value_type": "int",
+          "value_is_null": false
+        },
+        {
+          "field": "kpis.vendorHealthScore",
+          "present": true,
+          "value_type": "int",
+          "value_is_null": false
+        },
+        {
+          "field": "summary.totalFrameworks",
+          "present": true,
+          "value_type": "int",
+          "value_is_null": false
+        },
+        {
+          "field": "summary.totalControls",
+          "present": true,
+          "value_type": "int",
+          "value_is_null": false
+        },
+        {
+          "field": "summary.risksByLevel",
+          "present": true,
+          "value_type": "dict",
+          "value_is_null": false
+        },
+        {
+          "field": "actionCenter.overdueTasks",
+          "present": true,
+          "value_type": "list",
+          "value_is_null": false
+        },
+        {
+          "field": "actionCenter.failingControls",
+          "present": true,
+          "value_type": "list",
+          "value_is_null": false
+        },
+        {
+          "field": "actionCenter.pendingApprovals",
+          "present": true,
+          "value_type": "list",
+          "value_is_null": false
+        },
+        {
+          "field": "programHealth.openFindings",
+          "present": true,
+          "value_type": "dict",
+          "value_is_null": false
+        },
+        {
+          "field": "programHealth.controlEffectiveness",
+          "present": true,
+          "value_type": "dict",
+          "value_is_null": false
+        },
+        {
+          "field": "programHealth.coverage",
+          "present": true,
+          "value_type": "list",
+          "value_is_null": false
+        },
+        {
+          "field": "lifecycle.auditReadinessPercent",
+          "present": true,
+          "value_type": "NoneType",
+          "value_is_null": true
+        },
+        {
+          "field": "activity.entries",
+          "present": true,
+          "value_type": "list",
+          "value_is_null": false
+        }
+      ]
+    },
+    {
+      "path": "/api/workspaces",
+      "status": 200,
+      "ms": 20,
+      "shape": {
+        "count": 0
+      }
+    }
+  ],
+  "fe_shape_failures": []
+}

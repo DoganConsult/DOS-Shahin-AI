@@ -1,0 +1,11 @@
+ownership,additional_framework,framework_name,scrutiny_level,audit_frequency,note
+GOVT_OWNED,DGA-DCC,DGA Data Cybersecurity Controls,highest,quarterly,
+GOVT_OWNED,NDMO-DM,NDMO Data Management,highest,quarterly,
+PIF_OWNED_FULL,DGA-DCC,DGA Data Cybersecurity Controls,high,annual + spot,
+LISTED_TADAWUL,CMA-CG,CMA Corporate Governance Regulations,high,quarterly,
+LISTED_TADAWUL,CMA-IC,CMA Internal Controls,high,quarterly,
+LISTED_TADAWUL,CMA-DISCLOSURE,CMA Disclosure Rules,high,quarterly,
+FOREIGN_PARENT,(no framework adds),,moderate,annual,"Parent group policies often add ISO 27001, GDPR, SOX, etc."
+MAJORITY_FOREIGN,(no framework adds),,moderate,annual,MISA license + parent compliance typically
+FAMILY_OWNED,(no framework adds),,standard,annual,
+100_SAUDI,(no framework adds),,standard,annual,

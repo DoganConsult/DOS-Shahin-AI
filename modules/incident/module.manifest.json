@@ -1,0 +1,106 @@
+{
+  "moduleCode": "incident",
+  "displayName": "Incident Management",
+  "ownerTeam": "product-shahin-ai",
+  "productCode": "shahin-ai",
+  "ownership": "module-owned",
+  "version": "1.0.0",
+  "status": "active",
+  "platformDependencies": [
+    "identity",
+    "tenancy",
+    "workflow",
+    "permissions",
+    "audit"
+  ],
+  "seedProviders": [
+    "products/shahin/seeds/incident-seed"
+  ],
+  "tenantDefaults": [
+    "incident_response_sla_hours",
+    "incident_auto_classify"
+  ],
+  "requiredReferenceData": [
+    "incident_categories",
+    "severity_matrix",
+    "response_templates"
+  ],
+  "currentSources": [
+    "/home/Dr-Dogan-AGRC-OS/backend/src/modules/incident"
+  ],
+  "targetPath": "modules/incident",
+  "futureService": "risk-incident-service",
+  "frontendSources": [
+    "/home/Dr-Dogan-AGRC-OS/frontend/src/app/platform-manifests/incident.module.routes.ts"
+  ],
+  "ownedTables": [
+    "incident_assets",
+    "incident_audit_log",
+    "incident_evidence",
+    "incident_impacts",
+    "incident_lessons_learned",
+    "incident_notifications_log",
+    "incident_pir",
+    "incident_policies",
+    "incident_recurring_patterns",
+    "incident_classifications",
+    "incident_containment_actions",
+    "incident_escalations",
+    "incident_response_plans",
+    "incident_stakeholders",
+    "incident_timeline_entries",
+    "incident_root_cause_analysis",
+    "incident_categories",
+    "incident_severity_matrix",
+    "incident_regulatory_reports",
+    "incident_near_misses"
+  ],
+  "referencedTables": [
+    "audit_trail",
+    "teams",
+    "workflows",
+    "assets",
+    "risk_assessments"
+  ],
+  "events": {
+    "publishes": [
+      "incident.created",
+      "incident.classified",
+      "incident.contained",
+      "incident.escalated",
+      "incident.closed",
+      "incident.breach_reported",
+      "incident.capa_assigned",
+      "incident.near_miss_reported",
+      "incident.pir_completed",
+      "incident.lesson_documented",
+      "incident.regulatory_notified",
+      "incident.severity_changed",
+      "incident.owner_assigned",
+      "incident.war_room_opened",
+      "incident.war_room_closed",
+      "incident.evidence_attached",
+      "incident.timeline_updated",
+      "incident.root_cause_identified",
+      "incident.triage_completed",
+      "incident.impact_assessed",
+      "incident.containment_verified",
+      "incident.recovery_started",
+      "incident.recovery_completed",
+      "incident.case_created",
+      "incident.case_closed"
+    ],
+    "subscribes": [
+      "risk.residual_high",
+      "compliance.posture_changed",
+      "vendor.risk_changed",
+      "bcp.crisis_declared",
+      "workflow.status_changed",
+      "ai.alert.created",
+      "foundation.org.manager.changed"
+    ]
+  },
+  "routeBases": [
+    "/api/incident"
+  ]
+}

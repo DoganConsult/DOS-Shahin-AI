@@ -1,0 +1,55 @@
+---
+apiVersion: "api.cerbos.dev/v1"
+resourcePolicy:
+  version: "1"
+  resource: "policy"
+  importDerivedRoles:
+    - dogan_enterprise
+
+  rules:
+    - actions: ["policy.view", "policy.list"]
+      effect: EFFECT_ALLOW
+      derivedRoles:
+        - tenant_member
+        - auditor_readonly
+        - compliance_officer
+        - platform_admin
+
+    - actions: ["policy.create", "policy.update"]
+      effect: EFFECT_ALLOW
+      roles: ["policy_editor", "policy_admin", "compliance_officer", "tenant_admin", "platform_admin"]
+      condition:
+        match:
+          expr: request.principal.attr.tenantId == request.resource.attr.tenantId
+
+    # Approve — SoD: approver ≠ drafter/owner, step-up required
+    - actions: ["policy.approve", "policy.publish"]
+      effect: EFFECT_ALLOW
+      derivedRoles: ["compliance_officer", "step_up_satisfied"]
+      condition:
+        match:
+          all:
+            of:
+              - expr: request.resource.attr.status == "submitted"
+              - expr: request.principal.id != request.resource.attr.createdBy
+
+    - actions: ["policy.approve", "policy.publish"]
+      effect: EFFECT_DENY
+      roles: ["*"]
+      condition:
+        match:
+          expr: request.principal.id == request.resource.attr.createdBy
+      output:
+        when:
+          ruleActivated: '"DAUTH_DENY_SOD_SELF_APPROVAL"'
+
+    - actions: ["policy.retire"]
+      effect: EFFECT_ALLOW
+      derivedRoles: ["compliance_officer", "tenant_admin", "platform_admin"]
+
+    - actions: ["policy.export"]
+      effect: EFFECT_ALLOW
+      derivedRoles: ["compliance_officer", "auditor_readonly", "tenant_admin"]
+      condition:
+        match:
+          expr: request.resource.attr.status == "published"

@@ -1,0 +1,13 @@
+{
+  "name": "@dos/ai",
+  "version": "1.0.0",
+  "description": "AI-OS — Public AI SDK facade. Re-exports the canonical AI authentication/types surface used by every AI consumer (gateway, engine, governance, business modules). Superseded internal helpers now live in @dos/ai-gateway and @dos/core-ai.",
+  "private": true,
+  "main": "index.js",
+  "types": "index.d.ts",
+  "type": "module",
+  "dependencies": {
+    "@dos/dauth-shared": "workspace:*",
+    "@dos/types": "workspace:*"
+  }
+}

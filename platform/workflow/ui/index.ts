@@ -1,0 +1,46 @@
+export { WorkflowHubComponent } from './features/workflow/pages/workflow-hub/workflow-hub.component';
+export { ApprovalCenterComponent } from './features/workflow/pages/approval-center/approval-center.component';
+export { KanbanBoardComponent } from './features/workflow/pages/kanban-board/kanban-board.component';
+export { OperationsHubComponent } from './features/workflow/pages/operations-hub/operations-hub.component';
+export { WorkflowBuilderComponent } from './features/workflow/pages/workflow-builder/workflow-builder.component';
+export { WorkflowTemplatesComponent } from './features/workflow/pages/workflow-templates/workflow-templates.component';
+export { WorkflowExecutionsComponent } from './features/workflow/pages/workflow-executions/workflow-executions.component';
+export { WorkflowAnalyticsComponent } from './features/workflow/pages/workflow-analytics/workflow-analytics.component';
+export { SLAManagementComponent } from './features/workflow/pages/sla-management/sla-management.component';
+export { SlaMonitoringComponent } from './features/workflow/pages/sla-monitoring/sla-monitoring.component';
+export { ActionItemsComponent } from './features/workflow/pages/action-items/action-items.component';
+export { TimelineComponent } from './features/workflow/pages/timeline/timeline.component';
+export { ActivityFeedComponent } from './features/workflow/pages/activity-feed/activity-feed.component';
+export { ProcessTasksComponent } from './features/workflow/pages/process-tasks/process-tasks.component';
+export { MessagingComponent } from './features/workflow/pages/messaging/messaging.component';
+export { SubflowsComponent } from './features/workflow/pages/subflows/subflows.component';
+export { CooperativeWorkflowsComponent } from './features/workflow/pages/cooperative-workflows/cooperative-workflows.component';
+export { WorkflowsComponent } from './features/workflow/pages/workflows/workflows.component';
+export { WorkflowListComponent } from './features/workflow/pages/workflows/components/workflow-list.component';
+export { WorkflowDesignerComponent } from './features/workflow/pages/workflows/components/workflow-designer.component';
+export { AutomationHubComponent } from './features/workflow/pages/automation-hub/automation-hub.component';
+export { AutomationComponent } from './features/workflow/pages/automation/automation.component';
+export { BulkTasksComponent } from './features/workflow/pages/bulk-tasks/bulk-tasks.component';
+export { WorkflowVersionsComponent } from './features/workflow/pages/workflow-versions/workflow-versions.component';
+export { WorkflowImportExportComponent } from './features/workflow/pages/workflow-import-export/workflow-import-export.component';
+export { ChainMonitorComponent } from './features/workflow/pages/chain-monitor/chain-monitor.component';
+export { SLADashboardComponent } from './features/workflow/pages/sla-dashboard/sla-dashboard.component';
+export { WorkflowAuditTrailComponent } from './features/workflow/pages/workflow-audit-trail/workflow-audit-trail.component';
+export { WorkflowExtComponent } from './features/workflow/pages/workflow-ext/workflow-ext.component';
+export { ProcessesComponent } from './features/workflow/pages/processes/processes.component';
+
+export { WorkflowSupervisorDashboardComponent } from './features/workflow/pages/workflow-3level/workflow-supervisor-dashboard.component';
+export { WorkflowAIConfigComponent } from './features/workflow/pages/workflow-3level/workflow-ai-config.component';
+export { WorkflowExecutionTraceComponent } from './features/workflow/pages/workflow-3level/workflow-execution-trace.component';
+export { WorkflowGuardrailStatusComponent } from './features/workflow/pages/workflow-3level/workflow-guardrail-status.component';
+
+export { WorkItemsInboxPageComponent } from './features/workflow/pages/work-items-inbox/work-items-inbox.page';
+export { WORKFLOW_ROUTES } from './features/workflow/pages/workflow.routes';
+
+export { InboxOverviewComponent } from './features/inbox/pages/inbox-overview.component';
+export { InboxHubComponent } from './features/inbox/pages/inbox-hub.component';
+export { InboxDetailComponent } from './features/inbox/pages/inbox-detail.component';
+export { InboxDiagnosticsComponent } from './features/inbox/diagnostics/inbox-diagnostics.component';
+export { InboxDashboardComponent } from './features/inbox/dashboards/inbox-dashboard.component';
+export { InboxAdminComponent } from './features/inbox/admin/inbox-admin.component';
+export { InboxWidgetComponent } from './features/inbox/widgets/inbox-widget.component';

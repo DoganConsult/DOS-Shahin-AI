@@ -1,0 +1,6 @@
+
+> dogan-ai-os-platform-target@1.0.0 verify:data-safety /root/DOS-AIO
+> node ops/scripts/verify-migration-data-safety.mjs
+
+[data-safety] DATABASE_URL is required.
+ ELIFECYCLE  Command failed with exit code 1.

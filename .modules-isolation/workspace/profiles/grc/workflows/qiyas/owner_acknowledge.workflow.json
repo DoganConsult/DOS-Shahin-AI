@@ -1,0 +1,15 @@
+{
+  "id": "qiyas.owner_acknowledge",
+  "module": "qiyas",
+  "hook": "owner_acknowledge",
+  "version": "1.0.0",
+  "sla_hours": 48,
+  "actor_role_default": "qiyas.module_lead",
+  "states": ["pending","acknowledged","escalated"],
+  "initial": "pending",
+  "transitions": [{"from":"pending","to":"acknowledged","on":"ack","actor_role":"qiyas.module_lead"},{"from":"pending","to":"escalated","on":"sla_breach","actor_role":"qiyas.executive_owner"}],
+  "audit_event_prefix": "qiyas.workflow.owner_acknowledge",
+  "notification_targets": ["qiyas.module_lead", "qiyas.approver"],
+  "evidence_required_on": ["passed","published"],
+  "escalation": { "on": "sla_breach", "to": "qiyas.executive_owner", "after_hours": 96 }
+}

@@ -1,0 +1,14 @@
+{
+  "mcp.title": "بروتوكول سياق النموذج",
+  "mcp.dashboard": "لوحة MCP",
+  "mcp.tools": "سجل الأدوات",
+  "mcp.agents": "سجل الوكلاء",
+  "mcp.executions": "سجلات التنفيذ",
+  "mcp.empty.title": "لا توجد أدوات مسجلة",
+  "mcp.empty.description": "سجّل أداتك الأولى لتمكين تنسيق وكلاء الذكاء الاصطناعي.",
+  "mcp.loading": "جاري تحميل بيانات MCP...",
+  "mcp.error.title": "فشل تحميل بيانات MCP",
+  "mcp.error.retry": "إعادة المحاولة",
+  "mcp.create": "تسجيل أداة",
+  "mcp.diagnostics": "التشخيصات"
+}

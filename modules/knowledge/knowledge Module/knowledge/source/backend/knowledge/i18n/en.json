@@ -1,0 +1,11 @@
+{
+  "knowledge.title": "Knowledge Hub",
+  "knowledge.dashboard": "Knowledge Hub Dashboard",
+  "knowledge.empty.title": "No records found",
+  "knowledge.empty.description": "Create your first knowledge record to get started.",
+  "knowledge.loading": "Loading knowledge data...",
+  "knowledge.error.title": "Failed to load data",
+  "knowledge.error.retry": "Retry",
+  "knowledge.create": "Create New",
+  "knowledge.diagnostics": "Diagnostics"
+}

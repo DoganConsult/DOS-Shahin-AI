@@ -1,0 +1,556 @@
+{
+  "module": "incident",
+  "generated_at": "2026-04-21T19:41:12.781Z",
+  "tables_owned": 60,
+  "tables_with_smells": 58,
+  "by_layer": {
+    "tenant": 37,
+    "public": 23
+  },
+  "smell_counts": {
+    "missing-fk-on": 80,
+    "redundant-tenant-id-in-tenant-schema": 34,
+    "jsonb-column": 54,
+    "intra-schema-duplicate": 7,
+    "denorm-counter": 2,
+    "cross-schema-duplicate": 1
+  },
+  "tables": [
+    {
+      "name": "findings",
+      "layer": "tenant",
+      "smells": [
+        "missing-fk-on:finding_id",
+        "redundant-tenant-id-in-tenant-schema"
+      ]
+    },
+    {
+      "name": "incident_ai_suggestions",
+      "layer": "tenant",
+      "smells": [
+        "missing-fk-on:entity_id",
+        "redundant-tenant-id-in-tenant-schema"
+      ]
+    },
+    {
+      "name": "incident_assets",
+      "layer": "public",
+      "smells": [
+        "missing-fk-on:incident_id",
+        "missing-fk-on:asset_id"
+      ]
+    },
+    {
+      "name": "incident_attachments",
+      "layer": "tenant",
+      "smells": [
+        "missing-fk-on:entity_id",
+        "redundant-tenant-id-in-tenant-schema"
+      ]
+    },
+    {
+      "name": "incident_audit_log",
+      "layer": "public",
+      "smells": [
+        "missing-fk-on:log_id",
+        "missing-fk-on:entity_id",
+        "missing-fk-on:actor_id",
+        "jsonb-column:before_state",
+        "jsonb-column:after_state"
+      ]
+    },
+    {
+      "name": "incident_automated_triggers",
+      "layer": "tenant",
+      "smells": [
+        "jsonb-column:metadata",
+        "redundant-tenant-id-in-tenant-schema"
+      ]
+    },
+    {
+      "name": "incident_capas",
+      "layer": "tenant",
+      "smells": [
+        "missing-fk-on:incident_id",
+        "redundant-tenant-id-in-tenant-schema"
+      ]
+    },
+    {
+      "name": "incident_categories",
+      "layer": "tenant",
+      "smells": [
+        "intra-schema-duplicate:__TENANT_SCHEMA__:3",
+        "missing-fk-on:parent_id",
+        "redundant-tenant-id-in-tenant-schema"
+      ]
+    },
+    {
+      "name": "incident_change_log",
+      "layer": "tenant",
+      "smells": [
+        "missing-fk-on:entity_id",
+        "missing-fk-on:correlation_id",
+        "redundant-tenant-id-in-tenant-schema"
+      ]
+    },
+    {
+      "name": "incident_comments",
+      "layer": "tenant",
+      "smells": [
+        "missing-fk-on:entity_id",
+        "missing-fk-on:parent_id",
+        "missing-fk-on:author_id",
+        "redundant-tenant-id-in-tenant-schema"
+      ]
+    },
+    {
+      "name": "incident_communication_logs",
+      "layer": "tenant",
+      "smells": [
+        "jsonb-column:payload",
+        "missing-fk-on:user_id",
+        "redundant-tenant-id-in-tenant-schema"
+      ]
+    },
+    {
+      "name": "incident_escalation_log",
+      "layer": "tenant",
+      "smells": [
+        "missing-fk-on:incident_id",
+        "redundant-tenant-id-in-tenant-schema"
+      ]
+    },
+    {
+      "name": "incident_escalations",
+      "layer": "tenant",
+      "smells": [
+        "jsonb-column:metadata",
+        "redundant-tenant-id-in-tenant-schema"
+      ]
+    },
+    {
+      "name": "incident_evidence",
+      "layer": "public",
+      "smells": [
+        "missing-fk-on:incident_id",
+        "missing-fk-on:evidence_id"
+      ]
+    },
+    {
+      "name": "incident_evidence_links",
+      "layer": "tenant",
+      "smells": [
+        "jsonb-column:metadata",
+        "redundant-tenant-id-in-tenant-schema"
+      ]
+    },
+    {
+      "name": "incident_external_mappings",
+      "layer": "tenant",
+      "smells": [
+        "missing-fk-on:entity_id",
+        "missing-fk-on:external_id",
+        "jsonb-column:mapping_config",
+        "redundant-tenant-id-in-tenant-schema"
+      ]
+    },
+    {
+      "name": "incident_impacts",
+      "layer": "public",
+      "smells": [
+        "missing-fk-on:impact_id",
+        "missing-fk-on:incident_id",
+        "denorm-counter:affected_users_count"
+      ]
+    },
+    {
+      "name": "incident_incidents",
+      "layer": "tenant",
+      "smells": [
+        "redundant-tenant-id-in-tenant-schema"
+      ]
+    },
+    {
+      "name": "incident_investigations",
+      "layer": "tenant",
+      "smells": [
+        "intra-schema-duplicate:__TENANT_SCHEMA__:2",
+        "missing-fk-on:incident_id",
+        "jsonb-column:findings",
+        "redundant-tenant-id-in-tenant-schema"
+      ]
+    },
+    {
+      "name": "incident_kpis",
+      "layer": "tenant",
+      "smells": [
+        "redundant-tenant-id-in-tenant-schema"
+      ]
+    },
+    {
+      "name": "incident_lessons",
+      "layer": "tenant",
+      "smells": [
+        "intra-schema-duplicate:__TENANT_SCHEMA__:2",
+        "missing-fk-on:incident_id",
+        "jsonb-column:applies_to",
+        "redundant-tenant-id-in-tenant-schema"
+      ]
+    },
+    {
+      "name": "incident_lessons_learned",
+      "layer": "public",
+      "smells": [
+        "missing-fk-on:lesson_id",
+        "missing-fk-on:incident_id"
+      ]
+    },
+    {
+      "name": "incident_near_misses",
+      "layer": "tenant",
+      "smells": [
+        "redundant-tenant-id-in-tenant-schema"
+      ]
+    },
+    {
+      "name": "incident_notification_templates",
+      "layer": "tenant",
+      "smells": []
+    },
+    {
+      "name": "incident_notifications",
+      "layer": "tenant",
+      "smells": [
+        "jsonb-column:metadata",
+        "redundant-tenant-id-in-tenant-schema"
+      ]
+    },
+    {
+      "name": "incident_notifications_log",
+      "layer": "public",
+      "smells": [
+        "missing-fk-on:notification_id",
+        "missing-fk-on:incident_id",
+        "missing-fk-on:recipient_id"
+      ]
+    },
+    {
+      "name": "incident_pir",
+      "layer": "public",
+      "smells": [
+        "missing-fk-on:pir_id",
+        "missing-fk-on:incident_id",
+        "missing-fk-on:lead_id",
+        "missing-fk-on:facilitator_id",
+        "jsonb-column:root_causes",
+        "jsonb-column:contributing_factors",
+        "jsonb-column:impact_analysis",
+        "jsonb-column:lessons_learned",
+        "jsonb-column:recommendations",
+        "jsonb-column:action_items",
+        "jsonb-column:attendees",
+        "jsonb-column:attachments",
+        "jsonb-column:metadata"
+      ]
+    },
+    {
+      "name": "incident_pir_reports",
+      "layer": "tenant",
+      "smells": [
+        "jsonb-column:query_definition",
+        "redundant-tenant-id-in-tenant-schema"
+      ]
+    },
+    {
+      "name": "incident_policies",
+      "layer": "public",
+      "smells": [
+        "missing-fk-on:incident_id",
+        "missing-fk-on:policy_id"
+      ]
+    },
+    {
+      "name": "incident_post_incident_reviews",
+      "layer": "tenant",
+      "smells": [
+        "missing-fk-on:incident_id",
+        "missing-fk-on:facilitator_id",
+        "jsonb-column:attendees",
+        "jsonb-column:action_items",
+        "redundant-tenant-id-in-tenant-schema"
+      ]
+    },
+    {
+      "name": "incident_recurring_patterns",
+      "layer": "public",
+      "smells": [
+        "missing-fk-on:pattern_id",
+        "denorm-counter:occurrence_count",
+        "jsonb-column:affected_systems",
+        "jsonb-column:taxonomy_nodes",
+        "jsonb-column:severity_distribution",
+        "jsonb-column:metadata"
+      ]
+    },
+    {
+      "name": "incident_regulatory_notifications",
+      "layer": "public",
+      "smells": [
+        "missing-fk-on:notification_id",
+        "missing-fk-on:incident_id",
+        "jsonb-column:authority_contact",
+        "jsonb-column:content_full",
+        "jsonb-column:follow_up_actions",
+        "jsonb-column:attachments",
+        "jsonb-column:metadata"
+      ]
+    },
+    {
+      "name": "incident_regulatory_reports",
+      "layer": "tenant",
+      "smells": [
+        "missing-fk-on:incident_id",
+        "jsonb-column:report_data",
+        "redundant-tenant-id-in-tenant-schema"
+      ]
+    },
+    {
+      "name": "incident_report_snapshots",
+      "layer": "tenant",
+      "smells": [
+        "jsonb-column:parameters",
+        "jsonb-column:result_data",
+        "redundant-tenant-id-in-tenant-schema"
+      ]
+    },
+    {
+      "name": "incident_reportable_criteria",
+      "layer": "public",
+      "smells": [
+        "missing-fk-on:criteria_id",
+        "jsonb-column:criteria_rule"
+      ]
+    },
+    {
+      "name": "incident_reporting_config",
+      "layer": "tenant",
+      "smells": [
+        "jsonb-column:config_value",
+        "redundant-tenant-id-in-tenant-schema"
+      ]
+    },
+    {
+      "name": "incident_responders",
+      "layer": "tenant",
+      "smells": [
+        "jsonb-column:metadata",
+        "redundant-tenant-id-in-tenant-schema"
+      ]
+    },
+    {
+      "name": "incident_response_actions",
+      "layer": "public",
+      "smells": [
+        "missing-fk-on:action_id",
+        "missing-fk-on:incident_id"
+      ]
+    },
+    {
+      "name": "incident_response_teams",
+      "layer": "tenant",
+      "smells": [
+        "jsonb-column:members",
+        "jsonb-column:on_call_schedule"
+      ]
+    },
+    {
+      "name": "incident_responses",
+      "layer": "tenant",
+      "smells": [
+        "jsonb-column:metadata",
+        "redundant-tenant-id-in-tenant-schema"
+      ]
+    },
+    {
+      "name": "incident_risk_links",
+      "layer": "public",
+      "smells": [
+        "missing-fk-on:link_id",
+        "missing-fk-on:incident_id",
+        "missing-fk-on:risk_id"
+      ]
+    },
+    {
+      "name": "incident_root_cause_analysis",
+      "layer": "tenant",
+      "smells": [
+        "jsonb-column:metadata",
+        "redundant-tenant-id-in-tenant-schema"
+      ]
+    },
+    {
+      "name": "incident_root_causes",
+      "layer": "public",
+      "smells": [
+        "missing-fk-on:root_cause_id",
+        "missing-fk-on:incident_id"
+      ]
+    },
+    {
+      "name": "incident_settings",
+      "layer": "tenant",
+      "smells": [
+        "intra-schema-duplicate:__TENANT_SCHEMA__:2",
+        "jsonb-column:config_value",
+        "redundant-tenant-id-in-tenant-schema"
+      ]
+    },
+    {
+      "name": "incident_severity_matrix",
+      "layer": "tenant",
+      "smells": []
+    },
+    {
+      "name": "incident_tags",
+      "layer": "tenant",
+      "smells": [
+        "missing-fk-on:entity_id",
+        "redundant-tenant-id-in-tenant-schema"
+      ]
+    },
+    {
+      "name": "incident_tasks",
+      "layer": "tenant",
+      "smells": [
+        "jsonb-column:metadata",
+        "redundant-tenant-id-in-tenant-schema"
+      ]
+    },
+    {
+      "name": "incident_taxonomy",
+      "layer": "public",
+      "smells": [
+        "missing-fk-on:node_id",
+        "missing-fk-on:parent_id",
+        "jsonb-column:metadata"
+      ]
+    },
+    {
+      "name": "incident_timeline",
+      "layer": "tenant",
+      "smells": [
+        "missing-fk-on:incident_id",
+        "missing-fk-on:actor_id",
+        "redundant-tenant-id-in-tenant-schema"
+      ]
+    },
+    {
+      "name": "incident_timeline_events",
+      "layer": "tenant",
+      "smells": [
+        "jsonb-column:payload",
+        "missing-fk-on:user_id",
+        "redundant-tenant-id-in-tenant-schema"
+      ]
+    },
+    {
+      "name": "incident_timelines",
+      "layer": "tenant",
+      "smells": [
+        "missing-fk-on:incident_id",
+        "jsonb-column:evidence_refs",
+        "redundant-tenant-id-in-tenant-schema"
+      ]
+    },
+    {
+      "name": "incident_trend_cache",
+      "layer": "public",
+      "smells": [
+        "missing-fk-on:cache_id",
+        "jsonb-column:metadata"
+      ]
+    },
+    {
+      "name": "incident_triage_decisions",
+      "layer": "public",
+      "smells": [
+        "missing-fk-on:decision_id",
+        "missing-fk-on:incident_id",
+        "jsonb-column:assignment_decision",
+        "jsonb-column:score_factors"
+      ]
+    },
+    {
+      "name": "incident_updates",
+      "layer": "public",
+      "smells": [
+        "missing-fk-on:update_id",
+        "missing-fk-on:incident_id"
+      ]
+    },
+    {
+      "name": "incident_vendors",
+      "layer": "public",
+      "smells": [
+        "missing-fk-on:incident_id",
+        "missing-fk-on:vendor_id"
+      ]
+    },
+    {
+      "name": "incident_versions",
+      "layer": "tenant",
+      "smells": [
+        "intra-schema-duplicate:__TENANT_SCHEMA__:2",
+        "missing-fk-on:entity_id",
+        "jsonb-column:data",
+        "redundant-tenant-id-in-tenant-schema"
+      ]
+    },
+    {
+      "name": "incidents",
+      "layer": "public",
+      "smells": [
+        "cross-schema-duplicate:__TENANT_SCHEMA__,dos",
+        "intra-schema-duplicate:dos:2",
+        "intra-schema-duplicate:__TENANT_SCHEMA__:2",
+        "missing-fk-on:incident_id",
+        "missing-fk-on:risk_id",
+        "missing-fk-on:taxonomy_node_id",
+        "jsonb-column:affected_systems",
+        "jsonb-column:metadata",
+        "missing-fk-on:owner_user_id"
+      ]
+    },
+    {
+      "name": "near_miss_reports",
+      "layer": "public",
+      "smells": [
+        "missing-fk-on:near_miss_id",
+        "missing-fk-on:taxonomy_node_id",
+        "missing-fk-on:department_id",
+        "missing-fk-on:converted_to_incident_id",
+        "missing-fk-on:reviewer_id",
+        "jsonb-column:attachments",
+        "jsonb-column:metadata"
+      ]
+    },
+    {
+      "name": "pir_sign_offs",
+      "layer": "public",
+      "smells": [
+        "missing-fk-on:sign_off_id",
+        "missing-fk-on:pir_id",
+        "missing-fk-on:signer_id"
+      ]
+    },
+    {
+      "name": "vulnerability_findings_map",
+      "layer": "public",
+      "smells": [
+        "missing-fk-on:map_id",
+        "missing-fk-on:vulnerability_id",
+        "missing-fk-on:finding_id"
+      ]
+    }
+  ]
+}

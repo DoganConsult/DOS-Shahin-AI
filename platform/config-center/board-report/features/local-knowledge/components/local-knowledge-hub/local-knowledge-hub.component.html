@@ -1,0 +1,121 @@
+<div class="local-knowledge-hub" [dir]="i18n.direction()">
+  <div class="hub-header">
+    <h1>{{ 'localKnowledge.hub.title' | translate }}</h1>
+    <p class="subtitle">{{ 'localKnowledge.subtitle' | translate }}</p>
+  </div>
+
+  <div class="hub-content">
+    <!-- Statistics Cards -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="pi pi-file"></i>
+        </div>
+        <div class="stat-content">
+          <h3>{{ totalDocuments }}</h3>
+          <p>{{ 'localKnowledge.hub.totalDocuments' | translate }}</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="pi pi-check-circle"></i>
+        </div>
+        <div class="stat-content">
+          <h3>{{ indexedDocuments }}</h3>
+          <p>{{ 'localKnowledge.hub.indexedDocuments' | translate }}</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="pi pi-exclamation-triangle"></i>
+        </div>
+        <div class="stat-content">
+          <h3>{{ failedDocuments }}</h3>
+          <p>{{ 'localKnowledge.hub.failedDocuments' | translate }}</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="pi pi-clock"></i>
+        </div>
+        <div class="stat-content">
+          <h3>{{ pendingDocuments }}</h3>
+          <p>{{ 'localKnowledge.hub.pendingDocuments' | translate }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+      <h2>{{ 'localKnowledge.actions.search' | translate }}</h2>
+      <div class="search-bar">
+        <input 
+          type="text" 
+          pInputText 
+          [placeholder]="'localKnowledge.hub.searchPlaceholder' | translate"
+          (keyup.enter)="performSearch($event)"
+        />
+        <button pButton label="{{ 'localKnowledge.actions.search' | translate }}" (click)="performSearch($event)"></button>
+      </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="recent-activity">
+      <h2>{{ 'localKnowledge.hub.lastIngestion' | translate }}</h2>
+      <div class="activity-content">
+        <ng-container *ngIf="lastIngestion; else noActivity">
+          <p>{{ lastIngestion | date:'medium' }}</p>
+        </ng-container>
+        <ng-template #noActivity>
+          <p>{{ 'localKnowledge.emptyStates.noDocuments' | translate }}</p>
+          <button pButton 
+            label="{{ 'localKnowledge.hub.ingestFirstDocument' | translate }}"
+            (click)="navigateToIngestion()"
+            class="p-button-outlined">
+          </button>
+        </ng-template>
+      </div>
+    </div>
+
+    <!-- Navigation Actions -->
+    <div class="navigation-actions">
+      <div class="action-grid">
+        <div class="action-card" (click)="navigateToIngestion()">
+          <i class="pi pi-upload"></i>
+          <h3>{{ 'localKnowledge.ingestion.title' | translate }}</h3>
+          <p>{{ 'localKnowledge.ingestion.uploadDocument' | translate }}</p>
+        </div>
+
+        <div class="action-card" (click)="navigateToRetrieval()">
+          <i class="pi pi-search"></i>
+          <h3>{{ 'localKnowledge.retrieval.title' | translate }}</h3>
+          <p>{{ 'localKnowledge.retrieval.search' | translate }}</p>
+        </div>
+
+        <div class="action-card" (click)="navigateToCuration()">
+          <i class="pi pi-eye"></i>
+          <h3>{{ 'localKnowledge.curation.title' | translate }}</h3>
+          <p>{{ 'localKnowledge.curation.curateDocument' | translate }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-overlay">
+    <p-progressSpinner></p-progressSpinner>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="error-state">
+    <p-message severity="error" [text]="error"></p-message>
+    <button pButton 
+      label="{{ 'localKnowledge.actions.retry' | translate }}"
+      (click)="refreshData()"
+      class="p-button-outlined">
+    </button>
+  </div>
+</div>

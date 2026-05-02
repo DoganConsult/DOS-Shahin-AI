@@ -1,0 +1,53 @@
+{
+  "moduleCode": "executive",
+  "displayName": "Executive Command",
+  "ownerTeam": "product-shahin-ai",
+  "productCode": "shahin-ai",
+  "ownership": "module-owned",
+  "version": "1.0.0",
+  "status": "active",
+  "platformDependencies": [
+    "identity",
+    "tenancy"
+  ],
+  "seedProviders": [
+    "products/shahin/seeds/executive-seed"
+  ],
+  "tenantDefaults": [
+    "executive_brief_frequency_days"
+  ],
+  "requiredReferenceData": [
+    "executive_brief_templates"
+  ],
+  "currentSources": [
+    "/home/Dr-Dogan-AGRC-OS/backend/src/modules/executive"
+  ],
+  "targetPath": "modules/executive",
+  "futureService": "executive-intelligence-service",
+  "frontendSources": [
+    "/home/Dr-Dogan-AGRC-OS/frontend/src/app/platform-manifests/executive.module.routes.ts"
+  ],
+  "ownedTables": [
+    "executive_briefs",
+    "executive_objectives",
+    "executive_risk_appetite"
+  ],
+  "referencedTables": [
+    "users",
+    "risk_register"
+  ],
+  "events": {
+    "publishes": [
+      "executive.brief_created",
+      "executive.brief_approved",
+      "executive.appetite_breach"
+    ],
+    "subscribes": [
+      "analytics.kpi_updated",
+      "risk.exposure_changed"
+    ]
+  },
+  "routeBases": [
+    "/api/executive"
+  ]
+}

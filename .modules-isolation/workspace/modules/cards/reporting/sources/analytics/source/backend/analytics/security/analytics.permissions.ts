@@ -1,0 +1,2 @@
+import { ANALYTICS_PERMISSIONS } from './analytics.security';
+export { ANALYTICS_PERMISSIONS as ANALYTICS_MODULE_PERMISSIONS };

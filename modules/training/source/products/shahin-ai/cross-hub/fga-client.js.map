@@ -1,0 +1,1 @@
+{"version":3,"file":"fga-client.js","sourceRoot":"","sources":["fga-client.ts"],"names":[],"mappings":";;;AAAA,uDAAuD;AACvD,sCAA6C;AAEhC,QAAA,SAAS,GAAG,IAAI,mBAAa,CAAC;IACzC,MAAM,EAAE,OAAO,CAAC,GAAG,CAAC,WAAW,IAAI,uBAAuB;IAC1D,OAAO,EAAE,OAAO,CAAC,GAAG,CAAC,YAAY,IAAI,eAAe;IACpD,oBAAoB,EAAE,OAAO,CAAC,GAAG,CAAC,YAAY;CAC/C,CAAC,CAAC"}

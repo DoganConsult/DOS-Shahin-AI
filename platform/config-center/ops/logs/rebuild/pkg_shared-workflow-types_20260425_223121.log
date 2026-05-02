@@ -1,0 +1,4 @@
+
+> @shahin/shared-workflow-types@1.0.0 build /root/DOS-AIO/packages/shared-workflow-types
+> tsc -p tsconfig.build.json
+

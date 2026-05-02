@@ -1,0 +1,3070 @@
+[
+  {
+    "file": "modules/action/db/public/migrations/001_extracted_from_001_remediation_tables.sql",
+    "proposed_module": "action",
+    "confidence": "high",
+    "reason": "path: modules/action/",
+    "tables_total": 1,
+    "schemas": [
+      "dos"
+    ]
+  },
+  {
+    "file": "modules/action/db/tenant/migrations/001_initial_tables.sql",
+    "proposed_module": "action",
+    "confidence": "high",
+    "reason": "path: modules/action/",
+    "tables_total": 2,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/action/db/tenant/migrations/002_enterprise_expansion.sql",
+    "proposed_module": "action",
+    "confidence": "high",
+    "reason": "path: modules/action/",
+    "tables_total": 16,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/action/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "action",
+    "confidence": "high",
+    "reason": "path: modules/action/",
+    "tables_total": 27,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/agrc-engine/db/public/migrations/001_agrc_tables.sql",
+    "proposed_module": "agrc-engine",
+    "confidence": "high",
+    "reason": "path: modules/agrc-engine/",
+    "tables_total": 1,
+    "schemas": [
+      "dos"
+    ]
+  },
+  {
+    "file": "modules/agrc-engine/db/public/migrations/002_agrc_agent_tables.sql",
+    "proposed_module": "agrc-engine",
+    "confidence": "high",
+    "reason": "path: modules/agrc-engine/",
+    "tables_total": 7,
+    "schemas": [
+      "dos"
+    ]
+  },
+  {
+    "file": "modules/agrc-engine/db/tenant/migrations/001_agrc_engine_tables.sql",
+    "proposed_module": "agrc-engine",
+    "confidence": "high",
+    "reason": "path: modules/agrc-engine/",
+    "tables_total": 1,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/agrc-engine/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "agrc-engine",
+    "confidence": "high",
+    "reason": "path: modules/agrc-engine/",
+    "tables_total": 27,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/ai-governance/db/public/migrations/001_ai_governance_entities_extend.sql",
+    "proposed_module": "ai-governance",
+    "confidence": "high",
+    "reason": "path: modules/ai-governance/",
+    "tables_total": 1,
+    "schemas": []
+  },
+  {
+    "file": "modules/ai-governance/db/public/migrations/002_copilot_and_performance_tables.sql",
+    "proposed_module": "ai-governance",
+    "confidence": "high",
+    "reason": "path: modules/ai-governance/",
+    "tables_total": 3,
+    "schemas": [
+      "public"
+    ]
+  },
+  {
+    "file": "modules/ai-governance/db/public/migrations/125_ai_dynamic_tables.sql",
+    "proposed_module": "ai-governance",
+    "confidence": "high",
+    "reason": "path: modules/ai-governance/",
+    "tables_total": 9,
+    "schemas": [
+      "public"
+    ]
+  },
+  {
+    "file": "modules/ai-governance/db/public/migrations/130_agent_sod_policies.sql",
+    "proposed_module": "ai-governance",
+    "confidence": "high",
+    "reason": "path: modules/ai-governance/",
+    "tables_total": 2,
+    "schemas": [
+      "public"
+    ]
+  },
+  {
+    "file": "modules/ai-governance/db/public/migrations/415_agent_tool_permissions.sql",
+    "proposed_module": "ai-governance",
+    "confidence": "high",
+    "reason": "path: modules/ai-governance/",
+    "tables_total": 1,
+    "schemas": [
+      "public"
+    ]
+  },
+  {
+    "file": "modules/ai-governance/db/tenant/migrations/001_ai_governance_tables.sql",
+    "proposed_module": "ai-governance",
+    "confidence": "high",
+    "reason": "path: modules/ai-governance/",
+    "tables_total": 1,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/ai-governance/db/tenant/migrations/003_agent_delegations_and_proposed_actions.sql",
+    "proposed_module": "ai-governance",
+    "confidence": "high",
+    "reason": "path: modules/ai-governance/",
+    "tables_total": 2,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/ai-governance/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "ai-governance",
+    "confidence": "high",
+    "reason": "path: modules/ai-governance/",
+    "tables_total": 55,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/ai/db/public/migrations/111_ai_model_risk_management_enhancement.sql",
+    "proposed_module": "ai",
+    "confidence": "high",
+    "reason": "path: modules/ai/",
+    "tables_total": 5,
+    "schemas": [
+      "public"
+    ]
+  },
+  {
+    "file": "modules/ai/db/tenant/migrations/001_ai_engine_initial_schema.sql",
+    "proposed_module": "ai",
+    "confidence": "high",
+    "reason": "path: modules/ai/",
+    "tables_total": 3,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/ai/db/tenant/migrations/001_initial_tables.sql",
+    "proposed_module": "ai",
+    "confidence": "high",
+    "reason": "path: modules/ai/",
+    "tables_total": 2,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/ai/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "ai",
+    "confidence": "high",
+    "reason": "path: modules/ai/",
+    "tables_total": 27,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/ai/db/tenant/migrations/099_extracted_from_099_bootstrap_tenant_domain_tables.sql",
+    "proposed_module": "ai",
+    "confidence": "high",
+    "reason": "path: modules/ai/",
+    "tables_total": 1,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/analytics/db/tenant/migrations/001_analytics_tables.sql",
+    "proposed_module": "analytics",
+    "confidence": "high",
+    "reason": "path: modules/analytics/",
+    "tables_total": 2,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/analytics/db/tenant/migrations/002_enterprise_expansion.sql",
+    "proposed_module": "analytics",
+    "confidence": "high",
+    "reason": "path: modules/analytics/",
+    "tables_total": 15,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/analytics/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "analytics",
+    "confidence": "high",
+    "reason": "path: modules/analytics/",
+    "tables_total": 19,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/asset/db/public/migrations/001_asset_tables.sql",
+    "proposed_module": "asset",
+    "confidence": "high",
+    "reason": "path: modules/asset/",
+    "tables_total": 1,
+    "schemas": [
+      "dos"
+    ]
+  },
+  {
+    "file": "modules/asset/db/public/migrations/118_extracted_from_118_incident_vendor_bcp_config_tables.sql",
+    "proposed_module": "asset",
+    "confidence": "high",
+    "reason": "path: modules/asset/",
+    "tables_total": 2,
+    "schemas": [
+      "public"
+    ]
+  },
+  {
+    "file": "modules/asset/db/tenant/migrations/001_asset_tables.sql",
+    "proposed_module": "asset",
+    "confidence": "high",
+    "reason": "path: modules/asset/",
+    "tables_total": 2,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/asset/db/tenant/migrations/002_enterprise_expansion.sql",
+    "proposed_module": "asset",
+    "confidence": "high",
+    "reason": "path: modules/asset/",
+    "tables_total": 16,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/asset/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "asset",
+    "confidence": "high",
+    "reason": "path: modules/asset/",
+    "tables_total": 27,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/attestation/db/tenant/migrations/001_initial_tables.sql",
+    "proposed_module": "attestation",
+    "confidence": "high",
+    "reason": "path: modules/attestation/",
+    "tables_total": 2,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/attestation/db/tenant/migrations/002_enterprise_expansion.sql",
+    "proposed_module": "attestation",
+    "confidence": "high",
+    "reason": "path: modules/attestation/",
+    "tables_total": 13,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/attestation/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "attestation",
+    "confidence": "high",
+    "reason": "path: modules/attestation/",
+    "tables_total": 27,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/audit/db/public/migrations/001_extracted_from_001_audit_tables.sql",
+    "proposed_module": "audit",
+    "confidence": "high",
+    "reason": "path: modules/audit/",
+    "tables_total": 1,
+    "schemas": [
+      "dos"
+    ]
+  },
+  {
+    "file": "modules/audit/db/public/migrations/001_extracted_from_001_evidence_tables.sql",
+    "proposed_module": "audit",
+    "confidence": "high",
+    "reason": "path: modules/audit/",
+    "tables_total": 1,
+    "schemas": [
+      "dos"
+    ]
+  },
+  {
+    "file": "modules/audit/db/public/migrations/011_audit_plans_table.sql",
+    "proposed_module": "audit",
+    "confidence": "high",
+    "reason": "path: modules/audit/",
+    "tables_total": 1,
+    "schemas": [
+      "dos"
+    ]
+  },
+  {
+    "file": "modules/audit/db/tenant/migrations/000_extracted_from_000_inline_baseline.sql",
+    "proposed_module": "audit",
+    "confidence": "high",
+    "reason": "path: modules/audit/",
+    "tables_total": 2,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/audit/db/tenant/migrations/001_audit_tables.sql",
+    "proposed_module": "audit",
+    "confidence": "high",
+    "reason": "path: modules/audit/",
+    "tables_total": 3,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/audit/db/tenant/migrations/002_enterprise_expansion.sql",
+    "proposed_module": "audit",
+    "confidence": "high",
+    "reason": "path: modules/audit/",
+    "tables_total": 22,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/audit/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "audit",
+    "confidence": "high",
+    "reason": "path: modules/audit/",
+    "tables_total": 24,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/bcp/db/public/migrations/001_bcp_tables.sql",
+    "proposed_module": "bcp",
+    "confidence": "high",
+    "reason": "path: modules/bcp/",
+    "tables_total": 1,
+    "schemas": [
+      "dos"
+    ]
+  },
+  {
+    "file": "modules/bcp/db/public/migrations/118_extracted_from_118_incident_vendor_bcp_config_tables.sql",
+    "proposed_module": "bcp",
+    "confidence": "high",
+    "reason": "path: modules/bcp/",
+    "tables_total": 4,
+    "schemas": [
+      "public"
+    ]
+  },
+  {
+    "file": "modules/bcp/db/tenant/migrations/001_bcp_tables.sql",
+    "proposed_module": "bcp",
+    "confidence": "high",
+    "reason": "path: modules/bcp/",
+    "tables_total": 3,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/bcp/db/tenant/migrations/002_enterprise_expansion.sql",
+    "proposed_module": "bcp",
+    "confidence": "high",
+    "reason": "path: modules/bcp/",
+    "tables_total": 18,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/bcp/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "bcp",
+    "confidence": "high",
+    "reason": "path: modules/bcp/",
+    "tables_total": 20,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/benchmarks/db/tenant/migrations/001_initial_tables.sql",
+    "proposed_module": "benchmarks",
+    "confidence": "high",
+    "reason": "path: modules/benchmarks/",
+    "tables_total": 2,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/benchmarks/db/tenant/migrations/002_enterprise_expansion.sql",
+    "proposed_module": "benchmarks",
+    "confidence": "high",
+    "reason": "path: modules/benchmarks/",
+    "tables_total": 13,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/benchmarks/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "benchmarks",
+    "confidence": "high",
+    "reason": "path: modules/benchmarks/",
+    "tables_total": 27,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/compliance/db/public/migrations/001_extracted_from_001_compliance_tables.sql",
+    "proposed_module": "compliance",
+    "confidence": "high",
+    "reason": "path: modules/compliance/",
+    "tables_total": 2,
+    "schemas": [
+      "dos"
+    ]
+  },
+  {
+    "file": "modules/compliance/db/public/migrations/001_qiyas_tables.sql",
+    "proposed_module": "compliance",
+    "confidence": "high",
+    "reason": "path: modules/compliance/",
+    "tables_total": 1,
+    "schemas": [
+      "dos"
+    ]
+  },
+  {
+    "file": "modules/compliance/db/public/migrations/131_sod_rules.sql",
+    "proposed_module": "compliance",
+    "confidence": "high",
+    "reason": "path: modules/compliance/",
+    "tables_total": 1,
+    "schemas": [
+      "public"
+    ]
+  },
+  {
+    "file": "modules/compliance/db/public/migrations/132_sod_waivers.sql",
+    "proposed_module": "compliance",
+    "confidence": "high",
+    "reason": "path: modules/compliance/",
+    "tables_total": 1,
+    "schemas": [
+      "public"
+    ]
+  },
+  {
+    "file": "modules/compliance/db/tenant/migrations/000_extracted_from_000_inline_baseline.sql",
+    "proposed_module": "compliance",
+    "confidence": "high",
+    "reason": "path: modules/compliance/",
+    "tables_total": 4,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/compliance/db/tenant/migrations/001_compliance_tables.sql",
+    "proposed_module": "compliance",
+    "confidence": "high",
+    "reason": "path: modules/compliance/",
+    "tables_total": 5,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/compliance/db/tenant/migrations/002_enterprise_expansion.sql",
+    "proposed_module": "compliance",
+    "confidence": "high",
+    "reason": "path: modules/compliance/",
+    "tables_total": 20,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/compliance/db/tenant/migrations/003_advanced_controls_tables.sql",
+    "proposed_module": "compliance",
+    "confidence": "high",
+    "reason": "path: modules/compliance/",
+    "tables_total": 11,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/compliance/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "compliance",
+    "confidence": "high",
+    "reason": "path: modules/compliance/",
+    "tables_total": 24,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/controls/db/public/migrations/001_extracted_from_001_compliance_tables.sql",
+    "proposed_module": "controls",
+    "confidence": "high",
+    "reason": "path: modules/controls/",
+    "tables_total": 1,
+    "schemas": [
+      "dos"
+    ]
+  },
+  {
+    "file": "modules/controls/db/tenant/migrations/000_extracted_from_000_inline_baseline.sql",
+    "proposed_module": "controls",
+    "confidence": "high",
+    "reason": "path: modules/controls/",
+    "tables_total": 2,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/controls/db/tenant/migrations/001_controls_tables.sql",
+    "proposed_module": "controls",
+    "confidence": "high",
+    "reason": "path: modules/controls/",
+    "tables_total": 2,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/controls/db/tenant/migrations/002_enterprise_expansion.sql",
+    "proposed_module": "controls",
+    "confidence": "high",
+    "reason": "path: modules/controls/",
+    "tables_total": 18,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/controls/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "controls",
+    "confidence": "high",
+    "reason": "path: modules/controls/",
+    "tables_total": 24,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/dashboard-editor/db/tenant/migrations/001_initial_tables.sql",
+    "proposed_module": "dashboard-editor",
+    "confidence": "high",
+    "reason": "path: modules/dashboard-editor/",
+    "tables_total": 2,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/dashboard-editor/db/tenant/migrations/002_enterprise_expansion.sql",
+    "proposed_module": "dashboard-editor",
+    "confidence": "high",
+    "reason": "path: modules/dashboard-editor/",
+    "tables_total": 13,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/dashboard/db/public/migrations/001_analytics_tables.sql",
+    "proposed_module": "dashboard",
+    "confidence": "high",
+    "reason": "path: modules/dashboard/",
+    "tables_total": 1,
+    "schemas": [
+      "dos"
+    ]
+  },
+  {
+    "file": "modules/dashboard/db/tenant/migrations/000_extracted_from_000_inline_baseline.sql",
+    "proposed_module": "dashboard",
+    "confidence": "high",
+    "reason": "path: modules/dashboard/",
+    "tables_total": 4,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/dashboard/db/tenant/migrations/001_dashboard_tables.sql",
+    "proposed_module": "dashboard",
+    "confidence": "high",
+    "reason": "path: modules/dashboard/",
+    "tables_total": 2,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/dashboard/db/tenant/migrations/002_enterprise_expansion.sql",
+    "proposed_module": "dashboard",
+    "confidence": "high",
+    "reason": "path: modules/dashboard/",
+    "tables_total": 13,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/dashboard/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "dashboard",
+    "confidence": "high",
+    "reason": "path: modules/dashboard/",
+    "tables_total": 15,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/dora/db/public/migrations/001_dora_tables.sql",
+    "proposed_module": "dora",
+    "confidence": "high",
+    "reason": "path: modules/dora/",
+    "tables_total": 1,
+    "schemas": [
+      "dos"
+    ]
+  },
+  {
+    "file": "modules/dora/db/tenant/migrations/001_dora_tables.sql",
+    "proposed_module": "dora",
+    "confidence": "high",
+    "reason": "path: modules/dora/",
+    "tables_total": 1,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/dora/db/tenant/migrations/002_enterprise_expansion.sql",
+    "proposed_module": "dora",
+    "confidence": "high",
+    "reason": "path: modules/dora/",
+    "tables_total": 18,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/dora/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "dora",
+    "confidence": "high",
+    "reason": "path: modules/dora/",
+    "tables_total": 27,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/evidence/db/public/migrations/001_extracted_from_001_evidence_tables.sql",
+    "proposed_module": "evidence",
+    "confidence": "high",
+    "reason": "path: modules/evidence/",
+    "tables_total": 1,
+    "schemas": [
+      "dos"
+    ]
+  },
+  {
+    "file": "modules/evidence/db/tenant/migrations/000_extracted_from_000_inline_baseline.sql",
+    "proposed_module": "evidence",
+    "confidence": "high",
+    "reason": "path: modules/evidence/",
+    "tables_total": 2,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/evidence/db/tenant/migrations/001_evidence_tables.sql",
+    "proposed_module": "evidence",
+    "confidence": "high",
+    "reason": "path: modules/evidence/",
+    "tables_total": 3,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/evidence/db/tenant/migrations/002_enterprise_expansion.sql",
+    "proposed_module": "evidence",
+    "confidence": "high",
+    "reason": "path: modules/evidence/",
+    "tables_total": 17,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/evidence/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "evidence",
+    "confidence": "high",
+    "reason": "path: modules/evidence/",
+    "tables_total": 19,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/exception/db/tenant/migrations/001_exception_tables.sql",
+    "proposed_module": "exception",
+    "confidence": "high",
+    "reason": "path: modules/exception/",
+    "tables_total": 1,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/exception/db/tenant/migrations/002_enterprise_expansion.sql",
+    "proposed_module": "exception",
+    "confidence": "high",
+    "reason": "path: modules/exception/",
+    "tables_total": 16,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/exception/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "exception",
+    "confidence": "high",
+    "reason": "path: modules/exception/",
+    "tables_total": 27,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/executive/db/public/migrations/001_executive_tables.sql",
+    "proposed_module": "executive",
+    "confidence": "high",
+    "reason": "path: modules/executive/",
+    "tables_total": 1,
+    "schemas": [
+      "dos"
+    ]
+  },
+  {
+    "file": "modules/executive/db/tenant/migrations/001_initial_tables.sql",
+    "proposed_module": "executive",
+    "confidence": "high",
+    "reason": "path: modules/executive/",
+    "tables_total": 2,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/executive/db/tenant/migrations/002_enterprise_expansion.sql",
+    "proposed_module": "executive",
+    "confidence": "high",
+    "reason": "path: modules/executive/",
+    "tables_total": 13,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/executive/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "executive",
+    "confidence": "high",
+    "reason": "path: modules/executive/",
+    "tables_total": 27,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/fitch/db/tenant/migrations/001_initial_tables.sql",
+    "proposed_module": "fitch",
+    "confidence": "high",
+    "reason": "path: modules/fitch/",
+    "tables_total": 2,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/fitch/db/tenant/migrations/002_enterprise_expansion.sql",
+    "proposed_module": "fitch",
+    "confidence": "high",
+    "reason": "path: modules/fitch/",
+    "tables_total": 13,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/fitch/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "fitch",
+    "confidence": "high",
+    "reason": "path: modules/fitch/",
+    "tables_total": 27,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/governance-ai/db/tenant/migrations/001_initial_tables.sql",
+    "proposed_module": "governance-ai",
+    "confidence": "high",
+    "reason": "path: modules/governance-ai/",
+    "tables_total": 2,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/governance-ai/db/tenant/migrations/002_enterprise_expansion.sql",
+    "proposed_module": "governance-ai",
+    "confidence": "high",
+    "reason": "path: modules/governance-ai/",
+    "tables_total": 13,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/governance-os/db/tenant/migrations/001_initial_tables.sql",
+    "proposed_module": "governance-os",
+    "confidence": "high",
+    "reason": "path: modules/governance-os/",
+    "tables_total": 2,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/governance-os/db/tenant/migrations/002_enterprise_expansion.sql",
+    "proposed_module": "governance-os",
+    "confidence": "high",
+    "reason": "path: modules/governance-os/",
+    "tables_total": 13,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/governance-os/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "governance-os",
+    "confidence": "high",
+    "reason": "path: modules/governance-os/",
+    "tables_total": 27,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/governance/db/tenant/migrations/000_extracted_from_000_inline_baseline.sql",
+    "proposed_module": "governance",
+    "confidence": "high",
+    "reason": "path: modules/governance/",
+    "tables_total": 1,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/governance/db/tenant/migrations/001_governance_tables.sql",
+    "proposed_module": "governance",
+    "confidence": "high",
+    "reason": "path: modules/governance/",
+    "tables_total": 4,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/governance/db/tenant/migrations/002_enterprise_expansion.sql",
+    "proposed_module": "governance",
+    "confidence": "high",
+    "reason": "path: modules/governance/",
+    "tables_total": 21,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/governance/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "governance",
+    "confidence": "high",
+    "reason": "path: modules/governance/",
+    "tables_total": 25,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/grc-query/db/tenant/migrations/001_initial_tables.sql",
+    "proposed_module": "grc-query",
+    "confidence": "high",
+    "reason": "path: modules/grc-query/",
+    "tables_total": 2,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/grc-query/db/tenant/migrations/002_enterprise_expansion.sql",
+    "proposed_module": "grc-query",
+    "confidence": "high",
+    "reason": "path: modules/grc-query/",
+    "tables_total": 13,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/grc-query/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "grc-query",
+    "confidence": "high",
+    "reason": "path: modules/grc-query/",
+    "tables_total": 27,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/inbox/db/tenant/migrations/001_inbox_tables.sql",
+    "proposed_module": "inbox",
+    "confidence": "high",
+    "reason": "path: modules/inbox/",
+    "tables_total": 1,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/inbox/db/tenant/migrations/002_enterprise_expansion.sql",
+    "proposed_module": "inbox",
+    "confidence": "high",
+    "reason": "path: modules/inbox/",
+    "tables_total": 14,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/inbox/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "inbox",
+    "confidence": "high",
+    "reason": "path: modules/inbox/",
+    "tables_total": 15,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/incident/db/public/migrations/001_extracted_from_001_risk_incident_tables.sql",
+    "proposed_module": "incident",
+    "confidence": "high",
+    "reason": "path: modules/incident/",
+    "tables_total": 1,
+    "schemas": [
+      "dos"
+    ]
+  },
+  {
+    "file": "modules/incident/db/public/migrations/101_incidents_ops_additions.sql",
+    "proposed_module": "incident",
+    "confidence": "high",
+    "reason": "path: modules/incident/",
+    "tables_total": 3,
+    "schemas": [
+      "public"
+    ]
+  },
+  {
+    "file": "modules/incident/db/public/migrations/102_incident_governance_pipeline.sql",
+    "proposed_module": "incident",
+    "confidence": "high",
+    "reason": "path: modules/incident/",
+    "tables_total": 2,
+    "schemas": [
+      "public"
+    ]
+  },
+  {
+    "file": "modules/incident/db/public/migrations/105_incident_advanced_tables.sql",
+    "proposed_module": "incident",
+    "confidence": "high",
+    "reason": "path: modules/incident/",
+    "tables_total": 11,
+    "schemas": [
+      "public"
+    ]
+  },
+  {
+    "file": "modules/incident/db/public/migrations/117_incident_case_breach_enterprise_v2.sql",
+    "proposed_module": "incident",
+    "confidence": "high",
+    "reason": "path: modules/incident/",
+    "tables_total": 1,
+    "schemas": [
+      "public"
+    ]
+  },
+  {
+    "file": "modules/incident/db/tenant/migrations/001_incident_tables.sql",
+    "proposed_module": "incident",
+    "confidence": "high",
+    "reason": "path: modules/incident/",
+    "tables_total": 3,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/incident/db/tenant/migrations/002_enterprise_expansion.sql",
+    "proposed_module": "incident",
+    "confidence": "high",
+    "reason": "path: modules/incident/",
+    "tables_total": 18,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/incident/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "incident",
+    "confidence": "high",
+    "reason": "path: modules/incident/",
+    "tables_total": 18,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/incident/db/tenant/migrations/099_extracted_from_099_bootstrap_tenant_domain_tables.sql",
+    "proposed_module": "incident",
+    "confidence": "high",
+    "reason": "path: modules/incident/",
+    "tables_total": 2,
+    "schemas": [
+      "__TENANT_SCHEMA__",
+      "public"
+    ]
+  },
+  {
+    "file": "modules/incident/db/tenant/migrations/107_incident_r1_structural_hardening.sql",
+    "proposed_module": "incident",
+    "confidence": "high",
+    "reason": "path: modules/incident/",
+    "tables_total": 1,
+    "schemas": []
+  },
+  {
+    "file": "modules/incident/db/tenant/migrations/118_extracted_from_118_incident_vendor_bcp_config_tables.sql",
+    "proposed_module": "incident",
+    "confidence": "high",
+    "reason": "path: modules/incident/",
+    "tables_total": 4,
+    "schemas": [
+      "__TENANT_SCHEMA__",
+      "public"
+    ]
+  },
+  {
+    "file": "modules/integrations/db/public/migrations/001_integrations_tables.sql",
+    "proposed_module": "integrations",
+    "confidence": "high",
+    "reason": "path: modules/integrations/",
+    "tables_total": 1,
+    "schemas": [
+      "dos"
+    ]
+  },
+  {
+    "file": "modules/integrations/db/tenant/migrations/001_initial_tables.sql",
+    "proposed_module": "integrations",
+    "confidence": "high",
+    "reason": "path: modules/integrations/",
+    "tables_total": 2,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/integrations/db/tenant/migrations/002_enterprise_expansion.sql",
+    "proposed_module": "integrations",
+    "confidence": "high",
+    "reason": "path: modules/integrations/",
+    "tables_total": 15,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/integrations/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "integrations",
+    "confidence": "high",
+    "reason": "path: modules/integrations/",
+    "tables_total": 18,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/issues/db/tenant/migrations/001_issues_tables.sql",
+    "proposed_module": "issues",
+    "confidence": "high",
+    "reason": "path: modules/issues/",
+    "tables_total": 1,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/issues/db/tenant/migrations/002_enterprise_expansion.sql",
+    "proposed_module": "issues",
+    "confidence": "high",
+    "reason": "path: modules/issues/",
+    "tables_total": 15,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/issues/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "issues",
+    "confidence": "high",
+    "reason": "path: modules/issues/",
+    "tables_total": 27,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/journey/db/tenant/migrations/001_journey_tables.sql",
+    "proposed_module": "journey",
+    "confidence": "high",
+    "reason": "path: modules/journey/",
+    "tables_total": 1,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/journey/db/tenant/migrations/002_enterprise_expansion.sql",
+    "proposed_module": "journey",
+    "confidence": "high",
+    "reason": "path: modules/journey/",
+    "tables_total": 14,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/journey/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "journey",
+    "confidence": "high",
+    "reason": "path: modules/journey/",
+    "tables_total": 27,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/knowledge/db/tenant/migrations/001_initial_tables.sql",
+    "proposed_module": "knowledge",
+    "confidence": "high",
+    "reason": "path: modules/knowledge/",
+    "tables_total": 2,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/knowledge/db/tenant/migrations/002_enterprise_expansion.sql",
+    "proposed_module": "knowledge",
+    "confidence": "high",
+    "reason": "path: modules/knowledge/",
+    "tables_total": 14,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/knowledge/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "knowledge",
+    "confidence": "high",
+    "reason": "path: modules/knowledge/",
+    "tables_total": 18,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/ksa-regulatory/db/tenant/migrations/001_ksa_regulatory_tables.sql",
+    "proposed_module": "ksa-regulatory",
+    "confidence": "high",
+    "reason": "path: modules/ksa-regulatory/",
+    "tables_total": 1,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/ksa-regulatory/db/tenant/migrations/002_enterprise_expansion.sql",
+    "proposed_module": "ksa-regulatory",
+    "confidence": "high",
+    "reason": "path: modules/ksa-regulatory/",
+    "tables_total": 13,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/ksa-regulatory/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "ksa-regulatory",
+    "confidence": "high",
+    "reason": "path: modules/ksa-regulatory/",
+    "tables_total": 27,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/local-knowledge/db/tenant/migrations/001_local_knowledge_tables.sql",
+    "proposed_module": "local-knowledge",
+    "confidence": "high",
+    "reason": "path: modules/local-knowledge/",
+    "tables_total": 1,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/local-knowledge/db/tenant/migrations/002_enterprise_expansion.sql",
+    "proposed_module": "local-knowledge",
+    "confidence": "high",
+    "reason": "path: modules/local-knowledge/",
+    "tables_total": 13,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/local-knowledge/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "local-knowledge",
+    "confidence": "high",
+    "reason": "path: modules/local-knowledge/",
+    "tables_total": 27,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/mcp/db/public/migrations/126_mcp_core_schema.sql",
+    "proposed_module": "mcp",
+    "confidence": "high",
+    "reason": "path: modules/mcp/",
+    "tables_total": 7,
+    "schemas": [
+      "public"
+    ]
+  },
+  {
+    "file": "modules/mcp/db/tenant/migrations/001_initial_tables.sql",
+    "proposed_module": "mcp",
+    "confidence": "high",
+    "reason": "path: modules/mcp/",
+    "tables_total": 2,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/mcp/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "mcp",
+    "confidence": "high",
+    "reason": "path: modules/mcp/",
+    "tables_total": 27,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/mobile/db/tenant/migrations/001_initial_tables.sql",
+    "proposed_module": "mobile",
+    "confidence": "high",
+    "reason": "path: modules/mobile/",
+    "tables_total": 2,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/mobile/db/tenant/migrations/002_enterprise_expansion.sql",
+    "proposed_module": "mobile",
+    "confidence": "high",
+    "reason": "path: modules/mobile/",
+    "tables_total": 13,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/mobile/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "mobile",
+    "confidence": "high",
+    "reason": "path: modules/mobile/",
+    "tables_total": 27,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/notification/db/public/migrations/001_inbox_tables.sql",
+    "proposed_module": "notification",
+    "confidence": "high",
+    "reason": "path: modules/notification/",
+    "tables_total": 1,
+    "schemas": [
+      "dos"
+    ]
+  },
+  {
+    "file": "modules/notification/db/public/migrations/116_incident_case_breach_enterprise_v1.sql",
+    "proposed_module": "notification",
+    "confidence": "high",
+    "reason": "path: modules/notification/",
+    "tables_total": 11,
+    "schemas": [
+      "public"
+    ]
+  },
+  {
+    "file": "modules/notification/db/public/migrations/20260419_extracted_from_20260419_0002_p95_notifications_schema_align.sql",
+    "proposed_module": "notification",
+    "confidence": "high",
+    "reason": "path: modules/notification/",
+    "tables_total": 1,
+    "schemas": []
+  },
+  {
+    "file": "modules/notification/db/tenant/migrations/001_notification_tables.sql",
+    "proposed_module": "notification",
+    "confidence": "high",
+    "reason": "path: modules/notification/",
+    "tables_total": 4,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/notification/db/tenant/migrations/002_enterprise_expansion.sql",
+    "proposed_module": "notification",
+    "confidence": "high",
+    "reason": "path: modules/notification/",
+    "tables_total": 14,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/notification/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "notification",
+    "confidence": "high",
+    "reason": "path: modules/notification/",
+    "tables_total": 19,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/onboarding/db/public/migrations/001_onboarding_tables.sql",
+    "proposed_module": "onboarding",
+    "confidence": "high",
+    "reason": "path: modules/onboarding/",
+    "tables_total": 1,
+    "schemas": [
+      "dos"
+    ]
+  },
+  {
+    "file": "modules/onboarding/db/public/migrations/002_inference_rules.sql",
+    "proposed_module": "onboarding",
+    "confidence": "high",
+    "reason": "path: modules/onboarding/",
+    "tables_total": 8,
+    "schemas": [
+      "public"
+    ]
+  },
+  {
+    "file": "modules/onboarding/db/public/migrations/016_onboarding_module_tables.sql",
+    "proposed_module": "onboarding",
+    "confidence": "high",
+    "reason": "path: modules/onboarding/",
+    "tables_total": 14,
+    "schemas": [
+      "dos",
+      "onb"
+    ]
+  },
+  {
+    "file": "modules/onboarding/db/public/migrations/026_create_onboarding_question_bank.sql",
+    "proposed_module": "onboarding",
+    "confidence": "high",
+    "reason": "path: modules/onboarding/",
+    "tables_total": 1,
+    "schemas": [
+      "public"
+    ]
+  },
+  {
+    "file": "modules/onboarding/db/public/migrations/027_create_missing_dependencies.sql",
+    "proposed_module": "onboarding",
+    "confidence": "high",
+    "reason": "path: modules/onboarding/",
+    "tables_total": 1,
+    "schemas": [
+      "public"
+    ]
+  },
+  {
+    "file": "modules/onboarding/db/public/migrations/033_question_bank_constraints_and_answers.sql",
+    "proposed_module": "onboarding",
+    "confidence": "high",
+    "reason": "path: modules/onboarding/",
+    "tables_total": 4,
+    "schemas": [
+      "public"
+    ]
+  },
+  {
+    "file": "modules/onboarding/db/public/migrations/040_question_tiers.sql",
+    "proposed_module": "onboarding",
+    "confidence": "high",
+    "reason": "path: modules/onboarding/",
+    "tables_total": 1,
+    "schemas": []
+  },
+  {
+    "file": "modules/onboarding/db/public/migrations/042_onboarding_effective_journey.sql",
+    "proposed_module": "onboarding",
+    "confidence": "high",
+    "reason": "path: modules/onboarding/",
+    "tables_total": 1,
+    "schemas": []
+  },
+  {
+    "file": "modules/onboarding/db/public/migrations/043_onboarding_inference_bundle.sql",
+    "proposed_module": "onboarding",
+    "confidence": "high",
+    "reason": "path: modules/onboarding/",
+    "tables_total": 3,
+    "schemas": [
+      "public"
+    ]
+  },
+  {
+    "file": "modules/onboarding/db/public/migrations/044_onboarding_inference_b3.sql",
+    "proposed_module": "onboarding",
+    "confidence": "high",
+    "reason": "path: modules/onboarding/",
+    "tables_total": 2,
+    "schemas": []
+  },
+  {
+    "file": "modules/onboarding/db/public/migrations/045_onboarding_workspace_handoff_cycles.sql",
+    "proposed_module": "onboarding",
+    "confidence": "high",
+    "reason": "path: modules/onboarding/",
+    "tables_total": 1,
+    "schemas": [
+      "public"
+    ]
+  },
+  {
+    "file": "modules/onboarding/db/public/migrations/046_handoff_cycle_provenance.sql",
+    "proposed_module": "onboarding",
+    "confidence": "high",
+    "reason": "path: modules/onboarding/",
+    "tables_total": 1,
+    "schemas": []
+  },
+  {
+    "file": "modules/onboarding/db/public/migrations/047_handoff_agent_runs.sql",
+    "proposed_module": "onboarding",
+    "confidence": "high",
+    "reason": "path: modules/onboarding/",
+    "tables_total": 2,
+    "schemas": [
+      "public"
+    ]
+  },
+  {
+    "file": "modules/onboarding/db/public/migrations/048_handoff_invitations.sql",
+    "proposed_module": "onboarding",
+    "confidence": "high",
+    "reason": "path: modules/onboarding/",
+    "tables_total": 1,
+    "schemas": [
+      "public"
+    ]
+  },
+  {
+    "file": "modules/onboarding/db/public/migrations/049_handoff_evidence_requests.sql",
+    "proposed_module": "onboarding",
+    "confidence": "high",
+    "reason": "path: modules/onboarding/",
+    "tables_total": 1,
+    "schemas": [
+      "public"
+    ]
+  },
+  {
+    "file": "modules/onboarding/db/public/migrations/051a_widen_question_tier_check.sql",
+    "proposed_module": "onboarding",
+    "confidence": "high",
+    "reason": "path: modules/onboarding/",
+    "tables_total": 1,
+    "schemas": []
+  },
+  {
+    "file": "modules/onboarding/db/tenant/migrations/001_onboarding_tables.sql",
+    "proposed_module": "onboarding",
+    "confidence": "high",
+    "reason": "path: modules/onboarding/",
+    "tables_total": 4,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/operating-cockpit/db/tenant/migrations/001_initial_tables.sql",
+    "proposed_module": "operating-cockpit",
+    "confidence": "high",
+    "reason": "path: modules/operating-cockpit/",
+    "tables_total": 2,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/operating-cockpit/db/tenant/migrations/002_enterprise_expansion.sql",
+    "proposed_module": "operating-cockpit",
+    "confidence": "high",
+    "reason": "path: modules/operating-cockpit/",
+    "tables_total": 13,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/operating-cockpit/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "operating-cockpit",
+    "confidence": "high",
+    "reason": "path: modules/operating-cockpit/",
+    "tables_total": 27,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/packs/db/tenant/migrations/001_packs_tables.sql",
+    "proposed_module": "packs",
+    "confidence": "high",
+    "reason": "path: modules/packs/",
+    "tables_total": 1,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/000_create_dos_schema.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 35,
+    "schemas": [
+      "dos",
+      "public"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/001_auth_tables.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 15,
+    "schemas": [
+      "dos",
+      "public"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/001_extracted_from_001_audit_tables.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 1,
+    "schemas": [
+      "dos"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/001_extracted_from_001_workflow_tables.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 5,
+    "schemas": [
+      "dos",
+      "public"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/001_notification_tables.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 3,
+    "schemas": [
+      "public"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/001_platform_baseline.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 2,
+    "schemas": []
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/001_platform_core_tables.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 32,
+    "schemas": [
+      "dos",
+      "public"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/001_platform_onboarding_schema_evolution.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 3,
+    "schemas": []
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/001_product_tables.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 1,
+    "schemas": [
+      "dos"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/001_tenant_tables.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 9,
+    "schemas": [
+      "dos",
+      "public"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/001_user_tables.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 6,
+    "schemas": [
+      "dos",
+      "public"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/002_add_country_of_incorporation_to_public_tenants.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 1,
+    "schemas": []
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/002_expand_authz_decision_log.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 1,
+    "schemas": []
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/002_user_role_assignments.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 1,
+    "schemas": [
+      "dos"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/003_refresh_token_families.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 1,
+    "schemas": [
+      "public"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/003_user_view_preferences.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 1,
+    "schemas": [
+      "public"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/003a_enterprise_features.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 10,
+    "schemas": [
+      "dos"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/003b_platform_admin_tables.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 23,
+    "schemas": [
+      "dos"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/004_dos_dauth_platform_layer.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 17,
+    "schemas": [
+      "dos"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/004_jwt_signing_keys.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 1,
+    "schemas": [
+      "public"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/005_missing_platform_tables.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 63,
+    "schemas": [
+      "public"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/005_scim_api_tokens.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 1,
+    "schemas": [
+      "public"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/006_hash_email_verification_tokens.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 1,
+    "schemas": []
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/006_missing_admin_tables.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 2,
+    "schemas": [
+      "dos"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/007_fix_schema_drift.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 2,
+    "schemas": []
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/008_mfa_enforcement.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 1,
+    "schemas": []
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/009_dauth_missing_tables.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 10,
+    "schemas": [
+      "dos",
+      "public"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/009b_service_domain_tables.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 34,
+    "schemas": [
+      "dos"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/010_csrf_security_tables.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 3,
+    "schemas": [
+      "public"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/011_dauth_enterprise_ledger.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 1,
+    "schemas": []
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/014_missing_endpoint_tables.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 5,
+    "schemas": [
+      "dos"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/015_provisioning_tables.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 3,
+    "schemas": [
+      "public"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/018_create_lookup_tables.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 11,
+    "schemas": [
+      "public"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/021_allow_registered_tenant_status.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 1,
+    "schemas": []
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/023_fix_template_tables.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 6,
+    "schemas": [
+      "dos"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/024_onboarding_product_packs.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 2,
+    "schemas": [
+      "onb"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/025_create_lookup_tables_fix.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 8,
+    "schemas": [
+      "public"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/029_hardening_infrastructure.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 10,
+    "schemas": [
+      "dos",
+      "public"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/032_production_grade_question_infrastructure.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 25,
+    "schemas": [
+      "public"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/050_tenant_migrations_tracker.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 1,
+    "schemas": [
+      "dos"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/052_platform_outbox.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 1,
+    "schemas": [
+      "public"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/053_register_idempotency_and_tenant_org_unique.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 1,
+    "schemas": [
+      "public"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/054_platform_outbox_dead_letter.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 3,
+    "schemas": [
+      "public"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/056_tenant_entitlement_profile_split.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 1,
+    "schemas": []
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/057_provisioning_worker_fields.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 2,
+    "schemas": [
+      "public"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/058_user_view_preferences.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 1,
+    "schemas": [
+      "public"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/059_iam_identities.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 1,
+    "schemas": [
+      "public"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/201_hybrid_layer_conflict_renames.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 4,
+    "schemas": []
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/20260418_0002_tenants_orgname_norm_uk.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 1,
+    "schemas": []
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/20260418_0004_refresh_tokens.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 1,
+    "schemas": [
+      "public"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/20260418_0007_provisioning_jobs_worker.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 1,
+    "schemas": []
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/20260418_0008_provisioning_step_runs.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 1,
+    "schemas": [
+      "public"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/20260418_0009_tenants_lifecycle_state.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 1,
+    "schemas": []
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/20260418_0011_service_domain_schema_align.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 6,
+    "schemas": [
+      "dos"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/20260419_0001_m2_team_role_schema_align.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 1,
+    "schemas": []
+  },
+  {
+    "file": "modules/platform-core/db/public/migrations/20260422_0001_platform_migrations_current_path.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 1,
+    "schemas": []
+  },
+  {
+    "file": "modules/platform-core/db/tenant/migrations/000_extracted_from_000_inline_baseline.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 25,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/tenant/migrations/019_file_storage_table.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 1,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/tenant/migrations/030_authorization_redesign_tenant.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 1,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/tenant/migrations/034_module_config_runtime.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 5,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/tenant/migrations/037_platform_runtime_tables.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 6,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/tenant/migrations/039_module_config_audit_hardening.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 1,
+    "schemas": []
+  },
+  {
+    "file": "modules/platform-core/db/tenant/migrations/041_module_entitlement_audit.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 1,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/tenant/migrations/042_tenant_module_entitlements_alignment.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 1,
+    "schemas": []
+  },
+  {
+    "file": "modules/platform-core/db/tenant/migrations/099_extracted_from_099_bootstrap_tenant_domain_tables.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 2,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/tenant/migrations/163_enterprise_authorization_tables.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 1,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/platform-core/db/tenant/migrations/412_role_permission_map.sql",
+    "proposed_module": "platform-core",
+    "confidence": "high",
+    "reason": "path: modules/platform-core/",
+    "tables_total": 1,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/playbooks/db/tenant/migrations/001_initial_tables.sql",
+    "proposed_module": "playbooks",
+    "confidence": "high",
+    "reason": "path: modules/playbooks/",
+    "tables_total": 2,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/playbooks/db/tenant/migrations/002_enterprise_expansion.sql",
+    "proposed_module": "playbooks",
+    "confidence": "high",
+    "reason": "path: modules/playbooks/",
+    "tables_total": 13,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/playbooks/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "playbooks",
+    "confidence": "high",
+    "reason": "path: modules/playbooks/",
+    "tables_total": 27,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/policy/db/public/migrations/001_governance_tables.sql",
+    "proposed_module": "policy",
+    "confidence": "high",
+    "reason": "path: modules/policy/",
+    "tables_total": 1,
+    "schemas": [
+      "dos"
+    ]
+  },
+  {
+    "file": "modules/policy/db/tenant/migrations/001_policy_tables.sql",
+    "proposed_module": "policy",
+    "confidence": "high",
+    "reason": "path: modules/policy/",
+    "tables_total": 3,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/policy/db/tenant/migrations/002_enterprise_expansion.sql",
+    "proposed_module": "policy",
+    "confidence": "high",
+    "reason": "path: modules/policy/",
+    "tables_total": 17,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/policy/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "policy",
+    "confidence": "high",
+    "reason": "path: modules/policy/",
+    "tables_total": 19,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/portals/db/public/migrations/001_portals_tables.sql",
+    "proposed_module": "portals",
+    "confidence": "high",
+    "reason": "path: modules/portals/",
+    "tables_total": 1,
+    "schemas": [
+      "dos"
+    ]
+  },
+  {
+    "file": "modules/portals/db/tenant/migrations/001_portals_tables.sql",
+    "proposed_module": "portals",
+    "confidence": "high",
+    "reason": "path: modules/portals/",
+    "tables_total": 1,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/portals/db/tenant/migrations/002_enterprise_expansion.sql",
+    "proposed_module": "portals",
+    "confidence": "high",
+    "reason": "path: modules/portals/",
+    "tables_total": 13,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/portals/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "portals",
+    "confidence": "high",
+    "reason": "path: modules/portals/",
+    "tables_total": 27,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/privacy/db/public/migrations/001_privacy_tables.sql",
+    "proposed_module": "privacy",
+    "confidence": "high",
+    "reason": "path: modules/privacy/",
+    "tables_total": 1,
+    "schemas": [
+      "dos"
+    ]
+  },
+  {
+    "file": "modules/privacy/db/tenant/migrations/001_initial_tables.sql",
+    "proposed_module": "privacy",
+    "confidence": "high",
+    "reason": "path: modules/privacy/",
+    "tables_total": 2,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/privacy/db/tenant/migrations/002_enterprise_expansion.sql",
+    "proposed_module": "privacy",
+    "confidence": "high",
+    "reason": "path: modules/privacy/",
+    "tables_total": 16,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/privacy/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "privacy",
+    "confidence": "high",
+    "reason": "path: modules/privacy/",
+    "tables_total": 23,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/proactive-leadership/db/tenant/migrations/001_initial_tables.sql",
+    "proposed_module": "proactive-leadership",
+    "confidence": "high",
+    "reason": "path: modules/proactive-leadership/",
+    "tables_total": 2,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/proactive-leadership/db/tenant/migrations/002_enterprise_expansion.sql",
+    "proposed_module": "proactive-leadership",
+    "confidence": "high",
+    "reason": "path: modules/proactive-leadership/",
+    "tables_total": 13,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/proactive-leadership/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "proactive-leadership",
+    "confidence": "high",
+    "reason": "path: modules/proactive-leadership/",
+    "tables_total": 27,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/qiyas/db/tenant/migrations/000_extracted_from_000_inline_baseline.sql",
+    "proposed_module": "qiyas",
+    "confidence": "high",
+    "reason": "path: modules/qiyas/",
+    "tables_total": 4,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/qiyas/db/tenant/migrations/001_qiyas_tables.sql",
+    "proposed_module": "qiyas",
+    "confidence": "high",
+    "reason": "path: modules/qiyas/",
+    "tables_total": 1,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/qiyas/db/tenant/migrations/002_enterprise_expansion.sql",
+    "proposed_module": "qiyas",
+    "confidence": "high",
+    "reason": "path: modules/qiyas/",
+    "tables_total": 14,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/qiyas/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "qiyas",
+    "confidence": "high",
+    "reason": "path: modules/qiyas/",
+    "tables_total": 27,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/records/db/public/migrations/001_records_tables.sql",
+    "proposed_module": "records",
+    "confidence": "high",
+    "reason": "path: modules/records/",
+    "tables_total": 1,
+    "schemas": [
+      "dos"
+    ]
+  },
+  {
+    "file": "modules/records/db/tenant/migrations/001_initial_tables.sql",
+    "proposed_module": "records",
+    "confidence": "high",
+    "reason": "path: modules/records/",
+    "tables_total": 2,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/records/db/tenant/migrations/002_enterprise_expansion.sql",
+    "proposed_module": "records",
+    "confidence": "high",
+    "reason": "path: modules/records/",
+    "tables_total": 13,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/records/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "records",
+    "confidence": "high",
+    "reason": "path: modules/records/",
+    "tables_total": 27,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/remediation/db/public/migrations/001_extracted_from_001_remediation_tables.sql",
+    "proposed_module": "remediation",
+    "confidence": "high",
+    "reason": "path: modules/remediation/",
+    "tables_total": 1,
+    "schemas": [
+      "dos"
+    ]
+  },
+  {
+    "file": "modules/remediation/db/tenant/migrations/001_remediation_tables.sql",
+    "proposed_module": "remediation",
+    "confidence": "high",
+    "reason": "path: modules/remediation/",
+    "tables_total": 1,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/remediation/db/tenant/migrations/002_enterprise_expansion.sql",
+    "proposed_module": "remediation",
+    "confidence": "high",
+    "reason": "path: modules/remediation/",
+    "tables_total": 15,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/remediation/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "remediation",
+    "confidence": "high",
+    "reason": "path: modules/remediation/",
+    "tables_total": 27,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/reporting/db/public/migrations/001_reporting_tables.sql",
+    "proposed_module": "reporting",
+    "confidence": "high",
+    "reason": "path: modules/reporting/",
+    "tables_total": 1,
+    "schemas": [
+      "dos"
+    ]
+  },
+  {
+    "file": "modules/reporting/db/tenant/migrations/001_reporting_tables.sql",
+    "proposed_module": "reporting",
+    "confidence": "high",
+    "reason": "path: modules/reporting/",
+    "tables_total": 1,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/reporting/db/tenant/migrations/002_enterprise_expansion.sql",
+    "proposed_module": "reporting",
+    "confidence": "high",
+    "reason": "path: modules/reporting/",
+    "tables_total": 15,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/reporting/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "reporting",
+    "confidence": "high",
+    "reason": "path: modules/reporting/",
+    "tables_total": 17,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/risk/db/public/migrations/001_extracted_from_001_risk_incident_tables.sql",
+    "proposed_module": "risk",
+    "confidence": "high",
+    "reason": "path: modules/risk/",
+    "tables_total": 1,
+    "schemas": [
+      "dos"
+    ]
+  },
+  {
+    "file": "modules/risk/db/public/migrations/100_risk_operating_model.sql",
+    "proposed_module": "risk",
+    "confidence": "high",
+    "reason": "path: modules/risk/",
+    "tables_total": 7,
+    "schemas": [
+      "public"
+    ]
+  },
+  {
+    "file": "modules/risk/db/public/migrations/110_key_risk_indicators.sql",
+    "proposed_module": "risk",
+    "confidence": "high",
+    "reason": "path: modules/risk/",
+    "tables_total": 3,
+    "schemas": [
+      "public"
+    ]
+  },
+  {
+    "file": "modules/risk/db/public/migrations/120_risk_spec_alignment.sql",
+    "proposed_module": "risk",
+    "confidence": "high",
+    "reason": "path: modules/risk/",
+    "tables_total": 15,
+    "schemas": [
+      "public"
+    ]
+  },
+  {
+    "file": "modules/risk/db/tenant/migrations/000_extracted_from_000_inline_baseline.sql",
+    "proposed_module": "risk",
+    "confidence": "high",
+    "reason": "path: modules/risk/",
+    "tables_total": 4,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/risk/db/tenant/migrations/001_risk_tables.sql",
+    "proposed_module": "risk",
+    "confidence": "high",
+    "reason": "path: modules/risk/",
+    "tables_total": 6,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/risk/db/tenant/migrations/002_enterprise_expansion.sql",
+    "proposed_module": "risk",
+    "confidence": "high",
+    "reason": "path: modules/risk/",
+    "tables_total": 24,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/risk/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "risk",
+    "confidence": "high",
+    "reason": "path: modules/risk/",
+    "tables_total": 30,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/risk/db/tenant/migrations/040_risk_risks_soft_delete.sql",
+    "proposed_module": "risk",
+    "confidence": "high",
+    "reason": "path: modules/risk/",
+    "tables_total": 1,
+    "schemas": []
+  },
+  {
+    "file": "modules/risk/db/tenant/migrations/099_extracted_from_099_bootstrap_tenant_domain_tables.sql",
+    "proposed_module": "risk",
+    "confidence": "high",
+    "reason": "path: modules/risk/",
+    "tables_total": 2,
+    "schemas": [
+      "__TENANT_SCHEMA__",
+      "public"
+    ]
+  },
+  {
+    "file": "modules/risk/db/tenant/migrations/103_risk_scenarios.sql",
+    "proposed_module": "risk",
+    "confidence": "high",
+    "reason": "path: modules/risk/",
+    "tables_total": 1,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/risk/db/tenant/migrations/104_risk_team_ownership.sql",
+    "proposed_module": "risk",
+    "confidence": "high",
+    "reason": "path: modules/risk/",
+    "tables_total": 1,
+    "schemas": []
+  },
+  {
+    "file": "modules/risk/db/tenant/migrations/109_risk_production_readiness.sql",
+    "proposed_module": "risk",
+    "confidence": "high",
+    "reason": "path: modules/risk/",
+    "tables_total": 8,
+    "schemas": []
+  },
+  {
+    "file": "modules/risk/db/tenant/migrations/112_ai_model_risk_register_link.sql",
+    "proposed_module": "risk",
+    "confidence": "high",
+    "reason": "path: modules/risk/",
+    "tables_total": 1,
+    "schemas": []
+  },
+  {
+    "file": "modules/risk/db/tenant/migrations/113_risk_scoring_tables_v1.sql",
+    "proposed_module": "risk",
+    "confidence": "high",
+    "reason": "path: modules/risk/",
+    "tables_total": 2,
+    "schemas": [
+      "__TENANT_SCHEMA__",
+      "public"
+    ]
+  },
+  {
+    "file": "modules/risk/db/tenant/migrations/114_risk_scoring_tables_v2.sql",
+    "proposed_module": "risk",
+    "confidence": "high",
+    "reason": "path: modules/risk/",
+    "tables_total": 2,
+    "schemas": [
+      "__TENANT_SCHEMA__",
+      "public"
+    ]
+  },
+  {
+    "file": "modules/risk/db/tenant/migrations/115_risk_scoring_tables_v3.sql",
+    "proposed_module": "risk",
+    "confidence": "high",
+    "reason": "path: modules/risk/",
+    "tables_total": 2,
+    "schemas": [
+      "__TENANT_SCHEMA__",
+      "public"
+    ]
+  },
+  {
+    "file": "modules/risk/db/tenant/migrations/119_risk_scoring_tables_v4.sql",
+    "proposed_module": "risk",
+    "confidence": "high",
+    "reason": "path: modules/risk/",
+    "tables_total": 2,
+    "schemas": [
+      "__TENANT_SCHEMA__",
+      "public"
+    ]
+  },
+  {
+    "file": "modules/risk/db/tenant/migrations/121_risk_spec_field_alignment.sql",
+    "proposed_module": "risk",
+    "confidence": "high",
+    "reason": "path: modules/risk/",
+    "tables_total": 3,
+    "schemas": []
+  },
+  {
+    "file": "modules/risk/db/tenant/migrations/122_risk_review_approval_tables.sql",
+    "proposed_module": "risk",
+    "confidence": "high",
+    "reason": "path: modules/risk/",
+    "tables_total": 3,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/risk/db/tenant/migrations/123_force_rls_everywhere.sql",
+    "proposed_module": "risk",
+    "confidence": "high",
+    "reason": "path: modules/risk/",
+    "tables_total": 2,
+    "schemas": []
+  },
+  {
+    "file": "modules/team/db/public/migrations/004_user_rls_and_indices.sql",
+    "proposed_module": "team",
+    "confidence": "high",
+    "reason": "path: modules/team/",
+    "tables_total": 1,
+    "schemas": []
+  },
+  {
+    "file": "modules/team/db/tenant/migrations/000_extracted_from_000_inline_baseline.sql",
+    "proposed_module": "team",
+    "confidence": "high",
+    "reason": "path: modules/team/",
+    "tables_total": 3,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/team/db/tenant/migrations/001_team_tables.sql",
+    "proposed_module": "team",
+    "confidence": "high",
+    "reason": "path: modules/team/",
+    "tables_total": 1,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/team/db/tenant/migrations/002_enterprise_expansion.sql",
+    "proposed_module": "team",
+    "confidence": "high",
+    "reason": "path: modules/team/",
+    "tables_total": 15,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/team/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "team",
+    "confidence": "high",
+    "reason": "path: modules/team/",
+    "tables_total": 21,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/training/db/public/migrations/001_training_tables.sql",
+    "proposed_module": "training",
+    "confidence": "high",
+    "reason": "path: modules/training/",
+    "tables_total": 1,
+    "schemas": [
+      "dos"
+    ]
+  },
+  {
+    "file": "modules/training/db/tenant/migrations/001_training_tables.sql",
+    "proposed_module": "training",
+    "confidence": "high",
+    "reason": "path: modules/training/",
+    "tables_total": 1,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/training/db/tenant/migrations/002_enterprise_expansion.sql",
+    "proposed_module": "training",
+    "confidence": "high",
+    "reason": "path: modules/training/",
+    "tables_total": 16,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/training/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "training",
+    "confidence": "high",
+    "reason": "path: modules/training/",
+    "tables_total": 27,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/vendor/db/public/migrations/001_vendor_tables.sql",
+    "proposed_module": "vendor",
+    "confidence": "high",
+    "reason": "path: modules/vendor/",
+    "tables_total": 1,
+    "schemas": [
+      "dos"
+    ]
+  },
+  {
+    "file": "modules/vendor/db/public/migrations/118_extracted_from_118_incident_vendor_bcp_config_tables.sql",
+    "proposed_module": "vendor",
+    "confidence": "high",
+    "reason": "path: modules/vendor/",
+    "tables_total": 3,
+    "schemas": [
+      "public"
+    ]
+  },
+  {
+    "file": "modules/vendor/db/tenant/migrations/001_vendor_tables.sql",
+    "proposed_module": "vendor",
+    "confidence": "high",
+    "reason": "path: modules/vendor/",
+    "tables_total": 5,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/vendor/db/tenant/migrations/002_enterprise_expansion.sql",
+    "proposed_module": "vendor",
+    "confidence": "high",
+    "reason": "path: modules/vendor/",
+    "tables_total": 18,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/vendor/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "vendor",
+    "confidence": "high",
+    "reason": "path: modules/vendor/",
+    "tables_total": 24,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/widgets/db/public/migrations/001_dashboard_widgets_tables.sql",
+    "proposed_module": "widgets",
+    "confidence": "high",
+    "reason": "path: modules/widgets/",
+    "tables_total": 1,
+    "schemas": [
+      "dos"
+    ]
+  },
+  {
+    "file": "modules/widgets/db/tenant/migrations/001_initial_tables.sql",
+    "proposed_module": "widgets",
+    "confidence": "high",
+    "reason": "path: modules/widgets/",
+    "tables_total": 2,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/widgets/db/tenant/migrations/002_enterprise_expansion.sql",
+    "proposed_module": "widgets",
+    "confidence": "high",
+    "reason": "path: modules/widgets/",
+    "tables_total": 13,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/widgets/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "widgets",
+    "confidence": "high",
+    "reason": "path: modules/widgets/",
+    "tables_total": 27,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/workflow/db/public/migrations/001_extracted_from_001_workflow_tables.sql",
+    "proposed_module": "workflow",
+    "confidence": "high",
+    "reason": "path: modules/workflow/",
+    "tables_total": 4,
+    "schemas": [
+      "dos"
+    ]
+  },
+  {
+    "file": "modules/workflow/db/public/migrations/20260419_extracted_from_20260419_0002_p95_notifications_schema_align.sql",
+    "proposed_module": "workflow",
+    "confidence": "high",
+    "reason": "path: modules/workflow/",
+    "tables_total": 1,
+    "schemas": [
+      "dos"
+    ]
+  },
+  {
+    "file": "modules/workflow/db/tenant/migrations/000_extracted_from_000_inline_baseline.sql",
+    "proposed_module": "workflow",
+    "confidence": "high",
+    "reason": "path: modules/workflow/",
+    "tables_total": 1,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/workflow/db/tenant/migrations/001_workflow_tables.sql",
+    "proposed_module": "workflow",
+    "confidence": "high",
+    "reason": "path: modules/workflow/",
+    "tables_total": 13,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/workflow/db/tenant/migrations/002_enterprise_expansion.sql",
+    "proposed_module": "workflow",
+    "confidence": "high",
+    "reason": "path: modules/workflow/",
+    "tables_total": 14,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  },
+  {
+    "file": "modules/workflow/db/tenant/migrations/022_reconcile_workflow_tables.sql",
+    "proposed_module": "workflow",
+    "confidence": "high",
+    "reason": "path: modules/workflow/",
+    "tables_total": 3,
+    "schemas": []
+  },
+  {
+    "file": "modules/workflow/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql",
+    "proposed_module": "workflow",
+    "confidence": "high",
+    "reason": "path: modules/workflow/",
+    "tables_total": 22,
+    "schemas": [
+      "__TENANT_SCHEMA__"
+    ]
+  }
+]

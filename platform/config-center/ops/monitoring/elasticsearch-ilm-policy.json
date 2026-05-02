@@ -1,0 +1,51 @@
+{
+  "_comment": "DOS Platform — Elasticsearch Index Lifecycle Management (ILM) Policy",
+  "_usage": "PUT _ilm/policy/dos-logs-policy < elasticsearch-ilm-policy.json",
+  "_retention": "Hot: 7d (fast SSD) → Warm: 30d (read-only, merged) → Cold: 365d (frozen) → Delete",
+  "policy": {
+    "phases": {
+      "hot": {
+        "min_age": "0ms",
+        "actions": {
+          "rollover": {
+            "max_primary_shard_size": "50gb",
+            "max_age": "7d"
+          },
+          "set_priority": {
+            "priority": 100
+          }
+        }
+      },
+      "warm": {
+        "min_age": "7d",
+        "actions": {
+          "forcemerge": {
+            "max_num_segments": 1
+          },
+          "shrink": {
+            "number_of_shards": 1
+          },
+          "set_priority": {
+            "priority": 50
+          },
+          "readonly": {}
+        }
+      },
+      "cold": {
+        "min_age": "30d",
+        "actions": {
+          "set_priority": {
+            "priority": 0
+          },
+          "freeze": {}
+        }
+      },
+      "delete": {
+        "min_age": "365d",
+        "actions": {
+          "delete": {}
+        }
+      }
+    }
+  }
+}

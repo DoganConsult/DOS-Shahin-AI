@@ -1,0 +1,388 @@
+{
+  "schemaVersion": "2",
+  "kind": "business",
+  "moduleCode": "compliance",
+  "displayName": "Compliance",
+  "ownerTeam": "product-shahin-ai",
+  "productCode": "shahin-ai",
+  "ownership": "module-owned",
+  "version": "1.0.0",
+  "status": "active",
+  "lifecycle": {
+    "stage": "ga",
+    "owner": "product-shahin-ai",
+    "entitlementKey": "module.compliance",
+    "featureFlag": "module.compliance.enabled",
+    "minTenantStage": "ga"
+  },
+
+  "identity": {
+    "provider": "keycloak",
+    "realm": "dogan",
+    "clientScopes": ["openid", "profile", "compliance.read", "compliance.write"],
+    "claims": ["sub", "tenantId", "permissions", "preferred_username"],
+    "rolesConsumed": [
+      "compliance.admin",
+      "compliance.officer",
+      "compliance.auditor",
+      "compliance.viewer"
+    ]
+  },
+
+  "authorization": {
+    "permissionPrefix": "compliance",
+    "permissionsDeclared": [
+      "compliance.read",
+      "compliance.write",
+      "compliance.approve",
+      "compliance.export",
+      "compliance.admin"
+    ],
+    "rolesGranted": {
+      "compliance.officer":  ["compliance.read", "compliance.write"],
+      "compliance.auditor":  ["compliance.read", "compliance.export"],
+      "compliance.admin":    ["compliance.read", "compliance.write", "compliance.approve", "compliance.export", "compliance.admin"],
+      "compliance.viewer":   ["compliance.read"]
+    },
+    "ports": ["@dos/dauth-shared", "@dos/access-store"],
+    "ownershipChecks": ["framework", "control", "assessment", "obligation", "attestation"]
+  },
+
+  "platform": {
+    "runtime": "@dos/platform-core",
+    "minVersion": "1.0.0",
+    "dependsOn": [
+      "@dos/db",
+      "@dos/types",
+      "@dos/module-sdk",
+      "@dos/module-auth",
+      "@dos/module-soc",
+      "@dos/module-dos",
+      "@dos/platform-core/http",
+      "@dos/platform-core/resilience",
+      "@dos/platform-core/workflows",
+      "@dos/platform-core/observability",
+      "@dos/platform-core/jobs",
+      "@dos/platform-core/events",
+      "@dos/platform-core/lifecycle",
+      "@dos/platform-core/notifications",
+      "@dos/platform-core/storage",
+      "@dos/platform-core/tenancy",
+      "@dos/platform-core/constants",
+      "@dos/event-backbone",
+      "@dos/service-client",
+      "@dos/service-bootstrap",
+      "@dos/dauth-shared"
+    ],
+    "portsImplemented": [
+      "auth",
+      "audit",
+      "database",
+      "ai",
+      "dynamic-ui",
+      "foundation",
+      "events",
+      "jobs",
+      "lifecycle",
+      "logger",
+      "middleware",
+      "platform",
+      "resilience",
+      "schemas",
+      "soc",
+      "errors"
+    ]
+  },
+
+  "foundation": {
+    "tablesConsumed": ["employees", "departments", "org_units", "authority_matrix"],
+    "eventsSubscribed": ["foundation.scope_changed", "foundation.org_created"],
+    "sodPolicies": [
+      "control_owner_cannot_test",
+      "approver_cannot_be_assessor",
+      "obligation_creator_cannot_close"
+    ],
+    "lifecycleHooks": [
+      { "on": "employee.terminated", "action": "revoke compliance.* roles" }
+    ],
+    "port": "./ports/foundation.port.ts"
+  },
+
+  "ai": {
+    "agentsUsed": [
+      "A03_compliance_officer",
+      "A05_assessment_analyst",
+      "A09_regulatory_writer"
+    ],
+    "tools": [
+      "compliance.draftFinding",
+      "compliance.summarizeEvidence",
+      "compliance.classifyControl",
+      "compliance.draftRegulatorReply"
+    ],
+    "models": {
+      "primary": "claude-opus-4-7",
+      "fallback": "claude-sonnet-4-6",
+      "offline": "ollama-stub"
+    },
+    "promptTemplates": "./application/ai/prompts/",
+    "memoryNamespaces": ["compliance.drafts", "compliance.findings"],
+    "evalSets": ["langfuse:compliance.findings.v1", "langfuse:compliance.regulator.v1"],
+    "port": "./ports/ai.port.ts"
+  },
+
+  "uiContract": {
+    "specVersion": "1.0.0",
+    "specSource": "docs/DOS-AIO-Specs/Shahin-AI SPA.md → dynamic-ui-enrollment-page-experience-widgets-spec.md",
+    "contractPath": "./contracts/ui.contract.json",
+    "publisherEndpoint": "/api/dynamic-ui/contract/compliance",
+    "routeCatalogEndpoint": "/api/dynamic-ui/route-catalog",
+    "moduleStyleTokens": {
+      "accent": "navy",
+      "accentSecondary": "saffron",
+      "icon": "fact_check",
+      "agentTone": "assurance",
+      "defaultPageLayout": "full-page",
+      "mobileVariant": "bottom-sheet"
+    }
+  },
+
+  "uiSystem": {
+    "designSystem": "@dos/ui-system",
+    "tokensImported": true,
+    "componentsUsed": [
+      "ds-button",
+      "ds-tile",
+      "ds-data-table",
+      "ds-tag",
+      "ds-modal",
+      "ds-drawer",
+      "ds-tabs",
+      "ds-form-grid",
+      "ds-input",
+      "ds-select",
+      "ds-date-picker",
+      "ds-language-switcher",
+      "ds-toast"
+    ],
+    "themesSupported": ["light", "dark"],
+    "rtl": true,
+    "i18n": ["en", "ar"]
+  },
+
+  "dynamicUI": {
+    "componentsRegistered": [
+      "compliance.framework-list",
+      "compliance.control-detail",
+      "compliance.assessment-runner",
+      "compliance.posture-heatmap",
+      "compliance.gap-board",
+      "compliance.attestation-campaign",
+      "compliance.regulator-bulletin",
+      "compliance.ksa-sector-maturity"
+    ],
+    "navContributions": [
+      { "id": "compliance",            "label": "compliance.nav.label",        "icon": "shield",   "route": "/compliance",            "permission": "compliance.read" },
+      { "id": "compliance.controls",   "label": "compliance.nav.controls",     "icon": "list",     "route": "/compliance/controls",   "permission": "compliance.read" },
+      { "id": "compliance.frameworks", "label": "compliance.nav.frameworks",   "icon": "book",     "route": "/compliance/frameworks", "permission": "compliance.read" },
+      { "id": "compliance.assessments","label": "compliance.nav.assessments",  "icon": "checkmark","route": "/compliance/assessments","permission": "compliance.read" },
+      { "id": "compliance.gaps",       "label": "compliance.nav.gaps",         "icon": "warning",  "route": "/compliance/gaps",       "permission": "compliance.read" },
+      { "id": "compliance.regulator",  "label": "compliance.nav.regulator",    "icon": "building", "route": "/compliance/regulator",  "permission": "compliance.export" }
+    ],
+    "seedManifest": "./db/seeds/dynamic-ui/index.json",
+    "port": "./ports/dynamic-ui.port.ts"
+  },
+
+  "services": {
+    "audit": {
+      "client": "@dos/service-client",
+      "writes": [
+        "compliance.framework.*",
+        "compliance.control.*",
+        "compliance.assessment.*",
+        "compliance.gap.*",
+        "compliance.attestation.*"
+      ],
+      "retentionDays": 2555
+    },
+    "notification": {
+      "channels": ["email", "in-app"],
+      "templates": [
+        "compliance.assessment_due",
+        "compliance.gap_opened",
+        "compliance.attestation_request",
+        "compliance.regulator_bulletin"
+      ]
+    },
+    "workflow": {
+      "templates": [
+        "compliance.assessment_review",
+        "compliance.gap_remediation",
+        "compliance.attestation_campaign",
+        "compliance.regulator_submission"
+      ],
+      "stateMachines": ["framework", "control", "assessment", "obligation", "attestation"]
+    },
+    "tenant": { "client": "@dos/service-client", "gatewayOriginHmac": true },
+    "config": {
+      "namespace": "compliance",
+      "scopes": ["platform", "environment", "product", "module", "tenant", "user"],
+      "schema": "./config/schema.ts",
+      "tenantDefaults": [
+        "compliance_default_framework",
+        "compliance_review_cycle_days"
+      ]
+    }
+  },
+
+  "database": {
+    "ownedSchema": "compliance",
+    "ownedTables": [
+      "frameworks",
+      "controls",
+      "compliance_mappings",
+      "compliance_assessments",
+      "compliance_gaps",
+      "compliance_requirements",
+      "control_objectives",
+      "control_testing",
+      "control_evidence_links",
+      "attestation_campaigns",
+      "attestation_records",
+      "attestation_drafts",
+      "csa_campaigns",
+      "csa_responses",
+      "ucf_controls",
+      "crosswalk_mappings",
+      "sod_conflict_matrix",
+      "regulator_bulletins",
+      "submission_packets",
+      "ksa_sector_maturity",
+      "ksa_regulatory_changes",
+      "ksa_regulatory_reports"
+    ],
+    "referencedTables": [
+      "tenants",
+      "users",
+      "workflow_instances",
+      "risks",
+      "evidence_items",
+      "policies",
+      "audit_trail",
+      "employees",
+      "departments",
+      "org_units"
+    ],
+    "migrations": "./db/migrations",
+    "seeds": "./db/seeds",
+    "rls": true,
+    "tenantIsolationGate": "tquery|withTenantClient mandatory"
+  },
+
+  "events": {
+    "publishes": [
+      "compliance.gap_detected",
+      "compliance.gap_closed",
+      "compliance.posture_changed",
+      "compliance.assessment_completed",
+      "compliance.framework_mapping_updated",
+      "compliance.framework_gap_identified",
+      "compliance.attestation_campaign_started",
+      "compliance.attestation_recorded",
+      "controls.created",
+      "controls.status_changed",
+      "controls.effectiveness_tested",
+      "controls.effectiveness_failed",
+      "controls.deficiency_detected"
+    ],
+    "subscribes": [
+      "risk.assessment_completed",
+      "evidence.collected",
+      "evidence.coverage_low",
+      "policy.approved",
+      "audit.finding_created",
+      "vendor.compliance_gap_propagated",
+      "foundation.scope_changed",
+      "foundation.org_created"
+    ]
+  },
+
+  "routeBases": [
+    "/api/compliance",
+    "/api/compliance-ws",
+    "/api/compliance-controls",
+    "/api/compliance-assertions",
+    "/api/compliance-attestation",
+    "/api/controls",
+    "/api/control",
+    "/api/ucf",
+    "/api/frameworks",
+    "/api/framework-mapping",
+    "/api/mappings",
+    "/api/objects",
+    "/api/scoring-policies",
+    "/api/lifecycle",
+    "/api/nca-assessment",
+    "/api/nca-export",
+    "/api/rcsa",
+    "/api/sama-assessment",
+    "/api/ksa-sector-maturity",
+    "/api/ksa-regulatory-changes",
+    "/api/ksa-regulatory-reports",
+    "/api/ksa-cross-framework",
+    "/api/assessment-templates",
+    "/api/regulator/heatmap",
+    "/api/regulator/portal",
+    "/api/regulator/registry"
+  ],
+
+  "seedProviders": [
+    "modules/compliance/infrastructure/data/compliance-seed.ts"
+  ],
+  "tenantDefaults": [
+    "compliance_default_framework",
+    "compliance_review_cycle_days"
+  ],
+  "requiredReferenceData": [
+    "frameworks",
+    "controls",
+    "assessment_types",
+    "compliance_statuses"
+  ],
+  "currentSources": [
+    "modules/compliance"
+  ],
+  "targetPath": "modules/compliance",
+  "frontendSources": [
+    "platform/config-center/board-report/platform-manifests/module-routes-governance/compliance.module.routes.ts"
+  ],
+
+  "platformDependencies": [
+    "identity",
+    "tenancy",
+    "workflow",
+    "permissions",
+    "audit"
+  ],
+
+  "ownedTables": [
+    "frameworks",
+    "controls",
+    "compliance_mappings",
+    "compliance_assessments",
+    "compliance_gaps",
+    "compliance_requirements",
+    "control_objectives",
+    "control_testing",
+    "control_evidence_links"
+  ],
+  "referencedTables": [
+    "tenants",
+    "users",
+    "workflow_instances",
+    "risks",
+    "evidence_items",
+    "policies",
+    "audit_trail"
+  ]
+}

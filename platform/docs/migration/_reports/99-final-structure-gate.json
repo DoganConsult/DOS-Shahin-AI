@@ -1,0 +1,118 @@
+{
+  "generatedAt": "2026-04-29T03:36:26.831Z",
+  "canonicalRoot": "/root/DOS-AIO/DOS Platform",
+  "verdict": "FAIL",
+  "passed": 12,
+  "failed": 6,
+  "total": 18,
+  "checks": [
+    {
+      "id": 1,
+      "name": "no source outside /root/DOS-AIO/DOS Platform",
+      "ok": false,
+      "detail": "Found 1 stray source file(s): e.g. /root/DOS-AIO/docs/api/platform-core/assets/hierarchy.js"
+    },
+    {
+      "id": 2,
+      "name": "final folder tree exists",
+      "ok": true,
+      "detail": "All required dirs present"
+    },
+    {
+      "id": 3,
+      "name": "no duplicate legacy module roots remain",
+      "ok": false,
+      "detail": "Still present: Foundation Module, Risk Module, Compliance Module, Audit Module, Action Module, AGRC-engine Module, AI-OS Module, Analytics Module, Asset Module, Attestation Module, BCP Module, Controls Module, DAuth Module, DNOC Module, DSOC Module, DORA Module, Dynamic UI Module, Evidence Module, Governance Module, Inbox Module, Incident Module, Isues Module, knowledge Module, ksa-regulatory Module, MCP Module, Mobile Module, Notification Module, Onboarding Module, Policy Module, Privacy Module, Qiyas Module, Remediation Module, Reporting Module, Training Module, Vendor Module, Workflow Module, Shahin-AI Website"
+    },
+    {
+      "id": 4,
+      "name": "pnpm workspace paths exist",
+      "ok": true,
+      "detail": "OK (40 globs declared)"
+    },
+    {
+      "id": 5,
+      "name": "tsconfig aliases resolve",
+      "ok": true,
+      "detail": "OK (16 aliases)"
+    },
+    {
+      "id": 6,
+      "name": "product manifest validates",
+      "ok": true,
+      "detail": "OK — all schema-required keys present, productCode + authMode correct"
+    },
+    {
+      "id": 7,
+      "name": "module manifests validate",
+      "ok": false,
+      "detail": "OK (0 module manifests)"
+    },
+    {
+      "id": 8,
+      "name": "route registry validates",
+      "ok": true,
+      "detail": "OK (19 routes; public + product-internal compat)"
+    },
+    {
+      "id": 9,
+      "name": "Dynamic UI enrollment validates",
+      "ok": true,
+      "detail": "OK (2 surfaces enrolled)"
+    },
+    {
+      "id": 10,
+      "name": "agent contracts validate",
+      "ok": true,
+      "detail": "OK (6 agents enrolled)"
+    },
+    {
+      "id": 11,
+      "name": "no platform/shared import from products",
+      "ok": false,
+      "detail": "Offenders: packages/shahin-product/src/agrc-route-manifest.ts; packages/shahin-product/src/agrc-routes.ts; packages/shahin-product/src/routing/agrc-route-manifest.ts; packages/shahin-product/src/routing/agrc-routes.ts; packages/shahin-product/src/shahin-catalog.ts"
+    },
+    {
+      "id": 12,
+      "name": "no module import from products/shahin-ai",
+      "ok": true,
+      "detail": "OK"
+    },
+    {
+      "id": 13,
+      "name": "no product code inside platform",
+      "ok": true,
+      "detail": "OK"
+    },
+    {
+      "id": 14,
+      "name": "no module code inside products",
+      "ok": true,
+      "detail": "OK"
+    },
+    {
+      "id": 15,
+      "name": "no localStorage token usage for auth",
+      "ok": false,
+      "detail": "Offenders: products/shahin-ai/app/src/app/blueprint/pages/invitations/invitation-accept.component.ts"
+    },
+    {
+      "id": 16,
+      "name": "Shahin-AI build config points to products/shahin-ai",
+      "ok": true,
+      "detail": "OK"
+    },
+    {
+      "id": 17,
+      "name": "active services still resolve their imports",
+      "ok": false,
+      "detail": "Issues: _service-template: no package.json; _shared: no package.json"
+    },
+    {
+      "id": 18,
+      "name": "active routes do not reference old moved paths",
+      "ok": true,
+      "detail": "OK"
+    }
+  ]
+}

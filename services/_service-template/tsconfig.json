@@ -1,0 +1,29 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "src",
+    "declaration": true,
+    "incremental": true,
+    "tsBuildInfoFile": "dist/.tsbuildinfo",
+    "baseUrl": ".",
+    "paths": {}
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "references": [
+    {
+      "path": "../../packages/dos-service-bootstrap"
+    },
+    {
+      "path": "../../packages/dos-service-client"
+    },
+    {
+      "path": "../../packages/dos-event-backbone"
+    },
+    {
+      "path": "../../packages/dos-runtime-config"
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+/* DOS Platform — Typography Tokens (Enterprise grade).
+ *
+ * Stacks:
+ *   --dos-font-family-sans : Latin UI text (Inter, system fallback)
+ *   --dos-font-family-arabic: Arabic UI text (IBM Plex Sans Arabic)
+ *   --dos-font-family-display: hero/marketing display (same as sans, optical sized)
+ *   --dos-font-family-mono : tabular numerics, code (JetBrains Mono fallback)
+ *
+ * The browser picks the right glyph per character — when an Arabic glyph
+ * is rendered, the Arabic stack wins. No JS-side switching needed.
+ */
+:root {
+  --dos-font-family-sans:
+    'Inter', 'IBM Plex Sans', 'IBM Plex Sans Arabic', 'Segoe UI', system-ui,
+    -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+  --dos-font-family-arabic:
+    'IBM Plex Sans Arabic', 'Tajawal', 'Noto Sans Arabic',
+    'Segoe UI', system-ui, sans-serif;
+
+  --dos-font-family-display:
+    'Inter Display', 'Inter', 'IBM Plex Sans Arabic', system-ui, sans-serif;
+
+  --dos-font-family-mono:
+    'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular,
+    'SF Mono', Menlo, Consolas, monospace;
+
+  --dos-font-family: var(--dos-font-family-sans); /* backwards-compat alias */
+
+  /* ── Type scale (modular) ─────────────────────────────────────────── */
+  --dos-font-size-2xs: 0.6875rem;   /* 11px */
+  --dos-font-size-xs:  0.75rem;     /* 12px */
+  --dos-font-size-sm:  0.8125rem;   /* 13px */
+  --dos-font-size-md:  0.875rem;    /* 14px (body default) */
+  --dos-font-size-base:0.9375rem;   /* 15px */
+  --dos-font-size-lg:  1rem;        /* 16px */
+  --dos-font-size-xl:  1.125rem;    /* 18px */
+  --dos-font-size-2xl: 1.375rem;    /* 22px */
+  --dos-font-size-3xl: 1.75rem;     /* 28px */
+  --dos-font-size-4xl: 2.25rem;     /* 36px */
+  --dos-font-size-5xl: 3rem;        /* 48px (hero) */
+
+  /* iOS-zoom-safe input size on mobile (≥16px). */
+  --dos-font-size-input-mobile: 1rem;
+
+  --dos-line-height-tight:    1.2;
+  --dos-line-height-snug:     1.35;
+  --dos-line-height-normal:   1.5;
+  --dos-line-height-relaxed:  1.65;
+
+  --dos-font-weight-regular:  400;
+  --dos-font-weight-medium:   500;
+  --dos-font-weight-semibold: 600;
+  --dos-font-weight-bold:     700;
+  --dos-font-weight-black:    800;
+
+  /* Letter spacing — used on caps labels + display heroes. */
+  --dos-letter-spacing-caps:    0.06em;
+  --dos-letter-spacing-tight:  -0.01em;
+  --dos-letter-spacing-display:-0.02em;
+
+  /* Tabular numerics for stat cards / metrics. Apply
+   * font-feature-settings: var(--dos-font-feature-tabular)
+   * to <code>, <span class='dos-num'>, etc. */
+  --dos-font-feature-tabular: 'tnum' 1, 'lnum' 1;
+  --dos-font-feature-display: 'cv11' 1, 'ss03' 1, 'liga' 1;
+}

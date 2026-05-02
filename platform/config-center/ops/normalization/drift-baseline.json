@@ -1,0 +1,16 @@
+{
+  "tablesTotal": 2154,
+  "tablesWithSmells": 2088,
+  "bySmellCategory": {
+    "jsonb-column": 1781,
+    "denorm-counter": 44,
+    "missing-fk-on": 1459,
+    "layer-conflict": 0,
+    "cross-schema-duplicate": 41,
+    "intra-schema-duplicate": 260,
+    "orphan-constraint": 1,
+    "no-primary-key": 13,
+    "redundant-tenant-id-in-tenant-schema": 1790,
+    "altered-without-create-found": 10
+  }
+}

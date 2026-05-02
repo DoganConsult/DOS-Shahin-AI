@@ -1,0 +1,1877 @@
+{
+  "generatedAt": "2026-04-20T22:41:14.938Z",
+  "issues": [
+    {
+      "kind": "cross-schema-duplicate",
+      "table": "access_profiles",
+      "severity": "warn",
+      "detail": "schemas: dos,public"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "action_categories",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "action_kpis",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "action_logs",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "action_settings",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "action_versions",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "cross-schema-duplicate",
+      "table": "ai_model_registry",
+      "severity": "warn",
+      "detail": "schemas: __TENANT_SCHEMA__,dos"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "ai_model_registry",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "analytics_benchmarks",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "analytics_dashboards",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "analytics_data_sources",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "analytics_kpis",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "analytics_reports",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "analytics_settings",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "analytics_snapshots",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "analytics_widgets",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "altered-without-create",
+      "table": "approval_matrix_rules",
+      "severity": "warn",
+      "detail": "only ALTER sites: ops/migrations/023_fix_template_tables.sql"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "asset_kpis",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "asset_settings",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "asset_versions",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "cross-schema-duplicate",
+      "table": "assets",
+      "severity": "warn",
+      "detail": "schemas: __TENANT_SCHEMA__,dos"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "attestation_campaigns",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "attestation_kpis",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "attestation_logs",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "attestation_settings",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "attestation_templates",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "attestation_versions",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "audit_engagements",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "cross-schema-duplicate",
+      "table": "audit_findings",
+      "severity": "warn",
+      "detail": "schemas: __TENANT_SCHEMA__,dos"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "audit_findings",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "cross-schema-duplicate",
+      "table": "audit_plans",
+      "severity": "warn",
+      "detail": "schemas: __TENANT_SCHEMA__,dos"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "audit_plans",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "audit_risk_assessments",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "audit_schedules",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "audit_settings",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "altered-without-create",
+      "table": "audit_trail_global",
+      "severity": "warn",
+      "detail": "only ALTER sites: ops/migrations/201_hybrid_layer_conflict_renames.sql"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "audit_universe",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:3"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "audit_versions",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "bcp_dependencies",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "bcp_exercises",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "cross-schema-duplicate",
+      "table": "bcp_plans",
+      "severity": "warn",
+      "detail": "schemas: __TENANT_SCHEMA__,dos"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "bcp_plans",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "bcp_scenarios",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "bcp_settings",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "bcp_versions",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "benchmarks_kpis",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "benchmarks_logs",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "benchmarks_settings",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "benchmarks_versions",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "compliance_assessments",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "compliance_attestations",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "compliance_evidence_links",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "compliance_exceptions",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "cross-schema-duplicate",
+      "table": "compliance_frameworks",
+      "severity": "warn",
+      "detail": "schemas: __TENANT_SCHEMA__,dos"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "compliance_gaps",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "compliance_obligations",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "compliance_programs",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "compliance_regulatory_changes",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "compliance_requirements",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "compliance_settings",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "compliance_versions",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "cross-schema-duplicate",
+      "table": "config_runtime_overrides",
+      "severity": "warn",
+      "detail": "schemas: dos,public"
+    },
+    {
+      "kind": "cross-schema-duplicate",
+      "table": "controls",
+      "severity": "warn",
+      "detail": "schemas: __TENANT_SCHEMA__,dos"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "controls",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "controls_automation",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "controls_kpis",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "controls_library",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "controls_mapping",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "controls_monitoring",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "controls_settings",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "controls_testing",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "controls_versions",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "dashboard_configs",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "dashboard_layouts",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "dashboard_settings",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "dashboard_sharing",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "dashboard_versions",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "cross-schema-duplicate",
+      "table": "dashboards",
+      "severity": "warn",
+      "detail": "schemas: __TENANT_SCHEMA__,dos"
+    },
+    {
+      "kind": "cross-schema-duplicate",
+      "table": "departments",
+      "severity": "warn",
+      "detail": "schemas: __TENANT_SCHEMA__,dos"
+    },
+    {
+      "kind": "cross-schema-duplicate",
+      "table": "dora_assessments",
+      "severity": "warn",
+      "detail": "schemas: __TENANT_SCHEMA__,dos"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "dora_kpis",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "dora_settings",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "dora_versions",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "evidence_freshness",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "evidence_items",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "evidence_links",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "evidence_requests",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:3"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "evidence_reviews",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "evidence_schedules",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "evidence_settings",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "evidence_versions",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "exception_approvals",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "exception_categories",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "exception_kpis",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "exception_settings",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "exception_versions",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "executive_kpis",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "executive_logs",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "executive_settings",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "executive_versions",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "cross-schema-duplicate",
+      "table": "feature_flags",
+      "severity": "warn",
+      "detail": "schemas: __TENANT_SCHEMA__,dos"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "feature_flags",
+      "severity": "warn",
+      "detail": "dos:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "fitch_assessments",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "fitch_kpis",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "fitch_logs",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "fitch_settings",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "fitch_versions",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "cross-schema-duplicate",
+      "table": "functional_roles",
+      "severity": "warn",
+      "detail": "schemas: __TENANT_SCHEMA__,dos"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "governance_ai_kpis",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "governance_ai_logs",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "governance_ai_settings",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "governance_ai_versions",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "governance_change_log",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "governance_charters",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "governance_committees",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "governance_compliance_map",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "governance_delegations",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "governance_escalation_rules",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "governance_health_scores",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "governance_kpis",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "governance_mandates",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "governance_meetings",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "governance_os_kpis",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "governance_os_logs",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "governance_os_settings",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "governance_os_versions",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "governance_settings",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "governance_tasks",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "governance_versions",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "grc_query_kpis",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "grc_query_logs",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "grc_query_settings",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "grc_query_versions",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "inbox_filters",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "cross-schema-duplicate",
+      "table": "inbox_items",
+      "severity": "warn",
+      "detail": "schemas: __TENANT_SCHEMA__,dos"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "inbox_settings",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "incident_categories",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:3"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "incident_investigations",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "incident_lessons",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "incident_settings",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "incident_versions",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "cross-schema-duplicate",
+      "table": "incidents",
+      "severity": "warn",
+      "detail": "schemas: __TENANT_SCHEMA__,dos"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "incidents",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "integrations_api_keys",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "integrations_connectors",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "integrations_field_mappings",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "integrations_settings",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "integrations_versions",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "integrations_webhooks",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "issues_kpis",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "issues_settings",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "issues_versions",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "cross-schema-duplicate",
+      "table": "job_registry",
+      "severity": "warn",
+      "detail": "schemas: dos,public"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "journey_kpis",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "journey_settings",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "journey_versions",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "knowledge_ai_suggestions",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "knowledge_articles",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:3"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "knowledge_categories",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:3"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "knowledge_comments",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "knowledge_feedback",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "knowledge_settings",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "knowledge_tags",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "knowledge_versions",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "altered-without-create",
+      "table": "kri_data_points",
+      "severity": "warn",
+      "detail": "only ALTER sites: ops/migrations/tenant/109_risk_production_readiness.sql, ops/migrations/tenant/110_key_risk_indicators.sql"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "ksa_regulatory_kpis",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "ksa_regulatory_settings",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "ksa_regulatory_versions",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "local_knowledge_kpis",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "local_knowledge_settings",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "local_knowledge_versions",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "cross-schema-duplicate",
+      "table": "login_attempts",
+      "severity": "warn",
+      "detail": "schemas: dos,public"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "login_attempts",
+      "severity": "warn",
+      "detail": "dos:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "lookup_cities",
+      "severity": "warn",
+      "detail": "public:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "lookup_countries",
+      "severity": "warn",
+      "detail": "public:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "lookup_employee_ranges",
+      "severity": "warn",
+      "detail": "public:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "lookup_frameworks",
+      "severity": "warn",
+      "detail": "public:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "lookup_languages",
+      "severity": "warn",
+      "detail": "public:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "lookup_org_types",
+      "severity": "warn",
+      "detail": "public:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "lookup_sectors",
+      "severity": "warn",
+      "detail": "public:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "lookup_timezones",
+      "severity": "warn",
+      "detail": "public:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "mcp_logs",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "mobile_kpis",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "mobile_logs",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "mobile_settings",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "mobile_versions",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "module_registry",
+      "severity": "warn",
+      "detail": "dos:2"
+    },
+    {
+      "kind": "cross-schema-duplicate",
+      "table": "navigation_registry",
+      "severity": "warn",
+      "detail": "schemas: __TENANT_SCHEMA__,dos"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "notification_delivery_log",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "notification_digests",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "notification_preferences",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "notification_rules",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "notification_settings",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "notification_subscriptions",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "notification_templates",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "notification_versions",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "cross-schema-duplicate",
+      "table": "notifications",
+      "severity": "warn",
+      "detail": "schemas: __TENANT_SCHEMA__,dos"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "onboarding_framework_rules",
+      "severity": "warn",
+      "detail": "public:2"
+    },
+    {
+      "kind": "cross-schema-duplicate",
+      "table": "onboarding_journeys",
+      "severity": "warn",
+      "detail": "schemas: __TENANT_SCHEMA__,dos"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "onboarding_module_rules",
+      "severity": "warn",
+      "detail": "public:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "onboarding_persona_rules",
+      "severity": "warn",
+      "detail": "public:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "onboarding_regulator_rules",
+      "severity": "warn",
+      "detail": "public:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "operating_cockpit_alerts",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "operating_cockpit_kpis",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "operating_cockpit_logs",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "operating_cockpit_metrics",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "operating_cockpit_settings",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "operating_cockpit_versions",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "platform_operation_config",
+      "severity": "warn",
+      "detail": "dos:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "playbooks_kpis",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "playbooks_logs",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "playbooks_settings",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "playbooks_versions",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "cross-schema-duplicate",
+      "table": "policies",
+      "severity": "warn",
+      "detail": "schemas: __TENANT_SCHEMA__,dos"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "policy_acknowledgements",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "policy_approvals",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "policy_exceptions",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "policy_review_cycles",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "policy_settings",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "policy_versions",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "portals_kpis",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "portals_settings",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "portals_versions",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "cross-schema-duplicate",
+      "table": "privacy_assessments",
+      "severity": "warn",
+      "detail": "schemas: __TENANT_SCHEMA__,dos"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "privacy_consent_records",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "privacy_processing_activities",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "privacy_settings",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "privacy_versions",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "proactive_leadership_kpis",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "proactive_leadership_logs",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "proactive_leadership_settings",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "proactive_leadership_versions",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "cross-schema-duplicate",
+      "table": "product_registry",
+      "severity": "warn",
+      "detail": "schemas: dos,public"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "product_registry",
+      "severity": "warn",
+      "detail": "dos:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "qiyas_kpis",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "qiyas_settings",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "qiyas_versions",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "records_kpis",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "records_logs",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "records_settings",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "records_versions",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "cross-schema-duplicate",
+      "table": "remediation_actions",
+      "severity": "warn",
+      "detail": "schemas: __TENANT_SCHEMA__,dos"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "remediation_kpis",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "remediation_settings",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "remediation_tasks",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "remediation_versions",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "reporting_settings",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "reporting_templates",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "reporting_versions",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "altered-without-create",
+      "table": "risk_pair_reviews",
+      "severity": "warn",
+      "detail": "only ALTER sites: ops/migrations/tenant/109_risk_production_readiness.sql"
+    },
+    {
+      "kind": "altered-without-create",
+      "table": "risk_peer_reviews",
+      "severity": "warn",
+      "detail": "only ALTER sites: ops/migrations/tenant/109_risk_production_readiness.sql"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "risk_scenarios",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "risk_score_history",
+      "severity": "warn",
+      "detail": "public:4"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "risk_scoring_models",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:5"
+    },
+    {
+      "kind": "cross-schema-duplicate",
+      "table": "risks",
+      "severity": "warn",
+      "detail": "schemas: __TENANT_SCHEMA__,dos"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "risks",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "cross-schema-duplicate",
+      "table": "runtime_config",
+      "severity": "warn",
+      "detail": "schemas: dos,public"
+    },
+    {
+      "kind": "cross-schema-duplicate",
+      "table": "sessions",
+      "severity": "warn",
+      "detail": "schemas: dos,public"
+    },
+    {
+      "kind": "cross-schema-duplicate",
+      "table": "sod_rules",
+      "severity": "warn",
+      "detail": "schemas: dos,public"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "system_events",
+      "severity": "warn",
+      "detail": "dos:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "team_capacity",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "cross-schema-duplicate",
+      "table": "team_members",
+      "severity": "warn",
+      "detail": "schemas: __TENANT_SCHEMA__,dos"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "team_members",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:3"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "team_org_chart",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "cross-schema-duplicate",
+      "table": "team_raci_assignments",
+      "severity": "warn",
+      "detail": "schemas: __TENANT_SCHEMA__,dos"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "team_raci_assignments",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "team_settings",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "team_skills",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "team_versions",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "cross-schema-duplicate",
+      "table": "teams",
+      "severity": "warn",
+      "detail": "schemas: __TENANT_SCHEMA__,dos"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "teams",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "altered-without-create",
+      "table": "tenant_entitlement_profile",
+      "severity": "warn",
+      "detail": "only ALTER sites: ops/migrations/056_tenant_entitlement_profile_split_down.sql"
+    },
+    {
+      "kind": "orphan-constraint",
+      "table": "tenant_migrations",
+      "severity": "warn",
+      "detail": "constraint PRIMARY KEY references column checksum not present in table"
+    },
+    {
+      "kind": "altered-without-create",
+      "table": "tenant_module_entitlement_registry",
+      "severity": "warn",
+      "detail": "only ALTER sites: ops/migrations/201_hybrid_layer_conflict_renames.sql"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "tenant_product_activation",
+      "severity": "warn",
+      "detail": "dos:2"
+    },
+    {
+      "kind": "cross-schema-duplicate",
+      "table": "tenants",
+      "severity": "warn",
+      "detail": "schemas: dos,public"
+    },
+    {
+      "kind": "cross-schema-duplicate",
+      "table": "training_courses",
+      "severity": "warn",
+      "detail": "schemas: __TENANT_SCHEMA__,dos"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "training_kpis",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "training_settings",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "training_versions",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "cross-schema-duplicate",
+      "table": "user_access_profiles",
+      "severity": "warn",
+      "detail": "schemas: dos,public"
+    },
+    {
+      "kind": "cross-schema-duplicate",
+      "table": "user_mfa",
+      "severity": "warn",
+      "detail": "schemas: dos,public"
+    },
+    {
+      "kind": "cross-schema-duplicate",
+      "table": "user_role_assignments",
+      "severity": "warn",
+      "detail": "schemas: __TENANT_SCHEMA__,dos"
+    },
+    {
+      "kind": "cross-schema-duplicate",
+      "table": "users",
+      "severity": "warn",
+      "detail": "schemas: dos,public"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "vendor_assessments",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "vendor_contracts",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "vendor_fourth_party",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "vendor_kpis",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "vendor_monitoring",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "vendor_profiles",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "vendor_settings",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "vendor_sla_tracking",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "vendor_versions",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "widgets_kpis",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "widgets_logs",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "widgets_settings",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "widgets_versions",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "workflow_approvals",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "altered-without-create",
+      "table": "workflow_approvals",
+      "severity": "warn",
+      "detail": "only ALTER sites: ops/migrations/tenant/022_reconcile_workflow_tables.sql, modules/workflow/source/backend/workflow/migrations/001_workflow_tables.sql"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "workflow_escalations",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "workflow_instances",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "altered-without-create",
+      "table": "workflow_instances",
+      "severity": "warn",
+      "detail": "only ALTER sites: ops/migrations/tenant/022_reconcile_workflow_tables.sql, modules/workflow/source/backend/workflow/migrations/001_workflow_tables.sql"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "workflow_settings",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "cross-schema-duplicate",
+      "table": "workflow_sla_configs",
+      "severity": "warn",
+      "detail": "schemas: __TENANT_SCHEMA__,dos"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "workflow_steps",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "altered-without-create",
+      "table": "workflow_tasks",
+      "severity": "warn",
+      "detail": "only ALTER sites: ops/migrations/tenant/022_reconcile_workflow_tables.sql"
+    },
+    {
+      "kind": "cross-schema-duplicate",
+      "table": "workflow_templates",
+      "severity": "warn",
+      "detail": "schemas: __TENANT_SCHEMA__,dos"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "workflow_templates",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "workflow_transitions",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "workflow_versions",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "intra-schema-duplicate",
+      "table": "workflows",
+      "severity": "warn",
+      "detail": "__TENANT_SCHEMA__:2"
+    },
+    {
+      "kind": "cross-schema-duplicate",
+      "table": "workspaces",
+      "severity": "warn",
+      "detail": "schemas: __TENANT_SCHEMA__,dos"
+    }
+  ]
+}

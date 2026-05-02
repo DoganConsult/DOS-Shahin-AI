@@ -1,0 +1,29 @@
+{
+  "name": "@dos/sdk-compliance",
+  "version": "0.1.0",
+  "description": "TypeScript SDK for the DOS Compliance API. Generated from modules/compliance/openapi.yaml.",
+  "private": false,
+  "license": "LicenseRef-DOS-AIO-Proprietary",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

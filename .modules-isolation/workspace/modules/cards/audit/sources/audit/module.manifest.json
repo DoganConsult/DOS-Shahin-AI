@@ -1,0 +1,77 @@
+{
+  "moduleCode": "audit",
+  "displayName": "Audit",
+  "ownerTeam": "product-shahin-ai",
+  "productCode": "shahin-ai",
+  "ownership": "module-owned",
+  "version": "1.0.0",
+  "status": "active",
+  "platformDependencies": [
+    "identity",
+    "tenancy",
+    "workflow",
+    "permissions"
+  ],
+  "seedProviders": [
+    "products/shahin/seeds/audit-seed"
+  ],
+  "tenantDefaults": [
+    "audit_retention_years",
+    "audit_auto_schedule_enabled"
+  ],
+  "requiredReferenceData": [
+    "finding_severity_levels",
+    "audit_engagement_types"
+  ],
+  "currentSources": [
+    "/home/Dr-Dogan-AGRC-OS/backend/src/modules/audit"
+  ],
+  "targetPath": "modules/audit",
+  "futureService": "evidence-audit-reporting-service",
+  "frontendSources": [
+    "/home/Dr-Dogan-AGRC-OS/frontend/src/app/platform-manifests/audit.module.routes.ts"
+  ],
+  "ownedTables": [
+    "audit_trail",
+    "audit_audits",
+    "audit_engagements",
+    "findings",
+    "audit_observations",
+    "audit_risk_assessment",
+    "audit_findings",
+    "audit_schedules"
+  ],
+  "referencedTables": [
+    "tenants",
+    "users",
+    "risks",
+    "controls",
+    "compliance_gaps",
+    "workflow_instances"
+  ],
+  "events": {
+    "publishes": [
+      "audit.finding_created",
+      "audit.finding_issued",
+      "audit.status_changed",
+      "audit.remediation_due",
+      "audit.plan_approved",
+      "audit.engagement_started",
+      "audit.engagement_completed"
+    ],
+    "subscribes": [
+      "bcp.rto_rpo_drift",
+      "bcp.maturity_regression",
+      "controls.status_changed",
+      "incident.classified",
+      "risk.residual_high",
+      "risk.appetite_breached",
+      "vendor.assessment_due",
+      "foundation.role.assigned",
+      "foundation.role.unassigned"
+    ]
+  },
+  "routeBases": [
+    "/api/audit"
+  ]
+}

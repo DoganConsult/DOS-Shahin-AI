@@ -1,0 +1,311 @@
+<div class="wh-page" [attr.dir]="dir()">
+
+  <!-- ══ Page Header ══ -->
+  <app-page-header
+    [titleEn]="tenantContext()?.orgName || 'Workspace Home'"
+    [titleAr]="tenantContext()?.orgName || 'الرئيسية'"
+    [subtitleEn]="(tenantContext()?.orgName || 'GRC') + (tenantContext()?.frameworkCount ? ' · ' + tenantContext()!.frameworkCount + ' frameworks' : '')"
+    [subtitleAr]="(tenantContext()?.orgName || 'الحوكمة') + (tenantContext()?.frameworkCount ? ' · ' + tenantContext()!.frameworkCount + ' أطر' : '')"
+    icon="home"
+    [breadcrumbs]="[i18n.translate('workspaceHome.home')]"
+    [actions]="headerActions"
+    [isAr]="i18n.isAr()"
+    [dir]="dir()"
+    (actionClick)="onHeaderAction($event)" />
+
+  <!-- ══ Home-only shortcuts strip ══ -->
+  <app-hub-connections-strip hubKey="workspace" />
+
+  <!-- ══ Body ══ -->
+  <div class="wh-body">
+
+    <!-- Error state -->
+    @if (loadError() && !loading()) {
+      <app-empty-state
+        variant="error"
+        [title]="i18n.translate('workspaceHome.failedToLoad')"
+        [description]="i18n.translate('workspaceHome.checkYourConnectionAndTryAgain')"
+        [actionLabel]="i18n.translate('workspaceHome.retry')"
+        [dir]="dir()"
+        (action)="refreshPage()" />
+    }
+
+    @if (!loadError()) {
+
+      <!-- Getting started banner (new workspace) -->
+      @if (showGettingStartedBanner()) {
+        <div class="wh-getting-started">
+          <div class="gs-left">
+            <svg cdsIcon="information" size="24" class="gs-icon"></svg>
+            <div class="gs-text">
+              <span class="gs-title">{{ i18n.translate('workspaceHome.getStartedWithYourGrcPlatform') }}</span>
+              <span class="gs-sub">{{ i18n.translate('workspaceHome.configureYourFrameworksControlsAndTeam') }}</span>
+            </div>
+          </div>
+          <div class="gs-actions">
+            <a [routerLink]="['/foundation/organization']" class="gs-btn gs-btn-primary">
+              {{ i18n.translate('workspaceHome.setUpOrg') }}
+            </a>
+            <a [routerLink]="['/compliance/frameworks']" class="gs-btn">
+              {{ i18n.translate('workspaceHome.addFramework') }}
+            </a>
+          </div>
+          <button type="button" class="gs-close" (click)="dismissGettingStarted()" [attr.aria-label]="i18n.translate('workspaceHome.dismiss')">
+            <svg cdsIcon="close" size="16"></svg>
+          </button>
+        </div>
+      }
+
+      <!-- ══ SECTION 0: Ignite Workspace ══ -->
+      <app-workspace-ignite-card [canIgnite]="canIgniteWorkspace()" />
+
+      <!-- ══ Module cards (config-driven, permission-filtered) ══ -->
+      <div class="wh-section">
+        <div class="wh-section-header">
+          <span class="wh-section-title">
+            <svg cdsIcon="dashboard" size="16" class="wh-section-icon" aria-hidden="true"></svg>
+            {{ i18n.translate('workspaceHome.modules') }}
+          </span>
+        </div>
+        <app-module-grid />
+      </div>
+
+      <!-- ══ SECTION 1: KPI Band (6 cards) ══ -->
+      @if (roleConfig().executiveSnapshot) {
+        <div class="wh-section">
+          <!-- Loading skeleton -->
+          @if (loading()) {
+            <div class="skeleton-kpi">
+              @for (i of [1,2,3,4,5,6]; track i) {
+                <cds-skeleton-placeholder></cds-skeleton-placeholder>
+              }
+            </div>
+          } @else if (kpis().length === 0) {
+            <app-empty-state
+              [title]="i18n.translate('workspaceHome.noDataYet')"
+              [description]="i18n.translate('workspaceHome.startByConfiguringFrameworksAndControls')"
+              [actionLabel]="i18n.translate('workspaceHome.frameworks')"
+              [dir]="dir()"
+              (action)="navigateTo('/compliance/frameworks')" />
+          } @else {
+            <app-kpi-card-grid
+              [cards]="kpis()"
+              [isAr]="i18n.isAr()"
+              (cardClick)="onKpiClick($event)" />
+          }
+        </div>
+      }
+
+      <!-- ══ SECTION 2: Next Actions (top 10) ══ -->
+      @if (roleConfig().actionCenter) {
+        <div class="wh-section">
+          <div class="wh-section-header">
+            <span class="wh-section-title">
+              <svg cdsIcon="lightning" size="16" class="wh-section-icon" aria-hidden="true"></svg>
+              {{ i18n.translate('workspaceHome.nextActions') }}
+              @if (nextActions().length > 0) {
+                <span class="wh-section-badge">{{ nextActions().length }}</span>
+              }
+            </span>
+            <a class="wh-section-link" [routerLink]="['/governance/actions']">
+              {{ i18n.translate('workspaceHome.viewAll') }}
+              <svg cdsIcon="chevron--right" size="12" class="wh-link-chevron" aria-hidden="true"></svg>
+            </a>
+          </div>
+
+          @if (loading()) {
+            <div class="skeleton-actions">
+              @for (i of [1,2,3,4]; track i) { <cds-skeleton-text [lines]="1"></cds-skeleton-text> }
+            </div>
+          } @else if (nextActions().length === 0) {
+            <app-empty-state
+              variant="success"
+              [title]="i18n.translate('workspaceHome.allClear')"
+              [description]="i18n.translate('workspaceHome.noOverdueOrUrgentActions')"
+              [dir]="dir()" />
+          } @else {
+            <div class="na-list">
+              @for (item of nextActions(); track item.id) {
+                <div class="na-item" [class]="actionPriorityClass(item.priority)" (click)="navigateTo(item.route)" role="button" tabindex="0" (keyup.enter)="navigateTo(item.route)">
+                  <svg [attr.cdsIcon]="actionIcon(item.type)" size="16" class="na-icon" aria-hidden="true"></svg>
+                  <span class="na-title">{{ item.title }}</span>
+                  <span class="na-type">{{ actionTypeLabel(item.type) }}</span>
+                  @if (item.dueDate) {
+                    <span class="na-date">{{ item.dueDate | appDate:'medium' }}</span>
+                  }
+                  <span class="na-priority-dot" [class]="'dot-' + item.priority" aria-hidden="true"></span>
+                  <svg cdsIcon="chevron--right" size="12" class="na-go" aria-hidden="true"></svg>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      }
+
+      <!-- ══ AI OS R2: AI Recommended Next Best Actions ══ -->
+      @if (roleConfig().nextSteps && aiNextBestActions().length > 0) {
+        <div class="wh-section">
+          <div class="wh-section-header">
+            <span class="wh-section-title">
+              <svg cdsIcon="machine-learning-model" size="16" class="wh-section-icon" aria-hidden="true"></svg>
+              {{ isAr() ? 'توصيات الذكاء الاصطناعي' : 'AI Recommended Actions' }}
+              <span class="wh-section-badge">{{ aiNextBestActions().length }}</span>
+            </span>
+            <a class="wh-section-link" [routerLink]="['/ai-recommendation-inbox']">
+              {{ isAr() ? 'عرض الكل' : 'View All' }}
+              <svg cdsIcon="chevron--right" size="12" class="wh-link-chevron" aria-hidden="true"></svg>
+            </a>
+          </div>
+          <div class="na-list">
+            @for (nba of aiNextBestActions(); track nba.id) {
+              <div class="na-item"
+                   [class]="'na-' + nba.priority"
+                   (click)="navigateTo(nba.route)"
+                   role="button" tabindex="0"
+                   (keyup.enter)="navigateTo(nba.route)">
+                <svg [attr.cdsIcon]="nba.type === 'process_task' ? 'lightning' : nba.type === 'ai_recommendation' ? 'idea' : nba.type === 'ai_alert' ? 'notification' : 'document'" size="16" class="na-icon" aria-hidden="true"></svg>
+                <span class="na-title">{{ nba.title }}</span>
+                <span class="na-type">{{ nba.source }}</span>
+                @if (nba.dueDate) {
+                  <span class="na-date">{{ nba.dueDate | appDate:'medium' }}</span>
+                }
+                <span class="na-priority-dot" [class]="'dot-' + nba.priority" aria-hidden="true"></span>
+                <svg cdsIcon="chevron--right" size="12" class="na-go" aria-hidden="true"></svg>
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- ══ SECTION 3: Module Progress (Framework Coverage) ══ -->
+      @if (roleConfig().programHealth) {
+        <div class="wh-section">
+          <div class="wh-section-header">
+            <span class="wh-section-title">
+              <svg cdsIcon="chart--line" size="16" class="wh-section-icon" aria-hidden="true"></svg>
+              {{ i18n.translate('workspaceHome.frameworkProgress') }}
+            </span>
+            <a class="wh-section-link" [routerLink]="['/compliance/frameworks']">
+              {{ i18n.translate('workspaceHome.manageFrameworks') }}
+              <svg cdsIcon="chevron--right" size="12" class="wh-link-chevron" aria-hidden="true"></svg>
+            </a>
+          </div>
+
+          @if (loading()) {
+            <div class="skeleton-fw">
+              @for (i of [1,2,3]; track i) { <cds-skeleton-text [lines]="2"></cds-skeleton-text> }
+            </div>
+          } @else if (complianceCoverage().length === 0) {
+            <app-empty-state
+              [title]="i18n.translate('workspaceHome.noFrameworksConfigured')"
+              [description]="i18n.translate('workspaceHome.addAFrameworkToStartTrackingCompliance')"
+              [actionLabel]="i18n.translate('workspaceHome.addFramework')"
+              [dir]="dir()"
+              (action)="navigateTo('/compliance/frameworks')" />
+          } @else {
+            @if (allFrameworksAtZero()) {
+              <cds-notification
+                [notificationObj]="{ type: 'warning', title: i18n.translate('workspaceHome.frameworksExistButNoControlsMappedYet'), message: '' }"
+                [showClose]="false">
+              </cds-notification>
+              <div class="fw-zero-actions">
+                <a [routerLink]="['/compliance/controls']" class="fw-zero-cta">{{ i18n.translate('workspaceHome.mapControls') }}</a>
+              </div>
+            }
+            <div class="fw-grid">
+              @for (fw of complianceCoverage(); track fw.frameworkId) {
+                <div class="fw-card" (click)="navigateTo('/compliance/frameworks')" role="button" tabindex="0" (keyup.enter)="navigateTo('/compliance/frameworks')">
+                  <div class="fw-card-header">
+                    <span class="fw-name">{{ fw.name }}</span>
+                    <span class="fw-pct" [class]="'pct-' + coverageSeverity(fw.percentage)">{{ fw.percentage }}%</span>
+                  </div>
+                  <cds-progress-bar [value]="fw.percentage" [max]="100" size="sm"></cds-progress-bar>
+                  <cds-tag [type]="fw.percentage === 0 ? 'cool-gray' : fw.percentage >= 70 ? 'green' : 'blue'" size="sm">
+                    {{ fw.percentage === 0 ? (i18n.translate('workspaceHome.notStarted')) : fw.percentage >= 70 ? (i18n.translate('workspaceHome.complete')) : (i18n.translate('workspaceHome.inProgress')) }}
+                  </cds-tag>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      }
+
+      <!-- ══ SECTION 4: Recent Activity ══ -->
+      @if (roleConfig().activity) {
+        <div class="wh-section">
+          <div class="wh-section-header">
+            <span class="wh-section-title">
+              <svg cdsIcon="recently-viewed" size="16" class="wh-section-icon" aria-hidden="true"></svg>
+              {{ i18n.translate('workspaceHome.recentActivity') }}
+            </span>
+            <select class="wh-activity-filter" [(ngModel)]="activityFilterValue" (ngModelChange)="onActivityFilterChange($event)"
+              [attr.aria-label]="i18n.translate('workspaceHome.filterActivity')">
+              <option value="">{{ i18n.translate('workspaceHome.all') }}</option>
+              <option value="risk">{{ i18n.translate('workspaceHome.risk') }}</option>
+              <option value="compliance">{{ i18n.translate('workspaceHome.compliance') }}</option>
+              <option value="policy">{{ i18n.translate('workspaceHome.policy') }}</option>
+              <option value="audit">{{ i18n.translate('workspaceHome.audit') }}</option>
+              <option value="evidence">{{ i18n.translate('workspaceHome.evidence') }}</option>
+              <option value="control">{{ i18n.translate('workspaceHome.control') }}</option>
+            </select>
+          </div>
+
+          @if (loading()) {
+            <cds-skeleton-text [lines]="5"></cds-skeleton-text>
+          } @else if (activityEntries().length === 0) {
+            <app-empty-state
+              [title]="i18n.translate('workspaceHome.noActivityYet')"
+              [description]="i18n.translate('workspaceHome.changesAcrossAllModulesWillAppearHere')"
+              [dir]="dir()" />
+          } @else {
+            <app-recent-activity-table
+              [rows]="activityEntries()"
+              [isAr]="i18n.isAr()" />
+            @if (activityCursor()) {
+              <div class="wh-load-more">
+                <button cdsButton="ghost" size="sm" (click)="loadMoreActivity()">
+                  <svg cdsIcon="chevron--down" size="16"></svg>
+                  {{ i18n.translate('workspaceHome.loadMore') }}
+                </button>
+              </div>
+            }
+          }
+        </div>
+      }
+
+    } <!-- end @if (!loadError()) -->
+
+  </div><!-- .wh-body -->
+
+  <!-- ══ Platform Map Modal (Carbon cds-modal) ══ -->
+  <cds-modal [open]="showPlatformMap" (overlaySelected)="showPlatformMap = false" size="lg">
+    <cds-modal-header [showCloseButton]="true" (closeSelect)="showPlatformMap = false">
+      <h3 cdsModalHeaderHeading>{{ i18n.translate('workspaceHome.platformMapAllPagesTools') }}</h3>
+    </cds-modal-header>
+    <section cdsModalContent>
+      <div class="pmap-grid">
+        @for (section of platformMapSections; track section.labelEn) {
+          <div class="pmap-section">
+            <div class="pmap-section-header">
+              <svg [attr.cdsIcon]="section.icon" size="16" class="pmap-section-icon"></svg>
+              <span>{{ i18n.localize(section.labelEn, section.labelAr) }}</span>
+            </div>
+            <div class="pmap-links">
+              @for (link of section.links; track link.route) {
+                <a class="pmap-link" [routerLink]="link.route" (click)="showPlatformMap = false">
+                  <svg [attr.cdsIcon]="link.icon" size="16" class="pmap-link-icon"></svg>
+                  <div class="pmap-link-body">
+                    <span class="pmap-link-title">{{ i18n.localize(link.labelEn, link.labelAr) }}</span>
+                    <span class="pmap-link-desc">{{ i18n.localize(link.descEn, link.descAr) }}</span>
+                  </div>
+                  <svg cdsIcon="chevron--right" size="12" class="pmap-go" aria-hidden="true"></svg>
+                </a>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </section>
+  </cds-modal>
+
+</div>

@@ -1,0 +1,4 @@
+
+> @dos/types@1.0.0 build /root/DOS-AIO/packages/dos-types
+> tsc -p tsconfig.build.json
+

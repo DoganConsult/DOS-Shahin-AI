@@ -1,0 +1,324 @@
+openapi: 3.1.0
+info:
+  title: DNOC Port — Public REST Contract
+  version: 1.0.0
+  description: |
+    Canonical wire contract for `DNOCPort` from `@dos/ports/dnoc`.
+    1:1 HTTP endpoints for the in-process port. Versioned via `/v1`.
+
+servers:
+  - url: '{baseUrl}/api/dnoc/port/v1'
+    variables:
+      baseUrl:
+        default: 'http://localhost:4003'
+
+components:
+  schemas:
+    DNOCMetric:
+      type: object
+      required: [name, kind, value]
+      properties:
+        name: { type: string }
+        kind: { type: string, enum: [counter, gauge, histogram] }
+        value: { type: number }
+        labels:
+          type: object
+          additionalProperties: { type: string }
+        timestamp: { type: string, format: date-time }
+
+    DNOCLogEntry:
+      type: object
+      required: [level, message, moduleCode]
+      properties:
+        level: { type: string, enum: [trace, debug, info, warn, error, fatal] }
+        message: { type: string }
+        moduleCode: { type: string }
+        tenantId: { type: string }
+        correlationId: { type: string }
+        attributes:
+          type: object
+          additionalProperties: true
+
+    DNOCTraceSpan:
+      type: object
+      required: [traceId, spanId, name, startedAt, endedAt]
+      properties:
+        traceId: { type: string }
+        spanId: { type: string }
+        parentSpanId: { type: string }
+        name: { type: string }
+        startedAt: { type: string, format: date-time }
+        endedAt: { type: string, format: date-time }
+        attributes:
+          type: object
+          additionalProperties: true
+
+    DNOCRouteDescriptor:
+      type: object
+      required: [moduleCode, serviceCode, method, path, authRequired]
+      properties:
+        moduleCode: { type: string }
+        serviceCode: { type: string }
+        method: { type: string, enum: [GET, POST, PUT, PATCH, DELETE] }
+        path: { type: string }
+        authRequired: { type: boolean }
+        rateLimit:
+          type: object
+          properties:
+            rpm: { type: integer, minimum: 1 }
+
+    Error:
+      type: object
+      required: [code, message]
+      properties:
+        code: { type: string }
+        message: { type: string }
+        details:
+          type: object
+          additionalProperties: true
+
+paths:
+  /metrics:
+    post:
+      operationId: recordMetric
+      summary: 'DNOCPort.recordMetric(metric)'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/DNOCMetric' }
+      responses:
+        '202':
+          description: Metric accepted (buffered, fire-and-forget)
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [accepted]
+                properties:
+                  accepted: { type: boolean }
+
+  /logs:
+    post:
+      operationId: emitLog
+      summary: 'DNOCPort.emitLog(entry)'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/DNOCLogEntry' }
+      responses:
+        '202':
+          description: Log entry accepted
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [accepted]
+                properties:
+                  accepted: { type: boolean }
+
+  /spans:
+    post:
+      operationId: emitSpan
+      summary: 'DNOCPort.emitSpan(span)'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/DNOCTraceSpan' }
+      responses:
+        '202':
+          description: Span accepted
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [accepted]
+                properties:
+                  accepted: { type: boolean }
+
+  /routes:
+    post:
+      operationId: registerRoute
+      summary: 'DNOCPort.registerRoute(route)'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/DNOCRouteDescriptor' }
+      responses:
+        '202':
+          description: Route registered (idempotent — safe to retry)
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [accepted]
+                properties:
+                  accepted: { type: boolean }
+
+  /metrics-query:
+    get:
+      operationId: listMetrics
+      summary: Recent samples for a named metric.
+      parameters:
+        - in: query
+          name: name
+          required: true
+          schema: { type: string }
+        - in: query
+          name: limit
+          schema: { type: integer, minimum: 1, maximum: 500, default: 50 }
+      responses:
+        '200':
+          description: Samples
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [name, count, samples]
+                properties:
+                  name: { type: string }
+                  count: { type: integer }
+                  samples:
+                    type: array
+                    items: { $ref: '#/components/schemas/DNOCMetric' }
+
+  /metrics/{name}/aggregate:
+    get:
+      operationId: aggregateMetric
+      summary: Aggregate (min/max/avg/p50/p95/p99) over recent samples.
+      parameters:
+        - in: path
+          name: name
+          required: true
+          schema: { type: string }
+        - in: query
+          name: limit
+          schema: { type: integer, minimum: 1, maximum: 5000, default: 1000 }
+      responses:
+        '200':
+          description: Aggregate
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [name, count]
+                properties:
+                  name: { type: string }
+                  count: { type: integer }
+                  aggregate:
+                    type: object
+                    properties:
+                      min: { type: number }
+                      max: { type: number }
+                      avg: { type: number }
+                      p50: { type: number }
+                      p95: { type: number }
+                      p99: { type: number }
+
+  /traces/{traceId}:
+    get:
+      operationId: listByTraceId
+      summary: All spans of a trace (start-time order).
+      parameters:
+        - in: path
+          name: traceId
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Spans
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [traceId, spanCount, spans]
+                properties:
+                  traceId: { type: string }
+                  spanCount: { type: integer }
+                  spans:
+                    type: array
+                    items: { $ref: '#/components/schemas/DNOCTraceSpan' }
+
+  /routes-query:
+    get:
+      operationId: listActiveRoutes
+      summary: Active routes a service has registered.
+      parameters:
+        - in: query
+          name: serviceCode
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Routes
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [serviceCode, count, routes]
+                properties:
+                  serviceCode: { type: string }
+                  count: { type: integer }
+                  routes:
+                    type: array
+                    items: { $ref: '#/components/schemas/DNOCRouteDescriptor' }
+
+  /health/{serviceCode}/report:
+    post:
+      operationId: reportHealth
+      summary: Self-report the current health status of a service.
+      parameters:
+        - in: path
+          name: serviceCode
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status]
+              properties:
+                status:
+                  type: string
+                  enum: [healthy, degraded, unhealthy, unknown]
+                details:
+                  type: object
+                  additionalProperties: true
+      responses:
+        '202':
+          description: Health sample recorded
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [serviceCode, status, accepted]
+                properties:
+                  serviceCode: { type: string }
+                  status: { type: string }
+                  accepted: { type: boolean }
+
+  /health/{serviceCode}:
+    get:
+      operationId: getHealth
+      summary: 'DNOCPort.getHealth(serviceCode)'
+      parameters:
+        - in: path
+          name: serviceCode
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Latest health status
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [serviceCode, status]
+                properties:
+                  serviceCode: { type: string }
+                  status: { type: string, enum: [healthy, degraded, unhealthy, unknown] }

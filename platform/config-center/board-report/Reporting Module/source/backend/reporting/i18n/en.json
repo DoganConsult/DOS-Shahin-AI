@@ -1,0 +1,21 @@
+{
+  "reporting.title": "Reporting",
+  "reporting.dashboard": "Reports Dashboard",
+  "reporting.library": "Report Library",
+  "reporting.templates": "Report Templates",
+  "reporting.scheduled": "Scheduled Reports",
+  "reporting.generator": "Report Generator",
+  "reporting.distribution": "Distribution Lists",
+  "reporting.regulatory": "Regulatory Reports",
+  "reporting.diagnostics": "Diagnostics",
+  "reporting.admin": "Reporting Admin",
+  "reporting.empty.title": "No reports generated",
+  "reporting.empty.description": "Create your first report template to begin generating compliance and governance reports.",
+  "reporting.loading": "Loading reports...",
+  "reporting.error.title": "Failed to load reports",
+  "reporting.error.retry": "Retry",
+  "reporting.create": "Create Report",
+  "reporting.generate": "Generate",
+  "reporting.schedule": "Schedule",
+  "reporting.export": "Export"
+}

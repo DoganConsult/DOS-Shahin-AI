@@ -1,0 +1,14 @@
+{
+  "executive.title": "القيادة التنفيذية",
+  "executive.dashboard": "لوحة القيادة التنفيذية",
+  "executive.briefs": "تقارير مجلس الإدارة",
+  "executive.objectives": "الأهداف الاستراتيجية",
+  "executive.appetite": "حد المخاطر",
+  "executive.empty.title": "لا توجد بيانات تنفيذية",
+  "executive.empty.description": "أنشئ أول تقرير تنفيذي للبدء.",
+  "executive.loading": "جاري تحميل البيانات التنفيذية...",
+  "executive.error.title": "فشل تحميل البيانات التنفيذية",
+  "executive.error.retry": "إعادة المحاولة",
+  "executive.create": "إنشاء تقرير",
+  "executive.diagnostics": "التشخيصات"
+}

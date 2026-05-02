@@ -1,0 +1,13 @@
+@dos/platform-core        -> ./modules/packages/dos-platform-core/package.json
+@dos/db                   -> ./modules/packages/dos-db/package.json
+@dos/types                -> ./modules/packages/dos-types/package.json
+@dos/contracts            -> ./modules/packages/dos-contracts/package.json
+@dos/ports                -> ./modules/packages/ports/package.json
+@dos/event-backbone       -> ./modules/packages/dos-event-backbone/package.json
+@dos/service-client       -> ./modules/packages/dos-service-client/package.json
+@dos/service-bootstrap    -> ./modules/packages/dos-service-bootstrap/package.json
+@dos/runtime-config       -> ./modules/packages/dos-runtime-config/package.json
+@dos/dauth-shared         -> ./platform/dauth/packages/shared/package.json
+@dos/ui-system            -> ./platform/ui-system/dos-ui-system/package.json
+@dos/ai-gateway           -> ./platform/ai/packages/ai-gateway/package.json
+@dos/sdk-compliance       -> ./modules/compliance/sdk/typescript/package.json

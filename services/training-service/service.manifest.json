@@ -1,0 +1,23 @@
+{
+  "serviceCode": "training-service",
+  "displayName": "Training and Awareness Service",
+  "layer": "domain-service",
+  "ownerTeam": "product-shahin-ai",
+  "runtime": "node",
+  "dependsOn": [
+    "auth-service",
+    "tenant-service"
+  ],
+  "modules": [
+    "training",
+    "packs"
+  ],
+  "exposes": {
+    "apiBase": "/api/training",
+    "events": [
+      "training.assigned",
+      "training.completed",
+      "campaign.launched"
+    ]
+  }
+}

@@ -1,0 +1,4 @@
+
+> @dos/risk-incident-service@0.1.0 build /root/DOS-AIO/services/risk-incident-service
+> tsc -p tsconfig.json
+

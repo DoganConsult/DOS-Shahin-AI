@@ -1,0 +1,11 @@
+{
+  "grc-query.title": "GrcQuery",
+  "grc-query.dashboard": "لوحة GrcQuery",
+  "grc-query.empty.title": "لا توجد سجلات",
+  "grc-query.empty.description": "أنشئ أول سجل grc-query للبدء.",
+  "grc-query.loading": "جاري تحميل بيانات grc-query...",
+  "grc-query.error.title": "فشل تحميل البيانات",
+  "grc-query.error.retry": "إعادة المحاولة",
+  "grc-query.create": "إنشاء جديد",
+  "grc-query.diagnostics": "التشخيصات"
+}

@@ -1,0 +1,12 @@
+{
+  "module": "governance",
+  "tier": "module",
+  "loadChildren": "modules/cards/governance/sources/governance.module#GovernanceModule",
+  "routes": [
+    { "path": "governance",           "view_kind": "list",      "required_permission": "governance.record.read" },
+    { "path": "governance/dashboard", "view_kind": "dashboard", "required_permission": "governance.record.read" },
+    { "path": "governance/new",       "view_kind": "form",      "required_permission": "governance.record.write" },
+    { "path": "governance/:id",       "view_kind": "detail",    "required_permission": "governance.record.read" },
+    { "path": "governance/settings",  "view_kind": "settings",  "required_permission": "governance.record.configure" }
+  ]
+}

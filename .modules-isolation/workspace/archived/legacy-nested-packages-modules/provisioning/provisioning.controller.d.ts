@@ -1,0 +1,10 @@
+import { Response } from 'express';
+import { AuthenticatedRequest } from '../ports/express.port';
+export declare function approveOnboarding(req: AuthenticatedRequest, res: Response): Promise<void>;
+export declare function provisionWorkspace(req: AuthenticatedRequest, res: Response): Promise<void>;
+export declare function getProvisioningJob(req: AuthenticatedRequest, res: Response): Promise<void>;
+export declare function getProvisioningSteps(req: AuthenticatedRequest, res: Response): Promise<void>;
+export declare function getProvisioningEvents(req: AuthenticatedRequest, res: Response): Promise<void>;
+export declare function retryProvisioningJob(req: AuthenticatedRequest, res: Response): Promise<void>;
+export declare function cancelProvisioningJob(req: AuthenticatedRequest, res: Response): Promise<void>;
+export declare function getTemporalStatus(req: AuthenticatedRequest, res: Response): Promise<void>;

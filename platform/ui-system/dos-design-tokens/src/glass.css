@@ -1,0 +1,64 @@
+/* DOS Platform — Glass / Backdrop Tokens (frosted surfaces).
+ *
+ * Glass surfaces are a frame-level concern only — apply via the
+ * `<dos-widget-frame variant="glass">` component, never directly on a
+ * Carbon primitive (Carbon's contrast tokens assume opaque backplates).
+ *
+ * Three blur strengths:
+ *   sm  →  navbar/floating chip (8px)
+ *   md  →  card / hero overlay (16px)
+ *   lg  →  modal / sheet / drawer (24px)
+ *
+ * Each blur ships with a tint (light/dark) and a hairline border for edge
+ * definition. Reduced motion / older browsers fall back to opaque.
+ */
+:root {
+  /* ── Blur strengths ────────────────────────────────────────────── */
+  --dos-glass-blur-sm: 8px;
+  --dos-glass-blur-md: 16px;
+  --dos-glass-blur-lg: 24px;
+
+  /* ── Saturation lift (compensates for blur desaturation) ───────── */
+  --dos-glass-saturate: 1.4;
+
+  /* ── Tint (light theme) ────────────────────────────────────────── */
+  --dos-glass-tint:        rgba(255, 255, 255, 0.62);
+  --dos-glass-tint-strong: rgba(255, 255, 255, 0.82);
+  --dos-glass-tint-muted:  rgba(246, 247, 249, 0.56);
+
+  /* ── Edge (hairline border on glass surfaces) ──────────────────── */
+  --dos-glass-edge:        rgba(255, 255, 255, 0.55);
+  --dos-glass-edge-strong: rgba(255, 255, 255, 0.78);
+
+  /* ── Composed backdrop (use as `backdrop-filter` value) ────────── */
+  --dos-glass-backdrop-sm: blur(var(--dos-glass-blur-sm)) saturate(var(--dos-glass-saturate));
+  --dos-glass-backdrop-md: blur(var(--dos-glass-blur-md)) saturate(var(--dos-glass-saturate));
+  --dos-glass-backdrop-lg: blur(var(--dos-glass-blur-lg)) saturate(var(--dos-glass-saturate));
+
+  /* ── Rim light (subtle inner highlight on glass cards) ─────────── */
+  --dos-glass-rim:
+    inset 0 1px 0 rgba(255, 255, 255, 0.62),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+}
+
+[data-theme='dark'] {
+  --dos-glass-tint:        rgba(15, 22, 35, 0.58);
+  --dos-glass-tint-strong: rgba(15, 22, 35, 0.82);
+  --dos-glass-tint-muted:  rgba(10, 17, 30, 0.50);
+
+  --dos-glass-edge:        rgba(255, 255, 255, 0.08);
+  --dos-glass-edge-strong: rgba(255, 255, 255, 0.14);
+
+  --dos-glass-rim:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+/* ── Fallback (browsers without backdrop-filter) ─────────────────── */
+@supports not (backdrop-filter: blur(1px)) {
+  :root {
+    --dos-glass-tint:        var(--dos-color-surface);
+    --dos-glass-tint-strong: var(--dos-color-surface);
+    --dos-glass-tint-muted:  var(--dos-color-surface-muted);
+  }
+}

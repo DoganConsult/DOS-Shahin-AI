@@ -1,0 +1,11 @@
+{
+  "platform-stats.title": "PlatformStats",
+  "platform-stats.dashboard": "لوحة PlatformStats",
+  "platform-stats.empty.title": "لا توجد سجلات",
+  "platform-stats.empty.description": "أنشئ أول سجل platform-stats للبدء.",
+  "platform-stats.loading": "جاري تحميل بيانات platform-stats...",
+  "platform-stats.error.title": "فشل تحميل البيانات",
+  "platform-stats.error.retry": "إعادة المحاولة",
+  "platform-stats.create": "إنشاء جديد",
+  "platform-stats.diagnostics": "التشخيصات"
+}

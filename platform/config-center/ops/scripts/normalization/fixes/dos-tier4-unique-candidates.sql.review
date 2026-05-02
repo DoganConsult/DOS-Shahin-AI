@@ -1,0 +1,543 @@
+-- TIER 4 — UNIQUE constraint candidates (BCNF) for schema dos
+-- Generated 2026-04-30T03:47:41.254Z
+--
+-- REVIEW BEFORE APPLYING. Each statement is commented out because
+-- adding UNIQUE may fail on existing duplicate data. For each row,
+-- run the SELECT first to confirm zero duplicates, then uncomment.
+
+-- access_profiles.profile_code
+-- 1) check duplicates:
+--    SELECT "profile_code", count(*) FROM "dos"."access_profiles"
+--      GROUP BY "profile_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."access_profiles"
+--      ADD CONSTRAINT "uq_access_profiles_profile_code" UNIQUE ("profile_code");
+
+-- agent_recommendations.module_code
+-- 1) check duplicates:
+--    SELECT "module_code", count(*) FROM "dos"."agent_recommendations"
+--      GROUP BY "module_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."agent_recommendations"
+--      ADD CONSTRAINT "uq_agent_recommendations_module_code" UNIQUE ("module_code");
+
+-- agent_runs.module_code
+-- 1) check duplicates:
+--    SELECT "module_code", count(*) FROM "dos"."agent_runs"
+--      GROUP BY "module_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."agent_runs"
+--      ADD CONSTRAINT "uq_agent_runs_module_code" UNIQUE ("module_code");
+
+-- ai_agent_registry.model_code
+-- 1) check duplicates:
+--    SELECT "model_code", count(*) FROM "dos"."ai_agent_registry"
+--      GROUP BY "model_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."ai_agent_registry"
+--      ADD CONSTRAINT "uq_ai_agent_registry_model_code" UNIQUE ("model_code");
+
+-- ai_prompt_registry.model_code
+-- 1) check duplicates:
+--    SELECT "model_code", count(*) FROM "dos"."ai_prompt_registry"
+--      GROUP BY "model_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."ai_prompt_registry"
+--      ADD CONSTRAINT "uq_ai_prompt_registry_model_code" UNIQUE ("model_code");
+
+-- ai_prompt_registry.module_code
+-- 1) check duplicates:
+--    SELECT "module_code", count(*) FROM "dos"."ai_prompt_registry"
+--      GROUP BY "module_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."ai_prompt_registry"
+--      ADD CONSTRAINT "uq_ai_prompt_registry_module_code" UNIQUE ("module_code");
+
+-- ai_workflow_triggers.workflow_code
+-- 1) check duplicates:
+--    SELECT "workflow_code", count(*) FROM "dos"."ai_workflow_triggers"
+--      GROUP BY "workflow_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."ai_workflow_triggers"
+--      ADD CONSTRAINT "uq_ai_workflow_triggers_workflow_code" UNIQUE ("workflow_code");
+
+-- approval_matrix_rules.action_code
+-- 1) check duplicates:
+--    SELECT "action_code", count(*) FROM "dos"."approval_matrix_rules"
+--      GROUP BY "action_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."approval_matrix_rules"
+--      ADD CONSTRAINT "uq_approval_matrix_rules_action_code" UNIQUE ("action_code");
+
+-- approval_matrix_rules.module_code
+-- 1) check duplicates:
+--    SELECT "module_code", count(*) FROM "dos"."approval_matrix_rules"
+--      GROUP BY "module_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."approval_matrix_rules"
+--      ADD CONSTRAINT "uq_approval_matrix_rules_module_code" UNIQUE ("module_code");
+
+-- approval_matrix_rules.required_authority_code
+-- 1) check duplicates:
+--    SELECT "required_authority_code", count(*) FROM "dos"."approval_matrix_rules"
+--      GROUP BY "required_authority_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."approval_matrix_rules"
+--      ADD CONSTRAINT "uq_approval_matrix_rules_required_authority_code" UNIQUE ("required_authority_code");
+
+-- audit_logs.actor_email
+-- 1) check duplicates:
+--    SELECT "actor_email", count(*) FROM "dos"."audit_logs"
+--      GROUP BY "actor_email" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."audit_logs"
+--      ADD CONSTRAINT "uq_audit_logs_actor_email" UNIQUE ("actor_email");
+
+-- business_units.code
+-- 1) check duplicates:
+--    SELECT "code", count(*) FROM "dos"."business_units"
+--      GROUP BY "code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."business_units"
+--      ADD CONSTRAINT "uq_business_units_code" UNIQUE ("code");
+
+-- committees.code
+-- 1) check duplicates:
+--    SELECT "code", count(*) FROM "dos"."committees"
+--      GROUP BY "code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."committees"
+--      ADD CONSTRAINT "uq_committees_code" UNIQUE ("code");
+
+-- compliance_requirements.code
+-- 1) check duplicates:
+--    SELECT "code", count(*) FROM "dos"."compliance_requirements"
+--      GROUP BY "code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."compliance_requirements"
+--      ADD CONSTRAINT "uq_compliance_requirements_code" UNIQUE ("code");
+
+-- component_registry.module_code
+-- 1) check duplicates:
+--    SELECT "module_code", count(*) FROM "dos"."component_registry"
+--      GROUP BY "module_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."component_registry"
+--      ADD CONSTRAINT "uq_component_registry_module_code" UNIQUE ("module_code");
+
+-- component_registry.product_code
+-- 1) check duplicates:
+--    SELECT "product_code", count(*) FROM "dos"."component_registry"
+--      GROUP BY "product_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."component_registry"
+--      ADD CONSTRAINT "uq_component_registry_product_code" UNIQUE ("product_code");
+
+-- config_definitions.module_code
+-- 1) check duplicates:
+--    SELECT "module_code", count(*) FROM "dos"."config_definitions"
+--      GROUP BY "module_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."config_definitions"
+--      ADD CONSTRAINT "uq_config_definitions_module_code" UNIQUE ("module_code");
+
+-- departments.code
+-- 1) check duplicates:
+--    SELECT "code", count(*) FROM "dos"."departments"
+--      GROUP BY "code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."departments"
+--      ADD CONSTRAINT "uq_departments_code" UNIQUE ("code");
+
+-- departments.department_code
+-- 1) check duplicates:
+--    SELECT "department_code", count(*) FROM "dos"."departments"
+--      GROUP BY "department_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."departments"
+--      ADD CONSTRAINT "uq_departments_department_code" UNIQUE ("department_code");
+
+-- dynamic_ui_actions.workflow_code
+-- 1) check duplicates:
+--    SELECT "workflow_code", count(*) FROM "dos"."dynamic_ui_actions"
+--      GROUP BY "workflow_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."dynamic_ui_actions"
+--      ADD CONSTRAINT "uq_dynamic_ui_actions_workflow_code" UNIQUE ("workflow_code");
+
+-- dynamic_ui_agent_actions.workflow_code
+-- 1) check duplicates:
+--    SELECT "workflow_code", count(*) FROM "dos"."dynamic_ui_agent_actions"
+--      GROUP BY "workflow_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."dynamic_ui_agent_actions"
+--      ADD CONSTRAINT "uq_dynamic_ui_agent_actions_workflow_code" UNIQUE ("workflow_code");
+
+-- dynamic_ui_agent_squads.module_code
+-- 1) check duplicates:
+--    SELECT "module_code", count(*) FROM "dos"."dynamic_ui_agent_squads"
+--      GROUP BY "module_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."dynamic_ui_agent_squads"
+--      ADD CONSTRAINT "uq_dynamic_ui_agent_squads_module_code" UNIQUE ("module_code");
+
+-- dynamic_ui_agents.module_code
+-- 1) check duplicates:
+--    SELECT "module_code", count(*) FROM "dos"."dynamic_ui_agents"
+--      GROUP BY "module_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."dynamic_ui_agents"
+--      ADD CONSTRAINT "uq_dynamic_ui_agents_module_code" UNIQUE ("module_code");
+
+-- dynamic_ui_navigation.module_code
+-- 1) check duplicates:
+--    SELECT "module_code", count(*) FROM "dos"."dynamic_ui_navigation"
+--      GROUP BY "module_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."dynamic_ui_navigation"
+--      ADD CONSTRAINT "uq_dynamic_ui_navigation_module_code" UNIQUE ("module_code");
+
+-- dynamic_ui_routes.module_code
+-- 1) check duplicates:
+--    SELECT "module_code", count(*) FROM "dos"."dynamic_ui_routes"
+--      GROUP BY "module_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."dynamic_ui_routes"
+--      ADD CONSTRAINT "uq_dynamic_ui_routes_module_code" UNIQUE ("module_code");
+
+-- dynamic_ui_skill_packs.module_codes
+-- 1) check duplicates:
+--    SELECT "module_codes", count(*) FROM "dos"."dynamic_ui_skill_packs"
+--      GROUP BY "module_codes" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."dynamic_ui_skill_packs"
+--      ADD CONSTRAINT "uq_dynamic_ui_skill_packs_module_codes" UNIQUE ("module_codes");
+
+-- feature_flags.module_code
+-- 1) check duplicates:
+--    SELECT "module_code", count(*) FROM "dos"."feature_flags"
+--      GROUP BY "module_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."feature_flags"
+--      ADD CONSTRAINT "uq_feature_flags_module_code" UNIQUE ("module_code");
+
+-- framework_recommendation_rules.framework_code
+-- 1) check duplicates:
+--    SELECT "framework_code", count(*) FROM "dos"."framework_recommendation_rules"
+--      GROUP BY "framework_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."framework_recommendation_rules"
+--      ADD CONSTRAINT "uq_framework_recommendation_rules_framework_code" UNIQUE ("framework_code");
+
+-- functional_roles.role_code
+-- 1) check duplicates:
+--    SELECT "role_code", count(*) FROM "dos"."functional_roles"
+--      GROUP BY "role_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."functional_roles"
+--      ADD CONSTRAINT "uq_functional_roles_role_code" UNIQUE ("role_code");
+
+-- governance_context.module_code
+-- 1) check duplicates:
+--    SELECT "module_code", count(*) FROM "dos"."governance_context"
+--      GROUP BY "module_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."governance_context"
+--      ADD CONSTRAINT "uq_governance_context_module_code" UNIQUE ("module_code");
+
+-- governance_initiatives.code
+-- 1) check duplicates:
+--    SELECT "code", count(*) FROM "dos"."governance_initiatives"
+--      GROUP BY "code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."governance_initiatives"
+--      ADD CONSTRAINT "uq_governance_initiatives_code" UNIQUE ("code");
+
+-- governance_os_learning_signals.module_code
+-- 1) check duplicates:
+--    SELECT "module_code", count(*) FROM "dos"."governance_os_learning_signals"
+--      GROUP BY "module_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."governance_os_learning_signals"
+--      ADD CONSTRAINT "uq_governance_os_learning_signals_module_code" UNIQUE ("module_code");
+
+-- governance_policies.code
+-- 1) check duplicates:
+--    SELECT "code", count(*) FROM "dos"."governance_policies"
+--      GROUP BY "code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."governance_policies"
+--      ADD CONSTRAINT "uq_governance_policies_code" UNIQUE ("code");
+
+-- job_registry.job_code
+-- 1) check duplicates:
+--    SELECT "job_code", count(*) FROM "dos"."job_registry"
+--      GROUP BY "job_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."job_registry"
+--      ADD CONSTRAINT "uq_job_registry_job_code" UNIQUE ("job_code");
+
+-- job_registry.module_code
+-- 1) check duplicates:
+--    SELECT "module_code", count(*) FROM "dos"."job_registry"
+--      GROUP BY "module_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."job_registry"
+--      ADD CONSTRAINT "uq_job_registry_module_code" UNIQUE ("module_code");
+
+-- locations.code
+-- 1) check duplicates:
+--    SELECT "code", count(*) FROM "dos"."locations"
+--      GROUP BY "code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."locations"
+--      ADD CONSTRAINT "uq_locations_code" UNIQUE ("code");
+
+-- login_attempts.email
+-- 1) check duplicates:
+--    SELECT "email", count(*) FROM "dos"."login_attempts"
+--      GROUP BY "email" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."login_attempts"
+--      ADD CONSTRAINT "uq_login_attempts_email" UNIQUE ("email");
+
+-- maturity_questions.dimension_code
+-- 1) check duplicates:
+--    SELECT "dimension_code", count(*) FROM "dos"."maturity_questions"
+--      GROUP BY "dimension_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."maturity_questions"
+--      ADD CONSTRAINT "uq_maturity_questions_dimension_code" UNIQUE ("dimension_code");
+
+-- maturity_questions.framework_code
+-- 1) check duplicates:
+--    SELECT "framework_code", count(*) FROM "dos"."maturity_questions"
+--      GROUP BY "framework_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."maturity_questions"
+--      ADD CONSTRAINT "uq_maturity_questions_framework_code" UNIQUE ("framework_code");
+
+-- module_sla_defaults.module_code
+-- 1) check duplicates:
+--    SELECT "module_code", count(*) FROM "dos"."module_sla_defaults"
+--      GROUP BY "module_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."module_sla_defaults"
+--      ADD CONSTRAINT "uq_module_sla_defaults_module_code" UNIQUE ("module_code");
+
+-- navigation_registry.module_code
+-- 1) check duplicates:
+--    SELECT "module_code", count(*) FROM "dos"."navigation_registry"
+--      GROUP BY "module_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."navigation_registry"
+--      ADD CONSTRAINT "uq_navigation_registry_module_code" UNIQUE ("module_code");
+
+-- navigation_registry.nav_item_code
+-- 1) check duplicates:
+--    SELECT "nav_item_code", count(*) FROM "dos"."navigation_registry"
+--      GROUP BY "nav_item_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."navigation_registry"
+--      ADD CONSTRAINT "uq_navigation_registry_nav_item_code" UNIQUE ("nav_item_code");
+
+-- navigation_registry.parent_code
+-- 1) check duplicates:
+--    SELECT "parent_code", count(*) FROM "dos"."navigation_registry"
+--      GROUP BY "parent_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."navigation_registry"
+--      ADD CONSTRAINT "uq_navigation_registry_parent_code" UNIQUE ("parent_code");
+
+-- organizations.code
+-- 1) check duplicates:
+--    SELECT "code", count(*) FROM "dos"."organizations"
+--      GROUP BY "code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."organizations"
+--      ADD CONSTRAINT "uq_organizations_code" UNIQUE ("code");
+
+-- permissions.module_code
+-- 1) check duplicates:
+--    SELECT "module_code", count(*) FROM "dos"."permissions"
+--      GROUP BY "module_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."permissions"
+--      ADD CONSTRAINT "uq_permissions_module_code" UNIQUE ("module_code");
+
+-- permissions.permission_code
+-- 1) check duplicates:
+--    SELECT "permission_code", count(*) FROM "dos"."permissions"
+--      GROUP BY "permission_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."permissions"
+--      ADD CONSTRAINT "uq_permissions_permission_code" UNIQUE ("permission_code");
+
+-- positions.code
+-- 1) check duplicates:
+--    SELECT "code", count(*) FROM "dos"."positions"
+--      GROUP BY "code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."positions"
+--      ADD CONSTRAINT "uq_positions_code" UNIQUE ("code");
+
+-- proactive_leadership_milestones.code
+-- 1) check duplicates:
+--    SELECT "code", count(*) FROM "dos"."proactive_leadership_milestones"
+--      GROUP BY "code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."proactive_leadership_milestones"
+--      ADD CONSTRAINT "uq_proactive_leadership_milestones_code" UNIQUE ("code");
+
+-- product_licenses.product_code
+-- 1) check duplicates:
+--    SELECT "product_code", count(*) FROM "dos"."product_licenses"
+--      GROUP BY "product_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."product_licenses"
+--      ADD CONSTRAINT "uq_product_licenses_product_code" UNIQUE ("product_code");
+
+-- shell_config.module_code
+-- 1) check duplicates:
+--    SELECT "module_code", count(*) FROM "dos"."shell_config"
+--      GROUP BY "module_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."shell_config"
+--      ADD CONSTRAINT "uq_shell_config_module_code" UNIQUE ("module_code");
+
+-- shell_config.product_code
+-- 1) check duplicates:
+--    SELECT "product_code", count(*) FROM "dos"."shell_config"
+--      GROUP BY "product_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."shell_config"
+--      ADD CONSTRAINT "uq_shell_config_product_code" UNIQUE ("product_code");
+
+-- sod_conflict_audit.module_code
+-- 1) check duplicates:
+--    SELECT "module_code", count(*) FROM "dos"."sod_conflict_audit"
+--      GROUP BY "module_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."sod_conflict_audit"
+--      ADD CONSTRAINT "uq_sod_conflict_audit_module_code" UNIQUE ("module_code");
+
+-- sod_rules.module_code
+-- 1) check duplicates:
+--    SELECT "module_code", count(*) FROM "dos"."sod_rules"
+--      GROUP BY "module_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."sod_rules"
+--      ADD CONSTRAINT "uq_sod_rules_module_code" UNIQUE ("module_code");
+
+-- sod_rules.rule_code
+-- 1) check duplicates:
+--    SELECT "rule_code", count(*) FROM "dos"."sod_rules"
+--      GROUP BY "rule_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."sod_rules"
+--      ADD CONSTRAINT "uq_sod_rules_rule_code" UNIQUE ("rule_code");
+
+-- teams.code
+-- 1) check duplicates:
+--    SELECT "code", count(*) FROM "dos"."teams"
+--      GROUP BY "code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."teams"
+--      ADD CONSTRAINT "uq_teams_code" UNIQUE ("code");
+
+-- teams.function_code
+-- 1) check duplicates:
+--    SELECT "function_code", count(*) FROM "dos"."teams"
+--      GROUP BY "function_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."teams"
+--      ADD CONSTRAINT "uq_teams_function_code" UNIQUE ("function_code");
+
+-- teams.team_code
+-- 1) check duplicates:
+--    SELECT "team_code", count(*) FROM "dos"."teams"
+--      GROUP BY "team_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."teams"
+--      ADD CONSTRAINT "uq_teams_team_code" UNIQUE ("team_code");
+
+-- tenant_dashboard_widget_pins.widget_code
+-- 1) check duplicates:
+--    SELECT "widget_code", count(*) FROM "dos"."tenant_dashboard_widget_pins"
+--      GROUP BY "widget_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."tenant_dashboard_widget_pins"
+--      ADD CONSTRAINT "uq_tenant_dashboard_widget_pins_widget_code" UNIQUE ("widget_code");
+
+-- tenant_feature_flag_overrides.flag_code
+-- 1) check duplicates:
+--    SELECT "flag_code", count(*) FROM "dos"."tenant_feature_flag_overrides"
+--      GROUP BY "flag_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."tenant_feature_flag_overrides"
+--      ADD CONSTRAINT "uq_tenant_feature_flag_overrides_flag_code" UNIQUE ("flag_code");
+
+-- tenant_memberships.role_code
+-- 1) check duplicates:
+--    SELECT "role_code", count(*) FROM "dos"."tenant_memberships"
+--      GROUP BY "role_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."tenant_memberships"
+--      ADD CONSTRAINT "uq_tenant_memberships_role_code" UNIQUE ("role_code");
+
+-- tenant_settings.module_code
+-- 1) check duplicates:
+--    SELECT "module_code", count(*) FROM "dos"."tenant_settings"
+--      GROUP BY "module_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."tenant_settings"
+--      ADD CONSTRAINT "uq_tenant_settings_module_code" UNIQUE ("module_code");
+
+-- tenants.tenant_code
+-- 1) check duplicates:
+--    SELECT "tenant_code", count(*) FROM "dos"."tenants"
+--      GROUP BY "tenant_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."tenants"
+--      ADD CONSTRAINT "uq_tenants_tenant_code" UNIQUE ("tenant_code");
+
+-- user_role_assignments.role_code
+-- 1) check duplicates:
+--    SELECT "role_code", count(*) FROM "dos"."user_role_assignments"
+--      GROUP BY "role_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."user_role_assignments"
+--      ADD CONSTRAINT "uq_user_role_assignments_role_code" UNIQUE ("role_code");
+
+-- users.email
+-- 1) check duplicates:
+--    SELECT "email", count(*) FROM "dos"."users"
+--      GROUP BY "email" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."users"
+--      ADD CONSTRAINT "uq_users_email" UNIQUE ("email");
+
+-- vendors.contact_email
+-- 1) check duplicates:
+--    SELECT "contact_email", count(*) FROM "dos"."vendors"
+--      GROUP BY "contact_email" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."vendors"
+--      ADD CONSTRAINT "uq_vendors_contact_email" UNIQUE ("contact_email");
+
+-- workflow_templates.module_code
+-- 1) check duplicates:
+--    SELECT "module_code", count(*) FROM "dos"."workflow_templates"
+--      GROUP BY "module_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."workflow_templates"
+--      ADD CONSTRAINT "uq_workflow_templates_module_code" UNIQUE ("module_code");
+
+-- workflow_templates.template_code
+-- 1) check duplicates:
+--    SELECT "template_code", count(*) FROM "dos"."workflow_templates"
+--      GROUP BY "template_code" HAVING count(*) > 1;
+-- 2) if zero rows, apply:
+--    ALTER TABLE "dos"."workflow_templates"
+--      ADD CONSTRAINT "uq_workflow_templates_template_code" UNIQUE ("template_code");
+

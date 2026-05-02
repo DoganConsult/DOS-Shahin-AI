@@ -1,0 +1,23 @@
+{
+  "remediation.title": "Remediation",
+  "remediation.dashboard": "Remediation Dashboard",
+  "remediation.plans": "Remediation Plans",
+  "remediation.tasks": "Remediation Tasks",
+  "remediation.tracking": "Progress Tracking",
+  "remediation.verification": "Verification",
+  "remediation.diagnostics": "Diagnostics",
+  "remediation.admin": "Remediation Admin",
+  "remediation.empty.title": "No remediation plans",
+  "remediation.empty.description": "Create a remediation plan to track corrective actions for findings and gaps.",
+  "remediation.loading": "Loading remediation data...",
+  "remediation.error.title": "Failed to load remediation data",
+  "remediation.error.retry": "Retry",
+  "remediation.create": "Create Plan",
+  "remediation.status.draft": "Draft",
+  "remediation.status.in_progress": "In Progress",
+  "remediation.status.pending_verification": "Pending Verification",
+  "remediation.status.verified": "Verified",
+  "remediation.status.closed": "Closed",
+  "remediation.status.overdue": "Overdue",
+  "remediation.status.archived": "Archived"
+}

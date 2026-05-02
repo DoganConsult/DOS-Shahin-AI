@@ -1,0 +1,200 @@
+[
+  {
+    "pid": 1824324,
+    "name": "auth-service",
+    "status": "online",
+    "restarts": 5,
+    "unstable_restarts": 0,
+    "uptime_s": 12578,
+    "memory_mb": 64.4
+  },
+  {
+    "pid": 2327577,
+    "name": "product-shell",
+    "status": "online",
+    "restarts": 9,
+    "unstable_restarts": 0,
+    "uptime_s": 2853,
+    "memory_mb": 92.3
+  },
+  {
+    "pid": 2335590,
+    "name": "integrations-service",
+    "status": "online",
+    "restarts": 66,
+    "unstable_restarts": 0,
+    "uptime_s": 2623,
+    "memory_mb": 103.3
+  },
+  {
+    "pid": 2331553,
+    "name": "dashboard-widgets-service",
+    "status": "online",
+    "restarts": 64,
+    "unstable_restarts": 0,
+    "uptime_s": 2744,
+    "memory_mb": 104.0
+  },
+  {
+    "pid": 2331530,
+    "name": "analytics-service",
+    "status": "online",
+    "restarts": 64,
+    "unstable_restarts": 0,
+    "uptime_s": 2744,
+    "memory_mb": 102.1
+  },
+  {
+    "pid": 1702394,
+    "name": "dos-service",
+    "status": "online",
+    "restarts": 4,
+    "unstable_restarts": 0,
+    "uptime_s": 16491,
+    "memory_mb": 56.3
+  },
+  {
+    "pid": 1721991,
+    "name": "dsoc-service",
+    "status": "online",
+    "restarts": 5,
+    "unstable_restarts": 0,
+    "uptime_s": 15840,
+    "memory_mb": 82.9
+  },
+  {
+    "pid": 1721979,
+    "name": "dnoc-service",
+    "status": "online",
+    "restarts": 5,
+    "unstable_restarts": 0,
+    "uptime_s": 15840,
+    "memory_mb": 82.2
+  },
+  {
+    "pid": 2298596,
+    "name": "admin-service",
+    "status": "online",
+    "restarts": 1,
+    "unstable_restarts": 0,
+    "uptime_s": 3675,
+    "memory_mb": 58.4
+  },
+  {
+    "pid": 1754220,
+    "name": "langfuse",
+    "status": "online",
+    "restarts": 0,
+    "unstable_restarts": 0,
+    "uptime_s": 14763,
+    "memory_mb": 226.9
+  },
+  {
+    "pid": 2298656,
+    "name": "ai-gateway-service",
+    "status": "online",
+    "restarts": 1,
+    "unstable_restarts": 0,
+    "uptime_s": 3674,
+    "memory_mb": 71.9
+  },
+  {
+    "pid": 2210248,
+    "name": "ai-governance-service",
+    "status": "online",
+    "restarts": 2,
+    "unstable_restarts": 0,
+    "uptime_s": 6397,
+    "memory_mb": 68.9
+  },
+  {
+    "pid": 0,
+    "name": "dos-migrator",
+    "status": "waiting restart",
+    "restarts": 0,
+    "unstable_restarts": 0,
+    "uptime_s": 10572,
+    "memory_mb": 0.0
+  },
+  {
+    "pid": 2421949,
+    "name": "dynamic-ui-service",
+    "status": "online",
+    "restarts": 7,
+    "unstable_restarts": 0,
+    "uptime_s": 890,
+    "memory_mb": 77.2
+  },
+  {
+    "pid": 2331576,
+    "name": "gateway",
+    "status": "online",
+    "restarts": 7,
+    "unstable_restarts": 0,
+    "uptime_s": 2744,
+    "memory_mb": 70.4
+  },
+  {
+    "pid": 2333569,
+    "name": "gateway",
+    "status": "online",
+    "restarts": 7,
+    "unstable_restarts": 0,
+    "uptime_s": 2683,
+    "memory_mb": 68.6
+  },
+  {
+    "pid": 2335716,
+    "name": "tenant-service",
+    "status": "online",
+    "restarts": 4,
+    "unstable_restarts": 0,
+    "uptime_s": 2621,
+    "memory_mb": 71.4
+  },
+  {
+    "pid": 2336905,
+    "name": "user-service",
+    "status": "online",
+    "restarts": 4,
+    "unstable_restarts": 0,
+    "uptime_s": 2591,
+    "memory_mb": 107.8
+  },
+  {
+    "pid": 2335614,
+    "name": "notification-service",
+    "status": "online",
+    "restarts": 3,
+    "unstable_restarts": 0,
+    "uptime_s": 2623,
+    "memory_mb": 98.4
+  },
+  {
+    "pid": 2390713,
+    "name": "ai-engine-service",
+    "status": "online",
+    "restarts": 0,
+    "unstable_restarts": 0,
+    "uptime_s": 1719,
+    "memory_mb": 184.2
+  },
+  {
+    "pid": 2407690,
+    "name": "ai-temporal-worker",
+    "status": "online",
+    "restarts": 0,
+    "unstable_restarts": 0,
+    "uptime_s": 1332,
+    "memory_mb": 175.9
+  },
+  {
+    "pid": 2412238,
+    "name": "ai-temporal-worker-2",
+    "status": "online",
+    "restarts": 0,
+    "unstable_restarts": 0,
+    "uptime_s": 1199,
+    "memory_mb": 175.9
+  }
+]

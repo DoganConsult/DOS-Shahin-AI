@@ -1,0 +1,47 @@
+=== test:unit summary ===
+REMEDIATION_ACTION_SERVICE_URL
+QIYAS_JOURNEY_SERVICE_URL
+DASHBOARD_WIDGETS_SERVICE_URL
+ANALYTICS_SERVICE_URL
+EXECUTIVE_INTELLIGENCE_SERVICE_URL
+INTEGRATIONS_SERVICE_URL
+NOTIFICATION_INBOX_SERVICE_URL
+PORTALS_SERVICE_URL
+RECORDS_SERVICE_URL
+PLATFORM_PRODUCT_SERVICE_URL
+AGRC_OS_SERVICE_URL
+MCP_GATEWAY_SERVICE_URL
+AI_GOVERNANCE_SERVICE_URL
+Ensure ops/env/gateway.env and ops/env/.env.shared define all service URLs.
+Running in non-production mode: using localhost fallback URLs.
+
+ [32m✓[39m services/gateway/src/__tests__/ai-governance-routes-registry.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m services/auth-service/src/__tests__/sod.routes.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m services/auth-service/src/__tests__/authz-explain.routes.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 5[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m335 passed[39m[22m[90m (335)[39m
+[2m      Tests [22m [1m[32m2912 passed[39m[22m[2m | [22m[33m1 skipped[39m[90m (2913)[39m
+[2m   Start at [22m 07:18:42
+[2m   Duration [22m 14.92s[2m (transform 39.24s, setup 32.68s, import 71.83s, tests 24.54s, environment 53ms)[22m
+
+=== test:integration summary ===
+[32m- 0[39m
+[31m+ 1[39m
+
+[36m [2m❯[22m tests/service-boot/service-boot-tests.test.ts:[2m400:82[22m[39m
+    [90m398|[39m
+    [90m399|[39m     console.log(`  Health checks during reload: ${checks}, failures: $…
+    [90m400|[39m     expect(failures, `${failures}/${checks} health checks failed durin…
+    [90m   |[39m                                                                                  [31m^[39m
+    [90m401|[39m
+    [90m402|[39m     [90m// Verify new process IDs differ (processes actually restarted)[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[37/37]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m10 failed[39m[22m[2m | [22m[1m[32m40 passed[39m[22m[90m (50)[39m
+[2m      Tests [22m [1m[31m35 failed[39m[22m[2m | [22m[1m[32m1389 passed[39m[22m[2m | [22m[33m70 skipped[39m[90m (1494)[39m
+[2m   Start at [22m 07:18:58
+[2m   Duration [22m 64.81s[2m (transform 2.89s, setup 3.79s, import 6.82s, tests 406.11s, environment 8ms)[22m
+
+ ELIFECYCLE  Command failed with exit code 1.

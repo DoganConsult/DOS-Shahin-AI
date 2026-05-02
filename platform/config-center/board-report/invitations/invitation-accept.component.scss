@@ -1,0 +1,187 @@
+.invite-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--surface-sunken, #f4f5f7);
+      position: relative;
+    }
+    .auth-top-bar { position: absolute; top: 1rem; right: 1rem; display: flex; align-items: center; gap: 1rem; }
+    .auth-top-bar a { color: var(--text-muted); text-decoration: none; font-size: var(--font-size-body-sm); }
+    .auth-top-bar a:hover { color: var(--primary); }
+    .auth-lang-dropdown { padding: 0.4rem 0.6rem; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--surface); font-size: var(--font-size-base); }
+    .invite-card {
+      max-width: 480px;
+      width: 100%;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      background: var(--surface, #fff);
+      border-radius: var(--radius-lg, 12px);
+      box-shadow: var(--shadow-lg, 0 4px 24px rgba(var(--color-black-rgb), .08));
+    }
+    .state-block { margin-top: 1rem; }
+    h2 { margin: 1rem 0 0.5rem; color: var(--text-heading, var(--surface-deep, var(--surface-deep, #1a1a2e))); }
+    p { color: var(--text-muted, #6b7280); margin-bottom: 0.5rem; }
+    p.sub { font-size: var(--font-size-body-sm); margin-bottom: 1.25rem; }
+    .detail strong { color: var(--text-heading, var(--surface-deep, var(--surface-deep, #1a1a2e))); }
+
+    .register-form { text-align: start; margin-top: 1rem; }
+    .form-group {
+      margin-bottom: 1rem;
+      position: relative;
+    }
+    .form-group label {
+      display: block;
+      font-size: var(--font-size-tag);
+      font-weight: 600;
+      color: var(--text-heading, var(--surface-deep, var(--surface-deep, #1a1a2e)));
+      margin-bottom: 0.35rem;
+    }
+    .form-input {
+      width: 100%;
+      padding: 0.65rem 0.85rem;
+      border: 1px solid var(--border, #d1d5db);
+      border-radius: var(--radius-md, 8px);
+      font-size: var(--font-size-body-sm);
+      background: var(--surface, #fff);
+      color: var(--text, var(--surface-deep, var(--surface-deep, #1a1a2e)));
+      box-sizing: border-box;
+      transition: border-color 0.15s;
+    }
+    .form-input:focus {
+      outline: none;
+      border-color: var(--primary, var(--grc-indigo, #4f46e5));
+      box-shadow: 0 0 0 3px rgba(var(--color-violet-500-rgb), 0.1);
+    }
+    .form-input.disabled {
+      background: var(--surface-alt, #f3f4f6);
+      color: var(--text-muted, #6b7280);
+      cursor: not-allowed;
+    }
+    .toggle-pw {
+      position: absolute;
+      right: 0.75rem;
+      top: 2.1rem;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 0.25rem;
+    }
+    [dir="rtl"] .toggle-pw { right: auto; left: 0.75rem; }
+    .form-error {
+      color: var(--error, #ef4444);
+      font-size: var(--font-size-tag);
+      margin-bottom: 0.75rem;
+      text-align: center;
+    }
+
+    .btn-accept {
+      display: block;
+      width: 100%;
+      padding: 0.75rem 2rem;
+      background: var(--primary, var(--grc-indigo, #4f46e5));
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-md, 8px);
+      font-size: var(--font-size-md);
+      cursor: pointer;
+      margin-top: 0.5rem;
+    }
+    .btn-accept:disabled { opacity: 0.6; cursor: not-allowed; }
+    .btn-accept:hover:not(:disabled) { filter: brightness(1.1); }
+    .btn-secondary {
+      display: inline-block;
+      padding: 0.65rem 1.5rem;
+      background: var(--surface-alt, #e5e7eb);
+      color: var(--text-heading, var(--surface-deep, var(--surface-deep, #1a1a2e)));
+      border: none;
+      border-radius: var(--radius-md, 8px);
+      font-size: var(--font-size-body-sm);
+      cursor: pointer;
+      margin-top: 0.5rem;
+    }
+    .btn-secondary:hover { filter: brightness(0.95); }
+    .btn-link {
+      display: block;
+      margin-top: 1rem;
+      background: none;
+      border: none;
+      color: var(--primary, var(--grc-indigo, #4f46e5));
+      cursor: pointer;
+      font-size: var(--font-size-body-sm);
+      text-decoration: underline;
+    }
+    .spinner {
+      width: 40px; height: 40px;
+      margin: 0 auto 1rem;
+      border: 4px solid var(--surface-alt, #e5e7eb);
+      border-top-color: var(--primary, var(--grc-indigo, #4f46e5));
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .role-detail-box {
+      background: var(--surface-alt, #f0f4ff);
+      border: 1px solid var(--primary-light, #dbe4ff);
+      border-radius: var(--radius-md, 8px);
+      padding: 12px 16px;
+      margin: 12px 0;
+      text-align: start;
+    }
+    .role-desc {
+      color: var(--text, #374151);
+      font-size: var(--font-size-body-sm);
+      line-height: 1.5;
+      margin: 0;
+    }
+    .profile-summary {
+      background: var(--surface-card, #fff);
+      border: 1px solid var(--border, #e5e7eb);
+      border-radius: var(--radius-md, 8px);
+      padding: 12px 16px;
+      margin: 8px 0 12px;
+      text-align: start;
+    }
+    .profile-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 0;
+    }
+    .profile-label {
+      font-size: var(--font-size-caption);
+      color: var(--text-muted, #6b7280);
+    }
+    .profile-value {
+      font-size: var(--font-size-body-sm);
+      color: var(--text-heading, var(--surface-deep, var(--surface-deep, #1a1a2e)));
+      font-weight: 600;
+    }
+    .modules-section {
+      margin: 8px 0 12px;
+      text-align: start;
+    }
+    .section-label {
+      font-size: var(--font-size-caption);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted, #6b7280);
+      margin: 0 0 6px;
+      font-weight: 600;
+    }
+    .module-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .module-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      background: var(--primary-light, #e0e7ff);
+      color: var(--primary-dark, #3730a3);
+      border-radius: var(--radius-lg);
+      font-size: var(--font-size-sm);
+      font-weight: 500;
+      text-transform: capitalize;
+    }

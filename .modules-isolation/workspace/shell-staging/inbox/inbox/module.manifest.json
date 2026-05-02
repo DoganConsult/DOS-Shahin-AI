@@ -1,0 +1,62 @@
+{
+  "moduleCode": "inbox",
+  "displayName": "Inbox",
+  "ownerTeam": "product-shahin-ai",
+  "productCode": "shahin-ai",
+  "ownership": "module-owned",
+  "version": "1.0.0",
+  "status": "active",
+  "platformDependencies": [
+    "identity",
+    "tenancy"
+  ],
+  "seedProviders": [
+    "products/shahin/seeds/inbox-seed"
+  ],
+  "tenantDefaults": [
+    "inbox_digest_frequency_hours",
+    "inbox_smart_priority_enabled"
+  ],
+  "requiredReferenceData": [
+    "inbox_message_templates"
+  ],
+  "currentSources": [
+    "/home/Dr-Dogan-AGRC-OS/backend/src/modules/inbox"
+  ],
+  "targetPath": "modules/inbox",
+  "futureService": "notification-inbox-service",
+  "frontendSources": [
+    "/home/Dr-Dogan-AGRC-OS/frontend/src/app/platform-manifests/inbox.module.routes.ts"
+  ],
+  "ownedTables": [
+    "inbox_messages",
+    "inbox_threads",
+    "inbox_templates",
+    "inbox_read_receipts",
+    "inbox_broadcasts",
+    "inbox_preferences"
+  ],
+  "referencedTables": [
+    "notifications",
+    "teams",
+    "workflows"
+  ],
+  "events": {
+    "publishes": [
+      "inbox.message_received",
+      "inbox.action_requested",
+      "inbox.action_completed",
+      "inbox.notification_read",
+      "inbox.digest_sent"
+    ],
+    "subscribes": [
+      "workflow.status_changed",
+      "governance.action_created",
+      "incident.escalated",
+      "compliance.review_overdue"
+    ]
+  },
+  "routeBases": [
+    "/api/inbox"
+  ]
+}

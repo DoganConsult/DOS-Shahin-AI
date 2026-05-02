@@ -1,0 +1,64 @@
+{
+  "module": "roles-permissions",
+  "phase": "Phase 1 / Module 6",
+  "completedAt": "2026-04-25T16:15:28.270396Z",
+  "verdict": "PASS",
+  "tenant": "shahin_visitors",
+  "user": "tenantadmin@shahin-ai.local",
+  "role": "tenant_admin",
+  "issuer": "https://auth.shahin-ai.com/realms/dogan",
+  "endpointCount": 6,
+  "passCount": 6,
+  "failCount": 0,
+  "failingEndpoints": [],
+  "endpoints": [
+    {
+      "name": "myPermissions",
+      "path": "/api/access/my-permissions",
+      "status": 200,
+      "ms": 94,
+      "verdict": "PASS",
+      "sample": "keys: ['data']"
+    },
+    {
+      "name": "accessSnapshot",
+      "path": "/api/foundation/access-snapshot",
+      "status": 200,
+      "ms": 27,
+      "verdict": "PASS",
+      "sample": "keys: ['data', 'success']"
+    },
+    {
+      "name": "profilesRoles",
+      "path": "/api/profiles/roles",
+      "status": 200,
+      "ms": 30,
+      "verdict": "PASS",
+      "sample": "profiles: list[25]"
+    },
+    {
+      "name": "roles",
+      "path": "/api/roles",
+      "status": 200,
+      "ms": 24,
+      "verdict": "PASS",
+      "sample": "data: list[0]"
+    },
+    {
+      "name": "foundationRoles",
+      "path": "/api/foundation/roles",
+      "status": 200,
+      "ms": 23,
+      "verdict": "PASS",
+      "sample": "data: list[0]"
+    },
+    {
+      "name": "delegations",
+      "path": "/api/governance/delegations",
+      "status": 200,
+      "ms": 25,
+      "verdict": "PASS",
+      "sample": "data: list[0]"
+    }
+  ]
+}

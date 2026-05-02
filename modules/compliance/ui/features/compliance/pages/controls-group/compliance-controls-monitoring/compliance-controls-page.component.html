@@ -1,0 +1,335 @@
+<div class="ctrl-page" [dir]="i18n.direction()">
+      @if (isMonitoredView()) {
+        <div class="monitored-banner">
+          <i class=""></i>
+          <span>{{ i18n.translate('Showing controls monitored by Agent Mesh') }}</span>
+          <a [routerLink]="['/compliance/controls']" [queryParams]="{}" class="monitored-clear">{{ i18n.translate('Show all') }}</a>
+        </div>
+      }
+      <div class="page-toolbar">
+        <h2>{{ scope() === 'my' ? (i18n.translate('My controls') || 'My controls') : i18n.translate('Compliance Controls') }}</h2>
+        <div class="toolbar-actions">
+          <button type="button" class="scope-btn" [class.active]="scope() === 'my'" (click)="toggleScope()">
+            <i class=""></i> {{ scope() === 'my' ? (i18n.translate('My controls') || 'My controls') : (i18n.translate('All') || 'All') }}
+          </button>
+          <select class="filter-select" [(ngModel)]="frameworkFilter" (ngModelChange)="reload()">
+            <option value="">{{ i18n.translate('All Frameworks') }}</option>
+            @for (fw of frameworkOptions(); track fw) {
+              <option [value]="fw">{{ fw }}</option>
+            }
+          </select>
+          <select class="filter-select" [(ngModel)]="statusFilter" (ngModelChange)="applyFilters()">
+            <option value="">{{ i18n.translate('All Statuses') }}</option>
+            <option value="not_started">Not Started</option>
+            <option value="in_progress">In Progress</option>
+            <option value="implemented">Implemented</option>
+            <option value="testing">Testing</option>
+            <option value="effective">Effective</option>
+            @for (st of complianceStatusFilterOptions; track st) {
+              <option [value]="st">{{ formatStatus(st) }}</option>
+            }
+          </select>
+          <select class="filter-select" [(ngModel)]="ownerFilter" (ngModelChange)="applyFilters()">
+            <option value="">{{ i18n.translate('All Owners') }}</option>
+            @for (user of userOptions(); track user.value) {
+              <option [value]="user.value">{{ user.label }}</option>
+            }
+          </select>
+          <button cdsButton icon="" [label]="i18n.translate('Export')" [outlined]="true" severity="secondary"
+            (onClick)="exportMenu.toggle($event)" size="small" />
+          <cds-context-menu #exportMenu [model]="exportMenuItems" [popup]="true" />
+        </div>
+      </div>
+
+      @if (loadError()) {
+        <div class="load-error-banner" role="alert">
+          <i class=""></i>
+          <span>{{ loadError() }}</span>
+          <button type="button" class="retry-btn" (click)="loadError.set(null); reload()">{{ i18n.translate('common.retry') }}</button>
+        </div>
+      }
+      <div class="health-strip">
+        <div tabindex="0" role="button" (keyup.enter)="statusFilter = ''; applyFilters()" class="hs-card" (click)="statusFilter = ''; applyFilters()">
+          <span class="hs-num">{{ totalCount() }}</span>
+          <span class="hs-label">{{ i18n.translate('Total') }}</span>
+        </div>
+        <div class="hs-card impl">
+          <span class="hs-num">{{ countByStatus('implemented') + countByStatus('effective') }}</span>
+          <span class="hs-label">{{ i18n.translate('Implemented') }}</span>
+        </div>
+        <div class="hs-card inprog">
+          <span class="hs-num">{{ countByStatus('in_progress') }}</span>
+          <span class="hs-label">{{ i18n.translate('In Progress') }}</span>
+        </div>
+        <div class="hs-card notstarted">
+          <span class="hs-num">{{ countByStatus('not_started') }}</span>
+          <span class="hs-label">{{ i18n.translate('Not Started') }}</span>
+        </div>
+      </div>
+
+      <!-- ═══ Mapping Analysis Dashboard (DB-driven) ═══ -->
+      @if (!loading() && mappingAnalysis()) {
+        <div class="mapping-analysis">
+          <div class="ma-header">
+            <h3><i class=""></i> Mapping Analysis</h3>
+          </div>
+          <div class="ma-cards">
+            <div class="ma-card">
+              <span class="ma-val">{{ mappingAnalysis()!.unmappedCount }}</span>
+              <span class="ma-lbl">Unmapped Obligations</span>
+            </div>
+            <div class="ma-card ma-warn">
+              <span class="ma-val">{{ mappingAnalysis()!.weakCount }}</span>
+              <span class="ma-lbl">Weak Controls</span>
+            </div>
+            <div class="ma-card ma-good">
+              <span class="ma-val">{{ mappingAnalysis()!.coveragePct }}%</span>
+              <span class="ma-lbl">Coverage</span>
+            </div>
+          </div>
+          @if (mappingAnalysis()!.unmapped.length) {
+            <details class="ma-section">
+              <summary>Unmapped Obligations ({{ mappingAnalysis()!.unmapped.length }})</summary>
+              <div class="ma-list">
+                @for (o of mappingAnalysis()!.unmapped.slice(0, 10); track o.obligation_id) {
+                  <div class="ma-item">
+                    <span class="ma-item-code">{{ o.title_en || o.obligation_id }}</span>
+                    <span class="priority-badge" [attr.data-priority]="o.priority">{{ o.priority }}</span>
+                  </div>
+                }
+              </div>
+            </details>
+          }
+          @if (mappingAnalysis()!.weakControls.length) {
+            <details class="ma-section">
+              <summary>Weak Controls ({{ mappingAnalysis()!.weakControls.length }})</summary>
+              <div class="ma-list">
+                @for (c of mappingAnalysis()!.weakControls.slice(0, 10); track c.control_id) {
+                  <div class="ma-item">
+                    <span class="ma-item-code">{{ c.title || c.control_id }}</span>
+                    <span class="status-badge" [attr.data-status]="c.test_status || c.status">{{ c.status }}</span>
+                    <span class="ma-item-cov">{{ c.avg_coverage }}% avg coverage</span>
+                  </div>
+                }
+              </div>
+            </details>
+          }
+        </div>
+      }
+
+      @if (loading()) {
+        <div class="loading-state" aria-live="polite"><i class=" pi-spinner"></i></div>
+      }
+
+      @if (!loading() && !loadError() && filtered().length === 0) {
+        <div class="empty-state"><i class=""></i><p>{{ i18n.translate('No controls found') }}</p></div>
+      }
+
+      @if (!loading() && !loadError() && totalCount() > 0) {
+        @if (selectedControlIds().size > 0) {
+          <div class="bulk-actions-bar">
+            <span class="bulk-selection-count">{{ selectedControlIds().size }} {{ i18n.translate('selected') }}</span>
+            <div class="bulk-actions">
+              <select class="owner-select" [(ngModel)]="bulkAssignOwnerId" [disabled]="bulkActionLoading()">
+                <option [value]="null">{{ i18n.translate('Select owner...') }}</option>
+                @for (user of userOptions(); track user.value) {
+                  <option [value]="user.value">{{ user.label }}</option>
+                }
+              </select>
+              <button class="bulk-btn" [disabled]="!bulkAssignOwnerId() || bulkActionLoading()" (click)="handleBulkAssign()">
+                @if (bulkActionLoading()) {
+                  <i class=" pi-spinner"></i>
+                } @else {
+                  <i class=""></i>
+                }
+                {{ i18n.translate('Assign Owner') }}
+              </button>
+              <button class="bulk-btn secondary" (click)="clearSelection()">{{ i18n.translate('Clear Selection') }}</button>
+            </div>
+          </div>
+        }
+        <div class="pagination-bar">
+          <span class="pagination-info">{{ i18n.translate('Showing') }} {{ pageStart() }}–{{ pageEnd() }} {{ i18n.translate('of') }} {{ totalCount() }}</span>
+          <div class="pagination-controls">
+            <select class="page-size-select" [ngModel]="pageSize()" (ngModelChange)="setPageSize($event)">
+              @for (opt of pageSizeOptions(); track opt) {
+                <option [value]="opt">{{ opt }}</option>
+              }
+            </select>
+            <button class="pagination-btn" [disabled]="page() <= 1" (click)="goToPage(page() - 1)"><i class=""></i></button>
+            <span class="page-num">{{ page() }} / {{ totalPages() }}</span>
+            <button class="pagination-btn" [disabled]="page() >= totalPages()" (click)="goToPage(page() + 1)"><i class=""></i></button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table aria-label="Data Table table" class="data-table">
+            <thead>
+              <tr>
+                <th class="checkbox-col">
+                  <input type="checkbox" [checked]="isAllSelected()" (change)="toggleSelectAll($event)" [title]="i18n.translate('Select all')" />
+                </th>
+                <th>{{ i18n.translate('Control') }}</th>
+                <th>{{ i18n.translate('Status') }}</th>
+                <th>{{ i18n.translate('Owner') }}</th>
+                <th>{{ i18n.translate('Frameworks') }}</th>
+                <th>{{ i18n.translate('Evidence') }}</th>
+                <th>{{ i18n.translate('Risks') }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (c of filtered(); track c.controlId) {
+                <tr [class.selected-row]="selectedControlIds().has(c.controlId)">
+                  <td class="checkbox-col" (click)="$event.stopPropagation()">
+                    <input type="checkbox" [checked]="selectedControlIds().has(c.controlId)" (change)="toggleSelectControl(c.controlId, $event)" />
+                  </td>
+                  <td tabindex="0" role="button" (keyup.enter)="openDetail(c)" class="clickable-cell title-cell" (click)="openDetail(c)">
+                    {{ c.title }}
+                    @if (c.automatable) { <span class="auto-badge">Auto</span> }
+                  </td>
+                  <td><span class="status-badge" [attr.data-status]="c.status">{{ formatStatus(c.status) }}</span></td>
+                  <td>{{ c.owner || '—' }}</td>
+                  <td>{{ (c.frameworks || []).slice(0,2).join(', ') || '—' }}</td>
+                  <td class="num-cell">{{ c.evidenceCount || 0 }}</td>
+                  <td class="num-cell">{{ c.riskCount || 0 }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+
+      @if (selectedCtrl()) {
+        <div tabindex="0" role="button" (keyup.enter)="closeDetail()" class="drawer-overlay" (click)="closeDetail()"></div>
+        <aside class="detail-drawer" [dir]="i18n.direction()">
+          <div class="drawer-header">
+            <h3>{{ selectedCtrl()!.title }}</h3>
+            <button aria-label="Close" class="close-btn" (click)="closeDetail()"><i class=""></i></button>
+          </div>
+          <div class="drawer-body">
+            @if (selectedCtrl()!.description) {
+              <div class="detail-section">
+                <label>{{ i18n.translate('Description') }}</label>
+                <p>{{ selectedCtrl()!.description }}</p>
+              </div>
+            }
+            <div class="detail-row">
+              <div class="detail-section half">
+                <label>{{ i18n.translate('Status') }}</label>
+                <span class="status-badge" [attr.data-status]="selectedCtrl()!.status">{{ formatStatus(selectedCtrl()!.status) }}</span>
+              </div>
+              <div class="detail-section half">
+                <label>{{ i18n.translate('Test Status') }}</label>
+                <span class="status-badge" [attr.data-status]="selectedCtrl()!.testStatus || 'not_tested'">{{ selectedCtrl()!.testStatus || 'not tested' }}</span>
+              </div>
+            </div>
+            <div class="drawer-actions">
+              @for (fwId of selectedCtrl()!.frameworks || []; track fwId) {
+                <a class="action-link" [routerLink]="['/compliance/frameworks']" [queryParams]="{ frameworkId: fwId }" (click)="closeDetail()">
+                  <i class=""></i> {{ i18n.translate('Framework') }}: {{ fwId }}
+                </a>
+              }
+            </div>
+
+            <div class="cycle-toolbar">
+              @if (cycleLoading()) {
+                <span class="cycle-loading"><i class=" pi-spinner"></i></span>
+              }
+              @if (!cycleLoading() && !hasActiveTasks()) {
+                <button class="launch-btn" (click)="launchCycle()">
+                  <i class=""></i> {{ i18n.translate('Launch Process Cycle') }}
+                </button>
+              }
+              @if (!cycleLoading() && hasActiveTasks()) {
+                <span class="cycle-active-badge"><i class=""></i> {{ i18n.translate('Cycle Active') }}</span>
+              }
+            </div>
+
+            <!-- Gaps panel -->
+            <div class="linked-panel">
+              <div class="panel-header">
+                <a class="panel-title-link" [routerLink]="['/compliance/gaps']" [queryParams]="{ controlId: selectedCtrl()!.controlId }" (click)="closeDetail()">
+                  <i class=""></i> {{ i18n.translate('Gaps') }} ({{ linkedItems()?.gaps?.length || 0 }})
+                </a>
+              </div>
+              @for (gap of linkedItems()?.gaps || []; track gap.gapId) {
+                <div class="task-row">
+                  <span class="item-title">{{ gap.title }}</span>
+                  <span class="sev-badge" [attr.data-sev]="gap.severity">{{ gap.severity }}</span>
+                  <span class="assignee-chip">{{ gap.assignedUser || (i18n.translate('Unassigned')) }}</span>
+                  <span class="sla-dot" [attr.data-sla]="gap.slaStatus || 'none'" [attr.aria-label]="'SLA: ' + (gap.slaStatus || 'none')" [title]="gap.slaStatus || 'no task'"></span>
+                  @if (gap.dueDate) { <span class="due-date">{{ gap.dueDate | appDate:'short' }}</span> }
+                </div>
+              }
+              @if (!linkedItems()?.gaps?.length) {
+                <div class="panel-empty">{{ i18n.translate('No gaps') }}</div>
+              }
+            </div>
+
+            <!-- Risks panel -->
+            <div class="linked-panel">
+              <div class="panel-header">
+                <a class="panel-title-link" [routerLink]="['/risk/register']" [queryParams]="{ controlId: selectedCtrl()!.controlId }" (click)="closeDetail()">
+                  <i class=""></i> {{ i18n.translate('Linked Risks') }} ({{ linkedItems()?.risks?.length || 0 }})
+                </a>
+              </div>
+              @for (risk of linkedItems()?.risks || []; track risk.riskId) {
+                <a class="task-row clickable-row" [routerLink]="['/risk/register']" [queryParams]="{ id: risk.riskId }" (click)="closeDetail()">
+                  <span class="item-title">{{ risk.title }}</span>
+                  <span class="score-chip">{{ risk.score }}</span>
+                  <span class="assignee-chip">{{ risk.assignedUser || (i18n.translate('Unassigned')) }}</span>
+                  <span class="sla-dot" [attr.data-sla]="risk.slaStatus || 'none'" [attr.aria-label]="'SLA: ' + (risk.slaStatus || 'none')" [title]="risk.slaStatus || 'no task'"></span>
+                  @if (risk.dueDate) { <span class="due-date">{{ risk.dueDate | appDate:'short' }}</span> }
+                </a>
+              }
+              @if (!linkedItems()?.risks?.length) {
+                <div class="panel-empty">{{ i18n.translate('No risks') }}</div>
+              }
+            </div>
+
+            <!-- Evidence panel -->
+            <div class="linked-panel">
+              <div class="panel-header">
+                <a class="panel-title-link" [routerLink]="['/foundation/evidence']" (click)="closeDetail()">
+                  <i class=""></i> {{ i18n.translate('Evidence') }} ({{ linkedItems()?.evidence?.length || 0 }})
+                </a>
+              </div>
+              @for (ev of linkedItems()?.evidence || []; track ev.scheduleId) {
+                <div class="task-row">
+                  <span class="item-title">{{ ev.frequency }}</span>
+                  <span class="assignee-chip">{{ ev.assignedUser || (i18n.translate('Unassigned')) }}</span>
+                  <span class="sla-dot" [attr.data-sla]="ev.slaStatus || 'none'" [attr.aria-label]="'SLA: ' + (ev.slaStatus || 'none')" [title]="ev.slaStatus || 'no task'"></span>
+                  @if (ev.dueDate) { <span class="due-date">{{ ev.dueDate | appDate:'short' }}</span> }
+                </div>
+              }
+              @if (!linkedItems()?.evidence?.length) {
+                <div class="panel-empty">{{ i18n.translate('No schedules') }}</div>
+              }
+            </div>
+
+            <!-- Audit tasks panel -->
+            <div class="linked-panel">
+              <div class="panel-header">
+                <a class="panel-title-link" (click)="viewAuditLog()">
+                  <i class=""></i> {{ i18n.translate('Audit Tasks') }} ({{ linkedItems()?.auditTasks?.length || 0 }})
+                </a>
+              </div>
+              @for (at of linkedItems()?.auditTasks || []; track at.taskId) {
+                <div class="task-row">
+                  <span class="item-title">{{ at.title }}</span>
+                  <span class="assignee-chip">{{ at.assignedUser || (i18n.translate('Unassigned')) }}</span>
+                  <span class="sla-dot" [attr.data-sla]="at.slaStatus || 'none'" [title]="at.slaStatus || 'no task'"></span>
+                  @if (at.dueDate) { <span class="due-date">{{ at.dueDate | appDate:'short' }}</span> }
+                </div>
+              }
+              @if (!linkedItems()?.auditTasks?.length) {
+                <div class="panel-empty">{{ i18n.translate('No audit tasks') }}</div>
+              }
+            </div>
+          </div>
+        </aside>
+      }
+
+      <!-- AI OS R2: AI Insights for Controls -->
+      <app-ai-entity-context-panel entityType="control" entityId="*" />
+    </div>
+    <cds-notification></cds-notification>

@@ -1,0 +1,1 @@
+{"version":3,"file":"foundation.errors.js","sourceRoot":"","sources":["../../contracts/foundation.errors.ts"],"names":[],"mappings":";AAAA;;;GAGG;;;AAEU,QAAA,sBAAsB,GAAG;IACpC,gBAAgB,EAAE,6BAA6B;IAC/C,eAAe,EAAE,4BAA4B;IAC7C,eAAe,EAAE,4BAA4B;IAC7C,gBAAgB,EAAE,6BAA6B;IAC/C,cAAc,EAAE,2BAA2B;IAC3C,yBAAyB,EAAE,sCAAsC;IACjE,sBAAsB,EAAE,wBAAwB;IAChD,iBAAiB,EAAE,mBAAmB;CAC9B,CAAC"}

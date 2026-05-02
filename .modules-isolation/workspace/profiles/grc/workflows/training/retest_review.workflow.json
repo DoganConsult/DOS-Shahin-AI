@@ -1,0 +1,15 @@
+{
+  "id": "training.retest_review",
+  "module": "training",
+  "hook": "retest_review",
+  "version": "1.0.0",
+  "sla_hours": 72,
+  "actor_role_default": "training.module_lead",
+  "states": ["ready","retesting","passed","failed"],
+  "initial": "ready",
+  "transitions": [{"from":"ready","to":"retesting","on":"start_retest"},{"from":"retesting","to":"passed","on":"pass","actor_role":"training.approver"},{"from":"retesting","to":"failed","on":"fail","actor_role":"training.approver"}],
+  "audit_event_prefix": "training.workflow.retest_review",
+  "notification_targets": ["training.module_lead", "training.approver"],
+  "evidence_required_on": ["passed","published"],
+  "escalation": { "on": "sla_breach", "to": "training.executive_owner", "after_hours": 144 }
+}

@@ -1,0 +1,33 @@
+{
+  "name": "@dos/dos-core",
+  "version": "1.0.0",
+  "private": true,
+  "description": "DOS Core — orchestrator logic. Persistent DOSPort implementation backed by Postgres (platform_dos.* schema). Tenant registry, module registry, product registry, event log, job scheduler.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "development": "./src/index.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@dos/types": "workspace:*",
+    "@dos/contracts": "workspace:*",
+    "@dos/ports": "workspace:*",
+    "@dos/db": "workspace:*",
+    "@dos/platform-core": "workspace:*"
+  },
+  "peerDependencies": {
+    "@dos/ports": "^1.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "vitest": "^4.1.4"
+  }
+}

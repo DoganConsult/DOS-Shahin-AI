@@ -1,0 +1,140 @@
+{
+  "$schema": "../../platform/contracts/module/module.manifest.schema.json",
+  "schemaVersion": 1,
+  "kind": "platform",
+  "moduleCode": "dos",
+  "displayName": "DOS — Dogan OS Core (orchestrator)",
+  "description": "The host platform module. Owns tenancy, module registry, product registry, event backbone persistence, and scheduled-job orchestration. Every other platform module (DAuth, DSOC, DNOC) and every product consumes DOS through @dos/ports/dos.DOSPort — never through direct imports of dos-core.",
+  "version": "1.0.0",
+  "extractable": true,
+  "selfContained": true,
+  "lifecycle": {
+    "stage": "alpha",
+    "owner": "platform-core",
+    "entitlementKey": "platform.dos",
+    "featureFlag": "platform.dos.enabled",
+    "minTenantStage": "alpha"
+  },
+  "contracts": {
+    "openapi": "./contracts/dos-port.openapi.yaml"
+  },
+  "platformDependencies": {
+    "@dos/platform-core": "^1.0.0",
+    "@dos/module-sdk": "^1.0.0",
+    "@dos/contracts": "^1.0.0",
+    "@dos/types": "^1.0.0"
+  },
+  "metadata": {
+    "ownerTeam": "platform-core",
+    "stability": "alpha",
+    "role": "orchestrator",
+    "previousLocation": "DOS Module",
+    "previousManifest": "platform/dos/manifest/platform-module.manifest.json",
+    "promotedAt": "2026-04-29",
+    "migrationNote": "Standardized to module.manifest.schema.json: replaced legacy `layer: \"platform\"` with `kind: \"platform\"`, added required `lifecycle` block, and moved all module-specific rich metadata under `metadata`. The legacy manifest is archived under _quarantine/legacy-manifests/dos/.",
+    "exposes": {
+      "packages": [
+        { "name": "@dos/dos-core", "path": "platform/dos/packages/core", "entry": "dist/index.js" },
+        { "name": "@dos/dos-shared", "path": "platform/dos/packages/shared", "entry": "dist/index.js" },
+        { "name": "@dos/dos-frontend", "path": "platform/dos/packages/frontend", "entry": "index.ts" }
+      ],
+      "services": [
+        { "code": "dos-service", "path": "platform/dos/services/dos-service", "apiBase": "/api/dos" }
+      ],
+      "ports": {
+        "package": "@dos/ports",
+        "subpath": "@dos/ports/dos",
+        "names": ["DOSPort"],
+        "binding": "platform/dos/packages/core/src/dos-port.impl.ts (createDOSPort)",
+        "status": "extracted"
+      }
+    },
+    "consumes": {
+      "platformPorts": [],
+      "platformPackages": ["@dos/types", "@dos/contracts", "@dos/ports", "@dos/db", "@dos/platform-core", "@dos/event-backbone"]
+    },
+    "schemas": {
+      "dedicated": {
+        "name": "platform_dos",
+        "tables": [
+          "tenants_registry",
+          "modules_registry",
+          "products_registry",
+          "platform_events_log",
+          "scheduled_jobs"
+        ]
+      }
+    },
+    "events": {
+      "publishes": [
+        "dos.tenant.registered",
+        "dos.tenant.suspended",
+        "dos.tenant.decommissioned",
+        "dos.module.registered",
+        "dos.module.deregistered",
+        "dos.product.registered",
+        "dos.product.enabled",
+        "dos.product.disabled",
+        "dos.job.scheduled",
+        "dos.job.completed",
+        "dos.job.failed"
+      ],
+      "subscribes": []
+    },
+    "routes": {
+      "catalog": "platform/dos/services/dos-service/src/routes",
+      "mounts": [
+        { "file": "port/dos-port.routes.ts", "base": "/api/dos/port/v1", "catalog": "dos:port-rest" }
+      ]
+    },
+    "migrations": {
+      "indexFile": "platform/dos/migrations/migrations-index.json",
+      "ownership": "physical",
+      "physicalLocation": "platform/dos/migrations/{public,tenant}",
+      "physicalMoveStatus": "native"
+    },
+    "observability": {
+      "metricsPrefix": "dos_",
+      "healthEndpoint": "/api/dos/health",
+      "readinessEndpoint": "/api/dos/ready",
+      "tracingEnabled": true,
+      "structuredLogging": true,
+      "owningService": "dos-service"
+    },
+    "security": {
+      "auditTarget": "DSOC via dsoc.audit.config_change for every module/product/tenant registration",
+      "secretsViaEnv": true,
+      "compliance": ["SOC2", "ISO27001"]
+    },
+    "tests": {
+      "fileCount": 0,
+      "boundaryTest": "platform/dos/packages/core/src/__tests__"
+    },
+    "completionStatus": {
+      "definitionOfDone": "14-item DoD per platform module spec",
+      "session": "DOS-Session-1 (Bootstrap)",
+      "session1Closed": [
+        "structure",
+        "manifest",
+        "bundle",
+        "schema-migration",
+        "core-package",
+        "service-bootstrap",
+        "isolation-rules",
+        "rest-contract",
+        "frontend-package",
+        "module-shim",
+        "contract-tests",
+        "gateway-routing",
+        "pm2-entry",
+        "error-middleware",
+        "ai-agent-tools",
+        "module-adoption",
+        "docs"
+      ]
+    },
+    "notes": [
+      "Legacy infrastructure utilities remain in packages/dos-platform-core (observability, http, resilience, jobs, modules classification). DAuth / DSOC / DNOC still consume those via @dos/platform-core/<subpath>. DOS-Session-1 introduces a NEW native orchestrator at platform/dos/ without retiring the legacy package; full consolidation of dos-platform-core's 47 subdirectories into platform/dos/ is a separate, longer effort."
+    ]
+  }
+}

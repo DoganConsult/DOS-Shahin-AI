@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "strict": false,
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "noEmit": true,
+    "outDir": "dist",
+    "rootDir": "."
+  },
+  "include": ["bootstrap.ts", "index.ts", "contracts/**/*.ts", "db/runner.ts"],
+  "exclude": ["node_modules", "dist", "ui", "tests", "_sources", "domain", "application", "infrastructure", "interface", "ports", "schemas"]
+}

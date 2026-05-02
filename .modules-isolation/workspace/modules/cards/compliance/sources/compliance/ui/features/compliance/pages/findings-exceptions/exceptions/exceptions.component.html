@@ -1,0 +1,222 @@
+<div class="gov-page" [attr.dir]="dir()">
+      <app-page-header
+        titleEn="Exceptions & Waivers" titleAr="الاستثناءات والإعفاءات"
+        subtitleEn="Manage control exceptions, compensating measures, risk acceptance and expiry tracking"
+        subtitleAr="إدارة استثناءات الضوابط والتدابير التعويضية وقبول المخاطر وتتبع الانتهاء"
+        icon="exclamation-triangle"
+        [breadcrumbs]="[i18n.translate('exceptions.dashboard'), i18n.translate('exceptions.governance'), i18n.translate('exceptions.exceptions')]"
+        [actions]="headerActions" [isAr]="isAr()" [dir]="dir()"
+        (actionClick)="onHeaderAction($event)" />
+      <app-module-tabs-bar [tabs]="tabs" [isAr]="isAr()" />
+      <div class="gov-body">
+
+      <cds-notification></cds-notification>
+
+      <div class="health-strip" *ngIf="loaded">
+        <div tabindex="0" role="button" (keyup.enter)="clearHealthFilter()" class="hs-card" (click)="clearHealthFilter()"><div class="hs-value">{{ items.length }}</div><div class="hs-label">{{ i18n.translate('exceptions.total') }}</div></div>
+        <div tabindex="0" role="button" (keyup.enter)="applyHealthFilter('pending')" class="hs-card" (click)="applyHealthFilter('pending')"><div class="hs-value" style="color:var(--grc-amber-dark, #d97706)">{{ pendingCount }}</div><div class="hs-label">{{ i18n.translate('exceptions.pending') }}</div></div>
+        <div tabindex="0" role="button" (keyup.enter)="applyHealthFilter('approved')" class="hs-card" (click)="applyHealthFilter('approved')"><div class="hs-value" style="color:var(--success)">{{ approvedCount }}</div><div class="hs-label">{{ i18n.translate('exceptions.approved') }}</div></div>
+        <div tabindex="0" role="button" (keyup.enter)="applyHealthFilter('expiring')" class="hs-card" (click)="applyHealthFilter('expiring')"><div class="hs-value" style="color:var(--warning)">{{ expiringSoonCount }}</div><div class="hs-label">{{ i18n.translate('exceptions.expiringSoon') }}</div></div>
+        <div tabindex="0" role="button" (keyup.enter)="applyHealthFilter('expired')" class="hs-card" (click)="applyHealthFilter('expired')"><div class="hs-value" style="color:var(--error)">{{ expiredCount }}</div><div class="hs-label">{{ i18n.translate('exceptions.expired') }}</div></div>
+        <div tabindex="0" role="button" (keyup.enter)="applyHealthFilter('no_controls')" class="hs-card" (click)="applyHealthFilter('no_controls')"><div class="hs-value" style="color:var(--grc-purple, #7c3aed)">{{ missingControlsCount }}</div><div class="hs-label">{{ i18n.translate('exceptions.noControls') }}</div></div>
+      </div>
+
+      <div class="page-toolbar">
+        <div class="toolbar-primary">
+          <button cdsButton [label]="i18n.translate('exceptions.add')" icon="" (onClick)="openCreateDialog()" />
+          <div class="search-wrap">
+            <i class=" search-icon"></i>
+            <input type="text" pInputText [(ngModel)]="searchTerm"
+                   [placeholder]="i18n.translate('exceptions.searchExceptions')" [attr.aria-label]="i18n.translate('exceptions.searchExceptions')"
+                   (input)="filterItems()" class="search-input" />
+          </div>
+        </div>
+        <div class="toolbar-secondary">
+          <cds-dropdown [options]="statusFilterOptions" [(ngModel)]="statusFilter" optionLabel="label" optionValue="value"
+                      [placeholder]="i18n.translate('exceptions.status')" (onChange)="filterItems()" [style]="{minWidth:'140px'}" />
+          <button cdsButton [label]="i18n.translate('exceptions.export')" icon="" severity="secondary"
+                    [outlined]="true" (onClick)="exportCSV()" [cdsTooltip]="i18n.translate('exceptions.exportToCsv')" />
+        </div>
+      </div>
+
+      <app-raci-panel entityType="control" [entityId]="selectedItem?.control_id || ''" [canEdit]="true" />
+
+      <grc-data-table
+        [totalRecords]="filteredItems.length"
+        [emptyMessage]="i18n.translate('exceptions.noDataFound')">
+        <table cdsTable aria-label="Filtered Items table" [value]="filteredItems" [paginator]="filteredItems.length > 10"
+                 [rows]="10" styleClass="p-datatable-striped p-datatable-sm">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>{{ i18n.translate('exceptions.title') }}</th>
+              <th>{{ i18n.translate('exceptions.control') }}</th>
+              <th>{{ i18n.translate('exceptions.requester') }}</th>
+              <th>{{ i18n.translate('exceptions.approver') }}</th>
+              <th>{{ i18n.translate('exceptions.riskLevel') }}</th>
+              <th>{{ i18n.translate('exceptions.status') }}</th>
+              <th>{{ i18n.translate('exceptions.expiry') }}</th>
+              <th style="width:160px">{{ i18n.translate('exceptions.actions') }}</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-item>
+            <tr tabindex="0" role="button" (keyup.enter)="openDetail(item)" [class.expiring-row]="isExpiringSoon(item)" [class.expired-row]="isExpired(item)" class="clickable-row" (click)="openDetail(item)">
+              <td><strong>{{ item.title ?? item.name }}</strong></td>
+              <td>{{ item.control_id }}</td>
+              <td>{{ item.requester || item.created_by || '—' }}</td>
+              <td>{{ item.approver || item.approved_by || '—' }}</td>
+              <td>
+                <cds-tag [value]="item.risk_level" [severity]="item.risk_level === 'critical' ? 'danger' : item.risk_level === 'high' ? 'danger' : item.risk_level === 'medium' ? 'warning' : 'info'" />
+              </td>
+              <td>
+                <app-status-badge [status]="item.status ?? 'pending'" />
+                <span *ngIf="isExpired(item)" class="expiry-badge expired">{{ i18n.translate('exceptions.expired') }}</span>
+                <span *ngIf="isExpiringSoon(item) && !isExpired(item)" class="expiry-badge soon">{{ i18n.translate('exceptions.expiring') }}</span>
+              </td>
+              <td>{{ item.expiry_date | appDate:'medium' }}</td>
+              <td tabindex="0" role="button" (keyup.enter)="$event.stopPropagation()" (click)="$event.stopPropagation()">
+                <div class="action-btns">
+                  <button aria-label="Approve" class="icon-btn approve" (click)="approveException(item)" [cdsTooltip]="Approve" *ngIf="item.status === 'pending'"><i class=""></i></button>
+                  <button aria-label="Reject" class="icon-btn reject" (click)="rejectException(item)" [cdsTooltip]="Reject" *ngIf="item.status === 'pending'"><i class=""></i></button>
+                  <button aria-label="Renew" class="icon-btn renew" (click)="openRenewDialog(item)" [cdsTooltip]="Renew" *ngIf="isExpired(item) || isExpiringSoon(item)"><i class=""></i></button>
+                  <button aria-label="Edit" class="icon-btn" (click)="openEditDialog(item)" [cdsTooltip]="Edit"><i class=""></i></button>
+                  <button aria-label="Delete" class="icon-btn danger" (click)="confirmDelete(item)" [cdsTooltip]="Delete"><i class=""></i></button>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </table>
+      </grc-data-table>
+
+      <cds-modal
+        [header]="editMode ? (i18n.translate('exceptions.editException')) : (i18n.translate('exceptions.addNewException'))"
+        [(visible)]="showDialog" [modal]="true" [style]="{width:'560px'}">
+        <div class="dialog-form">
+          <grc-form-field [label]="i18n.translate('exceptions.title')">
+            <input pInputText [(ngModel)]="form.title" class="w-full" />
+          </grc-form-field>
+          <div class="field">
+            <label>{{ i18n.translate('exceptions.description') }}</label>
+            <textarea pInputTextarea [(ngModel)]="form.description" [rows]="3" class="w-full"></textarea>
+          </div>
+          <div class="field-row">
+            <grc-form-field [label]="i18n.translate('exceptions.controlId')">
+              <input pInputText [(ngModel)]="form.control_id" class="w-full" />
+            </grc-form-field>
+            <div class="field">
+              <label>{{ i18n.translate('exceptions.riskLevel') }}</label>
+              <cds-dropdown [(ngModel)]="form.risk_level" [options]="riskLevelOptions"
+                          optionLabel="label" optionValue="value" styleClass="w-full" />
+            </div>
+          </div>
+          <div class="field-row">
+            <grc-form-field [label]="i18n.translate('exceptions.expiryDate')">
+              <input type="date" pInputText [(ngModel)]="form.expiry_date" class="w-full" />
+            </grc-form-field>
+            <div class="field">
+              <label>{{ i18n.translate('exceptions.status') }}</label>
+              <cds-dropdown [(ngModel)]="form.status" [options]="statusOptions"
+                          optionLabel="label" optionValue="value" styleClass="w-full" />
+            </div>
+          </div>
+          <div class="field">
+            <label>{{ i18n.translate('exceptions.compensatingControls') }}</label>
+            <textarea pInputTextarea [(ngModel)]="form.compensating_controls" [rows]="2" class="w-full"
+                      [placeholder]="i18n.translate('exceptions.describeCompensatingControls')" [attr.aria-label]="i18n.translate('exceptions.describeCompensatingControls')"></textarea>
+          </div>
+        </div>
+        <ng-template pTemplate="footer">
+          <button cdsButton [label]="i18n.translate('exceptions.cancel')" icon=""
+                    severity="secondary" [text]="true" (onClick)="showDialog = false" />
+          <button cdsButton [label]="i18n.translate('exceptions.save')" icon=""
+                    (onClick)="saveItem()" [disabled]="!form.title" />
+        </ng-template>
+      </cds-modal>
+
+      <cds-modal [header]="i18n.translate('exceptions.rejectionReason')"
+                [(visible)]="showRejectDialog" [modal]="true" [style]="{width:'400px'}">
+        <div class="dialog-form">
+          <div class="field">
+            <label>{{ i18n.translate('exceptions.reason') }}</label>
+            <textarea pInputTextarea [(ngModel)]="rejectReason" [rows]="3" class="w-full"
+                      [placeholder]="i18n.translate('exceptions.enterRejectionReason')" [attr.aria-label]="i18n.translate('exceptions.enterRejectionReason')"></textarea>
+          </div>
+        </div>
+        <ng-template pTemplate="footer">
+          <button cdsButton [label]="i18n.translate('exceptions.cancel')" severity="secondary" [text]="true"
+                    (onClick)="showRejectDialog = false" />
+          <button cdsButton [label]="i18n.translate('exceptions.reject')" icon="" severity="danger"
+                    (onClick)="confirmReject()" [disabled]="!rejectReason" />
+        </ng-template>
+      </cds-modal>
+
+      <cds-modal [header]="i18n.translate('exceptions.confirmDelete')"
+                [(visible)]="showDeleteDialog" [modal]="true" [style]="{width:'400px'}">
+        <p>{{ i18n.translate('exceptions.areYouSureYouWantToDeleteThisRecord') }}</p>
+        <ng-template pTemplate="footer">
+          <button cdsButton [label]="i18n.translate('exceptions.cancel')" severity="secondary" [text]="true"
+                    (onClick)="showDeleteDialog = false" />
+          <button cdsButton [label]="i18n.translate('exceptions.delete')" icon=""
+                    severity="danger" (onClick)="deleteItem()" />
+        </ng-template>
+      </cds-modal>
+
+      <!-- Exception Detail Drawer -->
+      <div tabindex="0" role="button" (keyup.enter)="drawerVisible = false" class="drawer-overlay" *ngIf="drawerVisible" (click)="drawerVisible = false"></div>
+      <div class="drawer" [class.open]="drawerVisible">
+        <div class="drawer-header">
+          <h3>{{ selectedItem?.title ?? selectedItem?.name }}</h3>
+          <button aria-label="Close" icon="" class=" " (click)="drawerVisible = false"></button>
+        </div>
+        <div class="detail-grid" *ngIf="selectedItem">
+          <div class="detail-row"><span class="detail-label">{{ i18n.translate('exceptions.status') }}</span><app-status-badge [status]="selectedItem.status ?? 'pending'" /></div>
+          <div class="detail-row"><span class="detail-label">{{ i18n.translate('exceptions.riskLevel') }}</span><cds-tag [value]="selectedItem.risk_level" [severity]="selectedItem.risk_level === 'critical' || selectedItem.risk_level === 'high' ? 'danger' : selectedItem.risk_level === 'medium' ? 'warning' : 'info'" /></div>
+          <div class="detail-row"><span class="detail-label">{{ i18n.translate('exceptions.control') }}</span><span>{{ selectedItem.control_id || '—' }}</span></div>
+          <div class="detail-row"><span class="detail-label">{{ i18n.translate('exceptions.expiry') }}</span><span>{{ selectedItem.expiry_date | appDate:'medium' }}</span></div>
+          <div class="detail-row"><span class="detail-label">{{ i18n.translate('exceptions.created') }}</span><span>{{ selectedItem.created_at | appDate:'medium' }}</span></div>
+        </div>
+        <div class="detail-section" *ngIf="selectedItem?.description">
+          <h4>{{ i18n.translate('exceptions.justification') }}</h4>
+          <p class="detail-text">{{ selectedItem.description }}</p>
+        </div>
+        <div class="detail-section" *ngIf="selectedItem?.compensating_controls">
+          <h4>{{ i18n.translate('exceptions.compensatingControls') }}</h4>
+          <p class="detail-text">{{ selectedItem.compensating_controls }}</p>
+        </div>
+        <div class="detail-section" *ngIf="selectedItem?.linked_policy_id || selectedItem?.linked_control_id || selectedItem?.linked_risk_id">
+          <h4>{{ i18n.translate('exceptions.linkedObjects') }}</h4>
+          <div *ngIf="selectedItem.linked_policy_id" class="linked-item"><i class=""></i> Policy: {{ selectedItem.linked_policy_id }}</div>
+          <div *ngIf="selectedItem.linked_control_id" class="linked-item"><i class=""></i> Control: {{ selectedItem.linked_control_id }}</div>
+          <div *ngIf="selectedItem.linked_risk_id" class="linked-item"><i class=""></i> Risk: {{ selectedItem.linked_risk_id }}</div>
+        </div>
+        <div class="detail-section" *ngIf="renewalHistory.length > 0">
+          <h4>{{ i18n.translate('exceptions.renewalHistory') }}</h4>
+          <div *ngFor="let rh of renewalHistory" class="renewal-entry">
+            <span class="renewal-date">{{ rh.renewed_at || rh.created_at | appDate:'medium' }}</span>
+            <span>{{ i18n.translate('exceptions.from') }} {{ rh.old_expiry | appDate:'medium' }} {{ i18n.translate('exceptions.to') }} {{ rh.new_expiry | appDate:'medium' }}</span>
+          </div>
+        </div>
+        <div class="audit-link-box mt-3" *ngIf="selectedItem">
+          <i class=""></i>
+          <a [routerLink]="['/foundation/audit']" [queryParams]="{entityType:'exception', entityId: selectedItem.exception_id || selectedItem.id}">
+            {{ i18n.translate('exceptions.viewAuditTrailForThisException') }}
+          </a>
+        </div>
+      </div>
+
+      <!-- Renew Dialog -->
+      <cds-modal [header]="i18n.translate('exceptions.renewException')"
+                [(visible)]="showRenewDialog" [modal]="true" [style]="{width:'440px'}">
+        <div class="dialog-form">
+          <grc-form-field [label]="i18n.translate('exceptions.newExpiryDate')">
+            <input type="date" pInputText [(ngModel)]="renewExpiry" class="w-full" />
+          </grc-form-field>
+        </div>
+        <ng-template pTemplate="footer">
+          <button cdsButton [label]="i18n.translate('exceptions.cancel')" severity="secondary" [text]="true" (onClick)="showRenewDialog = false" />
+          <button cdsButton [label]="i18n.translate('exceptions.renew')" icon="" (onClick)="confirmRenew()" [disabled]="!renewExpiry" />
+        </ng-template>
+      </cds-modal>
+
+      </div>
+    </div>
+    <app-ai-panel module="exceptions" />

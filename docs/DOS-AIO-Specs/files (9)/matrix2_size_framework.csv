@@ -1,0 +1,19 @@
+framework,framework_name,org_size,threshold_description,applies
+ZATCA-VAT,ZATCA VAT Regulations,ALL,"Revenue > SAR 375,000/year (mandatory) or > SAR 187,500 (voluntary)",True
+ZATCA-EINV,ZATCA E-Invoicing,ALL,All VAT-registered (mandatory),True
+MHRSD-SAUDIZATION,Nitaqat Saudization Program,MICRO,"Less stringent quotas, mostly waived for <5 employees",partial
+MHRSD-SAUDIZATION,Nitaqat Saudization Program,SMALL,"Bronze tier minimums, exemptions for some activities",True
+MHRSD-SAUDIZATION,Nitaqat Saudization Program,MEDIUM,Silver tier - higher Saudization quotas,True
+MHRSD-SAUDIZATION,Nitaqat Saudization Program,LARGE,Gold/Platinum tier - strict quotas + nationality breakdowns,True
+MHRSD-SAUDIZATION,Nitaqat Saudization Program,ENTERPRISE,Platinum tier maximum requirements,True
+CMA-CG,CMA Corporate Governance Regulations,ALL,Only listed companies regardless of size,if_listed
+NCNICC,NCA National Cybersecurity Controls for CNI,ALL,All private sector regardless of size (effective Jan 2026),True
+NCA-ECC,NCA Essential Cybersecurity Controls,ALL,Government entities + CNI regardless of size; private sector subject to NCNICC,True
+PDPL,Personal Data Protection Law,ALL,ANYONE processing personal data of KSA residents - no size threshold,True
+SAMA-CSF,SAMA Cyber Security Framework,ALL,All SAMA-licensed - no size threshold,True
+PCI-DSS,PCI DSS,MICRO,SAQ A or B-IP (lightest),merchant_level_4
+PCI-DSS,PCI DSS,SMALL,SAQ varies by transaction volume,merchant_level_3_4
+PCI-DSS,PCI DSS,MEDIUM,Full ROC + QSA assessment if Level 1 (>6M tx/yr),merchant_level_2_3
+PCI-DSS,PCI DSS,LARGE,Mandatory Level 1 - QSA + ROC,merchant_level_1
+PCI-DSS,PCI DSS,ENTERPRISE,Mandatory Level 1 - QSA + ROC,merchant_level_1
+ISO27001,ISO/IEC 27001,ALL,"Voluntary, but scope of ISMS scales with size",voluntary

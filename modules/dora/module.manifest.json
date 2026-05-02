@@ -1,0 +1,107 @@
+{
+  "moduleCode": "dora",
+  "displayName": "DORA - Digital Operational Resilience",
+  "ownerTeam": "product-shahin-ai",
+  "productCode": "shahin-ai",
+  "ownership": "module-owned",
+  "version": "1.0.0",
+  "status": "active",
+  "platformDependencies": [
+    "identity",
+    "tenancy",
+    "workflow",
+    "permissions",
+    "audit"
+  ],
+  "seedProviders": [
+    "products/shahin/seeds/dora-seed"
+  ],
+  "tenantDefaults": [
+    "dora_resilience_test_frequency_days",
+    "dora_reporting_threshold_hours"
+  ],
+  "requiredReferenceData": [
+    "dora_ict_asset_types",
+    "dora_resilience_test_templates",
+    "dora_reporting_thresholds"
+  ],
+  "currentSources": [
+    "/home/Dr-Dogan-AGRC-OS/backend/src/modules/dora"
+  ],
+  "targetPath": "modules/dora",
+  "futureService": "dora-service",
+  "frontendSources": [
+    "/home/Dr-Dogan-AGRC-OS/frontend/src/app/platform-manifests/dora.module.routes.ts"
+  ],
+  "ownedTables": [
+    "dora_ict_assets",
+    "dora_resilience_tests",
+    "dora_major_incidents",
+    "dora_threat_intel",
+    "dora_backup_configs",
+    "dora_third_party_register",
+    "dora_ict_risk_assessments",
+    "dora_incident_reports",
+    "dora_recovery_plans",
+    "dora_change_management",
+    "dora_audit_log",
+    "dora_obligations",
+    "dora_obligation_mappings",
+    "dora_framework_mappings",
+    "dora_control_mappings",
+    "dora_resilience_results",
+    "dora_readiness_snapshots"
+  ],
+  "referencedTables": [
+    "audit_trail",
+    "workflows",
+    "assets",
+    "risk_assessments",
+    "vendor_engagements",
+    "incident_response_plans"
+  ],
+  "events": {
+    "publishes": [
+      "dora.ict_asset_created",
+      "dora.ict_asset_updated",
+      "dora.ict_asset_decommissioned",
+      "dora.resilience_test_created",
+      "dora.resilience_test_completed",
+      "dora.resilience_test_failed",
+      "dora.resilience_test_overdue",
+      "dora.resilience_finding_created",
+      "dora.major_incident_reported",
+      "dora.major_incident_resolved",
+      "dora.threat_intel_received",
+      "dora.threat_intel_acknowledged",
+      "dora.third_party_flagged",
+      "dora.third_party_reviewed",
+      "dora.backup_verified",
+      "dora.backup_failed",
+      "dora.recovery_plan_activated",
+      "dora.recovery_plan_tested",
+      "dora.ict_risk_assessed",
+      "dora.concentration_risk_detected",
+      "dora.obligation_created",
+      "dora.obligation_updated",
+      "dora.obligation_deleted",
+      "dora.obligation_overdue",
+      "dora.obligation_mapping_created",
+      "dora.framework_mapping_created",
+      "dora.control_mapping_created",
+      "dora.status_changed",
+      "dora.ai_analysis_completed"
+    ],
+    "subscribes": [
+      "risk.residual_high",
+      "incident.classified",
+      "vendor.risk_changed",
+      "asset.criticality_changed",
+      "bcp.crisis_declared",
+      "workflow.status_changed"
+    ]
+  },
+  "routeBases": [
+    "/api/dora"
+  ]
+}

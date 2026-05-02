@@ -1,0 +1,151 @@
+{
+  "dashboard": {
+    "title": "DOS Platform \u2014 Service Detail",
+    "uid": "dos-service-detail",
+    "tags": [
+      "dos",
+      "service",
+      "detail"
+    ],
+    "timezone": "browser",
+    "refresh": "30s",
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    },
+    "templating": {
+      "list": [
+        {
+          "name": "service",
+          "type": "query",
+          "query": "label_values(dos_http_requests_total, instance)",
+          "current": {
+            "text": "All",
+            "value": "$__all"
+          }
+        }
+      ]
+    },
+    "panels": [
+      {
+        "title": "Request Rate by Route",
+        "type": "timeseries",
+        "gridPos": {
+          "h": 8,
+          "w": 24,
+          "x": 0,
+          "y": 0
+        },
+        "targets": [
+          {
+            "expr": "sum(rate(dos_http_requests_total{instance=~\"$service\"}[5m])) by (method, route)",
+            "legendFormat": "{{ method }} {{ route }}"
+          }
+        ]
+      },
+      {
+        "title": "Latency by Route (P50 / P95 / P99)",
+        "type": "timeseries",
+        "gridPos": {
+          "h": 8,
+          "w": 24,
+          "x": 0,
+          "y": 8
+        },
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.50, sum(rate(dos_http_request_duration_seconds_bucket{instance=~\"$service\"}[5m])) by (le, route)) * 1000",
+            "legendFormat": "P50 {{ route }}"
+          },
+          {
+            "expr": "histogram_quantile(0.95, sum(rate(dos_http_request_duration_seconds_bucket{instance=~\"$service\"}[5m])) by (le, route)) * 1000",
+            "legendFormat": "P95 {{ route }}"
+          },
+          {
+            "expr": "histogram_quantile(0.99, sum(rate(dos_http_request_duration_seconds_bucket{instance=~\"$service\"}[5m])) by (le, route)) * 1000",
+            "legendFormat": "P99 {{ route }}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "ms"
+          }
+        }
+      },
+      {
+        "title": "Error Breakdown",
+        "type": "timeseries",
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 16
+        },
+        "targets": [
+          {
+            "expr": "sum(rate(dos_errors_total{instance=~\"$service\"}[5m])) by (type, route)",
+            "legendFormat": "{{ type }} {{ route }}"
+          }
+        ]
+      },
+      {
+        "title": "DB Query Duration by Operation",
+        "type": "timeseries",
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 16
+        },
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, sum(rate(dos_db_query_duration_seconds_bucket{instance=~\"$service\"}[5m])) by (le, operation)) * 1000",
+            "legendFormat": "{{ operation }}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "ms"
+          }
+        }
+      },
+      {
+        "title": "HTTP Status Codes",
+        "type": "timeseries",
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 24
+        },
+        "targets": [
+          {
+            "expr": "sum(rate(dos_http_requests_total{instance=~\"$service\"}[5m])) by (status_code)",
+            "legendFormat": "{{ status_code }}"
+          }
+        ]
+      },
+      {
+        "title": "Module Routes Status",
+        "type": "stat",
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 24
+        },
+        "targets": [
+          {
+            "expr": "dos_module_routes_loaded{instance=~\"$service\",status=\"loaded\"}",
+            "legendFormat": "Loaded"
+          },
+          {
+            "expr": "dos_module_routes_loaded{instance=~\"$service\",status=\"failed\"}",
+            "legendFormat": "Failed"
+          }
+        ]
+      }
+    ]
+  },
+  "title": "DOS Service Detail"
+}

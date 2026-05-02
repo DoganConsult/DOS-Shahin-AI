@@ -1,0 +1,15 @@
+{
+  "id": "vendor.intake_review",
+  "module": "vendor",
+  "hook": "intake_review",
+  "version": "1.0.0",
+  "sla_hours": 24,
+  "actor_role_default": "vendor.module_lead",
+  "states": ["draft","triage","classified"],
+  "initial": "draft",
+  "transitions": [{"from":"draft","to":"triage","on":"submit"},{"from":"triage","to":"classified","on":"classify","actor_role":"vendor.module_lead"}],
+  "audit_event_prefix": "vendor.workflow.intake_review",
+  "notification_targets": ["vendor.module_lead", "vendor.approver"],
+  "evidence_required_on": ["passed","published"],
+  "escalation": { "on": "sla_breach", "to": "vendor.executive_owner", "after_hours": 48 }
+}

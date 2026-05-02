@@ -1,0 +1,1964 @@
+{
+  "generatedAt": "2026-04-29T02:54:49.601Z",
+  "canonicalRoot": "/root/DOS-AIO/DOS Platform",
+  "summary": {
+    "classifications": {
+      "platform-owned": 36,
+      "module-owned": 48,
+      "unsafe-to-move": 2,
+      "duplicate-legacy-root": 1,
+      "product-owned:shahin-ai": 1
+    },
+    "counts": {
+      "topLevelEntries": 88,
+      "moduleManifests": 54,
+      "productManifests": 0,
+      "angularConfigs": 4,
+      "topPackages": 25,
+      "topServices": 31,
+      "embeddedPackages": 21,
+      "embeddedServices": 11
+    }
+  },
+  "topEntries": [
+    {
+      "name": ".dependency-cruiser.cjs",
+      "kind": "file",
+      "relPath": ".dependency-cruiser.cjs",
+      "classification": "platform-owned",
+      "subKind": "root-file",
+      "keepAtRoot": true
+    },
+    {
+      "name": ".gitignore",
+      "kind": "file",
+      "relPath": ".gitignore",
+      "classification": "platform-owned",
+      "subKind": "root-file",
+      "keepAtRoot": true
+    },
+    {
+      "name": ".node-version",
+      "kind": "file",
+      "relPath": ".node-version",
+      "classification": "platform-owned",
+      "subKind": "root-file",
+      "keepAtRoot": true
+    },
+    {
+      "name": ".npmrc",
+      "kind": "file",
+      "relPath": ".npmrc",
+      "classification": "platform-owned",
+      "subKind": "root-file",
+      "keepAtRoot": true
+    },
+    {
+      "name": ".nvmrc",
+      "kind": "file",
+      "relPath": ".nvmrc",
+      "classification": "platform-owned",
+      "subKind": "root-file",
+      "keepAtRoot": true
+    },
+    {
+      "name": ".reorg-state.json",
+      "kind": "file",
+      "relPath": ".reorg-state.json",
+      "classification": "platform-owned",
+      "subKind": "root-file",
+      "keepAtRoot": true
+    },
+    {
+      "name": "Action Module",
+      "kind": "dir",
+      "relPath": "Action Module",
+      "classification": "module-owned",
+      "subKind": "spaced-module-folder",
+      "keepAtRoot": false
+    },
+    {
+      "name": "AGENTS.md",
+      "kind": "file",
+      "relPath": "AGENTS.md",
+      "classification": "platform-owned",
+      "subKind": "root-file",
+      "keepAtRoot": true
+    },
+    {
+      "name": "AGRC-engine Module",
+      "kind": "dir",
+      "relPath": "AGRC-engine Module",
+      "classification": "module-owned",
+      "subKind": "spaced-module-folder",
+      "keepAtRoot": false
+    },
+    {
+      "name": "AI-OS Module",
+      "kind": "dir",
+      "relPath": "AI-OS Module",
+      "classification": "module-owned",
+      "subKind": "spaced-module-folder",
+      "keepAtRoot": false
+    },
+    {
+      "name": "Analytics Module",
+      "kind": "dir",
+      "relPath": "Analytics Module",
+      "classification": "module-owned",
+      "subKind": "spaced-module-folder",
+      "keepAtRoot": false
+    },
+    {
+      "name": "Asset Module",
+      "kind": "dir",
+      "relPath": "Asset Module",
+      "classification": "module-owned",
+      "subKind": "spaced-module-folder",
+      "keepAtRoot": false
+    },
+    {
+      "name": "Attestation Module",
+      "kind": "dir",
+      "relPath": "Attestation Module",
+      "classification": "module-owned",
+      "subKind": "spaced-module-folder",
+      "keepAtRoot": false
+    },
+    {
+      "name": "Audit Module",
+      "kind": "dir",
+      "relPath": "Audit Module",
+      "classification": "module-owned",
+      "subKind": "spaced-module-folder",
+      "keepAtRoot": false
+    },
+    {
+      "name": "BCP Module",
+      "kind": "dir",
+      "relPath": "BCP Module",
+      "classification": "module-owned",
+      "subKind": "spaced-module-folder",
+      "keepAtRoot": false
+    },
+    {
+      "name": "benchmarks",
+      "kind": "dir",
+      "relPath": "benchmarks",
+      "classification": "module-owned",
+      "subKind": "bare-folder-module",
+      "keepAtRoot": false
+    },
+    {
+      "name": "Compliance Module",
+      "kind": "dir",
+      "relPath": "Compliance Module",
+      "classification": "module-owned",
+      "subKind": "spaced-module-folder",
+      "keepAtRoot": false
+    },
+    {
+      "name": "contracts",
+      "kind": "dir",
+      "relPath": "contracts",
+      "classification": "platform-owned",
+      "subKind": "platform-tier-legacy",
+      "keepAtRoot": false
+    },
+    {
+      "name": "CONTRIBUTING.md",
+      "kind": "file",
+      "relPath": "CONTRIBUTING.md",
+      "classification": "platform-owned",
+      "subKind": "root-file",
+      "keepAtRoot": true
+    },
+    {
+      "name": "Controls Module",
+      "kind": "dir",
+      "relPath": "Controls Module",
+      "classification": "module-owned",
+      "subKind": "spaced-module-folder",
+      "keepAtRoot": false
+    },
+    {
+      "name": "dashboard",
+      "kind": "dir",
+      "relPath": "dashboard",
+      "classification": "module-owned",
+      "subKind": "bare-folder-module",
+      "keepAtRoot": false
+    },
+    {
+      "name": "DAuth Module",
+      "kind": "dir",
+      "relPath": "DAuth Module",
+      "classification": "module-owned",
+      "subKind": "spaced-module-folder",
+      "keepAtRoot": false
+    },
+    {
+      "name": "DNOC Module",
+      "kind": "dir",
+      "relPath": "DNOC Module",
+      "classification": "module-owned",
+      "subKind": "spaced-module-folder",
+      "keepAtRoot": false
+    },
+    {
+      "name": "docs",
+      "kind": "dir",
+      "relPath": "docs",
+      "classification": "platform-owned",
+      "subKind": "platform-tier-legacy",
+      "keepAtRoot": false
+    },
+    {
+      "name": "DORA Module",
+      "kind": "dir",
+      "relPath": "DORA Module",
+      "classification": "module-owned",
+      "subKind": "spaced-module-folder",
+      "keepAtRoot": false
+    },
+    {
+      "name": "DOS",
+      "kind": "dir",
+      "relPath": "DOS",
+      "classification": "unsafe-to-move",
+      "subKind": "legacy-root",
+      "keepAtRoot": true
+    },
+    {
+      "name": "DOS-AIO-Specs",
+      "kind": "dir",
+      "relPath": "DOS-AIO-Specs",
+      "classification": "unsafe-to-move",
+      "subKind": "legacy-root",
+      "keepAtRoot": true
+    },
+    {
+      "name": "DOS.code-workspace",
+      "kind": "file",
+      "relPath": "DOS.code-workspace",
+      "classification": "platform-owned",
+      "subKind": "root-file",
+      "keepAtRoot": true
+    },
+    {
+      "name": "DSOC Module",
+      "kind": "dir",
+      "relPath": "DSOC Module",
+      "classification": "module-owned",
+      "subKind": "spaced-module-folder",
+      "keepAtRoot": false
+    },
+    {
+      "name": "Dynamic UI Module",
+      "kind": "dir",
+      "relPath": "Dynamic UI Module",
+      "classification": "duplicate-legacy-root",
+      "subKind": "unclassified",
+      "keepAtRoot": false
+    },
+    {
+      "name": "ecosystem.config.js",
+      "kind": "file",
+      "relPath": "ecosystem.config.js",
+      "classification": "platform-owned",
+      "subKind": "root-file",
+      "keepAtRoot": true
+    },
+    {
+      "name": "errors",
+      "kind": "dir",
+      "relPath": "errors",
+      "classification": "platform-owned",
+      "subKind": "platform-tier-legacy",
+      "keepAtRoot": false
+    },
+    {
+      "name": "eslint.config.js",
+      "kind": "file",
+      "relPath": "eslint.config.js",
+      "classification": "platform-owned",
+      "subKind": "root-file",
+      "keepAtRoot": true
+    },
+    {
+      "name": "Evidence Module",
+      "kind": "dir",
+      "relPath": "Evidence Module",
+      "classification": "module-owned",
+      "subKind": "spaced-module-folder",
+      "keepAtRoot": false
+    },
+    {
+      "name": "exception",
+      "kind": "dir",
+      "relPath": "exception",
+      "classification": "module-owned",
+      "subKind": "bare-folder-module",
+      "keepAtRoot": false
+    },
+    {
+      "name": "executive",
+      "kind": "dir",
+      "relPath": "executive",
+      "classification": "module-owned",
+      "subKind": "bare-folder-module",
+      "keepAtRoot": false
+    },
+    {
+      "name": "fitch",
+      "kind": "dir",
+      "relPath": "fitch",
+      "classification": "module-owned",
+      "subKind": "bare-folder-module",
+      "keepAtRoot": false
+    },
+    {
+      "name": "Foundation Module",
+      "kind": "dir",
+      "relPath": "Foundation Module",
+      "classification": "module-owned",
+      "subKind": "spaced-module-folder",
+      "keepAtRoot": false
+    },
+    {
+      "name": "Governance Module",
+      "kind": "dir",
+      "relPath": "Governance Module",
+      "classification": "module-owned",
+      "subKind": "spaced-module-folder",
+      "keepAtRoot": false
+    },
+    {
+      "name": "grc-query",
+      "kind": "dir",
+      "relPath": "grc-query",
+      "classification": "module-owned",
+      "subKind": "bare-folder-module",
+      "keepAtRoot": false
+    },
+    {
+      "name": "Inbox Module",
+      "kind": "dir",
+      "relPath": "Inbox Module",
+      "classification": "module-owned",
+      "subKind": "spaced-module-folder",
+      "keepAtRoot": false
+    },
+    {
+      "name": "Incident Module",
+      "kind": "dir",
+      "relPath": "Incident Module",
+      "classification": "module-owned",
+      "subKind": "spaced-module-folder",
+      "keepAtRoot": false
+    },
+    {
+      "name": "integrations",
+      "kind": "dir",
+      "relPath": "integrations",
+      "classification": "module-owned",
+      "subKind": "bare-folder-module",
+      "keepAtRoot": false
+    },
+    {
+      "name": "Isues Module",
+      "kind": "dir",
+      "relPath": "Isues Module",
+      "classification": "module-owned",
+      "subKind": "spaced-module-folder",
+      "keepAtRoot": false
+    },
+    {
+      "name": "knowledge Module",
+      "kind": "dir",
+      "relPath": "knowledge Module",
+      "classification": "module-owned",
+      "subKind": "spaced-module-folder",
+      "keepAtRoot": false
+    },
+    {
+      "name": "ksa-regulatory Module",
+      "kind": "dir",
+      "relPath": "ksa-regulatory Module",
+      "classification": "module-owned",
+      "subKind": "spaced-module-folder",
+      "keepAtRoot": false
+    },
+    {
+      "name": "LICENSE",
+      "kind": "file",
+      "relPath": "LICENSE",
+      "classification": "platform-owned",
+      "subKind": "root-file",
+      "keepAtRoot": true
+    },
+    {
+      "name": "manifests",
+      "kind": "dir",
+      "relPath": "manifests",
+      "classification": "platform-owned",
+      "subKind": "canonical-dir",
+      "keepAtRoot": true
+    },
+    {
+      "name": "MCP Module",
+      "kind": "dir",
+      "relPath": "MCP Module",
+      "classification": "module-owned",
+      "subKind": "spaced-module-folder",
+      "keepAtRoot": false
+    },
+    {
+      "name": "migration",
+      "kind": "dir",
+      "relPath": "migration",
+      "classification": "platform-owned",
+      "subKind": "platform-tier-legacy",
+      "keepAtRoot": false
+    },
+    {
+      "name": "Mobile Module",
+      "kind": "dir",
+      "relPath": "Mobile Module",
+      "classification": "module-owned",
+      "subKind": "spaced-module-folder",
+      "keepAtRoot": false
+    },
+    {
+      "name": "Notification Module",
+      "kind": "dir",
+      "relPath": "Notification Module",
+      "classification": "module-owned",
+      "subKind": "spaced-module-folder",
+      "keepAtRoot": false
+    },
+    {
+      "name": "Onboarding Module",
+      "kind": "dir",
+      "relPath": "Onboarding Module",
+      "classification": "module-owned",
+      "subKind": "spaced-module-folder",
+      "keepAtRoot": false
+    },
+    {
+      "name": "operating-cockpit",
+      "kind": "dir",
+      "relPath": "operating-cockpit",
+      "classification": "module-owned",
+      "subKind": "bare-folder-module",
+      "keepAtRoot": false
+    },
+    {
+      "name": "ops",
+      "kind": "dir",
+      "relPath": "ops",
+      "classification": "platform-owned",
+      "subKind": "canonical-dir",
+      "keepAtRoot": true
+    },
+    {
+      "name": "package.json",
+      "kind": "file",
+      "relPath": "package.json",
+      "classification": "platform-owned",
+      "subKind": "root-file",
+      "keepAtRoot": true
+    },
+    {
+      "name": "packages",
+      "kind": "dir",
+      "relPath": "packages",
+      "classification": "platform-owned",
+      "subKind": "canonical-dir",
+      "keepAtRoot": true
+    },
+    {
+      "name": "platform",
+      "kind": "dir",
+      "relPath": "platform",
+      "classification": "platform-owned",
+      "subKind": "canonical-dir",
+      "keepAtRoot": true
+    },
+    {
+      "name": "platform-core",
+      "kind": "dir",
+      "relPath": "platform-core",
+      "classification": "platform-owned",
+      "subKind": "platform-tier-legacy",
+      "keepAtRoot": false
+    },
+    {
+      "name": "playbooks",
+      "kind": "dir",
+      "relPath": "playbooks",
+      "classification": "module-owned",
+      "subKind": "bare-folder-module",
+      "keepAtRoot": false
+    },
+    {
+      "name": "playwright.config.ts",
+      "kind": "file",
+      "relPath": "playwright.config.ts",
+      "classification": "platform-owned",
+      "subKind": "root-file",
+      "keepAtRoot": true
+    },
+    {
+      "name": "pnpm-lock.yaml",
+      "kind": "file",
+      "relPath": "pnpm-lock.yaml",
+      "classification": "platform-owned",
+      "subKind": "root-file",
+      "keepAtRoot": true
+    },
+    {
+      "name": "pnpm-workspace.yaml",
+      "kind": "file",
+      "relPath": "pnpm-workspace.yaml",
+      "classification": "platform-owned",
+      "subKind": "root-file",
+      "keepAtRoot": true
+    },
+    {
+      "name": "Policy Module",
+      "kind": "dir",
+      "relPath": "Policy Module",
+      "classification": "module-owned",
+      "subKind": "spaced-module-folder",
+      "keepAtRoot": false
+    },
+    {
+      "name": "portals",
+      "kind": "dir",
+      "relPath": "portals",
+      "classification": "module-owned",
+      "subKind": "bare-folder-module",
+      "keepAtRoot": false
+    },
+    {
+      "name": "Privacy Module",
+      "kind": "dir",
+      "relPath": "Privacy Module",
+      "classification": "module-owned",
+      "subKind": "spaced-module-folder",
+      "keepAtRoot": false
+    },
+    {
+      "name": "proactive-leadership",
+      "kind": "dir",
+      "relPath": "proactive-leadership",
+      "classification": "module-owned",
+      "subKind": "bare-folder-module",
+      "keepAtRoot": false
+    },
+    {
+      "name": "product-shell",
+      "kind": "dir",
+      "relPath": "product-shell",
+      "classification": "platform-owned",
+      "subKind": "platform-tier-legacy",
+      "keepAtRoot": false
+    },
+    {
+      "name": "Qiyas Module",
+      "kind": "dir",
+      "relPath": "Qiyas Module",
+      "classification": "module-owned",
+      "subKind": "spaced-module-folder",
+      "keepAtRoot": false
+    },
+    {
+      "name": "README.md",
+      "kind": "file",
+      "relPath": "README.md",
+      "classification": "platform-owned",
+      "subKind": "root-file",
+      "keepAtRoot": true
+    },
+    {
+      "name": "records",
+      "kind": "dir",
+      "relPath": "records",
+      "classification": "module-owned",
+      "subKind": "bare-folder-module",
+      "keepAtRoot": false
+    },
+    {
+      "name": "registries",
+      "kind": "dir",
+      "relPath": "registries",
+      "classification": "platform-owned",
+      "subKind": "canonical-dir",
+      "keepAtRoot": true
+    },
+    {
+      "name": "Remediation Module",
+      "kind": "dir",
+      "relPath": "Remediation Module",
+      "classification": "module-owned",
+      "subKind": "spaced-module-folder",
+      "keepAtRoot": false
+    },
+    {
+      "name": "Reporting Module",
+      "kind": "dir",
+      "relPath": "Reporting Module",
+      "classification": "module-owned",
+      "subKind": "spaced-module-folder",
+      "keepAtRoot": false
+    },
+    {
+      "name": "Risk Module",
+      "kind": "dir",
+      "relPath": "Risk Module",
+      "classification": "module-owned",
+      "subKind": "spaced-module-folder",
+      "keepAtRoot": false
+    },
+    {
+      "name": "routing",
+      "kind": "dir",
+      "relPath": "routing",
+      "classification": "platform-owned",
+      "subKind": "platform-tier-legacy",
+      "keepAtRoot": false
+    },
+    {
+      "name": "scripts",
+      "kind": "dir",
+      "relPath": "scripts",
+      "classification": "platform-owned",
+      "subKind": "canonical-dir",
+      "keepAtRoot": true
+    },
+    {
+      "name": "services",
+      "kind": "dir",
+      "relPath": "services",
+      "classification": "platform-owned",
+      "subKind": "canonical-dir",
+      "keepAtRoot": true
+    },
+    {
+      "name": "Shahin-AI Website",
+      "kind": "dir",
+      "relPath": "Shahin-AI Website",
+      "classification": "product-owned:shahin-ai",
+      "subKind": "product-app-root",
+      "keepAtRoot": false
+    },
+    {
+      "name": "tests",
+      "kind": "dir",
+      "relPath": "tests",
+      "classification": "platform-owned",
+      "subKind": "canonical-dir",
+      "keepAtRoot": true
+    },
+    {
+      "name": "Training Module",
+      "kind": "dir",
+      "relPath": "Training Module",
+      "classification": "module-owned",
+      "subKind": "spaced-module-folder",
+      "keepAtRoot": false
+    },
+    {
+      "name": "tsconfig.base.json",
+      "kind": "file",
+      "relPath": "tsconfig.base.json",
+      "classification": "platform-owned",
+      "subKind": "root-file",
+      "keepAtRoot": true
+    },
+    {
+      "name": "tsconfig.modules.build.json",
+      "kind": "file",
+      "relPath": "tsconfig.modules.build.json",
+      "classification": "platform-owned",
+      "subKind": "root-file",
+      "keepAtRoot": true
+    },
+    {
+      "name": "tsconfig.modules.json",
+      "kind": "file",
+      "relPath": "tsconfig.modules.json",
+      "classification": "platform-owned",
+      "subKind": "root-file",
+      "keepAtRoot": true
+    },
+    {
+      "name": "utils",
+      "kind": "dir",
+      "relPath": "utils",
+      "classification": "platform-owned",
+      "subKind": "platform-tier-legacy",
+      "keepAtRoot": false
+    },
+    {
+      "name": "Vendor Module",
+      "kind": "dir",
+      "relPath": "Vendor Module",
+      "classification": "module-owned",
+      "subKind": "spaced-module-folder",
+      "keepAtRoot": false
+    },
+    {
+      "name": "widgets",
+      "kind": "dir",
+      "relPath": "widgets",
+      "classification": "module-owned",
+      "subKind": "bare-folder-module",
+      "keepAtRoot": false
+    },
+    {
+      "name": "Workflow Module",
+      "kind": "dir",
+      "relPath": "Workflow Module",
+      "classification": "module-owned",
+      "subKind": "spaced-module-folder",
+      "keepAtRoot": false
+    }
+  ],
+  "modules": [
+    {
+      "manifestPath": "Action Module/module.manifest.json",
+      "moduleCode": "action",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "Action Module",
+      "proposedNewRoot": "modules/action"
+    },
+    {
+      "manifestPath": "AGRC-engine Module/module.manifest.json",
+      "moduleCode": "agrc-engine",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "AGRC-engine Module",
+      "proposedNewRoot": "modules/agrc-engine"
+    },
+    {
+      "manifestPath": "AI-OS Module/_sources/modules_ai/module.manifest.json",
+      "moduleCode": "ai",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "AI-OS Module/_sources/modules_ai",
+      "proposedNewRoot": "modules/ai"
+    },
+    {
+      "manifestPath": "AI-OS Module/_sources/modules_ai-governance/module.manifest.json",
+      "moduleCode": "ai-governance",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "AI-OS Module/_sources/modules_ai-governance",
+      "proposedNewRoot": "modules/ai-governance"
+    },
+    {
+      "manifestPath": "Analytics Module/module.manifest.json",
+      "moduleCode": "analytics",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "Analytics Module",
+      "proposedNewRoot": "modules/analytics"
+    },
+    {
+      "manifestPath": "Asset Module/module.manifest.json",
+      "moduleCode": "asset",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "Asset Module",
+      "proposedNewRoot": "modules/asset"
+    },
+    {
+      "manifestPath": "Attestation Module/module.manifest.json",
+      "moduleCode": "attestation",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "Attestation Module",
+      "proposedNewRoot": "modules/attestation"
+    },
+    {
+      "manifestPath": "Audit Module/module.manifest.json",
+      "moduleCode": "audit",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "Audit Module",
+      "proposedNewRoot": "modules/audit"
+    },
+    {
+      "manifestPath": "BCP Module/_sources/modules_bcp/module.manifest.json",
+      "moduleCode": "bcp",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "BCP Module/_sources/modules_bcp",
+      "proposedNewRoot": "modules/bcp"
+    },
+    {
+      "manifestPath": "benchmarks/module.manifest.json",
+      "moduleCode": "benchmarks",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "benchmarks",
+      "proposedNewRoot": "modules/benchmarks"
+    },
+    {
+      "manifestPath": "Compliance Module/module.manifest.json",
+      "moduleCode": "compliance",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": false,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "Compliance Module",
+      "proposedNewRoot": "modules/compliance"
+    },
+    {
+      "manifestPath": "Controls Module/module.manifest.json",
+      "moduleCode": "controls",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "Controls Module",
+      "proposedNewRoot": "modules/controls"
+    },
+    {
+      "manifestPath": "dashboard/module.manifest.json",
+      "moduleCode": "dashboard",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "dashboard",
+      "proposedNewRoot": "modules/dashboard"
+    },
+    {
+      "manifestPath": "dashboard/dashboard-editor/module.manifest.json",
+      "moduleCode": "dashboard-editor",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "dashboard/dashboard-editor",
+      "proposedNewRoot": "modules/dashboard-editor"
+    },
+    {
+      "manifestPath": "DORA Module/module.manifest.json",
+      "moduleCode": "dora",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "DORA Module",
+      "proposedNewRoot": "modules/dora"
+    },
+    {
+      "manifestPath": "Dynamic UI Module/module.manifest.json",
+      "moduleCode": "dynamic-ui",
+      "productCode": null,
+      "ownerTeam": null,
+      "tier": null,
+      "status": null,
+      "hasSourceDir": false,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "Dynamic UI Module",
+      "proposedNewRoot": "modules/dynamic-ui"
+    },
+    {
+      "manifestPath": "Evidence Module/module.manifest.json",
+      "moduleCode": "evidence",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "Evidence Module",
+      "proposedNewRoot": "modules/evidence"
+    },
+    {
+      "manifestPath": "exception/module.manifest.json",
+      "moduleCode": "exception",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "exception",
+      "proposedNewRoot": "modules/exception"
+    },
+    {
+      "manifestPath": "executive/module.manifest.json",
+      "moduleCode": "executive",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "executive",
+      "proposedNewRoot": "modules/executive"
+    },
+    {
+      "manifestPath": "fitch/module.manifest.json",
+      "moduleCode": "fitch",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "fitch",
+      "proposedNewRoot": "modules/fitch"
+    },
+    {
+      "manifestPath": "Foundation Module/module.manifest.json",
+      "moduleCode": "foundation",
+      "productCode": "dos",
+      "ownerTeam": "platform-dos",
+      "tier": "platform",
+      "status": "active",
+      "hasSourceDir": false,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "Foundation Module",
+      "proposedNewRoot": "modules/foundation"
+    },
+    {
+      "manifestPath": "Governance Module/module.manifest.json",
+      "moduleCode": "governance",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "Governance Module",
+      "proposedNewRoot": "modules/governance"
+    },
+    {
+      "manifestPath": "Governance Module/governance-ai/module.manifest.json",
+      "moduleCode": "governance-ai",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "Governance Module/governance-ai",
+      "proposedNewRoot": "modules/governance-ai"
+    },
+    {
+      "manifestPath": "Governance Module/governance-os/module.manifest.json",
+      "moduleCode": "governance-os",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "Governance Module/governance-os",
+      "proposedNewRoot": "modules/governance-os"
+    },
+    {
+      "manifestPath": "grc-query/module.manifest.json",
+      "moduleCode": "grc-query",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "grc-query",
+      "proposedNewRoot": "modules/grc-query"
+    },
+    {
+      "manifestPath": "Inbox Module/module.manifest.json",
+      "moduleCode": "inbox",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "Inbox Module",
+      "proposedNewRoot": "modules/inbox"
+    },
+    {
+      "manifestPath": "Incident Module/module.manifest.json",
+      "moduleCode": "incident",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "Incident Module",
+      "proposedNewRoot": "modules/incident"
+    },
+    {
+      "manifestPath": "integrations/module.manifest.json",
+      "moduleCode": "integrations",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "integrations",
+      "proposedNewRoot": "modules/integrations"
+    },
+    {
+      "manifestPath": "Isues Module/module.manifest.json",
+      "moduleCode": "issues",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "Isues Module",
+      "proposedNewRoot": "modules/issues"
+    },
+    {
+      "manifestPath": "Onboarding Module/journey/module.manifest.json",
+      "moduleCode": "journey",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "Onboarding Module/journey",
+      "proposedNewRoot": "modules/journey"
+    },
+    {
+      "manifestPath": "knowledge Module/knowledge/module.manifest.json",
+      "moduleCode": "knowledge",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "knowledge Module/knowledge",
+      "proposedNewRoot": "modules/knowledge"
+    },
+    {
+      "manifestPath": "ksa-regulatory Module/module.manifest.json",
+      "moduleCode": "ksa-regulatory",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "ksa-regulatory Module",
+      "proposedNewRoot": "modules/ksa-regulatory"
+    },
+    {
+      "manifestPath": "knowledge Module/module.manifest.json",
+      "moduleCode": "local-knowledge",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "knowledge Module",
+      "proposedNewRoot": "modules/local-knowledge"
+    },
+    {
+      "manifestPath": "MCP Module/module.manifest.json",
+      "moduleCode": "mcp",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "MCP Module",
+      "proposedNewRoot": "modules/mcp"
+    },
+    {
+      "manifestPath": "Mobile Module/module.manifest.json",
+      "moduleCode": "mobile",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "Mobile Module",
+      "proposedNewRoot": "modules/mobile"
+    },
+    {
+      "manifestPath": "Notification Module/module.manifest.json",
+      "moduleCode": "notification",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "Notification Module",
+      "proposedNewRoot": "modules/notification"
+    },
+    {
+      "manifestPath": "Onboarding Module/modules-onboarding/module.manifest.json",
+      "moduleCode": "onboarding",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "Onboarding Module/modules-onboarding",
+      "proposedNewRoot": "modules/onboarding"
+    },
+    {
+      "manifestPath": "operating-cockpit/module.manifest.json",
+      "moduleCode": "operating-cockpit",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "operating-cockpit",
+      "proposedNewRoot": "modules/operating-cockpit"
+    },
+    {
+      "manifestPath": "DOS/modules/packs/module.manifest.json",
+      "moduleCode": "packs",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "DOS/modules/packs",
+      "proposedNewRoot": "modules/packs"
+    },
+    {
+      "manifestPath": "playbooks/module.manifest.json",
+      "moduleCode": "playbooks",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "playbooks",
+      "proposedNewRoot": "modules/playbooks"
+    },
+    {
+      "manifestPath": "Policy Module/module.manifest.json",
+      "moduleCode": "policy",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "Policy Module",
+      "proposedNewRoot": "modules/policy"
+    },
+    {
+      "manifestPath": "portals/module.manifest.json",
+      "moduleCode": "portals",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "portals",
+      "proposedNewRoot": "modules/portals"
+    },
+    {
+      "manifestPath": "Privacy Module/module.manifest.json",
+      "moduleCode": "privacy",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "Privacy Module",
+      "proposedNewRoot": "modules/privacy"
+    },
+    {
+      "manifestPath": "proactive-leadership/module.manifest.json",
+      "moduleCode": "proactive-leadership",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "proactive-leadership",
+      "proposedNewRoot": "modules/proactive-leadership"
+    },
+    {
+      "manifestPath": "Qiyas Module/module.manifest.json",
+      "moduleCode": "qiyas",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": false,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "Qiyas Module",
+      "proposedNewRoot": "modules/qiyas"
+    },
+    {
+      "manifestPath": "records/module.manifest.json",
+      "moduleCode": "records",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "records",
+      "proposedNewRoot": "modules/records"
+    },
+    {
+      "manifestPath": "Remediation Module/module.manifest.json",
+      "moduleCode": "remediation",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "Remediation Module",
+      "proposedNewRoot": "modules/remediation"
+    },
+    {
+      "manifestPath": "Reporting Module/module.manifest.json",
+      "moduleCode": "reporting",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "Reporting Module",
+      "proposedNewRoot": "modules/reporting"
+    },
+    {
+      "manifestPath": "Risk Module/module.manifest.json",
+      "moduleCode": "risk",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "Risk Module",
+      "proposedNewRoot": "modules/risk"
+    },
+    {
+      "manifestPath": "Foundation Module/team/module.manifest.json",
+      "moduleCode": "team",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "Foundation Module/team",
+      "proposedNewRoot": "modules/team"
+    },
+    {
+      "manifestPath": "Training Module/module.manifest.json",
+      "moduleCode": "training",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "Training Module",
+      "proposedNewRoot": "modules/training"
+    },
+    {
+      "manifestPath": "Vendor Module/_sources/modules_vendor/module.manifest.json",
+      "moduleCode": "vendor",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "Vendor Module/_sources/modules_vendor",
+      "proposedNewRoot": "modules/vendor"
+    },
+    {
+      "manifestPath": "widgets/module.manifest.json",
+      "moduleCode": "widgets",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": true,
+      "hasDbDir": true,
+      "classification": "module-owned",
+      "currentRoot": "widgets",
+      "proposedNewRoot": "modules/widgets"
+    },
+    {
+      "manifestPath": "Workflow Module/module.manifest.json",
+      "moduleCode": "workflow",
+      "productCode": "shahin-ai",
+      "ownerTeam": "product-shahin-ai",
+      "tier": null,
+      "status": "active",
+      "hasSourceDir": false,
+      "hasDbDir": false,
+      "classification": "module-owned",
+      "currentRoot": "Workflow Module",
+      "proposedNewRoot": "modules/workflow"
+    }
+  ],
+  "products": [],
+  "angularConfigs": [
+    {
+      "path": "Shahin-AI Website/frontend/angular.json",
+      "isProductApp": true
+    },
+    {
+      "path": "Shahin-AI Website/frontend/src/app/angular.json",
+      "isProductApp": true
+    },
+    {
+      "path": "Shahin-AI Website/spa/angular.json",
+      "isProductApp": true
+    },
+    {
+      "path": "Shahin-AI Website/spa/src/angular.json",
+      "isProductApp": true
+    }
+  ],
+  "topPackages": [
+    {
+      "name": "architecture-types",
+      "relPath": "packages/architecture-types",
+      "classification": "shared-package"
+    },
+    {
+      "name": "config",
+      "relPath": "packages/config",
+      "classification": "shared-package"
+    },
+    {
+      "name": "dnoc-contract-tests",
+      "relPath": "packages/dnoc-contract-tests",
+      "classification": "shared-package"
+    },
+    {
+      "name": "dos-contract-tests",
+      "relPath": "packages/dos-contract-tests",
+      "classification": "shared-package"
+    },
+    {
+      "name": "dos-contracts",
+      "relPath": "packages/dos-contracts",
+      "classification": "shared-package"
+    },
+    {
+      "name": "dos-db",
+      "relPath": "packages/dos-db",
+      "classification": "shared-package"
+    },
+    {
+      "name": "dos-design-system",
+      "relPath": "packages/dos-design-system",
+      "classification": "shared-package"
+    },
+    {
+      "name": "dos-event-backbone",
+      "relPath": "packages/dos-event-backbone",
+      "classification": "shared-package"
+    },
+    {
+      "name": "dos-module-sdk",
+      "relPath": "packages/dos-module-sdk",
+      "classification": "shared-package"
+    },
+    {
+      "name": "dos-platform-core",
+      "relPath": "packages/dos-platform-core",
+      "classification": "shared-package"
+    },
+    {
+      "name": "dos-runtime-config",
+      "relPath": "packages/dos-runtime-config",
+      "classification": "shared-package"
+    },
+    {
+      "name": "dos-service-bootstrap",
+      "relPath": "packages/dos-service-bootstrap",
+      "classification": "shared-package"
+    },
+    {
+      "name": "dos-service-client",
+      "relPath": "packages/dos-service-client",
+      "classification": "shared-package"
+    },
+    {
+      "name": "dos-types",
+      "relPath": "packages/dos-types",
+      "classification": "shared-package"
+    },
+    {
+      "name": "dsoc-contract-tests",
+      "relPath": "packages/dsoc-contract-tests",
+      "classification": "shared-package"
+    },
+    {
+      "name": "errors",
+      "relPath": "packages/errors",
+      "classification": "shared-package"
+    },
+    {
+      "name": "module-dos",
+      "relPath": "packages/module-dos",
+      "classification": "shared-package"
+    },
+    {
+      "name": "module-soc",
+      "relPath": "packages/module-soc",
+      "classification": "shared-package"
+    },
+    {
+      "name": "module-telemetry",
+      "relPath": "packages/module-telemetry",
+      "classification": "shared-package"
+    },
+    {
+      "name": "modules",
+      "relPath": "packages/modules",
+      "classification": "shared-package"
+    },
+    {
+      "name": "ports",
+      "relPath": "packages/ports",
+      "classification": "shared-package"
+    },
+    {
+      "name": "shahin-product",
+      "relPath": "packages/shahin-product",
+      "classification": "shared-package"
+    },
+    {
+      "name": "shared-compliance-types",
+      "relPath": "packages/shared-compliance-types",
+      "classification": "shared-package"
+    },
+    {
+      "name": "shared-risk-types",
+      "relPath": "packages/shared-risk-types",
+      "classification": "shared-package"
+    },
+    {
+      "name": "utils",
+      "relPath": "packages/utils",
+      "classification": "shared-package"
+    }
+  ],
+  "topServices": [
+    {
+      "name": "_service-template",
+      "relPath": "services/_service-template",
+      "classification": "runtime-service"
+    },
+    {
+      "name": "_shared",
+      "relPath": "services/_shared",
+      "classification": "runtime-service"
+    },
+    {
+      "name": "agrc-os-service",
+      "relPath": "services/agrc-os-service",
+      "classification": "runtime-service"
+    },
+    {
+      "name": "analytics-reporting-service",
+      "relPath": "services/analytics-reporting-service",
+      "classification": "runtime-service"
+    },
+    {
+      "name": "analytics-service",
+      "relPath": "services/analytics-service",
+      "classification": "runtime-service"
+    },
+    {
+      "name": "asset-service",
+      "relPath": "services/asset-service",
+      "classification": "runtime-service"
+    },
+    {
+      "name": "audit-service",
+      "relPath": "services/audit-service",
+      "classification": "runtime-service"
+    },
+    {
+      "name": "dashboard-widgets-service",
+      "relPath": "services/dashboard-widgets-service",
+      "classification": "runtime-service"
+    },
+    {
+      "name": "dora-service",
+      "relPath": "services/dora-service",
+      "classification": "runtime-service"
+    },
+    {
+      "name": "dynamic-ui-service",
+      "relPath": "services/dynamic-ui-service",
+      "classification": "runtime-service"
+    },
+    {
+      "name": "evidence-audit-reporting-service",
+      "relPath": "services/evidence-audit-reporting-service",
+      "classification": "runtime-service"
+    },
+    {
+      "name": "executive-intelligence-service",
+      "relPath": "services/executive-intelligence-service",
+      "classification": "runtime-service"
+    },
+    {
+      "name": "gateway",
+      "relPath": "services/gateway",
+      "classification": "runtime-service"
+    },
+    {
+      "name": "governance-policy-service",
+      "relPath": "services/governance-policy-service",
+      "classification": "runtime-service"
+    },
+    {
+      "name": "integrations-service",
+      "relPath": "services/integrations-service",
+      "classification": "runtime-service"
+    },
+    {
+      "name": "mcp-gateway-service",
+      "relPath": "services/mcp-gateway-service",
+      "classification": "runtime-service"
+    },
+    {
+      "name": "notification-inbox-service",
+      "relPath": "services/notification-inbox-service",
+      "classification": "runtime-service"
+    },
+    {
+      "name": "notification-service",
+      "relPath": "services/notification-service",
+      "classification": "runtime-service"
+    },
+    {
+      "name": "platform-admin-service",
+      "relPath": "services/platform-admin-service",
+      "classification": "runtime-service"
+    },
+    {
+      "name": "platform-app-shell",
+      "relPath": "services/platform-app-shell",
+      "classification": "runtime-service"
+    },
+    {
+      "name": "platform-core-service",
+      "relPath": "services/platform-core-service",
+      "classification": "runtime-service"
+    },
+    {
+      "name": "platform-product-service",
+      "relPath": "services/platform-product-service",
+      "classification": "runtime-service"
+    },
+    {
+      "name": "portals-service",
+      "relPath": "services/portals-service",
+      "classification": "runtime-service"
+    },
+    {
+      "name": "privacy-service",
+      "relPath": "services/privacy-service",
+      "classification": "runtime-service"
+    },
+    {
+      "name": "product-shell",
+      "relPath": "services/product-shell",
+      "classification": "runtime-service"
+    },
+    {
+      "name": "records-service",
+      "relPath": "services/records-service",
+      "classification": "runtime-service"
+    },
+    {
+      "name": "remediation-action-service",
+      "relPath": "services/remediation-action-service",
+      "classification": "runtime-service"
+    },
+    {
+      "name": "risk-incident-service",
+      "relPath": "services/risk-incident-service",
+      "classification": "runtime-service"
+    },
+    {
+      "name": "tenant-service",
+      "relPath": "services/tenant-service",
+      "classification": "runtime-service"
+    },
+    {
+      "name": "training-service",
+      "relPath": "services/training-service",
+      "classification": "runtime-service"
+    },
+    {
+      "name": "user-service",
+      "relPath": "services/user-service",
+      "classification": "runtime-service"
+    }
+  ],
+  "embeddedPackages": [
+    {
+      "relPath": "AI-OS Module/_sources/packages_ai",
+      "name": "ai",
+      "inModule": "AI-OS Module",
+      "classification": "shared-package",
+      "proposedNewRoot": "packages/ai"
+    },
+    {
+      "relPath": "AI-OS Module/_sources/packages_modules_ai",
+      "name": "modules_ai",
+      "inModule": "AI-OS Module",
+      "classification": "shared-package",
+      "proposedNewRoot": "packages/modules_ai"
+    },
+    {
+      "relPath": "AI-OS Module/_sources/packages_modules_ai-governance",
+      "name": "modules_ai-governance",
+      "inModule": "AI-OS Module",
+      "classification": "shared-package",
+      "proposedNewRoot": "packages/modules_ai-governance"
+    },
+    {
+      "relPath": "BCP Module/_sources/packages_modules_bcp",
+      "name": "modules_bcp",
+      "inModule": "BCP Module",
+      "classification": "shared-package",
+      "proposedNewRoot": "packages/modules_bcp"
+    },
+    {
+      "relPath": "DAuth Module/packages/authz-ids",
+      "name": "authz-ids",
+      "inModule": "DAuth Module",
+      "classification": "shared-package",
+      "proposedNewRoot": "packages/authz-ids"
+    },
+    {
+      "relPath": "DAuth Module/packages/contract-tests",
+      "name": "contract-tests",
+      "inModule": "DAuth Module",
+      "classification": "shared-package",
+      "proposedNewRoot": "packages/contract-tests"
+    },
+    {
+      "relPath": "DAuth Module/packages/core",
+      "name": "core",
+      "inModule": "DAuth Module",
+      "classification": "shared-package",
+      "proposedNewRoot": "packages/core"
+    },
+    {
+      "relPath": "DAuth Module/packages/csrf",
+      "name": "csrf",
+      "inModule": "DAuth Module",
+      "classification": "shared-package",
+      "proposedNewRoot": "packages/csrf"
+    },
+    {
+      "relPath": "DAuth Module/packages/frontend",
+      "name": "frontend",
+      "inModule": "DAuth Module",
+      "classification": "shared-package",
+      "proposedNewRoot": "packages/frontend"
+    },
+    {
+      "relPath": "DAuth Module/packages/module-auth",
+      "name": "module-auth",
+      "inModule": "DAuth Module",
+      "classification": "shared-package",
+      "proposedNewRoot": "packages/module-auth"
+    },
+    {
+      "relPath": "DAuth Module/packages/shared",
+      "name": "shared",
+      "inModule": "DAuth Module",
+      "classification": "shared-package",
+      "proposedNewRoot": "packages/shared"
+    },
+    {
+      "relPath": "DNOC Module/packages/core",
+      "name": "core",
+      "inModule": "DNOC Module",
+      "classification": "shared-package",
+      "proposedNewRoot": "packages/core"
+    },
+    {
+      "relPath": "DNOC Module/packages/frontend",
+      "name": "frontend",
+      "inModule": "DNOC Module",
+      "classification": "shared-package",
+      "proposedNewRoot": "packages/frontend"
+    },
+    {
+      "relPath": "DOS/packages/core",
+      "name": "core",
+      "inModule": "DOS",
+      "classification": "shared-package",
+      "proposedNewRoot": "packages/core"
+    },
+    {
+      "relPath": "DOS/packages/frontend",
+      "name": "frontend",
+      "inModule": "DOS",
+      "classification": "shared-package",
+      "proposedNewRoot": "packages/frontend"
+    },
+    {
+      "relPath": "DSOC Module/packages/core",
+      "name": "core",
+      "inModule": "DSOC Module",
+      "classification": "shared-package",
+      "proposedNewRoot": "packages/core"
+    },
+    {
+      "relPath": "DSOC Module/packages/frontend",
+      "name": "frontend",
+      "inModule": "DSOC Module",
+      "classification": "shared-package",
+      "proposedNewRoot": "packages/frontend"
+    },
+    {
+      "relPath": "Vendor Module/_sources/packages_modules_vendor",
+      "name": "modules_vendor",
+      "inModule": "Vendor Module",
+      "classification": "shared-package",
+      "proposedNewRoot": "packages/modules_vendor"
+    },
+    {
+      "relPath": "Workflow Module/_sources/packages_modules_workflow",
+      "name": "modules_workflow",
+      "inModule": "Workflow Module",
+      "classification": "shared-package",
+      "proposedNewRoot": "packages/modules_workflow"
+    },
+    {
+      "relPath": "Workflow Module/packages/shared-workflow-types",
+      "name": "shared-workflow-types",
+      "inModule": "Workflow Module",
+      "classification": "shared-package",
+      "proposedNewRoot": "packages/shared-workflow-types"
+    },
+    {
+      "relPath": "Workflow Module/packages/shared-workflow-types-grc",
+      "name": "shared-workflow-types-grc",
+      "inModule": "Workflow Module",
+      "classification": "shared-package",
+      "proposedNewRoot": "packages/shared-workflow-types-grc"
+    }
+  ],
+  "embeddedServices": [
+    {
+      "relPath": "AI-OS Module/_sources/services_ai-engine-service",
+      "name": "ai-engine-service",
+      "inModule": "AI-OS Module",
+      "classification": "runtime-service",
+      "proposedNewRoot": "services/ai-engine-service"
+    },
+    {
+      "relPath": "AI-OS Module/_sources/services_ai-gateway-service",
+      "name": "ai-gateway-service",
+      "inModule": "AI-OS Module",
+      "classification": "runtime-service",
+      "proposedNewRoot": "services/ai-gateway-service"
+    },
+    {
+      "relPath": "AI-OS Module/_sources/services_ai-governance-service",
+      "name": "ai-governance-service",
+      "inModule": "AI-OS Module",
+      "classification": "runtime-service",
+      "proposedNewRoot": "services/ai-governance-service"
+    },
+    {
+      "relPath": "AI-OS Module/_sources/services_tenant-service_src_domain_ai-os",
+      "name": "tenant-service_src_domain_ai-os",
+      "inModule": "AI-OS Module",
+      "classification": "runtime-service",
+      "proposedNewRoot": "services/tenant-service_src_domain_ai-os"
+    },
+    {
+      "relPath": "BCP Module/_sources/services_bcp-service",
+      "name": "bcp-service",
+      "inModule": "BCP Module",
+      "classification": "runtime-service",
+      "proposedNewRoot": "services/bcp-service"
+    },
+    {
+      "relPath": "DAuth Module/services/auth-service",
+      "name": "auth-service",
+      "inModule": "DAuth Module",
+      "classification": "runtime-service",
+      "proposedNewRoot": "services/auth-service"
+    },
+    {
+      "relPath": "DNOC Module/services/dnoc-service",
+      "name": "dnoc-service",
+      "inModule": "DNOC Module",
+      "classification": "runtime-service",
+      "proposedNewRoot": "services/dnoc-service"
+    },
+    {
+      "relPath": "DOS/services/dos-service",
+      "name": "dos-service",
+      "inModule": "DOS",
+      "classification": "runtime-service",
+      "proposedNewRoot": "services/dos-service"
+    },
+    {
+      "relPath": "DSOC Module/services/dsoc-service",
+      "name": "dsoc-service",
+      "inModule": "DSOC Module",
+      "classification": "runtime-service",
+      "proposedNewRoot": "services/dsoc-service"
+    },
+    {
+      "relPath": "Vendor Module/_sources/services_vendor-service",
+      "name": "vendor-service",
+      "inModule": "Vendor Module",
+      "classification": "runtime-service",
+      "proposedNewRoot": "services/vendor-service"
+    },
+    {
+      "relPath": "Workflow Module/_sources/services_workflow-service",
+      "name": "workflow-service",
+      "inModule": "Workflow Module",
+      "classification": "runtime-service",
+      "proposedNewRoot": "services/workflow-service"
+    }
+  ]
+}

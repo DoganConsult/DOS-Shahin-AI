@@ -1,0 +1,83 @@
+{
+  "module": "organization",
+  "phase": "Phase 1 / Module 3",
+  "completedAt": "2026-04-25T16:13:55.687686Z",
+  "verdict": "FAIL",
+  "tenant": "shahin_visitors",
+  "user": "tenantadmin@shahin-ai.local",
+  "role": "tenant_admin",
+  "issuer": "https://auth.shahin-ai.com/realms/dogan",
+  "endpointCount": 8,
+  "passCount": 6,
+  "failCount": 2,
+  "failingEndpoints": [
+    "departments",
+    "orgHierarchy"
+  ],
+  "endpoints": [
+    {
+      "name": "organizations",
+      "path": "/api/organizations",
+      "status": 200,
+      "ms": 31,
+      "verdict": "PASS",
+      "sample": "data: list[0]"
+    },
+    {
+      "name": "businessUnits",
+      "path": "/api/business-units",
+      "status": 200,
+      "ms": 27,
+      "verdict": "PASS",
+      "sample": "data: list[0]"
+    },
+    {
+      "name": "departments",
+      "path": "/api/foundation/departments",
+      "status": 500,
+      "ms": 44,
+      "verdict": "FAIL",
+      "sample": "keys: ['code', 'error', 'service']"
+    },
+    {
+      "name": "positions",
+      "path": "/api/positions",
+      "status": 200,
+      "ms": 25,
+      "verdict": "PASS",
+      "sample": "data: list[0]"
+    },
+    {
+      "name": "locations",
+      "path": "/api/locations",
+      "status": 200,
+      "ms": 25,
+      "verdict": "PASS",
+      "sample": "data: list[0]"
+    },
+    {
+      "name": "committees",
+      "path": "/api/committees",
+      "status": 200,
+      "ms": 25,
+      "verdict": "PASS",
+      "sample": "data: list[0]"
+    },
+    {
+      "name": "ownership",
+      "path": "/api/ownership-mappings",
+      "status": 200,
+      "ms": 24,
+      "verdict": "PASS",
+      "sample": "data: list[0]"
+    },
+    {
+      "name": "orgHierarchy",
+      "path": "/api/foundation/org-hierarchy",
+      "status": 404,
+      "ms": 23,
+      "verdict": "FAIL",
+      "sample": "non-json"
+    }
+  ]
+}

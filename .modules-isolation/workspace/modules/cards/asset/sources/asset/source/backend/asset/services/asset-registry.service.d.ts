@@ -1,0 +1,61 @@
+interface ListParams {
+    page?: number;
+    pageSize?: number;
+    search?: string;
+    type?: string;
+    category?: string;
+    criticality?: string;
+    classification?: string;
+    status?: string;
+    lifecycleStage?: string;
+    ownerId?: string;
+    serviceId?: string;
+    sortBy?: string;
+    sortDir?: 'asc' | 'desc';
+}
+interface CreateAssetInput {
+    name: string;
+    name_en?: string;
+    name_ar?: string;
+    type?: string;
+    asset_category?: string;
+    description?: string;
+    criticality?: string;
+    owner?: string;
+    custodian_id?: string;
+    department?: string;
+    location?: string;
+    ip_address?: string;
+    mac_address?: string;
+    os?: string;
+    classification?: string;
+    status?: string;
+    lifecycle_stage?: string;
+    business_service_id?: string;
+    data_classification_id?: string;
+    parent_asset_id?: string;
+    cia_confidentiality?: number;
+    cia_integrity?: number;
+    cia_availability?: number;
+    external_exposure?: boolean;
+    cmdb_external_id?: string;
+    valuation_amount?: number;
+    valuation_currency?: string;
+    tags?: string[];
+    metadata?: Record<string, unknown>;
+}
+export declare function listAssets(tenantId: string, params?: ListParams): Promise<{
+    data: any[];
+    page: number;
+    pageSize: number;
+    total: any;
+    totalPages: number;
+}>;
+export declare function getAssetById(tenantId: string, assetId: string): Promise<any>;
+export declare function createAsset(tenantId: string, userId: string, input: CreateAssetInput): Promise<any>;
+export declare function updateAsset(tenantId: string, userId: string, assetId: string, updates: Partial<CreateAssetInput>): Promise<any>;
+export declare function deleteAsset(tenantId: string, userId: string, assetId: string): Promise<any>;
+export declare function bulkUpdateAssets(tenantId: string, userId: string, ids: string[], update: Partial<CreateAssetInput>): Promise<any[]>;
+export declare function bulkDeleteAssets(tenantId: string, userId: string, ids: string[]): Promise<any[]>;
+export declare function getAssetStats(tenantId: string): Promise<any>;
+export {};

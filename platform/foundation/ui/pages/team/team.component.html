@@ -1,0 +1,236 @@
+<app-page-shell
+      icon="users"
+      [title]="i18n.translate('team.title')"
+      [subtitle]="i18n.translate('team.subtitle')"
+      [breadcrumbs]="['Dashboard', 'Team']"
+      [loading]="loading">
+
+      <!-- Org Summary Cards -->
+      <div class="org-cards" *ngIf="tenant">
+        <div class="org-card">
+          <div class="org-card-icon"><i class="pi pi-building"></i></div>
+          <div class="org-card-info">
+            <div class="org-card-label">{{ i18n.translate('team.organization') }}</div>
+            <div class="org-card-value">{{ tenant.org_name }}</div>
+          </div>
+        </div>
+        <div class="org-card">
+          <div class="org-card-icon purple"><i class="pi pi-briefcase"></i></div>
+          <div class="org-card-info">
+            <div class="org-card-label">{{ i18n.translate('team.industry') }}</div>
+            <div class="org-card-value">{{ tenant.industry }}</div>
+          </div>
+        </div>
+        <div class="org-card">
+          <div class="org-card-icon green"><i class="pi pi-users"></i></div>
+          <div class="org-card-info">
+            <div class="org-card-label">{{ i18n.translate('team.members') }}</div>
+            <div class="org-card-value">{{ members.length }}</div>
+          </div>
+        </div>
+        <div class="org-card">
+          <div class="org-card-icon amber"><i class="pi pi-star"></i></div>
+          <div class="org-card-info">
+            <div class="org-card-label">{{ i18n.translate('team.plan') }}</div>
+            <div class="org-card-value">{{ tenant.plan | uppercase }}</div>
+          </div>
+        </div>
+      </div>
+
+      <p-tabView [(activeIndex)]="activeTab">
+        <!-- Tab 1: Org Settings -->
+        <p-tabPanel [header]="i18n.translate('team.organizationSettings')">
+          <div class="org-settings" *ngIf="tenant">
+            <div class="field-row">
+              <grc-form-field [label]="i18n.translate('team.organizationName')">
+                <input pInputText [(ngModel)]="tenant.org_name" class="w-full" />
+              </grc-form-field>
+              <grc-form-field [label]="i18n.translate('team.logoUrl')">
+                <input pInputText [(ngModel)]="tenant.logo_url" class="w-full" placeholder="https://..." aria-label="https://..." />
+              </grc-form-field>
+            </div>
+            <div class="field-row">
+              <grc-form-field [label]="i18n.translate('team.primaryColor')">
+                <input pInputText [(ngModel)]="tenant.primary_color" class="w-full" />
+              </grc-form-field>
+              <grc-form-field [label]="i18n.translate('team.customDomain')">
+                <input pInputText [(ngModel)]="tenant.custom_domain" class="w-full" placeholder="grc.company.com" aria-label="grc.company.com" />
+              </grc-form-field>
+            </div>
+            <p-button *ngIf="canManageTenant" [label]="i18n.translate('common.save')" icon="pi pi-check" (onClick)="saveTenantSettings()" />
+          </div>
+        </p-tabPanel>
+
+        <!-- Tab 2: Team Members -->
+        <p-tabPanel [header]="i18n.translate('team.teamMembers')">
+          <grc-data-table
+            [totalRecords]="members.length"
+            [emptyMessage]="i18n.translate('common.noData')">
+            <p-table aria-label="Members table" [value]="members" [paginator]="members.length > 10" [rows]="10" styleClass="p-datatable-striped">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>{{ i18n.translate('common.name') }}</th>
+                  <th>{{ i18n.translate('team.email') }}</th>
+                  <th>{{ i18n.translate('team.role') }}</th>
+                  <th>{{ i18n.translate('team.teams') }}</th>
+                  <th>{{ i18n.translate('team.canApprove') }}</th>
+                  <th>{{ i18n.translate('common.status') }}</th>
+                  <th>{{ i18n.translate('team.joined') }}</th>
+                  <th style="width:120px">{{ i18n.translate('common.actions') }}</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-m>
+                <tr>
+                  <td><strong>{{ m.name }}</strong></td>
+                  <td>{{ m.email }}</td>
+                  <td>
+                    <p-tag [value]="getRoleDisplayName(m.role)" [severity]="getRoleSeverity(m.role)" [rounded]="true" />
+                  </td>
+                  <td>
+                    <span *ngIf="m.teamNames?.length; else noTeams">
+                      <p-tag *ngFor="let tn of m.teamNames" [value]="tn" severity="info" [rounded]="true" styleClass="mr-1 mb-1" />
+                    </span>
+                    <ng-template #noTeams><span class="text-color-secondary text-xs">—</span></ng-template>
+                  </td>
+                  <td>
+                    <i class="pi" [ngClass]="canRoleApprove(m.role) ? 'pi-check-circle approve-yes' : 'pi-times-circle approve-no'"></i>
+                  </td>
+                  <td>
+                    <span class="status-dot" [class.active]="m.is_active"></span>
+                    {{ m.is_active ? i18n.translate('common.active') : i18n.translate('common.pending') }}
+                  </td>
+                  <td>{{ m.created_at | appDate:'medium' }}</td>
+                  <td>
+                    <ng-container *ngIf="canManageUsers">
+                      <button aria-label="Change Role" class="icon-btn" (click)="openRoleDialog(m)" pTooltip="Change Role"><i class="pi pi-user-edit"></i></button>
+                      <button aria-label="View Activity" class="icon-btn" (click)="viewMemberActivity(m)" pTooltip="View Activity"><i class="pi pi-history"></i></button>
+                    </ng-container>
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </grc-data-table>
+        </p-tabPanel>
+
+        <!-- Tab 3: Roles & Permissions -->
+        <p-tabPanel [header]="i18n.translate('team.rolesAndPermissions')">
+          <div class="roles-grid">
+            <div class="role-card" *ngFor="let role of roles" [class.system-role]="role.is_system">
+              <div class="role-card-header">
+                <div class="role-icon-wrap" [ngClass]="'role-' + role.role_id">
+                  <i class="pi pi-shield"></i>
+                </div>
+                <div>
+                  <h3 class="role-name">{{ i18n.localize(role.name_en, role.name_ar) }}</h3>
+                  <span class="role-meta">
+                    <span *ngIf="role.is_system" class="system-badge">{{ i18n.translate('team.system') }}</span>
+                    <span *ngIf="role.can_approve" class="approve-badge"><i class="pi pi-check"></i> {{ i18n.translate('team.approver') }}</span>
+                    <span class="risk-badge" [ngClass]="'risk-' + role.max_risk_level">{{ role.max_risk_level }}</span>
+                  </span>
+                </div>
+              </div>
+              <p class="role-desc">{{ i18n.localize(role.description_en, role.description_ar) }}</p>
+              <div class="role-perms">
+                <span class="perm-label">{{ i18n.translate('team.permissions') }}:</span>
+                <div class="perm-chips">
+                  <p-chip *ngFor="let p of role.permissions | slice:0:8" [label]="p" styleClass="perm-chip" />
+                  <span *ngIf="role.permissions.length > 8" class="perm-more">+{{ role.permissions.length - 8 }} {{ i18n.translate('team.more') }}</span>
+                </div>
+              </div>
+              <div class="role-members">
+                <span class="perm-label">{{ i18n.translate('team.members') }}:</span>
+                <span class="member-count">{{ getMembersForRole(role.role_id).length }}</span>
+                <span class="member-names" *ngIf="getMembersForRole(role.role_id).length > 0">
+                  ({{ getMemberNamesPreview(role.role_id) }})
+                </span>
+              </div>
+            </div>
+          </div>
+        </p-tabPanel>
+
+        <!-- Tab 4: Activity Log -->
+        <p-tabPanel [header]="i18n.translate('team.activityLog')">
+          <div class="activity-filters">
+            <p-dropdown [(ngModel)]="activityUserFilter" [options]="memberFilterOptions"
+                        optionLabel="label" optionValue="value"
+                        [placeholder]="i18n.translate('team.allMembers')"
+                        [showClear]="true" (onChange)="loadActivities()"
+                        [style]="{'min-width':'200px'}" />
+          </div>
+          <div class="activity-timeline">
+            <div *ngFor="let a of activities" class="activity-entry">
+              <div class="activity-icon-wrap">
+                <i class="pi" [ngClass]="getActivityIcon(a.action)"></i>
+              </div>
+              <div class="activity-body">
+                <div class="activity-header-row">
+                  <strong class="activity-user">{{ a.user_name || a.user_email }}</strong>
+                  <span class="activity-action-badge" [ngClass]="'action-' + a.action">{{ a.action }}</span>
+                  <span class="activity-module" *ngIf="a.module">{{ a.module }}</span>
+                </div>
+                <p class="activity-desc" *ngIf="a.description">{{ a.description }}</p>
+                <span class="activity-time">{{ a.created_at | appDate:'medium' }}</span>
+              </div>
+            </div>
+            <div *ngIf="activities.length === 0 && !activitiesLoading" class="empty-state">
+              <i class="pi pi-history" style="font-size: var(--font-size-4xl);color:var(--text-muted, #94a3b8);display:block;margin-bottom:8px"></i>
+              <p>{{ i18n.translate('team.noActivities') }}</p>
+            </div>
+            <div *ngIf="activitiesLoading" class="loading-indicator">
+              <i class="pi pi-spin pi-spinner"></i> {{ i18n.translate('common.loading') }}
+            </div>
+            <div class="activity-load-more" *ngIf="activities.length < activitiesTotal && !activitiesLoading">
+              <p-button [label]="i18n.translate('team.loadMore')" icon="pi pi-chevron-down"
+                        [text]="true" (onClick)="loadMoreActivities()" />
+            </div>
+          </div>
+        </p-tabPanel>
+      </p-tabView>
+
+      <!-- Change Role Dialog -->
+      <p-dialog [header]="i18n.translate('team.changeRole')" [(visible)]="showRoleDialog" [modal]="true" [style]="{width:'480px'}">
+        <div class="dialog-form" *ngIf="editingMember">
+          <p class="role-dialog-user">{{ editingMember.name }} ({{ editingMember.email }})</p>
+          <div class="field">
+            <label>{{ i18n.translate('team.newRole') }}</label>
+            <p-dropdown [(ngModel)]="newRole" [options]="roleOptions" optionLabel="label" optionValue="value" styleClass="w-full" />
+          </div>
+          <div class="selected-role-info" *ngIf="getSelectedRoleInfo()">
+            <p class="sri-desc">{{ i18n.localize(getSelectedRoleInfo()!.description_en, getSelectedRoleInfo()!.description_ar) }}</p>
+            <div class="sri-badges">
+              <span *ngIf="getSelectedRoleInfo()!.can_approve" class="approve-badge"><i class="pi pi-check"></i> {{ i18n.translate('team.canApprove') }}</span>
+              <span class="risk-badge" [ngClass]="'risk-' + getSelectedRoleInfo()!.max_risk_level">
+                {{ i18n.translate('team.maxRisk') }}: {{ getSelectedRoleInfo()!.max_risk_level }}
+              </span>
+            </div>
+          </div>
+        </div>
+        <ng-template pTemplate="footer">
+          <p-button [label]="i18n.translate('common.cancel')" severity="secondary" [text]="true" (onClick)="showRoleDialog=false" />
+          <p-button [label]="i18n.translate('common.save')" icon="pi pi-check" (onClick)="changeRole()" />
+        </ng-template>
+      </p-dialog>
+
+      <!-- Member Activity Dialog -->
+      <p-dialog [header]="memberActivityName + ' — ' + i18n.translate('team.activityLog')"
+                [(visible)]="showMemberActivityDialog" [modal]="true" [style]="{width:'600px'}">
+        <div class="activity-timeline" *ngIf="memberActivities.length > 0">
+          <div *ngFor="let a of memberActivities" class="activity-entry">
+            <div class="activity-icon-wrap">
+              <i class="pi" [ngClass]="getActivityIcon(a.action)"></i>
+            </div>
+            <div class="activity-body">
+              <div class="activity-header-row">
+                <span class="activity-action-badge" [ngClass]="'action-' + a.action">{{ a.action }}</span>
+                <span class="activity-module" *ngIf="a.module">{{ a.module }}</span>
+              </div>
+              <p class="activity-desc" *ngIf="a.description">{{ a.description }}</p>
+              <span class="activity-time">{{ a.created_at | appDate:'medium' }}</span>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="memberActivities.length === 0" class="empty-state" style="padding:24px;text-align:center">
+          <p>{{ i18n.translate('team.noActivities') }}</p>
+        </div>
+      </p-dialog>
+    </app-page-shell>

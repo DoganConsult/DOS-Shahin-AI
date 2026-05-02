@@ -1,0 +1,20 @@
+{
+  "asset.title": "إدارة الأصول",
+  "asset.dashboard": "لوحة الأصول",
+  "asset.registry": "سجل الأصول",
+  "asset.applications": "التطبيقات",
+  "asset.services": "الخدمات",
+  "asset.dependencies": "التبعيات",
+  "asset.criticality": "تقييم الأهمية",
+  "asset.linkage": "ربط الأصول",
+  "asset.ownership": "الملكية",
+  "asset.serviceMap": "خريطة الخدمات",
+  "asset.diagnostics": "التشخيصات",
+  "asset.admin": "إدارة الأصول",
+  "asset.empty.title": "لا توجد أصول مسجلة",
+  "asset.empty.description": "سجّل أول أصل لبدء تتبع البنية التحتية.",
+  "asset.loading": "جاري تحميل الأصول...",
+  "asset.error.title": "فشل تحميل الأصول",
+  "asset.error.retry": "إعادة المحاولة",
+  "asset.create": "تسجيل أصل"
+}

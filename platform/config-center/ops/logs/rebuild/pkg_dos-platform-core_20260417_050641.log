@@ -1,0 +1,4 @@
+
+> @dos/platform-core@1.0.0 build /root/DOS-AIO/packages/dos-platform-core
+> tsc -p tsconfig.build.json
+

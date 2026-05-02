@@ -1,0 +1,26 @@
+/**
+ * DOS Platform — canonical token entry point.
+ *
+ * Consumers import this single file at the application root:
+ *   @import '@dos/design-tokens/tokens.css';
+ *
+ * Order matters: colors → typography → display-type → spacing → radius
+ * → shadows → motion → gradients → glass → density → layout → carbon-
+ * overrides → rtl. Carbon overrides come BEFORE rtl because rtl overrides
+ * logical properties only and is layout-agnostic. Carbon overrides come
+ * AFTER all primitives because they reference --dos-* tokens.
+ */
+@import './colors.css';
+@import './typography.css';
+@import './display-type.css';
+@import './spacing.css';
+@import './radius.css';
+@import './shadows.css';
+@import './motion.css';
+@import './gradients.css';
+@import './glass.css';
+@import './density.css';
+@import './layout.css';
+@import './carbon-overrides.css';
+@import './carbon-themes.css';
+@import './rtl.css';

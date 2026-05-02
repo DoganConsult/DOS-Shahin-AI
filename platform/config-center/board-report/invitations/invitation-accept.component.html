@@ -1,0 +1,138 @@
+<div class="invite-page" [dir]="i18n.direction()">
+      <div class="auth-top-bar">
+        <a routerLink="/">{{ i18n.translate('invitation.home') }}</a>
+        <select class="auth-lang-dropdown" [value]="i18n.currentLang()" (change)="i18n.switchLanguage($any($event.target).value)">
+          <option value="en">EN</option>
+          <option value="ar">عربي</option>
+        </select>
+      </div>
+      <div class="invite-card">
+        <img loading="eager" src="logoiconapphero.png" alt="Shahin GRC" width="48" height="48"
+             style="border-radius:12px; margin-bottom:16px" />
+
+        <!-- Loading state -->
+        <div *ngIf="state === 'loading'" class="state-block">
+          <div class="spinner"></div>
+          <p>{{ i18n.currentLang() === 'ar' ? 'جاري التحقق من الدعوة...' : 'Validating your invitation…' }}</p>
+        </div>
+
+        <!-- Ready: External role → simple accept button -->
+        <div *ngIf="state === 'ready' && isExternal" class="state-block">
+          <i class="pi pi-envelope" style="font-size:48px;color:var(--primary)"></i>
+          <h2>{{ i18n.currentLang() === 'ar' ? 'لقد تمت دعوتك' : 'You\\'ve Been Invited' }}</h2>
+          <p class="detail">
+            {{ i18n.currentLang() === 'ar' ? 'تمت دعوتك للانضمام إلى' : 'You are invited to join' }}
+            <strong>{{ organizationName }}</strong>
+            {{ i18n.currentLang() === 'ar' ? 'كـ' : 'as' }} <strong>{{ roleLabel }}</strong>.
+          </p>
+          <button class="btn-accept" (click)="acceptExternal()" [disabled]="accepting">
+            {{ accepting
+              ? (i18n.currentLang() === 'ar' ? 'جاري القبول...' : 'Accepting…')
+              : (i18n.currentLang() === 'ar' ? 'قبول الدعوة' : 'Accept Invitation') }}
+          </button>
+        </div>
+
+        <!-- Ready: Internal role → registration form with role details -->
+        <div *ngIf="state === 'ready' && !isExternal" class="state-block">
+          <i class="pi pi-user-plus" style="font-size:48px;color:var(--primary)"></i>
+          <h2>{{ i18n.currentLang() === 'ar' ? 'انضم إلى الفريق' : 'Join the Team' }}</h2>
+          <p class="detail">
+            {{ i18n.currentLang() === 'ar' ? 'تمت دعوتك للانضمام إلى' : 'You are invited to join' }}
+            <strong>{{ organizationName }}</strong>
+            {{ i18n.currentLang() === 'ar' ? 'كـ' : 'as' }} <strong>{{ roleLabel }}</strong>.
+          </p>
+
+          <!-- Role description -->
+          <div *ngIf="roleDescription" class="role-detail-box">
+            <p class="role-desc">{{ roleDescription }}</p>
+          </div>
+
+          <!-- Profile info from invitation metadata -->
+          <div *ngIf="jobTitle || department" class="profile-summary">
+            <div *ngIf="jobTitle" class="profile-row">
+              <span class="profile-label">{{ i18n.currentLang() === 'ar' ? 'المسمى الوظيفي' : 'Job Title' }}</span>
+              <span class="profile-value">{{ jobTitle }}</span>
+            </div>
+            <div *ngIf="department" class="profile-row">
+              <span class="profile-label">{{ i18n.currentLang() === 'ar' ? 'القسم' : 'Department' }}</span>
+              <span class="profile-value">{{ department }}</span>
+            </div>
+          </div>
+
+          <!-- Modules access badges -->
+          <div *ngIf="roleModules.length > 0" class="modules-section">
+            <p class="section-label">{{ i18n.currentLang() === 'ar' ? 'الموديولات المتاحة لك' : 'Modules you can access' }}</p>
+            <div class="module-badges">
+              <span *ngFor="let m of roleModules" class="module-badge">{{ m }}</span>
+            </div>
+          </div>
+
+          <p class="detail sub">
+            {{ i18n.currentLang() === 'ar' ? 'أنشئ حسابك للبدء.' : 'Create your account to get started.' }}
+          </p>
+
+          <form class="register-form" (ngSubmit)="acceptAndRegister()">
+            <!-- Email is pre-filled and disabled — no label/validation wrapper needed -->
+            <div class="form-group">
+              <label>{{ i18n.currentLang() === 'ar' ? 'البريد الإلكتروني' : 'Email' }}</label>
+              <input type="email" [value]="inviteeEmail" disabled class="form-input disabled" />
+            </div>
+            <grc-form-field
+              [label]="i18n.currentLang() === 'ar' ? 'الاسم الكامل' : 'Full Name'"
+              [required]="true">
+              <input type="text" [(ngModel)]="regName" name="name" class="form-input"
+                     [placeholder]="i18n.currentLang() === 'ar' ? 'أدخل اسمك' : 'Enter your full name'" required />
+            </grc-form-field>
+            <grc-form-field
+              [label]="i18n.currentLang() === 'ar' ? 'كلمة المرور' : 'Password'"
+              [required]="true">
+              <input [type]="showPassword ? 'text' : 'password'" [(ngModel)]="regPassword" name="password" class="form-input"
+                     [placeholder]="i18n.currentLang() === 'ar' ? '8 أحرف على الأقل' : 'At least 8 characters'" required minlength="8"
+                     (input)="onPasswordInput()" />
+              <button type="button" class="toggle-pw" (click)="showPassword = !showPassword"
+                      [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'">
+                <i [class]="showPassword ? 'pi pi-eye-slash' : 'pi pi-eye'"></i>
+              </button>
+              <div class="password-strength-bar" *ngIf="regPassword.length > 0" style="display:flex;gap:4px;margin-top:6px">
+                <span *ngFor="let i of [1,2,3,4,5]" style="flex:1;height:4px;border-radius:2px"
+                      [style.background]="i <= passwordStrength ? (passwordStrength >= 4 ? 'var(--success)' : passwordStrength >= 3 ? 'var(--warning)' : 'var(--error)') : 'var(--border)'"></span>
+              </div>
+            </grc-form-field>
+            <grc-form-field
+              [label]="i18n.currentLang() === 'ar' ? 'تأكيد كلمة المرور' : 'Confirm Password'"
+              [required]="true">
+              <input [type]="showPassword ? 'text' : 'password'" [(ngModel)]="regConfirmPassword" name="confirmPassword" class="form-input"
+                     [placeholder]="i18n.currentLang() === 'ar' ? 'أعد إدخال كلمة المرور' : 'Re-enter your password'" required />
+            </grc-form-field>
+
+            <div *ngIf="formError" class="form-error">{{ formError }}</div>
+
+            <button type="submit" class="btn-accept" [disabled]="accepting">
+              {{ accepting
+                ? (i18n.currentLang() === 'ar' ? 'جاري إنشاء الحساب...' : 'Creating Account…')
+                : (i18n.currentLang() === 'ar' ? 'إنشاء حساب والانضمام' : 'Create Account & Join') }}
+            </button>
+          </form>
+        </div>
+
+        <!-- Success -->
+        <div *ngIf="state === 'success'" class="state-block">
+          <i class="pi pi-check-circle" style="font-size:48px;color:var(--success, #22c55e)"></i>
+          <h2>{{ i18n.currentLang() === 'ar' ? 'مرحباً بك!' : 'Welcome!' }}</h2>
+          <p>{{ i18n.currentLang() === 'ar' ? 'تم إنشاء حسابك بنجاح. جاري التحويل...' : 'Your account has been created. Redirecting…' }}</p>
+        </div>
+
+        <!-- Error -->
+        <div *ngIf="state === 'error'" class="state-block">
+          <i class="pi pi-times-circle" style="font-size:48px;color:var(--error, #ef4444)"></i>
+          <h2>{{ i18n.currentLang() === 'ar' ? 'خطأ في الدعوة' : 'Invitation Error' }}</h2>
+          <p>{{ errorMessage }}</p>
+          <button class="btn-secondary" (click)="requestNew()">
+            {{ i18n.currentLang() === 'ar' ? 'طلب دعوة جديدة' : 'Request New Invitation' }}
+          </button>
+          <button class="btn-link" (click)="router.navigate(['/login'])">
+            {{ i18n.currentLang() === 'ar' ? 'الذهاب لتسجيل الدخول' : 'Go to Login' }}
+          </button>
+        </div>
+      </div>
+    </div>

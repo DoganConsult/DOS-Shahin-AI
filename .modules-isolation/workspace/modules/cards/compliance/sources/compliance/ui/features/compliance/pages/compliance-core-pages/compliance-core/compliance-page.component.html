@@ -1,0 +1,823 @@
+<div [dir]="i18n.direction()">
+  <!-- ═══ HEADER ═══ -->
+  <header class="compliance-header">
+    <div class="header-left">
+      <div class="header-icon-wrap"><i class=" header-icon"></i></div>
+      <div>
+        <h1 class="header-title">{{ L().pageTitle }}</h1>
+        <p class="header-subtitle">{{ L().pageSubtitle }}</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <cds-dropdown [options]="fwFilterOptions" [(ngModel)]="fwFilter" (onChange)="onFwFilterChange()"
+        [placeholder]="L().filterByFramework" [style]="{'min-width':'180px'}" appendTo="body"></cds-dropdown>
+      <button cdsButton [label]="L().startAssessment" icon="" class=" "
+        (click)="onStartAssessment()"></button>
+      <button cdsButton [label]="L().generateRoadmap" icon="" class=" "
+        (click)="onGenerateRoadmap()"></button>
+    </div>
+  </header>
+
+  <!-- ═══ HEADER METRICS BAND ═══ -->
+  @if (sum()) {
+    <div class="header-metrics">
+      <div class="hm-card">
+        <span class="hm-label">{{ L().activeFrameworks }}</span>
+        <span class="hm-value">{{ sum()!.activeFrameworks }}</span>
+      </div>
+      <div class="hm-card">
+        <span class="hm-label">{{ L().overallScore }}</span>
+        <span class="hm-value" [class]="scoreClass(sum()!.overallScore)">{{ sum()!.overallScore }}%</span>
+      </div>
+      <div class="hm-card">
+        <span class="hm-label">{{ L().openGaps }}</span>
+        <span class="hm-value" [class]="sum()!.openGaps > 0 ? 'bad' : 'good'">{{ sum()!.openGaps }}</span>
+      </div>
+      <div class="hm-card">
+        <span class="hm-label">{{ L().criticalGaps }}</span>
+        <span class="hm-value" [class]="sum()!.criticalGaps > 0 ? 'bad' : 'good'">{{ sum()!.criticalGaps }}</span>
+      </div>
+      <div class="hm-card">
+        <span class="hm-label">{{ L().overdueActions }}</span>
+        <span class="hm-value" [class]="sum()!.overdueActions > 0 ? 'warn' : 'good'">{{ sum()!.overdueActions }}</span>
+      </div>
+      <div class="hm-card">
+        <span class="hm-label">{{ L().auditReadiness }}</span>
+        <span class="hm-value" [class]="scoreClass(sum()!.auditReadiness)">{{ sum()!.auditReadiness }}%</span>
+      </div>
+    </div>
+  }
+
+  <!-- ═══ TABS ═══ -->
+  <cds-tabs [(activeIndex)]="tabIndex" (activeIndexChange)="onTabChange($event)">
+
+    <!-- ══════════════════════════════════════════════════════ -->
+    <!-- TAB 1: COMPLIANCE OVERVIEW                           -->
+    <!-- ══════════════════════════════════════════════════════ -->
+    <cds-tab [header]="L().overview">
+      <div class="tab-content">
+        @if (loading()) {
+          <p>{{ L().loading }}</p>
+        } @else if (!overview()) {
+          <div class="empty-state">
+            <div class="empty-icon"><i class=""></i></div>
+            <p class="empty-title">{{ L().noData }}</p>
+            <p class="empty-text">{{ L().emptyFrameworks }}</p>
+          </div>
+        } @else {
+          <!-- KPI Band -->
+          <div class="kpi-band">
+            <div class="kpi-card"><span class="kpi-label">{{ L().overallScore }}</span><span class="kpi-value" [style.color]="scoreColor(sum()!.overallScore)">{{ sum()!.overallScore }}%</span></div>
+            <div class="kpi-card"><span class="kpi-label">{{ L().activeFrameworks }}</span><span class="kpi-value">{{ sum()!.activeFrameworks }}</span></div>
+            <div class="kpi-card"><span class="kpi-label">{{ L().openGaps }}</span><span class="kpi-value" [style.color]="sum()!.openGaps > 0 ? 'var(--error)' : '#16a34a'">{{ sum()!.openGaps }}</span></div>
+            <div class="kpi-card"><span class="kpi-label">{{ L().criticalGaps }}</span><span class="kpi-value" [style.color]="sum()!.criticalGaps > 0 ? 'var(--error)' : '#16a34a'">{{ sum()!.criticalGaps }}</span></div>
+            <div class="kpi-card"><span class="kpi-label">{{ L().obligationsCovered }}</span><span class="kpi-value">{{ sum()!.obligationsCovered }}</span></div>
+            <div class="kpi-card"><span class="kpi-label">{{ L().controlsMapped }}</span><span class="kpi-value">{{ sum()!.controlsMapped }}</span></div>
+            <div class="kpi-card"><span class="kpi-label">{{ L().evidenceCoverage }}</span><span class="kpi-value" [style.color]="scoreColor(sum()!.evidenceCoverage)">{{ sum()!.evidenceCoverage }}%</span></div>
+            <div class="kpi-card"><span class="kpi-label">{{ L().auditReadiness }}</span><span class="kpi-value" [style.color]="scoreColor(sum()!.auditReadiness)">{{ sum()!.auditReadiness }}%</span></div>
+          </div>
+
+          <!-- Framework Posture -->
+          <div class="section-header">
+            <h3 class="section-title">{{ L().frameworkPosture }}</h3>
+          </div>
+          <div class="fw-cards">
+            @for (fw of overview()!.frameworks; track fw.frameworkId) {
+              <div tabindex="0" role="button" (keyup.enter)="tabIndex = 1; onTabChange(1); openFrameworkDetail(fw.frameworkId)" class="fw-card" (click)="tabIndex = 1; onTabChange(1); openFrameworkDetail(fw.frameworkId)">
+                <h4 class="fw-card-name">{{ fw.frameworkName }}</h4>
+                <div class="fw-card-stats">
+                  <div class="fw-stat"><span class="fw-stat-label">{{ L().score }}</span><span class="fw-stat-value" [style.color]="scoreColor(fw.score)">{{ fw.score }}%</span></div>
+                  <div class="fw-stat"><span class="fw-stat-label">{{ L().controls }}</span><span class="fw-stat-value">{{ fw.controlsMapped || fw.totalControls }}</span></div>
+                  <div class="fw-stat"><span class="fw-stat-label">{{ L().evidenceCoverage }}</span><span class="fw-stat-value">{{ fw.evidenceCoverage }}%</span></div>
+                  <div class="fw-stat"><span class="fw-stat-label">{{ L().openGaps }}</span><span class="fw-stat-value" [style.color]="(fw.openGaps || 0) > 0 ? 'var(--error)' : '#16a34a'">{{ fw.openGaps || 0 }}</span></div>
+                </div>
+              </div>
+            }
+          </div>
+
+          <!-- Domain Health -->
+          @if (overview()!.domains.length > 0) {
+            <div class="section-header">
+              <h3 class="section-title">{{ L().domainHealth }}</h3>
+            </div>
+            <div class="domain-heat">
+              @for (dom of overview()!.domains.slice(0, 12); track dom.nodeId) {
+                <div class="heat-cell" [style.background]="domainHeatColor(dom.score)">
+                  <p class="heat-cell-name">{{ i18n.isAr() ? dom.titleAr : dom.titleEn }}</p>
+                  <span class="heat-cell-score" [style.color]="scoreColor(dom.score)">{{ dom.score }}%</span>
+                  <p class="heat-cell-fw">{{ dom.frameworkName }}</p>
+                </div>
+              }
+            </div>
+          }
+
+          <!-- My Work & Team Work -->
+          <div class="work-panels">
+            <div class="work-panel">
+              <div class="section-header">
+                <h3 class="section-title"><i class=""></i> My Work</h3>
+                <a class="section-link" routerLink="/compliance/work-queue" [queryParams]="{scope:'my'}">View all</a>
+              </div>
+              <div class="work-items">
+                @if (myWorkItems().length) {
+                  @for (item of myWorkItems().slice(0, 5); track item.id) {
+                    <div class="work-item" (click)="navigateIssue(item)">
+                      <span class="work-item-type" [attr.data-type]="item.type">{{ item.type }}</span>
+                      <span class="work-item-title">{{ item.title }}</span>
+                      @if (item.dueDate) { <span class="work-item-due" [class.overdue]="isOverdueDate(item.dueDate)">{{ item.dueDate | appDate:'short' }}</span> }
+                    </div>
+                  }
+                } @else {
+                  <p class="work-empty">No pending work items</p>
+                }
+              </div>
+            </div>
+            <div class="work-panel">
+              <div class="section-header">
+                <h3 class="section-title"><i class=""></i> Team Work</h3>
+                <a class="section-link" routerLink="/compliance/work-queue">View all</a>
+              </div>
+              <div class="work-items">
+                @if (teamWorkItems().length) {
+                  @for (item of teamWorkItems().slice(0, 5); track item.id) {
+                    <div class="work-item">
+                      <span class="work-item-type" [attr.data-type]="item.type">{{ item.type }}</span>
+                      <span class="work-item-title">{{ item.title }}</span>
+                      @if (item.owner) { <span class="work-item-owner">{{ item.owner }}</span> }
+                    </div>
+                  }
+                } @else {
+                  <p class="work-empty">No team work items</p>
+                }
+              </div>
+            </div>
+          </div>
+
+          <!-- Business Unit Posture -->
+          @if (buPosture().length > 0) {
+            <div class="section-header">
+              <h3 class="section-title"><i class=""></i> Business Unit Posture</h3>
+              <a class="section-link" routerLink="/compliance/heatmap">Full heatmap</a>
+            </div>
+            <div class="bu-posture-grid">
+              @for (bu of buPosture().slice(0, 8); track bu.groupId) {
+                <div class="bu-card">
+                  <span class="bu-name">{{ bu.groupName || bu.groupId }}</span>
+                  <span class="bu-score" [style.color]="scoreColor(bu.complianceScore || 0)">{{ bu.complianceScore || 0 }}%</span>
+                  <div class="bu-bar"><div class="bu-bar-fill" [style.width.%]="bu.complianceScore || 0" [style.background]="scoreColor(bu.complianceScore || 0)"></div></div>
+                </div>
+              }
+            </div>
+          }
+
+          <!-- Regulatory Change Feed -->
+          @if (changeFeed().length > 0) {
+            <div class="section-header">
+              <h3 class="section-title"><i class=""></i> Regulatory Change Feed</h3>
+              <a class="section-link" routerLink="/compliance/regulatory-changes">View all</a>
+            </div>
+            <div class="change-feed">
+              @for (rc of changeFeed().slice(0, 5); track rc.id) {
+                <div class="change-item">
+                  <span class="change-sev" [class]="'sev-' + (rc.severity || 'info')"></span>
+                  <span class="change-title">{{ rc.title }}</span>
+                  <span class="change-status">{{ rc.status }}</span>
+                  @if (rc.effectiveDate) { <span class="change-date">{{ rc.effectiveDate | appDate:'short' }}</span> }
+                </div>
+              }
+            </div>
+          }
+
+          <!-- Hotspots -->
+          @if (overview()!.priorityIssues.length > 3) {
+            <div class="section-header">
+              <h3 class="section-title"><i class=""></i> Compliance Hotspots</h3>
+            </div>
+            <div class="hotspot-grid">
+              @for (fw of hotspotFrameworks(); track fw.frameworkId) {
+                <div class="hotspot-card">
+                  <span class="hotspot-name">{{ fw.frameworkName }}</span>
+                  <span class="hotspot-gaps">{{ fw.openGaps || 0 }} open gaps</span>
+                  <span class="hotspot-score" [style.color]="scoreColor(fw.score)">{{ fw.score }}%</span>
+                </div>
+              }
+            </div>
+          }
+
+          <!-- Priority Issues -->
+          @if (overview()!.priorityIssues.length > 0) {
+            <div class="section-header">
+              <h3 class="section-title">{{ L().priorityIssues }}</h3>
+            </div>
+            <div class="issue-list">
+              @for (issue of overview()!.priorityIssues; track issue.entityId) {
+                <div class="issue-row">
+                  <span class="issue-sev" [class]="'sev-' + issue.severity"></span>
+                  <span class="issue-title">{{ issue.title }}</span>
+                  <span class="issue-meta">{{ issue.type | titlecase }}</span>
+                  @if (issue.dueDate) { <span class="issue-meta">{{ issue.dueDate | appDate:'medium' }}</span> }
+                  @if (issue.owner) { <span class="issue-meta">{{ issue.owner }}</span> }
+                </div>
+              }
+            </div>
+          }
+        }
+      </div>
+    </cds-tab>
+
+    <!-- ══════════════════════════════════════════════════════ -->
+    <!-- TAB 2: FRAMEWORKS                                    -->
+    <!-- ══════════════════════════════════════════════════════ -->
+    <cds-tab [header]="L().frameworks">
+      <div class="tab-content">
+        @if (frameworks().length === 0) {
+          <div class="empty-state">
+            <div class="empty-icon"><i class=""></i></div>
+            <p class="empty-title">{{ L().emptyFrameworks }}</p>
+            <button cdsButton [label]="L().enableFramework" icon="" class="" routerLink="/onboarding"></button>
+          </div>
+        } @else {
+          <!-- Actions -->
+          <section cdsToolbar styleClass="mb-3">
+            <ng-template pTemplate="start">
+              <button cdsButton [label]="L().comparison" icon="" class=" " (click)="openFwComparison()"></button>
+            </ng-template>
+          </section>
+
+          <!-- Framework Register Table -->
+          <grc-data-table
+            [totalRecords]="frameworks().length"
+            [emptyMessage]="L().emptyFrameworks || 'No frameworks found'">
+            <table cdsTable aria-label="Frameworks table" [value]="frameworks()" [paginator]="true" [rows]="15" styleClass="p-datatable-sm p-datatable-striped"
+              [globalFilterFields]="['frameworkName','frameworkCode','category']" responsiveLayout="scroll">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th >{{ L().code }} </th>
+                  <th >{{ L().name }} </th>
+                  <th>{{ L().status }}</th>
+                  <th >{{ L().score }} </th>
+                  <th>{{ L().controls }}</th>
+                  <th>{{ L().evidenceCoverage }}</th>
+                  <th>{{ L().actions }}</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-fw>
+                <tr>
+                  <td>{{ fw.frameworkCode }}</td>
+                  <td><a class="cursor-pointer text-primary font-semibold" (click)="openFrameworkDetail(fw.frameworkId)">{{ i18n.isAr() ? fw.nameAr : fw.nameEn }}</a></td>
+                  <td><cds-tag [value]="fw.status" [severity]="fw.status === 'active' ? 'success' : 'info'"></cds-tag></td>
+                  <td><span [style.color]="scoreColor(fw.score)" class="font-bold">{{ fw.score }}%</span></td>
+                  <td>{{ fw.implementedControls }} / {{ fw.totalControls }}</td>
+                  <td>{{ fw.evidenceCoverage }}%</td>
+                  <td>
+                    <button cdsButton icon="" class=" " (click)="openFrameworkDetail(fw.frameworkId)" [cdsTooltip]="L().details" [attr.aria-label]="L().details"></button>
+                    <button cdsButton icon="" class=" " (click)="runFrameworkAssessment(fw.frameworkId)" [cdsTooltip]="L().runAssessment" [attr.aria-label]="L().runAssessment"></button>
+                  </td>
+                </tr>
+              </ng-template>
+            </table>
+          </grc-data-table>
+        }
+
+        <!-- Framework Detail Drawer -->
+        @if (selectedFw()) {
+          <div tabindex="0" role="button" (keyup.enter)="closeFrameworkDetail()" class="drawer-backdrop" (click)="closeFrameworkDetail()"></div>
+          <div class="detail-drawer">
+            <div class="drawer-header">
+              <h2 class="drawer-title">{{ selectedFw()!.nameEn || selectedFw()!.frameworkName }}</h2>
+              <button cdsButton icon="" class="" (click)="closeFrameworkDetail()" aria-label="Close"></button>
+            </div>
+            <div class="drawer-section">
+              <p>{{ selectedFw()!.summaryEn || selectedFw()!.description }}</p>
+            </div>
+            <div class="kpi-band" style="grid-template-columns: repeat(3, 1fr);">
+              <div class="kpi-card"><span class="kpi-label">{{ L().score }}</span><span class="kpi-value" [style.color]="scoreColor(selectedFw()!.score)">{{ selectedFw()!.score }}%</span></div>
+              <div class="kpi-card"><span class="kpi-label">{{ L().domains }}</span><span class="kpi-value">{{ selectedFw()!.domainsCount }}</span></div>
+              <div class="kpi-card"><span class="kpi-label">{{ L().obligations }}</span><span class="kpi-value">{{ selectedFw()!.obligationsCount }}</span></div>
+              <div class="kpi-card"><span class="kpi-label">{{ L().controls }}</span><span class="kpi-value">{{ selectedFw()!.controlsMapped }}</span></div>
+              <div class="kpi-card"><span class="kpi-label">{{ L().evidenceCoverage }}</span><span class="kpi-value">{{ selectedFw()!.evidenceCoverage }}%</span></div>
+              <div class="kpi-card"><span class="kpi-label">{{ L().openGaps }}</span><span class="kpi-value" [style.color]="selectedFw()!.openGaps > 0 ? 'var(--error)' : '#16a34a'">{{ selectedFw()!.openGaps }}</span></div>
+            </div>
+            @if (selectedFw()!.domains?.length) {
+              <div class="drawer-section">
+                <h4 class="drawer-section-title">{{ L().domains }}</h4>
+                <grc-data-table
+                  [totalRecords]="selectedFw()!.domains.length"
+                  [emptyMessage]="L().emptyDomains || 'No domains'">
+                  <table cdsTable aria-label="Domains table" [paginator]="true" [rows]="20" [rowsPerPageOptions]="[10,20,50]" [value]="selectedFw()!.domains" styleClass="p-datatable-sm" responsiveLayout="scroll">
+                    <ng-template pTemplate="body" let-d>
+                      <tr><td>{{ d.code }}</td><td>{{ i18n.isAr() ? d.title_ar : d.title_en }}</td></tr>
+                    </ng-template>
+                  </table>
+                </grc-data-table>
+              </div>
+            }
+          </div>
+        }
+
+        <!-- Framework Comparison Dialog -->
+        <cds-modal [(visible)]="fwCompareVisible" [header]="L().comparison" [modal]="true" [style]="{width:'70vw'}" [draggable]="false">
+          <div class="compare-grid">
+            @for (cmp of fwComparison(); track cmp.frameworkId) {
+              <div class="compare-card">
+                <p class="compare-name">{{ cmp.frameworkName }}</p>
+                <div class="fw-stat"><span class="fw-stat-label">{{ L().score }}</span><span class="fw-stat-value" [style.color]="scoreColor(cmp.score)">{{ cmp.score }}%</span></div>
+                <div class="fw-stat"><span class="fw-stat-label">{{ L().controls }}</span><span class="fw-stat-value">{{ cmp.implementedControls }}/{{ cmp.totalControls }}</span></div>
+                <div class="fw-stat"><span class="fw-stat-label">{{ L().evidenceCoverage }}</span><span class="fw-stat-value">{{ cmp.evidenceCoverage }}%</span></div>
+              </div>
+            }
+          </div>
+        </cds-modal>
+      </div>
+    </cds-tab>
+
+    <!-- ══════════════════════════════════════════════════════ -->
+    <!-- TAB 3: DOMAINS                                       -->
+    <!-- ══════════════════════════════════════════════════════ -->
+    <cds-tab [header]="L().domains">
+      <div class="tab-content">
+        @if (domains().length === 0) {
+          <div class="empty-state">
+            <div class="empty-icon"><i class=""></i></div>
+            <p class="empty-title">{{ L().emptyDomains }}</p>
+          </div>
+        } @else {
+          <!-- Toggle Heat/Table -->
+          <section cdsToolbar styleClass="mb-3">
+            <ng-template pTemplate="start">
+              <button cdsButton [label]="domainHeatView ? L().tableView : L().heatView" [icon]="domainHeatView ? '' : ''"
+                class=" " (click)="toggleDomainHeat()"></button>
+            </ng-template>
+          </section>
+
+          @if (domainHeatView) {
+            <div class="domain-heat">
+              @for (dom of domains(); track dom.nodeId) {
+                <div tabindex="0" role="button" (keyup.enter)="openDomainDetail(dom.nodeId)" class="heat-cell" [style.background]="domainHeatColor(dom.score)" (click)="openDomainDetail(dom.nodeId)">
+                  <p class="heat-cell-name">{{ i18n.isAr() ? dom.titleAr : dom.titleEn }}</p>
+                  <span class="heat-cell-score" [style.color]="scoreColor(dom.score)">{{ dom.score }}%</span>
+                  <p class="heat-cell-fw">{{ dom.frameworkName }} &middot; {{ dom.obligationsCount }} {{ L().obligations }}</p>
+                </div>
+              }
+            </div>
+          } @else {
+            <grc-data-table
+              [totalRecords]="domains().length"
+              [emptyMessage]="L().emptyDomains || 'No domains found'">
+              <table cdsTable aria-label="Domains table" [value]="domains()" [paginator]="true" [rows]="15" styleClass="p-datatable-sm p-datatable-striped" responsiveLayout="scroll">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th >{{ L().code }}</th>
+                    <th>{{ L().name }}</th>
+                    <th>{{ L().framework }}</th>
+                    <th >{{ L().score }}</th>
+                    <th>{{ L().obligations }}</th>
+                    <th>{{ L().controls }}</th>
+                    <th>{{ L().openGaps }}</th>
+                    <th>{{ L().actions }}</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-dom>
+                  <tr>
+                    <td>{{ dom.code }}</td>
+                    <td><a class="cursor-pointer text-primary font-semibold" (click)="openDomainDetail(dom.nodeId)">{{ i18n.isAr() ? dom.titleAr : dom.titleEn }}</a></td>
+                    <td>{{ dom.frameworkName }}</td>
+                    <td><span [style.color]="scoreColor(dom.score)" class="font-bold">{{ dom.score }}%</span></td>
+                    <td>{{ dom.obligationsCount }}</td>
+                    <td>{{ dom.controlsMapped }}</td>
+                    <td><span [style.color]="(dom.openGaps || 0) > 0 ? 'var(--error)' : '#16a34a'">{{ dom.openGaps || 0 }}</span></td>
+                    <td><button cdsButton icon="" class=" " (click)="openDomainDetail(dom.nodeId)" [attr.aria-label]="L().details"></button></td>
+                  </tr>
+                </ng-template>
+              </table>
+            </grc-data-table>
+          }
+        }
+
+        <!-- Domain Detail Drawer -->
+        @if (selectedDomain()) {
+          <div tabindex="0" role="button" (keyup.enter)="closeDomainDetail()" class="drawer-backdrop" (click)="closeDomainDetail()"></div>
+          <div class="detail-drawer">
+            <div class="drawer-header">
+              <h2 class="drawer-title">{{ i18n.isAr() ? selectedDomain()!.domain.titleAr : selectedDomain()!.domain.titleEn }}</h2>
+              <button cdsButton icon="" class="" (click)="closeDomainDetail()" aria-label="Close"></button>
+            </div>
+            <div class="kpi-band" style="grid-template-columns: repeat(3, 1fr);">
+              <div class="kpi-card"><span class="kpi-label">{{ L().score }}</span><span class="kpi-value" [style.color]="scoreColor(selectedDomain()!.score)">{{ selectedDomain()!.score }}%</span></div>
+              <div class="kpi-card"><span class="kpi-label">{{ L().obligations }}</span><span class="kpi-value">{{ selectedDomain()!.obligations.length }}</span></div>
+              <div class="kpi-card"><span class="kpi-label">{{ L().controls }}</span><span class="kpi-value">{{ selectedDomain()!.controls.length }}</span></div>
+            </div>
+            @if (selectedDomain()!.obligations.length) {
+              <div class="drawer-section">
+                <h4 class="drawer-section-title">{{ L().obligations }}</h4>
+                <grc-data-table
+                  [totalRecords]="selectedDomain()!.obligations.length"
+                  [emptyMessage]="L().emptyObligations || 'No obligations'">
+                  <table cdsTable aria-label="Obligations table" [paginator]="true" [rows]="20" [rowsPerPageOptions]="[10,20,50]" [value]="selectedDomain()!.obligations" styleClass="p-datatable-sm" responsiveLayout="scroll">
+                    <ng-template pTemplate="header"><tr><th>{{ L().code }}</th><th>{{ L().name }}</th><th>{{ L().controls }}</th><th>{{ L().covered }}</th></tr></ng-template>
+                    <ng-template pTemplate="body" let-o>
+                      <tr>
+                        <td>{{ o.code }}</td>
+                        <td>{{ i18n.isAr() ? o.title_ar : o.title_en }}</td>
+                        <td>{{ o.controlsMapped || 0 }}</td>
+                        <td><i class="pi" [ngClass]="o.covered ? 'pi-check-circle text-green-500' : 'pi-times-circle text-red-500'" ></i></td>
+                      </tr>
+                    </ng-template>
+                  </table>
+                </grc-data-table>
+              </div>
+            }
+            @if (selectedDomain()!.findings.length) {
+              <div class="drawer-section">
+                <h4 class="drawer-section-title">{{ L().gapAssessment }}</h4>
+                <grc-data-table
+                  [totalRecords]="selectedDomain()!.findings.length"
+                  [emptyMessage]="L().emptyGaps || 'No findings'">
+                  <table cdsTable aria-label="Findings table" [paginator]="true" [rows]="20" [rowsPerPageOptions]="[10,20,50]" [value]="selectedDomain()!.findings" styleClass="p-datatable-sm" responsiveLayout="scroll">
+                    <ng-template pTemplate="body" let-f>
+                      <tr><td>{{ f.title }}</td><td><cds-tag [value]="f.severity" [severity]="f.severity === 'critical' ? 'danger' : f.severity === 'high' ? 'warning' : 'info'"></cds-tag></td><td><cds-tag [value]="f.status"></cds-tag></td></tr>
+                    </ng-template>
+                  </table>
+                </grc-data-table>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </cds-tab>
+
+    <!-- ══════════════════════════════════════════════════════ -->
+    <!-- TAB 4: OBLIGATIONS                                   -->
+    <!-- ══════════════════════════════════════════════════════ -->
+    <cds-tab [header]="L().obligations">
+      <div class="tab-content">
+        @if (obligations().length === 0) {
+          <div class="empty-state">
+            <div class="empty-icon"><i class=""></i></div>
+            <p class="empty-title">{{ L().emptyObligations }}</p>
+            <button cdsButton [label]="L().startAssessment" icon="" class="" (click)="onStartAssessment()"></button>
+          </div>
+        } @else {
+          <!-- Toolbar -->
+          <section cdsToolbar styleClass="mb-3">
+            <ng-template pTemplate="start">
+              <span class="p-input-icon-left">
+                <i class=""></i>
+                <input pInputText [(ngModel)]="searchTerm" [placeholder]="'Search…'" [attr.aria-label]="'Search…'" class="p-inputtext-sm" style="width:220px" />
+              </span>
+              <cds-dropdown [options]="oblStatusOptions" [(ngModel)]="oblStatusFilter" [placeholder]="L().status"
+                class="ml-2" [style]="{'min-width':'150px'}" appendTo="body" [showClear]="true"></cds-dropdown>
+            </ng-template>
+            <ng-template pTemplate="end">
+              <button cdsButton [label]="L().coverageMatrix" icon="" class=" " (click)="openCoverageMatrix()"></button>
+            </ng-template>
+          </section>
+
+          <grc-data-table
+            [totalRecords]="filteredObligations().length"
+            [emptyMessage]="L().emptyObligations || 'No obligations found'">
+            <table cdsTable aria-label="Filtered Obligations table" [value]="filteredObligations()" [paginator]="true" [rows]="20" styleClass="p-datatable-sm p-datatable-striped" responsiveLayout="scroll">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th >{{ L().code }}</th>
+                  <th>{{ L().name }}</th>
+                  <th>{{ L().framework }}</th>
+                  <th>{{ L().domain }}</th>
+                  <th >{{ L().status }}</th>
+                  <th>{{ L().controls }}</th>
+                  <th>{{ L().evidenceCoverage }}</th>
+                  <th>{{ L().actions }}</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-obl>
+                <tr>
+                  <td>{{ obl.code }}</td>
+                  <td><a class="cursor-pointer text-primary font-semibold" (click)="openOblDetail(obl.nodeId)">{{ i18n.isAr() ? obl.titleAr : obl.titleEn }}</a></td>
+                  <td>{{ obl.frameworkName }}</td>
+                  <td>{{ i18n.isAr() ? obl.domainNameAr : obl.domainName }}</td>
+                  <td>
+                    <cds-tag [value]="obl.status" [severity]="obl.status === 'covered' ? 'success' : obl.status === 'partially_covered' ? 'warning' : obl.status === 'uncovered' ? 'danger' : 'info'"></cds-tag>
+                  </td>
+                  <td>{{ obl.controlsImplemented }} / {{ obl.controlCoverage }}</td>
+                  <td>{{ obl.evidenceCoverage }}%</td>
+                  <td><button cdsButton icon="" class=" " (click)="openOblDetail(obl.nodeId)" [attr.aria-label]="L().details"></button></td>
+                </tr>
+              </ng-template>
+            </table>
+          </grc-data-table>
+        }
+
+        <!-- Obligation Detail Drawer -->
+        @if (selectedObl()) {
+          <div tabindex="0" role="button" (keyup.enter)="closeOblDetail()" class="drawer-backdrop" (click)="closeOblDetail()"></div>
+          <div class="detail-drawer">
+            <div class="drawer-header">
+              <h2 class="drawer-title">{{ selectedObl()!.obligation.code }} — {{ i18n.isAr() ? selectedObl()!.obligation.titleAr : selectedObl()!.obligation.titleEn }}</h2>
+              <button cdsButton icon="" class="" (click)="closeOblDetail()" aria-label="Close"></button>
+            </div>
+            @if (selectedObl()!.obligation.descriptionEn) {
+              <div class="drawer-section">
+                <h4 class="drawer-section-title">{{ L().description }}</h4>
+                <p style="font-size:13px; line-height:1.6">{{ i18n.isAr() ? selectedObl()!.obligation.descriptionAr : selectedObl()!.obligation.descriptionEn }}</p>
+              </div>
+            }
+            @if (selectedObl()!.controls.length) {
+              <div class="drawer-section">
+                <h4 class="drawer-section-title">{{ L().controls }} ({{ selectedObl()!.controls.length }})</h4>
+                <grc-data-table
+                  [totalRecords]="selectedObl()!.controls.length"
+                  [emptyMessage]="'No controls'">
+                  <table cdsTable aria-label="Controls table" [paginator]="true" [rows]="20" [rowsPerPageOptions]="[10,20,50]" [value]="selectedObl()!.controls" styleClass="p-datatable-sm" responsiveLayout="scroll">
+                    <ng-template pTemplate="body" let-c>
+                      <tr><td>{{ c.title }}</td><td><cds-tag [value]="c.status" [severity]="c.status === 'implemented' ? 'success' : 'warning'"></cds-tag></td><td>{{ c.owner || '—' }}</td></tr>
+                    </ng-template>
+                  </table>
+                </grc-data-table>
+              </div>
+            }
+            @if (selectedObl()!.evidence.length) {
+              <div class="drawer-section">
+                <h4 class="drawer-section-title">{{ L().evidence }} ({{ selectedObl()!.evidence.length }})</h4>
+                <grc-data-table
+                  [totalRecords]="selectedObl()!.evidence.length"
+                  [emptyMessage]="'No evidence'">
+                  <table cdsTable aria-label="Evidence table" [paginator]="true" [rows]="20" [rowsPerPageOptions]="[10,20,50]" [value]="selectedObl()!.evidence" styleClass="p-datatable-sm" responsiveLayout="scroll">
+                    <ng-template pTemplate="body" let-e>
+                      <tr><td>{{ e.title }}</td><td><cds-tag [value]="e.verified ? 'Verified' : 'Pending'" [severity]="e.verified ? 'success' : 'warning'"></cds-tag></td></tr>
+                    </ng-template>
+                  </table>
+                </grc-data-table>
+              </div>
+            }
+            @if (selectedObl()!.findings.length) {
+              <div class="drawer-section">
+                <h4 class="drawer-section-title">{{ L().gapAssessment }} ({{ selectedObl()!.findings.length }})</h4>
+                <grc-data-table
+                  [totalRecords]="selectedObl()!.findings.length"
+                  [emptyMessage]="L().emptyGaps || 'No findings'">
+                  <table cdsTable aria-label="Findings table" [paginator]="true" [rows]="20" [rowsPerPageOptions]="[10,20,50]" [value]="selectedObl()!.findings" styleClass="p-datatable-sm" responsiveLayout="scroll">
+                    <ng-template pTemplate="body" let-f>
+                      <tr><td>{{ f.title }}</td><td><cds-tag [value]="f.severity" [severity]="f.severity === 'critical' ? 'danger' : 'warning'"></cds-tag></td></tr>
+                    </ng-template>
+                  </table>
+                </grc-data-table>
+              </div>
+            }
+          </div>
+        }
+
+        <!-- Coverage Matrix Dialog -->
+        <cds-modal [(visible)]="oblMatrixVisible" [header]="L().coverageMatrix" [modal]="true" [style]="{width:'80vw'}" [draggable]="false">
+          @if (oblCoverageMatrix()) {
+            <div style="margin-bottom:12px; font-size:13px; color:var(--text-secondary, #6b7280)">
+              {{ L().total }}: {{ oblCoverageMatrix()!.totalObligations }} &middot;
+              {{ L().covered }}: {{ oblCoverageMatrix()!.covered }} &middot;
+              {{ L().implemented }}: {{ oblCoverageMatrix()!.implemented }} &middot;
+              {{ L().withEvidence }}: {{ oblCoverageMatrix()!.withEvidence }}
+            </div>
+            <table aria-label="Matrix Table table" class="matrix-table">
+              <thead>
+                <tr>
+                  <th>{{ L().obligation }}</th>
+                  <th>{{ L().controls }}</th>
+                  <th>{{ L().implemented }}</th>
+                  <th>{{ L().evidence }}</th>
+                  <th>{{ L().tested }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (row of oblCoverageMatrix()!.matrix; track row.obligationId) {
+                  <tr>
+                    <td>{{ row.obligationCode }} — {{ row.obligationTitle }}</td>
+                    <td [class]="row.hasControl ? 'matrix-check' : 'matrix-miss'">{{ row.hasControl ? row.controlCount : '—' }}</td>
+                    <td [class]="row.isImplemented ? 'matrix-check' : 'matrix-miss'">{{ row.isImplemented ? '✓' : '✗' }}</td>
+                    <td [class]="row.hasEvidence ? 'matrix-check' : 'matrix-miss'">{{ row.hasEvidence ? '✓' : '✗' }}</td>
+                    <td [class]="row.isTested ? 'matrix-check' : 'matrix-miss'">{{ row.isTested ? '✓' : '✗' }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          }
+        </cds-modal>
+      </div>
+    </cds-tab>
+
+    <!-- ══════════════════════════════════════════════════════ -->
+    <!-- TAB 5: GAP ASSESSMENT                                -->
+    <!-- ══════════════════════════════════════════════════════ -->
+    <cds-tab [header]="L().gapAssessment">
+      <div class="tab-content">
+        @if (gaps().length === 0) {
+          <div class="empty-state">
+            <div class="empty-icon"><i class=""></i></div>
+            <p class="empty-title">{{ L().emptyGaps }}</p>
+            <p class="empty-text">{{ i18n.isAr() ? 'يمكن أن يعني ذلك تغطية قوية أو عدم تشغيل التقييم بعد' : 'This can mean either strong coverage or assessment not yet run' }}</p>
+            <button cdsButton [label]="L().startAssessment" icon="" class="" (click)="onStartAssessment()"></button>
+          </div>
+        } @else {
+          <!-- Gap Priority Board -->
+          <div class="gap-priority-bar">
+            <div tabindex="0" role="button" (keyup.enter)="gapSeverityFilter = ''; loadGaps()" class="gap-priority-chip" [class.active]="gapSeverityFilter === ''" (click)="gapSeverityFilter = ''; loadGaps()">
+              {{ L().allFrameworks }} ({{ gaps().length }})
+            </div>
+            <div tabindex="0" role="button" (keyup.enter)="gapSeverityFilter = 'critical'; loadGaps()" class="gap-priority-chip" [class.active]="gapSeverityFilter === 'critical'" (click)="gapSeverityFilter = 'critical'; loadGaps()">
+              <span class="issue-sev sev-critical"></span> {{ L().critical }} ({{ gapsByPriority().critical }})
+            </div>
+            <div tabindex="0" role="button" (keyup.enter)="gapSeverityFilter = 'high'; loadGaps()" class="gap-priority-chip" [class.active]="gapSeverityFilter === 'high'" (click)="gapSeverityFilter = 'high'; loadGaps()">
+              <span class="issue-sev sev-high"></span> {{ L().high }} ({{ gapsByPriority().high }})
+            </div>
+            <div tabindex="0" role="button" (keyup.enter)="gapSeverityFilter = 'medium'; loadGaps()" class="gap-priority-chip" [class.active]="gapSeverityFilter === 'medium'" (click)="gapSeverityFilter = 'medium'; loadGaps()">
+              <span class="issue-sev sev-medium"></span> {{ L().medium }} ({{ gapsByPriority().medium }})
+            </div>
+            <div tabindex="0" role="button" (keyup.enter)="gapSeverityFilter = 'low'; loadGaps()" class="gap-priority-chip" [class.active]="gapSeverityFilter === 'low'" (click)="gapSeverityFilter = 'low'; loadGaps()">
+              <span class="issue-sev sev-low"></span> {{ L().low }} ({{ gapsByPriority().low }})
+            </div>
+          </div>
+
+          <!-- Gaps Table -->
+          <grc-data-table
+            [totalRecords]="gaps().length"
+            [emptyMessage]="L().emptyGaps || 'No gaps found'">
+            <table cdsTable aria-label="Gaps table" [value]="gaps()" [paginator]="true" [rows]="20" styleClass="p-datatable-sm p-datatable-striped" responsiveLayout="scroll">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>{{ L().severity }}</th>
+                  <th>{{ L().name }}</th>
+                  <th>{{ L().framework }}</th>
+                  <th>{{ L().domain }}</th>
+                  <th>{{ L().obligation }}</th>
+                  <th>{{ L().status }}</th>
+                  <th>{{ L().actions }}</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-gap>
+                <tr>
+                  <td><cds-tag [value]="gap.severity" [severity]="gap.severity === 'critical' ? 'danger' : gap.severity === 'high' ? 'warning' : gap.severity === 'medium' ? 'warning' : 'info'"></cds-tag></td>
+                  <td><a class="cursor-pointer text-primary font-semibold" (click)="openGapDetail(gap.gapId)">{{ gap.title }}</a></td>
+                  <td>{{ gap.frameworkName || '—' }}</td>
+                  <td>{{ gap.domainName || '—' }}</td>
+                  <td>{{ gap.obligationCode || '—' }}</td>
+                  <td>
+                    <cds-dropdown [options]="gapStatusOptions" [ngModel]="gap.status" (ngModelChange)="updateGapStatus(gap.gapId, $event)"
+                      [style]="{'min-width':'140px'}" appendTo="body" styleClass="p-inputtext-sm"></cds-dropdown>
+                  </td>
+                  <td>
+                    <button cdsButton icon="" class=" " (click)="openGapDetail(gap.gapId)" [cdsTooltip]="L().details" [attr.aria-label]="L().details"></button>
+                    <button cdsButton icon="" class=" " (click)="openNewRemDialog(gap.gapId)" [cdsTooltip]="L().createRemediation" [attr.aria-label]="L().createRemediation"></button>
+                  </td>
+                </tr>
+              </ng-template>
+            </table>
+          </grc-data-table>
+        }
+
+        <!-- Gap Detail Drawer -->
+        @if (selectedGap()) {
+          <div tabindex="0" role="button" (keyup.enter)="closeGapDetail()" class="drawer-backdrop" (click)="closeGapDetail()"></div>
+          <div class="detail-drawer">
+            <div class="drawer-header">
+              <h2 class="drawer-title">{{ selectedGap()!.gap.title }}</h2>
+              <button cdsButton icon="" class="" (click)="closeGapDetail()" aria-label="Close"></button>
+            </div>
+            <div class="kpi-band" style="grid-template-columns: repeat(3, 1fr);">
+              <div class="kpi-card"><span class="kpi-label">{{ L().severity }}</span><span class="kpi-value">{{ selectedGap()!.gap.severity }}</span></div>
+              <div class="kpi-card"><span class="kpi-label">{{ L().status }}</span><span class="kpi-value">{{ selectedGap()!.gap.status }}</span></div>
+              <div class="kpi-card"><span class="kpi-label">{{ L().framework }}</span><span class="kpi-value" style="font-size:14px">{{ selectedGap()!.gap.frameworkName || '—' }}</span></div>
+            </div>
+            @if (selectedGap()!.gap.obligationTitle) {
+              <div class="drawer-section">
+                <h4 class="drawer-section-title">{{ L().obligation }}</h4>
+                <p style="font-size:13px">{{ selectedGap()!.gap.obligationCode }} — {{ selectedGap()!.gap.obligationTitle }}</p>
+                @if (selectedGap()!.gap.obligationDescription) {
+                  <p style="font-size:12px; color:var(--text-secondary, #6b7280); margin-top:4px">{{ selectedGap()!.gap.obligationDescription }}</p>
+                }
+              </div>
+            }
+            @if (selectedGap()!.gap.description) {
+              <div class="drawer-section">
+                <h4 class="drawer-section-title">{{ L().description }}</h4>
+                <p style="font-size:13px">{{ selectedGap()!.gap.description }}</p>
+              </div>
+            }
+            @if (selectedGap()!.linkedControls.length) {
+              <div class="drawer-section">
+                <h4 class="drawer-section-title">{{ L().controls }} ({{ selectedGap()!.linkedControls.length }})</h4>
+                <grc-data-table
+                  [totalRecords]="selectedGap()!.linkedControls.length"
+                  [emptyMessage]="'No linked controls'">
+                  <table cdsTable aria-label="Linked Controls table" [paginator]="true" [rows]="20" [rowsPerPageOptions]="[10,20,50]" [value]="selectedGap()!.linkedControls" styleClass="p-datatable-sm" responsiveLayout="scroll">
+                    <ng-template pTemplate="body" let-c>
+                      <tr><td>{{ c.title }}</td><td><cds-tag [value]="c.status" [severity]="c.status === 'implemented' ? 'success' : 'warning'"></cds-tag></td></tr>
+                    </ng-template>
+                  </table>
+                </grc-data-table>
+              </div>
+            }
+            @if (selectedGap()!.remediationTasks.length) {
+              <div class="drawer-section">
+                <h4 class="drawer-section-title">{{ L().tasks }} ({{ selectedGap()!.remediationTasks.length }})</h4>
+                <grc-data-table
+                  [totalRecords]="selectedGap()!.remediationTasks.length"
+                  [emptyMessage]="'No remediation tasks'">
+                  <table cdsTable aria-label="Remediation Tasks table" [paginator]="true" [rows]="20" [rowsPerPageOptions]="[10,20,50]" [value]="selectedGap()!.remediationTasks" styleClass="p-datatable-sm" responsiveLayout="scroll">
+                    <ng-template pTemplate="body" let-t>
+                      <tr><td>{{ t.title }}</td><td><cds-tag [value]="t.status"></cds-tag></td><td>{{ t.assigned_to || '—' }}</td><td>{{ t.due_date | appDate:'medium' }}</td></tr>
+                    </ng-template>
+                  </table>
+                </grc-data-table>
+              </div>
+            }
+            <div style="margin-top:16px; display:flex; gap:8px">
+              <button cdsButton [label]="L().createRemediation" icon="" class="" (click)="openNewRemDialog(selectedGap()!.gap.gapId)"></button>
+              <button cdsButton [label]="L().validateGap" icon="" class=" " (click)="onValidateGap(selectedGap()!.gap.gapId)"></button>
+            </div>
+          </div>
+        }
+
+        <!-- Create Remediation Dialog -->
+        <cds-modal [(visible)]="newRemDialogVisible" [header]="L().createRemediation" [modal]="true" [style]="{width:'400px'}">
+          <div style="display:flex; flex-direction:column; gap:12px">
+            <grc-form-field [label]="L().name">
+              <input pInputText [(ngModel)]="newRemTitle" [placeholder]="L().name" [attr.aria-label]="L().name" style="width:100%" />
+            </grc-form-field>
+            <button cdsButton [label]="L().createRemediation" icon="" (click)="createRemediation()" [disabled]="!newRemTitle.trim()"></button>
+          </div>
+        </cds-modal>
+      </div>
+    </cds-tab>
+
+    <!-- ══════════════════════════════════════════════════════ -->
+    <!-- TAB 6: COMPLIANCE ROADMAP                            -->
+    <!-- ══════════════════════════════════════════════════════ -->
+    <cds-tab [header]="L().roadmap">
+      <div class="tab-content">
+        @if (!roadmap()) {
+          <div class="empty-state">
+            <div class="empty-icon"><i class=""></i></div>
+            <p class="empty-title">{{ L().emptyRoadmap }}</p>
+            <button cdsButton [label]="L().generateRoadmap" icon="" class="" (click)="onGenerateRoadmap()"></button>
+          </div>
+        } @else {
+          <!-- Roadmap Summary -->
+          <div class="kpi-band" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 24px;">
+            <div class="kpi-card"><span class="kpi-label">{{ L().totalTasks }}</span><span class="kpi-value">{{ roadmap()!.totalTasks }}</span></div>
+            <div class="kpi-card"><span class="kpi-label">{{ L().completedTasks }}</span><span class="kpi-value good">{{ roadmap()!.completedTasks }}</span></div>
+            <div class="kpi-card"><span class="kpi-label">{{ L().completion }}</span><span class="kpi-value" [style.color]="scoreColor(roadmap()!.completionPercent)">{{ roadmap()!.completionPercent }}%</span></div>
+            @if (auditReadiness()) {
+              <div class="kpi-card"><span class="kpi-label">{{ L().readinessScore }}</span><span class="kpi-value" [style.color]="scoreColor(auditReadiness()!.readinessScore)">{{ auditReadiness()!.readinessScore }}%</span></div>
+            }
+          </div>
+
+          <!-- Audit Readiness Band -->
+          @if (auditReadiness()) {
+            <div class="section-header">
+              <h3 class="section-title">{{ L().auditReadiness }}</h3>
+            </div>
+            <div class="audit-grid">
+              <div class="audit-card"><span class="audit-label">{{ L().total }}</span><span class="audit-value">{{ auditReadiness()!.totalControls }}</span></div>
+              <div class="audit-card"><span class="audit-label">{{ L().implemented }}</span><span class="audit-value good">{{ auditReadiness()!.implemented }}</span><span class="audit-pct">{{ auditReadiness()!.implementedPct }}%</span></div>
+              <div class="audit-card"><span class="audit-label">{{ L().tested }}</span><span class="audit-value">{{ auditReadiness()!.tested }}</span><span class="audit-pct">{{ auditReadiness()!.testedPct }}%</span></div>
+              <div class="audit-card"><span class="audit-label">{{ L().withEvidence }}</span><span class="audit-value">{{ auditReadiness()!.withEvidence }}</span><span class="audit-pct">{{ auditReadiness()!.evidencePct }}%</span></div>
+              <div class="audit-card"><span class="audit-label">{{ L().fullyReady }}</span><span class="audit-value" [style.color]="scoreColor(auditReadiness()!.readinessScore)">{{ auditReadiness()!.fullyReady }}</span></div>
+            </div>
+          }
+
+          <!-- Phases -->
+          <div class="section-header">
+            <h3 class="section-title">{{ L().roadmap }}</h3>
+          </div>
+          <div class="roadmap-phases">
+            @for (phase of roadmap()!.phases; track phase.phaseType || $index) {
+              <div class="roadmap-phase" [class]="phaseStatusClass(phase)">
+                <div class="phase-header">
+                  <span class="phase-title">{{ phase.title || phase.phaseType }}</span>
+                  <span style="font-size:13px; color:var(--text-secondary, #6b7280)">{{ phaseCompletion(phase) }}%</span>
+                </div>
+                @if (phase.objective) {
+                  <p class="phase-objective">{{ phase.objective }}</p>
+                }
+                @if (phaseTasks(phase.phaseType).length) {
+                  <div class="phase-tasks">
+                    @for (task of phaseTasks(phase.phaseType).slice(0, 10); track task.task_id || $index) {
+                      <div class="phase-task">
+                        <span class="phase-task-status" [style.background]="task.status === 'completed' ? '#16a34a' : task.status === 'in_progress' ? '#3b82f6' : '#d1d5db'"></span>
+                        <span style="flex:1">{{ task.title_en || task.title }}</span>
+                        <cds-tag [value]="task.status" [severity]="task.status === 'completed' ? 'success' : task.status === 'in_progress' ? 'info' : 'warning'" styleClass="text-xs"></cds-tag>
+                      </div>
+                    }
+                    @if (phaseTasks(phase.phaseType).length > 10) {
+                      <span style="font-size:12px; color:var(--text-secondary, #6b7280); padding:4px 10px">+ {{ phaseTasks(phase.phaseType).length - 10 }} more</span>
+                    }
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </cds-tab>
+
+  </cds-tabs>
+</div>
+
+<cds-notification></cds-notification></p-toast>

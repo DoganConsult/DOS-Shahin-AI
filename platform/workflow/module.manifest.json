@@ -1,0 +1,109 @@
+{
+  "kind": "business",
+  "moduleCode": "workflow",
+  "displayName": "Workflows",
+  "ownerTeam": "product-shahin-ai",
+  "productCode": "shahin-ai",
+  "ownership": "module-owned",
+  "version": "1.0.0",
+  "status": "active",
+  "lifecycle": {
+    "stage": "ga",
+    "owner": "product-shahin-ai",
+    "entitlementKey": "module.workflow",
+    "featureFlag": "module.workflow.enabled",
+    "minTenantStage": "ga"
+  },
+  "platformDependencies": [
+    "identity",
+    "tenancy"
+  ],
+  "seedProviders": [
+    "products/shahin/seeds/workflow-seed"
+  ],
+  "tenantDefaults": [
+    "workflow_default_sla_hours",
+    "workflow_escalation_enabled"
+  ],
+  "requiredReferenceData": [
+    "workflow_templates",
+    "workflow_sla_policies"
+  ],
+  "currentSources": [
+    "/home/Dr-Dogan-AGRC-OS/backend/src/modules/workflow"
+  ],
+  "targetPath": "modules/workflow",
+  "futureService": "platform-core-service",
+  "frontendSources": [
+    "/home/Dr-Dogan-AGRC-OS/frontend/src/app/platform-manifests/workflow.module.routes.ts"
+  ],
+  "ownedTables": [
+    "workflows",
+    "workflow_instances",
+    "workflow_steps",
+    "workflow_transitions",
+    "workflow_templates",
+    "workflow_template_library",
+    "workflow_chains",
+    "workflow_chain_links",
+    "workflow_events",
+    "workflow_event_log",
+    "workflow_sla_configs",
+    "workflow_escalations",
+    "workflow_approvals",
+    "workflow_compensation_log",
+    "workflow_ai_notes",
+    "workflow_ai_drafts",
+    "workflow_ai_budgets",
+    "workflow_kill_switches",
+    "workflow_boundaries",
+    "workflow_autonomy_levels"
+  ],
+  "referencedTables": [
+    "audit_trail",
+    "teams"
+  ],
+  "events": {
+    "publishes": [
+      "workflow.instance_created",
+      "workflow.instance_completed",
+      "workflow.instance_cancelled",
+      "workflow.step_completed",
+      "workflow.step_failed",
+      "workflow.step_skipped",
+      "workflow.approval_requested",
+      "workflow.approval_granted",
+      "workflow.approval_rejected",
+      "workflow.task_assigned",
+      "workflow.task_completed",
+      "workflow.task_reassigned",
+      "workflow.sla_warning",
+      "workflow.sla_breached",
+      "workflow.escalation_triggered",
+      "workflow.chain_started",
+      "workflow.chain_completed",
+      "workflow.automation_executed",
+      "workflow.status_changed"
+    ],
+    "subscribes": [
+      "risk.status_changed",
+      "compliance.gap_detected",
+      "incident.classified",
+      "evidence.collected",
+      "audit.finding_created",
+      "policy.approved",
+      "vendor.sla_breached",
+      "exception.approved",
+      "team.member_removed",
+      "dashboard.widget_created",
+      "navigation.item_updated",
+      "provisioning.tenant_provisioned",
+      "onboarding.completed",
+      "dora.obligation_created",
+      "governance_ai.signal_detected"
+    ]
+  },
+  "routeBases": [
+    "/api/workflow"
+  ]
+}

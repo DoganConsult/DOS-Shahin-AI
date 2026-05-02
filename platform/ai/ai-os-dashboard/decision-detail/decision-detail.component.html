@@ -1,0 +1,114 @@
+<app-page-shell
+  icon="file-edit"
+  [title]="i18n.translate('aiOs.decisionDetailTitle') || 'Decision detail'"
+  [subtitle]="decisionId()"
+  [breadcrumbs]="[i18n.translate('nav.dashboard'), i18n.translate('aiOs.dashboardTitle') || 'AI OS', i18n.translate('aiOs.decisionDetailTitle') || 'Decision']"
+  [loading]="loading()">
+
+  <div class="decision-detail" [dir]="i18n.direction()">
+    <div class="decision-detail-actions">
+      <button pButton
+        icon="pi pi-arrow-left"
+        [label]="i18n.translate('aiOs.backToDecisions') || 'Back to decisions'"
+        class="p-button-outlined p-button-sm"
+        (click)="goBack()">
+      </button>
+    </div>
+
+    <div class="decision-error-box" *ngIf="error()">
+      <p class="decision-error">
+        <i class="pi pi-exclamation-triangle"></i> {{ error() }}
+      </p>
+      <p class="decision-correlation" *ngIf="correlationId()">
+        <span class="correlation-label">{{ i18n.translate('common.correlationId') || 'Correlation ID' }}:</span>
+        <code>{{ correlationId() }}</code>
+      </p>
+      <button pButton
+        [label]="i18n.translate('common.retry') || 'Retry'"
+        icon="pi pi-refresh"
+        class="p-button-outlined p-button-sm"
+        (click)="load()">
+      </button>
+    </div>
+
+    <div *ngIf="!loading() && !error() && decision()" class="decision-detail-content">
+      <div class="decision-meta p-card">
+        <h3>{{ i18n.translate('aiOs.metadata') || 'Metadata' }}</h3>
+        <dl class="decision-meta-list">
+          <dt>{{ i18n.translate('aiOs.decisionId') || 'Decision ID' }}</dt>
+          <dd><code>{{ decision().id || decision().decisionId || decisionId() }}</code></dd>
+          <dt>{{ i18n.translate('aiOs.agentId') || 'Agent ID' }}</dt>
+          <dd>{{ decision().agentId || decision().agent_id || '—' }}</dd>
+          <dt>{{ i18n.translate('aiOs.outcome') || 'Outcome' }}</dt>
+          <dd>
+            <span class="outcome-badge" [ngClass]="(getOutcomeLabel(decision()) || 'unknown').toLowerCase()">
+              {{ getOutcomeLabel(decision()) || '—' }}
+            </span>
+          </dd>
+          <dt>{{ i18n.translate('aiOs.entityType') || 'Entity type' }}</dt>
+          <dd>{{ decision().entityType || decision().entity_type || '—' }}</dd>
+          <dt *ngIf="(decision().confidence !== null && decision().confidence !== undefined) || decision().confidence === 0">{{ i18n.translate('aiOs.confidence') || 'Confidence' }}</dt>
+          <dd *ngIf="(decision().confidence !== null && decision().confidence !== undefined) || decision().confidence === 0">{{ ((decision().confidence ?? 0) * 100) | number:'1.0-0' }}%</dd>
+          <dt *ngIf="decision().run_id || decision().runId">{{ i18n.translate('aiOs.trace') || 'Trace' }}</dt>
+          <dd *ngIf="decision().run_id || decision().runId">
+            <a [routerLink]="['/ai-os-dashboard', 'traces', decision().run_id || decision().runId]" class="trace-link">
+              {{ i18n.translate('aiOs.viewTrace') || 'View trace' }}
+              <i class="pi pi-external-link"></i>
+            </a>
+          </dd>
+          <dt>{{ i18n.translate('aiOs.entityId') || 'Entity ID' }}</dt>
+          <dd><code>{{ decision().entityId || decision().entity_id || '—' }}</code></dd>
+          <dt>{{ i18n.translate('aiOs.timestamp') || 'Timestamp' }}</dt>
+          <dd>{{ formatTime(decision().timestamp || decision().created_at || decision().createdAt) }}</dd>
+        </dl>
+      </div>
+
+      <div class="decision-context p-card" *ngIf="decision().context || decision().input || decision().input_summary || decision().inputSummary">
+        <h3>{{ i18n.translate('aiOs.context') || 'Context' }}</h3>
+        <pre class="decision-json">{{ (decision().context || decision().input || decision().input_summary || decision().inputSummary) | json }}</pre>
+      </div>
+
+      <!-- Explainability: signals, related decisions, rule/reason hints -->
+      <div class="decision-explain p-card" *ngIf="explainChain()">
+        <h3>{{ i18n.translate('aiOs.explainability') || 'Explainability' }}</h3>
+        <p class="decision-explain-text" *ngIf="decision().explanation">{{ decision().explanation }}</p>
+        <div class="decision-signals" *ngIf="explainChain()!.signals?.length">
+          <h4 class="decision-subtitle">{{ i18n.translate('aiOs.signals') || 'Signals' }}</h4>
+          <ul class="signal-list">
+            <li *ngFor="let s of explainChain()!.signals">
+              <code>{{ s.signal_key || s.key || s.name }}</code>
+              <span *ngIf="s.value !== undefined"> = {{ s.value }}</span>
+              <span *ngIf="s.recorded_at" class="signal-time">{{ formatTime(s.recorded_at) }}</span>
+            </li>
+          </ul>
+        </div>
+        <div class="decision-related" *ngIf="explainChain()!.relatedDecisions?.length">
+          <h4 class="decision-subtitle">{{ i18n.translate('aiOs.relatedDecisions') || 'Related decisions (same run)' }}</h4>
+          <ul class="related-list">
+            <li *ngFor="let r of explainChain()!.relatedDecisions">
+              <a [routerLink]="['/ai-os-dashboard', 'decisions', r.decision_id || r.id]" class="related-link">
+                {{ (r.decision_id || r.id) | slice:0:8 }}… — {{ r.outcome?.action || r.outcome?.result || '—' }}
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="decision-reasons" *ngIf="decision().outcome && (decision().outcome.rule_ids?.length || decision().outcome.reasons?.length)">
+          <h4 class="decision-subtitle">{{ i18n.translate('aiOs.rulesOrReasons') || 'Rules / reasons' }}</h4>
+          <ul>
+            <li *ngFor="let id of (decision().outcome?.rule_ids || decision().outcome?.reasons || [])">{{ id }}</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="decision-raw p-card">
+        <h3>{{ i18n.translate('aiOs.rawDecision') || 'Full decision' }}</h3>
+        <pre class="decision-raw-json">{{ decision() | json }}</pre>
+      </div>
+    </div>
+
+    <div *ngIf="!loading() && !error() && !decision()" class="decision-empty">
+      <i class="pi pi-info-circle"></i>
+      <span>{{ i18n.translate('aiOs.noDecisionFound') || 'No decision found for this ID.' }}</span>
+    </div>
+  </div>
+</app-page-shell>

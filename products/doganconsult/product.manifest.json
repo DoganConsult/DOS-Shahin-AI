@@ -1,0 +1,72 @@
+{
+  "$schema": "../../platform/contracts/product/product.manifest.schema.json",
+  "schemaVersion": 1,
+  "kind": "product",
+  "productCode": "doganconsult",
+  "displayName": "Doganconsult",
+  "description": "Scaffold-only product slot for the Doganconsult surface (the consulting brand). Reserves the canonical product layout (mountPoint /products/doganconsult, kebab-case productCode, dogan-consult ownership) so workspace + tsconfig path-alias regularity can be asserted across all products in Phase 7. No app/, no website/, no module enrollments yet — promotion to alpha requires a product-owner first commit (see README.md, section 'Promotion contract').",
+  "hosts": [
+    "doganconsult.local",
+    "doganconsult.dogan-ai.os"
+  ],
+  "authMode": "cookie-session",
+  "lifecycle": {
+    "stage": "experimental",
+    "enteredStageAt": "2026-04-29T00:00:00Z",
+    "owner": "dogan-consult",
+    "entitlementKey": "product.doganconsult",
+    "featureFlag": "product.doganconsult.enabled"
+  },
+  "enabledModules": [],
+  "routeComposition": {
+    "mountPoint": "/products/doganconsult",
+    "publicCompatPrefixes": [],
+    "redirects": []
+  },
+  "navigationComposition": {
+    "primary": []
+  },
+  "dynamicUiEnrollment": {
+    "enrollmentRef": "dynamic-ui/enrollment.json"
+  },
+  "agentEnrollment": {
+    "enrollmentRef": "agents/enrollment.json"
+  },
+  "workflowEnrollment": {},
+  "theme": {
+    "base": "@dos/theme/default"
+  },
+  "i18n": {
+    "defaultLocale": "en",
+    "supportedLocales": ["en", "ar"]
+  },
+  "platformDependencies": {
+    "@dos/platform-core":  "^1.0.0",
+    "@dos/module-sdk":     "^1.0.0",
+    "@dos/runtime-config": "^1.0.0",
+    "@dos/contracts":      "^1.0.0",
+    "@dos/types":          "^1.0.0"
+  },
+  "moduleDependencies": {},
+  "metadata": {
+    "owner": "dogan-consult",
+    "createdAt": "2026-04-29T00:00:00Z",
+    "phase": "4B",
+    "status": "scaffold-only",
+    "rolloutStage": "pre-release",
+    "promotionContract": {
+      "blockedFor": ["alpha", "beta", "ga"],
+      "requiredArtifactsForAlpha": [
+        "products/doganconsult/app/  (Angular SPA scaffold or chosen UI framework)",
+        "products/doganconsult/website/  (public marketing site scaffold, optional)",
+        "Non-empty enabledModules[]",
+        "Non-empty navigationComposition.primary[]",
+        "Non-empty routeComposition.publicCompatPrefixes[] OR explicit decision to keep minimal",
+        "products/doganconsult/dynamic-ui/enrollment.json  (file referenced by dynamicUiEnrollment.enrollmentRef must exist)",
+        "products/doganconsult/agents/enrollment.json  (file referenced by agentEnrollment.enrollmentRef must exist)"
+      ],
+      "enrollmentRefsAreCurrentlyDangling": true,
+      "enrollmentRefsNote": "dynamicUiEnrollment.enrollmentRef and agentEnrollment.enrollmentRef point at files that do not yet exist on disk. The platform validator does not check enrollment file existence — only that the path strings are present (see scripts/validate-manifests.mjs). Enrollment files are required before the product can leave 'experimental'."
+    }
+  }
+}

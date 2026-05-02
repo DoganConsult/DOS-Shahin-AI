@@ -1,0 +1,13 @@
+{
+  "$schema": "../../../platform/contracts/agents/enrollment.schema.json",
+  "schemaVersion": 1,
+  "productCode": "shahin-ai",
+  "agents": [
+    { "agentId": "onboarding-agent",      "scope": "product" },
+    { "agentId": "next-best-action-agent","scope": "product" },
+    { "agentId": "rules-engine-agent",    "scope": "platform" },
+    { "agentId": "evidence-agent",        "scope": "module", "moduleCode": "evidence" },
+    { "agentId": "workflow-agent",        "scope": "module", "moduleCode": "workflow" },
+    { "agentId": "dashboard-agent",       "scope": "platform" }
+  ]
+}

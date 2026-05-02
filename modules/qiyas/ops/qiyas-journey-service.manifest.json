@@ -1,0 +1,24 @@
+{
+  "serviceCode": "qiyas-journey-service",
+  "displayName": "Qiyas Journey and Benchmarks Service",
+  "layer": "domain-service",
+  "ownerTeam": "product-shahin-ai",
+  "runtime": "node",
+  "dependsOn": [
+    "auth-service",
+    "tenant-service",
+    "workflow-service"
+  ],
+  "modules": [
+    "qiyas",
+    "benchmarks",
+    "journey"
+  ],
+  "exposes": {
+    "apiBase": "/api/qiyas",
+    "events": [
+      "qiyas.assessment.completed",
+      "benchmark.compared"
+    ]
+  }
+}

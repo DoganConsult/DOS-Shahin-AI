@@ -1,0 +1,110 @@
+---
+# DOS derived roles v2 — extends dogan_common with enterprise roles:
+# on_call, incident_responder, compliance_officer, risk_approver,
+# legal_hold_manager, break_glass, step_up_satisfied.
+#
+# Deploy path in Cerbos: /policies/derived_roles/derived_roles.dogan.v2.yaml
+apiVersion: "api.cerbos.dev/v1"
+derivedRoles:
+  name: dogan_enterprise
+  definitions:
+    - name: tenant_member
+      parentRoles: ["tenant_member"]
+      condition:
+        match:
+          expr: request.principal.attr.tenantId == request.resource.attr.tenantId
+
+    - name: tenant_admin
+      parentRoles: ["tenant_admin"]
+      condition:
+        match:
+          expr: request.principal.attr.tenantId == request.resource.attr.tenantId
+
+    - name: platform_admin
+      parentRoles: ["platform_admin"]
+
+    - name: support_readonly
+      parentRoles: ["support"]
+      condition:
+        match:
+          expr: request.resource.attr.tenantId != null
+
+    - name: auditor_readonly
+      parentRoles: ["auditor"]
+      condition:
+        match:
+          expr: request.principal.attr.tenantId == request.resource.attr.tenantId
+
+    - name: on_call
+      parentRoles: ["tenant_member"]
+      condition:
+        match:
+          expr: |
+            has(request.principal.attr.onCallTenants) &&
+            request.resource.attr.tenantId in request.principal.attr.onCallTenants
+
+    - name: incident_responder
+      parentRoles: ["incident_responder"]
+      condition:
+        match:
+          expr: request.principal.attr.tenantId == request.resource.attr.tenantId
+
+    - name: compliance_officer
+      parentRoles: ["compliance_officer"]
+      condition:
+        match:
+          expr: request.principal.attr.tenantId == request.resource.attr.tenantId
+
+    - name: risk_approver
+      parentRoles: ["risk_approver"]
+      condition:
+        match:
+          expr: request.principal.attr.tenantId == request.resource.attr.tenantId
+
+    - name: legal_hold_manager
+      parentRoles: ["legal_hold_manager"]
+      condition:
+        match:
+          expr: request.principal.attr.tenantId == request.resource.attr.tenantId
+
+    - name: owner
+      parentRoles: ["tenant_member"]
+      condition:
+        match:
+          expr: request.principal.id == request.resource.attr.createdBy
+
+    - name: delegate
+      parentRoles: ["tenant_member"]
+      condition:
+        match:
+          all:
+            of:
+              - expr: has(request.resource.attr.delegates)
+              - expr: request.principal.id in request.resource.attr.delegates
+              - expr: |
+                  has(request.resource.attr.delegateValidUntil) &&
+                  timestamp(request.resource.attr.delegateValidUntil) > now()
+
+    - name: break_glass
+      parentRoles: ["tenant_admin", "platform_admin"]
+      condition:
+        match:
+          all:
+            of:
+              - expr: has(request.principal.attr.breakGlassUntil)
+              - expr: timestamp(request.principal.attr.breakGlassUntil) > now()
+
+    - name: step_up_satisfied
+      parentRoles: ["tenant_member"]
+      condition:
+        match:
+          expr: |
+            has(request.principal.attr.acr) &&
+            (request.principal.attr.acr == "aal2" || request.principal.attr.acr == "aal3")
+
+    - name: high_assurance
+      parentRoles: ["tenant_admin", "platform_admin"]
+      condition:
+        match:
+          expr: |
+            has(request.principal.attr.acr) && request.principal.attr.acr == "aal3"

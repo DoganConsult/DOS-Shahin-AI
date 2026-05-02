@@ -1,0 +1,61 @@
+{
+  "$schema": "../../dos/manifests/platform-bundle.schema.json",
+  "bundleCode": "dauth-default",
+  "moduleCode": "dauth",
+  "displayName": "DAuth Default Bundle",
+  "description": "Standard DAuth deployment: auth-service backed by @dos/dauth-core packages with PostgreSQL persistence.",
+  "version": "1.0.0",
+  "services": [
+    {
+      "code": "auth-service",
+      "path": "platform/dauth/services/auth-service",
+      "required": true,
+      "ports": { "http": 3001 },
+      "dependsOnPlatform": ["dos"],
+      "dependsOnExternal": ["postgres", "redis"]
+    }
+  ],
+  "packages": [
+    "@dos/dauth-core",
+    "@dos/dauth-shared"
+  ],
+  "frontendPackages": [
+    {
+      "name": "@dos/dauth-frontend",
+      "path": "platform/dauth/packages/frontend",
+      "status": "shipped-as-source",
+      "note": "Frontend package.json not yet authored — package consumed via path imports from product shells. Tracked in DAuth Session 2."
+    }
+  ],
+  "migrations": {
+    "indexFile": "platform/dauth/migrations/migrations-index.json"
+  },
+  "environment": {
+    "required": [
+      "DATABASE_URL",
+      "JWT_PRIVATE_KEY",
+      "JWT_PUBLIC_KEY",
+      "SESSION_SECRET",
+      "MFA_ISSUER"
+    ],
+    "optional": [
+      "KEYCLOAK_URL",
+      "KEYCLOAK_REALM",
+      "OPENFGA_URL",
+      "CERBOS_URL",
+      "REDIS_URL",
+      "MAIL_FROM",
+      "SCIM_API_TOKEN_TTL_SECONDS"
+    ]
+  },
+  "healthChecks": [
+    { "service": "auth-service", "endpoint": "/api/auth/health", "expectedStatus": 200 },
+    { "service": "auth-service", "endpoint": "/api/auth/ready", "expectedStatus": 200 }
+  ],
+  "deployment": {
+    "runtime": "node",
+    "minNodeVersion": "20",
+    "horizontalScaling": "supported",
+    "statefulComponents": ["postgres", "redis"]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "id": "governance.intake_review",
+  "module": "governance",
+  "hook": "intake_review",
+  "version": "1.0.0",
+  "sla_hours": 24,
+  "actor_role_default": "governance.module_lead",
+  "states": ["draft","triage","classified"],
+  "initial": "draft",
+  "transitions": [{"from":"draft","to":"triage","on":"submit"},{"from":"triage","to":"classified","on":"classify","actor_role":"governance.module_lead"}],
+  "audit_event_prefix": "governance.workflow.intake_review",
+  "notification_targets": ["governance.module_lead", "governance.approver"],
+  "evidence_required_on": ["passed","published"],
+  "escalation": { "on": "sla_breach", "to": "governance.executive_owner", "after_hours": 48 }
+}

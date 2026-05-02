@@ -1,0 +1,12 @@
+code,name_en,name_ar,country_code,category,jurisdiction_en,website,established_year
+USA-FED,Federal Reserve System,نظام الاحتياطي الفيدرالي,USA,financial,Monetary Policy & Banking,https://federalreserve.gov,1913
+USA-OCC,Office of the Comptroller of the Currency,مكتب المراقب على العملة,USA,financial,National Banks,https://occ.gov,1863
+USA-FDIC,Federal Deposit Insurance Corporation,مؤسسة تأمين الودائع الفيدرالية,USA,financial,Banking & Deposit Insurance,https://fdic.gov,1933
+USA-SEC,Securities & Exchange Commission,هيئة الأوراق المالية والبورصات,USA,financial,Capital Markets,https://sec.gov,1934
+USA-CFPB,Consumer Financial Protection Bureau,مكتب حماية المستهلك المالي,USA,financial,Consumer Finance,https://consumerfinance.gov,2011
+USA-FTC,Federal Trade Commission,لجنة التجارة الفيدرالية,USA,privacy,Privacy & Consumer Protection,https://ftc.gov,1914
+USA-CISA,Cybersecurity & Infrastructure Security Agency,وكالة الأمن السيبراني وأمن البنية التحتية,USA,cybersecurity,Cybersecurity,https://cisa.gov,2018
+USA-NIST,National Institute of Standards & Technology,المعهد الوطني للمعايير والتقنية,USA,standards,Standards,https://nist.gov,1901
+USA-HHS,Department of Health & Human Services,وزارة الصحة والخدمات الإنسانية,USA,healthcare,Healthcare (HIPAA),https://hhs.gov,1953
+USA-IRS,Internal Revenue Service,خدمة الإيرادات الداخلية,USA,tax,Tax Administration,https://irs.gov,1862
+USA-FINCEN,Financial Crimes Enforcement Network,شبكة إنفاذ الجرائم المالية,USA,aml,AML & Bank Secrecy Act,https://fincen.gov,1990

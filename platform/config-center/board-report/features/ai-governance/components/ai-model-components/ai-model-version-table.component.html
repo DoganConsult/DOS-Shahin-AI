@@ -1,0 +1,215 @@
+<main class="version-panel">
+      <!-- No asset selected state -->
+      <div *ngIf="!asset" class="empty-state empty-state-lg">
+        <i class="pi pi-arrow-left"></i>
+        <span>{{ i18n.translate('ai.models.selectAsset') }}</span>
+      </div>
+
+      <!-- Asset selected -->
+      <ng-container *ngIf="asset">
+        <!-- Version panel header -->
+        <div class="version-panel-header">
+          <div class="version-header-info">
+            <h3 class="panel-title">{{ asset.display_name }}</h3>
+            <span class="text-muted" *ngIf="asset.description">{{ asset.description }}</span>
+          </div>
+          <div class="version-header-actions">
+            <!-- Rollback button -->
+            <button
+              *ngIf="canManage && !isSeededGlobal"
+              pButton
+              icon="pi pi-replay"
+              [label]="i18n.translate('ai.models.rollback')"
+              class="p-button-sm p-button-warning p-button-outlined"
+              (click)="rollbackRequested.emit()">
+            </button>
+            <!-- Create new draft version -->
+            <button
+              *ngIf="canWrite && !isSeededGlobal"
+              pButton
+              icon="pi pi-plus"
+              [label]="i18n.translate('ai.models.newVersion')"
+              class="p-button-sm p-button-outlined"
+              (click)="createDraft.emit()">
+            </button>
+          </div>
+        </div>
+
+        <!-- Version loading state -->
+        <div *ngIf="versionsLoading" class="loading-center">
+          <p-progressSpinner strokeWidth="3" [style]="{width: '32px', height: '32px'}" />
+        </div>
+
+        <!-- Version empty state -->
+        <div *ngIf="!versionsLoading && versions.length === 0" class="empty-state">
+          <i class="pi pi-list"></i>
+          <span>{{ i18n.translate('ai.models.noVersions') }}</span>
+        </div>
+
+        <!-- Version table -->
+        <grc-data-table
+          *ngIf="!versionsLoading && versions.length > 0"
+          [totalRecords]="versionTotal"
+          [emptyMessage]="i18n.translate('ai.models.noVersions')">
+        <p-table
+          [value]="versions"
+          [paginator]="versionTotal > versionPageSize"
+          [rows]="versionPageSize"
+          [totalRecords]="versionTotal"
+          [lazy]="true"
+          (onLazyLoad)="pageChange.emit($event)"
+          dataKey="id"
+          styleClass="p-datatable-sm p-datatable-striped"
+          aria-label="Model Versions">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>{{ i18n.translate('ai.models.version') }}</th>
+              <th>{{ i18n.translate('ai.models.provider') }}</th>
+              <th>{{ i18n.translate('ai.models.modelId') }}</th>
+              <th>{{ i18n.translate('ai.models.approval') }}</th>
+              <th>{{ i18n.translate('ai.models.deployment') }}</th>
+              <th>{{ i18n.translate('ai.models.changeSummary') }}</th>
+              <th>{{ i18n.translate('ai.models.createdAt') }}</th>
+              <th>{{ i18n.translate('common.actions') }}</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-v>
+            <tr>
+              <td>
+                <span class="version-number">v{{ v.version_number }}</span>
+              </td>
+              <td>{{ v.provider }}</td>
+              <td><code class="model-id-code">{{ v.provider_model_id }}</code></td>
+              <td>
+                <p-tag
+                  [value]="getApprovalLabel(v.approval_status)"
+                  [severity]="getApprovalSeverity(v.approval_status)" />
+              </td>
+              <td>
+                <span class="deployment-badge" [ngClass]="'deployment-' + getDeploymentKey(v)">
+                  <span *ngIf="v.is_active" class="active-dot"></span>
+                  {{ getDeploymentLabel(v) }}
+                </span>
+              </td>
+              <td class="change-summary-cell">{{ v.change_summary || '-' }}</td>
+              <td>{{ formatDate(v.created_at) }}</td>
+              <td>
+                <div class="action-buttons" *ngIf="!isSeededGlobal">
+                  <!-- Draft actions -->
+                  <ng-container *ngIf="v.approval_status === 'draft'">
+                    <button pButton icon="pi pi-pencil" class="p-button-sm p-button-text"
+                      [pTooltip]="i18n.translate('common.edit')"
+                      *ngIf="canWrite"
+                      (click)="versionAction.emit({action: 'edit', version: v})"></button>
+                    <button pButton icon="pi pi-send" class="p-button-sm p-button-text p-button-info"
+                      [pTooltip]="i18n.translate('ai.models.submitApproval')"
+                      *ngIf="canWrite"
+                      (click)="versionAction.emit({action: 'submit', version: v})"></button>
+                    <button pButton icon="pi pi-trash" class="p-button-sm p-button-text p-button-danger"
+                      [pTooltip]="i18n.translate('common.delete')"
+                      *ngIf="canWrite"
+                      (click)="versionAction.emit({action: 'delete', version: v})"></button>
+                  </ng-container>
+
+                  <!-- Pending approval actions -->
+                  <ng-container *ngIf="v.approval_status === 'pending_approval'">
+                    <button pButton icon="pi pi-check" class="p-button-sm p-button-text p-button-success"
+                      [pTooltip]="i18n.translate('ai.models.approve')"
+                      *ngIf="canManage"
+                      (click)="versionAction.emit({action: 'approve', version: v})"></button>
+                    <button pButton icon="pi pi-times" class="p-button-sm p-button-text p-button-danger"
+                      [pTooltip]="i18n.translate('ai.models.reject')"
+                      *ngIf="canManage"
+                      (click)="versionAction.emit({action: 'reject', version: v})"></button>
+                  </ng-container>
+
+                  <!-- Approved + inactive actions -->
+                  <ng-container *ngIf="v.approval_status === 'approved' && !v.is_active">
+                    <button pButton icon="pi pi-power-off" class="p-button-sm p-button-text p-button-success"
+                      [pTooltip]="i18n.translate('ai.models.activate')"
+                      *ngIf="canManage"
+                      (click)="versionAction.emit({action: 'activate', version: v})"></button>
+                  </ng-container>
+
+                  <!-- Active actions -->
+                  <ng-container *ngIf="v.is_active">
+                    <button pButton icon="pi pi-pause" class="p-button-sm p-button-text p-button-warning"
+                      [pTooltip]="i18n.translate('ai.models.suspend')"
+                      *ngIf="canManage"
+                      (click)="versionAction.emit({action: 'suspend', version: v})"></button>
+                    <button pButton icon="pi pi-ban" class="p-button-sm p-button-text p-button-secondary"
+                      [pTooltip]="i18n.translate('ai.models.retire')"
+                      *ngIf="canManage"
+                      (click)="versionAction.emit({action: 'retire', version: v})"></button>
+                  </ng-container>
+
+                  <!-- Suspended actions -->
+                  <ng-container *ngIf="v.deployment_status === 'suspended' && !v.is_active">
+                    <button pButton icon="pi pi-power-off" class="p-button-sm p-button-text p-button-success"
+                      [pTooltip]="i18n.translate('ai.models.activate')"
+                      *ngIf="canManage"
+                      (click)="versionAction.emit({action: 'activate', version: v})"></button>
+                    <button pButton icon="pi pi-ban" class="p-button-sm p-button-text p-button-secondary"
+                      [pTooltip]="i18n.translate('ai.models.retire')"
+                      *ngIf="canManage"
+                      (click)="versionAction.emit({action: 'retire', version: v})"></button>
+                  </ng-container>
+                </div>
+
+                <!-- Seeded global: lock icon only -->
+                <div *ngIf="isSeededGlobal" class="action-buttons">
+                  <i class="pi pi-lock text-muted" [pTooltip]="i18n.translate('ai.models.seededLocked')"></i>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+        </grc-data-table>
+
+        <!-- Governed Resolution Panel -->
+        <div class="resolve-panel">
+          <h4 class="resolve-title">{{ i18n.translate('ai.models.resolveTitle') }}</h4>
+          <div class="resolve-form">
+            <input
+              pInputText
+              type="text"
+              [placeholder]="i18n.translate('ai.models.agentIdPlaceholder')"
+              [ngModel]="resolveAgentId"
+              (ngModelChange)="resolveAgentIdChange.emit($event)"
+              class="resolve-input" />
+            <button
+              pButton
+              [label]="i18n.translate('ai.models.resolve')"
+              icon="pi pi-search"
+              class="p-button-sm"
+              [disabled]="!resolveAgentId || resolveLoading"
+              [loading]="resolveLoading"
+              (click)="resolveRequested.emit()">
+            </button>
+          </div>
+          <!-- Resolution result -->
+          <div *ngIf="resolveResult" class="resolve-result">
+            <div class="resolve-row">
+              <span class="resolve-label">{{ i18n.translate('ai.models.provider') }}:</span>
+              <span>{{ resolveResult.provider || '-' }}</span>
+            </div>
+            <div class="resolve-row">
+              <span class="resolve-label">{{ i18n.translate('ai.models.modelId') }}:</span>
+              <code>{{ resolveResult.provider_model_id || '-' }}</code>
+            </div>
+            <div *ngIf="resolveResult.mismatch_details" class="resolve-row resolve-warn">
+              <span class="resolve-label">{{ i18n.translate('ai.models.mismatch') }}:</span>
+              <span>{{ resolveResult.mismatch_details }}</span>
+            </div>
+            <div *ngIf="resolveResult.action_taken" class="resolve-row">
+              <span class="resolve-label">{{ i18n.translate('ai.models.actionTaken') }}:</span>
+              <span>{{ resolveResult.action_taken }}</span>
+            </div>
+            <div *ngIf="resolveResult.allowlist_advisory" class="resolve-row">
+              <span class="resolve-label">{{ i18n.translate('ai.models.allowlistAdvisory') }}:</span>
+              <span>{{ resolveResult.allowlist_advisory }}</span>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </main>

@@ -1,0 +1,54 @@
+/* DOS Platform — Density Modes.
+ *
+ * Three densities, set via `[data-density]` on any container. They retune
+ * the consumed spacing/radius/type aliases — primitive --dos-space-* and
+ * --dos-font-size-* values are NEVER overridden, so layout primitives
+ * remain stable. Components should consume the *aliases* below, not the
+ * primitives, when they want to be density-responsive.
+ *
+ *   compact      → power users, dense ops dashboards (data tables)
+ *   cozy         → default, balanced (workspace, exec dashboards)
+ *   comfortable  → executive, presentation, kiosk (hero, briefings)
+ *
+ * Carbon parity: components built on `cds--sm | cds--md | cds--lg` should
+ * use `data-cds-size` matching the active density.
+ */
+:root,
+[data-density='cozy'] {
+  --dos-density-pad-y:    var(--dos-space-4);
+  --dos-density-pad-x:    var(--dos-space-5);
+  --dos-density-gap:      var(--dos-space-3);
+  --dos-density-gap-tight: var(--dos-space-2);
+  --dos-density-radius:   var(--dos-radius-card);
+  --dos-density-title:    var(--dos-font-size-lg);
+  --dos-density-eyebrow:  var(--dos-font-size-xs);
+  --dos-density-body:     var(--dos-font-size-md);
+  --dos-density-line:     var(--dos-line-height-normal);
+  --dos-density-cds-size: 'md';
+}
+
+[data-density='compact'] {
+  --dos-density-pad-y:    var(--dos-space-2);
+  --dos-density-pad-x:    var(--dos-space-3);
+  --dos-density-gap:      var(--dos-space-2);
+  --dos-density-gap-tight: var(--dos-space-1);
+  --dos-density-radius:   var(--dos-radius-md);
+  --dos-density-title:    var(--dos-font-size-md);
+  --dos-density-eyebrow:  var(--dos-font-size-xs);
+  --dos-density-body:     var(--dos-font-size-sm);
+  --dos-density-line:     var(--dos-line-height-tight);
+  --dos-density-cds-size: 'sm';
+}
+
+[data-density='comfortable'] {
+  --dos-density-pad-y:    var(--dos-space-6);
+  --dos-density-pad-x:    var(--dos-space-8);
+  --dos-density-gap:      var(--dos-space-5);
+  --dos-density-gap-tight: var(--dos-space-3);
+  --dos-density-radius:   calc(var(--dos-radius-card) + 4px);
+  --dos-density-title:    var(--dos-font-size-xl);
+  --dos-density-eyebrow:  var(--dos-font-size-sm);
+  --dos-density-body:     var(--dos-font-size-lg);
+  --dos-density-line:     var(--dos-line-height-normal);
+  --dos-density-cds-size: 'lg';
+}

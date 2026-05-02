@@ -1,0 +1,244 @@
+{
+  "$schema": "../contracts/module/module.manifest.schema.json",
+  "schemaVersion": 1,
+  "kind": "platform",
+  "moduleCode": "ai-os",
+  "displayName": "AI-OS — Platform AI Plane",
+  "description": "Platform-level AI plane every product and module talks to. Owns the AI gateway (provider routing, quota, cost, rate limiting), the AI engine (inference orchestration, agents, tool calling, autonomy levels, kill switches, budgets, prompts, HITL, model configs) and AI governance (policy, safety, audit, redaction, evals). Business modules consume AI capability through this plane via /api/ai* and the ai.* event namespace; they never call an external model directly.",
+  "version": "1.0.0",
+  "extractable": true,
+  "selfContained": true,
+  "lifecycle": {
+    "stage": "ga",
+    "owner": "platform-ai",
+    "entitlementKey": "platform.ai-os",
+    "featureFlag": "platform.ai-os.enabled",
+    "minTenantStage": "ga"
+  },
+  "contracts": {
+    "openapi": "./contracts/ai-os.openapi.yaml"
+  },
+  "platformDependencies": {
+    "@dos/platform-core":  "^1.0.0",
+    "@dos/module-sdk":     "^1.0.0",
+    "@dos/contracts":      "^1.0.0",
+    "@dos/types":          "^1.0.0",
+    "@dos/runtime-config": "^1.0.0",
+    "@dos/dauth-shared":   "^1.0.0",
+    "@dos/event-backbone": "^1.0.0"
+  },
+  "metadata": {
+    "ownerTeam": "platform-ai",
+    "stability": "ga",
+    "role": "ai-plane",
+    "previousLocation": "AI-OS Module/_sources",
+    "promotedAt": "2026-04-30",
+    "migrationNote": "Consolidated AI-OS into a single canonical platform module. Hoisted manifest to platform/ai/ root, created contracts/, migrations/, bundles/ to match the 6 other platform modules (dauth, dos, dsoc, dnoc, foundation, dynamic-ui). Sub-module manifests for `ai` (engine) and `ai-governance` are preserved under platform/ai/modules/ for backward sub-module identity, but the platform-level ownership is asserted here. Removed product-specific `productCode: shahin-ai` binding from sub-module manifests.",
+    "exposes": {
+      "packages": [
+        { "name": "@dos/ai",            "path": "platform/ai/packages/ai" },
+        { "name": "@dos/modules-ai",    "path": "platform/ai/packages/modules-ai" },
+        { "name": "@dos/modules-ai-governance", "path": "platform/ai/packages/modules-ai-governance" },
+        { "name": "@dos/ai-gateway",    "path": "platform/ai/packages/ai-gateway" },
+        { "name": "@dos/core-ai",       "path": "platform/ai/packages/core-ai" }
+      ],
+      "services": [
+        { "code": "ai-gateway-service",    "path": "platform/ai/services/ai-gateway-service",    "apiBase": "/api/ai" },
+        { "code": "ai-engine-service",     "path": "platform/ai/services/ai-engine-service",     "apiBase": "/api/ai-engine" },
+        { "code": "ai-governance-service", "path": "platform/ai/services/ai-governance-service", "apiBase": "/api/ai-governance" }
+      ],
+      "ports": {
+        "package": "@dos/ports",
+        "subpath": "@dos/ports/ai-os",
+        "names": ["AIPort", "AIGovernancePort"],
+        "binding": "platform/ai/services/ai-gateway-service/src",
+        "status": "extracted"
+      }
+    },
+    "consumes": {
+      "platformPorts": ["DOSPort", "DAuthPort"],
+      "platformPackages": [
+        "@dos/types",
+        "@dos/contracts",
+        "@dos/ports",
+        "@dos/db",
+        "@dos/platform-core",
+        "@dos/event-backbone",
+        "@dos/runtime-config",
+        "@dos/dauth-shared"
+      ]
+    },
+    "subModules": [
+      { "code": "ai",            "manifest": "platform/ai/modules/ai/module.manifest.json" },
+      { "code": "ai-governance", "manifest": "platform/ai/modules/ai-governance/module.manifest.json" }
+    ],
+    "schemas": {
+      "dedicated": {
+        "name": "platform_ai",
+        "tables": [
+          "ai_agents",
+          "ai_agent_configs",
+          "ai_budgets",
+          "ai_execution_log",
+          "ai_kill_switches",
+          "ai_boundaries",
+          "ai_autonomy_levels",
+          "ai_notes",
+          "ai_drafts",
+          "ai_interventions",
+          "ai_model_configs",
+          "ai_prompt_templates",
+          "ai_context_sources",
+          "agent_model_config",
+          "prompt_injection_log",
+          "agent_delegations",
+          "agent_governance_audit",
+          "hitl_states",
+          "guard_decision_log",
+          "personal_agent_assignments",
+          "agent_activity_log",
+          "agent_cycle_summaries",
+          "agent_handoffs",
+          "agent_discoveries",
+          "agent_tool_permissions",
+          "hitl_gates",
+          "code_search_engine_registry",
+          "code_search_indexed_surface",
+          "ai_gov_assessments",
+          "ai_gov_audit_log",
+          "ai_gov_bias_reports",
+          "ai_gov_data_lineage",
+          "ai_gov_ethical_reviews",
+          "ai_gov_explainability_reports",
+          "ai_gov_fairness_metrics",
+          "ai_gov_impact_assessments",
+          "ai_gov_inventory",
+          "ai_gov_model_cards",
+          "ai_gov_monitoring_alerts",
+          "ai_gov_policies",
+          "ai_gov_registry",
+          "ai_gov_risk_assessments",
+          "ai_gov_transparency_reports",
+          "ai_gov_use_cases",
+          "ai_gov_validation_results"
+        ]
+      }
+    },
+    "events": {
+      "publishes": [
+        "ai.agent.started",
+        "ai.agent.completed",
+        "ai.agent.failed",
+        "ai.proposal.created",
+        "ai.proposal.approved",
+        "ai.proposal.rejected",
+        "ai.delegation.granted",
+        "ai.delegation.revoked",
+        "ai.delegation.action_executed",
+        "ai.copilot.action",
+        "ai.copilot.suggestion",
+        "ai.circuit_breaker.opened",
+        "ai.circuit_breaker.closed",
+        "ai.drift.detected",
+        "ai.cost.threshold_exceeded",
+        "ai.kill_switch.activated",
+        "ai.autonomy.level_changed",
+        "ai.code_search.queried",
+        "ai.code_search.engine_health_checked",
+        "ai.code_search.engine_registered",
+        "ai.code_search.engine_status_changed",
+        "ai.code_search.surface_indexed",
+        "ai_governance.model_registered",
+        "ai_governance.assessment_completed",
+        "ai_governance.bias_detected",
+        "ai_governance.fairness_scored",
+        "ai_governance.ethical_review_completed",
+        "ai_governance.impact_assessed",
+        "ai_governance.monitoring_alert",
+        "ai_governance.policy_violated",
+        "ai_governance.transparency_report_generated",
+        "ai_governance.validation_completed"
+      ],
+      "subscribes": [
+        "risk.record.created",
+        "risk.record.updated",
+        "compliance.assessment.completed",
+        "compliance.gap.detected",
+        "compliance.posture_changed",
+        "policy.document.approved",
+        "audit.finding.created",
+        "audit.finding_created",
+        "workflow.status.changed",
+        "workflow.status_changed",
+        "governance.health.updated",
+        "risk.score_changed"
+      ]
+    },
+    "routes": {
+      "catalog": "platform/ai/services",
+      "mounts": [
+        { "service": "ai-gateway-service",    "base": "/api/ai" },
+        { "service": "ai-engine-service",     "base": "/api/ai-engine" },
+        { "service": "ai-governance-service", "base": "/api/ai-governance" }
+      ]
+    },
+    "migrations": {
+      "indexFile": "platform/ai/migrations/migrations-index.json",
+      "ownership": "physical",
+      "physicalLocation": "platform/ai/migrations/{public,tenant}",
+      "physicalMoveStatus": "native"
+    },
+    "observability": {
+      "metricsPrefix": "ai_",
+      "healthEndpoint": "/api/ai/health",
+      "readinessEndpoint": "/api/ai/ready",
+      "tracingEnabled": true,
+      "structuredLogging": true,
+      "owningService": "ai-gateway-service"
+    },
+    "security": {
+      "auditTarget": "DSOC via dsoc.audit.config_change for every agent registration, kill switch toggle, and HITL gate override",
+      "secretsViaEnv": true,
+      "compliance": ["SOC2", "ISO27001", "ISO42001"]
+    },
+    "runtime": {
+      "routeBase": "/api/ai",
+      "eventNamespace": "ai",
+      "tablePrefix": "ai_",
+      "provisioningOrder": 6
+    },
+    "tenantDefaults": [
+      "ai_budget_limit_usd",
+      "ai_autonomy_default_level",
+      "ai_gov_assessment_frequency_days",
+      "ai_gov_bias_threshold"
+    ],
+    "requiredReferenceData": [
+      "ai_model_configs",
+      "ai_agent_templates",
+      "ai_model_categories",
+      "fairness_metrics",
+      "ethical_review_templates"
+    ],
+    "completionStatus": {
+      "definitionOfDone": "14-item DoD per platform module spec",
+      "session": "AI-OS-Session-1 (Promotion)",
+      "session1Closed": [
+        "structure",
+        "manifest",
+        "bundle",
+        "schema-migration",
+        "service-bootstrap",
+        "isolation-rules",
+        "rest-contract",
+        "contracts",
+        "validator-allowlist"
+      ]
+    },
+    "notes": [
+      "Promoted from AI-OS Module/_sources/. The legacy product-bound manifests (productCode: shahin-ai) are preserved as sub-module manifests under platform/ai/modules/{ai,ai-governance}/module.manifest.json for granular DB ownership tracking, but platform/ai/module.manifest.json is the canonical platform-level entry.",
+      "tenant-service AI sidecar (kernel + ollama router + tool base) consolidated under platform/ai/_sidecars/tenant-service-domain-ai-os/.",
+      "AI helpers previously in packages/dos-platform-core/src/ai{,-gateway} consolidated under platform/ai/packages/{core-ai,ai-gateway}/."
+    ]
+  }
+}

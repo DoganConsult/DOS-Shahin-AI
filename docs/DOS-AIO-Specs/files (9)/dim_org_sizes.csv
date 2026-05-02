@@ -1,0 +1,6 @@
+code,name_en,name_ar,employees_min,employees_max,revenue_max_sar
+MICRO,Micro,متناهية الصغر,1,5,3000000
+SMALL,Small,صغيرة,6,49,40000000
+MEDIUM,Medium,متوسطة,50,249,200000000
+LARGE,Large,كبيرة,250,999,999999999
+ENTERPRISE,Enterprise,مؤسسة كبرى,1000,999999,999999999999

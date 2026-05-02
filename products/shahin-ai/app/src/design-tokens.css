@@ -1,0 +1,651 @@
+/* ============================================
+   Shahin-AI GRC — Design Tokens
+   IBM Carbon Design System v11 Theme
+   Complete enterprise token system aligned with
+   Carbon's role-based color architecture.
+   Source: https://carbondesignsystem.com
+   ============================================ */
+
+:root {
+  /* ══════════════════════════════════════════
+     IBM CARBON COLOR PALETTE — Full Swatches
+     ══════════════════════════════════════════ */
+
+  /* ── Blue (Primary) ── */
+  --carbon-blue-10: #edf5ff;
+  --carbon-blue-20: #d0e2ff;
+  --carbon-blue-30: #a6c8ff;
+  --carbon-blue-40: #78a9ff;
+  --carbon-blue-50: #4589ff;
+  --carbon-blue-60: #0f62fe;
+  --carbon-blue-70: #0043ce;
+  --carbon-blue-80: #002d9c;
+  --carbon-blue-90: #001d6c;
+  --carbon-blue-100: #001141;
+
+  /* ── Gray (Neutral) ── */
+  --carbon-gray-10: #f4f4f4;
+  --carbon-gray-20: #e0e0e0;
+  --carbon-gray-30: #c6c6c6;
+  --carbon-gray-40: #a8a8a8;
+  --carbon-gray-50: #8d8d8d;
+  --carbon-gray-60: #6f6f6f;
+  --carbon-gray-70: #525252;
+  --carbon-gray-80: #393939;
+  --carbon-gray-90: #262626;
+  --carbon-gray-100: #161616;
+
+  /* ── Cool Gray ── */
+  --carbon-cool-gray-10: #f2f4f8;
+  --carbon-cool-gray-20: #dde1e6;
+  --carbon-cool-gray-30: #c1c7cd;
+  --carbon-cool-gray-50: #878d96;
+  --carbon-cool-gray-60: #697077;
+  --carbon-cool-gray-70: #4d5358;
+  --carbon-cool-gray-80: #343a3f;
+  --carbon-cool-gray-90: #21272a;
+  --carbon-cool-gray-100: #121619;
+
+  /* ── Green (Success) ── */
+  --carbon-green-10: #defbe6;
+  --carbon-green-20: #a7f0ba;
+  --carbon-green-30: #6fdc8c;
+  --carbon-green-40: #42be65;
+  --carbon-green-50: #24a148;
+  --carbon-green-60: #198038;
+  --carbon-green-70: #0e6027;
+  --carbon-green-80: #044317;
+
+  /* ── Red (Danger) ── */
+  --carbon-red-10: #fff1f1;
+  --carbon-red-20: #ffd7d9;
+  --carbon-red-30: #ffb3b8;
+  --carbon-red-40: #ff8389;
+  --carbon-red-50: #fa4d56;
+  --carbon-red-60: #da1e28;
+  --carbon-red-70: #a2191f;
+  --carbon-red-80: #750e13;
+
+  /* ── Yellow (Warning) ── */
+  --carbon-yellow-20: #fdd13a;
+  --carbon-yellow-30: #f1c21b;
+  --carbon-yellow-40: #d2a106;
+  --carbon-yellow-50: #b28600;
+
+  /* ── Purple ── */
+  --carbon-purple-10: #f6f2ff;
+  --carbon-purple-20: #e8daff;
+  --carbon-purple-30: #d4bbff;
+  --carbon-purple-40: #be95ff;
+  --carbon-purple-50: #a56eff;
+  --carbon-purple-60: #8a3ffc;
+  --carbon-purple-70: #6929c4;
+  --carbon-purple-80: #491d8b;
+
+  /* ── Teal ── */
+  --carbon-teal-10: #d9fbfb;
+  --carbon-teal-20: #9ef0f0;
+  --carbon-teal-30: #3ddbd9;
+  --carbon-teal-40: #08bdba;
+  --carbon-teal-50: #009d9a;
+  --carbon-teal-60: #007d79;
+  --carbon-teal-70: #005d5d;
+
+  /* ── Cyan ── */
+  --carbon-cyan-10: #e5f6ff;
+  --carbon-cyan-20: #bae6ff;
+  --carbon-cyan-30: #82cfff;
+  --carbon-cyan-40: #33b1ff;
+  --carbon-cyan-50: #1192e8;
+  --carbon-cyan-60: #0072c3;
+  --carbon-cyan-70: #00539a;
+
+  /* ── Magenta ── */
+  --carbon-magenta-10: #fff0f7;
+  --carbon-magenta-20: #ffd6e8;
+  --carbon-magenta-30: #ffafd2;
+  --carbon-magenta-40: #ff7eb6;
+  --carbon-magenta-50: #ee5396;
+  --carbon-magenta-60: #d02670;
+  --carbon-magenta-70: #9f1853;
+
+  /* ── Orange ── */
+  --carbon-orange-40: #ff832b;
+  --carbon-orange-60: #ba4e00;
+
+  /* ══════════════════════════════════════════
+     ROLE-BASED TOKENS — Carbon White Theme
+     ══════════════════════════════════════════ */
+
+  /* ── Primary palette ── */
+  --primary: var(--carbon-blue-60);
+  --primary-dark: var(--carbon-blue-70);
+  --primary-darker: var(--carbon-blue-80);
+  --primary-light: var(--carbon-blue-50);
+  --primary-lightest: var(--carbon-blue-20);
+  --accent-gold: var(--carbon-yellow-30);
+
+  /* ── Surfaces — Carbon White theme ── */
+  --surface: #ffffff;
+  --surface-ice: var(--carbon-gray-10);
+  --surface-sunken: var(--carbon-gray-20);
+  --surface-lavender: var(--carbon-purple-10);
+  --surface-mint: var(--carbon-green-10);
+  --surface-amber: #fcf4d6;
+
+  /* ── Borders — Carbon neutral grays ── */
+  --border-subtle: var(--carbon-gray-20);
+  --border-primary: var(--carbon-gray-30);
+
+  /* ── Text — Carbon gray scale ── */
+  --text-heading: var(--carbon-gray-100);
+  --text-body: var(--carbon-gray-70);
+  --text-muted: var(--carbon-gray-60);
+  --text-on-primary: #ffffff;
+
+  /* ── Semantic — Carbon support colors ── */
+  --success: var(--carbon-green-50);
+  --warning: var(--carbon-yellow-30);
+  --error: var(--carbon-red-60);
+  --info: var(--carbon-blue-70);
+
+  /* ── Typography scale — Carbon productive type set ── */
+  --font-size-caption: 12px;     /* caption-01 */
+  --font-size-xs: 11px;
+  --font-size-sm: 12px;          /* label-01 */
+  --font-size-base: 14px;        /* body-compact-01 */
+  --font-size-md: 16px;          /* body-01 */
+  --font-size-lg: 20px;          /* heading-03 */
+  --font-size-xl: 28px;          /* heading-04 */
+  --font-size-2xl: 36px;         /* heading-05 */
+  --font-size-3xl: 42px;         /* heading-06 */
+  --font-size-display-01: 54px;  /* display-01 */
+  --font-size-display-02: 68px;  /* display-02 */
+
+  /* ── Font weights — Carbon type ── */
+  --font-light: 300;
+  --font-regular: 400;
+  --font-medium: 600;            /* Carbon SemiBold */
+  --font-bold: 700;
+  --font-black: 800;
+
+  /* ── Line heights — Carbon productive ── */
+  --line-height-tight: 1.125;    /* headings */
+  --line-height-compact: 1.29;   /* body-compact */
+  --line-height-normal: 1.5;     /* body */
+  --line-height-relaxed: 1.7;    /* long-form */
+
+  /* ── Letter spacing — Carbon productive ── */
+  --letter-spacing-tight: -0.02em;
+  --letter-spacing-body: 0.16px;
+  --letter-spacing-heading: 0;
+  --letter-spacing-wide: 0.32px;
+
+  /* ── Spacing scale — Carbon 2px base grid ── */
+  --space-01: 2px;    /* $spacing-01 */
+  --space-02: 4px;    /* $spacing-02 */
+  --space-03: 8px;    /* $spacing-03 */
+  --space-04: 12px;   /* $spacing-04 */
+  --space-05: 16px;   /* $spacing-05 */
+  --space-06: 24px;   /* $spacing-06 */
+  --space-07: 32px;   /* $spacing-07 */
+  --space-08: 40px;   /* $spacing-08 */
+  --space-09: 48px;   /* $spacing-09 */
+  --space-10: 64px;   /* $spacing-10 */
+  --space-11: 80px;   /* $spacing-11 */
+  --space-12: 96px;   /* $spacing-12 */
+  --space-13: 160px;  /* $spacing-13 */
+  /* Legacy aliases */
+  --space-xs: var(--space-02);
+  --space-sm: var(--space-03);
+  --space-md: var(--space-05);
+  --space-lg: var(--space-06);
+  --space-xl: var(--space-07);
+  --space-2xl: var(--space-09);
+  --space-3xl: var(--space-10);
+
+  /* ── Border radius — Carbon minimal ── */
+  --radius-sm: 4px;
+  --radius: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 99px;
+
+  /* ── Shadows — Carbon elevation system ── */
+  --shadow-card: 0 2px 6px rgba(var(--color-black-rgb), 0.08);
+  --shadow-card-hover: 0 6px 14px rgba(var(--color-black-rgb), 0.12);
+  --shadow-md: 0 4px 8px rgba(var(--color-black-rgb), 0.10);
+  --shadow-lg: 0 8px 24px rgba(var(--color-black-rgb), 0.14);
+  --shadow-xl: 0 16px 40px -8px rgba(var(--color-black-rgb), 0.18), 0 6px 12px rgba(var(--color-black-rgb), 0.06);
+
+  /* ── Glass-morphism — Carbon-tinted ── */
+  --glass-subtle: rgba(var(--color-white-rgb), 0.06);
+  --glass-medium: rgba(var(--color-white-rgb), 0.10);
+  --glass-border: rgba(var(--color-white-rgb), 0.15);
+  --glass-navbar: rgba(var(--color-ibm-text-rgb), 0.97);
+
+  /* ── Glass-morphism icon tokens ── */
+  --glass-icon-bg: rgba(var(--primary-rgb), 0.06);
+  --glass-icon-border: rgba(var(--primary-rgb), 0.14);
+  --glass-icon-blur: 12px;
+  --glass-icon-shadow: 0 4px 16px rgba(var(--primary-rgb), 0.08), inset 0 1px 0 rgba(var(--color-white-rgb), 0.25);
+
+  /* ── Layout — Carbon grid breakpoints ── */
+  --sidebar-width: 256px;
+  --sidebar-collapsed: 48px;
+  --navbar-height: 48px;
+  --content-max-width: 1584px;
+  --breakpoint-sm: 320px;
+  --breakpoint-md: 672px;
+  --breakpoint-lg: 1056px;
+  --breakpoint-xlg: 1312px;
+  --breakpoint-max: 1584px;
+
+  /* ── Motion — Carbon productive & expressive easing ── */
+  --ease-productive-standard: cubic-bezier(0.2, 0, 0.38, 0.9);
+  --ease-productive-entrance: cubic-bezier(0, 0, 0.38, 0.9);
+  --ease-productive-exit: cubic-bezier(0.2, 0, 1, 0.9);
+  --ease-expressive-standard: cubic-bezier(0.4, 0.14, 0.3, 1);
+  --ease-expressive-entrance: cubic-bezier(0, 0, 0.3, 1);
+  --ease-expressive-exit: cubic-bezier(0.4, 0.14, 1, 1);
+  /* Legacy aliases */
+  --ease-premium: var(--ease-productive-standard);
+  --ease-spring: var(--ease-productive-entrance);
+
+  /* ── Duration — Carbon motion scale ── */
+  --duration-fast-01: 70ms;
+  --duration-fast-02: 110ms;
+  --duration-moderate-01: 150ms;
+  --duration-moderate-02: 240ms;
+  --duration-slow-01: 400ms;
+  --duration-slow-02: 700ms;
+  /* Legacy aliases */
+  --duration-hover: var(--duration-moderate-01);
+  --duration-enter: var(--duration-moderate-02);
+  --duration-exit: var(--duration-moderate-01);
+  --duration-theme-transition: var(--duration-moderate-02);
+
+  /* ── Premium Shadows — Carbon-tinted ── */
+  --shadow-premium-sm: 0 2px 6px rgba(var(--color-black-rgb), 0.06), 0 1px 2px rgba(var(--color-black-rgb), 0.04);
+  --shadow-premium-md: 0 6px 16px rgba(var(--color-black-rgb), 0.10), 0 2px 6px rgba(var(--color-black-rgb), 0.04);
+  --shadow-premium-lg: 0 12px 32px rgba(var(--color-black-rgb), 0.14), 0 4px 10px rgba(var(--color-black-rgb), 0.06);
+  --shadow-premium-glow: 0 0 20px rgba(var(--primary-rgb), 0.14), 0 0 6px rgba(var(--color-blue-40-rgb), 0.10);
+
+  /* ── Premium Gradients — Carbon blue ── */
+  --gradient-widget-accent: linear-gradient(90deg, var(--primary), var(--primary-light));
+  --gradient-widget-header: linear-gradient(180deg, rgba(var(--primary-rgb), 0.04) 0%, transparent 100%);
+  --gradient-widget-border: linear-gradient(135deg, rgba(var(--color-blue-40-rgb), 0.24), rgba(var(--primary-rgb), 0.06));
+  --gradient-shimmer: linear-gradient(105deg, transparent 40%, rgba(var(--color-white-rgb), 0.5) 50%, transparent 60%);
+
+  /* ── Premium Glass — Carbon ── */
+  --glass-widget-bg: rgba(var(--color-white-rgb), 0.80);
+  --glass-widget-blur: 16px;
+  --glass-widget-saturation: 1.4;
+  --glass-depth-layer: rgba(var(--color-white-rgb), 0.06);
+
+  /* ── Brand Accent (Dogan Consult × Carbon) ── */
+  --brand-accent: var(--carbon-blue-60);
+  --brand-accent-light: var(--carbon-blue-50);
+  --brand-accent-subtle: rgba(var(--primary-rgb), 0.06);
+
+  /* ── Carbon Structural Tokens — White theme ── */
+  --carbon-interactive: var(--carbon-blue-60);
+  --carbon-field: var(--carbon-gray-10);
+  --carbon-field-hover: #e8e8e8;
+  --carbon-layer-01: var(--carbon-gray-10);
+  --carbon-layer-02: #ffffff;
+  --carbon-layer-accent: var(--carbon-gray-20);
+  --carbon-border-interactive: var(--carbon-blue-60);
+  --carbon-border-strong: var(--carbon-gray-50);
+  --carbon-border-subtle: var(--carbon-gray-20);
+  --carbon-border-inverse: var(--carbon-gray-100);
+  --carbon-focus: var(--carbon-blue-60);
+  --carbon-focus-inset: #ffffff;
+  --carbon-link: var(--carbon-blue-60);
+  --carbon-link-hover: var(--carbon-blue-70);
+  --carbon-link-visited: var(--carbon-purple-60);
+  --carbon-icon-primary: var(--carbon-gray-100);
+  --carbon-icon-secondary: var(--carbon-gray-70);
+  --carbon-icon-on-color: #ffffff;
+  --carbon-icon-interactive: var(--carbon-blue-60);
+  --carbon-overlay: rgba(var(--color-ibm-text-rgb), 0.5);
+  --carbon-skeleton-bg: #e8e8e8;
+  --carbon-skeleton-element: var(--carbon-gray-30);
+  --carbon-highlight: var(--carbon-blue-20);
+  --carbon-toggle-off: var(--carbon-gray-50);
+
+  /* ── Carbon Support Tokens ── */
+  --carbon-support-error: var(--carbon-red-60);
+  --carbon-support-success: var(--carbon-green-50);
+  --carbon-support-warning: var(--carbon-yellow-30);
+  --carbon-support-info: var(--carbon-blue-70);
+  --carbon-support-error-inverse: var(--carbon-red-50);
+  --carbon-support-success-inverse: var(--carbon-green-40);
+  --carbon-support-warning-inverse: var(--carbon-yellow-30);
+  --carbon-support-info-inverse: var(--carbon-blue-50);
+
+  /* ── Carbon Button Tokens ── */
+  --carbon-button-primary: var(--carbon-blue-60);
+  --carbon-button-primary-hover: #0050e6;
+  --carbon-button-primary-active: var(--carbon-blue-80);
+  --carbon-button-secondary: var(--carbon-gray-80);
+  --carbon-button-secondary-hover: #4c4c4c;
+  --carbon-button-secondary-active: var(--carbon-gray-60);
+  --carbon-button-tertiary: var(--carbon-blue-60);
+  --carbon-button-tertiary-hover: #0353e9;
+  --carbon-button-tertiary-active: var(--carbon-blue-80);
+  --carbon-button-danger: var(--carbon-red-60);
+  --carbon-button-danger-hover: #b81921;
+  --carbon-button-danger-active: var(--carbon-red-80);
+  --carbon-button-disabled: var(--carbon-gray-30);
+  --carbon-button-separator: #e0e0e0;
+
+  /* ── Carbon Notification Tokens ── */
+  --carbon-notification-info-bg: var(--carbon-blue-10);
+  --carbon-notification-info-border: var(--carbon-blue-60);
+  --carbon-notification-success-bg: var(--carbon-green-10);
+  --carbon-notification-success-border: var(--carbon-green-50);
+  --carbon-notification-warning-bg: #fcf4d6;
+  --carbon-notification-warning-border: var(--carbon-yellow-30);
+  --carbon-notification-error-bg: var(--carbon-red-10);
+  --carbon-notification-error-border: var(--carbon-red-60);
+
+  /* ── Carbon Tag Tokens ── */
+  --carbon-tag-blue-bg: var(--carbon-blue-10);
+  --carbon-tag-blue-text: var(--carbon-blue-70);
+  --carbon-tag-green-bg: var(--carbon-green-10);
+  --carbon-tag-green-text: var(--carbon-green-70);
+  --carbon-tag-red-bg: var(--carbon-red-10);
+  --carbon-tag-red-text: var(--carbon-red-70);
+  --carbon-tag-purple-bg: var(--carbon-purple-10);
+  --carbon-tag-purple-text: var(--carbon-purple-70);
+  --carbon-tag-teal-bg: var(--carbon-teal-10);
+  --carbon-tag-teal-text: var(--carbon-teal-70);
+  --carbon-tag-cyan-bg: var(--carbon-cyan-10);
+  --carbon-tag-cyan-text: var(--carbon-cyan-70);
+  --carbon-tag-magenta-bg: var(--carbon-magenta-10);
+  --carbon-tag-magenta-text: var(--carbon-magenta-70);
+  --carbon-tag-warm-gray-bg: #f7f3f2;
+  --carbon-tag-warm-gray-text: #565151;
+  --carbon-tag-cool-gray-bg: var(--carbon-cool-gray-10);
+  --carbon-tag-cool-gray-text: var(--carbon-cool-gray-70);
+  --carbon-tag-high-contrast-bg: var(--carbon-gray-100);
+  --carbon-tag-high-contrast-text: var(--carbon-gray-10);
+  --carbon-tag-outline-border: var(--carbon-blue-60);
+  --carbon-tag-outline-text: var(--carbon-blue-60);
+
+  /* ── Data Visualization — Carbon categorical palette ── */
+  --chart-1-1: #6929c4;   /* Purple 70 */
+  --chart-1-2: #1192e8;   /* Cyan 50 */
+  --chart-1-3: #005d5d;   /* Teal 70 */
+  --chart-1-4: #9f1853;   /* Magenta 70 */
+  --chart-1-5: #fa4d56;   /* Red 50 */
+  --chart-1-6: #570408;   /* Red 90 */
+  --chart-1-7: #198038;   /* Green 60 */
+  --chart-1-8: #002d9c;   /* Blue 80 */
+  --chart-2-1: #8a3ffc;   /* Purple 60 */
+  --chart-2-2: #33b1ff;   /* Cyan 40 */
+  --chart-2-3: #007d79;   /* Teal 60 */
+  --chart-2-4: #ff7eb6;   /* Magenta 40 */
+  --chart-2-5: #fe8500;   /* Orange */
+  --chart-alert: var(--carbon-red-60);
+  --chart-success: var(--carbon-green-50);
+  --chart-warning: var(--carbon-yellow-30);
+
+  /* Agent colors — 10 unique (Carbon palette) */
+  --agent-a01: var(--carbon-blue-60);
+  --agent-a02: var(--carbon-purple-60);
+  --agent-a03: var(--carbon-yellow-30);
+  --agent-a04: var(--carbon-green-50);
+  --agent-a05: var(--carbon-magenta-50);
+  --agent-a06: var(--carbon-red-60);
+  --agent-a07: var(--carbon-cyan-60);
+  --agent-a08: var(--carbon-orange-40);
+  --agent-a09: var(--carbon-purple-70);
+  --agent-a10: var(--carbon-teal-50);
+}
+
+
+/* ============================================
+   Dark Theme — Carbon Gray 90 (g90)
+   Applied when [data-theme="dark"] is set.
+   Based on IBM Carbon g90 theme values.
+   ============================================ */
+
+[data-theme="dark"] {
+  /* ── Primary palette — brighter for dark bg ── */
+  --primary: var(--carbon-blue-50);
+  --primary-dark: var(--carbon-blue-60);
+  --primary-darker: var(--carbon-blue-40);
+  --primary-light: var(--carbon-blue-70);
+  --primary-lightest: var(--carbon-blue-90);
+  --accent-gold: var(--carbon-yellow-30);
+
+  /* ── Surfaces — Carbon g90 ── */
+  --surface: var(--carbon-gray-90);
+  --surface-ice: var(--carbon-gray-80);
+  --surface-sunken: var(--carbon-gray-100);
+  --surface-lavender: #31135e;
+  --surface-mint: #022d0d;
+  --surface-amber: #302400;
+
+  /* ── Borders — Carbon g90 ── */
+  --border-subtle: var(--carbon-gray-70);
+  --border-primary: var(--carbon-gray-60);
+
+  /* ── Text — Carbon g90 ── */
+  --text-heading: var(--carbon-gray-10);
+  --text-body: var(--carbon-gray-30);
+  --text-muted: var(--carbon-gray-50);
+  --text-on-primary: #ffffff;
+
+  /* ── Semantic — Carbon g90 support ── */
+  --success: var(--carbon-green-40);
+  --warning: var(--carbon-yellow-30);
+  --error: var(--carbon-red-50);
+  --info: var(--carbon-blue-50);
+
+  /* ── Shadows — deeper for dark ── */
+  --shadow-card: 0 2px 6px rgba(var(--color-black-rgb), 0.30);
+  --shadow-card-hover: 0 6px 14px rgba(var(--color-black-rgb), 0.40);
+  --shadow-md: 0 4px 8px rgba(var(--color-black-rgb), 0.36);
+  --shadow-lg: 0 8px 24px rgba(var(--color-black-rgb), 0.44);
+  --shadow-xl: 0 16px 40px -8px rgba(var(--color-black-rgb), 0.50), 0 6px 12px rgba(var(--color-black-rgb), 0.20);
+
+  /* ── Glass-morphism — dark ── */
+  --glass-subtle: rgba(var(--color-white-rgb), 0.04);
+  --glass-medium: rgba(var(--color-white-rgb), 0.08);
+  --glass-border: rgba(var(--color-white-rgb), 0.10);
+  --glass-navbar: rgba(var(--color-ibm-text-rgb), 0.97);
+
+  /* ── Glass-morphism icon tokens — dark ── */
+  --glass-icon-bg: rgba(var(--color-blue-40-rgb), 0.08);
+  --glass-icon-border: rgba(var(--color-blue-40-rgb), 0.16);
+  --glass-icon-shadow: 0 4px 16px rgba(var(--color-blue-40-rgb), 0.10), inset 0 1px 0 rgba(var(--color-white-rgb), 0.06);
+
+  /* ── Premium Shadows — dark ── */
+  --shadow-premium-sm: 0 2px 6px rgba(var(--color-black-rgb), 0.24), 0 1px 2px rgba(var(--color-blue-40-rgb), 0.04);
+  --shadow-premium-md: 0 6px 16px rgba(var(--color-black-rgb), 0.36), 0 2px 6px rgba(var(--color-blue-40-rgb), 0.06);
+  --shadow-premium-lg: 0 12px 32px rgba(var(--color-black-rgb), 0.44), 0 4px 10px rgba(var(--color-blue-40-rgb), 0.08);
+  --shadow-premium-glow: 0 0 20px rgba(var(--color-blue-40-rgb), 0.18), 0 0 6px rgba(var(--color-blue-40-rgb), 0.12);
+
+  /* ── Premium Gradients — dark ── */
+  --gradient-widget-accent: linear-gradient(90deg, var(--primary-light), var(--primary));
+  --gradient-widget-header: linear-gradient(180deg, rgba(var(--color-blue-40-rgb), 0.06) 0%, transparent 100%);
+  --gradient-widget-border: linear-gradient(135deg, rgba(var(--color-blue-40-rgb), 0.20), rgba(var(--color-blue-40-rgb), 0.04));
+  --gradient-shimmer: linear-gradient(105deg, transparent 40%, rgba(var(--color-white-rgb), 0.06) 50%, transparent 60%);
+
+  /* ── Premium Glass — dark ── */
+  --glass-widget-bg: rgba(var(--color-ibm-gray-80-rgb), 0.80);
+  --glass-widget-blur: 16px;
+  --glass-widget-saturation: 1.2;
+  --glass-depth-layer: rgba(var(--color-white-rgb), 0.03);
+
+  /* ── Brand Accent — dark ── */
+  --brand-accent: var(--carbon-blue-50);
+  --brand-accent-light: var(--carbon-blue-40);
+  --brand-accent-subtle: rgba(var(--color-blue-40-rgb), 0.08);
+
+  /* ── Carbon Structural Tokens — g90 ── */
+  --carbon-interactive: var(--carbon-blue-50);
+  --carbon-field: var(--carbon-gray-80);
+  --carbon-field-hover: #474747;
+  --carbon-layer-01: var(--carbon-gray-80);
+  --carbon-layer-02: var(--carbon-gray-90);
+  --carbon-layer-accent: var(--carbon-gray-70);
+  --carbon-border-interactive: var(--carbon-blue-50);
+  --carbon-border-strong: var(--carbon-gray-50);
+  --carbon-border-subtle: var(--carbon-gray-70);
+  --carbon-border-inverse: var(--carbon-gray-10);
+  --carbon-focus: #ffffff;
+  --carbon-focus-inset: var(--carbon-gray-100);
+  --carbon-link: var(--carbon-blue-40);
+  --carbon-link-hover: var(--carbon-blue-30);
+  --carbon-link-visited: var(--carbon-purple-40);
+  --carbon-icon-primary: var(--carbon-gray-10);
+  --carbon-icon-secondary: var(--carbon-gray-30);
+  --carbon-icon-on-color: #ffffff;
+  --carbon-icon-interactive: var(--carbon-blue-50);
+  --carbon-overlay: rgba(var(--color-black-rgb), 0.65);
+  --carbon-skeleton-bg: #333333;
+  --carbon-skeleton-element: var(--carbon-gray-70);
+  --carbon-highlight: var(--carbon-blue-80);
+  --carbon-toggle-off: var(--carbon-gray-50);
+
+  /* ── Carbon Button Tokens — g90 ── */
+  --carbon-button-primary: var(--carbon-blue-60);
+  --carbon-button-primary-hover: #0353e9;
+  --carbon-button-primary-active: var(--carbon-blue-80);
+  --carbon-button-secondary: var(--carbon-gray-60);
+  --carbon-button-secondary-hover: #606060;
+  --carbon-button-secondary-active: var(--carbon-gray-80);
+  --carbon-button-tertiary: #ffffff;
+  --carbon-button-tertiary-hover: var(--carbon-gray-10);
+  --carbon-button-tertiary-active: var(--carbon-gray-30);
+  --carbon-button-danger: var(--carbon-red-60);
+  --carbon-button-danger-hover: #b81921;
+  --carbon-button-danger-active: var(--carbon-red-80);
+  --carbon-button-disabled: var(--carbon-gray-70);
+
+  /* ── Carbon Notification Tokens — g90 ── */
+  --carbon-notification-info-bg: var(--carbon-gray-80);
+  --carbon-notification-info-border: var(--carbon-blue-50);
+  --carbon-notification-success-bg: var(--carbon-gray-80);
+  --carbon-notification-success-border: var(--carbon-green-40);
+  --carbon-notification-warning-bg: var(--carbon-gray-80);
+  --carbon-notification-warning-border: var(--carbon-yellow-30);
+  --carbon-notification-error-bg: var(--carbon-gray-80);
+  --carbon-notification-error-border: var(--carbon-red-50);
+
+  /* ── Carbon Tag Tokens — g90 ── */
+  --carbon-tag-blue-bg: var(--carbon-blue-80);
+  --carbon-tag-blue-text: var(--carbon-blue-30);
+  --carbon-tag-green-bg: var(--carbon-green-80);
+  --carbon-tag-green-text: var(--carbon-green-30);
+  --carbon-tag-red-bg: var(--carbon-red-80);
+  --carbon-tag-red-text: var(--carbon-red-30);
+  --carbon-tag-purple-bg: var(--carbon-purple-80);
+  --carbon-tag-purple-text: var(--carbon-purple-30);
+  --carbon-tag-teal-bg: var(--carbon-teal-70);
+  --carbon-tag-teal-text: var(--carbon-teal-20);
+  --carbon-tag-cyan-bg: var(--carbon-cyan-70);
+  --carbon-tag-cyan-text: var(--carbon-cyan-20);
+  --carbon-tag-magenta-bg: var(--carbon-magenta-70);
+  --carbon-tag-magenta-text: var(--carbon-magenta-20);
+  --carbon-tag-high-contrast-bg: var(--carbon-gray-10);
+  --carbon-tag-high-contrast-text: var(--carbon-gray-100);
+
+  /* ── Data Visualization — dark ── */
+  --chart-1-1: var(--carbon-purple-40);
+  --chart-1-2: var(--carbon-cyan-40);
+  --chart-1-3: var(--carbon-teal-40);
+  --chart-1-4: var(--carbon-magenta-40);
+  --chart-1-5: var(--carbon-red-40);
+  --chart-1-6: var(--carbon-red-30);
+  --chart-1-7: var(--carbon-green-40);
+  --chart-1-8: var(--carbon-blue-40);
+  --chart-alert: var(--carbon-red-50);
+  --chart-success: var(--carbon-green-40);
+  --chart-warning: var(--carbon-yellow-30);
+}
+
+
+/* ============================================
+   Enterprise Keyframe Animations
+   Premium motion system for widgets, charts,
+   dashboards, and data update indicators.
+   ============================================ */
+
+/* ── Widget fade-up entry — stagger via --stagger-delay ── */
+@keyframes premium-fade-up {
+  0%   { opacity: 0; transform: translateY(16px) scale(0.98); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ── Shimmer loading — glassmorphic skeleton ── */
+@keyframes premium-shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* ── Data update flash — highlight on WebSocket push ── */
+@keyframes premium-data-flash {
+  0%   { background-color: rgba(var(--primary-rgb), 0.06); }
+  50%  { background-color: rgba(var(--primary-rgb), 0.12); }
+  100% { background-color: transparent; }
+}
+
+/* ── Pulse ring — live indicator ring ── */
+@keyframes premium-pulse-ring {
+  0%   { transform: scale(1); opacity: 0.6; }
+  70%  { transform: scale(1.4); opacity: 0; }
+  100% { transform: scale(1.4); opacity: 0; }
+}
+
+/* ── KPI count-up number animation ── */
+@keyframes kpi-count-enter {
+  0%   { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Slide-in from left — tab content entry ── */
+@keyframes slide-in-left {
+  0%   { opacity: 0; transform: translateX(-12px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+/* ── Slide-in from right — RTL tab content entry ── */
+@keyframes slide-in-right {
+  0%   { opacity: 0; transform: translateX(12px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+/* ── Scale pop — button/badge emphasis ── */
+@keyframes scale-pop {
+  0%   { transform: scale(0.85); opacity: 0; }
+  60%  { transform: scale(1.04); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ── Chart canvas reveal — clip from bottom ── */
+@keyframes chart-reveal {
+  0%   { clip-path: inset(100% 0 0 0); opacity: 0; }
+  100% { clip-path: inset(0 0 0 0); opacity: 1; }
+}
+
+/* ── Gradient border rotation — premium accent ── */
+@keyframes gradient-rotate {
+  0%   { --gradient-angle: 0deg; }
+  100% { --gradient-angle: 360deg; }
+}
+
+/* ── Breathing glow — live system status ── */
+@keyframes breathing-glow {
+  0%, 100% { box-shadow: 0 0 8px rgba(var(--primary-rgb), 0.10); }
+  50%      { box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.22); }
+}
+
+/* ── Spin — loading spinner ── */
+@keyframes premium-spin {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "description": "Workspace shell child routes allowed to remain off DynamicPageHost until contracts + runtime catalog exist. STRICT=1 fails if a handwritten route is missing here.",
+  "routes": [
+    {
+      "path": "workspace/tasks",
+      "reason": "Workflow tasks hub; pending Dynamic UI route + widget map for /workspace/tasks.",
+      "expiresAt": "2026-08-01"
+    },
+    {
+      "path": "workspace/approvals",
+      "reason": "Approvals hub; pending Dynamic UI contract.",
+      "expiresAt": "2026-08-01"
+    },
+    {
+      "path": "workspace/activity",
+      "reason": "Activity feed; pending Dynamic UI contract.",
+      "expiresAt": "2026-08-01"
+    },
+    {
+      "path": "workspace/ai",
+      "reason": "AI workspace surface; pending ai-os Dynamic UI enrollment.",
+      "expiresAt": "2026-08-01"
+    },
+    {
+      "path": "workspace/modules",
+      "reason": "Legacy module launcher; replace with contract-driven surface per module.",
+      "expiresAt": "2026-08-01"
+    },
+    {
+      "path": "workspace/setup",
+      "reason": "Workspace setup wizard; pending contract.",
+      "expiresAt": "2026-08-01"
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "module": "users",
+  "phase": "Phase 1 / Module 4",
+  "completedAt": "2026-04-25T16:13:56.174457Z",
+  "verdict": "PASS",
+  "tenant": "shahin_visitors",
+  "user": "tenantadmin@shahin-ai.local",
+  "role": "tenant_admin",
+  "issuer": "https://auth.shahin-ai.com/realms/dogan",
+  "endpointCount": 6,
+  "passCount": 6,
+  "failCount": 0,
+  "failingEndpoints": [],
+  "endpoints": [
+    {
+      "name": "users",
+      "path": "/api/users",
+      "status": 200,
+      "ms": 32,
+      "verdict": "PASS",
+      "sample": "data: list[1]"
+    },
+    {
+      "name": "foundationUsers",
+      "path": "/api/foundation/users",
+      "status": 200,
+      "ms": 26,
+      "verdict": "PASS",
+      "sample": "data: list[1]"
+    },
+    {
+      "name": "userDetail",
+      "path": "/api/foundation/users/cf36d194-391d-42f6-b8df-267635bde169",
+      "status": 200,
+      "ms": 26,
+      "verdict": "PASS",
+      "sample": "keys: ['data', 'success']"
+    },
+    {
+      "name": "userTeams",
+      "path": "/api/foundation/users/cf36d194-391d-42f6-b8df-267635bde169/teams",
+      "status": 200,
+      "ms": 27,
+      "verdict": "PASS",
+      "sample": "teams: list[0]"
+    },
+    {
+      "name": "userTasks",
+      "path": "/api/foundation/users/cf36d194-391d-42f6-b8df-267635bde169/tasks",
+      "status": 200,
+      "ms": 25,
+      "verdict": "PASS",
+      "sample": "tasks: list[0]"
+    },
+    {
+      "name": "invitations",
+      "path": "/api/invitations",
+      "status": 200,
+      "ms": 22,
+      "verdict": "PASS",
+      "sample": "invitations: list[0]"
+    }
+  ]
+}

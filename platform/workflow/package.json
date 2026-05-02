@@ -1,0 +1,47 @@
+{
+  "name": "@dos/module-workflow",
+  "version": "2.0.0",
+  "description": "DOS Workflow module — definitions, instances, tasks, approvals, SLA, escalation, delegation, lifecycle.",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./contracts/*": "./contracts/*",
+    "./module.manifest.json": "./module.manifest.json",
+    "./db/migrations/*": "./db/migrations/*",
+    "./db/seeds/*": "./db/seeds/*",
+    "./ui": "./ui/index.ts",
+    "./ui/*": "./ui/*"
+  },
+  "files": [
+    "dist",
+    "ui",
+    "contracts",
+    "db",
+    "module.manifest.json"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "peerDependencies": {
+    "@dos/db": "workspace:*",
+    "@dos/module-sdk": "workspace:*",
+    "@dos/platform-core": "workspace:*",
+    "@dos/service-bootstrap": "workspace:*"
+  },
+  "peerDependenciesMeta": {
+    "@dos/db": { "optional": true },
+    "@dos/module-sdk": { "optional": true },
+    "@dos/platform-core": { "optional": true },
+    "@dos/service-bootstrap": { "optional": true }
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0"
+  }
+}

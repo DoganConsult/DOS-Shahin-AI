@@ -1,0 +1,284 @@
+{
+  "$schema": "../../platform/contracts/module/module.manifest.schema.json",
+  "schemaVersion": 1,
+  "kind": "platform",
+  "moduleCode": "dauth",
+  "displayName": "DAuth — Dogan Authentication & Authorization",
+  "description": "Identity, sessions, MFA, access decision engine, scope, authority, delegation, SoD, lifecycle authorization, identity audit, SCIM provisioning, CSRF protection.",
+  "version": "1.0.0",
+  "extractable": true,
+  "selfContained": true,
+  "lifecycle": {
+    "stage": "ga",
+    "owner": "platform-core",
+    "entitlementKey": "platform.dauth",
+    "featureFlag": "platform.dauth.enabled",
+    "minTenantStage": "ga"
+  },
+  "contracts": {
+    "openapi": "./contracts/dauth-port.openapi.yaml",
+    "permissions": "../contracts/access-contract/policy.schema.json"
+  },
+  "platformDependencies": {
+    "@dos/platform-core": "^1.0.0",
+    "@dos/module-sdk": "^1.0.0",
+    "@dos/contracts": "^1.0.0",
+    "@dos/types": "^1.0.0"
+  },
+  "metadata": {
+    "ownerTeam": "platform-core",
+    "stability": "stable",
+    "previousLocation": "DAuth Module",
+    "previousManifest": "platform/dauth/manifest/platform-module.manifest.json",
+    "promotedAt": "2026-04-29",
+    "migrationNote": "Standardized to module.manifest.schema.json: replaced legacy `layer: \"platform\"` with `kind: \"platform\"`, added required `lifecycle` block, and moved all module-specific rich metadata under `metadata`. Active references in DAuth migration tests and dependency-cruiser config were updated. The legacy manifest is archived under _quarantine/legacy-manifests/dauth/.",
+    "exposes": {
+      "packages": [
+        { "name": "@dos/dauth-core", "path": "platform/dauth/packages/core", "entry": "dist/index.js" },
+        { "name": "@dos/dauth-shared", "path": "platform/dauth/packages/shared", "entry": "dist/index.js" },
+        { "name": "@dos/dauth-frontend", "path": "platform/dauth/packages/frontend", "entry": "index.ts", "status": "published" }
+      ],
+      "services": [
+        { "code": "auth-service", "path": "platform/dauth/services/auth-service", "apiBase": "/api/auth" }
+      ],
+      "ports": {
+        "package": "@dos/ports",
+        "subpath": "@dos/ports/dauth",
+        "names": ["DAuthPort"],
+        "binding": "platform/dauth/packages/core/dauth-port.impl.ts (createDAuthPort)",
+        "status": "extracted"
+      }
+    },
+    "consumes": {
+      "platformPorts": ["@dos/ports/dos.DOSPort", "@dos/ports/dsoc.DSOCPort (publisher only)"],
+      "platformPackages": ["@dos/types", "@dos/contracts", "@dos/ports", "@dos/platform-core", "@dos/db", "@dos/event-backbone"],
+      "externalAdapters": ["keycloak", "openfga", "cerbos", "ldap"]
+    },
+    "schemas": {
+      "dedicated": {
+        "name": "platform_dauth",
+        "isolationPhase": "Phase 1 — views layer (non-destructive). Views in platform_dauth.* select from the underlying dos.* / public.* tables so new callers can address the isolated namespace without breaking legacy paths. Phase 2 cutover (ALTER TABLE SET SCHEMA) is tracked in platform/dauth/docs/G8-SCHEMA-MIGRATION.md.",
+        "migration": "platform/dauth/migrations/public/20260422_0005_create_platform_dauth_schema.sql",
+        "viewCount": 35
+      },
+      "shared": {
+        "name": "dos",
+        "tables": [
+          "access_profiles",
+          "approval_matrix_rules_template",
+          "authority_scope_bindings",
+          "authz_decision_log",
+          "decision_authorities",
+          "delegation_chains",
+          "delegation_policies",
+          "delegations",
+          "functional_roles",
+          "lifecycle_auth_log_template",
+          "login_attempts",
+          "permissions",
+          "role_permissions",
+          "sessions",
+          "sign_off_authorities_template",
+          "sod_conflict_audit_template",
+          "sod_rules",
+          "user_access_profiles",
+          "user_availability",
+          "user_competencies",
+          "user_mfa",
+          "user_role_assignments"
+        ]
+      },
+      "public": {
+        "name": "public",
+        "tables": [
+          "access_profiles",
+          "access_snapshots",
+          "active_sessions",
+          "actors",
+          "authorization_audit_log",
+          "invitations",
+          "jwt_signing_keys",
+          "refresh_token_families",
+          "scim_api_tokens",
+          "security_events",
+          "sessions",
+          "token_blacklist",
+          "user_access_profiles"
+        ],
+        "note": "These tables predate platform-module schema isolation. Migration to dedicated 'platform_dauth' schema is tracked separately."
+      }
+    },
+    "events": {
+      "publishes": [
+        "auth.verification_email_requested",
+        "csrf.policy.updated",
+        "csrf.validation.failed",
+        "dauth.access_profile.assigned",
+        "dauth.access_profile.revoked",
+        "dauth.access_review.completed",
+        "dauth.access_review.created",
+        "dauth.account.locked",
+        "dauth.approval-rule.created",
+        "dauth.approval-rule.deactivated",
+        "dauth.authority.granted",
+        "dauth.authority.revoked",
+        "dauth.delegation.action_executed",
+        "dauth.delegation.expired",
+        "dauth.invitation.created",
+        "dauth.login.failure",
+        "dauth.login.success",
+        "dauth.maker_checker.approved",
+        "dauth.maker_checker.rejected",
+        "dauth.maker_checker.submitted",
+        "dauth.mfa.code_sent",
+        "dauth.password_reset.completed",
+        "dauth.password_reset.requested",
+        "dauth.permission.assigned",
+        "dauth.permission.created",
+        "dauth.permission.deactivated",
+        "dauth.permission.revoked",
+        "dauth.registration.completed",
+        "dauth.role.assigned",
+        "dauth.role.created",
+        "dauth.role.deactivated",
+        "dauth.role.revoked",
+        "dauth.security_event",
+        "dauth.session.revoked",
+        "dauth.sessions.bulk_revoked",
+        "dauth.sod.conflicts_detected",
+        "dauth.sod.policy_created",
+        "dauth.sod.policy_deactivated",
+        "dauth.sod.waiver_granted",
+        "session.anomaly.detected"
+      ],
+      "subscribes": [
+        "dauth.access_profile.assigned",
+        "dauth.access_profile.revoked",
+        "dauth.access_review.completed",
+        "dauth.access_review.created",
+        "dauth.account.locked",
+        "dauth.approval-rule.created",
+        "dauth.approval-rule.deactivated",
+        "dauth.approver.assigned",
+        "dauth.approver.revoked",
+        "dauth.authority.granted",
+        "dauth.authority.revoked",
+        "dauth.delegation.action_executed",
+        "dauth.delegation.created",
+        "dauth.delegation.expired",
+        "dauth.delegation.revoked",
+        "dauth.fga.tuple_pending",
+        "dauth.invitation.created",
+        "dauth.kc.role_assigned",
+        "dauth.kc.role_revoked",
+        "dauth.kc.sync_pending",
+        "dauth.login.failure",
+        "dauth.login.success",
+        "dauth.maker_checker.approved",
+        "dauth.maker_checker.rejected",
+        "dauth.maker_checker.submitted",
+        "dauth.mfa.code_sent",
+        "dauth.membership.added",
+        "dauth.membership.removed",
+        "dauth.ownership.assigned",
+        "dauth.ownership.revoked",
+        "dauth.password_reset.completed",
+        "dauth.permission.assigned",
+        "dauth.permission.created",
+        "dauth.permission.deactivated",
+        "dauth.permission.revoked",
+        "dauth.registration.completed",
+        "dauth.reviewer.assigned",
+        "dauth.reviewer.revoked",
+        "dauth.role.assigned",
+        "dauth.role.created",
+        "dauth.role.deactivated",
+        "dauth.role.revoked",
+        "dauth.security_event",
+        "dauth.session.revoked",
+        "dauth.sessions.bulk_revoked",
+        "dauth.sod.conflicts_detected",
+        "dauth.sod.policy_created",
+        "dauth.sod.policy_deactivated",
+        "dauth.sod.waiver_granted",
+        "dauth.tenant_admin.assigned",
+        "dauth.tenant_admin.revoked",
+        "dauth.tester.assigned",
+        "dauth.tester.revoked",
+        "lifecycle.user_created",
+        "tenant.created",
+        "user.created",
+        "user.deactivated"
+      ]
+    },
+    "routes": {
+      "catalog": "platform/dauth/packages/core/routes",
+      "mounts": [
+        { "file": "auth.routes.ts", "base": "/api/auth", "catalog": "platform:auth" },
+        { "file": "me.routes.ts", "base": "/api/me", "catalog": "routes_me_routes" },
+        { "file": "invitation.routes.ts", "base": "/api/invitations", "catalog": "platform:invitations" },
+        { "file": "email-verification.routes.ts", "base": "/api/auth", "catalog": "routes_email_verification_routes" },
+        { "file": "authz-explain.routes.ts", "base": "/api/authz-explain", "catalog": "autodiscovered:routes_authz_explain_routes" },
+        { "file": "permission-derivation.routes.ts", "base": "/api/permission-derivation", "catalog": "autodiscovered:routes_permission_derivation_routes" },
+        { "file": "access-contract.routes.ts", "base": "/api/authz", "catalog": "dauth:access-contract" },
+        { "file": "actor-identity.routes.ts", "base": "/api/identity,/api/actors", "catalog": "dauth:actor-identity" },
+        { "file": "dynamic-rbac.routes.ts", "base": "/api/dynamic-rbac", "catalog": "dauth:dynamic-rbac" },
+        { "file": "role-profile.routes.ts", "base": "/api/dauth/roles", "catalog": "dauth:role-profile" },
+        { "file": "role-matrix.routes.ts", "base": "/api/dauth/role-matrix", "catalog": "dauth:role-matrix" },
+        { "file": "role-detail.routes.ts", "base": "/api/dauth/role-detail", "catalog": "dauth:role-detail" }
+      ]
+    },
+    "migrations": {
+      "indexFile": "platform/dauth/migrations/migrations-index.json",
+      "ownership": "physical",
+      "physicalLocation": "platform/dauth/migrations/{public,tenant}",
+      "physicalMoveStatus": "completed",
+      "runnerScanRoot": "platform/<module>/migrations (added to migration/migration-runner.ts#discoverAllMigrations)",
+      "totals": { "publicMigrations": 25, "tenantMigrations": 3, "downMigrationFiles": 20 }
+    },
+    "observability": {
+      "metricsPrefix": "dauth_",
+      "healthEndpoint": "/api/auth/health",
+      "readinessEndpoint": "/api/auth/ready",
+      "tracingEnabled": true,
+      "structuredLogging": true,
+      "owningService": "auth-service"
+    },
+    "security": {
+      "csrfEnforcement": "owned",
+      "rateLimiting": "owned",
+      "auditTarget": "DSOC via @dos/ports/dsoc.DSOCPort — backbone publisher at platform/dauth/packages/core/audit/dsoc-port.publisher.ts (createBackboneDSOCPort). Consumer service bootstraps with DSOC module.",
+      "auditTopics": ["dsoc.audit.*", "dsoc.alert.*"],
+      "secretsViaEnv": true,
+      "compliance": ["SOC2", "ISO27001", "GDPR", "PDPL"]
+    },
+    "tests": {
+      "fileCount": 207,
+      "boundaryTest": "platform/dauth/packages/shared/src/__tests__",
+      "portSmokeTests": [
+        "platform/dauth/packages/core/__tests__/dauth-port.impl.test.ts",
+        "platform/dauth/packages/core/__tests__/dsoc-port.publisher.test.ts"
+      ],
+      "vitestWiring": "vitest.config.mts now includes platform/*/packages/*/**/*.test.ts and platform/*/services/*/src/**/*.test.ts",
+      "lastRun": "2026-04-22 DAuth Session 2 — 118 test files passed, 89 failed; 1120 individual tests passed, 455 failed. New port tests 5/5 green. Remaining failures are pre-existing issues (missing module paths, mock-setup bugs, DB-dependent integration tests) independent of this refactor."
+    },
+    "completionStatus": {
+      "definitionOfDone": "14-item DoD per platform module spec",
+      "session": "DAuth-Session-2 (Deferred Item Closure)",
+      "session1Closed": ["D1-manifest", "D2-bundle", "D3-migrations-index", "D4-docs-paths", "D5-dependency-rule"],
+      "session2Closed": [
+        "ports-extracted-to-@dos/ports (new package packages/ports)",
+        "dauth-frontend-package-json (with 14 subpath exports)",
+        "physical-migration-move (48 files under platform/dauth/migrations/{public,tenant})",
+        "migration-runner-scans-platform-module-tree",
+        "dsoc-audit-publisher-wired-via-backbone",
+        "vitest-config-includes-platform-module-tests",
+        "port-smoke-tests-5of5-green"
+      ],
+      "remainingExternalBlockers": [
+        "DSOC service bootstrap (Session: DSOC-1) — DAuth already publishes to dsoc.audit.* topics; no DAuth-side change needed when DSOC consumer ships",
+        "Pre-existing test failures (not caused by this work) — 89/207 test files have failures that predate the refactor; fixing them is separate unrelated work"
+      ]
+    }
+  }
+}

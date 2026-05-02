@@ -1,0 +1,69 @@
+{
+  "moduleCode": "records",
+  "displayName": "Records Management",
+  "ownerTeam": "product-shahin-ai",
+  "productCode": "shahin-ai",
+  "ownership": "module-owned",
+  "version": "1.0.0",
+  "status": "active",
+  "platformDependencies": [
+    "identity",
+    "tenancy",
+    "workflow",
+    "permissions",
+    "audit"
+  ],
+  "seedProviders": [
+    "products/shahin/seeds/records-seed"
+  ],
+  "tenantDefaults": [
+    "records_default_retention_years",
+    "records_auto_classification"
+  ],
+  "requiredReferenceData": [
+    "record_classifications",
+    "retention_policies",
+    "disposal_methods"
+  ],
+  "currentSources": [
+    "/home/Dr-Dogan-AGRC-OS/backend/src/modules/records"
+  ],
+  "targetPath": "modules/records",
+  "futureService": "records-service",
+  "frontendSources": [
+    "/home/Dr-Dogan-AGRC-OS/frontend/src/app/platform-manifests/records.module.routes.ts"
+  ],
+  "ownedTables": [
+    "records",
+    "record_versions",
+    "record_retention_policies",
+    "record_classifications",
+    "record_holds",
+    "record_disposals"
+  ],
+  "referencedTables": [
+    "audit_trail",
+    "compliance_frameworks",
+    "policies"
+  ],
+  "events": {
+    "publishes": [
+      "records.created",
+      "records.classified",
+      "records.retention_set",
+      "records.disposal_requested",
+      "records.disposal_approved",
+      "records.hold_placed",
+      "records.hold_released"
+    ],
+    "subscribes": [
+      "compliance.posture_changed",
+      "policy.approved",
+      "audit.engagement_completed",
+      "workflow.status_changed"
+    ]
+  },
+  "routeBases": [
+    "/api/records"
+  ]
+}

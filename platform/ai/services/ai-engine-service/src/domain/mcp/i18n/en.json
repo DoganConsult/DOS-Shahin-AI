@@ -1,0 +1,14 @@
+{
+  "mcp.title": "Model Context Protocol",
+  "mcp.dashboard": "MCP Dashboard",
+  "mcp.tools": "Tool Registry",
+  "mcp.agents": "Agent Registry",
+  "mcp.executions": "Execution Logs",
+  "mcp.empty.title": "No tools registered",
+  "mcp.empty.description": "Register your first MCP tool to enable AI agent orchestration.",
+  "mcp.loading": "Loading MCP data...",
+  "mcp.error.title": "Failed to load MCP data",
+  "mcp.error.retry": "Retry",
+  "mcp.create": "Register Tool",
+  "mcp.diagnostics": "Diagnostics"
+}

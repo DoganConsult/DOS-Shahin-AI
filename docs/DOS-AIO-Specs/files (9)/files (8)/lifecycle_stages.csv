@@ -1,0 +1,13 @@
+code,name_en,name_ar,order,duration_days,responsible
+DEFINE,Definition,التعريف,1,7,Compliance Officer
+PLAN,Planning,التخطيط,2,7,Control Owner
+COLLECT,Collection,الجمع,3,14,Evidence Collector
+VALIDATE,Validation,التحقق,4,7,Quality Reviewer
+APPROVE,Approval,الموافقة,5,5,Manager/CISO
+STORE,Storage,التخزين,6,1,GRC Platform
+USE,Active Use,الاستخدام النشط,7,365,Audit Function
+REVIEW,Periodic Review,المراجعة الدورية,8,30,Internal Audit
+REFRESH,Refresh,التحديث,9,14,Control Owner
+RETAIN,Retention,الاحتفاظ,10,1095,Records Manager
+ARCHIVE,Archive,الأرشفة,11,1,IT Operations
+DISPOSE,Disposal,التخلص,12,1,Records Manager

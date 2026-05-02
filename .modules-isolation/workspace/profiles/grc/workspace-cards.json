@@ -1,0 +1,157 @@
+{
+  "$comment": "Authoritative ordered list of cards rendered in the Shahin-AI workspace shell. 18 GRC business modules. Foundation is platform DNA (lives in platform/foundation/) and is NOT a Shahin card.",
+  "version": "1.0.0",
+  "model": "GRC-18-card",
+  "cards": [
+    {
+      "position": 1,
+      "code": "governance",
+      "is_business_card": true
+    },
+    {
+      "position": 2,
+      "code": "qiyas",
+      "is_business_card": true
+    },
+    {
+      "position": 3,
+      "code": "regulatory",
+      "is_business_card": true
+    },
+    {
+      "position": 4,
+      "code": "compliance",
+      "is_business_card": true
+    },
+    {
+      "position": 5,
+      "code": "risk",
+      "is_business_card": true
+    },
+    {
+      "position": 6,
+      "code": "controls",
+      "is_business_card": true
+    },
+    {
+      "position": 7,
+      "code": "policy",
+      "is_business_card": true
+    },
+    {
+      "position": 8,
+      "code": "asset",
+      "is_business_card": true
+    },
+    {
+      "position": 9,
+      "code": "vendor",
+      "is_business_card": true
+    },
+    {
+      "position": 10,
+      "code": "incident",
+      "is_business_card": true
+    },
+    {
+      "position": 11,
+      "code": "exceptions",
+      "is_business_card": true
+    },
+    {
+      "position": 12,
+      "code": "issues",
+      "is_business_card": true
+    },
+    {
+      "position": 13,
+      "code": "evidence",
+      "is_business_card": true
+    },
+    {
+      "position": 14,
+      "code": "audit",
+      "is_business_card": true
+    },
+    {
+      "position": 15,
+      "code": "bcp",
+      "is_business_card": true
+    },
+    {
+      "position": 16,
+      "code": "training",
+      "is_business_card": true
+    },
+    {
+      "position": 17,
+      "code": "reporting",
+      "is_business_card": true
+    },
+    {
+      "position": 18,
+      "code": "ai_governance",
+      "is_business_card": true
+    }
+  ],
+  "shell_surfaces": {
+    "$comment": "Productivity layer — accessed everywhere, not a card.",
+    "inbox": [
+      "inbox",
+      "notifications",
+      "notification-center",
+      "messaging",
+      "approval-center"
+    ],
+    "workflow_center": "embedded_in_every_module"
+  },
+  "archived": [
+    "errors",
+    "not-found",
+    "placeholder",
+    "sample-reports"
+  ],
+  "relocated_to_platform": [
+    {
+      "from": "modules/inbox",
+      "to": "platform/inbox/"
+    },
+    {
+      "from": "modules/notifications",
+      "to": "platform/inbox/"
+    },
+    {
+      "from": "modules/notification-center",
+      "to": "platform/inbox/"
+    },
+    {
+      "from": "modules/messaging",
+      "to": "platform/inbox/"
+    },
+    {
+      "from": "modules/approval-center",
+      "to": "platform/inbox/"
+    },
+    {
+      "from": "modules/mobile",
+      "to": "platform/runtime/"
+    },
+    {
+      "from": "modules/shared",
+      "to": "modules/packages/module-shared/"
+    },
+    {
+      "from": "modules/widgets",
+      "to": "modules/packages/module-shared/"
+    },
+    {
+      "from": "modules/privacy",
+      "to": "modules/compliance/submodules/privacy/"
+    },
+    {
+      "from": "modules/foundation",
+      "to": "platform/foundation/",
+      "note": "DNA — out of enrolment scope"
+    }
+  ]
+}

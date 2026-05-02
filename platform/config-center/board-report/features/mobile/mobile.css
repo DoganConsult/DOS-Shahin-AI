@@ -1,0 +1,147 @@
+/* ============================================
+   Shahin GRC — Mobile Native Stylesheet
+   Safe areas, touch targets, native feel
+   ============================================ */
+
+/* ─── Safe area CSS variables ─────────────────────── */
+:root {
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --tab-bar-height: 60px;
+  --mob-content-pad: 16px;
+}
+
+/* ─── Capacitor platform root overrides ───────────── */
+body.plt-capacitor {
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+body.plt-ios {
+  /* Respect Dynamic Island / notch */
+  padding-top: env(safe-area-inset-top);
+}
+
+body.plt-android {
+  /* Android edge-to-edge */
+  padding-top: env(safe-area-inset-top);
+}
+
+/* ─── Touch target minimum size (WCAG 2.5.5) ──────── */
+body.plt-capacitor button,
+body.plt-capacitor a,
+body.plt-capacitor [role="button"] {
+  min-height: 44px;
+  min-width: 44px;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  cursor: pointer;
+}
+
+/* ─── Keyboard open — hide fixed bottom elements ──── */
+body.keyboard-open .mob-tab-bar,
+body.keyboard-open .mob-fab-container {
+  transform: translateY(100%);
+}
+
+/* ─── Offline state indicator ─────────────────────── */
+body.offline .mob-hero-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 1px solid rgba(var(--module-accent-yellow-rgb), 0.3);
+  pointer-events: none;
+}
+
+/* ─── Scroll containers ───────────────────────────── */
+.mob-scroll-container {
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+  scroll-snap-type: y proximity;
+  padding-bottom: calc(var(--tab-bar-height) + var(--safe-bottom) + 16px);
+}
+
+/* ─── Cards — press feedback ──────────────────────── */
+body.plt-capacitor .mob-metric-card:active,
+body.plt-capacitor .mob-risk-item:active,
+body.plt-capacitor .mob-deadline-item:active,
+body.plt-capacitor .mob-activity-item:active {
+  transform: scale(0.97);
+  transition: transform 0.1s ease;
+}
+
+/* ─── Swipe hint animation ────────────────────────── */
+@keyframes swipeHint {
+  0%   { transform: translateX(0); }
+  20%  { transform: translateX(-12px); }
+  40%  { transform: translateX(0); }
+  100% { transform: translateX(0); }
+}
+
+.mob-risk-item:first-child {
+  animation: swipeHint 2s ease 3s 1;
+}
+
+/* ─── Pull-to-refresh custom scroll behaviour ──────── */
+.mob-ptf-host {
+  position: relative;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ─── Status bar colour matching ──────────────────── */
+meta[name="theme-color"] { content: #0a1628; }
+
+/* ─── Font for Arabic ──────────────────────────────── */
+.mob-dash.rtl,
+body[dir="rtl"] .mob-dash {
+  font-family: 'Tajawal', 'IBM Plex Sans Arabic', 'Noto Kufi Arabic', sans-serif;
+}
+
+/* ─── Prevent rubber-band on body (iOS) ────────────── */
+body.plt-ios {
+  position: fixed;
+  width: 100%;
+}
+
+body.plt-ios app-root {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ─── Input / form mobile overrides ──────────────── */
+body.plt-capacitor input,
+body.plt-capacitor textarea,
+body.plt-capacitor select {
+  font-size: var(--font-size-md); /* prevents auto-zoom on iOS */
+  border-radius: var(--radius-lg);
+}
+
+/* ─── Loading states ──────────────────────────────── */
+.mob-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(var(--color-white-rgb), 0.04) 0%,
+    rgba(var(--color-white-rgb), 0.09) 50%,
+    rgba(var(--color-white-rgb), 0.04) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmerSlide 1.5s infinite;
+  border-radius: var(--radius-lg);
+}
+
+@keyframes shimmerSlide {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Reduced motion — handled globally in wcag-a11y.css */

@@ -1,0 +1,15 @@
+{
+  "id": "audit.intake_review",
+  "module": "audit",
+  "hook": "intake_review",
+  "version": "1.0.0",
+  "sla_hours": 24,
+  "actor_role_default": "audit.module_lead",
+  "states": ["draft","triage","classified"],
+  "initial": "draft",
+  "transitions": [{"from":"draft","to":"triage","on":"submit"},{"from":"triage","to":"classified","on":"classify","actor_role":"audit.module_lead"}],
+  "audit_event_prefix": "audit.workflow.intake_review",
+  "notification_targets": ["audit.module_lead", "audit.approver"],
+  "evidence_required_on": ["passed","published"],
+  "escalation": { "on": "sla_breach", "to": "audit.executive_owner", "after_hours": 48 }
+}

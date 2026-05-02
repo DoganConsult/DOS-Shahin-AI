@@ -1,0 +1,30 @@
+import { Injectable, inject, signal, computed } from '@angular/core';
+import { Subject } from 'rxjs';
+import { EffectiveUiState, UiRenderContext } from '../../../../../platform/core/runtime/ui-state.models';
+import { UiBlueprintResolverService } from './ui-blueprint-resolver.service';
+
+/**
+ * Computes and caches EffectiveUiState.
+ * Wraps UiBlueprintResolverService with caching and invalidation.
+ */
+@Injectable({ providedIn: 'root' })
+export class EffectiveUiStateService {
+  private resolver = inject(UiBlueprintResolverService);
+
+  private _cached = signal<EffectiveUiState | null>(null);
+  private _stateChange$ = new Subject<EffectiveUiState>();
+
+  readonly cached = computed(() => this._cached());
+  readonly stateChange$ = this._stateChange$.asObservable();
+
+  compute(ctx: UiRenderContext, apiNavMenu: unknown): EffectiveUiState {
+    const state = this.resolver.loadRuntimeState(ctx, apiNavMenu);
+    this._cached.set(state);
+    this._stateChange$.next(state);
+    return state;
+  }
+
+  invalidate(): void {
+    this._cached.set(null);
+  }
+}

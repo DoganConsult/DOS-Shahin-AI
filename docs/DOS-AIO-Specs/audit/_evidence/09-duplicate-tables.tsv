@@ -1,0 +1,17 @@
+login_attempts|dos, platform_dauth, public|3
+ai_agent_registry|dos, public|2
+api_keys|platform_dauth, public|2
+config_runtime_overrides|dos, public|2
+feature_flag_overrides|platform_dos, public|2
+feature_flags|dos, platform_dos|2
+incidents|dos, platform_dsoc|2
+invitations|dos, platform_dauth|2
+job_registry|dos, public|2
+product_modules|platform_dos, public|2
+product_registry|dos, public|2
+runtime_config|dos, public|2
+schema_migrations|dos, public|2
+sod_rules|platform_dauth, public|2
+tenants|dos, public|2
+user_mfa|platform_dauth, public|2
+users|dos, public|2

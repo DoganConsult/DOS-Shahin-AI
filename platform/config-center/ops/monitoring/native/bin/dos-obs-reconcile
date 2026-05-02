@@ -1,0 +1,94 @@
+#!/usr/bin/env bash
+# dos-obs-reconcile — copy observability configs from the repo into /etc/<svc>/
+# and reload each service that changed. Run this after editing files under
+# ops/monitoring/ on the host. Idempotent.
+#
+# Install location: /usr/local/sbin/dos-obs-reconcile (installed by install.sh).
+
+set -Eeuo pipefail
+
+REPO_ROOT="${DOS_REPO_ROOT:-/root/DOS-AIO}"
+MON_DIR="${REPO_ROOT}/ops/monitoring"
+
+[[ $EUID -eq 0 ]] || { echo "run with sudo" >&2; exit 1; }
+[[ -d "$MON_DIR" ]] || { echo "repo not found at $MON_DIR (set DOS_REPO_ROOT)" >&2; exit 1; }
+
+log() { printf '[reconcile] %s\n' "$*"; }
+
+sync_file() {
+  local src="$1" dest="$2" owner="$3" mode="$4" svc="$5"
+  if ! cmp -s "$src" "$dest" 2>/dev/null; then
+    install -D -m "$mode" -o "$owner" -g "$owner" "$src" "$dest"
+    log "updated: $dest"
+    CHANGED_SERVICES+=("$svc")
+  fi
+}
+
+sync_tree() {
+  local src="$1" dest="$2" owner="$3" dmode="$4" fmode="$5" svc="$6"
+  local changed=0
+  [[ -d "$dest" ]] || { install -d -m "$dmode" -o "$owner" -g "$owner" "$dest"; changed=1; }
+  while IFS= read -r -d '' f; do
+    local rel="${f#$src/}"
+    local out="$dest/$rel"
+    if ! cmp -s "$f" "$out" 2>/dev/null; then
+      install -D -m "$fmode" -o "$owner" -g "$owner" "$f" "$out"
+      changed=1
+    fi
+  done < <(find "$src" -type f -print0)
+  (( changed )) && { log "updated tree: $dest"; CHANGED_SERVICES+=("$svc"); } || true
+}
+
+CHANGED_SERVICES=()
+
+# Prometheus
+if [[ -f /etc/systemd/system/prometheus.service ]]; then
+  sync_file "${MON_DIR}/prometheus.yml" /etc/prometheus/prometheus.yml prometheus 0644 prometheus
+  sync_file "${MON_DIR}/alerts.yml"     /etc/prometheus/alerts.yml     prometheus 0644 prometheus
+  sync_tree "${MON_DIR}/generated"      /etc/prometheus/generated      prometheus 0755 0644 prometheus
+fi
+
+# Alertmanager
+if [[ -f /etc/systemd/system/alertmanager.service ]]; then
+  sync_file "${MON_DIR}/alertmanager.yml" /etc/alertmanager/alertmanager.yml.tmpl alertmanager 0640 alertmanager
+fi
+
+# Loki
+if [[ -f /etc/systemd/system/loki.service ]]; then
+  sync_file "${MON_DIR}/loki.yml" /etc/loki/loki.yml loki 0644 loki
+fi
+
+# Grafana provisioning + dashboards
+if systemctl list-unit-files grafana-server.service >/dev/null 2>&1; then
+  sync_tree "${MON_DIR}/grafana/provisioning" /etc/grafana/provisioning    grafana 0755 0644 grafana-server
+  sync_tree "${MON_DIR}/dashboards"           /var/lib/grafana/dashboards grafana 0755 0644 grafana-server
+fi
+
+if ((${#CHANGED_SERVICES[@]} == 0)); then
+  log "no changes"
+  exit 0
+fi
+
+# Deduplicate & reload — prefer reload over restart where the service supports it.
+readarray -t UNIQ < <(printf '%s\n' "${CHANGED_SERVICES[@]}" | sort -u)
+for svc in "${UNIQ[@]}"; do
+  case "$svc" in
+    prometheus)
+      # Hot-reload via POST to /-/reload (keeps TSDB state in memory).
+      if curl -fsS -XPOST http://127.0.0.1:9090/-/reload >/dev/null 2>&1; then
+        log "reloaded: prometheus (hot)"
+      else
+        systemctl reload-or-restart prometheus
+        log "restarted: prometheus"
+      fi
+      ;;
+    alertmanager)
+      systemctl restart alertmanager  # re-renders tmpl via ExecStartPre
+      log "restarted: alertmanager"
+      ;;
+    loki|grafana-server)
+      systemctl reload-or-restart "$svc"
+      log "reloaded-or-restarted: $svc"
+      ;;
+  esac
+done

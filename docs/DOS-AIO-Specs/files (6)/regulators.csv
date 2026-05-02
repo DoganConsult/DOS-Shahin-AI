@@ -1,0 +1,14 @@
+code,name_en,name_ar,country_code,category,jurisdiction_en,website,established_year
+UAE-CBU,Central Bank of UAE,مصرف الإمارات المركزي,ARE,financial,"Banking, Finance, Insurance & Payment Systems",https://centralbank.ae,1980
+UAE-SCA,Securities & Commodities Authority,هيئة الأوراق المالية والسلع,ARE,financial,Capital Markets & Securities,https://sca.gov.ae,2000
+UAE-DFSA,Dubai Financial Services Authority,هيئة الخدمات المالية بدبي,ARE,financial,DIFC Financial Services,https://dfsa.ae,2004
+UAE-FSRA,Financial Services Regulatory Authority,هيئة تنظيم الخدمات المالية,ARE,financial,ADGM Financial Services,https://fsra.adgm.com,2015
+UAE-CSC,UAE Cybersecurity Council,مجلس الأمن السيبراني,ARE,cybersecurity,National Cybersecurity Strategy,https://csc.gov.ae,2020
+UAE-SIA,Signals Intelligence Agency,هيئة الأمن السيبراني,ARE,cybersecurity,Critical Infrastructure Protection,https://sia.gov.ae,2014
+UAE-TDRA,Telecommunications & Digital Government Regulatory Authority,هيئة تنظيم الاتصالات والحكومة الرقمية,ARE,telecom,Telecom & Digital Government,https://tdra.gov.ae,2003
+UAE-DOH,Department of Health Abu Dhabi,دائرة الصحة أبوظبي,ARE,healthcare,Healthcare Regulation Abu Dhabi,https://doh.gov.ae,2007
+UAE-DHA,Dubai Health Authority,هيئة الصحة بدبي,ARE,healthcare,Healthcare Regulation Dubai,https://dha.gov.ae,2007
+UAE-MOHAP,Ministry of Health & Prevention,وزارة الصحة ووقاية المجتمع,ARE,healthcare,Federal Healthcare,https://mohap.gov.ae,1971
+UAE-FTA,Federal Tax Authority,الهيئة الاتحادية للضرائب,ARE,tax,Federal Tax & VAT,https://tax.gov.ae,2016
+UAE-MOE,Ministry of Economy,وزارة الاقتصاد,ARE,commerce,"Commerce, AML & Consumer Protection",https://moec.gov.ae,1971
+UAE-MOHRE,Ministry of Human Resources & Emiratisation,وزارة الموارد البشرية والتوطين,ARE,labor,Labor & HR,https://mohre.gov.ae,1972

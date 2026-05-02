@@ -1,0 +1,202 @@
+{
+  "$schema": "../../platform/contracts/module/module.manifest.schema.json",
+  "schemaVersion": 1,
+  "kind": "platform",
+  "moduleCode": "foundation",
+  "displayName": "Foundation",
+  "description": "Identity, organization, business units, departments, positions, locations, committees, invitations, delegations, access reviews, ownership mappings, SoD, and audit trail. The platform's foundational data layer that every product depends on.",
+  "version": "2.0.0",
+  "extractable": true,
+  "selfContained": true,
+  "lifecycle": {
+    "stage": "ga",
+    "owner": "dogan-consult",
+    "entitlementKey": "module.foundation",
+    "featureFlag": "module.foundation.enabled",
+    "minTenantStage": "ga"
+  },
+  "contracts": {
+    "routes":      "contracts/routing/routes.json",
+    "navigation":  "contracts/navigation/navigation.json",
+    "dynamicUi":   "contracts/dynamic-ui/widgets.json",
+    "agents":      "contracts/agents/agents.json",
+    "workflow":    "contracts/workflow/workflows.json",
+    "permissions": "contracts/permissions/permissions.json"
+  },
+  "platformDependencies": {
+    "@dos/platform-core":  "^1.0.0",
+    "@dos/module-sdk":     "^1.0.0",
+    "@dos/contracts":      "^1.0.0",
+    "@dos/types":          "^1.0.0",
+    "@dos/runtime-config": "^1.0.0"
+  },
+  "ownedTables": [
+    "organizations",
+    "business_units",
+    "departments",
+    "positions",
+    "position_assignments",
+    "locations",
+    "location_bu_map",
+    "committees",
+    "committee_meetings",
+    "committee_members",
+    "teams",
+    "team_members",
+    "team_raci_assignments",
+    "ownership_mappings",
+    "user_org_scope",
+    "tenant_memberships",
+    "access_reviews",
+    "access_review_items",
+    "delegations",
+    "foundation_authority_kinds",
+    "foundation_position_authority",
+    "foundation_employee_lifecycle_state",
+    "foundation_employee_lifecycle_tasks",
+    "foundation_employee_lifecycle_transitions",
+    "foundation_employee_lifecycle_workflows",
+    "foundation_coi_declarations",
+    "foundation_policy_acknowledgments",
+    "foundation_sod_rules",
+    "foundation_sod_violations"
+  ],
+  "ownedReferenceTables": [
+    "foundation_cat_audit_actions",
+    "foundation_cat_bu_templates",
+    "foundation_cat_calendar_systems",
+    "foundation_cat_coi_categories",
+    "foundation_cat_committee_templates",
+    "foundation_cat_data_classifications",
+    "foundation_cat_dept_templates",
+    "foundation_cat_lawful_bases",
+    "foundation_cat_location_types",
+    "foundation_cat_org_types",
+    "foundation_cat_ownership_domains",
+    "foundation_cat_position_templates",
+    "foundation_cat_profile_types",
+    "foundation_cat_readiness_dimensions",
+    "foundation_cat_reference",
+    "foundation_cat_role_templates",
+    "foundation_cat_tenant_defaults"
+  ],
+  "sharedTables": {
+    "platform_dauth": ["invitations", "sod_rules", "delegations"],
+    "ai_admin_or_dauth": ["users"],
+    "platform_dos": ["tenants_registry", "tenant_products", "tenant_product_modules"]
+  },
+  "disownedTables": [
+    "foundation_training_assignments",
+    "foundation_training_courses"
+  ],
+  "contestedTables": [
+    "users",
+    "tenants",
+    "invitations",
+    "sod_rules",
+    "delegations"
+  ],
+  "goldenReady": {
+    "ui": {
+      "navigation": { "min": 1, "declared": 18 },
+      "routes":     { "min": 1, "declared": 21 },
+      "widgets":    { "signature_per_route": true, "declared": 10, "min_per_route": 1 },
+      "icons":      { "all_required": true, "set": "lucide" },
+      "i18n":       { "locales": ["en","ar"], "missing_keys_max": 0 },
+      "actions":    { "primary_per_route": true, "declared": 5 },
+      "agents":     { "declared": 3, "page_agents": 7, "min_per_route": 1, "ai_required_page_types": ["overview","detail","workbench"] },
+      "kpis":       { "min_per_overview": 4 },
+      "themes":     { "tokens_complete": true },
+      "components": { "all_in_capability_registry": true }
+    },
+    "data": {
+      "public_tables": [
+        "dos.organizations","dos.business_units","dos.positions","dos.position_assignments",
+        "dos.locations","dos.location_bu_map","dos.committees","dos.committee_members",
+        "dos.ownership_mappings","dos.invitations","dos.audit_trail"
+      ],
+      "tenant_tables": [
+        "workspaces","organizations","business_units","departments","sections","teams",
+        "team_members","positions","position_assignments","committees","committee_members",
+        "locations","location_bu_map","ownership_mappings"
+      ],
+      "seeds": [
+        "platform/foundation/db/seeds/foundation-permissions.sql",
+        "platform/foundation/db/seeds/foundation-roles.sql",
+        "platform/foundation/db/seeds/foundation-demo-tenant.sql"
+      ],
+      "fk_invariants": true
+    },
+    "rbac": {
+      "permissions": [
+        "foundation.read","foundation.admin","foundation.manage","foundation.system.manage",
+        "foundation.org.read","foundation.org.write","foundation.user.read","foundation.user.write",
+        "foundation.record.read","foundation.record.write","foundation.record.approve","foundation.record.delete",
+        "audit_trail.read"
+      ],
+      "roles": ["tenant_owner","tenant_admin","org_admin","hr_admin","viewer","auditor","standard_user"],
+      "kc_client_roles": true,
+      "openfga_types": ["foundation:org","foundation:committee","foundation:record"]
+    },
+    "events":   { "publishes": ["foundation.user.invited","foundation.org.created"], "consumes": [] },
+    "workflows":{ "declared": ["committee.charter.approve","access.review.start"] },
+    "exports":  { "formats": ["csv","xlsx","pdf"] },
+    "realtime": { "channels": ["foundation.audit","foundation.org.changes"] }
+  },
+  "consumesFrom": [
+    { "module": "workflow", "capability": "task.create",   "version": "^1", "required": false },
+    { "module": "audit",    "capability": "ledger.append", "version": "^1", "required": false }
+  ],
+  "providesToOthers": [
+    { "capability": "foundation.committee.lookup", "shape": "schemas/committee-lookup.v1.json", "http_route": "/api/foundation/committees/:id", "fga_relation": "can_read", "description": "Resolve committee by id with members." },
+    { "capability": "foundation.user.lookup",      "shape": "schemas/user-lookup.v1.json",      "http_route": "/api/foundation/users/:id",      "fga_relation": "can_read", "description": "Resolve user with org/BU scope." },
+    { "capability": "foundation.org.tree",         "shape": "schemas/org-tree.v1.json",         "http_route": "/api/foundation/org/tree",       "fga_relation": "can_read", "description": "Tenant org/BU/dept tree." }
+  ],
+  "provisioning": {
+    "mode": "eager",
+    "pool_target": 0,
+    "pool_min": 0,
+    "build_seconds": 60,
+    "idempotency_key": "module:foundation:v2.0.0"
+  },
+  "metadata": {
+    "owner": "dogan-consult",
+    "futureService": "user-service",
+    "packageName": "@dos/module-foundation",
+    "internalRuntimeContracts": {
+      "ui":    "contracts/ui.contract.json",
+      "agent": "contracts/agent.contract.json",
+      "v1":    "contracts/v1/index.ts"
+    },
+    "runtime": {
+      "routeBase": "/api/foundation",
+      "eventNamespace": "foundation",
+      "tablePrefix": "foundation_",
+      "provisioningOrder": 2,
+      "licensingTier": "starter",
+      "entrypoint": "dist/bootstrap.js#registerFoundation",
+      "lifecycleHooks": {
+        "onInstall":   "dist/bootstrap.js#onInstall",
+        "onActivate":  "dist/bootstrap.js#onActivate",
+        "onMigrate":   "dist/bootstrap.js#onMigrate",
+        "onUninstall": "dist/bootstrap.js#onUninstall"
+      },
+      "softDependencies": ["team", "workflow"],
+      "seedProviders":    ["db/seeds"],
+      "tenantDefaults":   ["foundation_org_change_review_days", "foundation_default_org_type"],
+      "requiredReferenceData": [
+        "countries", "cities", "sectors", "employee_ranges",
+        "timezones", "languages", "frameworks", "org_types"
+      ]
+    },
+    "migrationLineage": "_migration/manifest.legacy.json",
+    "previousLocation": "Foundation Module"
+  },
+  "featureFlags": [
+    "foundation.hierarchy_visualization",
+    "foundation.sod_enforcement",
+    "foundation.ai_risk_advisor",
+    "foundation.training_integration",
+    "foundation.coi_workflow"
+  ]
+}

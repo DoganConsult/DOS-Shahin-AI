@@ -1,0 +1,15 @@
+{
+  "id": "exceptions.owner_acknowledge",
+  "module": "exceptions",
+  "hook": "owner_acknowledge",
+  "version": "1.0.0",
+  "sla_hours": 48,
+  "actor_role_default": "exceptions.module_lead",
+  "states": ["pending","acknowledged","escalated"],
+  "initial": "pending",
+  "transitions": [{"from":"pending","to":"acknowledged","on":"ack","actor_role":"exceptions.module_lead"},{"from":"pending","to":"escalated","on":"sla_breach","actor_role":"exceptions.executive_owner"}],
+  "audit_event_prefix": "exceptions.workflow.owner_acknowledge",
+  "notification_targets": ["exceptions.module_lead", "exceptions.approver"],
+  "evidence_required_on": ["passed","published"],
+  "escalation": { "on": "sla_breach", "to": "exceptions.executive_owner", "after_hours": 96 }
+}

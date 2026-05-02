@@ -1,0 +1,2 @@
+import { INTEGRATIONS_PERMISSIONS } from './integrations.security';
+export { INTEGRATIONS_PERMISSIONS as INTEGRATIONS_MODULE_PERMISSIONS };

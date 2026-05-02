@@ -1,0 +1,22 @@
+{
+  "serviceCode": "analytics-service",
+  "displayName": "Analytics Service",
+  "layer": "domain-service",
+  "ownerTeam": "product-shahin-ai",
+  "runtime": "node",
+  "dependsOn": [
+    "auth-service",
+    "tenant-service"
+  ],
+  "modules": [
+    "analytics",
+    "grc-query"
+  ],
+  "exposes": {
+    "apiBase": "/api/analytics",
+    "events": [
+      "analytics.report.generated",
+      "analytics.query.executed"
+    ]
+  }
+}

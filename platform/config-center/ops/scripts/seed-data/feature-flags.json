@@ -1,0 +1,116 @@
+[
+  {
+    "feature_key": "control_monitoring",
+    "enabled": true,
+    "description_en": "Enable continuous control monitoring and health tracking",
+    "description_ar": "تمكين المراقبة المستمرة للضوابط وتتبع الحالة"
+  },
+  {
+    "feature_key": "kri_breach_detection",
+    "enabled": true,
+    "description_en": "Enable key risk indicator breach detection and alerting",
+    "description_ar": "تمكين كشف تجاوزات مؤشرات المخاطر الرئيسية والتنبيه"
+  },
+  {
+    "feature_key": "policy_review_alerts",
+    "enabled": true,
+    "description_en": "Enable alerts for upcoming and overdue policy reviews",
+    "description_ar": "تمكين التنبيهات لمراجعات السياسات القادمة والمتأخرة"
+  },
+  {
+    "feature_key": "remediation_overdue",
+    "enabled": true,
+    "description_en": "Enable overdue remediation tracking and escalation",
+    "description_ar": "تمكين تتبع المعالجات المتأخرة والتصعيد"
+  },
+  {
+    "feature_key": "autonomous_workflow",
+    "enabled": false,
+    "description_en": "Enable autonomous workflow execution without manual approval",
+    "description_ar": "تمكين تنفيذ سير العمل المستقل بدون موافقة يدوية"
+  },
+  {
+    "feature_key": "ai_copilot",
+    "enabled": true,
+    "description_en": "Enable AI copilot assistance for governance tasks",
+    "description_ar": "تمكين مساعد الذكاء الاصطناعي لمهام الحوكمة"
+  },
+  {
+    "feature_key": "ai_squad",
+    "enabled": false,
+    "description_en": "Enable AI squad multi-agent collaboration",
+    "description_ar": "تمكين التعاون متعدد الوكلاء لفريق الذكاء الاصطناعي"
+  },
+  {
+    "feature_key": "advanced_analytics",
+    "enabled": true,
+    "description_en": "Enable advanced analytics and reporting dashboards",
+    "description_ar": "تمكين التحليلات المتقدمة ولوحات التقارير"
+  },
+  {
+    "feature_key": "evidence_automation",
+    "enabled": true,
+    "description_en": "Enable automated evidence collection and validation",
+    "description_ar": "تمكين جمع الأدلة والتحقق منها تلقائيًا"
+  },
+  {
+    "feature_key": "incident_auto_triage",
+    "enabled": false,
+    "description_en": "Enable automatic incident triage and classification",
+    "description_ar": "تمكين الفرز والتصنيف التلقائي للحوادث"
+  },
+  {
+    "feature_key": "vendor_risk_scoring",
+    "enabled": true,
+    "description_en": "Enable vendor risk scoring and third-party assessment",
+    "description_ar": "تمكين تقييم مخاطر الموردين وتقييم الأطراف الثالثة"
+  },
+  {
+    "feature_key": "maturity_assessment",
+    "enabled": true,
+    "description_en": "Enable organizational maturity assessment capabilities",
+    "description_ar": "تمكين قدرات تقييم النضج المؤسسي"
+  },
+  {
+    "feature_key": "agrc_engine_enabled",
+    "enabled": true,
+    "description_en": "Enable the core AGRC compliance engine",
+    "description_ar": "تمكين محرك الامتثال الأساسي AGRC"
+  },
+  {
+    "feature_key": "agrc_control_monitor_enabled",
+    "enabled": true,
+    "description_en": "Enable AGRC control monitoring subsystem",
+    "description_ar": "تمكين نظام مراقبة ضوابط AGRC"
+  },
+  {
+    "feature_key": "agrc_remediation_monitor_enabled",
+    "enabled": true,
+    "description_en": "Enable AGRC remediation monitoring and tracking",
+    "description_ar": "تمكين مراقبة وتتبع معالجات AGRC"
+  },
+  {
+    "feature_key": "agrc_kri_monitor_enabled",
+    "enabled": true,
+    "description_en": "Enable AGRC key risk indicator monitoring",
+    "description_ar": "تمكين مراقبة مؤشرات المخاطر الرئيسية AGRC"
+  },
+  {
+    "feature_key": "agrc_policy_review_enabled",
+    "enabled": true,
+    "description_en": "Enable AGRC policy review scheduling and tracking",
+    "description_ar": "تمكين جدولة وتتبع مراجعة سياسات AGRC"
+  },
+  {
+    "feature_key": "agrc_auto_task_creation_enabled",
+    "enabled": true,
+    "description_en": "Enable automatic task creation from engine findings",
+    "description_ar": "تمكين إنشاء المهام تلقائيًا من نتائج المحرك"
+  },
+  {
+    "feature_key": "agrc_auto_notification_enabled",
+    "enabled": true,
+    "description_en": "Enable automatic notification dispatch for engine events",
+    "description_ar": "تمكين إرسال الإشعارات تلقائيًا لأحداث المحرك"
+  }
+]

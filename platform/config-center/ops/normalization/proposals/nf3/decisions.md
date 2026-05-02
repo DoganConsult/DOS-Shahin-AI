@@ -1,0 +1,72 @@
+# 3NF Fix — Decision Matrix
+Generated: 2026-04-20T22:40:10.776Z
+Total violations: **66** across 55 tables.
+
+| Table | Layer | Kind | Detail | Proposed fix | Decision |
+|---|---|---|---|---|---|
+| access_profiles | public | transitive-id-name-pair | transitive:profile_id+profile_name | drop profile_name; fetch via JOIN on profile_id |  |
+| access_profiles | public | transitive-id-name-pair | transitive:profile_id+profile_code | drop profile_code; fetch via JOIN on profile_id |  |
+| active_alerts | public | transitive-id-name-pair | transitive:alert_id+alert_name | drop alert_name; fetch via JOIN on alert_id |  |
+| agent_feedback_log | tenant | transitive-id-name-pair | transitive:task_id+task_title | drop task_title; fetch via JOIN on task_id |  |
+| agrc_metrics_snapshots | tenant | denorm-counter | denorm-counter:cycle_count | see counter-cleanup-plan.ts (DROP / TRIGGER / NIGHTLY) |  |
+| agrc_metrics_snapshots | tenant | denorm-counter | denorm-counter:event_count | see counter-cleanup-plan.ts (DROP / TRIGGER / NIGHTLY) |  |
+| analytics_data_sources | tenant | denorm-counter | denorm-counter:row_count | see counter-cleanup-plan.ts (DROP / TRIGGER / NIGHTLY) |  |
+| attestation_drafts | tenant | transitive-id-name-pair | transitive:entity_id+entity_name | drop entity_name; fetch via JOIN on entity_id |  |
+| audit_external | tenant | denorm-counter | denorm-counter:findings_count | see counter-cleanup-plan.ts (DROP / TRIGGER / NIGHTLY) |  |
+| audit_repeat_findings | tenant | denorm-counter | denorm-counter:repeat_count | see counter-cleanup-plan.ts (DROP / TRIGGER / NIGHTLY) |  |
+| breach_reporting_records | tenant | denorm-counter | denorm-counter:data_subjects_count | see counter-cleanup-plan.ts (DROP / TRIGGER / NIGHTLY) |  |
+| compliance_requirements | public | transitive-id-name-pair | transitive:framework_id+framework_name | drop framework_name; fetch via JOIN on framework_id |  |
+| dead_letter_queue | public | denorm-counter | denorm-counter:retry_count | see counter-cleanup-plan.ts (DROP / TRIGGER / NIGHTLY) |  |
+| dora_resilience_tests | tenant | denorm-counter | denorm-counter:findings_count | see counter-cleanup-plan.ts (DROP / TRIGGER / NIGHTLY) |  |
+| dos_quality_gates | public | transitive-id-name-pair | transitive:gate_id+gate_code | drop gate_code; fetch via JOIN on gate_id |  |
+| dos_releases | public | transitive-id-name-pair | transitive:release_id+release_code | drop release_code; fetch via JOIN on release_id |  |
+| editor_templates | tenant | denorm-counter | denorm-counter:usage_count | see counter-cleanup-plan.ts (DROP / TRIGGER / NIGHTLY) |  |
+| enforcement_runs | public | denorm-counter | denorm-counter:fail_count | see counter-cleanup-plan.ts (DROP / TRIGGER / NIGHTLY) |  |
+| event_dead_letter_queue | public | denorm-counter | denorm-counter:retry_count | see counter-cleanup-plan.ts (DROP / TRIGGER / NIGHTLY) |  |
+| grc_regulators | tenant | denorm-counter | denorm-counter:own_frameworks_count | see counter-cleanup-plan.ts (DROP / TRIGGER / NIGHTLY) |  |
+| grc_regulators | tenant | denorm-counter | denorm-counter:must_comply_count | see counter-cleanup-plan.ts (DROP / TRIGGER / NIGHTLY) |  |
+| incident_recurring_patterns | tenant | denorm-counter | denorm-counter:occurrence_count | see counter-cleanup-plan.ts (DROP / TRIGGER / NIGHTLY) |  |
+| incident_reportable_criteria | tenant | transitive-id-name-pair | transitive:criteria_id+criteria_name | drop criteria_name; fetch via JOIN on criteria_id |  |
+| integrations_webhooks | tenant | denorm-counter | denorm-counter:failure_count | see counter-cleanup-plan.ts (DROP / TRIGGER / NIGHTLY) |  |
+| knowledge_articles | tenant | denorm-counter | denorm-counter:view_count | see counter-cleanup-plan.ts (DROP / TRIGGER / NIGHTLY) |  |
+| knowledge_articles | tenant | denorm-counter | denorm-counter:helpful_count | see counter-cleanup-plan.ts (DROP / TRIGGER / NIGHTLY) |  |
+| knowledge_embeddings | tenant | denorm-counter | denorm-counter:token_count | see counter-cleanup-plan.ts (DROP / TRIGGER / NIGHTLY) |  |
+| knowledge_search_log | tenant | denorm-counter | denorm-counter:results_count | see counter-cleanup-plan.ts (DROP / TRIGGER / NIGHTLY) |  |
+| mcp_prompt_registry | public | transitive-id-name-pair | transitive:prompt_id+prompt_name | drop prompt_name; fetch via JOIN on prompt_id |  |
+| mcp_prompts | tenant | transitive-id-name-pair | transitive:prompt_id+prompt_name | drop prompt_name; fetch via JOIN on prompt_id |  |
+| mcp_resource_registry | public | transitive-id-name-pair | transitive:resource_id+resource_name | drop resource_name; fetch via JOIN on resource_id |  |
+| mcp_servers | tenant | transitive-id-name-pair | transitive:server_id+server_name | drop server_name; fetch via JOIN on server_id |  |
+| mcp_tool_invocations | tenant | transitive-id-name-pair | transitive:tool_id+tool_name | drop tool_name; fetch via JOIN on tool_id |  |
+| mcp_tool_registry | public | transitive-id-name-pair | transitive:tool_id+tool_name | drop tool_name; fetch via JOIN on tool_id |  |
+| mcp_tools | tenant | transitive-id-name-pair | transitive:tool_id+tool_name | drop tool_name; fetch via JOIN on tool_id |  |
+| onboarding_answer_analytics | public | denorm-counter | denorm-counter:correction_count | see counter-cleanup-plan.ts (DROP / TRIGGER / NIGHTLY) |  |
+| onboarding_handoff_agent_runs | public | denorm-counter | denorm-counter:findings_count | see counter-cleanup-plan.ts (DROP / TRIGGER / NIGHTLY) |  |
+| onboarding_handoff_agent_runs | public | denorm-counter | denorm-counter:proposed_actions_count | see counter-cleanup-plan.ts (DROP / TRIGGER / NIGHTLY) |  |
+| onboarding_regulator_rules | public | transitive-id-name-pair | transitive:regulator_id+regulator_name | drop regulator_name; fetch via JOIN on regulator_id |  |
+| onboarding_regulator_rules | public | transitive-id-name-pair | transitive:regulator_id+regulator_name_ar | drop regulator_name_ar; fetch via JOIN on regulator_id |  |
+| onboarding_sessions | public | denorm-counter | denorm-counter:blockers_count | see counter-cleanup-plan.ts (DROP / TRIGGER / NIGHTLY) |  |
+| permission_usage | public | denorm-counter | denorm-counter:usage_count | see counter-cleanup-plan.ts (DROP / TRIGGER / NIGHTLY) |  |
+| policy_distribution | tenant | denorm-counter | denorm-counter:acknowledged_count | see counter-cleanup-plan.ts (DROP / TRIGGER / NIGHTLY) |  |
+| provisioning_jobs | public | denorm-counter | denorm-counter:retry_count | see counter-cleanup-plan.ts (DROP / TRIGGER / NIGHTLY) |  |
+| provisioning_steps | public | denorm-counter | denorm-counter:retry_count | see counter-cleanup-plan.ts (DROP / TRIGGER / NIGHTLY) |  |
+| query_datasets | tenant | denorm-counter | denorm-counter:row_count | see counter-cleanup-plan.ts (DROP / TRIGGER / NIGHTLY) |  |
+| query_history | tenant | denorm-counter | denorm-counter:row_count | see counter-cleanup-plan.ts (DROP / TRIGGER / NIGHTLY) |  |
+| query_templates | tenant | denorm-counter | denorm-counter:usage_count | see counter-cleanup-plan.ts (DROP / TRIGGER / NIGHTLY) |  |
+| regulatory_gap_analysis | tenant | denorm-counter | denorm-counter:compliant_count | see counter-cleanup-plan.ts (DROP / TRIGGER / NIGHTLY) |  |
+| regulatory_gap_analysis | tenant | denorm-counter | denorm-counter:partial_count | see counter-cleanup-plan.ts (DROP / TRIGGER / NIGHTLY) |  |
+| regulatory_gap_analysis | tenant | denorm-counter | denorm-counter:non_compliant_count | see counter-cleanup-plan.ts (DROP / TRIGGER / NIGHTLY) |  |
+| reporting_data_extracts | tenant | denorm-counter | denorm-counter:row_count | see counter-cleanup-plan.ts (DROP / TRIGGER / NIGHTLY) |  |
+| risk_appetite_config | tenant | transitive-id-name-pair | transitive:appetite_id+appetite_name | drop appetite_name; fetch via JOIN on appetite_id |  |
+| risk_scenarios | tenant | transitive-id-name-pair | transitive:scenario_id+scenario_name | drop scenario_name; fetch via JOIN on scenario_id |  |
+| risks | public | transitive-id-name-pair | transitive:risk_id+risk_code | drop risk_code; fetch via JOIN on risk_id |  |
+| seed_history | public | denorm-counter | denorm-counter:row_count | see counter-cleanup-plan.ts (DROP / TRIGGER / NIGHTLY) |  |
+| tenants | public | denorm-counter | denorm-counter:branch_count | see counter-cleanup-plan.ts (DROP / TRIGGER / NIGHTLY) |  |
+| tenants | public | denorm-counter | denorm-counter:employee_count | see counter-cleanup-plan.ts (DROP / TRIGGER / NIGHTLY) |  |
+| tenants | public | denorm-counter | denorm-counter:it_staff_count | see counter-cleanup-plan.ts (DROP / TRIGGER / NIGHTLY) |  |
+| tenants | public | denorm-counter | denorm-counter:security_staff_count | see counter-cleanup-plan.ts (DROP / TRIGGER / NIGHTLY) |  |
+| training_content_library | tenant | denorm-counter | denorm-counter:usage_count | see counter-cleanup-plan.ts (DROP / TRIGGER / NIGHTLY) |  |
+| users | public | denorm-counter | denorm-counter:login_count | see counter-cleanup-plan.ts (DROP / TRIGGER / NIGHTLY) |  |
+| vendor_concentration | tenant | denorm-counter | denorm-counter:alternative_count | see counter-cleanup-plan.ts (DROP / TRIGGER / NIGHTLY) |  |
+| vendor_sla_tracking | tenant | denorm-counter | denorm-counter:breach_count | see counter-cleanup-plan.ts (DROP / TRIGGER / NIGHTLY) |  |
+| workflow_scheduled_jobs | public | denorm-counter | denorm-counter:trigger_count | see counter-cleanup-plan.ts (DROP / TRIGGER / NIGHTLY) |  |
+| workflow_templates | public | transitive-id-name-pair | transitive:template_id+template_code | drop template_code; fetch via JOIN on template_id |  |

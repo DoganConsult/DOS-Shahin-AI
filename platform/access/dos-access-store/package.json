@@ -1,0 +1,30 @@
+{
+  "name": "@dos/access-store",
+  "version": "1.0.0",
+  "description": "DOS Platform — access/session store. Single source of truth for current user, tenant, roles, permissions, entitled modules. Lifted from product-local code so every product consumes the same canonical session surface, plus the platform-owned NavSource implementations and the PlatformReadinessService probe registry.",
+  "private": true,
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": { "types": "./src/index.ts", "default": "./src/index.ts" }
+  },
+  "files": ["dist", "src"],
+  "scripts": {
+    "prebuild": "node ../../../scripts/codegen/module-navigation-registry.mjs --write",
+    "build": "tsc -p tsconfig.build.json",
+    "clean": "rm -rf dist src/generated"
+  },
+  "peerDependencies": {
+    "@angular/common": ">=20.0.0 <22.0.0",
+    "@angular/core": ">=20.0.0 <22.0.0"
+  },
+  "dependencies": {
+    "@dos/ui-contracts": "workspace:*"
+  },
+  "devDependencies": {
+    "@angular/common": "^21.2.7",
+    "@angular/core": "^21.2.7",
+    "rxjs": "^7.8.1",
+    "typescript": "^5.7.0"
+  }
+}

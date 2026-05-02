@@ -1,0 +1,227 @@
+/* Evidence Home — uses design tokens only (no hardcoded hex/rgb) */
+
+.eh-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  background: var(--bg-0);
+}
+
+.eh-header {
+  padding: 24px 24px 12px;
+  border-bottom: 1px solid var(--border);
+
+  h1 {
+    margin: 0;
+    font-size: var(--font-size-xl, 22px);
+    font-weight: 700;
+    color: var(--text-body);
+  }
+}
+
+.eh-subtitle {
+  margin: 4px 0 0;
+  font-size: var(--font-size-sm, 13px);
+  color: var(--text-muted);
+}
+
+.eh-body {
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ── KPI Grids ── */
+
+.eh-kpi-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.eh-kpi-5 {
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.eh-kpi-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+@media (max-width: 1024px) {
+  .eh-kpi-5 { grid-template-columns: repeat(3, 1fr); }
+  .eh-kpi-3 { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 640px) {
+  .eh-kpi-5,
+  .eh-kpi-3 { grid-template-columns: 1fr 1fr; }
+}
+
+.eh-kpi-card {
+  background: var(--surface-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg, 12px);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: box-shadow 0.15s ease;
+
+  &:hover {
+    box-shadow: 0 2px 8px var(--opacity-hover, rgba(var(--color-black-rgb), 0.06));
+  }
+}
+
+.eh-kpi-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md, 8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--card-accent) 12%, transparent);
+  color: var(--card-accent);
+  font-size: var(--font-size-md);
+}
+
+.eh-kpi-value {
+  font-size: var(--font-size-2xl, 28px);
+  font-weight: 700;
+  color: var(--text-body);
+  line-height: 1.1;
+}
+
+.eh-kpi-label {
+  font-size: var(--font-size-xs, 11px);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--text-muted);
+}
+
+/* ── Sections ── */
+
+.eh-section {
+  background: var(--surface-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg, 12px);
+  padding: 20px;
+}
+
+.eh-section-title {
+  margin: 0 0 14px;
+  font-size: var(--font-size-md, 16px);
+  font-weight: 600;
+  color: var(--text-body);
+}
+
+/* ── Status Table ── */
+
+.eh-status-table {
+  display: flex;
+  flex-direction: column;
+}
+
+.eh-st-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 12px;
+  font-size: var(--font-size-xs, 11px);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+}
+
+.eh-st-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.eh-st-status {
+  display: flex;
+  align-items: center;
+}
+
+.eh-st-count {
+  font-size: var(--font-size-base, 14px);
+  font-weight: 600;
+  color: var(--text-body);
+}
+
+/* ── Activity Feed ── */
+
+.eh-activity-list {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 18px;
+  position: relative;
+}
+
+[dir="rtl"] .eh-activity-list {
+  padding: 0 18px 0 0;
+}
+
+.eh-activity-item {
+  position: relative;
+  padding-bottom: 14px;
+
+  &:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    left: -12px;
+    top: 12px;
+    bottom: 0;
+    width: 2px;
+    background: var(--border);
+  }
+}
+
+[dir="rtl"] .eh-activity-item:not(:last-child)::before {
+  left: auto;
+  right: -12px;
+}
+
+.eh-activity-dot {
+  position: absolute;
+  left: -16px;
+  top: 6px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--primary);
+  border: 2px solid var(--surface-card);
+}
+
+[dir="rtl"] .eh-activity-dot {
+  left: auto;
+  right: -16px;
+}
+
+.eh-activity-content {
+  font-size: var(--font-size-sm, 13px);
+  color: var(--text-body);
+}
+
+.eh-activity-action {
+  font-weight: 600;
+  margin-inline-end: 6px;
+}
+
+.eh-activity-entity {
+  color: var(--primary);
+}
+
+.eh-activity-meta {
+  font-size: var(--font-size-xs, 11px);
+  color: var(--text-muted);
+  margin-top: 2px;
+}

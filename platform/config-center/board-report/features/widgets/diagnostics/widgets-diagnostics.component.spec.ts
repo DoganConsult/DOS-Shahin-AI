@@ -1,0 +1,37 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { WidgetsDiagnosticsComponent } from './widgets-diagnostics.component';
+import { ActivatedRoute } from '@angular/router';
+import { of } from 'rxjs';
+
+describe('WidgetsDiagnosticsComponent', () => {
+  let component: WidgetsDiagnosticsComponent;
+  let fixture: ComponentFixture<WidgetsDiagnosticsComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [WidgetsDiagnosticsComponent], // Assuming standalone component
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: { paramMap: { get: () => '1' } },
+            params: of({ id: '1' }),
+            queryParams: of({})
+          }
+        }
+      ]
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(WidgetsDiagnosticsComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

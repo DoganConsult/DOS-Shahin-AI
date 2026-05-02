@@ -1,0 +1,216 @@
+<app-page-shell
+      icon="cog"
+      [title]="i18n.translate('nav.workflows')"
+      [subtitle]="i18n.translate('workflows.subtitle')"
+      [breadcrumbs]="['Dashboard', 'Workflows']"
+      [loading]="loading">
+      <app-raci-panel entityType="policy" entityId="" [canEdit]="true" />
+
+      <div class="integration-context mb-3" role="region" aria-label="Integration">
+        <i class="pi pi-link"></i>
+        <span>{{ i18n.translate('workflows.integrationContext') }}</span>
+      </div>
+
+      <p-toast />
+      <p-confirmDialog />
+
+      <p-tabView [(activeIndex)]="tabIndex">
+
+        <!-- Tab 1: Workflow List -->
+        <p-tabPanel [header]="i18n.translate('workflows.list')">
+          <app-workflow-list
+            [workflows]="workflows"
+            (newClicked)="newWorkflow()"
+            (editClicked)="editWorkflow($event)"
+            (refreshNeeded)="loadWorkflows()"
+            (raciClicked)="viewRaci($event)" />
+        </p-tabPanel>
+
+        <!-- Tab 2: Predefined Templates -->
+        <p-tabPanel [header]="i18n.translate('workflows.predefinedTemplates')">
+          <div class="templates-intro">
+            <p class="templates-desc">Choose from ready-made GRC workflow templates. Each template includes predefined nodes, edges, swimlanes, SLA rules, and escalation chains.</p>
+            <input pInputText [(ngModel)]="templateSearch" [placeholder]="i18n.translate('workflows.searchTemplates')" [attr.aria-label]="i18n.translate('workflows.searchTemplates')" style="max-width:300px" />
+          </div>
+
+          <div class="templates-grid">
+            <div tabindex="0" role="button" (keyup.enter)="selectTemplate(tpl)" *ngFor="let tpl of filteredTemplates" class="tpl-card"
+                 [class.selected]="isTemplateSelected(tpl)"
+                 (click)="selectTemplate(tpl)">
+              <div class="tpl-icon"><i class="pi pi-sitemap"></i></div>
+              <div class="tpl-name">{{ getTemplateName(tpl) }}</div>
+              <div class="tpl-desc">{{ getTemplateDesc(tpl) }}</div>
+              <div class="tpl-meta">
+                <p-tag [value]="getTemplateStepCount(tpl) + ' steps'" severity="info" />
+                <p-tag *ngIf="tpl.definition?.swimlanes?.length" [value]="tpl.definition.swimlanes.length + ' lanes'" severity="success" />
+                <p-tag *ngIf="tpl.slaConfig" value="SLA" severity="warning" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Template Detail Panel -->
+          <div class="template-detail" *ngIf="selectedTemplate">
+            <div class="detail-header">
+              <h3>{{ getTemplateName(selectedTemplate) }}</h3>
+              <p-button icon="pi pi-times" [text]="true" (onClick)="selectedTemplate = null" />
+            </div>
+            <p class="detail-desc">{{ getTemplateDesc(selectedTemplate) }}</p>
+
+            <!-- Visual Flow Preview -->
+            <div class="flow-preview">
+              <h4>Workflow Flow</h4>
+              <div class="flow-steps">
+                <ng-container *ngFor="let node of getTemplateNodes(); let last = last">
+                  <div class="flow-step" [ngClass]="'step-' + node.type">
+                    <span class="step-type-badge">{{ node.type }}</span>
+                    <span class="step-label">{{ i18n.localize(node.label_en || node.nameEn, node.label_ar || node.nameAr) }}</span>
+                    <span class="step-sla" *ngIf="node.slaHours">SLA: {{ node.slaHours }}h</span>
+                    <span class="step-lane" *ngIf="node.swimlane || node.assignedRole">{{ node.swimlane || node.assignedRole }}</span>
+                  </div>
+                  <i *ngIf="!last" class="pi pi-arrow-right flow-arrow"></i>
+                </ng-container>
+              </div>
+            </div>
+
+            <!-- Swimlanes -->
+            <div class="detail-section" *ngIf="selectedTemplate.definition?.swimlanes?.length">
+              <h4>Swimlanes</h4>
+              <div class="tag-row">
+                <p-tag *ngFor="let lane of selectedTemplate.definition.swimlanes" [value]="lane" severity="info" />
+              </div>
+            </div>
+
+            <!-- Escalation Chain -->
+            <div class="detail-section" *ngIf="selectedTemplate.definition?.escalationChain?.length">
+              <h4>Escalation Chain</h4>
+              <div class="escalation-chain">
+                <span *ngFor="let role of selectedTemplate.definition.escalationChain; let last = last" class="esc-role">
+                  {{ role }}<i *ngIf="!last" class="pi pi-chevron-right esc-arrow"></i>
+                </span>
+              </div>
+            </div>
+
+            <!-- Edges -->
+            <div class="detail-section" *ngIf="getTemplateEdges().length">
+              <h4>Connections ({{ getTemplateEdges().length }})</h4>
+              <div class="edges-list">
+                <div *ngFor="let edge of getTemplateEdges()" class="edge-item">
+                  <span class="edge-from">{{ edge.from }}</span>
+                  <i class="pi pi-arrow-right"></i>
+                  <span class="edge-to">{{ edge.to }}</span>
+                  <span class="edge-cond" *ngIf="edge.condition">{{ edge.condition }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Instantiate Form -->
+            <div class="instantiate-form">
+              <h4>Create Workflow from Template</h4>
+              <div class="form-row">
+                <grc-form-field label="Workflow Name">
+                  <input pInputText [(ngModel)]="instanceName" [placeholder]="selectedTemplate.name_en || selectedTemplate.nameEn" [attr.aria-label]="selectedTemplate.name_en || selectedTemplate.nameEn" />
+                </grc-form-field>
+              </div>
+              <div class="form-row">
+                <label>Priority</label>
+                <p-dropdown [(ngModel)]="instancePriority" [options]="priorityOptions" optionLabel="label" optionValue="value" [style]="{'width':'100%'}" />
+              </div>
+              <div class="form-row">
+                <label>Assignee (optional)</label>
+                <p-dropdown [(ngModel)]="instanceAssignee" [options]="teamMemberOptions" optionLabel="label" optionValue="value"
+                            [filter]="true" [showClear]="true" placeholder="Select assignee..." [style]="{'width':'100%'}" />
+              </div>
+              <p-button [label]="i18n.translate('workflows.createWorkflow')" icon="pi pi-play" (onClick)="instantiateTemplate()" [loading]="instantiating" />
+            </div>
+          </div>
+        </p-tabPanel>
+
+        <!-- Tab 3: Workflow Designer -->
+        <p-tabPanel [header]="i18n.translate('workflows.designer')">
+          <app-workflow-designer #designer
+            [roleOptions]="roleOptions"
+            [teamMemberOptions]="teamMemberOptions"
+            [approverOptions]="approverOptions"
+            (saved)="onDesignerSave($event)" />
+        </p-tabPanel>
+
+        <!-- Tab 4: Execution History -->
+        <p-tabPanel [header]="i18n.translate('workflows.executionHistory')">
+          <div class="exec-list" *ngIf="executions.length > 0">
+            <div *ngFor="let exec of executions" class="exec-row">
+              <div class="exec-info">
+                <span class="exec-name">{{ exec.workflow_name || exec.name }}</span>
+                <app-status-badge [status]="exec.status" />
+              </div>
+              <div class="exec-meta">
+                <span><i class="pi pi-calendar"></i> {{ exec.started_at | appDate:'medium' }}</span>
+                <span *ngIf="exec.completed_at"><i class="pi pi-check"></i> {{ exec.completed_at | appDate:'medium' }}</span>
+                <span *ngIf="exec.duration"><i class="pi pi-clock"></i> {{ exec.duration }}</span>
+                <span><i class="pi pi-sitemap"></i> {{ exec.steps_completed || 0 }}/{{ exec.total_steps || 0 }} steps</span>
+              </div>
+              <div class="exec-steps" *ngIf="exec.step_log?.length">
+                <div *ngFor="let step of exec.step_log" class="exec-step" [ngClass]="'step-' + step.status">
+                  <i [class]="step.status === 'completed' ? 'pi pi-check-circle' : step.status === 'failed' ? 'pi pi-times-circle' : 'pi pi-spin pi-spinner'"></i>
+                  {{ step.node_label || step.node_id }}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="executions.length === 0" class="empty-state">
+            <i class="pi pi-history empty-icon"></i>
+            <p>No workflow executions yet. Execute a workflow to see history here.</p>
+          </div>
+        </p-tabPanel>
+
+        <!-- Tab 5: Analytics -->
+        <p-tabPanel [header]="i18n.translate('workflows.analytics')">
+          <div class="analytics-selector">
+            <label>Select workflow:</label>
+            <p-dropdown [(ngModel)]="analyticsWorkflowId" [options]="workflowDropdownOptions"
+                        optionLabel="label" optionValue="value" placeholder="Choose a workflow..."
+                        (onChange)="loadAnalytics()" [style]="{'min-width':'300px'}" />
+          </div>
+          <div *ngIf="analyticsData" class="analytics-grid">
+            <app-stat-card icon="play" [value]="analyticsData.totalExecutions || 0"
+                           label="Executions" accentColor="#0f62fe" />
+            <app-stat-card icon="check-circle" [value]="(analyticsData.successRate || 0) + '%'"
+                           label="Success Rate" accentColor="var(--accent)" />
+            <app-stat-card icon="clock" [value]="analyticsData.avgDuration || '\u2014'"
+                           label="Avg Duration" accentColor="var(--secondary)" />
+            <app-stat-card icon="exclamation-triangle" [value]="analyticsData.failedCount || 0"
+                           label="Failed" accentColor="#f97316" />
+          </div>
+          <div *ngIf="!analyticsData && !analyticsWorkflowId" class="empty-state">
+            <i class="pi pi-chart-line empty-icon"></i>
+            <p>{{ i18n.translate('workflows.selectForAnalytics') }}</p>
+          </div>
+        </p-tabPanel>
+      </p-tabView>
+
+      <!-- RACI Matrix Dialog -->
+      <p-dialog [header]="i18n.translate('workflows.raciMatrix') + ': ' + raciWfLabel"
+        [(visible)]="raciWfVisible" [modal]="true" [style]="{width: '460px'}">
+        @if (raciWfLoading) {
+          <p style="color:var(--text-muted)">{{ i18n.translate('common.loading') }}</p>
+        } @else if (raciWfMatrix) {
+          <div class="raci-grid">
+            @for (role of ['responsible','accountable','consulted','informed']; track role) {
+              <div class="raci-row">
+                <span class="raci-badge raci-wf-{{role}}">{{ raciWfLetter(role) }}</span>
+                <div style="display:flex;flex-wrap:wrap;gap:4px">
+                  @for (e of raciWfMatrix[role] || []; track e.raciId) {
+                    <p-tag [value]="e.teamId ? 'Team' : e.platformRole" [severity]="raciWfSev(role)" styleClass="mr-1" />
+                  }
+                  @if (!(raciWfMatrix[role] || []).length) {
+                    <span style="color:var(--text-muted);font-size: var(--font-size-sm)">{{ i18n.translate('workflows.unassigned') }}</span>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        }
+        <ng-template pTemplate="footer">
+          <p-button [label]="i18n.translate('common.close')" severity="secondary" (onClick)="raciWfVisible = false" />
+        </ng-template>
+      </p-dialog>
+    </app-page-shell>

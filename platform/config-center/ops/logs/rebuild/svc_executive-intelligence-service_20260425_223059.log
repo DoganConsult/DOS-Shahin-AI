@@ -1,0 +1,4 @@
+
+> @dos/executive-intelligence-service@0.1.0 build /root/DOS-AIO/services/executive-intelligence-service
+> tsc -p tsconfig.json
+

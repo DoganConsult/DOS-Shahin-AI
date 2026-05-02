@@ -1,0 +1,30 @@
+{
+  "name": "@dos/contracts",
+  "version": "1.0.0",
+  "description": "DOS Platform — API, event, and manifest contracts. Defines the contract surface for all modules and products.",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "default": "./dist/index.js" },
+    "./api": { "types": "./dist/api/index.d.ts", "default": "./dist/api/index.js" },
+    "./events": { "types": "./dist/events/index.d.ts", "default": "./dist/events/index.js" },
+    "./manifest": { "types": "./dist/manifest/index.d.ts", "default": "./dist/manifest/index.js" },
+    "./lifecycle": { "types": "./dist/lifecycle/index.d.ts", "default": "./dist/lifecycle/index.js" },
+    "./auth": { "types": "./dist/auth/index.d.ts", "default": "./dist/auth/index.js" },
+    "./platform": { "types": "./dist/platform/index.d.ts", "default": "./dist/platform/index.js" },
+    "./platform/provider-policy": { "types": "./dist/platform/provider-policy.d.ts", "default": "./dist/platform/provider-policy.js" }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@dos/types": "workspace:*",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0"
+  }
+}

@@ -1,0 +1,6 @@
+
+> dogan-ai-os-platform-target@1.0.0 validate:migrations /root/DOS-AIO
+> node ops/scripts/validate-migrations.mjs
+
+[validate-migrations] DATABASE_URL is required.
+ ELIFECYCLE  Command failed with exit code 1.

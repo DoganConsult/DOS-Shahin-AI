@@ -1,0 +1,126 @@
+{
+  "task_lock": {
+    "wave": "W?-<module>",
+    "task_type": "module_enrolment",
+    "out_of_scope": ["gateway", "auth-service", "tenant-service", "db migrations not in scope", "unrelated modules"]
+  },
+  "canonical_path": {
+    "repo_root": "/root/DOS-Platform",
+    "canonical_package_path": "modules/<module>",
+    "package_name": "@dos/module-<module>",
+    "build_command": "pnpm --filter @dos/module-<module> build",
+    "duplicate_paths_found": false
+  },
+  "baseline_state": {
+    "baseline_command": "pnpm --filter @dos/module-<module> typecheck",
+    "baseline_error_count": 0,
+    "git_status_summary": "clean"
+  },
+  "source_of_truth": {
+    "i18n": "platform/i18n/<module>",
+    "toast": "@dos/ui-system/toast",
+    "resolver": "services/ui-os-service/.../<module>",
+    "route_navigation": "modules/<module>/contracts/navigation/navigation.json",
+    "permissions": "profiles/grc/registries/permissions.registry.json",
+    "ui_system_components": "@dos/ui-system",
+    "dynamic_ui": "profiles/grc/dynamic-ui-seeds/*",
+    "manifest": "profiles/grc/manifests/<module>.profile.json"
+  },
+  "ui_system_preflight": {
+    "wrapper_layer": "@dos/ui-system",
+    "components": [
+      {
+        "vendor": "ibm-carbon",
+        "carbon_key": "tiles",
+        "component_key": "command-center.sample",
+        "source": "page",
+        "route_key": null,
+        "page_key": null,
+        "widget_key": null,
+        "validation_status": "invalid",
+        "failure_reason": "Illustrative sample only. Run node scripts/ci-guards/carbon-dynamic-ui-coherence.mjs and pnpm dynamic-ui:gates; set validation_status to valid only after those pass and catalog/registry rows match."
+      }
+    ],
+    "responsive_checked": true,
+    "rtl_checked": true,
+    "mobile_safe_area_checked": true
+  },
+  "dynamic_ui_preflight": {
+    "module_manifest_checked": true,
+    "navigation_contract_checked": true,
+    "routing_contract_checked": true,
+    "permissions_contract_checked": true,
+    "widget_contract_checked": true,
+    "component_registry_checked": true,
+    "db_runtime_checked": true,
+    "resolver_checked": true
+  },
+  "accepted_fixes": {
+    "allowed_used": ["typed_port_repair", "missing_import_repair", "ui_system_primitive_replacement"],
+    "forbidden_used": []
+  },
+  "change_plan": {
+    "planned_files": [
+      { "path": "profiles/grc/enrolment/<module>/01_module_registry.sql", "reason": "registry insert" },
+      { "path": "profiles/grc/enrolment/<module>/02_tenant_entitlement.sql", "reason": "entitlement default" },
+      { "path": "profiles/grc/enrolment/<module>/03_permissions.sql", "reason": "perm projection" },
+      { "path": "profiles/grc/enrolment/<module>/04_role_permissions.sql", "reason": "role projection" },
+      { "path": "profiles/grc/enrolment/<module>/routes.json", "reason": "lazy-load contract" }
+    ],
+    "ui_system_files": [],
+    "dynamic_ui_files": [],
+    "rejected_files": ["gateway", "auth-service", "tenant-service", "DB migrations", "product-shell", "unrelated modules"]
+  },
+  "build_gates": {
+    "commands": [
+      "bash profile-tools/validate-profile.sh grc",
+      "bash profile-tools/validate-enrolment.sh grc <module>"
+    ],
+    "results": ["pass", "pass"]
+  },
+  "route_wiring_rule": {
+    "foundation_module_build_green": true,
+    "spa_build_green": true,
+    "route_matches_contract": true,
+    "nav_matches_contract": true,
+    "component_keys_resolve": true,
+    "permissions_resolve": true,
+    "unauthorized_falls_closed": true,
+    "rollback_simple": true
+  },
+  "db_rbac_runtime_rule": {
+    "staging_rehearsed": true,
+    "sql_reviewed": true,
+    "rollback_present": true,
+    "prod_approved": true,
+    "tenant_impact_known": true,
+    "dynamic_ui_matches_contracts": true,
+    "permissions_in_rbac": true,
+    "no_orphan_rows": true
+  },
+  "responsive_rtl": {
+    "widths_checked": ["390", "430", "768", "1440"],
+    "behaviors_checked": ["no_overflow", "rtl_logical", "mobile_command_bar_collapse", "empty_state_renders"]
+  },
+  "fake_green_check": {
+    "used_skipped_tests": false,
+    "used_any_casts": false,
+    "used_dollarany": false,
+    "used_fake_services": false,
+    "used_hidden_route_disablement": false,
+    "used_build_exclusions": false,
+    "used_tsconfig_loosen": false,
+    "used_ts_ignore": false,
+    "used_ui_guard_bypass": false,
+    "used_dynamic_ui_bypass": false
+  },
+  "report_contract": {
+    "files_changed": [],
+    "baseline_error_count": 0,
+    "final_error_count": 0,
+    "build_commands_run": ["validate-profile.sh", "validate-enrolment.sh"],
+    "next_wave_safe": false,
+    "next_blocker": "Sample report: flip decision to GO and set components[].validation_status to valid only after carbon-dynamic-ui-coherence + dynamic-ui:gates pass."
+  },
+  "decision": "PARTIAL"
+}

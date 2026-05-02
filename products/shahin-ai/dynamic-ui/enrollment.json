@@ -1,0 +1,40 @@
+{
+  "$schema": "../../../platform/contracts/dynamic-ui/enrollment.schema.json",
+  "schemaVersion": 1,
+  "productCode": "shahin-ai",
+  "surfaces": [
+    {
+      "surfaceId": "workspace-home",
+      "slots": [
+        {
+          "slotId": "primary",
+          "widgets": [
+            { "moduleCode": "foundation",  "widgetId": "overview-summary" },
+            { "moduleCode": "risk",        "widgetId": "top-risks" },
+            { "moduleCode": "compliance",  "widgetId": "framework-coverage" }
+          ]
+        },
+        {
+          "slotId": "secondary",
+          "widgets": [
+            { "moduleCode": "audit",       "widgetId": "open-audits" },
+            { "moduleCode": "evidence",    "widgetId": "pending-evidence" },
+            { "moduleCode": "incident",    "widgetId": "active-incidents" }
+          ]
+        }
+      ]
+    },
+    {
+      "surfaceId": "foundation-overview",
+      "slots": [
+        {
+          "slotId": "primary",
+          "widgets": [
+            { "moduleCode": "foundation", "widgetId": "tenant-snapshot" },
+            { "moduleCode": "foundation", "widgetId": "module-entitlements" }
+          ]
+        }
+      ]
+    }
+  ]
+}

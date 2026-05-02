@@ -1,0 +1,263 @@
+<!-- Controls Certifications — Campaign Management -->
+<div class="controls-certifications" [attr.dir]="dir()">
+
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="skeleton-strip">
+      @for (i of [1,2,3,4]; track i) {
+        <p-skeleton height="80px" borderRadius="10px" />
+      }
+    </div>
+    <p-skeleton height="400px" borderRadius="10px" />
+  }
+
+  <!-- Error State -->
+  @if (!loading() && error()) {
+    <app-empty-state
+      variant="error"
+      [title]="isAr() ? 'فشل تحميل بيانات الشهادات' : 'Failed to load certification data'"
+      [description]="isAr() ? 'تحقق من الاتصال وحاول مرة أخرى' : 'Check your connection and try again'"
+      [actionLabel]="isAr() ? 'إعادة المحاولة' : 'Retry'"
+      [dir]="dir()"
+      (action)="loadData()" />
+  }
+
+  <!-- Loaded Content -->
+  @if (!loading() && !error()) {
+
+    <!-- Summary Strip -->
+    <section class="summary-strip" [attr.aria-label]="isAr() ? 'ملخص الشهادات' : 'Certifications Summary'">
+      <div class="summary-card">
+        <div class="summary-card__icon" style="background: color-mix(in srgb, var(--primary) 12%, transparent)">
+          <i class="pi pi-flag" style="color: var(--primary)" aria-hidden="true"></i>
+        </div>
+        <div class="summary-card__content">
+          <span class="summary-card__value">{{ activeCampaigns() }}</span>
+          <span class="summary-card__label">{{ isAr() ? 'حملات نشطة' : 'Active Campaigns' }}</span>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-card__icon" style="background: color-mix(in srgb, var(--info) 12%, transparent)">
+          <i class="pi pi-inbox" style="color: var(--info)" aria-hidden="true"></i>
+        </div>
+        <div class="summary-card__content">
+          <span class="summary-card__value">{{ totalRequests() }}</span>
+          <span class="summary-card__label">{{ isAr() ? 'إجمالي الطلبات' : 'Total Requests' }}</span>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-card__icon" style="background: color-mix(in srgb, var(--success) 12%, transparent)">
+          <i class="pi pi-check-circle" style="color: var(--success)" aria-hidden="true"></i>
+        </div>
+        <div class="summary-card__content">
+          <span class="summary-card__value">{{ overallCompletion() }}%</span>
+          <span class="summary-card__label">{{ isAr() ? 'نسبة الإنجاز' : 'Completion' }}</span>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-card__icon" style="background: color-mix(in srgb, var(--warning) 12%, transparent)">
+          <i class="pi pi-clock" style="color: var(--warning)" aria-hidden="true"></i>
+        </div>
+        <div class="summary-card__content">
+          <span class="summary-card__value">{{ overdueCount() }}</span>
+          <span class="summary-card__label">{{ isAr() ? 'طلبات متأخرة' : 'Overdue' }}</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Campaign List Table -->
+    <grc-data-table
+      [title]="isAr() ? 'حملات الشهادات' : 'Certification Campaigns'"
+      [totalRecords]="campaigns().length"
+      [loading]="false"
+      [emptyMessage]="isAr() ? 'لا توجد حملات شهادات' : 'No certification campaigns'">
+      <div tableToolbar>
+        <button pButton
+          class="p-button-sm p-button-primary"
+          [label]="isAr() ? 'إنشاء حملة' : 'Create Campaign'"
+          icon="pi pi-plus"
+          (click)="openCreateDialog()">
+        </button>
+      </div>
+      @if (campaigns().length) {
+        <p-table
+          [value]="campaigns()"
+          [paginator]="true"
+          [rows]="10"
+          [rowsPerPageOptions]="[10, 25, 50]"
+          styleClass="p-datatable-sm p-datatable-striped"
+          [attr.aria-label]="isAr() ? 'جدول حملات الشهادات' : 'Certification Campaigns Table'">
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="width: 3rem"></th>
+              <th>{{ isAr() ? 'اسم الحملة' : 'Campaign Name' }}</th>
+              <th>{{ isAr() ? 'الحالة' : 'Status' }}</th>
+              <th>{{ isAr() ? 'تاريخ البدء' : 'Start Date' }}</th>
+              <th>{{ isAr() ? 'تاريخ الانتهاء' : 'End Date' }}</th>
+              <th>{{ isAr() ? 'الإنجاز' : 'Completion' }}</th>
+              <th>{{ isAr() ? 'متأخرة' : 'Overdue' }}</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-campaign>
+            <tr>
+              <td>
+                <button pButton
+                  class="p-button-text p-button-sm p-button-rounded"
+                  [icon]="expandedCampaignId() === campaign.campaignId ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+                  (click)="toggleCampaignDetail(campaign.campaignId)"
+                  [pTooltip]="isAr() ? 'عرض التفاصيل' : 'View Details'">
+                </button>
+              </td>
+              <td class="font-semibold">{{ campaign.name }}</td>
+              <td><app-status-badge [status]="campaign.status" /></td>
+              <td>{{ formatDate(campaign.startDate) }}</td>
+              <td>{{ formatDate(campaign.endDate) }}</td>
+              <td>
+                <div class="completion-cell">
+                  <p-progressBar
+                    [value]="campaign.completionPct"
+                    [showValue]="false"
+                    [style]="{ height: '8px', width: '100%' }">
+                  </p-progressBar>
+                  <span class="completion-pct">{{ campaign.completionPct }}%</span>
+                </div>
+              </td>
+              <td>
+                @if (campaign.overdueRequests > 0) {
+                  <span class="overdue-badge">{{ campaign.overdueRequests }}</span>
+                } @else {
+                  <span class="text-muted">0</span>
+                }
+              </td>
+            </tr>
+
+            <!-- Row Expansion: Attestation Requests -->
+            @if (expandedCampaignId() === campaign.campaignId) {
+              <tr class="expansion-row">
+                <td colspan="7">
+                  <div class="expansion-content">
+                    <h4 class="expansion-title">
+                      {{ isAr() ? 'طلبات التصديق' : 'Attestation Requests' }}
+                    </h4>
+                    @if (requestsLoading()) {
+                      <app-skeleton-loader variant="list" [count]="3" />
+                    } @else if (!requests().length) {
+                      <app-empty-state
+                        [title]="isAr() ? 'لا توجد طلبات' : 'No requests'"
+                        [dir]="dir()" />
+                    } @else {
+                      <p-table
+                        [value]="requests()"
+                        styleClass="p-datatable-sm"
+                        [attr.aria-label]="isAr() ? 'جدول طلبات التصديق' : 'Attestation Requests Table'">
+                        <ng-template pTemplate="header">
+                          <tr>
+                            <th>{{ isAr() ? 'عنوان الضابط' : 'Control Title' }}</th>
+                            <th>{{ isAr() ? 'المالك' : 'Owner' }}</th>
+                            <th>{{ isAr() ? 'الحالة' : 'Status' }}</th>
+                            <th>{{ isAr() ? 'تاريخ الاستجابة' : 'Responded At' }}</th>
+                          </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-req>
+                          <tr>
+                            <td>{{ req.controlTitle || req.controlId }}</td>
+                            <td>{{ req.ownerName || req.ownerId }}</td>
+                            <td><app-status-badge [status]="req.status" /></td>
+                            <td>{{ formatDate(req.respondedAt) }}</td>
+                          </tr>
+                        </ng-template>
+                      </p-table>
+                    }
+                  </div>
+                </td>
+              </tr>
+            }
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="7">
+                <app-empty-state
+                  [title]="isAr() ? 'لا توجد حملات شهادات' : 'No certification campaigns'"
+                  [description]="isAr() ? 'أنشئ حملة جديدة للبدء' : 'Create a new campaign to get started'"
+                  [actionLabel]="isAr() ? 'إنشاء حملة' : 'Create Campaign'"
+                  [dir]="dir()"
+                  (action)="openCreateDialog()" />
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      }
+    </grc-data-table>
+  }
+
+  <!-- Create Campaign Dialog -->
+  <p-dialog
+    [header]="isAr() ? 'إنشاء حملة شهادات' : 'Create Certification Campaign'"
+    [(visible)]="showCreateDialog"
+    [modal]="true"
+    [style]="{ width: '560px' }"
+    [closable]="true"
+    [draggable]="false">
+    <form [formGroup]="form" (ngSubmit)="submitCampaign()">
+      <div class="dialog-form">
+        <grc-form-field
+          [label]="isAr() ? 'اسم الحملة' : 'Campaign Name'"
+          [required]="true"
+          [control]="form.controls.name">
+          <input pInputText formControlName="name" class="w-full" />
+        </grc-form-field>
+
+        <grc-form-field
+          [label]="isAr() ? 'الوصف' : 'Description'">
+          <textarea pInputTextarea formControlName="description" class="w-full" rows="3"></textarea>
+        </grc-form-field>
+
+        <grc-form-field
+          [label]="isAr() ? 'الضوابط' : 'Controls'"
+          [required]="true"
+          [control]="form.controls.controlIds">
+          <p-multiSelect
+            formControlName="controlIds"
+            [options]="controlOptions()"
+            [placeholder]="isAr() ? 'اختر الضوابط' : 'Select Controls'"
+            optionLabel="label"
+            optionValue="value"
+            [filter]="true"
+            styleClass="w-full">
+          </p-multiSelect>
+        </grc-form-field>
+
+        <div class="form-row">
+          <grc-form-field
+            [label]="isAr() ? 'تاريخ البدء' : 'Start Date'"
+            [required]="true"
+            [control]="form.controls.startDate">
+            <p-calendar formControlName="startDate" dateFormat="yy-mm-dd" styleClass="w-full" />
+          </grc-form-field>
+          <grc-form-field
+            [label]="isAr() ? 'تاريخ الانتهاء' : 'End Date'"
+            [required]="true"
+            [control]="form.controls.endDate">
+            <p-calendar formControlName="endDate" dateFormat="yy-mm-dd" styleClass="w-full" />
+          </grc-form-field>
+        </div>
+      </div>
+    </form>
+
+    <ng-template pTemplate="footer">
+      <button pButton
+        class="p-button-text"
+        [label]="isAr() ? 'إلغاء' : 'Cancel'"
+        (click)="showCreateDialog.set(false)">
+      </button>
+      <button pButton
+        class="p-button-primary"
+        [label]="isAr() ? 'إنشاء' : 'Create'"
+        icon="pi pi-check"
+        [loading]="creating()"
+        [disabled]="form.invalid"
+        (click)="submitCampaign()">
+      </button>
+    </ng-template>
+  </p-dialog>
+</div>

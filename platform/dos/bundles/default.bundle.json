@@ -1,0 +1,37 @@
+{
+  "$schema": "./manifests/platform-bundle.schema.json",
+  "bundleCode": "dos-default",
+  "moduleCode": "dos",
+  "displayName": "DOS Default Bundle",
+  "description": "Standard DOS deployment: dos-service backed by @dos/dos-core with PostgreSQL persistence in the platform_dos schema.",
+  "version": "1.0.0",
+  "services": [
+    {
+      "code": "dos-service",
+      "path": "platform/dos/services/dos-service",
+      "required": true,
+      "ports": { "http": 4100 },
+      "dependsOnPlatform": [],
+      "dependsOnExternal": ["postgres", "redis"]
+    }
+  ],
+  "packages": ["@dos/dos-core", "@dos/dos-shared"],
+  "frontendPackages": [
+    { "name": "@dos/dos-frontend", "path": "platform/dos/packages/frontend", "status": "shipped-as-source" }
+  ],
+  "migrations": { "indexFile": "platform/dos/migrations/migrations-index.json" },
+  "environment": {
+    "required": ["DATABASE_URL", "REDIS_URL"],
+    "optional": ["DOS_JOB_POLL_INTERVAL_MS", "DOS_EVENT_LOG_RETENTION_DAYS"]
+  },
+  "healthChecks": [
+    { "service": "dos-service", "endpoint": "/api/dos/health", "expectedStatus": 200 },
+    { "service": "dos-service", "endpoint": "/api/dos/ready", "expectedStatus": 200 }
+  ],
+  "deployment": {
+    "runtime": "node",
+    "minNodeVersion": "20",
+    "horizontalScaling": "supported",
+    "statefulComponents": ["postgres"]
+  }
+}

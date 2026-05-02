@@ -1,0 +1,325 @@
+<!-- Page Header -->
+    <div class="page-header">
+      <div class="header-left">
+        <h1 class="page-title">{{ i18n.translate('scoringPolicy.title') || 'Scoring Policies' }}</h1>
+        <span class="policy-count" *ngIf="policies().length">
+          {{ policies().length }} {{ policies().length === 1 ? 'policy' : 'policies' }}
+        </span>
+      </div>
+      <button cdsButton
+        [label]="i18n.translate('scoringPolicy.newPolicy')"
+        icon=""
+        (onClick)="openCreateDialog()"
+        [cdsTooltip]="i18n.translate('scoringPolicy.createTooltip')"
+      />
+    </div>
+
+    <!-- Loading State -->
+    <div class="loading-state" *ngIf="loading()">
+      <i class=" pi-spinner loading-icon"></i>
+      <p>Loading scoring policies...</p>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="!loading() && policies().length === 0">
+      <i class=" empty-icon"></i>
+      <p>No scoring policies found.</p>
+      <button cdsButton
+        [label]="i18n.translate('scoringPolicy.createFirst')"
+        icon=""
+        [outlined]="true"
+        (onClick)="openCreateDialog()"
+      />
+    </div>
+
+    <!-- Policies Table -->
+    <grc-data-table
+      *ngIf="!loading() && policies().length > 0"
+      [totalRecords]="policies().length"
+      emptyMessage="No scoring policies found.">
+      <table cdsTable
+        [value]="policies()"
+        [paginator]="policies().length > 10"
+        [rows]="10"
+        styleClass="p-datatable-striped p-datatable-gridlines"
+        [attr.aria-label]="i18n.translate('scoringPolicy.tableLabel')"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Name</th>
+            <th>Status</th>
+            <th>Weight Domains</th>
+            <th>Weight Total</th>
+            <th>Created</th>
+            <th>Updated</th>
+            <th style="width: 160px">Actions</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-policy>
+          <tr>
+            <td><strong>{{ policy.name }}</strong></td>
+            <td>
+              <cds-tag
+                *ngIf="policy.is_default"
+                value="Default"
+                severity="success"
+                [rounded]="true"
+              />
+              <span *ngIf="!policy.is_default" class="text-muted">--</span>
+            </td>
+            <td>{{ getWeightCount(policy) }} domains</td>
+            <td>
+              <span
+                [class.weight-valid]="isWeightSumValid(policy)"
+                [class.weight-invalid]="!isWeightSumValid(policy)"
+              >
+                {{ getWeightSum(policy) | number:'1.2-2' }}
+              </span>
+            </td>
+            <td>{{ policy.created_at | appDate:'short' }}</td>
+            <td>{{ policy.updated_at | appDate:'short' }}</td>
+            <td>
+              <div class="action-btns">
+                <button
+                  class="icon-btn edit-btn"
+                  (click)="openEditDialog(policy)"
+                  [cdsTooltip]="Edit"
+                  aria-label="Edit policy"
+                >
+                  <i class=""></i>
+                </button>
+                <button
+                  class="icon-btn apply-btn"
+                  (click)="openApplyDialog(policy)"
+                  [cdsTooltip]="Apply to Assessment"
+                  aria-label="Apply to assessment"
+                >
+                  <i class=""></i>
+                </button>
+                <button
+                  class="icon-btn delete-btn"
+                  (click)="openDeleteDialog(policy)"
+                  [cdsTooltip]="Delete"
+                  aria-label="Delete policy"
+                >
+                  <i class=""></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </table>
+    </grc-data-table>
+
+    <!-- Create / Edit Dialog -->
+    <cds-modal
+      [header]="editingPolicy() ? i18n.translate('scoringPolicy.editPolicy') : i18n.translate('scoringPolicy.newPolicyDialog')"
+      [(visible)]="showFormDialog"
+      [modal]="true"
+      [style]="{ width: '620px' }"
+      [closable]="true"
+      (onHide)="resetForm()"
+    >
+      <div class="dialog-form">
+        <!-- Name -->
+        <div class="field">
+          <grc-form-field [label]="i18n.translate('scoringPolicy.policyName')">
+            <input
+              id="policyName"
+              pInputText
+              [(ngModel)]="formName"
+              [placeholder]="i18n.translate('scoringPolicy.namePlaceholder')"
+              class="w-full"
+            />
+          </grc-form-field>
+        </div>
+
+        <!-- Default Toggle -->
+        <div class="field-row-inline">
+          <label class="checkbox-label">
+            <input type="checkbox" [(ngModel)]="formIsDefault" />
+            Set as default policy
+          </label>
+        </div>
+
+        <!-- Weights Section -->
+        <div class="weights-section">
+          <div class="weights-header">
+            <label class="section-label">Weight Domains</label>
+            <button cdsButton
+              [label]="i18n.translate('scoringPolicy.addDomain')"
+              icon=""
+              severity="secondary"
+              [outlined]="true"
+              size="small"
+              (onClick)="addWeightRow()"
+            />
+          </div>
+
+          <div class="weight-row" *ngFor="let w of formWeights; let idx = index; trackBy: trackByIndex">
+            <div class="weight-domain">
+              <input
+                pInputText
+                [(ngModel)]="w.domain"
+                [placeholder]="i18n.translate('scoringPolicy.domainPlaceholder')"
+                class="w-full"
+              />
+            </div>
+            <div class="weight-value">
+              <cds-number
+                [(ngModel)]="w.value"
+                [min]="0"
+                [max]="1"
+                [step]="0.05"
+                [minFractionDigits]="2"
+                [maxFractionDigits]="2"
+                mode="decimal"
+                inputStyleClass="w-full"
+                styleClass="w-full"
+              />
+            </div>
+            <button
+              class="icon-btn delete-btn"
+              (click)="removeWeightRow(idx)"
+              [cdsTooltip]="Remove"
+              aria-label="Remove weight row"
+            >
+              <i class=""></i>
+            </button>
+          </div>
+
+          <div *ngIf="formWeights.length === 0" class="no-weights-msg">
+            No weight domains defined. Click "Add Domain" to begin.
+          </div>
+
+          <!-- Weight total indicator -->
+          <div class="weight-total" *ngIf="formWeights.length > 0">
+            <span>Total:</span>
+            <span
+              [class.weight-valid]="isFormWeightSumValid()"
+              [class.weight-invalid]="!isFormWeightSumValid()"
+            >
+              {{ formWeightSum() | number:'1.2-2' }}
+            </span>
+            <span class="weight-hint" *ngIf="!isFormWeightSumValid()">
+              (weights must sum to 1.00)
+            </span>
+            <span class="weight-hint weight-ok" *ngIf="isFormWeightSumValid()">
+              <i class=""></i> Valid
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <ng-template pTemplate="footer">
+        <button cdsButton
+          [label]="i18n.translate('common.cancel')"
+          icon=""
+          severity="secondary"
+          [text]="true"
+          (onClick)="showFormDialog = false"
+        />
+        <button cdsButton
+          [label]="editingPolicy() ? i18n.translate('common.update') : i18n.translate('common.create')"
+          icon=""
+          (onClick)="savePolicy()"
+          [disabled]="!formName.trim() || formWeights.length === 0"
+        />
+      </ng-template>
+    </cds-modal>
+
+    <!-- Delete Confirmation Dialog -->
+    <cds-modal
+      [header]="i18n.translate('scoringPolicy.confirmDelete')"
+      [(visible)]="showDeleteDialog"
+      [modal]="true"
+      [style]="{ width: '420px' }"
+      [closable]="true"
+    >
+      <div class="delete-confirm">
+        <i class=" delete-warn-icon"></i>
+        <p>
+          Are you sure you want to delete the policy
+          <strong>"{{ deletingPolicy()?.name }}"</strong>?
+          This action cannot be undone.
+        </p>
+      </div>
+      <ng-template pTemplate="footer">
+        <button cdsButton
+          [label]="i18n.translate('common.cancel')"
+          icon=""
+          severity="secondary"
+          [text]="true"
+          (onClick)="showDeleteDialog = false"
+        />
+        <button cdsButton
+          [label]="i18n.translate('common.delete')"
+          icon=""
+          severity="danger"
+          (onClick)="confirmDelete()"
+        />
+      </ng-template>
+    </cds-modal>
+
+    <!-- Apply to Assessment Dialog -->
+    <cds-modal
+      [header]="i18n.translate('scoringPolicy.applyToAssessment')"
+      [(visible)]="showApplyDialog"
+      [modal]="true"
+      [style]="{ width: '480px' }"
+      [closable]="true"
+    >
+      <div class="dialog-form">
+        <p class="apply-policy-name">
+          Policy: <strong>{{ applyingPolicy()?.name }}</strong>
+        </p>
+        <div class="field">
+          <grc-form-field [label]="i18n.translate('scoringPolicy.assessmentId')">
+            <input
+              pInputText
+              [(ngModel)]="applyAssessmentId"
+              [placeholder]="i18n.translate('scoringPolicy.assessmentIdPlaceholder')"
+              class="w-full"
+            />
+          </grc-form-field>
+        </div>
+
+        <!-- Result display -->
+        <div class="apply-result" *ngIf="applyResult()">
+          <div class="result-card">
+            <div class="result-label">Assessment Score</div>
+            <div class="result-score">{{ applyResult()!.score | number:'1.2-2' }}</div>
+            <div class="result-meta">
+              Policy: {{ applyResult()!.policyId }}<br />
+              Assessment: {{ applyResult()!.assessmentId }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <ng-template pTemplate="footer">
+        <button cdsButton
+          [label]="i18n.translate('common.cancel')"
+          icon=""
+          severity="secondary"
+          [text]="true"
+          (onClick)="closeApplyDialog()"
+        />
+        <button cdsButton
+          [label]="i18n.translate('scoringPolicy.apply')"
+          icon=""
+          (onClick)="applyPolicy()"
+          [disabled]="!applyAssessmentId.trim()"
+          [loading]="applyLoading()"
+        />
+      </ng-template>
+    </cds-modal>
+
+    <!-- Error Banner -->
+    <div class="error-banner" *ngIf="errorMsg()">
+      <i class=""></i>
+      <span>{{ errorMsg() }}</span>
+      <button class="icon-btn" (click)="errorMsg.set('')" aria-label="Dismiss error">
+        <i class=""></i>
+      </button>
+    </div>

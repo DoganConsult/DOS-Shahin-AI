@@ -1,0 +1,31 @@
+{
+  "name": "@dos/dsoc-service",
+  "version": "0.1.0",
+  "private": true,
+  "description": "DOS Platform — Security Operations Center service (DSOC)",
+  "main": "dist/server.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/server.js",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@dos/service-bootstrap": "workspace:*",
+    "@dos/runtime-config": "workspace:*",
+    "@dos/event-backbone": "workspace:*",
+    "@dos/db": "workspace:*",
+    "@dos/types": "workspace:*",
+    "@dos/contracts": "workspace:*",
+    "@dos/ports": "workspace:*",
+    "@dos/dsoc-core": "workspace:*",
+    "@dos/platform-core": "workspace:*",
+    "express": "^4.22.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^25.6.0",
+    "typescript": "^5.7.0"
+  }
+}

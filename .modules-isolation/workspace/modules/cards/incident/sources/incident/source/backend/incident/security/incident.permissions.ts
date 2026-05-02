@@ -1,0 +1,2 @@
+import { INCIDENT_PERMISSIONS } from './incident.security';
+export { INCIDENT_PERMISSIONS as INCIDENT_MODULE_PERMISSIONS };

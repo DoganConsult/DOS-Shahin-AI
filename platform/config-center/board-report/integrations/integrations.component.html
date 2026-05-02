@@ -1,0 +1,356 @@
+<app-page-shell icon="link" [title]="i18n.translate('integrations.title')"
+      [subtitle]="i18n.translate('integrations.subtitle')"
+      [breadcrumbs]="['Dashboard', i18n.translate('integrations.title')]" [loading]="loading">
+      <p-tabView>
+        <!-- Webhooks Tab -->
+        <p-tabPanel [header]="i18n.translate('integrations.webhooks')">
+          <div class="toolbar-row">
+            <p-button [label]="i18n.translate('integrations.registerWebhook')" icon="pi pi-plus" (onClick)="showWebhookDialog = true" />
+          </div>
+          <grc-data-table
+            [totalRecords]="webhooks.length"
+            emptyMessage="No webhooks registered">
+            <p-table [attr.aria-label]="i18n.translate('integrations.webhooksTable')" [value]="webhooks" styleClass="p-datatable-sm" [paginator]="true" [rows]="10">
+              <ng-template pTemplate="header">
+                <tr><th>URL</th><th>Events</th><th>Secret</th><th>Created</th><th>Actions</th></tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-w>
+                <tr>
+                  <td class="url-cell">{{ w.url }}</td>
+                  <td><p-tag *ngFor="let e of (w.events || w.event_types || [])" [value]="e" severity="info" class="me-1" /></td>
+                  <td><code>{{ w.secret ? '••••••' : '—' }}</code></td>
+                  <td>{{ w.created_at | appDate:'short' }}</td>
+                  <td><p-button icon="pi pi-trash" severity="danger" [text]="true" (onClick)="removeWebhook(w.webhook_id)" /></td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </grc-data-table>
+        </p-tabPanel>
+
+        <!-- Connectors Tab -->
+        <p-tabPanel header="Connectors">
+          <div class="connector-grid">
+            <!-- Jira Card -->
+            <div class="connector-card">
+              <div class="connector-header">
+                <i class="pi pi-ticket connector-icon connector-icon--jira"></i>
+                <h3>Jira</h3>
+                <p-tag [value]="jiraConfigured ? 'Connected' : 'Not Configured'" [severity]="jiraConfigured ? 'success' : 'warning'" class="ms-auto" />
+              </div>
+              <p class="text-muted">Create issues and sync status from Jira projects</p>
+              <div class="connector-actions" *ngIf="!jiraConfigured">
+                <p-button label="Connect Jira" icon="pi pi-link" (onClick)="openJiraSetup()" />
+              </div>
+              <div class="connector-actions" *ngIf="jiraConfigured">
+                <p-button label="Test" icon="pi pi-bolt" severity="info" [outlined]="true" (onClick)="testJira()" [loading]="testingJira" size="small" />
+                <p-button label="Disconnect" icon="pi pi-times" severity="danger" [outlined]="true" (onClick)="disconnectIntegration('jira')" size="small" />
+              </div>
+              <div *ngIf="jiraTestResult" class="test-msg" [class.test-ok]="jiraTestResult.ok" [class.test-fail]="!jiraTestResult.ok">
+                <i class="pi" [ngClass]="jiraTestResult.ok ? 'pi-check-circle' : 'pi-times-circle'"></i>
+                {{ jiraTestResult.message }}
+              </div>
+            </div>
+
+            <!-- Slack Card -->
+            <div class="connector-card">
+              <div class="connector-header">
+                <i class="pi pi-slack connector-icon connector-icon--slack"></i>
+                <h3>Slack</h3>
+                <p-tag [value]="slackConfigured ? 'Connected' : 'Not Configured'" [severity]="slackConfigured ? 'success' : 'warning'" class="ms-auto" />
+              </div>
+              <p class="text-muted">Post messages and alerts to Slack channels</p>
+              <div class="connector-actions" *ngIf="!slackConfigured">
+                <p-button label="Connect Slack" icon="pi pi-link" (onClick)="openSlackSetup()" />
+              </div>
+              <div class="connector-actions" *ngIf="slackConfigured">
+                <p-button label="Test Message" icon="pi pi-bolt" severity="info" [outlined]="true" (onClick)="testSlack()" [loading]="testingSlack" size="small" />
+                <p-button label="Disconnect" icon="pi pi-times" severity="danger" [outlined]="true" (onClick)="disconnectIntegration('slack')" size="small" />
+              </div>
+              <div *ngIf="slackTestResult" class="test-msg" [class.test-ok]="slackTestResult.ok" [class.test-fail]="!slackTestResult.ok">
+                <i class="pi" [ngClass]="slackTestResult.ok ? 'pi-check-circle' : 'pi-times-circle'"></i>
+                {{ slackTestResult.message }}
+              </div>
+            </div>
+            <!-- Teams Card -->
+            <div class="connector-card">
+              <div class="connector-header">
+                <i class="pi pi-microsoft connector-icon connector-icon--teams"></i>
+                <h3>Microsoft Teams</h3>
+                <p-tag [value]="teamsConfigured ? 'Connected' : 'Not Configured'" [severity]="teamsConfigured ? 'success' : 'warning'" class="ms-auto" />
+              </div>
+              <p class="text-muted">Send GRC alerts and notifications to Teams channels</p>
+              <div class="connector-actions" *ngIf="!teamsConfigured">
+                <p-button label="Connect Teams" icon="pi pi-link" (onClick)="openTeamsSetup()" />
+              </div>
+              <div class="connector-actions" *ngIf="teamsConfigured">
+                <p-button label="Disconnect" icon="pi pi-times" severity="danger" [outlined]="true" (onClick)="disconnectIntegration('teams')" size="small" />
+              </div>
+            </div>
+
+            <!-- ServiceNow Card -->
+            <div class="connector-card">
+              <div class="connector-header">
+                <i class="pi pi-server connector-icon connector-icon--servicenow"></i>
+                <h3>ServiceNow</h3>
+                <p-tag [value]="servicenowConfigured ? 'Connected' : 'Not Configured'" [severity]="servicenowConfigured ? 'success' : 'warning'" class="ms-auto" />
+              </div>
+              <p class="text-muted">Auto-create incidents and change requests in ServiceNow ITSM</p>
+              <div class="connector-actions" *ngIf="!servicenowConfigured">
+                <p-button label="Connect ServiceNow" icon="pi pi-link" (onClick)="openServiceNowSetup()" />
+              </div>
+              <div class="connector-actions" *ngIf="servicenowConfigured">
+                <p-button label="Disconnect" icon="pi pi-times" severity="danger" [outlined]="true" (onClick)="disconnectIntegration('servicenow')" size="small" />
+              </div>
+            </div>
+
+            <!-- CISO Assistant Card -->
+            <div class="connector-card">
+              <div class="connector-header">
+                <i class="pi pi-shield connector-icon connector-icon--ciso"></i>
+                <h3>CISO Assistant</h3>
+                <p-tag [value]="cisoConfigured ? 'Connected' : 'Not Configured'" [severity]="cisoConfigured ? 'success' : 'warning'" class="ms-auto" />
+              </div>
+              <p class="text-muted">Enrich gap analysis with CISO Assistant controls and metrics</p>
+              <div class="connector-actions" *ngIf="!cisoConfigured">
+                <p-button label="Connect CISO Assistant" icon="pi pi-link" (onClick)="openCisoSetup()" />
+              </div>
+              <div class="connector-actions" *ngIf="cisoConfigured">
+                <p-button label="Disconnect" icon="pi pi-times" severity="danger" [outlined]="true" (onClick)="disconnectIntegration('ciso_assistant')" size="small" />
+              </div>
+            </div>
+
+            <!-- OpenProject Card -->
+            <div class="connector-card">
+              <div class="connector-header">
+                <i class="pi pi-briefcase connector-icon connector-icon--openproject"></i>
+                <h3>OpenProject</h3>
+                <p-tag [value]="openprojectConfigured ? 'Connected' : 'Not Configured'" [severity]="openprojectConfigured ? 'success' : 'warning'" class="ms-auto" />
+              </div>
+              <p class="text-muted">Create work packages for remediation tasks in OpenProject</p>
+              <div class="connector-actions" *ngIf="!openprojectConfigured">
+                <p-button label="Connect OpenProject" icon="pi pi-link" (onClick)="openOpenProjectSetup()" />
+              </div>
+              <div class="connector-actions" *ngIf="openprojectConfigured">
+                <p-button label="Disconnect" icon="pi pi-times" severity="danger" [outlined]="true" (onClick)="disconnectIntegration('openproject')" size="small" />
+              </div>
+            </div>
+          </div>
+        </p-tabPanel>
+
+        <!-- OpenClaw Tab -->
+        <p-tabPanel header="OpenClaw MCP">
+          <div class="connector-grid">
+            <div class="connector-card connector-card--full-width">
+              <div class="connector-header">
+                <i class="pi pi-code connector-icon connector-icon--openclaw"></i>
+                <h3>OpenClaw MCP Server</h3>
+                <p-tag [value]="openClawStatus?.enabled ? 'Enabled' : 'Disabled'" [severity]="openClawStatus?.enabled ? 'success' : 'danger'" class="ms-auto" />
+              </div>
+              <p class="text-muted">Model Context Protocol server for external integrations. Exposes AI agents, connectors, and workflows via MCP.</p>
+              
+              <div *ngIf="openClawStatus" class="openclaw-details info-card">
+                <div class="auto-grid">
+                  <div><strong>Transport:</strong> {{ openClawStatus.transport }}</div>
+                  <div><strong>Port:</strong> {{ openClawStatus.port }}</div>
+                  <div><strong>Host:</strong> {{ openClawStatus.host }}</div>
+                  <div><strong>Available:</strong> <p-tag [value]="openClawStatus.available ? 'Yes' : 'No'" [severity]="openClawStatus.available ? 'success' : 'danger'" /></div>
+                </div>
+                <div class="section-divider">
+                  <strong>Integrations:</strong>
+                  <div class="tag-row">
+                    <p-tag [value]="'LangGraph: ' + (openClawStatus.integrations?.langgraph ? 'On' : 'Off')" [severity]="openClawStatus.integrations?.langgraph ? 'success' : 'info'" />
+                    <p-tag [value]="'Temporal: ' + (openClawStatus.integrations?.temporal ? 'On' : 'Off')" [severity]="openClawStatus.integrations?.temporal ? 'success' : 'info'" />
+                    <p-tag [value]="'Langfuse: ' + (openClawStatus.integrations?.langfuse ? 'On' : 'Off')" [severity]="openClawStatus.integrations?.langfuse ? 'success' : 'info'" />
+                  </div>
+                </div>
+                <div class="section-divider">
+                  <strong>Connectors:</strong>
+                  <p-tag [value]="'Exposed: ' + (openClawStatus.connectors?.exposed ? 'Yes' : 'No')" [severity]="openClawStatus.connectors?.exposed ? 'success' : 'info'" [style]="{'margin-top': '6px'}" />
+                </div>
+              </div>
+
+              <div class="connector-actions mt-16">
+                <p-button label="Test Connection" icon="pi pi-bolt" severity="info" [outlined]="true" (onClick)="testOpenClaw()" [loading]="testingOpenClaw" size="small" />
+                <p-button label="View Tools" icon="pi pi-list" severity="secondary" [outlined]="true" (onClick)="loadOpenClawTools()" [loading]="loadingTools" size="small" />
+                <p-button label="View Resources" icon="pi pi-database" severity="secondary" [outlined]="true" (onClick)="loadOpenClawResources()" [loading]="loadingResources" size="small" />
+              </div>
+
+              <div *ngIf="openClawTestResult" class="test-msg mt-12" [class.test-ok]="openClawTestResult.ok" [class.test-fail]="!openClawTestResult.ok">
+                <i class="pi" [ngClass]="openClawTestResult.ok ? 'pi-check-circle' : 'pi-times-circle'"></i>
+                {{ openClawTestResult.message }}
+                <span *ngIf="openClawTestResult.toolsCount !== undefined"> ({{ openClawTestResult.toolsCount }} tools available)</span>
+              </div>
+
+              <div *ngIf="openClawTools.length > 0" class="info-card info-card--compact">
+                <strong class="label-sm">Available Tools ({{ openClawTools.length }}):</strong>
+                <div class="tag-list">
+                  <p-tag *ngFor="let tool of openClawTools" [value]="tool.name" severity="info" [style]="{'font-size': 'var(--font-size-xs)'}" />
+                </div>
+              </div>
+
+              <div *ngIf="openClawResources.length > 0" class="info-card info-card--compact">
+                <strong class="label-sm">Available Resources ({{ openClawResources.length }}):</strong>
+                <div class="tag-list">
+                  <p-tag *ngFor="let res of openClawResources" [value]="res.uri || res.name" [severity]="'info'" [style]="{'font-size': 'var(--font-size-xs)'}" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </p-tabPanel>
+
+        <!-- Integration Configs Tab -->
+        <p-tabPanel [header]="i18n.translate('integrations.configurations')">
+          <div class="toolbar-row">
+            <p-button [label]="i18n.translate('integrations.addConfig')" icon="pi pi-plus" (onClick)="openConfigDialog()" />
+          </div>
+          <grc-data-table
+            [totalRecords]="configs.length"
+            emptyMessage="No integration configurations">
+            <p-table [attr.aria-label]="i18n.translate('integrations.configsTable')" [value]="configs" styleClass="p-datatable-sm" [paginator]="true" [rows]="10">
+              <ng-template pTemplate="header">
+                <tr><th>Name</th><th>Type</th><th>Enabled</th><th>Status</th><th>Created</th><th>Actions</th></tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-c>
+                <tr>
+                  <td>{{ c.name || '—' }}</td>
+                  <td><p-tag [value]="c.type" /></td>
+                  <td><p-tag [value]="c.enabled ? 'Yes' : 'No'" [severity]="c.enabled ? 'success' : 'danger'" /></td>
+                  <td><p-tag [value]="c.validation_status || 'pending'" [severity]="c.validation_status === 'valid' ? 'success' : c.validation_status === 'invalid' ? 'danger' : 'info'" /></td>
+                  <td>{{ c.created_at | appDate:'short' }}</td>
+                  <td>
+                    <p-button icon="pi pi-pencil" [text]="true" (onClick)="editConfig(c)" class="me-1" />
+                    <p-button icon="pi pi-trash" severity="danger" [text]="true" (onClick)="removeConfig(c.integration_id)" />
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </grc-data-table>
+        </p-tabPanel>
+      </p-tabView>
+
+      <!-- Webhook Dialog -->
+      <p-dialog [header]="i18n.translate('integrations.registerWebhookDialog')" [(visible)]="showWebhookDialog" [modal]="true" [style]="{width:'480px'}">
+        <grc-form-field label="URL" [required]="true">
+          <input pInputText [(ngModel)]="newWebhook.url" placeholder="https://..." aria-label="Webhook URL" class="w-full" />
+        </grc-form-field>
+        <grc-form-field label="Events (comma-separated)">
+          <input pInputText [(ngModel)]="newWebhook.eventsStr" placeholder="risk.created, control.updated" aria-label="Events" class="w-full" />
+        </grc-form-field>
+        <grc-form-field label="Secret (optional)">
+          <input pInputText [(ngModel)]="newWebhook.secret" class="w-full" />
+        </grc-form-field>
+        <ng-template pTemplate="footer">
+          <p-button [label]="i18n.translate('integrations.cancel')" severity="secondary" [text]="true" (onClick)="showWebhookDialog = false" />
+          <p-button [label]="i18n.translate('integrations.register')" icon="pi pi-check" (onClick)="saveWebhook()" [disabled]="!newWebhook.url" />
+        </ng-template>
+      </p-dialog>
+
+      <!-- Jira Setup Dialog -->
+      <p-dialog header="Connect Jira" [(visible)]="showJiraDialog" [modal]="true" [style]="{width:'500px'}">
+        <grc-form-field label="Jira Base URL" [required]="true">
+          <input pInputText [(ngModel)]="jiraForm.baseUrl" placeholder="https://company.atlassian.net" class="w-full" />
+        </grc-form-field>
+        <grc-form-field label="Email" [required]="true">
+          <input pInputText [(ngModel)]="jiraForm.email" placeholder="user@company.com" class="w-full" />
+        </grc-form-field>
+        <div class="form-field"><label>API Token <span class="req">*</span></label><p-password [(ngModel)]="jiraForm.apiToken" [toggleMask]="true" [feedback]="false" styleClass="w-full" inputStyleClass="w-full" /></div>
+        <grc-form-field label="Default Project Key">
+          <input pInputText [(ngModel)]="jiraForm.projectKey" placeholder="AGRC" class="w-full" />
+        </grc-form-field>
+        <ng-template pTemplate="footer">
+          <p-button label="Cancel" severity="secondary" [text]="true" (onClick)="showJiraDialog = false" />
+          <p-button label="Connect" icon="pi pi-check" (onClick)="saveJiraConfig()" [disabled]="!jiraForm.baseUrl || !jiraForm.email || !jiraForm.apiToken" [loading]="savingJira" />
+        </ng-template>
+      </p-dialog>
+
+      <!-- Slack Setup Dialog -->
+      <p-dialog header="Connect Slack" [(visible)]="showSlackDialog" [modal]="true" [style]="{width:'500px'}">
+        <p-tabView>
+          <p-tabPanel header="Webhook URL">
+            <grc-form-field label="Incoming Webhook URL" [required]="true">
+              <input pInputText [(ngModel)]="slackForm.webhookUrl" placeholder="https://hooks.slack.com/services/..." class="w-full" />
+            </grc-form-field>
+          </p-tabPanel>
+          <p-tabPanel header="Bot Token">
+            <div class="form-field"><label>Bot OAuth Token <span class="req">*</span></label><p-password [(ngModel)]="slackForm.botToken" [toggleMask]="true" [feedback]="false" styleClass="w-full" inputStyleClass="w-full" /></div>
+          </p-tabPanel>
+        </p-tabView>
+        <grc-form-field label="Default Channel">
+          <input pInputText [(ngModel)]="slackForm.defaultChannel" placeholder="#grc-alerts" class="w-full" />
+        </grc-form-field>
+        <ng-template pTemplate="footer">
+          <p-button label="Cancel" severity="secondary" [text]="true" (onClick)="showSlackDialog = false" />
+          <p-button label="Connect" icon="pi pi-check" (onClick)="saveSlackConfig()" [disabled]="!slackForm.webhookUrl && !slackForm.botToken" [loading]="savingSlack" />
+        </ng-template>
+      </p-dialog>
+
+      <!-- Teams Setup Dialog -->
+      <p-dialog header="Connect Microsoft Teams" [(visible)]="showTeamsDialog" [modal]="true" [style]="{width:'500px'}">
+        <grc-form-field label="Incoming Webhook URL" [required]="true">
+          <input pInputText [(ngModel)]="teamsForm.webhookUrl" placeholder="https://outlook.office.com/webhook/..." class="w-full" />
+        </grc-form-field>
+        <ng-template pTemplate="footer">
+          <p-button label="Cancel" severity="secondary" [text]="true" (onClick)="showTeamsDialog = false" />
+          <p-button label="Connect" icon="pi pi-check" (onClick)="saveTeamsConfig()" [disabled]="!teamsForm.webhookUrl" [loading]="savingTeams" />
+        </ng-template>
+      </p-dialog>
+
+      <!-- ServiceNow Setup Dialog -->
+      <p-dialog header="Connect ServiceNow" [(visible)]="showServiceNowDialog" [modal]="true" [style]="{width:'500px'}">
+        <grc-form-field label="Instance URL" [required]="true">
+          <input pInputText [(ngModel)]="servicenowForm.instanceUrl" placeholder="https://myorg.service-now.com" class="w-full" />
+        </grc-form-field>
+        <grc-form-field label="Username" [required]="true">
+          <input pInputText [(ngModel)]="servicenowForm.username" class="w-full" />
+        </grc-form-field>
+        <div class="form-field"><label>Password <span class="req">*</span></label><p-password [(ngModel)]="servicenowForm.password" [toggleMask]="true" [feedback]="false" styleClass="w-full" inputStyleClass="w-full" /></div>
+        <ng-template pTemplate="footer">
+          <p-button label="Cancel" severity="secondary" [text]="true" (onClick)="showServiceNowDialog = false" />
+          <p-button label="Connect" icon="pi pi-check" (onClick)="saveServiceNowConfig()" [disabled]="!servicenowForm.instanceUrl || !servicenowForm.username" [loading]="savingServiceNow" />
+        </ng-template>
+      </p-dialog>
+
+      <!-- CISO Assistant Setup Dialog -->
+      <p-dialog header="Connect CISO Assistant" [(visible)]="showCisoDialog" [modal]="true" [style]="{width:'500px'}">
+        <grc-form-field label="CISO Assistant URL" [required]="true">
+          <input pInputText [(ngModel)]="cisoForm.url" placeholder="http://localhost:8600" class="w-full" />
+        </grc-form-field>
+        <div class="form-field"><label>API Key <span class="req">*</span></label><p-password [(ngModel)]="cisoForm.apiKey" [toggleMask]="true" [feedback]="false" styleClass="w-full" inputStyleClass="w-full" /></div>
+        <ng-template pTemplate="footer">
+          <p-button label="Cancel" severity="secondary" [text]="true" (onClick)="showCisoDialog = false" />
+          <p-button label="Connect" icon="pi pi-check" (onClick)="saveCisoConfig()" [disabled]="!cisoForm.url || !cisoForm.apiKey" [loading]="savingCiso" />
+        </ng-template>
+      </p-dialog>
+
+      <!-- OpenProject Setup Dialog -->
+      <p-dialog header="Connect OpenProject" [(visible)]="showOpenProjectDialog" [modal]="true" [style]="{width:'500px'}">
+        <grc-form-field label="OpenProject URL" [required]="true">
+          <input pInputText [(ngModel)]="openprojectForm.url" placeholder="http://localhost:8602" class="w-full" />
+        </grc-form-field>
+        <div class="form-field"><label>API Key <span class="req">*</span></label><p-password [(ngModel)]="openprojectForm.apiKey" [toggleMask]="true" [feedback]="false" styleClass="w-full" inputStyleClass="w-full" /></div>
+        <grc-form-field label="GRC Project ID">
+          <input pInputText [(ngModel)]="openprojectForm.projectId" placeholder="1" class="w-full" />
+        </grc-form-field>
+        <ng-template pTemplate="footer">
+          <p-button label="Cancel" severity="secondary" [text]="true" (onClick)="showOpenProjectDialog = false" />
+          <p-button label="Connect" icon="pi pi-check" (onClick)="saveOpenProjectConfig()" [disabled]="!openprojectForm.url || !openprojectForm.apiKey" [loading]="savingOpenProject" />
+        </ng-template>
+      </p-dialog>
+
+      <!-- Config Dialog -->
+      <p-dialog [header]="i18n.translate('integrations.integrationConfig')" [(visible)]="showConfigDialog" [modal]="true" [style]="{width:'480px'}">
+        <grc-form-field label="Name">
+          <input pInputText [(ngModel)]="editingConfig.name" class="w-full" placeholder="My Integration" />
+        </grc-form-field>
+        <div class="form-field"><label>Type</label>
+          <p-dropdown [options]="configTypes" [(ngModel)]="editingConfig.type" placeholder="Select type" styleClass="w-full" />
+        </div>
+        <div class="form-field"><label>Enabled</label><p-inputSwitch [(ngModel)]="editingConfig.enabled" /></div>
+        <div class="form-field"><label>Config JSON</label><textarea pInputText [(ngModel)]="editingConfig.configJson" rows="4" class="w-full code-textarea"></textarea></div>
+        <ng-template pTemplate="footer">
+          <p-button [label]="i18n.translate('integrations.cancel')" severity="secondary" [text]="true" (onClick)="showConfigDialog = false" />
+          <p-button [label]="i18n.translate('integrations.save')" icon="pi pi-check" (onClick)="saveConfig()" [disabled]="!editingConfig.type" />
+        </ng-template>
+      </p-dialog>
+    </app-page-shell>
+    <p-toast />

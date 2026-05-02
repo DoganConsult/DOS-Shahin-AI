@@ -1,0 +1,9 @@
+{
+  "_doc": "A1 baseline of pre-existing non-Carbon vendor violations inside the workspace evolution scoped paths. Each wave is expected to shrink this list. A10 final acceptance requires `allowed` to be []. Do not add entries — only remove.",
+  "_recorded": "2026-05-02 (A1)",
+  "allowed": [
+    { "file": "platform/core/platform/shell/dynamic-page-context-bar.component.ts", "kind": "PrimeIcons CSS class (pi-*)" },
+    { "file": "platform/core/platform/shell/shell-renderer.component.ts",            "kind": "PrimeIcons CSS class (pi-*)" },
+    { "file": "platform/ui-system/dos-ui-system/src/i18n/dos-language-switcher.component.ts", "kind": "PrimeIcons CSS class (pi-*)" }
+  ]
+}

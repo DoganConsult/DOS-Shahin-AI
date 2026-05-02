@@ -1,0 +1,2 @@
+import { GOVERNANCE_AI_PERMISSIONS } from './governance-ai.security';
+export { GOVERNANCE_AI_PERMISSIONS as GOVERNANCE_AI_MODULE_PERMISSIONS };

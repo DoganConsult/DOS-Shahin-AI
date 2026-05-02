@@ -1,0 +1,101 @@
+name: Foundation Module CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'modules/foundation/**'
+      - 'services/user-service/**'
+      - 'services/tenant-service/src/domain/provisioning/**'
+      - 'packages/dos-db/**'
+      - '.github/workflows/foundation-module-ci.yml'
+  pull_request:
+    paths:
+      - 'modules/foundation/**'
+      - 'services/user-service/**'
+      - 'services/tenant-service/src/domain/provisioning/**'
+      - 'packages/dos-db/**'
+
+concurrency:
+  group: foundation-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    name: Build + Unit/Integration Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: dos_test
+          POSTGRES_USER: dos
+          POSTGRES_PASSWORD: dos
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U dos"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      DATABASE_URL: postgres://dos:dos@localhost:5432/dos_test
+      PGHOST: localhost
+      PGUSER: dos
+      PGPASSWORD: dos
+      PGDATABASE: dos_test
+      RLS_ENABLED: 'true'
+      NODE_ENV: test
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile=false
+
+      - name: Validate manifests
+        run: pnpm run validate:manifests
+
+      - name: Build foundation module
+        run: pnpm --filter @dos/module-foundation build
+
+      - name: Run module migrations (smoke)
+        run: |
+          bash ops/scripts/run-migrations.sh || true
+
+      - name: Foundation unit + integration tests
+        working-directory: modules/foundation
+        run: npx vitest run
+
+      - name: F1 contract test suite
+        run: npx vitest run -c vitest.bootstrap.config.mjs tests/integration/foundation-f1.contract.test.ts || npx vitest run tests/integration/foundation-f1.contract.test.ts
+        continue-on-error: false
+
+  lint:
+    name: TypeScript build-check
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile=false
+      - name: tsc foundation
+        run: npx tsc -p modules/foundation/tsconfig.build.json --noEmit

@@ -1,0 +1,123 @@
+import { safeQuery } from '@dos/db';
+import { logger } from '../../observability';
+import { publish } from '../../events';
+import { catchHandler, EC, toErrorMessage } from '../../resilience';
+import { createHash, createHmac, randomBytes, randomUUID, timingSafeEqual } from 'crypto';
+
+function hashKey(apiKey: string): string {
+  return createHash('sha256').update(apiKey).digest('hex');
+}
+
+function parseScopes(value: unknown): Record<string, any> {
+  if (typeof value === 'string') {
+    try {
+      return JSON.parse(value);
+    } catch {
+      return {};
+    }
+  }
+  if (Array.isArray(value)) {
+    const record: Record<string, any> = {};
+    for (const entry of value) {
+      if (entry && typeof entry === 'object' && 'key' in (entry as Record<string, unknown>) && 'value' in (entry as Record<string, unknown>)) {
+        const row = entry as Record<string, unknown>;
+        record[String(row.key)] = row.value;
+      }
+    }
+    return record;
+  }
+  return value && typeof value === 'object' ? value as Record<string, any> : {};
+}
+
+async function ensureWebhookEventsTable(): Promise<void> {
+  await safeQuery(`
+    CREATE TABLE IF NOT EXISTS public.telemetry_webhook_events (
+      event_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      tenant_id VARCHAR(255) NOT NULL,
+      source_name VARCHAR(255),
+      event_type VARCHAR(255) NOT NULL,
+      severity VARCHAR(50),
+      payload JSONB NOT NULL DEFAULT '{}'::jsonb,
+      received_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `);
+}
+
+function normalizeSignature(signature: string | undefined): string | undefined {
+  if (!signature) return undefined;
+  return signature.startsWith('sha256=') ? signature.slice(7) : signature;
+}
+
+function signaturesMatch(expected: string, received: string | undefined): boolean {
+  const normalized = normalizeSignature(received);
+  if (!normalized) return false;
+  const expectedBuffer = Buffer.from(expected, 'hex');
+  const actualBuffer = Buffer.from(normalized, 'hex');
+  return expectedBuffer.length === actualBuffer.length && timingSafeEqual(expectedBuffer, actualBuffer);
+}
+
+export async function processWebhook(tenantId: string, payload: Record<string, any>): Promise<Record<string, unknown>> {
+  await ensureWebhookEventsTable();
+  const eventId = randomUUID();
+  const sourceName = String(payload.sourceName ?? payload.source ?? 'external');
+  const eventType = String(payload.eventType ?? payload.type ?? 'telemetry.ingested');
+  const severity = payload.severity ? String(payload.severity) : null;
+  await safeQuery(
+    `INSERT INTO public.telemetry_webhook_events (event_id, tenant_id, source_name, event_type, severity, payload) VALUES ($1, $2, $3, $4, $5, $6::jsonb)`,
+    [eventId, tenantId, sourceName, eventType, severity, JSON.stringify(payload)],
+  );
+  publish('telemetry.ingested', tenantId, { eventId, sourceName, eventType, payload }).catch(catchHandler(EC.EVENT_BUS));
+  return { accepted: true, eventId, tenantId, sourceName, eventType };
+}
+
+export async function authenticateWebhook(apiKey: string, rawBody: string, signature?: string): Promise<{ tenantId: string; keyId: string; sourceName: string }> {
+  const result = await safeQuery(
+    `SELECT key_id, label, scopes, expires_at FROM public.api_keys WHERE hashed_key = $1 LIMIT 1`,
+    [hashKey(apiKey)],
+  );
+  const row = result.rows[0] as Record<string, any> | undefined;
+  if (!row) throw new Error('Invalid webhook API key');
+  if (row.expires_at && new Date(row.expires_at) < new Date()) throw new Error('Webhook API key expired');
+  const scopes = parseScopes(row.scopes);
+  if (scopes.kind !== 'telemetry_webhook') throw new Error('Invalid webhook key kind');
+  if (scopes.enableHmac === true) {
+    const expected = createHmac('sha256', apiKey).update(rawBody).digest('hex');
+    if (!signaturesMatch(expected, signature)) throw new Error('Invalid webhook signature');
+  }
+  return { tenantId: String(scopes.tenantId ?? ''), keyId: String(row.key_id), sourceName: String(scopes.sourceName ?? row.label ?? 'external') };
+}
+
+export async function createWebhookApiKey(tenantId: string, keyName: string, sourceName: string, enableHmac = false): Promise<Record<string, unknown>> {
+  const keyId = randomUUID();
+  const apiKey = randomBytes(24).toString('hex');
+  const createdAt = new Date().toISOString();
+  const scopes = { kind: 'telemetry_webhook', tenantId, sourceName, enableHmac };
+  await safeQuery(
+    `INSERT INTO public.api_keys (key_id, hashed_key, label, scopes, created_at) VALUES ($1, $2, $3, $4::jsonb, $5)`,
+    [keyId, hashKey(apiKey), keyName, JSON.stringify(scopes), createdAt],
+  );
+  return { keyId, apiKey, keyName, sourceName, enableHmac, createdAt };
+}
+
+export async function listWebhookApiKeys(tenantId: string): Promise<Record<string, unknown>[]> {
+  const result = await safeQuery(`SELECT key_id, label, scopes, expires_at, created_at FROM public.api_keys ORDER BY created_at DESC`);
+  return result.rows
+    .map((row: Record<string, any>) => ({ row, scopes: parseScopes(row.scopes) }))
+    .filter(({ scopes }) => scopes.kind === 'telemetry_webhook' && scopes.tenantId === tenantId)
+    .map(({ row, scopes }) => ({
+      keyId: row.key_id,
+      keyName: row.label,
+      sourceName: scopes.sourceName ?? 'external',
+      enableHmac: scopes.enableHmac === true,
+      expiresAt: row.expires_at ?? null,
+      createdAt: row.created_at,
+    }));
+}
+
+export async function revokeWebhookApiKey(tenantId: string, keyId: string): Promise<void> {
+  const keys = await listWebhookApiKeys(tenantId);
+  if (!keys.find((entry) => entry.keyId === keyId)) {
+    throw new Error('Invalid or foreign webhook key');
+  }
+  await safeQuery(`DELETE FROM public.api_keys WHERE key_id = $1`, [keyId]);
+}

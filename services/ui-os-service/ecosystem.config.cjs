@@ -1,0 +1,31 @@
+module.exports = {
+  apps: [{
+    name: 'ui-os-service',
+    script: 'dist/server.js',
+    instances: 1,
+    exec_mode: 'fork',
+    env: {
+      NODE_ENV: 'production',
+      PORT: 4015,
+      LOG_LEVEL: 'info',
+      DATABASE_URL: 'postgresql://dos_auth:dos_auth_pass_2026@localhost:5432/shahin_grc',
+      GATEWAY_ORIGIN_HMAC_SECRET: 'edaea84ef5aac336f1a948f92a21f1d81c655bccf0c383a8d04e99c692ddbd8c',
+      LEGACY_HEADER_TRUST: 'true',
+      // Patch 1 — OpenFGA model alignment.
+      OPENFGA_API_URL: 'http://127.0.0.1:8080',
+      OPENFGA_STORE_ID: '01KNSF17SBJBCF4H0E4KZM15EQ',
+      OPENFGA_MODEL_ID: '01KQHTBYFQ9826QKAQ75QQ0A63',
+      KEYCLOAK_ISSUER: 'https://shahin-ai.com/login/realms/dogan',
+      KEYCLOAK_AUDIENCE: 'shahin-bff',
+      KEYCLOAK_JWKS_URL: 'http://127.0.0.1:8180/login/realms/dogan/protocol/openid-connect/certs',
+    },
+    node_args: '--max-old-space-size=512',
+    max_memory_restart: '512M',
+    wait_ready: true,
+    listen_timeout: 30000,
+    kill_timeout: 15000,
+    autorestart: true,
+    watch: false,
+    merge_logs: true,
+  }],
+};

@@ -1,0 +1,336 @@
+/* Evidence Catalog — enterprise catalog page styles */
+/* All colors use CSS custom properties from grc-tokens.css */
+
+:host {
+  display: block;
+}
+
+.catalog-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 0;
+}
+
+/* ── KPI Section ── */
+
+.catalog-kpis {
+  margin-bottom: 0.25rem;
+}
+
+/* ── Toolbar ── */
+
+.catalog-toolbar {
+  margin-bottom: 0.25rem;
+
+  .p-toolbar {
+    background: var(--bg-0);
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+}
+
+.toolbar-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.toolbar-toggles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.search-input {
+  position: relative;
+
+  i {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    z-index: 1;
+  }
+
+  input {
+    padding-inline-start: 2.25rem;
+    width: 14rem;
+  }
+
+  [dir='rtl'] & {
+    i {
+      left: auto;
+      right: 0.75rem;
+    }
+
+    input {
+      padding-inline-start: 0.75rem;
+      padding-inline-end: 2.25rem;
+    }
+  }
+}
+
+.toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: var(--font-size-xs-plus);
+  color: var(--text-body);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* ── View Mode Banner ── */
+
+.view-mode-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--bg-0);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  font-size: var(--font-size-xs-plus);
+  color: var(--text-body);
+
+  .pi {
+    color: var(--warning);
+  }
+
+  .pi-shield {
+    color: var(--success);
+  }
+}
+
+/* ── Table Section ── */
+
+.catalog-table-section {
+  background: var(--bg-0);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+
+  .p-datatable {
+    .p-datatable-thead > tr > th {
+      background: var(--bg-0);
+      color: var(--text-muted);
+      font-size: var(--font-size-sm);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      padding: 0.625rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    .p-datatable-tbody > tr > td {
+      padding: 0.5rem 0.75rem;
+      font-size: var(--font-size-xs-plus);
+      color: var(--text-body);
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    .p-datatable-tbody > tr:hover {
+      background: color-mix(in srgb, var(--primary) 4%, transparent);
+    }
+
+    .p-paginator {
+      border-top: 1px solid var(--border);
+      padding: 0.5rem;
+    }
+  }
+}
+
+.catalog-row {
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+/* ── Cell Styles ── */
+
+.code-cell {
+  .evidence-code {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--primary);
+    background: color-mix(in srgb, var(--primary) 8%, transparent);
+    padding: 0.125rem 0.375rem;
+    border-radius: 0.25rem;
+  }
+}
+
+.evidence-title {
+  font-weight: 500;
+  color: var(--text-body);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.source-label,
+.source-system,
+.confidentiality-label {
+  font-size: var(--font-size-xs-plus);
+  color: var(--text-muted);
+  text-transform: capitalize;
+}
+
+.owner-label {
+  font-size: var(--font-size-xs-plus);
+  color: var(--text-body);
+  max-width: 8rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
+}
+
+.link-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  background: color-mix(in srgb, var(--text-muted) 10%, transparent);
+  color: var(--text-muted);
+
+  &.has-links {
+    background: color-mix(in srgb, var(--primary) 12%, transparent);
+    color: var(--primary);
+  }
+}
+
+.quality-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.625rem;
+  height: 1.625rem;
+  border-radius: 0.25rem;
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  background: var(--bg-0);
+  border: 1px solid var(--border);
+
+  &[data-tier='A'] {
+    background: color-mix(in srgb, var(--success) 12%, transparent);
+    color: var(--success);
+    border-color: var(--success);
+  }
+
+  &[data-tier='B'] {
+    background: color-mix(in srgb, var(--warning) 12%, transparent);
+    color: var(--warning);
+    border-color: var(--warning);
+  }
+
+  &[data-tier='C'] {
+    background: color-mix(in srgb, var(--error) 12%, transparent);
+    color: var(--error);
+    border-color: var(--error);
+  }
+}
+
+.expiring-soon {
+  color: var(--warning);
+  font-weight: 600;
+}
+
+.reuse-yes {
+  color: var(--success);
+  font-size: var(--font-size-md);
+}
+
+.reuse-no {
+  color: var(--text-muted);
+  font-size: var(--font-size-base);
+  opacity: 0.5;
+}
+
+/* ── Create Dialog ── */
+
+.create-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+
+  label {
+    font-size: var(--font-size-xs-plus);
+    font-weight: 600;
+    color: var(--text-body);
+  }
+}
+
+.toggle-field {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* ── RTL Support ── */
+
+[dir='rtl'] {
+  .toolbar-filters,
+  .toolbar-toggles {
+    direction: rtl;
+  }
+
+  .owner-label {
+    direction: rtl;
+  }
+
+  .code-cell .evidence-code {
+    direction: ltr;
+    unicode-bidi: embed;
+  }
+}
+
+/* ── Responsive ── */
+
+@media (max-width: 1024px) {
+  .toolbar-filters,
+  .toolbar-toggles {
+    flex-wrap: wrap;
+  }
+
+  .search-input input {
+    width: 10rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .catalog-table-section {
+    overflow-x: auto;
+
+    .p-datatable {
+      min-width: 64rem;
+    }
+  }
+}

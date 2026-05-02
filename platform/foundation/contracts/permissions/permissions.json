@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "moduleCode": "foundation",
+  "permissions": [
+    { "code": "foundation.read",            "labelKey": "modules.foundation.perm.read",                "description": "Read access to foundation entities (orgs, BUs, departments, locations, committees, etc.).", "default": "viewer" },
+    { "code": "foundation.record.write",    "labelKey": "modules.foundation.perm.write",               "description": "Create/update foundation entities.",                                                       "default": "tenant-admin" },
+    { "code": "foundation.record.delete",   "labelKey": "modules.foundation.perm.delete",              "description": "Delete foundation entities.",                                                              "default": "tenant-admin" },
+    { "code": "foundation.manage",          "labelKey": "modules.foundation.perm.manage",              "description": "Full administration of the foundation module (legacy alias 'foundation.manage').",        "default": "tenant-admin" },
+
+    { "code": "foundation.user.read",       "labelKey": "modules.foundation.perm.users.read",          "description": "Read users within the tenant.",                                                            "default": "viewer" },
+    { "code": "foundation.user.write",      "labelKey": "modules.foundation.perm.users.write",         "description": "Create/update users (invite, edit profile).",                                              "default": "tenant-admin" },
+    { "code": "foundation.user.disable",    "labelKey": "modules.foundation.perm.users.disable",       "description": "Disable or deactivate users.",                                                             "default": "tenant-admin" },
+
+    { "code": "foundation.admin.read",      "labelKey": "modules.foundation.perm.admin.read",          "description": "Read role and permission catalogs.",                                                       "default": "tenant-admin" },
+    { "code": "foundation.admin.write",     "labelKey": "modules.foundation.perm.admin.write",         "description": "Mutate role assignments and access profiles.",                                            "default": "tenant-admin" },
+
+    { "code": "audit_trail.read",           "labelKey": "modules.foundation.perm.audit.read",          "description": "Read tenant audit trail (foundation-scoped events).",                                      "default": "auditor" },
+
+    { "code": "access_review:create",       "labelKey": "modules.foundation.perm.accessReview.create", "description": "Create access review campaigns.",                                                          "default": "tenant-admin" },
+    { "code": "access_review:approve",      "labelKey": "modules.foundation.perm.accessReview.approve","description": "Approve/reject access review attestations.",                                                "default": "tenant-admin" },
+
+    { "code": "delegation:create",          "labelKey": "modules.foundation.perm.delegation.create",   "description": "Request delegation of authority.",                                                         "default": "user" },
+    { "code": "delegation:approve",         "labelKey": "modules.foundation.perm.delegation.approve",  "description": "Approve delegation requests.",                                                             "default": "tenant-admin" }
+  ],
+  "roleDefaults": {
+    "viewer":        ["foundation.read", "foundation.user.read"],
+    "user":          ["foundation.read", "foundation.user.read", "delegation:create"],
+    "auditor":       ["foundation.read", "foundation.user.read", "foundation.admin.read", "audit_trail.read"],
+    "tenant-admin":  ["foundation.read", "foundation.record.write", "foundation.record.delete", "foundation.manage", "foundation.user.read", "foundation.user.write", "foundation.user.disable", "foundation.admin.read", "foundation.admin.write", "audit_trail.read", "access_review:create", "access_review:approve", "delegation:create", "delegation:approve"]
+  }
+}

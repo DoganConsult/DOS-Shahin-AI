@@ -1,0 +1,951 @@
+<div class="cc-root" [dir]="i18n.direction()">
+  <p-toast />
+
+  <!-- ═══════════════ COMMAND CENTER HEADER ═══════════════ -->
+  <header class="cc-header">
+    <div class="cc-header-left">
+      <div class="cc-logo-ring" [class.pulse-healthy]="healthStatus() === 'healthy'"
+           [class.pulse-degraded]="healthStatus() === 'degraded'"
+           [class.pulse-critical]="healthStatus() === 'critical'">
+        <i class="pi pi-microchip-ai"></i>
+      </div>
+      <div class="cc-header-text">
+        <h1>{{ i18n.translate('agrcOs.title') }}</h1>
+        <p>{{ i18n.translate('agrcOs.subtitle') }}</p>
+      </div>
+    </div>
+    <div class="cc-header-right">
+      <a routerLink="/workspace-home" class="cc-btn-nav" [attr.aria-label]="i18n.translate('common.backToDashboard')">
+        <i class="pi pi-home"></i>
+        <span>{{ i18n.translate('common.home') }}</span>
+      </a>
+      <div class="cc-system-pulse">
+        <span class="cc-pulse-dot" [class]="'dot-' + healthStatus()"></span>
+        <span class="cc-pulse-label">{{ healthStatus() | uppercase }}</span>
+      </div>
+      <div class="cc-live-badge">
+        <span class="cc-live-dot"></span>
+        {{ i18n.translate('agrcOs.live') }}
+      </div>
+      <button class="cc-btn-run" (click)="runCycle()" [disabled]="cycleRunning()">
+        <i class="pi" [ngClass]="cycleRunning() ? 'pi-spin pi-spinner' : 'pi-play'"></i>
+        {{ i18n.translate('agrcOs.runCycle') }}
+      </button>
+    </div>
+  </header>
+
+  <!-- Error Banner -->
+  <div class="cc-error-banner" *ngIf="loadError()">
+    <i class="pi pi-exclamation-circle"></i>
+    <span>{{ loadError() }}</span>
+    <span *ngIf="loadCorrelationId()" class="cc-correlation">
+      <span class="correlation-label">{{ i18n.translate('common.correlationId') || 'Correlation ID' }}:</span>
+      <code>{{ loadCorrelationId() }}</code>
+    </span>
+    <button aria-label="Retry" class="cc-btn-ghost" (click)="retryLoad()"><i class="pi pi-refresh"></i> {{ i18n.translate('common.retry') || 'Retry' }}</button>
+  </div>
+
+  <!-- ═══════════════ KPI COMMAND STRIP ═══════════════ -->
+  <div class="cc-kpi-strip">
+    <div class="cc-kpi-card" *ngFor="let kpi of kpis(); let i = index" [style.animation-delay]="i * 80 + 'ms'">
+      <div class="cc-kpi-icon-wrap"><i class="pi" [ngClass]="kpi.icon"></i></div>
+      <div class="cc-kpi-data">
+        <span class="cc-kpi-value">{{ kpi.value }}</span>
+        <span class="cc-kpi-label">{{ i18n.translate(kpi.labelKey) }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ MAIN WIDGET GRID — COMMAND CENTER LAYOUT ═══════════════ -->
+  <div class="cc-widget-grid">
+
+    <!-- Row 1: Risk Heatmap (8 cols) + Compliance Gauge (4 cols) -->
+    @if (pmc.isModuleVisible('risk')) {
+    <section class="cc-span-8">
+      <app-risk-heatmap-widget [cells]="heatmapCells()" [loading]="widgetsLoading()" [canRefresh]="true" (refresh)="onWidgetRefresh()" />
+    </section>
+    }
+    @if (pmc.isModuleVisible('compliance')) {
+    <section class="cc-span-4">
+      <app-compliance-gauge-widget [scorePercent]="complianceScore()" [loading]="widgetsLoading()" [canRefresh]="true" (refresh)="onWidgetRefresh()" />
+    </section>
+    }
+
+    <!-- Row 2: Maturity Radar (4) + Findings Bar (4) + Evidence Donut (4) -->
+    @if (pmc.isModuleVisible('compliance')) {
+    <section class="cc-span-4">
+      <app-maturity-radar-widget [values]="maturityValues()" [loading]="widgetsLoading()" [canRefresh]="true" (refresh)="onWidgetRefresh()" />
+    </section>
+    }
+    @if (pmc.isModuleVisible('audit')) {
+    <section class="cc-span-4">
+      <app-findings-bar-widget [loading]="widgetsLoading()" [canRefresh]="true" (refresh)="onWidgetRefresh()" />
+    </section>
+    }
+    @if (pmc.isModuleVisible('evidence')) {
+    <section class="cc-span-4">
+      <app-evidence-donut-widget [slices]="evidenceSlices()" centreLabel="Evidence" [loading]="widgetsLoading()" [canRefresh]="true" (refresh)="onWidgetRefresh()" />
+    </section>
+    }
+
+    <!-- Row 3: Trend Line (full width) -->
+    <section class="cc-span-12">
+      <app-trend-line-widget [loading]="widgetsLoading()" [canRefresh]="true" (refresh)="onWidgetRefresh()" />
+    </section>
+
+    <!-- Row 4: Vendor Bubble (6) + Top Risks (6) -->
+    @if (pmc.isModuleVisible('vendor')) {
+    <section class="cc-span-6">
+      <app-vendor-bubble-widget [points]="vendorBubbles()" [loading]="widgetsLoading()" [canRefresh]="true" (refresh)="onWidgetRefresh()" />
+    </section>
+    }
+    @if (pmc.isModuleVisible('risk')) {
+    <section class="cc-span-6">
+      <app-top-risks [rows]="topRisks()" [loading]="widgetsLoading()" [canRefresh]="true" (refresh)="onWidgetRefresh()" />
+    </section>
+    }
+
+    <!-- Row 5: Orchestration Engine Hero Card -->
+    <section class="cc-span-12">
+      <div class="cc-card cc-card-hero">
+        <div class="cc-card-header">
+          <i class="pi pi-cog"></i>
+          <h2>{{ i18n.translate('agrcOsDashboard.orchestrationEngine') }}</h2>
+          <span class="cc-auto-badge">
+            <i class="pi pi-sync cc-spin"></i>
+            {{ i18n.translate('agrcOsDashboard.autoRefresh30s') }}
+          </span>
+        </div>
+        <div class="cc-orch-grid" *ngIf="status()" aria-live="polite">
+          <div class="cc-orch-metric">
+            <span class="cc-orch-val">{{ status().cyclesLast24h || 0 }}</span>
+            <span class="cc-orch-lbl">{{ i18n.translate('agrcOsDashboard.cycles24h') }}</span>
+          </div>
+          <div class="cc-orch-metric">
+            <span class="cc-orch-val">{{ status().avgCycleMs || 0 }}<small>ms</small></span>
+            <span class="cc-orch-lbl">{{ i18n.translate('agrcOsDashboard.avgCycle') }}</span>
+          </div>
+          <div class="cc-orch-metric">
+            <span class="cc-orch-val">{{ status().totalEnforcementActions || 0 }}</span>
+            <span class="cc-orch-lbl">{{ i18n.translate('agrcOsDashboard.enforcements') }}</span>
+          </div>
+          <div class="cc-orch-metric" *ngIf="metrics()">
+            <span class="cc-orch-val" [class.critical-text]="metrics().criticalEvents > 0">{{ metrics().criticalEvents || 0 }}</span>
+            <span class="cc-orch-lbl">{{ i18n.translate('agrcOsDashboard.criticalEvents') }}</span>
+          </div>
+          <div class="cc-orch-metric" *ngIf="metrics()">
+            <span class="cc-orch-val">{{ metrics().staleControlPct || 0 }}%</span>
+            <span class="cc-orch-lbl">{{ i18n.translate('agrcOsDashboard.staleControls') }}</span>
+          </div>
+          <div class="cc-orch-metric" *ngIf="metrics()">
+            <span class="cc-orch-val">{{ metrics().telemetryIngestionRate || 0 }}</span>
+            <span class="cc-orch-lbl">{{ i18n.translate('agrcOsDashboard.telemetryRate') }}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Row 6: System Topology (6) + Wiring + Team Hub (6) -->
+    <section class="cc-span-6">
+      <div class="cc-card">
+        <div class="cc-card-header">
+          <i class="pi pi-sitemap"></i>
+          <h2>{{ i18n.translate('agrcOsDashboard.systemTopology') }}</h2>
+        </div>
+        <div class="cc-subsystem-grid">
+          <a class="cc-subsystem" *ngFor="let sub of subsystems" [class.sub-active]="sub.active"
+             [routerLink]="'/' + sub.route">
+            <div class="cc-sub-icon"><i class="pi" [ngClass]="sub.icon"></i></div>
+            <div class="cc-sub-name">{{ i18n.direction() === 'rtl' ? sub.nameAr : sub.nameEn }}</div>
+            <span class="cc-sub-dot" [class.active]="sub.active"></span>
+          </a>
+        </div>
+      </div>
+    </section>
+    <section class="cc-span-6">
+      <div class="cc-card">
+        <div class="cc-card-header">
+          <i class="pi pi-bolt"></i>
+          <h2>{{ i18n.translate('agrcOsDashboard.wiringAndTeams') }}</h2>
+          <button aria-label="Download" class="cc-btn-ghost" *ngIf="canSetup()" (click)="runSetup()" [disabled]="setupRunning()">
+            <i class="pi pi-download"></i>
+          </button>
+        </div>
+        <app-widget-agrc-wiring-status></app-widget-agrc-wiring-status>
+        <div class="cc-team-row">
+          <div class="cc-team-stat">
+            <span class="cc-team-val">{{ teamCount() | appNumber }}</span>
+            <span class="cc-team-lbl">{{ i18n.translate('agrcOsDashboard.teams') }}</span>
+          </div>
+          <div class="cc-team-stat">
+            <span class="cc-team-val">{{ teamMemberCount() | appNumber }}</span>
+            <span class="cc-team-lbl">{{ i18n.translate('agrcOsDashboard.members') }}</span>
+          </div>
+          <a routerLink="/team-hub" class="cc-team-link">
+            <i class="pi pi-arrow-right"></i> {{ i18n.translate('agrcOsDashboard.teamHub') }}
+          </a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ═══════════════ DETAILED PANELS (TABS) ═══════════════ -->
+  <div class="cc-tabs-section">
+    <div class="cc-tab-bar">
+      <button *ngFor="let tab of tabs" class="cc-tab-btn" [class.active]="activeTab() === tab.key"
+              (click)="activeTab.set(tab.key)">
+        <i class="pi" [ngClass]="tab.icon"></i>
+        <span>{{ i18n.translate(tab.labelKey) }}</span>
+      </button>
+    </div>
+
+    <div class="cc-tab-content">
+      <!-- Status Tab -->
+      <ng-container *ngIf="activeTab() === 'status'">
+        <div class="cc-card">
+          <div class="cc-card-header">
+            <i class="pi pi-history"></i>
+            <h2>{{ i18n.translate('agrcOs.cycleHistory') }}</h2>
+          </div>
+          <div class="cc-table-wrap">
+            <table [attr.aria-label]="(i18n.translate('agrcOs.cycleHistory')) + ' table'" class="cc-table">
+              <thead><tr>
+                <th>{{ i18n.translate('agrcOs.time') }}</th>
+                <th>{{ i18n.translate('agrcOs.telemetry') }}</th>
+                <th>{{ i18n.translate('agrcOs.controls') }}</th>
+                <th>{{ i18n.translate('agrcOs.risks') }}</th>
+                <th>{{ i18n.translate('agrcOs.enforcement') }}</th>
+                <th>{{ i18n.translate('agrcOs.cycleMs') }}</th>
+              </tr></thead>
+              <tbody>
+                <tr *ngFor="let c of history()">
+                  <td>{{ c.executed_at | appDate:'short' }}</td>
+                  <td>{{ c.telemetry_ingested }}</td>
+                  <td>{{ c.controls_evaluated }}</td>
+                  <td>{{ c.risks_recomputed }}</td>
+                  <td><span class="cc-badge-accent">{{ c.enforcement_actions }}</span></td>
+                  <td>{{ c.cycle_ms }}ms</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Events Tab -->
+      <ng-container *ngIf="activeTab() === 'events'">
+        <div class="cc-card">
+          <div class="cc-card-header">
+            <i class="pi pi-bolt"></i>
+            <h2>{{ i18n.translate('agrcOs.eventLog') }}</h2>
+            <select class="cc-select" [(ngModel)]="eventSeverityFilter" (change)="loadEvents()">
+              <option value="">{{ i18n.translate('agrcOsDashboard.all') }}</option>
+              <option value="info">Info</option>
+              <option value="warning">Warning</option>
+              <option value="critical">Critical</option>
+            </select>
+          </div>
+          <div class="cc-event-stats" *ngIf="eventStats()">
+            <span class="cc-ev-stat"><strong>{{ eventStats().total }}</strong> {{ i18n.translate('agrcOsDashboard.total') }}</span>
+            <span class="cc-ev-stat" *ngFor="let s of objectEntries(eventStats().bySeverity)">
+              <span class="cc-sev-dot" [class]="'sev-' + s[0]"></span> {{ s[0] }}: <strong>{{ s[1] }}</strong>
+            </span>
+          </div>
+          <div class="cc-table-wrap">
+            <table [attr.aria-label]="(i18n.translate('agrcOs.cycleHistory')) + ' table'" class="cc-table">
+              <thead><tr>
+                <th>{{ i18n.translate('agrcOs.time') }}</th>
+                <th>{{ i18n.translate('agrcOs.eventType') }}</th>
+                <th>{{ i18n.translate('agrcOs.severity') }}</th>
+                <th>{{ i18n.translate('agrcOs.source') }}</th>
+                <th>{{ i18n.translate('agrcOs.entity') }}</th>
+              </tr></thead>
+              <tbody>
+                <tr *ngFor="let e of events()" [class]="'row-' + e.severity">
+                  <td>{{ e.created_at | appDate:'short' }}</td>
+                  <td><code>{{ e.event_type }}</code></td>
+                  <td><span class="cc-sev-badge" [class]="'sev-' + e.severity">{{ e.severity }}</span></td>
+                  <td>{{ e.source_service }}</td>
+                  <td>{{ e.entity_type }}:{{ e.entity_id }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Gates Tab -->
+      <ng-container *ngIf="activeTab() === 'gates'">
+        <div class="cc-card">
+          <div class="cc-card-header">
+            <i class="pi pi-shield"></i>
+            <h2>{{ i18n.translate('agrcOs.enforcementGates') }}</h2>
+          </div>
+          <div class="cc-table-wrap">
+            <table [attr.aria-label]="(i18n.translate('agrcOs.cycleHistory')) + ' table'" class="cc-table">
+              <thead><tr>
+                <th>{{ i18n.translate('agrcOs.time') }}</th>
+                <th>{{ i18n.translate('agrcOs.gateType') }}</th>
+                <th>{{ i18n.translate('agrcOs.subject') }}</th>
+                <th>{{ i18n.translate('agrcOs.decision') }}</th>
+                <th>{{ i18n.translate('agrcOs.reasons') }}</th>
+              </tr></thead>
+              <tbody>
+                <tr *ngFor="let g of gateLog()">
+                  <td>{{ g.created_at | appDate:'short' }}</td>
+                  <td>{{ g.gate_type }}</td>
+                  <td>{{ g.subject_name || g.subject_id }}</td>
+                  <td>
+                    <span class="cc-gate-badge" [class.allowed]="g.allowed" [class.blocked]="!g.allowed">
+                      {{ g.allowed ? 'ALLOWED' : 'BLOCKED' }}
+                    </span>
+                  </td>
+                  <td>{{ g.block_reasons?.join(', ') || '—' }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Constitution Tab -->
+      <ng-container *ngIf="activeTab() === 'constitution'">
+        <!-- Validate Button + Completeness -->
+        <div class="cc-card" style="margin-bottom: 16px;">
+          <div class="cc-card-header">
+            <i class="pi pi-check-circle"></i>
+            <h2>{{ i18n.translate('agrcOsDashboard.constitutionCompleteness') }}</h2>
+            <button class="cc-btn-secondary" (click)="validateConstitutionAction()" [disabled]="validatingConstitution()">
+              <i class="pi" [ngClass]="validatingConstitution() ? 'pi-spin pi-spinner' : 'pi-verified'"></i>
+              {{ i18n.translate('agrcOsDashboard.validate') }}
+            </button>
+          </div>
+          <div class="cc-validation-result" *ngIf="constitutionValidation()">
+            <div class="cc-val-score" [class.complete]="constitutionValidation().complete" [class.incomplete]="!constitutionValidation().complete">
+              <i class="pi" [ngClass]="constitutionValidation().complete ? 'pi-check-circle' : 'pi-exclamation-circle'"></i>
+              {{ constitutionValidation().complete ? i18n.translate('agrcOsDashboard.constitutionComplete') : i18n.translate('agrcOsDashboard.constitutionIncomplete') }}
+              <span class="cc-val-pct">{{ constitutionValidation().completenessPercent || 0 }}%</span>
+            </div>
+            <div class="cc-val-gaps" *ngIf="constitutionValidation().gaps?.length > 0">
+              <div class="cc-val-gap" *ngFor="let gap of constitutionValidation().gaps">
+                <i class="pi pi-info-circle"></i> {{ gap }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cc-card-pair">
+          <div class="cc-card">
+            <div class="cc-card-header">
+              <i class="pi pi-exclamation-triangle"></i>
+              <h2>{{ i18n.translate('agrcOs.riskAppetite') }}</h2>
+              <a routerLink="/governance" class="cc-btn-ghost" title="Edit in Governance-OS"><i class="pi pi-external-link"></i></a>
+            </div>
+            <div *ngIf="riskAppetite().length === 0" class="cc-empty-state">
+              <i class="pi pi-inbox"></i>
+              <p>{{ i18n.translate('agrcOsDashboard.noRiskAppetite') }}</p>
+              <button class="cc-btn-secondary" *ngIf="canSetup()" (click)="runSetup()">
+                <i class="pi pi-download"></i> {{ i18n.translate('agrcOsDashboard.setupNow') }}
+              </button>
+            </div>
+            <div class="cc-table-wrap" *ngIf="riskAppetite().length > 0">
+              <table [attr.aria-label]="(i18n.translate('agrcOs.cycleHistory')) + ' table'" class="cc-table">
+                <thead><tr><th>{{ i18n.translate('agrcOs.category') }}</th><th>{{ i18n.translate('agrcOs.maxScore') }}</th><th>{{ i18n.translate('agrcOs.action') }}</th></tr></thead>
+                <tbody><tr *ngFor="let r of riskAppetite()"><td>{{ r.category }}</td><td><strong>{{ r.max_score }}</strong></td><td>{{ r.breach_action }}</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="cc-card">
+            <div class="cc-card-header">
+              <i class="pi pi-verified"></i>
+              <h2>{{ i18n.translate('agrcOs.authorityMatrix') }}</h2>
+              <a routerLink="/governance" class="cc-btn-ghost" title="Edit in Governance-OS"><i class="pi pi-external-link"></i></a>
+            </div>
+            <div *ngIf="authorityMatrix().length === 0" class="cc-empty-state">
+              <i class="pi pi-inbox"></i>
+              <p>{{ i18n.translate('agrcOsDashboard.noAuthorityMatrix') }}</p>
+              <button class="cc-btn-secondary" *ngIf="canSetup()" (click)="runSetup()">
+                <i class="pi pi-download"></i> {{ i18n.translate('agrcOsDashboard.setupNow') }}
+              </button>
+            </div>
+            <div class="cc-table-wrap" *ngIf="authorityMatrix().length > 0">
+              <table [attr.aria-label]="(i18n.translate('agrcOs.cycleHistory')) + ' table'" class="cc-table">
+                <thead><tr><th>{{ i18n.translate('agrcOs.decisionType') }}</th><th>{{ i18n.translate('agrcOs.criticality') }}</th><th>{{ i18n.translate('agrcOs.approverRole') }}</th></tr></thead>
+                <tbody><tr *ngFor="let a of authorityMatrix()"><td>{{ a.decision_type }}</td><td>{{ a.criticality }}</td><td>{{ a.approver_role }}</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Escalation Thresholds -->
+        <div class="cc-card" style="margin-top: 16px;">
+          <div class="cc-card-header">
+            <i class="pi pi-arrow-up-right"></i>
+            <h2>{{ i18n.translate('agrcOsDashboard.escalationThresholds') }}</h2>
+            <a routerLink="/governance" class="cc-btn-ghost" title="Edit in Governance-OS"><i class="pi pi-external-link"></i></a>
+          </div>
+          <div *ngIf="escalationThresholds().length === 0" class="cc-empty-state">
+            <i class="pi pi-inbox"></i>
+            <p>{{ i18n.translate('agrcOsDashboard.noEscalationThresholds') }}</p>
+          </div>
+          <div class="cc-table-wrap" *ngIf="escalationThresholds().length > 0">
+            <table [attr.aria-label]="(i18n.translate('agrcOs.cycleHistory')) + ' table'" class="cc-table">
+              <thead><tr>
+                <th>{{ i18n.translate('agrcOsDashboard.metric') }}</th>
+                <th>{{ i18n.translate('agrcOsDashboard.threshold') }}</th>
+                <th>{{ i18n.translate('agrcOsDashboard.actionLabel') }}</th>
+                <th>{{ i18n.translate('agrcOsDashboard.notify') }}</th>
+              </tr></thead>
+              <tbody>
+                <tr *ngFor="let t of escalationThresholds()">
+                  <td>{{ t.metric_name || t.metricName }}</td>
+                  <td><strong>{{ t.threshold_value || t.thresholdValue }}</strong></td>
+                  <td>{{ t.escalation_action || t.escalationAction }}</td>
+                  <td>{{ t.notify_role || t.notifyRole }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- CCM Tab -->
+      <ng-container *ngIf="activeTab() === 'ccm'">
+        <div class="cc-card">
+          <div class="cc-card-header">
+            <i class="pi pi-refresh"></i>
+            <h2>{{ i18n.translate('agrcOs.ccmHistory') }}</h2>
+            <button class="cc-btn-secondary" (click)="runCCM()" [attr.aria-label]="i18n.translate('agrcOsDashboard.run')"><i class="pi pi-play"></i> {{ i18n.translate('agrcOsDashboard.run') }}</button>
+          </div>
+          <div class="cc-table-wrap">
+            <table [attr.aria-label]="(i18n.translate('agrcOs.cycleHistory')) + ' table'" class="cc-table">
+              <thead><tr><th>{{ i18n.translate('agrcOs.time') }}</th><th>{{ i18n.translate('agrcOs.evaluated') }}</th><th>{{ i18n.translate('agrcOs.stale') }}</th><th>{{ i18n.translate('agrcOs.escalations') }}</th></tr></thead>
+              <tbody><tr *ngFor="let c of ccmHistory()"><td>{{ c.executed_at | appDate:'short' }}</td><td>{{ c.controls_evaluated }}</td><td><span [class.critical-text]="c.stale_controls > 0">{{ c.stale_controls }}</span></td><td>{{ c.escalations_triggered }}</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- SOPs Tab -->
+      <ng-container *ngIf="activeTab() === 'sops'">
+        <div class="cc-card">
+          <div class="cc-card-header"><i class="pi pi-list"></i><h2>{{ i18n.translate('agrcOs.sops') }}</h2>
+            <button class="cc-btn-secondary" (click)="seedSOPs()" [attr.aria-label]="i18n.translate('agrcOsDashboard.seed')"><i class="pi pi-plus"></i> {{ i18n.translate('agrcOsDashboard.seed') }}</button>
+          </div>
+          <div *ngIf="sops().length === 0" class="cc-empty-state">
+            <i class="pi pi-folder-open"></i>
+            <p>{{ i18n.translate('agrcOsDashboard.noSops') }}</p>
+            <button class="cc-btn-secondary" (click)="seedSOPs()">
+              <i class="pi pi-download"></i> {{ i18n.translate('agrcOsDashboard.seedDefaultSops') }}
+            </button>
+          </div>
+          <div class="cc-sop-grid" *ngIf="sops().length > 0">
+            <div class="cc-sop-card" *ngFor="let s of sops()">
+              <div class="cc-sop-icon"><i class="pi pi-file-edit"></i></div>
+              <div class="cc-sop-body">
+                <div class="cc-sop-title">{{ i18n.direction() === 'rtl' ? s.title_ar : s.title_en }}</div>
+                <div class="cc-sop-meta">{{ s.process_type }} · {{ s.stage_id }}</div>
+              </div>
+              <span class="cc-sop-steps">{{ (s.steps || []).length }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="cc-card" style="margin-top: 16px;">
+          <div class="cc-card-header"><i class="pi pi-bolt"></i><h2>{{ i18n.translate('agrcOs.runbooks') }}</h2>
+            <button class="cc-btn-secondary" (click)="seedRunbooks()" [attr.aria-label]="i18n.translate('agrcOsDashboard.seed')"><i class="pi pi-plus"></i> {{ i18n.translate('agrcOsDashboard.seed') }}</button>
+          </div>
+          <div *ngIf="runbooks().length === 0" class="cc-empty-state">
+            <i class="pi pi-folder-open"></i>
+            <p>{{ i18n.translate('agrcOsDashboard.noRunbooks') }}</p>
+            <button class="cc-btn-secondary" (click)="seedRunbooks()">
+              <i class="pi pi-download"></i> {{ i18n.translate('agrcOsDashboard.seedDefaultRunbooks') }}
+            </button>
+          </div>
+          <div class="cc-sop-grid" *ngIf="runbooks().length > 0">
+            <div class="cc-sop-card" *ngFor="let r of runbooks()">
+              <div class="cc-sop-icon runbook"><i class="pi pi-bolt"></i></div>
+              <div class="cc-sop-body">
+                <div class="cc-sop-title">{{ i18n.direction() === 'rtl' ? r.name_ar : r.name_en }}</div>
+                <div class="cc-sop-meta"><code>{{ r.trigger_event }}</code></div>
+              </div>
+              <span class="cc-enabled-badge" [class.on]="r.enabled">{{ r.enabled ? 'ON' : 'OFF' }}</span>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Reporting Tab -->
+      <ng-container *ngIf="activeTab() === 'reporting'">
+        <div class="cc-card">
+          <div class="cc-card-header">
+            <i class="pi pi-file-pdf"></i>
+            <h2>{{ i18n.translate('agrcOs.reportingStatus') }}</h2>
+            <div class="cc-header-actions">
+              <select (change)="onExportFormatChange($event)" [disabled]="exporting()"
+                      class="cc-btn-secondary appearance-auto cursor-pointer pr-8">
+                <option value="">{{ i18n.translate('agrcOsDashboard.export') }}</option>
+                <option value="pdf">PDF</option>
+                <option value="excel">Excel</option>
+              </select>
+              <button aria-label="Move up" class="cc-btn-danger" (click)="escalateOverdue()" [disabled]="escalating() || (reportingStatus()?.overdueCount ?? 0) === 0"><i class="pi pi-arrow-up-right"></i></button>
+            </div>
+          </div>
+          <div class="cc-report-kpis" *ngIf="reportingStatus()">
+            <div class="cc-rkpi"><span class="cc-rk-val">{{ reportingStatus().schedules?.length ?? 0 }}</span><span class="cc-rk-lbl">{{ i18n.translate('agrcOsDashboard.schedules') }}</span></div>
+            <div class="cc-rkpi" [class.danger]="(reportingStatus().overdueCount ?? 0) > 0"><span class="cc-rk-val">{{ reportingStatus().overdueCount ?? 0 }}</span><span class="cc-rk-lbl">{{ i18n.translate('agrcOsDashboard.overdue') }}</span></div>
+            <div class="cc-rkpi"><span class="cc-rk-val">{{ reportingStatus().escalatedCount ?? 0 }}</span><span class="cc-rk-lbl">{{ i18n.translate('agrcOsDashboard.escalated') }}</span></div>
+          </div>
+          <div class="cc-table-wrap">
+            <table [attr.aria-label]="(i18n.translate('agrcOs.cycleHistory')) + ' table'" class="cc-table">
+              <thead><tr><th>{{ i18n.translate('agrcOs.reportType') }}</th><th>{{ i18n.translate('agrcOs.lastRun') }}</th><th>{{ i18n.translate('agrcOs.nextExpected') }}</th><th>{{ i18n.translate('agrcOs.status') }}</th></tr></thead>
+              <tbody>
+                <tr *ngFor="let s of reportingStatus()?.schedules ?? []" [class.overdue]="s.isOverdue">
+                  <td>{{ s.reportType }}</td><td>{{ s.lastRunAt | appDate:'short' }}</td><td>{{ s.nextExpectedAt | appDate:'short' }}</td>
+                  <td><span class="cc-sev-badge" [class.sev-warning]="s.escalationState === 'overdue'" [class.sev-critical]="s.escalationState === 'escalated'">{{ s.escalationState }}</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Metrics Tab -->
+      <ng-container *ngIf="activeTab() === 'metrics'">
+        <div class="cc-card">
+          <div class="cc-card-header"><i class="pi pi-chart-line"></i><h2>{{ i18n.translate('agrcOs.liveMetrics') }}</h2></div>
+          <div class="cc-metrics-tiles" *ngIf="metrics()">
+            <div class="cc-mtile"><div class="cc-mt-icon"><i class="pi pi-sync"></i></div><div class="cc-mt-val">{{ metrics().cycleCount }}</div><div class="cc-mt-lbl">{{ i18n.translate('agrcOsDashboard.cycleCount') }}</div></div>
+            <div class="cc-mtile"><div class="cc-mt-icon"><i class="pi pi-clock"></i></div><div class="cc-mt-val">{{ metrics().avgCycleMs }}ms</div><div class="cc-mt-lbl">{{ i18n.translate('agrcOsDashboard.avgCycle') }}</div></div>
+            <div class="cc-mtile"><div class="cc-mt-icon"><i class="pi pi-shield"></i></div><div class="cc-mt-val">{{ metrics().enforcementRate }}</div><div class="cc-mt-lbl">{{ i18n.translate('agrcOsDashboard.enforcementRate') }}</div></div>
+            <div class="cc-mtile"><div class="cc-mt-icon"><i class="pi pi-percentage"></i></div><div class="cc-mt-val" [class.critical-text]="metrics().staleControlPct > 10">{{ metrics().staleControlPct }}%</div><div class="cc-mt-lbl">{{ i18n.translate('agrcOsDashboard.staleControls') }}</div></div>
+            <div class="cc-mtile"><div class="cc-mt-icon"><i class="pi pi-bolt"></i></div><div class="cc-mt-val">{{ metrics().telemetryIngestionRate }}</div><div class="cc-mt-lbl">{{ i18n.translate('agrcOsDashboard.telemetry') }}</div></div>
+            <div class="cc-mtile"><div class="cc-mt-icon"><i class="pi pi-exclamation-triangle"></i></div><div class="cc-mt-val critical-text">{{ metrics().criticalEvents }}</div><div class="cc-mt-lbl">{{ i18n.translate('agrcOsDashboard.critical') }}</div></div>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Regulatory Delta Tab -->
+      <ng-container *ngIf="activeTab() === 'regulatory-delta'">
+        <div class="cc-card">
+          <div class="cc-card-header">
+            <i class="pi pi-megaphone"></i>
+            <h2>{{ i18n.translate('agrcOsDashboard.regulatoryDelta') }}</h2>
+            <button class="cc-btn-secondary" (click)="scanRegulatoryDelta()" [disabled]="deltaScanning()">
+              <i class="pi" [ngClass]="deltaScanning() ? 'pi-spin pi-spinner' : 'pi-search'"></i>
+              {{ i18n.translate('agrcOsDashboard.scan') }}
+            </button>
+          </div>
+          <div *ngIf="regulatoryDeltas().length === 0" class="cc-empty-state">
+            <i class="pi pi-check-circle"></i>
+            <p>{{ i18n.translate('agrcOsDashboard.noRegulatoryDeltas') }}</p>
+            <button class="cc-btn-secondary" (click)="scanRegulatoryDelta()" [disabled]="deltaScanning()">
+              <i class="pi pi-search"></i> {{ i18n.translate('agrcOsDashboard.scanNow') }}
+            </button>
+          </div>
+          <div class="cc-table-wrap" *ngIf="regulatoryDeltas().length > 0">
+            <table [attr.aria-label]="(i18n.translate('agrcOs.cycleHistory')) + ' table'" class="cc-table">
+              <thead><tr>
+                <th>{{ i18n.translate('agrcOsDashboard.time') }}</th>
+                <th>{{ i18n.translate('agrcOsDashboard.framework') }}</th>
+                <th>{{ i18n.translate('agrcOsDashboard.type') }}</th>
+                <th>{{ i18n.translate('agrcOsDashboard.description') }}</th>
+                <th>{{ i18n.translate('agrcOsDashboard.impact') }}</th>
+              </tr></thead>
+              <tbody>
+                <tr *ngFor="let d of regulatoryDeltas()">
+                  <td>{{ d.detected_at || d.created_at | appDate:'short' }}</td>
+                  <td>{{ d.framework_name || d.instrument_id || '—' }}</td>
+                  <td><code>{{ d.delta_type || d.change_type }}</code></td>
+                  <td>{{ d.description || d.summary || '—' }}</td>
+                  <td>
+                    <span class="cc-sev-badge" [class.sev-critical]="d.impact === 'high'" [class.sev-warning]="d.impact === 'medium'" [class.sev-info]="d.impact === 'low'">
+                      {{ d.impact || 'unknown' }}
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Unified Squad Tab (Agent Status) -->
+      <ng-container *ngIf="activeTab() === 'unified-squad'">
+        <!-- Autonomous GRC Engine -->
+        <div class="cc-card" style="margin-bottom: 16px;">
+          <div class="cc-card-header">
+            <i class="pi pi-microchip-ai"></i>
+            <h2>{{ i18n.translate('agrcOsDashboard.autonomousGrcEngine') }}</h2>
+            <button class="cc-btn-run" (click)="runAutonomous()" [disabled]="autonomousRunning()" *ngIf="canSetup()">
+              <i class="pi" [ngClass]="autonomousRunning() ? 'pi-spin pi-spinner' : 'pi-play'"></i>
+              {{ i18n.translate('agrcOsDashboard.runEngine') }}
+            </button>
+          </div>
+          <div class="cc-orch-grid" *ngIf="autonomousStatus()">
+            <div class="cc-orch-metric">
+              <span class="cc-orch-val">{{ autonomousStatus().totalCycles || 0 }}</span>
+              <span class="cc-orch-lbl">{{ i18n.translate('agrcOsDashboard.totalCycles') }}</span>
+            </div>
+            <div class="cc-orch-metric">
+              <span class="cc-orch-val">{{ autonomousStatus().lastCycleMs || 0 }}<small>ms</small></span>
+              <span class="cc-orch-lbl">{{ i18n.translate('agrcOsDashboard.lastCycle') }}</span>
+            </div>
+            <div class="cc-orch-metric">
+              <span class="cc-orch-val">{{ autonomousStatus().actionsToday || 0 }}</span>
+              <span class="cc-orch-lbl">{{ i18n.translate('agrcOsDashboard.actionsToday') }}</span>
+            </div>
+            <div class="cc-orch-metric">
+              <span class="cc-orch-val" [class.critical-text]="autonomousStatus().status === 'error'">
+                {{ autonomousStatus().status || 'idle' }}
+              </span>
+              <span class="cc-orch-lbl">{{ i18n.translate('agrcOsDashboard.status') }}</span>
+            </div>
+          </div>
+          <!-- Autonomous History -->
+          <div class="cc-table-wrap" *ngIf="autonomousHistory().length > 0" style="margin-top: 12px;">
+            <table [attr.aria-label]="(i18n.translate('agrcOs.cycleHistory')) + ' table'" class="cc-table">
+              <thead><tr>
+                <th>{{ i18n.translate('agrcOsDashboard.time') }}</th>
+                <th>{{ i18n.translate('agrcOsDashboard.actions') }}</th>
+                <th>{{ i18n.translate('agrcOsDashboard.duration') }}</th>
+                <th>{{ i18n.translate('agrcOsDashboard.result') }}</th>
+              </tr></thead>
+              <tbody>
+                <tr *ngFor="let h of autonomousHistory()">
+                  <td>{{ h.executed_at || h.timestamp | appDate:'short' }}</td>
+                  <td>{{ h.actions_taken || h.actionsTaken || 0 }}</td>
+                  <td>{{ h.duration_ms || h.durationMs || 0 }}ms</td>
+                  <td><span class="cc-sev-badge" [class.sev-info]="h.success !== false" [class.sev-critical]="h.success === false">{{ h.success === false ? 'FAILED' : 'OK' }}</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Agent Grid (A01–A10) -->
+        <div class="cc-card">
+          <div class="cc-card-header">
+            <i class="pi pi-users"></i>
+            <h2>{{ i18n.translate('agrcOsDashboard.unifiedSquad') }}</h2>
+            <div class="cc-agent-summary" *ngIf="agentStatus()">
+              <span class="cc-agent-sum-stat"><strong>{{ agentStatus().activeAgents || 0 }}</strong> {{ i18n.translate('agrcOsDashboard.active') }}</span>
+              <span class="cc-agent-sum-stat"><strong>{{ agentStatus().totalActionsToday || 0 }}</strong> {{ i18n.translate('agrcOsDashboard.actionsTodayLabel') }}</span>
+            </div>
+          </div>
+          <div class="cc-agent-grid" *ngIf="agentStatus()?.agents?.length > 0">
+            <div class="cc-agent-card" *ngFor="let agent of agentStatus().agents"
+                 [class.agent-active]="agent.status === 'active'"
+                 [class.agent-stale]="agent.status === 'stale'"
+                 [class.agent-idle]="agent.status === 'idle'">
+              <div class="cc-agent-icon"><i class="pi" [ngClass]="agent.icon"></i></div>
+              <div class="cc-agent-info">
+                <div class="cc-agent-name">{{ agent.id }} — {{ agent.name }}</div>
+                <div class="cc-agent-domain">{{ agent.domain }}</div>
+              </div>
+              <div class="cc-agent-stats">
+                <span class="cc-agent-status-dot" [class]="'dot-' + agent.status" [attr.aria-label]="agent.status"></span><span class="sr-only">{{ agent.status }}</span>
+                <span class="cc-agent-actions">{{ agent.actionsToday }} {{ i18n.translate('agrcOsDashboard.actionsLabel') }}</span>
+                <span class="cc-agent-last" *ngIf="agent.minsAgo !== null">{{ agent.minsAgo }}m {{ i18n.translate('agrcOsDashboard.ago') }}</span>
+                <span class="cc-agent-last" *ngIf="agent.minsAgo === null">{{ i18n.translate('agrcOsDashboard.neverRun') }}</span>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="!agentStatus()?.agents?.length" class="cc-empty-state">
+            <i class="pi pi-users"></i>
+            <p>{{ i18n.translate('agrcOsDashboard.noAgentData') }}</p>
+          </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="cc-card" style="margin-top: 16px;">
+          <div class="cc-card-header">
+            <i class="pi pi-link"></i>
+            <h2>{{ i18n.translate('agrcOsDashboard.quickLinks') }}</h2>
+          </div>
+          <div class="cc-quick-links">
+            <a routerLink="/workspace-lifecycle" class="cc-qlink"><i class="pi pi-sliders-h"></i> {{ i18n.translate('agrcOsDashboard.workspaceLifecycle') }}</a>
+            <a routerLink="/automation-hub" class="cc-qlink"><i class="pi pi-bolt"></i> {{ i18n.translate('agrcOsDashboard.automationHub') }}</a>
+            <a routerLink="/ai-hub" class="cc-qlink"><i class="pi pi-microchip-ai"></i> {{ i18n.translate('agrcOsDashboard.aiHub') }}</a>
+            <a routerLink="/governance" class="cc-qlink"><i class="pi pi-file-edit"></i> {{ i18n.translate('agrcOsDashboard.governanceOs') }}</a>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+
+  <!-- ═══════════════ GUIDED EXPERIENCE + MISALIGNMENT FOOTER ═══════════════ -->
+  <div class="cc-footer-panels">
+    <!-- Setup Progress -->
+    <div class="cc-card cc-footer-card" *ngIf="setupProgress()">
+      <div class="cc-card-header">
+        <i class="pi pi-flag"></i>
+        <h2>{{ i18n.translate('agrcOsDashboard.setupProgress') }}</h2>
+        <span class="cc-setup-pct">{{ setupProgress().percentage || 0 }}%</span>
+      </div>
+      <div class="cc-progress-bar"><div class="cc-progress-fill" [style.width.%]="setupProgress().percentage || 0"></div></div>
+      <div class="cc-setup-steps" *ngIf="setupProgress().steps?.length > 0">
+        <div class="cc-setup-step" *ngFor="let step of setupProgress().steps" [class.step-done]="step.completed">
+          <i class="pi" [ngClass]="step.completed ? 'pi-check-circle' : 'pi-circle'"></i>
+          <span>{{ i18n.direction() === 'rtl' ? step.label_ar : step.label_en }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Next Actions -->
+    <div class="cc-card cc-footer-card" *ngIf="nextActions().length > 0">
+      <div class="cc-card-header">
+        <i class="pi pi-arrow-right"></i>
+        <h2>{{ i18n.translate('agrcOsDashboard.nextActions') }}</h2>
+      </div>
+      <div class="cc-next-actions">
+        <a *ngFor="let action of nextActions()" [routerLink]="action.route || '/'" class="cc-action-item">
+          <i class="pi" [ngClass]="action.icon || 'pi-arrow-right'"></i>
+          <div class="cc-action-text">
+            <span class="cc-action-title">{{ i18n.direction() === 'rtl' ? action.title_ar : action.title_en }}</span>
+            <span class="cc-action-desc">{{ i18n.direction() === 'rtl' ? action.description_ar : action.description_en }}</span>
+          </div>
+          <span class="cc-action-priority" [class]="'pri-' + (action.priority || 'medium')">{{ action.priority || 'medium' }}</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Misalignment Detection -->
+    <div class="cc-card cc-footer-card" *ngIf="misalignments().length > 0 || canSetup()">
+      <div class="cc-card-header">
+        <i class="pi pi-exclamation-circle"></i>
+        <h2>{{ i18n.translate('agrcOsDashboard.misalignmentDetection') }}</h2>
+        <button class="cc-btn-secondary" (click)="detectMisalignmentAction()" [disabled]="detectingMisalignment()" *ngIf="canSetup()">
+          <i class="pi" [ngClass]="detectingMisalignment() ? 'pi-spin pi-spinner' : 'pi-search'"></i>
+          {{ i18n.translate('agrcOsDashboard.scan') }}
+        </button>
+      </div>
+      <div *ngIf="misalignments().length === 0" class="cc-empty-state-sm">
+        <i class="pi pi-check-circle"></i>
+        <span>{{ i18n.translate('agrcOsDashboard.noMisalignments') }}</span>
+      </div>
+      <div class="cc-misalignment-list" *ngIf="misalignments().length > 0">
+        <div class="cc-mis-item" *ngFor="let m of misalignments()">
+          <div class="cc-mis-info">
+            <span class="cc-mis-type">{{ m.type || m.misalignment_type }}</span>
+            <span class="cc-mis-desc">{{ m.description || m.detail }}</span>
+          </div>
+          <div class="cc-mis-actions">
+            <button aria-label="Resolve" class="cc-btn-ghost" (click)="resolveMisalignmentAction(m.id || m.misalignment_id, 'resolved')" title="Resolve"><i class="pi pi-check"></i></button>
+            <button aria-label="Dismiss" class="cc-btn-ghost" (click)="resolveMisalignmentAction(m.id || m.misalignment_id, 'dismissed')" title="Dismiss"><i class="pi pi-times"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ AGENT MESH TAB ═══════════════ -->
+  <ng-container *ngIf="activeTab() === 'agent-mesh'">
+    <div class="cc-card" style="margin-bottom:16px">
+      <div class="cc-card-header">
+        <i class="pi pi-sitemap"></i>
+        <h2>{{ i18n.translate('agrcOs.tabAgentMesh') || 'Agent Mesh' }}</h2>
+        <button class="cc-btn-secondary" (click)="loadMesh()" [disabled]="meshLoading()">
+          <i class="pi" [ngClass]="meshLoading() ? 'pi-spin pi-spinner' : 'pi-refresh'"></i>
+          {{ i18n.translate('agrcOsDashboard.refresh') || 'Refresh' }}
+        </button>
+      </div>
+      <div *ngIf="meshLoading()" class="cc-empty-state-sm"><i class="pi pi-spin pi-spinner"></i> Loading…</div>
+      <div *ngIf="!meshLoading() && meshData()" class="cc-orch-grid" style="margin-bottom:12px">
+        <div class="cc-orch-metric cc-orch-metric-link">
+          <a [routerLink]="['/ai-os-dashboard', 'decisions']" class="cc-orch-link">
+            <span class="cc-orch-val">{{ (meshData()?.participants || []).length }}</span>
+            <span class="cc-orch-lbl">Participants</span>
+          </a>
+        </div>
+        <div class="cc-orch-metric cc-orch-metric-link">
+          <a [routerLink]="['/ai-os-dashboard', 'decisions']" class="cc-orch-link">
+            <span class="cc-orch-val">{{ meshData()?.handoffs?.summary?.pending ?? 0 }}</span>
+            <span class="cc-orch-lbl">Pending handoffs</span>
+          </a>
+        </div>
+        <div class="cc-orch-metric">
+          <span class="cc-orch-val">{{ meshData()?.monitoringTargets?.total ?? 0 }}</span>
+          <span class="cc-orch-lbl">Monitoring targets</span>
+        </div>
+        <div class="cc-orch-metric">
+          <span class="cc-orch-val">{{ meshData()?.pendingActions?.count ?? 0 }}</span>
+          <span class="cc-orch-lbl">Pending actions</span>
+        </div>
+      </div>
+      <div *ngIf="!meshLoading() && meshData() && (meshData()?.participants || []).length" class="cc-table-wrap" style="margin-bottom:12px">
+        <h3 class="cc-h3">Participants → Guard decisions</h3>
+        <p class="cc-muted">Click an agent to view its decisions.</p>
+        <div class="cc-participant-pills">
+          <a *ngFor="let p of meshData()?.participants || []" [routerLink]="['/ai-os-dashboard', 'decisions']" [queryParams]="{ agentId: p.userId || p.memberId || p.id }" class="cc-pill-link">
+            {{ p.displayNameEn || p.displayNameAr || p.name || p.userId || p.memberId || p.id || p }}
+          </a>
+        </div>
+      </div>
+      <div *ngIf="!meshLoading() && meshData() && (meshData()?.handoffs?.items || []).length" class="cc-table-wrap" style="margin-bottom:12px">
+        <h3 class="cc-h3">Pending handoffs → Guard decisions</h3>
+        <table class="cc-table" aria-label="Handoffs">
+          <thead><tr><th>From</th><th>To</th><th></th></tr></thead>
+          <tbody>
+            <tr *ngFor="let h of meshData()?.handoffs?.items || []">
+              <td><a [routerLink]="['/ai-os-dashboard', 'decisions']" [queryParams]="{ agentId: h.from_agent || h.from }" class="cc-link">{{ h.from_agent || h.from || '—' }}</a></td>
+              <td><a [routerLink]="['/ai-os-dashboard', 'decisions']" [queryParams]="{ agentId: h.to_agent || h.to }" class="cc-link">{{ h.to_agent || h.to || '—' }}</a></td>
+              <td><a [routerLink]="['/ai-os-dashboard', 'decisions']" [queryParams]="{ agentId: h.from_agent || h.from }" class="cc-btn-secondary cc-btn-sm">View decisions</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div *ngIf="!meshLoading() && meshData() && objectEntries(meshData()?.monitoringTargets?.byAgent || {}).length" class="cc-table-wrap">
+        <h3 class="cc-h3">Targets by agent</h3>
+        <table class="cc-table" aria-label="Monitoring targets by agent">
+          <thead><tr><th>Agent</th><th>Target count</th></tr></thead>
+          <tbody>
+            <tr *ngFor="let e of objectEntries(meshData()?.monitoringTargets?.byAgent || {})">
+              <td><a [routerLink]="['/ai-os-dashboard', 'decisions']" [queryParams]="{ agentId: e[0] }" class="cc-link"><code>{{ e[0] }}</code></a></td>
+              <td><a [routerLink]="['/ai-os-dashboard', 'decisions']" [queryParams]="{ agentId: e[0] }" class="cc-link">{{ e[1] }}</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- Monitored controls (in scope from framework_focus) -->
+    <div class="cc-card" style="margin-bottom:16px">
+      <div class="cc-card-header">
+        <i class="pi pi-list"></i>
+        <h2>{{ i18n.translate('agrcOsDashboard.monitoredControls') || 'Monitored controls' }}</h2>
+        <button class="cc-btn-secondary" (click)="loadMonitoredControls()" [disabled]="monitoredControlsLoading()">
+          <i class="pi" [ngClass]="monitoredControlsLoading() ? 'pi-spin pi-spinner' : 'pi-refresh'"></i>
+          {{ i18n.translate('agrcOsDashboard.refresh') || 'Refresh' }}
+        </button>
+      </div>
+      <div *ngIf="monitoredControlsLoading()" class="cc-empty-state-sm"><i class="pi pi-spin pi-spinner"></i> Loading…</div>
+      <div *ngIf="!monitoredControlsLoading() && monitoredControls().length === 0" class="cc-empty-state-sm">
+        <i class="pi pi-info-circle"></i>
+        <span>{{ i18n.translate('agrcOsDashboard.noMonitoredControls') || 'No controls in scope from agent monitoring targets.' }}</span>
+      </div>
+      <div class="cc-table-wrap" *ngIf="!monitoredControlsLoading() && monitoredControls().length > 0">
+        <table class="cc-table" aria-label="Monitored controls">
+          <thead><tr><th>Code</th><th>Objective</th></tr></thead>
+          <tbody>
+            <tr *ngFor="let c of monitoredControls()">
+              <td><code>{{ c.code || c.controlId }}</code></td>
+              <td>{{ c.objectiveEn || c.objective || c.titleEn || '—' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- ═══════════════ QIYAS↔GRC CROSS-MODULE AUTOMATION TAB ═══════════════ -->
+  <ng-container *ngIf="activeTab() === 'qiyas-grc'">
+    <div class="cc-card" style="margin-bottom:16px">
+      <div class="cc-card-header">
+        <i class="pi pi-arrows-h" style="color:var(--c-purple, #6366f1)"></i>
+        <h2>{{ i18n.translate('agrcOsDashboard.qiyasGrcAutomation') }}</h2>
+        <button class="cc-btn-secondary" (click)="loadQiyasGrcAutomation()" [disabled]="qiyasGrcLoading()">
+          <i class="pi" [ngClass]="qiyasGrcLoading() ? 'pi-spin pi-spinner' : 'pi-refresh'"></i>
+          {{ i18n.translate('agrcOsDashboard.refresh') }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Trigger Log -->
+    <div class="cc-card" style="margin-bottom:16px">
+      <div class="cc-card-header">
+        <i class="pi pi-bolt" style="color:var(--grc-amber, #f59e0b)"></i>
+        <h2>{{ i18n.translate('agrcOsDashboard.triggerLog') }}</h2>
+        <span class="cc-badge">{{ qiyasGrcTriggers().length }}</span>
+      </div>
+      <div *ngIf="qiyasGrcTriggers().length === 0" class="cc-empty-state-sm">
+        <i class="pi pi-check-circle"></i>
+        <span>{{ i18n.translate('agrcOsDashboard.noPendingTriggers') }}</span>
+      </div>
+      <table [attr.aria-label]="(i18n.translate('agrcOsDashboard.triggerLog')) + ' table'" *ngIf="qiyasGrcTriggers().length > 0" class="cc-table">
+        <thead><tr>
+          <th>{{ i18n.translate('agrcOsDashboard.colType') }}</th>
+          <th>{{ i18n.translate('agrcOsDashboard.colSource') }}</th>
+          <th>{{ i18n.translate('agrcOsDashboard.colStatus') }}</th>
+          <th>{{ i18n.translate('agrcOsDashboard.colDate') }}</th>
+        </tr></thead>
+        <tbody>
+          <tr *ngFor="let t of qiyasGrcTriggers()">
+            <td><code>{{ t.trigger_type }}</code></td>
+            <td>{{ t.source_entity_type }}: {{ t.source_entity_id | slice:0:8 }}…</td>
+            <td>
+              <span class="cc-status-pill"
+                [style.background]="t.status === 'processed' ? 'var(--green-100)' : t.status === 'failed' ? 'var(--red-100)' : 'var(--yellow-100)'"
+                [style.color]="t.status === 'processed' ? 'var(--green-700)' : t.status === 'failed' ? 'var(--red-700)' : 'var(--yellow-700)'">
+                {{ t.status }}
+              </span>
+            </td>
+            <td>{{ t.created_at | appDate:'short' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Auto-Tasks -->
+    <div class="cc-card" style="margin-bottom:16px">
+      <div class="cc-card-header">
+        <i class="pi pi-list-check" style="color:var(--success, #10b981)"></i>
+        <h2>{{ i18n.translate('agrcOsDashboard.autoTasks') }}</h2>
+        <span class="cc-badge">{{ qiyasAutoTasks().length }}</span>
+      </div>
+      <div *ngIf="qiyasAutoTasks().length === 0" class="cc-empty-state-sm">
+        <i class="pi pi-check-circle"></i>
+        <span>{{ i18n.translate('agrcOsDashboard.noAutoTasks') }}</span>
+      </div>
+      <table [attr.aria-label]="(i18n.translate('agrcOsDashboard.autoTasks')) + ' table'" *ngIf="qiyasAutoTasks().length > 0" class="cc-table">
+        <thead><tr>
+          <th>{{ i18n.translate('agrcOsDashboard.colTaskType') }}</th>
+          <th>{{ i18n.translate('agrcOsDashboard.colEntity') }}</th>
+          <th>{{ i18n.translate('agrcOsDashboard.colPriority') }}</th>
+          <th>{{ i18n.translate('agrcOsDashboard.colStatusTask') }}</th>
+        </tr></thead>
+        <tbody>
+          <tr *ngFor="let t of qiyasAutoTasks()">
+            <td><code>{{ t.task_type }}</code></td>
+            <td>{{ t.entity_type }}: {{ t.entity_id | slice:0:8 }}…</td>
+            <td>
+              <span class="cc-status-pill"
+                [style.background]="t.priority === 'critical' ? 'var(--red-100)' : t.priority === 'high' ? 'var(--orange-100)' : 'var(--blue-100)'"
+                [style.color]="t.priority === 'critical' ? 'var(--red-700)' : t.priority === 'high' ? 'var(--orange-700)' : 'var(--blue-700)'">
+                {{ t.priority }}
+              </span>
+            </td>
+            <td>{{ t.status }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Maturity Sync -->
+    <div class="cc-card">
+      <div class="cc-card-header">
+        <i class="pi pi-chart-line" style="color:var(--c-purple, #6366f1)"></i>
+        <h2>{{ i18n.translate('agrcOsDashboard.maturitySync') }}</h2>
+        <span class="cc-badge">{{ maturitySyncs().length }}</span>
+      </div>
+      <div *ngIf="maturitySyncs().length === 0" class="cc-empty-state-sm">
+        <i class="pi pi-info-circle"></i>
+        <span>{{ i18n.translate('agrcOsDashboard.noMaturitySyncs') }}</span>
+      </div>
+      <table [attr.aria-label]="(i18n.translate('agrcOsDashboard.maturitySync')) + ' table'" *ngIf="maturitySyncs().length > 0" class="cc-table">
+        <thead><tr>
+          <th>{{ i18n.translate('agrcOsDashboard.colAssessment') }}</th>
+          <th>{{ i18n.translate('agrcOsDashboard.colScore') }}</th>
+          <th>{{ i18n.translate('agrcOsDashboard.colMaturity') }}</th>
+          <th>{{ i18n.translate('agrcOsDashboard.colSynced') }}</th>
+        </tr></thead>
+        <tbody>
+          <tr *ngFor="let s of maturitySyncs()">
+            <td>{{ s.assessment_id | slice:0:8 }}…</td>
+            <td><strong>{{ s.overall_score }}</strong></td>
+            <td>{{ s.maturity_level }}</td>
+            <td>{{ s.synced_at | appDate:'short' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </ng-container>
+</div>

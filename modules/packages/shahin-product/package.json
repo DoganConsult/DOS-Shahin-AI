@@ -1,0 +1,45 @@
+{
+  "name": "@shahin-ai/product",
+  "version": "1.0.0",
+  "description": "Shahin-AI GRC Product — agent tools (A01-A12), product manifest, event subscribers, rules engine, CRUD catalog. Consumes @dos/module-sdk.",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./ai/tools/*": {
+      "types": "./dist/ai/tools/*.d.ts",
+      "default": "./dist/ai/tools/*.js"
+    },
+    "./shahin-ai-employees": {
+      "types": "./dist/shahin-ai-employees.d.ts",
+      "default": "./dist/shahin-ai-employees.js"
+    },
+    "./agrc-agents": {
+      "types": "./dist/agrc-agents.d.ts",
+      "default": "./dist/agrc-agents.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@dos/dauth-shared": "workspace:*",
+    "@dos/contracts": "workspace:*",
+    "@dos/db": "workspace:*",
+    "@dos/module-sdk": "workspace:*",
+    "@dos/platform-core": "workspace:*",
+    "@dos/types": "workspace:*",
+    "json-rules-engine": "^7.3.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0"
+  }
+}

@@ -1,0 +1,184 @@
+<div class="policy-drafting" [dir]="dir()">
+  <app-page-header
+    titleEn="Policy Drafting & Reviews"
+    titleAr="صياغة ومراجعة السياسات"
+    subtitleEn="Manage the drafting, review, and approval pipeline for your policies"
+    subtitleAr="إدارة مسار صياغة ومراجعة واعتماد السياسات"
+    icon="policy"
+    [isAr]="isAr()"
+    [actions]="headerActions"
+    (actionClick)="onHeaderAction($event)">
+  </app-page-header>
+
+  <p-toast />
+
+  @if (loading()) {
+    <app-skeleton-loader variant="list" [count]="8" />
+  } @else {
+    <!-- Filters toolbar -->
+    <div class="filters-toolbar">
+      <p-dropdown
+        [options]="statusOptions"
+        [(ngModel)]="statusFilter"
+        placeholder="Status"
+        [style]="{ minWidth: '160px' }"
+        appendTo="body">
+      </p-dropdown>
+      <p-dropdown
+        [options]="stepOptions"
+        [(ngModel)]="stepFilter"
+        placeholder="Step"
+        [style]="{ minWidth: '180px' }"
+        appendTo="body">
+      </p-dropdown>
+      <p-dropdown
+        [options]="reviewerOptions()"
+        [(ngModel)]="reviewerFilter"
+        placeholder="Reviewer"
+        [style]="{ minWidth: '180px' }"
+        appendTo="body">
+      </p-dropdown>
+      <p-dropdown
+        [options]="slaOptions"
+        [(ngModel)]="slaFilter"
+        placeholder="SLA Status"
+        [style]="{ minWidth: '160px' }"
+        appendTo="body">
+      </p-dropdown>
+    </div>
+
+    <!-- Accordion Sections -->
+    <p-accordion [multiple]="true" [activeIndex]="[0, 1, 2]">
+
+      <!-- Section 1: Active Drafts -->
+      <p-accordionTab header="Active Drafts ({{ filteredDrafts().length }})">
+        <grc-data-table
+          [totalRecords]="filteredDrafts().length"
+          [loading]="false"
+          emptyMessage="No active drafts">
+          <p-table [value]="filteredDrafts()" [paginator]="filteredDrafts().length > 10" [rows]="10"
+            styleClass="p-datatable-sm" [rowHover]="true">
+            <ng-template pTemplate="header">
+              <tr>
+                <th pSortableColumn="policyCode" style="width: 120px">Code <p-sortIcon field="policyCode" /></th>
+                <th pSortableColumn="title">Title <p-sortIcon field="title" /></th>
+                <th pSortableColumn="author">Author <p-sortIcon field="author" /></th>
+                <th pSortableColumn="version" style="width: 80px">Version <p-sortIcon field="version" /></th>
+                <th>Status</th>
+                <th pSortableColumn="lastUpdated">Last Updated <p-sortIcon field="lastUpdated" /></th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-row>
+              <tr>
+                <td><span class="policy-code">{{ row.policyCode }}</span></td>
+                <td>
+                  <a class="link" [routerLink]="['/policy/library']" [queryParams]="{id: row.id}">{{ row.title }}</a>
+                </td>
+                <td>{{ row.author }}</td>
+                <td>v{{ row.version }}</td>
+                <td><app-status-badge [status]="row.status" /></td>
+                <td>{{ row.lastUpdated | date:'mediumDate' }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </grc-data-table>
+      </p-accordionTab>
+
+      <!-- Section 2: Review Pipeline -->
+      <p-accordionTab header="Review Pipeline ({{ filteredReviews().length }})">
+        @if (filteredReviews().length === 0) {
+          <app-empty-state title="No items in review pipeline" description="Policies submitted for review will appear here." />
+        } @else {
+          @for (stepGroup of reviewStepGroups(); track stepGroup) {
+            <div class="step-group">
+              <h4 class="step-group__title">
+                <i class="pi pi-arrow-right"></i>
+                {{ formatStepName(stepGroup) }}
+                <span class="step-group__count">({{ reviewsByStep()[stepGroup].length }})</span>
+              </h4>
+
+              <grc-data-table
+                [totalRecords]="reviewsByStep()[stepGroup].length"
+                [loading]="false"
+                emptyMessage="No items in this step">
+                <p-table [value]="reviewsByStep()[stepGroup]" styleClass="p-datatable-sm" [rowHover]="true">
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th>Policy</th>
+                      <th>Reviewer</th>
+                      <th>Step Status</th>
+                      <th>SLA Remaining</th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-row>
+                    <tr>
+                      <td>{{ row.policyTitle }}</td>
+                      <td>{{ row.reviewer }}</td>
+                      <td><app-status-badge [status]="row.stepStatus" /></td>
+                      <td>
+                        <span [class]="slaClass(row.slaHours)">
+                          {{ row.slaRemaining || (row.slaHours > 0 ? (row.slaHours | number:'1.0-0') + 'h' : 'Breached') }}
+                        </span>
+                      </td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+              </grc-data-table>
+            </div>
+          }
+        }
+      </p-accordionTab>
+
+      <!-- Section 3: Approval Queue -->
+      <p-accordionTab header="Approval Queue ({{ filteredApprovalQueue().length }})">
+        <grc-data-table
+          [totalRecords]="filteredApprovalQueue().length"
+          [loading]="false"
+          emptyMessage="No policies awaiting approval">
+          <p-table [value]="filteredApprovalQueue()" [paginator]="filteredApprovalQueue().length > 10" [rows]="10"
+            styleClass="p-datatable-sm" [rowHover]="true">
+            <ng-template pTemplate="header">
+              <tr>
+                <th pSortableColumn="policyTitle">Policy <p-sortIcon field="policyTitle" /></th>
+                <th>Requested By</th>
+                <th pSortableColumn="requestedAt">Requested <p-sortIcon field="requestedAt" /></th>
+                <th pSortableColumn="slaDeadline">SLA Deadline <p-sortIcon field="slaDeadline" /></th>
+                <th style="width: 180px">Actions</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-row>
+              <tr>
+                <td>{{ row.policyTitle }}</td>
+                <td>{{ row.requestedBy }}</td>
+                <td>{{ row.requestedAt | date:'mediumDate' }}</td>
+                <td>
+                  @if (row.slaDeadline) {
+                    <span [class.sla-at-risk]="getSlaStatus(computeHoursFromDeadline(row.slaDeadline)) === 'at-risk'"
+                          [class.sla-breached]="getSlaStatus(computeHoursFromDeadline(row.slaDeadline)) === 'breached'">
+                      {{ row.slaDeadline | date:'medium' }}
+                    </span>
+                  } @else {
+                    <span class="text-muted">--</span>
+                  }
+                </td>
+                <td class="action-cell">
+                  <button pButton label="Approve" icon="pi pi-check"
+                    class="p-button-success p-button-sm"
+                    (click)="approveItem(row)"
+                    pTooltip="Approve this policy">
+                  </button>
+                  <button pButton label="Reject" icon="pi pi-times"
+                    class="p-button-danger p-button-sm p-button-outlined"
+                    (click)="rejectItem(row)"
+                    pTooltip="Reject this policy">
+                  </button>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </grc-data-table>
+      </p-accordionTab>
+
+    </p-accordion>
+  }
+</div>

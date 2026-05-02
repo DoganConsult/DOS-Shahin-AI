@@ -1,0 +1,186 @@
+<div class="qr-field" [class.qr-field-boolean]="question.question_type === 'boolean'">
+      <label class="qr-label">
+        @if (questionNumber) { <span class="qr-num">{{ questionNumber }}</span> }
+        {{ label }}
+        @if (question.is_required) { <span class="qr-required">*</span> }
+        @if (tooltipText) {
+          <i class="pi pi-info-circle qr-tooltip-icon"
+             [pTooltip]="tooltipText"
+             tooltipPosition="top"></i>
+        }
+      </label>
+      @if (helpText) { <small class="qr-help">{{ helpText }}</small> }
+
+      @switch (question.question_type) {
+        @case ('text') {
+          <input pInputText class="w-full"
+                 [id]="question.question_code"
+                 [value]="currentValue ?? ''"
+                 [placeholder]="placeholder" [attr.aria-label]="placeholder"
+                 (input)="onTextChange($event)" />
+        }
+        @case ('email') {
+          <input pInputText type="email" class="w-full"
+                 [id]="question.question_code"
+                 [value]="currentValue ?? ''"
+                 [placeholder]="placeholder" [attr.aria-label]="placeholder"
+                 (input)="onTextChange($event)" />
+        }
+        @case ('textarea') {
+          <textarea pInputTextarea class="w-full" [rows]="3"
+                    [id]="question.question_code"
+                    [value]="currentValue ?? ''"
+                    [placeholder]="placeholder" [attr.aria-label]="placeholder"
+                    (input)="onTextChange($event)"></textarea>
+        }
+        @case ('number') {
+          <p-inputNumber [id]="question.question_code"
+                         [ngModel]="numValue"
+                         (ngModelChange)="onNumberChange($event)"
+                         [showButtons]="true" [useGrouping]="false"
+                         [min]="question.validation_json?.['min'] ?? 0"
+                         [placeholder]="placeholder"
+                         [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}" />
+        }
+        @case ('date') {
+          <input pInputText class="w-full" type="date"
+                 [id]="question.question_code"
+                 [ngModel]="currentValue"
+                 (ngModelChange)="onDateInputChange($event)" />
+        }
+        @case ('boolean') {
+          <p-inputSwitch [id]="question.question_code"
+                         [ngModel]="boolValue"
+                         (ngModelChange)="onBoolChange($event)" />
+        }
+        @case ('select') {
+          <p-select class="w-full"
+                      [id]="question.question_code"
+                      [options]="dropdownOptions"
+                      optionLabel="label" optionValue="value"
+                      [ngModel]="currentValue"
+                      (ngModelChange)="onSelectChange($event)"
+                      [placeholder]="placeholder || (isAr ? 'اختر...' : 'Select...')"
+                      [filter]="dropdownOptions.length > 8"
+                      [filterPlaceholder]="isAr ? 'ابحث...' : 'Search...'"
+                      [showClear]="true" appendTo="body"
+                      [style]="{'width':'100%'}"
+                      [virtualScroll]="dropdownOptions.length > 20"
+                      [virtualScrollItemSize]="38" />
+        }
+        @case ('multi_select') {
+          <p-multiSelect class="w-full"
+                         [id]="question.question_code"
+                         [options]="dropdownOptions"
+                         optionLabel="label" optionValue="value" filterBy="label"
+                         [ngModel]="multiValue"
+                         (ngModelChange)="onMultiSelectChange($event)"
+                         [placeholder]="placeholder || (isAr ? 'اختر...' : 'Select...')"
+                         [filter]="true" [showClear]="true" appendTo="body"
+                         [style]="{'width':'100%'}"
+                         [virtualScroll]="dropdownOptions.length > 20"
+                         [virtualScrollItemSize]="38" />
+        }
+        @case ('entity_picker') {
+          <p-multiSelect class="w-full"
+                         [id]="question.question_code"
+                         [options]="dropdownOptions"
+                         optionLabel="label" optionValue="value" filterBy="label"
+                         [ngModel]="multiValue"
+                         (ngModelChange)="onMultiSelectChange($event)"
+                         [placeholder]="placeholder || (isAr ? 'اختر...' : 'Select...')"
+                         [filter]="true" [showClear]="true" appendTo="body"
+                         [style]="{'width':'100%'}"
+                         [virtualScroll]="dropdownOptions.length > 20"
+                         [virtualScrollItemSize]="38" />
+        }
+        @case ('chips') {
+          <div class="qr-chips-wrapper">
+            <div class="qr-chips-list">
+              @for (chip of chipsValue; track $index) {
+                <span class="qr-chip">
+                  {{ chip }}
+                  <i tabindex="0" role="button" (keyup.enter)="removeChipAt($index)" class="pi pi-times qr-chip-remove" (click)="removeChipAt($index)"></i>
+                </span>
+              }
+            </div>
+            <input pInputText class="w-full"
+                   [placeholder]="isAr ? 'اكتب واضغط Enter لإضافة...' : 'Type and press Enter to add...'"
+                   [attr.aria-label]="isAr ? 'اكتب واضغط Enter لإضافة...' : 'Type and press Enter to add...'"
+                   (keydown.enter)="onChipEnter($event)" />
+          </div>
+        }
+        @case ('json') {
+          @if (question.ui_variant === 'contacts_table') {
+            <div class="qr-json-table">
+              <div class="qr-json-header">
+                <span class="qr-json-col-head">{{ isAr ? 'الدور' : 'Role' }}</span>
+                <span class="qr-json-col-head">{{ isAr ? 'الاسم' : 'Name' }}</span>
+                <span class="qr-json-col-head">{{ isAr ? 'البريد الإلكتروني' : 'Email' }}</span>
+                <span class="qr-json-col-action"></span>
+              </div>
+              @for (row of jsonEntries; track $index) {
+                <div class="qr-json-row">
+                  <p-select class="qr-json-cell" [options]="roleOptions" optionLabel="label" optionValue="value"
+                    [placeholder]="isAr ? 'اختر الدور' : 'Select role'" [ngModel]="row.role"
+                    (ngModelChange)="onJsonFieldUpdate($index, 'role', $event)"
+                    [filter]="roleOptions.length > 6" filterBy="label"
+                    appendTo="body" [style]="{'width':'100%'}" />
+                  <input pInputText class="qr-json-cell" [placeholder]="isAr ? 'الاسم الكامل' : 'Full name'" [attr.aria-label]="isAr ? 'الاسم الكامل' : 'Full name'"
+                    [ngModel]="row.name" (ngModelChange)="onJsonFieldUpdate($index, 'name', $event)" />
+                  <input pInputText class="qr-json-cell" type="email" placeholder="email@example.com" [attr.aria-label]="'email@example.com'"
+                    [ngModel]="row.email" (ngModelChange)="onJsonFieldUpdate($index, 'email', $event)" />
+                  <button [attr.aria-label]="i18n.translate('onboarding.delete')" pButton icon="pi pi-trash" class="p-button-text p-button-danger p-button-sm qr-json-del"
+                    (click)="removeJsonEntry($index)"></button>
+                </div>
+              }
+              <button pButton type="button" class="p-button-outlined p-button-sm qr-json-add"
+                [label]="isAr ? 'إضافة جهة اتصال' : 'Add Contact'" icon="pi pi-plus"
+                (click)="addJsonEntry()"></button>
+            </div>
+          } @else if (question.ui_variant === 'invite_table') {
+            <div class="qr-json-table">
+              <div class="qr-json-header qr-json-3col">
+                <span class="qr-json-col-head">{{ isAr ? 'البريد الإلكتروني' : 'Email' }}</span>
+                <span class="qr-json-col-head">{{ isAr ? 'الدور' : 'Role' }}</span>
+                <span class="qr-json-col-action"></span>
+              </div>
+              @for (row of jsonEntries; track $index) {
+                <div class="qr-json-row qr-json-3col">
+                  <input pInputText class="qr-json-cell" type="email" placeholder="email@example.com" [attr.aria-label]="'email@example.com'"
+                    [ngModel]="row.email" (ngModelChange)="onJsonFieldUpdate($index, 'email', $event)" />
+                  <p-select class="qr-json-cell" [options]="roleOptions" optionLabel="label" optionValue="value"
+                    [placeholder]="isAr ? 'اختر الدور' : 'Select role'" [ngModel]="row.role"
+                    (ngModelChange)="onJsonFieldUpdate($index, 'role', $event)"
+                    [filter]="roleOptions.length > 6" filterBy="label"
+                    appendTo="body" [style]="{'width':'100%'}" />
+                  <button [attr.aria-label]="i18n.translate('onboarding.delete')" pButton icon="pi pi-trash" class="p-button-text p-button-danger p-button-sm qr-json-del"
+                    (click)="removeJsonEntry($index)"></button>
+                </div>
+              }
+              <button pButton type="button" class="p-button-outlined p-button-sm qr-json-add"
+                [label]="isAr ? 'دعوة مستخدم' : 'Invite User'" icon="pi pi-user-plus"
+                (click)="addJsonEntryWith({email:'',role:''})"></button>
+            </div>
+          } @else {
+            <textarea pInputTextarea class="w-full" [rows]="4"
+              [placeholder]="isAr ? 'أدخل بيانات JSON' : 'Enter JSON data'"
+              [attr.aria-label]="isAr ? 'أدخل بيانات JSON' : 'Enter JSON data'"
+              [ngModel]="jsonStringified"
+              (ngModelChange)="onJsonTextChange($event)"></textarea>
+          }
+        }
+        @default {
+          <input pInputText class="w-full"
+                 [id]="question.question_code"
+                 [value]="currentValue ?? ''"
+                 (input)="onTextChange($event)" />
+        }
+      }
+
+      @if (validationError) {
+        <small class="qr-validation-error">
+          <i class="pi pi-exclamation-circle"></i> {{ validationError }}
+        </small>
+      }
+    </div>

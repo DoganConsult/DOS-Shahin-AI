@@ -1,0 +1,10 @@
+code,name_en,saudi_ownership_min,implications
+100_SAUDI,100% Saudi-Owned,100,Full domestic regulations apply
+MAJORITY_SAUDI,Majority Saudi-Owned (>50%),51,Standard local treatment
+MAJORITY_FOREIGN,Majority Foreign-Owned,0,MISA license required
+PIF_OWNED_FULL,PIF Wholly-Owned,100,Subject to PIF governance
+GOVT_OWNED,Government-Owned,100,Public sector regulations
+FOREIGN_PARENT,Wholly-Owned Foreign Subsidiary,0,MISA + parent group policies
+LISTED_TADAWUL,Listed on Tadawul,0,CMA disclosure rules apply
+FAMILY_OWNED,Family-Owned,100,Family business governance
+MIXED,Mixed (JV),25,JV agreement governs

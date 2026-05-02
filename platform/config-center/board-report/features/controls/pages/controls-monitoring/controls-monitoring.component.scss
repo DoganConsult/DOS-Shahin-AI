@@ -1,0 +1,181 @@
+/**
+ * Controls Monitoring — Styles
+ * All colors use CSS custom properties from grc-tokens.css (Rule 7).
+ */
+
+// -- Page Container --
+.controls-monitoring {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px 24px;
+  min-height: 100%;
+  background: var(--surface-ground, var(--bg-0));
+}
+
+// -- Skeleton Loading --
+.skeleton-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+// -- Summary Strip --
+.summary-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.summary-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: var(--surface-card, var(--bg-0));
+  border: 1px solid var(--border-subtle, var(--border));
+  border-radius: var(--radius-md, 8px);
+}
+
+.summary-card__icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md, 8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  .pi { font-size: var(--font-size-xl, 1.25rem); }
+}
+
+.summary-card__content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.summary-card__value {
+  font-size: var(--font-size-xl, 1.25rem);
+  font-weight: 700;
+  color: var(--text-heading, var(--text-body));
+}
+
+.summary-card__label {
+  font-size: var(--font-size-sm, 0.875rem);
+  color: var(--text-muted);
+}
+
+// -- Two Column Layout --
+.two-col-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+// -- Section Card --
+.section-card {
+  background: var(--surface-card, var(--bg-0));
+  border: 1px solid var(--border-subtle, var(--border));
+  border-radius: var(--radius-md, 8px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.section-card__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid var(--border-subtle, var(--border));
+  font-size: var(--font-size-sm, 0.875rem);
+  font-weight: 700;
+  color: var(--text-heading, var(--text-body));
+
+  .pi {
+    color: var(--primary);
+    font-size: var(--font-size-base, 1rem);
+  }
+}
+
+.section-card__body {
+  flex: 1;
+  padding: 0;
+  overflow: auto;
+}
+
+.chart-body {
+  padding: 16px;
+}
+
+.chart-container {
+  width: 100%;
+  height: 260px;
+  position: relative;
+}
+
+// -- Active Dot --
+.active-dot {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-size-sm, 0.875rem);
+  font-weight: 600;
+
+  &--on {
+    color: var(--success);
+  }
+
+  &--off {
+    color: var(--text-muted);
+  }
+
+  &::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  &--on::before {
+    background: var(--success);
+  }
+
+  &--off::before {
+    background: var(--text-muted);
+  }
+}
+
+// -- Table Helpers --
+.font-semibold {
+  font-weight: 600;
+}
+
+.text-muted {
+  color: var(--text-muted);
+  font-size: var(--font-size-sm, 0.875rem);
+}
+
+// -- Responsive --
+@media (max-width: 1024px) {
+  .two-col-section {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .controls-monitoring {
+    padding: 12px;
+  }
+
+  .summary-strip {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .summary-strip {
+    grid-template-columns: 1fr;
+  }
+}

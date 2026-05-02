@@ -1,0 +1,15 @@
+{
+  "id": "governance.post_approval",
+  "module": "governance",
+  "hook": "post_approval",
+  "version": "1.0.0",
+  "sla_hours": 8,
+  "actor_role_default": "governance.module_lead",
+  "states": ["approved","published","notified"],
+  "initial": "approved",
+  "transitions": [{"from":"approved","to":"published","on":"publish","actor_role":"governance.module_lead"},{"from":"published","to":"notified","on":"notify"}],
+  "audit_event_prefix": "governance.workflow.post_approval",
+  "notification_targets": ["governance.module_lead", "governance.approver"],
+  "evidence_required_on": ["passed","published"],
+  "escalation": { "on": "sla_breach", "to": "governance.executive_owner", "after_hours": 16 }
+}

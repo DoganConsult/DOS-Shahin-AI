@@ -1,0 +1,63 @@
+<app-page-shell
+  icon="list"
+  [title]="i18n.translate('aiOs.traceDetailTitle') || 'Trace detail'"
+  [subtitle]="runId()"
+  [breadcrumbs]="[i18n.translate('nav.dashboard'), i18n.translate('aiOs.dashboardTitle') || 'AI OS', i18n.translate('aiOs.traceDetailTitle') || 'Trace']"
+  [loading]="loading()">
+
+  <div class="trace-detail" [dir]="i18n.direction()">
+    <div class="trace-detail-actions">
+      <button pButton
+        icon="pi pi-arrow-left"
+        [label]="i18n.translate('aiOs.backToDashboard') || 'Back to AI OS Dashboard'"
+        class="p-button-outlined p-button-sm"
+        (click)="goBack()">
+      </button>
+    </div>
+
+    <div class="trace-error-box" *ngIf="error()">
+      <p class="trace-error">
+        <i class="pi pi-exclamation-triangle"></i> {{ error() }}
+      </p>
+      <p class="trace-correlation" *ngIf="correlationId()">
+        <span class="correlation-label">{{ i18n.translate('common.correlationId') || 'Correlation ID' }}:</span>
+        <code>{{ correlationId() }}</code>
+      </p>
+      <button pButton
+        [label]="i18n.translate('common.retry') || 'Retry'"
+        icon="pi pi-refresh"
+        class="p-button-outlined p-button-sm"
+        (click)="load()">
+      </button>
+    </div>
+
+    <div *ngIf="!loading() && !error() && trace()" class="trace-detail-content">
+      <div class="trace-meta p-card">
+        <h3>{{ i18n.translate('aiOs.runMetadata') || 'Run metadata' }}</h3>
+        <dl class="trace-meta-list">
+          <dt>{{ i18n.translate('aiOs.runId') || 'Run ID' }}</dt>
+          <dd><code>{{ trace()?.run_id || runId() }}</code></dd>
+          <dt>{{ i18n.translate('aiOs.traceId') || 'Trace ID' }}</dt>
+          <dd><code>{{ trace()?.trace_id || '—' }}</code></dd>
+          <dt>{{ i18n.translate('aiOs.stepsCount') || 'Steps' }}</dt>
+          <dd>{{ traceItems().length }}</dd>
+        </dl>
+      </div>
+
+      <div class="trace-steps p-card" *ngIf="traceItems().length">
+        <h3>{{ i18n.translate('aiOs.steps') || 'Steps' }}</h3>
+        <pre class="trace-steps-json">{{ traceItems() | json }}</pre>
+      </div>
+
+      <div class="trace-raw p-card" *ngIf="trace() && !traceItems().length">
+        <h3>{{ i18n.translate('aiOs.rawTrace') || 'Trace data' }}</h3>
+        <pre class="trace-raw-json">{{ trace() | json }}</pre>
+      </div>
+    </div>
+
+    <div *ngIf="!loading() && !error() && !trace()" class="trace-empty">
+      <i class="pi pi-info-circle"></i>
+      <span>{{ i18n.translate('aiOs.noTraceFound') || 'No trace data found for this run.' }}</span>
+    </div>
+  </div>
+</app-page-shell>

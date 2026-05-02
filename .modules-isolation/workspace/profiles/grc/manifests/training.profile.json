@@ -1,0 +1,102 @@
+{
+  "code": "training",
+  "name": "Training & Awareness",
+  "card_position": 16,
+  "description": "Awareness campaigns, training proof, acknowledgements.",
+  "source_folders": ["training"],
+  "lifecycle": {
+    "states": [
+      "create","classify","assign_owner","raci_map","risk_compliance_link",
+      "workflow_approval","evidence_attach","monitor","exception_or_issue",
+      "remediate","retest_review","close","archive"
+    ],
+    "transitions": [
+      { "from": "create",                "to": "classify",            "trigger": "submitted" },
+      { "from": "classify",              "to": "assign_owner",        "trigger": "classified" },
+      { "from": "assign_owner",          "to": "raci_map",            "trigger": "owner_assigned",        "guard_permission": "training.record.write" },
+      { "from": "raci_map",              "to": "risk_compliance_link","trigger": "raci_set" },
+      { "from": "risk_compliance_link",  "to": "workflow_approval",   "trigger": "linked" },
+      { "from": "workflow_approval",     "to": "evidence_attach",     "trigger": "approved",              "guard_permission": "training.record.approve" },
+      { "from": "evidence_attach",       "to": "monitor",             "trigger": "evidence_attached",     "guard_permission": "training.evidence.write" },
+      { "from": "monitor",               "to": "exception_or_issue",  "trigger": "deviation_detected" },
+      { "from": "exception_or_issue",    "to": "remediate",           "trigger": "issue_opened" },
+      { "from": "remediate",             "to": "retest_review",       "trigger": "remediation_done" },
+      { "from": "retest_review",         "to": "close",               "trigger": "retest_passed" },
+      { "from": "close",                 "to": "archive",             "trigger": "retention_elapsed",     "guard_permission": "training.record.manage" }
+    ]
+  },
+  "workflow_hooks": [
+    { "event": "submitted",            "workflow": "training.intake_review",      "sla_hours": 24 },
+    { "event": "owner_assigned",       "workflow": "training.owner_acknowledge",  "sla_hours": 48 },
+    { "event": "approved",             "workflow": "training.post_approval",      "sla_hours": 8 },
+    { "event": "deviation_detected",   "workflow": "training.deviation_triage",   "sla_hours": 12 },
+    { "event": "remediation_done",     "workflow": "training.retest_review",      "sla_hours": 72 }
+  ],
+  "owner_role": {
+    "accountable": "training.executive_owner",
+    "responsible": "training.module_lead"
+  },
+  "raci": {
+    "responsible": ["training.module_lead", "training.contributor"],
+    "accountable":  "training.executive_owner",
+    "consulted":  ["training.approver", "governance.module_lead"],
+    "informed":   ["training.viewer", "audit.module_lead"]
+  },
+  "org_scope": ["org","business_unit","department","team","position","own"],
+  "permissions": [
+    "record.read","record.write","record.approve","record.manage",
+    "record.delete","record.configure",
+    "evidence.read","evidence.write",
+    "report.read","export"
+  ],
+  "roles": {
+    "executive_owner": { "permissions": [
+      "record.read","record.write","record.approve","record.manage",
+      "record.delete","record.configure",
+      "evidence.read","evidence.write","report.read","export"
+    ] },
+    "module_lead":    { "permissions": [
+      "record.read","record.write","record.approve","record.manage",
+      "record.configure","evidence.read","evidence.write","report.read","export"
+    ] },
+    "approver":       { "permissions": [
+      "record.read","record.write","record.approve",
+      "evidence.read","report.read"
+    ] },
+    "contributor":    { "permissions": [
+      "record.read","record.write",
+      "evidence.read","evidence.write","report.read"
+    ] },
+    "viewer":         { "permissions": [
+      "record.read","evidence.read","report.read"
+    ] }
+  },
+  "evidence_hooks": [
+    { "state": "evidence_attach", "evidence_type": "primary_artifact", "required": true,  "expiry_days": 365 },
+    { "state": "remediate",       "evidence_type": "remediation_proof", "required": true,  "expiry_days": 365 },
+    { "state": "retest_review",   "evidence_type": "retest_result",     "required": true,  "expiry_days": 365 },
+    { "state": "monitor",         "evidence_type": "monitoring_log",    "required": false, "expiry_days": 180 }
+  ],
+  "audit_events": [
+    { "event": "training.record.created",   "category": "create",    "fields_logged": ["id","tenant_id","actor_id","scope"] },
+    { "event": "training.record.updated",   "category": "update",    "fields_logged": ["id","actor_id","field_diff"] },
+    { "event": "training.record.approved",  "category": "approve",   "fields_logged": ["id","approver_id","decision","comment"] },
+    { "event": "training.record.deleted",   "category": "delete",    "fields_logged": ["id","actor_id","reason"] },
+    { "event": "training.record.exported",  "category": "export",    "fields_logged": ["id","actor_id","format","filter"] },
+    { "event": "training.record.viewed",    "category": "access",    "fields_logged": ["id","actor_id"] },
+    { "event": "training.record.configured","category": "configure", "fields_logged": ["actor_id","config_diff"] }
+  ],
+  "reporting": {
+    "kpis": [
+      { "code": "training.coverage_pct",      "name": "Coverage %"                 },
+      { "code": "training.on_time_closure",   "name": "On-time closure rate"       },
+      { "code": "training.avg_cycle_hours",   "name": "Average cycle time (hours)" }
+    ],
+    "kris": [
+      { "code": "training.overdue_count",     "name": "Overdue items"              },
+      { "code": "training.exception_rate",    "name": "Exception rate"             }
+    ],
+    "exec_pack_section": "Training & Awareness"
+  },
+  "consumes": ["foundation","policy","governance"]
+}

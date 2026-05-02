@@ -1,0 +1,168 @@
+{
+  "$schema": "./flags.schema.json",
+  "version": "1.0.0",
+  "description": "Platform-wide feature flags. Evaluated server-side; never trust client-provided flag state.",
+  "flags": [
+    {
+      "key": "onboarding.email_verification",
+      "description": "Require email verification during new-user registration before allowing onboarding wizard access.",
+      "type": "boolean",
+      "defaultValue": false,
+      "rollout": {
+        "strategy": "percentage",
+        "percentage": 0
+      },
+      "owner": "platform",
+      "status": "planned",
+      "tags": ["onboarding", "auth", "email"]
+    },
+    {
+      "key": "onboarding.ai_suggestions",
+      "description": "Enable AI-powered suggestions during the onboarding wizard (question pre-fill, module recommendations).",
+      "type": "boolean",
+      "defaultValue": true,
+      "rollout": {
+        "strategy": "all"
+      },
+      "owner": "platform",
+      "status": "active",
+      "tags": ["onboarding", "ai"]
+    },
+    {
+      "key": "onboarding.journey_resolver",
+      "description": "Use the server-authoritative journey resolver to determine visible stages and question set.",
+      "type": "boolean",
+      "defaultValue": true,
+      "rollout": {
+        "strategy": "all"
+      },
+      "owner": "platform",
+      "status": "active",
+      "tags": ["onboarding"]
+    },
+    {
+      "key": "ai.copilot_enabled",
+      "description": "Enable the Copilot chat panel globally.",
+      "type": "boolean",
+      "defaultValue": true,
+      "rollout": {
+        "strategy": "all"
+      },
+      "owner": "ai",
+      "status": "active",
+      "tags": ["ai", "copilot"]
+    },
+    {
+      "key": "ai.nudge_engine",
+      "description": "Enable real-time nudge suggestions on the workspace home.",
+      "type": "boolean",
+      "defaultValue": true,
+      "rollout": {
+        "strategy": "all"
+      },
+      "owner": "ai",
+      "status": "active",
+      "tags": ["ai", "nudges"]
+    },
+    {
+      "key": "export.async_mode",
+      "description": "Use async job queue for large exports (>500 rows). Falls back to sync for smaller sets.",
+      "type": "boolean",
+      "defaultValue": true,
+      "rollout": {
+        "strategy": "all"
+      },
+      "owner": "platform",
+      "status": "active",
+      "tags": ["export"]
+    },
+    {
+      "key": "realtime.sse_enabled",
+      "description": "Enable SSE realtime event stream for workspace live updates.",
+      "type": "boolean",
+      "defaultValue": true,
+      "rollout": {
+        "strategy": "all"
+      },
+      "owner": "platform",
+      "status": "active",
+      "tags": ["realtime", "sse"]
+    },
+    {
+      "key": "governance.risk_quantification",
+      "description": "Enable Monte Carlo risk quantification engine on the risk module.",
+      "type": "boolean",
+      "defaultValue": false,
+      "rollout": {
+        "strategy": "tenant_allowlist",
+        "allowedTenants": []
+      },
+      "owner": "grc",
+      "status": "beta",
+      "tags": ["risk", "ai"]
+    },
+    {
+      "key": "platform.onboarding.enabled",
+      "description": "Wave-1 master switch for the onboarding / workspace-lifecycle surface (register → session → provisioning → workspace-ready). Flipping this off stops new-user registration from reaching the onboarding wizard.",
+      "type": "boolean",
+      "defaultValue": true,
+      "rollout": {
+        "strategy": "all"
+      },
+      "owner": "platform",
+      "status": "active",
+      "tags": ["wave-1", "onboarding"]
+    },
+    {
+      "key": "platform.identity.enabled",
+      "description": "Wave-1 master switch for the Foundation identity/profile/access surface (users, roles, permissions, org structure). Always-on platform primitive.",
+      "type": "boolean",
+      "defaultValue": true,
+      "rollout": {
+        "strategy": "all"
+      },
+      "owner": "platform",
+      "status": "active",
+      "tags": ["wave-1", "identity"]
+    },
+    {
+      "key": "product.dashboard.enabled",
+      "description": "Wave-1 dashboard/home surface (workspace-home landing). Gated to allowlisted tenants until the post-provisioning dashboard is certified end-to-end.",
+      "type": "boolean",
+      "defaultValue": true,
+      "rollout": {
+        "strategy": "tenant_allowlist",
+        "allowedTenants": []
+      },
+      "owner": "shahin",
+      "status": "active",
+      "tags": ["wave-1", "dashboard"]
+    },
+    {
+      "key": "module.compliance_controls.enabled",
+      "description": "Wave-1 Compliance + Controls modules (frameworks, obligations, control library, testing). Backend entitlements must carry `compliance` + `controls` for this to take effect.",
+      "type": "boolean",
+      "defaultValue": true,
+      "rollout": {
+        "strategy": "tenant_allowlist",
+        "allowedTenants": []
+      },
+      "owner": "shahin",
+      "status": "active",
+      "tags": ["wave-1", "compliance", "controls"]
+    },
+    {
+      "key": "module.evidence_reporting.enabled",
+      "description": "Wave-1 Evidence + Audit + Reporting modules (evidence catalog, audit log, reports overview). Backend entitlements must carry `evidence` + `audit` + `reporting` for this to take effect.",
+      "type": "boolean",
+      "defaultValue": true,
+      "rollout": {
+        "strategy": "tenant_allowlist",
+        "allowedTenants": []
+      },
+      "owner": "shahin",
+      "status": "active",
+      "tags": ["wave-1", "evidence", "reporting"]
+    }
+  ]
+}

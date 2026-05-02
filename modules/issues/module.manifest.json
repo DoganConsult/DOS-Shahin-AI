@@ -1,0 +1,77 @@
+{
+  "moduleCode": "issues",
+  "displayName": "Issues",
+  "ownerTeam": "product-shahin-ai",
+  "productCode": "shahin-ai",
+  "ownership": "module-owned",
+  "version": "1.0.0",
+  "status": "active",
+  "platformDependencies": [
+    "identity",
+    "tenancy",
+    "workflow",
+    "permissions",
+    "audit"
+  ],
+  "seedProviders": [
+    "products/shahin/seeds/issues-seed"
+  ],
+  "tenantDefaults": [
+    "issues_default_sla_hours",
+    "issues_auto_link_enabled"
+  ],
+  "requiredReferenceData": [
+    "issue_categories",
+    "issue_priorities",
+    "issue_statuses"
+  ],
+  "currentSources": [
+    "/home/Dr-Dogan-AGRC-OS/backend/src/modules/issues"
+  ],
+  "targetPath": "modules/issues",
+  "futureService": "remediation-action-service",
+  "frontendSources": [
+    "/home/Dr-Dogan-AGRC-OS/frontend/src/app/platform-manifests/issues.module.routes.ts"
+  ],
+  "ownedTables": [
+    "issues",
+    "issue_comments",
+    "issue_links",
+    "issue_history",
+    "issue_tags",
+    "issue_watchers",
+    "issue_attachments"
+  ],
+  "referencedTables": [
+    "audit_trail",
+    "teams",
+    "workflows",
+    "risks",
+    "compliance_frameworks"
+  ],
+  "events": {
+    "publishes": [
+      "issues.created",
+      "issues.assigned",
+      "issues.escalated",
+      "issues.resolved",
+      "issues.closed",
+      "issues.reopened",
+      "issues.overdue",
+      "issues.linked"
+    ],
+    "subscribes": [
+      "compliance.gap_detected",
+      "audit.finding_created",
+      "risk.residual_high",
+      "incident.created",
+      "vendor.issue_created",
+      "workflow.status_changed",
+      "foundation.position.holder.unassigned",
+      "foundation.org.manager.changed"
+    ]
+  },
+  "routeBases": [
+    "/api/issues"
+  ]
+}

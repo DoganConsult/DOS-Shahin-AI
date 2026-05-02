@@ -1,0 +1,439 @@
+# Inbound consolidation move report
+# Generated: 2026-04-30T10:52:17Z
+# Total files moved: 435
+
+Controls Module/AS-BUILT.md -> modules/compliance/_inbound/controls/AS-BUILT.md
+Controls Module/db/manifest.yml -> modules/compliance/_inbound/controls/db/manifest.yml
+Controls Module/db/public/migrations/001_extracted_from_001_compliance_tables.sql -> modules/compliance/_inbound/controls/db/public/migrations/001_extracted_from_001_compliance_tables.sql
+Controls Module/db/tenant/migrations/000_extracted_from_000_inline_baseline.sql -> modules/compliance/_inbound/controls/db/tenant/migrations/000_extracted_from_000_inline_baseline.sql
+Controls Module/db/tenant/migrations/001_controls_tables.sql -> modules/compliance/_inbound/controls/db/tenant/migrations/001_controls_tables.sql
+Controls Module/db/tenant/migrations/001_controls_tables_down.sql -> modules/compliance/_inbound/controls/db/tenant/migrations/001_controls_tables_down.sql
+Controls Module/db/tenant/migrations/002_enterprise_expansion.sql -> modules/compliance/_inbound/controls/db/tenant/migrations/002_enterprise_expansion.sql
+Controls Module/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql -> modules/compliance/_inbound/controls/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql
+Controls Module/module.manifest.json -> modules/compliance/_inbound/controls/module.manifest.json
+Controls Module/source/backend/audit/ports/auth.port.ts -> modules/compliance/_inbound/controls/source/backend/audit/ports/auth.port.ts
+Controls Module/source/backend/audit/ports/database.port.ts -> modules/compliance/_inbound/controls/source/backend/audit/ports/database.port.ts
+Controls Module/source/backend/audit/ports/events.port.ts -> modules/compliance/_inbound/controls/source/backend/audit/ports/events.port.ts
+Controls Module/source/backend/audit/ports/jobs.port.ts -> modules/compliance/_inbound/controls/source/backend/audit/ports/jobs.port.ts
+Controls Module/source/backend/audit/ports/lifecycle.port.ts -> modules/compliance/_inbound/controls/source/backend/audit/ports/lifecycle.port.ts
+Controls Module/source/backend/audit/ports/logger.port.ts -> modules/compliance/_inbound/controls/source/backend/audit/ports/logger.port.ts
+Controls Module/source/backend/audit/ports/middleware.port.ts -> modules/compliance/_inbound/controls/source/backend/audit/ports/middleware.port.ts
+Controls Module/source/backend/audit/ports/platform.port.ts -> modules/compliance/_inbound/controls/source/backend/audit/ports/platform.port.ts
+Controls Module/source/backend/audit/services/audit/core/audit-trail.service.ts -> modules/compliance/_inbound/controls/source/backend/audit/services/audit/core/audit-trail.service.ts
+Controls Module/source/backend/controls/AS-BUILT.md -> modules/compliance/_inbound/controls/source/backend/controls/AS-BUILT.md
+Controls Module/source/backend/controls/admin/controls-admin.routes.ts -> modules/compliance/_inbound/controls/source/backend/controls/admin/controls-admin.routes.ts
+Controls Module/source/backend/controls/contracts/controls.contract.ts -> modules/compliance/_inbound/controls/source/backend/controls/contracts/controls.contract.ts
+Controls Module/source/backend/controls/controllers/controls-admin.controller.ts -> modules/compliance/_inbound/controls/source/backend/controls/controllers/controls-admin.controller.ts
+Controls Module/source/backend/controls/controllers/controls.controller.ts -> modules/compliance/_inbound/controls/source/backend/controls/controllers/controls.controller.ts
+Controls Module/source/backend/controls/controls.module.test.ts -> modules/compliance/_inbound/controls/source/backend/controls/controls.module.test.ts
+Controls Module/source/backend/controls/controls.module.ts -> modules/compliance/_inbound/controls/source/backend/controls/controls.module.ts
+Controls Module/source/backend/controls/diagnostics/controls-diagnostics.service.ts -> modules/compliance/_inbound/controls/source/backend/controls/diagnostics/controls-diagnostics.service.ts
+Controls Module/source/backend/controls/errors/controls.error-codes.ts -> modules/compliance/_inbound/controls/source/backend/controls/errors/controls.error-codes.ts
+Controls Module/source/backend/controls/events/controls.events.ts -> modules/compliance/_inbound/controls/source/backend/controls/events/controls.events.ts
+Controls Module/source/backend/controls/events/controls.foundation-dept-created.test.ts -> modules/compliance/_inbound/controls/source/backend/controls/events/controls.foundation-dept-created.test.ts
+Controls Module/source/backend/controls/events/controls.publishers.ts -> modules/compliance/_inbound/controls/source/backend/controls/events/controls.publishers.ts
+Controls Module/source/backend/controls/events/controls.subscribers.test.ts -> modules/compliance/_inbound/controls/source/backend/controls/events/controls.subscribers.test.ts
+Controls Module/source/backend/controls/events/controls.subscribers.ts -> modules/compliance/_inbound/controls/source/backend/controls/events/controls.subscribers.ts
+Controls Module/source/backend/controls/i18n/ar.json -> modules/compliance/_inbound/controls/source/backend/controls/i18n/ar.json
+Controls Module/source/backend/controls/i18n/en.json -> modules/compliance/_inbound/controls/source/backend/controls/i18n/en.json
+Controls Module/source/backend/controls/index.ts -> modules/compliance/_inbound/controls/source/backend/controls/index.ts
+Controls Module/source/backend/controls/jobs/controls-monitor.job.ts -> modules/compliance/_inbound/controls/source/backend/controls/jobs/controls-monitor.job.ts
+Controls Module/source/backend/controls/lifecycle-registration.test.ts -> modules/compliance/_inbound/controls/source/backend/controls/lifecycle-registration.test.ts
+Controls Module/source/backend/controls/lifecycle-registration.ts -> modules/compliance/_inbound/controls/source/backend/controls/lifecycle-registration.ts
+Controls Module/source/backend/controls/manifest/controls.manifest.ts -> modules/compliance/_inbound/controls/source/backend/controls/manifest/controls.manifest.ts
+Controls Module/source/backend/controls/mappers/controls.mapper.ts -> modules/compliance/_inbound/controls/source/backend/controls/mappers/controls.mapper.ts
+Controls Module/source/backend/controls/policies/controls.policies.ts -> modules/compliance/_inbound/controls/source/backend/controls/policies/controls.policies.ts
+Controls Module/source/backend/controls/ports/auth.port.ts -> modules/compliance/_inbound/controls/source/backend/controls/ports/auth.port.ts
+Controls Module/source/backend/controls/ports/database.port.ts -> modules/compliance/_inbound/controls/source/backend/controls/ports/database.port.ts
+Controls Module/source/backend/controls/ports/errors.port.ts -> modules/compliance/_inbound/controls/source/backend/controls/ports/errors.port.ts
+Controls Module/source/backend/controls/ports/events.port.ts -> modules/compliance/_inbound/controls/source/backend/controls/ports/events.port.ts
+Controls Module/source/backend/controls/ports/index.ts -> modules/compliance/_inbound/controls/source/backend/controls/ports/index.ts
+Controls Module/source/backend/controls/ports/jobs.port.ts -> modules/compliance/_inbound/controls/source/backend/controls/ports/jobs.port.ts
+Controls Module/source/backend/controls/ports/lifecycle.port.ts -> modules/compliance/_inbound/controls/source/backend/controls/ports/lifecycle.port.ts
+Controls Module/source/backend/controls/ports/logger.port.ts -> modules/compliance/_inbound/controls/source/backend/controls/ports/logger.port.ts
+Controls Module/source/backend/controls/ports/middleware.port.ts -> modules/compliance/_inbound/controls/source/backend/controls/ports/middleware.port.ts
+Controls Module/source/backend/controls/ports/platform.port.ts -> modules/compliance/_inbound/controls/source/backend/controls/ports/platform.port.ts
+Controls Module/source/backend/controls/repositories/auto-extracted.repo.ts -> modules/compliance/_inbound/controls/source/backend/controls/repositories/auto-extracted.repo.ts
+Controls Module/source/backend/controls/repositories/controls-query.repo.ts -> modules/compliance/_inbound/controls/source/backend/controls/repositories/controls-query.repo.ts
+Controls Module/source/backend/controls/repositories/controls.repository.ts -> modules/compliance/_inbound/controls/source/backend/controls/repositories/controls.repository.ts
+Controls Module/source/backend/controls/routes/control-admin.routes.ts -> modules/compliance/_inbound/controls/source/backend/controls/routes/control-admin.routes.ts
+Controls Module/source/backend/controls/routes/control-certification.routes.ts -> modules/compliance/_inbound/controls/source/backend/controls/routes/control-certification.routes.ts
+Controls Module/source/backend/controls/routes/control-deficiency.routes.ts -> modules/compliance/_inbound/controls/source/backend/controls/routes/control-deficiency.routes.ts
+Controls Module/source/backend/controls/routes/control-detail.routes.ts -> modules/compliance/_inbound/controls/source/backend/controls/routes/control-detail.routes.ts
+Controls Module/source/backend/controls/routes/control-home.routes.ts -> modules/compliance/_inbound/controls/source/backend/controls/routes/control-home.routes.ts
+Controls Module/source/backend/controls/routes/control-mapping.routes.ts -> modules/compliance/_inbound/controls/source/backend/controls/routes/control-mapping.routes.ts
+Controls Module/source/backend/controls/routes/control-monitoring-admin.routes.ts -> modules/compliance/_inbound/controls/source/backend/controls/routes/control-monitoring-admin.routes.ts
+Controls Module/source/backend/controls/routes/control-reports.routes.ts -> modules/compliance/_inbound/controls/source/backend/controls/routes/control-reports.routes.ts
+Controls Module/source/backend/controls/routes/control-work-queue.routes.ts -> modules/compliance/_inbound/controls/source/backend/controls/routes/control-work-queue.routes.ts
+Controls Module/source/backend/controls/routes/control-workflow.routes.ts -> modules/compliance/_inbound/controls/source/backend/controls/routes/control-workflow.routes.ts
+Controls Module/source/backend/controls/routes/controls-diagnostics.routes.ts -> modules/compliance/_inbound/controls/source/backend/controls/routes/controls-diagnostics.routes.ts
+Controls Module/source/backend/controls/schemas/controls.schemas.ts -> modules/compliance/_inbound/controls/source/backend/controls/schemas/controls.schemas.ts
+Controls Module/source/backend/controls/security/controls.actions.ts -> modules/compliance/_inbound/controls/source/backend/controls/security/controls.actions.ts
+Controls Module/source/backend/controls/security/controls.approval-matrix.ts -> modules/compliance/_inbound/controls/source/backend/controls/security/controls.approval-matrix.ts
+Controls Module/source/backend/controls/security/controls.ownership.ts -> modules/compliance/_inbound/controls/source/backend/controls/security/controls.ownership.ts
+Controls Module/source/backend/controls/security/controls.permissions.ts -> modules/compliance/_inbound/controls/source/backend/controls/security/controls.permissions.ts
+Controls Module/source/backend/controls/security/controls.roles.ts -> modules/compliance/_inbound/controls/source/backend/controls/security/controls.roles.ts
+Controls Module/source/backend/controls/security/controls.security.ts -> modules/compliance/_inbound/controls/source/backend/controls/security/controls.security.ts
+Controls Module/source/backend/controls/security/controls.sod.ts -> modules/compliance/_inbound/controls/source/backend/controls/security/controls.sod.ts
+Controls Module/source/backend/controls/services/control-admin.service.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/control-admin.service.ts
+Controls Module/source/backend/controls/services/control-automation-state.service.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/control-automation-state.service.ts
+Controls Module/source/backend/controls/services/control-certification.service.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/control-certification.service.ts
+Controls Module/source/backend/controls/services/control-deficiency.service.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/control-deficiency.service.ts
+Controls Module/source/backend/controls/services/control-design.service.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/control-design.service.ts
+Controls Module/source/backend/controls/services/control-detail.service.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/control-detail.service.ts
+Controls Module/source/backend/controls/services/control-effectiveness.service.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/control-effectiveness.service.ts
+Controls Module/source/backend/controls/services/control-health-snapshot.service.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/control-health-snapshot.service.ts
+Controls Module/source/backend/controls/services/control-home.service.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/control-home.service.ts
+Controls Module/source/backend/controls/services/control-library.service.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/control-library.service.ts
+Controls Module/source/backend/controls/services/control-mapping.service.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/control-mapping.service.ts
+Controls Module/source/backend/controls/services/control-monitoring-admin.service.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/control-monitoring-admin.service.ts
+Controls Module/source/backend/controls/services/control-notification.service.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/control-notification.service.ts
+Controls Module/source/backend/controls/services/control-ownership.service.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/control-ownership.service.ts
+Controls Module/source/backend/controls/services/control-reporting.service.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/control-reporting.service.ts
+Controls Module/source/backend/controls/services/control-work-queue.service.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/control-work-queue.service.ts
+Controls Module/source/backend/controls/services/control-workflow.service.test.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/control-workflow.service.test.ts
+Controls Module/source/backend/controls/services/control-workflow.service.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/control-workflow.service.ts
+Controls Module/source/backend/controls/services/controls-ai.service.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/controls-ai.service.ts
+Controls Module/source/backend/controls/services/controls-dashboard.service.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/controls-dashboard.service.ts
+Controls Module/source/backend/controls/services/controls-event.service.test.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/controls-event.service.test.ts
+Controls Module/source/backend/controls/services/controls-event.service.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/controls-event.service.ts
+Controls Module/source/backend/controls/services/controls-jobs.service.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/controls-jobs.service.ts
+Controls Module/source/backend/controls/services/controls-lifecycle.service.test.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/controls-lifecycle.service.test.ts
+Controls Module/source/backend/controls/services/controls-lifecycle.service.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/controls-lifecycle.service.ts
+Controls Module/source/backend/controls/services/controls-rules.service.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/controls-rules.service.ts
+Controls Module/source/backend/controls/services/core/control-admin.service.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/core/control-admin.service.ts
+Controls Module/source/backend/controls/services/core/control-automation-state.service.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/core/control-automation-state.service.ts
+Controls Module/source/backend/controls/services/core/control-certification.service.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/core/control-certification.service.ts
+Controls Module/source/backend/controls/services/core/control-deficiency.service.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/core/control-deficiency.service.ts
+Controls Module/source/backend/controls/services/core/control-design.service.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/core/control-design.service.ts
+Controls Module/source/backend/controls/services/core/control-detail.service.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/core/control-detail.service.ts
+Controls Module/source/backend/controls/services/core/control-effectiveness.service.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/core/control-effectiveness.service.ts
+Controls Module/source/backend/controls/services/core/control-health-snapshot.service.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/core/control-health-snapshot.service.ts
+Controls Module/source/backend/controls/services/core/control-home.service.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/core/control-home.service.ts
+Controls Module/source/backend/controls/services/core/control-library.service.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/core/control-library.service.ts
+Controls Module/source/backend/controls/services/core/control-mapping.service.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/core/control-mapping.service.ts
+Controls Module/source/backend/controls/services/core/control-monitoring-admin.service.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/core/control-monitoring-admin.service.ts
+Controls Module/source/backend/controls/services/core/control-notification.service.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/core/control-notification.service.ts
+Controls Module/source/backend/controls/services/core/control-ownership.service.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/core/control-ownership.service.ts
+Controls Module/source/backend/controls/services/core/control-reporting.service.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/core/control-reporting.service.ts
+Controls Module/source/backend/controls/services/core/control-work-queue.service.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/core/control-work-queue.service.ts
+Controls Module/source/backend/controls/services/core/control-workflow.service.test.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/core/control-workflow.service.test.ts
+Controls Module/source/backend/controls/services/core/control-workflow.service.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/core/control-workflow.service.ts
+Controls Module/source/backend/controls/services/core/controls-ai.service.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/core/controls-ai.service.ts
+Controls Module/source/backend/controls/services/core/controls-dashboard.service.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/core/controls-dashboard.service.ts
+Controls Module/source/backend/controls/services/core/controls-event.service.test.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/core/controls-event.service.test.ts
+Controls Module/source/backend/controls/services/core/controls-event.service.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/core/controls-event.service.ts
+Controls Module/source/backend/controls/services/core/controls-jobs.service.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/core/controls-jobs.service.ts
+Controls Module/source/backend/controls/services/core/controls-lifecycle.service.test.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/core/controls-lifecycle.service.test.ts
+Controls Module/source/backend/controls/services/core/controls-lifecycle.service.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/core/controls-lifecycle.service.ts
+Controls Module/source/backend/controls/services/core/controls-rules.service.ts -> modules/compliance/_inbound/controls/source/backend/controls/services/core/controls-rules.service.ts
+Controls Module/source/backend/controls/types/controls.dto.ts -> modules/compliance/_inbound/controls/source/backend/controls/types/controls.dto.ts
+Controls Module/source/backend/controls/types/controls.types.ts -> modules/compliance/_inbound/controls/source/backend/controls/types/controls.types.ts
+Controls Module/source/backend/controls/workflows/controls-lifecycle.ts -> modules/compliance/_inbound/controls/source/backend/controls/workflows/controls-lifecycle.ts
+Controls Module/source/backend/ports/database.port.ts -> modules/compliance/_inbound/controls/source/backend/ports/database.port.ts
+Controls Module/source/backend/ports/events.port.ts -> modules/compliance/_inbound/controls/source/backend/ports/events.port.ts
+Controls Module/source/backend/ports/platform.port.ts -> modules/compliance/_inbound/controls/source/backend/ports/platform.port.ts
+Controls Module/source/config/database.ts -> modules/compliance/_inbound/controls/source/config/database.ts
+Controls Module/source/frontend/controls/contracts/controls.contracts.ts -> modules/compliance/_inbound/controls/source/frontend/controls/contracts/controls.contracts.ts
+Controls Module/source/frontend/controls/controls.routes.ts -> modules/compliance/_inbound/controls/source/frontend/controls/controls.routes.ts
+Controls Module/source/frontend/controls/pages/controls-hub.component.ts -> modules/compliance/_inbound/controls/source/frontend/controls/pages/controls-hub.component.ts
+Controls Module/source/frontend/controls/services/controls-api.service.ts -> modules/compliance/_inbound/controls/source/frontend/controls/services/controls-api.service.ts
+Controls Module/source/schemas/common.schemas.d.ts -> modules/compliance/_inbound/controls/source/schemas/common.schemas.d.ts
+Controls Module/source/schemas/common.schemas.js -> modules/compliance/_inbound/controls/source/schemas/common.schemas.js
+Controls Module/source/schemas/common.schemas.js.map -> modules/compliance/_inbound/controls/source/schemas/common.schemas.js.map
+Controls Module/source/schemas/common.schemas.ts -> modules/compliance/_inbound/controls/source/schemas/common.schemas.ts
+Controls Module/source/shared/error-catalog.types.d.ts -> modules/compliance/_inbound/controls/source/shared/error-catalog.types.d.ts
+Controls Module/source/shared/error-catalog.types.js -> modules/compliance/_inbound/controls/source/shared/error-catalog.types.js
+Controls Module/source/shared/error-catalog.types.js.map -> modules/compliance/_inbound/controls/source/shared/error-catalog.types.js.map
+Controls Module/source/shared/error-catalog.types.ts -> modules/compliance/_inbound/controls/source/shared/error-catalog.types.ts
+Controls Module/tsconfig.json -> modules/compliance/_inbound/controls/tsconfig.json
+Attestation Module/AS-BUILT.md -> modules/compliance/_inbound/attestation/AS-BUILT.md
+Attestation Module/config/database.d.ts -> modules/compliance/_inbound/attestation/config/database.d.ts
+Attestation Module/config/database.js -> modules/compliance/_inbound/attestation/config/database.js
+Attestation Module/db/manifest.yml -> modules/compliance/_inbound/attestation/db/manifest.yml
+Attestation Module/db/tenant/migrations/001_initial_tables.sql -> modules/compliance/_inbound/attestation/db/tenant/migrations/001_initial_tables.sql
+Attestation Module/db/tenant/migrations/001_initial_tables_down.sql -> modules/compliance/_inbound/attestation/db/tenant/migrations/001_initial_tables_down.sql
+Attestation Module/db/tenant/migrations/002_enterprise_expansion.sql -> modules/compliance/_inbound/attestation/db/tenant/migrations/002_enterprise_expansion.sql
+Attestation Module/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql -> modules/compliance/_inbound/attestation/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql
+Attestation Module/module.manifest.json -> modules/compliance/_inbound/attestation/module.manifest.json
+Attestation Module/source/backend/attestation/AS-BUILT.md -> modules/compliance/_inbound/attestation/source/backend/attestation/AS-BUILT.md
+Attestation Module/source/backend/attestation/attestation.module.d.ts -> modules/compliance/_inbound/attestation/source/backend/attestation/attestation.module.d.ts
+Attestation Module/source/backend/attestation/attestation.module.js -> modules/compliance/_inbound/attestation/source/backend/attestation/attestation.module.js
+Attestation Module/source/backend/attestation/attestation.module.js.map -> modules/compliance/_inbound/attestation/source/backend/attestation/attestation.module.js.map
+Attestation Module/source/backend/attestation/attestation.module.test.ts -> modules/compliance/_inbound/attestation/source/backend/attestation/attestation.module.test.ts
+Attestation Module/source/backend/attestation/attestation.module.ts -> modules/compliance/_inbound/attestation/source/backend/attestation/attestation.module.ts
+Attestation Module/source/backend/attestation/contracts/attestation.contract.d.ts -> modules/compliance/_inbound/attestation/source/backend/attestation/contracts/attestation.contract.d.ts
+Attestation Module/source/backend/attestation/contracts/attestation.contract.js -> modules/compliance/_inbound/attestation/source/backend/attestation/contracts/attestation.contract.js
+Attestation Module/source/backend/attestation/contracts/attestation.contract.js.map -> modules/compliance/_inbound/attestation/source/backend/attestation/contracts/attestation.contract.js.map
+Attestation Module/source/backend/attestation/contracts/attestation.contract.ts -> modules/compliance/_inbound/attestation/source/backend/attestation/contracts/attestation.contract.ts
+Attestation Module/source/backend/attestation/events/attestation.events.d.ts -> modules/compliance/_inbound/attestation/source/backend/attestation/events/attestation.events.d.ts
+Attestation Module/source/backend/attestation/events/attestation.events.js -> modules/compliance/_inbound/attestation/source/backend/attestation/events/attestation.events.js
+Attestation Module/source/backend/attestation/events/attestation.events.js.map -> modules/compliance/_inbound/attestation/source/backend/attestation/events/attestation.events.js.map
+Attestation Module/source/backend/attestation/events/attestation.events.ts -> modules/compliance/_inbound/attestation/source/backend/attestation/events/attestation.events.ts
+Attestation Module/source/backend/attestation/events/attestation.foundation-position-assigned.test.ts -> modules/compliance/_inbound/attestation/source/backend/attestation/events/attestation.foundation-position-assigned.test.ts
+Attestation Module/source/backend/attestation/events/attestation.subscribers.d.ts -> modules/compliance/_inbound/attestation/source/backend/attestation/events/attestation.subscribers.d.ts
+Attestation Module/source/backend/attestation/events/attestation.subscribers.js -> modules/compliance/_inbound/attestation/source/backend/attestation/events/attestation.subscribers.js
+Attestation Module/source/backend/attestation/events/attestation.subscribers.js.map -> modules/compliance/_inbound/attestation/source/backend/attestation/events/attestation.subscribers.js.map
+Attestation Module/source/backend/attestation/events/attestation.subscribers.ts -> modules/compliance/_inbound/attestation/source/backend/attestation/events/attestation.subscribers.ts
+Attestation Module/source/backend/attestation/i18n/ar.json -> modules/compliance/_inbound/attestation/source/backend/attestation/i18n/ar.json
+Attestation Module/source/backend/attestation/i18n/en.json -> modules/compliance/_inbound/attestation/source/backend/attestation/i18n/en.json
+Attestation Module/source/backend/attestation/index.d.ts -> modules/compliance/_inbound/attestation/source/backend/attestation/index.d.ts
+Attestation Module/source/backend/attestation/index.js -> modules/compliance/_inbound/attestation/source/backend/attestation/index.js
+Attestation Module/source/backend/attestation/index.js.map -> modules/compliance/_inbound/attestation/source/backend/attestation/index.js.map
+Attestation Module/source/backend/attestation/index.ts -> modules/compliance/_inbound/attestation/source/backend/attestation/index.ts
+Attestation Module/source/backend/attestation/lifecycle-registration.d.ts -> modules/compliance/_inbound/attestation/source/backend/attestation/lifecycle-registration.d.ts
+Attestation Module/source/backend/attestation/lifecycle-registration.js -> modules/compliance/_inbound/attestation/source/backend/attestation/lifecycle-registration.js
+Attestation Module/source/backend/attestation/lifecycle-registration.js.map -> modules/compliance/_inbound/attestation/source/backend/attestation/lifecycle-registration.js.map
+Attestation Module/source/backend/attestation/lifecycle-registration.test.ts -> modules/compliance/_inbound/attestation/source/backend/attestation/lifecycle-registration.test.ts
+Attestation Module/source/backend/attestation/lifecycle-registration.ts -> modules/compliance/_inbound/attestation/source/backend/attestation/lifecycle-registration.ts
+Attestation Module/source/backend/attestation/ports/attestation.ports.d.ts -> modules/compliance/_inbound/attestation/source/backend/attestation/ports/attestation.ports.d.ts
+Attestation Module/source/backend/attestation/ports/attestation.ports.js -> modules/compliance/_inbound/attestation/source/backend/attestation/ports/attestation.ports.js
+Attestation Module/source/backend/attestation/ports/attestation.ports.js.map -> modules/compliance/_inbound/attestation/source/backend/attestation/ports/attestation.ports.js.map
+Attestation Module/source/backend/attestation/ports/attestation.ports.ts -> modules/compliance/_inbound/attestation/source/backend/attestation/ports/attestation.ports.ts
+Attestation Module/source/backend/attestation/routes/attestation.routes.d.ts -> modules/compliance/_inbound/attestation/source/backend/attestation/routes/attestation.routes.d.ts
+Attestation Module/source/backend/attestation/routes/attestation.routes.js -> modules/compliance/_inbound/attestation/source/backend/attestation/routes/attestation.routes.js
+Attestation Module/source/backend/attestation/routes/attestation.routes.js.map -> modules/compliance/_inbound/attestation/source/backend/attestation/routes/attestation.routes.js.map
+Attestation Module/source/backend/attestation/routes/attestation.routes.ts -> modules/compliance/_inbound/attestation/source/backend/attestation/routes/attestation.routes.ts
+Attestation Module/source/backend/attestation/schemas/attestation.schemas.d.ts -> modules/compliance/_inbound/attestation/source/backend/attestation/schemas/attestation.schemas.d.ts
+Attestation Module/source/backend/attestation/schemas/attestation.schemas.js -> modules/compliance/_inbound/attestation/source/backend/attestation/schemas/attestation.schemas.js
+Attestation Module/source/backend/attestation/schemas/attestation.schemas.js.map -> modules/compliance/_inbound/attestation/source/backend/attestation/schemas/attestation.schemas.js.map
+Attestation Module/source/backend/attestation/schemas/attestation.schemas.ts -> modules/compliance/_inbound/attestation/source/backend/attestation/schemas/attestation.schemas.ts
+Attestation Module/source/backend/attestation/security/attestation.approval-matrix.d.ts -> modules/compliance/_inbound/attestation/source/backend/attestation/security/attestation.approval-matrix.d.ts
+Attestation Module/source/backend/attestation/security/attestation.approval-matrix.js -> modules/compliance/_inbound/attestation/source/backend/attestation/security/attestation.approval-matrix.js
+Attestation Module/source/backend/attestation/security/attestation.approval-matrix.js.map -> modules/compliance/_inbound/attestation/source/backend/attestation/security/attestation.approval-matrix.js.map
+Attestation Module/source/backend/attestation/security/attestation.approval-matrix.ts -> modules/compliance/_inbound/attestation/source/backend/attestation/security/attestation.approval-matrix.ts
+Attestation Module/source/backend/attestation/security/attestation.security.d.ts -> modules/compliance/_inbound/attestation/source/backend/attestation/security/attestation.security.d.ts
+Attestation Module/source/backend/attestation/security/attestation.security.js -> modules/compliance/_inbound/attestation/source/backend/attestation/security/attestation.security.js
+Attestation Module/source/backend/attestation/security/attestation.security.js.map -> modules/compliance/_inbound/attestation/source/backend/attestation/security/attestation.security.js.map
+Attestation Module/source/backend/attestation/security/attestation.security.ts -> modules/compliance/_inbound/attestation/source/backend/attestation/security/attestation.security.ts
+Attestation Module/source/backend/attestation/security/attestation.sod.d.ts -> modules/compliance/_inbound/attestation/source/backend/attestation/security/attestation.sod.d.ts
+Attestation Module/source/backend/attestation/security/attestation.sod.js -> modules/compliance/_inbound/attestation/source/backend/attestation/security/attestation.sod.js
+Attestation Module/source/backend/attestation/security/attestation.sod.js.map -> modules/compliance/_inbound/attestation/source/backend/attestation/security/attestation.sod.js.map
+Attestation Module/source/backend/attestation/security/attestation.sod.ts -> modules/compliance/_inbound/attestation/source/backend/attestation/security/attestation.sod.ts
+Attestation Module/source/backend/attestation/services/attestation.service.d.ts -> modules/compliance/_inbound/attestation/source/backend/attestation/services/attestation.service.d.ts
+Attestation Module/source/backend/attestation/services/attestation.service.js -> modules/compliance/_inbound/attestation/source/backend/attestation/services/attestation.service.js
+Attestation Module/source/backend/attestation/services/attestation.service.js.map -> modules/compliance/_inbound/attestation/source/backend/attestation/services/attestation.service.js.map
+Attestation Module/source/backend/attestation/services/attestation.service.ts -> modules/compliance/_inbound/attestation/source/backend/attestation/services/attestation.service.ts
+Attestation Module/source/backend/platform/dos/events.ts -> modules/compliance/_inbound/attestation/source/backend/platform/dos/events.ts
+Attestation Module/source/config/database.d.ts -> modules/compliance/_inbound/attestation/source/config/database.d.ts
+Attestation Module/source/config/database.js -> modules/compliance/_inbound/attestation/source/config/database.js
+Attestation Module/source/config/database.js.map -> modules/compliance/_inbound/attestation/source/config/database.js.map
+Attestation Module/source/config/database.ts -> modules/compliance/_inbound/attestation/source/config/database.ts
+Attestation Module/source/frontend/attestation/attestation.routes.ts -> modules/compliance/_inbound/attestation/source/frontend/attestation/attestation.routes.ts
+Attestation Module/source/frontend/attestation/contracts/attestation.contracts.ts -> modules/compliance/_inbound/attestation/source/frontend/attestation/contracts/attestation.contracts.ts
+Attestation Module/source/frontend/attestation/pages/attestation-hub.component.ts -> modules/compliance/_inbound/attestation/source/frontend/attestation/pages/attestation-hub.component.ts
+Attestation Module/source/frontend/attestation/services/attestation-api.service.ts -> modules/compliance/_inbound/attestation/source/frontend/attestation/services/attestation-api.service.ts
+Attestation Module/tsconfig.json -> modules/compliance/_inbound/attestation/tsconfig.json
+ksa-regulatory Module/AS-BUILT.md -> modules/compliance/_inbound/ksa-regulatory/AS-BUILT.md
+ksa-regulatory Module/db/manifest.yml -> modules/compliance/_inbound/ksa-regulatory/db/manifest.yml
+ksa-regulatory Module/db/tenant/migrations/001_ksa_regulatory_tables.sql -> modules/compliance/_inbound/ksa-regulatory/db/tenant/migrations/001_ksa_regulatory_tables.sql
+ksa-regulatory Module/db/tenant/migrations/001_ksa_regulatory_tables_down.sql -> modules/compliance/_inbound/ksa-regulatory/db/tenant/migrations/001_ksa_regulatory_tables_down.sql
+ksa-regulatory Module/db/tenant/migrations/002_enterprise_expansion.sql -> modules/compliance/_inbound/ksa-regulatory/db/tenant/migrations/002_enterprise_expansion.sql
+ksa-regulatory Module/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql -> modules/compliance/_inbound/ksa-regulatory/db/tenant/migrations/027_extracted_from_027_tenant_schema_tables.sql
+ksa-regulatory Module/module.manifest.json -> modules/compliance/_inbound/ksa-regulatory/module.manifest.json
+ksa-regulatory Module/source/backend/ksa-regulatory/AS-BUILT.md -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/AS-BUILT.md
+ksa-regulatory Module/source/backend/ksa-regulatory/admin/ksa-regulatory-admin.routes.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/admin/ksa-regulatory-admin.routes.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/contracts/ksa-regulatory.contract.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/contracts/ksa-regulatory.contract.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/controllers/ksa-regulatory-admin.controller.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/controllers/ksa-regulatory-admin.controller.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/controllers/ksa-regulatory.controller.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/controllers/ksa-regulatory.controller.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/diagnostics/ksa-regulatory-diagnostics.service.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/diagnostics/ksa-regulatory-diagnostics.service.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/diagnostics/ksa_regulatory-diagnostics.service.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/diagnostics/ksa_regulatory-diagnostics.service.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/errors/ksa-regulatory.error-codes.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/errors/ksa-regulatory.error-codes.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/events/ksa-regulatory.events.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/events/ksa-regulatory.events.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/events/ksa-regulatory.publishers.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/events/ksa-regulatory.publishers.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/events/ksa-regulatory.subscribers.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/events/ksa-regulatory.subscribers.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/i18n/ar.json -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/i18n/ar.json
+ksa-regulatory Module/source/backend/ksa-regulatory/i18n/en.json -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/i18n/en.json
+ksa-regulatory Module/source/backend/ksa-regulatory/index.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/index.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/jobs/ksa-regulatory-monitor.job.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/jobs/ksa-regulatory-monitor.job.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/ksa-regulatory.module.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/ksa-regulatory.module.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/ksa_regulatory.module.test.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/ksa_regulatory.module.test.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/lifecycle-registration.test.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/lifecycle-registration.test.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/lifecycle-registration.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/lifecycle-registration.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/manifest/ksa-regulatory.manifest.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/manifest/ksa-regulatory.manifest.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/mappers/ksa-regulatory.mapper.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/mappers/ksa-regulatory.mapper.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/policies/ksa-regulatory.policies.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/policies/ksa-regulatory.policies.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/ports/ai.port.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/ports/ai.port.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/ports/auth.port.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/ports/auth.port.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/ports/database.port.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/ports/database.port.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/ports/errors.port.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/ports/errors.port.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/ports/events.port.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/ports/events.port.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/ports/index.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/ports/index.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/ports/jobs.port.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/ports/jobs.port.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/ports/lifecycle.port.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/ports/lifecycle.port.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/ports/logger.port.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/ports/logger.port.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/ports/middleware.port.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/ports/middleware.port.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/ports/platform.port.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/ports/platform.port.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/repositories/auto-extracted.repo.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/repositories/auto-extracted.repo.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/repositories/ksa-regulatory-query.repo.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/repositories/ksa-regulatory-query.repo.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/repositories/ksa-regulatory-query.repository.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/repositories/ksa-regulatory-query.repository.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/repositories/ksa-regulatory.repository.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/repositories/ksa-regulatory.repository.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/routes/index.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/routes/index.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/routes/ksa-regulatory.routes.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/routes/ksa-regulatory.routes.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/schemas/ksa-regulatory.schemas.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/schemas/ksa-regulatory.schemas.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/security/ksa-regulatory.actions.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/security/ksa-regulatory.actions.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/security/ksa-regulatory.approval-matrix.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/security/ksa-regulatory.approval-matrix.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/security/ksa-regulatory.ownership.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/security/ksa-regulatory.ownership.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/security/ksa-regulatory.permissions.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/security/ksa-regulatory.permissions.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/security/ksa-regulatory.roles.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/security/ksa-regulatory.roles.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/security/ksa-regulatory.security.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/security/ksa-regulatory.security.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/security/ksa-regulatory.sod.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/security/ksa-regulatory.sod.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/services/jurisdiction-registry.service.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/services/jurisdiction-registry.service.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/services/ksa-admin.service.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/services/ksa-admin.service.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/services/ksa-compliance-scoring.service.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/services/ksa-compliance-scoring.service.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/services/ksa-cross-framework-mapping.service.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/services/ksa-cross-framework-mapping.service.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/services/ksa-diagnostics.service.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/services/ksa-diagnostics.service.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/services/ksa-hub.service.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/services/ksa-hub.service.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/services/ksa-obligation.service.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/services/ksa-obligation.service.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/services/ksa-readiness.service.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/services/ksa-readiness.service.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/services/ksa-regulatory-ai.service.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/services/ksa-regulatory-ai.service.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/services/ksa-regulatory-catalog.service.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/services/ksa-regulatory-catalog.service.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/services/ksa-regulatory-change-tracking.service.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/services/ksa-regulatory-change-tracking.service.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/services/ksa-regulatory-event.service.test.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/services/ksa-regulatory-event.service.test.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/services/ksa-regulatory-event.service.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/services/ksa-regulatory-event.service.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/services/ksa-regulatory-intelligence-helpers.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/services/ksa-regulatory-intelligence-helpers.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/services/ksa-regulatory-intelligence.service.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/services/ksa-regulatory-intelligence.service.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/services/ksa-regulatory-intelligence.types.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/services/ksa-regulatory-intelligence.types.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/services/ksa-regulatory-lifecycle.service.test.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/services/ksa-regulatory-lifecycle.service.test.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/services/ksa-regulatory-lifecycle.service.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/services/ksa-regulatory-lifecycle.service.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/services/ksa-regulatory-report-templates.service.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/services/ksa-regulatory-report-templates.service.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/services/ksa-regulatory-workflow.service.test.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/services/ksa-regulatory-workflow.service.test.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/services/ksa-regulatory-workflow.service.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/services/ksa-regulatory-workflow.service.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/services/ksa-sector-maturity-dimensions.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/services/ksa-sector-maturity-dimensions.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/services/ksa-sector-maturity-helpers.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/services/ksa-sector-maturity-helpers.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/services/ksa-sector-maturity.service.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/services/ksa-sector-maturity.service.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/services/ksa-sector-maturity.types.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/services/ksa-sector-maturity.types.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/types/ksa-regulatory.dto.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/types/ksa-regulatory.dto.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/types/ksa-regulatory.enums.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/types/ksa-regulatory.enums.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/types/ksa-regulatory.types.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/types/ksa-regulatory.types.ts
+ksa-regulatory Module/source/backend/ksa-regulatory/workflows/ksa-regulatory-lifecycle.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ksa-regulatory/workflows/ksa-regulatory-lifecycle.ts
+ksa-regulatory Module/source/backend/ports/database.port.ts -> modules/compliance/_inbound/ksa-regulatory/source/backend/ports/database.port.ts
+ksa-regulatory Module/source/config/claude-client.d.ts -> modules/compliance/_inbound/ksa-regulatory/source/config/claude-client.d.ts
+ksa-regulatory Module/source/config/claude-client.js -> modules/compliance/_inbound/ksa-regulatory/source/config/claude-client.js
+ksa-regulatory Module/source/config/claude-client.js.map -> modules/compliance/_inbound/ksa-regulatory/source/config/claude-client.js.map
+ksa-regulatory Module/source/config/claude-client.ts -> modules/compliance/_inbound/ksa-regulatory/source/config/claude-client.ts
+ksa-regulatory Module/source/config/database.ts -> modules/compliance/_inbound/ksa-regulatory/source/config/database.ts
+ksa-regulatory Module/source/frontend/ksa-regulatory/contracts/ksa-regulatory.contracts.ts -> modules/compliance/_inbound/ksa-regulatory/source/frontend/ksa-regulatory/contracts/ksa-regulatory.contracts.ts
+ksa-regulatory Module/source/frontend/ksa-regulatory/ksa-regulatory.routes.ts -> modules/compliance/_inbound/ksa-regulatory/source/frontend/ksa-regulatory/ksa-regulatory.routes.ts
+ksa-regulatory Module/source/frontend/ksa-regulatory/pages/ksa-regulatory-hub.component.ts -> modules/compliance/_inbound/ksa-regulatory/source/frontend/ksa-regulatory/pages/ksa-regulatory-hub.component.ts
+ksa-regulatory Module/source/frontend/ksa-regulatory/services/ksa-regulatory-api.service.ts -> modules/compliance/_inbound/ksa-regulatory/source/frontend/ksa-regulatory/services/ksa-regulatory-api.service.ts
+ksa-regulatory Module/source/ports/auth.port.ts -> modules/compliance/_inbound/ksa-regulatory/source/ports/auth.port.ts
+ksa-regulatory Module/source/ports/events.port.ts -> modules/compliance/_inbound/ksa-regulatory/source/ports/events.port.ts
+ksa-regulatory Module/source/ports/logger.port.ts -> modules/compliance/_inbound/ksa-regulatory/source/ports/logger.port.ts
+ksa-regulatory Module/source/ports/logger.ts -> modules/compliance/_inbound/ksa-regulatory/source/ports/logger.ts
+ksa-regulatory Module/source/schemas/common.schemas.d.ts -> modules/compliance/_inbound/ksa-regulatory/source/schemas/common.schemas.d.ts
+ksa-regulatory Module/source/schemas/common.schemas.js -> modules/compliance/_inbound/ksa-regulatory/source/schemas/common.schemas.js
+ksa-regulatory Module/source/schemas/common.schemas.js.map -> modules/compliance/_inbound/ksa-regulatory/source/schemas/common.schemas.js.map
+ksa-regulatory Module/source/schemas/common.schemas.ts -> modules/compliance/_inbound/ksa-regulatory/source/schemas/common.schemas.ts
+ksa-regulatory Module/source/shared/error-catalog.types.d.ts -> modules/compliance/_inbound/ksa-regulatory/source/shared/error-catalog.types.d.ts
+ksa-regulatory Module/source/shared/error-catalog.types.js -> modules/compliance/_inbound/ksa-regulatory/source/shared/error-catalog.types.js
+ksa-regulatory Module/source/shared/error-catalog.types.js.map -> modules/compliance/_inbound/ksa-regulatory/source/shared/error-catalog.types.js.map
+ksa-regulatory Module/source/shared/error-catalog.types.ts -> modules/compliance/_inbound/ksa-regulatory/source/shared/error-catalog.types.ts
+ksa-regulatory Module/source/utils/error.d.ts -> modules/compliance/_inbound/ksa-regulatory/source/utils/error.d.ts
+ksa-regulatory Module/source/utils/error.js -> modules/compliance/_inbound/ksa-regulatory/source/utils/error.js
+ksa-regulatory Module/source/utils/error.js.map -> modules/compliance/_inbound/ksa-regulatory/source/utils/error.js.map
+ksa-regulatory Module/source/utils/error.ts -> modules/compliance/_inbound/ksa-regulatory/source/utils/error.ts
+ksa-regulatory Module/tsconfig.json -> modules/compliance/_inbound/ksa-regulatory/tsconfig.json
+packages/modules/controls/routes/control-admin.routes.d.ts -> modules/compliance/_inbound/controls-package/routes/control-admin.routes.d.ts
+packages/modules/controls/routes/control-admin.routes.js -> modules/compliance/_inbound/controls-package/routes/control-admin.routes.js
+packages/modules/controls/routes/control-admin.routes.js.map -> modules/compliance/_inbound/controls-package/routes/control-admin.routes.js.map
+packages/modules/controls/routes/control-admin.routes.ts -> modules/compliance/_inbound/controls-package/routes/control-admin.routes.ts
+packages/modules/controls/routes/control-admin.ts -> modules/compliance/_inbound/controls-package/routes/control-admin.ts
+packages/modules/controls/routes/control-certification.routes.d.ts -> modules/compliance/_inbound/controls-package/routes/control-certification.routes.d.ts
+packages/modules/controls/routes/control-certification.routes.js -> modules/compliance/_inbound/controls-package/routes/control-certification.routes.js
+packages/modules/controls/routes/control-certification.routes.js.map -> modules/compliance/_inbound/controls-package/routes/control-certification.routes.js.map
+packages/modules/controls/routes/control-certification.routes.ts -> modules/compliance/_inbound/controls-package/routes/control-certification.routes.ts
+packages/modules/controls/routes/control-certification.ts -> modules/compliance/_inbound/controls-package/routes/control-certification.ts
+packages/modules/controls/routes/control-deficiency.routes.d.ts -> modules/compliance/_inbound/controls-package/routes/control-deficiency.routes.d.ts
+packages/modules/controls/routes/control-deficiency.routes.js -> modules/compliance/_inbound/controls-package/routes/control-deficiency.routes.js
+packages/modules/controls/routes/control-deficiency.routes.js.map -> modules/compliance/_inbound/controls-package/routes/control-deficiency.routes.js.map
+packages/modules/controls/routes/control-deficiency.routes.ts -> modules/compliance/_inbound/controls-package/routes/control-deficiency.routes.ts
+packages/modules/controls/routes/control-deficiency.ts -> modules/compliance/_inbound/controls-package/routes/control-deficiency.ts
+packages/modules/controls/routes/control-detail.routes.d.ts -> modules/compliance/_inbound/controls-package/routes/control-detail.routes.d.ts
+packages/modules/controls/routes/control-detail.routes.js -> modules/compliance/_inbound/controls-package/routes/control-detail.routes.js
+packages/modules/controls/routes/control-detail.routes.js.map -> modules/compliance/_inbound/controls-package/routes/control-detail.routes.js.map
+packages/modules/controls/routes/control-detail.routes.ts -> modules/compliance/_inbound/controls-package/routes/control-detail.routes.ts
+packages/modules/controls/routes/control-detail.ts -> modules/compliance/_inbound/controls-package/routes/control-detail.ts
+packages/modules/controls/routes/control-home.routes.d.ts -> modules/compliance/_inbound/controls-package/routes/control-home.routes.d.ts
+packages/modules/controls/routes/control-home.routes.js -> modules/compliance/_inbound/controls-package/routes/control-home.routes.js
+packages/modules/controls/routes/control-home.routes.js.map -> modules/compliance/_inbound/controls-package/routes/control-home.routes.js.map
+packages/modules/controls/routes/control-home.routes.ts -> modules/compliance/_inbound/controls-package/routes/control-home.routes.ts
+packages/modules/controls/routes/control-home.ts -> modules/compliance/_inbound/controls-package/routes/control-home.ts
+packages/modules/controls/routes/control-mapping.routes.d.ts -> modules/compliance/_inbound/controls-package/routes/control-mapping.routes.d.ts
+packages/modules/controls/routes/control-mapping.routes.js -> modules/compliance/_inbound/controls-package/routes/control-mapping.routes.js
+packages/modules/controls/routes/control-mapping.routes.js.map -> modules/compliance/_inbound/controls-package/routes/control-mapping.routes.js.map
+packages/modules/controls/routes/control-mapping.routes.ts -> modules/compliance/_inbound/controls-package/routes/control-mapping.routes.ts
+packages/modules/controls/routes/control-mapping.ts -> modules/compliance/_inbound/controls-package/routes/control-mapping.ts
+packages/modules/controls/routes/control-monitoring-admin.routes.d.ts -> modules/compliance/_inbound/controls-package/routes/control-monitoring-admin.routes.d.ts
+packages/modules/controls/routes/control-monitoring-admin.routes.js -> modules/compliance/_inbound/controls-package/routes/control-monitoring-admin.routes.js
+packages/modules/controls/routes/control-monitoring-admin.routes.js.map -> modules/compliance/_inbound/controls-package/routes/control-monitoring-admin.routes.js.map
+packages/modules/controls/routes/control-monitoring-admin.routes.ts -> modules/compliance/_inbound/controls-package/routes/control-monitoring-admin.routes.ts
+packages/modules/controls/routes/control-monitoring-admin.ts -> modules/compliance/_inbound/controls-package/routes/control-monitoring-admin.ts
+packages/modules/controls/routes/control-reports.routes.d.ts -> modules/compliance/_inbound/controls-package/routes/control-reports.routes.d.ts
+packages/modules/controls/routes/control-reports.routes.js -> modules/compliance/_inbound/controls-package/routes/control-reports.routes.js
+packages/modules/controls/routes/control-reports.routes.js.map -> modules/compliance/_inbound/controls-package/routes/control-reports.routes.js.map
+packages/modules/controls/routes/control-reports.routes.ts -> modules/compliance/_inbound/controls-package/routes/control-reports.routes.ts
+packages/modules/controls/routes/control-reports.ts -> modules/compliance/_inbound/controls-package/routes/control-reports.ts
+packages/modules/controls/routes/control-work-queue.routes.d.ts -> modules/compliance/_inbound/controls-package/routes/control-work-queue.routes.d.ts
+packages/modules/controls/routes/control-work-queue.routes.js -> modules/compliance/_inbound/controls-package/routes/control-work-queue.routes.js
+packages/modules/controls/routes/control-work-queue.routes.js.map -> modules/compliance/_inbound/controls-package/routes/control-work-queue.routes.js.map
+packages/modules/controls/routes/control-work-queue.routes.ts -> modules/compliance/_inbound/controls-package/routes/control-work-queue.routes.ts
+packages/modules/controls/routes/control-work-queue.ts -> modules/compliance/_inbound/controls-package/routes/control-work-queue.ts
+packages/modules/controls/routes/control-workflow.routes.d.ts -> modules/compliance/_inbound/controls-package/routes/control-workflow.routes.d.ts
+packages/modules/controls/routes/control-workflow.routes.js -> modules/compliance/_inbound/controls-package/routes/control-workflow.routes.js
+packages/modules/controls/routes/control-workflow.routes.js.map -> modules/compliance/_inbound/controls-package/routes/control-workflow.routes.js.map
+packages/modules/controls/routes/control-workflow.routes.ts -> modules/compliance/_inbound/controls-package/routes/control-workflow.routes.ts
+packages/modules/controls/routes/control-workflow.ts -> modules/compliance/_inbound/controls-package/routes/control-workflow.ts
+packages/modules/controls/routes/controls-diagnostics.routes.d.ts -> modules/compliance/_inbound/controls-package/routes/controls-diagnostics.routes.d.ts
+packages/modules/controls/routes/controls-diagnostics.routes.js -> modules/compliance/_inbound/controls-package/routes/controls-diagnostics.routes.js
+packages/modules/controls/routes/controls-diagnostics.routes.js.map -> modules/compliance/_inbound/controls-package/routes/controls-diagnostics.routes.js.map
+packages/modules/controls/routes/controls-diagnostics.routes.ts -> modules/compliance/_inbound/controls-package/routes/controls-diagnostics.routes.ts
+packages/modules/controls/routes/controls-diagnostics.ts -> modules/compliance/_inbound/controls-package/routes/controls-diagnostics.ts
+packages/modules/ksa-regulatory/routes.d.ts -> modules/compliance/_inbound/ksa-regulatory-package/routes.d.ts
+packages/modules/ksa-regulatory/routes.js -> modules/compliance/_inbound/ksa-regulatory-package/routes.js
+packages/modules/ksa-regulatory/routes.js.map -> modules/compliance/_inbound/ksa-regulatory-package/routes.js.map
+packages/modules/ksa-regulatory/routes.ts -> modules/compliance/_inbound/ksa-regulatory-package/routes.ts
+packages/modules/packs/pack-installer.controller.d.ts -> modules/compliance/_inbound/packs-package/pack-installer.controller.d.ts
+packages/modules/packs/pack-installer.controller.js -> modules/compliance/_inbound/packs-package/pack-installer.controller.js
+packages/modules/packs/pack-installer.controller.js.map -> modules/compliance/_inbound/packs-package/pack-installer.controller.js.map
+packages/modules/packs/pack-installer.controller.ts -> modules/compliance/_inbound/packs-package/pack-installer.controller.ts
+packages/modules/packs/pack-installer.service.d.ts -> modules/compliance/_inbound/packs-package/pack-installer.service.d.ts
+packages/modules/packs/pack-installer.service.js -> modules/compliance/_inbound/packs-package/pack-installer.service.js
+packages/modules/packs/pack-installer.service.js.map -> modules/compliance/_inbound/packs-package/pack-installer.service.js.map
+packages/modules/packs/pack-installer.service.ts -> modules/compliance/_inbound/packs-package/pack-installer.service.ts
+packages/modules/packs/pack-installer.ts -> modules/compliance/_inbound/packs-package/pack-installer.ts
+packages/modules/packs/pack-policy.controller.d.ts -> modules/compliance/_inbound/packs-package/pack-policy.controller.d.ts
+packages/modules/packs/pack-policy.controller.js -> modules/compliance/_inbound/packs-package/pack-policy.controller.js
+packages/modules/packs/pack-policy.controller.js.map -> modules/compliance/_inbound/packs-package/pack-policy.controller.js.map
+packages/modules/packs/pack-policy.controller.ts -> modules/compliance/_inbound/packs-package/pack-policy.controller.ts
+packages/modules/packs/pack-policy.service.d.ts -> modules/compliance/_inbound/packs-package/pack-policy.service.d.ts
+packages/modules/packs/pack-policy.service.js -> modules/compliance/_inbound/packs-package/pack-policy.service.js
+packages/modules/packs/pack-policy.service.js.map -> modules/compliance/_inbound/packs-package/pack-policy.service.js.map
+packages/modules/packs/pack-policy.service.ts -> modules/compliance/_inbound/packs-package/pack-policy.service.ts
+packages/modules/packs/pack-policy.ts -> modules/compliance/_inbound/packs-package/pack-policy.ts
+packages/modules/packs/ports/auth.port.d.ts -> modules/compliance/_inbound/packs-package/ports/auth.port.d.ts
+packages/modules/packs/ports/auth.port.js -> modules/compliance/_inbound/packs-package/ports/auth.port.js
+packages/modules/packs/ports/auth.port.js.map -> modules/compliance/_inbound/packs-package/ports/auth.port.js.map
+packages/modules/packs/ports/auth.port.ts -> modules/compliance/_inbound/packs-package/ports/auth.port.ts
+packages/modules/packs/ports/auth.ts -> modules/compliance/_inbound/packs-package/ports/auth.ts
+packages/modules/packs/ports/events.port.d.ts -> modules/compliance/_inbound/packs-package/ports/events.port.d.ts
+packages/modules/packs/ports/events.port.js -> modules/compliance/_inbound/packs-package/ports/events.port.js
+packages/modules/packs/ports/events.port.js.map -> modules/compliance/_inbound/packs-package/ports/events.port.js.map
+packages/modules/packs/ports/events.port.ts -> modules/compliance/_inbound/packs-package/ports/events.port.ts
+packages/modules/packs/ports/events.ts -> modules/compliance/_inbound/packs-package/ports/events.ts
+packages/modules/packs/ports/express-augment.ts -> modules/compliance/_inbound/packs-package/ports/express-augment.ts
+packages/modules/packs/ports/middleware.port.d.ts -> modules/compliance/_inbound/packs-package/ports/middleware.port.d.ts
+packages/modules/packs/ports/middleware.port.js -> modules/compliance/_inbound/packs-package/ports/middleware.port.js
+packages/modules/packs/ports/middleware.port.js.map -> modules/compliance/_inbound/packs-package/ports/middleware.port.js.map
+packages/modules/packs/ports/middleware.port.ts -> modules/compliance/_inbound/packs-package/ports/middleware.port.ts
+packages/modules/packs/ports/middleware.ts -> modules/compliance/_inbound/packs-package/ports/middleware.ts
+packages/modules/packs/ports/platform.port.d.ts -> modules/compliance/_inbound/packs-package/ports/platform.port.d.ts
+packages/modules/packs/ports/platform.port.js -> modules/compliance/_inbound/packs-package/ports/platform.port.js
+packages/modules/packs/ports/platform.port.js.map -> modules/compliance/_inbound/packs-package/ports/platform.port.js.map
+packages/modules/packs/ports/platform.port.ts -> modules/compliance/_inbound/packs-package/ports/platform.port.ts
+packages/modules/packs/ports/platform.ts -> modules/compliance/_inbound/packs-package/ports/platform.ts
+packages/modules/packs/routes/packs-diagnostics.routes.d.ts -> modules/compliance/_inbound/packs-package/routes/packs-diagnostics.routes.d.ts
+packages/modules/packs/routes/packs-diagnostics.routes.js -> modules/compliance/_inbound/packs-package/routes/packs-diagnostics.routes.js
+packages/modules/packs/routes/packs-diagnostics.routes.js.map -> modules/compliance/_inbound/packs-package/routes/packs-diagnostics.routes.js.map
+packages/modules/packs/routes/packs-diagnostics.routes.ts -> modules/compliance/_inbound/packs-package/routes/packs-diagnostics.routes.ts
+packages/modules/packs/routes/packs-diagnostics.ts -> modules/compliance/_inbound/packs-package/routes/packs-diagnostics.ts

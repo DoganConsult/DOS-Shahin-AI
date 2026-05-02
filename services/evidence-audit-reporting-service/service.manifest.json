@@ -1,0 +1,26 @@
+{
+  "serviceCode": "evidence-audit-reporting-service",
+  "displayName": "Evidence Audit Reporting Service",
+  "layer": "domain-service",
+  "ownerTeam": "product-shahin-ai",
+  "runtime": "node",
+  "dependsOn": [
+    "auth-service",
+    "tenant-service",
+    "workflow-service"
+  ],
+  "modules": [
+    "evidence",
+    "audit",
+    "reporting",
+    "analytics",
+    "dashboard",
+    "dashboard-editor",
+    "widgets",
+    "records",
+    "attestation"
+  ],
+  "exposes": {
+    "apiBase": "/api/evidence"
+  }
+}

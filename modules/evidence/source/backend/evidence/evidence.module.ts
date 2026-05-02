@@ -1,0 +1,85 @@
+import type { ModuleManifest } from '@dos/types';
+import { registerModule } from '@dos/module-sdk';
+import { EVIDENCE_PERMISSIONS, EVIDENCE_ROLES, EVIDENCE_ACTIONS } from './security/evidence.security';
+import { EVIDENCE_APPROVAL_MATRIX } from './security/evidence.approval-matrix';
+
+export const EVIDENCE_MANIFEST: ModuleManifest = {
+  code: 'evidence',
+  version: '2.0.0',
+  aliases: [],
+  nameEn: 'Evidence',
+  nameAr: 'الأدلة',
+  descriptionEn: 'Evidence collection, quality scoring, freshness tracking, auto-collection, and multimodal analysis.',
+  descriptionAr: 'جمع الأدلة وتسجيل الجودة وتتبع الحداثة والجمع التلقائي والتحليل متعدد الوسائط.',
+  tier: 'full',
+  category: 'core_grc',
+  routeBase: '/api/evidence',
+  eventNamespace: 'evidence',
+  tablePrefix: 'evidence_',
+  ownedTables: [
+    'evidence_actions', 'evidence_activity_log', 'evidence_admin_settings',
+    'evidence_attachments', 'evidence_attachments_config', 'evidence_auto_collection',
+    'evidence_collection_jobs', 'evidence_collection_log', 'evidence_collection_rules',
+    'evidence_collection_schedules', 'evidence_connector_configs', 'evidence_coverage_gaps',
+    'evidence_dependencies', 'evidence_expiry_alerts', 'evidence_freshness_config',
+    'evidence_links', 'evidence_metadata', 'evidence_multimodal_analysis',
+    'evidence_packages', 'evidence_quality_scores', 'evidence_request_items',
+    'evidence_requests', 'evidence_retention_policies', 'evidence_review_assignments',
+    'evidence_review_history', 'evidence_reviews', 'evidence_scoring_rubrics',
+    'evidence_source_configs', 'evidence_tags', 'evidence_templates',
+    'evidence_types', 'evidence_usage_log', 'evidence_validation_rules',
+    'evidence_version_history', 'evidence_workflows',
+  ],
+  sharedTables: ['artifacts', 'attestation_records'],
+  referencedTables: ['audit_trail', 'teams', 'compliance_frameworks', 'risk_assessments'],
+  aggregateRoots: ['evidence_requests', 'evidence_packages', 'evidence_links', 'evidence_reviews'],
+  publishedEvents: [
+    'evidence.collected', 'evidence.auto_collected', 'evidence.expired',
+    'evidence.coverage_low', 'evidence.more_info_requested',
+    'evidence.freshness_verified', 'evidence.freshness_refresh_requested',
+    'evidence.bulk_refresh_requested', 'evidence.multimodal_analyzed',
+    'evidence.quality_scored', 'evidence.package_created',
+    'evidence.review_completed', 'evidence.review_rejected',
+    'evidence.connector_synced', 'evidence.retention_applied',
+    'evidence.request_created', 'evidence.request_fulfilled',
+  ],
+  consumedEvents: [
+    'compliance.assessment_completed', 'audit.finding_created',
+    'risk.assessment_completed', 'vendor.assessment_due',
+    'workflow.status_changed',
+  ],
+  hardDeps: ['compliance'],
+  softDeps: ['risk', 'audit', 'vendor', 'policy'],
+  navId: 'evidence',
+  navChildCount: 11,
+  workflowTemplateCode: 'evidence_collection_cycle',
+  workflowSlaHours: 168,
+  automationLevel: 'full',
+  agentBinding: 'A05',
+  aiCapabilities: ['notes', 'drafts', 'recommendations', 'gate_checks', 'classification', 'scoring'],
+  aiEnabled: true,
+  featureFlags: ['evidence.multimodal', 'evidence.auto_collection', 'evidence.ai_scoring'],
+  installable: true,
+  provisioningOrder: 13,
+  licensingTier: 'starter',
+  visibility: 'both',
+  adminSurfaces: ['collection-rules', 'source-configs', 'retention-policies', 'scoring-rubrics'],
+
+  securityPermissions: EVIDENCE_PERMISSIONS,
+  securityRoles: EVIDENCE_ROLES,
+  securityActions: EVIDENCE_ACTIONS,
+  approvalRules: EVIDENCE_APPROVAL_MATRIX,
+  ownershipRules: [
+    { entityType: 'evidence_requests', ownerField: 'requested_by', reviewerField: 'reviewer_id', approverField: 'approver_id', assigneeField: 'assigned_to', orgScopeField: 'department_id', defaultOwnerRole: 'evidence.module_lead', canDelegate: true, delegateRoles: ['evidence.operator', 'evidence.contributor'], canReassign: true, reassignRoles: ['evidence.module_lead', 'evidence.executive_owner'], requiresApproval: true, creatorRights: 'full', externalVisible: false, rowLevelAccess: 'department' },
+    { entityType: 'evidence_packages', ownerField: 'owner_id', reviewerField: 'reviewer_id', approverField: 'approver_id', assigneeField: null, orgScopeField: 'department_id', defaultOwnerRole: 'evidence.module_lead', canDelegate: true, delegateRoles: ['evidence.operator'], canReassign: true, reassignRoles: ['evidence.module_lead', 'evidence.executive_owner'], requiresApproval: true, creatorRights: 'full', externalVisible: false, rowLevelAccess: 'department' },
+    { entityType: 'evidence_links', ownerField: 'created_by', reviewerField: null, approverField: null, assigneeField: null, orgScopeField: 'department_id', defaultOwnerRole: 'evidence.contributor', canDelegate: false, delegateRoles: [], canReassign: true, reassignRoles: ['evidence.module_lead'], requiresApproval: false, creatorRights: 'full', externalVisible: false, rowLevelAccess: 'department' },
+    { entityType: 'evidence_reviews', ownerField: 'reviewer_id', reviewerField: null, approverField: 'approver_id', assigneeField: 'reviewer_id', orgScopeField: 'department_id', defaultOwnerRole: 'evidence.reviewer', canDelegate: true, delegateRoles: ['evidence.operator'], canReassign: true, reassignRoles: ['evidence.module_lead', 'evidence.executive_owner'], requiresApproval: true, creatorRights: 'read_only', externalVisible: false, rowLevelAccess: 'department' },
+  ],
+  sodRules: [
+    { ruleCode: 'evidence.sod.collector_reviewer', descriptionEn: 'Evidence collector cannot review their own collected evidence', descriptionAr: 'لا يمكن لجامع الأدلة مراجعة أدلته', conflictingRoles: [], conflictingActions: ['evidence.evidence.collect', 'evidence.evidence.review'], conflictingTransitions: ['collected->reviewed'], severity: 'high', enforcement: 'block', temporaryWaiverAllowed: false, waiverMaxDays: null, compensatingControls: ['peer_review'], overrideAuthority: ['evidence.executive_owner'], auditObligations: ['log_sod_violation'] },
+    { ruleCode: 'evidence.sod.submitter_approver', descriptionEn: 'Evidence package submitter cannot approve their own package', descriptionAr: 'لا يمكن لمقدم حزمة الأدلة الموافقة على حزمته', conflictingRoles: [], conflictingActions: ['evidence.package.submit', 'evidence.package.approve'], conflictingTransitions: ['submitted->approved'], severity: 'high', enforcement: 'block', temporaryWaiverAllowed: false, waiverMaxDays: null, compensatingControls: ['independent_review'], overrideAuthority: ['evidence.executive_owner'], auditObligations: ['log_sod_violation'] },
+  ],
+    mcpServiceEntrypoint: 'modules/evidence/services/core/evidence.service'
+};
+
+registerModule(EVIDENCE_MANIFEST);

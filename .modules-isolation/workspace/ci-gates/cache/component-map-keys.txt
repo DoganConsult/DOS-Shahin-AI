@@ -1,0 +1,4 @@
+ShahinProfilePage
+ShahinSettingsPage
+ShahinTenantProfilePage
+ShahinTenantSettingsPage

@@ -1,0 +1,34 @@
+- generic [ref=e2]:
+  - generic [ref=e3]: Please enable cookies.
+  - generic [ref=e4]:
+    - banner [ref=e5]:
+      - heading "Error 1010" [level=1] [ref=e6]
+      - text: "Ray ID: 9f14adab7d11c630 • 2026-04-24 11:13:23 UTC"
+      - heading "Access denied" [level=2] [ref=e7]
+    - generic [ref=e9]:
+      - heading "What happened?" [level=2] [ref=e10]
+      - paragraph [ref=e11]: The owner of this website (shahin-ai.com) has banned your access based on your browser's signature (9f14adab7d11c630-ua56).
+      - paragraph [ref=e12]:
+        - text: Please see
+        - link "https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-1xxx-errors/error-1010/" [ref=e13] [cursor=pointer]:
+          - /url: https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-1xxx-errors/error-1010/
+        - text: for more details.
+    - generic [ref=e14]:
+      - generic [ref=e15]:
+        - text: Was this page helpful?
+        - button "Yes" [ref=e16]
+        - button "No" [ref=e17]
+      - generic [ref=e18]: Thank you for your feedback!
+    - paragraph [ref=e20]:
+      - generic [ref=e21]:
+        - text: "Cloudflare Ray ID:"
+        - strong [ref=e22]: 9f14adab7d11c630
+      - text: •
+      - generic [ref=e23]:
+        - text: "Your IP:"
+        - button "Click to reveal" [ref=e24]
+        - text: 149.104.105.124 •
+      - generic [ref=e25]:
+        - text: Performance & security by
+        - link "Cloudflare" [ref=e26] [cursor=pointer]:
+          - /url: https://www.cloudflare.com/5xx-error-landing
