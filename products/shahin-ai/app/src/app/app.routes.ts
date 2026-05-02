@@ -64,7 +64,14 @@ export const routes: Routes = [
         data: { moduleCode: 'foundation', productCode: 'shahin-ai', kpiScope: 'module-overview' },
         canActivate: [foundationGuard],
         children: [
-          { path: '', pathMatch: 'full', redirectTo: 'overview' },
+          { path: '', pathMatch: 'full', redirectTo: 'home' },
+          // Phase-1 Module Enrollment — Standard 5-Page Template
+          { path: 'home',              loadComponent: () => import('@dos/module-foundation/ui').then(m => m.FoundationHomeComponent), data: { moduleCode: 'foundation', kpiScope: 'module-overview' } },
+          { path: 'register',          loadComponent: () => import('@dos/module-foundation/ui').then(m => m.FoundationRegisterComponent), data: { moduleCode: 'foundation' } },
+          { path: 'detail',            loadComponent: () => import('@dos/module-foundation/ui').then(m => m.FoundationDetailComponent), data: { moduleCode: 'foundation' } },
+          { path: 'module-settings',   loadComponent: () => import('@dos/module-foundation/ui').then(m => m.FoundationModuleSettingsComponent), data: { moduleCode: 'foundation' } },
+          { path: 'module-audit',      loadComponent: () => import('@dos/module-foundation/ui').then(m => m.FoundationModuleAuditComponent), data: { moduleCode: 'foundation' } },
+          // Legacy routes (existing pages)
           { path: 'overview',          loadComponent: () => import('@dos/module-foundation/ui').then(m => m.FoundationOverviewComponent) },
           { path: 'organization',      loadComponent: () => import('@dos/module-foundation/ui').then(m => m.FoundationOrganizationComponent) },
           { path: 'business-units',    loadComponent: () => import('@dos/module-foundation/ui').then(m => m.FoundationBusinessUnitsComponent) },

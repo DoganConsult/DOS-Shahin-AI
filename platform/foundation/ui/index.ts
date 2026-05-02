@@ -25,6 +25,13 @@ export { FoundationSettingsComponent } from './pages/foundation-settings.compone
 export { FoundationTeamsComponent } from './pages/foundation-teams.component';
 export { FoundationUsersComponent } from './pages/foundation-users.component';
 
+// Phase-1 Module Enrollment — Standard 5-Page Template (Carbon-only)
+export { FoundationHomeComponent } from './pages/foundation-home.component';
+export { FoundationRegisterComponent } from './pages/foundation-register.component';
+export { FoundationDetailComponent } from './pages/foundation-detail.component';
+export { FoundationModuleSettingsComponent } from './pages/foundation-module-settings.component';
+export { FoundationModuleAuditComponent } from './pages/foundation-module-audit.component';
+
 // Shared chrome
 export { FoundationPageShellComponent } from './components/foundation-page-shell.component';
 
