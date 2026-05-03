@@ -538,6 +538,33 @@ const REGISTRY_COMPONENT_MAP: Record<string, () => Promise<Type<any>>> = {
   'marketing.download-kit-card':    () => import('@dos/ui-system').then(m => m.DosDownloadKitCardComponent),
   'marketing.gated-download-modal': () => import('@dos/ui-system').then(m => m.DosGatedDownloadModalComponent),
   'marketing.download-success':     () => import('@dos/ui-system').then(m => m.DosDownloadSuccessComponent),
+
+  // ── Phase M1.6 — Carbon Auth Pages Pack (5 pages + 19 primitives) ───────
+  // Carbon backing per row enforced by 20260503_0028_auth_pages_pack.sql.
+  'auth.shell':                  () => import('@dos/ui-system').then(m => m.DosAuthShellComponent),
+  'auth.brand-panel':            () => import('@dos/ui-system').then(m => m.DosAuthBrandPanelComponent),
+  'auth.login-card':             () => import('@dos/ui-system').then(m => m.DosAuthLoginCardComponent),
+  'auth.register-card':          () => import('@dos/ui-system').then(m => m.DosAuthRegisterCardComponent),
+  'auth.forgot-password-card':   () => import('@dos/ui-system').then(m => m.DosAuthForgotPasswordCardComponent),
+  'auth.reset-password-card':    () => import('@dos/ui-system').then(m => m.DosAuthResetPasswordCardComponent),
+  'auth.mfa-card':               () => import('@dos/ui-system').then(m => m.DosAuthMfaCardComponent),
+  'auth.field':                  () => import('@dos/ui-system').then(m => m.DosAuthFieldComponent),
+  'auth.password-field':         () => import('@dos/ui-system').then(m => m.DosAuthPasswordFieldComponent),
+  'auth.dropdown':               () => import('@dos/ui-system').then(m => m.DosAuthDropdownComponent),
+  'auth.checkbox':               () => import('@dos/ui-system').then(m => m.DosAuthCheckboxComponent),
+  'auth.submit':                 () => import('@dos/ui-system').then(m => m.DosAuthSubmitComponent),
+  'auth.sso-actions':            () => import('@dos/ui-system').then(m => m.DosAuthSsoActionsComponent),
+  'auth.notification':           () => import('@dos/ui-system').then(m => m.DosAuthNotificationComponent),
+  'auth.progress':               () => import('@dos/ui-system').then(m => m.DosAuthProgressComponent),
+  'auth.help':                   () => import('@dos/ui-system').then(m => m.DosAuthHelpComponent),
+  'auth.language-toggle':        () => import('@dos/ui-system').then(m => m.DosAuthLanguageToggleComponent),
+  'auth.security-note':          () => import('@dos/ui-system').then(m => m.DosAuthSecurityNoteComponent),
+  'auth.skeleton':               () => import('@dos/ui-system').then(m => m.DosAuthSkeletonComponent),
+  'auth.login.page':             () => import('@dos/ui-system').then(m => m.DosAuthLoginPageComponent),
+  'auth.register.page':          () => import('@dos/ui-system').then(m => m.DosAuthRegisterPageComponent),
+  'auth.forgot-password.page':   () => import('@dos/ui-system').then(m => m.DosAuthForgotPasswordPageComponent),
+  'auth.mfa.page':               () => import('@dos/ui-system').then(m => m.DosAuthMfaPageComponent),
+  'auth.reset-password.page':    () => import('@dos/ui-system').then(m => m.DosAuthResetPasswordPageComponent),
 };
 
 const PRIMITIVE_KEYS = new Set(Object.keys(CARBON_PRIMITIVE_COMPONENT_MAP));

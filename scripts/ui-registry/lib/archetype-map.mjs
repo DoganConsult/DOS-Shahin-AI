@@ -126,6 +126,16 @@ export function mapComponentKeyToArchetype(componentKey, route = '') {
    || k === 'marketing.download-success')
     return { archetype: 'command-home', template_export: 'ModuleOverviewTemplateComponent' };
 
+  // ── Phase M1.6 — Carbon Auth Pages Pack ─────────────────────────────────
+  // Auth pages and their composing primitives all map to the command-home
+  // archetype family (full-page composition with standalone components).
+  if (k === 'auth.login.page' || k === 'auth.register.page'
+   || k === 'auth.forgot-password.page' || k === 'auth.mfa.page'
+   || k === 'auth.reset-password.page')
+    return { archetype: 'command-home', template_export: 'ModuleOverviewTemplateComponent' };
+  if (typeof k === 'string' && k.startsWith('auth.'))
+    return { archetype: 'command-home', template_export: 'ModuleOverviewTemplateComponent' };
+
   // ── Per-module page-key conventions (PascalCase suffix patterns) ─────────
   if (/HeatmapPage$/.test(k) || /\.heatmap\.page$/.test(k))
     return { archetype: 'risk-landscape', template_export: 'ModuleHeatmapTemplateComponent' };

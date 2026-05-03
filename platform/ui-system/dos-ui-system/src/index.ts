@@ -115,6 +115,11 @@ export * from './marketing/marketing-home.page';
 export * from './marketing/download-kit.contract';
 export * from './marketing/download-kit.components';
 
+// Phase M1.6 — Carbon Auth Pages Pack (5 pages + 14 primitives + contract).
+export * from './auth/auth.contract';
+export * from './auth/auth-components';
+export * from './auth/auth-pages';
+
 // Agentic UI Interaction Layer (Phase M0.5) — 10 Carbon-backed components
 // + universal state/event contract. CI gate: agentic-ui-coverage.mjs.
 export * from './agentic/agentic.contract';
