@@ -1,6 +1,10 @@
 /**
  * @dos/module-templates — Universal Module Page Template Library
- * 13 canonical archetypes. All modules import from this single entry point.
+ * 31 canonical archetypes (roster patch — see ARCHETYPE_REGISTRY in
+ * module-template.types.ts for the canonical stable-key → component_key →
+ * raw IBM Carbon primitive table). All modules import from this single
+ * entry point. All 31 renderers are shipped (13 original + 18 added by the
+ * roster patch).
  *
  * Usage:
  *   import { CommandHomeTemplateComponent, ModuleInsightPillars } from '@platform/shell/templates';
@@ -22,11 +26,15 @@
 export * from './module-template.types';
 
 // ── Universal Insight Bar ───────────────────────────────────────────────────
-// <dos-insight-bar> — embedded in all 13 templates. Can also be used standalone.
+// <dos-insight-bar> — embedded in all 31 templates. Can also be used standalone.
 export { DosInsightBarComponent } from './dos-insight-bar.component';
 
 // ══════════════════════════════════════════════════════════════════════════════
-// THE 13 CANONICAL PAGE ARCHETYPES
+// THE 31 CANONICAL PAGE ARCHETYPES (31 renderers shipped — 13 original + 18 new)
+// All export names are mirrored in
+// scripts/ci-guards/template-coverage.mjs:ARCHETYPE_EXPORTS,
+// scripts/ui-registry/lib/archetype-map.mjs:mapComponentKeyToArchetype, and
+// platform/dos/registry/component-map.ts:REGISTRY_COMPONENT_MAP.
 // ══════════════════════════════════════════════════════════════════════════════
 
 // 1. Command Home
@@ -135,6 +143,53 @@ export {
 //     Use for: Module onboarding, first-run setup, feature activation
 export { ModuleOnboardingTemplateComponent as ActivationJourneyTemplateComponent } from './module-extra.templates';
 export { ModuleOnboardingTemplateComponent } from './module-extra.templates';
+
+// ══════════════════════════════════════════════════════════════════════════════
+// THE NEW 18 ARCHETYPES (roster patch 31) — renderer files now shipped
+// ══════════════════════════════════════════════════════════════════════════════
+
+// 14. Decision Dashboard
+export { DecisionDashboardTemplateComponent } from './module-decision-dashboard.template';
+
+// 15. Audit Trail
+export { AuditTrailTemplateComponent } from './module-audit-trail.template';
+
+// 16. Calendar Timeline
+export { CalendarTimelineTemplateComponent } from './module-calendar-timeline.template';
+
+// 17–31. Extended renderers (15) — co-located, raw IBM Carbon only.
+export {
+  CommandDashboardTemplateComponent,
+  ExportCenterTemplateComponent,
+  ComplianceCalendarTemplateComponent,
+  WorkflowTimelineTemplateComponent,
+  RemediationRoadmapTemplateComponent,
+  OrgChartTemplateComponent,
+  OwnershipMapTemplateComponent,
+  DelegationCenterTemplateComponent,
+  AgentFlowTemplateComponent,
+  AgentRegistryTemplateComponent,
+  UserAgentWorkbenchTemplateComponent,
+  AuditTrailLedgerTemplateComponent,
+  AuditTrailEvidenceTemplateComponent,
+  FollowUpCenterTemplateComponent,
+  IncidentResponseTemplateComponent,
+  type ExportArtifact,
+  type ComplianceCalendarEvent,
+  type WorkflowTimelineStep,
+  type RoadmapMilestone,
+  type OrgChartNode,
+  type OwnershipEdge,
+  type OwnershipRole,
+  type DelegationRule,
+  type AgentFlowStep,
+  type AgentRegistryEntry,
+  type AuditLedgerRow,
+  type AuditEvidenceArtifact,
+  type FollowUpItem,
+  type IncidentRunbookStep,
+  type IncidentCommunication,
+} from './module-archetypes-extended.templates';
 
 // ══════════════════════════════════════════════════════════════════════════════
 // COMPONENT KEY ↔ TEMPLATE REGISTRY

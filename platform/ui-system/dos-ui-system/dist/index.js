@@ -37,6 +37,17 @@ export * from './components/trust-layer.component';
 export * from './components/recommendation-card.component';
 export * from './components/why-chip.component';
 export * from './components/page-masthead.component';
+// 10 archetype-enhancement molecules (G13 — roster patch 31)
+export * from './components/mission-bar.component';
+export * from './components/narrative-panel.component';
+export * from './components/ai-confidence-chip.component';
+export * from './components/impact-preview-modal.component';
+export * from './components/readiness-meter.component';
+export * from './components/why-tooltip.component';
+export * from './components/twin-graph.component';
+export * from './components/side-panel.component';
+export * from './components/agent-followup.component';
+export * from './components/role-priority-switcher.component';
 // Universal Advanced Components (§26)
 export * from './components/command-center.component';
 export * from './components/entity-360-panel.component';

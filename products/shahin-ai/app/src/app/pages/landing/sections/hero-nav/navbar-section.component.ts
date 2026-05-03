@@ -159,7 +159,7 @@ import { DosLanguageSwitcherComponent } from '@dos/ui-system';
       display: none;
     }
 
-    @media (max-width: 900px) {
+    @media (max-width: 1080px) {
       /* hide desktop-only elements */
       .desktop-only { display: none !important; }
 
@@ -351,14 +351,14 @@ export class NavbarSectionComponent implements OnDestroy {
 
   @HostListener('window:resize')
   onResize(): void {
-    if (this.menuOpen && window.innerWidth > 900) this.closeMenu();
+    if (this.menuOpen && window.innerWidth > 1080) this.closeMenu();
   }
 
   scrollTo(id: string): void {
     const target = document.getElementById(id);
     if (!target) return;
 
-    const offset = window.innerWidth <= 900 ? 78 : 72;
+    const offset = window.innerWidth <= 1080 ? 78 : 72;
     const top = target.getBoundingClientRect().top + window.scrollY - offset;
     window.scrollTo({ top, behavior: 'smooth' });
   }

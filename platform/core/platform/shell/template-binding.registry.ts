@@ -1,7 +1,7 @@
 /**
  * Phase F-F3 — Static archetype → lazy template loader registry.
  *
- * Mirrors `scripts/ui-registry/lib/archetype-map.mjs` (canonical 13 archetypes)
+ * Mirrors `scripts/ui-registry/lib/archetype-map.mjs` (canonical 31 archetypes)
  * and `scripts/ci-guards/template-coverage.mjs` ARCHETYPE_EXPORTS so the FE
  * loader, the backend resolver, and the CI gates all agree.
  *
@@ -80,6 +80,51 @@ const LOADERS: Record<string, Loader> = {
     import('./templates/module-extra.templates').then(m => m.ModuleOnboardingTemplateComponent),
   ActivationJourneyTemplateComponent: () =>
     import('./templates/module-extra.templates').then(m => m.ModuleOnboardingTemplateComponent),
+
+  // ── 18 new archetype renderers (roster patch 31) ───────────────────────
+  // Decision Dashboard
+  DecisionDashboardTemplateComponent: () =>
+    import('./templates/module-decision-dashboard.template').then(m => m.DecisionDashboardTemplateComponent),
+
+  // Audit Trail
+  AuditTrailTemplateComponent: () =>
+    import('./templates/module-audit-trail.template').then(m => m.AuditTrailTemplateComponent),
+
+  // Calendar Timeline
+  CalendarTimelineTemplateComponent: () =>
+    import('./templates/module-calendar-timeline.template').then(m => m.CalendarTimelineTemplateComponent),
+
+  // Extended (15) — all in module-archetypes-extended.templates
+  CommandDashboardTemplateComponent: () =>
+    import('./templates/module-archetypes-extended.templates').then(m => m.CommandDashboardTemplateComponent),
+  ExportCenterTemplateComponent: () =>
+    import('./templates/module-archetypes-extended.templates').then(m => m.ExportCenterTemplateComponent),
+  ComplianceCalendarTemplateComponent: () =>
+    import('./templates/module-archetypes-extended.templates').then(m => m.ComplianceCalendarTemplateComponent),
+  WorkflowTimelineTemplateComponent: () =>
+    import('./templates/module-archetypes-extended.templates').then(m => m.WorkflowTimelineTemplateComponent),
+  RemediationRoadmapTemplateComponent: () =>
+    import('./templates/module-archetypes-extended.templates').then(m => m.RemediationRoadmapTemplateComponent),
+  OrgChartTemplateComponent: () =>
+    import('./templates/module-archetypes-extended.templates').then(m => m.OrgChartTemplateComponent),
+  OwnershipMapTemplateComponent: () =>
+    import('./templates/module-archetypes-extended.templates').then(m => m.OwnershipMapTemplateComponent),
+  DelegationCenterTemplateComponent: () =>
+    import('./templates/module-archetypes-extended.templates').then(m => m.DelegationCenterTemplateComponent),
+  AgentFlowTemplateComponent: () =>
+    import('./templates/module-archetypes-extended.templates').then(m => m.AgentFlowTemplateComponent),
+  AgentRegistryTemplateComponent: () =>
+    import('./templates/module-archetypes-extended.templates').then(m => m.AgentRegistryTemplateComponent),
+  UserAgentWorkbenchTemplateComponent: () =>
+    import('./templates/module-archetypes-extended.templates').then(m => m.UserAgentWorkbenchTemplateComponent),
+  AuditTrailLedgerTemplateComponent: () =>
+    import('./templates/module-archetypes-extended.templates').then(m => m.AuditTrailLedgerTemplateComponent),
+  AuditTrailEvidenceTemplateComponent: () =>
+    import('./templates/module-archetypes-extended.templates').then(m => m.AuditTrailEvidenceTemplateComponent),
+  FollowUpCenterTemplateComponent: () =>
+    import('./templates/module-archetypes-extended.templates').then(m => m.FollowUpCenterTemplateComponent),
+  IncidentResponseTemplateComponent: () =>
+    import('./templates/module-archetypes-extended.templates').then(m => m.IncidentResponseTemplateComponent),
 };
 
 export const ARCHETYPE_TEMPLATE_EXPORTS: ReadonlySet<string> =

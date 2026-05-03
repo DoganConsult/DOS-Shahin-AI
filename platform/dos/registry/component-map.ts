@@ -455,6 +455,47 @@ const REGISTRY_COMPONENT_MAP: Record<string, () => Promise<Type<any>>> = {
   'smart-grid.themes': () => import('../../core/platform/shell/templates/module-records.template').then(m => m.ModuleRecordsTemplateComponent),
   'smart-grid.tm': () => import('./carbon-primitive-renderers').then(m => m.CarbonDataTableRenderer),
   'smart-grid.users': () => import('./carbon-primitive-renderers').then(m => m.CarbonDataTableRenderer),
+
+  // ── 31-archetype roster patch (Phase F) ─────────────────────────────────
+  // 24 component_keys seeded by 20260503_0019_phase_f_archetype_registry_seed.sql
+  // Each maps to its canonical template export from
+  // `platform/core/platform/shell/templates/`. Mirrors:
+  //   • ARCHETYPE_REGISTRY in module-template.types.ts
+  //   • mapComponentKeyToArchetype() in scripts/ui-registry/lib/archetype-map.mjs
+  //   • LOADERS in platform/core/platform/shell/template-binding.registry.ts
+  // B — Insight
+  'module.posture.page': () => import('../../core/platform/shell/templates/module-posture-overview.template').then(m => m.PostureOverviewTemplateComponent),
+  'module.trends.page': () => import('../../core/platform/shell/templates/module-trend-intelligence.template').then(m => m.TrendIntelligenceTemplateComponent),
+  'module.dashboard.page': () => import('../../core/platform/shell/templates/module-decision-dashboard.template').then(m => m.DecisionDashboardTemplateComponent),
+  'module.command_dashboard.page': () => import('../../core/platform/shell/templates/module-archetypes-extended.templates').then(m => m.CommandDashboardTemplateComponent),
+  // C — Records
+  'module.heatmap.page': () => import('../../core/platform/shell/templates/module-heatmap.template').then(m => m.ModuleHeatmapTemplateComponent),
+  'module.record.detail.page': () => import('../../core/platform/shell/templates/module-record-story.template').then(m => m.RecordStoryTemplateComponent),
+  'module.record.create.page': () => import('../../core/platform/shell/templates/module-guided-create.template').then(m => m.GuidedCreateTemplateComponent),
+  // D — Work
+  'module.workflow_timeline.page': () => import('../../core/platform/shell/templates/module-archetypes-extended.templates').then(m => m.WorkflowTimelineTemplateComponent),
+  'module.followup_center.page': () => import('../../core/platform/shell/templates/module-archetypes-extended.templates').then(m => m.FollowUpCenterTemplateComponent),
+  // E — Evidence
+  'module.export.page': () => import('../../core/platform/shell/templates/module-archetypes-extended.templates').then(m => m.ExportCenterTemplateComponent),
+  'module.audit_trail_ledger.page': () => import('../../core/platform/shell/templates/module-archetypes-extended.templates').then(m => m.AuditTrailLedgerTemplateComponent),
+  'module.audit_evidence.page': () => import('../../core/platform/shell/templates/module-archetypes-extended.templates').then(m => m.AuditTrailEvidenceTemplateComponent),
+  // F — Time / Plan
+  'module.calendar.page': () => import('../../core/platform/shell/templates/module-calendar-timeline.template').then(m => m.CalendarTimelineTemplateComponent),
+  'module.compliance_calendar.page': () => import('../../core/platform/shell/templates/module-archetypes-extended.templates').then(m => m.ComplianceCalendarTemplateComponent),
+  'module.roadmap.page': () => import('../../core/platform/shell/templates/module-archetypes-extended.templates').then(m => m.RemediationRoadmapTemplateComponent),
+  // G — Governance
+  'module.org_chart.page': () => import('../../core/platform/shell/templates/module-archetypes-extended.templates').then(m => m.OrgChartTemplateComponent),
+  'module.ownership_map.page': () => import('../../core/platform/shell/templates/module-archetypes-extended.templates').then(m => m.OwnershipMapTemplateComponent),
+  'module.delegation_center.page': () => import('../../core/platform/shell/templates/module-archetypes-extended.templates').then(m => m.DelegationCenterTemplateComponent),
+  // H — Agentic
+  'module.ai.advisor.page': () => import('../../core/platform/shell/templates/module-ai-advisor.template').then(m => m.AiAdvisorTemplateComponent),
+  'module.agent_flow.page': () => import('../../core/platform/shell/templates/module-archetypes-extended.templates').then(m => m.AgentFlowTemplateComponent),
+  'module.agent_registry.page': () => import('../../core/platform/shell/templates/module-archetypes-extended.templates').then(m => m.AgentRegistryTemplateComponent),
+  'module.user_agent_workbench.page': () => import('../../core/platform/shell/templates/module-archetypes-extended.templates').then(m => m.UserAgentWorkbenchTemplateComponent),
+  // J — Onboarding
+  'module.activation.page': () => import('../../core/platform/shell/templates/module-extra.templates').then(m => m.ModuleOnboardingTemplateComponent),
+  // K — Operational P0
+  'module.incident_response.page': () => import('../../core/platform/shell/templates/module-archetypes-extended.templates').then(m => m.IncidentResponseTemplateComponent),
 };
 
 const PRIMITIVE_KEYS = new Set(Object.keys(CARBON_PRIMITIVE_COMPONENT_MAP));

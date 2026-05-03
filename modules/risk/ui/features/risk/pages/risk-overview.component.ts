@@ -151,7 +151,8 @@ export class RiskOverviewComponent implements OnInit {
 
   readonly primaryAction: ModuleAction = {
     label: 'Add Risk',
-    action: () => this.router.navigate(['/risk/register'])
+    route: '/risk/register',
+    actionKey: 'risk.create',
   };
 
   readonly secondaryActions = [

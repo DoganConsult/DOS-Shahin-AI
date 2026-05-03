@@ -1,7 +1,7 @@
 /**
  * Shared archetype/template mapping used by ui-registry:{import,diff,seed:dev}.
  *
- * Maps a Dynamic-UI component_key to one of the 13 canonical archetypes and
+ * Maps a Dynamic-UI component_key to one of the 31 canonical archetypes and
  * its ESM export from `@platform/shell/templates`. Mirrors:
  *   - chk_archetype constraint in 20260503_0017_phase_f_ui_route_template_binding.sql
  *   - ARCHETYPE_EXPORTS in scripts/ci-guards/template-coverage.mjs
@@ -42,6 +42,46 @@ export function mapComponentKeyToArchetype(componentKey, route = '') {
     return { archetype: 'ai-advisor', template_export: 'AiAdvisorTemplateComponent' };
   if (k === 'product-wc.checklist' || /onboarding|activation/i.test(k))
     return { archetype: 'activation-journey', template_export: 'ActivationJourneyTemplateComponent' };
+
+  // ── New 18 archetypes (roster patch 31) ──────────────────────────────────
+  // Each pair mirrors ARCHETYPE_REGISTRY in
+  // platform/core/platform/shell/templates/module-template.types.ts.
+  if (k === 'module.dashboard.page')
+    return { archetype: 'decision-dashboard', template_export: 'DecisionDashboardTemplateComponent' };
+  if (k === 'module.command_dashboard.page')
+    return { archetype: 'command-dashboard', template_export: 'CommandDashboardTemplateComponent' };
+  if (k === 'module.workflow_timeline.page')
+    return { archetype: 'workflow-timeline', template_export: 'WorkflowTimelineTemplateComponent' };
+  if (k === 'module.followup_center.page')
+    return { archetype: 'follow-up-center', template_export: 'FollowUpCenterTemplateComponent' };
+  if (k === 'module.export.page')
+    return { archetype: 'export-center', template_export: 'ExportCenterTemplateComponent' };
+  if (k === 'module.audit_trail' || k === 'module.audit_trail.page')
+    return { archetype: 'audit-trail', template_export: 'AuditTrailTemplateComponent' };
+  if (k === 'module.audit_trail_ledger.page')
+    return { archetype: 'audit-trail-ledger', template_export: 'AuditTrailLedgerTemplateComponent' };
+  if (k === 'module.audit_evidence.page')
+    return { archetype: 'audit-trail-evidence', template_export: 'AuditTrailEvidenceTemplateComponent' };
+  if (k === 'module.calendar.page')
+    return { archetype: 'calendar-timeline', template_export: 'CalendarTimelineTemplateComponent' };
+  if (k === 'module.compliance_calendar.page')
+    return { archetype: 'compliance-calendar', template_export: 'ComplianceCalendarTemplateComponent' };
+  if (k === 'module.roadmap.page')
+    return { archetype: 'remediation-roadmap', template_export: 'RemediationRoadmapTemplateComponent' };
+  if (k === 'module.org_chart.page')
+    return { archetype: 'org-chart', template_export: 'OrgChartTemplateComponent' };
+  if (k === 'module.ownership_map.page')
+    return { archetype: 'ownership-map', template_export: 'OwnershipMapTemplateComponent' };
+  if (k === 'module.delegation_center.page')
+    return { archetype: 'delegation-center', template_export: 'DelegationCenterTemplateComponent' };
+  if (k === 'module.agent_flow.page')
+    return { archetype: 'agent-flow', template_export: 'AgentFlowTemplateComponent' };
+  if (k === 'module.agent_registry.page')
+    return { archetype: 'agent-registry', template_export: 'AgentRegistryTemplateComponent' };
+  if (k === 'module.user_agent_workbench.page')
+    return { archetype: 'user-agent-workbench', template_export: 'UserAgentWorkbenchTemplateComponent' };
+  if (k === 'module.incident_response.page')
+    return { archetype: 'incident-response', template_export: 'IncidentResponseTemplateComponent' };
 
   // ── Per-module page-key conventions (PascalCase suffix patterns) ─────────
   if (/HeatmapPage$/.test(k) || /\.heatmap\.page$/.test(k))
@@ -107,8 +147,19 @@ export function mapComponentKeyToArchetype(componentKey, route = '') {
   return null;
 }
 
+// Canonical 31 archetypes — kept in lockstep with ARCHETYPE_REGISTRY in
+// platform/core/platform/shell/templates/module-template.types.ts and
+// chk_archetype in 20260503_0019_phase_f_archetype_registry_seed.sql.
 export const ALLOWED_ARCHETYPES = new Set([
-  'command-home','posture-overview','intelligent-register','risk-landscape',
-  'workflow-control','trend-intelligence','evidence-reports','action-queue',
-  'module-settings','record-story','guided-create','ai-advisor','activation-journey',
+  'command-home',
+  'decision-dashboard','command-dashboard','posture-overview','trend-intelligence',
+  'intelligent-register','risk-landscape','record-story','guided-create',
+  'action-queue','workflow-control','workflow-timeline','follow-up-center',
+  'evidence-reports','export-center','audit-trail','audit-trail-ledger','audit-trail-evidence',
+  'calendar-timeline','compliance-calendar','remediation-roadmap',
+  'org-chart','ownership-map','delegation-center',
+  'ai-advisor','agent-flow','agent-registry','user-agent-workbench',
+  'module-settings',
+  'activation-journey',
+  'incident-response',
 ]);

@@ -18,10 +18,34 @@ import { fileURLToPath } from 'node:url';
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const MIG_DIR = join(REPO, 'platform/dos/migrations/public');
 
+// Canonical 31 archetypes — mirror of ARCHETYPE_REGISTRY in
+// platform/core/platform/shell/templates/module-template.types.ts and the
+// chk_archetype constraint in 20260503_0019_phase_f_archetype_registry_seed.sql.
+// Single source of truth: the TS registry. Drift fails CI here AND the
+// assertArchetypeRegistryIntegrity() runtime guard.
 const ALLOWED_ARCHETYPES = new Set([
-  'command-home','posture-overview','intelligent-register','risk-landscape',
-  'workflow-control','trend-intelligence','evidence-reports','action-queue',
-  'module-settings','record-story','guided-create','ai-advisor','activation-journey',
+  // A
+  'command-home',
+  // B
+  'decision-dashboard','command-dashboard','posture-overview','trend-intelligence',
+  // C
+  'intelligent-register','risk-landscape','record-story','guided-create',
+  // D
+  'action-queue','workflow-control','workflow-timeline','follow-up-center',
+  // E
+  'evidence-reports','export-center','audit-trail','audit-trail-ledger','audit-trail-evidence',
+  // F
+  'calendar-timeline','compliance-calendar','remediation-roadmap',
+  // G
+  'org-chart','ownership-map','delegation-center',
+  // H
+  'ai-advisor','agent-flow','agent-registry','user-agent-workbench',
+  // I
+  'module-settings',
+  // J
+  'activation-journey',
+  // K
+  'incident-response',
 ]);
 const EXEMPT = new Set(['/profile','/settings','/tenant-profile','/tenant-settings']);
 

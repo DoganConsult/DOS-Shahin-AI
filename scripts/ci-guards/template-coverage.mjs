@@ -4,7 +4,7 @@
  *
  * Verifies that every active dynamic_ui_routes component_key in
  * platform/dos/registry/component-map.ts resolves (via lazy-import) to one
- * of the 13 canonical archetype templates exported from
+ * of the 31 canonical archetype templates exported from
  * platform/core/platform/shell/templates/index.ts.
  *
  * Allowed exemptions:
@@ -31,7 +31,14 @@ const EXEMPT_KEYS = new Set([
   'ShahinTenantSettingsPage',
 ]);
 
+// Canonical 31-archetype export aliases — kept in lockstep with
+// ARCHETYPE_REGISTRY in
+// platform/core/platform/shell/templates/module-template.types.ts and
+// scripts/ui-registry/lib/archetype-map.mjs. All 31 renderers are shipped
+// (13 original + 18 added by the roster patch) and re-exported through
+// platform/core/platform/shell/templates/index.ts.
 const ARCHETYPE_EXPORTS = new Set([
+  // Original 13 (existing renderers)
   'ModuleOverviewTemplateComponent',
   'CommandHomeTemplateComponent',
   'PostureOverviewTemplateComponent',
@@ -53,6 +60,25 @@ const ARCHETYPE_EXPORTS = new Set([
   'AiAdvisorTemplateComponent',
   'ModuleOnboardingTemplateComponent',
   'ActivationJourneyTemplateComponent',
+  // 18 new archetype renderers — shipped via templates/index.ts
+  'DecisionDashboardTemplateComponent',
+  'CommandDashboardTemplateComponent',
+  'ExportCenterTemplateComponent',
+  'CalendarTimelineTemplateComponent',
+  'ComplianceCalendarTemplateComponent',
+  'WorkflowTimelineTemplateComponent',
+  'RemediationRoadmapTemplateComponent',
+  'OrgChartTemplateComponent',
+  'OwnershipMapTemplateComponent',
+  'DelegationCenterTemplateComponent',
+  'AgentFlowTemplateComponent',
+  'AgentRegistryTemplateComponent',
+  'UserAgentWorkbenchTemplateComponent',
+  'AuditTrailTemplateComponent',
+  'AuditTrailLedgerTemplateComponent',
+  'AuditTrailEvidenceTemplateComponent',
+  'FollowUpCenterTemplateComponent',
+  'IncidentResponseTemplateComponent',
 ]);
 
 if (!existsSync(TEMPLATES_INDEX)) {
