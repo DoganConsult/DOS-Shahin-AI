@@ -21,12 +21,29 @@ import {
 } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Title } from '@angular/platform-browser';
+// Phase H — Carbon chrome is now consumed exclusively through the
+// @dos/ui-system workspace-host-kit (Carbon-only wrappers under
+// platform/ui-system/dos-ui-system/src/shell/*). Direct
+// `carbon-components-angular` imports are forbidden here per
+// UNIFIED_MOUNT_POLICY §1 and ui-os-carbon-boundary-guard.
 import {
-  BreadcrumbModule,
-  SearchModule,
-  SkeletonModule,
-  UIShellModule,
-} from 'carbon-components-angular';
+  DosAppShellComponent,
+  DosMobileShellComponent,
+  DosMobileDrawerComponent,
+  DosWorkspaceHeaderComponent,
+  DosWorkspaceSidebarComponent,
+  DosMobileBottomNavComponent,
+  DosCommandSearchComponent,
+  DosInboxCenterComponent,
+  DosQuickCreateComponent,
+  DosSkeletonComponent,
+  DosIconComponent,
+  type DosBottomNavItem,
+  type CommandSearchResult,
+  type InboxMessage,
+  type QuickCreateAction,
+} from '@dos/ui-system';
+import type { WorkspaceNavItem } from '@dos/ui-system';
 import {
   WorkspaceNavigationAdapter,
   AccessStore as PlatformAccessStore,
@@ -37,26 +54,8 @@ import type { DosNavGroup, DosNavItem } from '@dos/ui-contracts';
 import { BreadcrumbService } from './breadcrumb.service';
 
 const CARBON_BREAKPOINT_LARGE_PX = 1056;
-
-/** Group → Carbon icon name mapping (rendered as inline SVG via ibmIcon or text fallback). */
-const GROUP_ICONS: Record<string, string> = {
-  'foundation':        'layers',
-  'compliance':        'security',
-  'risk':              'warning',
-  'config-center':     'settings',
-  'access':            'locked',
-  'dauth':             'user--admin',
-  'dnoc':              'network--3',
-  'dsoc':              'security',
-  'ai-platform':       'ai',
-  'dos-platform':      'platforms',
-  'runtime':           'cloud',
-  'ui-system':         'application',
-  'tenant-management': 'enterprise',
-  'multi-tenant-mgmt': 'building',
-  'foundation-admin':  'layers',
-  'modules':           'folder',
-};
+const FALLBACK_GROUP_ICON = 'layout-dashboard';
+const FALLBACK_ITEM_ICON  = 'dot';
 
 @Component({
   selector: 'app-shell-host',
@@ -65,206 +64,243 @@ const GROUP_ICONS: Record<string, string> = {
     CommonModule,
     RouterOutlet,
     RouterLink,
-    UIShellModule,
-    BreadcrumbModule,
-    SearchModule,
-    SkeletonModule,
+    DosAppShellComponent,
+    DosMobileShellComponent,
+    DosMobileDrawerComponent,
+    DosWorkspaceHeaderComponent,
+    DosWorkspaceSidebarComponent,
+    DosMobileBottomNavComponent,
+    DosCommandSearchComponent,
+    DosInboxCenterComponent,
+    DosQuickCreateComponent,
+    DosSkeletonComponent,
+    DosIconComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [`
-    /* ─── Rail toggle ─── */
-    .shell-rail-toggle {
-      display: flex;
+    :host { display: block; min-height: 100vh; }
+
+    /* Header chrome — owned by dos-workspace-header projection slots. */
+    .shell-header-toggle {
+      display: inline-flex;
       align-items: center;
       justify-content: center;
       width: 2rem;
       height: 2rem;
       background: none;
-      border: none;
+      border: 0;
       cursor: pointer;
-      color: var(--cds-icon-inverse, #fff);
-      margin-inline-start: var(--cds-spacing-03);
+      color: var(--cds-text-on-color, #fff);
       border-radius: 2px;
       transition: background 0.15s;
     }
-    .shell-rail-toggle:hover { background: var(--cds-layer-hover, rgba(255,255,255,0.08)); }
-
-    /* ─── Nav search ─── */
-    .shell-nav-search {
-      padding: var(--cds-spacing-03) var(--cds-spacing-05);
-      border-bottom: 1px solid var(--cds-border-subtle);
+    .shell-header-toggle:hover { background: var(--cds-layer-hover, rgba(255,255,255,0.08)); }
+    .shell-header-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--cds-spacing-03, 0.5rem);
+      color: inherit;
+      text-decoration: none;
+      font-weight: 600;
     }
+    .shell-header-brand a { color: inherit; text-decoration: none; }
 
-    /* ─── Breadcrumb strip ─── */
+    /* Breadcrumb strip — pure HTML; no Carbon import. */
     .shell-breadcrumb {
-      position: sticky;
-      top: 3rem;
-      z-index: 5999;
+      padding: var(--cds-spacing-03, 0.5rem) var(--cds-spacing-06, 1.5rem);
       background: var(--cds-layer-01, #f4f4f4);
       border-bottom: 1px solid var(--cds-border-subtle-01, #e0e0e0);
-      padding: var(--cds-spacing-03) var(--cds-spacing-06);
     }
+    .shell-breadcrumb ol { display: flex; gap: var(--cds-spacing-03, 0.5rem); list-style: none; margin: 0; padding: 0; flex-wrap: wrap; }
+    .shell-breadcrumb a { color: var(--cds-link-primary, #0f62fe); text-decoration: none; }
+    .shell-breadcrumb a:hover { text-decoration: underline; }
+    .shell-breadcrumb__sep { margin-inline-start: var(--cds-spacing-03, 0.5rem); color: var(--cds-text-secondary, #6f6f6f); }
 
-    /* ─── Page header strip ─── */
-    .shell-page-header {
-      padding: var(--cds-spacing-05) var(--cds-spacing-06) 0;
-      max-width: 1600px;
-    }
-    .shell-page-title {
-      margin: 0;
-      font-size: var(--cds-productive-heading-04-font-size, 1.75rem);
-      font-weight: var(--cds-productive-heading-04-font-weight, 400);
-      line-height: 1.25;
-      color: var(--cds-text-primary);
-    }
+    /* Page title strip. */
+    .shell-page-header { padding: var(--cds-spacing-05, 1rem) var(--cds-spacing-06, 1.5rem) 0; max-width: 1600px; }
+    .shell-page-title { margin: 0; font-size: 1.75rem; font-weight: 400; line-height: 1.25; color: var(--cds-text-primary, #161616); }
 
-    /* ─── Nav item disabled state ─── */
-    .shell-nav-disabled {
-      opacity: 0.45;
-      pointer-events: none;
-    }
+    /* Skeleton container. */
+    .shell-skeleton { padding: var(--cds-spacing-07, 2rem) var(--cds-spacing-06, 1.5rem); display: grid; gap: var(--cds-spacing-05, 1rem); }
 
-    /* ─── Skeleton container ─── */
-    .shell-skeleton {
-      padding: var(--cds-spacing-07) var(--cds-spacing-06);
-      display: grid;
-      gap: var(--cds-spacing-05);
+    /* Header-mounted command-search — keep narrow inside the inverse bar. */
+    .shell-header-cmd { display: inline-block; min-width: 12rem; max-width: 22rem; }
+    .shell-header-cmd ::ng-deep .dos-command-search__input {
+      background: var(--cds-field-02, rgba(255,255,255,0.08));
+      color: var(--cds-text-on-color, #fff);
+      border: 1px solid transparent;
+      height: 32px;
+      padding: 0 .5rem;
+      font-size: .875rem;
     }
-
-    /* ─── Active group highlight ─── */
-    :host ::ng-deep .cds--side-nav__menu[aria-expanded="true"] > a {
-      color: var(--cds-interactive, #0f62fe);
+    .shell-header-cmd ::ng-deep .dos-command-search__input::placeholder {
+      color: var(--cds-text-placeholder-on-color, rgba(255,255,255,0.6));
     }
-
   `],
   template: `
-    <!-- ═══════════════════════════════════════════
-         HEADER (cds-header)
-    ═══════════════════════════════════════════ -->
-    <cds-header
-      [brand]="headerBrand()"
-      [name]="headerWorkspaceTitle()"
-      [route]="headerHomeRoute()"
-      useRouter="true">
+    <!-- Phase H — workspace-host-kit consumer mount.
+         Desktop  → dos-app-shell + dos-workspace-sidebar
+         Mobile   → dos-mobile-shell + dos-mobile-drawer + dos-mobile-bottom-nav
+         Common   → dos-workspace-header (header surface), dos-skeleton (loading).
+         No raw cds-* tags. -->
 
-      <cds-hamburger
-        [active]="sideNavActive()"
-        (selected)="toggleSideNav()">
-      </cds-hamburger>
-
-      <!-- Rail mode toggle (W-E) -->
-      <button
-        class="shell-rail-toggle"
-        [title]="isRail() ? 'Expand sidebar' : 'Collapse sidebar'"
-        [attr.aria-label]="isRail() ? 'Expand sidebar' : 'Collapse to rail'"
-        (click)="toggleRail()">
-        {{ isRail() ? '▶' : '◀' }}
-      </button>
-
-    </cds-header>
-
-    <!-- ═══════════════════════════════════════════
-         SIDENAV (W-A, W-D, W-E, W-F)
-    ═══════════════════════════════════════════ -->
-    @if (navGroups().length > 0) {
-      <cds-sidenav
-        [expanded]="sideNavActive()"
-        [rail]="isRail()"
-        useRouter="true"
-        [ariaLabel]="sideNavAriaLabel()">
-
-        <!-- W-D: Nav search filter -->
-        @if (!isRail()) {
-          <div class="shell-nav-search">
-            <cds-search
-              size="sm"
-              placeholder="Filter navigation"
-              [value]="navSearch()"
-              (valueChange)="navSearch.set($event)"
-              id="shell-nav-search-input">
-            </cds-search>
-          </div>
-        }
-
-        <!-- W-A: Groups with icons, active state, auto-expand -->
-        @for (group of filteredGroups(); track group.id) {
-          <cds-sidenav-menu
-            [title]="groupLabel(group.id, group.label)"
-            [active]="activeGroupId() === group.id">
-
-            @for (item of group.items; track item.id) {
-              @if (item.enabled !== false) {
-                <!-- Normal routable item -->
-                <cds-sidenav-item
-                  [route]="[item.route]"
-                  useRouter="true"
-                  [active]="isActive(item)"
-                  [attr.aria-current]="isActive(item) ? 'page' : null"
-                  (navigation)="onNav(item)">
-                  {{ label(item) }}
-                </cds-sidenav-item>
-              } @else {
-                <!-- Disabled / coming-soon item -->
-                <cds-sidenav-item class="shell-nav-disabled"
-                  [attr.aria-disabled]="true"
-                  [title]="disabledTitle(item)">
-                  {{ label(item) }}
-                </cds-sidenav-item>
-              }
-            }
-          </cds-sidenav-menu>
-        }
-
-        @if (filteredGroups().length === 0 && navSearch()) {
-          <p style="padding:1rem;color:var(--cds-text-secondary);font-size:.875rem">
-            No results for "{{ navSearch() }}"
-          </p>
-        }
-      </cds-sidenav>
-    }
-
-    <!-- ═══════════════════════════════════════════
-         BREADCRUMB STRIP (W-B)
-    ═══════════════════════════════════════════ -->
-    @if (breadcrumbs().length > 1) {
-      <div class="shell-breadcrumb" id="shell-breadcrumb-strip" role="navigation" aria-label="Breadcrumb">
-        <cds-breadcrumb [noTrailingSlash]="true">
-          @for (crumb of breadcrumbs(); track crumb.label; let last = $last) {
-            <cds-breadcrumb-item>
-              @if (!last && crumb.route) {
-                <a [routerLink]="crumb.route">{{ crumb.label }}</a>
-              } @else {
-                {{ crumb.label }}
-              }
-            </cds-breadcrumb-item>
+    <ng-template #headerTpl>
+      <dos-workspace-header shellHeader [title]="headerWorkspaceTitle()">
+        <ng-container headerStart>
+          <button type="button"
+                  class="shell-header-toggle"
+                  [attr.aria-label]="ariaToggleNav()"
+                  (click)="toggleSideNav()">
+            <dos-icon name="menu" [size]="20" [ariaLabel]="ariaToggleNav()"></dos-icon>
+          </button>
+          <span class="shell-header-brand">
+            <a [routerLink]="headerHomeRoute()">{{ headerBrand() }}</a>
+          </span>
+        </ng-container>
+        <ng-container headerEnd>
+          @if (!isMobile()) {
+            <dos-command-search class="shell-header-cmd"
+                                [results]="commandResults()"
+                                [placeholder]="commandPlaceholder()"
+                                [ariaLabel]="commandAria()"
+                                (queryChange)="onCommandQuery($event)"
+                                (select)="onCommandSelect($event)">
+            </dos-command-search>
           }
-        </cds-breadcrumb>
-      </div>
-    }
+          <button type="button"
+                  class="shell-header-toggle"
+                  [attr.aria-label]="inboxToggleAria()"
+                  [attr.aria-expanded]="inboxOpen()"
+                  (click)="toggleInbox()">
+            <dos-icon name="bell" [size]="20" [ariaLabel]="inboxToggleAria()"></dos-icon>
+          </button>
+          @if (!isMobile()) {
+            <button type="button"
+                    class="shell-header-toggle"
+                    [attr.title]="ariaToggleRail()"
+                    [attr.aria-label]="ariaToggleRail()"
+                    (click)="toggleRail()">
+              <dos-icon [name]="isRail() ? 'chevron-right' : 'chevron-left'"
+                        [size]="20"
+                        [ariaLabel]="ariaToggleRail()"></dos-icon>
+            </button>
+          }
+        </ng-container>
+      </dos-workspace-header>
+    </ng-template>
 
-    <!-- ═══════════════════════════════════════════
-         MAIN CONTENT with skeleton (W-C, W-G)
-    ═══════════════════════════════════════════ -->
-    <main class="cds--content" id="main-content">
+    <ng-template #breadcrumbTpl>
+      @if (breadcrumbs().length > 1) {
+        <nav class="shell-breadcrumb" id="shell-breadcrumb-strip" [attr.aria-label]="ariaBreadcrumb()">
+          <ol>
+            @for (crumb of breadcrumbs(); track crumb.label; let last = $last) {
+              <li>
+                @if (!last && crumb.route) {
+                  <a [routerLink]="crumb.route">{{ crumb.label }}</a>
+                } @else {
+                  <span>{{ crumb.label }}</span>
+                }
+                @if (!last) { <span class="shell-breadcrumb__sep" aria-hidden="true">/</span> }
+              </li>
+            }
+          </ol>
+        </nav>
+      }
+    </ng-template>
+
+    <ng-template #titleTpl>
       @if (pageTitle()) {
         <div class="shell-page-header" id="shell-page-header">
           <h1 class="shell-page-title">{{ pageTitle() }}</h1>
         </div>
       }
+    </ng-template>
 
+    <ng-template #mainTpl>
       @if (isNavigating()) {
-        <!-- W-C: Skeleton during navigation -->
-        <div class="shell-skeleton" id="shell-nav-skeleton" aria-busy="true" aria-label="Loading page">
-          <cds-skeleton-text [lines]="2" [heading]="true"></cds-skeleton-text>
-          <cds-skeleton-text [lines]="4"></cds-skeleton-text>
-          <cds-skeleton-placeholder></cds-skeleton-placeholder>
-          <cds-skeleton-text [lines]="3"></cds-skeleton-text>
+        <div class="shell-skeleton" id="shell-nav-skeleton" aria-busy="true" [attr.aria-label]="ariaLoadingPage()">
+          <dos-skeleton shape="line" [rows]="6" [ariaLabel]="ariaLoadingPage()"></dos-skeleton>
         </div>
       } @else {
         <router-outlet />
       }
-    </main>
+    </ng-template>
 
+    @if (isMobile()) {
+      <!-- Mobile chrome: dos-mobile-shell + dos-mobile-drawer + dos-mobile-bottom-nav. -->
+      <dos-mobile-shell>
+        <ng-container *ngTemplateOutlet="headerTpl"></ng-container>
+        <ng-container *ngTemplateOutlet="breadcrumbTpl"></ng-container>
+        <ng-container *ngTemplateOutlet="titleTpl"></ng-container>
+        <ng-container *ngTemplateOutlet="mainTpl"></ng-container>
+
+        @if (mobileBottomItems().length > 0) {
+          <dos-mobile-bottom-nav shellBottomNav
+                                 [items]="mobileBottomItems()"
+                                 [dir]="sidebarDir()"
+                                 [ariaLabel]="mobileBottomNavAria()"
+                                 (select)="onMobileNavSelect($event)">
+          </dos-mobile-bottom-nav>
+        }
+
+        <dos-mobile-drawer shellDrawer
+                           [open]="sideNavActive()"
+                           [title]="drawerTitle()"
+                           [dir]="sidebarDir()"
+                           [closeLabel]="drawerCloseLabel()"
+                           (closed)="closeSideNav()">
+          @if (sidebarItems().length > 0) {
+            <dos-workspace-sidebar
+              [items]="sidebarItems()"
+              [collapsed]="false"
+              [dir]="sidebarDir()"
+              [ariaLabel]="sideNavAriaLabel()"
+              (navigate)="onSidebarNavigate($event)">
+            </dos-workspace-sidebar>
+          }
+        </dos-mobile-drawer>
+      </dos-mobile-shell>
+    } @else {
+      <!-- Desktop chrome: dos-app-shell + dos-workspace-sidebar. -->
+      <dos-app-shell [mobile]="false">
+        <ng-container *ngTemplateOutlet="headerTpl"></ng-container>
+
+        @if (sidebarItems().length > 0 && sideNavActive()) {
+          <dos-workspace-sidebar shellSidebar
+                                 [items]="sidebarItems()"
+                                 [collapsed]="isRail()"
+                                 [dir]="sidebarDir()"
+                                 [ariaLabel]="sideNavAriaLabel()"
+                                 (navigate)="onSidebarNavigate($event)">
+          </dos-workspace-sidebar>
+        }
+
+        <ng-container *ngTemplateOutlet="breadcrumbTpl"></ng-container>
+        <ng-container *ngTemplateOutlet="titleTpl"></ng-container>
+        <ng-container *ngTemplateOutlet="mainTpl"></ng-container>
+      </dos-app-shell>
+    }
+
+    <!-- Global action surfaces — fixed-position overlays, render once. -->
+    <dos-inbox-center [open]="inboxOpen()"
+                      [mobileMode]="isMobile()"
+                      [messages]="inboxMessages()"
+                      [title]="inboxTitle()"
+                      [ariaLabel]="inboxAria()"
+                      [closeLabel]="drawerCloseLabel()"
+                      [emptyText]="inboxEmpty()"
+                      (select)="onInboxSelect($event)"
+                      (closed)="closeInbox()">
+    </dos-inbox-center>
+
+    @if (quickCreateActions().length > 0) {
+      <dos-quick-create [actions]="quickCreateActions()"
+                        [mobileMode]="isMobile()"
+                        [ariaLabel]="quickCreateAria()"
+                        [fabGlyph]="quickCreateGlyph()"
+                        (invoke)="onQuickCreate($event)">
+      </dos-quick-create>
+    }
   `,
 })
 export class ShellHostComponent {
@@ -337,15 +373,18 @@ export class ShellHostComponent {
   });
 
   // ── Header labels ─────────────────────────────────────────────────────────
+  // Phase H — every chrome string MUST come from the resolver. No hardcoded
+  // English literals remain in this file; missing keys render empty so the
+  // gap is observable at runtime instead of being masked by fake defaults.
   readonly headerBrand = computed(
-    () => this.labelResolver?.shellChromeString?.('shell.header.brand') ?? 'Shahin',
+    () => this.labelResolver?.shellChromeString?.('shell.header.brand') ?? '',
   );
   // Step 2.5 — Selected module label sourced from existing nav state.
-  // No hardcoded module map; falls back to generic 'Workspace'.
+  // Falls back to the resolver-owned chrome string when no module is active.
   readonly headerWorkspaceTitle = computed(() => {
     const sel = this.selectedModuleLabel();
     if (sel) return sel;
-    return this.labelResolver?.shellChromeString?.('shell.header.workspace_title') ?? 'Workspace';
+    return this.labelResolver?.shellChromeString?.('shell.header.workspace_title') ?? '';
   });
   readonly selectedModuleLabel = computed<string | null>(() => {
     // 1. Prefer the active sidenav group label.
@@ -366,12 +405,76 @@ export class ShellHostComponent {
     return null;
   });
   readonly headerHomeRoute = computed((): string[] => {
-    const raw = this.labelResolver?.shellChromeString?.('shell.header.home_route') ?? '/workspace-home';
+    const raw = this.labelResolver?.shellChromeString?.('shell.header.home_route') ?? '';
     const parts = raw.replace(/^\/+/, '').split('/').filter(Boolean);
-    return parts.length ? parts : ['workspace-home'];
+    return parts;
   });
   readonly sideNavAriaLabel = computed(
-    () => this.labelResolver?.shellChromeString?.('shell.sidenav.aria_label') ?? 'Workspace navigation',
+    () => this.labelResolver?.shellChromeString?.('shell.sidenav.aria_label') ?? '',
+  );
+
+  // Phase H — chrome aria/labels resolved through WorkspaceNavLabelResolver.
+  readonly ariaToggleNav = computed(
+    () => this.labelResolver?.shellChromeString?.(
+      this.sideNavActive() ? 'shell.header.hide_navigation' : 'shell.header.show_navigation',
+    ) ?? '',
+  );
+  readonly ariaToggleRail = computed(
+    () => this.labelResolver?.shellChromeString?.(
+      this.isRail() ? 'shell.header.expand_sidebar' : 'shell.header.collapse_to_rail',
+    ) ?? '',
+  );
+  readonly ariaBreadcrumb = computed(
+    () => this.labelResolver?.shellChromeString?.('shell.breadcrumb.aria') ?? '',
+  );
+  readonly ariaLoadingPage = computed(
+    () => this.labelResolver?.shellChromeString?.('shell.skeleton.loading_page') ?? '',
+  );
+  readonly drawerTitle = computed(
+    () => this.selectedModuleLabel()
+       ?? this.labelResolver?.shellChromeString?.('shell.drawer.title')
+       ?? this.headerBrand(),
+  );
+  readonly drawerCloseLabel = computed(
+    () => this.labelResolver?.shellChromeString?.('shell.drawer.close') ?? '',
+  );
+  readonly mobileBottomNavAria = computed(
+    () => this.labelResolver?.shellChromeString?.('shell.mobile_bottom_nav.aria') ?? '',
+  );
+
+  // ── Global action surfaces — command-search / inbox-center / quick-create ─
+  readonly inboxOpen           = signal(false);
+  readonly commandQuery        = signal('');
+  // Backend feeds will populate these signals through a binding service in a
+  // follow-up phase. For now expose typed empty arrays so the surfaces mount
+  // and render their localized empty/placeholder states.
+  readonly commandResults      = signal<CommandSearchResult[]>([]);
+  readonly inboxMessages       = signal<InboxMessage[]>([]);
+  readonly quickCreateActions  = signal<QuickCreateAction[]>([]);
+
+  readonly commandAria = computed(
+    () => this.labelResolver?.shellChromeString?.('shell.command.aria') ?? '',
+  );
+  readonly commandPlaceholder = computed(
+    () => this.labelResolver?.shellChromeString?.('shell.command.placeholder') ?? '',
+  );
+  readonly inboxTitle = computed(
+    () => this.labelResolver?.shellChromeString?.('shell.inbox.title') ?? '',
+  );
+  readonly inboxAria = computed(
+    () => this.labelResolver?.shellChromeString?.('shell.inbox.aria') ?? '',
+  );
+  readonly inboxEmpty = computed(
+    () => this.labelResolver?.shellChromeString?.('shell.inbox.empty') ?? '',
+  );
+  readonly inboxToggleAria = computed(
+    () => this.labelResolver?.shellChromeString?.('shell.inbox.toggle') ?? '',
+  );
+  readonly quickCreateAria = computed(
+    () => this.labelResolver?.shellChromeString?.('shell.quick.aria') ?? '',
+  );
+  readonly quickCreateGlyph = computed(
+    () => this.labelResolver?.shellChromeString?.('shell.quick.fab_glyph') || '+',
   );
 
   // ── Effects ───────────────────────────────────────────────────────────────
@@ -421,6 +524,43 @@ export class ShellHostComponent {
   // ── Public methods ────────────────────────────────────────────────────────
   toggleSideNav(): void { this.sideNavActive.update((v) => !v); }
 
+  closeSideNav(): void { this.sideNavActive.set(false); }
+
+  // ── Global action handlers ────────────────────────────────────────────────
+  toggleInbox(): void { this.inboxOpen.update((v) => !v); }
+  closeInbox(): void { this.inboxOpen.set(false); }
+
+  onCommandQuery(q: string): void { this.commandQuery.set(q); }
+
+  onCommandSelect(r: CommandSearchResult): void {
+    if (r.route) void this.router.navigateByUrl(r.route);
+  }
+
+  onInboxSelect(m: InboxMessage): void {
+    if (m.route) {
+      void this.router.navigateByUrl(m.route);
+      this.closeInbox();
+    }
+  }
+
+  onQuickCreate(a: QuickCreateAction): void {
+    if (a.route) void this.router.navigateByUrl(a.route);
+  }
+
+  // cmd-K / ctrl-K — focus command-search input.
+  @HostListener('document:keydown', ['$event'])
+  onGlobalKeydown(ev: KeyboardEvent): void {
+    if ((ev.metaKey || ev.ctrlKey) && (ev.key === 'k' || ev.key === 'K')) {
+      ev.preventDefault();
+      if (!this.isBrowser) return;
+      const el = document.querySelector<HTMLInputElement>(
+        '.shell-header-cmd .dos-command-search__input',
+      );
+      el?.focus();
+      el?.select?.();
+    }
+  }
+
   toggleRail(): void {
     this.isRail.update((v) => !v);
     // Ensure sidenav stays open in rail mode
@@ -433,6 +573,65 @@ export class ShellHostComponent {
     if (this.isMobile()) this.sideNavActive.set(false);
   }
 
+  // Phase H — workspace-host-kit feeds.
+  readonly sidebarDir = computed<'ltr' | 'rtl'>(() => {
+    if (!this.isBrowser) return 'ltr';
+    const d = (document.documentElement.getAttribute('dir') || '').toLowerCase();
+    return d === 'rtl' ? 'rtl' : 'ltr';
+  });
+
+  readonly sidebarItems = computed<WorkspaceNavItem[]>(() => {
+    const out: WorkspaceNavItem[] = [];
+    for (const group of this.filteredGroups()) {
+      const groupName = this.groupLabel(group.id, group.label);
+      for (const it of group.items) {
+        if (!it.route) continue;
+        if (it.enabled === false) continue;
+        const badgeNum = it.badge != null ? Number(it.badge) : NaN;
+        const item: WorkspaceNavItem = {
+          id: it.id,
+          label: { i18nKey: it.labelKey || it.id, fallback: this.label(it) },
+          icon: this.itemIcon(it, group.id),
+          route: it.route,
+          active: this.isActive(it),
+          group: groupName,
+        };
+        if (it.requiredPermission) item.permission = it.requiredPermission;
+        if (Number.isFinite(badgeNum) && badgeNum > 0) item.badgeCount = badgeNum;
+        out.push(item);
+      }
+    }
+    return out;
+  });
+
+  readonly mobileBottomItems = computed<DosBottomNavItem[]>(() => {
+    const out: DosBottomNavItem[] = [];
+    for (const group of this.navGroups()) {
+      const first = group.items.find((i: DosNavItem) => !!i.route && i.enabled !== false);
+      if (!first) continue;
+      out.push({
+        id: first.id,
+        label: this.label(first),
+        icon: this.itemIcon(first, group.id),
+        route: first.route,
+        active: this.isActive(first),
+      });
+      if (out.length === 4) break;
+    }
+    return out;
+  });
+
+  onSidebarNavigate(item: WorkspaceNavItem): void {
+    if (!item.route) return;
+    void this.router.navigateByUrl(item.route);
+    if (this.isMobile()) this.sideNavActive.set(false);
+  }
+
+  onMobileNavSelect(item: DosBottomNavItem): void {
+    if (!item.route) return;
+    void this.router.navigateByUrl(item.route);
+  }
+
   // W-A: router-exact active state
   isActive(item: DosNavItem): boolean {
     if (!item.route) return false;
@@ -441,17 +640,13 @@ export class ShellHostComponent {
     return url === route || url.startsWith(`${route}/`);
   }
 
-  // W-I: disabled item tooltip
+  // W-I: disabled item tooltip — reason text resolved through resolver.
   disabledTitle(item: DosNavItem): string {
     const reason = (item as DosNavItem & { disabledReason?: string }).disabledReason;
-    switch (reason) {
-      case 'coming-soon':      return `${this.label(item)} — Coming soon`;
-      case 'route-not-wired':  return `${this.label(item)} — Not yet available`;
-      case 'backend-offline':  return `${this.label(item)} — Service offline`;
-      case 'missing-permission': return `${this.label(item)} — Access restricted`;
-      case 'not-entitled':     return `${this.label(item)} — Not in your plan`;
-      default: return this.label(item);
-    }
+    if (!reason) return this.label(item);
+    const key = `shell.nav.disabled.${reason.replace(/-/g, '_')}`;
+    const txt = this.labelResolver?.shellChromeString?.(key);
+    return txt ? `${this.label(item)} — ${txt}` : this.label(item);
   }
 
   label(item: DosNavItem): string {
@@ -470,7 +665,18 @@ export class ShellHostComponent {
   }
 
   groupIcon(groupId: string): string {
-    return GROUP_ICONS[groupId] ?? 'folder';
+    const key = `shell.group.icon.${groupId}`;
+    return this.labelResolver?.shellChromeString?.(key) || FALLBACK_GROUP_ICON;
+  }
+
+  itemIcon(item: DosNavItem, groupId: string): string {
+    const direct = (item.icon || '').toString().trim();
+    if (direct) return direct;
+    const key = `shell.item.icon.${item.id}`;
+    const resolved = this.labelResolver?.shellChromeString?.(key);
+    if (resolved) return resolved;
+    const grp = this.groupIcon(groupId);
+    return grp || FALLBACK_ITEM_ICON;
   }
 
   labelFromKey(key: string): string {

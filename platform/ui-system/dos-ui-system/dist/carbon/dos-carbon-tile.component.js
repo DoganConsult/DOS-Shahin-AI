@@ -9,16 +9,25 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TilesModule } from 'carbon-components-angular';
 /**
  * Carbon Tile / ClickableTile wrapper.
- * - `clickable=false` renders `cds-tile`.
- * - `clickable=true` renders `cds-clickable-tile` with optional `route`.
+ *
+ * NOTE: emits plain `cds--tile` markup so we sidestep
+ * `cds-clickable-tile`'s internal `[routerLink]` binding which crashes when
+ * `route` is null and triggers the recursive `template` ContentChildren
+ * resolution loop observed at runtime. Carbon CSS (`@carbon/styles`) styles
+ * `.cds--tile` and `.cds--tile--clickable` directly.
+ *
+ * - `clickable=false` renders `<div class="cds--tile">`.
+ * - `clickable=true`  renders `<a class="cds--tile cds--tile--clickable">`.
  */
 let DosCarbonTileComponent = class DosCarbonTileComponent {
     clickable = false;
     route = null;
     activated = new EventEmitter();
+    onActivate(ev) {
+        this.activated.emit(ev);
+    }
 };
 __decorate([
     Input(),
@@ -36,17 +45,22 @@ DosCarbonTileComponent = __decorate([
     Component({
         selector: 'dos-carbon-tile',
         standalone: true,
-        imports: [CommonModule, TilesModule],
+        imports: [CommonModule],
         changeDetection: ChangeDetectionStrategy.OnPush,
         template: `
     @if (clickable) {
-      <cds-clickable-tile [route]="route" (click)="activated.emit($event)">
+      <a
+        class="cds--tile cds--tile--clickable"
+        [attr.href]="route || '#'"
+        [attr.role]="route ? null : 'button'"
+        (click)="onActivate($event)"
+      >
         <ng-content></ng-content>
-      </cds-clickable-tile>
+      </a>
     } @else {
-      <cds-tile>
+      <div class="cds--tile">
         <ng-content></ng-content>
-      </cds-tile>
+      </div>
     }
   `,
     })

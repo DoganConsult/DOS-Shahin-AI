@@ -22,6 +22,202 @@ import type { DbPool } from '../db.js';
 const ALLOWED_BRANDS = new Set(['shahin-ai', 'dogan-ai-os']);
 const ALLOWED_LOCALES = new Set(['en', 'ar']);
 
+type Tx = (en: string, ar: string) => string;
+
+function buildMarketingHomeContent(brandCode: string, locale: string, tx: Tx) {
+  const brandLabel = brandCode === 'shahin-ai' ? 'Shahin-AI' : 'Dogan-AI';
+  return {
+    brandLabel,
+    hero: {
+      badge: tx('New · Agentic GRC', 'جديد · حوكمة وكيلة'),
+      eyebrow: tx('Agentic GRC, brought to life', 'حوكمة وكيلة، نابضة بالحياة'),
+      title: tx('The operating system for agentic enterprises.', 'نظام التشغيل للمؤسسات الوكيلة.'),
+      sub: tx(
+        'Observe, suggest, approve, execute, verify, log — every action accounted for.',
+        'مراقبة، اقتراح، موافقة، تنفيذ، تحقق، تسجيل — كل إجراء موثق.',
+      ),
+      microcopy: tx(
+        'Free 14-day trial · No credit card · Bilingual EN/AR',
+        'تجربة مجانية ١٤ يوماً · بدون بطاقة ائتمان · ثنائي اللغة',
+      ),
+      ctaPrimary: { label: tx('Start free trial', 'ابدأ التجربة المجانية'), href: '/trial' },
+      ctaSecondary: { label: tx('See the platform', 'استعرض المنصة'), href: '/platform' },
+    },
+    trustPills: [
+      { id: 'iso', label: tx('ISO 27001', 'آيزو ٢٧٠٠١') },
+      { id: 'soc2', label: tx('SOC 2 Type II', 'SOC 2 النوع الثاني') },
+      { id: 'gdpr', label: tx('GDPR', 'اللائحة العامة لحماية البيانات') },
+      { id: 'nca', label: tx('NCA ECC', 'الهيئة الوطنية - ECC') },
+      { id: 'sama', label: tx('SAMA CSF', 'إطار ساما للأمن السيبراني') },
+    ],
+    valueProps: [
+      { id: 'one', title: tx('One platform', 'منصة واحدة'),
+        body: tx('GRC, security ops, AI agents, evidence — unified.',
+                 'الحوكمة والمخاطر، عمليات الأمن، وكلاء الذكاء، الأدلة — موحدة.') },
+      { id: 'auto', title: tx('Automated proof', 'إثبات آلي'),
+        body: tx('Continuous evidence with cryptographic audit trail.',
+                 'أدلة مستمرة مع سجل تدقيق مشفر.') },
+      { id: 'safe', title: tx('Human-in-the-loop', 'الإنسان في الحلقة'),
+        body: tx('Every agent action approved, traceable, reversible.',
+                 'كل إجراء وكيل معتمد، قابل للتتبع والعكس.') },
+    ],
+    agentic: {
+      eyebrow: tx('Agentic proof', 'إثبات وكيل'),
+      title: tx('Nine agents already at work.', 'تسعة وكلاء يعملون بالفعل.'),
+      readinessPercent: 90,
+      tiles: [
+        { agentCode: 'A01', displayName: 'Onboarding Agent',      displayNameAr: 'وكيل التهيئة',            role: 'onboarding' },
+        { agentCode: 'A02', displayName: 'Identity Provisioning', displayNameAr: 'وكيل توفير الهوية',       role: 'identity' },
+        { agentCode: 'A04', displayName: 'Control Authoring',     displayNameAr: 'وكيل تأليف الضوابط',     role: 'controls' },
+        { agentCode: 'A05', displayName: 'Evidence Collection',   displayNameAr: 'وكيل جمع الأدلة',         role: 'evidence' },
+        { agentCode: 'A06', displayName: 'Gap Remediation',       displayNameAr: 'وكيل معالجة الفجوات',     role: 'remediation' },
+        { agentCode: 'A07', displayName: 'Risk Register',         displayNameAr: 'وكيل سجل المخاطر',        role: 'risk' },
+        { agentCode: 'A08', displayName: 'Policy Lifecycle',      displayNameAr: 'وكيل دورة حياة السياسات', role: 'policy' },
+        { agentCode: 'A09', displayName: 'Third-Party Risk',      displayNameAr: 'وكيل مخاطر الأطراف',     role: 'vendor' },
+        { agentCode: 'A10', displayName: 'Audit Reporting',       displayNameAr: 'وكيل تقارير التدقيق',     role: 'audit' },
+      ],
+    },
+    downloadKit: {
+      eyebrow: tx('Take it with you', 'خذها معك'),
+      title: tx(`Download the ${brandLabel} Executive Kit`, `حمّل الحزمة التنفيذية لـ ${brandLabel}`),
+      body: tx('A concise pack for executives evaluating AI-native GRC.',
+               'حزمة موجزة للتنفيذيين الذين يقيمون حوكمة الذكاء الاصطناعي.'),
+      ctaLabel: tx('Download kit', 'تحميل الحزمة'),
+      featuredAssetKey: 'shahin-executive-overview',
+      notification: {
+        title: tx('Free executive kit', 'حزمة تنفيذية مجانية'),
+        subtitle: tx('Bilingual EN/AR. PDF + slides.', 'ثنائي اللغة. PDF + شرائح.'),
+      },
+      toast: {
+        title: tx('Your kit is ready', 'حزمتك جاهزة'),
+        subtitle: tx('Check your inbox for the download link.', 'تحقق من بريدك للحصول على رابط التحميل.'),
+      },
+    },
+    platform: {
+      title: tx('A platform, not a checklist tool.', 'منصة، لا قائمة فحص.'),
+      body: tx('Foundation, DAuth, Dynamic UI, AI engine, Audit ledger — composable from day one.',
+               'Foundation و DAuth وواجهة ديناميكية ومحرك ذكاء اصطناعي وسجل تدقيق — قابلة للتركيب منذ اليوم الأول.'),
+      tabs: [
+        { id: 'foundation', label: tx('Foundation', 'الأساس'),
+          body: tx('Org, identity, SoD, lifecycle — the unconditional DNA layer.',
+                   'المنظمة والهوية والفصل بين الواجبات ودورة الحياة — طبقة الحمض النووي.') },
+        { id: 'dauth', label: tx('DAuth', 'DAuth'),
+          body: tx('Identity, session, MFA, authority, SoD enforcement at the edge.',
+                   'الهوية والجلسات والمصادقة المتعددة والصلاحيات عند الحافة.') },
+        { id: 'dynamic-ui', label: tx('Dynamic UI', 'واجهة ديناميكية'),
+          body: tx('Routes, navigation, widgets resolved from the DB registry.',
+                   'المسارات والتنقل والعناصر تُحل من سجل قاعدة البيانات.') },
+        { id: 'ai-engine', label: tx('AI Engine', 'محرك الذكاء'),
+          body: tx('Provider-agnostic AI orchestration with audit-grade provenance.',
+                   'تنسيق ذكاء اصطناعي مستقل عن المزود مع تتبع بمستوى التدقيق.') },
+        { id: 'audit', label: tx('Audit Ledger', 'سجل التدقيق'),
+          body: tx('Cryptographic ledger for every approved agent action.',
+                   'سجل مشفر لكل إجراء وكيل معتمد.') },
+      ],
+    },
+    modules: [
+      { id: 'risk',     title: tx('Risk', 'المخاطر'),         body: tx('Quantified risk register, AI explainability built in.', 'سجل مخاطر كمي مع قابلية شرح مدمجة.') },
+      { id: 'controls', title: tx('Controls', 'الضوابط'),     body: tx('Author once, prove everywhere.', 'كتابة واحدة، إثبات في كل مكان.') },
+      { id: 'evidence', title: tx('Evidence', 'الأدلة'),      body: tx('Continuous collection, cryptographic ledger.', 'جمع مستمر، سجل مشفر.') },
+      { id: 'audit',    title: tx('Audit', 'التدقيق'),        body: tx('Always-ready, examiner-grade exports.', 'جاهز دائماً، تصدير بمستوى المراجع.') },
+      { id: 'policy',   title: tx('Policy', 'السياسات'),      body: tx('Lifecycle, approvals, attestations.', 'دورة الحياة، الموافقات، الإقرارات.') },
+      { id: 'vendor',   title: tx('Third-party', 'الأطراف الخارجية'), body: tx('Continuous vendor monitoring.', 'مراقبة موردين مستمرة.') },
+    ],
+    industries: [
+      { id: 'finance', label: tx('Financial services', 'الخدمات المالية') },
+      { id: 'health',  label: tx('Healthcare', 'الرعاية الصحية') },
+      { id: 'gov',     label: tx('Government', 'الحكومة') },
+      { id: 'energy',  label: tx('Energy', 'الطاقة') },
+      { id: 'tech',    label: tx('Technology', 'التقنية') },
+    ],
+    architecture: {
+      title: tx('Built on platform DNA.', 'مبني على حمض نووي للمنصة.'),
+      body: tx('Four tiers — products → modules → services → platform. Never reverse.',
+               'أربع طبقات — منتجات ← وحدات ← خدمات ← منصة. لا عكس.'),
+      rows: [
+        { key: 'tier-1', label: tx('Tier 1 — Platform DNA', 'الطبقة ١ — الحمض النووي'),
+          value: tx('Foundation, DAuth, DSOC, DNOC, AI, UI-System, Workflow',
+                    'Foundation و DAuth و DSOC و DNOC والذكاء وواجهة ونظام عمل') },
+        { key: 'tier-2', label: tx('Tier 2 — Microservices', 'الطبقة ٢ — الخدمات المصغرة'),
+          value: tx('35+ Express services managed by PM2', 'أكثر من ٣٥ خدمة Express تُدار بواسطة PM2') },
+        { key: 'tier-3', label: tx('Tier 3 — Module Library', 'الطبقة ٣ — مكتبة الوحدات'),
+          value: tx('60+ kebab-case business modules, tenant-entitled', 'أكثر من ٦٠ وحدة عمل بحقوق المستأجر') },
+        { key: 'tier-4', label: tx('Tier 4 — Product Consumers', 'الطبقة ٤ — منتجات مستهلكة'),
+          value: 'Shahin-AI, Dogan-AI, Dogan-Consult, Dogan-Hub, Dogan-Lab' },
+      ],
+    },
+    ai: {
+      eyebrow: tx('How agents act safely', 'كيف يعمل الوكلاء بأمان'),
+      title: tx('AI agents you can audit.', 'وكلاء ذكاء يمكن تدقيقهم.'),
+      body: tx('Every model decision carries provenance, confidence, and reversal path.',
+               'كل قرار يحمل مصدراً وثقة ومسار تراجع.'),
+      currentStep: 5,
+      steps: [
+        { state: 'complete', label: tx('Observe', 'مراقبة'),  description: tx('Telemetry + signals', 'قياس وإشارات') },
+        { state: 'complete', label: tx('Suggest', 'اقتراح'),  description: tx('Model proposes', 'النموذج يقترح') },
+        { state: 'complete', label: tx('Approve', 'موافقة'),  description: tx('Human-in-the-loop', 'إنسان في الحلقة') },
+        { state: 'complete', label: tx('Execute', 'تنفيذ'),   description: tx('Action issued', 'إصدار الإجراء') },
+        { state: 'complete', label: tx('Verify', 'تحقق'),     description: tx('Outcome checked', 'فحص النتيجة') },
+        { state: 'current',  label: tx('Log', 'تسجيل'),       description: tx('Cryptographic ledger', 'سجل مشفر') },
+      ],
+    },
+    pricing: {
+      title: tx('Pricing that scales with proof, not seats.', 'تسعير يقاس بالأدلة، لا بالمقاعد.'),
+      ctaLabel: tx('See pricing', 'استعرض التسعير'),
+      href: '/pricing',
+      columns: [
+        { key: 'feature',    header: tx('Feature', 'الميزة'),       width: '40%' },
+        { key: 'trial',      header: tx('Trial', 'تجربة'),          align: 'center' },
+        { key: 'standard',   header: tx('Standard', 'قياسي'),       align: 'center' },
+        { key: 'enterprise', header: tx('Enterprise', 'مؤسسي'),     align: 'center' },
+      ],
+      rows: [
+        { feature: tx('AI Agents', 'الوكلاء'),               trial: '9',  standard: '9+',                       enterprise: tx('Unlimited', 'بلا حدود') },
+        { feature: tx('Audit Trail', 'سجل التدقيق'),         trial: '✓',  standard: '✓',                        enterprise: tx('✓ Cryptographic', '✓ مشفر') },
+        { feature: tx('On-prem Deployment', 'نشر داخلي'),    trial: '—',  standard: tx('Add-on', 'إضافة'),       enterprise: tx('✓ Included', '✓ مضمّن') },
+        { feature: tx('Bring-your-own LLM', 'نموذجك الخاص'), trial: '—',  standard: '✓',                        enterprise: '✓' },
+        { feature: tx('Dedicated Support', 'دعم مخصص'),      trial: tx('Email', 'بريد'), standard: tx('Email + Chat', 'بريد + دردشة'), enterprise: tx('24×7 + CSM', '٢٤×٧ + مدير') },
+        { feature: tx('Manual Billing', 'فوترة يدوية'),      trial: '✓',  standard: '✓',                        enterprise: '✓' },
+      ],
+    },
+    testimonials: [
+      { id: '1', quote: tx('Our auditors finished in days, not weeks.', 'انتهى المدققون في أيام، لا أسابيع.'),
+        author: tx('Head of GRC', 'رئيس الحوكمة'), role: tx('Bank', 'مصرف') },
+      { id: '2', quote: tx('The first GRC tool people actually use.', 'أول أداة حوكمة يستعملها الناس فعلاً.'),
+        author: tx('CISO', 'مدير الأمن'),          role: tx('Insurer', 'تأمين') },
+      { id: '3', quote: tx('Continuous evidence, finally.', 'أدلة مستمرة، أخيراً.'),
+        author: tx('VP Risk', 'نائب رئيس المخاطر'), role: tx('Telco', 'اتصالات') },
+    ],
+    customerLogos: [
+      { id: '1', name: 'BankCo' }, { id: '2', name: 'GovDept' },
+      { id: '3', name: 'HealthOrg' }, { id: '4', name: 'Energy+' }, { id: '5', name: 'Telco9' },
+    ],
+    resources: [
+      { id: 'docs',  title: tx('Docs', 'الوثائق'),         body: tx('Build with the platform SDK.', 'ابنِ مع SDK المنصة.'), href: '/docs' },
+      { id: 'blog',  title: tx('Blog', 'المدونة'),         body: tx('Field notes from agentic GRC.', 'ملاحظات ميدانية من الحوكمة الوكيلة.'), href: '/blog' },
+      { id: 'wp',    title: tx('White papers', 'أوراق بيضاء'), body: tx('In-depth research.', 'بحث متعمق.'), href: '/whitepapers' },
+    ],
+    faq: [
+      { q: tx('Is this on-prem ready?', 'هل جاهز للنشر الداخلي؟'),
+        a: tx('Yes — same product, same DB topology.', 'نعم — نفس المنتج، نفس بنية قاعدة البيانات.') },
+      { q: tx('How are agent actions authorised?', 'كيف يُصرّح بإجراءات الوكلاء؟'),
+        a: tx('Through dauth + module-level RBAC, with audit trail.', 'عبر DAuth + صلاحيات على مستوى الوحدة مع سجل تدقيق.') },
+      { q: tx('Can we bring our own AI model?', 'هل يمكن استخدام نموذجنا الخاص؟'),
+        a: tx('Yes — the AI engine is provider-agnostic.', 'نعم — محرك الذكاء مستقل عن المزود.') },
+    ],
+    ctaBanner: {
+      eyebrow: tx('Get started', 'ابدأ'),
+      title: tx('Ready to see it run?', 'جاهز لتراها تعمل؟'),
+      sub: tx('Spin up a sandbox in 90 seconds. No credit card. Bring your own LLM.',
+              'صندوق رمل في ٩٠ ثانية. بدون بطاقة. نموذجك الخاص.'),
+    },
+    breadcrumb: [
+      { label: tx('Home', 'الرئيسية'), href: '/' },
+      { label: tx('Platform', 'المنصة'), href: '/platform', current: true },
+    ],
+  };
+}
+
 interface BrandTokenRow { token_key: string; token_value: string }
 interface BrandAssetRow {
   asset_kind: string;
@@ -176,6 +372,7 @@ export function createBrandRouter(pool: DbPool): Router {
         landingLiveStatusPill: false,
         landingAgenticProof: true,
       },
+      homeContent: buildMarketingHomeContent(brandCode, locale, tx),
     });
   });
 

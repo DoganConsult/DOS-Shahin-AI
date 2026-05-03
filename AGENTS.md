@@ -62,6 +62,90 @@ AUTHZ NEGATIVE-PATH HARNESS (CLOSED 2026-05-03 by Phase F-F6 H3):
   skipped unless `ADMIN_STORAGE_STATE` is provided). Verify:
   `E2E_BASE_URL=http://localhost:3000 cd platform/config-center/test && npx playwright test phase-f-authz-negative.spec.ts --project=chromium`.
 
+MARKETING LANDING ARCHETYPE (CLOSED 2026-05-04 by Phase M3.1):
+- Root cause unblocked: the 17-section `<dos-marketing-home>` shipped with
+  no `styles`/`styleUrl`/peer `.scss`, so all 33 layout selectors
+  (`dos-marketing-home`, `dos-mh-section`, `dos-mh-container`, `dos-mh-hero`,
+  `dos-mh-hero-content`, `dos-mh-hero-badge`, `dos-mh-hero-orb`,
+  `dos-mh-hero-visual`, `dos-mh-hero-microcopy`, `dos-mh-eyebrow`,
+  `dos-mh-eyebrow-on-dark`, `dos-mh-title`, `dos-mh-sub`, `dos-mh-sub-on-dark`,
+  `dos-mh-cta-row`, `dos-mh-grid-3`, `dos-mh-pill-row`,
+  `dos-mh-breadcrumb-row`, `dos-mh-section-title`, `dos-mh-trust`,
+  `dos-mh-value-props`, `dos-mh-agentic`, `dos-mh-readiness`,
+  `dos-mh-demo-skeleton`, `dos-mh-agent-tiles`, `dos-mh-agent-tile`,
+  `dos-mh-agent-img`, `dos-mh-agent-letter`, `dos-mh-download-kit`,
+  `dos-mh-toast-anchor`, `dos-mh-ai`, `dos-mh-ai-loop`, `dos-mh-quote`,
+  `dos-mh-logo`, `dos-mh-cta-banner`, `dos-mh-cta-banner-inner`,
+  `dos-mh-footer`, `dos-mh-footer-grid`, `dos-mh-footer-col`,
+  `dos-mh-footer-brand`) had zero rules anywhere in the workspace and the
+  page rendered as a flat unstyled stream of Carbon micro-widgets despite
+  `@carbon/styles/css/styles.css` shipping correctly in `styles-*.css`.
+  `services/product-shell/src/server.ts` cached `INDEX_EXISTS=false` at
+  boot when PM2 started before the SPA build finished, returning
+  `503 "SPA build missing"` plain-text — that masked the second deeper
+  CSS gap until product-shell was restarted.
+- Fix shipped:
+    1. New stylesheet
+       `platform/ui-system/dos-ui-system/src/marketing/marketing-home.page.scss`
+       (~410 LOC) covering all 40 unique selectors using `--cds-*` Carbon
+       tokens with inline fallbacks, RTL via CSS logical properties (no
+       left/right), responsive breakpoints 480/768, and a fixed-position
+       `.dos-mh-toast-anchor` z-index=9999 with mobile safe-area fallback.
+       Wired via `styleUrl: './marketing-home.page.scss'` (Angular
+       Emulated encapsulation; no global bleed). Verified live: 40 unique
+       `dos-mh-*` selectors present in the lazy ui-system chunk after
+       `pnpm --filter shahin-ai-grc-frontend build`.
+    2. Migration
+       `platform/dos/migrations/public/20260504_0210_marketing_landing_archetype.sql`
+       extends `chk_archetype` with the 33rd archetype `marketing-landing`,
+       re-maps the 7 marketing rows in `dos.dynamic_ui_component_registry`
+       from placeholder `carbon_key='tiles'` to representative active
+       Carbon keys (`grid` for `marketing.home.page`, `structured-list` for
+       `marketing.legal.page`, `tiles` for the rest — all
+       `runtime_status='active'` per `dos.ui_carbon_components`, so
+       `trg_carbon_only_runtime` stays satisfied), and inserts 7 rows in
+       `dos.ui_route_template_binding` (`/`, `/pricing`, `/trust`,
+       `/security`, `/contact`, `/about`, `/legal`) with
+       `archetype='marketing-landing'`, bilingual EN/AR titles+subtitles,
+       and `props='{}'::jsonb`. Per-section seed tables intentionally
+       NOT introduced because content already streams live via
+       `services/ui-os-service/src/routes/brand.routes.ts ::
+       buildMarketingHomeContent()` and
+       `MarketingPublicConfigService.marketingHomeContent()`.
+    3. Loader registry
+       `platform/core/platform/shell/template-binding.registry.ts` adds
+       7 alias entries (`MarketingHomeTemplateComponent`,
+       `MarketingPricingTemplateComponent`, `MarketingTrustTemplateComponent`,
+       `MarketingSecurityTemplateComponent`, `MarketingContactTemplateComponent`,
+       `MarketingAboutTemplateComponent`, `MarketingLegalTemplateComponent`)
+       each thinly importing the existing `Dos*PageComponent` from
+       `@dos/ui-system`. Aliases satisfy the `template-only-routing.mjs`
+       naming contract (`*TemplateComponent`) without forcing a synthetic
+       dispatcher page. ARCHETYPE_COUNT=33; LOADERS=47.
+- Customer-gate state (`PROPS_COVERAGE_ENFORCE=1 pnpm platform:customer-gate`)
+  GREEN end-to-end:
+    [carbon-dynamic-ui-coherence] OK
+    [loader-resolvability] PASS
+    SPA build OK (≈18s)
+    [props-coverage] bindings=179 archetypes-with-props=16 failures=0
+    [workspace-shell-coverage] surfaces=10 failures=0
+    [template-only-routing] non-archetype=0 no-binding=0 unknown-export=0
+                            spa-bypass=0 (loaders=47, routes=176)
+- Known follow-ups (not in this slice): (a) `DosCarbonTooltipComponent`
+  is imported but unused — NG8113 warning to clean up; (b) per-section
+  Phase-F seed tables (`dos.ui_route_marketing_section`, `..._faq_item`,
+  `..._footer_group`, `..._testimonial`, …) for full DB-driven content
+  authority — currently content lives in
+  `buildMarketingHomeContent()`; migrating to per-section tables is a
+  separate Phase-F deepening; (c) Playwright spec for marketing routes
+  (3 widths × 2 directions) is GATED ON USER APPROVAL per workflow §6.5
+  and not shipped here; (d) consider patching
+  `services/product-shell/src/server.ts:167` to lazy-check `INDEX_EXISTS`
+  per request so a future "SPA built after server boot" race self-heals.
+- Verify:
+  `PGPASSWORD=dos_auth_pass_2026 psql -h localhost -U dos_auth -d shahin_grc -c "SELECT count(*) FROM dos.ui_route_template_binding WHERE archetype='marketing-landing'; SELECT count(*) FROM dos.dynamic_ui_component_registry WHERE component_key LIKE 'marketing.%';"`
+  → expects `7` and `10` (7 page rows + 3 download-kit rows from M1.5).
+
 WORKSPACE SHELL REGISTRY (CLOSED 2026-05-04 by Phase WS-1):
 - Migration `20260504_0010_workspace_shell_registry.sql` registers the 10
   default `workspace.*` component_keys (header, sidebar, mobile-nav,

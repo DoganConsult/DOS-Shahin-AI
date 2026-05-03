@@ -21,10 +21,10 @@ import type { ActionQueueItem } from './workspace-shell.contracts';
   template: `
     <aside class="dos-action-queue"
            [class.dos-action-queue--mobile]="mobileMode"
-           aria-label="Action queue"
+           [attr.aria-label]="ariaLabel || null"
            data-testid="dos-action-queue">
       <header class="dos-action-queue__hdr">
-        <strong>Action queue</strong>
+        <strong>{{ title }}</strong>
         <span class="dos-action-queue__count" data-cds-component="tag">{{ items.length }}</span>
       </header>
       @if (items.length) {
@@ -42,7 +42,7 @@ import type { ActionQueueItem } from './workspace-shell.contracts';
           }
         </ul>
       } @else {
-        <p class="dos-action-queue__empty">No pending actions.</p>
+        <p class="dos-action-queue__empty">{{ emptyText }}</p>
       }
     </aside>
   `,
@@ -61,5 +61,8 @@ import type { ActionQueueItem } from './workspace-shell.contracts';
 export class DosActionQueueComponent {
   @Input() items: ActionQueueItem[] = [];
   @Input() mobileMode = false;
+  @Input() ariaLabel = '';
+  @Input() title = '';
+  @Input() emptyText = '';
   @Output() open = new EventEmitter<ActionQueueItem>();
 }

@@ -33,6 +33,7 @@ import {
   signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { DosBrandEagleComponent } from '../brand/dos-brand-eagle.component';
 import { BrandResolverService } from '../brand/brand-resolver.service';
 import { MarketingPublicConfigService } from './marketing-public-config.service';
@@ -71,7 +72,10 @@ import { DosCarbonBreadcrumbComponent, type DosCarbonBreadcrumbItem } from '../c
 import { DosCarbonStructuredListComponent, type DosCarbonStructuredListRow } from '../carbon/dos-carbon-structured-list.component';
 import { DosCarbonDataTableComponent, type DosCarbonTableColumn } from '../carbon/dos-carbon-data-table.component';
 import { DosCarbonProgressBarComponent } from '../carbon/dos-carbon-progress-bar.component';
+import { DosCarbonProgressIndicatorComponent, type DosCarbonProgressStep } from '../carbon/dos-carbon-progress-indicator.component';
 import { DosCarbonSkeletonComponent } from '../carbon/dos-carbon-skeleton.component';
+import { DosCarbonAspectRatioComponent } from '../carbon/dos-carbon-aspect-ratio.component';
+import { DosCarbonTooltipComponent } from '../carbon/dos-carbon-tooltip.component';
 
 /** Locked 17-section ordering (M1.5 inserts `download-kit` after agentic-proof).
  *  CI gate `marketing-home-coverage.mjs` greps this literal. */
@@ -130,9 +134,13 @@ export interface MarketingAgentTile {
     DosCarbonStructuredListComponent,
     DosCarbonDataTableComponent,
     DosCarbonProgressBarComponent,
+    DosCarbonProgressIndicatorComponent,
     DosCarbonSkeletonComponent,
+    DosCarbonAspectRatioComponent,
+    DosCarbonTooltipComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  styleUrl: './marketing-home.page.scss',
   template: `
     <main
       class="dos-marketing-home"
@@ -142,7 +150,7 @@ export interface MarketingAgentTile {
     >
       <!-- ░░ Header (cds-header + cds-header-navigation + HeaderMenuItem) ░░ -->
       <dos-carbon-header-shell
-        [brand]="brandCode === 'shahin-ai' ? 'Shahin-AI' : 'Dogan-AI'"
+        [brand]="brandLabel"
         brandShort="DOS"
         [showHeaderNav]="true"
         [showHamburger]="false"
@@ -172,18 +180,31 @@ export interface MarketingAgentTile {
       >
         <dos-carbon-grid [fullWidth]="true">
           <dos-carbon-row>
-            <dos-carbon-col [columnNumbers]="{ sm: 4, md: 8, lg: 12 }">
-              <dos-brand-eagle [brandCode]="brandCode" [locale]="locale" [size]="64" />
-              <p class="dos-mh-eyebrow">{{ heroEyebrow }}</p>
-              <h1 class="dos-mh-title">{{ heroTitle }}</h1>
-              <p class="dos-mh-sub">{{ heroSub }}</p>
-              <div class="dos-mh-cta-row">
-                <dos-carbon-button kind="primary" size="lg" (clicked)="navigate(ctaPrimaryHref)">
-                  {{ ctaPrimaryLabel }}
-                </dos-carbon-button>
-                <dos-carbon-button kind="tertiary" size="lg" (clicked)="navigate(ctaSecondaryHref)">
-                  {{ ctaSecondaryLabel }}
-                </dos-carbon-button>
+            <dos-carbon-col [columnNumbers]="{ sm: 4, md: 8, lg: 8 }">
+              <div class="dos-mh-hero-content">
+                <dos-brand-eagle [brandCode]="brandCode" [locale]="locale" [size]="64" />
+                <div class="dos-mh-hero-badge">
+                  <dos-carbon-tag type="blue" size="md">{{ heroBadgeLabel }}</dos-carbon-tag>
+                </div>
+                <p class="dos-mh-eyebrow">{{ heroEyebrow }}</p>
+                <h1 class="dos-mh-title">{{ heroTitle }}</h1>
+                <p class="dos-mh-sub">{{ heroSub }}</p>
+                <div class="dos-mh-cta-row">
+                  <dos-carbon-button kind="primary" size="lg" (clicked)="navigate(ctaPrimaryHref)">
+                    {{ ctaPrimaryLabel }}
+                  </dos-carbon-button>
+                  <dos-carbon-button kind="tertiary" size="lg" (clicked)="navigate(ctaSecondaryHref)">
+                    {{ ctaSecondaryLabel }}
+                  </dos-carbon-button>
+                </div>
+                <p class="dos-mh-hero-microcopy">{{ heroMicrocopy }}</p>
+              </div>
+            </dos-carbon-col>
+            <dos-carbon-col [columnNumbers]="{ sm: 0, md: 0, lg: 4 }">
+              <div class="dos-mh-hero-visual" aria-hidden="true">
+                <dos-carbon-aspect-ratio ratio="1x1">
+                  <div class="dos-mh-hero-orb"></div>
+                </dos-carbon-aspect-ratio>
               </div>
             </dos-carbon-col>
           </dos-carbon-row>
@@ -249,10 +270,10 @@ export interface MarketingAgentTile {
                 <li [attr.data-agent-code]="t.agentCode">
                   <dos-carbon-tile [clickable]="true">
                     <div class="dos-mh-agent-tile">
-                      @if (tileAsset(t.agentCode); as a) {
+                      @if (tileAssetUrl(t.agentCode); as src) {
                         <img
                           class="dos-mh-agent-img"
-                          [src]="a.source.kind === 'url' ? a.source.url : ''"
+                          [src]="src"
                           [alt]="locale === 'ar' ? (t.displayNameAr || t.displayName) : t.displayName"
                           [width]="96"
                           [height]="96"
@@ -284,8 +305,8 @@ export interface MarketingAgentTile {
           <dos-carbon-notification
             variant="inline"
             kind="info"
-            title="Free executive kit"
-            subtitle="Bilingual EN/AR. PDF + slides."
+            [title]="kitNotificationTitle"
+            [subtitle]="kitNotificationSubtitle"
             [hideClose]="true"
           ></dos-carbon-notification>
 
@@ -305,8 +326,8 @@ export interface MarketingAgentTile {
               <dos-carbon-notification
                 variant="toast"
                 kind="success"
-                title="Your kit is ready"
-                subtitle="Check your inbox for the download link."
+                [title]="kitToastTitle"
+                [subtitle]="kitToastSubtitle"
                 (closed)="downloadSuccess.set(false)"
               ></dos-carbon-notification>
             </div>
@@ -370,11 +391,20 @@ export interface MarketingAgentTile {
         </div>
       </section>
 
-      <!-- 10 ai-and-agents ──────────────────────────────────────────── -->
-      <section class="dos-mh-section" data-section-id="ai-and-agents">
+      <!-- 10 ai-and-agents — Carbon ProgressIndicator (6-step agent loop) ── -->
+      <section class="dos-mh-section dos-mh-ai" data-section-id="ai-and-agents">
         <div class="dos-mh-container">
+          <p class="dos-mh-eyebrow">{{ aiEyebrow }}</p>
           <h2 class="dos-mh-section-title">{{ aiTitle }}</h2>
-          <p>{{ aiBody }}</p>
+          <p class="dos-mh-sub">{{ aiBody }}</p>
+          <div class="dos-mh-ai-loop">
+            <dos-carbon-progress-indicator
+              [steps]="agentLoopSteps"
+              [current]="agentLoopCurrent"
+              orientation="horizontal"
+              [spaceEqually]="true"
+            ></dos-carbon-progress-indicator>
+          </div>
         </div>
       </section>
 
@@ -442,11 +472,16 @@ export interface MarketingAgentTile {
 
       <!-- 16 cta-banner ─────────────────────────────────────────────── -->
       <section class="dos-mh-section dos-mh-cta-banner" data-section-id="cta-banner">
-        <div class="dos-mh-container">
+        <div class="dos-mh-container dos-mh-cta-banner-inner">
+          <p class="dos-mh-eyebrow dos-mh-eyebrow-on-dark">{{ ctaBannerEyebrow }}</p>
           <h2 class="dos-mh-section-title">{{ ctaBannerTitle }}</h2>
+          <p class="dos-mh-sub dos-mh-sub-on-dark">{{ ctaBannerSub }}</p>
           <div class="dos-mh-cta-row">
             <dos-carbon-button kind="primary" size="lg" (clicked)="navigate(ctaPrimaryHref)">
               {{ ctaPrimaryLabel }}
+            </dos-carbon-button>
+            <dos-carbon-button kind="tertiary" size="lg" (clicked)="navigate(ctaSecondaryHref)">
+              {{ ctaSecondaryLabel }}
             </dos-carbon-button>
           </div>
         </div>
@@ -475,292 +510,130 @@ export interface MarketingAgentTile {
       </footer>
     </main>
   `,
-  styles: [`
-    :host { display: block; font-family: 'IBM Plex Sans', 'Inter', system-ui, sans-serif; }
-    .dos-marketing-home { color: #161616; background: #ffffff; container-type: inline-size; }
-    .dos-mh-section { padding-block: 4.5rem; }
-    .dos-mh-container { max-inline-size: 1200px; margin-inline: auto; padding-inline: 1.5rem; }
-    .dos-mh-eyebrow { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.16em; color: #fbbf24; margin: 0 0 0.75rem; }
-    .dos-mh-title { font-size: clamp(2.25rem, 5vw, 3.75rem); line-height: 1.08; margin: 0 0 1rem; font-weight: 600; letter-spacing: -0.02em; color: #0f1f3d; }
-    .dos-mh-sub { font-size: 1.125rem; line-height: 1.5; margin: 0 0 2rem; color: #525252; max-inline-size: 720px; }
-    .dos-mh-section-title { font-size: clamp(1.75rem, 3vw, 2.5rem); margin: 0 0 1.5rem; font-weight: 600; letter-spacing: -0.01em; color: #0f1f3d; }
-
-    /* ── Hero ─────────────────────────────────────────────────────────── */
-    .dos-mh-hero { background: linear-gradient(180deg, #f4f4f4 0%, #ffffff 100%); padding-block: 6rem 5rem; }
-    .dos-mh-hero dos-brand-eagle { display: inline-flex; margin-block-end: 1.25rem; }
-
-    /* ── CTA buttons (Carbon-styled) ──────────────────────────────────── */
-    .dos-mh-cta-row { display: flex; gap: 1rem; flex-wrap: wrap; margin-block-start: 0.5rem; }
-    .dos-mh-cta { display: inline-flex; align-items: center; justify-content: center; padding: 0.875rem 2rem; font-size: 1rem; font-weight: 400; min-block-size: 48px; text-decoration: none; border: 1px solid transparent; border-radius: 0; cursor: pointer; transition: background 70ms cubic-bezier(.2,0,.38,.9), border-color 70ms; line-height: 1.25; }
-    .dos-mh-cta[data-kind="primary"] { background: #0f62fe; color: #ffffff; }
-    .dos-mh-cta[data-kind="primary"]:hover { background: #0050e6; }
-    .dos-mh-cta[data-kind="secondary"], .dos-mh-cta[data-kind="tertiary"] { background: transparent; color: #0f62fe; border-color: #0f62fe; }
-    .dos-mh-cta[data-kind="secondary"]:hover, .dos-mh-cta[data-kind="tertiary"]:hover { background: rgba(15,98,254,0.08); }
-
-    /* ── Trust pills (Carbon tag) ─────────────────────────────────────── */
-    .dos-mh-pill-row { display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; }
-    .dos-mh-pill { display: inline-flex; align-items: center; padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.75rem; font-weight: 400; line-height: 1.5; background: #e0e0e0; color: #161616; min-block-size: 24px; }
-    .dos-mh-pill[data-kind="cool-gray"] { background: #dde1e6; color: #121619; }
-    .dos-mh-pill[data-kind="warm-gray"] { background: #e5e0df; color: #171414; }
-
-    /* ── Cards / tiles ────────────────────────────────────────────────── */
-    .dos-mh-grid-3 { display: grid; gap: 1.5rem; grid-template-columns: repeat(3, 1fr); }
-    .dos-mh-card { padding: 1.75rem 1.5rem; background: #f4f4f4; border-radius: 0; border-block-start: 4px solid #0f62fe; display: block; text-decoration: none; color: inherit; transition: background 110ms; }
-    .dos-mh-card:hover { background: #e8e8e8; }
-    .dos-mh-card h3 { margin: 0 0 0.5rem; font-size: 1.25rem; font-weight: 600; color: #0f1f3d; line-height: 1.25; }
-    .dos-mh-card p { margin: 0; font-size: 0.9375rem; line-height: 1.5; color: #525252; }
-    .dos-mh-card footer { margin-block-start: 1rem; font-size: 0.8125rem; color: #6f6f6f; }
-
-    /* ── Breadcrumb row ───────────────────────────────────────────────── */
-    .dos-mh-breadcrumb-row { padding-block: 1rem 0; }
-
-    /* ── Readiness meter + demo skeleton ──────────────────────────────── */
-    .dos-mh-readiness { margin-block: 1.5rem; max-inline-size: 480px; }
-    .dos-mh-demo-skeleton { margin-block: 1rem; min-block-size: 160px; }
-
-    /* ── Toast anchor (top-end) ───────────────────────────────────────── */
-    .dos-mh-toast-anchor { position: fixed; inset-block-start: 4rem; inset-inline-end: 1rem; z-index: 1000; }
-
-    /* ── Quotes inside Carbon Tile ────────────────────────────────────── */
-    .dos-mh-quote { margin: 0; }
-    .dos-mh-quote p { margin: 0 0 0.5rem; }
-    .dos-mh-quote footer { color: #525252; }
-
-    /* ── Agent strip + tiles ──────────────────────────────────────────── */
-    .dos-mh-agentic { background: #f4f4f4; }
-    .dos-mh-agent-tiles { list-style: none; margin: 2rem 0 0; padding: 0; display: grid; gap: 1.25rem; grid-template-columns: repeat(3, 1fr); }
-    .dos-mh-agent-tile { padding: 1.25rem; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; text-align: center; background: #ffffff; border-radius: 0; box-shadow: 0 1px 0 #e0e0e0; transition: box-shadow 110ms; }
-    .dos-mh-agent-tile:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-    .dos-mh-agent-tile strong { font-size: 0.9375rem; font-weight: 600; color: #161616; }
-    .dos-mh-agent-tile small { font-size: 0.75rem; color: #6f6f6f; text-transform: capitalize; }
-    .dos-mh-agent-img { inline-size: 112px; block-size: 112px; object-fit: contain; }
-    .dos-mh-agent-letter { font-weight: 700; font-size: 1.5rem; padding: 1.5rem 1.75rem; background: #0f1f3d; color: #fbbf24; border-radius: 0; min-inline-size: 96px; min-block-size: 96px; display: inline-flex; align-items: center; justify-content: center; }
-
-    /* ── Download kit ─────────────────────────────────────────────────── */
-    .dos-mh-download-kit { background: #ffffff; }
-    .dos-mh-download-kit p { color: #525252; line-height: 1.5; max-inline-size: 720px; }
-
-    /* ── FAQ ──────────────────────────────────────────────────────────── */
-    .dos-mh-faq { padding-block: 1rem; border-block-end: 1px solid #e0e0e0; }
-    .dos-mh-faq summary { font-weight: 600; cursor: pointer; padding-block: 0.5rem; color: #0f1f3d; font-size: 1rem; list-style-position: inside; }
-    .dos-mh-faq summary::marker { color: #0f62fe; }
-    .dos-mh-faq p { margin: 0.75rem 0 0; color: #525252; line-height: 1.5; }
-
-    /* ── CTA banner ──────────────────────────────────────────────────── */
-    .dos-mh-cta-banner { background: linear-gradient(135deg, #0f1f3d 0%, #1a2f5a 100%); color: #ffffff; padding-block: 5rem; }
-    .dos-mh-cta-banner .dos-mh-section-title { color: #ffffff; }
-    .dos-mh-cta-banner .dos-mh-cta[data-kind="primary"] { background: #fbbf24; color: #0f1f3d; font-weight: 600; }
-    .dos-mh-cta-banner .dos-mh-cta[data-kind="primary"]:hover { background: #f59e0b; }
-
-    /* ── Customer logos ──────────────────────────────────────────────── */
-    .dos-mh-logo { font-size: 1.125rem; font-weight: 600; color: #6f6f6f; padding: 0.5rem 1rem; letter-spacing: 0.02em; }
-
-    /* ── Pricing teaser ──────────────────────────────────────────────── */
-    [data-section-id="pricing-teaser"] { background: #f4f4f4; text-align: center; }
-    [data-section-id="pricing-teaser"] .dos-mh-cta { margin-block-start: 1rem; }
-
-    /* ── Footer ──────────────────────────────────────────────────────── */
-    .dos-mh-footer { background: #0f1f3d; color: #f4f4f4; padding-block: 4rem 2rem; }
-    .dos-mh-footer a { color: #c6c6c6; text-decoration: none; transition: color 70ms; font-size: 0.875rem; }
-    .dos-mh-footer a:hover { color: #ffffff; text-decoration: underline; }
-    .dos-mh-footer-grid { display: grid; gap: 2.5rem; grid-template-columns: repeat(4, 1fr); }
-    .dos-mh-footer-col strong { display: block; font-size: 0.875rem; font-weight: 600; color: #ffffff; margin-block-end: 1rem; text-transform: uppercase; letter-spacing: 0.04em; }
-    .dos-mh-footer-col ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.625rem; }
-    .dos-mh-footer-col li { line-height: 1.5; }
-    .dos-mh-footer-brand { color: #8d8d8d; font-size: 0.8125rem; }
-    .dos-mh-footer-brand small { display: block; margin-block-start: 0.75rem; }
-    @container (max-width: 720px) {
-      .dos-mh-grid-3 { grid-template-columns: 1fr; }
-      .dos-mh-agent-tiles { grid-template-columns: repeat(2, 1fr); }
-      .dos-mh-footer-grid { grid-template-columns: 1fr 1fr; }
-    }
-    @container (max-width: 480px) {
-      .dos-mh-agent-tiles { grid-template-columns: 1fr; }
-      .dos-mh-footer-grid { grid-template-columns: 1fr; }
-    }
-  `],
 })
 export class DosMarketingHomePageComponent {
   private readonly brandResolver = inject(BrandResolverService);
   private readonly marketingCfg = inject(MarketingPublicConfigService);
+  private readonly router = inject(Router);
 
   @Input({ required: true }) brandCode!: DosBrandCode;
   @Input() locale: 'en' | 'ar' = 'en';
 
-  // Hero
-  @Input() heroEyebrow = 'Agentic GRC, brought to life';
-  @Input() heroTitle = 'The operating system for agentic enterprises.';
-  @Input() heroSub = 'Observe, suggest, approve, execute, verify, log — every action accounted for.';
-  @Input() ctaPrimaryLabel = 'Start free trial';
-  @Input() ctaPrimaryHref = '/trial';
-  @Input() ctaSecondaryLabel = 'See the platform';
-  @Input() ctaSecondaryHref = '/platform';
-
-  // Trust pills
-  @Input() trustPills: ReadonlyArray<{ id: string; label: string }> = [
-    { id: 'iso',  label: 'ISO 27001' },
-    { id: 'soc2', label: 'SOC 2 Type II' },
-    { id: 'gdpr', label: 'GDPR' },
-    { id: 'nca',  label: 'NCA ECC' },
-    { id: 'sama', label: 'SAMA CSF' },
-  ];
-
-  // Value props (3)
-  @Input() valueProps: ReadonlyArray<{ id: string; title: string; body: string }> = [
-    { id: 'one',   title: 'One platform', body: 'GRC, security ops, AI agents, evidence — unified.' },
-    { id: 'auto',  title: 'Automated proof', body: 'Continuous evidence with cryptographic audit trail.' },
-    { id: 'safe',  title: 'Human-in-the-loop', body: 'Every agent action approved, traceable, reversible.' },
-  ];
-
-  // Agentic-proof
-  @Input() agenticEyebrow = 'Agentic proof';
-  @Input() agenticTitle = 'Nine agents already at work.';
+  /** Runtime-fed strip state (not "content" — set by host). */
   @Input() agentStripState: AgentState = 'ready';
   @Input() agentStripSummary: AgentStripSummary | null = null;
-  @Input() agentTiles: ReadonlyArray<MarketingAgentTile> = [
-    { agentCode: 'A01', displayName: 'Onboarding Agent',           displayNameAr: 'وكيل التهيئة',            role: 'onboarding' },
-    { agentCode: 'A02', displayName: 'Identity Provisioning',      displayNameAr: 'وكيل توفير الهوية',       role: 'identity' },
-    { agentCode: 'A04', displayName: 'Control Authoring',          displayNameAr: 'وكيل تأليف الضوابط',     role: 'controls' },
-    { agentCode: 'A05', displayName: 'Evidence Collection',        displayNameAr: 'وكيل جمع الأدلة',         role: 'evidence' },
-    { agentCode: 'A06', displayName: 'Gap Remediation',            displayNameAr: 'وكيل معالجة الفجوات',     role: 'remediation' },
-    { agentCode: 'A07', displayName: 'Risk Register',              displayNameAr: 'وكيل سجل المخاطر',        role: 'risk' },
-    { agentCode: 'A08', displayName: 'Policy Lifecycle',           displayNameAr: 'وكيل دورة حياة السياسات', role: 'policy' },
-    { agentCode: 'A09', displayName: 'Third-Party Risk',           displayNameAr: 'وكيل مخاطر الأطراف',     role: 'vendor' },
-    { agentCode: 'A10', displayName: 'Audit Reporting',            displayNameAr: 'وكيل تقارير التدقيق',     role: 'audit' },
-  ];
 
-  // Platform overview
-  @Input() platformTitle = 'A platform, not a checklist tool.';
-  @Input() platformBody = 'Foundation, DAuth, Dynamic UI, AI engine, Audit ledger — composable from day one.';
+  /** Pre-fetched marketing assets (host wires from /marketing/assets). */
+  @Input() downloadAssets: ReadonlyArray<MarketingAsset> = [];
 
-  // Modules
-  @Input() moduleTiles: ReadonlyArray<{ id: string; title: string; body: string }> = [
-    { id: 'risk',     title: 'Risk',       body: 'Quantified risk register, AI explainability built in.' },
-    { id: 'controls', title: 'Controls',   body: 'Author once, prove everywhere.' },
-    { id: 'evidence', title: 'Evidence',   body: 'Continuous collection, cryptographic ledger.' },
-    { id: 'audit',    title: 'Audit',      body: 'Always-ready, examiner-grade exports.' },
-    { id: 'policy',   title: 'Policy',     body: 'Lifecycle, approvals, attestations.' },
-    { id: 'vendor',   title: 'Third-party', body: 'Continuous vendor monitoring.' },
-  ];
+  // ─── 100% dynamic content (no hardcoded defaults) ────────────────────
+  /** Single source of truth: marketing-public-config-service homeContent. */
+  private readonly content = computed(() => this.marketingCfg.marketingHomeContent());
 
-  // Industries
-  @Input() industries: ReadonlyArray<{ id: string; label: string }> = [
-    { id: 'finance',  label: 'Financial services' },
-    { id: 'health',   label: 'Healthcare' },
-    { id: 'gov',      label: 'Government' },
-    { id: 'energy',   label: 'Energy' },
-    { id: 'tech',     label: 'Technology' },
-  ];
+  // Brand label (resolved server-side, no string mapping in component).
+  get brandLabel(): string { return this.content().brandLabel; }
 
-  // Architecture
-  @Input() architectureTitle = 'Built on platform DNA.';
-  @Input() architectureBody = 'Four tiers — products → modules → services → platform. Never reverse.';
+  // Hero
+  get heroBadgeLabel(): string  { return this.content().hero.badge; }
+  get heroEyebrow(): string     { return this.content().hero.eyebrow; }
+  get heroTitle(): string       { return this.content().hero.title; }
+  get heroSub(): string         { return this.content().hero.sub; }
+  get heroMicrocopy(): string   { return this.content().hero.microcopy; }
+  get ctaPrimaryLabel(): string  { return this.content().hero.ctaPrimary.label; }
+  get ctaPrimaryHref(): string   { return this.content().hero.ctaPrimary.href; }
+  get ctaSecondaryLabel(): string { return this.content().hero.ctaSecondary.label; }
+  get ctaSecondaryHref(): string  { return this.content().hero.ctaSecondary.href; }
 
-  // AI / Agents
-  @Input() aiTitle = 'AI agents you can audit.';
-  @Input() aiBody = 'Every model decision carries provenance, confidence, and reversal path.';
+  // Trust pills + value props
+  get trustPills(): ReadonlyArray<{ id: string; label: string }> { return this.content().trustPills; }
+  get valueProps(): ReadonlyArray<{ id: string; title: string; body: string }> { return this.content().valueProps; }
 
-  // Pricing
-  @Input() pricingTitle = 'Pricing that scales with proof, not seats.';
-  @Input() pricingCtaLabel = 'See pricing';
-  @Input() pricingHref = '/pricing';
+  // Agentic-proof
+  get agenticEyebrow(): string { return this.content().agentic.eyebrow; }
+  get agenticTitle(): string   { return this.content().agentic.title; }
+  get readinessPercent(): number { return this.content().agentic.readinessPercent; }
+  get agentTiles(): ReadonlyArray<MarketingAgentTile> { return this.content().agentic.tiles; }
 
-  // Testimonials
-  @Input() testimonials: ReadonlyArray<{ id: string; quote: string; author: string; role: string }> = [
-    { id: '1', quote: 'Our auditors finished in days, not weeks.',  author: 'Head of GRC', role: 'Bank' },
-    { id: '2', quote: 'The first GRC tool people actually use.',   author: 'CISO',        role: 'Insurer' },
-    { id: '3', quote: 'Continuous evidence, finally.',             author: 'VP Risk',     role: 'Telco' },
-  ];
-
-  // Logos
-  @Input() customerLogos: ReadonlyArray<{ id: string; name: string }> = [
-    { id: '1', name: 'BankCo' }, { id: '2', name: 'GovDept' },
-    { id: '3', name: 'HealthOrg' }, { id: '4', name: 'Energy+' }, { id: '5', name: 'Telco9' },
-  ];
-
-  // Resources
-  @Input() resources: ReadonlyArray<{ id: string; title: string; body: string; href: string }> = [
-    { id: 'docs',  title: 'Docs',       body: 'Build with the platform SDK.', href: '/docs' },
-    { id: 'blog',  title: 'Blog',       body: 'Field notes from agentic GRC.', href: '/blog' },
-    { id: 'wp',    title: 'White papers', body: 'In-depth research.',          href: '/whitepapers' },
-  ];
-
-  // FAQ
-  @Input() faq: ReadonlyArray<{ q: string; a: string }> = [
-    { q: 'Is this on-prem ready?',              a: 'Yes — same product, same DB topology.' },
-    { q: 'How are agent actions authorised?',   a: 'Through dauth + module-level RBAC, with audit trail.' },
-    { q: 'Can we bring our own AI model?',      a: 'Yes — the AI engine is provider-agnostic.' },
-  ];
-
-  // CTA banner
-  @Input() ctaBannerTitle = 'Ready to see it run?';
-
-  readonly year = new Date().getFullYear();
-
-  readonly footerGroups = computed(() => this.marketingCfg.marketingFooterGroups());
-
-  readonly navItems = computed(() => this.marketingCfg.marketingNavItems());
-
-  readonly showAgenticProof = computed(() => this.marketingCfg.flag('landingAgenticProof'));
-
-  /** Breadcrumb (Home › current) — Carbon Breadcrumb. */
-  readonly breadcrumbItems: DosCarbonBreadcrumbItem[] = [
-    { label: 'Home', href: '/' },
-    { label: 'Platform', href: '/platform', current: true },
-  ];
-
-  /** Agentic readiness — % of agents online (drives Carbon ProgressBar). */
-  @Input() readinessPercent = 90;
-
-  /** Carbon Tabs in platform-overview. */
-  readonly platformTabs: DosCarbonTabItem[] = [
-    { id: 'foundation', label: 'Foundation' },
-    { id: 'dauth',      label: 'DAuth' },
-    { id: 'dynamic-ui', label: 'Dynamic UI' },
-    { id: 'ai-engine',  label: 'AI Engine' },
-    { id: 'audit',      label: 'Audit Ledger' },
-  ];
-  readonly platformTabId = signal<string>('foundation');
+  // Platform-overview
+  get platformTitle(): string { return this.content().platform.title; }
+  get platformBody(): string  { return this.content().platform.body; }
+  get platformTabs(): DosCarbonTabItem[] {
+    return this.content().platform.tabs.map((t) => ({ id: t.id, label: t.label }));
+  }
+  readonly platformTabId = signal<string>('');
   readonly platformTabBody = computed(() => {
-    const id = this.platformTabId();
-    const map: Record<string, string> = {
-      'foundation': 'Org, identity, SoD, lifecycle — the unconditional DNA layer.',
-      'dauth':      'Identity, session, MFA, authority, SoD enforcement at the edge.',
-      'dynamic-ui': 'Routes, navigation, widgets resolved from the DB registry.',
-      'ai-engine':  'Provider-agnostic AI orchestration with audit-grade provenance.',
-      'audit':      'Cryptographic ledger for every approved agent action.',
-    };
-    return map[id] ?? '';
+    const tabs = this.content().platform.tabs;
+    const id = this.platformTabId() || tabs[0]?.id || '';
+    return tabs.find((t) => t.id === id)?.body ?? '';
   });
 
-  /** Carbon StructuredList in architecture. */
-  readonly architectureRows: DosCarbonStructuredListRow[] = [
-    { key: 'tier-1', label: 'Tier 1 — Platform DNA', value: 'Foundation, DAuth, DSOC, DNOC, AI, UI-System, Workflow' },
-    { key: 'tier-2', label: 'Tier 2 — Microservices', value: '35+ Express services managed by PM2' },
-    { key: 'tier-3', label: 'Tier 3 — Module Library', value: '60+ kebab-case business modules, tenant-entitled' },
-    { key: 'tier-4', label: 'Tier 4 — Product Consumers', value: 'Shahin-AI, Dogan-AI, Dogan-Consult, Dogan-Hub, Dogan-Lab' },
-  ];
+  // Modules / industries
+  get moduleTiles(): ReadonlyArray<{ id: string; title: string; body: string }> { return this.content().modules; }
+  get industries(): ReadonlyArray<{ id: string; label: string }>                { return this.content().industries; }
 
-  /** Carbon DataTable — pricing comparison. */
-  readonly pricingColumns: DosCarbonTableColumn[] = [
-    { key: 'feature',   header: 'Feature', width: '40%' },
-    { key: 'trial',     header: 'Trial',     align: 'center' },
-    { key: 'standard',  header: 'Standard',  align: 'center' },
-    { key: 'enterprise', header: 'Enterprise', align: 'center' },
-  ];
-  readonly pricingRows = [
-    { feature: 'AI Agents',           trial: '9', standard: '9+',   enterprise: 'Unlimited' },
-    { feature: 'Audit Trail',         trial: '✓', standard: '✓',    enterprise: '✓ Cryptographic' },
-    { feature: 'On-prem Deployment',  trial: '—', standard: 'Add-on', enterprise: '✓ Included' },
-    { feature: 'Bring-your-own LLM',  trial: '—', standard: '✓',    enterprise: '✓' },
-    { feature: 'Dedicated Support',   trial: 'Email', standard: 'Email + Chat', enterprise: '24×7 + CSM' },
-    { feature: 'Manual Billing',      trial: '✓', standard: '✓',    enterprise: '✓' },
-  ];
+  // Architecture
+  get architectureTitle(): string { return this.content().architecture.title; }
+  get architectureBody(): string  { return this.content().architecture.body; }
+  get architectureRows(): DosCarbonStructuredListRow[] {
+    return this.content().architecture.rows.map((r) => ({ key: r.key, label: r.label, value: r.value }));
+  }
 
-  /** Carbon Accordion items derived from FAQ input. */
-  readonly faqItems = computed<DosCarbonAccordionItem[]>(() =>
-    this.faq.map((f) => ({ title: f.q, content: f.a })),
-  );
+  // AI / agent loop
+  get aiEyebrow(): string { return this.content().ai.eyebrow; }
+  get aiTitle(): string   { return this.content().ai.title; }
+  get aiBody(): string    { return this.content().ai.body; }
+  get agentLoopCurrent(): number { return this.content().ai.currentStep; }
+  get agentLoopSteps(): DosCarbonProgressStep[] {
+    return this.content().ai.steps.map((s) => ({
+      state: s.state, label: s.label, description: s.description,
+    }));
+  }
+
+  // Pricing
+  get pricingTitle(): string    { return this.content().pricing.title; }
+  get pricingCtaLabel(): string { return this.content().pricing.ctaLabel; }
+  get pricingHref(): string     { return this.content().pricing.href; }
+  get pricingColumns(): DosCarbonTableColumn[] {
+    return this.content().pricing.columns.map((c) => ({
+      key: c.key, header: c.header, width: c.width, align: c.align,
+    }));
+  }
+  get pricingRows(): ReadonlyArray<Record<string, string>> { return this.content().pricing.rows; }
+
+  // Testimonials / logos / resources / FAQ / CTA banner
+  get testimonials(): ReadonlyArray<{ id: string; quote: string; author: string; role: string }> { return this.content().testimonials; }
+  get customerLogos(): ReadonlyArray<{ id: string; name: string }> { return this.content().customerLogos; }
+  get resources(): ReadonlyArray<{ id: string; title: string; body: string; href: string }> { return this.content().resources; }
+  get faq(): ReadonlyArray<{ q: string; a: string }> { return this.content().faq; }
+  get ctaBannerEyebrow(): string { return this.content().ctaBanner.eyebrow; }
+  get ctaBannerTitle(): string   { return this.content().ctaBanner.title; }
+  get ctaBannerSub(): string     { return this.content().ctaBanner.sub; }
+
+  // Breadcrumb
+  get breadcrumbItems(): DosCarbonBreadcrumbItem[] {
+    return this.content().breadcrumb.map((b) => ({ label: b.label, href: b.href, current: b.current }));
+  }
+
+  // Download-kit content (M1.5)
+  get downloadKitEyebrow(): string { return this.content().downloadKit.eyebrow; }
+  get downloadKitTitle(): string   { return this.content().downloadKit.title; }
+  get downloadKitBody(): string    { return this.content().downloadKit.body; }
+  get downloadCtaLabel(): string   { return this.content().downloadKit.ctaLabel; }
+  get featuredAssetKey(): string   { return this.content().downloadKit.featuredAssetKey; }
+  get kitNotificationTitle(): string    { return this.content().downloadKit.notification.title; }
+  get kitNotificationSubtitle(): string { return this.content().downloadKit.notification.subtitle; }
+  get kitToastTitle(): string    { return this.content().downloadKit.toast.title; }
+  get kitToastSubtitle(): string { return this.content().downloadKit.toast.subtitle; }
+
+  readonly year = new Date().getFullYear();
+  readonly footerGroups = computed(() => this.marketingCfg.marketingFooterGroups());
+  readonly navItems = computed(() => this.marketingCfg.marketingNavItems());
+  readonly showAgenticProof = computed(() => this.marketingCfg.flag('landingAgenticProof'));
+
+  /** Carbon Accordion items derived from FAQ. */
+  faqItems(): DosCarbonAccordionItem[] {
+    return this.faq.map((f) => ({ title: f.q, content: f.a }));
+  }
 
   /** Footer label/title resolvers — prefer server-translated `title`/`label`,
    *  fall back to the i18n key when the resolver hasn't shipped one. */
@@ -774,35 +647,33 @@ export class DosMarketingHomePageComponent {
     return n.label || n.labelKey;
   }
 
-  /** Imperatively navigate (Carbon button doesn't take href). */
+  /** Imperatively navigate. External URLs through window.location; internal
+   *  paths via the SPA Router so the landing doesn't reload on CTA click. */
   navigate(href: string): void {
-    if (typeof window !== 'undefined' && href) window.location.assign(href);
+    if (!href) return;
+    if (/^https?:\/\//.test(href)) {
+      if (typeof window !== 'undefined') window.location.assign(href);
+      return;
+    }
+    void this.router.navigateByUrl(href);
   }
 
-  // ─── M1.5 Download-Kit ───────────────────────────────────────────────
-  @Input() downloadKitEyebrow = 'Take it with you';
-  @Input() downloadKitTitle = 'Download the Shahin-AI Executive Kit';
-  @Input() downloadKitBody = 'A concise pack for executives evaluating AI-native GRC.';
-  @Input() downloadCtaLabel = 'Download kit';
-  /** Pre-fetched marketing assets (host wires from /marketing/assets). */
-  @Input() downloadAssets: ReadonlyArray<MarketingAsset> = [];
-  /** Asset key to feature in the landing card slot. */
-  @Input() featuredAssetKey = 'shahin-executive-overview';
-
+  // ─── M1.5 Download-Kit runtime state ─────────────────────────────────
   readonly modalOpen = signal(false);
   readonly downloadSuccess = signal(false);
 
   @Output() readonly downloadEvent = new EventEmitter<MarketingDownloadEvent>();
 
-  readonly featuredAsset = computed<MarketingAsset | null>(() => {
+  featuredAsset(): MarketingAsset | null {
     const list = this.downloadAssets;
     if (!list?.length) return null;
+    const key = this.featuredAssetKey;
     return (
-      list.find((a) => a.assetKey === this.featuredAssetKey && a.locale === this.locale)
-      ?? list.find((a) => a.assetKey === this.featuredAssetKey)
+      list.find((a) => a.assetKey === key && a.locale === this.locale)
+      ?? list.find((a) => a.assetKey === key)
       ?? null
     );
-  });
+  }
 
   onDownloadEvent(e: MarketingDownloadEvent) {
     if (e.key === 'marketing.download.opened') {
@@ -828,5 +699,12 @@ export class DosMarketingHomePageComponent {
           && a.assetKind === 'agent-tile'
           && (a as unknown as { assetCode?: string }).assetCode === agentCode,
     ) ?? null;
+  }
+
+  /** Return a real URL for the agent tile, or null. Prevents img src="". */
+  tileAssetUrl(agentCode: string): string | null {
+    const asset = this.tileAsset(agentCode);
+    if (!asset || asset.source.kind !== 'url') return null;
+    return asset.source.url;
   }
 }

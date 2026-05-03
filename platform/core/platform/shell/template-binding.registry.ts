@@ -129,6 +129,26 @@ const LOADERS: Record<string, Loader> = {
   // Case Finalization (32nd archetype)
   CaseFinalizationTemplateComponent: () =>
     import('./templates/module-case-finalization.template').then(m => m.CaseFinalizationTemplateComponent),
+
+  // Marketing Landing (33rd archetype) — 7 public, unauthenticated pages.
+  // Each alias points to the matching `@dos/ui-system` standalone page
+  // component. They satisfy `template-only-routing.mjs` (loader naming
+  // contract `*TemplateComponent`) without forcing a synthetic dispatcher
+  // page; route → template_export alias → real page component.
+  MarketingHomeTemplateComponent: () =>
+    import('@dos/ui-system').then(m => m.DosMarketingHomePageComponent),
+  MarketingPricingTemplateComponent: () =>
+    import('@dos/ui-system').then(m => m.DosMarketingPricingPageComponent),
+  MarketingTrustTemplateComponent: () =>
+    import('@dos/ui-system').then(m => m.DosMarketingTrustPageComponent),
+  MarketingSecurityTemplateComponent: () =>
+    import('@dos/ui-system').then(m => m.DosMarketingSecurityPageComponent),
+  MarketingContactTemplateComponent: () =>
+    import('@dos/ui-system').then(m => m.DosMarketingContactPageComponent),
+  MarketingAboutTemplateComponent: () =>
+    import('@dos/ui-system').then(m => m.DosMarketingAboutPageComponent),
+  MarketingLegalTemplateComponent: () =>
+    import('@dos/ui-system').then(m => m.DosMarketingLegalPageComponent),
 };
 
 export const ARCHETYPE_TEMPLATE_EXPORTS: ReadonlySet<string> =

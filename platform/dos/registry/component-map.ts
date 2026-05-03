@@ -73,6 +73,9 @@ const CARBON_PRIMITIVE_COMPONENT_MAP: Record<string, () => Promise<Type<any>>> =
   Popover: () => import('./carbon-primitive-renderers').then(m => m.CarbonPopoverRenderer),
   FileUploader: () => import('./carbon-primitive-renderers').then(m => m.CarbonFileUploaderRenderer),
   Accordion: () => import('./carbon-primitive-renderers').then(m => m.CarbonAccordionRenderer),
+  Link: () => import('./carbon-extended-renderers').then(m => m.CarbonLinkRenderer),
+  AspectRatio: () => import('./carbon-extended-renderers').then(m => m.CarbonAspectRatioRenderer),
+  ProgressIndicator: () => import('./carbon-extended-renderers').then(m => m.CarbonProgressIndicatorRenderer),
 };
 
 const REGISTRY_COMPONENT_MAP: Record<string, () => Promise<Type<any>>> = {

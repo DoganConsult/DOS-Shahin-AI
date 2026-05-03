@@ -238,12 +238,58 @@ const I18N: Record<DosLocale, Record<string, string>> = {
     'shell.account.menu.tenant_settings': 'Tenant settings',
     'shell.account.menu.logout':          'Sign out',
     // Carbon ShellHost cds-header / sidenav (keep copy out of platform/core shell)
-    'shell.header.brand':                   'Shahin',
+    'shell.header.brand':                   'Shahin-AI+',
     'shell.header.workspace_title':        'Workspace',
     'shell.header.home_route':              '/workspace-home',
     'shell.header.account_action':          'Account',
+    'shell.header.hide_navigation':         'Hide navigation',
+    'shell.header.show_navigation':         'Show navigation',
+    'shell.header.expand_sidebar':          'Expand sidebar',
+    'shell.header.collapse_to_rail':        'Collapse to rail',
+    'shell.breadcrumb.aria':                'Breadcrumb',
+    'shell.skeleton.loading_page':          'Loading page',
+    'shell.drawer.title':                   'Navigation',
+    'shell.drawer.close':                   'Close',
+    'shell.mobile_bottom_nav.aria':         'Bottom navigation',
     'shell.sidenav.aria_label':             'Workspace side navigation',
     'shell.account.initial_fallback':      'U',
+    'shell.nav.disabled.coming_soon':       'Coming soon',
+    'shell.nav.disabled.route_not_wired':   'Not yet available',
+    'shell.nav.disabled.backend_offline':   'Service offline',
+    'shell.nav.disabled.missing_permission':'Access restricted',
+    'shell.nav.disabled.not_entitled':      'Not in your plan',
+    'shell.nav.disabled.trial_expired':     'Trial expired',
+    'shell.nav.disabled.trial_limit_reached':'Trial limit reached',
+    // Group icons (token IDs consumed by dos-icon).
+    'shell.group.icon.workspace':           'home',
+    'shell.group.icon.core':                'layout-dashboard',
+    'shell.group.icon.foundation':          'building',
+    'shell.group.icon.config-center':       'settings',
+    'shell.group.icon.compliance':          'shield-check',
+    'shell.group.icon.risk':                'alert-triangle',
+    'shell.group.icon.dauth':               'user-check',
+    'shell.group.icon.access':              'key',
+    'shell.group.icon.dnoc':                'globe',
+    'shell.group.icon.dsoc':                'shield',
+    'shell.group.icon.ai-platform':         'cpu',
+    'shell.group.icon.dos-platform':        'layers',
+    'shell.group.icon.runtime':             'play',
+    'shell.group.icon.ui-system':           'grid',
+    'shell.group.icon.tenant-management':   'users',
+    'shell.group.icon.multi-tenant-mgmt':   'users',
+    'shell.group.icon.foundation-admin':    'tool',
+    'shell.group.icon.modules':             'package',
+    'shell.group.icon.misc':                'more-horizontal',
+    // Global action surfaces — command-search / inbox-center / quick-create
+    'shell.command.aria':                   'Command search',
+    'shell.command.placeholder':            'Search routes, records, actions…',
+    'shell.command.empty':                  'Type to search.',
+    'shell.inbox.title':                    'Inbox',
+    'shell.inbox.aria':                     'Inbox center',
+    'shell.inbox.empty':                    'No messages.',
+    'shell.inbox.toggle':                   'Open inbox',
+    'shell.quick.aria':                     'Quick create',
+    'shell.quick.fab_glyph':                '+',
     'workspace.page.modules.title':         'Module launcher',
     'workspace.page.modules.description':   'Active, pending and locked modules for this tenant.',
     'workspace.stub.back':                   'Back to command center',
@@ -337,6 +383,49 @@ const I18N: Record<DosLocale, Record<string, string>> = {
     'nav.item.home':               'Home',
     'nav.item.overview':           'Overview',
     'nav.item.dashboard':          'Dashboard',
+    // ── Workspace-home page chrome (consumed by WorkspaceHomeComponent) ──
+    'workspace.home.eyebrow':                 'Workspace',
+    'workspace.home.tenant.status_pending':   'Tenant status pending',
+    'workspace.home.tenant.status_prefix':    'Tenant',
+    'workspace.home.metric.active':           'active',
+    'workspace.home.metric.entitled':         'entitled',
+    'workspace.home.metric.visible':          'visible',
+    'workspace.home.metric.permission':       'permission',
+    'workspace.home.metric.permissions':      'permissions',
+    'workspace.home.separator':               '·',
+    'workspace.home.loading.title':           'Loading workspace…',
+    'workspace.home.loading.subtitle':        'Resolving entitled modules.',
+    'workspace.home.error.title':             'Could not load workspace',
+    'workspace.home.empty.title':             'No modules activated for this tenant',
+    'workspace.home.empty.body':              'Contact your workspace administrator to activate modules.',
+    'workspace.home.empty.cta':               'Open tenant profile →',
+    'workspace.home.attention.singular':      'module needs attention',
+    'workspace.home.attention.plural':        'modules need attention',
+    'workspace.home.card.platform_default':   'Platform default',
+    'workspace.home.card.cta.open':           'Open module',
+    'workspace.home.card.cta.trial_expired':  'Trial expired',
+    'workspace.home.card.cta.limit_reached':  'Limit reached',
+    'workspace.home.card.cta.registry_drift': 'Registry drift',
+    'workspace.home.card.cta.not_configured': 'Not configured',
+    'workspace.home.card.cta.route_missing':  'Route not wired',
+    'workspace.home.card.permission':         'permission',
+    'workspace.home.card.permissions':        'permissions',
+    // Status pill labels
+    'workspace.home.status.active':            'Active',
+    'workspace.home.status.route_missing':     'Route missing',
+    'workspace.home.status.metadata_missing':  'Metadata missing',
+    'workspace.home.status.registry_drift':    'Registry drift',
+    'workspace.home.status.trial_blocked':     'Trial blocked',
+    // Status reason copy
+    'workspace.home.reason.trial_expired':     'Trial period has expired for this module.',
+    'workspace.home.reason.limit_reached':     'Trial usage limit reached for this module.',
+    'workspace.home.reason.registry_drift':    "Module is entitled but has no entry in the platform module registry.",
+    'workspace.home.reason.metadata_missing':  'Module is registered but has no display metadata configured.',
+    'workspace.home.reason.route_missing':     'Module is entitled but has no route mounted in the application.',
+    'workspace.home.subtitle.trial_expired':   'Trial expired — contact your administrator.',
+    'workspace.home.subtitle.limit_reached':   'Usage limit reached — upgrade to continue.',
+    'workspace.home.subtitle.registry_drift':  'Entitled module with no registry entry.',
+    'workspace.home.subtitle.metadata_missing':'Entitled module — no metadata configured.',
   },
   ar: {
     // workspace.*
@@ -465,12 +554,56 @@ const I18N: Record<DosLocale, Record<string, string>> = {
     'shell.account.menu.tenant_profile':  'ملف المستأجر',
     'shell.account.menu.tenant_settings': 'إعدادات المستأجر',
     'shell.account.menu.logout':          'تسجيل الخروج',
-    'shell.header.brand':                   'شاهين',
+    'shell.header.brand':                   'شاهين AI+',
     'shell.header.workspace_title':        'مساحة العمل',
     'shell.header.home_route':              '/workspace-home',
     'shell.header.account_action':          'الحساب',
+    'shell.header.hide_navigation':         'إخفاء التنقل',
+    'shell.header.show_navigation':         'عرض التنقل',
+    'shell.header.expand_sidebar':          'توسيع الشريط الجانبي',
+    'shell.header.collapse_to_rail':        'طي إلى الشريط',
+    'shell.breadcrumb.aria':                'مسار التنقل',
+    'shell.skeleton.loading_page':          'جارٍ تحميل الصفحة',
+    'shell.drawer.title':                   'التنقل',
+    'shell.drawer.close':                   'إغلاق',
+    'shell.mobile_bottom_nav.aria':         'التنقل السفلي',
     'shell.sidenav.aria_label':             'التنقل الجانبي لمساحة العمل',
     'shell.account.initial_fallback':       'U',
+    'shell.nav.disabled.coming_soon':        'قريباً',
+    'shell.nav.disabled.route_not_wired':    'غير متوفر بعد',
+    'shell.nav.disabled.backend_offline':    'الخدمة غير متصلة',
+    'shell.nav.disabled.missing_permission': 'الوصول مقيّد',
+    'shell.nav.disabled.not_entitled':       'غير متاح في خطتك',
+    'shell.nav.disabled.trial_expired':      'انتهت الفترة التجريبية',
+    'shell.nav.disabled.trial_limit_reached':'تم بلوغ حد التجربة',
+    'shell.group.icon.workspace':           'home',
+    'shell.group.icon.core':                'layout-dashboard',
+    'shell.group.icon.foundation':          'building',
+    'shell.group.icon.config-center':       'settings',
+    'shell.group.icon.compliance':          'shield-check',
+    'shell.group.icon.risk':                'alert-triangle',
+    'shell.group.icon.dauth':               'user-check',
+    'shell.group.icon.access':              'key',
+    'shell.group.icon.dnoc':                'globe',
+    'shell.group.icon.dsoc':                'shield',
+    'shell.group.icon.ai-platform':         'cpu',
+    'shell.group.icon.dos-platform':        'layers',
+    'shell.group.icon.runtime':             'play',
+    'shell.group.icon.ui-system':           'grid',
+    'shell.group.icon.tenant-management':   'users',
+    'shell.group.icon.multi-tenant-mgmt':   'users',
+    'shell.group.icon.foundation-admin':    'tool',
+    'shell.group.icon.modules':             'package',
+    'shell.group.icon.misc':                'more-horizontal',
+    'shell.command.aria':                   'بحث الأوامر',
+    'shell.command.placeholder':            'ابحث في المسارات والسجلات والإجراءات…',
+    'shell.command.empty':                  'اكتب للبحث.',
+    'shell.inbox.title':                    'صندوق الوارد',
+    'shell.inbox.aria':                     'مركز الوارد',
+    'shell.inbox.empty':                    'لا توجد رسائل.',
+    'shell.inbox.toggle':                   'فتح الوارد',
+    'shell.quick.aria':                     'إنشاء سريع',
+    'shell.quick.fab_glyph':                '+',
     'workspace.page.modules.title':         'مشغّل الوحدات',
     'workspace.page.modules.description':   'الوحدات النشطة والمعلّقة والمقفلة لهذا المستأجر.',
     'workspace.stub.back':                   'العودة إلى مركز القيادة',
@@ -564,6 +697,47 @@ const I18N: Record<DosLocale, Record<string, string>> = {
     'nav.item.home':                'الرئيسية',
     'nav.item.overview':            'نظرة عامة',
     'nav.item.dashboard':           'لوحة التحكم',
+    // ── Workspace-home page chrome (Arabic) ───────────────────────────
+    'workspace.home.eyebrow':                 'مساحة العمل',
+    'workspace.home.tenant.status_pending':   'حالة المستأجر قيد الانتظار',
+    'workspace.home.tenant.status_prefix':    'المستأجر',
+    'workspace.home.metric.active':           'نشطة',
+    'workspace.home.metric.entitled':         'مخصصة',
+    'workspace.home.metric.visible':          'ظاهرة',
+    'workspace.home.metric.permission':       'صلاحية',
+    'workspace.home.metric.permissions':      'صلاحيات',
+    'workspace.home.separator':               '·',
+    'workspace.home.loading.title':           'جارٍ تحميل مساحة العمل…',
+    'workspace.home.loading.subtitle':        'يجري حصر الوحدات المخصصة.',
+    'workspace.home.error.title':             'تعذر تحميل مساحة العمل',
+    'workspace.home.empty.title':             'لم يتم تفعيل أي وحدات لهذا المستأجر',
+    'workspace.home.empty.body':              'يرجى التواصل مع مسؤول مساحة العمل لتفعيل الوحدات.',
+    'workspace.home.empty.cta':               'فتح ملف المستأجر ←',
+    'workspace.home.attention.singular':      'وحدة تحتاج إلى انتباه',
+    'workspace.home.attention.plural':        'وحدات تحتاج إلى انتباه',
+    'workspace.home.card.platform_default':   'افتراضي للمنصة',
+    'workspace.home.card.cta.open':           'فتح الوحدة',
+    'workspace.home.card.cta.trial_expired':  'انتهت التجربة',
+    'workspace.home.card.cta.limit_reached':  'تم بلوغ الحد',
+    'workspace.home.card.cta.registry_drift': 'انحراف السجل',
+    'workspace.home.card.cta.not_configured': 'غير مهيأة',
+    'workspace.home.card.cta.route_missing':  'لم يُربط المسار',
+    'workspace.home.card.permission':         'صلاحية',
+    'workspace.home.card.permissions':        'صلاحيات',
+    'workspace.home.status.active':            'نشطة',
+    'workspace.home.status.route_missing':     'المسار مفقود',
+    'workspace.home.status.metadata_missing':  'البيانات الوصفية مفقودة',
+    'workspace.home.status.registry_drift':    'انحراف السجل',
+    'workspace.home.status.trial_blocked':     'محظورة بالتجربة',
+    'workspace.home.reason.trial_expired':     'انتهت الفترة التجريبية لهذه الوحدة.',
+    'workspace.home.reason.limit_reached':     'تم بلوغ حد الاستخدام التجريبي لهذه الوحدة.',
+    'workspace.home.reason.registry_drift':    'هذه الوحدة مخصصة لكن لا توجد لها مدخلة في سجل وحدات المنصة.',
+    'workspace.home.reason.metadata_missing':  'هذه الوحدة مسجلة لكن لا توجد لها بيانات وصفية للعرض.',
+    'workspace.home.reason.route_missing':     'هذه الوحدة مخصصة لكن لا يوجد لها مسار مثبت في التطبيق.',
+    'workspace.home.subtitle.trial_expired':   'انتهت التجربة — تواصل مع المسؤول.',
+    'workspace.home.subtitle.limit_reached':   'تم بلوغ حد الاستخدام — قم بالترقية للمتابعة.',
+    'workspace.home.subtitle.registry_drift':  'وحدة مخصصة بلا مدخلة في السجل.',
+    'workspace.home.subtitle.metadata_missing':'وحدة مخصصة — لا توجد بيانات وصفية مهيأة.',
   },
 };
 
@@ -686,26 +860,63 @@ export class WorkspaceResolverService implements DynamicUiResolverPort, Workspac
   }
 
   /**
-   * Localize a sidebar nav ITEM label. Tries `nav.item.<id-or-label>`,
-   * then `nav.item.<first-segment-of-id>` (e.g. 'foundation.overview' →
-   * 'foundation'). Falls back to the verbatim input.
+   * Localize a sidebar nav ITEM label. Tries `nav.item.<id-or-label>` for
+   * each candidate. Falls back to humanizing the LAST segment of the
+   * dotted id (so siblings like `identity.users` and `identity.roles`
+   * render as "Users" / "Roles", not collapsed to a single "Identity").
+   *
+   * The legacy first-segment fallback was removed because it caused
+   * every sibling within a group to render the same parent label — see
+   * workspace-audit.md §4 (5× "Identity", 7× "Marketing" duplicate-label
+   * regression).
    */
   navItemLabel(idOrLabel: string | undefined | null, fallbackId?: string): string {
+    const loc = this.locale();
+    const lookup = (k: string): string | null => {
+      const v = I18N[loc]?.[k];
+      if (v !== undefined) return v;
+      const en = I18N.en?.[k];
+      return en !== undefined ? en : null;
+    };
     const candidates = [idOrLabel ?? '', fallbackId ?? '']
       .map(s => s.trim().toLowerCase())
       .filter(Boolean);
     for (const c of candidates) {
-      const direct = this.t(c);
-      if (direct.value !== c) return direct.value;
-      const r = this.t(`nav.item.${c}`);
-      if (r.value !== `nav.item.${c}`) return r.value;
-      const firstSeg = c.split(/[./_-]/)[0];
-      if (firstSeg && firstSeg !== c) {
-        const rs = this.t(`nav.item.${firstSeg}`);
-        if (rs.value !== `nav.item.${firstSeg}`) return rs.value;
+      // Only treat the candidate as a *direct* i18n key when it is dot-free —
+      // dotted keys go through the `nav.item.*` namespace below to avoid the
+      // humanize() fallback synthesizing the last-segment ('Title' leak).
+      if (!c.includes('.')) {
+        const direct = lookup(c);
+        if (direct) return direct;
       }
+      const r = lookup(`nav.item.${c}`);
+      if (r) return r;
+      // NOTE: no first-segment fallback. Siblings sharing a prefix must
+      // resolve through their FULL id (or the humanized leaf below) so
+      // each renders a distinct label.
     }
-    return idOrLabel || fallbackId || '';
+    // Last resort: humanize the LAST meaningful segment of the original
+    // input. For dotted keys this surfaces the leaf (e.g. `identity.users`
+    // → "Users"), guaranteeing siblings render distinct labels even when
+    // no i18n key exists for them.
+    const raw = (idOrLabel || fallbackId || '').toString().trim();
+    if (!raw) return '';
+    if (raw.includes('.')) {
+      const segs = raw.split('.').filter(Boolean);
+      // Skip generic suffixes that would otherwise leak as the display
+      // text (`module.foundation.title` → "Foundation", not "Title").
+      const GENERIC_SUFFIXES = new Set(['title', 'label', 'name', 'caption']);
+      let leaf = segs[segs.length - 1] ?? raw;
+      for (let i = segs.length - 1; i >= 0; i--) {
+        if (!GENERIC_SUFFIXES.has(segs[i].toLowerCase())) {
+          leaf = segs[i];
+          break;
+        }
+      }
+      return this.humanize(leaf);
+    }
+    if (!/^[a-z0-9_-]+$/i.test(raw)) return raw;
+    return this.humanize(raw);
   }
 
   /**

@@ -1,0 +1,533 @@
+/* ---------------------------------------------------------------------------
+ * marketing-home.page.scss
+ * Phase M3.1 — visual contract for the 17-section public landing.
+ *
+ * All design values are sourced from `@carbon/styles` CSS custom properties
+ * (`--cds-*`) and `@dos/design-tokens` (`--dos-*`) where available, with
+ * inline fallbacks so the surface degrades gracefully when tokens haven't
+ * loaded. RTL is handled via CSS logical properties (no left/right).
+ *
+ * Emulated view encapsulation (Angular default) scopes every rule under
+ * `<dos-marketing-home>` so no global bleed.
+ * ------------------------------------------------------------------------- */
+
+/* ===== root + section primitives ========================================== */
+:host {
+  display: block;
+  min-block-size: 100vh;
+  background: var(--cds-background, #ffffff);
+  color: var(--cds-text-primary, #161616);
+  font-family: var(--cds-body-font-family, 'IBM Plex Sans', system-ui, sans-serif);
+}
+
+.dos-marketing-home {
+  display: block;
+  inline-size: 100%;
+}
+
+.dos-marketing-home[dir='rtl'] {
+  font-family: 'IBM Plex Sans Arabic', 'Tajawal', system-ui, sans-serif;
+}
+
+.dos-mh-section {
+  display: block;
+  padding-block: clamp(2.5rem, 5vw, 5rem);
+  padding-inline: clamp(1rem, 4vw, 2.5rem);
+  border-block-end: 1px solid var(--cds-border-subtle-00, #e0e0e0);
+}
+
+.dos-mh-container {
+  max-inline-size: 1280px;
+  margin-inline: auto;
+}
+
+.dos-mh-section-title {
+  font: 600 clamp(1.5rem, 3vw, 2.25rem) / 1.2 var(--cds-productive-heading-05-font-family, inherit);
+  margin: 0 0 1rem;
+  color: var(--cds-text-primary, #161616);
+}
+
+.dos-mh-eyebrow {
+  font: 500 0.75rem / 1.4 var(--cds-label-01-font-family, inherit);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cds-text-secondary, #525252);
+  margin: 0 0 0.5rem;
+}
+
+.dos-mh-sub {
+  font: 400 clamp(1rem, 1.6vw, 1.125rem) / 1.5 inherit;
+  color: var(--cds-text-secondary, #525252);
+  margin: 0 0 1.5rem;
+  max-inline-size: 64ch;
+}
+
+/* ===== shared cta row ===================================================== */
+.dos-mh-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin-block-start: 1.5rem;
+}
+
+/* ===== shared 3-up grid =================================================== */
+.dos-mh-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 1rem;
+  align-items: stretch;
+}
+
+/* ===== shared pill row (tags / industries / logos) ======================== */
+.dos-mh-pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+/* ===== breadcrumb row ===================================================== */
+.dos-mh-breadcrumb-row {
+  padding-block: 0.75rem;
+  padding-inline: clamp(1rem, 4vw, 2.5rem);
+}
+
+/* ===== 01 hero ============================================================ */
+.dos-mh-hero {
+  padding-block: clamp(3rem, 8vw, 6rem);
+  background: linear-gradient(
+    180deg,
+    var(--cds-background, #ffffff) 0%,
+    var(--cds-layer-01, #f4f4f4) 100%
+  );
+  border-block-end: none;
+}
+
+.dos-mh-hero-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: flex-start;
+  padding-block: 1rem;
+}
+
+.dos-mh-hero-badge {
+  margin-block: 0.25rem;
+}
+
+.dos-mh-title {
+  font: 600 clamp(2rem, 5vw, 3.75rem) / 1.1 inherit;
+  margin: 0;
+  color: var(--cds-text-primary, #161616);
+  letter-spacing: -0.01em;
+}
+
+.dos-mh-hero-microcopy {
+  font: 400 0.875rem / 1.5 inherit;
+  color: var(--cds-text-helper, #6f6f6f);
+  margin: 0.5rem 0 0;
+}
+
+.dos-mh-hero-visual {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  inline-size: 100%;
+  padding-block: 1rem;
+}
+
+.dos-mh-hero-orb {
+  inline-size: 100%;
+  block-size: 100%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 30% 30%,
+    var(--cds-button-primary, #0f62fe) 0%,
+    var(--cds-button-primary-hover, #0353e9) 50%,
+    var(--cds-background-inverse, #393939) 100%
+  );
+  box-shadow: 0 16px 64px rgba(15, 98, 254, 0.25);
+}
+
+/* ===== 02 trust-pills ===================================================== */
+.dos-mh-trust {
+  padding-block: clamp(1.5rem, 3vw, 2.5rem);
+  background: var(--cds-layer-01, #f4f4f4);
+  border-block-end: none;
+}
+
+/* ===== 03 value-props ===================================================== */
+.dos-mh-value-props .dos-mh-grid-3 dos-carbon-tile {
+  display: block;
+  padding: 1.5rem;
+  background: var(--cds-layer-02, #ffffff);
+}
+
+/* ===== 04 agentic-proof =================================================== */
+.dos-mh-agentic {
+  background: var(--cds-layer-01, #f4f4f4);
+}
+
+.dos-mh-readiness {
+  margin-block: 1.5rem 2rem;
+  max-inline-size: 720px;
+}
+
+.dos-mh-demo-skeleton {
+  margin-block: 1rem 1.5rem;
+  min-block-size: 8rem;
+}
+
+.dos-mh-agent-tiles {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  gap: 0.75rem;
+}
+
+.dos-mh-agent-tiles > li {
+  display: block;
+}
+
+.dos-mh-agent-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 0.5rem;
+  text-align: center;
+}
+
+.dos-mh-agent-img {
+  inline-size: 96px;
+  block-size: 96px;
+  object-fit: cover;
+  border-radius: 50%;
+  background: var(--cds-layer-03, #e0e0e0);
+}
+
+.dos-mh-agent-letter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 96px;
+  block-size: 96px;
+  border-radius: 50%;
+  background: var(--cds-button-primary, #0f62fe);
+  color: var(--cds-text-on-color, #ffffff);
+  font: 600 1.25rem / 1 inherit;
+  letter-spacing: 0.04em;
+}
+
+.dos-mh-agent-tile strong {
+  font-weight: 600;
+  font-size: 0.875rem;
+  line-height: 1.3;
+  color: var(--cds-text-primary, #161616);
+}
+
+.dos-mh-agent-tile small {
+  font-size: 0.75rem;
+  color: var(--cds-text-secondary, #525252);
+}
+
+/* ===== 05 download-kit ==================================================== */
+.dos-mh-download-kit {
+  padding-block: clamp(3rem, 5vw, 4rem);
+}
+
+.dos-mh-download-kit > .dos-mh-container > p {
+  font: 400 1rem / 1.5 inherit;
+  color: var(--cds-text-secondary, #525252);
+  max-inline-size: 64ch;
+  margin: 0 0 1.5rem;
+}
+
+.dos-mh-download-kit dos-carbon-notification {
+  display: block;
+  margin-block: 1rem 1.5rem;
+}
+
+.dos-mh-toast-anchor {
+  position: fixed;
+  inset-block-end: 1.5rem;
+  inset-inline-end: 1.5rem;
+  z-index: 9999;
+  max-inline-size: 360px;
+}
+
+@media (max-width: 480px) {
+  .dos-mh-toast-anchor {
+    inset-inline: 1rem;
+    inset-block-end: 1rem;
+    max-inline-size: none;
+  }
+}
+
+/* ===== 06 platform-overview / 09 architecture ============================= */
+.dos-mh-section dos-carbon-tabs,
+.dos-mh-section dos-carbon-structured-list {
+  display: block;
+  margin-block-start: 1.5rem;
+}
+
+/* ===== 07 modules / 12 testimonials / 14 resources ======================== */
+.dos-mh-section dos-carbon-tile {
+  display: block;
+}
+
+.dos-mh-section dos-carbon-tile h3 {
+  font: 600 1.125rem / 1.3 inherit;
+  margin: 0 0 0.5rem;
+  color: var(--cds-text-primary, #161616);
+}
+
+.dos-mh-section dos-carbon-tile p {
+  font: 400 0.9375rem / 1.5 inherit;
+  margin: 0;
+  color: var(--cds-text-secondary, #525252);
+}
+
+/* ===== 10 ai-and-agents =================================================== */
+.dos-mh-ai {
+  background: var(--cds-layer-inverse, #161616);
+  color: var(--cds-text-on-color, #ffffff);
+  border-block-end: none;
+}
+
+.dos-mh-ai .dos-mh-section-title,
+.dos-mh-ai .dos-mh-eyebrow,
+.dos-mh-ai .dos-mh-sub {
+  color: var(--cds-text-on-color, #ffffff);
+}
+
+.dos-mh-ai .dos-mh-eyebrow {
+  color: var(--cds-text-on-color-disabled, #c6c6c6);
+}
+
+.dos-mh-ai-loop {
+  margin-block-start: 2rem;
+  padding: 1.5rem;
+  background: var(--cds-layer-01, #262626);
+  border-radius: 0;
+}
+
+/* ===== 11 pricing-teaser ================================================== */
+.dos-mh-section[data-section-id='pricing-teaser'] dos-carbon-data-table {
+  display: block;
+  margin-block-start: 1rem;
+}
+
+/* ===== 12 testimonials — quote ============================================ */
+.dos-mh-quote {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  border-inline-start: 3px solid var(--cds-border-interactive, #0f62fe);
+  padding-inline-start: 1rem;
+}
+
+.dos-mh-quote p {
+  font: italic 400 1rem / 1.5 inherit;
+  color: var(--cds-text-primary, #161616);
+  margin: 0;
+}
+
+.dos-mh-quote footer {
+  font: 400 0.875rem / 1.4 inherit;
+  color: var(--cds-text-secondary, #525252);
+}
+
+/* ===== 13 logos =========================================================== */
+.dos-mh-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: 8rem;
+  min-block-size: 3rem;
+  padding: 0.5rem 1rem;
+  background: var(--cds-layer-01, #f4f4f4);
+  border: 1px solid var(--cds-border-subtle-01, #e0e0e0);
+  font: 500 0.875rem / 1 inherit;
+  color: var(--cds-text-secondary, #525252);
+  letter-spacing: 0.04em;
+}
+
+/* ===== 16 cta-banner ===================================================== */
+.dos-mh-cta-banner {
+  background: var(--cds-background-brand, #0f62fe);
+  color: var(--cds-text-on-color, #ffffff);
+  padding-block: clamp(3rem, 6vw, 5rem);
+  text-align: center;
+  border-block-end: none;
+}
+
+.dos-mh-cta-banner-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  max-inline-size: 720px;
+  margin-inline: auto;
+}
+
+.dos-mh-cta-banner .dos-mh-section-title {
+  color: var(--cds-text-on-color, #ffffff);
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+}
+
+.dos-mh-eyebrow-on-dark {
+  color: var(--cds-text-on-color-disabled, #c6c6c6);
+}
+
+.dos-mh-sub-on-dark {
+  color: var(--cds-text-on-color, #ffffff);
+}
+
+.dos-mh-cta-banner .dos-mh-cta-row {
+  justify-content: center;
+}
+
+/* ===== 17 footer ========================================================== */
+.dos-mh-footer {
+  background: var(--cds-layer-inverse, #161616);
+  color: var(--cds-text-on-color, #ffffff);
+  padding-block: clamp(2.5rem, 4vw, 4rem);
+  border-block-end: none;
+}
+
+.dos-mh-footer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  gap: 2rem;
+  align-items: start;
+}
+
+.dos-mh-footer-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.dos-mh-footer-col strong {
+  font: 600 0.875rem / 1.3 inherit;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--cds-text-on-color, #ffffff);
+  margin-block-end: 0.25rem;
+}
+
+.dos-mh-footer-col ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.dos-mh-footer-col li {
+  display: block;
+}
+
+.dos-mh-footer-brand {
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.dos-mh-footer-brand small {
+  color: var(--cds-text-on-color-disabled, #c6c6c6);
+  font-size: 0.75rem;
+}
+
+/* ===== header navigation slot — link spacing ============================== */
+:host ::ng-deep dos-carbon-header-shell [slot='header-nav'],
+:host ::ng-deep [headerNav] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  padding-inline: 1rem;
+}
+
+/* ===== responsive — mobile portrait (≤ 480) =============================== */
+@media (max-width: 480px) {
+  .dos-mh-section {
+    padding-block: 2rem;
+    padding-inline: 1rem;
+  }
+
+  .dos-mh-cta-row > * {
+    flex: 1 1 100%;
+  }
+
+  .dos-mh-hero {
+    padding-block: 2.5rem;
+  }
+
+  .dos-mh-grid-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .dos-mh-agent-tiles {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dos-mh-footer-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+/* ===== responsive — tablet (≤ 768) ======================================== */
+@media (min-width: 481px) and (max-width: 768px) {
+  .dos-mh-grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ===== responsive — small mobile (≤ 430) per spec ========================= */
+@media (max-width: 430px) {
+  .dos-mh-container {
+    inline-size: 100%;
+    padding-inline: 1rem;
+  }
+
+  .dos-mh-cta-row {
+    align-items: stretch;
+  }
+
+  .dos-mh-cta-row :where(button, a) {
+    inline-size: 100%;
+  }
+}
+
+/* ===== responsive — extra small (≤ 390) per spec ========================== */
+@media (max-width: 390px) {
+  .dos-mh-title {
+    font-size: clamp(1.75rem, 12vw, 2.5rem);
+  }
+
+  .dos-mh-section {
+    padding-block: 1.75rem;
+  }
+}
+
+/* ===== responsive — desktop ceiling (≤ 1440) ============================== */
+@media (max-width: 1440px) {
+  .dos-mh-container {
+    max-inline-size: min(100% - 2rem, 1180px);
+  }
+}
+
+/* ===== RTL letter-spacing override per spec =============================== */
+:host-context([dir='rtl']) .dos-mh-eyebrow,
+:host-context([dir='rtl']) .dos-mh-hero-badge,
+:host-context([dir='rtl']) .dos-mh-eyebrow-on-dark {
+  letter-spacing: 0;
+}

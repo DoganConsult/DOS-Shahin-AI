@@ -63,6 +63,29 @@ export * from './components/icon.component';
 // Layout
 export * from './layout/responsive-grid.component';
 
+// Workspace shell — 10 standalone Carbon-backed surfaces (Phase WS-2..WS-6).
+// Drives the runtime workspace shell (header, sidebar, mobile nav,
+// command-search, status-bar, action-queue, agent-strip, inbox, context,
+// quick-create) — every selector is registered in
+// dos.dynamic_ui_component_registry under workspace.* keys.
+export * from './shell/mobile-bottom-nav.component';
+export * from './shell/workspace-header.component';
+export * from './shell/workspace-sidebar.component';
+export * from './shell/command-search.component';
+export * from './shell/workspace-status-bar.component';
+export * from './shell/workspace-action-queue.component';
+export * from './shell/agent-activity-strip.component';
+export * from './shell/inbox-center.component';
+export * from './shell/context-panel.component';
+export * from './shell/quick-create.component';
+export * from './shell/workspace-shell.contracts';
+
+// Named internal kits (Carbon-only, built on top of src/carbon/* wrappers).
+// NOT third-party templates — the kits exist solely to formalize the
+// "kit boundary" referenced by the agent operating directive.
+export * from './shell/workspace-host-kit';
+export * from './marketing/marketing-page-kit';
+
 // Carbon-backed primitives (one-source wrappers — never import Carbon
 // directly from products/modules/services; the carbon-boundary-guard
 // fails the build if you do).

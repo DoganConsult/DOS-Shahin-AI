@@ -21,12 +21,15 @@ import type { InboxMessage } from './workspace-shell.contracts';
            [class.dos-inbox-center--mobile]="mobileMode"
            role="dialog"
            aria-modal="true"
-           aria-label="Inbox center"
+           [attr.aria-label]="ariaLabel || null"
            data-testid="dos-inbox-center"
            data-cds-component="modal">
         <header class="dos-inbox-center__hdr">
-          <strong>Inbox</strong>
-          <button type="button" class="dos-inbox-center__close" (click)="closed.emit()" aria-label="Close">×</button>
+          <strong>{{ title }}</strong>
+          <button type="button"
+                  class="dos-inbox-center__close"
+                  (click)="closed.emit()"
+                  [attr.aria-label]="closeLabel || null">×</button>
         </header>
         @if (messages.length) {
           <ul class="dos-inbox-center__list">
@@ -43,7 +46,7 @@ import type { InboxMessage } from './workspace-shell.contracts';
             }
           </ul>
         } @else {
-          <p class="dos-inbox-center__empty">No messages.</p>
+          <p class="dos-inbox-center__empty">{{ emptyText }}</p>
         }
       </div>
     }
@@ -64,6 +67,10 @@ export class DosInboxCenterComponent {
   @Input() messages: InboxMessage[] = [];
   @Input() open = false;
   @Input() mobileMode = false;
+  @Input() title = '';
+  @Input() ariaLabel: string | null = null;
+  @Input() closeLabel: string | null = null;
+  @Input() emptyText = '';
   @Output() select = new EventEmitter<InboxMessage>();
   @Output() closed = new EventEmitter<void>();
 }

@@ -51,6 +51,100 @@ export interface MarketingFooterGroup {
   items: ReadonlyArray<{ id: string; labelKey: string; label?: string; href: string }>;
 }
 
+export interface MarketingHomeAgentTile {
+  agentCode: string;
+  displayName: string;
+  displayNameAr?: string;
+  role?: string;
+}
+
+export interface MarketingHomeProgressStep {
+  state: 'incomplete' | 'current' | 'complete' | 'invalid' | 'disabled';
+  label: string;
+  description?: string;
+}
+
+export interface MarketingHomeStructuredRow {
+  key: string;
+  label: string;
+  value: string;
+}
+
+export interface MarketingHomeTableColumn {
+  key: string;
+  header: string;
+  width?: string;
+  align?: 'left' | 'center' | 'right';
+}
+
+export interface MarketingHomeBreadcrumbItem {
+  label: string;
+  href?: string;
+  current?: boolean;
+}
+
+export interface MarketingHomeContent {
+  brandLabel: string;
+  hero: {
+    badge: string;
+    eyebrow: string;
+    title: string;
+    sub: string;
+    microcopy: string;
+    ctaPrimary: { label: string; href: string };
+    ctaSecondary: { label: string; href: string };
+  };
+  trustPills: ReadonlyArray<{ id: string; label: string }>;
+  valueProps: ReadonlyArray<{ id: string; title: string; body: string }>;
+  agentic: {
+    eyebrow: string;
+    title: string;
+    readinessPercent: number;
+    tiles: ReadonlyArray<MarketingHomeAgentTile>;
+  };
+  downloadKit: {
+    eyebrow: string;
+    title: string;
+    body: string;
+    ctaLabel: string;
+    featuredAssetKey: string;
+    notification: { title: string; subtitle: string };
+    toast: { title: string; subtitle: string };
+  };
+  platform: {
+    title: string;
+    body: string;
+    tabs: ReadonlyArray<{ id: string; label: string; body: string }>;
+  };
+  modules: ReadonlyArray<{ id: string; title: string; body: string }>;
+  industries: ReadonlyArray<{ id: string; label: string }>;
+  architecture: {
+    title: string;
+    body: string;
+    rows: ReadonlyArray<MarketingHomeStructuredRow>;
+  };
+  ai: {
+    eyebrow: string;
+    title: string;
+    body: string;
+    currentStep: number;
+    steps: ReadonlyArray<MarketingHomeProgressStep>;
+  };
+  pricing: {
+    title: string;
+    ctaLabel: string;
+    href: string;
+    columns: ReadonlyArray<MarketingHomeTableColumn>;
+    rows: ReadonlyArray<Record<string, string>>;
+  };
+  testimonials: ReadonlyArray<{ id: string; quote: string; author: string; role: string }>;
+  customerLogos: ReadonlyArray<{ id: string; name: string }>;
+  resources: ReadonlyArray<{ id: string; title: string; body: string; href: string }>;
+  faq: ReadonlyArray<{ q: string; a: string }>;
+  ctaBanner: { eyebrow: string; title: string; sub: string };
+  breadcrumb: ReadonlyArray<MarketingHomeBreadcrumbItem>;
+}
+
 export interface MarketingPublicConfig {
   brandCode: DosBrandCode;
   locale: 'en' | 'ar';
@@ -61,7 +155,38 @@ export interface MarketingPublicConfig {
   footerGroups: ReadonlyArray<MarketingFooterGroup>;
   /** Feature flags consumed by section renderers. */
   flags: Readonly<Record<string, boolean>>;
+  /** All marketing-home content blocks (Phase M3 — 100% dynamic). */
+  homeContent?: MarketingHomeContent;
 }
+
+const EMPTY_HOME_CONTENT: MarketingHomeContent = {
+  brandLabel: '',
+  hero: {
+    badge: '', eyebrow: '', title: '', sub: '', microcopy: '',
+    ctaPrimary: { label: '', href: '' },
+    ctaSecondary: { label: '', href: '' },
+  },
+  trustPills: [],
+  valueProps: [],
+  agentic: { eyebrow: '', title: '', readinessPercent: 0, tiles: [] },
+  downloadKit: {
+    eyebrow: '', title: '', body: '', ctaLabel: '', featuredAssetKey: '',
+    notification: { title: '', subtitle: '' },
+    toast: { title: '', subtitle: '' },
+  },
+  platform: { title: '', body: '', tabs: [] },
+  modules: [],
+  industries: [],
+  architecture: { title: '', body: '', rows: [] },
+  ai: { eyebrow: '', title: '', body: '', currentStep: 0, steps: [] },
+  pricing: { title: '', ctaLabel: '', href: '', columns: [], rows: [] },
+  testimonials: [],
+  customerLogos: [],
+  resources: [],
+  faq: [],
+  ctaBanner: { eyebrow: '', title: '', sub: '' },
+  breadcrumb: [],
+};
 
 @Injectable({ providedIn: 'root' })
 export class MarketingPublicConfigService {
@@ -109,4 +234,11 @@ export class MarketingPublicConfigService {
   flag(name: string): boolean {
     return this._config()?.flags?.[name] === true;
   }
+
+  /** All marketing-home content blocks (100% dynamic). When the resolver
+   *  hasn't shipped a block, an empty fallback is returned so templates can
+   *  bind without null-checks. */
+  readonly marketingHomeContent = computed<MarketingHomeContent>(
+    () => this._config()?.homeContent ?? EMPTY_HOME_CONTENT,
+  );
 }

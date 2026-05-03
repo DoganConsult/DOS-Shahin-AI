@@ -28,7 +28,7 @@ import type { CommandSearchResult } from './workspace-shell.contracts';
              (focus)="open.set(true)"
              (input)="queryChange.emit(query)"
              [placeholder]="placeholder"
-             aria-label="Command search"
+             [attr.aria-label]="ariaLabel || null"
              data-cds-component="search" />
       @if (open() && results.length) {
         <ul class="dos-command-search__results" role="listbox">
@@ -57,7 +57,8 @@ import type { CommandSearchResult } from './workspace-shell.contracts';
 })
 export class DosCommandSearchComponent {
   @Input() results: CommandSearchResult[] = [];
-  @Input() placeholder = 'Search routes, records, actions…';
+  @Input() placeholder = '';
+  @Input() ariaLabel: string | null = null;
   @Input() mobileMode = false;
   query = '';
   open = signal(false);

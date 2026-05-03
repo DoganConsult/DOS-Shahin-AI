@@ -59,6 +59,7 @@ export * from './dos-carbon-contained-list.component';
 export * from './dos-carbon-treeview.component';
 export * from './dos-carbon-content-switcher.component';
 export * from './dos-carbon-layer.component';
+export * from './dos-carbon-aspect-ratio.component';
 
 // ── WAVE 4 — Charts (1 facade, 21 kinds) ──────────────────────────
 export * from './dos-carbon-chart.component';

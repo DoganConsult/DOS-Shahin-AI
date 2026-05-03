@@ -23,9 +23,9 @@ import type { QuickCreateAction } from './workspace-shell.contracts';
               class="dos-quick-create__fab"
               data-cds-component="button"
               [attr.aria-expanded]="open()"
-              aria-label="Quick create"
+              [attr.aria-label]="ariaLabel || null"
               (click)="toggle()">
-        +
+        {{ fabGlyph }}
       </button>
       @if (open()) {
         <ul class="dos-quick-create__menu" role="menu">
@@ -61,6 +61,8 @@ import type { QuickCreateAction } from './workspace-shell.contracts';
 export class DosQuickCreateComponent {
   @Input() actions: QuickCreateAction[] = [];
   @Input() mobileMode = false;
+  @Input() ariaLabel: string | null = null;
+  @Input() fabGlyph = '+';
   open = signal(false);
   @Output() invoke = new EventEmitter<QuickCreateAction>();
 

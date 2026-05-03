@@ -89,9 +89,6 @@ export class DosPageRailDirective {
     TabsModule,
     TilesModule,
     GridModule,
-    DosPageTabDirective,
-    DosPageKpiDirective,
-    DosPageRailDirective,
   ],
   styles: [`
     :host { display: block; }
