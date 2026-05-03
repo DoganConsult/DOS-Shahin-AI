@@ -97,6 +97,24 @@ export function mapComponentKeyToArchetype(componentKey, route = '') {
   if (k === 'platform.dauth.console')
     return { archetype: 'decision-dashboard', template_export: 'DecisionDashboardTemplateComponent' };
 
+  // ── Phase M0.5 — Agentic UI components (Family H) ───────────────────────
+  // These keys are not pages; they map onto the existing Family H archetypes
+  // so route-binding diff/seed flows remain consistent.
+  if (k === 'agent.workbench')
+    return { archetype: 'user-agent-workbench', template_export: 'UserAgentWorkbenchTemplateComponent' };
+  if (k === 'agent.audit-trail')
+    return { archetype: 'audit-trail', template_export: 'AuditTrailTemplateComponent' };
+  if (k === 'agent.followup-center')
+    return { archetype: 'follow-up-center', template_export: 'FollowUpCenterTemplateComponent' };
+  if (k === 'agent.activity-flow')
+    return { archetype: 'agent-flow', template_export: 'AgentFlowTemplateComponent' };
+  if (k === 'agent.task-queue')
+    return { archetype: 'action-queue', template_export: 'ModuleWorkQueueTemplateComponent' };
+  if (k === 'agent.card' || k === 'agent.recommendation-panel'
+   || k === 'agent.action-approval-modal' || k === 'agent.evidence-drawer'
+   || k === 'agent.status-strip')
+    return { archetype: 'agent-registry', template_export: 'AgentRegistryTemplateComponent' };
+
   // ── Per-module page-key conventions (PascalCase suffix patterns) ─────────
   if (/HeatmapPage$/.test(k) || /\.heatmap\.page$/.test(k))
     return { archetype: 'risk-landscape', template_export: 'ModuleHeatmapTemplateComponent' };

@@ -98,6 +98,11 @@ export * from './brand/brand-asset.contract';
 export * from './brand/brand-resolver.service';
 export * from './brand/dos-brand-eagle.component';
 export * from './marketing/marketing-public-config.service';
+
+// Agentic UI Interaction Layer (Phase M0.5) — 10 Carbon-backed components
+// + universal state/event contract. CI gate: agentic-ui-coverage.mjs.
+export * from './agentic/agentic.contract';
+export * from './agentic/agentic-components';
 export {
   CARBON_ICON_NAMES,
   CARBON_ICON_NAME_SET,

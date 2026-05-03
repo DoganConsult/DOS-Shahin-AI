@@ -511,6 +511,21 @@ const REGISTRY_COMPONENT_MAP: Record<string, () => Promise<Type<any>>> = {
   'platform.dauth.console':          () => import('../../core/platform/shell/templates/module-decision-dashboard.template').then(m => m.DecisionDashboardTemplateComponent),
   'platform.dnoc.console':           () => import('../../core/platform/shell/templates/module-archetypes-extended.templates').then(m => m.CommandDashboardTemplateComponent),
   'platform.dsoc.console':           () => import('../../core/platform/shell/templates/module-archetypes-extended.templates').then(m => m.CommandDashboardTemplateComponent),
+
+  // ── Phase M0.5 — Agentic UI Interaction Layer (10 components) ───────────
+  // Each agent.* component_key maps to its standalone Dos*Component from
+  // @dos/ui-system/agentic. Components emit events; workflow services execute.
+  // Carbon backing per row is enforced by 20260503_0024_agentic_ui_components.sql.
+  'agent.status-strip':          () => import('@dos/ui-system').then(m => m.DosAgentStatusStripComponent),
+  'agent.card':                  () => import('@dos/ui-system').then(m => m.DosAgentCardComponent),
+  'agent.activity-flow':         () => import('@dos/ui-system').then(m => m.DosAgentActivityFlowComponent),
+  'agent.task-queue':            () => import('@dos/ui-system').then(m => m.DosAgentTaskQueueComponent),
+  'agent.recommendation-panel':  () => import('@dos/ui-system').then(m => m.DosAgentRecommendationPanelComponent),
+  'agent.action-approval-modal': () => import('@dos/ui-system').then(m => m.DosAgentActionApprovalModalComponent),
+  'agent.workbench':             () => import('@dos/ui-system').then(m => m.DosAgentWorkbenchComponent),
+  'agent.evidence-drawer':       () => import('@dos/ui-system').then(m => m.DosAgentEvidenceDrawerComponent),
+  'agent.followup-center':       () => import('@dos/ui-system').then(m => m.DosAgentFollowupCenterComponent),
+  'agent.audit-trail':           () => import('@dos/ui-system').then(m => m.DosAgentAuditTrailComponent),
 };
 
 const PRIMITIVE_KEYS = new Set(Object.keys(CARBON_PRIMITIVE_COMPONENT_MAP));
