@@ -224,40 +224,73 @@ export const routes: Routes = [
             loadComponent: () => import('../../../../../platform/config-center/config-resolution.component').then((m) => m.ConfigResolutionComponent),
           },
           {
-            path: 'settings',
-            loadComponent: () => import('../../../../../platform/config-center/config-settings.component').then((m) => m.ConfigSettingsComponent),
-          },
-          {
-            path: 'audit',
-            loadComponent: () => import('../../../../../platform/config-center/config-audit.component').then((m) => m.ConfigAuditComponent),
-          },
-          {
-            path: 'health',
-            loadComponent: () => import('../../../../../platform/config-center/config-health.component').then((m) => m.ConfigHealthComponent),
-          },
-          {
             path: 'compare',
             loadComponent: () => import('../../../../../platform/config-center/config-compare.component').then((m) => m.ConfigCompareComponent),
-          },
-          {
-            path: 'gateway',
-            loadComponent: () => import('../../../../../platform/config-center/config-gateway.component').then((m) => m.ConfigGatewayComponent),
           },
           {
             path: 'workspace',
             loadComponent: () => import('../../../../../platform/config-center/config-workspace.component').then((m) => m.ConfigWorkspaceComponent),
           },
           {
+            path: 'health',
+            loadComponent: () => import('../../../../../platform/config-center/config-health.component').then((m) => m.ConfigHealthComponent),
+          },
+          // Phase F-F5 — these admin/config-center concrete routes are now
+          // resolved by the DB-driven template binding host. Each route still
+          // has its own row in dos.ui_route_template_binding so the legacy
+          // shapes (audit / settings / flags / tokens) keep their archetype.
+          {
+            path: 'settings',
+            loadComponent: () => import('@platform/shell').then((m) => m.DynamicTemplatePageComponent),
+            data: { contractRoute: '/admin/config-center/settings' },
+          },
+          {
+            path: 'audit',
+            loadComponent: () => import('@platform/shell').then((m) => m.DynamicTemplatePageComponent),
+            data: { contractRoute: '/admin/config-center/audit' },
+          },
+          {
+            path: 'gateway',
+            loadComponent: () => import('@platform/shell').then((m) => m.DynamicTemplatePageComponent),
+            data: { contractRoute: '/admin/config-center/gateway' },
+          },
+          {
             path: 'flags',
-            redirectTo: 'gateway',
-            pathMatch: 'full',
+            loadComponent: () => import('@platform/shell').then((m) => m.DynamicTemplatePageComponent),
+            data: { contractRoute: '/admin/config-center/flags' },
           },
           {
             path: 'tokens',
-            redirectTo: 'workspace',
-            pathMatch: 'full',
+            loadComponent: () => import('@platform/shell').then((m) => m.DynamicTemplatePageComponent),
+            data: { contractRoute: '/admin/config-center/tokens' },
           },
         ],
+      },
+      // Phase F-F5 — DB-driven admin surface. Every /admin/* path that is not
+      // claimed by the concrete admin/config-center block above falls through
+      // to the dynamic template host, which resolves its archetype + props
+      // from dos.ui_route_template_binding. Covers /admin/{access,ai,dauth,
+      // dnoc,dos,dsoc,foundation,multi-tenant,runtime,tenants,ui-system}/*.
+      {
+        path: 'admin',
+        data: { moduleCode: 'platform-admin', productCode: 'shahin-ai', kpiScope: 'page-local' },
+        children: [
+          {
+            path: '**',
+            loadComponent: () => import('@platform/shell').then((m) => m.DynamicTemplatePageComponent),
+          },
+        ],
+      },
+      // Phase F-F5 — top-level DB-bound settings surfaces.
+      {
+        path: 'settings',
+        loadComponent: () => import('@platform/shell').then((m) => m.DynamicTemplatePageComponent),
+        data: { contractRoute: '/settings' },
+      },
+      {
+        path: 'tenant-settings',
+        loadComponent: () => import('@platform/shell').then((m) => m.DynamicTemplatePageComponent),
+        data: { contractRoute: '/tenant-settings' },
       },
       ...dnaModuleRoutes,
       // Phase F-F4 — DB-driven dynamic template host. Any path under
