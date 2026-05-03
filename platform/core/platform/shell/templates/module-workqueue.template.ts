@@ -37,7 +37,7 @@ export interface WorkTask {
 }
 
 @Component({
-  selector: 'dos-action-queue',
+  selector: 'dos-module-workqueue-list',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

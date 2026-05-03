@@ -93,7 +93,7 @@ export { ModuleReportsTemplateComponent as EvidenceReportsTemplateComponent } fr
 export { ModuleReportsTemplateComponent } from './module-extra.templates';
 
 // 8. My Action Queue
-//    Selector: dos-action-queue
+//    Selector: dos-module-workqueue-list (shell strip uses dos-action-queue)
 //    Story: AI-ranked tasks by urgency group (overdue/today/week/upcoming)
 //    Use for: Personal task queue, work assignments, review queue
 export { ModuleWorkQueueTemplateComponent as ActionQueueTemplateComponent } from './module-workqueue.template';
@@ -214,7 +214,7 @@ export {
 // RiskAssessmentsPage        → dos-workflow-control       → WorkflowControlTemplateComponent
 // module.trends.page         → dos-trend-intelligence     → TrendIntelligenceTemplateComponent
 // module.reports.page        → dos-evidence-reports       → EvidenceReportsTemplateComponent
-// module.work_queue          → dos-action-queue           → ActionQueueTemplateComponent
+// module.work_queue          → dos-module-workqueue-list  → ActionQueueTemplateComponent
 // module.settings.page       → dos-module-settings        → ModuleControlSettingsTemplateComponent
 // module.record.detail       → dos-record-story           → RecordStoryTemplateComponent
 // module.record.create       → dos-guided-create          → GuidedCreateTemplateComponent

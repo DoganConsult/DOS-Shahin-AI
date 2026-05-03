@@ -91,6 +91,48 @@ WORKSPACE SHELL REGISTRY (CLOSED 2026-05-04 by Phase WS-1):
   `PGPASSWORD=dos_auth_pass_2026 psql -h localhost -U dos_auth -d shahin_grc -c "SELECT count(*) FROM dos.dynamic_ui_component_registry WHERE component_key LIKE 'workspace.%'; SELECT count(*) FROM dos.workspace_shell_binding;"`
   → expects `10` and `400`.
 
+WORKSPACE SHELL WRAPPERS + RESOLVER + GATE (CLOSED 2026-05-04 by Phase WS-2..WS-6):
+- 10 standalone Carbon-backed shell wrappers shipped under
+  `platform/ui-system/dos-ui-system/src/shell/` and re-exported via
+  `@dos/ui-system` barrel:
+    workspace-header (existing, contracts-driven)
+    workspace-sidebar (NEW selector dos-workspace-sidebar)
+    mobile-bottom-nav (existing)
+    command-search (NEW dos-command-search, cmd-k launch, mobile→full-screen)
+    workspace-status-bar (NEW dos-workspace-status-bar)
+    workspace-action-queue (NEW dos-action-queue SHELL strip; distinct from
+      page-archetype renderer which was renamed to dos-module-workqueue-list)
+    agent-activity-strip (NEW dos-agent-activity-strip)
+    inbox-center (NEW dos-inbox-center, modal/drawer)
+    context-panel (NEW dos-context-panel, accordion/full-sheet)
+    quick-create (NEW dos-quick-create, FAB/sticky-bottom)
+  Each consumes its typed contract from
+  `platform/ui-system/dos-ui-system/src/shell/workspace-shell.contracts.ts`
+  (PermissionAware, i18nKey labels, mobile_mode flag, RTL-safe).
+- Backend resolver: `GET /api/ui-os/workspace-shell/:tenantId` mounted in
+  `services/ui-os-service/src/routes/workspace-shell.routes.ts` returns
+  `{tenantId, version, surfaces[10], knownKeys[10]}` from
+  `dos.workspace_shell_binding`. Verified live on PM2 ui-os-service :4015
+  (real tenant returns 10 enabled surfaces with sum-version=10).
+- CI guard: `scripts/ci-guards/workspace-shell-coverage.mjs` cross-checks
+  the 10 SURFACES (key↔selector pair) against:
+    1. component declaring the selector under src/shell/
+    2. WORKSPACE_SHELL_KEYS const in workspace-shell.contracts.ts
+    3. registry migration 20260504_0010
+    4. barrel re-export in src/index.ts
+  Wired into `pnpm platform:customer-gate` with
+  WORKSPACE_SHELL_COVERAGE_ENFORCE=1. Current state:
+  `surfaces=10 failures=0 — PASS`.
+- Customer-gate end-to-end (PROPS_COVERAGE_ENFORCE=1) GREEN in ~27s:
+    [carbon-dynamic-ui-coherence] OK
+    [loader-resolvability] PASS
+    SPA build OK
+    [props-coverage] bindings=159 archetypes-with-props=16 failures=0 — PASS
+    [workspace-shell-coverage] surfaces=10 failures=0 — PASS
+- Phase WS-7 (Playwright spec — 3 breakpoints × 2 directions × 3 auth states)
+  is GATED ON USER APPROVAL per workflow §6.5 and is NOT shipped in this
+  patch.
+
 PROGRESSIVE-MODULE BINDINGS (CLOSED 2026-05-03 by Phase G):
 - Migrations `20260503_0900_phase_g_progressive_modules_bindings.sql` (+95
   customer-bound rows, ON CONFLICT DO UPDATE) and
