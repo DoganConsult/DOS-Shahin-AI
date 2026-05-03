@@ -47,7 +47,13 @@ const ALLOWED_ARCHETYPES = new Set([
   // K
   'incident-response',
 ]);
-const EXEMPT = new Set(['/profile','/settings','/tenant-profile','/tenant-settings']);
+const EXEMPT = new Set([
+  '/profile','/settings','/tenant-profile','/tenant-settings',
+  // Phase M1.6 — Carbon Auth Pages Pack: 5 public auth routes use bespoke
+  // Dos*PageComponent composers (not archetype-bound). Coherence is policed
+  // by auth-pages-coverage.mjs.
+  '/login','/register','/forgot-password','/mfa','/reset-password',
+]);
 
 function nextBoundary(s, i) {
   const m = s.slice(i).search(/\n(?:INSERT INTO dos\.|UPDATE dos\.)/i);

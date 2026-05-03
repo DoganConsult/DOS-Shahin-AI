@@ -29,6 +29,13 @@ const EXEMPT_KEYS = new Set([
   'ShahinSettingsPage',
   'ShahinTenantProfilePage',
   'ShahinTenantSettingsPage',
+  // Phase M1.6 — Carbon Auth Pages Pack: 5 bespoke page composers
+  // (Dos*PageComponent) policed by auth-pages-coverage gate, not archetype.
+  'auth.login.page',
+  'auth.register.page',
+  'auth.forgot-password.page',
+  'auth.mfa.page',
+  'auth.reset-password.page',
 ]);
 
 // Canonical 31-archetype export aliases — kept in lockstep with
