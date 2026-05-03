@@ -497,6 +497,9 @@ const REGISTRY_COMPONENT_MAP: Record<string, () => Promise<Type<any>>> = {
   // K — Operational P0
   'module.incident_response.page': () => import('../../core/platform/shell/templates/module-archetypes-extended.templates').then(m => m.IncidentResponseTemplateComponent),
 
+  // Phase G tail (block B) — orphaned binding hygiene
+  'compliance.controls.list.page': () => import('../../core/platform/shell/templates/module-records.template').then(m => m.ModuleRecordsTemplateComponent),
+
   // ── Utility-pages seed (20260503_0022) — 8 dedicated surfaces ───────────
   // User Profile + Tenant Profile reuse the 360° Record Story renderer.
   'module.user_profile.page':        () => import('../../core/platform/shell/templates/module-record-story.template').then(m => m.RecordStoryTemplateComponent),

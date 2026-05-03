@@ -194,7 +194,7 @@ export function mapComponentKeyToArchetype(componentKey, route = '') {
     return { archetype: 'evidence-reports', template_export: 'ModuleReportsTemplateComponent' };
   if (tail === 'heatmap')
     return { archetype: 'risk-landscape', template_export: 'ModuleHeatmapTemplateComponent' };
-  if (tail === 'register' || tail === 'records')
+  if (tail === 'register' || tail === 'records' || tail === 'list')
     return { archetype: 'intelligent-register', template_export: 'ModuleRecordsTemplateComponent' };
 
   return null;

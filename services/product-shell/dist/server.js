@@ -108,15 +108,12 @@ app.use((0, cors_1.default)({
 app.use((0, morgan_1.default)(process.env.LOG_FORMAT || 'combined'));
 app.get('/health', (_req, res) => res.json({ ok: true, service: SERVICE }));
 app.get('/ready', (_req, res) => res.json({ ok: true, service: SERVICE }));
-// Defense-in-depth: auth entry routes MUST never serve the SPA shell, even
-// if nginx-level redirects are bypassed or a stale service worker tries to
-// intercept navigation. These run before express.static and the SPA catch-all.
-app.get(['/login', '/register'], (req, res) => {
-    const mode = req.path === '/register' ? 'register' : 'login';
-    applyNoStoreHeaders(res);
-    res.setHeader('X-DOS-Route', `product-shell-auth-${mode}-redirect`);
-    res.redirect(302, `/api/auth/oidc/start?mode=${mode}`);
-});
+// Phase M1.6 — auth entry routes (/login, /register, /forgot-password,
+// /mfa, /reset-password) are now owned by the SPA's Carbon Auth Pages
+// Pack. The SPA's <app-auth-page-host> renders the Carbon login/register
+// card and forwards submit/SSO events to /api/auth/oidc/start?mode=…,
+// so the legacy hard 302 here is intentionally removed. These paths fall
+// through to the SPA catch-all below.
 // /api/* → gateway. Express strips the mount path, so re-prepend it via
 // pathRewrite — the gateway mounts everything under /api/*.
 app.use('/api', (0, http_proxy_middleware_1.createProxyMiddleware)({

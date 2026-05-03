@@ -80,20 +80,39 @@ export const routes: Routes = [
   {
     path: '',
     loadComponent: () =>
-      import('./pages/landing/landing.component').then(m => m.LandingComponent),
+      import('./pages/marketing-landing/marketing-landing.component').then(m => m.MarketingLandingComponent),
     pathMatch: 'full',
+    data: { contractRoute: '/', componentKey: 'marketing.home.page' },
   },
   {
     path: 'login',
     loadComponent: () =>
-      import('./pages/auth-redirect/auth-redirect.component').then(m => m.AuthRedirectComponent),
-    data: { mode: 'login' },
+      import('./pages/auth-pages/auth-page.host').then(m => m.AuthPageHostComponent),
+    data: { authPage: 'login', contractRoute: '/login', componentKey: 'auth.login.page' },
   },
   {
     path: 'register',
     loadComponent: () =>
-      import('./pages/auth-redirect/auth-redirect.component').then(m => m.AuthRedirectComponent),
-    data: { mode: 'register' },
+      import('./pages/auth-pages/auth-page.host').then(m => m.AuthPageHostComponent),
+    data: { authPage: 'register', contractRoute: '/register', componentKey: 'auth.register.page' },
+  },
+  {
+    path: 'forgot-password',
+    loadComponent: () =>
+      import('./pages/auth-pages/auth-page.host').then(m => m.AuthPageHostComponent),
+    data: { authPage: 'forgot-password', contractRoute: '/forgot-password', componentKey: 'auth.forgot-password.page' },
+  },
+  {
+    path: 'mfa',
+    loadComponent: () =>
+      import('./pages/auth-pages/auth-page.host').then(m => m.AuthPageHostComponent),
+    data: { authPage: 'mfa', contractRoute: '/mfa', componentKey: 'auth.mfa.page' },
+  },
+  {
+    path: 'reset-password',
+    loadComponent: () =>
+      import('./pages/auth-pages/auth-page.host').then(m => m.AuthPageHostComponent),
+    data: { authPage: 'reset-password', contractRoute: '/reset-password', componentKey: 'auth.reset-password.page' },
   },
   {
     path: '',
