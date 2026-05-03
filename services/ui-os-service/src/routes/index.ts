@@ -27,6 +27,7 @@ import { createAdminRouter } from './admin.routes.js';
 import { createPlatformAdminRouter } from './platform-admin.routes.js';
 import { createDynamicUiContractRouter } from './dynamic-ui-contract.routes.js';
 import { createTemplateBindingRouter } from './template-binding.routes.js';
+import { createBrandRouter } from './brand.routes.js';
 import type { DbPool } from '../db.js';
 
 export function createUiOsRouter(pool: DbPool): Router {
@@ -67,6 +68,8 @@ export function createUiOsRouter(pool: DbPool): Router {
   router.use('/', createDynamicUiContractRouter(pool));
   // Phase F — DB-driven template binding resolver
   router.use('/', createTemplateBindingRouter(pool));
+  // Phase M0 — Public marketing brand resolver (NOT auth-bound)
+  router.use('/', createBrandRouter(pool));
 
   return router;
 }

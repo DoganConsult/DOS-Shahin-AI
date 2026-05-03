@@ -84,6 +84,20 @@ export * from './directives/dos-gate-probe.directive';
 // Carbon icon allowlist + picker (rule #8 — package-level asset, runtime allowlist).
 export * from './icons/carbon-icon-allowlist.service';
 export * from './icons/carbon-icon-picker.component';
+
+// Marketing surface — Phase M0 (functional icon subset, public config,
+// brand asset contract + eagle renderer). NOT AccessStore-bound.
+export {
+  MARKETING_ICON_NAMES,
+  MARKETING_ICON_SET,
+  isMarketingIcon,
+  assertMarketingIcon,
+  type MarketingIconName,
+} from './allowlists/marketing-icons.allowlist';
+export * from './brand/brand-asset.contract';
+export * from './brand/brand-resolver.service';
+export * from './brand/dos-brand-eagle.component';
+export * from './marketing/marketing-public-config.service';
 export {
   CARBON_ICON_NAMES,
   CARBON_ICON_NAME_SET,

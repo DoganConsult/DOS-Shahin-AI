@@ -1,0 +1,74 @@
+/* DOS Platform — Brand Color Overlays (Phase M0).
+ *
+ * Per-brand semantic colour overlays. Activated by `[data-brand="<code>"]`
+ * on a host element (typically <html> at app boot, set by the
+ * BrandResolverService). Falls back to the default DOS palette when no
+ * brand attribute is set.
+ *
+ * Brands shipped in M0 seed:
+ *   - shahin-ai      (Shahin: AR-first, deep navy + gold accent → eagle)
+ *   - dogan-ai-os    (Dogan parent: EN-first, ink + amber)
+ *
+ * IMPORTANT: do NOT redefine raw colour primitives here. Only override
+ * the SEMANTIC tokens (--dos-color-primary, --dos-color-accent, etc.) so
+ * downstream components keep working without recompilation.
+ */
+
+/* ── Shahin-AI brand overlay (eagle = navy + gold) ──────────────────── */
+[data-brand='shahin-ai'] {
+  --dos-color-brand-primary:        #0f1f3d;   /* deep navy */
+  --dos-color-brand-primary-strong: #08152a;
+  --dos-color-brand-primary-soft:   #1d3666;
+  --dos-color-brand-accent:         #c9a14a;   /* gold (eagle) */
+  --dos-color-brand-accent-strong:  #a37e2c;
+  --dos-color-brand-accent-soft:    #e6cd8c;
+  --dos-color-brand-on-primary:     #ffffff;
+  --dos-color-brand-on-accent:      #1a1a1a;
+
+  --dos-gradient-brand-hero:
+    radial-gradient(ellipse at 20% 0%, rgba(201, 161, 74, 0.18) 0%, transparent 55%),
+    linear-gradient(160deg, #0f1f3d 0%, #08152a 100%);
+  --dos-gradient-brand-cta:
+    linear-gradient(95deg, #c9a14a 0%, #a37e2c 100%);
+
+  /* Semantic alias overrides — components consume these, not the brand-* keys. */
+  --dos-color-primary:        var(--dos-color-brand-primary);
+  --dos-color-primary-strong: var(--dos-color-brand-primary-strong);
+  --dos-color-primary-soft:   var(--dos-color-brand-primary-soft);
+  --dos-color-accent:         var(--dos-color-brand-accent);
+}
+
+/* ── Dogan-AI-OS brand overlay (parent ink + amber) ─────────────────── */
+[data-brand='dogan-ai-os'] {
+  --dos-color-brand-primary:        #1a1f2c;   /* ink */
+  --dos-color-brand-primary-strong: #0c111c;
+  --dos-color-brand-primary-soft:   #2a3147;
+  --dos-color-brand-accent:         #d98e2b;   /* amber */
+  --dos-color-brand-accent-strong:  #b46f1c;
+  --dos-color-brand-accent-soft:    #f0b87a;
+  --dos-color-brand-on-primary:     #ffffff;
+  --dos-color-brand-on-accent:      #1a1a1a;
+
+  --dos-gradient-brand-hero:
+    radial-gradient(ellipse at 80% 0%, rgba(217, 142, 43, 0.16) 0%, transparent 55%),
+    linear-gradient(200deg, #1a1f2c 0%, #0c111c 100%);
+  --dos-gradient-brand-cta:
+    linear-gradient(95deg, #d98e2b 0%, #b46f1c 100%);
+
+  --dos-color-primary:        var(--dos-color-brand-primary);
+  --dos-color-primary-strong: var(--dos-color-brand-primary-strong);
+  --dos-color-primary-soft:   var(--dos-color-brand-primary-soft);
+  --dos-color-accent:         var(--dos-color-brand-accent);
+}
+
+/* ── Default brand fallback (no [data-brand] set) ───────────────────── */
+:root {
+  --dos-color-brand-primary:  var(--dos-color-primary);
+  --dos-color-brand-accent:   var(--dos-color-info);
+  --dos-color-brand-on-primary: #ffffff;
+  --dos-color-brand-on-accent:  #1a1a1a;
+  --dos-gradient-brand-hero:
+    linear-gradient(160deg, var(--dos-color-primary) 0%, var(--dos-color-primary-strong) 100%);
+  --dos-gradient-brand-cta:
+    linear-gradient(95deg, var(--dos-color-info) 0%, var(--dos-color-primary) 100%);
+}

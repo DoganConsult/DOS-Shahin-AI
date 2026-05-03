@@ -1,0 +1,83 @@
+/* DOS Platform — Marketing Surface Tokens (Phase M0).
+ *
+ * Public-facing marketing pages (/, /platform, /products/*, /trust, /pricing)
+ * have a different visual rhythm than the in-product workspace shell:
+ *   - hero typography (display-grade)
+ *   - generous section spacing (section rhythm)
+ *   - CTA density (button height + horizontal padding)
+ *   - mobile-first surface (390/430 px first, scale up)
+ *   - max content widths (containers, prose lines)
+ *
+ * Tokens here are aliases over the primitives in spacing.css / typography.css
+ * — primitives are NEVER overridden, so workspace surfaces stay stable.
+ *
+ * Activation: a marketing page sets `data-surface="marketing"` on its host
+ * element. Workspace shell never sets this attribute, so marketing tokens
+ * are inert inside the app shell.
+ */
+:root,
+[data-surface='marketing'] {
+  /* ── Section rhythm (vertical spacing between marketing sections) ── */
+  --dos-marketing-section-pad-block:        var(--dos-space-12);
+  --dos-marketing-section-pad-block-mobile: var(--dos-space-8);
+  --dos-marketing-section-gap:              var(--dos-space-10);
+  --dos-marketing-section-gap-mobile:       var(--dos-space-6);
+
+  /* ── Container widths (logical inset, RTL-safe) ─────────────────── */
+  --dos-marketing-container-max:    1280px;
+  --dos-marketing-container-narrow:  920px;
+  --dos-marketing-container-prose:   720px;
+  --dos-marketing-container-pad-x:   var(--dos-space-6);
+  --dos-marketing-container-pad-x-mobile: var(--dos-space-4);
+
+  /* ── Hero block ──────────────────────────────────────────────────── */
+  --dos-marketing-hero-title-size:        var(--dos-font-size-5xl);
+  --dos-marketing-hero-title-size-mobile: var(--dos-font-size-3xl);
+  --dos-marketing-hero-eyebrow-size:      var(--dos-font-size-sm);
+  --dos-marketing-hero-sub-size:          var(--dos-font-size-xl);
+  --dos-marketing-hero-sub-size-mobile:   var(--dos-font-size-lg);
+  --dos-marketing-hero-line:              var(--dos-line-height-tight);
+  --dos-marketing-hero-pad-block:         var(--dos-space-12);
+  --dos-marketing-hero-pad-block-mobile:  var(--dos-space-8);
+
+  /* ── Section heads ─────────────────────────────────────────────── */
+  --dos-marketing-section-title-size:        var(--dos-font-size-3xl);
+  --dos-marketing-section-title-size-mobile: var(--dos-font-size-2xl);
+  --dos-marketing-section-eyebrow-size:      var(--dos-font-size-xs);
+
+  /* ── CTA / button density (marketing buttons are larger than app) ── */
+  --dos-marketing-cta-pad-y:        0.875rem;   /* 14px */
+  --dos-marketing-cta-pad-y-mobile: 1rem;       /* 16px → thumb-friendly */
+  --dos-marketing-cta-pad-x:        var(--dos-space-6);
+  --dos-marketing-cta-pad-x-mobile: var(--dos-space-5);
+  --dos-marketing-cta-radius:       var(--dos-radius-pill);
+  --dos-marketing-cta-font-size:    var(--dos-font-size-lg);
+  --dos-marketing-cta-min-tap:      44px;       /* iOS / WCAG min */
+
+  /* ── Card / tile rhythm (module showcase, framework cloud, FAQ) ── */
+  --dos-marketing-card-pad:         var(--dos-space-6);
+  --dos-marketing-card-radius:      var(--dos-radius-card);
+  --dos-marketing-card-gap:         var(--dos-space-4);
+  --dos-marketing-card-shadow:      var(--dos-shadow-md);
+
+  /* ── Trust strip / status pill ──────────────────────────────────── */
+  --dos-marketing-trust-gap:       var(--dos-space-5);
+  --dos-marketing-pill-pad-y:      var(--dos-space-1);
+  --dos-marketing-pill-pad-x:      var(--dos-space-3);
+  --dos-marketing-pill-radius:     var(--dos-radius-pill);
+}
+
+/* Mobile-first overrides — ≤480 (390/430 baseline). */
+@media (max-width: 480px) {
+  [data-surface='marketing'] {
+    --dos-marketing-section-pad-block: var(--dos-marketing-section-pad-block-mobile);
+    --dos-marketing-section-gap:       var(--dos-marketing-section-gap-mobile);
+    --dos-marketing-container-pad-x:   var(--dos-marketing-container-pad-x-mobile);
+    --dos-marketing-hero-title-size:   var(--dos-marketing-hero-title-size-mobile);
+    --dos-marketing-hero-sub-size:     var(--dos-marketing-hero-sub-size-mobile);
+    --dos-marketing-hero-pad-block:    var(--dos-marketing-hero-pad-block-mobile);
+    --dos-marketing-section-title-size:var(--dos-marketing-section-title-size-mobile);
+    --dos-marketing-cta-pad-y:         var(--dos-marketing-cta-pad-y-mobile);
+    --dos-marketing-cta-pad-x:         var(--dos-marketing-cta-pad-x-mobile);
+  }
+}

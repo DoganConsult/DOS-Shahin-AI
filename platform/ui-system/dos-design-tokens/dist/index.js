@@ -12,7 +12,7 @@
  * switching, RTL, and per-product overrides remain a CSS concern.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DOS_Z_INDEX_TOKENS = exports.DOS_TYPOGRAPHY_TOKENS = exports.DOS_LAYOUT_TOKENS = exports.DOS_DENSITY_MODES = exports.DOS_DISPLAY_TYPE_TOKENS = exports.DOS_DENSITY_TOKENS = exports.DOS_GLASS_TOKENS = exports.DOS_GRADIENT_TOKENS = exports.DOS_SHADOW_TOKENS = exports.DOS_RADIUS_TOKENS = exports.DOS_SPACING_TOKENS = exports.DOS_COLOR_TOKENS = exports.DOS_TOKEN_STYLESHEET = void 0;
+exports.DOS_MARKETING_TOKENS = exports.DOS_BRAND_CODES = exports.DOS_BRAND_TOKENS = exports.DOS_Z_INDEX_TOKENS = exports.DOS_TYPOGRAPHY_TOKENS = exports.DOS_LAYOUT_TOKENS = exports.DOS_DENSITY_MODES = exports.DOS_DISPLAY_TYPE_TOKENS = exports.DOS_DENSITY_TOKENS = exports.DOS_GLASS_TOKENS = exports.DOS_GRADIENT_TOKENS = exports.DOS_SHADOW_TOKENS = exports.DOS_RADIUS_TOKENS = exports.DOS_SPACING_TOKENS = exports.DOS_COLOR_TOKENS = exports.DOS_TOKEN_STYLESHEET = void 0;
 exports.DOS_TOKEN_STYLESHEET = '@dos/design-tokens/tokens.css';
 exports.DOS_COLOR_TOKENS = [
     '--dos-color-primary',
@@ -156,5 +156,50 @@ exports.DOS_Z_INDEX_TOKENS = [
     '--dos-z-overlay',
     '--dos-z-modal',
     '--dos-z-toast',
+];
+// ── M0 — Brand DNA + Marketing Surface Tokens ─────────────────────────
+// Activated via [data-brand="<code>"] and [data-surface="marketing"]
+// host attributes. Workspace shell never sets data-surface so these
+// tokens are inert inside the in-product shell.
+exports.DOS_BRAND_TOKENS = [
+    '--dos-color-brand-primary',
+    '--dos-color-brand-primary-strong',
+    '--dos-color-brand-primary-soft',
+    '--dos-color-brand-accent',
+    '--dos-color-brand-accent-strong',
+    '--dos-color-brand-accent-soft',
+    '--dos-color-brand-on-primary',
+    '--dos-color-brand-on-accent',
+    '--dos-gradient-brand-hero',
+    '--dos-gradient-brand-cta',
+];
+exports.DOS_BRAND_CODES = ['shahin-ai', 'dogan-ai-os'];
+exports.DOS_MARKETING_TOKENS = [
+    '--dos-marketing-section-pad-block',
+    '--dos-marketing-section-gap',
+    '--dos-marketing-container-max',
+    '--dos-marketing-container-narrow',
+    '--dos-marketing-container-prose',
+    '--dos-marketing-container-pad-x',
+    '--dos-marketing-hero-title-size',
+    '--dos-marketing-hero-eyebrow-size',
+    '--dos-marketing-hero-sub-size',
+    '--dos-marketing-hero-line',
+    '--dos-marketing-hero-pad-block',
+    '--dos-marketing-section-title-size',
+    '--dos-marketing-section-eyebrow-size',
+    '--dos-marketing-cta-pad-y',
+    '--dos-marketing-cta-pad-x',
+    '--dos-marketing-cta-radius',
+    '--dos-marketing-cta-font-size',
+    '--dos-marketing-cta-min-tap',
+    '--dos-marketing-card-pad',
+    '--dos-marketing-card-radius',
+    '--dos-marketing-card-gap',
+    '--dos-marketing-card-shadow',
+    '--dos-marketing-trust-gap',
+    '--dos-marketing-pill-pad-y',
+    '--dos-marketing-pill-pad-x',
+    '--dos-marketing-pill-radius',
 ];
 //# sourceMappingURL=index.js.map

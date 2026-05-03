@@ -169,6 +169,58 @@ export const DOS_Z_INDEX_TOKENS = [
   '--dos-z-toast',
 ] as const;
 
+// ── M0 — Brand DNA + Marketing Surface Tokens ─────────────────────────
+// Activated via [data-brand="<code>"] and [data-surface="marketing"]
+// host attributes. Workspace shell never sets data-surface so these
+// tokens are inert inside the in-product shell.
+export const DOS_BRAND_TOKENS = [
+  '--dos-color-brand-primary',
+  '--dos-color-brand-primary-strong',
+  '--dos-color-brand-primary-soft',
+  '--dos-color-brand-accent',
+  '--dos-color-brand-accent-strong',
+  '--dos-color-brand-accent-soft',
+  '--dos-color-brand-on-primary',
+  '--dos-color-brand-on-accent',
+  '--dos-gradient-brand-hero',
+  '--dos-gradient-brand-cta',
+] as const;
+
+export const DOS_BRAND_CODES = ['shahin-ai', 'dogan-ai-os'] as const;
+export type DosBrandCode = (typeof DOS_BRAND_CODES)[number];
+
+export const DOS_MARKETING_TOKENS = [
+  '--dos-marketing-section-pad-block',
+  '--dos-marketing-section-gap',
+  '--dos-marketing-container-max',
+  '--dos-marketing-container-narrow',
+  '--dos-marketing-container-prose',
+  '--dos-marketing-container-pad-x',
+  '--dos-marketing-hero-title-size',
+  '--dos-marketing-hero-eyebrow-size',
+  '--dos-marketing-hero-sub-size',
+  '--dos-marketing-hero-line',
+  '--dos-marketing-hero-pad-block',
+  '--dos-marketing-section-title-size',
+  '--dos-marketing-section-eyebrow-size',
+  '--dos-marketing-cta-pad-y',
+  '--dos-marketing-cta-pad-x',
+  '--dos-marketing-cta-radius',
+  '--dos-marketing-cta-font-size',
+  '--dos-marketing-cta-min-tap',
+  '--dos-marketing-card-pad',
+  '--dos-marketing-card-radius',
+  '--dos-marketing-card-gap',
+  '--dos-marketing-card-shadow',
+  '--dos-marketing-trust-gap',
+  '--dos-marketing-pill-pad-y',
+  '--dos-marketing-pill-pad-x',
+  '--dos-marketing-pill-radius',
+] as const;
+
+export type DosBrandToken = (typeof DOS_BRAND_TOKENS)[number];
+export type DosMarketingToken = (typeof DOS_MARKETING_TOKENS)[number];
+
 export type DosColorToken = (typeof DOS_COLOR_TOKENS)[number];
 export type DosSpacingToken = (typeof DOS_SPACING_TOKENS)[number];
 export type DosRadiusToken = (typeof DOS_RADIUS_TOKENS)[number];
