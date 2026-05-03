@@ -118,6 +118,51 @@ const ARCHETYPE_EXTENSIONS: Record<string, Array<{ key: string; sql: string }>> 
     sql: `SELECT case_id, sort_order, title_en, title_ar, case_type, origin_ref, decision, decision_owner, decision_at, signoff_status, evidence_uri, rationale_en, rationale_ar, next_review_at, status
             FROM dos.ui_route_case_finalization WHERE route=$1 ORDER BY sort_order`,
   }],
+
+  // ─── Phase F-F8 — extension tables for the remaining 12 archetypes ──
+  'decision-dashboard': [
+    { key: 'urgentItems',     sql: `SELECT item_id AS id, sort_order, label_en, label_ar, owner, severity, due_at, link, status FROM dos.ui_route_decision_item WHERE route=$1 AND kind='urgent'   ORDER BY sort_order` },
+    { key: 'blockedItems',    sql: `SELECT item_id AS id, sort_order, label_en, label_ar, owner, severity, due_at, link, status FROM dos.ui_route_decision_item WHERE route=$1 AND kind='blocked'  ORDER BY sort_order` },
+    { key: 'recentActivity',  sql: `SELECT item_id AS id, sort_order, label_en, label_ar, owner, severity, due_at, link, status FROM dos.ui_route_decision_item WHERE route=$1 AND kind='activity' ORDER BY sort_order` },
+  ],
+  'posture-overview': [
+    { key: 'scoreKpis',       sql: `SELECT score_id AS id, sort_order, label_en, label_ar, value, max_value, severity, status FROM dos.ui_route_posture_score WHERE route=$1 AND kind='score'    ORDER BY sort_order` },
+    { key: 'maturityDomains', sql: `SELECT score_id AS id, sort_order, label_en, label_ar, value, max_value, severity, status FROM dos.ui_route_posture_score WHERE route=$1 AND kind='maturity' ORDER BY sort_order` },
+    { key: 'topGaps',         sql: `SELECT score_id AS id, sort_order, label_en, label_ar, value, severity FROM dos.ui_route_posture_score WHERE route=$1 AND kind='gap'      ORDER BY sort_order` },
+  ],
+  'trend-intelligence': [
+    { key: 'trendSeries',     sql: `SELECT series_id AS id, sort_order, name_en, name_ar, color, points FROM dos.ui_route_trend_series WHERE route=$1 ORDER BY sort_order` },
+    { key: 'aiInsights',      sql: `SELECT insight_id AS id, sort_order, text_en, text_ar, severity, action FROM dos.ui_route_ai_insight WHERE route=$1 ORDER BY sort_order` },
+  ],
+  'intelligent-register': [
+    { key: 'rows',            sql: `SELECT row_id AS id, sort_order, payload, severity, status FROM dos.ui_route_record_row WHERE route=$1 ORDER BY sort_order` },
+  ],
+  'risk-landscape': [
+    { key: 'cells',           sql: `SELECT cell_id AS id, x, y, count, severity, label_en, label_ar FROM dos.ui_route_heatmap_cell WHERE route=$1 ORDER BY y, x` },
+    { key: 'topItems',        sql: `SELECT item_id AS id, sort_order, title_en, title_ar, severity, link FROM dos.ui_route_heatmap_top_item WHERE route=$1 ORDER BY sort_order` },
+  ],
+  'record-story': [
+    { key: 'keyFields',       sql: `SELECT field_id AS id, sort_order, label_en, label_ar, value, kind FROM dos.ui_route_record_field WHERE route=$1 ORDER BY sort_order` },
+    { key: 'timeline',        sql: `SELECT event_id AS id, sort_order, occurred_at, label_en, label_ar, actor, kind, link FROM dos.ui_route_record_timeline_event WHERE route=$1 ORDER BY occurred_at, sort_order` },
+  ],
+  'guided-create': [
+    { key: 'steps',           sql: `SELECT step_id AS id, sort_order, label_en, label_ar, fields, completed, ai_prefilled FROM dos.ui_route_form_step WHERE route=$1 ORDER BY sort_order` },
+  ],
+  'action-queue': [
+    { key: 'tasks',           sql: `SELECT task_id AS id, sort_order, title_en, title_ar, owner, due_at, severity, status, link, ai_score FROM dos.ui_route_work_task WHERE route=$1 ORDER BY sort_order` },
+  ],
+  'workflow-control': [
+    { key: 'progressSteps',   sql: `SELECT step_id AS id, sort_order, label_en, label_ar, state, description, occurred_at, actor FROM dos.ui_route_workflow_timeline_step WHERE route=$1 ORDER BY sort_order` },
+  ],
+  'audit-trail': [
+    { key: 'events',          sql: `SELECT event_id AS id, sort_order, occurred_at, actor, action, source, target, severity, description_en, description_ar FROM dos.ui_route_audit_event WHERE route=$1 ORDER BY occurred_at, sort_order` },
+  ],
+  'ai-advisor': [
+    { key: 'recommendations', sql: `SELECT recommendation_id AS id, sort_order, kind, title_en, title_ar, body_en, body_ar, confidence, action_route, action_label_en, action_label_ar FROM dos.ui_route_ai_recommendation WHERE route=$1 ORDER BY sort_order` },
+  ],
+  'activation-journey': [
+    { key: 'steps',           sql: `SELECT step_id AS id, sort_order, label_en, label_ar, description_en, description_ar, status, link FROM dos.ui_route_activation_step WHERE route=$1 ORDER BY sort_order` },
+  ],
 };
 
 async function loadProps(

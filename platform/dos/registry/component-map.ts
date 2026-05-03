@@ -542,6 +542,16 @@ const REGISTRY_COMPONENT_MAP: Record<string, () => Promise<Type<any>>> = {
   'marketing.gated-download-modal': () => import('@dos/ui-system').then(m => m.DosGatedDownloadModalComponent),
   'marketing.download-success':     () => import('@dos/ui-system').then(m => m.DosDownloadSuccessComponent),
 
+  // ── Phase M2 — Public marketing pages (pricing/trust/security/contact/about/legal)
+  // Public, tenantless, no AccessStore, no permission_key. Carbon backing: tiles.
+  // Registered by 20260504_0090_marketing_public_pages.sql.
+  'marketing.pricing.page':  () => import('@dos/ui-system').then(m => m.DosMarketingPricingPageComponent),
+  'marketing.trust.page':    () => import('@dos/ui-system').then(m => m.DosMarketingTrustPageComponent),
+  'marketing.security.page': () => import('@dos/ui-system').then(m => m.DosMarketingSecurityPageComponent),
+  'marketing.contact.page':  () => import('@dos/ui-system').then(m => m.DosMarketingContactPageComponent),
+  'marketing.about.page':    () => import('@dos/ui-system').then(m => m.DosMarketingAboutPageComponent),
+  'marketing.legal.page':    () => import('@dos/ui-system').then(m => m.DosMarketingLegalPageComponent),
+
   // ── Phase M1.6 — Carbon Auth Pages Pack (5 pages + 19 primitives) ───────
   // Carbon backing per row enforced by 20260503_0028_auth_pages_pack.sql.
   'auth.shell':                  () => import('@dos/ui-system').then(m => m.DosAuthShellComponent),
@@ -568,6 +578,40 @@ const REGISTRY_COMPONENT_MAP: Record<string, () => Promise<Type<any>>> = {
   'auth.forgot-password.page':   () => import('@dos/ui-system').then(m => m.DosAuthForgotPasswordPageComponent),
   'auth.mfa.page':               () => import('@dos/ui-system').then(m => m.DosAuthMfaPageComponent),
   'auth.reset-password.page':    () => import('@dos/ui-system').then(m => m.DosAuthResetPasswordPageComponent),
+
+  // ── Phase F-FOUND — Foundation pages pack (21 canonical pages) ──────────
+  // Carbon backing per row enforced by 20260503_0029_foundation_pages_pack.sql.
+  // Page components live in platform/foundation/ui/pages/*.component.ts and
+  // are re-exported through the `@dos/module-foundation/ui` subpath
+  // (declared in platform/foundation/package.json#exports). The root barrel
+  // is backend-only — never import Angular components from there.
+  // Template-Only Routing rule §3.1 — all `foundation.*.page` keys now
+  // resolve to canonical 32-archetype templates. Migrations 0040/0050/0060
+  // already rewrote dos.dynamic_ui_routes.component_key for foundation
+  // URLs to `module.*.page` keys; these legacy aliases stay so any tool
+  // that joins on the old foundation.*.page key still resolves to a real
+  // archetype renderer instead of a bespoke Foundation*Component class.
+  'foundation.overview.page':        () => import('@platform/shell/templates/module-overview.template').then(m => m.ModuleOverviewTemplateComponent),
+  'foundation.organization.page':    () => import('@platform/shell/templates/module-archetypes-extended.templates').then(m => m.OrgChartTemplateComponent),
+  'foundation.business-units.page':  () => import('@platform/shell/templates/module-archetypes-extended.templates').then(m => m.OrgChartTemplateComponent),
+  'foundation.departments.page':     () => import('@platform/shell/templates/module-archetypes-extended.templates').then(m => m.OrgChartTemplateComponent),
+  'foundation.positions.page':       () => import('@platform/shell/templates/module-records.template').then(m => m.ModuleRecordsTemplateComponent),
+  'foundation.locations.page':       () => import('@platform/shell/templates/module-records.template').then(m => m.ModuleRecordsTemplateComponent),
+  'foundation.users.page':           () => import('@platform/shell/templates/module-records.template').then(m => m.ModuleRecordsTemplateComponent),
+  'foundation.teams.page':           () => import('@platform/shell/templates/module-archetypes-extended.templates').then(m => m.OrgChartTemplateComponent),
+  'foundation.roles.page':           () => import('@platform/shell/templates/module-records.template').then(m => m.ModuleRecordsTemplateComponent),
+  'foundation.permissions.page':     () => import('@platform/shell/templates/module-archetypes-extended.templates').then(m => m.OwnershipMapTemplateComponent),
+  'foundation.committees.page':      () => import('@platform/shell/templates/module-records.template').then(m => m.ModuleRecordsTemplateComponent),
+  'foundation.delegations.page':     () => import('@platform/shell/templates/module-archetypes-extended.templates').then(m => m.DelegationCenterTemplateComponent),
+  'foundation.access-review.page':   () => import('@platform/shell/templates/module-extra.templates').then(m => m.ModuleAssessmentsTemplateComponent),
+  'foundation.policies.page':        () => import('@platform/shell/templates/module-records.template').then(m => m.ModuleRecordsTemplateComponent),
+  'foundation.audit.page':           () => import('@platform/shell/templates/module-archetypes-extended.templates').then(m => m.AuditTrailLedgerTemplateComponent),
+  'foundation.ownership.page':       () => import('@platform/shell/templates/module-archetypes-extended.templates').then(m => m.OwnershipMapTemplateComponent),
+  'foundation.sod.page':             () => import('@platform/shell/templates/module-extra.templates').then(m => m.ModuleSettingsTemplateComponent),
+  'foundation.hierarchy-viz.page':   () => import('@platform/shell/templates/module-archetypes-extended.templates').then(m => m.OrgChartTemplateComponent),
+  'foundation.user-lifecycle.page':  () => import('@platform/shell/templates/module-archetypes-extended.templates').then(m => m.WorkflowTimelineTemplateComponent),
+  'foundation.reference-data.page':  () => import('@platform/shell/templates/module-records.template').then(m => m.ModuleRecordsTemplateComponent),
+  'foundation.diagnostics.page':     () => import('@platform/shell/templates/module-posture-overview.template').then(m => m.PostureOverviewTemplateComponent),
 };
 
 const PRIMITIVE_KEYS = new Set(Object.keys(CARBON_PRIMITIVE_COMPONENT_MAP));

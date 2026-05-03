@@ -23,13 +23,14 @@
               "flatpickr/dist/plugins/rangePlugin",
               "flatpickr/dist/l10n/index"
             ],
-            "outputPath": "dist/shahin-ai",
+            "outputPath": "../../dist/shahin-ai",
             "index": "index.html",
             "browser": "main.ts",
             "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
             "assets": [
-              { "glob": "**/*", "input": "assets", "output": "assets" }
+              { "glob": "**/*", "input": "assets", "output": "assets" },
+              { "glob": "**/*", "input": "../../public", "output": "/" }
             ],
             "styles": [
               "node_modules/@fontsource-variable/inter/index.css",

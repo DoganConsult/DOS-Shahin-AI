@@ -2,6 +2,9 @@ import express from 'express';
 import { createPool } from './db.js';
 import { createUiOsRouter } from './routes/index.js';
 import { createDynamicUiContractRouter } from './routes/dynamic-ui-contract.routes.js';
+import { createBrandRouter } from './routes/brand.routes.js';
+import { createAgenticRouter } from './routes/agentic.routes.js';
+import { createMarketingDownloadsRouter } from './routes/marketing-downloads.routes.js';
 import { requireGatewayOrigin } from './middleware/gateway-origin.js';
 const PORT = Number(process.env.PORT || 4015);
 const DATABASE_URL = process.env.DATABASE_URL;
@@ -20,6 +23,19 @@ app.use(express.json({ limit: '1mb' }));
 app.get('/api/ui-os/health', (_req, res) => {
     res.json({ service: 'ui-os-service', status: 'ok' });
 });
+// Phase M3 — PUBLIC, UNAUTHENTICATED marketing surface. These are the only
+// /api/ui-os/* endpoints that bypass requireGatewayOrigin because the marketing
+// landing must render for anonymous visitors (no tenant, no session). Mount
+// BEFORE the auth gate so the catch-all gate never sees these paths.
+//   - /api/ui-os/brand                 (brand resolver)
+//   - /api/ui-os/marketing/config      (marketing config)
+//   - /api/ui-os/marketing/assets      (download kit)
+//   - /api/ui-os/marketing/downloads   (event sink, POST)
+//   - /api/ui-os/agentic/registry      (agentic showcase)
+//   - /api/ui-os/agentic/strip         (agent strip aggregate)
+app.use('/api/ui-os', createBrandRouter(pool));
+app.use('/api/ui-os', createAgenticRouter(pool));
+app.use('/api/ui-os', createMarketingDownloadsRouter(pool));
 app.use('/api/ui-os', requireGatewayOrigin());
 // Wave 10b — pin canonical x-dos-* identity headers from the verified
 // principal. After this point all route handlers read identity from

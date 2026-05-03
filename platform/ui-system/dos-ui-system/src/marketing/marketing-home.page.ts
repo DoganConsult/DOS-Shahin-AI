@@ -1,5 +1,5 @@
 /**
- * Phase M1 — `marketing.home.page` 16-section landing surface.
+ * Phase M1 — `marketing.home.page` 17-section landing surface.
  *
  * Public, unauthenticated landing for shahin-ai + dogan-ai-os brands. Built
  * exclusively from approved primitives:
@@ -8,15 +8,16 @@
  *   - 9 agent-tile brand assets resolved via BrandResolverService.
  *   - IBM Carbon `tiles`/`button`/`tag` styling hooks via data-cds-component.
  *
- * Sections (16 — single ordered list, every one rendered as a <section>):
- *   01 hero               09 ai-and-agents
- *   02 trust-pills        10 pricing-teaser
- *   03 value-props        11 testimonials
- *   04 agentic-proof      12 logos
- *   05 platform-overview  13 resources
- *   06 modules            14 faq
- *   07 industries         15 cta-banner
- *   08 architecture       16 footer
+ * Sections (17 — single ordered list, every one rendered as a <section>):
+ *   01 hero               10 ai-and-agents
+ *   02 trust-pills        11 pricing-teaser
+ *   03 value-props        12 testimonials
+ *   04 agentic-proof      13 logos
+ *   05 download-kit       14 resources
+ *   06 platform-overview  15 faq
+ *   07 modules            16 cta-banner
+ *   08 industries         17 footer
+ *   09 architecture
  *
  * NEVER imports AccessStore. NEVER reads tenant context. The agent strip
  * is fed by `summary` Input (consumer wires it from /api/ui-os/agentic/strip).

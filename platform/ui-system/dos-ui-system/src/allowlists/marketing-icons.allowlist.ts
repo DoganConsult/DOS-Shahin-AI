@@ -25,7 +25,7 @@ const _MARKETING_ICONS = [
   'search',
   'arrow--right',
   'play--filled',
-  'shield',
+  'security',
   'certificate',
   'partnership',
   'idea',

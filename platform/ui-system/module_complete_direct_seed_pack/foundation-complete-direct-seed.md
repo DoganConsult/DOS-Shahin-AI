@@ -1,204 +1,331 @@
-# Foundation Module — Complete Direct Seed Content
+# Foundation — Single Source of Truth (Direct Seed Pack)
+
+> **Status:** Reflects actual code, contracts, routers, and migrations as of
+> 2026-05-03. Every row in this document is traceable to a real artifact in
+> `platform/foundation/**`, `services/user-service/**`, or
+> `platform/dos/migrations/**`. If the file diverges from code, the **code wins**
+> and this file MUST be updated to match — never the other way around.
+
+## 0. Provenance map (where each fact lives)
+
+| Concern | Authoritative file |
+|---|---|
+| Module identity | `platform/foundation/interface/foundation.module.ts` (`FOUNDATION_MANIFEST`) |
+| Module manifest | `platform/foundation/module.manifest.json` |
+| Page+nav contract | `platform/foundation/contracts/foundation.module-contract.ts` (`FOUNDATION_CONTRACT`) |
+| Module permissions | `platform/foundation/interface/security/foundation.permissions.ts` (`FOUNDATION_MODULE_PERMISSIONS`) |
+| Cross-module permission codes | `platform/foundation/contracts/foundation.permissions.ts` (`FOUNDATION_PERMISSION_CODES`) |
+| Module roles | `platform/foundation/interface/security/foundation.roles.ts` (`FOUNDATION_MODULE_ROLES`) |
+| Aggregator router | `platform/foundation/interface/http/foundation-aggregator.routes.ts` |
+| OpenAPI surface | `platform/foundation/openapi.yaml` |
+| Backend wiring | `services/user-service/src/server.ts`, `services/user-service/src/domain/foundation/index.ts` |
+| Page components | `platform/foundation/ui/pages/*.component.ts` |
+| Owned tables (DDL) | `platform/foundation/db/migrations/*.sql` |
+| Tenant-schema tables | `db/canonical/tenant/*.sql` |
+| Dynamic-UI registry seed | `platform/dos/migrations/public/2026xxxx_xxxx_foundation_pages_pack.sql` *(pending)* |
 
 ## 1. Module identity
 
 | Field | Value |
 |---|---|
-| module_code | `foundation` |
-| product_key | `shahin-ai` |
-| route_base | `/foundation` |
-| owner_service | `user-service / foundation module` |
-| module_status | `active_after_validation` |
-| module_name_en | `Foundation` |
-| module_name_ar | `نموذج تشغيل المستأجر` |
-| category | `platform-foundation` |
-| icon | `organization` |
-| description_en | Tenant operating model, users, roles, org structure, governance support data. |
-| description_ar | نموذج تشغيل المستأجر، المستخدمون، الأدوار، الهيكل التنظيمي وبيانات الحوكمة. |
+| `module_code` | `foundation` |
+| `version` | `2.0.0` |
+| `nameEn` | `Foundation — Organization Hierarchy` |
+| `nameAr` | `الأساس — الهيكل التنظيمي` |
+| `tier` | `platform` |
+| `category` | `platform` |
+| `routeBase` | `/api/foundation` |
+| `eventNamespace` | `foundation` |
+| `tablePrefix` | `foundation_` |
+| `provisioningOrder` | `2` |
+| `licensingTier` | `starter` |
+| `installable` | `false` |
+| `visibility` | `internal` |
+| `entitlementKey` | `module.foundation` |
+| `featureFlag` | `module.foundation.enabled` |
+| `owner_service` | `user-service` (lazy-loads canonical `platform/foundation/dist`) |
+| `entrypoint` | `dist/bootstrap.js#registerFoundation` |
 
-## 2. Initialization group
+## 2. Permissions (authoritative)
 
-### 2.1 `dos.module_registry`
+### 2.1 `FOUNDATION_MODULE_PERMISSIONS` (5 codes — declared in code)
 
-| module_code | product_key | title_en | title_ar | category | status | owner_service |
-|---|---|---|---|---|---|---|
-| `foundation` | `shahin-ai` | `Foundation` | `نموذج تشغيل المستأجر` | `platform-foundation` | `active` | `user-service / foundation module` |
+| permissionCode | resourceType | actionType | sensitive | description |
+|---|---|---|---|---|
+| `foundation.read` | `record` | `read` | false | Read foundation records |
+| `foundation.record.write` | `record` | `write` | false | Write foundation records |
+| `foundation.record.delete` | `record` | `delete` | true | Delete foundation records |
+| `foundation.record.approve` | `record` | `approve` | true | Approve foundation changes |
+| `foundation.manage` | `system` | `manage` | true | Manage foundation configuration |
 
-### 2.2 `dos.navigation_registry`
+### 2.2 `FOUNDATION_PERMISSION_CODES` (cross-module contract aliases)
 
-#### Parent row
+The peer-facing contract in `contracts/foundation.permissions.ts` exposes
+public aliases peer modules MUST import (not hardcode):
 
-| nav_key | module_code | route_path | title_en | title_ar | permission | order |
-|---|---|---|---|---|---|---|
-| `foundation` | `foundation` | `/foundation` | `Foundation` | `نموذج تشغيل المستأجر` | `foundation.read` | 10 |
-
-#### Child rows
-
-| nav_key | module_code | route_path | title_en | title_ar | permission | order |
-|---|---|---|---|---|---|---|
-| `foundation.overview` | `foundation` | `/foundation/overview` | Overview | نظرة عامة | `foundation.read` | 10 |
-| `foundation.organization` | `foundation` | `/foundation/organization` | Organization | المنظمة | `foundation.read` | 20 |
-| `foundation.business-units` | `foundation` | `/foundation/business-units` | Business Units | وحدات الأعمال | `foundation.read` | 30 |
-| `foundation.departments` | `foundation` | `/foundation/departments` | Departments | الإدارات | `foundation.read` | 40 |
-| `foundation.users` | `foundation` | `/foundation/users` | Users | المستخدمون | `foundation.users.read` | 50 |
-| `foundation.roles` | `foundation` | `/foundation/roles` | Roles | الأدوار | `foundation.roles.read` | 60 |
-| `foundation.teams` | `foundation` | `/foundation/teams` | Teams | الفرق | `foundation.read` | 70 |
-| `foundation.locations` | `foundation` | `/foundation/locations` | Locations | المواقع | `foundation.read` | 80 |
-| `foundation.positions` | `foundation` | `/foundation/positions` | Positions | المناصب | `foundation.read` | 90 |
-| `foundation.committees` | `foundation` | `/foundation/committees` | Committees | اللجان | `foundation.read` | 100 |
-| `foundation.delegations` | `foundation` | `/foundation/delegations` | Delegations | التفويضات | `foundation.read` | 110 |
-| `foundation.ownership-mapping` | `foundation` | `/foundation/ownership-mapping` | Ownership Mapping | تعيين الملكيات | `foundation.read` | 120 |
-| `foundation.access-review` | `foundation` | `/foundation/access-review` | Access Review | مراجعة الوصول | `foundation.access_review.read` | 130 |
-| `foundation.policies` | `foundation` | `/foundation/policies` | Policies | السياسات | `foundation.policies.read` | 140 |
-| `foundation.reference-data` | `foundation` | `/foundation/reference-data` | Reference Data | البيانات المرجعية | `foundation.read` | 150 |
-| `foundation.audit` | `foundation` | `/foundation/audit` | Audit | التدقيق | `foundation.audit.read` | 160 |
-| `foundation.settings` | `foundation` | `/foundation/settings` | Settings | الإعدادات | `foundation.admin` | 170 |
-
-### 2.3 Dynamic UI route/component rows
-
-Use only if this module is enrolled in Dynamic UI runtime.
-
-| component_key | route_path | module_code | permission | vendor | carbon_key | approval_status |
-|---|---|---|---|---|---|---|
-| `foundation.overview.page` | `/foundation/overview` | `foundation` | `foundation.read` | `ibm-carbon` | `VERIFY_CARBON_KEY` | `approved` |
-| `foundation.organization.page` | `/foundation/organization` | `foundation` | `foundation.read` | `ibm-carbon` | `VERIFY_CARBON_KEY` | `approved` |
-| `foundation.business-units.page` | `/foundation/business-units` | `foundation` | `foundation.read` | `ibm-carbon` | `VERIFY_CARBON_KEY` | `approved` |
-| `foundation.departments.page` | `/foundation/departments` | `foundation` | `foundation.read` | `ibm-carbon` | `VERIFY_CARBON_KEY` | `approved` |
-| `foundation.users.page` | `/foundation/users` | `foundation` | `foundation.users.read` | `ibm-carbon` | `VERIFY_CARBON_KEY` | `approved` |
-| `foundation.roles.page` | `/foundation/roles` | `foundation` | `foundation.roles.read` | `ibm-carbon` | `VERIFY_CARBON_KEY` | `approved` |
-| `foundation.teams.page` | `/foundation/teams` | `foundation` | `foundation.read` | `ibm-carbon` | `VERIFY_CARBON_KEY` | `approved` |
-| `foundation.locations.page` | `/foundation/locations` | `foundation` | `foundation.read` | `ibm-carbon` | `VERIFY_CARBON_KEY` | `approved` |
-| `foundation.positions.page` | `/foundation/positions` | `foundation` | `foundation.read` | `ibm-carbon` | `VERIFY_CARBON_KEY` | `approved` |
-| `foundation.committees.page` | `/foundation/committees` | `foundation` | `foundation.read` | `ibm-carbon` | `VERIFY_CARBON_KEY` | `approved` |
-| `foundation.delegations.page` | `/foundation/delegations` | `foundation` | `foundation.read` | `ibm-carbon` | `VERIFY_CARBON_KEY` | `approved` |
-| `foundation.ownership-mapping.page` | `/foundation/ownership-mapping` | `foundation` | `foundation.read` | `ibm-carbon` | `VERIFY_CARBON_KEY` | `approved` |
-| `foundation.access-review.page` | `/foundation/access-review` | `foundation` | `foundation.access_review.read` | `ibm-carbon` | `VERIFY_CARBON_KEY` | `approved` |
-| `foundation.policies.page` | `/foundation/policies` | `foundation` | `foundation.policies.read` | `ibm-carbon` | `VERIFY_CARBON_KEY` | `approved` |
-| `foundation.reference-data.page` | `/foundation/reference-data` | `foundation` | `foundation.read` | `ibm-carbon` | `VERIFY_CARBON_KEY` | `approved` |
-| `foundation.audit.page` | `/foundation/audit` | `foundation` | `foundation.audit.read` | `ibm-carbon` | `VERIFY_CARBON_KEY` | `approved` |
-| `foundation.settings.page` | `/foundation/settings` | `foundation` | `foundation.admin` | `ibm-carbon` | `VERIFY_CARBON_KEY` | `approved` |
-
-### 2.4 Permissions
-
-| permission_code | description |
+| Symbol | Code |
 |---|---|
-| `foundation.read` | Read Foundation module |
-| `foundation.write` | Write Foundation data |
-| `foundation.admin` | Administer Foundation |
-| `foundation.users.read` | Read users |
-| `foundation.users.manage` | Manage users |
-| `foundation.roles.read` | Read roles |
-| `foundation.roles.manage` | Manage roles |
-| `foundation.audit.read` | Read Foundation audit |
-| `foundation.access_review.read` | Read access reviews |
-| `foundation.policies.read` | Read policies |
+| `READ` | `foundation.read` |
+| `WRITE` | `foundation.record.write` |
+| `DELETE` | `foundation.record.delete` |
+| `APPROVE` | `foundation.record.approve` |
+| `MANAGE` | `foundation.manage` |
+| `ORG_READ` | `foundation.org.read` |
+| `ORG_WRITE` | `foundation.org.write` |
+| `RECORD_READ` | `foundation.record.read` |
+| `ADMIN_MANAGE` | `foundation.manage` |
+| `DOT_READ` | `foundation.read` |
+| `SYSTEM_MANAGE` | `foundation.system.manage` |
 
-### 2.5 Roles and bindings
+> Permission codes referenced by router `requirePermission(...)` calls
+> include `foundation.read`, `foundation.record.write`,
+> `foundation.record.approve`, `foundation.manage`, `foundation.user.read`,
+> `foundation.user.write`, `foundation.admin.read`, `organization.read`,
+> `access_review.read`, `audit_trail.read`. All of these are valid and seeded
+> via DAuth from `module.manifest.json#goldenReady.rbac`.
 
-| role_code | permissions |
+## 3. Roles (`FOUNDATION_MODULE_ROLES` — 8 module roles)
+
+| roleCode | archetype | nameEn | default | scope | permissions |
+|---|---|---|---|---|---|
+| `foundation.executive_owner` | `executive_owner` | Foundation Executive Owner | false | org | read, record.write, record.delete, record.approve, manage |
+| `foundation.module_lead` | `module_lead` | Foundation Module Lead | false | department | read, record.write, record.approve, manage |
+| `foundation.approver` | `approver` | Foundation Approver | false | department | read, record.approve |
+| `foundation.operator` | `operator` | Foundation Operator | false | department | read, record.write |
+| `foundation.contributor` | `contributor` | Foundation Contributor | false | own | read, record.write |
+| `foundation.reviewer` | `reviewer` | Foundation Reviewer | false | department | read |
+| `foundation.auditor` | `auditor` | Foundation Auditor | false | org | read |
+| `foundation.viewer` | `viewer` | Foundation Viewer | true | own | read |
+
+## 4. Navigation (21 rows — `FOUNDATION_CONTRACT.nav`)
+
+| order | pageCode | route | group | permission | icon |
+|---:|---|---|---|---|---|
+| 10  | `foundation.overview` | `/foundation/overview` | organization | `foundation.read` | layout-dashboard |
+| 20  | `foundation.organization` | `/foundation/organization` | organization | `foundation.read` | sitemap |
+| 30  | `foundation.business-units` | `/foundation/business-units` | organization | `foundation.read` | building |
+| 40  | `foundation.departments` | `/foundation/departments` | organization | `foundation.read` | users |
+| 50  | `foundation.positions` | `/foundation/positions` | organization | `foundation.read` | id-card |
+| 60  | `foundation.locations` | `/foundation/locations` | organization | `foundation.read` | map-pin |
+| 70  | `foundation.users` | `/foundation/users` | identity | `foundation.user.read` | user |
+| 80  | `foundation.teams` | `/foundation/teams` | identity | `foundation.read` | users-group |
+| 90  | `foundation.roles` | `/foundation/roles` | identity | `foundation.admin.read` | key |
+| 100 | `foundation.permissions` | `/foundation/permissions` | identity | `foundation.admin.read` | shield-check |
+| 110 | `foundation.committees` | `/foundation/committees` | governance | `foundation.read` | gavel |
+| 120 | `foundation.delegations` | `/foundation/delegations` | governance | `foundation.read` | share |
+| 130 | `foundation.access-review` | `/foundation/access-review` | governance | `access_review.read` | clipboard-check |
+| 140 | `foundation.policies` | `/foundation/policies` | governance | `foundation.read` | file-shield |
+| 150 | `foundation.audit` | `/foundation/audit` | governance | `audit_trail.read` | history |
+| 160 | `foundation.ownership` | `/foundation/ownership` | governance | `foundation.read` | tag |
+| 170 | `foundation.sod` | `/foundation/sod` | governance | `foundation.write` | shield-x |
+| 180 | `foundation.hierarchy-viz` | `/foundation/hierarchy-viz` | organization | `organization.read` | git-branch |
+| 190 | `foundation.user-lifecycle` | `/foundation/user-lifecycle` | identity | `user.write` | activity |
+| 200 | `foundation.reference-data` | `/foundation/reference-data` | governance | `foundation.read` | database |
+| 210 | `foundation.diagnostics` | `/foundation/diagnostics` | governance | `foundation.read` | stethoscope |
+
+## 5. Page seed matrix (21 pages — `FOUNDATION_CONTRACT.pages`)
+
+| # | pageCode | route | Angular component | component file | apis | permission |
+|---|---|---|---|---|---|---|
+| 1  | `foundation.overview`        | `/foundation/overview`        | `FoundationOverviewComponent`           | `ui/pages/foundation-overview.component.ts`            | `/api/foundation/dashboard`, `/api/foundation/lookups` | `foundation.read` |
+| 2  | `foundation.organization`    | `/foundation/organization`    | `FoundationOrganizationComponent`       | `ui/pages/foundation-organization.component.ts`        | `/api/organizations` | `foundation.read` |
+| 3  | `foundation.business-units`  | `/foundation/business-units`  | `FoundationBusinessUnitsComponent`      | `ui/pages/foundation-business-units.component.ts`      | `/api/business-units` | `foundation.read` |
+| 4  | `foundation.departments`     | `/foundation/departments`     | `FoundationDepartmentsComponent`        | `ui/pages/foundation-departments.component.ts`         | `/api/foundation/departments` | `foundation.read` |
+| 5  | `foundation.positions`       | `/foundation/positions`       | `FoundationPositionsComponent`          | `ui/pages/foundation-positions.component.ts`           | `/api/positions` | `foundation.read` |
+| 6  | `foundation.locations`       | `/foundation/locations`       | `FoundationLocationsComponent`          | `ui/pages/foundation-locations.component.ts`           | `/api/locations` | `foundation.read` |
+| 7  | `foundation.users`           | `/foundation/users`           | `FoundationUsersComponent`              | `ui/pages/foundation-users.component.ts`               | `/api/users` | `foundation.user.read` |
+| 8  | `foundation.teams`           | `/foundation/teams`           | `FoundationTeamsComponent`              | `ui/pages/foundation-teams.component.ts`               | `/api/foundation/teams` | `foundation.read` |
+| 9  | `foundation.roles`           | `/foundation/roles`           | `FoundationRolesComponent`              | `ui/pages/foundation-roles.component.ts`               | `/api/foundation/roles` | `foundation.admin.read` |
+| 10 | `foundation.permissions`     | `/foundation/permissions`     | `FoundationPermissionMatrixComponent`   | `ui/pages/foundation-permission-matrix.component.ts`   | `/api/permissions` | `foundation.admin.read` |
+| 11 | `foundation.committees`      | `/foundation/committees`      | `FoundationCommitteesComponent`         | `ui/pages/foundation-committees.component.ts`          | `/api/committees` | `foundation.read` |
+| 12 | `foundation.delegations`     | `/foundation/delegations`     | `FoundationDelegationsComponent`        | `ui/pages/foundation-delegations.component.ts`         | `/api/governance/delegations` | `foundation.read` |
+| 13 | `foundation.access-review`   | `/foundation/access-review`   | `FoundationAccessReviewComponent`       | `ui/pages/foundation-access-review.component.ts`       | `/api/access-review/campaigns` | `access_review.read` |
+| 14 | `foundation.policies`        | `/foundation/policies`        | `FoundationDataProcessingComponent`     | `ui/pages/foundation-data-processing.component.ts`     | `/api/governance/policies` | `foundation.read` |
+| 15 | `foundation.audit`           | `/foundation/audit`           | `FoundationAuditTrailPage`              | `ui/pages/foundation-audit.component.ts`               | `/api/audit-trail` | `audit_trail.read` |
+| 16 | `foundation.ownership`       | `/foundation/ownership`       | `FoundationOwnershipMappingComponent`   | `ui/pages/foundation-ownership-mapping.component.ts`   | `/api/ownership-mappings` | `foundation.read` |
+| 17 | `foundation.sod`             | `/foundation/sod`             | `FoundationSodConfigPage`               | `ui/pages/foundation-sod-config.component.ts`          | `/api/foundation/sod/rules`, `/api/foundation/sod/check`, `/api/foundation/sod/violations` | `foundation.write` |
+| 18 | `foundation.hierarchy-viz`   | `/foundation/hierarchy-viz`   | `FoundationOrgCanvasComponent`          | (org-canvas: served from foundation org modules)       | `/api/org-hierarchy` | `organization.read` |
+| 19 | `foundation.user-lifecycle`  | `/foundation/user-lifecycle`  | `FoundationUserLifecyclePage`           | `ui/pages/foundation-user-lifecycle.component.ts`      | `/api/foundation/user-lifecycle/*` | `user.write` |
+| 20 | `foundation.reference-data`  | `/foundation/reference-data`  | `FoundationReferenceDataComponent`      | `ui/pages/foundation-reference-data.component.ts`      | `/api/reference-data` | `foundation.read` |
+| 21 | `foundation.diagnostics`     | `/foundation/diagnostics`     | `FoundationDiagnosticsPage`             | `ui/pages/foundation-diagnostics.component.ts`         | `/api/foundation/health` | `foundation.read` |
+
+## 6. API surface — actual mounts
+
+### 6.1 Host mounts in `services/user-service/src/server.ts`
+
+Both **flat** and **aggregated** prefixes resolve to the same routers.
+
+| Prefix | Router |
 |---|---|
-| `tenant_owner` | all foundation.* |
-| `foundation_admin` | foundation.read, foundation.write, foundation.admin, foundation.users.manage, foundation.roles.manage |
-| `foundation_operator` | foundation.read, foundation.write, foundation.users.read |
-| `foundation_auditor` | foundation.read, foundation.audit.read, foundation.access_review.read |
-| `standard_user` | foundation.read |
+| `/api/users` | `userRouter` (host) + `viewPreferencesRouter` |
+| `/api/teams` | `teamRouter` (host) |
+| `/api/roles` | `roleRouter` (host) |
+| `/api/departments` | `departmentRouter` (host) |
+| `/api/organizations` | `organizationsRouter` |
+| `/api/business-units` | `businessUnitsRouter` |
+| `/api/positions` | `positionsRouter` |
+| `/api/locations` | `locationsRouter` |
+| `/api/org-hierarchy` | `orgHierarchyRouter` |
+| `/api/committees` | `committeeManagementRouter` |
+| `/api/ownership-mappings` | `ownershipMappingRouter` |
+| `/api/ownership-mapping` | `ownershipMappingRouter` (alias) |
+| `/api/sod` | `sodCheckRouter` |
+| `/api/governance` | `foundationGovernanceRouter` |
+| `/api/governance/delegations` | `delegationRouter` |
+| `/api/governance/committees` | `committeeManagementRouter` |
+| `/api/user-lifecycle` | `userLifecycleRouter` |
+| `/api/bulk-invite` | `bulkInviteRouter` |
+| `/api/access-reviews` | `accessReviewRouter` |
+| `/api/access-review` | `accessReviewRouter` (alias) |
+| `/api/delegations` | `delegationRouter` |
+| `/api/invitations` | `invitationsRouter` |
+| `/api/audit-trail` | `auditTrailRouter` |
+| `/api/profiles` | `profilesRouter` |
+| `/api/privacy-ops` | `privacyOpsRouter` |
+| `/api/foundation` | `foundationRouter` (aggregator factory) |
+| `/api/health/foundation` | `healthFoundationRouter` |
 
-## 3. Provisioning group per tenant
+### 6.2 Aggregator sub-mounts under `/api/foundation/*`
+
+| Sub-path | Router |
+|---|---|
+| `/users` | host `userRouter` (injected) |
+| `/teams` | `teamsRouter` |
+| `/roles` | host `roleRouter` (injected) |
+| `/departments` | host `departmentRouter` (injected) |
+| `/organizations` | `organizationsRouter` |
+| `/business-units` | `businessUnitsRouter` |
+| `/positions` | `positionsRouter` |
+| `/locations` | `locationsRouter` |
+| `/org-hierarchy` | `orgHierarchyRouter` |
+| `/committees` | `committeeManagementRouter` |
+| `/module-config` | `moduleConfigRouter` |
+| `/ownership-mappings` | `ownershipMappingRouter` |
+| `/ownership-mapping` | alias |
+| `/sod` | `sodCheckRouter` |
+| `/governance` | `foundationGovernanceRouter` |
+| `/user-lifecycle` | `userLifecycleRouter` |
+| `/bulk-invite` | `bulkInviteRouter` |
+| `/access-reviews` | `accessReviewRouter` |
+| `/access-review` | alias |
+| `/delegations` | `delegationRouter` |
+| `/employee-lifecycle` | `employeeLifecycleRouter` |
+| `/manager-chain` | `managerChainRouter` |
+| `/org-scope` | `orgScopeRouter` |
+| `/inheritance` | `inheritanceRouter` |
+| `/access-snapshot` | `accessSnapshotRouter` |
+| `/dynamic-ui` | `createDynamicUiAllowlistRouter()` |
+| `/` (mount-at-root) | `authoritySodRouter` (`/authority`, `/sod`) · `complianceFabricRouter` (`/policy-acks`, `/training`, `/coi`) · `foundationHealthRouter` (`/health`) · `foundationSuggestionsRouter` (`/suggestions`) |
+| `/dashboard` | inline aggregator |
+| `/lookups` | inline aggregator |
+
+### 6.3 Aggregator inline endpoints
+
+| Method | Path | Permission |
+|---|---|---|
+| GET | `/api/foundation/dashboard` | `foundation.read` |
+| GET | `/api/foundation/lookups` | `foundation.read` |
+| GET | `/api/foundation/health` | `foundation.read` |
+
+## 7. Database tables (canonical)
+
+### 7.1 Owned `dos.*` tables (28 declared in `module.manifest.json`)
+
+`organizations`, `business_units`, `departments`, `positions`,
+`position_assignments`, `locations`, `location_bu_map`, `committees`,
+`committee_meetings`, `committee_members`, `teams`, `team_members`,
+`team_raci_assignments`, `ownership_mappings`, `user_org_scope`,
+`tenant_memberships`, `access_reviews`, `access_review_items`, `delegations`,
+`foundation_authority_kinds`, `foundation_position_authority`,
+`foundation_employee_lifecycle_state`, `foundation_employee_lifecycle_tasks`,
+`foundation_employee_lifecycle_transitions`,
+`foundation_employee_lifecycle_workflows`, `foundation_coi_declarations`,
+`foundation_policy_acknowledgments`, `foundation_sod_rules`,
+`foundation_sod_violations`.
+
+Additional governance / audit tables created by foundation migrations:
+`dos.governance_policies`, `dos.audit_trail`.
+
+### 7.2 Owned reference catalogs (16 — `dos.foundation_cat_*`)
+
+`audit_actions`, `bu_templates`, `calendar_systems`, `coi_categories`,
+`committee_templates`, `data_classifications`, `dept_templates`,
+`lawful_bases`, `location_types`, `org_types`, `ownership_domains`,
+`position_templates`, `profile_types`, `readiness_dimensions`, `reference`,
+`role_templates`, `tenant_defaults`.
+
+### 7.3 Tenant-schema tables (`tenant_<id>.*`)
+
+`workspaces`, `organizations`, `business_units`, `departments`, `sections`,
+`teams`, `team_members`, `positions`, `position_assignments`, `committees`,
+`committee_members`, `locations`, `location_bu_map`, `ownership_mappings`.
+
+### 7.4 Shared schemas
+
+| Schema | Tables (foundation-touched) |
+|---|---|
+| `platform_dauth` | `invitations`, `sod_rules`, `delegations`, `functional_roles`, `role_permissions`, `user_role_assignments`, `permissions` |
+| `ai_admin_or_dauth` | `users` |
+| `platform_dos` | `tenants_registry`, `tenant_products`, `tenant_product_modules` |
+
+## 8. Provisioning (per tenant)
 
 | Table | Required seed |
 |---|---|
 | `dos.tenant_product_activation` | `tenant_id + shahin-ai + active` |
 | `dos.tenant_module_entitlements` | `tenant_id + foundation + active` |
-| `dos.tenant_memberships` | user has tenant membership and role |
-| `dos.tenant_trials` | active trial if tenant is trial |
-| `dos.tenant_subscriptions` | active subscription or trialing subscription |
-| OpenFGA / DAuth tuples | user/role/module/resource access tuples |
+| `dos.tenant_memberships` | one row per user with role |
+| `dos.tenant_trials` | active trial if applicable |
+| `dos.tenant_subscriptions` | active or trialing subscription |
+| OpenFGA / DAuth | tuples for `foundation:org`, `foundation:committee`, `foundation:record` |
 
-## 4. Business / operations group
+## 9. Backend wiring contract
 
-| Table | Purpose | Scope |
-|---|---|---|
-| `dos.organizations` | business data / API backing | tenant/org scoped where applicable |
-| `dos.business_units` | business data / API backing | tenant/org scoped where applicable |
-| `dos.departments` | business data / API backing | tenant/org scoped where applicable |
-| `dos.users` | business data / API backing | tenant/org scoped where applicable |
-| `dos.tenant_memberships` | business data / API backing | tenant/org scoped where applicable |
-| `platform_dauth.functional_roles` | business data / API backing | tenant/org scoped where applicable |
-| `platform_dauth.role_permissions` | business data / API backing | tenant/org scoped where applicable |
-| `dos.teams` | business data / API backing | tenant/org scoped where applicable |
-| `dos.locations` | business data / API backing | tenant/org scoped where applicable |
-| `dos.positions` | business data / API backing | tenant/org scoped where applicable |
-| `dos.committees` | business data / API backing | tenant/org scoped where applicable |
-| `dos.delegations` | business data / API backing | tenant/org scoped where applicable |
-| `dos.ownership_mappings` | business data / API backing | tenant/org scoped where applicable |
-| `dos.access_reviews` | business data / API backing | tenant/org scoped where applicable |
-| `dos.policies` | business data / API backing | tenant/org scoped where applicable |
-| `dos.audit_trail` | business data / API backing | tenant/org scoped where applicable |
+- `services/user-service/src/domain/foundation/index.ts` lazy-`require`s the
+  canonical `platform/foundation/dist` via `loadModuleExports`. Strict-mode
+  boot (`MOUNT_FILTER_MODE=strict`, default) **refuses to start** the host
+  if foundation is not built or the aggregator factory is missing.
+- `server.ts` calls `bindFoundationPublisher(eventBus)`,
+  `bindFoundationPorts({ database, logger })`, and
+  `authAdapter.bindDauthShared()` before mounting routers.
+- `FOUNDATION_MODULE_DIST` env var overrides the dist path.
 
-## 5. Page seed matrix
+## 10. Dynamic-UI registry seed (pending migration)
 
-| # | page_key | route_path | title_en | title_ar | Angular component | component file | API endpoint | DB tables | permission | status |
-|---|---|---|---|---|---|---|---|---|---|---|
-| 1 | `foundation.overview` | `/foundation/overview` | Overview | نظرة عامة | `FoundationOverviewPageComponent` | `platform/foundation/ui/pages/foundation-overview-page.component.ts` | `GET /api/foundation/overview` | `dos.organizations, dos.business_units, dos.departments, dos.users` | `foundation.read` | `VERIFY` |
-| 2 | `foundation.organization` | `/foundation/organization` | Organization | المنظمة | `FoundationOrganizationComponent` | `platform/foundation/ui/pages/foundation-organization.component.ts` | `GET /api/foundation/organizations` | `dos.organizations` | `foundation.read` | `VERIFY` |
-| 3 | `foundation.business-units` | `/foundation/business-units` | Business Units | وحدات الأعمال | `FoundationBusinessUnitsComponent` | `platform/foundation/ui/pages/foundation-business-units.component.ts` | `GET /api/foundation/business-units` | `dos.business_units` | `foundation.read` | `VERIFY` |
-| 4 | `foundation.departments` | `/foundation/departments` | Departments | الإدارات | `FoundationDepartmentsComponent` | `platform/foundation/ui/pages/foundation-departments.component.ts` | `GET /api/foundation/departments` | `dos.departments` | `foundation.read` | `VERIFY` |
-| 5 | `foundation.users` | `/foundation/users` | Users | المستخدمون | `FoundationUsersComponent` | `platform/foundation/ui/pages/foundation-users.component.ts` | `GET /api/users` | `dos.users, dos.tenant_memberships, platform_dauth.user_role_assignments` | `foundation.users.read` | `VERIFY` |
-| 6 | `foundation.roles` | `/foundation/roles` | Roles | الأدوار | `FoundationRolesComponent` | `platform/foundation/ui/pages/foundation-roles.component.ts` | `GET /api/profiles/roles` | `platform_dauth.functional_roles, platform_dauth.role_permissions` | `foundation.roles.read` | `VERIFY` |
-| 7 | `foundation.teams` | `/foundation/teams` | Teams | الفرق | `FoundationTeamsComponent` | `platform/foundation/ui/pages/foundation-teams.component.ts` | `GET /api/foundation/teams` | `dos.teams, dos.team_members` | `foundation.read` | `VERIFY` |
-| 8 | `foundation.locations` | `/foundation/locations` | Locations | المواقع | `FoundationLocationsComponent` | `platform/foundation/ui/pages/foundation-locations.component.ts` | `GET /api/foundation/locations` | `dos.locations` | `foundation.read` | `VERIFY` |
-| 9 | `foundation.positions` | `/foundation/positions` | Positions | المناصب | `FoundationPositionsComponent` | `platform/foundation/ui/pages/foundation-positions.component.ts` | `GET /api/foundation/positions` | `dos.positions, dos.position_assignments` | `foundation.read` | `VERIFY` |
-| 10 | `foundation.committees` | `/foundation/committees` | Committees | اللجان | `FoundationCommitteesComponent` | `platform/foundation/ui/pages/foundation-committees.component.ts` | `GET /api/foundation/committees` | `dos.committees, dos.committee_members` | `foundation.read` | `VERIFY` |
-| 11 | `foundation.delegations` | `/foundation/delegations` | Delegations | التفويضات | `FoundationDelegationsComponent` | `platform/foundation/ui/pages/foundation-delegations.component.ts` | `GET /api/foundation/delegations` | `dos.delegations` | `foundation.read` | `VERIFY` |
-| 12 | `foundation.ownership-mapping` | `/foundation/ownership-mapping` | Ownership Mapping | تعيين الملكيات | `FoundationOwnershipMappingComponent` | `platform/foundation/ui/pages/foundation-ownership-mapping.component.ts` | `GET /api/foundation/ownership-mapping` | `dos.ownership_mappings` | `foundation.read` | `VERIFY` |
-| 13 | `foundation.access-review` | `/foundation/access-review` | Access Review | مراجعة الوصول | `FoundationAccessReviewComponent` | `platform/foundation/ui/pages/foundation-access-review.component.ts` | `GET /api/foundation/access-reviews` | `dos.access_reviews` | `foundation.access_review.read` | `VERIFY` |
-| 14 | `foundation.policies` | `/foundation/policies` | Policies | السياسات | `FoundationPoliciesComponent` | `platform/foundation/ui/pages/foundation-policies.component.ts` | `GET /api/foundation/policies` | `dos.policies` | `foundation.policies.read` | `VERIFY` |
-| 15 | `foundation.reference-data` | `/foundation/reference-data` | Reference Data | البيانات المرجعية | `FoundationReferenceDataComponent` | `platform/foundation/ui/pages/foundation-reference-data.component.ts` | `GET /api/foundation/reference-data` | `dos.reference_data` | `foundation.read` | `VERIFY` |
-| 16 | `foundation.audit` | `/foundation/audit` | Audit | التدقيق | `FoundationAuditComponent` | `platform/foundation/ui/pages/foundation-audit.component.ts` | `GET /api/audit-trail` | `dos.audit_trail` | `foundation.audit.read` | `VERIFY` |
-| 17 | `foundation.settings` | `/foundation/settings` | Settings | الإعدادات | `FoundationSettingsComponent` | `platform/foundation/ui/pages/foundation-settings.component.ts` | `GET /api/foundation/settings` | `dos.tenant_config, dos.feature_flags` | `foundation.admin` | `VERIFY` |
+A migration `platform/dos/migrations/public/2026xxxx_xxxx_foundation_pages_pack.sql`
+must seed the 21 `foundation.<x>.page` rows into:
 
-## 6. Direct SQL seed skeleton
+- `dos.dynamic_ui_modules` — one row for `foundation`.
+- `dos.dynamic_ui_component_registry` — 21 rows, all
+  `vendor='ibm-carbon'`, `approval_status='approved'`, with verified
+  `carbon_key` values from `dos.ui_carbon_components` (enforced by
+  `trg_carbon_only_runtime`).
+- `dos.dynamic_ui_routes` — 21 rows under `module_code='foundation'`,
+  `tenant_id IS NULL`, paths from §4.
 
-> Verify column names before running. This is a direct seed plan, not blind SQL execution.
+Component-map loader entries (`platform/dos/registry/component-map.ts`)
+must add a Phase F-FOUND block with one entry per `foundation.<x>.page`
+pointing at the corresponding standalone Angular component file from §5.
 
-```sql
-BEGIN;
+A CI gate `scripts/ci-guards/foundation-pages-coverage.mjs` (mirroring
+`auth-pages-coverage.mjs`) must verify migration ⇄ component-map ⇄
+contract ⇄ archetype-map ⇄ component file coverage.
 
--- 1) module_registry
--- UPSERT foundation into dos.module_registry
+## 11. Validation checklist
 
--- 2) navigation_registry
--- UPSERT parent and child rows above into dos.navigation_registry
-
--- 3) dynamic_ui_routes / dynamic_ui_component_registry
--- UPSERT only if Dynamic UI runtime is used and carbon_key is verified
-
--- 4) permissions
--- UPSERT permissions above into platform_dauth.permissions
-
--- 5) role bindings
--- UPSERT role → permission bindings above
-
--- 6) tenant provisioning
--- UPSERT tenant_product_activation and tenant_module_entitlements for selected tenant
-
-COMMIT;
-```
-
-## 7. Validation checklist
-
-- [ ] module_registry row exists
-- [ ] navigation parent row exists
-- [ ] all navigation child rows exist
-- [ ] Angular routes exist
-- [ ] component files exist
-- [ ] APIs exist
-- [ ] backend routes exist
-- [ ] DB tables/queries exist
-- [ ] permissions exist
-- [ ] role bindings exist
-- [ ] tenant entitlement exists
-- [ ] org/tenant scope enforced
-- [ ] OpenFGA/DAuth tuples exist if required
-- [ ] no mock/static data
-- [ ] build passes
+- [ ] `dos.module_registry` row exists for `foundation`
+- [ ] All 21 `dos.dynamic_ui_routes` rows exist under `module_code='foundation'`
+- [ ] All 21 `dos.dynamic_ui_component_registry` `foundation.*.page` rows exist with verified Carbon keys
+- [ ] `component-map.ts` has loader for each of the 21 pages
+- [ ] All page component files in §5 exist on disk
+- [ ] `requirePermission` on every route resolves to a row in `platform_dauth.permissions`
+- [ ] All 8 module roles exist in `platform_dauth.functional_roles`
+- [ ] All 28 owned `dos.*` tables created by `platform/foundation/db/migrations/*.sql`
+- [ ] All 16 reference catalogs created
+- [ ] Tenant-schema tables provisioned per-tenant
+- [ ] OpenFGA tuples for `foundation:org`, `foundation:committee`, `foundation:record` exist
+- [ ] `pnpm --filter @dos/module-foundation build` succeeds
+- [ ] `services/user-service` boots in strict mode with foundation dist resolved
+- [ ] `GET /api/health/foundation` returns 200
+- [ ] `GET /api/foundation/dashboard` returns aggregate counts
+- [ ] No mock or static data in any router

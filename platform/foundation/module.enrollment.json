@@ -8,70 +8,97 @@
   "services": ["user-service", "audit-service"],
   "permissions": [
     "foundation.read",
+    "foundation.record.write",
+    "foundation.record.delete",
+    "foundation.record.approve",
     "foundation.manage",
-    "foundation.workflow.approve"
+    "foundation.user.read",
+    "foundation.user.write",
+    "foundation.admin.read",
+    "organization.read",
+    "access_review.read",
+    "audit_trail.read",
+    "user.write",
+    "foundation.write"
   ],
   "pages": [
-    {
-      "id": "overview",
-      "route": "/foundation/overview",
-      "componentKey": "foundation.overview.page",
-      "permission": "foundation.read",
-      "title": "foundation.overview.title",
-      "subtitle": "foundation.overview.subtitle"
-    },
-    {
-      "id": "records",
-      "route": "/foundation/records",
-      "componentKey": "foundation.records.page",
-      "permission": "foundation.read",
-      "title": "foundation.records.title"
-    },
-    {
-      "id": "workflows",
-      "route": "/foundation/workflows",
-      "componentKey": "foundation.workflows.page",
-      "permission": "foundation.workflow.approve",
-      "title": "foundation.workflows.title"
-    },
-    {
-      "id": "reports",
-      "route": "/foundation/reports",
-      "componentKey": "foundation.reports.page",
-      "permission": "foundation.read",
-      "title": "foundation.reports.title"
-    },
-    {
-      "id": "settings",
-      "route": "/foundation/settings",
-      "componentKey": "foundation.settings.page",
-      "permission": "foundation.manage",
-      "title": "foundation.settings.title"
-    }
+    { "id": "overview",        "route": "/foundation/overview",        "componentKey": "foundation.overview.page",        "permission": "foundation.read",       "title": "foundation.overview.title",        "subtitle": "foundation.overview.subtitle" },
+    { "id": "organization",    "route": "/foundation/organization",    "componentKey": "foundation.organization.page",    "permission": "foundation.read",       "title": "foundation.organization.title" },
+    { "id": "business-units",  "route": "/foundation/business-units",  "componentKey": "foundation.business-units.page",  "permission": "foundation.read",       "title": "foundation.businessUnits.title" },
+    { "id": "departments",     "route": "/foundation/departments",     "componentKey": "foundation.departments.page",     "permission": "foundation.read",       "title": "foundation.departments.title" },
+    { "id": "positions",       "route": "/foundation/positions",       "componentKey": "foundation.positions.page",       "permission": "foundation.read",       "title": "foundation.positions.title" },
+    { "id": "locations",       "route": "/foundation/locations",       "componentKey": "foundation.locations.page",       "permission": "foundation.read",       "title": "foundation.locations.title" },
+    { "id": "users",           "route": "/foundation/users",           "componentKey": "foundation.users.page",           "permission": "foundation.user.read",  "title": "foundation.users.title" },
+    { "id": "teams",           "route": "/foundation/teams",           "componentKey": "foundation.teams.page",           "permission": "foundation.read",       "title": "foundation.teams.title" },
+    { "id": "roles",           "route": "/foundation/roles",           "componentKey": "foundation.roles.page",           "permission": "foundation.admin.read", "title": "foundation.roles.title" },
+    { "id": "permissions",     "route": "/foundation/permissions",     "componentKey": "foundation.permissions.page",     "permission": "foundation.admin.read", "title": "foundation.permissions.title" },
+    { "id": "committees",      "route": "/foundation/committees",      "componentKey": "foundation.committees.page",      "permission": "foundation.read",       "title": "foundation.committees.title" },
+    { "id": "delegations",     "route": "/foundation/delegations",     "componentKey": "foundation.delegations.page",     "permission": "foundation.read",       "title": "foundation.delegations.title" },
+    { "id": "access-review",   "route": "/foundation/access-review",   "componentKey": "foundation.access-review.page",   "permission": "access_review.read",    "title": "foundation.accessReview.title" },
+    { "id": "policies",        "route": "/foundation/policies",        "componentKey": "foundation.policies.page",        "permission": "foundation.read",       "title": "foundation.policies.title" },
+    { "id": "audit",           "route": "/foundation/audit",           "componentKey": "foundation.audit.page",           "permission": "audit_trail.read",      "title": "foundation.audit.title" },
+    { "id": "ownership",       "route": "/foundation/ownership",       "componentKey": "foundation.ownership.page",       "permission": "foundation.read",       "title": "foundation.ownership.title" },
+    { "id": "sod",             "route": "/foundation/sod",             "componentKey": "foundation.sod.page",             "permission": "foundation.write",      "title": "foundation.sod.title" },
+    { "id": "hierarchy-viz",   "route": "/foundation/hierarchy-viz",   "componentKey": "foundation.hierarchy-viz.page",   "permission": "organization.read",     "title": "foundation.hierarchyViz.title" },
+    { "id": "user-lifecycle",  "route": "/foundation/user-lifecycle",  "componentKey": "foundation.user-lifecycle.page",  "permission": "user.write",            "title": "foundation.userLifecycle.title" },
+    { "id": "reference-data",  "route": "/foundation/reference-data",  "componentKey": "foundation.reference-data.page",  "permission": "foundation.read",       "title": "foundation.referenceData.title" },
+    { "id": "diagnostics",     "route": "/foundation/diagnostics",     "componentKey": "foundation.diagnostics.page",     "permission": "foundation.read",       "title": "foundation.diagnostics.title" }
   ],
   "navigation": [
-    { "id": "foundation.overview",  "parent": "foundation", "label": "Overview",  "route": "/foundation/overview",  "sortOrder": 10, "permission": "foundation.read" },
-    { "id": "foundation.records",   "parent": "foundation", "label": "Records",   "route": "/foundation/records",   "sortOrder": 20, "permission": "foundation.read" },
-    { "id": "foundation.workflows", "parent": "foundation", "label": "Workflows", "route": "/foundation/workflows", "sortOrder": 30, "permission": "foundation.workflow.approve" },
-    { "id": "foundation.reports",   "parent": "foundation", "label": "Reports",   "route": "/foundation/reports",   "sortOrder": 40, "permission": "foundation.read" },
-    { "id": "foundation.settings",  "parent": "foundation", "label": "Settings",  "route": "/foundation/settings",  "sortOrder": 50, "permission": "foundation.manage" }
+    { "id": "foundation.overview",        "parent": "foundation", "label": "Overview",              "route": "/foundation/overview",        "sortOrder": 10,  "permission": "foundation.read" },
+    { "id": "foundation.organization",    "parent": "foundation", "label": "Organization",          "route": "/foundation/organization",    "sortOrder": 20,  "permission": "foundation.read" },
+    { "id": "foundation.business-units",  "parent": "foundation", "label": "Business Units",        "route": "/foundation/business-units",  "sortOrder": 30,  "permission": "foundation.read" },
+    { "id": "foundation.departments",     "parent": "foundation", "label": "Departments",           "route": "/foundation/departments",     "sortOrder": 40,  "permission": "foundation.read" },
+    { "id": "foundation.positions",       "parent": "foundation", "label": "Positions",             "route": "/foundation/positions",       "sortOrder": 50,  "permission": "foundation.read" },
+    { "id": "foundation.locations",       "parent": "foundation", "label": "Locations",             "route": "/foundation/locations",       "sortOrder": 60,  "permission": "foundation.read" },
+    { "id": "foundation.users",           "parent": "foundation", "label": "Users",                 "route": "/foundation/users",           "sortOrder": 70,  "permission": "foundation.user.read" },
+    { "id": "foundation.teams",           "parent": "foundation", "label": "Teams",                 "route": "/foundation/teams",           "sortOrder": 80,  "permission": "foundation.read" },
+    { "id": "foundation.roles",           "parent": "foundation", "label": "Roles",                 "route": "/foundation/roles",           "sortOrder": 90,  "permission": "foundation.admin.read" },
+    { "id": "foundation.permissions",     "parent": "foundation", "label": "Permissions",           "route": "/foundation/permissions",     "sortOrder": 100, "permission": "foundation.admin.read" },
+    { "id": "foundation.committees",      "parent": "foundation", "label": "Committees",            "route": "/foundation/committees",      "sortOrder": 110, "permission": "foundation.read" },
+    { "id": "foundation.delegations",     "parent": "foundation", "label": "Delegations",           "route": "/foundation/delegations",     "sortOrder": 120, "permission": "foundation.read" },
+    { "id": "foundation.access-review",   "parent": "foundation", "label": "Access Review",         "route": "/foundation/access-review",   "sortOrder": 130, "permission": "access_review.read" },
+    { "id": "foundation.policies",        "parent": "foundation", "label": "Policies",              "route": "/foundation/policies",        "sortOrder": 140, "permission": "foundation.read" },
+    { "id": "foundation.audit",           "parent": "foundation", "label": "Audit",                 "route": "/foundation/audit",           "sortOrder": 150, "permission": "audit_trail.read" },
+    { "id": "foundation.ownership",       "parent": "foundation", "label": "Ownership",             "route": "/foundation/ownership",       "sortOrder": 160, "permission": "foundation.read" },
+    { "id": "foundation.sod",             "parent": "foundation", "label": "Segregation of Duties", "route": "/foundation/sod",             "sortOrder": 170, "permission": "foundation.write" },
+    { "id": "foundation.hierarchy-viz",   "parent": "foundation", "label": "Hierarchy Viz",         "route": "/foundation/hierarchy-viz",   "sortOrder": 180, "permission": "organization.read" },
+    { "id": "foundation.user-lifecycle",  "parent": "foundation", "label": "User Lifecycle",        "route": "/foundation/user-lifecycle",  "sortOrder": 190, "permission": "user.write" },
+    { "id": "foundation.reference-data",  "parent": "foundation", "label": "Reference Data",        "route": "/foundation/reference-data",  "sortOrder": 200, "permission": "foundation.read" },
+    { "id": "foundation.diagnostics",     "parent": "foundation", "label": "Diagnostics",           "route": "/foundation/diagnostics",     "sortOrder": 210, "permission": "foundation.read" }
   ],
   "components": [
     "foundation.overview.page",
-    "foundation.records.page",
-    "foundation.workflows.page",
-    "foundation.reports.page",
-    "foundation.settings.page"
+    "foundation.organization.page",
+    "foundation.business-units.page",
+    "foundation.departments.page",
+    "foundation.positions.page",
+    "foundation.locations.page",
+    "foundation.users.page",
+    "foundation.teams.page",
+    "foundation.roles.page",
+    "foundation.permissions.page",
+    "foundation.committees.page",
+    "foundation.delegations.page",
+    "foundation.access-review.page",
+    "foundation.policies.page",
+    "foundation.audit.page",
+    "foundation.ownership.page",
+    "foundation.sod.page",
+    "foundation.hierarchy-viz.page",
+    "foundation.user-lifecycle.page",
+    "foundation.reference-data.page",
+    "foundation.diagnostics.page"
   ],
   "api": {
-    "summary":   "/api/audit/summary?moduleCode=foundation",
-    "records":   "/api/users",
-    "workflows": "/api/audit/entries?moduleCode=foundation&kind=workflow",
-    "audit":     "/api/audit/entries?moduleCode=foundation&limit=50",
+    "dashboard": "/api/foundation/dashboard",
+    "lookups":   "/api/foundation/lookups",
+    "records":   "/api/foundation/users",
+    "audit":     "/api/audit-trail?moduleCode=foundation&limit=50",
     "health":    "/api/health/foundation"
   },
   "owner": {
     "writer": "platform-projector",
-    "note": "Modules MUST NOT write dos.dynamic_ui_* directly. Platform projector reads this manifest and emits registry/route/nav rows."
+    "note": "Modules MUST NOT write dos.dynamic_ui_* directly. Source migration: platform/dos/migrations/public/20260503_0029_foundation_pages_pack.sql. Per-tenant enrollment is fanned out to every active row in platform_dos.tenants_registry."
   }
 }

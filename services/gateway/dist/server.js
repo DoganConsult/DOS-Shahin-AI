@@ -456,6 +456,41 @@ if (AI_GATEWAY_SERVICE_URL) {
         xfwd: true,
     }));
 }
+// Phase M3 — PUBLIC marketing surface (no auth, no tenant). Anonymous
+// visitors must reach /api/ui-os/{brand,marketing/*,agentic/*}. These paths
+// MUST be matched BEFORE the authGuard'd /api/ui-os proxy below, otherwise
+// authGuard returns 401. ui-os-service mounts the same prefixes ahead of
+// requireGatewayOrigin (see services/ui-os-service/src/server.ts §M3).
+if (UI_OS_SERVICE_URL) {
+    const publicUiOsPrefixes = [
+        '/api/ui-os/brand',
+        '/api/ui-os/marketing/config',
+        '/api/ui-os/marketing/assets',
+        '/api/ui-os/marketing/downloads',
+        '/api/ui-os/agentic/registry',
+        '/api/ui-os/agentic/strip',
+    ];
+    const publicUiOsProxy = (0, http_proxy_middleware_1.createProxyMiddleware)({
+        target: UI_OS_SERVICE_URL,
+        changeOrigin: true,
+        xfwd: true,
+        onError: (_err, _req, res) => {
+            if (!res.headersSent) {
+                res.status(503).type('application/json').send(JSON.stringify({
+                    ok: false,
+                    blocked: 'UI_OS_SERVICE_OFFLINE',
+                }));
+            }
+        },
+    });
+    app.use((req, res, next) => {
+        const full = req.originalUrl.split('?')[0];
+        if (publicUiOsPrefixes.some((p) => full === p || full.startsWith(p + '/'))) {
+            return publicUiOsProxy(req, res, next);
+        }
+        return next();
+    });
+}
 // Wave 10a — canonical UI-OS service proxy. Single source / one path / one
 // way: all UI-OS runtime, personalization, dashboards, widgets, grids,
 // branding, theme, i18n, tours, help, search, commands, and admin

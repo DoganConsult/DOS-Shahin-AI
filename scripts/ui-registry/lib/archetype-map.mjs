@@ -125,6 +125,11 @@ export function mapComponentKeyToArchetype(componentKey, route = '') {
    || k === 'marketing.gated-download-modal'
    || k === 'marketing.download-success')
     return { archetype: 'command-home', template_export: 'ModuleOverviewTemplateComponent' };
+  // ── Phase M2 — Public marketing pages (pricing/trust/security/contact/about/legal).
+  if (k === 'marketing.pricing.page' || k === 'marketing.trust.page'
+   || k === 'marketing.security.page' || k === 'marketing.contact.page'
+   || k === 'marketing.about.page' || k === 'marketing.legal.page')
+    return { archetype: 'command-home', template_export: 'ModuleOverviewTemplateComponent' };
 
   // ── Phase M1.6 — Carbon Auth Pages Pack ─────────────────────────────────
   // Auth pages and their composing primitives all map to the command-home
@@ -135,6 +140,17 @@ export function mapComponentKeyToArchetype(componentKey, route = '') {
     return { archetype: 'command-home', template_export: 'ModuleOverviewTemplateComponent' };
   if (typeof k === 'string' && k.startsWith('auth.'))
     return { archetype: 'command-home', template_export: 'ModuleOverviewTemplateComponent' };
+
+  // ── Phase F-FOUND — Foundation pages pack (21 pages) ────────────────────
+  if (k === 'foundation.overview.page' || k === 'foundation.diagnostics.page'
+   || k === 'foundation.hierarchy-viz.page')
+    return { archetype: 'command-home', template_export: 'ModuleOverviewTemplateComponent' };
+  if (k === 'foundation.sod.page' || k === 'foundation.user-lifecycle.page')
+    return { archetype: 'workflow-control', template_export: 'ModuleAssessmentsTemplateComponent' };
+  if (k === 'foundation.audit.page')
+    return { archetype: 'audit-trail', template_export: 'AuditTrailTemplateComponent' };
+  if (typeof k === 'string' && /^foundation\.[a-z0-9-]+\.page$/.test(k))
+    return { archetype: 'intelligent-register', template_export: 'ModuleRecordsTemplateComponent' };
 
   // ── Per-module page-key conventions (PascalCase suffix patterns) ─────────
   if (/HeatmapPage$/.test(k) || /\.heatmap\.page$/.test(k))

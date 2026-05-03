@@ -30,9 +30,9 @@ async function goto(page: Page, url: string) {
   await page.waitForLoadState('networkidle', { timeout: 15_000 }).catch(() => {});
 }
 
-// TODO(M2): unskip once product-shell maps `/` to marketing.home.page.
-test.describe.skip('M1 — marketing.home.page renders without auth', () => {
-  test('all 16 sections present in DOM order', async ({ page }) => {
+// Phase M2 — `/` is now mounted to MarketingLandingComponent (DosMarketingHomePageComponent).
+test.describe('M1 — marketing.home.page renders without auth', () => {
+  test('all 17 sections present in DOM order', async ({ page }) => {
     await goto(page, '/');
     const ids = await page.$$eval(
       '[data-section-id]',

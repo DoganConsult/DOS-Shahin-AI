@@ -8,7 +8,7 @@
     "generate:route-fragments": "node ../../scripts/generate-route-fragments.mjs",
     "manifest:parity": "node ../../scripts/manifest-parity.mjs",
     "prebuild": "pnpm run generate:route-fragments",
-    "build": "ng build && sed -i 's/<script src=\"\\([^\"]*\\)\" type=\"module\"><\\/script>/<script src=\"\\1\" type=\"module\" data-cfasync=\"false\"><\\/script>/g' dist/shahin-ai/browser/index.html",
+    "build": "ng build && sed -i 's/<script src=\"\\([^\"]*\\)\" type=\"module\"><\\/script>/<script src=\"\\1\" type=\"module\" data-cfasync=\"false\"><\\/script>/g' ../../dist/shahin-ai/browser/index.html",
     "watch": "ng build --watch --configuration development",
     "test": "vitest run",
     "test:watch": "vitest",

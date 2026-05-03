@@ -106,6 +106,15 @@ export class DynamicTemplatePageComponent {
       incidentCommunications:  'communications',
       // case-finalization resolver already returns 'cases' which the
       // template input is also called 'cases' — no alias needed.
+      // ─── Phase F-F8 — base-array → archetype-template @Input aliases ──
+      // command-home expects `nbaActions`; resolver returns `nextBestActions`.
+      nextBestActions:         'nbaActions',
+      // evidence-reports expects `reports`; resolver returns `reportCards`.
+      reportCards:             'reports',
+      // module-settings expects `sections`; resolver returns `settingsSections`.
+      settingsSections:        'sections',
+      // workflow-control expects `tabs` (already a base array) plus
+      // `progressSteps` which the F8 resolver now returns natively.
     };
 
     // 1. Spread the entire resolver payload so any new key the resolver

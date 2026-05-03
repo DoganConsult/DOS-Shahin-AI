@@ -4,6 +4,7 @@ import { AccessStore } from '@dos/access-store';
 import { foundationGuard } from './shell/foundation.guard';
 import { provideRouteIcons } from './shell/icon-registration';
 import { SHAHIN_DNA_MODULE_PACKS, buildDnaChildEntries } from './shell/dna-nav-contracts';
+import { MARKETING_PUBLIC_ROUTES } from './pages/marketing-public/marketing-public.routes';
 // ── Compliance routes ────────────────────────────────────────────────────────
 // Source: modules/compliance/ui/routes/compliance.module.routes.ts
 // Only READY_TO_MOUNT routes (verified build-clean) are wired.
@@ -84,17 +85,22 @@ export const routes: Routes = [
     pathMatch: 'full',
     data: { contractRoute: '/', componentKey: 'marketing.home.page' },
   },
+  ...MARKETING_PUBLIC_ROUTES,
   {
+    // Phase M1.6.1 — OIDC bridge. SPA NEVER collects credentials.
+    // The Carbon login/register card components remain in @dos/ui-system
+    // for future tenant-managed flows but the public route renders the
+    // bridge: brand + security note + single SSO CTA → Keycloak.
     path: 'login',
     loadComponent: () =>
-      import('./pages/auth-pages/auth-page.host').then(m => m.AuthPageHostComponent),
-    data: { authPage: 'login', contractRoute: '/login', componentKey: 'auth.login.page' },
+      import('./pages/auth-pages/auth-bridge.component').then(m => m.AuthBridgeComponent),
+    data: { authMode: 'login', contractRoute: '/login', componentKey: 'auth.login.bridge' },
   },
   {
     path: 'register',
     loadComponent: () =>
-      import('./pages/auth-pages/auth-page.host').then(m => m.AuthPageHostComponent),
-    data: { authPage: 'register', contractRoute: '/register', componentKey: 'auth.register.page' },
+      import('./pages/auth-pages/auth-bridge.component').then(m => m.AuthBridgeComponent),
+    data: { authMode: 'register', contractRoute: '/register', componentKey: 'auth.register.bridge' },
   },
   {
     path: 'forgot-password',
@@ -149,6 +155,11 @@ export const routes: Routes = [
         path: 'foundation',
         data: { moduleCode: 'foundation', productCode: 'shahin-ai', kpiScope: 'module-overview' },
         canActivate: [foundationGuard],
+        // Template-only routing (rule §3.1): every Foundation child route is
+        // resolved through DynamicTemplatePageComponent, which reads the
+        // archetype + props from `dos.ui_route_template_binding`. No bespoke
+        // Foundation*Component is reachable from any URL — they are
+        // @deprecated and slated for physical deletion.
         children: [
           { path: '', pathMatch: 'full', redirectTo: 'overview' },
           { path: 'home', pathMatch: 'full', redirectTo: 'overview' },
@@ -156,29 +167,11 @@ export const routes: Routes = [
           { path: 'detail', pathMatch: 'full', redirectTo: 'records' },
           { path: 'module-settings', pathMatch: 'full', redirectTo: 'settings' },
           { path: 'module-audit', pathMatch: 'full', redirectTo: 'reports' },
-          { path: 'overview',          loadComponent: () => import('@dos/module-foundation/ui').then(m => m.FoundationOverviewPageComponent), data: { moduleCode: 'foundation', kpiScope: 'module-overview', componentKey: 'foundation.overview.page' } },
-          { path: 'records',           loadComponent: () => import('@dos/module-foundation/ui').then(m => m.FoundationRecordsPageComponent), data: { moduleCode: 'foundation', componentKey: 'foundation.records.page' } },
-          { path: 'workflows',         loadComponent: () => import('@dos/module-foundation/ui').then(m => m.FoundationWorkflowsPageComponent), data: { moduleCode: 'foundation', componentKey: 'foundation.workflows.page' } },
-          { path: 'reports',           loadComponent: () => import('@dos/module-foundation/ui').then(m => m.FoundationReportsPageComponent), data: { moduleCode: 'foundation', componentKey: 'foundation.reports.page' } },
-          { path: 'settings',          loadComponent: () => import('@dos/module-foundation/ui').then(m => m.FoundationSettingsPageComponent), data: { moduleCode: 'foundation', componentKey: 'foundation.settings.page' } },
-          // Legacy routes (existing pages)
-          { path: 'organization',      loadComponent: () => import('@dos/module-foundation/ui').then(m => m.FoundationOrganizationComponent) },
-          { path: 'business-units',    loadComponent: () => import('@dos/module-foundation/ui').then(m => m.FoundationBusinessUnitsComponent) },
-          { path: 'departments',       loadComponent: () => import('@dos/module-foundation/ui').then(m => m.FoundationDepartmentsComponent) },
-          { path: 'positions',         loadComponent: () => import('@dos/module-foundation/ui').then(m => m.FoundationPositionsComponent) },
-          { path: 'locations',         loadComponent: () => import('@dos/module-foundation/ui').then(m => m.FoundationLocationsComponent) },
-          { path: 'users',             loadComponent: () => import('@dos/module-foundation/ui').then(m => m.FoundationUsersComponent) },
-          { path: 'teams',             loadComponent: () => import('@dos/module-foundation/ui').then(m => m.FoundationTeamsComponent) },
-          { path: 'roles',             loadComponent: () => import('@dos/module-foundation/ui').then(m => m.FoundationRolesComponent) },
-          { path: 'roles/:id',         loadComponent: () => import('@dos/module-foundation/ui').then(m => m.FoundationRoleDetailComponent) },
-          { path: 'committees',        loadComponent: () => import('@dos/module-foundation/ui').then(m => m.FoundationCommitteesComponent) },
-          { path: 'delegations',       loadComponent: () => import('@dos/module-foundation/ui').then(m => m.FoundationDelegationsComponent) },
-          { path: 'ownership-mapping', loadComponent: () => import('@dos/module-foundation/ui').then(m => m.FoundationOwnershipMappingComponent) },
-          { path: 'access-review',     loadComponent: () => import('@dos/module-foundation/ui').then(m => m.FoundationAccessReviewComponent) },
-          { path: 'policies',          loadComponent: () => import('@dos/module-foundation/ui').then(m => m.FoundationPoliciesComponent) },
-          { path: 'data-processing',   loadComponent: () => import('@dos/module-foundation/ui').then(m => m.FoundationDataProcessingComponent) },
-          { path: 'reference-data',    loadComponent: () => import('@dos/module-foundation/ui').then(m => m.FoundationReferenceDataComponent) },
-          { path: 'audit',             loadComponent: () => import('@dos/module-foundation/ui').then(m => m.FoundationAuditComponent) },
+          {
+            path: '**',
+            loadComponent: () =>
+              import('@platform/shell').then(m => m.DynamicTemplatePageComponent),
+          },
         ],
       },
       {
