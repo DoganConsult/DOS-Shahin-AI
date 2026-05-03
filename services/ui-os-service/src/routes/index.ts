@@ -26,6 +26,7 @@ import { createToursRouter } from './tours.routes.js';
 import { createAdminRouter } from './admin.routes.js';
 import { createPlatformAdminRouter } from './platform-admin.routes.js';
 import { createDynamicUiContractRouter } from './dynamic-ui-contract.routes.js';
+import { createTemplateBindingRouter } from './template-binding.routes.js';
 import type { DbPool } from '../db.js';
 
 export function createUiOsRouter(pool: DbPool): Router {
@@ -64,6 +65,8 @@ export function createUiOsRouter(pool: DbPool): Router {
   // W8 — Spec §10 contract endpoints, also re-mounted under /api/dynamic-ui
   // by server.ts so the canonical spec path resolves at the gateway.
   router.use('/', createDynamicUiContractRouter(pool));
+  // Phase F — DB-driven template binding resolver
+  router.use('/', createTemplateBindingRouter(pool));
 
   return router;
 }
