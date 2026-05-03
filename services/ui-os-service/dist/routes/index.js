@@ -27,6 +27,8 @@ import { createAdminRouter } from './admin.routes.js';
 import { createPlatformAdminRouter } from './platform-admin.routes.js';
 import { createDynamicUiContractRouter } from './dynamic-ui-contract.routes.js';
 import { createTemplateBindingRouter } from './template-binding.routes.js';
+import { createBrandRouter } from './brand.routes.js';
+import { createAgenticRouter } from './agentic.routes.js';
 export function createUiOsRouter(pool) {
     const router = Router();
     router.get('/health', (_req, res) => {
@@ -63,6 +65,10 @@ export function createUiOsRouter(pool) {
     router.use('/', createDynamicUiContractRouter(pool));
     // Phase F — DB-driven template binding resolver
     router.use('/', createTemplateBindingRouter(pool));
+    // Phase M0 — Public marketing brand resolver (NOT auth-bound)
+    router.use('/', createBrandRouter(pool));
+    // Phase M0.5 — Public agentic registry + strip aggregate (NOT auth-bound)
+    router.use('/', createAgenticRouter(pool));
     return router;
 }
 //# sourceMappingURL=index.js.map
