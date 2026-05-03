@@ -83,6 +83,20 @@ export function mapComponentKeyToArchetype(componentKey, route = '') {
   if (k === 'module.incident_response.page')
     return { archetype: 'incident-response', template_export: 'IncidentResponseTemplateComponent' };
 
+  // ── Utility-pages seed (20260503_0022) — 8 dedicated surfaces ────────────
+  if (k === 'module.user_profile.page' || k === 'module.tenant_profile.page')
+    return { archetype: 'record-story', template_export: 'RecordStoryTemplateComponent' };
+  if (k === 'module.tenant_settings.page')
+    return { archetype: 'module-settings', template_export: 'ModuleSettingsTemplateComponent' };
+  if (k === 'module.tenant_services.page')
+    return { archetype: 'intelligent-register', template_export: 'ModuleRecordsTemplateComponent' };
+  if (k === 'platform.platform_settings.page'
+   || k === 'platform.dnoc.console'
+   || k === 'platform.dsoc.console')
+    return { archetype: 'command-dashboard', template_export: 'CommandDashboardTemplateComponent' };
+  if (k === 'platform.dauth.console')
+    return { archetype: 'decision-dashboard', template_export: 'DecisionDashboardTemplateComponent' };
+
   // ── Per-module page-key conventions (PascalCase suffix patterns) ─────────
   if (/HeatmapPage$/.test(k) || /\.heatmap\.page$/.test(k))
     return { archetype: 'risk-landscape', template_export: 'ModuleHeatmapTemplateComponent' };

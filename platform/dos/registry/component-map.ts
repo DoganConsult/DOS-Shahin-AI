@@ -496,6 +496,21 @@ const REGISTRY_COMPONENT_MAP: Record<string, () => Promise<Type<any>>> = {
   'module.activation.page': () => import('../../core/platform/shell/templates/module-extra.templates').then(m => m.ModuleOnboardingTemplateComponent),
   // K — Operational P0
   'module.incident_response.page': () => import('../../core/platform/shell/templates/module-archetypes-extended.templates').then(m => m.IncidentResponseTemplateComponent),
+
+  // ── Utility-pages seed (20260503_0022) — 8 dedicated surfaces ───────────
+  // User Profile + Tenant Profile reuse the 360° Record Story renderer.
+  'module.user_profile.page':        () => import('../../core/platform/shell/templates/module-record-story.template').then(m => m.RecordStoryTemplateComponent),
+  'module.tenant_profile.page':      () => import('../../core/platform/shell/templates/module-record-story.template').then(m => m.RecordStoryTemplateComponent),
+  // Tenant Settings reuses the canonical Module Settings tabbed renderer.
+  'module.tenant_settings.page':     () => import('../../core/platform/shell/templates/module-extra.templates').then(m => m.ModuleSettingsTemplateComponent),
+  // Tenant Services is a managed list (Intelligent Register).
+  'module.tenant_services.page':     () => import('../../core/platform/shell/templates/module-records.template').then(m => m.ModuleRecordsTemplateComponent),
+  // Platform Settings is an executive command surface (Command Dashboard).
+  'platform.platform_settings.page': () => import('../../core/platform/shell/templates/module-archetypes-extended.templates').then(m => m.CommandDashboardTemplateComponent),
+  // Platform consoles: DAuth = decision; DNOC + DSOC = command-room.
+  'platform.dauth.console':          () => import('../../core/platform/shell/templates/module-decision-dashboard.template').then(m => m.DecisionDashboardTemplateComponent),
+  'platform.dnoc.console':           () => import('../../core/platform/shell/templates/module-archetypes-extended.templates').then(m => m.CommandDashboardTemplateComponent),
+  'platform.dsoc.console':           () => import('../../core/platform/shell/templates/module-archetypes-extended.templates').then(m => m.CommandDashboardTemplateComponent),
 };
 
 const PRIMITIVE_KEYS = new Set(Object.keys(CARBON_PRIMITIVE_COMPONENT_MAP));
