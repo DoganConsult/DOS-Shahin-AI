@@ -16,6 +16,7 @@ packages:
   - 'platform/ai/packages/*'
   - 'platform/ai/services/*'
   - 'platform/ai/admin/services/*'
+  - 'platform/config-center/test'
   # Microservices
   - 'services/*'
   # Modules + shared workspace packages

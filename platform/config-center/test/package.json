@@ -1,0 +1,13 @@
+{
+  "name": "@dos/config-center-test",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Cross-cutting Playwright E2E suite (config-center test harness).",
+  "scripts": {
+    "e2e": "playwright test",
+    "e2e:install": "playwright install chromium"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.49.0"
+  }
+}

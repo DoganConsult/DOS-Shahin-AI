@@ -44,12 +44,14 @@ export default defineConfig({
     },
   ],
 
-  webServer: process.env.CI ? undefined : {
-    command: 'npm run start',
-    url: 'http://localhost:4200',
-    reuseExistingServer: !process.env.CI,
-    timeout: 120000,
-  },
+  // Reuse the already-running product-shell (PM2). Set
+  // E2E_AUTOSTART=1 to opt back into a managed dev server.
+  webServer: process.env.E2E_AUTOSTART === '1' ? {
+    command: 'pnpm --filter shahin-ai-grc-frontend start',
+    url: process.env.E2E_BASE_URL || 'http://localhost:4200',
+    reuseExistingServer: true,
+    timeout: 120_000,
+  } : undefined,
 
   outputDir: './playwright-results',
 });
