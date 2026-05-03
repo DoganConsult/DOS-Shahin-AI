@@ -62,6 +62,20 @@ AUTHZ NEGATIVE-PATH HARNESS (CLOSED 2026-05-03 by Phase F-F6 H3):
   skipped unless `ADMIN_STORAGE_STATE` is provided). Verify:
   `E2E_BASE_URL=http://localhost:3000 cd platform/config-center/test && npx playwright test phase-f-authz-negative.spec.ts --project=chromium`.
 
+PROGRESSIVE-MODULE BINDINGS (CLOSED 2026-05-03 by Phase G):
+- Migrations `20260503_0900_phase_g_progressive_modules_bindings.sql` (+95
+  customer-bound rows, ON CONFLICT DO UPDATE) and
+  `202605030910_phase_f_phase_g_progressive_props.sql` (+211 rows across
+  all 14 archetype-props tables) lift the 10 productive modules (risk,
+  compliance, controls, policy, audit, evidence, workflow, reporting,
+  knowledge, foundation) onto the 31-archetype roster. Live totals:
+  `total_bindings=159, distinct_archetypes=27`. 13 props-bearing routes
+  (calendar-timeline, compliance-calendar, remediation-roadmap, ownership-map ×3,
+  audit-trail-ledger, org-chart ×4, delegation-center, workflow-timeline)
+  seeded with bilingual EN/AR fixtures via `pnpm ui-registry:import:props`.
+  `PROPS_COVERAGE_ENFORCE=1 pnpm platform:customer-gate` GREEN end-to-end
+  (dynamic-ui:gates + SPA build ~25s + props-coverage 159/0).
+
 PROPS COVERAGE (CLOSED 2026-05-03 by Phase F-F6 V1-V6):
 - Migration `202605030850_phase_f_phase_f_v2_v6_props.sql` (idempotent, ON
   CONFLICT DO UPDATE) seeded 143 rows across 14 archetype-props tables for

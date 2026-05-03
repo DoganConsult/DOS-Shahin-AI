@@ -1,0 +1,52 @@
+{
+  "route": "/compliance/roadmap",
+  "archetype": "remediation-roadmap",
+  "roadmapMilestones": [
+    {
+      "milestone_id": "crm-mfa",
+      "title_en": "Enforce MFA on all admin tenants",
+      "title_ar": "فرض المصادقة الثنائية على جميع المستأجرين الإداريين",
+      "description": "CC-001 finding remediation",
+      "target_date": "2026-06-30",
+      "progress": 65,
+      "status": "in-progress",
+      "owner": "ciso@grc"
+    },
+    {
+      "milestone_id": "crm-evd",
+      "title_en": "Automate evidence collection for ECC controls",
+      "title_ar": "أتمتة جمع الأدلة لضوابط ECC",
+      "target_date": "2026-09-30",
+      "progress": 30,
+      "status": "in-progress",
+      "owner": "compliance-lead@grc"
+    },
+    {
+      "milestone_id": "crm-vlm",
+      "title_en": "Vendor lifecycle remediation tracker",
+      "title_ar": "متعقب معالجة دورة حياة المورد",
+      "target_date": "2026-08-15",
+      "progress": 50,
+      "status": "in-progress",
+      "owner": "tprm-lead@grc"
+    },
+    {
+      "milestone_id": "crm-pdpl",
+      "title_en": "PDPL data-mapping completeness",
+      "title_ar": "اكتمال تخطيط بيانات PDPL",
+      "target_date": "2026-05-31",
+      "progress": 80,
+      "status": "at-risk",
+      "owner": "dpo@grc"
+    },
+    {
+      "milestone_id": "crm-bcp",
+      "title_en": "BCP recovery exercise refresh",
+      "title_ar": "تحديث تمرين الاستعادة لخطة استمرارية الأعمال",
+      "target_date": "2026-11-30",
+      "progress": 10,
+      "status": "not-started",
+      "owner": "bcp-lead@grc"
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "route": "/workflow/executions",
+  "archetype": "workflow-timeline",
+  "workflowTimelineSteps": [
+    {
+      "step_id": "wfe-1",
+      "label_en": "Trigger received",
+      "label_ar": "تم استلام المشغل",
+      "state": "complete",
+      "description": "Risk treatment workflow triggered",
+      "occurred_at": "2026-05-01T08:00:00Z",
+      "actor": "system"
+    },
+    {
+      "step_id": "wfe-2",
+      "label_en": "Owner acknowledged",
+      "label_ar": "إقرار المالك",
+      "state": "complete",
+      "occurred_at": "2026-05-01T09:15:00Z",
+      "actor": "risk-lead@grc"
+    },
+    {
+      "step_id": "wfe-3",
+      "label_en": "Mitigation drafted",
+      "label_ar": "صياغة التخفيف",
+      "state": "complete",
+      "occurred_at": "2026-05-02T11:30:00Z",
+      "actor": "risk-analyst@grc"
+    },
+    {
+      "step_id": "wfe-4",
+      "label_en": "Reviewer approval",
+      "label_ar": "موافقة المراجع",
+      "state": "current",
+      "description": "Awaiting CRO sign-off",
+      "actor": "cro@grc"
+    },
+    {
+      "step_id": "wfe-5",
+      "label_en": "Evidence attached",
+      "label_ar": "إرفاق الأدلة",
+      "state": "incomplete"
+    },
+    {
+      "step_id": "wfe-6",
+      "label_en": "Closed & ledgered",
+      "label_ar": "الإغلاق والتسجيل",
+      "state": "incomplete"
+    }
+  ]
+}

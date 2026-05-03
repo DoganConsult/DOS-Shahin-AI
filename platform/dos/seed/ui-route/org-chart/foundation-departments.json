@@ -1,0 +1,55 @@
+{
+  "route": "/foundation/departments",
+  "archetype": "org-chart",
+  "orgChartNodes": [
+    {
+      "node_id": "dep-root",
+      "parent_id": null,
+      "title_en": "GRC Tenant",
+      "title_ar": "مستأجر الحوكمة",
+      "role": "tenant",
+      "owner": "tenant-admin@grc",
+      "badge": "ACTIVE"
+    },
+    {
+      "node_id": "dep-risk",
+      "parent_id": "dep-root",
+      "title_en": "Risk Department",
+      "title_ar": "إدارة المخاطر",
+      "role": "department",
+      "owner": "risk-lead@grc"
+    },
+    {
+      "node_id": "dep-aud",
+      "parent_id": "dep-root",
+      "title_en": "Audit Department",
+      "title_ar": "إدارة التدقيق",
+      "role": "department",
+      "owner": "audit-lead@grc"
+    },
+    {
+      "node_id": "dep-comp",
+      "parent_id": "dep-root",
+      "title_en": "Compliance Department",
+      "title_ar": "إدارة الامتثال",
+      "role": "department",
+      "owner": "compliance-lead@grc"
+    },
+    {
+      "node_id": "dep-sec",
+      "parent_id": "dep-root",
+      "title_en": "Security Department",
+      "title_ar": "إدارة الأمن",
+      "role": "department",
+      "owner": "ciso@grc"
+    },
+    {
+      "node_id": "dep-leg",
+      "parent_id": "dep-root",
+      "title_en": "Legal Department",
+      "title_ar": "الإدارة القانونية",
+      "role": "department",
+      "owner": "gc@grc"
+    }
+  ]
+}

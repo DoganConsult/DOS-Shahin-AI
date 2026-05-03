@@ -1,0 +1,71 @@
+{
+  "route": "/foundation/organization",
+  "archetype": "org-chart",
+  "orgChartNodes": [
+    {
+      "node_id": "org-board",
+      "parent_id": null,
+      "title_en": "Board of Directors",
+      "title_ar": "مجلس الإدارة",
+      "role": "board",
+      "owner": "chairman@grc",
+      "badge": "BOARD"
+    },
+    {
+      "node_id": "org-ceo",
+      "parent_id": "org-board",
+      "title_en": "CEO",
+      "title_ar": "الرئيس التنفيذي",
+      "role": "executive",
+      "owner": "ceo@grc"
+    },
+    {
+      "node_id": "org-cfo",
+      "parent_id": "org-ceo",
+      "title_en": "CFO",
+      "title_ar": "المدير المالي",
+      "role": "executive",
+      "owner": "cfo@grc"
+    },
+    {
+      "node_id": "org-coo",
+      "parent_id": "org-ceo",
+      "title_en": "COO",
+      "title_ar": "مدير العمليات",
+      "role": "executive",
+      "owner": "coo@grc"
+    },
+    {
+      "node_id": "org-cto",
+      "parent_id": "org-ceo",
+      "title_en": "CTO",
+      "title_ar": "مدير التكنولوجيا",
+      "role": "executive",
+      "owner": "cto@grc"
+    },
+    {
+      "node_id": "org-ciso",
+      "parent_id": "org-cto",
+      "title_en": "CISO",
+      "title_ar": "مدير أمن المعلومات",
+      "role": "executive",
+      "owner": "ciso@grc"
+    },
+    {
+      "node_id": "org-cro",
+      "parent_id": "org-ceo",
+      "title_en": "CRO",
+      "title_ar": "مدير المخاطر",
+      "role": "executive",
+      "owner": "cro@grc"
+    },
+    {
+      "node_id": "org-cae",
+      "parent_id": "org-board",
+      "title_en": "CAE",
+      "title_ar": "مدير التدقيق",
+      "role": "executive",
+      "owner": "cae@grc"
+    }
+  ]
+}

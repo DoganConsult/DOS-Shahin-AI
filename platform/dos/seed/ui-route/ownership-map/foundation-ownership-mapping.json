@@ -1,0 +1,54 @@
+{
+  "route": "/foundation/ownership-mapping",
+  "archetype": "ownership-map",
+  "ownershipEdges": [
+    {
+      "edge_id": "om-1",
+      "entity_id": "POL-001",
+      "entity_label": "Information Security Policy",
+      "owner": "ciso@grc",
+      "ownership_role": "accountable",
+      "effective_from": "2025-01-01"
+    },
+    {
+      "edge_id": "om-2",
+      "entity_id": "POL-002",
+      "entity_label": "Acceptable Use Policy",
+      "owner": "ciso@grc",
+      "ownership_role": "accountable",
+      "effective_from": "2025-01-01"
+    },
+    {
+      "edge_id": "om-3",
+      "entity_id": "POL-003",
+      "entity_label": "Data Classification Policy",
+      "owner": "dpo@grc",
+      "ownership_role": "accountable",
+      "effective_from": "2025-02-01"
+    },
+    {
+      "edge_id": "om-4",
+      "entity_id": "POL-004",
+      "entity_label": "Vendor Risk Policy",
+      "owner": "tprm-lead@grc",
+      "ownership_role": "responsible",
+      "effective_from": "2025-03-01"
+    },
+    {
+      "edge_id": "om-5",
+      "entity_id": "POL-005",
+      "entity_label": "Business Continuity Policy",
+      "owner": "bcp-lead@grc",
+      "ownership_role": "accountable",
+      "effective_from": "2025-04-01"
+    },
+    {
+      "edge_id": "om-6",
+      "entity_id": "PROC-001",
+      "entity_label": "Incident Response Procedure",
+      "owner": "soc-lead@grc",
+      "ownership_role": "responsible",
+      "effective_from": "2025-05-01"
+    }
+  ]
+}

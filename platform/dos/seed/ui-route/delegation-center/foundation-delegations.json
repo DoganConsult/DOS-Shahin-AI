@@ -1,0 +1,54 @@
+{
+  "route": "/foundation/delegations",
+  "archetype": "delegation-center",
+  "delegationRules": [
+    {
+      "rule_id": "fd-1",
+      "delegator": "ceo@grc",
+      "delegate": "coo@grc",
+      "scope": "foundation.signoff",
+      "permission": "foundation.attest",
+      "starts_at": "2026-04-01T00:00:00Z",
+      "ends_at": "2026-04-15T23:59:59Z",
+      "status": "expired"
+    },
+    {
+      "rule_id": "fd-2",
+      "delegator": "cfo@grc",
+      "delegate": "fin-vp@grc",
+      "scope": "finance.budget.approve",
+      "permission": "budget.approve",
+      "starts_at": "2026-05-01T00:00:00Z",
+      "ends_at": "2026-05-31T23:59:59Z",
+      "status": "active"
+    },
+    {
+      "rule_id": "fd-3",
+      "delegator": "ciso@grc",
+      "delegate": "sec-mgr@grc",
+      "scope": "security.policy.publish",
+      "permission": "policy.publish",
+      "starts_at": "2026-05-15T00:00:00Z",
+      "status": "active"
+    },
+    {
+      "rule_id": "fd-4",
+      "delegator": "compliance-lead@grc",
+      "delegate": "audit-lead@grc",
+      "scope": "compliance.attest",
+      "permission": "compliance.attest",
+      "starts_at": "2026-06-01T00:00:00Z",
+      "ends_at": "2026-06-30T23:59:59Z",
+      "status": "scheduled"
+    },
+    {
+      "rule_id": "fd-5",
+      "delegator": "cto@grc",
+      "delegate": "eng-mgr@grc",
+      "scope": "change.production.approve",
+      "permission": "change.approve",
+      "starts_at": "2026-04-20T00:00:00Z",
+      "status": "active"
+    }
+  ]
+}

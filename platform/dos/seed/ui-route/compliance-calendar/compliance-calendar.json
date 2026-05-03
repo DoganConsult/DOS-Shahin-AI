@@ -1,0 +1,54 @@
+{
+  "route": "/compliance/calendar",
+  "archetype": "compliance-calendar",
+  "calendarEvents": [
+    {
+      "event_id": "cc-sama-attest",
+      "title_en": "SAMA Annual Attestation Window",
+      "title_ar": "نافذة الإقرار السنوي لساما",
+      "category": "regulatory",
+      "starts_at": "2026-03-01T00:00:00Z",
+      "ends_at": "2026-03-31T23:59:59Z",
+      "status": "in-progress",
+      "severity": "warning"
+    },
+    {
+      "event_id": "cc-nca-ecc",
+      "title_en": "NCA ECC v2 Self-Assessment",
+      "title_ar": "التقييم الذاتي للضوابط NCA ECC v2",
+      "category": "regulatory",
+      "starts_at": "2026-05-01T00:00:00Z",
+      "ends_at": "2026-06-30T23:59:59Z",
+      "status": "scheduled",
+      "severity": "warning"
+    },
+    {
+      "event_id": "cc-iso27001",
+      "title_en": "ISO 27001 Surveillance Audit",
+      "title_ar": "تدقيق المراقبة ISO 27001",
+      "category": "audit",
+      "starts_at": "2026-09-15T09:00:00Z",
+      "ends_at": "2026-09-19T17:00:00Z",
+      "status": "scheduled",
+      "severity": "info"
+    },
+    {
+      "event_id": "cc-pdpl-renewal",
+      "title_en": "PDPL DPO Certification Renewal",
+      "title_ar": "تجديد شهادة موظف حماية البيانات PDPL",
+      "category": "regulatory",
+      "starts_at": "2026-11-01T00:00:00Z",
+      "status": "scheduled",
+      "severity": "info"
+    },
+    {
+      "event_id": "cc-board-policy",
+      "title_en": "Board Policy Refresh Cycle",
+      "title_ar": "دورة تجديد سياسة مجلس الإدارة",
+      "category": "review",
+      "starts_at": "2026-10-01T14:00:00Z",
+      "status": "scheduled",
+      "severity": "info"
+    }
+  ]
+}

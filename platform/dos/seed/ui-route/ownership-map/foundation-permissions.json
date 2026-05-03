@@ -1,0 +1,54 @@
+{
+  "route": "/foundation/permissions",
+  "archetype": "ownership-map",
+  "ownershipEdges": [
+    {
+      "edge_id": "fp-1",
+      "entity_id": "PERM-risk.read",
+      "entity_label": "risk.read",
+      "owner": "risk-lead@grc",
+      "ownership_role": "custodian",
+      "effective_from": "2025-01-01"
+    },
+    {
+      "edge_id": "fp-2",
+      "entity_id": "PERM-risk.write",
+      "entity_label": "risk.write",
+      "owner": "risk-lead@grc",
+      "ownership_role": "approver",
+      "effective_from": "2025-01-01"
+    },
+    {
+      "edge_id": "fp-3",
+      "entity_id": "PERM-compliance.attest",
+      "entity_label": "compliance.attest",
+      "owner": "compliance-lead@grc",
+      "ownership_role": "approver",
+      "effective_from": "2025-02-01"
+    },
+    {
+      "edge_id": "fp-4",
+      "entity_id": "PERM-audit.read",
+      "entity_label": "audit.read",
+      "owner": "audit-lead@grc",
+      "ownership_role": "reviewer",
+      "effective_from": "2025-02-01"
+    },
+    {
+      "edge_id": "fp-5",
+      "entity_id": "PERM-evidence.upload",
+      "entity_label": "evidence.upload",
+      "owner": "compliance-lead@grc",
+      "ownership_role": "executor",
+      "effective_from": "2025-03-01"
+    },
+    {
+      "edge_id": "fp-6",
+      "entity_id": "PERM-policy.publish",
+      "entity_label": "policy.publish",
+      "owner": "ciso@grc",
+      "ownership_role": "approver",
+      "effective_from": "2025-03-01"
+    }
+  ]
+}

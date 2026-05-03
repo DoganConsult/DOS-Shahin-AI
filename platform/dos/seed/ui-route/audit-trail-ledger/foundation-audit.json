@@ -1,50 +1,46 @@
 {
-  "route": "/admin/foundation/audit",
+  "route": "/foundation/audit",
   "archetype": "audit-trail-ledger",
   "auditLedgerRows": [
     {
-      "ledger_id": "led-foundation-1",
-      "occurred_at": "2026-05-01T08:15:00Z",
+      "ledger_id": "fa-001",
+      "occurred_at": "2026-04-30T08:15:00Z",
       "actor": "platform-admin",
-      "action": "settings.update",
-      "entity_type": "foundation",
-      "entity_id": "foundation-rec-1",
+      "action": "foundation.lifecycle.attest",
+      "entity_type": "tenant",
+      "entity_id": "grc",
       "prev_hash": null,
-      "hash": "sha256:foundation-1-202605010815",
-      "decision_ref": "dec-foundation-1"
+      "hash": "sha256:11111111111111111111111111111111"
     },
     {
-      "ledger_id": "led-foundation-2",
-      "occurred_at": "2026-05-02T11:42:00Z",
-      "actor": "tenant-admin@grc",
-      "action": "role.grant",
-      "entity_type": "foundation",
-      "entity_id": "foundation-rec-2",
-      "prev_hash": "sha256:prev-foundation-1",
-      "hash": "sha256:foundation-2-202605021142",
-      "decision_ref": "dec-foundation-2"
-    },
-    {
-      "ledger_id": "led-foundation-3",
-      "occurred_at": "2026-05-03T07:05:00Z",
+      "ledger_id": "fa-002",
+      "occurred_at": "2026-04-30T09:00:00Z",
       "actor": "audit-lead@grc",
-      "action": "config.publish",
-      "entity_type": "foundation",
-      "entity_id": "foundation-rec-3",
-      "prev_hash": "sha256:prev-foundation-2",
-      "hash": "sha256:foundation-3-202605030705",
-      "decision_ref": "dec-foundation-3"
+      "action": "foundation.lifecycle.attest",
+      "entity_type": "control",
+      "entity_id": "CTRL-001",
+      "prev_hash": "sha256:11111111111111111111111111111111",
+      "hash": "sha256:22222222222222222222222222222222"
     },
     {
-      "ledger_id": "led-foundation-4",
-      "occurred_at": "2026-05-03T15:30:00Z",
+      "ledger_id": "fa-003",
+      "occurred_at": "2026-05-01T14:32:00Z",
       "actor": "ciso@grc",
-      "action": "policy.attest",
-      "entity_type": "foundation",
-      "entity_id": "foundation-rec-4",
-      "prev_hash": "sha256:prev-foundation-3",
-      "hash": "sha256:foundation-4-202605031530",
-      "decision_ref": "dec-foundation-4"
+      "action": "foundation.lifecycle.attest",
+      "entity_type": "policy",
+      "entity_id": "POL-014",
+      "prev_hash": "sha256:22222222222222222222222222222222",
+      "hash": "sha256:33333333333333333333333333333333"
+    },
+    {
+      "ledger_id": "fa-004",
+      "occurred_at": "2026-05-02T10:08:00Z",
+      "actor": "compliance-lead@grc",
+      "action": "foundation.lifecycle.attest",
+      "entity_type": "evidence",
+      "entity_id": "EVD-091",
+      "prev_hash": "sha256:33333333333333333333333333333333",
+      "hash": "sha256:44444444444444444444444444444444"
     }
   ]
 }

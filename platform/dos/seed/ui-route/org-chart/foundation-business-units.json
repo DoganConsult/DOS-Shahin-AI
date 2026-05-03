@@ -1,0 +1,55 @@
+{
+  "route": "/foundation/business-units",
+  "archetype": "org-chart",
+  "orgChartNodes": [
+    {
+      "node_id": "bu-root",
+      "parent_id": null,
+      "title_en": "Enterprise",
+      "title_ar": "المؤسسة",
+      "role": "enterprise",
+      "owner": "ceo@grc",
+      "badge": "GLOBAL"
+    },
+    {
+      "node_id": "bu-fin",
+      "parent_id": "bu-root",
+      "title_en": "Finance & Treasury",
+      "title_ar": "المالية والخزانة",
+      "role": "business-unit",
+      "owner": "cfo@grc"
+    },
+    {
+      "node_id": "bu-tech",
+      "parent_id": "bu-root",
+      "title_en": "Technology & Operations",
+      "title_ar": "التكنولوجيا والعمليات",
+      "role": "business-unit",
+      "owner": "cto@grc"
+    },
+    {
+      "node_id": "bu-risk",
+      "parent_id": "bu-root",
+      "title_en": "Risk & Compliance",
+      "title_ar": "المخاطر والامتثال",
+      "role": "business-unit",
+      "owner": "cro@grc"
+    },
+    {
+      "node_id": "bu-aud",
+      "parent_id": "bu-root",
+      "title_en": "Internal Audit",
+      "title_ar": "التدقيق الداخلي",
+      "role": "business-unit",
+      "owner": "cae@grc"
+    },
+    {
+      "node_id": "bu-ops",
+      "parent_id": "bu-root",
+      "title_en": "Business Operations",
+      "title_ar": "العمليات التجارية",
+      "role": "business-unit",
+      "owner": "coo@grc"
+    }
+  ]
+}

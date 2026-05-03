@@ -1,0 +1,46 @@
+{
+  "route": "/controls/mapping",
+  "archetype": "ownership-map",
+  "ownershipEdges": [
+    {
+      "edge_id": "cm-1",
+      "entity_id": "CTRL-001",
+      "entity_label": "Access Control Policy",
+      "owner": "iam-lead@grc",
+      "ownership_role": "accountable",
+      "effective_from": "2025-01-01"
+    },
+    {
+      "edge_id": "cm-2",
+      "entity_id": "CTRL-014",
+      "entity_label": "Vulnerability Management Procedure",
+      "owner": "soc-lead@grc",
+      "ownership_role": "responsible",
+      "effective_from": "2025-01-01"
+    },
+    {
+      "edge_id": "cm-3",
+      "entity_id": "CTRL-027",
+      "entity_label": "Change Management Standard",
+      "owner": "cto@grc",
+      "ownership_role": "accountable",
+      "effective_from": "2025-02-01"
+    },
+    {
+      "edge_id": "cm-4",
+      "entity_id": "CTRL-051",
+      "entity_label": "Incident Response Runbook",
+      "owner": "ciso@grc",
+      "ownership_role": "accountable",
+      "effective_from": "2025-03-01"
+    },
+    {
+      "edge_id": "cm-5",
+      "entity_id": "CTRL-073",
+      "entity_label": "Third-Party Risk Assessment",
+      "owner": "tprm-lead@grc",
+      "ownership_role": "responsible",
+      "effective_from": "2025-04-01"
+    }
+  ]
+}

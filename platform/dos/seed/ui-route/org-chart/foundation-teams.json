@@ -1,0 +1,55 @@
+{
+  "route": "/foundation/teams",
+  "archetype": "org-chart",
+  "orgChartNodes": [
+    {
+      "node_id": "tm-root",
+      "parent_id": null,
+      "title_en": "GRC Squad",
+      "title_ar": "فريق الحوكمة",
+      "role": "squad",
+      "owner": "cro@grc",
+      "badge": "ACTIVE"
+    },
+    {
+      "node_id": "tm-rsk",
+      "parent_id": "tm-root",
+      "title_en": "Risk Modelling Team",
+      "title_ar": "فريق نمذجة المخاطر",
+      "role": "team",
+      "owner": "risk-modelling-lead@grc"
+    },
+    {
+      "node_id": "tm-cmp",
+      "parent_id": "tm-root",
+      "title_en": "Compliance Operations Team",
+      "title_ar": "فريق عمليات الامتثال",
+      "role": "team",
+      "owner": "compliance-ops-lead@grc"
+    },
+    {
+      "node_id": "tm-aud",
+      "parent_id": "tm-root",
+      "title_en": "Audit Fieldwork Team",
+      "title_ar": "فريق العمل الميداني للتدقيق",
+      "role": "team",
+      "owner": "audit-field-lead@grc"
+    },
+    {
+      "node_id": "tm-soc",
+      "parent_id": "tm-root",
+      "title_en": "Security Operations Team",
+      "title_ar": "فريق العمليات الأمنية",
+      "role": "team",
+      "owner": "soc-lead@grc"
+    },
+    {
+      "node_id": "tm-tpr",
+      "parent_id": "tm-root",
+      "title_en": "Third-Party Risk Team",
+      "title_ar": "فريق مخاطر الأطراف الثالثة",
+      "role": "team",
+      "owner": "tprm-lead@grc"
+    }
+  ]
+}
