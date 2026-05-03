@@ -19,7 +19,7 @@ import { RouterModule } from '@angular/router';
 import {
   TilesModule, ProgressIndicatorModule, NotificationModule, ButtonModule,
   BreadcrumbModule, InputModule, DropdownModule, CheckboxModule,
-  RadioModule, FileUploaderModule, InlineLoadingModule,
+  RadioModule, InlineLoadingModule,
   ToggleModule, TagModule
 } from 'carbon-components-angular';
 import { DosInsightBarComponent } from './dos-insight-bar.component';
@@ -45,7 +45,7 @@ export interface FormStep {
     CommonModule, RouterModule,
     TilesModule, ProgressIndicatorModule, NotificationModule,
     BreadcrumbModule, ButtonModule, InputModule, DropdownModule, CheckboxModule,
-    RadioModule, FileUploaderModule, InlineLoadingModule,
+    RadioModule, InlineLoadingModule,
     ToggleModule, TagModule,
     DosInsightBarComponent,
   ],

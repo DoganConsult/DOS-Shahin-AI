@@ -59,6 +59,9 @@ import { DosInsightBarComponent } from './dos-insight-bar.component';
       @if (subtitle) { <p class="dmt-subtitle">{{ subtitle }}</p> }
     </cds-tile>
 
+    <dos-insight-bar [pillars]="pillars" archetype="evidence-reports"
+      (actionClick)="pillars?.nextAction?.action?.()"></dos-insight-bar>
+
     <div class="dmt-toolbar">
       <cds-content-switcher (selected)="viewSwitch.emit($event)">
         <button cdsContentSwitcherOption name="all">All</button>
@@ -146,6 +149,8 @@ import { DosInsightBarComponent } from './dos-insight-bar.component';
   `]
 })
 export class ModuleReportsTemplateComponent {
+  @Input() pillars: ModuleInsightPillars | null = null;
+
   @Input() eyebrow = '';
   @Input() title = 'Reports';
   @Input() subtitle = '';
@@ -211,6 +216,9 @@ export class ModuleReportsTemplateComponent {
       }
     </cds-tile>
 
+    <dos-insight-bar [pillars]="pillars" archetype="module-settings"
+      (actionClick)="pillars?.nextAction?.action?.()"></dos-insight-bar>
+
     <cds-tile class="dmt-settings-tile">
       <cds-tabs type="contained" [followFocus]="true">
         @for (section of sections; track section.id) {
@@ -247,7 +255,9 @@ export class ModuleReportsTemplateComponent {
   `]
 })
 export class ModuleSettingsTemplateComponent {
+  @Input() pillars: ModuleInsightPillars | null = null;
   @Input() eyebrow = '';
+
   @Input() title = 'Settings';
   @Input() subtitle = '';
   @Input() aiHeadline = '';
@@ -302,6 +312,11 @@ export class ModuleSettingsTemplateComponent {
       </cds-progress-indicator>
     </cds-tile>
 
+    <!-- 5-Pillar Insight Bar -->
+    <dos-insight-bar [pillars]="pillars" archetype="workflow-control"
+      (actionClick)="pillars?.nextAction?.action?.()">
+    </dos-insight-bar>
+
     <cds-tile class="dmt-assessments-tile">
       <cds-tabs type="line" [followFocus]="true">
         @for (tab of tabs; track tab.id) {
@@ -337,6 +352,7 @@ export class ModuleSettingsTemplateComponent {
   `]
 })
 export class ModuleAssessmentsTemplateComponent {
+  @Input() pillars: ModuleInsightPillars | null = null;
   @Input() eyebrow = '';
   @Input() title = 'Assessments';
   @Input() subtitle = '';
@@ -377,7 +393,12 @@ export class ModuleAssessmentsTemplateComponent {
 
       <!-- Setup progress -->
       @if (steps.length) {
-        <cds-progress-bar
+        <!-- 5-Pillar Insight Bar -->
+        <dos-insight-bar [pillars]="pillars" archetype="activation-journey"
+          (actionClick)="pillars?.nextAction?.action?.()">
+        </dos-insight-bar>
+
+                <cds-progress-bar
           [value]="completedSteps"
           [max]="steps.length"
           size="md"
@@ -431,6 +452,7 @@ export class ModuleAssessmentsTemplateComponent {
   `]
 })
 export class ModuleOnboardingTemplateComponent {
+  @Input() pillars: ModuleInsightPillars | null = null;
   @Input() title = 'Get Started';
   @Input() subtitle = '';
   @Input() aiHeadline = '';

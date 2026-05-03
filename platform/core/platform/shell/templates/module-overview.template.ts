@@ -135,7 +135,14 @@ import { DosInsightBarComponent } from './dos-insight-bar.component';
         </div>
       </cds-tile>
 
-      <!-- ── KPI strip ──────────────────────────────────────────────── -->
+      <!-- ── 5-Pillar Insight Bar ────────────────────────────────── -->
+      <dos-insight-bar
+        [pillars]="pillars"
+        archetype="command-home"
+        (actionClick)="pillars?.nextAction?.action?.()">
+      </dos-insight-bar>
+
+            <!-- ── KPI strip ──────────────────────────────────────────────── -->
       @if (kpis.length) {
         <div class="dmt-kpi-strip">
           @for (kpi of visibleKpis(); track kpi.label) {
