@@ -99,6 +99,9 @@ export * from './brand/brand-resolver.service';
 export * from './brand/dos-brand-eagle.component';
 export * from './marketing/marketing-public-config.service';
 export * from './marketing/marketing-home.page';
+// Phase M1.5 — Download-Kit system (3 components + contract).
+export * from './marketing/download-kit.contract';
+export * from './marketing/download-kit.components';
 
 // Agentic UI Interaction Layer (Phase M0.5) — 10 Carbon-backed components
 // + universal state/event contract. CI gate: agentic-ui-coverage.mjs.

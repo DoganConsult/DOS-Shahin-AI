@@ -68,6 +68,8 @@ export * from './brand/brand-resolver.service';
 export * from './brand/dos-brand-eagle.component';
 export * from './marketing/marketing-public-config.service';
 export * from './marketing/marketing-home.page';
+export * from './marketing/download-kit.contract';
+export * from './marketing/download-kit.components';
 export * from './agentic/agentic.contract';
 export * from './agentic/agentic-components';
 export { CARBON_ICON_NAMES, CARBON_ICON_NAME_SET, CARBON_ICON_INDEX, isCarbonIconName, resolveCarbonIcon, type CarbonIconName, type CarbonIconSize, type CarbonIconNamespace, type CarbonIconEntry, } from './allowlists/carbon-icons.allowlist';

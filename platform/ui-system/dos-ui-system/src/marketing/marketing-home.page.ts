@@ -24,9 +24,12 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  EventEmitter,
   Input,
+  Output,
   computed,
   inject,
+  signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DosBrandEagleComponent } from '../brand/dos-brand-eagle.component';
@@ -35,13 +38,24 @@ import { MarketingPublicConfigService } from './marketing-public-config.service'
 import { DosAgentStatusStripComponent } from '../agentic/agentic-components';
 import type { AgentState, AgentStripSummary } from '../agentic/agentic.contract';
 import type { DosBrandCode } from '@dos/design-tokens';
+import {
+  DosDownloadKitCardComponent,
+  DosGatedDownloadModalComponent,
+  DosDownloadSuccessComponent,
+} from './download-kit.components';
+import type {
+  MarketingAsset,
+  MarketingDownloadEvent,
+} from './download-kit.contract';
 
-/** Locked 16-section ordering. CI gate `marketing-home-coverage.mjs` greps. */
+/** Locked 17-section ordering (M1.5 inserts `download-kit` after agentic-proof).
+ *  CI gate `marketing-home-coverage.mjs` greps this literal. */
 export const MARKETING_HOME_SECTIONS = [
   'hero',
   'trust-pills',
   'value-props',
   'agentic-proof',
+  'download-kit',
   'platform-overview',
   'modules',
   'industries',
@@ -68,7 +82,14 @@ export interface MarketingAgentTile {
 @Component({
   selector: 'dos-marketing-home',
   standalone: true,
-  imports: [CommonModule, DosBrandEagleComponent, DosAgentStatusStripComponent],
+  imports: [
+    CommonModule,
+    DosBrandEagleComponent,
+    DosAgentStatusStripComponent,
+    DosDownloadKitCardComponent,
+    DosGatedDownloadModalComponent,
+    DosDownloadSuccessComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <main
@@ -159,7 +180,40 @@ export interface MarketingAgentTile {
         </section>
       }
 
-      <!-- 05 platform-overview ──────────────────────────────────────── -->
+      <!-- 05 download-kit ───────────────────────────────────────────── -->
+      <section class="dos-mh-section dos-mh-download-kit" data-section-id="download-kit">
+        <div class="dos-mh-container">
+          <p class="dos-mh-eyebrow">{{ downloadKitEyebrow }}</p>
+          <h2 class="dos-mh-section-title">{{ downloadKitTitle }}</h2>
+          <p>{{ downloadKitBody }}</p>
+
+          @if (featuredAsset(); as a) {
+            <dos-download-kit-card
+              [asset]="a"
+              [ctaLabel]="downloadCtaLabel"
+              (event)="onDownloadEvent($event)"
+            />
+          } @else {
+            <div data-cds-component="skeleton-text"></div>
+          }
+
+          @if (downloadSuccess()) {
+            <dos-download-success
+              [asset]="featuredAsset()"
+              (event)="onDownloadEvent($event)"
+            />
+          }
+
+          <dos-gated-download-modal
+            [asset]="featuredAsset()"
+            [open]="modalOpen()"
+            (event)="onDownloadEvent($event)"
+            (closed)="onModalClosed()"
+          />
+        </div>
+      </section>
+
+      <!-- 06 platform-overview ──────────────────────────────────────── -->
       <section class="dos-mh-section" data-section-id="platform-overview">
         <div class="dos-mh-container">
           <h2 class="dos-mh-section-title">{{ platformTitle }}</h2>
@@ -445,6 +499,47 @@ export class DosMarketingHomePageComponent {
   readonly footerGroups = computed(() => this.marketingCfg.marketingFooterGroups());
 
   readonly showAgenticProof = computed(() => this.marketingCfg.flag('landingAgenticProof'));
+
+  // ─── M1.5 Download-Kit ───────────────────────────────────────────────
+  @Input() downloadKitEyebrow = 'Take it with you';
+  @Input() downloadKitTitle = 'Download the Shahin-AI Executive Kit';
+  @Input() downloadKitBody = 'A concise pack for executives evaluating AI-native GRC.';
+  @Input() downloadCtaLabel = 'Download kit';
+  /** Pre-fetched marketing assets (host wires from /marketing/assets). */
+  @Input() downloadAssets: ReadonlyArray<MarketingAsset> = [];
+  /** Asset key to feature in the landing card slot. */
+  @Input() featuredAssetKey = 'shahin-executive-overview';
+
+  readonly modalOpen = signal(false);
+  readonly downloadSuccess = signal(false);
+
+  @Output() readonly downloadEvent = new EventEmitter<MarketingDownloadEvent>();
+
+  readonly featuredAsset = computed<MarketingAsset | null>(() => {
+    const list = this.downloadAssets;
+    if (!list?.length) return null;
+    return (
+      list.find((a) => a.assetKey === this.featuredAssetKey && a.locale === this.locale)
+      ?? list.find((a) => a.assetKey === this.featuredAssetKey)
+      ?? null
+    );
+  });
+
+  onDownloadEvent(e: MarketingDownloadEvent) {
+    if (e.key === 'marketing.download.opened') {
+      const asset = this.featuredAsset();
+      if (asset?.isGated) this.modalOpen.set(true);
+    }
+    if (e.key === 'marketing.download.completed') {
+      this.modalOpen.set(false);
+      this.downloadSuccess.set(true);
+    }
+    this.downloadEvent.emit(e);
+  }
+
+  onModalClosed() {
+    this.modalOpen.set(false);
+  }
 
   /** Resolve the agent-tile asset for a given agent code via BrandResolverService. */
   tileAsset(agentCode: string) {

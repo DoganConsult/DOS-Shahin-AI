@@ -82,6 +82,8 @@ export function mapComponentKeyToArchetype(componentKey, route = '') {
     return { archetype: 'user-agent-workbench', template_export: 'UserAgentWorkbenchTemplateComponent' };
   if (k === 'module.incident_response.page')
     return { archetype: 'incident-response', template_export: 'IncidentResponseTemplateComponent' };
+  if (k === 'module.case_finalization.page')
+    return { archetype: 'case-finalization', template_export: 'CaseFinalizationTemplateComponent' };
 
   // ── Utility-pages seed (20260503_0022) — 8 dedicated surfaces ────────────
   if (k === 'module.user_profile.page' || k === 'module.tenant_profile.page')
@@ -117,6 +119,11 @@ export function mapComponentKeyToArchetype(componentKey, route = '') {
 
   // ── Phase M1 — Marketing-OS landing surface ─────────────────────────────
   if (k === 'marketing.home.page')
+    return { archetype: 'command-home', template_export: 'ModuleOverviewTemplateComponent' };
+  // ── Phase M1.5 — Download-Kit components (sit inside marketing.home.page).
+  if (k === 'marketing.download-kit-card'
+   || k === 'marketing.gated-download-modal'
+   || k === 'marketing.download-success')
     return { archetype: 'command-home', template_export: 'ModuleOverviewTemplateComponent' };
 
   // ── Per-module page-key conventions (PascalCase suffix patterns) ─────────
@@ -198,4 +205,5 @@ export const ALLOWED_ARCHETYPES = new Set([
   'module-settings',
   'activation-journey',
   'incident-response',
+  'case-finalization',
 ]);

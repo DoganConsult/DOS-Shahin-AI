@@ -35,7 +35,7 @@ const COMP_MAP = resolve(REPO, 'platform/dos/registry/component-map.ts');
 const BRAND_ASSET_CONTRACT = resolve(REPO, 'platform/ui-system/dos-ui-system/src/brand/brand-asset.contract.ts');
 
 const EXPECTED_SECTIONS = [
-  'hero','trust-pills','value-props','agentic-proof',
+  'hero','trust-pills','value-props','agentic-proof','download-kit',
   'platform-overview','modules','industries','architecture',
   'ai-and-agents','pricing-teaser','testimonials','logos',
   'resources','faq','cta-banner','footer',
@@ -53,10 +53,10 @@ describe('M1 — marketing.home.page contract', () => {
   const map  = readFileSync(COMP_MAP, 'utf8');
   const ba   = readFileSync(BRAND_ASSET_CONTRACT, 'utf8');
 
-  it('declares the locked 16-section ordering', () => {
+  it('declares the locked 17-section ordering (M1.5 inserts download-kit)', () => {
     const sections = extractSectionLiteral(src);
     expect(sections).toEqual([...EXPECTED_SECTIONS]);
-    expect(sections).toHaveLength(16);
+    expect(sections).toHaveLength(17);
   });
 
   it('every section id has a [data-section-id] template hook', () => {

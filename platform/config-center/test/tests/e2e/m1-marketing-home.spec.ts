@@ -17,7 +17,7 @@
 import { test, expect, type Page } from '@playwright/test';
 
 const SECTIONS = [
-  'hero','trust-pills','value-props','agentic-proof',
+  'hero','trust-pills','value-props','agentic-proof','download-kit',
   'platform-overview','modules','industries','architecture',
   'ai-and-agents','pricing-teaser','testimonials','logos',
   'resources','faq','cta-banner','footer',

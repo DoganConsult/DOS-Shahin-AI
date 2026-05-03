@@ -2,8 +2,8 @@
 /**
  * marketing-home-coverage.mjs — Phase M1 CI gate.
  *
- * Verifies the canonical 16-section marketing.home.page is wired coherently:
- *   ① The marketing-home page source declares all 16 section ids in the
+ * Verifies the canonical 17-section marketing.home.page is wired coherently:
+ *   ① The marketing-home page source declares all 17 section ids in the
  *      MARKETING_HOME_SECTIONS literal.
  *   ② Every section id appears as a [data-section-id="…"] hook in the
  *      template body (so renderers/tests can target sections selector-safely).
@@ -28,7 +28,7 @@ const SEED_SQL = join(REPO, 'platform/dos/migrations/public/20260503_0026_market
 const COMP_MAP = join(REPO, 'platform/dos/registry/component-map.ts');
 
 const SECTIONS = [
-  'hero','trust-pills','value-props','agentic-proof',
+  'hero','trust-pills','value-props','agentic-proof','download-kit',
   'platform-overview','modules','industries','architecture',
   'ai-and-agents','pricing-teaser','testimonials','logos',
   'resources','faq','cta-banner','footer',

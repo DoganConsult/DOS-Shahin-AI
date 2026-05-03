@@ -29,6 +29,7 @@ import { createDynamicUiContractRouter } from './dynamic-ui-contract.routes.js';
 import { createTemplateBindingRouter } from './template-binding.routes.js';
 import { createBrandRouter } from './brand.routes.js';
 import { createAgenticRouter } from './agentic.routes.js';
+import { createMarketingDownloadsRouter } from './marketing-downloads.routes.js';
 import type { DbPool } from '../db.js';
 
 export function createUiOsRouter(pool: DbPool): Router {
@@ -73,6 +74,8 @@ export function createUiOsRouter(pool: DbPool): Router {
   router.use('/', createBrandRouter(pool));
   // Phase M0.5 — Public agentic registry + strip aggregate (NOT auth-bound)
   router.use('/', createAgenticRouter(pool));
+  // Phase M1.5 — Public marketing assets + download event sink (NOT auth-bound)
+  router.use('/', createMarketingDownloadsRouter(pool));
 
   return router;
 }

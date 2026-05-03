@@ -528,9 +528,16 @@ const REGISTRY_COMPONENT_MAP: Record<string, () => Promise<Type<any>>> = {
   'agent.audit-trail':           () => import('@dos/ui-system').then(m => m.DosAgentAuditTrailComponent),
 
   // ── Phase M1 — Marketing-OS public landing ──────────────────────────────
-  // 16-section unauthenticated landing rendered from @dos/ui-system. Carbon
+  // 17-section unauthenticated landing rendered from @dos/ui-system. Carbon
   // backing: tiles. Route binding: /  → marketing.home.page.
   'marketing.home.page':         () => import('@dos/ui-system').then(m => m.DosMarketingHomePageComponent),
+
+  // ── Phase M1.5 — Download-Kit components ────────────────────────────────
+  // Card / gated modal / success states for the public download flow.
+  // Carbon backing per row enforced by 20260503_0027_marketing_download_kit.sql.
+  'marketing.download-kit-card':    () => import('@dos/ui-system').then(m => m.DosDownloadKitCardComponent),
+  'marketing.gated-download-modal': () => import('@dos/ui-system').then(m => m.DosGatedDownloadModalComponent),
+  'marketing.download-success':     () => import('@dos/ui-system').then(m => m.DosDownloadSuccessComponent),
 };
 
 const PRIMITIVE_KEYS = new Set(Object.keys(CARBON_PRIMITIVE_COMPONENT_MAP));
