@@ -306,7 +306,7 @@ export async function getFullContext(tenantId: string): Promise<FullContext> {
     modules,
     crossModuleAlerts,
 
-    healthScore: healthRes.rows[0]?.overall_score,
+    healthScore: Number(healthRes.rows[0]?.overall_score) || 0,
   };
 }
 

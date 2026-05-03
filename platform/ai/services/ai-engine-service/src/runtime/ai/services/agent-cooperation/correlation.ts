@@ -117,7 +117,7 @@ export async function correlateDiscoveries(
 
     // Combine and normalize discoveries from both sources
 
-    const otherDiscoveries: AgentDiscovery[] = [
+    const otherDiscoveries: AgentDiscovery[] = ([
       ...dbDiscoveriesResult.rows.map((row: GenericRow) => ({
         id: row.id,
         agentId: row.agentId,
@@ -140,7 +140,7 @@ export async function correlateDiscoveries(
         details: row.details || '',
         timestamp: row.timestamp,
       })),
-    ];
+    ] as unknown) as AgentDiscovery[];
 
     // Remove duplicates by id
     const uniqueOtherDiscoveries = Array.from(

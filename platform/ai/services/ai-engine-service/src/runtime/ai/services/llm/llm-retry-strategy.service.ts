@@ -236,7 +236,7 @@ export async function retryWithBackoff<T>(
       `(${status.failureCount} failures in window, ${status.rejectedCount} rejected)`
     );
 
-    (err as Record<string, unknown>).circuitBreakerOpen = true;
+    (err as unknown as Record<string, unknown>).circuitBreakerOpen = true;
     throw err;
   }
 

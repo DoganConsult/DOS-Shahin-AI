@@ -73,7 +73,8 @@ router.get('/agent-status', validate({ query: z.record(z.unknown()) }), authenti
      GROUP BY agent_id`, [tenantId]), { tenantId: tenantId, operation: 'fallback query' });
     const perfMap = new Map();
     for (const row of perfResult.rows) {
-        perfMap.set(row.agent_id, { last_run: row.last_run, actions_today: Number(row.actions_today) });
+        const r = row;
+        perfMap.set(r.agent_id, { last_run: r.last_run, actions_today: Number(r.actions_today) });
     }
     const agents = AGENTS.map(a => {
         const perf = perfMap.get(a.id);

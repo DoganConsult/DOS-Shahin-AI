@@ -130,7 +130,16 @@ export async function getDrawerTemplate(
   }
 }
 
-function mapRowToDrawerTemplate( r: Record<string, unknown>): DrawerTemplate {
+function mapRowToDrawerTemplate(rawRow: Record<string, unknown>): DrawerTemplate {
+  const r = rawRow as {
+    template_id: string;
+    template_key: string;
+    name_en?: string;
+    name_ar?: string | null;
+    zones?: string | unknown[];
+    context_type?: string;
+    sort_order?: number;
+  };
   const zones = (typeof r.zones === 'string' ? JSON.parse(r.zones) : r.zones) || [];
   return {
 
@@ -141,13 +150,13 @@ function mapRowToDrawerTemplate( r: Record<string, unknown>): DrawerTemplate {
     nameEn: r.name_en || '',
 
     nameAr: r.name_ar || null,
-    zones: zones.map((z: any) => ({
-      id: z.id || '',
-      title_en: z.title_en,
-      title_ar: z.title_ar,
+    zones: (zones as Array<Record<string, unknown>>).map((z) => ({
+      id: (z.id as string) || '',
+      title_en: z.title_en as string | undefined,
+      title_ar: z.title_ar as string | undefined,
     })),
 
-    contextType: r.context_type || 'entity',
+    contextType: (r.context_type as string) || 'entity',
 
     sortOrder: r.sort_order ?? 0,
   };
@@ -262,7 +271,7 @@ export async function seedWorkspaceProfileFromOnboarding(
   const orchestratorEnabled = latest?.orchestrator_enabled ?? 'auto';
   const reportingCadence = latest?.reporting_cadence ?? 'weekly';
   const enforcementMode = latest?.enforcement_mode ?? 'advisory';
-  const evidenceFreshnessDays = parseInt(latest?.evidence_freshness) || 60;
+  const evidenceFreshnessDays = parseInt(String(latest?.evidence_freshness ?? '')) || 60;
 
   await safeQuery(
     `INSERT INTO "${schema}".workspace_profile

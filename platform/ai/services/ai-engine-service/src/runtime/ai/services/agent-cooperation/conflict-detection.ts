@@ -84,7 +84,7 @@ export async function recordAgentConflicts(
   if (candidates.length === 0) return;
   const schema = tenantSchema(tenantId);
 
-  const { queuePendingAction } = await import('@dos/platform-core/settings/platform-mode-gate');
+  const { queuePendingAction } = await import('@dos/platform-core/settings/platform-mode-gate.service');
 
   for (const c of candidates) {
     try {

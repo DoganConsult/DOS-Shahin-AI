@@ -13,7 +13,7 @@ import { ModuleTabsBarComponent } from '@app/shared/components/module-chrome/mod
 import { EmptyStateComponent } from '@app/shared/components/layouts/primitives/empty-state.component';
 import { StatusBadgeComponent } from '@app/shared/components/status-indicators/badges/status-badge.component';
 import { SkeletonModule } from 'primeng/skeleton';
-import { TabViewModule } from 'primeng/tabs';
+import { TabsModule } from 'primeng/tabs';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { BadgeModule } from 'primeng/badge';
@@ -41,7 +41,7 @@ import { devError } from '@app/runtime/utils/dev-logger';
     imports: [
         CommonModule, RouterModule,
         PageHeaderComponent, ModuleTabsBarComponent, StatusBadgeComponent,
-        SkeletonModule, TabViewModule, TableModule, TagModule, BadgeModule, ButtonModule, ToastModule,
+        SkeletonModule, TabsModule, TableModule, TagModule, BadgeModule, ButtonModule, ToastModule,
     ],
     providers: [MessageService],
     template: `
@@ -57,7 +57,7 @@ import { devError } from '@app/runtime/utils/dev-logger';
 
       <div class="rwq-content" *ngIf="!loading(); else skeleton">
 
-        <p-tabView>
+        <p-tabs>
           <!-- Tab: Risks Pending Review -->
           <p-tabPanel>
             <ng-template pTemplate="header">
@@ -235,7 +235,7 @@ import { devError } from '@app/runtime/utils/dev-logger';
               </ng-template>
             </p-table>
           </p-tabPanel>
-        </p-tabView>
+        </p-tabs>
 
       </div>
 

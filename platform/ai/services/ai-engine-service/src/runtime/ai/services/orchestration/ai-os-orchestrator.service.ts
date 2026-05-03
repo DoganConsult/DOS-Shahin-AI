@@ -38,7 +38,7 @@ export async function orchestratedAssessRisk(tenantId: string, riskId: string, r
       tenantId, runId, agentId: 'A07', decisionType: 'scoring',
       entityType: 'risk', entityId: riskId,
 
-      confidence: (result as Record<string, unknown>).confidence, explanation: `Risk scored: ${(result as Record<string, unknown>).riskLevel}`,
+      confidence: (result as Record<string, unknown>).confidence as number | undefined, explanation: `Risk scored: ${(result as Record<string, unknown>).riskLevel}`,
       outcome: result,
     });
     pub('ai.run.completed', tenantId, 'info', { agentId: 'A07', action: 'assessRisk', entityId: riskId });
@@ -60,7 +60,7 @@ export async function orchestratedAnalyzeGap(tenantId: string, frameworkId: stri
       tenantId, runId, agentId: 'A03', decisionType: 'classification',
       entityType: 'framework', entityId: frameworkId,
 
-      confidence: (result as Record<string, unknown>).compliancePercent / 100,
+      confidence: ((result as Record<string, unknown>).compliancePercent as number) / 100,
       explanation: `Gap analysis: ${(result as Record<string, unknown>).gapCount} gaps out of ${(result as Record<string, unknown>).totalControls} controls`,
       outcome: { gapCount: (result as Record<string, unknown>).gapCount, compliancePercent: (result as Record<string, unknown>).compliancePercent },
     });
@@ -105,7 +105,7 @@ export async function orchestratedPrepareAudit(tenantId: string, frameworkId: st
       tenantId, runId, agentId: 'A10', decisionType: 'classification',
       entityType: 'audit', entityId: frameworkId,
 
-      confidence: (result as Record<string, unknown>).readinessPercent / 100,
+      confidence: ((result as Record<string, unknown>).readinessPercent as number) / 100,
       explanation: `Audit readiness: ${(result as Record<string, unknown>).readinessPercent}%`,
       outcome: { readinessPercent: (result as Record<string, unknown>).readinessPercent, totalControls: (result as Record<string, unknown>).totalControls },
     });

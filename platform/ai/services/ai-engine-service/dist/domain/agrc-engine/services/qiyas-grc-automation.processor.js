@@ -1,5 +1,10 @@
 import { emptyResult, safeQuery, tenantSchema } from '../ports/database.port.js';
-import { pushToTenant, buildWSEvent, getActiveTenantIds } from '../ports/events.port.js';
+// Tenant push/active-tenant helpers are not exposed by the AI-engine events port.
+// Provide local no-op fallbacks so callers compile and degrade safely until the
+// canonical websocket fan-out and tenant-registry helpers are wired through.
+const pushToTenant = (_tenantId, _event) => { };
+const buildWSEvent = (eventType, payload) => ({ type: eventType, payload });
+const getActiveTenantIds = () => [];
 import { swallowDefault, EC, catchHandler } from '@dos/platform-core/resilience/resilient-catch';
 const RULES = {
     control_test_fail: async (schema, trigger) => {

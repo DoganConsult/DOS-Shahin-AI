@@ -80,9 +80,9 @@ export async function handleTaskCompletion(event: PlatformEvent): Promise<void> 
 
   // Also check routing metadata for agent origin
 
-  if (!sourceAgentId && payload.routingMetadata?.triggerSource) {
-
-    const ts = payload.routingMetadata.triggerSource;
+  const routingMetadata = payload.routingMetadata as { triggerSource?: string } | undefined;
+  if (!sourceAgentId && routingMetadata?.triggerSource) {
+    const ts = routingMetadata.triggerSource;
     if (typeof ts === 'string' && /A\d{2}/.test(ts)) {
       sourceAgentId = ts.match(/A\d{2}/)?.[0] ?? '';
     }

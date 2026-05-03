@@ -14,7 +14,7 @@ export async function getRegisteredAgentIds(tenantId: string): Promise<string[]>
   const result = await safeQuery(
     `SELECT agent_id FROM "${schema}".ai_agent_registry WHERE is_active = TRUE ORDER BY agent_id`,
   ).catch(() => ({ rows: [] }));
-  const dbIds = result.rows.map(( r: Record<string, unknown>) => r.agent_id);
+  const dbIds = result.rows.map((r: Record<string, unknown>) => r.agent_id as string);
 
   return [...new Set([...BUILT_IN_AGENT_IDS, ...dbIds])];
 }

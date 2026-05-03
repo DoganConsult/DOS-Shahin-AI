@@ -7,7 +7,7 @@ import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { DropdownModule } from 'primeng/select';
+import { SelectModule } from 'primeng/select';
 import { SkeletonModule } from 'primeng/skeleton';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
@@ -20,7 +20,7 @@ import { ConfigCenterService, type SettingRecord } from './config-center.service
   imports: [
     CommonModule, FormsModule, PageShellComponent,
     TableModule, TagModule, ButtonModule, InputTextModule,
-    DropdownModule, SkeletonModule, ToastModule,
+    SelectModule, SkeletonModule, ToastModule,
   ],
   providers: [MessageService],
   template: `
@@ -33,7 +33,7 @@ import { ConfigCenterService, type SettingRecord } from './config-center.service
       [loading]="loading()">
 
       <div headerActions class="flex gap-2">
-        <p-dropdown [options]="scopes" [(ngModel)]="selectedScope" (onChange)="loadSettings()" placeholder="Scope" styleClass="p-inputtext-sm" />
+        <p-select [options]="scopes" [(ngModel)]="selectedScope" (onChange)="loadSettings()" placeholder="Scope" styleClass="p-inputtext-sm" />
         <p-button icon="pi pi-refresh" [label]="i18n.translate('Refresh')"
                   (onClick)="loadSettings()" [disabled]="loading()" styleClass="p-button-outlined" />
       </div>

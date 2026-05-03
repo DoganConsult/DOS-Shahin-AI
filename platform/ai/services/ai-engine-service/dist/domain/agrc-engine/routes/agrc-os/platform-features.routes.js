@@ -127,7 +127,7 @@ router.get('/integration/handoffs', authenticate, requirePermission('platform.ag
 router.get('/integration/mesh', authenticate, requirePermission('platform.agent.read'), validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
     const tenantId = req.tenantId;
     const { listParticipants } = await import('../../runtime/ai/services/squad/unified-squad-registry.service.js');
-    const { getPendingActions } = await import('@dos/platform-core/settings/platform-mode-gate');
+    const { getPendingActions } = await import('@dos/platform-core/settings/platform-mode-gate.service');
     const { tenantSchema, safeQuery } = await import('@dos/db');
     const schema = tenantSchema(tenantId);
     const [participants, handoffsRows, targetsRows, pendingActions] = await Promise.all([
@@ -152,18 +152,18 @@ router.get('/integration/mesh', authenticate, requirePermission('platform.agent.
 // ── Platform Mode & Pending Actions ────────────────────────────────────────
 // GET /api/agrc-os/platform-mode — Current tenant platform mode
 router.get('/platform-mode', authenticate, requirePermission('platform.agent.read'), validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
-    const { getTenantPlatformMode } = await import('@dos/platform-core/settings/platform-mode-gate');
+    const { getTenantPlatformMode } = await import('@dos/platform-core/settings/platform-mode-gate.service');
     const mode = await getTenantPlatformMode(req.tenantId);
     res.json({ mode });
 }));
 // GET /api/agrc-os/agent-roles — Agent RBAC map (which agent represents which GRC role)
 router.get('/agent-roles', authenticate, requirePermission('platform.agent.read'), validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
-    const { getAgentRbacEntries } = await import('@dos/platform-core/settings/platform-mode-gate');
+    const { getAgentRbacEntries } = await import('@dos/platform-core/settings/platform-mode-gate.service');
     res.json({ agents: getAgentRbacEntries() });
 }));
 // GET /api/agrc-os/pending-actions — List pending agent actions awaiting approval
 router.get('/pending-actions', authenticate, requirePermission('platform.agent.read'), validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
-    const { getPendingActions } = await import('@dos/platform-core/settings/platform-mode-gate');
+    const { getPendingActions } = await import('@dos/platform-core/settings/platform-mode-gate.service');
     const agentId = req.query.agentId;
     const status = req.query.status;
     const limit = req.query.limit ? parseInt(req.query.limit, 10) : 50;
@@ -172,13 +172,13 @@ router.get('/pending-actions', authenticate, requirePermission('platform.agent.r
 }));
 // GET /api/agrc-os/pending-actions/count — Count of pending actions (for badge)
 router.get('/pending-actions/count', authenticate, requirePermission('platform.agent.read'), validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
-    const { getPendingActions } = await import('@dos/platform-core/settings/platform-mode-gate');
+    const { getPendingActions } = await import('@dos/platform-core/settings/platform-mode-gate.service');
     const actions = await getPendingActions(req.tenantId, { status: 'awaiting_approval' });
     res.json({ count: actions.length });
 }));
 // PUT /api/agrc-os/pending-actions/:id/review — Approve or reject a pending action
 router.put('/pending-actions/:id/review', authenticate, requirePermission('platform.agent.write'), writeLimiter, validate({ body: updateReviewBody }), asyncHandler(async (req, res) => {
-    const { reviewPendingAction } = await import('@dos/platform-core/settings/platform-mode-gate');
+    const { reviewPendingAction } = await import('@dos/platform-core/settings/platform-mode-gate.service');
     const { executeAction } = await import('../../runtime/ai/services/agents/core/agent-runner.service.js');
     const tenantId = req.tenantId;
     const userId = req.user?.userId;
@@ -437,7 +437,7 @@ router.put('/shadow-agents/:userId', authenticate, requirePermission('delegation
 // POST /api/agrc-os/hyper-role/check — Check if action is allowed by Hyper-Role
 router.post('/hyper-role/check', authenticate, requirePermission('platform.agent.read'), validate({ body: createCheckBody }), asyncHandler(async (req, res) => {
     const { computeHyperRole, mapModeToAutonomy } = await import('../../runtime/ai/services/orchestration/agent-orchestration.service.js');
-    const { getTenantPlatformMode } = await import('@dos/platform-core/settings/platform-mode-gate');
+    const { getTenantPlatformMode } = await import('@dos/platform-core/settings/platform-mode-gate.service');
     const tenantId = req.tenantId;
     const { agentId, actionType, userPermissions, autonomyLevel } = req.body;
     if (!agentId || !actionType) {

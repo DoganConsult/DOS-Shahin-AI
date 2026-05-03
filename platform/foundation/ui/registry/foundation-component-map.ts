@@ -7,6 +7,11 @@
  */
 
 export const FOUNDATION_COMPONENT_MAP: Record<string, () => Promise<unknown>> = {
+  'FoundationOverviewPageComponent':   () => import('../pages/foundation-overview-page.component'),
+  'FoundationRecordsPageComponent':    () => import('../pages/foundation-records-page.component'),
+  'FoundationWorkflowsPageComponent':  () => import('../pages/foundation-workflows-page.component'),
+  'FoundationReportsPageComponent':    () => import('../pages/foundation-reports-page.component'),
+  'FoundationSettingsPageComponent':   () => import('../pages/foundation-settings-page.component'),
   'FoundationOverviewComponent':       () => import('../pages/foundation-overview.component'),
   'FoundationOrganizationComponent':   () => import('../pages/foundation-organization.component'),
   'FoundationBusinessUnitsComponent':  () => import('../pages/foundation-business-units.component'),

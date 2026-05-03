@@ -29,21 +29,23 @@ const ENV_KEY_MAP: Record<FreeProvider, string> = {
 };
 
 export function buildFreeProvider(name: FreeProvider, raw: unknown): FreeProviderConfig | undefined {
-
-  const apiKey = raw?.apiKey || process.env[ENV_KEY_MAP[name]] || '';
+  const cfg = (raw ?? {}) as {
+    apiKey?: string;
+    model?: string;
+    endpoint?: string;
+    enabled?: boolean;
+    maxTokens?: number;
+    extraHeaders?: Record<string, string>;
+  };
+  const apiKey = cfg.apiKey || process.env[ENV_KEY_MAP[name]] || '';
   if (!apiKey) return undefined;
   const defaults = FREE_PROVIDER_DEFAULTS[name];
   return {
     apiKey,
-
-    model: raw?.model || defaults.model,
-
-    endpoint: raw?.endpoint || defaults.endpoint,
-
-    enabled: raw?.enabled !== false,
-
-    maxTokens: raw?.maxTokens,
-
-    extraHeaders: raw?.extraHeaders,
+    model: cfg.model || defaults.model,
+    endpoint: cfg.endpoint || defaults.endpoint,
+    enabled: cfg.enabled !== false,
+    maxTokens: cfg.maxTokens,
+    extraHeaders: cfg.extraHeaders,
   };
 }

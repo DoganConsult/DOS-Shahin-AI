@@ -87,10 +87,10 @@ export async function simulateFrameworkAdoption(tenantId: string, params: {
   const e = currentEvidence.rows[0] as Record<string, unknown>;
   const t = currentTeam.rows[0] as Record<string, unknown>;
 
-  const currentScore = (c as any).total > 0 ? Math.round((c.compliant / c.total) * 100) : 100;
+  const currentScore = Number(c.total) > 0 ? Math.round((Number(c.compliant) / Number(c.total)) * 100) : 100;
   const newTotal = Number(c.total) + params.controlCount;
 
-  const projectedScore = newTotal > 0 ? Math.round((c.compliant / newTotal) * 100) : 0;
+  const projectedScore = newTotal > 0 ? Math.round((Number(c.compliant) / newTotal) * 100) : 0;
   const additionalEvidence = Math.ceil(params.controlCount * EVIDENCE_PER_CONTROL);
   const additionalFTEs = Math.ceil(params.controlCount / CONTROLS_PER_FTE);
   const timeToCompliance = Math.ceil(params.controlCount / CONTROLS_PER_WEEK) * 7;
@@ -232,7 +232,7 @@ export async function monteCarloComplianceProjection(tenantId: string, params: {
 
   const c = current.rows[0] as Record<string, unknown>;
 
-  const currentScore = (c as any).total > 0 ? (c.compliant / c.total) * 100 : 50;
+  const currentScore = Number(c.total) > 0 ? (Number(c.compliant) / Number(c.total)) * 100 : 50;
   const gap = params.targetScore - currentScore;
 
   // Already at or above target

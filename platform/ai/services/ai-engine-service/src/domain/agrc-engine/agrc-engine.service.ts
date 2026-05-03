@@ -4,4 +4,7 @@
  */
 export * from './services/agrc-engine.service';
 
-export const AgrcEngineService = (..._args: any[]): any => { return {} as any; };
+export class AgrcEngineService {
+  constructor(..._args: any[]) {}
+  [key: string]: any;
+}

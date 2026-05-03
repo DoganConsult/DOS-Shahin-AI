@@ -5,6 +5,7 @@ import { createEventBackbone } from '@dos/event-backbone';
 import { logger } from '@dos/platform-core/observability';
 import { setEventBus } from '@dos/module-sdk';
 import incidentRouter from './routes/incident.routes';
+import healthRiskRouter from './routes/health.risk';
 import {
   routes,
   riskWorkspaceRouter,
@@ -54,6 +55,7 @@ async function main() {
     port: config.port,
     routes: [
       { path: '/api/risk', router: riskRoutes },
+      { path: '/api/health/risk', router: healthRiskRouter },
       { path: '/api/incident', router: incidentRouter },
       { path: '/api/risk-incident', router: routes },
       { path: '/api/risk-ws', router: riskWorkspaceRouter },

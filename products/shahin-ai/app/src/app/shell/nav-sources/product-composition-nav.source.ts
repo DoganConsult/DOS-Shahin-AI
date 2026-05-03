@@ -12,6 +12,7 @@
 // Owns the MANIFEST_ICON_GLYPH map (moved here from the legacy adapter).
 
 import { Injectable } from '@angular/core';
+import { DNA_MODULE_CODES } from '@dos/access-store';
 import type { DosNavItem } from '@dos/ui-contracts';
 import type { NavCtx, NavSource, NavSourceResult } from '@dos/access-store';
 import productManifest from '../../../../../product.manifest.json';
@@ -53,6 +54,8 @@ const MANIFEST_ICON_GLYPH: Readonly<Record<string, string>> = {
   notebook:   '📓',
 };
 
+const DNA_MODULE_CODE_SET = new Set<string>(DNA_MODULE_CODES);
+
 function normaliseIcon(raw: string | undefined, fallback = '📁'): string {
   if (!raw) return fallback;
   if ([...raw].length <= 2) return raw;
@@ -76,10 +79,12 @@ export class ProductCompositionNavSource implements NavSource {
       // Skip /workspace-home — survival fallback (L6) and Foundation DNA
       // already cover it; the product layer should not duplicate.
       if (entry.id === 'workspace-home') return;
+      if (entry.moduleRef && DNA_MODULE_CODE_SET.has(entry.moduleRef)) return;
       out.push(this.toItem(entry, 'primary', idx));
     });
     secondary.forEach((entry, idx) => {
       if (entry.id === 'workspace-home') return;
+      if (entry.moduleRef && DNA_MODULE_CODE_SET.has(entry.moduleRef)) return;
       out.push(this.toItem(entry, 'secondary', idx));
     });
     return out;

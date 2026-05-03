@@ -12,9 +12,9 @@ import { PageShellComponent } from '@app/shared/components/layouts/page-shell.co
 import { ModuleTabsBarComponent } from '@app/shared/components/module-chrome/module-tabs-bar.component';
 import { RISK_PRIMARY_TABS, RISK_TABS } from '@app/features/risk/risk.constants';
 import { InputTextModule } from 'primeng/inputtext';
-import { InputTextarea } from 'primeng/textarea';
+import { TextareaModule } from 'primeng/textarea';
 import { ButtonModule } from 'primeng/button';
-import { DropdownModule } from 'primeng/select';
+import { SelectModule } from 'primeng/select';
 import { SliderModule } from 'primeng/slider';
 import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
@@ -59,7 +59,7 @@ const LS_VISIBLE_COLS_KEY = 'agrc_risk_register_visible_columns';
   standalone: true,
   imports: [
     CommonModule, FormsModule,
-    PageShellComponent, ModuleTabsBarComponent, InputTextModule, InputTextarea, ButtonModule, DropdownModule, SliderModule,
+    PageShellComponent, ModuleTabsBarComponent, InputTextModule, TextareaModule, ButtonModule, SelectModule, SliderModule,
     DialogModule, ToastModule, ConfirmDialogModule,
     /* Child components */
     RiskRegisterHealthStripComponent,
@@ -132,11 +132,11 @@ const LS_VISIBLE_COLS_KEY = 'agrc_risk_register_visible_columns';
       <p-dialog [header]="editMode ? L().editRisk : L().createRisk" [(visible)]="dialogVisible" [modal]="true" [focusTrap]="true" [style]="{width:'600px'}">
         <div class="dialog-form">
           <div class="field"><label for="risk-title">{{ L().title }}</label><input id="risk-title" pInputText [(ngModel)]="form.title" class="w-full" /></div>
-          <div class="field"><label for="risk-desc">{{ L().description }}</label><textarea id="risk-desc" pInputTextarea [(ngModel)]="form.description" [rows]="3" class="w-full"></textarea></div>
+          <div class="field"><label for="risk-desc">{{ L().description }}</label><textarea id="risk-desc" pTextarea [(ngModel)]="form.description" [rows]="3" class="w-full"></textarea></div>
           <div class="field-row">
-            <div class="field"><label>{{ L().category }}</label><p-dropdown [(ngModel)]="form.category" [options]="riskCategoryOptions()" optionLabel="label" optionValue="value" styleClass="w-full" appendTo="body" /></div>
+            <div class="field"><label>{{ L().category }}</label><p-select [(ngModel)]="form.category" [options]="riskCategoryOptions()" optionLabel="label" optionValue="value" styleClass="w-full" appendTo="body" /></div>
             <div class="field"><label>{{ L().owner }}</label>
-              <p-dropdown [options]="foundationUsers()" optionLabel="fullName" optionValue="userId"
+              <p-select [options]="foundationUsers()" optionLabel="fullName" optionValue="userId"
                           [(ngModel)]="form.owner" [placeholder]="isAr() ? '\u0627\u062e\u062a\u0631 \u0627\u0644\u0645\u0633\u0624\u0648\u0644' : 'Select Owner'" [filter]="true" filterBy="fullName,email"
                           [showClear]="true" styleClass="w-full" appendTo="body">
                 <ng-template let-user pTemplate="item">
@@ -145,21 +145,21 @@ const LS_VISIBLE_COLS_KEY = 'agrc_risk_register_visible_columns';
                     <small class="text-muted" style="margin-inline-start:8px">{{ user.departmentName || '' }}</small>
                   </div>
                 </ng-template>
-              </p-dropdown>
+              </p-select>
             </div>
           </div>
           <div class="field"><label>{{ isAr() ? '\u0627\u0644\u0641\u0631\u064a\u0642 \u0627\u0644\u0645\u0633\u0624\u0648\u0644' : 'Responsible Team' }}</label>
-            <p-dropdown [options]="foundationTeams()" optionLabel="name" optionValue="teamId"
+            <p-select [options]="foundationTeams()" optionLabel="name" optionValue="teamId"
                         [(ngModel)]="form.ownerTeamId" [placeholder]="isAr() ? '\u0627\u062e\u062a\u0631 \u0627\u0644\u0641\u0631\u064a\u0642' : 'Select Team'" [filter]="true" [showClear]="true"
                         styleClass="w-full" appendTo="body">
-            </p-dropdown>
+            </p-select>
           </div>
           <div class="field-row">
             <div class="field"><label>{{ L().likelihood }}: {{ form.likelihood }}</label><p-slider [(ngModel)]="form.likelihood" [min]="1" [max]="5" [step]="1" /></div>
             <div class="field"><label>{{ L().impact }}: {{ form.impact }}</label><p-slider [(ngModel)]="form.impact" [min]="1" [max]="5" [step]="1" /></div>
           </div>
           <div class="field"><label>{{ L().status }}</label>
-            <p-dropdown [(ngModel)]="form.status"
+            <p-select [(ngModel)]="form.status"
                         [options]="editMode && validTransitions().length > 0 ? lifecycleStatusOptions() : riskStatusOptions"
                         optionLabel="label" optionValue="value" styleClass="w-full" appendTo="body"
                         [disabled]="editMode && validTransitions().length === 0 && !!editingRiskId" />

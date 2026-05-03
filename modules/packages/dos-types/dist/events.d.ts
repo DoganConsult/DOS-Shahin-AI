@@ -5,6 +5,7 @@ export interface PlatformEvent {
     module_code?: string;
     moduleCode?: string;
     module?: string;
+    sourceService?: string;
     entity_type?: string;
     entity_id?: string;
     tenant_id?: string;

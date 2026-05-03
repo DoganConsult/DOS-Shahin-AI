@@ -9,7 +9,7 @@ import { TableModule, TableLazyLoadEvent } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
-import { DropdownModule } from 'primeng/select';
+import { SelectModule } from 'primeng/select';
 import { TooltipModule } from 'primeng/tooltip';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { RiskRegisterItemDto } from '../pages/risk-workspace/risk-workspace.models';
@@ -34,7 +34,7 @@ export interface RiskTableAction {
     CommonModule, FormsModule,
     StatusBadgeComponent, ExportButtonComponent, HasPermissionDirective,
     TableModule, InputTextModule, ButtonModule, TagModule,
-    DropdownModule, TooltipModule, MultiSelectModule, AppDatePipe,
+    SelectModule, TooltipModule, MultiSelectModule, AppDatePipe,
   ],
   template: `
     <!-- ── Toolbar ── -->
@@ -47,9 +47,9 @@ export interface RiskTableAction {
                        [selectedItemsLabel]="'{0} ' + labels.columns" (onChange)="columnsChanged.emit(visibleColumnValues)" appendTo="body" />
       </div>
       <div class="toolbar-secondary">
-        <p-dropdown [options]="statusFilterOptions" [(ngModel)]="statusFilterValue" optionLabel="label" optionValue="value"
+        <p-select [options]="statusFilterOptions" [(ngModel)]="statusFilterValue" optionLabel="label" optionValue="value"
                     [placeholder]="labels.filterByStatus" (onChange)="statusFilterChange.emit(statusFilterValue)" [style]="{minWidth:'160px'}" styleClass="me-2" />
-        <p-dropdown [options]="categoryFilterOptions" [(ngModel)]="categoryFilterValue" optionLabel="label" optionValue="value"
+        <p-select [options]="categoryFilterOptions" [(ngModel)]="categoryFilterValue" optionLabel="label" optionValue="value"
                     [placeholder]="labels.filterByCategory" (onChange)="categoryFilterChange.emit(categoryFilterValue)" [style]="{minWidth:'160px'}" styleClass="me-2" />
         <span class="search-wrap">
           <i class="pi pi-search search-icon"></i>
@@ -62,7 +62,7 @@ export interface RiskTableAction {
     <div class="bulk-toolbar" *ngIf="selectedIds.length > 0">
       <span class="bulk-count">{{ selectedIds.length }} {{ labels.selected }}</span>
       <div class="bulk-actions">
-        <p-dropdown [options]="riskStatusOptions" [(ngModel)]="bulkStatusValue" optionLabel="label" optionValue="value"
+        <p-select [options]="riskStatusOptions" [(ngModel)]="bulkStatusValue" optionLabel="label" optionValue="value"
                     [placeholder]="labels.bulkStatus" [style]="{minWidth:'160px'}" styleClass="me-2" appendTo="body" />
         <input pInputText [(ngModel)]="bulkOwnerValue" [placeholder]="labels.bulkOwner" class="bulk-owner-input me-2" />
         <p-button [label]="labels.applyBulk" icon="pi pi-check" (onClick)="applyBulk.emit({ status: bulkStatusValue, owner: bulkOwnerValue })" [disabled]="!bulkStatusValue && !bulkOwnerValue" severity="warning" styleClass="me-2" />

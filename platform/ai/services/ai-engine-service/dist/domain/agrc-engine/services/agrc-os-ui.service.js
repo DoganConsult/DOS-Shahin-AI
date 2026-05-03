@@ -51,7 +51,8 @@ export async function getDrawerTemplate(tenantId, contextType) {
         return null;
     }
 }
-function mapRowToDrawerTemplate(r) {
+function mapRowToDrawerTemplate(rawRow) {
+    const r = rawRow;
     const zones = (typeof r.zones === 'string' ? JSON.parse(r.zones) : r.zones) || [];
     return {
         templateId: r.template_id,
@@ -150,7 +151,7 @@ export async function seedWorkspaceProfileFromOnboarding(tenantId, answersOverri
     const orchestratorEnabled = latest?.orchestrator_enabled ?? 'auto';
     const reportingCadence = latest?.reporting_cadence ?? 'weekly';
     const enforcementMode = latest?.enforcement_mode ?? 'advisory';
-    const evidenceFreshnessDays = parseInt(latest?.evidence_freshness) || 60;
+    const evidenceFreshnessDays = parseInt(String(latest?.evidence_freshness ?? '')) || 60;
     await safeQuery(`INSERT INTO "${schema}".workspace_profile
        (tenant_id, industry, org_size, sectors, default_dashboard,
         risk_appetite, escalation_level, orchestrator_enabled,

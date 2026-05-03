@@ -14,16 +14,21 @@ export { FoundationLocationsComponent } from './pages/foundation-locations.compo
 export { FoundationOperationsReadinessComponent } from './pages/foundation-operations-readiness.component';
 export { FoundationOrganizationComponent } from './pages/foundation-organization.component';
 export { FoundationOverviewComponent } from './pages/foundation-overview.component';
+export { FoundationOverviewPageComponent } from './pages/foundation-overview-page.component';
 export { FoundationOwnershipMappingComponent } from './pages/foundation-ownership-mapping.component';
 export { FoundationPermissionMatrixComponent } from './pages/foundation-permission-matrix.component';
 export { FoundationPoliciesComponent } from './pages/foundation-policies.component';
 export { FoundationPositionsComponent } from './pages/foundation-positions.component';
 export { FoundationReferenceDataComponent } from './pages/foundation-reference-data.component';
 export { FoundationRoleDetailComponent } from './pages/foundation-role-detail.component';
+export { FoundationRecordsPageComponent } from './pages/foundation-records-page.component';
+export { FoundationReportsPageComponent } from './pages/foundation-reports-page.component';
 export { FoundationRolesComponent } from './pages/foundation-roles.component';
 export { FoundationSettingsComponent } from './pages/foundation-settings.component';
+export { FoundationSettingsPageComponent } from './pages/foundation-settings-page.component';
 export { FoundationTeamsComponent } from './pages/foundation-teams.component';
 export { FoundationUsersComponent } from './pages/foundation-users.component';
+export { FoundationWorkflowsPageComponent } from './pages/foundation-workflows-page.component';
 
 // Phase-1 Module Enrollment — Standard 5-Page Template (Carbon-only)
 export { FoundationHomeComponent } from './pages/foundation-home.component';

@@ -161,7 +161,7 @@ router.get('/integration/mesh', validate({ query: z.record(z.unknown()) }), auth
     const tenantId = req.tenantId;
     const { listParticipants } = await import('../../runtime/ai/services/squad/unified-squad-registry.service');
 
-    const { getPendingActions } = await import('@dos/platform-core/settings/platform-mode-gate');
+    const { getPendingActions } = await import('@dos/platform-core/settings/platform-mode-gate.service');
     const { tenantSchema, safeQuery } = await import('@dos/db');
     const schema = tenantSchema(tenantId);
 

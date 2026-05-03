@@ -120,13 +120,14 @@ function findDependentEntities(entityId, entityType, entityLinks) {
         : { entityType: link.source_entity_type, entityId: link.source_entity_id, relationship: link.relationship_type });
 }
 function computeScopeEntityCount(snapshot, scenario) {
+    const s = snapshot;
     if (scenario.scope === 'org_wide')
-        return (snapshot.controls?.length || 0) + (snapshot.risks?.length || 0) + (snapshot.policies?.length || 0);
+        return (s.controls?.length || 0) + (s.risks?.length || 0) + (s.policies?.length || 0);
     if (scenario.scope === 'department' && scenario.scopeFilter?.department_id) {
-        return (snapshot.controls?.filter((c) => c.department_id === scenario.scopeFilter?.department_id) || []).length + (snapshot.risks?.filter((r) => r.department_id === scenario.scopeFilter?.department_id) || []).length;
+        return (s.controls?.filter((c) => c.department_id === scenario.scopeFilter?.department_id) || []).length + (s.risks?.filter((r) => r.department_id === scenario.scopeFilter?.department_id) || []).length;
     }
     if (scenario.scope === 'business_unit' && scenario.scopeFilter?.business_unit_id) {
-        return (snapshot.controls?.filter((c) => c.business_unit_id === scenario.scopeFilter?.business_unit_id) || []).length + (snapshot.risks?.filter((r) => r.business_unit_id === scenario.scopeFilter?.business_unit_id) || []).length;
+        return (s.controls?.filter((c) => c.business_unit_id === scenario.scopeFilter?.business_unit_id) || []).length + (s.risks?.filter((r) => r.business_unit_id === scenario.scopeFilter?.business_unit_id) || []).length;
     }
     return 0;
 }

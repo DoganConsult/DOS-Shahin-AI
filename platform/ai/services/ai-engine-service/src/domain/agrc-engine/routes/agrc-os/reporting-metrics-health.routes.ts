@@ -93,7 +93,8 @@ router.get('/agent-status', validate({ query: z.record(z.unknown()) }), authenti
   const perfMap = new Map<string, { last_run: string | null; actions_today: number }>();
   for (const row of perfResult.rows) {
 
-    perfMap.set((row as any).agent_id, { last_run: row.last_run, actions_today: Number(row.actions_today) });
+    const r = row as any;
+    perfMap.set(r.agent_id, { last_run: r.last_run as string | null, actions_today: Number(r.actions_today) });
   }
 
   const agents = AGENTS.map(a => {

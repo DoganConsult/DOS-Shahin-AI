@@ -4,7 +4,7 @@ import { authenticate } from '../../../ports/auth.port';
 
 import { Router } from 'express';
 
-import { auditMiddleware, automationMiddleware } from '../../../ports/middleware.port';
+import { auditMiddleware, automationMiddleware, moduleStack } from '../../../ports/middleware.port';
 
 import constitutionRoutes from '../constitution.routes.js';
 import telemetryRoutes from '../telemetry.routes';

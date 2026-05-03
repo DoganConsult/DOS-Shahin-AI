@@ -23,7 +23,7 @@
  */
 import { Injectable, computed, inject, signal, untracked } from '@angular/core';
 
-import { AccessStore } from '@dos/access-store';
+import { AccessStore, type WorkspaceNavLabelResolver } from '@dos/access-store';
 import type {
   DynamicUiResolverPort,
   ResolvedWorkspaceSurface,
@@ -237,6 +237,18 @@ const I18N: Record<DosLocale, Record<string, string>> = {
     'shell.account.menu.tenant_profile':  'Tenant profile',
     'shell.account.menu.tenant_settings': 'Tenant settings',
     'shell.account.menu.logout':          'Sign out',
+    // Carbon ShellHost cds-header / sidenav (keep copy out of platform/core shell)
+    'shell.header.brand':                   'Shahin',
+    'shell.header.workspace_title':        'Workspace',
+    'shell.header.home_route':              '/workspace-home',
+    'shell.header.account_action':          'Account',
+    'shell.sidenav.aria_label':             'Workspace side navigation',
+    'shell.account.initial_fallback':      'U',
+    'workspace.page.modules.title':         'Module launcher',
+    'workspace.page.modules.description':   'Active, pending and locked modules for this tenant.',
+    'workspace.stub.back':                   'Back to command center',
+    'workspace.stub.wiring':                'This surface is wired and ready. Backend data feed is being connected.',
+    'workspace.stub.empty':                 'No items yet.',
     // ── Sidebar nav GROUP labels ─────────────────────────────────────
     'nav.group.workspace':         'Workspace',
     'nav.group.core':              'Core',
@@ -246,7 +258,19 @@ const I18N: Record<DosLocale, Record<string, string>> = {
     'nav.group.primary':           'Primary',
     'nav.group.secondary':         'Secondary',
     'nav.group.platform':          'Platform',
+    'nav.group.config-center':     'Config Center',
     'nav.group.misc':              'More',
+    // ── Direct Dynamic-UI / module title keys surfaced by the shell ─────
+    'cfg.overview.title':          'Config Center',
+    'cfg.e1.title':                'Settings',
+    'cfg.e2.title':                'Gateway',
+    'cfg.e3.title':                'Workspace',
+    'cfg.audit.title':             'Audit',
+    'compliance.nav.controls':     'Controls',
+    'compliance.nav.diagnostics':  'Diagnostics',
+    'compliance.nav.evidence':     'Evidence',
+    'compliance.nav.ksa':          'KSA',
+    'compliance.nav.regulator':    'Regulator',
     // ── Sidebar nav ITEM labels (one key per known module / route) ──
     'nav.item.foundation':         'Foundation',
     'nav.item.risk':               'Risk',
@@ -441,6 +465,17 @@ const I18N: Record<DosLocale, Record<string, string>> = {
     'shell.account.menu.tenant_profile':  'ملف المستأجر',
     'shell.account.menu.tenant_settings': 'إعدادات المستأجر',
     'shell.account.menu.logout':          'تسجيل الخروج',
+    'shell.header.brand':                   'شاهين',
+    'shell.header.workspace_title':        'مساحة العمل',
+    'shell.header.home_route':              '/workspace-home',
+    'shell.header.account_action':          'الحساب',
+    'shell.sidenav.aria_label':             'التنقل الجانبي لمساحة العمل',
+    'shell.account.initial_fallback':       'U',
+    'workspace.page.modules.title':         'مشغّل الوحدات',
+    'workspace.page.modules.description':   'الوحدات النشطة والمعلّقة والمقفلة لهذا المستأجر.',
+    'workspace.stub.back':                   'العودة إلى مركز القيادة',
+    'workspace.stub.wiring':                'هذا السطح جاهز. يجري ربط مصدر البيانات.',
+    'workspace.stub.empty':                 'لا توجد عناصر بعد.',
     // ── Sidebar nav GROUP labels (Arabic) ─────────────────────────────
     'nav.group.workspace':          'مساحة العمل',
     'nav.group.core':               'الأساسيات',
@@ -450,7 +485,19 @@ const I18N: Record<DosLocale, Record<string, string>> = {
     'nav.group.primary':            'الرئيسية',
     'nav.group.secondary':          'الثانوية',
     'nav.group.platform':           'المنصة',
+    'nav.group.config-center':      'مركز الإعدادات',
     'nav.group.misc':               'المزيد',
+    // ── Direct Dynamic-UI / module title keys surfaced by the shell ─────
+    'cfg.overview.title':           'مركز الإعدادات',
+    'cfg.e1.title':                 'الإعدادات',
+    'cfg.e2.title':                 'البوابة',
+    'cfg.e3.title':                 'مساحة العمل',
+    'cfg.audit.title':              'التدقيق',
+    'compliance.nav.controls':      'الضوابط',
+    'compliance.nav.diagnostics':   'التشخيص',
+    'compliance.nav.evidence':      'الأدلة',
+    'compliance.nav.ksa':           'السعودية',
+    'compliance.nav.regulator':     'الجهة التنظيمية',
     // ── Sidebar nav ITEM labels (Arabic) ──────────────────────────────
     'nav.item.foundation':          'الأساس',
     'nav.item.risk':                'المخاطر',
@@ -540,7 +587,7 @@ const ROLE_LABELS: Record<string, string> = {
 };
 
 @Injectable({ providedIn: 'root' })
-export class WorkspaceResolverService implements DynamicUiResolverPort {
+export class WorkspaceResolverService implements DynamicUiResolverPort, WorkspaceNavLabelResolver {
   readonly access = inject(AccessStore);
 
   // ────────────────────────────────────────────────────────────────
@@ -648,6 +695,8 @@ export class WorkspaceResolverService implements DynamicUiResolverPort {
       .map(s => s.trim().toLowerCase())
       .filter(Boolean);
     for (const c of candidates) {
+      const direct = this.t(c);
+      if (direct.value !== c) return direct.value;
       const r = this.t(`nav.item.${c}`);
       if (r.value !== `nav.item.${c}`) return r.value;
       const firstSeg = c.split(/[./_-]/)[0];
@@ -657,6 +706,19 @@ export class WorkspaceResolverService implements DynamicUiResolverPort {
       }
     }
     return idOrLabel || fallbackId || '';
+  }
+
+  /**
+   * Shell chrome lookups for platform `ShellHostComponent`. Returns `null` when
+   * the key is missing so the Carbon shell applies its baked-in English defaults.
+   */
+  shellChromeString(key: string): string | null {
+    const loc = this.locale();
+    const direct = I18N[loc]?.[key];
+    if (direct !== undefined) return direct;
+    const en = I18N.en?.[key];
+    if (en !== undefined) return en;
+    return null;
   }
 
   async resolveWorkspace(): Promise<ResolvedWorkspaceSurface> {

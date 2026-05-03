@@ -360,9 +360,9 @@ export async function agentChat(
           provider: agentResolution.resolved_model.provider,
           model: agentResolution.resolved_model.provider_model_id,
 
-          maxTokens: agentResolution.resolved_model.config?.max_tokens,
+          maxTokens: agentResolution.resolved_model.config?.max_tokens as number | undefined,
 
-          temperature: agentResolution.resolved_model.config?.temperature,
+          temperature: agentResolution.resolved_model.config?.temperature as number | undefined,
         };
       }
       if (agentResolution.resolution_status === 'blocked_enforce') {

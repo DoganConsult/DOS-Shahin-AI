@@ -1214,14 +1214,36 @@ app.get('/navigation/tree', async (req, res) => {
         if (mems.length === 0)
             return res.status(409).json({ blocked: 'NO_MEMBERSHIP' });
         const tenantId = mems[0].tenant_id;
-        const { rows } = await pool.query(`SELECT n.id, n.module_code, n.nav_item_code, n.label_en, n.label_ar,
+        // Phase G T2: navigation entries come from BOTH the legacy product activation
+        // model (tenant_product_activation) AND the newer module entitlement model
+        // (tenant_module_entitlements). Foundation is platform DNA — always included.
+        // The UNION deduplicates by nav_item_code so overlapping entries don't double.
+        const { rows } = await pool.query(`SELECT DISTINCT ON (n.nav_item_code) n.id, n.module_code, n.nav_item_code, n.label_en, n.label_ar,
               n.icon, n.route, n.parent_code, n.sort_order
          FROM dos.navigation_registry n
          JOIN dos.module_registry m ON m.module_code = n.module_code
-         JOIN dos.tenant_product_activation t
-              ON t.product_key = m.product_key AND t.tenant_id = $1 AND t.status = 'active'
         WHERE m.status = 'active'
-        ORDER BY n.sort_order ASC, n.id ASC`, [tenantId]);
+          AND (
+            -- Legacy: module is part of an actively activated product
+            EXISTS (
+              SELECT 1 FROM dos.tenant_product_activation tpa
+               WHERE tpa.product_key = m.product_key
+                 AND tpa.tenant_id = $1 AND tpa.status = 'active'
+            )
+            OR
+            -- Phase G: module is directly entitled via tenant_module_entitlements
+            EXISTS (
+              SELECT 1 FROM dos.tenant_module_entitlements tme
+               WHERE tme.module_code = n.module_code
+                 AND tme.tenant_id = $1 AND tme.entitlement_status = 'active'
+            )
+            OR
+            -- Platform DNA: foundation is always visible
+            n.module_code = 'foundation'
+          )
+        ORDER BY n.nav_item_code, n.sort_order ASC, n.id ASC`, [tenantId]);
+        // Re-sort the deduped rows by sort_order for the final output.
+        rows.sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0));
         return res.json({ entries: rows, count: rows.length });
     }
     catch (err) {

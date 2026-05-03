@@ -38,6 +38,9 @@ export async function executeActivityAction(tenantId, activityId, assignment, ac
             type: activity.activityType,
             entityType: activity.entityType,
             entityId: activity.entityId,
+            title: activity.activityType,
+            description: `Personal agent activity ${activityId}`,
+            priority: 'medium',
             ...activity.actionPayload,
         });
         const durationMs = Date.now() - startTime;

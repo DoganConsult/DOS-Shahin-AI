@@ -18,7 +18,7 @@ router.use(auditMiddleware('agrc-engine'));
 // GET /api/agrc-os/platform-mode — Current tenant platform mode
 router.get('/platform-mode', validate({ query: z.record(z.unknown()) }), authenticate, requirePermission('platform.agent.read'), async (req, res) => {
     try {
-        const { getTenantPlatformMode } = await import('@dos/platform-core/settings/platform-mode-gate');
+        const { getTenantPlatformMode } = await import('@dos/platform-core/settings/platform-mode-gate.service');
         const mode = await getTenantPlatformMode(req.tenantId);
         res.json({ mode });
     }
@@ -29,7 +29,7 @@ router.get('/platform-mode', validate({ query: z.record(z.unknown()) }), authent
 // GET /api/agrc-os/agent-roles — Agent RBAC map
 router.get('/agent-roles', validate({ query: z.record(z.unknown()) }), authenticate, requirePermission('platform.agent.read'), async (req, res) => {
     try {
-        const { getAgentRbacEntries } = await import('@dos/platform-core/settings/platform-mode-gate');
+        const { getAgentRbacEntries } = await import('@dos/platform-core/settings/platform-mode-gate.service');
         res.json({ agents: getAgentRbacEntries() });
     }
     catch (_err) {
@@ -39,7 +39,7 @@ router.get('/agent-roles', validate({ query: z.record(z.unknown()) }), authentic
 // GET /api/agrc-os/pending-actions — List pending agent actions awaiting approval
 router.get('/pending-actions', validate({ query: z.record(z.unknown()) }), authenticate, requirePermission('platform.agent.read'), async (req, res) => {
     try {
-        const { getPendingActions } = await import('@dos/platform-core/settings/platform-mode-gate');
+        const { getPendingActions } = await import('@dos/platform-core/settings/platform-mode-gate.service');
         const agentId = req.query.agentId;
         const status = req.query.status;
         const limit = req.query.limit ? parseInt(req.query.limit, 10) : 50;
@@ -53,7 +53,7 @@ router.get('/pending-actions', validate({ query: z.record(z.unknown()) }), authe
 // GET /api/agrc-os/pending-actions/count — Count of pending actions (for badge)
 router.get('/pending-actions/count', validate({ query: z.record(z.unknown()) }), authenticate, requirePermission('platform.agent.read'), async (req, res) => {
     try {
-        const { getPendingActions } = await import('@dos/platform-core/settings/platform-mode-gate');
+        const { getPendingActions } = await import('@dos/platform-core/settings/platform-mode-gate.service');
         const actions = await getPendingActions(req.tenantId, { status: 'awaiting_approval' });
         res.json({ count: actions.length });
     }
@@ -64,7 +64,7 @@ router.get('/pending-actions/count', validate({ query: z.record(z.unknown()) }),
 // PUT /api/agrc-os/pending-actions/:id/review — Approve or reject a pending action
 router.put('/pending-actions/:id/review', authenticate, requirePermission('platform.agent.write'), writeLimiter, validate({ body: updateReviewBody }), async (req, res) => {
     try {
-        const { reviewPendingAction } = await import('@dos/platform-core/settings/platform-mode-gate');
+        const { reviewPendingAction } = await import('@dos/platform-core/settings/platform-mode-gate.service');
         const { executeAction } = await import('../../runtime/ai/services/agents/core/agent-runner.service.js');
         const tenantId = req.tenantId;
         const userId = req.user?.userId;

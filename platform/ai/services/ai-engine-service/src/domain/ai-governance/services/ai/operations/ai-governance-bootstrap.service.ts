@@ -304,7 +304,7 @@ export async function checkGovernanceHealth(tenantId: string): Promise<Governanc
     [expectedConfigKeys],
   ), { operation: 'query platform_operation_config' });
 
-  const foundConfigKeys = (configResult.rows as Record<string, unknown>[][]).map(r => r.config_key);
+  const foundConfigKeys = (configResult.rows as Record<string, unknown>[]).map(r => r.config_key as string);
   const missingConfigKeys = expectedConfigKeys.filter(k => !foundConfigKeys.includes(k));
 
   const healthy =
@@ -349,7 +349,7 @@ async function checkAssetPresence(
     [assetType, expectedKeys],
   ), { operation: 'query ai_asset_inventory' });
 
-  const foundKeys = (result.rows as Record<string, unknown>[][]).map(r => r.asset_key);
+  const foundKeys = (result.rows as Record<string, unknown>[]).map(r => r.asset_key as string);
   const missing = expectedKeys.filter(k => !foundKeys.includes(k));
   return { expected: expectedKeys.length, found: foundKeys.length, missing };
 }
@@ -369,7 +369,7 @@ async function checkActiveVersions(
     [assetType, expectedAssetKeys],
   ), { operation: 'fallback query' });
 
-  const foundKeys = (result.rows as Record<string, unknown>[][]).map(r => r.asset_key);
+  const foundKeys = (result.rows as Record<string, unknown>[]).map(r => r.asset_key as string);
   const missingActiveFor = expectedAssetKeys.filter(k => !foundKeys.includes(k));
   return { expected: expectedAssetKeys.length, found: foundKeys.length, missingActiveFor };
 }

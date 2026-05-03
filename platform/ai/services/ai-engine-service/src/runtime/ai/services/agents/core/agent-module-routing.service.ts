@@ -42,7 +42,7 @@ function _ensureInitialized(): void {
 export function resolveAgentForModule(moduleCode: string): AgentDefinition | null {
   const manifests = getAllManifests();
 
-  const manifest = manifests.get(moduleCode);
+  const manifest = manifests.find((m) => m.code === moduleCode);
   const boundAgent = manifest?.agentBinding;
   if (typeof boundAgent === 'string' && boundAgent.length > 0) {
     _ensureInitialized();
@@ -80,8 +80,8 @@ export function getAgentBindingMap(): Record<string, string | null> {
   const manifests = getAllManifests();
   const map: Record<string, string | null> = {};
 
-  for (const [code, manifest] of manifests) {
-    map[code] = manifest.agentBinding;
+  for (const manifest of manifests) {
+    map[manifest.code] = manifest.agentBinding ?? null;
   }
   return map;
 }
@@ -90,9 +90,9 @@ export function getUnboundModules(): string[] {
   const manifests = getAllManifests();
   const unbound: string[] = [];
 
-  for (const [code, manifest] of manifests) {
+  for (const manifest of manifests) {
     if (!manifest.agentBinding) {
-      unbound.push(code);
+      unbound.push(manifest.code);
     }
   }
   return unbound;
@@ -105,8 +105,8 @@ export function getAgentCapabilities(agentCode: string): string[] {
   const capabilities = new Set<string>();
   for (const mod of modules) {
 
-    const manifest = manifests.get(mod);
-    if (manifest) {
+    const manifest = manifests.find((m) => m.code === mod);
+    if (manifest && manifest.aiCapabilities) {
       for (const cap of manifest.aiCapabilities) {
         capabilities.add(cap);
       }
@@ -129,7 +129,7 @@ export function routeModuleToAgent(moduleCode: string): AgentRoutingResult | nul
   if (!agent) return null;
   const manifests = getAllManifests();
 
-  const manifest = manifests.get(moduleCode);
+  const manifest = manifests.find((m) => m.code === moduleCode);
   return {
     agentCode: agent.agentCode,
     agentName: agent.name,

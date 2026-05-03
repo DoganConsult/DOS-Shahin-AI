@@ -46,6 +46,65 @@ const CK_MAP = {
   'notification': ['CarbonNotificationRenderer', 'x'],
   'dialog': ['CarbonDialogRenderer', 'x'],
   'wc.skip-to-content': ['CarbonSkipToContentRenderer', 'x'],
+  // Real <cds-*> web-component wrappers (file 'x') — Carbon shipped, not fallback.
+  'ai-label':              ['CarbonAiLabelRenderer', 'x'],
+  'ai.chat-button':        ['CarbonChatButtonRenderer', 'x'],
+  'ai.skeleton':           ['CarbonAiSkeletonRenderer', 'x'],
+  'aichat.container':      ['CarbonAiChatContainerRenderer', 'x'],
+  'aichat.custom-element': ['CarbonAiChatElementRenderer', 'x'],
+  'aspect-ratio':          ['CarbonAspectRatioRenderer', 'x'],
+  'code-snippet':          ['CarbonCodeSnippetRenderer', 'x'],
+  'combo-button':          ['CarbonComboButtonRenderer', 'x'],
+  'contained-list':        ['CarbonContainedListRenderer', 'x'],
+  'content-switcher':      ['CarbonContentSwitcherRenderer', 'x'],
+  'menu-button':           ['CarbonMenuButtonRenderer', 'x'],
+  'progress-indicator':    ['CarbonProgressIndicatorRenderer', 'x'],
+  'slider':                ['CarbonSliderRenderer', 'x'],
+  'timepicker':            ['CarbonTimePickerRenderer', 'x'],
+  'timepicker-select':     ['CarbonTimePickerSelectRenderer', 'x'],
+  'treeview':              ['CarbonTreeViewRenderer', 'x'],
+  // wc.* web-components
+  'wc.badge-indicator':    ['CarbonBadgeIndicatorRenderer', 'x'],
+  'wc.copy':               ['CarbonCopyRenderer', 'x'],
+  'wc.feature-flags':      ['CarbonFeatureFlagsRenderer', 'x'],
+  'wc.floating-menu':      ['CarbonFloatingMenuRenderer', 'x'],
+  'wc.fluid-combo-box':    ['CarbonFluidComboBoxRenderer', 'x'],
+  'wc.fluid-dropdown':     ['CarbonFluidDropdownRenderer', 'x'],
+  'wc.fluid-multi-select': ['CarbonFluidMultiSelectRenderer', 'x'],
+  'wc.fluid-number-input': ['CarbonFluidNumberInputRenderer', 'x'],
+  'wc.fluid-password-input':['CarbonFluidPasswordInputRenderer', 'x'],
+  'wc.fluid-search':       ['CarbonFluidSearchRenderer', 'x'],
+  'wc.fluid-select':       ['CarbonFluidSelectRenderer', 'x'],
+  'wc.fluid-text-input':   ['CarbonFluidTextInputRenderer', 'x'],
+  'wc.fluid-textarea':     ['CarbonFluidTextareaRenderer', 'x'],
+  'wc.fluid-time-picker':  ['CarbonFluidTimePickerRenderer', 'x'],
+  'wc.form-group':         ['CarbonFormGroupRenderer', 'x'],
+  'wc.heading':            ['CarbonHeadingRenderer', 'x'],
+  'wc.icon-button':        ['CarbonWcIconButtonRenderer', 'x'],
+  'wc.icon-indicator':     ['CarbonIconIndicatorRenderer', 'x'],
+  'wc.page-header':        ['CarbonWcPageHeaderRenderer', 'x'],
+  'wc.pagination-nav':     ['CarbonPaginationNavRenderer', 'x'],
+  'wc.shape-indicator':    ['CarbonShapeIndicatorRenderer', 'x'],
+  'wc.side-panel':         ['CarbonSidePanelRenderer', 'x'],
+  'wc.stack':              ['CarbonStackRenderer', 'x'],
+  'wc.tearsheet':          ['CarbonTearsheetRenderer', 'x'],
+  // product-wc.* — IBM Products web-components
+  'product-wc.about-modal':         ['CarbonPwcAboutModalRenderer', 'x'],
+  'product-wc.action-set':          ['CarbonPwcActionSetRenderer', 'x'],
+  'product-wc.big-number':          ['CarbonPwcBigNumberRenderer', 'x'],
+  'product-wc.checklist':           ['CarbonPwcChecklistRenderer', 'x'],
+  'product-wc.coachmark':           ['CarbonPwcCoachmarkRenderer', 'x'],
+  'product-wc.full-page-error':     ['CarbonPwcFullPageErrorRenderer', 'x'],
+  'product-wc.guide-banner':        ['CarbonPwcGuideBannerRenderer', 'x'],
+  'product-wc.interstitial-screen': ['CarbonPwcInterstitialScreenRenderer', 'x'],
+  'product-wc.notifications-panel': ['CarbonPwcNotificationsPanelRenderer', 'x'],
+  'product-wc.options-tile':        ['CarbonPwcOptionsTileRenderer', 'x'],
+  'product-wc.page-header':         ['CarbonPwcPageHeaderRenderer', 'x'],
+  'product-wc.side-panel':          ['CarbonPwcSidePanelRenderer', 'x'],
+  'product-wc.tearsheet':           ['CarbonPwcTearsheetRenderer', 'x'],
+  'product-wc.tearsheet-preview':   ['CarbonPwcTearsheetPreviewRenderer', 'x'],
+  'product-wc.truncated-text':      ['CarbonPwcTruncatedTextRenderer', 'x'],
+  'product-wc.user-avatar':         ['CarbonPwcUserAvatarRenderer', 'x'],
   // @carbon/charts-angular wrappers (file 'c')
   'chart.alluvial':       ['CarbonChartAlluvialRenderer', 'c'],
   'chart.area':           ['CarbonChartAreaRenderer', 'c'],
@@ -77,6 +136,18 @@ const CK_MAP = {
 
 const PLACEHOLDER = ['CarbonCatalogPlaceholderRenderer', 'x'];
 const rendererFor = (ck) => CK_MAP[ck] || PLACEHOLDER;
+
+// Reusable Module-Pack page components — bound to the universal 5-page
+// pack (file 'm' = ./module-pages/<name>.component). Resolved by
+// component_key, NOT carbon_key, so they take precedence over the
+// per-carbon_key renderer mapping above.
+const COMPONENT_KEY_OVERRIDE = {
+  'module.overview.page':  ['ModuleOverviewPageComponent',  'm', 'module-overview-page.component'],
+  'module.records.page':   ['ModuleRecordsPageComponent',   'm', 'module-records-page.component'],
+  'module.workflows.page': ['ModuleWorkflowsPageComponent', 'm', 'module-workflows-page.component'],
+  'module.reports.page':   ['ModuleReportsPageComponent',   'm', 'module-reports-page.component'],
+  'module.settings.page':  ['ModuleSettingsPageComponent',  'm', 'module-settings-page.component'],
+};
 
 const FRAME_KEYS = {
   UIShell: 'CarbonUIShellRenderer',
@@ -164,12 +235,15 @@ out.push('};');
 out.push('');
 out.push('const REGISTRY_COMPONENT_MAP: Record<string, () => Promise<Type<any>>> = {');
 for (const r of rows) {
-  const [cls, src] = rendererFor(r.carbon_key);
+  const override = COMPONENT_KEY_OVERRIDE[r.component_key];
+  const [cls, src, mfile] = override ?? [...rendererFor(r.carbon_key), undefined];
   const file = src === 'p'
     ? './carbon-primitive-renderers'
     : src === 'c'
       ? './carbon-chart-renderers'
-      : './carbon-extended-renderers';
+      : src === 'm'
+        ? `./module-pages/${mfile}`
+        : './carbon-extended-renderers';
   const key = r.component_key.replace(/'/g, "\\'");
   out.push(`  '${key}': () => import('${file}').then(m => m.${cls}),`);
 }

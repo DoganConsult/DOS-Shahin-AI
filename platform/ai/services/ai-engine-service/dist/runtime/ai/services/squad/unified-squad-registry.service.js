@@ -119,6 +119,7 @@ export async function updateParticipantStatus(tenantId, userId, status) {
 }
 // ── Row Mapper ─────────────────────────────────────────────────────────────
 function mapRow(row) {
+    const lastActivity = row.last_activity_at;
     return {
         memberId: row.member_id,
         userId: row.user_id,
@@ -133,7 +134,9 @@ function mapRow(row) {
         deliveryChannel: row.delivery_channel,
         webhookUrl: row.webhook_url || undefined,
         taskQueue: row.task_queue || [],
-        lastActivityAt: row.last_activity_at?.toISOString?.() || row.last_activity_at,
+        lastActivityAt: (typeof lastActivity === 'object' && lastActivity?.toISOString
+            ? lastActivity.toISOString()
+            : lastActivity),
     };
 }
 //# sourceMappingURL=unified-squad-registry.service.js.map

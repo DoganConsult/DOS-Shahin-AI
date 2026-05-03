@@ -8,9 +8,9 @@ import { HasPermissionDirective } from '@app/dauth/directives/has-permission.dir
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
-import { DropdownModule } from 'primeng/select';
+import { SelectModule } from 'primeng/select';
 import { TooltipModule } from 'primeng/tooltip';
-import { TabViewModule } from 'primeng/tabs';
+import { TabsModule } from 'primeng/tabs';
 import { RiskDetailDto } from '@app/features/risk/pages/risk-workspace/risk-workspace.models';
 import { GrcRecord } from '@app/core/models/shared.types';
 
@@ -35,14 +35,14 @@ export interface DrawerTeamOption { label: string; value: string; }
     imports: [
         CommonModule, FormsModule,
         StatusBadgeComponent, EntityDetailDrawerComponent,
-        InputTextModule, ButtonModule, TagModule, DropdownModule, TooltipModule,
-        TabViewModule, AppDatePipe,
+        InputTextModule, ButtonModule, TagModule, SelectModule, TooltipModule,
+        TabsModule, AppDatePipe,
     ],
     template: `
     <app-entity-detail-drawer [(visible)]="visible" (visibleChange)="visibleChange.emit($event)"
       [title]="risk?.risk?.title || ''" entityType="risk" [entityId]="risk?.risk?.riskId || ''">
       <div *ngIf="risk">
-        <p-tabView>
+        <p-tabs>
           <!-- ── Overview tab ── -->
           <p-tabPanel [header]="labels.overviewTab">
             <div class="drawer-details">
@@ -59,27 +59,27 @@ export interface DrawerTeamOption { label: string; value: string; }
             <!-- Owner Dropdown -->
             <div class="drawer-field-section">
               <label class="drawer-field-label"><i class="pi pi-user"></i> {{ labels.owner }}</label>
-              <p-dropdown
+              <p-select
                 [options]="userOptions"
                 [(ngModel)]="selectedOwnerId"
                 [filter]="true" filterBy="label" [showClear]="true"
                 [placeholder]="isAr ? '\u0627\u062e\u062a\u0631 \u0627\u0644\u0645\u0633\u0624\u0648\u0644...' : 'Select owner...'"
                 styleClass="w-full"
                 (onChange)="ownerChange.emit($event.value)">
-              </p-dropdown>
+              </p-select>
             </div>
 
             <!-- Team Dropdown -->
             <div class="drawer-field-section">
               <label class="drawer-field-label"><i class="pi pi-users"></i> {{ labels.responsibleTeam }}</label>
-              <p-dropdown
+              <p-select
                 [options]="teamOptions"
                 [(ngModel)]="selectedTeamId"
                 [filter]="true" filterBy="label" [showClear]="true"
                 [placeholder]="isAr ? '\u0627\u062e\u062a\u0631 \u0627\u0644\u0641\u0631\u064a\u0642...' : 'Select team...'"
                 styleClass="w-full"
                 (onChange)="teamChange.emit($event.value)">
-              </p-dropdown>
+              </p-select>
             </div>
 
             <!-- Ownership Context Card -->
@@ -106,13 +106,13 @@ export interface DrawerTeamOption { label: string; value: string; }
             @if (availableTransitions.length > 0) {
               <div class="drawer-field-section">
                 <label class="drawer-field-label"><i class="pi pi-arrows-h"></i> {{ labels.changeStatus }}</label>
-                <p-dropdown
+                <p-select
                   [options]="availableTransitions"
                   [(ngModel)]="pendingStatusChange"
                   [placeholder]="isAr ? '\u0627\u0644\u0627\u0646\u062a\u0642\u0627\u0644 \u0625\u0644\u0649...' : 'Transition to...'"
                   styleClass="w-full"
                   (onChange)="statusTransition.emit($event.value)">
-                </p-dropdown>
+                </p-select>
               </div>
             }
 
@@ -261,7 +261,7 @@ export interface DrawerTeamOption { label: string; value: string; }
                 (onClick)="viewAuditLog.emit(risk.risk.riskId)" />
             </div>
           </p-tabPanel>
-        </p-tabView>
+        </p-tabs>
       </div>
     </app-entity-detail-drawer>
   `,

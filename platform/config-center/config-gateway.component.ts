@@ -7,7 +7,7 @@ import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { DropdownModule } from 'primeng/select';
+import { SelectModule } from 'primeng/select';
 import { SkeletonModule } from 'primeng/skeleton';
 import { ToastModule } from 'primeng/toast';
 import { DialogModule } from 'primeng/dialog';
@@ -22,7 +22,7 @@ import { ConfigCenterService, type GatewayInventoryItem } from './config-center.
   imports: [
     CommonModule, FormsModule, PageShellComponent,
     TableModule, TagModule, ButtonModule, InputTextModule,
-    DropdownModule, SkeletonModule, ToastModule, DialogModule, ConfirmDialogModule,
+    SelectModule, SkeletonModule, ToastModule, DialogModule, ConfirmDialogModule,
   ],
   providers: [MessageService, ConfirmationService],
   template: `
@@ -36,9 +36,9 @@ import { ConfigCenterService, type GatewayInventoryItem } from './config-center.
       [loading]="loading()">
 
       <div headerActions class="flex gap-2 align-items-center">
-        <p-dropdown [options]="ownerFilters" [(ngModel)]="selectedOwner" (onChange)="applyFilter()"
+        <p-select [options]="ownerFilters" [(ngModel)]="selectedOwner" (onChange)="applyFilter()"
                     placeholder="All Owners" [showClear]="true" styleClass="p-inputtext-sm" />
-        <p-dropdown [options]="sourceFilters" [(ngModel)]="selectedSource" (onChange)="applyFilter()"
+        <p-select [options]="sourceFilters" [(ngModel)]="selectedSource" (onChange)="applyFilter()"
                     placeholder="All Sources" [showClear]="true" styleClass="p-inputtext-sm" />
         <input pInputText type="text" [(ngModel)]="searchText" (input)="applyFilter()"
                placeholder="Search keys..." class="p-inputtext-sm" style="width:200px" />

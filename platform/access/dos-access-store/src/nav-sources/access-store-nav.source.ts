@@ -23,18 +23,7 @@ export class AccessStoreNavSource implements NavSource {
     const entitled = this.access.modules();
     if (!entitled || entitled.length === 0) return null;
 
-    // De-duplicate against L4 (product composition). When the product
-    // manifest's navigationComposition already exposes a module as a
-    // top-level entry (e.g. "foundation" → /foundation/overview), L5
-    // must not re-emit it under a different id (`module.foundation`)
-    // because the nav adapter merge is keyed by `id` — different ids
-    // produce duplicate sidebar items.
-    //
-    // We collect every id used by L4 (manifest) and SKIP modules whose
-    // moduleCode/id is already exposed there. L5's job is to surface
-    // ENTITLED-but-NOT-IN-MANIFEST modules (so the user can see they
-    // have access even if the route isn't wired yet) — not to mirror
-    // the manifest.
+    // De-duplicate against L4 (product composition manifest).
     const manifest = ctx.productManifest as {
       navigationComposition?: {
         primary?: Array<{ id?: string; moduleRef?: string }>;
@@ -49,14 +38,24 @@ export class AccessStoreNavSource implements NavSource {
       }
     }
 
+    // De-duplicate against L1 (DB-driven dynamic-ui nav source).
+    // L1 item IDs are compound ("config-center./admin/config-center/resolve") but
+    // their `group` field carries the moduleCode ("config-center"). If any L1 item
+    // already covers a module, L5 must not emit a shadow gap item for it.
+    const l1ModuleCodes = new Set<string>();
+    for (const item of ctx.l1Items ?? []) {
+      if (item.group)      l1ModuleCodes.add(item.group);
+      if (item.moduleCode) l1ModuleCodes.add(item.moduleCode);
+    }
+
     const uncovered = entitled.filter((moduleCode) =>
-      !!moduleCode && !manifestModuleRefs.has(moduleCode));
+      !!moduleCode &&
+      !manifestModuleRefs.has(moduleCode) &&
+      !l1ModuleCodes.has(moduleCode));
 
     if (uncovered.length === 0) return [];
 
     return uncovered.map<DosNavItem>((moduleCode) => ({
-      // Use the moduleCode itself as the nav id so any future L4
-      // contribution under the same id supersedes (merge wins).
       id: moduleCode,
       label: moduleCode,
       moduleCode,

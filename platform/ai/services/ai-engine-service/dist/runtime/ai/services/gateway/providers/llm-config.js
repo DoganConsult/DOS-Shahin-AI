@@ -23,17 +23,18 @@ const ENV_KEY_MAP = {
     sambanova: 'SAMBANOVA_API_KEY',
 };
 export function buildFreeProvider(name, raw) {
-    const apiKey = raw?.apiKey || process.env[ENV_KEY_MAP[name]] || '';
+    const cfg = (raw ?? {});
+    const apiKey = cfg.apiKey || process.env[ENV_KEY_MAP[name]] || '';
     if (!apiKey)
         return undefined;
     const defaults = FREE_PROVIDER_DEFAULTS[name];
     return {
         apiKey,
-        model: raw?.model || defaults.model,
-        endpoint: raw?.endpoint || defaults.endpoint,
-        enabled: raw?.enabled !== false,
-        maxTokens: raw?.maxTokens,
-        extraHeaders: raw?.extraHeaders,
+        model: cfg.model || defaults.model,
+        endpoint: cfg.endpoint || defaults.endpoint,
+        enabled: cfg.enabled !== false,
+        maxTokens: cfg.maxTokens,
+        extraHeaders: cfg.extraHeaders,
     };
 }
 //# sourceMappingURL=llm-config.js.map

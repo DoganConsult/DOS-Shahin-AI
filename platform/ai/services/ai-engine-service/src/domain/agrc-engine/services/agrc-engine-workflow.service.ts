@@ -58,7 +58,7 @@ export async function executeTransition(
   emitAgrcEngineEvent({
     tenantId,
 
-    entityType: 'run' as string,
+    entityType: "run",
     entityId,
     action: 'status_changed',
     triggeredBy: userId,
@@ -95,25 +95,25 @@ export async function handleApprovalOutcome(
 
 export async function onWorkflowTriggered(ctx: AgrcEngineWorkflowContext): Promise<void> {
 
-  emitAgrcEngineEvent({ tenantId: ctx.tenantId, entityType: ctx.entityType as string, entityId: ctx.entityId, action: 'status_changed', triggeredBy: ctx.triggeredBy, correlationId: ctx.correlationId, data: { trigger: 'workflow_start' } });
+  emitAgrcEngineEvent({ tenantId: ctx.tenantId, entityType: ctx.entityType as import("./agrc-engine-event.service").AgrcEngineEntityType, entityId: ctx.entityId, action: 'status_changed', triggeredBy: ctx.triggeredBy, correlationId: ctx.correlationId, data: { trigger: 'workflow_start' } });
 }
 export async function onTaskCreated(ctx: AgrcEngineWorkflowContext, taskId: string): Promise<void> {
 
-  emitAgrcEngineEvent({ tenantId: ctx.tenantId, entityType: ctx.entityType as string, entityId: ctx.entityId, action: 'created', triggeredBy: 'workflow', correlationId: ctx.correlationId, data: { taskId, trigger: 'task_creation' } });
+  emitAgrcEngineEvent({ tenantId: ctx.tenantId, entityType: ctx.entityType as import("./agrc-engine-event.service").AgrcEngineEntityType, entityId: ctx.entityId, action: 'created', triggeredBy: 'workflow', correlationId: ctx.correlationId, data: { taskId, trigger: 'task_creation' } });
 }
 export async function onApprovalRequired(ctx: AgrcEngineWorkflowContext, approverRole: string): Promise<void> {
 
-  emitAgrcEngineEvent({ tenantId: ctx.tenantId, entityType: ctx.entityType as string, entityId: ctx.entityId, action: 'escalated', triggeredBy: 'workflow', correlationId: ctx.correlationId, data: { approverRole, trigger: 'approval_hook' } });
+  emitAgrcEngineEvent({ tenantId: ctx.tenantId, entityType: ctx.entityType as import("./agrc-engine-event.service").AgrcEngineEntityType, entityId: ctx.entityId, action: 'escalated', triggeredBy: 'workflow', correlationId: ctx.correlationId, data: { approverRole, trigger: 'approval_hook' } });
 }
 export async function onEscalation(ctx: AgrcEngineWorkflowContext, reason: string, escalateTo: string): Promise<void> {
 
-  emitAgrcEngineEvent({ tenantId: ctx.tenantId, entityType: ctx.entityType as string, entityId: ctx.entityId, action: 'escalated', triggeredBy: 'workflow', correlationId: ctx.correlationId, data: { reason, escalateTo, trigger: 'escalation_hook' } });
+  emitAgrcEngineEvent({ tenantId: ctx.tenantId, entityType: ctx.entityType as import("./agrc-engine-event.service").AgrcEngineEntityType, entityId: ctx.entityId, action: 'escalated', triggeredBy: 'workflow', correlationId: ctx.correlationId, data: { reason, escalateTo, trigger: 'escalation_hook' } });
 }
 export async function onClosure(ctx: AgrcEngineWorkflowContext, closureReason: string): Promise<void> {
 
-  emitAgrcEngineEvent({ tenantId: ctx.tenantId, entityType: ctx.entityType as string, entityId: ctx.entityId, action: 'status_changed', triggeredBy: ctx.triggeredBy, newState: 'archived', correlationId: ctx.correlationId, data: { closureReason, trigger: 'closure_hook' } });
+  emitAgrcEngineEvent({ tenantId: ctx.tenantId, entityType: ctx.entityType as import("./agrc-engine-event.service").AgrcEngineEntityType, entityId: ctx.entityId, action: 'status_changed', triggeredBy: ctx.triggeredBy, newState: 'archived', correlationId: ctx.correlationId, data: { closureReason, trigger: 'closure_hook' } });
 }
 export async function onFailure(ctx: AgrcEngineWorkflowContext, error: string): Promise<void> {
 
-  emitAgrcEngineEvent({ tenantId: ctx.tenantId, entityType: ctx.entityType as string, entityId: ctx.entityId, action: 'status_changed', triggeredBy: 'workflow', correlationId: ctx.correlationId, data: { error, trigger: 'failure_compensation' } });
+  emitAgrcEngineEvent({ tenantId: ctx.tenantId, entityType: ctx.entityType as import("./agrc-engine-event.service").AgrcEngineEntityType, entityId: ctx.entityId, action: 'status_changed', triggeredBy: 'workflow', correlationId: ctx.correlationId, data: { error, trigger: 'failure_compensation' } });
 }

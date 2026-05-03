@@ -12,6 +12,7 @@ import { eventBus } from '../../ports/events.port';
 import { toErrorMessage } from '@dos/module-sdk';
 import { getFirstRow } from '@dos/db';
 import type { PersonalAgentAssignment, AgentActivity } from './personal-agent.types';
+import type { AgentAction } from '../agents/core/agent-runner.types';
 import { riskLevelOrder } from './personal-agent.types';
 import { getPersonalAgentAssignment } from './personal-agent-assignment.service';
 import { getAgentActivity, mapActivityRow as _mapActivityRow } from './personal-agent-approval.service';
@@ -85,8 +86,11 @@ export async function executeActivityAction(
       type: activity.activityType,
       entityType: activity.entityType,
       entityId: activity.entityId,
+      title: activity.activityType,
+      description: `Personal agent activity ${activityId}`,
+      priority: 'medium',
       ...activity.actionPayload,
-    } as unknown);
+    } as unknown as AgentAction);
 
     const durationMs = Date.now() - startTime;
 
@@ -220,7 +224,7 @@ async function checkCompanyPolicy(
   enforcementLevel: 'blocking' | 'advisory' | 'informational';
 }> {
   // Apply company policy rules from assignment
-  const policyRules = assignment.companyPolicyRules;
+  const policyRules = assignment.companyPolicyRules as Record<string, { blocked?: boolean; requiresApproval?: boolean } | undefined>;
 
   // Simple policy check (can be enhanced with JSONLogic evaluation)
 

@@ -18,7 +18,7 @@ import { TagModule } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
-import { DropdownModule } from 'primeng/select';
+import { SelectModule } from 'primeng/select';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { RiskAppetiteConfigDto, AppetiteBreachDto, AcceptanceQueueItemDto, AppetiteTrendDto } from './risk-workspace/risk-workspace.models';
@@ -32,7 +32,7 @@ import { GrcRecord } from '@app/core/models/shared.types';
   standalone: true,
   imports: [
     CommonModule, FormsModule, PageShellComponent, ModuleTabsBarComponent, StatusBadgeComponent, ExportButtonComponent,
-    TableModule, ButtonModule, TagModule, TooltipModule, DialogModule, InputTextModule, DropdownModule, ToastModule, AppDatePipe, HasPermissionDirective,],
+    TableModule, ButtonModule, TagModule, TooltipModule, DialogModule, InputTextModule, SelectModule, ToastModule, AppDatePipe, HasPermissionDirective,],
   providers: [MessageService],
   template: `
     <app-page-shell
@@ -201,7 +201,7 @@ import { GrcRecord } from '@app/core/models/shared.types';
         <div class="dialog-form">
           <div class="field">
             <label>{{ i18n.translate('risk.model') }}</label>
-            <p-dropdown [(ngModel)]="configForm.model" [options]="modelOptions" optionLabel="label" optionValue="value" styleClass="w-full" appendTo="body" />
+            <p-select [(ngModel)]="configForm.model" [options]="modelOptions" optionLabel="label" optionValue="value" styleClass="w-full" appendTo="body" />
           </div>
           <div class="field"><label>{{ i18n.translate('risk.authority') }}</label><input pInputText [(ngModel)]="configForm.authority" class="w-full" /></div>
         </div>

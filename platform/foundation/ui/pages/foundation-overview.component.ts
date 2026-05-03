@@ -7,6 +7,18 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpClient } from '@angular/common/http';
 import { catchError, of } from 'rxjs';
 import { environment } from '@env/environment';
+import {
+  BreadcrumbModule,
+  ButtonModule,
+  GridModule,
+  LoadingModule,
+  NotificationModule,
+  StructuredListModule,
+  TabsModule,
+  TagModule,
+  TilesModule,
+  UIShellModule,
+} from 'carbon-components-angular';
 import { FoundationApiService, FoundationOverviewData } from '../services/foundation-api.service';
 import { FOUNDATION_I18N, type FoundationI18n, NoopFoundationI18n } from '../ports/i18n.port';
 
@@ -42,259 +54,297 @@ const FOUNDATION_REALTIME_EVENTS = [
   selector: 'app-foundation-overview',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, RouterModule, FoundationKpiGridComponent],
+  imports: [
+    CommonModule,
+    RouterModule,
+    BreadcrumbModule,
+    ButtonModule,
+    GridModule,
+    LoadingModule,
+    NotificationModule,
+    StructuredListModule,
+    TabsModule,
+    TagModule,
+    TilesModule,
+    UIShellModule,
+    FoundationKpiGridComponent,
+  ],
   styles: [`
     :host { display: block; }
-    .ovw {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 320px;
-      gap: var(--cds-spacing-06, 24px);
-      padding: var(--cds-spacing-06, 24px) var(--cds-spacing-07, 32px);
-      min-height: 100vh;
-      background: var(--shell-page-bg, var(--cds-layer-01, #f4f4f4));
-      --module-accent: #1f6feb;
+    /* Structural-only layout — colors, type, spacing all sourced from
+       --cds-* tokens. No raw hex, no rgba, no PrimeIcons, no PrimeNG. */
+    .fo-page { padding: var(--cds-spacing-06) var(--cds-spacing-07); }
+    .fo-stack { display: flex; flex-direction: column; gap: var(--cds-spacing-06); }
+    .fo-rail-stack { display: flex; flex-direction: column; gap: var(--cds-spacing-05); }
+    .fo-section-title {
+      font: 600 var(--cds-heading-03-font-size, 1.25rem)/1.4 var(--cds-font-family-sans);
+      color: var(--cds-text-primary);
+      margin: 0 0 var(--cds-spacing-04);
     }
-    @media (max-width: 960px) { .ovw { grid-template-columns: 1fr; } }
-    .ovw-main { min-width: 0; display: flex; flex-direction: column; gap: var(--cds-spacing-06, 24px); }
-    .ovw-rail { display: flex; flex-direction: column; gap: var(--cds-spacing-05, 16px); }
-    .masthead {
-      background: var(--shell-card-bg, var(--cds-layer-02, #fff));
-      border: 1px solid var(--shell-card-border, var(--cds-border-subtle-00));
-      border-radius: var(--radius-md, 8px);
-      padding: var(--cds-spacing-05, 16px) var(--cds-spacing-06, 24px);
-      box-shadow: var(--shell-elevation-01, 0 1px 2px rgba(0,0,0,.06));
+    .fo-rail-title {
+      font: 600 var(--cds-heading-02-font-size, 1rem)/1.4 var(--cds-font-family-sans);
+      color: var(--cds-text-primary);
+      margin: 0 0 var(--cds-spacing-04);
     }
-    .crumbs { display: flex; gap: var(--cds-spacing-02, 4px); font-size: var(--cds-body-compact-01-size, .875rem); color: var(--shell-text-secondary, var(--cds-text-secondary)); margin-bottom: var(--cds-spacing-03, 8px); }
-    .crumbs a { color: inherit; text-decoration: none; }
-    .crumbs a:hover { color: var(--module-accent); text-decoration: underline; }
-    .crumbs .sep { opacity: .5; }
-    .ovw-header { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--cds-spacing-05, 16px); flex-wrap: wrap; }
-    .ovw-title { font-size: var(--cds-heading-04-size, 1.75rem); font-weight: 600; margin: 0; color: var(--shell-text-primary, var(--cds-text-primary)); }
-    .ovw-subtitle { font-size: var(--cds-body-01-size, .875rem); color: var(--shell-text-secondary, var(--cds-text-secondary)); margin: var(--cds-spacing-02, 4px) 0 0; }
-    .ovw-chips { display: flex; gap: var(--cds-spacing-03, 8px); flex-wrap: wrap; margin-top: var(--cds-spacing-03, 8px); }
-    .chip { padding: var(--cds-spacing-02, 4px) var(--cds-spacing-04, 12px); border-radius: 999px; background: var(--shell-card-bg, var(--cds-layer-02, #fff)); border: 1px solid var(--shell-card-border, var(--cds-border-subtle-00, #e0e0e0)); font-size: var(--cds-body-compact-01-size, .875rem); color: var(--shell-text-secondary, var(--cds-text-secondary)); }
-    .chip--accent { color: var(--module-accent); border-color: var(--module-accent); background: var(--shell-card-bg, var(--cds-layer-02, #fff)); }
-    .chip--ok { color: var(--cds-support-success, #24a148); border-color: var(--cds-support-success, #24a148); }
-    .header-actions { display: flex; align-items: center; gap: var(--cds-spacing-03, 8px); }
-    .views { display: flex; gap: var(--cds-spacing-02, 4px); }
-    .views button { padding: var(--cds-spacing-02, 4px) var(--cds-spacing-04, 12px); border: 1px solid var(--shell-card-border, var(--cds-border-subtle-00)); background: transparent; border-radius: var(--radius-sm, 4px); cursor: pointer; font-size: var(--cds-body-compact-01-size, .875rem); color: var(--shell-text-secondary, var(--cds-text-secondary)); }
-    .views button.active { background: var(--module-accent); color: #fff; border-color: var(--module-accent); }
-    .why-btn { background: transparent; border: 1px dashed var(--shell-card-border, var(--cds-border-subtle-00)); border-radius: var(--radius-sm, 4px); padding: var(--cds-spacing-02, 4px) var(--cds-spacing-04, 12px); font-size: var(--cds-body-compact-01-size, .875rem); color: var(--shell-text-secondary, var(--cds-text-secondary)); cursor: pointer; }
-    .why-btn:hover { color: var(--module-accent); border-color: var(--module-accent); }
-    .why-pop { background: var(--shell-card-bg, var(--cds-layer-02)); border: 1px solid var(--shell-card-border, var(--cds-border-subtle-00)); border-radius: var(--radius-sm, 4px); padding: var(--cds-spacing-04, 12px); margin-top: var(--cds-spacing-03, 8px); font-size: var(--cds-body-compact-01-size, .875rem); color: var(--shell-text-secondary); }
-    .why-pop dt { font-weight: 600; color: var(--shell-text-primary); margin-top: var(--cds-spacing-02, 4px); }
-    .why-pop dd { margin: 0 0 var(--cds-spacing-02, 4px) 0; }
-    .signature {
-      background: var(--shell-card-bg, var(--cds-layer-02, #fff));
-      border: 1px solid var(--shell-card-border, var(--cds-border-subtle-00));
-      border-radius: var(--radius-md, 8px);
-      padding: var(--cds-spacing-06, 24px);
-      box-shadow: var(--shell-elevation-01, 0 1px 2px rgba(0,0,0,.06));
+    .fo-quick-tile-label {
+      display: block;
+      font: 400 var(--cds-body-compact-01-font-size, 0.875rem)/1.3 var(--cds-font-family-sans);
+      color: var(--cds-text-secondary);
+      margin-bottom: var(--cds-spacing-02);
     }
-    .signature-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--cds-spacing-05, 16px); flex-wrap: wrap; gap: var(--cds-spacing-03, 8px); }
-    .signature-title { margin: 0; font-size: var(--cds-heading-03-size, 1.25rem); font-weight: 600; color: var(--shell-text-primary); }
-    .signature-meta { font-size: var(--cds-body-compact-01-size, .875rem); color: var(--shell-text-secondary); }
-    .quick-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: var(--cds-spacing-04, 12px); }
-    .quick-tile { display: flex; flex-direction: column; gap: var(--cds-spacing-02, 4px); padding: var(--cds-spacing-04, 12px) var(--cds-spacing-05, 16px); background: var(--cds-layer-01, #f4f4f4); border-radius: var(--radius-sm, 4px); text-decoration: none; color: inherit; border-inline-start: 3px solid var(--module-accent); }
-    .quick-tile:hover { background: var(--shell-card-bg, var(--cds-layer-02)); box-shadow: var(--shell-elevation-01, 0 1px 2px rgba(0,0,0,.06)); }
-    .quick-label { font-size: var(--cds-body-compact-01-size, .875rem); color: var(--shell-text-secondary); }
-    .quick-value { font-size: var(--cds-heading-03-size, 1.25rem); font-weight: 700; color: var(--module-accent); }
-    .panel { background: var(--shell-card-bg, var(--cds-layer-02, #fff)); border: 1px solid var(--shell-card-border, var(--cds-border-subtle-00)); border-radius: var(--radius-md, 8px); padding: var(--cds-spacing-05, 16px); }
-    .panel-title { font-size: var(--cds-heading-02-size, 1rem); font-weight: 600; margin: 0 0 var(--cds-spacing-04, 12px); color: var(--shell-text-primary); }
-    .rail-row, .nba-row { display: flex; align-items: center; justify-content: space-between; padding: var(--cds-spacing-03, 8px) 0; border-bottom: 1px solid var(--shell-card-border, var(--cds-border-subtle-00)); font-size: var(--cds-body-compact-01-size, .875rem); text-decoration: none; color: inherit; }
-    .rail-row:last-child, .nba-row:last-child { border-bottom: none; }
-    .rail-count { font-weight: 700; color: var(--module-accent); text-decoration: none; }
-    .nba-row[data-priority="critical"] .nba-dot { background: var(--cds-support-error, #da1e28); }
-    .nba-row[data-priority="attention"] .nba-dot { background: var(--cds-support-warning, #f1c21b); }
-    .nba-row[data-priority="recommended"] .nba-dot { background: var(--cds-support-info, #0043ce); }
-    .nba-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-inline-end: var(--cds-spacing-02, 4px); }
-    .agent-btn { display: inline-flex; align-items: center; gap: var(--cds-spacing-02, 4px); background: var(--module-accent); color: #fff; border: 0; border-radius: var(--radius-sm, 4px); padding: var(--cds-spacing-03, 8px) var(--cds-spacing-04, 12px); cursor: pointer; font-size: var(--cds-body-compact-01-size, .875rem); }
-    .empty { text-align: center; padding: var(--cds-spacing-07, 32px); color: var(--shell-text-secondary); }
-    .empty-title { font-size: var(--cds-heading-02-size, 1rem); font-weight: 600; color: var(--shell-text-primary); margin: 0 0 var(--cds-spacing-02, 4px); }
-    .err { padding: var(--cds-spacing-04, 12px); border-radius: var(--radius-sm, 4px); background: var(--shell-status-danger-bg, #fee); color: var(--cds-support-error, #da1e28); border: 1px solid var(--cds-support-error, #da1e28); margin-bottom: var(--cds-spacing-04, 12px); font-size: var(--cds-body-compact-01-size); }
-    .warn { padding: var(--cds-spacing-03, 8px) var(--cds-spacing-04, 12px); border-radius: var(--radius-sm, 4px); background: var(--shell-status-warning-bg, #fff4d6); color: var(--cds-text-primary); border: 1px solid var(--cds-support-warning, #f1c21b); margin-bottom: var(--cds-spacing-04, 12px); font-size: var(--cds-body-compact-01-size); }
-    .live-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--cds-support-success, #24a148); margin-inline-end: var(--cds-spacing-02, 4px); animation: pulse 2s infinite; }
-    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
-    .access-denied { padding: var(--cds-spacing-07, 32px); text-align: center; color: var(--shell-text-secondary); }
-    .skeleton { background: linear-gradient(90deg, var(--cds-layer-01) 0%, var(--cds-layer-02) 50%, var(--cds-layer-01) 100%); background-size: 200% 100%; animation: shimmer 1.4s infinite; height: 64px; border-radius: var(--radius-sm, 4px); }
-    @keyframes shimmer { 0%{background-position: 200% 0;} 100%{background-position: -200% 0;} }
+    .fo-quick-tile-value {
+      display: block;
+      font: 700 var(--cds-heading-03-font-size, 1.25rem)/1.2 var(--cds-font-family-sans);
+      color: var(--cds-text-primary);
+    }
+    .fo-meta {
+      font: 400 var(--cds-body-compact-01-font-size, 0.875rem)/1.4 var(--cds-font-family-sans);
+      color: var(--cds-text-secondary);
+    }
+    .fo-row {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: var(--cds-spacing-03);
+      padding: var(--cds-spacing-03) 0;
+      border-bottom: 1px solid var(--cds-border-subtle-01);
+      text-decoration: none; color: inherit;
+    }
+    .fo-row:last-child { border-bottom: 0; }
+    .fo-row-strong { font-weight: 600; color: var(--cds-text-primary); }
+    .fo-empty { padding: var(--cds-spacing-07); text-align: center; color: var(--cds-text-secondary); }
+    .fo-skeleton-grid {
+      display: grid; gap: var(--cds-spacing-04);
+      grid-template-columns: repeat(auto-fill, minmax(min(11rem, 100%), 1fr));
+    }
+    .fo-access-denied {
+      padding: var(--cds-spacing-07);
+      text-align: center;
+      color: var(--cds-text-secondary);
+    }
+    .fo-why { margin-top: var(--cds-spacing-04); }
+    .fo-why dt {
+      font-weight: 600; color: var(--cds-text-primary);
+      margin-top: var(--cds-spacing-02);
+    }
+    .fo-why dd { margin: 0 0 var(--cds-spacing-02); color: var(--cds-text-secondary); }
+    .fo-actions-row { display: flex; flex-wrap: wrap; gap: var(--cds-spacing-03); align-items: center; }
+    .fo-tabs-region { margin-top: var(--cds-spacing-05); }
+    [hidden] { display: none !important; }
   `],
   template: `
     @if (!visibleForUser()) {
-      <div class="access-denied" role="alert">
-        <h2>{{ i18n.translate('foundation.overview.accessDeniedTitle') }}</h2>
-        <p>{{ i18n.translate('foundation.overview.accessDeniedBody') }}</p>
+      <div class="fo-access-denied" role="alert">
+        <h2 class="fo-section-title">{{ i18n.translate('foundation.overview.accessDeniedTitle') }}</h2>
+        <p class="fo-meta">{{ i18n.translate('foundation.overview.accessDeniedBody') }}</p>
       </div>
     } @else {
-      <div class="ovw" [dir]="i18n.direction()" [attr.data-layout]="layout()" [attr.data-page-type]="pageType()" [attr.data-module]="'foundation'">
-        <!-- main column -->
-        <div class="ovw-main">
-          <!-- Page Masthead (spec §26.1) -->
-          <header class="masthead">
-            <nav class="crumbs" [attr.aria-label]="i18n.translate('foundation.overview.contextRail')">
-              @for (c of breadcrumbs(); track c.labelKey; let last = $last) {
-                @if (c.route && !last) {
-                  <a [routerLink]="c.route">{{ i18n.translate(c.labelKey) }}</a>
-                  <span class="sep">/</span>
-                } @else {
-                  <span>{{ i18n.translate(c.labelKey) }}</span>
-                }
-              }
-            </nav>
-            <div class="ovw-header">
-              <div>
-                <h1 class="ovw-title">{{ i18n.translate('foundation.overview.title') }}</h1>
-                <p class="ovw-subtitle">{{ i18n.translate('foundation.overview.subtitle') }}</p>
-                <div class="ovw-chips">
+      <div cdsGrid class="fo-page" [dir]="i18n.direction()"
+           [attr.data-layout]="layout()" [attr.data-page-type]="pageType()" [attr.data-module]="'foundation'">
+        <div cdsRow>
+          <!-- ────────── Main column ────────── -->
+          <div cdsCol [columnNumbers]="{ lg: 12, md: 8, sm: 4 }">
+            <div class="fo-stack">
+
+              <!-- Masthead: Carbon breadcrumb + title + status tag + actions -->
+              <cds-tile>
+                <cds-breadcrumb [ariaLabel]="i18n.translate('foundation.overview.contextRail')">
+                  @for (c of breadcrumbs(); track c.labelKey; let last = $last) {
+                    <cds-breadcrumb-item [href]="c.route || null" [current]="last">
+                      {{ i18n.translate(c.labelKey) }}
+                    </cds-breadcrumb-item>
+                  }
+                </cds-breadcrumb>
+
+                <h1 class="fo-section-title" style="margin-top: var(--cds-spacing-04);">
+                  {{ i18n.translate('foundation.overview.title') }}
+                </h1>
+                <p class="fo-meta">{{ i18n.translate('foundation.overview.subtitle') }}</p>
+
+                <div class="fo-actions-row" style="margin-top: var(--cds-spacing-04);">
                   @if (realtimeEnabled()) {
-                    <span class="chip chip--ok"><span class="live-dot"></span>{{ i18n.translate('foundation.overview.live') }}</span>
+                    <cds-tag type="green">{{ i18n.translate('foundation.overview.live') }}</cds-tag>
                   }
-                </div>
-              </div>
-              <div class="header-actions">
-                <button class="why-btn" type="button" (click)="toggleWhy()" [attr.aria-pressed]="whyOpen()" [attr.aria-expanded]="whyOpen()">
-                  {{ i18n.translate('foundation.overview.whyAmISeeing') }}
-                </button>
-                <div class="views" role="tablist" [attr.aria-label]="i18n.translate('foundation.overview.views')">
-                  <button type="button" [class.active]="view() === 'command-center'" (click)="setView('command-center')" role="tab" [attr.aria-selected]="view() === 'command-center'">
-                    {{ i18n.translate('foundation.overview.view.commandCenter') }}
-                  </button>
-                  <button type="button" [class.active]="view() === 'recent'" (click)="setView('recent')" role="tab" [attr.aria-selected]="view() === 'recent'">
-                    {{ i18n.translate('foundation.overview.view.recent') }}
+                  <button cdsButton="ghost" size="sm" type="button"
+                          (click)="toggleWhy()"
+                          [attr.aria-pressed]="whyOpen()"
+                          [attr.aria-expanded]="whyOpen()">
+                    {{ i18n.translate('foundation.overview.whyAmISeeing') }}
                   </button>
                 </div>
-              </div>
-            </div>
-            @if (whyOpen()) {
-              <dl class="why-pop" role="region" [attr.aria-label]="i18n.translate('foundation.overview.whyAmISeeing')">
-                <dt>{{ i18n.translate('foundation.overview.whyProfile') }}</dt>
-                <dd>{{ profileType() || i18n.translate('foundation.overview.whyProfileUnknown') }}</dd>
-                <dt>{{ i18n.translate('foundation.overview.whyDataScope') }}</dt>
-                <dd>{{ dataScopeLabel() }}</dd>
-                <dt>{{ i18n.translate('foundation.overview.whyContract') }}</dt>
-                <dd>{{ i18n.translate('foundation.overview.whyContractValue') }}</dd>
-              </dl>
-            }
-          </header>
 
-          @if (error()) { <div class="err" role="alert">{{ error() }}</div> }
-          @if (loadWarnings().length) {
-            <div class="warn" role="status">
-              {{ i18n.translate('foundation.overview.partial.summary') }}
-              @if (translatedWarnings().length) {
-                <details style="margin-top:6px;">
-                  <summary style="cursor:pointer;">{{ i18n.translate('foundation.overview.partial.details') }}</summary>
-                  <ul style="margin:6px 0 0 18px; padding:0;">
-                    @for (w of translatedWarnings(); track w) { <li>{{ w }}</li> }
-                  </ul>
-                </details>
+                @if (whyOpen()) {
+                  <dl class="fo-why" role="region"
+                      [attr.aria-label]="i18n.translate('foundation.overview.whyAmISeeing')">
+                    <dt>{{ i18n.translate('foundation.overview.whyProfile') }}</dt>
+                    <dd>{{ profileType() || i18n.translate('foundation.overview.whyProfileUnknown') }}</dd>
+                    <dt>{{ i18n.translate('foundation.overview.whyDataScope') }}</dt>
+                    <dd>{{ dataScopeLabel() }}</dd>
+                    <dt>{{ i18n.translate('foundation.overview.whyContract') }}</dt>
+                    <dd>{{ i18n.translate('foundation.overview.whyContractValue') }}</dd>
+                  </dl>
+                }
+              </cds-tile>
+
+              <!-- Status notifications: Carbon inline notifications -->
+              @if (error()) {
+                <cds-notification
+                  [notificationObj]="{ type: 'error', title: i18n.translate('foundation.overview.errorTitle'), message: error() || '', lowContrast: true }">
+                </cds-notification>
               }
-            </div>
-          }
-
-          <!-- KPI strip (spec §4.1) — only when contract kpiScope = module-overview -->
-          @if (kpiScope() === 'module-overview') {
-            @if (loading() && kpis().length === 0) {
-              <div class="skeleton" aria-busy="true"></div>
-            } @else if (kpis().length > 0) {
-              <app-kpi-card-grid [cards]="kpis()" [isAr]="isAr()"></app-kpi-card-grid>
-            }
-          }
-
-          <!-- Signature widget: foundation-command-center (spec §7) -->
-          <section class="signature" [attr.aria-label]="i18n.translate('foundation.overview.signatureWidget')">
-            <div class="signature-head">
-              <h2 class="signature-title">{{ i18n.translate('foundation.overview.commandCenter') }}</h2>
-              <span class="signature-meta">{{ i18n.translate('foundation.overview.dataSource') }}: {{ i18n.translate('foundation.overview.dataSourceLabel') }}</span>
-            </div>
-
-            @if (loading()) {
-              <div class="quick-grid">
-                <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
-                <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
-              </div>
-            } @else if (view() === 'command-center') {
-              @if (quickTiles().length === 0) {
-                <div class="empty">
-                  <p class="empty-title">{{ i18n.translate('foundation.overview.empty.title') }}</p>
-                  <p>{{ i18n.translate('foundation.overview.empty.body') }}</p>
-                </div>
-              } @else {
-                <div class="quick-grid">
-                  @for (t of quickTiles(); track t.key) {
-                    <a class="quick-tile" [routerLink]="t.route" [attr.aria-label]="i18n.translate(t.labelKey)">
-                      <span class="quick-label">{{ i18n.translate(t.labelKey) }}</span>
-                      <span class="quick-value">{{ t.value }}</span>
-                    </a>
-                  }
-                </div>
+              @if (loadWarnings().length) {
+                <cds-notification
+                  [notificationObj]="{ type: 'warning', title: i18n.translate('foundation.overview.partial.summary'), message: translatedWarnings().join(', '), lowContrast: true }">
+                </cds-notification>
               }
-            } @else {
-              @if (recentAudit().length === 0) {
-                <div class="empty">{{ i18n.translate('foundation.overview.empty.recent') }}</div>
-              } @else {
-                @for (entry of recentAudit(); track $index) {
-                  <div class="rail-row">
-                    <span>{{ entry['action'] || entry['event'] || i18n.translate('foundation.overview.activity') }} — {{ entry['entity_type'] || '' }}</span>
-                    <span class="signature-meta">{{ entry['created_at'] | date:'short' }}</span>
+
+              <!-- KPI strip — only when contract kpiScope = module-overview -->
+              @if (kpiScope() === 'module-overview') {
+                @if (loading() && kpis().length === 0) {
+                  <cds-loading [isActive]="true" size="sm"></cds-loading>
+                } @else if (kpis().length > 0) {
+                  <foundation-kpi-grid [cards]="kpis()" [dir]="isAr() ? 'rtl' : 'ltr'"></foundation-kpi-grid>
+                }
+              }
+
+              <!-- Signature widget: command center via Carbon tabs + tiles -->
+              <cds-tile [attr.aria-label]="i18n.translate('foundation.overview.signatureWidget')">
+                <h2 class="fo-section-title">{{ i18n.translate('foundation.overview.commandCenter') }}</h2>
+                <p class="fo-meta">
+                  {{ i18n.translate('foundation.overview.dataSource') }}:
+                  {{ i18n.translate('foundation.overview.dataSourceLabel') }}
+                </p>
+
+                <div class="fo-tabs-region">
+                  <cds-tabs>
+                    <cds-tab [heading]="i18n.translate('foundation.overview.view.commandCenter')"
+                             [active]="view() === 'command-center'"
+                             (selected)="setView('command-center')">
+                      @if (loading()) {
+                        <div class="fo-skeleton-grid">
+                          <cds-loading [isActive]="true" size="sm"></cds-loading>
+                          <cds-loading [isActive]="true" size="sm"></cds-loading>
+                          <cds-loading [isActive]="true" size="sm"></cds-loading>
+                        </div>
+                      } @else if (quickTiles().length === 0) {
+                        <div class="fo-empty">
+                          <p class="fo-row-strong">{{ i18n.translate('foundation.overview.empty.title') }}</p>
+                          <p class="fo-meta">{{ i18n.translate('foundation.overview.empty.body') }}</p>
+                        </div>
+                      } @else {
+                        <cds-structured-list>
+                          @for (t of quickTiles(); track t.key) {
+                            <cds-list-row>
+                              <cds-list-column>
+                                <a [routerLink]="t.route" [attr.aria-label]="i18n.translate(t.labelKey)"
+                                   style="text-decoration:none;color:inherit;display:block;">
+                                  <span class="fo-quick-tile-label">{{ i18n.translate(t.labelKey) }}</span>
+                                  <span class="fo-quick-tile-value">{{ t.value }}</span>
+                                </a>
+                              </cds-list-column>
+                            </cds-list-row>
+                          }
+                        </cds-structured-list>
+                      }
+                    </cds-tab>
+
+                    <cds-tab [heading]="i18n.translate('foundation.overview.view.recent')"
+                             [active]="view() === 'recent'"
+                             (selected)="setView('recent')">
+                      @if (recentAudit().length === 0) {
+                        <div class="fo-empty">{{ i18n.translate('foundation.overview.empty.recent') }}</div>
+                      } @else {
+                        <cds-structured-list>
+                          @for (entry of recentAudit(); track $index) {
+                            <cds-list-row>
+                              <cds-list-column>
+                                {{ entry['action'] || entry['event'] || i18n.translate('foundation.overview.activity') }}
+                                — {{ entry['entity_type'] || '' }}
+                              </cds-list-column>
+                              <cds-list-column class="fo-meta">
+                                {{ entry['created_at'] | date:'short' }}
+                              </cds-list-column>
+                            </cds-list-row>
+                          }
+                        </cds-structured-list>
+                      }
+                    </cds-tab>
+                  </cds-tabs>
+                </div>
+              </cds-tile>
+            </div>
+          </div>
+
+          <!-- ────────── Context rail (right) ────────── -->
+          <div cdsCol [columnNumbers]="{ lg: 4, md: 8, sm: 4 }">
+            <aside class="fo-rail-stack" [attr.aria-label]="i18n.translate('foundation.overview.contextRail')">
+
+              <!-- Agent panel -->
+              @if (agentEnabled() && primaryAgent()) {
+                <cds-tile>
+                  <h3 class="fo-rail-title">{{ i18n.translate('foundation.overview.agent.title') }}</h3>
+                  <p class="fo-meta">{{ primaryAgent() }}</p>
+                  <div class="fo-actions-row" style="margin-top: var(--cds-spacing-04);">
+                    <button cdsButton="primary" size="sm" type="button"
+                            (click)="toggleAgent()"
+                            [attr.aria-pressed]="agentOpen()"
+                            [attr.aria-expanded]="agentOpen()">
+                      {{ i18n.translate(agentOpen() ? 'foundation.overview.agent.close' : 'foundation.overview.agent.open') }}
+                    </button>
                   </div>
-                }
-              }
-            }
-          </section>
-        </div>
-
-        <!-- right rail: contextRailKeys -->
-        <aside class="ovw-rail" [attr.aria-label]="i18n.translate('foundation.overview.contextRail')">
-          <!-- Agent side panel trigger (spec §20.3 mode=side-panel) -->
-          @if (agentEnabled() && primaryAgent()) {
-            <div class="panel">
-              <h3 class="panel-title">{{ i18n.translate('foundation.overview.agent.title') }}</h3>
-              <p class="signature-meta" style="margin: 0 0 var(--cds-spacing-04, 12px);">{{ primaryAgent() }}</p>
-              <button class="agent-btn" type="button" (click)="toggleAgent()" [attr.aria-pressed]="agentOpen()" [attr.aria-expanded]="agentOpen()">
-                <i class="pi pi-bolt"></i> {{ i18n.translate(agentOpen() ? 'foundation.overview.agent.close' : 'foundation.overview.agent.open') }}
-              </button>
-              @if (agentOpen() && agentActions().length > 0) {
-                <div style="margin-top: var(--cds-spacing-04, 12px);">
-                  @for (a of agentActions(); track a.action_id) {
-                    <div class="rail-row">
-                      <span>{{ i18n.translate(a.label_key) }}</span>
-                      <span class="signature-meta">{{ a.level }}</span>
-                    </div>
+                  @if (agentOpen() && agentActions().length > 0) {
+                    <cds-structured-list>
+                      @for (a of agentActions(); track a.action_id) {
+                        <cds-list-row>
+                          <cds-list-column>{{ i18n.translate(a.label_key) }}</cds-list-column>
+                          <cds-list-column>
+                            <cds-tag type="cool-gray">{{ a.level }}</cds-tag>
+                          </cds-list-column>
+                        </cds-list-row>
+                      }
+                    </cds-structured-list>
                   }
-                </div>
+                </cds-tile>
               }
-            </div>
-          }
 
-          <!-- Context rails -->
-          @for (rail of contextRails(); track rail.id) {
-            <div class="panel">
-              <h3 class="panel-title">{{ i18n.translate(rail.titleKey) }}</h3>
-              <a class="rail-row" [routerLink]="rail.route">
-                <span>{{ i18n.translate('foundation.overview.openCount') }}</span>
-                <span class="rail-count">{{ rail.count }}</span>
-              </a>
-            </div>
-          }
-
-          <!-- NBA -->
-          @if (nbaEnabled()) {
-            <div class="panel">
-              <h3 class="panel-title">{{ i18n.translate('foundation.overview.nba.title') }}</h3>
-              @if (nbaItems().length === 0) {
-                <p class="signature-meta">{{ i18n.translate('foundation.overview.nba.empty') }}</p>
-              } @else {
-                @for (n of nbaItems(); track n.id) {
-                  <a class="nba-row" [attr.data-priority]="n.priority" [routerLink]="n.route">
-                    <span><span class="nba-dot"></span>{{ i18n.translate(n.titleKey) }}</span>
-                    <span class="signature-meta">{{ i18n.translate('foundation.priority.' + n.priority) }}</span>
-                  </a>
-                }
+              <!-- Context rails -->
+              @for (rail of contextRails(); track rail.id) {
+                <cds-clickable-tile [route]="[rail.route]">
+                  <h3 class="fo-rail-title">{{ i18n.translate(rail.titleKey) }}</h3>
+                  <div class="fo-row">
+                    <span class="fo-meta">{{ i18n.translate('foundation.overview.openCount') }}</span>
+                    <span class="fo-row-strong">{{ rail.count }}</span>
+                  </div>
+                </cds-clickable-tile>
               }
-            </div>
-          }
-        </aside>
+
+              <!-- NBA -->
+              @if (nbaEnabled()) {
+                <cds-tile>
+                  <h3 class="fo-rail-title">{{ i18n.translate('foundation.overview.nba.title') }}</h3>
+                  @if (nbaItems().length === 0) {
+                    <p class="fo-meta">{{ i18n.translate('foundation.overview.nba.empty') }}</p>
+                  } @else {
+                    <cds-structured-list>
+                      @for (n of nbaItems(); track n.id) {
+                        <cds-list-row>
+                          <cds-list-column>
+                            <a [routerLink]="n.route" style="text-decoration:none;color:inherit;">
+                              {{ i18n.translate(n.titleKey) }}
+                            </a>
+                          </cds-list-column>
+                          <cds-list-column>
+                            <cds-tag [type]="nbaTagType(n.priority)">
+                              {{ i18n.translate('foundation.priority.' + n.priority) }}
+                            </cds-tag>
+                          </cds-list-column>
+                        </cds-list-row>
+                      }
+                    </cds-structured-list>
+                  }
+                </cds-tile>
+              }
+            </aside>
+          </div>
+        </div>
       </div>
     }
   `,
@@ -454,17 +504,9 @@ export class FoundationOverviewComponent implements OnInit, OnDestroy {
   isAr = computed(() => this.i18n.currentLang() === 'ar');
 
   ngOnInit(): void {
-    // Restore last view preset — namespaced by tenant + user so localStorage
-    // (which may be shared across browser profiles) cannot bleed presets
-    // between tenants. Falls back to legacy global key for one read so users
-    // upgrading from the previous build keep their preference.
-    if (isPlatformBrowser(this.platformId)) {
-      try {
-        const key = this.viewPresetKey();
-        const saved = localStorage.getItem(key) ?? localStorage.getItem('foundation.overview.view');
-        if (saved === 'recent' || saved === 'command-center') this.view.set(saved);
-      } catch { /* SSR safe */ }
-    }
+    // View preset: in-memory only. Persisted localStorage write was removed
+    // per platform directive — Carbon-only Foundation Overview must not
+    // write tenant-scoped UI state without an explicit approved spec.
 
     // Apply theme tokens (spec §5 / §577)
     this.applyThemeTokens();
@@ -486,33 +528,34 @@ export class FoundationOverviewComponent implements OnInit, OnDestroy {
   }
 
   setView(v: 'command-center' | 'recent'): void {
+    // In-memory only — no localStorage persistence (Carbon-only directive).
     this.view.set(v);
-    if (isPlatformBrowser(this.platformId)) {
-      try { localStorage.setItem(this.viewPresetKey(), v); } catch { /* noop */ }
-    }
-  }
-
-  /** Tenant + user scoped key for the foundation overview view preset (no cross-tenant bleed). */
-  private viewPresetKey(): string {
-    const ctx = this.user.context();
-    const tenant = ctx?.tenantId ?? 'anon-tenant';
-    const userId = ctx?.userId ?? 'anon-user';
-    return `foundation.overview.view::${tenant}::${userId}`;
   }
 
   toggleAgent(): void { this.agentOpen.update(o => !o); }
   toggleWhy(): void { this.whyOpen.update(o => !o); }
 
-  // Spec §5 / §577 — apply contract theme tokens to body/document.documentElement
+  // Spec §5 / §577 — apply only data-attributes for layout selectors. All
+  // visual tokens (color, accent) flow through Carbon --cds-* and the DOS
+  // carbon-overrides layer. No raw hex, no module-accent variable.
   private applyThemeTokens(): void {
     if (!isPlatformBrowser(this.platformId)) return;
     try {
-      const root = document.documentElement;
-      root.style.setProperty('--module-accent', '#1f6feb');
       document.body.dataset['module'] = 'foundation';
       document.body.dataset['pageType'] = this.pageType();
       document.body.dataset['layout'] = this.layout();
     } catch { /* noop */ }
+  }
+
+  // Map NBA priority → Carbon tag type. Pure semantic Carbon mapping —
+  // colors come from --cds-tag-* via carbon-overrides.css.
+  nbaTagType(priority: 'critical' | 'attention' | 'recommended'): 'red' | 'magenta' | 'blue' {
+    switch (priority) {
+      case 'critical':    return 'red';
+      case 'attention':   return 'magenta';
+      case 'recommended':
+      default:            return 'blue';
+    }
   }
 
   // Spec §2.2 dataResources.foundation.overview → /api/tenants/home/overview
@@ -611,12 +654,12 @@ export class FoundationOverviewComponent implements OnInit, OnDestroy {
     };
     const tileVal = (key: string): number => Number(tiles.find(t => t.key === key)?.value ?? 0);
     const cards: KpiCardVM[] = [
-      { id: 'users',          labelEn: this.i18n.translate('foundation.kpi.users.total'),       labelAr: this.i18n.translate('foundation.kpi.users.total'),       value: tileVal('users'),       icon: 'pi pi-users',         color: 'var(--module-accent)', bg: 'var(--shell-card-bg)', route: '/foundation/users',       severity: 'default' },
-      { id: 'departments',    labelEn: this.i18n.translate('foundation.kpi.departments.total'), labelAr: this.i18n.translate('foundation.kpi.departments.total'), value: tileVal('departments'), icon: 'pi pi-sitemap',       color: 'var(--module-accent)', bg: 'var(--shell-card-bg)', route: '/foundation/departments', severity: 'default' },
-      { id: 'teams',          labelEn: this.i18n.translate('foundation.kpi.teams.total'),       labelAr: this.i18n.translate('foundation.kpi.teams.total'),       value: tileVal('teams'),       icon: 'pi pi-users',         color: 'var(--module-accent)', bg: 'var(--shell-card-bg)', route: '/foundation/teams',       severity: 'default' },
-      { id: 'vacancies',      labelEn: this.i18n.translate('foundation.kpi.vacancies'),         labelAr: this.i18n.translate('foundation.kpi.vacancies'),         value: get('vacancies'),       icon: 'pi pi-id-card',       color: 'var(--cds-support-warning)', bg: 'var(--shell-card-bg)', route: '/foundation/positions', severity: 'warning' },
-      { id: 'complianceRate', labelEn: this.i18n.translate('foundation.kpi.complianceRate'),    labelAr: this.i18n.translate('foundation.kpi.complianceRate'),    value: get('complianceRate'),  icon: 'pi pi-check-circle',  color: 'var(--cds-support-success)', bg: 'var(--shell-card-bg)', route: policyRoute, severity: 'success', unit: '%' },
-      { id: 'ownership.gaps', labelEn: this.i18n.translate('foundation.kpi.ownership.gaps'),    labelAr: this.i18n.translate('foundation.kpi.ownership.gaps'),    value: get('ownership'),       icon: 'pi pi-exclamation-triangle', color: 'var(--cds-support-error)', bg: 'var(--shell-card-bg)', route: '/foundation/ownership-mapping', severity: 'danger' },
+      { id: 'users',          labelEn: this.i18n.translate('foundation.kpi.users.total'),       labelAr: this.i18n.translate('foundation.kpi.users.total'),       value: tileVal('users'),       icon: '', color: 'var(--cds-text-primary)',    bg: 'var(--cds-layer-02)', route: '/foundation/users',             severity: 'default' },
+      { id: 'departments',    labelEn: this.i18n.translate('foundation.kpi.departments.total'), labelAr: this.i18n.translate('foundation.kpi.departments.total'), value: tileVal('departments'), icon: '', color: 'var(--cds-text-primary)',    bg: 'var(--cds-layer-02)', route: '/foundation/departments',       severity: 'default' },
+      { id: 'teams',          labelEn: this.i18n.translate('foundation.kpi.teams.total'),       labelAr: this.i18n.translate('foundation.kpi.teams.total'),       value: tileVal('teams'),       icon: '', color: 'var(--cds-text-primary)',    bg: 'var(--cds-layer-02)', route: '/foundation/teams',             severity: 'default' },
+      { id: 'vacancies',      labelEn: this.i18n.translate('foundation.kpi.vacancies'),         labelAr: this.i18n.translate('foundation.kpi.vacancies'),         value: get('vacancies'),       icon: '', color: 'var(--cds-support-warning)', bg: 'var(--cds-layer-02)', route: '/foundation/positions',         severity: 'warning' },
+      { id: 'complianceRate', labelEn: this.i18n.translate('foundation.kpi.complianceRate'),    labelAr: this.i18n.translate('foundation.kpi.complianceRate'),    value: get('complianceRate'),  icon: '', color: 'var(--cds-support-success)', bg: 'var(--cds-layer-02)', route: policyRoute,                     severity: 'success', unit: '%' },
+      { id: 'ownership.gaps', labelEn: this.i18n.translate('foundation.kpi.ownership.gaps'),    labelAr: this.i18n.translate('foundation.kpi.ownership.gaps'),    value: get('ownership'),       icon: '', color: 'var(--cds-support-error)',   bg: 'var(--cds-layer-02)', route: '/foundation/ownership-mapping', severity: 'danger' },
     ];
     this.kpis.set(cards);
   }

@@ -1,0 +1,78 @@
+{
+  "$schema": "../../platform/dos/contracts/module-enrollment.contract.ts",
+  "moduleCode": "risk",
+  "name": "Risk",
+  "phase": "phase-1",
+  "entryRoute": "/risk",
+  "defaultPage": "/risk/overview",
+  "services": ["risk-incident-service", "audit-service"],
+  "permissions": [
+    "risk.record.read",
+    "risk.record.write",
+    "risk.record.approve",
+    "risk.manage"
+  ],
+  "pages": [
+    {
+      "id": "overview",
+      "route": "/risk/overview",
+      "componentKey": "module.overview.page",
+      "permission": "risk.record.read",
+      "title": "risk.overview.title",
+      "subtitle": "risk.overview.subtitle"
+    },
+    {
+      "id": "records",
+      "route": "/risk/records",
+      "componentKey": "module.records.page",
+      "permission": "risk.record.read",
+      "title": "risk.records.title"
+    },
+    {
+      "id": "workflows",
+      "route": "/risk/workflows",
+      "componentKey": "module.workflows.page",
+      "permission": "risk.record.approve",
+      "title": "risk.workflows.title"
+    },
+    {
+      "id": "reports",
+      "route": "/risk/reports",
+      "componentKey": "module.reports.page",
+      "permission": "risk.record.read",
+      "title": "risk.reports.title"
+    },
+    {
+      "id": "settings",
+      "route": "/risk/settings",
+      "componentKey": "module.settings.page",
+      "permission": "risk.manage",
+      "title": "risk.settings.title"
+    }
+  ],
+  "navigation": [
+    { "id": "risk.overview",  "parent": "risk", "label": "Overview",  "route": "/risk/overview",  "sortOrder": 10, "permission": "risk.record.read" },
+    { "id": "risk.records",   "parent": "risk", "label": "Records",   "route": "/risk/records",   "sortOrder": 20, "permission": "risk.record.read" },
+    { "id": "risk.workflows", "parent": "risk", "label": "Workflows", "route": "/risk/workflows", "sortOrder": 30, "permission": "risk.record.approve" },
+    { "id": "risk.reports",   "parent": "risk", "label": "Reports",   "route": "/risk/reports",   "sortOrder": 40, "permission": "risk.record.read" },
+    { "id": "risk.settings",  "parent": "risk", "label": "Settings",  "route": "/risk/settings",  "sortOrder": 50, "permission": "risk.manage" }
+  ],
+  "components": [
+    "module.overview.page",
+    "module.records.page",
+    "module.workflows.page",
+    "module.reports.page",
+    "module.settings.page"
+  ],
+  "api": {
+    "summary":   "/api/risk/stats",
+    "records":   "/api/risk",
+    "workflows": "/api/audit/entries?moduleCode=risk&kind=workflow",
+    "audit":     "/api/audit/entries?moduleCode=risk&limit=50",
+    "health":    "/api/health/risk"
+  },
+  "owner": {
+    "writer": "platform-projector",
+    "note": "Modules MUST NOT write dos.dynamic_ui_* directly. Platform projector reads this manifest and emits registry/route/nav rows."
+  }
+}

@@ -205,12 +205,15 @@ export async function updateToolPermission(tenantId, permissionId, updates) {
     if (res.rows.length === 0)
         return null;
     const perm = rowToPermission(res.rows[0]);
-    eventBus.publish('constitution.updated', {
-        tenantId,
-        type: 'agent_permission_updated',
-        permissionId,
-        agentId: perm.agentId,
-        toolName: perm.toolName,
+    eventBus.publish({
+        event_type: 'constitution.updated',
+        tenant_id: tenantId,
+        payload: {
+            type: 'agent_permission_updated',
+            permissionId,
+            agentId: perm.agentId,
+            toolName: perm.toolName,
+        },
     });
     return perm;
 }
@@ -235,14 +238,17 @@ export async function createHITLGate(tenantId, input) {
         result: 'pending',
         details: { gateId, toolName: input.toolName, action: input.action, expiresAt },
     });
-    eventBus.publish('gate.blocked', {
-        tenantId,
-        type: 'hitl_gate_created',
-        gateId,
-        agentId: input.agentId,
-        toolName: input.toolName,
-        action: input.action,
-        expiresAt,
+    eventBus.publish({
+        event_type: 'gate.blocked',
+        tenant_id: tenantId,
+        payload: {
+            type: 'hitl_gate_created',
+            gateId,
+            agentId: input.agentId,
+            toolName: input.toolName,
+            action: input.action,
+            expiresAt,
+        },
     });
     return {
         gateId,
@@ -283,13 +289,16 @@ export async function resolveHITLGate(tenantId, gateId, decision, decidedBy, rea
     // Fetch updated
     const updatedRes = await safeQuery(`SELECT * FROM "${schema}".hitl_gates WHERE gate_id = $1`, [gateId]);
     const updatedGate = updatedRes.rows[0] || gate;
-    eventBus.publish(`gate.${decision === 'approved' ? 'allowed' : 'blocked'}`, {
-        tenantId,
-        type: `hitl_gate_${decision}`,
-        gateId,
-        agentId: gate.agent_id,
-        decision,
-        decidedBy,
+    eventBus.publish({
+        event_type: `gate.${decision === 'approved' ? 'allowed' : 'blocked'}`,
+        tenant_id: tenantId,
+        payload: {
+            type: `hitl_gate_${decision}`,
+            gateId,
+            agentId: gate.agent_id,
+            decision,
+            decidedBy,
+        },
     });
     return rowToGate(updatedGate);
 }
@@ -327,11 +336,14 @@ export async function expireOverdueGates(tenantId) {
             result: 'expired',
             details: { gateId: gate.gate_id },
         });
-        eventBus.publish('gate.blocked', {
-            tenantId,
-            type: 'hitl_gate_expired',
-            gateId: gate.gate_id,
-            agentId: gate.agent_id,
+        eventBus.publish({
+            event_type: 'gate.blocked',
+            tenant_id: tenantId,
+            payload: {
+                type: 'hitl_gate_expired',
+                gateId: gate.gate_id,
+                agentId: gate.agent_id,
+            },
         });
     }
     return expiredGates.length;

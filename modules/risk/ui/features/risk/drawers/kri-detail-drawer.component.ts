@@ -4,7 +4,7 @@ import { I18nService } from '@app/core/services/ui-infra/i18n.service';
 import { StatusBadgeComponent } from '@app/shared/components/status-indicators/badges/status-badge.component';
 import { AppDatePipe } from '@app/shared/pipes/app-date.pipe';
 import { SidebarModule } from 'primeng/drawer';
-import { TabViewModule } from 'primeng/tabs';
+import { TabsModule } from 'primeng/tabs';
 import { TagModule } from 'primeng/tag';
 import { AnomalyInfo } from '../utils/kri-sparkline.util';
 
@@ -15,7 +15,7 @@ import { AnomalyInfo } from '../utils/kri-sparkline.util';
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-kri-detail-drawer',
-    imports: [CommonModule, SidebarModule, TabViewModule, TagModule, StatusBadgeComponent, AppDatePipe],
+    imports: [CommonModule, SidebarModule, TabsModule, TagModule, StatusBadgeComponent, AppDatePipe],
     template: `
     <p-sidebar [(visible)]="visible" position="right" [style]="{width:'560px'}" [modal]="true" (onHide)="closed.emit()">
       @if (kri) {
@@ -29,7 +29,7 @@ import { AnomalyInfo } from '../utils/kri-sparkline.util';
           </div>
         </ng-template>
 
-        <p-tabView>
+        <p-tabs>
           <!-- Tab 1: Overview & Trend Chart -->
           <p-tabPanel [header]="i18n.translate('risk.overviewTab')">
             <div class="drawer-section">
@@ -106,7 +106,7 @@ import { AnomalyInfo } from '../utils/kri-sparkline.util';
             </div>
             <div *ngIf="linkedRisks.length === 0" class="empty-inline">{{ i18n.translate('risk.noLinkedRisks') }}</div>
           </p-tabPanel>
-        </p-tabView>
+        </p-tabs>
       }
     </p-sidebar>
   `,

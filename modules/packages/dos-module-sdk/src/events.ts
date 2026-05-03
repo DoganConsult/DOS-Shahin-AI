@@ -9,6 +9,13 @@ export interface EventBus {
   unsubscribe?(eventType: string, subscriberId: string): void;
   /** Optional — DOSEventBus validates events via schema validator, not type registration */
   registerEventType?(registration: EventRegistration): void;
+  /** Optional — concrete bus implementations may expose runtime backpressure metrics */
+  getBackpressureStats?(): {
+    inFlight: number;
+    maxInFlight: number;
+    dropped: number;
+    tenantsActive: number;
+  };
 }
 
 const GLOBAL_EVENT_KEY = Symbol.for('__dos_sdk_event_bus__');

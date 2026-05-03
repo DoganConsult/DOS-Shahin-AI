@@ -27,6 +27,7 @@
     "./db/migrations/*": "./db/migrations/*",
     "./db/seeds/*": "./db/seeds/*",
     "./ui": "./ui/index.ts",
+    "./ui/routes/compliance.module.routes": "./ui/routes/compliance.module.routes.ts",
     "./ui/*": "./ui/*"
   },
   "files": [

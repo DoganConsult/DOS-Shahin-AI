@@ -32,7 +32,7 @@ export async function executeTransition(tenantId, entityId, fromStatus, toStatus
     }
     emitAgrcEngineEvent({
         tenantId,
-        entityType: 'run',
+        entityType: "run",
         entityId,
         action: 'status_changed',
         triggeredBy: userId,

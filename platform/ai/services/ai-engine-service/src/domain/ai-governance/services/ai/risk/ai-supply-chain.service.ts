@@ -146,7 +146,7 @@ export async function assessSupplyChainRisk(
   let score = 0;
 
   // Build provider lookup by name for cross-referencing
-  const providerMap = new Map<string, unknown>();
+  const providerMap = new Map<string, Record<string, any>>();
   for (const p of providers.rows) {
     providerMap.set(p.name_en?.toLowerCase(), p);
   }

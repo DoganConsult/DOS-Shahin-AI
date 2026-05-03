@@ -1,5 +1,5 @@
 import { safeQuery, tenantSchema } from '../../ports/database.port';
-import { emitAiEvent } from './ai-event.service';
+import { emitAiEvent, type AiEntityType } from './ai-event.service';
 import { randomUUID } from 'crypto';
 import { catchHandler, EC } from '@dos/platform-core/resilience';
 
@@ -33,7 +33,7 @@ export async function executeTransition(
     [tenantId, userId, 'ai', 'ai', entityId, JSON.stringify({ status: fromStatus }), JSON.stringify({ status: toStatus })],
   );
 
-  emitAiEvent({ tenantId, entityType: 'ai' as string, entityId, action: 'status_changed', triggeredBy: userId, previousState: fromStatus as string, newState: toStatus as string, correlationId });
+  emitAiEvent({ tenantId, entityType: 'ai' as AiEntityType, entityId, action: 'status_changed', triggeredBy: userId, previousState: fromStatus as string, newState: toStatus as string, correlationId });
   const approvalTransitions = ['in_review->approved'];
   if (approvalTransitions.includes(`${fromStatus}->${toStatus}`)) {
     await safeQuery(`INSERT INTO "${schema}".inbox_inbox (tenant_id, subject, body, entity_type, entity_id, action_required, priority) VALUES ($1, $2, $3, $4, $5, true, 'high')`,
@@ -63,25 +63,25 @@ export async function handleApprovalOutcome(tenantId: string, entityId: string, 
 
 export async function onWorkflowTriggered(ctx: AiWorkflowContext): Promise<void> {
 
-  emitAiEvent({ tenantId: ctx.tenantId, entityType: ctx.entityType as string, entityId: ctx.entityId, action: 'status_changed', triggeredBy: ctx.triggeredBy, correlationId: ctx.correlationId, data: { trigger: 'workflow_start' } });
+  emitAiEvent({ tenantId: ctx.tenantId, entityType: ctx.entityType as AiEntityType, entityId: ctx.entityId, action: 'status_changed', triggeredBy: ctx.triggeredBy, correlationId: ctx.correlationId, data: { trigger: 'workflow_start' } });
 }
 export async function onTaskCreated(ctx: AiWorkflowContext, taskId: string): Promise<void> {
 
-  emitAiEvent({ tenantId: ctx.tenantId, entityType: ctx.entityType as string, entityId: ctx.entityId, action: 'created', triggeredBy: 'workflow', correlationId: ctx.correlationId, data: { taskId, trigger: 'task_creation' } });
+  emitAiEvent({ tenantId: ctx.tenantId, entityType: ctx.entityType as AiEntityType, entityId: ctx.entityId, action: 'created', triggeredBy: 'workflow', correlationId: ctx.correlationId, data: { taskId, trigger: 'task_creation' } });
 }
 export async function onApprovalRequired(ctx: AiWorkflowContext, approverRole: string): Promise<void> {
 
-  emitAiEvent({ tenantId: ctx.tenantId, entityType: ctx.entityType as string, entityId: ctx.entityId, action: 'escalated', triggeredBy: 'workflow', correlationId: ctx.correlationId, data: { approverRole, trigger: 'approval_hook' } });
+  emitAiEvent({ tenantId: ctx.tenantId, entityType: ctx.entityType as AiEntityType, entityId: ctx.entityId, action: 'escalated', triggeredBy: 'workflow', correlationId: ctx.correlationId, data: { approverRole, trigger: 'approval_hook' } });
 }
 export async function onEscalation(ctx: AiWorkflowContext, reason: string, escalateTo: string): Promise<void> {
 
-  emitAiEvent({ tenantId: ctx.tenantId, entityType: ctx.entityType as string, entityId: ctx.entityId, action: 'escalated', triggeredBy: 'workflow', correlationId: ctx.correlationId, data: { reason, escalateTo, trigger: 'escalation_hook' } });
+  emitAiEvent({ tenantId: ctx.tenantId, entityType: ctx.entityType as AiEntityType, entityId: ctx.entityId, action: 'escalated', triggeredBy: 'workflow', correlationId: ctx.correlationId, data: { reason, escalateTo, trigger: 'escalation_hook' } });
 }
 export async function onClosure(ctx: AiWorkflowContext, closureReason: string): Promise<void> {
 
-  emitAiEvent({ tenantId: ctx.tenantId, entityType: ctx.entityType as string, entityId: ctx.entityId, action: 'status_changed', triggeredBy: ctx.triggeredBy, newState: 'closed' as string, correlationId: ctx.correlationId, data: { closureReason, trigger: 'closure_hook' } });
+  emitAiEvent({ tenantId: ctx.tenantId, entityType: ctx.entityType as AiEntityType, entityId: ctx.entityId, action: 'status_changed', triggeredBy: ctx.triggeredBy, newState: 'closed' as string, correlationId: ctx.correlationId, data: { closureReason, trigger: 'closure_hook' } });
 }
 export async function onFailure(ctx: AiWorkflowContext, error: string): Promise<void> {
 
-  emitAiEvent({ tenantId: ctx.tenantId, entityType: ctx.entityType as string, entityId: ctx.entityId, action: 'status_changed', triggeredBy: 'workflow', correlationId: ctx.correlationId, data: { error, trigger: 'failure_compensation' } });
+  emitAiEvent({ tenantId: ctx.tenantId, entityType: ctx.entityType as AiEntityType, entityId: ctx.entityId, action: 'status_changed', triggeredBy: 'workflow', correlationId: ctx.correlationId, data: { error, trigger: 'failure_compensation' } });
 }

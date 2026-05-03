@@ -6,7 +6,7 @@ export const eventBus = {
   subscribe: (...args: Parameters<ReturnType<typeof getEventBus>['subscribe']>) => getEventBus().subscribe(...args),
   onAfterPublish: (...args: unknown[]) => {
 
-    const bus = getEventBus() as Record<string, unknown>;
+    const bus = getEventBus() as unknown as Record<string, unknown>;
     if (typeof bus.onAfterPublish === 'function') return (bus.onAfterPublish as Function)(...args);
   },
 };

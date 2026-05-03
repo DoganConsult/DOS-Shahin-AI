@@ -162,15 +162,15 @@ function findDependentEntities(entityId: string, entityType: string, entityLinks
 }
 
 function computeScopeEntityCount(snapshot: Record<string, unknown>, scenario: ScenarioDefinition): number {
-
-  if (scenario.scope === 'org_wide') return (snapshot.controls?.length || 0) + (snapshot.risks?.length || 0) + (snapshot.policies?.length || 0);
+  const s = snapshot as { controls?: GenericRow[]; risks?: GenericRow[]; policies?: GenericRow[] };
+  if (scenario.scope === 'org_wide') return (s.controls?.length || 0) + (s.risks?.length || 0) + (s.policies?.length || 0);
   if (scenario.scope === 'department' && scenario.scopeFilter?.department_id) {
 
-    return (snapshot.controls?.filter((c: GenericRow) => c.department_id === scenario.scopeFilter?.department_id) || []).length + (snapshot.risks?.filter((r: GenericRow) => r.department_id === scenario.scopeFilter?.department_id) || []).length;
+    return (s.controls?.filter((c: GenericRow) => c.department_id === scenario.scopeFilter?.department_id) || []).length + (s.risks?.filter((r: GenericRow) => r.department_id === scenario.scopeFilter?.department_id) || []).length;
   }
   if (scenario.scope === 'business_unit' && scenario.scopeFilter?.business_unit_id) {
 
-    return (snapshot.controls?.filter((c: GenericRow) => c.business_unit_id === scenario.scopeFilter?.business_unit_id) || []).length + (snapshot.risks?.filter((r: GenericRow) => r.business_unit_id === scenario.scopeFilter?.business_unit_id) || []).length;
+    return (s.controls?.filter((c: GenericRow) => c.business_unit_id === scenario.scopeFilter?.business_unit_id) || []).length + (s.risks?.filter((r: GenericRow) => r.business_unit_id === scenario.scopeFilter?.business_unit_id) || []).length;
   }
   return 0;
 }
@@ -182,7 +182,7 @@ function applyOrgStructureChange(
   controlMap: Map<string, GenericRow>, riskMap: Map<string, GenericRow>
 ): void {
 
-  const payload = change.changes as OrgStructureChangePayload;
+  const payload = change.changes as unknown as OrgStructureChangePayload;
   const operation = payload.operation || 'move_department';
 
   switch (operation) {

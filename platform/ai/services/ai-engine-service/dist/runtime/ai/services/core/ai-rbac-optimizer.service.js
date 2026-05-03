@@ -9,7 +9,7 @@ export async function analyzeRbacUsage(tenantId) {
     const activeRoles = rolesResult.rows.filter((r) => r.is_active).length;
     const unusedRoles = rolesResult.rows
         .filter((r) => r.is_active && parseInt(r.user_count, 10) === 0)
-        .map((r) => r.code);
+        .map((r) => String(r.code));
     const usageResult = await safeQuery(`SELECT ura.user_id, COUNT(DISTINCT rp.permission_id) AS total_perms,
             COUNT(DISTINCT CASE WHEN adl.id IS NOT NULL THEN rp.permission_id END) AS used_perms
      FROM "${schema}".user_role_assignments ura
@@ -26,7 +26,7 @@ export async function analyzeRbacUsage(tenantId) {
         return total > 0 && (used / total) < 0.5;
     })
         .map((r) => ({
-        userId: r.user_id,
+        userId: String(r.user_id),
         totalPermissions: parseInt(r.total_perms, 10),
         usedPermissions: parseInt(r.used_perms, 10),
         utilizationPct: Math.round((parseInt(r.used_perms, 10) / parseInt(r.total_perms, 10)) * 100),

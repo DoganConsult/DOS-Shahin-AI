@@ -1,6 +1,12 @@
 export { ShellResolverService } from './shell-resolver.service';
-export { ShellRendererComponent } from './shell-renderer.component';
-export { ShellKpiBridgeService } from './shell-kpi-bridge.service';
+export { ShellHostComponent } from './shell-host.component';
+export { BreadcrumbService, type Breadcrumb } from './breadcrumb.service';
+export {
+  DosPageLayoutComponent,
+  DosPageTabDirective,
+  DosPageKpiDirective,
+  DosPageRailDirective,
+} from './dos-page-layout.component';
 export {
   ModuleContentProvider,
   ContentProviderRegistry,

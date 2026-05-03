@@ -3,11 +3,18 @@ import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { DOS_LANGUAGE_SWITCHER_I18N } from '@dos/ui-system';
-import { provideAccessStore, WORKSPACE_NAV_PRODUCT_SOURCE } from '@dos/access-store';
+import {
+  provideAccessStore,
+  provideDnaNavContractLoaders,
+  WORKSPACE_NAV_LABEL_RESOLVER,
+  WORKSPACE_NAV_PRODUCT_SOURCE,
+} from '@dos/access-store';
 import { provideUiOsClient, provideUiOsComponentAllowlists } from '@dos/ui-os-client';
 import { I18nService } from '@app/core/services/ui-infra/i18n.service';
 import { provideShellIcons } from './shell/icon-registration';
 import { ProductCompositionNavSource } from './shell/nav-sources/product-composition-nav.source';
+import { SHAHIN_DNA_NAV_LOADERS } from './shell/dna-nav-contracts';
+import { WorkspaceResolverService } from './shell/workspace-resolver.service';
 import { COCKPIT_CONFIG, type CockpitConfigContract } from '@app/dos/contracts/cockpit-config.contract';
 import { FOUNDATION_I18N } from '@foundation-module/ui/ports/i18n.port';
 import { routes } from './app.routes';
@@ -56,10 +63,15 @@ export const appConfig: ApplicationConfig = {
     { provide: DOS_LANGUAGE_SWITCHER_I18N, useExisting: I18nService },
     // @dos/access-store — single canonical session/access store for this product.
     provideAccessStore(),
+    // L2 nav source — platform DNA modules get a standard 5-page Shahin pack.
+    provideDnaNavContractLoaders([...SHAHIN_DNA_NAV_LOADERS]),
     // L4 nav source — product-owned, registered against the platform-side DI
     // token so the platform WorkspaceNavigationAdapter (in @dos/access-store)
     // can pull product-composition items without importing product code.
     { provide: WORKSPACE_NAV_PRODUCT_SOURCE, useExisting: ProductCompositionNavSource },
+    // Product-side nav label resolver — the platform shell uses this to turn
+    // Dynamic-UI/module title keys into real locale-aware labels.
+    { provide: WORKSPACE_NAV_LABEL_RESOLVER, useExisting: WorkspaceResolverService },
     // @dos/ui-os-client — canonical /api/ui-os/* HTTP client + 9 component
     // allowlists (Wave 10d). Maps stay empty until Shahin registers its
     // page/widget/form-field/action/chart/grid-cell/empty-state/tour-step/

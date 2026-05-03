@@ -483,7 +483,7 @@ export declare const evidenceSchemas: {
         valid_until: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodString]>>;
     }, "strip", z.ZodTypeAny, {
         description?: string;
-        status?: "pending" | "expired" | "draft" | "approved" | "rejected";
+        status?: "pending" | "approved" | "rejected" | "expired" | "draft";
         title?: string;
         source?: string;
         owner?: string;
@@ -493,7 +493,7 @@ export declare const evidenceSchemas: {
         valid_until?: string;
     }, {
         description?: string;
-        status?: "pending" | "expired" | "draft" | "approved" | "rejected";
+        status?: "pending" | "approved" | "rejected" | "expired" | "draft";
         title?: string;
         source?: string;
         owner?: string;
@@ -570,14 +570,14 @@ export declare const privacySchemas: {
         data_categories: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
     }, "strip", z.ZodTypeAny, {
         description?: string;
-        status?: "in_progress" | "completed" | "draft" | "approved";
+        status?: "approved" | "in_progress" | "completed" | "draft";
         title?: string;
         owner?: string;
         assessment_type?: "dpia" | "pia" | "tia" | "lia";
         data_categories?: string[];
     }, {
         description?: string;
-        status?: "in_progress" | "completed" | "draft" | "approved";
+        status?: "approved" | "in_progress" | "completed" | "draft";
         title?: string;
         owner?: string;
         assessment_type?: "dpia" | "pia" | "tia" | "lia";
@@ -593,13 +593,13 @@ export declare const doraSchemas: {
         description: z.ZodOptional<z.ZodEffects<z.ZodString, string, string>>;
     }, "strip", z.ZodTypeAny, {
         description?: string;
-        status?: "in_progress" | "completed" | "draft" | "approved";
+        status?: "approved" | "in_progress" | "completed" | "draft";
         title?: string;
         owner?: string;
         assessment_type?: "ict_risk" | "incident_reporting" | "resilience_testing" | "third_party";
     }, {
         description?: string;
-        status?: "in_progress" | "completed" | "draft" | "approved";
+        status?: "approved" | "in_progress" | "completed" | "draft";
         title?: string;
         owner?: string;
         assessment_type?: "ict_risk" | "incident_reporting" | "resilience_testing" | "third_party";
@@ -2200,7 +2200,7 @@ export declare const allSchemas: {
             valid_until: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodString]>>;
         }, "strip", z.ZodTypeAny, {
             description?: string;
-            status?: "pending" | "expired" | "draft" | "approved" | "rejected";
+            status?: "pending" | "approved" | "rejected" | "expired" | "draft";
             title?: string;
             source?: string;
             owner?: string;
@@ -2210,7 +2210,7 @@ export declare const allSchemas: {
             valid_until?: string;
         }, {
             description?: string;
-            status?: "pending" | "expired" | "draft" | "approved" | "rejected";
+            status?: "pending" | "approved" | "rejected" | "expired" | "draft";
             title?: string;
             source?: string;
             owner?: string;
@@ -2287,14 +2287,14 @@ export declare const allSchemas: {
             data_categories: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
         }, "strip", z.ZodTypeAny, {
             description?: string;
-            status?: "in_progress" | "completed" | "draft" | "approved";
+            status?: "approved" | "in_progress" | "completed" | "draft";
             title?: string;
             owner?: string;
             assessment_type?: "dpia" | "pia" | "tia" | "lia";
             data_categories?: string[];
         }, {
             description?: string;
-            status?: "in_progress" | "completed" | "draft" | "approved";
+            status?: "approved" | "in_progress" | "completed" | "draft";
             title?: string;
             owner?: string;
             assessment_type?: "dpia" | "pia" | "tia" | "lia";
@@ -2310,13 +2310,13 @@ export declare const allSchemas: {
             description: z.ZodOptional<z.ZodEffects<z.ZodString, string, string>>;
         }, "strip", z.ZodTypeAny, {
             description?: string;
-            status?: "in_progress" | "completed" | "draft" | "approved";
+            status?: "approved" | "in_progress" | "completed" | "draft";
             title?: string;
             owner?: string;
             assessment_type?: "ict_risk" | "incident_reporting" | "resilience_testing" | "third_party";
         }, {
             description?: string;
-            status?: "in_progress" | "completed" | "draft" | "approved";
+            status?: "approved" | "in_progress" | "completed" | "draft";
             title?: string;
             owner?: string;
             assessment_type?: "ict_risk" | "incident_reporting" | "resilience_testing" | "third_party";

@@ -12,13 +12,13 @@ import { PageHeaderComponent } from '@app/shared/components/layouts/page-header.
 import { ModuleTabsBarComponent } from '@app/shared/components/module-chrome/module-tabs-bar.component';
 import { HasPermissionDirective } from '@app/dauth/directives/has-permission.directive';
 import { SkeletonModule } from 'primeng/skeleton';
-import { TabViewModule } from 'primeng/tabs';
+import { TabsModule } from 'primeng/tabs';
 import { TableModule } from 'primeng/table';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
-import { DropdownModule } from 'primeng/select';
+import { SelectModule } from 'primeng/select';
 import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
@@ -47,8 +47,8 @@ import { devError } from '@app/runtime/utils/dev-logger';
     imports: [
         CommonModule, FormsModule, RouterModule,
         PageHeaderComponent, ModuleTabsBarComponent, HasPermissionDirective,
-        SkeletonModule, TabViewModule, TableModule, CardModule, ButtonModule,
-        InputTextModule, InputNumberModule, DropdownModule, TagModule, ToastModule,
+        SkeletonModule, TabsModule, TableModule, CardModule, ButtonModule,
+        InputTextModule, InputNumberModule, SelectModule, TagModule, ToastModule,
     ],
     providers: [MessageService],
     template: `
@@ -63,7 +63,7 @@ import { devError } from '@app/runtime/utils/dev-logger';
       <app-module-tabs-bar [tabs]="tabs" />
 
       <div class="ra-content" *ngIf="!loading(); else skeleton">
-        <p-tabView>
+        <p-tabs>
           <!-- Risk Taxonomy -->
           <p-tabPanel [header]="isAr() ? 'التصنيف' : 'Taxonomy'">
             <div class="ra-section">
@@ -205,7 +205,7 @@ import { devError } from '@app/runtime/utils/dev-logger';
               <p class="ra-placeholder">{{ isAr() ? 'قواعد سير العمل والإشعارات' : 'Workflow automation rules, notification triggers, and escalation paths' }}</p>
             </div>
           </p-tabPanel>
-        </p-tabView>
+        </p-tabs>
       </div>
 
       <ng-template #skeleton>

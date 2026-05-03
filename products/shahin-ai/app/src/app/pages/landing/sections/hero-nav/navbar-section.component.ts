@@ -50,7 +50,7 @@ import { DosLanguageSwitcherComponent } from '@dos/ui-system';
             <a routerLink="/dashboard" class="nav-icon-btn" title="Dashboard" aria-label="Dashboard"><i class="pi pi-th-large"></i></a>
             <button class="nav-icon-btn" (click)="auth.logout()" [title]="i18n.translate('landing.navbar.logout')" [attr.aria-label]="i18n.translate('landing.navbar.logout')"><i class="pi pi-sign-out"></i></button>
           } @else {
-            <button class="nav-icon-btn desktop-only" (click)="navigateToLogin()" [title]="i18n.translate('landing.navbar.signIn')" [attr.aria-label]="i18n.translate('landing.navbar.signIn')"><i class="pi pi-sign-in"></i></button>
+            <button class="nav-icon-btn" (click)="navigateToLogin()" [title]="i18n.translate('landing.navbar.signIn')" [attr.aria-label]="i18n.translate('landing.navbar.signIn')"><i class="pi pi-sign-in" aria-hidden="true"></i><span class="sign-in-label">Sign In</span></button>
             <a routerLink="/register" class="nav-cta-btn">{{ i18n.localize('Start', 'ابدأ') }}</a>
           }
           <button class="nav-icon-btn hamburger" (click)="toggleMenu()" [attr.aria-expanded]="menuOpen" aria-label="Menu" aria-controls="nav-links"><i class="pi" [class.pi-bars]="!menuOpen" [class.pi-times]="menuOpen"></i></button>
@@ -126,6 +126,11 @@ import { DosLanguageSwitcherComponent } from '@dos/ui-system';
       text-decoration: none; cursor: pointer; transition: all 0.2s; white-space: nowrap;
     }
     .nav-cta-btn:hover { background: var(--ld-cta-primary-bg-hover); border-color: rgba(var(--color-amber-400-rgb), 0.7); }
+
+    .sign-in-label {
+      font-size: var(--font-size-sm); font-weight: 600;
+      margin-left: 6px; white-space: nowrap;
+    }
     .hamburger { display: none; }
     .menu-backdrop { display: none; }
 
@@ -150,6 +155,7 @@ import { DosLanguageSwitcherComponent } from '@dos/ui-system';
     @media (max-width: 900px) {
       /* hide desktop-only elements */
       .desktop-only { display: none !important; }
+      .sign-in-label { display: none; }
 
       /* Backdrop: covers everything (including the navbar) so the drawer reads as a sheet */
       .menu-backdrop {
@@ -175,7 +181,7 @@ import { DosLanguageSwitcherComponent } from '@dos/ui-system';
         box-shadow: 0 0 0 1px rgba(var(--color-white-rgb), 0.06),
                     -12px 0 32px rgba(var(--color-black-rgb), 0.45);
         transform: translateX(100%);
-        visibility: hidden;
+        visibility: hidden; pointer-events: none; overflow: hidden;
         transition: transform 240ms cubic-bezier(0.2, 0, 0, 1), visibility 0s linear 240ms;
       }
       /* RTL: drawer is on the start (left) side, slide from -100% */

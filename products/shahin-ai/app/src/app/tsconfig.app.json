@@ -2,5 +2,12 @@
   "extends": "./tsconfig.json",
   "compilerOptions": { "outDir": "./out-tsc/app", "types": [] },
   "files": ["main.ts"],
-  "include": ["**/*.d.ts", "**/*.json"]
+  "include": [
+    "**/*.d.ts",
+    "**/*.json",
+    "../../../../../platform/ui-system/dos-ui-system/src/**/*.ts",
+    "../../../../../platform/ui-system/dos-ui-contracts/src/**/*.ts",
+    "../../../../../platform/ui-system/dos-ui-os-client/src/**/*.ts",
+    "../../../../../platform/access/dos-access-store/src/**/*.ts"
+  ]
 }

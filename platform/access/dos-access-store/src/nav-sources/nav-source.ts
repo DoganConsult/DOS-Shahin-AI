@@ -20,6 +20,12 @@ export interface NavCtx {
   access: AccessStore;
   /** Optional product manifest already loaded by the host. */
   productManifest?: unknown;
+  /**
+   * L1 items resolved by DynamicUiNavSource, injected by the adapter after
+   * L1 completes. Allows L5 (AccessStoreNavSource) to skip modules that L1
+   * already covers, preventing duplicate ghost sidebar entries.
+   */
+  l1Items?: ReadonlyArray<DosNavItem>;
 }
 
 export type NavSourceResult = DosNavItem[] | null;
@@ -27,6 +33,21 @@ export type NavSourceResult = DosNavItem[] | null;
 export interface NavSource {
   readonly id: string;
   resolve(ctx: NavCtx): Promise<NavSourceResult>;
+}
+
+/**
+ * Product-provided label resolver consumed by the platform shell.
+ * This lets the shell render Dynamic-UI/module keys with the product's
+ * active locale without hardcoding product i18n inside platform code.
+ */
+export interface WorkspaceNavLabelResolver {
+  navGroupLabel(idOrLabel: string | undefined | null): string;
+  navItemLabel(idOrLabel: string | undefined | null, fallbackId?: string): string;
+  /**
+   * Localized shell chrome (Carbon header/account/sidenav). Return `null` for
+   * unknown keys so the platform shell applies its documented English defaults.
+   */
+  shellChromeString?(key: string): string | null;
 }
 
 /**
@@ -39,3 +60,6 @@ export interface NavSource {
  */
 export const WORKSPACE_NAV_PRODUCT_SOURCE =
   new InjectionToken<NavSource>('WORKSPACE_NAV_PRODUCT_SOURCE');
+
+export const WORKSPACE_NAV_LABEL_RESOLVER =
+  new InjectionToken<WorkspaceNavLabelResolver>('WORKSPACE_NAV_LABEL_RESOLVER');

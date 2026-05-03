@@ -3,5 +3,38 @@
   "compilerOptions": {
     "noEmit": false,
     "outDir": "dist"
-  }
+  },
+  "include": [
+    "contracts/**/*.ts",
+    "domain/**/*.ts",
+    "application/**/*.ts",
+    "infrastructure/**/*.ts",
+    "interface/**/*.ts",
+    "ports/**/*.ts",
+    "schemas/**/*.ts",
+    "config/**/*.ts",
+    "ui/**/*.ts",
+    "db/runner.ts",
+    "index.ts",
+    "bootstrap.ts",
+    "foundation.manifest.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "tests",
+    "ops",
+    "docs",
+    "db/migrations",
+    "db/seeds",
+    "db/canonical",
+    "db/rls",
+    "db/tenant",
+    "ui/**/*.spec.ts",
+    "ui/**/*.test.ts",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "ui/workspace/workspace-ignite-card.component.ts",
+    "ui/workspace/workspace-ignite-card.component.spec.ts"
+  ]
 }

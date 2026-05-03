@@ -218,7 +218,7 @@ export async function getFullContext(tenantId) {
         generatedAt: new Date().toISOString(),
         modules,
         crossModuleAlerts,
-        healthScore: healthRes.rows[0]?.overall_score,
+        healthScore: Number(healthRes.rows[0]?.overall_score) || 0,
     };
 }
 // ── Proactive Suggestions ────────────────────────────────────────────────────

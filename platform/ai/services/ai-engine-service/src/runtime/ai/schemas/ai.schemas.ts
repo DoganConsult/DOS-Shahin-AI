@@ -837,8 +837,15 @@ export const kernelProcessSchema = z.object({
 export const kernelAutonomyBody = z.object({
   level: z.enum(['high', 'standard', 'shadow', 'disabled'])
 });
-export const createExecuteActionBody = (..._args: any[]): any => { return {} as any; };
-export const updateCancelAutoBody = (..._args: any[]): any => { return {} as any; };
+export const createExecuteActionBody = z.object({
+  action: z.string().min(1),
+  agentId: z.string().optional(),
+  actionId: z.string().optional(),
+  payload: z.record(z.unknown()).optional(),
+}).passthrough();
+export const updateCancelAutoBody = z.object({
+  reason: z.string().optional(),
+}).passthrough();
 
 // ── Copilot schema aliases (referenced by copilot.routes.ts) ─────────────
 export const createChatBody = chatBody;

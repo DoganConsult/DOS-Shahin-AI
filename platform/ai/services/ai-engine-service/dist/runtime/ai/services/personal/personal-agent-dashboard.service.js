@@ -179,11 +179,12 @@ export async function getAgentAuditTrail(tenantId, filters, pagination) {
     const activities = activitiesResult.rows.map(row => {
         const activity = mapActivityRow(row);
         // Enrich with assignment details
-        activity.agentNameEn = row.agent_name_en;
-        activity.agentNameAr = row.agent_name_ar;
-        activity.assignmentActivationMode = row.activation_mode;
-        activity.inheritedRoles = row.inherited_roles || [];
-        activity.inheritedPermissions = row.inherited_permissions || [];
+        const enriched = activity;
+        enriched.agentNameEn = row.agent_name_en;
+        enriched.agentNameAr = row.agent_name_ar;
+        enriched.assignmentActivationMode = row.activation_mode;
+        enriched.inheritedRoles = row.inherited_roles || [];
+        enriched.inheritedPermissions = row.inherited_permissions || [];
         return activity;
     });
     const result = {

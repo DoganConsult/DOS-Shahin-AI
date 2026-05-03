@@ -599,7 +599,7 @@ ${JSON.stringify(base, null, 2)}`,
 
 export async function getProactiveInsights(tenantId: string): Promise<Record<string, unknown>[]> {
   const schema = tenantSchema(tenantId);
-  const insights: unknown[] = [];
+  const insights: Record<string, unknown>[] = [];
   const now = new Date();
   const in7Days = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
 

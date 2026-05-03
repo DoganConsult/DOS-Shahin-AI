@@ -60,7 +60,7 @@ router.post('/agents/run', authenticate, requirePermission('platform.agent.manag
     if (agent_id) {
         const { runAgent } = await import('../../runtime/ai/services/agents/core/agent-runner.service.js');
         const { createAgentRun: _createAgentRun } = await import('../../runtime/ai/services/orchestration/agent-orchestration.service.js');
-        const { getTenantPlatformMode } = await import('@dos/platform-core/settings/platform-mode-gate');
+        const { getTenantPlatformMode } = await import('@dos/platform-core/settings/platform-mode-gate.service');
         const { mapModeToAutonomy: _mapModeToAutonomy } = await import('../../runtime/ai/services/orchestration/agent-orchestration.service.js');
         const _mode = await getTenantPlatformMode(tenantId);
         const traceId = `tr_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;

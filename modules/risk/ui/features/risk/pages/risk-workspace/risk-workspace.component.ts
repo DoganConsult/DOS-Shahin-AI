@@ -10,15 +10,15 @@ import { StatusBadgeComponent } from '@app/shared/components/status-indicators/b
 import { StatCardComponent } from '@app/shared/components/status-indicators/stat-card.component';
 import { AiPanelComponent } from '@app/shared/ai-panel/ai-panel.component';
 import { EntityDetailDrawerComponent } from '@app/shared/components/entity/entity-detail-drawer.component';
-import { TabViewModule } from 'primeng/tabs';
+import { TabsModule } from 'primeng/tabs';
 import { TableModule } from 'primeng/table';
 import { ToolbarModule } from 'primeng/toolbar';
 import { InputTextModule } from 'primeng/inputtext';
-import { InputTextarea } from 'primeng/textarea';
+import { TextareaModule } from 'primeng/textarea';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { TagModule } from 'primeng/tag';
-import { DropdownModule } from 'primeng/select';
+import { SelectModule } from 'primeng/select';
 import { TooltipModule } from 'primeng/tooltip';
 import { DialogModule } from 'primeng/dialog';
 import { SliderModule } from 'primeng/slider';
@@ -46,9 +46,9 @@ import {
     GrcDataTableComponent, GrcFormFieldComponent,
     PageShellComponent, StatusBadgeComponent, StatCardComponent,
     EntityDetailDrawerComponent, AiPanelComponent,
-    TabViewModule, TableModule, ToolbarModule,
-    InputTextModule, InputTextarea, ButtonModule, CardModule, TagModule,
-    DropdownModule, TooltipModule, DialogModule, SliderModule, BadgeModule,
+    TabsModule, TableModule, ToolbarModule,
+    InputTextModule, TextareaModule, ButtonModule, CardModule, TagModule,
+    SelectModule, TooltipModule, DialogModule, SliderModule, BadgeModule,
     ToastModule,
   ],
   providers: [MessageService],

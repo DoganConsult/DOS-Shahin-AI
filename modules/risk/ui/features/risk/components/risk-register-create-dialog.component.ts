@@ -4,8 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { I18nService } from '@app/core/services/ui-infra/i18n.service';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
-import { InputTextarea } from 'primeng/textarea';
-import { DropdownModule } from 'primeng/select';
+import { TextareaModule } from 'primeng/textarea';
+import { SelectModule } from 'primeng/select';
 import { SliderModule } from 'primeng/slider';
 import { ButtonModule } from 'primeng/button';
 
@@ -33,7 +33,7 @@ export interface RiskFormData {
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-risk-register-create-dialog',
-    imports: [CommonModule, FormsModule, DialogModule, InputTextModule, InputTextarea, DropdownModule, SliderModule, ButtonModule],
+    imports: [CommonModule, FormsModule, DialogModule, InputTextModule, TextareaModule, SelectModule, SliderModule, ButtonModule],
     template: `
     <p-dialog [header]="editMode ? labels.editRisk : labels.createRisk" [(visible)]="visible" [modal]="true" [focusTrap]="true" [style]="{width:'600px'}" (onHide)="closed.emit()">
       <div class="dialog-form">
@@ -43,16 +43,16 @@ export interface RiskFormData {
         </div>
         <div class="field">
           <label for="risk-desc">{{ labels.description }}</label>
-          <textarea id="risk-desc" pInputTextarea [(ngModel)]="form.description" [rows]="3" class="w-full"></textarea>
+          <textarea id="risk-desc" pTextarea [(ngModel)]="form.description" [rows]="3" class="w-full"></textarea>
         </div>
         <div class="field-row">
           <div class="field">
             <label>{{ labels.category }}</label>
-            <p-dropdown [(ngModel)]="form.category" [options]="categoryOptions" optionLabel="label" optionValue="value" styleClass="w-full" appendTo="body" />
+            <p-select [(ngModel)]="form.category" [options]="categoryOptions" optionLabel="label" optionValue="value" styleClass="w-full" appendTo="body" />
           </div>
           <div class="field">
             <label>{{ labels.owner }}</label>
-            <p-dropdown [options]="userOptions" optionLabel="fullName" optionValue="userId"
+            <p-select [options]="userOptions" optionLabel="fullName" optionValue="userId"
                         [(ngModel)]="form.owner" [placeholder]="isAr ? selectOwnerLabelAr : selectOwnerLabelEn" [filter]="true" filterBy="fullName,email"
                         [showClear]="true" styleClass="w-full" appendTo="body">
               <ng-template let-user pTemplate="item">
@@ -61,12 +61,12 @@ export interface RiskFormData {
                   <small class="text-muted" style="margin-inline-start:8px">{{ user.departmentName || '' }}</small>
                 </div>
               </ng-template>
-            </p-dropdown>
+            </p-select>
           </div>
         </div>
         <div class="field">
           <label>{{ responsibleTeamLabel }}</label>
-          <p-dropdown [options]="teamOptions" optionLabel="name" optionValue="teamId"
+          <p-select [options]="teamOptions" optionLabel="name" optionValue="teamId"
                       [(ngModel)]="form.ownerTeamId" [placeholder]="isAr ? selectTeamLabelAr : selectTeamLabelEn" [filter]="true" [showClear]="true"
                       styleClass="w-full" appendTo="body" />
         </div>
@@ -82,7 +82,7 @@ export interface RiskFormData {
         </div>
         <div class="field">
           <label>{{ labels.status }}</label>
-          <p-dropdown [(ngModel)]="form.status"
+          <p-select [(ngModel)]="form.status"
                       [options]="statusOptions"
                       optionLabel="label" optionValue="value" styleClass="w-full" appendTo="body"
                       [disabled]="editMode && statusOptions.length === 0" />

@@ -25,7 +25,7 @@ router.use(auditMiddleware('agrc-engine'));
 router.get('/platform-mode', validate({ query: z.record(z.unknown()) }), authenticate, requirePermission('platform.agent.read'), async (req: Request, res: Response) => {
   try {
 
-    const { getTenantPlatformMode } = await import('@dos/platform-core/settings/platform-mode-gate');
+    const { getTenantPlatformMode } = await import('@dos/platform-core/settings/platform-mode-gate.service');
     const mode = await getTenantPlatformMode(req.tenantId);
     res.json({ mode });
   } catch (_err: unknown) { res.status(500).json({ error: errMsg('INTERNAL_ERROR', req) }); }
@@ -35,7 +35,7 @@ router.get('/platform-mode', validate({ query: z.record(z.unknown()) }), authent
 router.get('/agent-roles', validate({ query: z.record(z.unknown()) }), authenticate, requirePermission('platform.agent.read'), async (req: Request, res: Response) => {
   try {
 
-    const { getAgentRbacEntries } = await import('@dos/platform-core/settings/platform-mode-gate');
+    const { getAgentRbacEntries } = await import('@dos/platform-core/settings/platform-mode-gate.service');
     res.json({ agents: getAgentRbacEntries() });
   } catch (_err: unknown) { res.status(500).json({ error: errMsg('INTERNAL_ERROR', req) }); }
 });
@@ -44,7 +44,7 @@ router.get('/agent-roles', validate({ query: z.record(z.unknown()) }), authentic
 router.get('/pending-actions', validate({ query: z.record(z.unknown()) }), authenticate, requirePermission('platform.agent.read'), async (req: Request, res: Response) => {
   try {
 
-    const { getPendingActions } = await import('@dos/platform-core/settings/platform-mode-gate');
+    const { getPendingActions } = await import('@dos/platform-core/settings/platform-mode-gate.service');
     const agentId = req.query.agentId as string | undefined;
     const status = req.query.status as string | undefined;
     const limit = req.query.limit ? parseInt(req.query.limit as string, 10) : 50;
@@ -57,7 +57,7 @@ router.get('/pending-actions', validate({ query: z.record(z.unknown()) }), authe
 router.get('/pending-actions/count', validate({ query: z.record(z.unknown()) }), authenticate, requirePermission('platform.agent.read'), async (req: Request, res: Response) => {
   try {
 
-    const { getPendingActions } = await import('@dos/platform-core/settings/platform-mode-gate');
+    const { getPendingActions } = await import('@dos/platform-core/settings/platform-mode-gate.service');
     const actions = await getPendingActions(req.tenantId, { status: 'awaiting_approval' });
     res.json({ count: actions.length });
   } catch (_err: unknown) { res.status(500).json({ error: errMsg('INTERNAL_ERROR', req) }); }
@@ -67,7 +67,7 @@ router.get('/pending-actions/count', validate({ query: z.record(z.unknown()) }),
 router.put('/pending-actions/:id/review', authenticate, requirePermission('platform.agent.write'), writeLimiter, validate({ body: updateReviewBody }), async (req: Request, res: Response) => {
   try {
 
-    const { reviewPendingAction } = await import('@dos/platform-core/settings/platform-mode-gate');
+    const { reviewPendingAction } = await import('@dos/platform-core/settings/platform-mode-gate.service');
     const { executeAction } = await import('../../runtime/ai/services/agents/core/agent-runner.service');
     const tenantId = req.tenantId;
     const userId = req.user?.userId;
@@ -89,8 +89,8 @@ router.put('/pending-actions/:id/review', authenticate, requirePermission('platf
         ? JSON.parse(result.action.proposed_payload)
         : result.action.proposed_payload || {};
       try {
-        await executeAction(tenantId, result.action.agent_id, {
-          type: result.action.action_type,
+        await executeAction(tenantId, result.action.agent_id as string, {
+          type: result.action.action_type as any,
           title: payload.title || result.action.action_type,
           description: payload.description || '',
           priority: payload.priority || 'medium',

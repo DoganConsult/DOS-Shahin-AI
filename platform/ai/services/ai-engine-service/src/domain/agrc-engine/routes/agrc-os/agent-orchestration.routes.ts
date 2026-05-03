@@ -266,7 +266,7 @@ router.post('/hyper-role/check', authenticate, requirePermission('platform.agent
   try {
     const { computeHyperRole, mapModeToAutonomy } = await import('../../runtime/ai/services/orchestration/agent-orchestration.service');
 
-    const { getTenantPlatformMode } = await import('@dos/platform-core/settings/platform-mode-gate');
+    const { getTenantPlatformMode } = await import('@dos/platform-core/settings/platform-mode-gate.service');
     const tenantId = req.tenantId;
     const { agentId, actionType, userPermissions, autonomyLevel } = req.body;
 

@@ -73,7 +73,7 @@ router.get('/guided/faq', authenticate, requirePermission('platform.agent.read')
 
 router.get('/guided/agent-capabilities', validate({ query: z.record(z.unknown()) }), authenticate, requirePermission('platform.agent.read'), async (_req: Request, res: Response) => {
 
-  const { getAgentRbacEntries, AGENT_RBAC_MAP: _AGENT_RBAC_MAP } = await import('@dos/platform-core/settings/platform-mode-gate');
+  const { getAgentRbacEntries, AGENT_RBAC_MAP: _AGENT_RBAC_MAP } = await import('@dos/platform-core/settings/platform-mode-gate.service');
   const { computeHyperRole, mapModeToAutonomy } = await import('../../runtime/ai/services/orchestration/agent-orchestration.service');
 
   const modes = ['human', 'hybrid', 'shadow_agent', 'full_autonomous'] as const;

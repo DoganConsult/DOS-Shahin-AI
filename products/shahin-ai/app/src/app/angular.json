@@ -19,7 +19,9 @@
               "lottie-web",
               "plotly.js-dist-min",
               "elkjs",
-              "@profoundlogic/hogan"
+              "@profoundlogic/hogan",
+              "flatpickr/dist/plugins/rangePlugin",
+              "flatpickr/dist/l10n/index"
             ],
             "outputPath": "dist/shahin-ai",
             "index": "index.html",

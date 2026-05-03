@@ -53,11 +53,40 @@ PER-PRIMITIVE WRAPPER GAP (still real):
   Angular Carbon components in the workspace today. The remaining 138 keys
   resolve to a generic host until per-primitive wrappers land.
 
-FOUNDATION MODULE BUILD STATE (verified):
+FOUNDATION MODULE BUILD STATE (verified 2026-05-02 evening):
 - `platform/foundation/dist/` IS built (bootstrap.js + contracts present).
 - `platform/foundation/ui/` exposes the 19 UI components consumed by
   `app.routes.ts`. The Phase A "Gates 2 & 3 PENDING" wording in the broader
   plan reflects validation/CI gates, NOT missing build artefacts.
+- `platform/foundation/tsconfig.json` now declares `"lib": ["ES2022","DOM"]`
+  (was `["ES2022"]`). This unblocks `@dos/ui-system` typechecking when
+  pulled in transitively, because `@dos/ui-system/package.json` exposes
+  `src/index.ts` directly (no built `dist`) so foundation's tsc walks
+  ui-system source under foundation's lib set.
+
+REAL @dos/ui-system BLOCKERS (after the lib fix; verify with
+`pnpm --filter @dos/module-foundation build 2>&1 | grep -E "ui/workspace|ui-system"`):
+- `platform/foundation/ui/workspace/workspace-icons.ts` imports
+  `@carbon/icons/es/{qr-code,camera,wifi--off,email}/{16,32}` — package
+  ships JS without `.d.ts`. Fix: add a one-line `declare module '@carbon/icons/es/*';`
+  ambient shim under `platform/foundation/ui/types/`.
+- `platform/foundation/ui/workspace/workspace-ignite-card.component.ts`
+  imports `@app/modules` and `@app/dos/contracts/cockpit-config.contract`.
+  These are SPA-only path aliases, not workspace packages. The file does
+  not belong in foundation; either move it to the SPA or rewrite the
+  imports to use real `@dos/*` workspace packages.
+
+UI-SYSTEM USAGE POLICY (revised — no fake-green fallbacks):
+- Pages MUST prefer `@dos/ui-system` primitives when one exists. The
+  prior "ui-system is RED, fall back to carbon-components-angular" excuse
+  is forbidden; fix the build instead (see lib + ambient-icon-shim notes
+  above). Direct `carbon-components-angular` imports are allowed only
+  for primitives `@dos/ui-system` does not yet wrap; each such import
+  must include a one-line comment naming the missing wrapper.
+- When converting an existing page, replace at minimum: tiles → DosCard /
+  DosMetricCard, buttons → DosButton, notifications → DosStatusBanner,
+  empty/loading placeholders → DosEmptyState / DosLoadingState, page
+  headers → DosPageHeader, command bars → DosAdaptiveCommandBar.
 
 PLAYWRIGHT:
 - `npx playwright` binary resolves. Config: `platform/config-center/test/playwright.config.ts`.

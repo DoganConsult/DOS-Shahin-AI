@@ -238,7 +238,7 @@
           </div>
           <div class="field">
             <label>{{ L().justification }}</label>
-            <textarea pInputTextarea [(ngModel)]="form.reason" [rows]="4" class="w-full" [placeholder]="L().justificationPlaceholder" [attr.aria-label]="L().justificationPlaceholder"></textarea>
+            <textarea pTextarea [(ngModel)]="form.reason" [rows]="4" class="w-full" [placeholder]="L().justificationPlaceholder" [attr.aria-label]="L().justificationPlaceholder"></textarea>
           </div>
         </div>
         <ng-template pTemplate="footer">
@@ -251,7 +251,7 @@
         <div class="dialog-form">
           <div class="field">
             <label>{{ L().comments }}</label>
-            <textarea pInputTextarea [(ngModel)]="approvalComments" [rows]="3" class="w-full" [placeholder]="L().commentsPlaceholder" [attr.aria-label]="L().commentsPlaceholder"></textarea>
+            <textarea pTextarea [(ngModel)]="approvalComments" [rows]="3" class="w-full" [placeholder]="L().commentsPlaceholder" [attr.aria-label]="L().commentsPlaceholder"></textarea>
           </div>
         </div>
         <ng-template pTemplate="footer">
@@ -276,7 +276,7 @@
           </div>
           <div class="field">
             <label>{{ L().renewJustification }}</label>
-            <textarea pInputTextarea [(ngModel)]="renewReason" [rows]="3" class="w-full" [placeholder]="L().renewPlaceholder" [attr.aria-label]="L().renewPlaceholder"></textarea>
+            <textarea pTextarea [(ngModel)]="renewReason" [rows]="3" class="w-full" [placeholder]="L().renewPlaceholder" [attr.aria-label]="L().renewPlaceholder"></textarea>
           </div>
         </div>
         <ng-template pTemplate="footer">

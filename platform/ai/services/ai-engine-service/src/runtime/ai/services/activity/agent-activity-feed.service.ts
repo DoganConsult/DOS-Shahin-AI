@@ -90,7 +90,7 @@ function agentName(agentId: string, lang: 'en' | 'ar' = 'en'): string {
  */
 function extractAgentId(row: Record<string, unknown>): string | null {
   // Check source_service pattern "agent-runner:A0X" or "agent:A0X"
-  const src = row.source_service || '';
+  const src = (row.source_service as string | undefined) || '';
 
   const srcMatch = src.match(/\b(A\d{2})\b/);
   if (srcMatch) return srcMatch[1];

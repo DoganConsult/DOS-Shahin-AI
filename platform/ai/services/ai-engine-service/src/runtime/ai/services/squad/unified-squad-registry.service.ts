@@ -164,23 +164,26 @@ export async function updateParticipantStatus(tenantId: string, userId: string, 
 
 // ── Row Mapper ─────────────────────────────────────────────────────────────
 function mapRow(row: Record<string, unknown>): SquadMember {
+  const lastActivity = row.last_activity_at as { toISOString?: () => string } | string | null | undefined;
   return {
-    memberId: row.member_id,
-    userId: row.user_id,
-    displayNameEn: row.display_name_en,
-    displayNameAr: row.display_name_ar,
+    memberId: row.member_id as string,
+    userId: row.user_id as string,
+    displayNameEn: row.display_name_en as string,
+    displayNameAr: row.display_name_ar as string,
 
-    role: row.role,
-    deploymentMode: row.deployment_mode,
-    isAgent: row.is_agent,
+    role: row.role as SquadMember['role'],
+    deploymentMode: row.deployment_mode as DeploymentMode,
+    isAgent: row.is_agent as boolean,
 
-    capabilities: row.capabilities || [],
-    specialization: row.specialization || undefined,
-    currentStatus: row.current_status,
-    deliveryChannel: row.delivery_channel,
-    webhookUrl: row.webhook_url || undefined,
-    taskQueue: row.task_queue || [],
+    capabilities: (row.capabilities as string[]) || [],
+    specialization: (row.specialization as string) || undefined,
+    currentStatus: row.current_status as ParticipantStatus,
+    deliveryChannel: row.delivery_channel as SquadMember['deliveryChannel'],
+    webhookUrl: (row.webhook_url as string) || undefined,
+    taskQueue: (row.task_queue as string[]) || [],
 
-    lastActivityAt: row.last_activity_at?.toISOString?.() || row.last_activity_at,
+    lastActivityAt: (typeof lastActivity === 'object' && lastActivity?.toISOString
+      ? lastActivity.toISOString()
+      : (lastActivity as string)) as SquadMember['lastActivityAt'],
   };
 }

@@ -47,14 +47,14 @@ export async function getAiDiagnosticsSnapshot(tenantId) {
           WHERE created_at > NOW() - INTERVAL '24 hours'
         `), { tenantId, operation: 'diagnostics cost' }),
     ]);
-    const run = runRes.rows[0] || {};
-    const stuck = failedRes.rows[0] || {};
-    const tool = stuckRes.rows[0] || {};
-    const approvals = approvalRes.rows[0] || {};
-    const handoffs = handoffRes.rows[0] || {};
-    const mem = memRes.rows[0] || {};
-    const circuit = circuitRes.rows[0] || {};
-    const cost = costRes.rows[0] || {};
+    const run = (runRes.rows[0] || {});
+    const stuck = (failedRes.rows[0] || {});
+    const tool = (stuckRes.rows[0] || {});
+    const approvals = (approvalRes.rows[0] || {});
+    const handoffs = (handoffRes.rows[0] || {});
+    const mem = (memRes.rows[0] || {});
+    const circuit = (circuitRes.rows[0] || {});
+    const cost = (costRes.rows[0] || {});
     const errorRate = Math.round((Number(run.error_rate) || 0) * 100) / 100;
     const quotaUtil = Math.round(((Number(cost.total_tokens) || 0) / Math.max(Number(cost.budget) / 30, 1)) * 100);
     const overall = Number(stuck.stuck) > 5 || errorRate > 0.3 || Number(circuit.circuit_open) > 3

@@ -109,7 +109,8 @@ async function gatherAgentStatus(schema, tenantId, agentId, agentName, since) {
     const eventsRes = await swallowDefault(EC.FALLBACK_QUERY, emptyResult(), safeQuery(`SELECT event_type, payload FROM "${schema}".event_log
      WHERE source_service LIKE $1 AND created_at >= $2
      ORDER BY created_at DESC LIMIT 10`, [`%${agentId.toLowerCase().replace('agent-', '')}%`, since]), { tenantId: tenantId, operation: 'query event_log' });
-    for (const ev of eventsRes.rows) {
+    for (const evRow of eventsRes.rows) {
+        const ev = evRow;
         if (ev.event_type?.includes('alert') || ev.event_type?.includes('warning')) {
             findings.push(`${ev.event_type}: ${JSON.stringify(ev.payload || {}).slice(0, 100)}`);
         }
@@ -138,7 +139,8 @@ async function notifyTeamLeads(tenantId, schema, digest) {
      WHERE is_agent = FALSE AND (role LIKE '%admin%' OR role LIKE '%lead%')`, []), { tenantId: tenantId, operation: 'query unified_squad_members' });
     const findingCount = digest.entries.reduce((sum, e) => sum + e.findings.length, 0);
     const blockerCount = digest.entries.reduce((sum, e) => sum + e.blockers.length, 0);
-    for (const lead of leadsRes.rows) {
+    for (const leadRow of leadsRes.rows) {
+        const lead = leadRow;
         await createNotification(tenantId, {
             userId: lead.user_id,
             type: 'agent_standup',
@@ -148,15 +150,26 @@ async function notifyTeamLeads(tenantId, schema, digest) {
         }).catch(catchHandler(EC.AGENT_ACTION, {}));
     }
 }
-function mapDigest(r) {
+function mapDigest(rawRow) {
+    const r = rawRow;
+    const generatedAt = typeof r.generated_at === 'string'
+        ? r.generated_at
+        : (r.generated_at?.toISOString?.() ?? String(r.generated_at));
+    const acknowledgedAt = !r.acknowledged_at
+        ? undefined
+        : typeof r.acknowledged_at === 'string'
+            ? r.acknowledged_at
+            : (r.acknowledged_at?.toISOString?.() ?? String(r.acknowledged_at));
     return {
-        digestId: r.digest_id, tenantId: r.tenant_id,
-        entries: typeof r.entries === 'string' ? JSON.parse(r.entries) : r.entries || [],
+        digestId: r.digest_id,
+        tenantId: r.tenant_id,
+        entries: typeof r.entries === 'string' ? JSON.parse(r.entries) : (r.entries || []),
         teamLeadPriorities: r.team_lead_priorities
             ? (typeof r.team_lead_priorities === 'string' ? JSON.parse(r.team_lead_priorities) : r.team_lead_priorities)
             : undefined,
-        status: r.status, generatedAt: r.generated_at?.toISOString?.() || r.generated_at,
-        acknowledgedAt: r.acknowledged_at?.toISOString?.() || r.acknowledged_at,
+        status: r.status,
+        generatedAt,
+        acknowledgedAt,
         acknowledgedBy: r.acknowledged_by,
     };
 }

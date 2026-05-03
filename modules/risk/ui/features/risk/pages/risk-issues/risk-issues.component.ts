@@ -18,7 +18,7 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { ButtonModule } from 'primeng/button';
-import { DropdownModule } from 'primeng/select';
+import { SelectModule } from 'primeng/select';
 import { InputTextModule } from 'primeng/inputtext';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
@@ -41,7 +41,7 @@ import { devError } from '@app/runtime/utils/dev-logger';
         CommonModule, FormsModule,
         PageHeaderComponent, ModuleTabsBarComponent,
         StatusBadgeComponent, AppDatePipe,
-        SkeletonModule, TableModule, TagModule, ButtonModule, DropdownModule, InputTextModule, ToastModule,
+        SkeletonModule, TableModule, TagModule, ButtonModule, SelectModule, InputTextModule, ToastModule,
     ],
     providers: [MessageService],
     template: `
@@ -79,8 +79,8 @@ import { devError } from '@app/runtime/utils/dev-logger';
 
       <!-- Filters -->
       <div class="ri-filters">
-        <p-dropdown [options]="severityOptions" [(ngModel)]="filterSeverity" placeholder="{{ isAr() ? 'الأولوية' : 'Severity' }}" [showClear]="true" styleClass="ri-filter" />
-        <p-dropdown [options]="statusOptions" [(ngModel)]="filterStatus" placeholder="{{ isAr() ? 'الحالة' : 'Status' }}" [showClear]="true" styleClass="ri-filter" />
+        <p-select [options]="severityOptions" [(ngModel)]="filterSeverity" placeholder="{{ isAr() ? 'الأولوية' : 'Severity' }}" [showClear]="true" styleClass="ri-filter" />
+        <p-select [options]="statusOptions" [(ngModel)]="filterStatus" placeholder="{{ isAr() ? 'الحالة' : 'Status' }}" [showClear]="true" styleClass="ri-filter" />
         <span class="p-input-icon-left ri-filter">
           <i class="pi pi-search"></i>
           <input pInputText [(ngModel)]="searchTerm" placeholder="{{ isAr() ? 'بحث...' : 'Search...' }}" />

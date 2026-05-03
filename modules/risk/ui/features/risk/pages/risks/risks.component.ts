@@ -10,8 +10,8 @@ import { StatusBadgeComponent } from '@app/shared/components/status-indicators/b
 import { CardModule } from 'primeng/card';
 import { ToolbarModule } from 'primeng/toolbar';
 import { InputTextModule } from 'primeng/inputtext';
-import { InputTextarea } from 'primeng/textarea';
-import { DropdownModule } from 'primeng/select';
+import { TextareaModule } from 'primeng/textarea';
+import { SelectModule } from 'primeng/select';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { DialogModule } from 'primeng/dialog';
@@ -40,8 +40,8 @@ interface SeverityOption {
   imports: [
     CommonModule, FormsModule,
     PageShellComponent, StatusBadgeComponent, GrcFormFieldComponent,
-    CardModule, ToolbarModule, InputTextModule, InputTextarea,
-    DropdownModule, ButtonModule, TagModule, DialogModule,
+    CardModule, ToolbarModule, InputTextModule, TextareaModule,
+    SelectModule, ButtonModule, TagModule, DialogModule,
     SliderModule, ConfirmDialogModule, TooltipModule,
     EntityDetailDrawerComponent,
     AiPanelComponent, RaciPanelComponent, ToastModule,

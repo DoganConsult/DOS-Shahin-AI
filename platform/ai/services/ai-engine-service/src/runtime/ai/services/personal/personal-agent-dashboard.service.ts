@@ -242,16 +242,12 @@ export async function getAgentAuditTrail(
   const activities = activitiesResult.rows.map(row => {
     const activity = mapActivityRow(row);
     // Enrich with assignment details
-
-    (activity as Record<string, unknown>).agentNameEn = row.agent_name_en;
-
-    (activity as Record<string, unknown>).agentNameAr = row.agent_name_ar;
-
-    (activity as Record<string, unknown>).assignmentActivationMode = row.activation_mode;
-
-    (activity as Record<string, unknown>).inheritedRoles = row.inherited_roles || [];
-
-    (activity as Record<string, unknown>).inheritedPermissions = row.inherited_permissions || [];
+    const enriched = activity as unknown as Record<string, unknown>;
+    enriched.agentNameEn = row.agent_name_en;
+    enriched.agentNameAr = row.agent_name_ar;
+    enriched.assignmentActivationMode = row.activation_mode;
+    enriched.inheritedRoles = row.inherited_roles || [];
+    enriched.inheritedPermissions = row.inherited_permissions || [];
     return activity;
   });
 

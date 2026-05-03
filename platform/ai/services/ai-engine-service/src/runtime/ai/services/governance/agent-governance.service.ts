@@ -343,12 +343,15 @@ export async function updateToolPermission(
 
   const perm = rowToPermission(res.rows[0]);
 
-  eventBus.publish('constitution.updated' as any, {
-    tenantId,
-    type: 'agent_permission_updated',
-    permissionId,
-    agentId: perm.agentId,
-    toolName: perm.toolName,
+  eventBus.publish({
+    event_type: 'constitution.updated',
+    tenant_id: tenantId,
+    payload: {
+      type: 'agent_permission_updated',
+      permissionId,
+      agentId: perm.agentId,
+      toolName: perm.toolName,
+    },
   });
 
   return perm;
@@ -384,14 +387,17 @@ export async function createHITLGate(
     details: { gateId, toolName: input.toolName, action: input.action, expiresAt },
   });
 
-  eventBus.publish('gate.blocked' as any, {
-    tenantId,
-    type: 'hitl_gate_created',
-    gateId,
-    agentId: input.agentId,
-    toolName: input.toolName,
-    action: input.action,
-    expiresAt,
+  eventBus.publish({
+    event_type: 'gate.blocked',
+    tenant_id: tenantId,
+    payload: {
+      type: 'hitl_gate_created',
+      gateId,
+      agentId: input.agentId,
+      toolName: input.toolName,
+      action: input.action,
+      expiresAt,
+    },
   });
 
   return {
@@ -454,13 +460,16 @@ export async function resolveHITLGate(
   );
   const updatedGate = updatedRes.rows[0] || gate;
 
-  eventBus.publish(`gate.${decision === 'approved' ? 'allowed' : 'blocked'}` as any, {
-    tenantId,
-    type: `hitl_gate_${decision}`,
-    gateId,
-    agentId: gate.agent_id,
-    decision,
-    decidedBy,
+  eventBus.publish({
+    event_type: `gate.${decision === 'approved' ? 'allowed' : 'blocked'}`,
+    tenant_id: tenantId,
+    payload: {
+      type: `hitl_gate_${decision}`,
+      gateId,
+      agentId: gate.agent_id,
+      decision,
+      decidedBy,
+    },
   });
 
   return rowToGate(updatedGate);
@@ -515,11 +524,14 @@ export async function expireOverdueGates(tenantId: string): Promise<number> {
       details: { gateId: gate.gate_id },
     });
 
-    eventBus.publish('gate.blocked' as any, {
-      tenantId,
-      type: 'hitl_gate_expired',
-      gateId: gate.gate_id,
-      agentId: gate.agent_id,
+    eventBus.publish({
+      event_type: 'gate.blocked',
+      tenant_id: tenantId,
+      payload: {
+        type: 'hitl_gate_expired',
+        gateId: gate.gate_id,
+        agentId: gate.agent_id,
+      },
     });
   }
 

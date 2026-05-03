@@ -69,7 +69,7 @@ export async function createChatCompletion(
     temperature?: number;
   } = {},
 ): Promise<{ content: string; usage: { inputTokens: number; outputTokens: number } } | null> {
-  const client = getClaudeClient();
+  const client = getClaudeClient() as any;
   if (!client) return null;
 
   try {

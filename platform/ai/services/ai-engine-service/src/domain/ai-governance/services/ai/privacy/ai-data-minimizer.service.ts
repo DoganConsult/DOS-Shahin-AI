@@ -38,7 +38,7 @@ async function loadMinimizationConfig(tenantId: string): Promise<MinimizationCon
      FROM "${schema}".ai_data_minimization_config WHERE enabled = true`
   ), { tenantId: tenantId, operation: 'query ai_data_minimization_config' });
 
-  const configs = result.rows as MinimizationConfig[];
+  const configs = result.rows as unknown as MinimizationConfig[];
   configCache.set(tenantId, { configs, ts: Date.now() });
   return configs;
 }

@@ -19,7 +19,7 @@ function computeHndlRisk(dataSensitivity) {
 // 1. inventoryCryptoAsset
 export async function inventoryCryptoAsset(tenantId, asset) {
     const schema = tenantSchema(tenantId);
-    const alg = (asset.algorithm ?? '').toLowerCase();
+    const alg = String(asset.algorithm ?? '').toLowerCase();
     const isVulnerable = QUANTUM_VULNERABLE_ALGORITHMS.some(v => alg.includes(v));
     const hndlRisk = isVulnerable ? computeHndlRisk(asset.data_sensitivity) : 'none';
     const { rows } = await safeQuery(`INSERT INTO "${schema}".cryptographic_inventory

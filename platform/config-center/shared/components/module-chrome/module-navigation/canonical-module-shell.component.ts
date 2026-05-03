@@ -97,12 +97,12 @@ export interface CanonicalShellConfig {
     </div>
   `,
     styles: [`
-    .cms { display: flex; flex-direction: column; height: 100%; min-height: 0; background: var(--surface-ground, #f5f5f5); }
+    .cms { display: flex; flex-direction: column; height: 100%; min-height: 0; background: var(--cds-layer-01); }
     .cms-body { display: flex; flex: 1; min-height: 0; overflow: hidden; }
-    .cms-main { flex: 1; overflow-y: auto; padding: 16px 24px; min-width: 0; }
-    @media (max-width: 1024px) {
+    .cms-main { flex: 1; overflow-y: auto; padding: var(--cds-spacing-05) var(--cds-spacing-06); min-width: 0; }
+    @media (max-width: 64rem) {
       .cms-body { flex-direction: column; }
-      .cms-main { padding: 12px; }
+      .cms-main { padding: var(--cds-spacing-04); }
     }
   `]
 })

@@ -51,14 +51,11 @@ function evaluateCondition(condition: Record<string, unknown>, context: Record<s
   for (const [key, expected] of Object.entries(condition)) {
     const actual = context[key];
     if (typeof expected === 'object' && expected !== null) {
-
-      if (expected.$gte !== undefined && (actual === undefined || actual < expected.$gte)) return false;
-
-      if (expected.$lte !== undefined && (actual === undefined || actual > expected.$lte)) return false;
-
-      if (expected.$eq !== undefined && actual !== expected.$eq) return false;
-
-      if (expected.$in !== undefined && !expected.$in.includes(actual)) return false;
+      const op = expected as { $gte?: unknown; $lte?: unknown; $eq?: unknown; $in?: unknown[] };
+      if (op.$gte !== undefined && (actual === undefined || (actual as number) < (op.$gte as number))) return false;
+      if (op.$lte !== undefined && (actual === undefined || (actual as number) > (op.$lte as number))) return false;
+      if (op.$eq !== undefined && actual !== op.$eq) return false;
+      if (op.$in !== undefined && !op.$in.includes(actual)) return false;
     } else if (actual !== expected) {
       return false;
     }

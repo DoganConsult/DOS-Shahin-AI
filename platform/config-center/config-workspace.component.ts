@@ -5,8 +5,8 @@ import { I18nService } from '@app/core/services/ui-infra/i18n.service';
 import { PageShellComponent } from '@app/shared/components/layouts/page-shell.component';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { DropdownModule } from 'primeng/select';
-import { InputSwitchModule } from 'primeng/toggleswitch';
+import { SelectModule } from 'primeng/select';
+import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ColorPickerModule } from 'primeng/colorpicker';
 import { DividerModule } from 'primeng/divider';
@@ -32,7 +32,7 @@ interface WorkspaceField {
   standalone: true,
   imports: [
     CommonModule, FormsModule, PageShellComponent,
-    ButtonModule, InputTextModule, DropdownModule, InputSwitchModule,
+    ButtonModule, InputTextModule, SelectModule, ToggleSwitchModule,
     InputNumberModule, ColorPickerModule, DividerModule, ToastModule, TagModule,
   ],
   providers: [MessageService],
@@ -70,7 +70,7 @@ interface WorkspaceField {
                 </label>
                 @switch (field.type) {
                   @case ('select') {
-                    <p-dropdown [options]="field.options!" [(ngModel)]="field.value" (onChange)="markDirty(field)"
+                    <p-select [options]="field.options!" [(ngModel)]="field.value" (onChange)="markDirty(field)"
                                 styleClass="w-full p-inputtext-sm" />
                   }
                   @case ('text') {
@@ -83,7 +83,7 @@ interface WorkspaceField {
                     </div>
                   }
                   @case ('toggle') {
-                    <p-inputSwitch [(ngModel)]="field.value" (onChange)="markDirty(field)" />
+                    <p-toggleswitch [(ngModel)]="field.value" (onChange)="markDirty(field)" />
                   }
                 }
               </div>
@@ -106,7 +106,7 @@ interface WorkspaceField {
                 </label>
                 @switch (field.type) {
                   @case ('select') {
-                    <p-dropdown [options]="field.options!" [(ngModel)]="field.value" (onChange)="markDirty(field)"
+                    <p-select [options]="field.options!" [(ngModel)]="field.value" (onChange)="markDirty(field)"
                                 styleClass="w-full p-inputtext-sm" />
                   }
                   @case ('text') {
@@ -116,7 +116,7 @@ interface WorkspaceField {
                     <p-inputNumber [(ngModel)]="field.value" (onInput)="markDirty(field)" styleClass="p-inputtext-sm" />
                   }
                   @case ('toggle') {
-                    <p-inputSwitch [(ngModel)]="field.value" (onChange)="markDirty(field)" />
+                    <p-toggleswitch [(ngModel)]="field.value" (onChange)="markDirty(field)" />
                   }
                 }
               </div>
@@ -158,7 +158,7 @@ interface WorkspaceField {
                 </label>
                 @switch (field.type) {
                   @case ('select') {
-                    <p-dropdown [options]="field.options!" [(ngModel)]="field.value" (onChange)="markDirty(field)"
+                    <p-select [options]="field.options!" [(ngModel)]="field.value" (onChange)="markDirty(field)"
                                 styleClass="w-full p-inputtext-sm" />
                   }
                   @case ('text') {
@@ -168,7 +168,7 @@ interface WorkspaceField {
                     <p-inputNumber [(ngModel)]="field.value" (onInput)="markDirty(field)" styleClass="p-inputtext-sm" />
                   }
                   @case ('toggle') {
-                    <p-inputSwitch [(ngModel)]="field.value" (onChange)="markDirty(field)" />
+                    <p-toggleswitch [(ngModel)]="field.value" (onChange)="markDirty(field)" />
                   }
                 }
               </div>

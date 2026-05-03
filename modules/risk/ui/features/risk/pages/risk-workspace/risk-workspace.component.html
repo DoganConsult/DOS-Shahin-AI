@@ -26,7 +26,7 @@
         <p-button [label]="L().exportRegister" icon="pi pi-download" severity="secondary" [outlined]="true" (onClick)="exportRegister()" />
       </ng-template>
       <ng-template pTemplate="end">
-        <p-dropdown [options]="categoryFilterOptions" [(ngModel)]="categoryFilter" optionLabel="label" optionValue="value"
+        <p-select [options]="categoryFilterOptions" [(ngModel)]="categoryFilter" optionLabel="label" optionValue="value"
                     [placeholder]="L().filterByCategory" (onChange)="onFilterChange()" [style]="{minWidth:'180px'}" styleClass="me-2" />
         <span class="p-input-icon-left">
           <i class="pi pi-search"></i>
@@ -37,7 +37,7 @@
   </div>
 
   <!-- ═══ TABBED WORK AREA ═══ -->
-  <p-tabView [(activeIndex)]="tabIndex" (onChange)="onTabChange($event.index)" styleClass="risk-tabs">
+  <p-tabs [(activeIndex)]="tabIndex" (onChange)="onTabChange($event.index)" styleClass="risk-tabs">
 
     <!-- ═══ TAB 0: RISK OVERVIEW ═══ -->
     <p-tabPanel [header]="L().overview">
@@ -118,9 +118,9 @@
     <p-tabPanel [header]="L().register">
       <p-toolbar styleClass="mb-3">
         <ng-template pTemplate="start">
-          <p-dropdown [options]="statusFilterOptions" [(ngModel)]="statusFilter" optionLabel="label" optionValue="value"
+          <p-select [options]="statusFilterOptions" [(ngModel)]="statusFilter" optionLabel="label" optionValue="value"
                       [placeholder]="L().filterByStatus" (onChange)="loadRegister()" [style]="{minWidth:'160px'}" styleClass="me-2" />
-          <p-dropdown [options]="categoryFilterOptions" [(ngModel)]="registerCatFilter" optionLabel="label" optionValue="value"
+          <p-select [options]="categoryFilterOptions" [(ngModel)]="registerCatFilter" optionLabel="label" optionValue="value"
                       [placeholder]="L().filterByCategory" (onChange)="loadRegister()" [style]="{minWidth:'160px'}" />
         </ng-template>
         <ng-template pTemplate="end">
@@ -499,7 +499,7 @@
       </div>
     </p-tabPanel>
 
-  </p-tabView>
+  </p-tabs>
 
   <!-- ═══ CREATE/EDIT RISK DIALOG ═══ -->
   <p-dialog [header]="editMode ? L().editRisk : L().createRisk" [(visible)]="riskDialogVisible" [modal]="true" [style]="{width:'600px'}">
@@ -507,17 +507,17 @@
       <grc-form-field [label]="L().title">
         <input pInputText [(ngModel)]="riskForm.title" class="w-full" />
       </grc-form-field>
-      <div class="field"><label>{{ L().description }}</label><textarea pInputTextarea [(ngModel)]="riskForm.description" [rows]="3" class="w-full"></textarea></div>
+      <div class="field"><label>{{ L().description }}</label><textarea pTextarea [(ngModel)]="riskForm.description" [rows]="3" class="w-full"></textarea></div>
       <div class="field-row">
         <div class="field"><label>{{ L().category }}</label>
-          <p-dropdown [(ngModel)]="riskForm.category" [options]="riskCategoryOptions" optionLabel="label" optionValue="value" styleClass="w-full" /></div>
+          <p-select [(ngModel)]="riskForm.category" [options]="riskCategoryOptions" optionLabel="label" optionValue="value" styleClass="w-full" /></div>
         <grc-form-field [label]="L().owner">
           <input pInputText [(ngModel)]="riskForm.owner" class="w-full" />
         </grc-form-field>
       </div>
       <div class="field" *ngIf="teamOptions().length">
         <label>{{ i18n.currentLang() === 'ar' ? 'فريق المسؤول' : 'Owner Team' }}</label>
-        <p-dropdown [(ngModel)]="riskForm.owner_team_id" [options]="teamOptions()" optionLabel="label" optionValue="value"
+        <p-select [(ngModel)]="riskForm.owner_team_id" [options]="teamOptions()" optionLabel="label" optionValue="value"
           [filter]="true" [showClear]="true" [placeholder]="i18n.currentLang() === 'ar' ? 'اختر الفريق...' : 'Select team...'" styleClass="w-full" />
       </div>
       <div class="field-row">
@@ -525,7 +525,7 @@
         <div class="field"><label>{{ L().impact }}: {{ riskForm.impact }}</label><p-slider [(ngModel)]="riskForm.impact" [min]="1" [max]="5" [step]="1" /></div>
       </div>
       <div class="field"><label>{{ L().status }}</label>
-        <p-dropdown [(ngModel)]="riskForm.status" [options]="riskStatusOptions" optionLabel="label" optionValue="value" styleClass="w-full" /></div>
+        <p-select [(ngModel)]="riskForm.status" [options]="riskStatusOptions" optionLabel="label" optionValue="value" styleClass="w-full" /></div>
     </div>
     <ng-template pTemplate="footer">
       <p-button [label]="L().cancel" icon="pi pi-times" severity="secondary" [text]="true" (onClick)="riskDialogVisible=false" />

@@ -63,7 +63,7 @@ router.post("/generate-policy", authenticate, requirePermission("policy.document
   }
   const policy = await generatePolicy(req.tenantId, req.body);
 
-  setAuditData(res as any, { action: "create", entityType: "ai-analysis", entityId: policy?.id || "generate-policy", afterState: policy });
+  setAuditData(res as any, { action: "create", entityType: "ai-analysis", entityId: (policy as any)?.id || "generate-policy", afterState: policy as any });
   swallow(EC.EVENT_BUS, emitModuleEvent({ tenantId: req.tenantId, userId: req.user!.userId, module: 'governance', event: 'created', entityType: 'ai', entityId: req.params.id || '' }), { tenantId: req.tenantId, operation: 'grcEvent:governance.ai.created' });
   res.json(policy);
 }));

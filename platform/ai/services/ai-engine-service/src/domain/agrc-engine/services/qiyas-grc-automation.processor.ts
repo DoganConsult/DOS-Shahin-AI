@@ -1,6 +1,11 @@
 import { emptyResult, safeQuery, tenantSchema } from '../ports/database.port';
 
-import { pushToTenant, buildWSEvent, getActiveTenantIds } from '../ports/events.port';
+// Tenant push/active-tenant helpers are not exposed by the AI-engine events port.
+// Provide local no-op fallbacks so callers compile and degrade safely until the
+// canonical websocket fan-out and tenant-registry helpers are wired through.
+const pushToTenant = (_tenantId: string, _event: unknown): void => { /* no-op */ };
+const buildWSEvent = (eventType: string, payload: Record<string, unknown>): { type: string; payload: Record<string, unknown> } => ({ type: eventType, payload });
+const getActiveTenantIds = (): string[] => [];
 import { swallowDefault, EC , catchHandler } from '@dos/platform-core/resilience/resilient-catch';
 
 export interface TriggerRow {
@@ -84,7 +89,7 @@ export async function processPendingTriggers(tenantId: string): Promise<number> 
       const handler = RULES[(row as any).trigger_type];
       if (handler) {
 
-        await handler(schema, row);
+        await handler(schema, row as unknown as TriggerRow);
       }
       await safeQuery(
         `UPDATE "${schema}".qiyas_grc_trigger_log

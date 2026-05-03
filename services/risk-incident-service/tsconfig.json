@@ -5,6 +5,7 @@
     "rootDir": "src",
     "strict": false,
     "noEmitOnError": false,
+    "ignoreDeprecations": "6.0",
     "declaration": false,
     "declarationMap": false,
     "composite": false,

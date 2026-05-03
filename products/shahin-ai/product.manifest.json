@@ -19,6 +19,11 @@
   },
   "enabledModules": [
     { "moduleCode": "foundation",      "version": "2.0.0", "scope": "full" },
+    { "moduleCode": "dauth",           "version": "1.0.0", "scope": "full" },
+    { "moduleCode": "dnoc",            "version": "1.0.0", "scope": "full" },
+    { "moduleCode": "dsoc",            "version": "1.0.0", "scope": "full" },
+    { "moduleCode": "dos",             "version": "1.0.0", "scope": "full" },
+    { "moduleCode": "ai",              "version": "1.0.0", "scope": "full" },
     { "moduleCode": "risk",            "version": "1.0.0", "scope": "full" },
     { "moduleCode": "compliance",      "version": "1.0.0", "scope": "full" },
     { "moduleCode": "controls",        "version": "1.0.0", "scope": "full" },
@@ -59,6 +64,13 @@
       "/register",
       "/workspace-home",
       "/foundation",
+      "/compliance",
+      "/dauth",
+      "/dnoc",
+      "/dsoc",
+      "/dos",
+      "/ai",
+      "/admin/config-center",
       "/workspace",
       "/inbox",
       "/profile",
@@ -72,18 +84,10 @@
   },
   "navigationComposition": {
     "primary": [
-      { "id": "workspace-home", "label": "Workspace", "route": "/workspace-home", "icon": "home" },
-      { "id": "foundation",     "label": "Foundation", "route": "/foundation/overview", "icon": "layers", "moduleRef": "foundation" },
-      { "id": "risk",           "label": "Risk",        "route": "/workspace/modules",       "icon": "shield",   "moduleRef": "risk" },
-      { "id": "compliance",     "label": "Compliance",  "route": "/workspace/modules", "icon": "check",    "moduleRef": "compliance" },
-      { "id": "controls",       "label": "Controls",    "route": "/workspace/modules",   "icon": "lock",     "moduleRef": "controls" },
-      { "id": "evidence",       "label": "Evidence",    "route": "/workspace/modules",   "icon": "file",     "moduleRef": "evidence" },
-      { "id": "audit",          "label": "Audit",       "route": "/workspace/modules",      "icon": "clipboard","moduleRef": "audit" }
+      { "id": "workspace-home", "label": "Workspace",  "route": "/workspace-home",     "icon": "home"    },
+      { "id": "foundation",     "label": "Foundation", "route": "/foundation/overview", "icon": "layers", "moduleRef": "foundation" }
     ],
-    "secondary": [
-      { "id": "knowledge", "label": "Knowledge", "route": "/workspace/modules", "moduleRef": "knowledge" },
-      { "id": "reporting", "label": "Reporting", "route": "/workspace/modules", "moduleRef": "reporting" }
-    ]
+    "secondary": []
   },
   "dynamicUiEnrollment": {
     "enrollmentRef": "dynamic-ui/enrollment.json"

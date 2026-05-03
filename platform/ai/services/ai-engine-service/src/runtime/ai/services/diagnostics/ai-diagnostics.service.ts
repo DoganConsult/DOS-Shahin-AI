@@ -157,14 +157,14 @@ export async function getAiDiagnosticsSnapshot(tenantId: string): Promise<AiDiag
       ),
     ]);
 
-  const run = runRes.rows[0] || {};
-  const stuck = failedRes.rows[0] || {};
-  const tool = stuckRes.rows[0] || {};
-  const approvals = approvalRes.rows[0] || {};
-  const handoffs = handoffRes.rows[0] || {};
-  const mem = memRes.rows[0] || {};
-  const circuit = circuitRes.rows[0] || {};
-  const cost = costRes.rows[0] || {};
+  const run = (runRes.rows[0] || {}) as Record<string, unknown>;
+  const stuck = (failedRes.rows[0] || {}) as Record<string, unknown>;
+  const tool = (stuckRes.rows[0] || {}) as Record<string, unknown>;
+  const approvals = (approvalRes.rows[0] || {}) as Record<string, unknown>;
+  const handoffs = (handoffRes.rows[0] || {}) as Record<string, unknown>;
+  const mem = (memRes.rows[0] || {}) as Record<string, unknown>;
+  const circuit = (circuitRes.rows[0] || {}) as Record<string, unknown>;
+  const cost = (costRes.rows[0] || {}) as Record<string, unknown>;
 
   const errorRate = Math.round((Number(run.error_rate) || 0) * 100) / 100;
   const quotaUtil = Math.round(

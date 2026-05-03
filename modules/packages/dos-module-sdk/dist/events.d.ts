@@ -7,6 +7,13 @@ export interface EventBus {
     unsubscribe?(eventType: string, subscriberId: string): void;
     /** Optional — DOSEventBus validates events via schema validator, not type registration */
     registerEventType?(registration: EventRegistration): void;
+    /** Optional — concrete bus implementations may expose runtime backpressure metrics */
+    getBackpressureStats?(): {
+        queueDepth: number;
+        maxQueueDepth: number;
+        pendingDeliveries: number;
+        droppedEvents: number;
+    };
 }
 export declare function setEventBus(bus: EventBus): void;
 export declare function getEventBus(): EventBus;

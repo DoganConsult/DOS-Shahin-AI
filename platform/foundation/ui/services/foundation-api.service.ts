@@ -694,6 +694,14 @@ export class FoundationApiService {
     return this.http.get(`${this.api}/foundation/health-config`);
   }
 
+  getFoundationHealth(): Observable<any> {
+    return this.http.get(`${this.api}/foundation/health`);
+  }
+
+  getFoundationModuleConfig(): Observable<any> {
+    return this.http.get(`${this.api}/foundation/module-config`);
+  }
+
   // ---------- Authority & SoD ----------
   /** GET /api/foundation/authority/kinds — list all authority kind definitions. */
   getAuthorityKinds(): Observable<{ data: unknown[] }> {

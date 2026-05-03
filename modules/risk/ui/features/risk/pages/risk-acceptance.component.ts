@@ -17,13 +17,13 @@ import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
-import { InputTextarea } from 'primeng/textarea';
-import { DropdownModule } from 'primeng/select';
+import { TextareaModule } from 'primeng/textarea';
+import { SelectModule } from 'primeng/select';
 import { TooltipModule } from 'primeng/tooltip';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { BadgeModule } from 'primeng/badge';
-import { TabViewModule } from 'primeng/tabs';
+import { TabsModule } from 'primeng/tabs';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { AcceptanceQueueItemDto } from '@app/features/risk/pages/risk-workspace/risk-workspace.models';
 import { GrcRecord } from '@app/core/models/shared.types';
@@ -39,8 +39,8 @@ type WorkflowStep = 'requested' | 'under_review' | 'decision';
     imports: [
         CommonModule, FormsModule, PageShellComponent, ModuleTabsBarComponent, StatusBadgeComponent, ExportButtonComponent,
         GrcDataTableComponent, GrcFormFieldComponent,
-        TableModule, ButtonModule, TagModule, DialogModule, InputTextModule, InputTextarea,
-        DropdownModule, TooltipModule, ToastModule, ConfirmDialogModule, BadgeModule, TabViewModule, AppDatePipe,
+        TableModule, ButtonModule, TagModule, DialogModule, InputTextModule, TextareaModule,
+        SelectModule, TooltipModule, ToastModule, ConfirmDialogModule, BadgeModule, TabsModule, AppDatePipe,
     ],
     providers: [MessageService, ConfirmationService],
     templateUrl: './risk-acceptance.component.html',

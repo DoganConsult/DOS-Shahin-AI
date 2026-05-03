@@ -4,7 +4,7 @@ import type { AiStatus } from '@dos/types';
 import { randomUUID } from 'crypto';
 import { safeQuery } from "@dos/db";
 
-export type AiEntityType = 'agent' | 'task' | 'prompt' | 'conversation' | 'tool_invocation';
+export type AiEntityType = 'agent' | 'task' | 'prompt' | 'conversation' | 'tool_invocation' | 'ai';
 export type AiAction = 'created' | 'updated' | 'deleted' | 'status_changed' | 'assigned' | 'escalated' | 'approved' | 'rejected' | 'exported';
 
 export interface AiEventOptions {

@@ -13,7 +13,7 @@ import { EmptyStateComponent } from '@app/shared/components/layouts/primitives/e
 import { HasPermissionDirective } from '@app/dauth/directives/has-permission.directive';
 import { AiEntityContextPanelComponent } from '@app/shared/components/ai/ai-entity-context-panel.component';
 import { SkeletonModule } from 'primeng/skeleton';
-import { TabViewModule } from 'primeng/tabs';
+import { TabsModule } from 'primeng/tabs';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { CardModule } from 'primeng/card';
@@ -38,7 +38,7 @@ import { devError } from '@app/runtime/utils/dev-logger';
     selector: 'app-risk-detail-page',
     imports: [
         CommonModule, RouterModule, StatusBadgeComponent, AppDatePipe,
-        SkeletonModule, TabViewModule, TableModule, TagModule, CardModule,
+        SkeletonModule, TabsModule, TableModule, TagModule, CardModule,
         ButtonModule, ToastModule, TooltipModule,
     ],
     providers: [MessageService],
@@ -85,7 +85,7 @@ import { devError } from '@app/runtime/utils/dev-logger';
       </div>
 
       <!-- Tabs -->
-      <p-tabView *ngIf="risk()" styleClass="rd-tabs">
+      <p-tabs *ngIf="risk()" styleClass="rd-tabs">
         <!-- Overview -->
         <p-tabPanel [header]="isAr() ? 'نظرة عامة' : 'Overview'">
           <div class="rd-overview">
@@ -288,7 +288,7 @@ import { devError } from '@app/runtime/utils/dev-logger';
             </ng-template>
           </p-table>
         </p-tabPanel>
-      </p-tabView>
+      </p-tabs>
 
       <ng-template #headerSkeleton>
         <div class="rd-header-skeleton">

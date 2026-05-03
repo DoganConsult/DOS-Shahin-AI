@@ -55,7 +55,7 @@ router.get('/dpia/:dpiaId', validate({ query: z.record(z.unknown()) }), authenti
     const { dpiaId } = req.params;
     const result = await DPIAService.getDPIAAssessments(req.tenantId);
 
-    const dpia = result.find((d: Record<string, unknown>) => d.dpia_id === dpiaId);
+    const dpia = (result as unknown as Record<string, unknown>[]).find((d) => d.dpia_id === dpiaId);
     if (!dpia) {
       return res.status(404).json({ error: 'DPIA not found' });
     }

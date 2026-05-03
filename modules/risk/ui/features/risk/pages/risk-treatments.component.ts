@@ -17,8 +17,8 @@ import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
-import { InputTextarea } from 'primeng/textarea';
-import { DropdownModule } from 'primeng/select';
+import { TextareaModule } from 'primeng/textarea';
+import { SelectModule } from 'primeng/select';
 import { TooltipModule } from 'primeng/tooltip';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
@@ -34,8 +34,8 @@ import { GrcRecord } from '@app/core/models/shared.types';
     selector: 'app-risk-treatments-page',
     imports: [
         CommonModule, FormsModule, PageShellComponent, ModuleTabsBarComponent, StatusBadgeComponent, ExportButtonComponent,
-        TableModule, ButtonModule, TagModule, DialogModule, InputTextModule, InputTextarea,
-        DropdownModule, TooltipModule, ToastModule, ConfirmDialogModule, AppDatePipe, HasPermissionDirective, GanttChartComponent,
+        TableModule, ButtonModule, TagModule, DialogModule, InputTextModule, TextareaModule,
+        SelectModule, TooltipModule, ToastModule, ConfirmDialogModule, AppDatePipe, HasPermissionDirective, GanttChartComponent,
     ],
     providers: [MessageService, ConfirmationService],
     template: `
@@ -182,19 +182,19 @@ import { GrcRecord } from '@app/core/models/shared.types';
       <p-dialog [header]="editMode ? L().editTreatment : L().createTreatment" [(visible)]="dialogVisible" [modal]="true" [style]="{width:'550px'}">
         <div class="dialog-form">
           <div class="field"><label>{{ L().title }}</label><input pInputText [(ngModel)]="form.title" class="w-full" /></div>
-          <div class="field"><label>{{ L().description }}</label><textarea pInputTextarea [(ngModel)]="form.description" [rows]="3" class="w-full"></textarea></div>
+          <div class="field"><label>{{ L().description }}</label><textarea pTextarea [(ngModel)]="form.description" [rows]="3" class="w-full"></textarea></div>
           <div class="field-row">
             <div class="field"><label>{{ L().owner }}</label><input pInputText [(ngModel)]="form.owner" class="w-full" /></div>
-            <div class="field"><label>{{ L().linkedRisk }}</label><p-dropdown [(ngModel)]="form.linkedRiskId" [options]="riskOptions()" optionLabel="label" optionValue="value" styleClass="w-full" appendTo="body" [filter]="true" filterBy="label" /></div>
+            <div class="field"><label>{{ L().linkedRisk }}</label><p-select [(ngModel)]="form.linkedRiskId" [options]="riskOptions()" optionLabel="label" optionValue="value" styleClass="w-full" appendTo="body" [filter]="true" filterBy="label" /></div>
           </div>
           <div class="field-row">
             <div class="field">
               <label>{{ L().strategy }}</label>
-              <p-dropdown [(ngModel)]="form.strategy" [options]="strategyOptions" optionLabel="label" optionValue="value" styleClass="w-full" appendTo="body" />
+              <p-select [(ngModel)]="form.strategy" [options]="strategyOptions" optionLabel="label" optionValue="value" styleClass="w-full" appendTo="body" />
             </div>
             <div class="field">
               <label>{{ L().status }}</label>
-              <p-dropdown [(ngModel)]="form.status" [options]="statusOptions" optionLabel="label" optionValue="value" styleClass="w-full" appendTo="body" />
+              <p-select [(ngModel)]="form.status" [options]="statusOptions" optionLabel="label" optionValue="value" styleClass="w-full" appendTo="body" />
             </div>
           </div>
           <div class="field"><label>{{ L().targetDate }}</label><input pInputText type="date" [(ngModel)]="form.targetDate" class="w-full" /></div>

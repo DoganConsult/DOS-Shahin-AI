@@ -151,7 +151,7 @@ interface DashboardData {
       <!-- ─── Metric Cards (Horizontal Scroll) ─── -->
       <section class="metric-scroll">
         <cds-clickable-tile class="metric-card" (click)="navigateTo('/controls')">
-          <ibm-icon icon="shield--check" size="20" class="metric-icon controls"></ibm-icon>
+          <ibm-icon icon="security" size="20" class="metric-icon controls"></ibm-icon>
           <span class="metric-value">{{ data()?.controlsTotal || 0 }}</span>
           <span class="metric-label">{{ isArabic() ? 'الضوابط' : 'Controls' }}</span>
           @if ((data()?.controlsFailing || 0) > 0) {
@@ -222,7 +222,7 @@ interface DashboardData {
         @for (activity of data()?.recentActivities?.slice(0, 8) || []; track activity.timestamp) {
           <div class="activity-row">
             <div class="activity-icon-wrap">
-              <ibm-icon icon="circle--dash" size="16"></ibm-icon>
+              <ibm-icon icon="circle-dash" size="16"></ibm-icon>
             </div>
             <div class="activity-info">
               <span class="activity-title">{{ activity.title }}</span>
@@ -233,7 +233,7 @@ interface DashboardData {
         }
         @if (!data()?.recentActivities?.length) {
           <div class="empty-state">
-            <ibm-icon icon="inbox" size="32"></ibm-icon>
+            <ibm-icon icon="email" size="32" class="empty-icon"></ibm-icon>
             <span>{{ isArabic() ? 'لا يوجد نشاط حديث' : 'No recent activity' }}</span>
           </div>
         }

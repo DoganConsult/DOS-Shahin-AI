@@ -8,7 +8,7 @@ import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { TableModule } from 'primeng/table';
-import { DropdownModule } from 'primeng/select';
+import { SelectModule } from 'primeng/select';
 import { SkeletonModule } from 'primeng/skeleton';
 import { riskLevelFromScore } from '@shahin-ai/shared-risk-types';
 import { GrcRecord } from '@app/core/models/shared.types';
@@ -19,7 +19,7 @@ import { GrcOperationsService } from '@app/grc/services/grc-operations.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-risk-scoring',
   standalone: true,
-  imports: [CommonModule, FormsModule, PageShellComponent, CardModule, ButtonModule, TagModule, TableModule, DropdownModule, SkeletonModule],
+  imports: [CommonModule, FormsModule, PageShellComponent, CardModule, ButtonModule, TagModule, TableModule, SelectModule, SkeletonModule],
   template: `
     <app-page-shell icon="chart-bar" [title]="i18n.translate('grcOs.riskScoring')"
       [subtitle]="'Configurable risk models, heat maps, and KRI trends'"
@@ -72,7 +72,7 @@ import { GrcOperationsService } from '@app/grc/services/grc-operations.service';
             @if (risks.length > 0) {
               <div class="flex align-items-center gap-2 mb-3">
                 <label class="font-medium">Risk</label>
-                <p-dropdown [options]="riskOptions" [(ngModel)]="selectedRiskId" optionLabel="label" optionValue="value"
+                <p-select [options]="riskOptions" [(ngModel)]="selectedRiskId" optionLabel="label" optionValue="value"
                   placeholder="Select risk" [showClear]="true" (onChange)="onRiskSelected()" [style]="{'min-width':'220px'}" />
               </div>
             }

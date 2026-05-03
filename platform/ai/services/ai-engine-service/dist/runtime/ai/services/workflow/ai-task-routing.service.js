@@ -32,13 +32,14 @@ function evaluateCondition(condition, context) {
     for (const [key, expected] of Object.entries(condition)) {
         const actual = context[key];
         if (typeof expected === 'object' && expected !== null) {
-            if (expected.$gte !== undefined && (actual === undefined || actual < expected.$gte))
+            const op = expected;
+            if (op.$gte !== undefined && (actual === undefined || actual < op.$gte))
                 return false;
-            if (expected.$lte !== undefined && (actual === undefined || actual > expected.$lte))
+            if (op.$lte !== undefined && (actual === undefined || actual > op.$lte))
                 return false;
-            if (expected.$eq !== undefined && actual !== expected.$eq)
+            if (op.$eq !== undefined && actual !== op.$eq)
                 return false;
-            if (expected.$in !== undefined && !expected.$in.includes(actual))
+            if (op.$in !== undefined && !op.$in.includes(actual))
                 return false;
         }
         else if (actual !== expected) {

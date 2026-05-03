@@ -30,7 +30,7 @@ function _ensureInitialized() {
 }
 export function resolveAgentForModule(moduleCode) {
     const manifests = getAllManifests();
-    const manifest = manifests.get(moduleCode);
+    const manifest = manifests.find((m) => m.code === moduleCode);
     const boundAgent = manifest?.agentBinding;
     if (typeof boundAgent === 'string' && boundAgent.length > 0) {
         _ensureInitialized();
@@ -63,17 +63,17 @@ export function getAllAgentDefinitions() {
 export function getAgentBindingMap() {
     const manifests = getAllManifests();
     const map = {};
-    for (const [code, manifest] of manifests) {
-        map[code] = manifest.agentBinding;
+    for (const manifest of manifests) {
+        map[manifest.code] = manifest.agentBinding ?? null;
     }
     return map;
 }
 export function getUnboundModules() {
     const manifests = getAllManifests();
     const unbound = [];
-    for (const [code, manifest] of manifests) {
+    for (const manifest of manifests) {
         if (!manifest.agentBinding) {
-            unbound.push(code);
+            unbound.push(manifest.code);
         }
     }
     return unbound;
@@ -84,8 +84,8 @@ export function getAgentCapabilities(agentCode) {
     const manifests = getAllManifests();
     const capabilities = new Set();
     for (const mod of modules) {
-        const manifest = manifests.get(mod);
-        if (manifest) {
+        const manifest = manifests.find((m) => m.code === mod);
+        if (manifest && manifest.aiCapabilities) {
             for (const cap of manifest.aiCapabilities) {
                 capabilities.add(cap);
             }
@@ -99,7 +99,7 @@ export function routeModuleToAgent(moduleCode) {
     if (!agent)
         return null;
     const manifests = getAllManifests();
-    const manifest = manifests.get(moduleCode);
+    const manifest = manifests.find((m) => m.code === moduleCode);
     return {
         agentCode: agent.agentCode,
         agentName: agent.name,

@@ -16,8 +16,8 @@ import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
-import { InputTextarea } from 'primeng/textarea';
-import { DropdownModule } from 'primeng/select';
+import { TextareaModule } from 'primeng/textarea';
+import { SelectModule } from 'primeng/select';
 import { TooltipModule } from 'primeng/tooltip';
 import { ToastModule } from 'primeng/toast';
 import { ChipModule } from 'primeng/chip';
@@ -67,8 +67,8 @@ interface PeerDialogueEntry {
   standalone: true,
   imports: [
     CommonModule, FormsModule, PageShellComponent, ModuleTabsBarComponent, StatusBadgeComponent, ExportButtonComponent,
-    TableModule, ButtonModule, TagModule, DialogModule, InputTextModule, InputTextarea,
-    DropdownModule, TooltipModule, ToastModule, ChipModule, BadgeModule,
+    TableModule, ButtonModule, TagModule, DialogModule, InputTextModule, TextareaModule,
+    SelectModule, TooltipModule, ToastModule, ChipModule, BadgeModule,
   ],
   providers: [MessageService],
   template: `
@@ -199,17 +199,17 @@ interface PeerDialogueEntry {
         <div class="dialog-form">
           <div class="field">
             <label>{{ L().riskId }}</label>
-            <p-dropdown [(ngModel)]="form.riskId" [options]="riskOptions()" optionLabel="label" optionValue="value"
+            <p-select [(ngModel)]="form.riskId" [options]="riskOptions()" optionLabel="label" optionValue="value"
                         [placeholder]="L().riskIdPlaceholder" styleClass="w-full" appendTo="body" [filter]="true" filterBy="label" />
           </div>
           <div class="field-row">
             <div class="field">
               <label>{{ L().likelihood }} (1\u20135)</label>
-              <p-dropdown [(ngModel)]="form.likelihood" [options]="scaleOptions" optionLabel="label" optionValue="value" styleClass="w-full" appendTo="body" />
+              <p-select [(ngModel)]="form.likelihood" [options]="scaleOptions" optionLabel="label" optionValue="value" styleClass="w-full" appendTo="body" />
             </div>
             <div class="field">
               <label>{{ L().impact }} (1\u20135)</label>
-              <p-dropdown [(ngModel)]="form.impact" [options]="scaleOptions" optionLabel="label" optionValue="value" styleClass="w-full" appendTo="body" />
+              <p-select [(ngModel)]="form.impact" [options]="scaleOptions" optionLabel="label" optionValue="value" styleClass="w-full" appendTo="body" />
             </div>
           </div>
           <div class="field">
@@ -218,7 +218,7 @@ interface PeerDialogueEntry {
           </div>
           <div class="field">
             <label>{{ L().notes }}</label>
-            <textarea pInputTextarea [(ngModel)]="form.notes" [rows]="3" class="w-full"></textarea>
+            <textarea pTextarea [(ngModel)]="form.notes" [rows]="3" class="w-full"></textarea>
           </div>
         </div>
         <ng-template pTemplate="footer">
@@ -273,11 +273,11 @@ interface PeerDialogueEntry {
               <div class="field-row">
                 <div class="field">
                   <label>{{ L().likelihood }} (1\u20135)</label>
-                  <p-dropdown [(ngModel)]="peerForm.humanLikelihood" [options]="scaleOptions" optionLabel="label" optionValue="value" styleClass="w-full" appendTo="body" />
+                  <p-select [(ngModel)]="peerForm.humanLikelihood" [options]="scaleOptions" optionLabel="label" optionValue="value" styleClass="w-full" appendTo="body" />
                 </div>
                 <div class="field">
                   <label>{{ L().impact }} (1\u20135)</label>
-                  <p-dropdown [(ngModel)]="peerForm.humanImpact" [options]="scaleOptions" optionLabel="label" optionValue="value" styleClass="w-full" appendTo="body" />
+                  <p-select [(ngModel)]="peerForm.humanImpact" [options]="scaleOptions" optionLabel="label" optionValue="value" styleClass="w-full" appendTo="body" />
                 </div>
               </div>
               <div class="field">
@@ -286,7 +286,7 @@ interface PeerDialogueEntry {
               </div>
               <div class="field">
                 <label>{{ L().humanReasoning }}</label>
-                <textarea pInputTextarea [(ngModel)]="peerForm.humanReasoning" [rows]="3" class="w-full"></textarea>
+                <textarea pTextarea [(ngModel)]="peerForm.humanReasoning" [rows]="3" class="w-full"></textarea>
               </div>
               <div class="peer-computed" *ngIf="peerForm.humanLikelihood && peerForm.humanImpact">
                 <span class="peer-score-label">{{ L().humanComputedScore }}</span>
@@ -322,7 +322,7 @@ interface PeerDialogueEntry {
           </div>
 
           <div class="dialogue-input">
-            <textarea pInputTextarea [(ngModel)]="newDialogueMessage" [rows]="2" class="w-full" [placeholder]="L().dialoguePlaceholder"></textarea>
+            <textarea pTextarea [(ngModel)]="newDialogueMessage" [rows]="2" class="w-full" [placeholder]="L().dialoguePlaceholder"></textarea>
             <p-button [label]="L().sendDialogue" icon="pi pi-send" severity="secondary" [outlined]="true" size="small"
                       (onClick)="sendDialogueMessage()" [disabled]="!newDialogueMessage" />
           </div>

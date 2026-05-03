@@ -19,7 +19,7 @@
         </ng-template>
         <ng-template pTemplate="end">
           <p-button [label]="i18n.translate('common.exportCsv')" icon="pi pi-download" severity="secondary" [outlined]="true" (onClick)="exportCSV()" styleClass="me-2" />
-          <p-dropdown [options]="severityOptions" [(ngModel)]="selectedSeverity" optionLabel="label" optionValue="value"
+          <p-select [options]="severityOptions" [(ngModel)]="selectedSeverity" optionLabel="label" optionValue="value"
                       [placeholder]="i18n.translate('risk.severity')" (onChange)="filterRisks()" [style]="{minWidth:'180px'}" />
         </ng-template>
       </p-toolbar>
@@ -75,12 +75,12 @@
           </grc-form-field>
           <div class="field">
             <label>{{ i18n.translate('common.description') }}</label>
-            <textarea pInputTextarea [(ngModel)]="form.description" [rows]="3" class="w-full"></textarea>
+            <textarea pTextarea [(ngModel)]="form.description" [rows]="3" class="w-full"></textarea>
           </div>
           <div class="field-row">
             <div class="field">
               <label>{{ i18n.translate('risk.category') }}</label>
-              <p-dropdown [(ngModel)]="form.category" [options]="categoryOptions" optionLabel="label" optionValue="value" styleClass="w-full" />
+              <p-select [(ngModel)]="form.category" [options]="categoryOptions" optionLabel="label" optionValue="value" styleClass="w-full" />
             </div>
             <grc-form-field [label]="i18n.translate('risk.owner')">
               <input pInputText [(ngModel)]="form.owner" class="w-full" />
@@ -98,7 +98,7 @@
           </div>
           <div class="field">
             <label>{{ i18n.translate('common.status') }}</label>
-            <p-dropdown [(ngModel)]="form.status" [options]="statusOptions" optionLabel="label" optionValue="value" styleClass="w-full" />
+            <p-select [(ngModel)]="form.status" [options]="statusOptions" optionLabel="label" optionValue="value" styleClass="w-full" />
           </div>
         </div>
         <ng-template pTemplate="footer">

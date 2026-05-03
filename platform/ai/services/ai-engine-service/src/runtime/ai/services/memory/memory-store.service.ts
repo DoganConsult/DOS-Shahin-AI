@@ -807,11 +807,11 @@ export async function getMemoryStats(tenantId: string): Promise<{
 
     return {
 
-      total: Number((getFirstRow((totalR as any).value) as unknown)?.n ?? 0),
+      total: Number((getFirstRow((totalR as any).value) as { n?: unknown } | undefined)?.n ?? 0),
       byType,
       byAgent,
 
-      recentCommits: Number((getFirstRow((recentR as any).value) as unknown)?.n ?? 0),
+      recentCommits: Number((getFirstRow((recentR as any).value) as { n?: unknown } | undefined)?.n ?? 0),
     };
   } catch { return defaults; }
 }

@@ -123,3 +123,85 @@ export async function queuePendingAction(
   }
   return pendingId;
 }
+
+// ── Agent RBAC Entries (read-only catalog used by AGRC-OS routes) ───────────
+export interface AgentRbacEntry {
+  agentId: string;
+  agentName: string;
+  permissions: string[];
+}
+
+export function getAgentRbacEntries(): AgentRbacEntry[] {
+  // Static catalog until canonical agent-rbac-registry is wired through Config OS.
+  // Callers degrade safely on empty list.
+  return [];
+}
+
+// ── Pending Actions (queue retrieval + review) ──────────────────────────────
+export interface PendingActionRow {
+  pending_id: string;
+  tenant_id: string;
+  actor_id: string | null;
+  agent_id?: string | null;
+  action_type?: string;
+  entity_type?: string | null;
+  entity_id?: string | null;
+  proposed_payload?: Record<string, unknown> | string;
+  action_payload?: Record<string, unknown> | string;
+  status: string;
+  created_at: Date | string;
+}
+
+export async function getPendingActions(
+  tenantId: string,
+  opts: { agentId?: string; status?: string; limit?: number } = {},
+): Promise<PendingActionRow[]> {
+  try {
+    await ensurePendingActionsTable();
+    const limit = opts.limit && opts.limit > 0 ? Math.min(opts.limit, 500) : 50;
+    const conditions: string[] = ['tenant_id = $1'];
+    const params: unknown[] = [tenantId];
+    if (opts.agentId) { conditions.push(`actor_id = $${params.length + 1}`); params.push(opts.agentId); }
+    if (opts.status)  { conditions.push(`status = $${params.length + 1}`);   params.push(opts.status); }
+    const where = conditions.join(' AND ');
+    const result = await safeQuery(
+      `SELECT pending_id, tenant_id, actor_id, action_payload, status, created_at
+       FROM public.pending_agent_actions
+       WHERE ${where}
+       ORDER BY created_at DESC
+       LIMIT ${limit}`,
+      params,
+    );
+    return result.rows as unknown as PendingActionRow[];
+  } catch (error: unknown) {
+    logger.debug('[PlatformModeGate] getPendingActions fallback', { tenantId, error: toErrorMessage(error) });
+    return [];
+  }
+}
+
+export async function reviewPendingAction(
+  tenantId: string,
+  pendingId: string,
+  reviewerId: string | undefined,
+  approved: boolean,
+  reviewNote?: string,
+): Promise<{ success: boolean; action?: PendingActionRow }> {
+  try {
+    await ensurePendingActionsTable();
+    const next = approved ? 'approved' : 'rejected';
+    const result = await safeQuery(
+      `UPDATE public.pending_agent_actions
+       SET status = $1
+       WHERE pending_id = $2 AND tenant_id = $3
+       RETURNING pending_id, tenant_id, actor_id, action_payload, status, created_at`,
+      [next, pendingId, tenantId],
+    );
+    if (result.rows.length === 0) return { success: false };
+    const row = result.rows[0] as unknown as PendingActionRow;
+    logger.info('[PlatformModeGate] pending action reviewed', { tenantId, pendingId, reviewerId, approved, reviewNote });
+    return { success: true, action: row };
+  } catch (error: unknown) {
+    logger.warn('[PlatformModeGate] reviewPendingAction failed', { tenantId, pendingId, error: toErrorMessage(error) });
+    return { success: false };
+  }
+}

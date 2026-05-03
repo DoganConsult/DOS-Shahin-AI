@@ -35,20 +35,31 @@ export function createDynamicUiContractRouter(pool: DbPool): Router {
       const tenantId = principal?.tenantId
         ?? (req.headers['x-dos-tenant-id'] as string | undefined)
         ?? null;
+      // Join navigation_registry so we emit human-readable label_en/label_ar
+      // when present (no raw title_key like `compliance.nav.controls`
+      // leaks through to the sidebar). The title_key is still emitted as
+      // labelKey for downstream i18n; label always wins when present.
       const { rows } = await pool.query(
-        `SELECT module_code, path_pattern, permission_key, title_key, sort_order
-           FROM dos.dynamic_ui_routes
-          WHERE (tenant_id IS NULL OR tenant_id = $1)
-            AND COALESCE(readiness, 'active') = 'active'
-            AND title_key IS NOT NULL
-          ORDER BY module_code, sort_order, path_pattern`,
+        `SELECT r.module_code, r.path_pattern, r.permission_key, r.title_key,
+                r.sort_order, n.label_en, n.label_ar, n.parent_code, n.icon
+           FROM dos.dynamic_ui_routes r
+           LEFT JOIN dos.navigation_registry n
+             ON n.module_code = r.module_code AND n.route = r.path_pattern
+          WHERE (r.tenant_id IS NULL OR r.tenant_id = $1)
+            AND COALESCE(r.readiness, 'active') = 'active'
+            AND (r.title_key IS NOT NULL OR n.label_en IS NOT NULL)
+          ORDER BY r.module_code, r.sort_order, r.path_pattern`,
         [tenantId],
       );
       const items = rows.map((r) => ({
         id: `${r.module_code}.${r.path_pattern}`,
-        label: r.title_key,
+        label: r.label_en || r.title_key,
+        labelAr: r.label_ar ?? null,
+        labelKey: r.title_key ?? null,
         route: r.path_pattern,
         group: r.module_code,
+        parent: r.parent_code ?? null,
+        icon: r.icon ?? null,
         permission: r.permission_key ?? null,
         enabled: true,
       }));

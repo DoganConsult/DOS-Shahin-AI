@@ -279,7 +279,7 @@ router.put('/shadow-agents/:userId', authenticate, requirePermission('delegation
 router.post('/hyper-role/check', authenticate, requirePermission('platform.agent.read'), validate({ body: createCheckBody }), async (req, res) => {
     try {
         const { computeHyperRole, mapModeToAutonomy } = await import('../../runtime/ai/services/orchestration/agent-orchestration.service.js');
-        const { getTenantPlatformMode } = await import('@dos/platform-core/settings/platform-mode-gate');
+        const { getTenantPlatformMode } = await import('@dos/platform-core/settings/platform-mode-gate.service');
         const tenantId = req.tenantId;
         const { agentId, actionType, userPermissions, autonomyLevel } = req.body;
         if (!agentId || !actionType) {

@@ -1,0 +1,77 @@
+{
+  "$schema": "../dos/contracts/module-enrollment.contract.ts",
+  "moduleCode": "foundation",
+  "name": "Foundation",
+  "phase": "phase-1",
+  "entryRoute": "/foundation",
+  "defaultPage": "/foundation/overview",
+  "services": ["user-service", "audit-service"],
+  "permissions": [
+    "foundation.read",
+    "foundation.manage",
+    "foundation.workflow.approve"
+  ],
+  "pages": [
+    {
+      "id": "overview",
+      "route": "/foundation/overview",
+      "componentKey": "foundation.overview.page",
+      "permission": "foundation.read",
+      "title": "foundation.overview.title",
+      "subtitle": "foundation.overview.subtitle"
+    },
+    {
+      "id": "records",
+      "route": "/foundation/records",
+      "componentKey": "foundation.records.page",
+      "permission": "foundation.read",
+      "title": "foundation.records.title"
+    },
+    {
+      "id": "workflows",
+      "route": "/foundation/workflows",
+      "componentKey": "foundation.workflows.page",
+      "permission": "foundation.workflow.approve",
+      "title": "foundation.workflows.title"
+    },
+    {
+      "id": "reports",
+      "route": "/foundation/reports",
+      "componentKey": "foundation.reports.page",
+      "permission": "foundation.read",
+      "title": "foundation.reports.title"
+    },
+    {
+      "id": "settings",
+      "route": "/foundation/settings",
+      "componentKey": "foundation.settings.page",
+      "permission": "foundation.manage",
+      "title": "foundation.settings.title"
+    }
+  ],
+  "navigation": [
+    { "id": "foundation.overview",  "parent": "foundation", "label": "Overview",  "route": "/foundation/overview",  "sortOrder": 10, "permission": "foundation.read" },
+    { "id": "foundation.records",   "parent": "foundation", "label": "Records",   "route": "/foundation/records",   "sortOrder": 20, "permission": "foundation.read" },
+    { "id": "foundation.workflows", "parent": "foundation", "label": "Workflows", "route": "/foundation/workflows", "sortOrder": 30, "permission": "foundation.workflow.approve" },
+    { "id": "foundation.reports",   "parent": "foundation", "label": "Reports",   "route": "/foundation/reports",   "sortOrder": 40, "permission": "foundation.read" },
+    { "id": "foundation.settings",  "parent": "foundation", "label": "Settings",  "route": "/foundation/settings",  "sortOrder": 50, "permission": "foundation.manage" }
+  ],
+  "components": [
+    "foundation.overview.page",
+    "foundation.records.page",
+    "foundation.workflows.page",
+    "foundation.reports.page",
+    "foundation.settings.page"
+  ],
+  "api": {
+    "summary":   "/api/audit/summary?moduleCode=foundation",
+    "records":   "/api/users",
+    "workflows": "/api/audit/entries?moduleCode=foundation&kind=workflow",
+    "audit":     "/api/audit/entries?moduleCode=foundation&limit=50",
+    "health":    "/api/health/foundation"
+  },
+  "owner": {
+    "writer": "platform-projector",
+    "note": "Modules MUST NOT write dos.dynamic_ui_* directly. Platform projector reads this manifest and emits registry/route/nav rows."
+  }
+}

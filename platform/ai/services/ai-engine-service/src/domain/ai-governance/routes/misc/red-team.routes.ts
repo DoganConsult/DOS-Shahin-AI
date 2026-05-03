@@ -34,7 +34,7 @@ router.post("/run", authenticate, requirePermission("ai_governance.manage"), val
   if (!modelId || !canaryPrompt) { res.status(400).json({ error: "modelId, canaryPrompt required" }); return; }
   const run = await executeRedTeamRun(req.tenantId, { modelId, canaryPrompt });
 
-  setAuditData(res as any, { action: "create", entityType: "red_team_run", entityId: run.run_id, afterState: run });
+  setAuditData(res as any, { action: "create", entityType: "red_team_run", entityId: (run as any).run_id, afterState: run as any });
   swallow(EC.EVENT_BUS, emitEvent(({ tenantId: req.tenantId, userId: req.user!.userId, module: 'ai-governance', event: 'red_team.created', entityType: 'red_team', entityId: req.params.id || '' } as any)), { tenantId: req.tenantId, operation: 'grcEvent:risks.red_team.created' });
   res.status(201).json(run);
 }));

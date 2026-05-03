@@ -4,6 +4,8 @@ import { Router, RouterLink } from '@angular/router';
 import { interval, Subscription, switchMap, takeWhile } from 'rxjs';
 import { catchError, of } from 'rxjs';
 import { FOUNDATION_I18N, type FoundationI18n, NoopFoundationI18n } from '../ports/i18n.port';
+import { IconService } from 'carbon-components-angular/icon';
+import { registerWorkspaceIcons } from './workspace-icons';
 import {
   ModuleKickstartService, ModuleKickstartState, ModuleCode,
   IgniteResponse,
@@ -47,6 +49,8 @@ interface ModuleRow {
     styleUrls: ['./workspace-ignite-card.component.scss']
 })
 export class WorkspaceIgniteCardComponent implements OnInit, OnDestroy {
+  private _iconSvc = inject(IconService);
+  constructor() { registerWorkspaceIcons(this._iconSvc); }
   private destroyRef = inject(DestroyRef);
   @Input() canIgnite = false;
 

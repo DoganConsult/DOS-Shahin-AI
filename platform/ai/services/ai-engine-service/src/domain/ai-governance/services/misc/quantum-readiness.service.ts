@@ -28,7 +28,7 @@ export async function inventoryCryptoAsset(
 ): Promise<{ id: string; is_quantum_vulnerable: boolean; hndl_risk_level: string }> {
   const schema = tenantSchema(tenantId);
 
-  const alg = (asset.algorithm ?? '').toLowerCase();
+  const alg = String(asset.algorithm ?? '').toLowerCase();
   const isVulnerable = QUANTUM_VULNERABLE_ALGORITHMS.some(v => alg.includes(v));
   const hndlRisk = isVulnerable ? computeHndlRisk((asset as any).data_sensitivity) : 'none';
 

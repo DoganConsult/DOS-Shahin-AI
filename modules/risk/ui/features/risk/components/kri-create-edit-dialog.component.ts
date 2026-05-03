@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { I18nService } from '@app/core/services/ui-infra/i18n.service';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
-import { DropdownModule } from 'primeng/select';
+import { SelectModule } from 'primeng/select';
 import { ButtonModule } from 'primeng/button';
 
 /** Form model for KRI create/edit */
@@ -25,7 +25,7 @@ export interface KriFormData {
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-kri-create-edit-dialog',
-    imports: [CommonModule, FormsModule, DialogModule, InputTextModule, DropdownModule, ButtonModule],
+    imports: [CommonModule, FormsModule, DialogModule, InputTextModule, SelectModule, ButtonModule],
     template: `
     <p-dialog [header]="dialogTitle" [(visible)]="visible" [modal]="true" [style]="{width:'500px'}" (onHide)="closed.emit()">
       <div class="dialog-form">
@@ -36,7 +36,7 @@ export interface KriFormData {
         <div class="field-row">
           <div class="field">
             <label>{{ i18n.translate('risk.linkedRisk') }}</label>
-            <p-dropdown [(ngModel)]="form.linkedCategory" [options]="categoryOptions" optionLabel="label" optionValue="value" styleClass="w-full" appendTo="body" />
+            <p-select [(ngModel)]="form.linkedCategory" [options]="categoryOptions" optionLabel="label" optionValue="value" styleClass="w-full" appendTo="body" />
           </div>
           <div class="field">
             <label>{{ i18n.translate('risk.owner') }}</label>

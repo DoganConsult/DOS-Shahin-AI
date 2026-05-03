@@ -31,13 +31,32 @@ import type { ActionContract } from '../../ui-system/dos-ui-contracts/src/action
 import type { ResponsiveBehavior } from '../../ui-system/dos-ui-contracts/src/responsive-contract.js';
 
 // ─── Standard 5 page IDs ──────────────────────────────────────────────────
+// `overview` is the canonical Module-Gateway / Command-Center page.
+// `/{moduleCode}` MUST redirect to `/{moduleCode}/overview`.
 export const STANDARD_PAGE_IDS = [
-  'home', 'register', 'detail', 'settings', 'audit',
+  'overview', 'register', 'detail', 'settings', 'audit',
 ] as const;
 export type StandardPageId = typeof STANDARD_PAGE_IDS[number];
 
 export const MODULE_PHASE = ['phase-1', 'phase-2', 'phase-3'] as const;
 export type ModulePhase = typeof MODULE_PHASE[number];
+
+// ─── Mandatory sections of the Overview / Command-Center page ─────────────
+// Each section pins a single ApprovedComponentKey. These pin together
+// determine the Carbon binding via dos.ui_dos_component_carbon_map.
+export const OVERVIEW_SECTIONS = {
+  moduleHeader:    'PageHeader',          // Carbon: wc.page-header
+  healthStrip:     'StatusBanner',        // Carbon: notification
+  kpiCards:        'MetricCard',          // Carbon: tiles
+  quickActions:    'AdaptiveCommandBar',  // Carbon: combo-button
+  navigationTabs:  'Tabs',                // Carbon: tabs
+  workQueue:       'DataTable',           // Carbon: table
+  recentActivity:  'DataTable',           // Carbon: table (Carbon StructuredList alias)
+  alerts:          'StatusBanner',        // Carbon: notification
+  dataPreview:     'DataTable',           // Carbon: table
+  aiPanel:         'AIWorkbenchPanel',    // Carbon: aichat.container
+} as const;
+export type OverviewSectionId = keyof typeof OVERVIEW_SECTIONS;
 
 // ─── Zod mirrors of @dos/ui-contracts shapes ──────────────────────────────
 const ApprovedComponentKeyEnum = z.enum(
@@ -66,6 +85,12 @@ export const PageWidgetSchema = z.object({
     'header', 'hero', 'toolbar', 'filters', 'body',
     'tabs', 'tab-body', 'footer', 'banner', 'side-panel',
   ]),
+  /** Required on the overview page; must be one of OVERVIEW_SECTIONS keys.
+   *  Ignored on other pages. The validator enforces section→componentKey
+   *  pinning per OVERVIEW_SECTIONS. */
+  sectionId: z.enum(
+    Object.keys(OVERVIEW_SECTIONS) as [OverviewSectionId, ...OverviewSectionId[]],
+  ).optional(),
   /** ApprovedComponentKey (Dos* UI-system key). The shell resolves it to
    *  a Carbon renderer via component-map.ts; this contract never names a
    *  carbon_key directly. */
@@ -282,6 +307,40 @@ export function validateModuleEnrollment(input: unknown): ModuleEnrollmentContra
     if (!used.has(k)) {
       throw new Error(`Permission ${k} declared in permissions block but not used by any page.`);
     }
+  }
+
+  // 5. Overview / Command-Center page rules.
+  const overview = parsed.pages.find(p => p.id === 'overview')!;
+  if (overview.routePath !== 'overview') {
+    throw new Error(`Overview page routePath must be 'overview' (got '${overview.routePath}'). /{moduleCode} → /{moduleCode}/overview redirect is mandatory.`);
+  }
+  if (!overview.inSideNav) {
+    throw new Error('Overview page must have inSideNav=true (it is the module gateway).');
+  }
+  // 5a. Every OVERVIEW_SECTIONS key must appear at least once.
+  const presentSections = new Set(
+    overview.widgets.map(w => w.sectionId).filter((s): s is OverviewSectionId => !!s),
+  );
+  for (const sec of Object.keys(OVERVIEW_SECTIONS) as OverviewSectionId[]) {
+    if (!presentSections.has(sec)) {
+      throw new Error(`Overview page is missing mandatory section '${sec}'.`);
+    }
+  }
+  // 5b. Each section's widget must use the pinned ApprovedComponentKey.
+  for (const w of overview.widgets) {
+    if (!w.sectionId) continue;
+    const expected = OVERVIEW_SECTIONS[w.sectionId];
+    if (w.componentKey !== expected) {
+      throw new Error(
+        `Overview section '${w.sectionId}' must bind componentKey='${expected}' (got '${w.componentKey}').`,
+      );
+    }
+  }
+  // 5c. AI panel may only read/propose in Phase 1/2; writeAction must be
+  //     absent unless enabledFromPhase='phase-3'.
+  const ai = overview.widgets.find(w => w.sectionId === 'aiPanel');
+  if (ai?.writeAction && ai.writeAction.enabledFromPhase !== 'phase-3') {
+    throw new Error('AI panel may only enable write actions from phase-3.');
   }
 
   return parsed;

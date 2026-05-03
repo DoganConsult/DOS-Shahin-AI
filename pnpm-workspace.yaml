@@ -25,7 +25,6 @@ packages:
   - 'modules/compliance'
   - 'modules/compliance/sdk/typescript'
   # Products
-  - 'products/shahin-ai/app'
   - 'products/shahin-ai/app/src/app'
 ignoredBuiltDependencies: []
 onlyBuiltDependencies:

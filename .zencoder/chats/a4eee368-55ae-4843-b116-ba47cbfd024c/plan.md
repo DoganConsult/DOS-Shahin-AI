@@ -2,7 +2,7 @@
 
 ## Workflow Steps
 
-### [ ] Step: Investigation and Planning
+### [x] Step: Investigation and Planning
 
 Analyze the bug report and design a solution.
 

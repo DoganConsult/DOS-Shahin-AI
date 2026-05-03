@@ -1,12 +1,19 @@
-import { InjectionToken, Type } from '@angular/core';
-import type {
-  ModuleContentProviderContract,
-  ModuleWidgetRegistration,
-  ModuleFormRegistration,
-  ModuleViewRegistration,
-  ModuleActionRegistration,
-  ModuleDetailRegistration,
-} from '../../../shared/contracts/shell-engine.contracts';
+import { InjectionToken } from '@angular/core';
+
+// ── Inlined from shell-engine.contracts (source file missing at build time) ──
+export interface ModuleWidgetRegistration  { widgetId: string;  defaultZone?: string; [k: string]: unknown; }
+export interface ModuleFormRegistration    { formId: string;    [k: string]: unknown; }
+export interface ModuleViewRegistration    { viewId: string;    [k: string]: unknown; }
+export interface ModuleActionRegistration  { actionId: string;  position?: string; [k: string]: unknown; }
+export interface ModuleDetailRegistration  { detailId: string;  [k: string]: unknown; }
+export interface ModuleContentProviderContract {
+  moduleCode: string;
+  widgets: ModuleWidgetRegistration[];
+  forms: ModuleFormRegistration[];
+  views: ModuleViewRegistration[];
+  actions: ModuleActionRegistration[];
+  detailComponents: ModuleDetailRegistration[];
+}
 
 export const MODULE_CONTENT_PROVIDERS = new InjectionToken<ModuleContentProvider[]>('MODULE_CONTENT_PROVIDERS');
 

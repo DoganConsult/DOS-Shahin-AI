@@ -4,8 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { I18nService } from '@app/core/services/ui-infra/i18n.service';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
-import { InputTextarea } from 'primeng/textarea';
-import { DropdownModule } from 'primeng/select';
+import { TextareaModule } from 'primeng/textarea';
+import { SelectModule } from 'primeng/select';
 import { ButtonModule } from 'primeng/button';
 
 /** Form model for quick risk scoring */
@@ -24,23 +24,23 @@ export interface ScoringFormData {
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-risk-scoring-dialog',
-    imports: [CommonModule, FormsModule, DialogModule, InputTextModule, InputTextarea, DropdownModule, ButtonModule],
+    imports: [CommonModule, FormsModule, DialogModule, InputTextModule, TextareaModule, SelectModule, ButtonModule],
     template: `
     <p-dialog [header]="labels.assessRisk" [(visible)]="visible" [modal]="true" [style]="{width:'520px'}" (onHide)="closed.emit()">
       <div class="dialog-form">
         <div class="field">
           <label>{{ labels.riskId }}</label>
-          <p-dropdown [(ngModel)]="form.riskId" [options]="riskOptions" optionLabel="label" optionValue="value"
+          <p-select [(ngModel)]="form.riskId" [options]="riskOptions" optionLabel="label" optionValue="value"
                       [placeholder]="labels.riskIdPlaceholder" styleClass="w-full" appendTo="body" [filter]="true" filterBy="label" />
         </div>
         <div class="field-row">
           <div class="field">
             <label>{{ labels.likelihood }} (1\u20135)</label>
-            <p-dropdown [(ngModel)]="form.likelihood" [options]="scaleOptions" optionLabel="label" optionValue="value" styleClass="w-full" appendTo="body" />
+            <p-select [(ngModel)]="form.likelihood" [options]="scaleOptions" optionLabel="label" optionValue="value" styleClass="w-full" appendTo="body" />
           </div>
           <div class="field">
             <label>{{ labels.impact }} (1\u20135)</label>
-            <p-dropdown [(ngModel)]="form.impact" [options]="scaleOptions" optionLabel="label" optionValue="value" styleClass="w-full" appendTo="body" />
+            <p-select [(ngModel)]="form.impact" [options]="scaleOptions" optionLabel="label" optionValue="value" styleClass="w-full" appendTo="body" />
           </div>
         </div>
         <div class="field">
@@ -49,7 +49,7 @@ export interface ScoringFormData {
         </div>
         <div class="field">
           <label>{{ labels.notes }}</label>
-          <textarea pInputTextarea [(ngModel)]="form.notes" [rows]="3" class="w-full"></textarea>
+          <textarea pTextarea [(ngModel)]="form.notes" [rows]="3" class="w-full"></textarea>
         </div>
       </div>
       <ng-template pTemplate="footer">

@@ -8,7 +8,7 @@ import { WorkspaceShellConfigService } from '../../shell/workspace-shell-config.
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, WorkspaceStubComponent],
-  template: `<app-workspace-stub eyebrow="workspace" [title]="title()" [description]="desc()"></app-workspace-stub>`,
+  template: `<app-workspace-stub [title]="title()" [description]="desc()"></app-workspace-stub>`,
 })
 export class WorkspaceActivityComponent {
   readonly cfg = inject(WorkspaceShellConfigService);

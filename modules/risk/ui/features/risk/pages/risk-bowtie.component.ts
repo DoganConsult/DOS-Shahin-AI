@@ -12,7 +12,7 @@ import { GrcLiveService } from '@app/grc/services/grc-live.service';
 import { PageShellComponent } from '@app/shared/components/layouts/page-shell.component';
 import { ModuleTabsBarComponent } from '@app/shared/components/module-chrome/module-tabs-bar.component';
 import { RISK_PRIMARY_TABS } from '@app/features/risk/risk.constants';
-import { DropdownModule } from 'primeng/select';
+import { SelectModule } from 'primeng/select';
 import { ButtonModule } from 'primeng/button';
 
 interface BowTieNode {
@@ -35,7 +35,7 @@ interface BowTieModel {
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-risk-bowtie',
-    imports: [CommonModule, AppNumberPipe, FormsModule, PageShellComponent, ModuleTabsBarComponent, DropdownModule, ButtonModule],
+    imports: [CommonModule, AppNumberPipe, FormsModule, PageShellComponent, ModuleTabsBarComponent, SelectModule, ButtonModule],
     template: `
     <app-page-shell icon="share-alt"
       [title]="L().pageTitle"
@@ -47,7 +47,7 @@ interface BowTieModel {
 
       <div class="page-toolbar">
         <div class="risk-selector">
-          <p-dropdown [(ngModel)]="selectedRiskId" [options]="riskOptions()" optionLabel="label" optionValue="value" [filter]="true" filterBy="label" [placeholder]="L().selectRisk" styleClass="risk-dropdown" appendTo="body" />
+          <p-select [(ngModel)]="selectedRiskId" [options]="riskOptions()" optionLabel="label" optionValue="value" [filter]="true" filterBy="label" [placeholder]="L().selectRisk" styleClass="risk-dropdown" appendTo="body" />
           <button class="load-btn" (click)="loadBowTie()" [disabled]="!selectedRiskId || loading()">
             <i class="pi pi-eye" aria-hidden="true"></i>
             {{ L().load }}

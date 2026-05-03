@@ -208,7 +208,8 @@
         "/api/monte-carlo",
         "/api/risk-peer-review",
         "/api/issues",
-        "/api/fitch"
+        "/api/fitch",
+        "/api/health/risk"
       ]
     },
     "governance-policy-service": {

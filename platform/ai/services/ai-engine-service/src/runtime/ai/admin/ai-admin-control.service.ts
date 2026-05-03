@@ -37,7 +37,7 @@ export async function getAgentRuntimeConfigs(tenantId: string): Promise<AgentRun
   const schema = tenantSchema(tenantId);
   const result = await swallowDefault(
     EC.FALLBACK_QUERY,
-    { rows: [] } as unknown,
+    { rows: [] } as { rows: Record<string, unknown>[] },
     safeQuery(
       `SELECT agent_id, enabled, max_concurrent_runs, token_budget_override, updated_at
        FROM "${schema}".agent_runtime_config
@@ -53,7 +53,7 @@ export async function getAgentRuntimeConfigs(tenantId: string): Promise<AgentRun
     tokenBudgetOverride: r.token_budget_override != null ? Number(r.token_budget_override) : null,
     paused: false,
 
-    updatedAt: r.updated_at ? new Date(r.updated_at).toISOString() : new Date().toISOString(),
+    updatedAt: r.updated_at ? new Date(r.updated_at as string | number | Date).toISOString() : new Date().toISOString(),
   }));
 }
 
@@ -111,7 +111,7 @@ export async function getProviderPolicies(tenantId: string): Promise<ProviderPol
   const schema = tenantSchema(tenantId);
   const result = await swallowDefault(
     EC.FALLBACK_QUERY,
-    { rows: [] } as unknown,
+    { rows: [] } as { rows: Record<string, unknown>[] },
     safeQuery(
       `SELECT policy_id, policy_name, primary_provider, fallback_provider,
               max_tokens_per_request, cost_cap_daily_usd, shadow_enabled, canary_enabled, enabled

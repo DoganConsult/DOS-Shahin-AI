@@ -9,7 +9,7 @@ import {
   Component, ChangeDetectionStrategy, inject, signal, OnInit, DestroyRef,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, of, switchMap } from 'rxjs';
 import {
@@ -25,7 +25,7 @@ import { FOUNDATION_I18N, type FoundationI18n, NoopFoundationI18n } from '../por
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule, RouterLink,
+    CommonModule,
     BreadcrumbModule, TilesModule, TagModule, TabsModule,
     SkeletonModule, NotificationModule, IconModule, ButtonModule,
     TooltipModule,
