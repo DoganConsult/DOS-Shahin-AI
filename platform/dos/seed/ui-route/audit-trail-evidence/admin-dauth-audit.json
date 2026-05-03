@@ -1,0 +1,10 @@
+{
+  "route": "/admin/dauth/audit",
+  "archetype": "audit-trail-evidence",
+  "auditEvidenceArtifacts": [
+    { "artifact_id": "ev-dauth-001", "title_en": "DAuth role grant attestation Q1 2026",     "title_ar": "إقرار منح دور DAuth للربع الأول 2026", "artifact_type": "attestation", "hash": "sha256:5f4dcc3b5aa765d61d8327deb882cf99", "collected_at": "2026-04-01T10:00:00Z", "collected_by": "audit-lead@grc",   "download_url": "/api/evidence/ev-dauth-001.pdf" },
+    { "artifact_id": "ev-dauth-002", "title_en": "Permission matrix snapshot — production",  "title_ar": "لقطة مصفوفة الأذونات - الإنتاج",       "artifact_type": "export",      "hash": "sha256:e3b0c44298fc1c149afbf4c8996fb924", "collected_at": "2026-04-15T08:30:00Z", "collected_by": "compliance-lead@grc","download_url": "/api/evidence/ev-dauth-002.csv" },
+    { "artifact_id": "ev-dauth-003", "title_en": "MFA enforcement log — April 2026",         "title_ar": "سجل فرض المصادقة الثنائية - أبريل 2026","artifact_type": "log",         "hash": "sha256:6dcd4ce23d88e2ee9568ba546c007c63", "collected_at": "2026-05-01T00:00:00Z", "collected_by": "ciso@grc",         "download_url": "/api/evidence/ev-dauth-003.json" },
+    { "artifact_id": "ev-dauth-004", "title_en": "Role drift screenshot — quarterly review", "title_ar": "لقطة شاشة انحراف الدور - مراجعة فصلية","artifact_type": "screenshot",  "hash": "sha256:8d777f385d3dfec8815d20f7496026dc", "collected_at": "2026-04-30T16:45:00Z", "collected_by": "audit-lead@grc",   "download_url": "/api/evidence/ev-dauth-004.png" }
+  ]
+}

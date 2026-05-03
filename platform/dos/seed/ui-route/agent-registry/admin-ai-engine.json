@@ -1,0 +1,46 @@
+{
+  "route": "/admin/ai/engine",
+  "archetype": "agent-registry",
+  "agentRegistry": [
+    {
+      "agent_id": "eng-1",
+      "name_en": "Engine Risk Scorer",
+      "name_ar": "محرك تقدير المخاطر",
+      "agent_type": "platform",
+      "capability": "score",
+      "status": "enabled",
+      "owner": "platform-admin",
+      "ai_model": "gpt-4o"
+    },
+    {
+      "agent_id": "eng-2",
+      "name_en": "Engine Evidence Linker",
+      "name_ar": "رابط الأدلة",
+      "agent_type": "tenant",
+      "capability": "retrieval",
+      "status": "enabled",
+      "owner": "ciso@grc",
+      "ai_model": "claude-3.5-sonnet"
+    },
+    {
+      "agent_id": "eng-3",
+      "name_en": "Engine Policy Drafter",
+      "name_ar": "صائغ السياسات",
+      "agent_type": "tenant",
+      "capability": "generation",
+      "status": "draft",
+      "owner": "compliance-lead@grc",
+      "ai_model": "gemini-1.5-pro"
+    },
+    {
+      "agent_id": "eng-4",
+      "name_en": "Engine Anomaly Sentinel",
+      "name_ar": "حارس الشذوذ",
+      "agent_type": "platform",
+      "capability": "detection",
+      "status": "enabled",
+      "owner": "platform-admin",
+      "ai_model": "shahin-anomaly-v2"
+    }
+  ]
+}

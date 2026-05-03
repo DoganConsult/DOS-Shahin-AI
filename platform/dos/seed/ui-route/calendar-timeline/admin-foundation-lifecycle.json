@@ -1,0 +1,46 @@
+{
+  "route": "/admin/foundation/lifecycle",
+  "archetype": "calendar-timeline",
+  "calendarEvents": [
+    {
+      "event_id": "fl-q1-org-review",
+      "title_en": "Q1 Organization Lifecycle Review",
+      "title_ar": "مراجعة دورة حياة المؤسسة للربع الأول",
+      "category": "internal",
+      "starts_at": "2026-05-15T09:00:00Z",
+      "ends_at": "2026-05-15T12:00:00Z",
+      "status": "scheduled",
+      "severity": "info",
+      "link": "/admin/foundation/organizations"
+    },
+    {
+      "event_id": "fl-tenant-quarterly-attestation",
+      "title_en": "Tenant Quarterly Attestation Window Opens",
+      "title_ar": "فتح نافذة الإقرارات الفصلية للمستأجرين",
+      "category": "regulatory",
+      "starts_at": "2026-06-01T00:00:00Z",
+      "ends_at": "2026-06-30T23:59:59Z",
+      "status": "scheduled",
+      "severity": "warning"
+    },
+    {
+      "event_id": "fl-person-recert-h1",
+      "title_en": "H1 Person Re-certification Cycle",
+      "title_ar": "دورة إعادة اعتماد الأشخاص للنصف الأول",
+      "category": "audit",
+      "starts_at": "2026-05-20T08:00:00Z",
+      "ends_at": "2026-06-20T17:00:00Z",
+      "status": "in-progress",
+      "severity": "info"
+    },
+    {
+      "event_id": "fl-policy-refresh-board",
+      "title_en": "Foundation Policy Refresh — Board Sign-off",
+      "title_ar": "تجديد سياسة الأساس - موافقة مجلس الإدارة",
+      "category": "review",
+      "starts_at": "2026-07-10T14:00:00Z",
+      "status": "scheduled",
+      "severity": "info"
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "route": "/admin/ai",
+  "archetype": "agent-flow",
+  "agentFlowSteps": [
+    {
+      "step_id": "s1",
+      "label_en": "Ingest tenant context",
+      "label_ar": "استيعاب سياق المستأجر",
+      "step_type": "tool-call",
+      "agent_id": "agent-context",
+      "status": "done"
+    },
+    {
+      "step_id": "s2",
+      "label_en": "Classify request intent",
+      "label_ar": "تصنيف نية الطلب",
+      "step_type": "llm",
+      "agent_id": "agent-router",
+      "status": "done"
+    },
+    {
+      "step_id": "s3",
+      "label_en": "Retrieve evidence corpus",
+      "label_ar": "استرجاع مجموعة الأدلة",
+      "step_type": "tool-call",
+      "agent_id": "agent-rag",
+      "status": "done"
+    },
+    {
+      "step_id": "s4",
+      "label_en": "Run policy guardrails",
+      "label_ar": "تشغيل ضوابط السياسة",
+      "step_type": "condition",
+      "status": "done"
+    },
+    {
+      "step_id": "s5",
+      "label_en": "Generate decision draft",
+      "label_ar": "صياغة مسودة القرار",
+      "step_type": "llm",
+      "agent_id": "agent-decision",
+      "status": "running"
+    },
+    {
+      "step_id": "s6",
+      "label_en": "Human reviewer approval",
+      "label_ar": "موافقة المراجع البشري",
+      "step_type": "human-review",
+      "status": "pending"
+    },
+    {
+      "step_id": "s7",
+      "label_en": "Persist decision + ledger",
+      "label_ar": "تخزين القرار في السجل",
+      "step_type": "tool-call",
+      "agent_id": "agent-ledger",
+      "status": "pending"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "route": "/admin/foundation/persons",
+  "archetype": "ownership-map",
+  "ownershipEdges": [
+    { "edge_id": "p-1", "entity_id": "person-001", "entity_label": "Sara AlOtaibi",   "owner": "ciso@grc",         "ownership_role": "accountable", "effective_from": "2025-01-01" },
+    { "edge_id": "p-2", "entity_id": "person-002", "entity_label": "Mohammed Saif",    "owner": "risk-lead@grc",    "ownership_role": "responsible", "effective_from": "2025-03-15" },
+    { "edge_id": "p-3", "entity_id": "person-003", "entity_label": "Aisha Khaled",     "owner": "audit-lead@grc",   "ownership_role": "consulted",   "effective_from": "2025-04-01" },
+    { "edge_id": "p-4", "entity_id": "person-004", "entity_label": "Yousef Hassan",    "owner": "compliance-lead@grc","ownership_role": "informed",  "effective_from": "2025-02-10" },
+    { "edge_id": "p-5", "entity_id": "person-005", "entity_label": "Layla Al-Sayed",   "owner": "tenant-admin@grc", "ownership_role": "approver",    "effective_from": "2024-12-01" },
+    { "edge_id": "p-6", "entity_id": "person-006", "entity_label": "Khalid Al-Rashid", "owner": "tprm-lead@grc",    "ownership_role": "custodian",   "effective_from": "2025-05-01" },
+    { "edge_id": "p-7", "entity_id": "person-007", "entity_label": "Noura AlSubaie",   "owner": "cro@fin",          "ownership_role": "reviewer",    "effective_from": "2025-01-15" }
+  ]
+}

@@ -43,15 +43,31 @@ SHELL-RESOLVER LOCATION (corrects prior misclassification):
 - The `stripPiPrefix()` helper in `shell-host.component.ts:73` says "until the
   backend config flips" — that comment is misleading; the source is FE config.
 
-PER-PRIMITIVE WRAPPER GAP (still real):
-- `platform/dos/registry/component-map.ts` routes every Carbon key in
-  `CARBON_PRIMITIVE_COMPONENT_MAP` to one shared `DynamicPageHostComponent`
-  ("Same host as route archetypes until per-primitive Angular wrappers are
-  routed"). So while DB and component-map register 152 keys, only the ~14
-  Carbon shell primitives (`cds-header`, `cds-sidenav`, `cds-hamburger`, etc.)
-  rendered directly in `shell-host.component.ts` are actually wired as native
-  Angular Carbon components in the workspace today. The remaining 138 keys
-  resolve to a generic host until per-primitive wrappers land.
+PROPS COVERAGE (CLOSED 2026-05-03 by Phase F-F6 V1-V6):
+- Migration `202605030850_phase_f_phase_f_v2_v6_props.sql` (idempotent, ON
+  CONFLICT DO UPDATE) seeded 143 rows across 14 archetype-props tables for
+  29 customer-bound routes covering V1 (foundation), V2 (dauth+tenants),
+  V3 (audit-trail-ledger × 11), V4 (agent-suite), V5 (incident-response),
+  V6 (operational misc). `node scripts/ci-guards/props-coverage.mjs` →
+  `bindings=64 archetypes-with-props=15 failures=0`. Live DB row tallies:
+  calendar_event=8, roadmap_milestone=5, org_chart_node=9, ownership_edge=18,
+  delegation_rule=5, agent_registry=11, agent_flow_step=7,
+  incident_runbook_step=10, incident_communication=6, audit_ledger_row=44,
+  audit_evidence_artifact=4, follow_up_item=5, export_artifact=5,
+  workflow_timeline_step=6. `pnpm platform:customer-gate` GREEN end-to-end
+  (dynamic-ui:gates + SPA build 20.8s + props-coverage). Verify:
+  `PROPS_COVERAGE_ENFORCE=1 pnpm platform:customer-gate`.
+
+PER-PRIMITIVE WRAPPER GAP (CLOSED 2026-05-03 by Phase F-F6 H1):
+- `platform/dos/registry/component-map.ts` no longer carries any
+  `DynamicPageHostComponent` fallback. Every entry in
+  `CARBON_PRIMITIVE_COMPONENT_MAP` (62 primitives) and
+  `REGISTRY_COMPONENT_MAP` (>340 entries) resolves to a real Carbon Angular
+  wrapper from `carbon-primitive-renderers.ts` /
+  `carbon-extended-renderers.ts` / `carbon-chart-renderers.ts`. The
+  `loader-resolvability` CI gate enforces "every registry entry resolves
+  to a real export" (462/462 currently). Verify:
+  `pnpm dynamic-ui:gates 2>&1 | grep loader-resolvability`.
 
 FOUNDATION MODULE BUILD STATE (verified 2026-05-02 evening):
 - `platform/foundation/dist/` IS built (bootstrap.js + contracts present).

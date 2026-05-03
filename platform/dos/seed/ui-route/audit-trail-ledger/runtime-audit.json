@@ -1,0 +1,50 @@
+{
+  "route": "/admin/runtime/audit",
+  "archetype": "audit-trail-ledger",
+  "auditLedgerRows": [
+    {
+      "ledger_id": "led-runtime-1",
+      "occurred_at": "2026-05-01T08:15:00Z",
+      "actor": "platform-admin",
+      "action": "settings.update",
+      "entity_type": "runtime",
+      "entity_id": "runtime-rec-1",
+      "prev_hash": null,
+      "hash": "sha256:runtime-1-202605010815",
+      "decision_ref": "dec-runtime-1"
+    },
+    {
+      "ledger_id": "led-runtime-2",
+      "occurred_at": "2026-05-02T11:42:00Z",
+      "actor": "tenant-admin@grc",
+      "action": "role.grant",
+      "entity_type": "runtime",
+      "entity_id": "runtime-rec-2",
+      "prev_hash": "sha256:prev-runtime-1",
+      "hash": "sha256:runtime-2-202605021142",
+      "decision_ref": "dec-runtime-2"
+    },
+    {
+      "ledger_id": "led-runtime-3",
+      "occurred_at": "2026-05-03T07:05:00Z",
+      "actor": "audit-lead@grc",
+      "action": "config.publish",
+      "entity_type": "runtime",
+      "entity_id": "runtime-rec-3",
+      "prev_hash": "sha256:prev-runtime-2",
+      "hash": "sha256:runtime-3-202605030705",
+      "decision_ref": "dec-runtime-3"
+    },
+    {
+      "ledger_id": "led-runtime-4",
+      "occurred_at": "2026-05-03T15:30:00Z",
+      "actor": "ciso@grc",
+      "action": "policy.attest",
+      "entity_type": "runtime",
+      "entity_id": "runtime-rec-4",
+      "prev_hash": "sha256:prev-runtime-3",
+      "hash": "sha256:runtime-4-202605031530",
+      "decision_ref": "dec-runtime-4"
+    }
+  ]
+}

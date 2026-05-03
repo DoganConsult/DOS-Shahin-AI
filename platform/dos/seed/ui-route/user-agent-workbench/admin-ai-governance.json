@@ -1,0 +1,36 @@
+{
+  "route": "/admin/ai/governance",
+  "archetype": "user-agent-workbench",
+  "agentRegistry": [
+    {
+      "agent_id": "gov-1",
+      "name_en": "My Risk Drafting Assistant",
+      "name_ar": "مساعد صياغة المخاطر",
+      "agent_type": "user",
+      "capability": "drafting",
+      "status": "enabled",
+      "owner": "me@grc",
+      "ai_model": "gpt-4o"
+    },
+    {
+      "agent_id": "gov-2",
+      "name_en": "My Audit Q&A Assistant",
+      "name_ar": "مساعد أسئلة التدقيق",
+      "agent_type": "user",
+      "capability": "qa",
+      "status": "enabled",
+      "owner": "me@grc",
+      "ai_model": "claude-3.5-sonnet"
+    },
+    {
+      "agent_id": "gov-3",
+      "name_en": "Vendor Due Diligence Bot",
+      "name_ar": "بوت العناية بالمورّد",
+      "agent_type": "vendor",
+      "capability": "screening",
+      "status": "draft",
+      "owner": "me@grc",
+      "ai_model": "gemini-1.5-pro"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "route": "/admin/foundation/organizations",
+  "archetype": "org-chart",
+  "orgChartNodes": [
+    { "node_id": "root",        "parent_id": null,    "title_en": "Shahin AI Platform",       "title_ar": "منصة شاهين الذكية",  "role": "platform",     "owner": "platform-admin",        "badge": "GLOBAL"  },
+    { "node_id": "tenant-grc",  "parent_id": "root",  "title_en": "GRC Tenant",                "title_ar": "مستأجر الحوكمة",     "role": "tenant",       "owner": "tenant-admin@grc",      "badge": "ACTIVE"  },
+    { "node_id": "ou-risk",     "parent_id": "tenant-grc", "title_en": "Risk Operations",      "title_ar": "عمليات المخاطر",     "role": "org-unit",     "owner": "risk-lead@grc"                              },
+    { "node_id": "ou-audit",    "parent_id": "tenant-grc", "title_en": "Internal Audit",       "title_ar": "التدقيق الداخلي",    "role": "org-unit",     "owner": "audit-lead@grc"                             },
+    { "node_id": "ou-compliance","parent_id": "tenant-grc","title_en": "Compliance",           "title_ar": "الالتزام",           "role": "org-unit",     "owner": "compliance-lead@grc"                        },
+    { "node_id": "team-cyber",  "parent_id": "ou-risk", "title_en": "Cybersecurity Risk",      "title_ar": "مخاطر الأمن السيبراني","role": "team",       "owner": "ciso@grc"                                  },
+    { "node_id": "team-third",  "parent_id": "ou-risk", "title_en": "Third-Party Risk",        "title_ar": "مخاطر الأطراف الثالثة","role": "team",       "owner": "tprm-lead@grc"                             },
+    { "node_id": "tenant-fin",  "parent_id": "root",  "title_en": "Financial Services Tenant", "title_ar": "مستأجر الخدمات المالية","role": "tenant",     "owner": "tenant-admin@fin",     "badge": "ACTIVE"  },
+    { "node_id": "ou-fin-risk", "parent_id": "tenant-fin","title_en": "Risk & Capital",        "title_ar": "المخاطر ورأس المال", "role": "org-unit",     "owner": "cro@fin"                                    }
+  ]
+}

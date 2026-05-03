@@ -1,0 +1,11 @@
+{
+  "route": "/admin/dauth/roles",
+  "archetype": "delegation-center",
+  "delegationRules": [
+    { "rule_id": "del-1", "delegator": "tenant-admin@grc",   "delegate": "risk-lead@grc",      "scope": "risk.module.write",       "permission": "risk.record.update",   "starts_at": "2026-05-01T00:00:00Z", "ends_at": "2026-08-01T00:00:00Z", "status": "active" },
+    { "rule_id": "del-2", "delegator": "tenant-admin@grc",   "delegate": "audit-lead@grc",     "scope": "audit.engagement.manage", "permission": "audit.engagement.update","starts_at": "2026-05-15T00:00:00Z", "ends_at": "2026-09-15T00:00:00Z", "status": "active" },
+    { "rule_id": "del-3", "delegator": "ciso@grc",            "delegate": "tprm-lead@grc",      "scope": "tprm.assessment.review",  "permission": "tprm.assessment.approve","starts_at": "2026-04-01T00:00:00Z", "ends_at": "2026-06-30T00:00:00Z", "status": "active" },
+    { "rule_id": "del-4", "delegator": "compliance-lead@grc", "delegate": "Aisha Khaled",       "scope": "policy.publish",          "permission": "policy.publish",       "starts_at": "2026-05-20T00:00:00Z", "ends_at": "2026-07-20T00:00:00Z", "status": "scheduled" },
+    { "rule_id": "del-5", "delegator": "platform-admin",      "delegate": "tenant-admin@fin",   "scope": "tenant.settings.write",   "permission": "tenant.settings.update","starts_at": "2026-01-01T00:00:00Z", "ends_at": null,                    "status": "active" }
+  ]
+}

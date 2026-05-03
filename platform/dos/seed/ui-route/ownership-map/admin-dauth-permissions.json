@@ -1,0 +1,12 @@
+{
+  "route": "/admin/dauth/permissions",
+  "archetype": "ownership-map",
+  "ownershipEdges": [
+    { "edge_id": "perm-1", "entity_id": "perm.risk.record.update", "entity_label": "Risk Record Update",   "owner": "risk-lead@grc",      "ownership_role": "accountable", "effective_from": "2025-01-01" },
+    { "edge_id": "perm-2", "entity_id": "perm.risk.record.read",   "entity_label": "Risk Record Read",     "owner": "tenant-admin@grc",   "ownership_role": "responsible", "effective_from": "2025-01-01" },
+    { "edge_id": "perm-3", "entity_id": "perm.audit.engagement.update","entity_label": "Audit Engagement Update","owner": "audit-lead@grc","ownership_role": "accountable","effective_from": "2025-02-01" },
+    { "edge_id": "perm-4", "entity_id": "perm.policy.publish",     "entity_label": "Policy Publish",       "owner": "compliance-lead@grc","ownership_role": "approver",    "effective_from": "2025-03-01" },
+    { "edge_id": "perm-5", "entity_id": "perm.tenant.settings.update","entity_label": "Tenant Settings Update","owner": "platform-admin", "ownership_role": "custodian",   "effective_from": "2024-12-01" },
+    { "edge_id": "perm-6", "entity_id": "perm.ai.governance.write","entity_label": "AI Governance Write",  "owner": "ciso@grc",            "ownership_role": "accountable","effective_from": "2025-04-15" }
+  ]
+}

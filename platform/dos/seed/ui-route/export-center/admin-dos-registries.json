@@ -1,0 +1,56 @@
+{
+  "route": "/admin/dos/registries",
+  "archetype": "export-center",
+  "exportArtifacts": [
+    {
+      "artifact_id": "ex-1",
+      "title_en": "Full registry snapshot — JSON",
+      "title_ar": "لقطة السجل الكاملة - JSON",
+      "format": "json",
+      "status": "ready",
+      "size_kb": 2048,
+      "download_url": "/api/exports/ex-1.json",
+      "generated_at": "2026-05-03T08:00:00Z"
+    },
+    {
+      "artifact_id": "ex-2",
+      "title_en": "Component inventory — CSV",
+      "title_ar": "جرد المكونات - CSV",
+      "format": "csv",
+      "status": "ready",
+      "size_kb": 384,
+      "download_url": "/api/exports/ex-2.csv",
+      "generated_at": "2026-05-03T08:05:00Z"
+    },
+    {
+      "artifact_id": "ex-3",
+      "title_en": "Carbon catalog — XLSX",
+      "title_ar": "كتالوج Carbon - XLSX",
+      "format": "xlsx",
+      "status": "generating",
+      "size_kb": null,
+      "download_url": null,
+      "generated_at": null
+    },
+    {
+      "artifact_id": "ex-4",
+      "title_en": "Quarterly compliance pack — PDF",
+      "title_ar": "حزمة الامتثال الفصلية - PDF",
+      "format": "pdf",
+      "status": "ready",
+      "size_kb": 5120,
+      "download_url": "/api/exports/ex-4.pdf",
+      "generated_at": "2026-05-01T18:00:00Z"
+    },
+    {
+      "artifact_id": "ex-5",
+      "title_en": "Failed export — SBOM",
+      "title_ar": "تصدير فشل - SBOM",
+      "format": "json",
+      "status": "failed",
+      "size_kb": null,
+      "download_url": null,
+      "generated_at": "2026-05-02T22:30:00Z"
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "route": "/admin/dnoc/services",
+  "archetype": "follow-up-center",
+  "followUpItems": [
+    {
+      "item_id": "fu-1",
+      "title_en": "Restart degraded auth-service node",
+      "title_ar": "إعادة تشغيل عقدة خدمة المصادقة المتدهورة",
+      "origin_ref": "inc-001",
+      "owner": "sre-lead@grc",
+      "due_at": "2026-05-04T12:00:00Z",
+      "status": "open",
+      "severity": "critical",
+      "ai_score": 92
+    },
+    {
+      "item_id": "fu-2",
+      "title_en": "Patch CVE-2026-1234 across fleet",
+      "title_ar": "تصحيح الثغرة CVE-2026-1234 عبر الأسطول",
+      "origin_ref": "cve-scan",
+      "owner": "patch-team@grc",
+      "due_at": "2026-05-07T17:00:00Z",
+      "status": "in-progress",
+      "severity": "critical",
+      "ai_score": 88
+    },
+    {
+      "item_id": "fu-3",
+      "title_en": "Renew TLS cert for api.shahin-ai.io",
+      "title_ar": "تجديد شهادة TLS لـ api.shahin-ai.io",
+      "origin_ref": "cert-mon",
+      "owner": "platform-admin",
+      "due_at": "2026-06-01T00:00:00Z",
+      "status": "open",
+      "severity": "warning",
+      "ai_score": 65
+    },
+    {
+      "item_id": "fu-4",
+      "title_en": "Re-attest tenant-fin SSO config",
+      "title_ar": "إعادة اعتماد إعداد SSO للمستأجر المالي",
+      "origin_ref": "audit-q1",
+      "owner": "audit-lead@grc",
+      "due_at": "2026-05-30T17:00:00Z",
+      "status": "open",
+      "severity": "info",
+      "ai_score": 55
+    },
+    {
+      "item_id": "fu-5",
+      "title_en": "Close monitoring gap on dnoc/services",
+      "title_ar": "سد فجوة المراقبة على خدمات DNOC",
+      "origin_ref": "review",
+      "owner": "sre-lead@grc",
+      "due_at": "2026-05-15T17:00:00Z",
+      "status": "overdue",
+      "severity": "warning",
+      "ai_score": 71
+    }
+  ]
+}

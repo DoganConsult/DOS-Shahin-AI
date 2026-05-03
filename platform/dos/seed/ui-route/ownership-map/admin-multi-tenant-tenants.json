@@ -1,0 +1,11 @@
+{
+  "route": "/admin/multi-tenant/tenants",
+  "archetype": "ownership-map",
+  "ownershipEdges": [
+    { "edge_id": "ten-1", "entity_id": "tenant-grc",     "entity_label": "GRC Tenant",                "owner": "tenant-admin@grc",  "ownership_role": "accountable","effective_from": "2025-01-01" },
+    { "edge_id": "ten-2", "entity_id": "tenant-fin",     "entity_label": "Financial Services Tenant","owner": "tenant-admin@fin",  "ownership_role": "accountable","effective_from": "2025-01-01" },
+    { "edge_id": "ten-3", "entity_id": "tenant-hc",      "entity_label": "Healthcare Tenant",         "owner": "tenant-admin@hc",   "ownership_role": "accountable","effective_from": "2025-03-01" },
+    { "edge_id": "ten-4", "entity_id": "tenant-edu",     "entity_label": "Education Tenant",          "owner": "tenant-admin@edu",  "ownership_role": "responsible","effective_from": "2025-04-15" },
+    { "edge_id": "ten-5", "entity_id": "tenant-gov",     "entity_label": "Government Tenant",         "owner": "platform-admin",    "ownership_role": "custodian",  "effective_from": "2025-02-01" }
+  ]
+}

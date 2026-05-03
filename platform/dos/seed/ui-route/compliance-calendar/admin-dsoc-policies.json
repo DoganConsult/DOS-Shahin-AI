@@ -1,0 +1,46 @@
+{
+  "route": "/admin/dsoc/policies",
+  "archetype": "compliance-calendar",
+  "calendarEvents": [
+    {
+      "event_id": "cc-1",
+      "title_en": "NCA ECC annual review",
+      "title_ar": "المراجعة السنوية لضوابط NCA ECC",
+      "category": "regulatory",
+      "starts_at": "2026-06-15T09:00:00Z",
+      "ends_at": "2026-06-15T17:00:00Z",
+      "status": "scheduled",
+      "severity": "warning"
+    },
+    {
+      "event_id": "cc-2",
+      "title_en": "SAMA cybersecurity policy attestation",
+      "title_ar": "إقرار سياسة الأمن السيبراني SAMA",
+      "category": "regulatory",
+      "starts_at": "2026-07-01T08:00:00Z",
+      "ends_at": "2026-07-01T12:00:00Z",
+      "status": "scheduled",
+      "severity": "info"
+    },
+    {
+      "event_id": "cc-3",
+      "title_en": "PDPL data-protection refresh",
+      "title_ar": "تحديث حماية البيانات PDPL",
+      "category": "regulatory",
+      "starts_at": "2026-08-10T10:00:00Z",
+      "ends_at": "2026-08-10T15:00:00Z",
+      "status": "scheduled",
+      "severity": "info"
+    },
+    {
+      "event_id": "cc-4",
+      "title_en": "Internal policy gap walkthrough",
+      "title_ar": "استعراض فجوات السياسة الداخلية",
+      "category": "internal",
+      "starts_at": "2026-05-25T13:00:00Z",
+      "ends_at": "2026-05-25T16:00:00Z",
+      "status": "in-progress",
+      "severity": "info"
+    }
+  ]
+}

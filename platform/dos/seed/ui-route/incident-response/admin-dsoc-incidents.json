@@ -1,0 +1,77 @@
+{
+  "route": "/admin/dsoc/incidents",
+  "archetype": "incident-response",
+  "incidentRunbookSteps": [
+    {
+      "step_id": "rb-soc-1",
+      "label_en": "Detect & triage",
+      "label_ar": "كشف وفرز",
+      "phase": "detect",
+      "owner": "soc-lead@grc",
+      "due_at": "2026-05-03T09:00:00Z",
+      "status": "done"
+    },
+    {
+      "step_id": "rb-soc-2",
+      "label_en": "Contain blast radius",
+      "label_ar": "احتواء نطاق التأثير",
+      "phase": "contain",
+      "owner": "soc-lead@grc",
+      "due_at": "2026-05-03T10:30:00Z",
+      "status": "in-progress"
+    },
+    {
+      "step_id": "rb-soc-3",
+      "label_en": "Eradicate root cause",
+      "label_ar": "إزالة السبب الجذري",
+      "phase": "eradicate",
+      "owner": "incident-cmdr@grc",
+      "due_at": "2026-05-03T14:00:00Z",
+      "status": "pending"
+    },
+    {
+      "step_id": "rb-soc-4",
+      "label_en": "Recover services",
+      "label_ar": "استعادة الخدمات",
+      "phase": "recover",
+      "owner": "sre-lead@grc",
+      "due_at": "2026-05-03T18:00:00Z",
+      "status": "pending"
+    },
+    {
+      "step_id": "rb-soc-5",
+      "label_en": "Post-incident review",
+      "label_ar": "مراجعة ما بعد الحادث",
+      "phase": "review",
+      "owner": "audit-lead@grc",
+      "due_at": "2026-05-10T12:00:00Z",
+      "status": "pending"
+    }
+  ],
+  "incidentCommunications": [
+    {
+      "comm_id": "cm-soc-1",
+      "channel": "slack",
+      "audience": "internal",
+      "sent_at": "2026-05-03T09:05:00Z",
+      "message_en": "INC-001 raised — triage in progress.",
+      "message_ar": "تم رفع الحادث 001 - الفرز جارٍ."
+    },
+    {
+      "comm_id": "cm-soc-2",
+      "channel": "email",
+      "audience": "customer",
+      "sent_at": "2026-05-03T10:00:00Z",
+      "message_en": "Customer notice: temporary degradation expected.",
+      "message_ar": "إشعار للعميل: من المتوقع تدهور مؤقت."
+    },
+    {
+      "comm_id": "cm-soc-3",
+      "channel": "status-page",
+      "audience": "public",
+      "sent_at": "2026-05-03T10:15:00Z",
+      "message_en": "Investigating elevated error rates.",
+      "message_ar": "يتم التحقيق في ارتفاع معدلات الخطأ."
+    }
+  ]
+}

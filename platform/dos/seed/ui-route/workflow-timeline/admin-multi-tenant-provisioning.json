@@ -1,0 +1,60 @@
+{
+  "route": "/admin/multi-tenant/provisioning",
+  "archetype": "workflow-timeline",
+  "workflowTimelineSteps": [
+    {
+      "step_id": "wf-1",
+      "label_en": "Tenant request received",
+      "label_ar": "تم استلام طلب المستأجر",
+      "state": "complete",
+      "description": "Submitted via self-serve portal",
+      "occurred_at": "2026-05-01T08:00:00Z",
+      "actor": "requestor@new-tenant"
+    },
+    {
+      "step_id": "wf-2",
+      "label_en": "Risk + sanctions screen",
+      "label_ar": "فحص المخاطر والعقوبات",
+      "state": "complete",
+      "description": "Automated sanctions+risk score",
+      "occurred_at": "2026-05-01T08:30:00Z",
+      "actor": "agent-screener"
+    },
+    {
+      "step_id": "wf-3",
+      "label_en": "Tenant resources allocated",
+      "label_ar": "تخصيص موارد المستأجر",
+      "state": "complete",
+      "description": "Schemas, quotas, secrets",
+      "occurred_at": "2026-05-02T10:15:00Z",
+      "actor": "platform-admin"
+    },
+    {
+      "step_id": "wf-4",
+      "label_en": "Identity bootstrap & SSO wiring",
+      "label_ar": "تهيئة الهوية وربط SSO",
+      "state": "current",
+      "description": "Awaiting IdP metadata exchange",
+      "occurred_at": "2026-05-03T09:00:00Z",
+      "actor": "iam-team"
+    },
+    {
+      "step_id": "wf-5",
+      "label_en": "Compliance pack signed off",
+      "label_ar": "اعتماد حزمة الامتثال",
+      "state": "incomplete",
+      "description": "Pending CISO attestation",
+      "occurred_at": null,
+      "actor": null
+    },
+    {
+      "step_id": "wf-6",
+      "label_en": "Tenant go-live announcement",
+      "label_ar": "الإعلان عن إطلاق المستأجر",
+      "state": "incomplete",
+      "description": "Status page + comms",
+      "occurred_at": null,
+      "actor": null
+    }
+  ]
+}

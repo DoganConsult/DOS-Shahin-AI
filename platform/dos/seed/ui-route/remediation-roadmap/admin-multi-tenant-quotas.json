@@ -1,0 +1,56 @@
+{
+  "route": "/admin/multi-tenant/quotas",
+  "archetype": "remediation-roadmap",
+  "roadmapMilestones": [
+    {
+      "milestone_id": "rm-1",
+      "title_en": "Quota model v2 design",
+      "title_ar": "تصميم نموذج الحصص الإصدار 2",
+      "description": "Per-tenant elastic quotas with predictive limits",
+      "target_date": "2026-05-30",
+      "progress": 100,
+      "status": "done",
+      "owner": "platform-admin"
+    },
+    {
+      "milestone_id": "rm-2",
+      "title_en": "Quota enforcement at gateway",
+      "title_ar": "فرض الحصص عند البوابة",
+      "description": "Token-bucket + circuit-breakers",
+      "target_date": "2026-06-30",
+      "progress": 60,
+      "status": "in-progress",
+      "owner": "sre-lead@grc"
+    },
+    {
+      "milestone_id": "rm-3",
+      "title_en": "Tenant self-serve quota dashboard",
+      "title_ar": "لوحة الحصص الذاتية للمستأجر",
+      "description": "Live usage + projected over-runs",
+      "target_date": "2026-07-31",
+      "progress": 25,
+      "status": "in-progress",
+      "owner": "product-shell-team"
+    },
+    {
+      "milestone_id": "rm-4",
+      "title_en": "Predictive over-quota alerting",
+      "title_ar": "تنبيهات تجاوز الحصص التنبؤية",
+      "description": "AI forecasts breach 24h ahead",
+      "target_date": "2026-08-31",
+      "progress": 5,
+      "status": "at-risk",
+      "owner": "ai-engine-team"
+    },
+    {
+      "milestone_id": "rm-5",
+      "title_en": "Billing reconciliation handoff",
+      "title_ar": "تسليم تسوية الفوترة",
+      "description": "Daily reconciliation with billing system",
+      "target_date": "2026-09-30",
+      "progress": 0,
+      "status": "not-started",
+      "owner": "fin-ops"
+    }
+  ]
+}

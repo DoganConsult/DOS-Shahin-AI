@@ -20,8 +20,10 @@
     "ui-registry:verify": "node scripts/ui-registry/verify.mjs",
     "ui-registry:diff":   "node scripts/ui-registry/diff.mjs",
     "ui-registry:import": "node scripts/ui-registry/import.mjs",
+    "ui-registry:import:props": "node scripts/ui-registry/import-props.mjs",
     "ui-registry:seed:dev": "node scripts/ui-registry/seed-dev.mjs",
-    "platform:release-gate": "pnpm dynamic-ui:gates && pnpm --filter shahin-ai-grc-frontend build && pnpm --filter @dos/module-foundation build"
+    "platform:release-gate": "pnpm dynamic-ui:gates && pnpm --filter shahin-ai-grc-frontend build && pnpm --filter @dos/module-foundation build",
+    "platform:customer-gate": "pnpm dynamic-ui:gates && pnpm --filter shahin-ai-grc-frontend build && node scripts/ci-guards/props-coverage.mjs"
   },
   "devDependencies": {
     "typescript": "5.4.5"

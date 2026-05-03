@@ -1,0 +1,50 @@
+{
+  "route": "/admin/access/audit",
+  "archetype": "audit-trail-ledger",
+  "auditLedgerRows": [
+    {
+      "ledger_id": "led-access-1",
+      "occurred_at": "2026-05-01T08:15:00Z",
+      "actor": "platform-admin",
+      "action": "settings.update",
+      "entity_type": "access-control",
+      "entity_id": "access-control-rec-1",
+      "prev_hash": null,
+      "hash": "sha256:access-1-202605010815",
+      "decision_ref": "dec-access-1"
+    },
+    {
+      "ledger_id": "led-access-2",
+      "occurred_at": "2026-05-02T11:42:00Z",
+      "actor": "tenant-admin@grc",
+      "action": "role.grant",
+      "entity_type": "access-control",
+      "entity_id": "access-control-rec-2",
+      "prev_hash": "sha256:prev-access-1",
+      "hash": "sha256:access-2-202605021142",
+      "decision_ref": "dec-access-2"
+    },
+    {
+      "ledger_id": "led-access-3",
+      "occurred_at": "2026-05-03T07:05:00Z",
+      "actor": "audit-lead@grc",
+      "action": "config.publish",
+      "entity_type": "access-control",
+      "entity_id": "access-control-rec-3",
+      "prev_hash": "sha256:prev-access-2",
+      "hash": "sha256:access-3-202605030705",
+      "decision_ref": "dec-access-3"
+    },
+    {
+      "ledger_id": "led-access-4",
+      "occurred_at": "2026-05-03T15:30:00Z",
+      "actor": "ciso@grc",
+      "action": "policy.attest",
+      "entity_type": "access-control",
+      "entity_id": "access-control-rec-4",
+      "prev_hash": "sha256:prev-access-3",
+      "hash": "sha256:access-4-202605031530",
+      "decision_ref": "dec-access-4"
+    }
+  ]
+}
