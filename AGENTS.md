@@ -87,9 +87,12 @@ MARKETING LANDING ARCHETYPE (CLOSED 2026-05-04 by Phase M3.1):
 - Fix shipped:
     1. New stylesheet
        `platform/ui-system/dos-ui-system/src/marketing/marketing-home.page.scss`
-       (~410 LOC) covering all 40 unique selectors using `--cds-*` Carbon
+       (~530 LOC) covering all 40 unique selectors using `--cds-*` Carbon
        tokens with inline fallbacks, RTL via CSS logical properties (no
-       left/right), responsive breakpoints 480/768, and a fixed-position
+       left/right), responsive breakpoints 390/430/480/768/1440 per the
+       Shahin-AI+ CSS closeout spec, `:host-context([dir='rtl'])` letter-
+       spacing override for eyebrow/badge/eyebrow-on-dark, and a
+       fixed-position
        `.dos-mh-toast-anchor` z-index=9999 with mobile safe-area fallback.
        Wired via `styleUrl: './marketing-home.page.scss'` (Angular
        Emulated encapsulation; no global bleed). Verified live: 40 unique

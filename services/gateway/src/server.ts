@@ -492,6 +492,13 @@ if (UI_OS_SERVICE_URL) {
     '/api/ui-os/agentic/registry',
     '/api/ui-os/agentic/strip',
   ];
+  // Phase M3.1 — anonymous template-binding for the 7 marketing-landing routes.
+  // ui-os-service mirrors this allowlist (publicMarketingTemplateRoutes) so the
+  // bypass is symmetrical: only `GET /api/ui-os/template-binding?route=<one>`
+  // skips authGuard. Any other route still requires JWT.
+  const publicMarketingRoutes = new Set<string>([
+    '/', '/pricing', '/trust', '/security', '/contact', '/about', '/legal',
+  ]);
   const publicUiOsProxy = createProxyMiddleware({
     target: UI_OS_SERVICE_URL,
     changeOrigin: true,
@@ -509,6 +516,14 @@ if (UI_OS_SERVICE_URL) {
     const full = req.originalUrl.split('?')[0];
     if (publicUiOsPrefixes.some((p) => full === p || full.startsWith(p + '/'))) {
       return (publicUiOsProxy as any)(req, res, next);
+    }
+    if (req.method === 'GET' && full === '/api/ui-os/template-binding') {
+      const qs = req.originalUrl.includes('?') ? req.originalUrl.split('?')[1] : '';
+      const params = new URLSearchParams(qs);
+      const route = params.get('route') ?? '';
+      if (publicMarketingRoutes.has(route)) {
+        return (publicUiOsProxy as any)(req, res, next);
+      }
     }
     return next();
   });

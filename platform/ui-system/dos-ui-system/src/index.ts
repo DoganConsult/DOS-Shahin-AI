@@ -68,15 +68,20 @@ export * from './layout/responsive-grid.component';
 // command-search, status-bar, action-queue, agent-strip, inbox, context,
 // quick-create) — every selector is registered in
 // dos.dynamic_ui_component_registry under workspace.* keys.
-export * from './shell/mobile-bottom-nav.component';
-export * from './shell/workspace-header.component';
-export * from './shell/workspace-sidebar.component';
+export * from './shell/quick-create.component';
+export * from './shell/workspace-shell.contracts';
+export * from './shell/toast-outlet.component';
+export * from './shell/shell-banner-strip.component';
+export * from './shell/workspace-host-kit';
 export * from './shell/command-search.component';
 export * from './shell/workspace-status-bar.component';
 export * from './shell/workspace-action-queue.component';
 export * from './shell/agent-activity-strip.component';
 export * from './shell/inbox-center.component';
 export * from './shell/context-panel.component';
+export * from './shell/mobile-bottom-nav.component';
+export * from './shell/workspace-header.component';
+export * from './shell/workspace-sidebar.component';
 export * from './shell/quick-create.component';
 export * from './shell/workspace-shell.contracts';
 

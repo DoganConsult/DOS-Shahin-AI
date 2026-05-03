@@ -119,3 +119,77 @@ COMMIT;
 - [ ] org/tenant scope enforced
 - [ ] no mock/static data
 - [ ] build passes
+Workspace Host features and components
+#	Feature	Purpose	Component / selector	IBM Carbon primitives
+1	App shell frame	Overall authenticated shell	dos-app-shell	UIShell, Content, Layer
+2	Workspace header	Product identity + global actions	dos-workspace-header	Header, HeaderName, HeaderGlobal, HeaderAction
+3	Product logo/name	Shahin-AI+ brand identity	inside dos-workspace-header	HeaderName
+4	Tenant/workspace label	Show current tenant/workspace context	inside dos-workspace-header	Tag, HeaderAction
+5	Selected module label	Show active module/page context	inside dos-workspace-header	Tag, breadcrumb text
+6	Account menu	Profile, tenant profile, language, theme, logout	dos-account-menu or header slot	HeaderAction, Popover/Menu, Button
+7	Language switch	EN/AR toggle	inside account/header	Button, Tag
+8	Theme switch	Light/dark mode	inside account/header	Toggle, Button
+9	Notification entry	Bell/inbox access	dos-inbox-center	HeaderAction, Tag, Notification, Toast
+10	Command search	Global Cmd/Ctrl+K launcher	dos-command-search	Search, Modal, Button
+11	Quick create	Global create action	dos-quick-create	Button, Menu, Modal
+12	Desktop sidebar	Main module/page navigation	dos-workspace-sidebar	SideNav, SideNavMenu, SideNavItem
+13	Sidebar group labels	Registry/i18n-driven groups	inside dos-workspace-sidebar	SideNavMenu
+14	Sidebar item labels	Unique nav item labels, no Title placeholders	inside dos-workspace-sidebar	SideNavItem
+15	Sidebar collapse/rail	Compact desktop mode	dos-workspace-sidebar	SideNav
+16	Sidebar search/filter	Filter navigation labels	inside dos-workspace-sidebar	Search
+17	Mobile drawer	Mobile navigation drawer	dos-mobile-drawer	SideNav, HeaderAction
+18	Mobile bottom nav	High-priority mobile nav	dos-mobile-bottom-nav	Button, Tag
+19	Breadcrumb strip	Route/page hierarchy	shell breadcrumb container	Breadcrumb
+20	Workspace status bar	Tenant/session/system health strip	dos-workspace-status-bar	Tag, InlineNotification, ProgressBar
+21	Action queue entry	Global tasks/approvals queue	dos-action-queue	Tile, Tag, Button
+22	Agent activity strip	Recent AI/agent work summary	dos-agent-activity-strip	Tag, ProgressBar, SkeletonText
+23	Context panel	Right-side contextual info/help	dos-context-panel	Panel/Layer, StructuredList, Button
+24	Global loading frame	Shell-level loading state	shell loading wrapper	SkeletonText, SkeletonPlaceholder
+25	Global error frame	401/403/404/maintenance shell messages	shell error wrapper	InlineNotification, Button
+26	Content slot	Where pages/modules render	<router-outlet /> / dynamic outlet	Content, Grid, Column, Layer
+27	Permission-aware nav	Hide/disable nav by permissions	nav adapter + sidebar	SideNavItem, Tag
+28	Tenant-aware state	Current tenant/workspace/session context	shell state service	no visual primitive required
+29	RTL/LTR layout	Arabic/English direction support	host + wrappers	logical CSS
+30	Responsive shell	390/430/768/1440 support	shell CSS/wrappers	Grid, SideNav, Layer
+31	Safe-area support	iOS/browser chrome spacing	shell CSS	CSS env safe-area vars
+32	Toast outlet	Global toast notifications	shell toast outlet	Toast
+33	Help/support entry	Docs/help/contact support	header/context panel	HeaderAction, Modal, Link
+34	Session expiry warning	User warning before logout	status/header alert	InlineNotification, Modal
+35	Impersonation/admin banner	Safe notice if support/admin context	status bar	InlineNotification, Tag
+36	Trial/subscription banner	Workspace-level product state	status bar	InlineNotification, Tag
+37	Offline/reconnect banner	Network/SSE/WebSocket state	status bar	InlineNotification
+38	Accessibility landmarks	Header/nav/main semantics	shell wrappers	semantic HTML + Carbon
+39	Keyboard shortcuts	Cmd/Ctrl+K, nav close, escape	command/search/drawer	Angular handlers
+40	Correlation/request ID display	Debug/proof for errors	error panel/context	StructuredList, CodeSnippet if available
+Must-have selectors for Workspace Host Kit
+dos-app-shell
+dos-workspace-header
+dos-workspace-sidebar
+dos-mobile-drawer
+dos-mobile-bottom-nav
+dos-command-search
+dos-inbox-center
+dos-workspace-status-bar
+dos-action-queue
+dos-agent-activity-strip
+dos-context-panel
+dos-quick-create
+Do not put these in Workspace Host
+Foundation KPI cards
+Risk heatmap
+Finance dashboard
+Module tables
+Module forms
+Module business API calls
+Module-specific cards
+Hardcoded module metadata maps
+Route migration logic
+DB seed logic
+Customer records
+Priority order
+Priority	Implement first
+P0	Header, sidebar, content slot, account menu, nav label fix
+P1	Mobile drawer/bottom nav, command search, notifications
+P2	Status bar, quick create, action queue
+P3	Agent activity strip, context panel, help/support
+P4	Session expiry, offline/reconnect, correlation ID, admin banners

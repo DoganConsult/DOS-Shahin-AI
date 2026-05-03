@@ -1,5 +1,5 @@
 /**
- * Phase M1 — `marketing.home.page` 17-section landing surface.
+ * Phase M1 — `marketing.home.page` 19-region landing surface.
  *
  * Public, unauthenticated landing for shahin-ai + dogan-ai-os brands. Built
  * exclusively from approved primitives:
@@ -8,16 +8,17 @@
  *   - 9 agent-tile brand assets resolved via BrandResolverService.
  *   - IBM Carbon `tiles`/`button`/`tag` styling hooks via data-cds-component.
  *
- * Sections (17 — single ordered list, every one rendered as a <section>):
- *   01 hero               10 ai-and-agents
- *   02 trust-pills        11 pricing-teaser
- *   03 value-props        12 testimonials
- *   04 agentic-proof      13 logos
- *   05 download-kit       14 resources
- *   06 platform-overview  15 faq
- *   07 modules            16 cta-banner
- *   08 industries         17 footer
- *   09 architecture
+ * Regions (19 — header + breadcrumb + 17 content/footer regions):
+ *   01 public-header      11 architecture
+ *   02 breadcrumb-row     12 ai-and-agents
+ *   03 hero               13 pricing-teaser
+ *   04 trust-pills        14 testimonials
+ *   05 value-props        15 logos
+ *   06 agentic-proof      16 resources
+ *   07 download-kit       17 faq
+ *   08 platform-overview  18 cta-banner
+ *   09 modules            19 footer
+ *   10 industries
  *
  * NEVER imports AccessStore. NEVER reads tenant context. The agent strip
  * is fed by `summary` Input (consumer wires it from /api/ui-os/agentic/strip).
@@ -36,7 +37,11 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { DosBrandEagleComponent } from '../brand/dos-brand-eagle.component';
 import { BrandResolverService } from '../brand/brand-resolver.service';
-import { MarketingPublicConfigService } from './marketing-public-config.service';
+import type {
+  MarketingFooterGroup,
+  MarketingHomeContent,
+  MarketingNavItem,
+} from './marketing-public-config.service';
 import { DosAgentStatusStripComponent } from '../agentic/agentic-components';
 import type { AgentState, AgentStripSummary } from '../agentic/agentic.contract';
 import type { DosBrandCode } from '@dos/design-tokens';
@@ -75,11 +80,12 @@ import { DosCarbonProgressBarComponent } from '../carbon/dos-carbon-progress-bar
 import { DosCarbonProgressIndicatorComponent, type DosCarbonProgressStep } from '../carbon/dos-carbon-progress-indicator.component';
 import { DosCarbonSkeletonComponent } from '../carbon/dos-carbon-skeleton.component';
 import { DosCarbonAspectRatioComponent } from '../carbon/dos-carbon-aspect-ratio.component';
-import { DosCarbonTooltipComponent } from '../carbon/dos-carbon-tooltip.component';
 
-/** Locked 17-section ordering (M1.5 inserts `download-kit` after agentic-proof).
+/** Locked 19-region ordering: public header + breadcrumb + 17 content/footer regions.
  *  CI gate `marketing-home-coverage.mjs` greps this literal. */
-export const MARKETING_HOME_SECTIONS = [
+export const MARKETING_HOME_REGIONS = [
+  'public-header',
+  'breadcrumb-row',
   'hero',
   'trust-pills',
   'value-props',
@@ -98,7 +104,37 @@ export const MARKETING_HOME_SECTIONS = [
   'cta-banner',
   'footer',
 ] as const;
-export type MarketingHomeSectionId = (typeof MARKETING_HOME_SECTIONS)[number];
+export const MARKETING_HOME_SECTIONS = MARKETING_HOME_REGIONS;
+export type MarketingHomeSectionId = (typeof MARKETING_HOME_REGIONS)[number];
+
+const EMPTY_MARKETING_HOME_CONTENT: MarketingHomeContent = {
+  brandLabel: '',
+  hero: {
+    badge: '', eyebrow: '', title: '', sub: '', microcopy: '',
+    ctaPrimary: { label: '', href: '' },
+    ctaSecondary: { label: '', href: '' },
+  },
+  trustPills: [],
+  valueProps: [],
+  agentic: { eyebrow: '', title: '', readinessPercent: 0, tiles: [] },
+  downloadKit: {
+    eyebrow: '', title: '', body: '', ctaLabel: '', featuredAssetKey: '',
+    notification: { title: '', subtitle: '' },
+    toast: { title: '', subtitle: '' },
+  },
+  platform: { title: '', body: '', tabs: [] },
+  modules: [],
+  industries: [],
+  architecture: { title: '', body: '', rows: [] },
+  ai: { eyebrow: '', title: '', body: '', currentStep: 0, steps: [] },
+  pricing: { title: '', ctaLabel: '', href: '', columns: [], rows: [] },
+  testimonials: [],
+  customerLogos: [],
+  resources: [],
+  faq: [],
+  ctaBanner: { eyebrow: '', title: '', sub: '' },
+  breadcrumb: [],
+};
 
 /** Agent-tile descriptor surfaced in the agentic-proof section. */
 export interface MarketingAgentTile {
@@ -137,7 +173,6 @@ export interface MarketingAgentTile {
     DosCarbonProgressIndicatorComponent,
     DosCarbonSkeletonComponent,
     DosCarbonAspectRatioComponent,
-    DosCarbonTooltipComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './marketing-home.page.scss',
@@ -150,6 +185,7 @@ export interface MarketingAgentTile {
     >
       <!-- ░░ Header (cds-header + cds-header-navigation + HeaderMenuItem) ░░ -->
       <dos-carbon-header-shell
+        data-section-id="public-header"
         [brand]="brandLabel"
         brandShort="DOS"
         [showHeaderNav]="true"
@@ -168,7 +204,7 @@ export interface MarketingAgentTile {
       </dos-carbon-header-shell>
 
       <!-- ░░ Breadcrumb (Home › current) ░░ -->
-      <div class="dos-mh-container dos-mh-breadcrumb-row">
+      <div class="dos-mh-container dos-mh-breadcrumb-row" data-section-id="breadcrumb-row">
         <dos-carbon-breadcrumb [items]="breadcrumbItems"></dos-carbon-breadcrumb>
       </div>
 
@@ -242,15 +278,15 @@ export interface MarketingAgentTile {
             <dos-agent-status-strip
               [state]="agentStripState"
               [summary]="agentStripSummary"
-              emptyLabel="No agents enrolled"
-              failedLabel="Agent service unavailable"
+              [emptyLabel]="agenticEmptyLabel"
+              [failedLabel]="agenticFailedLabel"
             />
 
             <!-- ProgressBar — agentic readiness/maturity meter -->
             <div class="dos-mh-readiness">
               <dos-carbon-progress-bar
-                label="Agentic readiness"
-                helperText="9 of 10 agents online"
+                [label]="agenticReadinessLabel"
+                [helperText]="agenticReadinessHelper"
                 [value]="readinessPercent"
                 [max]="100"
                 size="big"
@@ -513,22 +549,35 @@ export interface MarketingAgentTile {
 })
 export class DosMarketingHomePageComponent {
   private readonly brandResolver = inject(BrandResolverService);
-  private readonly marketingCfg = inject(MarketingPublicConfigService);
   private readonly router = inject(Router);
+  private readonly _brandCode = signal<DosBrandCode | null>(null);
+  private readonly _homeContent = signal<MarketingHomeContent | null>(null);
+  private readonly _navItems = signal<ReadonlyArray<MarketingNavItem>>([]);
+  private readonly _footerGroups = signal<ReadonlyArray<MarketingFooterGroup>>([]);
+  private readonly _flags = signal<Readonly<Record<string, boolean>>>({});
 
-  @Input({ required: true }) brandCode!: DosBrandCode;
+  @Input({ required: true }) set brandCode(v: DosBrandCode) {
+    this._brandCode.set(v);
+    if (v) this.brandResolver.init(v).catch(() => {});
+  }
+  get brandCode(): DosBrandCode { return this._brandCode() as DosBrandCode; }
+
   @Input() locale: 'en' | 'ar' = 'en';
+  @Input() set homeContent(v: MarketingHomeContent | null) { this._homeContent.set(v); }
+  @Input('navItems') set navItemsInput(v: ReadonlyArray<MarketingNavItem> | null) { this._navItems.set(v ?? []); }
+  @Input('footerGroups') set footerGroupsInput(v: ReadonlyArray<MarketingFooterGroup> | null) { this._footerGroups.set(v ?? []); }
+  @Input() set flags(v: Readonly<Record<string, boolean>> | null) { this._flags.set(v ?? {}); }
 
-  /** Runtime-fed strip state (not "content" — set by host). */
   @Input() agentStripState: AgentState = 'ready';
-  @Input() agentStripSummary: AgentStripSummary | null = null;
+  private readonly _agentStripSummary = signal<AgentStripSummary | null>(null);
+  @Input() set agentStripSummary(v: AgentStripSummary | null) { this._agentStripSummary.set(v); }
+  get agentStripSummary(): AgentStripSummary | null { return this._agentStripSummary(); }
 
-  /** Pre-fetched marketing assets (host wires from /marketing/assets). */
-  @Input() downloadAssets: ReadonlyArray<MarketingAsset> = [];
+  private readonly _downloadAssets = signal<ReadonlyArray<MarketingAsset>>([]);
+  @Input() set downloadAssets(v: ReadonlyArray<MarketingAsset>) { this._downloadAssets.set(v); }
+  get downloadAssets(): ReadonlyArray<MarketingAsset> { return this._downloadAssets(); }
 
-  // ─── 100% dynamic content (no hardcoded defaults) ────────────────────
-  /** Single source of truth: marketing-public-config-service homeContent. */
-  private readonly content = computed(() => this.marketingCfg.marketingHomeContent());
+  private readonly content = computed(() => this._homeContent() ?? EMPTY_MARKETING_HOME_CONTENT);
 
   // Brand label (resolved server-side, no string mapping in component).
   get brandLabel(): string { return this.content().brandLabel; }
@@ -551,6 +600,10 @@ export class DosMarketingHomePageComponent {
   // Agentic-proof
   get agenticEyebrow(): string { return this.content().agentic.eyebrow; }
   get agenticTitle(): string   { return this.content().agentic.title; }
+  get agenticEmptyLabel(): string { return this.agenticText('emptyLabel'); }
+  get agenticFailedLabel(): string { return this.agenticText('failedLabel'); }
+  get agenticReadinessLabel(): string { return this.agenticText('readinessLabel'); }
+  get agenticReadinessHelper(): string { return this.agenticText('readinessHelper'); }
   get readinessPercent(): number { return this.content().agentic.readinessPercent; }
   get agentTiles(): ReadonlyArray<MarketingAgentTile> { return this.content().agentic.tiles; }
 
@@ -626,9 +679,13 @@ export class DosMarketingHomePageComponent {
   get kitToastSubtitle(): string { return this.content().downloadKit.toast.subtitle; }
 
   readonly year = new Date().getFullYear();
-  readonly footerGroups = computed(() => this.marketingCfg.marketingFooterGroups());
-  readonly navItems = computed(() => this.marketingCfg.marketingNavItems());
-  readonly showAgenticProof = computed(() => this.marketingCfg.flag('landingAgenticProof'));
+  readonly footerGroups = computed(() => this._footerGroups());
+  readonly navItems = computed(() => this._navItems());
+  readonly showAgenticProof = computed(() => this._flags()['landingAgenticProof'] === true);
+
+  agenticText(key: string): string {
+    return ((this.content().agentic as unknown as Record<string, string>)[key] ?? '');
+  }
 
   /** Carbon Accordion items derived from FAQ. */
   faqItems(): DosCarbonAccordionItem[] {

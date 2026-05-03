@@ -1,13 +1,13 @@
 /**
  * Phase M1 — `marketing.home.page` contract test.
  *
- * Source-level (no DOM) verification that the 16-section public landing
+ * Source-level (no DOM) verification that the 19-region public landing
  * surface stays coherent with the registry / brand-asset / agentic
  * contracts. Runs under `tests/vitest.contracts.config.mjs`.
  *
  * Asserts:
- *   ① MARKETING_HOME_SECTIONS literal exposes all 16 canonical ids.
- *   ② Every section id appears as a [data-section-id="…"] hook in the
+ *   ① MARKETING_HOME_REGIONS literal exposes all 19 canonical ids.
+ *   ② Every region id appears as a [data-section-id="…"] hook in the
  *      template (selector-safe for Playwright probes).
  *   ③ The agentic-proof section is gated by `flag('landingAgenticProof')`
  *      AND embeds <dos-agent-status-strip> from M0.5.
@@ -35,15 +35,15 @@ const COMP_MAP = resolve(REPO, 'platform/dos/registry/component-map.ts');
 const BRAND_ASSET_CONTRACT = resolve(REPO, 'platform/ui-system/dos-ui-system/src/brand/brand-asset.contract.ts');
 
 const EXPECTED_SECTIONS = [
-  'hero','trust-pills','value-props','agentic-proof','download-kit',
-  'platform-overview','modules','industries','architecture',
-  'ai-and-agents','pricing-teaser','testimonials','logos',
+  'public-header','breadcrumb-row','hero','trust-pills','value-props',
+  'agentic-proof','download-kit','platform-overview','modules','industries',
+  'architecture','ai-and-agents','pricing-teaser','testimonials','logos',
   'resources','faq','cta-banner','footer',
 ] as const;
 
 function extractSectionLiteral(src: string): string[] {
-  const m = src.match(/MARKETING_HOME_SECTIONS\s*=\s*\[([\s\S]*?)\]\s*as\s+const/);
-  if (!m) throw new Error('MARKETING_HOME_SECTIONS literal not found');
+  const m = src.match(/MARKETING_HOME_REGIONS\s*=\s*\[([\s\S]*?)\]\s*as\s+const/);
+  if (!m) throw new Error('MARKETING_HOME_REGIONS literal not found');
   return Array.from(m[1].matchAll(/'([a-z-]+)'/g)).map((x) => x[1]);
 }
 
@@ -53,13 +53,13 @@ describe('M1 — marketing.home.page contract', () => {
   const map  = readFileSync(COMP_MAP, 'utf8');
   const ba   = readFileSync(BRAND_ASSET_CONTRACT, 'utf8');
 
-  it('declares the locked 17-section ordering (M1.5 inserts download-kit)', () => {
+  it('declares the locked 19-region ordering', () => {
     const sections = extractSectionLiteral(src);
     expect(sections).toEqual([...EXPECTED_SECTIONS]);
-    expect(sections).toHaveLength(17);
+    expect(sections).toHaveLength(19);
   });
 
-  it('every section id has a [data-section-id] template hook', () => {
+  it('every region id has a [data-section-id] template hook', () => {
     for (const id of EXPECTED_SECTIONS) {
       expect(src).toContain(`data-section-id="${id}"`);
     }

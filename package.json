@@ -23,7 +23,15 @@
     "ui-registry:import:props": "node scripts/ui-registry/import-props.mjs",
     "ui-registry:seed:dev": "node scripts/ui-registry/seed-dev.mjs",
     "platform:release-gate": "pnpm dynamic-ui:gates && pnpm --filter shahin-ai-grc-frontend build && pnpm --filter @dos/module-foundation build",
-    "platform:customer-gate": "pnpm dynamic-ui:gates && pnpm --filter shahin-ai-grc-frontend build && node scripts/ci-guards/props-coverage.mjs && WORKSPACE_SHELL_COVERAGE_ENFORCE=1 node scripts/ci-guards/workspace-shell-coverage.mjs && TEMPLATE_ONLY_ROUTING_ENFORCE=1 node scripts/ci-guards/template-only-routing.mjs"
+    "platform:customer-gate": "pnpm dynamic-ui:gates && pnpm --filter shahin-ai-grc-frontend build && node scripts/ci-guards/props-coverage.mjs && WORKSPACE_SHELL_COVERAGE_ENFORCE=1 node scripts/ci-guards/workspace-shell-coverage.mjs && TEMPLATE_ONLY_ROUTING_ENFORCE=1 node scripts/ci-guards/template-only-routing.mjs",
+    "module:list":       "node scripts/module/list.mjs",
+    "module:validate":   "node scripts/module/validate.mjs",
+    "module:dry-run":    "node scripts/module/dry-run.mjs",
+    "module:publish":    "node scripts/module/publish.mjs",
+    "module:activate":   "node scripts/module/activate.mjs",
+    "module:deactivate": "node scripts/module/deactivate.mjs",
+    "module:verify":     "node scripts/module/verify.mjs",
+    "module:gates":      "SEED_PACK_PARITY_ENFORCE=1 node scripts/ci-guards/seed-pack-md-json-parity.mjs && MODULE_CONTRACT_PUBLISHER_ONLY_ENFORCE=1 node scripts/ci-guards/module-contract-publisher-only.mjs"
   },
   "devDependencies": {
     "typescript": "5.4.5"

@@ -36,3 +36,8 @@ export * from './desktop-shell.component';
 export * from './desktop-sidebar.component';
 export * from './mobile-shell.component';
 export * from './mobile-drawer.component';
+
+// §B.9 (P1..P4) ancillary surfaces — singleton primitives, NOT workspace.* keys.
+// See shahin_workspace_step2_fix_plan.md §B.9.5 (explicit-non-changes).
+export * from './toast-outlet.component';
+export * from './shell-banner-strip.component';

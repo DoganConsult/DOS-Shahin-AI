@@ -3,7 +3,7 @@
 --
 -- Phase M3.1 — DB-driven UI enrolment for the public marketing surface.
 --
--- The 17-section `marketing.home.page` and the 6 sibling public pages
+-- The 19-region `marketing.home.page` and the 6 sibling public pages
 -- (pricing, trust, security, contact, about, legal) were previously
 -- present only in `dos.dynamic_ui_component_registry` (all naively
 -- carrying carbon_key='tiles'), with no row in
@@ -113,31 +113,31 @@ INSERT INTO dos.ui_route_template_binding (
   subtitle_en,                               subtitle_ar
 ) VALUES
   ('/',         'marketing-landing', 'MarketingHomeTemplateComponent',
-   '{}'::jsonb,
+   '{"brandCode":"shahin-ai"}'::jsonb,
    'Shahin-AI by Dogan Consult',             'شاهين-AI من دوغان للاستشارات',
    'The KSA GRC painkiller',                 'مسكّن آلام الحوكمة في المملكة'),
   ('/pricing',  'marketing-landing', 'MarketingPricingTemplateComponent',
-   '{}'::jsonb,
+   '{"brandCode":"shahin-ai"}'::jsonb,
    'Pricing built for governance teams',     'تسعير مصمم لفرق الحوكمة',
    'Transparent pricing. Trial available.',  'تسعير شفاف. تجربة مجانية متاحة.'),
   ('/trust',    'marketing-landing', 'MarketingTrustTemplateComponent',
-   '{}'::jsonb,
+   '{"brandCode":"shahin-ai"}'::jsonb,
    'Trust',                                  'الثقة',
    'Compliance, certifications, posture.',   'الامتثال والشهادات والوضع الأمني.'),
   ('/security', 'marketing-landing', 'MarketingSecurityTemplateComponent',
-   '{}'::jsonb,
+   '{"brandCode":"shahin-ai"}'::jsonb,
    'Security',                               'الأمن',
    'How we protect your data.',              'كيف نحمي بياناتك.'),
   ('/contact',  'marketing-landing', 'MarketingContactTemplateComponent',
-   '{}'::jsonb,
+   '{"brandCode":"shahin-ai"}'::jsonb,
    'Contact',                                'اتصل بنا',
    'Reach the team.',                        'تواصل مع الفريق.'),
   ('/about',    'marketing-landing', 'MarketingAboutTemplateComponent',
-   '{}'::jsonb,
+   '{"brandCode":"shahin-ai"}'::jsonb,
    'About',                                  'من نحن',
    'Dogan Consult — KSA-first GRC.',         'دوغان للاستشارات — حوكمة المملكة أولاً.'),
   ('/legal',    'marketing-landing', 'MarketingLegalTemplateComponent',
-   '{}'::jsonb,
+   '{"brandCode":"shahin-ai"}'::jsonb,
    'Legal',                                  'القانوني',
    'Terms, privacy, DPAs.',                  'الشروط والخصوصية واتفاقيات معالجة البيانات.')
 ON CONFLICT (route) DO UPDATE

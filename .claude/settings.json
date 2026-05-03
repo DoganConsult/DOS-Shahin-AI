@@ -267,12 +267,31 @@
       "Bash(node /tmp/screenshot.js)",
       "Bash(pkill -f spa-server)",
       "Bash(pkill -f http-server sleep 1 node /tmp/spa-server.js)",
-      "Bash(ls /root/DOS-Platform/platform/foundation/ui/workspace/workspace-ignite-card.component.*)"
+      "Bash(ls /root/DOS-Platform/platform/foundation/ui/workspace/workspace-ignite-card.component.*)",
+      "Bash(grep -E \"\\\\.ts$|\\\\.component\\\\.ts$\")",
+      "Bash(grep -r \"from '@dos/ui-system'\" platform/ui-system/dos-ui-system/src/shell/*.ts)",
+      "Bash(grep -r \"from '\\\\\\\\.\\\\\\\\./\\\\\\\\.\\\\\\\\.'\" platform/ui-system/dos-ui-system/src/shell/*.ts)",
+      "Bash(grep -r \"@dos/core\" /root/DOS-Platform/tsconfig.json /root/DOS-Platform/tsconfig*.json)",
+      "Bash(find /root/DOS-Platform -name \"tsconfig.json\" -exec grep -l \"@dos/core\" {} \\\\;)",
+      "Bash(find /root/DOS-Platform -name \"tsconfig.json\" -exec grep -H \"paths\" {} \\\\;)",
+      "Bash(python3 -c \"import os; print\\(os.path.relpath\\('../../../../platform/core/platform/shell/correlation-id.interceptor.ts'\\)\\)\")",
+      "Bash(find /root/DOS-Platform -name \"tsconfig.json\" -exec grep -H \"\\\\\"@dos/core\" {} \\\\;)",
+      "Bash(grep -r \"from.*platform/shell\" /root/DOS-Platform/products/shahin-ai/app/src/app/*.ts)",
+      "Bash(grep -l \"workspace_shell_binding\\\\|dynamic_ui_component_registry\" /root/DOS-Platform/platform/dos/migrations/public/*.sql)",
+      "Bash(grep -l \"CREATE.*component_registry\\\\|workspace_shell_binding\" /root/DOS-Platform/platform/dos/migrations/public/*.sql)",
+      "Read(//root/.claude/projects/**)",
+      "Bash(find /root/DOS-Platform/platform/dos/migrations -name \"*.sql\" -exec grep -l \"workspace_shell_binding\" {} \\\\;)",
+      "Bash(grep -r \"dynamic_ui_component_registry\" /root/DOS-Platform/platform/dos/migrations/public/*.sql)",
+      "Bash(find /root/DOS-Platform -type f -name \"*.ts\" -exec grep -l \"WorkspaceNavLabelResolver\\\\|shellChromeString\" {} \\\\;)",
+      "Bash([ -f /tmp/claude-0/-root-DOS-Platform/0857b111-1564-483f-94e8-7695f1396b08/tasks/ae7485ae2f4af8c66.output ])",
+      "Bash(grep -l \"Injectable\\\\|Service\\\\|Interceptor\" /root/DOS-Platform/platform/core/platform/shell/*.ts)",
+      "Bash(wc -l /root/DOS-Platform/platform/ui-system/dos-ui-system/src/shell/*.component.ts)"
     ],
     "additionalDirectories": [
       "/tmp",
       "/root/DOS-AIO/DOS Platform/platform/access/dos-access-store/src",
-      "/root/DOS-AIO/.github/workflows"
+      "/root/DOS-AIO/.github/workflows",
+      "/root/.claude/projects/-root-DOS-Platform/0857b111-1564-483f-94e8-7695f1396b08/tool-results"
     ]
   }
 }

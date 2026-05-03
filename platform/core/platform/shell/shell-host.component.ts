@@ -36,13 +36,29 @@ import {
   DosCommandSearchComponent,
   DosInboxCenterComponent,
   DosQuickCreateComponent,
+  DosWorkspaceStatusBarComponent,
+  DosActionQueueComponent,
+  DosAgentActivityStripComponent,
+  DosContextPanelComponent,
+  DosAccountMenuComponent,
   DosSkeletonComponent,
   DosIconComponent,
+  DosToastOutletComponent,
+  DosShellBannerStripComponent,
   type DosBottomNavItem,
+  type DosAccountMenuItem,
+  type DosToastMessage,
+  type DosShellBanner,
   type CommandSearchResult,
   type InboxMessage,
   type QuickCreateAction,
+  type StatusBarSignal,
+  type ActionQueueItem,
+  type AgentActivity,
+  type ContextPanelView,
+  type ContextPanelTab,
 } from '@dos/ui-system';
+import { DosCarbonSearchComponent } from '@dos/ui-system';
 import type { WorkspaceNavItem } from '@dos/ui-system';
 import {
   WorkspaceNavigationAdapter,
@@ -50,8 +66,11 @@ import {
   WORKSPACE_NAV_LABEL_RESOLVER,
   type WorkspaceNavLabelResolver,
 } from '@dos/access-store';
-import type { DosNavGroup, DosNavItem } from '@dos/ui-contracts';
+import type { DosNavGroup, DosNavItem, ShellAccountMenuEntry } from '@dos/ui-contracts';
 import { BreadcrumbService } from './breadcrumb.service';
+import { WorkspaceShellBindingService } from './workspace-shell-binding.service';
+import { ShellPreferencesService } from './shell-preferences.service';
+import { ShellErrorStateService } from './shell-error-state.service';
 
 const CARBON_BREAKPOINT_LARGE_PX = 1056;
 const FALLBACK_GROUP_ICON = 'layout-dashboard';
@@ -73,8 +92,16 @@ const FALLBACK_ITEM_ICON  = 'dot';
     DosCommandSearchComponent,
     DosInboxCenterComponent,
     DosQuickCreateComponent,
+    DosWorkspaceStatusBarComponent,
+    DosActionQueueComponent,
+    DosAgentActivityStripComponent,
+    DosContextPanelComponent,
+    DosAccountMenuComponent,
     DosSkeletonComponent,
     DosIconComponent,
+    DosToastOutletComponent,
+    DosShellBannerStripComponent,
+    DosCarbonSearchComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [`
@@ -136,8 +163,123 @@ const FALLBACK_ITEM_ICON  = 'dot';
     .shell-header-cmd ::ng-deep .dos-command-search__input::placeholder {
       color: var(--cds-text-placeholder-on-color, rgba(255,255,255,0.6));
     }
+
+    /* Wave F — account menu anchor (DosAccountMenuComponent is the dropdown body). */
+    .shell-account { position: relative; display: inline-block; }
+    .shell-account__popover {
+      position: absolute;
+      inset-block-start: calc(100% + 2px);
+      inset-inline-end: 0;
+      min-width: 14rem;
+      background: var(--cds-layer, #fff);
+      color: var(--cds-text-primary, #161616);
+      border: 1px solid var(--cds-border-subtle-01, #e0e0e0);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      z-index: 80;
+    }
+
+    /* Wave F — mobile full-screen command-search overlay. */
+    .shell-mobile-cmd {
+      position: fixed; inset: 0;
+      background: var(--cds-background, #ffffff);
+      z-index: 90;
+      display: flex; flex-direction: column;
+      padding: var(--cds-spacing-05, 1rem);
+      gap: var(--cds-spacing-05, 1rem);
+    }
+    .shell-mobile-cmd__bar { display: flex; align-items: center; gap: var(--cds-spacing-03, .5rem); }
+    .shell-mobile-cmd__close {
+      flex: 0 0 auto;
+      width: 2rem; height: 2rem;
+      background: none; border: 0; cursor: pointer;
+      color: var(--cds-text-primary, #161616);
+    }
+    .shell-mobile-cmd__body { flex: 1; overflow: auto; }
+
+    /* Wave F — action-queue + agent-strip in-flow placement (desktop only). */
+    .shell-aux-strip { max-width: 1600px; padding-inline: var(--cds-spacing-06, 1.5rem); }
+    .shell-aux-strip--top    { padding-block-start: var(--cds-spacing-03, .5rem); }
+    .shell-aux-strip--bottom { padding-block-end:   var(--cds-spacing-03, .5rem); }
+
+    /* Wave F — status-bar fixed bottom strip with mobile safe-area padding. */
+    .shell-statusbar-fixed {
+      position: fixed;
+      inset-block-end: 0;
+      inset-inline: 0;
+      z-index: 60;
+      background: var(--cds-layer, #fff);
+      border-block-start: 1px solid var(--cds-border-subtle-01, #e0e0e0);
+      padding-block-end: env(safe-area-inset-bottom, 0);
+    }
+    @media (max-width: 480px) {
+      /* Avoid overlap with DosMobileBottomNav (~56px) and DosQuickCreate FAB. */
+      .shell-statusbar-fixed { inset-block-end: 56px; }
+    }
+
+    /* §B.9 #38 — skip-link for keyboard/screen-reader a11y. */
+    .shell-skip-link {
+      position: absolute;
+      inset-block-start: -100%;
+      inset-inline-start: 0;
+      background: var(--cds-background, #fff);
+      color: var(--cds-link-primary, #0f62fe);
+      padding: var(--cds-spacing-03, .5rem) var(--cds-spacing-05, 1rem);
+      z-index: 999;
+      font-size: .875rem;
+      text-decoration: none;
+    }
+    .shell-skip-link:focus { inset-block-start: 0; }
+
+    /* §B.9 #25 — blocking error frame (401/403/maintenance). */
+    .shell-error-frame {
+      padding: var(--cds-spacing-07, 2rem) var(--cds-spacing-06, 1.5rem);
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .shell-error-frame__kind {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--cds-support-error, #da1e28);
+      margin-block-end: var(--cds-spacing-03, .5rem);
+    }
+    .shell-error-frame__message {
+      color: var(--cds-text-secondary, #6f6f6f);
+      margin-block-end: var(--cds-spacing-05, 1rem);
+    }
+    .shell-error-frame__corr-id {
+      display: inline-block;
+      margin-block-end: var(--cds-spacing-05, 1rem);
+      padding: var(--cds-spacing-02, .25rem) var(--cds-spacing-03, .5rem);
+      background: var(--cds-layer-01, #f4f4f4);
+      font-family: var(--cds-code-01-font-family, monospace);
+      font-size: .8125rem;
+      user-select: all;
+    }
+    .shell-error-frame__action {
+      background: none;
+      border: 1px solid var(--cds-border-interactive, #0f62fe);
+      color: var(--cds-link-primary, #0f62fe);
+      padding: var(--cds-spacing-03, .5rem) var(--cds-spacing-05, 1rem);
+      cursor: pointer;
+      font-size: .875rem;
+    }
+    .shell-error-frame__action:hover {
+      background: var(--cds-layer-hover, rgba(0,0,0,.04));
+    }
+
+    /* §B.9 #16 — sidebar search wrapper. */
+    .shell-sidebar-search {
+      padding: var(--cds-spacing-03, .5rem) var(--cds-spacing-04, .75rem);
+      border-block-end: 1px solid var(--cds-border-subtle-01, #e0e0e0);
+    }
   `],
   template: `
+    <!-- §B.9 #38 — skip-link for keyboard/screen-reader accessibility. -->
+    <a class="shell-skip-link" href="#main-content">
+      {{ labelResolver?.shellChromeString?.('shell.a11y.skip_to_main') ?? 'Skip to main content' }}
+    </a>
+
     <!-- Phase H — workspace-host-kit consumer mount.
          Desktop  → dos-app-shell + dos-workspace-sidebar
          Mobile   → dos-mobile-shell + dos-mobile-drawer + dos-mobile-bottom-nav
@@ -158,7 +300,7 @@ const FALLBACK_ITEM_ICON  = 'dot';
           </span>
         </ng-container>
         <ng-container headerEnd>
-          @if (!isMobile()) {
+          @if (!isMobile() && showCommandSearch()) {
             <dos-command-search class="shell-header-cmd"
                                 [results]="commandResults()"
                                 [placeholder]="commandPlaceholder()"
@@ -167,13 +309,57 @@ const FALLBACK_ITEM_ICON  = 'dot';
                                 (select)="onCommandSelect($event)">
             </dos-command-search>
           }
-          <button type="button"
-                  class="shell-header-toggle"
-                  [attr.aria-label]="inboxToggleAria()"
-                  [attr.aria-expanded]="inboxOpen()"
-                  (click)="toggleInbox()">
-            <dos-icon name="bell" [size]="20" [ariaLabel]="inboxToggleAria()"></dos-icon>
-          </button>
+          @if (isMobile() && showCommandSearch()) {
+            <!-- GAP-HDR-3 — mobile command-search launch button. -->
+            <button type="button"
+                    class="shell-header-toggle"
+                    [attr.aria-label]="commandAria()"
+                    [attr.aria-expanded]="mobileCmdOpen()"
+                    (click)="toggleMobileCmd()">
+              <dos-icon name="search" [size]="20" [ariaLabel]="commandAria()"></dos-icon>
+            </button>
+          }
+          @if (showInbox()) {
+            <button type="button"
+                    class="shell-header-toggle"
+                    [attr.aria-label]="inboxToggleAria()"
+                    [attr.aria-expanded]="inboxOpen()"
+                    (click)="toggleInbox()">
+              <dos-icon name="bell" [size]="20" [ariaLabel]="inboxToggleAria()"></dos-icon>
+            </button>
+          }
+          <!-- GAP-HDR-2 — account menu. -->
+          <span class="shell-account">
+            <button type="button"
+                    class="shell-header-toggle"
+                    [attr.aria-label]="accountAria()"
+                    [attr.aria-expanded]="accountOpen()"
+                    aria-haspopup="menu"
+                    (click)="toggleAccount()">
+              <dos-icon name="user" [size]="20" [ariaLabel]="accountAria()"></dos-icon>
+            </button>
+            @if (accountOpen()) {
+              <div class="shell-account__popover">
+                <dos-account-menu [userName]="userDisplayName()"
+                                  [userEmail]="userEmail()"
+                                  [items]="accountMenuItems()"
+                                  (action)="onAccountMenuAction($event)">
+                </dos-account-menu>
+              </div>
+            }
+          </span>
+          <!-- §B.9 #33 — help/support entry opens context panel on 'help' tab. -->
+          @if (showContextPanel()) {
+            <button type="button"
+                    class="shell-header-toggle"
+                    [attr.aria-label]="labelResolver?.shellChromeString?.('shell.header.help') ?? 'Help'"
+                    [attr.aria-expanded]="contextOpen()"
+                    (click)="openContextHelp()">
+              <dos-icon name="help" [size]="20"
+                        [ariaLabel]="labelResolver?.shellChromeString?.('shell.header.help') ?? 'Help'">
+              </dos-icon>
+            </button>
+          }
           @if (!isMobile()) {
             <button type="button"
                     class="shell-header-toggle"
@@ -217,13 +403,27 @@ const FALLBACK_ITEM_ICON  = 'dot';
     </ng-template>
 
     <ng-template #mainTpl>
-      @if (isNavigating()) {
-        <div class="shell-skeleton" id="shell-nav-skeleton" aria-busy="true" [attr.aria-label]="ariaLoadingPage()">
-          <dos-skeleton shape="line" [rows]="6" [ariaLabel]="ariaLoadingPage()"></dos-skeleton>
-        </div>
-      } @else {
-        <router-outlet />
-      }
+      <main id="main-content" role="main">
+        @if (errorState.hasError() && isBlockingError()) {
+          <!-- §B.9 #25 — blocking error frame (401/403/maintenance). -->
+          <div class="shell-error-frame" role="alert">
+            <div class="shell-error-frame__kind">{{ errorState.error()?.kind }}</div>
+            <div class="shell-error-frame__message">{{ errorState.error()?.message }}</div>
+            @if (errorState.error()?.correlationId) {
+              <code class="shell-error-frame__corr-id">{{ errorState.error()?.correlationId }}</code>
+            }
+            <button type="button" class="shell-error-frame__action" (click)="errorState.clearError()">
+              {{ labelResolver?.shellChromeString?.('shell.error.dismiss') ?? 'Dismiss' }}
+            </button>
+          </div>
+        } @else if (isNavigating()) {
+          <div class="shell-skeleton" id="shell-nav-skeleton" aria-busy="true" [attr.aria-label]="ariaLoadingPage()">
+            <dos-skeleton shape="line" [rows]="6" [ariaLabel]="ariaLoadingPage()"></dos-skeleton>
+          </div>
+        } @else {
+          <router-outlet />
+        }
+      </main>
     </ng-template>
 
     @if (isMobile()) {
@@ -231,6 +431,12 @@ const FALLBACK_ITEM_ICON  = 'dot';
       <dos-mobile-shell>
         <ng-container *ngTemplateOutlet="headerTpl"></ng-container>
         <ng-container *ngTemplateOutlet="breadcrumbTpl"></ng-container>
+        @if (shellBanners().length > 0) {
+          <dos-shell-banner-strip [banners]="shellBanners()"
+                                  (action)="onBannerAction($event)"
+                                  (dismiss)="onBannerDismiss($event)">
+          </dos-shell-banner-strip>
+        }
         <ng-container *ngTemplateOutlet="titleTpl"></ng-container>
         <ng-container *ngTemplateOutlet="mainTpl"></ng-container>
 
@@ -266,6 +472,16 @@ const FALLBACK_ITEM_ICON  = 'dot';
         <ng-container *ngTemplateOutlet="headerTpl"></ng-container>
 
         @if (sidebarItems().length > 0 && sideNavActive()) {
+          <!-- §B.9 #16 — sidebar search/filter input. -->
+          @if (!isRail()) {
+            <div class="shell-sidebar-search">
+              <dos-carbon-search size="sm"
+                                 [placeholder]="labelResolver?.shellChromeString?.('shell.sidebar.search_placeholder') ?? 'Filter navigation…'"
+                                 [value]="navSearch()"
+                                 (valueChange)="navSearch.set($event)">
+              </dos-carbon-search>
+            </div>
+          }
           <dos-workspace-sidebar shellSidebar
                                  [items]="sidebarItems()"
                                  [collapsed]="isRail()"
@@ -276,24 +492,32 @@ const FALLBACK_ITEM_ICON  = 'dot';
         }
 
         <ng-container *ngTemplateOutlet="breadcrumbTpl"></ng-container>
+        @if (shellBanners().length > 0) {
+          <dos-shell-banner-strip [banners]="shellBanners()"
+                                  (action)="onBannerAction($event)"
+                                  (dismiss)="onBannerDismiss($event)">
+          </dos-shell-banner-strip>
+        }
         <ng-container *ngTemplateOutlet="titleTpl"></ng-container>
         <ng-container *ngTemplateOutlet="mainTpl"></ng-container>
       </dos-app-shell>
     }
 
-    <!-- Global action surfaces — fixed-position overlays, render once. -->
-    <dos-inbox-center [open]="inboxOpen()"
-                      [mobileMode]="isMobile()"
-                      [messages]="inboxMessages()"
-                      [title]="inboxTitle()"
-                      [ariaLabel]="inboxAria()"
-                      [closeLabel]="drawerCloseLabel()"
-                      [emptyText]="inboxEmpty()"
-                      (select)="onInboxSelect($event)"
-                      (closed)="closeInbox()">
-    </dos-inbox-center>
+    <!-- Global action surfaces — DB-gated via workspace_shell_binding. -->
+    @if (showInbox()) {
+      <dos-inbox-center [open]="inboxOpen()"
+                        [mobileMode]="isMobile()"
+                        [messages]="inboxMessages()"
+                        [title]="inboxTitle()"
+                        [ariaLabel]="inboxAria()"
+                        [closeLabel]="drawerCloseLabel()"
+                        [emptyText]="inboxEmpty()"
+                        (select)="onInboxSelect($event)"
+                        (closed)="closeInbox()">
+      </dos-inbox-center>
+    }
 
-    @if (quickCreateActions().length > 0) {
+    @if (showQuickCreate() && quickCreateActions().length > 0) {
       <dos-quick-create [actions]="quickCreateActions()"
                         [mobileMode]="isMobile()"
                         [ariaLabel]="quickCreateAria()"
@@ -301,6 +525,80 @@ const FALLBACK_ITEM_ICON  = 'dot';
                         (invoke)="onQuickCreate($event)">
       </dos-quick-create>
     }
+
+    <!-- Wave F — GAP-SURF-2 action-queue strip. Render gate is DB-driven
+         (dos.workspace_shell_binding.enabled + perms_required). Content is
+         hidden on mobile to avoid overlap with bottom-nav; the strip itself
+         still respects the DB enabled flag on desktop. -->
+    @if (!isMobile() && showActionQueue() && actionQueueItems().length > 0) {
+      <div class="shell-aux-strip shell-aux-strip--top">
+        <dos-action-queue [items]="actionQueueItems()"
+                          [mobileMode]="false"
+                          [ariaLabel]="actionQueueAria()"
+                          [title]="actionQueueTitle()"
+                          [emptyText]="actionQueueEmpty()"
+                          (open)="onActionQueueOpen($event)">
+        </dos-action-queue>
+      </div>
+    }
+
+    <!-- Wave F — GAP-SURF-3 agent-activity-strip. DB-gated. -->
+    @if (!isMobile() && showAgentStrip() && agentActivities().length > 0) {
+      <div class="shell-aux-strip shell-aux-strip--bottom">
+        <dos-agent-activity-strip [activities]="agentActivities()"
+                                  [mobileMode]="false"
+                                  (select)="onAgentSelect($event)">
+        </dos-agent-activity-strip>
+      </div>
+    }
+
+    <!-- Wave F — GAP-SURF-4 context-panel. DB-gated — rendered only when
+         the per-tenant binding enables it AND the session holds the required
+         permissions. The wrapper itself is [open]-gated internally. -->
+    @if (showContextPanel()) {
+      <dos-context-panel [views]="contextViews()"
+                         [activeTab]="contextTab()"
+                         [open]="contextOpen()"
+                         [mobileMode]="isMobile()"
+                         [dir]="sidebarDir()"
+                         (tabChange)="onContextTabChange($event)">
+      </dos-context-panel>
+    }
+
+    <!-- Wave F — GAP-SURF-1 status-bar. DB-gated. -->
+    @if (showStatusBar() && statusBarSignals().length > 0) {
+      <div class="shell-statusbar-fixed">
+        <dos-workspace-status-bar [signals]="statusBarSignals()"
+                                  [mobileMode]="isMobile()"
+                                  (signalClick)="onStatusSignal($event)">
+        </dos-workspace-status-bar>
+      </div>
+    }
+
+    <!-- GAP-HDR-3 — mobile command-search full-screen overlay. -->
+    @if (isMobile() && mobileCmdOpen()) {
+      <div class="shell-mobile-cmd" role="dialog" [attr.aria-label]="commandAria()">
+        <div class="shell-mobile-cmd__bar">
+          <button type="button"
+                  class="shell-mobile-cmd__close"
+                  [attr.aria-label]="drawerCloseLabel()"
+                  (click)="closeMobileCmd()">
+            <dos-icon name="close" [size]="20" [ariaLabel]="drawerCloseLabel()"></dos-icon>
+          </button>
+          <dos-command-search [results]="commandResults()"
+                              [placeholder]="commandPlaceholder()"
+                              [ariaLabel]="commandAria()"
+                              (queryChange)="onCommandQuery($event)"
+                              (select)="onMobileCommandSelect($event)">
+          </dos-command-search>
+        </div>
+      </div>
+    }
+
+    <!-- §B.9 #32 — toast outlet (singleton, not workspace.* gated). -->
+    <dos-toast-outlet [messages]="toastMessages()"
+                      (dismissed)="onToastDismissed($event)">
+    </dos-toast-outlet>
   `,
 })
 export class ShellHostComponent {
@@ -311,7 +609,10 @@ export class ShellHostComponent {
   private readonly titleSvc    = inject(Title);
   private readonly destroyRef  = inject(DestroyRef);
   private readonly breadcrumbSvc = inject(BreadcrumbService);
-  private readonly labelResolver = inject<WorkspaceNavLabelResolver | null>(
+  private readonly shellBinding = inject(WorkspaceShellBindingService);
+  private readonly prefs = inject(ShellPreferencesService);
+  readonly errorState = inject(ShellErrorStateService);
+  protected readonly labelResolver = inject<WorkspaceNavLabelResolver | null>(
     WORKSPACE_NAV_LABEL_RESOLVER, { optional: true },
   );
 
@@ -322,6 +623,11 @@ export class ShellHostComponent {
   readonly sideNavActive = signal(true);
   readonly isRail       = signal(false);   // W-E: rail mode
   readonly navSearch    = signal('');       // W-D: filter
+
+  // ── §B.9 P2/P4 — toast, offline, banner state ─────────────────────────────
+  readonly toastMessages = signal<DosToastMessage[]>([]);
+  readonly isOffline     = signal(false);
+  private readonly dismissedBannerIds = signal<Set<string>>(new Set());
 
   // ── W-C: skeleton + title ─────────────────────────────────────────────────
   readonly isNavigating = signal(false);
@@ -373,18 +679,26 @@ export class ShellHostComponent {
   });
 
   // ── Header labels ─────────────────────────────────────────────────────────
-  // Phase H — every chrome string MUST come from the resolver. No hardcoded
-  // English literals remain in this file; missing keys render empty so the
-  // gap is observable at runtime instead of being masked by fake defaults.
+  // Wave F / Dynamic-UI policy: chrome strings flow dynamic-first, catalog-
+  // last. Priority order for every header label is:
+  //   1. workspace.header.props.* from `dos.workspace_shell_binding` (live
+  //      per-tenant, served by GET /api/ui-os/workspace-shell/:tenantId).
+  //   2. product-level i18n catalog (`WorkspaceNavLabelResolver`).
+  //   3. empty string (observable gap, per Phase H policy — no fake defaults).
   readonly headerBrand = computed(
-    () => this.labelResolver?.shellChromeString?.('shell.header.brand') ?? '',
+    () => this.shellBinding.headerBrandLabel()
+       ?? this.labelResolver?.shellChromeString?.('shell.header.brand')
+       ?? '',
   );
   // Step 2.5 — Selected module label sourced from existing nav state.
-  // Falls back to the resolver-owned chrome string when no module is active.
+  // Falls back to the resolver-owned chrome string when no module is active,
+  // and ultimately to the binding-served workspace title if present.
   readonly headerWorkspaceTitle = computed(() => {
     const sel = this.selectedModuleLabel();
     if (sel) return sel;
-    return this.labelResolver?.shellChromeString?.('shell.header.workspace_title') ?? '';
+    return this.shellBinding.headerWorkspaceTitle()
+        ?? this.labelResolver?.shellChromeString?.('shell.header.workspace_title')
+        ?? '';
   });
   readonly selectedModuleLabel = computed<string | null>(() => {
     // 1. Prefer the active sidenav group label.
@@ -405,7 +719,9 @@ export class ShellHostComponent {
     return null;
   });
   readonly headerHomeRoute = computed((): string[] => {
-    const raw = this.labelResolver?.shellChromeString?.('shell.header.home_route') ?? '';
+    const raw = this.shellBinding.headerHomeRoute()
+             ?? this.labelResolver?.shellChromeString?.('shell.header.home_route')
+             ?? '';
     const parts = raw.replace(/^\/+/, '').split('/').filter(Boolean);
     return parts;
   });
@@ -445,12 +761,125 @@ export class ShellHostComponent {
   // ── Global action surfaces — command-search / inbox-center / quick-create ─
   readonly inboxOpen           = signal(false);
   readonly commandQuery        = signal('');
-  // Backend feeds will populate these signals through a binding service in a
-  // follow-up phase. For now expose typed empty arrays so the surfaces mount
-  // and render their localized empty/placeholder states.
-  readonly commandResults      = signal<CommandSearchResult[]>([]);
-  readonly inboxMessages       = signal<InboxMessage[]>([]);
-  readonly quickCreateActions  = signal<QuickCreateAction[]>([]);
+  // Wave F / GAP-RES-1 — surface payloads are resolver-fed by
+  // WorkspaceShellBindingService consuming
+  // GET /api/ui-os/workspace-shell/:tenantId (dos.workspace_shell_binding).
+  // Empty arrays render localized empty/placeholder states fail-soft.
+  readonly commandResults: () => CommandSearchResult[]      = this.shellBinding.commandResults;
+  readonly inboxMessages: () => InboxMessage[]              = this.shellBinding.inboxMessages;
+  readonly quickCreateActions: () => QuickCreateAction[]    = this.shellBinding.quickCreateActions;
+  readonly statusBarSignals: () => StatusBarSignal[]        = this.shellBinding.statusBarSignals;
+  readonly actionQueueItems: () => ActionQueueItem[]        = this.shellBinding.actionQueueItems;
+  readonly agentActivities: () => AgentActivity[]           = this.shellBinding.agentActivities;
+  readonly contextViews: () => ContextPanelView[]           = this.shellBinding.contextViews;
+
+  // ── Dynamic render gates — DB enabled + perms_required ──────────────────
+  // Every surface render is gated on the per-tenant row in
+  // `dos.workspace_shell_binding`. The host never decides visibility from
+  // static config; binding-service.isSurfaceAllowed(key) is the only gate.
+  readonly showStatusBar    = computed(() => this.shellBinding.isSurfaceAllowed('workspace.status-bar'));
+  readonly showActionQueue  = computed(() => this.shellBinding.isSurfaceAllowed('workspace.action-queue'));
+  readonly showAgentStrip   = computed(() => this.shellBinding.isSurfaceAllowed('workspace.agent-strip'));
+  readonly showContextPanel = computed(() => this.shellBinding.isSurfaceAllowed('workspace.context-panel'));
+  readonly showInbox        = computed(() => this.shellBinding.isSurfaceAllowed('workspace.inbox-center'));
+  readonly showQuickCreate  = computed(() => this.shellBinding.isSurfaceAllowed('workspace.quick-create'));
+  readonly showCommandSearch = computed(() => this.shellBinding.isSurfaceAllowed('workspace.command-search'));
+
+  // ── §B.9 P4 — banner multiplex (#25, #34–37) ──────────────────────────────
+  readonly shellBanners = computed<DosShellBanner[]>(() => {
+    const banners: DosShellBanner[] = [];
+    const dismissed = this.dismissedBannerIds();
+
+    // #36 — trial/subscription banner
+    const expired = this.access.trialExpiredModules() as string[];
+    if (expired.length > 0 && !dismissed.has('trial-expired')) {
+      banners.push({
+        id: 'trial-expired',
+        kind: 'warning',
+        title: this.labelResolver?.shellChromeString?.('shell.banner.trial_expired.title') ?? 'Trial Expired',
+        message: (this.labelResolver?.shellChromeString?.('shell.banner.trial_expired.message') ?? 'Modules expired: ') + expired.join(', '),
+        dismissible: true,
+        actionLabel: this.labelResolver?.shellChromeString?.('shell.banner.trial_expired.action') ?? 'Upgrade',
+        actionRoute: '/settings/subscription',
+      });
+    }
+
+    // #37 — offline/reconnect banner
+    if (this.isOffline() && !dismissed.has('offline')) {
+      banners.push({
+        id: 'offline',
+        kind: 'danger',
+        title: this.labelResolver?.shellChromeString?.('shell.banner.offline.title') ?? 'Offline',
+        message: this.labelResolver?.shellChromeString?.('shell.banner.offline.message') ?? 'You are offline. Some features may be unavailable.',
+        dismissible: false,
+      });
+    }
+
+    // #25 — global error frame (from ShellErrorStateService + #40 correlation-id)
+    const err = this.errorState.error();
+    if (err && !dismissed.has('shell-error')) {
+      const corrId = err.correlationId;
+      banners.push({
+        id: 'shell-error',
+        kind: 'danger',
+        title: err.kind,
+        message: err.message + (corrId ? ` (ID: ${corrId})` : ''),
+        dismissible: true,
+      });
+    }
+
+    // #34 — session-expiry: stub (AccessStore.sessionExpiresAt not yet exposed)
+    // #35 — impersonation: stub (AccessStore.isImpersonating not yet exposed)
+
+    return banners;
+  });
+
+  // §B.9 #25 — blocking errors replace content slot with error frame.
+  readonly isBlockingError = computed(() => {
+    const err = this.errorState.error();
+    if (!err) return false;
+    return err.kind === 'unauthorized' || err.kind === 'forbidden' || err.kind === 'maintenance';
+  });
+
+  // ── Wave F — new header/overlay UI state ──────────────────────────────────
+  readonly accountOpen   = signal(false);
+  readonly mobileCmdOpen = signal(false);
+  readonly contextOpen   = signal(false);
+  readonly contextTab    = signal<ContextPanelTab>('record');
+  // Dynamic-first account menu: prefer DB (workspace.header.props.accountMenu
+  // via WorkspaceShellBindingService) over the platform-default adapter
+  // constant. Both sources are signals so the UI reacts to either flipping.
+  readonly accountMenuEntries = computed<ReadonlyArray<ShellAccountMenuEntry>>(
+    () => this.shellBinding.accountMenuEntries() ?? this.nav.accountMenuConfig(),
+  );
+  // Map platform-owned ShellAccountMenuEntry → DosAccountMenuItem shape
+  // consumed by the @dos/ui-system primitive. Labels are i18n-resolved via
+  // WorkspaceNavLabelResolver; the `ShellAccountMenuEntry.route` is carried
+  // into an internal map (see `accountRouteById`) because DosAccountMenuItem
+  // has no route field — only `action` emits the id on click.
+  readonly accountMenuItems = computed<DosAccountMenuItem[]>(() => {
+    const base = this.accountMenuEntries().map((e) => ({
+      id: e.id,
+      label: this.accountLabel(e),
+      destructive: !!e.destructive,
+    }));
+    // #7 — language toggle (EN/AR)
+    const langLabel = this.prefs.language() === 'ar'
+      ? (this.labelResolver?.shellChromeString?.('shell.account.menu.switch_to_english') ?? 'English')
+      : (this.labelResolver?.shellChromeString?.('shell.account.menu.switch_to_arabic') ?? 'العربية');
+    base.push({ id: '__prefs_language', label: langLabel, destructive: false });
+    // #8 — theme toggle (light/dark)
+    const themeLabel = this.prefs.isDark()
+      ? (this.labelResolver?.shellChromeString?.('shell.account.menu.light_theme') ?? 'Light Theme')
+      : (this.labelResolver?.shellChromeString?.('shell.account.menu.dark_theme') ?? 'Dark Theme');
+    base.push({ id: '__prefs_theme', label: themeLabel, destructive: false });
+    return base;
+  });
+  readonly userDisplayName = computed<string>(() => {
+    const u = this._user();
+    return (u?.displayName || u?.name || '') as string;
+  });
+  readonly userEmail = computed<string>(() => (this._user()?.email || '') as string);
 
   readonly commandAria = computed(
     () => this.labelResolver?.shellChromeString?.('shell.command.aria') ?? '',
@@ -475,6 +904,18 @@ export class ShellHostComponent {
   );
   readonly quickCreateGlyph = computed(
     () => this.labelResolver?.shellChromeString?.('shell.quick.fab_glyph') || '+',
+  );
+  readonly accountAria = computed(
+    () => this.labelResolver?.shellChromeString?.('shell.header.account_action') ?? '',
+  );
+  readonly actionQueueAria = computed(
+    () => this.labelResolver?.shellChromeString?.('shell.action_queue.aria') ?? '',
+  );
+  readonly actionQueueTitle = computed(
+    () => this.labelResolver?.shellChromeString?.('shell.action_queue.title') ?? '',
+  );
+  readonly actionQueueEmpty = computed(
+    () => this.labelResolver?.shellChromeString?.('shell.action_queue.empty') ?? '',
   );
 
   // ── Effects ───────────────────────────────────────────────────────────────
@@ -516,6 +957,19 @@ export class ShellHostComponent {
     // W-B: subscribe to breadcrumb updates
     const unsub = this.breadcrumbSvc.subscribe((crumbs) => this.breadcrumbs.set(crumbs));
     this.destroyRef.onDestroy(unsub);
+
+    // §B.9 #37 — offline/reconnect signal.
+    if (this.isBrowser) {
+      this.isOffline.set(!navigator.onLine);
+      const goOnline  = () => this.isOffline.set(false);
+      const goOffline = () => this.isOffline.set(true);
+      window.addEventListener('online',  goOnline);
+      window.addEventListener('offline', goOffline);
+      this.destroyRef.onDestroy(() => {
+        window.removeEventListener('online',  goOnline);
+        window.removeEventListener('offline', goOffline);
+      });
+    }
   }
 
   @HostListener('window:resize')
@@ -547,17 +1001,115 @@ export class ShellHostComponent {
     if (a.route) void this.router.navigateByUrl(a.route);
   }
 
+  // ── Wave F handlers ──────────────────────────────────────────────────────
+  toggleAccount(): void { this.accountOpen.update((v) => !v); }
+  closeAccount(): void  { this.accountOpen.set(false); }
+
+  onAccountEntry(entry: ShellAccountMenuEntry): void {
+    this.closeAccount();
+    if (entry.route) {
+      void this.router.navigateByUrl(entry.route);
+      return;
+    }
+    // Routeless logout / custom action: emit a DOM-level custom event so
+    // products can opt in without requiring a platform-wide logout bus here.
+    if (this.isBrowser) {
+      window.dispatchEvent(new CustomEvent('dos:shell-account-action', {
+        detail: { id: entry.id },
+      }));
+    }
+  }
+
+  /** Bridge DosAccountMenu `action` emission → platform ShellAccountMenuEntry. */
+  onAccountMenuAction(item: DosAccountMenuItem): void {
+    // §B.9 #7/#8 — intercept synthetic preference toggles.
+    if (item.id === '__prefs_language') { this.prefs.toggleLanguage(); this.closeAccount(); return; }
+    if (item.id === '__prefs_theme')    { this.prefs.toggleTheme();    this.closeAccount(); return; }
+    const entry = this.accountMenuEntries().find((e) => e.id === item.id);
+    if (entry) this.onAccountEntry(entry);
+    else this.closeAccount();
+  }
+
+  accountLabel(entry: ShellAccountMenuEntry): string {
+    const key = entry.labelKey || `shell.account.menu.${entry.id}`;
+    const resolved = this.labelResolver?.shellChromeString?.(key);
+    if (resolved) return resolved;
+    return this.labelFromKey(key);
+  }
+
+  toggleMobileCmd(): void { this.mobileCmdOpen.update((v) => !v); }
+  closeMobileCmd(): void  { this.mobileCmdOpen.set(false); }
+
+  onMobileCommandSelect(r: CommandSearchResult): void {
+    this.onCommandSelect(r);
+    this.closeMobileCmd();
+  }
+
+  onStatusSignal(s: StatusBarSignal): void {
+    if (s.detailRoute) void this.router.navigateByUrl(s.detailRoute);
+  }
+
+  onActionQueueOpen(item: ActionQueueItem): void {
+    if (item.route) void this.router.navigateByUrl(item.route);
+  }
+
+  onAgentSelect(a: AgentActivity): void {
+    if (a.evidenceUri) {
+      if (this.isBrowser) window.open(a.evidenceUri, '_blank', 'noopener');
+    }
+  }
+
+  onContextTabChange(tab: ContextPanelTab): void {
+    this.contextTab.set(tab);
+  }
+
+  toggleContext(): void { this.contextOpen.update((v) => !v); }
+  closeContext(): void  { this.contextOpen.set(false); }
+
+  // §B.9 #33 — help entry opens context panel on 'help' tab.
+  openContextHelp(): void {
+    this.contextTab.set('help');
+    this.contextOpen.set(true);
+  }
+
+  // §B.9 #32 — toast outlet handlers.
+  onToastDismissed(msg: DosToastMessage): void {
+    this.toastMessages.update((msgs) => msgs.filter((m) => m !== msg));
+  }
+
+  // §B.9 #34–37, #25 — banner strip handlers.
+  onBannerAction(banner: DosShellBanner): void {
+    if (banner.actionRoute) void this.router.navigateByUrl(banner.actionRoute);
+  }
+
+  onBannerDismiss(banner: DosShellBanner): void {
+    this.dismissedBannerIds.update((s) => {
+      const next = new Set(s);
+      next.add(banner.id);
+      return next;
+    });
+    if (banner.id === 'shell-error') this.errorState.clearError();
+  }
+
   // cmd-K / ctrl-K — focus command-search input.
   @HostListener('document:keydown', ['$event'])
   onGlobalKeydown(ev: KeyboardEvent): void {
     if ((ev.metaKey || ev.ctrlKey) && (ev.key === 'k' || ev.key === 'K')) {
       ev.preventDefault();
       if (!this.isBrowser) return;
+      if (this.isMobile()) {
+        this.mobileCmdOpen.set(true);
+        return;
+      }
       const el = document.querySelector<HTMLInputElement>(
         '.shell-header-cmd .dos-command-search__input',
       );
       el?.focus();
       el?.select?.();
+    }
+    if (ev.key === 'Escape') {
+      if (this.mobileCmdOpen()) { this.mobileCmdOpen.set(false); return; }
+      if (this.accountOpen())   { this.accountOpen.set(false);   return; }
     }
   }
 
@@ -574,11 +1126,8 @@ export class ShellHostComponent {
   }
 
   // Phase H — workspace-host-kit feeds.
-  readonly sidebarDir = computed<'ltr' | 'rtl'>(() => {
-    if (!this.isBrowser) return 'ltr';
-    const d = (document.documentElement.getAttribute('dir') || '').toLowerCase();
-    return d === 'rtl' ? 'rtl' : 'ltr';
-  });
+  // §B.9 #7 — dir derived from ShellPreferencesService (no DOM read).
+  readonly sidebarDir = computed<'ltr' | 'rtl'>(() => this.prefs.dir());
 
   readonly sidebarItems = computed<WorkspaceNavItem[]>(() => {
     const out: WorkspaceNavItem[] = [];

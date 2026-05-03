@@ -81,7 +81,7 @@ export const routes: Routes = [
   {
     path: '',
     loadComponent: () =>
-      import('./pages/marketing-landing/marketing-landing.component').then(m => m.MarketingLandingComponent),
+      import('@platform/shell').then(m => m.DynamicTemplatePageComponent),
     pathMatch: 'full',
     providers: [provideRouteIcons()],
     data: { contractRoute: '/', componentKey: 'marketing.home.page' },

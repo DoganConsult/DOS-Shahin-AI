@@ -5,6 +5,7 @@ import { createDynamicUiContractRouter } from './routes/dynamic-ui-contract.rout
 import { createBrandRouter } from './routes/brand.routes.js';
 import { createAgenticRouter } from './routes/agentic.routes.js';
 import { createMarketingDownloadsRouter } from './routes/marketing-downloads.routes.js';
+import { createTemplateBindingRouter } from './routes/template-binding.routes.js';
 import { requireGatewayOrigin } from './middleware/gateway-origin.js';
 
 const PORT = Number(process.env.PORT || 4015);
@@ -16,6 +17,8 @@ if (!DATABASE_URL) {
 }
 
 const pool = createPool(DATABASE_URL);
+const publicMarketingTemplateRoutes = new Set(['/', '/pricing', '/trust', '/security', '/contact', '/about', '/legal']);
+const publicTemplateBindingRouter = createTemplateBindingRouter(pool);
 const app = express();
 app.disable('x-powered-by');
 app.use(express.json({ limit: '1mb' }));
@@ -41,6 +44,13 @@ app.get('/api/ui-os/health', (_req, res) => {
 app.use('/api/ui-os', createBrandRouter(pool));
 app.use('/api/ui-os', createAgenticRouter(pool));
 app.use('/api/ui-os', createMarketingDownloadsRouter(pool));
+app.use('/api/ui-os', (req, res, next) => {
+  const route = String(req.query.route ?? '');
+  if (req.method === 'GET' && req.path === '/template-binding' && publicMarketingTemplateRoutes.has(route)) {
+    return publicTemplateBindingRouter(req, res, next);
+  }
+  next();
+});
 
 app.use('/api/ui-os', requireGatewayOrigin());
 

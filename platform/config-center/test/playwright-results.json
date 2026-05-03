@@ -10,7 +10,9 @@
     "grep": {},
     "grepInvert": null,
     "maxFailures": 0,
-    "metadata": {},
+    "metadata": {
+      "actualWorkers": 5
+    },
     "preserveOutput": "always",
     "reporter": [
       [
@@ -115,1232 +117,216 @@
   },
   "suites": [
     {
-      "title": "m16-auth-pages.spec.ts",
-      "file": "m16-auth-pages.spec.ts",
+      "title": "m1-marketing-home.spec.ts",
+      "file": "m1-marketing-home.spec.ts",
       "column": 0,
       "line": 0,
       "specs": [],
       "suites": [
         {
-          "title": "M1.6 — auth.login.page renders at /login",
-          "file": "m16-auth-pages.spec.ts",
+          "title": "M1 — marketing.home.page renders without auth",
+          "file": "m1-marketing-home.spec.ts",
           "line": 28,
-          "column": 15,
+          "column": 6,
           "specs": [
             {
-              "title": "split-screen layout at desktop",
-              "ok": true,
+              "title": "root route resolves the marketing-landing Dynamic-UI binding",
+              "ok": false,
               "tags": [],
               "tests": [
                 {
                   "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
+                  "annotations": [],
+                  "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "status": "failed",
+                      "duration": 5,
+                      "error": {
+                        "message": "Error: browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1148/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
+                        "stack": "Error: browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1148/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1148/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-03T21:31:00.102Z",
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
                 }
               ],
-              "id": "b2c015965981d3ffc92d-020eb3a39682495b9388",
-              "file": "m16-auth-pages.spec.ts",
+              "id": "bdf94da1d30640e78532-610111feb505d36bd3af",
+              "file": "m1-marketing-home.spec.ts",
               "line": 29,
               "column": 7
             },
             {
-              "title": "login card emits submitted and does not auto-execute",
-              "ok": true,
+              "title": "all 19 public regions present in DOM order",
+              "ok": false,
               "tags": [],
               "tests": [
                 {
                   "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
+                  "annotations": [],
+                  "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "status": "failed",
+                      "duration": 5,
+                      "error": {
+                        "message": "Error: browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1148/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
+                        "stack": "Error: browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1148/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1148/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-03T21:31:00.123Z",
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
                 }
               ],
-              "id": "b2c015965981d3ffc92d-be588fb17bbb5c813433",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 37,
+              "id": "bdf94da1d30640e78532-fea5a1efa8916eb96443",
+              "file": "m1-marketing-home.spec.ts",
+              "line": 40,
               "column": 7
             },
             {
-              "title": "public surface — single /auth/me probe at most (no looping)",
-              "ok": true,
+              "title": "brand eagle pictogram + 9 agent tiles render in agentic-proof",
+              "ok": false,
               "tags": [],
               "tests": [
                 {
                   "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
+                  "annotations": [],
+                  "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "status": "failed",
+                      "duration": 5,
+                      "error": {
+                        "message": "Error: browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1148/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
+                        "stack": "Error: browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1148/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1148/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-03T21:31:00.189Z",
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
                 }
               ],
-              "id": "b2c015965981d3ffc92d-4df7f27993a7c2a7bea8",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 54,
+              "id": "bdf94da1d30640e78532-1231aedb69f12bbd8a47",
+              "file": "m1-marketing-home.spec.ts",
+              "line": 49,
               "column": 7
             },
             {
-              "title": "split-screen layout at desktop",
-              "ok": true,
+              "title": "Arabic locale flips dir=rtl on the marketing root",
+              "ok": false,
               "tags": [],
               "tests": [
                 {
                   "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "firefox",
-                  "projectName": "firefox",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b2c015965981d3ffc92d-bc81a93f828c4b58897c",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 29,
-              "column": 7
-            },
-            {
-              "title": "login card emits submitted and does not auto-execute",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "firefox",
-                  "projectName": "firefox",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b2c015965981d3ffc92d-261c5f5ce73818a30334",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 37,
-              "column": 7
-            },
-            {
-              "title": "public surface — single /auth/me probe at most (no looping)",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "firefox",
-                  "projectName": "firefox",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b2c015965981d3ffc92d-0e6a837bfd71a232674b",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 54,
-              "column": 7
-            },
-            {
-              "title": "split-screen layout at desktop",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "webkit",
-                  "projectName": "webkit",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b2c015965981d3ffc92d-083d042f6943ab55c851",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 29,
-              "column": 7
-            },
-            {
-              "title": "login card emits submitted and does not auto-execute",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "webkit",
-                  "projectName": "webkit",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b2c015965981d3ffc92d-54b3d54dc94ca32df8a8",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 37,
-              "column": 7
-            },
-            {
-              "title": "public surface — single /auth/me probe at most (no looping)",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "webkit",
-                  "projectName": "webkit",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b2c015965981d3ffc92d-8dda90bf06704300ca8d",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 54,
-              "column": 7
-            },
-            {
-              "title": "split-screen layout at desktop",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b2c015965981d3ffc92d-96f4bd8b37b6385bd651",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 29,
-              "column": 7
-            },
-            {
-              "title": "login card emits submitted and does not auto-execute",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b2c015965981d3ffc92d-37731a0358799b3c155a",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 37,
-              "column": 7
-            },
-            {
-              "title": "public surface — single /auth/me probe at most (no looping)",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b2c015965981d3ffc92d-19d3bd7cd1b30998d13a",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 54,
-              "column": 7
-            },
-            {
-              "title": "split-screen layout at desktop",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "Mobile Safari",
-                  "projectName": "Mobile Safari",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b2c015965981d3ffc92d-bd5294ece1eee34b181d",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 29,
-              "column": 7
-            },
-            {
-              "title": "login card emits submitted and does not auto-execute",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "Mobile Safari",
-                  "projectName": "Mobile Safari",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b2c015965981d3ffc92d-b27ab6b4609cf3c68f27",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 37,
-              "column": 7
-            },
-            {
-              "title": "public surface — single /auth/me probe at most (no looping)",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "Mobile Safari",
-                  "projectName": "Mobile Safari",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b2c015965981d3ffc92d-7b8426864b742bfebf2f",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 54,
-              "column": 7
-            }
-          ]
-        },
-        {
-          "title": "M1.6 — register / forgot / reset / mfa surfaces",
-          "file": "m16-auth-pages.spec.ts",
-          "line": 65,
-          "column": 15,
-          "specs": [
-            {
-              "title": "/register renders the 4-step wizard",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
+                  "annotations": [],
+                  "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "status": "failed",
+                      "duration": 5,
+                      "error": {
+                        "message": "Error: browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1148/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
+                        "stack": "Error: browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1148/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1148/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-03T21:31:00.113Z",
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
                 }
               ],
-              "id": "b2c015965981d3ffc92d-673febcb2d51abd490ca",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 66,
+              "id": "bdf94da1d30640e78532-01b03fd1702af0c3f52a",
+              "file": "m1-marketing-home.spec.ts",
+              "line": 62,
               "column": 7
             },
             {
-              "title": "/forgot-password renders single-field card",
-              "ok": true,
+              "title": "public surface — no credential forms and login/register are bridges",
+              "ok": false,
               "tags": [],
               "tests": [
                 {
                   "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
+                  "annotations": [],
+                  "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b2c015965981d3ffc92d-3c90fc27c539efed3b75",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 72,
-              "column": 7
-            },
-            {
-              "title": "/reset-password validates password match",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
+                  "results": [
                     {
-                      "type": "skip"
+                      "workerIndex": 4,
+                      "status": "failed",
+                      "duration": 6,
+                      "error": {
+                        "message": "Error: browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1148/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
+                        "stack": "Error: browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1148/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1148/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-03T21:31:00.156Z",
+                      "attachments": []
                     }
                   ],
-                  "expectedStatus": "skipped",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "status": "unexpected"
                 }
               ],
-              "id": "b2c015965981d3ffc92d-9a6869ffc208d30b35b6",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 77,
-              "column": 7
-            },
-            {
-              "title": "/mfa renders the code field",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b2c015965981d3ffc92d-d8a9060b5bc12a10bfd8",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 85,
-              "column": 7
-            },
-            {
-              "title": "/register renders the 4-step wizard",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "firefox",
-                  "projectName": "firefox",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b2c015965981d3ffc92d-72945701ea591c154bba",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 66,
-              "column": 7
-            },
-            {
-              "title": "/forgot-password renders single-field card",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "firefox",
-                  "projectName": "firefox",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b2c015965981d3ffc92d-5bcac5ccb7b1a7f8454a",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 72,
-              "column": 7
-            },
-            {
-              "title": "/reset-password validates password match",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "firefox",
-                  "projectName": "firefox",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b2c015965981d3ffc92d-c12150f83e2b71d94a47",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 77,
-              "column": 7
-            },
-            {
-              "title": "/mfa renders the code field",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "firefox",
-                  "projectName": "firefox",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b2c015965981d3ffc92d-5046d7540d8e4c153426",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 85,
-              "column": 7
-            },
-            {
-              "title": "/register renders the 4-step wizard",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "webkit",
-                  "projectName": "webkit",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b2c015965981d3ffc92d-814ad44f1aaa4f370bc1",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 66,
-              "column": 7
-            },
-            {
-              "title": "/forgot-password renders single-field card",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "webkit",
-                  "projectName": "webkit",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b2c015965981d3ffc92d-0eec005ace2be6596b92",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 72,
-              "column": 7
-            },
-            {
-              "title": "/reset-password validates password match",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "webkit",
-                  "projectName": "webkit",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b2c015965981d3ffc92d-540f5514e596ecb2e151",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 77,
-              "column": 7
-            },
-            {
-              "title": "/mfa renders the code field",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "webkit",
-                  "projectName": "webkit",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b2c015965981d3ffc92d-4317522aac59b72f2a16",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 85,
-              "column": 7
-            },
-            {
-              "title": "/register renders the 4-step wizard",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b2c015965981d3ffc92d-5db87b2eaa98ba5cff18",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 66,
-              "column": 7
-            },
-            {
-              "title": "/forgot-password renders single-field card",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b2c015965981d3ffc92d-7d1ba667748e3e894ecf",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 72,
-              "column": 7
-            },
-            {
-              "title": "/reset-password validates password match",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b2c015965981d3ffc92d-a45a0aeea07bf9fac126",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 77,
-              "column": 7
-            },
-            {
-              "title": "/mfa renders the code field",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b2c015965981d3ffc92d-2eb67a25f4b3fb9ebaed",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 85,
-              "column": 7
-            },
-            {
-              "title": "/register renders the 4-step wizard",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "Mobile Safari",
-                  "projectName": "Mobile Safari",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b2c015965981d3ffc92d-305c12c74437ff7a1b20",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 66,
-              "column": 7
-            },
-            {
-              "title": "/forgot-password renders single-field card",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "Mobile Safari",
-                  "projectName": "Mobile Safari",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b2c015965981d3ffc92d-fc1dcf4a0e6fdc53a9b4",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 72,
-              "column": 7
-            },
-            {
-              "title": "/reset-password validates password match",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "Mobile Safari",
-                  "projectName": "Mobile Safari",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b2c015965981d3ffc92d-d40e8fdefe53b6ae5fa8",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 77,
-              "column": 7
-            },
-            {
-              "title": "/mfa renders the code field",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "Mobile Safari",
-                  "projectName": "Mobile Safari",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b2c015965981d3ffc92d-a1ce7e64c67c4db8c9b7",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 85,
-              "column": 7
-            }
-          ]
-        },
-        {
-          "title": "M1.6 — mobile 390px reflow",
-          "file": "m16-auth-pages.spec.ts",
-          "line": 94,
-          "column": 15,
-          "specs": [
-            {
-              "title": "/login collapses to single column at ≤720px",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b2c015965981d3ffc92d-28810f76ca5e5ec400a0",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 95,
-              "column": 7
-            },
-            {
-              "title": "MFA card flips to bottom-sheet at ≤480px",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b2c015965981d3ffc92d-336995800af3b675b214",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 103,
-              "column": 7
-            },
-            {
-              "title": "?locale=ar flips dir=rtl",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b2c015965981d3ffc92d-10068c6c78dde971041d",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 109,
-              "column": 7
-            },
-            {
-              "title": "/login collapses to single column at ≤720px",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "firefox",
-                  "projectName": "firefox",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b2c015965981d3ffc92d-96a41c8054bfa4135145",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 95,
-              "column": 7
-            },
-            {
-              "title": "MFA card flips to bottom-sheet at ≤480px",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "firefox",
-                  "projectName": "firefox",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b2c015965981d3ffc92d-bb5dd60e6ad8590b10b6",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 103,
-              "column": 7
-            },
-            {
-              "title": "?locale=ar flips dir=rtl",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "firefox",
-                  "projectName": "firefox",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b2c015965981d3ffc92d-3bd3ece837b2a1ea0664",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 109,
-              "column": 7
-            },
-            {
-              "title": "/login collapses to single column at ≤720px",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "webkit",
-                  "projectName": "webkit",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b2c015965981d3ffc92d-58ae35cb5d15113bc5d1",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 95,
-              "column": 7
-            },
-            {
-              "title": "MFA card flips to bottom-sheet at ≤480px",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "webkit",
-                  "projectName": "webkit",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b2c015965981d3ffc92d-b528571b1344ec52e0fe",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 103,
-              "column": 7
-            },
-            {
-              "title": "?locale=ar flips dir=rtl",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "webkit",
-                  "projectName": "webkit",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b2c015965981d3ffc92d-4ad9406745002583969d",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 109,
-              "column": 7
-            },
-            {
-              "title": "/login collapses to single column at ≤720px",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b2c015965981d3ffc92d-8ac46897d0d3b19ebb8e",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 95,
-              "column": 7
-            },
-            {
-              "title": "MFA card flips to bottom-sheet at ≤480px",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b2c015965981d3ffc92d-9fe2da2a748fa8d9b742",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 103,
-              "column": 7
-            },
-            {
-              "title": "?locale=ar flips dir=rtl",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b2c015965981d3ffc92d-08026d4df021316992bc",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 109,
-              "column": 7
-            },
-            {
-              "title": "/login collapses to single column at ≤720px",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "Mobile Safari",
-                  "projectName": "Mobile Safari",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b2c015965981d3ffc92d-e36a94d1eda904b35ea1",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 95,
-              "column": 7
-            },
-            {
-              "title": "MFA card flips to bottom-sheet at ≤480px",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "Mobile Safari",
-                  "projectName": "Mobile Safari",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b2c015965981d3ffc92d-aca116f5a25b198f5a95",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 103,
-              "column": 7
-            },
-            {
-              "title": "?locale=ar flips dir=rtl",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip"
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "Mobile Safari",
-                  "projectName": "Mobile Safari",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b2c015965981d3ffc92d-477a05ff3e2afe688c8f",
-              "file": "m16-auth-pages.spec.ts",
-              "line": 109,
+              "id": "bdf94da1d30640e78532-d61748eef40a42a43eb6",
+              "file": "m1-marketing-home.spec.ts",
+              "line": 69,
               "column": 7
             }
           ]
@@ -1350,11 +336,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-05-03T10:39:14.572Z",
-    "duration": 167.231,
+    "startTime": "2026-05-03T21:30:59.295Z",
+    "duration": 947.7800000000001,
     "expected": 0,
-    "skipped": 50,
-    "unexpected": 0,
+    "skipped": 0,
+    "unexpected": 5,
     "flaky": 0
   }
 }

@@ -2,9 +2,9 @@
 /**
  * marketing-home-coverage.mjs — Phase M1 CI gate.
  *
- * Verifies the canonical 17-section marketing.home.page is wired coherently:
- *   ① The marketing-home page source declares all 17 section ids in the
- *      MARKETING_HOME_SECTIONS literal.
+ * Verifies the canonical 19-region marketing.home.page is wired coherently:
+ *   ① The marketing-home page source declares all 19 region ids in the
+ *      MARKETING_HOME_REGIONS literal.
  *   ② Every section id appears as a [data-section-id="…"] hook in the
  *      template body (so renderers/tests can target sections selector-safely).
  *   ③ The agentic-proof section is gated by `flag('landingAgenticProof')`
@@ -28,9 +28,9 @@ const SEED_SQL = join(REPO, 'platform/dos/migrations/public/20260503_0026_market
 const COMP_MAP = join(REPO, 'platform/dos/registry/component-map.ts');
 
 const SECTIONS = [
-  'hero','trust-pills','value-props','agentic-proof','download-kit',
-  'platform-overview','modules','industries','architecture',
-  'ai-and-agents','pricing-teaser','testimonials','logos',
+  'public-header','breadcrumb-row','hero','trust-pills','value-props',
+  'agentic-proof','download-kit','platform-overview','modules','industries',
+  'architecture','ai-and-agents','pricing-teaser','testimonials','logos',
   'resources','faq','cta-banner','footer',
 ];
 
@@ -53,9 +53,9 @@ if (violations.length === 0) {
   // ① + ② Section coverage in source AND template hooks.
   for (const id of SECTIONS) {
     if (!src.includes(`'${id}'`))
-      violations.push(`section id '${id}' not declared in MARKETING_HOME_SECTIONS`);
+      violations.push(`region id '${id}' not declared in MARKETING_HOME_REGIONS`);
     if (!src.includes(`data-section-id="${id}"`))
-      violations.push(`section '${id}' missing [data-section-id] template hook`);
+      violations.push(`region '${id}' missing [data-section-id] template hook`);
   }
 
   // ③ Agentic-proof gating + status strip embed.
@@ -86,4 +86,4 @@ if (violations.length > 0) {
   console.warn(`${tag} SHADOW (${violations.length} violation${violations.length === 1 ? '' : 's'}). Set MARKETING_HOME_COVERAGE_ENFORCE=1 to enforce.`);
   process.exit(0);
 }
-console.log(`${tag} OK — ${SECTIONS.length} sections wired, agentic-proof gated, registry coherent.`);
+console.log(`${tag} OK — ${SECTIONS.length} regions wired, agentic-proof gated, registry coherent.`);

@@ -1,6 +1,7 @@
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { correlationIdInterceptor } from '@platform/shell/correlation-id.interceptor';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { DOS_LANGUAGE_SWITCHER_I18N } from '@dos/ui-system';
 import {
@@ -56,7 +57,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes, withInMemoryScrolling({ scrollPositionRestoration: 'top' })),
-    provideHttpClient(),
+    provideHttpClient(withInterceptors([correlationIdInterceptor])),
     provideAnimationsAsync(),
     // @dos/ui-system DosLanguageSwitcher consumes the product's I18nService
     // through this token. Same instance — no duplicate state.
