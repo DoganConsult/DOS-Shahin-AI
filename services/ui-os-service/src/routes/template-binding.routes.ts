@@ -180,9 +180,14 @@ export function createTemplateBindingRouter(pool: DbPool): Router {
   router.get('/template-binding', async (req, res) => {
     const route = String(req.query.route ?? '');
     if (!route) return res.status(400).json({ error: 'route_required' });
+    const locale = String(req.query.locale ?? req.headers['accept-language'] ?? 'en')
+      .toLowerCase().startsWith('ar') ? 'ar' : 'en';
     try {
       const { rows } = await pool.query(
-        `SELECT route, archetype, template_export, props, version
+        `SELECT route, archetype, template_export, props, version,
+                title_en, title_ar, subtitle_en, subtitle_ar,
+                eyebrow_en, eyebrow_ar, ai_headline_en, ai_headline_ar,
+                status_tags, primary_action
            FROM dos.ui_route_template_binding WHERE route=$1`,
         [route],
       );
@@ -191,11 +196,31 @@ export function createTemplateBindingRouter(pool: DbPool): Router {
           route, archetype: null, template_export: null, props: {}, version: 0,
         } satisfies Partial<TemplateBinding>);
       }
-      const row = rows[0] as TemplateBinding;
+      const row = rows[0] as TemplateBinding & {
+        title_en?: string; title_ar?: string;
+        subtitle_en?: string; subtitle_ar?: string;
+        eyebrow_en?: string; eyebrow_ar?: string;
+        ai_headline_en?: string; ai_headline_ar?: string;
+        status_tags?: unknown; primary_action?: unknown;
+      };
       const dynamicProps = await loadProps(pool, route, row.archetype);
+      // Phase F-F7-2 — derive `masthead` object the host reads.
+      const pick = (en?: string, ar?: string) =>
+        (locale === 'ar' ? (ar ?? en) : (en ?? ar)) ?? undefined;
+      const masthead = {
+        title:        pick(row.title_en, row.title_ar),
+        subtitle:     pick(row.subtitle_en, row.subtitle_ar),
+        eyebrow:      pick(row.eyebrow_en, row.eyebrow_ar),
+        aiHeadline:   pick(row.ai_headline_en, row.ai_headline_ar),
+        statusTags:   row.status_tags ?? [],
+        primaryAction: row.primary_action ?? null,
+      };
       res.json({
-        ...row,
-        props: { ...(row.props ?? {}), ...dynamicProps },
+        route: row.route,
+        archetype: row.archetype,
+        template_export: row.template_export,
+        version: row.version,
+        props: { ...(row.props ?? {}), ...dynamicProps, masthead },
       });
     } catch (e) {
       res.status(500).json({ error: 'template_binding_fetch_failed', detail: String(e) });

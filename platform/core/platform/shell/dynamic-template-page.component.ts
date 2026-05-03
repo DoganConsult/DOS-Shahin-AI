@@ -82,21 +82,77 @@ export class DynamicTemplatePageComponent {
   readonly tplInputs = computed<Record<string, unknown>>(() => {
     const b = this.binding();
     if (!b) return {};
-    const p = b.props ?? {};
-    // Map DB-resolved arrays to the template @Input names.
-    return {
-      kpis: p.kpis ?? [],
-      columns: p.columns ?? [],
-      tabs: p.tabs ?? [],
-      nextBestActions: p.nextBestActions ?? [],
-      settingsSections: p.settingsSections ?? [],
-      reportCards: p.reportCards ?? [],
-      workqueueGroups: p.workqueueGroups ?? [],
-      heatmapAxes: p.heatmapAxes ?? [],
-      pillars: p.pillars ?? this.fallbackPillars,
-      archetype: b.archetype,
-      route: b.route,
+    const p: Record<string, unknown> = (b.props ?? {}) as Record<string, unknown>;
+
+    // Resolver → template @Input alias map. The ui-os resolver returns
+    // archetype-specific data under domain-named keys (orgChartNodes,
+    // ownershipEdges, …); the templates declare shorter @Input names
+    // (nodes, edges, …). This map closes the gap so both halves of the
+    // dynamic-routing contract agree without renaming either side.
+    const ALIAS: Record<string, string> = {
+      orgChartNodes:           'nodes',
+      ownershipEdges:          'edges',
+      workflowTimelineSteps:   'steps',
+      agentFlowSteps:          'steps',
+      auditLedgerRows:         'rows',
+      auditEvidenceArtifacts:  'artifacts',
+      exportArtifacts:         'artifacts',
+      followUpItems:           'items',
+      delegationRules:         'rules',
+      agentRegistry:           'agents',
+      roadmapMilestones:       'milestones',
+      calendarEvents:          'events',
+      incidentRunbookSteps:    'runbook',
+      incidentCommunications:  'communications',
+      // case-finalization resolver already returns 'cases' which the
+      // template input is also called 'cases' — no alias needed.
     };
+
+    // 1. Spread the entire resolver payload so any new key the resolver
+    //    later adds (e.g. for archetypes without an explicit forward
+    //    mapping) reaches the template automatically.
+    const out: Record<string, unknown> = { ...p };
+
+    // 2. Apply the alias map. Keep the original key too so DB-driven
+    //    consumers/tests can still introspect by domain name.
+    for (const [from, to] of Object.entries(ALIAS)) {
+      if (p[from] !== undefined && out[to] === undefined) {
+        out[to] = p[from];
+      }
+    }
+
+    // 3. Provide stable defaults for the 8 base arrays so every
+    //    template's `@Input ... = []` keeps its empty-state contract
+    //    even when the resolver omits them.
+    out['kpis']             ??= [];
+    out['columns']          ??= [];
+    out['tabs']             ??= [];
+    out['nextBestActions']  ??= [];
+    out['settingsSections'] ??= [];
+    out['reportCards']      ??= [];
+    out['workqueueGroups']  ??= [];
+    out['heatmapAxes']      ??= [];
+    out['pillars']          ??= this.fallbackPillars;
+
+    // 4. Surface masthead scalars from props.masthead (Phase F-F7) so
+    //    every template gets a populated header without needing per-
+    //    page bespoke wiring. ui-os-service derives `masthead` from the
+    //    new title_en/ar, subtitle_en/ar, eyebrow_en/ar, ai_headline_en/ar,
+    //    status_tags, primary_action columns on
+    //    `dos.ui_route_template_binding` (migration 0120).
+    const masthead = (p['masthead'] as Record<string, unknown> | undefined) ?? {};
+    if (masthead['title']        !== undefined) out['title']        ??= masthead['title'];
+    if (masthead['subtitle']     !== undefined) out['subtitle']     ??= masthead['subtitle'];
+    if (masthead['eyebrow']      !== undefined) out['eyebrow']      ??= masthead['eyebrow'];
+    if (masthead['aiHeadline']   !== undefined) out['aiHeadline']   ??= masthead['aiHeadline'];
+    if (masthead['statusTags']   !== undefined) out['statusTags']   ??= masthead['statusTags'];
+    if (masthead['primaryAction']!== undefined) out['primaryAction']??= masthead['primaryAction'];
+
+    // 5. Always last — never let a template-supplied prop override
+    //    these contract metadata fields.
+    out['archetype'] = b.archetype;
+    out['route']     = b.route;
+    return out;
   });
 
   readonly fallbackPillars: ModuleInsightPillars = {
