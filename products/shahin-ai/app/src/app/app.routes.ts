@@ -260,6 +260,22 @@ export const routes: Routes = [
         ],
       },
       ...dnaModuleRoutes,
+      // Phase F-F4 — DB-driven dynamic template host. Any path under
+      // `/_dyn/*` resolves its archetype + props from the live
+      // `dos.ui_route_template_binding` table via the
+      // `/api/ui-os/template-binding` resolver, then lazy-imports the
+      // matching `@platform/shell/templates` archetype. Opt-in only — no
+      // existing route is disturbed.
+      {
+        path: '_dyn',
+        loadComponent: () =>
+          import('@platform/shell').then(m => m.DynamicTemplatePageComponent),
+      },
+      {
+        path: '_dyn/:rest',
+        loadComponent: () =>
+          import('@platform/shell').then(m => m.DynamicTemplatePageComponent),
+      },
     ],
   },
   { path: '**', redirectTo: '' },

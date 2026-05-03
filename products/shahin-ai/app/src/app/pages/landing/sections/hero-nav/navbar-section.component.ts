@@ -50,10 +50,10 @@ import { DosLanguageSwitcherComponent } from '@dos/ui-system';
             <a routerLink="/dashboard" class="nav-icon-btn" title="Dashboard" aria-label="Dashboard"><i class="pi pi-th-large"></i></a>
             <button class="nav-icon-btn" (click)="auth.logout()" [title]="i18n.translate('landing.navbar.logout')" [attr.aria-label]="i18n.translate('landing.navbar.logout')"><i class="pi pi-sign-out"></i></button>
           } @else {
-            <button class="nav-icon-btn" (click)="navigateToLogin()" [title]="i18n.translate('landing.navbar.signIn')" [attr.aria-label]="i18n.translate('landing.navbar.signIn')"><i class="pi pi-sign-in" aria-hidden="true"></i><span class="sign-in-label">Sign In</span></button>
+            <button class="nav-icon-btn nav-auth-btn" (click)="navigateToLogin()" [title]="i18n.translate('landing.navbar.signIn')" [attr.aria-label]="i18n.translate('landing.navbar.signIn')"><i class="pi pi-sign-in" aria-hidden="true"></i><span class="sign-in-label">{{ i18n.translate('landing.navbar.signIn') }}</span></button>
             <a routerLink="/register" class="nav-cta-btn">{{ i18n.localize('Start', 'ابدأ') }}</a>
           }
-          <button class="nav-icon-btn hamburger" (click)="toggleMenu()" [attr.aria-expanded]="menuOpen" aria-label="Menu" aria-controls="nav-links"><i class="pi" [class.pi-bars]="!menuOpen" [class.pi-times]="menuOpen"></i></button>
+          <button class="nav-icon-btn hamburger" (click)="toggleMenu()" [attr.aria-expanded]="menuOpen" [attr.aria-label]="i18n.localize('Menu', 'القائمة')" aria-controls="nav-links"><i class="pi" [class.pi-bars]="!menuOpen" [class.pi-times]="menuOpen"></i><span class="hamburger-label">{{ i18n.localize('Menu', 'القائمة') }}</span></button>
         </div>
       </div>
     </nav>
@@ -118,6 +118,12 @@ import { DosLanguageSwitcherComponent } from '@dos/ui-system';
       text-decoration: none; font-size: var(--font-size-base);
     }
     .nav-icon-btn:hover { background: rgba(var(--color-white-rgb), 0.24); border-color: rgba(var(--color-white-rgb), 0.45); }
+    .nav-auth-btn {
+      width: auto;
+      min-inline-size: 0;
+      padding-inline: 14px;
+      gap: 8px;
+    }
     .nav-cta-btn {
       display: inline-flex; align-items: center; justify-content: center;
       padding: 8px 20px; border-radius: var(--radius-pill);
@@ -131,6 +137,7 @@ import { DosLanguageSwitcherComponent } from '@dos/ui-system';
       font-size: var(--font-size-sm); font-weight: 600;
       margin-left: 6px; white-space: nowrap;
     }
+    .hamburger-label { display: none; }
     .hamburger { display: none; }
     .menu-backdrop { display: none; }
 
@@ -155,7 +162,31 @@ import { DosLanguageSwitcherComponent } from '@dos/ui-system';
     @media (max-width: 900px) {
       /* hide desktop-only elements */
       .desktop-only { display: none !important; }
-      .sign-in-label { display: none; }
+
+      .nav-auth-btn {
+        padding-inline: 12px;
+        min-block-size: 42px;
+      }
+      .nav-auth-btn .pi { font-size: 12px; }
+      .sign-in-label {
+        display: inline;
+        margin-left: 0;
+        font-size: var(--font-size-xs);
+      }
+      .nav-cta-btn {
+        padding-inline: 14px;
+        font-size: var(--font-size-xs);
+      }
+      .hamburger {
+        width: auto;
+        padding-inline: 12px;
+        gap: 8px;
+      }
+      .hamburger-label {
+        display: inline;
+        font-size: var(--font-size-xs);
+        font-weight: var(--font-bold);
+      }
 
       /* Backdrop: covers everything (including the navbar) so the drawer reads as a sheet */
       .menu-backdrop {
@@ -282,15 +313,15 @@ export class NavbarSectionComponent implements OnDestroy {
 
   navLinks = [
     { id: 'stats',     ar: 'الإحصائيات',  en: 'Stats' },
-    { id: 'pain',      ar: 'التحديات',     en: 'Challenges' },
-    { id: 'how',       ar: 'كيف تعمل',     en: 'How It Works' },
+    { id: 'pain-points', ar: 'التحديات',   en: 'Challenges' },
+    { id: 'how-it-works', ar: 'كيف تعمل',  en: 'How It Works' },
     { id: 'solutions', ar: 'الخدمات',      en: 'Services' },
-    { id: 'agents',    ar: 'الوكلاء',      en: 'AI Agents' },
-    { id: 'ksa',       ar: 'السعودية',     en: 'KSA' },
+    { id: 'ai-agents', ar: 'الوكلاء',      en: 'AI Agents' },
+    { id: 'ksa-features', ar: 'السعودية',  en: 'KSA' },
     { id: 'features',  ar: 'القدرات',      en: 'Features' },
   ];
 
-  private sectionIds = ['hero', 'stats', 'pain', 'how', 'solutions', 'agents', 'ksa', 'features', 'cta'];
+  private sectionIds = ['hero', 'stats', 'pain-points', 'how-it-works', 'solutions', 'ai-agents', 'ksa-features', 'features', 'cta'];
 
   constructor() {
     afterNextRender(() => {
@@ -324,7 +355,12 @@ export class NavbarSectionComponent implements OnDestroy {
   }
 
   scrollTo(id: string): void {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const target = document.getElementById(id);
+    if (!target) return;
+
+    const offset = window.innerWidth <= 900 ? 78 : 72;
+    const top = target.getBoundingClientRect().top + window.scrollY - offset;
+    window.scrollTo({ top, behavior: 'smooth' });
   }
 
   private onScroll(): void {

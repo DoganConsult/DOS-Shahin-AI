@@ -1,201 +1,157 @@
 <section class="feat-section">
   <div class="feat-container">
     <app-section-header
-      badge="Shahin-AI Apps Layer"
-      badgeAr="طبقة تطبيقات Shahin-AI"
+      badge="Mobile Workspace"
+      badgeAr="مساحة العمل المتنقلة"
       badgeIcon="pi pi-th-large"
-      title="Your Dashboard — Live Preview"
-      titleAr="لوحة التحكم — معاينة مباشرة"
-      subtitle="This is what your Shahin-AI workspace looks like. Every module is interactive, AI-powered, and ready to run."
-      subtitleAr="هذا ما تبدو عليه مساحة عمل Shahin-AI. كل وحدة تفاعلية ومدعومة بالذكاء الاصطناعي وجاهزة للعمل."
+      title="A command center designed for executives, operators, and AI lanes"
+      titleAr="مركز قيادة مصمم للتنفيذيين والمشغلين ومسارات الذكاء"
+      subtitle="Instead of a generic desktop mockup, the preview feels like the real mobile operating layer your teams will use every day."
+      subtitleAr="بدلاً من لقطة سطح مكتب تقليدية، تبدو المعاينة كطبقة التشغيل المتنقلة الحقيقية التي سيستخدمها فريقك يوميًا."
     />
 
-    <!-- Dashboard Preview Window -->
-    <div class="dash-window">
-      <!-- Window chrome bar -->
-      <div class="dash-chrome">
-        <div class="chrome-dots">
-          <span class="dot dot-red"></span>
-          <span class="dot dot-yellow"></span>
-          <span class="dot dot-green"></span>
-        </div>
-        <div class="chrome-title">
-          <i class="pi pi-lock"></i>
-          <span>app.shahin-ai.com/workspace-home</span>
-        </div>
-        <div class="chrome-status">
-          <span class="status-pulse"></span>
-          {{ i18n.translate('landingFeatures.engineRunning') }}
-        </div>
+    <div class="preview-stage">
+      <div class="preview-story">
+        <article class="story-card story-card--accent">
+          <span class="story-eyebrow">{{ i18n.localize('Command layer', 'طبقة القيادة') }}</span>
+          <h3>{{ i18n.localize('One mobile workspace for executives, operators, and AI agents.', 'مساحة عمل متنقلة واحدة للتنفيذيين والمشغلين ووكلاء الذكاء.') }}</h3>
+          <p>{{ i18n.localize('The landing preview now speaks the same language as the product: decisions, evidence, actions, and Saudi framework context in one operating rhythm.', 'أصبحت معاينة الصفحة تتكلم لغة المنتج نفسه: القرارات والأدلة والإجراءات والسياق السعودي ضمن إيقاع تشغيلي واحد.') }}</p>
+        </article>
+
+        <article class="story-card">
+          <span class="story-kicker">{{ i18n.localize('AI mesh', 'شبكة الذكاء') }}</span>
+          <strong>{{ i18n.localize('Route evidence, risk, policy, and approvals in parallel.', 'وجّه الأدلة والمخاطر والسياسات والاعتمادات بالتوازي.') }}</strong>
+          <p>{{ i18n.localize('Each lane stays visible and owned, so work stops feeling like email traffic and starts behaving like operations.', 'يبقى كل مسار مرئيًا ومملوكًا، فيتوقف العمل عن التشابه مع البريد الإلكتروني ويبدأ بالتصرف كتشغيل حقيقي.') }}</p>
+          <div class="story-tags">
+            <span>Evidence</span>
+            <span>Policy</span>
+            <span>Risk</span>
+            <span>Workflow</span>
+          </div>
+        </article>
+
+        <article class="story-card">
+          <span class="story-kicker">{{ i18n.localize('Saudi scope', 'النطاق السعودي') }}</span>
+          <strong>{{ i18n.localize('NCA, SAMA, PDPL, and internal policy in one rhythm.', 'NCA وSAMA وPDPL والسياسات الداخلية ضمن إيقاع واحد.') }}</strong>
+          <p>{{ i18n.localize('Local frameworks stay close to the queues, approvals, and evidence owners that actually drive enterprise execution.', 'تبقى الأطر المحلية قريبة من الطوابير والاعتمادات ومالكي الأدلة الذين يقودون التنفيذ المؤسسي فعليًا.') }}</p>
+          <div class="story-metric-row">
+            <span>129 {{ i18n.localize('regulators', 'جهة رقابية') }}</span>
+            <span>6,000+ {{ i18n.localize('controls', 'ضوابط') }}</span>
+          </div>
+        </article>
       </div>
 
-      <!-- Dashboard body -->
-      <div class="dash-body">
-        <!-- Mini sidebar -->
-        <div class="dash-sidebar">
-          <div class="ds-logo"><img loading="eager" src="logoiconapphero.png" alt="Shahin-AI logo" width="24" height="24" /></div>
-          <div class="ds-item active"><i class="pi pi-home"></i></div>
-          <div class="ds-item"><i class="pi pi-shield"></i></div>
-          <div class="ds-item"><i class="pi pi-exclamation-triangle"></i></div>
-          <div class="ds-item"><i class="pi pi-check-circle"></i></div>
-          <div class="ds-item"><i class="pi pi-verified"></i></div>
-          <div class="ds-item"><i class="pi pi-microchip-ai"></i></div>
-          <div class="ds-item"><i class="pi pi-chart-bar"></i></div>
-          <div class="ds-item"><i class="pi pi-file"></i></div>
-          <div class="ds-item"><i class="pi pi-users"></i></div>
-          <div class="ds-item"><i class="pi pi-cog"></i></div>
-        </div>
+      <div class="device-showcase">
+        <div class="device-halo"></div>
+        <div class="device-frame">
+          <div class="device-notch"></div>
 
-        <!-- Main content area -->
-        <div class="dash-main">
-          <!-- Top metrics row -->
-          <div class="dash-metrics">
-            <div class="dm-card" routerLink="/register">
-              <div class="dm-icon dm-blue"><i class="pi pi-shield"></i></div>
-              <div class="dm-data">
-                <span class="dm-val">87<small>%</small></span>
-                <span class="dm-label">{{ i18n.translate('landingFeatures.compliance') }}</span>
-              </div>
-              <svg class="dm-spark" viewBox="0 0 60 24"><path d="M0,18 Q10,12 15,14 T30,8 T45,10 T60,4" fill="none" stroke="#3b82f6" stroke-width="2"/></svg>
+          <div class="device-screen">
+            <div class="screen-status">
+              <span class="screen-status__eyebrow">{{ i18n.localize('workspace-home', 'مساحة العمل') }}</span>
+              <span class="screen-status__time">08:42</span>
             </div>
-            <div class="dm-card" routerLink="/register">
-              <div class="dm-icon dm-amber"><i class="pi pi-exclamation-triangle"></i></div>
-              <div class="dm-data">
-                <span class="dm-val">23</span>
-                <span class="dm-label">{{ i18n.translate('landingFeatures.activeRisks') }}</span>
-              </div>
-              <svg class="dm-spark" viewBox="0 0 60 24"><path d="M0,6 Q10,14 15,10 T30,16 T45,12 T60,18" fill="none" stroke="#f59e0b" stroke-width="2"/></svg>
+
+            <div class="screen-hero">
+              <span class="screen-hero__badge">{{ i18n.localize('Executive pulse', 'نبض القيادة') }}</span>
+              <h3>{{ i18n.localize('3 priority queues need action before the next checkpoint.', '3 مسارات أولوية تحتاج إجراء قبل نقطة المراجعة القادمة.') }}</h3>
+              <p>{{ i18n.localize('Decisions, evidence freshness, and AI lanes are visible from one mobile cockpit.', 'القرارات وحداثة الأدلة ومسارات الذكاء ظاهرة من قمرة جوال واحدة.') }}</p>
             </div>
-            <div class="dm-card" routerLink="/register">
-              <div class="dm-icon dm-green"><i class="pi pi-check-circle"></i></div>
-              <div class="dm-data">
-                <span class="dm-val">4,218</span>
-                <span class="dm-label">{{ i18n.translate('landingFeatures.controlsMapped') }}</span>
-              </div>
-              <svg class="dm-spark" viewBox="0 0 60 24"><path d="M0,20 Q10,16 15,12 T30,10 T45,6 T60,4" fill="none" stroke="#10b981" stroke-width="2"/></svg>
+
+            <div class="screen-pill-row">
+              <span class="screen-pill">NCA ECC</span>
+              <span class="screen-pill">SAMA CSF</span>
+              <span class="screen-pill">PDPL</span>
             </div>
-            <div class="dm-card" routerLink="/register">
-              <div class="dm-icon dm-purple"><i class="pi pi-microchip-ai"></i></div>
-              <div class="dm-data">
-                <span class="dm-val">10</span>
-                <span class="dm-label">{{ i18n.translate('landingFeatures.agentsActive') }}</span>
-              </div>
-              <div class="dm-agents-dots">
-                <span class="agent-dot a-on"></span><span class="agent-dot a-on"></span>
-                <span class="agent-dot a-on"></span><span class="agent-dot a-on"></span>
-                <span class="agent-dot a-on"></span><span class="agent-dot a-on"></span>
-                <span class="agent-dot a-on"></span><span class="agent-dot a-on"></span>
-                <span class="agent-dot a-on"></span><span class="agent-dot a-on"></span>
-              </div>
+
+            <div class="screen-metrics">
+              <a routerLink="/register" class="metric-card metric-card--blue">
+                <strong>87%</strong>
+                <span>{{ i18n.localize('Compliance posture', 'وضع الامتثال') }}</span>
+              </a>
+              <a routerLink="/register" class="metric-card metric-card--amber">
+                <strong>23</strong>
+                <span>{{ i18n.localize('Open risks', 'مخاطر مفتوحة') }}</span>
+              </a>
+              <a routerLink="/register" class="metric-card metric-card--green">
+                <strong>4,218</strong>
+                <span>{{ i18n.localize('Controls linked', 'ضوابط مربوطة') }}</span>
+              </a>
+              <a routerLink="/register" class="metric-card metric-card--dark">
+                <strong>10</strong>
+                <span>{{ i18n.localize('AI lanes live', 'مسارات ذكاء مباشرة') }}</span>
+              </a>
             </div>
-          </div>
 
-          <!-- Module grid -->
-          <div class="dash-modules">
-            <a routerLink="/register" class="mod-card mod-governance">
-              <div class="mod-header">
-                <i class="pi pi-sitemap"></i>
-                <span>{{ i18n.translate('landingFeatures.governancePolicies') }}</span>
-              </div>
-              <div class="mod-body">
-                <div class="mod-mini-chart">
-                  <div class="mini-bar" style="height:65%;background:var(--primary, #3b82f6)"></div>
-                  <div class="mini-bar" style="height:80%;background:var(--primary, #3b82f6)"></div>
-                  <div class="mini-bar" style="height:45%;background:var(--primary-light, #93c5fd)"></div>
-                  <div class="mini-bar" style="height:90%;background:var(--primary, #3b82f6)"></div>
-                  <div class="mini-bar" style="height:70%;background:var(--primary, #3b82f6)"></div>
-                </div>
-                <div class="mod-stat">42 {{ i18n.translate('landingFeatures.activePolicies') }}</div>
-              </div>
-            </a>
+            <div class="screen-lanes">
+              <article class="lane-card lane-card--alert">
+                <span class="lane-card__label">{{ i18n.localize('Action lane', 'مسار الإجراء') }}</span>
+                <strong>{{ i18n.localize('Evidence refresh required', 'تحديث الأدلة مطلوب') }}</strong>
+                <p>{{ i18n.localize('12 controls need fresh proof from 4 owners.', '12 ضابطة تحتاج دليلاً محدثًا من 4 مالكين.') }}</p>
+              </article>
 
-            <a routerLink="/register" class="mod-card mod-risk">
-              <div class="mod-header">
-                <i class="pi pi-exclamation-triangle"></i>
-                <span>{{ i18n.translate('landingFeatures.riskManagement') }}</span>
-              </div>
-              <div class="mod-body">
-                <div class="mod-heatmap">
-                  <div class="hm-cell hm-low"></div><div class="hm-cell hm-low"></div><div class="hm-cell hm-med"></div><div class="hm-cell hm-med"></div><div class="hm-cell hm-high"></div>
-                  <div class="hm-cell hm-low"></div><div class="hm-cell hm-med"></div><div class="hm-cell hm-med"></div><div class="hm-cell hm-high"></div><div class="hm-cell hm-crit"></div>
-                  <div class="hm-cell hm-low"></div><div class="hm-cell hm-med"></div><div class="hm-cell hm-high"></div><div class="hm-cell hm-high"></div><div class="hm-cell hm-crit"></div>
-                </div>
-                <div class="mod-stat">5×5 {{ i18n.translate('landingFeatures.heatmap') }}</div>
-              </div>
-            </a>
+              <article class="lane-card">
+                <span class="lane-card__label">{{ i18n.localize('AI lane', 'مسار الذكاء') }}</span>
+                <strong>{{ i18n.localize('Policy draft is ready for review', 'مسودة السياسة جاهزة للمراجعة') }}</strong>
+                <p>{{ i18n.localize('A08 prepared the next version with mapped control impact.', 'الوكيل A08 جهّز النسخة التالية مع أثر الضوابط المرتبطة.') }}</p>
+              </article>
+            </div>
 
-            <a routerLink="/register" class="mod-card mod-compliance">
-              <div class="mod-header">
-                <i class="pi pi-check-circle"></i>
-                <span>{{ i18n.translate('landingFeatures.complianceModule') }}</span>
-              </div>
-              <div class="mod-body">
-                <div class="mod-gauge">
-                  <svg viewBox="0 0 60 34" class="gauge-svg">
-                    <path d="M5,30 A25,25 0 0,1 55,30" fill="none" stroke="#e2e8f0" stroke-width="5" stroke-linecap="round"/>
-                    <path d="M5,30 A25,25 0 0,1 48,12" fill="none" stroke="#10b981" stroke-width="5" stroke-linecap="round"/>
-                  </svg>
-                  <span class="gauge-pct">87%</span>
-                </div>
-                <div class="mod-stat">60+ {{ i18n.translate('landingFeatures.frameworks') }}</div>
-              </div>
-            </a>
+            <div class="screen-module-stack">
+              <a routerLink="/register" class="module-row">
+                <span class="module-row__badge">GP</span>
+                <span class="module-row__copy">
+                  <strong>{{ i18n.localize('Governance & Policy', 'الحوكمة والسياسات') }}</strong>
+                  <small>{{ i18n.localize('2 approvals waiting', '2 اعتماد بانتظار الإنهاء') }}</small>
+                </span>
+                <span class="module-row__state">{{ i18n.localize('Live', 'مباشر') }}</span>
+              </a>
 
-            <a routerLink="/register" class="mod-card mod-audit">
-              <div class="mod-header">
-                <i class="pi pi-verified"></i>
-                <span>{{ i18n.translate('landingFeatures.auditEvidence') }}</span>
-              </div>
-              <div class="mod-body">
-                <div class="mod-progress-list">
-                  <div class="mp-row"><span class="mp-label">NCA ECC</span><div class="mp-bar"><div class="mp-fill" style="width:92%"></div></div><span class="mp-pct">92%</span></div>
-                  <div class="mp-row"><span class="mp-label">SAMA</span><div class="mp-bar"><div class="mp-fill mp-amber" style="width:78%"></div></div><span class="mp-pct">78%</span></div>
-                  <div class="mp-row"><span class="mp-label">PDPL</span><div class="mp-bar"><div class="mp-fill" style="width:85%"></div></div><span class="mp-pct">85%</span></div>
-                </div>
-              </div>
-            </a>
+              <a routerLink="/register" class="module-row">
+                <span class="module-row__badge">RM</span>
+                <span class="module-row__copy">
+                  <strong>{{ i18n.localize('Risk Management', 'إدارة المخاطر') }}</strong>
+                  <small>{{ i18n.localize('Heatmap and KRIs aligned', 'الخريطة الحرارية ومؤشرات المخاطر متوافقة') }}</small>
+                </span>
+                <span class="module-row__state">5x5</span>
+              </a>
 
-            <a routerLink="/register" class="mod-card mod-agents">
-              <div class="mod-header">
-                <i class="pi pi-microchip-ai"></i>
-                <span>{{ i18n.translate('landingFeatures.agentSquad') }}</span>
-              </div>
-              <div class="mod-body">
-                <div class="mod-agent-feed">
-                  <div class="af-line"><span class="af-dot af-green"></span><span class="af-text">A03 {{ i18n.translate('landingFeatures.mapped12Controls') }}</span></div>
-                  <div class="af-line"><span class="af-dot af-blue"></span><span class="af-text">A05 {{ i18n.translate('landingFeatures.collected3Evidence') }}</span></div>
-                  <div class="af-line"><span class="af-dot af-amber"></span><span class="af-text">A07 {{ i18n.translate('landingFeatures.scored5Risks') }}</span></div>
-                  <div class="af-line"><span class="af-dot af-purple"></span><span class="af-text">A08 {{ i18n.translate('landingFeatures.draftedPolicyV2') }}</span></div>
-                </div>
-              </div>
-            </a>
+              <a routerLink="/register" class="module-row">
+                <span class="module-row__badge">EV</span>
+                <span class="module-row__copy">
+                  <strong>{{ i18n.localize('Audit & Evidence', 'التدقيق والأدلة') }}</strong>
+                  <small>{{ i18n.localize('Freshness and chain of proof visible', 'حداثة الأدلة وسلسلة الإثبات ظاهرتان') }}</small>
+                </span>
+                <span class="module-row__state">92%</span>
+              </a>
 
-            <a routerLink="/register" class="mod-card mod-reports">
-              <div class="mod-header">
-                <i class="pi pi-file"></i>
-                <span>{{ i18n.translate('landingFeatures.reportCenter') }}</span>
-              </div>
-              <div class="mod-body">
-                <div class="mod-formats">
-                  <span class="fmt-chip fmt-pdf">PDF</span>
-                  <span class="fmt-chip fmt-excel">Excel</span>
-                  <span class="fmt-chip fmt-html">HTML</span>
-                </div>
-                <div class="mod-stat">90 {{ i18n.translate('landingFeatures.reportsReady') }}</div>
-              </div>
-            </a>
+              <a routerLink="/register" class="module-row">
+                <span class="module-row__badge">AI</span>
+                <span class="module-row__copy">
+                  <strong>{{ i18n.localize('Agent Mesh', 'شبكة الوكلاء') }}</strong>
+                  <small>{{ i18n.localize('10 specialized lanes available', '10 مسارات متخصصة متاحة') }}</small>
+                </span>
+                <span class="module-row__state">10/10</span>
+              </a>
+            </div>
+
+            <div class="screen-bottom-nav">
+              <a routerLink="/register" class="bottom-nav__item bottom-nav__item--active">{{ i18n.localize('Home', 'الرئيسية') }}</a>
+              <a routerLink="/register" class="bottom-nav__item">{{ i18n.localize('Actions', 'الإجراءات') }}</a>
+              <a routerLink="/register" class="bottom-nav__item">{{ i18n.localize('Agents', 'الوكلاء') }}</a>
+              <a routerLink="/register" class="bottom-nav__item">{{ i18n.localize('Reports', 'التقارير') }}</a>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- CTA under dashboard -->
     <div class="dash-cta">
-      <span>{{ i18n.translate('landingFeatures.notAMockup') }}</span>
-      <a routerLink="/register" class="dash-cta-btn">
-        <i class="pi pi-power-off"></i>
-        {{ i18n.translate('landingFeatures.getStarted') }}
-      </a>
+      <div>
+        <strong>{{ i18n.localize('Not a mockup. This is the mobile operating model behind Shahin-AI.', 'ليست صورة تجميلية. هذا هو نموذج التشغيل المتنقل خلف Shahin-AI.') }}</strong>
+        <p>{{ i18n.localize('Launch a workspace with modules, workflows, and AI lanes already sequenced for enterprise execution.', 'ابدأ مساحة عمل مع الموديولات وسير العمل ومسارات الذكاء وقد تم ترتيبها مسبقًا للتنفيذ المؤسسي.') }}</p>
+      </div>
+      <a routerLink="/register" class="dash-cta-btn">{{ i18n.localize('Open my workspace', 'افتح مساحة عملي') }}</a>
     </div>
   </div>
 </section>

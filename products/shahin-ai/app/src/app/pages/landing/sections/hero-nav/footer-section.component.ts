@@ -18,25 +18,25 @@ import { I18nService } from '@app/core/services/ui-infra/i18n.service';
             <ul>
               <li><a (click)="scrollTo('solutions')">{{ i18n.translate('landing.footer.services') }}</a></li>
               <li><a (click)="scrollTo('features')">{{ i18n.translate('landing.footer.capabilities') }}</a></li>
-              <li><a (click)="scrollTo('agents')">{{ i18n.translate('landing.footer.aiAgents') }}</a></li>
+              <li><a (click)="scrollTo('ai-agents')">{{ i18n.translate('landing.footer.aiAgents') }}</a></li>
               <li><a (click)="scrollTo('stats')">{{ i18n.translate('landing.footer.liveStats') }}</a></li>
-              <li><a (click)="scrollTo('how')">{{ i18n.translate('landing.footer.howItWorks') }}</a></li>
+              <li><a (click)="scrollTo('how-it-works')">{{ i18n.translate('landing.footer.howItWorks') }}</a></li>
             </ul>
           </div>
           <div class="footer-col">
             <h4>{{ i18n.translate('landing.footer.colCompliance') }}</h4>
             <ul>
-              <li><a (click)="scrollTo('ksa-nca-ecc')">{{ i18n.translate('landing.footer.complianceNcaEcc') }}</a></li>
+              <li><a (click)="scrollTo('ksa-features')">{{ i18n.translate('landing.footer.complianceNcaEcc') }}</a></li>
               <li><a (click)="scrollTo('solutions')">{{ i18n.translate('landing.footer.complianceSamaCsf') }}</a></li>
-              <li><a (click)="scrollTo('ksa-pdpl-dpia')">{{ i18n.translate('landing.footer.compliancePdpl') }}</a></li>
+              <li><a (click)="scrollTo('ksa-features')">{{ i18n.translate('landing.footer.compliancePdpl') }}</a></li>
               <li><a (click)="scrollTo('solutions')">{{ i18n.translate('landing.footer.complianceIso27001') }}</a></li>
             </ul>
           </div>
           <div class="footer-col">
             <h4>{{ i18n.translate('landing.footer.colMore') }}</h4>
             <ul>
-              <li><a (click)="scrollTo('pain')">{{ i18n.translate('landing.footer.challenges') }}</a></li>
-              <li><a (click)="scrollTo('ksa')">{{ i18n.translate('landing.footer.ksaFeatures') }}</a></li>
+              <li><a (click)="scrollTo('pain-points')">{{ i18n.translate('landing.footer.challenges') }}</a></li>
+              <li><a (click)="scrollTo('ksa-features')">{{ i18n.translate('landing.footer.ksaFeatures') }}</a></li>
               <li><a (click)="scrollTo('cta')">{{ i18n.translate('landing.footer.getStarted') }}</a></li>
             </ul>
           </div>
@@ -181,6 +181,11 @@ import { I18nService } from '@app/core/services/ui-infra/i18n.service';
 export class FooterSectionComponent {
   i18n = inject(I18nService);
   scrollTo(id: string): void {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const target = document.getElementById(id);
+    if (!target) return;
+
+    const offset = window.innerWidth <= 900 ? 78 : 72;
+    const top = target.getBoundingClientRect().top + window.scrollY - offset;
+    window.scrollTo({ top, behavior: 'smooth' });
   }
 }

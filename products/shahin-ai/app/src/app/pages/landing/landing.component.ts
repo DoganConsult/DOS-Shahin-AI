@@ -37,7 +37,7 @@ import { HowItWorksSectionComponent } from './sections/features-solutions/how-it
   template: `
     <div class="landing-root" aria-label="Shahin-AI">
       <app-navbar-section />
-      <main class="landing-main">
+      <main class="landing-main" id="main-content">
         <app-hero-section id="hero" />
         <app-stats-section id="stats" />
         <app-pain-points-section id="pain-points" />
@@ -53,8 +53,14 @@ import { HowItWorksSectionComponent } from './sections/features-solutions/how-it
   `,
   styles: [`
     :host { display: block; }
-    .landing-root { min-block-size: 100vh; display: flex; flex-direction: column; }
+    .landing-root { min-block-size: 100vh; display: flex; flex-direction: column; background: var(--surface); }
     .landing-main { flex: 1; }
+
+    @media (max-width: 900px) {
+      .landing-main {
+        padding-block-end: calc(6rem + env(safe-area-inset-bottom, 0px));
+      }
+    }
   `],
 })
 export class LandingComponent {}

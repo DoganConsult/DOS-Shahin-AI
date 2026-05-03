@@ -16,3 +16,15 @@ export {
   MODULE_CONTENT_PROVIDERS,
   CONTENT_PROVIDER_REGISTRY,
 } from './module-content-provider';
+
+// ── Phase F-F3 — DB-driven template binding (FE consumer) ──
+export {
+  TemplateBindingService,
+  type TemplateBinding,
+  type TemplateBindingProps,
+} from './template-binding.service';
+export {
+  ARCHETYPE_TEMPLATE_EXPORTS,
+  loadArchetypeTemplate,
+} from './template-binding.registry';
+export { DynamicTemplatePageComponent } from './dynamic-template-page.component';
