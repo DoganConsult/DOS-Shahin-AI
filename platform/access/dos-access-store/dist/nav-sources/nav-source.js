@@ -8,4 +8,5 @@ import { InjectionToken } from '@angular/core';
  *   { provide: WORKSPACE_NAV_PRODUCT_SOURCE, useExisting: ProductCompositionNavSource }
  */
 export const WORKSPACE_NAV_PRODUCT_SOURCE = new InjectionToken('WORKSPACE_NAV_PRODUCT_SOURCE');
+export const WORKSPACE_NAV_LABEL_RESOLVER = new InjectionToken('WORKSPACE_NAV_LABEL_RESOLVER');
 //# sourceMappingURL=nav-source.js.map

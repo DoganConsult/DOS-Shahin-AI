@@ -14,5 +14,5 @@ export declare class WorkspaceNavigationAdapter {
     readonly accountMenuConfig: import("@angular/core").Signal<readonly ShellAccountMenuEntry[]>;
     /** Resolve and publish nav config. Idempotent; safe to call from multiple consumers. */
     refresh(): Promise<void>;
-    private titleCase;
+    private groupLabelOf;
 }

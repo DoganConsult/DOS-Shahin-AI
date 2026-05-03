@@ -64,10 +64,15 @@ let WorkspaceNavigationAdapter = class WorkspaceNavigationAdapter {
     /** Resolve and publish nav config. Idempotent; safe to call from multiple consumers. */
     async refresh() {
         const ctx = { access: this.access };
-        const orderedSources = this.l4
-            ? [this.l1, this.l2, this.l3, this.l4, this.l5]
-            : [this.l1, this.l2, this.l3, this.l5];
-        const results = await Promise.all(orderedSources.map((s) => s.resolve(ctx).catch(() => null)));
+        // Phase 1: resolve L1 first so we can pass its results to L5 for dedup.
+        const l1Result = await this.l1.resolve(ctx).catch(() => null);
+        const ctxWithL1 = { ...ctx, l1Items: l1Result ?? [] };
+        // Phase 2: resolve L2..L5 concurrently with the enriched context.
+        const remainingSources = this.l4
+            ? [this.l2, this.l3, this.l4, this.l5]
+            : [this.l2, this.l3, this.l5];
+        const remainingResults = await Promise.all(remainingSources.map((s) => s.resolve(ctxWithL1).catch(() => null)));
+        const results = [l1Result, ...remainingResults];
         const allNull = results.every((r) => r === null);
         const merged = new Map();
         if (allNull && !this.access.loaded()) {
@@ -76,9 +81,11 @@ let WorkspaceNavigationAdapter = class WorkspaceNavigationAdapter {
                 merged.set(it.id, it);
         }
         else {
-            results.forEach((items) => {
+            results.forEach((items, i) => {
                 if (!items)
                     return;
+                // L5 re-resolve with L1 context so it can skip duplicates
+                // (already resolved above; result is in results[l5Index])
                 for (const it of items) {
                     const existing = merged.get(it.id);
                     if (!existing) {
@@ -154,7 +161,7 @@ let WorkspaceNavigationAdapter = class WorkspaceNavigationAdapter {
             const gid = it.group ?? 'misc';
             let g = groupMap.get(gid);
             if (!g) {
-                g = { id: gid, label: this.titleCase(gid), order: defaultOrder(gid), items: [] };
+                g = { id: gid, label: this.groupLabelOf(gid), order: defaultOrder(gid), items: [] };
                 groupMap.set(gid, g);
             }
             const { __tier: _t, ...clean } = it;
@@ -163,8 +170,31 @@ let WorkspaceNavigationAdapter = class WorkspaceNavigationAdapter {
         const groups = Array.from(groupMap.values()).sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
         this._config.set({ groups });
     }
-    titleCase(s) {
-        return s.charAt(0).toUpperCase() + s.slice(1);
+    groupLabelOf(gid) {
+        const DISPLAY = {
+            'workspace': 'Workspace',
+            'core': 'Core',
+            'foundation': 'Foundation',
+            'config-center': 'Config Center',
+            'compliance': 'Compliance',
+            'risk': 'Risk',
+            'dauth': 'Identity & Access',
+            'access': 'Access Control',
+            'dnoc': 'Network Operations',
+            'dsoc': 'Security Operations',
+            'ai-platform': 'AI Platform',
+            'dos-platform': 'DOS Platform',
+            'runtime': 'Runtime',
+            'ui-system': 'UI System',
+            'tenant-management': 'Tenant Management',
+            'multi-tenant-mgmt': 'Multi-Tenant Mgmt',
+            'foundation-admin': 'Foundation Admin',
+            'modules': 'Modules',
+            'misc': 'Other',
+            'primary': 'Main',
+            'secondary': 'Secondary',
+        };
+        return DISPLAY[gid] ?? (gid.charAt(0).toUpperCase() + gid.slice(1));
     }
 };
 WorkspaceNavigationAdapter = __decorate([
@@ -173,14 +203,31 @@ WorkspaceNavigationAdapter = __decorate([
 export { WorkspaceNavigationAdapter };
 function defaultOrder(group) {
     switch (group) {
+        // Core platform — always first
         case 'workspace':
         case 'core': return 10;
-        case 'tenant': return 20;
-        case 'foundation': return 30;
-        case 'modules': return 40;
-        case 'primary': return 50;
-        case 'secondary': return 60;
-        case 'platform': return 70;
+        // GRC modules — business content
+        case 'foundation': return 20;
+        case 'compliance': return 30;
+        case 'risk': return 40;
+        // Config & platform admin
+        case 'config-center': return 50;
+        case 'access': return 60;
+        case 'dauth': return 70;
+        case 'dnoc': return 80;
+        case 'dsoc': return 90;
+        case 'ai-platform': return 100;
+        case 'dos-platform': return 110;
+        case 'runtime': return 120;
+        case 'ui-system': return 130;
+        case 'tenant-management': return 140;
+        case 'multi-tenant-mgmt': return 150;
+        case 'foundation-admin': return 160;
+        // Catch-all buckets
+        case 'modules': return 900;
+        case 'primary': return 910;
+        case 'secondary': return 920;
+        case 'misc': return 990;
         default: return 999;
     }
 }

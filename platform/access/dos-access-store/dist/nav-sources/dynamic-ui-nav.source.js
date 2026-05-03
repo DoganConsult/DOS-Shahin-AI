@@ -23,7 +23,16 @@ let DynamicUiNavSource = class DynamicUiNavSource {
             .pipe(timeout(800), catchError(() => of(null))));
         if (!result || !Array.isArray(result.items))
             return null;
-        return result.items.map((it) => ({ ...it, group: it.group ?? this.id }));
+        return result.items.map((it) => {
+            const rawLabel = typeof it.label === 'string' ? it.label.trim() : '';
+            const labelLooksLikeKey = rawLabel.includes('.') && !rawLabel.includes(' ');
+            return {
+                ...it,
+                labelKey: it.labelKey ?? (labelLooksLikeKey ? rawLabel : undefined),
+                requiredPermission: it.requiredPermission ?? it.permission ?? undefined,
+                group: it.group ?? this.id,
+            };
+        });
     }
 };
 DynamicUiNavSource = __decorate([

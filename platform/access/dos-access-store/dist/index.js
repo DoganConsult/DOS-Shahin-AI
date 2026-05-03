@@ -8,7 +8,7 @@ export * from './access.config';
 export { AccessStore } from './access.store';
 export { PlatformReadinessService } from './platform-readiness.service';
 export { DNA_MODULE_CODES } from './platform-dna.registry';
-export { WORKSPACE_NAV_PRODUCT_SOURCE } from './nav-sources/nav-source';
+export { WORKSPACE_NAV_PRODUCT_SOURCE, WORKSPACE_NAV_LABEL_RESOLVER, } from './nav-sources/nav-source';
 export { DynamicUiNavSource } from './nav-sources/dynamic-ui-nav.source';
 export { PlatformDnaNavSource, DNA_NAV_CONTRACT_LOADERS, provideDnaNavContractLoaders, } from './nav-sources/platform-dna-nav.source';
 export { ModuleLibraryNavSource } from './nav-sources/module-library-nav.source';

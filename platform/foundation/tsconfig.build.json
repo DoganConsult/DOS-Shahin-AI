@@ -13,7 +13,6 @@
     "ports/**/*.ts",
     "schemas/**/*.ts",
     "config/**/*.ts",
-    "ui/**/*.ts",
     "db/runner.ts",
     "index.ts",
     "bootstrap.ts",

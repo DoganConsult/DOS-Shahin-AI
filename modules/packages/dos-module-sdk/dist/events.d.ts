@@ -9,10 +9,10 @@ export interface EventBus {
     registerEventType?(registration: EventRegistration): void;
     /** Optional — concrete bus implementations may expose runtime backpressure metrics */
     getBackpressureStats?(): {
-        queueDepth: number;
-        maxQueueDepth: number;
-        pendingDeliveries: number;
-        droppedEvents: number;
+        inFlight: number;
+        maxInFlight: number;
+        dropped: number;
+        tenantsActive: number;
     };
 }
 export declare function setEventBus(bus: EventBus): void;
