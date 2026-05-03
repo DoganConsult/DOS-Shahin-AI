@@ -526,6 +526,11 @@ const REGISTRY_COMPONENT_MAP: Record<string, () => Promise<Type<any>>> = {
   'agent.evidence-drawer':       () => import('@dos/ui-system').then(m => m.DosAgentEvidenceDrawerComponent),
   'agent.followup-center':       () => import('@dos/ui-system').then(m => m.DosAgentFollowupCenterComponent),
   'agent.audit-trail':           () => import('@dos/ui-system').then(m => m.DosAgentAuditTrailComponent),
+
+  // ── Phase M1 — Marketing-OS public landing ──────────────────────────────
+  // 16-section unauthenticated landing rendered from @dos/ui-system. Carbon
+  // backing: tiles. Route binding: /  → marketing.home.page.
+  'marketing.home.page':         () => import('@dos/ui-system').then(m => m.DosMarketingHomePageComponent),
 };
 
 const PRIMITIVE_KEYS = new Set(Object.keys(CARBON_PRIMITIVE_COMPONENT_MAP));

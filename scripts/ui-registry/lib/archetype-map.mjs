@@ -115,6 +115,10 @@ export function mapComponentKeyToArchetype(componentKey, route = '') {
    || k === 'agent.status-strip')
     return { archetype: 'agent-registry', template_export: 'AgentRegistryTemplateComponent' };
 
+  // ── Phase M1 — Marketing-OS landing surface ─────────────────────────────
+  if (k === 'marketing.home.page')
+    return { archetype: 'command-home', template_export: 'ModuleOverviewTemplateComponent' };
+
   // ── Per-module page-key conventions (PascalCase suffix patterns) ─────────
   if (/HeatmapPage$/.test(k) || /\.heatmap\.page$/.test(k))
     return { archetype: 'risk-landscape', template_export: 'ModuleHeatmapTemplateComponent' };

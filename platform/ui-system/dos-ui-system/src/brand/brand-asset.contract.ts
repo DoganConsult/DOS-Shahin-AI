@@ -16,7 +16,8 @@ export type DosBrandAssetKind =
   | 'logo-lockup'       // eagle + wordmark composed
   | 'favicon'           // 32×32 / 64×64 ico/svg
   | 'og-image'          // 1200×630 social card
-  | 'hero-bg';          // hero background plate
+  | 'hero-bg'           // hero background plate
+  | 'agent-tile';       // M0.5 — per-agent pictogram (A01..An)
 
 /** Theme variants. */
 export type DosBrandAssetTheme = 'light' | 'dark' | 'mono-light' | 'mono-dark';
@@ -29,6 +30,8 @@ export type DosBrandAssetSource =
 export interface DosBrandAsset {
   brandCode: DosBrandCode;
   assetKind: DosBrandAssetKind;
+  /** Optional discriminator within an asset_kind (e.g. 'A01' for agent-tile). */
+  assetCode?: string;
   theme: DosBrandAssetTheme;
   /** Optional locale narrowing — `null` = applies to all locales. */
   locale: 'en' | 'ar' | null;

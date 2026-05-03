@@ -25,6 +25,7 @@ const ALLOWED_LOCALES = new Set(['en', 'ar']);
 interface BrandTokenRow { token_key: string; token_value: string }
 interface BrandAssetRow {
   asset_kind: string;
+  asset_code: string | null;
   theme: string;
   locale: string | null;
   direction: string | null;
@@ -56,11 +57,11 @@ export function createBrandRouter(pool: DbPool): Router {
         [brandCode],
       );
       const assetsQ = await pool.query<BrandAssetRow>(
-        `SELECT asset_kind, theme, locale, direction, source_kind,
+        `SELECT asset_kind, asset_code, theme, locale, direction, source_kind,
                 svg, url, mime, width, height, alt_en, alt_ar, version
            FROM dos.marketing_brand_assets
           WHERE brand_code = $1 AND active = TRUE
-          ORDER BY asset_kind, theme`,
+          ORDER BY asset_kind, asset_code NULLS FIRST, theme`,
         [brandCode],
       );
 
@@ -70,6 +71,7 @@ export function createBrandRouter(pool: DbPool): Router {
       const assets = assetsQ.rows.map((r) => ({
         brandCode,
         assetKind: r.asset_kind,
+        assetCode: r.asset_code,
         theme: r.theme,
         locale: r.locale,
         direction: r.direction,
