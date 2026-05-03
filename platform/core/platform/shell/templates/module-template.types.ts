@@ -196,9 +196,11 @@ export type PageArchetype =
   | 'audit-trail-ledger'
   | 'audit-trail-evidence'
   | 'follow-up-center'
-  | 'incident-response';
+  | 'incident-response'
+  // Family L — Case-closure (1)
+  | 'case-finalization';
 
-// ─── Archetype Registry — 31 canonical entries ──────────────────────────────
+// ─── Archetype Registry — 32 canonical entries ──────────────────────────────
 // Stable archetype-key → Dynamic UI component_key → IBM Carbon carbon_key.
 // Carbon-only contract:
 //   Raw IBM Carbon primitives and approved DOS Carbon wrapper molecules are
@@ -212,7 +214,7 @@ export interface ArchetypeRegistryEntry {
   carbonKey: string;           // dos.ui_carbon_components.carbon_key
   family: 'A-landing' | 'B-insight' | 'C-records' | 'D-work' | 'E-evidence'
         | 'F-time-plan' | 'G-governance' | 'H-agentic' | 'I-configuration'
-        | 'J-onboarding' | 'K-operational-p0';
+        | 'J-onboarding' | 'K-operational-p0' | 'L-case-closure';
   reused: boolean;             // true → key already present in DB before patch
 }
 
@@ -269,10 +271,13 @@ export const ARCHETYPE_REGISTRY: readonly ArchetypeRegistryEntry[] = [
 
   // K — Operational P0 (1)
   { archetype: 'incident-response',     componentKey: 'module.incident_response.page',    carbonKey: 'tiles',              family: 'K-operational-p0', reused: false },
+
+  // L — Case-closure (1)
+  { archetype: 'case-finalization',     componentKey: 'module.case_finalization.page',    carbonKey: 'tabs',               family: 'L-case-closure',   reused: false },
 ] as const;
 
 // Compile-time count guard — adjust only when the roster intentionally changes.
-export const ARCHETYPE_COUNT = 31 as const;
+export const ARCHETYPE_COUNT = 32 as const;
 
 // Hard runtime / preflight guard — used by CI and bootstrap. Throws on any
 // drift (count mismatch, duplicate archetype, missing componentKey/carbonKey).

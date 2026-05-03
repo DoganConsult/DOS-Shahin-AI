@@ -79,6 +79,8 @@ const ARCHETYPE_EXPORTS = new Set([
   'AuditTrailEvidenceTemplateComponent',
   'FollowUpCenterTemplateComponent',
   'IncidentResponseTemplateComponent',
+  // 32nd archetype (Phase WS-1b)
+  'CaseFinalizationTemplateComponent',
 ]);
 
 if (!existsSync(TEMPLATES_INDEX)) {

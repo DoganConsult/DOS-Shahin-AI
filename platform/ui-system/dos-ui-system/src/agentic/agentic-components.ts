@@ -405,8 +405,8 @@ export class DosAgentTaskQueueComponent {
   imports: [CommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <section class="dos-agent-recommendation-panel" [attr.data-state]="recommendation?.state ?? state">
-      @switch (recommendation?.state ?? state) {
+    <section class="dos-agent-recommendation-panel" [attr.data-state]="recommendation?.status ?? state">
+      @switch (recommendation?.status ?? state) {
         @case ('loading') { <div data-cds-component="skeleton-text"></div> }
         @case ('empty')   { <p>No recommendations.</p> }
         @case ('failed')  { <div data-cds-component="notification" data-kind="error">Recommendation engine failed</div> }

@@ -123,6 +123,7 @@ const naturalKeys = {
   'dos.ui_route_follow_up_item':              ['route','item_id'],
   'dos.ui_route_export_artifact':             ['route','artifact_id'],
   'dos.ui_route_workflow_timeline_step':      ['route','step_id'],
+  'dos.ui_route_case_finalization':           ['route','case_id'],
 };
 
 const header = [

@@ -115,6 +115,17 @@ export const ARCHETYPE_PROPS_SCHEMA = {
     required: ['step_id','label_en','state'],
     enums: { state: ['complete','current','incomplete','invalid','disabled'] },
   },
+  'case-finalization': {
+    jsonKey: 'cases',
+    table: 'dos.ui_route_case_finalization',
+    cols: ['route','sort_order','case_id','title_en','title_ar','case_type','origin_ref','decision','decision_owner','decision_at','signoff_status','evidence_uri','rationale_en','rationale_ar','next_review_at','status'],
+    required: ['case_id','title_en'],
+    enums: {
+      decision: ['approve','reject','accept-risk','escalate','defer'],
+      signoff_status: ['pending','partial','complete','rejected'],
+      status: ['open','in-review','finalized','reopened'],
+    },
+  },
 };
 
 /**

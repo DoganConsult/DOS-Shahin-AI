@@ -62,6 +62,35 @@ AUTHZ NEGATIVE-PATH HARNESS (CLOSED 2026-05-03 by Phase F-F6 H3):
   skipped unless `ADMIN_STORAGE_STATE` is provided). Verify:
   `E2E_BASE_URL=http://localhost:3000 cd platform/config-center/test && npx playwright test phase-f-authz-negative.spec.ts --project=chromium`.
 
+WORKSPACE SHELL REGISTRY (CLOSED 2026-05-04 by Phase WS-1):
+- Migration `20260504_0010_workspace_shell_registry.sql` registers the 10
+  default `workspace.*` component_keys (header, sidebar, mobile-nav,
+  command-search, status-bar, action-queue, agent-strip, inbox-center,
+  context-panel, quick-create) in `dos.dynamic_ui_component_registry`
+  (vendor='ibm-carbon', approved, mapped to ui-shell/tiles/search/tag/
+  modal/accordion/button carbon_keys). Adds per-tenant
+  `dos.workspace_shell_binding` table (UNIQUE(tenant_id, component_key),
+  enabled/position/perms_required/props/version) with version-bump trigger
+  and CHECK constraint locking the 10 keys. Backfilled 400 rows
+  (40 tenants × 10 keys) with default perms (search.use, workqueue.read,
+  agents.observe, inbox.read, records.create). Migration
+  `20260504_0020_phase_ws_case_finalization_archetype.sql` adds the
+  32nd archetype `case-finalization` to chk_archetype, registers
+  `module.case_finalization.page` (carbon_key=tabs), and creates props
+  table `dos.ui_route_case_finalization` (case_id, decision, signoff_status,
+  status enums). TS contracts in
+  `platform/ui-system/dos-ui-system/src/shell/workspace-shell.contracts.ts`
+  (WorkspaceHeaderContext, WorkspaceNavItem, BottomNavItem,
+  CommandSearchResult, StatusBarSignal, ActionQueueItem, AgentActivity,
+  InboxMessage, ContextPanelView, QuickCreateAction — all PermissionAware
+  + i18nKey + loading-state discriminator). 32nd template
+  `CaseFinalizationTemplateComponent` shipped via templates/index.ts;
+  ARCHETYPE_COUNT=32; LOADERS=40; ARCHETYPE_EXPORTS=39.
+  `PROPS_COVERAGE_ENFORCE=1 pnpm platform:customer-gate` GREEN end-to-end
+  (`bindings=159 archetypes-with-props=16 failures=0`). Verify:
+  `PGPASSWORD=dos_auth_pass_2026 psql -h localhost -U dos_auth -d shahin_grc -c "SELECT count(*) FROM dos.dynamic_ui_component_registry WHERE component_key LIKE 'workspace.%'; SELECT count(*) FROM dos.workspace_shell_binding;"`
+  → expects `10` and `400`.
+
 PROGRESSIVE-MODULE BINDINGS (CLOSED 2026-05-03 by Phase G):
 - Migrations `20260503_0900_phase_g_progressive_modules_bindings.sql` (+95
   customer-bound rows, ON CONFLICT DO UPDATE) and

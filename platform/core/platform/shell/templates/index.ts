@@ -191,6 +191,15 @@ export {
   type IncidentCommunication,
 } from './module-archetypes-extended.templates';
 
+// 32. Case Finalization
+//     Selector: dos-case-finalization
+//     Story: Cases pending closure — decision + sign-off + evidence + rationale
+//     Use for: Governance cases, audit cases, incident closure, exception sign-off
+export {
+  CaseFinalizationTemplateComponent,
+  type CaseFinalizationRow,
+} from './module-case-finalization.template';
+
 // ══════════════════════════════════════════════════════════════════════════════
 // COMPONENT KEY ↔ TEMPLATE REGISTRY
 // Maps dos.dynamic_ui_component_registry component_key → Template

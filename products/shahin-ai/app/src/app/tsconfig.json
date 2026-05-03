@@ -34,6 +34,8 @@
         "@dos/module-foundation/*": ["../../../../../platform/foundation/dist/*"],
         "@dos/module-foundation/ui": ["../../../../../platform/foundation/ui/index.ts"],
         "@dos/module-foundation/ui/*": ["../../../../../platform/foundation/ui/*"],
+        "@dos/ui-system": ["../../../../../platform/ui-system/dos-ui-system/src/index.ts"],
+        "@dos/ui-system/*": ["../../../../../platform/ui-system/dos-ui-system/src/*"],
         "@app/api": ["../../../../../platform/core/services/api/index.ts"],
         "@app/api/*": ["../../../../../platform/core/services/api/*"],
         "@app/infrastructure": ["../../../../../platform/runtime/infrastructure/index.ts"],

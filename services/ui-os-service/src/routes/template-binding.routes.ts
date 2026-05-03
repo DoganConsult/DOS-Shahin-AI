@@ -113,6 +113,11 @@ const ARCHETYPE_EXTENSIONS: Record<string, Array<{ key: string; sql: string }>> 
     sql: `SELECT step_id, sort_order, label_en, label_ar, state, description, occurred_at, actor
             FROM dos.ui_route_workflow_timeline_step WHERE route=$1 ORDER BY sort_order`,
   }],
+  'case-finalization': [{
+    key: 'cases',
+    sql: `SELECT case_id, sort_order, title_en, title_ar, case_type, origin_ref, decision, decision_owner, decision_at, signoff_status, evidence_uri, rationale_en, rationale_ar, next_review_at, status
+            FROM dos.ui_route_case_finalization WHERE route=$1 ORDER BY sort_order`,
+  }],
 };
 
 async function loadProps(

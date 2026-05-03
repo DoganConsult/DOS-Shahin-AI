@@ -125,6 +125,10 @@ const LOADERS: Record<string, Loader> = {
     import('./templates/module-archetypes-extended.templates').then(m => m.FollowUpCenterTemplateComponent),
   IncidentResponseTemplateComponent: () =>
     import('./templates/module-archetypes-extended.templates').then(m => m.IncidentResponseTemplateComponent),
+
+  // Case Finalization (32nd archetype)
+  CaseFinalizationTemplateComponent: () =>
+    import('./templates/module-case-finalization.template').then(m => m.CaseFinalizationTemplateComponent),
 };
 
 export const ARCHETYPE_TEMPLATE_EXPORTS: ReadonlySet<string> =
