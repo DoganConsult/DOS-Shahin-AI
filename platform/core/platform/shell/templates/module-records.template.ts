@@ -25,11 +25,13 @@ import {
 } from 'carbon-components-angular';
 import {
   ModuleColumn, ModuleRecord, ModuleKpi, ModuleNotification,
-  ModuleRole, resolveViewMode, RoleViewMode
+  ModuleInsightPillars, ModuleRole, resolveViewMode, RoleViewMode
 } from './module-template.types';
+import { DosInsightBarComponent } from './dos-insight-bar.component';
+
 
 @Component({
-  selector: 'dos-records-template',
+  selector: 'dos-intelligent-register',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -77,6 +79,14 @@ import {
         }
       </div>
     </cds-tile>
+
+
+      <!-- ── 5-Pillar Insight Bar ─────────────────────────────────────────── -->
+      <dos-insight-bar
+        [pillars]="pillars"
+        archetype="intelligent-register"
+        (actionClick)="pillars?.nextAction?.action?.()">
+      </dos-insight-bar>
 
     <!-- Toolbar -->
     <div class="dmt-toolbar">
@@ -262,6 +272,7 @@ export class ModuleRecordsTemplateComponent {
   @Input() viewSwitcher: Array<{ id: string; label: string }> = [];
   @Input() bulkActions: Array<{ content: string; click: () => void }> = [];
   @Input() addAction: { label: string; action: () => void } | null = null;
+  @Input() pillars: ModuleInsightPillars | null = null;
   @Input() currentRole: ModuleRole = 'standard_user';
   @Input() writeRoles: ModuleRole[] = [];
   @Input() ownerId?: string; // for 'limited' role — show only own rows

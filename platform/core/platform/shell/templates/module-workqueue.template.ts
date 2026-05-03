@@ -16,8 +16,10 @@ import {
   DropdownModule, SkeletonModule, BreadcrumbModule, LinkModule, IconModule
 } from 'carbon-components-angular';
 import {
-  ModuleAction, ModuleNotification, ModuleRole, resolveViewMode
+  ModuleAction, ModuleNotification, ModuleInsightPillars, ModuleRole, resolveViewMode
 } from './module-template.types';
+import { DosInsightBarComponent } from './dos-insight-bar.component';
+
 
 export interface WorkTask {
   id: string;
@@ -35,7 +37,7 @@ export interface WorkTask {
 }
 
 @Component({
-  selector: 'dos-workqueue-template',
+  selector: 'dos-action-queue',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -72,6 +74,14 @@ export interface WorkTask {
         </div>
       }
     </cds-tile>
+
+
+      <!-- ── 5-Pillar Insight Bar ─────────────────────────────────────────── -->
+      <dos-insight-bar
+        [pillars]="pillars"
+        archetype="action-queue"
+        (actionClick)="pillars?.nextAction?.action?.()">
+      </dos-insight-bar>
 
     <!-- Toolbar -->
     <div class="dmt-toolbar">
@@ -220,6 +230,7 @@ export class ModuleWorkQueueTemplateComponent {
   @Input() loading = false;
   @Input() notification: ModuleNotification | null = null;
   @Input() tasks: WorkTask[] = [];
+  @Input() pillars: ModuleInsightPillars | null = null;
   @Input() currentRole: ModuleRole = 'standard_user';
   @Input() writeRoles: ModuleRole[] = [];
   @Input() ownerId?: string;

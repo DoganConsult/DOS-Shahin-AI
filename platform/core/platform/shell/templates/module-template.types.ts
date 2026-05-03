@@ -113,3 +113,52 @@ export interface ModuleSetupStep {
   route?: string;
   actionLabel?: string;
 }
+
+// ─── Universal 5-Pillar Insight Contract ────────────────────────────────────
+// Every page MUST drive: Information → Decision → Action → Evidence
+// These 5 questions must be answerable on every page.
+export interface ModuleInsightPillars {
+  /** "Risk score dropped 12 pts this week" */
+  whatChanged?: string;
+  /** "Board review in 8 days — unmitigated critical risks disqualify" */
+  whyItMatters?: string;
+  /** "3 critical risks have no assigned treatment" */
+  riskOrOpportunity?: string;
+  /** Drives the primary CTA — what the user should do NOW */
+  nextAction?: ModuleAction;
+  /** "Based on 47 risk records, 3 assessments, AI model v2.1" */
+  evidence?: string;
+}
+
+// ─── Canonical 13 Page Archetype Names ──────────────────────────────────────
+// Selector → Canonical Name → Story Role
+//
+// dos-command-home         → Command Home         → Entry + hero metric + AI headline + NBA
+// dos-posture-overview     → Posture Overview     → Radar + treemap + maturity landscape
+// dos-intelligent-register → Intelligent Register → Searchable entity list + AI score
+// dos-risk-landscape       → Risk Landscape       → Heatmap matrix + bubble chart
+// dos-workflow-control     → Workflow Control Room → Staged pipeline + assessments
+// dos-trend-intelligence   → Trend Intelligence   → Time series + analytics + predictions
+// dos-evidence-reports     → Evidence & Reports Hub → Report cards + board pack + AI
+// dos-action-queue         → My Action Queue      → AI-ranked tasks by urgency
+// dos-module-settings      → Module Control Settings → Tabbed config + role-gated save
+// dos-record-story         → 360° Record Story    → Full tearsheet detail + evidence + history
+// dos-guided-create        → Guided Create / Edit → Multi-step form tearsheet + AI assist
+// dos-ai-advisor           → AI Risk Advisor      → AI insights + predictions + recommendations
+// dos-activation-journey   → Activation Journey   → Onboarding checklist + coachmarks
+
+export type PageArchetype =
+  | 'command-home'
+  | 'posture-overview'
+  | 'intelligent-register'
+  | 'risk-landscape'
+  | 'workflow-control'
+  | 'trend-intelligence'
+  | 'evidence-reports'
+  | 'action-queue'
+  | 'module-settings'
+  | 'record-story'
+  | 'guided-create'
+  | 'ai-advisor'
+  | 'activation-journey';
+

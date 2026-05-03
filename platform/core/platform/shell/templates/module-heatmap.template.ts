@@ -16,7 +16,9 @@ import {
   NotificationModule, ModalModule, TooltipModule, StructuredListModule,
   SkeletonModule, BreadcrumbModule, ButtonModule, LinkModule
 } from 'carbon-components-angular';
-import { ModuleNotification, ModuleRole, resolveViewMode } from './module-template.types';
+import type { ModuleNotification, ModuleInsightPillars } from './module-template.types';
+import { DosInsightBarComponent } from './dos-insight-bar.component';
+
 
 export interface HeatmapCell {
   x: string;
@@ -26,7 +28,7 @@ export interface HeatmapCell {
 }
 
 @Component({
-  selector: 'dos-heatmap-template',
+  selector: 'dos-risk-landscape',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -35,6 +37,7 @@ export interface HeatmapCell {
     TilesModule, ContentSwitcherModule, SearchModule, TagModule,
     NotificationModule, ModalModule, TooltipModule, StructuredListModule,
     SkeletonModule, BreadcrumbModule, ButtonModule, LinkModule,
+    DosInsightBarComponent,
   ],
   template: `
     @if (notification) {
@@ -59,6 +62,14 @@ export interface HeatmapCell {
         }
       </div>
     </cds-tile>
+
+
+      <!-- ── 5-Pillar Insight Bar ─────────────────────────────────────────── -->
+      <dos-insight-bar
+        [pillars]="pillars"
+        archetype="risk-landscape"
+        (actionClick)="pillars?.nextAction?.action?.()">
+      </dos-insight-bar>
 
     <!-- Toolbar -->
     <div class="dmt-toolbar">
@@ -130,8 +141,8 @@ export interface HeatmapCell {
           <cds-structured-list>
             @for (item of topItems.slice(0,5); track item.id) {
               <cds-list-row>
-                <cds-list-cell><cds-tag [type]="tagType(item.severity)">{{ item.severity }}</cds-tag></cds-list-cell>
-                <cds-list-cell><a cdsLink (click)="itemClick.emit(item)">{{ item.title }}</a></cds-list-cell>
+                <cds-list-column><cds-tag [type]="tagType(item.severity)">{{ item.severity }}</cds-tag></cds-list-column>
+                <cds-list-column><a cdsLink (click)="itemClick.emit(item)">{{ item.title }}</a></cds-list-column>
               </cds-list-row>
             }
           </cds-structured-list>
@@ -150,8 +161,8 @@ export interface HeatmapCell {
           <cds-structured-list>
             @for (item of selectedCell!.items!; track item.id) {
               <cds-list-row>
-                <cds-list-cell><cds-tag [type]="tagType(item.severity)">{{ item.severity }}</cds-tag></cds-list-cell>
-                <cds-list-cell>{{ item.title }}</cds-list-cell>
+                <cds-list-column><cds-tag [type]="tagType(item.severity)">{{ item.severity }}</cds-tag></cds-list-column>
+                <cds-list-column>{{ item.title }}</cds-list-column>
               </cds-list-row>
             }
           </cds-structured-list>
@@ -202,6 +213,7 @@ export class ModuleHeatmapTemplateComponent {
   @Input() aiHeadline = '';
   @Input() loading = false;
   @Input() notification: ModuleNotification | null = null;
+  @Input() pillars: ModuleInsightPillars | null = null;
   @Input() cells: HeatmapCell[] = [];
   @Input() xLabels: string[] = ['Rare', 'Unlikely', 'Possible', 'Likely', 'Almost Certain'];
   @Input() yLabels: string[] = ['Catastrophic', 'Major', 'Moderate', 'Minor', 'Negligible'];

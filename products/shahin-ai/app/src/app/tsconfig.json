@@ -75,7 +75,11 @@
         "@app/grc/services/grc-compliance.service": ["../../../../../modules/compliance/ui/services/grc-compliance.service.ts"],
         "@app/*": ["./*"],
         "@env/*": ["../environments/*"],
-        "@mobile/*": ["./mobile/*"]
+        "@mobile/*": ["./mobile/*"],
+        "@platform/shell/templates": ["../../../../../platform/core/platform/shell/templates/index.ts"],
+        "@platform/shell/templates/*": ["../../../../../platform/core/platform/shell/templates/*"],
+        "@platform/shell": ["../../../../../platform/core/platform/shell/index.ts"],
+        "@platform/shell/*": ["../../../../../platform/core/platform/shell/*"]
       }
   },
   "angularCompilerOptions": {

@@ -1,6 +1,9 @@
 export { ShellResolverService } from './shell-resolver.service';
 export { ShellHostComponent } from './shell-host.component';
 export { BreadcrumbService, type Breadcrumb } from './breadcrumb.service';
+
+// ── Universal module page templates (import from here) ──
+export * from './templates';
 export {
   DosPageLayoutComponent,
   DosPageTabDirective,

@@ -200,6 +200,16 @@ export const routes: Routes = [
             loadComponent: () => import('@risk-module/ui/features/risk/pages/risk-treatments.component').then(m => m.RiskTreatmentsPageComponent),
             data: { moduleCode: 'risk', componentKey: 'RiskTreatmentsPage', permission: 'risk.record.read' },
           },
+          {
+            path: 'reports',
+            loadComponent: () => import('@risk-module/ui/features/risk/pages/risk-reports.component').then(m => m.RiskReportsPageComponent),
+            data: { moduleCode: 'risk', componentKey: 'module.reports.page', permission: 'risk.record.read' },
+          },
+          {
+            path: 'settings',
+            loadComponent: () => import('@risk-module/ui/features/risk/pages/risk-settings.component').then(m => m.RiskSettingsPageComponent),
+            data: { moduleCode: 'risk', componentKey: 'module.settings.page', permission: 'risk.manage' },
+          },
         ],
       },
       {

@@ -25,11 +25,13 @@ import {
 } from 'carbon-components-angular';
 import {
   ModuleKpi, ModuleAction, ModuleTab, ModuleNotification,
-  ModuleRole, resolveViewMode, RoleViewMode
+  ModuleRole, resolveViewMode, RoleViewMode, ModuleInsightPillars
 } from './module-template.types';
+import { DosInsightBarComponent } from './dos-insight-bar.component';
+
 
 @Component({
-  selector: 'dos-overview-template',
+  selector: 'dos-command-home',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -39,7 +41,9 @@ import {
     SkeletonModule, BreadcrumbModule, ButtonModule, ComboButtonModule,
     StructuredListModule, ProgressBarModule, GridModule, LayerModule,
     ContentSwitcherModule, LinkModule, IconModule,
+    DosInsightBarComponent,
   ],
+
   template: `
     <!-- ── Loading skeleton ───────────────────────────────────────── -->
     @if (loading) {
@@ -185,20 +189,20 @@ import {
               <cds-ai-label kind="inline" size="sm">AI Recommendations</cds-ai-label>
               <cds-structured-list>
                 <cds-list-header>
-                  <cds-list-head>Priority</cds-list-head>
-                  <cds-list-head>Action</cds-list-head>
+                  <cds-list-column>Priority</cds-list-column>
+                  <cds-list-column>Action</cds-list-column>
                 </cds-list-header>
                 @for (action of nbaActions.slice(0,5); track action.label; let i = $index) {
                   <cds-list-row>
-                    <cds-list-cell>
+                    <cds-list-column>
                       <cds-tag [type]="nbaTagType(action.severity)">{{ i + 1 }}</cds-tag>
-                    </cds-list-cell>
-                    <cds-list-cell>
+                    </cds-list-column>
+                    <cds-list-column>
                       <a cdsLink [routerLink]="action.route ?? null">{{ action.label }}</a>
                       @if (action.aiScore) {
                         <cds-ai-label kind="inline" size="sm">Score: {{ action.aiScore }}</cds-ai-label>
                       }
-                    </cds-list-cell>
+                    </cds-list-column>
                   </cds-list-row>
                 }
               </cds-structured-list>
@@ -276,6 +280,8 @@ export class ModuleOverviewTemplateComponent implements OnInit {
   @Input() currentRole: ModuleRole = 'standard_user';
   @Input() writeRoles: ModuleRole[] = [];
   @Input() maxKpis = 4;
+  @Input() pillars: ModuleInsightPillars | null = null;
+
 
   viewMode = computed<RoleViewMode>(() => resolveViewMode(this.currentRole, this.writeRoles));
 
