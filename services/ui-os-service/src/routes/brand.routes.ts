@@ -112,50 +112,68 @@ export function createBrandRouter(pool: DbPool): Router {
     }
     const direction = locale === 'ar' ? 'rtl' : 'ltr';
 
-    // Static M0 baseline — Phase M1 swaps to dos.marketing_pages-driven config.
+    // Phase M3 — public marketing config with EN/AR localized labels resolved
+    // server-side. Each item ships both `labelKey` (i18n key for SPA-driven
+    // i18n) and `label` (already-translated string for the public surface
+    // which has no authenticated i18n loader).
+    const tx = (en: string, ar: string) => (locale === 'ar' ? ar : en);
     res.json({
       brandCode,
       locale,
       direction,
       publicMarketingEnabled: true,
       navItems: [
-        { id: 'platform', labelKey: 'marketing.nav.platform', href: '/platform', variant: 'link' },
-        { id: 'products', labelKey: 'marketing.nav.products', href: '/products', variant: 'link' },
-        { id: 'trust', labelKey: 'marketing.nav.trust', href: '/trust', variant: 'link' },
-        { id: 'pricing', labelKey: 'marketing.nav.pricing', href: '/pricing', variant: 'link' },
-        { id: 'cta-trial', labelKey: 'marketing.cta.start_trial', href: '/trial', variant: 'primary' },
+        { id: 'platform', labelKey: 'marketing.nav.platform', label: tx('Platform', 'المنصة'), href: '/platform', variant: 'link' },
+        { id: 'pricing',  labelKey: 'marketing.nav.pricing',  label: tx('Pricing', 'التسعير'), href: '/pricing',  variant: 'link' },
+        { id: 'trust',    labelKey: 'marketing.nav.trust',    label: tx('Trust', 'الثقة'),     href: '/trust',    variant: 'link' },
+        { id: 'about',    labelKey: 'marketing.nav.about',    label: tx('About', 'حولنا'),      href: '/about',    variant: 'link' },
+        { id: 'contact',  labelKey: 'marketing.nav.contact',  label: tx('Contact', 'تواصل'),    href: '/contact',  variant: 'link' },
+        { id: 'cta-signin', labelKey: 'marketing.cta.signin', label: tx('Sign in', 'تسجيل الدخول'), href: '/login', variant: 'link' },
+        { id: 'cta-register', labelKey: 'marketing.cta.create_account', label: tx('Create account', 'إنشاء حساب'), href: '/register', variant: 'primary' },
       ],
       footerGroups: [
         {
           id: 'product',
           titleKey: 'marketing.footer.product',
+          title: tx('Product', 'المنتج'),
           items: [
-            { id: 'platform', labelKey: 'marketing.nav.platform', href: '/platform' },
-            { id: 'products', labelKey: 'marketing.nav.products', href: '/products' },
-            { id: 'pricing', labelKey: 'marketing.nav.pricing', href: '/pricing' },
+            { id: 'platform',  labelKey: 'marketing.nav.platform',  label: tx('Platform', 'المنصة'),       href: '/platform'  },
+            { id: 'pricing',   labelKey: 'marketing.nav.pricing',   label: tx('Pricing', 'التسعير'),       href: '/pricing'   },
+            { id: 'security',  labelKey: 'marketing.footer.security', label: tx('Security', 'الأمن'),       href: '/security'  },
           ],
         },
         {
           id: 'trust',
           titleKey: 'marketing.footer.trust',
+          title: tx('Trust', 'الثقة'),
           items: [
-            { id: 'security', labelKey: 'marketing.footer.security', href: '/trust/security' },
-            { id: 'compliance', labelKey: 'marketing.footer.compliance', href: '/trust/compliance' },
-            { id: 'privacy', labelKey: 'marketing.footer.privacy', href: '/trust/privacy' },
+            { id: 'trust',     labelKey: 'marketing.nav.trust',       label: tx('Trust center', 'مركز الثقة'),  href: '/trust'   },
+            { id: 'security',  labelKey: 'marketing.footer.security', label: tx('Security', 'الأمن'),           href: '/security'},
+            { id: 'legal',     labelKey: 'marketing.footer.privacy',  label: tx('Privacy & legal', 'الخصوصية'), href: '/legal'   },
           ],
         },
         {
           id: 'company',
           titleKey: 'marketing.footer.company',
+          title: tx('Company', 'الشركة'),
           items: [
-            { id: 'about', labelKey: 'marketing.footer.about', href: '/about' },
-            { id: 'contact', labelKey: 'marketing.footer.contact', href: '/contact' },
+            { id: 'about',   labelKey: 'marketing.footer.about',   label: tx('About', 'حولنا'),  href: '/about'   },
+            { id: 'contact', labelKey: 'marketing.footer.contact', label: tx('Contact', 'تواصل'), href: '/contact' },
+          ],
+        },
+        {
+          id: 'account',
+          titleKey: 'marketing.footer.account',
+          title: tx('Account', 'الحساب'),
+          items: [
+            { id: 'signin',   labelKey: 'marketing.cta.signin',         label: tx('Sign in', 'تسجيل الدخول'),  href: '/login'    },
+            { id: 'register', labelKey: 'marketing.cta.create_account', label: tx('Create account', 'إنشاء حساب'), href: '/register' },
           ],
         },
       ],
       flags: {
         landingHeroVideo: false,
-        landingLiveStatusPill: true,
+        landingLiveStatusPill: false,
         landingAgenticProof: true,
       },
     });

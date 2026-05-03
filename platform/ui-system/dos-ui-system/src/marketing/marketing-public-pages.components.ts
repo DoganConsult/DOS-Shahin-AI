@@ -23,6 +23,11 @@ import {
 import { CommonModule } from '@angular/common';
 import { DosBrandEagleComponent } from '../brand/dos-brand-eagle.component';
 import type { DosBrandCode } from '@dos/design-tokens';
+// Phase M3 — Carbon Breadcrumb wrapper (one-source rule).
+import {
+  DosCarbonBreadcrumbComponent,
+  type DosCarbonBreadcrumbItem,
+} from '../carbon/dos-carbon-breadcrumb.component';
 
 const SHARED_STYLES = `
   :host { display: block; min-height: 100vh; background: var(--cds-background, #ffffff); color: var(--cds-text-primary, #161616); }
@@ -184,10 +189,11 @@ type PublicLocale = 'en' | 'ar';
 @Component({
   selector: 'dos-marketing-pricing',
   standalone: true,
-  imports: [CommonModule, DosBrandEagleComponent],
+  imports: [CommonModule, DosBrandEagleComponent, DosCarbonBreadcrumbComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <main class="dos-mp-wrap" [attr.dir]="locale === 'ar' ? 'rtl' : 'ltr'" data-page-id="marketing.pricing.page">
+      <dos-carbon-breadcrumb [items]="breadcrumb"></dos-carbon-breadcrumb>
       <header class="dos-mp-hero" data-section-id="hero">
         <dos-brand-eagle [brandCode]="brandCode" pictogramSize="lg"></dos-brand-eagle>
         <h1>{{ copy().h1 }}</h1>
@@ -216,16 +222,18 @@ export class DosMarketingPricingPageComponent {
   @Input() ctaSecondaryHref = '/contact';
   @Input() ctaSecondaryLabel = 'Talk to sales';
   readonly year = new Date().getFullYear();
+  get breadcrumb(): DosCarbonBreadcrumbItem[] { return [{ label: this.locale === 'ar' ? 'الرئيسية' : 'Home', href: '/' }, { label: this.copy().h1, current: true }]; }
   copy() { return I18N_PRICING[this.locale] ?? I18N_PRICING.en; }
 }
 
 @Component({
   selector: 'dos-marketing-trust',
   standalone: true,
-  imports: [CommonModule, DosBrandEagleComponent],
+  imports: [CommonModule, DosBrandEagleComponent, DosCarbonBreadcrumbComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <main class="dos-mp-wrap" [attr.dir]="locale === 'ar' ? 'rtl' : 'ltr'" data-page-id="marketing.trust.page">
+      <dos-carbon-breadcrumb [items]="breadcrumb"></dos-carbon-breadcrumb>
       <header class="dos-mp-hero" data-section-id="hero">
         <dos-brand-eagle [brandCode]="brandCode" pictogramSize="lg"></dos-brand-eagle>
         <h1>{{ copy().h1 }}</h1>
@@ -251,16 +259,18 @@ export class DosMarketingTrustPageComponent {
   @Input() ctaHref = '/security';
   @Input() ctaLabel = 'Security details';
   readonly year = new Date().getFullYear();
+  get breadcrumb(): DosCarbonBreadcrumbItem[] { return [{ label: this.locale === 'ar' ? 'الرئيسية' : 'Home', href: '/' }, { label: this.copy().h1, current: true }]; }
   copy() { return I18N_TRUST[this.locale] ?? I18N_TRUST.en; }
 }
 
 @Component({
   selector: 'dos-marketing-security',
   standalone: true,
-  imports: [CommonModule, DosBrandEagleComponent],
+  imports: [CommonModule, DosBrandEagleComponent, DosCarbonBreadcrumbComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <main class="dos-mp-wrap" [attr.dir]="locale === 'ar' ? 'rtl' : 'ltr'" data-page-id="marketing.security.page">
+      <dos-carbon-breadcrumb [items]="breadcrumb"></dos-carbon-breadcrumb>
       <header class="dos-mp-hero" data-section-id="hero">
         <dos-brand-eagle [brandCode]="brandCode" pictogramSize="lg"></dos-brand-eagle>
         <h1>{{ copy().h1 }}</h1>
@@ -286,16 +296,18 @@ export class DosMarketingSecurityPageComponent {
   @Input() ctaHref = '/contact';
   @Input() ctaLabel = 'Report a vulnerability';
   readonly year = new Date().getFullYear();
+  get breadcrumb(): DosCarbonBreadcrumbItem[] { return [{ label: this.locale === 'ar' ? 'الرئيسية' : 'Home', href: '/' }, { label: this.copy().h1, current: true }]; }
   copy() { return I18N_SECURITY[this.locale] ?? I18N_SECURITY.en; }
 }
 
 @Component({
   selector: 'dos-marketing-contact',
   standalone: true,
-  imports: [CommonModule, DosBrandEagleComponent],
+  imports: [CommonModule, DosBrandEagleComponent, DosCarbonBreadcrumbComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <main class="dos-mp-wrap" [attr.dir]="locale === 'ar' ? 'rtl' : 'ltr'" data-page-id="marketing.contact.page">
+      <dos-carbon-breadcrumb [items]="breadcrumb"></dos-carbon-breadcrumb>
       <header class="dos-mp-hero" data-section-id="hero">
         <dos-brand-eagle [brandCode]="brandCode" pictogramSize="lg"></dos-brand-eagle>
         <h1>{{ copy().h1 }}</h1>
@@ -316,16 +328,18 @@ export class DosMarketingContactPageComponent {
   @Input() brandCode: DosBrandCode = 'shahin-ai';
   @Input() locale: PublicLocale = 'en';
   readonly year = new Date().getFullYear();
+  get breadcrumb(): DosCarbonBreadcrumbItem[] { return [{ label: this.locale === 'ar' ? 'الرئيسية' : 'Home', href: '/' }, { label: this.copy().h1, current: true }]; }
   copy() { return I18N_CONTACT[this.locale] ?? I18N_CONTACT.en; }
 }
 
 @Component({
   selector: 'dos-marketing-about',
   standalone: true,
-  imports: [CommonModule, DosBrandEagleComponent],
+  imports: [CommonModule, DosBrandEagleComponent, DosCarbonBreadcrumbComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <main class="dos-mp-wrap" [attr.dir]="locale === 'ar' ? 'rtl' : 'ltr'" data-page-id="marketing.about.page">
+      <dos-carbon-breadcrumb [items]="breadcrumb"></dos-carbon-breadcrumb>
       <header class="dos-mp-hero" data-section-id="hero">
         <dos-brand-eagle [brandCode]="brandCode" pictogramSize="lg"></dos-brand-eagle>
         <h1>{{ copy().h1 }}</h1>
@@ -346,16 +360,18 @@ export class DosMarketingAboutPageComponent {
   @Input() brandCode: DosBrandCode = 'shahin-ai';
   @Input() locale: PublicLocale = 'en';
   readonly year = new Date().getFullYear();
+  get breadcrumb(): DosCarbonBreadcrumbItem[] { return [{ label: this.locale === 'ar' ? 'الرئيسية' : 'Home', href: '/' }, { label: this.copy().h1, current: true }]; }
   copy() { return I18N_ABOUT[this.locale] ?? I18N_ABOUT.en; }
 }
 
 @Component({
   selector: 'dos-marketing-legal',
   standalone: true,
-  imports: [CommonModule, DosBrandEagleComponent],
+  imports: [CommonModule, DosBrandEagleComponent, DosCarbonBreadcrumbComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <main class="dos-mp-wrap" [attr.dir]="locale === 'ar' ? 'rtl' : 'ltr'" data-page-id="marketing.legal.page">
+      <dos-carbon-breadcrumb [items]="breadcrumb"></dos-carbon-breadcrumb>
       <header class="dos-mp-hero" data-section-id="hero">
         <dos-brand-eagle [brandCode]="brandCode" pictogramSize="lg"></dos-brand-eagle>
         <h1>{{ copy().h1 }}</h1>
@@ -376,6 +392,7 @@ export class DosMarketingLegalPageComponent {
   @Input() brandCode: DosBrandCode = 'shahin-ai';
   @Input() locale: PublicLocale = 'en';
   readonly year = new Date().getFullYear();
+  get breadcrumb(): DosCarbonBreadcrumbItem[] { return [{ label: this.locale === 'ar' ? 'الرئيسية' : 'Home', href: '/' }, { label: this.copy().h1, current: true }]; }
   copy() { return I18N_LEGAL[this.locale] ?? I18N_LEGAL.en; }
 }
 

@@ -135,6 +135,7 @@ const GROUP_ICONS: Record<string, string> = {
     :host ::ng-deep .cds--side-nav__menu[aria-expanded="true"] > a {
       color: var(--cds-interactive, #0f62fe);
     }
+
   `],
   template: `
     <!-- ═══════════════════════════════════════════
@@ -160,13 +161,6 @@ const GROUP_ICONS: Record<string, string> = {
         {{ isRail() ? '▶' : '◀' }}
       </button>
 
-      <cds-header-global>
-        <cds-header-action
-          [description]="headerAccountActionDescription()"
-          [attr.aria-label]="accountLabel()">
-          {{ accountInitial() }}
-        </cds-header-action>
-      </cds-header-global>
     </cds-header>
 
     <!-- ═══════════════════════════════════════════
@@ -270,6 +264,7 @@ const GROUP_ICONS: Record<string, string> = {
         <router-outlet />
       }
     </main>
+
   `,
 })
 export class ShellHostComponent {
@@ -345,33 +340,39 @@ export class ShellHostComponent {
   readonly headerBrand = computed(
     () => this.labelResolver?.shellChromeString?.('shell.header.brand') ?? 'Shahin',
   );
-  readonly headerWorkspaceTitle = computed(
-    () => this.labelResolver?.shellChromeString?.('shell.header.workspace_title') ?? 'Workspace',
-  );
+  // Step 2.5 — Selected module label sourced from existing nav state.
+  // No hardcoded module map; falls back to generic 'Workspace'.
+  readonly headerWorkspaceTitle = computed(() => {
+    const sel = this.selectedModuleLabel();
+    if (sel) return sel;
+    return this.labelResolver?.shellChromeString?.('shell.header.workspace_title') ?? 'Workspace';
+  });
+  readonly selectedModuleLabel = computed<string | null>(() => {
+    // 1. Prefer the active sidenav group label.
+    const id = this.activeGroupId();
+    if (id) {
+      const g = this.navGroups().find((g) => g.id === id);
+      if (g) {
+        const lbl = this.groupLabel(g.id, g.label);
+        if (lbl) return lbl;
+      }
+    }
+    // 2. Fall back to the first breadcrumb segment after the home crumb.
+    const crumbs = this.breadcrumbs();
+    if (crumbs.length >= 2) {
+      const seg = (crumbs[1]?.label ?? '').toString().trim();
+      if (seg) return seg;
+    }
+    return null;
+  });
   readonly headerHomeRoute = computed((): string[] => {
     const raw = this.labelResolver?.shellChromeString?.('shell.header.home_route') ?? '/workspace-home';
     const parts = raw.replace(/^\/+/, '').split('/').filter(Boolean);
     return parts.length ? parts : ['workspace-home'];
   });
-  readonly headerAccountActionDescription = computed(
-    () => this.labelResolver?.shellChromeString?.('shell.header.account_action') ?? 'Account',
-  );
   readonly sideNavAriaLabel = computed(
     () => this.labelResolver?.shellChromeString?.('shell.sidenav.aria_label') ?? 'Workspace navigation',
   );
-
-  // ── Account ───────────────────────────────────────────────────────────────
-  readonly accountInitial = computed(() => {
-    const user = this._user();
-    const name = (user?.displayName || user?.name || user?.email || '').trim();
-    return name ? name.charAt(0).toUpperCase()
-      : (this.labelResolver?.shellChromeString?.('shell.account.initial_fallback') ?? 'U');
-  });
-  readonly accountLabel = computed(() => {
-    const user = this._user();
-    return user?.displayName || user?.name || user?.email
-      || (this.labelResolver?.shellChromeString?.('shell.account.fallback') ?? 'Account');
-  });
 
   // ── Effects ───────────────────────────────────────────────────────────────
   private readonly navRefreshEffect = effect(
@@ -515,4 +516,5 @@ export class ShellHostComponent {
     this.sideNavActive.set(!mobile);
     if (mobile) this.isRail.set(false);
   }
+
 }

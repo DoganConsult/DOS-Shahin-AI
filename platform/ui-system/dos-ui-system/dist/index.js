@@ -96,6 +96,7 @@ export * from './marketing/marketing-home.page';
 // Phase M1.5 — Download-Kit system (3 components + contract).
 export * from './marketing/download-kit.contract';
 export * from './marketing/download-kit.components';
+export * from './marketing/marketing-public-pages.components';
 // Phase M1.6 — Carbon Auth Pages Pack (5 pages + 14 primitives + contract).
 export * from './auth/auth.contract';
 export * from './auth/auth-components';

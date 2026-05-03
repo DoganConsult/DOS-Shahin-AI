@@ -30,6 +30,17 @@ import {
   type MarketingDownloadEvent,
   type MarketingDownloadFormPayload,
 } from './download-kit.contract';
+// Phase M3 — IBM Carbon Angular wrappers (one-source rule).
+import { DosCarbonModalComponent } from '../carbon/dos-carbon-modal.component';
+import { DosCarbonTextInputComponent } from '../carbon/dos-carbon-text-input.component';
+import {
+  DosCarbonDropdownComponent,
+  type DosCarbonDropdownItem,
+} from '../carbon/dos-carbon-dropdown.component';
+import { DosCarbonCheckboxComponent } from '../carbon/dos-carbon-checkbox.component';
+import { DosCarbonButtonComponent } from '../carbon/dos-carbon-button.component';
+import { DosCarbonNotificationComponent } from '../carbon/dos-carbon-notification.component';
+import { DosCarbonInlineLoadingComponent } from '../carbon/dos-carbon-inline-loading.component';
 
 function nowIso(): string { return new Date().toISOString(); }
 
@@ -116,76 +127,90 @@ export class DosDownloadKitCardComponent {
 @Component({
   selector: 'dos-gated-download-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    DosCarbonModalComponent,
+    DosCarbonTextInputComponent,
+    DosCarbonDropdownComponent,
+    DosCarbonCheckboxComponent,
+    DosCarbonButtonComponent,
+    DosCarbonNotificationComponent,
+    DosCarbonInlineLoadingComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <section
-      class="dos-gated-modal"
-      data-cds-component="modal"
-      [attr.data-asset-key]="asset?.assetKey"
-      [attr.data-mobile-mode]="'bottom-sheet'"
-      [attr.aria-hidden]="!open"
-      [hidden]="!open"
-      role="dialog"
-      aria-modal="true"
+    <dos-carbon-modal
+      [open]="open"
+      [title]="title"
+      [subtitle]="asset?.title || null"
+      size="md"
+      [hasScrollingContent]="true"
+      (closed)="onClose()"
     >
-      <header><h3>{{ title }}</h3></header>
-      @if (asset) {
-        <p>{{ asset.title }}</p>
-      }
-      <form (ngSubmit)="onSubmit()" novalidate>
-        <label data-cds-component="input">
-          <span>{{ labelName }}</span>
-          <input type="text" name="name" [(ngModel)]="form.name" required />
-        </label>
-        <label data-cds-component="input">
-          <span>{{ labelEmail }}</span>
-          <input type="email" name="email" [(ngModel)]="form.email" required />
-        </label>
-        <label data-cds-component="input">
-          <span>{{ labelCompany }}</span>
-          <input type="text" name="company" [(ngModel)]="form.company" required />
-        </label>
-        <label data-cds-component="input">
-          <span>{{ labelJobTitle }}</span>
-          <input type="text" name="jobTitle" [(ngModel)]="form.jobTitle" />
-        </label>
-        <label data-cds-component="dropdown">
-          <span>{{ labelCountry }}</span>
-          <select name="country" [(ngModel)]="form.country" required>
-            @for (c of countries; track c) { <option [value]="c">{{ c }}</option> }
-          </select>
-        </label>
-        <label data-cds-component="dropdown">
-          <span>{{ labelInterest }}</span>
-          <select name="interestArea" [(ngModel)]="form.interestArea">
-            @for (i of interestAreas; track i) { <option [value]="i">{{ i }}</option> }
-          </select>
-        </label>
-        <label data-cds-component="checkbox">
-          <input type="checkbox" name="consent" [(ngModel)]="consent" required />
-          <span>{{ labelConsent }}</span>
-        </label>
+      <form
+        class="dos-gated-modal"
+        [attr.data-asset-key]="asset?.assetKey"
+        [attr.data-mobile-mode]="'bottom-sheet'"
+        (ngSubmit)="onSubmit()"
+        novalidate
+      >
+        <dos-carbon-text-input
+          [label]="labelName"
+          [(value)]="form.name"
+        ></dos-carbon-text-input>
+        <dos-carbon-text-input
+          [label]="labelEmail"
+          [(value)]="form.email"
+        ></dos-carbon-text-input>
+        <dos-carbon-text-input
+          [label]="labelCompany"
+          [(value)]="form.company"
+        ></dos-carbon-text-input>
+        <dos-carbon-text-input
+          [label]="labelJobTitle"
+          [(value)]="form.jobTitle"
+        ></dos-carbon-text-input>
+        <dos-carbon-dropdown
+          [label]="labelCountry"
+          [items]="countryItems"
+          (selected)="form.country = $event?.content || ''"
+        ></dos-carbon-dropdown>
+        <dos-carbon-dropdown
+          [label]="labelInterest"
+          [items]="interestItems"
+          (selected)="form.interestArea = $event?.content || ''"
+        ></dos-carbon-dropdown>
+        <dos-carbon-checkbox
+          [label]="labelConsent"
+          [(checked)]="consent"
+        ></dos-carbon-checkbox>
 
         @if (errorMessage()) {
-          <div data-cds-component="notification" data-kind="error" role="alert">
-            {{ errorMessage() }}
-          </div>
+          <dos-carbon-notification
+            variant="inline"
+            kind="error"
+            [title]="errorMessage() || ''"
+            [hideClose]="true"
+          ></dos-carbon-notification>
         }
         @if (submitting()) {
-          <div data-cds-component="inline-loading">{{ submittingLabel }}</div>
+          <dos-carbon-inline-loading
+            state="active"
+            [loadingText]="submittingLabel"
+          ></dos-carbon-inline-loading>
         }
-
-        <footer>
-          <button type="button" data-cds-component="button" data-kind="tertiary" (click)="onClose()">
-            {{ cancelLabel }}
-          </button>
-          <button type="submit" data-cds-component="button" data-kind="primary" [disabled]="submitting()">
-            {{ submitLabel }}
-          </button>
-        </footer>
       </form>
-    </section>
+
+      <ng-container modalFooter>
+        <dos-carbon-button kind="tertiary" (clicked)="onClose()">
+          {{ cancelLabel }}
+        </dos-carbon-button>
+        <dos-carbon-button kind="primary" [disabled]="submitting()" (clicked)="onSubmit()">
+          {{ submitLabel }}
+        </dos-carbon-button>
+      </ng-container>
+    </dos-carbon-modal>
   `,
   styles: [`
     :host { display: contents; container-type: inline-size; }
@@ -215,6 +240,13 @@ export class DosGatedDownloadModalComponent {
   @Input() submittingLabel = 'Submitting…';
   @Input() countries: ReadonlyArray<string> = ['Saudi Arabia','UAE','Qatar','Kuwait','Bahrain','Oman','Other'];
   @Input() interestAreas: ReadonlyArray<string> = ['GRC','Risk','Audit','Security','Privacy','Other'];
+
+  get countryItems(): DosCarbonDropdownItem[] {
+    return this.countries.map((c) => ({ content: c, selected: c === this.form.country }));
+  }
+  get interestItems(): DosCarbonDropdownItem[] {
+    return this.interestAreas.map((c) => ({ content: c, selected: c === this.form.interestArea }));
+  }
 
   @Output() readonly event = new EventEmitter<MarketingDownloadEvent>();
   @Output() readonly closed = new EventEmitter<void>();

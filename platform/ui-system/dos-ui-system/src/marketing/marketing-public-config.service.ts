@@ -30,6 +30,10 @@ export interface MarketingNavItem {
   id: string;
   /** Translation key (NOT raw text). Resolved by i18n at render time. */
   labelKey: string;
+  /** Optional server-translated label (Phase M3). Public marketing surface
+   *  has no authenticated i18n loader, so the resolver ships the literal
+   *  EN/AR label alongside the key. */
+  label?: string;
   href: string;
   /** Optional functional Carbon icon (validated via marketing-icons allowlist). */
   icon?: string;
@@ -42,7 +46,9 @@ export interface MarketingNavItem {
 export interface MarketingFooterGroup {
   id: string;
   titleKey: string;
-  items: ReadonlyArray<{ id: string; labelKey: string; href: string }>;
+  /** Optional server-translated title (Phase M3 — see MarketingNavItem.label). */
+  title?: string;
+  items: ReadonlyArray<{ id: string; labelKey: string; label?: string; href: string }>;
 }
 
 export interface MarketingPublicConfig {

@@ -79,6 +79,7 @@ export * from './marketing/marketing-public-config.service';
 export * from './marketing/marketing-home.page';
 export * from './marketing/download-kit.contract';
 export * from './marketing/download-kit.components';
+export * from './marketing/marketing-public-pages.components';
 export * from './auth/auth.contract';
 export * from './auth/auth-components';
 export * from './auth/auth-pages';
