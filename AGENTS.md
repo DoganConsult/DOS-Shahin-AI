@@ -43,6 +43,25 @@ SHELL-RESOLVER LOCATION (corrects prior misclassification):
 - The `stripPiPrefix()` helper in `shell-host.component.ts:73` says "until the
   backend config flips" — that comment is misleading; the source is FE config.
 
+VERTICAL-SLICE DoD (CLOSED 2026-05-03 by Phase F-F6 H4):
+- `platform/config-center/test/tests/e2e/phase-f-vertical-slice-dod.spec.ts`
+  hits the live ui-os-service resolver (`/api/ui-os/template-binding`) for
+  all 21 V1-V6 routes and asserts: archetype matches the rebind contract,
+  `template_export` is one of the 39 LOADERS, the archetype-extension
+  `props` key holds ≥ the V1-V6 minimum row count, and a sentinel string
+  from each seed JSON appears in the live response. 21/21 PASS in 1.2s.
+  Verify (with PM2 ui-os-service ONLINE on :4015):
+  `cd platform/config-center/test && npx playwright test phase-f-vertical-slice-dod.spec.ts --project=chromium`.
+
+AUTHZ NEGATIVE-PATH HARNESS (CLOSED 2026-05-03 by Phase F-F6 H3):
+- `platform/config-center/test/tests/e2e/phase-f-authz-negative.spec.ts`
+  asserts the production AuthZ contract for unauthenticated visitors on
+  every V1-V6 route (4 gates: route-guard redirect, render-time mutator
+  absence, network 401/403 enforcement, no legacy "No widget configured").
+  21/21 PASS in 16.8s against PM2 product-shell on :3000 (positive control
+  skipped unless `ADMIN_STORAGE_STATE` is provided). Verify:
+  `E2E_BASE_URL=http://localhost:3000 cd platform/config-center/test && npx playwright test phase-f-authz-negative.spec.ts --project=chromium`.
+
 PROPS COVERAGE (CLOSED 2026-05-03 by Phase F-F6 V1-V6):
 - Migration `202605030850_phase_f_phase_f_v2_v6_props.sql` (idempotent, ON
   CONFLICT DO UPDATE) seeded 143 rows across 14 archetype-props tables for
