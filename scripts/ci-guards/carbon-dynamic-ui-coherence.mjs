@@ -144,7 +144,8 @@ function parseCarbonPrimitiveSpreadKeys(text) {
 
 /** @param {string} text */
 function parseTsRecordKeysFromText(text, exportName) {
-  const start = text.indexOf(`export const ${exportName}`);
+  let start = text.indexOf(`export const ${exportName}`);
+  if (start === -1) start = text.indexOf(`const ${exportName}`);
   if (start === -1) return new Set();
   const brace = text.indexOf('{', start);
   let depth = 0;
@@ -218,6 +219,10 @@ function mergeComponentMapKeySet(text, exportName) {
   const keys = parseTsRecordKeysFromText(text, exportName);
   if (exportName === 'COMPONENT_MAP') {
     for (const k of parseCarbonPrimitiveSpreadKeys(text)) keys.add(k);
+    // COMPONENT_MAP is composed via spread of REGISTRY_COMPONENT_MAP +
+    // CARBON_PRIMITIVE_COMPONENT_MAP. Pull the registry keys directly so
+    // the gate sees the full effective keyset.
+    for (const k of parseTsRecordKeysFromText(text, 'REGISTRY_COMPONENT_MAP')) keys.add(k);
   }
   return keys;
 }
