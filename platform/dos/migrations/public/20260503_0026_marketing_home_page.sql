@@ -21,14 +21,23 @@ VALUES
   ('marketing.home.page', 'ibm-carbon', 'tiles', 'approved')
 ON CONFLICT (component_key) DO NOTHING;
 
--- ② Public landing route (tenant_id IS NULL, public surface).
+-- ② Register the marketing module (idempotent).
+INSERT INTO dos.dynamic_ui_modules
+  (module_code, product_key, display_name, default_route, registry_status,
+   default_tenant_enrollment_status, platform_key)
+VALUES
+  ('marketing', 'shahin-ai', 'Marketing', '/', 'active', 'active', 'dos')
+ON CONFLICT (module_code) DO NOTHING;
+
+-- ③ Public landing route (tenant_id IS NULL, public surface — data_scope_mode
+--    NULL because the public landing has no data scope).
 INSERT INTO dos.dynamic_ui_routes
   (tenant_id, module_code, path_pattern, component_key, permission_key,
    sort_order, readiness, page_type, layout, kpi_scope, user_intent,
    data_scope_mode, evidence_required, title_key, subtitle_key,
    data_resource_key, default_view, audit_enabled, realtime_enabled)
 SELECT NULL, 'marketing', '/', 'marketing.home.page', NULL,
-       10, 'active', 'overview', 'full-page', 'none', 'discover', 'public',
+       10, 'active', 'overview', 'full-page', 'none', NULL, NULL,
        FALSE,
        'marketing.home.title', 'marketing.home.subtitle',
        'marketing.resource.home', 'cards',
