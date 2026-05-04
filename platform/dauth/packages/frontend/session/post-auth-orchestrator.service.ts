@@ -24,6 +24,7 @@ import { AccessStore } from '../access/access.store';
 import { BootstrapStore } from '@app/core/platform/bootstrap.store';
 import { StorageService } from '@app/infrastructure';
 import { IdleTimeoutService } from '@app/infrastructure';
+import { TenantLandingConfigService } from '../services/tenant-landing-config.service';
 
 
 // ── PostAuthResponse ──────────────────────────────────────────────────────
@@ -61,6 +62,7 @@ export class PostAuthOrchestratorService {
   private storage = inject(StorageService);
   private idleTimeout = inject(IdleTimeoutService);
   private router = inject(Router);
+  private landingConfig = inject(TenantLandingConfigService);
 
   /**
    * Single entry point called by login, register, and shell onRegistered().
@@ -183,18 +185,20 @@ export class PostAuthOrchestratorService {
         const mapped = this.sanitizeReturnUrl(bootstrap.next.route);
         if (mapped) return mapped;
       }
-    } catch {
+    } catch (err) {
       if (!this.accessStore.loaded() && !this.bootstrapStore.landingPage()) {
         if (!this.session.isOnboardingComplete()) {
           return '/onboarding';
         }
-        return '/workspace-home';
+        // DB-driven fallback: use tenant landing config or default /workspace-home
+        return this.landingConfig.postAuthRoute();
       }
     }
     if (this.accessStore.loaded()) {
       return this.accessStore.landingPage();
     }
-    return this.bootstrapStore.landingPage() || '/workspace-home';
+    // DB-driven fallback: use tenant landing config or default /workspace-home
+    return this.bootstrapStore.landingPage() || this.landingConfig.postAuthRoute();
   }
 
   /**

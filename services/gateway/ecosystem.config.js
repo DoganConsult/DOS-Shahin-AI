@@ -8,7 +8,18 @@ module.exports = {
       NODE_ENV: 'production',
       PORT: 4000,
       LOG_LEVEL: 'info',
-      AUTH_SERVICE_URL: 'http://127.0.0.1:4001',
+      AUTH_SERVICE_URL: 'https://127.0.0.1:4001',
+      // L34 (Phase 4) — tenant-zone mTLS (separate CA from admin zone).
+      TENANT_MTLS_ENFORCE: '1',
+      TENANT_MTLS_CA: '/root/DOS-Platform/platform/config-center/secrets/tenant-mtls/ca.crt',
+      TENANT_MTLS_GATEWAY_CERT: '/root/DOS-Platform/platform/config-center/secrets/tenant-mtls/gateway-client.crt',
+      TENANT_MTLS_GATEWAY_KEY: '/root/DOS-Platform/platform/config-center/secrets/tenant-mtls/gateway-client.key',
+      TENANT_MTLS_REJECT_UNAUTHORIZED: '1',
+      // L37-C (Phase 4) — per-tenant Redis sliding-window rate limiter.
+      // Reads dos.platform_session_policy.rate_limit_per_minute (60s window).
+      TENANT_RATE_LIMIT_ENFORCE: '1',
+      RATE_LIMIT_REDIS_URL: 'redis://:d57921272933f2d3a94a6f1fbf42982791b8afdd74f96f89@127.0.0.1:6379/0',
+      RATE_LIMIT_PREFIX: 'dos:rl:',
       TENANT_SERVICE_URL: 'http://127.0.0.1:4002',
       USER_SERVICE_URL: 'http://127.0.0.1:4003',
       DYNAMIC_UI_SERVICE_URL: 'http://127.0.0.1:4015',

@@ -94,6 +94,7 @@ export interface MarketingHomeBreadcrumbItem {
 export interface MarketingHomeContent {
   brandLabel: string;
   copyright: string;
+  logoHref: string;
   uiLabels: {
     headerMenuLabel: string;
     mobileMenuLabel: string;
@@ -190,6 +191,236 @@ export interface MarketingHomeContent {
   };
   ctaBanner: { eyebrow: string; title: string; sub: string };
   breadcrumb: ReadonlyArray<MarketingHomeBreadcrumbItem>;
+  // Sub-page content (pricing, trust, security, contact, about, legal, platform)
+  pricingPage?: {
+    eyebrow_en: string;
+    eyebrow_ar: string;
+    title_en: string;
+    title_ar: string;
+    sub_en: string;
+    sub_ar: string;
+    ctaLabel_en: string;
+    ctaLabel_ar: string;
+    ctaHref: string;
+    currency: string;
+    billingCycle_en: string;
+    billingCycle_ar: string;
+    plans: ReadonlyArray<{
+      id: string;
+      name_en: string;
+      name_ar: string;
+      price: string;
+      period_en: string;
+      period_ar: string;
+      description_en: string;
+      description_ar: string;
+      features: ReadonlyArray<{ en: string; ar: string; included: boolean }>;
+      popular: boolean;
+    }>;
+  };
+  trust?: {
+    eyebrow_en: string;
+    eyebrow_ar: string;
+    title_en: string;
+    title_ar: string;
+    sub_en: string;
+    sub_ar: string;
+    certifications: ReadonlyArray<{
+      id: string;
+      name_en: string;
+      name_ar: string;
+      description_en: string;
+      description_ar: string;
+      status: string;
+      year: string;
+    }>;
+    securityMetrics: ReadonlyArray<{ label_en: string; label_ar: string; description_en: string; description_ar: string }>;
+    trustIndicators: ReadonlyArray<{
+      icon: string;
+      title_en: string;
+      title_ar: string;
+      body_en: string;
+      body_ar: string;
+    }>;
+    ctaLabel_en: string;
+    ctaLabel_ar: string;
+    ctaHref: string;
+  };
+  security?: {
+    eyebrow_en: string;
+    eyebrow_ar: string;
+    title_en: string;
+    title_ar: string;
+    sub_en: string;
+    sub_ar: string;
+    features: ReadonlyArray<{
+      id: string;
+      title_en: string;
+      title_ar: string;
+      body_en: string;
+      body_ar: string;
+      icon: string;
+    }>;
+    complianceStandards: ReadonlyArray<{
+      name_en: string;
+      name_ar: string;
+      description_en: string;
+      description_ar: string;
+    }>;
+    architecture: {
+      title_en: string;
+      title_ar: string;
+      body_en: string;
+      body_ar: string;
+    };
+    ctaLabel_en: string;
+    ctaLabel_ar: string;
+    ctaHref: string;
+  };
+  contact?: {
+    eyebrow_en: string;
+    eyebrow_ar: string;
+    title_en: string;
+    title_ar: string;
+    sub_en: string;
+    sub_ar: string;
+    contactForm: {
+      enabled: boolean;
+      title_en: string;
+      title_ar: string;
+      fields: ReadonlyArray<{
+        name: string;
+        label_en: string;
+        label_ar: string;
+        type: string;
+        required: boolean;
+      }>;
+      submitLabel_en: string;
+      submitLabel_ar: string;
+    };
+    contactInfo: ReadonlyArray<{
+      icon: string;
+      label_en: string;
+      label_ar: string;
+      value_en: string;
+      value_ar: string;
+    }>;
+    officeLocations: ReadonlyArray<{
+      name_en: string;
+      name_ar: string;
+      address_en: string;
+      address_ar: string;
+      hours_en: string;
+      hours_ar: string;
+    }>;
+    support: {
+      title_en: string;
+      title_ar: string;
+      channels: ReadonlyArray<{ name_en: string; name_ar: string; available: boolean }>;
+      responseTime_en: string;
+      responseTime_ar: string;
+    };
+    socialLinks: ReadonlyArray<{ platform: string; url: string }>;
+  };
+  about?: {
+    eyebrow_en: string;
+    eyebrow_ar: string;
+    title_en: string;
+    title_ar: string;
+    sub_en: string;
+    sub_ar: string;
+    story: {
+      title_en: string;
+      title_ar: string;
+      body_en: string;
+      body_ar: string;
+    };
+    mission: {
+      title_en: string;
+      title_ar: string;
+      body_en: string;
+      body_ar: string;
+    };
+    values: ReadonlyArray<{
+      title_en: string;
+      title_ar: string;
+      body_en: string;
+      body_ar: string;
+    }>;
+    team: {
+      title_en: string;
+      title_ar: string;
+      members: ReadonlyArray<{ name_en: string; name_ar: string; role_en: string; role_ar: string }>;
+    };
+    achievements: ReadonlyArray<{ label_en: string; label_ar: string; description_en: string; description_ar: string }>;
+    ctaLabel_en: string;
+    ctaLabel_ar: string;
+    ctaHref: string;
+  };
+  legal?: {
+    eyebrow_en: string;
+    eyebrow_ar: string;
+    title_en: string;
+    title_ar: string;
+    sub_en: string;
+    sub_ar: string;
+    documents: ReadonlyArray<{
+      id: string;
+      title_en: string;
+      title_ar: string;
+      summary_en: string;
+      summary_ar: string;
+      lastUpdated_en: string;
+      lastUpdated_ar: string;
+      sections: ReadonlyArray<{ title_en: string; title_ar: string; body_en: string; body_ar: string }>;
+    }>;
+    gdprCompliance: {
+      title_en: string;
+      title_ar: string;
+      body_en: string;
+      body_ar: string;
+      rights: ReadonlyArray<{ name_en: string; name_ar: string; description_en: string; description_ar: string }>;
+    };
+    contactLabel_en: string;
+    contactLabel_ar: string;
+    contactHref: string;
+  };
+  platformPage?: {
+    eyebrow_en: string;
+    eyebrow_ar: string;
+    title_en: string;
+    title_ar: string;
+    sub_en: string;
+    sub_ar: string;
+    overview: {
+      title_en: string;
+      title_ar: string;
+      body_en: string;
+      body_ar: string;
+    };
+    architecture: {
+      title_en: string;
+      title_ar: string;
+      body_en: string;
+      body_ar: string;
+      components: ReadonlyArray<{
+        name_en: string;
+        name_ar: string;
+        description_en: string;
+        description_ar: string;
+      }>;
+    };
+    features: ReadonlyArray<{
+      title_en: string;
+      title_ar: string;
+      body_en: string;
+      body_ar: string;
+    }>;
+    integrations: ReadonlyArray<{ name_en: string; name_ar: string; icon: string }>;
+    ctaLabel_en: string;
+    ctaLabel_ar: string;
+    ctaHref: string;
+  };
 }
 
 export interface MarketingPublicConfig {
@@ -211,6 +442,7 @@ export interface MarketingPublicConfig {
 const EMPTY_MARKETING_HOME_CONTENT: MarketingHomeContent = {
   brandLabel: '',
   copyright: '',
+  logoHref: '/',
   uiLabels: {
     headerMenuLabel: '',
     mobileMenuLabel: '',

@@ -37,7 +37,7 @@ import type { WorkspaceHeaderContext, WorkspaceHeaderAction } from './workspace-
       ></cds-hamburger>
 
       <!-- Brand logo slot -->
-      <a class="dos-wh-brand" [attr.aria-label]="resolvedBrand" href="/">
+      <a class="dos-wh-brand" [attr.aria-label]="resolvedBrand" [attr.href]="logoHref">
         @if (logoUri) {
           <img class="dos-wh-logo"
                [src]="logoUri"
@@ -283,6 +283,7 @@ export class DosWorkspaceHeaderComponent {
   @Input() title = 'Shahin-AI';
   @Input() tenantName = '';
   @Input() logoUri: string | null = null;
+  @Input() logoHref = '/'; // DB-driven logo destination from workspace.header.props.logoHref
   @Input() userDisplayName = '';
   @Input() userAvatarUri: string | null = null;
   @Input() ariaLabel: string | null = null;

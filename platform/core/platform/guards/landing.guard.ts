@@ -26,6 +26,7 @@ export const landingGuard: CanActivateFn = async () => {
     ),
   ]).catch(err => {
     console.warn(err);
+    // Fallback to /workspace-home - DB-driven config is in orchestrator
     return '/workspace-home';
   });
   if (route === '/workspace-home') {

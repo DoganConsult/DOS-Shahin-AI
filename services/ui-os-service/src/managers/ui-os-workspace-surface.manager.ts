@@ -152,7 +152,7 @@ export class UiOsWorkspaceSurfaceManager {
     const { rows } = await this.pool.query<DbAiTip>(
       `SELECT tip_key, title_key, body_key, cta_label_key, cta_route, icon,
               condition_kind, condition_payload, priority, required_permission
-         FROM dos.dynamic_ui_ai_tips
+         FROM dos.dynamic_ui_workspace_ai_tips
         WHERE is_active = TRUE
           AND (tenant_id = $1 OR tenant_id IS NULL)
         ORDER BY COALESCE(tenant_id, '*') DESC, priority, tip_key`,
@@ -178,7 +178,7 @@ export class UiOsWorkspaceSurfaceManager {
     const { rows } = await this.pool.query<DbPageHeader>(
       `SELECT route_key, variant, density, eyebrow_key, title_key, subtitle_key,
               gradient_token, mesh_layers, hairline_visible, hairline_token
-         FROM dos.dynamic_ui_page_headers
+         FROM dos.dynamic_ui_workspace_page_headers
         WHERE route_key = $1 AND is_active = TRUE
           AND (tenant_id = $2 OR tenant_id IS NULL)
         ORDER BY COALESCE(tenant_id, '*') DESC
@@ -193,7 +193,7 @@ export class UiOsWorkspaceSurfaceManager {
       `SELECT col_key, scope, label_key, data_field, data_kind, format_payload,
               is_sortable, is_filterable, default_sort, sort_priority,
               align, is_visible, sort_order
-         FROM dos.dynamic_ui_grid_columns
+         FROM dos.dynamic_ui_workspace_grid_columns
         WHERE scope = $1 AND is_active = TRUE
           AND (tenant_id = $2 OR tenant_id IS NULL)
         ORDER BY COALESCE(tenant_id, '*') DESC, sort_order, col_key`,

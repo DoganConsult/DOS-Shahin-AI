@@ -96,6 +96,9 @@ export class WorkspaceShellBindingService {
   readonly headerWorkspaceTitle = computed<string | null>(
     () => this.stringProp('workspace.header', 'workspaceTitle'),
   );
+  readonly headerLogoHref = computed<string | null>(
+    () => this.stringProp('workspace.header', 'logoHref'),
+  );
 
   // ── Dynamic account menu entries ────────────────────────────────────────
   // Reads `workspace.header.props.accountMenu` (array of ShellAccountMenuEntry

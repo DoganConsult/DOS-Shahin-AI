@@ -1,0 +1,8 @@
+{
+  "probes": [
+    { "probe_key": "dna-modules",    "label_key": "workspace.health.dna",      "description_key": null, "source_endpoint": "/api/health/dna",      "source_kind": "http_status", "ok_threshold": {}, "required_permission": "tenant_admin", "sort_order": 10 },
+    { "probe_key": "entitled-count", "label_key": "workspace.health.entitled", "description_key": null, "source_endpoint": "/api/health/entitled", "source_kind": "count",       "ok_threshold": {}, "required_permission": "tenant_admin", "sort_order": 20 },
+    { "probe_key": "openfga-seed",   "label_key": "workspace.health.openfga",  "description_key": null, "source_endpoint": "/api/health/openfga",  "source_kind": "http_status", "ok_threshold": {}, "required_permission": "tenant_admin", "sort_order": 30 },
+    { "probe_key": "trial-status",   "label_key": "workspace.health.trial",    "description_key": null, "source_endpoint": "/api/health/trial",    "source_kind": "signal",      "ok_threshold": {}, "required_permission": "tenant_admin", "sort_order": 40 }
+  ]
+}

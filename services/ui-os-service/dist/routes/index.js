@@ -28,9 +28,12 @@ import { createPlatformAdminRouter } from './platform-admin.routes.js';
 import { createDynamicUiContractRouter } from './dynamic-ui-contract.routes.js';
 import { createTemplateBindingRouter } from './template-binding.routes.js';
 import { createWorkspaceShellRouter } from './workspace-shell.routes.js';
+import { createWorkspaceSurfaceRouter } from './workspace-surface.routes.js';
 import { createBrandRouter } from './brand.routes.js';
 import { createAgenticRouter } from './agentic.routes.js';
 import { createMarketingDownloadsRouter } from './marketing-downloads.routes.js';
+import { createTenantLandingConfigRouter } from './tenant-landing-config.routes.js';
+import { createI18nFallbacksRouter } from './i18n-fallbacks.routes.js';
 export function createUiOsRouter(pool) {
     const router = Router();
     router.get('/health', (_req, res) => {
@@ -69,12 +72,18 @@ export function createUiOsRouter(pool) {
     router.use('/', createTemplateBindingRouter(pool));
     // Phase WS-5 — workspace-shell binding resolver
     router.use('/', createWorkspaceShellRouter(pool));
+    // Phase WS-DB-2 — workspace surface content catalogs (DB-driven rewrite)
+    router.use('/', createWorkspaceSurfaceRouter(pool));
     // Phase M0 — Public marketing brand resolver (NOT auth-bound)
     router.use('/', createBrandRouter(pool));
     // Phase M0.5 — Public agentic registry + strip aggregate (NOT auth-bound)
     router.use('/', createAgenticRouter(pool));
     // Phase M1.5 — Public marketing assets + download event sink (NOT auth-bound)
     router.use('/', createMarketingDownloadsRouter(pool));
+    // Phase 1 — DB-driven logo/home-link configuration (tenant landing config)
+    router.use('/', createTenantLandingConfigRouter(pool));
+    // Phase 1 — DB-driven i18n fallback values
+    router.use('/', createI18nFallbacksRouter(pool));
     return router;
 }
 //# sourceMappingURL=index.js.map

@@ -32,6 +32,9 @@ import { createWorkspaceSurfaceRouter } from './workspace-surface.routes.js';
 import { createBrandRouter } from './brand.routes.js';
 import { createAgenticRouter } from './agentic.routes.js';
 import { createMarketingDownloadsRouter } from './marketing-downloads.routes.js';
+import { createTenantLandingConfigRouter } from './tenant-landing-config.routes.js';
+import { createI18nFallbacksRouter } from './i18n-fallbacks.routes.js';
+import { createGrcSandboxRouter } from './grc-sandbox.routes.js';
 import type { DbPool } from '../db.js';
 
 export function createUiOsRouter(pool: DbPool): Router {
@@ -82,6 +85,12 @@ export function createUiOsRouter(pool: DbPool): Router {
   router.use('/', createAgenticRouter(pool));
   // Phase M1.5 — Public marketing assets + download event sink (NOT auth-bound)
   router.use('/', createMarketingDownloadsRouter(pool));
+  // Phase 1 — DB-driven logo/home-link configuration (tenant landing config)
+  router.use('/', createTenantLandingConfigRouter(pool));
+  // Phase 1 — DB-driven i18n fallback values
+  router.use('/', createI18nFallbacksRouter(pool));
+  // Phase 1 — DB-driven GRC sandbox (public visitor experience)
+  router.use('/grc-sandbox', createGrcSandboxRouter(pool));
 
   return router;
 }

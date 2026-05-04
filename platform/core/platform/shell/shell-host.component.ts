@@ -273,7 +273,7 @@ const FALLBACK_ITEM_ICON  = 'dot';
          No raw cds-* tags. -->
 
     <ng-template #headerTpl>
-      <dos-workspace-header shellHeader [title]="headerWorkspaceTitle()">
+      <dos-workspace-header shellHeader [title]="headerWorkspaceTitle()" [logoHref]="headerLogoHref()">
         <ng-container headerStart>
           <button type="button"
                   class="shell-header-toggle"
@@ -696,11 +696,12 @@ export class ShellHostComponent {
     return null;
   });
   readonly headerHomeRoute = computed((): string[] => {
-    const raw = this.shellBinding.headerHomeRoute()
-             ?? this.labelResolver?.shellChromeString?.('shell.header.home_route')
-             ?? '';
+    const raw = this.shellBinding.headerHomeRoute() ?? '';
     const parts = raw.replace(/^\/+/, '').split('/').filter(Boolean);
     return parts;
+  });
+  readonly headerLogoHref = computed((): string => {
+    return this.shellBinding.headerLogoHref() ?? '/';
   });
   readonly sideNavAriaLabel = computed(
     () => this.labelResolver?.shellChromeString?.('shell.sidenav.aria_label') ?? '',

@@ -27,6 +27,8 @@ const pg_1 = require("pg");
 const gateway_origin_1 = require("./middleware/gateway-origin");
 const decision_ledger_1 = require("./middleware/decision-ledger");
 const admin_zone_mtls_1 = require("./middleware/admin-zone-mtls");
+const tenant_zone_mtls_1 = require("./middleware/tenant-zone-mtls");
+const tenant_rate_limit_1 = require("./middleware/tenant-rate-limit");
 const PORT = Number(process.env.PORT || 4000);
 const AUTH_SERVICE_URL = required('AUTH_SERVICE_URL');
 const TENANT_SERVICE_URL = required('TENANT_SERVICE_URL');
@@ -225,10 +227,18 @@ function authGuard(req, res, next) {
         .catch(() => res.status(401).json({ error: 'INVALID_TOKEN' }));
 }
 // /api/auth/* → auth-service (public + protected handled inside the service)
-app.use('/api/auth', (0, http_proxy_middleware_1.createProxyMiddleware)({
+// L34 (Phase 4): when TENANT_MTLS_ENFORCE=1 + AUTH_SERVICE_URL is https://,
+// attach tenant-zone HttpsAgent so the hop is mTLS-encrypted. Article 4
+// segregation — tenant CA, NOT admin CA.
+const _tenantZoneAgentRaw = (0, tenant_zone_mtls_1.tenantZoneMtlsAgent)();
+const _tenantUpstreamHttps = AUTH_SERVICE_URL.startsWith('https:');
+const tenantZoneAgent = (_tenantZoneAgentRaw && _tenantUpstreamHttps) ? _tenantZoneAgentRaw : null;
+console.log(`[gateway] tenant-zone mTLS: ${(0, tenant_zone_mtls_1.tenantZoneMtlsStatus)()}${_tenantZoneAgentRaw && !_tenantUpstreamHttps ? ' (agent staged, awaiting https:// AUTH_SERVICE_URL)' : ''}`);
+app.use('/api/auth', (0, tenant_rate_limit_1.tenantRateLimit)('customer'), (0, http_proxy_middleware_1.createProxyMiddleware)({
     target: AUTH_SERVICE_URL,
     changeOrigin: true,
     xfwd: true,
+    ...(tenantZoneAgent ? { agent: tenantZoneAgent } : {}),
 }));
 // Inject identity headers from verified JWT for downstream services.
 //
@@ -1439,6 +1449,8 @@ app.use(['/api/platform-product', '/api/product', '/api/knowledge', '/api/operat
 // ── Public marketing / landing stubs (no auth)
 // Consumed by product shells (e.g. shahin-ai) until platform-product publishes
 // real CMS-backed routes. Registered before the catch-all /api → 404.
+// L37-C — customer-zone rate limit on all public endpoints.
+app.use('/api/public', (0, tenant_rate_limit_1.tenantRateLimit)('customer'));
 app.get(['/api/public/landing-content', '/api/public/landing/content'], (_req, res) => {
     res.json({
         agents: [],

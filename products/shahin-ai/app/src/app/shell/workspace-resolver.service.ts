@@ -22,12 +22,11 @@
  * `httpClient.get('/api/ui/resolve?route=...').pipe(...)` wrapper.
  */
 import { Injectable, computed, inject, signal, untracked } from '@angular/core';
-
-import {
-  AccessStore,
-  WorkspaceNavigationAdapter,
-  type WorkspaceNavLabelResolver,
-} from '@dos/access-store';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { catchError, of } from 'rxjs';
+import { AccessStore, WorkspaceNavigationAdapter } from '@dos/access-store';
+import { I18nFallbacksService } from '@app/core/platform/services/i18n-fallbacks.service';
+import { WorkspaceSurfaceDataService } from './workspace-surface-data.service';
 import type {
   DynamicUiResolverPort,
   ResolvedWorkspaceSurface,
@@ -803,8 +802,11 @@ const ROLE_LABELS: Record<string, string> = {
 };
 
 @Injectable({ providedIn: 'root' })
-export class WorkspaceResolverService implements DynamicUiResolverPort, WorkspaceNavLabelResolver {
-  readonly access = inject(AccessStore);
+export class WorkspaceResolverService implements DynamicUiResolverPort {
+  private readonly http = inject(HttpClient);
+  private readonly access = inject(AccessStore);
+  private readonly i18nFallbacks = inject(I18nFallbacksService);
+  private readonly surfaceData = inject(WorkspaceSurfaceDataService);
   readonly nav = inject(WorkspaceNavigationAdapter);
 
   // ────────────────────────────────────────────────────────────────
@@ -967,6 +969,9 @@ export class WorkspaceResolverService implements DynamicUiResolverPort, Workspac
    * the key is missing so the Carbon shell applies its baked-in English defaults.
    */
   shellChromeString(key: string): string | null {
+    // DB-driven i18n fallbacks: check service first, fall back to hardcoded map
+    const dbValue = this.i18nFallbacks.get(key, this.locale() as 'en' | 'ar');
+    if (dbValue) return dbValue;
     const loc = this.locale();
     const direct = I18N[loc]?.[key];
     if (direct !== undefined) return direct;
@@ -976,7 +981,9 @@ export class WorkspaceResolverService implements DynamicUiResolverPort, Workspac
   }
 
   async resolveWorkspace(): Promise<ResolvedWorkspaceSurface> {
-    await this.nav.refresh();
+    // Pull DB-driven surface catalogs (with JSON fallback) before composition.
+    const tenantId = this.access.me()?.tenant?.id ?? null;
+    await Promise.allSettled([this.nav.refresh(), this.surfaceData.loadAll(tenantId)]);
     return this.composeWorkspace();
   }
 
@@ -1190,6 +1197,51 @@ export class WorkspaceResolverService implements DynamicUiResolverPort, Workspac
       return { key, value: code, locale: this.locale(), bidi: 'plain' };
     }
     return resolved;
+  }
+
+  /**
+   * Evaluate a setup-step `condition_kind` against current AccessStore
+   * state. Returns true when the step should be marked done.
+   * Mirrors the kinds enumerated in the seed migration §10.2.
+   */
+  private evaluateSetupCondition(
+    kind: string,
+    me: ReturnType<AccessStore['me']>,
+    moduleCount: number,
+  ): boolean {
+    switch (kind) {
+      case 'has_user_name':    return Boolean(me?.user?.name);
+      case 'has_tenant_id':    return Boolean(me?.tenant?.id);
+      case 'has_modules':      return moduleCount > 0;
+      case 'has_team_members': return false; // wired when membership-count signal lands
+      case 'always_done':      return true;
+      default:                 return false;
+    }
+  }
+
+  /**
+   * Evaluate an AI-tip `condition_kind`. Tips are surfaced when the
+   * predicate returns true. Defaults to `true` for unknown kinds so a
+   * mis-seeded row still renders rather than vanishing silently.
+   */
+  private evaluateTipCondition(
+    kind: string,
+    setupPercent: number,
+    moduleCount: number,
+    isAdmin: boolean,
+  ): boolean {
+    switch (kind) {
+      case 'always':             return true;
+      case 'setup_below':        return setupPercent < 100;
+      case 'setup_above':        return setupPercent >= 100;
+      case 'has_modules':        return moduleCount > 0;
+      case 'no_modules':         return moduleCount === 0;
+      case 'tenant_admin':       return isAdmin;
+      case 'member_count_below': return false;
+      case 'trial_active':       return true;
+      case 'trial_expired':      return false;
+      default:                   return true;
+    }
   }
 
   private moduleMeta(code: string): { title: string; description: string } {
@@ -1455,26 +1507,90 @@ export class WorkspaceResolverService implements DynamicUiResolverPort, Workspac
       },
     ];
 
-    // Setup steps — sourced from dos.ui_route_template_binding props.setupSteps[] via DB.
-    // No hardcoded steps — Carbon cds-progress-indicator renders DB-provided steps.
-    const steps: ResolvedSetupStep[] = [];
-    const setupPercent = 0;
+    // Setup steps ─ DB-driven via WorkspaceSurfaceDataService (JSON fallback).
+    const setupRows = this.surfaceData.setupSteps();
+    const steps: ResolvedSetupStep[] = setupRows.map((row) => {
+      const done = this.evaluateSetupCondition(row.condition_kind, me, moduleCount);
+      return {
+        stepKey:     row.step_key,
+        label:       this.t(row.label_key),
+        description: row.description_key ? this.t(row.description_key) : undefined,
+        icon:        row.icon ?? undefined,
+        route:       row.route,
+        done,
+        permitted:   true,
+        sortOrder:   row.sort_order,
+      } as ResolvedSetupStep;
+    }).sort((a, b) => a.sortOrder - b.sortOrder);
+    const setupPercent = steps.length === 0
+      ? 0
+      : Math.round((steps.filter(s => s.done).length / steps.length) * 100);
 
-    // AI tips — sourced from dos.ai_query widget bindings via DB (binding_kind='ai_query').
-    // No hardcoded tips or trust scores — cds-ai-label renders DB-provided AI content.
-    const tips: ResolvedAiTip[] = [];
+    // AI tips ─ DB-driven (priority-sorted, conditionally filtered).
+    const tipRows = this.surfaceData.aiTips();
+    const isAdminForTips = this.access.isTenantAdmin();
+    const tips: ResolvedAiTip[] = tipRows
+      .filter((row) => this.evaluateTipCondition(row.condition_kind, setupPercent, moduleCount, isAdminForTips))
+      .map((row) => ({
+        tipKey:    row.tip_key,
+        title:     this.t(row.title_key),
+        body:      this.t(row.body_key),
+        ctaLabel:  row.cta_label_key ? this.t(row.cta_label_key) : undefined,
+        ctaRoute:  row.cta_route ?? undefined,
+        icon:      row.icon ?? undefined,
+        priority:  row.priority,
+        trust: {
+          source:           'platform.suggestions',
+          confidence:       0.6,
+          reasoningSummary: this.t('workspace.health.adminonly'),
+          dataUsed:         [],
+          lastUpdated:      new Date().toISOString(),
+          riskLevel:        'low',
+          humanApprovalRequired: false,
+        },
+      } as ResolvedAiTip));
 
-    // Quick actions — sourced from dos.ui_route_template_binding props.nbaActions[] via DB.
-    // No hardcoded actions — Carbon cds-clickable-tile / cds-button renders DB-provided actions.
-    const actions: ResolvedQuickAction[] = [];
+    // Quick actions ─ DB-driven (permission-gated, sort_order honored).
+    const actionRows = this.surfaceData.quickActions();
+    const actions: ResolvedQuickAction[] = actionRows.map((row) => ({
+      actionKey:   row.action_key,
+      eyebrow:     row.eyebrow_key ? this.t(row.eyebrow_key) : undefined,
+      label:       this.t(row.label_key),
+      description: row.description_key ? this.t(row.description_key) : undefined,
+      icon:        row.icon ?? undefined,
+      route:       row.route,
+      variant:     (row.variant ?? 'solid') as ResolvedQuickAction['variant'],
+      tone:        (row.tone ?? 'neutral') as ResolvedQuickAction['tone'],
+      permitted:   !row.required_permission || this.access.hasPermission?.(row.required_permission) !== false,
+      sortOrder:   row.sort_order,
+    } as ResolvedQuickAction));
 
-    // Health probes (admin only) ───────────────────────────────────
-    const probes: ResolvedHealthProbe[] = this.access.isTenantAdmin() ? [
-      { probeKey: 'dna-modules',    label: this.t('workspace.health.dna'),       state: 'ok',      stateLabel: this.t('workspace.health.online'),  tone: 'success', sortOrder: 0 },
-      { probeKey: 'entitled-count', label: this.t('workspace.health.entitled'),  state: moduleCount > 0 ? 'ok' : 'unknown', stateLabel: this.t(moduleCount > 0 ? 'workspace.health.online' : 'workspace.health.offline'), tone: moduleCount > 0 ? 'success' : 'warning', sortOrder: 10 },
-      { probeKey: 'openfga-seed',   label: this.t('workspace.health.openfga'),   state: 'ok',      stateLabel: this.t('workspace.health.online'),  tone: 'success', sortOrder: 20 },
-      { probeKey: 'trial-status',   label: this.t('workspace.health.trial'),     state: 'ok',      stateLabel: this.statusPill('tenant', tenantStatus).label, tone: 'info',    sortOrder: 30 },
-    ] : [];
+    // Health probes (admin only) ─ DB-driven label set; runtime state stays
+    // synthesized until the readiness microprobes land.
+    const probeRows = this.surfaceData.healthProbes();
+    const probes: ResolvedHealthProbe[] = this.access.isTenantAdmin()
+      ? probeRows.map((row) => {
+          const onlineKey = 'workspace.health.online';
+          const offlineKey = 'workspace.health.offline';
+          const ok = row.probe_key === 'entitled-count' ? moduleCount > 0 : true;
+          const state: ResolvedHealthProbe['state'] = ok ? 'ok' : 'unknown';
+          const tone: ResolvedHealthProbe['tone'] = row.probe_key === 'trial-status'
+            ? 'info'
+            : (ok ? 'success' : 'warning');
+          const stateLabel = row.probe_key === 'trial-status'
+            ? this.statusPill('tenant', tenantStatus).label
+            : this.t(ok ? onlineKey : offlineKey);
+          return {
+            probeKey:    row.probe_key,
+            label:       this.t(row.label_key),
+            description: row.description_key ? this.t(row.description_key) : undefined,
+            state,
+            stateLabel,
+            tone,
+            sortOrder:   row.sort_order,
+          } as ResolvedHealthProbe;
+        })
+      : [];
 
     // Modules table ────────────────────────────────────────────────
     const expired = new Set(this.access.trialExpiredModules() || []);
@@ -1493,42 +1609,42 @@ export class WorkspaceResolverService implements DynamicUiResolverPort, Workspac
       };
     });
 
-    // Module-launcher columns — sourced from dos.ui_route_template_binding props.moduleColumns[] via DB.
-    // No hardcoded columns — Carbon cds-data-table renders DB-provided column definitions.
-    const moduleColumns: ResolvedGridColumn[] = [];
+    // Module-launcher columns — DB-driven via WorkspaceSurfaceDataService.
+    const moduleColumnRows = this.surfaceData.gridColumnsFor('workspace.modules');
+    const moduleColumns: ResolvedGridColumn[] = moduleColumnRows
+      .filter(c => c.is_visible)
+      .map((c) => ({
+        colKey:        c.col_key,
+        label:         this.t(c.label_key),
+        dataField:     c.data_field,
+        dataKind:      c.data_kind,
+        formatPayload: (c.format_payload ?? {}) as Record<string, unknown>,
+        isSortable:    c.is_sortable,
+        isFilterable:  c.is_filterable,
+        defaultSort:   c.default_sort ?? undefined,
+        sortPriority:  c.sort_priority ?? undefined,
+        align:         c.align,
+        isVisible:     c.is_visible,
+        sortOrder:     c.sort_order,
+      } as ResolvedGridColumn))
+      .sort((a, b) => a.sortOrder - b.sortOrder);
 
-    // Empty states catalog ─────────────────────────────────────────
-    const emptyStates: Record<string, ResolvedStateContent> = {
-      'workspace.tasks.empty': {
-        stateKey: 'workspace.tasks.empty',
-        title:    this.t('workspace.empty.tasks.title'),
-        tone:     'info',
-        primaryLabel: this.t('workspace.action.view_all'),
-        primaryRoute: '/workspace/tasks',
-      },
-      'workspace.approvals.empty': {
-        stateKey: 'workspace.approvals.empty',
-        title:    this.t('workspace.empty.approvals.title'),
-        tone:     'warning',
-        primaryLabel: this.t('workspace.action.view_all'),
-        primaryRoute: '/workspace/approvals',
-      },
-      'workspace.activity.empty': {
-        stateKey: 'workspace.activity.empty',
-        title:    this.t('workspace.empty.activity.title'),
-        tone:     'success',
-        primaryLabel: this.t('workspace.action.view_all'),
-        primaryRoute: '/workspace/activity',
-      },
-      'workspace.modules.empty': {
-        stateKey: 'workspace.modules.empty',
-        title:    this.t('workspace.empty.modules.title'),
-        description: this.t('workspace.empty.modules.description'),
-        tone:     'brand',
-        primaryLabel: this.t('workspace.action.ask_ai'),
-        primaryRoute: '/workspace/ai',
-      },
-    };
+    // Empty states catalog — DB-driven (state_key keyed map).
+    const emptyStateRows = this.surfaceData.emptyStates();
+    const emptyStates: Record<string, ResolvedStateContent> = {};
+    for (const row of emptyStateRows) {
+      emptyStates[row.state_key] = {
+        stateKey:       row.state_key,
+        title:          this.t(row.title_key),
+        description:    row.description_key ? this.t(row.description_key) : undefined,
+        tone:           row.tone as ResolvedStateContent['tone'],
+        illustration:   row.illustration ?? undefined,
+        primaryLabel:   row.primary_label_key ? this.t(row.primary_label_key) : undefined,
+        primaryRoute:   row.primary_route ?? undefined,
+        secondaryLabel: row.secondary_label_key ? this.t(row.secondary_label_key) : undefined,
+        secondaryRoute: row.secondary_route ?? undefined,
+      };
+    }
 
     // §3.5 #4-#5 — profile-aware visibility. Auditor renders read-only;
     // department manager scope-locked to their org branch; admin/owner

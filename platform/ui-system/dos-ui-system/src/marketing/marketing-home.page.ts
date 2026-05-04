@@ -86,6 +86,8 @@ import { DosCarbonContainedListComponent, type DosCarbonContainedListItem } from
 import { DosCarbonInlineLoadingComponent } from '../carbon/dos-carbon-inline-loading.component';
 import { DosCarbonToggleTipComponent } from '../carbon/dos-carbon-toggle-tip.component';
 import { DosCarbonIconComponent } from '../carbon/dos-carbon-icon.component';
+// Phase 1: DB-Driven GRC Sandbox
+import { DosGrcSandboxComponent } from '../grc/grc-sandbox.component';
 // IBM Carbon icon descriptor for the public-header Sign-in CTA. Imported
 // from @carbon/icons (one-source rule) so the icon ships through the
 // @dos/ui-system Carbon boundary rather than being scattered into products.
@@ -148,6 +150,7 @@ export type MarketingHomeSectionId = (typeof MARKETING_HOME_REGIONS)[number];
 const EMPTY_MARKETING_HOME_CONTENT: MarketingHomeContent = {
   brandLabel: '',
   copyright: '',
+  logoHref: '/',
   uiLabels: {
     headerMenuLabel: '',
     mobileMenuLabel: '',
@@ -228,6 +231,8 @@ export interface MarketingAgentTile {
     DosCarbonInlineLoadingComponent,
     DosCarbonToggleTipComponent,
     DosCarbonIconComponent,
+    // Phase 1: DB-Driven GRC Sandbox
+    DosGrcSandboxComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './marketing-home.page.scss',
@@ -241,7 +246,7 @@ export interface MarketingAgentTile {
       <!-- ░░ Header — public Carbon-style shell without workspace chrome ░░ -->
       <header class="dos-mh-public-header" data-section-id="public-header">
         <div class="dos-mh-container dos-mh-public-header__inner">
-          <a class="dos-mh-public-header__brand" href="/" (click)="onAnchorNavigate($event, '/')">
+          <a class="dos-mh-public-header__brand" [attr.href]="logoHref" (click)="onAnchorNavigate($event, logoHref)">
             <dos-brand-eagle [brandCode]="brandCode" [locale]="locale" [size]="32" />
             <span class="dos-mh-public-header__brand-text">{{ brandLabel }}</span>
           </a>
@@ -582,6 +587,13 @@ export interface MarketingAgentTile {
         </div>
       </section>
 
+      <!-- 10.5 grc-sandbox — Interactive GRC Sandbox (DB-driven Carbon components) ── -->
+      <section class="dos-mh-section" data-section-id="grc-sandbox" id="grc-sandbox">
+        <div class="dos-mh-container">
+          <dos-grc-sandbox></dos-grc-sandbox>
+        </div>
+      </section>
+
       <!-- 11 pricing-teaser — Carbon DataTable + Button ─────────────── -->
       <section class="dos-mh-section" data-section-id="pricing-teaser" id="pricing">
         <div class="dos-mh-container">
@@ -740,6 +752,7 @@ export class DosMarketingHomePageComponent {
   // Brand label (resolved server-side, no string mapping in component).
   get brandLabel(): string { return this.content().brandLabel; }
   get copyright(): string { return this.content().copyright; }
+  get logoHref(): string { return this.content().logoHref; }
 
   // Hero
   get heroBadgeLabel(): string  { return this.content().hero.badge; }

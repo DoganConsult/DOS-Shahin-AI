@@ -1,0 +1,16 @@
+{
+  "headers": {
+    "/workspace-home": {
+      "route_key": "/workspace-home",
+      "variant": "signature",
+      "density": "comfortable",
+      "eyebrow_key": "workspace.eyebrow",
+      "title_key": "workspace.title",
+      "subtitle_key": null,
+      "gradient_token": "--dos-gradient-brand-soft",
+      "mesh_layers": ["--dos-gradient-mesh-1", "--dos-gradient-mesh-2", "--dos-gradient-mesh-3"],
+      "hairline_visible": true,
+      "hairline_token": "--dos-gradient-kpi-line"
+    }
+  }
+}
