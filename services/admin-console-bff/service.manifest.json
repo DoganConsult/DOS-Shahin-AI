@@ -1,0 +1,11 @@
+{
+  "serviceCode": "admin-console-bff",
+  "version": "0.1.0",
+  "domains": ["platform"],
+  "trustZone": "admin",
+  "dependencies": [],
+  "apiPrefix": "/api/admin/console",
+  "doctrineArticle": 4,
+  "controlled": true,
+  "writerActor": "admin-console-bff"
+}

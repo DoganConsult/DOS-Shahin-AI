@@ -943,10 +943,33 @@ Master are CI-rejected (`dos-master-only.mjs`) and DB-rejected
   → rev1 superseded=1 + rev2 live → rollbackRevision(rev2) → rev2
   rolled_back + rev1 restored to live (`listRevisions` returns
   `[rev2:rolled_back, rev1:live]`). Build GREEN.
-- **M11..M14** — IN-PROGRESS. Sequenced per DOS_MASTER_PLAN.md §3.
-  M11 next: Platform-admin trust zone (Keycloak realm `platform-ops`,
-  schema `platform_admin`, `services/admin-console-bff`,
-  `/api/admin/console-bootstrap`).
+- **M11 D1 — CLOSED (2026-05-04).** `services/admin-console-bff`
+  (`@dos/admin-console-bff`, port 4013, admin trust zone, prefix
+  `/api/admin/console`) ships the platform-admin BFF.
+  `GET /console-bootstrap?email=` returns
+  `{user, pillars[{pillar, roles[]}], permissions[], generatedAt}`
+  reading from `platform_admin.platform_admin_{user,role,grant}`.
+  4 pillars supported: DNOC, DSOC, DOS, DAuth (CHECK constraint). Repo
+  writes use `dos.actor='dos-master'` so `trg_dos_master_only` accepts.
+  Routes: `GET /console-bootstrap`, `GET|POST /users`,
+  `GET|POST /roles`, `POST /grants`, `GET /grants/:user_id`. Registered
+  in `dos_master.service_registry` (port=4013, zone=admin) + 7 endpoints
+  in `dos_master.service_endpoint` with
+  `dos.master.admin.{bootstrap,user,role,grant}.{read,write}` permission
+  keys; granted `dos-master` + `dos-master-admin` in
+  `dos.dos_master_grant`. Allocated port 4013 in
+  `platform/config-center/ops/ports.allocation.json`. Seeded 4 pillar
+  roles (`dnoc-operator` [DNOC], `dsoc-analyst` [DSOC],
+  `dos-platform-admin` [DOS], `dauth-admin` [DAuth]) and provisioned
+  test admin `admin@dos.platform` with all 4 grants. Live-verified
+  bootstrap response: pillars=`DAuth:1, DNOC:1, DOS:1, DSOC:1`,
+  permissions=8. CLI extended with 5 parity commands:
+  `admin:user:add`, `admin:user:list`, `admin:role:add`,
+  `admin:role:list`, `admin:grant`. Total CLI surface now 20.
+  Build GREEN.
+- **M12..M14** — IN-PROGRESS. Sequenced per DOS_MASTER_PLAN.md §3.
+  M12 next: 4 admin pillar UIs (DNOC/DSOC/DOS/DAuth) backed by
+  `dos.admin_pillar_*` composer-driven tables.
 
 ### Phase status (live as of 2026-05-01)
 

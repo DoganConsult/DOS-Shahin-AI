@@ -242,6 +242,63 @@ async function publishRollback() {
   });
 }
 
+async function adminUserAdd() {
+  const email = flag('email'); const name = flag('name');
+  if (!email || !name) { console.error('--email --name required'); process.exit(2); }
+  return withClient(async (c) => {
+    const r = await c.query(
+      `INSERT INTO platform_admin.platform_admin_user (email, display_name, status)
+       VALUES ($1,$2,'active')
+       ON CONFLICT (email) DO UPDATE SET display_name=EXCLUDED.display_name
+       RETURNING id`,
+      [email, name],
+    );
+    console.log(`[dos] admin user: ${email} ${r.rows[0].id}`);
+  });
+}
+
+async function adminRoleAdd() {
+  const code = flag('code'); const name = flag('name'); const pillar = flag('pillar');
+  if (!code || !name || !pillar) { console.error('--code --name --pillar required'); process.exit(2); }
+  return withClient(async (c) => {
+    await c.query(
+      `INSERT INTO platform_admin.platform_admin_role (role_code, display_name, pillar, description)
+       VALUES ($1,$2,$3,$4)
+       ON CONFLICT (role_code) DO UPDATE SET display_name=EXCLUDED.display_name, pillar=EXCLUDED.pillar`,
+      [code, name, pillar, flag('desc', null)],
+    );
+    console.log(`[dos] admin role: ${code} [${pillar}]`);
+  });
+}
+
+async function adminGrant() {
+  const userId = flag('user'); const role = flag('role'); const by = flag('by', 'dos-master-cli');
+  if (!userId || !role) { console.error('--user --role required'); process.exit(2); }
+  return withClient(async (c) => {
+    await c.query(
+      `INSERT INTO platform_admin.platform_admin_grant (user_id, role_code, granted_by)
+       VALUES ($1::uuid,$2,$3)
+       ON CONFLICT (user_id, role_code) DO UPDATE SET revoked_at=NULL, granted_by=EXCLUDED.granted_by`,
+      [userId, role, by],
+    );
+    console.log(`[dos] granted ${role} to ${userId}`);
+  });
+}
+
+async function adminUsers() {
+  return withClient(async (c) => {
+    const r = await c.query(`SELECT id, email, display_name, status FROM platform_admin.platform_admin_user ORDER BY email`);
+    console.table(r.rows);
+  });
+}
+
+async function adminRoles() {
+  return withClient(async (c) => {
+    const r = await c.query(`SELECT role_code, pillar, display_name FROM platform_admin.platform_admin_role ORDER BY pillar, role_code`);
+    console.table(r.rows);
+  });
+}
+
 async function provisioningJobs() {
   return withClient(async (c) => {
     const r = await c.query(
@@ -269,6 +326,11 @@ const dispatch = {
   'publish:revision:add': publishRevisionAdd,
   'publish:go': publishGo,
   'publish:rollback': publishRollback,
+  'admin:user:add': adminUserAdd,
+  'admin:user:list': adminUsers,
+  'admin:role:add': adminRoleAdd,
+  'admin:role:list': adminRoles,
+  'admin:grant': adminGrant,
 };
 
 if (!cmd || cmd === '-h' || cmd === '--help') {

@@ -650,6 +650,15 @@
       "gatewayPrefix": "/api/admin/publish",
       "envFile": "publish-service",
       "note": "DOS Master M10 \u2014 atomic publish/rollback engine (page/component/route/brand-kit/nav/archetype-props)"
+    },
+    "admin-console-bff": {
+      "port": 4013,
+      "cwd": "services/admin-console-bff",
+      "script": "dist/server.js",
+      "wave": 1,
+      "gatewayPrefix": "/api/admin/console",
+      "envFile": "admin-console-bff",
+      "note": "DOS Master M11 \u2014 platform-admin trust zone BFF (DNOC/DSOC/DOS/DAuth pillars)"
     }
   },
   "oneShots": {
