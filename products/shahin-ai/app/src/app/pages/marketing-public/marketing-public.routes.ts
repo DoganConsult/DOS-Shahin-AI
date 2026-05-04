@@ -1,9 +1,12 @@
 import { Routes } from '@angular/router';
 
 export const MARKETING_PUBLIC_ROUTES: Routes = [
-  { path: 'platform', loadComponent: () => import('@dos/ui-system').then(m => m.DosMarketingPlatformPageComponent) },
-  { path: 'resources', loadComponent: () => import('@dos/ui-system').then(m => m.DosMarketingResourcesPageComponent) },
-  { path: 'resources/executive-kit', loadComponent: () => import('@dos/ui-system').then(m => m.DosMarketingExecutiveKitPageComponent) },
+  { path: 'platform', loadComponent: () => import('@platform/shell').then(m => m.DynamicTemplatePageComponent),
+    data: { contractRoute: '/platform', componentKey: 'marketing.platform.page', isPublic: true } },
+  { path: 'resources', loadComponent: () => import('@platform/shell').then(m => m.DynamicTemplatePageComponent),
+    data: { contractRoute: '/resources', componentKey: 'marketing.resources.page', isPublic: true } },
+  { path: 'resources/executive-kit', loadComponent: () => import('@platform/shell').then(m => m.DynamicTemplatePageComponent),
+    data: { contractRoute: '/resources/executive-kit', componentKey: 'marketing.executive-kit.page', isPublic: true } },
   { path: 'pricing',  loadComponent: () => import('@platform/shell').then(m => m.DynamicTemplatePageComponent),
     data: { contractRoute: '/pricing',  componentKey: 'marketing.pricing.page',  isPublic: true } },
   { path: 'trust',    loadComponent: () => import('@platform/shell').then(m => m.DynamicTemplatePageComponent),

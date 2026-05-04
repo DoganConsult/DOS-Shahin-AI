@@ -424,7 +424,7 @@ Legend: **DONE** = already live in code; **GAP** = open action item; **N/A-SHELL
 |---|---|---|---|---|
 | 1 | App shell frame | `dos-app-shell` / `dos-mobile-shell` | DONE | `shell-host.component.ts:332,366` |
 | 2 | Workspace header | `dos-workspace-header` | DONE | `:217` |
-| 3 | Product logo/name | header brand | DONE | `headerBrand()` resolves DB `shellBinding.headerBrandLabel()` → tenant name/code from `AccessStore.tenant()` → catalog fallback. Dynamic per-tenant resolution wired. |
+| 3 | Product logo/name | header brand | DONE (catalog) | `headerBrand()` resolves DB `shellBinding.headerBrandLabel()` (currently null) → `shellChromeString('shell.header.brand')` → `'Shahin'` from `WorkspaceResolverService.I18N`. Temporary catalog value, not dynamic brand resolution. |
 | 4 | Tenant/workspace label | header workspace title | DONE | `headerWorkspaceTitle()` `:563-569` |
 | 5 | Selected module label | header (active group / breadcrumb fallback) | DONE | `selectedModuleLabel()` `:570-587` |
 | 6 | Account menu | `dos-account-menu` (popover body inside `headerEnd`) | DONE | `:259-277`, entries `:663-677` |
@@ -455,15 +455,15 @@ Legend: **DONE** = already live in code; **GAP** = open action item; **N/A-SHELL
 | 31 | Safe-area support | `env(safe-area-inset-bottom)` | DONE | status-bar fixed strip `:202`; bottom-nav margin handled by `DosMobileBottomNavComponent` |
 | 32 | Toast outlet | `dos-toast-outlet` at shell level | DONE | Mounted at end of template; `toastMessages` signal + `onToastDismissed` handler |
 | 33 | Help/support entry | help button in `headerEnd` | DONE | Opens context-panel on `tab='help'` via `openContextHelp()` |
-| 34 | Session expiry warning | banner channel | DONE | `AccessStore.sessionExpiresAt()` signal wired; 5/1-min countdown banner in `shellBanners` computed; dismissible=false. Modal at t-10s not implemented (future enhancement). |
-| 35 | Impersonation/admin banner | banner channel | DONE | `AccessStore.isImpersonating()` signal wired; warning banner in `shellBanners` computed when true. |
+| 34 | Session expiry warning | banner channel (stub) | **PARTIAL** | Banner slot wired in `shellBanners` computed. Blocked: `AccessStore.sessionExpiresAt()` not exposed, no countdown logic, no modal at t-10s, no Playwright/visual proof |
+| 35 | Impersonation/admin banner | banner channel (stub) | **PARTIAL** | Banner slot wired in `shellBanners` computed. Blocked: `AccessStore.isImpersonating()` not exposed, no Playwright/visual proof |
 | 36 | Trial/subscription banner | `dos-shell-banner-strip` | DONE | `shellBanners` computed reads `AccessStore.trialExpiredModules()` |
 | 37 | Offline/reconnect banner | `dos-shell-banner-strip` | DONE | `isOffline` signal from `window.online/offline` listeners |
 | 38 | Accessibility landmarks | `<main id="main-content">` + skip-link | DONE | `mainTpl` wrapped in `<main>`, skip-link at top of template |
 | 39 | Keyboard shortcuts | Cmd/Ctrl+K, Escape | DONE | `:854-873` |
 | 40 | Correlation/request ID display | `correlationIdInterceptor` + error frame | DONE | Interceptor registered in `app.config.ts`; correlation ID shown in error frame + banner |
 
-**Tally:** 40 DONE · 0 GAP · 0 PARTIAL · 0 NEW-SURFACE.
+**Tally:** 37 DONE · 0 GAP · 3 PARTIAL (#3 brand catalog-only, #34/#35 stubs awaiting AccessStore signals + visual proof) · 0 NEW-SURFACE.
 
 ## B.9.2 Priority-ordered action plan
 
@@ -530,3 +530,77 @@ Each closes only when all of:
 ## B.9.7 Next approval gate
 
 User selects which priority bucket to execute next (P1, P2, P3, or P4 in full). Until then, no code changes.
+Workspace Host features and components
+#	Feature	Purpose	Component / selector	IBM Carbon primitives
+1	App shell frame	Overall authenticated shell	dos-app-shell	UIShell, Content, Layer
+2	Workspace header	Product identity + global actions	dos-workspace-header	Header, HeaderName, HeaderGlobal, HeaderAction
+3	Product logo/name	Shahin-AI+ brand identity	inside dos-workspace-header	HeaderName
+4	Tenant/workspace label	Show current tenant/workspace context	inside dos-workspace-header	Tag, HeaderAction
+5	Selected module label	Show active module/page context	inside dos-workspace-header	Tag, breadcrumb text
+6	Account menu	Profile, tenant profile, language, theme, logout	dos-account-menu or header slot	HeaderAction, Popover/Menu, Button
+7	Language switch	EN/AR toggle	inside account/header	Button, Tag
+8	Theme switch	Light/dark mode	inside account/header	Toggle, Button
+9	Notification entry	Bell/inbox access	dos-inbox-center	HeaderAction, Tag, Notification, Toast
+10	Command search	Global Cmd/Ctrl+K launcher	dos-command-search	Search, Modal, Button
+11	Quick create	Global create action	dos-quick-create	Button, Menu, Modal
+12	Desktop sidebar	Main module/page navigation	dos-workspace-sidebar	SideNav, SideNavMenu, SideNavItem
+13	Sidebar group labels	Registry/i18n-driven groups	inside dos-workspace-sidebar	SideNavMenu
+14	Sidebar item labels	Unique nav item labels, no Title placeholders	inside dos-workspace-sidebar	SideNavItem
+15	Sidebar collapse/rail	Compact desktop mode	dos-workspace-sidebar	SideNav
+16	Sidebar search/filter	Filter navigation labels	inside dos-workspace-sidebar	Search
+17	Mobile drawer	Mobile navigation drawer	dos-mobile-drawer	SideNav, HeaderAction
+18	Mobile bottom nav	High-priority mobile nav	dos-mobile-bottom-nav	Button, Tag
+19	Breadcrumb strip	Route/page hierarchy	shell breadcrumb container	Breadcrumb
+20	Workspace status bar	Tenant/session/system health strip	dos-workspace-status-bar	Tag, InlineNotification, ProgressBar
+21	Action queue entry	Global tasks/approvals queue	dos-action-queue	Tile, Tag, Button
+22	Agent activity strip	Recent AI/agent work summary	dos-agent-activity-strip	Tag, ProgressBar, SkeletonText
+23	Context panel	Right-side contextual info/help	dos-context-panel	Panel/Layer, StructuredList, Button
+24	Global loading frame	Shell-level loading state	shell loading wrapper	SkeletonText, SkeletonPlaceholder
+25	Global error frame	401/403/404/maintenance shell messages	shell error wrapper	InlineNotification, Button
+26	Content slot	Where pages/modules render	<router-outlet /> / dynamic outlet	Content, Grid, Column, Layer
+27	Permission-aware nav	Hide/disable nav by permissions	nav adapter + sidebar	SideNavItem, Tag
+28	Tenant-aware state	Current tenant/workspace/session context	shell state service	no visual primitive required
+29	RTL/LTR layout	Arabic/English direction support	host + wrappers	logical CSS
+30	Responsive shell	390/430/768/1440 support	shell CSS/wrappers	Grid, SideNav, Layer
+31	Safe-area support	iOS/browser chrome spacing	shell CSS	CSS env safe-area vars
+32	Toast outlet	Global toast notifications	shell toast outlet	Toast
+33	Help/support entry	Docs/help/contact support	header/context panel	HeaderAction, Modal, Link
+34	Session expiry warning	User warning before logout	status/header alert	InlineNotification, Modal
+35	Impersonation/admin banner	Safe notice if support/admin context	status bar	InlineNotification, Tag
+36	Trial/subscription banner	Workspace-level product state	status bar	InlineNotification, Tag
+37	Offline/reconnect banner	Network/SSE/WebSocket state	status bar	InlineNotification
+38	Accessibility landmarks	Header/nav/main semantics	shell wrappers	semantic HTML + Carbon
+39	Keyboard shortcuts	Cmd/Ctrl+K, nav close, escape	command/search/drawer	Angular handlers
+40	Correlation/request ID display	Debug/proof for errors	error panel/context	StructuredList, CodeSnippet if available
+Must-have selectors for Workspace Host Kit
+dos-app-shell
+dos-workspace-header
+dos-workspace-sidebar
+dos-mobile-drawer
+dos-mobile-bottom-nav
+dos-command-search
+dos-inbox-center
+dos-workspace-status-bar
+dos-action-queue
+dos-agent-activity-strip
+dos-context-panel
+dos-quick-create
+Do not put these in Workspace Host
+Foundation KPI cards
+Risk heatmap
+Finance dashboard
+Module tables
+Module forms
+Module business API calls
+Module-specific cards
+Hardcoded module metadata maps
+Route migration logic
+DB seed logic
+Customer records
+Priority order
+Priority	Implement first
+P0	Header, sidebar, content slot, account menu, nav label fix
+P1	Mobile drawer/bottom nav, command search, notifications
+P2	Status bar, quick create, action queue
+P3	Agent activity strip, context panel, help/support
+P4	Session expiry, offline/reconnect, correlation ID, admin banners

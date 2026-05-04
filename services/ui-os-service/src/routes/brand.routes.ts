@@ -195,20 +195,8 @@ function buildMarketingHomeContent(brandCode: string, locale: string, tx: Tx, ro
       title: tx('Pricing that scales with proof, not seats.', 'تسعير يقاس بالأدلة، لا بالمقاعد.'),
       ctaLabel: tx('See pricing', 'استعرض التسعير'),
       href: '/pricing',
-      columns: [
-        { key: 'feature',    header: tx('Feature', 'الميزة'),       width: '40%' },
-        { key: 'trial',      header: tx('Trial', 'تجربة'),          align: 'center' },
-        { key: 'standard',   header: tx('Standard', 'قياسي'),       align: 'center' },
-        { key: 'enterprise', header: tx('Enterprise', 'مؤسسي'),     align: 'center' },
-      ],
-      rows: [
-        { feature: tx('AI Agents', 'الوكلاء'),               trial: '9',  standard: '9+',                       enterprise: tx('Unlimited', 'بلا حدود') },
-        { feature: tx('Audit Trail', 'سجل التدقيق'),         trial: '✓',  standard: '✓',                        enterprise: tx('✓ Cryptographic', '✓ مشفر') },
-        { feature: tx('On-prem Deployment', 'نشر داخلي'),    trial: '—',  standard: tx('Add-on', 'إضافة'),       enterprise: tx('✓ Included', '✓ مضمّن') },
-        { feature: tx('Bring-your-own LLM', 'نموذجك الخاص'), trial: '—',  standard: '✓',                        enterprise: '✓' },
-        { feature: tx('Dedicated Support', 'دعم مخصص'),      trial: tx('Email', 'بريد'), standard: tx('Email + Chat', 'بريد + دردشة'), enterprise: tx('24×7 + CSM', '٢٤×٧ + مدير') },
-        { feature: tx('Manual Billing', 'فوترة يدوية'),      trial: '✓',  standard: '✓',                        enterprise: '✓' },
-      ],
+      columns: [] as Array<{ key: string; header: string; width?: string; align?: 'left' | 'center' | 'right' }>,
+      rows: [] as Array<Record<string, string>>,
     },
     testimonials: [
       { id: '1', quote: tx('Our auditors finished in days, not weeks.', 'انتهى المدققون في أيام، لا أسابيع.'),

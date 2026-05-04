@@ -149,6 +149,12 @@ const LOADERS: Record<string, Loader> = {
     import('@dos/ui-system').then(m => m.DosMarketingAboutPageComponent),
   MarketingLegalTemplateComponent: () =>
     import('@dos/ui-system').then(m => m.DosMarketingLegalPageComponent),
+  MarketingPlatformTemplateComponent: () =>
+    import('@dos/ui-system').then(m => m.DosMarketingPlatformPageComponent),
+  MarketingResourcesTemplateComponent: () =>
+    import('@dos/ui-system').then(m => m.DosMarketingResourcesPageComponent),
+  MarketingExecutiveKitTemplateComponent: () =>
+    import('@dos/ui-system').then(m => m.DosMarketingExecutiveKitPageComponent),
 };
 
 export const ARCHETYPE_TEMPLATE_EXPORTS: ReadonlySet<string> =

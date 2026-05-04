@@ -27,6 +27,8 @@ import {
 } from './middleware/gateway-origin';
 import { initDecisionLedger, writeDecision } from './middleware/decision-ledger';
 import { adminZoneMtlsAgent, adminZoneMtlsStatus } from './middleware/admin-zone-mtls';
+import { tenantZoneMtlsAgent, tenantZoneMtlsStatus } from './middleware/tenant-zone-mtls';
+import { tenantRateLimit } from './middleware/tenant-rate-limit';
 
 const PORT = Number(process.env.PORT || 4000);
 const AUTH_SERVICE_URL = required('AUTH_SERVICE_URL');
@@ -239,10 +241,18 @@ function authGuard(req: Request, res: Response, next: NextFunction) {
 }
 
 // /api/auth/* → auth-service (public + protected handled inside the service)
-app.use('/api/auth', createProxyMiddleware({
+// L34 (Phase 4): when TENANT_MTLS_ENFORCE=1 + AUTH_SERVICE_URL is https://,
+// attach tenant-zone HttpsAgent so the hop is mTLS-encrypted. Article 4
+// segregation — tenant CA, NOT admin CA.
+const _tenantZoneAgentRaw = tenantZoneMtlsAgent();
+const _tenantUpstreamHttps = AUTH_SERVICE_URL.startsWith('https:');
+const tenantZoneAgent = (_tenantZoneAgentRaw && _tenantUpstreamHttps) ? _tenantZoneAgentRaw : null;
+console.log(`[gateway] tenant-zone mTLS: ${tenantZoneMtlsStatus()}${_tenantZoneAgentRaw && !_tenantUpstreamHttps ? ' (agent staged, awaiting https:// AUTH_SERVICE_URL)' : ''}`);
+app.use('/api/auth', tenantRateLimit('customer'), createProxyMiddleware({
   target: AUTH_SERVICE_URL,
   changeOrigin: true,
   xfwd: true,
+  ...(tenantZoneAgent ? { agent: tenantZoneAgent } : {}),
 }));
 
 // Inject identity headers from verified JWT for downstream services.
@@ -1534,6 +1544,8 @@ app.use(['/api/platform-product', '/api/product', '/api/knowledge', '/api/operat
 // ── Public marketing / landing stubs (no auth)
 // Consumed by product shells (e.g. shahin-ai) until platform-product publishes
 // real CMS-backed routes. Registered before the catch-all /api → 404.
+// L37-C — customer-zone rate limit on all public endpoints.
+app.use('/api/public', tenantRateLimit('customer'));
 app.get(['/api/public/landing-content', '/api/public/landing/content'], (_req, res) => {
   res.json({
     agents: [],

@@ -28,6 +28,7 @@ import { createPlatformAdminRouter } from './platform-admin.routes.js';
 import { createDynamicUiContractRouter } from './dynamic-ui-contract.routes.js';
 import { createTemplateBindingRouter } from './template-binding.routes.js';
 import { createWorkspaceShellRouter } from './workspace-shell.routes.js';
+import { createWorkspaceSurfaceRouter } from './workspace-surface.routes.js';
 import { createBrandRouter } from './brand.routes.js';
 import { createAgenticRouter } from './agentic.routes.js';
 import { createMarketingDownloadsRouter } from './marketing-downloads.routes.js';
@@ -73,6 +74,8 @@ export function createUiOsRouter(pool: DbPool): Router {
   router.use('/', createTemplateBindingRouter(pool));
   // Phase WS-5 — workspace-shell binding resolver
   router.use('/', createWorkspaceShellRouter(pool));
+  // Phase WS-DB-2 — workspace surface content catalogs (DB-driven rewrite)
+  router.use('/', createWorkspaceSurfaceRouter(pool));
   // Phase M0 — Public marketing brand resolver (NOT auth-bound)
   router.use('/', createBrandRouter(pool));
   // Phase M0.5 — Public agentic registry + strip aggregate (NOT auth-bound)
