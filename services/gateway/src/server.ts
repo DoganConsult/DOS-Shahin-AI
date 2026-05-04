@@ -502,6 +502,11 @@ if (UI_OS_SERVICE_URL) {
     '/api/ui-os/marketing/downloads',
     '/api/ui-os/agentic/registry',
     '/api/ui-os/agentic/strip',
+    // Phase 1 — DB-driven GRC Sandbox surfaced on the public marketing landing.
+    // ui-os-service mounts /api/ui-os/grc-sandbox/* BEFORE requireGatewayOrigin
+    // and every SQL is scoped to tenant_id='sandbox' — no real tenant data
+    // can leak via this surface.
+    '/api/ui-os/grc-sandbox',
   ];
   // Phase M3.1 — anonymous template-binding for the 7 marketing-landing routes.
   // ui-os-service mirrors this allowlist (publicMarketingTemplateRoutes) so the

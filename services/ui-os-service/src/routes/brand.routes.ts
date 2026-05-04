@@ -50,6 +50,53 @@ function buildMarketingHomeContent(brandCode: string, locale: string, tx: Tx, ro
   const brandLabel = brandCode === 'shahin-ai' ? 'Shahin-AI' : 'Dogan-AI';
   return {
     brandLabel,
+    copyright: tx(
+      `© ${new Date().getFullYear()} Dogan Consult — All rights reserved.`,
+      `© ${new Date().getFullYear()} دوغان للاستشارات — جميع الحقوق محفوظة.`,
+    ),
+    logoHref: '/',
+    // Phase M3.1 — uiLabels bag consumed by every aria-label / accessibility
+    // string + per-section eyebrow-without-content strings on the FE.
+    uiLabels: {
+      headerMenuLabel:  tx('Menu', 'القائمة'),
+      mobileMenuLabel:  tx('Open navigation menu', 'فتح قائمة التنقل'),
+      heroTrustLabel:   tx(
+        'Trusted for: ISO 27001 · SOC 2 Type II · GDPR · NCA ECC · SAMA CSF',
+        'موثوق لـ: ISO 27001 · SOC 2 Type II · GDPR · NCA ECC · SAMA CSF',
+      ),
+      valuePropsEyebrow: tx('Operational value', 'قيمة تشغيلية'),
+      valuePropsTitle:   tx(
+        'Three proof points before the rest of the platform story.',
+        'ثلاث فوائد واضحة قبل أن تبدأ بقية الصفحة.',
+      ),
+      valuePropsSub: tx(
+        'Shorter review cycles, tighter approvals, and evidence that stays ready for every regulator.',
+        'تقليل وقت المراجعة، إحكام الموافقات، وإبقاء الأدلة جاهزة للتدقيق في كل خطوة.',
+      ),
+      heroProofStatus: tx('Audit-ready', 'جاهز للتدقيق'),
+      heroProofTitle:  tx(
+        'A live proof panel for agents, approvals, and audit.',
+        'لوحة مباشرة للوكلاء والموافقات والدليل الرقابي.',
+      ),
+      heroProofBody: tx(
+        'Monitor execution status, track approvals, and keep an auditable receipt from first signal to closure.',
+        'راقب حالة التنفيذ، تتبّع الموافقات، واحتفظ بدليل قابل للمراجعة من أول إشارة حتى الإغلاق.',
+      ),
+      heroEvidenceReceipt: tx('Evidence receipt', 'إيصال الأدلة'),
+      heroProofStatusItems: [
+        { id: 'agents',     label: tx('Agents',     'الوكلاء'),    value: tx('9 active', '٩ نشطون'),     tone: 'live'    as const },
+        { id: 'approvals',  label: tx('Approvals',  'الموافقات'),  value: tx('All in flight', 'كلها قيد التنفيذ'), tone: 'pending' as const },
+        { id: 'evidence',   label: tx('Evidence',   'الأدلة'),     value: tx('Synced',  'متزامن'),       tone: 'synced'  as const },
+      ],
+      heroTimelineSteps: [
+        tx('Observe',  'مراقبة'),
+        tx('Suggest',  'اقتراح'),
+        tx('Approve',  'موافقة'),
+        tx('Execute',  'تنفيذ'),
+        tx('Verify',   'تحقق'),
+        tx('Log',      'تسجيل'),
+      ],
+    },
     hero: {
       badge: tx('Enterprise GRC · AI-Native · Bilingual', 'حوكمة مؤسسية · ذكاء اصطناعي أصيل · ثنائي اللغة'),
       eyebrow: tx('Purpose-built for regulated enterprises', 'مصمم خصيصًا للمؤسسات الخاضعة للتنظيم'),
@@ -124,6 +171,7 @@ function buildMarketingHomeContent(brandCode: string, locale: string, tx: Tx, ro
       },
     },
     platform: {
+      eyebrow: tx('Platform DNA', 'الحمض النووي للمنصة'),
       title: tx('A platform, not a checklist tool.', 'منصة، لا قائمة فحص.'),
       body: tx('Foundation, DAuth, Dynamic UI, AI engine, Audit ledger — composable from day one.',
                'Foundation و DAuth وواجهة ديناميكية ومحرك ذكاء اصطناعي وسجل تدقيق — قابلة للتركيب منذ اليوم الأول.'),
@@ -192,37 +240,68 @@ function buildMarketingHomeContent(brandCode: string, locale: string, tx: Tx, ro
       ],
     },
     pricing: {
+      eyebrow: tx('Pricing', 'التسعير'),
       title: tx('Pricing that scales with proof, not seats.', 'تسعير يقاس بالأدلة، لا بالمقاعد.'),
       ctaLabel: tx('See pricing', 'استعرض التسعير'),
       href: '/pricing',
       columns: [] as Array<{ key: string; header: string; width?: string; align?: 'left' | 'center' | 'right' }>,
       rows: [] as Array<Record<string, string>>,
     },
-    testimonials: [
-      { id: '1', quote: tx('Our auditors finished in days, not weeks.', 'انتهى المدققون في أيام، لا أسابيع.'),
-        author: tx('Head of GRC', 'رئيس الحوكمة'), role: tx('Bank', 'مصرف') },
-      { id: '2', quote: tx('The first GRC tool people actually use.', 'أول أداة حوكمة يستعملها الناس فعلاً.'),
-        author: tx('CISO', 'مدير الأمن'),          role: tx('Insurer', 'تأمين') },
-      { id: '3', quote: tx('Continuous evidence, finally.', 'أدلة مستمرة، أخيراً.'),
-        author: tx('VP Risk', 'نائب رئيس المخاطر'), role: tx('Telco', 'اتصالات') },
-    ],
-    customerLogos: [
-      { id: '1', name: 'BankCo' }, { id: '2', name: 'GovDept' },
-      { id: '3', name: 'HealthOrg' }, { id: '4', name: 'Energy+' }, { id: '5', name: 'Telco9' },
-    ],
-    resources: [
-      { id: 'docs',  title: tx('Docs', 'الوثائق'),         body: tx('Build with the platform SDK.', 'ابنِ مع SDK المنصة.'), href: '/docs' },
-      { id: 'blog',  title: tx('Blog', 'المدونة'),         body: tx('Field notes from agentic GRC.', 'ملاحظات ميدانية من الحوكمة الوكيلة.'), href: '/blog' },
-      { id: 'wp',    title: tx('White papers', 'أوراق بيضاء'), body: tx('In-depth research.', 'بحث متعمق.'), href: '/whitepapers' },
-    ],
-    faq: [
-      { q: tx('Is this on-prem ready?', 'هل جاهز للنشر الداخلي؟'),
-        a: tx('Yes — same product, same DB topology.', 'نعم — نفس المنتج، نفس بنية قاعدة البيانات.') },
-      { q: tx('How are agent actions authorised?', 'كيف يُصرّح بإجراءات الوكلاء؟'),
-        a: tx('Through dauth + module-level RBAC, with audit trail.', 'عبر DAuth + صلاحيات على مستوى الوحدة مع سجل تدقيق.') },
-      { q: tx('Can we bring our own AI model?', 'هل يمكن استخدام نموذجنا الخاص؟'),
-        a: tx('Yes — the AI engine is provider-agnostic.', 'نعم — محرك الذكاء مستقل عن المزود.') },
-    ],
+    testimonials: {
+      eyebrow: tx('What customers say', 'ماذا يقول العملاء'),
+      title: tx('Audit-ready, in their own words.', 'جاهزون للتدقيق، بكلماتهم.'),
+      sub: tx(
+        'Three quotes from teams that closed the gap between policy and proof.',
+        'ثلاثة اقتباسات من فرق أغلقت الفجوة بين السياسة والإثبات.',
+      ),
+      items: [
+        { id: '1', quote: tx('Our auditors finished in days, not weeks.', 'انتهى المدققون في أيام، لا أسابيع.'),
+          author: tx('Head of GRC', 'رئيس الحوكمة'), role: tx('Bank', 'مصرف') },
+        { id: '2', quote: tx('The first GRC tool people actually use.', 'أول أداة حوكمة يستعملها الناس فعلاً.'),
+          author: tx('CISO', 'مدير الأمن'),          role: tx('Insurer', 'تأمين') },
+        { id: '3', quote: tx('Continuous evidence, finally.', 'أدلة مستمرة، أخيراً.'),
+          author: tx('VP Risk', 'نائب رئيس المخاطر'), role: tx('Telco', 'اتصالات') },
+      ],
+    },
+    logos: {
+      eyebrow: tx('Trusted by', 'موثوق به من'),
+      title: tx('Customers across regulated industries.', 'عملاء عبر القطاعات المنظمة.'),
+      label: tx('Customer logo', 'شعار عميل'),
+      items: [
+        { id: '1', name: 'BankCo' }, { id: '2', name: 'GovDept' },
+        { id: '3', name: 'HealthOrg' }, { id: '4', name: 'Energy+' }, { id: '5', name: 'Telco9' },
+      ],
+    },
+    resources: {
+      eyebrow: tx('Resources', 'الموارد'),
+      title: tx('Read, watch, and learn.', 'اقرأ، شاهد، وتعلّم.'),
+      sub: tx(
+        'Docs, field notes, and in-depth research from the agentic GRC team.',
+        'وثائق، ملاحظات ميدانية، وبحث متعمق من فريق الحوكمة الوكيلة.',
+      ),
+      label: tx('Open resource', 'افتح المورد'),
+      items: [
+        { id: 'docs',  title: tx('Docs', 'الوثائق'),             body: tx('Build with the platform SDK.', 'ابنِ مع SDK المنصة.'),                  href: '/docs' },
+        { id: 'blog',  title: tx('Blog', 'المدونة'),             body: tx('Field notes from agentic GRC.', 'ملاحظات ميدانية من الحوكمة الوكيلة.'), href: '/blog' },
+        { id: 'wp',    title: tx('White papers', 'أوراق بيضاء'), body: tx('In-depth research.', 'بحث متعمق.'),                                       href: '/whitepapers' },
+      ],
+    },
+    faq: {
+      eyebrow: tx('FAQ', 'الأسئلة الشائعة'),
+      title: tx('Common questions, direct answers.', 'أسئلة شائعة، إجابات مباشرة.'),
+      sub: tx(
+        'On-prem readiness, agent authorisation, and bring-your-own-LLM — covered.',
+        'جاهزية النشر الداخلي، تصاريح الوكلاء، وإحضار نموذجك الخاص — كلها مغطاة.',
+      ),
+      items: [
+        { q: tx('Is this on-prem ready?', 'هل جاهز للنشر الداخلي؟'),
+          a: tx('Yes — same product, same DB topology.', 'نعم — نفس المنتج، نفس بنية قاعدة البيانات.') },
+        { q: tx('How are agent actions authorised?', 'كيف يُصرّح بإجراءات الوكلاء؟'),
+          a: tx('Through dauth + module-level RBAC, with audit trail.', 'عبر DAuth + صلاحيات على مستوى الوحدة مع سجل تدقيق.') },
+        { q: tx('Can we bring our own AI model?', 'هل يمكن استخدام نموذجنا الخاص؟'),
+          a: tx('Yes — the AI engine is provider-agnostic.', 'نعم — محرك الذكاء مستقل عن المزود.') },
+      ],
+    },
     ctaBanner: {
       eyebrow: tx('Get started', 'ابدأ'),
       title: tx('Ready to see it run?', 'جاهز لتراها تعمل؟'),

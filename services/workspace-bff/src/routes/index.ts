@@ -5,4 +5,9 @@ import { eventsRouter } from './events.route.js';
 export const routes = Router();
 routes.use('/workspace', bootstrapRouter);
 routes.use('/workspace', eventsRouter);
-routes.get('/workspace/health', (_req, res) => res.json({ ok: true, service: 'workspace-bff' }));
+const healthHandler = (_req: import('express').Request, res: import('express').Response) =>
+  res.json({ ok: true, service: 'workspace-bff' });
+routes.get('/workspace/health', healthHandler);
+// /healthz alias for PM2 / Cloudflare / k8s-style probes that hit the
+// service root rather than the prefixed mount.
+routes.get('/healthz', healthHandler);

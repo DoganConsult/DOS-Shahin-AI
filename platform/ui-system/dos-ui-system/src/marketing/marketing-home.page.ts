@@ -747,7 +747,39 @@ export class DosMarketingHomePageComponent {
   @Input() set downloadAssets(v: ReadonlyArray<MarketingAsset>) { this._downloadAssets.set(v); }
   get downloadAssets(): ReadonlyArray<MarketingAsset> { return this._downloadAssets(); }
 
-  private readonly content = computed(() => this._homeContent() ?? EMPTY_MARKETING_HOME_CONTENT);
+  private readonly content = computed(() => {
+    const c = this._homeContent() ?? EMPTY_MARKETING_HOME_CONTENT;
+    // Defensive: a live resolver payload may ship with any of the nested
+    // section bags missing (older fixtures pre-date the M3.1 schema).
+    // Merge each bag against its empty default so per-key getters never
+    // crash with "Cannot read properties of undefined (reading 'eyebrow')"
+    // / 'mobileMenuLabel' / etc. Merge is shallow per bag — that matches
+    // every getter on this component (no getter dives more than one
+    // level into a nested object).
+    const E = EMPTY_MARKETING_HOME_CONTENT;
+    return {
+      ...E,
+      ...c,
+      uiLabels:    { ...E.uiLabels,    ...(c.uiLabels    ?? {}) },
+      hero:        { ...E.hero,        ...(c.hero        ?? {}) },
+      agentic:     { ...E.agentic,     ...(c.agentic     ?? {}) },
+      downloadKit: { ...E.downloadKit, ...(c.downloadKit ?? {}) },
+      platform:    { ...E.platform,    ...(c.platform    ?? {}) },
+      architecture:{ ...E.architecture,...(c.architecture?? {}) },
+      ai:          { ...E.ai,          ...(c.ai          ?? {}) },
+      pricing:     { ...E.pricing,     ...(c.pricing     ?? {}) },
+      testimonials:{ ...E.testimonials,...(c.testimonials?? {}) },
+      logos:       { ...E.logos,       ...(c.logos       ?? {}) },
+      resources:   { ...E.resources,   ...(c.resources   ?? {}) },
+      faq:         { ...E.faq,         ...(c.faq         ?? {}) },
+      ctaBanner:   { ...E.ctaBanner,   ...(c.ctaBanner   ?? {}) },
+      trustPills:  c.trustPills  ?? E.trustPills,
+      valueProps:  c.valueProps  ?? E.valueProps,
+      modules:     c.modules     ?? E.modules,
+      industries:  c.industries  ?? E.industries,
+      breadcrumb:  c.breadcrumb  ?? E.breadcrumb,
+    } as MarketingHomeContent;
+  });
 
   // Brand label (resolved server-side, no string mapping in component).
   get brandLabel(): string { return this.content().brandLabel; }
