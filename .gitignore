@@ -50,3 +50,4 @@ ios/
 
 # DOS Master Phase 3 / L29 — admin-zone mTLS materials (secrets, never committed).
 platform/config-center/secrets/
+products/shahin-ai/app/src/app/.angular/cache/

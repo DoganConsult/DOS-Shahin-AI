@@ -1,9 +1,0 @@
-                  id                  |       created_at        |                                   tags                                    |                                                            metadata                                                            
---------------------------------------+-------------------------+---------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------
- e4544316-8b75-46d0-8d22-9c42e5e28b5e | 2026-05-02 06:00:26.402 | {ai-engine,surface:agent-A05,surface:agent-shift,tenant:t_test_sub_123}   | {"phase": 2, "source": "ai-hr-shift-runner", "service": "ai-engine-service", "tenantId": "t_test_sub_123", "durationMs": 41}
- 1b47abdc-3729-43e6-b88d-7ccc2ced23ff | 2026-05-02 06:00:26.363 | {ai-engine,surface:agent-A01,surface:agent-shift,tenant:t_test_sub_123}   | {"phase": 2, "source": "ai-hr-shift-runner", "service": "ai-engine-service", "tenantId": "t_test_sub_123", "durationMs": 32}
- 25e0d0bd-45a4-44f8-86fc-ee681742c2b9 | 2026-05-02 06:00:26.342 | {ai-engine,surface:agent-A01,surface:agent-shift,tenant:f2a45bc25f31}     | {"phase": 2, "source": "ai-hr-shift-runner", "service": "ai-engine-service", "tenantId": "f2a45bc25f31", "durationMs": 42}
- 5e158c40-bc7e-4b75-9bc2-066cac560d5d | 2026-05-02 06:00:26.269 | {ai-engine,surface:agent-A01,surface:agent-shift,tenant:6d8f5010ab6fe2fd} | {"phase": 2, "source": "ai-hr-shift-runner", "service": "ai-engine-service", "tenantId": "6d8f5010ab6fe2fd", "durationMs": 46}
- 22145f44-d538-4364-be4c-43ff8d02919d | 2026-05-02 06:00:26.206 | {ai-engine,surface:agent-A05,surface:agent-shift,tenant:t_smoketest-17}   | {"phase": 2, "source": "ai-hr-shift-runner", "service": "ai-engine-service", "tenantId": "t_smoketest-17", "durationMs": 70}
-(5 rows)
-
