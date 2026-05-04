@@ -894,9 +894,22 @@ Master are CI-rejected (`dos-master-only.mjs`) and DB-rejected
   attempt POSTed → tenant uuid minted → `provisioning_job` row queued
   with status=`queued` → `dos.dos_master_invalidation_log` fan-out row
   inserted with scope=`tenant`. Build GREEN.
-- **M8..M14** — IN-PROGRESS. Sequenced per DOS_MASTER_PLAN.md §3.
-  M8 D1 next: `services/anti-abuse-service` (CAPTCHA + IP-rep + device-FP
-  + email-verify adapter façade).
+- **M8 D1 — CLOSED (2026-05-04).** `services/anti-abuse-service`
+  (`@dos/anti-abuse-service`, port 4010, public trust zone, prefix
+  `/api/public/anti-abuse`) ships `POST /evaluate`. 4 adapters under
+  `src/adapters/`: `captcha.adapter` (token presence + sentinel),
+  `ip-rep.adapter` (private/loopback whitelist), `device-fp.adapter`
+  (empty fp = high risk), `email-verify.adapter` (5-domain disposable
+  blocklist). Aggregator computes max-score → decision
+  `allow|review|block` (default block at ≥0.7, env override
+  `ANTI_ABUSE_BLOCK_THRESHOLD`); on block flips
+  `dos_master.signup_attempt.status='blocked'`. Each signal persists
+  one row in `dos_master.signup_anti_abuse_signal`. Live verified:
+  clean inputs = allow (0.05); spammer@mailinator.com + empty fp +
+  empty captcha = block (1.0). Build GREEN.
+- **M9..M14** — IN-PROGRESS. Sequenced per DOS_MASTER_PLAN.md §3.
+  M9 D1 next: `services/marketing-shell-service` (public zone SSR +
+  `dos.marketing_*` content authority + `/api/public/site-bootstrap`).
 
 ### Phase status (live as of 2026-05-01)
 

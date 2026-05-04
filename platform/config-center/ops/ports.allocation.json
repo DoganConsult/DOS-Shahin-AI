@@ -632,6 +632,15 @@
       "gatewayPrefix": "/api/public/anti-abuse",
       "envFile": "anti-abuse-service",
       "note": "DOS Master M8 \u2014 anti-abuse aggregator (CAPTCHA + IP-rep + device-FP + email-verify)"
+    },
+    "marketing-shell-service": {
+      "port": 4011,
+      "cwd": "services/marketing-shell-service",
+      "script": "dist/server.js",
+      "wave": 1,
+      "gatewayPrefix": "/api/public/site",
+      "envFile": "marketing-shell-service",
+      "note": "DOS Master M9 \u2014 public marketing shell BFF (CDN-fronted; Cloudflare default + CdnAdapter for on-prem)"
     }
   },
   "oneShots": {

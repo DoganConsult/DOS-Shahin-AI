@@ -1,0 +1,15 @@
+{
+  "serviceCode": "marketing-shell-service",
+  "version": "0.1.0",
+  "domains": ["platform"],
+  "trustZone": "public",
+  "dependencies": [],
+  "apiPrefix": "/api/public/site",
+  "doctrineArticle": 4,
+  "controlled": true,
+  "writerActor": "marketing-shell-service",
+  "cdn": {
+    "default": "cloudflare",
+    "adapter": "@dos/cdn-adapter (M9 D2)"
+  }
+}
