@@ -1,0 +1,11 @@
+{
+  "serviceCode": "workflow-service",
+  "version": "0.1.0",
+  "domains": ["platform"],
+  "trustZone": "admin",
+  "dependencies": ["rollout-service", "publish-service"],
+  "apiPrefix": "/api/admin/workflow",
+  "doctrineArticle": 11,
+  "controlled": true,
+  "writerActor": "dos-master"
+}

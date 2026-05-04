@@ -802,6 +802,48 @@ app.use('/api/admin/console', createProxyMiddleware({
   ...(adminZoneAgent ? { agent: adminZoneAgent } : {}),
 }));
 
+// ── DOS Master Phase 2 L13 — workflow-service (admin trust zone) ────────
+// /api/admin/workflow/* routes to workflow-service:4018. Mounted BEFORE
+// the broader /api/admin → admin-service proxy so it wins path matching.
+const DOS_WORKFLOW_SERVICE_URL = process.env.DOS_WORKFLOW_SERVICE_URL || 'http://127.0.0.1:4018';
+app.use('/api/admin/workflow', createProxyMiddleware({
+  target: DOS_WORKFLOW_SERVICE_URL,
+  changeOrigin: true,
+  xfwd: true,
+  pathRewrite: (p) => `/api/admin/workflow${p.startsWith('/') ? p : `/${p}`}`,
+  ...(adminZoneAgent ? { agent: adminZoneAgent } : {}),
+}));
+
+// ── DOS Master Phase 2 L14..L27 — 14 Phase-2 OS services (admin trust zone)
+// Each proxy mounts BEFORE the broader /api/admin → admin-service so it wins.
+const PHASE2_OS = [
+  ['ai-os',                4019],
+  ['notification-os',      4020],
+  ['integration-os',       4021],
+  ['data-governance-os',   4022],
+  ['billing-os',           4023],
+  ['feature-flag-os',      4024],
+  ['security-secrets-os',  4025],
+  ['telemetry-os',         4026],
+  ['schema-authoring-os',  4027],
+  ['deployment-os',        4028],
+  ['release-os',           4029],
+  ['vendor-risk-os',       4034],
+  ['marketplace-os',       4031],
+  ['dr-os',                4032],
+] as const;
+for (const [code, port] of PHASE2_OS) {
+  const envKey = `DOS_${code.toUpperCase().replace(/-/g, '_')}_SERVICE_URL`;
+  const target = (process.env as Record<string, string | undefined>)[envKey] || `http://127.0.0.1:${port}`;
+  app.use(`/api/admin/${code}`, createProxyMiddleware({
+    target,
+    changeOrigin: true,
+    xfwd: true,
+    pathRewrite: (p) => `/api/admin/${code}${p.startsWith('/') ? p : `/${p}`}`,
+    ...(adminZoneAgent ? { agent: adminZoneAgent } : {}),
+  }));
+}
+
 // ── Platform Admin Workspace — proxied to admin-service ─────────────────
 // /api/admin/{dos,dauth,dsoc,dnoc,whoami,overview,info} routes to the
 // unified admin surface. admin-service does its own auth+permission check

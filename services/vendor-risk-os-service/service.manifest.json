@@ -1,0 +1,15 @@
+{
+  "serviceCode": "vendor-risk-os-service",
+  "version": "0.1.0",
+  "domains": [
+    "platform"
+  ],
+  "trustZone": "admin",
+  "dependencies": [
+    "rollout-service"
+  ],
+  "apiPrefix": "/api/admin/vendor-risk-os",
+  "doctrineArticle": 11,
+  "controlled": true,
+  "writerActor": "dos-master"
+}

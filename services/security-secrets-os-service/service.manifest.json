@@ -1,0 +1,15 @@
+{
+  "serviceCode": "security-secrets-os-service",
+  "version": "0.1.0",
+  "domains": [
+    "platform"
+  ],
+  "trustZone": "admin",
+  "dependencies": [
+    "rollout-service"
+  ],
+  "apiPrefix": "/api/admin/security-secrets-os",
+  "doctrineArticle": 11,
+  "controlled": true,
+  "writerActor": "dos-master"
+}

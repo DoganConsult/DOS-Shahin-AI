@@ -76,6 +76,24 @@ export class PlatformAdminApiService {
     return { ok: true, status, data, error: null };
   }
 
+  async post<T>(path: string, body: unknown): Promise<ApiResult<T>> {
+    const tok = this.token();
+    if (!tok) return { ok: false, status: 401, data: null, error: 'token_required' };
+    const r = await fetch(`${API}${path}`, {
+      method: 'POST',
+      headers: { authorization: `Bearer ${tok}`, 'content-type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    const status = r.status;
+    if (!r.ok) {
+      let err = `http_${status}`;
+      try { const j = await r.json(); err = (j as { error?: string }).error || err; } catch { /* noop */ }
+      return { ok: false, status, data: null, error: err };
+    }
+    const data = (await r.json()) as T;
+    return { ok: true, status, data, error: null };
+  }
+
   async downloadEvidencePack(): Promise<{ filename: string; blobUrl: string } | null> {
     const tok = this.token();
     if (!tok) return null;
