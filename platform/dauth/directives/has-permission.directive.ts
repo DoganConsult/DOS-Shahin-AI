@@ -1,5 +1,5 @@
 import { Directive, Input, TemplateRef, ViewContainerRef, inject, OnInit } from '@angular/core';
-import { AccessStore } from '../access/access.store';
+import { AccessStore } from '@dos/access-store';
 
 @Directive({
   selector: '[appHasPermission]',

@@ -18,6 +18,13 @@ export interface AccessStoreConfig {
   /** Override for `GET <baseUrl>/api/tenants/me`. */
   mePath?: string;
   /**
+   * Optional opt-in for a trial summary endpoint. Defaults to disabled so
+   * workspace bootstrap does not fan out directly to `/api/trials/current`.
+   * Products that still need trial chrome must provide a canonical BFF-backed
+   * path explicitly.
+   */
+  trialSummaryPath?: string | null;
+  /**
    * Where to redirect on a 401 from any session call. Empty string
    * disables the redirect (the consumer handles 401 themselves).
    */
@@ -32,6 +39,7 @@ export const DEFAULT_ACCESS_STORE_CONFIG: Required<AccessStoreConfig> = {
   baseUrl: '',
   myPermissionsPath: '/api/access/my-permissions',
   mePath: '/api/tenants/me',
+  trialSummaryPath: null,
   loginRedirectUrl: '/api/auth/oidc/start?mode=login',
 };
 

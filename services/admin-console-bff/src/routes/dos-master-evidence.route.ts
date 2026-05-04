@@ -6,8 +6,38 @@ import {
   authWhoami, authEmailLogin,
 } from '../lib/dos-master-evidence.js';
 import { PLATFORM_ADMIN_SPA_HTML } from '../lib/platform-admin-spa.js';
+import { kcVerifyMiddleware, kcRequireEnabled, kcConfig } from '../lib/keycloak-verifier.js';
+import { mtlsStatus, mtlsConfig } from '../lib/mtls-options.js';
 
 export const dosMasterEvidenceRouter = Router();
+
+// M15 D1 (B) — Keycloak `platform-ops` JWT verifier, DISABLED by default.
+// Mounted before all routes so JWT-shaped Bearer tokens (3 segments) hit
+// the KC verifier when KC_REQUIRE=1. Opaque DB-session tokens (1 segment,
+// e.g. `tmp.<base64url>`) bypass it and fall through to requireAdmin.
+dosMasterEvidenceRouter.use(kcVerifyMiddleware());
+
+// M15 status surface for the Evidence Pack panel + ops dashboards.
+// Read-only, no auth — exposes only the on/off flags + masked config so
+// agents can prove the disabled-by-default doctrine binding.
+dosMasterEvidenceRouter.get('/dos-master/m15/status', (_req: Request, res: Response) => {
+  const kc = kcConfig();
+  const mt = mtlsConfig();
+  res.json({
+    kc_require: kcRequireEnabled() ? 1 : 0,
+    kc_realm: kc.realm,
+    kc_issuer_present: kc.issuer.length > 0,
+    kc_jwks_url_present: kc.jwksUrl.length > 0,
+    kc_audience: kc.audience,
+    mtls_enforce: mt.enforce ? 1 : 0,
+    mtls_status: mtlsStatus(),
+    mtls_ca_path_present: mt.caPath.length > 0,
+    mtls_cert_path_present: mt.certPath.length > 0,
+    mtls_key_path_present: mt.keyPath.length > 0,
+    doctrine_articles: [4, 5, 7, 11],
+    note: 'Scaffolds shipped disabled by default per Doctrine §10. Flip via PPD ring R0..R5 only.',
+  });
+});
 
 // Carbon-styled SPA shell. Hash-based routing inside the page handles all
 // /platform-admin/dos-master/* sub-routes. Auth via Bearer-from-localStorage

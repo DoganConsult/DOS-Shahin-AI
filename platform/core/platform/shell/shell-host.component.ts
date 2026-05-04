@@ -165,20 +165,6 @@ const FALLBACK_ITEM_ICON  = 'dot';
       color: var(--cds-text-placeholder-on-color, rgba(255,255,255,0.6));
     }
 
-    /* Wave F — account menu anchor (DosAccountMenuComponent is the dropdown body). */
-    .shell-account { position: relative; display: inline-block; }
-    .shell-account__popover {
-      position: absolute;
-      inset-block-start: calc(100% + 2px);
-      inset-inline-end: 0;
-      min-width: 14rem;
-      background: var(--cds-layer, #fff);
-      color: var(--cds-text-primary, #161616);
-      border: 1px solid var(--cds-border-subtle-01, #e0e0e0);
-      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-      z-index: 80;
-    }
-
     /* Wave F — mobile full-screen command-search overlay. */
     .shell-mobile-cmd {
       position: fixed; inset: 0;
@@ -329,26 +315,13 @@ const FALLBACK_ITEM_ICON  = 'dot';
               <dos-icon name="bell" [size]="20" [ariaLabel]="inboxToggleAria()"></dos-icon>
             </button>
           }
-          <!-- GAP-HDR-2 — account menu. -->
-          <span class="shell-account">
-            <button type="button"
-                    class="shell-header-toggle"
-                    [attr.aria-label]="accountAria()"
-                    [attr.aria-expanded]="accountOpen()"
-                    aria-haspopup="menu"
-                    (click)="toggleAccount()">
-              <dos-icon name="user" [size]="20" [ariaLabel]="accountAria()"></dos-icon>
-            </button>
-            @if (accountOpen()) {
-              <div class="shell-account__popover">
-                <dos-account-menu [userName]="userDisplayName()"
-                                  [userEmail]="userEmail()"
-                                  [items]="accountMenuItems()"
-                                  (action)="onAccountMenuAction($event)">
-                </dos-account-menu>
-              </div>
-            }
-          </span>
+          <!-- GAP-HDR-2 — account menu (Carbon header action + overflow menu). -->
+          <dos-account-menu [userName]="userDisplayName()"
+                            [userEmail]="userEmail()"
+                            [buttonLabel]="accountAria() || 'Account menu'"
+                            [items]="accountMenuItems()"
+                            (action)="onAccountMenuAction($event)">
+          </dos-account-menu>
           <!-- §B.9 #33 — help/support entry opens context panel on 'help' tab. -->
           @if (showContextPanel()) {
             <button type="button"
@@ -876,7 +849,6 @@ export class ShellHostComponent {
   });
 
   // ── Wave F — new header/overlay UI state ──────────────────────────────────
-  readonly accountOpen   = signal(false);
   readonly mobileCmdOpen = signal(false);
   readonly contextOpen   = signal(false);
   readonly contextTab    = signal<ContextPanelTab>('record');
@@ -1041,11 +1013,7 @@ export class ShellHostComponent {
   }
 
   // ── Wave F handlers ──────────────────────────────────────────────────────
-  toggleAccount(): void { this.accountOpen.update((v) => !v); }
-  closeAccount(): void  { this.accountOpen.set(false); }
-
   onAccountEntry(entry: ShellAccountMenuEntry): void {
-    this.closeAccount();
     if (entry.route) {
       void this.router.navigateByUrl(entry.route);
       return;
@@ -1062,11 +1030,10 @@ export class ShellHostComponent {
   /** Bridge DosAccountMenu `action` emission → platform ShellAccountMenuEntry. */
   onAccountMenuAction(item: DosAccountMenuItem): void {
     // §B.9 #7/#8 — intercept synthetic preference toggles.
-    if (item.id === '__prefs_language') { this.prefs.toggleLanguage(); this.closeAccount(); return; }
-    if (item.id === '__prefs_theme')    { this.prefs.toggleTheme();    this.closeAccount(); return; }
+    if (item.id === '__prefs_language') { this.prefs.toggleLanguage(); return; }
+    if (item.id === '__prefs_theme')    { this.prefs.toggleTheme();    return; }
     const entry = this.accountMenuEntries().find((e) => e.id === item.id);
     if (entry) this.onAccountEntry(entry);
-    else this.closeAccount();
   }
 
   accountLabel(entry: ShellAccountMenuEntry): string {
@@ -1148,7 +1115,6 @@ export class ShellHostComponent {
     }
     if (ev.key === 'Escape') {
       if (this.mobileCmdOpen()) { this.mobileCmdOpen.set(false); return; }
-      if (this.accountOpen())   { this.accountOpen.set(false);   return; }
     }
   }
 

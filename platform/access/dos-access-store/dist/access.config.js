@@ -4,6 +4,7 @@ export const DEFAULT_ACCESS_STORE_CONFIG = {
     baseUrl: '',
     myPermissionsPath: '/api/access/my-permissions',
     mePath: '/api/tenants/me',
+    trialSummaryPath: null,
     loginRedirectUrl: '/api/auth/oidc/start?mode=login',
 };
 /** Ergonomic provider helper for product bootstrap files. */

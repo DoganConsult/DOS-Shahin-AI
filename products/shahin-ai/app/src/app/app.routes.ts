@@ -88,6 +88,16 @@ export const routes: Routes = [
   },
   ...MARKETING_PUBLIC_ROUTES.map(r => ({ ...r, providers: [provideRouteIcons()] })),
   {
+    // DOS Master — Platform Admin Console workspace shell host.
+    // Mounted at top level (outside ShellHostComponent) because the
+    // platform-admin trust zone is separate from tenant AccessStore
+    // (Doctrine Article 4). Auth uses platform_admin_session JWE
+    // tokens consumed by admin-console-bff /auth/whoami.
+    path: 'platform-admin',
+    loadChildren: () =>
+      import('./pages/platform-admin/platform-admin.routes').then(m => m.PLATFORM_ADMIN_ROUTES),
+  },
+  {
     // Phase M1.6.1 — OIDC bridge. SPA NEVER collects credentials.
     // The Carbon login/register card components remain in @dos/ui-system
     // for future tenant-managed flows but the public route renders the

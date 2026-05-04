@@ -1203,9 +1203,11 @@ Master are CI-rejected (`dos-master-only.mjs`) and DB-rejected
   routes), `.../lib/platform-admin-spa.ts` (Carbon-styled SPA), wired
   via `.../routes/index.ts` and `server.ts`;
   `scripts/dos-master/provision-temp-admin.mjs` (canonical seed path
-  for platform-admin trust zone). Service is NOT yet on PM2 — it runs
-  manually for internal validation. PM2 boot, Keycloak `platform-ops`
-  realm cut-over, and mTLS certs land with M11 productionisation.
+  for platform-admin trust zone). Service is **ONLINE on PM2** (id 16,
+  port 4013, verified via `pm2 jlist`); gateway proxy
+  `/api/admin/console/* → :4013` returns 200, `/platform-admin` SPA
+  returns 200. Keycloak `platform-ops` realm cut-over and admin-zone
+  mTLS certs remain GATED on ops decisions and land with M15 D2/D3.
   Build GREEN (`pnpm --filter @dos/admin-console-bff build`),
   `dos-master-gate.mjs` 23/23 still PASS.
 

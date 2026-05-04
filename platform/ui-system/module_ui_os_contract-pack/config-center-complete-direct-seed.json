@@ -289,11 +289,31 @@
     }
   ],
   "apis": [
-    { "method": "GET", "path": "/api/cfg/overview", "owner_service": "config-center-service", "permission": "platform.config_center.read" },
-    { "method": "GET", "path": "/api/cfg/settings", "owner_service": "config-center-service", "permission": "platform.config_center.read" },
-    { "method": "GET", "path": "/api/cfg/flags", "owner_service": "config-center-service", "permission": "platform.config_center.read" },
-    { "method": "GET", "path": "/api/cfg/tokens", "owner_service": "config-center-service", "permission": "platform.config_center.read" },
-    { "method": "GET", "path": "/api/audit", "owner_service": "audit-service", "permission": "platform.audit.read" }
+    { "method": "GET", "path": "/api/config-center/resolve/:key", "owner_service": "tenant-service", "permission": "platform.config_center.read" },
+    { "method": "POST", "path": "/api/config-center/resolve/batch", "owner_service": "tenant-service", "permission": "platform.config_center.read" },
+    { "method": "GET", "path": "/api/config-center/explain/:key", "owner_service": "tenant-service", "permission": "platform.config_center.read" },
+    { "method": "GET", "path": "/api/config-center/settings", "owner_service": "tenant-service", "permission": "platform.config_center.read" },
+    { "method": "GET", "path": "/api/config-center/settings/:key", "owner_service": "tenant-service", "permission": "platform.config_center.read" },
+    { "method": "PUT", "path": "/api/config-center/settings/:key", "owner_service": "tenant-service", "permission": "platform.config_center.admin" },
+    { "method": "GET", "path": "/api/config-center/compare/tenants", "owner_service": "tenant-service", "permission": "platform.config_center.read" },
+    { "method": "GET", "path": "/api/config-center/compare/defaults", "owner_service": "tenant-service", "permission": "platform.config_center.read" },
+    { "method": "GET", "path": "/api/config-center/export", "owner_service": "tenant-service", "permission": "platform.config_center.admin" },
+    { "method": "POST", "path": "/api/config-center/import", "owner_service": "tenant-service", "permission": "platform.config_center.admin" },
+    { "method": "GET", "path": "/api/config-center/audit", "owner_service": "tenant-service", "permission": "platform.config_center.read" },
+    { "method": "GET", "path": "/api/config-center/audit/:key", "owner_service": "tenant-service", "permission": "platform.audit.read" },
+    { "method": "GET", "path": "/api/config-center/health/env", "owner_service": "tenant-service", "permission": "platform.config_center.read" },
+    { "method": "GET", "path": "/api/config-center/health/secrets", "owner_service": "tenant-service", "permission": "platform.config_center.admin" },
+    { "method": "GET", "path": "/api/config-center/health/drift", "owner_service": "tenant-service", "permission": "platform.config_center.read" },
+    { "method": "GET", "path": "/api/config-center/health/diagnostics", "owner_service": "tenant-service", "permission": "platform.config_center.read" },
+    { "method": "GET", "path": "/api/config-center/gateway/inventory", "owner_service": "tenant-service", "permission": "platform.config_center.read" },
+    { "method": "GET", "path": "/api/config-center/gateway/overrides", "owner_service": "tenant-service", "permission": "platform.config_center.read" },
+    { "method": "PUT", "path": "/api/config-center/gateway/override/:key", "owner_service": "tenant-service", "permission": "platform.config_center.admin" },
+    { "method": "DELETE", "path": "/api/config-center/gateway/override/:key", "owner_service": "tenant-service", "permission": "platform.config_center.admin" },
+    { "method": "POST", "path": "/api/config-center/gateway/invalidate", "owner_service": "tenant-service", "permission": "platform.config_center.admin" },
+    { "method": "GET", "path": "/api/config-center/gateway/workspace-config", "owner_service": "tenant-service", "permission": "platform.config_center.read" },
+    { "method": "GET", "path": "/api/config-center/gateway/shell-override", "owner_service": "tenant-service", "permission": "platform.config_center.read" },
+    { "method": "PUT", "path": "/api/config-center/gateway/workspace-batch", "owner_service": "tenant-service", "permission": "platform.config_center.admin" },
+    { "method": "GET", "path": "/api/ui-os/template-binding", "owner_service": "ui-os-service", "permission": "platform.config_center.read" }
   ],
   "i18n": {
     "en": {

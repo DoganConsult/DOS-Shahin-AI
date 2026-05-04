@@ -8,6 +8,9 @@ import type { AccessSnapshot, AccessTenant, MeResponse, ModuleCode, Permission }
  * Source endpoints (configurable via {@link ACCESS_STORE_CONFIG}):
  *   - `GET /api/access/my-permissions` → roles, permissions, modules, tenantId
  *   - `GET /api/tenants/me`            → user + tenant + membership
+ *   - `GET <trialSummaryPath>`         → optional trial summary; disabled by
+ *     default so workspace bootstrap does not call `/api/trials/current`
+ *     directly.
  *
  * Cookie-based session; no token math here. On 401 the store optionally
  * redirects to the configured login URL (override or disable per product).
@@ -123,11 +126,9 @@ export declare class AccessStore {
     private fetchPermissions;
     private fetchMe;
     /**
-     * Phase G T5 — pull current trial summary so the nav adapter can emit
-     * trial-aware reasons (trial-expired / trial-limit-reached). Best-effort:
-     * a missing/failing endpoint is normal for non-tenant users (404) and
-     * must NOT block load(). The shape mirrors getTrialSummary() in
-     * services/tenant-service/src/domain/trial-bundle.ts.
+     * Optional trial summary. Disabled by default; products must opt in with
+     * `trialSummaryPath` so workspace bootstrap stays on canonical access/BFF
+     * sources instead of calling `/api/trials/current` directly.
      */
     private fetchTrialSummary;
     private url;

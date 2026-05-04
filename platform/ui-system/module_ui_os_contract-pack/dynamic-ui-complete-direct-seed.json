@@ -162,27 +162,39 @@
   "apis": [
     {
       "method": "GET",
-      "path": "/api/ui-os/overview",
+      "path": "/api/ui-os/workspace/nav",
       "owner_service": "ui-os-service",
       "permission": "dynamic_ui.module.read"
     },
     {
       "method": "GET",
-      "path": "/api/ui-os/routes",
+      "path": "/api/ui-os/route-catalog",
       "owner_service": "ui-os-service",
       "permission": "dynamic_ui.routes.read"
     },
     {
       "method": "GET",
-      "path": "/api/ui-os/components",
+      "path": "/api/ui-os/contract/:moduleCode",
       "owner_service": "ui-os-service",
-      "permission": "dynamic_ui.components.read"
+      "permission": "dynamic_ui.contracts.read"
     },
     {
       "method": "GET",
-      "path": "/api/ui-os/contracts",
+      "path": "/api/ui-os/page-experience",
       "owner_service": "ui-os-service",
-      "permission": "dynamic_ui.contracts.read"
+      "permission": "dynamic_ui.module.read"
+    },
+    {
+      "method": "GET",
+      "path": "/api/ui-os/template-binding",
+      "owner_service": "ui-os-service",
+      "permission": "dynamic_ui.routes.read"
+    },
+    {
+      "method": "GET",
+      "path": "/api/ui-os/template-binding/all",
+      "owner_service": "ui-os-service",
+      "permission": "dynamic_ui.routes.read"
     }
   ],
   "i18n": {

@@ -5,7 +5,7 @@ import { TimeoutError, firstValueFrom, throwError } from 'rxjs';
 import { catchError, timeout } from 'rxjs/operators';
 import { SESSION_BOOTSTRAP_HTTP_TIMEOUT_MS } from '../../core/services/platform/bootstrap-timeouts';
 import { StorageService } from '@app/infrastructure';
-import { AccessStore } from '../access/access.store';
+import { AccessStore } from '@dos/access-store';
 import { GrcAuthService } from '../../core/services/grc-auth.service';
 import { environment } from '@env/environment';
 

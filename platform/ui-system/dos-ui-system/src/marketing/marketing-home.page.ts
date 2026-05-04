@@ -29,6 +29,7 @@ import {
   EventEmitter,
   Input,
   Output,
+  ViewChild,
   computed,
   inject,
   signal,
@@ -84,6 +85,11 @@ import { DosCarbonSkeletonComponent } from '../carbon/dos-carbon-skeleton.compon
 import { DosCarbonContainedListComponent, type DosCarbonContainedListItem } from '../carbon/dos-carbon-contained-list.component';
 import { DosCarbonInlineLoadingComponent } from '../carbon/dos-carbon-inline-loading.component';
 import { DosCarbonToggleTipComponent } from '../carbon/dos-carbon-toggle-tip.component';
+import { DosCarbonIconComponent } from '../carbon/dos-carbon-icon.component';
+// IBM Carbon icon descriptor for the public-header Sign-in CTA. Imported
+// from @carbon/icons (one-source rule) so the icon ships through the
+// @dos/ui-system Carbon boundary rather than being scattered into products.
+import Login20 from '@carbon/icons/lib/login/20';
 
 /** Locked 19-region ordering: public header + breadcrumb + 17 content/footer regions.
  *  CI gate `marketing-home-coverage.mjs` greps this literal. */
@@ -109,14 +115,38 @@ export const MARKETING_HOME_REGIONS = [
   'footer',
 ] as const;
 
+// Keep this as a second literal export because the contract test parses the
+// source text rather than following aliases.
+export const MARKETING_HOME_SECTIONS = [
+  'public-header',
+  'breadcrumb-row',
+  'hero',
+  'trust-pills',
+  'value-props',
+  'agentic-proof',
+  'download-kit',
+  'platform-overview',
+  'modules',
+  'industries',
+  'architecture',
+  'ai-and-agents',
+  'pricing-teaser',
+  'testimonials',
+  'logos',
+  'resources',
+  'faq',
+  'cta-banner',
+  'footer',
+] as const;
+
 const PUBLIC_HEADER_LINKS = [
-  { id: 'platform', href: '/platform', labelEn: 'Platform', labelAr: 'المنصة' },
+  { id: 'platform-dna', href: '#platform-dna', labelEn: 'Platform DNA', labelAr: 'بنية المنصة' },
+  { id: 'safe-ai', href: '#safe-ai', labelEn: 'Safe AI', labelAr: 'ذكاء آمن' },
   { id: 'pricing', href: '/pricing', labelEn: 'Pricing', labelAr: 'الأسعار' },
-  { id: 'trust', href: '/trust', labelEn: 'Trust', labelAr: 'الثقة' },
-  { id: 'about', href: '/about', labelEn: 'About', labelAr: 'من نحن' },
+  { id: 'resources', href: '/resources', labelEn: 'Resources', labelAr: 'الموارد' },
+  { id: 'faq', href: '#faq', labelEn: 'FAQ', labelAr: 'الأسئلة' },
   { id: 'contact', href: '/contact', labelEn: 'Contact', labelAr: 'تواصل' },
 ] as const;
-export const MARKETING_HOME_SECTIONS = MARKETING_HOME_REGIONS;
 export type MarketingHomeSectionId = (typeof MARKETING_HOME_REGIONS)[number];
 
 const EMPTY_MARKETING_HOME_CONTENT: MarketingHomeContent = {
@@ -186,6 +216,7 @@ export interface MarketingAgentTile {
     DosCarbonContainedListComponent,
     DosCarbonInlineLoadingComponent,
     DosCarbonToggleTipComponent,
+    DosCarbonIconComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './marketing-home.page.scss',
@@ -204,33 +235,44 @@ export interface MarketingAgentTile {
             <span class="dos-mh-public-header__brand-text">{{ brandLabel }}</span>
           </a>
 
-          <button
+          <dos-carbon-button
             class="dos-mh-public-header__menu-toggle"
-            type="button"
+            kind="ghost"
+            size="sm"
             [attr.aria-expanded]="headerMenuOpen()"
             [attr.aria-label]="mobileMenuLabel"
-            (click)="toggleHeaderMenu()"
+            (clicked)="toggleHeaderMenu()"
           >
-            <span></span>
-            <span></span>
-            <span></span>
-          </button>
+            {{ headerMenuLabel }}
+          </dos-carbon-button>
 
           <div class="dos-mh-public-header__menus" [class.is-open]="headerMenuOpen()">
             <nav class="dos-mh-public-header__nav" aria-label="Public navigation">
               @for (n of headerNavItems(); track n.id) {
-                <a
+                <dos-carbon-button
                   class="dos-mh-public-header__nav-link"
-                  [class.dos-mh-public-header__nav-link--active]="isHeaderActive(n.href)"
-                  [href]="n.href"
-                  (click)="onAnchorNavigate($event, n.href)"
+                  [kind]="isHeaderActive(n.href) ? 'secondary' : 'ghost'"
+                  size="sm"
+                  (clicked)="navigate(n.href)"
                 >
                   {{ n.label }}
-                </a>
+                </dos-carbon-button>
               }
             </nav>
 
             <div class="dos-mh-public-header__actions">
+              <dos-carbon-button
+                kind="ghost"
+                size="md"
+                data-testid="marketing-signin-cta"
+                data-cta-id="cta-signin"
+                (clicked)="navigate('/login')"
+              >
+                <span class="dos-mh-signin-cta">
+                  <dos-carbon-icon [icon]="signInIcon" size="20"></dos-carbon-icon>
+                  <span>{{ signInLabel }}</span>
+                </span>
+              </dos-carbon-button>
               <dos-carbon-button kind="tertiary" size="md" (clicked)="navigate(ctaSecondaryHref)">
                 {{ ctaSecondaryLabel }}
               </dos-carbon-button>
@@ -249,6 +291,7 @@ export interface MarketingAgentTile {
       <section
         class="dos-mh-section dos-mh-hero"
         data-section-id="hero"
+        id="hero"
         data-cds-layer="01"
       >
         <div class="dos-mh-container dos-mh-hero-layout">
@@ -261,12 +304,12 @@ export interface MarketingAgentTile {
             <h1 class="dos-mh-title">{{ heroTitle }}</h1>
             <p class="dos-mh-sub">{{ heroSub }}</p>
             <div class="dos-mh-cta-row">
-              <a class="dos-mh-hero-cta dos-mh-hero-cta--primary" [href]="ctaPrimaryHref" (click)="onAnchorNavigate($event, ctaPrimaryHref)">
+              <dos-carbon-button class="dos-mh-hero-cta dos-mh-hero-cta--primary" kind="primary" size="lg" (clicked)="navigate(ctaPrimaryHref)">
                 {{ ctaPrimaryLabel }}
-              </a>
-              <a class="dos-mh-hero-cta dos-mh-hero-cta--secondary" [href]="ctaSecondaryHref" (click)="onAnchorNavigate($event, ctaSecondaryHref)">
+              </dos-carbon-button>
+              <dos-carbon-button class="dos-mh-hero-cta dos-mh-hero-cta--secondary" kind="tertiary" size="lg" (clicked)="navigate(ctaSecondaryHref)">
                 {{ ctaSecondaryLabel }}
-              </a>
+              </dos-carbon-button>
             </div>
             <p class="dos-mh-hero-microcopy">{{ heroMicrocopy }}</p>
 
@@ -309,7 +352,7 @@ export interface MarketingAgentTile {
       <section class="dos-mh-section dos-mh-trust" data-section-id="trust-pills" data-cds-component="notification" hidden aria-hidden="true"></section>
 
       <!-- 03 value-props — Carbon Tile ───────────────────────────────── -->
-      <section class="dos-mh-section dos-mh-value-props" data-section-id="value-props">
+      <section class="dos-mh-section dos-mh-value-props" data-section-id="value-props" id="value">
         <div class="dos-mh-container">
           <p class="dos-mh-eyebrow">{{ valuePropsEyebrow }}</p>
           <h2 class="dos-mh-section-title">{{ valuePropsTitle }}</h2>
@@ -397,11 +440,18 @@ export interface MarketingAgentTile {
       }
 
       <!-- 05 download-kit ───────────────────────────────────────────── -->
-      <section class="dos-mh-section dos-mh-download-kit" data-section-id="download-kit">
+      <section class="dos-mh-section dos-mh-download-kit" data-section-id="download-kit" id="executive-kit">
         <div class="dos-mh-container">
           <p class="dos-mh-eyebrow">{{ downloadKitEyebrow }}</p>
           <h2 class="dos-mh-section-title">{{ downloadKitTitle }}</h2>
           <p>{{ downloadKitBody }}</p>
+          <dos-carbon-notification
+            variant="inline"
+            kind="info"
+            [title]="kitNotificationTitle"
+            [subtitle]="kitNotificationSubtitle"
+            [hideClose]="true"
+          ></dos-carbon-notification>
 
           @if (featuredAsset(); as a) {
             <dos-download-kit-card
@@ -447,8 +497,9 @@ export interface MarketingAgentTile {
       </section>
 
       <!-- 06 platform-overview — Carbon Tabs ────────────────────────── -->
-      <section class="dos-mh-section" data-section-id="platform-overview">
+      <section class="dos-mh-section" data-section-id="platform-overview" id="platform-dna">
         <div class="dos-mh-container">
+          <p class="dos-mh-eyebrow">{{ locale === 'ar' ? 'بنية المنصة' : 'Platform DNA' }}</p>
           <h2 class="dos-mh-section-title">{{ platformTitle }}</h2>
           <p>{{ platformBody }}</p>
           <dos-carbon-tabs
@@ -462,7 +513,7 @@ export interface MarketingAgentTile {
       </section>
 
       <!-- 07 modules — Carbon ClickableTile ─────────────────────────── -->
-      <section class="dos-mh-section" data-section-id="modules">
+      <section class="dos-mh-section" data-section-id="modules" hidden aria-hidden="true">
         <div class="dos-mh-container dos-mh-grid-3">
           @for (m of moduleTiles; track m.id) {
             <dos-carbon-tile [clickable]="true" [route]="'/modules/' + m.id">
@@ -474,7 +525,7 @@ export interface MarketingAgentTile {
       </section>
 
       <!-- 08 industries — Carbon Tag ────────────────────────────────── -->
-      <section class="dos-mh-section" data-section-id="industries">
+      <section class="dos-mh-section" data-section-id="industries" hidden aria-hidden="true">
         <div class="dos-mh-container dos-mh-pill-row">
           @for (i of industries; track i.id) {
             <dos-carbon-tag type="warm-gray" size="md">{{ i.label }}</dos-carbon-tag>
@@ -483,7 +534,7 @@ export interface MarketingAgentTile {
       </section>
 
       <!-- 09 architecture — Carbon StructuredList ───────────────────── -->
-      <section class="dos-mh-section" data-section-id="architecture">
+      <section class="dos-mh-section" data-section-id="architecture" hidden aria-hidden="true">
         <div class="dos-mh-container">
           <h2 class="dos-mh-section-title">{{ architectureTitle }}</h2>
           <p>{{ architectureBody }}</p>
@@ -492,7 +543,7 @@ export interface MarketingAgentTile {
       </section>
 
       <!-- 10 ai-and-agents — Carbon ProgressIndicator (6-step agent loop) ── -->
-      <section class="dos-mh-section dos-mh-ai" data-section-id="ai-and-agents">
+      <section class="dos-mh-section dos-mh-ai" data-section-id="ai-and-agents" id="safe-ai">
         <div class="dos-mh-container">
           <p class="dos-mh-eyebrow">{{ aiEyebrow }}</p>
           <h2 class="dos-mh-section-title">{{ aiTitle }}</h2>
@@ -509,8 +560,9 @@ export interface MarketingAgentTile {
       </section>
 
       <!-- 11 pricing-teaser — Carbon DataTable + Button ─────────────── -->
-      <section class="dos-mh-section" data-section-id="pricing-teaser">
+      <section class="dos-mh-section" data-section-id="pricing-teaser" id="pricing">
         <div class="dos-mh-container">
+          <p class="dos-mh-eyebrow">{{ locale === 'ar' ? 'الأسعار' : 'Pricing' }}</p>
           <h2 class="dos-mh-section-title">{{ pricingTitle }}</h2>
           <dos-carbon-data-table
             [columns]="pricingColumns"
@@ -527,8 +579,13 @@ export interface MarketingAgentTile {
       </section>
 
       <!-- 12 testimonials — Carbon Tile ─────────────────────────────── -->
-      <section class="dos-mh-section" data-section-id="testimonials">
+      <section class="dos-mh-section" data-section-id="testimonials" id="proof">
         <div class="dos-mh-container dos-mh-grid-3">
+          <div class="dos-mh-testimonial-intro">
+            <p class="dos-mh-eyebrow">{{ locale === 'ar' ? 'إثبات تنفيذي' : 'Executive proof' }}</p>
+            <h2 class="dos-mh-section-title">{{ locale === 'ar' ? 'نتائج يكررها قادة الحوكمة.' : 'Results leadership teams remember.' }}</h2>
+            <p class="dos-mh-sub">{{ locale === 'ar' ? 'شهادات قصيرة تركز على الزمن والدليل وسهولة الاعتماد.' : 'Short proof points centred on speed, evidence, and decision confidence.' }}</p>
+          </div>
           @for (q of testimonials; track q.id) {
             <dos-carbon-tile>
               <blockquote class="dos-mh-quote">
@@ -543,8 +600,10 @@ export interface MarketingAgentTile {
       <!-- 13 logos — Carbon ContainedList ───────────────────────────── -->
       <!-- B1: contained-list replaces raw span loop -->
       <!-- carbon_key='contained-list' runtime_status='active' dynamic_ui_allowed=true -->
-      <section class="dos-mh-section" data-section-id="logos" data-cds-component="contained-list">
+      <section class="dos-mh-section" data-section-id="logos" data-cds-component="contained-list" id="trusted-by">
         <div class="dos-mh-container">
+          <p class="dos-mh-eyebrow">{{ locale === 'ar' ? 'موثوق به' : 'Trusted by' }}</p>
+          <h2 class="dos-mh-section-title">{{ locale === 'ar' ? 'علامات تعرف معنى الضبط المؤسسي.' : 'Teams that measure readiness by evidence.' }}</h2>
           <dos-carbon-contained-list
             class="dos-mh-logos-list"
             [label]="locale === 'ar' ? 'يثق بنا' : 'Trusted by'"
@@ -558,29 +617,32 @@ export interface MarketingAgentTile {
       <!-- 14 resources — Carbon ContainedList (disclosed) ────────────── -->
       <!-- B5: contained-list disclosed replaces 3 separate tiles -->
       <!-- carbon_key='contained-list' runtime_status='active' dynamic_ui_allowed=true -->
-      <section class="dos-mh-section" data-section-id="resources" data-cds-component="contained-list">
+      <section class="dos-mh-section" data-section-id="resources" data-cds-component="contained-list" id="resources">
         <div class="dos-mh-container">
           <h2 class="dos-mh-section-title">{{ locale === 'ar' ? 'الموارد' : 'Resources' }}</h2>
+          <p class="dos-mh-sub">{{ locale === 'ar' ? 'ابدأ من الصفحة المناسبة: منصة المنتج، الحزمة التنفيذية، أو مركز الثقة.' : 'Jump directly to the platform story, the executive kit, or the trust surface.' }}</p>
           <dos-carbon-contained-list
             class="dos-mh-resource-list"
             [label]="locale === 'ar' ? 'استكشف' : 'Explore'"
             [kind]="'disclosed'"
             [size]="'lg'"
             [items]="resourceListItems()"
-            (itemClick)="navigate($event.content)"
+            (itemClick)="onResourceSelected($event)"
           ></dos-carbon-contained-list>
         </div>
       </section>
 
       <!-- 15 faq — Carbon Accordion ─────────────────────────────────── -->
-      <section class="dos-mh-section" data-section-id="faq">
+      <section class="dos-mh-section" data-section-id="faq" id="faq">
         <div class="dos-mh-container">
+          <p class="dos-mh-eyebrow">{{ locale === 'ar' ? 'الأسئلة الشائعة' : 'FAQ' }}</p>
+          <h2 class="dos-mh-section-title">{{ locale === 'ar' ? 'إجابات سريعة قبل أن تبدأ.' : 'The short answers before procurement starts.' }}</h2>
           <dos-carbon-accordion [items]="faqItems()" align="end" size="md"></dos-carbon-accordion>
         </div>
       </section>
 
       <!-- 16 cta-banner ─────────────────────────────────────────────── -->
-      <section class="dos-mh-section dos-mh-cta-banner" data-section-id="cta-banner">
+      <section class="dos-mh-section dos-mh-cta-banner" data-section-id="cta-banner" id="get-started">
         <div class="dos-mh-container dos-mh-cta-banner-inner">
           <p class="dos-mh-eyebrow dos-mh-eyebrow-on-dark">{{ ctaBannerEyebrow }}</p>
           <h2 class="dos-mh-section-title">{{ ctaBannerTitle }}</h2>
@@ -597,7 +659,7 @@ export interface MarketingAgentTile {
       </section>
 
       <!-- 17 footer — Carbon Grid ───────────────────────────────────── -->
-      <footer class="dos-mh-section dos-mh-footer" data-section-id="footer">
+      <footer class="dos-mh-section dos-mh-footer" data-section-id="footer" id="footer">
         <div class="dos-mh-container">
           <dos-carbon-grid>
             <dos-carbon-row>
@@ -616,7 +678,7 @@ export interface MarketingAgentTile {
               <dos-carbon-col [columnNumbers]="{ sm: 4, md: 4, lg: 3 }">
                 <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start;">
                   <dos-brand-eagle [brandCode]="brandCode" [locale]="locale" [size]="32" />
-                  <small>© {{ year }} {{ brandCode }}</small>
+                  <small>© {{ year }} {{ brandLabel }}</small>
                 </div>
               </dos-carbon-col>
             </dos-carbon-row>
@@ -671,6 +733,11 @@ export class DosMarketingHomePageComponent {
   get ctaPrimaryHref(): string   { return this.content().hero.ctaPrimary.href; }
   get ctaSecondaryLabel(): string { return this.content().hero.ctaSecondary.label; }
   get ctaSecondaryHref(): string  { return this.content().hero.ctaSecondary.href; }
+
+  /** IBM Carbon `login/20` icon descriptor for the public-header Sign-in CTA. */
+  readonly signInIcon = Login20;
+  /** Localized label for the public-header Sign-in CTA. */
+  get signInLabel(): string { return this.locale === 'ar' ? 'تسجيل الدخول' : 'Sign in'; }
 
   // Trust pills + value props
   get trustPills(): ReadonlyArray<{ id: string; label: string }> { return this.content().trustPills; }
@@ -785,8 +852,13 @@ export class DosMarketingHomePageComponent {
   resourceListItems(): DosCarbonContainedListItem[] {
     return (this.resources ?? []).map((r) => ({
       id:      r.id,
-      content: r.href,  // navigate() receives href via itemClick
+      content: `${r.title} — ${r.body}`,
     }));
+  }
+
+  onResourceSelected(item: DosCarbonContainedListItem): void {
+    const match = this.resources.find((resource) => resource.id === item.id);
+    this.navigate(match?.href || '/resources');
   }
 
 
@@ -817,8 +889,15 @@ export class DosMarketingHomePageComponent {
     return item ? this.navLabel(item) : (this.locale === 'ar' ? fallbackAr : fallbackEn);
   }
   isHeaderActive(href: string): boolean {
+    if (href.startsWith('#')) {
+      if (typeof window === 'undefined') return href === '#hero';
+      return window.location.hash === href || (href === '#hero' && !window.location.hash);
+    }
     const current = this.router.url.split('?')[0] || '';
     return href !== '/' && (current === href || current.startsWith(`${href}/`));
+  }
+  get headerMenuLabel(): string {
+    return this.locale === 'ar' ? 'القائمة' : 'Menu';
   }
   get mobileMenuLabel(): string {
     return this.locale === 'ar' ? 'فتح قائمة التنقل' : 'Open navigation menu';
@@ -924,12 +1003,28 @@ export class DosMarketingHomePageComponent {
       if (typeof window !== 'undefined') window.location.assign(href);
       return;
     }
+    if (href.startsWith('#')) {
+      this.scrollToAnchor(href.slice(1));
+      return;
+    }
+    const [path, fragment] = href.split('#');
+    if (fragment && (!path || path === '/')) {
+      this.scrollToAnchor(fragment);
+      return;
+    }
+    if (fragment) {
+      void this.router.navigateByUrl(path || '/').then(() => this.deferScrollToAnchor(fragment));
+      return;
+    }
     void this.router.navigateByUrl(href);
   }
 
   // ─── M1.5 Download-Kit runtime state ─────────────────────────────────
   readonly modalOpen = signal(false);
   readonly downloadSuccess = signal(false);
+
+  @ViewChild(DosGatedDownloadModalComponent)
+  private readonly gatedDownloadModal?: DosGatedDownloadModalComponent;
 
   @Output() readonly downloadEvent = new EventEmitter<MarketingDownloadEvent>();
 
@@ -944,10 +1039,13 @@ export class DosMarketingHomePageComponent {
     );
   }
 
-  onDownloadEvent(e: MarketingDownloadEvent) {
+  async onDownloadEvent(e: MarketingDownloadEvent): Promise<void> {
     if (e.key === 'marketing.download.opened') {
       const asset = this.featuredAsset();
       if (asset?.isGated) this.modalOpen.set(true);
+    }
+    if (e.key === 'marketing.download.submitted') {
+      await this.submitMarketingDownload(e);
     }
     if (e.key === 'marketing.download.completed') {
       this.modalOpen.set(false);
@@ -958,6 +1056,52 @@ export class DosMarketingHomePageComponent {
 
   onModalClosed() {
     this.modalOpen.set(false);
+  }
+
+  private deferScrollToAnchor(anchor: string): void {
+    if (typeof window === 'undefined') return;
+    window.requestAnimationFrame(() => this.scrollToAnchor(anchor));
+  }
+
+  private scrollToAnchor(anchor: string): void {
+    if (typeof document === 'undefined' || typeof window === 'undefined') return;
+    const target = document.getElementById(anchor);
+    if (!target) {
+      window.location.hash = anchor;
+      return;
+    }
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const nextUrl = anchor === 'hero' ? '/' : `/#${anchor}`;
+    window.history.replaceState(window.history.state, '', nextUrl);
+  }
+
+  private async submitMarketingDownload(event: MarketingDownloadEvent): Promise<void> {
+    const response = await fetch('/api/ui-os/marketing/downloads', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      credentials: 'omit',
+      body: JSON.stringify(event),
+    }).catch((error: unknown) => {
+      throw new Error((error as Error)?.message || 'download_submit_failed');
+    });
+
+    if (response.ok) {
+      this.gatedDownloadModal?.markCompleted();
+      return;
+    }
+
+    const payload = await response.json().catch(() => ({}));
+    const message = typeof payload?.message === 'string'
+      ? payload.message
+      : typeof payload?.error === 'string'
+        ? payload.error
+        : this.locale === 'ar'
+          ? 'تعذر إرسال طلب الحزمة التنفيذية.'
+          : 'Unable to submit the executive kit request.';
+    this.gatedDownloadModal?.markFailed(message);
   }
 
   /** Resolve the agent-tile asset for a given agent code via BrandResolverService. */

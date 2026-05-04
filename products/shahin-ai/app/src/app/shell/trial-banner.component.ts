@@ -1,15 +1,14 @@
 /**
  * Phase G T6 — contract-driven trial banner, rendered with raw IBM Carbon.
  *
- * Reads chrome from `product.manifest.json` `trialChrome.banner`. Pulls live
- * trial state from `/api/trials/current`. Renders via raw
+ * Reads chrome from `product.manifest.json` `trialChrome.banner`. The host
+ * supplies trial state when this surface is enabled. Renders via raw
  * `cds-actionable-notification` from `carbon-components-angular` directly —
  * no DOS wrappers, per "100% IBM Carbon original" rule.
  */
 
-import { ChangeDetectionStrategy, Component, OnInit, inject, signal, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { NotificationModule } from 'carbon-components-angular';
 import productManifest from '../../../../product.manifest.json';
 
@@ -81,12 +80,14 @@ function carbonNotificationType(tone: 'info' | 'warning' | 'danger' | 'success')
   `,
   styles: [`:host { display: block; }`],
 })
-export class TrialBannerComponent implements OnInit {
-  private readonly http = inject(HttpClient);
-
+export class TrialBannerComponent {
   readonly locale = signal<'en' | 'ar'>('en');
   readonly summary = signal<TrialCurrentResponse | null>(null);
   readonly chrome  = signal<TrialChromeContract>(CHROME);
+
+  @Input() set summaryData(value: TrialCurrentResponse | null) {
+    this.summary.set(value);
+  }
 
   readonly visible = computed(() => {
     const s = this.summary();
@@ -139,10 +140,4 @@ export class TrialBannerComponent implements OnInit {
     if (a?.route && typeof window !== 'undefined') window.location.href = a.route;
   }
 
-  ngOnInit(): void {
-    this.http.get<TrialCurrentResponse>('/api/trials/current').subscribe({
-      next: (resp) => this.summary.set(resp),
-      error: () => this.summary.set({ ok: false, productCode: '', hasTrial: false }),
-    });
-  }
 }

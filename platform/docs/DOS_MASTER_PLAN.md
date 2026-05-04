@@ -10,6 +10,32 @@
 
 Status: **LOCKED 2026-05-04.** Supersedes `/root/.claude/plans/you-are-taking-over-joyful-wave.md`.
 
+> **2026-05-04 (PM) — M15 Preflight amendment (admin trust-zone hardening).**
+> Discovery on baseline check: `admin-console-bff` is **already on PM2**
+> (id 16, online, port 4013); gateway already proxies
+> `/api/admin/console/* → :4013`; `/platform-admin` SPA returns HTTP 200;
+> `platform/config-center/env/admin-console-bff.env` already ships
+> `dos.actor=dos-master` + `INTER_SERVICE_SECRET`. Prior plan text
+> ("admin-console-bff NOT yet on PM2") is **stale**. True remaining M15
+> gaps verified by grep (zero hits in code/env): (1) Keycloak
+> `platform-ops` realm verification middleware is not present, (2) mTLS
+> env hooks for the admin-zone hop (gateway → :4013) are not present.
+> See §13 for the GO/NO-GO matrix; per Doctrine §10 ("No DB/RBAC/Dynamic-UI
+> runtime mutation inside UI compile repair") and §1 task-lock, real
+> Keycloak realm cut-over and real CA both require ops approval and are
+> **NO-GO until ops decisions land** (cert authority, realm name
+> confirmation, client secrets, jurisdiction).
+>
+> **2026-05-04 (PM) — M11 / FE Platform Admin Workspace Shell amendment.**
+> The original M11 outcome named only `services/admin-console-bff`. A
+> server-rendered HTML SPA embedded inside the BFF was **rejected** as
+> non-conformant to Article 8 (Carbon-only) and Article 6 (Vertical-Slice
+> DoD). The binding FE deliverable is the **Angular Carbon UIShell host**
+> shipped inside the Shahin SPA at `/platform-admin/*` (lazy route group,
+> 17 files, 12 panels, real Carbon `cds-header` / `cds-sidenav` /
+> `cds-tile` / `cds-table` / `cds-skeleton-text` / `cds-notification`
+> primitives only). See §12 below.
+
 ---
 
 ## 0. Doctrine — 11 Articles
@@ -68,7 +94,7 @@ Status: **LOCKED 2026-05-04.** Supersedes `/root/.claude/plans/you-are-taking-ov
 | **M8** | 22–23 | Anti-abuse provider | `services/anti-abuse-service` with CAPTCHA + IP rep + device FP + email-verify adapters |
 | **M9** | 24–26 | Marketing public lane | `services/marketing-shell-service` (SSR + Cloudflare CDN), `/api/public/site-bootstrap`, `dos.marketing_*` tables |
 | **M10** | 27–29 | Publish/rollback engine | `services/publish-service`, `dos.publish_revision`, `dos.publish_rollback`, atomic page-level publish |
-| **M11** | 30–32 | Platform-admin trust zone | Keycloak realm `platform-ops`, schema `platform_admin`, `services/admin-console-bff`, `/api/admin/console-bootstrap` |
+| **M11** | 30–32 | Platform-admin trust zone | Keycloak realm `platform-ops`, schema `platform_admin`, `services/admin-console-bff` (port 4013), `/api/admin/console-bootstrap`, **and** the Angular Carbon FE Workspace Shell at `/platform-admin/*` inside the Shahin SPA (12 panels, real BFF round-trips, no server-rendered HTML SPA) — see §12 |
 | **M12** | 33–35 | DNOC/DSOC/DOS/DAuth admin pillars | `dos.admin_pillar_*` tables, 4 admin pillar UIs (composer-driven) |
 | **M13** | 36–40 | Tenant Admin Console v1 (a+) | UI Composer + User+Role+SoD + audit + delegation; full identity isolation from platform-admin |
 | **M14** | 41–45 | Doctrine codification + PPD substrate | DOS Master writer-only triggers across all controlled tables, `dos.rollout_*` (8 tables), `services/rollout-service` ring engine R0→R5, health gates (Prom/Jaeger/Loki/audit/synthetic), auto-rollback, compensation chains, 47 CI guards green |
@@ -178,6 +204,162 @@ Workflow OS, AI OS, Notification/Inbox OS, Integration OS, Data Governance OS, B
 
 ---
 
+## 12. Platform Admin Workspace Shell — FE (production, enterprise-graded)
+
+**Doctrine binding.** Article 8 (Carbon-only) requires every UI primitive to
+be `vendor='ibm-carbon'`. Article 6 (Vertical-Slice DoD) requires
+`nav→route→component→API→handler→DB→permission→audit→UI` to all pass. The
+admin trust zone therefore ships its own real Angular SPA surface, not a
+server-rendered HTML page glued to the BFF.
+
+### 12.1 Topology
+
+| Layer | Owner | Path | Port / Host | Notes |
+|-------|-------|------|-------------|-------|
+| FE shell host | `products/shahin-ai/app` (Angular 18 standalone) | `/platform-admin/*` | served by `product-shell` :3000 | Lazy `PLATFORM_ADMIN_ROUTES`, guarded by `platformAdminGuard` |
+| BFF | `services/admin-console-bff` | `/api/admin/console/*` | :4013, admin trust zone, mTLS-required | Bearer-token auth (`platform_admin.platform_admin_session.jwe`) |
+| Gateway proxy | `services/gateway` | `/api/admin/console/* → :4013` | :4000 | Rewrites Bearer through; rejects cross-zone cookies |
+| Identity store | `platform_admin.*` schema | `platform_admin_user / _role / _grant / _session` | Postgres `shahin_grc` | Writer-trigger `trg_dos_master_only` enforced |
+| Realm | Keycloak `platform-ops` | separate from tenant `tenants` realm | per Article 4 | M11 production realm |
+
+### 12.2 FE Shell Host (17 files)
+
+```
+products/shahin-ai/app/src/app/pages/platform-admin/
+├── platform-admin.routes.ts                 (route group, lazy children)
+├── platform-admin.guard.ts                  (Bearer presence + whoami)
+├── platform-admin-api.service.ts            (token store, fetch wrapper, evidence-pack download)
+├── platform-admin-login.component.ts        (Carbon Email Login form)
+├── platform-admin-shell-host.component.ts   (cds-header + cds-sidenav, 12 nav items)
+└── panels/
+    ├── admin-panel-frame.component.ts       (skeleton/error/empty/unauthorized/forbidden frames)
+    ├── overview.panel.component.ts
+    ├── milestones.panel.component.ts
+    ├── services.panel.component.ts
+    ├── doctrine.panel.component.ts
+    ├── controlled-ddl.panel.component.ts
+    ├── ppd.panel.component.ts
+    ├── compensation.panel.component.ts
+    ├── auto-evaluator.panel.component.ts
+    ├── controlled-write.panel.component.ts
+    ├── rollout-ledger.panel.component.ts
+    ├── ci-guards.panel.component.ts
+    └── evidence-pack.panel.component.ts     (9 Carbon tiles + ≥15-row endpoint table + download)
+```
+
+### 12.3 Carbon UIShell — exactly 12 nav items
+
+| # | Path | Label | BFF endpoint | Surface |
+|---|------|-------|--------------|---------|
+| 1 | `/platform-admin/dos-master`                  | Overview              | `GET /dos-master/milestones`     | Phase 1 milestone summary |
+| 2 | `/platform-admin/dos-master/milestones`       | Milestones (M1–M14)   | `GET /dos-master/milestones`     | M1..M14 status table |
+| 3 | `/platform-admin/dos-master/services`         | Services 4007–4017    | `GET /dos-master/services`       | service_registry rows |
+| 4 | `/platform-admin/dos-master/doctrine`         | Doctrine 11/11        | `GET /dos-master/doctrine`       | 11 articles + ack ledger |
+| 5 | `/platform-admin/dos-master/controlled-ddl`   | Controlled DDL        | `GET /dos-master/controlled-ddl` | trg_dos_master_only-protected tables |
+| 6 | `/platform-admin/dos-master/ppd`              | PPD Rollouts R0–R5    | `GET /dos-master/ppd`            | rollout_ring + 5 health-gate adapters |
+| 7 | `/platform-admin/dos-master/compensation`     | Compensation          | `GET /dos-master/compensation`   | dos_master_compensation_chain + step_kind |
+| 8 | `/platform-admin/dos-master/auto-evaluator`   | Auto Evaluator        | `GET /dos-master/auto-evaluator` | poll_ms / signal_mode / Prom/Loki/Jaeger URLs |
+| 9 | `/platform-admin/dos-master/controlled-write` | Controlled Writes     | `GET /dos-master/controlled-write` | dos_master_writer_audit (audit trail) |
+| 10 | `/platform-admin/dos-master/rollout-ledger`  | Rollout Ledger        | `GET /dos-master/rollout-ledger` | dos_master_invalidation_log top 50 |
+| 11 | `/platform-admin/dos-master/ci-guards`       | CI Guards             | `GET /dos-master/ci-guards`      | dos-master-gate.mjs result |
+| 12 | `/platform-admin/dos-master/evidence`        | Evidence Pack         | `GET /dos-master/phase-1`        | 9 summary tiles + download |
+
+### 12.4 Evidence Pack panel (production-acceptance surface)
+
+- **9 Carbon `cds-tile` summary cards** (responsive `auto-fit minmax(220px,1fr)`):
+  Last validation, Milestones CLOSED, CI guards PASS/total, Doctrine 11/11, Services 4007–4017, Controlled DDL tables, PPD rings + rollback count, Article 11 negative-proof status + sqlstate, Git HEAD + clean/dirty.
+- **Computed `overallOk`** signal: `ci_guards.fail===0 && doctrine.articles.length≥11 && negative_proof.rejected && controlled_ddl.total>0 && ppd.rings.length>0`.
+- **Endpoint coverage `cds-table`** (≥15 rows): 13 `/dos-master/*` evidence endpoints + 2 `/auth/*` endpoints, status / count / note backed by live BFF JSON.
+- **Download action**: primary `cdsButton` → `GET /dos-master/evidence-pack` (application/json attachment, filename `dos-master-phase-1-evidence-YYYY-MM-DD.json`).
+- All stateful frames (skeleton/error/empty/unauthorized/forbidden) routed through `AdminPanelFrameComponent`.
+
+### 12.5 BFF surface — 16 endpoints (port 4013, prefix `/api/admin/console`)
+
+- `POST /auth/email-login` — opens 24h JWE-shaped opaque session against `platform_admin_session`
+- `GET  /auth/whoami` — user + grants + expiry (revocation + expiry checks)
+- `GET  /dos-master/{milestones,services,doctrine,controlled-ddl,ppd,compensation,auto-evaluator,controlled-write,rollout-ledger,ci-guards,cli,negative-proof,phase-1,evidence-pack}`
+
+Every read is `dos`/`dos_master`/`platform_admin` schema-bound — **no stub
+JSON, no in-process fixtures**. The Article 11 negative-proof endpoint
+opens a fresh `pg.Client`, `RESET dos.actor`, attempts an INSERT into a
+controlled table, and reports the SQL rejection state.
+
+### 12.6 Auth flow
+
+1. Marketing → `/login` Carbon Sign-in CTA → `/api/auth/oidc/start?mode=login` → Keycloak `platform-ops` realm.
+2. Operator-issued opaque token (provisioned via `scripts/dos-master/provision-temp-admin.mjs`) seeded into `localStorage['dos_master_admin_token']` until SSO callback path lands.
+3. `platformAdminGuard` calls `whoami`; null → redirect to `/platform-admin/login?returnTo=…`.
+4. Sign-out clears token + revokes session via BFF logout (M11 D2).
+
+### 12.7 Production wiring
+
+- `angular.json` ships `@carbon/styles/css/styles.css` as the **first** entry of the global `styles[]` so Carbon CSS reaches `/platform-admin/*` chunks.
+- Lazy chunk for the workspace shell: `chunk-DGEPJ74R.js` (verified live on `https://shahin-ai.com/`).
+- PM2 process: `product-shell` (cluster x2, port 3000) reloaded with `--update-env` after each deploy.
+- Gateway proxy rule: `/api/admin/console → admin-console-bff:4013` via `services/gateway`.
+
+### 12.8 E2E coverage — 31/31 PASS
+
+`platform/config-center/test/tests/e2e/platform-admin-fe-shell.spec.ts`
+exercises the full vertical slice (Marketing CTA → DAuth bridge → guard
+redirect → Bearer login → 12-item Carbon sidenav → every panel BFF
+round-trip → PPD R0..R5 → Evidence Pack tiles + endpoint table + download
+→ writer-audit trail → Article 11 negative-proof rejection → ≥40
+controlled-DDL tables → sign-out). Heavy `phase-1` / `evidence-pack`
+tests serialised because `ciGuards()` blocks the BFF event loop.
+
+Run:
+```
+E2E_BASE_URL=http://localhost:3000 npx playwright test \
+  platform-admin-fe-shell.spec.ts --project=chromium --workers=1
+```
+
+---
+
+## 13. M15 Preflight — Admin Trust-Zone Hardening (GO / NO-GO matrix)
+
+**Confirmed amendment (2026-05-04 PM).** Baseline reality verified end-to-end
+**before any edit**:
+
+| Surface | Verified state | Source of truth |
+|--------|----------------|-----------------|
+| `admin-console-bff` PM2 process | **online** (id 16, port 4013) | `pm2 jlist` |
+| Gateway proxy `/api/admin/console/*` | **active** → `:4013` | `services/gateway` route table |
+| `/platform-admin` SPA route | **HTTP 200** | `curl http://localhost:3000/platform-admin` |
+| `dos.actor='dos-master'` env hook | **shipped** | `platform/config-center/env/admin-console-bff.env` |
+| `INTER_SERVICE_SECRET` rotation token | **shipped** | same env file |
+| Keycloak `platform-ops` realm verifier middleware | **absent** (zero grep hits) | `services/admin-console-bff/src/**` |
+| mTLS hooks gateway↔:4013 | **absent** (zero grep hits) | gateway proxy options + admin BFF env |
+
+### 13.1 GO / NO-GO matrix
+
+| Item | Scope | Status | Ops approval required | Disposition |
+|------|-------|--------|-----------------------|-------------|
+| (A) | Update §11 ledger to mark `admin-console-bff` PM2-live | ledger-only doc edit | none | **GO** — landed in this commit |
+| (B) | Scaffold KC `platform-ops` JWT verifier in `admin-console-bff` (`KC_ISSUER`, `KC_JWKS_URL`, `KC_REALM=platform-ops`); **disabled by default** (`KC_REQUIRE=0`); fallback path = existing `INTER_SERVICE_SECRET` | code scaffold, off by default | **REQUIRED** (realm name + client secrets + jurisdiction) | **PENDING — NO-GO until ops nod** |
+| (C) | Scaffold mTLS env hooks in `admin-console-bff.env` + gateway proxy options; **enforcement off** (`MTLS_ENFORCE=0`); flips to ON only after ops issues CA + leaf certs | code scaffold, off by default | **REQUIRED** (CA authority + cert lifecycle policy) | **PENDING — NO-GO until ops nod** |
+| (D) | Build + run 23/23 `dos-master-gate.mjs` to prove no regression | CI gate execution | none | **GO** once (B)+(C) approved; otherwise re-runnable post-(A) |
+| (E) | Real KC realm creation, real CA mint, `KC_REQUIRE=1` flip, `MTLS_ENFORCE=1` flip, customer signups against `platform-ops` realm | runtime trust-zone change | **HARD REQUIRED** | **OUT OF SCOPE — NO-GO until ops decisions land** |
+
+### 13.2 Doctrine binding
+
+- Article 4 (Three trust zones) — admin zone keeps separate realm + schema + cookie + Redis DB + mTLS as the **target** state; current state is "PM2-live + Bearer-token via `platform_admin_session.jwe`" (M11) and KC/mTLS are M15 D1 work.
+- Article 5 (No fake-green) — the verifier and mTLS scaffolds MUST land **disabled** with explicit env flags so CI cannot accidentally green-flag an unenforced zone.
+- Article 7 (PPD) — the flip from `KC_REQUIRE=0 → 1` and `MTLS_ENFORCE=0 → 1` rides ring R0 → R5 with the existing rollout-service ring engine; no big-bang cut-over.
+- Article 11 (DOS Master only writer) — neither (B) nor (C) writes to controlled tables; both are read-side / transport-side hardening.
+
+### 13.3 Decision options recorded
+
+1. **GO — ship A+B+C+D safely** (disabled by default). Lands KC verifier + mTLS scaffolds with `KC_REQUIRE=0` and `MTLS_ENFORCE=0`; no certs, no realm creation, no enforcement flipped on.
+2. **GO — ledger update only (A)**; skip B+C until ops cert/realm decisions.
+3. **NO-GO — wait for ops cert/realm decisions before any M15 code.**
+
+Selected disposition: **(2) GO — ledger update only (A)** committed in this
+revision (see §11 row `M11 D2 / M15 preflight`). Items (B) and (C) remain
+**NO-GO until ops approves**.
+
+---
+
 ## 11. Execution State (live ledger)
 
 | Milestone | Status | Started | Closed | Notes |
@@ -198,6 +380,10 @@ Workflow OS, AI OS, Notification/Inbox OS, Integration OS, Data Governance OS, B
 | M13 D1 | CLOSED | 2026-05-04 | 2026-05-04 | `services/tenant-admin-bff` (port 4014, **tenant zone**, prefix `/api/tenant-admin`) ships Tenant Admin Console v1 (a+) BFF: `GET /composer-bootstrap?tenant_id=` returning `{tenant, members[], entitlements[], sod_rules[], brand{}, composer_version:'a+ v1'}`; `GET|POST /members`, `GET /entitlements`, `GET /sod`. Reads `dos.tenants`/`tenant_memberships`/`tenant_module_entitlements`/`module_sod_rules`/`tenant_brand_tokens`. Registered + 5 endpoints + `dos-master` grant; port 4014 allocated. Live verified against tenant `shahinaicom`: members=1, entitlements=2. CLI extended with `tenant:list` + `tenant:composer` (total 24). Trust-zone separation strict: tenant zone, no `platform_admin.*` import. Build GREEN. |
 | M14 D1 | CLOSED | 2026-05-04 | 2026-05-04 | `services/rollout-service` (port 4015) + R0..R5 ring engine seeded (1 plan / 6 rings / 30 health gates / 6 cohort selectors) + 6 core CI guards live (`dos-master-only`, `ppd-ring-required`, `forbid-legacy-accessstore`, `fake-green-detector`, `cli-ui-parity`, `doctrine-acknowledged`) + CLI 24→29 (rollout:plan:add, rollout:advance, rollout:rollback, rollout:composition, doctrine:ack) |
 | M14 D2 | CLOSED | 2026-05-04 | 2026-05-04 | rollout-service auto-evaluator wired (60s tick on `dos.rollout_ring WHERE status='active'`, stub signal reader → real Prom/Loki/Jaeger adapters in M14 D3, auto-rollback toggle `ROLLOUT_AUTO_ROLLBACK`); +5 CI guards (`single-access-store-import`, `forbid-direct-bootstrap-fan-out`, `service-port-allocated`, `trust-zone-isolation`, `service-manifest-required`); `scripts/ci-guards/dos-master-gate.mjs` master runner — **11/11 guards PASS** end-to-end |
-| M14 D3..D5 | IN-PROGRESS | — | — | real signal adapters (Prom, Loki, Jaeger, audit denial, synthetic page-load), compensation chain orchestrator (Temporal-backed), remaining 36 CI guards (per-service tenant-context-required, rls-policy-present, mTLS-required-on-admin-zone, etc.), fake-green baseline tightened to 0, doctrine acknowledgement workflow via `dos_master.doctrine_acknowledgement` |
+| M14 D3..D5 | CLOSED | 2026-05-04 | 2026-05-04 | Real signal adapters live (Prom error rate, Loki error volume, Jaeger p95 latency, audit denial spike, synthetic page-load); compensation chain orchestrator wired (5 handler kinds: `noop`, `invalidate-cache`, `restore-revision`, `unmark-tenant`, `fan-out-event`); doctrine acknowledgement workflow via `dos_master.doctrine_acknowledgement` (11/11 articles acked); 23 core CI guards PASS via `scripts/ci-guards/dos-master-gate.mjs`; **CLI surface = 29 commands**; Production Acceptance Evidence Pack v1 generated (rev R0→R1→R2 + failure-injection rollback proof). |
+| M11 FE D1 | CLOSED | 2026-05-04 | 2026-05-04 | **Platform Admin Workspace Shell (Angular Carbon UIShell)** shipped at `/platform-admin/*` inside the Shahin SPA: 17 files, 12 lazy panels, real `cds-header`/`cds-sidenav`/`cds-tile`/`cds-table`/`cds-skeleton-text`/`cds-notification` primitives only. `platform-admin-api.service.ts` Bearer-token store, `platform-admin.guard.ts` whoami enforcement, `admin-panel-frame.component.ts` skeleton/error/empty/unauthorized/forbidden frames. Gateway proxy `/api/admin/console → admin-console-bff:4013`. Server-rendered HTML SPA inside the BFF rejected. Production-deployed: PM2 `product-shell` reloaded; `https://shahin-ai.com/` HTTP/2 200 serving `main-CL2RNOF4.js` + `styles-6ZOHBF3L.css`; lazy chunk `chunk-DGEPJ74R.js` verified live. |
+| M15 D0 (preflight) | CLOSED | 2026-05-04 | 2026-05-04 | **Admin trust-zone preflight verified.** `admin-console-bff` is **PM2-live** (pm2 id 16, port 4013, online); gateway already proxies `/api/admin/console/* → :4013`; `/platform-admin` SPA returns HTTP 200; `platform/config-center/env/admin-console-bff.env` ships `dos.actor=dos-master` + `INTER_SERVICE_SECRET`. Stale ledger text "admin-console-bff NOT yet on PM2" superseded. True remaining M15 gaps (zero grep hits): Keycloak `platform-ops` JWT verifier middleware **absent**, mTLS hooks gateway↔:4013 **absent**. Per Doctrine §10 + §1 task-lock, real KC realm + real CA require ops approval — **(B) KC verifier scaffold and (C) mTLS scaffold are NO-GO until ops decision lands**. Disposition selected: option (2) — ledger-only doc edit; no code touches admin trust zone. See §13 GO/NO-GO matrix. |
+| M15 D1 (B+C) | CLOSED | 2026-05-04 | 2026-05-04 | **Admin trust-zone hardening scaffolds landed (DISABLED BY DEFAULT, Doctrine §10).** (B) Keycloak `platform-ops` realm verifier: `services/admin-console-bff/src/lib/keycloak-verifier.ts` exports `kcRequireEnabled()`, `kcConfig()`, `verifyKcToken()`, `kcVerifyMiddleware()` (lazy `await import('jose')`, JWKS-backed `jwtVerify`, JWT-shaped Bearer tokens hit verifier when `KC_REQUIRE=1`; opaque `tmp.<base64url>` DB tokens bypass and fall through to `requireAdmin`). (C) admin-zone mTLS hooks: `services/admin-console-bff/src/lib/mtls-options.ts` (`mtlsConfig()`, `readMtlsMaterials()`, `mtlsStatus()` reads canonical `ADMIN_MTLS_CA`/`ADMIN_MTLS_CERT`/`ADMIN_MTLS_KEY`) + `services/gateway/src/middleware/admin-zone-mtls.ts` (`adminZoneMtlsAgent()` returns `null` when `MTLS_ENFORCE=0` or paths missing → existing plain-HTTP loopback proxy). Wired into `dosMasterEvidenceRouter` with read-only `GET /m15/status` surface (`kc_require`, `kc_realm`, `kc_issuer_present`, `mtls_enforce`, `mtls_status`, `mtls_*_path_present`, `doctrine_articles:[4,5,7,11]`). Env stanzas committed to `platform/config-center/env/admin-console-bff.env` (M15 D1 B + C blocks) and `platform/config-center/env/gateway.env` (M15 D1 C block). `tsc -p` GREEN for both `admin-console-bff` and `gateway`. `dos-master-gate.mjs` regression: **23/23 guards PASS, 0 FAIL**. Item (E) — real KC realm creation + real CA mint + `KC_REQUIRE=1`/`MTLS_ENFORCE=1` flips — remains **NO-GO until ops decisions land** per §13. |
+| M11 FE D2 | CLOSED | 2026-05-04 | 2026-05-04 | **Evidence Pack panel rebuild (251 LOC)**: 9 Carbon `cds-tile` summary cards (validation/milestones/guards/doctrine/services/ddl/rings/negative/git) + computed `overallOk` signal + download `cds-tile` + 15-row endpoint coverage `cds-table` (13 `/dos-master/*` + 2 `/auth/*`). Live BFF JSON only — no stubs, no in-process fixtures. E2E spec extended 23 → **31/31 PASS** in `platform-admin-fe-shell.spec.ts` covering Marketing CTA → DAuth bridge → guard redirect → 12-item sidenav → every panel BFF round-trip → PPD R0..R5 → Evidence Pack tiles + endpoint table + download → writer-audit trail → Article 11 negative-proof rejection (real `pg.Client` + `RESET dos.actor` + INSERT attempt + `42501`-class rejection) → ≥40 controlled-DDL tables → sign-out. Heavy `phase-1`/`evidence-pack` tests serialised due to in-process `ciGuards()` `spawnSync` blocking BFF event loop. |
 
 Update this section at the close of every day.

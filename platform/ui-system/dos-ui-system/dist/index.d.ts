@@ -66,7 +66,6 @@ export * from './shell/workspace-header.component';
 export * from './shell/workspace-sidebar.component';
 export * from './shell/quick-create.component';
 export * from './shell/workspace-shell.contracts';
-export * from './shell/workspace-host-kit';
 export * from './marketing/marketing-page-kit';
 export * from './carbon/index';
 export * from './directives/dos-can-render.directive';

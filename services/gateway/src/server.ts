@@ -26,6 +26,7 @@ import {
   stripInboundIdentityHeaders,
 } from './middleware/gateway-origin';
 import { initDecisionLedger, writeDecision } from './middleware/decision-ledger';
+import { adminZoneMtlsAgent, adminZoneMtlsStatus } from './middleware/admin-zone-mtls';
 
 const PORT = Number(process.env.PORT || 4000);
 const AUTH_SERVICE_URL = required('AUTH_SERVICE_URL');
@@ -775,6 +776,30 @@ app.use('/api/dsoc', authGuard, injectIdentityHeaders, createProxyMiddleware({
   changeOrigin: true,
   xfwd: true,
   pathRewrite: (p) => `/api/dsoc${p.startsWith('/') ? p : `/${p}`}`,
+}));
+
+// ── DOS Master M11 — admin-console-bff (platform-admin trust zone) ──────
+// /api/admin/console/* routes to admin-console-bff:4013. Trust zone is
+// SEPARATE from the tenant Keycloak realm (Doctrine Article 4): auth uses
+// a JWE-shaped opaque session token issued by the BFF itself
+// (provision-temp-admin.mjs / future platform-ops realm), bound to a row
+// in platform_admin.platform_admin_session. The KC-derived authGuard MUST
+// NOT gate this prefix; the BFF runs its own requireAdmin middleware on
+// every protected route and exempts /auth/email-login + /auth/whoami.
+//
+// Mounted BEFORE the broader /api/admin → admin-service proxy so it wins
+// path-prefix matching for /api/admin/console/*.
+const ADMIN_CONSOLE_BFF_URL = process.env.ADMIN_CONSOLE_BFF_URL || 'http://127.0.0.1:4013';
+// M15 D1 (C) — admin-zone mTLS hook. agent === null when MTLS_ENFORCE=0
+// or materials missing; proxy then falls through to plain HTTP loopback.
+const adminZoneAgent = adminZoneMtlsAgent();
+console.log(`[gateway] admin-zone mTLS: ${adminZoneMtlsStatus()}`);
+app.use('/api/admin/console', createProxyMiddleware({
+  target: ADMIN_CONSOLE_BFF_URL,
+  changeOrigin: true,
+  xfwd: true,
+  pathRewrite: (p) => `/api/admin/console${p.startsWith('/') ? p : `/${p}`}`,
+  ...(adminZoneAgent ? { agent: adminZoneAgent } : {}),
 }));
 
 // ── Platform Admin Workspace — proxied to admin-service ─────────────────

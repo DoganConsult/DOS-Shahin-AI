@@ -2,13 +2,13 @@
  * Phase G T6 (full) — contract-driven trial card, rendered with raw IBM Carbon.
  *
  * Reads `productManifest.trialChrome.card` for fields/labels/actions.
+ * The host supplies trial state when this dormant surface is re-enabled.
  * Renders via raw `cds-tile` + `cds-structured-list` + `cdsButton` + `cds-tag`
  * imported directly from `carbon-components-angular`. Zero DOS wrappers.
  */
 
-import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import {
   TilesModule,
   StructuredListModule,
@@ -143,12 +143,14 @@ function fmtDate(v: unknown): string {
     }
   `],
 })
-export class TrialCardComponent implements OnInit {
-  private readonly http = inject(HttpClient);
-
+export class TrialCardComponent {
   readonly locale  = signal<'en' | 'ar'>('en');
   readonly summary = signal<TrialCurrentResponse | null>(null);
   readonly chrome  = signal<TrialChromeContract>(CHROME);
+
+  @Input() set summaryData(value: TrialCurrentResponse | null) {
+    this.summary.set(value);
+  }
 
   readonly visible = computed(() => {
     const c = this.chrome().card;
@@ -214,10 +216,4 @@ export class TrialCardComponent implements OnInit {
     if (a?.route && typeof window !== 'undefined') window.location.href = a.route;
   }
 
-  ngOnInit(): void {
-    this.http.get<TrialCurrentResponse>('/api/trials/current').subscribe({
-      next: (resp) => this.summary.set(resp),
-      error: () => this.summary.set({ ok: false, productCode: '', hasTrial: false }),
-    });
-  }
 }

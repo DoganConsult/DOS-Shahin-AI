@@ -183,25 +183,13 @@
 
 .dos-mh-public-header__menu-toggle {
   display: none;
-  align-items: center;
-  justify-content: center;
-  gap: 0.25rem;
-  inline-size: 3rem;
-  block-size: 3rem;
   margin-inline-start: auto;
-  padding: 0;
-  border: 1px solid rgba(15, 98, 254, 0.14);
-  border-radius: 999px;
-  background: rgba(15, 98, 254, 0.06);
-  cursor: pointer;
 }
 
-.dos-mh-public-header__menu-toggle span {
-  display: block;
-  inline-size: 1rem;
-  block-size: 2px;
+.dos-mh-public-header__menu-toggle ::ng-deep .cds--btn {
+  min-block-size: 2.75rem;
+  padding-inline: 1rem;
   border-radius: 999px;
-  background: var(--cds-text-primary, #161616);
 }
 
 .dos-mh-public-header__menus {
@@ -222,21 +210,12 @@
 
 .dos-mh-public-header__nav-link {
   display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-block-size: 2.5rem;
-  padding-inline: 0.8rem;
-  border: 1px solid transparent;
-  border-radius: 999px;
-  color: var(--cds-text-primary, #161616);
-  font: 600 0.9rem / 1.1 inherit;
-  transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease;
 }
 
-.dos-mh-public-header__nav-link--active {
-  background: rgba(15, 98, 254, 0.1);
-  border-color: rgba(15, 98, 254, 0.22);
-  color: var(--cds-link-primary, #0f62fe);
+.dos-mh-public-header__nav-link ::ng-deep .cds--btn {
+  min-block-size: 2.5rem;
+  padding-inline: 0.8rem;
+  border-radius: 999px;
 }
 
 .dos-mh-public-header__nav-link:hover,
@@ -245,16 +224,15 @@
 .dos-mh-public-header__action-link:focus-visible,
 .dos-mh-public-header__button:hover,
 .dos-mh-public-header__button:focus-visible,
-.dos-mh-hero-cta:hover,
-.dos-mh-hero-cta:focus-visible {
+dos-carbon-button.dos-mh-hero-cta:hover,
+dos-carbon-button.dos-mh-hero-cta:focus-visible {
   text-decoration: none;
   outline: none;
 }
 
-.dos-mh-public-header__nav-link:hover,
-.dos-mh-public-header__nav-link:focus-visible {
-  background: var(--cds-layer-hover-01, #e8e8e8);
-  border-color: rgba(15, 98, 254, 0.18);
+.dos-mh-public-header__nav-link:hover ::ng-deep .cds--btn,
+.dos-mh-public-header__nav-link:focus-visible ::ng-deep .cds--btn {
+  transform: translateY(-1px);
 }
 
 .dos-mh-public-header__actions {
@@ -263,6 +241,17 @@
   align-items: center;
   justify-content: flex-end;
   gap: 0.625rem;
+}
+
+.dos-mh-signin-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  line-height: 1;
+}
+
+.dos-mh-signin-cta svg {
+  flex-shrink: 0;
 }
 
 .dos-mh-public-header__action-link {
@@ -303,8 +292,8 @@
 
 .dos-mh-public-header__button:hover,
 .dos-mh-public-header__button:focus-visible,
-.dos-mh-hero-cta:hover,
-.dos-mh-hero-cta:focus-visible {
+dos-carbon-button.dos-mh-hero-cta:hover,
+dos-carbon-button.dos-mh-hero-cta:focus-visible {
   transform: translateY(-1px);
 }
 
@@ -364,13 +353,25 @@
     inline-size: 100%;
     padding-inline: 1rem;
   }
+
+  .dos-mh-public-header__nav-link,
+  .dos-mh-public-header__menu-toggle {
+    display: block;
+  }
+
+  .dos-mh-public-header__nav-link ::ng-deep .cds--btn,
+  .dos-mh-public-header__menu-toggle ::ng-deep .cds--btn,
+  .dos-mh-public-header__actions dos-carbon-button ::ng-deep .cds--btn {
+    inline-size: 100%;
+    justify-content: flex-start;
+  }
 }
 
 @media (max-width: 430px) {
   .dos-mh-public-header__nav-link,
   .dos-mh-public-header__action-link,
   .dos-mh-public-header__button,
-  .dos-mh-hero-cta {
+  dos-carbon-button.dos-mh-hero-cta {
     inline-size: 100%;
   }
 }
@@ -472,25 +473,23 @@
   margin: 0;
 }
 
-.dos-mh-hero-cta {
+dos-carbon-button.dos-mh-hero-cta {
   display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-block-size: 3.5rem;
-  padding-inline: 1.35rem;
-  border: 1px solid transparent;
-  border-radius: 999px;
-  font: 600 1rem / 1.1 inherit;
-  transition: transform 140ms ease, background-color 140ms ease, border-color 140ms ease;
+  transition: transform 140ms ease;
 }
 
-.dos-mh-hero-cta--primary {
-  background: var(--cds-button-primary, #0f62fe);
-  color: var(--cds-text-on-color, #ffffff);
+dos-carbon-button.dos-mh-hero-cta ::ng-deep .cds--btn {
+  min-block-size: 3.5rem;
+  padding-inline: 1.35rem;
+  border-radius: 999px;
+  font: 600 1rem / 1.1 inherit;
+}
+
+dos-carbon-button.dos-mh-hero-cta--primary ::ng-deep .cds--btn {
   box-shadow: 0 20px 44px rgba(15, 98, 254, 0.22);
 }
 
-.dos-mh-hero-cta--secondary {
+dos-carbon-button.dos-mh-hero-cta--secondary ::ng-deep .cds--btn {
   background: rgba(255, 255, 255, 0.08);
   border-color: rgba(255, 255, 255, 0.18);
   color: #ffffff;
@@ -837,6 +836,11 @@
   font: 400 0.9375rem / 1.6 inherit;
   margin: 0;
   color: var(--cds-text-secondary, #525252);
+}
+
+.dos-mh-testimonial-intro {
+  grid-column: 1 / -1;
+  max-inline-size: 48rem;
 }
 
 

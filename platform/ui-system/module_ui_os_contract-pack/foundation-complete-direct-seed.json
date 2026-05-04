@@ -128,7 +128,14 @@
     { "component_key": "module.posture.page", "vendor": "ibm-carbon", "carbon_key": "grid", "schema_version": 1, "selector": "dos-page-layout", "approval_status": "approved", "metadata": { "source": "wave1-foundation-roster", "archetype": "posture-overview" } }
   ],
   "apis": [
-    { "method": "GET", "path": "/api/ui-os/template-binding", "owner_service": "ui-os-service", "permission": "foundation.module.read" }
+    { "method": "GET", "path": "/api/ui-os/template-binding", "owner_service": "ui-os-service", "permission": "foundation.module.read" },
+    { "method": "GET", "path": "/api/ui-os/template-binding/all", "owner_service": "ui-os-service", "permission": "foundation.module.read" },
+    { "method": "GET", "path": "/api/foundation/dashboard", "owner_service": "user-service", "permission": null },
+    { "method": "GET", "path": "/api/foundation/lookups", "owner_service": "user-service", "permission": null },
+    { "method": "GET", "path": "/api/organizations", "owner_service": "user-service", "permission": null },
+    { "method": "GET", "path": "/api/users", "owner_service": "user-service", "permission": null },
+    { "method": "GET", "path": "/api/audit-trail", "owner_service": "user-service", "permission": null },
+    { "method": "GET", "path": "/api/health/foundation", "owner_service": "user-service", "permission": null }
   ],
   "i18n": {
     "en": { "foundation.module.title": "Foundation" },

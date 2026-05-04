@@ -80,7 +80,6 @@ export * from './shell/workspace-shell.contracts';
 // Named internal kits (Carbon-only, built on top of src/carbon/* wrappers).
 // NOT third-party templates — the kits exist solely to formalize the
 // "kit boundary" referenced by the agent operating directive.
-export * from './shell/workspace-host-kit';
 export * from './marketing/marketing-page-kit';
 // Carbon-backed primitives (one-source wrappers — never import Carbon
 // directly from products/modules/services; the carbon-boundary-guard

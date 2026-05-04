@@ -41,6 +41,8 @@ import { DosCarbonCheckboxComponent } from '../carbon/dos-carbon-checkbox.compon
 import { DosCarbonButtonComponent } from '../carbon/dos-carbon-button.component';
 import { DosCarbonNotificationComponent } from '../carbon/dos-carbon-notification.component';
 import { DosCarbonInlineLoadingComponent } from '../carbon/dos-carbon-inline-loading.component';
+import { DosCarbonTileComponent } from '../carbon/dos-carbon-tile.component';
+import { DosCarbonTagComponent } from '../carbon/dos-carbon-tag.component';
 
 function nowIso(): string { return new Date().toISOString(); }
 
@@ -50,41 +52,50 @@ function nowIso(): string { return new Date().toISOString(); }
 @Component({
   selector: 'dos-download-kit-card',
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    DosCarbonTileComponent,
+    DosCarbonTagComponent,
+    DosCarbonButtonComponent,
+    DosCarbonInlineLoadingComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <article
+    <dos-carbon-tile
       class="dos-download-kit-card"
-      data-cds-component="tile"
       [attr.data-asset-key]="asset?.assetKey"
       [attr.data-locale]="asset?.locale"
       [attr.data-gated]="asset?.isGated ? 'true' : 'false'"
     >
       @if (!asset) {
-        <div data-cds-component="skeleton-text"></div>
+        <dos-carbon-inline-loading
+          state="active"
+          loadingText="Preparing executive kit…"
+        ></dos-carbon-inline-loading>
       } @else {
         <header class="dos-dk-card-head">
-          <span data-cds-component="tag" [attr.data-kind]="asset.isGated ? 'warm-gray' : 'cool-gray'">
+          <dos-carbon-tag [type]="asset.isGated ? 'warm-gray' : 'cool-gray'" size="md">
             {{ asset.isGated ? gatedLabel : openLabel }}
-          </span>
-          <span data-cds-component="tag" data-kind="gray">{{ asset.assetType.toUpperCase() }}</span>
+          </dos-carbon-tag>
+          <dos-carbon-tag type="gray" size="md">{{ asset.assetType.toUpperCase() }}</dos-carbon-tag>
         </header>
         <h3 class="dos-dk-card-title">{{ asset.title }}</h3>
         <p class="dos-dk-card-desc">{{ asset.description }}</p>
-        <ul class="dos-dk-card-meta" data-cds-component="structured-list">
-          <li><span>v</span><strong>{{ asset.version }}</strong></li>
-          <li><span>locale</span><strong>{{ asset.locale }}</strong></li>
-        </ul>
-        <footer>
-          <button
-            type="button"
-            data-cds-component="button"
-            data-kind="primary"
-            (click)="onPrimary()"
-          >{{ ctaLabel }}</button>
+        <dl class="dos-dk-card-meta">
+          <div>
+            <dt>{{ versionLabel }}</dt>
+            <dd>{{ asset.version }}</dd>
+          </div>
+          <div>
+            <dt>{{ localeLabel }}</dt>
+            <dd>{{ asset.locale.toUpperCase() }}</dd>
+          </div>
+        </dl>
+        <footer class="dos-dk-card-actions">
+          <dos-carbon-button kind="primary" size="md" (clicked)="onPrimary()">{{ ctaLabel }}</dos-carbon-button>
         </footer>
       }
-    </article>
+    </dos-carbon-tile>
   `,
   styles: [`
     :host { display: block; container-type: inline-size; }
@@ -92,11 +103,14 @@ function nowIso(): string { return new Date().toISOString(); }
     .dos-dk-card-head { display: flex; gap: 0.5rem; }
     .dos-dk-card-title { margin: 0; font-size: 1.25rem; }
     .dos-dk-card-desc { margin: 0; color: var(--dos-color-text-secondary, #525252); }
-    .dos-dk-card-meta { list-style: none; padding: 0; margin: 0; display: flex; gap: 1rem; }
-    .dos-dk-card-meta li { display: flex; flex-direction: column; }
+    .dos-dk-card-meta { margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; }
+    .dos-dk-card-meta div { display: grid; gap: 0.15rem; }
+    .dos-dk-card-meta dt { font-size: 0.75rem; color: var(--dos-color-text-secondary, #525252); }
+    .dos-dk-card-meta dd { margin: 0; font-size: 0.9375rem; font-weight: 600; color: var(--dos-color-text-primary, #161616); }
+    .dos-dk-card-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
     @container (max-width: 480px) {
       .dos-download-kit-card { padding: var(--dos-space-3, 0.75rem); }
-      .dos-dk-card-meta { flex-direction: column; gap: 0.25rem; }
+      .dos-dk-card-meta { grid-template-columns: 1fr; gap: 0.25rem; }
     }
   `],
 })
@@ -106,6 +120,9 @@ export class DosDownloadKitCardComponent {
   @Input() gatedLabel = 'Gated';
   @Input() openLabel = 'Open download';
   @Output() readonly event = new EventEmitter<MarketingDownloadEvent>();
+
+  readonly versionLabel = 'Version';
+  readonly localeLabel = 'Locale';
 
   onPrimary() {
     if (!this.asset) return;
@@ -311,45 +328,48 @@ export class DosGatedDownloadModalComponent {
 @Component({
   selector: 'dos-download-success',
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    DosCarbonTileComponent,
+    DosCarbonNotificationComponent,
+    DosCarbonButtonComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <section
+    <dos-carbon-tile
       class="dos-download-success"
-      data-cds-component="tile"
       [attr.data-asset-key]="asset?.assetKey"
     >
-      <div data-cds-component="notification" data-kind="success" role="status">
-        {{ successHeading }}
-      </div>
+      <dos-carbon-notification
+        variant="inline"
+        kind="success"
+        [title]="successHeading"
+        [subtitle]="asset ? successBody + ' ' + asset.title + '.' : successBody"
+        [hideClose]="true"
+      ></dos-carbon-notification>
       @if (asset) {
-        <p>{{ successBody }} <strong>{{ asset.title }}</strong>.</p>
+        <p>{{ followupBody }}</p>
       }
       <footer>
         @if (asset?.fileUrl) {
-          <a
-            data-cds-component="button"
-            data-kind="primary"
-            [attr.href]="asset?.fileUrl"
-            target="_blank" rel="noopener"
-            (click)="emitOpenedNow()"
-          >{{ downloadNowLabel }}</a>
+          <dos-carbon-button kind="primary" size="md" (clicked)="openDownloadNow()">{{ downloadNowLabel }}</dos-carbon-button>
         }
-        <button type="button" data-cds-component="button" data-kind="tertiary" (click)="emitEmail()">
+        <dos-carbon-button kind="tertiary" size="md" (clicked)="emitEmail()">
           {{ emailLabel }}
-        </button>
-        <a data-cds-component="button" data-kind="tertiary" [href]="bookDemoHref">
+        </dos-carbon-button>
+        <dos-carbon-button kind="ghost" size="md" (clicked)="openRoute(bookDemoHref)">
           {{ bookDemoLabel }}
-        </a>
-        <a data-cds-component="button" data-kind="tertiary" [href]="exploreHref">
+        </dos-carbon-button>
+        <dos-carbon-button kind="ghost" size="md" (clicked)="openRoute(exploreHref)">
           {{ exploreLabel }}
-        </a>
+        </dos-carbon-button>
       </footer>
-    </section>
+    </dos-carbon-tile>
   `,
   styles: [`
     :host { display: block; }
     .dos-download-success { padding: var(--dos-space-4, 1rem); display: flex; flex-direction: column; gap: var(--dos-space-3, 0.75rem); }
+    .dos-download-success p { margin: 0; color: var(--dos-color-text-secondary, #525252); }
     footer { display: flex; gap: 0.5rem; flex-wrap: wrap; }
   `],
 })
@@ -363,8 +383,22 @@ export class DosDownloadSuccessComponent {
   @Input() bookDemoHref = '/demo';
   @Input() exploreLabel = 'Explore the platform';
   @Input() exploreHref = '/platform';
+  @Input() followupBody = 'The executive kit is unlocked and ready for the next review step.';
 
   @Output() readonly event = new EventEmitter<MarketingDownloadEvent>();
+
+  openDownloadNow() {
+    if (!this.asset?.fileUrl) return;
+    if (typeof window !== 'undefined') {
+      window.open(this.asset.fileUrl, '_blank', 'noopener');
+    }
+    this.emitOpenedNow();
+  }
+
+  openRoute(href: string) {
+    if (!href || typeof window === 'undefined') return;
+    window.location.assign(href);
+  }
 
   emitOpenedNow() {
     if (!this.asset) return;

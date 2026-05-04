@@ -11,7 +11,7 @@
     "grepInvert": null,
     "maxFailures": 0,
     "metadata": {
-      "actualWorkers": 5
+      "actualWorkers": 1
     },
     "preserveOutput": "always",
     "reporter": [
@@ -112,25 +112,25 @@
     "shard": null,
     "updateSnapshots": "missing",
     "version": "1.49.0",
-    "workers": 8,
+    "workers": 1,
     "webServer": null
   },
   "suites": [
     {
-      "title": "m1-marketing-home.spec.ts",
-      "file": "m1-marketing-home.spec.ts",
+      "title": "platform-admin-fe-shell.spec.ts",
+      "file": "platform-admin-fe-shell.spec.ts",
       "column": 0,
       "line": 0,
       "specs": [],
       "suites": [
         {
-          "title": "M1 — marketing.home.page renders without auth",
-          "file": "m1-marketing-home.spec.ts",
-          "line": 28,
+          "title": "Marketing → DAuth/Keycloak login bridge",
+          "file": "platform-admin-fe-shell.spec.ts",
+          "line": 58,
           "column": 6,
           "specs": [
             {
-              "title": "root route resolves the marketing-landing Dynamic-UI binding",
+              "title": "marketing landing renders IBM Carbon Sign-in icon button routing to /login",
               "ok": false,
               "tags": [],
               "tests": [
@@ -144,189 +144,56 @@
                     {
                       "workerIndex": 0,
                       "status": "failed",
-                      "duration": 5,
+                      "duration": 261,
                       "error": {
-                        "message": "Error: browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1148/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
-                        "stack": "Error: browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1148/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                        "message": "Error: page.goto: net::ERR_CERT_AUTHORITY_INVALID at https://shahin-ai.com/\nCall log:\n\u001b[2m  - navigating to \"https://shahin-ai.com/\", waiting until \"load\"\u001b[22m\n",
+                        "stack": "Error: page.goto: net::ERR_CERT_AUTHORITY_INVALID at https://shahin-ai.com/\nCall log:\n\u001b[2m  - navigating to \"https://shahin-ai.com/\", waiting until \"load\"\u001b[22m\n\n    at /root/DOS-Platform/platform/config-center/test/tests/e2e/platform-admin-fe-shell.spec.ts:69:16",
+                        "location": {
+                          "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/platform-admin-fe-shell.spec.ts",
+                          "column": 16,
+                          "line": 69
+                        },
+                        "snippet": "  67 |\n  68 |   test('marketing landing renders IBM Carbon Sign-in icon button routing to /login', async ({ page }) => {\n> 69 |     await page.goto(`${BASE}/`);\n     |                ^\n  70 |     const cta = page.locator('[data-testid=\"marketing-signin-cta\"]');\n  71 |     await expect(cta).toBeVisible({ timeout: 15_000 });\n  72 |     await expect(cta).toContainText(/Sign in|تسجيل الدخول/);"
                       },
                       "errors": [
                         {
-                          "message": "Error: browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1148/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                          "location": {
+                            "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/platform-admin-fe-shell.spec.ts",
+                            "column": 16,
+                            "line": 69
+                          },
+                          "message": "Error: page.goto: net::ERR_CERT_AUTHORITY_INVALID at https://shahin-ai.com/\nCall log:\n\u001b[2m  - navigating to \"https://shahin-ai.com/\", waiting until \"load\"\u001b[22m\n\n\n  67 |\n  68 |   test('marketing landing renders IBM Carbon Sign-in icon button routing to /login', async ({ page }) => {\n> 69 |     await page.goto(`${BASE}/`);\n     |                ^\n  70 |     const cta = page.locator('[data-testid=\"marketing-signin-cta\"]');\n  71 |     await expect(cta).toBeVisible({ timeout: 15_000 });\n  72 |     await expect(cta).toContainText(/Sign in|تسجيل الدخول/);\n    at /root/DOS-Platform/platform/config-center/test/tests/e2e/platform-admin-fe-shell.spec.ts:69:16"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-03T21:31:00.102Z",
-                      "attachments": []
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "bdf94da1d30640e78532-610111feb505d36bd3af",
-              "file": "m1-marketing-home.spec.ts",
-              "line": 29,
-              "column": 7
-            },
-            {
-              "title": "all 19 public regions present in DOM order",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 1,
-                      "status": "failed",
-                      "duration": 5,
-                      "error": {
-                        "message": "Error: browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1148/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
-                        "stack": "Error: browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1148/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
-                      },
-                      "errors": [
+                      "startTime": "2026-05-04T09:29:34.864Z",
+                      "attachments": [
                         {
-                          "message": "Error: browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1148/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/root/DOS-Platform/platform/config-center/test/playwright-results/platform-admin-fe-shell-Ma-e9be0-con-button-routing-to-login-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/root/DOS-Platform/platform/config-center/test/playwright-results/platform-admin-fe-shell-Ma-e9be0-con-button-routing-to-login-chromium/video.webm"
                         }
                       ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-05-03T21:31:00.123Z",
-                      "attachments": []
+                      "errorLocation": {
+                        "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/platform-admin-fe-shell.spec.ts",
+                        "column": 16,
+                        "line": 69
+                      }
                     }
                   ],
                   "status": "unexpected"
                 }
               ],
-              "id": "bdf94da1d30640e78532-fea5a1efa8916eb96443",
-              "file": "m1-marketing-home.spec.ts",
-              "line": 40,
-              "column": 7
-            },
-            {
-              "title": "brand eagle pictogram + 9 agent tiles render in agentic-proof",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 2,
-                      "status": "failed",
-                      "duration": 5,
-                      "error": {
-                        "message": "Error: browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1148/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
-                        "stack": "Error: browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1148/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
-                      },
-                      "errors": [
-                        {
-                          "message": "Error: browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1148/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-05-03T21:31:00.189Z",
-                      "attachments": []
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "bdf94da1d30640e78532-1231aedb69f12bbd8a47",
-              "file": "m1-marketing-home.spec.ts",
-              "line": 49,
-              "column": 7
-            },
-            {
-              "title": "Arabic locale flips dir=rtl on the marketing root",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 3,
-                      "status": "failed",
-                      "duration": 5,
-                      "error": {
-                        "message": "Error: browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1148/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
-                        "stack": "Error: browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1148/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
-                      },
-                      "errors": [
-                        {
-                          "message": "Error: browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1148/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-05-03T21:31:00.113Z",
-                      "attachments": []
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "bdf94da1d30640e78532-01b03fd1702af0c3f52a",
-              "file": "m1-marketing-home.spec.ts",
-              "line": 62,
-              "column": 7
-            },
-            {
-              "title": "public surface — no credential forms and login/register are bridges",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 4,
-                      "status": "failed",
-                      "duration": 6,
-                      "error": {
-                        "message": "Error: browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1148/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
-                        "stack": "Error: browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1148/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
-                      },
-                      "errors": [
-                        {
-                          "message": "Error: browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1148/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-05-03T21:31:00.156Z",
-                      "attachments": []
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "bdf94da1d30640e78532-d61748eef40a42a43eb6",
-              "file": "m1-marketing-home.spec.ts",
-              "line": 69,
+              "id": "ac9a3ee3161c7bb012c1-af0744a0fa67a06be3a9",
+              "file": "platform-admin-fe-shell.spec.ts",
+              "line": 68,
               "column": 7
             }
           ]
@@ -336,11 +203,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-05-03T21:30:59.295Z",
-    "duration": 947.7800000000001,
+    "startTime": "2026-05-04T09:29:34.204Z",
+    "duration": 1075.481,
     "expected": 0,
     "skipped": 0,
-    "unexpected": 5,
+    "unexpected": 1,
     "flaky": 0
   }
 }
