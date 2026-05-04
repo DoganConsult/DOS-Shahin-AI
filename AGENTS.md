@@ -1066,13 +1066,40 @@ Master are CI-rejected (`dos-master-only.mjs`) and DB-rejected
                                               backfill manifests)
   `scripts/ci-guards/dos-master-gate.mjs` master runner: 11/11 PASS
   end-to-end (`node scripts/ci-guards/dos-master-gate.mjs`).
-- **M14 D3..D5** — IN-PROGRESS. Remaining: real Prom/Loki/Jaeger/audit/
-  synthetic signal adapters via `@dos/observability-clients`,
-  Temporal-backed compensation chain orchestrator, remaining 36 CI
-  guards (per-zone: `tenant-context-required`, `rls-policy-present`,
-  `mTLS-required-on-admin-zone`, `redis-db-isolation`, …), tighten
-  fake-green/bootstrap-fan-out baselines to 0, end-to-end doctrine
-  acknowledgement workflow via `dos_master.doctrine_acknowledgement`.
+- **M14 D3 — CLOSED (2026-05-04).** Real signal adapters shipped:
+  `services/rollout-service/src/lib/signal-adapters.ts` ships
+  `RealSignalReader` with timeout-protected adapters for
+  Prom (`/api/v1/query`), Loki (`/loki/api/v1/query_range`), Jaeger
+  (Prom-histogram p95), audit denial spike (writer-audit ledger
+  `status='denied'` last 10 min) and synthetic page-load. Each adapter
+  degrades to a NEUTRAL value on upstream timeout/error so
+  observability outage never auto-rolls-back (Article 5: no
+  fake-green). Wired in `server.ts`: env `ROLLOUT_SIGNAL_MODE=real`
+  installs `RealSignalReader`; default stays `StubSignalReader` for
+  local dev.
+  Four additional CI guards landed and PASS in
+  `dos-master-gate.mjs`:
+    `tenant-context-required.mjs`        2 tenant services
+                                         (baseline 2 — tightens once
+                                          workspace-bff and
+                                          tenant-admin-bff import
+                                          `@dos/tenant-context`)
+    `rls-policy-present.mjs`             13/201 tenant tables RLS
+                                         (baseline 200 — drops as
+                                          remaining tables enable RLS)
+    `audit-event-on-write.mjs`           159 audit rows across 1 actor
+    `keycloak-realm-isolation.mjs`       3 admin + 2 tenant services
+                                         realm-isolated
+  `scripts/ci-guards/dos-master-gate.mjs` master runner: 15/15 guards
+  PASS end-to-end (`node scripts/ci-guards/dos-master-gate.mjs`).
+- **M14 D4..D5** — IN-PROGRESS. Remaining: Temporal-backed compensation
+  chain orchestrator (`dos.rollout_compensation_step` execution
+  engine), remaining 32 CI guards (per-zone: `mTLS-required-on-admin-zone`,
+  `redis-db-isolation`, `cookie-domain-isolation`, `bootstrap-cache-key-coherent`,
+  `static-route-ban`, `decision-ledger-immutable`, …), tighten
+  fake-green/bootstrap-fan-out/tenant-context baselines to 0,
+  end-to-end doctrine acknowledgement workflow via
+  `dos_master.doctrine_acknowledgement`.
 
 ### Phase status (live as of 2026-05-01)
 

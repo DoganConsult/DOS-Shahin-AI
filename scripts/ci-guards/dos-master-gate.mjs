@@ -17,6 +17,10 @@ const GUARDS = [
   'service-port-allocated.mjs',
   'trust-zone-isolation.mjs',
   'service-manifest-required.mjs',
+  'tenant-context-required.mjs',
+  'rls-policy-present.mjs',
+  'audit-event-on-write.mjs',
+  'keycloak-realm-isolation.mjs',
 ];
 
 let pass = 0, fail = 0;
