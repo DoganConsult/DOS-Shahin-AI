@@ -403,11 +403,28 @@ const REGISTRY_COMPONENT_MAP: Record<string, () => Promise<Type<any>>> = {
   'platform.ai-platform.gateway': () => import('../../core/platform/shell/templates/module-records.template').then(m => m.ModuleRecordsTemplateComponent),
   'platform.ai-platform.governance': () => import('../../core/platform/shell/templates/module-extra.templates').then(m => m.ModuleSettingsTemplateComponent),
   'platform.ai-platform.overview': () => import('../../core/platform/shell/templates/module-overview.template').then(m => m.ModuleOverviewTemplateComponent),
-  'platform.config-center.audit': () => import('../../core/platform/shell/templates/module-records.template').then(m => m.ModuleRecordsTemplateComponent),
-  'platform.config-center.flags': () => import('../../core/platform/shell/templates/module-extra.templates').then(m => m.ModuleSettingsTemplateComponent),
+  'dynamic-ui.components': () => import('../../core/platform/shell/templates/module-records.template').then(m => m.ModuleRecordsTemplateComponent),
+  'dynamic-ui.contracts': () => import('../../core/platform/shell/templates/module-records.template').then(m => m.ModuleRecordsTemplateComponent),
+  'dynamic-ui.overview': () => import('../../core/platform/shell/templates/module-overview.template').then(m => m.ModuleOverviewTemplateComponent),
+  'dynamic-ui.routes': () => import('../../core/platform/shell/templates/module-records.template').then(m => m.ModuleRecordsTemplateComponent),
+  'platform.config-center.audit': () =>
+    import('../../core/platform/shell/templates/module-archetypes-extended.templates').then(m => m.AuditTrailLedgerTemplateComponent),
+  'platform.config-center.compare': () =>
+    import('../../core/platform/shell/templates/module-extra.templates').then(m => m.ModuleSettingsTemplateComponent),
+  'platform.config-center.flags': () => import('../../core/platform/shell/templates/module-records.template').then(m => m.ModuleRecordsTemplateComponent),
+  'platform.config-center.gateway': () =>
+    import('../../core/platform/shell/templates/module-trend-intelligence.template').then(m => m.TrendIntelligenceTemplateComponent),
+  'platform.config-center.health': () =>
+    import('../../core/platform/shell/templates/module-trend-intelligence.template').then(m => m.TrendIntelligenceTemplateComponent),
+  'platform.config-center.hub': () =>
+    import('../../core/platform/shell/templates/module-decision-dashboard.template').then(m => m.DecisionDashboardTemplateComponent),
   'platform.config-center.overview': () => import('../../core/platform/shell/templates/module-overview.template').then(m => m.ModuleOverviewTemplateComponent),
-  'platform.config-center.settings': () => import('../../core/platform/shell/templates/module-extra.templates').then(m => m.ModuleSettingsTemplateComponent),
-  'platform.config-center.tokens': () => import('../../core/platform/shell/templates/module-extra.templates').then(m => m.ModuleSettingsTemplateComponent),
+  'platform.config-center.resolve': () =>
+    import('../../core/platform/shell/templates/module-extra.templates').then(m => m.ModuleSettingsTemplateComponent),
+  'platform.config-center.settings': () => import('../../core/platform/shell/templates/module-records.template').then(m => m.ModuleRecordsTemplateComponent),
+  'platform.config-center.tokens': () => import('../../core/platform/shell/templates/module-records.template').then(m => m.ModuleRecordsTemplateComponent),
+  'platform.config-center.workspace': () =>
+    import('../../core/platform/shell/templates/module-extra.templates').then(m => m.ModuleSettingsTemplateComponent),
   'platform.dauth.audit.list': () => import('../../core/platform/shell/templates/module-records.template').then(m => m.ModuleRecordsTemplateComponent),
   'platform.dauth.overview': () => import('../../core/platform/shell/templates/module-overview.template').then(m => m.ModuleOverviewTemplateComponent),
   'platform.dauth.perms.list': () => import('../../core/platform/shell/templates/module-records.template').then(m => m.ModuleRecordsTemplateComponent),

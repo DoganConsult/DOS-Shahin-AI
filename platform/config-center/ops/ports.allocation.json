@@ -623,6 +623,15 @@
       "gatewayPrefix": "/api/public/signup",
       "envFile": "signup-bff",
       "note": "DOS Master M7 \u2014 public self-signup BFF (Doctrine Article 4 \u2014 public trust zone)"
+    },
+    "anti-abuse-service": {
+      "port": 4010,
+      "cwd": "services/anti-abuse-service",
+      "script": "dist/server.js",
+      "wave": 1,
+      "gatewayPrefix": "/api/public/anti-abuse",
+      "envFile": "anti-abuse-service",
+      "note": "DOS Master M8 \u2014 anti-abuse aggregator (CAPTCHA + IP-rep + device-FP + email-verify)"
     }
   },
   "oneShots": {

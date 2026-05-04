@@ -1,0 +1,11 @@
+{
+  "serviceCode": "anti-abuse-service",
+  "version": "0.1.0",
+  "domains": ["platform"],
+  "trustZone": "public",
+  "dependencies": ["signup-bff"],
+  "apiPrefix": "/api/public/anti-abuse",
+  "doctrineArticle": 4,
+  "controlled": true,
+  "writerActor": "anti-abuse-service"
+}

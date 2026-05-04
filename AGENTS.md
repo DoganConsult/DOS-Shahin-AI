@@ -877,9 +877,26 @@ Master are CI-rejected (`dos-master-only.mjs`) and DB-rejected
   Live verified: 2 products (`shahin-ai`, `tuwaiq-ai`) + 4 enrollments
   (foundation+compliance+risk+workflow) + workspace-bff at :4007 in
   `dos_master.service_registry`. Build GREEN.
-- **M7..M14** — IN-PROGRESS. Sequenced per DOS_MASTER_PLAN.md §3.
-  M7 D1 next: `services/signup-bff` + `dos_master.signup_flow_step`
-  seeding for shahin-ai self-signup.
+- **M7 D1 — CLOSED (2026-05-04).** `services/signup-bff`
+  (`@dos/signup-bff`, port 4009, public trust zone, prefix
+  `/api/public/signup`) ships:
+  `GET /flows?product_code`, `GET /flows/:flow_code/steps`,
+  `POST /attempts`, `POST /attempts/complete`.
+  Seeded `shahin-ai-trial` flow with 6 steps
+  (collect-email → verify-email → anti-abuse → tenant-name →
+  provision → launch-workspace). Provision step payload locks the
+  trial contract: modules=[foundation, compliance, risk, workflow],
+  trial_days=7, extension_max=1, extension_days=7.
+  Registered in `dos_master.service_registry` (zone=public, port=4009)
+  + 4 endpoints in `dos_master.service_endpoint`. CLI `dos.mjs`
+  extended with `signup:attempts` and `provisioning:jobs`.
+  Live-verified end-to-end via `signup-repo` direct call:
+  attempt POSTed → tenant uuid minted → `provisioning_job` row queued
+  with status=`queued` → `dos.dos_master_invalidation_log` fan-out row
+  inserted with scope=`tenant`. Build GREEN.
+- **M8..M14** — IN-PROGRESS. Sequenced per DOS_MASTER_PLAN.md §3.
+  M8 D1 next: `services/anti-abuse-service` (CAPTCHA + IP-rep + device-FP
+  + email-verify adapter façade).
 
 ### Phase status (live as of 2026-05-01)
 

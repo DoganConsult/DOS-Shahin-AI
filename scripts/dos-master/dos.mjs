@@ -155,6 +155,28 @@ async function signupFlows() {
   });
 }
 
+async function signupAttempts() {
+  return withClient(async (c) => {
+    const r = await c.query(
+      `SELECT id, flow_code, email, status, tenant_id, created_at
+         FROM dos_master.signup_attempt
+        ORDER BY created_at DESC LIMIT 50`,
+    );
+    console.table(r.rows);
+  });
+}
+
+async function provisioningJobs() {
+  return withClient(async (c) => {
+    const r = await c.query(
+      `SELECT id, tenant_id, product_code, edition, status, created_at
+         FROM dos_master.provisioning_job
+        ORDER BY created_at DESC LIMIT 50`,
+    );
+    console.table(r.rows);
+  });
+}
+
 const dispatch = {
   'product:add': productAdd,
   'product:list': productList,
@@ -165,6 +187,8 @@ const dispatch = {
   'rollout:list': rolloutList,
   'publish:revisions': publishRevisions,
   'signup:flows': signupFlows,
+  'signup:attempts': signupAttempts,
+  'provisioning:jobs': provisioningJobs,
 };
 
 if (!cmd || cmd === '-h' || cmd === '--help') {

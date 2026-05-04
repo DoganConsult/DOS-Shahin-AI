@@ -189,6 +189,7 @@ Workflow OS, AI OS, Notification/Inbox OS, Integration OS, Data Governance OS, B
 | M4 D2 | CLOSED | 2026-05-04 | 2026-05-04 | `bootstrap-repo.ts` reads MV via `@dos/db/master`; route hydrates `nav.primary` + `shell.surfaces` from MV; `mvRefreshedAt` echoed in envelope |
 | M5 D1 | CLOSED | 2026-05-04 | 2026-05-04 | SSE `/api/workspace/events` tails `dos.dos_master_invalidation_log` (5s poll); `POST /api/workspace/refresh` runs `REFRESH MATERIALIZED VIEW CONCURRENTLY`; live-verified end-to-end |
 | M6 D1 | CLOSED | 2026-05-04 | 2026-05-04 | `services/onboarding-service` (`/api/admin/onboarding/{products,enrollments,services}`) + `scripts/dos-master/dos.mjs` CLI shipping 9 commands (product:add/list/enroll, service:register/list, doctrine:list, rollout:list, publish:revisions, signup:flows). Live: shahin-ai + tuwaiq-ai products registered; foundation+compliance+risk+workflow enrolled into shahin-ai; workspace-bff registered at port 4007. Build GREEN. |
-| M7..M14 | IN-PROGRESS | 2026-05-04 | — | Sequenced; auto-advance per ring engine |
+| M7 D1 | CLOSED | 2026-05-04 | 2026-05-04 | `services/signup-bff` (port 4009, public trust zone, prefix `/api/public/signup`) ships flows/steps GET + attempts POST + complete; `shahin-ai-trial` 6-step flow seeded (collect-email→verify-email→anti-abuse→tenant-name→provision→launch-workspace) with trial=Foundation+Compliance+Risk+Workflow, 7d base + 1×7d extension. Live verified: attempt → tenant minted → provisioning_job queued → invalidation_log fired. Build GREEN. |
+| M8..M14 | IN-PROGRESS | 2026-05-04 | — | Sequenced; auto-advance per ring engine |
 
 Update this section at the close of every day.
