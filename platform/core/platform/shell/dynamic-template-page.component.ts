@@ -37,6 +37,11 @@ import { TemplateBindingService, type TemplateBinding } from './template-binding
 import { loadArchetypeTemplate } from './template-binding.registry';
 import { DosInsightBarComponent } from './templates/dos-insight-bar.component';
 import type { ModuleInsightPillars } from './templates/module-template.types';
+// Marketing-landing archetype — config + brand services injected here so
+// DosMarketingHomePageComponent receives homeContent/nav/footer/agentStrip
+// inputs via tplInputs() without needing a bespoke wrapper component.
+import { MarketingPublicConfigService } from '@dos/ui-system';
+import { BrandResolverService } from '@dos/ui-system';
 
 @Component({
   selector: 'dos-dynamic-template-page',
@@ -72,6 +77,11 @@ export class DynamicTemplatePageComponent {
   private readonly router = inject(Router);
   private readonly bindings = inject(TemplateBindingService);
   private readonly envInjector = inject(EnvironmentInjector);
+  // Marketing-landing archetype hydration — injected lazily-safe; Angular
+  // will create these as singletons via the DI tree without pulling
+  // marketing code into non-marketing route bundles.
+  private readonly marketingCfg = inject(MarketingPublicConfigService);
+  private readonly brandResolver = inject(BrandResolverService);
 
   readonly currentRoute = signal<string>(this.normalize(this.router.url));
   readonly binding = signal<TemplateBinding | null>(null);
@@ -157,7 +167,24 @@ export class DynamicTemplatePageComponent {
     if (masthead['statusTags']   !== undefined) out['statusTags']   ??= masthead['statusTags'];
     if (masthead['primaryAction']!== undefined) out['primaryAction']??= masthead['primaryAction'];
 
-    // 5. Always last — never let a template-supplied prop override
+    // 5. Marketing-landing archetype — inject live config signals so that
+    //    DosMarketingHomePageComponent receives all required @Input() fields.
+    //    homeContent carries hero/trustPills/valueProps/agenticProof/platform
+    //    sections; nav/footer/flags come from the same config signal bundle.
+    if (b.archetype === 'marketing-landing') {
+      const cfg = this.marketingCfg;
+      out['brandCode']        = 'shahin-ai';
+      out['locale']           = 'en';
+      out['homeContent']      = cfg.marketingHomeContent();
+      out['navItems']         = cfg.marketingNavItems();
+      out['navGroups']        = cfg.marketingNavGroups();
+      out['footerGroups']     = cfg.marketingFooterGroups();
+      out['agentStripState']  = 'ready';
+      out['agentStripSummary'] = null;
+      out['downloadAssets']   = [];
+    }
+
+    // 6. Always last — never let a template-supplied prop override
     //    these contract metadata fields.
     out['archetype'] = b.archetype;
     out['route']     = b.route;
@@ -195,6 +222,16 @@ export class DynamicTemplatePageComponent {
           if (!b?.template_export) {
             this.loading.set(false);
             return;
+          }
+          // Marketing-landing: eagerly hydrate config + brand so tplInputs()
+          // signals are populated before the component is created.
+          if (b.archetype === 'marketing-landing') {
+            this.marketingCfg.init('shahin-ai', 'en').catch(
+              (e) => console.warn('[dynamic-template] marketing cfg init failed', e),
+            );
+            this.brandResolver.init('shahin-ai').catch(
+              (e) => console.warn('[dynamic-template] brand init failed', e),
+            );
           }
           const promise = loadArchetypeTemplate(b.template_export);
           if (!promise) {
