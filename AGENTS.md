@@ -1159,6 +1159,55 @@ Master are CI-rejected (`dos-master-only.mjs`) and DB-rejected
   static-route, manifest, RLS, mTLS), real Temporal worker swap-in for
   compensation orchestrator, and Phase 2 customer-pitch-matrix v1
   publish.
+- **Platform Admin Workspace (Internal Validation, 2026-05-04) — CLOSED.**
+  `services/admin-console-bff` now serves a self-contained Carbon-styled
+  HTML SPA at `GET /platform-admin` (and any sub-route) plus 13 evidence
+  endpoints under `/api/admin/console/dos-master/*` rendering live data
+  from the DOS Master substrate (no mocks). Auth uses real
+  `platform_admin.platform_admin_session` rows minted by
+  `scripts/dos-master/provision-temp-admin.mjs` (idempotent +
+  `--revoke|--list`); login is a `POST /api/admin/console/auth/email-login`
+  by email that returns the active session JWE. The 14 SPA hash routes
+  cover Overview, Phase-1 (M1–M14), CI Guards (23/23), Services 4007–4015,
+  CLI surface (29 cmds), Controlled DDL, Doctrine 11/11, PPD R0–R5,
+  Compensation, Auto-Evaluator, Writer Audit, Rollout Ledger, Negative
+  Proof, and Evidence-Pack download (JSON, attachment). Top-level
+  `/platform-admin` is mounted in `server.ts` separately from
+  `/api/admin/console`; no PrimeNG/Material — pure `--cds-*` Carbon
+  tokens consistent with `marketing-home.page.scss`. Live-verified
+  end-to-end against PID listening on :4013:
+    - `doganlap@gmail.com` provisioned with 4 pillar grants
+      (`dos-platform-admin`, `dauth-admin`, `dnoc-operator`,
+      `dsoc-analyst`) + 24h session token.
+    - 11/11 evidence endpoints return 200 with real DB-backed payloads
+      (services=9, milestones=14, CLI commands=29, controlled-DDL
+      tables=48 protected by `trg_dos_master_only`, doctrine articles=11,
+      PPD plan with R0–R5 + 5 health-gate adapters, compensation chains,
+      writer-audit totals, invalidation ledger top-50).
+    - `/dos-master/ci-guards` spawns `dos-master-gate.mjs` and reports
+      `pass=23 total=23 fail=0`.
+    - `/dos-master/evidence-pack` aggregates all endpoints into a single
+      JSON download (Content-Disposition attachment, dated filename).
+    - **Negative-path proof live (Article 11):** the
+      `/dos-master/negative-proof` endpoint opens a raw `pg.Client`,
+      `BEGIN`s a transaction, `RESET`s `dos.actor`, attempts an
+      `INSERT INTO dos.rollout_plan` and reports the trigger rejection
+      verbatim — `sqlstate=42501 message="DOS Master only: dos.actor
+      must be set to 'dos-master' (got )"` — then `ROLLBACK`s. Confirms
+      `trg_dos_master_only` rejects bypass attempts at the live DB.
+    - Unauthorized requests return 401 (no token + bad token both
+      verified).
+  Files shipped:
+  `services/admin-console-bff/src/lib/dos-master-evidence.ts` (14
+  evidence functions), `.../routes/dos-master-evidence.route.ts` (16
+  routes), `.../lib/platform-admin-spa.ts` (Carbon-styled SPA), wired
+  via `.../routes/index.ts` and `server.ts`;
+  `scripts/dos-master/provision-temp-admin.mjs` (canonical seed path
+  for platform-admin trust zone). Service is NOT yet on PM2 — it runs
+  manually for internal validation. PM2 boot, Keycloak `platform-ops`
+  realm cut-over, and mTLS certs land with M11 productionisation.
+  Build GREEN (`pnpm --filter @dos/admin-console-bff build`),
+  `dos-master-gate.mjs` 23/23 still PASS.
 
 ### Phase status (live as of 2026-05-01)
 
