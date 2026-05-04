@@ -16,7 +16,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TagModule } from 'carbon-components-angular';
-import { DosCarbonTagComponent, type DosCarbonTagType } from '../carbon/dos-carbon-tag.component';
+import type { DosCarbonTagType } from '../carbon/dos-carbon-tag.component';
 import type { StatusBarSignal } from './workspace-shell.contracts';
 
 type SignalLevel = StatusBarSignal['level'];
@@ -32,7 +32,7 @@ const LEVEL_TAG_TYPE: Record<SignalLevel, DosCarbonTagType> = {
 @Component({
   selector: 'dos-workspace-status-bar',
   standalone: true,
-  imports: [CommonModule, TagModule, DosCarbonTagComponent],
+  imports: [CommonModule, TagModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="dos-status-bar"

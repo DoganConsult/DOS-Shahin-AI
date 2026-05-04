@@ -792,8 +792,19 @@ app.use('/api/dsoc', authGuard, injectIdentityHeaders, createProxyMiddleware({
 const ADMIN_CONSOLE_BFF_URL = process.env.ADMIN_CONSOLE_BFF_URL || 'http://127.0.0.1:4013';
 // M15 D1 (C) — admin-zone mTLS hook. agent === null when MTLS_ENFORCE=0
 // or materials missing; proxy then falls through to plain HTTP loopback.
-const adminZoneAgent = adminZoneMtlsAgent();
-console.log(`[gateway] admin-zone mTLS: ${adminZoneMtlsStatus()}`);
+// L29 (Phase 3 D2): Only attach the mTLS HttpsAgent when EVERY admin-zone
+// upstream target URL is https://. Mixed http+https admin upstreams would
+// break the proxy. When upstreams are still plain HTTP the agent is
+// dropped to null and a warning is logged so the half-flip is visible
+// (Article 5 — no fake-green). Once admin services expose HTTPS listeners
+// the URLs flip to https:// and the agent activates automatically.
+const _adminZoneAgentRaw = adminZoneMtlsAgent();
+const _adminUpstreamsAllHttps = (
+  (process.env.ADMIN_CONSOLE_BFF_URL || 'http://127.0.0.1:4013').startsWith('https:') &&
+  (process.env.DOS_WORKFLOW_SERVICE_URL || 'http://127.0.0.1:4018').startsWith('https:')
+);
+const adminZoneAgent = (_adminZoneAgentRaw && _adminUpstreamsAllHttps) ? _adminZoneAgentRaw : null;
+console.log(`[gateway] admin-zone mTLS: ${adminZoneMtlsStatus()}${_adminZoneAgentRaw && !_adminUpstreamsAllHttps ? ' (agent staged, awaiting https:// upstreams)' : ''}`);
 app.use('/api/admin/console', createProxyMiddleware({
   target: ADMIN_CONSOLE_BFF_URL,
   changeOrigin: true,
@@ -1108,7 +1119,7 @@ app.use('/api/platform-config', authGuard, injectIdentityHeaders, createProxyMid
 // Tenant-service exposes /navigation/tree which returns
 // { entries: dos.navigation_registry rows, count }. Adapt the tree into the
 // shape NavigationStore.apiItemToNavItem expects so the SPA never falls back
-// to BASE_PRIMARY_NAV.
+// to a legacy hardcoded primary nav.
 app.get('/api/navigation/route-catalog', authGuard, injectIdentityHeaders, async (req, res) => {
   try {
     const headers: Record<string, string> = { accept: 'application/json' };

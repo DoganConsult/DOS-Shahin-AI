@@ -47,3 +47,6 @@ coverage/
 # Capacitor mobile
 android/
 ios/
+
+# DOS Master Phase 3 / L29 — admin-zone mTLS materials (secrets, never committed).
+platform/config-center/secrets/

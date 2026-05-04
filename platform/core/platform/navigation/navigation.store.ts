@@ -25,7 +25,7 @@ export class NavigationStore {
     // Authoritative visibility source: AccessStore.visibleModules() (from
     // /api/access/my-permissions). Until access has loaded, we render an
     // empty primary so the sidebar does NOT flash the legacy all-modules
-    // catalog (BASE_PRIMARY_NAV) before the truth arrives.
+    // catalog (legacy hardcoded primary nav) before the truth arrives.
     if (!this.accessStore.loaded()) {
       return { primary: [], secondary: [], quickActions };
     }

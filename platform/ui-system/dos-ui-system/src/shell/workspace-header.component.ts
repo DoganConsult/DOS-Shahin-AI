@@ -15,14 +15,13 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UIShellModule } from 'carbon-components-angular';
-import { DosCarbonTagComponent } from '../carbon/dos-carbon-tag.component';
 import { DosIconComponent } from '../components/icon.component';
 import type { WorkspaceHeaderContext, WorkspaceHeaderAction } from './workspace-shell.contracts';
 
 @Component({
   selector: 'dos-workspace-header',
   standalone: true,
-  imports: [CommonModule, UIShellModule, DosCarbonTagComponent, DosIconComponent],
+  imports: [CommonModule, UIShellModule, DosIconComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <cds-header

@@ -1,70 +1,269 @@
 /**
- * Phase WS-2 — workspace.quick-create wrapper.
+ * Phase WS-2 + Carbon-Wiring — workspace.quick-create wrapper (FAB).
  * Selector: dos-quick-create
- * Carbon primitive: button (FAB variant).
- * Mobile_mode: sticky-bottom (full-width bar at ≤480px).
+ * Carbon primitive: button (ButtonModule → cds-button)
+ * DB: dos.dynamic_ui_component_registry component_key='workspace.quick-create' carbon_key='button'
+ *
+ * Token stack:
+ *   --cds-button-*   (Carbon button tokens)
+ *   --shell-z-sticky (z-index for FAB)
+ *   scale-pop        (FAB open animation — design-tokens.css)
  */
 import {
-  Component, ChangeDetectionStrategy, Input, Output, EventEmitter, signal,
+  Component, ChangeDetectionStrategy, Input, Output, EventEmitter, signal, HostListener,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ButtonModule } from 'carbon-components-angular';
+import { DosIconComponent } from '../components/icon.component';
 import type { QuickCreateAction } from './workspace-shell.contracts';
 
 @Component({
   selector: 'dos-quick-create',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ButtonModule, DosIconComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="dos-quick-create"
          [class.dos-quick-create--mobile]="mobileMode"
+         [class.dos-quick-create--open]="menuOpen()"
          data-testid="dos-quick-create">
-      <button type="button"
-              class="dos-quick-create__fab"
-              data-cds-component="button"
-              [attr.aria-expanded]="open()"
-              [attr.aria-label]="ariaLabel || null"
-              (click)="toggle()">
-        {{ fabGlyph }}
-      </button>
-      @if (open()) {
-        <ul class="dos-quick-create__menu" role="menu">
-          @for (a of actions; track a.id) {
+
+      <!-- Desktop FAB: cds-button primary iconOnly (carbon_key=button) -->
+      @if (!mobileMode) {
+        <button
+          cdsButton="primary"
+          size="md"
+          type="button"
+          class="dos-quick-create__fab"
+          [attr.aria-label]="fabLabel || 'Create'"
+          [attr.aria-expanded]="menuOpen()"
+          (click)="toggleMenu()">
+          <dos-icon name="add" [size]="20" [ariaLabel]="fabLabel || 'Create'"></dos-icon>
+        </button>
+      }
+
+      <!-- Ghost action menu (shown when FAB is open) -->
+      @if (menuOpen() && actions.length) {
+        <ul class="dos-quick-create__menu"
+            role="menu"
+            [attr.aria-label]="menuLabel || 'Create options'"
+            [class.dos-quick-create__menu--rtl]="dir === 'rtl'">
+          @for (action of actions; track action.id) {
             <li role="none">
-              <button type="button"
-                      role="menuitem"
-                      class="dos-quick-create__action"
-                      [attr.data-action-id]="a.id"
-                      (click)="invoke.emit(a); open.set(false)">
-                @if (a.icon) { <span aria-hidden="true">{{ a.icon }}</span> }
-                <span>{{ a.label.fallback ?? a.label.i18nKey }}</span>
-                @if (a.hotkey) { <kbd>{{ a.hotkey }}</kbd> }
+              <button
+                cdsButton="ghost"
+                size="sm"
+                type="button"
+                role="menuitem"
+                class="dos-quick-create__action"
+                [attr.data-action-id]="action.id"
+                [attr.aria-label]="action.label.fallback ?? action.label.i18nKey"
+                (click)="onAction(action)">
+                @if (action.icon) {
+                  <dos-icon [name]="action.icon" [size]="16" class="dos-quick-create__action-icon"></dos-icon>
+                }
+                <span class="dos-quick-create__action-label">
+                  {{ action.label.fallback ?? action.label.i18nKey }}
+                </span>
+                @if (action.hotkey) {
+                  <kbd class="dos-quick-create__hotkey">{{ action.hotkey }}</kbd>
+                }
               </button>
             </li>
           }
         </ul>
       }
+
+      <!-- Mobile: full-width sticky bottom cds-button primary -->
+      @if (mobileMode) {
+        <button
+          cdsButton="primary"
+          size="lg"
+          type="button"
+          class="dos-quick-create__mobile-btn"
+          [attr.aria-label]="fabLabel || 'Create'"
+          [attr.aria-expanded]="menuOpen()"
+          (click)="toggleMenu()">
+          <dos-icon name="add" [size]="20"></dos-icon>
+          <span>{{ fabLabel || 'Create' }}</span>
+        </button>
+
+        @if (menuOpen() && actions.length) {
+          <div class="dos-quick-create__mobile-menu" role="menu">
+            @for (action of actions; track action.id) {
+              <button
+                cdsButton="ghost"
+                size="md"
+                type="button"
+                role="menuitem"
+                class="dos-quick-create__action dos-quick-create__action--mobile"
+                [attr.data-action-id]="action.id"
+                (click)="onAction(action)">
+                @if (action.icon) {
+                  <dos-icon [name]="action.icon" [size]="16"></dos-icon>
+                }
+                <span>{{ action.label.fallback ?? action.label.i18nKey }}</span>
+              </button>
+            }
+          </div>
+        }
+      }
     </div>
   `,
   styles: [`
     :host { display: block; }
-    .dos-quick-create { position: fixed; inset-block-end: 1rem; inset-inline-end: 1rem; z-index: 90; }
-    .dos-quick-create--mobile { inset-inline: 0; inset-block-end: 0; padding: .5rem; background: var(--cds-layer, #fff); border-block-start: 1px solid var(--cds-border-subtle, #e0e0e0); }
-    .dos-quick-create__fab { width: 3rem; height: 3rem; border-radius: 50%; border: 0; background: var(--cds-button-primary, #0f62fe); color: var(--cds-text-on-color, #fff); font-size: 1.5rem; cursor: pointer; }
-    .dos-quick-create--mobile .dos-quick-create__fab { width: 100%; height: 2.5rem; border-radius: 0; }
-    .dos-quick-create__menu { position: absolute; inset-block-end: 100%; inset-inline-end: 0; background: var(--cds-layer, #fff); border: 1px solid var(--cds-border-subtle, #e0e0e0); margin: 0 0 .5rem 0; padding: .25rem; min-width: 12rem; list-style: none; }
-    .dos-quick-create__action { display: flex; gap: .5rem; align-items: center; width: 100%; padding: .5rem; background: transparent; border: 0; cursor: pointer; text-align: start; }
-    .dos-quick-create__action:hover { background: var(--cds-layer-hover, #f4f4f4); }
-    .dos-quick-create__action kbd { margin-inline-start: auto; font-size: .75rem; color: var(--cds-text-secondary, #6f6f6f); }
+
+    /* ── FAB (desktop) ────────────────────────────────── */
+    .dos-quick-create {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dos-quick-create__fab {
+      /* Carbon cds-button handles sizing; we override shape to circle */
+      border-radius: 50% !important;
+      width: 3rem;
+      height: 3rem;
+      padding: 0 !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-premium-md, 0 6px 16px rgba(15,98,254,0.30));
+      transition: box-shadow 0.2s, transform 0.15s;
+    }
+
+    .dos-quick-create__fab:hover {
+      transform: scale(1.06);
+      box-shadow: var(--shadow-premium-lg, 0 12px 28px rgba(15,98,254,0.38));
+    }
+
+    .dos-quick-create--open .dos-quick-create__fab {
+      transform: rotate(45deg);
+    }
+
+    /* ── Ghost action menu (desktop) ────────────────── */
+    .dos-quick-create__menu {
+      position: absolute;
+      inset-block-end: calc(100% + var(--cds-spacing-03, 0.5rem));
+      inset-inline-end: 0;
+      min-inline-size: 16rem;
+      background: var(--cds-layer, #fff);
+      border: 1px solid var(--cds-border-subtle-01, #e0e0e0);
+      box-shadow: var(--shadow-premium-lg, 0 12px 32px rgba(0,0,0,0.16));
+      list-style: none;
+      margin: 0;
+      padding: var(--cds-spacing-02, 0.25rem) 0;
+      z-index: var(--shell-z-dropdown, 9100);
+      animation: scale-pop 0.18s ease-out both;
+    }
+
+    .dos-quick-create__menu--rtl {
+      inset-inline-end: auto;
+      inset-inline-start: 0;
+    }
+
+    .dos-quick-create__action {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: var(--cds-spacing-03, 0.5rem);
+      /* Carbon ghost button handles base styles */
+    }
+
+    .dos-quick-create__action-icon { flex: 0 0 auto; }
+
+    .dos-quick-create__action-label {
+      flex: 1;
+      text-align: start;
+    }
+
+    .dos-quick-create__hotkey {
+      font-size: 0.625rem;
+      font-family: var(--cds-code-01-font-family, monospace);
+      color: var(--cds-text-secondary, #6f6f6f);
+      background: var(--cds-layer-02, #e0e0e0);
+      border: 1px solid var(--cds-border-subtle, #c6c6c6);
+      border-radius: 3px;
+      padding: 1px 4px;
+      white-space: nowrap;
+      margin-inline-start: auto;
+    }
+
+    /* ── Mobile sticky bottom ────────────────────────── */
+    .dos-quick-create--mobile {
+      position: fixed;
+      inset-block-end: calc(var(--shell-mobile-bottom-padding, 5.5rem) + env(safe-area-inset-bottom, 0px));
+      inset-inline: 0;
+      padding-inline: var(--cds-spacing-05, 1rem);
+      z-index: var(--shell-z-sticky, 6000);
+    }
+
+    .dos-quick-create__mobile-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--cds-spacing-03, 0.5rem);
+    }
+
+    .dos-quick-create__mobile-menu {
+      position: fixed;
+      inset-block-end: calc(var(--shell-mobile-bottom-padding, 5.5rem) + 3.5rem + env(safe-area-inset-bottom, 0px));
+      inset-inline: var(--cds-spacing-05, 1rem);
+      background: var(--cds-layer, #fff);
+      border: 1px solid var(--cds-border-subtle-01, #e0e0e0);
+      box-shadow: var(--shadow-premium-lg, 0 12px 32px rgba(0,0,0,0.16));
+      padding: var(--cds-spacing-03, 0.5rem) 0;
+      z-index: var(--shell-z-dropdown, 9100);
+      animation: premium-fade-up 0.18s ease-out both;
+    }
+
+    .dos-quick-create__action--mobile {
+      width: 100%;
+      justify-content: flex-start;
+      padding-inline: var(--cds-spacing-05, 1rem);
+    }
+
+    /* ── Keyframes ─────────────────────────────────────── */
+    @keyframes scale-pop {
+      0%   { transform: scale(0.85); opacity: 0; }
+      60%  { transform: scale(1.03); }
+      100% { transform: scale(1);   opacity: 1; }
+    }
+    @keyframes premium-fade-up {
+      0%   { opacity: 0; transform: translateY(12px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
   `],
 })
 export class DosQuickCreateComponent {
   @Input() actions: QuickCreateAction[] = [];
   @Input() mobileMode = false;
-  @Input() ariaLabel: string | null = null;
-  @Input() fabGlyph = '+';
-  open = signal(false);
-  @Output() invoke = new EventEmitter<QuickCreateAction>();
+  @Input() dir: 'ltr' | 'rtl' = 'ltr';
+  @Input() fabLabel = 'Create';
+  @Input() menuLabel = 'Create options';
 
-  toggle() { this.open.update(v => !v); }
+  menuOpen = signal(false);
+
+  @Output() create = new EventEmitter<QuickCreateAction>();
+
+  toggleMenu(): void {
+    this.menuOpen.update(v => !v);
+  }
+
+  onAction(action: QuickCreateAction): void {
+    this.create.emit(action);
+    this.menuOpen.set(false);
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscape(): void {
+    this.menuOpen.set(false);
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocClick(ev: MouseEvent): void {
+    const host = ev.target as HTMLElement;
+    if (!host.closest('dos-quick-create')) this.menuOpen.set(false);
+  }
 }

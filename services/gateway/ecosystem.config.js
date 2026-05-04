@@ -25,6 +25,14 @@ module.exports = {
       GATEWAY_ORIGIN_TTL_SECONDS: 60,
       DATABASE_URL: 'postgresql://dos_auth:dos_auth_pass_2026@localhost:5432/shahin_grc',
       CORS_ALLOWED_ORIGINS: 'https://shahin-ai.com,https://www.shahin-ai.com',
+      // L29 (Phase 3 D2) — admin-zone mTLS (ops-approved flip 2026-05-04).
+      // Agent only attaches once admin upstream URLs flip to https://.
+      MTLS_ENFORCE: '1',
+      ADMIN_MTLS_CA: '/root/DOS-Platform/platform/config-center/secrets/admin-mtls/ca.crt',
+      ADMIN_MTLS_GATEWAY_CERT: '/root/DOS-Platform/platform/config-center/secrets/admin-mtls/gateway-client.crt',
+      ADMIN_MTLS_GATEWAY_KEY: '/root/DOS-Platform/platform/config-center/secrets/admin-mtls/gateway-client.key',
+      MTLS_REJECT_UNAUTHORIZED: '1',
+      DOS_WORKFLOW_SERVICE_URL: 'http://127.0.0.1:4018',
     },
     node_args: '--max-old-space-size=768',
     max_memory_restart: '1G',

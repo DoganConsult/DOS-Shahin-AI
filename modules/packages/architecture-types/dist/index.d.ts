@@ -19,7 +19,7 @@ export interface ProductManifest {
     ownerTeam: string;
     platformDependencies: string[];
     defaultServices: string[];
-    defaultModules: string[];
+    defaultModuleCodes: string[];
 }
 export interface ModuleManifest {
     moduleCode: string;

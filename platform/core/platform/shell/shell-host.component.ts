@@ -48,7 +48,7 @@ import {
   type DosBottomNavItem,
   type DosAccountMenuItem,
   type DosToastMessage,
-  type DosShellBanner,
+  type ShellBanner,
   type CommandSearchResult,
   type InboxMessage,
   type QuickCreateAction,
@@ -768,8 +768,8 @@ export class ShellHostComponent {
   readonly showCommandSearch    = computed(() => this.shellBinding.isSurfaceAllowed('workspace.command-search'));
 
   // ── §B.9 P4 — banner multiplex (#25, #34–37) ──────────────────────────────
-  readonly shellBanners = computed<DosShellBanner[]>(() => {
-    const banners: DosShellBanner[] = [];
+  readonly shellBanners = computed<ShellBanner[]>(() => {
+    const banners: ShellBanner[] = [];
     const dismissed = this.dismissedBannerIds();
 
     // #36 — trial/subscription banner
@@ -1084,11 +1084,11 @@ export class ShellHostComponent {
   }
 
   // §B.9 #34–37, #25 — banner strip handlers.
-  onBannerAction(banner: DosShellBanner): void {
+  onBannerAction(banner: ShellBanner): void {
     if (banner.actionRoute) void this.router.navigateByUrl(banner.actionRoute);
   }
 
-  onBannerDismiss(banner: DosShellBanner): void {
+  onBannerDismiss(banner: ShellBanner): void {
     this.dismissedBannerIds.update((s) => {
       const next = new Set(s);
       next.add(banner.id);

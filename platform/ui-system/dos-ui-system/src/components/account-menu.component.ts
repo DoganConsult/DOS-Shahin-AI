@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { OverflowMenuModule } from 'carbon-components-angular';
+import { DialogModule } from 'carbon-components-angular';
 
 export interface DosAccountMenuItem {
   id: string;
@@ -12,7 +12,7 @@ export interface DosAccountMenuItem {
 @Component({
   selector: 'dos-account-menu',
   standalone: true,
-  imports: [CommonModule, OverflowMenuModule],
+  imports: [CommonModule, DialogModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <ibm-overflow-menu
