@@ -29,6 +29,10 @@ const argv = process.argv.slice(2);
 const cmd = argv.shift();
 
 function flag(name, def) {
+  const eqPrefix = `--${name}=`;
+  for (const a of argv) {
+    if (a.startsWith(eqPrefix)) return a.slice(eqPrefix.length);
+  }
   const i = argv.indexOf(`--${name}`);
   if (i === -1) return def;
   const v = argv[i + 1];
