@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject, signal, computed } from '@angular/core';
 import {
   DosMarketingHomePageComponent,
   MarketingPublicConfigService,
@@ -12,8 +12,8 @@ import type { AgentStripSummary, AgentState } from '@dos/ui-system';
  * landing) at the public root. Wires:
  *   - BrandResolverService.init() so <dos-brand-eagle> + agent-tile assets
  *     resolve from the live /api/ui-os/brand bundle.
- *   - MarketingPublicConfigService.init() so footer groups + the
- *     `landingAgenticProof` feature flag come from /api/ui-os/marketing/config.
+ *   - MarketingPublicConfigService.init() so navItems, navGroups, footerGroups,
+ *     and the `landingAgenticProof` feature flag come from /api/ui-os/marketing/config.
  *   - GET /api/ui-os/agentic/strip → [agentStripSummary] live agent counts.
  *   - GET /api/ui-os/marketing/assets → [downloadAssets] for the kit card.
  *   - `?locale=ar` → flips the entire surface to Arabic + RTL.
@@ -32,19 +32,17 @@ import type { AgentStripSummary, AgentState } from '@dos/ui-system';
       [agentStripState]="agentStripState()"
       [agentStripSummary]="agentStripSummary()"
       [downloadAssets]="downloadAssets()"
-      ctaPrimaryLabel="Create account"
-      ctaPrimaryHref="/register"
-      ctaSecondaryLabel="Sign in"
-      ctaSecondaryHref="/login"
+      [navItems]="navItems()"
+      [navGroups]="navGroups()"
+      [footerGroups]="footerGroups()"
       pricingCtaLabel="See pricing"
-      pricingHref="/pricing"
-      ctaBannerTitle="Ready to get started?">
+      pricingHref="/pricing">
     </dos-marketing-home>
   `,
   styles: [`:host { display: block; min-height: 100vh; }`],
 })
 export class MarketingLandingComponent implements OnInit {
-  private readonly cfg = inject(MarketingPublicConfigService);
+  private readonly cfg   = inject(MarketingPublicConfigService);
   private readonly brand = inject(BrandResolverService);
 
   readonly locale: 'en' | 'ar' = (() => {
@@ -53,14 +51,19 @@ export class MarketingLandingComponent implements OnInit {
     return q === 'ar' ? 'ar' : 'en';
   })();
 
-  readonly agentStripState = signal<AgentState>('loading');
+  readonly agentStripState   = signal<AgentState>('loading');
   readonly agentStripSummary = signal<AgentStripSummary | null>(null);
-  readonly downloadAssets = signal<readonly MarketingAsset[]>([]);
+  readonly downloadAssets    = signal<readonly MarketingAsset[]>([]);
+
+  // DB-driven nav + footer — wired from MarketingPublicConfigService
+  readonly navItems    = computed(() => this.cfg.marketingNavItems());
+  readonly navGroups   = computed(() => this.cfg.marketingNavGroups());
+  readonly footerGroups = computed(() => this.cfg.marketingFooterGroups());
 
   async ngOnInit(): Promise<void> {
     // 1. Brand bundle (eagle + agent-tile assets).
     this.brand.init('shahin-ai').catch((e) => console.warn('[marketing] brand init failed', e));
-    // 2. Marketing config (footer + flags).
+    // 2. Marketing config (nav + navGroups + footer + flags).
     this.cfg.init('shahin-ai', this.locale).catch((e) => console.warn('[marketing] cfg init failed', e));
     // 3. Live agent strip summary.
     try {
@@ -74,7 +77,7 @@ export class MarketingLandingComponent implements OnInit {
     } catch {
       this.agentStripState.set('failed');
     }
-    // 4. Downloadable kit assets.
+    // 4. Downloadable kit assets (now includes diagram + xlsx types).
     try {
       const r = await fetch(`/api/ui-os/marketing/assets?brand=shahin-ai&locale=${this.locale}`, { credentials: 'omit' });
       if (r.ok) {

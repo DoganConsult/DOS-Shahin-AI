@@ -41,6 +41,7 @@ import { BrandResolverService } from '../brand/brand-resolver.service';
 import type {
   MarketingFooterGroup,
   MarketingHomeContent,
+  MarketingNavGroup,
   MarketingNavItem,
 } from './marketing-public-config.service';
 import { DosAgentStatusStripComponent } from '../agentic/agentic-components';
@@ -244,15 +245,47 @@ export interface MarketingAgentTile {
 
           <div class="dos-mh-public-header__menus" [class.is-open]="headerMenuOpen()">
             <nav class="dos-mh-public-header__nav" aria-label="Public navigation">
+              <!-- DB-driven nav: grouped items = IBM Carbon header-menu dropdown;
+                   ungrouped items = flat anchor link. Carbon registry: header-menu, link (both active). -->
+              @for (group of navGroups(); track group.id) {
+                <div class="dos-mh-nav-group" [attr.data-group-id]="group.id">
+                  <button
+                    class="dos-mh-nav-group__trigger"
+                    type="button"
+                    [attr.aria-expanded]="isGroupOpen(group.id)"
+                    (click)="toggleNavGroup(group.id)"
+                  >
+                    {{ group.label }}
+                    <svg class="dos-mh-nav-group__chevron" viewBox="0 0 16 16" aria-hidden="true">
+                      <path d="M8 11L2 5h12z"/>
+                    </svg>
+                  </button>
+                  <ul class="dos-mh-nav-group__menu" role="menu"
+                      [class.is-open]="isGroupOpen(group.id)">
+                    @for (item of group.items; track item.id) {
+                      <li role="none">
+                        <a
+                          class="dos-mh-nav-group__item"
+                          [href]="item.href"
+                          role="menuitem"
+                          [attr.aria-current]="isHeaderActive(item.href) ? 'page' : null"
+                          (click)="onAnchorNavigate($event, item.href)"
+                        >{{ item.label }}</a>
+                      </li>
+                    }
+                  </ul>
+                </div>
+              }
+              <!-- Ungrouped flat nav links (no navGroup) -->
               @for (n of headerNavItems(); track n.id) {
-                <dos-carbon-button
-                  class="dos-mh-public-header__nav-link"
-                  [kind]="isHeaderActive(n.href) ? 'secondary' : 'ghost'"
-                  size="sm"
-                  (clicked)="navigate(n.href)"
-                >
-                  {{ n.label }}
-                </dos-carbon-button>
+                @if (!n.navGroup) {
+                  <a
+                    class="dos-mh-public-header__nav-link"
+                    [href]="n.href"
+                    [attr.aria-current]="isHeaderActive(n.href) ? 'page' : null"
+                    (click)="onAnchorNavigate($event, n.href)"
+                  >{{ n.label }}</a>
+                }
               }
             </nav>
 
@@ -703,7 +736,8 @@ export class DosMarketingHomePageComponent {
   private readonly router = inject(Router);
   private readonly _brandCode = signal<DosBrandCode | null>(null);
   private readonly _homeContent = signal<MarketingHomeContent | null>(null);
-  private readonly _navItems = signal<ReadonlyArray<MarketingNavItem>>([]);
+  private readonly _navItems  = signal<ReadonlyArray<MarketingNavItem>>([]);
+  private readonly _navGroups = signal<ReadonlyArray<MarketingNavGroup>>([]);
   private readonly _footerGroups = signal<ReadonlyArray<MarketingFooterGroup>>([]);
   private readonly _flags = signal<Readonly<Record<string, boolean>>>({});
 
@@ -715,7 +749,8 @@ export class DosMarketingHomePageComponent {
 
   @Input() locale: 'en' | 'ar' = 'en';
   @Input() set homeContent(v: MarketingHomeContent | null) { this._homeContent.set(v); }
-  @Input('navItems') set navItemsInput(v: ReadonlyArray<MarketingNavItem> | null) { this._navItems.set(v ?? []); }
+  @Input('navItems')  set navItemsInput(v:  ReadonlyArray<MarketingNavItem>  | null) { this._navItems.set(v  ?? []); }
+  @Input('navGroups') set navGroupsInput(v: ReadonlyArray<MarketingNavGroup> | null) { this._navGroups.set(v ?? []); }
   @Input('footerGroups') set footerGroupsInput(v: ReadonlyArray<MarketingFooterGroup> | null) { this._footerGroups.set(v ?? []); }
   @Input() set flags(v: Readonly<Record<string, boolean>> | null) { this._flags.set(v ?? {}); }
 
@@ -832,7 +867,8 @@ export class DosMarketingHomePageComponent {
 
   readonly year = new Date().getFullYear();
   readonly footerGroups = computed(() => this._footerGroups());
-  readonly navItems = computed(() => this._navItems());
+  readonly navItems  = computed(() => this._navItems());
+  readonly navGroups = computed(() => this._navGroups());
   readonly showAgenticProof    = computed(() => this._flags()['landingAgenticProof']    === true);
   /** Wave 2 — wires the landingHeroVideo flag to a video slot in the hero section. */
   readonly showHeroVideo       = computed(() => this._flags()['landingHeroVideo']       === true);
@@ -983,6 +1019,23 @@ export class DosMarketingHomePageComponent {
   toggleHeaderMenu(): void {
     this.headerMenuOpen.update((open) => !open);
   }
+
+  /** Tracks which nav dropdown groups are currently open by group id. */
+  private readonly _openNavGroups = signal<ReadonlySet<string>>(new Set());
+
+  isGroupOpen(groupId: string): boolean {
+    return this._openNavGroups().has(groupId);
+  }
+
+  toggleNavGroup(groupId: string): void {
+    this._openNavGroups.update((s) => {
+      const next = new Set(s);
+      if (next.has(groupId)) next.delete(groupId);
+      else next.add(groupId);
+      return next;
+    });
+  }
+
 
   onAnchorNavigate(event: MouseEvent, href: string): void {
     if (

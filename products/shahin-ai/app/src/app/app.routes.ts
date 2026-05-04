@@ -23,7 +23,11 @@ const complianceRouteChildren: Record<string, any> = {
     data: { moduleCode: 'compliance', componentKey: 'compliance.overview.page', kpiScope: 'module-overview' },
   },
   assessments:                   { loadComponent: () => import('@compliance-module/ui/features/compliance/pages/assessments-group/compliance-assessments-findings/compliance-assessments-page.component').then(m => m.ComplianceAssessmentsPageComponent) },
-  attestations:                  { loadComponent: () => import('@compliance-module/ui/features/compliance/pages/assessments-group/compliance-assessments-findings/compliance-attestations-page.component').then(m => m.ComplianceAttestationsPageComponent) },
+  // Phase F-F11 — DB-driven via dos.ui_route_template_binding row for
+  // `/compliance/attestations`. The legacy ComplianceAttestationsPageComponent
+  // called a backend endpoint that 404'd ("Failed to Load"); the binding
+  // delivers the same page via the `command-home` archetype + props.
+  attestations:                  { loadComponent: () => import('@platform/shell').then(m => m.DynamicTemplatePageComponent), data: { contractRoute: '/compliance/attestations' } },
   obligations:                   { loadComponent: () => import('@compliance-module/ui/features/compliance/pages/regulatory-group/compliance-regulatory/compliance-obligations-page.component').then(m => m.ComplianceObligationsPageComponent) },
   'obligation-workspace':        { loadComponent: () => import('@compliance-module/ui/features/compliance/pages/regulatory-group/compliance-regulatory/obligation-workspace.component').then(m => m.ObligationWorkspaceComponent) },
   'obligations/:id':             { loadComponent: () => import('@compliance-module/ui/features/compliance/pages/regulatory-group/compliance-regulatory/obligation-detail-page.component').then(m => m.ObligationDetailPageComponent) },

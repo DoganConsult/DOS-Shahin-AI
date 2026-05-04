@@ -340,11 +340,18 @@ export function createBrandRouter(pool: DbPool): Router {
       // ── DB-driven nav + footer (replaces all hardcoded arrays) ───────────
       // Carbon registry: nav items carry carbon_key (link|button|header-menu-item)
       // verified active in dos.ui_carbon_components.
-      const [navQ, groupQ, itemQ] = await Promise.all([
+      const [navQ, navGroupQ, footerGroupQ, footerItemQ] = await Promise.all([
         pool.query(
           `SELECT id, label_en, label_ar, label_key, href, variant, carbon_key,
-                  hide_for_locales
+                  hide_for_locales, nav_group
              FROM dos.marketing_nav_items
+            WHERE brand_code = $1 AND is_active = TRUE
+            ORDER BY sort_order`,
+          [brandCode],
+        ),
+        pool.query(
+          `SELECT id, label_en, label_ar, sort_order
+             FROM dos.marketing_nav_groups
             WHERE brand_code = $1 AND is_active = TRUE
             ORDER BY sort_order`,
           [brandCode],
@@ -365,7 +372,7 @@ export function createBrandRouter(pool: DbPool): Router {
         ),
       ]);
 
-      // Assemble navItems — locale label resolved server-side
+      // Assemble navItems — locale label + group resolved server-side
       const navItems = navQ.rows.map((r) => ({
         id:              r.id,
         labelKey:        r.label_key,
@@ -373,19 +380,28 @@ export function createBrandRouter(pool: DbPool): Router {
         href:            r.href,
         variant:         r.variant,
         carbonKey:       r.carbon_key,
+        navGroup:        r.nav_group ?? null,
         hideForLocales:  r.hide_for_locales ?? null,
       }));
 
+      // Assemble navGroups (dropdown menu descriptors)
+      const navGroupsByKey = new Map(navQ.rows.filter((r) => r.nav_group).map((r) => [r.nav_group, r]));
+      const navGroups = navGroupQ.rows.map((g) => ({
+        id:    g.id,
+        label: locale === 'ar' ? g.label_ar : g.label_en,
+        items: navItems.filter((n) => n.navGroup === g.id),
+      }));
+
       // Group footer items by group_id
-      const itemsByGroup = new Map<string, typeof itemQ.rows>();
-      for (const item of itemQ.rows) {
+      const itemsByGroup = new Map<string, typeof footerItemQ.rows>();
+      for (const item of footerItemQ.rows) {
         const g = itemsByGroup.get(item.group_id) ?? [];
         g.push(item);
         itemsByGroup.set(item.group_id, g);
       }
 
       // Assemble footerGroups
-      const footerGroups = groupQ.rows.map((g) => ({
+      const footerGroups = footerGroupQ.rows.map((g) => ({
         id:       g.id,
         titleKey: g.title_key,
         title:    locale === 'ar' ? g.title_ar : g.title_en,
@@ -403,6 +419,7 @@ export function createBrandRouter(pool: DbPool): Router {
         direction,
         publicMarketingEnabled: true,
         navItems,
+        navGroups,
         footerGroups,
         flags: {
           landingHeroVideo:        false,

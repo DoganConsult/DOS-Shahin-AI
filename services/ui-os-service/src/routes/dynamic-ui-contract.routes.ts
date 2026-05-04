@@ -74,34 +74,76 @@ export function createDynamicUiContractRouter(pool: DbPool): Router {
       const tenantId = principal?.tenantId
         ?? (req.headers['x-dos-tenant-id'] as string | undefined)
         ?? null;
-      // Join navigation_registry so we emit human-readable label_en/label_ar
-      // when present (no raw title_key like `compliance.nav.controls`
-      // leaks through to the sidebar). The title_key is still emitted as
-      // labelKey for downstream i18n; label always wins when present.
-      const { rows } = await pool.query(
-        `SELECT r.module_code, r.path_pattern, r.component_key,
-          r.permission_key, r.title_key,
-                r.sort_order, n.label_en, n.label_ar, n.parent_code, n.icon
-           FROM dos.dynamic_ui_routes r
-           LEFT JOIN dos.navigation_registry n
-             ON n.module_code = r.module_code AND n.route = r.path_pattern
-          WHERE (r.tenant_id IS NULL OR r.tenant_id = $1)
-            AND COALESCE(r.readiness, 'active') = 'active'
-            AND (r.title_key IS NOT NULL OR n.label_en IS NOT NULL)
-          ORDER BY r.module_code, r.sort_order, r.path_pattern`,
-        [tenantId],
-      );
+      // Phase F-F10 — UNION the legacy `dos.dynamic_ui_routes` projection
+      // with the new `dos.ui_module_nav_item` source (seeded from
+      // `platform/ui-system/module_ui_os_contract-pack/*.json` via
+      // `scripts/seed-module-contract-pack.mjs`). Items present in both
+      // sources are deduplicated by route — the legacy row wins because
+      // it carries readiness/tenant scoping that the new tables don't yet
+      // model. The merge order means: legacy rows render with their
+      // existing labels/permissions; brand-new items from the contract
+      // pack appear automatically without touching this endpoint.
+      const [legacyR, newR] = await Promise.all([
+        pool.query(
+          `SELECT r.module_code, r.path_pattern, r.component_key,
+                  r.permission_key, r.title_key,
+                  r.sort_order, n.label_en, n.label_ar, n.parent_code, n.icon
+             FROM dos.dynamic_ui_routes r
+             LEFT JOIN dos.navigation_registry n
+               ON n.module_code = r.module_code AND n.route = r.path_pattern
+            WHERE (r.tenant_id IS NULL OR r.tenant_id = $1)
+              AND COALESCE(r.readiness, 'active') = 'active'
+              AND (r.title_key IS NOT NULL OR n.label_en IS NOT NULL)
+            ORDER BY r.module_code, r.sort_order, r.path_pattern`,
+          [tenantId],
+        ),
+        pool.query(
+          `SELECT i.module_code,
+                  i.route          AS path_pattern,
+                  NULL             AS component_key,
+                  i.permission     AS permission_key,
+                  i.label_key      AS title_key,
+                  i.sort_order,
+                  i.label_en, i.label_ar,
+                  i.group_id       AS parent_code,
+                  i.icon
+             FROM dos.ui_module_nav_item i
+            WHERE i.enabled = true
+            ORDER BY i.module_code, i.sort_order, i.item_id`,
+        ),
+      ]);
+      // Merge: keep legacy first, then add only routes not already present.
+      type NavRow = {
+        module_code: string | null;
+        path_pattern: string | null;
+        component_key?: string | null;
+        permission_key?: string | null;
+        title_key?: string | null;
+        sort_order?: number | null;
+        label_en?: string | null;
+        label_ar?: string | null;
+        parent_code?: string | null;
+        icon?: string | null;
+      };
+      const seen = new Set<string>();
+      const rows: NavRow[] = [];
+      const allRows = [...(legacyR.rows as NavRow[]), ...(newR.rows as NavRow[])];
+      for (const r of allRows) {
+        const key = `${r.module_code}|${r.path_pattern}`;
+        if (seen.has(key)) continue;
+        seen.add(key); rows.push(r);
+      }
       const items = rows.filter(isWorkspaceRoute).map((r) => ({
-        id: `${r.module_code}.${r.path_pattern}`,
-        label: r.label_en || r.title_key,
-        labelAr: r.label_ar ?? null,
+        id:       `${r.module_code}.${r.path_pattern}`,
+        label:    r.label_en || r.title_key,
+        labelAr:  r.label_ar ?? null,
         labelKey: r.title_key ?? null,
-        route: r.path_pattern,
-        group: r.module_code,
-        parent: r.parent_code ?? null,
-        icon: r.icon ?? null,
+        route:    r.path_pattern,
+        group:    r.module_code,
+        parent:   r.parent_code ?? null,
+        icon:     r.icon ?? null,
         permission: r.permission_key ?? null,
-        enabled: true,
+        enabled:  true,
       }));
       res.json({ items });
     } catch (e) {

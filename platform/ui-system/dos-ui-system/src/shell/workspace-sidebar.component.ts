@@ -100,6 +100,34 @@ import type { WorkspaceNavItem } from './workspace-shell.contracts';
   styles: [`
     :host { display: block; height: 100%; }
 
+    /* ──────────────────────────────────────────────────────────────────
+     * Phase F-F12 — defloat the Carbon side-nav.
+     * ------------------------------------------------------------------
+     * Carbon's <cds-sidenav> ships with \`position: fixed; inset-block-start: 3rem;
+     * width: 16rem; z-index: 8000\`, designed for the "shell host" pattern
+     * where the side-nav floats over content from the left edge of the
+     * viewport. In our grid-based <dos-app-shell> the sidebar is a grid
+     * cell — the Carbon defaults caused it to render as a floating
+     * popover at the top-right of the page (RTL) and overlap the masthead.
+     *
+     * Override here forces the inner Carbon DOM to behave like a normal
+     * static block element so the parent grid takes over positioning.
+     * Mobile drawer wraps this same component — there the override is
+     * harmless because <dos-mobile-drawer> establishes its own portal
+     * with explicit positioning.
+     * ────────────────────────────────────────────────────────────────── */
+    :host ::ng-deep .cds--side-nav,
+    :host ::ng-deep .cds--side-nav__navigation {
+      position: static !important;
+      inset: auto !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      height: 100% !important;
+      z-index: auto !important;
+      box-shadow: none !important;
+      transform: none !important;
+    }
+
     /* ── Item inner layout ───────────────────────────── */
     .dos-sidebar-item-inner {
       display: flex;

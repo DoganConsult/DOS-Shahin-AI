@@ -146,19 +146,21 @@ export function createMarketingDownloadsRouter(pool: DbPool): Router {
     }
     try {
       const p = body.payload ?? {};
-      await pool.query(
+      const result = await pool.query(
         `INSERT INTO dos.marketing_download_events
-           (event_key, asset_key, brand_code, locale, email, company,
+           (event_key, asset_key, brand_code, locale, visitor_name, email, company,
             job_title, country, interest_area, user_agent)
-         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)
+         RETURNING id`,
         [
           body.eventKey, body.assetKey, body.brandCode, body.locale,
+          p.name ?? null,
           p.email ?? null, p.company ?? null, p.jobTitle ?? null,
           p.country ?? null, p.interestArea ?? null,
           String(req.headers['user-agent'] ?? '').slice(0, 256),
         ],
       );
-      res.status(202).json({ accepted: true });
+      res.status(202).json({ accepted: true, eventId: result.rows[0]?.id ?? null });
     } catch (e) {
       res.status(500).json({ error: 'download_event_failed', message: (e as Error).message });
     }

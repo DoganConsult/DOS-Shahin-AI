@@ -41,6 +41,14 @@ export interface MarketingNavItem {
   variant?: 'link' | 'primary' | 'secondary' | 'ghost';
   /** Hide on locales that don't apply (rare — mostly null = all). */
   hideForLocales?: ReadonlyArray<'en' | 'ar'>;
+  /** Nav group ID — items with the same group render as a dropdown menu. */
+  navGroup?: string | null;
+}
+
+export interface MarketingNavGroup {
+  id: string;
+  label: string;
+  items: ReadonlyArray<MarketingNavItem>;
 }
 
 export interface MarketingFooterGroup {
@@ -152,6 +160,8 @@ export interface MarketingPublicConfig {
   /** Master kill switch. When false, marketing routes resolve to 404. */
   publicMarketingEnabled: boolean;
   navItems: ReadonlyArray<MarketingNavItem>;
+  /** Grouped nav items for dropdown menus in the header. */
+  navGroups: ReadonlyArray<MarketingNavGroup>;
   footerGroups: ReadonlyArray<MarketingFooterGroup>;
   /** Feature flags consumed by section renderers. */
   flags: Readonly<Record<string, boolean>>;
@@ -224,6 +234,11 @@ export class MarketingPublicConfigService {
       (n) => !n.hideForLocales || !n.hideForLocales.includes(c.locale),
     );
   });
+
+  /** Header nav groups (dropdowns) from DB. */
+  readonly marketingNavGroups = computed<ReadonlyArray<MarketingNavGroup>>(
+    () => this._config()?.navGroups ?? [],
+  );
 
   /** Footer column groups. */
   readonly marketingFooterGroups = computed<ReadonlyArray<MarketingFooterGroup>>(
