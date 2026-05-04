@@ -166,6 +166,82 @@ async function signupAttempts() {
   });
 }
 
+async function publishTargetAdd() {
+  const kind = flag('kind'); const key = flag('key'); const name = flag('name');
+  if (!kind || !key || !name) { console.error('--kind --key --name required'); process.exit(2); }
+  return withClient(async (c) => {
+    await c.query(
+      `INSERT INTO dos.publish_target (target_kind, target_key, display_name, owner_team)
+       VALUES ($1,$2,$3,$4)
+       ON CONFLICT (target_kind, target_key) DO UPDATE SET display_name=EXCLUDED.display_name`,
+      [kind, key, name, flag('owner', null)],
+    );
+    console.log(`[dos] publish target: ${kind}:${key}`);
+  });
+}
+
+async function publishRevisionAdd() {
+  const kind = flag('kind'); const key = flag('key'); const by = flag('by', 'dos-master-cli');
+  const payload = flag('payload', '{}');
+  if (!kind || !key) { console.error('--kind --key required'); process.exit(2); }
+  return withClient(async (c) => {
+    const n = await c.query(
+      `SELECT COALESCE(MAX(revision_no),0)+1 AS n FROM dos.publish_revision WHERE target_kind=$1 AND target_key=$2`,
+      [kind, key],
+    );
+    const r = await c.query(
+      `INSERT INTO dos.publish_revision (target_kind, target_key, revision_no, payload, created_by, status)
+       VALUES ($1,$2,$3,$4::jsonb,$5,'draft') RETURNING id, revision_no`,
+      [kind, key, Number(n.rows[0].n), payload, by],
+    );
+    console.log(`[dos] revision created: ${r.rows[0].id} (rev ${r.rows[0].revision_no})`);
+  });
+}
+
+async function publishGo() {
+  const id = flag('id');
+  if (!id) { console.error('--id required'); process.exit(2); }
+  return withClient(async (c) => {
+    const cur = await c.query(`SELECT target_kind, target_key, status FROM dos.publish_revision WHERE id=$1::uuid`, [id]);
+    if (!cur.rows.length) { console.error('revision_not_found'); process.exit(3); }
+    const { target_kind, target_key } = cur.rows[0];
+    const sup = await c.query(
+      `UPDATE dos.publish_revision SET status='superseded'
+        WHERE target_kind=$1 AND target_key=$2 AND status='live' AND id<>$3::uuid`,
+      [target_kind, target_key, id],
+    );
+    await c.query(`UPDATE dos.publish_revision SET status='live' WHERE id=$1::uuid`, [id]);
+    await c.query(
+      `INSERT INTO dos.dos_master_invalidation_log (scope, scope_key, reason, cache_version, fan_out_count)
+       VALUES ('global', $1, $2, 'v1', 0)`,
+      [`${target_kind}:${target_key}`, `publish_revision:${id}`],
+    );
+    console.log(`[dos] published live; superseded ${sup.rowCount ?? 0}`);
+  });
+}
+
+async function publishRollback() {
+  const id = flag('id'); const by = flag('by', 'dos-master-cli'); const reason = flag('reason', 'cli rollback');
+  if (!id) { console.error('--id required'); process.exit(2); }
+  return withClient(async (c) => {
+    const cur = await c.query(`SELECT target_kind, target_key, status FROM dos.publish_revision WHERE id=$1::uuid`, [id]);
+    if (!cur.rows.length || cur.rows[0].status !== 'live') { console.error('not_live'); process.exit(3); }
+    await c.query(`INSERT INTO dos.publish_rollback (revision_id, rolled_back_by, reason) VALUES ($1::uuid,$2,$3)`, [id, by, reason]);
+    await c.query(`UPDATE dos.publish_revision SET status='rolled_back' WHERE id=$1::uuid`, [id]);
+    await c.query(
+      `UPDATE dos.publish_revision SET status='live'
+        WHERE id = (SELECT id FROM dos.publish_revision WHERE target_kind=$1 AND target_key=$2 AND status='superseded' ORDER BY revision_no DESC LIMIT 1)`,
+      [cur.rows[0].target_kind, cur.rows[0].target_key],
+    );
+    await c.query(
+      `INSERT INTO dos.dos_master_invalidation_log (scope, scope_key, reason, cache_version, fan_out_count)
+       VALUES ('global', $1, $2, 'v1', 0)`,
+      [`${cur.rows[0].target_kind}:${cur.rows[0].target_key}`, `publish_rollback:${id}`],
+    );
+    console.log(`[dos] rolled back ${id}`);
+  });
+}
+
 async function provisioningJobs() {
   return withClient(async (c) => {
     const r = await c.query(
@@ -189,6 +265,10 @@ const dispatch = {
   'signup:flows': signupFlows,
   'signup:attempts': signupAttempts,
   'provisioning:jobs': provisioningJobs,
+  'publish:target:add': publishTargetAdd,
+  'publish:revision:add': publishRevisionAdd,
+  'publish:go': publishGo,
+  'publish:rollback': publishRollback,
 };
 
 if (!cmd || cmd === '-h' || cmd === '--help') {

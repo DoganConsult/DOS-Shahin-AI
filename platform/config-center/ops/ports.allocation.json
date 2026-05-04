@@ -641,6 +641,15 @@
       "gatewayPrefix": "/api/public/site",
       "envFile": "marketing-shell-service",
       "note": "DOS Master M9 \u2014 public marketing shell BFF (CDN-fronted; Cloudflare default + CdnAdapter for on-prem)"
+    },
+    "publish-service": {
+      "port": 4012,
+      "cwd": "services/publish-service",
+      "script": "dist/server.js",
+      "wave": 1,
+      "gatewayPrefix": "/api/admin/publish",
+      "envFile": "publish-service",
+      "note": "DOS Master M10 \u2014 atomic publish/rollback engine (page/component/route/brand-kit/nav/archetype-props)"
     }
   },
   "oneShots": {

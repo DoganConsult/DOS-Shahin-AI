@@ -907,9 +907,46 @@ Master are CI-rejected (`dos-master-only.mjs`) and DB-rejected
   one row in `dos_master.signup_anti_abuse_signal`. Live verified:
   clean inputs = allow (0.05); spammer@mailinator.com + empty fp +
   empty captcha = block (1.0). Build GREEN.
-- **M9..M14** — IN-PROGRESS. Sequenced per DOS_MASTER_PLAN.md §3.
-  M9 D1 next: `services/marketing-shell-service` (public zone SSR +
-  `dos.marketing_*` content authority + `/api/public/site-bootstrap`).
+- **M9 D1 — CLOSED (2026-05-04).** `services/marketing-shell-service`
+  (`@dos/marketing-shell-service`, port 4011, public trust zone, prefix
+  `/api/public/site`) ships `GET /site-bootstrap?product=`. Returns
+  `{product, cdn, routes[], brand{tokens, assets}, generatedAt}`.
+  Routes pulled from `dos.ui_route_template_binding` filtered to
+  `archetype='marketing-landing'` (8 rows: `/, /about, /contact,
+  /legal, /platform, /pricing, /security, /trust`). Brand tokens +
+  assets read from `dos.marketing_brand_tokens` and
+  `dos.marketing_brand_assets`. CDN selector defaults to `cloudflare`,
+  overridable via `MARKETING_CDN` env (CdnAdapter SDK ships M9 D2).
+  Cache headers: `public, max-age=60, s-maxage=300`. Build GREEN.
+  Live verified: 8 routes in correct order. Granted both
+  `dos-master` + `dos-master-marketing` to `marketing-shell-service`.
+- **M10 D1 — CLOSED (2026-05-04).** `services/publish-service`
+  (`@dos/publish-service`, port 4012, admin trust zone, prefix
+  `/api/admin/publish`) ships atomic publish lifecycle: `ensureTarget`,
+  `createRevision` (auto-increments `revision_no` per
+  `(target_kind, target_key)`), `publishRevision` (atomic supersede prior
+  live + mark new live + fan-out `dos.dos_master_invalidation_log`),
+  `rollbackRevision` (logs `dos.publish_rollback`, marks rev rolled_back,
+  restores most-recent superseded → live, fan-out), `listRevisions`. 6
+  allowed kinds: `page|component|route|brand-kit|nav|archetype-props`.
+  Routes: `GET /revisions`, `POST /targets`, `POST /revisions`,
+  `POST /publish`, `POST /rollback`. Registered in
+  `dos_master.service_registry` + 5 endpoints in
+  `dos_master.service_endpoint`; granted both `dos-master` and
+  `dos-master-publisher` in `dos.dos_master_grant`. Allocated port 4012
+  in `platform/config-center/ops/ports.allocation.json`. CLI
+  `scripts/dos-master/dos.mjs` extended with 4 parity commands
+  (`publish:target:add`, `publish:revision:add`, `publish:go`,
+  `publish:rollback`) — total CLI surface = 15. Live-verified
+  end-to-end: ensureTarget(`page:/marketing/home`) → createRevision rev1
+  → createRevision rev2 → publishRevision(rev1)=live → publishRevision(rev2)
+  → rev1 superseded=1 + rev2 live → rollbackRevision(rev2) → rev2
+  rolled_back + rev1 restored to live (`listRevisions` returns
+  `[rev2:rolled_back, rev1:live]`). Build GREEN.
+- **M11..M14** — IN-PROGRESS. Sequenced per DOS_MASTER_PLAN.md §3.
+  M11 next: Platform-admin trust zone (Keycloak realm `platform-ops`,
+  schema `platform_admin`, `services/admin-console-bff`,
+  `/api/admin/console-bootstrap`).
 
 ### Phase status (live as of 2026-05-01)
 

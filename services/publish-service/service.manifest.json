@@ -1,0 +1,11 @@
+{
+  "serviceCode": "publish-service",
+  "version": "0.1.0",
+  "domains": ["platform"],
+  "trustZone": "admin",
+  "dependencies": ["onboarding-service", "workspace-bff"],
+  "apiPrefix": "/api/admin/publish",
+  "doctrineArticle": 11,
+  "controlled": true,
+  "writerActor": "publish-service"
+}
