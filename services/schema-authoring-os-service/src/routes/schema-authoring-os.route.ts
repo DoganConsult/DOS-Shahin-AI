@@ -1,5 +1,5 @@
 import { Router, type Request, type Response } from 'express';
-import { listRecords, getRecord, createRecord, publishRecord, listEvents, emitEvent } from '../lib/schema-authoring-os-repo.js';
+import { listRecords, getRecord, createRecord, publishRecord, listEvents, emitEvent , evaluateRecord} from '../lib/schema-authoring-os-repo.js';
 import { RecordCreateSchema, RecordPublishSchema, EventEmitSchema } from '../schemas/schema-authoring-os.schemas.js';
 
 export const schemaAuthoringOsRouter = Router();
@@ -47,4 +47,20 @@ schemaAuthoringOsRouter.post('/events', async (req: Request, res: Response) => {
   if (!p.success) { res.status(400).json({ error: 'validation', issues: p.error.issues }); return; }
   try { res.status(201).json({ ok: true, event: await emitEvent(p.data as Parameters<typeof emitEvent>[0]) }); }
   catch (e) { res.status(500).json({ error: 'emit_failed', detail: String((e as Error).message) }); }
+});
+
+// ── Phase 3 / L30 — domain-aware deterministic record evaluator.
+schemaAuthoringOsRouter.post('/records/:record_key/evaluate', async (req: Request, res: Response) => {
+  try {
+    const ctx = (req.body && typeof req.body === 'object') ? req.body as Record<string, unknown> : {};
+    const result = await evaluateRecord(String(req.params.record_key), {
+      tenant_id: typeof ctx.tenant_id === 'string' ? ctx.tenant_id : undefined,
+      user_id:   typeof ctx.user_id === 'string'   ? ctx.user_id   : undefined,
+      cohort:    typeof ctx.cohort === 'string'    ? ctx.cohort    : undefined,
+    });
+    res.json({ ok: true, evaluation: result });
+  } catch (e) {
+    const msg = String((e as Error).message);
+    res.status(msg === 'record_not_published' ? 404 : 500).json({ error: 'evaluate_failed', detail: msg });
+  }
 });

@@ -182,7 +182,12 @@ export interface WorkspaceShellBindingRow {
     | 'page.masthead'
     | 'page.header'
     | 'page.tabs'
-    | 'page.widget-frame';
+    | 'page.widget-frame'
+    // Group 7: Tile Variants (4)
+    | 'workspace.selectable-tile'
+    | 'workspace.clickable-tile'
+    | 'workspace.expandable-tile'
+    | 'workspace.ai-tile';
   enabled: boolean;
   position: number;
   perms_required: string[];
@@ -223,6 +228,11 @@ export const WORKSPACE_SHELL_KEYS = [
   'page.header',
   'page.tabs',
   'page.widget-frame',
+  // Group 7: Tile Variants (4)
+  'workspace.selectable-tile',
+  'workspace.clickable-tile',
+  'workspace.expandable-tile',
+  'workspace.ai-tile',
 ] as const;
 
 export type WorkspaceShellKey = typeof WORKSPACE_SHELL_KEYS[number];

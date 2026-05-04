@@ -48,6 +48,11 @@ const WORKSPACE_SHELL_KEYS = [
   'page.header',
   'page.tabs',
   'page.widget-frame',
+  // Group 7: Tile Variants (4)
+  'workspace.selectable-tile',
+  'workspace.clickable-tile',
+  'workspace.expandable-tile',
+  'workspace.ai-tile',
 ] as const;
 
 interface WorkspaceShellRow {
