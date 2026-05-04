@@ -14,13 +14,19 @@ async function main() {
     process.exit(0);
   }
   const r = await c.query(`SELECT count(*)::int AS n FROM dos_master.doctrine_article`);
+  const a = await c.query(`SELECT count(DISTINCT article_no)::int AS n FROM dos_master.doctrine_acknowledgement`);
   await c.end();
   const n = r.rows[0].n;
+  const ack = a.rows[0].n;
   if (n < 11) {
     console.error(`[doctrine-acknowledged] FAIL only ${n}/11 doctrine articles present`);
     process.exit(1);
   }
-  console.log(`[doctrine-acknowledged] PASS ${n} articles seeded`);
+  if (ack < 11) {
+    console.error(`[doctrine-acknowledged] FAIL only ${ack}/11 articles acknowledged by any actor`);
+    process.exit(1);
+  }
+  console.log(`[doctrine-acknowledged] PASS 11/11 articles seeded + ${ack}/11 acknowledged`);
 }
 
 main().catch((e) => { console.error('[doctrine-acknowledged] ERROR', e.message); process.exit(1); });

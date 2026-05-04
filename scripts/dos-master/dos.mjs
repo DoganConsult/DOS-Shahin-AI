@@ -410,7 +410,7 @@ async function doctrineAck() {
   if (!article) { console.error('--article required'); process.exit(2); }
   return withClient(async (c) => {
     await c.query(
-      `INSERT INTO dos_master.doctrine_acknowledgement (article_no, actor, acknowledged_at) VALUES ($1::int,$2,now()) ON CONFLICT DO NOTHING`,
+      `INSERT INTO dos_master.doctrine_acknowledgement (article_no, actor, ack_at) VALUES ($1::int,$2,now()) ON CONFLICT (actor, article_no) DO NOTHING`,
       [article, by],
     );
     console.log(`[dos] doctrine article ${article} acknowledged by ${by}`);

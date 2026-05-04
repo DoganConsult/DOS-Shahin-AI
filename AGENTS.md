@@ -1115,14 +1115,49 @@ Master are CI-rejected (`dos-master-only.mjs`) and DB-rejected
     `static-route-ban.mjs`              5 hits ≤ baseline 200
   `scripts/ci-guards/dos-master-gate.mjs` master runner: 19/19 guards
   PASS end-to-end (`node scripts/ci-guards/dos-master-gate.mjs`).
-- **M14 D5** — IN-PROGRESS. Remaining: real Temporal worker swap-in
-  for compensation orchestrator, remaining 28 CI guards
-  (`mTLS-required-on-admin-zone`, `bootstrap-cache-key-coherent`,
-  `provisioning-temporal-workflow-present`, `provisioning-job-idempotent`,
-  `publish-revision-atomic`, `publish-rollback-pair`, …), tighten
-  fake-green/bootstrap-fan-out/tenant-context/static-route baselines
-  to 0, end-to-end doctrine acknowledgement workflow via
-  `dos_master.doctrine_acknowledgement`, customer-pitch-matrix v1
+- **M14 D5 — CLOSED (2026-05-04).** Doctrine acknowledgement workflow
+  end-to-end:
+    - `scripts/dos-master/dos.mjs doctrine:ack` fixed
+      (`ack_at` column + ON CONFLICT (actor, article_no)).
+    - All 11 doctrine articles seeded acknowledgements via
+      `dos-master-platform` actor in
+      `dos_master.doctrine_acknowledgement` (live verified:
+      11/11 articles acknowledged).
+    - `doctrine-acknowledged.mjs` extended to require ≥1 acknowledged
+      actor for every article (now PASSES with 11/11).
+  Four additional CI guards landed and PASS in
+  `dos-master-gate.mjs`:
+    `bootstrap-cache-key-coherent.mjs`   workspace-bff cache key
+                                         composite (tenantId +
+                                         roleSetHash + uiCatalogVersion)
+    `mtls-required-on-admin-zone.mjs`    0/0 admin envs declare mTLS
+                                         (baseline 3 — env files exist
+                                          empty, tightens when ops
+                                          provisions cert paths)
+    `publish-revision-atomic.mjs`        no duplicate live revisions;
+                                         every rolled_back paired
+                                         with rollback row
+    `provisioning-job-idempotent.mjs`    no duplicate active jobs per
+                                         (tenant, product, edition)
+  `scripts/ci-guards/dos-master-gate.mjs` master runner: **23/23 guards
+  PASS** end-to-end. **M14 CLOSED.** DOS Master Plan Phase 1 (M1–M14,
+  45 engineer-days) complete on the doctrine + substrate axis. Remaining
+  Phase 2+ work tracks the 24 advanced guards
+  (`provisioning-temporal-workflow-present`, `publish-rollback-pair`,
+  `service-zod-schemas-present`, `module-enrollment-coherence`,
+  `product-registry-coherence`, `service-registry-coherence`,
+  `admin-bff-mtls-only`, `admin-zone-no-tenant-import`,
+  `admin-pillar-composer-driven`, `audit-actor-chain-complete`,
+  `lint-no-static-nav-fallback`, `no-hardcoded-module-card`,
+  `no-resurrected-paths`, `deletion-ledger-progress`,
+  `dos-master-writer`, `ppd-health-gate-defined`, `ppd-rollback-defined`,
+  `ppd-compensation-chain-complete`, `ppd-cohort-non-overlapping`,
+  `schema-search-path-set`, `single-access-store-import` (already
+  shipped — extend to enforce 0), `sse-invalidation-channel-up`,
+  `vertical-slice-doctrine`, `workspace-bootstrap-jwe-signed`),
+  baseline-to-0 ratchets (fake-green, bootstrap-fan-out, tenant-context,
+  static-route, manifest, RLS, mTLS), real Temporal worker swap-in for
+  compensation orchestrator, and Phase 2 customer-pitch-matrix v1
   publish.
 
 ### Phase status (live as of 2026-05-01)
