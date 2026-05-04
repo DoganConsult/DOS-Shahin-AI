@@ -1007,11 +1007,43 @@ Master are CI-rejected (`dos-master-only.mjs`) and DB-rejected
   active): members=1, entitlements=2, sod_rules=0 (no global SoD rules
   seeded), composer_version=`a+ v1`. CLI extended with 2 parity
   commands (`tenant:list`, `tenant:composer`); total CLI surface now 24.
-- **M14** — IN-PROGRESS. M14 D1 next: doctrine codification + PPD
-  substrate (47 CI guards mapped to scripts under `scripts/ci-guards/`,
-  ring engine R0→R5 wired to `services/rollout-service`, health gates
-  Prom/Jaeger/Loki/audit/synthetic, auto-rollback within 5m on gate
-  failure, compensation chain orchestration via Temporal).
+- **M14 D1 — CLOSED (2026-05-04).** PPD substrate live:
+  `services/rollout-service` (`@dos/rollout-service`, port 4015, admin
+  trust zone, prefix `/api/admin/rollout`) ships `POST /plans`,
+  `GET /plans`, `GET /plans/:plan_id/composition`, `POST /advance`,
+  `POST /rollback`, `POST /evaluate` — health-gate-driven decision
+  engine (`hold|advance|rollback`) reads `dos.rollout_health_gate` and
+  writes `dos.rollout_evaluation`. Registered in
+  `dos_master.service_registry` + 6 endpoints in
+  `dos_master.service_endpoint`; granted `dos-master` +
+  `dos-master-rollout` in `dos.dos_master_grant`. Allocated port 4015 in
+  `platform/config-center/ops/ports.allocation.json`. Migration
+  `20260504_0700_dos_master_m14_ppd_seed.sql` seeds the canonical
+  `platform-rollout` plan with 6 rings (R0 dev → R1 internal → R2
+  canary tenant `shahinaicom` → R3 region `me-central-1` → R4 product
+  `shahin-ai` → R5 fleet) × 5 health gates each (prom_error_rate<0.02,
+  jaeger_p95_latency<750ms, loki_error_volume<100, audit_denial_spike<25,
+  synthetic_pageload≥0.95) × 1 cohort selector each. Live-verified end
+  to end: R0 activated, breach evaluation produced `decision='rollback'`,
+  healthy evaluation produced `decision='advance'`. 6 core CI guards
+  shipped under `scripts/ci-guards/` and PASS:
+  `dos-master-only.mjs` (26 controlled tables protected by
+  `trg_dos_master_only`), `ppd-ring-required.mjs` (6 rings × ≥5 gates ×
+  ≥1 cohort), `forbid-legacy-accessstore.mjs` (zero legacy
+  `platform/dauth/access` imports), `cli-ui-parity.mjs` (CLI surface =
+  29 ≥ doctrine min 24), `doctrine-acknowledged.mjs` (11 articles
+  seeded), `fake-green-detector.mjs` (76 hits ≤ baseline 100; tighten to
+  0 with `FAKE_GREEN_ENFORCE=1` in M14 D2). CLI `scripts/dos-master/dos.mjs`
+  extended with 5 parity commands (`rollout:plan:add`, `rollout:advance`,
+  `rollout:rollback`, `rollout:composition`, `doctrine:ack`) — total CLI
+  surface now 29.
+- **M14 D2..D5** — IN-PROGRESS. Remaining: rollout-service
+  auto-evaluation loop (60 s Prom/Loki/Jaeger pollers + auto-rollback
+  within 5 m of gate breach), compensation chain orchestrator backed by
+  Temporal, remaining 41 CI guards (per-zone: tenant-context-required,
+  rls-policy-present, mTLS-required-on-admin-zone, etc.), fake-green
+  baseline tightened to 0, end-to-end doctrine acknowledgement workflow
+  via `dos_master.doctrine_acknowledgement`.
 
 ### Phase status (live as of 2026-05-01)
 

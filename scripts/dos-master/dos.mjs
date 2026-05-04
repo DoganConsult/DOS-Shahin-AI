@@ -344,6 +344,79 @@ async function adminRoles() {
   });
 }
 
+async function rolloutPlanAdd() {
+  const title = flag('title'); const by = flag('by', 'dos-master-cli');
+  if (!title) { console.error('--title required'); process.exit(2); }
+  return withClient(async (c) => {
+    const r = await c.query(
+      `INSERT INTO dos.rollout_plan (title, status, created_by) VALUES ($1,'draft',$2) RETURNING id`,
+      [title, by],
+    );
+    console.log(`[dos] rollout plan: ${r.rows[0].id}`);
+  });
+}
+
+async function rolloutAdvance() {
+  const plan = flag('plan'); const ring = flag('ring');
+  if (!plan || !ring) { console.error('--plan --ring required'); process.exit(2); }
+  return withClient(async (c) => {
+    const cur = await c.query(`SELECT id, ring_order FROM dos.rollout_ring WHERE plan_id=$1::uuid AND ring_code=$2`, [plan, ring]);
+    if (!cur.rows.length) { console.error('ring_not_found'); process.exit(3); }
+    await c.query(`UPDATE dos.rollout_ring SET status='succeeded', ended_at=now() WHERE id=$1::uuid`, [cur.rows[0].id]);
+    const next = await c.query(
+      `UPDATE dos.rollout_ring SET status='active', started_at=now()
+        WHERE plan_id=$1::uuid AND ring_order=$2 AND status='pending' RETURNING ring_code`,
+      [plan, cur.rows[0].ring_order + 1],
+    );
+    if (!next.rows.length) await c.query(`UPDATE dos.rollout_plan SET status='succeeded' WHERE id=$1::uuid`, [plan]);
+    else await c.query(`UPDATE dos.rollout_plan SET status='running' WHERE id=$1::uuid AND status='draft'`, [plan]);
+    console.log(`[dos] advanced ${ring} → ${next.rows[0]?.ring_code ?? 'plan-complete'}`);
+  });
+}
+
+async function rolloutRollback() {
+  const plan = flag('plan'); const ring = flag('ring');
+  const by = flag('by', 'dos-master-cli'); const reason = flag('reason', 'cli rollback');
+  if (!plan || !ring) { console.error('--plan --ring required'); process.exit(2); }
+  return withClient(async (c) => {
+    const cur = await c.query(`SELECT id FROM dos.rollout_ring WHERE plan_id=$1::uuid AND ring_code=$2`, [plan, ring]);
+    if (!cur.rows.length) { console.error('ring_not_found'); process.exit(3); }
+    await c.query(`INSERT INTO dos.rollout_rollback (ring_id, triggered_by, reason, succeeded_at) VALUES ($1::uuid,$2,$3,now())`, [cur.rows[0].id, by, reason]);
+    await c.query(`UPDATE dos.rollout_ring SET status='rolled_back', ended_at=now() WHERE id=$1::uuid`, [cur.rows[0].id]);
+    await c.query(`UPDATE dos.rollout_plan SET status='rolled_back' WHERE id=$1::uuid`, [plan]);
+    console.log(`[dos] rolled back ${ring}`);
+  });
+}
+
+async function rolloutComposition() {
+  const plan = flag('plan');
+  if (!plan) { console.error('--plan required'); process.exit(2); }
+  return withClient(async (c) => {
+    const r = await c.query(
+      `SELECT r.ring_code, r.status, r.ring_order, count(g.*) AS gates, count(co.*) AS cohorts
+         FROM dos.rollout_ring r
+         LEFT JOIN dos.rollout_health_gate g ON g.ring_id = r.id
+         LEFT JOIN dos.rollout_cohort co ON co.ring_id = r.id
+        WHERE r.plan_id = $1::uuid
+        GROUP BY r.id ORDER BY r.ring_order`,
+      [plan],
+    );
+    console.table(r.rows);
+  });
+}
+
+async function doctrineAck() {
+  const article = flag('article'); const by = flag('by', 'dos-master-cli');
+  if (!article) { console.error('--article required'); process.exit(2); }
+  return withClient(async (c) => {
+    await c.query(
+      `INSERT INTO dos_master.doctrine_acknowledgement (article_no, actor, acknowledged_at) VALUES ($1::int,$2,now()) ON CONFLICT DO NOTHING`,
+      [article, by],
+    );
+    console.log(`[dos] doctrine article ${article} acknowledged by ${by}`);
+  });
+}
+
 async function provisioningJobs() {
   return withClient(async (c) => {
     const r = await c.query(
@@ -380,6 +453,11 @@ const dispatch = {
   'pillar:list': pillarList,
   'tenant:list': tenantList,
   'tenant:composer': tenantComposer,
+  'rollout:plan:add': rolloutPlanAdd,
+  'rollout:advance': rolloutAdvance,
+  'rollout:rollback': rolloutRollback,
+  'rollout:composition': rolloutComposition,
+  'doctrine:ack': doctrineAck,
 };
 
 if (!cmd || cmd === '-h' || cmd === '--help') {

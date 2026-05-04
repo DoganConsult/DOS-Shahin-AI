@@ -1,0 +1,11 @@
+{
+  "serviceCode": "rollout-service",
+  "version": "0.1.0",
+  "domains": ["platform"],
+  "trustZone": "admin",
+  "dependencies": ["publish-service", "workspace-bff"],
+  "apiPrefix": "/api/admin/rollout",
+  "doctrineArticle": 7,
+  "controlled": true,
+  "writerActor": "rollout-service"
+}

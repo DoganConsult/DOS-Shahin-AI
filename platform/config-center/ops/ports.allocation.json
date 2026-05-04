@@ -668,6 +668,15 @@
       "gatewayPrefix": "/api/tenant-admin",
       "envFile": "tenant-admin-bff",
       "note": "DOS Master M13 \u2014 Tenant Admin Console v1 (a+) BFF (UI Composer + User+Role+SoD)"
+    },
+    "rollout-service": {
+      "port": 4015,
+      "cwd": "services/rollout-service",
+      "script": "dist/server.js",
+      "wave": 1,
+      "gatewayPrefix": "/api/admin/rollout",
+      "envFile": "rollout-service",
+      "note": "DOS Master M14 \u2014 PPD ring engine R0..R5 (advance/rollback/evaluate, health-gate-driven auto-rollback)"
     }
   },
   "oneShots": {
