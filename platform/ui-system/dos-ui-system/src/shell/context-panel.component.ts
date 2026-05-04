@@ -101,18 +101,18 @@ const TAB_LABELS: Record<ContextPanelTab, string> = {
   styles: [`
     :host { display: block; }
 
-    /* ── Panel frame ─────────────────────────────────── */
+    /* ── Panel frame ────────────────────────────────── */
     .dos-context-panel {
       position: fixed;
       inset-block: 3rem 0; /* below 48px Carbon header */
       inset-inline-end: 0;
       inline-size: min(360px, 100vw);
-      background: var(--cds-layer-01, #f4f4f4);
-      border-inline-start: 1px solid var(--cds-border-subtle-01, #e0e0e0);
-      z-index: var(--shell-z-sticky, 6000);
+      background: var(--cds-layer-01);
+      border-inline-start: 1px solid var(--cds-border-subtle-01);
+      z-index: var(--dos-z-panel, 6000);
       display: flex;
       flex-direction: column;
-      box-shadow: var(--shadow-premium-md, -4px 0 16px rgba(0,0,0,0.08));
+      box-shadow: var(--cds-shadow);
       animation: slide-in-right-panel 0.2s ease-out both;
     }
 
@@ -121,8 +121,8 @@ const TAB_LABELS: Record<ContextPanelTab, string> = {
       inset-inline-end: auto;
       inset-inline-start: 0;
       border-inline-start: 0;
-      border-inline-end: 1px solid var(--cds-border-subtle-01, #e0e0e0);
-      box-shadow: var(--shadow-premium-md, 4px 0 16px rgba(0,0,0,0.08));
+      border-inline-end: 1px solid var(--cds-border-subtle-01);
+      box-shadow: var(--cds-shadow);
       animation-name: slide-in-left-panel;
     }
 
@@ -130,7 +130,7 @@ const TAB_LABELS: Record<ContextPanelTab, string> = {
       inline-size: 100vw;
       inset-block-start: 0;
       border-inline: none;
-      border-block-start: 1px solid var(--cds-border-subtle-01, #e0e0e0);
+      border-block-start: 1px solid var(--cds-border-subtle-01);
     }
 
     /* ── Tabs ────────────────────────────────────────── */
@@ -170,16 +170,16 @@ const TAB_LABELS: Record<ContextPanelTab, string> = {
 
     /* ── Empty state ──────────────────────────────────── */
     .dos-context-panel__empty {
-      padding: var(--cds-spacing-07, 2rem) var(--cds-spacing-05, 1rem);
+      padding: var(--cds-spacing-07) var(--cds-spacing-05);
       text-align: center;
-      color: var(--cds-text-secondary, #6f6f6f);
-      font-size: 0.875rem;
+      color: var(--cds-text-secondary);
+      font-size: var(--cds-body-short-01-font-size);
     }
 
     /* ── AI-insights placeholder ─────────────────────── */
     .dos-context-panel__ai-placeholder {
-      font-size: 0.8125rem;
-      color: var(--cds-text-secondary, #6f6f6f);
+      font-size: var(--cds-caption-01-font-size);
+      color: var(--cds-text-secondary);
       font-style: italic;
     }
 

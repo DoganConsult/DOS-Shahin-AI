@@ -25,97 +25,26 @@ const LAYOUT_MAP: Record<WorkspacePattern, ShellLayoutType> = {
   'studio': 'workspace',
 };
 
-const DEFAULT_SLOTS: ShellSlotConfig[] = [
-  { slotId: 'masthead', visible: true, order: 1 },
-  { slotId: 'kpi-strip', visible: true, order: 2 },
-  { slotId: 'action-bar', visible: true, order: 3 },
-  { slotId: 'workflow-ribbon', visible: true, order: 4 },
-  { slotId: 'main-content', visible: true, order: 5 },
-  { slotId: 'context-rail', visible: true, order: 6 },
-  { slotId: 'sticky-footer', visible: false, order: 7 },
-  { slotId: 'filter-panel', visible: false, order: 8 },
-  { slotId: 'detail-drawer', visible: false, order: 9 },
-  { slotId: 'preview-panel', visible: false, order: 10 },
-  { slotId: 'left-nav-tree', visible: false, order: 11 },
-  { slotId: 'editor-canvas', visible: false, order: 12 },
-  { slotId: 'validation-panel', visible: false, order: 13 },
-  { slotId: 'priority-queue', visible: false, order: 14 },
-  { slotId: 'trend-row', visible: false, order: 15 },
-  { slotId: 'ai-recommendations', visible: false, order: 16 },
-];
+// Slots sourced exclusively from dos.workspace_shell_binding via DB override.
+// No TS defaults — layout is Carbon-shell-driven (cds-side-nav, cds-header, cds-content).
+const DEFAULT_SLOTS: ShellSlotConfig[] = [];
 
 function slotsForLayout(layoutType: ShellLayoutType): ShellSlotConfig[] {
-  const base = DEFAULT_SLOTS.map(s => ({ ...s }));
-  const show = (id: ShellSlotId) => {
-    const slot = base.find(s => s.slotId === id);
-    if (slot) slot.visible = true;
-  };
-  const hide = (id: ShellSlotId) => {
-    const slot = base.find(s => s.slotId === id);
-    if (slot) slot.visible = false;
-  };
-
-  switch (layoutType) {
-    case 'cockpit':
-    case 'hub':
-      show('priority-queue');
-      show('trend-row');
-      show('ai-recommendations');
-      hide('filter-panel');
-      hide('detail-drawer');
-      // Spec §26.2 + §26.4 — Command Center (overview/landing) does NOT use
-      // the right Context Rail. The rail is reserved for Entity 360 / object
-      // pages where there is real per-record context (relationships, audit,
-      // evidence, notes). On overview pages we have no entity selected, so
-      // the rail would render an empty 320px strip ("collapsed-but-empty"
-      // visual bug seen on /foundation/overview). Collapse it here.
-      hide('context-rail');
-      break;
-    case 'list-detail':
-      show('filter-panel');
-      show('detail-drawer');
-      show('preview-panel');
-      show('sticky-footer');
-      hide('workflow-ribbon');
-      break;
-    case 'workspace':
-    case 'reviewer-workspace':
-      show('sticky-footer');
-      show('detail-drawer');
-      break;
-    case 'board':
-      show('filter-panel');
-      show('sticky-footer');
-      hide('context-rail');
-      break;
-    case 'admin-console':
-      hide('kpi-strip');
-      hide('workflow-ribbon');
-      hide('context-rail');
-      show('filter-panel');
-      break;
-  }
-  return base;
+  // Slot configuration sourced from dos.workspace_shell_binding via DB override.
+  // The binding service determines which slots are enabled and their position per tenant.
+  // This function now returns empty array; DB override supplies the actual slot config.
+  return DEFAULT_SLOTS.map(s => ({ ...s }));
 }
 
-function defaultActionBar(def: ModuleShellDefinition): ShellActionBarConfig {
-  return {
-    slots: [
-      { position: 'primary-create', actionId: `${def.moduleCode}:create`, label: { en: 'Create', ar: 'إنشاء' }, icon: 'add', visible: true },
-      { position: 'import', actionId: `${def.moduleCode}:import`, label: { en: 'Import', ar: 'استيراد' }, icon: 'upload', visible: true },
-      { position: 'bulk', actionId: `${def.moduleCode}:bulk`, label: { en: 'Bulk Actions', ar: 'إجراءات جماعية' }, icon: 'list', visible: true },
-      { position: 'filters', actionId: `${def.moduleCode}:filters`, label: { en: 'Filters', ar: 'تصفية' }, icon: 'filter', visible: true },
-      { position: 'view-switch', actionId: `${def.moduleCode}:view-switch`, label: { en: 'View', ar: 'عرض' }, icon: 'grid', visible: true },
-      { position: 'export', actionId: `${def.moduleCode}:export`, label: { en: 'Export', ar: 'تصدير' }, icon: 'download', visible: true },
-      { position: 'ai-assist', actionId: def.primaryAiAction.id, label: def.primaryAiAction.label, icon: def.primaryAiAction.icon, visible: true },
-    ],
-    showSearch: true,
-    viewModes: ['table', 'cards'],
-    activeView: 'table',
-  };
+function defaultActionBar(_def: ModuleShellDefinition): ShellActionBarConfig {
+  // Action-bar slots sourced from dos.ui_route_template_binding props.nbaActions[] via DB.
+  // No hardcoded actions — Carbon cds-overflow-menu renders whatever the DB provides.
+  return { slots: [], showSearch: true, viewModes: ['table'], activeView: 'table' };
 }
 
 function defaultTabs(def: ModuleShellDefinition): ShellTabConfig[] {
+  // Tabs sourced from dos.ui_route_template_binding props.tabs[] via DB resolver.
+  // DB-registered tabs only — rendered by cds-tabs / cds-tab Carbon primitives.
   if (def.defaultRecordTabs.length > 0) {
     return def.defaultRecordTabs.map((t, i) => ({
       id: t.id,
@@ -127,13 +56,8 @@ function defaultTabs(def: ModuleShellDefinition): ShellTabConfig[] {
       order: i + 1,
     }));
   }
-  return [
-    { id: 'overview', label: { en: 'Overview', ar: 'نظرة عامة' }, icon: 'home', default: true, visible: true, order: 1 },
-    { id: 'records', label: { en: 'Records', ar: 'السجلات' }, icon: 'list', default: false, visible: true, order: 2 },
-    { id: 'analytics', label: { en: 'Analytics', ar: 'التحليلات' }, icon: 'chart--bar', default: false, visible: true, order: 3 },
-    { id: 'ai-insights', label: { en: 'AI Insights', ar: 'رؤى الذكاء الاصطناعي' }, icon: 'machine-learning-model', default: false, visible: true, order: 4 },
-    { id: 'settings', label: { en: 'Settings', ar: 'الإعدادات' }, icon: 'settings', default: false, visible: true, order: 5 },
-  ];
+  // No TS fallback tab list — return empty; DB override supplies the tabs.
+  return [];
 }
 
 function buildWorkflowConfig(def: ModuleShellDefinition): ResolvedShellConfig['workflow'] {
@@ -216,16 +140,12 @@ function buildPlatformDefault(input: ShellResolverInput): ResolvedShellConfig {
       { zoneId: 'sidebar-widgets', label: { en: 'Sidebar', ar: 'الشريط الجانبي' }, maxWidgets: 4, widgetIds: [], layout: 'stack' },
     ],
     detailDrawer: {
+      // Detail-drawer sections sourced from props.detailTabs[] in dos.ui_route_template_binding.
+      // No hardcoded section list — Carbon cds-accordion / cds-tabs renders DB-provided sections.
       enabled: layoutType === 'list-detail' || layoutType === 'workspace',
       position: 'right',
       width: '480px',
-      sections: [
-        { id: 'summary', label: { en: 'Summary', ar: 'ملخص' }, order: 1, visible: true },
-        { id: 'details', label: { en: 'Details', ar: 'التفاصيل' }, order: 2, visible: true },
-        { id: 'ai-summary', label: { en: 'AI Summary', ar: 'ملخص الذكاء الاصطناعي' }, order: 3, visible: true },
-        { id: 'activity', label: { en: 'Activity', ar: 'النشاط' }, order: 4, visible: true },
-        { id: 'audit-trail', label: { en: 'Audit Trail', ar: 'سجل التدقيق' }, order: 5, visible: true },
-      ],
+      sections: [],
     },
     workflow: buildWorkflowConfig(def),
     footer: {
@@ -254,7 +174,8 @@ function buildFallback(input: ShellResolverInput): ResolvedShellConfig {
     lang: 'en',
     dir: 'ltr',
     masthead: {
-      moduleIcon: 'cube',
+      // moduleIcon sourced from dos.ui_module_nav_group.icon via DB — no TS fallback.
+      moduleIcon: '',
       moduleName: { en: input.moduleCode, ar: input.moduleCode },
       purposeLine: { en: '', ar: '' },
       accentToken: 'gray',
@@ -267,7 +188,7 @@ function buildFallback(input: ShellResolverInput): ResolvedShellConfig {
     kpiStrip: { cards: [], maxVisible: 6 },
     actionBar: { slots: [], showSearch: true, viewModes: ['table'], activeView: 'table' },
     slots: slotsForLayout('workspace'),
-    tabs: [{ id: 'overview', label: { en: 'Overview', ar: 'نظرة عامة' }, default: true, visible: true, order: 1 }],
+    tabs: [],
     panels: [],
     widgetZones: [],
     detailDrawer: { enabled: false, position: 'right', width: '480px', sections: [] },

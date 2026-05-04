@@ -198,7 +198,7 @@ const PRIORITY_TAG: Record<MsgPriority, DosCarbonTagType> = {
     .dos-inbox-msg__time {
       margin-inline-start: auto;
       font-size: 0.75rem;
-      color: var(--cds-text-secondary, #6f6f6f);
+      color: var(--cds-text-secondary, #525252);
     }
 
     .dos-inbox-msg__subject {
@@ -214,7 +214,7 @@ const PRIORITY_TAG: Record<MsgPriority, DosCarbonTagType> = {
 
     .dos-inbox-msg__preview {
       font-size: 0.8125rem;
-      color: var(--cds-text-secondary, #6f6f6f);
+      color: var(--cds-text-secondary, #525252);
       margin: 0;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -223,7 +223,7 @@ const PRIORITY_TAG: Record<MsgPriority, DosCarbonTagType> = {
 
     /* High priority: breathing glow border */
     .dos-inbox-msg--high {
-      border-inline-start: 3px solid var(--cds-support-error, #da1e28);
+      border-inline-start: var(--dos-inbox-error-border-width, 3px) solid var(--cds-support-error, #da1e28);
       padding-inline-start: var(--cds-spacing-03, 0.5rem);
       animation: breathing-glow 2s ease-in-out infinite;
     }
@@ -232,7 +232,7 @@ const PRIORITY_TAG: Record<MsgPriority, DosCarbonTagType> = {
     .dos-inbox-empty {
       padding: var(--cds-spacing-07, 2rem) var(--cds-spacing-05, 1rem);
       text-align: center;
-      color: var(--cds-text-secondary, #6f6f6f);
+      color: var(--cds-text-secondary, #525252);
     }
 
     /* ── Mobile drawer ───────────────────────────────── */
@@ -241,7 +241,7 @@ const PRIORITY_TAG: Record<MsgPriority, DosCarbonTagType> = {
       inset-block-end: 0;
       inset-inline: 0;
       max-block-size: 80vh;
-      background: var(--cds-layer, #fff);
+      background: var(--cds-layer, var(--cds-white, #ffffff));
       border-block-start: 1px solid var(--cds-border-subtle, #e0e0e0);
       border-radius: var(--cds-spacing-03, 0.5rem) var(--cds-spacing-03, 0.5rem) 0 0;
       z-index: var(--shell-z-modal, 9000);

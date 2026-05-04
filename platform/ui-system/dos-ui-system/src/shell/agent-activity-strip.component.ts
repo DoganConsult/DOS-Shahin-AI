@@ -146,72 +146,72 @@ const STATE_LABEL: Record<AgentState, string> = {
     :host ::ng-deep .dos-agent-strip__tile .cds--tile {
       display: flex;
       align-items: center;
-      gap: var(--cds-spacing-04, 0.75rem);
-      padding: var(--cds-spacing-04, 0.75rem) var(--cds-spacing-05, 1rem);
-      border-block-end: 1px solid var(--cds-border-subtle-00, #e0e0e0);
+      gap: var(--cds-spacing-04);
+      padding: var(--cds-spacing-04) var(--cds-spacing-05);
+      border-block-end: 1px solid var(--cds-border-subtle-00);
       transition: background 0.12s;
     }
 
     :host ::ng-deep .dos-agent-strip__tile .cds--tile:hover {
-      background: var(--cds-layer-hover, #e8e8e8);
+      background: var(--cds-layer-hover);
     }
 
     /* ══ The signature differentiator: running agent breathing glow ══ */
     .dos-agent-strip__item--running :host ::ng-deep .cds--tile {
-      border-inline-start: 3px solid var(--cds-support-info, #0f62fe);
+      border-inline-start: var(--dos-sidebar-active-border-width, 3px) solid var(--cds-support-info);
       animation: running-tile-glow 2.4s ease-in-out infinite;
       background: linear-gradient(
         90deg,
-        rgba(69,137,255,0.04) 0%,
+        color-mix(in srgb, var(--cds-support-info) 4%, transparent) 0%,
         transparent 100%
       );
     }
 
     /* Awaiting approval: magenta accent */
     .dos-agent-strip__item--awaiting :host ::ng-deep .cds--tile {
-      border-inline-start: 3px solid var(--cds-support-warning, #f1c21b);
+      border-inline-start: var(--dos-sidebar-active-border-width, 3px) solid var(--cds-support-warning);
     }
 
     /* Error: red accent */
     .dos-agent-strip__item--error :host ::ng-deep .cds--tile {
-      border-inline-start: 3px solid var(--cds-support-error, #da1e28);
+      border-inline-start: var(--dos-sidebar-active-border-width, 3px) solid var(--cds-support-error);
     }
 
     /* ── Agent avatar ────────────────────────────────── */
     .dos-agent-tile__avatar {
       position: relative;
       flex: 0 0 auto;
-      width: 2rem;
-      height: 2rem;
+      width: var(--cds-spacing-07);
+      height: var(--cds-spacing-07);
       border-radius: 50%;
-      background: var(--cds-layer-02, #e0e0e0);
+      background: var(--cds-layer-02);
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
     .dos-agent-tile__avatar--running {
-      background: rgba(69,137,255,0.10);
-      border: 1.5px solid rgba(69,137,255,0.30);
+      background: color-mix(in srgb, var(--cds-support-info) 10%, transparent);
+      border: 1.5px solid color-mix(in srgb, var(--cds-support-info) 30%, transparent);
     }
 
     .dos-agent-tile__img {
       border-radius: 50%;
       object-fit: cover;
-      width: 2rem;
-      height: 2rem;
+      width: var(--cds-spacing-07);
+      height: var(--cds-spacing-07);
     }
 
     .dos-agent-tile__icon {
-      color: var(--cds-icon-secondary, #525252);
+      color: var(--cds-icon-secondary);
     }
 
     /* Pulse ring for running state */
     .dos-agent-tile__pulse {
       position: absolute;
-      inset: -4px;
+      inset: calc(-1 * var(--cds-spacing-01));
       border-radius: 50%;
-      border: 2px solid rgba(69,137,255,0.50);
+      border: 2px solid color-mix(in srgb, var(--cds-support-info) 50%, transparent);
       animation: premium-pulse-ring 1.8s ease-out infinite;
     }
 
@@ -225,17 +225,17 @@ const STATE_LABEL: Record<AgentState, string> = {
     }
 
     .dos-agent-tile__name {
-      font-size: 0.875rem;
+      font-size: var(--cds-body-short-01-font-size);
       font-weight: 600;
-      color: var(--cds-text-primary, #161616);
+      color: var(--cds-text-primary);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
     .dos-agent-tile__step {
-      font-size: 0.75rem;
-      color: var(--cds-text-secondary, #6f6f6f);
+      font-size: var(--cds-caption-01-font-size);
+      color: var(--cds-text-secondary);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -268,19 +268,19 @@ const STATE_LABEL: Record<AgentState, string> = {
       align-items: center;
       gap: var(--cds-spacing-03, 0.5rem);
       padding: var(--cds-spacing-05, 1rem);
-      color: var(--cds-text-secondary, #6f6f6f);
-      font-size: 0.875rem;
+      color: var(--cds-text-secondary);
+      font-size: var(--cds-body-short-01-font-size);
     }
 
     .dos-agent-strip__empty-icon {
       flex: 0 0 auto;
-      color: var(--cds-icon-secondary, #525252);
+      color: var(--cds-icon-secondary);
     }
 
     /* ── Keyframes ─────────────────────────────────────── */
     @keyframes running-tile-glow {
-      0%, 100% { box-shadow: inset 3px 0 12px rgba(69,137,255,0.08); }
-      50%      { box-shadow: inset 3px 0 20px rgba(69,137,255,0.20); }
+      0%, 100% { box-shadow: inset var(--dos-sidebar-active-border-width, 3px) 0 12px color-mix(in srgb, var(--cds-support-info) 8%, transparent); }
+      50%      { box-shadow: inset var(--dos-sidebar-active-border-width, 3px) 0 20px color-mix(in srgb, var(--cds-support-info) 20%, transparent); }
     }
     @keyframes premium-fade-up {
       0%   { opacity: 0; transform: translateY(10px) scale(0.99); }

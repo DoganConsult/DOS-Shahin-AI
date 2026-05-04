@@ -125,7 +125,7 @@ import type { WorkspaceHeaderContext, WorkspaceHeaderAction } from './workspace-
       align-items: center;
       gap: var(--cds-spacing-03, 0.5rem);
       padding-inline: var(--cds-spacing-05, 1rem);
-      color: var(--cds-text-on-color, #fff);
+      color: var(--cds-text-on-color, var(--cds-white, #ffffff));
       text-decoration: none;
       font-weight: 600;
       font-size: 0.875rem;
@@ -148,7 +148,7 @@ import type { WorkspaceHeaderContext, WorkspaceHeaderAction } from './workspace-
     .dos-wh-brand-name {
       font-weight: 700;
       letter-spacing: -0.01em;
-      color: var(--cds-text-on-color, #fff);
+      color: var(--cds-text-on-color, var(--cds-white, #ffffff));
     }
 
     .dos-wh-tenant-sep {
@@ -177,7 +177,7 @@ import type { WorkspaceHeaderContext, WorkspaceHeaderAction } from './workspace-
       background: none;
       border: none;
       cursor: pointer;
-      color: var(--cds-text-on-color, #fff);
+      color: var(--cds-text-on-color, var(--cds-white, #ffffff));
       transition: background 0.12s ease;
       flex: 0 0 auto;
     }
@@ -187,7 +187,7 @@ import type { WorkspaceHeaderContext, WorkspaceHeaderAction } from './workspace-
     }
 
     .dos-wh-action:focus-visible {
-      outline: 2px solid var(--cds-focus, #fff);
+      outline: 2px solid var(--cds-focus, var(--cds-white, #ffffff));
       outline-offset: -2px;
     }
 
@@ -205,7 +205,7 @@ import type { WorkspaceHeaderContext, WorkspaceHeaderAction } from './workspace-
       line-height: 1rem;
       text-align: center;
       background: var(--cds-support-error, #da1e28);
-      color: #fff;
+      color: var(--cds-text-on-color, var(--cds-white, #ffffff));
       pointer-events: none;
       animation: scale-pop 0.2s ease-out both;
     }
@@ -220,7 +220,7 @@ import type { WorkspaceHeaderContext, WorkspaceHeaderAction } from './workspace-
       background: none;
       border: none;
       cursor: pointer;
-      color: var(--cds-text-on-color, #fff);
+      color: var(--cds-text-on-color, var(--cds-white, #ffffff));
       transition: background 0.12s ease;
     }
 
@@ -229,7 +229,7 @@ import type { WorkspaceHeaderContext, WorkspaceHeaderAction } from './workspace-
     }
 
     .dos-wh-avatar:focus-visible {
-      outline: 2px solid var(--cds-focus, #fff);
+      outline: 2px solid var(--cds-focus, var(--cds-white, #ffffff));
       outline-offset: -2px;
     }
 
@@ -247,7 +247,7 @@ import type { WorkspaceHeaderContext, WorkspaceHeaderAction } from './workspace-
       height: 1.5rem;
       border-radius: 50%;
       background: var(--brand-accent, var(--cds-button-primary, #0f62fe));
-      color: #fff;
+      color: var(--cds-text-on-color, var(--cds-white, #ffffff));
       font-size: 0.625rem;
       font-weight: 700;
       letter-spacing: 0.04em;

@@ -147,15 +147,15 @@ import type { WorkspaceNavItem } from './workspace-shell.contracts';
        handle routerLinkActive class for programmatic activation */
     :host ::ng-deep .dos-sidebar-item--active .cds--side-nav__link,
     :host ::ng-deep .cds--side-nav__link--current {
-      background: var(--shell-nav-active-bg, var(--cds-background-selected, #e0e0e0));
-      border-inline-start: 3px solid var(--cds-border-interactive, #0f62fe);
-      color: var(--cds-text-primary, #161616);
+      background: var(--shell-nav-active-bg, var(--cds-background-selected));
+      border-inline-start: var(--dos-sidebar-active-border-width, 3px) solid var(--cds-border-interactive);
+      color: var(--cds-text-primary);
       font-weight: 600;
     }
 
     :host ::ng-deep .dos-sidebar-item--active .dos-sidebar-icon,
     :host ::ng-deep .cds--side-nav__link--current .dos-sidebar-icon {
-      color: var(--cds-link-primary, #0f62fe);
+      color: var(--cds-link-primary);
     }
 
     .dos-sidebar-label {

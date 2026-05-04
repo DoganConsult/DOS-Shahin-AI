@@ -176,7 +176,7 @@ const CATEGORY_TAG_TYPE: Record<ResultCategory, DosCarbonTagType> = {
 
     .dos-command-search__route {
       font-size: 0.75rem;
-      color: var(--cds-text-secondary, #6f6f6f);
+      color: var(--cds-text-secondary, #525252);
       margin-inline-start: auto;
       font-family: var(--cds-code-01-font-family, monospace);
     }
@@ -188,7 +188,7 @@ const CATEGORY_TAG_TYPE: Record<ResultCategory, DosCarbonTagType> = {
       gap: var(--cds-spacing-03, 0.5rem);
       padding: var(--cds-spacing-05, 1rem);
       font-size: 0.875rem;
-      color: var(--cds-text-secondary, #6f6f6f);
+      color: var(--cds-text-secondary, #525252);
       background: var(--cds-layer-01, #f4f4f4);
       border: 1px solid var(--cds-border-subtle-01, #e0e0e0);
       position: absolute;
@@ -206,7 +206,7 @@ const CATEGORY_TAG_TYPE: Record<ResultCategory, DosCarbonTagType> = {
     .dos-command-search--mobile.dos-command-search--open {
       position: fixed;
       inset: 0;
-      background: var(--cds-background, #fff);
+      background: var(--cds-background, var(--cds-white, #ffffff));
       z-index: var(--shell-z-modal, 9000);
       display: flex;
       flex-direction: column;

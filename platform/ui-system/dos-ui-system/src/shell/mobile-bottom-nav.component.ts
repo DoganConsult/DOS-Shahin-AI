@@ -49,7 +49,7 @@ export interface DosBottomNavItem {
     :host { display: block; }
     .dos-bottom-nav {
       display: grid; grid-auto-flow: column; grid-auto-columns: 1fr;
-      align-items: stretch; min-height: 56px;
+      align-items: stretch; min-height: var(--cds-spacing-14, 56px);
       background: var(--cds-layer-01, #f4f4f4);
     }
     .dos-bottom-nav__item {
@@ -71,7 +71,7 @@ export interface DosBottomNavItem {
       position: absolute; top: .25rem; inset-inline-end: 25%;
       min-width: 1rem; padding: 0 .25rem; border-radius: 999px;
       font-size: .625rem; line-height: 1rem; text-align: center;
-      background: var(--cds-support-error, #da1e28); color: #fff;
+      background: var(--cds-support-error, #da1e28); color: var(--cds-text-on-color, var(--cds-white, #ffffff));
     }
   `],
 })

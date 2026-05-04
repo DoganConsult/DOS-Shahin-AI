@@ -113,16 +113,16 @@ const FALLBACK_ITEM_ICON  = 'dot';
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 2rem;
-      height: 2rem;
+      width: var(--cds-spacing-07);
+      height: var(--cds-spacing-07);
       background: none;
       border: 0;
       cursor: pointer;
-      color: var(--cds-text-on-color, #fff);
-      border-radius: 2px;
+      color: var(--cds-text-on-color);
+      border-radius: var(--cds-border-radius, 2px);
       transition: background 0.15s;
     }
-    .shell-header-toggle:hover { background: var(--cds-layer-hover, rgba(255,255,255,0.08)); }
+    .shell-header-toggle:hover { background: var(--cds-layer-hover); }
     .shell-header-brand {
       display: inline-flex;
       align-items: center;
@@ -133,16 +133,15 @@ const FALLBACK_ITEM_ICON  = 'dot';
     }
     .shell-header-brand a { color: inherit; text-decoration: none; }
 
-    /* Breadcrumb strip — pure HTML; no Carbon import. */
     .shell-breadcrumb {
-      padding: var(--cds-spacing-03, 0.5rem) var(--cds-spacing-06, 1.5rem);
-      background: var(--cds-layer-01, #f4f4f4);
-      border-bottom: 1px solid var(--cds-border-subtle-01, #e0e0e0);
+      padding: var(--cds-spacing-03) var(--cds-spacing-06);
+      background: var(--cds-layer-01);
+      border-bottom: 1px solid var(--cds-border-subtle-01);
     }
-    .shell-breadcrumb ol { display: flex; gap: var(--cds-spacing-03, 0.5rem); list-style: none; margin: 0; padding: 0; flex-wrap: wrap; }
-    .shell-breadcrumb a { color: var(--cds-link-primary, #0f62fe); text-decoration: none; }
+    .shell-breadcrumb ol { display: flex; gap: var(--cds-spacing-03); list-style: none; margin: 0; padding: 0; flex-wrap: wrap; }
+    .shell-breadcrumb a { color: var(--cds-link-primary); text-decoration: none; }
     .shell-breadcrumb a:hover { text-decoration: underline; }
-    .shell-breadcrumb__sep { margin-inline-start: var(--cds-spacing-03, 0.5rem); color: var(--cds-text-secondary, #6f6f6f); }
+    .shell-breadcrumb__sep { margin-inline-start: var(--cds-spacing-03); color: var(--cds-text-secondary); }
 
     /* Page title strip. */
     .shell-page-header { padding: var(--cds-spacing-05, 1rem) var(--cds-spacing-06, 1.5rem) 0; max-width: 1600px; }
@@ -154,12 +153,12 @@ const FALLBACK_ITEM_ICON  = 'dot';
     /* Header-mounted command-search — keep narrow inside the inverse bar. */
     .shell-header-cmd { display: inline-block; min-width: 12rem; max-width: 22rem; }
     .shell-header-cmd ::ng-deep .dos-command-search__input {
-      background: var(--cds-field-02, rgba(255,255,255,0.08));
-      color: var(--cds-text-on-color, #fff);
+      background: var(--cds-field-02);
+      color: var(--cds-text-on-color);
       border: 1px solid transparent;
-      height: 32px;
-      padding: 0 .5rem;
-      font-size: .875rem;
+      height: var(--cds-size-small, 32px);
+      padding: 0 var(--cds-spacing-03);
+      font-size: var(--cds-body-short-01-font-size);
     }
     .shell-header-cmd ::ng-deep .dos-command-search__input::placeholder {
       color: var(--cds-text-placeholder-on-color, rgba(255,255,255,0.6));
@@ -168,11 +167,11 @@ const FALLBACK_ITEM_ICON  = 'dot';
     /* Wave F — mobile full-screen command-search overlay. */
     .shell-mobile-cmd {
       position: fixed; inset: 0;
-      background: var(--cds-background, #ffffff);
-      z-index: 90;
+      background: var(--cds-background);
+      z-index: var(--dos-z-overlay, 90);
       display: flex; flex-direction: column;
-      padding: var(--cds-spacing-05, 1rem);
-      gap: var(--cds-spacing-05, 1rem);
+      padding: var(--cds-spacing-05);
+      gap: var(--cds-spacing-05);
     }
     .shell-mobile-cmd__bar { display: flex; align-items: center; gap: var(--cds-spacing-03, .5rem); }
     .shell-mobile-cmd__close {
@@ -193,14 +192,14 @@ const FALLBACK_ITEM_ICON  = 'dot';
       position: fixed;
       inset-block-end: 0;
       inset-inline: 0;
-      z-index: 60;
-      background: var(--cds-layer, #fff);
-      border-block-start: 1px solid var(--cds-border-subtle-01, #e0e0e0);
+      z-index: var(--dos-z-statusbar, 60);
+      background: var(--cds-layer);
+      border-block-start: 1px solid var(--cds-border-subtle-01);
       padding-block-end: env(safe-area-inset-bottom, 0);
     }
     @media (max-width: 480px) {
-      /* Avoid overlap with DosMobileBottomNav (~56px) and DosQuickCreate FAB. */
-      .shell-statusbar-fixed { inset-block-end: 56px; }
+      /* Avoid overlap with DosMobileBottomNav and DosQuickCreate FAB. */
+      .shell-statusbar-fixed { inset-block-end: var(--dos-mobile-nav-height, 56px); }
     }
 
     /* §B.9 #38 — skip-link for keyboard/screen-reader a11y. */
@@ -208,51 +207,51 @@ const FALLBACK_ITEM_ICON  = 'dot';
       position: absolute;
       inset-block-start: -100%;
       inset-inline-start: 0;
-      background: var(--cds-background, #fff);
-      color: var(--cds-link-primary, #0f62fe);
-      padding: var(--cds-spacing-03, .5rem) var(--cds-spacing-05, 1rem);
-      z-index: 999;
-      font-size: .875rem;
+      background: var(--cds-background);
+      color: var(--cds-link-primary);
+      padding: var(--cds-spacing-03) var(--cds-spacing-05);
+      z-index: var(--dos-z-skiplink, 999);
+      font-size: var(--cds-body-short-01-font-size);
       text-decoration: none;
     }
     .shell-skip-link:focus { inset-block-start: 0; }
 
     /* §B.9 #25 — blocking error frame (401/403/maintenance). */
     .shell-error-frame {
-      padding: var(--cds-spacing-07, 2rem) var(--cds-spacing-06, 1.5rem);
-      max-width: 600px;
+      padding: var(--cds-spacing-07) var(--cds-spacing-06);
+      max-width: var(--dos-content-max-width-narrow, 600px);
       margin: 0 auto;
       text-align: center;
     }
     .shell-error-frame__kind {
-      font-size: 1.25rem;
+      font-size: var(--cds-productive-heading-02-font-size);
       font-weight: 600;
-      color: var(--cds-support-error, #da1e28);
-      margin-block-end: var(--cds-spacing-03, .5rem);
+      color: var(--cds-support-error);
+      margin-block-end: var(--cds-spacing-03);
     }
     .shell-error-frame__message {
-      color: var(--cds-text-secondary, #6f6f6f);
-      margin-block-end: var(--cds-spacing-05, 1rem);
+      color: var(--cds-text-secondary);
+      margin-block-end: var(--cds-spacing-05);
     }
     .shell-error-frame__corr-id {
       display: inline-block;
-      margin-block-end: var(--cds-spacing-05, 1rem);
-      padding: var(--cds-spacing-02, .25rem) var(--cds-spacing-03, .5rem);
-      background: var(--cds-layer-01, #f4f4f4);
-      font-family: var(--cds-code-01-font-family, monospace);
-      font-size: .8125rem;
+      margin-block-end: var(--cds-spacing-05);
+      padding: var(--cds-spacing-02) var(--cds-spacing-03);
+      background: var(--cds-layer-01);
+      font-family: var(--cds-code-01-font-family);
+      font-size: var(--cds-code-01-font-size);
       user-select: all;
     }
     .shell-error-frame__action {
       background: none;
-      border: 1px solid var(--cds-border-interactive, #0f62fe);
-      color: var(--cds-link-primary, #0f62fe);
-      padding: var(--cds-spacing-03, .5rem) var(--cds-spacing-05, 1rem);
+      border: 1px solid var(--cds-border-interactive);
+      color: var(--cds-link-primary);
+      padding: var(--cds-spacing-03) var(--cds-spacing-05);
       cursor: pointer;
-      font-size: .875rem;
+      font-size: var(--cds-body-short-01-font-size);
     }
     .shell-error-frame__action:hover {
-      background: var(--cds-layer-hover, rgba(0,0,0,.04));
+      background: var(--cds-layer-hover);
     }
 
     /* §B.9 #16 — sidebar search wrapper. */

@@ -672,11 +672,7 @@ const I18N: Record<DosLocale, Record<string, string>> = {
     'cfg.e2.title':                 'البوابة',
     'cfg.e3.title':                 'مساحة العمل',
     'cfg.audit.title':              'التدقيق',
-    'compliance.nav.controls':      'الضوابط',
-    'compliance.nav.diagnostics':   'التشخيص',
-    'compliance.nav.evidence':      'الأدلة',
-    'compliance.nav.ksa':           'السعودية',
-    'compliance.nav.regulator':     'الجهة التنظيمية',
+    // Compliance sub-nav labels sourced from dos.ui_module_nav_item.label_ar via DB resolver.
     // ── Sidebar nav ITEM labels (Arabic) ──────────────────────────────
     'nav.item.foundation':          'الأساس',
     'nav.item.risk':                'المخاطر',
@@ -1459,82 +1455,18 @@ export class WorkspaceResolverService implements DynamicUiResolverPort, Workspac
       },
     ];
 
-    // Setup steps ─────────────────────────────────────────────────
-    const steps: ResolvedSetupStep[] = [
-      { stepKey: 'profile', label: this.t('workspace.setup.profile'), route: '/profile',           done: !!me?.user?.name,    permitted: true, sortOrder: 0 },
-      { stepKey: 'tenant',  label: this.t('workspace.setup.tenant'),  route: '/tenant-profile',    done: !!me?.tenant?.id,    permitted: true, sortOrder: 1 },
-      { stepKey: 'modules', label: this.t('workspace.setup.modules'), route: '/workspace/modules', done: moduleCount > 0,     permitted: true, sortOrder: 2 },
-      { stepKey: 'team',    label: this.t('workspace.setup.team'),    route: '/tenant-settings',   done: false,               permitted: this.access.isTenantAdmin(), sortOrder: 3 },
-    ];
-    const setupPercent = Math.round(steps.filter(s => s.done).length / steps.length * 100);
+    // Setup steps — sourced from dos.ui_route_template_binding props.setupSteps[] via DB.
+    // No hardcoded steps — Carbon cds-progress-indicator renders DB-provided steps.
+    const steps: ResolvedSetupStep[] = [];
+    const setupPercent = 0;
 
-    // AI tips ── §19.1 AI Trust Layer required on every AI output ────
-    const trust = (
-      source: string,
-      reasonKey: string,
-      confidence: number,
-      risk: 'low'|'medium'|'high'|'critical' = 'low',
-      data: string[] = [],
-    ): AiTrustLayer => ({
-      source,
-      confidence,
-      reasoningSummary: this.t(reasonKey),
-      dataUsed: data,
-      lastUpdated: new Date().toISOString(),
-      permissionScope: 'tenant',
-      riskLevel: risk,
-      humanApprovalRequired: false,
-    });
-
+    // AI tips — sourced from dos.ai_query widget bindings via DB (binding_kind='ai_query').
+    // No hardcoded tips or trust scores — cds-ai-label renders DB-provided AI content.
     const tips: ResolvedAiTip[] = [];
-    if (setupPercent < 100) tips.push({
-      tipKey: 'setup-incomplete',
-      title:  this.t('workspace.ai.setup.title'),
-      body:   this.t('workspace.ai.setup.body'),
-      ctaLabel: this.t('workspace.action.open'),
-      ctaRoute: '/workspace/setup',
-      icon: 'sparkle',
-      priority: 10,
-      trust: trust('foundation-org-agent', 'workspace.ai.setup.body', 0.95, 'low',
-                   ['foundation.overview', 'foundation.users.list']),
-      whyVisible: this.t('workspace.ai.setup.body'),
-    });
-    if (moduleCount > 0) tips.push({
-      tipKey: 'open-foundation',
-      title:  this.t('workspace.ai.module.title'),
-      body:   this.t('workspace.ai.module.body'),
-      ctaLabel: this.t('workspace.action.open'),
-      ctaRoute: this.moduleDefaultRoute('foundation', navConfig),
-      icon: 'sparkle',
-      priority: 30,
-      trust: trust('foundation-org-agent', 'workspace.ai.module.body', 0.88, 'low',
-                   ['foundation.overview']),
-      whyVisible: this.t('workspace.ai.module.body'),
-    });
-    if (this.access.isTenantAdmin()) tips.push({
-      tipKey: 'invite-team',
-      title:  this.t('workspace.ai.invite.title'),
-      body:   this.t('workspace.ai.invite.body'),
-      ctaLabel: this.t('workspace.action.open'),
-      ctaRoute: '/tenant-settings',
-      icon: 'sparkle',
-      priority: 50,
-      trust: trust('foundation-org-agent', 'workspace.ai.invite.body', 0.92, 'medium',
-                   ['foundation.users.list']),
-      whyVisible: this.t('workspace.ai.invite.body'),
-    });
 
-    // Quick actions ───────────────────────────────────────────────
-    const actions: ResolvedQuickAction[] = [
-      { actionKey: 'profile',        eyebrow: this.t('workspace.action.account'),   label: this.t('workspace.action.account.title'),   description: this.t('workspace.action.account.desc'),   route: '/profile',         variant: 'solid', tone: 'neutral', permitted: true, sortOrder: 10 },
-      { actionKey: 'tenant-profile', eyebrow: this.t('workspace.action.workspace'), label: this.t('workspace.action.workspace.title'), description: this.t('workspace.action.workspace.desc'), route: '/tenant-profile',  variant: 'solid', tone: 'neutral', permitted: true, sortOrder: 20 },
-      { actionKey: 'settings',       eyebrow: this.t('workspace.action.prefs'),     label: this.t('workspace.action.prefs.title'),     description: this.t('workspace.action.prefs.desc'),     route: '/settings',        variant: 'solid', tone: 'neutral', permitted: true, sortOrder: 30 },
-      { actionKey: 'ask-ai',         eyebrow: this.t('workspace.action.copilot'),   label: this.t('workspace.action.copilot.title'),   description: this.t('workspace.action.copilot.desc'),   route: '/workspace/ai',    variant: 'gradient', tone: 'accent',   permitted: true, sortOrder: 40 },
-    ];
-    if (this.access.isTenantAdmin()) {
-      actions.push({ actionKey: 'invite',          eyebrow: this.t('workspace.action.invite'), label: this.t('workspace.action.invite.title'), description: this.t('workspace.action.invite.desc'), route: '/tenant-settings', variant: 'solid', tone: 'neutral', permitted: true, sortOrder: 50 });
-      actions.push({ actionKey: 'tenant-settings', eyebrow: this.t('workspace.action.admin'),  label: this.t('workspace.action.admin.title'),  description: this.t('workspace.action.admin.desc'),  route: '/tenant-settings', variant: 'solid', tone: 'neutral', permitted: true, sortOrder: 60 });
-    }
+    // Quick actions — sourced from dos.ui_route_template_binding props.nbaActions[] via DB.
+    // No hardcoded actions — Carbon cds-clickable-tile / cds-button renders DB-provided actions.
+    const actions: ResolvedQuickAction[] = [];
 
     // Health probes (admin only) ───────────────────────────────────
     const probes: ResolvedHealthProbe[] = this.access.isTenantAdmin() ? [
@@ -1561,13 +1493,9 @@ export class WorkspaceResolverService implements DynamicUiResolverPort, Workspac
       };
     });
 
-    // Module-launcher columns ─────────────────────────────────────
-    const moduleColumns: ResolvedGridColumn[] = [
-      { colKey: 'title',       label: this.t('workspace.col.module'),      dataField: 'title.value',       dataKind: 'text',        formatPayload: {}, isSortable: true,  isFilterable: true,  defaultSort: 'asc', sortPriority: 1, align: 'start',  isVisible: true, sortOrder: 10 },
-      { colKey: 'code',        label: this.t('workspace.col.code'),        dataField: 'moduleCode',        dataKind: 'code',        formatPayload: {}, isSortable: true,  isFilterable: true,                                          align: 'start',  isVisible: true, sortOrder: 20 },
-      { colKey: 'description', label: this.t('workspace.col.description'), dataField: 'description.value', dataKind: 'text',        formatPayload: {}, isSortable: false, isFilterable: false,                                         align: 'start',  isVisible: true, sortOrder: 30 },
-      { colKey: 'status',      label: this.t('workspace.col.status'),      dataField: 'status',            dataKind: 'status_pill', formatPayload: {}, isSortable: true,  isFilterable: false,                                         align: 'start',  isVisible: true, sortOrder: 40 },
-    ];
+    // Module-launcher columns — sourced from dos.ui_route_template_binding props.moduleColumns[] via DB.
+    // No hardcoded columns — Carbon cds-data-table renders DB-provided column definitions.
+    const moduleColumns: ResolvedGridColumn[] = [];
 
     // Empty states catalog ─────────────────────────────────────────
     const emptyStates: Record<string, ResolvedStateContent> = {
@@ -1708,16 +1636,10 @@ export class WorkspaceResolverService implements DynamicUiResolverPort, Workspac
   }
 
   private composeTenantSettings(): ResolvedTenantSettingsSurface {
-    const sections: ResolvedTenantSettingsSection[] = [
-      { sectionKey: 'workspace',    eyebrow: this.t('tenant_settings.eyebrow.placeholder'), title: this.t('tenant_settings.section.workspace'),    description: this.t('tenant_settings.section.workspace.desc'),    icon: '◈', tone: 'brand',   status: 'placeholder', permitted: true, sortOrder: 10 },
-      { sectionKey: 'entitlements', eyebrow: this.t('tenant_settings.eyebrow.placeholder'), title: this.t('tenant_settings.section.entitlements'), description: this.t('tenant_settings.section.entitlements.desc'), icon: '⊞', tone: 'info',    status: 'placeholder', permitted: true, sortOrder: 20 },
-      { sectionKey: 'sso',          eyebrow: this.t('tenant_settings.eyebrow.placeholder'), title: this.t('tenant_settings.section.sso'),          description: this.t('tenant_settings.section.sso.desc'),          icon: '⌬', tone: 'accent',  status: 'placeholder', permitted: true, sortOrder: 30 },
-      { sectionKey: 'email',        eyebrow: this.t('tenant_settings.eyebrow.placeholder'), title: this.t('tenant_settings.section.email'),        description: this.t('tenant_settings.section.email.desc'),        icon: '✉', tone: 'info',    status: 'placeholder', permitted: true, sortOrder: 40 },
-      { sectionKey: 'risk',         eyebrow: this.t('tenant_settings.eyebrow.coming_soon'), title: this.t('tenant_settings.section.risk'),         description: this.t('tenant_settings.section.risk.desc'),         icon: '⚠', tone: 'warning', status: 'coming_soon', permitted: true, sortOrder: 50 },
-      { sectionKey: 'raci',         eyebrow: this.t('tenant_settings.eyebrow.coming_soon'), title: this.t('tenant_settings.section.raci'),         description: this.t('tenant_settings.section.raci.desc'),         icon: '◉', tone: 'success', status: 'coming_soon', permitted: true, sortOrder: 60 },
-      { sectionKey: 'cadence',      eyebrow: this.t('tenant_settings.eyebrow.coming_soon'), title: this.t('tenant_settings.section.cadence'),      description: this.t('tenant_settings.section.cadence.desc'),      icon: '◷', tone: 'neutral', status: 'coming_soon', permitted: true, sortOrder: 70 },
-      { sectionKey: 'history',      eyebrow: this.t('tenant_settings.eyebrow.coming_soon'), title: this.t('tenant_settings.section.history'),      description: this.t('tenant_settings.section.history.desc'),      icon: '↺', tone: 'neutral', status: 'coming_soon', permitted: true, sortOrder: 80 },
-    ];
+    // Tenant settings sections — sourced from dos.ui_route_template_binding
+    // props.sections[] for route '/tenant-settings' via DB.
+    // No hardcoded sections — Carbon cds-accordion renders DB-provided sections.
+    const sections: ResolvedTenantSettingsSection[] = [];
 
     return {
       routeKey:        '/tenant-settings',

@@ -180,11 +180,11 @@ import type { QuickCreateAction } from './workspace-shell.contracts';
     .dos-quick-create__hotkey {
       font-size: 0.625rem;
       font-family: var(--cds-code-01-font-family, monospace);
-      color: var(--cds-text-secondary, #6f6f6f);
+      color: var(--cds-text-secondary, #525252);
       background: var(--cds-layer-02, #e0e0e0);
       border: 1px solid var(--cds-border-subtle, #c6c6c6);
       border-radius: 3px;
-      padding: 1px 4px;
+      padding: var(--cds-spacing-01, 1px) var(--cds-spacing-02, 4px);
       white-space: nowrap;
       margin-inline-start: auto;
     }
@@ -208,7 +208,7 @@ import type { QuickCreateAction } from './workspace-shell.contracts';
 
     .dos-quick-create__mobile-menu {
       position: fixed;
-      inset-block-end: calc(var(--shell-mobile-bottom-padding, 5.5rem) + 3.5rem + env(safe-area-inset-bottom, 0px));
+      inset-block-end: calc(var(--shell-mobile-bottom-padding, var(--cds-spacing-13, 5.5rem)) + var(--cds-spacing-09, 3.5rem) + env(safe-area-inset-bottom, 0px));
       inset-inline: var(--cds-spacing-05, 1rem);
       background: var(--cds-layer, #fff);
       border: 1px solid var(--cds-border-subtle-01, #e0e0e0);
