@@ -32,7 +32,10 @@ module.exports = {
       ADMIN_MTLS_GATEWAY_CERT: '/root/DOS-Platform/platform/config-center/secrets/admin-mtls/gateway-client.crt',
       ADMIN_MTLS_GATEWAY_KEY: '/root/DOS-Platform/platform/config-center/secrets/admin-mtls/gateway-client.key',
       MTLS_REJECT_UNAUTHORIZED: '1',
-      DOS_WORKFLOW_SERVICE_URL: 'http://127.0.0.1:4018',
+      // L31 (Phase 3 D4) — admin upstreams flipped to HTTPS so the staged
+      // HttpsAgent activates (ca.crt SAN includes IP:127.0.0.1 + DNS).
+      ADMIN_CONSOLE_BFF_URL: 'https://127.0.0.1:4013',
+      DOS_WORKFLOW_SERVICE_URL: 'https://127.0.0.1:4018',
     },
     node_args: '--max-old-space-size=768',
     max_memory_restart: '1G',

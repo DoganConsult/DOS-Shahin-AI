@@ -9,10 +9,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { DialogModule } from 'carbon-components-angular';
 let DosAccountMenuComponent = class DosAccountMenuComponent {
     userName = '';
     userEmail = '';
     items = [];
+    buttonLabel = 'Account';
     action = new EventEmitter();
 };
 __decorate([
@@ -28,6 +30,10 @@ __decorate([
     __metadata("design:type", Array)
 ], DosAccountMenuComponent.prototype, "items", void 0);
 __decorate([
+    Input(),
+    __metadata("design:type", Object)
+], DosAccountMenuComponent.prototype, "buttonLabel", void 0);
+__decorate([
     Output(),
     __metadata("design:type", Object)
 ], DosAccountMenuComponent.prototype, "action", void 0);
@@ -35,24 +41,38 @@ DosAccountMenuComponent = __decorate([
     Component({
         selector: 'dos-account-menu',
         standalone: true,
-        imports: [CommonModule],
+        imports: [CommonModule, DialogModule],
         changeDetection: ChangeDetectionStrategy.OnPush,
         template: `
-    <div class="dos-account-menu" role="menu">
-      @if (userName) { <div><strong>{{ userName }}</strong></div> }
-      @if (userEmail) { <div class="dos-page-header__description">{{ userEmail }}</div> }
-      @for (item of items; track item.id) {
-        <button
-          type="button"
-          role="menuitem"
-          class="dos-bottom-nav__item"
-          (click)="action.emit(item)"
-        >
-          {{ item.label }}
-        </button>
+    <ibm-overflow-menu
+      [flip]="true"
+      [description]="buttonLabel"
+      class="dos-account-menu__trigger"
+      data-testid="dos-account-menu-trigger"
+    >
+      @if (userName) {
+        <ibm-overflow-menu-option [disabled]="true">{{ userName }}</ibm-overflow-menu-option>
       }
-    </div>
+      @if (userEmail) {
+        <ibm-overflow-menu-option [disabled]="true">{{ userEmail }}</ibm-overflow-menu-option>
+      }
+      @for (item of items; track item.id) {
+        <ibm-overflow-menu-option
+          [type]="item.destructive ? 'danger' : null"
+          (selected)="action.emit(item)"
+        >{{ item.label }}</ibm-overflow-menu-option>
+      }
+    </ibm-overflow-menu>
   `,
+        styles: [`
+    :host {
+      display: inline-flex;
+      align-items: center;
+    }
+    .dos-account-menu__trigger {
+      color: var(--cds-text-on-color, #fff);
+    }
+  `],
     })
 ], DosAccountMenuComponent);
 export { DosAccountMenuComponent };

@@ -323,27 +323,34 @@ export interface MarketingAgentTile {
             </div>
           </div>
 
-          <aside class="dos-mh-hero-proof" [attr.aria-label]="heroProofTitle">
-            <div class="dos-mh-hero-proof__status">{{ heroProofStatus }}</div>
-            <h2 class="dos-mh-hero-proof__title">{{ heroProofTitle }}</h2>
-            <p class="dos-mh-hero-proof__body">{{ heroProofBody }}</p>
-
-            <div class="dos-mh-hero-proof__status-row">
-              @for (item of heroProofStatusItems(); track item.id) {
-                <div class="dos-mh-hero-proof__status-item" [attr.data-tone]="item.tone">
-                  <span>{{ item.label }}</span>
-                  <strong>{{ item.value }}</strong>
-                </div>
-              }
+          <!-- Item 1: Product workspace screenshot — replaces text proof card -->
+          <!-- Uses Unified GRC Platform Workspace Overview.jpg from brand kit -->
+          <aside class="dos-mh-hero-screenshot-panel" aria-label="Shahin-AI GRC workspace preview">
+            <img
+              class="dos-mh-hero-screenshot"
+              src="/assets/brand/workspace-overview.jpg"
+              [alt]="locale === 'ar' ? 'نظرة عامة على مساحة عمل Shahin-AI' : 'Shahin-AI GRC Workspace Overview'"
+              width="960"
+              height="640"
+              loading="eager"
+              decoding="async"
+              fetchpriority="high"
+            />
+            <!-- Floating KPI strip — brand kit shows "Open Tasks 12, High Risks 7, Score 76%" -->
+            <div class="dos-mh-hero-kpi-strip" aria-hidden="true">
+              <div class="dos-mh-hero-kpi-badge">
+                <span class="dos-mh-hero-kpi-badge__value">12</span>
+                <span class="dos-mh-hero-kpi-badge__label">{{ locale === 'ar' ? 'مهام مفتوحة' : 'Open Tasks' }}</span>
+              </div>
+              <div class="dos-mh-hero-kpi-badge">
+                <span class="dos-mh-hero-kpi-badge__value">7</span>
+                <span class="dos-mh-hero-kpi-badge__label">{{ locale === 'ar' ? 'مخاطر عالية' : 'High Risks' }}</span>
+              </div>
+              <div class="dos-mh-hero-kpi-badge dos-mh-hero-kpi-badge--gold">
+                <span class="dos-mh-hero-kpi-badge__value">76%</span>
+                <span class="dos-mh-hero-kpi-badge__label">{{ locale === 'ar' ? 'الامتثال' : 'Compliance' }}</span>
+              </div>
             </div>
-
-            <ol class="dos-mh-hero-proof__timeline" aria-label="Operational proof timeline">
-              @for (step of heroTimelineSteps(); track step) {
-                <li>{{ step }}</li>
-              }
-            </ol>
-
-            <p class="dos-mh-hero-proof__receipt">{{ heroEvidenceReceipt }}</p>
           </aside>
         </div>
       </section>

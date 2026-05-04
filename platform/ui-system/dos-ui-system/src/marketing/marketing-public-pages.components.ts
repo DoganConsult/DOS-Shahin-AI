@@ -679,7 +679,7 @@ export class DosMarketingExecutiveKitPageComponent implements OnInit {
     const response = await fetch(`/api/ui-os/marketing/assets?brand=${this.brandCode}&locale=${this.locale}`, {
       credentials: 'omit',
       headers: { Accept: 'application/json' },
-    }).catch(() => null);
+    }).catch((): null => null);
     if (!response?.ok) return;
     const payload = await response.json().catch(() => ({ assets: [] as MarketingAsset[] }));
     this.downloadAssets.set((payload as { assets?: MarketingAsset[] }).assets ?? []);

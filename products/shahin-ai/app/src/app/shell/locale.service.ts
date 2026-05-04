@@ -64,5 +64,11 @@ export class LocaleService {
     const html = document.documentElement;
     html.setAttribute('lang', locale);
     html.setAttribute('dir', locale === 'ar' ? 'rtl' : 'ltr');
+    // Item 4: Activate brand-overlay CSS tokens (dos-design-tokens/brand-overlays.css).
+    // This applies --dos-color-brand-primary (#0f1f3d navy) and --dos-color-brand-accent
+    // (#c9a14a gold) on :root via [data-brand='shahin-ai'] selector.
+    if (!html.hasAttribute('data-brand')) {
+      html.setAttribute('data-brand', 'shahin-ai');
+    }
   }
 }

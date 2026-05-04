@@ -21,6 +21,35 @@ import { setupServiceOpenApi } from './openapi';
 import { enforceEnvValidation, type EnvRule } from './validate-env';
 import { initErrorTelemetry, captureException } from './error-telemetry';
 import { initFeatureFlags } from './feature-flags';
+import { readFileSync, existsSync } from 'node:fs';
+import { createServer as createHttpsServer, type Server as HttpsServer } from 'node:https';
+
+// ── L31 (Phase 3 D4) — opt-in HTTPS listener for admin trust-zone services.
+// Reads MTLS_HTTPS_LISTEN=1 + ADMIN_MTLS_CA / ADMIN_MTLS_CERT / ADMIN_MTLS_KEY.
+// Returns null when disabled or any cert path missing — caller falls back to
+// plain HTTP (Article 5: no fake-green half-flip; never half-start a broken
+// TLS listener).
+function _httpsListenOptions(): {
+  ca: Buffer; cert: Buffer; key: Buffer; requestCert: boolean; rejectUnauthorized: boolean;
+} | null {
+  if (String(process.env.MTLS_HTTPS_LISTEN ?? '0').trim() !== '1') return null;
+  const caPath   = String(process.env.ADMIN_MTLS_CA   ?? '').trim();
+  const certPath = String(process.env.ADMIN_MTLS_CERT ?? '').trim();
+  const keyPath  = String(process.env.ADMIN_MTLS_KEY  ?? '').trim();
+  if (!caPath || !certPath || !keyPath) return null;
+  if (!existsSync(caPath) || !existsSync(certPath) || !existsSync(keyPath)) return null;
+  try {
+    return {
+      ca:   readFileSync(caPath),
+      cert: readFileSync(certPath),
+      key:  readFileSync(keyPath),
+      requestCert:        String(process.env.MTLS_REQUEST_CLIENT_CERT ?? '1').trim() === '1',
+      rejectUnauthorized: String(process.env.MTLS_REJECT_UNAUTHORIZED ?? '1').trim() === '1',
+    };
+  } catch {
+    return null;
+  }
+}
 
 export interface ServiceConfig {
   serviceCode: string;
@@ -58,7 +87,7 @@ export interface RouteRegistration {
   router: express.Router;
 }
 
-export async function createServiceServer(config: ServiceConfig): Promise<{ app: Express; start: () => Promise<import('http').Server> }> {
+export async function createServiceServer(config: ServiceConfig): Promise<{ app: Express; start: () => Promise<import('http').Server | HttpsServer> }> {
   // Init Sentry FIRST — before tracing, before Express — so every subsequent
   // unhandled error is captured. No-op if SENTRY_DSN is unset.
   initErrorTelemetry({ serviceCode: config.serviceCode });
@@ -597,7 +626,7 @@ export async function createServiceServer(config: ServiceConfig): Promise<{ app:
     });
   });
 
-  const start = async (): Promise<ReturnType<typeof app.listen>> => {
+  const start = async (): Promise<import('http').Server | HttpsServer> => {
     startHeapTrendTracker();
     initExtendedMetrics();
     initAgentMetrics();
@@ -661,11 +690,25 @@ export async function createServiceServer(config: ServiceConfig): Promise<{ app:
     }
 
     const bindHost = config.serviceCode === 'gateway' ? '0.0.0.0' : '127.0.0.1';
-    const server = app.listen(config.port, bindHost, () => {
-      logger.info(`${config.serviceCode} listening on ${bindHost}:${config.port}`);
-      if (process.send) process.send('ready');
-      config.onReady?.();
-    });
+    // L31 (Phase 3 D4): opt-in HTTPS listener (mTLS) when admin trust-zone
+    // env asks for it. Falls back to plain HTTP otherwise (Article 5).
+    const _tlsOpts = _httpsListenOptions();
+    let server: import('http').Server | HttpsServer;
+    if (_tlsOpts) {
+      const httpsServer = createHttpsServer(_tlsOpts, app);
+      httpsServer.listen(config.port, bindHost, () => {
+        logger.info(`${config.serviceCode} listening on https://${bindHost}:${config.port} (mTLS, requestCert=${_tlsOpts.requestCert}, reject=${_tlsOpts.rejectUnauthorized})`);
+        if (process.send) process.send('ready');
+        config.onReady?.();
+      });
+      server = httpsServer;
+    } else {
+      server = app.listen(config.port, bindHost, () => {
+        logger.info(`${config.serviceCode} listening on ${bindHost}:${config.port}`);
+        if (process.send) process.send('ready');
+        config.onReady?.();
+      });
+    }
 
     const shutdown = async (signal: string) => {
       logger.info(`${signal} received, shutting down ${config.serviceCode}`);

@@ -3,6 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import pino from 'pino';
 import { type EnvRule } from './validate-env';
+import { type Server as HttpsServer } from 'node:https';
 export interface ServiceConfig {
     serviceCode: string;
     port: number;
@@ -38,7 +39,7 @@ export interface RouteRegistration {
 }
 export declare function createServiceServer(config: ServiceConfig): Promise<{
     app: Express;
-    start: () => Promise<import('http').Server>;
+    start: () => Promise<import('http').Server | HttpsServer>;
 }>;
 declare function createLogger(serviceCode: string): pino.Logger<never, boolean>;
 export { createLogger };

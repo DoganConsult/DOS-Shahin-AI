@@ -1,7 +1,7 @@
 // Phase F template-binding router.
 //
 //   GET /template-binding?route=/admin/dauth/users
-//     → { route, archetype, template_export, props, version }
+//     → { route, archetype, template_export, props, version, _layers }
 //     200 with `null`-template when no binding row exists (caller falls back
 //     to component-map default archetype).
 //
@@ -9,15 +9,88 @@
 //     → [{ route, archetype, template_export, version }] — bulk fetch used
 //        by the Shahin SPA bootstrap to warm a client-side cache.
 //
-// Resolver merges:
-//   - dos.ui_route_template_binding (primary)
-//   - dos.ui_route_kpi / column / tab / nba / setting_section / report_card /
-//     workqueue_group / heatmap_axis (joined into props.*)
+//   GET /export?scope=tenant[&tenant_id=...] — Phase F-F9 export endpoint:
+//     emits the merged effective binding for every route as a single JSON
+//     bundle, suitable for snapshotting a tenant's UI configuration.
+//
+// Phase F-F9 — multi-layer Dynamic-UI override architecture.
+// The resolved payload is a deep-merge of (broader → narrower):
+//   1. workspace shell defaults (handled by workspace-shell.routes.ts)
+//   2. PRODUCT  dos.ui_override_product[product_code]
+//   3. MODULE   dos.ui_override_module[module_code]
+//   4. ROUTE    dos.ui_route_template_binding.props (+ shaped row tables)
+//   5. TENANT   dos.ui_override_tenant[(tenant_id, '*')]
+//               then dos.ui_override_tenant[(tenant_id, route)]
+//   6. USER     dos.ui_override_user[(user_id, '*')]
+//               then dos.ui_override_user[(user_id, route)]
+// Object keys are merged recursively; arrays REPLACE in full (see deepMerge).
+//
+// Caller context is read from:
+//   - product_code:  req.headers['x-product-code']  (default 'shahin-ai')
+//   - module_code:   derived from route prefix (deriveModuleCode below)
+//   - tenant_id:     req.principal.tenantId  (gateway-origin middleware)
+//   - user_id:       req.principal.sub        (gateway-origin middleware)
 //
 // Wired via services/ui-os-service/src/routes/index.ts.
 
-import { Router } from 'express';
+import { Router, type Request } from 'express';
 import type { DbPool } from '../db.js';
+
+// ─── Phase F-F9 deep-merge ─────────────────────────────────────────────
+// Recursively merges plain objects. Arrays REPLACE entirely (no concat,
+// no element-wise merge) — the only documented exception so layer rules
+// are predictable.
+function isPlainObject(x: unknown): x is Record<string, unknown> {
+  return typeof x === 'object' && x !== null && !Array.isArray(x)
+    && (Object.getPrototypeOf(x) === Object.prototype || Object.getPrototypeOf(x) === null);
+}
+function deepMerge(
+  target: Record<string, unknown>,
+  source: Record<string, unknown> | null | undefined,
+): Record<string, unknown> {
+  if (!source || !isPlainObject(source)) return target;
+  for (const [k, v] of Object.entries(source)) {
+    const cur = target[k];
+    if (isPlainObject(v) && isPlainObject(cur)) {
+      target[k] = deepMerge({ ...cur }, v);
+    } else {
+      target[k] = v;
+    }
+  }
+  return target;
+}
+
+// First non-empty path segment → module_code. Mirrors the FE app.routes
+// hierarchy under products/shahin-ai/app/src/app/app.routes.ts.
+const MODULE_PREFIX_MAP: Array<[RegExp, string]> = [
+  [/^\/admin\/config-center(\/|$)/, 'config-center'],
+  [/^\/admin(\/|$)/,                'platform-admin'],
+  [/^\/foundation(\/|$)/,           'foundation'],
+  [/^\/compliance(\/|$)/,           'compliance'],
+  [/^\/risk(\/|$)/,                 'risk'],
+  [/^\/audit(\/|$)/,                'audit'],
+  [/^\/workspace-home(\/|$)/,       'foundation'],
+  [/^\/(profile|tenant-profile|settings|tenant-settings)(\/|$)/, 'foundation'],
+];
+function deriveModuleCode(route: string): string {
+  for (const [re, code] of MODULE_PREFIX_MAP) if (re.test(route)) return code;
+  return '';
+}
+
+function readProductCode(req: Request): string {
+  const h = req.headers['x-product-code'];
+  if (typeof h === 'string' && h.trim()) return h.trim();
+  return 'shahin-ai';
+}
+
+type Principal = { sub?: string; tenantId?: string } | undefined;
+function readPrincipal(req: Request): { tenantId: string; userId: string } {
+  const p = (req as unknown as { principal?: Principal }).principal;
+  return {
+    tenantId: typeof p?.tenantId === 'string' ? p.tenantId : '',
+    userId:   typeof p?.sub      === 'string' ? p.sub      : '',
+  };
+}
 
 interface TemplateBinding {
   route: string;
@@ -25,6 +98,58 @@ interface TemplateBinding {
   template_export: string;
   props: Record<string, unknown>;
   version: number;
+}
+
+interface LayerPatch {
+  patch: Record<string, unknown> | null;
+  version: number;
+}
+interface OverrideLayers {
+  product: LayerPatch | null;
+  module:  LayerPatch | null;
+  tenantWildcard: LayerPatch | null;
+  tenantRoute:    LayerPatch | null;
+  userWildcard:   LayerPatch | null;
+  userRoute:      LayerPatch | null;
+}
+async function loadOverrideLayers(
+  pool: DbPool,
+  route: string,
+  productCode: string,
+  moduleCode: string,
+  tenantId: string,
+  userId: string,
+): Promise<OverrideLayers> {
+  const [prod, mod, tenW, tenR, usrW, usrR] = await Promise.all([
+    productCode
+      ? pool.query<LayerPatch>(`SELECT patch, version FROM dos.ui_override_product WHERE product_code=$1`, [productCode])
+      : Promise.resolve({ rows: [] }),
+    moduleCode
+      ? pool.query<LayerPatch>(`SELECT patch, version FROM dos.ui_override_module WHERE module_code=$1`, [moduleCode])
+      : Promise.resolve({ rows: [] }),
+    tenantId
+      ? pool.query<LayerPatch>(`SELECT patch, version FROM dos.ui_override_tenant WHERE tenant_id=$1 AND route='*'`, [tenantId])
+      : Promise.resolve({ rows: [] }),
+    tenantId
+      ? pool.query<LayerPatch>(`SELECT patch, version FROM dos.ui_override_tenant WHERE tenant_id=$1 AND route=$2`, [tenantId, route])
+      : Promise.resolve({ rows: [] }),
+    userId
+      ? pool.query<LayerPatch>(`SELECT patch, version FROM dos.ui_override_user WHERE user_id=$1 AND route='*'`, [userId])
+      : Promise.resolve({ rows: [] }),
+    userId
+      ? pool.query<LayerPatch>(`SELECT patch, version FROM dos.ui_override_user WHERE user_id=$1 AND route=$2`, [userId, route])
+      : Promise.resolve({ rows: [] }),
+  ]);
+  const pick = (r: { rows: LayerPatch[] }): LayerPatch | null =>
+    r.rows[0] ? { patch: (r.rows[0].patch ?? {}) as Record<string, unknown>, version: r.rows[0].version } : null;
+  return {
+    product:        pick(prod),
+    module:         pick(mod),
+    tenantWildcard: pick(tenW),
+    tenantRoute:    pick(tenR),
+    userWildcard:   pick(usrW),
+    userRoute:      pick(usrR),
+  };
 }
 
 // Per-archetype extension table map. Loaded lazily — only the queries
@@ -188,20 +313,28 @@ async function loadProps(
     pool.query(`SELECT axis, sort_order, label_en, label_ar, bucket_key
                   FROM dos.ui_route_heatmap_axis WHERE route=$1 ORDER BY axis, sort_order`, [route]),
   ]);
-  const base: Record<string, unknown> = {
-    kpis: kpis.rows,
-    columns: cols.rows,
-    tabs: tabs.rows,
-    nextBestActions: nbas.rows,
-    settingsSections: sections.rows,
-    reportCards: reports.rows,
-    workqueueGroups: groups.rows,
-    heatmapAxes: axes.rows,
-  };
+  // Only emit a key when the dedicated table has rows. Empty arrays are
+  // omitted so they don't clobber pre-shaped arrays already stored in
+  // `dos.ui_route_template_binding.props` (which is the source of truth
+  // for routes that ship their KPI/NBA/tab payloads inline). Caller spread
+  // order is `{ ...row.props, ...dynamicProps }` so any non-empty value
+  // here intentionally overrides the stored one — that's how the
+  // shaped-table path remains authoritative when it is populated.
+  const base: Record<string, unknown> = {};
+  if (kpis.rows.length)     base['kpis']             = kpis.rows;
+  if (cols.rows.length)     base['columns']          = cols.rows;
+  if (tabs.rows.length)     base['tabs']             = tabs.rows;
+  if (nbas.rows.length)     base['nextBestActions']  = nbas.rows;
+  if (sections.rows.length) base['settingsSections'] = sections.rows;
+  if (reports.rows.length)  base['reportCards']      = reports.rows;
+  if (groups.rows.length)   base['workqueueGroups']  = groups.rows;
+  if (axes.rows.length)     base['heatmapAxes']      = axes.rows;
   const ext = archetype ? ARCHETYPE_EXTENSIONS[archetype] : undefined;
   if (ext && ext.length) {
     const results = await Promise.all(ext.map(e => pool.query(e.sql, [route])));
-    ext.forEach((e, i) => { base[e.key] = results[i].rows; });
+    ext.forEach((e, i) => {
+      if (results[i].rows.length) base[e.key] = results[i].rows;
+    });
   }
   return base;
 }
@@ -227,6 +360,9 @@ export function createTemplateBindingRouter(pool: DbPool): Router {
     if (!route) return res.status(400).json({ error: 'route_required' });
     const locale = String(req.query.locale ?? req.headers['accept-language'] ?? 'en')
       .toLowerCase().startsWith('ar') ? 'ar' : 'en';
+    const productCode = readProductCode(req);
+    const moduleCode  = deriveModuleCode(route);
+    const { tenantId, userId } = readPrincipal(req);
     try {
       const { rows } = await pool.query(
         `SELECT route, archetype, template_export, props, version,
@@ -248,27 +384,132 @@ export function createTemplateBindingRouter(pool: DbPool): Router {
         ai_headline_en?: string; ai_headline_ar?: string;
         status_tags?: unknown; primary_action?: unknown;
       };
-      const dynamicProps = await loadProps(pool, route, row.archetype);
+      const [dynamicProps, layers] = await Promise.all([
+        loadProps(pool, route, row.archetype),
+        loadOverrideLayers(pool, route, productCode, moduleCode, tenantId, userId),
+      ]);
       // Phase F-F7-2 — derive `masthead` object the host reads.
-      const pick = (en?: string, ar?: string) =>
+      const pickStr = (en?: string, ar?: string) =>
         (locale === 'ar' ? (ar ?? en) : (en ?? ar)) ?? undefined;
       const masthead = {
-        title:        pick(row.title_en, row.title_ar),
-        subtitle:     pick(row.subtitle_en, row.subtitle_ar),
-        eyebrow:      pick(row.eyebrow_en, row.eyebrow_ar),
-        aiHeadline:   pick(row.ai_headline_en, row.ai_headline_ar),
-        statusTags:   row.status_tags ?? [],
+        title:         pickStr(row.title_en, row.title_ar),
+        subtitle:      pickStr(row.subtitle_en, row.subtitle_ar),
+        eyebrow:       pickStr(row.eyebrow_en, row.eyebrow_ar),
+        aiHeadline:    pickStr(row.ai_headline_en, row.ai_headline_ar),
+        statusTags:    row.status_tags ?? [],
         primaryAction: row.primary_action ?? null,
       };
+
+      // Phase F-F9 — deep-merge layers in order broader → narrower.
+      // Route layer = (row.props + dynamicProps + masthead) flattened.
+      let merged: Record<string, unknown> = {};
+      deepMerge(merged, layers.product?.patch ?? null);
+      deepMerge(merged, layers.module?.patch  ?? null);
+      deepMerge(merged, (row.props ?? {}) as Record<string, unknown>);
+      deepMerge(merged, dynamicProps);
+      deepMerge(merged, layers.tenantWildcard?.patch ?? null);
+      deepMerge(merged, layers.tenantRoute?.patch    ?? null);
+      deepMerge(merged, layers.userWildcard?.patch   ?? null);
+      deepMerge(merged, layers.userRoute?.patch      ?? null);
+      // Masthead is computed last so column-driven i18n always wins; tenant
+      // and user layers can still override individual masthead.* fields by
+      // emitting `{ "masthead": { "title": "..." } }` in their patch.
+      merged = deepMerge({ masthead }, merged);
+
       res.json({
         route: row.route,
         archetype: row.archetype,
         template_export: row.template_export,
         version: row.version,
-        props: { ...(row.props ?? {}), ...dynamicProps, masthead },
+        props: merged,
+        // Diagnostic — opt-in. Lets the SPA / debugger see which layers
+        // contributed without needing to query the DB. Safe to ship in
+        // prod; contains versions only, never the raw patch JSON.
+        _layers: {
+          product:        layers.product        ? { product_code: productCode, version: layers.product.version }        : null,
+          module:         layers.module         ? { module_code:  moduleCode,  version: layers.module.version }         : null,
+          route:          { version: row.version },
+          tenantWildcard: layers.tenantWildcard ? { tenant_id: tenantId, version: layers.tenantWildcard.version } : null,
+          tenantRoute:    layers.tenantRoute    ? { tenant_id: tenantId, version: layers.tenantRoute.version }    : null,
+          userWildcard:   layers.userWildcard   ? { user_id:   userId,   version: layers.userWildcard.version }   : null,
+          userRoute:      layers.userRoute      ? { user_id:   userId,   version: layers.userRoute.version }      : null,
+        },
       });
     } catch (e) {
       res.status(500).json({ error: 'template_binding_fetch_failed', detail: String(e) });
+    }
+  });
+
+  // Phase F-F9 — Effective-binding export for a scope.
+  //   GET /export?scope=tenant       → uses caller's tenantId from principal
+  //   GET /export?scope=tenant&tenant_id=<id>   → admin override
+  //   GET /export?scope=product[&product_code=...]
+  //   GET /export?scope=anonymous    → product+module+route only
+  // Returns: { scope, generated_at, bindings: [{ route, archetype, template_export, version, props }] }
+  router.get('/export', async (req, res) => {
+    const scope = String(req.query.scope ?? 'anonymous');
+    const productCode = (typeof req.query.product_code === 'string' && req.query.product_code)
+      || readProductCode(req);
+    const principal = readPrincipal(req);
+    const tenantId = scope === 'tenant'
+      ? (typeof req.query.tenant_id === 'string' && req.query.tenant_id ? req.query.tenant_id : principal.tenantId)
+      : '';
+    const userId = scope === 'user' ? principal.userId : '';
+    try {
+      const { rows } = await pool.query<{ route: string; archetype: string; template_export: string; version: number; props: Record<string, unknown> } & {
+        title_en?: string; title_ar?: string; subtitle_en?: string; subtitle_ar?: string;
+        eyebrow_en?: string; eyebrow_ar?: string; ai_headline_en?: string; ai_headline_ar?: string;
+        status_tags?: unknown; primary_action?: unknown;
+      }>(
+        `SELECT route, archetype, template_export, props, version,
+                title_en, title_ar, subtitle_en, subtitle_ar,
+                eyebrow_en, eyebrow_ar, ai_headline_en, ai_headline_ar,
+                status_tags, primary_action
+           FROM dos.ui_route_template_binding ORDER BY route`,
+      );
+      const bundle = await Promise.all(rows.map(async (row) => {
+        const moduleCode = deriveModuleCode(row.route);
+        const [dyn, layers] = await Promise.all([
+          loadProps(pool, row.route, row.archetype),
+          loadOverrideLayers(pool, row.route, productCode, moduleCode, tenantId, userId),
+        ]);
+        const masthead = {
+          title:         row.title_en      ?? row.title_ar      ?? null,
+          subtitle:      row.subtitle_en   ?? row.subtitle_ar   ?? null,
+          eyebrow:       row.eyebrow_en    ?? row.eyebrow_ar    ?? null,
+          aiHeadline:    row.ai_headline_en?? row.ai_headline_ar?? null,
+          statusTags:    row.status_tags   ?? [],
+          primaryAction: row.primary_action ?? null,
+        };
+        let merged: Record<string, unknown> = {};
+        deepMerge(merged, layers.product?.patch ?? null);
+        deepMerge(merged, layers.module?.patch  ?? null);
+        deepMerge(merged, (row.props ?? {}) as Record<string, unknown>);
+        deepMerge(merged, dyn);
+        deepMerge(merged, layers.tenantWildcard?.patch ?? null);
+        deepMerge(merged, layers.tenantRoute?.patch    ?? null);
+        deepMerge(merged, layers.userWildcard?.patch   ?? null);
+        deepMerge(merged, layers.userRoute?.patch      ?? null);
+        merged = deepMerge({ masthead }, merged);
+        return {
+          route: row.route,
+          archetype: row.archetype,
+          template_export: row.template_export,
+          version: row.version,
+          props: merged,
+        };
+      }));
+      res.json({
+        scope,
+        product_code: productCode,
+        tenant_id: tenantId || null,
+        user_id:   userId   || null,
+        generated_at: new Date().toISOString(),
+        binding_count: bundle.length,
+        bindings: bundle,
+      });
+    } catch (e) {
+      res.status(500).json({ error: 'template_binding_export_failed', detail: String(e) });
     }
   });
 

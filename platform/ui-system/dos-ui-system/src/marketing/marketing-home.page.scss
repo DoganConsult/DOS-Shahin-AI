@@ -379,37 +379,42 @@ dos-carbon-button.dos-mh-hero-cta:focus-visible {
 /* ===== 01 hero — deep navy enterprise gradient ============================= */
 .dos-mh-hero {
   padding-block: clamp(3.75rem, 5.2vw, 4.75rem);
-  background:
-    linear-gradient(135deg, #060d1f 0%, #0a1a40 40%, #0c2560 70%, #1246b5 100%);
+  /* ── Item 3: Use canonical brand token — navy→gold signature ── */
+  background: var(--dos-gradient-brand-hero,
+    var(--dos-gradient-signature,
+      linear-gradient(135deg, #0f1f3d 0%, #08152a 38%, #14365e 64%, #c9a14a 110%)));
   border-block-end: none;
   position: relative;
   overflow: hidden;
 }
 
-/* Radial depth mesh */
+/* Radial mesh overlays — token-driven */
 .dos-mh-hero::before {
   content: '';
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 70% 70% at 80% 40%, rgba(15,98,254,.3) 0%, transparent 65%),
-    radial-gradient(ellipse 45% 45% at 15% 75%, rgba(100,160,255,.12) 0%, transparent 55%);
+    var(--dos-gradient-mesh-1,
+      radial-gradient(at 12% 14%, rgba(23, 105, 179, 0.18) 0%, transparent 42%)),
+    var(--dos-gradient-mesh-2,
+      radial-gradient(at 88% 10%, rgba(200, 160, 82, 0.12) 0%, transparent 38%)),
+    var(--dos-gradient-mesh-3,
+      radial-gradient(at 50% 110%, rgba(58, 127, 188, 0.12) 0%, transparent 60%));
   pointer-events: none;
   z-index: 0;
 }
 
+/* Gold accent hairline at top */
 .dos-mh-hero::after {
   content: '';
-  position: relative;
-  inset-block-end: -8rem;
-  inset-inline-end: -6rem;
-  inline-size: min(34rem, 42vw);
-  block-size: min(34rem, 42vw);
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(120, 180, 255, 0.26) 0%, rgba(15, 98, 254, 0.16) 42%, transparent 72%);
-  filter: blur(6px);
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  block-size: 2px;
+  background: var(--dos-gradient-kpi-line,
+    linear-gradient(90deg, transparent 0%, #c9a14a 28%, #1769b3 72%, transparent 100%));
+  z-index: 2;
   pointer-events: none;
-  z-index: 0;
 }
 
 .dos-mh-hero-layout {
@@ -417,8 +422,9 @@ dos-carbon-button.dos-mh-hero-cta:focus-visible {
   z-index: 1;
   display: grid;
   min-block-size: 620px;
-  grid-template-columns: minmax(0, 1fr) minmax(320px, 390px);
-  gap: clamp(1.25rem, 2.8vw, 2.5rem);
+  /* Item 1: wider right column for screenshot panel */
+  grid-template-columns: minmax(0, 1fr) minmax(380px, 480px);
+  gap: clamp(1.25rem, 2.8vw, 3rem);
   align-items: center;
 }
 
@@ -512,6 +518,87 @@ dos-carbon-button.dos-mh-hero-cta--secondary ::ng-deep .cds--btn {
   gap: 0.5rem;
 }
 
+/* ── Item 1: Product screenshot hero panel ── */
+.dos-mh-hero-screenshot-panel {
+  position: relative;
+  border-radius: 1.25rem;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px rgba(201, 161, 74, 0.28),
+    0 32px 72px rgba(4, 11, 31, 0.55),
+    0 8px 24px rgba(4, 11, 31, 0.36);
+  transform: perspective(1200px) rotateY(-4deg) rotateX(2deg);
+  transition: transform var(--dos-transition-slow, 320ms ease);
+  will-change: transform;
+}
+
+.dos-mh-hero-screenshot-panel:hover {
+  transform: perspective(1200px) rotateY(-1deg) rotateX(1deg);
+}
+
+.dos-mh-hero-screenshot {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  max-block-size: 520px;
+  object-fit: cover;
+  object-position: top left;
+  border-radius: inherit;
+}
+
+/* Gold hairline border on screenshot */
+.dos-mh-hero-screenshot-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 1px solid rgba(201, 161, 74, 0.22);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Floating KPI badge strip over the screenshot */
+.dos-mh-hero-kpi-strip {
+  position: absolute;
+  inset-block-end: 1rem;
+  inset-inline: 0.75rem;
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  z-index: 3;
+}
+
+.dos-mh-hero-kpi-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  padding: 0.45rem 0.85rem;
+  border-radius: 0.625rem;
+  background: var(--dos-glass-tint-strong, rgba(15, 22, 35, 0.82));
+  backdrop-filter: blur(var(--dos-glass-blur-md, 16px));
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow: var(--dos-shadow-md);
+  color: #ffffff;
+  white-space: nowrap;
+}
+
+.dos-mh-hero-kpi-badge__value {
+  font: 700 1rem / 1.1 inherit;
+  font-feature-settings: 'tnum' 1;
+  color: #ffffff;
+}
+
+.dos-mh-hero-kpi-badge__label {
+  font: 400 0.6875rem / 1.2 inherit;
+  color: rgba(255, 255, 255, 0.66);
+}
+
+.dos-mh-hero-kpi-badge--gold .dos-mh-hero-kpi-badge__value {
+  color: #f0cc80;
+}
+
+/* Keep old proof styles for mobile fallback — hidden on desktop */
 .dos-mh-hero-proof {
   display: flex;
   flex-direction: column;
@@ -523,6 +610,7 @@ dos-carbon-button.dos-mh-hero-cta--secondary ::ng-deep .cds--btn {
   color: #ffffff;
   box-shadow: 0 32px 72px rgba(4, 11, 31, 0.36);
   backdrop-filter: blur(18px);
+  display: none; /* replaced by screenshot panel */
 }
 
 .dos-mh-hero-proof__status {

@@ -63,6 +63,36 @@ const openapi_1 = require("./openapi");
 const validate_env_1 = require("./validate-env");
 const error_telemetry_1 = require("./error-telemetry");
 const feature_flags_1 = require("./feature-flags");
+const node_fs_1 = require("node:fs");
+const node_https_1 = require("node:https");
+// ── L31 (Phase 3 D4) — opt-in HTTPS listener for admin trust-zone services.
+// Reads MTLS_HTTPS_LISTEN=1 + ADMIN_MTLS_CA / ADMIN_MTLS_CERT / ADMIN_MTLS_KEY.
+// Returns null when disabled or any cert path missing — caller falls back to
+// plain HTTP (Article 5: no fake-green half-flip; never half-start a broken
+// TLS listener).
+function _httpsListenOptions() {
+    if (String(process.env.MTLS_HTTPS_LISTEN ?? '0').trim() !== '1')
+        return null;
+    const caPath = String(process.env.ADMIN_MTLS_CA ?? '').trim();
+    const certPath = String(process.env.ADMIN_MTLS_CERT ?? '').trim();
+    const keyPath = String(process.env.ADMIN_MTLS_KEY ?? '').trim();
+    if (!caPath || !certPath || !keyPath)
+        return null;
+    if (!(0, node_fs_1.existsSync)(caPath) || !(0, node_fs_1.existsSync)(certPath) || !(0, node_fs_1.existsSync)(keyPath))
+        return null;
+    try {
+        return {
+            ca: (0, node_fs_1.readFileSync)(caPath),
+            cert: (0, node_fs_1.readFileSync)(certPath),
+            key: (0, node_fs_1.readFileSync)(keyPath),
+            requestCert: String(process.env.MTLS_REQUEST_CLIENT_CERT ?? '1').trim() === '1',
+            rejectUnauthorized: String(process.env.MTLS_REJECT_UNAUTHORIZED ?? '1').trim() === '1',
+        };
+    }
+    catch {
+        return null;
+    }
+}
 async function createServiceServer(config) {
     // Init Sentry FIRST — before tracing, before Express — so every subsequent
     // unhandled error is captured. No-op if SENTRY_DSN is unset.
@@ -646,12 +676,28 @@ async function createServiceServer(config) {
             catch { /* DB config overlay not available — using env defaults */ }
         }
         const bindHost = config.serviceCode === 'gateway' ? '0.0.0.0' : '127.0.0.1';
-        const server = app.listen(config.port, bindHost, () => {
-            logger.info(`${config.serviceCode} listening on ${bindHost}:${config.port}`);
-            if (process.send)
-                process.send('ready');
-            config.onReady?.();
-        });
+        // L31 (Phase 3 D4): opt-in HTTPS listener (mTLS) when admin trust-zone
+        // env asks for it. Falls back to plain HTTP otherwise (Article 5).
+        const _tlsOpts = _httpsListenOptions();
+        let server;
+        if (_tlsOpts) {
+            const httpsServer = (0, node_https_1.createServer)(_tlsOpts, app);
+            httpsServer.listen(config.port, bindHost, () => {
+                logger.info(`${config.serviceCode} listening on https://${bindHost}:${config.port} (mTLS, requestCert=${_tlsOpts.requestCert}, reject=${_tlsOpts.rejectUnauthorized})`);
+                if (process.send)
+                    process.send('ready');
+                config.onReady?.();
+            });
+            server = httpsServer;
+        }
+        else {
+            server = app.listen(config.port, bindHost, () => {
+                logger.info(`${config.serviceCode} listening on ${bindHost}:${config.port}`);
+                if (process.send)
+                    process.send('ready');
+                config.onReady?.();
+            });
+        }
         const shutdown = async (signal) => {
             logger.info(`${signal} received, shutting down ${config.serviceCode}`);
             server.close(async () => {

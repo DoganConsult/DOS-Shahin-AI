@@ -9,5 +9,6 @@ export declare class DosAccountMenuComponent {
     userName: string;
     userEmail: string;
     items: DosAccountMenuItem[];
+    buttonLabel: string;
     action: EventEmitter<DosAccountMenuItem>;
 }
