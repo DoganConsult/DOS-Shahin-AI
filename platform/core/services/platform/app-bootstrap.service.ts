@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, TimeoutError, firstValueFrom, from, of, throwError } from 'rxjs';
 import { catchError, tap, timeout } from 'rxjs/operators';
 import { BootstrapStore, type BootstrapData } from './bootstrap.store';
-import { AccessStore } from '../../../dauth/access/access.store';
+import { AccessStore } from '@dos/access-store';
 import { COMPONENT_MAP, ALLOWLIST } from '../../../dos/registry/component-map';
 import { buildAuthenticatedRoutes } from '../../routing/dynamic-route-builder.service';
 import { Route } from '@angular/router';

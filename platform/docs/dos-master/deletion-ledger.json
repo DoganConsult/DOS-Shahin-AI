@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "owner": "DOS Master",
+  "binding": "Doctrine Article 10",
+  "milestones": {
+    "M3": {
+      "title": "Legacy AccessStore deletion + consumer migration",
+      "executed_at": "2026-05-04",
+      "deleted": [
+        "platform/dauth/access/access.store.ts",
+        "platform/dauth/packages/frontend/access/access.store.ts",
+        "platform/dauth/packages/frontend/access/access.ts",
+        "platform/dauth/packages/frontend/access/index.ts"
+      ],
+      "consumers_migrated": [
+        "platform/config-center/board-report/features/bootstrap/bootstrap-checklist.component.ts",
+        "platform/config-center/runtime/ui-runtime-store.service.ts",
+        "platform/foundation/ui/pages/foundation-locations.component.spec.ts",
+        "platform/core/platform/navigation/navigation.store.ts",
+        "platform/core/services/authz-client.service.ts",
+        "platform/core/services/platform/app-bootstrap.service.ts"
+      ]
+    },
+    "M3_pending": {
+      "title": "Remaining ledger paths to retire across M4..M14",
+      "paths": [
+        "platform/core/platform/navigation/active-modules.ts",
+        "platform/core/platform/auth/authz-client.service.ts",
+        "platform/core/platform/bootstrap/app-bootstrap.service.ts",
+        "STATIC_*_NAV_CHILDREN constants (ripgrep)",
+        "defaultModules arrays (ripgrep)",
+        "BASE_PRIMARY_NAV arrays (ripgrep)"
+      ]
+    }
+  }
+}

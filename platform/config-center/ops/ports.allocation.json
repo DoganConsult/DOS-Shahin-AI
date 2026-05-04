@@ -149,7 +149,7 @@
       "gatewayPrefix": "/api/ui-os",
       "envFile": "ui-os-service",
       "supersedes": "dynamic-ui-service",
-      "note": "Canonical UI-OS service. Owns the dos.ui_* runtime/personalization/productivity/layout tables (0302–0305) and reads the dos.dynamic_ui_* catalog (0300). Replaces the disabled services/.dynamic-ui-service.skipped/ scaffold. Legacy /api/shell, /api/dashboard, /api/widgets, /api/kpi, /api/navigation prefixes are intentionally retired here per the one-source/one-path/one-way decree; FE callers will be migrated to /api/ui-os/* in subsequent waves."
+      "note": "Canonical UI-OS service. Owns the dos.ui_* runtime/personalization/productivity/layout tables (0302\u20130305) and reads the dos.dynamic_ui_* catalog (0300). Replaces the disabled services/.dynamic-ui-service.skipped/ scaffold. Legacy /api/shell, /api/dashboard, /api/widgets, /api/kpi, /api/navigation prefixes are intentionally retired here per the one-source/one-path/one-way decree; FE callers will be migrated to /api/ui-os/* in subsequent waves."
     },
     "dashboard-widgets-service": {
       "port": 4023,
@@ -596,6 +596,15 @@
         "/api/module-enroll"
       ],
       "note": "Phase-17 single-process orchestrator: readiness verdicts + pool keeper + capability broker + tenant enrollment. Backed by dos.module_readiness/_pool_slots/_capabilities/_capability_bindings/tenant_modules."
+    },
+    "workspace-bff": {
+      "port": 4007,
+      "cwd": "services/workspace-bff",
+      "script": "dist/server.js",
+      "wave": 1,
+      "gatewayPrefix": "/api/workspace",
+      "envFile": "workspace-bff",
+      "note": "DOS Master M4 \u2014 JWE-signed workspace bootstrap BFF (Doctrine Article 2)"
     }
   },
   "oneShots": {

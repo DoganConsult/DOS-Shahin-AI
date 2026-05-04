@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '@env/environment';
 import { StorageService } from '@app/infrastructure';
 import { SessionService } from '../../../../dauth/session/session.service';
-import { AccessStore } from '../../../../dauth/access/access.store';
+import { AccessStore } from '@dos/access-store';
 
 interface ChecklistItem {
   key: string;

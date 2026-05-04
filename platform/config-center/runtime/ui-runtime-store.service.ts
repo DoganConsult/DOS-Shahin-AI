@@ -1,6 +1,6 @@
 import { Injectable, computed, signal, inject } from '@angular/core';
 import { BootstrapStore } from '@app/core/services/platform/bootstrap.store';
-import { AccessStore } from '@app/dauth/access/access.store';
+import { AccessStore } from '@dos/access-store';
 import { EntitlementsService } from '@app/core/services/platform/entitlements.service';
 
 import { I18nService } from '@app/core/services/ui-infra/i18n.service';

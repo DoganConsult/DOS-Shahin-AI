@@ -1,0 +1,11 @@
+{
+  "serviceCode": "workspace-bff",
+  "version": "0.1.0",
+  "domains": ["platform"],
+  "trustZone": "tenant",
+  "dependencies": ["auth-service", "tenant-service", "user-service", "ui-os-service"],
+  "apiPrefix": "/api/workspace",
+  "doctrineArticle": 2,
+  "controlled": true,
+  "writerActor": "workspace-bff"
+}

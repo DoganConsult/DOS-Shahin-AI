@@ -4,7 +4,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 import { FoundationLocationsComponent } from './foundation-locations.component';
-import { AccessStore } from '../../../dauth/access/access.store';
+import { AccessStore } from '@dos/access-store';
 
 class StubAccessStore {
   permissions = { length: 0 };

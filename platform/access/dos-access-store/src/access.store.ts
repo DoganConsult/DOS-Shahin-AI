@@ -58,6 +58,9 @@ export class AccessStore {
   private readonly _trialDays       = signal<number | null>(null);
   private readonly _trialExpired    = signal<ModuleCode[]>([]);
   private readonly _trialLimitsHit  = signal<ModuleCode[]>([]);
+  // §B.9 #34/#35 — session expiry and impersonation signals for shell banners.
+  private readonly _sessionExpiresAt = signal<string | null>(null);
+  private readonly _isImpersonating   = signal(false);
 
   readonly permissions = this._permissions.asReadonly();
   readonly roles = this._roles.asReadonly();
@@ -70,6 +73,8 @@ export class AccessStore {
   readonly trialExpiredModules = this._trialExpired.asReadonly();
   readonly trialLimitsHitModules = this._trialLimitsHit.asReadonly();
   readonly error = this._error.asReadonly();
+  readonly sessionExpiresAt = this._sessionExpiresAt.asReadonly();
+  readonly isImpersonating   = this._isImpersonating.asReadonly();
 
   /** Convenience: current tenant block from /me, or null. */
   readonly tenant = computed<AccessTenant | null>(() => this._me()?.tenant ?? null);
@@ -99,7 +104,156 @@ export class AccessStore {
   }));
 
   hasPermission(perm: Permission): boolean {
-    return this._permissions().includes(perm);
+    const needle = String(perm).toLowerCase().trim();
+    const perms = this._permissions();
+    for (const p of perms) {
+      const pn = String(p).toLowerCase().trim();
+      if (pn === needle) return true;
+      if (pn === '*') return true;
+      if (pn.endsWith('.*') && needle.startsWith(pn.slice(0, -1))) return true;
+    }
+    return false;
+  }
+
+  /** Convenience alias matching the legacy `can(perm)` shape. */
+  can(perm: Permission): boolean {
+    return this.hasPermission(perm);
+  }
+
+  hasAnyPermission(perms: readonly Permission[]): boolean {
+    for (const p of perms) if (this.hasPermission(p)) return true;
+    return false;
+  }
+
+  hasAllPermissions(perms: readonly Permission[]): boolean {
+    for (const p of perms) if (!this.hasPermission(p)) return false;
+    return true;
+  }
+
+  /** Tenant-entitled module check. Foundation (DNA) is always true. */
+  canAccessModule(moduleCode: ModuleCode): boolean {
+    const m = String(moduleCode).toLowerCase().trim();
+    if (m === 'foundation') return true;
+    return this._modules().some((x) => String(x).toLowerCase().trim() === m);
+  }
+
+  hasRole(role: string): boolean {
+    const r = String(role).toLowerCase().trim();
+    return this._roles().some((x) => String(x).toLowerCase().trim() === r);
+  }
+
+  hasAnyRole(roles: readonly string[]): boolean {
+    for (const r of roles) if (this.hasRole(r)) return true;
+    return false;
+  }
+
+  // ===================================================================
+  // M3 migration compat layer.
+  //
+  // Aliases preserved verbatim so legacy consumers in `platform/core/*`,
+  // `platform/config-center/*`, and `platform/foundation/ui/*` can swap
+  // their import path from `…/dauth/access/access.store` to
+  // `@dos/access-store` without changing call sites. Deletion ledger
+  // path: these aliases are removed in M3 D5 once consumer migration
+  // is complete and `pnpm forbid-legacy-accessstore-aliases` passes.
+  // ===================================================================
+
+  /** Compat: legacy `roles()` alias used by AuthZ payload builders. */
+  readonly functionalRoles = this._roles.asReadonly();
+  /** Compat: legacy `modules()` alias. */
+  readonly visibleModules  = this._modules.asReadonly();
+  /** Compat: legacy `isTenantAdmin` boolean as function-style. */
+  readonly isAdmin = computed(() => this.isTenantAdmin());
+  /** Compat: legacy `accessProfiles` (treat roles as profiles in absence of separate channel). */
+  readonly accessProfiles = this._roles.asReadonly();
+  /** Compat: derived account status from tenant block; defaults active. */
+  readonly accountStatus = computed<string>(() => this._me()?.tenant?.status ?? 'active');
+  /** Compat: scope bindings — empty until source-of-truth lands in M4 BFF. */
+  readonly scopeBindings = computed<ReadonlyArray<{scopeType:string;scopeId:string;roleCode:string;moduleCode?:string}>>(() => []);
+  /** Compat: decision authorities — empty until SoD module lands in M13. */
+  readonly decisionAuthorities = computed<ReadonlyArray<string>>(() => []);
+  /** Compat: allowed dashboards — empty until dashboard registry lands. */
+  readonly allowedDashboards = computed<ReadonlyArray<string>>(() => []);
+
+  /** Compat: legacy `landingPage()` function shape. */
+  landingPage(): string {
+    if (this.isTenantAdmin()) {
+      const isPlatformAdmin = this._roles().some((r) => {
+        const n = String(r).toLowerCase().trim();
+        return n === 'platform_admin' || n === 'platform_super_admin' || n === 'platform_owner' || n === 'dos_admin';
+      });
+      if (isPlatformAdmin) return '/admin-hub';
+    }
+    return '/workspace-home';
+  }
+
+  /** Compat: legacy `hasAuthority(code)` — proxy to permission check. */
+  hasAuthority(code: string): boolean {
+    return this.hasPermission(code);
+  }
+  /** Compat: legacy module access alias. */
+  hasModuleAccess(moduleCode: ModuleCode): boolean {
+    return this.canAccessModule(moduleCode);
+  }
+  /** Compat: legacy super-admin alias. */
+  isSuperAdmin(): boolean {
+    return this.isTenantAdmin();
+  }
+  /** Compat: legacy dashboard access — returns true unless registry blocks. */
+  canAccessDashboard(_dashboardCode: string): boolean {
+    return this.isTenantAdmin();
+  }
+  /** Compat: legacy scope-by-role lookup; empty until M4. */
+  getScopeForRole(_roleCode: string): ReadonlyArray<{scopeType:string;scopeId:string;roleCode:string}> {
+    return [];
+  }
+
+  /**
+   * Compat: legacy `setSnapshot(...)` test seam used by component specs.
+   * Production code paths MUST go through `load()`; this exists ONLY so
+   * legacy spec stubs that hand-feed snapshots keep passing across the
+   * import swap.
+   */
+  setSnapshot(data: {
+    permissions?: Permission[];
+    visibleModules?: ModuleCode[];
+    modules?: ModuleCode[];
+    functionalRoles?: string[];
+    roles?: string[];
+    accessProfiles?: string[];
+    accountStatus?: string;
+    isAdmin?: boolean;
+    scopeBindings?: unknown[];
+    decisionAuthorities?: string[];
+    allowedDashboards?: string[];
+    landingPage?: string;
+    tenantId?: string;
+  }): void {
+    if (data.permissions !== undefined) this._permissions.set(data.permissions);
+    const mods = data.modules ?? data.visibleModules;
+    if (mods !== undefined) this._modules.set(mods);
+    const roles = data.roles ?? data.functionalRoles;
+    if (roles !== undefined) this._roles.set(roles);
+    if (data.tenantId !== undefined) this._tenantId.set(data.tenantId);
+    this._loaded.set(true);
+    this._error.set(null);
+  }
+
+  /** Compat: legacy `clear()` used by sign-out flows. */
+  clear(): void {
+    this._permissions.set([]);
+    this._roles.set([]);
+    this._modules.set([]);
+    this._tenantId.set(null);
+    this._me.set(null);
+    this._trialStatus.set(null);
+    this._trialDays.set(null);
+    this._trialExpired.set([]);
+    this._trialLimitsHit.set([]);
+    this._sessionExpiresAt.set(null);
+    this._isImpersonating.set(false);
+    this._error.set(null);
+    this._loaded.set(false);
   }
 
   /** Idempotent. Safe to call from multiple components on first navigation. */
@@ -117,7 +271,12 @@ export class AccessStore {
         this._modules.set(perms.modules ?? []);
         this._tenantId.set(perms.tenantId ?? null);
       }
-      if (me) this._me.set(me);
+      if (me) {
+        this._me.set(me);
+        // §B.9 #34/#35 — populate session expiry and impersonation flags from /me membership.
+        this._sessionExpiresAt.set(me.membership?.sessionExpiresAt ?? null);
+        this._isImpersonating.set(me.membership?.isImpersonating === true);
+      }
       if (trial) {
         this._trialStatus.set(trial.status ?? null);
         this._trialDays.set(typeof trial.daysRemaining === 'number' ? trial.daysRemaining : null);

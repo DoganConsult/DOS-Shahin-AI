@@ -1,9 +1,10 @@
 # Workspace Shell — Complete Direct Seed Content
 
 > Module #0 of the DOS Module Contract Publisher. This is the platform-DNA
-> shell host (12 surfaces) on which every page archetype renders. Authored to
-> the Universal Module Seed Standard (`00-universal-module-seed-standard.md`)
-> and validated against `00-universal-module-contract.schema.json`.
+> shell host (26 components across 6 groups) on which every page archetype
+> renders. Authored to the Universal Module Seed Standard
+> (`00-universal-module-seed-standard.md`) and validated against
+> `00-universal-module-contract.schema.json`.
 >
 > **Rule:** This `.md` and its sibling `.json` MUST stay in parity. Edits to
 > either are forbidden outside the publisher pipeline (`pnpm module:publish
@@ -21,26 +22,69 @@
 | `owner_service` | `ui-os-service` |
 | `name_en` | `Workspace Shell` |
 | `name_ar` | `هيكل مساحة العمل` |
-| `version` | `1.0.0` |
+| `version` | `2.0.0` |
 | `is_platform_dna` | `true` |
 | `route_base` | `null` (shell hosts pages, owns no route) |
 
 ## 2. Initialization group — global one-time seed
 
-### 2.1 Carbon component registry — 10 `workspace.*` keys
+### 2.1 Carbon component registry — 26 components across 6 groups
 
-| `component_key` | `carbon_key` | Selector |
-|---|---|---|
-| `workspace.header`         | `ui-shell`  | `dos-workspace-header` |
-| `workspace.sidebar`        | `ui-shell`  | `dos-workspace-sidebar` |
-| `workspace.mobile-nav`     | `tiles`     | `dos-mobile-bottom-nav` |
-| `workspace.command-search` | `search`    | `dos-command-search` |
-| `workspace.status-bar`     | `tag`       | `dos-workspace-status-bar` |
-| `workspace.action-queue`   | `tiles`     | `dos-action-queue` |
-| `workspace.agent-strip`    | `tiles`     | `dos-agent-activity-strip` |
-| `workspace.inbox-center`   | `modal`     | `dos-inbox-center` |
-| `workspace.context-panel`  | `accordion` | `dos-context-panel` |
-| `workspace.quick-create`   | `button`    | `dos-quick-create` |
+#### Group 1: Shell Layout Framework (4)
+
+| `component_key` | `carbon_key` | Selector | Position |
+|---|---|---|---|
+| `shell.app` | `ui-shell` | `dos-app-shell` | root |
+| `shell.desktop` | `ui-shell` | `dos-desktop-shell` | root/desktop |
+| `shell.mobile` | `ui-shell` | `dos-mobile-shell` | root/mobile |
+| `shell.desktop-sidebar` | `ui-shell` | `dos-desktop-sidebar` | left |
+
+#### Group 2: Header & Navigation (7)
+
+| `component_key` | `carbon_key` | Selector | Position |
+|---|---|---|---|
+| `workspace.header` | `ui-shell` | `dos-workspace-header` | top |
+| `workspace.sidebar` | `ui-shell` | `dos-workspace-sidebar` | left |
+| `workspace.mobile-nav` | `tiles` | `dos-mobile-bottom-nav` | bottom |
+| `shell.mobile-drawer` | `ui-shell` | `dos-mobile-drawer` | left-overlay |
+| `shell.workspace-nav` | `ui-shell` | `dos-workspace-nav` | sidebar-content |
+| `shell.nav-section` | `ui-shell` | `dos-nav-section` | sidebar-group |
+| `shell.nav-item` | `ui-shell` | `dos-nav-item` | sidebar-leaf |
+
+#### Group 3: Global Action Surfaces (5)
+
+| `component_key` | `carbon_key` | Selector | Trigger |
+|---|---|---|---|
+| `workspace.command-search` | `search` | `dos-command-search` | cmd-k |
+| `workspace.inbox-center` | `modal` | `dos-inbox-center` | bell icon |
+| `workspace.quick-create` | `button` | `dos-quick-create` | FAB |
+| `workspace.context-panel` | `accordion` | `dos-context-panel` | right rail |
+| `shell.account-menu` | `overflow-menu` | `dos-account-menu` | avatar |
+
+#### Group 4: Work Activity & Status (3)
+
+| `component_key` | `carbon_key` | Selector | Purpose |
+|---|---|---|---|
+| `workspace.status-bar` | `tag` | `dos-workspace-status-bar` | system signals |
+| `workspace.action-queue` | `tiles` | `dos-action-queue` | pending work |
+| `workspace.agent-strip` | `tiles` | `dos-agent-activity-strip` | agent activity |
+
+#### Group 5: Alerts & Singletons (2)
+
+| `component_key` | `carbon_key` | Selector | Purpose |
+|---|---|---|---|
+| `shell.banner-strip` | `notification` | `dos-shell-banner-strip` | trial/offline/error banners |
+| `shell.toast-outlet` | `notification` | `dos-toast-outlet` | transient toasts |
+
+#### Group 6: Page Content Infrastructure (5)
+
+| `component_key` | `carbon_key` | Selector | Purpose |
+|---|---|---|---|
+| `page.layout` | `grid` | `dos-page-layout` | canonical page frame (masthead+KPI+tabs+main+rail) |
+| `page.masthead` | `tiles` | `dos-page-masthead` | hero with eyebrow/title/subtitle/gradient |
+| `page.header` | `breadcrumb` | `dos-page-header` | breadcrumb + title + actions |
+| `page.tabs` | `tabs` | `dos-tabs` | tab navigation within pages |
+| `page.widget-frame` | `tiles` | `dos-widget-frame` | dynamic widget chrome (5 variants, 4 states) |
 
 All vendor-locked to `ibm-carbon` (`trg_carbon_only_runtime`). Pre-existing rows in
 `dos.dynamic_ui_component_registry` (Phase WS-1 migration) — the publisher idempotently
@@ -63,13 +107,19 @@ re-asserts.
 - `workspace_shell_viewer` — all read perms.
 - `workspace_shell_admin` — adds `workspace.shell.manage`.
 
-### 2.4 i18n keys (44 keys × 2 locales = 88 rows)
+### 2.4 i18n keys (156 keys x 2 locales = 312 rows)
 
-Namespace `shell` covering: header chrome, account menu, command search,
-notifications/help/theme/language ARIA, side-nav ARIA, inbox / quick-create /
-action-queue / agent-strip / context-panel / status-bar titles & emptys,
-4 context-panel tabs, 3 status-bar signal labels, 11 status pill values
-(`status.tenant.*`, `status.health.*`, `status.sync.*`).
+Namespace coverage:
+
+| Namespace | Key count | Coverage |
+|---|---|---|
+| `shell.*` | 82 | Header chrome, account menu, command search, ARIA labels, sidenav, drawer, mobile nav, banners, breadcrumb, skeleton, error states, group icons, brand/tenant prefixes, disabled nav reasons |
+| `nav.group.*` | 10 | Sidebar group labels (workspace, core, tenant, foundation, modules, primary, secondary, platform, config-center, misc) |
+| `nav.item.*` | 30 | Sidebar item labels (all 36 modules + workspace pages) |
+| `status.*` | 11 | Tenant status (4), health status (3), sync status (3), plus 1 placeholder |
+| `role.*` | 4 | Owner, tenant owner, admin, member |
+| `common.*` | 2 | Retry, dismiss |
+| `page.*` | 4 | Loading, error title, empty title, empty description |
 
 Authoritative source: `workspace-shell-complete-direct-seed.json#/i18n`.
 
@@ -82,14 +132,14 @@ Authoritative source: `workspace-shell-complete-direct-seed.json#/i18n`.
 
 ## 3. Provisioning group — per tenant
 
-The publisher seeds `dos.workspace_shell_binding` (10 rows × N tenants) with
-non-empty `props` payloads (per §5 below). Existing 400 rows get UPDATE; new
+The publisher seeds `dos.workspace_shell_binding` (26 rows x N tenants) with
+non-empty `props` payloads (per §5 below). Existing rows get UPDATE; new
 tenants pick up via tenant-provisioning.
 
 | Table | Required seed |
 |---|---|
-| `dos.workspace_shell_binding` | 10 enabled rows per tenant, `props` non-empty |
-| `dos.workspace_shell_i18n` | full `shell.*` and `status.*` catalog × en + ar |
+| `dos.workspace_shell_binding` | 26 enabled rows per tenant, `props` non-empty |
+| `dos.workspace_shell_i18n` | full `shell.*`, `nav.*`, `status.*`, `role.*`, `common.*`, `page.*` catalog x en + ar |
 | `dos.workspace_shell_status_label` | tenant / health / sync catalogs |
 
 ## 4. Business / operations group
@@ -104,12 +154,45 @@ services through their published APIs:
 | `workspace.inbox-center` | `notification-service` | `/api/notifications/inbox` |
 | `workspace.status-bar`   | `dnoc-service` + `tenant-service` + `ui-os-service` | aggregated by ui-os |
 | `workspace.command-search` | `ui-os-service` | `/api/ui-os/search` |
+| `page.tabs` | `ui-os-service` | `dos.ui_route_tab` via template-binding |
+| `page.widget-frame` | `ui-os-service` | `dos.dynamic_ui_widgets` via widget resolver |
 
 ## 5. Page seed matrix
 
 N/A — workspace-shell owns no pages (it is the shell that hosts every page).
 Per-surface props payloads (the equivalent unit) are in
 `workspace-shell-complete-direct-seed.json#/seeds[0].rows[]`.
+
+### 5.1 Binding row props summary (26 rows)
+
+| Component | Key props |
+|---|---|
+| `shell.app` | `responsive_breakpoint`, desktop/mobile component refs |
+| `shell.desktop` | sidebar/header component refs |
+| `shell.mobile` | drawer/header/bottom-nav component refs |
+| `shell.desktop-sidebar` | `collapsible`, rail/expanded widths, nav component ref |
+| `workspace.header` | brand/title i18n keys, home route, trailing actions, account menu ref |
+| `workspace.sidebar` | aria key, nav source, search placeholder key |
+| `workspace.mobile-nav` | max items, nav source, aria key |
+| `shell.mobile-drawer` | title/close i18n keys, nav component ref |
+| `shell.workspace-nav` | nav source, section/item component refs |
+| `shell.nav-section` | `collapsible`, icon source |
+| `shell.nav-item` | badge, disabled reason i18n keys (7 reasons) |
+| `workspace.command-search` | placeholder/aria/empty keys, categories, mobile fullscreen |
+| `workspace.status-bar` | 3 signal definitions (health, tenant, sync) |
+| `workspace.action-queue` | title/aria/empty keys, source service, page size |
+| `workspace.agent-strip` | title/empty keys, source service, live updates |
+| `workspace.inbox-center` | title/aria/empty/toggle keys, source service, mobile mode |
+| `workspace.context-panel` | title key, 4 tab definitions |
+| `workspace.quick-create` | title/aria/fab-glyph keys, variant, mobile mode, actions source |
+| `shell.account-menu` | aria/fallback keys, 4 menu entries, language/theme toggles |
+| `shell.banner-strip` | 2 banner definitions (trial-expired, offline) |
+| `shell.toast-outlet` | position, max visible, auto-dismiss timing |
+| `page.layout` | 5 zone names, masthead/tabs component refs |
+| `page.masthead` | gradient/mesh/hairline tokens |
+| `page.header` | breadcrumb/skip-to-main i18n keys |
+| `page.tabs` | source table, permission gating |
+| `page.widget-frame` | default variant, loading/error/empty i18n keys |
 
 ## 6. Direct SQL seed skeleton
 
@@ -118,12 +201,12 @@ idempotent SQL bundle:
 
 ```text
 BEGIN;
--- 1. UPSERT components into dos.dynamic_ui_component_registry
--- 2. UPSERT permissions into platform_dauth.permissions
--- 3. UPSERT roles + role_permissions
--- 4. UPSERT i18n into dos.workspace_shell_i18n
+-- 1. UPSERT 26 components into dos.dynamic_ui_component_registry
+-- 2. UPSERT 7 permissions into platform_dauth.permissions
+-- 3. UPSERT 2 roles + role_permissions
+-- 4. UPSERT 312 i18n rows into dos.workspace_shell_i18n
 -- 5. UPSERT status labels into dos.workspace_shell_status_label
--- 6. UPSERT per-tenant binding rows into dos.workspace_shell_binding
+-- 6. UPSERT 26 per-tenant binding rows into dos.workspace_shell_binding
 -- 7. INSERT publish-log row into dos.module_contract_publish_log
 COMMIT;
 ```
@@ -132,20 +215,20 @@ COMMIT;
 
 ```text
 .json contract row
-→ dos.dynamic_ui_component_registry (vendor + carbon_key)
-→ dos.workspace_shell_binding (tenant + props)
-→ GET /api/ui-os/workspace-shell/:tenantId
-→ WorkspaceShellBindingService (FE)
-→ ShellHostComponent <dos-workspace-*>
-→ Carbon primitive
-→ rendered surface
+-> dos.dynamic_ui_component_registry (vendor + carbon_key)
+-> dos.workspace_shell_binding (tenant + props)
+-> GET /api/ui-os/workspace-shell/:tenantId
+-> WorkspaceShellBindingService (FE)
+-> ShellHostComponent <dos-workspace-*> / <dos-shell-*> / <dos-page-*>
+-> Carbon design tokens (CSS custom properties)
+-> rendered surface
 ```
 
 ## 8. Status rules
 
 A row is not seed-ready until:
 
-- Component file exists under `platform/ui-system/dos-ui-system/src/shell/`.
+- Component file exists under `platform/ui-system/dos-ui-system/src/shell/` or `src/components/`.
 - Selector matches `.json#/components[].selector`.
 - Barrel re-exports the file.
 - `dos.workspace_shell_binding.props` is non-empty for every enabled tenant.
@@ -154,7 +237,7 @@ A row is not seed-ready until:
 
 Allowed status values: `COMPLETE`, `PARTIAL`, `BLOCKED`.
 
-Current status: **PUBLISHED** (this contract is the first one to publish under the new pipeline).
+Current status: **PUBLISHED** (v2.0.0 — expanded from 10 to 26 components).
 
 ## 9. Publisher commands
 
@@ -181,5 +264,5 @@ pnpm module:list                           # show all modules + state
    (auto-discovered)` and writes WARNING rows to `dos.module_contract_errors`.
 5. **No manual writes** to `dos.workspace_shell_binding`, `dos.workspace_shell_i18n`,
    `dos.workspace_shell_status_label`, `dos.dynamic_ui_component_registry`
-   (workspace.* rows). DB trigger `trg_published_by_only` on those tables
-   rejects rows missing `metadata.published_by='contract-publisher@v1'`.
+   (workspace.* / shell.* / page.* rows). DB trigger `trg_published_by_only` on those
+   tables rejects rows missing `metadata.published_by='contract-publisher@v1'`.

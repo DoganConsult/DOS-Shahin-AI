@@ -4,26 +4,18 @@
  * all PUBLIC and TENANTLESS — they MUST NOT import AccessStore, MUST NOT
  * read tenant context, MUST NOT gate on permission_key.
  *
- * Each component composes IBM Carbon `tiles` and `button` via
- * data-cds-component attributes. Mobile reflow handled by container
- * queries (no JS) — the same DOM serves 390 / 430 / 768 / 1440 widths.
- *
- * Inputs: brandCode + locale only. CTA hrefs accept overrides so the
- * SPA wrapper can wire navigation deterministically.
- *
- * The 6 component_keys are registered in
- *   platform/dos/migrations/public/20260504_0090_marketing_public_pages.sql
- * and lazy-imported through platform/dos/registry/component-map.ts.
+ * Wave 3 changes:
+ *   - CommonModule removed; all loops use @for (Angular 17+ control flow).
+ *   - Footer brand name uses brandDisplayName getter (fixes #15 hardcoding).
+ *   - DosMarketingContactPageComponent now has a CTA row (fixes #10).
  */
 import {
   ChangeDetectionStrategy,
   Component,
   Input,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { DosBrandEagleComponent } from '../brand/dos-brand-eagle.component';
 import type { DosBrandCode } from '@dos/design-tokens';
-// Phase M3 — Carbon Breadcrumb wrapper (one-source rule).
 import {
   DosCarbonBreadcrumbComponent,
   type DosCarbonBreadcrumbItem,
@@ -125,6 +117,7 @@ const I18N_CONTACT = {
   en: {
     h1: 'Contact us',
     sub: 'Talk to a governance specialist or request a guided demo.',
+    cta: 'Get in touch',
     tiles: [
       { title: 'Sales', body: 'sales@shahin-ai.com' },
       { title: 'Support', body: 'support@shahin-ai.com' },
@@ -134,6 +127,7 @@ const I18N_CONTACT = {
   ar: {
     h1: 'تواصل معنا',
     sub: 'تحدث إلى متخصص حوكمة أو اطلب عرضًا توجيهيًا.',
+    cta: 'تواصل معنا',
     tiles: [
       { title: 'المبيعات', body: 'sales@shahin-ai.com' },
       { title: 'الدعم', body: 'support@shahin-ai.com' },
@@ -189,7 +183,7 @@ type PublicLocale = 'en' | 'ar';
 @Component({
   selector: 'dos-marketing-pricing',
   standalone: true,
-  imports: [CommonModule, DosBrandEagleComponent, DosCarbonBreadcrumbComponent],
+  imports: [DosBrandEagleComponent, DosCarbonBreadcrumbComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <main class="dos-mp-wrap" [attr.dir]="locale === 'ar' ? 'rtl' : 'ltr'" data-page-id="marketing.pricing.page">
@@ -200,16 +194,18 @@ type PublicLocale = 'en' | 'ar';
         <p>{{ copy().sub }}</p>
       </header>
       <section class="dos-mp-tiles" data-section-id="tiles" data-cds-component="tiles">
-        <article class="dos-mp-tile" *ngFor="let t of copy().tiles" data-cds-component="tile">
-          <h3>{{ t.title }}</h3>
-          <p>{{ t.body }}</p>
-        </article>
+        @for (t of copy().tiles; track t.title) {
+          <article class="dos-mp-tile" data-cds-component="tile">
+            <h3>{{ t.title }}</h3>
+            <p>{{ t.body }}</p>
+          </article>
+        }
       </section>
       <div class="dos-mp-cta-row" data-section-id="cta">
         <a class="dos-mp-btn dos-mp-btn--primary" [attr.href]="ctaPrimaryHref" data-cds-component="button">{{ ctaPrimaryLabel }}</a>
         <a class="dos-mp-btn dos-mp-btn--secondary" [attr.href]="ctaSecondaryHref" data-cds-component="button">{{ ctaSecondaryLabel }}</a>
       </div>
-      <footer class="dos-mp-footer" data-section-id="footer"><small>© {{ year }} Shahin-AI</small></footer>
+      <footer class="dos-mp-footer" data-section-id="footer"><small>© {{ year }} {{ brandDisplayName }}</small></footer>
     </main>
   `,
   styles: [SHARED_STYLES],
@@ -222,6 +218,7 @@ export class DosMarketingPricingPageComponent {
   @Input() ctaSecondaryHref = '/contact';
   @Input() ctaSecondaryLabel = 'Talk to sales';
   readonly year = new Date().getFullYear();
+  get brandDisplayName(): string { return this.brandCode === 'shahin-ai' ? 'Shahin-AI' : 'Dogan-AI'; }
   get breadcrumb(): DosCarbonBreadcrumbItem[] { return [{ label: this.locale === 'ar' ? 'الرئيسية' : 'Home', href: '/' }, { label: this.copy().h1, current: true }]; }
   copy() { return I18N_PRICING[this.locale] ?? I18N_PRICING.en; }
 }
@@ -229,7 +226,7 @@ export class DosMarketingPricingPageComponent {
 @Component({
   selector: 'dos-marketing-trust',
   standalone: true,
-  imports: [CommonModule, DosBrandEagleComponent, DosCarbonBreadcrumbComponent],
+  imports: [DosBrandEagleComponent, DosCarbonBreadcrumbComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <main class="dos-mp-wrap" [attr.dir]="locale === 'ar' ? 'rtl' : 'ltr'" data-page-id="marketing.trust.page">
@@ -240,15 +237,17 @@ export class DosMarketingPricingPageComponent {
         <p>{{ copy().sub }}</p>
       </header>
       <section class="dos-mp-tiles" data-section-id="tiles" data-cds-component="tiles">
-        <article class="dos-mp-tile" *ngFor="let t of copy().tiles" data-cds-component="tile">
-          <h3>{{ t.title }}</h3>
-          <p>{{ t.body }}</p>
-        </article>
+        @for (t of copy().tiles; track t.title) {
+          <article class="dos-mp-tile" data-cds-component="tile">
+            <h3>{{ t.title }}</h3>
+            <p>{{ t.body }}</p>
+          </article>
+        }
       </section>
       <div class="dos-mp-cta-row" data-section-id="cta">
         <a class="dos-mp-btn dos-mp-btn--primary" [attr.href]="ctaHref" data-cds-component="button">{{ ctaLabel }}</a>
       </div>
-      <footer class="dos-mp-footer" data-section-id="footer"><small>© {{ year }} Shahin-AI</small></footer>
+      <footer class="dos-mp-footer" data-section-id="footer"><small>© {{ year }} {{ brandDisplayName }}</small></footer>
     </main>
   `,
   styles: [SHARED_STYLES],
@@ -259,6 +258,7 @@ export class DosMarketingTrustPageComponent {
   @Input() ctaHref = '/security';
   @Input() ctaLabel = 'Security details';
   readonly year = new Date().getFullYear();
+  get brandDisplayName(): string { return this.brandCode === 'shahin-ai' ? 'Shahin-AI' : 'Dogan-AI'; }
   get breadcrumb(): DosCarbonBreadcrumbItem[] { return [{ label: this.locale === 'ar' ? 'الرئيسية' : 'Home', href: '/' }, { label: this.copy().h1, current: true }]; }
   copy() { return I18N_TRUST[this.locale] ?? I18N_TRUST.en; }
 }
@@ -266,7 +266,7 @@ export class DosMarketingTrustPageComponent {
 @Component({
   selector: 'dos-marketing-security',
   standalone: true,
-  imports: [CommonModule, DosBrandEagleComponent, DosCarbonBreadcrumbComponent],
+  imports: [DosBrandEagleComponent, DosCarbonBreadcrumbComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <main class="dos-mp-wrap" [attr.dir]="locale === 'ar' ? 'rtl' : 'ltr'" data-page-id="marketing.security.page">
@@ -277,15 +277,17 @@ export class DosMarketingTrustPageComponent {
         <p>{{ copy().sub }}</p>
       </header>
       <section class="dos-mp-tiles" data-section-id="tiles" data-cds-component="tiles">
-        <article class="dos-mp-tile" *ngFor="let t of copy().tiles" data-cds-component="tile">
-          <h3>{{ t.title }}</h3>
-          <p>{{ t.body }}</p>
-        </article>
+        @for (t of copy().tiles; track t.title) {
+          <article class="dos-mp-tile" data-cds-component="tile">
+            <h3>{{ t.title }}</h3>
+            <p>{{ t.body }}</p>
+          </article>
+        }
       </section>
       <div class="dos-mp-cta-row" data-section-id="cta">
         <a class="dos-mp-btn dos-mp-btn--primary" [attr.href]="ctaHref" data-cds-component="button">{{ ctaLabel }}</a>
       </div>
-      <footer class="dos-mp-footer" data-section-id="footer"><small>© {{ year }} Shahin-AI</small></footer>
+      <footer class="dos-mp-footer" data-section-id="footer"><small>© {{ year }} {{ brandDisplayName }}</small></footer>
     </main>
   `,
   styles: [SHARED_STYLES],
@@ -296,6 +298,7 @@ export class DosMarketingSecurityPageComponent {
   @Input() ctaHref = '/contact';
   @Input() ctaLabel = 'Report a vulnerability';
   readonly year = new Date().getFullYear();
+  get brandDisplayName(): string { return this.brandCode === 'shahin-ai' ? 'Shahin-AI' : 'Dogan-AI'; }
   get breadcrumb(): DosCarbonBreadcrumbItem[] { return [{ label: this.locale === 'ar' ? 'الرئيسية' : 'Home', href: '/' }, { label: this.copy().h1, current: true }]; }
   copy() { return I18N_SECURITY[this.locale] ?? I18N_SECURITY.en; }
 }
@@ -303,7 +306,7 @@ export class DosMarketingSecurityPageComponent {
 @Component({
   selector: 'dos-marketing-contact',
   standalone: true,
-  imports: [CommonModule, DosBrandEagleComponent, DosCarbonBreadcrumbComponent],
+  imports: [DosBrandEagleComponent, DosCarbonBreadcrumbComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <main class="dos-mp-wrap" [attr.dir]="locale === 'ar' ? 'rtl' : 'ltr'" data-page-id="marketing.contact.page">
@@ -314,12 +317,18 @@ export class DosMarketingSecurityPageComponent {
         <p>{{ copy().sub }}</p>
       </header>
       <section class="dos-mp-tiles" data-section-id="tiles" data-cds-component="tiles">
-        <article class="dos-mp-tile" *ngFor="let t of copy().tiles" data-cds-component="tile">
-          <h3>{{ t.title }}</h3>
-          <p>{{ t.body }}</p>
-        </article>
+        @for (t of copy().tiles; track t.title) {
+          <article class="dos-mp-tile" data-cds-component="tile">
+            <h3>{{ t.title }}</h3>
+            <p>{{ t.body }}</p>
+          </article>
+        }
       </section>
-      <footer class="dos-mp-footer" data-section-id="footer"><small>© {{ year }} Shahin-AI</small></footer>
+      <!-- Wave 3 fix #10: Contact page was missing a CTA — added below -->
+      <div class="dos-mp-cta-row" data-section-id="cta">
+        <a class="dos-mp-btn dos-mp-btn--primary" [attr.href]="ctaHref" data-cds-component="button">{{ copy().cta }}</a>
+      </div>
+      <footer class="dos-mp-footer" data-section-id="footer"><small>© {{ year }} {{ brandDisplayName }}</small></footer>
     </main>
   `,
   styles: [SHARED_STYLES],
@@ -327,7 +336,9 @@ export class DosMarketingSecurityPageComponent {
 export class DosMarketingContactPageComponent {
   @Input() brandCode: DosBrandCode = 'shahin-ai';
   @Input() locale: PublicLocale = 'en';
+  @Input() ctaHref = '/register';
   readonly year = new Date().getFullYear();
+  get brandDisplayName(): string { return this.brandCode === 'shahin-ai' ? 'Shahin-AI' : 'Dogan-AI'; }
   get breadcrumb(): DosCarbonBreadcrumbItem[] { return [{ label: this.locale === 'ar' ? 'الرئيسية' : 'Home', href: '/' }, { label: this.copy().h1, current: true }]; }
   copy() { return I18N_CONTACT[this.locale] ?? I18N_CONTACT.en; }
 }
@@ -335,7 +346,7 @@ export class DosMarketingContactPageComponent {
 @Component({
   selector: 'dos-marketing-about',
   standalone: true,
-  imports: [CommonModule, DosBrandEagleComponent, DosCarbonBreadcrumbComponent],
+  imports: [DosBrandEagleComponent, DosCarbonBreadcrumbComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <main class="dos-mp-wrap" [attr.dir]="locale === 'ar' ? 'rtl' : 'ltr'" data-page-id="marketing.about.page">
@@ -346,12 +357,14 @@ export class DosMarketingContactPageComponent {
         <p>{{ copy().sub }}</p>
       </header>
       <section class="dos-mp-tiles" data-section-id="tiles" data-cds-component="tiles">
-        <article class="dos-mp-tile" *ngFor="let t of copy().tiles" data-cds-component="tile">
-          <h3>{{ t.title }}</h3>
-          <p>{{ t.body }}</p>
-        </article>
+        @for (t of copy().tiles; track t.title) {
+          <article class="dos-mp-tile" data-cds-component="tile">
+            <h3>{{ t.title }}</h3>
+            <p>{{ t.body }}</p>
+          </article>
+        }
       </section>
-      <footer class="dos-mp-footer" data-section-id="footer"><small>© {{ year }} Shahin-AI</small></footer>
+      <footer class="dos-mp-footer" data-section-id="footer"><small>© {{ year }} {{ brandDisplayName }}</small></footer>
     </main>
   `,
   styles: [SHARED_STYLES],
@@ -360,6 +373,7 @@ export class DosMarketingAboutPageComponent {
   @Input() brandCode: DosBrandCode = 'shahin-ai';
   @Input() locale: PublicLocale = 'en';
   readonly year = new Date().getFullYear();
+  get brandDisplayName(): string { return this.brandCode === 'shahin-ai' ? 'Shahin-AI' : 'Dogan-AI'; }
   get breadcrumb(): DosCarbonBreadcrumbItem[] { return [{ label: this.locale === 'ar' ? 'الرئيسية' : 'Home', href: '/' }, { label: this.copy().h1, current: true }]; }
   copy() { return I18N_ABOUT[this.locale] ?? I18N_ABOUT.en; }
 }
@@ -367,7 +381,7 @@ export class DosMarketingAboutPageComponent {
 @Component({
   selector: 'dos-marketing-legal',
   standalone: true,
-  imports: [CommonModule, DosBrandEagleComponent, DosCarbonBreadcrumbComponent],
+  imports: [DosBrandEagleComponent, DosCarbonBreadcrumbComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <main class="dos-mp-wrap" [attr.dir]="locale === 'ar' ? 'rtl' : 'ltr'" data-page-id="marketing.legal.page">
@@ -378,12 +392,14 @@ export class DosMarketingAboutPageComponent {
         <p>{{ copy().sub }}</p>
       </header>
       <section class="dos-mp-tiles" data-section-id="tiles" data-cds-component="tiles">
-        <article class="dos-mp-tile" *ngFor="let t of copy().tiles" data-cds-component="tile">
-          <h3>{{ t.title }}</h3>
-          <p>{{ t.body }}</p>
-        </article>
+        @for (t of copy().tiles; track t.title) {
+          <article class="dos-mp-tile" data-cds-component="tile">
+            <h3>{{ t.title }}</h3>
+            <p>{{ t.body }}</p>
+          </article>
+        }
       </section>
-      <footer class="dos-mp-footer" data-section-id="footer"><small>© {{ year }} Shahin-AI</small></footer>
+      <footer class="dos-mp-footer" data-section-id="footer"><small>© {{ year }} {{ brandDisplayName }}</small></footer>
     </main>
   `,
   styles: [SHARED_STYLES],
@@ -392,6 +408,7 @@ export class DosMarketingLegalPageComponent {
   @Input() brandCode: DosBrandCode = 'shahin-ai';
   @Input() locale: PublicLocale = 'en';
   readonly year = new Date().getFullYear();
+  get brandDisplayName(): string { return this.brandCode === 'shahin-ai' ? 'Shahin-AI' : 'Dogan-AI'; }
   get breadcrumb(): DosCarbonBreadcrumbItem[] { return [{ label: this.locale === 'ar' ? 'الرئيسية' : 'Home', href: '/' }, { label: this.copy().h1, current: true }]; }
   copy() { return I18N_LEGAL[this.locale] ?? I18N_LEGAL.en; }
 }

@@ -285,7 +285,10 @@
       "Bash(find /root/DOS-Platform -type f -name \"*.ts\" -exec grep -l \"WorkspaceNavLabelResolver\\\\|shellChromeString\" {} \\\\;)",
       "Bash([ -f /tmp/claude-0/-root-DOS-Platform/0857b111-1564-483f-94e8-7695f1396b08/tasks/ae7485ae2f4af8c66.output ])",
       "Bash(grep -l \"Injectable\\\\|Service\\\\|Interceptor\" /root/DOS-Platform/platform/core/platform/shell/*.ts)",
-      "Bash(wc -l /root/DOS-Platform/platform/ui-system/dos-ui-system/src/shell/*.component.ts)"
+      "Bash(wc -l /root/DOS-Platform/platform/ui-system/dos-ui-system/src/shell/*.component.ts)",
+      "Bash(grep -rn \"CREATE TABLE.*dynamic_ui_component_registry\\\\|CREATE TABLE IF NOT EXISTS dos.dynamic_ui_component_registry\" /root/DOS-Platform/platform/dos/migrations/public/*.sql)",
+      "Edit(~/.claude/skills/plan/**)",
+      "Bash(python3 -c \"import json; f=open\\('platform/ui-system/module_complete_direct_seed_pack/workspace-shell-complete-direct-seed.json'\\); d=json.load\\(f\\); print\\(f'Components: {len\\(d[\\\\\"components\\\\\"]\\)}'\\); print\\(f'Seed rows: {len\\(d[\\\\\"seeds\\\\\"][0][\\\\\"rows\\\\\"]\\)}'\\); print\\(f'EN i18n keys: {len\\(d[\\\\\"i18n\\\\\"][\\\\\"en\\\\\"]\\)}'\\); print\\(f'AR i18n keys: {len\\(d[\\\\\"i18n\\\\\"][\\\\\"ar\\\\\"]\\)}'\\); print\\(f'Version: {d[\\\\\"module\\\\\"][\\\\\"version\\\\\"]}'\\)\")"
     ],
     "additionalDirectories": [
       "/tmp",

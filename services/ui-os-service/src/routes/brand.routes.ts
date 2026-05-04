@@ -24,24 +24,46 @@ const ALLOWED_LOCALES = new Set(['en', 'ar']);
 
 type Tx = (en: string, ar: string) => string;
 
-function buildMarketingHomeContent(brandCode: string, locale: string, tx: Tx) {
+/** Per-route breadcrumb so each marketing page shows its own trail. */
+function buildBreadcrumb(
+  routePath: string,
+  tx: Tx,
+): Array<{ label: string; href?: string; current?: boolean }> {
+  const home = { label: tx('Home', 'الرئيسية'), href: '/' };
+  const pageLabels: Record<string, string> = {
+    '/':         tx('Home', 'الرئيسية'),
+    '/platform': tx('Platform', 'المنصة'),
+    '/pricing':  tx('Pricing', 'التسعير'),
+    '/trust':    tx('Trust', 'الثقة'),
+    '/security': tx('Security', 'الأمن'),
+    '/contact':  tx('Contact', 'تواصل'),
+    '/about':    tx('About', 'حولنا'),
+    '/legal':    tx('Legal', 'القانوني'),
+  };
+  const label = pageLabels[routePath] ?? routePath;
+  // Root / — breadcrumb is just [Home(current)]
+  if (routePath === '/') return [{ label, current: true }];
+  return [home, { label, current: true }];
+}
+
+function buildMarketingHomeContent(brandCode: string, locale: string, tx: Tx, routePath = '/') {
   const brandLabel = brandCode === 'shahin-ai' ? 'Shahin-AI' : 'Dogan-AI';
   return {
     brandLabel,
     hero: {
-      badge: tx('New · Agentic GRC', 'جديد · حوكمة وكيلة'),
-      eyebrow: tx('Agentic GRC, brought to life', 'حوكمة وكيلة، نابضة بالحياة'),
-      title: tx('The operating system for agentic enterprises.', 'نظام التشغيل للمؤسسات الوكيلة.'),
+      badge: tx('Enterprise GRC · AI-Native · Bilingual', 'حوكمة مؤسسية · ذكاء اصطناعي أصيل · ثنائي اللغة'),
+      eyebrow: tx('Purpose-built for regulated enterprises', 'مصمم خصيصًا للمؤسسات الخاضعة للتنظيم'),
+      title: tx('Governance, Risk & Compliance — fully autonomous.', 'الحوكمة والمخاطر والامتثال — مستقلة بالكامل.'),
       sub: tx(
-        'Observe, suggest, approve, execute, verify, log — every action accounted for.',
-        'مراقبة، اقتراح، موافقة، تنفيذ، تحقق، تسجيل — كل إجراء موثق.',
+        'Nine specialised AI agents observe, decide, and act across your GRC lifecycle — every step approved, cryptographically logged, and fully reversible.',
+        'تسعة وكلاء ذكاء متخصصون يراقبون ويقررون ويتصرفون عبر دورة حياة الحوكمة — كل خطوة معتمدة ومسجلة بتشفير وقابلة للعكس.',
       ),
       microcopy: tx(
-        'Free 14-day trial · No credit card · Bilingual EN/AR',
-        'تجربة مجانية ١٤ يوماً · بدون بطاقة ائتمان · ثنائي اللغة',
+        '14-day free trial · No credit card required · Full EN/AR bilingual · On-prem available',
+        'تجربة مجانية ١٤ يومًا · بدون بطاقة ائتمان · ثنائي اللغة كامل · متوفر للنشر الداخلي',
       ),
-      ctaPrimary: { label: tx('Start free trial', 'ابدأ التجربة المجانية'), href: '/trial' },
-      ctaSecondary: { label: tx('See the platform', 'استعرض المنصة'), href: '/platform' },
+      ctaPrimary:   { label: tx('Start free trial', 'ابدأ التجربة المجانية'), href: '/register' },
+      ctaSecondary: { label: tx('Book a live demo', 'احجز عرضًا مباشرًا'),   href: '/contact' },
     },
     trustPills: [
       { id: 'iso', label: tx('ISO 27001', 'آيزو ٢٧٠٠١') },
@@ -65,9 +87,17 @@ function buildMarketingHomeContent(brandCode: string, locale: string, tx: Tx) {
       eyebrow: tx('Agentic proof', 'إثبات وكيل'),
       title: tx('Nine agents already at work.', 'تسعة وكلاء يعملون بالفعل.'),
       readinessPercent: 90,
+      // Wave 1 — labels consumed by DosAgentStatusStripComponent + DosProgressBarComponent.
+      emptyLabel:       tx('No agents active', 'لا توجد وكلاء نشطون'),
+      failedLabel:      tx('Agent error', 'خطأ في الوكيل'),
+      readinessLabel:   tx('Agentic readiness', 'مستوى الاستعداد الوكيل'),
+      readinessHelper:  tx('90% of actions are fully autonomous', '٩٠٪ من الإجراءات مستقلة تماماً'),
       tiles: [
         { agentCode: 'A01', displayName: 'Onboarding Agent',      displayNameAr: 'وكيل التهيئة',            role: 'onboarding' },
         { agentCode: 'A02', displayName: 'Identity Provisioning', displayNameAr: 'وكيل توفير الهوية',       role: 'identity' },
+        // A03 intentionally omitted — this agent slot was retired before launch.
+        // The code A03 (Compliance Mapping) was merged into A04 Control Authoring.
+        // Do NOT reuse A03; next new agent should be A11.
         { agentCode: 'A04', displayName: 'Control Authoring',     displayNameAr: 'وكيل تأليف الضوابط',     role: 'controls' },
         { agentCode: 'A05', displayName: 'Evidence Collection',   displayNameAr: 'وكيل جمع الأدلة',         role: 'evidence' },
         { agentCode: 'A06', displayName: 'Gap Remediation',       displayNameAr: 'وكيل معالجة الفجوات',     role: 'remediation' },
@@ -211,10 +241,7 @@ function buildMarketingHomeContent(brandCode: string, locale: string, tx: Tx) {
       sub: tx('Spin up a sandbox in 90 seconds. No credit card. Bring your own LLM.',
               'صندوق رمل في ٩٠ ثانية. بدون بطاقة. نموذجك الخاص.'),
     },
-    breadcrumb: [
-      { label: tx('Home', 'الرئيسية'), href: '/' },
-      { label: tx('Platform', 'المنصة'), href: '/platform', current: true },
-    ],
+    breadcrumb: buildBreadcrumb(routePath, tx),
   };
 }
 
@@ -372,7 +399,8 @@ export function createBrandRouter(pool: DbPool): Router {
         landingLiveStatusPill: false,
         landingAgenticProof: true,
       },
-      homeContent: buildMarketingHomeContent(brandCode, locale, tx),
+      // Pass the request path so each page gets its own breadcrumb trail.
+      homeContent: buildMarketingHomeContent(brandCode, locale, tx, String(req.path || '/')),
     });
   });
 

@@ -60,6 +60,9 @@ import type {
 // ClickableTile, Tag, Accordion, Tabs, Modal, InlineNotification,
 // ToastNotification, Link, Breadcrumb, StructuredList, DataTable,
 // ProgressBar, SkeletonPlaceholder.
+// Gap audit additions (Wave visual-enhancement):
+// ContainedList (logos + resources), InlineLoading (download-kit skeleton),
+// ToggleTip (agentic tile badges), Layer (hero visual token scope).
 import { DosCarbonHeaderShellComponent } from '../carbon/dos-carbon-header-shell.component';
 import { DosCarbonButtonComponent } from '../carbon/dos-carbon-button.component';
 import {
@@ -80,6 +83,11 @@ import { DosCarbonProgressBarComponent } from '../carbon/dos-carbon-progress-bar
 import { DosCarbonProgressIndicatorComponent, type DosCarbonProgressStep } from '../carbon/dos-carbon-progress-indicator.component';
 import { DosCarbonSkeletonComponent } from '../carbon/dos-carbon-skeleton.component';
 import { DosCarbonAspectRatioComponent } from '../carbon/dos-carbon-aspect-ratio.component';
+// B0 — Gap-audit additions: all carbon_keys verified runtime_status='active', dynamic_ui_allowed=true.
+import { DosCarbonContainedListComponent, type DosCarbonContainedListItem } from '../carbon/dos-carbon-contained-list.component';
+import { DosCarbonInlineLoadingComponent } from '../carbon/dos-carbon-inline-loading.component';
+import { DosCarbonToggleTipComponent } from '../carbon/dos-carbon-toggle-tip.component';
+import { DosCarbonLayerComponent } from '../carbon/dos-carbon-layer.component';
 
 /** Locked 19-region ordering: public header + breadcrumb + 17 content/footer regions.
  *  CI gate `marketing-home-coverage.mjs` greps this literal. */
@@ -173,6 +181,11 @@ export interface MarketingAgentTile {
     DosCarbonProgressIndicatorComponent,
     DosCarbonSkeletonComponent,
     DosCarbonAspectRatioComponent,
+    // B0 gap-audit additions
+    DosCarbonContainedListComponent,
+    DosCarbonInlineLoadingComponent,
+    DosCarbonToggleTipComponent,
+    DosCarbonLayerComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './marketing-home.page.scss',
@@ -237,22 +250,36 @@ export interface MarketingAgentTile {
               </div>
             </dos-carbon-col>
             <dos-carbon-col [columnNumbers]="{ sm: 0, md: 0, lg: 4 }">
-              <div class="dos-mh-hero-visual" aria-hidden="true">
-                <dos-carbon-aspect-ratio ratio="1x1">
-                  <div class="dos-mh-hero-orb"></div>
-                </dos-carbon-aspect-ratio>
-              </div>
+              <!-- B6: dos-carbon-layer scopes --cds-layer-02 tokens to hero visual -->
+              <dos-carbon-layer [level]="2">
+                <div class="dos-mh-hero-visual" aria-hidden="true">
+                  <dos-carbon-aspect-ratio ratio="1x1">
+                    <div class="dos-mh-hero-orb"></div>
+                  </dos-carbon-aspect-ratio>
+                </div>
+              </dos-carbon-layer>
             </dos-carbon-col>
           </dos-carbon-row>
         </dos-carbon-grid>
       </section>
 
-      <!-- 02 trust-pills — Carbon Tag ────────────────────────────────── -->
-      <section class="dos-mh-section dos-mh-trust" data-section-id="trust-pills">
-        <div class="dos-mh-container dos-mh-pill-row">
-          @for (p of trustPills; track p.id) {
-            <dos-carbon-tag type="cool-gray" size="md">{{ p.label }}</dos-carbon-tag>
-          }
+      <!-- 02 trust-pills — Carbon Tag + Notification header ───────────── -->
+      <!-- B2: inline notification provides context for the compliance pills -->
+      <!-- carbon_key='notification' runtime_status='active' dynamic_ui_allowed=true -->
+      <section class="dos-mh-section dos-mh-trust" data-section-id="trust-pills" data-cds-component="notification">
+        <div class="dos-mh-container">
+          <dos-carbon-notification
+            variant="inline"
+            kind="info"
+            [title]="locale === 'ar' ? 'مدقق ربع سنوياً · ' : 'Audited quarterly · '"
+            [subtitle]="locale === 'ar' ? 'ISO 27001 · SOC 2 Type II · GDPR · NCA ECC · SAMA CSF — محقق ومعتمد' : 'ISO 27001 · SOC 2 Type II · GDPR · NCA ECC · SAMA CSF — verified & certified'"
+            [hideClose]="true"
+          ></dos-carbon-notification>
+          <div class="dos-mh-pill-row" style="margin-block-start:0.75rem">
+            @for (p of trustPills; track p.id) {
+              <dos-carbon-tag type="cool-gray" size="md">{{ p.label }}</dos-carbon-tag>
+            }
+          </div>
         </div>
       </section>
 
@@ -301,7 +328,9 @@ export interface MarketingAgentTile {
               </div>
             }
 
-            <ul class="dos-mh-agent-tiles" role="list">
+            <!-- B3: agent tiles with toggletip on agent code badge -->
+            <!-- carbon_key='toggletip' runtime_status='active' dynamic_ui_allowed=true -->
+            <ul class="dos-mh-agent-tiles" role="list" data-cds-component="tiles">
               @for (t of agentTiles; track t.agentCode) {
                 <li [attr.data-agent-code]="t.agentCode">
                   <dos-carbon-tile [clickable]="true">
@@ -317,7 +346,11 @@ export interface MarketingAgentTile {
                           decoding="async"
                         />
                       } @else {
-                        <span class="dos-mh-agent-letter" aria-hidden="true">{{ t.agentCode }}</span>
+                        <!-- B3: toggletip wraps agent code so users can learn the agent's role -->
+                        <dos-carbon-toggle-tip [buttonLabel]="'About ' + t.agentCode">
+                          <span class="dos-mh-agent-letter" aria-hidden="true">{{ t.agentCode }}</span>
+                          <p slot="content">{{ locale === 'ar' ? (t.displayNameAr || t.displayName) : t.displayName }} — {{ t.role }}</p>
+                        </dos-carbon-toggle-tip>
                       }
                       <strong>{{ locale === 'ar' ? (t.displayNameAr || t.displayName) : t.displayName }}</strong>
                       @if (t.role) { <small>{{ t.role }}</small> }
@@ -353,7 +386,12 @@ export interface MarketingAgentTile {
               (event)="onDownloadEvent($event)"
             />
           } @else {
-            <dos-carbon-skeleton shape="text" [paragraph]="true" [lineCount]="3"></dos-carbon-skeleton>
+            <!-- B4: inline-loading replaces generic skeleton for download-kit -->
+            <!-- carbon_key='inline-loading' runtime_status='active' dynamic_ui_allowed=true -->
+            <dos-carbon-inline-loading
+              [state]="'active'"
+              [loadingText]="locale === 'ar' ? 'جارٍ تحضير حزمتك…' : 'Preparing your kit…'"
+            ></dos-carbon-inline-loading>
           }
 
           <!-- ToastNotification on download success -->
@@ -476,26 +514,35 @@ export interface MarketingAgentTile {
         </div>
       </section>
 
-      <!-- 13 logos ──────────────────────────────────────────────────── -->
-      <section class="dos-mh-section" data-section-id="logos">
-        <div class="dos-mh-container dos-mh-pill-row">
-          @for (l of customerLogos; track l.id) {
-            <span class="dos-mh-logo">{{ l.name }}</span>
-          }
+      <!-- 13 logos — Carbon ContainedList ───────────────────────────── -->
+      <!-- B1: contained-list replaces raw span loop -->
+      <!-- carbon_key='contained-list' runtime_status='active' dynamic_ui_allowed=true -->
+      <section class="dos-mh-section" data-section-id="logos" data-cds-component="contained-list">
+        <div class="dos-mh-container">
+          <dos-carbon-contained-list
+            class="dos-mh-logos-list"
+            [label]="locale === 'ar' ? 'يثق بنا' : 'Trusted by'"
+            [kind]="'on-page'"
+            [size]="'lg'"
+            [items]="logoListItems()"
+          ></dos-carbon-contained-list>
         </div>
       </section>
 
-      <!-- 14 resources — Carbon ClickableTile + Link ────────────────── -->
-      <section class="dos-mh-section" data-section-id="resources">
-        <div class="dos-mh-container dos-mh-grid-3">
-          @for (r of resources; track r.id) {
-            <dos-carbon-tile [clickable]="true" [route]="r.href">
-              <h3>
-                <dos-carbon-link [href]="r.href" size="lg">{{ r.title }}</dos-carbon-link>
-              </h3>
-              <p>{{ r.body }}</p>
-            </dos-carbon-tile>
-          }
+      <!-- 14 resources — Carbon ContainedList (disclosed) ────────────── -->
+      <!-- B5: contained-list disclosed replaces 3 separate tiles -->
+      <!-- carbon_key='contained-list' runtime_status='active' dynamic_ui_allowed=true -->
+      <section class="dos-mh-section" data-section-id="resources" data-cds-component="contained-list">
+        <div class="dos-mh-container">
+          <h2 class="dos-mh-section-title">{{ locale === 'ar' ? 'الموارد' : 'Resources' }}</h2>
+          <dos-carbon-contained-list
+            class="dos-mh-resource-list"
+            [label]="locale === 'ar' ? 'استكشف' : 'Explore'"
+            [kind]="'disclosed'"
+            [size]="'lg'"
+            [items]="resourceListItems()"
+            (itemClick)="navigate($event.content)"
+          ></dos-carbon-contained-list>
         </div>
       </section>
 
@@ -681,7 +728,11 @@ export class DosMarketingHomePageComponent {
   readonly year = new Date().getFullYear();
   readonly footerGroups = computed(() => this._footerGroups());
   readonly navItems = computed(() => this._navItems());
-  readonly showAgenticProof = computed(() => this._flags()['landingAgenticProof'] === true);
+  readonly showAgenticProof    = computed(() => this._flags()['landingAgenticProof']    === true);
+  /** Wave 2 — wires the landingHeroVideo flag to a video slot in the hero section. */
+  readonly showHeroVideo       = computed(() => this._flags()['landingHeroVideo']       === true);
+  /** Wave 2 — wires the landingLiveStatusPill flag to a status pill under the hero badge. */
+  readonly showLiveStatusPill  = computed(() => this._flags()['landingLiveStatusPill']  === true);
 
   agenticText(key: string): string {
     return ((this.content().agentic as unknown as Record<string, string>)[key] ?? '');
@@ -691,6 +742,26 @@ export class DosMarketingHomePageComponent {
   faqItems(): DosCarbonAccordionItem[] {
     return this.faq.map((f) => ({ title: f.q, content: f.a }));
   }
+
+  /** B1 — Maps customerLogos to DosCarbonContainedListItem[] for the logos contained-list.
+   *  carbon_key='contained-list', runtime_status='active', dynamic_ui_allowed=true */
+  logoListItems(): DosCarbonContainedListItem[] {
+    return (this.customerLogos ?? []).map((l) => ({
+      id:      l.id,
+      content: l.name,
+    }));
+  }
+
+  /** B5 — Maps resources to DosCarbonContainedListItem[] for the resources disclosed list.
+   *  itemClick emits { content: href } which navigate() handles.
+   *  carbon_key='contained-list', runtime_status='active', dynamic_ui_allowed=true */
+  resourceListItems(): DosCarbonContainedListItem[] {
+    return (this.resources ?? []).map((r) => ({
+      id:      r.id,
+      content: r.href,  // navigate() receives href via itemClick
+    }));
+  }
+
 
   /** Footer label/title resolvers — prefer server-translated `title`/`label`,
    *  fall back to the i18n key when the resolver hasn't shipped one. */

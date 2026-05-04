@@ -1,6 +1,6 @@
 import { Injectable, computed, signal, inject } from '@angular/core';
 import { BootstrapStore } from '../../services/platform/bootstrap.store';
-import { AccessStore } from '@app/dauth/access/access.store';
+import { AccessStore } from '@dos/access-store';
 import { NavigationService } from './navigation.service';
 import { NavItem, NavigationViewModel, CanonicalModuleCode } from './navigation.models';
 import { RouteRegistryStore } from '../../routing/route-registry.store';

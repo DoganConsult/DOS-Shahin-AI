@@ -555,6 +555,16 @@ const REGISTRY_COMPONENT_MAP: Record<string, () => Promise<Type<any>>> = {
   'marketing.about.page':    () => import('@dos/ui-system').then(m => m.DosMarketingAboutPageComponent),
   'marketing.legal.page':    () => import('@dos/ui-system').then(m => m.DosMarketingLegalPageComponent),
 
+  // ── Gap-audit additions (20260504_0400_marketing_gap_registry.sql) ────────
+  // platform.page: new route added Wave 4; carbon_key=tabs, aliases pricing template
+  // until a dedicated MarketingPlatformTemplateComponent is built.
+  'marketing.platform.page':   () => import('@dos/ui-system').then(m => m.DosMarketingPricingPageComponent),
+  // Section-level registry entries — each aliases the renderer for its carbon_key.
+  'marketing.logos.section':   () => import('./carbon-extended-renderers').then(m => m.CarbonContainedListRenderer),
+  'marketing.trust.section':   () => import('./carbon-extended-renderers').then(m => m.CarbonNotificationRenderer),
+  'marketing.agentic.section': () => import('./carbon-primitive-renderers').then(m => m.CarbonTileRenderer),
+
+
   // ── Phase M1.6 — Carbon Auth Pages Pack (5 pages + 19 primitives) ───────
   // Carbon backing per row enforced by 20260503_0028_auth_pages_pack.sql.
   'auth.shell':                  () => import('@dos/ui-system').then(m => m.DosAuthShellComponent),

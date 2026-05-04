@@ -789,16 +789,76 @@ gateway → services → DAuth/AccessStore → DB schema/search_path → RLS →
 
 ## Active integrated plan (master, single source of truth)
 
-**`/root/.claude/plans/you-are-taking-over-joyful-wave.md`** — covers Phase 0
-(consolidation), Phase A (UI-OS), Phase B (Config OS), Phase C (Dynamic UI),
-Phase D (AI OS), Phase E (Multi-tenant SaaS / RBAC / Deployment), Phase F
-(DB-Driven UI Management), Phase G (Self-Registration Trial Lifecycle), Phase H
-(Billing/Subscription OS), and Phases I–T (Platform operating layers: Registry,
-Provisioning, Readiness, Audit, Workflow, Data Governance, Integration,
-Notification/Inbox, Security/Secrets/Policy, SDK enforcement, Guards/CI gates,
-Admin Console). Includes 10 sequenced milestones (M1–M10).
-Always reflects current done/pending status. Don't fork. Update this single
-file when status changes; sync companion docs alongside.
+**[platform/docs/DOS_MASTER_PLAN.md](./platform/docs/DOS_MASTER_PLAN.md)** —
+**LOCKED 2026-05-04. Force-binding.** Supersedes
+`/root/.claude/plans/you-are-taking-over-joyful-wave.md`. Codifies the 11-
+article DOS Master Doctrine, 3 trust zones, 9 locked decisions, 14
+milestones (M1–M14, 45 engineer-days), 48 controlled DDL tables, 47 CI
+guards, 37 CLI↔UI parity commands, 50-path deletion ledger, 39-capability
+customer pitch matrix, PPD ring engine (R0→R5 with health gates and
+auto-rollback), and Phase 2+ preview (L13–L35). Every agent MUST read it
+before editing. The codebase is the engine; all UI/nav/module/product/
+service/tenant/permission/marketing/admin/rollout changes flow through
+**rows** in DOS Master controlled tables. Code edits that bypass DOS
+Master are CI-rejected (`dos-master-only.mjs`) and DB-rejected
+(`trg_dos_master_only`). Update §11 "Execution State" at every day-close.
+
+### DOS Master execution ledger (live)
+
+- **M1 (2026-05-04) — CLOSED.** All 48 DOS Master controlled tables live in
+  `shahin_grc`: 10 in `dos.dos_master_*`, 8 in `dos.rollout_*`, 4 in
+  `dos.publish_*`, 22 in `dos_master.*` (registry/onboarding/signup/
+  provisioning/audit/doctrine), 4 in `platform_admin.*`. 47
+  `trg_dos_master_only_*` triggers attached. 11 doctrine articles seeded.
+  `dos_master` PG role created and granted to `dos_auth` (dev). Migrations:
+  `20260504_0500_dos_master_writer_scaffold{,_ops,_down}.sql`,
+  `20260504_0510_dos_master_base_batch.sql`,
+  `20260504_0520_dos_master_ppd_publish.sql`,
+  `20260504_0530_dos_master_registry_signup_admin.sql`. Negative-path
+  proof: write without `SET dos.actor='dos-master'` rejected with
+  `42501 "DOS Master only: dos.actor must be set to 'dos-master'"`.
+  Positive-path proof: writes accepted, audit ledger captures
+  `actor=dos-master, op=INSERT|DELETE` rows.
+- **M2 — CLOSED (2026-05-04).** Canonical AccessStore extension:
+  `canAccessModule`, `hasRole`, `hasAnyPermission`, `hasAllPermissions`,
+  `can()` shipped on `@dos/access-store`, plus full M3 compat layer
+  (`functionalRoles`, `visibleModules`, `isAdmin`, `accessProfiles`,
+  `accountStatus`, `scopeBindings`, `decisionAuthorities`,
+  `allowedDashboards`, `landingPage()`, `hasAuthority`, `hasModuleAccess`,
+  `isSuperAdmin`, `canAccessDashboard`, `getScopeForRole`, `setSnapshot`,
+  `clear`). `pnpm --filter @dos/access-store build` GREEN.
+- **M3 — CLOSED (2026-05-04).** 6 consumer imports swapped to
+  `@dos/access-store`: `platform/config-center/board-report/features/bootstrap/bootstrap-checklist.component.ts`,
+  `platform/config-center/runtime/ui-runtime-store.service.ts`,
+  `platform/foundation/ui/pages/foundation-locations.component.spec.ts`,
+  `platform/core/platform/navigation/navigation.store.ts`,
+  `platform/core/services/authz-client.service.ts`,
+  `platform/core/services/platform/app-bootstrap.service.ts`.
+  4 legacy files DELETED:
+  `platform/dauth/access/access.store.ts`,
+  `platform/dauth/packages/frontend/access/{access.store.ts,access.ts,index.ts}`.
+  Deletion ledger written: `platform/docs/dos-master/deletion-ledger.json`.
+  Residual legacy imports: 0 (only doc-comment string mentions remain).
+- **M4 D1 — CLOSED (2026-05-04).** Workspace BFF scaffold landed:
+  `services/workspace-bff/` (`@dos/workspace-bff`, port 4007, gateway
+  prefix `/api/workspace`, trust zone `tenant`). `tsc -p` GREEN. JWE
+  helper (A256GCM, alg=dir, 32-byte base64url key from
+  `WORKSPACE_BOOTSTRAP_JWE_KEY`) + cache-key SHA-256 of sorted role set
+  + Zod `BootstrapPayloadSchema` shipped. Materialized view
+  `dos.mv_workspace_bootstrap` LIVE in `shahin_grc`: 40 rows, each
+  exposing `routes` (179), `shell` (26), `components` (479) JSONB
+  aggregates keyed UNIQUE on `(tenant_id, ui_catalog_version)`.
+  Migration: `20260504_0540_dos_master_mv_workspace_bootstrap.sql`.
+  `workspace-bff` actor registered in `dos.dos_master_grant`
+  (role=`dos-master`), `dos_master.service_registry`
+  (port=4007, zone=`tenant`), `dos_master.service_endpoint`
+  (`GET /api/workspace/bootstrap`, perm=`workspace.bootstrap.read`).
+  Allocated port 4007 in `platform/config-center/ops/ports.allocation.json`.
+- **M4 D2..D3 — PENDING.** Wire `@dos/db` to read MV by cache-key,
+  switch SPA `AccessStore.load()` to `/api/workspace/bootstrap`,
+  REFRESH MATERIALIZED VIEW CONCURRENTLY on `dos_master_invalidation_log`
+  insert (M5 SSE channel).
+- **M5..M14** — PENDING. Sequenced per DOS_MASTER_PLAN.md §3.
 
 ### Phase status (live as of 2026-05-01)
 

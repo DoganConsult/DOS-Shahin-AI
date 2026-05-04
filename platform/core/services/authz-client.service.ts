@@ -1,5 +1,5 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { AccessStore } from '../../dauth/access/access.store';
+import { AccessStore } from '@dos/access-store';
 
 export interface AuthzData {
   accessProfiles: string[];
