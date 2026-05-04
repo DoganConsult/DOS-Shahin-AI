@@ -113,7 +113,7 @@ export async function services9(): Promise<unknown[]> {
     `SELECT s.service_code, s.port, s.trust_zone, s.status, s.pm2_name,
             (SELECT count(*) FROM dos_master.service_endpoint e WHERE e.service_code=s.service_code) AS endpoints
        FROM dos_master.service_registry s
-      WHERE s.port BETWEEN 4007 AND 4015
+      WHERE s.port BETWEEN 4007 AND 4017
       ORDER BY s.port`,
   );
   return r.rows;

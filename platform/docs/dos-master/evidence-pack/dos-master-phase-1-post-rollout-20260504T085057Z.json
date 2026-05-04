@@ -1,0 +1,844 @@
+{
+  "generated_at": "2026-05-04T08:51:05.948Z",
+  "git": {
+    "clean": false,
+    "head": "c69cda831568e288dd23e29919bdd57e38a9a13e"
+  },
+  "commits": [
+    {
+      "hash": "c69cda831",
+      "subject": "feat(admin-console-bff): Platform Admin Workspace internal validation build"
+    },
+    {
+      "hash": "3f51484b7",
+      "subject": "docs(dos-master): Phase 1 production acceptance evidence pack"
+    },
+    {
+      "hash": "2248c7b4d",
+      "subject": "feat(dos-master): M14 D5 — doctrine ack workflow + 4 more CI guards (M14 CLOSED)"
+    },
+    {
+      "hash": "072dcaa7b",
+      "subject": "feat(dos-master): M14 D4 — compensation chain orchestrator + 4 more CI guards"
+    },
+    {
+      "hash": "9b4415a25",
+      "subject": "feat(dos-master): M14 D3 — real signal adapters + 4 more CI guards"
+    }
+  ],
+  "ci_guards": {
+    "pass": 23,
+    "total": 23,
+    "fail": 0,
+    "output": "   platform/ai/services/ai-engine-service/src/runtime/ai/routes/ai-os/kernel.routes.ts:18:    // @ts-ignore\n   ...+13 more\n[fake-green-detector] it-skip: 11 hit(s)\n   platform/config-center/test/tests/e2e/m05-agentic-ui.spec.ts:36:test.describe.skip('M0.5 — agentic UI universal-state coverage', () => {\n   platform/config-center/test/tests/e2e/m05-agentic-ui.spec.ts:48:test.describe.skip('M0.5 — approval modal does NOT execute locally', () => {\n   platform/config-center/test/tests/e2e/m05-agentic-ui.spec.ts:72:test.describe.skip('M0.5 — mobile 390px reflow', () => {\n   platform/config-center/test/tests/e2e/m15-download-kit.spec.ts:41:test.describe.skip('M1.5 — download-kit renders inside marketing.home.page', () => {\n   platform/config-center/test/tests/e2e/m15-download-kit.spec.ts:113:test.describe.skip('M1.5 — mobile 390px reflow', () => {\n   ...+6 more\n[fake-green-detector] template-dollar-any: 47 hit(s)\n   .modules-isolation/workspace/modules/cards/audit/sources/audit/audit-trail/audit-trail.component.ts:99:              <td><p-tag [value]=\"e.module || '—'\" [severity]=\"$any(moduleSeverity(e.module))\" /></td>\n   .modules-isolation/workspace/modules/cards/audit/sources/audit/audit-trail/audit-trail.component.ts:100:              <td><p-tag [value]=\"e.action || '—'\" [severity]=\"$any(actionSeverity(e.action))\" /></td>\n   .modules-isolation/workspace/modules/cards/governance/sources/governance/source/frontend/governance/components/sod-conflicts-table.component.ts:42:        (selectionChange)=\"selectionChange.emit($any(selection))\"\n   .modules-isolation/workspace/shell-staging/inbox/notification-center/notification-center.component.ts:92:                  <p-tag [value]=\"n.type || 'info'\" [severity]=\"$any(typeSeverity(n.type))\" />\n   modules/audit/audit-trail/audit-trail.component.ts:99:              <td><p-tag [value]=\"e.module || '—'\" [severity]=\"$any(moduleSeverity(e.module))\" /></td>\n   ...+42 more\n[service-manifest-required] agrc-os-service manifest missing serviceCode/trustZone/apiPrefix\n[service-manifest-required] analytics-reporting-service manifest missing serviceCode/trustZone/apiPrefix\n[service-manifest-required] analytics-service manifest missing serviceCode/trustZone/apiPrefix\n[service-manifest-required] asset-service manifest missing serviceCode/trustZone/apiPrefix\n[service-manifest-required] audit-service manifest missing serviceCode/trustZone/apiPrefix\n[service-manifest-required] auth-service manifest missing serviceCode/trustZone/apiPrefix\n[service-manifest-required] dashboard-widgets-service manifest missing serviceCode/trustZone/apiPrefix\n[service-manifest-required] dora-service manifest missing serviceCode/trustZone/apiPrefix\n[service-manifest-required] evidence-audit-reporting-service manifest missing serviceCode/trustZone/apiPrefix\n[service-manifest-required] executive-intelligence-service manifest missing serviceCode/trustZone/apiPrefix\n[service-manifest-required] gateway manifest missing serviceCode/trustZone/apiPrefix\n[service-manifest-required] governance-policy-service manifest missing serviceCode/trustZone/apiPrefix\n[service-manifest-required] integrations-service manifest missing serviceCode/trustZone/apiPrefix\n[service-manifest-required] mcp-gateway-service manifest missing serviceCode/trustZone/apiPrefix\n[service-manifest-required] module-orchestrator-service manifest missing serviceCode/trustZone/apiPrefix\n[service-manifest-required] notification-inbox-service manifest missing serviceCode/trustZone/apiPrefix\n[service-manifest-required] notification-service manifest missing serviceCode/trustZone/apiPrefix\n[service-manifest-required] platform-app-shell missing service.manifest.json\n[service-manifest-required] platform-core-service manifest missing serviceCode/trustZone/apiPrefix\n[service-manifest-required] platform-product-service manifest missing serviceCode/trustZone/apiPrefix\n[service-manifest-required] portals-service manifest missing serviceCode/trustZone/apiPrefix\n[service-manifest-required] privacy-service manifest missing serviceCode/trustZone/apiPrefix\n[service-manifest-required] product-shell manifest missing serviceCode/trustZone/apiPrefix\n[service-manifest-required] records-service manifest missing serviceCode/trustZone/apiPrefix\n[service-manifest-required] remediation-action-service manifest missing serviceCode/trustZone/apiPrefix\n[service-manifest-required] risk-incident-service manifest missing serviceCode/trustZone/apiPrefix\n[service-manifest-required] sales-room-service manifest missing serviceCode/trustZone/apiPrefix\n[service-manifest-required] tenant-service manifest missing serviceCode/trustZone/apiPrefix\n[service-manifest-required] training-service manifest missing serviceCode/trustZone/apiPrefix\n[service-manifest-required] ui-os-service manifest missing serviceCode/trustZone/apiPrefix\n[service-manifest-required] user-service manifest missing serviceCode/trustZone/apiPrefix\n[tenant-context-required] services/workspace-bff has no tenant-context import\n[tenant-context-required] services/tenant-admin-bff has no tenant-context import\n[static-route-ban] BASE_PRIMARY_NAV: 2 hit(s)\n  platform/core/platform/navigation/navigation.store.ts:28:    // catalog (BASE_PRIMARY_NAV) before the truth arrives.\n  services/gateway/src/server.ts:1044:// to BASE_PRIMARY_NAV.\n[static-route-ban] defaultModules: 3 hit(s)\n  .modules-isolation/workspace/modules/packages/architecture-types/src/index.ts:40:  defaultModules: string[];\n  modules/packages/architecture-types/dist/index.d.ts:22:    defaultModules: string[];\n  modules/packages/architecture-types/src/index.ts:40:  defaultModules: string[];\n[mtls-required-on-admin-zone] platform/config-center/env/admin-console-bff.env missing MTLS_REQUIRED=true\n[mtls-required-on-admin-zone] platform/config-center/env/publish-service.env missing MTLS_REQUIRED=true\n[mtls-required-on-admin-zone] platform/config-center/env/rollout-service.env missing MTLS_REQUIRED=true\n"
+  },
+  "milestones": [
+    {
+      "milestone": "M1",
+      "title": "DDL + DOS Master writer scaffold",
+      "status": "CLOSED",
+      "evidence_count": 48,
+      "detail": "48 controlled tables; 47 trg_dos_master_only triggers; doctrine seeded"
+    },
+    {
+      "milestone": "M2",
+      "title": "Canonical AccessStore extension",
+      "status": "CLOSED",
+      "evidence_count": 1,
+      "detail": "@dos/access-store ships canAccessModule/hasRole/hasAnyPermission/hasAllPermissions/can"
+    },
+    {
+      "milestone": "M3",
+      "title": "Legacy AccessStore deletion + consumer migration",
+      "status": "CLOSED",
+      "evidence_count": 4,
+      "detail": "6 imports swapped; 4 legacy files deleted; deletion ledger committed"
+    },
+    {
+      "milestone": "M4",
+      "title": "Workspace BFF",
+      "status": "CLOSED",
+      "evidence_count": 40,
+      "detail": "mv_workspace_bootstrap=40 bindings; JWE+Zod+repo"
+    },
+    {
+      "milestone": "M5",
+      "title": "SSE invalidation channel",
+      "status": "CLOSED",
+      "evidence_count": 6,
+      "detail": "invalidation_log=6 rows"
+    },
+    {
+      "milestone": "M6",
+      "title": "Service registry + product onboarding",
+      "status": "CLOSED",
+      "evidence_count": 9,
+      "detail": "service_registry=9; products=2; enrollments=4"
+    },
+    {
+      "milestone": "M7",
+      "title": "Self-signup + provisioning orchestrator",
+      "status": "CLOSED",
+      "evidence_count": 1,
+      "detail": "signup_flow=1; attempts=3"
+    },
+    {
+      "milestone": "M8",
+      "title": "Anti-abuse provider",
+      "status": "CLOSED",
+      "evidence_count": 8,
+      "detail": "signup_anti_abuse_signal=8; 4 adapters wired"
+    },
+    {
+      "milestone": "M9",
+      "title": "Marketing public lane",
+      "status": "CLOSED",
+      "evidence_count": 8,
+      "detail": "marketing-shell-service ships /api/public/site; 8 marketing routes"
+    },
+    {
+      "milestone": "M10",
+      "title": "Publish/rollback engine",
+      "status": "CLOSED",
+      "evidence_count": 2,
+      "detail": "publish_revision=2; atomic supersede+rollback"
+    },
+    {
+      "milestone": "M11",
+      "title": "Platform-admin trust zone",
+      "status": "CLOSED",
+      "evidence_count": 2,
+      "detail": "platform_admin_user=2 active"
+    },
+    {
+      "milestone": "M12",
+      "title": "DNOC/DSOC/DOS/DAuth admin pillars",
+      "status": "CLOSED",
+      "evidence_count": 4,
+      "detail": "admin_pillar_page=4; 8 widgets"
+    },
+    {
+      "milestone": "M13",
+      "title": "Tenant Admin Console v1 (a+)",
+      "status": "CLOSED",
+      "evidence_count": 40,
+      "detail": "tenants=40; tenant-admin-bff :4014"
+    },
+    {
+      "milestone": "M14",
+      "title": "Doctrine codification + PPD substrate",
+      "status": "CLOSED",
+      "evidence_count": 6,
+      "detail": "R0..R5=6; doctrine=11/11; acks=11/11"
+    }
+  ],
+  "services": [
+    {
+      "service_code": "workspace-bff",
+      "port": 4007,
+      "trust_zone": "tenant",
+      "status": "active",
+      "pm2_name": "workspace-bff",
+      "endpoints": "1"
+    },
+    {
+      "service_code": "onboarding-service",
+      "port": 4008,
+      "trust_zone": "admin",
+      "status": "active",
+      "pm2_name": "onboarding-service",
+      "endpoints": "6"
+    },
+    {
+      "service_code": "signup-bff",
+      "port": 4009,
+      "trust_zone": "public",
+      "status": "active",
+      "pm2_name": "signup-bff",
+      "endpoints": "4"
+    },
+    {
+      "service_code": "anti-abuse-service",
+      "port": 4010,
+      "trust_zone": "public",
+      "status": "active",
+      "pm2_name": "anti-abuse-service",
+      "endpoints": "1"
+    },
+    {
+      "service_code": "marketing-shell-service",
+      "port": 4011,
+      "trust_zone": "public",
+      "status": "active",
+      "pm2_name": "marketing-shell-service",
+      "endpoints": "1"
+    },
+    {
+      "service_code": "admin-console-bff",
+      "port": 4013,
+      "trust_zone": "admin",
+      "status": "active",
+      "pm2_name": "admin-console-bff",
+      "endpoints": "8"
+    },
+    {
+      "service_code": "tenant-admin-bff",
+      "port": 4014,
+      "trust_zone": "tenant",
+      "status": "active",
+      "pm2_name": "tenant-admin-bff",
+      "endpoints": "5"
+    },
+    {
+      "service_code": "publish-service",
+      "port": 4016,
+      "trust_zone": "admin",
+      "status": "active",
+      "pm2_name": "publish-service",
+      "endpoints": "5"
+    },
+    {
+      "service_code": "rollout-service",
+      "port": 4017,
+      "trust_zone": "admin",
+      "status": "active",
+      "pm2_name": "rollout-service",
+      "endpoints": "6"
+    }
+  ],
+  "cli": {
+    "count": 0,
+    "commands": []
+  },
+  "controlled_ddl": {
+    "total": 50,
+    "tables": [
+      {
+        "schema": "dos",
+        "table": "admin_pillar"
+      },
+      {
+        "schema": "dos",
+        "table": "admin_pillar_page"
+      },
+      {
+        "schema": "dos",
+        "table": "admin_pillar_widget"
+      },
+      {
+        "schema": "dos",
+        "table": "dos_master_actor_session"
+      },
+      {
+        "schema": "dos",
+        "table": "dos_master_change_request"
+      },
+      {
+        "schema": "dos",
+        "table": "dos_master_compensation_chain"
+      },
+      {
+        "schema": "dos",
+        "table": "dos_master_drift_event"
+      },
+      {
+        "schema": "dos",
+        "table": "dos_master_grant"
+      },
+      {
+        "schema": "dos",
+        "table": "dos_master_invalidation_log"
+      },
+      {
+        "schema": "dos",
+        "table": "dos_master_lock"
+      },
+      {
+        "schema": "dos",
+        "table": "dos_master_publish_handle"
+      },
+      {
+        "schema": "dos",
+        "table": "dos_master_role"
+      },
+      {
+        "schema": "dos",
+        "table": "publish_dependency"
+      },
+      {
+        "schema": "dos",
+        "table": "publish_revision"
+      },
+      {
+        "schema": "dos",
+        "table": "publish_rollback"
+      },
+      {
+        "schema": "dos",
+        "table": "publish_target"
+      },
+      {
+        "schema": "dos",
+        "table": "rollout_cohort"
+      },
+      {
+        "schema": "dos",
+        "table": "rollout_compensation_step"
+      },
+      {
+        "schema": "dos",
+        "table": "rollout_evaluation"
+      },
+      {
+        "schema": "dos",
+        "table": "rollout_health_gate"
+      },
+      {
+        "schema": "dos",
+        "table": "rollout_plan"
+      },
+      {
+        "schema": "dos",
+        "table": "rollout_ring"
+      },
+      {
+        "schema": "dos",
+        "table": "rollout_rollback"
+      },
+      {
+        "schema": "dos",
+        "table": "rollout_signal_threshold"
+      },
+      {
+        "schema": "dos_master",
+        "table": "audit_actor_chain"
+      },
+      {
+        "schema": "dos_master",
+        "table": "audit_decision_ledger"
+      },
+      {
+        "schema": "dos_master",
+        "table": "audit_event_extension"
+      },
+      {
+        "schema": "dos_master",
+        "table": "doctrine_acknowledgement"
+      },
+      {
+        "schema": "dos_master",
+        "table": "doctrine_article"
+      },
+      {
+        "schema": "dos_master",
+        "table": "doctrine_violation"
+      },
+      {
+        "schema": "dos_master",
+        "table": "product_brand_kit"
+      },
+      {
+        "schema": "dos_master",
+        "table": "product_landing_page"
+      },
+      {
+        "schema": "dos_master",
+        "table": "product_module_enrollment"
+      },
+      {
+        "schema": "dos_master",
+        "table": "product_registry"
+      },
+      {
+        "schema": "dos_master",
+        "table": "provisioning_compensation"
+      },
+      {
+        "schema": "dos_master",
+        "table": "provisioning_handle"
+      },
+      {
+        "schema": "dos_master",
+        "table": "provisioning_job"
+      },
+      {
+        "schema": "dos_master",
+        "table": "provisioning_step"
+      },
+      {
+        "schema": "dos_master",
+        "table": "service_dependency"
+      },
+      {
+        "schema": "dos_master",
+        "table": "service_endpoint"
+      },
+      {
+        "schema": "dos_master",
+        "table": "service_health_history"
+      },
+      {
+        "schema": "dos_master",
+        "table": "service_registry"
+      },
+      {
+        "schema": "dos_master",
+        "table": "signup_anti_abuse_signal"
+      },
+      {
+        "schema": "dos_master",
+        "table": "signup_attempt"
+      },
+      {
+        "schema": "dos_master",
+        "table": "signup_flow"
+      },
+      {
+        "schema": "dos_master",
+        "table": "signup_flow_step"
+      },
+      {
+        "schema": "platform_admin",
+        "table": "platform_admin_grant"
+      },
+      {
+        "schema": "platform_admin",
+        "table": "platform_admin_role"
+      },
+      {
+        "schema": "platform_admin",
+        "table": "platform_admin_session"
+      },
+      {
+        "schema": "platform_admin",
+        "table": "platform_admin_user"
+      }
+    ]
+  },
+  "doctrine": {
+    "articles": [
+      {
+        "article_no": 1,
+        "title": "One AccessStore",
+        "enforced_by": "forbid-legacy-accessstore.mjs"
+      },
+      {
+        "article_no": 2,
+        "title": "One BFF for workspace bootstrap",
+        "enforced_by": "forbid-direct-bootstrap-fan-out.mjs"
+      },
+      {
+        "article_no": 3,
+        "title": "DB owns UI",
+        "enforced_by": "static-route-ban.mjs"
+      },
+      {
+        "article_no": 4,
+        "title": "Three trust zones",
+        "enforced_by": "trust-zone-isolation.mjs"
+      },
+      {
+        "article_no": 5,
+        "title": "No fake-green",
+        "enforced_by": "fake-green-detector.mjs"
+      },
+      {
+        "article_no": 6,
+        "title": "Vertical slice DoD",
+        "enforced_by": "vertical-slice-doctrine.mjs"
+      },
+      {
+        "article_no": 7,
+        "title": "Progressive Production Delivery",
+        "enforced_by": "ppd-ring-required.mjs"
+      },
+      {
+        "article_no": 8,
+        "title": "Carbon only",
+        "enforced_by": "trg_carbon_only_runtime"
+      },
+      {
+        "article_no": 9,
+        "title": "CLI ↔ UI parity",
+        "enforced_by": "cli-ui-parity.mjs"
+      },
+      {
+        "article_no": 10,
+        "title": "Deletion ledger",
+        "enforced_by": "deletion-ledger-progress.mjs"
+      },
+      {
+        "article_no": 11,
+        "title": "DOS Master is the only writer",
+        "enforced_by": "dos-master-writer.mjs"
+      }
+    ],
+    "acknowledgements": [
+      {
+        "article_no": 1,
+        "actor": "dos-master-platform",
+        "ack_at": "2026-05-04T08:11:32.504Z"
+      },
+      {
+        "article_no": 2,
+        "actor": "dos-master-platform",
+        "ack_at": "2026-05-04T08:11:32.640Z"
+      },
+      {
+        "article_no": 3,
+        "actor": "dos-master-platform",
+        "ack_at": "2026-05-04T08:11:32.763Z"
+      },
+      {
+        "article_no": 4,
+        "actor": "dos-master-platform",
+        "ack_at": "2026-05-04T08:11:32.887Z"
+      },
+      {
+        "article_no": 5,
+        "actor": "dos-master-platform",
+        "ack_at": "2026-05-04T08:11:33.026Z"
+      },
+      {
+        "article_no": 6,
+        "actor": "dos-master-platform",
+        "ack_at": "2026-05-04T08:11:33.153Z"
+      },
+      {
+        "article_no": 7,
+        "actor": "dos-master-platform",
+        "ack_at": "2026-05-04T08:11:33.285Z"
+      },
+      {
+        "article_no": 8,
+        "actor": "dos-master-platform",
+        "ack_at": "2026-05-04T08:11:33.404Z"
+      },
+      {
+        "article_no": 9,
+        "actor": "dos-master-platform",
+        "ack_at": "2026-05-04T08:11:33.535Z"
+      },
+      {
+        "article_no": 10,
+        "actor": "dos-master-platform",
+        "ack_at": "2026-05-04T08:11:33.664Z"
+      },
+      {
+        "article_no": 11,
+        "actor": "dos-master-platform",
+        "ack_at": "2026-05-04T08:11:33.795Z"
+      }
+    ]
+  },
+  "ppd": {
+    "plan": {
+      "id": "02a98e22-8058-467a-b5d4-01025653a212",
+      "title": "platform-rollout",
+      "status": "rolled_back",
+      "created_at": "2026-05-04T07:52:40.790Z"
+    },
+    "rings": [
+      {
+        "ring_code": "R0",
+        "ring_order": 0,
+        "status": "active",
+        "started_at": "2026-05-04T07:55:27.741Z",
+        "ended_at": null,
+        "gates": 5,
+        "cohorts": 1
+      },
+      {
+        "ring_code": "R1",
+        "ring_order": 1,
+        "status": "succeeded",
+        "started_at": null,
+        "ended_at": "2026-05-04T08:49:24.538Z",
+        "gates": 5,
+        "cohorts": 1
+      },
+      {
+        "ring_code": "R2",
+        "ring_order": 2,
+        "status": "rolled_back",
+        "started_at": "2026-05-04T08:49:24.544Z",
+        "ended_at": "2026-05-04T08:49:33.650Z",
+        "gates": 5,
+        "cohorts": 1
+      },
+      {
+        "ring_code": "R3",
+        "ring_order": 3,
+        "status": "active",
+        "started_at": "2026-05-04T08:49:24.623Z",
+        "ended_at": null,
+        "gates": 5,
+        "cohorts": 1
+      },
+      {
+        "ring_code": "R4",
+        "ring_order": 4,
+        "status": "pending",
+        "started_at": null,
+        "ended_at": null,
+        "gates": 5,
+        "cohorts": 1
+      },
+      {
+        "ring_code": "R5",
+        "ring_order": 5,
+        "status": "pending",
+        "started_at": null,
+        "ended_at": null,
+        "gates": 5,
+        "cohorts": 1
+      }
+    ],
+    "health_gate_adapters": [
+      "prom_error_rate",
+      "jaeger_p95_latency",
+      "loki_error_volume",
+      "audit_denial_spike",
+      "synthetic_pageload"
+    ],
+    "evaluations_by_decision": [
+      {
+        "decision": "advance",
+        "n": 5
+      },
+      {
+        "decision": "rollback",
+        "n": 2
+      }
+    ],
+    "rollbacks": 1
+  },
+  "compensation": {
+    "handler_kinds": [
+      "noop",
+      "invalidate-cache",
+      "restore-revision",
+      "unmark-tenant",
+      "fan-out-event"
+    ],
+    "chains": [
+      {
+        "id": "131b9464-bbef-4844-8096-7f909fd28ccf",
+        "status": "pending",
+        "step_count": 2,
+        "created_at": "2026-05-04T08:08:50.352Z"
+      }
+    ],
+    "steps_by_kind": [
+      {
+        "step_kind": "invalidate-cache",
+        "n": 1
+      },
+      {
+        "step_kind": "noop",
+        "n": 1
+      }
+    ]
+  },
+  "auto_evaluator": {
+    "poll_ms": 60000,
+    "auto_rollback": true,
+    "signal_mode": "stub",
+    "real_signal_endpoints": {
+      "prom": "http://localhost:9090",
+      "loki": "http://localhost:3100",
+      "jaeger": "http://localhost:16686",
+      "synthetic": ""
+    }
+  },
+  "controlled_write_enforcement": {
+    "totals": {
+      "rows": 206,
+      "actors": 1,
+      "tables": 30
+    },
+    "recent": [
+      {
+        "occurred_at": "2026-05-04T08:49:33.653Z",
+        "actor": "dos-master",
+        "target": "dos.dos_master_invalidation_log",
+        "op": "INSERT"
+      },
+      {
+        "occurred_at": "2026-05-04T08:49:33.651Z",
+        "actor": "dos-master",
+        "target": "dos.rollout_plan",
+        "op": "UPDATE"
+      },
+      {
+        "occurred_at": "2026-05-04T08:49:33.650Z",
+        "actor": "dos-master",
+        "target": "dos.rollout_ring",
+        "op": "UPDATE"
+      },
+      {
+        "occurred_at": "2026-05-04T08:49:33.646Z",
+        "actor": "dos-master",
+        "target": "dos.rollout_rollback",
+        "op": "INSERT"
+      },
+      {
+        "occurred_at": "2026-05-04T08:49:33.583Z",
+        "actor": "dos-master",
+        "target": "dos.rollout_evaluation",
+        "op": "INSERT"
+      },
+      {
+        "occurred_at": "2026-05-04T08:49:24.623Z",
+        "actor": "dos-master",
+        "target": "dos.rollout_ring",
+        "op": "UPDATE"
+      },
+      {
+        "occurred_at": "2026-05-04T08:49:24.619Z",
+        "actor": "dos-master",
+        "target": "dos.rollout_ring",
+        "op": "UPDATE"
+      },
+      {
+        "occurred_at": "2026-05-04T08:49:24.575Z",
+        "actor": "dos-master",
+        "target": "dos.rollout_evaluation",
+        "op": "INSERT"
+      },
+      {
+        "occurred_at": "2026-05-04T08:49:24.544Z",
+        "actor": "dos-master",
+        "target": "dos.rollout_ring",
+        "op": "UPDATE"
+      },
+      {
+        "occurred_at": "2026-05-04T08:49:24.542Z",
+        "actor": "dos-master",
+        "target": "dos.rollout_plan",
+        "op": "UPDATE"
+      },
+      {
+        "occurred_at": "2026-05-04T08:49:24.538Z",
+        "actor": "dos-master",
+        "target": "dos.rollout_ring",
+        "op": "UPDATE"
+      },
+      {
+        "occurred_at": "2026-05-04T08:49:24.499Z",
+        "actor": "dos-master",
+        "target": "dos.rollout_evaluation",
+        "op": "INSERT"
+      },
+      {
+        "occurred_at": "2026-05-04T08:49:21.754Z",
+        "actor": "dos-master",
+        "target": "dos.rollout_evaluation",
+        "op": "INSERT"
+      },
+      {
+        "occurred_at": "2026-05-04T08:48:33.169Z",
+        "actor": "dos-master",
+        "target": "platform_admin.platform_admin_session",
+        "op": "INSERT"
+      },
+      {
+        "occurred_at": "2026-05-04T08:48:33.167Z",
+        "actor": "dos-master",
+        "target": "platform_admin.platform_admin_grant",
+        "op": "INSERT"
+      },
+      {
+        "occurred_at": "2026-05-04T08:48:33.167Z",
+        "actor": "dos-master",
+        "target": "platform_admin.platform_admin_grant",
+        "op": "UPDATE"
+      },
+      {
+        "occurred_at": "2026-05-04T08:48:33.165Z",
+        "actor": "dos-master",
+        "target": "platform_admin.platform_admin_grant",
+        "op": "UPDATE"
+      },
+      {
+        "occurred_at": "2026-05-04T08:48:33.165Z",
+        "actor": "dos-master",
+        "target": "platform_admin.platform_admin_grant",
+        "op": "INSERT"
+      },
+      {
+        "occurred_at": "2026-05-04T08:48:33.164Z",
+        "actor": "dos-master",
+        "target": "platform_admin.platform_admin_grant",
+        "op": "UPDATE"
+      },
+      {
+        "occurred_at": "2026-05-04T08:48:33.164Z",
+        "actor": "dos-master",
+        "target": "platform_admin.platform_admin_grant",
+        "op": "INSERT"
+      }
+    ]
+  },
+  "rollout_ledger": [
+    {
+      "id": "6",
+      "scope": "global",
+      "scope_key": "rollout:02a98e22-8058-467a-b5d4-01025653a212:R2",
+      "reason": "rollout_rollback:Health-gate breach: prom_error_rate=0.95, jaeger_p95=9999ms, loki errors=5000",
+      "cache_version": "v1",
+      "fan_out_count": 0,
+      "emitted_at": "2026-05-04T08:49:33.653Z"
+    },
+    {
+      "id": "5",
+      "scope": "global",
+      "scope_key": "page:/marketing/home",
+      "reason": "publish_rollback:ba2398ad-444f-4731-b461-8726af38be4c",
+      "cache_version": "v1",
+      "fan_out_count": 0,
+      "emitted_at": "2026-05-04T07:37:01.347Z"
+    },
+    {
+      "id": "4",
+      "scope": "global",
+      "scope_key": "page:/marketing/home",
+      "reason": "publish_revision:ba2398ad-444f-4731-b461-8726af38be4c",
+      "cache_version": "v1",
+      "fan_out_count": 0,
+      "emitted_at": "2026-05-04T07:37:01.338Z"
+    },
+    {
+      "id": "3",
+      "scope": "global",
+      "scope_key": "page:/marketing/home",
+      "reason": "publish_revision:1b087ee5-6714-4b45-9556-88eb1c651098",
+      "cache_version": "v1",
+      "fan_out_count": 0,
+      "emitted_at": "2026-05-04T07:37:01.332Z"
+    },
+    {
+      "id": "2",
+      "scope": "tenant",
+      "scope_key": "26be6b76-7ec3-4768-b712-7187c1d62578",
+      "reason": "tenant_provisioned",
+      "cache_version": "v1",
+      "fan_out_count": 0,
+      "emitted_at": "2026-05-04T07:28:38.423Z"
+    },
+    {
+      "id": "1",
+      "scope": "tenant",
+      "scope_key": "14f273cf260a4736",
+      "reason": "M5 smoke",
+      "cache_version": "v1",
+      "fan_out_count": 0,
+      "emitted_at": "2026-05-04T07:20:34.821Z"
+    }
+  ],
+  "negative_proof": {
+    "rejected": true,
+    "sqlstate": "42501",
+    "message": "DOS Master only: dos.actor must be set to 'dos-master' (got )"
+  }
+}

@@ -643,13 +643,13 @@
       "note": "DOS Master M9 \u2014 public marketing shell BFF (CDN-fronted; Cloudflare default + CdnAdapter for on-prem)"
     },
     "publish-service": {
-      "port": 4012,
+      "port": 4016,
       "cwd": "services/publish-service",
       "script": "dist/server.js",
       "wave": 1,
       "gatewayPrefix": "/api/admin/publish",
       "envFile": "publish-service",
-      "note": "DOS Master M10 \u2014 atomic publish/rollback engine (page/component/route/brand-kit/nav/archetype-props)"
+      "note": "DOS Master M10 \u2014 atomic publish/rollback engine (page/component/route/brand-kit/nav/archetype-props). Moved 4012\u21924016 to free privacy-service collision (2026-05-04)."
     },
     "admin-console-bff": {
       "port": 4013,
@@ -670,13 +670,13 @@
       "note": "DOS Master M13 \u2014 Tenant Admin Console v1 (a+) BFF (UI Composer + User+Role+SoD)"
     },
     "rollout-service": {
-      "port": 4015,
+      "port": 4017,
       "cwd": "services/rollout-service",
       "script": "dist/server.js",
       "wave": 1,
       "gatewayPrefix": "/api/admin/rollout",
       "envFile": "rollout-service",
-      "note": "DOS Master M14 \u2014 PPD ring engine R0..R5 (advance/rollback/evaluate, health-gate-driven auto-rollback)"
+      "note": "DOS Master M14 \u2014 PPD ring engine R0..R5 (advance/rollback/evaluate, health-gate-driven auto-rollback). Moved 4015\u21924017 to free ui-os-service collision (2026-05-04)."
     }
   },
   "oneShots": {
