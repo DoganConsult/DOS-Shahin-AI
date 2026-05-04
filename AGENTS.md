@@ -1092,14 +1092,38 @@ Master are CI-rejected (`dos-master-only.mjs`) and DB-rejected
                                          realm-isolated
   `scripts/ci-guards/dos-master-gate.mjs` master runner: 15/15 guards
   PASS end-to-end (`node scripts/ci-guards/dos-master-gate.mjs`).
-- **M14 D4..D5** — IN-PROGRESS. Remaining: Temporal-backed compensation
-  chain orchestrator (`dos.rollout_compensation_step` execution
-  engine), remaining 32 CI guards (per-zone: `mTLS-required-on-admin-zone`,
-  `redis-db-isolation`, `cookie-domain-isolation`, `bootstrap-cache-key-coherent`,
-  `static-route-ban`, `decision-ledger-immutable`, …), tighten
-  fake-green/bootstrap-fan-out/tenant-context baselines to 0,
-  end-to-end doctrine acknowledgement workflow via
-  `dos_master.doctrine_acknowledgement`.
+- **M14 D4 — CLOSED (2026-05-04).** Compensation chain orchestrator
+  shipped (`services/rollout-service/src/lib/compensation-orchestrator.ts`):
+  step kinds `noop|invalidate-cache|restore-revision|unmark-tenant|fan-out-event`
+  with pluggable handlers (`registerStepHandler`); `executeChain()`
+  walks `dos.rollout_compensation_step` in `step_order`, marks
+  `running→succeeded|failed`, short-circuits on first failure, sets
+  `dos.dos_master_compensation_chain.status='compensated'|'failed'`.
+  Handlers registered: `noop`, `invalidate-cache` (writes
+  `dos_master_invalidation_log`), `fan-out-event`. Routes mounted on
+  `services/rollout-service`:
+    `POST /api/admin/rollout/compensation/chains` (creates chain + steps)
+    `POST /api/admin/rollout/compensation/chains/:chain_id/execute`
+  Live-verified DB substrate end-to-end (chain row + 2 step rows
+  visible in `dos.rollout_compensation_step` keyed on chain UUID,
+  trg_dos_master_only accepted writes under `dos.actor='dos-master'`).
+  Four additional CI guards landed and PASS in
+  `dos-master-gate.mjs`:
+    `decision-ledger-immutable.mjs`     dos_master_writer_audit append-only
+    `cookie-domain-isolation.mjs`       3 admin + 2 tenant cookie-isolated
+    `redis-db-isolation.mjs`            env files compliant per zone
+    `static-route-ban.mjs`              5 hits ≤ baseline 200
+  `scripts/ci-guards/dos-master-gate.mjs` master runner: 19/19 guards
+  PASS end-to-end (`node scripts/ci-guards/dos-master-gate.mjs`).
+- **M14 D5** — IN-PROGRESS. Remaining: real Temporal worker swap-in
+  for compensation orchestrator, remaining 28 CI guards
+  (`mTLS-required-on-admin-zone`, `bootstrap-cache-key-coherent`,
+  `provisioning-temporal-workflow-present`, `provisioning-job-idempotent`,
+  `publish-revision-atomic`, `publish-rollback-pair`, …), tighten
+  fake-green/bootstrap-fan-out/tenant-context/static-route baselines
+  to 0, end-to-end doctrine acknowledgement workflow via
+  `dos_master.doctrine_acknowledgement`, customer-pitch-matrix v1
+  publish.
 
 ### Phase status (live as of 2026-05-01)
 

@@ -1,6 +1,7 @@
 import { Router, type Request, type Response } from 'express';
 import { createPlan, listPlans, planComposition, advanceRing, rollbackRing, evaluateRing } from '../lib/rollout-repo.js';
 import { PlanCreateSchema, RingAdvanceSchema, RingRollbackSchema, EvaluateSchema } from '../schemas/rollout.schemas.js';
+import { createChain, executeChain, type StepKind } from '../lib/compensation-orchestrator.js';
 
 export const rolloutRouter = Router();
 
@@ -48,6 +49,25 @@ rolloutRouter.post('/rollback', async (req: Request, res: Response) => {
     res.json(await rollbackRing(p.data.plan_id, p.data.ring_code, p.data.triggered_by, p.data.reason));
   } catch (e) {
     res.status(500).json({ error: 'rollback_failed', detail: String((e as Error).message) });
+  }
+});
+
+rolloutRouter.post('/compensation/chains', async (req: Request, res: Response) => {
+  const steps = Array.isArray(req.body?.steps) ? req.body.steps as Array<{ kind: StepKind; payload?: Record<string, unknown> }> : null;
+  if (!steps?.length) { res.status(400).json({ error: 'steps_required' }); return; }
+  try {
+    const id = await createChain(steps, req.body?.change_request_id ?? null);
+    res.status(201).json({ ok: true, chain_id: id, step_count: steps.length });
+  } catch (e) {
+    res.status(500).json({ error: 'create_chain_failed', detail: String((e as Error).message) });
+  }
+});
+
+rolloutRouter.post('/compensation/chains/:chain_id/execute', async (req, res) => {
+  try {
+    res.json(await executeChain(String(req.params.chain_id)));
+  } catch (e) {
+    res.status(500).json({ error: 'execute_chain_failed', detail: String((e as Error).message) });
   }
 });
 

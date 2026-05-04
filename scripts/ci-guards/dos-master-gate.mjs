@@ -21,6 +21,10 @@ const GUARDS = [
   'rls-policy-present.mjs',
   'audit-event-on-write.mjs',
   'keycloak-realm-isolation.mjs',
+  'decision-ledger-immutable.mjs',
+  'cookie-domain-isolation.mjs',
+  'redis-db-isolation.mjs',
+  'static-route-ban.mjs',
 ];
 
 let pass = 0, fail = 0;
