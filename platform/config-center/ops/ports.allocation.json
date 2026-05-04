@@ -659,6 +659,15 @@
       "gatewayPrefix": "/api/admin/console",
       "envFile": "admin-console-bff",
       "note": "DOS Master M11 \u2014 platform-admin trust zone BFF (DNOC/DSOC/DOS/DAuth pillars)"
+    },
+    "tenant-admin-bff": {
+      "port": 4014,
+      "cwd": "services/tenant-admin-bff",
+      "script": "dist/server.js",
+      "wave": 1,
+      "gatewayPrefix": "/api/tenant-admin",
+      "envFile": "tenant-admin-bff",
+      "note": "DOS Master M13 \u2014 Tenant Admin Console v1 (a+) BFF (UI Composer + User+Role+SoD)"
     }
   },
   "oneShots": {

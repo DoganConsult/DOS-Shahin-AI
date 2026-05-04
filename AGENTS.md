@@ -986,9 +986,32 @@ Master are CI-rejected (`dos-master-only.mjs`) and DB-rejected
   for all 4 pillars: each returns 1 page × 2 widgets. CLI extended
   with 2 parity commands (`pillar:page:add`, `pillar:list`); total CLI
   surface now 22.
-- **M13..M14** — IN-PROGRESS. Sequenced per DOS_MASTER_PLAN.md §3.
-  M13 next: Tenant Admin Console v1 (a+) — UI Composer + User+Role+SoD
-  + audit + delegation, isolated from platform-admin trust.
+- **M13 D1 — CLOSED (2026-05-04).** `services/tenant-admin-bff`
+  (`@dos/tenant-admin-bff`, port 4014, **tenant trust zone**, prefix
+  `/api/tenant-admin`) ships Tenant Admin Console v1 (a+) BFF.
+  `GET /composer-bootstrap?tenant_id=` returns
+  `{tenant, members[], entitlements[], sod_rules[], brand{},
+  composer_version:'a+ v1', generatedAt}` joining `dos.tenants` +
+  `dos.tenant_memberships` (status='active') + `dos.tenant_module_entitlements`
+  + `dos.module_sod_rules` (enabled global SoD inherited by tenant) +
+  `dos.tenant_brand_tokens`. Routes: `GET /composer-bootstrap`,
+  `GET|POST /members`, `GET /entitlements`, `GET /sod`. Registered in
+  `dos_master.service_registry` (port=4014, zone=tenant) + 5 endpoints
+  in `dos_master.service_endpoint` with
+  `tenant.admin.{composer,members,entitlements,sod}.{read,write}`
+  permission keys; granted `dos-master` in `dos.dos_master_grant`.
+  Allocated port 4014 in
+  `platform/config-center/ops/ports.allocation.json`. Trust-zone
+  separation strict: tenant zone never imports `platform_admin.*`.
+  Live-verified bootstrap for tenant `14f273cf260a4736` (`shahinaicom`,
+  active): members=1, entitlements=2, sod_rules=0 (no global SoD rules
+  seeded), composer_version=`a+ v1`. CLI extended with 2 parity
+  commands (`tenant:list`, `tenant:composer`); total CLI surface now 24.
+- **M14** — IN-PROGRESS. M14 D1 next: doctrine codification + PPD
+  substrate (47 CI guards mapped to scripts under `scripts/ci-guards/`,
+  ring engine R0→R5 wired to `services/rollout-service`, health gates
+  Prom/Jaeger/Loki/audit/synthetic, auto-rollback within 5m on gate
+  failure, compensation chain orchestration via Temporal).
 
 ### Phase status (live as of 2026-05-01)
 

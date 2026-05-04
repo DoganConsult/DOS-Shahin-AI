@@ -285,6 +285,26 @@ async function adminGrant() {
   });
 }
 
+async function tenantList() {
+  return withClient(async (c) => {
+    const r = await c.query(`SELECT tenant_id, tenant_code, tenant_name, status FROM dos.tenants ORDER BY tenant_id LIMIT 50`);
+    console.table(r.rows);
+  });
+}
+
+async function tenantComposer() {
+  const id = flag('tenant');
+  if (!id) { console.error('--tenant required'); process.exit(2); }
+  return withClient(async (c) => {
+    const t = await c.query(`SELECT tenant_id, tenant_code, status FROM dos.tenants WHERE tenant_id=$1`, [id]);
+    if (!t.rows.length) { console.error('tenant_not_found'); process.exit(3); }
+    const m = await c.query(`SELECT count(*)::int AS n FROM dos.tenant_memberships WHERE tenant_id=$1 AND status='active'`, [id]);
+    const e = await c.query(`SELECT count(*)::int AS n FROM dos.tenant_module_entitlements WHERE tenant_id=$1`, [id]);
+    console.log('tenant:', t.rows[0]);
+    console.log('members:', m.rows[0].n, '| entitlements:', e.rows[0].n);
+  });
+}
+
 async function pillarPageAdd() {
   const pillar = flag('pillar'); const key = flag('key'); const name = flag('name');
   const route = flag('route'); const arche = flag('archetype', 'dashboard-grid');
@@ -358,6 +378,8 @@ const dispatch = {
   'admin:grant': adminGrant,
   'pillar:page:add': pillarPageAdd,
   'pillar:list': pillarList,
+  'tenant:list': tenantList,
+  'tenant:composer': tenantComposer,
 };
 
 if (!cmd || cmd === '-h' || cmd === '--help') {

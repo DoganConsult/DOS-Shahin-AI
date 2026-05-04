@@ -1,0 +1,25 @@
+{
+  "name": "@dos/tenant-admin-bff",
+  "version": "0.1.0",
+  "description": "DOS Master M13 — Tenant Admin Console v1 (a+) BFF (UI Composer + User+Role+SoD)",
+  "private": true,
+  "main": "dist/server.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/server.js",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@dos/service-bootstrap": "workspace:*",
+    "@dos/runtime-config": "workspace:*",
+    "@dos/platform-core": "workspace:*",
+    "@dos/db": "workspace:*",
+    "express": "^4.22.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^25.6.0",
+    "typescript": "^5.7.0"
+  }
+}
