@@ -60,6 +60,69 @@ export async function listEvents(recordKey?: string, limit = 100) {
   return r.rows;
 }
 
+// ── Phase 3 / L28 — feature-flag-os domain logic: deterministic flag evaluator.
+// Decides ON|OFF for a published flag against a tenant/user ctx using the
+// flag's `kind` (boolean | percentage | cohort | kill-switch). Emits a
+// `feature_flag_evaluated` event ledger row so the decision is auditable.
+export interface FlagEvalCtx { tenant_id?: string; user_id?: string; cohort?: string }
+export interface FlagEvalResult { record_key: string; version: number; kind: string; decision: 'on'|'off'; reason: string; evaluated_at: string }
+
+function hash32(s: string): number {
+  let h = 2166136261 >>> 0;
+  for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; }
+  return h >>> 0;
+}
+
+export async function evaluateFlag(recordKey: string, ctx: FlagEvalCtx): Promise<FlagEvalResult> {
+  await actor();
+  const r = await masterQuery(
+    `SELECT record_key, version, kind, status, config
+       FROM dos.feature_flag_record
+      WHERE record_key=$1 AND status='published'
+      ORDER BY version DESC LIMIT 1`,
+    [recordKey],
+  );
+  if (!r.rows.length) throw new Error('flag_not_published');
+  const row = r.rows[0] as { record_key: string; version: number; kind: string; config: Record<string, unknown> };
+  const cfg = row.config ?? {};
+  let decision: 'on'|'off' = 'off';
+  let reason = 'default_off';
+  switch (row.kind) {
+    case 'boolean':
+      decision = cfg.enabled === true ? 'on' : 'off';
+      reason = `boolean:${decision}`;
+      break;
+    case 'kill-switch':
+      decision = cfg.killed === true ? 'off' : 'on';
+      reason = `kill-switch:${cfg.killed === true ? 'killed' : 'live'}`;
+      break;
+    case 'percentage': {
+      const pct = Math.max(0, Math.min(100, Number(cfg.percentage ?? 0)));
+      const seed = `${recordKey}|${ctx.tenant_id ?? ''}|${ctx.user_id ?? ''}`;
+      const bucket = hash32(seed) % 100;
+      decision = bucket < pct ? 'on' : 'off';
+      reason = `percentage:${pct}%,bucket=${bucket}`;
+      break;
+    }
+    case 'cohort': {
+      const cohorts = Array.isArray(cfg.cohorts) ? cfg.cohorts as string[] : [];
+      decision = cohorts.includes(ctx.cohort ?? '') ? 'on' : 'off';
+      reason = `cohort:${ctx.cohort ?? '∅'}∈${JSON.stringify(cohorts)}`;
+      break;
+    }
+    default:
+      reason = `unknown_kind:${row.kind}`;
+  }
+  const evaluatedAt = new Date().toISOString();
+  await emitEvent({
+    record_key: recordKey,
+    kind: 'feature_flag_evaluated',
+    payload: { ctx, decision, reason, version: row.version },
+    emitted_by: 'feature-flag-os-service',
+  });
+  return { record_key: row.record_key, version: row.version, kind: row.kind, decision, reason, evaluated_at: evaluatedAt };
+}
+
 export async function emitEvent(input: { record_key: string; kind: string; payload?: Record<string, unknown>; emitted_by: string; }) {
   await actor();
   const rec = await getRecord(input.record_key);

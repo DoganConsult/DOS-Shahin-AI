@@ -1,20 +1,34 @@
 /**
- * Phase WS-2 — workspace.context-panel wrapper.
+ * Phase WS-2 + Carbon-Wiring — workspace.context-panel wrapper.
  * Selector: dos-context-panel
- * Carbon primitive: accordion.
- * Mobile_mode: full-screen-sheet at ≤480px.
- * Tabs: record, help, audit, ai-insights.
+ * Carbon primitive: accordion (AccordionModule → cds-accordion) + tabs (cds-tabs CSS)
+ * DB: dos.dynamic_ui_component_registry component_key='workspace.context-panel' carbon_key='accordion'
+ *
+ * Token stack:
+ *   --cds-accordion-*  (Carbon accordion tokens)
+ *   --shell-z-sticky   (z-index for fixed panel)
+ *   slide-in-left/right (tab entry animation — design-tokens.css)
  */
 import {
   Component, ChangeDetectionStrategy, Input, Output, EventEmitter,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AccordionModule } from 'carbon-components-angular';
+import { DosCarbonTabsComponent, type DosCarbonTabItem } from '../carbon/dos-carbon-tabs.component';
+import { DosCarbonSkeletonComponent } from '../carbon/dos-carbon-skeleton.component';
 import type { ContextPanelView, ContextPanelTab } from './workspace-shell.contracts';
+
+const TAB_LABELS: Record<ContextPanelTab, string> = {
+  'record':      'Record',
+  'help':        'Help',
+  'audit':       'Audit',
+  'ai-insights': 'AI Insights',
+};
 
 @Component({
   selector: 'dos-context-panel',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, AccordionModule, DosCarbonTabsComponent, DosCarbonSkeletonComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     @if (open) {
@@ -25,25 +39,59 @@ import type { ContextPanelView, ContextPanelTab } from './workspace-shell.contra
              aria-label="Context panel"
              data-testid="dos-context-panel"
              data-cds-component="accordion">
-        <nav class="dos-context-panel__tabs" role="tablist">
-          @for (v of views; track v.tab) {
-            <button type="button"
-                    role="tab"
-                    class="dos-context-panel__tab"
-                    [class.dos-context-panel__tab--active]="v.tab === activeTab"
-                    [attr.data-tab]="v.tab"
-                    [attr.aria-selected]="v.tab === activeTab"
-                    (click)="tabChange.emit(v.tab)">
-              {{ v.title.fallback ?? v.title.i18nKey }}
-            </button>
-          }
-        </nav>
+
+        <!-- Tab navigation using cds-tabs CSS pattern -->
+        <dos-carbon-tabs
+          [items]="tabItems"
+          [selectedId]="activeTab"
+          (selectedIdChange)="onTabChange($event)"
+          class="dos-context-panel__tabs">
+        </dos-carbon-tabs>
+
+        <!-- Active tab body -->
         @for (v of views; track v.tab) {
           @if (v.tab === activeTab) {
-            <section class="dos-context-panel__body" role="tabpanel">
-              @if (v.loading) { <p>Loading…</p> }
-              @else if (!v.payload) { <p class="dos-context-panel__empty">{{ v.emptyMessage?.fallback ?? 'No context yet.' }}</p> }
-              @else { <ng-content></ng-content> }
+            <section class="dos-context-panel__body"
+                     role="tabpanel"
+                     [class.dos-context-panel__body--rtl]="dir === 'rtl'"
+                     [attr.aria-label]="TAB_LABELS[v.tab]">
+
+              @if (v.loading) {
+                <!-- cds-skeleton-text while loading -->
+                <div class="dos-context-panel__skeleton">
+                  <dos-carbon-skeleton shape="text" [paragraph]="true" [lineCount]="4"></dos-carbon-skeleton>
+                  <dos-carbon-skeleton shape="placeholder"></dos-carbon-skeleton>
+                </div>
+              } @else if (!v.payload) {
+                <div class="dos-context-panel__empty">
+                  <p>{{ v.emptyMessage?.fallback ?? v.emptyMessage?.i18nKey ?? 'No context available.' }}</p>
+                </div>
+              } @else {
+                <!-- Real payload: use cds-accordion for collapsible sub-sections -->
+                <cds-accordion size="md" align="end" class="dos-context-panel__accordion">
+                  <!-- AI-Insights tab: special agentic header -->
+                  @if (v.tab === 'ai-insights') {
+                    <cds-accordion-item title="Agent Insights" [expanded]="true">
+                      <ng-content select="[aiInsightsContent]"></ng-content>
+                      <p class="dos-context-panel__ai-placeholder">
+                        AI insights are loading from the agent context…
+                      </p>
+                    </cds-accordion-item>
+                  }
+                  <!-- Audit tab: immutable audit trail emphasis -->
+                  @if (v.tab === 'audit') {
+                    <cds-accordion-item title="Audit Trail" [expanded]="true">
+                      <ng-content select="[auditContent]"></ng-content>
+                    </cds-accordion-item>
+                  }
+                  <!-- Record / Help: generic content projection -->
+                  @if (v.tab !== 'ai-insights' && v.tab !== 'audit') {
+                    <cds-accordion-item [title]="TAB_LABELS[v.tab]" [expanded]="true">
+                      <ng-content></ng-content>
+                    </cds-accordion-item>
+                  }
+                </cds-accordion>
+              }
             </section>
           }
         }
@@ -52,20 +100,127 @@ import type { ContextPanelView, ContextPanelTab } from './workspace-shell.contra
   `,
   styles: [`
     :host { display: block; }
-    .dos-context-panel { position: fixed; inset-block-start: 0; bottom: 0; inset-inline-end: 0; width: min(360px, 100vw); background: var(--cds-layer, #fff); border-inline-start: 1px solid var(--cds-border-subtle, #e0e0e0); z-index: 70; display: flex; flex-direction: column; }
-    .dos-context-panel--mobile { width: 100vw; inset: 0; }
-    .dos-context-panel__tabs { display: flex; border-block-end: 1px solid var(--cds-border-subtle, #e0e0e0); }
-    .dos-context-panel__tab { flex: 1; padding: .5rem; background: transparent; border: 0; cursor: pointer; }
-    .dos-context-panel__tab--active { border-block-end: 2px solid var(--cds-border-interactive, #0f62fe); font-weight: 600; }
-    .dos-context-panel__body { padding: .75rem; overflow: auto; flex: 1; }
-    .dos-context-panel__empty { color: var(--cds-text-secondary, #6f6f6f); }
+
+    /* ── Panel frame ─────────────────────────────────── */
+    .dos-context-panel {
+      position: fixed;
+      inset-block: 3rem 0; /* below 48px Carbon header */
+      inset-inline-end: 0;
+      inline-size: min(360px, 100vw);
+      background: var(--cds-layer-01, #f4f4f4);
+      border-inline-start: 1px solid var(--cds-border-subtle-01, #e0e0e0);
+      z-index: var(--shell-z-sticky, 6000);
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-premium-md, -4px 0 16px rgba(0,0,0,0.08));
+      animation: slide-in-right-panel 0.2s ease-out both;
+    }
+
+    [dir='rtl'] .dos-context-panel,
+    .dos-context-panel[dir='rtl'] {
+      inset-inline-end: auto;
+      inset-inline-start: 0;
+      border-inline-start: 0;
+      border-inline-end: 1px solid var(--cds-border-subtle-01, #e0e0e0);
+      box-shadow: var(--shadow-premium-md, 4px 0 16px rgba(0,0,0,0.08));
+      animation-name: slide-in-left-panel;
+    }
+
+    .dos-context-panel--mobile {
+      inline-size: 100vw;
+      inset-block-start: 0;
+      border-inline: none;
+      border-block-start: 1px solid var(--cds-border-subtle-01, #e0e0e0);
+    }
+
+    /* ── Tabs ────────────────────────────────────────── */
+    .dos-context-panel__tabs {
+      flex: 0 0 auto;
+      border-block-end: 1px solid var(--cds-border-subtle-01, #e0e0e0);
+    }
+
+    /* ── Body ────────────────────────────────────────── */
+    .dos-context-panel__body {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      animation: slide-in-left 0.15s ease-out both;
+    }
+
+    .dos-context-panel__body--rtl {
+      animation-name: slide-in-right;
+    }
+
+    /* ── Accordion override: flush to panel edges ──── */
+    .dos-context-panel__accordion {
+      padding: 0;
+    }
+
+    :host ::ng-deep .dos-context-panel__accordion .cds--accordion__content {
+      padding-inline: var(--cds-spacing-05, 1rem);
+    }
+
+    /* ── Skeleton ─────────────────────────────────────── */
+    .dos-context-panel__skeleton {
+      display: flex;
+      flex-direction: column;
+      gap: var(--cds-spacing-05, 1rem);
+      padding: var(--cds-spacing-05, 1rem);
+    }
+
+    /* ── Empty state ──────────────────────────────────── */
+    .dos-context-panel__empty {
+      padding: var(--cds-spacing-07, 2rem) var(--cds-spacing-05, 1rem);
+      text-align: center;
+      color: var(--cds-text-secondary, #6f6f6f);
+      font-size: 0.875rem;
+    }
+
+    /* ── AI-insights placeholder ─────────────────────── */
+    .dos-context-panel__ai-placeholder {
+      font-size: 0.8125rem;
+      color: var(--cds-text-secondary, #6f6f6f);
+      font-style: italic;
+    }
+
+    /* ── Keyframes ─────────────────────────────────────── */
+    @keyframes slide-in-right-panel {
+      0%   { opacity: 0; transform: translateX(24px); }
+      100% { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slide-in-left-panel {
+      0%   { opacity: 0; transform: translateX(-24px); }
+      100% { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slide-in-left {
+      0%   { opacity: 0; transform: translateX(-8px); }
+      100% { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slide-in-right {
+      0%   { opacity: 0; transform: translateX(8px); }
+      100% { opacity: 1; transform: translateX(0); }
+    }
   `],
 })
 export class DosContextPanelComponent {
+  /** Expose TAB_LABELS to template */
+  protected readonly TAB_LABELS = TAB_LABELS;
+
   @Input() views: ContextPanelView[] = [];
   @Input() activeTab: ContextPanelTab = 'record';
   @Input() open = false;
   @Input() mobileMode = false;
   @Input() dir: 'ltr' | 'rtl' = 'ltr';
   @Output() tabChange = new EventEmitter<ContextPanelTab>();
+
+  get tabItems(): DosCarbonTabItem[] {
+    return this.views.map(v => ({
+      id:    v.tab,
+      label: TAB_LABELS[v.tab],
+    }));
+  }
+
+  onTabChange(id: string): void {
+    this.tabChange.emit(id as ContextPanelTab);
+  }
 }

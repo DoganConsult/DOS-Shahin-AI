@@ -141,7 +141,7 @@ export const routes: Routes = [
       {
         path: 'workspace-home',
         loadComponent: () =>
-          import('@dos/module-foundation/ui/workspace/workspace-home.component').then(m => m.WorkspaceHomeComponent),
+          import('@platform/shell').then(m => m.DynamicTemplatePageComponent),
         providers: [provideRouteIcons()],
         data: {
           contractRoute: '/workspace-home',

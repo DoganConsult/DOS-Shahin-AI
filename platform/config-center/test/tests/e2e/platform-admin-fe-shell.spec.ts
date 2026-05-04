@@ -24,7 +24,7 @@ import { test, expect, Page, APIRequestContext } from '@playwright/test';
 const BASE = process.env.E2E_BASE_URL || 'http://localhost:3000';
 const ADMIN_EMAIL = process.env.PLATFORM_ADMIN_E2E_EMAIL || 'e2e-admin@dos.platform';
 
-const NAV: { path: string; label: string }[] = [
+const NAV: { path: string; label: string; endpoint?: string | null }[] = [
   { path: '/platform-admin/dos-master',                  label: 'Overview' },
   { path: '/platform-admin/dos-master/milestones',       label: 'Milestones (M1–M14)' },
   { path: '/platform-admin/dos-master/services',         label: 'Services 4007–4017' },
@@ -37,6 +37,38 @@ const NAV: { path: string; label: string }[] = [
   { path: '/platform-admin/dos-master/rollout-ledger',   label: 'Rollout Ledger' },
   { path: '/platform-admin/dos-master/ci-guards',        label: 'CI Guards' },
   { path: '/platform-admin/dos-master/evidence',         label: 'Evidence Pack' },
+  // L13 D2 — Workflow OS panels (BFF base differs from FE path: /workflow not /workflow-os)
+  { path: '/platform-admin/workflow-os/definitions',     label: 'Workflow OS — Definitions', endpoint: '/api/admin/console/workflow/definitions' },
+  { path: '/platform-admin/workflow-os/instances',       label: 'Workflow OS — Instances',   endpoint: '/api/admin/console/workflow/instances' },
+  // L14..L27 — Phase 2 Full-Stack-Per-OS panels (28 entries; endpoint inferred via path replace)
+  { path: '/platform-admin/ai-os/records',                label: 'AI OS — Records' },
+  { path: '/platform-admin/ai-os/events',                 label: 'AI OS — Events' },
+  { path: '/platform-admin/notification-os/records',      label: 'Notification OS — Records' },
+  { path: '/platform-admin/notification-os/events',       label: 'Notification OS — Events' },
+  { path: '/platform-admin/integration-os/records',       label: 'Integration OS — Records' },
+  { path: '/platform-admin/integration-os/events',        label: 'Integration OS — Events' },
+  { path: '/platform-admin/data-governance-os/records',   label: 'Data Governance OS — Records' },
+  { path: '/platform-admin/data-governance-os/events',    label: 'Data Governance OS — Events' },
+  { path: '/platform-admin/billing-os/records',           label: 'Billing OS — Records' },
+  { path: '/platform-admin/billing-os/events',            label: 'Billing OS — Events' },
+  { path: '/platform-admin/feature-flag-os/records',      label: 'Feature Flag OS — Records' },
+  { path: '/platform-admin/feature-flag-os/events',       label: 'Feature Flag OS — Events' },
+  { path: '/platform-admin/security-secrets-os/records',  label: 'Security Secrets OS — Records' },
+  { path: '/platform-admin/security-secrets-os/events',   label: 'Security Secrets OS — Events' },
+  { path: '/platform-admin/telemetry-os/records',         label: 'Telemetry OS — Records' },
+  { path: '/platform-admin/telemetry-os/events',          label: 'Telemetry OS — Events' },
+  { path: '/platform-admin/schema-authoring-os/records',  label: 'Schema Authoring OS — Records' },
+  { path: '/platform-admin/schema-authoring-os/events',   label: 'Schema Authoring OS — Events' },
+  { path: '/platform-admin/deployment-os/records',        label: 'Deployment OS — Records' },
+  { path: '/platform-admin/deployment-os/events',         label: 'Deployment OS — Events' },
+  { path: '/platform-admin/release-os/records',           label: 'Release OS — Records' },
+  { path: '/platform-admin/release-os/events',            label: 'Release OS — Events' },
+  { path: '/platform-admin/vendor-risk-os/records',       label: 'Vendor Risk OS — Records' },
+  { path: '/platform-admin/vendor-risk-os/events',        label: 'Vendor Risk OS — Events' },
+  { path: '/platform-admin/marketplace-os/records',       label: 'Marketplace OS — Records' },
+  { path: '/platform-admin/marketplace-os/events',        label: 'Marketplace OS — Events' },
+  { path: '/platform-admin/dr-os/records',                label: 'DR OS — Records' },
+  { path: '/platform-admin/dr-os/events',                 label: 'DR OS — Events' },
 ];
 
 async function loginViaApi(req: APIRequestContext): Promise<string> {
@@ -121,7 +153,7 @@ test.describe('Platform Admin FE Workspace Shell — Carbon UIShell', () => {
     await seedAdminToken(page, token);
   });
 
-  test('Carbon side nav renders exactly 12 NAV items', async ({ page }) => {
+  test('Carbon side nav renders exactly 42 NAV items', async ({ page }) => {
     await page.goto(`${BASE}/platform-admin/dos-master`);
     const sidenav = page.locator('[data-testid="platform-admin-sidenav"]');
     await expect(sidenav).toBeVisible();
@@ -131,16 +163,18 @@ test.describe('Platform Admin FE Workspace Shell — Carbon UIShell', () => {
       await expect(node).toContainText(item.label);
     }
     const all = await sidenav.locator('[data-nav-path]').count();
-    expect(all).toBe(12);
+    expect(all).toBe(42);
   });
 
   for (const item of NAV) {
     test(`panel ${item.path} renders BFF data without error/empty/loading frame`, async ({ page }) => {
-      const endpoint = item.path.endsWith('/dos-master')
-        ? '/api/admin/console/dos-master/milestones'
-        : item.path.endsWith('/evidence')
-          ? null
-          : `/api/admin/console${item.path.replace('/platform-admin', '')}`;
+      const endpoint = item.endpoint !== undefined
+        ? item.endpoint
+        : item.path.endsWith('/dos-master')
+          ? '/api/admin/console/dos-master/milestones'
+          : item.path.endsWith('/evidence')
+            ? null
+            : `/api/admin/console${item.path.replace('/platform-admin', '')}`;
 
       if (endpoint) {
         const wait = page.waitForResponse(

@@ -14,7 +14,7 @@ const src = readFileSync(new URL('../../scripts/dos-master/dos.mjs', import.meta
 const dispatchBlock = src.match(/const dispatch = \{([\s\S]*?)\};/);
 if (!dispatchBlock) { console.error('[cli-ui-parity] cannot parse dispatch'); process.exit(1); }
 const cmds = Array.from(dispatchBlock[1].matchAll(/'([^']+)'\s*:/g)).map((m) => m[1]);
-const MIN = 24;
+const MIN = 57;
 if (cmds.length < MIN) {
   console.error(`[cli-ui-parity] FAIL CLI surface ${cmds.length} < doctrine min ${MIN}`);
   process.exit(1);

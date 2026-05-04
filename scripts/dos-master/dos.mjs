@@ -428,6 +428,50 @@ async function provisioningJobs() {
   });
 }
 
+// ── Phase 2 / L14..L27 — Full-Stack-Per-OS CLI parity (Doctrine §14, Article 9).
+// Each Phase-2 OS exposes a `<os>:records` (controlled DDL list) +
+// `<os>:events` (event ledger list) verb so every Carbon panel under
+// /platform-admin/<os>/{records,events} has a matching CLI surface.
+const PHASE2_OS_TABLES = [
+  ['ai-os',                'ai_record',                'ai_event'],
+  ['notification-os',      'notification_record',      'notification_event'],
+  ['integration-os',       'integration_record',       'integration_event'],
+  ['data-governance-os',   'data_governance_record',   'data_governance_event'],
+  ['billing-os',           'billing_record',           'billing_event'],
+  ['feature-flag-os',      'feature_flag_record',      'feature_flag_event'],
+  ['security-secrets-os',  'security_secret_record',   'security_secret_event'],
+  ['telemetry-os',         'telemetry_record',         'telemetry_event'],
+  ['schema-authoring-os',  'schema_authoring_record',  'schema_authoring_event'],
+  ['deployment-os',        'deployment_record',        'deployment_event'],
+  ['release-os',           'release_record',           'release_event'],
+  ['vendor-risk-os',       'vendor_risk_record',       'vendor_risk_event'],
+  ['marketplace-os',       'marketplace_record',       'marketplace_event'],
+  ['dr-os',                'dr_record',                'dr_event'],
+];
+
+function osRecordsCommand(table) {
+  return async () =>
+    withClient(async (c) => {
+      const r = await c.query(
+        `SELECT record_key, version, title, kind, trust_zone, status, published_at
+           FROM dos.${table}
+          ORDER BY record_key, version DESC LIMIT 200`,
+      );
+      console.table(r.rows);
+    });
+}
+function osEventsCommand(table) {
+  return async () =>
+    withClient(async (c) => {
+      const r = await c.query(
+        `SELECT id, COALESCE(record_key, '—') AS record_key, kind, emitted_by, emitted_at
+           FROM dos.${table}
+          ORDER BY emitted_at DESC LIMIT 200`,
+      );
+      console.table(r.rows);
+    });
+}
+
 const dispatch = {
   'product:add': productAdd,
   'product:list': productList,
@@ -458,6 +502,34 @@ const dispatch = {
   'rollout:rollback': rolloutRollback,
   'rollout:composition': rolloutComposition,
   'doctrine:ack': doctrineAck,
+  'ai-os:records': osRecordsCommand('ai_record'),
+  'ai-os:events': osEventsCommand('ai_event'),
+  'notification-os:records': osRecordsCommand('notification_record'),
+  'notification-os:events': osEventsCommand('notification_event'),
+  'integration-os:records': osRecordsCommand('integration_record'),
+  'integration-os:events': osEventsCommand('integration_event'),
+  'data-governance-os:records': osRecordsCommand('data_governance_record'),
+  'data-governance-os:events': osEventsCommand('data_governance_event'),
+  'billing-os:records': osRecordsCommand('billing_record'),
+  'billing-os:events': osEventsCommand('billing_event'),
+  'feature-flag-os:records': osRecordsCommand('feature_flag_record'),
+  'feature-flag-os:events': osEventsCommand('feature_flag_event'),
+  'security-secrets-os:records': osRecordsCommand('security_secret_record'),
+  'security-secrets-os:events': osEventsCommand('security_secret_event'),
+  'telemetry-os:records': osRecordsCommand('telemetry_record'),
+  'telemetry-os:events': osEventsCommand('telemetry_event'),
+  'schema-authoring-os:records': osRecordsCommand('schema_authoring_record'),
+  'schema-authoring-os:events': osEventsCommand('schema_authoring_event'),
+  'deployment-os:records': osRecordsCommand('deployment_record'),
+  'deployment-os:events': osEventsCommand('deployment_event'),
+  'release-os:records': osRecordsCommand('release_record'),
+  'release-os:events': osEventsCommand('release_event'),
+  'vendor-risk-os:records': osRecordsCommand('vendor_risk_record'),
+  'vendor-risk-os:events': osEventsCommand('vendor_risk_event'),
+  'marketplace-os:records': osRecordsCommand('marketplace_record'),
+  'marketplace-os:events': osEventsCommand('marketplace_event'),
+  'dr-os:records': osRecordsCommand('dr_record'),
+  'dr-os:events': osEventsCommand('dr_event'),
 };
 
 if (!cmd || cmd === '-h' || cmd === '--help') {
