@@ -13,10 +13,10 @@ SET props = COALESCE(props, '{}'::jsonb) || jsonb_build_object(
   'title_en', 'Built for the future of governance',
   'title_ar', 'مبني لمستقبل الحوكمة',
   'sub_en', 'Modern architecture powered by AI and automation.',
-  'sub_ar': 'بنية حديثة مدعومة بالذكاء الاصطناعي والأتمتة.',
+  'sub_ar', 'بنية حديثة مدعومة بالذكاء الاصطناعي والأتمتة.',
   'overview', jsonb_build_object(
     'title_en', 'Platform Overview',
-    'title_ar': 'نظرة عامة على المنصة',
+    'title_ar', 'نظرة عامة على المنصة',
     'body_en', 'Shahin-AI is a next-generation governance platform that combines AI, automation, and deep domain expertise to transform how organizations manage compliance and risk.',
     'body_ar': 'Shahin-AI هي منصة حوكمة من الجيل التالي التي تجمع بين الذكاء الاصطناعي والأتمتة والخبرة العميقة في المجال لتحويل كيفية إدارة المؤسسات للامتثال والمخاطر.'
   ),
