@@ -66,7 +66,7 @@ export interface GrcComparison {
 @Injectable({ providedIn: 'root' })
 export class GrcSandboxService {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = environment.production ? '/grc-sandbox' : 'http://localhost:4015/grc-sandbox';
+  private readonly baseUrl = '/grc-sandbox';
   private readonly _frameworks = signal<GrcFramework[]>([]);
   private readonly _controls = signal<GrcControl[]>([]);
   private readonly _requirements = signal<GrcRequirement[]>([]);
