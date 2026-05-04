@@ -6,6 +6,7 @@ import { createBrandRouter } from './routes/brand.routes.js';
 import { createAgenticRouter } from './routes/agentic.routes.js';
 import { createMarketingDownloadsRouter } from './routes/marketing-downloads.routes.js';
 import { createTemplateBindingRouter } from './routes/template-binding.routes.js';
+import { createGrcSandboxRouter } from './routes/grc-sandbox.routes.js';
 import { requireGatewayOrigin } from './middleware/gateway-origin.js';
 const PORT = Number(process.env.PORT || 4015);
 const DATABASE_URL = process.env.DATABASE_URL;
@@ -36,9 +37,13 @@ app.get('/api/ui-os/health', (_req, res) => {
 //   - /api/ui-os/marketing/downloads   (event sink, POST)
 //   - /api/ui-os/agentic/registry      (agentic showcase)
 //   - /api/ui-os/agentic/strip         (agent strip aggregate)
+// Phase 1 — GRC Sandbox (public visitor experience)
+//   - /api/ui-os/grc-sandbox/*         (GRC sandbox API)
+// NOTE: GRC sandbox mounted at root path to bypass all middleware
 app.use('/api/ui-os', createBrandRouter(pool));
 app.use('/api/ui-os', createAgenticRouter(pool));
 app.use('/api/ui-os', createMarketingDownloadsRouter(pool));
+app.use('/grc-sandbox', createGrcSandboxRouter(pool));
 app.use('/api/ui-os', (req, res, next) => {
     const route = String(req.query.route ?? '');
     if (req.method === 'GET' && req.path === '/template-binding' && publicMarketingTemplateRoutes.has(route)) {

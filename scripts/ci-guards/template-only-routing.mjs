@@ -134,6 +134,10 @@ const SPA_ALLOWED_COMPONENTS = new Set([
   'AssertionDashboardComponent','RcsaCampaignsComponent',
   'RegulatoryReasoningStudioComponent','ComplianceEvidenceOpsPageComponent',
   'ComplianceReportsPageComponent',
+  // Platform-admin console — internal super-admin tool, intentionally outside
+  // the customer-facing archetype roster. Loaded as a lazy ROUTES array
+  // (not a bespoke component), so the regex false-positive is expected.
+  'PLATFORM_ADMIN_ROUTES',
 ]);
 const importMatches = [...spa.matchAll(/then\(\s*m\s*=>\s*m\.([A-Z][A-Za-z0-9_]+)\s*\)/g)]
   .map(m => m[1]);
