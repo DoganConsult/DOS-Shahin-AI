@@ -2,20 +2,15 @@ import { Router, type Request, type Response } from 'express';
 import { encryptBootstrap } from '../lib/jwe.js';
 import { roleSetHash } from '../lib/cache-key.js';
 import { BootstrapPayloadSchema } from '../schemas/bootstrap.schemas.js';
+import { readBootstrapMv } from '../lib/bootstrap-repo.js';
 
 /**
  * GET /api/workspace/bootstrap
  *
  * Doctrine Article 2: single source of truth for SPA workspace bootstrap.
- * Returns a JWE-signed payload built from `dos.mv_workspace_bootstrap` keyed on
- * `(tenantId, roleSetHash, uiCatalogVersion)`. SSE invalidation arrives in M5.
- *
- * Inputs (all from authenticated session injected by gateway):
- *   - req.user.userId, req.user.email
- *   - req.tenant.tenantId
- *   - req.user.roles[]
- *
- * Output: `{ jwe, expiresAt, cacheKey }`
+ * Reads `dos.mv_workspace_bootstrap` keyed on
+ * `(tenantId, ui_catalog_version)` (M5 will add roleSetHash dim) and
+ * returns a JWE-signed payload. SSE invalidation channel ships in M5.
  */
 export const bootstrapRouter = Router();
 
@@ -28,18 +23,16 @@ bootstrapRouter.get('/bootstrap', async (req: Request, res: Response) => {
       return;
     }
 
-    // M4 stub: read from mv_workspace_bootstrap (M5 will add SSE invalidation).
-    // Until the materialized view is plumbed end-to-end via @dos/db, return a
-    // deterministic projection of the verified session+tenant+role set so the
-    // wire contract and JWE shape ship today and downstream consumers
-    // (workspace-shell, navigation.store, accessStore.load) can adopt it.
+    const tenantId = String(ten.tenantId);
+    const uiCatalogVersion = String(sess.uiCatalogVersion ?? 'v1');
     const roles: string[] = Array.isArray(sess.roles) ? sess.roles : [];
     const permissions: string[] = Array.isArray(sess.permissions) ? sess.permissions : [];
     const modules: string[] = Array.isArray(sess.modules) ? sess.modules : [];
-    const uiCatalogVersion: string = String(sess.uiCatalogVersion ?? 'v1');
+
+    const mv = await readBootstrapMv(tenantId, uiCatalogVersion);
 
     const cacheKey = {
-      tenantId: ten.tenantId,
+      tenantId,
       roleSetHash: roleSetHash(roles),
       uiCatalogVersion,
     };
@@ -49,13 +42,13 @@ bootstrapRouter.get('/bootstrap', async (req: Request, res: Response) => {
 
     const payload = {
       session: {
-        userId: sess.userId,
-        email: sess.email,
+        userId: String(sess.userId),
+        email: String(sess.email),
         issuedAt: now.toISOString(),
         expiresAt: expiresAt.toISOString(),
       },
       tenant: {
-        tenantId: ten.tenantId,
+        tenantId,
         name: ten.name ?? null,
         status: ten.status ?? 'active',
       },
@@ -63,15 +56,24 @@ bootstrapRouter.get('/bootstrap', async (req: Request, res: Response) => {
       permissions,
       roles,
       uiCatalogVersion,
-      nav: { primary: [], secondary: [] },
-      shell: { surfaces: [] },
+      nav: {
+        primary: (mv?.routes as unknown[]) ?? [],
+        secondary: [],
+      },
+      shell: { surfaces: (mv?.shell as unknown[]) ?? [] },
       cacheKey,
     };
 
     BootstrapPayloadSchema.parse(payload);
 
     const jwe = await encryptBootstrap(payload);
-    res.json({ jwe, expiresAt: expiresAt.toISOString(), cacheKey });
+    res.setHeader('Cache-Control', 'private, max-age=0, no-store');
+    res.json({
+      jwe,
+      expiresAt: expiresAt.toISOString(),
+      cacheKey,
+      mvRefreshedAt: mv?.refreshed_at ?? null,
+    });
   } catch (err) {
     res.status(500).json({ error: 'bootstrap_failed', detail: String((err as Error).message) });
   }
