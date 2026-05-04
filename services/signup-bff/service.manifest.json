@@ -1,0 +1,11 @@
+{
+  "serviceCode": "signup-bff",
+  "version": "0.1.0",
+  "domains": ["platform"],
+  "trustZone": "public",
+  "dependencies": ["onboarding-service"],
+  "apiPrefix": "/api/public/signup",
+  "doctrineArticle": 4,
+  "controlled": true,
+  "writerActor": "signup-bff"
+}

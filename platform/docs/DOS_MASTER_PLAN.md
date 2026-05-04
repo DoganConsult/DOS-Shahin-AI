@@ -186,7 +186,9 @@ Workflow OS, AI OS, Notification/Inbox OS, Integration OS, Data Governance OS, B
 | M2 | CLOSED | 2026-05-04 | 2026-05-04 | `@dos/access-store` extended (`can`, `hasRole`, `hasAnyPermission`, `hasAllPermissions`, `canAccessModule`) + M3 compat layer; build GREEN |
 | M3 | CLOSED | 2026-05-04 | 2026-05-04 | 6 consumer imports swapped to `@dos/access-store`; 4 legacy files deleted (`platform/dauth/access/access.store.ts`, `platform/dauth/packages/frontend/access/{access.store,access,index}.ts`); deletion ledger JSON committed; zero residual legacy imports |
 | M4 D1 | CLOSED | 2026-05-04 | 2026-05-04 | `services/workspace-bff` scaffolded (port 4007, gateway prefix `/api/workspace`), `tsc -p` GREEN; `dos.mv_workspace_bootstrap` MV live (40 tenants × 179 routes / 26 shell / 479 components); `workspace-bff` registered in `dos_master.service_registry` + `service_endpoint` + granted `dos-master` writer role; JWE (A256GCM/dir) helper + Zod payload schema shipped. Migration: `20260504_0540_dos_master_mv_workspace_bootstrap.sql` |
-| M4 D2..D3 | PENDING | — | — | Wire `@dos/db` to materialize-from-MV per (tenantId, roleSetHash, uiCatalogVersion); SPA AccessStore.load() switch to `/api/workspace/bootstrap`; concurrent MV refresh on `dos_master_invalidation_log` insert |
-| M5..M14 | PENDING | — | — | Sequenced; auto-advance per ring engine |
+| M4 D2 | CLOSED | 2026-05-04 | 2026-05-04 | `bootstrap-repo.ts` reads MV via `@dos/db/master`; route hydrates `nav.primary` + `shell.surfaces` from MV; `mvRefreshedAt` echoed in envelope |
+| M5 D1 | CLOSED | 2026-05-04 | 2026-05-04 | SSE `/api/workspace/events` tails `dos.dos_master_invalidation_log` (5s poll); `POST /api/workspace/refresh` runs `REFRESH MATERIALIZED VIEW CONCURRENTLY`; live-verified end-to-end |
+| M6 D1 | CLOSED | 2026-05-04 | 2026-05-04 | `services/onboarding-service` (`/api/admin/onboarding/{products,enrollments,services}`) + `scripts/dos-master/dos.mjs` CLI shipping 9 commands (product:add/list/enroll, service:register/list, doctrine:list, rollout:list, publish:revisions, signup:flows). Live: shahin-ai + tuwaiq-ai products registered; foundation+compliance+risk+workflow enrolled into shahin-ai; workspace-bff registered at port 4007. Build GREEN. |
+| M7..M14 | IN-PROGRESS | 2026-05-04 | — | Sequenced; auto-advance per ring engine |
 
 Update this section at the close of every day.

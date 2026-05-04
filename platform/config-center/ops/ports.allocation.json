@@ -605,6 +605,24 @@
       "gatewayPrefix": "/api/workspace",
       "envFile": "workspace-bff",
       "note": "DOS Master M4 \u2014 JWE-signed workspace bootstrap BFF (Doctrine Article 2)"
+    },
+    "onboarding-service": {
+      "port": 4008,
+      "cwd": "services/onboarding-service",
+      "script": "dist/server.js",
+      "wave": 1,
+      "gatewayPrefix": "/api/admin/onboarding",
+      "envFile": "onboarding-service",
+      "note": "DOS Master M6 \u2014 product/service onboarding (Doctrine Article 9)"
+    },
+    "signup-bff": {
+      "port": 4009,
+      "cwd": "services/signup-bff",
+      "script": "dist/server.js",
+      "wave": 1,
+      "gatewayPrefix": "/api/public/signup",
+      "envFile": "signup-bff",
+      "note": "DOS Master M7 \u2014 public self-signup BFF (Doctrine Article 4 \u2014 public trust zone)"
     }
   },
   "oneShots": {

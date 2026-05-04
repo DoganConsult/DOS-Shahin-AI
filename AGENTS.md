@@ -854,11 +854,32 @@ Master are CI-rejected (`dos-master-only.mjs`) and DB-rejected
   (port=4007, zone=`tenant`), `dos_master.service_endpoint`
   (`GET /api/workspace/bootstrap`, perm=`workspace.bootstrap.read`).
   Allocated port 4007 in `platform/config-center/ops/ports.allocation.json`.
-- **M4 D2..D3 — PENDING.** Wire `@dos/db` to read MV by cache-key,
-  switch SPA `AccessStore.load()` to `/api/workspace/bootstrap`,
-  REFRESH MATERIALIZED VIEW CONCURRENTLY on `dos_master_invalidation_log`
-  insert (M5 SSE channel).
-- **M5..M14** — PENDING. Sequenced per DOS_MASTER_PLAN.md §3.
+- **M4 D2 — CLOSED (2026-05-04).** `bootstrap-repo.ts` reads
+  `dos.mv_workspace_bootstrap` via `@dos/db/master masterQuery` keyed on
+  `(tenantId, ui_catalog_version)`; route hydrates `nav.primary` from
+  `mv.routes` and `shell.surfaces` from `mv.shell`; envelope echoes
+  `mvRefreshedAt`. Build GREEN.
+- **M5 D1 — CLOSED (2026-05-04).** SSE channel
+  `GET /api/workspace/events` tails `dos.dos_master_invalidation_log`
+  (5 s poll, last-event-id resumable) and emits `bootstrap-invalidate`
+  events; `POST /api/workspace/refresh` runs
+  `REFRESH MATERIALIZED VIEW CONCURRENTLY` under `dos.actor='dos-master'`.
+  Live-verified end-to-end: JWE roundtrip, INSERT into invalidation_log
+  accepted by `trg_dos_master_only`, REFRESH succeeded, MV read returned
+  179/26/479 counts.
+- **M6 D1 — CLOSED (2026-05-04).** `services/onboarding-service`
+  (`@dos/onboarding-service`, trust zone `admin`, prefix
+  `/api/admin/onboarding/*`) ships `products|enrollments|services`
+  CRUD-lite endpoints; every write `SET dos.actor='dos-master'`. CLI
+  `scripts/dos-master/dos.mjs` ships 9 parity commands
+  (`product:{add,list,enroll}`, `service:{register,list}`,
+  `doctrine:list`, `rollout:list`, `publish:revisions`, `signup:flows`).
+  Live verified: 2 products (`shahin-ai`, `tuwaiq-ai`) + 4 enrollments
+  (foundation+compliance+risk+workflow) + workspace-bff at :4007 in
+  `dos_master.service_registry`. Build GREEN.
+- **M7..M14** — IN-PROGRESS. Sequenced per DOS_MASTER_PLAN.md §3.
+  M7 D1 next: `services/signup-bff` + `dos_master.signup_flow_step`
+  seeding for shahin-ai self-signup.
 
 ### Phase status (live as of 2026-05-01)
 
