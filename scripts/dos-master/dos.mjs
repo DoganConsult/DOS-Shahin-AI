@@ -530,6 +530,39 @@ const dispatch = {
   'marketplace-os:events': osEventsCommand('marketplace_event'),
   'dr-os:records': osRecordsCommand('dr_record'),
   'dr-os:events': osEventsCommand('dr_event'),
+  // ── Phase 3 / L30 — per-OS evaluator CLI parity (Doctrine §14, Article 9).
+  // Each OS exposes a `<os>:evaluate` verb mirroring the runtime
+  // POST /api/admin/<os>/records/:record_key/evaluate so every domain
+  // evaluator has a CLI surface (cli-ui-parity guard scope: optional).
+  ...Object.fromEntries(
+    [
+      ['ai-os', 4019], ['notification-os', 4020], ['integration-os', 4021],
+      ['data-governance-os', 4022], ['billing-os', 4023], ['feature-flag-os', 4024],
+      ['security-secrets-os', 4025], ['telemetry-os', 4026], ['schema-authoring-os', 4027],
+      ['deployment-os', 4028], ['release-os', 4029], ['vendor-risk-os', 4034],
+      ['marketplace-os', 4031], ['dr-os', 4032],
+    ].map(([code, port]) => [
+      `${code}:evaluate`,
+      async () => {
+        const recordKey = flag('record-key'); if (!recordKey) { console.error('--record-key required'); process.exit(2); }
+        const ctx = {
+          tenant_id: flag('tenant-id') || undefined,
+          user_id:   flag('user-id')   || undefined,
+          cohort:    flag('cohort')    || undefined,
+        };
+        // feature-flag-os route: /records/:k/evaluate — same shape across all 14.
+        const path = `/api/admin/${code}/records/${encodeURIComponent(recordKey)}/evaluate`;
+        const url  = `http://127.0.0.1:${port}${path}`;
+        const res  = await fetch(url, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(ctx),
+        });
+        const body = await res.json();
+        console.log(JSON.stringify(body, null, 2));
+        if (!res.ok) process.exit(1);
+      },
+    ]),
+  ),
 };
 
 if (!cmd || cmd === '-h' || cmd === '--help') {
