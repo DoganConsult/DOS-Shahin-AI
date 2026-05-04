@@ -12,6 +12,22 @@ const ADMIN_ENVS = [
   'platform/config-center/env/admin-console-bff.env',
   'platform/config-center/env/publish-service.env',
   'platform/config-center/env/rollout-service.env',
+  // L31..L32 — admin trust zone extended to workflow-service + 14 Phase-2 OSes.
+  'platform/config-center/env/workflow-service.env',
+  'platform/config-center/env/ai-os-service.env',
+  'platform/config-center/env/notification-os-service.env',
+  'platform/config-center/env/integration-os-service.env',
+  'platform/config-center/env/data-governance-os-service.env',
+  'platform/config-center/env/billing-os-service.env',
+  'platform/config-center/env/feature-flag-os-service.env',
+  'platform/config-center/env/security-secrets-os-service.env',
+  'platform/config-center/env/telemetry-os-service.env',
+  'platform/config-center/env/schema-authoring-os-service.env',
+  'platform/config-center/env/deployment-os-service.env',
+  'platform/config-center/env/release-os-service.env',
+  'platform/config-center/env/vendor-risk-os-service.env',
+  'platform/config-center/env/marketplace-os-service.env',
+  'platform/config-center/env/dr-os-service.env',
 ];
 
 let missing = 0, checked = 0;

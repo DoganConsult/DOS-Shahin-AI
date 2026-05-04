@@ -845,7 +845,8 @@ const PHASE2_OS = [
 ] as const;
 for (const [code, port] of PHASE2_OS) {
   const envKey = `DOS_${code.toUpperCase().replace(/-/g, '_')}_SERVICE_URL`;
-  const target = (process.env as Record<string, string | undefined>)[envKey] || `http://127.0.0.1:${port}`;
+  // L32 (Phase 3 D5): Phase-2 OS services now bind HTTPS+mTLS by default.
+  const target = (process.env as Record<string, string | undefined>)[envKey] || `https://127.0.0.1:${port}`;
   app.use(`/api/admin/${code}`, createProxyMiddleware({
     target,
     changeOrigin: true,

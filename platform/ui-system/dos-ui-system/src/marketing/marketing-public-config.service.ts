@@ -38,7 +38,7 @@ export interface MarketingNavItem {
   /** Optional functional Carbon icon (validated via marketing-icons allowlist). */
   icon?: string;
   /** Visual emphasis: 'primary' shows as filled CTA in header. */
-  variant?: 'link' | 'primary' | 'secondary';
+  variant?: 'link' | 'primary' | 'secondary' | 'ghost';
   /** Hide on locales that don't apply (rare — mostly null = all). */
   hideForLocales?: ReadonlyArray<'en' | 'ar'>;
 }

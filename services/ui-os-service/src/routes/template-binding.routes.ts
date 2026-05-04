@@ -440,6 +440,119 @@ export function createTemplateBindingRouter(pool: DbPool): Router {
     }
   });
 
+  // ──────────────────────────────────────────────────────────────────
+  // Phase F-F10 — Module navigation resolver.
+  //   GET /module-nav?module=<code>[&locale=ar]
+  //     → { module_code, groups: [{ id, label_en, label_ar, sort_order,
+  //                                  items: [{ id, route, icon, permission,
+  //                                            label_en, label_ar, badge,
+  //                                            sort_order, pinned }] }] }
+  // Merge order (broader → narrower):
+  //   ③ default      dos.ui_module_nav_group + dos.ui_module_nav_item
+  //   ④ tenant       dos.ui_module_nav_override_tenant   (sparse)
+  //   ⑤ user         dos.ui_module_nav_override_user     (sparse + pin)
+  // Each non-NULL override column wins; NULL = inherit prior layer.
+  // ──────────────────────────────────────────────────────────────────
+  router.get('/module-nav', async (req, res) => {
+    const moduleCode = String(req.query.module ?? '').trim();
+    if (!moduleCode) return res.status(400).json({ error: 'module_required' });
+    const { tenantId, userId } = readPrincipal(req);
+    try {
+      const [groupsR, itemsR, tenOR, usrOR] = await Promise.all([
+        pool.query(`SELECT group_id, sort_order, label_key, label_en, label_ar, enabled, version
+                      FROM dos.ui_module_nav_group
+                     WHERE module_code=$1 AND enabled=true
+                     ORDER BY sort_order, group_id`, [moduleCode]),
+        pool.query(`SELECT item_id, group_id, sort_order, route, icon, permission,
+                           label_key, label_en, label_ar, badge, enabled, version
+                      FROM dos.ui_module_nav_item
+                     WHERE module_code=$1 AND enabled=true
+                     ORDER BY sort_order, item_id`, [moduleCode]),
+        tenantId
+          ? pool.query(`SELECT item_id, sort_order, enabled, label_en, label_ar, badge
+                          FROM dos.ui_module_nav_override_tenant
+                         WHERE tenant_id=$1 AND module_code=$2`, [tenantId, moduleCode])
+          : Promise.resolve({ rows: [] }),
+        userId
+          ? pool.query(`SELECT item_id, sort_order, enabled, pinned
+                          FROM dos.ui_module_nav_override_user
+                         WHERE user_id=$1 AND module_code=$2`, [userId, moduleCode])
+          : Promise.resolve({ rows: [] }),
+      ]);
+
+      const tenById = new Map<string, Record<string, unknown>>();
+      for (const r of tenOR.rows as Array<Record<string, unknown>>) tenById.set(r['item_id'] as string, r);
+      const usrById = new Map<string, Record<string, unknown>>();
+      for (const r of usrOR.rows as Array<Record<string, unknown>>) usrById.set(r['item_id'] as string, r);
+
+      // Merge an item with its tenant + user override patches. Sparse
+      // semantics: NULL columns inherit the prior layer; non-NULL win.
+      const mergeItem = (it: Record<string, unknown>) => {
+        const t = tenById.get(it['item_id'] as string) ?? {};
+        const u = usrById.get(it['item_id'] as string) ?? {};
+        const pick = <T,>(...vals: Array<T | null | undefined>): T | null => {
+          for (const v of vals) if (v !== null && v !== undefined) return v;
+          return null;
+        };
+        const enabled = pick<boolean>(u['enabled'] as boolean, t['enabled'] as boolean, it['enabled'] as boolean);
+        if (enabled === false) return null;            // hidden by override
+        return {
+          id:         it['item_id'],
+          group_id:   it['group_id'],
+          sort_order: pick<number>(u['sort_order'] as number, t['sort_order'] as number, it['sort_order'] as number) ?? 0,
+          route:      it['route'],
+          icon:       it['icon'],
+          permission: it['permission'],
+          label_key:  it['label_key'],
+          label_en:   pick<string>(t['label_en'] as string, it['label_en'] as string),
+          label_ar:   pick<string>(t['label_ar'] as string, it['label_ar'] as string),
+          badge:      pick<string>(t['badge']    as string, it['badge']    as string),
+          pinned:     u['pinned'] === true,
+        };
+      };
+
+      const merged = (itemsR.rows as Array<Record<string, unknown>>)
+        .map(mergeItem).filter((x): x is Exclude<typeof x, null> => x !== null)
+        .sort((a, b) => (a.sort_order as number) - (b.sort_order as number));
+
+      // Build groups envelope; preserve declared group order. Items with
+      // no group fall into a synthetic '_root' group emitted last.
+      const groupsOut: Array<Record<string, unknown>> = [];
+      for (const g of groupsR.rows as Array<Record<string, unknown>>) {
+        groupsOut.push({
+          id:         g['group_id'],
+          sort_order: g['sort_order'],
+          label_key:  g['label_key'],
+          label_en:   g['label_en'],
+          label_ar:   g['label_ar'],
+          items:      merged.filter(i => i.group_id === g['group_id']),
+        });
+      }
+      const ungrouped = merged.filter(i => !i.group_id || !groupsOut.some(g => g['id'] === i.group_id));
+      if (ungrouped.length) {
+        groupsOut.push({
+          id: '_root', sort_order: 9999, label_key: null, label_en: null, label_ar: null,
+          items: ungrouped,
+        });
+      }
+      // Pinned items also surfaced as a synthetic top rail (cross-group).
+      const pinned = merged.filter(i => i.pinned);
+
+      res.json({
+        module_code: moduleCode,
+        groups: groupsOut,
+        pinned,                // empty when no user has pinned anything
+        _layers: {
+          module:  { group_count: groupsR.rows.length, item_count: itemsR.rows.length },
+          tenant:  tenantId ? { tenant_id: tenantId, override_count: tenOR.rows.length } : null,
+          user:    userId   ? { user_id:   userId,   override_count: usrOR.rows.length } : null,
+        },
+      });
+    } catch (e) {
+      res.status(500).json({ error: 'module_nav_fetch_failed', detail: String(e) });
+    }
+  });
+
   // Phase F-F9 — Effective-binding export for a scope.
   //   GET /export?scope=tenant       → uses caller's tenantId from principal
   //   GET /export?scope=tenant&tenant_id=<id>   → admin override

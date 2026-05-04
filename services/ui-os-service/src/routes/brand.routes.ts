@@ -324,7 +324,7 @@ export function createBrandRouter(pool: DbPool): Router {
 
   router.get('/marketing/config', async (req: Request, res: Response) => {
     const brandCode = String(req.query.brand ?? '').trim();
-    const locale = String(req.query.locale ?? 'en').trim();
+    const locale    = String(req.query.locale ?? 'en').trim();
     if (!ALLOWED_BRANDS.has(brandCode)) {
       res.status(404).json({ error: 'unknown_brand', brand: brandCode });
       return;
@@ -334,74 +334,86 @@ export function createBrandRouter(pool: DbPool): Router {
       return;
     }
     const direction = locale === 'ar' ? 'rtl' : 'ltr';
-
-    // Phase M3 — public marketing config with EN/AR localized labels resolved
-    // server-side. Each item ships both `labelKey` (i18n key for SPA-driven
-    // i18n) and `label` (already-translated string for the public surface
-    // which has no authenticated i18n loader).
     const tx = (en: string, ar: string) => (locale === 'ar' ? ar : en);
-    res.json({
-      brandCode,
-      locale,
-      direction,
-      publicMarketingEnabled: true,
-      navItems: [
-        { id: 'platform', labelKey: 'marketing.nav.platform', label: tx('Platform', 'المنصة'), href: '/platform', variant: 'link' },
-        { id: 'pricing',  labelKey: 'marketing.nav.pricing',  label: tx('Pricing', 'التسعير'), href: '/pricing',  variant: 'link' },
-        { id: 'trust',    labelKey: 'marketing.nav.trust',    label: tx('Trust', 'الثقة'),     href: '/trust',    variant: 'link' },
-        { id: 'about',    labelKey: 'marketing.nav.about',    label: tx('About', 'حولنا'),      href: '/about',    variant: 'link' },
-        { id: 'contact',  labelKey: 'marketing.nav.contact',  label: tx('Contact', 'تواصل'),    href: '/contact',  variant: 'link' },
-        { id: 'cta-signin', labelKey: 'marketing.cta.signin', label: tx('Sign in', 'تسجيل الدخول'), href: '/login', variant: 'link' },
-        { id: 'cta-register', labelKey: 'marketing.cta.create_account', label: tx('Create account', 'إنشاء حساب'), href: '/register', variant: 'primary' },
-      ],
-      footerGroups: [
-        {
-          id: 'product',
-          titleKey: 'marketing.footer.product',
-          title: tx('Product', 'المنتج'),
-          items: [
-            { id: 'platform',  labelKey: 'marketing.nav.platform',  label: tx('Platform', 'المنصة'),       href: '/platform'  },
-            { id: 'pricing',   labelKey: 'marketing.nav.pricing',   label: tx('Pricing', 'التسعير'),       href: '/pricing'   },
-            { id: 'security',  labelKey: 'marketing.footer.security', label: tx('Security', 'الأمن'),       href: '/security'  },
-          ],
+
+    try {
+      // ── DB-driven nav + footer (replaces all hardcoded arrays) ───────────
+      // Carbon registry: nav items carry carbon_key (link|button|header-menu-item)
+      // verified active in dos.ui_carbon_components.
+      const [navQ, groupQ, itemQ] = await Promise.all([
+        pool.query(
+          `SELECT id, label_en, label_ar, label_key, href, variant, carbon_key,
+                  hide_for_locales
+             FROM dos.marketing_nav_items
+            WHERE brand_code = $1 AND is_active = TRUE
+            ORDER BY sort_order`,
+          [brandCode],
+        ),
+        pool.query(
+          `SELECT id, title_en, title_ar, title_key
+             FROM dos.marketing_footer_groups
+            WHERE brand_code = $1 AND is_active = TRUE
+            ORDER BY sort_order`,
+          [brandCode],
+        ),
+        pool.query(
+          `SELECT id, group_id, label_en, label_ar, label_key, href
+             FROM dos.marketing_footer_items
+            WHERE brand_code = $1 AND is_active = TRUE
+            ORDER BY group_id, sort_order`,
+          [brandCode],
+        ),
+      ]);
+
+      // Assemble navItems — locale label resolved server-side
+      const navItems = navQ.rows.map((r) => ({
+        id:              r.id,
+        labelKey:        r.label_key,
+        label:           locale === 'ar' ? r.label_ar : r.label_en,
+        href:            r.href,
+        variant:         r.variant,
+        carbonKey:       r.carbon_key,
+        hideForLocales:  r.hide_for_locales ?? null,
+      }));
+
+      // Group footer items by group_id
+      const itemsByGroup = new Map<string, typeof itemQ.rows>();
+      for (const item of itemQ.rows) {
+        const g = itemsByGroup.get(item.group_id) ?? [];
+        g.push(item);
+        itemsByGroup.set(item.group_id, g);
+      }
+
+      // Assemble footerGroups
+      const footerGroups = groupQ.rows.map((g) => ({
+        id:       g.id,
+        titleKey: g.title_key,
+        title:    locale === 'ar' ? g.title_ar : g.title_en,
+        items: (itemsByGroup.get(g.id) ?? []).map((it) => ({
+          id:       it.id,
+          labelKey: it.label_key,
+          label:    locale === 'ar' ? it.label_ar : it.label_en,
+          href:     it.href,
+        })),
+      }));
+
+      res.json({
+        brandCode,
+        locale,
+        direction,
+        publicMarketingEnabled: true,
+        navItems,
+        footerGroups,
+        flags: {
+          landingHeroVideo:        false,
+          landingLiveStatusPill:   false,
+          landingAgenticProof:     true,
         },
-        {
-          id: 'trust',
-          titleKey: 'marketing.footer.trust',
-          title: tx('Trust', 'الثقة'),
-          items: [
-            { id: 'trust',     labelKey: 'marketing.nav.trust',       label: tx('Trust center', 'مركز الثقة'),  href: '/trust'   },
-            { id: 'security',  labelKey: 'marketing.footer.security', label: tx('Security', 'الأمن'),           href: '/security'},
-            { id: 'legal',     labelKey: 'marketing.footer.privacy',  label: tx('Privacy & legal', 'الخصوصية'), href: '/legal'   },
-          ],
-        },
-        {
-          id: 'company',
-          titleKey: 'marketing.footer.company',
-          title: tx('Company', 'الشركة'),
-          items: [
-            { id: 'about',   labelKey: 'marketing.footer.about',   label: tx('About', 'حولنا'),  href: '/about'   },
-            { id: 'contact', labelKey: 'marketing.footer.contact', label: tx('Contact', 'تواصل'), href: '/contact' },
-          ],
-        },
-        {
-          id: 'account',
-          titleKey: 'marketing.footer.account',
-          title: tx('Account', 'الحساب'),
-          items: [
-            { id: 'signin',   labelKey: 'marketing.cta.signin',         label: tx('Sign in', 'تسجيل الدخول'),  href: '/login'    },
-            { id: 'register', labelKey: 'marketing.cta.create_account', label: tx('Create account', 'إنشاء حساب'), href: '/register' },
-          ],
-        },
-      ],
-      flags: {
-        landingHeroVideo: false,
-        landingLiveStatusPill: false,
-        landingAgenticProof: true,
-      },
-      // Pass the request path so each page gets its own breadcrumb trail.
-      homeContent: buildMarketingHomeContent(brandCode, locale, tx, String(req.path || '/')),
-    });
+        homeContent: buildMarketingHomeContent(brandCode, locale, tx, String(req.path || '/')),
+      });
+    } catch (e) {
+      res.status(500).json({ error: 'marketing_config_failed', message: (e as Error).message });
+    }
   });
 
   return router;

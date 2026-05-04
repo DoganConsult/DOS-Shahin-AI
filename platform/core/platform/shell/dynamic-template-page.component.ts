@@ -164,9 +164,13 @@ export class DynamicTemplatePageComponent {
     return out;
   });
 
+  // User-facing fallback. Intentionally NOT mentioning "binding row",
+  // "Phase F", or any platform terminology — these strings ship to end
+  // users when the binding row omits a `pillars` patch. Override per
+  // route by emitting `props.pillars` from the resolver.
   readonly fallbackPillars: ModuleInsightPillars = {
-    whatChanged: 'No DB-driven content yet for this route.',
-    evidence: 'Phase F template-binding row missing — falling back to safe shell.',
+    whatChanged: 'Live overview — content updates automatically.',
+    evidence:    'Powered by the Shahin-AI evidence engine.',
   };
 
   constructor() {

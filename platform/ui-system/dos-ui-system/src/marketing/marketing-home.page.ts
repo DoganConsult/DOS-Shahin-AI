@@ -139,14 +139,10 @@ export const MARKETING_HOME_SECTIONS = [
   'footer',
 ] as const;
 
-const PUBLIC_HEADER_LINKS = [
-  { id: 'platform-dna', href: '#platform-dna', labelEn: 'Platform DNA', labelAr: 'بنية المنصة' },
-  { id: 'safe-ai', href: '#safe-ai', labelEn: 'Safe AI', labelAr: 'ذكاء آمن' },
-  { id: 'pricing', href: '/pricing', labelEn: 'Pricing', labelAr: 'الأسعار' },
-  { id: 'resources', href: '/resources', labelEn: 'Resources', labelAr: 'الموارد' },
-  { id: 'faq', href: '#faq', labelEn: 'FAQ', labelAr: 'الأسئلة' },
-  { id: 'contact', href: '/contact', labelEn: 'Contact', labelAr: 'تواصل' },
-] as const;
+// Nav items are 100% DB-driven via MarketingPublicConfigService → /api/ui-os/marketing/config.
+// PUBLIC_HEADER_LINKS deleted — no hardcoded nav ordering or fallback labels.
+// Carbon registry keys shipped per item: carbon_key in (link|button|header-menu-item).
+// All active in dos.ui_carbon_components (verified 2026-05-04).
 export type MarketingHomeSectionId = (typeof MARKETING_HOME_REGIONS)[number];
 
 const EMPTY_MARKETING_HOME_CONTENT: MarketingHomeContent = {
@@ -261,24 +257,31 @@ export interface MarketingAgentTile {
             </nav>
 
             <div class="dos-mh-public-header__actions">
-              <dos-carbon-button
-                kind="ghost"
-                size="md"
-                data-testid="marketing-signin-cta"
-                data-cta-id="cta-signin"
-                (clicked)="navigate('/login')"
-              >
-                <span class="dos-mh-signin-cta">
-                  <dos-carbon-icon [icon]="signInIcon" size="20"></dos-carbon-icon>
-                  <span>{{ signInLabel }}</span>
-                </span>
-              </dos-carbon-button>
-              <dos-carbon-button kind="tertiary" size="md" (clicked)="navigate(ctaSecondaryHref)">
-                {{ ctaSecondaryLabel }}
-              </dos-carbon-button>
-              <dos-carbon-button kind="primary" size="md" (clicked)="navigate(ctaPrimaryHref)">
-                {{ ctaPrimaryLabel }}
-              </dos-carbon-button>
+              <!-- Header CTA actions — 100% DB-driven via dos.marketing_nav_items (variant=ghost|primary) -->
+              @for (cta of headerCtaItems(); track cta.id) {
+                @if (cta.variant === 'primary') {
+                  <dos-carbon-button
+                    kind="primary"
+                    size="md"
+                    [attr.data-cta-id]="cta.id"
+                    (clicked)="navigate(cta.href)"
+                  >{{ cta.label }}</dos-carbon-button>
+                } @else {
+                  <dos-carbon-button
+                    kind="ghost"
+                    size="md"
+                    [attr.data-cta-id]="cta.id"
+                    (clicked)="navigate(cta.href)"
+                  >
+                    <span class="dos-mh-signin-cta">
+                      @if (cta.id === 'cta-signin') {
+                        <dos-carbon-icon [icon]="signInIcon" size="20"></dos-carbon-icon>
+                      }
+                      <span>{{ cta.label }}</span>
+                    </span>
+                  </dos-carbon-button>
+                }
+              }
             </div>
           </div>
         </div>
@@ -742,9 +745,10 @@ export class DosMarketingHomePageComponent {
   get ctaSecondaryHref(): string  { return this.content().hero.ctaSecondary.href; }
 
   /** IBM Carbon `login/20` icon descriptor for the public-header Sign-in CTA. */
+  /** IBM Carbon login/20 icon — used for cta-signin icon slot (id check in template). */
   readonly signInIcon = Login20;
-  /** Localized label for the public-header Sign-in CTA. */
-  get signInLabel(): string { return this.locale === 'ar' ? 'تسجيل الدخول' : 'Sign in'; }
+  // signInLabel deleted — label is now DB-driven via dos.marketing_nav_items.label_en/ar.
+
 
   // Trust pills + value props
   get trustPills(): ReadonlyArray<{ id: string; label: string }> { return this.content().trustPills; }
@@ -877,23 +881,14 @@ export class DosMarketingHomePageComponent {
   itemLabel(it: { labelKey: string; label?: string }): string {
     return it.label || it.labelKey;
   }
-  navLabel(n: { labelKey: string; label?: string }): string {
-    return n.label || n.labelKey;
+  /** Header nav items — 100% DB-driven from MarketingPublicConfigService signal.
+   * Excludes CTA variants (primary/secondary) which render in the header actions slot. */
+  headerNavItems(): ReadonlyArray<MarketingNavItem> {
+    return this.navItems().filter((n) => n.variant !== 'primary' && n.variant !== 'secondary');
   }
-  headerNavItems(): ReadonlyArray<{ id: string; href: string; label: string }> {
-    const source = new Map(this.navItems().map((item) => [item.href, item]));
-    return PUBLIC_HEADER_LINKS.map((link) => {
-      const item = source.get(link.href);
-      return {
-        id: item?.id ?? link.id,
-        href: link.href,
-        label: item ? this.navLabel(item) : (this.locale === 'ar' ? link.labelAr : link.labelEn),
-      };
-    });
-  }
-  headerActionLabel(href: string, fallbackEn: string, fallbackAr: string): string {
-    const item = this.navItems().find((entry) => entry.href === href);
-    return item ? this.navLabel(item) : (this.locale === 'ar' ? fallbackAr : fallbackEn);
+  /** Header CTA items (variant=primary|secondary) — rendered in the header actions slot. */
+  headerCtaItems(): ReadonlyArray<MarketingNavItem> {
+    return this.navItems().filter((n) => n.variant === 'primary' || n.variant === 'secondary');
   }
   isHeaderActive(href: string): boolean {
     if (href.startsWith('#')) {

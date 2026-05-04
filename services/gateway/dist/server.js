@@ -771,7 +771,8 @@ const PHASE2_OS = [
 ];
 for (const [code, port] of PHASE2_OS) {
     const envKey = `DOS_${code.toUpperCase().replace(/-/g, '_')}_SERVICE_URL`;
-    const target = process.env[envKey] || `http://127.0.0.1:${port}`;
+    // L32 (Phase 3 D5): Phase-2 OS services now bind HTTPS+mTLS by default.
+    const target = process.env[envKey] || `https://127.0.0.1:${port}`;
     app.use(`/api/admin/${code}`, (0, http_proxy_middleware_1.createProxyMiddleware)({
         target,
         changeOrigin: true,
@@ -1039,7 +1040,7 @@ app.use('/api/platform-config', authGuard, injectIdentityHeaders, (0, http_proxy
 // Tenant-service exposes /navigation/tree which returns
 // { entries: dos.navigation_registry rows, count }. Adapt the tree into the
 // shape NavigationStore.apiItemToNavItem expects so the SPA never falls back
-// to BASE_PRIMARY_NAV.
+// to a legacy hardcoded primary nav.
 app.get('/api/navigation/route-catalog', authGuard, injectIdentityHeaders, async (req, res) => {
     try {
         const headers = { accept: 'application/json' };
