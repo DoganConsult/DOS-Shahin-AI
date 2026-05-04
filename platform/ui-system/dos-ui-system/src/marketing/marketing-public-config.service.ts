@@ -120,6 +120,7 @@ export interface MarketingHomeContent {
     toast: { title: string; subtitle: string };
   };
   platform: {
+    eyebrow: string;
     title: string;
     body: string;
     tabs: ReadonlyArray<{ id: string; label: string; body: string }>;
@@ -139,16 +140,36 @@ export interface MarketingHomeContent {
     steps: ReadonlyArray<MarketingHomeProgressStep>;
   };
   pricing: {
+    eyebrow: string;
     title: string;
     ctaLabel: string;
     href: string;
     columns: ReadonlyArray<MarketingHomeTableColumn>;
     rows: ReadonlyArray<Record<string, string>>;
   };
-  testimonials: ReadonlyArray<{ id: string; quote: string; author: string; role: string }>;
-  customerLogos: ReadonlyArray<{ id: string; name: string }>;
-  resources: ReadonlyArray<{ id: string; title: string; body: string; href: string }>;
-  faq: ReadonlyArray<{ q: string; a: string }>;
+  testimonials: {
+    eyebrow: string;
+    title: string;
+    sub: string;
+    items: ReadonlyArray<{ id: string; quote: string; author: string; role: string }>;
+  };
+  logos: {
+    eyebrow: string;
+    title: string;
+    items: ReadonlyArray<{ id: string; name: string }>;
+  };
+  resources: {
+    eyebrow: string;
+    title: string;
+    sub: string;
+    items: ReadonlyArray<{ id: string; title: string; body: string; href: string }>;
+  };
+  faq: {
+    eyebrow: string;
+    title: string;
+    sub: string;
+    items: ReadonlyArray<{ q: string; a: string }>;
+  };
   ctaBanner: { eyebrow: string; title: string; sub: string };
   breadcrumb: ReadonlyArray<MarketingHomeBreadcrumbItem>;
 }
@@ -184,16 +205,16 @@ const EMPTY_HOME_CONTENT: MarketingHomeContent = {
     notification: { title: '', subtitle: '' },
     toast: { title: '', subtitle: '' },
   },
-  platform: { title: '', body: '', tabs: [] },
+  platform: { eyebrow: '', title: '', body: '', tabs: [] },
   modules: [],
   industries: [],
   architecture: { title: '', body: '', rows: [] },
   ai: { eyebrow: '', title: '', body: '', currentStep: 0, steps: [] },
-  pricing: { title: '', ctaLabel: '', href: '', columns: [], rows: [] },
-  testimonials: [],
-  customerLogos: [],
-  resources: [],
-  faq: [],
+  pricing: { eyebrow: '', title: '', ctaLabel: '', href: '', columns: [], rows: [] },
+  testimonials: { eyebrow: '', title: '', sub: '', items: [] },
+  logos: { eyebrow: '', title: '', items: [] },
+  resources: { eyebrow: '', title: '', sub: '', items: [] },
+  faq: { eyebrow: '', title: '', sub: '', items: [] },
   ctaBanner: { eyebrow: '', title: '', sub: '' },
   breadcrumb: [],
 };

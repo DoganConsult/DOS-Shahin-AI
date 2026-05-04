@@ -34,9 +34,7 @@ import type { AgentStripSummary, AgentState } from '@dos/ui-system';
       [downloadAssets]="downloadAssets()"
       [navItems]="navItems()"
       [navGroups]="navGroups()"
-      [footerGroups]="footerGroups()"
-      pricingCtaLabel="See pricing"
-      pricingHref="/pricing">
+      [footerGroups]="footerGroups()">
     </dos-marketing-home>
   `,
   styles: [`:host { display: block; min-height: 100vh; }`],

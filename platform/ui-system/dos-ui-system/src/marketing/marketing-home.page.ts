@@ -160,16 +160,16 @@ const EMPTY_MARKETING_HOME_CONTENT: MarketingHomeContent = {
     notification: { title: '', subtitle: '' },
     toast: { title: '', subtitle: '' },
   },
-  platform: { title: '', body: '', tabs: [] },
+  platform: { eyebrow: '', title: '', body: '', tabs: [] },
   modules: [],
   industries: [],
   architecture: { title: '', body: '', rows: [] },
   ai: { eyebrow: '', title: '', body: '', currentStep: 0, steps: [] },
-  pricing: { title: '', ctaLabel: '', href: '', columns: [], rows: [] },
-  testimonials: [],
-  customerLogos: [],
-  resources: [],
-  faq: [],
+  pricing: { eyebrow: '', title: '', ctaLabel: '', href: '', columns: [], rows: [] },
+  testimonials: { eyebrow: '', title: '', sub: '', items: [] },
+  logos: { eyebrow: '', title: '', items: [] },
+  resources: { eyebrow: '', title: '', sub: '', items: [] },
+  faq: { eyebrow: '', title: '', sub: '', items: [] },
   ctaBanner: { eyebrow: '', title: '', sub: '' },
   breadcrumb: [],
 };
@@ -506,7 +506,7 @@ export interface MarketingAgentTile {
       <!-- 06 platform-overview — Carbon Tabs ────────────────────────── -->
       <section class="dos-mh-section" data-section-id="platform-overview" id="platform-dna">
         <div class="dos-mh-container">
-          <p class="dos-mh-eyebrow">{{ locale === 'ar' ? 'بنية المنصة' : 'Platform DNA' }}</p>
+          <p class="dos-mh-eyebrow">{{ platformEyebrow }}</p>
           <h2 class="dos-mh-section-title">{{ platformTitle }}</h2>
           <p>{{ platformBody }}</p>
           <dos-carbon-tabs
@@ -569,7 +569,7 @@ export interface MarketingAgentTile {
       <!-- 11 pricing-teaser — Carbon DataTable + Button ─────────────── -->
       <section class="dos-mh-section" data-section-id="pricing-teaser" id="pricing">
         <div class="dos-mh-container">
-          <p class="dos-mh-eyebrow">{{ locale === 'ar' ? 'الأسعار' : 'Pricing' }}</p>
+          <p class="dos-mh-eyebrow">{{ pricingEyebrow }}</p>
           <h2 class="dos-mh-section-title">{{ pricingTitle }}</h2>
           <div class="dos-mh-cta-row">
             <dos-carbon-button kind="primary" size="lg" (clicked)="navigate(pricingHref)">
@@ -583,9 +583,9 @@ export interface MarketingAgentTile {
       <section class="dos-mh-section" data-section-id="testimonials" id="proof">
         <div class="dos-mh-container dos-mh-grid-3">
           <div class="dos-mh-testimonial-intro">
-            <p class="dos-mh-eyebrow">{{ locale === 'ar' ? 'إثبات تنفيذي' : 'Executive proof' }}</p>
-            <h2 class="dos-mh-section-title">{{ locale === 'ar' ? 'نتائج يكررها قادة الحوكمة.' : 'Results leadership teams remember.' }}</h2>
-            <p class="dos-mh-sub">{{ locale === 'ar' ? 'شهادات قصيرة تركز على الزمن والدليل وسهولة الاعتماد.' : 'Short proof points centred on speed, evidence, and decision confidence.' }}</p>
+            <p class="dos-mh-eyebrow">{{ testimonialsEyebrow }}</p>
+            <h2 class="dos-mh-section-title">{{ testimonialsTitle }}</h2>
+            <p class="dos-mh-sub">{{ testimonialsSub }}</p>
           </div>
           @for (q of testimonials; track q.id) {
             <dos-carbon-tile>
@@ -603,8 +603,8 @@ export interface MarketingAgentTile {
       <!-- carbon_key='contained-list' runtime_status='active' dynamic_ui_allowed=true -->
       <section class="dos-mh-section" data-section-id="logos" data-cds-component="contained-list" id="trusted-by">
         <div class="dos-mh-container">
-          <p class="dos-mh-eyebrow">{{ locale === 'ar' ? 'موثوق به' : 'Trusted by' }}</p>
-          <h2 class="dos-mh-section-title">{{ locale === 'ar' ? 'علامات تعرف معنى الضبط المؤسسي.' : 'Teams that measure readiness by evidence.' }}</h2>
+          <p class="dos-mh-eyebrow">{{ logosEyebrow }}</p>
+          <h2 class="dos-mh-section-title">{{ logosTitle }}</h2>
           <dos-carbon-contained-list
             class="dos-mh-logos-list"
             [label]="locale === 'ar' ? 'يثق بنا' : 'Trusted by'"
@@ -620,8 +620,9 @@ export interface MarketingAgentTile {
       <!-- carbon_key='contained-list' runtime_status='active' dynamic_ui_allowed=true -->
       <section class="dos-mh-section" data-section-id="resources" data-cds-component="contained-list" id="resources">
         <div class="dos-mh-container">
-          <h2 class="dos-mh-section-title">{{ locale === 'ar' ? 'الموارد' : 'Resources' }}</h2>
-          <p class="dos-mh-sub">{{ locale === 'ar' ? 'ابدأ من الصفحة المناسبة: منصة المنتج، الحزمة التنفيذية، أو مركز الثقة.' : 'Jump directly to the platform story, the executive kit, or the trust surface.' }}</p>
+          <p class="dos-mh-eyebrow">{{ resourcesEyebrow }}</p>
+          <h2 class="dos-mh-section-title">{{ resourcesTitle }}</h2>
+          <p class="dos-mh-sub">{{ resourcesSub }}</p>
           <dos-carbon-contained-list
             class="dos-mh-resource-list"
             [label]="locale === 'ar' ? 'استكشف' : 'Explore'"
@@ -636,8 +637,9 @@ export interface MarketingAgentTile {
       <!-- 15 faq — Carbon Accordion ─────────────────────────────────── -->
       <section class="dos-mh-section" data-section-id="faq" id="faq">
         <div class="dos-mh-container">
-          <p class="dos-mh-eyebrow">{{ locale === 'ar' ? 'الأسئلة الشائعة' : 'FAQ' }}</p>
-          <h2 class="dos-mh-section-title">{{ locale === 'ar' ? 'إجابات سريعة قبل أن تبدأ.' : 'The short answers before procurement starts.' }}</h2>
+          <p class="dos-mh-eyebrow">{{ faqEyebrow }}</p>
+          <h2 class="dos-mh-section-title">{{ faqTitle }}</h2>
+          <p class="dos-mh-sub">{{ faqSub }}</p>
           <dos-carbon-accordion [items]="faqItems()" align="end" size="md"></dos-carbon-accordion>
         </div>
       </section>
@@ -754,6 +756,7 @@ export class DosMarketingHomePageComponent {
   get agentTiles(): ReadonlyArray<MarketingAgentTile> { return this.content().agentic.tiles; }
 
   // Platform-overview
+  get platformEyebrow(): string { return this.content().platform.eyebrow; }
   get platformTitle(): string { return this.content().platform.title; }
   get platformBody(): string  { return this.content().platform.body; }
   get platformTabs(): DosCarbonTabItem[] {
@@ -789,14 +792,26 @@ export class DosMarketingHomePageComponent {
   }
 
   // Pricing
+  get pricingEyebrow(): string  { return this.content().pricing.eyebrow; }
   get pricingTitle(): string    { return this.content().pricing.title; }
   get pricingCtaLabel(): string { return this.content().pricing.ctaLabel; }
   get pricingHref(): string     { return this.content().pricing.href; }
   // Testimonials / logos / resources / FAQ / CTA banner
-  get testimonials(): ReadonlyArray<{ id: string; quote: string; author: string; role: string }> { return this.content().testimonials; }
-  get customerLogos(): ReadonlyArray<{ id: string; name: string }> { return this.content().customerLogos; }
-  get resources(): ReadonlyArray<{ id: string; title: string; body: string; href: string }> { return this.content().resources; }
-  get faq(): ReadonlyArray<{ q: string; a: string }> { return this.content().faq; }
+  get testimonialsEyebrow(): string { return this.content().testimonials.eyebrow; }
+  get testimonialsTitle(): string   { return this.content().testimonials.title; }
+  get testimonialsSub(): string     { return this.content().testimonials.sub; }
+  get testimonials(): ReadonlyArray<{ id: string; quote: string; author: string; role: string }> { return this.content().testimonials.items; }
+  get logosEyebrow(): string { return this.content().logos.eyebrow; }
+  get logosTitle(): string   { return this.content().logos.title; }
+  get logos(): ReadonlyArray<{ id: string; name: string }> { return this.content().logos.items; }
+  get resourcesEyebrow(): string { return this.content().resources.eyebrow; }
+  get resourcesTitle(): string   { return this.content().resources.title; }
+  get resourcesSub(): string     { return this.content().resources.sub; }
+  get resources(): ReadonlyArray<{ id: string; title: string; body: string; href: string }> { return this.content().resources.items; }
+  get faqEyebrow(): string { return this.content().faq.eyebrow; }
+  get faqTitle(): string   { return this.content().faq.title; }
+  get faqSub(): string     { return this.content().faq.sub; }
+  get faq(): ReadonlyArray<{ q: string; a: string }> { return this.content().faq.items; }
   get ctaBannerEyebrow(): string { return this.content().ctaBanner.eyebrow; }
   get ctaBannerTitle(): string   { return this.content().ctaBanner.title; }
   get ctaBannerSub(): string     { return this.content().ctaBanner.sub; }
@@ -831,10 +846,10 @@ export class DosMarketingHomePageComponent {
     return this.faq.map((f) => ({ title: f.q, content: f.a }));
   }
 
-  /** B1 — Maps customerLogos to DosCarbonContainedListItem[] for the logos contained-list.
+  /** B1 — Maps logos to DosCarbonContainedListItem[] for the logos contained-list.
    *  carbon_key='contained-list', runtime_status='active', dynamic_ui_allowed=true */
   logoListItems(): DosCarbonContainedListItem[] {
-    return (this.customerLogos ?? []).map((l) => ({
+    return (this.logos ?? []).map((l) => ({
       id:      l.id,
       content: l.name,
     }));
