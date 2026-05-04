@@ -1,0 +1,28 @@
+#!/usr/bin/env node
+/**
+ * DOS Master release gate — runs every DOS Master CI guard in sequence.
+ * Exit non-zero if any guard fails.
+ */
+import { spawnSync } from 'node:child_process';
+
+const GUARDS = [
+  'dos-master-only.mjs',
+  'ppd-ring-required.mjs',
+  'forbid-legacy-accessstore.mjs',
+  'single-access-store-import.mjs',
+  'forbid-direct-bootstrap-fan-out.mjs',
+  'cli-ui-parity.mjs',
+  'doctrine-acknowledged.mjs',
+  'fake-green-detector.mjs',
+  'service-port-allocated.mjs',
+  'trust-zone-isolation.mjs',
+  'service-manifest-required.mjs',
+];
+
+let pass = 0, fail = 0;
+for (const g of GUARDS) {
+  const r = spawnSync('node', [`scripts/ci-guards/${g}`], { stdio: 'inherit' });
+  if (r.status === 0) pass++; else fail++;
+}
+console.log(`\n[dos-master-gate] ${pass}/${GUARDS.length} guards PASS, ${fail} FAIL`);
+process.exit(fail ? 1 : 0);

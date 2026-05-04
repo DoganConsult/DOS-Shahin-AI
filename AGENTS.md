@@ -1037,13 +1037,42 @@ Master are CI-rejected (`dos-master-only.mjs`) and DB-rejected
   extended with 5 parity commands (`rollout:plan:add`, `rollout:advance`,
   `rollout:rollback`, `rollout:composition`, `doctrine:ack`) — total CLI
   surface now 29.
-- **M14 D2..D5** — IN-PROGRESS. Remaining: rollout-service
-  auto-evaluation loop (60 s Prom/Loki/Jaeger pollers + auto-rollback
-  within 5 m of gate breach), compensation chain orchestrator backed by
-  Temporal, remaining 41 CI guards (per-zone: tenant-context-required,
-  rls-policy-present, mTLS-required-on-admin-zone, etc.), fake-green
-  baseline tightened to 0, end-to-end doctrine acknowledgement workflow
-  via `dos_master.doctrine_acknowledgement`.
+- **M14 D2 — CLOSED (2026-05-04).** rollout-service auto-evaluator
+  shipped (`services/rollout-service/src/lib/auto-evaluator.ts`):
+  60 s `setInterval` tick scans `dos.rollout_ring WHERE status='active'`
+  AND parent plan in `('draft','running')`, calls `evaluateRing()` per
+  ring with the configured `SignalReader`, and on `decision='rollback'`
+  invokes `rollbackRing(actor='rollout-service:auto', reason='auto: …')`.
+  Bootstrap toggles via env: `ROLLOUT_AUTO_EVAL=0` disables the loop,
+  `ROLLOUT_POLL_MS` sets cadence, `ROLLOUT_AUTO_ROLLBACK=0` puts the
+  loop in observe-only mode. Default `StubSignalReader` returns synthetic
+  healthy signals; M14 D3 swaps in real Prom/Loki/Jaeger/audit/synthetic
+  adapters via `setSignalReader()`.
+  Five additional CI guards landed and PASS:
+    `single-access-store-import.mjs`         27 canonical, 0 legacy
+    `forbid-direct-bootstrap-fan-out.mjs`    32 hits ≤ baseline 50
+                                             (BOOTSTRAP_FAN_OUT_ENFORCE=1
+                                              tightens to 0 in M14 D3)
+    `service-port-allocated.mjs`             40 services on disk;
+                                             9 DOS Master services
+                                             registered in
+                                             dos_master.service_registry
+    `trust-zone-isolation.mjs`               5 tenant-zone + 3 admin-zone
+                                             services isolated
+    `service-manifest-required.mjs`          31 legacy ≤ baseline 35;
+                                             9/40 services compliant
+                                             (MANIFEST_ENFORCE=1 tightens
+                                              when legacy services
+                                              backfill manifests)
+  `scripts/ci-guards/dos-master-gate.mjs` master runner: 11/11 PASS
+  end-to-end (`node scripts/ci-guards/dos-master-gate.mjs`).
+- **M14 D3..D5** — IN-PROGRESS. Remaining: real Prom/Loki/Jaeger/audit/
+  synthetic signal adapters via `@dos/observability-clients`,
+  Temporal-backed compensation chain orchestrator, remaining 36 CI
+  guards (per-zone: `tenant-context-required`, `rls-policy-present`,
+  `mTLS-required-on-admin-zone`, `redis-db-isolation`, …), tighten
+  fake-green/bootstrap-fan-out baselines to 0, end-to-end doctrine
+  acknowledgement workflow via `dos_master.doctrine_acknowledgement`.
 
 ### Phase status (live as of 2026-05-01)
 
