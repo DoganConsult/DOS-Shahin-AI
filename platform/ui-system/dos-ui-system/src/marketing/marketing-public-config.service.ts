@@ -93,6 +93,21 @@ export interface MarketingHomeBreadcrumbItem {
 
 export interface MarketingHomeContent {
   brandLabel: string;
+  copyright: string;
+  uiLabels: {
+    headerMenuLabel: string;
+    mobileMenuLabel: string;
+    heroTrustLabel: string;
+    valuePropsEyebrow: string;
+    valuePropsTitle: string;
+    valuePropsSub: string;
+    heroProofStatus: string;
+    heroProofTitle: string;
+    heroProofBody: string;
+    heroEvidenceReceipt: string;
+    heroProofStatusItems: ReadonlyArray<{ id: string; label: string; value: string; tone: 'live' | 'pending' | 'synced' }>;
+    heroTimelineSteps: ReadonlyArray<string>;
+  };
   hero: {
     badge: string;
     eyebrow: string;
@@ -116,6 +131,7 @@ export interface MarketingHomeContent {
     body: string;
     ctaLabel: string;
     featuredAssetKey: string;
+    loadingText: string;
     notification: { title: string; subtitle: string };
     toast: { title: string; subtitle: string };
   };
@@ -156,12 +172,14 @@ export interface MarketingHomeContent {
   logos: {
     eyebrow: string;
     title: string;
+    label: string;
     items: ReadonlyArray<{ id: string; name: string }>;
   };
   resources: {
     eyebrow: string;
     title: string;
     sub: string;
+    label: string;
     items: ReadonlyArray<{ id: string; title: string; body: string; href: string }>;
   };
   faq: {
@@ -190,8 +208,23 @@ export interface MarketingPublicConfig {
   homeContent?: MarketingHomeContent;
 }
 
-const EMPTY_HOME_CONTENT: MarketingHomeContent = {
+const EMPTY_MARKETING_HOME_CONTENT: MarketingHomeContent = {
   brandLabel: '',
+  copyright: '',
+  uiLabels: {
+    headerMenuLabel: '',
+    mobileMenuLabel: '',
+    heroTrustLabel: '',
+    valuePropsEyebrow: '',
+    valuePropsTitle: '',
+    valuePropsSub: '',
+    heroProofStatus: '',
+    heroProofTitle: '',
+    heroProofBody: '',
+    heroEvidenceReceipt: '',
+    heroProofStatusItems: [],
+    heroTimelineSteps: [],
+  },
   hero: {
     badge: '', eyebrow: '', title: '', sub: '', microcopy: '',
     ctaPrimary: { label: '', href: '' },
@@ -202,6 +235,7 @@ const EMPTY_HOME_CONTENT: MarketingHomeContent = {
   agentic: { eyebrow: '', title: '', readinessPercent: 0, tiles: [] },
   downloadKit: {
     eyebrow: '', title: '', body: '', ctaLabel: '', featuredAssetKey: '',
+    loadingText: '',
     notification: { title: '', subtitle: '' },
     toast: { title: '', subtitle: '' },
   },
@@ -212,8 +246,8 @@ const EMPTY_HOME_CONTENT: MarketingHomeContent = {
   ai: { eyebrow: '', title: '', body: '', currentStep: 0, steps: [] },
   pricing: { eyebrow: '', title: '', ctaLabel: '', href: '', columns: [], rows: [] },
   testimonials: { eyebrow: '', title: '', sub: '', items: [] },
-  logos: { eyebrow: '', title: '', items: [] },
-  resources: { eyebrow: '', title: '', sub: '', items: [] },
+  logos: { eyebrow: '', title: '', label: '', items: [] },
+  resources: { eyebrow: '', title: '', sub: '', label: '', items: [] },
   faq: { eyebrow: '', title: '', sub: '', items: [] },
   ctaBanner: { eyebrow: '', title: '', sub: '' },
   breadcrumb: [],
@@ -275,6 +309,6 @@ export class MarketingPublicConfigService {
    *  hasn't shipped a block, an empty fallback is returned so templates can
    *  bind without null-checks. */
   readonly marketingHomeContent = computed<MarketingHomeContent>(
-    () => this._config()?.homeContent ?? EMPTY_HOME_CONTENT,
+    () => this._config()?.homeContent ?? EMPTY_MARKETING_HOME_CONTENT,
   );
 }

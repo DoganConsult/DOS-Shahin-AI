@@ -147,6 +147,21 @@ export type MarketingHomeSectionId = (typeof MARKETING_HOME_REGIONS)[number];
 
 const EMPTY_MARKETING_HOME_CONTENT: MarketingHomeContent = {
   brandLabel: '',
+  copyright: '',
+  uiLabels: {
+    headerMenuLabel: '',
+    mobileMenuLabel: '',
+    heroTrustLabel: '',
+    valuePropsEyebrow: '',
+    valuePropsTitle: '',
+    valuePropsSub: '',
+    heroProofStatus: '',
+    heroProofTitle: '',
+    heroProofBody: '',
+    heroEvidenceReceipt: '',
+    heroProofStatusItems: [],
+    heroTimelineSteps: [],
+  },
   hero: {
     badge: '', eyebrow: '', title: '', sub: '', microcopy: '',
     ctaPrimary: { label: '', href: '' },
@@ -157,6 +172,7 @@ const EMPTY_MARKETING_HOME_CONTENT: MarketingHomeContent = {
   agentic: { eyebrow: '', title: '', readinessPercent: 0, tiles: [] },
   downloadKit: {
     eyebrow: '', title: '', body: '', ctaLabel: '', featuredAssetKey: '',
+    loadingText: '',
     notification: { title: '', subtitle: '' },
     toast: { title: '', subtitle: '' },
   },
@@ -167,8 +183,8 @@ const EMPTY_MARKETING_HOME_CONTENT: MarketingHomeContent = {
   ai: { eyebrow: '', title: '', body: '', currentStep: 0, steps: [] },
   pricing: { eyebrow: '', title: '', ctaLabel: '', href: '', columns: [], rows: [] },
   testimonials: { eyebrow: '', title: '', sub: '', items: [] },
-  logos: { eyebrow: '', title: '', items: [] },
-  resources: { eyebrow: '', title: '', sub: '', items: [] },
+  logos: { eyebrow: '', title: '', label: '', items: [] },
+  resources: { eyebrow: '', title: '', sub: '', label: '', items: [] },
   faq: { eyebrow: '', title: '', sub: '', items: [] },
   ctaBanner: { eyebrow: '', title: '', sub: '' },
   breadcrumb: [],
@@ -471,7 +487,7 @@ export interface MarketingAgentTile {
             <!-- carbon_key='inline-loading' runtime_status='active' dynamic_ui_allowed=true -->
             <dos-carbon-inline-loading
               [state]="'active'"
-              [loadingText]="locale === 'ar' ? 'جارٍ تحضير حزمتك…' : 'Preparing your kit…'"
+              [loadingText]="downloadKitLoadingText"
             ></dos-carbon-inline-loading>
           }
 
@@ -607,7 +623,7 @@ export interface MarketingAgentTile {
           <h2 class="dos-mh-section-title">{{ logosTitle }}</h2>
           <dos-carbon-contained-list
             class="dos-mh-logos-list"
-            [label]="locale === 'ar' ? 'يثق بنا' : 'Trusted by'"
+            [label]="logosLabel"
             [kind]="'on-page'"
             [size]="'lg'"
             [items]="logoListItems()"
@@ -625,7 +641,7 @@ export interface MarketingAgentTile {
           <p class="dos-mh-sub">{{ resourcesSub }}</p>
           <dos-carbon-contained-list
             class="dos-mh-resource-list"
-            [label]="locale === 'ar' ? 'استكشف' : 'Explore'"
+            [label]="resourcesLabel"
             [kind]="'disclosed'"
             [size]="'lg'"
             [items]="resourceListItems()"
@@ -679,7 +695,7 @@ export interface MarketingAgentTile {
             }
             <div class="dos-mh-footer-col dos-mh-footer-brand">
               <dos-brand-eagle [brandCode]="brandCode" [locale]="locale" [size]="32" />
-              <small>© {{ year }} {{ brandLabel }}</small>
+              <small>{{ copyright }}</small>
             </div>
           </div>
         </div>
@@ -723,6 +739,7 @@ export class DosMarketingHomePageComponent {
 
   // Brand label (resolved server-side, no string mapping in component).
   get brandLabel(): string { return this.content().brandLabel; }
+  get copyright(): string { return this.content().copyright; }
 
   // Hero
   get heroBadgeLabel(): string  { return this.content().hero.badge; }
@@ -803,10 +820,12 @@ export class DosMarketingHomePageComponent {
   get testimonials(): ReadonlyArray<{ id: string; quote: string; author: string; role: string }> { return this.content().testimonials.items; }
   get logosEyebrow(): string { return this.content().logos.eyebrow; }
   get logosTitle(): string   { return this.content().logos.title; }
+  get logosLabel(): string   { return this.content().logos.label; }
   get logos(): ReadonlyArray<{ id: string; name: string }> { return this.content().logos.items; }
   get resourcesEyebrow(): string { return this.content().resources.eyebrow; }
   get resourcesTitle(): string   { return this.content().resources.title; }
   get resourcesSub(): string     { return this.content().resources.sub; }
+  get resourcesLabel(): string  { return this.content().resources.label; }
   get resources(): ReadonlyArray<{ id: string; title: string; body: string; href: string }> { return this.content().resources.items; }
   get faqEyebrow(): string { return this.content().faq.eyebrow; }
   get faqTitle(): string   { return this.content().faq.title; }
@@ -821,6 +840,7 @@ export class DosMarketingHomePageComponent {
   get downloadKitTitle(): string   { return this.content().downloadKit.title; }
   get downloadKitBody(): string    { return this.content().downloadKit.body; }
   get downloadCtaLabel(): string   { return this.content().downloadKit.ctaLabel; }
+  get downloadKitLoadingText(): string { return this.content().downloadKit.loadingText; }
   get featuredAssetKey(): string   { return this.content().downloadKit.featuredAssetKey; }
   get kitNotificationTitle(): string    { return this.content().downloadKit.notification.title; }
   get kitNotificationSubtitle(): string { return this.content().downloadKit.notification.subtitle; }
@@ -896,46 +916,20 @@ export class DosMarketingHomePageComponent {
     const current = this.router.url.split('?')[0] || '';
     return href !== '/' && (current === href || current.startsWith(`${href}/`));
   }
-  get headerMenuLabel(): string {
-    return this.locale === 'ar' ? 'القائمة' : 'Menu';
-  }
-  get mobileMenuLabel(): string {
-    return this.locale === 'ar' ? 'فتح قائمة التنقل' : 'Open navigation menu';
-  }
+  get headerMenuLabel(): string { return this.content().uiLabels.headerMenuLabel || (this.locale === 'ar' ? 'القائمة' : 'Menu'); }
+  get mobileMenuLabel(): string { return this.content().uiLabels.mobileMenuLabel || (this.locale === 'ar' ? 'فتح قائمة التنقل' : 'Open navigation menu'); }
 
-  get heroTrustLabel(): string {
-    return this.locale === 'ar'
-      ? 'موثوق لـ: ISO 27001 · SOC 2 Type II · GDPR · NCA ECC · SAMA CSF'
-      : 'Trusted for: ISO 27001 · SOC 2 Type II · GDPR · NCA ECC · SAMA CSF';
-  }
-  get valuePropsEyebrow(): string {
-    return this.locale === 'ar' ? 'قيمة تشغيلية' : 'Operational value';
-  }
-  get valuePropsTitle(): string {
-    return this.locale === 'ar'
-      ? 'ثلاث فوائد واضحة قبل أن تبدأ بقية الصفحة.'
-      : 'Three proof points before the rest of the platform story.';
-  }
-  get valuePropsSub(): string {
-    return this.locale === 'ar'
-      ? 'تقليل وقت المراجعة، إحكام الموافقات، وإبقاء الأدلة جاهزة للتدقيق في كل خطوة.'
-      : 'Shorter review cycles, tighter approvals, and evidence that stays ready for every regulator.';
-  }
+  get heroTrustLabel(): string { return this.content().uiLabels.heroTrustLabel || (this.locale === 'ar' ? 'موثوق لـ: ISO 27001 · SOC 2 Type II · GDPR · NCA ECC · SAMA CSF' : 'Trusted for: ISO 27001 · SOC 2 Type II · GDPR · NCA ECC · SAMA CSF'); }
+  get valuePropsEyebrow(): string { return this.content().uiLabels.valuePropsEyebrow || (this.locale === 'ar' ? 'قيمة تشغيلية' : 'Operational value'); }
+  get valuePropsTitle(): string { return this.content().uiLabels.valuePropsTitle || (this.locale === 'ar' ? 'ثلاث فوائد واضحة قبل أن تبدأ بقية الصفحة.' : 'Three proof points before the rest of the platform story.'); }
+  get valuePropsSub(): string { return this.content().uiLabels.valuePropsSub || (this.locale === 'ar' ? 'تقليل وقت المراجعة، إحكام الموافقات، وإبقاء الأدلة جاهزة للتدقيق في كل خطوة.' : 'Shorter review cycles, tighter approvals, and evidence that stays ready for every regulator.'); }
 
-  get heroProofStatus(): string {
-    return this.locale === 'ar' ? 'جاهز للتدقيق' : 'Audit-ready';
-  }
-  get heroProofTitle(): string {
-    return this.locale === 'ar'
-      ? 'لوحة مباشرة للوكلاء والموافقات والدليل الرقابي.'
-      : 'A live proof panel for agents, approvals, and audit.';
-  }
-  get heroProofBody(): string {
-    return this.locale === 'ar'
-      ? 'راقب حالة التنفيذ، تتبّع الموافقات، واحتفظ بدليل قابل للمراجعة من أول إشارة حتى الإغلاق.'
-      : 'Monitor execution status, track approvals, and keep review-ready evidence from first signal to final sign-off.';
-  }
+  get heroProofStatus(): string { return this.content().uiLabels.heroProofStatus || (this.locale === 'ar' ? 'جاهز للتدقيق' : 'Audit-ready'); }
+  get heroProofTitle(): string { return this.content().uiLabels.heroProofTitle || (this.locale === 'ar' ? 'لوحة مباشرة للوكلاء والموافقات والدليل الرقابي.' : 'A live proof panel for agents, approvals, and audit.'); }
+  get heroProofBody(): string { return this.content().uiLabels.heroProofBody || (this.locale === 'ar' ? 'راقب حالة التنفيذ، تتبّع الموافقات، واحتفظ بدليل قابل للمراجعة من أول إشارة حتى الإغلاق.' : 'Monitor execution status, track approvals, and keep review-ready evidence from first signal to final sign-off.'); }
   heroProofStatusItems(): ReadonlyArray<{ id: string; label: string; value: string; tone: 'live' | 'pending' | 'synced' }> {
+    const dbItems = this.content().uiLabels.heroProofStatusItems;
+    if (dbItems && dbItems.length > 0) return dbItems;
     const agentCount = this.agentTiles.length || 9;
     return this.locale === 'ar'
       ? [
@@ -950,6 +944,8 @@ export class DosMarketingHomePageComponent {
         ];
   }
   heroTimelineSteps(): ReadonlyArray<string> {
+    const dbSteps = this.content().uiLabels.heroTimelineSteps;
+    if (dbSteps && dbSteps.length > 0) return dbSteps;
     return this.locale === 'ar'
       ? [
           'راقب',
@@ -968,11 +964,7 @@ export class DosMarketingHomePageComponent {
           'Log',
         ];
   }
-  get heroEvidenceReceipt(): string {
-    return this.locale === 'ar'
-      ? 'إيصال الدليل: EVT-240504-0912 · موقّع ومحفوظ في السجل غير القابل للتعديل.'
-      : 'Evidence receipt: EVT-240504-0912 · signed and written to the immutable audit log.';
-  }
+  get heroEvidenceReceipt(): string { return this.content().uiLabels.heroEvidenceReceipt || (this.locale === 'ar' ? 'إيصال الدليل: EVT-240504-0912 · موقّع ومحفوظ في السجل غير القابل للتعديل.' : 'Evidence receipt: EVT-240504-0912 · signed and written to the immutable audit log.'); }
 
   /** Imperatively navigate. External URLs through window.location; internal
    *  paths via the SPA Router so the landing doesn't reload on CTA click. */
