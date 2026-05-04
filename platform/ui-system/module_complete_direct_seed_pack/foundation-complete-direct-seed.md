@@ -1,5 +1,7 @@
 # Foundation — Single Source of Truth (Direct Seed Pack)
 
+**Authoritative contract:** `foundation-complete-direct-seed.json`
+
 > **Status:** Reflects actual code, contracts, routers, and migrations as of
 > 2026-05-03. Every row in this document is traceable to a real artifact in
 > `platform/foundation/**`, `services/user-service/**`, or

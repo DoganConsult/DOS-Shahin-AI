@@ -967,9 +967,28 @@ Master are CI-rejected (`dos-master-only.mjs`) and DB-rejected
   `admin:user:add`, `admin:user:list`, `admin:role:add`,
   `admin:role:list`, `admin:grant`. Total CLI surface now 20.
   Build GREEN.
-- **M12..M14** — IN-PROGRESS. Sequenced per DOS_MASTER_PLAN.md §3.
-  M12 next: 4 admin pillar UIs (DNOC/DSOC/DOS/DAuth) backed by
-  `dos.admin_pillar_*` composer-driven tables.
+- **M12 D1 — CLOSED (2026-05-04).** Migration
+  `20260504_0600_dos_master_admin_pillar.sql` ships the composer
+  substrate for the 4 admin pillar UIs:
+    - `dos.admin_pillar` (4 rows seeded: DNOC, DSOC, DOS, DAuth — each
+      with display_name + description + display_order)
+    - `dos.admin_pillar_page` (4 overview pages bound to archetype
+      `dashboard-grid`, routes `/admin/{dnoc,dsoc,dos,dauth}/overview`,
+      perm `pillar.<code>.access`)
+    - `dos.admin_pillar_widget` (8 widgets: 2 per pillar, EN/AR titles,
+      data_source uri scheme `prom:` / `loki:` / `pg:`, props jsonb)
+  All 3 tables wired to `trg_dos_master_only`. `admin-console-bff`
+  extended with `pillarComposition()` repo and
+  `GET /api/admin/console/pillars/:pillar_code/composition` route
+  (validates pillar in {DNOC,DSOC,DOS,DAuth}). Endpoint registered as
+  the 8th row in `dos_master.service_endpoint` for admin-console-bff
+  with perm `dos.master.admin.pillar.read`. Live-verified composition
+  for all 4 pillars: each returns 1 page × 2 widgets. CLI extended
+  with 2 parity commands (`pillar:page:add`, `pillar:list`); total CLI
+  surface now 22.
+- **M13..M14** — IN-PROGRESS. Sequenced per DOS_MASTER_PLAN.md §3.
+  M13 next: Tenant Admin Console v1 (a+) — UI Composer + User+Role+SoD
+  + audit + delegation, isolated from platform-admin trust.
 
 ### Phase status (live as of 2026-05-01)
 

@@ -1,5 +1,7 @@
 # Dynamic UI Module — Complete Direct Seed Content
 
+**Authoritative contract:** `dynamic-ui-complete-direct-seed.json`
+
 ## 1. Module identity
 
 | Field | Value |

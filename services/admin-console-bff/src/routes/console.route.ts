@@ -1,7 +1,7 @@
 import { Router, type Request, type Response } from 'express';
 import {
   ensureUser, listUsers, ensureRole, listRoles,
-  grantRole, listGrants, consoleBootstrap,
+  grantRole, listGrants, consoleBootstrap, pillarComposition,
 } from '../lib/console-repo.js';
 import {
   UserEnsureSchema, RoleEnsureSchema, GrantSchema, BootstrapQuerySchema,
@@ -65,6 +65,14 @@ consoleRouter.post('/grants', async (req: Request, res: Response) => {
   } catch (e) {
     res.status(500).json({ error: 'grant_failed', detail: String((e as Error).message) });
   }
+});
+
+consoleRouter.get('/pillars/:pillar_code/composition', async (req, res) => {
+  const allowed = new Set(['DNOC', 'DSOC', 'DOS', 'DAuth']);
+  const code = req.params.pillar_code;
+  if (!allowed.has(code)) { res.status(400).json({ error: 'unknown_pillar' }); return; }
+  try { res.json({ pillar: code, pages: await pillarComposition(code) }); }
+  catch (e) { res.status(500).json({ error: 'compose_failed', detail: String((e as Error).message) }); }
 });
 
 consoleRouter.get('/grants/:user_id', async (req, res) => {

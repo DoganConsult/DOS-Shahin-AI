@@ -102,6 +102,46 @@ export interface ConsoleBootstrap {
   generatedAt: string;
 }
 
+export interface PillarPage {
+  page_key: string;
+  display_name: string;
+  archetype: string;
+  route: string;
+  permission_required: string;
+  display_order: number;
+  widgets: { widget_key: string; carbon_key: string; title_en: string | null; title_ar: string | null; data_source: string; props: unknown; display_order: number }[];
+}
+
+export async function pillarComposition(pillarCode: string): Promise<PillarPage[]> {
+  const pgs = await masterQuery(
+    `SELECT id, page_key, display_name, archetype, route, permission_required, display_order
+       FROM dos.admin_pillar_page
+      WHERE pillar_code = $1 AND enabled = true
+      ORDER BY display_order, page_key`,
+    [pillarCode],
+  );
+  const pages: PillarPage[] = [];
+  for (const p of pgs.rows as Array<Record<string, unknown>>) {
+    const w = await masterQuery(
+      `SELECT widget_key, carbon_key, title_en, title_ar, data_source, props, display_order
+         FROM dos.admin_pillar_widget
+        WHERE page_id = $1::uuid
+        ORDER BY display_order, widget_key`,
+      [String(p.id)],
+    );
+    pages.push({
+      page_key: String(p.page_key),
+      display_name: String(p.display_name),
+      archetype: String(p.archetype),
+      route: String(p.route),
+      permission_required: String(p.permission_required),
+      display_order: Number(p.display_order),
+      widgets: w.rows as PillarPage['widgets'],
+    });
+  }
+  return pages;
+}
+
 export async function consoleBootstrap(email: string): Promise<ConsoleBootstrap> {
   const u = await masterQuery(
     `SELECT id, email, display_name, status

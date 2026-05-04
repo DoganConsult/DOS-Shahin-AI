@@ -285,6 +285,31 @@ async function adminGrant() {
   });
 }
 
+async function pillarPageAdd() {
+  const pillar = flag('pillar'); const key = flag('key'); const name = flag('name');
+  const route = flag('route'); const arche = flag('archetype', 'dashboard-grid');
+  const perm = flag('perm');
+  if (!pillar || !key || !name || !route || !perm) { console.error('--pillar --key --name --route --perm required'); process.exit(2); }
+  return withClient(async (c) => {
+    await c.query(
+      `INSERT INTO dos.admin_pillar_page (pillar_code, page_key, display_name, archetype, route, permission_required, display_order)
+       VALUES ($1,$2,$3,$4,$5,$6,$7)
+       ON CONFLICT (pillar_code, page_key) DO UPDATE SET
+         display_name=EXCLUDED.display_name, archetype=EXCLUDED.archetype,
+         route=EXCLUDED.route, permission_required=EXCLUDED.permission_required`,
+      [pillar, key, name, arche, route, perm, Number(flag('order', 1))],
+    );
+    console.log(`[dos] pillar page: ${pillar}/${key} -> ${route}`);
+  });
+}
+
+async function pillarList() {
+  return withClient(async (c) => {
+    const r = await c.query(`SELECT pillar_code, page_key, route, archetype FROM dos.admin_pillar_page ORDER BY pillar_code, display_order`);
+    console.table(r.rows);
+  });
+}
+
 async function adminUsers() {
   return withClient(async (c) => {
     const r = await c.query(`SELECT id, email, display_name, status FROM platform_admin.platform_admin_user ORDER BY email`);
@@ -331,6 +356,8 @@ const dispatch = {
   'admin:role:add': adminRoleAdd,
   'admin:role:list': adminRoles,
   'admin:grant': adminGrant,
+  'pillar:page:add': pillarPageAdd,
+  'pillar:list': pillarList,
 };
 
 if (!cmd || cmd === '-h' || cmd === '--help') {

@@ -1,5 +1,7 @@
 # Config Center Module — Complete Direct Seed Content
 
+**Authoritative contract:** `config-center-complete-direct-seed.json`
+
 ## 1. Module identity
 
 | Field | Value |
