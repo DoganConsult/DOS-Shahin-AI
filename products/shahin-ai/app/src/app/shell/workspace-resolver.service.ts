@@ -988,8 +988,106 @@ export class WorkspaceResolverService implements DynamicUiResolverPort, Workspac
     return this.composeTenantSettings();
   }
 
-  async resolveSidebarNav(): Promise<ResolvedNavItem[]> {
-    return [];   // sidebar resolver lives elsewhere — F.5 wires it
+  /**
+   * F.5 — DB-driven sidebar nav via GET /api/ui-os/module-nav.
+   *
+   * Reads the current module from the URL (first segment after '/'),
+   * fetches nav groups + items from dos.ui_module_nav_group/item,
+   * and maps to WorkspaceNavItem[]. Falls back to [] on any error so
+   * the shell never crashes. Locale (en|ar) is read from the DOM signal.
+   */
+  async resolveSidebarNav(moduleCode?: string): Promise<ResolvedNavItem[]> {
+    try {
+      const code = moduleCode ?? this.moduleCodeFromUrl();
+      if (!code) return [];
+      const locale = this._localeSig();
+      const me = this.access.me();
+      const tenantId = me?.tenant?.id;
+      const userId   = me?.user?.id;
+
+      const params = new URLSearchParams({ module: code });
+      if (tenantId) params.set('tenantId', String(tenantId));
+      if (userId)   params.set('userId',   String(userId));
+
+      const resp = await fetch(`/api/ui-os/module-nav?${params}`, { credentials: 'include' });
+      if (!resp.ok) return [];
+
+      const body = await resp.json() as {
+        groups?: Array<{
+          id: string;
+          label_en: string | null;
+          label_ar: string | null;
+          items: Array<{
+            id: string;
+            route: string | null;
+            icon:  string | null;
+            label_en: string | null;
+            label_ar: string | null;
+            badge: string | null;
+            pinned: boolean;
+          }>;
+        }>;
+      };
+
+      const navItems: ResolvedNavItem[] = [];
+      let sortIdx = 0;
+      for (const group of body.groups ?? []) {
+        if (group.id === '_root') {
+          // Ungrouped items — emit directly at primary level
+          for (const item of group.items) {
+            navItems.push(this.mapNavItem(item, locale, 'primary', undefined, sortIdx++));
+          }
+        } else {
+          // Group items: emit each item with parentId = group.id so the
+          // sidebar can render grouped sections. The group header itself
+          // is emitted with an empty route (or skipped by the sidebar renderer).
+          const groupLabel = (locale === 'ar' ? group.label_ar : group.label_en) ?? this.humanize(group.id);
+          navItems.push({
+            id:        group.id,
+            label:     { key: group.id, value: groupLabel, locale, bidi: 'plain' },
+            route:     `/${group.id.replace('.', '/')}`,
+            icon:      this.string(`shell.group.icon.${group.id.split('.')[0]}`),
+            sortOrder: sortIdx++,
+            group:     'primary',
+            permitted: true,
+          });
+          for (const item of group.items) {
+            navItems.push(this.mapNavItem(item, locale, 'secondary', group.id, sortIdx++));
+          }
+        }
+      }
+      return navItems;
+    } catch {
+      return [];
+    }
+  }
+
+  /** Extract module code from the current URL's first segment. */
+  private moduleCodeFromUrl(): string | null {
+    if (typeof window === 'undefined') return null;
+    const segs = window.location.pathname.replace(/^\//, '').split('/');
+    return segs[0] || null;
+  }
+
+  /** Map a raw module-nav item row to a ResolvedNavItem. */
+  private mapNavItem(
+    item: { id: string; route: string | null; icon: string | null; label_en: string | null; label_ar: string | null; badge?: string | null },
+    locale: DosLocale,
+    group: 'primary' | 'secondary' | 'tertiary' = 'primary',
+    parentId?: string,
+    sortOrder = 0,
+  ): ResolvedNavItem {
+    const rawLabel = (locale === 'ar' ? item.label_ar : item.label_en) ?? this.humanize(item.id);
+    return {
+      id:        item.id,
+      label:     { key: item.id, value: rawLabel, locale, bidi: 'plain' },
+      route:     item.route ?? `/${item.id.replace(/\./g, '/')}`,
+      icon:      item.icon  ?? undefined,
+      parentId,
+      sortOrder,
+      group,
+      permitted: true,
+    };
   }
 
   // ────────────────────────────────────────────────────────────────

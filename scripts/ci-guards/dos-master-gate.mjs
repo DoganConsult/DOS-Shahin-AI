@@ -29,6 +29,11 @@ const GUARDS = [
   'mtls-required-on-admin-zone.mjs',
   'publish-revision-atomic.mjs',
   'provisioning-job-idempotent.mjs',
+  // Phase 4 (L33..L37) additions.
+  'cert-expiry-baseline.mjs',
+  'tenant-zone-cert-isolation.mjs',
+  'slo-row-per-active-service.mjs',
+  'customer-zone-pkce-only.mjs',
 ];
 
 let pass = 0, fail = 0;

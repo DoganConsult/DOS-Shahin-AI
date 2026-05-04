@@ -1,64 +1,22 @@
 /* ---------------------------------------------------------------------------
  * marketing-home.page.scss
- * Phase M3.1 — visual contract for the 17-section public landing.
+ * Carbon-only layout glue for the public marketing landing page.
  *
- * All design values are sourced from `@carbon/styles` CSS custom properties
- * (`--cds-*`) and `@dos/design-tokens` (`--dos-*`) where available, with
- * inline fallbacks so the surface degrades gracefully when tokens haven't
- * loaded. RTL is handled via CSS logical properties (no left/right).
- *
- * Emulated view encapsulation (Angular default) scopes every rule under
- * `<dos-marketing-home>` so no global bleed.
+ * The page should render with IBM Carbon components and Carbon tokens only.
+ * This stylesheet keeps section spacing, responsive layout, and a small amount
+ * of component-safe positioning without shipping a bespoke visual skin.
  * ------------------------------------------------------------------------- */
 
-/* ===== CSS gate: prevent horizontal overflow ==================================== */
-:host ::ng-deep html,
-:host ::ng-deep body {
-  overflow-x: hidden;
-}
-
-:host ::ng-deep * {
-  box-sizing: border-box;
-}
-
-/* ===== root + section primitives ========================================== */
 :host {
   display: block;
   min-block-size: 100vh;
   background: var(--cds-background, #ffffff);
   color: var(--cds-text-primary, #161616);
   font-family: var(--cds-body-font-family, 'IBM Plex Sans', system-ui, sans-serif);
-  --dos-mh-brand-surface: var(--cds-background-brand, #0f62fe);
-  --dos-mh-brand-surface-soft: color-mix(in srgb, var(--dos-mh-brand-surface) 8%, transparent);
-  --dos-mh-brand-surface-subtle: color-mix(in srgb, var(--dos-mh-brand-surface) 10%, var(--cds-layer, #ffffff));
-  --dos-mh-brand-surface-strong: color-mix(in srgb, var(--dos-mh-brand-surface) 28%, var(--cds-layer-inverse, #161616));
-  --dos-mh-brand-surface-stronger: color-mix(in srgb, var(--dos-mh-brand-surface) 36%, var(--cds-layer-inverse, #161616));
-  --dos-mh-brand-border-subtle: color-mix(in srgb, var(--dos-mh-brand-surface) 18%, transparent);
-  --dos-mh-brand-border-strong: color-mix(in srgb, var(--dos-mh-brand-surface) 26%, var(--cds-border-inverse, #f4f4f4));
-  --dos-mh-inverse-surface: var(--cds-layer-inverse, #161616);
-  --dos-mh-inverse-surface-soft: color-mix(in srgb, var(--dos-mh-inverse-surface) 86%, var(--cds-layer, #ffffff));
-  --dos-mh-inverse-surface-softer: color-mix(in srgb, var(--dos-mh-inverse-surface) 72%, var(--cds-layer, #ffffff));
-  --dos-mh-inverse-border-subtle: color-mix(in srgb, var(--cds-border-inverse, #f4f4f4) 14%, transparent);
-  --dos-mh-inverse-border-strong: color-mix(in srgb, var(--cds-border-inverse, #f4f4f4) 22%, transparent);
-  --dos-mh-inverse-text: var(--cds-text-on-color, #ffffff);
-  --dos-mh-inverse-text-soft: color-mix(in srgb, var(--dos-mh-inverse-text) 84%, transparent);
-  --dos-mh-inverse-text-subtle: color-mix(in srgb, var(--dos-mh-inverse-text) 72%, transparent);
-  --dos-mh-inverse-text-muted: var(--cds-text-on-color-disabled, #c6c6c6);
-  --dos-mh-support-info: var(--cds-support-info, #0043ce);
-  --dos-mh-support-success: var(--cds-support-success, #24a148);
-  --dos-mh-support-warning: var(--cds-support-warning, #f1c21b);
-  --dos-mh-shadow-brand-sm: 0 14px 28px color-mix(in srgb, var(--dos-mh-brand-surface) 24%, transparent);
-  --dos-mh-shadow-brand-lg: 0 20px 44px color-mix(in srgb, var(--dos-mh-brand-surface) 24%, transparent);
-  --dos-mh-shadow-inverse-sm:
-    0 8px 24px color-mix(in srgb, var(--dos-mh-inverse-surface) 12%, transparent),
-    0 2px 6px color-mix(in srgb, var(--dos-mh-inverse-surface) 8%, transparent);
-  --dos-mh-shadow-inverse-lg:
-    0 32px 72px color-mix(in srgb, var(--dos-mh-inverse-surface) 36%, transparent),
-    0 8px 24px color-mix(in srgb, var(--dos-mh-inverse-surface) 24%, transparent);
-  /* Intensification: smooth scroll + subpixel AA */
-  scroll-behavior: smooth;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+}
+
+:host ::ng-deep * {
+  box-sizing: border-box;
 }
 
 .dos-marketing-home {
@@ -67,85 +25,65 @@
 }
 
 .dos-marketing-home[dir='rtl'] {
-  font-family: 'IBM Plex Sans Arabic', 'Tajawal', system-ui, sans-serif;
+  direction: rtl;
 }
 
-/* ── Section: zero side-padding; container handles all centering ── */
 .dos-mh-section {
   display: block;
-  padding-block: clamp(3rem, 6vw, 6rem);
-  padding-inline: 0;
+  padding-block: clamp(2.5rem, 5vw, 4rem);
   border-block-end: 1px solid var(--cds-border-subtle-00, #e0e0e0);
-  overflow-x: hidden;
+  background: var(--cds-background, #ffffff);
 }
 
-/* ── Container: auto-centering at every breakpoint ──────────────── */
-.dos-public-page-container,
 .dos-mh-container {
   inline-size: min(1200px, 100%);
-  max-inline-size: 1200px;
-  padding-inline: clamp(1rem, 2.8vw, 1.5rem);
   margin-inline: auto;
+  padding-inline: clamp(1rem, 2vw, 1.5rem);
 }
 
-@media (max-width: 768px) {
-  .dos-public-page-container,
-  .dos-mh-container { padding-inline: 1rem; }
-  .dos-mh-section   { padding-block: clamp(2rem, 5vw, 3.5rem); }
-}
-@media (max-width: 430px) {
-  .dos-public-page-container,
-  .dos-mh-container { padding-inline: 0.75rem; }
-}
-
-.dos-public-page-container > *,
-.dos-mh-container > *,
-.dos-mh-grid-3 > *,
-.dos-mh-footer-grid > * {
-  min-inline-size: 0;
+.dos-mh-breadcrumb-row {
+  padding-block: 0.75rem;
 }
 
 .dos-mh-section-title {
-  font: 700 clamp(1.75rem, 3.5vw, 2.75rem) / 1.15 var(--cds-productive-heading-05-font-family, inherit);
   margin: 0 0 1rem;
   color: var(--cds-text-primary, #161616);
-  letter-spacing: -0.015em;
+  font: 600 clamp(1.75rem, 4vw, 2.75rem) / 1.15 var(--cds-productive-heading-05-font-family, inherit);
 }
 
 .dos-mh-eyebrow {
-  font: 700 0.6875rem / 1.4 var(--cds-label-01-font-family, inherit);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  /* Intensification: brand-blue accent for eyebrow labels */
-  color: var(--cds-link-primary, #0f62fe);
   margin: 0 0 0.5rem;
-}
-
-.dos-mh-sub {
-  font: 400 clamp(1rem, 1.6vw, 1.125rem) / 1.5 inherit;
   color: var(--cds-text-secondary, #525252);
-  margin: 0 0 1.5rem;
-  max-inline-size: 64ch;
+  font: 600 0.75rem / 1.4 var(--cds-label-01-font-family, inherit);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
-/* ===== shared cta row ===================================================== */
+.dos-mh-sub,
+.dos-mh-container > p {
+  max-inline-size: 64ch;
+  margin: 0 0 1.5rem;
+  color: var(--cds-text-secondary, #525252);
+}
+
+.dos-mh-value-props__sub {
+  margin-block-end: 2rem;
+}
+
 .dos-mh-cta-row {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
   align-items: center;
-  margin-block-start: 1.5rem;
+  margin-block-start: 1rem;
 }
 
-/* ===== shared 3-up grid =================================================== */
 .dos-mh-grid-3 {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
-  align-items: stretch;
 }
 
-/* ===== shared pill row (tags / industries / logos) ======================== */
 .dos-mh-pill-row {
   display: flex;
   flex-wrap: wrap;
@@ -153,27 +91,20 @@
   align-items: center;
 }
 
-/* ===== breadcrumb row ===================================================== */
-.dos-mh-breadcrumb-row {
-  padding-block: 0.75rem;
-  padding-inline: clamp(1rem, 4vw, 2.5rem);
-}
-
-/* ===== public header ====================================================== */
 .dos-mh-public-header {
-  position: relative;
+  position: sticky;
+  inset-block-start: 0;
   z-index: 20;
-  background: color-mix(in srgb, var(--cds-layer, #ffffff) 94%, rgba(244, 244, 244, 0.92));
+  background: var(--cds-layer, #ffffff);
   border-block-end: 1px solid var(--cds-border-subtle-00, #e0e0e0);
-  backdrop-filter: blur(14px);
 }
 
 .dos-mh-public-header__inner {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
+  gap: 1rem;
   align-items: center;
-  gap: 0.75rem 1.25rem;
-  padding-block: 0.75rem;
+  padding-block: 1rem;
 }
 
 .dos-mh-public-header__brand,
@@ -182,16 +113,11 @@
 .dos-mh-public-header__nav-link,
 .dos-mh-public-header__nav-link:link,
 .dos-mh-public-header__nav-link:visited,
-.dos-mh-public-header__action-link,
-.dos-mh-public-header__action-link:link,
-.dos-mh-public-header__action-link:visited,
-.dos-mh-public-header__button,
-.dos-mh-public-header__button:link,
-.dos-mh-public-header__button:visited,
-.dos-mh-hero-cta,
-.dos-mh-hero-cta:link,
-.dos-mh-hero-cta:visited {
-  text-decoration: none !important;
+.dos-mh-nav-group__item,
+.dos-mh-nav-group__item:link,
+.dos-mh-nav-group__item:visited {
+  color: inherit;
+  text-decoration: none;
 }
 
 .dos-mh-public-header__brand {
@@ -199,146 +125,276 @@
   align-items: center;
   gap: 0.75rem;
   min-inline-size: 0;
-  color: var(--cds-text-primary, #161616);
 }
 
 .dos-mh-public-header__brand-text {
-  font: 700 1.125rem / 1.1 var(--cds-productive-heading-03-font-family, inherit);
-  letter-spacing: -0.02em;
   white-space: nowrap;
+  font: 600 1rem / 1.1 var(--cds-productive-heading-03-font-family, inherit);
 }
 
 .dos-mh-public-header__menu-toggle {
   display: none;
-  margin-inline-start: auto;
-}
-
-.dos-mh-public-header__menu-toggle ::ng-deep .cds--btn {
-  min-block-size: 2.75rem;
-  padding-inline: 1rem;
-  border-radius: 999px;
 }
 
 .dos-mh-public-header__menus {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
   align-items: center;
-  gap: 0.75rem 1rem;
   min-inline-size: 0;
 }
 
 .dos-mh-public-header__nav {
   display: flex;
   flex-wrap: wrap;
+  gap: 0.5rem;
   align-items: center;
-  gap: 0.375rem;
   min-inline-size: 0;
 }
 
 .dos-mh-public-header__nav-link {
   display: inline-flex;
-}
-
-.dos-mh-public-header__nav-link ::ng-deep .cds--btn {
+  align-items: center;
   min-block-size: 2.5rem;
-  padding-inline: 0.8rem;
-  border-radius: 999px;
+  padding-inline: 0.75rem;
+  color: var(--cds-link-primary, #0f62fe);
 }
 
 .dos-mh-public-header__nav-link:hover,
 .dos-mh-public-header__nav-link:focus-visible,
-.dos-mh-public-header__action-link:hover,
-.dos-mh-public-header__action-link:focus-visible,
-.dos-mh-public-header__button:hover,
-.dos-mh-public-header__button:focus-visible,
-dos-carbon-button.dos-mh-hero-cta:hover,
-dos-carbon-button.dos-mh-hero-cta:focus-visible {
-  text-decoration: none;
+.dos-mh-nav-group__item:hover,
+.dos-mh-nav-group__item:focus-visible {
+  background: var(--cds-layer-hover, #e8e8e8);
   outline: none;
 }
 
-.dos-mh-public-header__nav-link:hover ::ng-deep .cds--btn,
-.dos-mh-public-header__nav-link:focus-visible ::ng-deep .cds--btn {
-  transform: translateY(-1px);
+.dos-mh-public-header__nav-link[aria-current='page'],
+.dos-mh-nav-group__item[aria-current='page'] {
+  color: var(--cds-text-primary, #161616);
+  font-weight: 600;
 }
 
 .dos-mh-public-header__actions {
   display: flex;
   flex-wrap: wrap;
+  gap: 0.75rem;
   align-items: center;
   justify-content: flex-end;
-  gap: 0.625rem;
 }
 
 .dos-mh-signin-cta {
   display: inline-flex;
   align-items: center;
   gap: 0.375rem;
-  line-height: 1;
 }
 
-.dos-mh-signin-cta svg {
+.dos-mh-nav-group {
+  position: relative;
+  display: inline-flex;
+}
+
+.dos-mh-nav-group__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  min-block-size: 2.5rem;
+  padding-inline: 0.875rem;
+  border: 1px solid var(--cds-border-subtle-00, #e0e0e0);
+  background: var(--cds-field, #ffffff);
+  color: var(--cds-text-primary, #161616);
+  font: 400 0.875rem / 1.1 inherit;
+  cursor: pointer;
+}
+
+.dos-mh-nav-group__chevron {
+  inline-size: 16px;
+  block-size: 16px;
+  fill: currentColor;
   flex-shrink: 0;
 }
 
-.dos-mh-public-header__action-link {
-  display: inline-flex;
-  align-items: center;
-  min-block-size: 2.25rem;
-  color: var(--cds-text-secondary, #525252);
-  font: 600 0.9rem / 1.1 inherit;
+.dos-mh-nav-group__menu {
+  position: absolute;
+  inset-block-start: calc(100% + 0.25rem);
+  inset-inline-start: 0;
+  z-index: 30;
+  min-inline-size: 14rem;
+  margin: 0;
+  padding: 0.25rem 0;
+  list-style: none;
+  border: 1px solid var(--cds-border-subtle-00, #e0e0e0);
+  background: var(--cds-layer, #ffffff);
+  display: none;
 }
 
-.dos-mh-public-header__action-link--strong {
+.dos-mh-nav-group__menu.is-open {
+  display: block;
+}
+
+.dos-mh-nav-group__item {
+  display: block;
+  padding: 0.75rem 1rem;
   color: var(--cds-link-primary, #0f62fe);
 }
 
-.dos-mh-public-header__button {
+.dos-mh-trust,
+.dos-mh-agentic,
+.dos-mh-ai,
+.dos-mh-footer {
+  background: var(--cds-layer-01, #f4f4f4);
+}
+
+.dos-mh-readiness,
+.dos-mh-demo-skeleton,
+.dos-mh-ai-loop {
+  margin-block-start: 1.5rem;
+}
+
+.dos-mh-section dos-carbon-tabs,
+.dos-mh-section dos-carbon-structured-list,
+.dos-mh-section dos-carbon-data-table,
+.dos-mh-section dos-carbon-notification,
+.dos-mh-section dos-carbon-accordion,
+.dos-mh-section dos-carbon-contained-list {
+  display: block;
+}
+
+.dos-mh-agent-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  text-align: center;
+}
+
+.dos-mh-agent-img,
+.dos-mh-agent-letter {
+  inline-size: 96px;
+  block-size: 96px;
+  border-radius: 50%;
+}
+
+.dos-mh-agent-img {
+  object-fit: cover;
+}
+
+.dos-mh-agent-letter {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-block-size: 2.75rem;
-  padding-inline: 1.1rem;
-  border-radius: 999px;
-  border: 1px solid transparent;
-  font: 600 0.9rem / 1.1 inherit;
-  transition: transform 140ms ease, background-color 140ms ease, border-color 140ms ease;
-}
-
-.dos-mh-public-header__button--secondary {
-  background: var(--dos-mh-brand-surface-soft);
-  border-color: var(--dos-mh-brand-border-subtle);
-  color: var(--cds-link-primary, #0f62fe);
-}
-
-.dos-mh-public-header__button--primary {
-  background: var(--cds-button-primary, #0f62fe);
+  background: var(--cds-background-brand, #0f62fe);
   color: var(--cds-text-on-color, #ffffff);
-  box-shadow: var(--dos-mh-shadow-brand-sm);
+  font: 600 1.25rem / 1 inherit;
 }
 
-.dos-mh-public-header__button:hover,
-.dos-mh-public-header__button:focus-visible,
-dos-carbon-button.dos-mh-hero-cta:hover,
-dos-carbon-button.dos-mh-hero-cta:focus-visible {
-  transform: translateY(-1px);
+.dos-mh-agent-tile strong {
+  color: var(--cds-text-primary, #161616);
 }
 
-@media (max-width: 1200px) {
-  .dos-mh-public-header__inner {
-    grid-template-columns: auto minmax(0, 1fr);
-  }
+.dos-mh-agent-tile small {
+  color: var(--cds-text-secondary, #525252);
+}
 
-  .dos-mh-public-header__menus {
-    grid-template-columns: 1fr;
-    justify-items: stretch;
+.dos-mh-download-kit dos-carbon-notification {
+  margin-block: 1rem 1.5rem;
+}
+
+.dos-mh-toast-anchor {
+  position: fixed;
+  inset-block-end: max(1rem, env(safe-area-inset-bottom, 1rem));
+  inset-inline-end: 1rem;
+  z-index: 9999;
+  max-inline-size: 360px;
+}
+
+.dos-mh-testimonial-intro {
+  grid-column: 1 / -1;
+  max-inline-size: 48rem;
+}
+
+.dos-mh-quote {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+  padding-inline-start: 1rem;
+  border-inline-start: 3px solid var(--cds-border-interactive, #0f62fe);
+}
+
+.dos-mh-quote p,
+.dos-mh-quote footer {
+  margin: 0;
+}
+
+.dos-mh-quote footer {
+  color: var(--cds-text-secondary, #525252);
+}
+
+.dos-mh-cta-banner {
+  background: var(--cds-background-brand, #0f62fe);
+  color: var(--cds-text-on-color, #ffffff);
+  border-block-end: none;
+}
+
+.dos-mh-cta-banner-inner {
+  display: grid;
+  gap: 0.75rem;
+  justify-items: start;
+}
+
+.dos-mh-cta-banner .dos-mh-section-title,
+.dos-mh-eyebrow-on-dark,
+.dos-mh-sub-on-dark {
+  color: var(--cds-text-on-color, #ffffff);
+}
+
+.dos-mh-footer {
+  border-block-end: none;
+}
+
+.dos-mh-footer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+  gap: 1.5rem;
+}
+
+.dos-mh-footer-col {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.dos-mh-footer-col strong {
+  color: var(--cds-text-primary, #161616);
+  font: 600 0.875rem / 1.3 inherit;
+}
+
+.dos-mh-footer-col ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.375rem;
+}
+
+.dos-mh-footer-brand {
+  align-content: start;
+}
+
+:host ::ng-deep .dos-mh-section[data-section-id='pricing-teaser'] .cds--data-table-container,
+:host ::ng-deep .dos-mh-section[data-section-id='resources'] .cds--contained-list,
+:host ::ng-deep .dos-mh-section[data-section-id='faq'] .cds--accordion {
+  max-inline-size: 100%;
+  min-inline-size: 0;
+}
+
+@media (max-width: 1100px) {
+  .dos-mh-grid-3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 768px) {
   .dos-mh-public-header__inner {
     grid-template-columns: minmax(0, 1fr) auto;
-    gap: 0.75rem;
   }
 
   .dos-mh-public-header__menu-toggle {
@@ -349,8 +405,6 @@ dos-carbon-button.dos-mh-hero-cta:focus-visible {
     display: none;
     grid-column: 1 / -1;
     grid-template-columns: 1fr;
-    gap: 0.875rem;
-    padding-block-start: 0.25rem;
   }
 
   .dos-mh-public-header__menus.is-open {
@@ -359,1191 +413,54 @@ dos-carbon-button.dos-mh-hero-cta:focus-visible {
 
   .dos-mh-public-header__nav,
   .dos-mh-public-header__actions {
-    align-items: stretch;
-    justify-content: flex-start;
-  }
-
-  .dos-mh-public-header__nav {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .dos-mh-public-header__actions {
-    display: grid;
-    gap: 0.5rem;
-  }
-
-  .dos-mh-public-header__nav-link,
-  .dos-mh-public-header__action-link,
-  .dos-mh-public-header__button {
-    justify-content: flex-start;
-    inline-size: 100%;
-    padding-inline: 1rem;
-  }
-
-  .dos-mh-public-header__nav-link,
-  .dos-mh-public-header__menu-toggle {
-    display: block;
-  }
-
-  .dos-mh-public-header__nav-link ::ng-deep .cds--btn,
-  .dos-mh-public-header__menu-toggle ::ng-deep .cds--btn,
-  .dos-mh-public-header__actions dos-carbon-button ::ng-deep .cds--btn {
-    inline-size: 100%;
-    justify-content: flex-start;
-  }
-}
-
-@media (max-width: 430px) {
-  .dos-mh-public-header__nav-link,
-  .dos-mh-public-header__action-link,
-  .dos-mh-public-header__button,
-  dos-carbon-button.dos-mh-hero-cta {
-    inline-size: 100%;
-  }
-}
-
-/* ── Nav flat anchor link (replaces ghost dos-carbon-button) ── */
-.dos-mh-public-header__nav-link {
-  display: inline-flex;
-  align-items: center;
-  min-block-size: 2.5rem;
-  padding-inline: 0.8rem;
-  border-radius: 999px;
-  color: var(--cds-text-secondary, #525252);
-  font: 500 0.9rem / 1.1 inherit;
-  text-decoration: none;
-  transition: background 120ms ease, color 120ms ease, transform 120ms ease;
-
-  &:hover,
-  &:focus-visible {
-    background: var(--cds-layer-hover, rgba(141, 141, 141, 0.12));
-    color: var(--cds-text-primary, #161616);
-    transform: translateY(-1px);
-    outline: none;
-  }
-
-  &[aria-current='page'] {
-    background: var(--cds-layer-selected, rgba(15, 98, 254, 0.08));
-    color: var(--cds-link-primary, #0f62fe);
-    font-weight: 600;
-  }
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   IBM Carbon-aligned nav dropdown groups
-   carbon_key=header-menu, runtime_status=active
-   ═══════════════════════════════════════════════════════════════ */
-.dos-mh-nav-group {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-}
-
-.dos-mh-nav-group__trigger {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  min-block-size: 2.5rem;
-  padding-inline: 0.8rem;
-  border-radius: 999px;
-  border: none;
-  background: transparent;
-  color: var(--cds-text-secondary, #525252);
-  font: 500 0.9rem / 1.1 inherit;
-  font-family: inherit;
-  cursor: pointer;
-  transition: background 120ms ease, color 120ms ease;
-
-  &:hover,
-  &:focus-visible {
-    background: var(--cds-layer-hover, rgba(141, 141, 141, 0.12));
-    color: var(--cds-text-primary, #161616);
-    outline: none;
-  }
-
-  &[aria-expanded='true'] {
-    background: var(--cds-layer-selected, rgba(15, 98, 254, 0.08));
-    color: var(--cds-link-primary, #0f62fe);
-    font-weight: 600;
-
-    .dos-mh-nav-group__chevron {
-      transform: rotate(180deg);
-    }
-  }
-}
-
-.dos-mh-nav-group__chevron {
-  inline-size: 16px;
-  block-size: 16px;
-  fill: currentColor;
-  flex-shrink: 0;
-  transition: transform 180ms ease;
-  transform-origin: center;
-}
-
-.dos-mh-nav-group__menu {
-  position: absolute;
-  inset-block-start: calc(100% + 4px);
-  inset-inline-start: 0;
-  z-index: 100;
-  min-inline-size: 180px;
-  padding: 0.5rem 0;
-  margin: 0;
-  list-style: none;
-  background: var(--cds-layer, #ffffff);
-  border: 1px solid var(--cds-border-subtle-00, #e0e0e0);
-  border-radius: 0.5rem;
-  box-shadow: var(--dos-mh-shadow-inverse-sm);
-  /* Hidden by default */
-  display: none;
-  animation: dos-mh-menu-in 140ms ease;
-
-  &.is-open {
-    display: block;
-  }
-
-  /* RTL — open toward the start of reading direction */
-  [dir='rtl'] & {
-    inset-inline-start: auto;
-    inset-inline-end: 0;
-  }
-}
-
-@keyframes dos-mh-menu-in {
-  from { opacity: 0; transform: translateY(-4px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-.dos-mh-nav-group__item {
-  display: flex;
-  align-items: center;
-  padding: 0.6rem 1rem;
-  color: var(--cds-text-primary, #161616);
-  font: 400 0.9rem / 1.3 inherit;
-  text-decoration: none;
-  transition: background 100ms ease;
-  cursor: pointer;
-
-  &:hover,
-  &:focus-visible {
-    background: var(--cds-layer-hover, rgba(141, 141, 141, 0.12));
-    outline: none;
-  }
-
-  &[aria-current='page'] {
-    background: var(--cds-layer-selected, rgba(15, 98, 254, 0.06));
-    color: var(--cds-link-primary, #0f62fe);
-    font-weight: 600;
-  }
-}
-
-/* Mobile — nav groups stack as accordion-style blocks */
-@media (max-width: 768px) {
-  .dos-mh-nav-group {
-    display: flex;
     flex-direction: column;
     align-items: stretch;
-    inline-size: 100%;
   }
 
+  .dos-mh-public-header__nav-link,
+  .dos-mh-nav-group,
   .dos-mh-nav-group__trigger {
-    border-radius: 0.5rem;
-    padding-inline: 1rem;
     inline-size: 100%;
-    justify-content: space-between;
   }
 
   .dos-mh-nav-group__menu {
     position: static;
-    box-shadow: none;
-    border: none;
-    border-inline-start: 2px solid var(--cds-border-subtle-00, #e0e0e0);
-    border-radius: 0;
-    margin-inline-start: 1rem;
-    padding: 0.25rem 0;
+    min-inline-size: 0;
+    border-block-start: 0;
   }
 
-  .dos-mh-nav-group__item {
-    padding-inline-start: 1rem;
-  }
-}
-
-
-/* ===== 01 hero — deep navy enterprise gradient ============================= */
-.dos-mh-hero {
-  padding-block: clamp(3.75rem, 5.2vw, 4.75rem);
-  background: linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--dos-mh-brand-surface) 18%, var(--dos-mh-inverse-surface)) 0%,
-    var(--dos-mh-inverse-surface) 42%,
-    var(--dos-mh-brand-surface-strong) 100%
-  );
-  border-block-end: none;
-  position: relative;
-  overflow: hidden;
-}
-
-.dos-mh-hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(
-      circle at 12% 14%,
-      color-mix(in srgb, var(--dos-mh-brand-surface) 24%, transparent) 0%,
-      transparent 44%
-    ),
-    radial-gradient(
-      circle at 88% 10%,
-      color-mix(in srgb, var(--dos-mh-support-warning) 18%, transparent) 0%,
-      transparent 40%
-    ),
-    radial-gradient(
-      circle at 50% 110%,
-      color-mix(in srgb, var(--dos-mh-support-info) 16%, transparent) 0%,
-      transparent 60%
-    );
-  pointer-events: none;
-  z-index: 0;
-}
-
-.dos-mh-hero::after {
-  content: '';
-  position: absolute;
-  inset-block-start: 0;
-  inset-inline: 0;
-  block-size: 2px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    var(--dos-mh-support-warning) 28%,
-    var(--dos-mh-brand-surface) 72%,
-    transparent 100%
-  );
-  z-index: 2;
-  pointer-events: none;
-}
-
-.dos-mh-hero-layout {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  min-block-size: 620px;
-  /* Item 1: wider right column for screenshot panel */
-  grid-template-columns: minmax(0, 1fr) minmax(380px, 480px);
-  gap: clamp(1.25rem, 2.8vw, 3rem);
-  align-items: center;
-}
-
-.dos-mh-hero-content {
-  display: flex;
-  flex-direction: column;
-  gap: 1.1rem;
-  align-items: flex-start;
-  justify-content: center;
-  max-inline-size: 35rem;
-  padding-block: 0.25rem;
-  color: var(--dos-mh-inverse-text);
-  position: relative;
-  z-index: 1;
-}
-
-.dos-mh-hero-content .dos-mh-title {
-  color: var(--dos-mh-inverse-text);
-  max-inline-size: 560px;
-  text-shadow: 0 16px 40px color-mix(in srgb, var(--dos-mh-inverse-surface) 26%, transparent);
-}
-
-.dos-mh-hero-content .dos-mh-sub {
-  color: var(--dos-mh-inverse-text-soft);
-  margin-block-end: 0;
-}
-
-.dos-mh-hero-content .dos-mh-hero-microcopy {
-  color: var(--dos-mh-inverse-text-muted);
-}
-
-.dos-mh-hero-content .dos-mh-eyebrow {
-  color: var(--cds-link-inverse, #78a9ff);
-  margin-block-end: 0;
-}
-
-.dos-mh-hero-badge { margin-block: 0.25rem; }
-
-.dos-mh-title {
-  font-family: var(--cds-productive-heading-05-font-family, inherit);
-  font-size: clamp(3.75rem, 4.4vw, 4rem);
-  font-weight: 800;
-  line-height: 1.05;
-  margin: 0;
-  color: var(--cds-text-primary, #161616);
-  letter-spacing: -0.03em;
-}
-
-.dos-mh-hero-microcopy {
-  font: 400 0.875rem / 1.6 inherit;
-  color: var(--cds-text-helper, #6f6f6f);
-  margin: 0;
-}
-
-dos-carbon-button.dos-mh-hero-cta {
-  display: inline-flex;
-  transition: transform 140ms ease;
-}
-
-dos-carbon-button.dos-mh-hero-cta ::ng-deep .cds--btn {
-  min-block-size: 3.5rem;
-  padding-inline: 1.35rem;
-  border-radius: 999px;
-  font: 600 1rem / 1.1 inherit;
-}
-
-dos-carbon-button.dos-mh-hero-cta--primary ::ng-deep .cds--btn {
-  box-shadow: var(--dos-mh-shadow-brand-lg);
-}
-
-dos-carbon-button.dos-mh-hero-cta--secondary ::ng-deep .cds--btn {
-  background: var(--dos-mh-inverse-border-subtle);
-  border-color: var(--dos-mh-inverse-border-strong);
-  color: var(--dos-mh-inverse-text);
-}
-
-.dos-mh-hero-trust {
-  inline-size: 100%;
-  margin-block-start: 0.5rem;
-  padding-block-start: 1.25rem;
-  border-block-start: 1px solid var(--dos-mh-inverse-border-subtle);
-}
-
-.dos-mh-hero-trust__label {
-  margin: 0 0 0.75rem;
-  color: var(--dos-mh-inverse-text-subtle);
-  font: 600 0.95rem / 1.45 inherit;
-}
-
-.dos-mh-hero-trust__chips {
-  gap: 0.5rem;
-}
-
-/* ── Item 1: Product screenshot hero panel ── */
-.dos-mh-hero-screenshot-panel {
-  position: relative;
-  border-radius: 1.25rem;
-  overflow: hidden;
-  box-shadow: 0 0 0 1px var(--dos-mh-brand-border-strong), var(--dos-mh-shadow-inverse-lg);
-  transform: perspective(1200px) rotateY(-4deg) rotateX(2deg);
-  transition: transform 320ms ease;
-  will-change: transform;
-}
-
-.dos-mh-hero-screenshot-panel:hover {
-  transform: perspective(1200px) rotateY(-1deg) rotateX(1deg);
-}
-
-.dos-mh-hero-screenshot {
-  display: block;
-  inline-size: 100%;
-  block-size: auto;
-  max-block-size: 520px;
-  object-fit: cover;
-  object-position: top left;
-  border-radius: inherit;
-}
-
-/* Gold hairline border on screenshot */
-.dos-mh-hero-screenshot-panel::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  border: 1px solid var(--dos-mh-brand-border-subtle);
-  pointer-events: none;
-  z-index: 2;
-}
-
-/* Floating KPI badge strip over the screenshot */
-.dos-mh-hero-kpi-strip {
-  position: absolute;
-  inset-block-end: 1rem;
-  inset-inline: 0.75rem;
-  display: flex;
-  gap: 0.5rem;
-  justify-content: center;
-  z-index: 3;
-}
-
-.dos-mh-hero-kpi-badge {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.1rem;
-  padding: 0.45rem 0.85rem;
-  border-radius: 0.625rem;
-  background: var(--dos-mh-inverse-surface-soft);
-  backdrop-filter: blur(16px);
-  border: 1px solid var(--dos-mh-inverse-border-strong);
-  box-shadow: var(--dos-mh-shadow-inverse-sm);
-  color: var(--dos-mh-inverse-text);
-  white-space: nowrap;
-}
-
-.dos-mh-hero-kpi-badge__value {
-  font: 700 1rem / 1.1 inherit;
-  font-feature-settings: 'tnum' 1;
-  color: var(--dos-mh-inverse-text);
-}
-
-.dos-mh-hero-kpi-badge__label {
-  font: 400 0.6875rem / 1.2 inherit;
-  color: var(--dos-mh-inverse-text-muted);
-}
-
-.dos-mh-hero-kpi-badge--gold .dos-mh-hero-kpi-badge__value {
-  color: var(--dos-mh-support-warning);
-}
-
-/* Keep old proof styles for mobile fallback — hidden on desktop */
-.dos-mh-hero-proof {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding: clamp(1.2rem, 2.4vw, 1.7rem);
-  border-radius: 1.75rem;
-  border: 1px solid var(--dos-mh-inverse-border-strong);
-  background: linear-gradient(180deg, var(--dos-mh-brand-surface-stronger) 0%, var(--dos-mh-inverse-surface-soft) 100%);
-  color: var(--dos-mh-inverse-text);
-  box-shadow: var(--dos-mh-shadow-inverse-lg);
-  backdrop-filter: blur(18px);
-  display: none; /* replaced by screenshot panel */
-}
-
-.dos-mh-hero-proof__status {
-  display: inline-flex;
-  align-items: center;
-  min-block-size: 2rem;
-  padding-inline: 0.875rem;
-  border-radius: 999px;
-  border: 1px solid color-mix(in srgb, var(--cds-link-inverse, #78a9ff) 28%, transparent);
-  background: color-mix(in srgb, var(--cds-link-inverse, #78a9ff) 12%, transparent);
-  color: var(--cds-link-inverse, #78a9ff);
-  font: 700 0.8125rem / 1 inherit;
-}
-
-.dos-mh-hero-proof__title {
-  margin: 0;
-  color: var(--dos-mh-inverse-text);
-  font: 700 clamp(1.5rem, 3vw, 2rem) / 1.15 var(--cds-productive-heading-04-font-family, inherit);
-}
-
-.dos-mh-hero-proof__body {
-  margin: 0;
-  color: var(--dos-mh-inverse-text-soft);
-  font: 400 0.96rem / 1.55 inherit;
-}
-
-.dos-mh-hero-proof__status-row {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.625rem;
-}
-
-.dos-mh-hero-proof__status-item {
-  display: grid;
-  gap: 0.25rem;
-  padding: 0.85rem 0.9rem;
-  border-radius: 1rem;
-  background: var(--dos-mh-inverse-border-subtle);
-  border: 1px solid var(--dos-mh-inverse-border-strong);
-}
-
-.dos-mh-hero-proof__status-item span {
-  color: var(--dos-mh-inverse-text-muted);
-  font: 600 0.75rem / 1.2 inherit;
-}
-
-.dos-mh-hero-proof__status-item strong {
-  color: var(--dos-mh-inverse-text);
-  font: 700 0.95rem / 1.3 inherit;
-}
-
-.dos-mh-hero-proof__status-item[data-tone='live'] strong {
-  color: var(--dos-mh-support-success);
-}
-
-.dos-mh-hero-proof__status-item[data-tone='pending'] strong {
-  color: var(--dos-mh-support-warning);
-}
-
-.dos-mh-hero-proof__status-item[data-tone='synced'] strong {
-  color: var(--cds-link-inverse, #78a9ff);
-}
-
-.dos-mh-hero-proof__timeline {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.5rem;
-}
-
-.dos-mh-hero-proof__timeline li {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-block-size: 2.3rem;
-  padding-inline: 0.75rem;
-  border-radius: 999px;
-  border: 1px solid var(--dos-mh-inverse-border-strong);
-  background: var(--dos-mh-inverse-border-subtle);
-  color: var(--dos-mh-inverse-text-soft);
-  font: 600 0.78rem / 1.2 inherit;
-}
-
-.dos-mh-hero-proof__receipt {
-  margin: 0;
-  color: var(--dos-mh-inverse-text-muted);
-  font: 500 0.78rem / 1.45 var(--cds-code-01-font-family, 'IBM Plex Mono', monospace);
-}
-
-@media (max-width: 900px) {
-  .dos-mh-hero-layout {
+  .dos-mh-grid-3,
+  .dos-mh-footer-grid {
     grid-template-columns: 1fr;
-    min-block-size: auto;
   }
 
-  .dos-mh-hero-proof {
-    max-inline-size: 42rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .dos-mh-hero {
-    padding-block: clamp(2.75rem, 9vw, 4rem);
-  }
-
-  .dos-mh-hero-content {
-    max-inline-size: none;
-  }
-
-  .dos-mh-title {
-    font-size: clamp(2.75rem, 11vw, 3.5rem);
-  }
-
-  .dos-mh-hero-proof__status-row {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 0.5rem;
-  }
-
-  .dos-mh-hero-proof__status-item {
-    padding: 0.7rem 0.65rem;
-  }
-
-  .dos-mh-hero-proof__status-item span {
-    font-size: 0.67rem;
-  }
-
-  .dos-mh-hero-proof__status-item strong {
-    font-size: 0.78rem;
-  }
-
-  .dos-mh-hero-proof__timeline {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+  .dos-mh-cta-row > * {
+    flex: 1 1 100%;
   }
 }
 
 @media (max-width: 480px) {
-  .dos-mh-hero-proof__timeline {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .dos-mh-section {
+    padding-block: 2rem;
   }
 
-  .dos-mh-hero-trust__label {
-    font-size: 0.875rem;
+  .dos-mh-container {
+    padding-inline: 0.75rem;
   }
-}
 
-/* ===== 02 trust-pills ===================================================== */
-.dos-mh-trust {
-  padding-block: 0;
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--dos-mh-brand-surface) 6%, var(--cds-background, #ffffff)) 0%,
-    color-mix(in srgb, var(--dos-mh-brand-surface) 10%, var(--cds-background, #ffffff)) 50%,
-    color-mix(in srgb, var(--dos-mh-brand-surface) 6%, var(--cds-background, #ffffff)) 100%
-  );
-  border-block-end: 1px solid var(--dos-mh-brand-border-subtle);
-}
+  .dos-mh-agent-img,
+  .dos-mh-agent-letter {
+    inline-size: 72px;
+    block-size: 72px;
+  }
 
-.dos-mh-trust-pills {
-  justify-content: center;
-}
-
-/* ===== 03 value-props ===================================================== */
-.dos-mh-value-props {
-  padding-block-start: 5rem;
-}
-
-.dos-mh-value-props .dos-mh-section-title {
-  max-inline-size: 18ch;
-}
-
-.dos-mh-value-props__sub {
-  margin-block-end: 2rem;
-}
-
-.dos-mh-value-props .dos-mh-grid-3 dos-carbon-tile {
-  display: block;
-  padding: 1.5rem;
-  background: var(--cds-layer-02, #ffffff);
-}
-
-/* ===== 04 agentic-proof =================================================== */
-.dos-mh-agentic {
-  background: var(--cds-layer-01, #f4f4f4);
-}
-
-.dos-mh-readiness {
-  margin-block: 1.5rem 2rem;
-  max-inline-size: 720px;
-}
-
-.dos-mh-demo-skeleton {
-  margin-block: 1rem 1.5rem;
-  min-block-size: 8rem;
-}
-
-.dos-mh-agent-tiles {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
-  gap: 0.75rem;
-}
-
-.dos-mh-agent-tiles > li {
-  display: block;
-}
-
-.dos-mh-agent-tile {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 1rem 0.5rem;
-  text-align: center;
-}
-
-.dos-mh-agent-img {
-  inline-size: 96px;
-  block-size: 96px;
-  object-fit: cover;
-  border-radius: 50%;
-  background: var(--cds-layer-03, #e0e0e0);
-}
-
-.dos-mh-agent-letter {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  inline-size: 96px;
-  block-size: 96px;
-  border-radius: 50%;
-  background: var(--cds-button-primary, #0f62fe);
-  color: var(--cds-text-on-color, #ffffff);
-  font: 600 1.25rem / 1 inherit;
-  letter-spacing: 0.04em;
-}
-
-.dos-mh-agent-tile strong {
-  font-weight: 600;
-  font-size: 0.875rem;
-  line-height: 1.3;
-  color: var(--cds-text-primary, #161616);
-}
-
-.dos-mh-agent-tile small {
-  font-size: 0.75rem;
-  color: var(--cds-text-secondary, #525252);
-}
-
-/* ===== 05 download-kit ==================================================== */
-.dos-mh-download-kit {
-  padding-block: clamp(3rem, 5vw, 4rem);
-}
-
-.dos-mh-download-kit > .dos-mh-container > p {
-  font: 400 1rem / 1.5 inherit;
-  color: var(--cds-text-secondary, #525252);
-  max-inline-size: 64ch;
-  margin: 0 0 1.5rem;
-}
-
-.dos-mh-download-kit dos-carbon-notification {
-  display: block;
-  margin-block: 1rem 1.5rem;
-}
-
-.dos-mh-toast-anchor {
-  position: fixed;
-  /* Wave 6: env(safe-area-inset-bottom) clears the iOS home indicator. */
-  inset-block-end: max(1.5rem, env(safe-area-inset-bottom, 1.5rem));
-  inset-inline-end: 1.5rem;
-  z-index: 9999;
-  max-inline-size: 360px;
-}
-
-@media (max-width: 480px) {
   .dos-mh-toast-anchor {
-    inset-inline: 1rem;
-    inset-block-end: max(1rem, env(safe-area-inset-bottom, 1rem));
+    inset-inline: 0.75rem;
     max-inline-size: none;
   }
 }
 
-/* ===== 06 platform-overview / 09 architecture ============================= */
-.dos-mh-section dos-carbon-tabs,
-.dos-mh-section dos-carbon-structured-list {
-  display: block;
-  margin-block-start: 1.5rem;
-}
-
-/* ===== 07 modules / 12 testimonials / 14 resources ======================== */
-.dos-mh-section dos-carbon-tile {
-  display: block;
-  /* Intensification: hover lift + smooth shadow transition */
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  overflow: hidden;
-}
-
-.dos-mh-section dos-carbon-tile:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 32px color-mix(in srgb, var(--dos-mh-inverse-surface) 10%, transparent);
-  z-index: 1;
-}
-
-.dos-mh-section dos-carbon-tile h3 {
-  font: 700 1.125rem / 1.25 inherit;
-  margin: 0 0 0.5rem;
-  color: var(--cds-text-primary, #161616);
-  letter-spacing: -0.01em;
-}
-
-.dos-mh-section dos-carbon-tile p {
-  font: 400 0.9375rem / 1.6 inherit;
-  margin: 0;
-  color: var(--cds-text-secondary, #525252);
-}
-
-.dos-mh-testimonial-intro {
-  grid-column: 1 / -1;
-  max-inline-size: 48rem;
-}
-
-
-/* ===== 10 ai-and-agents =================================================== */
-.dos-mh-ai {
-  background: var(--cds-layer-inverse, #161616);
-  color: var(--cds-text-on-color, #ffffff);
-  border-block-end: none;
-}
-
-.dos-mh-ai .dos-mh-section-title,
-.dos-mh-ai .dos-mh-eyebrow,
-.dos-mh-ai .dos-mh-sub {
-  color: var(--cds-text-on-color, #ffffff);
-}
-
-.dos-mh-ai .dos-mh-eyebrow {
-  color: var(--cds-text-on-color-disabled, #c6c6c6);
-}
-
-.dos-mh-ai-loop {
-  margin-block-start: 2rem;
-  padding: 1.5rem;
-  background: var(--cds-layer-01, #262626);
-  border-radius: 0;
-}
-
-/* ===== 11 pricing-teaser ================================================== */
-.dos-mh-section[data-section-id='pricing-teaser'] dos-carbon-data-table {
-  display: block;
-  margin-block-start: 1rem;
-  overflow-x: auto;
-}
-
-:host ::ng-deep .dos-mh-section[data-section-id='pricing-teaser'] cds-data-table,
-:host ::ng-deep .dos-mh-section[data-section-id='pricing-teaser'] .cds--data-table {
-  overflow-x: auto;
-  max-inline-size: 100%;
-}
-
-/* ===== 12 testimonials — quote ============================================ */
-.dos-mh-quote {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  margin: 0;
-  padding: 0;
-  border-inline-start: 3px solid var(--cds-border-interactive, #0f62fe);
-  padding-inline-start: 1rem;
-}
-
-.dos-mh-quote p {
-  font: italic 400 1rem / 1.5 inherit;
-  color: var(--cds-text-primary, #161616);
-  margin: 0;
-}
-
-.dos-mh-quote footer {
-  font: 400 0.875rem / 1.4 inherit;
-  color: var(--cds-text-secondary, #525252);
-}
-
-/* ===== 13 logos =========================================================== */
-.dos-mh-logo {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-inline-size: 8rem;
-  min-block-size: 3rem;
-  padding: 0.5rem 1rem;
-  background: var(--cds-layer-01, #f4f4f4);
-  border: 1px solid var(--cds-border-subtle-01, #e0e0e0);
-  font: 500 0.875rem / 1 inherit;
-  color: var(--cds-text-secondary, #525252);
-  letter-spacing: 0.04em;
-}
-
-/* ===== 16 cta-banner ===================================================== */
-.dos-mh-cta-banner {
-  background: var(--cds-background-brand, #0f62fe);
-  color: var(--cds-text-on-color, #ffffff);
-  padding-block: clamp(3rem, 6vw, 5rem);
-  text-align: center;
-  border-block-end: none;
-}
-
-.dos-mh-cta-banner-inner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.75rem;
-  max-inline-size: 720px;
-  margin-inline: auto;
-}
-
-.dos-mh-cta-banner .dos-mh-section-title {
-  color: var(--cds-text-on-color, #ffffff);
-  font-size: clamp(1.75rem, 4vw, 2.5rem);
-}
-
-.dos-mh-eyebrow-on-dark {
-  color: var(--cds-text-on-color-disabled, #c6c6c6);
-}
-
-.dos-mh-sub-on-dark {
-  color: var(--cds-text-on-color, #ffffff);
-}
-
-.dos-mh-cta-banner .dos-mh-cta-row {
-  justify-content: center;
-}
-
-/* ===== 17 footer ========================================================== */
-.dos-mh-footer {
-  background: var(--cds-layer-inverse, #161616);
-  color: var(--cds-text-on-color, #ffffff);
-  padding-block: clamp(2.5rem, 4vw, 4rem);
-  border-block-end: none;
-}
-
-.dos-mh-footer-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
-  gap: 2rem;
-  align-items: start;
-}
-
-.dos-mh-footer-col {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.dos-mh-footer-col strong {
-  font: 600 0.875rem / 1.3 inherit;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--cds-text-on-color, #ffffff);
-  margin-block-end: 0.25rem;
-}
-
-.dos-mh-footer-col ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.375rem;
-}
-
-.dos-mh-footer-col li {
-  display: block;
-}
-
-.dos-mh-footer-brand {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.75rem;
-}
-
-.dos-mh-footer-brand small {
-  color: var(--cds-text-on-color-disabled, #c6c6c6);
-  font-size: 0.75rem;
-}
-
-:host ::ng-deep .dos-mh-footer .cds--link {
-  color: var(--cds-link-inverse, #78a9ff);
-}
-
-:host ::ng-deep .dos-mh-footer .cds--link:hover,
-:host ::ng-deep .dos-mh-footer .cds--link:focus-visible {
-  color: var(--cds-text-on-color, #ffffff);
-}
-
-/* ===== header nav — enterprise spaced links ================================ */
-:host ::ng-deep .dos-mh-shell-bar .cds--header {
-  position: relative;
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: center;
-  column-gap: clamp(0.75rem, 1.6vw, 1.5rem);
-  inline-size: 100%;
-  min-block-size: 4rem;
-  block-size: auto;
-  padding-block: 0.25rem;
-  padding-inline: 0;
-  background: transparent;
-  border-block-end: 0;
-}
-
-:host ::ng-deep .dos-mh-shell-bar .cds--header__name {
-  flex: 0 0 auto;
-  margin-inline-end: 0;
-  min-inline-size: max-content;
-  white-space: nowrap;
-}
-
-:host ::ng-deep .dos-mh-shell-bar cds-header-navigation {
-  display: block;
-  inline-size: 100%;
-  min-inline-size: 0;
-  block-size: auto !important;
-}
-
-:host ::ng-deep .dos-mh-shell-bar .cds--header__nav,
-:host ::ng-deep .dos-mh-shell-bar .cds--header__menu-bar {
-  display: flex;
-  align-items: center;
-  flex-wrap: nowrap;
-  gap: 0.25rem;
-}
-
-:host ::ng-deep .dos-mh-shell-bar .cds--header__nav {
-  flex: 1 1 auto;
-  min-inline-size: 0;
-  inline-size: 100%;
-}
-
-:host ::ng-deep .dos-mh-shell-bar .cds--header__menu-bar {
-  inline-size: 100%;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-
-:host ::ng-deep .dos-mh-shell-bar .cds--header__menu-bar::-webkit-scrollbar {
-  display: none;
-}
-
-:host ::ng-deep .dos-mh-shell-bar .cds--header__global {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-inline-start: 0;
-  justify-self: end;
-  inline-size: auto;
-}
-
-:host ::ng-deep .dos-mh-shell-bar cds-header-item,
-:host ::ng-deep .dos-mh-shell-bar .cds--header__menu-item {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-block-size: 3rem;
-  padding-inline: 0.875rem;
-  min-inline-size: max-content;
-  white-space: nowrap;
-  font-size: 0.875rem;
-  font-weight: 500;
-  letter-spacing: 0.01em;
-}
-
-:host ::ng-deep .dos-mh-section[data-section-id='pricing-teaser'] .cds--data-table-container,
-:host ::ng-deep .dos-mh-section[data-section-id='resources'] .cds--contained-list,
-:host ::ng-deep .dos-mh-section[data-section-id='faq'] .cds--accordion,
-:host ::ng-deep .dos-mh-section[data-section-id='footer'] .cds--grid,
-:host ::ng-deep .dos-mh-section[data-section-id='footer'] .cds--row {
-  max-inline-size: 100%;
-  min-inline-size: 0;
-}
-
-:host ::ng-deep .dos-mh-section[data-section-id='footer'] .cds--row {
-  margin-inline: 0;
-}
-
-:host ::ng-deep .dos-mh-section[data-section-id='footer'] .cds--col {
-  min-inline-size: 0;
-}
-
-/* ===== responsive breakpoints ============================================== */
-/* 390 — tiny phone */
-@media (max-width: 390px) {
-  :host ::ng-deep .dos-mh-shell-bar .cds--header {
-    grid-template-columns: 1fr;
-    row-gap: 0.75rem;
-    padding-block: 0.75rem;
-  }
-  :host ::ng-deep .dos-mh-shell-bar .cds--header__global {
-    justify-self: stretch;
-  }
-  .dos-mh-shell-actions {
-    inline-size: 100%;
-    justify-content: stretch;
-    flex-wrap: wrap;
-  }
-  .dos-mh-shell-actions > * {
-    flex: 1 1 100%;
-  }
-  .dos-mh-hero { padding-block: 3rem 2rem; }
-  .dos-mh-title { font-size: clamp(2rem, 11vw, 2.75rem); }
-  .dos-mh-grid-3 { grid-template-columns: 1fr; }
-  .dos-mh-agent-tiles { grid-template-columns: 1fr 1fr; }
-  .dos-mh-footer-grid { grid-template-columns: 1fr; gap: 1.5rem; }
-  .dos-mh-cta-row > * { flex: 1 1 100%; }
-}
-
-/* 430 — small phone */
-@media (min-width: 391px) and (max-width: 430px) {
-  :host ::ng-deep .dos-mh-shell-bar .cds--header {
-    grid-template-columns: 1fr;
-    row-gap: 0.75rem;
-    padding-block: 0.75rem;
-  }
-  :host ::ng-deep .dos-mh-shell-bar .cds--header__global {
-    justify-self: stretch;
-  }
-  .dos-mh-shell-actions {
-    inline-size: 100%;
-    justify-content: stretch;
-    flex-wrap: wrap;
-  }
-  .dos-mh-shell-actions > * {
-    flex: 1 1 100%;
-  }
-  .dos-mh-title { font-size: clamp(2.25rem, 9vw, 3rem); }
-  .dos-mh-grid-3 { grid-template-columns: 1fr; }
-  .dos-mh-cta-row > * { flex: 1 1 100%; }
-}
-
-/* 480 — large phone */
-@media (max-width: 480px) {
-  .dos-mh-hero { padding-block: 3.5rem 2.5rem; }
-  .dos-mh-grid-3 { grid-template-columns: 1fr; }
-  .dos-mh-footer-grid { grid-template-columns: 1fr; gap: 1.5rem; }
-}
-
-/* 768 — tablet */
-@media (min-width: 481px) and (max-width: 768px) {
-  :host ::ng-deep .dos-mh-shell-bar .cds--header {
-    grid-template-columns: auto minmax(0, 1fr);
-    row-gap: 0.75rem;
-  }
-  :host ::ng-deep .dos-mh-shell-bar .cds--header__nav,
-  :host ::ng-deep .dos-mh-shell-bar cds-header-navigation {
-    grid-column: 1 / -1;
-  }
-  :host ::ng-deep .dos-mh-shell-bar .cds--header__global {
-    justify-self: end;
-  }
-  .dos-mh-shell-actions {
-    flex-wrap: wrap;
-  }
-  .dos-mh-grid-3 { grid-template-columns: repeat(2, 1fr); }
-  .dos-mh-agent-tiles { grid-template-columns: repeat(3, 1fr); }
-}
-
-/* ===== RTL letter-spacing override per spec =============================== */
 :host-context([dir='rtl']) .dos-mh-eyebrow,
-:host-context([dir='rtl']) .dos-mh-hero-badge,
 :host-context([dir='rtl']) .dos-mh-eyebrow-on-dark {
   letter-spacing: 0;
 }
-
-/* ===== Part C — Gap-audit section styles ================================== */
-
-/* B1: logos contained-list — compact on-page list with separator */
-.dos-mh-logos-list {
-  cds-contained-list-item,
-  ::ng-deep cds-contained-list-item {
-    border-block-end-color: var(--cds-border-subtle, #e0e0e0);
-  }
-}
-
-/* hide the contained-list divider for logos to keep it pill-like */
-[data-section-id='logos'] cds-contained-list {
-  --cds-contained-list-border: none;
-}
-
-/* B2: trust notification strip sits above the pill row */
-[data-section-id='trust-pills'] {
-  cds-inline-notification,
-  ::ng-deep cds-inline-notification {
-    margin-block-end: 0.5rem;
-    max-inline-size: none; /* full-width within container */
-  }
-}
-
-/* B4: inline-loading on download-kit matches tile height */
-[data-section-id='download-kit'] cds-inline-loading,
-[data-section-id='download-kit'] ::ng-deep cds-inline-loading {
-  display: flex;
-  align-items: center;
-  min-block-size: 4rem;
-  padding-inline-start: 1rem;
-}
-
-/* B5: resource contained-list (disclosed) — consistent height, no overflow clip */
-.dos-mh-resource-list {
-  cds-contained-list-item,
-  ::ng-deep cds-contained-list-item {
-    min-block-size: 3.5rem;
-    align-items: center;
-  }
-}
-
-/* B6: hero layer — ensure the orb still shows its gradient inside the layer scope */
-dos-carbon-layer > .dos-mh-hero-visual {
-  block-size: 100%;
-}
-
-/* responsive adjustments for gap-audit sections */
-@media (max-width: 768px) {
-  .dos-mh-logos-list,
-  .dos-mh-resource-list {
-    font-size: var(--cds-body-short-01-font-size, 0.875rem);
-  }
-}
-

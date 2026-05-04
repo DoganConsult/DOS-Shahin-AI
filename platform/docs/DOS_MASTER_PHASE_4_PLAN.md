@@ -43,16 +43,11 @@ deferred to ops window.
 
 ---
 
-## L35 — Tuwaiq-AI Angular SPA scaffold (closes the §10 carve-out)
+## L35 — DROPPED
 
-| Item | Scope | Article | Disposition |
-|------|-------|---------|-------------|
-| (A) | Product-owner first commit on `products/tuwaiq-ai/app/` (manifest already at `lifecycle.stage='experimental'`) | runtime | **NO-GO until product-owner sign-off** |
-| (B) | Once (A) lands: scaffold Angular Carbon UIShell mirroring `shahin-ai/app` pattern (vertical slice — header, side-nav, 1 panel) | code | **GO post-(A)** |
-| (C) | Lifecycle flip `experimental → beta` via `dos-master` writer + audit row | runtime | **NO-GO until QA cohort signs off** |
-
-**Acceptance:** SPA returns HTTP 200 at `/tuwaiq/*`; first row in
-`dos.product_lifecycle_event` (kind `stage_changed`).
+**Tuwaiq-AI Angular SPA scaffold removed from Phase 4 scope** —
+out-of-contract per user directive 2026-05-04. Manifest stays at
+`lifecycle.stage='experimental'` indefinitely until contract amendment.
 
 ---
 
