@@ -18,6 +18,11 @@ import { marketplaceOsProxyRouter } from './marketplace-os-proxy.route.js';
 import { drOsProxyRouter } from './dr-os-proxy.route.js';
 
 export const routes = Router();
+// Health route registered BEFORE prefix mounts so it cannot be shadowed
+// by a future router-internal '/health' (latent-regression hygiene).
+routes.get('/admin/console/health', (_req, res) =>
+  res.json({ ok: true, service: 'admin-console-bff' }),
+);
 routes.use('/admin/console', consoleRouter);
 routes.use('/admin/console', dosMasterEvidenceRouter);
 // L13 D2 — Workflow OS admin-zone proxy (Doctrine Article 4).
@@ -37,6 +42,3 @@ routes.use('/admin/console/release-os',           releaseOsProxyRouter);
 routes.use('/admin/console/vendor-risk-os',       vendorRiskOsProxyRouter);
 routes.use('/admin/console/marketplace-os',       marketplaceOsProxyRouter);
 routes.use('/admin/console/dr-os',                drOsProxyRouter);
-routes.get('/admin/console/health', (_req, res) =>
-  res.json({ ok: true, service: 'admin-console-bff' }),
-);

@@ -11,6 +11,11 @@ async function main() {
   const config = loadServiceConfig(SERVICE_CODE);
   const realmCfg = loadPlatformOpsRealmConfig();
   const apiRouter = Router();
+  // Unauthenticated liveness probe MUST be reachable before the realm guard
+  // so ops/PM2/health-checkers can confirm the process is up without a token.
+  apiRouter.get('/admin/console/health', (_req, res) =>
+    res.json({ ok: true, service: 'admin-console-bff' }),
+  );
   apiRouter.use(platformOpsRealmGuard(realmCfg));
   apiRouter.use(routes);
   const spaRouter = Router();
