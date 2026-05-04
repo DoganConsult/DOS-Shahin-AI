@@ -1,0 +1,11 @@
+{
+  "serviceCode": "onboarding-service",
+  "version": "0.1.0",
+  "domains": ["platform"],
+  "trustZone": "admin",
+  "dependencies": ["workspace-bff"],
+  "apiPrefix": "/api/admin/onboarding",
+  "doctrineArticle": 9,
+  "controlled": true,
+  "writerActor": "onboarding-service"
+}

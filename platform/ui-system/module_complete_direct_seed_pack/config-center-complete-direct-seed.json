@@ -231,94 +231,61 @@
   ],
   "components": [
     {
-      "component_key": "platform.config-center.hub.page",
+      "component_key": "module.dashboard.page",
+      "vendor": "ibm-carbon",
+      "carbon_key": "grid",
+      "schema_version": 1,
+      "selector": "dos-page-layout",
+      "approval_status": "approved",
+      "metadata": { "source": "wave1-config-center-roster", "archetype": "decision-dashboard", "page": "platform.config-center.hub" }
+    },
+    {
+      "component_key": "module.records.page",
+      "vendor": "ibm-carbon",
+      "carbon_key": "table",
+      "schema_version": 1,
+      "selector": "dos-page-layout",
+      "approval_status": "approved",
+      "metadata": {
+        "source": "wave1-config-center-roster",
+        "archetype": "intelligent-register",
+        "pages": ["settings", "flags", "tokens"]
+      }
+    },
+    {
+      "component_key": "module.audit_trail_ledger.page",
+      "vendor": "ibm-carbon",
+      "carbon_key": "table",
+      "schema_version": 1,
+      "selector": "dos-page-layout",
+      "approval_status": "approved",
+      "metadata": { "source": "wave1-config-center-roster", "archetype": "audit-trail-ledger", "page": "audit" }
+    },
+    {
+      "component_key": "module.settings.page",
+      "vendor": "ibm-carbon",
+      "carbon_key": "tabs",
+      "schema_version": 1,
+      "selector": "dos-page-layout",
+      "approval_status": "approved",
+      "metadata": {
+        "source": "wave1-config-center-roster",
+        "archetype": "module-settings",
+        "pages": ["compare", "resolve", "workspace"]
+      }
+    },
+    {
+      "component_key": "module.trends.page",
       "vendor": "ibm-carbon",
       "carbon_key": "tiles",
       "schema_version": 1,
       "selector": "dos-page-layout",
       "approval_status": "approved",
-      "metadata": { "source": "wave1-config-center-seed", "binding": "0021-decision-dashboard" }
-    },
-    {
-      "component_key": "platform.config-center.settings.page",
-      "vendor": "ibm-carbon",
-      "carbon_key": "data-table",
-      "schema_version": 1,
-      "selector": "dos-page-layout",
-      "approval_status": "approved",
-      "metadata": { "source": "wave1-config-center-seed", "surface": "settings" }
-    },
-    {
-      "component_key": "platform.config-center.flags.page",
-      "vendor": "ibm-carbon",
-      "carbon_key": "data-table",
-      "schema_version": 1,
-      "selector": "dos-page-layout",
-      "approval_status": "approved",
-      "metadata": { "source": "wave1-config-center-seed", "surface": "flags" }
-    },
-    {
-      "component_key": "platform.config-center.tokens.page",
-      "vendor": "ibm-carbon",
-      "carbon_key": "data-table",
-      "schema_version": 1,
-      "selector": "dos-page-layout",
-      "approval_status": "approved",
-      "metadata": { "source": "wave1-config-center-seed", "surface": "tokens" }
-    },
-    {
-      "component_key": "platform.config-center.audit.page",
-      "vendor": "ibm-carbon",
-      "carbon_key": "data-table",
-      "schema_version": 1,
-      "selector": "dos-page-layout",
-      "approval_status": "approved",
-      "metadata": { "source": "wave1-config-center-seed", "surface": "audit" }
-    },
-    {
-      "component_key": "platform.config-center.compare.page",
-      "vendor": "ibm-carbon",
-      "carbon_key": "tabs",
-      "schema_version": 1,
-      "selector": "dos-page-layout",
-      "approval_status": "approved",
-      "metadata": { "source": "wave1-config-center-seed", "phase": "0030-module-settings" }
-    },
-    {
-      "component_key": "platform.config-center.resolve.page",
-      "vendor": "ibm-carbon",
-      "carbon_key": "tabs",
-      "schema_version": 1,
-      "selector": "dos-page-layout",
-      "approval_status": "approved",
-      "metadata": { "source": "wave1-config-center-seed", "phase": "0030-module-settings" }
-    },
-    {
-      "component_key": "platform.config-center.workspace.page",
-      "vendor": "ibm-carbon",
-      "carbon_key": "tabs",
-      "schema_version": 1,
-      "selector": "dos-page-layout",
-      "approval_status": "approved",
-      "metadata": { "source": "wave1-config-center-seed", "phase": "0030-module-settings" }
-    },
-    {
-      "component_key": "platform.config-center.gateway.page",
-      "vendor": "ibm-carbon",
-      "carbon_key": "line-chart",
-      "schema_version": 1,
-      "selector": "dos-page-layout",
-      "approval_status": "approved",
-      "metadata": { "source": "wave1-config-center-seed", "phase": "0030-trend-intelligence" }
-    },
-    {
-      "component_key": "platform.config-center.health.page",
-      "vendor": "ibm-carbon",
-      "carbon_key": "line-chart",
-      "schema_version": 1,
-      "selector": "dos-page-layout",
-      "approval_status": "approved",
-      "metadata": { "source": "wave1-config-center-seed", "phase": "0030-trend-intelligence" }
+      "metadata": {
+        "source": "wave1-config-center-roster",
+        "archetype": "trend-intelligence",
+        "pages": ["gateway", "health"]
+      }
     }
   ],
   "apis": [

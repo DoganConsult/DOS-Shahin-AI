@@ -9,6 +9,10 @@ import type { NavCtx, NavSource, NavSourceResult } from './nav-source';
  * (codegen scans `**\/contracts/navigation/navigation.json` files at build
  * time — `pnpm modulenav:codegen:write`). Emits DosNavItems tagged tier='module'.
  *
+ * For workspace-sidebar context, this source returns Foundation module items
+ * when the user has Foundation entitlement. Other modules' internal nav items
+ * are not surfaced in the workspace sidebar (they belong in module-context sidebars).
+ *
  * Items are tenant-entitled — final visibility decided downstream by the
  * filter pipeline against `access.modules()`. This source emits unfiltered.
  *
@@ -22,13 +26,12 @@ import type { NavCtx, NavSource, NavSourceResult } from './nav-source';
  */
 export declare class ModuleLibraryNavSource implements NavSource {
     readonly id = "module-library";
-    resolve(_ctx: NavCtx): Promise<NavSourceResult>;
+    resolve(ctx: NavCtx): Promise<NavSourceResult>;
     /**
-     * Reserved for the module-context sidebar (Phase F+). Reads the codegen
+     * Converts a module navigation contract item to a DosNavItem.
+     * Reserved for module-context sidebar (Phase F+). Reads the codegen
      * registry directly when the host product is showing a single module's
-     * page. Not currently invoked from this source — kept for re-use by
-     * downstream module-context resolvers without re-implementing the
-     * contract→nav-item adapter logic.
+     * page.
      */
     private toModuleItem;
 }

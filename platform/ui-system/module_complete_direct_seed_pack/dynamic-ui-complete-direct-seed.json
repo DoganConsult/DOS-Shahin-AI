@@ -133,40 +133,30 @@
   ],
   "components": [
     {
-      "component_key": "dynamic_ui.overview.page",
+      "component_key": "module.entry.page",
       "vendor": "ibm-carbon",
-      "carbon_key": "tiles",
+      "carbon_key": "grid",
       "schema_version": 1,
       "selector": "dos-page-layout",
       "approval_status": "approved",
-      "metadata": { "source": "wave1-dynamic-ui-seed", "page": "overview" }
+      "metadata": {
+        "source": "wave1-dynamic-ui-seed-roster",
+        "archetype": "command-home",
+        "pages": ["dynamic-ui.overview"]
+      }
     },
     {
-      "component_key": "dynamic_ui.routes.page",
+      "component_key": "module.records.page",
       "vendor": "ibm-carbon",
-      "carbon_key": "data-table",
+      "carbon_key": "table",
       "schema_version": 1,
       "selector": "dos-page-layout",
       "approval_status": "approved",
-      "metadata": { "source": "wave1-dynamic-ui-seed", "page": "routes" }
-    },
-    {
-      "component_key": "dynamic_ui.components.page",
-      "vendor": "ibm-carbon",
-      "carbon_key": "data-table",
-      "schema_version": 1,
-      "selector": "dos-page-layout",
-      "approval_status": "approved",
-      "metadata": { "source": "wave1-dynamic-ui-seed", "page": "components" }
-    },
-    {
-      "component_key": "dynamic_ui.contracts.page",
-      "vendor": "ibm-carbon",
-      "carbon_key": "data-table",
-      "schema_version": 1,
-      "selector": "dos-page-layout",
-      "approval_status": "approved",
-      "metadata": { "source": "wave1-dynamic-ui-seed", "page": "contracts" }
+      "metadata": {
+        "source": "wave1-dynamic-ui-seed-roster",
+        "archetype": "intelligent-register",
+        "pages": ["dynamic-ui.routes", "dynamic-ui.components", "dynamic-ui.contracts"]
+      }
     }
   ],
   "apis": [

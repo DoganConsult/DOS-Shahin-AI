@@ -7,11 +7,33 @@
 //   1. components[].carbon_key ∈ dos.ui_carbon_components (active)
 //   2. components[].vendor === 'ibm-carbon' (schema enforces, double-checked)
 //   3. components[].component_key already-or-will-be in dos.dynamic_ui_component_registry
-//   4. pages[].archetype ∈ chk_archetype constraint definition
-//   5. pages[].template_export ∈ template loader registry
+//   4. non-shell module contracts use only the approved 32 archetype pages
+//   5. pages[].archetype ∈ chk_archetype constraint definition
+//   6. pages[].template_export ∈ template loader registry and canonical roster
 //   6. permissions[].code 3-segment regex (schema enforces)
 //   7. i18n parity: every EN key has AR sibling
 //   8. seeds[].table whitelisted (publisher-owned)
+//   9. dynamic_ui_routes seed rows may use only the approved 32 page keys
+
+import { readFileSync } from 'node:fs';
+import { resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import {
+  getApprovedPageEntry,
+  isApprovedPageComponentKey,
+  shouldEnforceApprovedPageRoster,
+} from './approved-page-roster.mjs';
+
+const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
+const TEMPLATE_BINDING_REGISTRY = resolve(
+  REPO,
+  'platform/core/platform/shell/template-binding.registry.ts',
+);
+
+const TEMPLATE_EXPORTS = new Set(
+  [...readFileSync(TEMPLATE_BINDING_REGISTRY, 'utf8').matchAll(/^[ \t]+([A-Z][A-Za-z0-9]+TemplateComponent)\s*:/gm)]
+    .map(match => match[1]),
+);
 
 const ALLOWED_SEED_TABLES = new Set([
   'dos.workspace_shell_binding',
@@ -28,6 +50,7 @@ const ALLOWED_SEED_TABLES = new Set([
 
 export async function crossRefAgainstDb(client, contract) {
   const errors = [];
+  const enforceApprovedPages = shouldEnforceApprovedPageRoster(contract);
 
   // 1+2+3. components
   for (const c of contract.components ?? []) {
@@ -45,9 +68,13 @@ export async function crossRefAgainstDb(client, contract) {
       errors.push({ error_type: 'INACTIVE_CARBON_KEY', error_path: `components.${c.component_key}.carbon_key`,
         message: `carbon_key '${c.carbon_key}' is inactive`, severity: 'WARNING' });
     }
+    if (enforceApprovedPages && !isApprovedPageComponentKey(c.component_key)) {
+      errors.push({ error_type: 'NON_APPROVED_PAGE_COMPONENT', error_path: `components.${c.component_key}`,
+        message: `component_key '${c.component_key}' is outside the approved 32 archetype page roster`, severity: 'BLOCKER' });
+    }
   }
 
-  // 4. pages.archetype against chk_archetype
+  // 4+5+6. pages.archetype against approved module roster + chk_archetype + loader registry.
   if ((contract.pages ?? []).length > 0) {
     const r = await client.query(`
       SELECT pg_get_constraintdef(oid) AS def
@@ -57,10 +84,28 @@ export async function crossRefAgainstDb(client, contract) {
     const def = r.rows[0]?.def ?? '';
     const allowed = new Set([...def.matchAll(/'([a-z0-9-]+)'/g)].map(m => m[1]));
     for (const p of contract.pages) {
+      const approved = getApprovedPageEntry(p.archetype);
+      if (enforceApprovedPages && !approved) {
+        errors.push({ error_type: 'NON_APPROVED_ARCHETYPE',
+          error_path: `pages.${p.page_code}.archetype`,
+          message: `archetype '${p.archetype}' is outside the approved 32 archetype page roster`,
+          severity: 'BLOCKER' });
+      }
       if (allowed.size && !allowed.has(p.archetype)) {
         errors.push({ error_type: 'UNKNOWN_ARCHETYPE',
           error_path: `pages.${p.page_code}.archetype`,
           message: `archetype '${p.archetype}' not in chk_archetype`,
+          severity: 'BLOCKER' });
+      }
+      if (!TEMPLATE_EXPORTS.has(p.template_export)) {
+        errors.push({ error_type: 'UNKNOWN_TEMPLATE_EXPORT',
+          error_path: `pages.${p.page_code}.template_export`,
+          message: `template_export '${p.template_export}' not in template-binding.registry.ts`,
+          severity: 'BLOCKER' });
+      } else if (enforceApprovedPages && approved && p.template_export !== approved.templateExport) {
+        errors.push({ error_type: 'NON_CANONICAL_TEMPLATE_EXPORT',
+          error_path: `pages.${p.page_code}.template_export`,
+          message: `template_export '${p.template_export}' must be '${approved.templateExport}' for archetype '${p.archetype}'`,
           severity: 'BLOCKER' });
       }
     }
@@ -88,6 +133,24 @@ export async function crossRefAgainstDb(client, contract) {
       errors.push({ error_type: 'UNAPPROVED_SEED_TABLE', error_path: `seeds.${s.table}`,
         message: `seed target table '${s.table}' not in publisher allowlist`,
         severity: 'BLOCKER' });
+    }
+    if (enforceApprovedPages && s.table === 'dos.dynamic_ui_component_registry') {
+      for (const [index, row] of (s.rows ?? []).entries()) {
+        if (!isApprovedPageComponentKey(row.component_key)) {
+          errors.push({ error_type: 'NON_APPROVED_SEED_COMPONENT', error_path: `seeds.${s.table}.rows.${index}.component_key`,
+            message: `component_key '${row.component_key}' is outside the approved 32 archetype page roster`,
+            severity: 'BLOCKER' });
+        }
+      }
+    }
+    if (enforceApprovedPages && s.table === 'dos.dynamic_ui_routes') {
+      for (const [index, row] of (s.rows ?? []).entries()) {
+        if (!isApprovedPageComponentKey(row.component_key)) {
+          errors.push({ error_type: 'NON_APPROVED_ROUTE_COMPONENT', error_path: `seeds.${s.table}.rows.${index}.component_key`,
+            message: `route component_key '${row.component_key}' is outside the approved 32 archetype page roster`,
+            severity: 'BLOCKER' });
+        }
+      }
     }
   }
 

@@ -10,7 +10,13 @@ if (!code) {
   process.exit(2);
 }
 
-const { contract } = loadContract(code);
+let contract;
+try {
+  ({ contract } = loadContract(code));
+} catch (error) {
+  console.error(String(error instanceof Error ? error.message : error));
+  process.exit(1);
+}
 const sv = validateContract(contract);
 const errors = [...sv.errors];
 

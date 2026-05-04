@@ -8,12 +8,48 @@ type DynamicUiNavItem = DosNavItem & {
   permission?: string | null;
 };
 
+const NON_WORKSPACE_PATHS = new Set([
+  '/',
+  '/about',
+  '/contact',
+  '/dauth',
+  '/forgot-password',
+  '/legal',
+  '/login',
+  '/mfa',
+  '/platform',
+  '/pricing',
+  '/profile',
+  '/register',
+  '/reset-password',
+  '/security',
+  '/settings',
+  '/tenant-profile',
+  '/tenant-settings',
+  '/trust',
+]);
+
+function isWorkspaceNavItem(item: DynamicUiNavItem): boolean {
+  const route = typeof item.route === 'string' ? item.route.trim() : '';
+  const group = typeof item.group === 'string' ? item.group.trim() : '';
+  const moduleCode = typeof item.moduleCode === 'string' ? item.moduleCode.trim() : '';
+  const permission = item.requiredPermission ?? item.permission ?? undefined;
+  const labelKey = typeof item.labelKey === 'string' ? item.labelKey : '';
+
+  if (!route || NON_WORKSPACE_PATHS.has(route)) return false;
+  if (route.startsWith('/admin/')) return false;
+  if (group === 'marketing' || moduleCode === 'marketing') return false;
+  if (labelKey.startsWith('auth.') || labelKey.startsWith('marketing.')) return false;
+  if (!permission) return false;
+  return true;
+}
+
 /**
  * L1 — Dynamic UI nav source.
- * GET /api/dynamic-ui/workspace/nav with 800ms timeout. Tolerant: any
+ * GET /api/ui-os/workspace/nav with 800ms timeout. Tolerant: any
  * non-2xx, network error, timeout, or malformed payload returns null
- * (skip layer). The dynamic-ui service is currently `.skipped`, so this
- * source's null-return is the default state until that backend lands.
+ * (skip layer). The ui-os-service serves DB-driven nav from
+ * dos.dynamic_ui_routes + dos.navigation_registry.
  */
 @Injectable({ providedIn: 'root' })
 export class DynamicUiNavSource implements NavSource {
@@ -23,7 +59,7 @@ export class DynamicUiNavSource implements NavSource {
   async resolve(_ctx: NavCtx): Promise<NavSourceResult> {
     const result = await firstValueFrom(
       this.http
-        .get<{ items?: DynamicUiNavItem[] }>('/api/dynamic-ui/workspace/nav', { withCredentials: true })
+        .get<{ items?: DynamicUiNavItem[] }>('/api/ui-os/workspace/nav', { withCredentials: true })
         .pipe(timeout(800), catchError(() => of(null))),
     );
     if (!result || !Array.isArray(result.items)) return null;
@@ -36,6 +72,6 @@ export class DynamicUiNavSource implements NavSource {
         requiredPermission: it.requiredPermission ?? it.permission ?? undefined,
         group: it.group ?? this.id,
       };
-    });
+    }).filter(isWorkspaceNavItem);
   }
 }

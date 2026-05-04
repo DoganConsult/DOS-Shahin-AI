@@ -52,6 +52,20 @@ const TOKEN_INTERNAL       = `${KC_INTERNAL}/realms/${KC_REALM}/protocol/openid-
 
 export const oidcRouter = Router();
 
+function authFailureRoute(mode: 'login' | 'register', autoProvisionAttempted: boolean, code: string): string {
+  const targetMode = autoProvisionAttempted ? 'register' : mode;
+  const path = targetMode === 'register' ? '/register' : '/login';
+  return `${path}?error=${encodeURIComponent(code)}`;
+}
+
+function tenantDispatchFailureCode(resp: { data?: Record<string, unknown> } | null | undefined): string {
+  const blocked = resp?.data?.blocked;
+  if (typeof blocked === 'string' && blocked) return blocked;
+  const error = resp?.data?.error;
+  if (typeof error === 'string' && error) return error;
+  return 'BACKEND_ERROR';
+}
+
 oidcRouter.get('/start', (req: Request, res: Response) => {
   const mode = (req.query.mode as string) === 'register' ? 'register' : 'login';
   const state    = crypto.randomBytes(16).toString('hex');
@@ -132,13 +146,14 @@ oidcRouter.get('/callback', async (req: Request, res: Response) => {
     res.clearCookie(COOKIE_STATE, { ...cookieOpts });
 
     // Dispatch to tenant-service so register/login finishes the workspace
-    // resolution server-side (Tasks 3/4/5). On register → POST /register;
-    // on login → GET /me (recovers old users via email-fallback). Failures
-    // route to /workspace-blocked with the blocked code so the SPA can
-    // render a controlled state instead of a blank workspace.
+    // resolution server-side (Tasks 3/4/5). On register -> POST /register;
+    // on login -> GET /me (recovers old users via email-fallback). Any
+    // non-2xx response must fail closed back to a real auth entry route so
+    // the SPA never boots the workspace with a half-resolved session.
     let landing = stored.returnUrl || DEFAULT_LANDING;
     try {
       if (TENANT_SERVICE_URL) {
+        const mode = stored.mode === 'register' ? 'register' : 'login';
         const claims = decodeAccessTokenClaims(data.access_token);
         if (!claims.sub || !claims.email) throw new Error('NO_CLAIMS');
         const headers: Record<string, string> = {
@@ -158,11 +173,12 @@ oidcRouter.get('/callback', async (req: Request, res: Response) => {
         const companyAr = (typeof c.companyNameAr === 'string' && c.companyNameAr) || null;
         if (companyEn) headers['x-user-company']    = companyEn as string;
         if (companyAr) headers['x-user-company-ar'] = companyAr as string;
-        const path = stored.mode === 'register' ? '/register' : '/me';
+        const path = mode === 'register' ? '/register' : '/me';
+        let autoProvisionAttempted = false;
         let resp = await axios.request({
-          method: stored.mode === 'register' ? 'post' : 'get',
+          method: mode === 'register' ? 'post' : 'get',
           url: `${TENANT_SERVICE_URL}${path}`,
-          data: stored.mode === 'register'
+          data: mode === 'register'
             ? { orgName: companyEn || undefined, orgNameAr: companyAr || undefined }
             : undefined,
           headers,
@@ -175,10 +191,11 @@ oidcRouter.get('/callback', async (req: Request, res: Response) => {
         // /workspace-blocked dead-end for first-time logins that bypassed
         // the explicit register button.
         if (
-          stored.mode !== 'register' &&
+          mode !== 'register' &&
           resp.status === 409 &&
           (resp.data?.blocked === 'NO_USER' || resp.data?.blocked === 'NO_MEMBERSHIP')
         ) {
+          autoProvisionAttempted = true;
           resp = await axios.request({
             method: 'post',
             url: `${TENANT_SERVICE_URL}/register`,
@@ -188,10 +205,14 @@ oidcRouter.get('/callback', async (req: Request, res: Response) => {
             validateStatus: () => true,
           });
         }
-        if (resp.status === 409 && resp.data?.blocked) {
-          landing = `/workspace-blocked?code=${encodeURIComponent(resp.data.blocked)}`;
-        } else if (resp.status >= 500) {
-          landing = '/workspace-blocked?code=BACKEND_ERROR';
+        if (resp.status < 200 || resp.status >= 300) {
+          res.clearCookie(COOKIE_ACCESS, cookieOpts);
+          res.clearCookie(COOKIE_REFRESH, cookieOpts);
+          landing = authFailureRoute(
+            mode,
+            autoProvisionAttempted,
+            tenantDispatchFailureCode(resp),
+          );
         }
 
         // Fix 6 (Phase 18) — Auto-assign DAuth role on first login. Closes
@@ -229,7 +250,13 @@ oidcRouter.get('/callback', async (req: Request, res: Response) => {
       }
     } catch (e: any) {
       console.warn('[oidc/callback] tenant dispatch failed', e?.message || e);
-      landing = '/workspace-blocked?code=BACKEND_ERROR';
+      res.clearCookie(COOKIE_ACCESS, cookieOpts);
+      res.clearCookie(COOKIE_REFRESH, cookieOpts);
+      landing = authFailureRoute(
+        stored.mode === 'register' ? 'register' : 'login',
+        false,
+        'BACKEND_ERROR',
+      );
     }
 
     res.redirect(302, landing);

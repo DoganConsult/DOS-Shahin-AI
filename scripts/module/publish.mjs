@@ -9,7 +9,15 @@ import { makePool, withPublisherTx } from './lib/db.mjs';
 const code = process.argv[2];
 if (!code) { console.error('usage: module:publish <code>'); process.exit(2); }
 
-const { contract, raw, sha256 } = loadContract(code);
+let contract;
+let raw;
+let sha256;
+try {
+  ({ contract, raw, sha256 } = loadContract(code));
+} catch (error) {
+  console.error(String(error instanceof Error ? error.message : error));
+  process.exit(1);
+}
 const sv = validateContract(contract);
 const blockers = sv.errors.filter(e => e.severity === 'BLOCKER');
 if (blockers.length) {

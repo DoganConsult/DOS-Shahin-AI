@@ -5,6 +5,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { Injectable } from '@angular/core';
+import { getModuleNavContract, } from '../generated/module-navigation.registry';
 /**
  * L3 — Module library nav source.
  *
@@ -14,6 +15,10 @@ import { Injectable } from '@angular/core';
  * `platform/access/dos-access-store/src/generated/module-navigation.registry.ts`
  * (codegen scans `**\/contracts/navigation/navigation.json` files at build
  * time — `pnpm modulenav:codegen:write`). Emits DosNavItems tagged tier='module'.
+ *
+ * For workspace-sidebar context, this source returns Foundation module items
+ * when the user has Foundation entitlement. Other modules' internal nav items
+ * are not surfaced in the workspace sidebar (they belong in module-context sidebars).
  *
  * Items are tenant-entitled — final visibility decided downstream by the
  * filter pipeline against `access.modules()`. This source emits unfiltered.
@@ -28,42 +33,35 @@ import { Injectable } from '@angular/core';
  */
 let ModuleLibraryNavSource = class ModuleLibraryNavSource {
     id = 'module-library';
-    async resolve(_ctx) {
-        // Workspace-sidebar context: return null. The global sidebar must
-        // only show module ENTRIES (handled by L4 product-composition from
-        // product.manifest.json's navigationComposition.primary/secondary).
-        // Module-INTERNAL nav (e.g. Foundation's 14 sub-pages from
-        // platform/foundation/contracts/navigation/navigation.json) belongs
-        // inside the module's own page chrome — typically a left rail
-        // rendered when the user is on /foundation/*. Emitting those 14
-        // items into the workspace sidebar pollutes the shell with
-        // overlapping `Foundation` (L4 entry) + 14 sub-pages (L3 contract).
-        //
-        // The codegen registry at
-        //   platform/access/dos-access-store/src/generated/module-navigation.registry.ts
-        // is still maintained on every build. When module-context sidebars
-        // ship (Phase F admin/Dynamic UI), they will read from
-        // `getModuleNavContract(moduleCode)` directly and render module
-        // pages WITHOUT going through this NavSource. Until then, return
-        // null and let L5 (access-store-nav.source) surface entitlement
-        // gaps with `route-not-wired`.
+    async resolve(ctx) {
+        const { access } = ctx;
+        // For workspace-sidebar context, return Foundation items if entitled.
+        // Other modules' internal navigation items are not surfaced in the
+        // workspace sidebar — they belong in module-context sidebars (Phase F+).
+        const foundationContract = getModuleNavContract('foundation');
+        if (foundationContract && access.modules().includes('foundation')) {
+            const items = [];
+            for (const it of foundationContract.items) {
+                items.push(this.toModuleItem(it, 'foundation', foundationContract));
+            }
+            return items;
+        }
+        // No Foundation entitlement or no contract → return null
         return null;
     }
     /**
-     * Reserved for the module-context sidebar (Phase F+). Reads the codegen
+     * Converts a module navigation contract item to a DosNavItem.
+     * Reserved for module-context sidebar (Phase F+). Reads the codegen
      * registry directly when the host product is showing a single module's
-     * page. Not currently invoked from this source — kept for re-use by
-     * downstream module-context resolvers without re-implementing the
-     * contract→nav-item adapter logic.
+     * page.
      */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     toModuleItem(it, moduleCode, contract) {
         // Resolve enclosing group: a group whose `items[]` contains this item id.
         const enclosing = (contract.groups || []).find((g) => Array.isArray(g.items) && g.items.includes(it.id));
         const group = it.group ?? enclosing?.id ?? moduleCode;
         return {
             id: String(it.id),
-            label: String(it.label ?? it.id ?? moduleCode),
+            label: it.label ?? it.id,
             labelKey: it.labelKey,
             route: it.route,
             icon: it.icon,

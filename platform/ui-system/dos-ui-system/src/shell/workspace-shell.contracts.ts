@@ -1,9 +1,10 @@
 /**
  * Phase WS-1 — Workspace-shell typed contracts.
  *
- * One source-of-truth for the 10 workspace-shell surfaces' input shapes.
- * Mirrors the `workspace.*` rows in `dos.dynamic_ui_component_registry`
- * registered by 20260504_0010_workspace_shell_registry.sql and the
+ * One source-of-truth for the 26 workspace-shell surfaces' input shapes.
+ * Mirrors the `shell.*`, `workspace.*`, `page.*` rows in
+ * `dos.dynamic_ui_component_registry` registered by
+ * 20260504_0010_workspace_shell_registry.sql and the
  * per-tenant binding rows in `dos.workspace_shell_binding`.
  *
  * Carbon-only contract: every surface composes IBM Carbon primitives
@@ -150,16 +151,38 @@ export interface QuickCreateAction extends PermissionAware {
 export interface WorkspaceShellBindingRow {
   tenant_id: string;
   component_key:
+    // Group 1: Shell Layout Framework (4)
+    | 'shell.app'
+    | 'shell.desktop'
+    | 'shell.mobile'
+    | 'shell.desktop-sidebar'
+    // Group 2: Header & Navigation (7)
     | 'workspace.header'
     | 'workspace.sidebar'
     | 'workspace.mobile-nav'
+    | 'shell.mobile-drawer'
+    | 'shell.workspace-nav'
+    | 'shell.nav-section'
+    | 'shell.nav-item'
+    // Group 3: Global Action Surfaces (5)
     | 'workspace.command-search'
+    | 'workspace.inbox-center'
+    | 'workspace.quick-create'
+    | 'workspace.context-panel'
+    | 'shell.account-menu'
+    // Group 4: Work Activity & Status (3)
     | 'workspace.status-bar'
     | 'workspace.action-queue'
     | 'workspace.agent-strip'
-    | 'workspace.inbox-center'
-    | 'workspace.context-panel'
-    | 'workspace.quick-create';
+    // Group 5: Alerts & Singletons (2)
+    | 'shell.banner-strip'
+    | 'shell.toast-outlet'
+    // Group 6: Page Content Infrastructure (5)
+    | 'page.layout'
+    | 'page.masthead'
+    | 'page.header'
+    | 'page.tabs'
+    | 'page.widget-frame';
   enabled: boolean;
   position: number;
   perms_required: string[];
@@ -168,16 +191,38 @@ export interface WorkspaceShellBindingRow {
 }
 
 export const WORKSPACE_SHELL_KEYS = [
+  // Group 1: Shell Layout Framework (4)
+  'shell.app',
+  'shell.desktop',
+  'shell.mobile',
+  'shell.desktop-sidebar',
+  // Group 2: Header & Navigation (7)
   'workspace.header',
   'workspace.sidebar',
   'workspace.mobile-nav',
+  'shell.mobile-drawer',
+  'shell.workspace-nav',
+  'shell.nav-section',
+  'shell.nav-item',
+  // Group 3: Global Action Surfaces (5)
   'workspace.command-search',
+  'workspace.inbox-center',
+  'workspace.quick-create',
+  'workspace.context-panel',
+  'shell.account-menu',
+  // Group 4: Work Activity & Status (3)
   'workspace.status-bar',
   'workspace.action-queue',
   'workspace.agent-strip',
-  'workspace.inbox-center',
-  'workspace.context-panel',
-  'workspace.quick-create',
+  // Group 5: Alerts & Singletons (2)
+  'shell.banner-strip',
+  'shell.toast-outlet',
+  // Group 6: Page Content Infrastructure (5)
+  'page.layout',
+  'page.masthead',
+  'page.header',
+  'page.tabs',
+  'page.widget-frame',
 ] as const;
 
 export type WorkspaceShellKey = typeof WORKSPACE_SHELL_KEYS[number];

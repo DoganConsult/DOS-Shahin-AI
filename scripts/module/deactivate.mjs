@@ -8,7 +8,13 @@ const tenantArg = process.argv.find(a => a.startsWith('--tenant='));
 const tenant = tenantArg?.split('=')[1];
 if (!code || !tenant) { console.error('usage: module:deactivate <code> --tenant=<id>'); process.exit(2); }
 
-const { contract } = loadContract(code);
+let contract;
+try {
+  ({ contract } = loadContract(code));
+} catch (error) {
+  console.error(String(error instanceof Error ? error.message : error));
+  process.exit(1);
+}
 if (contract.module.is_platform_dna) {
   console.error(`[module:deactivate] ${code} is platform-DNA — refused.`);
   process.exit(1);

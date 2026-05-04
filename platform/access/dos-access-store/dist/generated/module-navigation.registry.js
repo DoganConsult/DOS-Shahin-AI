@@ -40,11 +40,27 @@ export const MODULE_NAVIGATION_REGISTRY = Object.freeze({
                 "permission": "foundation.read"
             },
             {
-                "id": "foundation.positions",
-                "labelKey": "modules.foundation.nav.positions",
-                "route": "/foundation/positions",
-                "icon": "id-card",
+                "id": "foundation.users",
+                "labelKey": "modules.foundation.nav.users",
+                "route": "/foundation/users",
+                "icon": "user",
                 "order": 50,
+                "permission": "foundation.user.read"
+            },
+            {
+                "id": "foundation.roles",
+                "labelKey": "modules.foundation.nav.roles",
+                "route": "/foundation/roles",
+                "icon": "key",
+                "order": 60,
+                "permission": "foundation.admin.read"
+            },
+            {
+                "id": "foundation.teams",
+                "labelKey": "modules.foundation.nav.teams",
+                "route": "/foundation/teams",
+                "icon": "users-group",
+                "order": 70,
                 "permission": "foundation.read"
             },
             {
@@ -52,32 +68,16 @@ export const MODULE_NAVIGATION_REGISTRY = Object.freeze({
                 "labelKey": "modules.foundation.nav.locations",
                 "route": "/foundation/locations",
                 "icon": "map-pin",
-                "order": 60,
-                "permission": "foundation.read"
-            },
-            {
-                "id": "foundation.users",
-                "labelKey": "modules.foundation.nav.users",
-                "route": "/foundation/users",
-                "icon": "user",
-                "order": 70,
-                "permission": "foundation.user.read"
-            },
-            {
-                "id": "foundation.teams",
-                "labelKey": "modules.foundation.nav.teams",
-                "route": "/foundation/teams",
-                "icon": "users-group",
                 "order": 80,
                 "permission": "foundation.read"
             },
             {
-                "id": "foundation.roles",
-                "labelKey": "modules.foundation.nav.roles",
-                "route": "/foundation/roles",
-                "icon": "key",
+                "id": "foundation.positions",
+                "labelKey": "modules.foundation.nav.positions",
+                "route": "/foundation/positions",
+                "icon": "id-card",
                 "order": 90,
-                "permission": "foundation.admin.read"
+                "permission": "foundation.read"
             },
             {
                 "id": "foundation.committees",
@@ -96,11 +96,19 @@ export const MODULE_NAVIGATION_REGISTRY = Object.freeze({
                 "permission": "foundation.read"
             },
             {
+                "id": "foundation.ownership-mapping",
+                "labelKey": "modules.foundation.nav.ownershipMapping",
+                "route": "/foundation/ownership-mapping",
+                "icon": "link",
+                "order": 120,
+                "permission": "foundation.read"
+            },
+            {
                 "id": "foundation.access-review",
                 "labelKey": "modules.foundation.nav.accessReview",
                 "route": "/foundation/access-review",
                 "icon": "shield-check",
-                "order": 120,
+                "order": 130,
                 "permission": "access_review:create"
             },
             {
@@ -108,7 +116,23 @@ export const MODULE_NAVIGATION_REGISTRY = Object.freeze({
                 "labelKey": "modules.foundation.nav.policies",
                 "route": "/foundation/policies",
                 "icon": "file-shield",
-                "order": 130,
+                "order": 140,
+                "permission": "foundation.read"
+            },
+            {
+                "id": "foundation.data-processing",
+                "labelKey": "modules.foundation.nav.dataProcessing",
+                "route": "/foundation/data-processing",
+                "icon": "database",
+                "order": 150,
+                "permission": "foundation.read"
+            },
+            {
+                "id": "foundation.reference-data",
+                "labelKey": "modules.foundation.nav.referenceData",
+                "route": "/foundation/reference-data",
+                "icon": "list",
+                "order": 160,
                 "permission": "foundation.read"
             },
             {
@@ -116,8 +140,16 @@ export const MODULE_NAVIGATION_REGISTRY = Object.freeze({
                 "labelKey": "modules.foundation.nav.audit",
                 "route": "/foundation/audit",
                 "icon": "history",
-                "order": 140,
+                "order": 170,
                 "permission": "audit_trail.read"
+            },
+            {
+                "id": "foundation.settings",
+                "labelKey": "modules.foundation.nav.settings",
+                "route": "/foundation/settings",
+                "icon": "settings",
+                "order": 180,
+                "permission": "foundation.admin.read"
             }
         ],
         "groups": [
@@ -150,9 +182,13 @@ export const MODULE_NAVIGATION_REGISTRY = Object.freeze({
                 "items": [
                     "foundation.committees",
                     "foundation.delegations",
+                    "foundation.ownership-mapping",
                     "foundation.access-review",
                     "foundation.policies",
-                    "foundation.audit"
+                    "foundation.data-processing",
+                    "foundation.reference-data",
+                    "foundation.audit",
+                    "foundation.settings"
                 ],
                 "order": 30
             }

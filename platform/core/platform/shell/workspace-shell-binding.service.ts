@@ -3,8 +3,8 @@
  *
  * Consumes `GET /api/ui-os/workspace-shell/:tenantId` (served by
  * `services/ui-os-service/src/routes/workspace-shell.routes.ts`) and exposes
- * per-surface signals keyed by the 10 `workspace.*` component keys from
- * `dos.workspace_shell_binding` (Phase WS-1 seed, 400 rows / 40 tenants).
+ * per-surface signals keyed by the 26 component keys from
+ * `dos.workspace_shell_binding` (shell.*, workspace.*, page.*).
  *
  * Fail-soft: any HTTP error (including 401/403 during sign-out) resolves to
  * an empty surface map so the shell continues to render empty/placeholder

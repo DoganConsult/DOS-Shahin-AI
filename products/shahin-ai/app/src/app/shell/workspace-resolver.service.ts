@@ -23,7 +23,11 @@
  */
 import { Injectable, computed, inject, signal, untracked } from '@angular/core';
 
-import { AccessStore, type WorkspaceNavLabelResolver } from '@dos/access-store';
+import {
+  AccessStore,
+  WorkspaceNavigationAdapter,
+  type WorkspaceNavLabelResolver,
+} from '@dos/access-store';
 import type {
   DynamicUiResolverPort,
   ResolvedWorkspaceSurface,
@@ -304,6 +308,10 @@ const I18N: Record<DosLocale, Record<string, string>> = {
     'shell.banner.trial_expired.action':    'Upgrade',
     'shell.banner.offline.title':           'Offline',
     'shell.banner.offline.message':         'You are offline. Some features may be unavailable.',
+    'shell.banner.session_expiry.title':    'Session Expiring',
+    'shell.banner.session_expiry.message':  'Your session expires in ',
+    'shell.banner.impersonation.title':     'Impersonation Mode',
+    'shell.banner.impersonation.message':   'You are viewing this workspace as another user.',
     'shell.action_queue.aria':              'Action queue',
     'shell.action_queue.title':             'Action queue',
     'shell.action_queue.empty':             'No pending actions.',
@@ -635,6 +643,10 @@ const I18N: Record<DosLocale, Record<string, string>> = {
     'shell.banner.trial_expired.action':    'ترقية',
     'shell.banner.offline.title':           'غير متصل',
     'shell.banner.offline.message':         'أنت غير متصل. قد لا تتوفر بعض الميزات.',
+    'shell.banner.session_expiry.title':    'انتهاء الجلسة',
+    'shell.banner.session_expiry.message':  'تنتهي جلسة العمل خلال ',
+    'shell.banner.impersonation.title':     'وضع انتحال الهوية',
+    'shell.banner.impersonation.message':   'أنت تعرض مساحة العمل كمستخدم آخر.',
     'shell.action_queue.aria':              'قائمة الإجراءات',
     'shell.action_queue.title':             'قائمة الإجراءات',
     'shell.action_queue.empty':             'لا توجد إجراءات معلقة.',
@@ -797,6 +809,7 @@ const ROLE_LABELS: Record<string, string> = {
 @Injectable({ providedIn: 'root' })
 export class WorkspaceResolverService implements DynamicUiResolverPort, WorkspaceNavLabelResolver {
   readonly access = inject(AccessStore);
+  readonly nav = inject(WorkspaceNavigationAdapter);
 
   // ────────────────────────────────────────────────────────────────
   // Reactive locale + direction (PILLAR 1.A).
@@ -967,6 +980,7 @@ export class WorkspaceResolverService implements DynamicUiResolverPort, Workspac
   }
 
   async resolveWorkspace(): Promise<ResolvedWorkspaceSurface> {
+    await this.nav.refresh();
     return this.composeWorkspace();
   }
 
@@ -1093,6 +1107,72 @@ export class WorkspaceResolverService implements DynamicUiResolverPort, Workspac
     };
   }
 
+  private moduleDefaultRoute(
+    moduleCode: string,
+    navConfig = this.nav.navConfig(),
+  ): string {
+    const direct = this.findModuleRoute(navConfig?.groups ?? [], moduleCode);
+    return direct ?? `/${moduleCode}`;
+  }
+
+  private findModuleRoute(
+    groups: ReadonlyArray<{
+      items?: ReadonlyArray<{
+        id?: string;
+        route?: string;
+        moduleCode?: string;
+        children?: ReadonlyArray<unknown>;
+      }>;
+    }>,
+    moduleCode: string,
+  ): string | null {
+    const visit = (
+      items: ReadonlyArray<{
+        id?: string;
+        route?: string;
+        moduleCode?: string;
+        children?: ReadonlyArray<unknown>;
+      }>,
+    ): string | null => {
+      for (const item of items) {
+        const route = typeof item.route === 'string' ? item.route.trim() : '';
+        const itemModuleCode = typeof item.moduleCode === 'string' ? item.moduleCode.trim() : '';
+        const itemId = typeof item.id === 'string' ? item.id.trim() : '';
+        if (
+          route && (
+            itemModuleCode === moduleCode
+            || route === `/${moduleCode}`
+            || route.startsWith(`/${moduleCode}/`)
+            || itemId === moduleCode
+            || itemId.startsWith(`${moduleCode}.`)
+          )
+        ) {
+          return route;
+        }
+        if (Array.isArray(item.children)) {
+          const childRoute = visit(
+            item.children.filter(
+              (child): child is {
+                id?: string;
+                route?: string;
+                moduleCode?: string;
+                children?: ReadonlyArray<unknown>;
+              } => !!child && typeof child === 'object',
+            ),
+          );
+          if (childRoute) return childRoute;
+        }
+      }
+      return null;
+    };
+
+    for (const group of groups) {
+      const route = visit(group.items ?? []);
+      if (route) return route;
+    }
+    return null;
+  }
+
   private pageHeader(routeKey: string, eyebrow: string, title: string, subtitleValue?: string): ResolvedPageHeader {
     return {
       routeKey,
@@ -1217,6 +1297,7 @@ export class WorkspaceResolverService implements DynamicUiResolverPort, Workspac
   }
 
   private composeWorkspace(): ResolvedWorkspaceSurface {
+    const navConfig = this.nav.navConfig();
     const routeContract = this.resolveRouteContract('/workspace-home');
     const me = this.access.me();
     const tenantCode    = me?.tenant?.code   ?? '—';
@@ -1325,7 +1406,7 @@ export class WorkspaceResolverService implements DynamicUiResolverPort, Workspac
       title:  this.t('workspace.ai.module.title'),
       body:   this.t('workspace.ai.module.body'),
       ctaLabel: this.t('workspace.action.open'),
-      ctaRoute: '/foundation',
+      ctaRoute: this.moduleDefaultRoute('foundation', navConfig),
       icon: 'sparkle',
       priority: 30,
       trust: trust('foundation-org-agent', 'workspace.ai.module.body', 0.88, 'low',
@@ -1377,7 +1458,7 @@ export class WorkspaceResolverService implements DynamicUiResolverPort, Workspac
         title:       { key: `module.${code}.title`,       value: meta.title,       locale: this.locale(), bidi: 'isolate' },
         description: { key: `module.${code}.description`, value: meta.description, locale: this.locale(), bidi: 'isolate' },
         status:      this.statusPill('tenant', statusCode),
-        route:       `/${code}`,
+        route:       this.moduleDefaultRoute(code, navConfig),
         iconGlyph:   (meta.title || '·').slice(0, 1).toUpperCase(),
       };
     });

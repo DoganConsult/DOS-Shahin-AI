@@ -35,6 +35,12 @@ import { DosBrandEagleComponent } from '@dos/ui-system';
           TLS 1.3 in transit · AES-256 at rest · audit-logged · single sign-on.
         </p>
 
+        @if (errorCode) {
+          <p class="dos-auth-bridge-alert" role="alert" aria-live="polite">
+            {{ errorMessage(errorCode) }}
+          </p>
+        }
+
         <a
           class="dos-auth-bridge-cta"
           data-cds-component="button"
@@ -109,6 +115,14 @@ import { DosBrandEagleComponent } from '@dos/ui-system';
       background: var(--cds-layer-accent, #e8e8e8);
       border-inline-start: 2px solid var(--cds-border-strong, #8d8d8d);
     }
+    .dos-auth-bridge-alert {
+      margin: 0;
+      padding: 0.75rem 1rem;
+      background: var(--cds-support-error-inverse, #da1e28);
+      color: var(--cds-text-on-color, #ffffff);
+      font-size: 0.875rem;
+      line-height: 1.4;
+    }
     .dos-auth-bridge-cta {
       display: inline-flex;
       align-items: center;
@@ -149,6 +163,7 @@ export class AuthBridgeComponent {
   private readonly route = inject(ActivatedRoute);
   readonly mode: 'login' | 'register' =
     (this.route.snapshot.data['authMode'] ?? 'login') as 'login' | 'register';
+  readonly errorCode = this.route.snapshot.queryParamMap.get('error');
 
   ctaHref(): string {
     return `/api/auth/oidc/start?mode=${this.mode}`;
@@ -168,5 +183,18 @@ export class AuthBridgeComponent {
     return mode === 'login'
       ? 'Continue with Shahin-AI SSO'
       : 'Continue to create account';
+  }
+
+  errorMessage(code: string): string {
+    switch (code) {
+      case 'NO_USER':
+        return 'No Shahin-AI workspace account exists for this identity yet. Use account creation or contact your administrator.';
+      case 'NO_MEMBERSHIP':
+        return 'Your identity is authenticated, but it is not assigned to a workspace. Contact your administrator or retry account creation.';
+      case 'ORG_NAME_REQUIRED':
+        return 'Workspace provisioning could not complete because the organization name was missing from the identity response. Retry registration or contact support.';
+      default:
+        return 'Shahin-AI could not complete sign-in. Retry the flow or contact support if the problem persists.';
+    }
   }
 }

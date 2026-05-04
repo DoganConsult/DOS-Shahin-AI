@@ -31,7 +31,16 @@ export function loadSchema() {
 
 export function loadContract(moduleCode) {
   const p = contractPath(moduleCode);
-  if (!existsSync(p)) throw new Error(`[publisher] contract not found: ${p}`);
+  if (!existsSync(p)) {
+    const md = mdPath(moduleCode);
+    if (existsSync(md)) {
+      throw new Error(
+        `[publisher] contract not found: ${p}\n` +
+        `[module-pipeline] ${moduleCode} is markdown-only at ${md} and is dropped from the DB publisher pipeline until a complete JSON contract is authored.`
+      );
+    }
+    throw new Error(`[publisher] contract not found: ${p}`);
+  }
   const raw = readFileSync(p, 'utf8');
   const json = JSON.parse(raw);
   const sha256 = createHash('sha256').update(raw).digest('hex');

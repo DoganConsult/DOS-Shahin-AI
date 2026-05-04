@@ -31,7 +31,8 @@
     "module:activate":   "node scripts/module/activate.mjs",
     "module:deactivate": "node scripts/module/deactivate.mjs",
     "module:verify":     "node scripts/module/verify.mjs",
-    "module:gates":      "SEED_PACK_PARITY_ENFORCE=1 node scripts/ci-guards/seed-pack-md-json-parity.mjs && MODULE_CONTRACT_PUBLISHER_ONLY_ENFORCE=1 node scripts/ci-guards/module-contract-publisher-only.mjs"
+    "module:template-approval": "MODULE_TEMPLATE_APPROVAL_ENFORCE=1 node scripts/ci-guards/module-template-approval.mjs",
+    "module:gates":      "SEED_PACK_PARITY_ENFORCE=1 node scripts/ci-guards/seed-pack-md-json-parity.mjs && MODULE_TEMPLATE_APPROVAL_ENFORCE=1 node scripts/ci-guards/module-template-approval.mjs && MODULE_CONTRACT_PUBLISHER_ONLY_ENFORCE=1 node scripts/ci-guards/module-contract-publisher-only.mjs"
   },
   "devDependencies": {
     "typescript": "5.4.5"

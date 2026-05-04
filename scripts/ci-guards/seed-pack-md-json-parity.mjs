@@ -24,13 +24,13 @@ for (const code of codesJson) {
     }
   }
 }
-const warnings = [];
+const dropped = [];
 for (const code of codesMd) {
-  if (!codesJson.includes(code)) warnings.push(`${code}: .md has no .json twin yet (backlog module — will be authored under publisher pipeline)`);
+  if (!codesJson.includes(code)) dropped.push(`${code}: .md has no .json twin and is dropped from the DB publisher pipeline until a JSON contract exists`);
 }
 
-console.log(`[seed-pack-md-json-parity] published=${codesJson.length} backlog=${warnings.length} blockers=${failures.length}`);
+console.log(`[seed-pack-md-json-parity] published=${codesJson.length} dropped=${dropped.length} blockers=${failures.length}`);
 for (const f of failures) console.error(`  ✗ BLOCKER ${f}`);
-for (const w of warnings) console.warn(`  ⚠ WARNING ${w}`);
+for (const w of dropped) console.warn(`  ⚠ DROPPED ${w}`);
 if (failures.length && enforce) process.exit(1);
 process.exit(0);

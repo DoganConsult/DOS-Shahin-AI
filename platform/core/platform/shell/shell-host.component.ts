@@ -71,6 +71,7 @@ import { BreadcrumbService } from './breadcrumb.service';
 import { WorkspaceShellBindingService } from './workspace-shell-binding.service';
 import { ShellPreferencesService } from './shell-preferences.service';
 import { ShellErrorStateService } from './shell-error-state.service';
+import { ToastService } from '../../../dos/shell/toast.service';
 
 const CARBON_BREAKPOINT_LARGE_PX = 1056;
 const FALLBACK_GROUP_ICON = 'layout-dashboard';
@@ -426,7 +427,7 @@ const FALLBACK_ITEM_ICON  = 'dot';
       </main>
     </ng-template>
 
-    @if (isMobile()) {
+    @if (isMobile() && showShellMobile()) {
       <!-- Mobile chrome: dos-mobile-shell + dos-mobile-drawer + dos-mobile-bottom-nav. -->
       <dos-mobile-shell>
         <ng-container *ngTemplateOutlet="headerTpl"></ng-container>
@@ -466,7 +467,7 @@ const FALLBACK_ITEM_ICON  = 'dot';
           }
         </dos-mobile-drawer>
       </dos-mobile-shell>
-    } @else {
+    } @else if (showShellDesktop()) {
       <!-- Desktop chrome: dos-app-shell + dos-workspace-sidebar. -->
       <dos-app-shell [mobile]="false">
         <ng-container *ngTemplateOutlet="headerTpl"></ng-container>
@@ -612,6 +613,7 @@ export class ShellHostComponent {
   private readonly shellBinding = inject(WorkspaceShellBindingService);
   private readonly prefs = inject(ShellPreferencesService);
   readonly errorState = inject(ShellErrorStateService);
+  private readonly toastSvc = inject(ToastService);
   protected readonly labelResolver = inject<WorkspaceNavLabelResolver | null>(
     WORKSPACE_NAV_LABEL_RESOLVER, { optional: true },
   );
@@ -683,10 +685,13 @@ export class ShellHostComponent {
   // last. Priority order for every header label is:
   //   1. workspace.header.props.* from `dos.workspace_shell_binding` (live
   //      per-tenant, served by GET /api/ui-os/workspace-shell/:tenantId).
-  //   2. product-level i18n catalog (`WorkspaceNavLabelResolver`).
-  //   3. empty string (observable gap, per Phase H policy — no fake defaults).
+  //   2. tenant name/code from AccessStore (dynamic per-tenant fallback).
+  //   3. product-level i18n catalog (`WorkspaceNavLabelResolver`).
+  //   4. empty string (observable gap, per Phase H policy — no fake defaults).
   readonly headerBrand = computed(
     () => this.shellBinding.headerBrandLabel()
+       ?? this.access.tenant()?.name
+       ?? this.access.tenant()?.code
        ?? this.labelResolver?.shellChromeString?.('shell.header.brand')
        ?? '',
   );
@@ -777,13 +782,17 @@ export class ShellHostComponent {
   // Every surface render is gated on the per-tenant row in
   // `dos.workspace_shell_binding`. The host never decides visibility from
   // static config; binding-service.isSurfaceAllowed(key) is the only gate.
-  readonly showStatusBar    = computed(() => this.shellBinding.isSurfaceAllowed('workspace.status-bar'));
-  readonly showActionQueue  = computed(() => this.shellBinding.isSurfaceAllowed('workspace.action-queue'));
-  readonly showAgentStrip   = computed(() => this.shellBinding.isSurfaceAllowed('workspace.agent-strip'));
-  readonly showContextPanel = computed(() => this.shellBinding.isSurfaceAllowed('workspace.context-panel'));
-  readonly showInbox        = computed(() => this.shellBinding.isSurfaceAllowed('workspace.inbox-center'));
-  readonly showQuickCreate  = computed(() => this.shellBinding.isSurfaceAllowed('workspace.quick-create'));
-  readonly showCommandSearch = computed(() => this.shellBinding.isSurfaceAllowed('workspace.command-search'));
+  readonly showShellApp         = computed(() => this.shellBinding.isSurfaceAllowed('shell.app'));
+  readonly showShellDesktop     = computed(() => this.shellBinding.isSurfaceAllowed('shell.desktop'));
+  readonly showShellMobile      = computed(() => this.shellBinding.isSurfaceAllowed('shell.mobile'));
+  readonly showShellDesktopSidebar = computed(() => this.shellBinding.isSurfaceAllowed('shell.desktop-sidebar'));
+  readonly showStatusBar        = computed(() => this.shellBinding.isSurfaceAllowed('workspace.status-bar'));
+  readonly showActionQueue      = computed(() => this.shellBinding.isSurfaceAllowed('workspace.action-queue'));
+  readonly showAgentStrip       = computed(() => this.shellBinding.isSurfaceAllowed('workspace.agent-strip'));
+  readonly showContextPanel     = computed(() => this.shellBinding.isSurfaceAllowed('workspace.context-panel'));
+  readonly showInbox            = computed(() => this.shellBinding.isSurfaceAllowed('workspace.inbox-center'));
+  readonly showQuickCreate      = computed(() => this.shellBinding.isSurfaceAllowed('workspace.quick-create'));
+  readonly showCommandSearch    = computed(() => this.shellBinding.isSurfaceAllowed('workspace.command-search'));
 
   // ── §B.9 P4 — banner multiplex (#25, #34–37) ──────────────────────────────
   readonly shellBanners = computed<DosShellBanner[]>(() => {
@@ -828,8 +837,33 @@ export class ShellHostComponent {
       });
     }
 
-    // #34 — session-expiry: stub (AccessStore.sessionExpiresAt not yet exposed)
-    // #35 — impersonation: stub (AccessStore.isImpersonating not yet exposed)
+    // #34 — session-expiry warning
+    const expiresAt = this.access.sessionExpiresAt();
+    if (expiresAt && !dismissed.has('session-expiry')) {
+      const expiryDate = new Date(expiresAt);
+      const now = new Date();
+      const minsLeft = Math.max(0, Math.floor((expiryDate.getTime() - now.getTime()) / 60000));
+      if (minsLeft <= 5) {
+        banners.push({
+          id: 'session-expiry',
+          kind: minsLeft <= 1 ? 'danger' : 'warning',
+          title: this.labelResolver?.shellChromeString?.('shell.banner.session_expiry.title') ?? 'Session Expiring',
+          message: (this.labelResolver?.shellChromeString?.('shell.banner.session_expiry.message') ?? 'Your session expires in ') + minsLeft + ' minute' + (minsLeft !== 1 ? 's' : '') + '.',
+          dismissible: false,
+        });
+      }
+    }
+
+    // #35 — impersonation banner
+    if (this.access.isImpersonating() && !dismissed.has('impersonation')) {
+      banners.push({
+        id: 'impersonation',
+        kind: 'warning',
+        title: this.labelResolver?.shellChromeString?.('shell.banner.impersonation.title') ?? 'Impersonation Mode',
+        message: this.labelResolver?.shellChromeString?.('shell.banner.impersonation.message') ?? 'You are viewing this workspace as another user.',
+        dismissible: false,
+      });
+    }
 
     return banners;
   });
@@ -970,6 +1004,11 @@ export class ShellHostComponent {
         window.removeEventListener('offline', goOffline);
       });
     }
+
+    // §B.9 #32 — sync platform ToastService messages into shell-host outlet signal.
+    effect(() => {
+      this.toastMessages.set(this.toastSvc.messages() as DosToastMessage[]);
+    });
   }
 
   @HostListener('window:resize')

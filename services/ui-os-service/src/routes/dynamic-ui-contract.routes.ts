@@ -21,6 +21,45 @@
 import { Router } from 'express';
 import type { DbPool } from '../db.js';
 
+const NON_WORKSPACE_PATHS = new Set([
+  '/',
+  '/about',
+  '/contact',
+  '/dauth',
+  '/forgot-password',
+  '/legal',
+  '/login',
+  '/mfa',
+  '/platform',
+  '/pricing',
+  '/profile',
+  '/register',
+  '/reset-password',
+  '/security',
+  '/settings',
+  '/tenant-profile',
+  '/tenant-settings',
+  '/trust',
+]);
+
+function isWorkspaceRoute(row: {
+  module_code: string | null;
+  path_pattern: string | null;
+  component_key?: string | null;
+  permission_key?: string | null;
+}): boolean {
+  const moduleCode = String(row.module_code ?? '');
+  const pathPattern = String(row.path_pattern ?? '');
+  const componentKey = String(row.component_key ?? '');
+
+  if (!pathPattern || NON_WORKSPACE_PATHS.has(pathPattern)) return false;
+  if (pathPattern.startsWith('/admin/')) return false;
+  if (moduleCode === 'marketing') return false;
+  if (componentKey.startsWith('auth.')) return false;
+  if (!row.permission_key) return false;
+  return true;
+}
+
 export function createDynamicUiContractRouter(pool: DbPool): Router {
   const router = Router();
 
@@ -40,7 +79,8 @@ export function createDynamicUiContractRouter(pool: DbPool): Router {
       // leaks through to the sidebar). The title_key is still emitted as
       // labelKey for downstream i18n; label always wins when present.
       const { rows } = await pool.query(
-        `SELECT r.module_code, r.path_pattern, r.permission_key, r.title_key,
+        `SELECT r.module_code, r.path_pattern, r.component_key,
+          r.permission_key, r.title_key,
                 r.sort_order, n.label_en, n.label_ar, n.parent_code, n.icon
            FROM dos.dynamic_ui_routes r
            LEFT JOIN dos.navigation_registry n
@@ -51,7 +91,7 @@ export function createDynamicUiContractRouter(pool: DbPool): Router {
           ORDER BY r.module_code, r.sort_order, r.path_pattern`,
         [tenantId],
       );
-      const items = rows.map((r) => ({
+      const items = rows.filter(isWorkspaceRoute).map((r) => ({
         id: `${r.module_code}.${r.path_pattern}`,
         label: r.label_en || r.title_key,
         labelAr: r.label_ar ?? null,

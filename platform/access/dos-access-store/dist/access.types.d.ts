@@ -18,6 +18,8 @@ export interface AccessTenant {
 export interface AccessMembership {
     roleCode?: string;
     isOwner?: boolean;
+    isImpersonating?: boolean;
+    sessionExpiresAt?: string | null;
 }
 export interface AccessTenantMembership {
     tenantId?: string;

@@ -11,6 +11,16 @@
  * `<dos-marketing-home>` so no global bleed.
  * ------------------------------------------------------------------------- */
 
+/* ===== CSS gate: prevent horizontal overflow ==================================== */
+:host ::ng-deep html,
+:host ::ng-deep body {
+  overflow-x: hidden;
+}
+
+:host ::ng-deep * {
+  box-sizing: border-box;
+}
+
 /* ===== root + section primitives ========================================== */
 :host {
   display: block;
@@ -39,20 +49,33 @@
   padding-block: clamp(3rem, 6vw, 6rem);
   padding-inline: 0;
   border-block-end: 1px solid var(--cds-border-subtle-00, #e0e0e0);
+  overflow-x: hidden;
 }
 
 /* ── Container: auto-centering at every breakpoint ──────────────── */
+.dos-public-page-container,
 .dos-mh-container {
-  inline-size: min(100% - 3rem, 1200px);
+  inline-size: min(1200px, 100%);
+  max-inline-size: 1200px;
+  padding-inline: clamp(1rem, 2.8vw, 1.5rem);
   margin-inline: auto;
 }
 
 @media (max-width: 768px) {
-  .dos-mh-container { inline-size: min(100% - 2rem, 100%); }
+  .dos-public-page-container,
+  .dos-mh-container { padding-inline: 1rem; }
   .dos-mh-section   { padding-block: clamp(2rem, 5vw, 3.5rem); }
 }
 @media (max-width: 430px) {
-  .dos-mh-container { inline-size: calc(100% - 1.5rem); }
+  .dos-public-page-container,
+  .dos-mh-container { padding-inline: 0.75rem; }
+}
+
+.dos-public-page-container > *,
+.dos-mh-container > *,
+.dos-mh-grid-3 > *,
+.dos-mh-footer-grid > * {
+  min-inline-size: 0;
 }
 
 .dos-mh-section-title {
@@ -109,9 +132,252 @@
   padding-inline: clamp(1rem, 4vw, 2.5rem);
 }
 
+/* ===== public header ====================================================== */
+.dos-mh-public-header {
+  position: relative;
+  z-index: 20;
+  background: color-mix(in srgb, var(--cds-layer, #ffffff) 94%, rgba(244, 244, 244, 0.92));
+  border-block-end: 1px solid var(--cds-border-subtle-00, #e0e0e0);
+  backdrop-filter: blur(14px);
+}
+
+.dos-mh-public-header__inner {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  padding-block: 0.75rem;
+}
+
+.dos-mh-public-header__brand,
+.dos-mh-public-header__brand:link,
+.dos-mh-public-header__brand:visited,
+.dos-mh-public-header__nav-link,
+.dos-mh-public-header__nav-link:link,
+.dos-mh-public-header__nav-link:visited,
+.dos-mh-public-header__action-link,
+.dos-mh-public-header__action-link:link,
+.dos-mh-public-header__action-link:visited,
+.dos-mh-public-header__button,
+.dos-mh-public-header__button:link,
+.dos-mh-public-header__button:visited,
+.dos-mh-hero-cta,
+.dos-mh-hero-cta:link,
+.dos-mh-hero-cta:visited {
+  text-decoration: none !important;
+}
+
+.dos-mh-public-header__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-inline-size: 0;
+  color: var(--cds-text-primary, #161616);
+}
+
+.dos-mh-public-header__brand-text {
+  font: 700 1.125rem / 1.1 var(--cds-productive-heading-03-font-family, inherit);
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+.dos-mh-public-header__menu-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  inline-size: 3rem;
+  block-size: 3rem;
+  margin-inline-start: auto;
+  padding: 0;
+  border: 1px solid rgba(15, 98, 254, 0.14);
+  border-radius: 999px;
+  background: rgba(15, 98, 254, 0.06);
+  cursor: pointer;
+}
+
+.dos-mh-public-header__menu-toggle span {
+  display: block;
+  inline-size: 1rem;
+  block-size: 2px;
+  border-radius: 999px;
+  background: var(--cds-text-primary, #161616);
+}
+
+.dos-mh-public-header__menus {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.75rem 1rem;
+  min-inline-size: 0;
+}
+
+.dos-mh-public-header__nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.375rem;
+  min-inline-size: 0;
+}
+
+.dos-mh-public-header__nav-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 2.5rem;
+  padding-inline: 0.8rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  color: var(--cds-text-primary, #161616);
+  font: 600 0.9rem / 1.1 inherit;
+  transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease;
+}
+
+.dos-mh-public-header__nav-link--active {
+  background: rgba(15, 98, 254, 0.1);
+  border-color: rgba(15, 98, 254, 0.22);
+  color: var(--cds-link-primary, #0f62fe);
+}
+
+.dos-mh-public-header__nav-link:hover,
+.dos-mh-public-header__nav-link:focus-visible,
+.dos-mh-public-header__action-link:hover,
+.dos-mh-public-header__action-link:focus-visible,
+.dos-mh-public-header__button:hover,
+.dos-mh-public-header__button:focus-visible,
+.dos-mh-hero-cta:hover,
+.dos-mh-hero-cta:focus-visible {
+  text-decoration: none;
+  outline: none;
+}
+
+.dos-mh-public-header__nav-link:hover,
+.dos-mh-public-header__nav-link:focus-visible {
+  background: var(--cds-layer-hover-01, #e8e8e8);
+  border-color: rgba(15, 98, 254, 0.18);
+}
+
+.dos-mh-public-header__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.625rem;
+}
+
+.dos-mh-public-header__action-link {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 2.25rem;
+  color: var(--cds-text-secondary, #525252);
+  font: 600 0.9rem / 1.1 inherit;
+}
+
+.dos-mh-public-header__action-link--strong {
+  color: var(--cds-link-primary, #0f62fe);
+}
+
+.dos-mh-public-header__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 2.75rem;
+  padding-inline: 1.1rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font: 600 0.9rem / 1.1 inherit;
+  transition: transform 140ms ease, background-color 140ms ease, border-color 140ms ease;
+}
+
+.dos-mh-public-header__button--secondary {
+  background: rgba(15, 98, 254, 0.08);
+  border-color: rgba(15, 98, 254, 0.18);
+  color: var(--cds-link-primary, #0f62fe);
+}
+
+.dos-mh-public-header__button--primary {
+  background: var(--cds-button-primary, #0f62fe);
+  color: var(--cds-text-on-color, #ffffff);
+  box-shadow: 0 14px 28px rgba(15, 98, 254, 0.24);
+}
+
+.dos-mh-public-header__button:hover,
+.dos-mh-public-header__button:focus-visible,
+.dos-mh-hero-cta:hover,
+.dos-mh-hero-cta:focus-visible {
+  transform: translateY(-1px);
+}
+
+@media (max-width: 1200px) {
+  .dos-mh-public-header__inner {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .dos-mh-public-header__menus {
+    grid-template-columns: 1fr;
+    justify-items: stretch;
+  }
+}
+
+@media (max-width: 768px) {
+  .dos-mh-public-header__inner {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.75rem;
+  }
+
+  .dos-mh-public-header__menu-toggle {
+    display: inline-flex;
+  }
+
+  .dos-mh-public-header__menus {
+    display: none;
+    grid-column: 1 / -1;
+    grid-template-columns: 1fr;
+    gap: 0.875rem;
+    padding-block-start: 0.25rem;
+  }
+
+  .dos-mh-public-header__menus.is-open {
+    display: grid;
+  }
+
+  .dos-mh-public-header__nav,
+  .dos-mh-public-header__actions {
+    align-items: stretch;
+    justify-content: flex-start;
+  }
+
+  .dos-mh-public-header__nav {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .dos-mh-public-header__actions {
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .dos-mh-public-header__nav-link,
+  .dos-mh-public-header__action-link,
+  .dos-mh-public-header__button {
+    justify-content: flex-start;
+    inline-size: 100%;
+    padding-inline: 1rem;
+  }
+}
+
+@media (max-width: 430px) {
+  .dos-mh-public-header__nav-link,
+  .dos-mh-public-header__action-link,
+  .dos-mh-public-header__button,
+  .dos-mh-hero-cta {
+    inline-size: 100%;
+  }
+}
+
 /* ===== 01 hero — deep navy enterprise gradient ============================= */
 .dos-mh-hero {
-  padding-block: clamp(5rem, 10vw, 9rem);
+  padding-block: clamp(3.75rem, 5.2vw, 4.75rem);
   background:
     linear-gradient(135deg, #060d1f 0%, #0a1a40 40%, #0c2560 70%, #1246b5 100%);
   border-block-end: none;
@@ -131,81 +397,70 @@
   z-index: 0;
 }
 
-/* ── Carbon Grid override: force full-width 2-col layout inside hero ─ */
-/* cds-grid injects its own max-width; we override it here              */
-:host ::ng-deep .dos-mh-hero cds-grid,
-:host ::ng-deep .dos-mh-hero .cds--grid {
-  inline-size: min(100% - 3rem, 1200px) !important;
-  margin-inline: auto !important;
-  padding-inline: 0 !important;
+.dos-mh-hero::after {
+  content: '';
+  position: relative;
+  inset-block-end: -8rem;
+  inset-inline-end: -6rem;
+  inline-size: min(34rem, 42vw);
+  block-size: min(34rem, 42vw);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(120, 180, 255, 0.26) 0%, rgba(15, 98, 254, 0.16) 42%, transparent 72%);
+  filter: blur(6px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.dos-mh-hero-layout {
   position: relative;
   z-index: 1;
+  display: grid;
+  min-block-size: 620px;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 390px);
+  gap: clamp(1.25rem, 2.8vw, 2.5rem);
+  align-items: center;
 }
 
-:host ::ng-deep .dos-mh-hero cds-row,
-:host ::ng-deep .dos-mh-hero .cds--row {
-  display: grid !important;
-  grid-template-columns: 1fr 1fr !important;
-  gap: 3rem !important;
-  align-items: center !important;
-  margin-inline: 0 !important;
-}
-
-/* Left col: text content */
-:host ::ng-deep .dos-mh-hero cds-col:first-child,
-:host ::ng-deep .dos-mh-hero .cds--col:first-child {
-  display: block !important;
-  flex: unset !important;
-  max-inline-size: 100% !important;
-  padding-inline: 0 !important;
-}
-
-/* Right col: orb — always visible at all breakpoints */
-:host ::ng-deep .dos-mh-hero cds-col:last-child,
-:host ::ng-deep .dos-mh-hero .cds--col:last-child {
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-  flex: unset !important;
-  max-inline-size: 100% !important;
-  padding-inline: 0 !important;
-}
-
-/* Mobile: stack columns */
-@media (max-width: 768px) {
-  :host ::ng-deep .dos-mh-hero cds-row,
-  :host ::ng-deep .dos-mh-hero .cds--row {
-    grid-template-columns: 1fr !important;
-    gap: 2.5rem !important;
-  }
-  :host ::ng-deep .dos-mh-hero cds-grid,
-  :host ::ng-deep .dos-mh-hero .cds--grid {
-    inline-size: calc(100% - 2rem) !important;
-  }
-}
-
-/* ── Hero text content ───────────────────────────────────────────── */
 .dos-mh-hero-content {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1.1rem;
   align-items: flex-start;
-  padding-block: 1rem;
+  justify-content: center;
+  max-inline-size: 35rem;
+  padding-block: 0.25rem;
   color: #ffffff;
   position: relative;
   z-index: 1;
 }
 
-.dos-mh-hero-content .dos-mh-title { color: #ffffff; }
-.dos-mh-hero-content .dos-mh-sub   { color: rgba(255,255,255,.78); }
-.dos-mh-hero-content .dos-mh-hero-microcopy { color: rgba(255,255,255,.5); }
-.dos-mh-hero-content .dos-mh-eyebrow { color: #78b4ff; }
+.dos-mh-hero-content .dos-mh-title {
+  color: #ffffff;
+  max-inline-size: 560px;
+  text-shadow: 0 16px 40px rgba(0, 0, 0, 0.26);
+}
+
+.dos-mh-hero-content .dos-mh-sub {
+  color: rgba(255, 255, 255, 0.84);
+  margin-block-end: 0;
+}
+
+.dos-mh-hero-content .dos-mh-hero-microcopy {
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.dos-mh-hero-content .dos-mh-eyebrow {
+  color: #9dc5ff;
+  margin-block-end: 0;
+}
 
 .dos-mh-hero-badge { margin-block: 0.25rem; }
 
-/* ── Typography scale — enterprise grade ────────────────────────── */
 .dos-mh-title {
-  font: 800 clamp(2.5rem, 6vw, 4.75rem) / 1.02 inherit;
+  font-family: var(--cds-productive-heading-05-font-family, inherit);
+  font-size: clamp(3.75rem, 4.4vw, 4rem);
+  font-weight: 800;
+  line-height: 1.05;
   margin: 0;
   color: var(--cds-text-primary, #161616);
   letter-spacing: -0.03em;
@@ -217,56 +472,229 @@
   margin: 0;
 }
 
-/* ── Hero visual (right col) ─────────────────────────────────────── */
-.dos-mh-hero-visual {
-  display: flex;
-  justify-content: center;
+.dos-mh-hero-cta {
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
+  min-block-size: 3.5rem;
+  padding-inline: 1.35rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font: 600 1rem / 1.1 inherit;
+  transition: transform 140ms ease, background-color 140ms ease, border-color 140ms ease;
+}
+
+.dos-mh-hero-cta--primary {
+  background: var(--cds-button-primary, #0f62fe);
+  color: var(--cds-text-on-color, #ffffff);
+  box-shadow: 0 20px 44px rgba(15, 98, 254, 0.22);
+}
+
+.dos-mh-hero-cta--secondary {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+}
+
+.dos-mh-hero-trust {
   inline-size: 100%;
-  block-size: 100%;
-  min-block-size: 300px;
-  position: relative;
-  z-index: 1;
+  margin-block-start: 0.5rem;
+  padding-block-start: 1.25rem;
+  border-block-start: 1px solid rgba(255, 255, 255, 0.12);
 }
 
-/* Carbon aspect-ratio wrapper — make it fill the column */
-:host ::ng-deep .dos-mh-hero-visual cds-aspect-ratio,
-:host ::ng-deep .dos-mh-hero-visual .cds--aspect-ratio {
-  inline-size: min(380px, 90%) !important;
+.dos-mh-hero-trust__label {
+  margin: 0 0 0.75rem;
+  color: rgba(255, 255, 255, 0.72);
+  font: 600 0.95rem / 1.45 inherit;
 }
 
-/* Pulsing orb */
-@keyframes dos-orb-pulse {
-  0%,100% { box-shadow: 0 0 60px 20px rgba(15,98,254,.4), 0 0 120px 40px rgba(15,98,254,.2); transform: scale(1); }
-  50%      { box-shadow: 0 0 90px 32px rgba(15,98,254,.6), 0 0 180px 60px rgba(15,98,254,.28); transform: scale(1.05); }
+.dos-mh-hero-trust__chips {
+  gap: 0.5rem;
 }
 
-.dos-mh-hero-orb {
-  inline-size: 100%;
-  block-size: 100%;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%, #a0c4ff 0%, #0f62fe 38%, #0343d0 62%, #001450 100%);
-  animation: dos-orb-pulse 4s ease-in-out infinite;
-  position: relative;
+.dos-mh-hero-proof {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: clamp(1.2rem, 2.4vw, 1.7rem);
+  border-radius: 1.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: linear-gradient(180deg, rgba(11, 27, 74, 0.86) 0%, rgba(7, 18, 50, 0.72) 100%);
+  color: #ffffff;
+  box-shadow: 0 32px 72px rgba(4, 11, 31, 0.36);
+  backdrop-filter: blur(18px);
 }
 
-.dos-mh-hero-orb::after {
-  content: '';
-  position: absolute;
-  inset: 10%;
-  border-radius: 50%;
-  border: 1.5px solid rgba(255,255,255,.22);
-  background: radial-gradient(circle at 30% 28%, rgba(255,255,255,.18) 0%, transparent 55%);
+.dos-mh-hero-proof__status {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 2rem;
+  padding-inline: 0.875rem;
+  border-radius: 999px;
+  border: 1px solid rgba(157, 197, 255, 0.24);
+  background: rgba(157, 197, 255, 0.12);
+  color: #c9e0ff;
+  font: 700 0.8125rem / 1 inherit;
+}
+
+.dos-mh-hero-proof__title {
+  margin: 0;
+  color: #ffffff;
+  font: 700 clamp(1.5rem, 3vw, 2rem) / 1.15 var(--cds-productive-heading-04-font-family, inherit);
+}
+
+.dos-mh-hero-proof__body {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.78);
+  font: 400 0.96rem / 1.55 inherit;
+}
+
+.dos-mh-hero-proof__status-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.625rem;
+}
+
+.dos-mh-hero-proof__status-item {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.85rem 0.9rem;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.dos-mh-hero-proof__status-item span {
+  color: rgba(255, 255, 255, 0.64);
+  font: 600 0.75rem / 1.2 inherit;
+}
+
+.dos-mh-hero-proof__status-item strong {
+  color: #ffffff;
+  font: 700 0.95rem / 1.3 inherit;
+}
+
+.dos-mh-hero-proof__status-item[data-tone='live'] strong {
+  color: #7dffb1;
+}
+
+.dos-mh-hero-proof__status-item[data-tone='pending'] strong {
+  color: #ffe28a;
+}
+
+.dos-mh-hero-proof__status-item[data-tone='synced'] strong {
+  color: #b9d1ff;
+}
+
+.dos-mh-hero-proof__timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.dos-mh-hero-proof__timeline li {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 2.3rem;
+  padding-inline: 0.75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.82);
+  font: 600 0.78rem / 1.2 inherit;
+}
+
+.dos-mh-hero-proof__receipt {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.64);
+  font: 500 0.78rem / 1.45 var(--cds-code-01-font-family, 'IBM Plex Mono', monospace);
+}
+
+@media (max-width: 900px) {
+  .dos-mh-hero-layout {
+    grid-template-columns: 1fr;
+    min-block-size: auto;
+  }
+
+  .dos-mh-hero-proof {
+    max-inline-size: 42rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .dos-mh-hero {
+    padding-block: clamp(2.75rem, 9vw, 4rem);
+  }
+
+  .dos-mh-hero-content {
+    max-inline-size: none;
+  }
+
+  .dos-mh-title {
+    font-size: clamp(2.75rem, 11vw, 3.5rem);
+  }
+
+  .dos-mh-hero-proof__status-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+
+  .dos-mh-hero-proof__status-item {
+    padding: 0.7rem 0.65rem;
+  }
+
+  .dos-mh-hero-proof__status-item span {
+    font-size: 0.67rem;
+  }
+
+  .dos-mh-hero-proof__status-item strong {
+    font-size: 0.78rem;
+  }
+
+  .dos-mh-hero-proof__timeline {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .dos-mh-hero-proof__timeline {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .dos-mh-hero-trust__label {
+    font-size: 0.875rem;
+  }
 }
 
 /* ===== 02 trust-pills ===================================================== */
 .dos-mh-trust {
-  padding-block: clamp(1.25rem, 2.5vw, 2rem);
+  padding-block: 0;
   background: linear-gradient(90deg, #f0f5ff 0%, #e8f0ff 50%, #f0f5ff 100%);
   border-block-end: 1px solid rgba(15,98,254,.12);
 }
 
+.dos-mh-trust-pills {
+  justify-content: center;
+}
+
 /* ===== 03 value-props ===================================================== */
+.dos-mh-value-props {
+  padding-block-start: 5rem;
+}
+
+.dos-mh-value-props .dos-mh-section-title {
+  max-inline-size: 18ch;
+}
+
+.dos-mh-value-props__sub {
+  margin-block-end: 2rem;
+}
+
 .dos-mh-value-props .dos-mh-grid-3 dos-carbon-tile {
   display: block;
   padding: 1.5rem;
@@ -389,6 +817,7 @@
   display: block;
   /* Intensification: hover lift + smooth shadow transition */
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  overflow: hidden;
 }
 
 .dos-mh-section dos-carbon-tile:hover {
@@ -439,6 +868,13 @@
 .dos-mh-section[data-section-id='pricing-teaser'] dos-carbon-data-table {
   display: block;
   margin-block-start: 1rem;
+  overflow-x: auto;
+}
+
+:host ::ng-deep .dos-mh-section[data-section-id='pricing-teaser'] cds-data-table,
+:host ::ng-deep .dos-mh-section[data-section-id='pricing-teaser'] .cds--data-table {
+  overflow-x: auto;
+  max-inline-size: 100%;
 }
 
 /* ===== 12 testimonials — quote ============================================ */
@@ -566,18 +1002,75 @@
 }
 
 /* ===== header nav — enterprise spaced links ================================ */
-:host ::ng-deep dos-carbon-header-shell [slot='header-nav'],
-:host ::ng-deep [headerNav] {
-  display: flex;
-  flex-wrap: nowrap;
-  gap: 0;
+:host ::ng-deep .dos-mh-shell-bar .cds--header {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  padding-inline: 0.5rem;
+  column-gap: clamp(0.75rem, 1.6vw, 1.5rem);
+  inline-size: 100%;
+  min-block-size: 4rem;
+  block-size: auto;
+  padding-block: 0.25rem;
+  padding-inline: 0;
+  background: transparent;
+  border-block-end: 0;
 }
 
-:host ::ng-deep dos-carbon-header-shell cds-header-item,
-:host ::ng-deep dos-carbon-header-shell .cds--header__menu-item {
-  padding-inline: 1rem;
+:host ::ng-deep .dos-mh-shell-bar .cds--header__name {
+  flex: 0 0 auto;
+  margin-inline-end: 0;
+  min-inline-size: max-content;
+  white-space: nowrap;
+}
+
+:host ::ng-deep .dos-mh-shell-bar cds-header-navigation {
+  display: block;
+  inline-size: 100%;
+  min-inline-size: 0;
+  block-size: auto !important;
+}
+
+:host ::ng-deep .dos-mh-shell-bar .cds--header__nav,
+:host ::ng-deep .dos-mh-shell-bar .cds--header__menu-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 0.25rem;
+}
+
+:host ::ng-deep .dos-mh-shell-bar .cds--header__nav {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  inline-size: 100%;
+}
+
+:host ::ng-deep .dos-mh-shell-bar .cds--header__menu-bar {
+  inline-size: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+:host ::ng-deep .dos-mh-shell-bar .cds--header__menu-bar::-webkit-scrollbar {
+  display: none;
+}
+
+:host ::ng-deep .dos-mh-shell-bar .cds--header__global {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-inline-start: 0;
+  justify-self: end;
+  inline-size: auto;
+}
+
+:host ::ng-deep .dos-mh-shell-bar cds-header-item,
+:host ::ng-deep .dos-mh-shell-bar .cds--header__menu-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 3rem;
+  padding-inline: 0.875rem;
   min-inline-size: max-content;
   white-space: nowrap;
   font-size: 0.875rem;
@@ -585,9 +1078,42 @@
   letter-spacing: 0.01em;
 }
 
+:host ::ng-deep .dos-mh-section[data-section-id='pricing-teaser'] .cds--data-table-container,
+:host ::ng-deep .dos-mh-section[data-section-id='resources'] .cds--contained-list,
+:host ::ng-deep .dos-mh-section[data-section-id='faq'] .cds--accordion,
+:host ::ng-deep .dos-mh-section[data-section-id='footer'] .cds--grid,
+:host ::ng-deep .dos-mh-section[data-section-id='footer'] .cds--row {
+  max-inline-size: 100%;
+  min-inline-size: 0;
+}
+
+:host ::ng-deep .dos-mh-section[data-section-id='footer'] .cds--row {
+  margin-inline: 0;
+}
+
+:host ::ng-deep .dos-mh-section[data-section-id='footer'] .cds--col {
+  min-inline-size: 0;
+}
+
 /* ===== responsive breakpoints ============================================== */
 /* 390 — tiny phone */
 @media (max-width: 390px) {
+  :host ::ng-deep .dos-mh-shell-bar .cds--header {
+    grid-template-columns: 1fr;
+    row-gap: 0.75rem;
+    padding-block: 0.75rem;
+  }
+  :host ::ng-deep .dos-mh-shell-bar .cds--header__global {
+    justify-self: stretch;
+  }
+  .dos-mh-shell-actions {
+    inline-size: 100%;
+    justify-content: stretch;
+    flex-wrap: wrap;
+  }
+  .dos-mh-shell-actions > * {
+    flex: 1 1 100%;
+  }
   .dos-mh-hero { padding-block: 3rem 2rem; }
   .dos-mh-title { font-size: clamp(2rem, 11vw, 2.75rem); }
   .dos-mh-grid-3 { grid-template-columns: 1fr; }
@@ -598,6 +1124,22 @@
 
 /* 430 — small phone */
 @media (min-width: 391px) and (max-width: 430px) {
+  :host ::ng-deep .dos-mh-shell-bar .cds--header {
+    grid-template-columns: 1fr;
+    row-gap: 0.75rem;
+    padding-block: 0.75rem;
+  }
+  :host ::ng-deep .dos-mh-shell-bar .cds--header__global {
+    justify-self: stretch;
+  }
+  .dos-mh-shell-actions {
+    inline-size: 100%;
+    justify-content: stretch;
+    flex-wrap: wrap;
+  }
+  .dos-mh-shell-actions > * {
+    flex: 1 1 100%;
+  }
   .dos-mh-title { font-size: clamp(2.25rem, 9vw, 3rem); }
   .dos-mh-grid-3 { grid-template-columns: 1fr; }
   .dos-mh-cta-row > * { flex: 1 1 100%; }
@@ -612,6 +1154,20 @@
 
 /* 768 — tablet */
 @media (min-width: 481px) and (max-width: 768px) {
+  :host ::ng-deep .dos-mh-shell-bar .cds--header {
+    grid-template-columns: auto minmax(0, 1fr);
+    row-gap: 0.75rem;
+  }
+  :host ::ng-deep .dos-mh-shell-bar .cds--header__nav,
+  :host ::ng-deep .dos-mh-shell-bar cds-header-navigation {
+    grid-column: 1 / -1;
+  }
+  :host ::ng-deep .dos-mh-shell-bar .cds--header__global {
+    justify-self: end;
+  }
+  .dos-mh-shell-actions {
+    flex-wrap: wrap;
+  }
   .dos-mh-grid-3 { grid-template-columns: repeat(2, 1fr); }
   .dos-mh-agent-tiles { grid-template-columns: repeat(3, 1fr); }
 }

@@ -6,7 +6,6 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { DOS_LANGUAGE_SWITCHER_I18N } from '@dos/ui-system';
 import {
   provideAccessStore,
-  provideDnaNavContractLoaders,
   WORKSPACE_NAV_LABEL_RESOLVER,
   WORKSPACE_NAV_PRODUCT_SOURCE,
 } from '@dos/access-store';
@@ -14,7 +13,6 @@ import { provideUiOsClient, provideUiOsComponentAllowlists } from '@dos/ui-os-cl
 import { I18nService } from '@app/core/services/ui-infra/i18n.service';
 import { provideShellIcons } from './shell/icon-registration';
 import { ProductCompositionNavSource } from './shell/nav-sources/product-composition-nav.source';
-import { SHAHIN_DNA_NAV_LOADERS } from './shell/dna-nav-contracts';
 import { WorkspaceResolverService } from './shell/workspace-resolver.service';
 import { COCKPIT_CONFIG, type CockpitConfigContract } from '@app/dos/contracts/cockpit-config.contract';
 import { FOUNDATION_I18N } from '@foundation-module/ui/ports/i18n.port';
@@ -64,8 +62,6 @@ export const appConfig: ApplicationConfig = {
     { provide: DOS_LANGUAGE_SWITCHER_I18N, useExisting: I18nService },
     // @dos/access-store — single canonical session/access store for this product.
     provideAccessStore(),
-    // L2 nav source — platform DNA modules get a standard 5-page Shahin pack.
-    provideDnaNavContractLoaders([...SHAHIN_DNA_NAV_LOADERS]),
     // L4 nav source — product-owned, registered against the platform-side DI
     // token so the platform WorkspaceNavigationAdapter (in @dos/access-store)
     // can pull product-composition items without importing product code.

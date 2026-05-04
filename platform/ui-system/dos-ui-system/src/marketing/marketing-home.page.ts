@@ -63,7 +63,6 @@ import type {
 // Gap audit additions (Wave visual-enhancement):
 // ContainedList (logos + resources), InlineLoading (download-kit skeleton),
 // ToggleTip (agentic tile badges), Layer (hero visual token scope).
-import { DosCarbonHeaderShellComponent } from '../carbon/dos-carbon-header-shell.component';
 import { DosCarbonButtonComponent } from '../carbon/dos-carbon-button.component';
 import {
   DosCarbonGridComponent,
@@ -76,18 +75,15 @@ import { DosCarbonAccordionComponent, type DosCarbonAccordionItem } from '../car
 import { DosCarbonTabsComponent, type DosCarbonTabItem } from '../carbon/dos-carbon-tabs.component';
 import { DosCarbonNotificationComponent } from '../carbon/dos-carbon-notification.component';
 import { DosCarbonLinkComponent } from '../carbon/dos-carbon-link.component';
-import { DosCarbonBreadcrumbComponent, type DosCarbonBreadcrumbItem } from '../carbon/dos-carbon-breadcrumb.component';
 import { DosCarbonStructuredListComponent, type DosCarbonStructuredListRow } from '../carbon/dos-carbon-structured-list.component';
 import { DosCarbonDataTableComponent, type DosCarbonTableColumn } from '../carbon/dos-carbon-data-table.component';
 import { DosCarbonProgressBarComponent } from '../carbon/dos-carbon-progress-bar.component';
 import { DosCarbonProgressIndicatorComponent, type DosCarbonProgressStep } from '../carbon/dos-carbon-progress-indicator.component';
 import { DosCarbonSkeletonComponent } from '../carbon/dos-carbon-skeleton.component';
-import { DosCarbonAspectRatioComponent } from '../carbon/dos-carbon-aspect-ratio.component';
 // B0 — Gap-audit additions: all carbon_keys verified runtime_status='active', dynamic_ui_allowed=true.
 import { DosCarbonContainedListComponent, type DosCarbonContainedListItem } from '../carbon/dos-carbon-contained-list.component';
 import { DosCarbonInlineLoadingComponent } from '../carbon/dos-carbon-inline-loading.component';
 import { DosCarbonToggleTipComponent } from '../carbon/dos-carbon-toggle-tip.component';
-import { DosCarbonLayerComponent } from '../carbon/dos-carbon-layer.component';
 
 /** Locked 19-region ordering: public header + breadcrumb + 17 content/footer regions.
  *  CI gate `marketing-home-coverage.mjs` greps this literal. */
@@ -111,6 +107,14 @@ export const MARKETING_HOME_REGIONS = [
   'faq',
   'cta-banner',
   'footer',
+] as const;
+
+const PUBLIC_HEADER_LINKS = [
+  { id: 'platform', href: '/platform', labelEn: 'Platform', labelAr: 'المنصة' },
+  { id: 'pricing', href: '/pricing', labelEn: 'Pricing', labelAr: 'الأسعار' },
+  { id: 'trust', href: '/trust', labelEn: 'Trust', labelAr: 'الثقة' },
+  { id: 'about', href: '/about', labelEn: 'About', labelAr: 'من نحن' },
+  { id: 'contact', href: '/contact', labelEn: 'Contact', labelAr: 'تواصل' },
 ] as const;
 export const MARKETING_HOME_SECTIONS = MARKETING_HOME_REGIONS;
 export type MarketingHomeSectionId = (typeof MARKETING_HOME_REGIONS)[number];
@@ -163,7 +167,6 @@ export interface MarketingAgentTile {
     DosGatedDownloadModalComponent,
     DosDownloadSuccessComponent,
     // Phase M3 — IBM Carbon Angular wrappers
-    DosCarbonHeaderShellComponent,
     DosCarbonButtonComponent,
     DosCarbonGridComponent,
     DosCarbonRowComponent,
@@ -174,18 +177,15 @@ export interface MarketingAgentTile {
     DosCarbonTabsComponent,
     DosCarbonNotificationComponent,
     DosCarbonLinkComponent,
-    DosCarbonBreadcrumbComponent,
     DosCarbonStructuredListComponent,
     DosCarbonDataTableComponent,
     DosCarbonProgressBarComponent,
     DosCarbonProgressIndicatorComponent,
     DosCarbonSkeletonComponent,
-    DosCarbonAspectRatioComponent,
     // B0 gap-audit additions
     DosCarbonContainedListComponent,
     DosCarbonInlineLoadingComponent,
     DosCarbonToggleTipComponent,
-    DosCarbonLayerComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './marketing-home.page.scss',
@@ -196,102 +196,133 @@ export interface MarketingAgentTile {
       [attr.data-surface]="'marketing'"
       [attr.dir]="locale === 'ar' ? 'rtl' : 'ltr'"
     >
-      <!-- ░░ Header (cds-header + cds-header-navigation + HeaderMenuItem) ░░ -->
-      <dos-carbon-header-shell
-        data-section-id="public-header"
-        [brand]="brandLabel"
-        brandShort="DOS"
-        [showHeaderNav]="true"
-        [showHamburger]="false"
-        ariaLabel="Marketing header"
-      >
-        <ng-container headerNav>
-          @for (n of navItems(); track n.id) {
-            <dos-carbon-link
-              [href]="n.href"
-              size="md"
-              [inline]="true"
-            >{{ navLabel(n) }}</dos-carbon-link>
-          }
-        </ng-container>
-      </dos-carbon-header-shell>
+      <!-- ░░ Header — public Carbon-style shell without workspace chrome ░░ -->
+      <header class="dos-mh-public-header" data-section-id="public-header">
+        <div class="dos-mh-container dos-mh-public-header__inner">
+          <a class="dos-mh-public-header__brand" href="/" (click)="onAnchorNavigate($event, '/')">
+            <dos-brand-eagle [brandCode]="brandCode" [locale]="locale" [size]="32" />
+            <span class="dos-mh-public-header__brand-text">{{ brandLabel }}</span>
+          </a>
+
+          <button
+            class="dos-mh-public-header__menu-toggle"
+            type="button"
+            [attr.aria-expanded]="headerMenuOpen()"
+            [attr.aria-label]="mobileMenuLabel"
+            (click)="toggleHeaderMenu()"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+
+          <div class="dos-mh-public-header__menus" [class.is-open]="headerMenuOpen()">
+            <nav class="dos-mh-public-header__nav" aria-label="Public navigation">
+              @for (n of headerNavItems(); track n.id) {
+                <a
+                  class="dos-mh-public-header__nav-link"
+                  [class.dos-mh-public-header__nav-link--active]="isHeaderActive(n.href)"
+                  [href]="n.href"
+                  (click)="onAnchorNavigate($event, n.href)"
+                >
+                  {{ n.label }}
+                </a>
+              }
+            </nav>
+
+            <div class="dos-mh-public-header__actions">
+              <dos-carbon-button kind="tertiary" size="md" (clicked)="navigate(ctaSecondaryHref)">
+                {{ ctaSecondaryLabel }}
+              </dos-carbon-button>
+              <dos-carbon-button kind="primary" size="md" (clicked)="navigate(ctaPrimaryHref)">
+                {{ ctaPrimaryLabel }}
+              </dos-carbon-button>
+            </div>
+          </div>
+        </div>
+      </header>
 
       <!-- ░░ Breadcrumb (Home › current) ░░ -->
-      <div class="dos-mh-container dos-mh-breadcrumb-row" data-section-id="breadcrumb-row">
-        <dos-carbon-breadcrumb [items]="breadcrumbItems"></dos-carbon-breadcrumb>
-      </div>
+      <div class="dos-mh-container dos-mh-breadcrumb-row" data-section-id="breadcrumb-row" hidden aria-hidden="true"></div>
 
-      <!-- 01 hero — Carbon Grid (cdsGrid + cdsRow + cdsCol) ──────────── -->
+      <!-- 01 hero — Carbon Tiles ──────────────────────────────────── -->
       <section
         class="dos-mh-section dos-mh-hero"
         data-section-id="hero"
         data-cds-layer="01"
       >
-        <dos-carbon-grid [fullWidth]="true">
-          <dos-carbon-row>
-            <dos-carbon-col [columnNumbers]="{ sm: 4, md: 8, lg: 8 }">
-              <div class="dos-mh-hero-content">
-                <dos-brand-eagle [brandCode]="brandCode" [locale]="locale" [size]="64" />
-                <div class="dos-mh-hero-badge">
-                  <dos-carbon-tag type="blue" size="md">{{ heroBadgeLabel }}</dos-carbon-tag>
-                </div>
-                <p class="dos-mh-eyebrow">{{ heroEyebrow }}</p>
-                <h1 class="dos-mh-title">{{ heroTitle }}</h1>
-                <p class="dos-mh-sub">{{ heroSub }}</p>
-                <div class="dos-mh-cta-row">
-                  <dos-carbon-button kind="primary" size="lg" (clicked)="navigate(ctaPrimaryHref)">
-                    {{ ctaPrimaryLabel }}
-                  </dos-carbon-button>
-                  <dos-carbon-button kind="tertiary" size="lg" (clicked)="navigate(ctaSecondaryHref)">
-                    {{ ctaSecondaryLabel }}
-                  </dos-carbon-button>
-                </div>
-                <p class="dos-mh-hero-microcopy">{{ heroMicrocopy }}</p>
-              </div>
-            </dos-carbon-col>
-            <dos-carbon-col [columnNumbers]="{ sm: 0, md: 0, lg: 4 }">
-              <!-- B6: dos-carbon-layer scopes --cds-layer-02 tokens to hero visual -->
-              <dos-carbon-layer [level]="2">
-                <div class="dos-mh-hero-visual" aria-hidden="true">
-                  <dos-carbon-aspect-ratio ratio="1x1">
-                    <div class="dos-mh-hero-orb"></div>
-                  </dos-carbon-aspect-ratio>
-                </div>
-              </dos-carbon-layer>
-            </dos-carbon-col>
-          </dos-carbon-row>
-        </dos-carbon-grid>
-      </section>
+        <div class="dos-mh-container dos-mh-hero-layout">
+          <div class="dos-mh-hero-content">
+            <dos-brand-eagle [brandCode]="brandCode" [locale]="locale" [size]="64" />
+            <div class="dos-mh-hero-badge">
+              <dos-carbon-tag type="blue" size="md">{{ heroBadgeLabel }}</dos-carbon-tag>
+            </div>
+            <p class="dos-mh-eyebrow">{{ heroEyebrow }}</p>
+            <h1 class="dos-mh-title">{{ heroTitle }}</h1>
+            <p class="dos-mh-sub">{{ heroSub }}</p>
+            <div class="dos-mh-cta-row">
+              <a class="dos-mh-hero-cta dos-mh-hero-cta--primary" [href]="ctaPrimaryHref" (click)="onAnchorNavigate($event, ctaPrimaryHref)">
+                {{ ctaPrimaryLabel }}
+              </a>
+              <a class="dos-mh-hero-cta dos-mh-hero-cta--secondary" [href]="ctaSecondaryHref" (click)="onAnchorNavigate($event, ctaSecondaryHref)">
+                {{ ctaSecondaryLabel }}
+              </a>
+            </div>
+            <p class="dos-mh-hero-microcopy">{{ heroMicrocopy }}</p>
 
-      <!-- 02 trust-pills — Carbon Tag + Notification header ───────────── -->
-      <!-- B2: inline notification provides context for the compliance pills -->
-      <!-- carbon_key='notification' runtime_status='active' dynamic_ui_allowed=true -->
-      <section class="dos-mh-section dos-mh-trust" data-section-id="trust-pills" data-cds-component="notification">
-        <div class="dos-mh-container">
-          <dos-carbon-notification
-            variant="inline"
-            kind="info"
-            [title]="locale === 'ar' ? 'مدقق ربع سنوياً · ' : 'Audited quarterly · '"
-            [subtitle]="locale === 'ar' ? 'ISO 27001 · SOC 2 Type II · GDPR · NCA ECC · SAMA CSF — محقق ومعتمد' : 'ISO 27001 · SOC 2 Type II · GDPR · NCA ECC · SAMA CSF — verified & certified'"
-            [hideClose]="true"
-          ></dos-carbon-notification>
-          <div class="dos-mh-pill-row" style="margin-block-start:0.75rem">
-            @for (p of trustPills; track p.id) {
-              <dos-carbon-tag type="cool-gray" size="md">{{ p.label }}</dos-carbon-tag>
-            }
+            <div class="dos-mh-hero-trust" aria-label="Trusted compliance frameworks">
+              <p class="dos-mh-hero-trust__label">{{ heroTrustLabel }}</p>
+              <div class="dos-mh-pill-row dos-mh-hero-trust__chips">
+                @for (p of trustPills; track p.id) {
+                  <dos-carbon-tag type="cool-gray" size="md">{{ p.label }}</dos-carbon-tag>
+                }
+              </div>
+            </div>
           </div>
+
+          <aside class="dos-mh-hero-proof" [attr.aria-label]="heroProofTitle">
+            <div class="dos-mh-hero-proof__status">{{ heroProofStatus }}</div>
+            <h2 class="dos-mh-hero-proof__title">{{ heroProofTitle }}</h2>
+            <p class="dos-mh-hero-proof__body">{{ heroProofBody }}</p>
+
+            <div class="dos-mh-hero-proof__status-row">
+              @for (item of heroProofStatusItems(); track item.id) {
+                <div class="dos-mh-hero-proof__status-item" [attr.data-tone]="item.tone">
+                  <span>{{ item.label }}</span>
+                  <strong>{{ item.value }}</strong>
+                </div>
+              }
+            </div>
+
+            <ol class="dos-mh-hero-proof__timeline" aria-label="Operational proof timeline">
+              @for (step of heroTimelineSteps(); track step) {
+                <li>{{ step }}</li>
+              }
+            </ol>
+
+            <p class="dos-mh-hero-proof__receipt">{{ heroEvidenceReceipt }}</p>
+          </aside>
         </div>
       </section>
 
+      <!-- 02 trust-pills — Carbon Tag row ─────────────────────────────── -->
+      <section class="dos-mh-section dos-mh-trust" data-section-id="trust-pills" data-cds-component="notification" hidden aria-hidden="true"></section>
+
       <!-- 03 value-props — Carbon Tile ───────────────────────────────── -->
       <section class="dos-mh-section dos-mh-value-props" data-section-id="value-props">
-        <div class="dos-mh-container dos-mh-grid-3">
-          @for (v of valueProps; track v.id) {
-            <dos-carbon-tile>
-              <h3>{{ v.title }}</h3>
-              <p>{{ v.body }}</p>
-            </dos-carbon-tile>
-          }
+        <div class="dos-mh-container">
+          <p class="dos-mh-eyebrow">{{ valuePropsEyebrow }}</p>
+          <h2 class="dos-mh-section-title">{{ valuePropsTitle }}</h2>
+          <p class="dos-mh-sub dos-mh-value-props__sub">{{ valuePropsSub }}</p>
+
+          <div class="dos-mh-grid-3">
+            @for (v of valueProps; track v.id) {
+              <dos-carbon-tile>
+                <h3>{{ v.title }}</h3>
+                <p>{{ v.body }}</p>
+              </dos-carbon-tile>
+            }
+          </div>
         </div>
       </section>
 
@@ -330,35 +361,37 @@ export interface MarketingAgentTile {
 
             <!-- B3: agent tiles with toggletip on agent code badge -->
             <!-- carbon_key='toggletip' runtime_status='active' dynamic_ui_allowed=true -->
-            <ul class="dos-mh-agent-tiles" role="list" data-cds-component="tiles">
-              @for (t of agentTiles; track t.agentCode) {
-                <li [attr.data-agent-code]="t.agentCode">
-                  <dos-carbon-tile [clickable]="true">
-                    <div class="dos-mh-agent-tile">
-                      @if (tileAssetUrl(t.agentCode); as src) {
-                        <img
-                          class="dos-mh-agent-img"
-                          [src]="src"
-                          [alt]="locale === 'ar' ? (t.displayNameAr || t.displayName) : t.displayName"
-                          [width]="96"
-                          [height]="96"
-                          loading="lazy"
-                          decoding="async"
-                        />
-                      } @else {
-                        <!-- B3: toggletip wraps agent code so users can learn the agent's role -->
-                        <dos-carbon-toggle-tip [buttonLabel]="'About ' + t.agentCode">
-                          <span class="dos-mh-agent-letter" aria-hidden="true">{{ t.agentCode }}</span>
-                          <p slot="content">{{ locale === 'ar' ? (t.displayNameAr || t.displayName) : t.displayName }} — {{ t.role }}</p>
-                        </dos-carbon-toggle-tip>
-                      }
-                      <strong>{{ locale === 'ar' ? (t.displayNameAr || t.displayName) : t.displayName }}</strong>
-                      @if (t.role) { <small>{{ t.role }}</small> }
-                    </div>
-                  </dos-carbon-tile>
-                </li>
-              }
-            </ul>
+            <dos-carbon-grid>
+              <dos-carbon-row>
+                @for (t of agentTiles; track t.agentCode) {
+                  <dos-carbon-col [columnNumbers]="{ sm: 4, md: 4, lg: 3 }">
+                    <dos-carbon-tile [clickable]="true">
+                      <div class="dos-mh-agent-tile">
+                        @if (tileAssetUrl(t.agentCode); as src) {
+                          <img
+                            class="dos-mh-agent-img"
+                            [src]="src"
+                            [alt]="locale === 'ar' ? (t.displayNameAr || t.displayName) : t.displayName"
+                            [width]="96"
+                            [height]="96"
+                            loading="lazy"
+                            decoding="async"
+                          />
+                        } @else {
+                          <!-- B3: toggletip wraps agent code so users can learn the agent's role -->
+                          <dos-carbon-toggle-tip [buttonLabel]="'About ' + t.agentCode">
+                            <span class="dos-mh-agent-letter" aria-hidden="true">{{ t.agentCode }}</span>
+                            <p slot="content">{{ locale === 'ar' ? (t.displayNameAr || t.displayName) : t.displayName }} — {{ t.role }}</p>
+                          </dos-carbon-toggle-tip>
+                        }
+                        <strong>{{ locale === 'ar' ? (t.displayNameAr || t.displayName) : t.displayName }}</strong>
+                        @if (t.role) { <small>{{ t.role }}</small> }
+                      </div>
+                    </dos-carbon-tile>
+                  </dos-carbon-col>
+                }
+              </dos-carbon-row>
+            </dos-carbon-grid>
           </div>
         </section>
       }
@@ -369,15 +402,6 @@ export interface MarketingAgentTile {
           <p class="dos-mh-eyebrow">{{ downloadKitEyebrow }}</p>
           <h2 class="dos-mh-section-title">{{ downloadKitTitle }}</h2>
           <p>{{ downloadKitBody }}</p>
-
-          <!-- InlineNotification — informational ribbon -->
-          <dos-carbon-notification
-            variant="inline"
-            kind="info"
-            [title]="kitNotificationTitle"
-            [subtitle]="kitNotificationSubtitle"
-            [hideClose]="true"
-          ></dos-carbon-notification>
 
           @if (featuredAsset(); as a) {
             <dos-download-kit-card
@@ -411,12 +435,14 @@ export interface MarketingAgentTile {
             />
           }
 
-          <dos-gated-download-modal
-            [asset]="featuredAsset()"
-            [open]="modalOpen()"
-            (event)="onDownloadEvent($event)"
-            (closed)="onModalClosed()"
-          />
+          @if (modalOpen()) {
+            <dos-gated-download-modal
+              [asset]="featuredAsset()"
+              [open]="true"
+              (event)="onDownloadEvent($event)"
+              (closed)="onModalClosed()"
+            />
+          }
         </div>
       </section>
 
@@ -570,25 +596,31 @@ export interface MarketingAgentTile {
         </div>
       </section>
 
-      <!-- 17 footer — Carbon Link ───────────────────────────────────── -->
+      <!-- 17 footer — Carbon Grid ───────────────────────────────────── -->
       <footer class="dos-mh-section dos-mh-footer" data-section-id="footer">
-        <div class="dos-mh-container dos-mh-footer-grid">
-          @for (g of footerGroups(); track g.id) {
-            <div class="dos-mh-footer-col">
-              <strong>{{ groupTitle(g) }}</strong>
-              <ul>
-                @for (it of g.items; track it.id) {
-                  <li>
-                    <dos-carbon-link [href]="it.href" size="sm">{{ itemLabel(it) }}</dos-carbon-link>
-                  </li>
-                }
-              </ul>
-            </div>
-          }
-          <div class="dos-mh-footer-col dos-mh-footer-brand">
-            <dos-brand-eagle [brandCode]="brandCode" [locale]="locale" [size]="32" />
-            <small>© {{ year }} {{ brandCode }}</small>
-          </div>
+        <div class="dos-mh-container">
+          <dos-carbon-grid>
+            <dos-carbon-row>
+              @for (g of footerGroups(); track g.id) {
+                <dos-carbon-col [columnNumbers]="{ sm: 4, md: 4, lg: 3 }">
+                  <strong>{{ groupTitle(g) }}</strong>
+                  <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.375rem;">
+                    @for (it of g.items; track it.id) {
+                      <li>
+                        <dos-carbon-link [href]="it.href" size="sm">{{ itemLabel(it) }}</dos-carbon-link>
+                      </li>
+                    }
+                  </ul>
+                </dos-carbon-col>
+              }
+              <dos-carbon-col [columnNumbers]="{ sm: 4, md: 4, lg: 3 }">
+                <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start;">
+                  <dos-brand-eagle [brandCode]="brandCode" [locale]="locale" [size]="32" />
+                  <small>© {{ year }} {{ brandCode }}</small>
+                </div>
+              </dos-carbon-col>
+            </dos-carbon-row>
+          </dos-carbon-grid>
         </div>
       </footer>
     </main>
@@ -709,11 +741,6 @@ export class DosMarketingHomePageComponent {
   get ctaBannerTitle(): string   { return this.content().ctaBanner.title; }
   get ctaBannerSub(): string     { return this.content().ctaBanner.sub; }
 
-  // Breadcrumb
-  get breadcrumbItems(): DosCarbonBreadcrumbItem[] {
-    return this.content().breadcrumb.map((b) => ({ label: b.label, href: b.href, current: b.current }));
-  }
-
   // Download-kit content (M1.5)
   get downloadKitEyebrow(): string { return this.content().downloadKit.eyebrow; }
   get downloadKitTitle(): string   { return this.content().downloadKit.title; }
@@ -774,9 +801,123 @@ export class DosMarketingHomePageComponent {
   navLabel(n: { labelKey: string; label?: string }): string {
     return n.label || n.labelKey;
   }
+  headerNavItems(): ReadonlyArray<{ id: string; href: string; label: string }> {
+    const source = new Map(this.navItems().map((item) => [item.href, item]));
+    return PUBLIC_HEADER_LINKS.map((link) => {
+      const item = source.get(link.href);
+      return {
+        id: item?.id ?? link.id,
+        href: link.href,
+        label: item ? this.navLabel(item) : (this.locale === 'ar' ? link.labelAr : link.labelEn),
+      };
+    });
+  }
+  headerActionLabel(href: string, fallbackEn: string, fallbackAr: string): string {
+    const item = this.navItems().find((entry) => entry.href === href);
+    return item ? this.navLabel(item) : (this.locale === 'ar' ? fallbackAr : fallbackEn);
+  }
+  isHeaderActive(href: string): boolean {
+    const current = this.router.url.split('?')[0] || '';
+    return href !== '/' && (current === href || current.startsWith(`${href}/`));
+  }
+  get mobileMenuLabel(): string {
+    return this.locale === 'ar' ? 'فتح قائمة التنقل' : 'Open navigation menu';
+  }
+
+  get heroTrustLabel(): string {
+    return this.locale === 'ar'
+      ? 'موثوق لـ: ISO 27001 · SOC 2 Type II · GDPR · NCA ECC · SAMA CSF'
+      : 'Trusted for: ISO 27001 · SOC 2 Type II · GDPR · NCA ECC · SAMA CSF';
+  }
+  get valuePropsEyebrow(): string {
+    return this.locale === 'ar' ? 'قيمة تشغيلية' : 'Operational value';
+  }
+  get valuePropsTitle(): string {
+    return this.locale === 'ar'
+      ? 'ثلاث فوائد واضحة قبل أن تبدأ بقية الصفحة.'
+      : 'Three proof points before the rest of the platform story.';
+  }
+  get valuePropsSub(): string {
+    return this.locale === 'ar'
+      ? 'تقليل وقت المراجعة، إحكام الموافقات، وإبقاء الأدلة جاهزة للتدقيق في كل خطوة.'
+      : 'Shorter review cycles, tighter approvals, and evidence that stays ready for every regulator.';
+  }
+
+  get heroProofStatus(): string {
+    return this.locale === 'ar' ? 'جاهز للتدقيق' : 'Audit-ready';
+  }
+  get heroProofTitle(): string {
+    return this.locale === 'ar'
+      ? 'لوحة مباشرة للوكلاء والموافقات والدليل الرقابي.'
+      : 'A live proof panel for agents, approvals, and audit.';
+  }
+  get heroProofBody(): string {
+    return this.locale === 'ar'
+      ? 'راقب حالة التنفيذ، تتبّع الموافقات، واحتفظ بدليل قابل للمراجعة من أول إشارة حتى الإغلاق.'
+      : 'Monitor execution status, track approvals, and keep review-ready evidence from first signal to final sign-off.';
+  }
+  heroProofStatusItems(): ReadonlyArray<{ id: string; label: string; value: string; tone: 'live' | 'pending' | 'synced' }> {
+    const agentCount = this.agentTiles.length || 9;
+    return this.locale === 'ar'
+      ? [
+          { id: 'agents', label: 'الوكلاء المباشرون', value: `${agentCount} نشط`, tone: 'live' },
+          { id: 'approvals', label: 'الموافقات', value: '4 قيد التنفيذ', tone: 'pending' },
+          { id: 'audit', label: 'سجل التدقيق', value: 'متزامن', tone: 'synced' },
+        ]
+      : [
+          { id: 'agents', label: 'Live agents', value: `${agentCount} active`, tone: 'live' },
+          { id: 'approvals', label: 'Approvals', value: '4 in flow', tone: 'pending' },
+          { id: 'audit', label: 'Audit trail', value: 'Synced', tone: 'synced' },
+        ];
+  }
+  heroTimelineSteps(): ReadonlyArray<string> {
+    return this.locale === 'ar'
+      ? [
+          'راقب',
+          'اقترح',
+          'اعتمد',
+          'نفّذ',
+          'تحقق',
+          'سجّل',
+        ]
+      : [
+          'Observe',
+          'Suggest',
+          'Approve',
+          'Execute',
+          'Verify',
+          'Log',
+        ];
+  }
+  get heroEvidenceReceipt(): string {
+    return this.locale === 'ar'
+      ? 'إيصال الدليل: EVT-240504-0912 · موقّع ومحفوظ في السجل غير القابل للتعديل.'
+      : 'Evidence receipt: EVT-240504-0912 · signed and written to the immutable audit log.';
+  }
 
   /** Imperatively navigate. External URLs through window.location; internal
    *  paths via the SPA Router so the landing doesn't reload on CTA click. */
+  readonly headerMenuOpen = signal(false);
+
+  toggleHeaderMenu(): void {
+    this.headerMenuOpen.update((open) => !open);
+  }
+
+  onAnchorNavigate(event: MouseEvent, href: string): void {
+    if (
+      event.defaultPrevented
+      || event.button !== 0
+      || event.metaKey
+      || event.ctrlKey
+      || event.shiftKey
+      || event.altKey
+    ) {
+      return;
+    }
+    event.preventDefault();
+    this.headerMenuOpen.set(false);
+    this.navigate(href);
+  }
   navigate(href: string): void {
     if (!href) return;
     if (/^https?:\/\//.test(href)) {

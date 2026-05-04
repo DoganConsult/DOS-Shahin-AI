@@ -16,16 +16,38 @@ import { Router } from 'express';
 import type { DbPool } from '../db.js';
 
 const WORKSPACE_SHELL_KEYS = [
+  // Group 1: Shell Layout Framework (4)
+  'shell.app',
+  'shell.desktop',
+  'shell.mobile',
+  'shell.desktop-sidebar',
+  // Group 2: Header & Navigation (7)
   'workspace.header',
   'workspace.sidebar',
   'workspace.mobile-nav',
+  'shell.mobile-drawer',
+  'shell.workspace-nav',
+  'shell.nav-section',
+  'shell.nav-item',
+  // Group 3: Global Action Surfaces (5)
   'workspace.command-search',
+  'workspace.inbox-center',
+  'workspace.quick-create',
+  'workspace.context-panel',
+  'shell.account-menu',
+  // Group 4: Work Activity & Status (3)
   'workspace.status-bar',
   'workspace.action-queue',
   'workspace.agent-strip',
-  'workspace.inbox-center',
-  'workspace.context-panel',
-  'workspace.quick-create',
+  // Group 5: Alerts & Singletons (2)
+  'shell.banner-strip',
+  'shell.toast-outlet',
+  // Group 6: Page Content Infrastructure (5)
+  'page.layout',
+  'page.masthead',
+  'page.header',
+  'page.tabs',
+  'page.widget-frame',
 ] as const;
 
 interface WorkspaceShellRow {
