@@ -1,0 +1,20 @@
+=== 5. Services registered ===
+workspace-bff|4007|tenant|active
+onboarding-service|4008|admin|active
+signup-bff|4009|public|active
+anti-abuse-service|4010|public|active
+marketing-shell-service|4011|public|active
+publish-service|4012|admin|active
+admin-console-bff|4013|admin|active
+tenant-admin-bff|4014|tenant|active
+rollout-service|4015|admin|active
+=== Endpoints ===
+admin-console-bff|8
+anti-abuse-service|1
+marketing-shell-service|1
+onboarding-service|6
+publish-service|5
+rollout-service|6
+signup-bff|4
+tenant-admin-bff|5
+workspace-bff|1

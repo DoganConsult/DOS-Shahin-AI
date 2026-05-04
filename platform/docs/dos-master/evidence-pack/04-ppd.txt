@@ -1,0 +1,7 @@
+=== 4. PPD substrate ===
+R0|0|active|5|1
+R1|1|pending|5|1
+R2|2|pending|5|1
+R3|3|pending|5|1
+R4|4|pending|5|1
+R5|5|pending|5|1

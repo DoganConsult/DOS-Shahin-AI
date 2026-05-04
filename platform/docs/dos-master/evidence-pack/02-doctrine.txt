@@ -1,0 +1,24 @@
+=== 2. Doctrine articles ===
+1|One AccessStore|forbid-legacy-accessstore.mjs
+2|One BFF for workspace bootstrap|forbid-direct-bootstrap-fan-out.mjs
+3|DB owns UI|static-route-ban.mjs
+4|Three trust zones|trust-zone-isolation.mjs
+5|No fake-green|fake-green-detector.mjs
+6|Vertical slice DoD|vertical-slice-doctrine.mjs
+7|Progressive Production Delivery|ppd-ring-required.mjs
+8|Carbon only|trg_carbon_only_runtime
+9|CLI ↔ UI parity|cli-ui-parity.mjs
+10|Deletion ledger|deletion-ledger-progress.mjs
+11|DOS Master is the only writer|dos-master-writer.mjs
+=== Acks ===
+1|dos-master-platform|2026-05-04 08:11:32.504183+00
+2|dos-master-platform|2026-05-04 08:11:32.640689+00
+3|dos-master-platform|2026-05-04 08:11:32.763697+00
+4|dos-master-platform|2026-05-04 08:11:32.887113+00
+5|dos-master-platform|2026-05-04 08:11:33.026581+00
+6|dos-master-platform|2026-05-04 08:11:33.153889+00
+7|dos-master-platform|2026-05-04 08:11:33.28546+00
+8|dos-master-platform|2026-05-04 08:11:33.404987+00
+9|dos-master-platform|2026-05-04 08:11:33.535246+00
+10|dos-master-platform|2026-05-04 08:11:33.66484+00
+11|dos-master-platform|2026-05-04 08:11:33.795874+00

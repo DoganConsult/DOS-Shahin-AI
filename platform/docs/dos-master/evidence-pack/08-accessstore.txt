@@ -1,0 +1,3 @@
+=== 8. AccessStore canonical ===
+Canonical: @dos/access-store at platform/access/dos-access-store/
+-rw-r--r-- 1 root root 1093 May  1 15:56 /root/DOS-Platform/platform/access/dos-access-store/package.json
