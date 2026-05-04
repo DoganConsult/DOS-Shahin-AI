@@ -704,28 +704,24 @@ export interface MarketingAgentTile {
       <!-- 17 footer — Carbon Grid ───────────────────────────────────── -->
       <footer class="dos-mh-section dos-mh-footer" data-section-id="footer" id="footer">
         <div class="dos-mh-container">
-          <dos-carbon-grid>
-            <dos-carbon-row>
-              @for (g of footerGroups(); track g.id) {
-                <dos-carbon-col [columnNumbers]="{ sm: 4, md: 4, lg: 3 }">
-                  <strong>{{ groupTitle(g) }}</strong>
-                  <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.375rem;">
-                    @for (it of g.items; track it.id) {
-                      <li>
-                        <dos-carbon-link [href]="it.href" size="sm">{{ itemLabel(it) }}</dos-carbon-link>
-                      </li>
-                    }
-                  </ul>
-                </dos-carbon-col>
-              }
-              <dos-carbon-col [columnNumbers]="{ sm: 4, md: 4, lg: 3 }">
-                <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start;">
-                  <dos-brand-eagle [brandCode]="brandCode" [locale]="locale" [size]="32" />
-                  <small>© {{ year }} {{ brandLabel }}</small>
-                </div>
-              </dos-carbon-col>
-            </dos-carbon-row>
-          </dos-carbon-grid>
+          <div class="dos-mh-footer-grid">
+            @for (g of footerGroups(); track g.id) {
+              <section class="dos-mh-footer-col">
+                <strong>{{ groupTitle(g) }}</strong>
+                <ul>
+                  @for (it of g.items; track it.id) {
+                    <li>
+                      <dos-carbon-link [href]="it.href" size="sm">{{ itemLabel(it) }}</dos-carbon-link>
+                    </li>
+                  }
+                </ul>
+              </section>
+            }
+            <div class="dos-mh-footer-col dos-mh-footer-brand">
+              <dos-brand-eagle [brandCode]="brandCode" [locale]="locale" [size]="32" />
+              <small>© {{ year }} {{ brandLabel }}</small>
+            </div>
+          </div>
         </div>
       </footer>
     </main>

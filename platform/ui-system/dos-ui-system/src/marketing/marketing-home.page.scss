@@ -28,6 +28,33 @@
   background: var(--cds-background, #ffffff);
   color: var(--cds-text-primary, #161616);
   font-family: var(--cds-body-font-family, 'IBM Plex Sans', system-ui, sans-serif);
+  --dos-mh-brand-surface: var(--cds-background-brand, #0f62fe);
+  --dos-mh-brand-surface-soft: color-mix(in srgb, var(--dos-mh-brand-surface) 8%, transparent);
+  --dos-mh-brand-surface-subtle: color-mix(in srgb, var(--dos-mh-brand-surface) 10%, var(--cds-layer, #ffffff));
+  --dos-mh-brand-surface-strong: color-mix(in srgb, var(--dos-mh-brand-surface) 28%, var(--cds-layer-inverse, #161616));
+  --dos-mh-brand-surface-stronger: color-mix(in srgb, var(--dos-mh-brand-surface) 36%, var(--cds-layer-inverse, #161616));
+  --dos-mh-brand-border-subtle: color-mix(in srgb, var(--dos-mh-brand-surface) 18%, transparent);
+  --dos-mh-brand-border-strong: color-mix(in srgb, var(--dos-mh-brand-surface) 26%, var(--cds-border-inverse, #f4f4f4));
+  --dos-mh-inverse-surface: var(--cds-layer-inverse, #161616);
+  --dos-mh-inverse-surface-soft: color-mix(in srgb, var(--dos-mh-inverse-surface) 86%, var(--cds-layer, #ffffff));
+  --dos-mh-inverse-surface-softer: color-mix(in srgb, var(--dos-mh-inverse-surface) 72%, var(--cds-layer, #ffffff));
+  --dos-mh-inverse-border-subtle: color-mix(in srgb, var(--cds-border-inverse, #f4f4f4) 14%, transparent);
+  --dos-mh-inverse-border-strong: color-mix(in srgb, var(--cds-border-inverse, #f4f4f4) 22%, transparent);
+  --dos-mh-inverse-text: var(--cds-text-on-color, #ffffff);
+  --dos-mh-inverse-text-soft: color-mix(in srgb, var(--dos-mh-inverse-text) 84%, transparent);
+  --dos-mh-inverse-text-subtle: color-mix(in srgb, var(--dos-mh-inverse-text) 72%, transparent);
+  --dos-mh-inverse-text-muted: var(--cds-text-on-color-disabled, #c6c6c6);
+  --dos-mh-support-info: var(--cds-support-info, #0043ce);
+  --dos-mh-support-success: var(--cds-support-success, #24a148);
+  --dos-mh-support-warning: var(--cds-support-warning, #f1c21b);
+  --dos-mh-shadow-brand-sm: 0 14px 28px color-mix(in srgb, var(--dos-mh-brand-surface) 24%, transparent);
+  --dos-mh-shadow-brand-lg: 0 20px 44px color-mix(in srgb, var(--dos-mh-brand-surface) 24%, transparent);
+  --dos-mh-shadow-inverse-sm:
+    0 8px 24px color-mix(in srgb, var(--dos-mh-inverse-surface) 12%, transparent),
+    0 2px 6px color-mix(in srgb, var(--dos-mh-inverse-surface) 8%, transparent);
+  --dos-mh-shadow-inverse-lg:
+    0 32px 72px color-mix(in srgb, var(--dos-mh-inverse-surface) 36%, transparent),
+    0 8px 24px color-mix(in srgb, var(--dos-mh-inverse-surface) 24%, transparent);
   /* Intensification: smooth scroll + subpixel AA */
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
@@ -279,15 +306,15 @@ dos-carbon-button.dos-mh-hero-cta:focus-visible {
 }
 
 .dos-mh-public-header__button--secondary {
-  background: rgba(15, 98, 254, 0.08);
-  border-color: rgba(15, 98, 254, 0.18);
+  background: var(--dos-mh-brand-surface-soft);
+  border-color: var(--dos-mh-brand-border-subtle);
   color: var(--cds-link-primary, #0f62fe);
 }
 
 .dos-mh-public-header__button--primary {
   background: var(--cds-button-primary, #0f62fe);
   color: var(--cds-text-on-color, #ffffff);
-  box-shadow: 0 14px 28px rgba(15, 98, 254, 0.24);
+  box-shadow: var(--dos-mh-shadow-brand-sm);
 }
 
 .dos-mh-public-header__button:hover,
@@ -467,7 +494,7 @@ dos-carbon-button.dos-mh-hero-cta:focus-visible {
   background: var(--cds-layer, #ffffff);
   border: 1px solid var(--cds-border-subtle-00, #e0e0e0);
   border-radius: 0.5rem;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--dos-mh-shadow-inverse-sm);
   /* Hidden by default */
   display: none;
   animation: dos-mh-menu-in 140ms ease;
@@ -546,40 +573,54 @@ dos-carbon-button.dos-mh-hero-cta:focus-visible {
 /* ===== 01 hero — deep navy enterprise gradient ============================= */
 .dos-mh-hero {
   padding-block: clamp(3.75rem, 5.2vw, 4.75rem);
-  /* ── Item 3: Use canonical brand token — navy→gold signature ── */
-  background: var(--dos-gradient-brand-hero,
-    var(--dos-gradient-signature,
-      linear-gradient(135deg, #0f1f3d 0%, #08152a 38%, #14365e 64%, #c9a14a 110%)));
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--dos-mh-brand-surface) 18%, var(--dos-mh-inverse-surface)) 0%,
+    var(--dos-mh-inverse-surface) 42%,
+    var(--dos-mh-brand-surface-strong) 100%
+  );
   border-block-end: none;
   position: relative;
   overflow: hidden;
 }
 
-/* Radial mesh overlays — token-driven */
 .dos-mh-hero::before {
   content: '';
   position: absolute;
   inset: 0;
   background:
-    var(--dos-gradient-mesh-1,
-      radial-gradient(at 12% 14%, rgba(23, 105, 179, 0.18) 0%, transparent 42%)),
-    var(--dos-gradient-mesh-2,
-      radial-gradient(at 88% 10%, rgba(200, 160, 82, 0.12) 0%, transparent 38%)),
-    var(--dos-gradient-mesh-3,
-      radial-gradient(at 50% 110%, rgba(58, 127, 188, 0.12) 0%, transparent 60%));
+    radial-gradient(
+      circle at 12% 14%,
+      color-mix(in srgb, var(--dos-mh-brand-surface) 24%, transparent) 0%,
+      transparent 44%
+    ),
+    radial-gradient(
+      circle at 88% 10%,
+      color-mix(in srgb, var(--dos-mh-support-warning) 18%, transparent) 0%,
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 50% 110%,
+      color-mix(in srgb, var(--dos-mh-support-info) 16%, transparent) 0%,
+      transparent 60%
+    );
   pointer-events: none;
   z-index: 0;
 }
 
-/* Gold accent hairline at top */
 .dos-mh-hero::after {
   content: '';
   position: absolute;
   inset-block-start: 0;
   inset-inline: 0;
   block-size: 2px;
-  background: var(--dos-gradient-kpi-line,
-    linear-gradient(90deg, transparent 0%, #c9a14a 28%, #1769b3 72%, transparent 100%));
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--dos-mh-support-warning) 28%,
+    var(--dos-mh-brand-surface) 72%,
+    transparent 100%
+  );
   z-index: 2;
   pointer-events: none;
 }
@@ -603,28 +644,28 @@ dos-carbon-button.dos-mh-hero-cta:focus-visible {
   justify-content: center;
   max-inline-size: 35rem;
   padding-block: 0.25rem;
-  color: #ffffff;
+  color: var(--dos-mh-inverse-text);
   position: relative;
   z-index: 1;
 }
 
 .dos-mh-hero-content .dos-mh-title {
-  color: #ffffff;
+  color: var(--dos-mh-inverse-text);
   max-inline-size: 560px;
-  text-shadow: 0 16px 40px rgba(0, 0, 0, 0.26);
+  text-shadow: 0 16px 40px color-mix(in srgb, var(--dos-mh-inverse-surface) 26%, transparent);
 }
 
 .dos-mh-hero-content .dos-mh-sub {
-  color: rgba(255, 255, 255, 0.84);
+  color: var(--dos-mh-inverse-text-soft);
   margin-block-end: 0;
 }
 
 .dos-mh-hero-content .dos-mh-hero-microcopy {
-  color: rgba(255, 255, 255, 0.62);
+  color: var(--dos-mh-inverse-text-muted);
 }
 
 .dos-mh-hero-content .dos-mh-eyebrow {
-  color: #9dc5ff;
+  color: var(--cds-link-inverse, #78a9ff);
   margin-block-end: 0;
 }
 
@@ -659,25 +700,25 @@ dos-carbon-button.dos-mh-hero-cta ::ng-deep .cds--btn {
 }
 
 dos-carbon-button.dos-mh-hero-cta--primary ::ng-deep .cds--btn {
-  box-shadow: 0 20px 44px rgba(15, 98, 254, 0.22);
+  box-shadow: var(--dos-mh-shadow-brand-lg);
 }
 
 dos-carbon-button.dos-mh-hero-cta--secondary ::ng-deep .cds--btn {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.18);
-  color: #ffffff;
+  background: var(--dos-mh-inverse-border-subtle);
+  border-color: var(--dos-mh-inverse-border-strong);
+  color: var(--dos-mh-inverse-text);
 }
 
 .dos-mh-hero-trust {
   inline-size: 100%;
   margin-block-start: 0.5rem;
   padding-block-start: 1.25rem;
-  border-block-start: 1px solid rgba(255, 255, 255, 0.12);
+  border-block-start: 1px solid var(--dos-mh-inverse-border-subtle);
 }
 
 .dos-mh-hero-trust__label {
   margin: 0 0 0.75rem;
-  color: rgba(255, 255, 255, 0.72);
+  color: var(--dos-mh-inverse-text-subtle);
   font: 600 0.95rem / 1.45 inherit;
 }
 
@@ -690,12 +731,9 @@ dos-carbon-button.dos-mh-hero-cta--secondary ::ng-deep .cds--btn {
   position: relative;
   border-radius: 1.25rem;
   overflow: hidden;
-  box-shadow:
-    0 0 0 1px rgba(201, 161, 74, 0.28),
-    0 32px 72px rgba(4, 11, 31, 0.55),
-    0 8px 24px rgba(4, 11, 31, 0.36);
+  box-shadow: 0 0 0 1px var(--dos-mh-brand-border-strong), var(--dos-mh-shadow-inverse-lg);
   transform: perspective(1200px) rotateY(-4deg) rotateX(2deg);
-  transition: transform var(--dos-transition-slow, 320ms ease);
+  transition: transform 320ms ease;
   will-change: transform;
 }
 
@@ -719,7 +757,7 @@ dos-carbon-button.dos-mh-hero-cta--secondary ::ng-deep .cds--btn {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  border: 1px solid rgba(201, 161, 74, 0.22);
+  border: 1px solid var(--dos-mh-brand-border-subtle);
   pointer-events: none;
   z-index: 2;
 }
@@ -742,27 +780,27 @@ dos-carbon-button.dos-mh-hero-cta--secondary ::ng-deep .cds--btn {
   gap: 0.1rem;
   padding: 0.45rem 0.85rem;
   border-radius: 0.625rem;
-  background: var(--dos-glass-tint-strong, rgba(15, 22, 35, 0.82));
-  backdrop-filter: blur(var(--dos-glass-blur-md, 16px));
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  box-shadow: var(--dos-shadow-md);
-  color: #ffffff;
+  background: var(--dos-mh-inverse-surface-soft);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--dos-mh-inverse-border-strong);
+  box-shadow: var(--dos-mh-shadow-inverse-sm);
+  color: var(--dos-mh-inverse-text);
   white-space: nowrap;
 }
 
 .dos-mh-hero-kpi-badge__value {
   font: 700 1rem / 1.1 inherit;
   font-feature-settings: 'tnum' 1;
-  color: #ffffff;
+  color: var(--dos-mh-inverse-text);
 }
 
 .dos-mh-hero-kpi-badge__label {
   font: 400 0.6875rem / 1.2 inherit;
-  color: rgba(255, 255, 255, 0.66);
+  color: var(--dos-mh-inverse-text-muted);
 }
 
 .dos-mh-hero-kpi-badge--gold .dos-mh-hero-kpi-badge__value {
-  color: #f0cc80;
+  color: var(--dos-mh-support-warning);
 }
 
 /* Keep old proof styles for mobile fallback — hidden on desktop */
@@ -772,10 +810,10 @@ dos-carbon-button.dos-mh-hero-cta--secondary ::ng-deep .cds--btn {
   gap: 1rem;
   padding: clamp(1.2rem, 2.4vw, 1.7rem);
   border-radius: 1.75rem;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: linear-gradient(180deg, rgba(11, 27, 74, 0.86) 0%, rgba(7, 18, 50, 0.72) 100%);
-  color: #ffffff;
-  box-shadow: 0 32px 72px rgba(4, 11, 31, 0.36);
+  border: 1px solid var(--dos-mh-inverse-border-strong);
+  background: linear-gradient(180deg, var(--dos-mh-brand-surface-stronger) 0%, var(--dos-mh-inverse-surface-soft) 100%);
+  color: var(--dos-mh-inverse-text);
+  box-shadow: var(--dos-mh-shadow-inverse-lg);
   backdrop-filter: blur(18px);
   display: none; /* replaced by screenshot panel */
 }
@@ -786,21 +824,21 @@ dos-carbon-button.dos-mh-hero-cta--secondary ::ng-deep .cds--btn {
   min-block-size: 2rem;
   padding-inline: 0.875rem;
   border-radius: 999px;
-  border: 1px solid rgba(157, 197, 255, 0.24);
-  background: rgba(157, 197, 255, 0.12);
-  color: #c9e0ff;
+  border: 1px solid color-mix(in srgb, var(--cds-link-inverse, #78a9ff) 28%, transparent);
+  background: color-mix(in srgb, var(--cds-link-inverse, #78a9ff) 12%, transparent);
+  color: var(--cds-link-inverse, #78a9ff);
   font: 700 0.8125rem / 1 inherit;
 }
 
 .dos-mh-hero-proof__title {
   margin: 0;
-  color: #ffffff;
+  color: var(--dos-mh-inverse-text);
   font: 700 clamp(1.5rem, 3vw, 2rem) / 1.15 var(--cds-productive-heading-04-font-family, inherit);
 }
 
 .dos-mh-hero-proof__body {
   margin: 0;
-  color: rgba(255, 255, 255, 0.78);
+  color: var(--dos-mh-inverse-text-soft);
   font: 400 0.96rem / 1.55 inherit;
 }
 
@@ -815,30 +853,30 @@ dos-carbon-button.dos-mh-hero-cta--secondary ::ng-deep .cds--btn {
   gap: 0.25rem;
   padding: 0.85rem 0.9rem;
   border-radius: 1rem;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--dos-mh-inverse-border-subtle);
+  border: 1px solid var(--dos-mh-inverse-border-strong);
 }
 
 .dos-mh-hero-proof__status-item span {
-  color: rgba(255, 255, 255, 0.64);
+  color: var(--dos-mh-inverse-text-muted);
   font: 600 0.75rem / 1.2 inherit;
 }
 
 .dos-mh-hero-proof__status-item strong {
-  color: #ffffff;
+  color: var(--dos-mh-inverse-text);
   font: 700 0.95rem / 1.3 inherit;
 }
 
 .dos-mh-hero-proof__status-item[data-tone='live'] strong {
-  color: #7dffb1;
+  color: var(--dos-mh-support-success);
 }
 
 .dos-mh-hero-proof__status-item[data-tone='pending'] strong {
-  color: #ffe28a;
+  color: var(--dos-mh-support-warning);
 }
 
 .dos-mh-hero-proof__status-item[data-tone='synced'] strong {
-  color: #b9d1ff;
+  color: var(--cds-link-inverse, #78a9ff);
 }
 
 .dos-mh-hero-proof__timeline {
@@ -857,15 +895,15 @@ dos-carbon-button.dos-mh-hero-cta--secondary ::ng-deep .cds--btn {
   min-block-size: 2.3rem;
   padding-inline: 0.75rem;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.04);
-  color: rgba(255, 255, 255, 0.82);
+  border: 1px solid var(--dos-mh-inverse-border-strong);
+  background: var(--dos-mh-inverse-border-subtle);
+  color: var(--dos-mh-inverse-text-soft);
   font: 600 0.78rem / 1.2 inherit;
 }
 
 .dos-mh-hero-proof__receipt {
   margin: 0;
-  color: rgba(255, 255, 255, 0.64);
+  color: var(--dos-mh-inverse-text-muted);
   font: 500 0.78rem / 1.45 var(--cds-code-01-font-family, 'IBM Plex Mono', monospace);
 }
 
@@ -928,8 +966,13 @@ dos-carbon-button.dos-mh-hero-cta--secondary ::ng-deep .cds--btn {
 /* ===== 02 trust-pills ===================================================== */
 .dos-mh-trust {
   padding-block: 0;
-  background: linear-gradient(90deg, #f0f5ff 0%, #e8f0ff 50%, #f0f5ff 100%);
-  border-block-end: 1px solid rgba(15,98,254,.12);
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--dos-mh-brand-surface) 6%, var(--cds-background, #ffffff)) 0%,
+    color-mix(in srgb, var(--dos-mh-brand-surface) 10%, var(--cds-background, #ffffff)) 50%,
+    color-mix(in srgb, var(--dos-mh-brand-surface) 6%, var(--cds-background, #ffffff)) 100%
+  );
+  border-block-end: 1px solid var(--dos-mh-brand-border-subtle);
 }
 
 .dos-mh-trust-pills {
@@ -1076,7 +1119,7 @@ dos-carbon-button.dos-mh-hero-cta--secondary ::ng-deep .cds--btn {
 
 .dos-mh-section dos-carbon-tile:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.10);
+  box-shadow: 0 8px 32px color-mix(in srgb, var(--dos-mh-inverse-surface) 10%, transparent);
   z-index: 1;
 }
 
@@ -1251,6 +1294,8 @@ dos-carbon-button.dos-mh-hero-cta--secondary ::ng-deep .cds--btn {
 }
 
 .dos-mh-footer-brand {
+  display: flex;
+  flex-direction: column;
   align-items: flex-start;
   gap: 0.75rem;
 }
@@ -1258,6 +1303,15 @@ dos-carbon-button.dos-mh-hero-cta--secondary ::ng-deep .cds--btn {
 .dos-mh-footer-brand small {
   color: var(--cds-text-on-color-disabled, #c6c6c6);
   font-size: 0.75rem;
+}
+
+:host ::ng-deep .dos-mh-footer .cds--link {
+  color: var(--cds-link-inverse, #78a9ff);
+}
+
+:host ::ng-deep .dos-mh-footer .cds--link:hover,
+:host ::ng-deep .dos-mh-footer .cds--link:focus-visible {
+  color: var(--cds-text-on-color, #ffffff);
 }
 
 /* ===== header nav — enterprise spaced links ================================ */
