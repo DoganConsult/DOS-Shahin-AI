@@ -2,7 +2,136 @@
   "schema_version": 1,
   "owner": "Platform / legacy archive discipline",
   "description": "Retention ledger for code moved under platform/_archive or excluded from default builds. Parallel to platform/docs/dos-master/deletion-ledger.json (deletion).",
-  "moved": [],
+  "moved": [
+    {
+      "from": "products/shahin-ai/app/src/app",
+      "wave": "products-composition-only-2026-05-05",
+      "moved_date": "2026-05-05",
+      "tier": "L4",
+      "reason": "Legacy product SPA tree retired; SPA canonicalised at platform/app/. Workspace glob removed from pnpm-workspace.yaml (composition-only products enforced by scripts/ci-guards/product-no-runtime.mjs).",
+      "replacement": "platform/app + DB-driven workspace-shell/template-binding"
+    },
+    {
+      "from": "platform/core/platform/auth/authz-client.service.ts",
+      "wave": "products-composition-only-2026-05-05",
+      "moved_date": "2026-05-05",
+      "tier": "L4",
+      "reason": "Duplicate authz surface; file removed from disk between archive-inventory.md M3_pending listing and 2026-05-05 audit.",
+      "replacement": "@dos/access-store + gateway authz"
+    },
+    {
+      "from": "platform/core/platform/bootstrap/app-bootstrap.service.ts",
+      "wave": "products-composition-only-2026-05-05",
+      "moved_date": "2026-05-05",
+      "tier": "L4",
+      "reason": "Twin bootstrap retired; file removed from disk between archive-inventory.md M3_pending listing and 2026-05-05 audit.",
+      "replacement": "platform/core/services/platform/ canonical bootstrap"
+    },
+    {
+      "from": "platform/core/models/bootstrap-response.model.ts",
+      "wave": "zero-importer-orphans-2026-05-05",
+      "moved_date": "2026-05-05",
+      "tier": "L4",
+      "reason": "Self-marked @deprecated DTOs (BootstrapUserDto/BootstrapTenantDto/BootstrapWorkspaceDto) with zero importers across platform/products/modules/services/packages. Bootstrap response shape now flows through @dos/access-store + canonical platform/core/services/platform bootstrap.",
+      "replacement": "@dos/access-store contracts + canonical bootstrap response types"
+    },
+    {
+      "from": "platform/core/platform/guards/onboarding-entry.guard.ts",
+      "wave": "zero-importer-orphans-2026-05-05",
+      "moved_date": "2026-05-05",
+      "tier": "L4",
+      "reason": "Self-marked @deprecated thin re-export of platform/dauth/guards/onboarding-entry.guard with zero downstream importers. Canonical guard lives at platform/dauth/guards/onboarding-entry.guard.ts.",
+      "replacement": "platform/dauth/guards/onboarding-entry.guard.ts"
+    },
+    {
+      "from": "platform/core/platform/navigation/active-modules.ts",
+      "wave": "nav-residue-sweep-2026-05-05",
+      "moved_date": "2026-05-05",
+      "tier": "L4",
+      "reason": "Static ACTIVE_CAPABILITIES all-false drift; 4 importers rewired to AccessStore.canAccessModule(...) (DB-backed /api/access/my-permissions). Hard-deleted on contact per dynamic-only doctrine.",
+      "replacement": "@dos/access-store AccessStore.canAccessModule"
+    },
+    {
+      "from": "platform/runtime/routing/navigation-catalog.resolver.ts",
+      "wave": "nav-residue-sweep-2026-05-05",
+      "moved_date": "2026-05-05",
+      "tier": "L4",
+      "reason": "Sole importer of deleted navigation.store; zero downstream consumers.",
+      "replacement": "Dynamic UI bootstrap + workspace-shell resolver"
+    },
+    {
+      "from": "platform/config-center/shared/contracts/per-module-ui-checklist.test.ts",
+      "wave": "nav-residue-sweep-2026-05-05",
+      "moved_date": "2026-05-05",
+      "tier": "L4",
+      "reason": "Asserted hardcoded module wiring (sidebar ordering, route manifest, KPIs, tabs, filters) obsoleted by DB-driven workspace-shell + ui_route_template_binding.",
+      "replacement": "tenant-completeness + workspace-shell-binding-renderer-parity CI gates"
+    },
+    {
+      "from": "modules/governance/source/frontend/governance/governance-module-integrity.test.ts",
+      "wave": "nav-residue-sweep-2026-05-05",
+      "moved_date": "2026-05-05",
+      "tier": "L4",
+      "reason": "Pinned deleted navigation.config.ts path; static-nav assertion patterns no longer match dynamic substrate.",
+      "replacement": "DB-driven nav resolver + binding-renderer-parity gate"
+    },
+    {
+      "from": "modules/risk/ui/features/risk/risk-module-integrity.test.ts",
+      "wave": "nav-residue-sweep-2026-05-05",
+      "moved_date": "2026-05-05",
+      "tier": "L4",
+      "reason": "Pinned deleted navigation.config.ts path; static-nav assertion patterns no longer match dynamic substrate.",
+      "replacement": "DB-driven nav resolver + binding-renderer-parity gate"
+    },
+    {
+      "from": "platform/config-center/board-report/features/governance/governance-module-integrity.test.ts",
+      "wave": "nav-residue-sweep-2026-05-05",
+      "moved_date": "2026-05-05",
+      "tier": "L4",
+      "reason": "Pinned deleted navigation.config.ts path; static-nav assertion patterns no longer match dynamic substrate.",
+      "replacement": "DB-driven nav resolver + binding-renderer-parity gate"
+    },
+    {
+      "from": "scripts/codegen/module-navigation-registry.mjs (already removed in 1b78fb438)",
+      "wave": "nav-residue-sweep-2026-05-05",
+      "moved_date": "2026-05-05",
+      "tier": "L4",
+      "reason": "Codegen prebuild stripped from platform/access/dos-access-store/package.json. Generated artifact src/generated/module-navigation.registry.ts is now committed-at-source per dynamic-only doctrine.",
+      "replacement": "Committed src/generated/module-navigation.registry.ts (no codegen prebuild)"
+    },
+    {
+      "from": "modules/governance/",
+      "wave": "scope-prune-to-4-surfaces-2026-05-05",
+      "moved_date": "2026-05-05",
+      "tier": "L4",
+      "reason": "Out of scope per dynamic-only 4-surface contract (workspace-shell + product-shell + foundation + marketing). Not a workspace package (no top-level package.json); zero active TS importers in platform/products/services (the ai-engine 'modules/governance/...' path resolves to its OWN local src/modules/governance/, unrelated). Hard-deleted on contact.",
+      "replacement": "DB-driven workspace-shell + Dynamic UI template binding (no static governance module)"
+    },
+    {
+      "from": "modules/risk/",
+      "wave": "scope-prune-to-4-surfaces-2026-05-05",
+      "moved_date": "2026-05-05",
+      "tier": "L4",
+      "reason": "Out of scope per dynamic-only 4-surface contract. Workspace package '@dos/module-risk' retired; consumed only by services/risk-incident-service (also dropped this wave). Workspace glob 'modules/risk' removed from pnpm-workspace.yaml; canonical SQL root 'modules/risk/db/canonical' removed from platform/config-center/ops/scripts/sql-ci-gates.mjs determinismGate.",
+      "replacement": "DB-driven workspace-shell + Dynamic UI template binding (no static risk module)"
+    },
+    {
+      "from": "services/risk-incident-service/",
+      "wave": "scope-prune-to-4-surfaces-2026-05-05",
+      "moved_date": "2026-05-05",
+      "tier": "L4",
+      "reason": "Out of scope per dynamic-only 4-surface contract. Sole consumer of '@dos/module-risk'; not in PM2 online process set; no active TS importers outside docs/config-center reports. Hard-deleted alongside modules/risk.",
+      "replacement": "None — risk surface retired; future risk pages resolve via DB-driven template binding when reintroduced"
+    },
+    {
+      "from": "services/_shared/",
+      "wave": "scope-prune-to-4-surfaces-2026-05-05",
+      "moved_date": "2026-05-05",
+      "tier": "L4",
+      "reason": "Out of scope shared-services scaffold (only contained templates/welcome-email.html); zero TS importers in active tree. Hard-deleted per dynamic-only doctrine.",
+      "replacement": "None — email templates resolve via notification-os-service when needed"
+    }
+  ],
   "purged": [
     {
       "from": "various active paths (pre-2026-05-01)",

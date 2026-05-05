@@ -79,21 +79,50 @@ export interface ResolvedTrialConfig {
   aiCredits?:     number;
 }
 
-export function resolveTrialConfig(): ResolvedTrialConfig {
+/**
+ * DB-driven module roster.
+ *
+ * Source of truth: `dos.dynamic_ui_modules`. A module is part of the
+ * default commercial trial bundle iff:
+ *   product_key = $productCode
+ *   AND default_tenant_enrollment_status = 'active'
+ *
+ * `foundation` is platform DNA (always included) — appended unconditionally
+ * if the registry happens to omit it for the product.
+ *
+ * `TRIAL_ALLOWED_MODULES` env CSV remains an explicit override for staging
+ * cutovers. When unset (the production default), the DB roster wins so
+ * "default commercial features" stay 100 % data-driven.
+ */
+async function resolveAllowedModulesFromDb(
+  client: PoolClient,
+  productCode: string,
+): Promise<string[]> {
+  const r = await client.query<{ module_code: string }>(
+    `SELECT module_code
+       FROM dos.dynamic_ui_modules
+      WHERE product_key = $1
+        AND default_tenant_enrollment_status = 'active'
+      ORDER BY module_code`,
+    [productCode],
+  );
+  const modules = r.rows.map(row => row.module_code);
+  if (!modules.includes('foundation')) modules.unshift('foundation');
+  return modules;
+}
+
+export async function resolveTrialConfig(
+  client: PoolClient,
+  productCode: string,
+): Promise<ResolvedTrialConfig> {
+  const envOverride = process.env.TRIAL_ALLOWED_MODULES;
+  const allowedModules = (envOverride && envOverride.trim() !== '')
+    ? readCsv(envOverride, [])
+    : await resolveAllowedModulesFromDb(client, productCode);
   return {
     defaultDays:    readNumber(process.env.TRIAL_DEFAULT_DAYS, 14),
     graceDays:      readNumber(process.env.TRIAL_GRACE_DAYS, 7),
-    allowedModules: readCsv(process.env.TRIAL_ALLOWED_MODULES, [
-      // §G: Foundation is platform DNA — listed here only because module
-      // entitlement rows are still created with source='platform_dna'.
-      // Other modules listed are the trial-allowed Shahin modules.
-      'foundation','risk','compliance','controls','evidence','audit',
-      'policy','vendor','asset','incident','issues','remediation',
-      'workflow','notification','inbox','attestation','training',
-      'privacy','bcp','dora','knowledge','reporting','analytics',
-      'onboarding','action','ksa-regulatory','qiyas','agrc-engine',
-      'ai-os','mcp','dynamic-ui',
-    ]),
+    allowedModules,
     maxUsers:       process.env.TRIAL_MAX_USERS  ? readNumber(process.env.TRIAL_MAX_USERS,  10) : undefined,
     aiCredits:      process.env.TRIAL_AI_CREDITS ? readNumber(process.env.TRIAL_AI_CREDITS, 1000) : undefined,
   };
@@ -112,7 +141,7 @@ export async function createTrialBundle(
   client: PoolClient,
   input: TrialBundleInput,
 ): Promise<TrialBundleOutput> {
-  const cfg = resolveTrialConfig();
+  const cfg = await resolveTrialConfig(client, input.productCode);
 
   // Re-use existing active trial if present (idempotent /register).
   const existing = await client.query<{

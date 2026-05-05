@@ -1,63 +1,72 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ensureUserRoleAssignment = void 0;
-const DEFAULT_FALLBACK_ROLE = 'standard_user';
-const FOUNDER_ROLE = 'tenant_admin';
-const PRIORITY = [
-    'platform_admin',
-    'tenant_owner',
-    'tenant_admin',
-    'org_admin',
-    'hr_admin',
-    'auditor',
-    'viewer',
-    'standard_user',
-];
-function pickPriorityRole(kcRoles, isFounder) {
-    // Phase 18.1 — founder elevation: the user who just created a tenant via
-    // /register becomes its tenant_admin automatically. tenant_owner stays a
-    // deliberate human action (billing/legal transfer).
-    if (isFounder)
-        return FOUNDER_ROLE;
-    const set = new Set(kcRoles.map((r) => r.toLowerCase()));
-    for (const p of PRIORITY)
-        if (set.has(p))
-            return p;
-    return DEFAULT_FALLBACK_ROLE;
+const openfga_1 = require("./openfga");
+const TENANT_ADMIN_ROLE = 'tenant_admin';
+const PLATFORM_ADMIN_ROLE = 'platform_admin';
+/**
+ * Platform-admin email allow-list. Direct PaaS access is restricted to a
+ * small operator set; everyone else self-registering becomes tenant_admin
+ * for their own tenant. Sourced from PLATFORM_ADMIN_EMAILS (CSV) with the
+ * two canonical operators as the fallback so production stays correct
+ * even when the env override is unset.
+ */
+function platformAdminEmails() {
+    const csv = (process.env.PLATFORM_ADMIN_EMAILS || '').trim();
+    const raw = csv === ''
+        ? ['doganlap@gmail.com', 'ahmet.dogan@doganconsult.com']
+        : csv.split(',').map((s) => s.trim()).filter(Boolean);
+    return new Set(raw.map((s) => s.toLowerCase()));
+}
+/**
+ * Dynamic-only role rule:
+ *   - email ∈ PLATFORM_ADMIN_EMAILS → platform_admin (direct PaaS access).
+ *   - otherwise → tenant_admin (self-register founder always owns the
+ *     tenant they just created).
+ * KC realm-role priority lookup is intentionally removed — the role is
+ * decided by the email allow-list + the founder fact, never by external
+ * KC realm metadata.
+ */
+function pickPriorityRole(email) {
+    return platformAdminEmails().has(email.toLowerCase())
+        ? PLATFORM_ADMIN_ROLE
+        : TENANT_ADMIN_ROLE;
 }
 /**
  * Ensure the user has at least one role assignment for the tenant. Returns
  * the role_code that was used (whether or not a row was newly inserted).
  */
 async function ensureUserRoleAssignment(args) {
-    const { pool, userSub, email, tenantId, kcRealmRoles, isFounder } = args;
+    const { pool, userSub, email, tenantId } = args;
     if (!userSub || !tenantId)
         return null;
-    // 1. Already has assignments? Nothing to do.
+    // 1. Already has assignments? Seed FGA tuples (idempotent) and exit.
     try {
-        const existing = await pool.query(`SELECT 1 FROM dos.user_role_assignments
-        WHERE user_id = $1 AND tenant_id = $2 LIMIT 1`, [userSub, tenantId]);
-        if ((existing.rowCount ?? 0) > 0)
-            return null;
+        const existing = await pool.query(`SELECT role_code FROM dos.user_role_assignments
+        WHERE user_id = $1 AND tenant_id = $2 AND is_active = TRUE
+        ORDER BY granted_at DESC LIMIT 1`, [userSub, tenantId]);
+        if ((existing.rowCount ?? 0) > 0) {
+            const role = existing.rows[0].role_code;
+            await (0, openfga_1.writeLoginTuples)({ userSub, tenantId, role });
+            return role;
+        }
     }
     catch (e) {
-        // Table missing or different shape — log and fall through to write attempt.
         console.warn('[post-login-roles] read existing failed', e.message);
         return null;
     }
-    // 2. Pick role.
-    const candidate = pickPriorityRole(kcRealmRoles, isFounder);
-    // 3. Resolve to a known functional_roles row when possible.
+    // 2. Pick role — dynamic email-allow-list rule. Self-register users
+    //    always become tenant_admin for their own tenant; platform admins
+    //    are the small allow-listed operator set.
+    const candidate = pickPriorityRole(email);
+    // 3. Resolve to a known functional_roles row when possible. The dynamic
+    //    rule only emits two role_codes (platform_admin / tenant_admin) and
+    //    both exist in the canonical functional_roles seed; if one is
+    //    missing we still write the row — RLS / permission lookup will
+    //    surface the missing-role error rather than silently downgrade.
     let roleCode = candidate;
     try {
-        const r = await pool.query(`SELECT role_code FROM platform_dauth.functional_roles
-        WHERE role_code = $1 LIMIT 1`, [candidate]);
-        if ((r.rowCount ?? 0) === 0) {
-            const fallback = await pool.query(`SELECT role_code FROM platform_dauth.functional_roles
-          WHERE role_code = $1 LIMIT 1`, [DEFAULT_FALLBACK_ROLE]);
-            if ((fallback.rowCount ?? 0) > 0)
-                roleCode = DEFAULT_FALLBACK_ROLE;
-        }
+        await pool.query(`SELECT role_code FROM platform_dauth.functional_roles WHERE role_code = $1 LIMIT 1`, [candidate]);
     }
     catch (e) {
         console.warn('[post-login-roles] role lookup failed', e.message);
@@ -80,6 +89,11 @@ async function ensureUserRoleAssignment(args) {
     catch (e) {
         // sso_identities may not exist on all envs — non-fatal.
     }
+    // 5. Seed canonical OpenFGA tuples for the user/tenant pair. Always
+    //    writes the baseline (user:<sub>, member, tenant:<id>); when the
+    //    role resolves to tenant_admin / platform_admin we additionally
+    //    emit the matching admin tuple. Idempotent on re-login.
+    await (0, openfga_1.writeLoginTuples)({ userSub, tenantId, role: roleCode });
     return roleCode;
 }
 exports.ensureUserRoleAssignment = ensureUserRoleAssignment;

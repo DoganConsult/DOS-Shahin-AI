@@ -16,8 +16,12 @@ export declare class DosCarbonPasswordInputComponent {
     theme: 'light' | 'dark';
     showLabel: string;
     hideLabel: string;
+    name: string;
+    id: string;
     valueChange: EventEmitter<string>;
     blurred: EventEmitter<void>;
     readonly visible: import("@angular/core").WritableSignal<boolean>;
+    private readonly _autoId;
+    get fieldId(): string;
     onInput(ev: Event): void;
 }

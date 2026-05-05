@@ -17,6 +17,8 @@ import https from 'node:https';
 import { existsSync, readFileSync } from 'node:fs';
 import { oidcRouter } from './routes/oidc.routes';
 import { accessRouter } from './routes/access.routes';
+import { mfaRouter } from './routes/mfa.routes';
+import { adminSecretsRouter } from './routes/admin-secrets.routes';
 
 const PORT = Number(process.env.PORT || 4001);
 
@@ -68,6 +70,14 @@ app.use('/oidc', oidcRouter);
 // Access snapshot and permissions.
 // Expected by SPA at /api/access/my-permissions
 app.use('/api/access', accessRouter);
+
+// MFA-by-email. Gateway exposes as /api/auth/mfa/{send,verify}.
+app.use('/mfa', mfaRouter);
+
+// Platform-admin dynamic secret store. Gateway exposes as
+//   GET  /api/auth/admin/secrets             — list catalog + masked previews
+//   PUT  /api/auth/admin/secrets/:secretKey  — upsert one value
+app.use('/admin/secrets', adminSecretsRouter);
 
 // CSRF removed (Task 9). The OIDC browser flow is cookie + PKCE; no XSRF
 // token is exchanged. SPA must not probe /api/auth/csrf.

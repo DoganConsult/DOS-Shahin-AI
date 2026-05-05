@@ -38,7 +38,8 @@ export function createWorkspaceSurfaceRouter(pool: DbPool): Router {
 
   router.get('/workspace-surface/quick-actions', async (req, res) => {
     try {
-      const surfaceKey = String(req.query.surface_key ?? 'workspace.home');
+      const surfaceKey = String(req.query.surface_key ?? '').trim();
+      if (!surfaceKey) { res.status(400).json({ error: 'missing_surface_key' }); return; }
       const actions = await mgr.listQuickActions(tenant(req), surfaceKey);
       res.json({ actions });
     } catch (e) {

@@ -1,1 +1,0 @@
-{"version":3,"file":"audit-trail.service.js","sourceRoot":"","sources":["audit-trail.service.ts"],"names":[],"mappings":";;;AAAa,QAAA,UAAU,GAAG;IACxB,GAAG,EAAE,KAAK,EAAE,SAAiB,EAAE,MAA+B,EAAE,EAAE,GAAE,CAAC;IACrE,KAAK,EAAE,KAAK,EAAE,SAAiB,EAAE,OAAgC,EAAE,EAAE,CAAC,EAAE;CACzE,CAAC;AACW,QAAA,WAAW,GAAG,kBAAU,CAAC"}

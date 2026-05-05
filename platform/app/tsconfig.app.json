@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": { "outDir": "./out-tsc/app", "types": [] },
+  "files": ["src/main.ts"],
+  "include": [
+    "src/**/*.d.ts",
+    "src/**/*.json",
+    "../ui-system/dos-ui-system/src/**/*.ts",
+    "../ui-system/dos-ui-contracts/src/**/*.ts",
+    "../ui-system/dos-ui-os-client/src/**/*.ts",
+    "../access/dos-access-store/src/**/*.ts"
+  ]
+}

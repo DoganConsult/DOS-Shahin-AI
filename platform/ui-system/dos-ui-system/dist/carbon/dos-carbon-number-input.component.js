@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { InputModule } from 'carbon-components-angular';
+let __dosCarbonNumSeq = 0;
 /**
  * Carbon-backed numeric input. Carbon ships `cdsNumber` as a directive
  * applied to a native `<input type="number">`. This wrapper composes
@@ -27,7 +28,13 @@ let DosCarbonNumberInputComponent = class DosCarbonNumberInputComponent {
     disabled = false;
     invalid = false;
     invalidText = '';
+    name = '';
+    id = '';
     valueChange = new EventEmitter();
+    _autoId = `dos-carbon-num-${++__dosCarbonNumSeq}`;
+    get fieldId() {
+        return this.id || this.name || this._autoId;
+    }
     onInput(ev) {
         const raw = ev.target.value;
         const num = Number(raw);
@@ -80,6 +87,14 @@ __decorate([
     __metadata("design:type", Object)
 ], DosCarbonNumberInputComponent.prototype, "invalidText", void 0);
 __decorate([
+    Input(),
+    __metadata("design:type", Object)
+], DosCarbonNumberInputComponent.prototype, "name", void 0);
+__decorate([
+    Input(),
+    __metadata("design:type", Object)
+], DosCarbonNumberInputComponent.prototype, "id", void 0);
+__decorate([
     Output(),
     __metadata("design:type", Object)
 ], DosCarbonNumberInputComponent.prototype, "valueChange", void 0);
@@ -101,6 +116,8 @@ DosCarbonNumberInputComponent = __decorate([
         type="number"
         [size]="size"
         [disabled]="disabled"
+        [attr.name]="name || null"
+        [attr.id]="fieldId"
         [attr.min]="min"
         [attr.max]="max"
         [attr.step]="step"

@@ -2,7 +2,7 @@
  * Phase WS-2 + Carbon-Wiring — workspace.quick-create wrapper (FAB).
  * Selector: dos-quick-create
  * Carbon primitive: button (ButtonModule → cds-button)
- * DB: dos.dynamic_ui_component_registry component_key='workspace.quick-create' carbon_key='button'
+ * DB: dos.dynamic_ui_component_registry component_key=workspace.quick-create carbon_key=button
  *
  * Token stack:
  *   --cds-button-*   (Carbon button tokens)

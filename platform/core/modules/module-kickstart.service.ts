@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable, of } from 'rxjs';
 import { environment } from '@env/environment';
-import { isCapabilityActive } from '@app/core/platform/navigation/active-modules';
+import { AccessStore } from '@dos/access-store';
 
 export type ModuleCode = string;
 export type ModuleKickstartStatus = 'pending' | 'not_started' | 'in_progress' | 'completed' | 'failed';
@@ -59,6 +59,7 @@ export interface IgniteResponse {
 @Injectable({ providedIn: 'root' })
 export class ModuleKickstartService {
   private readonly http = inject(HttpClient);
+  private readonly access = inject(AccessStore);
   private readonly base = environment.apiUrl;
 
   kickstart(moduleCode: ModuleCode): Observable<KickstartResult> {
@@ -70,7 +71,7 @@ export class ModuleKickstartService {
   }
 
   loadStatus(): Observable<Record<string, ModuleKickstartState>> {
-    if (!isCapabilityActive('moduleKickstart')) {
+    if (!this.access.canAccessModule('module-kickstart')) {
       return of({} as Record<string, ModuleKickstartState>);
     }
     return this.http

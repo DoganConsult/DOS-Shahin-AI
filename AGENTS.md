@@ -2230,3 +2230,144 @@ Workflow §6.5 approval; A2 deferred to a dedicated wave; A6 verified empty.
 
 **Verdict — CLOSED** for archive map + enforcement scaffolding; execution of
 additional `git mv` batches remains wave-scoped per inventory.
+
+================================================================================
+2026-05-05 — Navigation residue sweep + scoped 4-surface build — CLOSED
+================================================================================
+
+- **Wave** `nav-residue-sweep-2026-05-05`. Closes the navigation-residue
+  carry-over from the dynamic-only FE rebuild after `active-modules.ts`
+  and the entire `platform/core/platform/navigation/` directory were
+  staged-deleted. 4 active-modules importers were already rewired to
+  `AccessStore.canAccessModule(...)` in the prior session.
+- **Restored as canonical dynamic helpers (no static drift):**
+  - `platform/core/platform/navigation/navigation.models.ts` — typed
+    NavItem / QuickActionItem / CanonicalModuleCode shapes consumed by
+    11 active files (foundation pages, page.registry,
+    dynamic-ui-bootstrap, sidebar, navigation-items.service).
+  - `platform/core/platform/navigation/navigation.config.ts` — DB-row
+    → NavItem helpers (`buildFoundationNavChildren`, `buildPlatformNav`,
+    `buildFoundationGroup`); `SHAHIN_NAV`/`PLATFORM_NAV_BOTTOM`/
+    `WIDGET_TO_QUICK_ACTION` already empty arrays (no static nav).
+- **Dropped (zero-importer residue):**
+  - `platform/runtime/routing/navigation-catalog.resolver.ts` — only
+    importer of deleted `navigation.store`.
+  - `platform/config-center/shared/contracts/per-module-ui-checklist.test.ts`
+    — asserted hardcoded module wiring obsoleted by dynamic-only
+    doctrine.
+  - `modules/governance/source/frontend/governance/governance-module-integrity.test.ts`,
+    `modules/risk/ui/features/risk/risk-module-integrity.test.ts`,
+    `platform/config-center/board-report/features/governance/governance-module-integrity.test.ts`
+    — pinned the deleted `navigation.config.ts` path; static-nav
+    assertion patterns no longer match dynamic substrate.
+- **Codegen retire:** `platform/access/dos-access-store/package.json`
+  `prebuild: node ../../../scripts/codegen/module-navigation-registry.mjs --write`
+  removed; the script was deleted in commit 1b78fb438 and the generated
+  file `src/generated/module-navigation.registry.ts` is the canonical
+  committed-at-source state under dynamic-only doctrine. `clean` script
+  no longer wipes `src/generated`.
+- **Build matrix scoped to the 4 user-requested surfaces (workspace-shell,
+  product-shell, foundation, marketing) — all GREEN:**
+  - `pnpm --filter @dos/access-store build` GREEN.
+  - `pnpm --filter @dos/ui-system build` GREEN.
+  - `pnpm --filter @dos/platform-core build` GREEN.
+  - `pnpm --filter @dos/module-foundation build` GREEN.
+  - `pnpm --filter @dos/platform-app build` GREEN
+    (Initial 3.00 MB / 467.68 kB transfer; 14.7 s; 22 lazy chunks).
+  - `pnpm --filter ./services/product-shell build` GREEN.
+  - `pnpm --filter ./services/ui-os-service build` GREEN.
+  - `pnpm --filter ./services/workspace-bff build` GREEN.
+  - `pnpm --filter ./services/gateway build` GREEN.
+- **PM2 reload + smoke** — DEFERRED. `pm2 list` returned an empty
+  process table at this run (server-offline maintenance window). No
+  reload performed; no live HTTP smoke executed.
+- **Gates — all GREEN post-sweep:**
+  - `no-archive-imports` PASS — 0 illegal references.
+  - `product-no-runtime` OK — scanned 2 product source files.
+  - `workspace-shell-binding-renderer-parity` OK — 60 seed keys
+    covered across 92 files.
+  - `tenant-completeness` PASS — active_tenants=36 shell_perms=0
+    failures=0 (TENANT_COMPLETENESS_ENFORCE=1).
+  - `dos-master-gate` 30/30 PASS, 0 FAIL.
+- **Verdict — CLOSED** for the navigation-residue sweep and scoped
+  4-surface build. Live PM2/HTTP smoke remains DEFERRED until the
+  maintenance window ends.
+
+================================================================================
+2026-05-05 Scope-prune to 4 surfaces (`scope-prune-to-4-surfaces-2026-05-05`)
+================================================================================
+
+User directive: "drop gobernan dopr risk dorp shahred servies now only wha
+isaied only" — prune workspace to the 4 declared surfaces (workspace-shell,
+product-shell, foundation, marketing) only.
+
+- **Hard-deleted (no archive bucket; dynamic-only / drop-on-contact):**
+  - `modules/governance/` (~6.5 MB) — not a workspace package; zero active
+    importers in `platform/`, `products/`, `services/` (the
+    `ai-engine-service` `modules/governance/...` paths are LOCAL relative
+    imports under `platform/ai/services/ai-engine-service/src/modules/`,
+    unrelated).
+  - `modules/risk/` (~6.4 MB) — workspace package `@dos/module-risk` retired.
+  - `services/risk-incident-service/` — sole runtime consumer of
+    `@dos/module-risk`; not in the PM2 online process set; no TS
+    importers outside docs/config-center reports.
+  - `services/_shared/` — empty scaffold (only `templates/welcome-email.html`),
+    zero TS importers.
+- **Workspace + gate fixups:**
+  - `pnpm-workspace.yaml`: removed `modules/risk` glob.
+  - `platform/config-center/ops/scripts/sql-ci-gates.mjs`:
+    `determinismGate` canonical roots no longer includes
+    `modules/risk/db/canonical`.
+- **Gates GREEN end-to-end post-prune:**
+  - `dos-master-gate` 30/30 PASS, 0 FAIL.
+  - `tenant-completeness` PASS — active_tenants=36 shell_perms=0 failures=0.
+  - `workspace-shell-binding-renderer-parity` OK — 60 seed keys covered
+    across 92 files.
+  - `no-archive-imports` PASS — 0 illegal references.
+  - `product-no-runtime` OK.
+- **Scoped 4-surface FE build GREEN:** `@dos/access-store`,
+  `@dos/ui-system`, `@dos/platform-core`, `@dos/module-foundation`,
+  `@dos/platform-app` (3.00 MB initial / 467.68 kB transfer / 14.8s
+  / 22 lazy chunks).
+- **Archive ledger:** 4 new `moved[]` entries appended to
+  `platform/docs/legacy/archive-ledger.json` under wave
+  `scope-prune-to-4-surfaces-2026-05-05`.
+- **Verdict — CLOSED.** Workspace pruned to the 4 declared surfaces.
+  Cascade to other out-of-scope `services/*` (e.g. ai-engine-service,
+  governance-policy-service, …) deferred to a follow-up wave; current
+  scope-prune satisfies the explicit directive (governance, risk,
+  shared services).
+
+================================================================================
+2026-05-05 Deploy bring-up — 8-service smoke (`deploy-bringup-2026-05-05`)
+================================================================================
+
+User directive: "make sure to close all actions needed to deploy all dynamic
+to end user testing functionally." Followed `pm2 start
+ecosystem.platform.config.js --only ...` for the 8 surfaces required by the
+4-surface contract; 8/8 online after 8s.
+
+- **PM2 process table (online):** product-shell:3000, gateway:4000,
+  auth-service:4001, tenant-service:4002, user-service:4003,
+  workspace-bff:4007, signup-bff:4009, ui-os-service:4015. Bypassed the
+  broken `risk-incident-service` allocation row (deleted on disk in the
+  scope-prune wave; cleanup of `ports.allocation.json:173` carried as a
+  follow-up).
+- **HTTP smoke (200 OK):** product-shell `/`, `/auth/login`,
+  `/auth/register`, `/foundation`, `/foundation/delegations`,
+  `/foundation/reference-data`. gateway `/health` returns
+  `{"ok":true,"service":"gateway"}`; workspace-bff `/health` returns
+  `{"status":"ok","checks":{"database":"ok"},...}`; tenant-service,
+  user-service, signup-bff `/` 200 OK.
+- **Resolver fail-closed (expected):** ui-os-service
+  `/api/ui-os/workspace-shell/:tenantId` and `/workspace-runtime` reject
+  unauthenticated callers with `NO_CALLER`/`MISSING_PRINCIPAL`; gateway
+  proxy returns `UNAUTHENTICATED` — confirms the auth contract is wired
+  end-to-end (no stub bypass).
+- **Final gate run:** `dos-master-gate` 30/30 PASS, 0 FAIL;
+  `tenant-completeness` PASS active_tenants=36; `product-no-runtime` OK.
+
+**Verdict — CLOSED.** Marketing, auth (login/register), platform shell,
+and Foundation routes are live for end-user functional testing under the
+dynamic-only DB-driven 4-surface contract. Resolver auth gates fail closed
+as designed; smoke-test from a logged-in browser session is the next step.

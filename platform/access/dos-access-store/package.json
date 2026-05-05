@@ -10,9 +10,8 @@
   },
   "files": ["dist", "src"],
   "scripts": {
-    "prebuild": "node ../../../scripts/codegen/module-navigation-registry.mjs --write",
     "build": "tsc -p tsconfig.build.json",
-    "clean": "rm -rf dist src/generated"
+    "clean": "rm -rf dist"
   },
   "peerDependencies": {
     "@angular/common": ">=20.0.0 <22.0.0",

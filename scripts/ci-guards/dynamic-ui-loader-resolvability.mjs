@@ -11,8 +11,8 @@
  * empty-state.
  *
  * Resolves @foundation-module/ui, @workflow-module/ui, etc., via the
- * tsconfig paths block in products/shahin-ai/app/src/app/tsconfig.json
- * (the canonical SPA build tsconfig — `shahin-ai-grc-frontend`). Anything
+ * tsconfig paths block in platform/app/tsconfig.json
+ * (the canonical SPA build tsconfig — `@dos/platform-app`). Anything
  * unresolvable hard-fails this gate.
  */
 
@@ -27,7 +27,7 @@ process.chdir(repoRoot);
 const WIDGET_MAP_FILE =
   'platform/config-center/shared/dynamic-ui/registry/widget-key-map.ts';
 const COMPONENT_MAP_FILE = 'platform/dos/registry/component-map.ts';
-const SPA_TSCONFIG = 'products/shahin-ai/app/src/app/tsconfig.json';
+const SPA_TSCONFIG = 'platform/app/tsconfig.json';
 
 // ─── tsconfig paths resolver ──────────────────────────────────────────────
 function loadPathAliases() {

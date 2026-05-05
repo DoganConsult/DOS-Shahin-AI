@@ -56,7 +56,7 @@ function determinismGate() {
   const canonicalRoots = [
     'modules/platform-core/db/canonical', 'modules/team/db/canonical',
     'modules/incident/db/canonical', 'modules/foundation/db/canonical',
-    'modules/onboarding/db/canonical', 'modules/risk/db/canonical',
+    'modules/onboarding/db/canonical',
     'modules/compliance/db/canonical', 'modules/workflow/db/canonical',
     'platform/dauth/canonical', 'platform/dos/canonical',
   ];

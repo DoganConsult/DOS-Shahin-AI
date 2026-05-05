@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 import { CommonModule } from '@angular/common';
 import { InputModule } from 'carbon-components-angular';
 
+let __dosCarbonNumSeq = 0;
+
 /**
  * Carbon-backed numeric input. Carbon ships `cdsNumber` as a directive
  * applied to a native `<input type="number">`. This wrapper composes
@@ -24,6 +26,8 @@ import { InputModule } from 'carbon-components-angular';
         type="number"
         [size]="size"
         [disabled]="disabled"
+        [attr.name]="name || null"
+        [attr.id]="fieldId"
         [attr.min]="min"
         [attr.max]="max"
         [attr.step]="step"
@@ -45,7 +49,13 @@ export class DosCarbonNumberInputComponent {
   @Input() disabled = false;
   @Input() invalid = false;
   @Input() invalidText = '';
+  @Input() name = '';
+  @Input() id = '';
   @Output() valueChange = new EventEmitter<number | null>();
+  private readonly _autoId = `dos-carbon-num-${++__dosCarbonNumSeq}`;
+  get fieldId(): string {
+    return this.id || this.name || this._autoId;
+  }
 
   onInput(ev: Event): void {
     const raw = (ev.target as HTMLInputElement).value;

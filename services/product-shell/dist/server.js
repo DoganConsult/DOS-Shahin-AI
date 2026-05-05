@@ -29,15 +29,14 @@ const GATEWAY_URL = required('GATEWAY_URL');
 //   3. computed fallback       ← anchored from __dirname, no literal
 //                                 "DOS Platform/..." string in code
 //
-// The fallback assumes the in-platform layout (post Phase-0 consolidation —
-// services live at the top level):
+// The fallback assumes the in-platform layout:
 //   <repo-root>/services/product-shell/dist/server.js  (this file)
-//   <repo-root>/products/shahin-ai/app/dist/shahin-ai/browser
+//   <repo-root>/platform/app/dist/platform-app/browser
 //
 // __dirname → <repo-root>/services/product-shell/dist
 // 3 ups = repo-root.
 const PLATFORM_ROOT = path_1.default.resolve(__dirname, '..', '..', '..');
-const SPA_DIR_DEFAULT = path_1.default.join(PLATFORM_ROOT, 'products', 'shahin-ai', 'app', 'dist', 'shahin-ai', 'browser');
+const SPA_DIR_DEFAULT = path_1.default.join(PLATFORM_ROOT, 'platform', 'app', 'dist', 'platform-app', 'browser');
 let SPA_DIR_SOURCE = 'fallback';
 let SPA_DIR;
 if (process.env.PRODUCT_SHELL_SPA_DIR && process.env.PRODUCT_SHELL_SPA_DIR.length > 0) {
@@ -147,6 +146,19 @@ if (!SAFETY_WORKER_EXISTS)
     CONTROLLED_404_PATHS.push('/safety-worker.js');
 app.get(CONTROLLED_404_PATHS, (_req, res) => {
     applyNoStoreHeaders(res);
+    res.status(404).type('text/plain').send('not found');
+});
+// Legacy PWA clients have /manifest.json cached as the manifest URL. Serve
+// the canonical manifest.webmanifest contents (proper JSON, correct
+// content-type) instead of letting the SPA catch-all return text/html and
+// trigger "Manifest: Line 1 column 1 Syntax error" in the browser.
+app.get('/manifest.json', (_req, res) => {
+    const canonical = path_1.default.join(SPA_DIR, 'manifest.webmanifest');
+    applyNoStoreHeaders(res);
+    if (fs_1.default.existsSync(canonical)) {
+        res.type('application/manifest+json').sendFile(canonical);
+        return;
+    }
     res.status(404).type('text/plain').send('not found');
 });
 // Wave 7: INDEX_PATH resolved once at boot (no syscall cost); existsSync

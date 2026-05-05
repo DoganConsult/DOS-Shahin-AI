@@ -17,7 +17,7 @@ exports.getAccessSnapshot = getAccessSnapshot;
  * augments those fields with Foundation's hierarchy data and presents the
  * unified shape the FE consumes.
  *
- * Plan: /root/.claude/plans/need-to-clean-the-swift-trinket.md (Phase B-1)
+ * Plan: docs/plans/need-to-clean-the-swift-trinket.md (Phase B-1)
  */
 const database_port_1 = require("../../ports/database.port");
 const metrics_1 = require("../../infrastructure/observability/metrics");

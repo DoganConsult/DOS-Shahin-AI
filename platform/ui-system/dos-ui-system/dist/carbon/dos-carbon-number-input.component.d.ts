@@ -16,6 +16,10 @@ export declare class DosCarbonNumberInputComponent {
     disabled: boolean;
     invalid: boolean;
     invalidText: string;
+    name: string;
+    id: string;
     valueChange: EventEmitter<number>;
+    private readonly _autoId;
+    get fieldId(): string;
     onInput(ev: Event): void;
 }

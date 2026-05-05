@@ -21,6 +21,8 @@ const pool = createPool(DATABASE_URL);
 const publicMarketingTemplateRoutes = new Set([
   '/', '/pricing', '/trust', '/security', '/contact', '/about', '/legal',
   '/platform', '/resources', '/resources/executive-kit',
+  // Auth pages — public, unauthenticated (Phase P2 canonical /auth/* paths).
+  '/auth/login', '/auth/register', '/auth/forgot-password', '/auth/mfa', '/auth/reset-password',
 ]);
 const publicTemplateBindingRouter = createTemplateBindingRouter(pool);
 const app = express();

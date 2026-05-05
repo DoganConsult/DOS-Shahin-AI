@@ -2,7 +2,7 @@
  * Phase WS-2 + Carbon-Wiring — workspace.action-queue wrapper (SHELL strip).
  * Selector: dos-action-queue
  * Carbon primitive: tiles (TilesModule → cds-tile clickable) + tag (TagModule)
- * DB: dos.dynamic_ui_component_registry component_key='workspace.action-queue' carbon_key='tiles'
+ * DB: dos.dynamic_ui_component_registry component_key=workspace.action-queue carbon_key=tiles
  *
  * Token stack:
  *   --cds-tile-*          (Carbon tile tokens)

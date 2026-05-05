@@ -37,6 +37,8 @@ const GUARDS = [
   'customer-zone-pkce-only.mjs',
   // 2026-05-04 — bridge gate for tenant authorization + workspace shell.
   'tenant-completeness.mjs',
+  // 2026-05-05 Wave 7.5 — product composition-only enforcement.
+  'product-no-runtime.mjs',
 ];
 
 let pass = 0, fail = 0;

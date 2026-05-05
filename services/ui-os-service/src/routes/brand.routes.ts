@@ -109,7 +109,7 @@ function buildMarketingHomeContent(brandCode: string, locale: string, tx: Tx, ro
         '14-day free trial · No credit card required · Full EN/AR bilingual · On-prem available',
         'تجربة مجانية ١٤ يومًا · بدون بطاقة ائتمان · ثنائي اللغة كامل · متوفر للنشر الداخلي',
       ),
-      ctaPrimary:   { label: tx('Start free trial', 'ابدأ التجربة المجانية'), href: '/register' },
+      ctaPrimary:   { label: tx('Start free trial', 'ابدأ التجربة المجانية'), href: '/auth/register' },
       ctaSecondary: { label: tx('Book a live demo', 'احجز عرضًا مباشرًا'),   href: '/contact' },
     },
     trustPills: [

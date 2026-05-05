@@ -2,7 +2,7 @@
  * Phase WS-2 + Carbon-Wiring — workspace.sidebar wrapper.
  * Selector: dos-workspace-sidebar
  * Carbon primitive: ui-shell (UIShellModule → cds-sidenav + cds-sidenav-menu + cds-sidenav-item)
- * DB: dos.dynamic_ui_component_registry component_key='workspace.sidebar' carbon_key='ui-shell'
+ * DB: dos.dynamic_ui_component_registry component_key=workspace.sidebar carbon_key=ui-shell
  *
  * Token stack:
  *   --cds-side-nav-*     (Carbon UI-Shell nav tokens)

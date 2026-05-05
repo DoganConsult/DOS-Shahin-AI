@@ -19,17 +19,19 @@
 import {
   Component,
   ChangeDetectionStrategy,
+  ComponentRef,
+  ViewChild,
+  ViewContainerRef,
   inject,
   signal,
   computed,
   Type,
-  Injector,
   effect,
   EnvironmentInjector,
   runInInjectionContext,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NgComponentOutlet } from '@angular/common';
+import { Subscription } from 'rxjs';
 import { Router, NavigationEnd, ActivatedRoute, type ActivatedRouteSnapshot } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter, startWith } from 'rxjs/operators';
@@ -47,7 +49,7 @@ import { BrandResolverService, DosEmptyStateComponent, MarketingPublicConfigServ
   selector: 'dos-dynamic-template-page',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, NgComponentOutlet, DosEmptyStateComponent, DosInsightBarComponent],
+  imports: [CommonModule, DosEmptyStateComponent, DosInsightBarComponent],
   template: `
     @if (deniedPermission(); as deniedPermission) {
       <dos-empty-state
@@ -60,13 +62,9 @@ import { BrandResolverService, DosEmptyStateComponent, MarketingPublicConfigServ
       <p class="dos-tpl-fallback__msg">
         Required permission: <code>{{ deniedPermission }}</code>
       </p>
-    } @else if (template(); as tpl) {
-      <ng-container
-        *ngComponentOutlet="tpl; injector: tplInjector(); inputs: tplInputs()"
-      ></ng-container>
-    } @else if (loading()) {
+    } @else if (loading() && !template()) {
       <div class="dos-tpl-loading" data-testid="dos-tpl-loading">Loading…</div>
-    } @else {
+    } @else if (!template() && !loading()) {
       <div class="dos-tpl-fallback" data-testid="dos-tpl-fallback">
         <dos-insight-bar [pillars]="fallbackPillars" archetype="empty"></dos-insight-bar>
         <p class="dos-tpl-fallback__msg">
@@ -74,6 +72,7 @@ import { BrandResolverService, DosEmptyStateComponent, MarketingPublicConfigServ
         </p>
       </div>
     }
+    <ng-container #tplHost></ng-container>
   `,
   styles: [`
     :host { display: block; }
@@ -101,6 +100,11 @@ export class DynamicTemplatePageComponent {
   readonly template = signal<Type<unknown> | null>(null);
   readonly deniedPermission = signal<string | null>(null);
   readonly loading = signal<boolean>(true);
+
+  @ViewChild('tplHost', { read: ViewContainerRef, static: true })
+  private tplHost!: ViewContainerRef;
+  private currentRef: ComponentRef<unknown> | null = null;
+  private readonly outputSubs: Subscription[] = [];
 
   readonly tplInjector = computed(() => this.envInjector);
   readonly tplInputs = computed<Record<string, unknown>>(() => {
@@ -232,6 +236,7 @@ export class DynamicTemplatePageComponent {
       this.binding.set(null);
       this.template.set(null);
       this.deniedPermission.set(null);
+      this.disposeMounted();
       runInInjectionContext(this.envInjector, () => {
         this.bindings.resolve(route).subscribe(async (b) => {
           this.binding.set(b);
@@ -266,12 +271,125 @@ export class DynamicTemplatePageComponent {
             // Drop result if the user navigated away while we awaited.
             if (this.currentRoute() !== route) return;
             this.template.set(cmp);
+            this.mountTemplate(cmp);
           } finally {
             this.loading.set(false);
           }
         });
       });
     });
+  }
+
+  /**
+   * Imperatively mount the resolved template component, apply props as
+   * inputs, and wire every EventEmitter @Output to the DB-driven event
+   * handler dispatcher (props.eventHandlers).
+   */
+  private mountTemplate(cmp: Type<unknown>): void {
+    if (!this.tplHost) return;
+    this.disposeMounted();
+    const ref = this.tplHost.createComponent(cmp, { injector: this.envInjector });
+    this.currentRef = ref;
+    const inputs = this.tplInputs();
+    for (const [k, v] of Object.entries(inputs)) {
+      try {
+        ref.setInput(k, v);
+      } catch {
+        // Unknown @Input — silently ignore per Phase F-F3 contract.
+      }
+    }
+    // Wire any EventEmitter-shaped output to the dispatcher.
+    const inst = ref.instance as Record<string, unknown>;
+    for (const key of Object.keys(inst)) {
+      const out = inst[key] as { subscribe?: (fn: (v: unknown) => void) => Subscription; emit?: unknown } | undefined;
+      if (out && typeof out.subscribe === 'function' && typeof out.emit === 'function') {
+        const sub = out.subscribe((evt) => this.dispatchEvent(evt));
+        this.outputSubs.push(sub);
+      }
+    }
+  }
+
+  private disposeMounted(): void {
+    while (this.outputSubs.length) {
+      const s = this.outputSubs.pop();
+      try { s?.unsubscribe(); } catch { /* noop */ }
+    }
+    if (this.currentRef) {
+      try { this.currentRef.destroy(); } catch { /* noop */ }
+      this.currentRef = null;
+    }
+    if (this.tplHost) {
+      this.tplHost.clear();
+    }
+  }
+
+  /**
+   * Dispatch a template-emitted event through the DB-driven
+   * `props.eventHandlers` table. The shape on the binding is:
+   *   { eventHandlers: { "<event.key>": { method, url, ... } } }
+   *
+   * Supported handler methods:
+   *   - "redirect" → full-page navigation to handler.url
+   *   - "fetch"    → POST/GET handler.url with optional payload from
+   *                  the event; on 2xx, optionally redirect to
+   *                  handler.onSuccessRedirect; on non-2xx, optionally
+   *                  redirect to handler.onErrorRedirect.
+   *
+   * Unknown keys / missing handlers are no-ops by design — auth pages
+   * that emit purely presentational events (locale toggle, step change)
+   * keep working without any FE-side coupling.
+   */
+  private dispatchEvent(evt: unknown): void {
+    if (!evt || typeof evt !== 'object') return;
+    const key = (evt as { key?: unknown }).key;
+    if (typeof key !== 'string') return;
+    const props = (this.binding()?.props ?? {}) as Record<string, unknown>;
+    const handlers = props['eventHandlers'] as Record<string, unknown> | undefined;
+    if (!handlers || typeof handlers !== 'object') return;
+    const handler = handlers[key] as {
+      method?: string;
+      url?: string;
+      http?: string;
+      payloadFromEvent?: boolean;
+      payload?: unknown;
+      onSuccessRedirect?: string;
+      onErrorRedirect?: string;
+    } | undefined;
+    if (!handler || typeof handler !== 'object') return;
+
+    if (handler.method === 'redirect' && typeof handler.url === 'string' && handler.url) {
+      if (typeof window !== 'undefined') {
+        window.location.assign(handler.url);
+      }
+      return;
+    }
+
+    if (handler.method === 'fetch' && typeof handler.url === 'string' && handler.url) {
+      const http = (handler.http || 'POST').toUpperCase();
+      const body = handler.payloadFromEvent
+        ? (evt as { payload?: unknown }).payload ?? null
+        : handler.payload ?? null;
+      const init: RequestInit = {
+        method: http,
+        credentials: 'include',
+        headers: { 'content-type': 'application/json', accept: 'application/json' },
+      };
+      if (http !== 'GET' && http !== 'HEAD') {
+        init.body = JSON.stringify(body ?? {});
+      }
+      if (typeof window === 'undefined' || typeof fetch !== 'function') return;
+      void fetch(handler.url, init).then((resp) => {
+        if (resp.ok && handler.onSuccessRedirect) {
+          window.location.assign(handler.onSuccessRedirect);
+        } else if (!resp.ok && handler.onErrorRedirect) {
+          window.location.assign(handler.onErrorRedirect);
+        }
+      }).catch(() => {
+        if (handler.onErrorRedirect) {
+          window.location.assign(handler.onErrorRedirect);
+        }
+      });
+    }
   }
 
   private normalize(url: string): string {

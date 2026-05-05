@@ -21,12 +21,14 @@ packages:
   - 'services/*'
   # Modules + shared workspace packages
   - 'modules/packages/*'
-  - 'modules/risk'
   - 'modules/qiyas'
   - 'modules/compliance'
   - 'modules/compliance/sdk/typescript'
-  # Products
-  - 'products/shahin-ai/app/src/app'
+  # Platform App (single SPA entry point for all products)
+  - 'platform/app'
+  # NOTE: legacy 'products/shahin-ai/app/src/app' workspace entry retired
+  # 2026-05-05 — directory deleted from disk; products/ is composition-only
+  # (BE/manifest/jobs only, enforced by scripts/ci-guards/product-no-runtime.mjs).
 ignoredBuiltDependencies: []
 onlyBuiltDependencies:
   - esbuild

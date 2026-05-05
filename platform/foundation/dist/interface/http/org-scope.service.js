@@ -10,7 +10,7 @@ exports.getOrgScope = getOrgScope;
  * Source of truth is dos.* (canonical hierarchy). This file does NOT
  * compute permissions — that is DAuth's job.
  *
- * Plan: /root/.claude/plans/need-to-clean-the-swift-trinket.md (Phase B-1)
+ * Plan: docs/plans/need-to-clean-the-swift-trinket.md (Phase B-1)
  */
 const database_port_1 = require("../../ports/database.port");
 const metrics_1 = require("../../infrastructure/observability/metrics");

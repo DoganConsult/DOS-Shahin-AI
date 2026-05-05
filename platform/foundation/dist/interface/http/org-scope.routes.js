@@ -42,7 +42,7 @@ exports.orgScopeRouter = void 0;
  * chain + organization ancestor chain) computed from dos.* (Foundation's
  * source of truth for hierarchy).
  *
- * Plan: /root/.claude/plans/need-to-clean-the-swift-trinket.md (Phase B-1)
+ * Plan: docs/plans/need-to-clean-the-swift-trinket.md (Phase B-1)
  */
 const express_1 = require("express");
 const auth_adapter_1 = require("../../infrastructure/auth.adapter");

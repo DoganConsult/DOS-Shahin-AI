@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { I18nService } from '@app/core/services/ui-infra/i18n.service';
 import { environment } from '@env/environment';
-import { isCapabilityActive } from '@app/core/platform/navigation/active-modules';
+import { AccessStore } from '@dos/access-store';
 import { TagModule } from 'primeng/tag';
 
 interface AiAction {
@@ -193,6 +193,7 @@ export class ModuleAiPulseComponent implements OnInit, OnChanges {
 
   i18n = inject(I18nService);
   private http: HttpClient = inject(HttpClient);
+  private access = inject(AccessStore);
 
   pulse: AiPulseData | null = null;
 
@@ -245,7 +246,7 @@ export class ModuleAiPulseComponent implements OnInit, OnChanges {
     if (!this.moduleCode) return;
     // Capability-gated: never call runtime-health/ai-pulse unless ai-os is active.
     // During Foundation-only bring-up this prevents 404 noise on the active page.
-    if (!isCapabilityActive('aiOs') || !isCapabilityActive('runtimeHealth')) {
+    if (!this.access.canAccessModule('ai-os') || !this.access.canAccessModule('runtime-health')) {
       this.pulse = null as unknown as AiPulseData;
       return;
     }

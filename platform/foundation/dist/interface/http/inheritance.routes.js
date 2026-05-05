@@ -42,7 +42,7 @@ exports.inheritanceRouter = void 0;
  * tightening, governance for policy stacking, DOS for SLA) decide how to
  * apply the items.
  *
- * Plan: /root/.claude/plans/need-to-clean-the-swift-trinket.md (Phase B-1)
+ * Plan: docs/plans/need-to-clean-the-swift-trinket.md (Phase B-1)
  */
 const express_1 = require("express");
 const auth_adapter_1 = require("../../infrastructure/auth.adapter");

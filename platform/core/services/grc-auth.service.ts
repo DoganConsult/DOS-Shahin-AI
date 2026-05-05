@@ -131,7 +131,7 @@ export class GrcAuthService {
     }
   }
 
-  login(): void { this.router.navigate(['/login']); }
+  login(): void { this.router.navigate(['/auth/login']); }
 
   logout(reason?: string): void {
     const tid = this.tenantId() || '';
@@ -163,7 +163,7 @@ export class GrcAuthService {
     this._authzClient.clear();
     this.http.post(`${environment.apiUrl}/auth/oidc/logout`, {}, { withCredentials: true })
       .subscribe({ error: () => {} });
-    this.router.navigate(['/login']);
+    this.router.navigate(['/auth/login']);
   }
 
   /** @deprecated SPA must not read tokens; returns null. */

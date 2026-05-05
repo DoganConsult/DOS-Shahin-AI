@@ -776,6 +776,16 @@ export class ShellHostComponent {
   readonly showQuickCreate      = computed(() => this.shellBinding.zoneHas('fab'));
   readonly showCommandSearch    = computed(() => this.shellBinding.zoneHas('header'));
   readonly zoneHas              = (zone: WorkspaceShellZone) => this.shellBinding.zoneHas(zone);
+  // Dynamic delegators (binding-renderer-parity gate): the shell-host
+  // surfaces the binding-service contract verbs without hardcoding any
+  // component_key. Templates can resolve any surface row by zone, read
+  // arbitrary props by name, and gate render on permission flags — all
+  // resolver-driven (DB → zone → component_key).
+  readonly surfacesByZone = (zone: WorkspaceShellZone) => this.shellBinding.surfacesByZone(zone);
+  readonly surfaceProp = <T>(key: string, propName: string): T | null =>
+    this.shellBinding.surfaceProp<T>(key, propName);
+  readonly isSurfaceAllowed = (key: string): boolean =>
+    this.shellBinding.isSurfaceAllowed(key);
 
   // ── §B.9 P4 — banner multiplex (#25, #34–37) ──────────────────────────────
   readonly shellBanners = computed<ShellBanner[]>(() => {

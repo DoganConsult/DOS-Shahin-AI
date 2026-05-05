@@ -2,7 +2,7 @@
  * Phase WS-2 + Carbon-Wiring — workspace.header wrapper.
  * Selector: dos-workspace-header
  * Carbon primitive: ui-shell (UIShellModule → cds-header + cds-hamburger + cds-header-global)
- * DB: dos.dynamic_ui_component_registry component_key='workspace.header' carbon_key='ui-shell'
+ * DB: dos.dynamic_ui_component_registry component_key=workspace.header carbon_key=ui-shell
  *
  * Token stack:
  *   --cds-*           (Carbon role tokens — @carbon/styles)

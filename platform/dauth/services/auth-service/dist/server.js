@@ -22,6 +22,8 @@ const node_https_1 = __importDefault(require("node:https"));
 const node_fs_1 = require("node:fs");
 const oidc_routes_1 = require("./routes/oidc.routes");
 const access_routes_1 = require("./routes/access.routes");
+const mfa_routes_1 = require("./routes/mfa.routes");
+const admin_secrets_routes_1 = require("./routes/admin-secrets.routes");
 const PORT = Number(process.env.PORT || 4001);
 // L34 (Phase 4) — tenant-zone HTTPS listener (mTLS).
 // Reads MTLS_HTTPS_LISTEN=1 + TENANT_MTLS_CA / TENANT_MTLS_CERT /
@@ -70,6 +72,12 @@ app.use('/oidc', oidc_routes_1.oidcRouter);
 // Access snapshot and permissions.
 // Expected by SPA at /api/access/my-permissions
 app.use('/api/access', access_routes_1.accessRouter);
+// MFA-by-email. Gateway exposes as /api/auth/mfa/{send,verify}.
+app.use('/mfa', mfa_routes_1.mfaRouter);
+// Platform-admin dynamic secret store. Gateway exposes as
+//   GET  /api/auth/admin/secrets             — list catalog + masked previews
+//   PUT  /api/auth/admin/secrets/:secretKey  — upsert one value
+app.use('/admin/secrets', admin_secrets_routes_1.adminSecretsRouter);
 // CSRF removed (Task 9). The OIDC browser flow is cookie + PKCE; no XSRF
 // token is exchanged. SPA must not probe /api/auth/csrf.
 app.use((err, _req, res, _next) => {

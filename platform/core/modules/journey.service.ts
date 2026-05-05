@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { isCapabilityActive } from '@app/core/platform/navigation/active-modules';
+import { AccessStore } from '@dos/access-store';
 
 export interface JourneyPhase {
   phaseId: string;
@@ -60,13 +60,14 @@ export interface Nudge {
 @Injectable({ providedIn: 'root' })
 export class JourneyService {
   private http = inject(HttpClient);
+  private access = inject(AccessStore);
 
   loadJourney(tenantId: string) {
     return this.http.get<JourneyState>(`/api/tenants/${tenantId}/journey`);
   }
 
   getActiveNudges() {
-    if (!isCapabilityActive('nudges')) {
+    if (!this.access.canAccessModule('nudges')) {
       return of({ nudges: [] as Nudge[] });
     }
     return this.http.get<{ nudges: Nudge[] }>('/api/nudges/active');

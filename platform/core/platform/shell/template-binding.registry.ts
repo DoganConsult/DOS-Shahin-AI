@@ -209,6 +209,15 @@ Object.assign(LOADERS, {
   'marketing.platform.page': LOADERS.MarketingPlatformTemplateComponent,
   'marketing.resources.page': LOADERS.MarketingResourcesTemplateComponent,
   'marketing.executive-kit.page': LOADERS.MarketingExecutiveKitTemplateComponent,
+
+  // Auth pages (34th archetype 'auth-page') — 5 public, unauthenticated pages.
+  // Keyed by the DB component_key (auth.*.page) so the template_export
+  // stored in ui_route_template_binding resolves directly.
+  'auth.login.page':           () => import('@dos/ui-system').then(m => m.DosAuthLoginPageComponent),
+  'auth.register.page':        () => import('@dos/ui-system').then(m => m.DosAuthRegisterPageComponent),
+  'auth.forgot-password.page': () => import('@dos/ui-system').then(m => m.DosAuthForgotPasswordPageComponent),
+  'auth.mfa.page':             () => import('@dos/ui-system').then(m => m.DosAuthMfaPageComponent),
+  'auth.reset-password.page':  () => import('@dos/ui-system').then(m => m.DosAuthResetPasswordPageComponent),
 });
 
 export const ARCHETYPE_TEMPLATE_EXPORTS: ReadonlySet<string> =

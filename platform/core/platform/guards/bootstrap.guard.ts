@@ -42,6 +42,6 @@ export const bootstrapGuard: CanActivateFn = () => {
 
       return router.createUrlTree([roleHome]);
     }),
-    catchError(() => of(router.createUrlTree(['/login'])))
+    catchError(() => of(router.createUrlTree(['/auth/login'])))
   );
 };

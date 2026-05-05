@@ -44,7 +44,7 @@ exports.accessSnapshotRouter = void 0;
  * read this once per session and on token refresh; the single guard
  * `accessSnapshotGuard` (Phase D) reads from this response.
  *
- * Plan: /root/.claude/plans/need-to-clean-the-swift-trinket.md (Phase B-1)
+ * Plan: docs/plans/need-to-clean-the-swift-trinket.md (Phase B-1)
  */
 const express_1 = require("express");
 const auth_adapter_1 = require("../../infrastructure/auth.adapter");

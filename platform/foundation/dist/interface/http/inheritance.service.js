@@ -21,7 +21,7 @@ exports.getInheritance = getInheritance;
  * is the consumer's responsibility (DAuth for SoD/security baseline, DOS for
  * SLA, etc.). Foundation only owns "what is inherited from where."
  *
- * Plan: /root/.claude/plans/need-to-clean-the-swift-trinket.md (Phase B-1)
+ * Plan: docs/plans/need-to-clean-the-swift-trinket.md (Phase B-1)
  */
 const database_port_1 = require("../../ports/database.port");
 const metrics_1 = require("../../infrastructure/observability/metrics");

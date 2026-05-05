@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { InputModule } from 'carbon-components-angular';
+let __dosCarbonTextSeq = 0;
 let DosCarbonTextInputComponent = class DosCarbonTextInputComponent {
     label = '';
     value = '';
@@ -21,8 +22,17 @@ let DosCarbonTextInputComponent = class DosCarbonTextInputComponent {
     readonly = false;
     size = 'md';
     theme = 'light';
+    name = '';
+    id = '';
+    autocomplete = null;
+    inputmode = null;
+    type = 'text';
     valueChange = new EventEmitter();
     blurred = new EventEmitter();
+    _autoId = `dos-carbon-text-${++__dosCarbonTextSeq}`;
+    get fieldId() {
+        return this.id || this.name || this._autoId;
+    }
     onInput(ev) {
         const v = ev.target.value;
         this.value = v;
@@ -70,6 +80,26 @@ __decorate([
     __metadata("design:type", String)
 ], DosCarbonTextInputComponent.prototype, "theme", void 0);
 __decorate([
+    Input(),
+    __metadata("design:type", Object)
+], DosCarbonTextInputComponent.prototype, "name", void 0);
+__decorate([
+    Input(),
+    __metadata("design:type", Object)
+], DosCarbonTextInputComponent.prototype, "id", void 0);
+__decorate([
+    Input(),
+    __metadata("design:type", String)
+], DosCarbonTextInputComponent.prototype, "autocomplete", void 0);
+__decorate([
+    Input(),
+    __metadata("design:type", String)
+], DosCarbonTextInputComponent.prototype, "inputmode", void 0);
+__decorate([
+    Input(),
+    __metadata("design:type", String)
+], DosCarbonTextInputComponent.prototype, "type", void 0);
+__decorate([
     Output(),
     __metadata("design:type", Object)
 ], DosCarbonTextInputComponent.prototype, "valueChange", void 0);
@@ -97,6 +127,11 @@ DosCarbonTextInputComponent = __decorate([
         [placeholder]="placeholder"
         [disabled]="disabled"
         [readonly]="readonly"
+        [attr.name]="name || null"
+        [attr.id]="fieldId"
+        [attr.autocomplete]="autocomplete"
+        [attr.inputmode]="inputmode"
+        [attr.type]="type"
         [value]="value"
         (input)="onInput($event)"
         (blur)="blurred.emit()"

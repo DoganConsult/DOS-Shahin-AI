@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { InputModule } from 'carbon-components-angular';
+let __dosCarbonPwSeq = 0;
 /**
  * Carbon-backed password input with show/hide toggle button.
  */
@@ -27,9 +28,15 @@ let DosCarbonPasswordInputComponent = class DosCarbonPasswordInputComponent {
     theme = 'light';
     showLabel = 'Show';
     hideLabel = 'Hide';
+    name = 'password';
+    id = '';
     valueChange = new EventEmitter();
     blurred = new EventEmitter();
     visible = signal(false);
+    _autoId = `dos-carbon-pw-${++__dosCarbonPwSeq}`;
+    get fieldId() {
+        return this.id || this.name || this._autoId;
+    }
     onInput(ev) {
         const v = ev.target.value;
         this.value = v;
@@ -89,6 +96,14 @@ __decorate([
     __metadata("design:type", Object)
 ], DosCarbonPasswordInputComponent.prototype, "hideLabel", void 0);
 __decorate([
+    Input(),
+    __metadata("design:type", Object)
+], DosCarbonPasswordInputComponent.prototype, "name", void 0);
+__decorate([
+    Input(),
+    __metadata("design:type", Object)
+], DosCarbonPasswordInputComponent.prototype, "id", void 0);
+__decorate([
     Output(),
     __metadata("design:type", Object)
 ], DosCarbonPasswordInputComponent.prototype, "valueChange", void 0);
@@ -118,6 +133,8 @@ DosCarbonPasswordInputComponent = __decorate([
         [disabled]="disabled"
         [readonly]="readonly"
         [autocomplete]="autocomplete"
+        [attr.name]="name || null"
+        [attr.id]="fieldId"
         [value]="value"
         (input)="onInput($event)"
         (blur)="blurred.emit()"

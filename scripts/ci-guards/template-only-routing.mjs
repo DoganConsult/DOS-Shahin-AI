@@ -13,7 +13,7 @@
  *   3. Every binding's `template_export` must exist in the FE LOADERS
  *      registry shipped by template-binding.registry.ts.
  *   4. Every workspace child route in
- *      products/shahin-ai/app/src/app/app.routes.ts MUST resolve to
+ *      platform/app/src/app.routes.ts MUST resolve to
  *      `DynamicTemplatePageComponent` — no bespoke `Foundation*Component`
  *      / `<Module>*Page` import is allowed inside a `loadComponent`.
  *
@@ -106,7 +106,7 @@ await client.end();
 
 // ── Probe 4: SPA route file forbids bespoke loadComponents ────────────
 const spa = readFileSync(
-  resolve(repo, 'products/shahin-ai/app/src/app/app.routes.ts'),
+  resolve(repo, 'platform/app/src/app.routes.ts'),
   'utf8',
 );
 

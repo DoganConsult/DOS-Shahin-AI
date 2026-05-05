@@ -1,2 +1,0 @@
-import { GOVERNANCE_PERMISSIONS } from './governance.security';
-export { GOVERNANCE_PERMISSIONS as GOVERNANCE_MODULE_PERMISSIONS };

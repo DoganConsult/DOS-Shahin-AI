@@ -521,6 +521,8 @@ if (UI_OS_SERVICE_URL) {
     const publicMarketingRoutes = new Set([
         '/', '/pricing', '/trust', '/security', '/contact', '/about', '/legal',
         '/platform', '/resources', '/resources/executive-kit',
+        // Auth pages — public, unauthenticated (Phase P1).
+        '/login', '/register', '/forgot-password', '/mfa', '/reset-password',
     ]);
     const publicUiOsProxy = (0, http_proxy_middleware_1.createProxyMiddleware)({
         target: UI_OS_SERVICE_URL,

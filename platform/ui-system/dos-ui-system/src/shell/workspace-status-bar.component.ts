@@ -2,7 +2,7 @@
  * Phase WS-2 + Carbon-Wiring — workspace.status-bar wrapper.
  * Selector: dos-workspace-status-bar
  * Carbon primitive: tag (TagModule → cds-tag)
- * DB: dos.dynamic_ui_component_registry component_key='workspace.status-bar' carbon_key='tag'
+ * DB: dos.dynamic_ui_component_registry component_key=workspace.status-bar carbon_key=tag
  *
  * Token stack:
  *   --cds-tag-*           (Carbon tag tokens per level)

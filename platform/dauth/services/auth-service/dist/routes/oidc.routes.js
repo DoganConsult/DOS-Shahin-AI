@@ -222,6 +222,31 @@ exports.oidcRouter.get('/callback', async (req, res) => {
                 catch (e) {
                     console.warn('[oidc/callback] post-login role hook failed', e.message);
                 }
+                // Dynamic MFA gate. Per-tenant policy in dos.tenant_security_policy
+                // (mfa_required boolean). When true, divert the landing target to
+                // /auth/mfa and tag a cookie so the MFA page knows where to send
+                // the user after a successful verify (handler.onSuccessRedirect
+                // in the DB binding overrides this — kept here as a sane default).
+                try {
+                    const pool = getPool();
+                    const tenantId = resp?.data?.tenantId ||
+                        resp?.data?.tenant?.id ||
+                        resp?.data?.workspace?.tenantId ||
+                        null;
+                    if (pool && tenantId) {
+                        const polR = await pool.query(`SELECT mfa_required FROM dos.tenant_security_policy WHERE tenant_id = $1`, [tenantId]);
+                        const mfaRequired = polR.rows[0]?.mfa_required === true;
+                        if (mfaRequired) {
+                            res.cookie('dos_mfa_return', landing, {
+                                ...cookieOpts, maxAge: 10 * 60 * 1000,
+                            });
+                            landing = '/auth/mfa';
+                        }
+                    }
+                }
+                catch (e) {
+                    console.warn('[oidc/callback] mfa policy lookup failed', e.message);
+                }
             }
         }
         catch (e) {

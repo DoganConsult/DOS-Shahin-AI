@@ -2,7 +2,7 @@
  * Phase WS-2 + Carbon-Wiring — workspace.agent-strip wrapper.
  * Selector: dos-agent-activity-strip
  * Carbon primitive: tiles (TilesModule → cds-clickable-tile) + tag (TagModule)
- * DB: dos.dynamic_ui_component_registry component_key='workspace.agent-strip' carbon_key='tiles'
+ * DB: dos.dynamic_ui_component_registry component_key=workspace.agent-strip carbon_key=tiles
  *
  * Token stack:
  *   --cds-tile-*          (Carbon tile tokens)

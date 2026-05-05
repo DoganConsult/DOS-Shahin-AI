@@ -42,7 +42,7 @@ exports.managerChainRouter = void 0;
  * the current active holder of each position attached. Foundation owns this
  * structure; DAuth, OpenFGA, and DOS orchestration consume it via this API.
  *
- * Plan: /root/.claude/plans/need-to-clean-the-swift-trinket.md (Phase B-1)
+ * Plan: docs/plans/need-to-clean-the-swift-trinket.md (Phase B-1)
  */
 const express_1 = require("express");
 const auth_adapter_1 = require("../../infrastructure/auth.adapter");

@@ -19,6 +19,9 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+
+let __dosAuthFieldSeq = 0;
+const nextAutoId = (prefix: string) => `${prefix}-${++__dosAuthFieldSeq}`;
 import {
   type AuthEvent,
   type AuthLoginPayload,
@@ -117,15 +120,17 @@ export class DosAuthBrandPanelComponent {
   imports: [CommonModule, FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <label class="dos-auth-field" data-cds-component="input">
+    <label class="dos-auth-field" data-cds-component="input" [attr.for]="fieldId">
       <span class="dos-auth-field-label">{{ label }}</span>
       <input
         [type]="type"
-        [name]="name"
+        [attr.id]="fieldId"
+        [attr.name]="name || null"
         [attr.autocomplete]="autocomplete"
         [attr.inputmode]="inputmode"
         [attr.aria-invalid]="invalid ? 'true' : null"
         [(ngModel)]="value"
+        [ngModelOptions]="{ standalone: true }"
         (ngModelChange)="valueChange.emit($event)"
         [required]="required"
       />
@@ -155,7 +160,12 @@ export class DosAuthFieldComponent {
   @Input() invalid = false;
   @Input() errorMessage = '';
   @Input() value = '';
+  @Input() id = '';
   @Output() readonly valueChange = new EventEmitter<string>();
+  private readonly _autoId = nextAutoId('dos-auth-field');
+  get fieldId(): string {
+    return this.id || this.name || this._autoId;
+  }
 }
 
 // ═════════════════════════════════════════════════════════════════════
@@ -168,15 +178,17 @@ export class DosAuthFieldComponent {
   imports: [CommonModule, FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <label class="dos-auth-pw" data-cds-component="input" data-kind="password">
+    <label class="dos-auth-pw" data-cds-component="input" data-kind="password" [attr.for]="fieldId">
       <span class="dos-auth-pw-label">{{ label }}</span>
       <span class="dos-auth-pw-row">
         <input
           [type]="reveal() ? 'text' : 'password'"
-          [name]="name"
+          [attr.id]="fieldId"
+          [attr.name]="name || null"
           [attr.autocomplete]="autocomplete"
           [attr.aria-invalid]="invalid ? 'true' : null"
           [(ngModel)]="value"
+          [ngModelOptions]="{ standalone: true }"
           (ngModelChange)="valueChange.emit($event)"
           [required]="required"
         />
@@ -214,8 +226,13 @@ export class DosAuthPasswordFieldComponent {
   @Input() showLabel = 'Show';
   @Input() hideLabel = 'Hide';
   @Input() value = '';
+  @Input() id = '';
   @Output() readonly valueChange = new EventEmitter<string>();
   readonly reveal = signal(false);
+  private readonly _autoId = nextAutoId('dos-auth-pw');
+  get fieldId(): string {
+    return this.id || this.name || this._autoId;
+  }
 }
 
 // ═════════════════════════════════════════════════════════════════════
@@ -227,9 +244,14 @@ export class DosAuthPasswordFieldComponent {
   imports: [CommonModule, FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <label class="dos-auth-cb" data-cds-component="checkbox">
-      <input type="checkbox" [name]="name" [(ngModel)]="checked"
-             (ngModelChange)="checkedChange.emit($event)" [required]="required" />
+    <label class="dos-auth-cb" data-cds-component="checkbox" [attr.for]="fieldId">
+      <input type="checkbox"
+             [attr.id]="fieldId"
+             [attr.name]="name || null"
+             [(ngModel)]="checked"
+             [ngModelOptions]="{ standalone: true }"
+             (ngModelChange)="checkedChange.emit($event)"
+             [required]="required" />
       <span>{{ label }}</span>
     </label>
   `,
@@ -242,7 +264,12 @@ export class DosAuthCheckboxComponent {
   @Input() label = '';
   @Input() required = false;
   @Input() checked = false;
+  @Input() id = '';
   @Output() readonly checkedChange = new EventEmitter<boolean>();
+  private readonly _autoId = nextAutoId('dos-auth-cb');
+  get fieldId(): string {
+    return this.id || this.name || this._autoId;
+  }
 }
 
 // ═════════════════════════════════════════════════════════════════════
@@ -254,9 +281,14 @@ export class DosAuthCheckboxComponent {
   imports: [CommonModule, FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <label class="dos-auth-dd" data-cds-component="dropdown">
+    <label class="dos-auth-dd" data-cds-component="dropdown" [attr.for]="fieldId">
       <span>{{ label }}</span>
-      <select [name]="name" [(ngModel)]="value" (ngModelChange)="valueChange.emit($event)" [required]="required">
+      <select [attr.id]="fieldId"
+              [attr.name]="name || null"
+              [(ngModel)]="value"
+              [ngModelOptions]="{ standalone: true }"
+              (ngModelChange)="valueChange.emit($event)"
+              [required]="required">
         @for (o of options; track o) { <option [value]="o">{{ o }}</option> }
       </select>
     </label>
@@ -272,7 +304,12 @@ export class DosAuthDropdownComponent {
   @Input() options: ReadonlyArray<string> = [];
   @Input() required = false;
   @Input() value = '';
+  @Input() id = '';
   @Output() readonly valueChange = new EventEmitter<string>();
+  private readonly _autoId = nextAutoId('dos-auth-dd');
+  get fieldId(): string {
+    return this.id || this.name || this._autoId;
+  }
 }
 
 // ═════════════════════════════════════════════════════════════════════
@@ -559,8 +596,8 @@ export class DosAuthLoginCardComponent {
   @Input() submitLabel = 'Sign in';
   @Input() forgotPasswordLabel = 'Forgot password?';
   @Input() registerLabel = 'Create an account';
-  @Input() forgotPasswordHref = '/forgot-password';
-  @Input() registerHref = '/register';
+  @Input() forgotPasswordHref = '/auth/forgot-password';
+  @Input() registerHref = '/auth/register';
   @Input() ssoProviders: ReadonlyArray<AuthSsoRequest['provider']> = ['oidc'];
   @Input() invalidEmail = false;
   @Input() invalidPassword = false;
@@ -697,7 +734,7 @@ export class DosAuthRegisterCardComponent {
   @Input() backLabel = 'Back';
   @Input() submitLabel = 'Create workspace';
   @Input() loginLabel = 'Already have an account? Sign in';
-  @Input() loginHref = '/login';
+  @Input() loginHref = '/auth/login';
 
   @Input() companySizes: ReadonlyArray<string> = ['1-10','11-50','51-200','201-1000','1000+'];
   @Input() countries: ReadonlyArray<string> = ['Saudi Arabia','UAE','Qatar','Kuwait','Bahrain','Oman','Other'];

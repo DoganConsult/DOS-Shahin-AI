@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, signal
 import { CommonModule } from '@angular/common';
 import { InputModule } from 'carbon-components-angular';
 
+let __dosCarbonPwSeq = 0;
+
 /**
  * Carbon-backed password input with show/hide toggle button.
  */
@@ -26,6 +28,8 @@ import { InputModule } from 'carbon-components-angular';
         [disabled]="disabled"
         [readonly]="readonly"
         [autocomplete]="autocomplete"
+        [attr.name]="name || null"
+        [attr.id]="fieldId"
         [value]="value"
         (input)="onInput($event)"
         (blur)="blurred.emit()"
@@ -64,11 +68,18 @@ export class DosCarbonPasswordInputComponent {
   @Input() theme: 'light' | 'dark' = 'light';
   @Input() showLabel = 'Show';
   @Input() hideLabel = 'Hide';
+  @Input() name = 'password';
+  @Input() id = '';
 
   @Output() valueChange = new EventEmitter<string>();
   @Output() blurred = new EventEmitter<void>();
 
   readonly visible = signal(false);
+
+  private readonly _autoId = `dos-carbon-pw-${++__dosCarbonPwSeq}`;
+  get fieldId(): string {
+    return this.id || this.name || this._autoId;
+  }
 
   onInput(ev: Event): void {
     const v = (ev.target as HTMLInputElement).value;

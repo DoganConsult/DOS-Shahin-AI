@@ -7,7 +7,6 @@ import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '@env/environment';
 import { ProductsModulesConfig } from './products-modules-config.models';
-import { isActiveModule } from '../../core/platform/navigation/active-modules';
 
 @Injectable({ providedIn: 'root' })
 export class ProductsModulesConfigService {
@@ -25,7 +24,6 @@ export class ProductsModulesConfigService {
   /** Whether a module code is visible for the current tenant (from DB/entitlements). */
   isModuleVisible(moduleCode: string | null | undefined): boolean {
     if (moduleCode == null || moduleCode === '') return true;
-    if (!isActiveModule(moduleCode)) return false;
     const cfg = this._config();
     // Fail-closed: when tenant config is unavailable or empty we MUST NOT
     // leak module visibility. Foundation Horizontal Closure removed the
