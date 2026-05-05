@@ -202,11 +202,11 @@ export async function trackRegulatoryChanges(tenantId: string): Promise<ChangeTr
         affectedControlsCount: affectedControls.length,
         complianceGapDelta: estimateGapDelta((row as any).impact_level, affectedControls.length),
 
-        effectiveDate: row.effective_date || null,
+        effectiveDate: nullableString(row.effective_date),
 
         status: (row.response_status as string) || 'pending_review',
 
-        detectedAt: row.detected_at || detectedAt,
+        detectedAt: nullableString(row.detected_at) ?? detectedAt,
       });
     }
 
@@ -232,11 +232,11 @@ export async function trackRegulatoryChanges(tenantId: string): Promise<ChangeTr
         affectedControlsCount: affectedControls.length,
         complianceGapDelta: estimateGapDelta(classifyImpactLevel(affectedControls.length), affectedControls.length),
 
-        effectiveDate: row.effective_date || null,
+        effectiveDate: nullableString(row.effective_date),
 
         status: (row.status as string) || 'identified',
 
-        detectedAt: row.detected_at || detectedAt,
+        detectedAt: nullableString(row.detected_at) ?? detectedAt,
       });
     }
 
@@ -379,7 +379,7 @@ export async function getRegulatoryChangeHistory(
         impactLevel: row.impact_level || 'medium',
         affectedControlsCount: affectedControls.length,
         complianceGapDelta: estimateGapDelta(row.impact_level, affectedControls.length),
-        effectiveDate: row.effective_date || null,
+        effectiveDate: nullableString(row.effective_date),
         status: row.status || 'identified',
         detectedAt: row.detected_at,
       };
@@ -746,6 +746,13 @@ function parseJsonArraySafe(value: unknown): string[] {
   return [];
 }
 
+function nullableString(value: unknown): string | null {
+  if (typeof value === 'string') return value;
+  if (value instanceof Date) return value.toISOString();
+  if (typeof value === 'number' || typeof value === 'boolean') return String(value);
+  return null;
+}
+
 /** Classify impact level based on affected controls count. */
 function classifyImpactLevel(affectedCount: number): 'critical' | 'high' | 'medium' | 'low' {
   if (affectedCount >= 50) return 'critical';
@@ -817,7 +824,7 @@ async function detectFrameworkVersionChanges(
           affectedControlsCount: 0,
           complianceGapDelta: 0,
 
-          effectiveDate: row.last_updated,
+          effectiveDate: nullableString(row.last_updated),
           status: 'pending_review',
           detectedAt: new Date().toISOString(),
         });

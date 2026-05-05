@@ -14,7 +14,7 @@
 import { Injectable, computed, effect, inject, signal } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, of } from 'rxjs';
-import type { WorkspaceShellBindingRow } from '@dos/ui-system';
+import { registerWorkspaceShellCatalog, type WorkspaceShellBindingRow, type WorkspaceShellCatalogEntry } from '@dos/ui-system';
 import type { ShellAccountMenuEntry } from '@dos/ui-contracts';
 import { AccessStore } from '@dos/access-store';
 
@@ -37,11 +37,13 @@ interface WorkspaceShellResponse {
   surfaces?: WorkspaceShellSurface[];
   zones?: Partial<Record<WorkspaceShellZone, WorkspaceShellSurface[]>>;
   knownKeys?: readonly string[];
+  componentRegistry?: readonly WorkspaceShellCatalogEntry[];
   shell?: {
     version: number;
     surfaces: WorkspaceShellSurface[];
     zones?: Partial<Record<WorkspaceShellZone, WorkspaceShellSurface[]>>;
     knownKeys?: readonly string[];
+    componentRegistry?: readonly WorkspaceShellCatalogEntry[];
   };
 }
 
@@ -257,6 +259,8 @@ export class WorkspaceShellBindingService {
     const shell = resp?.shell;
     const surfaces = shell?.surfaces ?? resp?.surfaces;
     const version = shell?.version ?? resp?.version;
+    const componentRegistry = shell?.componentRegistry ?? resp?.componentRegistry ?? [];
+    registerWorkspaceShellCatalog(componentRegistry);
     if (!resp || !Array.isArray(surfaces)) {
       if (!transientAuth) {
         this._surfaces.set(EMPTY_MAP);

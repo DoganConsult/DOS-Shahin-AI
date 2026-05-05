@@ -33,11 +33,18 @@ interface WorkspaceShellRow {
 
 interface WorkspaceShellRegistryRow {
   component_key: string;
+  vendor: string | null;
+  carbon_key: string | null;
+  schema_version: string | null;
+  metadata: Record<string, unknown> | null;
+  approval_status: string | null;
+  approved_at: string | null;
   metadata_zone: WorkspaceRuntimeZone | null;
 }
 
 interface WorkspaceShellCatalog {
   knownKeys: string[];
+  registry: WorkspaceShellRegistryRow[];
   zoneByKey: ReadonlyMap<string, WorkspaceRuntimeZone>;
   runtimeZones: string[];
 }
@@ -45,6 +52,12 @@ interface WorkspaceShellCatalog {
 async function loadWorkspaceShellCatalog(pool: DbPool): Promise<WorkspaceShellCatalog> {
   const result = await pool.query<WorkspaceShellRegistryRow>(
     `SELECT component_key,
+            vendor,
+            carbon_key,
+            schema_version,
+            metadata,
+            approval_status,
+            approved_at::text AS approved_at,
             NULLIF(metadata->>'zone', '') AS metadata_zone
        FROM dos.dynamic_ui_component_registry
       WHERE component_key LIKE 'workspace.%'
@@ -61,7 +74,7 @@ async function loadWorkspaceShellCatalog(pool: DbPool): Promise<WorkspaceShellCa
       zoneSet.add(row.metadata_zone);
     }
   }
-  return { knownKeys, zoneByKey, runtimeZones: [...zoneSet].sort() };
+  return { knownKeys, registry: result.rows, zoneByKey, runtimeZones: [...zoneSet].sort() };
 }
 
 function resolveSurfaceZone(
@@ -193,6 +206,7 @@ export function createWorkspaceShellRouter(pool: DbPool): Router {
         surfaces,
         zones: groupSurfacesByZone(surfaces, catalog),
         knownKeys: catalog.knownKeys,
+        componentRegistry: catalog.registry,
       });
     } catch (e) {
       res.status(500).json({
@@ -285,6 +299,7 @@ export function createWorkspaceShellRouter(pool: DbPool): Router {
           surfaces,
           zones: groupSurfacesByZone(surfaces, catalog),
           knownKeys: catalog.knownKeys,
+          componentRegistry: catalog.registry,
         },
         navigation: {
           groups: navGroups.rows,
