@@ -11,9 +11,9 @@
  * Operational metadata (governance, tools, escalation) remains in
  * agrc-agents.ts — that file is the runtime gate. This file is the HR view.
  *
- * Manager role codes match the canonical RBAC catalogue
- * (packages/shahin-product/src/canonical-roles.ts) so every agent reports
- * to a real human role that can be impersonated by a real Keycloak user.
+ * Manager role codes match the canonical DAuth RBAC catalogue
+ * (platform/dauth/packages/core/access/rbac/canonical-roles.ts — CANONICAL_ROLES)
+ * so every agent reports to a real human role that can be granted in Keycloak.
  */
 import type { AgentEmployeeRecord } from '@dos/types';
 export declare const SHAHIN_AI_EMPLOYEES: Record<string, AgentEmployeeRecord>;

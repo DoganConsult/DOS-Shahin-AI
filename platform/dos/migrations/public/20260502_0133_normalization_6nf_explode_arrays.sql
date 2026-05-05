@@ -1,3 +1,4 @@
+-- dos:draft — depends on draft migrations 0125/0129/0130 (feature_flags + manager_studio).
 -- =====================================================================
 -- UI-OS — final 6NF normalization pass: explode TEXT[] of first-class
 -- entities into proper junction child tables. (20260502_0133)

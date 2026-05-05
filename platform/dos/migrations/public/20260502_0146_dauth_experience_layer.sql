@@ -1,3 +1,4 @@
+-- dos:draft — superseded by Carbon-only workspace-shell publisher pipeline (vendor=custom rejected by trg_carbon_only_runtime).
 -- =====================================================================
 -- DAuth experience layer (20260502_0146) — Wave W9 (vertical slice 1/9, depth)
 --

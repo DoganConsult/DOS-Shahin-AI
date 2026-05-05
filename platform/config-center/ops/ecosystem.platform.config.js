@@ -61,7 +61,7 @@ function appFromService(name, svc) {
     exec_mode: 'fork',
     autorestart: true,
     max_memory_restart: svc.maxMemory || '1G',
-    node_args: svc.nodeArgs || '--max-old-space-size=768',
+    node_args: (svc.nodeArgs || '--max-old-space-size=768') + ' --no-deprecation',
     env: {
       ...COMMON,
       ...PLATFORM_SECRETS,

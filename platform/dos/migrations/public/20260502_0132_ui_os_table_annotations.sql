@@ -1,3 +1,4 @@
+-- dos:draft — depends on draft migrations 0128/0129/0130 (ai_workspace + manager_studio).
 -- =====================================================================
 -- UI-OS — table annotations for §19 AI Workspace + §20 Manager Studio
 -- (20260502_0132)
