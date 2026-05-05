@@ -275,6 +275,94 @@ pnpm module:verify   workspace-shell      # post-apply checks
 pnpm module:list                           # show all modules + state
 ```
 
+### C8) Publish / verify / build / deploy
+
+**Platform doctrine (AI always-on).** AI OS and AI-adjacent platform surfaces are
+platform-tier (platform DNA), aligned with the mantra *UI-OS renders; Dynamic UI
+resolves; Config OS configures.* They are not skipped as a “tenant toggle” in
+this operator path: **run the full chain all the way** (validate → substrate when
+needed → publish under a publisher session → verify → UI stack build → CI guards
+→ reload serving host).
+
+```mermaid
+flowchart LR
+  seedEdit["Edit seed JSON or MD"]
+  migrate["Apply SQL migrations"]
+  publish["pnpm module publish workspace-shell"]
+  verify["pnpm module verify workspace-shell"]
+  buildUI["pnpm filters ui-system, platform-core, SPA"]
+  gates["dynamic-ui gates, completeness, parity"]
+  reload["pm2 reload product-shell"]
+
+  seedEdit --> migrate
+  migrate --> publish
+  publish --> verify
+  verify --> buildUI
+  buildUI --> gates
+  gates --> reload
+```
+
+Canonical order (adapt **migrate** and **gates** per change; see notes):
+
+1. **Validate contract pack**
+
+   ```bash
+   pnpm module:validate workspace-shell
+   ```
+
+2. **Apply DOS SQL migrations (conditional)** — Run only when DDL or controlled
+   substrate changed (new tables, FKs, triggers, RLS). Use repo migration runbook
+   (`pnpm migrate` from root or `migration/migration-runner` per
+   [CONTRIBUTING.md](../../../CONTRIBUTING.md)).
+   **Skip** when the change is documentation-only or JSON/MD contract-only with
+   no database impact.
+
+3. **Publish (publisher session)**
+
+   ```bash
+   pnpm module:publish workspace-shell
+   ```
+
+   Requires a **publisher-safe DB session** (e.g. `SET LOCAL dos.actor =
+   'dos-master'` or the session your runbook documents) so DOS Master-controlled
+   writers and triggers accept the batch.
+
+4. **Verify publisher post-conditions**
+
+   ```bash
+   pnpm module:verify workspace-shell
+   ```
+
+5. **Build UI artifacts consumed by shell and SPA**
+
+   ```bash
+   pnpm --filter @dos/ui-system build
+   pnpm --filter @dos/platform-core build
+   pnpm --filter shahin-ai-grc-frontend build
+   ```
+
+6. **Repository gates**
+
+   ```bash
+   node scripts/ci-guards/workspace-shell-binding-renderer-parity.mjs
+   TENANT_COMPLETENESS_ENFORCE=1 node scripts/ci-guards/tenant-completeness.mjs
+   ```
+
+7. **Dynamic UI hard gates**
+
+   ```bash
+   pnpm dynamic-ui:gates
+   ```
+
+   Root `pnpm platform:customer-gate` already invokes `pnpm dynamic-ui:gates` first;
+   **avoid running `dynamic-ui:gates` twice** unless you are isolating a failure.
+
+8. **Reload product shell**
+
+   ```bash
+   pm2 reload product-shell --update-env
+   ```
+
 ## 10. Spec-discipline rules (apply to this file forever)
 
 1. **Append-only `.md`.** CI guard `seed-pack-md-json-parity.mjs` fails if any

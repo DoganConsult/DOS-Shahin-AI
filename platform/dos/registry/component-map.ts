@@ -735,6 +735,44 @@ const REGISTRY_COMPONENT_MAP: Record<string, () => Promise<Type<any>>> = {
   'foundation.user-lifecycle.page':  () => import('@platform/shell/templates/module-archetypes-extended.templates').then(m => m.WorkflowTimelineTemplateComponent),
   'foundation.reference-data.page':  () => import('@platform/shell/templates/module-records.template').then(m => m.ModuleRecordsTemplateComponent),
   'foundation.diagnostics.page':     () => import('@platform/shell/templates/module-posture-overview.template').then(m => m.PostureOverviewTemplateComponent),
+
+  // Approved-template aliases — registered in dos.dynamic_ui_component_registry by
+  // 20260505_1800_register_approved_template_components.sql and emitted as
+  // ui_route_template_binding.template_export by the canonical publisher
+  // (sql-emitter.mjs). Each maps the FE component name 1:1 to its real export
+  // in @platform/shell/templates barrel.
+  'ModuleOverviewTemplateComponent':       () => import('../../core/platform/shell/templates').then(m => m.ModuleOverviewTemplateComponent),
+  'PostureOverviewTemplateComponent':      () => import('../../core/platform/shell/templates').then(m => m.PostureOverviewTemplateComponent),
+  'TrendIntelligenceTemplateComponent':    () => import('../../core/platform/shell/templates').then(m => m.TrendIntelligenceTemplateComponent),
+  'DecisionDashboardTemplateComponent':    () => import('../../core/platform/shell/templates').then(m => m.DecisionDashboardTemplateComponent),
+  'CommandDashboardTemplateComponent':     () => import('../../core/platform/shell/templates').then(m => m.CommandDashboardTemplateComponent),
+  'ModuleRecordsTemplateComponent':        () => import('../../core/platform/shell/templates').then(m => m.ModuleRecordsTemplateComponent),
+  'ModuleHeatmapTemplateComponent':        () => import('../../core/platform/shell/templates').then(m => m.ModuleHeatmapTemplateComponent),
+  'RecordStoryTemplateComponent':          () => import('../../core/platform/shell/templates').then(m => m.RecordStoryTemplateComponent),
+  'GuidedCreateTemplateComponent':         () => import('../../core/platform/shell/templates').then(m => m.GuidedCreateTemplateComponent),
+  'ModuleWorkQueueTemplateComponent':      () => import('../../core/platform/shell/templates').then(m => m.ModuleWorkQueueTemplateComponent),
+  'ModuleAssessmentsTemplateComponent':    () => import('../../core/platform/shell/templates').then(m => m.ModuleAssessmentsTemplateComponent),
+  'WorkflowTimelineTemplateComponent':     () => import('../../core/platform/shell/templates').then(m => m.WorkflowTimelineTemplateComponent),
+  'FollowUpCenterTemplateComponent':       () => import('../../core/platform/shell/templates').then(m => m.FollowUpCenterTemplateComponent),
+  'ModuleReportsTemplateComponent':        () => import('../../core/platform/shell/templates').then(m => m.ModuleReportsTemplateComponent),
+  'ExportCenterTemplateComponent':         () => import('../../core/platform/shell/templates').then(m => m.ExportCenterTemplateComponent),
+  'AuditTrailTemplateComponent':           () => import('../../core/platform/shell/templates').then(m => m.AuditTrailTemplateComponent),
+  'AuditTrailLedgerTemplateComponent':     () => import('../../core/platform/shell/templates').then(m => m.AuditTrailLedgerTemplateComponent),
+  'AuditTrailEvidenceTemplateComponent':   () => import('../../core/platform/shell/templates').then(m => m.AuditTrailEvidenceTemplateComponent),
+  'CalendarTimelineTemplateComponent':     () => import('../../core/platform/shell/templates').then(m => m.CalendarTimelineTemplateComponent),
+  'ComplianceCalendarTemplateComponent':   () => import('../../core/platform/shell/templates').then(m => m.ComplianceCalendarTemplateComponent),
+  'RemediationRoadmapTemplateComponent':   () => import('../../core/platform/shell/templates').then(m => m.RemediationRoadmapTemplateComponent),
+  'OrgChartTemplateComponent':             () => import('../../core/platform/shell/templates').then(m => m.OrgChartTemplateComponent),
+  'OwnershipMapTemplateComponent':         () => import('../../core/platform/shell/templates').then(m => m.OwnershipMapTemplateComponent),
+  'DelegationCenterTemplateComponent':     () => import('../../core/platform/shell/templates').then(m => m.DelegationCenterTemplateComponent),
+  'AiAdvisorTemplateComponent':            () => import('../../core/platform/shell/templates').then(m => m.AiAdvisorTemplateComponent),
+  'AgentFlowTemplateComponent':            () => import('../../core/platform/shell/templates').then(m => m.AgentFlowTemplateComponent),
+  'AgentRegistryTemplateComponent':        () => import('../../core/platform/shell/templates').then(m => m.AgentRegistryTemplateComponent),
+  'UserAgentWorkbenchTemplateComponent':   () => import('../../core/platform/shell/templates').then(m => m.UserAgentWorkbenchTemplateComponent),
+  'ModuleSettingsTemplateComponent':       () => import('../../core/platform/shell/templates').then(m => m.ModuleSettingsTemplateComponent),
+  'ActivationJourneyTemplateComponent':    () => import('../../core/platform/shell/templates').then(m => m.ActivationJourneyTemplateComponent),
+  'IncidentResponseTemplateComponent':     () => import('../../core/platform/shell/templates').then(m => m.IncidentResponseTemplateComponent),
+  'CaseFinalizationTemplateComponent':     () => import('../../core/platform/shell/templates').then(m => m.CaseFinalizationTemplateComponent),
 };
 
 const PRIMITIVE_KEYS = new Set(Object.keys(CARBON_PRIMITIVE_COMPONENT_MAP));
