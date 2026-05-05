@@ -1,40 +1,49 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.APPROVED_COMPONENT_KEYS = void 0;
-exports.isApprovedComponentKey = isApprovedComponentKey;
 /**
- * Approved Dynamic UI component keys.
+ * Dynamic UI component key registry.
  *
- * Dynamic UI MUST allow only these keys. Any unknown component key
- * fails the `ui-component-allowlist.mjs` CI guard and is refused at
- * render time by the runtime allowlist guard.
+ * NO hardcoded keys. The approved set is populated at bootstrap from
+ * the DB (dos.dynamic_ui_component_registry) via the workspace-runtime
+ * resolver. CI guards validate against the live DB, not this file.
+ *
+ * Migration from static:
+ *   - Old: APPROVED_COMPONENT_KEYS = ['PageHeader', 'Tabs', ...] as const
+ *   - New: mutable Set populated at runtime from resolver/bootstrap
  */
-exports.APPROVED_COMPONENT_KEYS = [
-    'AppShell',
-    'PageHeader',
-    'Tabs',
-    'MetricCard',
-    'AdaptiveCommandBar',
-    'StatusBanner',
-    'ServiceCard',
-    'ChallengeCard',
-    'EmptyState',
-    'LoadingState',
-    'BottomSheet',
-    'DesktopDialog',
-    'SideDrawer',
-    'AccountMenu',
-    'AiAssistantFab',
-    'DataTable',
-    'GraphCanvas',
-    'AIWorkbenchPanel',
-    // B0.2 nav primitives — owned by @dos/ui-system, consumed via product
-    // navigation adapters. Do not duplicate locally in product apps.
-    'NavItem',
-    'NavSection',
-    'WorkspaceNav',
-];
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.registerApprovedComponentKeys = registerApprovedComponentKeys;
+exports.registerComponentKey = registerComponentKey;
+exports.isApprovedComponentKey = isApprovedComponentKey;
+exports.getApprovedComponentKeys = getApprovedComponentKeys;
+// ── Runtime registry (populated from DB at bootstrap) ─────────────────────
+const _approvedKeys = new Set();
+/**
+ * Populate the approved key set from the resolver bootstrap response.
+ * Called once at app init by the bootstrap service.
+ */
+function registerApprovedComponentKeys(keys) {
+    _approvedKeys.clear();
+    for (const k of keys)
+        _approvedKeys.add(k);
+}
+/**
+ * Add a single key at runtime (e.g. lazy-loaded module registering a
+ * domain widget after bootstrap).
+ */
+function registerComponentKey(key) {
+    _approvedKeys.add(key);
+}
+/**
+ * Runtime type guard — returns true only if the key was registered
+ * from the DB via registerApprovedComponentKeys().
+ */
 function isApprovedComponentKey(key) {
-    return exports.APPROVED_COMPONENT_KEYS.includes(key);
+    return _approvedKeys.has(key);
+}
+/**
+ * Snapshot of currently registered keys (for admin validation, CI guards).
+ */
+function getApprovedComponentKeys() {
+    return _approvedKeys;
 }
 //# sourceMappingURL=component-keys.js.map

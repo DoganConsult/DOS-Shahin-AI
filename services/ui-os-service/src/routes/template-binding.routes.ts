@@ -60,21 +60,31 @@ function deepMerge(
   return target;
 }
 
-// First non-empty path segment → module_code. Mirrors the FE app.routes
-// hierarchy under products/shahin-ai/app/src/app/app.routes.ts.
-const MODULE_PREFIX_MAP: Array<[RegExp, string]> = [
-  [/^\/admin\/config-center(\/|$)/, 'config-center'],
-  [/^\/admin(\/|$)/,                'platform-admin'],
-  [/^\/foundation(\/|$)/,           'foundation'],
-  [/^\/compliance(\/|$)/,           'compliance'],
-  [/^\/risk(\/|$)/,                 'risk'],
-  [/^\/audit(\/|$)/,                'audit'],
-  [/^\/workspace-home(\/|$)/,       'foundation'],
-  [/^\/(profile|tenant-profile|settings|tenant-settings)(\/|$)/, 'foundation'],
-];
+// Dynamic route→module resolution. No hardcoded module names.
+// Falls back to first non-empty path segment (e.g. /risk/... → 'risk').
+// The DB table dos.dynamic_ui_modules.default_route can override this
+// for modules whose route prefix ≠ module_code.
+let _moduleRouteCache: Map<string, string> | null = null;
+async function warmModuleRouteCache(pool: DbPool): Promise<void> {
+  try {
+    const { rows } = await pool.query<{ module_code: string; default_route: string }>(
+      `SELECT module_code, default_route FROM dos.dynamic_ui_modules WHERE default_route IS NOT NULL`,
+    );
+    const m = new Map<string, string>();
+    for (const r of rows) m.set(r.default_route.replace(/\/$/, ''), r.module_code);
+    _moduleRouteCache = m;
+  } catch { _moduleRouteCache = new Map(); }
+}
 function deriveModuleCode(route: string): string {
-  for (const [re, code] of MODULE_PREFIX_MAP) if (re.test(route)) return code;
-  return '';
+  // Check DB-driven cache first.
+  if (_moduleRouteCache) {
+    for (const [prefix, code] of _moduleRouteCache) {
+      if (route === prefix || route.startsWith(prefix + '/')) return code;
+    }
+  }
+  // Fallback: first path segment = module_code.
+  const seg = route.replace(/^\/+/, '').split('/')[0];
+  return seg || '';
 }
 
 function readProductCode(req: Request): string {
@@ -342,6 +352,8 @@ async function loadProps(
 
 export function createTemplateBindingRouter(pool: DbPool): Router {
   const router = Router();
+  // Warm the route→module cache from DB at startup (async, non-blocking).
+  warmModuleRouteCache(pool);
 
   router.get('/template-binding/all', async (_req, res) => {
     try {

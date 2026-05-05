@@ -46,8 +46,7 @@ function isWorkspaceRoute(row) {
         return false;
     if (pathPattern.startsWith('/admin/'))
         return false;
-    if (moduleCode === 'marketing')
-        return false;
+    // Marketing routes already excluded via NON_WORKSPACE_PATHS above.
     if (componentKey.startsWith('auth.'))
         return false;
     if (!row.permission_key)

@@ -267,8 +267,9 @@ export class DynamicUiBootstrapService {
         if (r.status === 'fulfilled' && r.value.bundle) {
           merged[r.value.code] = r.value.bundle;
           loaded.push(r.value.code);
-          // Keep legacy foundation signal in sync.
-          if (r.value.code === 'foundation') {
+          // Legacy single-module signal: sync with the first successfully
+          // loaded module so code using `this.foundation()` keeps working.
+          if (!this._foundation()) {
             this._foundation.set(r.value.bundle);
           }
         } else if (r.status === 'rejected') {
