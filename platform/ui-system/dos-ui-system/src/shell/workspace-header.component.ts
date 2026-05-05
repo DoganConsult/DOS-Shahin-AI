@@ -280,11 +280,13 @@ export class DosWorkspaceHeaderComponent {
   /** Full WorkspaceHeaderContext — optional; individual @Inputs also accepted */
   @Input() set context(v: WorkspaceHeaderContext | null | undefined) {
     if (!v) return;
-    this.title = v.brand?.productName?.fallback ?? v.brand?.productName?.i18nKey ?? '';
-    this.tenantName = v.tenantName?.fallback ?? v.tenantName?.i18nKey ?? '';
-    this.logoUri = v.brand?.logoUri ?? null;
+    const pn = v.brand?.productName;
+    this.title = typeof pn === 'string' ? pn : (pn as any)?.fallback ?? (pn as any)?.i18nKey ?? '';
+    const tn = v.tenantName;
+    this.tenantName = typeof tn === 'string' ? tn : (tn as any)?.fallback ?? (tn as any)?.i18nKey ?? '';
+    this.logoUri = v.brand?.logoUri ?? v.brand?.logoHref ?? null;
     this.userDisplayName = v.user?.displayName ?? '';
-    this.userAvatarUri = v.user?.avatarUri ?? null;
+    this.userAvatarUri = v.user?.avatarUri ?? v.user?.avatarUrl ?? null;
     this.trailingActions = v.trailingActions ?? [];
   }
 

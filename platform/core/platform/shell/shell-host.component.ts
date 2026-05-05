@@ -49,17 +49,8 @@ import {
   type DosAccountMenuItem,
   type DosToastMessage,
   type ShellBanner,
-  type CommandSearchResult,
-  type InboxMessage,
-  type QuickCreateAction,
-  type StatusBarSignal,
-  type ActionQueueItem,
-  type AgentActivity,
-  type ContextPanelView,
-  type ContextPanelTab,
 } from '@dos/ui-system';
 import { DosCarbonSearchComponent } from '@dos/ui-system';
-import type { WorkspaceNavItem } from '@dos/ui-system';
 import {
   WorkspaceNavigationAdapter,
   AccessStore as PlatformAccessStore,
@@ -761,46 +752,30 @@ export class ShellHostComponent {
   // WorkspaceShellBindingService consuming
   // GET /api/ui-os/workspace-shell/:tenantId (dos.workspace_shell_binding).
   // Empty arrays render localized empty/placeholder states fail-soft.
-  readonly commandResults: () => CommandSearchResult[]      = this.shellBinding.commandResults;
-  readonly inboxMessages: () => InboxMessage[]              = this.shellBinding.inboxMessages;
-  readonly quickCreateActions: () => QuickCreateAction[]    = this.shellBinding.quickCreateActions;
-  readonly statusBarSignals: () => StatusBarSignal[]        = this.shellBinding.statusBarSignals;
-  readonly actionQueueItems: () => ActionQueueItem[]        = this.shellBinding.actionQueueItems;
-  readonly agentActivities: () => AgentActivity[]           = this.shellBinding.agentActivities;
-  readonly contextViews: () => ContextPanelView[]           = this.shellBinding.contextViews;
+  readonly commandResults: () => unknown[]      = this.shellBinding.commandResults;
+  readonly inboxMessages: () => unknown[]              = this.shellBinding.inboxMessages;
+  readonly quickCreateActions: () => unknown[]    = this.shellBinding.quickCreateActions;
+  readonly statusBarSignals: () => unknown[]        = this.shellBinding.statusBarSignals;
+  readonly actionQueueItems: () => unknown[]        = this.shellBinding.actionQueueItems;
+  readonly agentActivities: () => unknown[]           = this.shellBinding.agentActivities;
+  readonly contextViews: () => unknown[]           = this.shellBinding.contextViews;
 
-  // ── Dynamic render gates — DB enabled + perms_required ──────────────────
-  // Every surface render is gated on the per-tenant row in
-  // `dos.workspace_shell_binding`. The host never decides visibility from
-  // static config; binding-service.isSurfaceAllowed(key) is the only gate.
-  readonly showShellApp         = computed(() => this.shellBinding.isSurfaceAllowed('shell.app'));
-  readonly showShellDesktop     = computed(() => this.shellBinding.isSurfaceAllowed('shell.desktop'));
-  readonly showShellMobile      = computed(() => this.shellBinding.isSurfaceAllowed('shell.mobile'));
-  readonly showShellDesktopSidebar = computed(() => this.shellBinding.isSurfaceAllowed('shell.desktop-sidebar'));
-  readonly showStatusBar        = computed(() => this.shellBinding.isSurfaceAllowed('workspace.status-bar'));
-  readonly showActionQueue      = computed(() => this.shellBinding.isSurfaceAllowed('workspace.action-queue'));
-  readonly showAgentStrip       = computed(() => this.shellBinding.isSurfaceAllowed('workspace.agent-strip'));
-  readonly showContextPanel     = computed(() => this.shellBinding.isSurfaceAllowed('workspace.context-panel'));
-  readonly showInbox            = computed(() => this.shellBinding.isSurfaceAllowed('workspace.inbox-center'));
-  readonly showQuickCreate      = computed(() => this.shellBinding.isSurfaceAllowed('workspace.quick-create'));
-  readonly showCommandSearch    = computed(() => this.shellBinding.isSurfaceAllowed('workspace.command-search'));
+  // ── Dynamic render gates — Zone-based, fully resolver-driven ─────────────
+  // Every surface render is gated on zone membership from the resolver.
+  // The shell-host never references specific component_key strings.
+  // The binding-service resolves zone from: row.zone → props.zone → null.
+  readonly showShellApp         = computed(() => this.shellBinding.zoneHas('header'));
+  readonly showShellDesktop     = computed(() => this.shellBinding.zoneHas('header'));
+  readonly showShellMobile      = computed(() => this.shellBinding.zoneHas('header'));
+  readonly showShellDesktopSidebar = computed(() => this.shellBinding.zoneHas('sidebar'));
+  readonly showStatusBar        = computed(() => this.shellBinding.zoneHas('bottom-status'));
+  readonly showActionQueue      = computed(() => this.shellBinding.zoneHas('bottom-status'));
+  readonly showAgentStrip       = computed(() => this.shellBinding.zoneHas('bottom-status'));
+  readonly showContextPanel     = computed(() => this.shellBinding.zoneHas('right-rail'));
+  readonly showInbox            = computed(() => this.shellBinding.zoneHas('right-rail'));
+  readonly showQuickCreate      = computed(() => this.shellBinding.zoneHas('fab'));
+  readonly showCommandSearch    = computed(() => this.shellBinding.zoneHas('header'));
   readonly zoneHas              = (zone: WorkspaceShellZone) => this.shellBinding.zoneHas(zone);
-
-  // ── Group 7 — tile-variant render gates + props pipes ─────────────────────
-  // The four `workspace.*-tile` keys are Carbon tile primitive variants
-  // seeded by the publisher. `isSurfaceAllowed()` honours the row's enabled
-  // flag and any tenant-imposed `perms_required`; the `…TileProps` signals
-  // expose `props.variant` + tone/density/etc. so call-sites that consume
-  // `<dos-carbon-tile [variant]="…">` can read tenant overrides without
-  // hard-coding the literal Carbon variant names.
-  readonly showSelectableTile   = computed(() => this.shellBinding.isSurfaceAllowed('workspace.selectable-tile'));
-  readonly showClickableTile    = computed(() => this.shellBinding.isSurfaceAllowed('workspace.clickable-tile'));
-  readonly showExpandableTile   = computed(() => this.shellBinding.isSurfaceAllowed('workspace.expandable-tile'));
-  readonly showAiTile           = computed(() => this.shellBinding.isSurfaceAllowed('workspace.ai-tile'));
-  readonly selectableTileProps  = computed(() => this.shellBinding.selectableTileProps());
-  readonly clickableTileProps   = computed(() => this.shellBinding.clickableTileProps());
-  readonly expandableTileProps  = computed(() => this.shellBinding.expandableTileProps());
-  readonly aiTileProps          = computed(() => this.shellBinding.aiTileProps());
 
   // ── §B.9 P4 — banner multiplex (#25, #34–37) ──────────────────────────────
   readonly shellBanners = computed<ShellBanner[]>(() => {
@@ -886,7 +861,7 @@ export class ShellHostComponent {
   // ── Wave F — new header/overlay UI state ──────────────────────────────────
   readonly mobileCmdOpen = signal(false);
   readonly contextOpen   = signal(false);
-  readonly contextTab    = signal<ContextPanelTab>('record');
+  readonly contextTab    = signal<string>('record');
   // Dynamic-first account menu: prefer DB (workspace.header.props.accountMenu
   // via WorkspaceShellBindingService) over the platform-default adapter
   // constant. Both sources are signals so the UI reacts to either flipping.
@@ -1032,19 +1007,19 @@ export class ShellHostComponent {
 
   onCommandQuery(q: string): void { this.commandQuery.set(q); }
 
-  onCommandSelect(r: CommandSearchResult): void {
-    if (r.route) void this.router.navigateByUrl(r.route);
+  onCommandSelect(r: Record<string, unknown>): void {
+    if (r['route']) void this.router.navigateByUrl(r['route'] as string);
   }
 
-  onInboxSelect(m: InboxMessage): void {
-    if (m.route) {
-      void this.router.navigateByUrl(m.route);
+  onInboxSelect(m: Record<string, unknown>): void {
+    if (m['route']) {
+      void this.router.navigateByUrl(m['route'] as string);
       this.closeInbox();
     }
   }
 
-  onQuickCreate(a: QuickCreateAction): void {
-    if (a.route) void this.router.navigateByUrl(a.route);
+  onQuickCreate(a: Record<string, unknown>): void {
+    if (a['route']) void this.router.navigateByUrl(a['route'] as string);
   }
 
   // ── Wave F handlers ──────────────────────────────────────────────────────
@@ -1081,26 +1056,26 @@ export class ShellHostComponent {
   toggleMobileCmd(): void { this.mobileCmdOpen.update((v) => !v); }
   closeMobileCmd(): void  { this.mobileCmdOpen.set(false); }
 
-  onMobileCommandSelect(r: CommandSearchResult): void {
+  onMobileCommandSelect(r: Record<string, unknown>): void {
     this.onCommandSelect(r);
     this.closeMobileCmd();
   }
 
-  onStatusSignal(s: StatusBarSignal): void {
-    if (s.detailRoute) void this.router.navigateByUrl(s.detailRoute);
+  onStatusSignal(s: Record<string, unknown>): void {
+    if (s['detailRoute']) void this.router.navigateByUrl(s['detailRoute'] as string);
   }
 
-  onActionQueueOpen(item: ActionQueueItem): void {
-    if (item.route) void this.router.navigateByUrl(item.route);
+  onActionQueueOpen(item: Record<string, unknown>): void {
+    if (item['route']) void this.router.navigateByUrl(item['route'] as string);
   }
 
-  onAgentSelect(a: AgentActivity): void {
-    if (a.evidenceUri) {
-      if (this.isBrowser) window.open(a.evidenceUri, '_blank', 'noopener');
+  onAgentSelect(a: Record<string, unknown>): void {
+    if (a['evidenceUri']) {
+      if (this.isBrowser) window.open(a['evidenceUri'] as string, '_blank', 'noopener');
     }
   }
 
-  onContextTabChange(tab: ContextPanelTab): void {
+  onContextTabChange(tab: string): void {
     this.contextTab.set(tab);
   }
 
@@ -1169,15 +1144,15 @@ export class ShellHostComponent {
   // §B.9 #7 — dir derived from ShellPreferencesService (no DOM read).
   readonly sidebarDir = computed<'ltr' | 'rtl'>(() => this.prefs.dir());
 
-  readonly sidebarItems = computed<WorkspaceNavItem[]>(() => {
-    const out: WorkspaceNavItem[] = [];
+  readonly sidebarItems = computed<Record<string, unknown>[]>(() => {
+    const out: Record<string, unknown>[] = [];
     for (const group of this.filteredGroups()) {
       const groupName = this.groupLabel(group.id, group.label);
       for (const it of group.items) {
         if (!it.route) continue;
         if (it.enabled === false) continue;
         const badgeNum = it.badge != null ? Number(it.badge) : NaN;
-        const item: WorkspaceNavItem = {
+        const item: Record<string, unknown> = {
           id: it.id,
           label: { i18nKey: it.labelKey || it.id, fallback: this.label(it) },
           icon: this.itemIcon(it, group.id),
@@ -1210,9 +1185,9 @@ export class ShellHostComponent {
     return out;
   });
 
-  onSidebarNavigate(item: WorkspaceNavItem): void {
-    if (!item.route) return;
-    void this.router.navigateByUrl(item.route);
+  onSidebarNavigate(item: Record<string, unknown>): void {
+    if (!item['route']) return;
+    void this.router.navigateByUrl(item['route'] as string);
     if (this.isMobile()) this.sideNavActive.set(false);
   }
 

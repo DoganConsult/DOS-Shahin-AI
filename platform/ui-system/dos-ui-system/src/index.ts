@@ -145,8 +145,10 @@ export {
 
 // Re-export contracts for convenience.
 export {
-  APPROVED_COMPONENT_KEYS,
   isApprovedComponentKey,
+  registerApprovedComponentKeys,
+  getApprovedComponentKeys,
+  registerComponentKey,
 } from '@dos/ui-contracts';
 export type {
   ApprovedComponentKey,

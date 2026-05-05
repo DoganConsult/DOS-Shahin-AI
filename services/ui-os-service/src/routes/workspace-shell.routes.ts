@@ -121,31 +121,39 @@ const WORKSPACE_RUNTIME_ZONES: readonly WorkspaceRuntimeZone[] = [
   'content',
 ];
 
-// Zone mapping applies to Band A (frame primitives) which have fixed
-// layout positions. Bands B-F are zone-agnostic — they render wherever
-// their parent composition places them (resolved by props.zone override).
-const DEFAULT_SURFACE_ZONES: Partial<Record<WorkspaceShellKey, WorkspaceRuntimeZone>> = {
-  'workspace.frame.ui-shell':            'main',
-  'workspace.frame.header':              'header',
-  'workspace.frame.header-name':         'header',
-  'workspace.frame.header-navigation':   'header',
-  'workspace.frame.header-menu':         'header',
-  'workspace.frame.header-menu-item':    'header',
-  'workspace.frame.header-global-bar':   'header',
-  'workspace.frame.header-global-action':'header',
-  'workspace.frame.side-nav':            'sidebar',
-  'workspace.frame.side-nav-items':      'sidebar',
-  'workspace.frame.side-nav-menu':       'sidebar',
-  'workspace.frame.side-nav-menu-item':  'sidebar',
-  'workspace.frame.side-nav-link':       'sidebar',
-  'workspace.frame.content':             'content',
-};
+// Zone mapping — Band A (frame primitives) have fixed layout positions.
+// Bands B-F default to 'content' — they render inside the page content area.
+// Any key can override zone via props.zone in the DB binding row.
+const FRAME_ZONE_PREFIXES: ReadonlyArray<[string, WorkspaceRuntimeZone]> = [
+  ['workspace.frame.header',    'header'],
+  ['workspace.frame.side-nav',  'sidebar'],
+  ['workspace.frame.content',   'content'],
+  ['workspace.frame.ui-shell',  'main'],
+];
 
 function zoneForSurface(row: WorkspaceShellRow): WorkspaceRuntimeZone | null {
+  // 1. Explicit DB override always wins.
   const props = row.props ?? {};
   const propZone = typeof props.zone === 'string' ? props.zone as WorkspaceRuntimeZone : null;
   if (propZone && WORKSPACE_RUNTIME_ZONES.includes(propZone)) return propZone;
-  return DEFAULT_SURFACE_ZONES[row.component_key as WorkspaceShellKey] ?? null;
+
+  const key = row.component_key;
+
+  // 2. Band A frame primitives — prefix-based fixed zone.
+  for (const [prefix, zone] of FRAME_ZONE_PREFIXES) {
+    if (key === prefix || key.startsWith(prefix + '-') || key.startsWith(prefix + '.')) return zone;
+  }
+  // workspace.frame.* catch-all → main
+  if (key.startsWith('workspace.frame.')) return 'main';
+
+  // 3. All other bands (B-F) → content by default.
+  //    workspace.nav.*, workspace.data.*, workspace.input.*,
+  //    workspace.action.*, workspace.polish.* — these are Carbon
+  //    primitives used inside page content.
+  if (key.startsWith('workspace.')) return 'content';
+
+  // 4. Unknown prefix — skip.
+  return null;
 }
 
 function normalizeSurface(row: WorkspaceShellRow): WorkspaceShellRow {

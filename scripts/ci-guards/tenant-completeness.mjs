@@ -12,7 +12,7 @@
  *   - active product entitlement
  *   - active foundation module entitlement
  *   - trial bundle row OR a paid subscription
- *   - 30 workspace shell binding rows
+ *   - 60 workspace shell binding rows (60-key taxonomy v3.0)
  *
  * Also asserts that every distinct perm referenced by
  * dos.workspace_shell_binding.perms_required[] is granted by ≥1 functional
@@ -56,8 +56,8 @@ async function main() {
       `SELECT count(*)::int AS n FROM dos.workspace_shell_binding WHERE tenant_id=$1`,
       [t.tenant_id],
     );
-    if (sb.rows[0].n !== 30) {
-      failures.push(`${t.tenant_id} (${t.tenant_code}): workspace_shell_binding has ${sb.rows[0].n} rows, expected 30`);
+    if (sb.rows[0].n !== 60) {
+      failures.push(`${t.tenant_id} (${t.tenant_code}): workspace_shell_binding has ${sb.rows[0].n} rows, expected 60`);
     }
   }
 

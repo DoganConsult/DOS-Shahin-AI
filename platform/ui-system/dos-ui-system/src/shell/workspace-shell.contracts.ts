@@ -135,19 +135,19 @@ export const WORKSPACE_SHELL_KEY_COUNT = 60 as const;
 
 export const WORKSPACE_SHELL_CARBON_MAP: Readonly<Record<WorkspaceShellKey, string>> = {
   // Band A — Frame (14)
-  'workspace.frame.ui-shell':            'ui-shell',
+  'workspace.frame.ui-shell':            'ui_shell',
   'workspace.frame.header':              'header',
-  'workspace.frame.header-name':         'header-name',
-  'workspace.frame.header-navigation':   'header-navigation',
-  'workspace.frame.header-menu':         'header-menu',
-  'workspace.frame.header-menu-item':    'header-menu-item',
-  'workspace.frame.header-global-bar':   'header-global-bar',
-  'workspace.frame.header-global-action':'header-global-action',
-  'workspace.frame.side-nav':            'side-nav',
-  'workspace.frame.side-nav-items':      'side-nav-items',
-  'workspace.frame.side-nav-menu':       'side-nav-menu',
-  'workspace.frame.side-nav-menu-item':  'side-nav-menu-item',
-  'workspace.frame.side-nav-link':       'side-nav-link',
+  'workspace.frame.header-name':         'header_name',
+  'workspace.frame.header-navigation':   'header_navigation',
+  'workspace.frame.header-menu':         'header_menu',
+  'workspace.frame.header-menu-item':    'header_menu_item',
+  'workspace.frame.header-global-bar':   'header_global_bar',
+  'workspace.frame.header-global-action':'header_global_action',
+  'workspace.frame.side-nav':            'side_nav',
+  'workspace.frame.side-nav-items':      'side_nav_items',
+  'workspace.frame.side-nav-menu':       'side_nav_menu',
+  'workspace.frame.side-nav-menu-item':  'side_nav_menu_item',
+  'workspace.frame.side-nav-link':       'side_nav_link',
   'workspace.frame.content':             'content',
 
   // Band B — Navigation / Layout (10)
@@ -158,8 +158,8 @@ export const WORKSPACE_SHELL_CARBON_MAP: Readonly<Record<WorkspaceShellKey, stri
   'workspace.nav.tabs':                  'tabs',
   'workspace.nav.tab':                   'tab',
   'workspace.nav.tile':                  'tile',
-  'workspace.nav.clickable-tile':        'clickable-tile',
-  'workspace.nav.expandable-tile':       'expandable-tile',
+  'workspace.nav.clickable-tile':        'clickable_tile',
+  'workspace.nav.expandable-tile':       'expandable_tile',
   'workspace.nav.tag':                   'tag',
 
   // Band C — Tables / Lists / Data (7)
@@ -169,7 +169,7 @@ export const WORKSPACE_SHELL_CARBON_MAP: Readonly<Record<WorkspaceShellKey, stri
   'workspace.data.table-toolbar-actions':'table_toolbar_actions',
   'workspace.data.table-batch-actions':  'table_batch_actions',
   'workspace.data.pagination':           'pagination',
-  'workspace.data.structured-list':      'structured-list',
+  'workspace.data.structured-list':      'structured_list',
 
   // Band D — Search / Filters / Inputs (12)
   'workspace.input.search':              'search',
@@ -179,7 +179,7 @@ export const WORKSPACE_SHELL_CARBON_MAP: Readonly<Record<WorkspaceShellKey, stri
   'workspace.input.date-picker':         'date_picker',
   'workspace.input.text-input':          'text_input',
   'workspace.input.text-area':           'text_area',
-  'workspace.input.number-input':        'number-input',
+  'workspace.input.number-input':        'number_input',
   'workspace.input.select':              'select',
   'workspace.input.checkbox':            'checkbox',
   'workspace.input.radio':               'radio',
@@ -188,22 +188,22 @@ export const WORKSPACE_SHELL_CARBON_MAP: Readonly<Record<WorkspaceShellKey, stri
   // Band E — Actions / Feedback / Overlays (7)
   'workspace.action.button':             'button',
   'workspace.action.icon-button':        'icon_button',
-  'workspace.action.overflow-menu':      'overflow-menu',
-  'workspace.action.overflow-menu-option':'overflow-menu-option',
+  'workspace.action.overflow-menu':      'overflow_menu',
+  'workspace.action.overflow-menu-option':'overflow_menu_option',
   'workspace.action.modal':              'modal',
-  'workspace.action.inline-notification':'inline-notification',
-  'workspace.action.toast-notification': 'toast-notification',
+  'workspace.action.inline-notification':'inline_notification',
+  'workspace.action.toast-notification': 'toast_notification',
 
   // Band F — Enterprise Polish (10)
   'workspace.polish.tooltip':            'tooltip',
   'workspace.polish.toggletip':          'toggletip',
   'workspace.polish.popover':            'popover',
-  'workspace.polish.progress-bar':       'progress-bar',
-  'workspace.polish.inline-loading':     'inline-loading',
-  'workspace.polish.skeleton-text':      'skeleton-text',
-  'workspace.polish.skeleton-placeholder':'skeleton-placeholder',
-  'workspace.polish.context-menu':       'context-menu',
-  'workspace.polish.file-uploader':      'file-uploader',
+  'workspace.polish.progress-bar':       'progress_bar',
+  'workspace.polish.inline-loading':     'inline_loading',
+  'workspace.polish.skeleton-text':      'skeleton_text',
+  'workspace.polish.skeleton-placeholder':'skeleton_placeholder',
+  'workspace.polish.context-menu':       'context_menu',
+  'workspace.polish.file-uploader':      'file_uploader',
   'workspace.polish.accordion':          'accordion',
 };
 
@@ -257,7 +257,7 @@ export const WORKSPACE_RUNTIME_ZONES: readonly WorkspaceRuntimeZone[] = [
   'content',
 ];
 
-export const DEFAULT_ZONE_MAP: Partial<Record<WorkspaceShellKey, WorkspaceRuntimeZone>> = {
+export const DEFAULT_ZONE_MAP: Readonly<Record<string, WorkspaceRuntimeZone>> = {
   'workspace.frame.ui-shell':            'main',
   'workspace.frame.header':              'header',
   'workspace.frame.header-name':         'header',
@@ -281,7 +281,8 @@ export interface PermissionAware {
 
 // ─── Binding row contract ─────────────────────────────────────────────────
 export interface WorkspaceShellBindingRow {
-  readonly component_key: WorkspaceShellKey;
+  readonly component_key: string;
+  readonly carbon_key?: string;
   readonly enabled: boolean;
   readonly position: number;
   readonly perms_required: readonly string[];
@@ -313,9 +314,130 @@ export function assertWorkspaceShellKey(value: string): asserts value is Workspa
 }
 
 /**
- * Resolve the canonical carbon_key for a workspace-shell component_key.
- * Returns undefined for invalid keys (caller should fallback or throw).
+ * Resolve the canonical carbon_key for any component_key.
+ * Returns undefined for unknown keys (caller must fail preflight, not silently fallback).
  */
-export function carbonKeyFor(key: WorkspaceShellKey): string {
-  return WORKSPACE_SHELL_CARBON_MAP[key];
+export function carbonKeyFor(key: string): string | undefined {
+  return (WORKSPACE_SHELL_CARBON_MAP as Record<string, string>)[key];
 }
+
+// ─── Data-shape contracts for shell wrapper components ───────────────────
+// These define the data shapes that individual shell wrapper components
+// consume via their @Input() bindings. They are independent from the
+// 60-key taxonomy above (which defines component_key → carbon_key mapping).
+
+export interface WorkspaceI18nLabel {
+  i18nKey: string;
+  fallback?: string;
+}
+
+/** workspace-header props */
+export interface WorkspaceHeaderContext {
+  brand?: { productName?: string; tenantName?: string; logoHref?: string; logoUri?: string };
+  tenantName?: string;
+  homeRoute?: string;
+  workspaceTitle?: string;
+  user?: { displayName?: string; email?: string; avatarUri?: string; avatarUrl?: string };
+  trailingActions?: WorkspaceHeaderAction[];
+}
+
+export interface WorkspaceHeaderAction {
+  id: string;
+  label: WorkspaceI18nLabel;
+  icon?: string;
+  ariaLabel?: string;
+}
+
+/** workspace-sidebar nav item */
+export interface WorkspaceNavItem {
+  id: string;
+  label: WorkspaceI18nLabel;
+  icon?: string;
+  route?: string;
+  active?: boolean;
+  badge?: number;
+  group?: string;
+}
+
+/** workspace-status-bar signal */
+export interface StatusBarSignal {
+  id: string;
+  label: WorkspaceI18nLabel;
+  kind?: string;
+  level?: string;
+  value?: string | number;
+  detailRoute?: string;
+}
+
+/** workspace-action-queue item */
+export interface ActionQueueItem {
+  id: string;
+  title: WorkspaceI18nLabel;
+  origin: WorkspaceI18nLabel;
+  status?: string;
+  severity?: string;
+  route?: string;
+  timestamp?: string;
+  dueAt?: string;
+}
+
+/** agent-activity-strip activity */
+export type AgentActivityState = 'running' | 'complete' | 'done' | 'error' | 'waiting' | 'awaiting-approval' | string;
+
+export interface AgentActivity {
+  agentName: WorkspaceI18nLabel;
+  step: WorkspaceI18nLabel;
+  state?: AgentActivityState;
+  status?: AgentActivityState;
+  evidenceUri?: string;
+}
+
+/** command-search result */
+export interface CommandSearchResult {
+  id: string;
+  label: WorkspaceI18nLabel;
+  route?: string;
+  icon?: string;
+  category?: string;
+}
+
+/** context-panel view */
+export interface ContextPanelView {
+  id: string;
+  title: WorkspaceI18nLabel;
+  emptyMessage?: WorkspaceI18nLabel;
+  tab?: string;
+}
+
+export type ContextPanelTab = 'record' | 'help' | 'activity' | string;
+
+/** inbox-center message */
+export type InboxSource = 'system' | 'agent' | 'user' | 'module' | string;
+export type InboxPriority = 'low' | 'med' | 'medium' | 'high' | string;
+
+export interface InboxMessage {
+  id: string;
+  subject: WorkspaceI18nLabel;
+  preview: WorkspaceI18nLabel;
+  source?: InboxSource;
+  priority?: InboxPriority;
+  route?: string;
+  read?: boolean;
+  unread?: boolean;
+  timestamp?: string;
+}
+
+/** quick-create action */
+export interface QuickCreateAction {
+  id: string;
+  label: WorkspaceI18nLabel;
+  icon?: string;
+  route?: string;
+}
+
+/** Tile variant props (for workspace.nav.tile/clickable-tile/expandable-tile) */
+export interface SelectableTileProps { variant?: string; tone?: string; density?: string; }
+export interface ClickableTileProps { variant?: string; href?: string; }
+export interface ExpandableTileProps { variant?: string; expandedHeight?: string; }
+export interface AiTileProps { variant?: string; confidence?: number; }
+

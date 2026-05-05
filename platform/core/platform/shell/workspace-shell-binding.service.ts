@@ -1,36 +1,20 @@
 /**
- * Wave F / GAP-RES-1 — Workspace-shell binding consumer.
+ * Phase WS-7 — Workspace-shell binding consumer (fully dynamic, 60-key v3.0).
  *
- * Consumes `GET /api/ui-os/workspace-shell/:tenantId` (served by
- * `services/ui-os-service/src/routes/workspace-shell.routes.ts`) and exposes
- * per-surface signals keyed by the 26 component keys from
- * `dos.workspace_shell_binding` (shell.*, workspace.*, page.*).
+ * Consumes `GET /api/ui-os/workspace-shell/:tenantId` and exposes surfaces
+ * keyed by whatever component_key strings the resolver returns.
  *
- * Fail-soft: any HTTP error (including 401/403 during sign-out) resolves to
- * an empty surface map so the shell continues to render empty/placeholder
- * states instead of throwing. The shell host never blocks on this service.
+ * RULE: This file has ZERO hardcoded component_key literals. Every surface
+ * name flows from the resolver response. The FE never decides which keys
+ * exist — the DB does.
  *
- * NOTE: This service does NOT write to the DB. It is a pure read-through of
- * the existing Phase WS-1 seed. No migration, no template export.
+ * Fail-soft: any HTTP error resolves to an empty surface map so the shell
+ * continues to render empty/placeholder states instead of throwing.
  */
 import { Injectable, computed, effect, inject, signal } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, of } from 'rxjs';
-import type {
-  ActionQueueItem,
-  AgentActivity,
-  AiTileProps,
-  ClickableTileProps,
-  CommandSearchResult,
-  ContextPanelView,
-  ExpandableTileProps,
-  InboxMessage,
-  QuickCreateAction,
-  SelectableTileProps,
-  StatusBarSignal,
-  WorkspaceShellBindingRow,
-  WorkspaceShellKey,
-} from '@dos/ui-system';
+import type { WorkspaceShellBindingRow } from '@dos/ui-system';
 import type { ShellAccountMenuEntry } from '@dos/ui-contracts';
 import { AccessStore } from '@dos/access-store';
 
@@ -64,7 +48,8 @@ interface WorkspaceShellResponse {
   };
 }
 
-type SurfaceMap = ReadonlyMap<WorkspaceShellKey, WorkspaceShellSurface>;
+/** Fully dynamic surface map — key type is string, not a union literal. */
+type SurfaceMap = ReadonlyMap<string, WorkspaceShellSurface>;
 
 const EMPTY_MAP: SurfaceMap = new Map();
 
@@ -81,32 +66,6 @@ const WORKSPACE_SHELL_ZONES = new Set<WorkspaceShellZone>([
   'toast',
 ]);
 
-const DEFAULT_SURFACE_ZONES: Partial<Record<WorkspaceShellKey, WorkspaceShellZone>> = {
-  'workspace.header': 'header',
-  'workspace.command-search': 'header',
-  'shell.account-menu': 'header',
-  'workspace.sidebar': 'sidebar',
-  'shell.desktop-sidebar': 'sidebar',
-  'shell.workspace-nav': 'sidebar',
-  'shell.nav-section': 'sidebar',
-  'shell.nav-item': 'sidebar',
-  'shell.mobile-drawer': 'mobile-drawer',
-  'workspace.mobile-nav': 'mobile-nav',
-  'shell.banner-strip': 'top-banners',
-  'page.layout': 'main',
-  'page.masthead': 'main',
-  'page.header': 'main',
-  'page.tabs': 'main',
-  'page.widget-frame': 'main',
-  'workspace.context-panel': 'right-rail',
-  'workspace.inbox-center': 'right-rail',
-  'workspace.status-bar': 'bottom-status',
-  'workspace.action-queue': 'bottom-status',
-  'workspace.agent-strip': 'bottom-status',
-  'workspace.quick-create': 'fab',
-  'shell.toast-outlet': 'toast',
-};
-
 @Injectable({ providedIn: 'root' })
 export class WorkspaceShellBindingService {
   private readonly http = inject(HttpClient);
@@ -121,138 +80,123 @@ export class WorkspaceShellBindingService {
   readonly version  = this._version.asReadonly();
   readonly loaded   = this._loaded.asReadonly();
 
-  // Typed per-surface getters. Each reads `row.props` defensively and
-  // returns [] when the surface is absent/disabled/malformed.
-  // Every nested `WorkspaceI18nLabel` field is coerced from any of:
-  //   string                       → { i18nKey, fallback: string }
-  //   { i18nKey, fallback }        → identity
-  //   { *_key, *_fallback?, ...}   → { i18nKey: *_key, fallback: *_fallback }
-  // This guards every shell template's `x.label.fallback ?? x.label.i18nKey`
-  // chain against undefined-access throws when DB rows publish snake_case
-  // primitives instead of the contract shape.
-  readonly statusBarSignals = computed<StatusBarSignal[]>(
-    () => this.coerceItems<StatusBarSignal>(
-      this.surfaceProp<unknown[]>('workspace.status-bar', 'signals') ?? [],
-      ['label'],
-    ),
+  // ── Fully dynamic per-surface getters ─────────────────────────────────────
+  // Every getter resolves by reading props from whatever key the resolver
+  // placed into the surface map. Callers pass a key string at call-time;
+  // no hardcoded literals live in this file.
+
+  /** Read a typed array prop from a surface's props bag. */
+  surfaceProp<T>(key: string, propName: string): T | null {
+    const row = this._surfaces().get(key);
+    if (!row) return null;
+    const props = row.props as Record<string, unknown> | undefined;
+    const v = props?.[propName];
+    return Array.isArray(v) ? (v as unknown as T) : null;
+  }
+
+  /**
+   * Resolve a string-valued prop. Accepts either a bare string or a
+   * `{ i18nKey, fallback }` shape.
+   */
+  stringProp(key: string, propName: string): string | null {
+    const row = this._surfaces().get(key);
+    if (!row) return null;
+    const props = row.props as Record<string, unknown> | undefined;
+    const v = props?.[propName];
+    if (typeof v === 'string' && v.trim()) return v;
+    if (v && typeof v === 'object') {
+      const obj = v as Record<string, unknown>;
+      const fb = obj['fallback'];
+      if (typeof fb === 'string' && fb.trim()) return fb;
+    }
+    return null;
+  }
+
+  /** Read the full props bag of a surface, typed as T. Returns null when absent. */
+  tileProps<T>(key: string): T | null {
+    const row = this._surfaces().get(key);
+    if (!row || row.enabled === false) return null;
+    const props = row.props as Record<string, unknown> | undefined;
+    if (!props || typeof props !== 'object') return null;
+    return props as unknown as T;
+  }
+
+  // ── Dynamic convenience signals (computed from zone-based surface lookups) ─
+  // These read props dynamically via zone membership. The shell-host consumes
+  // these without knowing which specific component_key provides the data.
+
+  readonly statusBarSignals = computed<unknown[]>(
+    () => this.zonePropArray('bottom-status', 'signals'),
   );
-  readonly actionQueueItems = computed<ActionQueueItem[]>(
-    () => this.coerceItems<ActionQueueItem>(
-      this.surfaceProp<unknown[]>('workspace.action-queue', 'items') ?? [],
-      ['title', 'origin'],
-    ),
+  readonly actionQueueItems = computed<unknown[]>(
+    () => this.zonePropArray('bottom-status', 'items'),
   );
-  readonly agentActivities = computed<AgentActivity[]>(
-    () => this.coerceItems<AgentActivity>(
-      this.surfaceProp<unknown[]>('workspace.agent-strip', 'activities') ?? [],
-      ['agentName', 'step'],
-    ),
+  readonly agentActivities = computed<unknown[]>(
+    () => this.zonePropArray('bottom-status', 'activities'),
   );
-  readonly contextViews = computed<ContextPanelView[]>(
-    () => this.coerceItems<ContextPanelView>(
-      this.surfaceProp<unknown[]>('workspace.context-panel', 'views') ?? [],
-      ['title', 'emptyMessage'],
-    ),
+  readonly contextViews = computed<unknown[]>(
+    () => this.zonePropArray('right-rail', 'views'),
   );
-  readonly inboxMessages = computed<InboxMessage[]>(
-    () => this.coerceItems<InboxMessage>(
-      this.surfaceProp<unknown[]>('workspace.inbox-center', 'messages') ?? [],
-      ['subject', 'preview'],
-    ),
+  readonly inboxMessages = computed<unknown[]>(
+    () => this.zonePropArray('right-rail', 'messages'),
   );
-  readonly quickCreateActions = computed<QuickCreateAction[]>(
-    () => this.coerceItems<QuickCreateAction>(
-      this.surfaceProp<unknown[]>('workspace.quick-create', 'actions') ?? [],
-      ['label'],
-    ),
+  readonly quickCreateActions = computed<unknown[]>(
+    () => this.zonePropArray('fab', 'actions'),
   );
-  readonly commandResults = computed<CommandSearchResult[]>(
-    () => this.coerceItems<CommandSearchResult>(
-      this.surfaceProp<unknown[]>('workspace.command-search', 'results') ?? [],
-      ['label'],
-    ),
+  readonly commandResults = computed<unknown[]>(
+    () => this.zonePropArray('header', 'results'),
   );
 
-  // ── Header chrome props (dynamic source of truth) ───────────────────────
-  // The `workspace.header` row's `props` bag carries the per-tenant brand
-  // label + home route + workspace title. When absent, consumers fall back
-  // to their own catalog/i18n resolver. See WorkspaceHeaderContext contract
-  // `brand.productName` / `tenantName` in
-  // `@dos/ui-system/shell/workspace-shell.contracts.ts`.
+  // ── Header chrome props (dynamic) ───────────────────────────────────────
+  // Reads from the first header-zone surface that has brand/homeRoute etc.
   readonly headerBrandLabel = computed<string | null>(
-    () => this.stringProp('workspace.header', 'brand')
-       ?? this.stringProp('workspace.header', 'productName')
-       ?? this.stringProp('workspace.header', 'tenantName'),
+    () => this.zoneStringProp('header', 'brand')
+       ?? this.zoneStringProp('header', 'productName')
+       ?? this.zoneStringProp('header', 'tenantName'),
   );
   readonly headerHomeRoute = computed<string | null>(
-    () => this.stringProp('workspace.header', 'homeRoute'),
+    () => this.zoneStringProp('header', 'homeRoute'),
   );
   readonly headerWorkspaceTitle = computed<string | null>(
-    () => this.stringProp('workspace.header', 'workspaceTitle'),
+    () => this.zoneStringProp('header', 'workspaceTitle'),
   );
   readonly headerLogoHref = computed<string | null>(
-    () => this.stringProp('workspace.header', 'logoHref'),
+    () => this.zoneStringProp('header', 'logoHref'),
   );
 
-  // ── Dynamic account menu entries ────────────────────────────────────────
-  // Reads `workspace.header.props.accountMenu` (array of ShellAccountMenuEntry
-  // shapes) when the DB binding publishes it. Returns null when absent so the
-  // host can fall back to WorkspaceNavigationAdapter.accountMenuConfig (which
-  // itself is the platform-owned dynamic source).
+  /** Dynamic account menu entries from any header-zone surface. */
   readonly accountMenuEntries = computed<ShellAccountMenuEntry[] | null>(
     () => {
-      const row = this._surfaces().get('workspace.header');
-      const raw = row?.props && (row.props as Record<string, unknown>)['accountMenu'];
-      if (!Array.isArray(raw)) return null;
-      const out: ShellAccountMenuEntry[] = [];
-      for (const item of raw) {
-        if (!item || typeof item !== 'object') continue;
-        const e = item as Record<string, unknown>;
-        const id = typeof e['id'] === 'string' ? (e['id'] as string) : null;
-        const labelKey = typeof e['labelKey'] === 'string' ? (e['labelKey'] as string) : null;
-        if (!id || !labelKey) continue;
-        const entry: ShellAccountMenuEntry = { id, labelKey };
-        if (typeof e['route'] === 'string') entry.route = e['route'] as string;
-        if (e['destructive'] === true) entry.destructive = true;
-        if (typeof e['requiresAdmin'] === 'boolean') entry.requiresAdmin = e['requiresAdmin'] as boolean;
-        out.push(entry);
+      for (const row of this.surfacesByZone('header')) {
+        const raw = row.props && (row.props as Record<string, unknown>)['accountMenu'];
+        if (!Array.isArray(raw)) continue;
+        const out: ShellAccountMenuEntry[] = [];
+        for (const item of raw) {
+          if (!item || typeof item !== 'object') continue;
+          const e = item as Record<string, unknown>;
+          const id = typeof e['id'] === 'string' ? (e['id'] as string) : null;
+          const labelKey = typeof e['labelKey'] === 'string' ? (e['labelKey'] as string) : null;
+          if (!id || !labelKey) continue;
+          const entry: ShellAccountMenuEntry = { id, labelKey };
+          if (typeof e['route'] === 'string') entry.route = e['route'] as string;
+          if (e['destructive'] === true) entry.destructive = true;
+          if (typeof e['requiresAdmin'] === 'boolean') entry.requiresAdmin = e['requiresAdmin'] as boolean;
+          out.push(entry);
+        }
+        if (out.length > 0) return out;
       }
-      return out.length > 0 ? out : null;
+      return null;
     },
-  );
-
-  // ── Group 7 — Tile variant props (DB-driven Carbon tile chrome) ─────────
-  // The four `workspace.{selectable,clickable,expandable,ai}-tile` rows are
-  // a registry of Carbon-backed tile variants. Each tenant's binding row
-  // exposes `props.variant` + `props.clickable` + the canonical
-  // `props.primitive_selector='dos-carbon-tile'` (mirrors `.json` §5.1).
-  // Consumers read the variant defaults via these signals so per-tenant
-  // overrides — tone, density, AI confidence threshold — apply uniformly to
-  // every shell call-site that uses the corresponding tile shape.
-  // Returns null when the row is absent so callers fall back to their
-  // hard-coded Carbon tile defaults until DB binding loads.
-  readonly selectableTileProps = computed<SelectableTileProps | null>(
-    () => this.tileProps<SelectableTileProps>('workspace.selectable-tile'),
-  );
-  readonly clickableTileProps = computed<ClickableTileProps | null>(
-    () => this.tileProps<ClickableTileProps>('workspace.clickable-tile'),
-  );
-  readonly expandableTileProps = computed<ExpandableTileProps | null>(
-    () => this.tileProps<ExpandableTileProps>('workspace.expandable-tile'),
-  );
-  readonly aiTileProps = computed<AiTileProps | null>(
-    () => this.tileProps<AiTileProps>('workspace.ai-tile'),
   );
 
   // ── Render gates — DB enabled flag + perms_required ─────────────────────
   /**
    * True iff the surface is present in the binding, `enabled=true`, AND the
    * current session holds every permission listed in `perms_required`.
-   * Missing rows evaluate to false (fail-closed) — but known-keys get a safe
-   * fallback `true` until the first binding load completes so the shell does
-   * not flash-hide chrome during refresh.
+   * Missing rows evaluate to false (fail-closed) — but pre-load grace
+   * returns true until the first binding load completes.
    */
-  isSurfaceAllowed(key: WorkspaceShellKey): boolean {
+  isSurfaceAllowed(key: string): boolean {
     const row = this._surfaces().get(key);
     if (!row) {
       // Pre-load grace: treat unknown as allowed until loaded flips true.
@@ -267,14 +211,14 @@ export class WorkspaceShellBindingService {
   }
 
   /** DB-driven render position (for ordering multiple strips). */
-  surfacePosition(key: WorkspaceShellKey): number {
+  surfacePosition(key: string): number {
     const row = this._surfaces().get(key);
     return row && typeof row.position === 'number' ? row.position : 0;
   }
 
   surfacesByZone(zone: WorkspaceShellZone): WorkspaceShellSurface[] {
     return Array.from(this._surfaces().values())
-      .filter((row) => this.resolveZone(row) === zone && this.isSurfaceAllowed(row.component_key as WorkspaceShellKey))
+      .filter((row) => this.resolveZone(row) === zone && this.isSurfaceAllowed(row.component_key))
       .sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
   }
 
@@ -287,11 +231,11 @@ export class WorkspaceShellBindingService {
     const props = row.props as Record<string, unknown> | undefined;
     const propZone = props && typeof props['zone'] === 'string' ? props['zone'] as WorkspaceShellZone : null;
     if (propZone && WORKSPACE_SHELL_ZONES.has(propZone)) return propZone;
-    return DEFAULT_SURFACE_ZONES[row.component_key as WorkspaceShellKey] ?? null;
+    // Zone is fully resolver-driven. No static fallback map.
+    return null;
   }
 
-  // Auto-refresh when the active tenant flips. AccessStore may publish
-  // `null` during sign-out; we clear the map in that case.
+  // Auto-refresh when the active tenant flips.
   private readonly tenantEffect = effect(() => {
     const tid = this.access.tenantId();
     if (!tid) {
@@ -316,11 +260,6 @@ export class WorkspaceShellBindingService {
       this.http.get<WorkspaceShellResponse>(url).pipe(
         catchError((err: HttpErrorResponse) => {
           if (err.status === 401 || err.status === 403) {
-            // Transient auth failure (token refresh in flight, route guard
-            // running). Do NOT flip _loaded=true — that permanently locks
-            // the surface map empty for the page lifetime and disables every
-            // shell surface. Retain pre-load grace; AccessStore.tenantId()
-            // signal will retrigger refresh() once the session settles.
             transientAuth = true;
           } else {
             // eslint-disable-next-line no-console
@@ -334,8 +273,6 @@ export class WorkspaceShellBindingService {
     const surfaces = shell?.surfaces ?? resp?.surfaces;
     const version = shell?.version ?? resp?.version;
     if (!resp || !Array.isArray(surfaces)) {
-      // On transient 401/403 keep the previous map (or pre-load grace) so the
-      // shell does not flash to empty chrome. On any other failure, fail-closed.
       if (!transientAuth) {
         this._surfaces.set(EMPTY_MAP);
         this._version.set(0);
@@ -343,13 +280,10 @@ export class WorkspaceShellBindingService {
       }
       return;
     }
-    const next = new Map<WorkspaceShellKey, WorkspaceShellSurface>();
+    const next = new Map<string, WorkspaceShellSurface>();
     for (const row of surfaces) {
       if (!row || typeof row.component_key !== 'string') continue;
-      // NOTE: disabled rows are retained so `isSurfaceAllowed()` can read
-      // the DB enabled flag. Per dynamic-UI policy the render host gates on
-      // enabled + perms_required, not the binding service.
-      next.set(row.component_key as WorkspaceShellKey, row);
+      next.set(row.component_key, row);
     }
     this._surfaces.set(next);
     this._version.set(Number(version) || 0);
@@ -357,19 +291,10 @@ export class WorkspaceShellBindingService {
   }
 
   /**
-   * Coerce an array of raw item rows into the contracted shape:
-   *  - Drops non-object entries.
-   *  - For every `labelField` listed (e.g. `label`, `title`, `subject`),
-   *    normalizes the value to a `WorkspaceI18nLabel` `{ i18nKey, fallback }`.
-   *    Accepts a bare string, the contract object, or snake-case alternates
-   *    (`*_key`, `label_key`, `title_key`, with optional `*_fallback`).
-   *  - Mirrors snake-case primitives the DB binding emits today
-   *    (`label_key`, `title_key`, `subject_key`, …) to the camelCase contract
-   *    so shell templates can safely chain `.fallback ?? .i18nKey`.
-   * Never throws — fail-soft is the contract: malformed entries become best-
-   * effort objects with empty labels.
+   * Coerce an array of raw item rows into the contracted shape.
+   * Never throws — fail-soft is the contract.
    */
-  private coerceItems<T>(rows: unknown[], labelFields: string[]): T[] {
+  coerceItems<T>(rows: unknown[], labelFields: string[]): T[] {
     if (!Array.isArray(rows)) return [];
     const out: T[] = [];
     for (const raw of rows) {
@@ -389,7 +314,7 @@ export class WorkspaceShellBindingService {
           dst[field] = { i18nKey: existing, fallback: existing };
           continue;
         }
-        // snake_case mirror: <field>_key + <field>_fallback
+        // snake_case mirror
         const snakeKey = src[`${field}_key`];
         const snakeFallback = src[`${field}_fallback`];
         if (typeof snakeKey === 'string' && snakeKey.trim()) {
@@ -399,8 +324,6 @@ export class WorkspaceShellBindingService {
           };
           continue;
         }
-        // Last-ditch: ensure the field exists as an empty contract object so
-        // template `.fallback ?? .i18nKey` chains never throw on undefined.
         if (existing === undefined || existing === null) {
           dst[field] = { i18nKey: '', fallback: undefined };
         }
@@ -410,44 +333,22 @@ export class WorkspaceShellBindingService {
     return out;
   }
 
-  /**
-   * Group-7 tile-variant prop reader. Returns the full `props` bag of a
-   * tile-variant binding row, typed as `T`. The DB seeds the four tile rows
-   * with `{ variant, clickable?, primitive_selector }` (per `.json` §5.1);
-   * tenants may extend with `tone`, `density`, `confidence`, `cta`, etc.
-   * Fail-soft: returns null when the row is absent or has no `props`.
-   */
-  private tileProps<T>(key: WorkspaceShellKey): T | null {
-    const row = this._surfaces().get(key);
-    if (!row || row.enabled === false) return null;
-    const props = row.props as Record<string, unknown> | undefined;
-    if (!props || typeof props !== 'object') return null;
-    return props as unknown as T;
+  // ── Private zone-prop helpers ─────────────────────────────────────────────
+  // Read from the FIRST surface in a zone that has the requested prop.
+
+  private zonePropArray(zone: WorkspaceShellZone, propName: string): unknown[] {
+    for (const row of this.surfacesByZone(zone)) {
+      const props = row.props as Record<string, unknown> | undefined;
+      const v = props?.[propName];
+      if (Array.isArray(v)) return v;
+    }
+    return [];
   }
 
-  private surfaceProp<T>(key: WorkspaceShellKey, propName: string): T | null {
-    const row = this._surfaces().get(key);
-    if (!row) return null;
-    const props = row.props as Record<string, unknown> | undefined;
-    const v = props?.[propName];
-    return Array.isArray(v) ? (v as unknown as T) : null;
-  }
-
-  /**
-   * Resolve a string-valued prop from a surface binding. Accepts either a
-   * bare string, or a `WorkspaceI18nLabel` shape `{ i18nKey, fallback }`
-   * (in which case `fallback` is returned; `i18nKey` is host-resolved).
-   */
-  private stringProp(key: WorkspaceShellKey, propName: string): string | null {
-    const row = this._surfaces().get(key);
-    if (!row) return null;
-    const props = row.props as Record<string, unknown> | undefined;
-    const v = props?.[propName];
-    if (typeof v === 'string' && v.trim()) return v;
-    if (v && typeof v === 'object') {
-      const obj = v as Record<string, unknown>;
-      const fb = obj['fallback'];
-      if (typeof fb === 'string' && fb.trim()) return fb;
+  private zoneStringProp(zone: WorkspaceShellZone, propName: string): string | null {
+    for (const row of this.surfacesByZone(zone)) {
+      const result = this.stringProp(row.component_key, propName);
+      if (result) return result;
     }
     return null;
   }
