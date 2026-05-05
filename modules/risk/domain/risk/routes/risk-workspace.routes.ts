@@ -692,7 +692,7 @@ router.post("/import",
     const errors: Array<{ row: number; error: string }> = [];
 
     for (let i = 0; i < risks.length; i++) {
-      const r = risks[i];
+      const r = risks[i] as { title?: string; description?: string; category?: string; likelihood?: string; impact?: string; owner?: string; status?: string; treatment_status?: string };
 
       if (!r.title) { errors.push({ row: i + 1, error: 'title is required' }); continue; }
       try {
@@ -703,22 +703,14 @@ router.post("/import",
           VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10, NOW())
         `, [
           riskId,
-
           r.title,
-
           r.description || '',
-
           r.category || 'operational',
-
-          Math.min(5, Math.max(1, parseInt(r.likelihood, 10) || 3)),
-
-          Math.min(5, Math.max(1, parseInt(r.impact, 10) || 3)),
-
+          Math.min(5, Math.max(1, parseInt(r.likelihood || '3', 10))),
+          Math.min(5, Math.max(1, parseInt(r.impact || '3', 10))),
           r.owner || userId,
-
           r.status || 'identified',
-
-          r.treatmentStatus || 'untreated',
+          r.treatment_status || null,
           userId,
         ]);
         imported++;

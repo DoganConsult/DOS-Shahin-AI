@@ -15,7 +15,7 @@ import { authenticate, requirePermission } from '../ports/auth.port';
 import * as FairService from '../services/quantification/fair-financial-quantification.service';
 import { toErrorMessage } from '@dos/module-sdk';
 
-import { createCalculateBody, createEstimateMagnitudeBody } from '../schemas/risk.schemas';
+import { createCalculatescoreBody, createEstimateMagnitudeBody } from '../schemas/risk.schemas';
 import { z } from "zod";
 import { withTenantClient } from '../ports/database.port';
 
@@ -38,7 +38,7 @@ router.use(auditMiddleware('fair-financial-quantification'));
  * - lossMagnitude: LossMagnitude object
  * - useAIEnhancement: boolean
  */
-router.post('/calculate/:riskId', authenticate, requirePermission('risk.record.write'), validate({ body: createCalculateBody }), async (req: Request, res: Response) => {
+router.post('/calculate/:riskId', authenticate, requirePermission('risk.record.write'), validate({ body: createCalculatescoreBody }), async (req: Request, res: Response) => {
   try {
     const tenantId = req.user.tenantId;
     const { riskId } = req.params;

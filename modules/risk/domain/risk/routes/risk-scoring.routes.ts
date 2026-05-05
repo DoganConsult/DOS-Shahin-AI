@@ -60,9 +60,9 @@ router.post("/models", authenticate, requirePermission("risk.record.write"),
       zoneDefinitions: req.body.zone_definitions,
     });
 
-    setAuditData(res as any, { action: "create", entityType: "risk_scoring", entityId: (model as Record<string, unknown>).modelId ?? (model as Record<string, unknown>).model_id, afterState: model });
+    setAuditData(res as any, { action: "create", entityType: "risk_scoring", entityId: (model as unknown as Record<string, unknown>).modelId ?? (model as unknown as Record<string, unknown>).model_id, afterState: model });
 
-    swallow(EC.EVENT_BUS, emitEvent(({ tenantId, userId: req.user!.userId, module: 'risks', event: 'created', entityType: 'risk_scoring', entityId: (model as Record<string, unknown>).model_id ?? '' } as any)), { tenantId: tenantId, operation: 'grcEvent:risks.risk_scoring.created' });
+    swallow(EC.EVENT_BUS, emitEvent(({ tenantId, userId: req.user!.userId, module: 'risks', event: 'created', entityType: 'risk_scoring', entityId: (model as unknown as Record<string, unknown>).model_id ?? '' } as any)), { tenantId: tenantId, operation: 'grcEvent:risks.risk_scoring.created' });
     res.status(201).json(ok(model, req));
   })
 );

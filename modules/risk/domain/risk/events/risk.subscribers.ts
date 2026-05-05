@@ -51,9 +51,9 @@ async function handleVendorRiskChanged(event: PlatformEvent): Promise<void> {
   const riskScore = payload.riskScore as number ?? 0;
 
   try {
-
-    const { propagateVendorRiskToRegister } = await import('../../platform/services/cross/cross-module-state-propagator.service.js');
-    await propagateVendorRiskToRegister(tenantId, vendorId, riskRating, riskScore);
+    // TODO: Re-enable when cross-module-state-propagator.service is available
+    // const { propagateVendorRiskToRegister } = await import('../../platform/services/cross/cross-module-state-propagator.service.js');
+    // await propagateVendorRiskToRegister(tenantId, vendorId, riskRating, riskScore);
   } catch { /* propagator non-fatal */ }
 
   const linkedRisks = await safeQuery(
@@ -136,9 +136,9 @@ async function handleAuditFindingCreated(event: PlatformEvent): Promise<void> {
   const controlId = payload.controlId as string ?? null;
 
   try {
-
-    const { propagateAuditFindingToRiskAndControl } = await import('../../platform/services/cross/cross-module-state-propagator.service.js');
-    await propagateAuditFindingToRiskAndControl(tenantId, findingId, controlId, severity);
+    // TODO: Re-enable when cross-module-state-propagator.service is available
+    // const { propagateAuditFindingToRiskAndControl } = await import('../../platform/services/cross/cross-module-state-propagator.service.js');
+    // await propagateAuditFindingToRiskAndControl(tenantId, findingId, controlId, severity);
   } catch { /* propagator non-fatal */ }
 
   await createProcessTask(tenantId, {

@@ -78,10 +78,11 @@ export async function getAppetiteConfig(tenantId: string): Promise<unknown> {
  */
 export async function updateAppetiteConfigEntry(tenantId: string, data: unknown): Promise<unknown> {
   const schema = tenantSchema(tenantId);
+  const config = data as { thresholdsByCategory?: Array<{ category?: string; threshold?: number; maxResidualScore?: number; acceptanceRequiresRole?: string; reviewCadenceDays?: number }> };
 
-  if (data.thresholdsByCategory && Array.isArray(data.thresholdsByCategory)) {
+  if (config.thresholdsByCategory && Array.isArray(config.thresholdsByCategory)) {
 
-    for (const t of data.thresholdsByCategory) {
+    for (const t of config.thresholdsByCategory) {
       await safeQuery(`
         INSERT INTO "${schema}".governance_risk_appetite
           (category, max_residual_score, acceptance_requires_role, review_cadence_days, updated_at)
@@ -92,7 +93,7 @@ export async function updateAppetiteConfigEntry(tenantId: string, data: unknown)
           review_cadence_days = EXCLUDED.review_cadence_days,
           updated_at = NOW()
       `, [
-        t.category,
+        t.category || '',
         t.threshold || t.maxResidualScore || 15,
         t.acceptanceRequiresRole || 'executive',
         t.reviewCadenceDays || 90,

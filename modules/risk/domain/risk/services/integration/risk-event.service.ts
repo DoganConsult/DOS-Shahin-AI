@@ -1,8 +1,11 @@
 import { eventBus } from '../../ports/events.port';
 
-import type { RiskStatus } from '@dos/types';
+import type { TaskStatus } from '@dos/types';
 import { randomUUID } from 'crypto';
 import { safeQuery } from "@dos/db";
+
+// RiskStatus is not in @dos/types, define locally
+type RiskStatus = 'identified' | 'assessed' | 'treated' | 'accepted' | 'closed' | 'escalated';
 
 export type RiskEntityType =
   | 'risk'

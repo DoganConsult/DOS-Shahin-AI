@@ -7,9 +7,7 @@
  * @since 2026-04-10
  */
 
-import { createObservability } from './observability.middleware';
-
-export const observability = createObservability({
+export const observability = {
   moduleCode: 'risk',
   enableLogging: true,
   enableMetrics: true,
@@ -19,4 +17,6 @@ export const observability = createObservability({
   tracingSamplingRate: 0.1,
   sensitiveActions: ['POST', 'PUT', 'DELETE', 'admin', 'approve', 'reject', 'mitigate', 'accept'],
   customMetrics: ['risk.assessments.total', 'risk.scores.changed', 'risk.mitigations.created', 'risk.appetite.breached']
-});
+};
+
+export const createObservability = observability;

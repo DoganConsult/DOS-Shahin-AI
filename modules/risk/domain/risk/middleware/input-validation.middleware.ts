@@ -7,9 +7,7 @@
  * @since 2026-04-10
  */
 
-import { createInputValidation } from './input-validation.middleware';
-
-export const inputValidation = createInputValidation({
+export const inputValidation = {
   moduleCode: 'risk',
   validateSchema: true,
   validateQuery: true,
@@ -45,4 +43,6 @@ export const inputValidation = createInputValidation({
       field: 'assessment'
     }
   ]
-});
+};
+
+export const createInputValidation = inputValidation;

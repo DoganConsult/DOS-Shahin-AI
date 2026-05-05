@@ -19,7 +19,7 @@ import { z as _z } from 'zod';
 import { auditMiddleware, setAuditData, asyncHandler, validate, moduleStack, rateLimiter } from '../ports/middleware.port';
 import { swallow, EC } from '@dos/platform-core/resilience';
 
-import { createRiskIdMontecarloBody, createRiskIdScenarioBody, createRiskIdFairBody, createRiskIdThreatsBody, createRiskIdConsequencesBody, createThreatsthreatIdPreventivecontrolsBody, createConsequencesconsequenceIdMitigatingcontrolsBody, createMultiframeworkgapBody, updateScenariosBody } from "../schemas/risk.schemas";
+import { createRiskIdMontecarloBody, createRiskIdScenarioBody, createRiskIdFairBody, createRiskIdThreatsBody, createRiskIdConsequencesBody, createThreatsthreatIdPreventivecontrolsBody, createConsequencesconsequenceIdMitigatingcontrolsBody, createMultiframeworkgapBody, createScenarioBody } from "../schemas/risk.schemas";
 import { z } from "zod";
 
 
@@ -126,7 +126,7 @@ router.get('/:riskId/scenarios', validate({ query: z.record(z.unknown()) }), aut
 });
 
 // ── Scenario Update (spec: PATCH /scenarios/:id) ─────────────────────────
-router.patch('/scenarios/:scenarioId', authenticate, requirePermission('risk.record.write'), validate({ body: updateScenariosBody }), async (req: Request, res: Response) => {
+router.patch('/scenarios/:scenarioId', authenticate, requirePermission('risk.record.write'), validate({ body: createScenarioBody }), async (req: Request, res: Response) => {
   const tenantId = req.tenantId;
   const schema = tenantSchema(tenantId);
   const { scenario_name, baseline_score, scenario_score, assumptions, mc_mean_loss, mc_p95_loss } = req.body;

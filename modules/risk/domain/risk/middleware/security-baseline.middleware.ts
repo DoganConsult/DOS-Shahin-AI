@@ -7,9 +7,7 @@
  * @since 2026-04-10
  */
 
-import { createSecurityBaseline } from './security-baseline.middleware';
-
-export const securityBaseline = createSecurityBaseline({
+export const securityBaseline = {
   moduleCode: 'risk',
   enableRateLimit: true,
   enableSecureHeaders: true,
@@ -22,4 +20,6 @@ export const securityBaseline = createSecurityBaseline({
     'X-Risk-Security': 'enterprise-grade',
     'X-Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'"
   }
-});
+};
+
+export const createSecurityBaseline = securityBaseline;

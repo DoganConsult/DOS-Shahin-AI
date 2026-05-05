@@ -1,5 +1,36 @@
 
-import type { Risk, RiskCreateInput } from '@dos/types';
+// TODO: Risk and RiskCreateInput don't exist in @dos/types, define locally
+export interface Risk {
+  risk_id?: string;
+  id?: string;
+  tenant_id: string;
+  title: string;
+  description?: string;
+  category: string;
+  likelihood?: number;
+  impact?: number;
+  inherent_score?: number;
+  residual_score?: number;
+  status: string;
+  owner?: string;
+  treatment_status?: string;
+  created_at: string | Date;
+  updated_at: string | Date;
+  created_by?: string;
+  deleted_at?: string | Date;
+  [key: string]: unknown;
+}
+
+export interface RiskCreateInput {
+  tenant_id: string;
+  title: string;
+  description?: string;
+  category: string;
+  likelihood?: number;
+  impact?: number;
+  created_by?: string;
+  [key: string]: unknown;
+}
 import type { GenericRow } from '@dos/types';
 
 export function toEntity(row: GenericRow): Risk {

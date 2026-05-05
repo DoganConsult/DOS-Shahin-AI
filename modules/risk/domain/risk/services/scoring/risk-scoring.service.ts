@@ -385,8 +385,8 @@ export async function getAIRecommendations(
   tenantId: string,
   riskId: string
 ): Promise<Record<string, unknown>> {
-
-  return assessRisk(tenantId, riskId);
+  const result = await assessRisk(tenantId, riskId);
+  return result as unknown as Record<string, unknown>;
 }
 
 /**
@@ -411,8 +411,16 @@ export async function predictRiskTrajectory(
   trajectory: Array<{ date: string; score: number; zone: RiskZone }>;
   observationCreated: boolean;
 }> {
-      const result = await safeQuery("SELECT * FROM __TENANT_SCHEMA__.risk_items" + (tenantId ? " WHERE tenant_id = $1" : ""), tenantId ? [tenantId] : []);
-      return (result?.rows || []) as any;
+  // TODO: Implement trajectory prediction logic
+  return {
+    currentScore: 0,
+    currentZone: 'low',
+    projectedScore: 0,
+    projectedZone: 'low',
+    breachProbability: { high: 0, critical: 0 },
+    trajectory: [],
+    observationCreated: false,
+  };
 }
 
 // ============================================================

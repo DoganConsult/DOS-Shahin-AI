@@ -19,74 +19,35 @@ export async function createRiskEntry(tenantId: string, data: unknown): Promise<
   const schema = tenantSchema(tenantId);
   const riskId = uuid().slice(0, 8);
 
-  const riskCode = data.riskCode || `RSK-${riskId.toUpperCase()}`;
+  const input = data as Record<string, unknown>;
+  const riskCode = (input.riskCode as string) || `RSK-${riskId.toUpperCase()}`;
 
-  const inherentScore = (data.likelihood || 3) * (data.impact || 3);
+  const likelihood = (input.likelihood as number) || 3;
+  const impact = (input.impact as number) || 3;
+  const inherentScore = likelihood * impact;
 
   const result = await safeQuery(`
     INSERT INTO "${schema}".risks
       (risk_id, risk_code, title, description, statement,
        category, likelihood, impact, owner, owner_user_id, status,
-       treatment_status, control_ids,
-       cause_text, event_text, impact_text,
-       business_unit_id, trend_direction, appetite_status,
-       inherent_likelihood, inherent_impact, inherent_score,
-       next_review_date, updated_at)
-    VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23, NOW())
-    RETURNING risk_id AS "riskId", risk_code AS "riskCode", title, description, statement,
-              category, owner, owner_user_id AS "ownerUserId", status,
-              likelihood, impact, risk_score AS "riskScore",
-              inherent_likelihood AS "inherentLikelihood", inherent_impact AS "inherentImpact",
-              inherent_score AS "inherentScore",
-              treatment_status AS "treatmentStatus",
-              trend_direction AS "trendDirection", appetite_status AS "appetiteStatus",
-              business_unit_id AS "businessUnitId",
-              next_review_date AS "nextReviewDate",
-              created_at AS "createdAt"
+       inherent_score, residual_score, risk_appetite, entity_type, entity_id,
+       due_date, review_date, control_ids, cause_text, event_text, impact_text,
+       business_unit_id, trend_direction, appetite_status, next_review_date,
+       created_by, created_at, updated_at)
+    VALUES ($1, $2, $3, $4, $5,
+            $6, $7, $8, $9, $10, $11,
+            $12, $13, $14, $15, $16,
+            $17, $18, $19, $20, $21, $22,
+            $23, $24, $25, $26,
+            $27, NOW(), NOW())
+    RETURNING *
   `, [
-    riskId,
-    riskCode,
-
-    data.title,
-
-    data.description || '',
-
-    data.statement || data.description || '',
-
-    data.category || 'operational',
-
-    data.likelihood || 3,
-
-    data.impact || 3,
-
-    data.owner || '',
-
-    data.ownerUserId || data.owner || '',
-
-    data.status || 'identified',
-
-    data.treatmentStatus || 'untreated',
-
-    data.controlIds || [],
-
-    data.causeText || data.cause_text || null,
-
-    data.eventText || data.event_text || null,
-
-    data.impactText || data.impact_text || null,
-
-    data.businessUnitId || data.business_unit_id || null,
-
-    data.trendDirection || 'stable',
-
-    data.appetiteStatus || 'within',
-
-    data.likelihood || 3,
-
-    data.impact || 3,
-    inherentScore,
-
-    data.nextReviewDate || data.next_review_date || null,
+    riskId, tenantId, input.title, input.description, input.statement,
+    input.category, likelihood, impact, input.owner, input.ownerUserId, input.status || 'identified',
+    inherentScore, null, input.riskAppetite, input.entityType, input.entityId,
+    input.dueDate, input.reviewDate, input.controlIds, input.causeText, input.eventText, input.impactText,
+    input.businessUnitId, input.trendDirection, input.appetiteStatus, input.nextReviewDate,
+    input.ownerId || 'system',
   ]);
 
   const risk = getFirstRow(result);
@@ -97,13 +58,12 @@ export async function createRiskEntry(tenantId: string, data: unknown): Promise<
       entityType: 'risk',
       entityId: riskId,
       taskType: 'risk_assessment',
-
-      title: `Review new risk: ${data.title}`,
-      description: `Newly identified risk requires initial assessment and treatment plan.`,
+      title: `Review new risk: ${input.title}`,
       priority: inherentScore >= 15 ? 'high' : 'medium',
-      assigneeRole: 'risk_manager',
+      assigneeId: input.ownerId as string || null,
+      metadata: { riskId },
     });
-  } catch { /* best-effort: orchestration may not be configured */ }
+  } catch { /* task creation is non-critical */ }
 
   return risk;
 }

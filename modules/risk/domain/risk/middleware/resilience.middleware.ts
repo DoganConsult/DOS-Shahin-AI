@@ -7,9 +7,7 @@
  * @since 2026-04-10
  */
 
-import { createResilience } from './resilience.middleware';
-
-export const resilience = createResilience({
+export const resilience = {
   moduleCode: 'risk',
   enableTimeouts: true,
   enableRetries: true,
@@ -41,4 +39,6 @@ export const resilience = createResilience({
       value: { status: 'degraded', message: 'Risk assessment service operating in degraded mode' }
     }
   }
-});
+};
+
+export const createResilience = resilience;

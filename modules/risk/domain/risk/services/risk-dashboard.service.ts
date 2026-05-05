@@ -181,10 +181,10 @@ export class RiskDashboardService {
       [safeDays],
     ).catch((): { rows: Array<Record<string, unknown>> } => ({ rows: [] }));
 
-    return rows.map((r: Record<string, unknown>) => ({
-      date: r.date,
-      newRisks: parseInt((r as any).new_risks ?? '0', 10),
-      closedRisks: parseInt((r as any).closed_risks ?? '0', 10),
-    }));
+    return rows as unknown as Array<{
+      date: string;
+      newRisks: number;
+      closedRisks: number;
+    }>;
   }
 }

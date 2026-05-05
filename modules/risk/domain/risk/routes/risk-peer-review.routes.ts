@@ -63,9 +63,9 @@ router.post("/", authenticate, requirePermission("risk.record.write"),
       agentReasoning: req.body.agentReasoning || "",
     });
 
-    setAuditData(res as any, { action: "create", entityType: "risk_peer_review", entityId: (review as Record<string, unknown>).reviewId ?? (review as Record<string, unknown>).review_id ?? '', afterState: review });
+    setAuditData(res as any, { action: "create", entityType: "risk_peer_review", entityId: (review as unknown as Record<string, unknown>).reviewId ?? (review as unknown as Record<string, unknown>).review_id ?? '', afterState: review });
 
-    swallow(EC.EVENT_BUS, emitEvent(({ tenantId, userId: req.user!.userId, module: 'risks', event: 'created', entityType: 'risk_peer_review', entityId: (review as Record<string, unknown>).reviewId ?? '' } as any)), { tenantId: tenantId, operation: 'grcEvent:risks.risk_peer_review.created' });
+    swallow(EC.EVENT_BUS, emitEvent(({ tenantId, userId: req.user!.userId, module: 'risks', event: 'created', entityType: 'risk_peer_review', entityId: (review as unknown as Record<string, unknown>).reviewId ?? '' } as any)), { tenantId: tenantId, operation: 'grcEvent:risks.risk_peer_review.created' });
     res.status(201).json(ok(review, req));
   })
 );

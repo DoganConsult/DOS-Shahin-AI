@@ -1,4 +1,3 @@
--- dos:draft
 -- =====================================================================
 -- UI-OS — §16 Governance — change log + publish flow + approvals + versions  (20260502_0123)
 --
@@ -62,6 +61,26 @@ CREATE TABLE IF NOT EXISTS dos.ui_publish_approvals (
   CONSTRAINT ui_publish_approvals_uk
     UNIQUE (publish_request_id, approver_id)
 );
+
+-- If a legacy Wave 9 skeleton ui_published_versions exists (target_type),
+-- CREATE TABLE IF NOT EXISTS would no-op and indexes below would fail.
+-- Drop dependents first, then the legacy table (matches 0131 partial logic).
+DO $$
+DECLARE
+  legacy_pub BOOLEAN;
+BEGIN
+  SELECT EXISTS (
+    SELECT 1 FROM information_schema.columns
+     WHERE table_schema = 'dos'
+       AND table_name = 'ui_published_versions'
+       AND column_name = 'target_type'
+  ) INTO legacy_pub;
+
+  IF legacy_pub THEN
+    EXECUTE 'DROP TABLE IF EXISTS dos.ui_rollback_points CASCADE';
+    EXECUTE 'DROP TABLE IF EXISTS dos.ui_published_versions CASCADE';
+  END IF;
+END $$;
 
 CREATE TABLE IF NOT EXISTS dos.ui_published_versions (
   id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),

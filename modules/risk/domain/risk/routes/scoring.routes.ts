@@ -59,26 +59,26 @@ router.get("/:id", validate({ query: z.record(z.unknown()) }), authenticate, req
 
 // POST / — Create a new scoring policy
 router.post("/", authenticate, requirePermission("compliance.program.write"), validate({ body: createRootBody }), async (req: Request, res: Response) => {
-  const tenantId = req.user.tenantId;
-  const { name, weights } = req.body;
+  const tenantId = req.user.tenantId as string;
+  const { name, weights } = req.body as { name?: string; weights?: unknown };
   if (!name || !weights) {
     res.status(400).json({ error: "name and weights are required" });
     return;
   }
   const policy = await createScoringPolicy(tenantId, req.body);
 
-  setAuditData(res as any, { action: "create", entityType: "scoring", entityId: policy.policy_id ?? policy.id, afterState: policy });
-  swallow(EC.EVENT_BUS, emitEvent(({ tenantId: req.user.tenantId, userId: req.user!.userId, module: 'assessments', event: 'created', entityType: 'scoring', entityId: req.params.id || '' } as any)), { tenantId: req.user.tenantId, operation: 'grcEvent:assessments.scoring.created' });
+  setAuditData(res as any, { action: "create", entityType: "scoring", entityId: (policy as any).policy_id ?? (policy as any).id, afterState: policy });
+  swallow(EC.EVENT_BUS, emitEvent(({ tenantId: req.user.tenantId, userId: (req.user as any).userId, module: 'assessments', event: 'created', entityType: 'scoring', entityId: req.params.id || '' } as any)), { tenantId: req.user.tenantId, operation: 'grcEvent:assessments.scoring.created' });
   res.status(201).json(policy);
 });
 
 // PUT /:id — Update a scoring policy
 router.put("/:id", authenticate, requirePermission("compliance.program.write"), validate({ body: updateIdBody }), async (req: Request, res: Response) => {
   try {
-    const tenantId = req.user.tenantId;
+    const tenantId = req.user.tenantId as string;
     const policy = await updateScoringPolicy(tenantId, req.params.id as string, req.body);
     setAuditData(res as any, { action: "update", entityType: "scoring", entityId: req.params.id, afterState: policy });
-    swallow(EC.EVENT_BUS, emitEvent(({ tenantId: req.user.tenantId, userId: req.user!.userId, module: 'assessments', event: 'updated', entityType: 'scoring', entityId: req.params.id || '' } as any)), { tenantId: req.user.tenantId, operation: 'grcEvent:assessments.scoring.updated' });
+    swallow(EC.EVENT_BUS, emitEvent(({ tenantId: req.user.tenantId, userId: (req.user as any).userId, module: 'assessments', event: 'updated', entityType: 'scoring', entityId: req.params.id || '' } as any)), { tenantId: req.user.tenantId, operation: 'grcEvent:assessments.scoring.updated' });
     res.json(policy);
   } catch (err: unknown) {
     if (toErrorMessage(err) === "Scoring policy not found") {
@@ -91,24 +91,24 @@ router.put("/:id", authenticate, requirePermission("compliance.program.write"), 
 
 // DELETE /:id — Delete a scoring policy
 router.delete("/:id", validate({ body: genericPayloadSchema }), authenticate, requirePermission("compliance.delete"), async (req: Request, res: Response) => {
-  const tenantId = req.user.tenantId;
+  const tenantId = req.user.tenantId as string;
   const deleted = await deleteScoringPolicy(tenantId, req.params.id as string);
   if (!deleted) {
     res.status(404).json({ error: "Scoring policy not found" });
     return;
   }
   setAuditData(res as any, { action: "delete", entityType: "scoring", entityId: req.params.id });
-  swallow(EC.EVENT_BUS, emitEvent(({ tenantId: req.user.tenantId, userId: req.user!.userId, module: 'assessments', event: 'deleted', entityType: 'scoring', entityId: req.params.id || '' } as any)), { tenantId: req.user.tenantId, operation: 'grcEvent:assessments.scoring.deleted' });
-  res.json({ message: "Scoring policy deleted" });
+  swallow(EC.EVENT_BUS, emitEvent(({ tenantId: req.user.tenantId, userId: (req.user as any).userId, module: 'assessments', event: 'deleted', entityType: 'scoring', entityId: req.params.id || '' } as any)), { tenantId: req.user.tenantId, operation: 'grcEvent:assessments.scoring.deleted' });
+  res.status(204).send();
 });
 
 // POST /:id/apply/:assessmentId — Apply a scoring policy to an assessment
 router.post("/:id/apply/:assessmentId", authenticate, requirePermission("compliance.program.write"), validate({ body: createIdApplyassessmentIdBody }), async (req: Request, res: Response) => {
   try {
-    const tenantId = req.user.tenantId;
+    const tenantId = req.user.tenantId as string;
     const score = await applyPolicy(tenantId, req.params.assessmentId as string, req.params.id as string);
     setAuditData(res as any, { action: "update", entityType: "scoring", entityId: req.params.id, afterState: { assessmentId: req.params.assessmentId, score } });
-    swallow(EC.EVENT_BUS, emitEvent(({ tenantId: req.user.tenantId, userId: req.user!.userId, module: 'assessments', event: 'created', entityType: 'scoring', entityId: req.params.id || '' } as any)), { tenantId: req.user.tenantId, operation: 'grcEvent:assessments.scoring.created' });
+    swallow(EC.EVENT_BUS, emitEvent(({ tenantId: req.user.tenantId, userId: (req.user as any).userId, module: 'assessments', event: 'created', entityType: 'scoring', entityId: req.params.id || '' } as any)), { tenantId: req.user.tenantId, operation: 'grcEvent:assessments.scoring.created' });
     res.json({ assessmentId: req.params.assessmentId as string, policyId: req.params.id as string, score });
   } catch (err: unknown) {
     if (toErrorMessage(err) === "Scoring policy not found" || toErrorMessage(err) === "Assessment not found") {

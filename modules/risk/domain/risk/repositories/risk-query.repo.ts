@@ -110,13 +110,13 @@ export async function getRiskSeverityBreakdown(tenantId: string): Promise<Array<
     ORDER BY MIN(${SEVERITY_ORDER})
   `);
 
-  return result.rows.map(( r: Record<string, unknown>) => ({
-    severity: r.severity,
-    count: r.count,
-    openCount: r.open_count,
-    avgResidualScore: Number(r.avg_residual_score) || 0,
-    treatmentCoverage: Number(r.treatment_coverage) || 0,
-  }));
+  return result.rows as unknown as Array<{
+    severity: string;
+    count: number;
+    openCount: number;
+    avgResidualScore: number;
+    treatmentCoverage: number;
+  }>;
 }
 
 export async function getCategoryBreakdown(tenantId: string): Promise<Array<{
@@ -138,12 +138,12 @@ export async function getCategoryBreakdown(tenantId: string): Promise<Array<{
     ORDER BY count DESC
   `);
 
-  return result.rows.map(( r: Record<string, unknown>) => ({
-    category: r.category,
-    count: r.count,
-    openCount: r.open_count,
-    criticalCount: r.critical_count,
-  }));
+  return result.rows as unknown as Array<{
+    category: string;
+    count: number;
+    openCount: number;
+    criticalCount: number;
+  }>;
 }
 
 export async function getTreatmentStatusBreakdown(tenantId: string): Promise<Array<{
@@ -165,12 +165,12 @@ export async function getTreatmentStatusBreakdown(tenantId: string): Promise<Arr
     ORDER BY count DESC
   `);
 
-  return result.rows.map(( r: Record<string, unknown>) => ({
-    treatmentStatus: r.treatment_status,
-    treatmentType: r.treatment_type || null,
-    count: r.count,
-    avgResidualScore: Number(r.avg_residual_score) || 0,
-  }));
+  return result.rows as unknown as Array<{
+    treatmentStatus: string;
+    treatmentType: string | null;
+    count: number;
+    avgResidualScore: number;
+  }>;
 }
 
 export async function getCriticalRisks(tenantId: string): Promise<Array<{
@@ -204,20 +204,20 @@ export async function getCriticalRisks(tenantId: string): Promise<Array<{
     LIMIT 50
   `);
 
-  return result.rows.map(( r: Record<string, unknown>) => ({
-    id: r.id,
-    title: r.title,
-    category: r.category,
-    likelihood: r.likelihood,
-    impact: r.impact,
-    riskScore: r.risk_score,
-    residualScore: r.residual_score !== null ? Number(r.residual_score) : null,
-    status: r.status,
-    treatmentStatus: r.treatment_status || null,
-    owner: r.owner,
-    daysOpen: r.days_open || 0,
-    overdueReassessment: Boolean(r.overdue_reassessment),
-  }));
+  return result.rows as unknown as Array<{
+    id: string;
+    title: string;
+    category: string;
+    likelihood: number;
+    impact: number;
+    riskScore: number;
+    residualScore: number | null;
+    status: string;
+    treatmentStatus: string | null;
+    owner: string;
+    daysOpen: number;
+    overdueReassessment: boolean;
+  }>;
 }
 
 export async function getAgingReport(tenantId: string): Promise<Array<{ bucket: string; count: number }>> {
@@ -365,13 +365,12 @@ export async function getRiskAppetiteExceedances(tenantId: string, appetiteScore
     ORDER BY COALESCE(risk_score, likelihood * impact) DESC
   `, [appetiteScoreThreshold]);
 
-  return result.rows.map(( r: Record<string, unknown>) => ({
-    id: r.id,
-    title: r.title,
-    category: r.category,
-    riskScore: r.risk_score,
-    appetiteThreshold: appetiteScoreThreshold,
-
-    exceedanceAmount: r.risk_score - appetiteScoreThreshold,
-  }));
+  return result.rows as unknown as Array<{
+    id: string;
+    title: string;
+    category: string;
+    riskScore: number;
+    appetiteThreshold: number;
+    exceedanceAmount: number;
+  }>;
 }

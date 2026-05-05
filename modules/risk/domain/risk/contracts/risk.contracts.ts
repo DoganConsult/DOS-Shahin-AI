@@ -1,5 +1,6 @@
 
-import type { RiskStatus } from '@dos/types';
+// TODO: RiskStatus doesn't exist in @dos/types, define locally
+export type RiskStatus = 'identified' | 'assessed' | 'treated' | 'accepted' | 'closed' | 'escalated';
 import type { RiskZone } from '../services/scoring/risk-scoring.service';
 
 export interface RiskEntityContract {

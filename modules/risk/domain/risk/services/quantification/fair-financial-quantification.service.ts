@@ -200,19 +200,19 @@ export async function estimateMagnitudeWithAI(
     // AI should return structured estimates for each category
     // If not available, we'll use manual estimation with context
 
-    const aiEstimates = aiAssessment?.financialImpact || {};
+    const aiEstimates = (aiAssessment as { financialImpact?: Record<string, unknown> } | undefined)?.financialImpact || {};
 
     // Default currency based on tenant (KSA = SAR)
     const currency = 'SAR';
 
     // Build loss magnitude from AI estimates
     const categories: LossMagnitude['categories'] = {
-      response: aiEstimates.responseCosts || estimateResponseCosts(input),
-      replacement: aiEstimates.replacementCosts || estimateReplacementCosts(input),
-      productivity: aiEstimates.productivityLoss || estimateProductivityLoss(input),
-      fines: aiEstimates.regulatoryFines || estimateRegulatoryFines(input),
-      reputation: aiEstimates.reputationDamage || estimateReputationDamage(input),
-      legal: aiEstimates.legalCosts || estimateLegalCosts(input),
+      response: Number(aiEstimates.responseCosts || estimateResponseCosts(input)),
+      replacement: Number(aiEstimates.replacementCosts || estimateReplacementCosts(input)),
+      productivity: Number(aiEstimates.productivityLoss || estimateProductivityLoss(input)),
+      fines: Number(aiEstimates.regulatoryFines || estimateRegulatoryFines(input)),
+      reputation: Number(aiEstimates.reputationDamage || estimateReputationDamage(input)),
+      legal: Number(aiEstimates.legalCosts || estimateLegalCosts(input)),
     };
 
     return computeLossMagnitude(categories, currency, 0.8); // Higher confidence for AI-enhanced

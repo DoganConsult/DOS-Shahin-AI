@@ -4,8 +4,7 @@ import { asyncHandler, rateLimiter } from '../ports/middleware.port';
 
 import { authenticate, requirePermission } from '../ports/auth.port';
 import {
-
-  auditMiddleware, setAuditData, asyncHandler, validate, automationMiddleware,
+  auditMiddleware, setAuditData, validate, automationMiddleware,
   requireOwnership, fieldRbac, mandatoryFields, lifecycleGate, moduleStack, scopeContext,
 } from '../ports/middleware.port';
 import { ok, paginated, action } from "../_wave1-compat";
@@ -25,7 +24,6 @@ import {
 import { idParam } from '../schemas/common.schemas.js';
 import { swallow, EC } from '@dos/platform-core/resilience';
 
-import { validate } from '@dos/platform-core/http';
 import { z } from "zod";
 
 

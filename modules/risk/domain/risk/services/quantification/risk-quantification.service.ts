@@ -138,14 +138,10 @@ export async function buildBowTie(tenantId: string, riskId: string): Promise<Bow
   return {
     riskId,
     riskTitle: getFirstRow(riskRes)?.title || riskId,
-
-    threats: threatRes.rows,
-
-    preventiveControls: ctrlRes.rows.slice(0, midpoint),
-
-    consequences: conseqRes.rows,
-
-    mitigatingControls: ctrlRes.rows.slice(midpoint),
+    threats: threatRes.rows as Array<{ id: string; name: string; likelihood: number }>,
+    preventiveControls: ctrlRes.rows.slice(0, midpoint) as Array<{ id: string; name: string; effectiveness: number }>,
+    consequences: conseqRes.rows as Array<{ id: string; name: string; impact: number }>,
+    mitigatingControls: ctrlRes.rows.slice(midpoint) as Array<{ id: string; name: string; effectiveness: number }>,
   };
 }
 
@@ -335,5 +331,5 @@ export async function getMultiFrameworkGapAnalysis(
     frameworkIds,
   ), { tenantId: tenantId, operation: 'query controls' });
 
-  return res.rows;
+  return res.rows as unknown as FrameworkGapRow[];
 }

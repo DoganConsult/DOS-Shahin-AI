@@ -103,20 +103,20 @@ export async function listReviews(tenantId: string, status?: string): Promise<Ri
 
 function mapReview( r: Record<string, unknown>): RiskPairReview {
   return {
-
-    reviewId: r.review_id, riskId: r.risk_id, agentId: r.agent_id,
-
-    humanAnalystId: r.human_analyst_id, agentScore: r.agent_score,
-
-    agentReasoning: r.agent_reasoning, humanScore: r.human_score,
-
-    humanReasoning: r.human_reasoning, finalScore: r.final_score,
-
-    finalMethod: r.final_method, disagreementFlag: r.disagreement_flag,
+    reviewId: r.review_id as string,
+    riskId: r.risk_id as string,
+    agentId: r.agent_id as string,
+    humanAnalystId: r.human_analyst_id as string,
+    agentScore: r.agent_score as number,
+    agentReasoning: r.agent_reasoning as string,
+    humanScore: r.human_score as number,
+    humanReasoning: r.human_reasoning as string,
+    finalScore: r.final_score as number,
+    finalMethod: r.final_method as string,
+    disagreementFlag: r.disagreement_flag as boolean,
     dialogueEntries: typeof r.dialogue_entries === 'string' ? JSON.parse(r.dialogue_entries) : r.dialogue_entries || [],
-
-    status: r.status, createdAt: r.created_at?.toISOString?.() || r.created_at,
-
-    finalizedAt: r.finalized_at?.toISOString?.() || r.finalized_at,
+    status: r.status as 'agent_review' | 'human_review' | 'dialogue' | 'finalized',
+    createdAt: (r.created_at as Date)?.toISOString?.() || r.created_at as string,
+    finalizedAt: (r.finalized_at as Date)?.toISOString?.() || r.finalized_at as string,
   };
 }

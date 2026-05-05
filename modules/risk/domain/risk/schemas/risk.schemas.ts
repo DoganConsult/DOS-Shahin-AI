@@ -575,5 +575,13 @@ export const importImportBody = z.object({
   options: z.object({ overwrite: z.boolean().default(false) }).optional(),
 });
 
-
-export const createEstimateMagnitudeBody = (..._args: any[]): any => { return {} as any; };
+export const createEstimateMagnitudeBody = z.object({
+  riskId: z.string().uuid().optional(),
+  riskTitle: z.string().min(3).max(255),
+  riskDescription: z.string().optional(),
+  riskCategory: z.string().min(1).max(100),
+  affectedAssets: z.array(z.string()).optional(),
+  sector: z.string().optional(),
+  companySize: z.string().optional(),
+  historicalIncidents: z.array(z.object({})).optional(),
+});
