@@ -113,5 +113,5 @@ export * from './agentic/agentic.contract';
 export * from './agentic/agentic-components';
 export { CARBON_ICON_NAMES, CARBON_ICON_NAME_SET, CARBON_ICON_INDEX, isCarbonIconName, resolveCarbonIcon, } from './allowlists/carbon-icons.allowlist';
 // Re-export contracts for convenience.
-export { APPROVED_COMPONENT_KEYS, isApprovedComponentKey, } from '@dos/ui-contracts';
+export { isApprovedComponentKey, registerApprovedComponentKeys, getApprovedComponentKeys, registerComponentKey, } from '@dos/ui-contracts';
 //# sourceMappingURL=index.js.map

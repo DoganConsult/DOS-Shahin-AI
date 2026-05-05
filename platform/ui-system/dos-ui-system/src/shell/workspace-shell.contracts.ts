@@ -230,49 +230,14 @@ export const WORKSPACE_SHELL_BANDS: readonly WorkspaceShellBand[] = [
 // Frame-band primitives map to specific zones; lower bands are zone-agnostic
 // (they appear wherever their parent composition places them).
 
-export type WorkspaceRuntimeZone =
-  | 'header'
-  | 'sidebar'
-  | 'mobile-drawer'
-  | 'mobile-nav'
-  | 'top-banners'
-  | 'main'
-  | 'right-rail'
-  | 'bottom-status'
-  | 'fab'
-  | 'toast'
-  | 'content';
-
-export const WORKSPACE_RUNTIME_ZONES: readonly WorkspaceRuntimeZone[] = [
-  'header',
-  'sidebar',
-  'mobile-drawer',
-  'mobile-nav',
-  'top-banners',
-  'main',
-  'right-rail',
-  'bottom-status',
-  'fab',
-  'toast',
-  'content',
-];
-
-export const DEFAULT_ZONE_MAP: Readonly<Record<string, WorkspaceRuntimeZone>> = {
-  'workspace.frame.ui-shell':            'main',
-  'workspace.frame.header':              'header',
-  'workspace.frame.header-name':         'header',
-  'workspace.frame.header-navigation':   'header',
-  'workspace.frame.header-menu':         'header',
-  'workspace.frame.header-menu-item':    'header',
-  'workspace.frame.header-global-bar':   'header',
-  'workspace.frame.header-global-action':'header',
-  'workspace.frame.side-nav':            'sidebar',
-  'workspace.frame.side-nav-items':      'sidebar',
-  'workspace.frame.side-nav-menu':       'sidebar',
-  'workspace.frame.side-nav-menu-item':  'sidebar',
-  'workspace.frame.side-nav-link':       'sidebar',
-  'workspace.frame.content':             'content',
-};
+/**
+ * Zone names are fully resolver-driven. The set is sourced from
+ * `dos.dynamic_ui_component_registry.metadata.zone` (migration
+ * 20260505_2000) and overridable per-tenant via
+ * `dos.workspace_shell_binding.props.zone`. There is no closed enum or
+ * static fallback map — the resolver alone owns zone assignment.
+ */
+export type WorkspaceRuntimeZone = string;
 
 // ─── Permission-awareness ─────────────────────────────────────────────────
 export interface PermissionAware {
@@ -296,8 +261,8 @@ export interface WorkspaceShellResolverResponse {
   readonly tenantId: string;
   readonly version: number;
   readonly surfaces: readonly WorkspaceShellBindingRow[];
-  readonly zones: Readonly<Record<WorkspaceRuntimeZone, readonly WorkspaceShellBindingRow[]>>;
-  readonly knownKeys: typeof WORKSPACE_SHELL_KEYS;
+  readonly zones: Readonly<Record<string, readonly WorkspaceShellBindingRow[]>>;
+  readonly knownKeys: readonly string[];
 }
 
 // ─── Type guards ─────────────────────────────────────────────────────────

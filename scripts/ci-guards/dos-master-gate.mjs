@@ -25,6 +25,7 @@ const GUARDS = [
   'cookie-domain-isolation.mjs',
   'redis-db-isolation.mjs',
   'static-route-ban.mjs',
+  'no-archive-imports.mjs',
   'bootstrap-cache-key-coherent.mjs',
   'mtls-required-on-admin-zone.mjs',
   'publish-revision-atomic.mjs',

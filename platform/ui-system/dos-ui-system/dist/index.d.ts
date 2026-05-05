@@ -87,5 +87,5 @@ export * from './auth/auth-pages';
 export * from './agentic/agentic.contract';
 export * from './agentic/agentic-components';
 export { CARBON_ICON_NAMES, CARBON_ICON_NAME_SET, CARBON_ICON_INDEX, isCarbonIconName, resolveCarbonIcon, type CarbonIconName, type CarbonIconSize, type CarbonIconNamespace, type CarbonIconEntry, } from './allowlists/carbon-icons.allowlist';
-export { APPROVED_COMPONENT_KEYS, isApprovedComponentKey, } from '@dos/ui-contracts';
+export { isApprovedComponentKey, registerApprovedComponentKeys, getApprovedComponentKeys, registerComponentKey, } from '@dos/ui-contracts';
 export type { ApprovedComponentKey, ActionContract, PageContract, NavigationContract, ResponsiveBehavior, ResponsiveContract, Breakpoint, DosNavItem, DosNavGroup, DosNavDisabledReason, DosShellNavConfig, DosWorkspaceShellConfig, } from '@dos/ui-contracts';

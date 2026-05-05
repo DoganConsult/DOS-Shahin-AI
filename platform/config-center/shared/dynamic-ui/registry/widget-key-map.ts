@@ -11,19 +11,8 @@ import type { Type } from '@angular/core';
 
 export type LazyComponent = () => Promise<Type<unknown>>;
 
-type ExtraWidgetKey =
-  | 'workflow-command-center'
-  | 'my-work-queue'
-  | 'workflow-designer-canvas'
-  | 'workflow-instance-monitor'
-  | 'template-gallery'
-  | 'sla-console'
-  // Shahin product user/tenant page widgets (signature-zone-only thin
-  // pages dispatched through DynamicPageHostComponent).
-  | 'shahin-profile'
-  | 'shahin-settings'
-  | 'shahin-tenant-profile'
-  | 'shahin-tenant-settings';
+// Extra widget keys removed — workflow module and shahin page
+// components will be registered dynamically when their packages ship.
 
 const CANONICAL_SIGNATURE_WIDGET_MAP: Record<string, LazyComponent> = {
   // Foundation signature widgets (per ui.contract.json)
@@ -106,7 +95,7 @@ const CANONICAL_SIGNATURE_WIDGET_MAP: Record<string, LazyComponent> = {
     import('../../../../foundation/ui/workspace/workspace-home.component').then(m => m.WorkspaceHomeComponent as unknown as Type<unknown>),
 };
 
-export const WIDGET_KEY_MAP: Record<string | ExtraWidgetKey, LazyComponent> = {
+export const WIDGET_KEY_MAP: Record<string, LazyComponent> = {
   ...CANONICAL_SIGNATURE_WIDGET_MAP,
   'command-center': () =>
     import('../widgets/command-center.widget').then(m => m.CommandCenterWidgetComponent as unknown as Type<unknown>),
@@ -128,33 +117,12 @@ export const WIDGET_KEY_MAP: Record<string | ExtraWidgetKey, LazyComponent> = {
     import('@compliance-module/ui/components/widgets').then(m => m.FrameworkMappingComponent as unknown as Type<unknown>),
   'report-composer': () =>
     import('@compliance-module/ui/components/widgets').then(m => m.ReportComposerComponent as unknown as Type<unknown>),
-  'workflow-command-center': () =>
-    import('@workflow-module/ui').then(m => m.WorkflowHubComponent as unknown as Type<unknown>),
-  'my-work-queue': () =>
-    import('@workflow-module/ui').then(m => m.WorkItemsInboxPageComponent as unknown as Type<unknown>),
-  'workflow-designer-canvas': () =>
-    import('@workflow-module/ui').then(m => m.WorkflowBuilderComponent as unknown as Type<unknown>),
-  'workflow-instance-monitor': () =>
-    import('@workflow-module/ui').then(m => m.WorkflowExecutionsComponent as unknown as Type<unknown>),
-  'template-gallery': () =>
-    import('@workflow-module/ui').then(m => m.WorkflowTemplatesComponent as unknown as Type<unknown>),
-  'sla-console': () =>
-    import('@workflow-module/ui').then(m => m.SLAManagementComponent as unknown as Type<unknown>),
   'ai-recommendations-panel': () =>
     import('../../../../foundation/ui/shared/ai-panel/ai-panel.component').then(m => m.AiPanelComponent as unknown as Type<unknown>),
   'agent-copilot-panel': () =>
     import('../../../../foundation/ui/shared/ai-panel/ai-panel.component').then(m => m.AiPanelComponent as unknown as Type<unknown>),
-  // Shahin product user/tenant page widgets — wrap existing thin
-  // page components so DynamicPageHostComponent renders them in the
-  // signature zone. No template change; only dispatch path changes.
-  'shahin-profile': () =>
-    import('../../../../../products/shahin-ai/app/src/app/pages/profile/profile.component').then(m => m.ProfileComponent as unknown as Type<unknown>),
-  'shahin-settings': () =>
-    import('../../../../../products/shahin-ai/app/src/app/pages/settings/settings.component').then(m => m.SettingsComponent as unknown as Type<unknown>),
-  'shahin-tenant-profile': () =>
-    import('../../../../../products/shahin-ai/app/src/app/pages/tenant-profile/tenant-profile.component').then(m => m.TenantProfileComponent as unknown as Type<unknown>),
-  'shahin-tenant-settings': () =>
-    import('../../../../../products/shahin-ai/app/src/app/pages/tenant-settings/tenant-settings.component').then(m => m.TenantSettingsComponent as unknown as Type<unknown>),
+  // workflow-module and shahin page widgets removed — will be re-added
+  // when their packages ship with real component exports.
 };
 
 /** Keys present in WIDGET_KEY_MAP — used for prefix / .cfg fallbacks (keep in sync with carbon-dynamic-ui-coherence.mjs). */

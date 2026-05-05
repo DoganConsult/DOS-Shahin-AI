@@ -2200,3 +2200,32 @@ Workflow §6.5 approval; A2 deferred to a dedicated wave; A6 verified empty.
   UNIQUE constraint immunises against future drift; sync trigger
   negative-path tested. Open follow-up: triage the 7 unregistered-but-
   live `tenant_*` schemas (do NOT drop without confirming each is dead).
+
+================================================================================
+2026-05-05 — Legacy archive discipline (map + CI) — CLOSED
+================================================================================
+
+- **Wave 0 — Inventory.** `platform/docs/legacy/archive-inventory.md` records
+  tiers L0–L4, M3_pending paths, existing `platform/_archive/orphans-2026-05-01/`,
+  and dep-cruiser / guard verification commands. Freeze: no new features on
+  L3–L4 roots without an archive wave PR.
+- **Wave 1 — Quarantine + CI.** `scripts/ci-guards/no-archive-imports.mjs` fails
+  if tracked `ts|tsx|js|mjs|cjs|vue` under `platform/` (except `_archive`),
+  `products/`, `modules/`, `services/`, or `packages/` references `platform/_archive`
+  or `/_archive/` import paths. Allowlisted: `platform/_archive/**`, `docs/**`,
+  `scripts/**`, `.cursor/**`, `platform/docs/**`. Wired into
+  `scripts/ci-guards/dos-master-gate.mjs`. Bucket README:
+  `platform/_archive/README.md`.
+- **Wave 2 — Build matrix.** Default `pnpm build` already omits `_archive`
+  (not in workspace globs). **`pnpm build:legacy-check`** runs
+  `scripts/ci-guards/archive-legacy-build-check.mjs` over
+  `archive-ledger.json#build_excluded` (empty today = PASS).
+- **Wave 3 — Runtime.** No gateway/PM2/manifest cuts in this slice; ledger
+  `runtime_removed[]` empty — record future retirements there.
+- **Wave 4 — Ledger + docs.** `platform/docs/legacy/archive-ledger.json`
+  (schema v1: `moved`, `build_excluded`, `runtime_removed`). Architecture pointer
+  added in `docs/architecture.md#hard-rules`. **`pnpm verify:no-archive-imports`**
+  for ad-hoc checks.
+
+**Verdict — CLOSED** for archive map + enforcement scaffolding; execution of
+additional `git mv` batches remains wave-scoped per inventory.

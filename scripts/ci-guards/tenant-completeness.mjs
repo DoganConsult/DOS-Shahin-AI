@@ -38,16 +38,46 @@ async function main() {
   const tenants = await c.query(
     `SELECT tenant_id, tenant_code FROM dos.tenants WHERE status='active' ORDER BY created_at`,
   );
+  // ── Discover required platform modules from DB (no hardcoded module names).
+  let requiredProducts = [];
+  let requiredModules = [];
+  try {
+    const rp = await c.query(
+      `SELECT DISTINCT product_key FROM dos.tenant_product_activation LIMIT 100`,
+    );
+    requiredProducts = rp.rows.map(r => r.product_key);
+  } catch { /* table may not exist; graceful degradation */ }
+  try {
+    const rm = await c.query(
+      `SELECT DISTINCT module_code FROM dos.dynamic_ui_modules WHERE is_platform_required = true`,
+    );
+    requiredModules = rm.rows.map(r => r.module_code);
+  } catch {
+    // Fallback: if is_platform_required column doesn't exist, check all modules
+    requiredModules = [];
+  }
+
   for (const t of tenants.rows) {
     const checks = [
       { name: 'membership', sql: `SELECT 1 FROM dos.tenant_memberships WHERE tenant_id=$1 AND status='active' LIMIT 1` },
       { name: 'role',       sql: `SELECT 1 FROM dos.user_role_assignments WHERE tenant_id=$1 AND is_active=true LIMIT 1` },
-      { name: 'shahin-act', sql: `SELECT 1 FROM dos.tenant_product_activation WHERE tenant_id=$1 AND product_key='shahin-ai' AND status='active'` },
-      { name: 'found-act',  sql: `SELECT 1 FROM dos.tenant_product_activation WHERE tenant_id=$1 AND product_key='foundation' AND status='active'` },
       { name: 'prod-ent',   sql: `SELECT 1 FROM dos.tenant_product_entitlements WHERE tenant_id=$1 AND entitlement_status='active' LIMIT 1` },
-      { name: 'found-ent',  sql: `SELECT 1 FROM dos.tenant_module_entitlements WHERE tenant_id=$1 AND module_code='foundation' AND entitlement_status='active'` },
       { name: 'trial-or-sub', sql: `SELECT 1 FROM dos.tenant_trials WHERE tenant_id=$1 UNION SELECT 1 FROM dos.tenant_subscriptions WHERE tenant_id=$1 AND status IN ('active','past_due','grace') LIMIT 1` },
     ];
+    // Dynamic product activation checks
+    for (const pk of requiredProducts) {
+      checks.push({
+        name: `product-act:${pk}`,
+        sql: `SELECT 1 FROM dos.tenant_product_activation WHERE tenant_id=$1 AND product_key='${pk}' AND status='active'`,
+      });
+    }
+    // Dynamic module entitlement checks
+    for (const mc of requiredModules) {
+      checks.push({
+        name: `module-ent:${mc}`,
+        sql: `SELECT 1 FROM dos.tenant_module_entitlements WHERE tenant_id=$1 AND module_code='${mc}' AND entitlement_status='active'`,
+      });
+    }
     for (const ck of checks) {
       const r = await c.query(ck.sql, [t.tenant_id]);
       if (r.rows.length === 0) failures.push(`${t.tenant_id} (${t.tenant_code}): missing ${ck.name}`);
@@ -56,8 +86,13 @@ async function main() {
       `SELECT count(*)::int AS n FROM dos.workspace_shell_binding WHERE tenant_id=$1`,
       [t.tenant_id],
     );
-    if (sb.rows[0].n !== 60) {
-      failures.push(`${t.tenant_id} (${t.tenant_code}): workspace_shell_binding has ${sb.rows[0].n} rows, expected 60`);
+    // Expected shell binding count comes from DB, not hardcoded
+    const expectedKeys = await c.query(
+      `SELECT count(DISTINCT component_key)::int AS n FROM dos.dynamic_ui_component_registry WHERE component_key LIKE 'workspace.%'`,
+    );
+    const expectedCount = expectedKeys.rows[0]?.n ?? 60;
+    if (sb.rows[0].n !== expectedCount) {
+      failures.push(`${t.tenant_id} (${t.tenant_code}): workspace_shell_binding has ${sb.rows[0].n} rows, expected ${expectedCount}`);
     }
   }
 

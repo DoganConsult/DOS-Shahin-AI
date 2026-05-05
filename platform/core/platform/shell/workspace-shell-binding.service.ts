@@ -18,17 +18,14 @@ import type { WorkspaceShellBindingRow } from '@dos/ui-system';
 import type { ShellAccountMenuEntry } from '@dos/ui-contracts';
 import { AccessStore } from '@dos/access-store';
 
-export type WorkspaceShellZone =
-  | 'header'
-  | 'sidebar'
-  | 'mobile-drawer'
-  | 'mobile-nav'
-  | 'top-banners'
-  | 'main'
-  | 'right-rail'
-  | 'bottom-status'
-  | 'fab'
-  | 'toast';
+/**
+ * Zone names are fully resolver-driven — every zone string returned by
+ * `GET /api/ui-os/workspace-runtime` is honoured. The set is sourced from
+ * `dos.dynamic_ui_component_registry.metadata.zone` (migration
+ * 20260505_2000) and overridable per-tenant via
+ * `dos.workspace_shell_binding.props.zone`. There is no closed enum here.
+ */
+export type WorkspaceShellZone = string;
 
 export interface WorkspaceShellSurface extends WorkspaceShellBindingRow {
   zone?: WorkspaceShellZone;
@@ -52,19 +49,6 @@ interface WorkspaceShellResponse {
 type SurfaceMap = ReadonlyMap<string, WorkspaceShellSurface>;
 
 const EMPTY_MAP: SurfaceMap = new Map();
-
-const WORKSPACE_SHELL_ZONES = new Set<WorkspaceShellZone>([
-  'header',
-  'sidebar',
-  'mobile-drawer',
-  'mobile-nav',
-  'top-banners',
-  'main',
-  'right-rail',
-  'bottom-status',
-  'fab',
-  'toast',
-]);
 
 @Injectable({ providedIn: 'root' })
 export class WorkspaceShellBindingService {
@@ -227,11 +211,12 @@ export class WorkspaceShellBindingService {
   }
 
   private resolveZone(row: WorkspaceShellSurface): WorkspaceShellZone | null {
-    if (row.zone && WORKSPACE_SHELL_ZONES.has(row.zone)) return row.zone;
+    // Zone is fully resolver-driven. The resolver already merged
+    // registry metadata.zone with per-tenant props.zone overrides.
+    if (row.zone && typeof row.zone === 'string' && row.zone.trim()) return row.zone;
     const props = row.props as Record<string, unknown> | undefined;
-    const propZone = props && typeof props['zone'] === 'string' ? props['zone'] as WorkspaceShellZone : null;
-    if (propZone && WORKSPACE_SHELL_ZONES.has(propZone)) return propZone;
-    // Zone is fully resolver-driven. No static fallback map.
+    const propZone = props && typeof props['zone'] === 'string' ? props['zone'] as string : null;
+    if (propZone && propZone.trim()) return propZone;
     return null;
   }
 

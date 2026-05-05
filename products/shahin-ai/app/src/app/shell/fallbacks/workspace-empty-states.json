@@ -1,8 +1,0 @@
-{
-  "states": [
-    { "state_key": "workspace.tasks.empty",     "title_key": "workspace.empty.tasks.title",     "description_key": null,                                  "tone": "info",    "illustration": null, "primary_label_key": "workspace.action.view_all", "primary_route": "/workspace/tasks",     "secondary_label_key": null, "secondary_route": null },
-    { "state_key": "workspace.approvals.empty", "title_key": "workspace.empty.approvals.title", "description_key": null,                                  "tone": "warning", "illustration": null, "primary_label_key": "workspace.action.view_all", "primary_route": "/workspace/approvals", "secondary_label_key": null, "secondary_route": null },
-    { "state_key": "workspace.activity.empty",  "title_key": "workspace.empty.activity.title",  "description_key": null,                                  "tone": "success", "illustration": null, "primary_label_key": "workspace.action.view_all", "primary_route": "/workspace/activity",  "secondary_label_key": null, "secondary_route": null },
-    { "state_key": "workspace.modules.empty",   "title_key": "workspace.empty.modules.title",   "description_key": "workspace.empty.modules.description", "tone": "brand",   "illustration": null, "primary_label_key": "workspace.action.ask_ai",   "primary_route": "/workspace/ai",         "secondary_label_key": null, "secondary_route": null }
-  ]
-}

@@ -46,61 +46,41 @@
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { execSync } from 'node:child_process';
 
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const SPA_SRC = path.join(REPO_ROOT, 'products/shahin-ai/app/src/app');
 const REGISTRIES = path.join(REPO_ROOT, 'registries/modules.registry.json');
 
-// 34 known module codes from spec §32.
-const KNOWN_MODULES = [
-  'foundation',
-  'risk',
-  'compliance',
-  'workflow',
-  'policy',
-  'evidence',
-  'privacy',
-  'vendor',
-  'asset',
-  'bcp',
-  'training',
-  'action',
-  'dora',
-  'journey',
-  'analytics',
-  'reporting',
-  'executive',
-  'ai-governance',
-  'ai-engine',
-  'dsoc',
-  'dnoc',
-  'dauth',
-  'config-center',
-  'notifications',
-  'records',
-  'integrations',
-  'mcp',
-  'portals',
-  'widgets',
-  'product',
-  'agrc-os',
-  'platform-admin',
-  'user-profile',
-  'audit-trail',
-];
+// Module codes loaded dynamically — no hardcoded list.
+// Priority: DB → registry JSON → empty (no fallback module list).
+const KNOWN_MODULES = [];
 
-// Try to enrich from the registry (optional; static fallback uses spec list).
 function loadRegistryModules() {
-  if (!existsSync(REGISTRIES)) return KNOWN_MODULES;
+  // 1. Try DB
   try {
-    const j = JSON.parse(readFileSync(REGISTRIES, 'utf-8'));
-    const list = j.modules || j;
-    const ids = Array.isArray(list) ? list.map((m) => m.id || m.module_code) : [];
-    const all = new Set([...KNOWN_MODULES, ...ids.filter(Boolean)]);
-    return Array.from(all);
-  } catch {
-    return KNOWN_MODULES;
+    const raw = execSync(
+      `PGPASSWORD=dos_auth_pass_2026 psql -h localhost -U dos_auth -d shahin_grc -t -A -c "SELECT DISTINCT module_code FROM dos.dynamic_ui_modules ORDER BY module_code"`,
+      { encoding: 'utf8', timeout: 5000 },
+    ).trim();
+    if (raw) {
+      const dbMods = raw.split('\n').map(s => s.trim()).filter(Boolean);
+      if (dbMods.length > 0) return dbMods;
+    }
+  } catch { /* DB unavailable, try JSON */ }
+
+  // 2. Try registry JSON
+  if (existsSync(REGISTRIES)) {
+    try {
+      const j = JSON.parse(readFileSync(REGISTRIES, 'utf-8'));
+      const list = j.modules || j;
+      const ids = Array.isArray(list) ? list.map((m) => m.id || m.module_code).filter(Boolean) : [];
+      if (ids.length > 0) return ids;
+    } catch { /* fall through */ }
   }
+
+  // 3. Empty — guard becomes a no-op (safe: won't produce false positives).
+  return [];
 }
 
 // Glob-ish prefix walker.

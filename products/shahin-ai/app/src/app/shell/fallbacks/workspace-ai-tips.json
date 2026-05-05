@@ -1,7 +1,0 @@
-{
-  "tips": [
-    { "tip_key": "setup-incomplete", "title_key": "workspace.ai.setup.title",  "body_key": "workspace.ai.setup.body",  "cta_label_key": "workspace.action.open", "cta_route": "/workspace/setup", "icon": "sparkle", "condition_kind": "setup_below",  "condition_payload": {}, "priority": 10, "required_permission": null },
-    { "tip_key": "open-foundation",  "title_key": "workspace.ai.module.title", "body_key": "workspace.ai.module.body", "cta_label_key": "workspace.action.open", "cta_route": "/foundation",      "icon": "sparkle", "condition_kind": "has_modules",  "condition_payload": {}, "priority": 30, "required_permission": null },
-    { "tip_key": "invite-team",      "title_key": "workspace.ai.invite.title", "body_key": "workspace.ai.invite.body", "cta_label_key": "workspace.action.open", "cta_route": "/tenant-settings", "icon": "sparkle", "condition_kind": "tenant_admin", "condition_payload": {}, "priority": 50, "required_permission": null }
-  ]
-}

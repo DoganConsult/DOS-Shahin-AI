@@ -26,3 +26,9 @@ This file is the canonical schema. Every PR MUST attach a completed
 - `fake_green_check`
 - `report_contract`
 - `decision`            # values: GO | NO-GO | PARTIAL
+
+## Legacy archive discipline (`platform/_archive`)
+
+- **Do not** import from `platform/_archive/**` into the active tree (`platform/core`, `products`, `modules`, `services`, other non-archive packages). Port behavior to canonical paths instead.
+- CI: `node scripts/ci-guards/no-archive-imports.mjs` (also `no-archive-imports.mjs` in `scripts/ci-guards/dos-master-gate.mjs`). Inventory and moves: `platform/docs/legacy/archive-inventory.md`, `platform/docs/legacy/archive-ledger.json`, `platform/_archive/README.md`.
+- **Edits** under `platform/_archive/**` are for archive maintenance only; new feature work targets the active tree.

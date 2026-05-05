@@ -14,88 +14,12 @@
 import { Router } from 'express';
 import type { DbPool } from '../db.js';
 
-const WORKSPACE_SHELL_KEYS = [
-  // Band A — Workspace Shell Frame (14)
-  'workspace.frame.ui-shell',
-  'workspace.frame.header',
-  'workspace.frame.header-name',
-  'workspace.frame.header-navigation',
-  'workspace.frame.header-menu',
-  'workspace.frame.header-menu-item',
-  'workspace.frame.header-global-bar',
-  'workspace.frame.header-global-action',
-  'workspace.frame.side-nav',
-  'workspace.frame.side-nav-items',
-  'workspace.frame.side-nav-menu',
-  'workspace.frame.side-nav-menu-item',
-  'workspace.frame.side-nav-link',
-  'workspace.frame.content',
-  // Band B — Navigation / Layout (10)
-  'workspace.nav.grid',
-  'workspace.nav.column',
-  'workspace.nav.layer',
-  'workspace.nav.breadcrumb',
-  'workspace.nav.tabs',
-  'workspace.nav.tab',
-  'workspace.nav.tile',
-  'workspace.nav.clickable-tile',
-  'workspace.nav.expandable-tile',
-  'workspace.nav.tag',
-  // Band C — Tables / Lists / Data (7)
-  'workspace.data.data-table',
-  'workspace.data.table-toolbar',
-  'workspace.data.table-toolbar-search',
-  'workspace.data.table-toolbar-actions',
-  'workspace.data.table-batch-actions',
-  'workspace.data.pagination',
-  'workspace.data.structured-list',
-  // Band D — Search / Filters / Inputs (12)
-  'workspace.input.search',
-  'workspace.input.dropdown',
-  'workspace.input.combo-box',
-  'workspace.input.multi-select',
-  'workspace.input.date-picker',
-  'workspace.input.text-input',
-  'workspace.input.text-area',
-  'workspace.input.number-input',
-  'workspace.input.select',
-  'workspace.input.checkbox',
-  'workspace.input.radio',
-  'workspace.input.toggle',
-  // Band E — Actions / Feedback / Overlays (7)
-  'workspace.action.button',
-  'workspace.action.icon-button',
-  'workspace.action.overflow-menu',
-  'workspace.action.overflow-menu-option',
-  'workspace.action.modal',
-  'workspace.action.inline-notification',
-  'workspace.action.toast-notification',
-  // Band F — Enterprise Polish (10)
-  'workspace.polish.tooltip',
-  'workspace.polish.toggletip',
-  'workspace.polish.popover',
-  'workspace.polish.progress-bar',
-  'workspace.polish.inline-loading',
-  'workspace.polish.skeleton-text',
-  'workspace.polish.skeleton-placeholder',
-  'workspace.polish.context-menu',
-  'workspace.polish.file-uploader',
-  'workspace.polish.accordion',
-] as const;
-
-type WorkspaceShellKey = typeof WORKSPACE_SHELL_KEYS[number];
-type WorkspaceRuntimeZone =
-  | 'header'
-  | 'sidebar'
-  | 'mobile-drawer'
-  | 'mobile-nav'
-  | 'top-banners'
-  | 'main'
-  | 'right-rail'
-  | 'bottom-status'
-  | 'fab'
-  | 'toast'
-  | 'content';
+// Workspace shell key set + zone map are loaded LIVE from
+// dos.dynamic_ui_component_registry on every request — no hardcoded
+// 60-key array, no FRAME_ZONE_PREFIXES table. Zones are stored on
+// `metadata.zone` (migration 20260505_2000) and overridable per-tenant
+// via dos.workspace_shell_binding.props.zone.
+type WorkspaceRuntimeZone = string;
 
 interface WorkspaceShellRow {
   component_key: string;
@@ -107,57 +31,56 @@ interface WorkspaceShellRow {
   zone?: WorkspaceRuntimeZone;
 }
 
-const WORKSPACE_RUNTIME_ZONES: readonly WorkspaceRuntimeZone[] = [
-  'header',
-  'sidebar',
-  'mobile-drawer',
-  'mobile-nav',
-  'top-banners',
-  'main',
-  'right-rail',
-  'bottom-status',
-  'fab',
-  'toast',
-  'content',
-];
-
-// Zone mapping — Band A (frame primitives) have fixed layout positions.
-// Bands B-F default to 'content' — they render inside the page content area.
-// Any key can override zone via props.zone in the DB binding row.
-const FRAME_ZONE_PREFIXES: ReadonlyArray<[string, WorkspaceRuntimeZone]> = [
-  ['workspace.frame.header',    'header'],
-  ['workspace.frame.side-nav',  'sidebar'],
-  ['workspace.frame.content',   'content'],
-  ['workspace.frame.ui-shell',  'main'],
-];
-
-function zoneForSurface(row: WorkspaceShellRow): WorkspaceRuntimeZone | null {
-  // 1. Explicit DB override always wins.
-  const props = row.props ?? {};
-  const propZone = typeof props.zone === 'string' ? props.zone as WorkspaceRuntimeZone : null;
-  if (propZone && WORKSPACE_RUNTIME_ZONES.includes(propZone)) return propZone;
-
-  const key = row.component_key;
-
-  // 2. Band A frame primitives — prefix-based fixed zone.
-  for (const [prefix, zone] of FRAME_ZONE_PREFIXES) {
-    if (key === prefix || key.startsWith(prefix + '-') || key.startsWith(prefix + '.')) return zone;
-  }
-  // workspace.frame.* catch-all → main
-  if (key.startsWith('workspace.frame.')) return 'main';
-
-  // 3. All other bands (B-F) → content by default.
-  //    workspace.nav.*, workspace.data.*, workspace.input.*,
-  //    workspace.action.*, workspace.polish.* — these are Carbon
-  //    primitives used inside page content.
-  if (key.startsWith('workspace.')) return 'content';
-
-  // 4. Unknown prefix — skip.
-  return null;
+interface WorkspaceShellRegistryRow {
+  component_key: string;
+  metadata_zone: WorkspaceRuntimeZone | null;
 }
 
-function normalizeSurface(row: WorkspaceShellRow): WorkspaceShellRow {
-  const zone = zoneForSurface(row);
+interface WorkspaceShellCatalog {
+  knownKeys: string[];
+  zoneByKey: ReadonlyMap<string, WorkspaceRuntimeZone>;
+  runtimeZones: string[];
+}
+
+async function loadWorkspaceShellCatalog(pool: DbPool): Promise<WorkspaceShellCatalog> {
+  const result = await pool.query<WorkspaceShellRegistryRow>(
+    `SELECT component_key,
+            NULLIF(metadata->>'zone', '') AS metadata_zone
+       FROM dos.dynamic_ui_component_registry
+      WHERE component_key LIKE 'workspace.%'
+        AND approval_status = 'approved'
+      ORDER BY component_key`,
+  );
+  const zoneByKey = new Map<string, WorkspaceRuntimeZone>();
+  const knownKeys: string[] = [];
+  const zoneSet = new Set<string>();
+  for (const row of result.rows) {
+    knownKeys.push(row.component_key);
+    if (row.metadata_zone) {
+      zoneByKey.set(row.component_key, row.metadata_zone);
+      zoneSet.add(row.metadata_zone);
+    }
+  }
+  return { knownKeys, zoneByKey, runtimeZones: [...zoneSet].sort() };
+}
+
+function resolveSurfaceZone(
+  row: WorkspaceShellRow,
+  catalog: WorkspaceShellCatalog,
+): WorkspaceRuntimeZone | null {
+  // 1. Tenant-level override via binding props always wins.
+  const props = row.props ?? {};
+  const propZone = typeof props.zone === 'string' ? (props.zone as WorkspaceRuntimeZone) : null;
+  if (propZone) return propZone;
+  // 2. Registry metadata.zone (loaded from DB).
+  return catalog.zoneByKey.get(row.component_key) ?? null;
+}
+
+function normalizeSurface(
+  row: WorkspaceShellRow,
+  catalog: WorkspaceShellCatalog,
+): WorkspaceShellRow {
+  const zone = resolveSurfaceZone(row, catalog);
   return {
     ...row,
     props: row.props ?? {},
@@ -165,14 +88,21 @@ function normalizeSurface(row: WorkspaceShellRow): WorkspaceShellRow {
   };
 }
 
-function groupSurfacesByZone(rows: WorkspaceShellRow[]): Record<WorkspaceRuntimeZone, WorkspaceShellRow[]> {
-  const grouped = Object.fromEntries(WORKSPACE_RUNTIME_ZONES.map((zone) => [zone, []])) as Record<WorkspaceRuntimeZone, WorkspaceShellRow[]>;
+function groupSurfacesByZone(
+  rows: WorkspaceShellRow[],
+  catalog: WorkspaceShellCatalog,
+): Record<string, WorkspaceShellRow[]> {
+  // Seed with every distinct zone observed in the registry plus any
+  // zone introduced by tenant-level binding overrides (props.zone).
+  const grouped: Record<string, WorkspaceShellRow[]> = {};
+  for (const zone of catalog.runtimeZones) grouped[zone] = [];
   for (const row of rows) {
-    const zone = row.zone ?? zoneForSurface(row);
+    const zone = row.zone ?? resolveSurfaceZone(row, catalog);
     if (!zone) continue;
+    if (!grouped[zone]) grouped[zone] = [];
     grouped[zone].push(row);
   }
-  for (const zone of WORKSPACE_RUNTIME_ZONES) {
+  for (const zone of Object.keys(grouped)) {
     grouped[zone].sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
   }
   return grouped;
@@ -226,7 +156,11 @@ function buildPageOrder(items: PageOrderRow[]) {
     .sort((a, b) => a.moduleCode.localeCompare(b.moduleCode) || a.sortOrder - b.sortOrder || a.itemId.localeCompare(b.itemId));
 }
 
-async function loadWorkspaceSurfaces(pool: DbPool, tenantId: string): Promise<WorkspaceShellRow[]> {
+async function loadWorkspaceSurfaces(
+  pool: DbPool,
+  tenantId: string,
+  catalog: WorkspaceShellCatalog,
+): Promise<WorkspaceShellRow[]> {
   const result = await pool.query<WorkspaceShellRow>(
     `SELECT component_key, enabled, position, perms_required, props, version
        FROM dos.workspace_shell_binding
@@ -234,7 +168,7 @@ async function loadWorkspaceSurfaces(pool: DbPool, tenantId: string): Promise<Wo
       ORDER BY position`,
     [tenantId],
   );
-  return result.rows.map(normalizeSurface);
+  return result.rows.map((row) => normalizeSurface(row, catalog));
 }
 
 export function createWorkspaceShellRouter(pool: DbPool): Router {
@@ -247,7 +181,8 @@ export function createWorkspaceShellRouter(pool: DbPool): Router {
       return;
     }
     try {
-      const surfaces = await loadWorkspaceSurfaces(pool, tenantId);
+      const catalog = await loadWorkspaceShellCatalog(pool);
+      const surfaces = await loadWorkspaceSurfaces(pool, tenantId, catalog);
       const aggregateVersion = surfaces.reduce(
         (acc, r) => acc + (r.version ?? 0),
         0,
@@ -256,8 +191,8 @@ export function createWorkspaceShellRouter(pool: DbPool): Router {
         tenantId,
         version: aggregateVersion,
         surfaces,
-        zones: groupSurfacesByZone(surfaces),
-        knownKeys: WORKSPACE_SHELL_KEYS,
+        zones: groupSurfacesByZone(surfaces, catalog),
+        knownKeys: catalog.knownKeys,
       });
     } catch (e) {
       res.status(500).json({
@@ -290,7 +225,8 @@ export function createWorkspaceShellRouter(pool: DbPool): Router {
     }
 
     try {
-      const surfaces = await loadWorkspaceSurfaces(pool, tenantId);
+      const catalog = await loadWorkspaceShellCatalog(pool);
+      const surfaces = await loadWorkspaceSurfaces(pool, tenantId, catalog);
       const shellVersion = surfaces.reduce((acc, r) => acc + (r.version ?? 0), 0);
       const [
         navGroups,
@@ -347,8 +283,8 @@ export function createWorkspaceShellRouter(pool: DbPool): Router {
         shell: {
           version: shellVersion,
           surfaces,
-          zones: groupSurfacesByZone(surfaces),
-          knownKeys: WORKSPACE_SHELL_KEYS,
+          zones: groupSurfacesByZone(surfaces, catalog),
+          knownKeys: catalog.knownKeys,
         },
         navigation: {
           groups: navGroups.rows,
@@ -380,7 +316,7 @@ export function createWorkspaceShellRouter(pool: DbPool): Router {
           probes: probes.rows,
         },
         pageInfrastructure: {
-          surfaces: surfaces.filter((s) => (s.zone ?? zoneForSurface(s)) === 'main'),
+          surfaces: surfaces.filter((s) => (s.zone ?? resolveSurfaceZone(s, catalog)) === 'main'),
         },
       });
     } catch (e) {

@@ -1,8 +1,0 @@
-{
-  "steps": [
-    { "step_key": "profile", "label_key": "workspace.setup.profile", "description_key": null, "icon": "user",     "route": "/profile",           "required_permission": null, "sort_order": 10, "condition_kind": "has_user_name",   "condition_payload": {} },
-    { "step_key": "tenant",  "label_key": "workspace.setup.tenant",  "description_key": null, "icon": "building", "route": "/tenant-profile",    "required_permission": null, "sort_order": 20, "condition_kind": "has_tenant_id",   "condition_payload": {} },
-    { "step_key": "modules", "label_key": "workspace.setup.modules", "description_key": null, "icon": "package",  "route": "/workspace/modules", "required_permission": null, "sort_order": 30, "condition_kind": "has_modules",     "condition_payload": {} },
-    { "step_key": "team",    "label_key": "workspace.setup.team",    "description_key": null, "icon": "users",    "route": "/tenant-settings",   "required_permission": null, "sort_order": 40, "condition_kind": "has_team_members","condition_payload": {} }
-  ]
-}

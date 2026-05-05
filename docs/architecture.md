@@ -47,6 +47,7 @@ or `modules/`.
 3. **`services/` must never import product frontend code.**
 4. Single canonical home — every concern has exactly one folder. No dual paths.
    Dead duplicates → `platform/_archive/orphans-<date>/`.
+   **Inventory + retention ledger:** [platform/docs/legacy/](../platform/docs/legacy/) (`archive-inventory.md`, `archive-ledger.json`); see `platform/_archive/README.md`. Active code must not import `platform/_archive/**` (`no-archive-imports.mjs` in `dos-master-gate`).
 5. Naming: kebab-case, no spaces, no "Module" suffix. Module folder name =
    `moduleCode`. Product folder name = `productCode`. Service folder name =
    `<name>-service`.

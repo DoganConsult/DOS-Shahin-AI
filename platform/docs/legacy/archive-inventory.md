@@ -36,6 +36,21 @@ For archive buckets, the invariant is simpler: **zero** `platform/_archive` stri
 node scripts/ci-guards/no-archive-imports.mjs
 ```
 
+## Deep verification (second pass, 2026-05-05)
+
+Canonical checks:
+
+| Check | Result |
+|-------|--------|
+| `platform/_archive/**` contains no `package.json` (workspace packages) | **0** files — default `pnpm build` filters (`./platform/**` with package roots only) never compile `_archive`. |
+| CI import ban | `no-archive-imports.mjs` is listed in `scripts/ci-guards/dos-master-gate.mjs` (runs with master gate). |
+| Manual guard | `node scripts/ci-guards/no-archive-imports.mjs` → **PASS** when run from a git checkout. |
+| Ledger | `archive-ledger.json` records `orphans-2026-05-01`; `build_excluded` / `runtime_removed` empty until future waves. |
+
+**Caveat:** `no-archive-imports.mjs` uses `git ls-files`; if `git` is unavailable it falls back to an empty file list (no violations reported). Treat runs outside a git workspace as **non-authoritative**; CI always runs in checkout.
+
+**Wave 0 supplement:** Dependency-cruiser remains an optional local edge audit (commands above); the **enforced** invariant is the CI guard + no workspace membership for `_archive`.
+
 ## Freeze (Wave 0)
 
 Until the next archive wave PR: no new features on M3_pending paths; no re-import of `platform/_archive/**` into the active tree.

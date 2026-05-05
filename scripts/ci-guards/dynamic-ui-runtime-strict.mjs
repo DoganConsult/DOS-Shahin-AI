@@ -126,18 +126,19 @@ async function main() {
   );
   gate(3, 'GET /modules → non-empty list', 'PASS', `${moduleCodes.size} modules`);
 
-  // Gate 4 — /contract/foundation
-  const contract = await jsonGet(`${BASE_URL}/contract/foundation`, '/contract/foundation');
+  // Gate 4 — /contract/:firstModule (canary probe — any active module proves the system works)
+  const canaryModule = [...moduleCodes][0];
+  const contract = await jsonGet(`${BASE_URL}/contract/${encodeURIComponent(canaryModule)}`, `/contract/${canaryModule}`);
   if (!contract.ok) {
-    gate(4, 'GET /contract/foundation', 'FAIL', contract.reason);
+    gate(4, `GET /contract/${canaryModule}`, 'FAIL', contract.reason);
     return finalize();
   }
   const c = contract.body;
   if (!c || (typeof c !== 'object')) {
-    gate(4, 'GET /contract/foundation', 'FAIL', 'response is not an object');
+    gate(4, `GET /contract/${canaryModule}`, 'FAIL', 'response is not an object');
     return finalize();
   }
-  gate(4, 'GET /contract/foundation', 'PASS', `module=${c.module?.module_code ?? c.moduleCode ?? '?'}`);
+  gate(4, `GET /contract/${canaryModule}`, 'PASS', `module=${c.module?.module_code ?? c.moduleCode ?? '?'}`);
 
   // Gate 5 — contract.routes non-empty
   const routes = c.routes ?? [];
@@ -160,40 +161,40 @@ async function main() {
   if (!overview) {
     gate(
       7,
-      'foundation contract declares an overview route',
+      `${canaryModule} contract declares an overview route`,
       'FAIL',
       'no route has pageType=overview',
     );
     return finalize();
   }
-  gate(7, 'foundation contract declares an overview route', 'PASS', overview.route);
+  gate(7, `${canaryModule} contract declares an overview route`, 'PASS', overview.route);
 
   // Gate 8 — /route-catalog
   const catalog = await jsonGet(`${BASE_URL}/route-catalog`, '/route-catalog');
   if (!catalog.ok) {
-    gate(8, 'GET /route-catalog → contains foundation routes', 'FAIL', catalog.reason);
+    gate(8, `GET /route-catalog → contains ${canaryModule} routes`, 'FAIL', catalog.reason);
     return finalize();
   }
   const catalogRoutes = Array.isArray(catalog.body)
     ? catalog.body
     : catalog.body?.routes ?? catalog.body?.routeCatalog ?? [];
-  const foundationCatalogCount = catalogRoutes.filter(
-    (r) => (r.module_code ?? r.moduleCode) === 'foundation',
+  const canaryCatalogCount = catalogRoutes.filter(
+    (r) => (r.module_code ?? r.moduleCode) === canaryModule,
   ).length;
-  if (foundationCatalogCount === 0) {
+  if (canaryCatalogCount === 0) {
     gate(
       8,
-      'GET /route-catalog → contains foundation routes',
+      `GET /route-catalog → contains ${canaryModule} routes`,
       'FAIL',
-      'no foundation routes in route-catalog',
+      `no ${canaryModule} routes in route-catalog`,
     );
     return finalize();
   }
   gate(
     8,
-    'GET /route-catalog → contains foundation routes',
+    `GET /route-catalog → contains ${canaryModule} routes`,
     'PASS',
-    `${foundationCatalogCount} foundation routes`,
+    `${canaryCatalogCount} ${canaryModule} routes`,
   );
 
   // Gate 9 — every catalog route has required fields
@@ -235,13 +236,13 @@ async function main() {
   }
   gate(10, 'no catalog route references an unknown moduleCode', 'PASS');
 
-  // Gate 11 — at least one widget configured for foundation
+  // Gate 11 — at least one widget configured for canary module
   const widgets = c.widgets ?? c.routes?.flatMap((r) => r.widgets ?? []) ?? [];
   if (!Array.isArray(widgets) || widgets.length === 0) {
-    gate(11, 'foundation contract declares at least one widget', 'FAIL', 'widgets[] is empty');
+    gate(11, `${canaryModule} contract declares at least one widget`, 'FAIL', 'widgets[] is empty');
     return finalize();
   }
-  gate(11, 'foundation contract declares at least one widget', 'PASS', `${widgets.length} widgets`);
+  gate(11, `${canaryModule} contract declares at least one widget`, 'PASS', `${widgets.length} widgets`);
 
   // Gate 12 — page-quality-gate (data-floor threshold).
   //

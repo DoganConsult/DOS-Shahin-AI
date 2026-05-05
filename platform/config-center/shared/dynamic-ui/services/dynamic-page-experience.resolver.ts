@@ -12,7 +12,8 @@ import { Injectable, computed, inject } from '@angular/core';
 import { DynamicUiBootstrapService, DynamicUiRouteItem } from './dynamic-ui-bootstrap.service';
 import { UserContextResolver, ProfileType } from '../../../../core/services/platform/user-context.resolver';
 
-export type PageType = 'overview' | 'list' | 'object' | 'workflow' | 'analytics' | 'audit' | 'settings';
+/** Known page types — matches ck_dynamic_ui_routes_page_type CHECK constraint. Accepts any string for forward compat. */
+export type PageType = 'overview' | 'list' | 'object' | 'workflow' | 'analytics' | 'audit' | 'settings' | (string & {});
 export type PageLayout = 'dashboard' | 'full-page' | 'split-view' | 'object-page' | 'wizard' | 'report';
 export type KpiScope = 'module-overview' | 'page-local' | 'none';
 export type DataScopeMode = 'tenant' | 'org_scope' | 'department_scope' | 'self' | 'global';
