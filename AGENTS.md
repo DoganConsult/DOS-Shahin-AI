@@ -1915,8 +1915,12 @@ Workflow §6.5 approval; A2 deferred to a dedicated wave; A6 verified empty.
   200, `/foundation/reference-data` → 200.
 
 ================================================================================
-2026-05-05 Group-7 close-loop — DB rows wired into the workspace shell — CLOSED
+2026-05-05 Group-7 close-loop — DB rows wired into the workspace shell — AWAITING MANUAL VERIFICATION
 ================================================================================
+> Status: code shipped + all automated gates GREEN, but **NOT CLOSED**. Final
+> CLOSED verdict is held until the user completes a hands-on browser test of
+> the four `workspace.*-tile` surfaces against a live tenant. Do not record a
+> closure marker on this entry without an explicit user sign-off line.
 
 - **Trigger.** Root-cause investigation showed the four
   `workspace.{selectable,clickable,expandable,ai}-tile` keys republished
@@ -1974,7 +1978,11 @@ Workflow §6.5 approval; A2 deferred to a dedicated wave; A6 verified empty.
     0 failed (7.3s).
   - `curl /foundation/delegations` → 200; `curl /foundation/reference-data` → 200.
 
-- **Verdict — CLOSED.** What was in the DB is now applied in the
-  workspace shell: every one of the 30 component_keys (incl. all four
-  tile variants) has a typed runtime consumer. CI guard prevents future
-  Group N additions from going inert.
+- **Verdict — PENDING MANUAL VERIFICATION (not closed).** Every one of
+  the 30 component_keys (incl. all four tile variants) now has a typed
+  runtime consumer and the CI guard prevents future Group N additions
+  from going inert. **Closure is withheld** per user directive
+  ("dont marke colosed bfore my manual testign") until the user
+  hands-on-validates the four tile surfaces in the browser against a
+  live tenant. Promote to CLOSED only after the user records explicit
+  sign-off here.
