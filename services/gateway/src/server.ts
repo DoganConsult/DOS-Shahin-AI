@@ -285,12 +285,42 @@ function forwardOriginalUrl(req: Request, res: Response, next: NextFunction) {
   next();
 }
 
-function injectIdentityHeaders(req: Request, _res: Response, next: NextFunction) {
+// 2026-05-04: routes that intentionally operate WITHOUT a resolved tenant
+// (admin console cross-tenant ops, signup, public marketing). Everything
+// else hard-fails with 403 NO_TENANT when authGuard succeeded but
+// resolveTenantId() returned null — we no longer silently forward an
+// empty x-tenant-id which downstream services accept under the legacy
+// trust contract and use to render an empty workspace shell.
+const TENANT_OPTIONAL_PREFIXES = [
+  '/api/admin',
+  '/api/public',
+  '/api/auth',
+  '/api/health',
+  '/api/site',
+  '/api/marketing',
+];
+
+function injectIdentityHeaders(req: Request, res: Response, next: NextFunction) {
   const u = (req as any).user || {};
   const sub = u.sub ? String(u.sub) : '';
   const email = u.email ? String(u.email) : '';
   const name = u.name || u.preferred_username ? String(u.name || u.preferred_username) : '';
   const tenantId = u.tenantId || u.tenant_id ? String(u.tenantId || u.tenant_id) : '';
+
+  // Hard-fail when the verified principal has no resolvable tenant on a
+  // tenant-scoped route. Silent forwarding produces the empty-chrome
+  // workspace bug (2026-05-04 audit). Skip for tenant-optional prefixes.
+  if (sub && !tenantId) {
+    const path = req.originalUrl || req.path || '';
+    const optional = TENANT_OPTIONAL_PREFIXES.some((p) => path.startsWith(p));
+    if (!optional) {
+      return res.status(403).json({
+        error: 'NO_TENANT',
+        message: 'Authenticated principal has no resolvable tenant. Re-register or contact support.',
+        sub: sub.slice(0, 8) + '…',
+      });
+    }
+  }
   // Roles: project realm + resource roles into a single normalized array.
   const realmRoles: string[] = Array.isArray(u?.realm_access?.roles) ? u.realm_access.roles : [];
   const resourceRoles: string[] = Object.values(u?.resource_access ?? {})

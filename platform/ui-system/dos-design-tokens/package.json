@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "DOS Platform — design tokens (colors, typography, spacing, radius, shadows, layout, RTL). Single source of truth for visual primitives across products.",
   "private": true,
+  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {

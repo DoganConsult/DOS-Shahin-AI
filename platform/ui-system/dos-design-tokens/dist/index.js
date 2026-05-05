@@ -1,4 +1,3 @@
-"use strict";
 /**
  * @dos/design-tokens
  *
@@ -11,10 +10,8 @@
  * No runtime values are emitted — tokens live only in CSS so theme
  * switching, RTL, and per-product overrides remain a CSS concern.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.DOS_MARKETING_TOKENS = exports.DOS_BRAND_CODES = exports.DOS_BRAND_TOKENS = exports.DOS_Z_INDEX_TOKENS = exports.DOS_TYPOGRAPHY_TOKENS = exports.DOS_LAYOUT_TOKENS = exports.DOS_DENSITY_MODES = exports.DOS_DISPLAY_TYPE_TOKENS = exports.DOS_DENSITY_TOKENS = exports.DOS_GLASS_TOKENS = exports.DOS_GRADIENT_TOKENS = exports.DOS_SHADOW_TOKENS = exports.DOS_RADIUS_TOKENS = exports.DOS_SPACING_TOKENS = exports.DOS_COLOR_TOKENS = exports.DOS_TOKEN_STYLESHEET = void 0;
-exports.DOS_TOKEN_STYLESHEET = '@dos/design-tokens/tokens.css';
-exports.DOS_COLOR_TOKENS = [
+export const DOS_TOKEN_STYLESHEET = '@dos/design-tokens/tokens.css';
+export const DOS_COLOR_TOKENS = [
     '--dos-color-primary',
     '--dos-color-primary-strong',
     '--dos-color-primary-soft',
@@ -31,7 +28,7 @@ exports.DOS_COLOR_TOKENS = [
     '--dos-color-danger',
     '--dos-color-info',
 ];
-exports.DOS_SPACING_TOKENS = [
+export const DOS_SPACING_TOKENS = [
     '--dos-space-0',
     '--dos-space-1',
     '--dos-space-2',
@@ -43,13 +40,13 @@ exports.DOS_SPACING_TOKENS = [
     '--dos-space-10',
     '--dos-space-12',
 ];
-exports.DOS_RADIUS_TOKENS = [
+export const DOS_RADIUS_TOKENS = [
     '--dos-radius-sm',
     '--dos-radius-md',
     '--dos-radius-card',
     '--dos-radius-pill',
 ];
-exports.DOS_SHADOW_TOKENS = [
+export const DOS_SHADOW_TOKENS = [
     '--dos-shadow-xs',
     '--dos-shadow-sm',
     '--dos-shadow-md',
@@ -63,7 +60,7 @@ exports.DOS_SHADOW_TOKENS = [
     '--dos-shadow-inset',
     '--dos-shadow-rim',
 ];
-exports.DOS_GRADIENT_TOKENS = [
+export const DOS_GRADIENT_TOKENS = [
     '--dos-gradient-signature',
     '--dos-gradient-signature-soft',
     '--dos-gradient-brand-soft',
@@ -79,7 +76,7 @@ exports.DOS_GRADIENT_TOKENS = [
     '--dos-gradient-hairline',
     '--dos-gradient-shimmer',
 ];
-exports.DOS_GLASS_TOKENS = [
+export const DOS_GLASS_TOKENS = [
     '--dos-glass-blur-sm',
     '--dos-glass-blur-md',
     '--dos-glass-blur-lg',
@@ -94,7 +91,7 @@ exports.DOS_GLASS_TOKENS = [
     '--dos-glass-backdrop-lg',
     '--dos-glass-rim',
 ];
-exports.DOS_DENSITY_TOKENS = [
+export const DOS_DENSITY_TOKENS = [
     '--dos-density-pad-y',
     '--dos-density-pad-x',
     '--dos-density-gap',
@@ -106,7 +103,7 @@ exports.DOS_DENSITY_TOKENS = [
     '--dos-density-line',
     '--dos-density-cds-size',
 ];
-exports.DOS_DISPLAY_TYPE_TOKENS = [
+export const DOS_DISPLAY_TYPE_TOKENS = [
     '--dos-display-xl',
     '--dos-display-lg',
     '--dos-display-md',
@@ -126,8 +123,8 @@ exports.DOS_DISPLAY_TYPE_TOKENS = [
     '--dos-caption-color',
     '--dos-numeric-features',
 ];
-exports.DOS_DENSITY_MODES = ['compact', 'cozy', 'comfortable'];
-exports.DOS_LAYOUT_TOKENS = [
+export const DOS_DENSITY_MODES = ['compact', 'cozy', 'comfortable'];
+export const DOS_LAYOUT_TOKENS = [
     '--dos-header-height-mobile',
     '--dos-header-height-desktop',
     '--dos-bottom-nav-height',
@@ -137,7 +134,7 @@ exports.DOS_LAYOUT_TOKENS = [
     '--dos-safe-top',
     '--dos-touch-target-min',
 ];
-exports.DOS_TYPOGRAPHY_TOKENS = [
+export const DOS_TYPOGRAPHY_TOKENS = [
     '--dos-font-family',
     '--dos-font-size-xs',
     '--dos-font-size-sm',
@@ -149,7 +146,7 @@ exports.DOS_TYPOGRAPHY_TOKENS = [
     '--dos-line-height-tight',
     '--dos-line-height-normal',
 ];
-exports.DOS_Z_INDEX_TOKENS = [
+export const DOS_Z_INDEX_TOKENS = [
     '--dos-z-base',
     '--dos-z-sticky',
     '--dos-z-fixed',
@@ -161,7 +158,7 @@ exports.DOS_Z_INDEX_TOKENS = [
 // Activated via [data-brand="<code>"] and [data-surface="marketing"]
 // host attributes. Workspace shell never sets data-surface so these
 // tokens are inert inside the in-product shell.
-exports.DOS_BRAND_TOKENS = [
+export const DOS_BRAND_TOKENS = [
     '--dos-color-brand-primary',
     '--dos-color-brand-primary-strong',
     '--dos-color-brand-primary-soft',
@@ -173,8 +170,8 @@ exports.DOS_BRAND_TOKENS = [
     '--dos-gradient-brand-hero',
     '--dos-gradient-brand-cta',
 ];
-exports.DOS_BRAND_CODES = ['shahin-ai', 'dogan-ai-os'];
-exports.DOS_MARKETING_TOKENS = [
+export const DOS_BRAND_CODES = ['shahin-ai', 'dogan-ai-os'];
+export const DOS_MARKETING_TOKENS = [
     '--dos-marketing-section-pad-block',
     '--dos-marketing-section-gap',
     '--dos-marketing-container-max',

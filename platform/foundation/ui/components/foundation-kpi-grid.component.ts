@@ -62,9 +62,9 @@ import { KpiCardVM } from '../shared/foundation-types';
       box-shadow: 0 2px 8px rgba(0,0,0,.12);
       border-color: var(--cds-interactive, #0f62fe);
     }
-    .fkpi-tile--danger  { border-left: 3px solid var(--cds-support-error, #da1e28); }
-    .fkpi-tile--warning { border-left: 3px solid var(--cds-support-warning, #f1c21b); }
-    .fkpi-tile--success { border-left: 3px solid var(--cds-support-success, #24a148); }
+    .fkpi-tile--danger  { border-inline-start: 3px solid var(--cds-support-error, #da1e28); }
+    .fkpi-tile--warning { border-inline-start: 3px solid var(--cds-support-warning, #f1c21b); }
+    .fkpi-tile--success { border-inline-start: 3px solid var(--cds-support-success, #24a148); }
     .fkpi-tile__icon  { font-size: 1.25rem; margin-bottom: var(--cds-spacing-02, 4px); }
     .fkpi-tile__value { font-size: 1.75rem; font-weight: 700; line-height: 1; color: var(--cds-text-primary, #161616); }
     .fkpi-tile__label { font-size: .75rem; color: var(--cds-text-secondary, #525252); margin-top: var(--cds-spacing-02, 4px); }

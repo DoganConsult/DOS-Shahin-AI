@@ -49,7 +49,7 @@ import type { WorkspaceNavItem } from './workspace-shell.contracts';
                     <dos-icon class="dos-sidebar-icon" [name]="item.icon" [size]="16"></dos-icon>
                   }
                   <span class="dos-sidebar-label">
-                    {{ item.label.fallback ?? item.label.i18nKey }}
+                    {{ item.label?.fallback ?? item.label?.i18nKey ?? '' }}
                   </span>
                   @if (item.badgeCount && item.badgeCount > 0 && !collapsed) {
                     <dos-carbon-tag type="blue" size="sm" class="dos-sidebar-badge">
@@ -75,7 +75,7 @@ import type { WorkspaceNavItem } from './workspace-shell.contracts';
                 }
                 @if (!collapsed) {
                   <span class="dos-sidebar-label">
-                    {{ item.label.fallback ?? item.label.i18nKey }}
+                    {{ item.label?.fallback ?? item.label?.i18nKey ?? '' }}
                   </span>
                   @if (item.badgeCount && item.badgeCount > 0) {
                     <dos-carbon-tag type="blue" size="sm" class="dos-sidebar-badge">

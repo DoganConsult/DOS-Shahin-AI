@@ -138,7 +138,7 @@ import { GrcRecord } from '../shared/foundation-types';
     .rd-informed { background: var(--text-muted); }
     .mono { font-family: 'JetBrains Mono', 'Fira Code', monospace; font-size: 0.82rem; }
     .pivot-wrapper { overflow-x: auto; }
-    .pivot-scope-col { position: sticky; left: 0; background: var(--surface-card); z-index: var(--z-base); }
+    .pivot-scope-col { position: sticky; inset-inline-start: 0; background: var(--surface-card); z-index: var(--z-base); }
     .pivot-team-col { text-align: center; }
     .pivot-team-header { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: var(--font-size-caption); }
     .tc-avatar-mini { width: 28px; height: 28px; border-radius: var(--radius-pill); color: white; display: flex; align-items: center; justify-content: center; font-size: var(--font-size-2xs); font-weight: 700; flex-shrink: 0; }

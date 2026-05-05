@@ -65,7 +65,7 @@ const LEVEL_TAG_TYPE: Record<SignalLevel, DosCarbonTagType> = {
             [type]="levelTagType(s.level)"
             size="sm"
             class="dos-status-bar__tag">
-            {{ s.label.fallback ?? s.label.i18nKey }}
+            {{ s.label?.fallback ?? s.label?.i18nKey ?? '' }}
             @if (s.value) { <span class="dos-status-bar__value">{{ s.value }}</span> }
           </cds-tag>
         </button>

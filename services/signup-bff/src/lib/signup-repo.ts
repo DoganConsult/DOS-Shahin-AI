@@ -42,7 +42,10 @@ export async function startAttempt(input: {
   return String(r.rows[0].id);
 }
 
-export async function completeAttempt(attemptId: string, edition = 'standard'): Promise<{ tenantId: string; jobId: string }> {
+export async function completeAttempt(
+  attemptId: string,
+  edition = 'standard',
+): Promise<{ provisioningCorrelationId: string; jobId: string }> {
   await actor();
   const att = await masterQuery(
     `SELECT a.id, a.flow_code, a.email, f.product_code
@@ -54,30 +57,34 @@ export async function completeAttempt(attemptId: string, edition = 'standard'): 
   if (!att.rows.length) throw new Error('attempt_not_found');
   const productCode = String(att.rows[0].product_code);
 
-  // Mint tenant id and provisioning job. Real Temporal kickoff lands in M7 D2.
+  // 2026-05-05 — Bridge W2: this UUID is a PROVISIONING CORRELATION HANDLE,
+  // not a runtime tenant_id. The runtime tenant (varchar16 hex) is minted
+  // by tenant-service /register inside the OIDC callback. Worker /
+  // SPA consumers MUST resolve runtime_tenant_id by joining
+  // dos_master.provisioning_job.runtime_tenant_id (set by tenant-service
+  // post-register) — never treat this UUID as a workspace tenant id.
   const t = await masterQuery(`SELECT gen_random_uuid() AS id`);
-  const tenantId = String(t.rows[0].id);
+  const provisioningCorrelationId = String(t.rows[0].id);
 
   await masterQuery(
     `UPDATE dos_master.signup_attempt
         SET status='succeeded', tenant_id=$2::uuid, completed_at=now()
       WHERE id=$1`,
-    [attemptId, tenantId],
+    [attemptId, provisioningCorrelationId],
   );
 
   const j = await masterQuery(
     `INSERT INTO dos_master.provisioning_job (tenant_id, product_code, edition, status)
      VALUES ($1::uuid, $2, $3, 'queued') RETURNING id`,
-    [tenantId, productCode, edition],
+    [provisioningCorrelationId, productCode, edition],
   );
   const jobId = String(j.rows[0].id);
 
-  // Trigger workspace-bootstrap MV invalidation for the new tenant.
-  await masterQuery(
-    `INSERT INTO dos.dos_master_invalidation_log (scope, scope_key, reason, cache_version, fan_out_count)
-     VALUES ('tenant', $1, 'tenant_provisioned', 'v1', 0)`,
-    [tenantId],
-  );
+  // INTENTIONALLY OMIT the dos.dos_master_invalidation_log INSERT here.
+  // Pre-bridge code wrote scope_key=<UUID>, but the workspace-bootstrap
+  // refresh contract requires scope_key=dos.tenants.tenant_id (varchar16).
+  // The correct invalidation row is emitted by tenant-service /register
+  // (or the provisioning worker) once the runtime tenant exists.
 
-  return { tenantId, jobId };
+  return { provisioningCorrelationId, jobId };
 }

@@ -2,6 +2,7 @@ import { inject } from '@angular/core';
 import { Routes, Router } from '@angular/router';
 import { AccessStore } from '@dos/access-store';
 import { foundationGuard } from './shell/foundation.guard';
+import { workspaceShellGuard } from './shell/workspace-shell.guard';
 import { provideRouteIcons } from './shell/icon-registration';
 import { SHAHIN_DNA_MODULE_PACKS, buildDnaChildEntries } from './shell/dna-nav-contracts';
 import { MARKETING_PUBLIC_ROUTES } from './pages/marketing-public/marketing-public.routes';
@@ -140,6 +141,10 @@ export const routes: Routes = [
     loadComponent: () =>
       import('@app/core/platform/shell/shell-host.component').then(m => m.ShellHostComponent),
     providers: [provideRouteIcons()],
+    // 2026-05-04: workspace shell host now gates on session+tenant+modules.
+    // Pre-bridge anonymous visitors reached the shell, which 401'd against
+    // the workspace-shell resolver and rendered all 30 surfaces empty.
+    canActivate: [workspaceShellGuard],
     data: { ...shellDefaults },
     children: [
       {

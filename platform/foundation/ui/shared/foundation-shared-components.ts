@@ -25,7 +25,7 @@ import { RouterModule } from '@angular/router';
       <p class="fsc__value">{{ value }}</p>
       @if (subtitle) { <p class="fsc__sub">{{ subtitle }}</p> }
     </div>`,
-  styles: [`:host{display:block}.fsc{padding:1rem 1.25rem;border:1px solid var(--cds-border-subtle-01,#c6c6c6);border-radius:4px;background:var(--cds-layer-02,#fff)}.fsc--highlight{border-left:3px solid var(--cds-interactive,#0f62fe)}.fsc__label{font-size:.75rem;color:var(--cds-text-secondary,#525252);margin:0 0 .25rem}.fsc__value{font-size:1.5rem;font-weight:700;color:var(--cds-text-primary,#161616);margin:0}.fsc__sub{font-size:.7rem;color:var(--cds-text-secondary,#525252);margin:.25rem 0 0}`],
+  styles: [`:host{display:block}.fsc{padding:1rem 1.25rem;border:1px solid var(--cds-border-subtle-01,#c6c6c6);border-radius:4px;background:var(--cds-layer-02,#fff)}.fsc--highlight{border-inline-start:3px solid var(--cds-interactive,#0f62fe)}.fsc__label{font-size:.75rem;color:var(--cds-text-secondary,#525252);margin:0 0 .25rem}.fsc__value{font-size:1.5rem;font-weight:700;color:var(--cds-text-primary,#161616);margin:0}.fsc__sub{font-size:.7rem;color:var(--cds-text-secondary,#525252);margin:.25rem 0 0}`],
 })
 export class FoundationStatCardComponent {
   @Input() label = '';

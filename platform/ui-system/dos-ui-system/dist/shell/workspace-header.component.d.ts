@@ -18,6 +18,7 @@ export declare class DosWorkspaceHeaderComponent {
     title: string;
     tenantName: string;
     logoUri: string | null;
+    logoHref: string;
     userDisplayName: string;
     userAvatarUri: string | null;
     ariaLabel: string | null;

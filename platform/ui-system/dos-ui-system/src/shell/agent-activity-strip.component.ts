@@ -72,7 +72,7 @@ const STATE_LABEL: Record<AgentState, string> = {
                      [class.dos-agent-tile__avatar--running]="a.state === 'running'">
                   @if (a.avatarUri) {
                     <img [src]="a.avatarUri"
-                         [alt]="a.agentName.fallback ?? a.agentName.i18nKey"
+                         [alt]="a.agentName?.fallback ?? a.agentName?.i18nKey ?? ''"
                          width="32" height="32"
                          class="dos-agent-tile__img" />
                   } @else {
@@ -87,11 +87,11 @@ const STATE_LABEL: Record<AgentState, string> = {
                 <!-- Agent name + step -->
                 <div class="dos-agent-tile__body">
                   <span class="dos-agent-tile__name">
-                    {{ a.agentName.fallback ?? a.agentName.i18nKey }}
+                    {{ a.agentName?.fallback ?? a.agentName?.i18nKey ?? '' }}
                   </span>
-                  @if (a.currentStep) {
+                  @if (a.step) {
                     <span class="dos-agent-tile__step">
-                      {{ a.currentStep.fallback ?? a.currentStep.i18nKey }}
+                      {{ a.step?.fallback ?? a.step?.i18nKey ?? '' }}
                     </span>
                   }
                 </div>

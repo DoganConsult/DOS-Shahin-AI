@@ -97,11 +97,11 @@ const PRIORITY_TAG: Record<MsgPriority, DosCarbonTagType> = {
                       </time>
                     </div>
                     <strong class="dos-inbox-msg__subject">
-                      {{ m.subject.fallback ?? m.subject.i18nKey }}
+                      {{ m.subject?.fallback ?? m.subject?.i18nKey ?? '' }}
                     </strong>
                     @if (m.preview) {
                       <p class="dos-inbox-msg__preview">
-                        {{ m.preview.fallback ?? m.preview.i18nKey }}
+                        {{ m.preview?.fallback ?? m.preview?.i18nKey ?? '' }}
                       </p>
                     }
                   </div>
@@ -147,7 +147,7 @@ const PRIORITY_TAG: Record<MsgPriority, DosCarbonTagType> = {
                 <dos-carbon-tag [type]="sourceTag(m.source)" size="sm">{{ m.source }}</dos-carbon-tag>
                 @if (m.unread) { <span class="dos-inbox-msg__dot" aria-label="Unread"></span> }
               </div>
-              <span class="dos-inbox-msg__subject">{{ m.subject.fallback ?? m.subject.i18nKey }}</span>
+              <span class="dos-inbox-msg__subject">{{ m.subject?.fallback ?? m.subject?.i18nKey ?? '' }}</span>
             </button>
           }
         </div>

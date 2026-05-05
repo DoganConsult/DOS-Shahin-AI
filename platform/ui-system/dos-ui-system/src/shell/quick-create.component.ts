@@ -57,13 +57,13 @@ import type { QuickCreateAction } from './workspace-shell.contracts';
                 role="menuitem"
                 class="dos-quick-create__action"
                 [attr.data-action-id]="action.id"
-                [attr.aria-label]="action.label.fallback ?? action.label.i18nKey"
+                [attr.aria-label]="action.label?.fallback ?? action.label?.i18nKey ?? ''"
                 (click)="onAction(action)">
                 @if (action.icon) {
                   <dos-icon [name]="action.icon" [size]="16" class="dos-quick-create__action-icon"></dos-icon>
                 }
                 <span class="dos-quick-create__action-label">
-                  {{ action.label.fallback ?? action.label.i18nKey }}
+                  {{ action.label?.fallback ?? action.label?.i18nKey ?? '' }}
                 </span>
                 @if (action.hotkey) {
                   <kbd class="dos-quick-create__hotkey">{{ action.hotkey }}</kbd>
@@ -102,7 +102,7 @@ import type { QuickCreateAction } from './workspace-shell.contracts';
                 @if (action.icon) {
                   <dos-icon [name]="action.icon" [size]="16"></dos-icon>
                 }
-                <span>{{ action.label.fallback ?? action.label.i18nKey }}</span>
+                <span>{{ action.label?.fallback ?? action.label?.i18nKey ?? '' }}</span>
               </button>
             }
           </div>

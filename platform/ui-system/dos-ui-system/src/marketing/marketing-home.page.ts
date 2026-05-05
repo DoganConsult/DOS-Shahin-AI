@@ -91,7 +91,7 @@ import { DosGrcSandboxComponent } from '../grc/grc-sandbox.component';
 // IBM Carbon icon descriptor for the public-header Sign-in CTA. Imported
 // from @carbon/icons (one-source rule) so the icon ships through the
 // @dos/ui-system Carbon boundary rather than being scattered into products.
-import Login20 from '@carbon/icons/lib/login/20';
+import Login20 from '@carbon/icons/es/login/20';
 
 /** Locked 19-region ordering: public header + breadcrumb + 17 content/footer regions.
  *  CI gate `marketing-home-coverage.mjs` greps this literal. */

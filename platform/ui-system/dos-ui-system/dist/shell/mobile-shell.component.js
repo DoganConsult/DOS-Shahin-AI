@@ -31,11 +31,11 @@ DosMobileShellComponent = __decorate([
     :host { display: block; min-height: 100vh; }
     .dos-mobile-shell {
       display: grid; grid-template-rows: auto 1fr auto;
-      min-height: 100vh; background: var(--cds-background, #fff);
+      min-height: 100vh; background: var(--cds-background, var(--cds-white, #ffffff));
     }
-    .dos-mobile-shell__header { position: sticky; top: 0; z-index: 30; }
-    .dos-mobile-shell__main   { min-width: 0; overflow-x: hidden; padding-bottom: 56px; }
-    .dos-mobile-shell__bottom { position: sticky; bottom: 0; z-index: 30;
+    .dos-mobile-shell__header { position: sticky; top: 0; z-index: var(--dos-z-sticky, 30); }
+    .dos-mobile-shell__main   { min-width: 0; overflow-x: hidden; padding-bottom: var(--cds-spacing-14, 56px); }
+    .dos-mobile-shell__bottom { position: sticky; bottom: 0; z-index: var(--dos-z-sticky, 30);
                                 border-block-start: 1px solid var(--cds-border-subtle-01, #e0e0e0); }
   `],
     })

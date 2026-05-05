@@ -38,11 +38,18 @@ app.get('/api/ui-os/health', (_req, res) => {
 //   - /api/ui-os/agentic/registry      (agentic showcase)
 //   - /api/ui-os/agentic/strip         (agent strip aggregate)
 // Phase 1 — GRC Sandbox (public visitor experience)
-//   - /api/ui-os/grc-sandbox/*         (GRC sandbox API)
-// NOTE: GRC sandbox mounted at root path to bypass all middleware
+//   - /api/ui-os/grc-sandbox/*         (GRC sandbox API — read-only, anon-safe,
+//                                       reads only rows scoped to tenant_id='sandbox')
+// Mounted under /api/ui-os/grc-sandbox BEFORE requireGatewayOrigin so the
+// unauthenticated marketing landing renders without 401. The router itself
+// is intrinsically scoped to tenant_id='sandbox' in every SQL statement, so
+// no real tenant data leaks via this surface.
 app.use('/api/ui-os', createBrandRouter(pool));
 app.use('/api/ui-os', createAgenticRouter(pool));
 app.use('/api/ui-os', createMarketingDownloadsRouter(pool));
+app.use('/api/ui-os/grc-sandbox', createGrcSandboxRouter(pool));
+// Legacy alias — kept so any internal caller hitting the original root path
+// keeps working during the cut-over. Safe to remove after one deploy cycle.
 app.use('/grc-sandbox', createGrcSandboxRouter(pool));
 app.use('/api/ui-os', (req, res, next) => {
     const route = String(req.query.route ?? '');

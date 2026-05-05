@@ -11,7 +11,7 @@
     "grepInvert": null,
     "maxFailures": 0,
     "metadata": {
-      "actualWorkers": 1
+      "actualWorkers": 7
     },
     "preserveOutput": "always",
     "reporter": [
@@ -112,26 +112,64 @@
     "shard": null,
     "updateSnapshots": "missing",
     "version": "1.49.0",
-    "workers": 1,
+    "workers": 8,
     "webServer": null
   },
   "suites": [
     {
-      "title": "platform-admin-fe-shell.spec.ts",
-      "file": "platform-admin-fe-shell.spec.ts",
+      "title": "phase-slice1-foundation-shell.spec.ts",
+      "file": "phase-slice1-foundation-shell.spec.ts",
       "column": 0,
       "line": 0,
-      "specs": [],
+      "specs": [
+        {
+          "title": "GATE 4 — workspace-shell binding payload label fields are contract-shaped",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [
+                {
+                  "type": "skip",
+                  "description": "no session — gate vacuously holds"
+                }
+              ],
+              "expectedStatus": "skipped",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "status": "skipped",
+                  "duration": 2077,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-05-05T01:46:54.384Z",
+                  "attachments": []
+                }
+              ],
+              "status": "skipped"
+            }
+          ],
+          "id": "c332cd3ecb49b7ee1132-348e43fe8ec30e8c4d14",
+          "file": "phase-slice1-foundation-shell.spec.ts",
+          "line": 95,
+          "column": 5
+        }
+      ],
       "suites": [
         {
-          "title": "Marketing → DAuth/Keycloak login bridge",
-          "file": "platform-admin-fe-shell.spec.ts",
-          "line": 58,
-          "column": 6,
+          "title": "Slice-1 contracts — /foundation/delegations",
+          "file": "phase-slice1-foundation-shell.spec.ts",
+          "line": 44,
+          "column": 8,
           "specs": [
             {
-              "title": "marketing landing renders IBM Carbon Sign-in icon button routing to /login",
-              "ok": false,
+              "title": "GATE 1 — no `.fallback` undefined-access throw",
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -143,58 +181,211 @@
                   "results": [
                     {
                       "workerIndex": 0,
-                      "status": "failed",
-                      "duration": 261,
-                      "error": {
-                        "message": "Error: page.goto: net::ERR_CERT_AUTHORITY_INVALID at https://shahin-ai.com/\nCall log:\n\u001b[2m  - navigating to \"https://shahin-ai.com/\", waiting until \"load\"\u001b[22m\n",
-                        "stack": "Error: page.goto: net::ERR_CERT_AUTHORITY_INVALID at https://shahin-ai.com/\nCall log:\n\u001b[2m  - navigating to \"https://shahin-ai.com/\", waiting until \"load\"\u001b[22m\n\n    at /root/DOS-Platform/platform/config-center/test/tests/e2e/platform-admin-fe-shell.spec.ts:69:16",
-                        "location": {
-                          "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/platform-admin-fe-shell.spec.ts",
-                          "column": 16,
-                          "line": 69
-                        },
-                        "snippet": "  67 |\n  68 |   test('marketing landing renders IBM Carbon Sign-in icon button routing to /login', async ({ page }) => {\n> 69 |     await page.goto(`${BASE}/`);\n     |                ^\n  70 |     const cta = page.locator('[data-testid=\"marketing-signin-cta\"]');\n  71 |     await expect(cta).toBeVisible({ timeout: 15_000 });\n  72 |     await expect(cta).toContainText(/Sign in|تسجيل الدخول/);"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/platform-admin-fe-shell.spec.ts",
-                            "column": 16,
-                            "line": 69
-                          },
-                          "message": "Error: page.goto: net::ERR_CERT_AUTHORITY_INVALID at https://shahin-ai.com/\nCall log:\n\u001b[2m  - navigating to \"https://shahin-ai.com/\", waiting until \"load\"\u001b[22m\n\n\n  67 |\n  68 |   test('marketing landing renders IBM Carbon Sign-in icon button routing to /login', async ({ page }) => {\n> 69 |     await page.goto(`${BASE}/`);\n     |                ^\n  70 |     const cta = page.locator('[data-testid=\"marketing-signin-cta\"]');\n  71 |     await expect(cta).toBeVisible({ timeout: 15_000 });\n  72 |     await expect(cta).toContainText(/Sign in|تسجيل الدخول/);\n    at /root/DOS-Platform/platform/config-center/test/tests/e2e/platform-admin-fe-shell.spec.ts:69:16"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 5748,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-04T09:29:34.864Z",
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/root/DOS-Platform/platform/config-center/test/playwright-results/platform-admin-fe-shell-Ma-e9be0-con-button-routing-to-login-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "/root/DOS-Platform/platform/config-center/test/playwright-results/platform-admin-fe-shell-Ma-e9be0-con-button-routing-to-login-chromium/video.webm"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/platform-admin-fe-shell.spec.ts",
-                        "column": 16,
-                        "line": 69
-                      }
+                      "startTime": "2026-05-05T01:46:54.353Z",
+                      "attachments": []
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
-              "id": "ac9a3ee3161c7bb012c1-af0744a0fa67a06be3a9",
-              "file": "platform-admin-fe-shell.spec.ts",
-              "line": 68,
-              "column": 7
+              "id": "c332cd3ecb49b7ee1132-7120e21511afd89c6ff3",
+              "file": "phase-slice1-foundation-shell.spec.ts",
+              "line": 45,
+              "column": 9
+            },
+            {
+              "title": "GATE 2 — single brand stamp in workspace header",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "description": "redirected to chrome-error://chromewebdata/"
+                    }
+                  ],
+                  "expectedStatus": "skipped",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "status": "skipped",
+                      "duration": 3502,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-05T01:46:54.535Z",
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c332cd3ecb49b7ee1132-39958013803036f63289",
+              "file": "phase-slice1-foundation-shell.spec.ts",
+              "line": 60,
+              "column": 9
+            },
+            {
+              "title": "GATE 3 — migration props.title rendered",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "description": "redirected to chrome-error://chromewebdata/"
+                    }
+                  ],
+                  "expectedStatus": "skipped",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "status": "skipped",
+                      "duration": 3096,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-05T01:46:54.354Z",
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c332cd3ecb49b7ee1132-900cf1a00d3fd373367c",
+              "file": "phase-slice1-foundation-shell.spec.ts",
+              "line": 79,
+              "column": 9
+            }
+          ]
+        },
+        {
+          "title": "Slice-1 contracts — /foundation/reference-data",
+          "file": "phase-slice1-foundation-shell.spec.ts",
+          "line": 44,
+          "column": 8,
+          "specs": [
+            {
+              "title": "GATE 1 — no `.fallback` undefined-access throw",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "status": "passed",
+                      "duration": 6124,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-05T01:46:54.415Z",
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c332cd3ecb49b7ee1132-a8b6b3cc01e6409d1bfd",
+              "file": "phase-slice1-foundation-shell.spec.ts",
+              "line": 45,
+              "column": 9
+            },
+            {
+              "title": "GATE 2 — single brand stamp in workspace header",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "description": "redirected to chrome-error://chromewebdata/"
+                    }
+                  ],
+                  "expectedStatus": "skipped",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "status": "skipped",
+                      "duration": 3388,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-05T01:46:54.377Z",
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c332cd3ecb49b7ee1132-67161a8aa8b438a8b16e",
+              "file": "phase-slice1-foundation-shell.spec.ts",
+              "line": 60,
+              "column": 9
+            },
+            {
+              "title": "GATE 3 — migration props.title rendered",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "description": "redirected to chrome-error://chromewebdata/"
+                    }
+                  ],
+                  "expectedStatus": "skipped",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "status": "skipped",
+                      "duration": 3337,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-05T01:46:54.353Z",
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c332cd3ecb49b7ee1132-df3cdf293de041a271dc",
+              "file": "phase-slice1-foundation-shell.spec.ts",
+              "line": 79,
+              "column": 9
             }
           ]
         }
@@ -203,11 +394,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-05-04T09:29:34.204Z",
-    "duration": 1075.481,
-    "expected": 0,
-    "skipped": 0,
-    "unexpected": 1,
+    "startTime": "2026-05-05T01:46:53.652Z",
+    "duration": 7048.933,
+    "expected": 2,
+    "skipped": 5,
+    "unexpected": 0,
     "flaky": 0
   }
 }

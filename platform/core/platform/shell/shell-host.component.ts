@@ -281,9 +281,11 @@ const FALLBACK_ITEM_ICON  = 'dot';
                   (click)="toggleSideNav()">
             <dos-icon name="menu" [size]="20" [ariaLabel]="ariaToggleNav()"></dos-icon>
           </button>
-          <span class="shell-header-brand">
-            <a [routerLink]="headerHomeRoute()">{{ headerBrand() }}</a>
-          </span>
+          <!-- 2026-05-05 Slice-1: brand is now rendered exactly once by
+               dos-workspace-header via the .dos-wh-brand-name projection.
+               Carbon cds-header [name] was removed in
+               workspace-header.component.ts:36 (dual-stamp collapse), so
+               there is nothing to project here. Do NOT add a third stamp. -->
         </ng-container>
         <ng-container headerEnd>
           @if (!isMobile() && showCommandSearch()) {

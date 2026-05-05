@@ -377,20 +377,20 @@ export declare const assetSchemas: {
         name?: string;
         description?: string;
         status?: "active" | "inactive" | "draft" | "decommissioned";
-        location?: string;
         owner?: string;
         asset_type?: "service" | "data" | "hardware" | "software" | "network" | "personnel" | "facility";
         classification?: "internal" | "restricted" | "public" | "confidential";
         criticality?: "critical" | "high" | "medium" | "low";
+        location?: string;
     }, {
         name?: string;
         description?: string;
         status?: "active" | "inactive" | "draft" | "decommissioned";
-        location?: string;
         owner?: string;
         asset_type?: "service" | "data" | "hardware" | "software" | "network" | "personnel" | "facility";
         classification?: "internal" | "restricted" | "public" | "confidential";
         criticality?: "critical" | "high" | "medium" | "low";
+        location?: string;
     }>;
     update: z.ZodObject<{
         name: z.ZodOptional<z.ZodEffects<z.ZodString, string, string>>;
@@ -618,8 +618,8 @@ export declare const remediationSchemas: {
     }, "strip", z.ZodTypeAny, {
         description?: string;
         status?: "in_progress" | "completed" | "cancelled" | "open" | "overdue";
-        priority?: "critical" | "high" | "medium" | "low";
         title?: string;
+        priority?: "critical" | "high" | "medium" | "low";
         owner?: string;
         due_date?: string;
         source_type?: string;
@@ -627,8 +627,8 @@ export declare const remediationSchemas: {
     }, {
         description?: string;
         status?: "in_progress" | "completed" | "cancelled" | "open" | "overdue";
-        priority?: "critical" | "high" | "medium" | "low";
         title?: string;
+        priority?: "critical" | "high" | "medium" | "low";
         owner?: string;
         due_date?: string;
         source_type?: string;
@@ -723,16 +723,16 @@ export declare const notificationSchemas: {
     }, "strip", z.ZodTypeAny, {
         type?: "email" | "in_app" | "sms" | "webhook";
         metadata?: Record<string, unknown>;
-        priority?: "high" | "low" | "normal";
         body?: string;
+        priority?: "high" | "low" | "normal";
         subject?: string;
         recipient_id?: string;
         recipient_email?: string;
     }, {
         type?: "email" | "in_app" | "sms" | "webhook";
         metadata?: Record<string, unknown>;
-        priority?: "high" | "low" | "normal";
         body?: string;
+        priority?: "high" | "low" | "normal";
         subject?: string;
         recipient_id?: string;
         recipient_email?: string;
@@ -2094,20 +2094,20 @@ export declare const allSchemas: {
             name?: string;
             description?: string;
             status?: "active" | "inactive" | "draft" | "decommissioned";
-            location?: string;
             owner?: string;
             asset_type?: "service" | "data" | "hardware" | "software" | "network" | "personnel" | "facility";
             classification?: "internal" | "restricted" | "public" | "confidential";
             criticality?: "critical" | "high" | "medium" | "low";
+            location?: string;
         }, {
             name?: string;
             description?: string;
             status?: "active" | "inactive" | "draft" | "decommissioned";
-            location?: string;
             owner?: string;
             asset_type?: "service" | "data" | "hardware" | "software" | "network" | "personnel" | "facility";
             classification?: "internal" | "restricted" | "public" | "confidential";
             criticality?: "critical" | "high" | "medium" | "low";
+            location?: string;
         }>;
         update: z.ZodObject<{
             name: z.ZodOptional<z.ZodEffects<z.ZodString, string, string>>;
@@ -2335,8 +2335,8 @@ export declare const allSchemas: {
         }, "strip", z.ZodTypeAny, {
             description?: string;
             status?: "in_progress" | "completed" | "cancelled" | "open" | "overdue";
-            priority?: "critical" | "high" | "medium" | "low";
             title?: string;
+            priority?: "critical" | "high" | "medium" | "low";
             owner?: string;
             due_date?: string;
             source_type?: string;
@@ -2344,8 +2344,8 @@ export declare const allSchemas: {
         }, {
             description?: string;
             status?: "in_progress" | "completed" | "cancelled" | "open" | "overdue";
-            priority?: "critical" | "high" | "medium" | "low";
             title?: string;
+            priority?: "critical" | "high" | "medium" | "low";
             owner?: string;
             due_date?: string;
             source_type?: string;
@@ -2440,16 +2440,16 @@ export declare const allSchemas: {
         }, "strip", z.ZodTypeAny, {
             type?: "email" | "in_app" | "sms" | "webhook";
             metadata?: Record<string, unknown>;
-            priority?: "high" | "low" | "normal";
             body?: string;
+            priority?: "high" | "low" | "normal";
             subject?: string;
             recipient_id?: string;
             recipient_email?: string;
         }, {
             type?: "email" | "in_app" | "sms" | "webhook";
             metadata?: Record<string, unknown>;
-            priority?: "high" | "low" | "normal";
             body?: string;
+            priority?: "high" | "low" | "normal";
             subject?: string;
             recipient_id?: string;
             recipient_email?: string;

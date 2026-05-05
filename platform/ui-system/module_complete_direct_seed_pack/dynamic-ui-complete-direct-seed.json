@@ -1,0 +1,220 @@
+{
+  "$schema": "./00-universal-module-contract.schema.json",
+  "schemaVersion": 1,
+  "module": {
+    "code": "dynamic-ui",
+    "product_key": "shahin-ai",
+    "tier": "platform",
+    "category": "platform",
+    "owner_service": "ui-os-service",
+    "name_en": "Dynamic UI",
+    "name_ar": "واجهة ديناميكية",
+    "version": "1.0.0",
+    "is_platform_dna": true,
+    "route_base": "/dynamic-ui"
+  },
+  "permissions": [
+    { "code": "dynamic_ui.module.read", "description": "Browse Dynamic UI module and read registry metadata", "sensitive": false },
+    { "code": "dynamic_ui.routes.read", "description": "Read route catalog and bindings", "sensitive": false },
+    { "code": "dynamic_ui.components.read", "description": "Read component registry entries", "sensitive": false },
+    { "code": "dynamic_ui.contracts.read", "description": "Read Dynamic UI contracts", "sensitive": false },
+    { "code": "dynamic_ui.module.write", "description": "Modify routes, bindings, or registry records where permitted", "sensitive": true },
+    { "code": "dynamic_ui.module.admin", "description": "Administer Dynamic UI module and policy-gated writes", "sensitive": true }
+  ],
+  "roles": [
+    {
+      "code": "dynamic_ui_viewer",
+      "archetype": "viewer",
+      "permissions": [
+        "dynamic_ui.module.read",
+        "dynamic_ui.routes.read",
+        "dynamic_ui.components.read",
+        "dynamic_ui.contracts.read"
+      ]
+    },
+    {
+      "code": "dynamic_ui_admin",
+      "archetype": "module_lead",
+      "permissions": [
+        "dynamic_ui.module.read",
+        "dynamic_ui.routes.read",
+        "dynamic_ui.components.read",
+        "dynamic_ui.contracts.read",
+        "dynamic_ui.module.write",
+        "dynamic_ui.module.admin"
+      ]
+    }
+  ],
+  "navigation": [
+    {
+      "nav_item_code": "dynamic-ui",
+      "parent_code": null,
+      "route": null,
+      "label_en": "Dynamic UI",
+      "label_ar": "واجهة ديناميكية",
+      "sort_order": 10,
+      "icon": "category",
+      "permission": "dynamic_ui.module.read"
+    },
+    {
+      "nav_item_code": "dynamic-ui.overview",
+      "parent_code": "dynamic-ui",
+      "route": "/dynamic-ui/overview",
+      "label_en": "Overview",
+      "label_ar": "نظرة عامة",
+      "sort_order": 10,
+      "icon": "layout-dashboard",
+      "permission": "dynamic_ui.module.read"
+    },
+    {
+      "nav_item_code": "dynamic-ui.routes",
+      "parent_code": "dynamic-ui",
+      "route": "/dynamic-ui/routes",
+      "label_en": "Routes",
+      "label_ar": "المسارات",
+      "sort_order": 20,
+      "icon": "route",
+      "permission": "dynamic_ui.routes.read"
+    },
+    {
+      "nav_item_code": "dynamic-ui.components",
+      "parent_code": "dynamic-ui",
+      "route": "/dynamic-ui/components",
+      "label_en": "Components",
+      "label_ar": "المكونات",
+      "sort_order": 30,
+      "icon": "components",
+      "permission": "dynamic_ui.components.read"
+    },
+    {
+      "nav_item_code": "dynamic-ui.contracts",
+      "parent_code": "dynamic-ui",
+      "route": "/dynamic-ui/contracts",
+      "label_en": "Contracts",
+      "label_ar": "العقود",
+      "sort_order": 40,
+      "icon": "file-contract",
+      "permission": "dynamic_ui.contracts.read"
+    }
+  ],
+  "pages": [
+    {
+      "page_code": "dynamic-ui.overview",
+      "route": "/dynamic-ui/overview",
+      "archetype": "command-home",
+      "template_export": "ModuleOverviewTemplateComponent",
+      "permission": "dynamic_ui.module.read",
+      "props": {}
+    },
+    {
+      "page_code": "dynamic-ui.routes",
+      "route": "/dynamic-ui/routes",
+      "archetype": "intelligent-register",
+      "template_export": "ModuleRecordsTemplateComponent",
+      "permission": "dynamic_ui.routes.read",
+      "props": {}
+    },
+    {
+      "page_code": "dynamic-ui.components",
+      "route": "/dynamic-ui/components",
+      "archetype": "intelligent-register",
+      "template_export": "ModuleRecordsTemplateComponent",
+      "permission": "dynamic_ui.components.read",
+      "props": {}
+    },
+    {
+      "page_code": "dynamic-ui.contracts",
+      "route": "/dynamic-ui/contracts",
+      "archetype": "intelligent-register",
+      "template_export": "ModuleRecordsTemplateComponent",
+      "permission": "dynamic_ui.contracts.read",
+      "props": {}
+    }
+  ],
+  "components": [
+    {
+      "component_key": "module.entry.page",
+      "vendor": "ibm-carbon",
+      "carbon_key": "grid",
+      "schema_version": 1,
+      "selector": "dos-page-layout",
+      "approval_status": "approved",
+      "metadata": {
+        "source": "wave1-dynamic-ui-seed-roster",
+        "archetype": "command-home",
+        "pages": ["dynamic-ui.overview"]
+      }
+    },
+    {
+      "component_key": "module.records.page",
+      "vendor": "ibm-carbon",
+      "carbon_key": "table",
+      "schema_version": 1,
+      "selector": "dos-page-layout",
+      "approval_status": "approved",
+      "metadata": {
+        "source": "wave1-dynamic-ui-seed-roster",
+        "archetype": "intelligent-register",
+        "pages": ["dynamic-ui.routes", "dynamic-ui.components", "dynamic-ui.contracts"]
+      }
+    }
+  ],
+  "apis": [
+    {
+      "method": "GET",
+      "path": "/api/ui-os/workspace/nav",
+      "owner_service": "ui-os-service",
+      "permission": "dynamic_ui.module.read"
+    },
+    {
+      "method": "GET",
+      "path": "/api/ui-os/route-catalog",
+      "owner_service": "ui-os-service",
+      "permission": "dynamic_ui.routes.read"
+    },
+    {
+      "method": "GET",
+      "path": "/api/ui-os/contract/:moduleCode",
+      "owner_service": "ui-os-service",
+      "permission": "dynamic_ui.contracts.read"
+    },
+    {
+      "method": "GET",
+      "path": "/api/ui-os/page-experience",
+      "owner_service": "ui-os-service",
+      "permission": "dynamic_ui.module.read"
+    },
+    {
+      "method": "GET",
+      "path": "/api/ui-os/template-binding",
+      "owner_service": "ui-os-service",
+      "permission": "dynamic_ui.routes.read"
+    },
+    {
+      "method": "GET",
+      "path": "/api/ui-os/template-binding/all",
+      "owner_service": "ui-os-service",
+      "permission": "dynamic_ui.routes.read"
+    }
+  ],
+  "i18n": {
+    "en": {
+      "dynamic_ui.overview.title": "Dynamic UI — Overview",
+      "dynamic_ui.routes.title": "Dynamic UI — Routes",
+      "dynamic_ui.components.title": "Dynamic UI — Components",
+      "dynamic_ui.contracts.title": "Dynamic UI — Contracts"
+    },
+    "ar": {
+      "dynamic_ui.overview.title": "الواجهة الديناميكية — نظرة عامة",
+      "dynamic_ui.routes.title": "الواجهة الديناميكية — المسارات",
+      "dynamic_ui.components.title": "الواجهة الديناميكية — المكونات",
+      "dynamic_ui.contracts.title": "الواجهة الديناميكية — العقود"
+    }
+  },
+  "tables_owned": [
+    "dos.dynamic_ui_routes",
+    "dos.dynamic_ui_component_registry",
+    "dos.dynamic_ui_contracts"
+  ],
+  "depends_on": ["platform.access-store"]
+}

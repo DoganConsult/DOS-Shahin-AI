@@ -24,8 +24,16 @@ import type { WorkspaceHeaderContext, WorkspaceHeaderAction } from './workspace-
   imports: [CommonModule, UIShellModule, DosIconComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
+    <!--
+      cds-header [name] intentionally omitted: Carbon paints "name" as the
+      brand banner in the chrome leading slot, while our explicit
+      <a class="dos-wh-brand"> projection below already renders the same
+      string (logo + brand-name + optional tenant). Passing both produced a
+      "Brand Brand" / "Tenant Tenant" double-stamp under RTL, observed on
+      /foundation/* routes. The anchor remains the source of truth so the
+      logo, tenant divider, and ellipsis-truncated tenantName render together.
+    -->
     <cds-header
-      [name]="resolvedBrand"
       [brand]="resolvedBrandShort"
       [attr.aria-label]="ariaLabel || resolvedBrand"
       data-testid="dos-workspace-header"
@@ -84,7 +92,7 @@ import type { WorkspaceHeaderContext, WorkspaceHeaderAction } from './workspace-
         @for (action of trailingActions; track action.id) {
           <button type="button"
                   class="dos-wh-action"
-                  [attr.aria-label]="action.label.fallback ?? action.label.i18nKey"
+                  [attr.aria-label]="action.label?.fallback ?? action.label?.i18nKey ?? ''"
                   [attr.data-action-id]="action.id"
                   (click)="actionClick.emit(action)">
             @if (action.icon) {

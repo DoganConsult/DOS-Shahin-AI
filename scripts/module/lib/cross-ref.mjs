@@ -35,7 +35,8 @@ const TEMPLATE_EXPORTS = new Set(
     .map(match => match[1]),
 );
 
-const ALLOWED_SEED_TABLES = new Set([
+/** Publisher-owned seed tables (whitelist). Exported for reconcile / tooling. */
+export const ALLOWED_SEED_TABLES = new Set([
   'dos.workspace_shell_binding',
   'dos.workspace_shell_i18n',
   'dos.workspace_shell_status_label',

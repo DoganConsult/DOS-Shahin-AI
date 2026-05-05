@@ -539,10 +539,10 @@ COMMIT;
 
 | component_key | route_path | module_code | permission | vendor | carbon_key | approval_status |
 |---|---|---|---|---|---|---|
-| `asset.overview.page` | `/asset/overview` | `asset` | `asset.read` | `ibm-carbon` | `VERIFY_CARBON_KEY` | `approved` |
-| `asset.inventory.page` | `/asset/inventory` | `asset` | `asset.read` | `ibm-carbon` | `VERIFY_CARBON_KEY` | `approved` |
-| `asset.owners.page` | `/asset/owners` | `asset` | `asset.read` | `ibm-carbon` | `VERIFY_CARBON_KEY` | `approved` |
-| `asset.risk.page` | `/asset/risk` | `asset` | `asset.risk.read` | `ibm-carbon` | `VERIFY_CARBON_KEY` | `approved` |
+| `asset.overview.page` | `/asset/overview` | `asset` | `asset.read` | `ibm-carbon` | `grid` | `approved` |
+| `asset.inventory.page` | `/asset/inventory` | `asset` | `asset.read` | `ibm-carbon` | `table` | `approved` |
+| `asset.owners.page` | `/asset/owners` | `asset` | `asset.read` | `ibm-carbon` | `structured-list` | `approved` |
+| `asset.risk.page` | `/asset/risk` | `asset` | `asset.risk.read` | `ibm-carbon` | `grid` | `approved` |
 
 ### Permissions
 

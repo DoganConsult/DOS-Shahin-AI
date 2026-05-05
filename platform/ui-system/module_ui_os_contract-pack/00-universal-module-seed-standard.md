@@ -4,6 +4,17 @@
 
 This folder defines what must exist before a module can be shown as a real active module in the workspace UI.
 
+**Per-module narrative shape:** When authoring or refreshing `*-complete-direct-seed.md`, follow the **Asset consolidated layout** (§1 → §1a operational inventory → §2 … §8, explicit `role_code → permission_code` matrix, §7 reconciliation) documented in [`00-CONSOLIDATED-DIRECT-SEED-SHAPE.md`](./00-CONSOLIDATED-DIRECT-SEED-SHAPE.md). Golden example: [`asset-complete-direct-seed.md`](./asset-complete-direct-seed.md). The three groups below remain the semantic contract; the consolidated shape adds publisher-grade counts and matrix parity.
+
+## Minimum-bar doctrine (non-negotiable)
+
+Each module’s `*-complete-direct-seed.md` and its parity `*-complete-direct-seed.json` are the **normative minimum contract** for publisher and runtime alignment.
+
+- **Allowed (enhance / increase):** new sections; additional seed rows; higher declared counts; tighter column definitions; new permissions, routes, or components; clarified prose; append-only blocks (`## Appendix …`); new `VERIFY_*` / status labels that increase transparency.
+- **Forbidden:** deleting or neglecting documented seed rows to match partial implementation; shrinking tables or counts so the document matches incomplete code; dropping matrix bindings without a traceable supersession note.
+- **When code lags:** keep the spec authoritative—use **Status rules** (`PARTIAL`, `VERIFY_*`, `BUILD_BLOCKED`, etc.) and appendix notes. Close gaps by **implementation + additive publisher apply**, not by editing the minimum bar downward.
+- **Parity:** edits to Markdown must be reflected in sibling JSON (and vice versa); both grow together.
+
 ## Three required groups
 
 ### A. Initialization group — global one-time seed
@@ -89,4 +100,42 @@ Allowed status values:
 - `ORG_SCOPE_MISSING`
 - `TUPLE_MISSING`
 - `BUILD_BLOCKED`
+
+---
+
+## Wave 1 Slice A — additive notes (do not replace per-module MDs)
+
+### Inventory pointer (comparable baseline + zero-loss traceability)
+
+Committed artifact: [`platform/docs/phase-1-seed-inventory.md`](../../docs/phase-1-seed-inventory.md).
+
+- Baseline table columns: `module_code`, `md_filename`, `json_in_contract_pack`, `json_in_canonical_pack`, `h2_heading_count`, `verify_placeholder_hits`, `notes`.
+- Continuation convention: add `part_index` only if a module is split across multiple comparable rows (not needed for the 2026-05-04 snapshot).
+- **Zero-loss outline:** the same file lists every `##` heading line per `*-complete-direct-seed.md` so reviewers can diff headings vs source MDs without rescraping.
+
+### Contract publisher observability (`dos` schema)
+
+- **`dos.module_contract_publish_log`** — successful publishes (`module_code`, `contract_version`, `schema_version`, `contract_sha256`, `sql_sha256`, `rows_emitted`, `applied_by`, `applied_at`, `summary`). Non-internal trigger **`trg_published_by_only`** runs **`assert_published_by_only()`** on INSERT/UPDATE (writer-actor guardrail).
+- **`dos.module_contract_errors`** — failures during validate/dry-run/publish/activate/verify (`phase`, `error_type`, `message`, `severity` with CHECK constraints).
+
+These complement (they do not replace) the initialization-group tables in **Three required groups** above.
+
+### `VERIFY_*` / placeholder convention
+
+Per-module MDs may still contain `VERIFY` markers or placeholder counts where JSON-backed publisher validation has not run. The inventory column **`verify_placeholder_hits`** surfaces rough placeholder density for prioritization; **`0`** means none matched the inventory scanner pattern for that snapshot.
+
+### Dual verification (spec ↔ implementation)
+
+Operator passes close the loop **both ways** (spec→truth and truth→spec); full checklist and mechanical aids are canonical in [`00-CONSOLIDATED-DIRECT-SEED-SHAPE.md`](./00-CONSOLIDATED-DIRECT-SEED-SHAPE.md) section **Dual verification passes (Pass A / Pass B)**. Fold bullets into each module’s **`## 8. Validation checklist`**; do not maintain duplicate registry tables outside [`README.md`](./README.md) §3 and the conformance snapshot in the consolidated shape doc.
+
+### Reviewer freeze checklist (Wave 1 baseline)
+
+- [ ] Inventory covers **all** `*-complete-direct-seed.md` files under this contract-pack directory (34 in the 2026-05-04 snapshot).
+- [ ] Per-file `##` appendix in `phase-1-seed-inventory.md` spot-checked against sources (outline completeness).
+- [ ] Additive edits to **this** universal document remain limited to Slice A blocks (no wholesale rewrite of seed narratives).
+- [ ] Canonical directory [`module_complete_direct_seed_pack/`](../module_complete_direct_seed_pack/README.md) matches contract-pack content described in [`phase-1-consolidation-audit.md`](../../docs/phase-1-consolidation-audit.md).
+- [ ] Read-only DB matrix in `phase-1-consolidation-audit.md` reproduced with appendix SQL on target environment.
+- [ ] Sign-off: record **freeze status = approved** in that report’s executive summary when the baseline is accepted.
+
+**Freeze status:** **pending** reviewer sign-off — do not treat the Wave 1 baseline as frozen until recorded in [`platform/docs/phase-1-consolidation-audit.md`](../../docs/phase-1-consolidation-audit.md).
 

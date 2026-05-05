@@ -38,6 +38,7 @@ let DosWorkspaceHeaderComponent = class DosWorkspaceHeaderComponent {
     title = 'Shahin-AI';
     tenantName = '';
     logoUri = null;
+    logoHref = '/'; // DB-driven logo destination from workspace.header.props.logoHref
     userDisplayName = '';
     userAvatarUri = null;
     ariaLabel = null;
@@ -85,6 +86,10 @@ __decorate([
     Input(),
     __metadata("design:type", String)
 ], DosWorkspaceHeaderComponent.prototype, "logoUri", void 0);
+__decorate([
+    Input(),
+    __metadata("design:type", Object)
+], DosWorkspaceHeaderComponent.prototype, "logoHref", void 0);
 __decorate([
     Input(),
     __metadata("design:type", Object)
@@ -152,8 +157,16 @@ DosWorkspaceHeaderComponent = __decorate([
         imports: [CommonModule, UIShellModule, DosIconComponent],
         changeDetection: ChangeDetectionStrategy.OnPush,
         template: `
+    <!--
+      cds-header [name] intentionally omitted: Carbon paints "name" as the
+      brand banner in the chrome leading slot, while our explicit
+      <a class="dos-wh-brand"> projection below already renders the same
+      string (logo + brand-name + optional tenant). Passing both produced a
+      "Brand Brand" / "Tenant Tenant" double-stamp under RTL, observed on
+      /foundation/* routes. The anchor remains the source of truth so the
+      logo, tenant divider, and ellipsis-truncated tenantName render together.
+    -->
     <cds-header
-      [name]="resolvedBrand"
       [brand]="resolvedBrandShort"
       [attr.aria-label]="ariaLabel || resolvedBrand"
       data-testid="dos-workspace-header"
@@ -165,7 +178,7 @@ DosWorkspaceHeaderComponent = __decorate([
       ></cds-hamburger>
 
       <!-- Brand logo slot -->
-      <a class="dos-wh-brand" [attr.aria-label]="resolvedBrand" href="/">
+      <a class="dos-wh-brand" [attr.aria-label]="resolvedBrand" [attr.href]="logoHref">
         @if (logoUri) {
           <img class="dos-wh-logo"
                [src]="logoUri"
@@ -212,7 +225,7 @@ DosWorkspaceHeaderComponent = __decorate([
         @for (action of trailingActions; track action.id) {
           <button type="button"
                   class="dos-wh-action"
-                  [attr.aria-label]="action.label.fallback ?? action.label.i18nKey"
+                  [attr.aria-label]="action.label?.fallback ?? action.label?.i18nKey ?? ''"
                   [attr.data-action-id]="action.id"
                   (click)="actionClick.emit(action)">
             @if (action.icon) {
@@ -253,7 +266,7 @@ DosWorkspaceHeaderComponent = __decorate([
       align-items: center;
       gap: var(--cds-spacing-03, 0.5rem);
       padding-inline: var(--cds-spacing-05, 1rem);
-      color: var(--cds-text-on-color, #fff);
+      color: var(--cds-text-on-color, var(--cds-white, #ffffff));
       text-decoration: none;
       font-weight: 600;
       font-size: 0.875rem;
@@ -276,7 +289,7 @@ DosWorkspaceHeaderComponent = __decorate([
     .dos-wh-brand-name {
       font-weight: 700;
       letter-spacing: -0.01em;
-      color: var(--cds-text-on-color, #fff);
+      color: var(--cds-text-on-color, var(--cds-white, #ffffff));
     }
 
     .dos-wh-tenant-sep {
@@ -305,7 +318,7 @@ DosWorkspaceHeaderComponent = __decorate([
       background: none;
       border: none;
       cursor: pointer;
-      color: var(--cds-text-on-color, #fff);
+      color: var(--cds-text-on-color, var(--cds-white, #ffffff));
       transition: background 0.12s ease;
       flex: 0 0 auto;
     }
@@ -315,7 +328,7 @@ DosWorkspaceHeaderComponent = __decorate([
     }
 
     .dos-wh-action:focus-visible {
-      outline: 2px solid var(--cds-focus, #fff);
+      outline: 2px solid var(--cds-focus, var(--cds-white, #ffffff));
       outline-offset: -2px;
     }
 
@@ -333,7 +346,7 @@ DosWorkspaceHeaderComponent = __decorate([
       line-height: 1rem;
       text-align: center;
       background: var(--cds-support-error, #da1e28);
-      color: #fff;
+      color: var(--cds-text-on-color, var(--cds-white, #ffffff));
       pointer-events: none;
       animation: scale-pop 0.2s ease-out both;
     }
@@ -348,7 +361,7 @@ DosWorkspaceHeaderComponent = __decorate([
       background: none;
       border: none;
       cursor: pointer;
-      color: var(--cds-text-on-color, #fff);
+      color: var(--cds-text-on-color, var(--cds-white, #ffffff));
       transition: background 0.12s ease;
     }
 
@@ -357,7 +370,7 @@ DosWorkspaceHeaderComponent = __decorate([
     }
 
     .dos-wh-avatar:focus-visible {
-      outline: 2px solid var(--cds-focus, #fff);
+      outline: 2px solid var(--cds-focus, var(--cds-white, #ffffff));
       outline-offset: -2px;
     }
 
@@ -375,7 +388,7 @@ DosWorkspaceHeaderComponent = __decorate([
       height: 1.5rem;
       border-radius: 50%;
       background: var(--brand-accent, var(--cds-button-primary, #0f62fe));
-      color: #fff;
+      color: var(--cds-text-on-color, var(--cds-white, #ffffff));
       font-size: 0.625rem;
       font-weight: 700;
       letter-spacing: 0.04em;

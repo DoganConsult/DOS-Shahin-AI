@@ -77,7 +77,7 @@ const SEVERITY_TAG: Record<ItemSeverity, DosCarbonTagType> = {
                             aria-hidden="true"></span>
                     }
                     <span class="dos-aq-title">
-                      {{ item.title.fallback ?? item.title.i18nKey }}
+                      {{ item.title?.fallback ?? item.title?.i18nKey ?? '' }}
                     </span>
                   </div>
 
@@ -85,7 +85,7 @@ const SEVERITY_TAG: Record<ItemSeverity, DosCarbonTagType> = {
                   <div class="dos-aq-tile-meta">
                     @if (item.origin) {
                       <span class="dos-aq-origin">
-                        {{ item.origin.fallback ?? item.origin.i18nKey }}
+                        {{ item.origin?.fallback ?? item.origin?.i18nKey ?? '' }}
                       </span>
                     }
 

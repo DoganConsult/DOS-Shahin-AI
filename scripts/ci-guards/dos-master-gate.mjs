@@ -34,6 +34,8 @@ const GUARDS = [
   'tenant-zone-cert-isolation.mjs',
   'slo-row-per-active-service.mjs',
   'customer-zone-pkce-only.mjs',
+  // 2026-05-04 — bridge gate for tenant authorization + workspace shell.
+  'tenant-completeness.mjs',
 ];
 
 let pass = 0, fail = 0;

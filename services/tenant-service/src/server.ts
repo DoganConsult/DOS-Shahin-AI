@@ -312,6 +312,32 @@ app.post('/register', antiAbuse({ pool }), async (req: Request, res: Response) =
       [c.sub, tenantId, DEFAULT_REGISTRATION_ROLE],
     );
 
+    // 4b. 2026-05-05 — Bridge W2 forward-fix: write the canonical
+    //     user_role_assignments row inside the SAME transaction. Pre-bridge,
+    //     this row was only ever inserted by the post-callback
+    //     `ensureUserRoleAssignment()` hook in oidc.routes.ts which runs
+    //     after the SPA redirect — every cohort-B tenant therefore had
+    //     active membership but is_active=true role assignment FALSE.
+    //
+    //     dos.user_role_assignments is an updatable VIEW over
+    //     platform_dauth.user_role_assignments, which has the partial
+    //     unique index ux_user_role_assignments_active on
+    //     (tenant_id, user_id, role_code) WHERE is_active=true. The
+    //     ON CONFLICT DO NOTHING path therefore collapses concurrent
+    //     /register calls (same principal in two tabs) without spurious
+    //     duplicate rows. Writing through the dos.* view keeps the
+    //     tenant-service write surface in the dos.* contract.
+    await client.query(
+      `INSERT INTO dos.user_role_assignments
+         (assignment_id, user_id, tenant_id, role_code, scope, granted_by, granted_at, is_active)
+       VALUES ($1, $2, $3, $4, NULL, 'tenant-service:/register', now(), true)
+       ON CONFLICT DO NOTHING`,
+      [
+        `asn_${tenantId}_${Date.now().toString(36)}`,
+        c.sub, tenantId, DEFAULT_REGISTRATION_ROLE,
+      ],
+    );
+
     // 5. Activate the default product(s) so the workspace renders with a
     // populated module side-nav and KPI surface immediately. Without this,
     // /tenant-home/overview returns setupPending=true and the cockpit

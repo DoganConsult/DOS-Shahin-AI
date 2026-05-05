@@ -1,7 +1,7 @@
 /**
  * Shared archetype/template mapping used by ui-registry:{import,diff,seed:dev}.
  *
- * Maps a Dynamic-UI component_key to one of the 31 canonical archetypes and
+ * Maps a Dynamic-UI component_key to one of the 32 canonical archetypes and
  * its ESM export from `@platform/shell/templates`. Mirrors:
  *   - chk_archetype constraint in 20260503_0017_phase_f_ui_route_template_binding.sql
  *   - ARCHETYPE_EXPORTS in scripts/ci-guards/template-coverage.mjs
@@ -34,16 +34,29 @@ export function mapComponentKeyToArchetype(componentKey, route = '') {
     return { archetype: 'action-queue', template_export: 'ModuleWorkQueueTemplateComponent' };
   if (k === 'module.settings.page')
     return { archetype: 'module-settings', template_export: 'ModuleSettingsTemplateComponent' };
-  if (k === 'module.record.detail' || /\.detail$/.test(k))
+  // Universal slugs use `.page` suffix (e.g. module.record.detail.page).
+  if (
+    k === 'module.record.detail' ||
+    k === 'module.record.detail.page' ||
+    /\.detail\.page$/.test(k)
+  )
     return { archetype: 'record-story', template_export: 'RecordStoryTemplateComponent' };
-  if (k === 'module.record.create' || /\.create$/.test(k))
+  if (
+    k === 'module.record.create' ||
+    k === 'module.record.create.page' ||
+    /\.create\.page$/.test(k)
+  )
     return { archetype: 'guided-create', template_export: 'GuidedCreateTemplateComponent' };
-  if (k === 'module.ai.advisor' || /\.advisor$/.test(k))
+  if (
+    k === 'module.ai.advisor' ||
+    k === 'module.ai.advisor.page' ||
+    /\.advisor\.page$/.test(k)
+  )
     return { archetype: 'ai-advisor', template_export: 'AiAdvisorTemplateComponent' };
   if (k === 'product-wc.checklist' || /onboarding|activation/i.test(k))
     return { archetype: 'activation-journey', template_export: 'ActivationJourneyTemplateComponent' };
 
-  // ── New 18 archetypes (roster patch 31) ──────────────────────────────────
+  // ── Extended archetype roster (PHASE F / WS patches; sync ARCHETYPE_COUNT) ──
   // Each pair mirrors ARCHETYPE_REGISTRY in
   // platform/core/platform/shell/templates/module-template.types.ts.
   if (k === 'module.dashboard.page')
@@ -216,7 +229,7 @@ export function mapComponentKeyToArchetype(componentKey, route = '') {
   return null;
 }
 
-// Canonical 31 archetypes — kept in lockstep with ARCHETYPE_REGISTRY in
+// Canonical 32 archetypes — kept in lockstep with ARCHETYPE_REGISTRY in
 // platform/core/platform/shell/templates/module-template.types.ts and
 // chk_archetype in 20260503_0019_phase_f_archetype_registry_seed.sql.
 export const ALLOWED_ARCHETYPES = new Set([

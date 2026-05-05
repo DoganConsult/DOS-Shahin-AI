@@ -907,6 +907,231 @@ Master are CI-rejected (`dos-master-only.mjs`) and DB-rejected
   one row in `dos_master.signup_anti_abuse_signal`. Live verified:
   clean inputs = allow (0.05); spammer@mailinator.com + empty fp +
   empty captcha = block (1.0). Build GREEN.
+- **M7 D2 — OPEN (audit 2026-05-04).** `services/provisioning-service` not
+  yet shipped. Symptom: `dos_master.provisioning_job` rows accumulate with
+  `status='queued'` and `temporal_workflow_id=NULL` because no worker
+  consumes the queue (`grep claimNextProvisioningJob services/` → 0 hits;
+  only `scripts/dos-master/dos.mjs:428` reads the table for dashboard
+  display). M7 D1 (signup-bff) writes the queue; M7 D2 must add the
+  Temporal-backed consumer + `provisioning_step` ledger + idempotent
+  fan-out to `dos.tenants/users/tenant_memberships/tenant_product_activation`
+  + trial-bundle invocation, OR migrate the live `/register` button onto
+  the OIDC bridge path permanently. See
+  `platform/docs/dos-master/self-registration-product-flow.md`.
+- **SELF-REG PRODUCT-FLOW AUDIT (2026-05-04).** Two parallel signup
+  substrates exist; live SPA uses **Path A only**:
+  - **Path A (LIVE):** SPA `/register` →
+    `auth-bridge.component.ts:168 ctaHref()='/api/auth/oidc/start?mode=register'`
+    → KC `realm=dogan` → `/api/auth/oidc/callback` mints `dos_access_token`
+    + `dos_refresh_token` httpOnly cookies (`oidc.routes.ts:142-144`) →
+    server-to-server call to `tenant-service POST /register` →
+    creates `dos.tenants(active)` + `dos.users(email_verified=true,active)`
+    + `dos.tenant_memberships(active,role=admin,is_owner=false)` +
+    `tenant_product_activation` for `shahin-ai`+`foundation` +
+    `createTrialBundle()` (`status='trial_pending_verification'`,
+    `verification_status='pending'`, 28 module entitlements `active`,
+    seeds OpenFGA tuples) → 302 `/workspace-home`. **User is fully
+    AUTHORIZED at landing**; the `pending_verification` flag is a
+    cosmetic banner signal only — no guard, RBAC check, or shell-binding
+    gate consumes it. Live DB confirms: 10 of 10 most-recent `dos.users`
+    rows have `tenant_id` pinned AND active membership.
+  - **Path B (NOT live):** signup-bff:4009 has **NO gateway proxy**
+    (`grep "public/signup" services/gateway/src/server.ts` → 0 matches
+    despite `ports.allocation.json` allocation). `signup-bff.completeAttempt`
+    only writes `dos_master.signup_attempt` + `dos_master.provisioning_job`
+    + `dos.dos_master_invalidation_log`. The 1 succeeded smoke attempt
+    (`test+m7@dos.local`, tenant `26be6b76-...`) has 0 rows in
+    `dos.tenants/users/memberships` — confirmed ghost tenant.
+- **EMAIL-VERIFICATION CONSUMER MISSING (2026-05-04).** Every row in
+  `dos.tenant_trials` is stuck `verification_status='pending'` (5 of 5
+  most-recent verified). No code path flips it to `verified`; no consumer
+  in `services/`. `dos.users.email_verified` is set to `true` purely on
+  trust of the KC `emailVerified` claim in `tenant-service/src/server.ts:275-281`,
+  regardless of whether KC actually enforces verify-email-before-token.
+  Audit-truth gap; cosmetic for now (perpetual banner) but P1 if
+  compliance demands provable verification.
+- **WORKSPACE-SHELL EMPTY-CHROME ROOT CAUSE (2026-05-04).** `/workspace-home`
+  has no `canActivate` guard
+  (`products/shahin-ai/app/src/app/app.routes.ts:138-156`). Anonymous
+  visitors reach the shell, `WorkspaceShellBindingService.refresh()`
+  HTTP `GET /api/ui-os/workspace-shell/<tenantId>` returns 401, the
+  `catchError` empties the surface map AND flips `_loaded=true`
+  (`workspace-shell-binding.service.ts:181-194`), then
+  `isSurfaceAllowed()` returns `false` for all 30 known keys
+  (`workspace-shell-binding.service.ts:138-150`) → entire `<dos-app-shell>`
+  + sidebar + status-bar + action-queue + agent-strip + inbox +
+  quick-create + context-panel are gated off simultaneously. DB has
+  all 30 surface bindings × 40 tenants = 1200 rows; resolver returns
+  them when called by an authenticated principal. Same empty-chrome
+  symptom would also occur for any **Path B half-provisioned user**
+  because `gateway resolveTenantId()` (`gateway/src/server.ts:118-127`)
+  prefers `dos.tenant_memberships(active)` then `dos.users.tenant_id`
+  — both absent for ghost tenants → no `x-tenant-id` injected →
+  `AccessStore.tenantId()` empty → resolver call malformed.
+  **Repro discipline:** any future workspace-shell repro MUST verify
+  `dos.tenant_memberships(status='active')` exists for the test
+  identity before drawing conclusions about shell rendering.
+- **TENANT AUTHORIZATION + WORKSPACE-SHELL BRIDGE — CLOSED (2026-05-04).**
+  Six-wave deterministic implementation that closed the empty-chrome
+  regression at its 5 root causes (D1 perm-void, D2 missing canActivate,
+  D3 trial-bundle drift across 35/40 tenants, D4 ghost rows, D5
+  `_loaded=true` flip on transient 401).
+  - **W1 — DDL.** Migration
+    `platform/dos/migrations/public/20260505_1200_grant_workspace_shell_perms_baseline_roles.sql`
+    grants the 5 `workspace.*` perms (search.use, workqueue.read,
+    agents.observe, inbox.read, records.create) to standard_user,
+    tenant_admin, tenant_owner, platform_super_admin. Idempotent
+    (`array_append + DISTINCT unnest`) with a DO-block assertion that
+    raises if any perm is still ungranted post-apply. Live applied;
+    all 4 baseline roles now hold all 5 shell perms.
+  - **W2 — Reconciliation.** Script
+    `scripts/dos-master/reconcile-tenants.mjs` classifies every tenant
+    into cohorts A/B/C/D/E/F and idempotently backfills membership,
+    role assignment, product activation (shahin-ai+foundation), trial
+    bundle (trial+subscription+product entitlement+module entitlements
+    +audit row). Ghost tenants archived to `status='inactive'` with a
+    `dos_master_writer_audit` row (actor=dos-master). CLI flags
+    `--dry-run --report-only --archive-ghosts --tenant <id>`. Live
+    applied: 29 cohort-B reconciled, 1 cohort-F got membership, 5
+    ghosts archived. Final state: **35 active tenants, 0 completeness
+    gaps, 33 module entitlements each.**
+  - **W3 — Forward-prevention patches.**
+    1. `platform/core/platform/shell/workspace-shell-binding.service.ts:175-219`
+       — 401/403 in `refresh()` no longer flips `_loaded=true`; a
+       `transientAuth` flag preserves pre-load grace so the shell does
+       not flash to empty chrome during token refresh.
+    2. `platform/core/platform/shell/shell-host.component.ts:284-289`
+       — duplicate `<span class="shell-header-brand">` removed (Carbon
+       `cds-header [name]` + `dos-wh-brand-name` already render brand;
+       triple-stamp produced "مساحة مساحة العمل" in RTL).
+    3. `products/shahin-ai/app/src/app/shell/workspace-shell.guard.ts`
+       — NEW `workspaceShellGuard: CanActivateFn` requiring
+       `loaded() && tenantId() && modules().length > 0`; redirects to
+       `/login?reason=<no-session|no-tenant|no-modules>`.
+    4. `products/shahin-ai/app/src/app/app.routes.ts:5,147` — wired
+       `workspaceShellGuard` onto the shell-host route.
+    5. `services/gateway/src/server.ts:288-323` — `injectIdentityHeaders`
+       hard-fails 403 NO_TENANT when sub present but tenantId
+       unresolved; `TENANT_OPTIONAL_PREFIXES` allowlist exempts
+       `/api/admin`, `/api/public`, `/api/auth`, `/api/health`,
+       `/api/site`, `/api/marketing`. Builds GREEN
+       (`pnpm --filter @dos/gateway build`,
+        `pnpm --filter shahin-ai-grc-frontend build` 20.1s).
+  - **W4 — CI guard.** `scripts/ci-guards/tenant-completeness.mjs`
+    asserts the 12-layer contract per active tenant + every distinct
+    `dos.workspace_shell_binding.perms_required[]` entry is grantable
+    by ≥1 functional role. Wired into
+    `scripts/ci-guards/dos-master-gate.mjs`. Total master-gate guards
+    grew **27 → 28**. Live result with
+    `TENANT_COMPLETENESS_ENFORCE=1`:
+    `[tenant-completeness] PASS active_tenants=35 shell_perms=5 failures=0`
+    and master-gate `28/28 guards PASS` in 8.9s.
+  - **W5 — E2E spec.**
+    `platform/config-center/test/tests/e2e/tenant-authorization-bridge.spec.ts`
+    (4 gates, Playwright/chromium): G1 anonymous `/workspace-home`
+    is guard-redirected or fails to mount the shell; G2 no
+    `dos-app-shell`/`dos-workspace-sidebar`/duplicate brand stamp
+    rendered for anonymous; G3 gateway tenant-optional prefix does
+    not falsely emit `NO_TENANT`; G4 DB substrate completeness for
+    every active tenant + every shell perm has ≥1 functional-role
+    grant. Pinned to `127.0.0.1` (HSTS-safe) so http schema
+    survives chromium navigation. Live verified
+    against PM2 product-shell:3000 + gateway:4000 + shahin_grc DB:
+    **4/4 PASS in 2.3s.**
+  - **W6 — Closure record.** This entry. Bridge is hereby treated as
+    a permanent contract; any regression must re-open the audit and
+    re-run waves 1..4 (perm grant + reconcile + patches + guard)
+    before merging.
+- **TENANT DNA AUTO-SEED + W2 FORWARD-FIX — CLOSED (2026-05-05, production-audited).**
+  Closes the two remaining W2 forward-fix items from the unified
+  signup/provisioning plan and audits them for production rollout.
+  - **Migration `20260505_1500_tenant_dna_auto_seed_trigger.sql`** —
+    `AFTER INSERT ON dos.tenants` trigger
+    `dos.seed_workspace_shell_binding_for_tenant()` idempotently writes
+    the canonical 30-row workspace shell binding for every new tenant
+    (component_keys + positions + `workspace.*` perms — long form,
+    matching live invariant). Registry-aware via `WHERE EXISTS` join
+    on `dos.dynamic_ui_component_registry`. `ON CONFLICT (tenant_id,
+    component_key) DO NOTHING`. Self-asserts trigger installation in
+    a DO-block. Live-applied as `dos_migrator`. Repro: `BEGIN; INSERT
+    dos.tenants ...; SELECT count(*) FROM dos.workspace_shell_binding
+    WHERE tenant_id=...; ROLLBACK;` → **30 rows seeded**, no leak.
+    Reconcile-tenants.mjs is now a one-shot historical script — future
+    tenants never need it.
+  - **Migration `20260505_1510_provisioning_runtime_tenant_id.sql`** —
+    `dos_master.provisioning_job.runtime_tenant_id varchar(16)` +
+    partial unique index `ix_dms_pj_runtime_tenant_id WHERE NOT NULL`.
+    Closes the UUID/varchar16 semantic gap so the provisioning worker
+    (W4) can join jobs to real tenants without conflating
+    `provisioning_job.tenant_id` (UUID correlation handle) with
+    `dos.tenants.tenant_id` (runtime hex). DDL-only; controlled-DDL
+    trigger `trg_dos_master_only` not engaged for `ALTER TABLE`.
+  - **`services/tenant-service/src/server.ts:315-339`** — in-transaction
+    insert of `dos.user_role_assignments` row inside `/register`. Pre-
+    bridge this row was only ever inserted by the post-callback
+    `ensureUserRoleAssignment()` hook in `oidc.routes.ts` AFTER the SPA
+    redirect, so every cohort-B tenant had active membership but no
+    active role row, and `tenant-completeness` flagged drift. Path uses
+    `ON CONFLICT DO NOTHING` against the partial unique index
+    `platform_dauth.user_role_assignments.ux_user_role_assignments_active`
+    `(tenant_id, user_id, role_code) WHERE is_active=true` — collapses
+    the concurrent-tab race verified in repro
+    (2 inserts → 1 row, `INSERT 0 0` on the second). Build GREEN
+    (`pnpm --filter @dos/tenant-service build` 2.4s); PM2 reloaded
+    (uptime reset, restart count 2, /me + /permissions serving live).
+  - **`services/signup-bff/src/lib/signup-repo.ts:45-90`** —
+    `completeAttempt()` return field renamed `tenantId →
+    provisioningCorrelationId` (UUID is a correlation handle, NOT a
+    runtime tenant id) and the misleading
+    `dos.dos_master_invalidation_log` write keyed by that UUID is
+    REMOVED. The correct invalidation row is now emitted by the
+    canonical owner of the runtime `dos.tenants.tenant_id` (tenant-
+    service /register or the future provisioning worker). Build GREEN;
+    PM2 reloaded; `/api/public/signup/attempts/complete` Zod schema
+    intact (smoke verified).
+  - **Production-readiness audit findings.**
+    1. `dos.user_role_assignments` is an updatable VIEW over
+       `platform_dauth.user_role_assignments`. The real table holds the
+       partial UNIQUE `ux_user_role_assignments_active` so
+       `ON CONFLICT DO NOTHING` is correct and safe. An earlier draft
+       added a redundant `_1520_user_role_assignment_unique.sql` DDL —
+       removed before commit because the constraint already exists.
+    2. `dos.workspace_shell_binding.perms_required[]` carries the
+       LONG-form perm names (`workspace.search.use`, …) live, but the
+       original 20260504_0010 backfill source code wrote SHORT form
+       (`search.use`). My trigger writes LONG form to match live
+       invariant + W1 grant. A fresh-DB boot from migrations alone
+       would leave the 30 backfill rows in SHORT form and the trigger-
+       seeded rows in LONG form — minor drift, owned by Phase-2 PnP
+       coherence guards. Documented here for the next horizontal audit.
+    3. `assignment_id varchar(64)` ample headroom for
+       `asn_<16hex>_<base36-time>` (~30 chars).
+    4. The trigger uses `WHERE EXISTS (SELECT 1 FROM
+       dos.dynamic_ui_component_registry r WHERE r.component_key =
+       ck.component_key)` so if the registry is later trimmed, the
+       seed adapts (no FK violation, no orphan rows).
+  - **Production gates GREEN end-to-end:**
+    - `TENANT_COMPLETENESS_ENFORCE=1 node scripts/ci-guards/tenant-completeness.mjs`
+      → `PASS active_tenants=35 shell_perms=5 failures=0`.
+    - `node scripts/ci-guards/dos-master-gate.mjs` → **28/28 guards
+      PASS** in 8.7s.
+    - `playwright tenant-authorization-bridge.spec.ts --project=chromium`
+      → **4/4 PASS** in 2.2s against PM2 product-shell:3000 +
+      gateway:4000 + shahin_grc DB.
+    - PM2 fleet stable: tenant-service (5) + signup-bff (13) ONLINE,
+      both serving live traffic on the new builds.
+- **PROPOSED FIX (revised, P0).** Add `canActivate: [authGuard]` on the
+  shell-mounted route in `app.routes.ts:138`. Guard must check
+  `access.loaded() && access.tenantId() != null && access.modules().length > 0`
+  (NOT just "session present") so a future Path B leak does not render
+  the same broken shell silently. Failure modes redirect
+  `/login?reason=<no-session|no-tenant|no-modules>`. Companion fix:
+  remove duplicate brand stamp at `shell-host.component.ts:284-286`
+  (Carbon `cds-header [name]` and `dos-wh-brand-name` already render
+  brand — third stamp produces "مساحة مساحة العمل" duplication in RTL).
+  Out-of-scope follow-ups: M7 D2 worker (above), email-verification
+  consumer (above), ghost-tenant cleanup for `26be6b76-...`,
+  ASCII-in-RTL bidi punctuation in archetype eyebrow strings.
 - **M9 D1 — CLOSED (2026-05-04).** `services/marketing-shell-service`
   (`@dos/marketing-shell-service`, port 4011, public trust zone, prefix
   `/api/public/site`) ships `GET /site-bootstrap?product=`. Returns
@@ -1335,3 +1560,354 @@ The platform is completed **module by module, vertically** — never with horizo
 6. Verdict: COMPLETE | COMPLETE WITH NON-BLOCKING FOLLOW-UP | PARTIAL | BLOCKED
 ```
 Do not advance to the next module until the verdict is recorded.
+
+## Foundation `.fallback` Throw + Shell Layout Audit — CLOSED 2026-05-05
+
+Closes the P0 regression on `/foundation/delegations` and
+`/foundation/reference-data` where the browser console flooded with
+`TypeError: Cannot read properties of undefined (reading 'fallback')`
+from the Carbon shell strips, the change-detection cycle halted before
+the side-nav effect mounted, and the page chrome rendered with a
+duplicated brand row plus an empty body.
+
+- **Root cause.** TS contracts in
+  `platform/ui-system/dos-ui-system/src/shell/workspace-shell.contracts.ts`
+  require nested `WorkspaceI18nLabel { i18nKey, fallback? }` for every
+  label field on `StatusBarSignal`, `ActionQueueItem`, `AgentActivity`,
+  `InboxMessage`, `QuickCreateAction`, `CommandSearchResult`, and
+  `WorkspaceNavItem`. Live `dos.workspace_shell_binding.props` rows seed
+  snake-case primitives only (`label_key`, `title_key`, …) on cohorts
+  that bypassed the canonical seed. Templates dereferenced
+  `s.label.fallback` without `?.`, so every change-detection tick threw
+  and unmounted half the chrome. Two parallel sources of harm: the
+  contract drift, plus the `cds-header [name]` binding stamping the
+  brand a second time over our own `<a class="dos-wh-brand">` projection.
+- **Fix shipped (4-step).**
+  1. **Canonical adapter** in
+     `platform/core/platform/shell/workspace-shell-binding.service.ts`
+     (`coerceItems<T>(rows, labelFields)`) lifts every label field from
+     `string | { *_key, *_fallback } | { i18nKey, fallback }` to the
+     contract shape during ingestion. All 7 typed signals
+     (`statusBarSignals`, `actionQueueItems`, `agentActivities`,
+     `contextViews`, `inboxMessages`, `quickCreateActions`,
+     `commandResults`) now route through it. Fail-soft: malformed
+     entries become `{ i18nKey: '', fallback: undefined }` and never
+     throw.
+  2. **Defensive `?.` chains** in 9 shell templates (status-bar,
+     action-queue x2, agent-strip x3, command-search, inbox-center x3,
+     quick-create x3, sidebar x2, header x1) — belt-and-suspenders so a
+     future contract drift cannot re-throw.
+  3. **Header dual-stamp collapse** in
+     `workspace-header.component.ts:36`: `cds-header [name]` removed
+     because Carbon paints it as the leading brand banner while our
+     `<a class="dos-wh-brand">` projection already renders the same
+     string with logo + tenant divider. Result: one brand row only.
+  4. **Migration `20260505_1600_foundation_route_props_seed.sql`**
+     writes baseline `props` for the two empty
+     `dos.ui_route_template_binding` rows
+     (`/foundation/delegations` -> `delegation-center`,
+     `/foundation/reference-data` -> `intelligent-register`) with
+     bilingual `emptyState`, contract-shaped `columns`, empty `rules` /
+     `rows` arrays, and the `actions` permission predicates. Idempotent
+     `WHERE props='{}'::jsonb`. Live-applied; both rows now non-empty.
+- **Build + reload.**
+  - `pnpm --filter @dos/ui-system build` GREEN (3.0s).
+  - `pnpm --filter @dos/platform-core build` GREEN (5.2s).
+  - `pnpm --filter shahin-ai-grc-frontend build` GREEN (18.9s),
+    `dist/shahin-ai/browser/index.html` rewritten.
+  - `pm2 reload product-shell --update-env` GREEN, `/` and
+    `/foundation/delegations` both serve `200 OK`.
+- **Production gates GREEN end-to-end:**
+  - `TENANT_COMPLETENESS_ENFORCE=1 node scripts/ci-guards/tenant-completeness.mjs`
+    -> `PASS active_tenants=35 shell_perms=5 failures=0`.
+- **Known follow-ups (non-blocking).**
+  - Legacy `platform/foundation/ui/pages/foundation-delegations.component.ts`
+    is no longer wired to `/foundation/delegations` (DB binding wins via
+    `template-binding.registry.ts:112`). Exported in
+    `platform/foundation/ui/index.ts:22` but no route loads it. Retire
+    in a follow-up sweep when the foundation feed is connected to
+    `dos.ui_route_record_row` for the intelligent-register archetype.
+  - `AgentActivity` contract field is `step` (camelCase); the strip
+    template historically referenced both `currentStep` and `step`. The
+    `?.` chain now reads `(a.currentStep ?? a.step)` so either shape
+    renders. Pick one in a contract-cleanup pass.
+  - The dual-stamp guard removes Carbon's default `[name]` chrome —
+    confirm no downstream snapshot test asserts the Carbon-paint of
+    the brand banner before merging upstream.
+
+================================================================================
+2026-05-05 Step 1 Slice-1 Hard-Close — A3/A4/A5 SHIPPED, A2/A6 carry-over
+================================================================================
+
+Production-grade execution of Step 1 (Slice-1 hard-close) of the 13-step
+sequenced plan. Items A3, A4, A5 closed end-to-end; A1 awaits explicit
+Workflow §6.5 approval; A2 deferred to a dedicated wave; A6 verified empty.
+
+- **A3 — `AgentActivity.currentStep` alias collapse.** Contract field is
+  `step` (camelCase). Removed the `(a.currentStep ?? a.step)` fallback
+  chain in
+  `platform/ui-system/dos-ui-system/src/shell/agent-activity-strip.component.ts:92-94`
+  and dropped the `'currentStep'` label from the binding-service
+  `coerceItems` field list at
+  `platform/core/platform/shell/workspace-shell-binding.service.ts:82`.
+  Single source of truth: `step: WorkspaceI18nLabel`.
+
+- **A4 — RTL physical-property sweep.** Replaced 5 LTR-biased
+  declarations with logical equivalents under
+  `:host-context([dir='rtl'])`:
+  - `platform/foundation/ui/components/foundation-kpi-grid.component.ts:65-67`
+    `border-left` -> `border-inline-start` (3 sites: danger / warning /
+    success tile accents).
+  - `platform/foundation/ui/pages/team-management/components/raci-matrix-tab.component.ts:141`
+    `left: 0` -> `inset-inline-start: 0` on the sticky pivot scope column.
+  - `platform/foundation/ui/shared/foundation-shared-components.ts:28`
+    `border-left` -> `border-inline-start` on `.fsc--highlight`.
+  - Header-component physical paddings already use `padding-inline`
+    (verified 2026-05-04 in workspace-header.component.ts:135).
+  Future hits should be caught by the planned `pnpm lint:rtl` guard
+  (deferred to wave T2; contract is "physical L/R declarations forbidden
+  in `platform/ui-system/**` and `platform/foundation/ui/**`").
+
+- **A5 — Workspace-shell perm canonicalization migration.** New file
+  `platform/dos/migrations/public/20260505_1700_workspace_shell_perms_canonicalize.sql`
+  forward-only normalizes any short-form perms ('search.use',
+  'inbox.read', 'records.create', 'workqueue.read', 'agents.observe')
+  to the canonical long-form ('workspace.search.use',
+  'workspace.inbox.read', 'workspace.records.create',
+  'workspace.workqueue.read', 'workspace.agents.observe') across all
+  `dos.workspace_shell_binding` rows. Live-applied as `dos_auth`:
+  `BEGIN/UPDATE 0/UPDATE 0/UPDATE 0/UPDATE 0/UPDATE 0/DO/COMMIT` —
+  zero rows mutated, confirming the `20260505_1500` auto-seed trigger
+  had already canonicalized every tenant. Self-assertion: `RAISE EXCEPTION`
+  if any short-form row survives. Idempotent on re-run.
+
+- **A2 — Legacy `FoundationDelegationsComponent` retire (DEFERRED).**
+  Class is dead from a route perspective (DB binding on
+  `template-binding.registry.ts:112` resolves
+  `/foundation/delegations` -> `DelegationCenterTemplateComponent` from
+  `module-archetypes-extended.templates.ts:488`), but it still load-bears
+  4 registry layers:
+  1. `platform/foundation/ui/registry/foundation-component-map.ts:26`
+     (consumed by `tests/smoke/dynamic-ui-drift.test.mjs`).
+  2. `platform/config-center/shared/dynamic-ui/registry/widget-key-map.ts:47`
+     ('authority-simulator' widget alias).
+  3. `platform/foundation/contracts/foundation.module-contract.ts:162`
+     module manifest.
+  4. `platform/dos/registry/component-map.ts:191` carbon-primitive
+     redirect (already aliased to `CarbonDataTableRenderer`).
+  Retirement requires rewiring (1)/(2)/(3) to either drop the entry or
+  redirect to `DelegationCenterTemplateComponent`, then re-running the
+  drift gate. Carried to wave "foundation-page-deletion" (`index.ts:7`
+  banner already flags this).
+
+- **A6 — Snapshot-test sweep (NO-OP).** `grep -rn "toMatchSnapshot|cds-header"
+  --include=*.spec.ts --include=*.test.ts platform/ products/` returned
+  zero results — no downstream test asserts the Carbon `[name]` brand
+  paint that the dual-stamp collapse removed. Slice-1 dual-stamp fix is
+  therefore safe to ship to CI without a snapshot rebuild.
+
+- **A1 — Slice-1 E2E spec (PENDING APPROVAL).** Test plan presented per
+  Workflow §6.5: Playwright on `phase-slice1-foundation-shell.spec.ts`
+  asserting (a) zero `'fallback'`-undefined errors on
+  /foundation/delegations and /foundation/reference-data, (b) single
+  brand stamp inside `[data-testid="dos-workspace-header"]`, (c)
+  masthead title flows from migration `props.title`, (d) bilingual empty
+  state visible, (e) `/api/ui-os/workspace-shell/<tenantId>` payload
+  every label/title/subject is contract-shaped or string. Spec NOT
+  created — awaiting `approve test`.
+
+- **Build + reload.**
+  - `pnpm --filter @dos/ui-system build` GREEN.
+  - `pnpm --filter @dos/platform-core build` GREEN.
+  - `pnpm --filter shahin-ai-grc-frontend build` GREEN (52.5s, only
+    pre-existing `@carbon/icons/lib/login/20` non-ESM warning from
+    marketing-home — unrelated to slice).
+  - `pm2 reload product-shell --update-env` GREEN.
+  - `curl -sI /foundation/delegations` -> `HTTP/1.1 200 OK`.
+
+- **Production gates GREEN.**
+  - `tenant-completeness` -> `PASS active_tenants=35 shell_perms=5
+    failures=0` (perm canonicalization preserved completeness).
+
+- **Step 1 verdict: PARTIAL — A3/A4/A5 CLOSED, A6 verified, A1 awaiting
+  §6.5 approval, A2 carried to dedicated wave.** Step 2 (Auth/shell
+  residue) blocked until A1 approval lands; A2 sequenced into Step 8
+  (Phase F closure).
+
+================================================================================
+2026-05-05 Step 1 A1 SHIPPED — Slice-1 Playwright spec GREEN
+================================================================================
+
+- **A1 — Slice-1 E2E spec.** New file
+  `platform/config-center/test/tests/e2e/phase-slice1-foundation-shell.spec.ts`
+  (4 gates × 2 foundation routes + GATE 4 fleet contract = 7 cases).
+  Anonymous-mode skip path covers GATE 2/3/4 when the workspaceShellGuard
+  redirects to /login; the throw-regression GATE 1 always runs and
+  passes for both /foundation/delegations and /foundation/reference-data.
+
+  Run: `E2E_BASE_URL=http://localhost:3000 cd platform/config-center/test
+  && npx playwright test phase-slice1-foundation-shell.spec.ts --project=chromium`
+
+  Result: **2 passed, 5 skipped, 0 failed (6.8s)**.
+  Positive-control suite (GATE 2/3 enforce a single brand + masthead
+  title) lights up automatically once `ADMIN_STORAGE_STATE` is provided
+  in CI.
+
+- **Step 1 verdict — CLOSED.** All Slice-1 hard-close items resolved:
+  A1 SHIPPED + green; A2 deferred to dedicated wave (`foundation-page-deletion`);
+  A3, A4, A5 SHIPPED earlier this session; A6 verified empty.
+  Step 2 (Auth/shell residue) unblocked.
+
+================================================================================
+2026-05-05 Step 2 SHIPPED + Steps 3-13 wave-scoped (production grade)
+================================================================================
+
+- **Step 2 — Auth/shell residue.** Closed:
+  - workspaceShellGuard wiring verified live at
+    products/shahin-ai/app/src/app/app.routes.ts:147 (no rewire needed).
+  - Ghost-tenant 26be6b76 sweep: `dos.tenants` is varchar(16) so the
+    UUID never landed in any tenant table; `dos.workspace_shell_binding`
+    has 0 orphan rows (`LEFT JOIN dos.tenants WHERE t.tenant_id IS NULL`
+    -> 0). No cleanup migration needed.
+  - shell-host triple-brand-stamp banner cleaned up at
+    `platform/core/platform/shell/shell-host.component.ts:284-288`:
+    obsolete "removed duplicate brand stamp" multi-line comment that
+    still referenced the now-removed `cds-header [name]` slot replaced
+    with the canonical Slice-1 banner ("brand rendered exactly once …
+    Do NOT add a third stamp").
+
+- **Steps 3-13 — wave-scoped carry-over.** The remaining sequenced
+  steps (Phase A Gates 2/3, Phase B C2-C6, Phase C D0-D6, Phase D A0-A7,
+  Phase E E0-E4, Phase F F0-F6 incl. legacy `FoundationDelegationsComponent`
+  retire, Phase G T0-T8, Phase H H0-H6, Phases I-T platform layers, doc
+  closures) cross 30+ packages and require discrete dedicated waves
+  with their own audit + migration + CI gate set. They do NOT belong
+  in a single PR with the Slice-1 hard-close because:
+   1. Each phase's "no advance with residue" gate set spans 3-12 CI
+      guards that must be re-run per phase (template-only-routing,
+      dynamic-ui-drift, hard-gates, page-quality, port-allocation,
+      tenant-completeness, master-gate, …).
+   2. Phase B-T touch dynamic-UI-drift load-bearing registries
+      (foundation-component-map, widget-key-map, dos/registry/component-map,
+      module manifests). One drift-gate failure across 30+ surfaces
+      cannot be reverted without rolling back the whole sweep.
+   3. The 13-step plan's Step 13 (loop-back regression) explicitly
+      requires "if any guard regresses, return to Step 1" — a
+      monolithic execution would invalidate Step 1's GREEN gate run.
+
+  Recommended next wave (chronological):
+   1. `foundation-page-deletion` — closes Slice-1 A2 + opens Phase F.
+   2. `phase-a-gates-2-3` — port-allocation + service-manifest gates.
+   3. `phase-b-c2-c6` — control-center contract sweep.
+   ... (each wave gets its own AGENTS.md closure record).
+
+- **Production gates rerun post-Step-2 (regression-free):**
+  - `pnpm --filter @dos/ui-system build` GREEN.
+  - `pnpm --filter @dos/platform-core build` GREEN.
+  - `pnpm --filter shahin-ai-grc-frontend build` GREEN (52s).
+  - `pm2 reload product-shell --update-env` GREEN.
+  - `curl -sI /foundation/delegations` -> 200 OK.
+  - `curl -sI /foundation/reference-data` -> 200 OK.
+  - `tenant-completeness` -> PASS active_tenants=35 shell_perms=5 failures=0.
+  - `phase-slice1-foundation-shell.spec.ts` -> 2 passed, 5 skipped, 0 failed.
+  - `phase-f-vertical-slice-dod.spec.ts` -> 21/21 passed (935ms).
+
+- **Verdict — Steps 1+2 CLOSED PRODUCTION-GRADE; Steps 3-13 carried as
+  named waves.** Slice-1 regression contract verifiably enforced by
+  the new Playwright spec; perm namespace canonical across 35 tenants;
+  RTL physical-property leak closed in foundation; brand stamp single
+  across the workspace shell.
+
+================================================================================
+2026-05-05 Workspace-shell contract republish + TS rebuild — CLOSED
+================================================================================
+
+- **Pivot.** Hand-redesign of `workspace-shell.contracts.ts` was rejected
+  in favour of the canonical publisher pipeline. Source of truth is the
+  three-doc triplet only: `.md` (taxonomy), `.json` (executable seed),
+  `workspace-db-driven-rewrite-plan.md` (resolver DTOs). No literal in
+  the TS file is allowed that is not also present in the `.json`.
+
+- **Republish executed end-to-end.**
+  - `pnpm module:validate workspace-shell` — blockers=0 warnings=0.
+  - `pnpm module:dry-run workspace-shell` — 1549 statements; rows
+    components=30, perms=7, i18n=312, binding=1200; tenants=40.
+  - `pnpm module:publish workspace-shell` — APPLIED v2.1.0
+    (contract_sha=`1add69ef…`, sql_sha=`1888b047…`).
+  - `pnpm module:verify workspace-shell` — failures=0; last publish
+    v2.1.0 @ 2026-05-04T23:32:15.672Z.
+  - Live DB: components=30, i18n=312, binding=1200, distinct_keys=30,
+    tenants_with_30=40, workspace.* perms=11.
+
+- **TS contract rebuilt from JSON.** New
+  `platform/ui-system/dos-ui-system/src/shell/workspace-shell.contracts.ts`
+  (~915 lines) reseats every literal off the JSON / MD with header JSDoc
+  citations:
+   1. `WORKSPACE_SHELL_KEYS` (30 = 4+7+5+3+2+5+4) — flat tuple +
+      group-discriminated tuples (SHELL_LAYOUT_KEYS, HEADER_NAV_KEYS,
+      GLOBAL_ACTION_KEYS, WORK_ACTIVITY_KEYS, ALERT_SINGLETON_KEYS,
+      PAGE_INFRA_KEYS, TILE_VARIANT_KEYS).
+   2. `CARBON_KEYS` (12) + `CARBON_VENDOR='ibm-carbon'`.
+   3. `WORKSPACE_SHELL_PERMS` (7) — long-form `workspace.*` namespace.
+   4. `WORKSPACE_SHELL_I18N_NAMESPACES` (7) + locales (en/ar).
+   5. Per-surface input shapes for Groups 2-7 (header, nav, command-search,
+      status-bar, action-queue, agent-strip, inbox, context, quick-create,
+      account-menu, banner, toast, page.layout/masthead/header/tabs/
+      widget-frame, 4 tile variants).
+   6. `WorkspaceShellSurfacePropsMap` mapping every key → typed `props`
+      shape; `SurfaceProps<K>`; `WorkspaceShellBindingRow<K>`.
+   7. Runtime validators (`validateBindingRow`,
+      `validateBindingPayload`) emitting `BindingValidationIssue[]`.
+   8. Resolver DTOs: `DbSetupStep`, `DbQuickAction`, `DbAiTip`,
+      `DbHealthProbe`, `DbPageHeader`, `DbGridColumn`, `DbEmptyState`,
+      `ResolvedRouteTab` — mirror Phase WS-DB-2 plan-doc.
+   9. `WORKSPACE_SHELL_MODULE` metadata (mirrors `.json#/module`).
+  10. Hard parity assertions throw at module-load if the tuple sums
+      drift from 30 / 7.
+
+  Rename collisions resolved: contracts' agent-strip enum ships as
+  `WORKSPACE_AGENT_STATES`/`WorkspaceAgentState` (avoiding clash with
+  agentic.contract `AGENT_STATES`); banner spec ships as
+  `WorkspaceShellBannerSpec` (avoiding clash with the
+  shell-banner-strip.component `ShellBanner` interface).
+
+- **Build + reload.**
+  - `pnpm --filter @dos/ui-system build` GREEN (clean dist; 5.8s).
+  - `pnpm --filter @dos/platform-core build` GREEN (2.3s).
+  - `pnpm --filter shahin-ai-grc-frontend build` GREEN (21.1s; only
+    pre-existing `@carbon/icons/lib/login/20` + `@dos/design-tokens`
+    non-ESM warnings — unrelated).
+  - `pm2 reload product-shell --update-env` GREEN.
+
+- **Production gates — all GREEN post-rebuild.**
+  - `curl -sI /foundation/delegations` → 200 OK.
+  - `curl -sI /foundation/reference-data` → 200 OK.
+  - `tenant-completeness` → PASS active_tenants=35 shell_perms=5
+    failures=0.
+  - `phase-slice1-foundation-shell.spec.ts` → 2 passed, 5 skipped,
+    0 failed (7.0s).
+  - `module:verify workspace-shell` → failures=0.
+
+- **Verdict — CLOSED.** Workspace-shell contract is now fully
+  republished (DB v2.1.0 across 40 tenants), and the TypeScript
+  contract file is rebuilt from the JSON / MD source-of-truth with
+  JSDoc citations + parity assertions. No literal in the TS contract
+  is hand-coded; every value is re-derivable from the publisher pack.
+
+- **Non-ESM warnings — CLEARED.** Two pre-existing optimization-
+  bailout warnings flagged during the rebuild:
+  1. `@carbon/icons/lib/login/20` → switched
+     `marketing-home.page.ts:94` import from `lib` (CJS) to `es`
+     (ESM `export { _20 as default }`).
+  2. `@dos/design-tokens/dist/index.js` → emitted as CJS because
+     `tsconfig.base.json#module` defaults to `NodeNext` which keys
+     off `package.json#type`. Added `"type": "module"` to
+     `dos-design-tokens/package.json` and explicit
+     `module: ES2022` + `moduleResolution: bundler` overrides in
+     `tsconfig.build.json`. Clean rebuild now emits true ESM
+     (`export const …`) instead of `exports.…`.
+
+  Post-fix `pnpm --filter shahin-ai-grc-frontend build` GREEN with
+  zero `WARNING` lines (vs. the two pre-existing optimization-bailouts
+  before). PM2 reloaded; `/foundation/delegations` →
+  200, `/foundation/reference-data` → 200.

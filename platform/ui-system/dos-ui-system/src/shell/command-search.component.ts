@@ -74,7 +74,7 @@ const CATEGORY_TAG_TYPE: Record<ResultCategory, DosCarbonTagType> = {
               @if (r.icon) {
                 <dos-icon [name]="r.icon" [size]="16" class="dos-command-search__icon"></dos-icon>
               }
-              <span class="dos-command-search__label">{{ r.label.fallback ?? r.label.i18nKey }}</span>
+              <span class="dos-command-search__label">{{ r.label?.fallback ?? r.label?.i18nKey ?? '' }}</span>
               @if (r.route) {
                 <span class="dos-command-search__route" aria-hidden="true">{{ r.route }}</span>
               }
