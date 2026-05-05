@@ -1,12 +1,12 @@
 import { Router } from 'express';
-import { logger } from '../../ports/logger.port.js';
-import { authenticate, requirePermission } from '../../ports/auth.port.js';
-import { getTenantEnforcementMode, setTenantEnforcementMode, } from '../../services/ai/operations/ai-governance-config.service.js';
+import { logger } from '../../ports/logger.port';
+import { authenticate, requirePermission } from '../../ports/auth.port';
+import { getTenantEnforcementMode, setTenantEnforcementMode, } from '../../services/ai/operations/ai-governance-config.service';
 import { toErrorMessage } from '@dos/module-sdk';
-import { getSoDPolicy, setSoDPolicy, VALID_SOD_POLICIES, VALID_REGISTRY_TYPES, } from '../../services/ai-governance-lifecycle.service.js';
+import { getSoDPolicy, setSoDPolicy, VALID_SOD_POLICIES, VALID_REGISTRY_TYPES, } from '../../services/ai-governance-lifecycle.service';
 // ── Zod Schemas ──────────────────────────────────────────────────────────
-import { validate, auditMiddleware, setAuditData, automationMiddleware, moduleStack, mutationEventHook } from '../../ports/middleware.port.js';
-import { enforcementModePutBody, sodPolicyPutBody } from "../../schemas/ai-governance.schemas.js";
+import { validate, auditMiddleware, setAuditData, automationMiddleware, moduleStack, mutationEventHook } from '../../ports/middleware.port';
+import { enforcementModePutBody, sodPolicyPutBody } from "../../schemas/ai-governance.schemas";
 import { z } from "zod";
 const router = Router();
 router.use(moduleStack('ai-governance'));

@@ -1,9 +1,9 @@
 // @ts-nocheck
-import { safeQuery, tenantSchema } from '../../../ports/database.port.js';
-import { getAssetById } from '../registry/ai-asset-inventory.service.js';
-import { emitRegistryAudit } from '../../ai-governance-lifecycle.service.js';
+import { safeQuery, tenantSchema } from '../../../ports/database.port';
+import { getAssetById } from '../registry/ai-asset-inventory.service';
+import { emitRegistryAudit } from '../../ai-governance-lifecycle.service';
 import { toErrorMessage } from '@dos/module-sdk';
-import { SYSTEM_JOB_ACTOR } from '../../../ports/platform.port.js';
+import { SYSTEM_JOB_ACTOR } from '../../../ports/platform.port';
 const AUDIT_MODULE = 'ai-binding-governance';
 const VALID_ALLOWLIST_TYPES = ['provider', 'model'];
 async function assertAssetExists(tenantId, assetId, expectedType, label) {

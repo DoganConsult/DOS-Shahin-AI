@@ -1061,7 +1061,8 @@ export class DosMarketingHomePageComponent {
       this.scrollToAnchor(href.slice(1));
       return;
     }
-    const [path, fragment] = href.split('#');
+    const canonicalHref = this.normalizeLegacyAuthHref(href);
+    const [path, fragment] = canonicalHref.split('#');
     if (fragment && (!path || path === '/')) {
       this.scrollToAnchor(fragment);
       return;
@@ -1070,7 +1071,26 @@ export class DosMarketingHomePageComponent {
       void this.router.navigateByUrl(path || '/').then(() => this.deferScrollToAnchor(fragment));
       return;
     }
-    void this.router.navigateByUrl(href);
+    void this.router.navigateByUrl(canonicalHref);
+  }
+
+  /** Phase P2 parity: DB auth bindings are under /auth/* only; remap bare paths so SPA navigation matches product-shell 301 behaviour. */
+  private normalizeLegacyAuthHref(href: string): string {
+    const LEGACY: Record<string, string> = {
+      '/login': '/auth/login',
+      '/register': '/auth/register',
+      '/forgot-password': '/auth/forgot-password',
+      '/mfa': '/auth/mfa',
+      '/reset-password': '/auth/reset-password',
+    };
+    const [beforeHash, frag] = href.split('#');
+    const qIdx = beforeHash.indexOf('?');
+    const pathOnly = (qIdx >= 0 ? beforeHash.slice(0, qIdx) : beforeHash) || '';
+    const canon = LEGACY[pathOnly];
+    if (!canon) return href;
+    const qs = qIdx >= 0 ? beforeHash.slice(qIdx) : '';
+    const hash = frag !== undefined ? `#${frag}` : '';
+    return `${canon}${qs}${hash}`;
   }
 
   // ─── M1.5 Download-Kit runtime state ─────────────────────────────────

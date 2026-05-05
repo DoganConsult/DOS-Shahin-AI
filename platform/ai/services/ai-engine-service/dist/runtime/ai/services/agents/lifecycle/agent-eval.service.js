@@ -1,6 +1,6 @@
-import { logger } from '../../../ports/logger.port.js';
-import { safeQuery, tenantSchema } from '../../../ports/database.port.js';
-import { chatCompletion } from '../../gateway/llm.service.js';
+import { logger } from '../../../ports/logger.port';
+import { safeQuery, tenantSchema } from '../../../ports/database.port';
+import { chatCompletion } from '../../gateway/llm.service';
 import { toErrorMessage } from '@dos/module-sdk';
 import { getFirstRow } from '@dos/db';
 const EVAL_PROMPTS = {

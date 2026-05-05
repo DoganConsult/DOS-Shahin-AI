@@ -374,7 +374,7 @@ export class DosAuthSubmitComponent {
   `],
 })
 export class DosAuthSsoActionsComponent {
-  @Input() providers: ReadonlyArray<AuthSsoRequest['provider']> = ['oidc'];
+  @Input() providers: ReadonlyArray<AuthSsoRequest['provider']> = [];
   @Output() readonly event = new EventEmitter<AuthEvent<AuthSsoRequest>>();
   providerLabel(p: string) {
     const map: Record<string, string> = {
@@ -596,9 +596,9 @@ export class DosAuthLoginCardComponent {
   @Input() submitLabel = 'Sign in';
   @Input() forgotPasswordLabel = 'Forgot password?';
   @Input() registerLabel = 'Create an account';
-  @Input() forgotPasswordHref = '/auth/forgot-password';
-  @Input() registerHref = '/auth/register';
-  @Input() ssoProviders: ReadonlyArray<AuthSsoRequest['provider']> = ['oidc'];
+  @Input() forgotPasswordHref = '/forgot-password';
+  @Input() registerHref = '/register';
+  @Input() ssoProviders: ReadonlyArray<AuthSsoRequest['provider']> = [];
   @Input() invalidEmail = false;
   @Input() invalidPassword = false;
   @Input() emailError = '';
@@ -734,12 +734,34 @@ export class DosAuthRegisterCardComponent {
   @Input() backLabel = 'Back';
   @Input() submitLabel = 'Create workspace';
   @Input() loginLabel = 'Already have an account? Sign in';
-  @Input() loginHref = '/auth/login';
+  @Input() loginHref = '/login';
 
-  @Input() companySizes: ReadonlyArray<string> = ['1-10','11-50','51-200','201-1000','1000+'];
-  @Input() countries: ReadonlyArray<string> = ['Saudi Arabia','UAE','Qatar','Kuwait','Bahrain','Oman','Other'];
-  @Input() industries: ReadonlyArray<string> = ['Banking','Energy','Healthcare','Telecom','Government','Other'];
-  @Input() regulatoryScopes: ReadonlyArray<string> = ['SAMA','NCA','SDAIA','PDPL','ISO 27001','SOC 2','Other'];
+  private static readonly DEFAULT_COMPANY_SIZES: ReadonlyArray<string> = ['1-10','11-50','51-200','201-1000','1000+'];
+  private static readonly DEFAULT_COUNTRIES: ReadonlyArray<string> = ['Saudi Arabia','UAE','Qatar','Kuwait','Bahrain','Oman','Other'];
+  private static readonly DEFAULT_INDUSTRIES: ReadonlyArray<string> = ['Banking','Energy','Healthcare','Telecom','Government','Other'];
+  private static readonly DEFAULT_REGULATORY_SCOPES: ReadonlyArray<string> = ['SAMA','NCA','SDAIA','PDPL','ISO 27001','SOC 2','Other'];
+
+  private _companySizes: ReadonlyArray<string> = DosAuthRegisterCardComponent.DEFAULT_COMPANY_SIZES;
+  private _countries: ReadonlyArray<string> = DosAuthRegisterCardComponent.DEFAULT_COUNTRIES;
+  private _industries: ReadonlyArray<string> = DosAuthRegisterCardComponent.DEFAULT_INDUSTRIES;
+  private _regulatoryScopes: ReadonlyArray<string> = DosAuthRegisterCardComponent.DEFAULT_REGULATORY_SCOPES;
+
+  @Input() set companySizes(v: ReadonlyArray<string> | null | undefined) {
+    this._companySizes = (v && v.length) ? v : DosAuthRegisterCardComponent.DEFAULT_COMPANY_SIZES;
+  }
+  get companySizes(): ReadonlyArray<string> { return this._companySizes; }
+  @Input() set countries(v: ReadonlyArray<string> | null | undefined) {
+    this._countries = (v && v.length) ? v : DosAuthRegisterCardComponent.DEFAULT_COUNTRIES;
+  }
+  get countries(): ReadonlyArray<string> { return this._countries; }
+  @Input() set industries(v: ReadonlyArray<string> | null | undefined) {
+    this._industries = (v && v.length) ? v : DosAuthRegisterCardComponent.DEFAULT_INDUSTRIES;
+  }
+  get industries(): ReadonlyArray<string> { return this._industries; }
+  @Input() set regulatoryScopes(v: ReadonlyArray<string> | null | undefined) {
+    this._regulatoryScopes = (v && v.length) ? v : DosAuthRegisterCardComponent.DEFAULT_REGULATORY_SCOPES;
+  }
+  get regulatoryScopes(): ReadonlyArray<string> { return this._regulatoryScopes; }
 
   @Output() readonly event = new EventEmitter<AuthEvent<AuthRegisterPayload | { step: number }>>();
 

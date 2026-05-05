@@ -18,7 +18,7 @@
  * delegates to `evaluateAccess`. Services that load dauth-core get the
  * full pipeline; services that don't get a clearly-marked legacy fallback.
  *
- * Plan: /root/.claude/plans/need-to-clean-the-swift-trinket.md
+ * Plan: docs/plans/need-to-clean-the-swift-trinket.md
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LegacyClaimAuthzEvaluator = void 0;

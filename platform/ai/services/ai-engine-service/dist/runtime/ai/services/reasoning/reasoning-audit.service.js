@@ -5,7 +5,7 @@ import { catchHandler, EC } from '@dos/platform-core/resilience/resilient-catch'
  * Persists every agent reasoning step for full audit trail.
  * Meets EU AI Act Article 52 transparency requirements.
  */
-import { safeQuery, tenantSchema } from '../../ports/database.port.js';
+import { safeQuery, tenantSchema } from '../../ports/database.port';
 /**
  * Persist a complete reasoning trace for an agent run.
  */

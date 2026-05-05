@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { authenticate, requirePermission } from '../../ports/auth.port.js';
-import { registerModelProvenance, trackDataLineage, getProvenanceById, getLineageById, generateAiBom, assessSupplyChainRisk, checkDataSovereignty, registerProvider, listProviders, getProviderById, updateProviderCompliance, createSupplierAgreement, listSupplierAgreements, getAgreementById, updateAgreementStatus, checkExpiringAgreements, recordModelModification, listModelModifications, getModificationById, getSubstantialModifications, } from '../../services/ai/risk/ai-supply-chain.service.js';
-import { emitAiGovernanceEvent } from '../../services/ai/operations/ai-governance-event.service.js';
-import { validate, asyncHandler, auditMiddleware, setAuditData, automationMiddleware, moduleStack } from '../../ports/middleware.port.js';
-import { provenanceBody, lineageBody, providerBody, agreementBody, agreementStatusBody, modificationBody, updateComplianceBody } from "../../schemas/ai-governance.schemas.js";
+import { authenticate, requirePermission } from '../../ports/auth.port';
+import { registerModelProvenance, trackDataLineage, getProvenanceById, getLineageById, generateAiBom, assessSupplyChainRisk, checkDataSovereignty, registerProvider, listProviders, getProviderById, updateProviderCompliance, createSupplierAgreement, listSupplierAgreements, getAgreementById, updateAgreementStatus, checkExpiringAgreements, recordModelModification, listModelModifications, getModificationById, getSubstantialModifications, } from '../../services/ai/risk/ai-supply-chain.service';
+import { emitAiGovernanceEvent } from '../../services/ai/operations/ai-governance-event.service';
+import { validate, asyncHandler, auditMiddleware, setAuditData, automationMiddleware, moduleStack } from '../../ports/middleware.port';
+import { provenanceBody, lineageBody, providerBody, agreementBody, agreementStatusBody, modificationBody, updateComplianceBody } from "../../schemas/ai-governance.schemas";
 import { z } from "zod";
 const router = Router();
 router.use(moduleStack('ai-governance'));

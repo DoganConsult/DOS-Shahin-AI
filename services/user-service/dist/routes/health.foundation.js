@@ -6,7 +6,7 @@
 // no detail leaked over HTTP. 1.5s overall timeout. No auth required.
 // 5-second in-process cache so the probe is cheap when called frequently.
 //
-// Spec: see /root/.claude/plans/you-are-taking-over-joyful-wave.md Step 2.
+// Spec: see docs/plans/you-are-taking-over-joyful-wave.md Step 2.
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.healthFoundationRouter = void 0;
 const express_1 = require("express");

@@ -10,7 +10,7 @@
 // Activation: set LANGSMITH_TRACING=true and LANGSMITH_API_KEY. When
 // either is missing this module is a no-op.
 import { randomUUID } from 'node:crypto';
-import { logger } from '../ports/logger.port.js';
+import { logger } from '../ports/logger.port';
 // LangSmith expects dotted_order = "<UTC YYYYMMDDTHHMMSSffffffZ><uuid>"
 // for root runs. Microseconds are zero-padded; the suffix is the run id.
 function dottedOrderFor(startedAt, runId) {

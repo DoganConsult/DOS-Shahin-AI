@@ -1,13 +1,13 @@
-import { logger } from '../../ports/logger.port.js';
+import { logger } from '../../ports/logger.port';
 // ============================================
 // AGRC-OS — Cross-Agent Correlation
 // Discovers patterns across agent findings by
 // matching shared entities and severity cascades.
 // ============================================
-import { safeQuery, tenantSchema } from '../../ports/database.port.js';
+import { safeQuery, tenantSchema } from '../../ports/database.port';
 import { toErrorMessage } from '@dos/module-sdk';
-import { detectPatterns } from '../../ports/platform.port.js';
-import { activeCycleContexts } from './cycle-context.js';
+import { detectPatterns } from '../../ports/platform.port';
+import { activeCycleContexts } from './cycle-context';
 // ── Severity Helper ──────────────────────────────────────────────────────────
 export function _maxSeverity(severities) {
     const rank = { critical: 4, high: 3, medium: 2, low: 1 };

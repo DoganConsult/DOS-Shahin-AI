@@ -1,13 +1,13 @@
-import { logger } from '../../../ports/logger.port.js';
+import { logger } from '../../../ports/logger.port';
 // ============================================================
 // Agent Health Visualization Service
 // Provides comprehensive health metrics and visualizations for all agents
 // ============================================================
-import { safeQuery, tenantSchema } from '../../../ports/database.port.js';
+import { safeQuery, tenantSchema } from '../../../ports/database.port';
 import { toErrorMessage } from '@dos/module-sdk';
-import { getAgentTaskMetrics } from '../../activity/agent-task-tracker.service.js';
-import { getAllAgentLearningCurves, getAgentLearningProfile } from './agent-learning-curve.service.js';
-import { getAgentLessons } from './agent-lessons-learned.service.js';
+import { getAgentTaskMetrics } from '../../activity/agent-task-tracker.service';
+import { getAllAgentLearningCurves, getAgentLearningProfile } from './agent-learning-curve.service';
+import { getAgentLessons } from './agent-lessons-learned.service';
 /**
  * Get comprehensive health status for a single agent
  */

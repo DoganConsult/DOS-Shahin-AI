@@ -1,4 +1,4 @@
-import { safeQuery, tenantSchema } from '../../ports/database.port.js';
+import { safeQuery, tenantSchema } from '../../ports/database.port';
 import { getFirstRow } from '@dos/db';
 function buildSharedNamespace(tenantId, scope) {
     return `mem:tenant:${tenantId}:shared:${scope}`;

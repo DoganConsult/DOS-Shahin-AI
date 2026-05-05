@@ -21,5 +21,5 @@ aiImportRowSchema, aiImportBatchSchema, aiExportRequestSchema,
 // Admin schemas
 aiAdminConfigSchema, 
 // Bulk operation schemas
-aiBulkUpdateSchema, aiBulkStatusChangeSchema, } from '../../schemas/ai.schemas.js';
+aiBulkUpdateSchema, aiBulkStatusChangeSchema, } from '../../schemas/ai.schemas';
 //# sourceMappingURL=ai.schemas.js.map

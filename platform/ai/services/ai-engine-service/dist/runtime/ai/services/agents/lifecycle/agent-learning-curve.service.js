@@ -1,11 +1,11 @@
-import { logger } from '../../../ports/logger.port.js';
+import { logger } from '../../../ports/logger.port';
 // ============================================================
 // Agent Learning Curve Tracker
 // Tracks agent performance improvements over time, learning patterns, and skill development
 // ============================================================
-import { safeQuery, tenantSchema } from '../../../ports/database.port.js';
+import { safeQuery, tenantSchema } from '../../../ports/database.port';
 import { toErrorMessage } from '@dos/module-sdk';
-import { getAgentTaskMetrics } from '../../activity/agent-task-tracker.service.js';
+import { getAgentTaskMetrics } from '../../activity/agent-task-tracker.service';
 /**
  * Record a learning event (successful pattern, failed pattern, or skill improvement)
  */

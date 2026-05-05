@@ -9,16 +9,16 @@
  *   - OpenAPI JSDoc annotations
  */
 import { Router } from 'express';
-import { auditMiddleware, moduleStack } from '../../ports/middleware.port.js';
-import decisionsRoutes from './decisions.routes.js';
-import policyRoutes from './policy.routes.js';
-import agentsRoutes from './agents.routes.js';
-import signalsRoutes from './signals.routes.js';
-import operationsRoutes from './operations.routes.js';
-import introspectionRoutes from './introspection.routes.js';
-import kernelRoutes from './kernel.routes.js';
-import codeSearchRoutes from './code-search.routes.js';
-import { authenticate } from '../../ports/auth.port.js';
+import { auditMiddleware, moduleStack } from '../../ports/middleware.port';
+import decisionsRoutes from './decisions.routes';
+import policyRoutes from './policy.routes';
+import agentsRoutes from './agents.routes';
+import signalsRoutes from './signals.routes';
+import operationsRoutes from './operations.routes';
+import introspectionRoutes from './introspection.routes';
+import kernelRoutes from './kernel.routes';
+import codeSearchRoutes from './code-search.routes';
+import { authenticate } from '../../ports/auth.port';
 const router = Router();
 router.use(authenticate);
 // Cross-cutting middleware applied to all AI OS routes

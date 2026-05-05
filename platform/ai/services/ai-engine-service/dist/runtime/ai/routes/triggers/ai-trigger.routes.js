@@ -1,17 +1,17 @@
 import { z as _z } from 'zod';
 import { Router } from "express";
-import { authenticate, requirePermission } from '../../ports/auth.port.js';
-import * as triggerService from '../../services/workflow/ai-workflow-trigger.service.js';
-import { emitModuleEvent } from '../../services/emit-event.js';
+import { authenticate, requirePermission } from '../../ports/auth.port';
+import * as triggerService from '../../services/workflow/ai-workflow-trigger.service';
+import { emitModuleEvent } from '../../services/emit-event';
 import { toErrorMessage } from '@dos/module-sdk';
 import { getFirstRow } from '@dos/db';
-import { emptyResult } from '../../ports/database.port.js';
+import { emptyResult } from '../../ports/database.port';
 // ── Zod Schemas ──────────────────────────────────────────────────────────
-import { validate, auditMiddleware, setAuditData, automationMiddleware, moduleStack } from '../../ports/middleware.port.js';
+import { validate, auditMiddleware, setAuditData, automationMiddleware, moduleStack } from '../../ports/middleware.port';
 import { swallow, swallowDefault, EC } from '@dos/platform-core/resilience/resilient-catch';
 const z = _z;
 const genericPayloadSchema = z.record(z.unknown());
-import { configPutBody, evaluatePostBody, rootPostBody, idPutBody, idTestPostBody, testAllPostBody } from "../../schemas/ai.schemas.js";
+import { configPutBody, evaluatePostBody, rootPostBody, idPutBody, idTestPostBody, testAllPostBody } from "../../schemas/ai.schemas";
 const router = Router();
 router.use(moduleStack('ai'));
 router.use(auditMiddleware("workflows"));

@@ -7,7 +7,7 @@
 // forever — at audit there was 1 such row.
 //
 // Disabled via AI_HITL_EXPIRY_CRON_DISABLED=1.
-import { logger } from '../ports/logger.port.js';
+import { logger } from '../ports/logger.port';
 let _timer = null;
 let _running = false;
 async function listTenantUuids(getPool) {

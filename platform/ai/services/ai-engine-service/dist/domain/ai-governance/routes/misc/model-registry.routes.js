@@ -1,12 +1,12 @@
 // @ts-nocheck
 import { Router } from 'express';
-import { authenticate, requirePermission, requireAnyPermission } from '../../ports/auth.port.js';
-import { listAssets, } from '../../services/ai/registry/ai-asset-inventory.service.js';
-import { createDraftModelVersion, updateDraftModelVersion, submitModelVersionForApproval, approveModelVersion, rejectModelVersion, activateModelVersion, suspendModelVersion, retireModelVersion, rollbackModelVersion, listModelVersions, getModelVersionById, getActiveModelVersionForAsset, deleteModelVersion, } from '../../services/misc/model-registry.service.js';
+import { authenticate, requirePermission, requireAnyPermission } from '../../ports/auth.port';
+import { listAssets, } from '../../services/ai/registry/ai-asset-inventory.service';
+import { createDraftModelVersion, updateDraftModelVersion, submitModelVersionForApproval, approveModelVersion, rejectModelVersion, activateModelVersion, suspendModelVersion, retireModelVersion, rollbackModelVersion, listModelVersions, getModelVersionById, getActiveModelVersionForAsset, deleteModelVersion, } from '../../services/misc/model-registry.service';
 import { toErrorMessage } from '@dos/module-sdk';
-import { validate, asyncHandler, auditMiddleware, setAuditData, automationMiddleware, moduleStack, mutationEventHook } from '../../ports/middleware.port.js';
-import { resolveGovernedModel, detectAllMismatches, getEnforcementMode, } from "../../services/misc/model-governance-bridge.service.js";
-import { createVersionsBody, updateVersionsBody, createSubmitBody, createApproveBody, createRejectBody, createActivateBody, createSuspendBody, createRetireBody, createRollbackBody } from '../../schemas/ai-governance.schemas.js';
+import { validate, asyncHandler, auditMiddleware, setAuditData, automationMiddleware, moduleStack, mutationEventHook } from '../../ports/middleware.port';
+import { resolveGovernedModel, detectAllMismatches, getEnforcementMode, } from "../../services/misc/model-governance-bridge.service";
+import { createVersionsBody, updateVersionsBody, createSubmitBody, createApproveBody, createRejectBody, createActivateBody, createSuspendBody, createRetireBody, createRollbackBody } from '../../schemas/ai-governance.schemas';
 import { z } from "zod";
 const router = Router();
 router.use(moduleStack('ai-governance'));

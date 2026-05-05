@@ -18,8 +18,8 @@
 // expose this endpoint as authenticate-optional and require a tenantId
 // query param for unauthenticated callers.
 import { Router } from 'express';
-import { eventBus } from '../../ports/events.port.js';
-import { logger } from '../../ports/logger.port.js';
+import { eventBus } from '../../ports/events.port';
+import { logger } from '../../ports/logger.port';
 const router = Router();
 const SUPPORTED_STREAMS = ['ai.agent', 'ai.gov', 'ai.cost', 'all'];
 router.get('/events', (req, res) => {

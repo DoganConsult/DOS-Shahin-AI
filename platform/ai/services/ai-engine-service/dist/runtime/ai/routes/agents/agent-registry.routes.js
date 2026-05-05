@@ -1,10 +1,10 @@
 // @ts-nocheck
 import { Router } from 'express';
-import { authenticate, requirePermission, requireAnyPermission } from '../../ports/auth.port.js';
-import { listAssets, } from '../../../ai-governance/services/ai/registry/ai-asset-inventory.service.js';
+import { authenticate, requirePermission, requireAnyPermission } from '../../ports/auth.port';
+import { listAssets, } from '../../../ai-governance/services/ai/registry/ai-asset-inventory.service';
 import { toErrorMessage } from '@dos/module-sdk';
-import { validate, asyncHandler, auditMiddleware, setAuditData, moduleStack, mutationEventHook } from '../../ports/middleware.port.js';
-import { createDraftAgentVersion, updateDraftAgentVersion, submitAgentVersionForApproval, approveAgentVersion, rejectAgentVersion, activateAgentVersion, suspendAgentVersion, retireAgentVersion, rollbackAgentVersion, listAgentVersions, getAgentVersionById, getActiveAgentVersionForAsset, deleteAgentVersion, } from '../../services/agents/core/agent-registry.service.js';
+import { validate, asyncHandler, auditMiddleware, setAuditData, moduleStack, mutationEventHook } from '../../ports/middleware.port';
+import { createDraftAgentVersion, updateDraftAgentVersion, submitAgentVersionForApproval, approveAgentVersion, rejectAgentVersion, activateAgentVersion, suspendAgentVersion, retireAgentVersion, rollbackAgentVersion, listAgentVersions, getAgentVersionById, getActiveAgentVersionForAsset, deleteAgentVersion, } from '../../services/agents/core/agent-registry.service';
 import { z } from "zod";
 // ── Zod Schemas ──────────────────────────────────────────────────────────
 const genericPayloadSchema = z.record(z.unknown());
@@ -381,13 +381,13 @@ router.delete("/versions/:versionId", authenticate, requirePermission("ai.agent.
 }));
 router.get("/governance/resolve/:agentId", authenticate, requirePermission("ai.agent.read"), validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
     const tenantId = req.tenantId;
-    const { resolveGovernedAgent } = await import('../../services/governance/agent-governance-bridge.service.js');
+    const { resolveGovernedAgent } = await import('../../services/governance/agent-governance-bridge.service');
     const resolution = await resolveGovernedAgent(tenantId, req.params.agentId);
     res.json(resolution);
 }));
 router.get("/governance/mismatches", authenticate, requirePermission("ai.agent.read"), validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
     const tenantId = req.tenantId;
-    const { detectAllAgentMismatches, getEnforcementMode } = await import('../../services/governance/agent-governance-bridge.service.js');
+    const { detectAllAgentMismatches, getEnforcementMode } = await import('../../services/governance/agent-governance-bridge.service');
     const mismatches = await detectAllAgentMismatches(tenantId);
     res.json({
         enforcement_mode: getEnforcementMode(),

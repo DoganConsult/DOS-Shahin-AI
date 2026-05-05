@@ -1,13 +1,13 @@
 // @ts-nocheck
-import { getAssetByKey, getAssetById } from '../../../ai-governance/services/ai/registry/ai-asset-inventory.service.js';
-import { getActiveAgentVersionForAsset, } from '../agents/core/agent-registry.service.js';
-import { getActivePromptVersionForAsset, } from '../../../ai-governance/services/misc/prompt-registry.service.js';
-import { getActiveModelVersionForAsset, } from '../../../ai-governance/services/misc/model-registry.service.js';
-import { AGENT_PROFILES } from '../gateway/llm.service.js';
-import { recordAudit } from '../../../audit/services/audit/core/audit-trail.service.js';
-import { getEnabledToolAssetIdsForAgent } from '../../../ai-governance/services/ai/compliance/ai-binding-governance.service.js';
-import { SYSTEM_JOB_ACTOR } from '../../ports/platform.port.js';
-import { getTenantEnforcementMode, setTenantEnforcementMode, getGlobalFallbackMode, setGlobalFallbackMode, } from '../../../ai-governance/services/ai/operations/ai-governance-config.service.js';
+import { getAssetByKey, getAssetById } from '../../../ai-governance/services/ai/registry/ai-asset-inventory.service';
+import { getActiveAgentVersionForAsset, } from '../agents/core/agent-registry.service';
+import { getActivePromptVersionForAsset, } from '../../../ai-governance/services/misc/prompt-registry.service';
+import { getActiveModelVersionForAsset, } from '../../../ai-governance/services/misc/model-registry.service';
+import { AGENT_PROFILES } from '../gateway/llm.service';
+import { recordAudit } from '../../../audit/services/audit/core/audit-trail.service';
+import { getEnabledToolAssetIdsForAgent } from '../../../ai-governance/services/ai/compliance/ai-binding-governance.service';
+import { SYSTEM_JOB_ACTOR } from '../../ports/platform.port';
+import { getTenantEnforcementMode, setTenantEnforcementMode, getGlobalFallbackMode, setGlobalFallbackMode, } from '../../../ai-governance/services/ai/operations/ai-governance-config.service';
 const AUDIT_MODULE = 'agent-governance-bridge';
 export function getEnforcementMode() {
     return getGlobalFallbackMode();

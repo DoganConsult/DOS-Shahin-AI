@@ -41,15 +41,27 @@ export interface TemplateBinding {
   permission_key?: string | null;
   props: TemplateBindingProps;
   version: number;
+  /**
+   * True when the resolver could not reach the BE (HTTP error or empty
+   * route). Distinguishes "BE definitively returned no binding" (false /
+   * undefined) from "we never got a definitive answer". Callers MUST NOT
+   * treat error-NULL bindings as proof that a route is unbound — e.g.
+   * unauthenticated visitors clicking a marketing CTA at /login receive
+   * a 401 NO_CALLER from the gateway-origin middleware, and would
+   * otherwise be bounced back to / before the SPA can render the public
+   * auth page.
+   */
+  error?: boolean;
 }
 
-const NULL_BINDING = (route: string): TemplateBinding => ({
+const NULL_BINDING = (route: string, error = false): TemplateBinding => ({
   route,
   archetype: null,
   template_export: null,
   permission_key: null,
   props: {},
   version: 0,
+  error,
 });
 
 @Injectable({ providedIn: 'root' })
@@ -60,7 +72,7 @@ export class TemplateBindingService {
 
   /** Resolve the binding for a single route. Cached for the page lifetime. */
   resolve(route: string): Observable<TemplateBinding> {
-    if (!route) return of(NULL_BINDING(route));
+    if (!route) return of(NULL_BINDING(route, true));
     const cached = this.cache.get(route);
     if (cached) return cached;
 
@@ -74,7 +86,7 @@ export class TemplateBindingService {
             // eslint-disable-next-line no-console
             console.warn('[template-binding] resolve failed', route, err.status);
           }
-          return of(NULL_BINDING(route));
+          return of(NULL_BINDING(route, true));
         }),
         shareReplay({ bufferSize: 1, refCount: false }),
       );

@@ -4,5 +4,5 @@
  * Re-export barrel — canonical agent-governance-bridge lives in the governance/ directory.
  * This gateway/ path exists for backward compatibility.
  */
-export * from '../governance/agent-governance-bridge.service.js';
+export * from '../governance/agent-governance-bridge.service';
 //# sourceMappingURL=agent-governance-bridge.service.js.map

@@ -3,8 +3,8 @@
 // AI Vendor Risk Assessment Service (SAMA CSF 3.3)
 // Assesses third-party AI providers for regulatory compliance
 // ============================================
-import { emptyResult, safeQuery, tenantSchema } from '../../../ports/database.port.js';
-import { claudeJSON } from '../../../ports/ai.port.js';
+import { emptyResult, safeQuery, tenantSchema } from '../../../ports/database.port';
+import { claudeJSON } from '../../../ports/ai.port';
 import { swallowDefault, EC, catchHandler } from '@dos/platform-core/resilience/resilient-catch';
 /**
  * Perform a comprehensive AI vendor risk assessment against SAMA CSF 3.3

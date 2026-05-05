@@ -1,7 +1,7 @@
-import { safeQuery, tenantSchema } from '../../../ports/database.port.js';
-import { runAgentWithTools } from '../../../ports/agent-executor.port.js';
+import { safeQuery, tenantSchema } from '../../../ports/database.port';
+import { runAgentWithTools } from '../../../ports/agent-executor.port';
 import crypto from 'crypto';
-import { logger } from '../../../ports/logger.port.js';
+import { logger } from '../../../ports/logger.port';
 // ── Table setup (memoized) ────────────────────────────────────────
 const _ensuredSchemas = new Set();
 async function ensureCopilotTables(schema) {
@@ -512,7 +512,7 @@ Rules:
 - After tools return, synthesize a concise answer for the user (markdown ok).
 - If a tool errors, explain briefly and continue with safe guidance.`;
     try {
-        const { callClaude } = await import('../../../config/claude-client.js');
+        const { callClaude } = await import('../../../config/claude-client');
         const messages = [{ role: 'user', content: query.slice(0, 8000) }];
         let totalIn = 0;
         let totalOut = 0;

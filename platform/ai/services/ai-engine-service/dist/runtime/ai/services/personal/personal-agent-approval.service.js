@@ -4,9 +4,9 @@
 //
 // Approve, reject, confirm agent activities, plus activity query helpers.
 // ============================================================================
-import { safeQuery, tenantSchema } from '../../ports/database.port.js';
-import { recordAudit } from '../../../audit/services/audit/core/audit-trail.service.js';
-import { invalidateAllCaches, } from './personal-agent-cache.service.js';
+import { safeQuery, tenantSchema } from '../../ports/database.port';
+import { recordAudit } from '../../../audit/services/audit/core/audit-trail.service';
+import { invalidateAllCaches, } from './personal-agent-cache.service';
 // ============================================================================
 // Activity Query
 // ============================================================================

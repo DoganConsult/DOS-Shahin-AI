@@ -4,5 +4,5 @@
  * Re-export barrel — canonical llm-trace lives in the llm/ directory.
  * This gateway/ path exists for backward compatibility.
  */
-export * from '../llm/llm-trace.service.js';
+export * from '../llm/llm-trace.service';
 //# sourceMappingURL=llm-trace.service.js.map

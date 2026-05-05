@@ -7,7 +7,7 @@
  * 3. Compliance timeline projection — Monte Carlo simulation
  * 4. Resource impact analysis — headcount/budget projections
  */
-import { emptyResult, safeQuery, tenantSchema } from '../../ports/database.port.js';
+import { emptyResult, safeQuery, tenantSchema } from '../../ports/database.port';
 import { swallowDefault, EC } from '@dos/platform-core/resilience/resilient-catch';
 // ── Constants ───────────────────────────────────────────────────────────
 /** Average evidence items generated per control */

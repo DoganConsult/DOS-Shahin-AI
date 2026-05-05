@@ -16,7 +16,7 @@
  *   AI_PER_TOOL_AUDIT              = true | false (default: true)
  *   AI_PERMISSION_DEFAULT_ALLOW    = true | false (default: true — backwards-compat for un-seeded tenants)
  */
-import { checkToolPermission } from './agent-governance.service.js';
+import { checkToolPermission } from './agent-governance.service';
 const RISK_RANK = { low: 1, medium: 2, high: 3 };
 function getMode() {
     const raw = (process.env.AI_GOVERNANCE_ENFORCEMENT_MODE || 'warn').toLowerCase();
@@ -34,7 +34,7 @@ async function recordToolAudit(tenantId, agentId, toolName, decision, toolInput)
     if (!flag('AI_PER_TOOL_AUDIT', true))
         return;
     try {
-        const m = await import('../../../audit/services/audit/core/audit-trail.service.js');
+        const m = await import('../../../audit/services/audit/core/audit-trail.service');
         await m.recordAudit(tenantId, `agent-${agentId}`, `agent.tool.${decision.allow ? 'allowed' : 'denied'}`, 'agent_tool', `${agentId}:${toolName}`, {
             toolName,
             decision: decision.allow ? 'allow' : 'deny',

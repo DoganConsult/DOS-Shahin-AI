@@ -1,6 +1,6 @@
-import { safeQuery, tenantSchema } from '../../../ports/database.port.js';
-import { logger } from '../../../ports/logger.port.js';
-import { CANONICAL_AGRC_MODULE_CODES } from '../../../ports/config.port.js';
+import { safeQuery, tenantSchema } from '../../../ports/database.port';
+import { logger } from '../../../ports/logger.port';
+import { CANONICAL_AGRC_MODULE_CODES } from '../../../ports/config.port';
 // Permission format validation: module.resource.action
 function isCanonicalFormat(code) { return /^[a-z][a-z0-9_-]*\.[a-z][a-z0-9_]*\.[a-z][a-z0-9_]*$/.test(code); }
 const LOG_TAG = '[AI-DriftDetector]';

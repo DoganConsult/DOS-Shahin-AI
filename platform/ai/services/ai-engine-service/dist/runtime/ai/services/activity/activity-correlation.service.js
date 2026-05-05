@@ -1,5 +1,5 @@
-import { safeQuery, tenantSchema } from '../../ports/database.port.js';
-import { logger } from '../../ports/logger.port.js';
+import { safeQuery, tenantSchema } from '../../ports/database.port';
+import { logger } from '../../ports/logger.port';
 export async function getActivityTimeline(tenantId, entityType, entityId, daysBack = 7) {
     const schema = tenantSchema(tenantId);
     const safeDays = Math.max(1, Math.min(daysBack, 365));

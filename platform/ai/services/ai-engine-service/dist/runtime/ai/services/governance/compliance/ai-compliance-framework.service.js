@@ -1,4 +1,4 @@
-import { safeQuery, tenantSchema } from '../../../ports/database.port.js';
+import { safeQuery, tenantSchema } from '../../../ports/database.port';
 /**
  * Map AI system to compliance framework control
  */

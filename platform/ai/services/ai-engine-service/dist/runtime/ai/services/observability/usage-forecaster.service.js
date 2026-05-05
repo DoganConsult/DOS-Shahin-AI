@@ -10,9 +10,9 @@
  * Uses linear regression on historical llm_usage_log data.
  */
 // Re-export base analytics forecaster
-export * from '../../../analytics/services/misc/usage-forecaster.service.js';
-import { safeQuery, tenantSchema } from '../../ports/database.port.js';
-import { logger } from '../../ports/logger.port.js';
+export * from '../../../analytics/services/misc/usage-forecaster.service';
+import { safeQuery, tenantSchema } from '../../ports/database.port';
+import { logger } from '../../ports/logger.port';
 import { getFirstRow } from '@dos/db';
 // ---------------------------------------------------------------------------
 // Linear regression helper

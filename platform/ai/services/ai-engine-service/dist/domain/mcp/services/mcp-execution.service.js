@@ -1,9 +1,9 @@
 // @ts-nocheck
-import { logger } from '../ports/logger.port.js';
-import * as executionRepo from '../repositories/mcp-execution.repo.js';
-import { MCP_BUSINESS_THRESHOLDS } from '../data/mcp-constants.js';
-import * as toolRepo from '../repositories/mcp-tool.repo.js';
-import * as agentRepo from '../repositories/mcp-agent.repo.js';
+import { logger } from '../ports/logger.port';
+import * as executionRepo from '../repositories/mcp-execution.repo';
+import { MCP_BUSINESS_THRESHOLDS } from '../data/mcp-constants';
+import * as toolRepo from '../repositories/mcp-tool.repo';
+import * as agentRepo from '../repositories/mcp-agent.repo';
 export async function getExecutionStats(tenantId, toolName) {
     const rows = await executionRepo.getExecutionStats(tenantId, toolName);
     return rows.map(r => ({

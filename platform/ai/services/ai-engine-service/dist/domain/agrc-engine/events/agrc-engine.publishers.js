@@ -1,5 +1,5 @@
-import { logger } from '../ports/logger.port.js';
-import { AGRC_ENGINE_EVENT_CONTRACT } from './agrc-engine.events.js';
+import { logger } from '../ports/logger.port';
+import { AGRC_ENGINE_EVENT_CONTRACT } from './agrc-engine.events';
 let _publisher = null;
 export function setPublisher(fn) {
     _publisher = fn;

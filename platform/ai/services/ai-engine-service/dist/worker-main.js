@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { bootstrapService } from '@dos/service-bootstrap';
 import { logger } from '@dos/platform-core/observability';
-import { agrcWorkerPool } from './domain/agrc-engine/workers.js';
+import { agrcWorkerPool } from './domain/agrc-engine/workers';
 async function bootstrapWorker() {
     try {
         const app = await bootstrapService('ai-engine-worker-service', {

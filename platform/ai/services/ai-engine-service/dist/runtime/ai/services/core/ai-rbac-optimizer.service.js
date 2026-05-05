@@ -1,4 +1,4 @@
-import { safeQuery, tenantSchema } from '../../ports/database.port.js';
+import { safeQuery, tenantSchema } from '../../ports/database.port';
 export async function analyzeRbacUsage(tenantId) {
     const schema = tenantSchema(tenantId);
     const rolesResult = await safeQuery(`SELECT fr.code, fr.is_active, COUNT(DISTINCT ura.user_id) AS user_count

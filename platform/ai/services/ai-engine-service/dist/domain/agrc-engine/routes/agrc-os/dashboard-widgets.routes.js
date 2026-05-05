@@ -1,81 +1,81 @@
 // AGRC-OS — Dashboard Widget Data APIs (30+ endpoints)
 import { Router } from 'express';
-import { asyncHandler } from '../../ports/middleware.port.js';
-import { authenticate, requirePermission } from '../../ports/auth.port.js';
+import { asyncHandler } from '../../ports/middleware.port';
+import { authenticate, requirePermission } from '../../ports/auth.port';
 import { getFirstRow } from '@dos/db';
-import { validate } from "../ports/middleware.port.js";
+import { validate } from "../ports/middleware.port";
 import { z } from "zod";
 const router = Router();
 // Risk Heatmap Widget
 router.get('/dashboard/risk-heatmap', authenticate, requirePermission('risk.record.read'), validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
-    const { getRiskHeatmapData } = await import('../../services/agrc-os-dashboard.service.js');
+    const { getRiskHeatmapData } = await import('../../services/agrc-os-dashboard.service');
     const result = await getRiskHeatmapData(req.tenantId);
     res.json(result);
 }));
 // Compliance Gauge Widget
 router.get('/dashboard/compliance-score', authenticate, requirePermission('compliance.program.read'), validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
-    const { getComplianceScoreData } = await import('../../services/agrc-os-dashboard.service.js');
+    const { getComplianceScoreData } = await import('../../services/agrc-os-dashboard.service');
     const result = await getComplianceScoreData(req.tenantId);
     res.json(result);
 }));
 // Maturity Radar Widget
 router.get('/dashboard/maturity-radar', authenticate, requirePermission('maturity.assessment.read'), validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
-    const { getMaturityRadarData } = await import('../../services/agrc-os-dashboard.service.js');
+    const { getMaturityRadarData } = await import('../../services/agrc-os-dashboard.service');
     const result = await getMaturityRadarData(req.tenantId);
     res.json(result);
 }));
 // Findings Bar Widget
 router.get('/dashboard/findings-bar', authenticate, requirePermission('audit.record.read'), validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
-    const { getFindingsBarData } = await import('../../services/agrc-os-dashboard.service.js');
+    const { getFindingsBarData } = await import('../../services/agrc-os-dashboard.service');
     const result = await getFindingsBarData(req.tenantId);
     res.json(result);
 }));
 // Evidence Donut Widget
 router.get('/dashboard/evidence-donut', authenticate, requirePermission('evidence.item.read'), validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
-    const { getEvidenceDonutData } = await import('../../services/agrc-os-dashboard.service.js');
+    const { getEvidenceDonutData } = await import('../../services/agrc-os-dashboard.service');
     const result = await getEvidenceDonutData(req.tenantId);
     res.json(result);
 }));
 // Vendor Bubble Widget
 router.get('/dashboard/vendor-bubble', authenticate, requirePermission('vendor.record.read'), validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
-    const { getVendorBubbleData } = await import('../../services/agrc-os-dashboard.service.js');
+    const { getVendorBubbleData } = await import('../../services/agrc-os-dashboard.service');
     const result = await getVendorBubbleData(req.tenantId);
     res.json(result);
 }));
 // Top Risks Widget
 router.get('/dashboard/top-risks', authenticate, requirePermission('risk.record.read'), validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
-    const { getTopRisksData } = await import('../../services/agrc-os-dashboard.service.js');
+    const { getTopRisksData } = await import('../../services/agrc-os-dashboard.service');
     const result = await getTopRisksData(req.tenantId);
     res.json(result);
 }));
 // Trend Line Widget
 router.get('/dashboard/trend-line', authenticate, requirePermission('platform.agent.read'), validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
-    const { getTrendLineData } = await import('../../services/agrc-os-dashboard.service.js');
+    const { getTrendLineData } = await import('../../services/agrc-os-dashboard.service');
     const days = parseInt(req.query.days) || 30;
     const result = await getTrendLineData(req.tenantId, days);
     res.json(result);
 }));
 // Control Health Widget
 router.get('/dashboard/control-health', authenticate, requirePermission('control.record.read'), validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
-    const { getControlHealthData } = await import('../../services/agrc-os-dashboard.service.js');
+    const { getControlHealthData } = await import('../../services/agrc-os-dashboard.service');
     const result = await getControlHealthData(req.tenantId);
     res.json(result);
 }));
 // Incident Stats Widget
 router.get('/dashboard/incident-stats', authenticate, requirePermission('incident.record.read'), validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
-    const { getIncidentStatsData } = await import('../../services/agrc-os-dashboard.service.js');
+    const { getIncidentStatsData } = await import('../../services/agrc-os-dashboard.service');
     const result = await getIncidentStatsData(req.tenantId);
     res.json(result);
 }));
 // Policy Compliance Widget
 router.get('/dashboard/policy-compliance', authenticate, requirePermission('policy.document.read'), validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
-    const { getPolicyComplianceData } = await import('../../services/agrc-os-dashboard.service.js');
+    const { getPolicyComplianceData } = await import('../../services/agrc-os-dashboard.service');
     const result = await getPolicyComplianceData(req.tenantId);
     res.json(result);
 }));
 // System Overview Stats
 router.get('/dashboard/system-overview', authenticate, requirePermission('platform.agent.read'), validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
-    const { getSystemOverviewStats } = await import('../../services/agrc-os-dashboard.service.js');
+    const { getSystemOverviewStats } = await import('../../services/agrc-os-dashboard.service');
     const result = await getSystemOverviewStats(req.tenantId);
     res.json(result);
 }));

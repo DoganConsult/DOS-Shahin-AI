@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import { safeQuery, tenantSchema } from '../ports/database.port.js';
+import { safeQuery, tenantSchema } from '../ports/database.port';
 import { getFirstRow } from '@dos/db';
 export class AgrcEngineRepository {
     schema;

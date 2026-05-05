@@ -191,6 +191,10 @@ const PUBLIC_AUTH_PATHS = new Set([
     '/api/auth/oidc/logout',
     '/api/auth/logout',
     '/api/auth/health',
+    // Direct-grant password flow — Carbon Auth Pages collect creds and POST
+    // here BEFORE any session cookie exists, so the gate must be open.
+    '/api/auth/password/login',
+    '/api/auth/password/register',
 ]);
 async function verifyToken(token) {
     const { payload } = await (0, jose_1.jwtVerify)(token, jwks, {

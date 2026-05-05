@@ -1,7 +1,7 @@
 import { ok, action } from '@dos/module-sdk';
-import { setAuditData } from '../ports/middleware.port.js';
-import { getAiSeedData, seedAiModule } from '../data/ai-seed.js';
-import { safeQuery, tenantSchema } from '../ports/database.port.js';
+import { setAuditData } from '../ports/middleware.port';
+import { getAiSeedData, seedAiModule } from '../data/ai-seed';
+import { safeQuery, tenantSchema } from '../ports/database.port';
 export async function getModuleConfig(req, res) {
     const seedData = getAiSeedData();
     res.json(ok({ moduleCode: 'ai', config: seedData.defaultConfigs }, req));

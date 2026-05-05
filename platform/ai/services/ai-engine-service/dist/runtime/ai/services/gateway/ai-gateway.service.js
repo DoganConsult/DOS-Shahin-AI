@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { logger } from '../../ports/logger.port.js';
+import { logger } from '../../ports/logger.port';
 // ============================================
 // AI Gateway Service — Centralized LLM Access
 // All modules MUST use this service instead of
@@ -161,7 +161,7 @@ async function withRetry(fn, provider) {
 }
 // ── Multi-provider completion via llm.service ──────────────────
 async function multiProviderComplete(systemPrompt, userMessage, _maxTokens, _temperature) {
-    const { chatCompletion } = await import('./llm.service.js');
+    const { chatCompletion } = await import('./llm.service');
     const messages = [];
     if (systemPrompt)
         messages.push({ role: 'system', content: systemPrompt });
@@ -173,7 +173,7 @@ async function multiProviderComplete(systemPrompt, userMessage, _maxTokens, _tem
     return result.content;
 }
 async function multiProviderChat(systemPrompt, messages, _opts) {
-    const { chatCompletion } = await import('./llm.service.js');
+    const { chatCompletion } = await import('./llm.service');
     const llmMessages = [];
     if (systemPrompt)
         llmMessages.push({ role: 'system', content: systemPrompt });
@@ -226,7 +226,7 @@ export async function gatewayWithTools(tenantId, opts) {
     try {
         return await withRetry(async () => {
             try {
-                const { claudeWithTools } = await import('../../../../config/claude-client.js');
+                const { claudeWithTools } = await import('../../../../config/claude-client');
                 return await claudeWithTools(opts);
             }
             catch (claudeErr) {

@@ -1,10 +1,10 @@
 // @ts-nocheck
 import { Router } from 'express';
-import { authenticate, requirePermission } from '../ports/auth.port.js';
-import { auditMiddleware, asyncHandler, moduleStack, validate, setAuditData } from '../ports/middleware.port.js';
-import * as registryService from '../services/mcp-registry.service.js';
-import * as executionService from '../services/mcp-execution.service.js';
-import { listToolsQuery, executeToolBody, toolOverrideBody, toolStatusBody, toolEnableBody, executionStatsQuery, purgeLogsBody } from '../schemas/mcp.schemas.js';
+import { authenticate, requirePermission } from '../ports/auth.port';
+import { auditMiddleware, asyncHandler, moduleStack, validate, setAuditData } from '../ports/middleware.port';
+import * as registryService from '../services/mcp-registry.service';
+import * as executionService from '../services/mcp-execution.service';
+import { listToolsQuery, executeToolBody, toolOverrideBody, toolStatusBody, toolEnableBody, executionStatsQuery, purgeLogsBody } from '../schemas/mcp.schemas';
 import { z } from "zod";
 const genericRouteSchema = z.any();
 const router = Router();

@@ -1,6 +1,6 @@
-import { emptyResult, safeQuery, tenantSchema } from '../../../ports/database.port.js';
-import { logger } from '../../../ports/logger.port.js';
-import { CANONICAL_AGRC_MODULE_CODES } from '../../../ports/config.port.js';
+import { emptyResult, safeQuery, tenantSchema } from '../../../ports/database.port';
+import { logger } from '../../../ports/logger.port';
+import { CANONICAL_AGRC_MODULE_CODES } from '../../../ports/config.port';
 import { swallowDefault, EC } from '@dos/platform-core/resilience/resilient-catch';
 const LOG_TAG = '[AI-SecurityPosture]';
 const POSTURE_WEIGHTS = {

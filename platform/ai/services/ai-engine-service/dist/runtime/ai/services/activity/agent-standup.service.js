@@ -4,9 +4,9 @@
 // Compiled into a single digest for team leads.
 // Leads reply with priorities, agents adjust next cycle.
 // ============================================================
-import { emptyResult, safeQuery, tenantSchema } from '../../ports/database.port.js';
-import { eventBus } from '../../ports/events.port.js';
-import { createNotification } from '../../../notification/services/notification.service.js';
+import { emptyResult, safeQuery, tenantSchema } from '../../ports/database.port';
+import { eventBus } from '../../ports/events.port';
+import { createNotification } from '../../../notification/services/notification.service';
 import { getFirstRow } from '@dos/db';
 import { swallowDefault, EC, catchHandler } from '@dos/platform-core/resilience/resilient-catch';
 const AGENT_NAMES = {

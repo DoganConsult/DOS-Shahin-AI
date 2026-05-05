@@ -8,9 +8,9 @@
 // asset, training, qiyas, ai-governance,
 // exception, remediation, action, foundation
 // ============================================
-import { tenantSchema } from '../../ports/database.port.js';
-import * as auditTrail from "../../../audit/services/audit/core/audit-trail.service.js";
-import { logger } from '../../ports/logger.port.js';
+import { tenantSchema } from '../../ports/database.port';
+import * as auditTrail from "../../../audit/services/audit/core/audit-trail.service";
+import { logger } from '../../ports/logger.port';
 import { toErrorMessage } from '@dos/module-sdk';
 const SEVERITY_ORDER = { low: 1, medium: 2, high: 3, critical: 4 };
 const TRIGGER_WORKFLOW_MAP = {
@@ -52,7 +52,7 @@ const DEFAULT_MODULE_TRIGGERS = {
 };
 export async function getConfig(tenantId) {
     const { safeQuery } = await import('@dos/db');
-    const { getFirstRow } = await import('../../../../utils/db-utils.js');
+    const { getFirstRow } = await import('../../../../utils/db-utils');
     const schema = tenantSchema(tenantId);
     const result = await safeQuery(`SELECT * FROM "${schema}".ai_trigger_config WHERE tenant_id = $1`, [tenantId]);
     if (!result.rows.length)
@@ -65,7 +65,7 @@ export async function getConfig(tenantId) {
 }
 export async function upsertConfig(tenantId, config) {
     const { safeQuery } = await import('@dos/db');
-    const { getFirstRow } = await import('../../../../utils/db-utils.js');
+    const { getFirstRow } = await import('../../../../utils/db-utils');
     const schema = tenantSchema(tenantId);
     const result = await safeQuery(`INSERT INTO "${schema}".ai_trigger_config (tenant_id, enabled, risk_threshold, compliance_gap_threshold, incident_severity_threshold, module_triggers, updated_at)
      VALUES ($1, $2, $3, $4, $5, $6, NOW())

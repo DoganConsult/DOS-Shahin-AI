@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { safeQuery, tenantSchema } from '../ports/database.port.js';
+import { safeQuery, tenantSchema } from '../ports/database.port';
 import { catchHandler, EC } from '@dos/platform-core/resilience/resilient-catch';
 const ALLOWED_TRANSITIONS = {
     draft: ['in_review'],
@@ -25,7 +25,7 @@ export async function transitionStatus(tenantId, entityId, targetStatus, userId,
         e.statusCode = 400;
         throw e;
     }
-    const { evaluateLifecycleTransition } = await import('../../../ports/auth.port.js').catch(() => ({ evaluateLifecycleTransition: async () => ({ allowed: true }) }));
+    const { evaluateLifecycleTransition } = await import('../../../ports/auth.port').catch(() => ({ evaluateLifecycleTransition: async () => ({ allowed: true }) }));
     if (evaluateLifecycleTransition) {
         const lifecycleResult = await evaluateLifecycleTransition(tenantId, userId, {
             moduleCode: 'agrc-engine', entityType: 'agrc-engine', entityId: entityId,
@@ -40,7 +40,7 @@ export async function transitionStatus(tenantId, entityId, targetStatus, userId,
     await safeQuery(`UPDATE "${schema}"."${table}" SET status = $1, updated_at = NOW() WHERE id = $2`, [targetStatus, entityId]);
     await safeQuery(`INSERT INTO "${schema}".audit_trail (tenant_id, actor_id, module, action, entity_type, entity_id, before_state, after_state) VALUES ($1,$2,'agrc-engine','transition',$3,$4,$5,$6)`, [tenantId, userId, entityType, entityId, JSON.stringify({ status: fromStatus }), JSON.stringify({ status: targetStatus })]).catch(catchHandler(EC.EVENT_BUS));
     try {
-        const { emitEvent } = await import('../../../ports/events.port.js').catch(() => ({ emitEvent: () => { } }));
+        const { emitEvent } = await import('../../../ports/events.port').catch(() => ({ emitEvent: () => { } }));
         if (emitEvent)
             await emitEvent({ tenantId, userId: userId, module: 'agrc-engine', event: 'status_changed', entityType: 'agrc-engine', entityId: entityId, data: { fromStatus, targetStatus } });
     }

@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { logger } from '../../../ports/logger.port.js';
+import { logger } from '../../../ports/logger.port';
 // ================================================================
 // AGRC-OS — Agent Tools Registry
 // Registers real, DB-backed tools for all 12 agents (A01-A12).
@@ -13,8 +13,8 @@ import { logger } from '../../../ports/logger.port.js';
 // ./agent-tools/ for maintainability. This module re-exports
 // them and handles master registration.
 // ================================================================
-import { registerAgentTools, getToolsForAgent as getToolsForAgentSync } from './agent-tool-executor.service.js';
-import { getAgentCatalogIds } from '../../../ports/platform.port.js';
+import { registerAgentTools, getToolsForAgent as getToolsForAgentSync } from './agent-tool-executor.service';
+import { getAgentCatalogIds } from '../../../ports/platform.port';
 import { buildA01Tools } from '@shahin-ai/product/ai/tools/a01-onboarding-tools';
 import { buildA02Tools } from '@shahin-ai/product/ai/tools/a02-identity-access-tools';
 import { buildA03Tools } from '@shahin-ai/product/ai/tools/a03-framework-tools';
@@ -75,7 +75,7 @@ export function initAgentToolsRegistry() {
                 }
                 // ── Circular Dependency Guardrail ──
                 if (visitedAgents.includes(targetAgentId)) {
-                    const { logBlockedDelegation } = await import('../../delegation/agent-to-agent-delegation.service.js');
+                    const { logBlockedDelegation } = await import('../../delegation/agent-to-agent-delegation.service');
                     await logBlockedDelegation(tenantId, agentId, targetAgentId, 'circular_dependency_prevented');
                     return {
                         error: `System Warning: Circular dependency detected. Target agent ${targetAgentId} is already active in the current call stack (${visitedAgents.join(' -> ')}). You cannot delegate to it. Synthesize your final response using your current context.`
@@ -83,13 +83,13 @@ export function initAgentToolsRegistry() {
                 }
                 // ── Depth Guardrail ──
                 if (visitedAgents.length >= 5) {
-                    const { logBlockedDelegation } = await import('../../delegation/agent-to-agent-delegation.service.js');
+                    const { logBlockedDelegation } = await import('../../delegation/agent-to-agent-delegation.service');
                     await logBlockedDelegation(tenantId, agentId, targetAgentId, 'max_depth_exceeded');
                     return {
                         error: `System Error: Maximum delegation depth (5) exceeded. Delegation chain: ${visitedAgents.join(' -> ')}. Aborting immediately.`
                     };
                 }
-                const { delegateToAgent } = await import('../../delegation/agent-to-agent-delegation.service.js');
+                const { delegateToAgent } = await import('../../delegation/agent-to-agent-delegation.service');
                 const result = await delegateToAgent(tenantId, agentId, targetAgentId, {
                     taskType: String(input.taskType),
                     taskDescription: String(input.taskDescription),
@@ -118,7 +118,7 @@ export function initAgentToolsRegistry() {
                 const ts = new Date().toISOString();
                 // D5: Route through real MCP tool registry when available
                 try {
-                    const mcpService = await import('../../../../../domain/mcp/services/mcp.service.js');
+                    const mcpService = await import('../../../../../domain/mcp/services/mcp.service');
                     const tools = await mcpService.getTools(tenantId);
                     const matchedTool = tools.find((t) => t.name === serverName || t.name === queryType);
                     if (matchedTool) {
@@ -172,7 +172,7 @@ export function initAgentToolsRegistry() {
                 required: ["documentId", "query"]
             },
             handler: async (tenantId, input) => {
-                const { analyzeDocumentWithRAG } = await import('../../rag/ai-rag-service.js');
+                const { analyzeDocumentWithRAG } = await import('../../rag/ai-rag-service');
                 const result = await analyzeDocumentWithRAG(tenantId, String(input.documentId), String(input.query));
                 return result;
             }

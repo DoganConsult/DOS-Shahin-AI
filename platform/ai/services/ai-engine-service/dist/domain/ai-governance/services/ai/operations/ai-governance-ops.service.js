@@ -1,7 +1,7 @@
 // @ts-nocheck
-import { safeQuery, tenantSchema } from '../../../ports/database.port.js';
-import { recordAudit } from '../../../../audit/services/audit/core/audit-trail.service.js';
-import { SYSTEM_JOB_ACTOR } from '../../../ports/platform.port.js';
+import { safeQuery, tenantSchema } from '../../../ports/database.port';
+import { recordAudit } from '../../../../audit/services/audit/core/audit-trail.service';
+import { SYSTEM_JOB_ACTOR } from '../../../ports/platform.port';
 const ENVIRONMENT_ORDER = {
     development: 0,
     staging: 1,

@@ -1,5 +1,5 @@
 import { logger, toErrorMessage } from '@dos/module-sdk';
-import { MCP_TIMEOUTS, MCP_BUSINESS_THRESHOLDS } from '../data/mcp-constants.js';
+import { MCP_TIMEOUTS, MCP_BUSINESS_THRESHOLDS } from '../data/mcp-constants';
 export async function getMcpJobs() {
     const { getProvisionedTenants } = await import('@dos/platform-core/tenancy');
     return [

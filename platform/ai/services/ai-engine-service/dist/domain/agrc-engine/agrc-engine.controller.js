@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { AgrcEngineService } from './agrc-engine.service.js';
-import { safeQuery } from './ports/database.port.js';
-import { auditMiddleware, setAuditData } from './ports/middleware.port.js';
+import { AgrcEngineService } from './agrc-engine.service';
+import { safeQuery } from './ports/database.port';
+import { auditMiddleware, setAuditData } from './ports/middleware.port';
 const router = Router();
 router.use(auditMiddleware('agrc-engine'));
 const service = new AgrcEngineService();

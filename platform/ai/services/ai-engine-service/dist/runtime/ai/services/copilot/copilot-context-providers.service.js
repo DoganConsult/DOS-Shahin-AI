@@ -6,7 +6,7 @@
 // metrics, recent activity, open items, and
 // actionable insights for contextual responses.
 // ============================================
-import { emptyResult, safeQuery, tenantSchema } from '../../ports/database.port.js';
+import { emptyResult, safeQuery, tenantSchema } from '../../ports/database.port';
 import { swallowDefault, EC } from '@dos/platform-core/resilience/resilient-catch';
 // ── Module metadata (A01–A10) ────────────────────────────────────────────────
 const MODULE_META = {

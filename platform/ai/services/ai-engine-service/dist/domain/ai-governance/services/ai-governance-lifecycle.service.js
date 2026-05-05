@@ -8,9 +8,9 @@
  *
  * @owner ai-governance module (Law 2)
  */
-import { safeQuery } from '../ports/database.port.js';
-import { logger } from '../ports/logger.port.js';
-import { emitEvent } from '../ports/events.port.js';
+import { safeQuery } from '../ports/database.port';
+import { logger } from '../ports/logger.port';
+import { emitEvent } from '../ports/events.port';
 export const VALID_APPROVAL = ['draft', 'submitted', 'under_review', 'approved', 'rejected', 'suspended', 'retired', 'archived'];
 export const VALID_DEPLOYMENT = ['not_deployed', 'staging', 'canary', 'production', 'rollback', 'decommissioned'];
 export const VALID_SOD_POLICIES = ['creator_cannot_approve', 'deployer_cannot_test', 'reviewer_cannot_deploy'];

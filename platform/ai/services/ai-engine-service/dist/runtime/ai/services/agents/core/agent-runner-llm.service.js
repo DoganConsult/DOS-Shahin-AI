@@ -1,15 +1,15 @@
 // @ts-nocheck
-import { logger } from '../../../ports/logger.port.js';
-import { eventBus } from '../../../ports/events.port.js';
-import { recordAudit } from '../../../../audit/services/audit/core/audit-trail.service.js';
-import { recordAgentPerformance, recordAgentRun as recordAgentRunMetric } from '../../../ports/platform.port.js';
+import { logger } from '../../../ports/logger.port';
+import { eventBus } from '../../../ports/events.port';
+import { recordAudit } from '../../../../audit/services/audit/core/audit-trail.service';
+import { recordAgentPerformance, recordAgentRun as recordAgentRunMetric } from '../../../ports/platform.port';
 import { completeHandoff, correlateDiscoveries, } from '../agent-cooperation.service.js';
-import { runAgentWithTools, getToolsForAgent } from './agent-tool-executor.service.js';
-import { updateAgentRun, recordAgentEvent, } from '../../orchestration/agent-orchestration.service.js';
-import { _fallbackAgentResponse } from './agent-fallback-responses.service.js';
+import { runAgentWithTools, getToolsForAgent } from './agent-tool-executor.service';
+import { updateAgentRun, recordAgentEvent, } from '../../orchestration/agent-orchestration.service';
+import { _fallbackAgentResponse } from './agent-fallback-responses.service';
 import { toErrorMessage } from '@dos/module-sdk';
-import { LANGGRAPH_CONFIG } from '../../../../../langgraph/config/langgraph.config.js';
-import { runSingleAgentGraph } from '../../../../../langgraph/graphs/single-agent.graph.js';
+import { LANGGRAPH_CONFIG } from '../../../../../langgraph/config/langgraph.config';
+import { runSingleAgentGraph } from '../../../../../langgraph/graphs/single-agent.graph';
 import { swallow, EC } from '@dos/platform-core/resilience/resilient-catch';
 // ── Helper: complete handoffs (both in-memory and DB-backed) ──────────────────
 async function completeAllHandoffs(tenantId, agentId, pendingHandoffs, dbHandoffs, actionsExecuted) {
@@ -18,7 +18,7 @@ async function completeAllHandoffs(tenantId, agentId, pendingHandoffs, dbHandoff
     }
     for (const h of dbHandoffs) {
         try {
-            const { completePersistentHandoff } = await import('../../../../agrc-engine/services/agrc-os-integration.service.js');
+            const { completePersistentHandoff } = await import('../../../../agrc-engine/services/agrc-os-integration.service');
             await completePersistentHandoff(tenantId, h.id, { processedBy: agentId, actionsGenerated: actionsExecuted });
         }
         catch { /* non-fatal */ }
@@ -27,18 +27,18 @@ async function completeAllHandoffs(tenantId, agentId, pendingHandoffs, dbHandoff
 // ── Helper: post-run memory + eval ──────────────────────────────────────────
 async function postRunMemoryAndEval(tenantId, agentId, runId, actionsProposed, actionsExecuted, durationMs, summary, mode, enrichedContext, discoveryCount) {
     try {
-        const { writeSharedMemory } = await import('../../memory/shared-agent-memory.service.js');
+        const { writeSharedMemory } = await import('../../memory/shared-agent-memory.service');
         await writeSharedMemory(tenantId, agentId, 'agent_runs', `${agentId}: ${summary} (proposed=${actionsProposed}, executed=${actionsExecuted})`, { runId, agentId, actionsProposed, actionsExecuted, discoveryCount, durationMs, mode }, actionsExecuted > 0 ? 0.7 : 0.4);
     }
     catch { /* shared memory non-fatal */ }
     try {
-        const { recordCycleFinding } = await import('../../orchestration/agent-cycle-memory.service.js');
+        const { recordCycleFinding } = await import('../../orchestration/agent-cycle-memory.service');
         const cycleId = runId || `cycle-${new Date().toISOString().split('T')[0]}`;
         await recordCycleFinding(tenantId, cycleId, agentId, `${agentId} ${mode} run: ${summary}`, 'cycle_finding', { actionsProposed, actionsExecuted, discoveryCount, durationMs, mode });
     }
     catch { /* cycle memory non-fatal */ }
     try {
-        const { evaluateOutput } = await import('../agent-eval.service.js');
+        const { evaluateOutput } = await import('../agent-eval.service');
         const inputSample = JSON.stringify(enrichedContext).slice(0, 1000);
         swallow(EC.AGENT_ACTION, evaluateOutput(tenantId, agentId, inputSample, summary, 'quality', runId || undefined), { tenantId, agentId, operation: 'evaluateOutput' });
     }
@@ -201,7 +201,7 @@ export async function executeToolExecutorPath(input) {
     }
     catch (toolErr) {
         eventBus.publish({ eventType: 'ai.run.failed', tenantId, sourceService: 'agent-runner', severity: 'warning', payload: { agentId, runId, error: toErrorMessage(toolErr) } });
-        const { escalateFailedRun } = await import('./ai-agent-runtime.service.js');
+        const { escalateFailedRun } = await import('./ai-agent-runtime.service');
         swallow(EC.AGENT_ACTION, escalateFailedRun(tenantId, runId || '', agentId), { tenantId, agentId, operation: 'escalateFailedRun' });
         logger.warn(`[AgentRunner] ${agentId} tool executor failed, falling back to legacy: ${toErrorMessage(toolErr)}`);
         return null; // Signal fallback

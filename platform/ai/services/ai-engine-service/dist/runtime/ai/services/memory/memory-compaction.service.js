@@ -1,5 +1,5 @@
-import { safeQuery, tenantSchema } from '../../ports/database.port.js';
-import { chatCompletion } from '../gateway/llm.service.js';
+import { safeQuery, tenantSchema } from '../../ports/database.port';
+import { chatCompletion } from '../gateway/llm.service';
 import { getFirstRow } from '@dos/db';
 export async function expireStaleMemories(tenantId) {
     const schema = tenantSchema(tenantId);

@@ -3,7 +3,7 @@
  * Used with validate() middleware in ai route files.
  */
 import { z } from 'zod';
-import { paginationQuery, bulkIdsBody } from '../../../schemas/common.schemas.js';
+import { paginationQuery, bulkIdsBody } from '../../../schemas/common.schemas';
 export const createAgentBody = z.object({
     name: z.string().min(3).max(255),
     code: z.string().max(50).optional(),

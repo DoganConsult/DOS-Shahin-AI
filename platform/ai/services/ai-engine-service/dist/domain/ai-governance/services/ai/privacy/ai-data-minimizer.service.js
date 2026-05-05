@@ -3,7 +3,7 @@
 // Filters data fields BEFORE sending to AI to ensure
 // only necessary data crosses the trust boundary.
 // ============================================
-import { emptyResult, safeQuery, tenantSchema } from '../../../ports/database.port.js';
+import { emptyResult, safeQuery, tenantSchema } from '../../../ports/database.port';
 import { swallowDefault, EC } from '@dos/platform-core/resilience/resilient-catch';
 const configCache = new Map();
 const CACHE_TTL = 300_000;

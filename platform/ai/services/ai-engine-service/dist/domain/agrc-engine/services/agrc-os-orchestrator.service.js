@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { logger } from '../ports/logger.port.js';
+import { logger } from '../ports/logger.port';
 import { swallow, EC } from '@dos/platform-core/resilience/resilient-catch';
 // ============================================
 // Shahin — AGRC-OS Orchestrator Service (Product)
@@ -15,10 +15,10 @@ import { swallow, EC } from '@dos/platform-core/resilience/resilient-catch';
 // NOTE: This is an AGRC product service residing
 // in the platform directory. Law 2 ownership: agrc.
 // ============================================
-import { query, safeQuery, tenantSchema } from '../ports/database.port.js';
-import { runCCMCycle } from '../../compliance/services/ccm/ccm-worker.service.js';
-import { recordAudit } from '../../audit/services/audit/core/audit-trail.service.js';
-import { eventBus } from '../ports/events.port.js';
+import { query, safeQuery, tenantSchema } from '../ports/database.port';
+import { runCCMCycle } from '../../compliance/services/ccm/ccm-worker.service';
+import { recordAudit } from '../../audit/services/audit/core/audit-trail.service';
+import { eventBus } from '../ports/events.port';
 import { toErrorMessage } from '@dos/module-sdk';
 import { getFirstRow } from '@dos/db';
 // ── Cycle lock to prevent concurrent cycles per tenant ─────────────────────
@@ -68,7 +68,7 @@ async function _runAGRCOSCycleInternal(tenantId) {
         }), { tenantId, operation: 'eventBus:cycle.started' });
         // ── Step 1: Process pending telemetry signals ──────────────────────────
         try {
-            const { getSignals } = await import('../../analytics/services/misc/telemetry-aggregator.service.js');
+            const { getSignals } = await import('../../analytics/services/misc/telemetry-aggregator.service');
             const signals = await getSignals(tenantId, { limit: 100 });
             telemetryIngested = signals.length;
             if (telemetryIngested > 0) {
@@ -110,7 +110,7 @@ async function _runAGRCOSCycleInternal(tenantId) {
         }
         // ── Step 3: Recompute risk posture ─────────────────────────────────────
         try {
-            const { getRiskPosture } = await import('../../risk/services/scoring/risk-scoring.service.js');
+            const { getRiskPosture } = await import('../../risk/services/scoring/risk-scoring.service');
             const posture = await getRiskPosture(tenantId);
             risksRecomputed = posture.totalRisks;
             swallow(EC.AGENT_ACTION, recordAudit({
@@ -129,7 +129,7 @@ async function _runAGRCOSCycleInternal(tenantId) {
             const schema = tenantSchema(tenantId);
             const policiesResult = await safeQuery(`SELECT policy_id, policy_code_rules FROM "${schema}".policies
          WHERE policy_code_rules IS NOT NULL AND status = 'approved'`);
-            const { executeRule } = await import('../../policy/services/policy/policy-code.service.js');
+            const { executeRule } = await import('../../policy/services/policy/policy-code.service');
             for (const policy of policiesResult.rows) {
                 const rules = Array.isArray(policy.policy_code_rules)
                     ? policy.policy_code_rules
@@ -171,7 +171,7 @@ async function _runAGRCOSCycleInternal(tenantId) {
         }
         // ── Step 5: Check governance constitution compliance ───────────────────
         try {
-            const { checkRiskAgainstAppetite } = await import('../../governance/services/governance/governance-constitution.service.js');
+            const { checkRiskAgainstAppetite } = await import('../../governance/services/governance/governance-constitution.service');
             const schema = tenantSchema(tenantId);
             const risksResult = await safeQuery(`SELECT risk_id, category, risk_score, title FROM "${schema}".risks
          WHERE risk_score IS NOT NULL`);
@@ -239,7 +239,7 @@ async function _runAGRCOSCycleInternal(tenantId) {
         }
         // ── Step 7: Escalate overdue reports (report.overdue events for runbooks) ─
         try {
-            const { escalateOverdueReports } = await import('./agrc-os-reporting.service.js');
+            const { escalateOverdueReports } = await import('./agrc-os-reporting.service');
             const esc = await escalateOverdueReports(tenantId, 48);
             if (esc.escalated > 0) {
                 swallow(EC.AGENT_ACTION, eventBus.publish({

@@ -1,4 +1,4 @@
-import { logger } from '../../ports/logger.port.js';
+import { logger } from '../../ports/logger.port';
 // ============================================
 // Shahin — Agent Coordination Service
 // Cross-agent trigger chains: when one agent
@@ -11,8 +11,8 @@ import { logger } from '../../ports/logger.port.js';
 //   A07 risk → A06 remediation → A09 vendor
 //   A08 policy → A04 control → A05 evidence
 // ============================================
-import { safeQuery, tenantSchema } from '../../ports/database.port.js';
-import { eventBus } from '../../ports/events.port.js';
+import { safeQuery, tenantSchema } from '../../ports/database.port';
+import { eventBus } from '../../ports/events.port';
 import { toErrorMessage } from '@dos/module-sdk';
 import { getFirstRow } from '@dos/db';
 import { swallow, EC } from '@dos/platform-core/resilience/resilient-catch';
@@ -82,7 +82,7 @@ export async function handleTaskCompletion(event) {
         const triggerFn = async () => {
             try {
                 // Dynamically import agent-runner to avoid circular deps
-                const { runAgent } = await import('../agents/core/agent-runner.service.js');
+                const { runAgent } = await import('../agents/core/agent-runner.service');
                 logger.info(`[AgentCoordination] Triggering ${chain.target_agent_id} from ${chain.source_agent_id}:${entityType}:${taskType} (delay=${chain.delay_seconds}s)`);
                 await runAgent(event.tenantId, chain.target_agent_id);
                 // Publish coordination event

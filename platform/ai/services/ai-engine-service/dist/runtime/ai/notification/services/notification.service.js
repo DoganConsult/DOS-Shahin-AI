@@ -1,3 +1,3 @@
 // Re-export the canonical notification service from the domain layer.
-export * from '../../../../domain/notification/services/notification.service.js';
+export * from '../../../../domain/notification/services/notification.service';
 //# sourceMappingURL=notification.service.js.map

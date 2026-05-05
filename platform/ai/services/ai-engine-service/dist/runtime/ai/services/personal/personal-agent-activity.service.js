@@ -4,7 +4,7 @@
 // Executes agent activities on behalf of a user, applying process governance
 // rules, company policy checks, and SLA-based activation logic.
 // ============================================================================
-import { safeQuery, tenantSchema } from '../../ports/database.port.js';
+import { safeQuery, tenantSchema } from '../../ports/database.port';
 import { toErrorMessage } from '@dos/module-sdk';
 import { getFirstRow } from '@dos/db';
 // ============================================================================
@@ -33,7 +33,7 @@ export async function executeActivityAction(tenantId, activityId, assignment, ac
        SET status = 'executing', executed_at = NOW()
        WHERE activity_id = $1`, [activityId]);
         // Execute the actual action via agent-runner service
-        const { executeAction } = await import('../agents/core/agent-runner.service.js');
+        const { executeAction } = await import('../agents/core/agent-runner.service');
         await executeAction(tenantId, assignment.agentId, {
             type: activity.activityType,
             entityType: activity.entityType,

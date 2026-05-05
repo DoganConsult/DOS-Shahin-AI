@@ -4,7 +4,7 @@ import { logger } from '@dos/platform-core/observability';
 // Used by all LangGraph graph compilations.
 // ============================================
 import { getPool, safeQuery } from '@dos/db';
-import { PostgresCheckpointSaver } from './checkpoint-postgres.js';
+import { PostgresCheckpointSaver } from './checkpoint-postgres';
 function getFirstRow(result) {
     return result.rows[0];
 }

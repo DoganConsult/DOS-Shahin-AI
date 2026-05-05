@@ -4,8 +4,8 @@
 // Mounted by ai-engine-service at /security/quantum.
 // ============================================
 import { Router } from 'express';
-import { asyncHandler } from '../ports/middleware.port.js';
-import { inventoryCryptoAsset, assessVulnerability, createMigrationPlan, recordPqcTestResult, listCryptoAssets, getCryptoAssetById, listMigrationPlans, getMigrationPlanById, listPqcTestResults, getQuantumReadinessDashboard, } from '../services/misc/quantum-readiness.service.js';
+import { asyncHandler } from '../ports/middleware.port';
+import { inventoryCryptoAsset, assessVulnerability, createMigrationPlan, recordPqcTestResult, listCryptoAssets, getCryptoAssetById, listMigrationPlans, getMigrationPlanById, listPqcTestResults, getQuantumReadinessDashboard, } from '../services/misc/quantum-readiness.service';
 const router = Router();
 // ── Helper: resolve tenant ID from request context ──
 function resolveTenantId(req) {

@@ -14,8 +14,8 @@
  * Both tables are optional; when absent the function falls back to "allowed:
  * true, reason: no rules" so the engine boots cleanly on un-seeded tenants.
  */
-import { safeQuery, tenantSchema } from '../../../ai/ports/database.port.js';
-import { logger } from '../../../ai/ports/logger.port.js';
+import { safeQuery, tenantSchema } from '../../../ai/ports/database.port';
+import { logger } from '../../../ai/ports/logger.port';
 const RISK_ORDER = { low: 0, medium: 1, high: 2, critical: 3 };
 function getFirstRow(result) {
     return result?.rows?.[0] ?? null;

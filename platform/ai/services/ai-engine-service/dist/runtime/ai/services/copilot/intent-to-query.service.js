@@ -2,7 +2,7 @@
 // AI Intent-to-Query Dynamic Parser
 // Translates natural language into structured list-data filters
 // ============================================
-import { safeQuery, tenantSchema, emptyResult } from '../../ports/database.port.js';
+import { safeQuery, tenantSchema, emptyResult } from '../../ports/database.port';
 import { swallowDefault, EC } from '@dos/platform-core/resilience/resilient-catch';
 import { toErrorMessage } from '@dos/module-sdk';
 export async function parseIntentToQuery(tenantId, userId, moduleCode, userQuery, language = 'en') {
@@ -49,7 +49,7 @@ Output exactly as JSON:
 }
 `;
     try {
-        const { claudeJSON } = await import('../../../../config/claude-client.js');
+        const { claudeJSON } = await import('../../../../config/claude-client');
         const result = await claudeJSON({
             systemPrompt,
             userMessage: userQuery,

@@ -1,53 +1,53 @@
 // @ts-nocheck
 import { Router } from 'express';
-import { auditMiddleware, validate, asyncHandler } from '../../ports/middleware.port.js';
-import { authenticate, requirePermission } from '../../ports/auth.port.js';
-import { emitModuleEvent } from '../../services/emit-event.js';
+import { auditMiddleware, validate, asyncHandler } from '../../ports/middleware.port';
+import { authenticate, requirePermission } from '../../ports/auth.port';
+import { emitModuleEvent } from '../../services/emit-event';
 import { toErrorMessage } from '@dos/module-sdk';
-import { enforceStatusTransition } from '../../ports/platform.port.js';
+import { enforceStatusTransition } from '../../ports/platform.port';
 import { getFirstRow } from '@dos/db';
 import { swallow, swallowDefault, EC } from '@dos/platform-core/resilience/resilient-catch';
-import { emptyResult } from '../../ports/database.port.js';
-import { modelConfigAgentIdPutBody, budgetPutBody, promptsAssetIdPostBody, promptsAssetIdActivateVersionIdPostBody, streamChatPostBody, evalsRunPostBody, memoryCompactPostBody, selfImprovePostBody, feedbackPostBody, proposedActionsIdPutBody, createOptimizeRoutingBody } from "../../schemas/ai.schemas.js";
+import { emptyResult } from '../../ports/database.port';
+import { modelConfigAgentIdPutBody, budgetPutBody, promptsAssetIdPostBody, promptsAssetIdActivateVersionIdPostBody, streamChatPostBody, evalsRunPostBody, memoryCompactPostBody, selfImprovePostBody, feedbackPostBody, proposedActionsIdPutBody, createOptimizeRoutingBody } from "../../schemas/ai.schemas";
 import { z } from "zod";
 const router = Router();
 router.use(auditMiddleware('ai'));
 router.get('/model-config', authenticate, requirePermission('admin.tenant.manage'), validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
-    const { getAllAgentModelConfigs } = await import('../../services/gateway/llm-router.service.js');
+    const { getAllAgentModelConfigs } = await import('../../services/gateway/llm-router.service');
     const configs = await getAllAgentModelConfigs(req.tenantId);
     res.json({ configs });
 }));
 router.put('/model-config/:agentId', authenticate, requirePermission('admin.tenant.manage'), validate({ body: modelConfigAgentIdPutBody }), asyncHandler(async (req, res) => {
-    const { upsertAgentModelConfig } = await import('../../services/gateway/llm-router.service.js');
+    const { upsertAgentModelConfig } = await import('../../services/gateway/llm-router.service');
     const ok = await upsertAgentModelConfig(req.tenantId, req.params.agentId, req.body);
     swallow(EC.EVENT_BUS, emitModuleEvent({ tenantId: req.tenantId, userId: req.user.userId, module: 'governance', event: 'updated', entityType: 'ai_enhanced', entityId: req.params.id || '' }), { tenantId: req.tenantId, operation: 'grcEvent:governance.ai_enhanced.updated' });
     res.json({ success: ok });
 }));
 router.get('/usage', authenticate, validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
-    const { getUsageSummary } = await import('../../services/gateway/llm-usage-tracker.service.js');
+    const { getUsageSummary } = await import('../../services/gateway/llm-usage-tracker.service');
     const days = parseInt(req.query.days) || 30;
     const summary = await getUsageSummary(req.tenantId, days);
     res.json(summary);
 }));
 router.get('/budget', authenticate, validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
-    const { getBudgetStatus } = await import('../../services/gateway/llm-usage-tracker.service.js');
+    const { getBudgetStatus } = await import('../../services/gateway/llm-usage-tracker.service');
     const status = await getBudgetStatus(req.tenantId);
     res.json(status || { message: 'No budget configured' });
 }));
 router.put('/budget', authenticate, requirePermission('admin.tenant.manage'), validate({ body: budgetPutBody }), asyncHandler(async (req, res) => {
-    const { updateBudgetLimits, ensureBudgetRecord } = await import('../../services/gateway/llm-usage-tracker.service.js');
+    const { updateBudgetLimits, ensureBudgetRecord } = await import('../../services/gateway/llm-usage-tracker.service');
     await ensureBudgetRecord(req.tenantId);
     const ok = await updateBudgetLimits(req.tenantId, req.body.monthlyTokenLimit || 10000000, req.body.monthlyCostLimit || 100, req.body.softLimitPct || 80, req.body.hardLimitAction || 'throttle');
     swallow(EC.EVENT_BUS, emitModuleEvent({ tenantId: req.tenantId, userId: req.user.userId, module: 'governance', event: 'updated', entityType: 'ai_enhanced', entityId: req.params.id || '' }), { tenantId: req.tenantId, operation: 'grcEvent:governance.ai_enhanced.updated' });
     res.json({ success: ok });
 }));
 router.get('/prompts/:assetId', authenticate, validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
-    const { listPromptVersions } = await import('../../services/llm/prompt-registry.service.js');
+    const { listPromptVersions } = await import('../../services/llm/prompt-registry.service');
     const result = await listPromptVersions(req.tenantId, { asset_id: req.params.assetId });
     res.json({ versions: result.versions });
 }));
 router.post('/prompts/:assetId', authenticate, requirePermission('admin.tenant.manage'), validate({ body: promptsAssetIdPostBody }), asyncHandler(async (req, res) => {
-    const { createDraftPromptVersion } = await import('../../services/llm/prompt-registry.service.js');
+    const { createDraftPromptVersion } = await import('../../services/llm/prompt-registry.service');
     const version = await createDraftPromptVersion(req.tenantId, {
         asset_id: req.params.assetId,
         template_text: req.body.systemPrompt || req.body.template_text,
@@ -58,14 +58,14 @@ router.post('/prompts/:assetId', authenticate, requirePermission('admin.tenant.m
     res.json(version);
 }));
 router.post('/prompts/:assetId/activate/:versionId', authenticate, requirePermission('admin.tenant.manage'), validate({ body: promptsAssetIdActivateVersionIdPostBody }), asyncHandler(async (req, res) => {
-    const { activatePromptVersion } = await import('../../services/llm/prompt-registry.service.js');
+    const { activatePromptVersion } = await import('../../services/llm/prompt-registry.service');
     const result = await activatePromptVersion(req.tenantId, req.params.versionId, req.userId || 'admin');
     swallow(EC.EVENT_BUS, emitModuleEvent({ tenantId: req.tenantId, userId: req.user.userId, module: 'governance', event: 'created', entityType: 'ai_enhanced', entityId: req.params.versionId || '' }), { tenantId: req.tenantId, operation: 'grcEvent:governance.ai_enhanced.created' });
     res.json({ success: true, activated: result.activated });
 }));
 router.get('/cache/stats', validate({ query: z.record(z.unknown()) }), authenticate, async (_req, res) => {
     try {
-        const { getCacheStats } = await import('../../services/llm/llm-cache.service.js');
+        const { getCacheStats } = await import('../../services/llm/llm-cache.service');
         const stats = await getCacheStats();
         res.json(stats);
     }
@@ -75,13 +75,13 @@ router.get('/cache/stats', validate({ query: z.record(z.unknown()) }), authentic
 });
 router.post('/stream/chat', authenticate, validate({ body: streamChatPostBody }), asyncHandler(async (req, res) => {
     try {
-        const { guardInput } = await import('../../services/llm/prompt-injection-guard.service.js');
+        const { guardInput } = await import('../../services/llm/prompt-injection-guard.service');
         const guard = await guardInput(req.tenantId, req.body.message || '', req.userId);
         if (!guard.allowed) {
             res.status(400).json({ error: guard.warning });
             return;
         }
-        const { streamClaudeResponse } = await import('../../services/llm/llm-stream.service.js');
+        const { streamClaudeResponse } = await import('../../services/llm/llm-stream.service');
         const messages = [
             ...(req.body.systemPrompt ? [{ role: 'system', content: req.body.systemPrompt }] : []),
             { role: 'user', content: guard.sanitizedInput },
@@ -94,7 +94,7 @@ router.post('/stream/chat', authenticate, validate({ body: streamChatPostBody })
     }
 }));
 router.get('/traces', authenticate, validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
-    const { queryTraces } = await import('../../services/llm/llm-trace.service.js');
+    const { queryTraces } = await import('../../services/llm/llm-trace.service');
     const result = await queryTraces({
         tenantId: req.tenantId,
         agentId: req.query.agentId,
@@ -106,64 +106,64 @@ router.get('/traces', authenticate, validate({ query: z.record(z.unknown()) }), 
     res.json(result);
 }));
 router.get('/traces/stats', authenticate, validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
-    const { getTraceStats } = await import('../../services/llm/llm-trace.service.js');
+    const { getTraceStats } = await import('../../services/llm/llm-trace.service');
     const days = parseInt(req.query.days) || 7;
     const stats = await getTraceStats(req.tenantId, days);
     res.json(stats);
 }));
 router.get('/evals', authenticate, validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
-    const { getEvalSummary } = await import('../../services/agents/lifecycle/agent-eval.service.js');
+    const { getEvalSummary } = await import('../../services/agents/lifecycle/agent-eval.service');
     const days = parseInt(req.query.days) || 30;
     const summary = await getEvalSummary(req.tenantId, req.query.agentId, days);
     res.json(summary);
 }));
 router.post('/evals/run', authenticate, requirePermission('admin.tenant.manage'), validate({ body: evalsRunPostBody }), asyncHandler(async (req, res) => {
-    const { batchEvaluate } = await import('../../services/agents/lifecycle/agent-eval.service.js');
+    const { batchEvaluate } = await import('../../services/agents/lifecycle/agent-eval.service');
     const result = await batchEvaluate(req.tenantId, req.body.sampleSize || 10);
     swallow(EC.EVENT_BUS, emitModuleEvent({ tenantId: req.tenantId, userId: req.user.userId, module: 'governance', event: 'created', entityType: 'ai_enhanced', entityId: req.params.id || '' }), { tenantId: req.tenantId, operation: 'grcEvent:governance.ai_enhanced.created' });
     res.json(result);
 }));
 router.get('/injection-stats', authenticate, validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
-    const { getInjectionStats } = await import('../../services/llm/prompt-injection-guard.service.js');
+    const { getInjectionStats } = await import('../../services/llm/prompt-injection-guard.service');
     const days = parseInt(req.query.days) || 30;
     const stats = await getInjectionStats(req.tenantId, days);
     res.json(stats);
 }));
 router.get('/memory/health', authenticate, validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
-    const { getMemoryHealth } = await import('../../services/memory/memory-compaction.service.js');
+    const { getMemoryHealth } = await import('../../services/memory/memory-compaction.service');
     const health = await getMemoryHealth(req.tenantId);
     res.json(health);
 }));
 router.post('/memory/compact', authenticate, requirePermission('admin.tenant.manage'), validate({ body: memoryCompactPostBody }), asyncHandler(async (req, res) => {
-    const { runCompaction } = await import('../../services/memory/memory-compaction.service.js');
+    const { runCompaction } = await import('../../services/memory/memory-compaction.service');
     const result = await runCompaction(req.tenantId);
     swallow(EC.EVENT_BUS, emitModuleEvent({ tenantId: req.tenantId, userId: req.user.userId, module: 'governance', event: 'created', entityType: 'ai_enhanced', entityId: req.params.id || '' }), { tenantId: req.tenantId, operation: 'grcEvent:governance.ai_enhanced.created' });
     res.json(result);
 }));
 router.get('/cycle-memory', authenticate, validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
-    const { getCycleIds } = await import('../../services/orchestration/agent-cycle-memory.service.js');
+    const { getCycleIds } = await import('../../services/orchestration/agent-cycle-memory.service');
     const cycles = await getCycleIds(req.tenantId, parseInt(req.query.limit) || 20);
     res.json({ cycles });
 }));
 router.get('/cycle-memory/:cycleId', authenticate, validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
-    const { getCycleMemory } = await import('../../services/orchestration/agent-cycle-memory.service.js');
+    const { getCycleMemory } = await import('../../services/orchestration/agent-cycle-memory.service');
     const entries = await getCycleMemory(req.tenantId, req.params.cycleId, req.query.agentId);
     res.json({ entries });
 }));
 router.get('/shared-memory', authenticate, validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
-    const { readAllSharedScopes } = await import('../../services/memory/shared-agent-memory.service.js');
+    const { readAllSharedScopes } = await import('../../services/memory/shared-agent-memory.service');
     const entries = await readAllSharedScopes(req.tenantId, req.query.agentId, parseInt(req.query.limit) || 20);
     res.json({ entries });
 }));
 router.post('/self-improve', authenticate, requirePermission('admin.tenant.manage'), validate({ body: selfImprovePostBody }), asyncHandler(async (req, res) => {
-    const { runSelfImprovementCycle } = await import('../../services/agents/lifecycle/agent-self-improve.service.js');
+    const { runSelfImprovementCycle } = await import('../../services/agents/lifecycle/agent-self-improve.service');
     const result = await runSelfImprovementCycle(req.tenantId);
     swallow(EC.EVENT_BUS, emitModuleEvent({ tenantId: req.tenantId, userId: req.user.userId, module: 'governance', event: 'created', entityType: 'ai_enhanced', entityId: req.params.id || '' }), { tenantId: req.tenantId, operation: 'grcEvent:governance.ai_enhanced.created' });
     res.json(result);
 }));
 router.get('/bilingual-prompts', validate({ query: z.record(z.unknown()) }), authenticate, async (_req, res) => {
     try {
-        const { getAllBilingualPrompts } = await import('../../platform/services/misc/bilingual-prompt.service.js');
+        const { getAllBilingualPrompts } = await import('../../platform/services/misc/bilingual-prompt.service');
         const prompts = getAllBilingualPrompts();
         res.json({ prompts });
     }
@@ -173,7 +173,7 @@ router.get('/bilingual-prompts', validate({ query: z.record(z.unknown()) }), aut
 });
 // ── User Feedback Routes ────────────────────────────────────────
 router.post('/feedback', authenticate, validate({ body: feedbackPostBody }), asyncHandler(async (req, res) => {
-    const { submitFeedback } = await import('../../services/agents/lifecycle/agent-eval.service.js');
+    const { submitFeedback } = await import('../../services/agents/lifecycle/agent-eval.service');
     const { agentId, runId, rating, comment } = req.body;
     if (!agentId || !rating) {
         return res.status(400).json({ error: 'agentId and rating are required' });
@@ -182,12 +182,12 @@ router.post('/feedback', authenticate, validate({ body: feedbackPostBody }), asy
     res.json(result || { error: 'Failed to submit feedback' });
 }));
 router.get('/feedback/summary', authenticate, validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
-    const { getFeedbackSummary } = await import('../../services/agents/lifecycle/agent-eval.service.js');
+    const { getFeedbackSummary } = await import('../../services/agents/lifecycle/agent-eval.service');
     const summary = await getFeedbackSummary(req.tenantId, req.query.agentId);
     res.json(summary);
 }));
 router.get('/feedback/correlation', authenticate, validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
-    const { getFeedbackVsEvalCorrelation } = await import('../../services/agents/lifecycle/agent-eval.service.js');
+    const { getFeedbackVsEvalCorrelation } = await import('../../services/agents/lifecycle/agent-eval.service');
     const days = parseInt(req.query.days) || 30;
     const result = await getFeedbackVsEvalCorrelation(req.tenantId, days);
     res.json(result);
@@ -195,7 +195,7 @@ router.get('/feedback/correlation', authenticate, validate({ query: z.record(z.u
 // ── Admin / Observability Routes ────────────────────────────────
 router.get('/gateway/health', validate({ query: z.record(z.unknown()) }), authenticate, requirePermission('ai.agent.read'), async (_req, res) => {
     try {
-        const { getGatewayHealth } = await import('../../services/gateway/ai-gateway.service.js');
+        const { getGatewayHealth } = await import('../../services/gateway/ai-gateway.service');
         res.json(getGatewayHealth());
     }
     catch (err) {
@@ -203,7 +203,7 @@ router.get('/gateway/health', validate({ query: z.record(z.unknown()) }), authen
     }
 });
 router.get('/evals/slo-status', authenticate, validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
-    const { getEvalSLOStatus } = await import('../../services/agents/lifecycle/agent-eval.service.js');
+    const { getEvalSLOStatus } = await import('../../services/agents/lifecycle/agent-eval.service');
     const days = parseInt(req.query.days) || 7;
     const status = await getEvalSLOStatus(req.tenantId, days);
     res.json(status);
@@ -252,7 +252,7 @@ router.put('/proposed-actions/:id', authenticate, requirePermission('admin.tenan
     if (result.rows.length === 0) {
         return res.status(404).json({ error: 'Proposed action not found' });
     }
-    const { emitModuleEvent } = await import('../../services/emit-event.js');
+    const { emitModuleEvent } = await import('../../services/emit-event');
     swallow(EC.EVENT_BUS, emitModuleEvent({ tenantId: req.tenantId, userId: req.user.userId, module: 'governance', event: 'updated', entityType: 'proposed_action', entityId: req.params.id }), { tenantId: req.tenantId, operation: 'grcEvent:governance.proposed_action.updated' });
     res.json({ success: true, item: getFirstRow(result) });
 }));
@@ -285,7 +285,7 @@ router.post('/optimize-routing', authenticate, requirePermission('admin.tenant.m
         swallowDefault(EC.FALLBACK_QUERY, emptyResult(), safeQuery(`SELECT agent_id, model, AVG(latency_ms) AS avg_latency, SUM(cost_usd) AS total_cost, COUNT(*) AS calls, SUM(CASE WHEN error_type IS NOT NULL THEN 1 ELSE 0 END) AS errors FROM "${schema}".llm_usage_log WHERE created_at > NOW() - INTERVAL '7 days' GROUP BY agent_id, model`), { tenantId: req.tenantId, operation: 'query agent_model_configs' }),
         swallowDefault(EC.FALLBACK_QUERY, emptyResult(), safeQuery(`SELECT * FROM "${schema}".llm_budget LIMIT 1`), { tenantId: req.tenantId, operation: 'query agent_model_configs' }),
     ]);
-    const { claudeJSON } = await import('../../../../config/claude-client.js');
+    const { claudeJSON } = await import('../../../../config/claude-client');
     const optimization = await claudeJSON({
         systemPrompt: `You are an AI model routing optimizer. Analyze usage patterns and recommend optimal model assignments.
 Respond with JSON: {
@@ -308,7 +308,7 @@ router.get('/cost-forecast', authenticate, requirePermission('ai.agent.read'), v
     const historicalCost = await swallowDefault(EC.FALLBACK_QUERY, emptyResult(), safeQuery(`SELECT DATE(created_at) AS day, SUM(cost_usd) AS daily_cost, SUM(input_tokens + output_tokens) AS daily_tokens, COUNT(*) AS daily_calls
      FROM "${schema}".llm_usage_log WHERE created_at > NOW() - INTERVAL '30 days'
      GROUP BY DATE(created_at) ORDER BY day`), { tenantId: req.tenantId, operation: 'query llm_usage_log' });
-    const { claudeJSON } = await import('../../../../config/claude-client.js');
+    const { claudeJSON } = await import('../../../../config/claude-client');
     const forecast = await claudeJSON({
         systemPrompt: `You are an AI cost forecasting engine. Analyze historical usage and project future costs.
 Respond with JSON: {

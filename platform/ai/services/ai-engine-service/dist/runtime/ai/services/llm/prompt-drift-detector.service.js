@@ -3,8 +3,8 @@
 // Compares recent agent outputs (decision_record) to prompt_drift_baselines.
 // Flags prompts for review and creates ai.alert when drift exceeds threshold.
 // ============================================================================
-import { safeQuery, tenantSchema } from '../../ports/database.port.js';
-import { createAlert } from '../governance/compliance/ai-alert.service.js';
+import { safeQuery, tenantSchema } from '../../ports/database.port';
+import { createAlert } from '../governance/compliance/ai-alert.service';
 import { getFirstRow } from '@dos/db';
 const DRIFT_CONFIDENCE_DELTA = 0.15; // flag if current avg drops this much vs baseline
 const DRIFT_REJECTION_DELTA = 0.2; // flag if rejection rate increases this much

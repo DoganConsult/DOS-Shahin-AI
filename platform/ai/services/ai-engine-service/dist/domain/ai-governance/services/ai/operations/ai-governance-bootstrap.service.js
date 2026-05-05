@@ -1,9 +1,9 @@
 // Platform-reusable AI governance bootstrap orchestration.
 // This file must NOT hardcode product-specific agent/tool/prompt/workflow catalogs.
 // Product seed data is obtained via the registered seed provider boundary.
-import { emptyResult, safeQuery, tenantSchema } from '../../../ports/database.port.js';
-import { discoverAndSeedAssets, getCanonicalAgents, getCanonicalModels, buildCanonicalPromptAssets, getRuntimeToolDefinitions, getAllowlistModels, getDefaultModelKey, } from '../../runtime/ai/services/governance/compliance/ai-asset-discovery.service.js';
-import { backfillTenantAllowlistAssetRefs } from '../compliance/ai-binding-governance.service.js';
+import { emptyResult, safeQuery, tenantSchema } from '../../../ports/database.port';
+import { discoverAndSeedAssets, getCanonicalAgents, getCanonicalModels, buildCanonicalPromptAssets, getRuntimeToolDefinitions, getAllowlistModels, getDefaultModelKey, } from '../../runtime/ai/services/governance/compliance/ai-asset-discovery.service';
+import { backfillTenantAllowlistAssetRefs } from '../compliance/ai-binding-governance.service';
 import { getFirstRow } from '@dos/db';
 import { swallowDefault, EC } from '@dos/platform-core/resilience/resilient-catch';
 export async function bootstrapAiGovernance(tenantId) {

@@ -27,7 +27,7 @@
  *      what each agent can read.
  */
 import { withTenantClient, safeQuery } from '@dos/db';
-import { logger } from '../../ports/logger.port.js';
+import { logger } from '../../ports/logger.port';
 const REGISTRY = new Map();
 const key = (agentId, shiftCode) => `${agentId}:${shiftCode}`;
 export function registerShiftHandler(agentId, shiftCode, handler) {

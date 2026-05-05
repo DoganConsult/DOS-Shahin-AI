@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { authenticate, requirePermission } from '../../ports/auth.port.js';
-import { safeQuery, tenantSchema } from '../../ports/database.port.js';
-import { asyncHandler, moduleStack } from '../../ports/middleware.port.js';
-import { validate } from "../ports/middleware.port.js";
+import { authenticate, requirePermission } from '../../ports/auth.port';
+import { safeQuery, tenantSchema } from '../../ports/database.port';
+import { asyncHandler, moduleStack } from '../../ports/middleware.port';
+import { validate } from "../ports/middleware.port";
 import { z } from "zod";
 const router = Router();
 router.use(moduleStack('ai'));

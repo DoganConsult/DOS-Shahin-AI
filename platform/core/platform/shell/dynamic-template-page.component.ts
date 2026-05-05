@@ -248,6 +248,17 @@ export class DynamicTemplatePageComponent {
           }
           if (!b?.template_export) {
             this.loading.set(false);
+            // Unknown route (typo, stale link, deleted binding). Marketing
+            // home `/` is always bound — bounce there instead of rendering
+            // a debug-style "No template binding for <route>" fallback.
+            // ONLY redirect on a definitive null binding from the BE (HTTP
+            // 200 with no template_export). On HTTP error / unauthenticated
+            // 401 (b.error===true) we MUST NOT redirect: anonymous visitors
+            // clicking the marketing /login or /register CTA would otherwise
+            // be bounced back to / before the auth page can render.
+            if (route !== '/' && route !== '' && !b?.error) {
+              this.router.navigateByUrl('/', { replaceUrl: true });
+            }
             return;
           }
           // Marketing-landing: eagerly hydrate config + brand so tplInputs()
@@ -378,11 +389,21 @@ export class DynamicTemplatePageComponent {
         init.body = JSON.stringify(body ?? {});
       }
       if (typeof window === 'undefined' || typeof fetch !== 'function') return;
-      void fetch(handler.url, init).then((resp) => {
-        if (resp.ok && handler.onSuccessRedirect) {
-          window.location.assign(handler.onSuccessRedirect);
-        } else if (!resp.ok && handler.onErrorRedirect) {
-          window.location.assign(handler.onErrorRedirect);
+      void fetch(handler.url, init).then(async (resp) => {
+        // Read JSON body opportunistically so the BE can carry a dynamic
+        // redirect target (e.g. "/auth/mfa" vs "/workspace-home" depending
+        // on per-tenant MFA policy). Body redirect wins over the static
+        // handler.onSuccessRedirect / onErrorRedirect fallback.
+        let respBody: { redirect?: unknown; ok?: unknown } | null = null;
+        try { respBody = await resp.clone().json() as typeof respBody; } catch { respBody = null; }
+        const dynamicTarget = respBody && typeof respBody.redirect === 'string' && respBody.redirect
+          ? respBody.redirect : null;
+        if (resp.ok) {
+          const target = dynamicTarget || handler.onSuccessRedirect;
+          if (target) window.location.assign(target);
+        } else {
+          const target = dynamicTarget || handler.onErrorRedirect;
+          if (target) window.location.assign(target);
         }
       }).catch(() => {
         if (handler.onErrorRedirect) {

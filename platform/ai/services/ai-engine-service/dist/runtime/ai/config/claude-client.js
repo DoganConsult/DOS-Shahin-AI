@@ -14,7 +14,7 @@
  * a hardened alternative for new AI-layer code.
  */
 import Anthropic from '@anthropic-ai/sdk';
-import { logger } from '../ports/logger.port.js';
+import { logger } from '../ports/logger.port';
 // ---------------------------------------------------------------------------
 // Error types
 // ---------------------------------------------------------------------------

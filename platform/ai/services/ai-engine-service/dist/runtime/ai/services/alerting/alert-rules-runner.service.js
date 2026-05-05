@@ -15,9 +15,9 @@
  *
  * Read-only against the source tables; writes only to ai_activity_alerts.
  */
-import { logger } from '../../ports/logger.port.js';
-import { safeQuery } from '../../ports/database.port.js';
-import { eventBus } from '../../ports/events.port.js';
+import { logger } from '../../ports/logger.port';
+import { safeQuery } from '../../ports/database.port';
+import { eventBus } from '../../ports/events.port';
 let intervalHandle = null;
 let isTicking = false;
 const platformQuery = async (text, params = []) => {

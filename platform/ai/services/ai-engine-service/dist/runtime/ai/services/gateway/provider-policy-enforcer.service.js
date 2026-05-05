@@ -1,12 +1,12 @@
-import { logger } from '../../ports/logger.port.js';
+import { logger } from '../../ports/logger.port';
 // ============================================
 // AGRC-OS — Provider Policy Runtime Enforcer
 // Wraps AI calls with provider-policy matrix checks
 // + circuit breaker health. Enables graceful degradation
 // when LLM providers are unavailable.
 // ============================================
-import { getTaskFallbackBehavior, isDeterministicTask, } from '../../ports/platform.port.js';
-import { aiCircuitBreaker } from '../governance/circuit/ai-circuit-breaker.service.js';
+import { getTaskFallbackBehavior, isDeterministicTask, } from '../../ports/platform.port';
+import { aiCircuitBreaker } from '../governance/circuit/ai-circuit-breaker.service';
 /**
  * Check whether an AI call is allowed for the given task key.
  * Returns the enforcement decision + fallback mode if blocked.

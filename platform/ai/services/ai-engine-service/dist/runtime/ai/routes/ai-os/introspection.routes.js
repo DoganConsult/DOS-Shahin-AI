@@ -3,16 +3,16 @@
  * @module ai-os/introspection
  */
 import { Router } from 'express';
-import { authenticate, requirePermission } from '../../ports/auth.port.js';
-import { NotFoundError, ValidationError } from '../../../../errors/index.js';
-import { aiReadLimiter, aiExportLimiter, setCacheHeaders } from './shared.js';
-import { emptyResult, tenantSchema, safeQuery } from '../../ports/database.port.js';
-import { getRuntimeHealthSummary, validateRuntimeConfigIntegrity, listAllRuntimeConfigs } from '../../services/agents/core/ai-agent-runtime.service.js';
-import { getPolicyEvalStats } from '../../services/governance/ai-policy-rule.service.js';
-import { getSignalStats, getAggregatedDashboard } from '../../services/cockpit/ai-cockpit-signal.service.js';
+import { authenticate, requirePermission } from '../../ports/auth.port';
+import { NotFoundError, ValidationError } from '../../../../errors';
+import { aiReadLimiter, aiExportLimiter, setCacheHeaders } from './shared';
+import { emptyResult, tenantSchema, safeQuery } from '../../ports/database.port';
+import { getRuntimeHealthSummary, validateRuntimeConfigIntegrity, listAllRuntimeConfigs } from '../../services/agents/core/ai-agent-runtime.service';
+import { getPolicyEvalStats } from '../../services/governance/ai-policy-rule.service';
+import { getSignalStats, getAggregatedDashboard } from '../../services/cockpit/ai-cockpit-signal.service';
 import { swallowDefault, EC } from '@dos/platform-core/resilience/resilient-catch';
-import { auditMiddleware, validate, asyncHandler, moduleStack, mutationEventHook } from '../../ports/middleware.port.js';
-import { createExplainBody } from '../../schemas/ai.schemas.js';
+import { auditMiddleware, validate, asyncHandler, moduleStack, mutationEventHook } from '../../ports/middleware.port';
+import { createExplainBody } from '../../schemas/ai.schemas';
 import { z } from "zod";
 const router = Router();
 router.use(moduleStack('ai'));
@@ -67,7 +67,7 @@ router.get('/ai-os/introspect', authenticate, aiExportLimiter, requirePermission
         swallowDefault(EC.FALLBACK_QUERY, emptyResult(), safeQuery(`SELECT COUNT(*) AS total, COUNT(*) FILTER (WHERE status = 'new') AS unread FROM "${schema}".governance_signals WHERE detected_at > NOW() - INTERVAL '24 hours'`), { tenantId: req.tenantId, operation: 'query ai_decisions' }),
         swallowDefault(EC.FALLBACK_QUERY, emptyResult(), safeQuery(`SELECT COUNT(*) AS total, COUNT(*) FILTER (WHERE severity = 'critical') AS critical FROM "${schema}".ai_alerts WHERE created_at > NOW() - INTERVAL '24 hours' AND status != 'resolved'`), { tenantId: req.tenantId, operation: 'query governance_signals' }),
     ]);
-    const { claudeJSON } = await import('../../../../config/claude-client.js');
+    const { claudeJSON } = await import('../../../../config/claude-client');
     const introspection = await claudeJSON({
         systemPrompt: `You are the AI OS self-introspection engine. Analyze the AI system health and provide:
 {health_score: number (0-100), status: "healthy"|"degraded"|"critical",
@@ -134,7 +134,7 @@ router.post('/ai-os/explain', authenticate, aiExportLimiter, requirePermission('
     }
     if (!entityData)
         throw new NotFoundError(entity_type, entity_id);
-    const { claudeJSON } = await import('../../../../config/claude-client.js');
+    const { claudeJSON } = await import('../../../../config/claude-client');
     const explanation = await claudeJSON({
         systemPrompt: `You are the AI Explainability Engine. Provide clear, bilingual-ready explanations of GRC decisions and actions.
 Respond with JSON: {

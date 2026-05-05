@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { authenticate, requirePermission } from '../../ports/auth.port.js';
-import { validate, auditMiddleware, asyncHandler, rateLimiter, moduleStack, mutationEventHook } from '../../ports/middleware.port.js';
-import { updateConfigBody, createReseedBody, createReindexBody, createBackfillBody } from '../../schemas/ai-governance.schemas.js';
-import { getModuleConfig, updateModuleConfig, reseedModule, getModuleHealth, reindexModule, backfillModule, getSlaConfig, getEscalationPolicy, getRunbookLinks, } from '../../controllers/ai-governance-admin.controller.js';
+import { authenticate, requirePermission } from '../../ports/auth.port';
+import { validate, auditMiddleware, asyncHandler, rateLimiter, moduleStack, mutationEventHook } from '../../ports/middleware.port';
+import { updateConfigBody, createReseedBody, createReindexBody, createBackfillBody } from '../../schemas/ai-governance.schemas';
+import { getModuleConfig, updateModuleConfig, reseedModule, getModuleHealth, reindexModule, backfillModule, getSlaConfig, getEscalationPolicy, getRunbookLinks, } from '../../controllers/ai-governance-admin.controller';
 import { z } from "zod";
 const router = Router();
 router.use(moduleStack('ai-governance'));

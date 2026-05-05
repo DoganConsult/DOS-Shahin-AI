@@ -1,8 +1,8 @@
 import { registerModule } from '@dos/module-sdk';
-import { AI_GOVERNANCE_PERMISSIONS, AI_GOVERNANCE_ROLES, AI_GOVERNANCE_ACTIONS } from './security/ai-governance.security.js';
-import { AI_GOVERNANCE_APPROVAL_MATRIX } from './security/ai-governance.approval-matrix.js';
-import { AI_GOVERNANCE_OWNERSHIP_RULES } from './security/ai-governance.ownership.js';
-import { AI_GOVERNANCE_SOD_RULES } from './security/ai-governance.sod.js';
+import { AI_GOVERNANCE_PERMISSIONS, AI_GOVERNANCE_ROLES, AI_GOVERNANCE_ACTIONS } from './security/ai-governance.security';
+import { AI_GOVERNANCE_APPROVAL_MATRIX } from './security/ai-governance.approval-matrix';
+import { AI_GOVERNANCE_OWNERSHIP_RULES } from './security/ai-governance.ownership';
+import { AI_GOVERNANCE_SOD_RULES } from './security/ai-governance.sod';
 export const AI_GOVERNANCE_MANIFEST = {
     code: 'ai-governance',
     version: '1.0.0',

@@ -1,12 +1,12 @@
 import { Router } from 'express';
-import { authenticate, requirePermission } from '../../ports/auth.port.js';
-import { seedAIAgents, getAISquad, getAgentProfile, getAgentStatusLog, } from '../../services/squad/ai-squad.service.js';
-import { emitModuleEvent } from '../../services/emit-event.js';
+import { authenticate, requirePermission } from '../../ports/auth.port';
+import { seedAIAgents, getAISquad, getAgentProfile, getAgentStatusLog, } from '../../services/squad/ai-squad.service';
+import { emitModuleEvent } from '../../services/emit-event';
 import { toErrorMessage } from '@dos/module-sdk';
 // ── Zod Schemas ──────────────────────────────────────────────────────────
-import { validate, auditMiddleware, setAuditData, automationMiddleware, moduleStack } from '../../ports/middleware.port.js';
+import { validate, auditMiddleware, setAuditData, automationMiddleware, moduleStack } from '../../ports/middleware.port';
 import { swallow, EC } from '@dos/platform-core/resilience/resilient-catch';
-import { seedPostBody } from "../../schemas/ai.schemas.js";
+import { seedPostBody } from "../../schemas/ai.schemas";
 import { z } from "zod";
 const router = Router();
 router.use(moduleStack('ai'));

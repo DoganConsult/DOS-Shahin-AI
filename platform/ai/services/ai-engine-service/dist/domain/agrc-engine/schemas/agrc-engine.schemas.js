@@ -7,7 +7,7 @@
  * @since 2026-03-31
  */
 import { z } from 'zod';
-import { grcJsonMetadata, } from '../../../schemas/common.schemas.js';
+import { grcJsonMetadata, } from '../../../schemas/common.schemas';
 // ── Domain Enums ─────────────────────────────────────────────────────
 const runType = z.enum([
     'ccm_scan', 'telemetry_collection', 'automation_cycle',

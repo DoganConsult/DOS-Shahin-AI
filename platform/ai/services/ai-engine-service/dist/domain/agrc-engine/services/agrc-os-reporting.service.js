@@ -6,11 +6,11 @@ import { catchHandler, EC } from '@dos/platform-core/resilience/resilient-catch'
 // NOTE: This is an AGRC product service residing
 // in the platform directory. Law 2 ownership: agrc.
 // ============================================
-import { safeQuery, tenantSchema } from '../ports/database.port.js';
-import { eventBus } from '../ports/events.port.js';
-import { getScheduledReports, generateExecutiveSnapshot, generateComplianceReport } from '../../reporting/services/report/report.service.js';
-import { exportPDF } from '../../reporting/services/misc/pdf-export.service.js';
-import { exportExcel } from '../../reporting/services/misc/excel-export.service.js';
+import { safeQuery, tenantSchema } from '../ports/database.port';
+import { eventBus } from '../ports/events.port';
+import { getScheduledReports, generateExecutiveSnapshot, generateComplianceReport } from '../../reporting/services/report/report.service';
+import { exportPDF } from '../../reporting/services/misc/pdf-export.service';
+import { exportExcel } from '../../reporting/services/misc/excel-export.service';
 import { getFirstRow } from '@dos/db';
 /** Approximate interval in hours for common cron patterns (for overdue detection). */
 function cronToExpectedHours(cronExpression) {

@@ -4,7 +4,7 @@
 // Trend analysis, anomaly detection, and
 // natural-language report summaries.
 // ============================================
-import { safeQuery, tenantSchema } from '../../ports/database.port.js';
+import { safeQuery, tenantSchema } from '../../ports/database.port';
 // === Pure Functions ===
 /**
  * Classify a KPI trend based on its linear regression slope.
@@ -284,7 +284,7 @@ export function buildSummaryText(report, language, anomalies = []) {
  */
 export async function generateReportSummary(report, language, tenantId) {
     try {
-        const { gatewayComplete } = await import('../gateway/ai-gateway.service.js');
+        const { gatewayComplete } = await import('../gateway/ai-gateway.service');
         const metricsJson = JSON.stringify(report.data || {}, null, 2);
         const langInstruction = language === "ar"
             ? "Respond ONLY in Arabic. Write a professional executive summary."

@@ -4,9 +4,9 @@
 // NIST AI 600-1, OWASP LLM Top 10, EU AI Act GPAI
 // 10 methods per exit gate.
 // ============================================
-import { safeQuery, tenantSchema } from '../../../ports/database.port.js';
-import { logPolicyDecision } from '../../../../packs/services/blueprint.service.js';
-import { eventBus } from '../../../ports/events.port.js';
+import { safeQuery, tenantSchema } from '../../../ports/database.port';
+import { logPolicyDecision } from '../../../../packs/services/blueprint.service';
+import { eventBus } from '../../../ports/events.port';
 import { swallow, EC, catchHandler } from '@dos/platform-core/resilience/resilient-catch';
 // PII detection patterns
 const PII_PATTERNS = [

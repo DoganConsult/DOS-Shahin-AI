@@ -1,7 +1,7 @@
-import { safeQuery, tenantSchema } from '../../../ports/database.port.js';
-import { eventBus } from '../../../ports/events.port.js';
+import { safeQuery, tenantSchema } from '../../../ports/database.port';
+import { eventBus } from '../../../ports/events.port';
 import { getFirstRow } from '@dos/db';
-import { SYSTEM_JOB_ACTOR } from '../../../ports/platform.port.js';
+import { SYSTEM_JOB_ACTOR } from '../../../ports/platform.port';
 const agentCircuits = new Map();
 const AGENT_CB_FAILURE_THRESHOLD = 3;
 const AGENT_CB_RECOVERY_MS = 120_000;

@@ -1,16 +1,16 @@
 import { Router } from 'express';
-import { logger } from '../../ports/logger.port.js';
+import { logger } from '../../ports/logger.port';
 // ============================================================
 // Agent Health Visualization Routes
 // Provides endpoints for viewing agent health, learning curves, and lessons learned
 // ============================================================
-import { getAgentHealthDashboard, getAgentHealthStatus } from '../../services/agents/lifecycle/agent-health-visualization.service.js';
-import { getAgentLearningProfile, calculateLearningCurve } from '../../services/agents/lifecycle/agent-learning-curve.service.js';
-import { getAgentLessons, getRelevantLessons } from '../../services/agents/lifecycle/agent-lessons-learned.service.js';
-import { getAgentTasks, getAgentTaskMetrics } from '../../services/activity/agent-task-tracker.service.js';
+import { getAgentHealthDashboard, getAgentHealthStatus } from '../../services/agents/lifecycle/agent-health-visualization.service';
+import { getAgentLearningProfile, calculateLearningCurve } from '../../services/agents/lifecycle/agent-learning-curve.service';
+import { getAgentLessons, getRelevantLessons } from '../../services/agents/lifecycle/agent-lessons-learned.service';
+import { getAgentTasks, getAgentTaskMetrics } from '../../services/activity/agent-task-tracker.service';
 import { toErrorMessage } from '@dos/module-sdk';
-import { authenticate, requirePermission } from '../../ports/auth.port.js';
-import { validate } from "../ports/middleware.port.js";
+import { authenticate, requirePermission } from '../../ports/auth.port';
+import { validate } from "../ports/middleware.port";
 import { z } from "zod";
 const router = Router();
 router.use(authenticate);

@@ -86,7 +86,13 @@ export class DosAuthLoginPageComponent {
         <header class="dos-auth-right-head">
           <dos-auth-language-toggle [locale]="locale" (event)="event.emit($event)" />
         </header>
-        <dos-auth-register-card (event)="event.emit($event)" />
+        <dos-auth-register-card
+          [companySizes]="companySizes"
+          [countries]="countries"
+          [industries]="industries"
+          [regulatoryScopes]="regulatoryScopes"
+          [loginHref]="loginHref"
+          (event)="event.emit($event)" />
         <dos-auth-help [items]="helpItems" />
       </section>
     </dos-auth-shell>
@@ -105,6 +111,11 @@ export class DosAuthRegisterPageComponent {
     { q: 'How long does setup take?',     a: 'Most teams are productive within 30 minutes.' },
     { q: 'Can I migrate later?',          a: 'Yes — workspace settings can change anytime.' },
   ];
+  @Input() companySizes: ReadonlyArray<string> = [];
+  @Input() countries: ReadonlyArray<string> = [];
+  @Input() industries: ReadonlyArray<string> = [];
+  @Input() regulatoryScopes: ReadonlyArray<string> = [];
+  @Input() loginHref = '/login';
   @Output() readonly event = new EventEmitter<AuthEvent<unknown>>();
 }
 

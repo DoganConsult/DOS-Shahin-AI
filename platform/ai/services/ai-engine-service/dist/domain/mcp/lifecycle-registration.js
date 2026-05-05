@@ -1,4 +1,4 @@
-import { registerLifecycleDefinition } from './ports/lifecycle.port.js';
+import { registerLifecycleDefinition } from './ports/lifecycle.port';
 const MCP_TOOL_STATES = [
     'draft',
     'active',

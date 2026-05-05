@@ -7,8 +7,8 @@
  */
 import { logger } from '@dos/platform-core/observability';
 import { toErrorMessage } from '@dos/platform-core/resilience';
-import { dequeueA2AMessages, ackA2AMessage, nackA2AMessage } from './agent-message-queue.js';
-import { subscribeToAgent, unsubscribeFromAgent, isRedisAvailable } from './a2a-redis-notifier.js';
+import { dequeueA2AMessages, ackA2AMessage, nackA2AMessage } from './agent-message-queue';
+import { subscribeToAgent, unsubscribeFromAgent, isRedisAvailable } from './a2a-redis-notifier';
 const POLL_INTERVAL_MS = parseInt(process.env.A2A_POLL_INTERVAL_MS || '10000', 10);
 const BATCH_SIZE = parseInt(process.env.A2A_BATCH_SIZE || '10', 10);
 /**

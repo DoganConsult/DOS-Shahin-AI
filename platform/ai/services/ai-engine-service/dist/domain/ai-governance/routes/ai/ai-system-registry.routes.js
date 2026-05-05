@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import { authenticate, requirePermission } from '../../ports/auth.port.js';
-import { registerAiSystem, getAiSystem, listAiSystems, classifyRisk, decommissionSystem, getAuditTrail, triggerReassessment, getConformityStatus, recordGoNoGoDecision, } from '../../services/ai/registry/ai-system-registry.service.js';
-import { emitAiGovernanceEvent } from '../../services/ai/operations/ai-governance-event.service.js';
-import { enforceStatusTransition } from '../../ports/platform.port.js';
-import { validate, asyncHandler, auditMiddleware, setAuditData, automationMiddleware, moduleStack } from '../../ports/middleware.port.js';
-import { registerBody, goNoGoBody, createClassifyBody, createReassessBody, createDecommissionBody } from "../../schemas/ai-governance.schemas.js";
+import { authenticate, requirePermission } from '../../ports/auth.port';
+import { registerAiSystem, getAiSystem, listAiSystems, classifyRisk, decommissionSystem, getAuditTrail, triggerReassessment, getConformityStatus, recordGoNoGoDecision, } from '../../services/ai/registry/ai-system-registry.service';
+import { emitAiGovernanceEvent } from '../../services/ai/operations/ai-governance-event.service';
+import { enforceStatusTransition } from '../../ports/platform.port';
+import { validate, asyncHandler, auditMiddleware, setAuditData, automationMiddleware, moduleStack } from '../../ports/middleware.port';
+import { registerBody, goNoGoBody, createClassifyBody, createReassessBody, createDecommissionBody } from "../../schemas/ai-governance.schemas";
 import { z } from "zod";
 const router = Router();
 router.use(moduleStack('ai-governance'));

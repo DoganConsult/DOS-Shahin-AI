@@ -7,8 +7,8 @@
 //   - Gate lifecycle (create, resolve, expire)
 //   - Combined audit trail for agent actions
 // ============================================================================
-import { safeQuery, tenantSchema } from '../../ports/database.port.js';
-import { eventBus } from '../../ports/events.port.js';
+import { safeQuery, tenantSchema } from '../../ports/database.port';
+import { eventBus } from '../../ports/events.port';
 import { v4 as uuid } from 'uuid';
 // ── Internal Helpers ──────────────────────────────────────────────────────
 function rowToPermission(r) {

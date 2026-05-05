@@ -1,4 +1,4 @@
-import { AI_MANIFEST } from '../ai.module.js';
+import { AI_MANIFEST } from '../ai.module';
 export { AI_MANIFEST };
 export const AI_MANIFEST_META = {
     code: AI_MANIFEST.code,

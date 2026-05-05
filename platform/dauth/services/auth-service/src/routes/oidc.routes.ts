@@ -250,7 +250,7 @@ oidcRouter.get('/callback', async (req: Request, res: Response) => {
 
         // Dynamic MFA gate. Per-tenant policy in dos.tenant_security_policy
         // (mfa_required boolean). When true, divert the landing target to
-        // /auth/mfa and tag a cookie so the MFA page knows where to send
+        // /mfa and tag a cookie so the MFA page knows where to send
         // the user after a successful verify (handler.onSuccessRedirect
         // in the DB binding overrides this — kept here as a sane default).
         try {
@@ -270,7 +270,7 @@ oidcRouter.get('/callback', async (req: Request, res: Response) => {
               res.cookie('dos_mfa_return', landing, {
                 ...cookieOpts, maxAge: 10 * 60 * 1000,
               });
-              landing = '/auth/mfa';
+              landing = '/mfa';
             }
           }
         } catch (e) {

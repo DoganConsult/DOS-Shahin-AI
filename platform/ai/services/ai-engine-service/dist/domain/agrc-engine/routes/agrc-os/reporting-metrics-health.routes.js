@@ -1,11 +1,11 @@
 import { Router } from 'express';
-import { validate, auditMiddleware } from '../../ports/middleware.port.js';
-import { authenticate, requirePermission } from '../../ports/auth.port.js';
-import { emitEvent } from '../../ports/events.port.js';
-import { writeLimiter } from './shared.js';
+import { validate, auditMiddleware } from '../../ports/middleware.port';
+import { authenticate, requirePermission } from '../../ports/auth.port';
+import { emitEvent } from '../../ports/events.port';
+import { writeLimiter } from './shared';
 import { swallowDefault, EC, catchHandler } from '@dos/platform-core/resilience/resilient-catch';
-import { emptyResult } from '../../ports/database.port.js';
-import { createEscalateBody } from '../../schemas/agrc-engine.schemas.js';
+import { emptyResult } from '../../ports/database.port';
+import { createEscalateBody } from '../../schemas/agrc-engine.schemas';
 import { z } from "zod";
 const genericPayloadSchema = z.record(z.unknown());
 const router = Router();
@@ -14,20 +14,20 @@ router.get('/ready', validate({ query: z.record(z.unknown()) }), (_req, res) => 
     res.json({ status: 'ok', service: 'agrc-os', timestamp: new Date().toISOString() });
 });
 router.get('/reporting/status', validate({ query: z.record(z.unknown()) }), authenticate, requirePermission('report.document.read'), async (req, res) => {
-    const { getReportSchedulesWithStatus } = await import('../../services/agrc-os-reporting.service.js');
+    const { getReportSchedulesWithStatus } = await import('../../services/agrc-os-reporting.service');
     const graceHours = parseInt(req.query.escalationGraceHours) || 48;
     const result = await getReportSchedulesWithStatus(req.tenantId, graceHours);
     res.json(result);
 });
 router.post('/reporting/escalate', authenticate, requirePermission('report.document.write'), writeLimiter, validate({ body: createEscalateBody }), async (req, res) => {
-    const { escalateOverdueReports } = await import('../../services/agrc-os-reporting.service.js');
+    const { escalateOverdueReports } = await import('../../services/agrc-os-reporting.service');
     const graceHours = parseInt(req.body?.escalationGraceHours) || 48;
     const result = await escalateOverdueReports(req.tenantId, graceHours);
     emitEvent({ tenantId: req.tenantId, userId: req.user.userId, module: 'governance', event: 'created', entityType: 'agrc_os', entityId: req.params.id || '' }).catch(catchHandler(EC.AGENT_ACTION, {}));
     res.json(result);
 });
 router.get('/reporting/live/export', validate({ query: z.record(z.unknown()) }), authenticate, requirePermission('report.document.download'), async (req, res) => {
-    const { exportLiveReport } = await import('../../services/agrc-os-reporting.service.js');
+    const { exportLiveReport } = await import('../../services/agrc-os-reporting.service');
     const format = req.query.format?.toLowerCase() === 'excel' ? 'excel' : 'pdf';
     const frameworkId = req.query.frameworkId;
     const language = req.query.language || 'en';
@@ -40,13 +40,13 @@ router.get('/reporting/live/export', validate({ query: z.record(z.unknown()) }),
     res.send(buffer);
 });
 router.get('/metrics', validate({ query: z.record(z.unknown()) }), authenticate, requirePermission('platform.agent.read'), async (req, res) => {
-    const { computeMetrics } = await import('../../services/agrc-metrics.service.js');
+    const { computeMetrics } = await import('../../services/agrc-metrics.service');
     const hours = parseInt(req.query.hours) || 24;
     const result = await computeMetrics(req.tenantId, hours);
     res.json(result);
 });
 router.get('/metrics/history', validate({ query: z.record(z.unknown()) }), authenticate, requirePermission('platform.agent.read'), async (req, res) => {
-    const { getMetricsHistory } = await import('../../services/agrc-metrics.service.js');
+    const { getMetricsHistory } = await import('../../services/agrc-metrics.service');
     const result = await getMetricsHistory(req.tenantId, parseInt(req.query.limit) || 30);
     res.json(result);
 });
@@ -101,7 +101,7 @@ router.get('/agent-status', validate({ query: z.record(z.unknown()) }), authenti
     });
 });
 router.get('/health', validate({ query: z.record(z.unknown()) }), authenticate, requirePermission('platform.agent.read'), async (req, res) => {
-    const { computeMetrics } = await import('../../services/agrc-metrics.service.js');
+    const { computeMetrics } = await import('../../services/agrc-metrics.service');
     const metrics = await computeMetrics(req.tenantId);
     res.json({
         status: metrics.healthStatus,

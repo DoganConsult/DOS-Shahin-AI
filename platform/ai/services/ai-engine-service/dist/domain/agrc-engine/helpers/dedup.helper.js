@@ -1,4 +1,4 @@
-import { query, safeQuery } from '../ports/database.port.js';
+import { query, safeQuery } from '../ports/database.port';
 import { swallowNull, EC } from '@dos/platform-core/resilience/resilient-catch';
 export async function canRunDedupAction(schema, dedupKey, entityType, entityId, actionType, ttlHours = 24) {
     await swallowNull(EC.FALLBACK_QUERY, query(`DELETE FROM "${schema}".agrc_engine_dedup WHERE expires_at < now()`), { operation: 'query agrc_engine_dedup' });

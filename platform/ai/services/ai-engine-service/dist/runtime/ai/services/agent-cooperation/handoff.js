@@ -4,9 +4,9 @@
 // Handoff creation, retrieval, completion, and
 // cooperation rule evaluation for auto-routing.
 // ============================================
-import { eventBus } from '../../ports/events.port.js';
-import { enqueueHandoff, getHandoffBatch } from '../../ports/platform.port.js';
-import { activeCycleContexts } from './cycle-context.js';
+import { eventBus } from '../../ports/events.port';
+import { enqueueHandoff, getHandoffBatch } from '../../ports/platform.port';
+import { activeCycleContexts } from './cycle-context';
 import { swallow, EC, catchHandler } from '@dos/platform-core/resilience/resilient-catch';
 // ── Cooperation Rules ────────────────────────────────────────────────────────
 export const COOPERATION_RULES = [

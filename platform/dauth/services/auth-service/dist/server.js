@@ -24,6 +24,7 @@ const oidc_routes_1 = require("./routes/oidc.routes");
 const access_routes_1 = require("./routes/access.routes");
 const mfa_routes_1 = require("./routes/mfa.routes");
 const admin_secrets_routes_1 = require("./routes/admin-secrets.routes");
+const password_routes_1 = require("./routes/password.routes");
 const PORT = Number(process.env.PORT || 4001);
 // L34 (Phase 4) — tenant-zone HTTPS listener (mTLS).
 // Reads MTLS_HTTPS_LISTEN=1 + TENANT_MTLS_CA / TENANT_MTLS_CERT /
@@ -74,6 +75,11 @@ app.use('/oidc', oidc_routes_1.oidcRouter);
 app.use('/api/access', access_routes_1.accessRouter);
 // MFA-by-email. Gateway exposes as /api/auth/mfa/{send,verify}.
 app.use('/mfa', mfa_routes_1.mfaRouter);
+// Direct-grant password flow — replaces the legacy KC redirect that
+// caused a double credential prompt. Gateway exposes as
+//   POST /api/auth/password/login
+//   POST /api/auth/password/register
+app.use('/password', password_routes_1.passwordRouter);
 // Platform-admin dynamic secret store. Gateway exposes as
 //   GET  /api/auth/admin/secrets             — list catalog + masked previews
 //   PUT  /api/auth/admin/secrets/:secretKey  — upsert one value

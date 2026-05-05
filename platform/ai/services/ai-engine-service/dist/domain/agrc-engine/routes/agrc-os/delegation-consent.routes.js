@@ -3,12 +3,12 @@ import { Router } from 'express';
 import { catchHandler, EC } from '@dos/platform-core/resilience/resilient-catch';
 // AGRC-OS — Delegation Rules & PDPL Consent routes
 // Covers: delegation rules CRUD, consent grant/revoke/forget/log
-import { authenticate, requirePermission } from '../../ports/auth.port.js';
-import { validate, auditMiddleware, setAuditData } from '../../ports/middleware.port.js';
-import { errMsg } from '../../../../i18n/error-messages.js';
-import { emitEvent } from '../../ports/events.port.js';
-import { writeLimiter } from './shared.js';
-import { updateDelegationRulesBody, createGrantBody, createRevokeBody, createForgetBody } from '../../schemas/agrc-engine.schemas.js';
+import { authenticate, requirePermission } from '../../ports/auth.port';
+import { validate, auditMiddleware, setAuditData } from '../../ports/middleware.port';
+import { errMsg } from '../../../../i18n/error-messages';
+import { emitEvent } from '../../ports/events.port';
+import { writeLimiter } from './shared';
+import { updateDelegationRulesBody, createGrantBody, createRevokeBody, createForgetBody } from '../../schemas/agrc-engine.schemas';
 import { z } from "zod";
 const genericPayloadSchema = z.record(z.unknown());
 const router = Router();
@@ -18,7 +18,7 @@ router.use(auditMiddleware('agrc-engine'));
 // ════════════════════════════════════════════════════════════════
 router.get('/delegation-rules/:userId', validate({ query: z.record(z.unknown()) }), authenticate, requirePermission('delegation.chain.read'), async (req, res) => {
     try {
-        const { getDelegationRules } = await import('../../../governance/services/misc/delegation-rules.service.js');
+        const { getDelegationRules } = await import('../../../governance/services/misc/delegation-rules.service');
         const rules = await getDelegationRules(req.tenantId, req.params.userId);
         res.json({ rules, count: rules.length });
     }
@@ -28,7 +28,7 @@ router.get('/delegation-rules/:userId', validate({ query: z.record(z.unknown()) 
 });
 router.put('/delegation-rules/:userId', authenticate, requirePermission('delegation.chain.manage'), writeLimiter, validate({ body: updateDelegationRulesBody }), async (req, res) => {
     try {
-        const { upsertDelegationRule } = await import('../../../governance/services/misc/delegation-rules.service.js');
+        const { upsertDelegationRule } = await import('../../../governance/services/misc/delegation-rules.service');
         const ruleId = await upsertDelegationRule(req.tenantId, req.params.userId, req.body);
         setAuditData(res, { action: 'update', entityType: 'delegation_rule', entityId: ruleId || '' });
         emitEvent({ tenantId: req.tenantId, userId: req.user.userId, module: 'governance', event: 'updated', entityType: 'agrc_os', entityId: req.params.id || '' }).catch(catchHandler(EC.EVENT_BUS, {}));
@@ -40,7 +40,7 @@ router.put('/delegation-rules/:userId', authenticate, requirePermission('delegat
 });
 router.delete('/delegation-rules/:userId/:ruleId', validate({ body: genericPayloadSchema }), authenticate, requirePermission('delegation.chain.manage'), writeLimiter, async (req, res) => {
     try {
-        const { deleteDelegationRule } = await import('../../../governance/services/misc/delegation-rules.service.js');
+        const { deleteDelegationRule } = await import('../../../governance/services/misc/delegation-rules.service');
         const deleted = await deleteDelegationRule(req.tenantId, req.params.ruleId);
         emitEvent({ tenantId: req.tenantId, userId: req.user.userId, module: 'governance', event: 'deleted', entityType: 'agrc_os', entityId: req.params.id || '' }).catch(catchHandler(EC.EVENT_BUS, {}));
         res.json({ deleted });

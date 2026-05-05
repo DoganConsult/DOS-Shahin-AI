@@ -12,8 +12,8 @@
  *   - Admin API for runtime management
  *   - Cron scheduling configuration
  */
-import { safeQuery, tenantSchema } from '../../../ports/database.port.js';
-import { logger } from '../../../ports/logger.port.js';
+import { safeQuery, tenantSchema } from '../../../ports/database.port';
+import { logger } from '../../../ports/logger.port';
 import { toErrorMessage } from '@dos/module-sdk';
 import { getFirstRow } from '@dos/db';
 // ── Cache ───────────────────────────────────────────────────────────────

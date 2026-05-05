@@ -4,8 +4,8 @@
 // Extracts text from evidence/policy documents stored in the DB
 // and uses Claude to answer user queries about document content.
 // ================================================================
-import { logger } from '../../ports/logger.port.js';
-import { safeQuery, tenantSchema } from '../../ports/database.port.js';
+import { logger } from '../../ports/logger.port';
+import { safeQuery, tenantSchema } from '../../ports/database.port';
 export async function analyzeDocumentWithRAG(tenantId, documentId, query) {
     logger.info(`[RAG Service] Analyzing document ${documentId} for query: "${query}"`);
     const schema = tenantSchema(tenantId);

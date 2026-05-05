@@ -1,10 +1,10 @@
 // @ts-nocheck
 import { Router } from 'express';
-import { authenticate, requirePermission } from '../../ports/auth.port.js';
+import { authenticate, requirePermission } from '../../ports/auth.port';
 import { toErrorMessage } from '@dos/module-sdk';
-import { validate, asyncHandler, auditMiddleware, setAuditData, automationMiddleware, moduleStack, mutationEventHook } from '../../ports/middleware.port.js';
-import { createAgentToolBinding, getAgentToolBindingById, updateAgentToolBinding, deleteAgentToolBinding, setAgentToolBindingEnabled, listAgentToolBindings, createTenantAllowlistEntry, getTenantAllowlistEntryById, updateTenantAllowlistEntry, deleteTenantAllowlistEntry, setTenantAllowlistEnabled, listTenantAllowlistEntries, backfillTenantAllowlistAssetRefs, getEnabledToolAssetIdsForAgent, getEnabledAllowlistForTenant, isAssetAllowlistedForTenant, } from '../../services/ai/compliance/ai-binding-governance.service.js';
-import { createAgentToolsBody, updateAgentToolsBody, createEnableBody, createDisableBody, createAllowlistBody, updateAllowlistBody, createBackfillBody } from "../../schemas/ai-governance.schemas.js";
+import { validate, asyncHandler, auditMiddleware, setAuditData, automationMiddleware, moduleStack, mutationEventHook } from '../../ports/middleware.port';
+import { createAgentToolBinding, getAgentToolBindingById, updateAgentToolBinding, deleteAgentToolBinding, setAgentToolBindingEnabled, listAgentToolBindings, createTenantAllowlistEntry, getTenantAllowlistEntryById, updateTenantAllowlistEntry, deleteTenantAllowlistEntry, setTenantAllowlistEnabled, listTenantAllowlistEntries, backfillTenantAllowlistAssetRefs, getEnabledToolAssetIdsForAgent, getEnabledAllowlistForTenant, isAssetAllowlistedForTenant, } from '../../services/ai/compliance/ai-binding-governance.service';
+import { createAgentToolsBody, updateAgentToolsBody, createEnableBody, createDisableBody, createAllowlistBody, updateAllowlistBody, createBackfillBody } from "../../schemas/ai-governance.schemas";
 import { z } from "zod";
 const router = Router();
 router.use(moduleStack('ai-governance'));

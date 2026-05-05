@@ -1,4 +1,4 @@
-import { AGRC_ENGINE_MANIFEST } from '../agrc_engine.module.js';
+import { AGRC_ENGINE_MANIFEST } from '../agrc_engine.module';
 export { AGRC_ENGINE_MANIFEST };
 export const AGRC_ENGINE_MANIFEST_META = {
     code: AGRC_ENGINE_MANIFEST.code,

@@ -5,9 +5,9 @@
 // conformity, technical docs, lifecycle management.
 // 14 methods per gated plan exit gate.
 // ============================================
-import { safeQuery, safeQueryWithClient, tenantSchema, withTransaction } from '../../../ports/database.port.js';
-import { logPolicyDecision } from '../../../../packs/services/blueprint.service.js';
-import { eventBus } from '../../../ports/events.port.js';
+import { safeQuery, safeQueryWithClient, tenantSchema, withTransaction } from '../../../ports/database.port';
+import { logPolicyDecision } from '../../../../packs/services/blueprint.service';
+import { eventBus } from '../../../ports/events.port';
 import { swallow, EC } from '@dos/platform-core/resilience/resilient-catch';
 // ── Annex III high-risk domain categories ──
 const ANNEX_III_HIGH_RISK_DOMAINS = [

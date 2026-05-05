@@ -3,8 +3,8 @@
 // Per-tenant, per-session, ordered list of (role, content, metadata)
 // turns. Used by the copilot route + agent-runner to replay prior turns
 // before the next LLM call. Persisted in <tenant>.ai_drafts.
-import { safeQuery, tenantSchema } from '../../ports/database.port.js';
-import { logger } from '../../ports/logger.port.js';
+import { safeQuery, tenantSchema } from '../../ports/database.port';
+import { logger } from '../../ports/logger.port';
 /**
  * Append one turn to the conversation. Marks it as the latest and
  * unflips the previous latest in the same session. Best-effort:

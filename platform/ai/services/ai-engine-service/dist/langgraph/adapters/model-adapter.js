@@ -7,7 +7,7 @@ import { logger } from '@dos/platform-core/observability';
 // complexity and automatic fallback.
 // ============================================
 import { ChatAnthropic } from '@langchain/anthropic';
-import { CLAUDE_MODEL, CLAUDE_MAX_TOKENS } from '../../config/claude-client.js';
+import { CLAUDE_MODEL, CLAUDE_MAX_TOKENS } from '../../config/claude-client';
 import { toErrorMessage } from '@dos/platform-core/resilience';
 let _chatModel = null;
 const MODEL_TIERS = {

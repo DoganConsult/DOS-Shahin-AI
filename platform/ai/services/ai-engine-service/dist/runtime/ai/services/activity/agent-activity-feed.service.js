@@ -3,7 +3,7 @@
 // Provides real-time feed of agent actions and
 // performance statistics for dashboard display.
 // ============================================
-import { safeQuery, tenantSchema } from '../../ports/database.port.js';
+import { safeQuery, tenantSchema } from '../../ports/database.port';
 // ── Agent name map ──────────────────────────────────────────────────────────
 const AGENT_NAMES = {
     'A01': { en: 'Governance Intelligence', ar: 'ذكاء الحوكمة' },

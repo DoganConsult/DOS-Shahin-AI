@@ -2,21 +2,21 @@
 import { catchHandler, EC } from '@dos/platform-core/resilience/resilient-catch';
 // AGRC-OS — Dashboard Composer Engine
 import { Router } from 'express';
-import { auditMiddleware, validate, asyncHandler } from '../../ports/middleware.port.js';
-import { authenticate, requirePermission } from '../../ports/auth.port.js';
-import { errMsg } from '../../../../i18n/error-messages.js';
-import { emitEvent } from '../../ports/events.port.js';
-import { updateCustomBody } from '../../schemas/agrc-engine.schemas.js';
+import { auditMiddleware, validate, asyncHandler } from '../../ports/middleware.port';
+import { authenticate, requirePermission } from '../../ports/auth.port';
+import { errMsg } from '../../../../i18n/error-messages';
+import { emitEvent } from '../../ports/events.port';
+import { updateCustomBody } from '../../schemas/agrc-engine.schemas';
 import { z } from "zod";
 const genericPayloadSchema = z.record(z.unknown());
 const router = Router();
 router.use(auditMiddleware('agrc-engine'));
 router.get('/dashboards/catalog', authenticate, requirePermission('platform.agent.read'), validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
-    const { getDashboardCatalog, getDashboardStats } = await import('../../../dashboard/services/dashboard-composer.service.js');
+    const { getDashboardCatalog, getDashboardStats } = await import('../../../dashboard/services/dashboard-composer.service');
     res.json({ dashboards: getDashboardCatalog(), stats: getDashboardStats() });
 }));
 router.get('/dashboards/layout/:code', authenticate, requirePermission('platform.agent.read'), validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
-    const { getDashboardLayout, loadCustomDashboard } = await import('../../../dashboard/services/dashboard-composer.service.js');
+    const { getDashboardLayout, loadCustomDashboard } = await import('../../../dashboard/services/dashboard-composer.service');
     const code = req.params.code;
     const tenantId = req.tenantId;
     const userId = req.user?.userId;
@@ -34,7 +34,7 @@ router.get('/dashboards/layout/:code', authenticate, requirePermission('platform
     res.json(layout);
 }));
 router.get('/dashboards/hub/:hubRoute', authenticate, requirePermission('platform.agent.read'), validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
-    const { getHubDashboard } = await import('../../../dashboard/services/dashboard-composer.service.js');
+    const { getHubDashboard } = await import('../../../dashboard/services/dashboard-composer.service');
     const layout = getHubDashboard(req.params.hubRoute);
     if (!layout) {
         res.status(404).json({ error: errMsg('NOT_FOUND', req) });
@@ -43,13 +43,13 @@ router.get('/dashboards/hub/:hubRoute', authenticate, requirePermission('platfor
     res.json(layout);
 }));
 router.get('/dashboards/role', authenticate, requirePermission('platform.agent.read'), validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
-    const { getRoleDashboard } = await import('../../../dashboard/services/dashboard-composer.service.js');
+    const { getRoleDashboard } = await import('../../../dashboard/services/dashboard-composer.service');
     const systemRole = req.user?.role || 'user';
     const layout = getRoleDashboard(systemRole);
     res.json(layout || { error: 'No dashboard for role' });
 }));
 router.get('/dashboards/stage/:stageId', authenticate, requirePermission('platform.agent.read'), validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
-    const { getStageDashboard } = await import('../../../dashboard/services/dashboard-composer.service.js');
+    const { getStageDashboard } = await import('../../../dashboard/services/dashboard-composer.service');
     const layout = getStageDashboard(req.params.stageId);
     if (!layout) {
         res.status(404).json({ error: errMsg('NOT_FOUND', req) });
@@ -58,11 +58,11 @@ router.get('/dashboards/stage/:stageId', authenticate, requirePermission('platfo
     res.json(layout);
 }));
 router.get('/dashboards/category/:category', authenticate, requirePermission('platform.agent.read'), validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
-    const { getDashboardsByCategory } = await import('../../../dashboard/services/dashboard-composer.service.js');
+    const { getDashboardsByCategory } = await import('../../../dashboard/services/dashboard-composer.service');
     res.json({ dashboards: getDashboardsByCategory(req.params.category) });
 }));
 router.put('/dashboards/custom/:code', authenticate, requirePermission('platform.agent.manage'), validate({ body: updateCustomBody }), asyncHandler(async (req, res) => {
-    const { saveCustomDashboard } = await import('../../../dashboard/services/dashboard-composer.service.js');
+    const { saveCustomDashboard } = await import('../../../dashboard/services/dashboard-composer.service');
     const tenantId = req.tenantId;
     const userId = req.user?.userId;
     await saveCustomDashboard(tenantId, userId, req.params.code, req.body);

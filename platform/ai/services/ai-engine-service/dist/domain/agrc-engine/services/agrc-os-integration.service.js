@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { logger } from '../ports/logger.port.js';
+import { logger } from '../ports/logger.port';
 // ================================================================
 // Shahin — AGRC-OS Integration Service (Product)
 // Bridges All Autonomy Gaps:
@@ -14,9 +14,9 @@ import { logger } from '../ports/logger.port.js';
 // NOTE: This is an AGRC product service residing
 // in the platform directory. Law 2 ownership: agrc.
 // ================================================================
-import { safeQuery, tenantSchema } from '../ports/database.port.js';
-import { eventBus } from '../ports/events.port.js';
-import { recordAudit } from '../../audit/services/audit/core/audit-trail.service.js';
+import { safeQuery, tenantSchema } from '../ports/database.port';
+import { eventBus } from '../ports/events.port';
+import { recordAudit } from '../../audit/services/audit/core/audit-trail.service';
 import { toErrorMessage } from '@dos/module-sdk';
 import { getFirstRow } from '@dos/db';
 import { swallowDefault, EC, catchHandler } from '@dos/platform-core/resilience/resilient-catch';
@@ -175,7 +175,7 @@ async function executeActivationAction(tenantId, schema, shadow, rule, triggerCo
             return `No agent mapped for shadow ${shadow.agent_name}`;
         }
         case 'create_task': {
-            const { createTask } = await import('../../workflow/services/tasks/task-board.service.js');
+            const { createTask } = await import('../../workflow/services/tasks/task-board.service');
             await createTask(tenantId, {
                 title: actionConfig.taskTitle || `[Auto] ${rule.rule_name}`,
                 description: `Triggered by activation rule: ${JSON.stringify(triggerContext)}`,
@@ -185,7 +185,7 @@ async function executeActivationAction(tenantId, schema, shadow, rule, triggerCo
             return `Task created for ${shadow.user_id} via rule "${rule.rule_name}"`;
         }
         case 'send_notification': {
-            const { createNotification } = await import('../../notification/services/notification.service.js');
+            const { createNotification } = await import('../../notification/services/notification.service');
             await createNotification(tenantId, {
                 userId: shadow.user_id,
                 type: 'agent_activation',

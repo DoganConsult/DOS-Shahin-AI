@@ -1,4 +1,4 @@
-import { safeQuery, tenantSchema } from '../ports/database.port.js';
+import { safeQuery, tenantSchema } from '../ports/database.port';
 export async function runDiagnostics(tenantId) {
     const schema = tenantSchema(tenantId);
     const checks = [];

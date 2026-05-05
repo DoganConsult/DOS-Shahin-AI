@@ -5,10 +5,10 @@ import { Router } from 'express';
  * @module ai
  * @since 2026-03-31
  */
-import { authenticate, requirePermission } from '../ports/auth.port.js';
-import { auditMiddleware, asyncHandler, moduleStack } from '../ports/middleware.port.js';
-import { getAiDiagnosticsSnapshot } from '../diagnostics/ai-diagnostics.service.js';
-import { validate } from "../ports/middleware.port.js";
+import { authenticate, requirePermission } from '../ports/auth.port';
+import { auditMiddleware, asyncHandler, moduleStack } from '../ports/middleware.port';
+import { getAiDiagnosticsSnapshot } from '../diagnostics/ai-diagnostics.service';
+import { validate } from "../ports/middleware.port";
 import { z } from "zod";
 const router = Router();
 router.use(moduleStack('ai'));

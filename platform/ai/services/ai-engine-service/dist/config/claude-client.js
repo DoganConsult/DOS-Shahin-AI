@@ -8,9 +8,9 @@
  *
  * This file re-exports from the production client to avoid null/stub failures.
  */
-import { callClaude as _callClaude, callClaudeJSON as _callClaudeJSON, } from '../runtime/ai/config/claude-client.js';
+import { callClaude as _callClaude, callClaudeJSON as _callClaudeJSON, } from '../runtime/ai/config/claude-client';
 // Re-export production client
-export { getClaudeClient, resetClient } from '../runtime/ai/config/claude-client.js';
+export { getClaudeClient, resetClient } from '../runtime/ai/config/claude-client';
 export const CLAUDE_MODEL = process.env.CLAUDE_MODEL || 'claude-sonnet-4-20250514';
 export const CLAUDE_MAX_TOKENS = parseInt(process.env.CLAUDE_MAX_TOKENS || '4096', 10);
 /**
@@ -91,5 +91,5 @@ export async function claudeWithTools(opts) {
         usage: { inputTokens: resp.inputTokens || 0, outputTokens: resp.outputTokens || 0 },
     };
 }
-export { loadAgentDef, buildToolResults } from '../runtime/ai/config/claude-client.js';
+export { loadAgentDef, buildToolResults } from '../runtime/ai/config/claude-client';
 //# sourceMappingURL=claude-client.js.map

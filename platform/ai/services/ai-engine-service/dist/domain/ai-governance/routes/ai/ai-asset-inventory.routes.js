@@ -1,12 +1,12 @@
 // @ts-nocheck
 import { Router } from 'express';
-import { authenticate, requirePermission } from '../../ports/auth.port.js';
-import { createAsset, getAssetById, getAssetByKey, updateAsset, listAssets, deleteAsset, getLifecycleTransitions, } from '../../services/ai/registry/ai-asset-inventory.service.js';
-import { discoverAndSeedAssets } from '../../runtime/ai/services/governance/compliance/ai-asset-discovery.service.js';
+import { authenticate, requirePermission } from '../../ports/auth.port';
+import { createAsset, getAssetById, getAssetByKey, updateAsset, listAssets, deleteAsset, getLifecycleTransitions, } from '../../services/ai/registry/ai-asset-inventory.service';
+import { discoverAndSeedAssets } from '../../runtime/ai/services/governance/compliance/ai-asset-discovery.service';
 import { toErrorMessage } from '@dos/module-sdk';
 // ── Zod Schemas ──────────────────────────────────────────────────────────
-import { validate, asyncHandler, auditMiddleware, setAuditData, automationMiddleware, requireOwnership, moduleStack, mutationEventHook } from '../../ports/middleware.port.js';
-import { createAiGovernanceBody, updateAiGovernanceBody, createTransitionBody, createDiscoverBody } from "../../schemas/ai-governance.schemas.js";
+import { validate, asyncHandler, auditMiddleware, setAuditData, automationMiddleware, requireOwnership, moduleStack, mutationEventHook } from '../../ports/middleware.port';
+import { createAiGovernanceBody, updateAiGovernanceBody, createTransitionBody, createDiscoverBody } from "../../schemas/ai-governance.schemas";
 import { z } from "zod";
 const router = Router();
 router.use(moduleStack('ai-governance'));

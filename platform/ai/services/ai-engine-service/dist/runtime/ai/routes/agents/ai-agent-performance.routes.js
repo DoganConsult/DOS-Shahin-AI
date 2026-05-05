@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import { authenticate, requirePermission } from '../../ports/auth.port.js';
-import * as AgentPerformanceService from '../../services/observability/ai-agent-performance.service.js';
+import { authenticate, requirePermission } from '../../ports/auth.port';
+import * as AgentPerformanceService from '../../services/observability/ai-agent-performance.service';
 import { toErrorMessage } from '@dos/module-sdk';
 // ── Zod Schemas ──────────────────────────────────────────────────────────
-import { auditMiddleware, validate, moduleStack, mutationEventHook } from '../../ports/middleware.port.js';
-import { agentsAgentIdPerformancePostBody, agentsAgentIdBiasDetectionPostBody, biasDetectionsDetectionIdRemediationPatchBody, agentsAgentIdTrustScorePostBody, agentsAgentIdHumanOverridesPostBody } from "../../schemas/ai.schemas.js";
+import { auditMiddleware, validate, moduleStack, mutationEventHook } from '../../ports/middleware.port';
+import { agentsAgentIdPerformancePostBody, agentsAgentIdBiasDetectionPostBody, biasDetectionsDetectionIdRemediationPatchBody, agentsAgentIdTrustScorePostBody, agentsAgentIdHumanOverridesPostBody } from "../../schemas/ai.schemas";
 import { z } from "zod";
 const router = Router();
 router.use(moduleStack('ai'));

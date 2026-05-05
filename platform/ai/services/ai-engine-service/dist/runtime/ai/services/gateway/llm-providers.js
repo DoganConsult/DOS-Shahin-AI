@@ -1,6 +1,6 @@
 import * as http from 'http';
 import * as https from 'https';
-import { CLAUDE_MODEL, CLAUDE_MAX_TOKENS } from '../../ports/ai.port.js';
+import { CLAUDE_MODEL, CLAUDE_MAX_TOKENS } from '../../ports/ai.port';
 import { toErrorMessage } from '@dos/module-sdk';
 export const DEFAULT_FREE_ORDER = [
     'groq', 'gemini', 'openrouter', 'together',
@@ -42,7 +42,7 @@ export function buildFreeProvider(name, raw) {
     };
 }
 export async function callClaude(messages, model, maxTokens) {
-    const { getClaudeClient } = await import('../../../../config/claude-client.js');
+    const { getClaudeClient } = await import('../../../../config/claude-client');
     const client = getClaudeClient();
     const systemMessages = messages.filter(m => m.role === 'system');
     const chatMessages = messages.filter(m => m.role !== 'system');

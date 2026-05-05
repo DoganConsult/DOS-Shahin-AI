@@ -3,13 +3,13 @@
 // AGRC-OS Agent Squad Manager Service
 // AI agents as first-class team members with FSM status tracking
 // ============================================================
-import { safeQuery, tenantSchema } from '../../ports/database.port.js';
-import { eventBus } from '../../ports/events.port.js';
-import { recordAudit } from '../../../audit/services/audit/core/audit-trail.service.js';
-import { registerParticipant } from './unified-squad-registry.service.js';
+import { safeQuery, tenantSchema } from '../../ports/database.port';
+import { eventBus } from '../../ports/events.port';
+import { recordAudit } from '../../../audit/services/audit/core/audit-trail.service';
+import { registerParticipant } from './unified-squad-registry.service';
 import { toErrorMessage } from '@dos/module-sdk';
 import { getFirstRow } from '@dos/db';
-import { SYSTEM_JOB_ACTOR } from '../../ports/platform.port.js';
+import { SYSTEM_JOB_ACTOR } from '../../ports/platform.port';
 // ── Predefined AI Agent Squad (A01–A10) ────────────────────────────────────
 const PREDEFINED_AGENTS = [
     { id: 'AGENT-A01', nameEn: 'Compliance Sentinel', nameAr: 'حارس الامتثال', role: 'compliance_monitor', specialization: 'regulatory_compliance' },

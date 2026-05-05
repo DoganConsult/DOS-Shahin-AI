@@ -1,4 +1,4 @@
-import { ServiceError } from '../errors/index.js';
+import { ServiceError } from '../errors';
 export function createModuleError(entry, opts) {
     const locale = opts?.locale ?? 'en';
     const message = opts?.messageOverride

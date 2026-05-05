@@ -6,8 +6,8 @@
 // Agents inherit user roles and permissions.
 // ============================================================================
 import { v4 as uuid } from 'uuid';
-import { safeQuery, tenantSchema } from '../../ports/database.port.js';
-import { recordAudit } from '../../../audit/services/audit/core/audit-trail.service.js';
+import { safeQuery, tenantSchema } from '../../ports/database.port';
+import { recordAudit } from '../../../audit/services/audit/core/audit-trail.service';
 import { getFirstRow } from '@dos/db';
 // ============================================================================
 // Assignment CRUD

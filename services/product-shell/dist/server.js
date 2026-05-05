@@ -72,6 +72,11 @@ function applyNoStoreHeaders(res) {
     res.setHeader('Cache-Control', NO_STORE_CACHE_CONTROL);
     res.setHeader('Pragma', 'no-cache');
     res.setHeader('Expires', '0');
+    // Strip validators so browsers/proxies cannot serve a 304 against the
+    // previous bundle's index.html. Without this an ETag/Last-Modified hit
+    // re-uses the old cached HTML which references the old hashed JS.
+    res.removeHeader('ETag');
+    res.removeHeader('Last-Modified');
 }
 function required(name) {
     const v = process.env[name];
@@ -156,7 +161,8 @@ app.get('/manifest.json', (_req, res) => {
     const canonical = path_1.default.join(SPA_DIR, 'manifest.webmanifest');
     applyNoStoreHeaders(res);
     if (fs_1.default.existsSync(canonical)) {
-        res.type('application/manifest+json').sendFile(canonical);
+        res.type('application/manifest+json')
+            .sendFile(canonical, { etag: false, lastModified: false, cacheControl: false });
         return;
     }
     res.status(404).type('text/plain').send('not found');
@@ -169,17 +175,17 @@ const INDEX_PATH = path_1.default.join(SPA_DIR, 'index.html');
 // be answered with index.html — browsers would try to execute HTML as JS
 // and silently replay the old SPA shell on top of the new one. 404 them.
 const ASSET_EXT = /\.(?:js|css|map|woff2?|ttf|otf|eot|png|jpe?g|gif|svg|ico|webp|wasm)$/i;
-// Legacy auth-path → canonical /auth/* redirect (Phase P2). Bookmarks,
-// stale tabs, and external links pointing at /login, /register, /mfa,
-// /forgot-password, /reset-password get 301'd to the canonical
-// /auth/<page> route so the SPA never asks template-binding for the
-// legacy path (which has no DB binding and no public allowlist entry).
+// /auth/<page> → clean / <page> redirect (Phase WS-Auth follow-up,
+// migration 20260508_0330). The DB binding shipped under /<page> so any
+// stale tab, external link, or bookmark hitting the legacy /auth/<page>
+// must 301 down to the canonical short path; the SPA router only knows
+// about /<page>.
 const LEGACY_AUTH_REDIRECTS = {
-    '/login': '/auth/login',
-    '/register': '/auth/register',
-    '/forgot-password': '/auth/forgot-password',
-    '/mfa': '/auth/mfa',
-    '/reset-password': '/auth/reset-password',
+    '/auth/login': '/login',
+    '/auth/register': '/register',
+    '/auth/forgot-password': '/forgot-password',
+    '/auth/mfa': '/mfa',
+    '/auth/reset-password': '/reset-password',
 };
 app.get(Object.keys(LEGACY_AUTH_REDIRECTS), (req, res) => {
     const target = LEGACY_AUTH_REDIRECTS[req.path];
@@ -201,7 +207,10 @@ app.get('*', (req, res) => {
         return;
     }
     applyNoStoreHeaders(res);
-    res.sendFile(INDEX_PATH);
+    // etag:false / lastModified:false → never emit a 304 for index.html.
+    // The catch-all *must* deliver fresh HTML (and therefore the freshest
+    // hashed-bundle filenames) on every navigation.
+    res.sendFile(INDEX_PATH, { etag: false, lastModified: false, cacheControl: false });
 });
 app.use((err, _req, res, _next) => {
     console.error(`[${SERVICE}] unhandled`, err);

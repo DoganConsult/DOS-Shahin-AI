@@ -1,13 +1,13 @@
 // @ts-nocheck
-import { assertTenantId, safeQuery, tenantSchema } from '../../../ports/database.port.js';
-import { logger } from '../../../ports/logger.port.js';
+import { assertTenantId, safeQuery, tenantSchema } from '../../../ports/database.port';
+import { logger } from '../../../ports/logger.port';
 import { toErrorMessage } from '@dos/module-sdk';
-import { canAgentExecute } from './ai-agent-config.service.js';
-import { isAgentModuleActive, CONTEXT_BUILDERS, loadGovernanceContext, loadAgentPlaybooks } from '../../orchestration/agent-context-builders.service.js';
+import { canAgentExecute } from './ai-agent-config.service';
+import { isAgentModuleActive, CONTEXT_BUILDERS, loadGovernanceContext, loadAgentPlaybooks } from '../../orchestration/agent-context-builders.service';
 import { getPendingHandoffs } from '../agent-cooperation.service.js';
-import { runAgentWithTools } from './agent-tool-executor.service.js';
-import { loadAgentDef } from '../../../ports/ai.port.js';
-import { eventBus } from '../../../ports/events.port.js';
+import { runAgentWithTools } from './agent-tool-executor.service';
+import { loadAgentDef } from '../../../ports/ai.port';
+import { eventBus } from '../../../ports/events.port';
 import { swallow, EC } from '@dos/platform-core/resilience/resilient-catch';
 // Wave 3.6 — kill-switch lookup, 5-second TTL cache. Returns
 // {active:true, reason} when either an agent-specific row or a
@@ -40,7 +40,7 @@ async function _isKillSwitchActive(tenantId, agentId, schema) {
     }
 }
 /** Action execution lives in orchestration; re-exported here for dynamic imports that expect `agent-runner.service`. */
-export { executeAction, resolveUserPermissions, getDefaultAgentPermissions, } from '../../orchestration/agent-action-executor.service.js';
+export { executeAction, resolveUserPermissions, getDefaultAgentPermissions, } from '../../orchestration/agent-action-executor.service';
 export async function runAgent(tenantId, agentId, opts = {}) {
     const startMs = Date.now();
     // Fail fast on missing tenant context. Callers reaching here without a
@@ -142,12 +142,12 @@ export async function runAgent(tenantId, agentId, opts = {}) {
         const memoryQuery = (opts.query || `agent ${agentId} prior context`).slice(0, 1024);
         const [priorMemories, ragContext] = await Promise.all([
             memoryEnabled
-                ? import('../../memory/memory-store.service.js')
+                ? import('../../memory/memory-store.service')
                     .then((m) => m.retrieveMemories({ tenantId, agentId, query: memoryQuery, topK: 5 }))
                     .catch(() => [])
                 : Promise.resolve([]),
             ragEnabled && opts.query
-                ? import('../../gateway/rag-pipeline.service.js')
+                ? import('../../gateway/rag-pipeline.service')
                     .then((m) => m.buildRAGContext(tenantId, agentId, opts.query, 3))
                     .catch(() => ({ documents: [], tokenEstimate: 0 }))
                 : Promise.resolve({ documents: [], tokenEstimate: 0 }),
@@ -158,7 +158,7 @@ export async function runAgent(tenantId, agentId, opts = {}) {
                 .join('\n')}\n=== END MEMORY ===\n`
             : '';
         const ragBlock = ragContext && ragContext.documents?.length
-            ? await import('../../gateway/rag-pipeline.service.js').then((m) => m.formatRAGForPrompt(ragContext))
+            ? await import('../../gateway/rag-pipeline.service').then((m) => m.formatRAGForPrompt(ragContext))
             : '';
         const enrichedContext = {
             agent: { id: agentId, name: agentDef.name || agentId },
@@ -182,7 +182,7 @@ export async function runAgent(tenantId, agentId, opts = {}) {
         });
         // ── Tier 2: commit run summary to memory (best-effort) ──
         if (memoryEnabled && toolResult.finalText) {
-            import('../../memory/memory-store.service.js')
+            import('../../memory/memory-store.service')
                 .then((m) => m.commitMemories({
                 tenantId,
                 agentId,
@@ -206,7 +206,7 @@ export async function runAgent(tenantId, agentId, opts = {}) {
         // Runs the canonical evaluateOutput judge on the run's finalText. Cheap
         // (one judge call per run when AI_AUTO_EVAL_ENABLED=true).
         if (process.env.AI_AUTO_EVAL_ENABLED === 'true' && toolResult.finalText) {
-            import('../lifecycle/agent-eval.service.js')
+            import('../lifecycle/agent-eval.service')
                 .then((m) => m.evaluateOutput(tenantId, agentId, String(opts.query || `agent ${agentId} autonomous run`).slice(0, 1000), String(toolResult.finalText).slice(0, 2000), 'quality', executionId || undefined))
                 .catch(() => undefined);
         }

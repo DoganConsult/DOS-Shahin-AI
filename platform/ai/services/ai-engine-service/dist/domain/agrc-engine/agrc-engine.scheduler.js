@@ -1,8 +1,8 @@
-import { logger } from './ports/logger.port.js';
-import { AgrcEngineService } from './agrc-engine.service.js';
-import { notReadyTenants } from './ports/platform.port.js';
-import { runScheduledEval } from '../../runtime/ai/services/agents/lifecycle/agent-eval.service.js';
-import { purgeExpiredMemories, consolidateMemories } from '../../runtime/ai/services/memory/memory-store.service.js';
+import { logger } from './ports/logger.port';
+import { AgrcEngineService } from './agrc-engine.service';
+import { notReadyTenants } from './ports/platform.port';
+import { runScheduledEval } from '../../runtime/ai/services/agents/lifecycle/agent-eval.service';
+import { purgeExpiredMemories, consolidateMemories } from '../../runtime/ai/services/memory/memory-store.service';
 export class AgrcEngineScheduler {
     service = new AgrcEngineService();
     timer = null;

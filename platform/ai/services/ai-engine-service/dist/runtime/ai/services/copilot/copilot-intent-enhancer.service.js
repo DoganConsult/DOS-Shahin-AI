@@ -4,7 +4,7 @@
 // AI-powered intent classification, disambiguation,
 // and context-aware query enhancement for the GRC copilot
 // ============================================
-import { emptyResult, safeQuery, tenantSchema } from '../../ports/database.port.js';
+import { emptyResult, safeQuery, tenantSchema } from '../../ports/database.port';
 import { swallowDefault, EC } from '@dos/platform-core/resilience/resilient-catch';
 // GRC domain intent taxonomy
 const INTENT_TAXONOMY = {
@@ -40,7 +40,7 @@ export async function classifyIntent(userInput, tenantId) {
     // AI fallback for ambiguous intents
     if (tenantId) {
         try {
-            const { claudeJSON } = await import('../../../../config/claude-client.js');
+            const { claudeJSON } = await import('../../../../config/claude-client');
             const result = await claudeJSON({
                 systemPrompt: `You are a GRC copilot intent classifier. Classify the user's intent into exactly one of these categories: ${Object.keys(INTENT_TAXONOMY).join(', ')}. Respond with JSON: {intent: string, confidence: number}`,
                 userMessage: userInput,
@@ -69,7 +69,7 @@ export async function enhanceIntent(tenantId, userInput) {
         swallowDefault(EC.FALLBACK_QUERY, emptyResult(), safeQuery(`SELECT entity_type, action, created_at FROM "${schema}".audit_trail WHERE created_at > NOW() - INTERVAL '1 hour' ORDER BY created_at DESC LIMIT 5`), { tenantId: tenantId, operation: 'query audit_trail' }),
         swallowDefault(EC.FALLBACK_QUERY, emptyResult(), safeQuery(`SELECT role, permissions FROM "${schema}".users WHERE user_id = (SELECT actor_id FROM "${schema}".audit_trail ORDER BY created_at DESC LIMIT 1)`), { tenantId: tenantId, operation: 'query audit_trail' }),
     ]);
-    const { claudeJSON } = await import('../../../../config/claude-client.js');
+    const { claudeJSON } = await import('../../../../config/claude-client');
     const enhanced = await claudeJSON({
         systemPrompt: `You are a GRC copilot intent enhancer. Take the user's raw query and enhance it with:
 1. Better phrasing for the GRC domain

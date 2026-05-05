@@ -1,5 +1,5 @@
-import { safeQuery, tenantSchema } from '../../ports/database.port.js';
-import { logger } from '../../ports/logger.port.js';
+import { safeQuery, tenantSchema } from '../../ports/database.port';
+import { logger } from '../../ports/logger.port';
 export async function getUnifiedActivityFeed(tenantId, userId, filter, cursor, limit = 20) {
     const schema = tenantSchema(tenantId);
     try {

@@ -1,6 +1,6 @@
-import { safeQuery, tenantSchema } from '../ports/database.port.js';
+import { safeQuery, tenantSchema } from '../ports/database.port';
 import { getFirstRow } from '@dos/db';
-import { logger } from '../ports/logger.port.js';
+import { logger } from '../ports/logger.port';
 import { toErrorMessage } from '@dos/module-sdk';
 export async function getAiGovernanceDiagnostics(tenantId) {
     const schema = tenantSchema(tenantId);

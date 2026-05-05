@@ -11,8 +11,8 @@
  * Table: {tenant_schema}.rag_embeddings (auto-created with HNSW index)
  */
 import { safeQuery, tenantSchema } from '@dos/db';
-import { generateEmbedding, generateEmbeddingsBatch, EMBEDDING_DIM } from './embedding-generator.js';
-import { chunkDocument } from './document-chunker.js';
+import { generateEmbedding, generateEmbeddingsBatch, EMBEDDING_DIM } from './embedding-generator';
+import { chunkDocument } from './document-chunker';
 import { logger } from '@dos/platform-core/observability';
 import { toErrorMessage } from '@dos/platform-core/resilience';
 /**

@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import { authenticate, requirePermission } from '../ports/auth.port.js';
-import { auditMiddleware, asyncHandler, moduleStack, validate } from '../ports/middleware.port.js';
-import { safeQuery, tenantSchema } from '../ports/database.port.js';
-import * as executionService from '../services/mcp-execution.service.js';
-import * as serverService from '../services/mcp-server.service.js';
-import { MCP_OWNED_TABLES } from '../data/mcp-constants.js';
+import { authenticate, requirePermission } from '../ports/auth.port';
+import { auditMiddleware, asyncHandler, moduleStack, validate } from '../ports/middleware.port';
+import { safeQuery, tenantSchema } from '../ports/database.port';
+import * as executionService from '../services/mcp-execution.service';
+import * as serverService from '../services/mcp-server.service';
+import { MCP_OWNED_TABLES } from '../data/mcp-constants';
 import { catchHandler, EC } from '@dos/platform-core/resilience';
 import { z } from "zod";
 const genericRouteSchema = z.any();

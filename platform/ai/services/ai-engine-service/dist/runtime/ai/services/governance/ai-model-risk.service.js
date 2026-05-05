@@ -1,8 +1,8 @@
 // @ts-nocheck
-import { logger } from '../../ports/logger.port.js';
-import { safeQuery, tenantSchema } from '../../ports/database.port.js';
-import { createRisk, updateRisk } from '../../risk/services/core/risk.service.js';
-import { eventBus } from '../../ports/events.port.js';
+import { logger } from '../../ports/logger.port';
+import { safeQuery, tenantSchema } from '../../ports/database.port';
+import { createRisk, updateRisk } from '../../risk/services/core/risk.service';
+import { eventBus } from '../../ports/events.port';
 /**
  * Calculate automated risk score for an AI model
  */

@@ -1,9 +1,9 @@
-import { logger } from '../../ports/logger.port.js';
+import { logger } from '../../ports/logger.port';
 // ============================================================
 // Agent Task Execution Tracker
 // Tracks all agent-executed tasks with status, verification, and performance metrics
 // ============================================================
-import { safeQuery, tenantSchema } from '../../ports/database.port.js';
+import { safeQuery, tenantSchema } from '../../ports/database.port';
 import { toErrorMessage } from '@dos/module-sdk';
 /**
  * Record a new agent task execution

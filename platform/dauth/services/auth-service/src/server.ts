@@ -19,6 +19,7 @@ import { oidcRouter } from './routes/oidc.routes';
 import { accessRouter } from './routes/access.routes';
 import { mfaRouter } from './routes/mfa.routes';
 import { adminSecretsRouter } from './routes/admin-secrets.routes';
+import { passwordRouter } from './routes/password.routes';
 
 const PORT = Number(process.env.PORT || 4001);
 
@@ -73,6 +74,12 @@ app.use('/api/access', accessRouter);
 
 // MFA-by-email. Gateway exposes as /api/auth/mfa/{send,verify}.
 app.use('/mfa', mfaRouter);
+
+// Direct-grant password flow — replaces the legacy KC redirect that
+// caused a double credential prompt. Gateway exposes as
+//   POST /api/auth/password/login
+//   POST /api/auth/password/register
+app.use('/password', passwordRouter);
 
 // Platform-admin dynamic secret store. Gateway exposes as
 //   GET  /api/auth/admin/secrets             — list catalog + masked previews

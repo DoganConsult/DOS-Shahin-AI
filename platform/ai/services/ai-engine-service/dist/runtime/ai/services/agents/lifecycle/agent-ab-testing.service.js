@@ -3,7 +3,7 @@
 // Enables A/B testing of agent configurations
 // Requirements: ai-os-10.1
 // ============================================
-import { emptyResult, safeQuery, tenantSchema } from '../../../ports/database.port.js';
+import { emptyResult, safeQuery, tenantSchema } from '../../../ports/database.port';
 import { getFirstRow } from '@dos/db';
 import { swallowDefault, EC, catchHandler } from '@dos/platform-core/resilience/resilient-catch';
 /**

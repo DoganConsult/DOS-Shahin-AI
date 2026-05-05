@@ -6,7 +6,7 @@ import { catchHandler, EC } from '@dos/platform-core/resilience/resilient-catch'
 // llm_usage_log and tenant_llm_budgets tables.
 // Requirements: ai-os-8.2
 // ============================================
-import { safeQuery, tenantSchema } from '../../ports/database.port.js';
+import { safeQuery, tenantSchema } from '../../ports/database.port';
 import { getFirstRow } from '@dos/db';
 /** Record a single LLM usage event with cost. */
 export async function recordUsage(tenantId, agentId, inputTokens, outputTokens, model, costUsd) {

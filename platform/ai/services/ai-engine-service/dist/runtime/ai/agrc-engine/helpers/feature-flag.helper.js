@@ -9,5 +9,5 @@
  * may reference the modules/ai/agrc-engine path. No code should
  * import from this path; all known consumers use the canonical path.
  */
-export { isFeatureEnabled, toggleFeatureFlag, bulkToggleFeatureFlags, listFeatureFlags, getFeatureFlag, invalidateFeatureFlagCache, getFeatureFlagCacheSize, } from '../../agrc-engine/helpers/feature-flag.helper.js';
+export { isFeatureEnabled, toggleFeatureFlag, bulkToggleFeatureFlags, listFeatureFlags, getFeatureFlag, invalidateFeatureFlagCache, getFeatureFlagCacheSize, } from '../../agrc-engine/helpers/feature-flag.helper';
 //# sourceMappingURL=feature-flag.helper.js.map

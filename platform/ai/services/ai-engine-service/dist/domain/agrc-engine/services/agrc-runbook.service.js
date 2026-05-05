@@ -2,5 +2,5 @@
  * Re-export from canonical location.
  * Law 1: One canonical engine per concern.
  */
-export * from './agrc-runbook.service.js';
+export * from './agrc-runbook.service';
 //# sourceMappingURL=agrc-runbook.service.js.map

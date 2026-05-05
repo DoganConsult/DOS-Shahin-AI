@@ -1,3 +1,3 @@
-export * from './database.port.js';
-export * from './logger.port.js';
+export * from './database.port';
+export * from './logger.port';
 //# sourceMappingURL=index.js.map

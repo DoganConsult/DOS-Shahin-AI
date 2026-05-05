@@ -1,3 +1,3 @@
 // Re-export from canonical domain location
-export * from '../../../domain/agrc-engine/services/agrc-os-integration.service.js';
+export * from '../../../domain/agrc-engine/services/agrc-os-integration.service';
 //# sourceMappingURL=agrc-os-integration.service.js.map

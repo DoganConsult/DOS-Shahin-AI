@@ -1,13 +1,13 @@
 // @ts-nocheck
 import { Router } from 'express';
 import { catchHandler, EC } from '@dos/platform-core/resilience/resilient-catch';
-import { authenticate, requirePermission } from '../../ports/auth.port.js';
-import { auditMiddleware, asyncHandler, validate, validateReleaseGate, validateVendorGate, validateGateOverride } from '../../ports/middleware.port.js';
-import { errMsg } from '../../../../i18n/error-messages.js';
-import { emitEvent } from '../../ports/events.port.js';
-import { safeQuery, tenantSchema } from '../../ports/database.port.js';
+import { authenticate, requirePermission } from '../../ports/auth.port';
+import { auditMiddleware, asyncHandler, validate, validateReleaseGate, validateVendorGate, validateGateOverride } from '../../ports/middleware.port';
+import { errMsg } from '../../../../i18n/error-messages';
+import { emitEvent } from '../../ports/events.port';
+import { safeQuery, tenantSchema } from '../../ports/database.port';
 import { toErrorMessage } from '@dos/module-sdk';
-import { createRegistryBody, updateRegistryBody, createRulesBody, createValidateBody, createValidateBatchBody, createOverrideBody, createApproveBody } from '../../schemas/agrc-engine.schemas.js';
+import { createRegistryBody, updateRegistryBody, createRulesBody, createValidateBody, createValidateBatchBody, createOverrideBody, createApproveBody } from '../../schemas/agrc-engine.schemas';
 import { z } from "zod";
 const genericPayloadSchema = z.record(z.unknown());
 const router = Router();
@@ -113,7 +113,7 @@ router.post('/gates/registry/:gateCode/rules', authenticate, requirePermission('
 // ===============================================================
 // POST /gates/validate/:gateCode — Validate ANY gate dynamically
 router.post('/gates/validate/:gateCode', authenticate, validate({ body: createValidateBody }), asyncHandler(async (req, res) => {
-    const { validateDynamicGate } = await import('../../../governance/services/misc/enforcement-gate.service.js');
+    const { validateDynamicGate } = await import('../../../governance/services/misc/enforcement-gate.service');
     const result = await validateDynamicGate(req.tenantId, req.params.gateCode, req.body, req.userId);
     emitEvent({
         tenantId: req.tenantId, userId: req.user.userId,
@@ -124,7 +124,7 @@ router.post('/gates/validate/:gateCode', authenticate, validate({ body: createVa
 }));
 // POST /gates/validate-batch — Validate multiple gates at once
 router.post('/gates/validate-batch', authenticate, requirePermission('gate.record.read'), validate({ body: createValidateBatchBody }), asyncHandler(async (req, res) => {
-    const { validateDynamicGate } = await import('../../../governance/services/misc/enforcement-gate.service.js');
+    const { validateDynamicGate } = await import('../../../governance/services/misc/enforcement-gate.service');
     const { gates } = req.body; // Array of { gateCode, params }
     if (!Array.isArray(gates) || gates.length === 0) {
         res.status(400).json({ error: 'gates array required' });
@@ -147,7 +147,7 @@ router.post('/gates/validate-batch', authenticate, requirePermission('gate.recor
 // ===============================================================
 // POST /gates/override/:gateLogId — Request override for blocked gate
 router.post('/gates/override/:gateLogId', authenticate, requirePermission('gate.record.read'), validateGateOverride, validate({ body: createOverrideBody }), asyncHandler(async (req, res) => {
-    const { overrideGate } = await import('../../../governance/services/misc/enforcement-gate.service.js');
+    const { overrideGate } = await import('../../../governance/services/misc/enforcement-gate.service');
     const { justification } = req.body;
     const result = await overrideGate(req.tenantId, req.params.gateLogId, req.userId, justification);
     emitEvent({ tenantId: req.tenantId, userId: req.user.userId, module: 'governance', event: 'created', entityType: 'gate_override', entityId: req.params.gateLogId }).catch(catchHandler(EC.AGENT_ACTION, {}));
@@ -155,7 +155,7 @@ router.post('/gates/override/:gateLogId', authenticate, requirePermission('gate.
 }));
 // POST /gates/override/:overrideId/approve — Approve/reject override
 router.post('/gates/override/:overrideId/approve', authenticate, requirePermission('tenant.config.manage'), validate({ body: createApproveBody }), asyncHandler(async (req, res) => {
-    const { approveOverrideRequest } = await import('../../../governance/services/misc/enforcement-gate.service.js');
+    const { approveOverrideRequest } = await import('../../../governance/services/misc/enforcement-gate.service');
     const { approved } = req.body;
     if (typeof approved !== 'boolean') {
         res.status(400).json({ error: errMsg('MISSING_FIELDS', req) });
@@ -230,7 +230,7 @@ router.get('/gates/analytics/ai-insights', authenticate, requirePermission('gate
         safeQuery(`SELECT gate_type, subject_name, reason, details FROM "${schema}".enforcement_gate_log
               WHERE allowed = false AND created_at > NOW() - INTERVAL '7 days' ORDER BY created_at DESC LIMIT 20`),
     ]);
-    const { claudeJSON } = await import('../../../../config/claude-client.js');
+    const { claudeJSON } = await import('../../../../config/claude-client');
     const insights = await claudeJSON({
         systemPrompt: `You are an AI-first GRC platform analyst specializing in enforcement gates and compliance risk.
 Provide structured JSON with: executive_summary (string), risk_patterns (array of {pattern, severity, affected_gates}),
@@ -246,13 +246,13 @@ Be concise, actionable, bilingual-ready.`,
 // Legacy compatibility — keep original endpoints working
 // ===============================================================
 router.post('/gates/release/validate', authenticate, requirePermission('tenant.config.manage'), validateReleaseGate, validate({ body: createValidateBody }), asyncHandler(async (req, res) => {
-    const { validateReleaseGate: validateGate } = await import('../../../governance/services/misc/enforcement-gate.service.js');
+    const { validateReleaseGate: validateGate } = await import('../../../governance/services/misc/enforcement-gate.service');
     const { releaseId, serviceName, controlKeys } = req.body;
     const result = await validateGate(req.tenantId, releaseId, serviceName, controlKeys || [], req.userId);
     res.status(result.allowed ? 200 : 409).json(result);
 }));
 router.post('/gates/vendor/validate', authenticate, requirePermission('risk.record.read'), validateVendorGate, validate({ body: createValidateBody }), asyncHandler(async (req, res) => {
-    const { validateVendorGate } = await import('../../../governance/services/misc/enforcement-gate.service.js');
+    const { validateVendorGate } = await import('../../../governance/services/misc/enforcement-gate.service');
     const { vendorId, vendorName, riskScore } = req.body;
     const result = await validateVendorGate(req.tenantId, vendorId, vendorName, riskScore, req.userId);
     res.status(result.allowed ? 200 : 409).json(result);

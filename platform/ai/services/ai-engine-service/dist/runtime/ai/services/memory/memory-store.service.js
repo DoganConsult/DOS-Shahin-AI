@@ -1,11 +1,11 @@
 import { catchHandler, EC } from '@dos/platform-core/resilience/resilient-catch';
-import { logger } from '../../ports/logger.port.js';
+import { logger } from '../../ports/logger.port';
 import * as https from 'https';
 import * as http from 'http';
-import { safeQuery, tenantSchema } from '../../ports/database.port.js';
+import { safeQuery, tenantSchema } from '../../ports/database.port';
 import { toErrorMessage } from '@dos/module-sdk';
 import { getFirstRow } from '@dos/db';
-import { SYSTEM_JOB_ACTOR, DEFAULT_EMBEDDING_DIM } from '../../ports/platform.port.js';
+import { SYSTEM_JOB_ACTOR, DEFAULT_EMBEDDING_DIM } from '../../ports/platform.port';
 const EMBEDDING_DIM = DEFAULT_EMBEDDING_DIM;
 // ── Memory RBAC ──────────────────────────────────────────────────
 // Validates that the caller has the required memory permission scope.
@@ -386,7 +386,7 @@ export async function storeMemory(input) {
     let contentToStore = input.content;
     if (input.userId) {
         try {
-            const { shouldRedactForUser, redactPII } = await import('../../platform/services/misc/pii-redaction.service.js');
+            const { shouldRedactForUser, redactPII } = await import('../../platform/services/misc/pii-redaction.service');
             const shouldRedact = await shouldRedactForUser(input.tenantId, input.userId);
             if (shouldRedact) {
                 const result = redactPII(contentToStore);

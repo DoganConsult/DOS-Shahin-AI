@@ -1,16 +1,16 @@
 import { Router } from 'express';
 import crypto from 'crypto';
-import { authenticate, requirePermission } from '../../ports/auth.port.js';
-import { validate, rateLimiter, auditMiddleware, setAuditData, automationMiddleware } from '../../ports/middleware.port.js';
-import { handleQuery, getSessionHistory, getAgentPerformance, buildSuggestions, handlePublicQuery, getCanonicalPublicAgentsForLanding, exportCopilotAudit, } from '../../ports/platform.port.js';
-import { executeDelegatedAction } from '../../services/delegation/agent-delegation.service.js';
-import { approveAction, rejectAction, cancelAutoExecute, getPendingCount, } from '../../services/workflow/proposed-action.service.js';
-import { emitModuleEvent } from '../../services/emit-event.js';
+import { authenticate, requirePermission } from '../../ports/auth.port';
+import { validate, rateLimiter, auditMiddleware, setAuditData, automationMiddleware } from '../../ports/middleware.port';
+import { handleQuery, getSessionHistory, getAgentPerformance, buildSuggestions, handlePublicQuery, getCanonicalPublicAgentsForLanding, exportCopilotAudit, } from '../../ports/platform.port';
+import { executeDelegatedAction } from '../../services/delegation/agent-delegation.service';
+import { approveAction, rejectAction, cancelAutoExecute, getPendingCount, } from '../../services/workflow/proposed-action.service';
+import { emitModuleEvent } from '../../services/emit-event';
 import { toErrorMessage } from '@dos/module-sdk';
 import { swallow, EC } from '@dos/platform-core/resilience/resilient-catch';
-import { createChatBody, createExecuteActionBody, updateApproveBody, updateRejectBody, updateCancelAutoBody, createPublicChatBody, intentToQueryBody } from '../../schemas/ai.schemas.js';
-import { parseIntentToQuery } from '../../services/copilot/intent-to-query.service.js';
-import { traceSurfaceCall } from '../../../../domain/agrc-engine/observability/langfuse-bridge.js';
+import { createChatBody, createExecuteActionBody, updateApproveBody, updateRejectBody, updateCancelAutoBody, createPublicChatBody, intentToQueryBody } from '../../schemas/ai.schemas';
+import { parseIntentToQuery } from '../../services/copilot/intent-to-query.service';
+import { traceSurfaceCall } from '../../../../domain/agrc-engine/observability/langfuse-bridge';
 import { z } from "zod";
 const router = Router();
 router.use(auditMiddleware('governance'));
@@ -325,7 +325,7 @@ router.post('/public-chat', publicChatLimiter, validate({ body: createPublicChat
 // GET /api/copilot/agents — List available AI agents with status (DB-driven)
 router.get('/agents', validate({ query: z.record(z.unknown()) }), authenticate, requirePermission('ai.copilot.read'), async (req, res) => {
     try {
-        const { loadDbAgents } = await import('../../../mcp/loaders/db-loader.js');
+        const { loadDbAgents } = await import('../../../mcp/loaders/db-loader');
         const tenantId = req.user?.tenantId || 'default';
         const dbAgents = await loadDbAgents(tenantId);
         if (dbAgents.size > 0) {
@@ -368,7 +368,7 @@ router.get('/agents', validate({ query: z.record(z.unknown()) }), authenticate, 
 });
 // D6: GET /api/copilot/stream — SSE endpoint for real-time delegation chain events
 router.get('/stream', authenticate, requirePermission('ai.copilot.read'), async (req, res) => {
-    const { initSSEResponse, sendSSEEvent, endSSE } = await import('../../services/llm/llm-stream.service.js');
+    const { initSSEResponse, sendSSEEvent, endSSE } = await import('../../services/llm/llm-stream.service');
     const { subscribe } = await import('@dos/platform-core/events');
     initSSEResponse(res);
     const tenantId = req.user.tenantId;
@@ -500,7 +500,7 @@ function detectLocale(text) {
  */
 async function publishLeadCaptured(payload) {
     try {
-        const { eventBus } = await import('../../ports/events.port.js');
+        const { eventBus } = await import('../../ports/events.port');
         await eventBus.publish({
             eventType: 'ai.copilot.lead.captured',
             tenantId: null,

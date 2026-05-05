@@ -1,3 +1,3 @@
 // Re-export from canonical domain location
-export * from '../../../domain/mcp/loaders/db-loader.js';
+export * from '../../../domain/mcp/loaders/db-loader';
 //# sourceMappingURL=db-loader.js.map

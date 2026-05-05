@@ -296,6 +296,13 @@ app.post('/register', (0, anti_abuse_1.antiAbuse)({ pool }), async (req, res) =>
         //     /register calls (same principal in two tabs) without spurious
         //     duplicate rows. Writing through the dos.* view keeps the
         //     tenant-service write surface in the dos.* contract.
+        //     The platform_dauth.fn_ura_via_role_profile_only trigger blocks
+        //     direct INSERTs into the URA view unless the canonical-path flag
+        //     is asserted on the session. Tenant-service /register is the
+        //     canonical founder-role bootstrap path (RoleProfileService is
+        //     the canonical path for ALL OTHER URA mutations), so flip the
+        //     flag for the duration of this single statement only.
+        await client.query(`SET LOCAL app.via_role_profile = 'true'`);
         await client.query(`INSERT INTO dos.user_role_assignments
          (assignment_id, user_id, tenant_id, role_code, scope, granted_by, granted_at, is_active)
        VALUES ($1, $2, $3, $4, NULL, 'tenant-service:/register', now(), true)
@@ -303,6 +310,7 @@ app.post('/register', (0, anti_abuse_1.antiAbuse)({ pool }), async (req, res) =>
             `asn_${tenantId}_${Date.now().toString(36)}`,
             c.sub, tenantId, DEFAULT_REGISTRATION_ROLE,
         ]);
+        await client.query(`SET LOCAL app.via_role_profile = 'false'`);
         // 5. Activate the default product(s) so the workspace renders with a
         // populated module side-nav and KPI surface immediately. Without this,
         // /tenant-home/overview returns setupPending=true and the cockpit

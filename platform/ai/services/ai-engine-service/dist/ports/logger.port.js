@@ -1,2 +1,2 @@
-export { logger } from '../runtime/ai/ports/logger.port.js';
+export { logger } from '../runtime/ai/ports/logger.port';
 //# sourceMappingURL=logger.port.js.map

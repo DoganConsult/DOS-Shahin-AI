@@ -1,4 +1,4 @@
-import { safeQuery } from '../../ports/database.port.js';
+import { safeQuery } from '../../ports/database.port';
 import { getFirstRow } from '@dos/db';
 let contextCache = new Map();
 let moduleStateCache = new Map();

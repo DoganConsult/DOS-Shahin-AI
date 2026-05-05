@@ -2,8 +2,8 @@
 // AGRC-OS — Agent Tools: Shared Utilities
 // Common helpers used by all agent tool builders.
 // ================================================================
-import { safeQuery } from '../../ports/database.port.js';
-import { logger } from '../../ports/logger.port.js';
+import { safeQuery } from '../../ports/database.port';
+import { logger } from '../../ports/logger.port';
 import { toErrorMessage } from '@dos/module-sdk';
 /**
  * Execute a SQL query and return rows, swallowing errors (returns []).

@@ -1,6 +1,6 @@
-import { emptyResult, safeQuery, tenantSchema } from '../../../ports/database.port.js';
-import { chatCompletion } from '../../gateway/llm.service.js';
-import { storeMemory } from '../../memory/memory-store.service.js';
+import { emptyResult, safeQuery, tenantSchema } from '../../../ports/database.port';
+import { chatCompletion } from '../../gateway/llm.service';
+import { storeMemory } from '../../memory/memory-store.service';
 import { swallowDefault, EC, catchHandler } from '@dos/platform-core/resilience/resilient-catch';
 export async function reflectOnPerformance(tenantId, agentId) {
     const schema = tenantSchema(tenantId);

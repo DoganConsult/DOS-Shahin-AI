@@ -7,10 +7,10 @@ import { Router } from 'express';
  *   POST /simulate/org-change   — Organizational change impact analysis
  *   POST /simulate/monte-carlo  — Monte Carlo compliance timeline projection
  */
-import { authenticate, requirePermission } from '../../ports/auth.port.js';
-import { validate, auditMiddleware, asyncHandler, moduleStack, mutationEventHook } from '../../ports/middleware.port.js';
-import { createFrameworkBody, createOrgChangeBody, createMonteCarloBody } from '../../schemas/ai-governance.schemas.js';
-import { simulateFrameworkAdoption, simulateOrgChange, monteCarloComplianceProjection, } from '../../services/misc/grc-digital-twin.service.js';
+import { authenticate, requirePermission } from '../../ports/auth.port';
+import { validate, auditMiddleware, asyncHandler, moduleStack, mutationEventHook } from '../../ports/middleware.port';
+import { createFrameworkBody, createOrgChangeBody, createMonteCarloBody } from '../../schemas/ai-governance.schemas';
+import { simulateFrameworkAdoption, simulateOrgChange, monteCarloComplianceProjection, } from '../../services/misc/grc-digital-twin.service';
 import { z } from "zod";
 const router = Router();
 router.use(moduleStack('ai-governance'));

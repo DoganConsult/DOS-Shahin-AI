@@ -1,9 +1,9 @@
-import { eventBus } from '../../ports/events.port.js';
-import { recordDecision } from '../reasoning/ai-decision-engine.service.js';
-import { evaluatePolicies } from '../governance/ai-policy-rule.service.js';
-import { recordSignal } from '../cockpit/ai-cockpit-signal.service.js';
+import { eventBus } from '../../ports/events.port';
+import { recordDecision } from '../reasoning/ai-decision-engine.service';
+import { evaluatePolicies } from '../governance/ai-policy-rule.service';
+import { recordSignal } from '../cockpit/ai-cockpit-signal.service';
 import { toErrorMessage } from '@dos/module-sdk';
-import { assessRisk, analyzeComplianceGap, generatePolicy, prepareAudit, triageIncident, analyzeRegulatoryChange, getProactiveInsights, autoClassifyRisk, autoClassifyIncident, } from '../agents/core/ai-agent.service.js';
+import { assessRisk, analyzeComplianceGap, generatePolicy, prepareAudit, triageIncident, analyzeRegulatoryChange, getProactiveInsights, autoClassifyRisk, autoClassifyIncident, } from '../agents/core/ai-agent.service';
 const SVC = 'ai-os-orchestrator';
 function pub(eventType, tenantId, severity, payload) {
     eventBus.publish({ eventType, tenantId, sourceService: SVC, severity, payload });

@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { authenticate, requirePermission } from '../../ports/auth.port.js';
-import { moduleStack, mutationEventHook, auditMiddleware, validate } from '../../ports/middleware.port.js';
+import { authenticate, requirePermission } from '../../ports/auth.port';
+import { moduleStack, mutationEventHook, auditMiddleware, validate } from '../../ports/middleware.port';
 import { toErrorMessage } from '@dos/module-sdk';
-import { kernelProcessIdParams, kernelAgentIdParams, kernelAutonomyBody } from '../../schemas/ai.schemas.js';
+import { kernelProcessIdParams, kernelAgentIdParams, kernelAutonomyBody } from '../../schemas/ai.schemas';
 const router = Router();
 router.use(moduleStack('ai'));
 router.use(mutationEventHook('ai'));

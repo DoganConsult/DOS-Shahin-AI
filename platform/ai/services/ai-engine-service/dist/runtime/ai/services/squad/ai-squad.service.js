@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { safeQuery, tenantSchema } from '../../ports/database.port.js';
-import { recordAudit } from '../../../audit/services/audit/core/audit-trail.service.js';
+import { safeQuery, tenantSchema } from '../../ports/database.port';
+import { recordAudit } from '../../../audit/services/audit/core/audit-trail.service';
 /** Inline team CRUD — DOS foundation scope (team module deleted, tables remain). */
 async function createTeam(tenantId, data) {
     const schema = tenantSchema(tenantId);
@@ -16,7 +16,7 @@ async function addMember(tenantId, teamId, userId, role) {
      VALUES ($1, $2, $3, 'active')
      ON CONFLICT (team_id, user_id) DO UPDATE SET role = EXCLUDED.role`, [teamId, userId, role]);
 }
-import { getAgentCatalog } from '../../ports/platform.port.js';
+import { getAgentCatalog } from '../../ports/platform.port';
 const DOMAIN_TO_STEP = {
     onboarding: 'onboarding', 'identity & rbac': 'identity', frameworks: 'framework',
     controls: 'control', evidence: 'evidence', roadmaps: 'compliance',

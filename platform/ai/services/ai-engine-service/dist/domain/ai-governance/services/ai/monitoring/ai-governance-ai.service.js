@@ -52,7 +52,7 @@ export function isAiGovernanceAiActionBlocked(action) {
 export function requiresAiGovernanceHumanApproval(action) {
     return AI_GOVERNANCE_AI_CONFIG.humanInLoopBoundaries.requiresHumanApproval.includes(action);
 }
-import { safeQuery, tenantSchema } from '../../../ports/database.port.js';
+import { safeQuery, tenantSchema } from '../../../ports/database.port';
 export async function summarize(tenantId, entityId) {
     const schema = tenantSchema(tenantId);
     const result = await safeQuery(`SELECT * FROM "${schema}".ai_systems WHERE id = $1`, [entityId]);

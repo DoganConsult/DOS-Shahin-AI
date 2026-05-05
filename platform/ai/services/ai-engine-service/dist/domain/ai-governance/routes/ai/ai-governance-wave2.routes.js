@@ -1,14 +1,14 @@
 // @ts-nocheck
 import { Router } from 'express';
-import { logger } from '../../ports/logger.port.js';
-import { authenticate, requirePermission } from '../../ports/auth.port.js';
-import { safeQuery, tenantSchema } from '../../ports/database.port.js';
+import { logger } from '../../ports/logger.port';
+import { authenticate, requirePermission } from '../../ports/auth.port';
+import { safeQuery, tenantSchema } from '../../ports/database.port';
 import { getFirstRow, getFirstRowOrThrow } from '@dos/db';
 import { toErrorMessage } from '@dos/module-sdk';
-import { enforceStatusTransition } from '../../ports/platform.port.js';
+import { enforceStatusTransition } from '../../ports/platform.port';
 // ── Zod Schemas ──────────────────────────────────────────────────────────
-import { validate, auditMiddleware, setAuditData, automationMiddleware, moduleStack, mutationEventHook } from '../../ports/middleware.port.js';
-import { fairnessScanPostBody, euAiActClassifyPostBody, redTeamSchedulesPostBody, redTeamSchedulesIdPutBody, ethicsReviewsPostBody, ethicsReviewsIdVotePostBody, ethicsReviewsIdDecidePostBody, impactAssessmentsPostBody, impactAssessmentsIdPutBody, regulatoryChangesPostBody, regulatoryChangesIdReviewPutBody } from "../../schemas/ai-governance.schemas.js";
+import { validate, auditMiddleware, setAuditData, automationMiddleware, moduleStack, mutationEventHook } from '../../ports/middleware.port';
+import { fairnessScanPostBody, euAiActClassifyPostBody, redTeamSchedulesPostBody, redTeamSchedulesIdPutBody, ethicsReviewsPostBody, ethicsReviewsIdVotePostBody, ethicsReviewsIdDecidePostBody, impactAssessmentsPostBody, impactAssessmentsIdPutBody, regulatoryChangesPostBody, regulatoryChangesIdReviewPutBody } from "../../schemas/ai-governance.schemas";
 import { z } from "zod";
 const router = Router();
 router.use(moduleStack('ai-governance'));

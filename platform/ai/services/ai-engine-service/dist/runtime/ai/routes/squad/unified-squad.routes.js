@@ -1,19 +1,19 @@
 // @ts-nocheck
 import { Router } from 'express';
-import { logger } from '../../ports/logger.port.js';
-import { authenticate, requirePermission } from '../../ports/auth.port.js';
-import * as registry from '../../services/squad/unified-squad-registry.service.js';
-import * as intervention from '../../ports/platform.port.js';
-import * as erp from '../../../integrations/services/erp-connector.service.js';
-import * as agentMgr from '../../services/squad/agent-squad-manager.service.js';
-import { emptyResult, safeQuery, tenantSchema } from '../../ports/database.port.js';
-import { emitModuleEvent } from '../../services/emit-event.js';
+import { logger } from '../../ports/logger.port';
+import { authenticate, requirePermission } from '../../ports/auth.port';
+import * as registry from '../../services/squad/unified-squad-registry.service';
+import * as intervention from '../../ports/platform.port';
+import * as erp from '../../../integrations/services/erp-connector.service';
+import * as agentMgr from '../../services/squad/agent-squad-manager.service';
+import { emptyResult, safeQuery, tenantSchema } from '../../ports/database.port';
+import { emitModuleEvent } from '../../services/emit-event';
 import { toErrorMessage } from '@dos/module-sdk';
-import { asyncHandler, auditMiddleware, setAuditData, automationMiddleware, validate } from '../../ports/middleware.port.js';
+import { asyncHandler, auditMiddleware, setAuditData, automationMiddleware, validate } from '../../ports/middleware.port';
 import { getFirstRow } from '@dos/db';
 import { swallow, swallowDefault, EC, catchHandler } from '@dos/platform-core/resilience/resilient-catch';
-import { participantsPostBody, participantsIdStatusPutBody, syncPostBody, assignPostBody, intervenePostBody, handoffPostBody, erpConnectionsPostBody, erpConnectionsIdPutBody, erpConnectionsIdValidatePostBody, erpConnectionsIdMappingsPostBody, erpConnectionsIdSyncPostBody, agentsSeedPostBody, agentsIdStatusPutBody, createAiAssignBody, createAiRebalanceBody } from "../../schemas/ai.schemas.js";
-import { traceSurfaceCall } from '../../../../domain/agrc-engine/observability/langfuse-bridge.js';
+import { participantsPostBody, participantsIdStatusPutBody, syncPostBody, assignPostBody, intervenePostBody, handoffPostBody, erpConnectionsPostBody, erpConnectionsIdPutBody, erpConnectionsIdValidatePostBody, erpConnectionsIdMappingsPostBody, erpConnectionsIdSyncPostBody, agentsSeedPostBody, agentsIdStatusPutBody, createAiAssignBody, createAiRebalanceBody } from "../../schemas/ai.schemas";
+import { traceSurfaceCall } from '../../../../domain/agrc-engine/observability/langfuse-bridge';
 import { z } from "zod";
 const router = Router();
 router.use(auditMiddleware("governance"));
@@ -220,7 +220,7 @@ router.get('/agents/monitoring', authenticate, requirePermission('ai.squad.read'
         // Get all agents
         const agents = await registry.listParticipants(tenantId, { isAgent: true });
         // Get performance summaries for all agents
-        const { getAgentPerformanceSummaries } = await import('../../services/observability/agent-metrics-aggregator.service.js');
+        const { getAgentPerformanceSummaries } = await import('../../services/observability/agent-metrics-aggregator.service');
         const performanceSummaries = await getAgentPerformanceSummaries(tenantId, 24);
         // Get latest metrics for each agent
         const agentMetricsMap = new Map();
@@ -371,7 +371,7 @@ router.post('/ai-assign', authenticate, validate({ body: createAiAssignBody }), 
         res.status(404).json({ error: 'No active squad participants' });
         return;
     }
-    const { claudeJSON } = await import('../../../../config/claude-client.js');
+    const { claudeJSON } = await import('../../../../config/claude-client');
     const assignment = await claudeJSON({
         systemPrompt: `You are an AI task assignment optimizer for a GRC squad. Match tasks to the best participant based on:
 1. Capability match 2. Current workload 3. Historical performance 4. Specialization fit
@@ -418,7 +418,7 @@ router.post('/ai-rebalance', authenticate, validate({ body: createAiRebalanceBod
         swallowDefault(EC.FALLBACK_QUERY, emptyResult(), safeQuery(`SELECT task_id, title, assigned_to, priority, due_date, created_at FROM "${schema}".process_tasks WHERE status = 'open' ORDER BY CASE WHEN priority = 'critical' THEN 0 WHEN priority = 'high' THEN 1 ELSE 2 END, due_date ASC LIMIT 100`), { tenantId: req.tenantId, operation: 'query process_tasks' }),
         swallowDefault(EC.FALLBACK_QUERY, emptyResult(), safeQuery(`SELECT user_id, display_name_en, role, capabilities, specialization, status FROM "${schema}".unified_squad_participants WHERE status = 'active'`), { tenantId: req.tenantId, operation: 'query process_tasks' }),
     ]);
-    const { claudeJSON } = await import('../../../../config/claude-client.js');
+    const { claudeJSON } = await import('../../../../config/claude-client');
     const rebalance = await claudeJSON({
         systemPrompt: `You are a workload rebalancing optimizer. Analyze current task distribution and recommend reassignments.
 Respond with JSON: {

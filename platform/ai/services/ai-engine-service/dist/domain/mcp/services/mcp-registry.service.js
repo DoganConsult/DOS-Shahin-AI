@@ -1,7 +1,7 @@
 // @ts-nocheck
-import { logger } from '../ports/logger.port.js';
-import * as toolRepo from '../repositories/mcp-tool.repo.js';
-import * as agentRepo from '../repositories/mcp-agent.repo.js';
+import { logger } from '../ports/logger.port';
+import * as toolRepo from '../repositories/mcp-tool.repo';
+import * as agentRepo from '../repositories/mcp-agent.repo';
 export async function listTools(tenantId, filter = {}) {
     try {
         return await toolRepo.listTools(tenantId, filter);

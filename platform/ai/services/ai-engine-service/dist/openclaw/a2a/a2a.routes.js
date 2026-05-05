@@ -5,11 +5,11 @@
  * Mounted at /openclaw/a2a in ai-engine-service.
  */
 import { Router } from 'express';
-import { enqueueA2AMessage, dequeueA2AMessages, ackA2AMessage, nackA2AMessage, getA2AQueueStats } from './agent-message-queue.js';
-import { notifyNewMessage } from './a2a-redis-notifier.js';
-import { enqueueMessageBody, dequeueMessagesBody, nackMessageBody } from './a2a.schemas.js';
-import { authenticate, requirePermission } from '../../ports/auth.port.js';
-import { traceSurfaceCall } from '../../domain/agrc-engine/observability/langfuse-bridge.js';
+import { enqueueA2AMessage, dequeueA2AMessages, ackA2AMessage, nackA2AMessage, getA2AQueueStats } from './agent-message-queue';
+import { notifyNewMessage } from './a2a-redis-notifier';
+import { enqueueMessageBody, dequeueMessagesBody, nackMessageBody } from './a2a.schemas';
+import { authenticate, requirePermission } from '../../ports/auth.port';
+import { traceSurfaceCall } from '../../domain/agrc-engine/observability/langfuse-bridge';
 const router = Router();
 router.use(authenticate);
 // POST /enqueue — Enqueue a message with Redis notification

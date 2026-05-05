@@ -4,10 +4,10 @@
 // compliance gap analysis, policy generation,
 // audit prep, incident triage, regulatory change
 // ============================================
-import { safeQuery, tenantSchema } from '../../../ports/database.port.js';
-import { logger } from '../../../ports/logger.port.js';
-import { loadAgentDef } from '../../../ports/ai.port.js';
-import { gatewayJSON } from "../../gateway/ai-gateway.service.js";
+import { safeQuery, tenantSchema } from '../../../ports/database.port';
+import { logger } from '../../../ports/logger.port';
+import { loadAgentDef } from '../../../ports/ai.port';
+import { gatewayJSON } from "../../gateway/ai-gateway.service";
 import { getFirstRow } from '@dos/db';
 import { z } from 'zod';
 // === Risk Assessment ===

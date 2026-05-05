@@ -1,5 +1,5 @@
 import { catchHandler, EC } from '@dos/platform-core/resilience/resilient-catch';
-import { safeQuery, tenantSchema } from '../../ports/database.port.js';
+import { safeQuery, tenantSchema } from '../../ports/database.port';
 import { getFirstRow } from '@dos/db';
 const COST_PER_1K = {
     'claude-sonnet-4-20250514': { input: 0.003, output: 0.015 },

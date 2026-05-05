@@ -1,11 +1,11 @@
-import { logger } from '../../ports/logger.port.js';
+import { logger } from '../../ports/logger.port';
 // ============================================
 // AGRC-OS — Default Event→Agent Trigger Bindings
 // Seeds per-tenant event_trigger_binding rows so the
 // ai-event-trigger.service afterPublish hook can
 // fire agents in real-time on critical domain events.
 // ============================================
-import { safeQuery, tenantSchema } from '../../ports/database.port.js';
+import { safeQuery, tenantSchema } from '../../ports/database.port';
 /**
  * Critical event→agent mappings. These are seeded per tenant during
  * provisioning so agents react to domain events in real-time

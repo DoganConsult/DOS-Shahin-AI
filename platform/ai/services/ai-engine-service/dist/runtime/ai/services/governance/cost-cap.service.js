@@ -15,7 +15,7 @@
  * Per-tenant overrides may live in dos.tenants.settings->>'ai_daily_usd_cap'
  * (consulted when present).
  */
-import { safeQuery } from '../../ports/database.port.js';
+import { safeQuery } from '../../ports/database.port';
 function priceInputPerMTok() {
     const v = parseFloat(String(process.env.AI_PRICE_INPUT_USD_PER_MTOK || '3'));
     return Number.isFinite(v) && v > 0 ? v : 3;

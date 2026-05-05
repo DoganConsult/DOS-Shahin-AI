@@ -1,9 +1,9 @@
 // @ts-nocheck
-import { logger } from '../../ports/logger.port.js';
-import { safeQuery } from '../../ports/database.port.js';
-import { searchCode, checkCodeSearchHealth } from '../../../../connectors/code-search.connector.js';
-import { getCodeSearchConfig, getEnabledEngines } from '../../../../config/code-search.js';
-import { emitModuleEvent } from '../emit-event.js';
+import { logger } from '../../ports/logger.port';
+import { safeQuery } from '../../ports/database.port';
+import { searchCode, checkCodeSearchHealth } from '../../../../connectors/code-search.connector';
+import { getCodeSearchConfig, getEnabledEngines } from '../../../../config/code-search';
+import { emitModuleEvent } from '../emit-event';
 import { swallowDefault, EC } from '@dos/platform-core/resilience/resilient-catch';
 const EMPTY_ROWS = { rows: [] };
 export async function executeCodeSearch(tenantId, userId, input) {

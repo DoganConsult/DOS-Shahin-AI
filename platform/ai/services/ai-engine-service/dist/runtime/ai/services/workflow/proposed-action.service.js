@@ -5,10 +5,10 @@
 // conflict detection, RACI-aware escalation, and visual trail.
 // ============================================================
 import * as crypto from 'crypto';
-import { safeQuery, safeQueryWithClient, tenantSchema, withTransaction } from '../../ports/database.port.js';
-import { executeDelegatedAction } from '../delegation/agent-delegation.service.js';
-import { createNotification } from '../../../notification/services/notification.service.js';
-import { eventBus } from '../../ports/events.port.js';
+import { safeQuery, safeQueryWithClient, tenantSchema, withTransaction } from '../../ports/database.port';
+import { executeDelegatedAction } from '../delegation/agent-delegation.service';
+import { createNotification } from '../../../notification/services/notification.service';
+import { eventBus } from '../../ports/events.port';
 import { toErrorMessage } from '@dos/module-sdk';
 import { getFirstRow } from '@dos/db';
 import { swallow, EC } from '@dos/platform-core/resilience/resilient-catch';

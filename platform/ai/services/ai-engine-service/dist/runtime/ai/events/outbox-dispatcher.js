@@ -15,7 +15,7 @@
 //     so only one drainer claims each row.
 //
 // Disabled via AI_OUTBOX_DISPATCHER_DISABLED=1.
-import { logger } from '../ports/logger.port.js';
+import { logger } from '../ports/logger.port';
 const BATCH_SIZE = parseInt(process.env.AI_OUTBOX_BATCH_SIZE || '100', 10);
 const MAX_ATTEMPTS = parseInt(process.env.AI_OUTBOX_MAX_ATTEMPTS || '5', 10);
 let _timer = null;

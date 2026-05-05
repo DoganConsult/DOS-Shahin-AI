@@ -1,5 +1,5 @@
-import { safeQuery, tenantSchema } from '../../../ports/database.port.js';
-import { logger } from '../../../ports/logger.port.js';
+import { safeQuery, tenantSchema } from '../../../ports/database.port';
+import { logger } from '../../../ports/logger.port';
 const LOG_TAG = '[AI-AuditAnomaly]';
 export async function detectAuditAnomalies(tenantId, lookbackHours = 24) {
     const schema = tenantSchema(tenantId);

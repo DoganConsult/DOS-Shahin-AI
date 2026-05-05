@@ -1,3 +1,3 @@
 // Re-export from domain-level ports
-export * from '../../ports/middleware.port.js';
+export * from '../../ports/middleware.port';
 //# sourceMappingURL=middleware.port.js.map

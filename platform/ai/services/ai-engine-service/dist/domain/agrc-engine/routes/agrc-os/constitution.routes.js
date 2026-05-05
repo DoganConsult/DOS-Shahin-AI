@@ -1,13 +1,13 @@
 // @ts-nocheck
 import { Router } from 'express';
 import { catchHandler, EC } from '@dos/platform-core/resilience/resilient-catch';
-import { authenticate, requirePermission } from '../../ports/auth.port.js';
-import { auditMiddleware, validate } from '../../ports/middleware.port.js';
-import { validateRiskAppetite, validateAuthorityMatrix, validateEscalationThresholds, } from '../../ports/middleware.port.js';
-import { errMsg } from '../../../../i18n/error-messages.js';
-import { emitEvent } from '../../ports/events.port.js';
-import { writeLimiter } from './shared.js';
-import { createRiskAppetiteBody, createAuthorityMatrixBody, createEscalationThresholdsBody, createResolveApproverBody } from '../../schemas/agrc-engine.schemas.js';
+import { authenticate, requirePermission } from '../../ports/auth.port';
+import { auditMiddleware, validate } from '../../ports/middleware.port';
+import { validateRiskAppetite, validateAuthorityMatrix, validateEscalationThresholds, } from '../../ports/middleware.port';
+import { errMsg } from '../../../../i18n/error-messages';
+import { emitEvent } from '../../ports/events.port';
+import { writeLimiter } from './shared';
+import { createRiskAppetiteBody, createAuthorityMatrixBody, createEscalationThresholdsBody, createResolveApproverBody } from '../../schemas/agrc-engine.schemas';
 import { z } from "zod";
 const genericPayloadSchema = z.record(z.unknown());
 const router = Router();

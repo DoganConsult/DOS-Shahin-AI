@@ -5,7 +5,7 @@
 // NOTE: This is an AGRC product service residing
 // in the platform directory. Law 2 ownership: agrc.
 // ============================================
-import { safeQuery, tenantSchema } from '../ports/database.port.js';
+import { safeQuery, tenantSchema } from '../ports/database.port';
 import { getFirstRow } from '@dos/db';
 // ── Risk Heatmap Data ───────────────────────────────────────────────────────
 export async function getRiskHeatmapData(tenantId) {

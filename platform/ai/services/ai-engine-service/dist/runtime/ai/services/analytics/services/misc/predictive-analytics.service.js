@@ -4,5 +4,5 @@
  * Re-export barrel — canonical predictive-analytics lives in the analytics module.
  * This file exists for backward compatibility with AI module consumers.
  */
-export * from '../../../../../analytics/services/misc/predictive-analytics.service.js';
+export * from '../../../../../analytics/services/misc/predictive-analytics.service';
 //# sourceMappingURL=predictive-analytics.service.js.map

@@ -4,7 +4,7 @@
  * Provides model configuration and a singleton client instance for
  * all AI/LLM operations in the platform.
  */
-import { logger } from '../../ports/logger.port.js';
+import { logger } from '../../ports/logger.port';
 import { getOrCreateBreaker, CircuitBreakerOpenError } from '@dos/platform-core/resilience';
 export const CLAUDE_MODEL = process.env.CLAUDE_MODEL || 'claude-sonnet-4-20250514';
 export const CLAUDE_MAX_TOKENS = parseInt(process.env.CLAUDE_MAX_TOKENS || '4096', 10);

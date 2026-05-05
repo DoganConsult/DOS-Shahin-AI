@@ -1,3 +1,3 @@
 // Re-export from canonical location
-export { onWorkflowTriggered, onTaskCreated, onApprovalRequired, onEscalation, onClosure, onFailure } from './operations/ai-governance-workflow.service.js';
+export { onWorkflowTriggered, onTaskCreated, onApprovalRequired, onEscalation, onClosure, onFailure } from './operations/ai-governance-workflow.service';
 //# sourceMappingURL=ai-governance-workflow.service.js.map

@@ -3,8 +3,8 @@
 // AI Model Card Service (ISO 42001, SDAIA, EU AI Act Annex IV)
 // Auto-generates model cards from runtime config + performance metrics
 // ============================================
-import { emptyResult, safeQuery, tenantSchema } from '../../../ports/database.port.js';
-import { claudeJSON } from '../../../ports/ai.port.js';
+import { emptyResult, safeQuery, tenantSchema } from '../../../ports/database.port';
+import { claudeJSON } from '../../../ports/ai.port';
 import { swallowDefault, EC, catchHandler } from '@dos/platform-core/resilience/resilient-catch';
 /**
  * Generate a comprehensive bilingual model card for an AI agent.

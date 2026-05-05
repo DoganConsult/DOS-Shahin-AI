@@ -1,8 +1,8 @@
 // @ts-nocheck
 import { Router } from 'express';
-import { authenticate, requirePermission, validate, asyncHandler } from '../ports/mcp.ports.js';
-import * as service from '../services/mcp.service.js';
-import { CreateToolSchema, CreateAgentSchema, BindToolSchema, LogExecutionSchema } from '../schemas/mcp.schemas.js';
+import { authenticate, requirePermission, validate, asyncHandler } from '../ports/mcp.ports';
+import * as service from '../services/mcp.service';
+import { CreateToolSchema, CreateAgentSchema, BindToolSchema, LogExecutionSchema } from '../schemas/mcp.schemas';
 import { z } from "zod";
 const router = Router();
 // §6: /api/mcp/tools

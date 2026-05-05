@@ -1,6 +1,6 @@
 // @ts-nocheck
 // Auto-extracted AgrcEngine repository
-import { safeQuery } from '../ports/database.port.js';
+import { safeQuery } from '../ports/database.port';
 export class AgrcEngineAutoRepo {
     static async query1(schema, args) {
         const query = `SELECT * FROM "${schema}".agrc_engine_runs WHERE run_id = $1`;

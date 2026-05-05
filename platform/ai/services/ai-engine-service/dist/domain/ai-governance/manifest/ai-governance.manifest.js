@@ -1,4 +1,4 @@
-import { AI_GOVERNANCE_MANIFEST } from '../ai-governance.module.js';
+import { AI_GOVERNANCE_MANIFEST } from '../ai-governance.module';
 export { AI_GOVERNANCE_MANIFEST };
 export const AI_GOVERNANCE_MANIFEST_META = {
     code: AI_GOVERNANCE_MANIFEST.code,

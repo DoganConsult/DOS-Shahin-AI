@@ -1,5 +1,5 @@
-import { logger } from '../ports/logger.port.js';
-import { AI_EVENT_CONTRACT } from './ai.events.js';
+import { logger } from '../ports/logger.port';
+import { AI_EVENT_CONTRACT } from './ai.events';
 let _publisher = null;
 export function setPublisher(fn) {
     _publisher = fn;

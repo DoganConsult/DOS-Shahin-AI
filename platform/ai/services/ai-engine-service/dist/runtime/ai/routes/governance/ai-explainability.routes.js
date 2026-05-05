@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import { authenticate, requirePermission } from '../../ports/auth.port.js';
-import * as ExplainabilityService from '../../services/reasoning/ai-explainability.service.js';
+import { authenticate, requirePermission } from '../../ports/auth.port';
+import * as ExplainabilityService from '../../services/reasoning/ai-explainability.service';
 import { toErrorMessage } from '@dos/module-sdk';
 // ── Zod Schemas ──────────────────────────────────────────────────────────
-import { auditMiddleware, validate, moduleStack, mutationEventHook } from '../../ports/middleware.port.js';
-import { explainabilityPostBody, explainabilityRecordIdReviewPostBody, explainabilityRecordIdCounterfactualPostBody } from "../../schemas/ai.schemas.js";
+import { auditMiddleware, validate, moduleStack, mutationEventHook } from '../../ports/middleware.port';
+import { explainabilityPostBody, explainabilityRecordIdReviewPostBody, explainabilityRecordIdCounterfactualPostBody } from "../../schemas/ai.schemas";
 import { z } from "zod";
 const router = Router();
 router.use(moduleStack('ai'));

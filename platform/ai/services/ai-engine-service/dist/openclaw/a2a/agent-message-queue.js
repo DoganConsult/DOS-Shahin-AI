@@ -40,7 +40,7 @@ export async function enqueueA2AMessage(tenantId, fromAgentId, toAgentId, messag
     const messageId = result.rows[0]?.message_id || '';
     // Notify via Redis pub/sub (non-blocking, best-effort)
     try {
-        const { notifyNewMessage } = await import('./a2a-redis-notifier.js');
+        const { notifyNewMessage } = await import('./a2a-redis-notifier');
         notifyNewMessage(tenantId, toAgentId, messageId).catch(() => { });
     }
     catch { /* Redis notifier not available — consumer will poll */ }

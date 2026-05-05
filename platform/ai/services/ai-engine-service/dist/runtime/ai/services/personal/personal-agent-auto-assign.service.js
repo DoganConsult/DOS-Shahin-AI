@@ -1,15 +1,15 @@
 // @ts-nocheck
-import { logger } from '../../ports/logger.port.js';
+import { logger } from '../../ports/logger.port';
 // ============================================================================
 // Personal Agent Auto-Assignment
 //
 // Automatically assigns personal agents when tenant mode changes
 // to hyper or autonomous.
 // ============================================================================
-import { safeQuery } from '../../ports/database.port.js';
-import { recordAudit } from '../../../audit/services/audit/core/audit-trail.service.js';
+import { safeQuery } from '../../ports/database.port';
+import { recordAudit } from '../../../audit/services/audit/core/audit-trail.service';
 import { toErrorMessage } from '@dos/module-sdk';
-import { assignPersonalAgent, getPersonalAgentAssignment, updatePersonalAgentAssignment, } from './personal-agent-assignment.service.js';
+import { assignPersonalAgent, getPersonalAgentAssignment, updatePersonalAgentAssignment, } from './personal-agent-assignment.service';
 // ============================================================================
 // Auto-Assignment When Tenant Mode Activates
 // ============================================================================

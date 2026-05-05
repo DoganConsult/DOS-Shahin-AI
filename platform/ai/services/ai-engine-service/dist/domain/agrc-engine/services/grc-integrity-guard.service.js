@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { logger } from '../ports/logger.port.js';
+import { logger } from '../ports/logger.port';
 import { swallow, EC } from '@dos/platform-core/resilience/resilient-catch';
 // ============================================
 // Shahin — GRC Integrity Guard
@@ -18,9 +18,9 @@ import { swallow, EC } from '@dos/platform-core/resilience/resilient-catch';
 // Publishes events for every fix so cross-hub
 // integration reacts.
 // ============================================
-import { safeQuery, tenantSchema } from '../ports/database.port.js';
-import { eventBus } from '../ports/events.port.js';
-import { recordAudit } from '../../audit/services/audit/core/audit-trail.service.js';
+import { safeQuery, tenantSchema } from '../ports/database.port';
+import { eventBus } from '../ports/events.port';
+import { recordAudit } from '../../audit/services/audit/core/audit-trail.service';
 import { getFirstRow } from '@dos/db';
 export async function runIntegrityGuard(tenantId) {
     const start = Date.now();
@@ -153,7 +153,7 @@ export async function runIntegrityGuard(tenantId) {
        LIMIT 20`);
         for (const inc of staleIncidents.rows) {
             try {
-                const { createTask } = await import('../../workflow/services/tasks/task-board.service.js');
+                const { createTask } = await import('../../workflow/services/tasks/task-board.service');
                 await createTask(tenantId, {
                     title: `[Integrity] Unresolved incident: ${inc.title}`,
                     description: `Incident "${inc.title}" has been open >30 days with no remediation task. Auto-created by GRC Integrity Guard.`,
@@ -178,7 +178,7 @@ export async function runIntegrityGuard(tenantId) {
        LIMIT 20`);
         for (const finding of unlinkedFindings.rows) {
             try {
-                const { createTask } = await import('../../workflow/services/tasks/task-board.service.js');
+                const { createTask } = await import('../../workflow/services/tasks/task-board.service');
                 await createTask(tenantId, {
                     title: `[Integrity] Remediate finding: ${finding.item_id}`,
                     description: `Assessment finding ${finding.item_id} is ${finding.status} with no remediation task. Auto-created by GRC Integrity Guard.`,

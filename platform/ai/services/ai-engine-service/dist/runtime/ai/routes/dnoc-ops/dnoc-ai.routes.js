@@ -8,11 +8,11 @@
  * Read-only endpoints. RBAC: requirePermission('platform.dnoc.read').
  */
 import { Router } from 'express';
-import { authenticate, requirePermission } from '../../ports/auth.port.js';
+import { authenticate, requirePermission } from '../../ports/auth.port';
 import { safeQuery } from '@dos/db';
-import { getUnifiedTimeline } from '../../services/dnoc-ops/unified-timeline.service.js';
-import { getAgentHealth } from '../../services/dnoc-ops/agent-health.service.js';
-import { getCostRollup } from '../../services/dnoc-ops/cost-rollup.service.js';
+import { getUnifiedTimeline } from '../../services/dnoc-ops/unified-timeline.service';
+import { getAgentHealth } from '../../services/dnoc-ops/agent-health.service';
+import { getCostRollup } from '../../services/dnoc-ops/cost-rollup.service';
 const router = Router();
 // Adapter: ai-engine uses safeQuery (returns {rows,rowCount}); aggregator wants {rows}.
 const platformQuery = async (text, params = []) => {

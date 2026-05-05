@@ -1,4 +1,4 @@
-import { query, safeQuery } from './ports/database.port.js';
+import { query, safeQuery } from './ports/database.port';
 import { swallowNull, EC } from '@dos/platform-core/resilience/resilient-catch';
 export class AgrcEngineRepo {
     async openRun(ctx) {

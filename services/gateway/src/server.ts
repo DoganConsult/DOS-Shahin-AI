@@ -203,6 +203,10 @@ const PUBLIC_AUTH_PATHS = new Set<string>([
   '/api/auth/oidc/logout',
   '/api/auth/logout',
   '/api/auth/health',
+  // Direct-grant password flow — Carbon Auth Pages collect creds and POST
+  // here BEFORE any session cookie exists, so the gate must be open.
+  '/api/auth/password/login',
+  '/api/auth/password/register',
 ]);
 
 async function verifyToken(token: string) {

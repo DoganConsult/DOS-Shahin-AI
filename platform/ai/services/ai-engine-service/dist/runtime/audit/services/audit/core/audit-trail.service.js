@@ -15,8 +15,8 @@
  * Schema target: dos.audit_trail
  *   columns: entry_id, tenant_id, actor_id, action, entity_type, entity_id, module, payload, created_at
  */
-import { safeQuery } from '../../../../ai/ports/database.port.js';
-import { logger } from '../../../../ai/ports/logger.port.js';
+import { safeQuery } from '../../../../ai/ports/database.port';
+import { logger } from '../../../../ai/ports/logger.port';
 const MODULE_TAG = 'ai';
 export async function recordAudit(tenantId, actorOrAction, actionOrPayload, entityType, entityId, payload) {
     // Detect signature shape: 6-arg vs 3-arg

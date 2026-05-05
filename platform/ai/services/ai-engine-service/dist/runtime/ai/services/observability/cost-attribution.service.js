@@ -4,8 +4,8 @@ import { catchHandler, EC } from '@dos/platform-core/resilience/resilient-catch'
 // Adds cost center/project tagging to LLM usage
 // Requirements: ai-os-7.2
 // ============================================
-import { safeQuery, tenantSchema } from '../../ports/database.port.js';
-import { trackUsage, estimateCost } from '../gateway/llm-usage-tracker.service.js';
+import { safeQuery, tenantSchema } from '../../ports/database.port';
+import { trackUsage, estimateCost } from '../gateway/llm-usage-tracker.service';
 import { getFirstRow } from '@dos/db';
 /**
  * Track usage with cost attribution

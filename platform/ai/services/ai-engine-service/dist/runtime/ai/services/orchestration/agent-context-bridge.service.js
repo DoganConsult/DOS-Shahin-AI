@@ -1,11 +1,11 @@
 // @ts-nocheck
-import { safeQuery, tenantSchema } from '../../ports/database.port.js';
-import { eventBus } from '../../ports/events.port.js';
-import { evaluateAndTrigger } from '../workflow/ai-workflow-trigger.service.js';
-import { logger } from '../../ports/logger.port.js';
-import { getContext } from '../../governance-os/services/governance/governance-context-engine.service.js';
-import { isModuleActive } from '../../governance-os/services/misc/module-operating-state.service.js';
-import { getModuleTriggerMapping } from '../../governance-os/services/governance/governance-os-config.service.js';
+import { safeQuery, tenantSchema } from '../../ports/database.port';
+import { eventBus } from '../../ports/events.port';
+import { evaluateAndTrigger } from '../workflow/ai-workflow-trigger.service';
+import { logger } from '../../ports/logger.port';
+import { getContext } from '../../governance-os/services/governance/governance-context-engine.service';
+import { isModuleActive } from '../../governance-os/services/misc/module-operating-state.service';
+import { getModuleTriggerMapping } from '../../governance-os/services/governance/governance-os-config.service';
 import { swallow, EC } from '@dos/platform-core/resilience/resilient-catch';
 // MODULE_TO_TRIGGER is now loaded from database via getModuleTriggerMapping()
 export async function getAgentAssignments(tenantId, moduleCode) {

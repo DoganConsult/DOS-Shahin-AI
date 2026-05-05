@@ -5,11 +5,11 @@
  * service files, providing a single import point for consumers.
  */
 // ── Config Service ──
-export { getTenantEnforcementMode, setTenantEnforcementMode, getGlobalFallbackMode, setGlobalFallbackMode, clearEnforcementCache, } from './services/ai/operations/ai-governance-config.service.js';
+export { getTenantEnforcementMode, setTenantEnforcementMode, getGlobalFallbackMode, setGlobalFallbackMode, clearEnforcementCache, } from './services/ai/operations/ai-governance-config.service';
 // ── Ops Service ──
-export { createBreakGlass, revokeBreakGlass, listBreakGlassEntries, recordPromotion, listPromotions, expireBreakGlassEntries, invalidateSummaryCache, getGovernanceEventSummary, listGovernanceAuditEvents, } from './services/ai/operations/ai-governance-ops.service.js';
+export { createBreakGlass, revokeBreakGlass, listBreakGlassEntries, recordPromotion, listPromotions, expireBreakGlassEntries, invalidateSummaryCache, getGovernanceEventSummary, listGovernanceAuditEvents, } from './services/ai/operations/ai-governance-ops.service';
 // ── Bootstrap Service ──
-export { bootstrapAiGovernance, checkGovernanceHealth, repairAiGovernance, } from './services/ai/operations/ai-governance-bootstrap.service.js';
+export { bootstrapAiGovernance, checkGovernanceHealth, repairAiGovernance, } from './services/ai/operations/ai-governance-bootstrap.service';
 // ── Lifecycle Service ──
-export { VALID_APPROVAL, VALID_DEPLOYMENT, VALID_SOD_POLICIES, VALID_REGISTRY_TYPES, getSoDPolicy, setSoDPolicy, assertSoDCompliance, } from './services/ai-governance-lifecycle.service.js';
+export { VALID_APPROVAL, VALID_DEPLOYMENT, VALID_SOD_POLICIES, VALID_REGISTRY_TYPES, getSoDPolicy, setSoDPolicy, assertSoDCompliance, } from './services/ai-governance-lifecycle.service';
 //# sourceMappingURL=ai-governance.service.js.map

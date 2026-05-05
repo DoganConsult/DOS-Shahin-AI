@@ -4,7 +4,7 @@ import { catchHandler, EC } from '@dos/platform-core/resilience/resilient-catch'
 // Tracks tokens per discovery/action for optimization
 // Requirements: ai-os-7.1
 // ============================================
-import { safeQuery, tenantSchema } from '../../ports/database.port.js';
+import { safeQuery, tenantSchema } from '../../ports/database.port';
 /**
  * Track token usage for a specific operation
  */

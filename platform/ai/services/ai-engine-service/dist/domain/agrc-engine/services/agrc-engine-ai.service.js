@@ -49,7 +49,7 @@ export function isAgrcEngineAiActionBlocked(action) {
 export function requiresAgrcEngineHumanApproval(action) {
     return AGRC_ENGINE_AI_CONFIG.humanInLoopBoundaries.requiresHumanApproval.includes(action);
 }
-import { safeQuery, tenantSchema } from '../ports/database.port.js';
+import { safeQuery, tenantSchema } from '../ports/database.port';
 export async function analyzeEngineHealth(tenantId) {
     const schema = tenantSchema(tenantId);
     const { rows } = await safeQuery(`SELECT status, COUNT(*)::int AS cnt FROM "${schema}".agrc_engine_runs GROUP BY status`).catch(() => ({ rows: [] }));
