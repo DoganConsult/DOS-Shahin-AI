@@ -66,10 +66,12 @@ import { BrandResolverService, DosEmptyStateComponent, MarketingPublicConfigServ
       <div class="dos-tpl-loading" data-testid="dos-tpl-loading">Loading…</div>
     } @else if (!template() && !loading()) {
       <div class="dos-tpl-fallback" data-testid="dos-tpl-fallback">
-        <dos-insight-bar [pillars]="fallbackPillars" archetype="empty"></dos-insight-bar>
-        <p class="dos-tpl-fallback__msg">
-          No template binding for <code>{{ currentRoute() }}</code>.
-        </p>
+        <dos-empty-state
+          title=""
+          description=""
+          icon="information"
+          tone="info"
+        ></dos-empty-state>
       </div>
     }
     <ng-container #tplHost></ng-container>
@@ -158,18 +160,8 @@ export class DynamicTemplatePageComponent {
       }
     }
 
-    // 3. Provide stable defaults for the 8 base arrays so every
-    //    template's `@Input ... = []` keeps its empty-state contract
-    //    even when the resolver omits them.
-    out['kpis']             ??= [];
-    out['columns']          ??= [];
-    out['tabs']             ??= [];
-    out['nextBestActions']  ??= [];
-    out['settingsSections'] ??= [];
-    out['reportCards']      ??= [];
-    out['workqueueGroups']  ??= [];
-    out['heatmapAxes']      ??= [];
-    out['pillars']          ??= this.fallbackPillars;
+    // COMPLIANCE: No auto-fill arrays. Templates receive only what the
+    // DB resolver provides. Empty state is the template's responsibility.
 
     // 4. Surface masthead scalars from props.masthead (Phase F-F7) so
     //    every template gets a populated header without needing per-
@@ -210,14 +202,8 @@ export class DynamicTemplatePageComponent {
     return out;
   });
 
-  // User-facing fallback. Intentionally NOT mentioning "binding row",
-  // "Phase F", or any platform terminology — these strings ship to end
-  // users when the binding row omits a `pillars` patch. Override per
-  // route by emitting `props.pillars` from the resolver.
-  readonly fallbackPillars: ModuleInsightPillars = {
-    whatChanged: 'Live overview — content updates automatically.',
-    evidence:    'Powered by the Shahin-AI evidence engine.',
-  };
+  // COMPLIANCE: No fallback pillars. Pillar content must flow from
+  // dos.ui_route_template_binding props.pillars — never hardcoded.
 
   constructor() {
     this.router.events

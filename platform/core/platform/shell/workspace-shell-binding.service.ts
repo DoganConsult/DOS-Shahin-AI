@@ -279,48 +279,9 @@ export class WorkspaceShellBindingService {
     this._loaded.set(true);
   }
 
-  /**
-   * Coerce an array of raw item rows into the contracted shape.
-   * Never throws — fail-soft is the contract.
-   */
-  coerceItems<T>(rows: unknown[], labelFields: string[]): T[] {
-    if (!Array.isArray(rows)) return [];
-    const out: T[] = [];
-    for (const raw of rows) {
-      if (!raw || typeof raw !== 'object') continue;
-      const src = raw as Record<string, unknown>;
-      const dst: Record<string, unknown> = { ...src };
-      for (const field of labelFields) {
-        const existing = src[field];
-        if (existing && typeof existing === 'object') {
-          const obj = existing as Record<string, unknown>;
-          const i18nKey = typeof obj['i18nKey'] === 'string' ? obj['i18nKey'] as string : '';
-          const fallback = typeof obj['fallback'] === 'string' ? obj['fallback'] as string : undefined;
-          dst[field] = { i18nKey, fallback };
-          continue;
-        }
-        if (typeof existing === 'string' && existing.trim()) {
-          dst[field] = { i18nKey: existing, fallback: existing };
-          continue;
-        }
-        // snake_case mirror
-        const snakeKey = src[`${field}_key`];
-        const snakeFallback = src[`${field}_fallback`];
-        if (typeof snakeKey === 'string' && snakeKey.trim()) {
-          dst[field] = {
-            i18nKey: snakeKey,
-            fallback: typeof snakeFallback === 'string' ? snakeFallback : undefined,
-          };
-          continue;
-        }
-        if (existing === undefined || existing === null) {
-          dst[field] = { i18nKey: '', fallback: undefined };
-        }
-      }
-      out.push(dst as unknown as T);
-    }
-    return out;
-  }
+  // COMPLIANCE: coerceItems DELETED — legacy compatibility shim that
+  // converted snake_case label_key/label_fallback into i18nKey/fallback.
+  // All data must flow from DB in the contracted shape. Zero consumers.
 
   // ── Private zone-prop helpers ─────────────────────────────────────────────
   // Read from the FIRST surface in a zone that has the requested prop.
