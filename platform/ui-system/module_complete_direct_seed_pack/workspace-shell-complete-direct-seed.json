@@ -93,7 +93,8 @@
         "label_en": "UIShell",
         "label_ar": "الإطار العام للـ workspace",
         "use_en": "Full workspace shell frame",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "main"
       }
     },
     {
@@ -109,7 +110,8 @@
         "label_en": "Header",
         "label_ar": "الهيدر العلوي",
         "use_en": "Top application header",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "header"
       }
     },
     {
@@ -125,7 +127,8 @@
         "label_en": "HeaderName",
         "label_ar": "اسم المنتج",
         "use_en": "Product name / Shahin / DOS",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "header"
       }
     },
     {
@@ -141,7 +144,8 @@
         "label_en": "HeaderNavigation",
         "label_ar": "تنقل الهيدر",
         "use_en": "Top navigation links",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "header"
       }
     },
     {
@@ -157,7 +161,8 @@
         "label_en": "HeaderMenu",
         "label_ar": "قوائم الهيدر",
         "use_en": "Menu groups in header",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "header"
       }
     },
     {
@@ -173,7 +178,8 @@
         "label_en": "HeaderMenuItem",
         "label_ar": "عنصر قائمة الهيدر",
         "use_en": "Item inside header menu",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "header"
       }
     },
     {
@@ -189,7 +195,8 @@
         "label_en": "HeaderGlobalBar",
         "label_ar": "شريط الإجراءات العامة",
         "use_en": "Right/left header action area",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "header"
       }
     },
     {
@@ -205,7 +212,8 @@
         "label_en": "HeaderGlobalAction",
         "label_ar": "إجراء عام في الهيدر",
         "use_en": "Profile/search/notifications/settings",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "header"
       }
     },
     {
@@ -221,7 +229,8 @@
         "label_en": "SideNav",
         "label_ar": "الشريط الجانبي الأساسي",
         "use_en": "Primary sidebar",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "sidebar"
       }
     },
     {
@@ -237,7 +246,8 @@
         "label_en": "SideNavItems",
         "label_ar": "حاوية عناصر الشريط الجانبي",
         "use_en": "Container for sidebar items",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "sidebar"
       }
     },
     {
@@ -253,7 +263,8 @@
         "label_en": "SideNavMenu",
         "label_ar": "مجموعة قابلة للتوسيع",
         "use_en": "Expandable sidebar group",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "sidebar"
       }
     },
     {
@@ -269,7 +280,8 @@
         "label_en": "SideNavMenuItem",
         "label_ar": "عنصر داخل المجموعة",
         "use_en": "Item inside sidebar group",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "sidebar"
       }
     },
     {
@@ -285,7 +297,8 @@
         "label_en": "SideNavLink",
         "label_ar": "رابط مباشر",
         "use_en": "Direct route link in sidebar",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "sidebar"
       }
     },
     {
@@ -301,7 +314,8 @@
         "label_en": "Content",
         "label_ar": "مساحة عرض الصفحات",
         "use_en": "Main page content area",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "content"
       }
     },
     {
@@ -317,7 +331,8 @@
         "label_en": "Grid",
         "label_ar": "شبكة التخطيط",
         "use_en": "Layout grid",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "content"
       }
     },
     {
@@ -333,7 +348,8 @@
         "label_en": "Column",
         "label_ar": "أعمدة متجاوبة",
         "use_en": "Responsive columns",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "content"
       }
     },
     {
@@ -349,7 +365,8 @@
         "label_en": "Layer",
         "label_ar": "طبقات متداخلة",
         "use_en": "Nested surfaces",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "content"
       }
     },
     {
@@ -365,7 +382,8 @@
         "label_en": "Breadcrumb",
         "label_ar": "مسار الصفحة",
         "use_en": "Page path navigation",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "content"
       }
     },
     {
@@ -381,7 +399,8 @@
         "label_en": "Tabs",
         "label_ar": "علامات تبويب",
         "use_en": "Workspace/page tabs",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "content"
       }
     },
     {
@@ -397,7 +416,8 @@
         "label_en": "Tab",
         "label_ar": "علامة تبويب",
         "use_en": "Single tab item",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "content"
       }
     },
     {
@@ -413,7 +433,8 @@
         "label_en": "Tile",
         "label_ar": "بطاقة أساسية",
         "use_en": "Cards / basic panels",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "content"
       }
     },
     {
@@ -429,7 +450,8 @@
         "label_en": "ClickableTile",
         "label_ar": "بطاقة قابلة للنقر",
         "use_en": "Module cards / shortcuts",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "content"
       }
     },
     {
@@ -445,7 +467,8 @@
         "label_en": "ExpandableTile",
         "label_ar": "بطاقة قابلة للتوسيع",
         "use_en": "Expandable panels",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "content"
       }
     },
     {
@@ -461,7 +484,8 @@
         "label_en": "Tag",
         "label_ar": "وسم",
         "use_en": "Status/role/risk labels",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "content"
       }
     },
     {
@@ -477,7 +501,8 @@
         "label_en": "DataTable",
         "label_ar": "جدول البيانات",
         "use_en": "Records grid",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "content"
       }
     },
     {
@@ -493,7 +518,8 @@
         "label_en": "TableToolbar",
         "label_ar": "شريط أدوات الجدول",
         "use_en": "Table actions area",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "content"
       }
     },
     {
@@ -509,7 +535,8 @@
         "label_en": "TableToolbarSearch",
         "label_ar": "بحث الجدول",
         "use_en": "Table search",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "content"
       }
     },
     {
@@ -525,7 +552,8 @@
         "label_en": "TableToolbarActions",
         "label_ar": "أزرار إجراءات الجدول",
         "use_en": "Table action buttons",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "content"
       }
     },
     {
@@ -541,7 +569,8 @@
         "label_en": "TableBatchActions",
         "label_ar": "إجراءات جماعية",
         "use_en": "Bulk actions",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "content"
       }
     },
     {
@@ -557,7 +586,8 @@
         "label_en": "Pagination",
         "label_ar": "التصفح",
         "use_en": "Paging controls",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "content"
       }
     },
     {
@@ -573,7 +603,8 @@
         "label_en": "StructuredList",
         "label_ar": "قائمة منظمة",
         "use_en": "Summary/detail list",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "content"
       }
     },
     {
@@ -589,7 +620,8 @@
         "label_en": "Search",
         "label_ar": "بحث عام",
         "use_en": "Global/page search",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "content"
       }
     },
     {
@@ -605,7 +637,8 @@
         "label_en": "Dropdown",
         "label_ar": "قائمة منسدلة",
         "use_en": "Single select dropdown",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "content"
       }
     },
     {
@@ -621,7 +654,8 @@
         "label_en": "ComboBox",
         "label_ar": "صندوق بحث منسدل",
         "use_en": "Searchable select",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "content"
       }
     },
     {
@@ -637,7 +671,8 @@
         "label_en": "MultiSelect",
         "label_ar": "اختيار متعدد",
         "use_en": "Multi-value filters",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "content"
       }
     },
     {
@@ -653,7 +688,8 @@
         "label_en": "DatePicker",
         "label_ar": "منتقي التاريخ",
         "use_en": "Date selection",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "content"
       }
     },
     {
@@ -669,7 +705,8 @@
         "label_en": "TextInput",
         "label_ar": "حقل نصي",
         "use_en": "Text fields",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "content"
       }
     },
     {
@@ -685,7 +722,8 @@
         "label_en": "TextArea",
         "label_ar": "حقل نص طويل",
         "use_en": "Long text fields",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "content"
       }
     },
     {
@@ -701,7 +739,8 @@
         "label_en": "NumberInput",
         "label_ar": "حقل رقمي",
         "use_en": "Numeric fields",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "content"
       }
     },
     {
@@ -717,7 +756,8 @@
         "label_en": "Select",
         "label_ar": "اختيار بسيط",
         "use_en": "Native/simple select",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "content"
       }
     },
     {
@@ -733,7 +773,8 @@
         "label_en": "Checkbox",
         "label_ar": "مربع اختيار",
         "use_en": "Boolean/multi check",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "content"
       }
     },
     {
@@ -749,7 +790,8 @@
         "label_en": "Radio",
         "label_ar": "اختيار فردي",
         "use_en": "Single option radio",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "content"
       }
     },
     {
@@ -765,7 +807,8 @@
         "label_en": "Toggle",
         "label_ar": "مفتاح تشغيل",
         "use_en": "On/off settings toggle",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "content"
       }
     },
     {
@@ -781,7 +824,8 @@
         "label_en": "Button",
         "label_ar": "زر إجراء",
         "use_en": "Primary/secondary actions",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "content"
       }
     },
     {
@@ -797,7 +841,8 @@
         "label_en": "IconButton",
         "label_ar": "زر أيقونة",
         "use_en": "Compact icon actions",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "content"
       }
     },
     {
@@ -813,7 +858,8 @@
         "label_en": "OverflowMenu",
         "label_ar": "قائمة المزيد",
         "use_en": "More actions menu",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "content"
       }
     },
     {
@@ -829,7 +875,8 @@
         "label_en": "OverflowMenuOption",
         "label_ar": "عنصر إجراء",
         "use_en": "Action item in overflow",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "content"
       }
     },
     {
@@ -845,7 +892,8 @@
         "label_en": "Modal",
         "label_ar": "نافذة حوار",
         "use_en": "Confirmation/create dialogs",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "content"
       }
     },
     {
@@ -861,7 +909,8 @@
         "label_en": "InlineNotification",
         "label_ar": "تنبيه مضمن",
         "use_en": "Inline errors/warnings",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "content"
       }
     },
     {
@@ -877,7 +926,8 @@
         "label_en": "ToastNotification",
         "label_ar": "إشعار عابر",
         "use_en": "Global success/error toasts",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "content"
       }
     },
     {
@@ -893,7 +943,8 @@
         "label_en": "Tooltip",
         "label_ar": "تلميح",
         "use_en": "Hover tooltips",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "content"
       }
     },
     {
@@ -909,7 +960,8 @@
         "label_en": "Toggletip",
         "label_ar": "تلميح قابل للتبديل",
         "use_en": "Click-toggle tips",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "content"
       }
     },
     {
@@ -925,7 +977,8 @@
         "label_en": "Popover",
         "label_ar": "نافذة منبثقة",
         "use_en": "Contextual popovers",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "content"
       }
     },
     {
@@ -941,7 +994,8 @@
         "label_en": "ProgressBar",
         "label_ar": "شريط التقدم",
         "use_en": "Progress indicators",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "content"
       }
     },
     {
@@ -957,7 +1011,8 @@
         "label_en": "InlineLoading",
         "label_ar": "تحميل مضمن",
         "use_en": "Inline loading spinners",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "content"
       }
     },
     {
@@ -973,7 +1028,8 @@
         "label_en": "SkeletonText",
         "label_ar": "هيكل نص تحميل",
         "use_en": "Loading skeleton text",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "content"
       }
     },
     {
@@ -989,7 +1045,8 @@
         "label_en": "SkeletonPlaceholder",
         "label_ar": "هيكل عنصر تحميل",
         "use_en": "Loading skeleton placeholder",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "content"
       }
     },
     {
@@ -1005,7 +1062,8 @@
         "label_en": "ContextMenu",
         "label_ar": "قائمة سياقية",
         "use_en": "Right-click context menus",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "content"
       }
     },
     {
@@ -1021,7 +1079,8 @@
         "label_en": "FileUploader",
         "label_ar": "رافع الملفات",
         "use_en": "File upload control",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "content"
       }
     },
     {
@@ -1037,7 +1096,8 @@
         "label_en": "Accordion",
         "label_ar": "أكورديون",
         "use_en": "Expandable accordion panels",
-        "family": "workspace-shell"
+        "family": "workspace-shell",
+        "zone": "content"
       }
     }
   ],
