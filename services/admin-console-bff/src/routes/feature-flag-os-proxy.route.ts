@@ -8,7 +8,7 @@ import { authWhoami } from '../lib/dos-master-evidence.js';
  *  Doctrine: Article 4 (admin BFF mediates every admin-FE call). */
 export const featureFlagOsProxyRouter = Router();
 
-const TARGET = process.env.DOS_FEATURE_FLAG_OS_SERVICE_URL || 'http://127.0.0.1:4024';
+const TARGET = process.env.DOS_FEATURE_FLAG_OS_SERVICE_URL || 'http://127.0.0.1:4049';
 
 function readToken(req: Request): string | null {
   const h = req.header('authorization') ?? '';

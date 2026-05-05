@@ -58,8 +58,9 @@ check_tcp 127.0.0.1 5432 postgres
 check_tcp 127.0.0.1 6379 redis
 check_tcp 127.0.0.1 8180 keycloak
 TEMPORAL_UP=no
-if (echo > /dev/tcp/127.0.0.1/7233) 2>/dev/null; then TEMPORAL_UP=yes; log "external OK : temporal (127.0.0.1:7233)"; else warn "optional dep DOWN: temporal (127.0.0.1:7233) — continuing"; fi
-check_tcp 127.0.0.1 4090 langfuse yes
+if (echo > /dev/tcp/127.0.0.1/7233) 2>/dev/null; then TEMPORAL_UP=yes; log "external OK : temporal (127.0.0.1:7233)"; else fatal "required dep DOWN: temporal (127.0.0.1:7233)"; fi
+check_tcp 127.0.0.1 4090 langfuse
+check_tcp 127.0.0.1 8000 glitchtip
 
 # ---------------------------------------------------------------------------
 # Wave-by-wave PM2 start
@@ -67,7 +68,7 @@ check_tcp 127.0.0.1 4090 langfuse yes
 start_wave() {
   local wave=$1; shift
   local apps
-  # Include optional apps iff their _requires probe is satisfied (currently temporal-server -> TEMPORAL_UP).
+  # Optional apps (allocation optional:true): start only when _requires probe satisfied (e.g. temporal-server).
   apps=$(TEMPORAL_UP="$TEMPORAL_UP" node -e "
     const c=require('$ECOSYSTEM');
     const tup=process.env.TEMPORAL_UP==='yes';

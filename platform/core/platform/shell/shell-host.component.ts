@@ -769,6 +769,22 @@ export class ShellHostComponent {
   readonly showQuickCreate      = computed(() => this.shellBinding.isSurfaceAllowed('workspace.quick-create'));
   readonly showCommandSearch    = computed(() => this.shellBinding.isSurfaceAllowed('workspace.command-search'));
 
+  // ── Group 7 — tile-variant render gates + props pipes ─────────────────────
+  // The four `workspace.*-tile` keys are Carbon tile primitive variants
+  // seeded by the publisher. `isSurfaceAllowed()` honours the row's enabled
+  // flag and any tenant-imposed `perms_required`; the `…TileProps` signals
+  // expose `props.variant` + tone/density/etc. so call-sites that consume
+  // `<dos-carbon-tile [variant]="…">` can read tenant overrides without
+  // hard-coding the literal Carbon variant names.
+  readonly showSelectableTile   = computed(() => this.shellBinding.isSurfaceAllowed('workspace.selectable-tile'));
+  readonly showClickableTile    = computed(() => this.shellBinding.isSurfaceAllowed('workspace.clickable-tile'));
+  readonly showExpandableTile   = computed(() => this.shellBinding.isSurfaceAllowed('workspace.expandable-tile'));
+  readonly showAiTile           = computed(() => this.shellBinding.isSurfaceAllowed('workspace.ai-tile'));
+  readonly selectableTileProps  = computed(() => this.shellBinding.selectableTileProps());
+  readonly clickableTileProps   = computed(() => this.shellBinding.clickableTileProps());
+  readonly expandableTileProps  = computed(() => this.shellBinding.expandableTileProps());
+  readonly aiTileProps          = computed(() => this.shellBinding.aiTileProps());
+
   // ── §B.9 P4 — banner multiplex (#25, #34–37) ──────────────────────────────
   readonly shellBanners = computed<ShellBanner[]>(() => {
     const banners: ShellBanner[] = [];

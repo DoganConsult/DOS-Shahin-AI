@@ -294,3 +294,14 @@ pnpm module:list                           # show all modules + state
    `dos.workspace_shell_status_label`, `dos.dynamic_ui_component_registry`
    (workspace.* / shell.* / page.* rows). DB trigger `trg_published_by_only` on those
    tables rejects rows missing `metadata.published_by='contract-publisher@v1'`.
+6. **Binding ↔ renderer parity (CI-enforced).** Every `component_key` in
+   §2.1 MUST have a runtime consumer (typed accessor / `isSurfaceAllowed`
+   gate / template binding) discoverable under `platform/core/platform/shell/`,
+   `platform/ui-system/dos-ui-system/src/shell/`,
+   `platform/ui-system/dos-ui-system/src/page/`, or
+   `services/ui-os-service/src/routes/`. The CI guard
+   `scripts/ci-guards/workspace-shell-binding-renderer-parity.mjs`
+   greps each key as a quoted literal and exits non-zero on the first
+   key with no consumer. This closes the failure mode where the
+   publisher applies N rows to the DB while the FE silently consumes M < N
+   (the Group 7 inert-tile bug, fixed 2026-05-05).

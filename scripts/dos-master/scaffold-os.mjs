@@ -13,16 +13,16 @@ const OSES = [
   { code: 'notification-os',       port: 4020, prefix: 'notification',       entity: 'Notification template',       seed: 'tenant.signup.welcome' },
   { code: 'integration-os',        port: 4021, prefix: 'integration',        entity: 'Connector definition',        seed: 'core.slack' },
   { code: 'data-governance-os',    port: 4022, prefix: 'data_governance',    entity: 'Classification policy',       seed: 'core.pii.email' },
-  { code: 'billing-os',            port: 4023, prefix: 'billing',            entity: 'Plan + price book',           seed: 'shahin.trial' },
-  { code: 'feature-flag-os',       port: 4024, prefix: 'feature_flag',       entity: 'Feature flag',                seed: 'core.workflow.composer' },
-  { code: 'security-secrets-os',   port: 4025, prefix: 'security_secret',    entity: 'Secret metadata + rotation',  seed: 'core.kc.client-secret' },
-  { code: 'telemetry-os',          port: 4026, prefix: 'telemetry',          entity: 'Telemetry sink + alert rule', seed: 'core.prom.error-rate' },
+  { code: 'billing-os',            port: 4048, prefix: 'billing',            entity: 'Plan + price book',           seed: 'shahin.trial' },
+  { code: 'feature-flag-os',       port: 4049, prefix: 'feature_flag',       entity: 'Feature flag',                seed: 'core.workflow.composer' },
+  { code: 'security-secrets-os',   port: 4050, prefix: 'security_secret',    entity: 'Secret metadata + rotation',  seed: 'core.kc.client-secret' },
+  { code: 'telemetry-os',          port: 4051, prefix: 'telemetry',          entity: 'Telemetry sink + alert rule', seed: 'core.prom.error-rate' },
   { code: 'schema-authoring-os',   port: 4027, prefix: 'schema_authoring',   entity: 'Schema artefact',             seed: 'core.dos.access-store' },
   { code: 'deployment-os',         port: 4028, prefix: 'deployment',         entity: 'Deployment artefact',         seed: 'core.gateway.v1' },
   { code: 'release-os',            port: 4029, prefix: 'release',            entity: 'Release train + gate',        seed: 'core.platform.r1' },
-  { code: 'vendor-risk-os',        port: 4030, prefix: 'vendor_risk',        entity: 'Vendor risk record',          seed: 'core.vendor.aws' },
-  { code: 'marketplace-os',        port: 4031, prefix: 'marketplace',        entity: 'Marketplace listing',         seed: 'core.app.compliance' },
-  { code: 'dr-os',                 port: 4032, prefix: 'dr',                 entity: 'Disaster recovery plan',      seed: 'core.dr.region.failover' },
+  { code: 'vendor-risk-os',        port: 4034, prefix: 'vendor_risk',        entity: 'Vendor risk record',          seed: 'core.vendor.aws' },
+  { code: 'marketplace-os',        port: 4052, prefix: 'marketplace',        entity: 'Marketplace listing',         seed: 'core.app.compliance' },
+  { code: 'dr-os',                 port: 4053, prefix: 'dr',                 entity: 'Disaster recovery plan',      seed: 'core.dr.region.failover' },
 ];
 
 const TEMPLATE_KIND = {

@@ -1913,3 +1913,68 @@ Workflow §6.5 approval; A2 deferred to a dedicated wave; A6 verified empty.
   zero `WARNING` lines (vs. the two pre-existing optimization-bailouts
   before). PM2 reloaded; `/foundation/delegations` →
   200, `/foundation/reference-data` → 200.
+
+================================================================================
+2026-05-05 Group-7 close-loop — DB rows wired into the workspace shell — CLOSED
+================================================================================
+
+- **Trigger.** Root-cause investigation showed the four
+  `workspace.{selectable,clickable,expandable,ai}-tile` keys republished
+  in v2.1.0 reached `dos.dynamic_ui_component_registry` (30 rows) and
+  `dos.workspace_shell_binding` (160 tile rows = 4 × 40 tenants) but had
+  zero FE consumer in `WorkspaceShellBindingService` /
+  `ShellHostComponent`. DB-applied, runtime-inert.
+
+- **Wiring shipped (close the loop).**
+  1. `platform/core/platform/shell/workspace-shell-binding.service.ts`
+     — added typed imports `SelectableTileProps`, `ClickableTileProps`,
+     `ExpandableTileProps`, `AiTileProps`; added four `computed<…|null>`
+     signals (`selectableTileProps`, `clickableTileProps`,
+     `expandableTileProps`, `aiTileProps`); added private `tileProps<T>()`
+     reader that returns the row's full `props` bag fail-soft, gated on
+     `enabled !== false`.
+  2. `platform/core/platform/shell/shell-host.component.ts` — added four
+     `isSurfaceAllowed()` gates (`showSelectableTile`, `showClickableTile`,
+     `showExpandableTile`, `showAiTile`) plus four pass-through
+     `…TileProps` computed signals so templates can read tenant
+     overrides directly off the binding row.
+  3. `scripts/ci-guards/workspace-shell-binding-renderer-parity.mjs`
+     — new CI guard that greps every `component_key` from
+     `module_complete_direct_seed_pack/workspace-shell-complete-direct-seed.json`
+     as a quoted literal across the four FE shell-rendering roots
+     (`platform/core/platform/shell/`,
+      `platform/ui-system/dos-ui-system/src/shell/`,
+      `platform/ui-system/dos-ui-system/src/page/`,
+      `services/ui-os-service/src/routes/`) and exits non-zero on the
+     first key with no consumer.
+  4. `module_complete_direct_seed_pack/workspace-shell-complete-direct-seed.md`
+     — appended doctrine §10.6 "Binding ↔ renderer parity (CI-enforced)"
+     with the inert-tile root-cause citation.
+
+- **Re-run pipeline (idempotent).**
+  - `pnpm module:validate workspace-shell` → blockers=0 warnings=0.
+  - `pnpm module:publish  workspace-shell` → APPLIED v2.1.0 (1549 stmts;
+    contract_sha=`1add69ef…`, sql_sha=`1888b047…`; rows components=30,
+    perms=7, i18n=312, binding=1200).
+  - `pnpm module:verify   workspace-shell` → failures=0; last publish
+    v2.1.0 @ 2026-05-05T02:15:30.918Z.
+
+- **Build + reload.**
+  - `pnpm --filter @dos/platform-core build` → GREEN (5.1s).
+  - `pnpm --filter shahin-ai-grc-frontend build` → GREEN (18.8s; zero
+    `WARNING` lines).
+  - `pm2 reload product-shell --update-env` → GREEN.
+
+- **Gates — all GREEN post-wiring.**
+  - `binding-renderer-parity` → OK; 30 component_keys all consumed
+    across 92 files.
+  - `tenant-completeness` → PASS active_tenants=35 shell_perms=5
+    failures=0.
+  - `phase-slice1-foundation-shell.spec.ts` → 2 passed / 5 skipped /
+    0 failed (7.3s).
+  - `curl /foundation/delegations` → 200; `curl /foundation/reference-data` → 200.
+
+- **Verdict — CLOSED.** What was in the DB is now applied in the
+  workspace shell: every one of the 30 component_keys (incl. all four
+  tile variants) has a typed runtime consumer. CI guard prevents future
+  Group N additions from going inert.

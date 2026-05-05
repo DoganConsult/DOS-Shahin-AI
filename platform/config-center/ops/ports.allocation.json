@@ -367,7 +367,7 @@
     },
     "bcp-service": {
       "port": 4043,
-      "cwd": "platform/BCP Module/_sources/services_bcp-service",
+      "cwd": "modules/bcp/_sources/services_bcp-service",
       "script": "dist/server.js",
       "wave": 7,
       "gatewayPrefix": "/api/bcp",
@@ -378,7 +378,7 @@
     },
     "vendor-service": {
       "port": 4044,
-      "cwd": "platform/dnoc/modules/vendor/_sources/services_vendor-service",
+      "cwd": "modules/vendor/_sources/services_vendor-service",
       "script": "dist/server.js",
       "wave": 7,
       "gatewayPrefix": "/api/vendors",
@@ -540,7 +540,6 @@
         "PG_POOL_MAX": "8",
         "UV_THREADPOOL_SIZE": "16"
       },
-      "optional": true,
       "requires": [
         "temporal-server"
       ]
@@ -559,7 +558,6 @@
         "PG_POOL_MAX": "8",
         "UV_THREADPOOL_SIZE": "16"
       },
-      "optional": true,
       "requires": [
         "temporal-server"
       ]
@@ -688,7 +686,7 @@
       "note": "DOS Master Phase 2 — Classification policy. Allocated 2026-05-04."
     },
     "billing-os-service": {
-      "port": 4023,
+      "port": 4048,
       "cwd": "services/billing-os-service",
       "script": "dist/server.js",
       "wave": 1,
@@ -697,7 +695,7 @@
       "note": "DOS Master Phase 2 — Plan + price book. Allocated 2026-05-04."
     },
     "feature-flag-os-service": {
-      "port": 4024,
+      "port": 4049,
       "cwd": "services/feature-flag-os-service",
       "script": "dist/server.js",
       "wave": 1,
@@ -706,7 +704,7 @@
       "note": "DOS Master Phase 2 — Feature flag. Allocated 2026-05-04."
     },
     "security-secrets-os-service": {
-      "port": 4025,
+      "port": 4050,
       "cwd": "services/security-secrets-os-service",
       "script": "dist/server.js",
       "wave": 1,
@@ -715,7 +713,7 @@
       "note": "DOS Master Phase 2 — Secret metadata + rotation. Allocated 2026-05-04."
     },
     "telemetry-os-service": {
-      "port": 4026,
+      "port": 4051,
       "cwd": "services/telemetry-os-service",
       "script": "dist/server.js",
       "wave": 1,
@@ -760,7 +758,7 @@
       "note": "DOS Master Phase 2 — Vendor risk record. Allocated 2026-05-04."
     },
     "marketplace-os-service": {
-      "port": 4031,
+      "port": 4052,
       "cwd": "services/marketplace-os-service",
       "script": "dist/server.js",
       "wave": 1,
@@ -769,7 +767,7 @@
       "note": "DOS Master Phase 2 — Marketplace listing. Allocated 2026-05-04."
     },
     "dr-os-service": {
-      "port": 4032,
+      "port": 4053,
       "cwd": "services/dr-os-service",
       "script": "dist/server.js",
       "wave": 1,
@@ -834,12 +832,12 @@
     "temporal": {
       "host": "127.0.0.1",
       "port": 7233,
-      "optional": true
+      "note": "Commercial production: required — frontend gRPC endpoint."
     },
     "langfuse": {
       "host": "127.0.0.1",
       "port": 4090,
-      "optional": true
+      "note": "Commercial production: required — AI tracing / eval surfaces."
     },
     "vault": {
       "host": "127.0.0.1",
@@ -870,8 +868,7 @@
       "systemdUnit": "glitchtip-web.service",
       "workerUnit": "glitchtip-worker.service",
       "appDir": "/opt/glitchtip",
-      "note": "Sentry-protocol-compatible error telemetry. Reuses existing postgres + redis. Worker has no listener.",
-      "optional": true
+      "note": "Sentry-protocol-compatible error telemetry. Reuses existing postgres + redis. Worker has no listener. Commercial production: required."
     },
     "openfga": {
       "host": "127.0.0.1",

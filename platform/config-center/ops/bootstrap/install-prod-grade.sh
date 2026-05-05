@@ -4,14 +4,14 @@
 # What this installs:
 #   - HashiCorp Vault    → /usr/local/bin/vault   :8200 / :8201
 #   - OpenFeature flagd  → /usr/local/bin/flagd   :8013 / :8014 / :8016
-#   - GlitchTip          → /opt/glitchtip         :8000          (optional, --with-glitchtip)
+#   - GlitchTip          → /opt/glitchtip         :8000          (commercial prod: default ON)
 #
 # Mirrors the existing native-daemon pattern used by cerbos.service /
 # openfga.service / keycloak. No Docker, no cloud. Single-server.
 #
 # Usage:
-#   sudo bash ops/bootstrap/install-prod-grade.sh                 # vault + flagd
-#   sudo bash ops/bootstrap/install-prod-grade.sh --with-glitchtip
+#   sudo bash ops/bootstrap/install-prod-grade.sh                 # vault + flagd + glitchtip
+#   sudo bash ops/bootstrap/install-prod-grade.sh --without-glitchtip   # vault + flagd only (non-prod / minimal)
 #   sudo bash ops/bootstrap/install-prod-grade.sh --dry-run       # show steps, change nothing
 #
 # Idempotent — re-runnable. Each step checks before doing.
@@ -19,12 +19,13 @@
 set -euo pipefail
 
 # ---------- args ----------
-WITH_GLITCHTIP=0
+WITH_GLITCHTIP=1
 DRY_RUN=0
 SKIP_VAULT_INIT=0
 for a in "$@"; do
   case "$a" in
-    --with-glitchtip) WITH_GLITCHTIP=1 ;;
+    --with-glitchtip) WITH_GLITCHTIP=1 ;; # explicit (default)
+    --without-glitchtip) WITH_GLITCHTIP=0 ;;
     --dry-run)        DRY_RUN=1 ;;
     --skip-vault-init) SKIP_VAULT_INIT=1 ;;
     -h|--help)
@@ -435,7 +436,7 @@ main() {
   if [[ "$WITH_GLITCHTIP" -eq 1 ]]; then
     install_glitchtip
   else
-    log "skipping glitchtip (use --with-glitchtip to install)"
+    log "skipping glitchtip (--without-glitchtip; commercial prod expects :8000 up)"
   fi
   health
   log "done. tracked in ops/ports.allocation.json (external block)."

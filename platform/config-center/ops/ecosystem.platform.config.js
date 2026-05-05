@@ -13,7 +13,7 @@
  *                                notification, notification-inbox, integrations
  *   wave 3 — pillars + admin   : dos, dsoc, dnoc, admin
  *   wave 4 — AI-OS triplet     : ai-gateway, ai-engine, ai-governance,
- *                                ai-temporal-worker (×2 — optional, requires Temporal)
+ *                                ai-temporal-worker ×2 (commercial prod: required; Temporal must be up)
  *   wave 5 — privacy/mcp/agrc  : privacy, mcp-gateway, agrc-os
  *   wave 6 — domain GRC fleet  : workflow, audit, risk-incident,
  *                                governance-policy, evidence, executive,

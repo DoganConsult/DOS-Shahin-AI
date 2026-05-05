@@ -19,10 +19,14 @@ import { catchError, of } from 'rxjs';
 import type {
   ActionQueueItem,
   AgentActivity,
+  AiTileProps,
+  ClickableTileProps,
   CommandSearchResult,
   ContextPanelView,
+  ExpandableTileProps,
   InboxMessage,
   QuickCreateAction,
+  SelectableTileProps,
   StatusBarSignal,
   WorkspaceShellBindingRow,
   WorkspaceShellKey,
@@ -153,6 +157,29 @@ export class WorkspaceShellBindingService {
       }
       return out.length > 0 ? out : null;
     },
+  );
+
+  // ── Group 7 — Tile variant props (DB-driven Carbon tile chrome) ─────────
+  // The four `workspace.{selectable,clickable,expandable,ai}-tile` rows are
+  // a registry of Carbon-backed tile variants. Each tenant's binding row
+  // exposes `props.variant` + `props.clickable` + the canonical
+  // `props.primitive_selector='dos-carbon-tile'` (mirrors `.json` §5.1).
+  // Consumers read the variant defaults via these signals so per-tenant
+  // overrides — tone, density, AI confidence threshold — apply uniformly to
+  // every shell call-site that uses the corresponding tile shape.
+  // Returns null when the row is absent so callers fall back to their
+  // hard-coded Carbon tile defaults until DB binding loads.
+  readonly selectableTileProps = computed<SelectableTileProps | null>(
+    () => this.tileProps<SelectableTileProps>('workspace.selectable-tile'),
+  );
+  readonly clickableTileProps = computed<ClickableTileProps | null>(
+    () => this.tileProps<ClickableTileProps>('workspace.clickable-tile'),
+  );
+  readonly expandableTileProps = computed<ExpandableTileProps | null>(
+    () => this.tileProps<ExpandableTileProps>('workspace.expandable-tile'),
+  );
+  readonly aiTileProps = computed<AiTileProps | null>(
+    () => this.tileProps<AiTileProps>('workspace.ai-tile'),
   );
 
   // ── Render gates — DB enabled flag + perms_required ─────────────────────
@@ -298,6 +325,21 @@ export class WorkspaceShellBindingService {
       out.push(dst as unknown as T);
     }
     return out;
+  }
+
+  /**
+   * Group-7 tile-variant prop reader. Returns the full `props` bag of a
+   * tile-variant binding row, typed as `T`. The DB seeds the four tile rows
+   * with `{ variant, clickable?, primitive_selector }` (per `.json` §5.1);
+   * tenants may extend with `tone`, `density`, `confidence`, `cta`, etc.
+   * Fail-soft: returns null when the row is absent or has no `props`.
+   */
+  private tileProps<T>(key: WorkspaceShellKey): T | null {
+    const row = this._surfaces().get(key);
+    if (!row || row.enabled === false) return null;
+    const props = row.props as Record<string, unknown> | undefined;
+    if (!props || typeof props !== 'object') return null;
+    return props as unknown as T;
   }
 
   private surfaceProp<T>(key: WorkspaceShellKey, propName: string): T | null {
