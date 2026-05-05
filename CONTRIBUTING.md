@@ -186,6 +186,14 @@ references the tracking row in
 - Env-var changes must be reflected in
   `packages/dos-service-bootstrap/src/validate-env.ts` so services
   refuse to boot with placeholder values.
+- **Native stack (Temporal, Langfuse, prod-grade daemons)**: follow the
+  operator activation order and troubleshooting notes in
+  [`platform/config-center/ops/bootstrap/README.md`](platform/config-center/ops/bootstrap/README.md).
+  For dev-local placeholder values only (stdout by default), use
+  [`scripts/generate-dev-secrets.sh`](scripts/generate-dev-secrets.sh);
+  use `--write` only when you intentionally append to a gitignored file.
+- **Bootstrap installers** (`platform/config-center/ops/bootstrap/*.sh`): run
+  **`pnpm ops:shell-sanity`** before merging changes (syntax check + optional `shellcheck`).
 - Customer data must never be copied into fixtures, tests, seeds, or
   issue/PR descriptions.
 

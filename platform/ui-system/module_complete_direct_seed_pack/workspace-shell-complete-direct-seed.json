@@ -444,7 +444,7 @@
         { "component_key": "workspace.inbox-center",   "enabled": true, "position": 16, "perms_required": ["workspace.inbox.read"],
           "props": { "title_key": "shell.inbox.title", "aria_key": "shell.inbox.aria", "empty_key": "shell.inbox.empty",
                      "toggle_key": "shell.inbox.toggle", "source": "notification-service", "mobile_mode": "drawer" } },
-        { "component_key": "workspace.context-panel",  "enabled": true, "position": 17, "perms_required": [],
+        { "component_key": "workspace.context-panel",  "enabled": true, "position": 17, "perms_required": ["workspace.shell.read"],
           "props": { "title_key": "shell.context_panel.title", "tabs": [
             { "id": "record",      "label_key": "shell.context_panel.tab.record" },
             { "id": "help",        "label_key": "shell.context_panel.tab.help" },
