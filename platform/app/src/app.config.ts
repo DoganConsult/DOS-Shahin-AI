@@ -3,6 +3,10 @@
  *
  * This is the single SPA entry point for all DOS products.
  * Product differentiation is DB-driven (product_key, modules, branding).
+ *
+ * COMPLIANCE NOTE: Zero hardcoded fallback configs. Every config value
+ * must flow from the Dynamic UI OS pipeline (DB → API → FE). If DB data
+ * is missing, components must show honest empty states — never fake content.
  */
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
@@ -10,37 +14,18 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { correlationIdInterceptor } from '@platform/shell/correlation-id.interceptor';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { DOS_LANGUAGE_SWITCHER_I18N } from '@dos/ui-system';
-import {
-  provideAccessStore,
-  WORKSPACE_NAV_LABEL_RESOLVER,
-} from '@dos/access-store';
+import { provideAccessStore } from '@dos/access-store';
 import { I18nService } from '@app/core/services/ui-infra/i18n.service';
 import { provideShellIcons } from './shell/icon-registration';
-// Legacy ProductCompositionNavSource removed — it had getNavItems() not
-// resolve(), crashing WorkspaceNavigationAdapter. Nav is fully DB-driven
-// via DynamicUiNavSource (L1). The adapter handles l4=null gracefully.
-import { WorkspaceResolverService } from './shell/workspace-resolver.service';
-import { COCKPIT_CONFIG, type CockpitConfigContract } from '@app/dos/contracts/cockpit-config.contract';
 import { FOUNDATION_I18N } from '@foundation-module/ui/ports/i18n.port';
 import { routes } from './app.routes';
 
-/** Default cockpit config — empty defaults, populated from DB at runtime. */
-const DEFAULT_COCKPIT_CONFIG: CockpitConfigContract = {
-  getRoleSections: () => ({}),
-  getRoleAliases: () => ({}),
-  getKpiModuleMap: () => [],
-  getDefaultRoleSection: () => ({
-    executiveSnapshot: true,
-    actionCenter: true,
-    programHealth: true,
-    analytics: true,
-    activity: true,
-    nextSteps: true,
-    widgetPriority: [],
-  }),
-  getIgniteModuleOrder: () => [],
-  getIgniteModuleMeta: () => ({}),
-};
+// DELETED: WorkspaceResolverService — was a passthrough stub (resolve(key) { return key }).
+//          ShellHostComponent.labelResolver is inject(..., { optional: true }) — handles null.
+// DELETED: ProductCompositionNavSource — had getNavItems() not resolve(), causing runtime crash.
+// DELETED: COCKPIT_CONFIG / DEFAULT_COCKPIT_CONFIG — hardcoded section flags (executiveSnapshot,
+//          actionCenter, etc.) that mislead auditors. Must be DB-driven per-tenant.
+// DELETED: WORKSPACE_NAV_LABEL_RESOLVER — stub did nothing. Labels are DB-driven via i18n catalog.
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -53,19 +38,9 @@ export const appConfig: ApplicationConfig = {
     { provide: DOS_LANGUAGE_SWITCHER_I18N, useExisting: I18nService },
     // @dos/access-store — single canonical session/access store for this product.
     provideAccessStore(),
-    // L4 nav source — removed. ProductCompositionNavSource was a legacy stub
-    // (getNavItems() not resolve()). Nav is now 100% DB-driven via
-    // DynamicUiNavSource (L1). WorkspaceNavigationAdapter skips l4 when null.
-    // Product-side nav label resolver — the platform shell uses this to turn
-    // Dynamic-UI/module title keys into real locale-aware labels.
-    { provide: WORKSPACE_NAV_LABEL_RESOLVER, useExisting: WorkspaceResolverService },
     // Register Carbon icons used by the workspace shell + nav with IconService.
     provideShellIcons(),
-    // Cockpit config — enables all workspace-home sections (KPIs, actions,
-    // frameworks, activity). Without this, NG0201 fires and all sections hide.
-    { provide: COCKPIT_CONFIG, useValue: DEFAULT_COCKPIT_CONFIG },
     // Foundation i18n — workspace-home uses this for all labels.
-    // Without it, NoopFoundationI18n returns Arabic fallbacks.
     { provide: FOUNDATION_I18N, useExisting: I18nService },
   ],
 };

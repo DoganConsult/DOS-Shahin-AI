@@ -1,4 +1,6 @@
-export { ShellResolverService } from './shell-resolver.service';
+// ShellResolverService DELETED — was dead code calling phantom
+// /api/shell/config, /api/config-center/gateway/shell-override endpoints
+// that 404. Shell config is 100% DB-driven via WorkspaceShellBindingService.
 export { ShellHostComponent } from './shell-host.component';
 export { BreadcrumbService, type Breadcrumb } from './breadcrumb.service';
 

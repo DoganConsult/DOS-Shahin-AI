@@ -65,8 +65,8 @@ import { ShellErrorStateService } from './shell-error-state.service';
 import { ToastService } from '../../../dos/shell/toast.service';
 
 const CARBON_BREAKPOINT_LARGE_PX = 1056;
-const FALLBACK_GROUP_ICON = 'layout-dashboard';
-const FALLBACK_ITEM_ICON  = 'dot';
+// No hardcoded fallback icons — icons must flow from DB (nav item.icon field).
+// Empty string = no icon rendered = honest empty state.
 
 @Component({
   selector: 'app-shell-host',
@@ -135,14 +135,14 @@ const FALLBACK_ITEM_ICON  = 'dot';
     .shell-breadcrumb__sep { margin-inline-start: var(--cds-spacing-03); color: var(--cds-text-secondary); }
 
     /* Page title strip. */
-    .shell-page-header { padding: var(--cds-spacing-05, 1rem) var(--cds-spacing-06, 1.5rem) 0; max-width: 1600px; }
+    .shell-page-header { padding: var(--cds-spacing-05, 1rem) var(--cds-spacing-06, 1.5rem) 0; max-width: var(--dos-shell-content-max-width, 100%); }
     .shell-page-title { margin: 0; font-size: 1.75rem; font-weight: 400; line-height: 1.25; color: var(--cds-text-primary, #161616); }
 
     /* Skeleton container. */
     .shell-skeleton { padding: var(--cds-spacing-07, 2rem) var(--cds-spacing-06, 1.5rem); display: grid; gap: var(--cds-spacing-05, 1rem); }
 
     /* Header-mounted command-search — keep narrow inside the inverse bar. */
-    .shell-header-cmd { display: inline-block; min-width: 12rem; max-width: 22rem; }
+    .shell-header-cmd { display: inline-block; min-width: var(--dos-shell-cmd-min-width, 12rem); max-width: var(--dos-shell-cmd-max-width, 22rem); }
     .shell-header-cmd ::ng-deep .dos-command-search__input {
       background: var(--cds-field-02);
       color: var(--cds-text-on-color);
@@ -174,7 +174,7 @@ const FALLBACK_ITEM_ICON  = 'dot';
     .shell-mobile-cmd__body { flex: 1; overflow: auto; }
 
     /* Wave F — action-queue + agent-strip in-flow placement (desktop only). */
-    .shell-aux-strip { max-width: 1600px; padding-inline: var(--cds-spacing-06, 1.5rem); }
+    .shell-aux-strip { max-width: var(--dos-shell-content-max-width, 100%); padding-inline: var(--cds-spacing-06, 1.5rem); }
     .shell-aux-strip--top    { padding-block-start: var(--cds-spacing-03, .5rem); }
     .shell-aux-strip--bottom { padding-block-end:   var(--cds-spacing-03, .5rem); }
 
@@ -1249,7 +1249,7 @@ export class ShellHostComponent {
 
   groupIcon(groupId: string): string {
     const key = `shell.group.icon.${groupId}`;
-    return this.labelResolver?.shellChromeString?.(key) || FALLBACK_GROUP_ICON;
+    return this.labelResolver?.shellChromeString?.(key) || '';
   }
 
   itemIcon(item: DosNavItem, groupId: string): string {
@@ -1259,7 +1259,7 @@ export class ShellHostComponent {
     const resolved = this.labelResolver?.shellChromeString?.(key);
     if (resolved) return resolved;
     const grp = this.groupIcon(groupId);
-    return grp || FALLBACK_ITEM_ICON;
+    return grp || '';
   }
 
   labelFromKey(key: string): string {
