@@ -545,8 +545,9 @@ if (UI_OS_SERVICE_URL) {
   const publicMarketingRoutes = new Set<string>([
     '/', '/pricing', '/trust', '/security', '/contact', '/about', '/legal',
     '/platform', '/resources', '/resources/executive-kit',
-    // Auth pages — public, unauthenticated (Phase P1).
-    '/login', '/register', '/forgot-password', '/mfa', '/reset-password',
+    // Auth pages — public, unauthenticated (Phase P2 canonical /auth/* paths).
+    // Mirrors services/ui-os-service/src/server.ts#publicMarketingTemplateRoutes.
+    '/auth/login', '/auth/register', '/auth/forgot-password', '/auth/mfa', '/auth/reset-password',
   ]);
   const publicUiOsProxy = createProxyMiddleware({
     target: UI_OS_SERVICE_URL,
