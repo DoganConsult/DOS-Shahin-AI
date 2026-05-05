@@ -4,7 +4,7 @@ Frozen list of retired or superseded codepaths and patterns. **Do not expand fea
 
 | Path / pattern | Legacy tier | Replacement / canonical | Risk | Owner / wave |
 |----------------|-------------|-------------------------|------|--------------|
-| `platform/_archive/orphans-2026-05-01/**` | L4 (no workspace import) | Active equivalents in `platform/core`, `products/shahin-ai`, Dynamic UI rows | None (quarantined) | Wave 1 — `orphans-2026-05-01` |
+| `platform/_archive/orphans-2026-05-01/**` (purged 2026-05-05) | — (removed) | Active equivalents in `platform/core`, `products/shahin-ai`, Dynamic UI rows | N/A | Wave 1 quarantine → **hard-delete**; see `archive-ledger.json#purged` |
 | `platform/config-center/migration/archive/**` | L1 (migration artifacts only) | Live migrations under `platform/dos/migrations/public/` | N/A — not application runtime | Retain per architecture.md |
 | `platform/core/platform/navigation/active-modules.ts` | L0 (referenced; retire) | Dynamic UI / workspace bootstrap MV | Static nav drift | M3_pending |
 | `platform/core/platform/auth/authz-client.service.ts` | L0 | `@dos/access-store` + gateway authz | Duplicate authz surface | M3_pending |
@@ -45,7 +45,7 @@ Canonical checks:
 | `platform/_archive/**` contains no `package.json` (workspace packages) | **0** files — default `pnpm build` filters (`./platform/**` with package roots only) never compile `_archive`. |
 | CI import ban | `no-archive-imports.mjs` is listed in `scripts/ci-guards/dos-master-gate.mjs` (runs with master gate). |
 | Manual guard | `node scripts/ci-guards/no-archive-imports.mjs` → **PASS** when run from a git checkout. |
-| Ledger | `archive-ledger.json` records `orphans-2026-05-01`; `build_excluded` / `runtime_removed` empty until future waves. |
+| Ledger | `archive-ledger.json` — `purged` lists `orphans-2026-05-01`; `moved` empty; `build_excluded` / `runtime_removed` empty until future waves. |
 
 **Caveat:** `no-archive-imports.mjs` uses `git ls-files`; if `git` is unavailable it falls back to an empty file list (no violations reported). Treat runs outside a git workspace as **non-authoritative**; CI always runs in checkout.
 

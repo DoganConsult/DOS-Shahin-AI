@@ -398,7 +398,6 @@ platform/workflow/_sources/services_workflow-service/src/events/workflow.publish
 platform/workflow/_sources/services_workflow-service/src/domain/schedule.service.ts
 platform/workflow/_sources/services_workflow-service/src/domain/cron-executor.ts
 platform/workflow/_sources/services_workflow-service/src/server.ts
-platform/_archive/orphans-2026-05-01/analytics-hub/analytics-hub.component.ts
 platform/core/services/user-account/journey.service.ts
 services/agrc-os-service/src/server.ts
 services/analytics-reporting-service/src/server.ts

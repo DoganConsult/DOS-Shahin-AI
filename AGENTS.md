@@ -2206,8 +2206,9 @@ Workflow §6.5 approval; A2 deferred to a dedicated wave; A6 verified empty.
 ================================================================================
 
 - **Wave 0 — Inventory.** `platform/docs/legacy/archive-inventory.md` records
-  tiers L0–L4, M3_pending paths, existing `platform/_archive/orphans-2026-05-01/`,
-  and dep-cruiser / guard verification commands. Freeze: no new features on
+  tiers L0–L4, M3_pending paths, and (historical) purged bucket `orphans-2026-05-01`
+  per `archive-ledger.json#purged`, plus dep-cruiser / guard verification commands.
+  Freeze: no new features on
   L3–L4 roots without an archive wave PR.
 - **Wave 1 — Quarantine + CI.** `scripts/ci-guards/no-archive-imports.mjs` fails
   if tracked `ts|tsx|js|mjs|cjs|vue` under `platform/` (except `_archive`),

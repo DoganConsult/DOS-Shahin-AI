@@ -2,20 +2,23 @@
   "schema_version": 1,
   "owner": "Platform / legacy archive discipline",
   "description": "Retention ledger for code moved under platform/_archive or excluded from default builds. Parallel to platform/docs/dos-master/deletion-ledger.json (deletion).",
-  "moved": [
+  "moved": [],
+  "purged": [
     {
       "from": "various active paths (pre-2026-05-01)",
-      "to": "platform/_archive/orphans-2026-05-01/",
+      "intermediate_path": "platform/_archive/orphans-2026-05-01/",
       "wave": "1",
-      "date": "2026-05-01",
-      "reason": "Superseded UI/helpers quarantined; no active imports",
+      "moved_date": "2026-05-01",
+      "purged_date": "2026-05-05",
+      "reason": "Superseded UI/helpers quarantined; no active imports; bucket hard-deleted after retention",
       "replacement": "platform/core, @dos/ui-system, Dynamic UI template bindings"
     }
   ],
   "build_excluded": [],
   "runtime_removed": [],
   "_notes": [
-    "2026-05-05 — No gateway or PM2 entries removed in this archive wave; future waves record retired_prefix / pm2_app here.",
+    "2026-05-05 — `orphans-2026-05-01` removed from disk and git; historical record only in `purged`.",
+    "2026-05-05 — No gateway or PM2 entries removed in this archive wave; future waves record retired_prefix / pm2_app under runtime_removed.",
     "Populate build_excluded with pnpm package names when a package is removed from pnpm-workspace.yaml but must remain buildable via pnpm build:legacy-check."
   ]
 }

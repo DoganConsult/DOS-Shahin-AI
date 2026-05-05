@@ -12,6 +12,10 @@ Per [docs/architecture.md](../../docs/architecture.md): dead duplicates and supe
 | `retired-products-<YYYYMMDD>/` | Whole product trees off the build matrix |
 | `contracts-snapshots-<YYYYMMDD>/` | JSON/MD contract snapshots |
 
+## History
+
+- **2026-05-05:** Bucket `orphans-2026-05-01/` was **hard-deleted** after retention. Replacement surface: `platform/core`, `@dos/ui-system`, Dynamic UI bindings. Record: `archive-ledger.json` → `purged`.
+
 ## Rules
 
 1. Prefer **`git mv`** when moving trees (preserves history).
