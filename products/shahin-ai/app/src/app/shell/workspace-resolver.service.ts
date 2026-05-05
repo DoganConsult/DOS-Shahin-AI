@@ -58,7 +58,7 @@ import type {
   DosLocale,
 } from '@dos/ui-contracts';
 
-import productManifest from '../../../../product.manifest.json';
+import productManifest from '../../../../manifest/product.manifest.json';
 // Foundation UI contract — single source for route page-experience fields.
 // The cornerstone consumes this directly; eventually the resolver will
 // fetch /api/dynamic-ui/contract/foundation and this static import goes

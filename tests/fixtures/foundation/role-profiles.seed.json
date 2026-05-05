@@ -1,0 +1,50 @@
+{
+  "$schema": "../../../platform/foundation/contracts/role-profile-sync.contract.json",
+  "module": "foundation",
+  "tenantId": "tenant_test_foundation",
+  "users": [
+    {
+      "user_id":  "test+foundation+viewer@dos.local",
+      "name":     "Foundation Viewer",
+      "locale":   "en",
+      "role_code": "viewer",
+      "scope":    "tenant",
+      "permissions": ["foundation.read","foundation.user.read"],
+      "lifecycle_state": "active"
+    },
+    {
+      "user_id":  "test+foundation+user@dos.local",
+      "name":     "Foundation User",
+      "locale":   "en",
+      "role_code": "user",
+      "scope":    "tenant",
+      "permissions": ["foundation.read","foundation.record.write","foundation.user.read"],
+      "lifecycle_state": "active"
+    },
+    {
+      "user_id":  "test+foundation+auditor@dos.local",
+      "name":     "Foundation Auditor",
+      "locale":   "en",
+      "role_code": "auditor",
+      "scope":    "tenant",
+      "permissions": ["foundation.read","foundation.user.read","foundation.admin.read","audit_trail.read"],
+      "lifecycle_state": "active"
+    },
+    {
+      "user_id":  "test+foundation+admin@dos.local",
+      "name":     "Foundation Tenant Admin",
+      "locale":   "en",
+      "role_code": "tenant-admin",
+      "scope":    "tenant",
+      "permissions": [
+        "foundation.read","foundation.record.write","foundation.record.delete","foundation.manage",
+        "foundation.user.read","foundation.user.write","foundation.user.disable",
+        "foundation.admin.read","foundation.admin.write",
+        "audit_trail.read",
+        "access_review:create","access_review:approve",
+        "delegation:create","delegation:approve"
+      ],
+      "lifecycle_state": "active"
+    }
+  ]
+}

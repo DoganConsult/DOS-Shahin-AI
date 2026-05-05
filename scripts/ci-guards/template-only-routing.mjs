@@ -32,7 +32,8 @@ const ALLOWLIST_PATHS = new Set([
   '/dauth', '/',
   // Marketing pages — UNIFIED_MOUNT_POLICY §2 (public, tenantless,
   // registry-seeded marketing.*.page keys, NOT workspace pages).
-  '/about', '/contact', '/legal', '/pricing', '/security', '/trust',
+  '/about', '/contact', '/legal', '/platform', '/pricing', '/resources',
+  '/resources/executive-kit', '/security', '/trust',
 ]);
 
 // Mirror of ARCHETYPE_REGISTRY (32 entries) — must stay in sync with
@@ -87,8 +88,8 @@ const loaderSrc = readFileSync(
   'utf8',
 );
 const loaderKeys = new Set(
-  [...loaderSrc.matchAll(/^\s+([A-Z][A-Za-z0-9]+TemplateComponent)\s*:/gm)]
-    .map(m => m[1])
+  [...loaderSrc.matchAll(/^\s+(?:([A-Z][A-Za-z0-9]+TemplateComponent)|['"]([^'"]+)['"])\s*:/gm)]
+    .map(m => m[1] ?? m[2])
 );
 let unknownExport = 0;
 const seenExports = new Set();

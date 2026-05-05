@@ -168,8 +168,15 @@ let AccessStore = class AccessStore {
     decisionAuthorities = computed(() => []);
     /** Compat: allowed dashboards — empty until dashboard registry lands. */
     allowedDashboards = computed(() => []);
-    /** Compat: legacy `landingPage()` function shape. */
+    /** Compat: legacy `landingPage()` function shape. Updated to use DB-driven tenant/member landing routes. */
     landingPage() {
+        // Priority: member override > tenant default > role-based fallback
+        // Note: The actual DB-driven landing routes (dos.tenants.default_landing_route,
+        // dos.memberships.landing_route_override) need to be surfaced through the
+        // /api/access/my-permissions API response. Once the backend API is updated
+        // to include these fields, this method should read them from the _me() or
+        // permissions payload instead of using role-based logic.
+        // For now, keep the role-based logic as fallback until the API is updated.
         if (this.isTenantAdmin()) {
             const isPlatformAdmin = this._roles().some((r) => {
                 const n = String(r).toLowerCase().trim();

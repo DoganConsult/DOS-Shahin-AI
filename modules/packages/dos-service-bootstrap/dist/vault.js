@@ -53,7 +53,8 @@ async function getSecret(key, opts = {}) {
             // fall through to env
         }
     }
-    if (opts.fallbackEnv)
+    const allowEnv = opts.includeEnvironmentFallback !== false;
+    if (allowEnv && opts.fallbackEnv)
         return process.env[opts.fallbackEnv];
     return undefined;
 }

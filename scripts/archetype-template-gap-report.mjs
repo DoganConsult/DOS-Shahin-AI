@@ -32,8 +32,8 @@ function parseArchetypeRegistry(tsPath) {
 function parseLoaderKeys(bindingPath) {
   const ts = readFileSync(bindingPath, 'utf8');
   const keys = new Set();
-  for (const ma of ts.matchAll(/^\s+(\w+):\s*\(\)\s*=>/gm)) {
-    keys.add(ma[1]);
+  for (const ma of ts.matchAll(/^[ \t]+(?:([A-Z][A-Za-z0-9]+TemplateComponent)|['"]([^'"]+)['"])\s*:/gm)) {
+    keys.add(ma[1] ?? ma[2]);
   }
   return keys;
 }

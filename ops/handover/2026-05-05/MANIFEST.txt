@@ -1,0 +1,7 @@
+# DOS Handover Manifest — 2026-05-05
+# files: 5  total bytes: 18467
+6680f2234bf5fdbfdfe6a32adc716ba7c75dd274d39a26aad669b58011c8064b  8563  audit-shelf/tenant_test_foundation/bundle.json
+6922b75816b3679aab71a5a7e20a68fae957c34feab0465f9ddcf707ccdaf716  309  foundation-handover.md
+9ccc4f259e1de6e6c65d92bf23bd2bb6da9b1280acfa05695a18e64118aebb72  78  audit-shelf/tenant_test_foundation/bundle.sha256
+e5cf8350a1c64535563402ca092918f8fbb345b583d6e934125034a8d59eab52  8974  foundation-rbac-matrix.json
+fbb78a4f8a2eea3d5ca02751b640af9720bc8217cd1af3a24920296de4ef6cab  543  foundation-handover.json

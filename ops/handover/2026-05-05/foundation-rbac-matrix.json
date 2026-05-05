@@ -1,0 +1,395 @@
+{
+  "date": "2026-05-05",
+  "roles": 4,
+  "routes": 16,
+  "cells": 64,
+  "allowed": 53,
+  "denied": 11,
+  "violations": [],
+  "matrix": [
+    {
+      "role": "viewer",
+      "route": "/foundation",
+      "required": "foundation.read",
+      "allowed": true
+    },
+    {
+      "role": "viewer",
+      "route": "/foundation/overview",
+      "required": "foundation.read",
+      "allowed": true
+    },
+    {
+      "role": "viewer",
+      "route": "/foundation/organization",
+      "required": "foundation.read",
+      "allowed": true
+    },
+    {
+      "role": "viewer",
+      "route": "/foundation/business-units",
+      "required": "foundation.read",
+      "allowed": true
+    },
+    {
+      "role": "viewer",
+      "route": "/foundation/departments",
+      "required": "foundation.read",
+      "allowed": true
+    },
+    {
+      "role": "viewer",
+      "route": "/foundation/positions",
+      "required": "foundation.read",
+      "allowed": true
+    },
+    {
+      "role": "viewer",
+      "route": "/foundation/locations",
+      "required": "foundation.read",
+      "allowed": true
+    },
+    {
+      "role": "viewer",
+      "route": "/foundation/users",
+      "required": "foundation.read",
+      "allowed": true
+    },
+    {
+      "role": "viewer",
+      "route": "/foundation/users/:id",
+      "required": "foundation.read",
+      "allowed": true
+    },
+    {
+      "role": "viewer",
+      "route": "/foundation/teams",
+      "required": "foundation.read",
+      "allowed": true
+    },
+    {
+      "role": "viewer",
+      "route": "/foundation/roles",
+      "required": "foundation.admin.read",
+      "allowed": false
+    },
+    {
+      "role": "viewer",
+      "route": "/foundation/committees",
+      "required": "foundation.read",
+      "allowed": true
+    },
+    {
+      "role": "viewer",
+      "route": "/foundation/delegations",
+      "required": "delegation:create",
+      "allowed": false
+    },
+    {
+      "role": "viewer",
+      "route": "/foundation/access-review",
+      "required": "access_review:create",
+      "allowed": false
+    },
+    {
+      "role": "viewer",
+      "route": "/foundation/policies",
+      "required": "foundation.admin.read",
+      "allowed": false
+    },
+    {
+      "role": "viewer",
+      "route": "/foundation/audit",
+      "required": "audit_trail.read",
+      "allowed": false
+    },
+    {
+      "role": "user",
+      "route": "/foundation",
+      "required": "foundation.read",
+      "allowed": true
+    },
+    {
+      "role": "user",
+      "route": "/foundation/overview",
+      "required": "foundation.read",
+      "allowed": true
+    },
+    {
+      "role": "user",
+      "route": "/foundation/organization",
+      "required": "foundation.read",
+      "allowed": true
+    },
+    {
+      "role": "user",
+      "route": "/foundation/business-units",
+      "required": "foundation.read",
+      "allowed": true
+    },
+    {
+      "role": "user",
+      "route": "/foundation/departments",
+      "required": "foundation.read",
+      "allowed": true
+    },
+    {
+      "role": "user",
+      "route": "/foundation/positions",
+      "required": "foundation.read",
+      "allowed": true
+    },
+    {
+      "role": "user",
+      "route": "/foundation/locations",
+      "required": "foundation.read",
+      "allowed": true
+    },
+    {
+      "role": "user",
+      "route": "/foundation/users",
+      "required": "foundation.read",
+      "allowed": true
+    },
+    {
+      "role": "user",
+      "route": "/foundation/users/:id",
+      "required": "foundation.read",
+      "allowed": true
+    },
+    {
+      "role": "user",
+      "route": "/foundation/teams",
+      "required": "foundation.read",
+      "allowed": true
+    },
+    {
+      "role": "user",
+      "route": "/foundation/roles",
+      "required": "foundation.admin.read",
+      "allowed": false
+    },
+    {
+      "role": "user",
+      "route": "/foundation/committees",
+      "required": "foundation.read",
+      "allowed": true
+    },
+    {
+      "role": "user",
+      "route": "/foundation/delegations",
+      "required": "delegation:create",
+      "allowed": true
+    },
+    {
+      "role": "user",
+      "route": "/foundation/access-review",
+      "required": "access_review:create",
+      "allowed": false
+    },
+    {
+      "role": "user",
+      "route": "/foundation/policies",
+      "required": "foundation.admin.read",
+      "allowed": false
+    },
+    {
+      "role": "user",
+      "route": "/foundation/audit",
+      "required": "audit_trail.read",
+      "allowed": false
+    },
+    {
+      "role": "auditor",
+      "route": "/foundation",
+      "required": "foundation.read",
+      "allowed": true
+    },
+    {
+      "role": "auditor",
+      "route": "/foundation/overview",
+      "required": "foundation.read",
+      "allowed": true
+    },
+    {
+      "role": "auditor",
+      "route": "/foundation/organization",
+      "required": "foundation.read",
+      "allowed": true
+    },
+    {
+      "role": "auditor",
+      "route": "/foundation/business-units",
+      "required": "foundation.read",
+      "allowed": true
+    },
+    {
+      "role": "auditor",
+      "route": "/foundation/departments",
+      "required": "foundation.read",
+      "allowed": true
+    },
+    {
+      "role": "auditor",
+      "route": "/foundation/positions",
+      "required": "foundation.read",
+      "allowed": true
+    },
+    {
+      "role": "auditor",
+      "route": "/foundation/locations",
+      "required": "foundation.read",
+      "allowed": true
+    },
+    {
+      "role": "auditor",
+      "route": "/foundation/users",
+      "required": "foundation.read",
+      "allowed": true
+    },
+    {
+      "role": "auditor",
+      "route": "/foundation/users/:id",
+      "required": "foundation.read",
+      "allowed": true
+    },
+    {
+      "role": "auditor",
+      "route": "/foundation/teams",
+      "required": "foundation.read",
+      "allowed": true
+    },
+    {
+      "role": "auditor",
+      "route": "/foundation/roles",
+      "required": "foundation.admin.read",
+      "allowed": true
+    },
+    {
+      "role": "auditor",
+      "route": "/foundation/committees",
+      "required": "foundation.read",
+      "allowed": true
+    },
+    {
+      "role": "auditor",
+      "route": "/foundation/delegations",
+      "required": "delegation:create",
+      "allowed": false
+    },
+    {
+      "role": "auditor",
+      "route": "/foundation/access-review",
+      "required": "access_review:create",
+      "allowed": false
+    },
+    {
+      "role": "auditor",
+      "route": "/foundation/policies",
+      "required": "foundation.admin.read",
+      "allowed": true
+    },
+    {
+      "role": "auditor",
+      "route": "/foundation/audit",
+      "required": "audit_trail.read",
+      "allowed": true
+    },
+    {
+      "role": "tenant-admin",
+      "route": "/foundation",
+      "required": "foundation.read",
+      "allowed": true
+    },
+    {
+      "role": "tenant-admin",
+      "route": "/foundation/overview",
+      "required": "foundation.read",
+      "allowed": true
+    },
+    {
+      "role": "tenant-admin",
+      "route": "/foundation/organization",
+      "required": "foundation.read",
+      "allowed": true
+    },
+    {
+      "role": "tenant-admin",
+      "route": "/foundation/business-units",
+      "required": "foundation.read",
+      "allowed": true
+    },
+    {
+      "role": "tenant-admin",
+      "route": "/foundation/departments",
+      "required": "foundation.read",
+      "allowed": true
+    },
+    {
+      "role": "tenant-admin",
+      "route": "/foundation/positions",
+      "required": "foundation.read",
+      "allowed": true
+    },
+    {
+      "role": "tenant-admin",
+      "route": "/foundation/locations",
+      "required": "foundation.read",
+      "allowed": true
+    },
+    {
+      "role": "tenant-admin",
+      "route": "/foundation/users",
+      "required": "foundation.read",
+      "allowed": true
+    },
+    {
+      "role": "tenant-admin",
+      "route": "/foundation/users/:id",
+      "required": "foundation.read",
+      "allowed": true
+    },
+    {
+      "role": "tenant-admin",
+      "route": "/foundation/teams",
+      "required": "foundation.read",
+      "allowed": true
+    },
+    {
+      "role": "tenant-admin",
+      "route": "/foundation/roles",
+      "required": "foundation.admin.read",
+      "allowed": true
+    },
+    {
+      "role": "tenant-admin",
+      "route": "/foundation/committees",
+      "required": "foundation.read",
+      "allowed": true
+    },
+    {
+      "role": "tenant-admin",
+      "route": "/foundation/delegations",
+      "required": "delegation:create",
+      "allowed": true
+    },
+    {
+      "role": "tenant-admin",
+      "route": "/foundation/access-review",
+      "required": "access_review:create",
+      "allowed": true
+    },
+    {
+      "role": "tenant-admin",
+      "route": "/foundation/policies",
+      "required": "foundation.admin.read",
+      "allowed": true
+    },
+    {
+      "role": "tenant-admin",
+      "route": "/foundation/audit",
+      "required": "audit_trail.read",
+      "allowed": true
+    }
+  ]
+}

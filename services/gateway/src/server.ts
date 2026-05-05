@@ -544,6 +544,7 @@ if (UI_OS_SERVICE_URL) {
   // skips authGuard. Any other route still requires JWT.
   const publicMarketingRoutes = new Set<string>([
     '/', '/pricing', '/trust', '/security', '/contact', '/about', '/legal',
+    '/platform', '/resources', '/resources/executive-kit',
   ]);
   const publicUiOsProxy = createProxyMiddleware({
     target: UI_OS_SERVICE_URL,

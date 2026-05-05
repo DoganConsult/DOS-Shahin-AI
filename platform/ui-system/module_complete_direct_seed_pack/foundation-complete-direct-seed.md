@@ -112,7 +112,7 @@ public aliases peer modules MUST import (not hardcode):
 | `foundation.auditor` | `auditor` | Foundation Auditor | false | org | read |
 | `foundation.viewer` | `viewer` | Foundation Viewer | true | own | read |
 
-## 4. Navigation (21 items — `foundation-complete-direct-seed.json` → `navigation[]`)
+## 4. Navigation (22 items — `foundation-complete-direct-seed.json` → `navigation[]`)
 
 These are the **intended** nav contract for Dynamic UI / AccessStore integration. Parent group row `foundation` has `route: null` (section root).
 
@@ -149,33 +149,33 @@ Under `path: 'foundation'`, **all** child paths are served by a single wildcard 
 
 | # | page_code | route | archetype | template_export (loader) | permission (JSON) | Primary data APIs (see §6) |
 |---:|---|---|---|---|---|---|
-| 1 | `foundation.overview` | `/foundation/overview` | command-home | `ModuleOverviewTemplateComponent` | `foundation.module.read` | `/api/foundation/dashboard`, `/api/foundation/lookups` |
-| 2 | `foundation.organization` | `/foundation/organization` | org-chart | `OrgChartTemplateComponent` | `foundation.data.read` | `/api/organizations`, `/api/org-hierarchy` |
-| 3 | `foundation.business-units` | `/foundation/business-units` | org-chart | `OrgChartTemplateComponent` | `foundation.data.read` | `/api/business-units`, `/api/organizations` |
-| 4 | `foundation.departments` | `/foundation/departments` | org-chart | `OrgChartTemplateComponent` | `foundation.data.read` | `/api/departments`, `/api/organizations` |
-| 5 | `foundation.positions` | `/foundation/positions` | intelligent-register | `ModuleRecordsTemplateComponent` | `foundation.data.read` | `/api/positions` |
-| 6 | `foundation.locations` | `/foundation/locations` | intelligent-register | `ModuleRecordsTemplateComponent` | `foundation.data.read` | `/api/locations` |
-| 7 | `foundation.users` | `/foundation/users` | intelligent-register | `ModuleRecordsTemplateComponent` | `foundation.user.read` | `/api/users`, `/api/profiles` |
-| 8 | `foundation.teams` | `/foundation/teams` | org-chart | `OrgChartTemplateComponent` | `foundation.data.read` | `/api/teams`, `/api/foundation/teams` |
-| 9 | `foundation.roles` | `/foundation/roles` | intelligent-register | `ModuleRecordsTemplateComponent` | `foundation.rbac.read` | `/api/roles`, `/api/foundation/roles` |
-| 10 | `foundation.permissions` | `/foundation/permissions` | ownership-map | `OwnershipMapTemplateComponent` | `foundation.rbac.read` | `/api/permissions` (via host / foundation aggregator as mounted) |
-| 11 | `foundation.committees` | `/foundation/committees` | intelligent-register | `ModuleRecordsTemplateComponent` | `foundation.data.read` | `/api/committees`, `/api/governance/committees` |
-| 12 | `foundation.delegations` | `/foundation/delegations` | delegation-center | `DelegationCenterTemplateComponent` | `foundation.data.read` | `/api/governance/delegations`, `/api/delegations` |
-| 13 | `foundation.access-review` | `/foundation/access-review` | workflow-control | `ModuleAssessmentsTemplateComponent` | `foundation.review.read` | `/api/access-reviews`, `/api/access-review` |
-| 14 | `foundation.policies` | `/foundation/policies` | intelligent-register | `ModuleRecordsTemplateComponent` | `foundation.data.read` | `/api/governance/policies`, `/api/governance` |
-| 15 | `foundation.audit` | `/foundation/audit` | audit-trail-ledger | `AuditTrailLedgerTemplateComponent` | `foundation.audit.read` | `/api/audit-trail` |
-| 16 | `foundation.ownership` | `/foundation/ownership` | ownership-map | `OwnershipMapTemplateComponent` | `foundation.data.read` | `/api/ownership-mappings` |
-| 17 | `foundation.sod` | `/foundation/sod` | module-settings | `ModuleSettingsTemplateComponent` | `foundation.sod.write` | `/api/sod`, `/api/foundation/sod/*` |
-| 18 | `foundation.hierarchy-viz` | `/foundation/hierarchy-viz` | org-chart | `OrgChartTemplateComponent` | `foundation.hierarchy.read` | `/api/org-hierarchy` |
-| 19 | `foundation.user-lifecycle` | `/foundation/user-lifecycle` | workflow-timeline | `WorkflowTimelineTemplateComponent` | `foundation.user.write` | `/api/user-lifecycle`, `/api/foundation/user-lifecycle` |
-| 20 | `foundation.reference-data` | `/foundation/reference-data` | intelligent-register | `ModuleRecordsTemplateComponent` | `foundation.data.read` | `/api/foundation/lookups`, reference catalogs via foundation routes |
-| 21 | `foundation.diagnostics` | `/foundation/diagnostics` | posture-overview | `PostureOverviewTemplateComponent` | `foundation.module.read` | `/api/health/foundation`, `/api/foundation/health` |
+| 1 | `foundation.overview` | `/foundation/overview` | command-home | `module.overview.page` | `foundation.module.read` | `/api/foundation/dashboard`, `/api/foundation/lookups` |
+| 2 | `foundation.organization` | `/foundation/organization` | org-chart | `module.org_chart.page` | `foundation.data.read` | `/api/organizations`, `/api/org-hierarchy` |
+| 3 | `foundation.business-units` | `/foundation/business-units` | org-chart | `module.org_chart.page` | `foundation.data.read` | `/api/business-units`, `/api/organizations` |
+| 4 | `foundation.departments` | `/foundation/departments` | org-chart | `module.org_chart.page` | `foundation.data.read` | `/api/departments`, `/api/organizations` |
+| 5 | `foundation.positions` | `/foundation/positions` | intelligent-register | `module.records.page` | `foundation.data.read` | `/api/positions` |
+| 6 | `foundation.locations` | `/foundation/locations` | intelligent-register | `module.records.page` | `foundation.data.read` | `/api/locations` |
+| 7 | `foundation.users` | `/foundation/users` | intelligent-register | `module.records.page` | `foundation.user.read` | `/api/users`, `/api/profiles` |
+| 8 | `foundation.teams` | `/foundation/teams` | org-chart | `module.org_chart.page` | `foundation.data.read` | `/api/teams`, `/api/foundation/teams` |
+| 9 | `foundation.roles` | `/foundation/roles` | intelligent-register | `module.records.page` | `foundation.rbac.read` | `/api/roles`, `/api/foundation/roles` |
+| 10 | `foundation.permissions` | `/foundation/permissions` | ownership-map | `module.ownership_map.page` | `foundation.rbac.read` | `/api/permissions` (via host / foundation aggregator as mounted) |
+| 11 | `foundation.committees` | `/foundation/committees` | intelligent-register | `module.records.page` | `foundation.data.read` | `/api/committees`, `/api/governance/committees` |
+| 12 | `foundation.delegations` | `/foundation/delegations` | delegation-center | `module.delegation_center.page` | `foundation.data.read` | `/api/governance/delegations`, `/api/delegations` |
+| 13 | `foundation.access-review` | `/foundation/access-review` | workflow-control | `module.workflows.page` | `foundation.review.read` | `/api/access-reviews`, `/api/access-review` |
+| 14 | `foundation.policies` | `/foundation/policies` | intelligent-register | `module.records.page` | `foundation.data.read` | `/api/governance/policies`, `/api/governance` |
+| 15 | `foundation.audit` | `/foundation/audit` | audit-trail-ledger | `module.audit_trail_ledger.page` | `foundation.audit.read` | `/api/audit-trail` |
+| 16 | `foundation.ownership` | `/foundation/ownership` | ownership-map | `module.ownership_map.page` | `foundation.data.read` | `/api/ownership-mappings` |
+| 17 | `foundation.sod` | `/foundation/sod` | module-settings | `module.settings.page` | `foundation.sod.write` | `/api/sod`, `/api/foundation/sod/*` |
+| 18 | `foundation.hierarchy-viz` | `/foundation/hierarchy-viz` | org-chart | `module.org_chart.page` | `foundation.hierarchy.read` | `/api/org-hierarchy` |
+| 19 | `foundation.user-lifecycle` | `/foundation/user-lifecycle` | workflow-timeline | `module.workflow_timeline.page` | `foundation.user.write` | `/api/user-lifecycle`, `/api/foundation/user-lifecycle` |
+| 20 | `foundation.reference-data` | `/foundation/reference-data` | intelligent-register | `module.records.page` | `foundation.data.read` | `/api/foundation/lookups`, reference catalogs via foundation routes |
+| 21 | `foundation.diagnostics` | `/foundation/diagnostics` | posture-overview | `module.posture.page` | `foundation.module.read` | `/api/health/foundation`, `/api/foundation/health` |
 
 **Legacy Angular pages:** files under `platform/foundation/ui/pages/*` match the old `Foundation*Component` routing model. They are **not** the Shahin URL host path today; keep them only until feature parity is proven on DynamicTemplate + archetype renderers, then delete per platform policy.
 
 ### 5.1 Snapshot APIs in `foundation-complete-direct-seed.json`
 
-The JSON `apis[]` lists a **minimal** cross-cutting set (template-binding + a few GET surfaces). It is **not** exhaustive; §6 is the full mount inventory. **Missing from JSON (optional next):** explicit rows for `/api/teams`, `/api/roles`, `/api/departments`, `/api/positions`, `/api/locations`, `/api/org-hierarchy`, `/api/committees`, `/api/governance/*`, `/api/access-review*`, `/api/sod`, `/api/user-lifecycle` — add only if you want the direct-seed pack to double as OpenAPI-style documentation (schema allows `method`, `path`, `owner_service`, `permission` only).
+The JSON `apis[]` now carries **27** rows, not the earlier minimal 8-path snapshot. It covers the main Foundation host and aggregator surfaces used by the current archetype pack, but §6 remains the fuller runtime mount inventory because `user-service` still exposes alias mounts and shared host routers outside the direct-seed contract.
 
 ## 6. API surface — actual mounts
 

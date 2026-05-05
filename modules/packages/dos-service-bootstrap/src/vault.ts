@@ -33,6 +33,11 @@ export interface GetSecretOptions {
   fallbackEnv?: string;
   /** Override the kv-v2 mount prefix. */
   pathPrefix?: string;
+  /**
+   * When false, do not read `fallbackEnv` after Vault misses — lets callers chain HTTP/other providers first.
+   * Default true.
+   */
+  includeEnvironmentFallback?: boolean;
 }
 
 export async function getSecret(key: string, opts: GetSecretOptions = {}): Promise<string | undefined> {
@@ -54,7 +59,8 @@ export async function getSecret(key: string, opts: GetSecretOptions = {}): Promi
     }
   }
 
-  if (opts.fallbackEnv) return process.env[opts.fallbackEnv];
+  const allowEnv = opts.includeEnvironmentFallback !== false;
+  if (allowEnv && opts.fallbackEnv) return process.env[opts.fallbackEnv];
   return undefined;
 }
 

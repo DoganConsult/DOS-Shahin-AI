@@ -7,6 +7,9 @@
  * 3. Parses dos.dynamic_ui_routes (active readiness only) for component_key
  * 4. Parses dos.dynamic_ui_widgets for signature_widget_key / widget_key literals
  * 5. Loads COMPONENT_MAP + WIDGET_KEY_MAP (static regex) and verifies:
+ *    - migration string literals in vendor column are exactly ibm-carbon for:
+ *      dos.dynamic_ui_component_registry and dos.ui_carbon_components (when vendor
+ *      is present), after stripping top-level DO $tag$ blocks (smoke negatives)
  *    - approved ibm-carbon registry rows reference carbon_key in catalog set
  *    - every active route component_key exists in COMPONENT_MAP
  *    - every approved registry component_key exists in COMPONENT_MAP
@@ -15,7 +18,7 @@
  *      with widget-key-map.ts)
  */
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
-import { resolve, dirname, join } from 'node:path';
+import { resolve, dirname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -27,6 +30,403 @@ const WIDGET_MAP_FILE = join(
 );
 
 const ACTIVE = new Set(['active']);
+
+/**
+ * Remove top-level `DO $dq$ ... $dq$` blocks only (PostgreSQL anonymous blocks).
+ * Blocks inside dollar-quoted function bodies (CREATE FUNCTION ... AS $$ ... $$)
+ * are preserved — dollar-quote nesting is tracked so inner $$ does not close the outer body incorrectly.
+ * This avoids CI false positives from deliberate negative-path INSERTs in smoke DO blocks.
+ * @param {string} sql
+ */
+function stripTopLevelDoDollarBlocks(sql) {
+  const parts = [];
+  let i = 0;
+  /** @type {string[]} */
+  const dollarStack = [];
+
+  /** @param {number} pos */
+  function parseDollarDelimiter(pos) {
+    if (sql[pos] !== '$') return null;
+    if (sql[pos + 1] === '$') return '$$';
+    const endTag = sql.indexOf('$', pos + 1);
+    if (endTag === -1) return null;
+    return sql.slice(pos, endTag + 1);
+  }
+
+  /** @param {number} pos */
+  function skipString(pos) {
+    let j = pos + 1;
+    while (j < sql.length) {
+      if (sql[j] === "'" && sql[j + 1] === "'") {
+        j += 2;
+        continue;
+      }
+      if (sql[j] === "'") return j + 1;
+      j++;
+    }
+    return sql.length;
+  }
+
+  while (i < sql.length) {
+    if (sql.slice(i, i + 2) === '--') {
+      const nl = sql.indexOf('\n', i);
+      const end = nl === -1 ? sql.length : nl + 1;
+      parts.push(sql.slice(i, end));
+      i = end;
+      continue;
+    }
+    if (sql.slice(i, i + 2) === '/*') {
+      const end = sql.indexOf('*/', i + 2);
+      if (end === -1) {
+        parts.push(sql.slice(i));
+        break;
+      }
+      parts.push(sql.slice(i, end + 2));
+      i = end + 2;
+      continue;
+    }
+
+    if (sql[i] === "'") {
+      const end = skipString(i);
+      parts.push(sql.slice(i, end));
+      i = end;
+      continue;
+    }
+
+    const delim = parseDollarDelimiter(i);
+    if (delim) {
+      if (dollarStack.length && dollarStack[dollarStack.length - 1] === delim) {
+        dollarStack.pop();
+      } else {
+        dollarStack.push(delim);
+      }
+      parts.push(delim);
+      i += delim.length;
+      continue;
+    }
+
+    if (dollarStack.length === 0) {
+      const rest = sql.slice(i);
+      const m = rest.match(/^\bDO\s+/i);
+      if (m) {
+        let pos = i + m[0].length;
+        const openDelim = parseDollarDelimiter(pos);
+        if (openDelim) {
+          pos += openDelim.length;
+          const closeIdx = sql.indexOf(openDelim, pos);
+          if (closeIdx !== -1) {
+            let end = closeIdx + openDelim.length;
+            while (end < sql.length && /\s/.test(sql[end])) end++;
+            if (sql[end] === ';') end++;
+            parts.push('\n');
+            i = end;
+            continue;
+          }
+        }
+      }
+    }
+
+    parts.push(sql[i]);
+    i++;
+  }
+
+  return parts.join('');
+}
+
+/** @param {string} expr */
+function parseSqlStringLiteral(expr) {
+  if (!expr) return undefined;
+  const t = expr.trim();
+  const m = t.match(/^'((?:''|[^'])*)'(?:\s*::\s*[a-zA-Z_][a-zA-Z0-9_]*)?$/);
+  if (!m) return undefined;
+  return m[1].replace(/''/g, "'");
+}
+
+/** @param {string} inner no outer parens */
+function splitTopLevelCommas(inner) {
+  const parts = [];
+  let depth = 0;
+  let start = 0;
+  let inStr = false;
+  for (let i = 0; i <= inner.length; i++) {
+    const c = inner[i];
+    if (i === inner.length || (depth === 0 && !inStr && c === ',')) {
+      parts.push(inner.slice(start, i).trim());
+      start = i + 1;
+      continue;
+    }
+    if (i === inner.length) break;
+    if (inStr) {
+      if (c === "'" && inner[i + 1] === "'") {
+        i++;
+        continue;
+      }
+      if (c === "'") inStr = false;
+      continue;
+    }
+    if (c === "'") {
+      inStr = true;
+      continue;
+    }
+    if (c === '(') depth++;
+    else if (c === ')') depth--;
+  }
+  return parts;
+}
+
+/** @param {string} inner VALUES payload: `(row1), (row2)` */
+function splitTopLevelTuples(inner) {
+  const s = inner.trim();
+  const tuples = [];
+  let i = 0;
+  while (i < s.length) {
+    while (i < s.length && /\s/.test(s[i])) i++;
+    if (i >= s.length) break;
+    if (s[i] !== '(') return [];
+    let depth = 0;
+    const start = i;
+    for (; i < s.length; i++) {
+      const c = s[i];
+      if (c === "'" && s[i + 1] === "'") {
+        i++;
+        continue;
+      }
+      if (c === '(') depth++;
+      else if (c === ')') {
+        depth--;
+        if (depth === 0) {
+          tuples.push(s.slice(start + 1, i));
+          i++;
+          break;
+        }
+      }
+    }
+    while (i < s.length && /^[\s,]/.test(s[i])) i++;
+  }
+  return tuples;
+}
+
+/**
+ * @param {string} block
+ * @param {string} tableSuffix e.g. 'dynamic_ui_component_registry'
+ */
+function sliceAfterDosInsertColumnList(block, tableSuffix) {
+  const re = new RegExp(`INSERT\\s+INTO\\s+dos\\.${tableSuffix}\\s*\\(`, 'i');
+  const m = re.exec(block);
+  if (!m) return null;
+  let i = m.index + m[0].length;
+  let depth = 1;
+  while (i < block.length && depth > 0) {
+    const c = block[i];
+    if (c === "'") {
+      i++;
+      while (i < block.length) {
+        if (block[i] === "'" && block[i + 1] === "'") {
+          i += 2;
+          continue;
+        }
+        if (block[i] === "'") {
+          i++;
+          break;
+        }
+        i++;
+      }
+      continue;
+    }
+    if (c === '(') depth++;
+    else if (c === ')') depth--;
+    i++;
+  }
+  return block.slice(i);
+}
+
+/** @param {string} block */
+function sliceAfterRegistryColumnList(block) {
+  return sliceAfterDosInsertColumnList(block, 'dynamic_ui_component_registry');
+}
+
+/**
+ * @param {string} block
+ * @param {string} tableSuffix
+ */
+function parseDosInsertColumns(block, tableSuffix) {
+  const re = new RegExp(`INSERT\\s+INTO\\s+dos\\.${tableSuffix}\\s*\\(`, 'i');
+  const m = re.exec(block);
+  if (!m) return null;
+  let i = m.index + m[0].length;
+  let depth = 1;
+  const start = i;
+  while (i < block.length && depth > 0) {
+    const c = block[i];
+    if (c === "'") {
+      i++;
+      while (i < block.length) {
+        if (block[i] === "'" && block[i + 1] === "'") {
+          i += 2;
+          continue;
+        }
+        if (block[i] === "'") {
+          i++;
+          break;
+        }
+        i++;
+      }
+      continue;
+    }
+    if (c === '(') depth++;
+    else if (c === ')') {
+      depth--;
+      if (depth === 0) {
+        const inner = block.slice(start, i);
+        return splitTopLevelCommas(inner).map(c =>
+          c.trim().replace(/^"+|"+$/g, '').replace(/^`+|`+$/g, ''),
+        );
+      }
+    }
+    i++;
+  }
+  return null;
+}
+
+/** @param {string} block */
+function parseRegistryInsertColumns(block) {
+  return parseDosInsertColumns(block, 'dynamic_ui_component_registry');
+}
+
+/** @param {string} rest after column list closing `)` */
+function extractValuesInner(rest) {
+  const t = rest.trimStart();
+  if (!/^VALUES\s+/i.test(t)) return null;
+  const after = t.replace(/^VALUES\s+/i, '');
+  let depth = 0;
+  let inStr = false;
+  for (let i = 0; i < after.length; i++) {
+    const c = after[i];
+    if (inStr) {
+      if (c === "'" && after[i + 1] === "'") {
+        i++;
+        continue;
+      }
+      if (c === "'") inStr = false;
+      continue;
+    }
+    if (c === "'") {
+      inStr = true;
+      continue;
+    }
+    if (c === '(') depth++;
+    else if (c === ')') depth--;
+    else if (depth === 0 && /^\s*ON\s+CONFLICT\b/i.test(after.slice(i))) {
+      return after.slice(0, i).trim();
+    }
+  }
+  return after.trim();
+}
+
+/** @param {string} rest after column list closing `)` */
+function extractSelectListRaw(rest) {
+  const t = rest.trimStart();
+  if (!/^SELECT\s+/i.test(t)) return null;
+  const afterSelect = t.replace(/^SELECT\s+/i, '');
+  let depth = 0;
+  let inStr = false;
+  for (let i = 0; i < afterSelect.length; i++) {
+    const c = afterSelect[i];
+    if (inStr) {
+      if (c === "'" && afterSelect[i + 1] === "'") {
+        i++;
+        continue;
+      }
+      if (c === "'") inStr = false;
+      continue;
+    }
+    if (c === "'") {
+      inStr = true;
+      continue;
+    }
+    if (c === '(') depth++;
+    else if (c === ')') depth--;
+    else if (depth === 0 && /^\s+FROM\b/i.test(afterSelect.slice(i))) {
+      return afterSelect.slice(0, i).trim();
+    }
+  }
+  return null;
+}
+
+/**
+ * Fail-closed on string literal vendor values only (dynamic expressions skipped).
+ * Applies to dos.dynamic_ui_component_registry and dos.ui_carbon_components when INSERT lists vendor.
+ * @param {string} fileLabel
+ * @param {string} sqlAlreadyDoStripped
+ * @param {'dynamic_ui_component_registry'|'ui_carbon_components'} tableSuffix
+ * @param {object[]} failures
+ */
+function auditDosInsertVendorLiterals(fileLabel, sqlAlreadyDoStripped, tableSuffix, failures) {
+  const blocks = extractInsertBlocks(sqlAlreadyDoStripped, tableSuffix);
+  const kind =
+    tableSuffix === 'dynamic_ui_component_registry'
+      ? 'registry_vendor_not_ibm_carbon'
+      : 'carbon_catalog_vendor_not_ibm_carbon';
+  const tableLabel =
+    tableSuffix === 'dynamic_ui_component_registry'
+      ? 'dynamic_ui_component_registry'
+      : 'ui_carbon_components';
+
+  for (const block of blocks) {
+    const cols = parseDosInsertColumns(block, tableSuffix);
+    if (!cols?.length) continue;
+    const vendorIdx = cols.findIndex(c => c.replace(/"/g, '') === 'vendor');
+    if (vendorIdx === -1) continue;
+
+    const tail = sliceAfterDosInsertColumnList(block, tableSuffix);
+    if (!tail) continue;
+    const trimmed = tail.trimStart();
+
+    const valuesInner = extractValuesInner(trimmed);
+    if (valuesInner !== null) {
+      const tuples = splitTopLevelTuples(valuesInner);
+      for (const tuple of tuples) {
+        const cells = splitTopLevelCommas(tuple);
+        const expr = cells[vendorIdx];
+        const lit = parseSqlStringLiteral(expr);
+        if (lit !== undefined && lit !== 'ibm-carbon') {
+          failures.push({
+            kind,
+            file: fileLabel,
+            vendor_literal: lit,
+            reason: `${tableLabel} migration vendor column must be exactly ibm-carbon (non-DO INSERT)`,
+          });
+        }
+      }
+      continue;
+    }
+
+    const selectList = extractSelectListRaw(trimmed);
+    if (selectList !== null) {
+      const cells = splitTopLevelCommas(selectList);
+      const expr = cells[vendorIdx];
+      const lit = parseSqlStringLiteral(expr);
+      if (lit !== undefined && lit !== 'ibm-carbon') {
+        failures.push({
+          kind,
+          file: fileLabel,
+          vendor_literal: lit,
+          reason: `${tableLabel} migration vendor column must be exactly ibm-carbon (INSERT … SELECT)`,
+        });
+      }
+    }
+  }
+}
+
+/** @param {string} fileLabel @param {string} sqlAlreadyDoStripped @param {object[]} failures */
+function auditRegistryVendorLiterals(fileLabel, sqlAlreadyDoStripped, failures) {
+  auditDosInsertVendorLiterals(fileLabel, sqlAlreadyDoStripped, 'dynamic_ui_component_registry', failures);
+}
+
+/** @param {string} fileLabel @param {string} sqlAlreadyDoStripped @param {object[]} failures */
+function auditCarbonCatalogVendorLiterals(fileLabel, sqlAlreadyDoStripped, failures) {
+  auditDosInsertVendorLiterals(fileLabel, sqlAlreadyDoStripped, 'ui_carbon_components', failures);
+}
 
 /** @param {string} sql */
 function nextDosInsertBoundary(sql, fromIdx) {
@@ -284,21 +684,27 @@ function main() {
   const bareRegistry = new Set();
   const routeKeys = new Set();
   const widgetKeys = new Set();
+  const failures = [];
 
   const files = readdirSync(MIG_DIR).filter(f => f.endsWith('.sql') && !f.includes('_down'));
 
   for (const f of files) {
     const whole = readFileSync(join(MIG_DIR, f), 'utf8');
-    for (const block of extractInsertBlocks(whole, 'ui_carbon_components')) {
+    const stripped = stripTopLevelDoDollarBlocks(whole);
+    const fileLabel = relative(repoRoot, join(MIG_DIR, f));
+    auditRegistryVendorLiterals(fileLabel, stripped, failures);
+    auditCarbonCatalogVendorLiterals(fileLabel, stripped, failures);
+
+    for (const block of extractInsertBlocks(stripped, 'ui_carbon_components')) {
       for (const k of parseCarbonCatalogKeys(block)) carbonCatalog.add(k);
     }
-    fullRegistry.push(...parseFullRegistryRows(whole));
-    for (const k of parseBareRegistryKeys(whole)) bareRegistry.add(k);
+    fullRegistry.push(...parseFullRegistryRows(stripped));
+    for (const k of parseBareRegistryKeys(stripped)) bareRegistry.add(k);
 
-    for (const block of extractInsertBlocks(whole, 'dynamic_ui_routes')) {
+    for (const block of extractInsertBlocks(stripped, 'dynamic_ui_routes')) {
       for (const k of parseRouteComponentKeys(block)) routeKeys.add(k);
     }
-    for (const block of extractInsertBlocks(whole, 'dynamic_ui_widgets')) {
+    for (const block of extractInsertBlocks(stripped, 'dynamic_ui_widgets')) {
       for (const k of parseWidgetKeys(block)) widgetKeys.add(k);
     }
   }
@@ -306,7 +712,6 @@ function main() {
   const componentMapText = readFileSync(COMPONENT_MAP_FILE, 'utf8');
   const componentMapKeys = mergeComponentMapKeySet(componentMapText, 'COMPONENT_MAP');
   const widgetQuoted = collectWidgetMapKeys(readFileSync(WIDGET_MAP_FILE, 'utf8'));
-  const failures = [];
 
   for (const row of fullRegistry) {
     if (row.approval !== 'approved') continue;

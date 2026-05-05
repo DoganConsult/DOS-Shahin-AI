@@ -11,7 +11,7 @@
     "grepInvert": null,
     "maxFailures": 0,
     "metadata": {
-      "actualWorkers": 7
+      "actualWorkers": 8
     },
     "preserveOutput": "always",
     "reporter": [
@@ -117,89 +117,21 @@
   },
   "suites": [
     {
-      "title": "phase-slice1-foundation-shell.spec.ts",
-      "file": "phase-slice1-foundation-shell.spec.ts",
+      "title": "m1-marketing-home.spec.ts",
+      "file": "m1-marketing-home.spec.ts",
       "column": 0,
       "line": 0,
-      "specs": [
-        {
-          "title": "GATE 4 — workspace-shell binding payload label fields are contract-shaped",
-          "ok": false,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 30000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "chromium",
-              "projectName": "chromium",
-              "results": [
-                {
-                  "workerIndex": 6,
-                  "status": "failed",
-                  "duration": 288,
-                  "error": {
-                    "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:4200/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:4200/\", waiting until \"domcontentloaded\"\u001b[22m\n",
-                    "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:4200/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:4200/\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at /root/DOS-Platform/platform/config-center/test/tests/e2e/phase-slice1-foundation-shell.spec.ts:100:14",
-                    "location": {
-                      "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/phase-slice1-foundation-shell.spec.ts",
-                      "column": 14,
-                      "line": 100
-                    },
-                    "snippet": "   98 |   // session the endpoint returns 401 and the gate is skipped (the binding\n   99 |   // service's pre-load grace path is the only consumer in that case).\n> 100 |   await page.goto('/', { waitUntil: 'domcontentloaded' });\n      |              ^\n  101 |   const tenantHeader = await request.get('/api/auth/whoami').catch(() => null);\n  102 |   if (!tenantHeader || !tenantHeader.ok()) test.skip(true, 'no session — gate vacuously holds');\n  103 |"
-                  },
-                  "errors": [
-                    {
-                      "location": {
-                        "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/phase-slice1-foundation-shell.spec.ts",
-                        "column": 14,
-                        "line": 100
-                      },
-                      "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:4200/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:4200/\", waiting until \"domcontentloaded\"\u001b[22m\n\n\n   98 |   // session the endpoint returns 401 and the gate is skipped (the binding\n   99 |   // service's pre-load grace path is the only consumer in that case).\n> 100 |   await page.goto('/', { waitUntil: 'domcontentloaded' });\n      |              ^\n  101 |   const tenantHeader = await request.get('/api/auth/whoami').catch(() => null);\n  102 |   if (!tenantHeader || !tenantHeader.ok()) test.skip(true, 'no session — gate vacuously holds');\n  103 |\n    at /root/DOS-Platform/platform/config-center/test/tests/e2e/phase-slice1-foundation-shell.spec.ts:100:14"
-                    }
-                  ],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-05-05T02:16:19.320Z",
-                  "attachments": [
-                    {
-                      "name": "screenshot",
-                      "contentType": "image/png",
-                      "path": "/root/DOS-Platform/platform/config-center/test/playwright-results/phase-slice1-foundation-sh-56118--fields-are-contract-shaped-chromium/test-failed-1.png"
-                    },
-                    {
-                      "name": "video",
-                      "contentType": "video/webm",
-                      "path": "/root/DOS-Platform/platform/config-center/test/playwright-results/phase-slice1-foundation-sh-56118--fields-are-contract-shaped-chromium/video.webm"
-                    }
-                  ],
-                  "errorLocation": {
-                    "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/phase-slice1-foundation-shell.spec.ts",
-                    "column": 14,
-                    "line": 100
-                  }
-                }
-              ],
-              "status": "unexpected"
-            }
-          ],
-          "id": "c332cd3ecb49b7ee1132-348e43fe8ec30e8c4d14",
-          "file": "phase-slice1-foundation-shell.spec.ts",
-          "line": 95,
-          "column": 5
-        }
-      ],
+      "specs": [],
       "suites": [
         {
-          "title": "Slice-1 contracts — /foundation/delegations",
-          "file": "phase-slice1-foundation-shell.spec.ts",
-          "line": 44,
-          "column": 8,
+          "title": "M1 — marketing.home.page renders without auth",
+          "file": "m1-marketing-home.spec.ts",
+          "line": 23,
+          "column": 6,
           "specs": [
             {
-              "title": "GATE 1 — no `.fallback` undefined-access throw",
-              "ok": false,
+              "title": "root route resolves the marketing-landing Dynamic-UI binding",
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -211,62 +143,27 @@
                   "results": [
                     {
                       "workerIndex": 0,
-                      "status": "failed",
-                      "duration": 273,
-                      "error": {
-                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:4200/foundation/delegations\nCall log:\n\u001b[2m  - navigating to \"http://localhost:4200/foundation/delegations\", waiting until \"domcontentloaded\"\u001b[22m\n",
-                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:4200/foundation/delegations\nCall log:\n\u001b[2m  - navigating to \"http://localhost:4200/foundation/delegations\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at /root/DOS-Platform/platform/config-center/test/tests/e2e/phase-slice1-foundation-shell.spec.ts:53:18",
-                        "location": {
-                          "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/phase-slice1-foundation-shell.spec.ts",
-                          "column": 18,
-                          "line": 53
-                        },
-                        "snippet": "  51 |       page.on('pageerror', (e) => { pageErrors.push(String(e?.message ?? e)); });\n  52 |\n> 53 |       await page.goto(route.url, { waitUntil: 'domcontentloaded' });\n     |                  ^\n  54 |       await page.waitForTimeout(4000);\n  55 |\n  56 |       const hits = [...consoleErrors, ...pageErrors].filter((s) => FALLBACK_THROW_RX.test(s));"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/phase-slice1-foundation-shell.spec.ts",
-                            "column": 18,
-                            "line": 53
-                          },
-                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:4200/foundation/delegations\nCall log:\n\u001b[2m  - navigating to \"http://localhost:4200/foundation/delegations\", waiting until \"domcontentloaded\"\u001b[22m\n\n\n  51 |       page.on('pageerror', (e) => { pageErrors.push(String(e?.message ?? e)); });\n  52 |\n> 53 |       await page.goto(route.url, { waitUntil: 'domcontentloaded' });\n     |                  ^\n  54 |       await page.waitForTimeout(4000);\n  55 |\n  56 |       const hits = [...consoleErrors, ...pageErrors].filter((s) => FALLBACK_THROW_RX.test(s));\n    at /root/DOS-Platform/platform/config-center/test/tests/e2e/phase-slice1-foundation-shell.spec.ts:53:18"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 400,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-05T02:16:19.255Z",
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/root/DOS-Platform/platform/config-center/test/playwright-results/phase-slice1-foundation-sh-ff6f3-back-undefined-access-throw-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "/root/DOS-Platform/platform/config-center/test/playwright-results/phase-slice1-foundation-sh-ff6f3-back-undefined-access-throw-chromium/video.webm"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/phase-slice1-foundation-shell.spec.ts",
-                        "column": 18,
-                        "line": 53
-                      }
+                      "startTime": "2026-05-05T06:19:54.568Z",
+                      "attachments": []
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
-              "id": "c332cd3ecb49b7ee1132-7120e21511afd89c6ff3",
-              "file": "phase-slice1-foundation-shell.spec.ts",
-              "line": 45,
-              "column": 9
+              "id": "bdf94da1d30640e78532-610111feb505d36bd3af",
+              "file": "m1-marketing-home.spec.ts",
+              "line": 24,
+              "column": 7
             },
             {
-              "title": "GATE 2 — single brand stamp in workspace header",
-              "ok": false,
+              "title": "all 20 public regions present in DOM order",
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -278,61 +175,26 @@
                   "results": [
                     {
                       "workerIndex": 1,
-                      "status": "failed",
-                      "duration": 326,
-                      "error": {
-                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:4200/foundation/delegations\nCall log:\n\u001b[2m  - navigating to \"http://localhost:4200/foundation/delegations\", waiting until \"domcontentloaded\"\u001b[22m\n",
-                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:4200/foundation/delegations\nCall log:\n\u001b[2m  - navigating to \"http://localhost:4200/foundation/delegations\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at /root/DOS-Platform/platform/config-center/test/tests/e2e/phase-slice1-foundation-shell.spec.ts:61:18",
-                        "location": {
-                          "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/phase-slice1-foundation-shell.spec.ts",
-                          "column": 18,
-                          "line": 61
-                        },
-                        "snippet": "  59 |\n  60 |     test('GATE 2 — single brand stamp in workspace header', async ({ page }) => {\n> 61 |       await page.goto(route.url, { waitUntil: 'domcontentloaded' });\n     |                  ^\n  62 |       await page.waitForTimeout(1500);\n  63 |       // Anonymous visitors redirect to /login (workspaceShellGuard). The\n  64 |       // dual-stamp regression cannot manifest on the login surface, so the"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/phase-slice1-foundation-shell.spec.ts",
-                            "column": 18,
-                            "line": 61
-                          },
-                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:4200/foundation/delegations\nCall log:\n\u001b[2m  - navigating to \"http://localhost:4200/foundation/delegations\", waiting until \"domcontentloaded\"\u001b[22m\n\n\n  59 |\n  60 |     test('GATE 2 — single brand stamp in workspace header', async ({ page }) => {\n> 61 |       await page.goto(route.url, { waitUntil: 'domcontentloaded' });\n     |                  ^\n  62 |       await page.waitForTimeout(1500);\n  63 |       // Anonymous visitors redirect to /login (workspaceShellGuard). The\n  64 |       // dual-stamp regression cannot manifest on the login surface, so the\n    at /root/DOS-Platform/platform/config-center/test/tests/e2e/phase-slice1-foundation-shell.spec.ts:61:18"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 4483,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-05T02:16:19.305Z",
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/root/DOS-Platform/platform/config-center/test/playwright-results/phase-slice1-foundation-sh-6ef0b-d-stamp-in-workspace-header-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "/root/DOS-Platform/platform/config-center/test/playwright-results/phase-slice1-foundation-sh-6ef0b-d-stamp-in-workspace-header-chromium/video.webm"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/phase-slice1-foundation-shell.spec.ts",
-                        "column": 18,
-                        "line": 61
-                      }
+                      "startTime": "2026-05-05T06:19:54.593Z",
+                      "attachments": []
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
-              "id": "c332cd3ecb49b7ee1132-39958013803036f63289",
-              "file": "phase-slice1-foundation-shell.spec.ts",
-              "line": 60,
-              "column": 9
+              "id": "bdf94da1d30640e78532-e0b7c36c8d937692fcbb",
+              "file": "m1-marketing-home.spec.ts",
+              "line": 35,
+              "column": 7
             },
             {
-              "title": "GATE 3 — migration props.title rendered",
+              "title": "brand eagle pictogram + 9 agent tiles render in agentic-proof",
               "ok": false,
               "tags": [],
               "tests": [
@@ -346,69 +208,73 @@
                     {
                       "workerIndex": 2,
                       "status": "failed",
-                      "duration": 307,
+                      "duration": 9664,
                       "error": {
-                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:4200/foundation/delegations\nCall log:\n\u001b[2m  - navigating to \"http://localhost:4200/foundation/delegations\", waiting until \"domcontentloaded\"\u001b[22m\n",
-                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:4200/foundation/delegations\nCall log:\n\u001b[2m  - navigating to \"http://localhost:4200/foundation/delegations\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at /root/DOS-Platform/platform/config-center/test/tests/e2e/phase-slice1-foundation-shell.spec.ts:80:18",
-                        "location": {
-                          "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/phase-slice1-foundation-shell.spec.ts",
-                          "column": 18,
-                          "line": 80
+                        "message": "Error: agent tile A01 should render\n\n\u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('[data-section-id=\"agentic-proof\"] [data-agent-code=\"A01\"]')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - agent tile A01 should render with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-section-id=\"agentic-proof\"] [data-agent-code=\"A01\"]')\u001b[22m\n",
+                        "stack": "Error: agent tile A01 should render\n\n\u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('[data-section-id=\"agentic-proof\"] [data-agent-code=\"A01\"]')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - agent tile A01 should render with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-section-id=\"agentic-proof\"] [data-agent-code=\"A01\"]')\u001b[22m\n\n    at /root/DOS-Platform/platform/config-center/test/tests/e2e/m1-marketing-home.spec.ts:53:9",
+                        "matcherResult": {
+                          "message": "\u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('[data-section-id=\"agentic-proof\"] [data-agent-code=\"A01\"]')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - agent tile A01 should render with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-section-id=\"agentic-proof\"] [data-agent-code=\"A01\"]')\u001b[22m\n",
+                          "pass": false,
+                          "actual": "hidden",
+                          "name": "toBeVisible",
+                          "expected": "visible",
+                          "log": [
+                            "  - agent tile A01 should render with timeout 5000ms",
+                            "  - waiting for locator('[data-section-id=\"agentic-proof\"] [data-agent-code=\"A01\"]')"
+                          ],
+                          "timeout": 5000
                         },
-                        "snippet": "  78 |\n  79 |     test('GATE 3 — migration props.title rendered', async ({ page }) => {\n> 80 |       await page.goto(route.url, { waitUntil: 'domcontentloaded' });\n     |                  ^\n  81 |       // Wait briefly for client-side guard redirect to settle.\n  82 |       await page.waitForTimeout(1500);\n  83 |       if (!page.url().includes(route.url)) test.skip(true, `redirected to ${page.url()}`);"
+                        "location": {
+                          "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/m1-marketing-home.spec.ts",
+                          "column": 9,
+                          "line": 53
+                        },
+                        "snippet": "  51 |         page.locator(`[data-section-id=\"agentic-proof\"] [data-agent-code=\"${code}\"]`),\n  52 |         `agent tile ${code} should render`,\n> 53 |       ).toBeVisible();\n     |         ^\n  54 |     }\n  55 |   });\n  56 |"
                       },
                       "errors": [
                         {
                           "location": {
-                            "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/phase-slice1-foundation-shell.spec.ts",
-                            "column": 18,
-                            "line": 80
+                            "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/m1-marketing-home.spec.ts",
+                            "column": 9,
+                            "line": 53
                           },
-                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:4200/foundation/delegations\nCall log:\n\u001b[2m  - navigating to \"http://localhost:4200/foundation/delegations\", waiting until \"domcontentloaded\"\u001b[22m\n\n\n  78 |\n  79 |     test('GATE 3 — migration props.title rendered', async ({ page }) => {\n> 80 |       await page.goto(route.url, { waitUntil: 'domcontentloaded' });\n     |                  ^\n  81 |       // Wait briefly for client-side guard redirect to settle.\n  82 |       await page.waitForTimeout(1500);\n  83 |       if (!page.url().includes(route.url)) test.skip(true, `redirected to ${page.url()}`);\n    at /root/DOS-Platform/platform/config-center/test/tests/e2e/phase-slice1-foundation-shell.spec.ts:80:18"
+                          "message": "Error: agent tile A01 should render\n\n\u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('[data-section-id=\"agentic-proof\"] [data-agent-code=\"A01\"]')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - agent tile A01 should render with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-section-id=\"agentic-proof\"] [data-agent-code=\"A01\"]')\u001b[22m\n\n\n  51 |         page.locator(`[data-section-id=\"agentic-proof\"] [data-agent-code=\"${code}\"]`),\n  52 |         `agent tile ${code} should render`,\n> 53 |       ).toBeVisible();\n     |         ^\n  54 |     }\n  55 |   });\n  56 |\n    at /root/DOS-Platform/platform/config-center/test/tests/e2e/m1-marketing-home.spec.ts:53:9"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-05T02:16:19.252Z",
+                      "startTime": "2026-05-05T06:19:54.625Z",
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/root/DOS-Platform/platform/config-center/test/playwright-results/phase-slice1-foundation-sh-bb2cc-ration-props-title-rendered-chromium/test-failed-1.png"
+                          "path": "/root/DOS-Platform/platform/config-center/test/playwright-results/m1-marketing-home-M1-—-mar-081d5-les-render-in-agentic-proof-chromium/test-failed-1.png"
                         },
                         {
                           "name": "video",
                           "contentType": "video/webm",
-                          "path": "/root/DOS-Platform/platform/config-center/test/playwright-results/phase-slice1-foundation-sh-bb2cc-ration-props-title-rendered-chromium/video.webm"
+                          "path": "/root/DOS-Platform/platform/config-center/test/playwright-results/m1-marketing-home-M1-—-mar-081d5-les-render-in-agentic-proof-chromium/video.webm"
                         }
                       ],
                       "errorLocation": {
-                        "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/phase-slice1-foundation-shell.spec.ts",
-                        "column": 18,
-                        "line": 80
+                        "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/m1-marketing-home.spec.ts",
+                        "column": 9,
+                        "line": 53
                       }
                     }
                   ],
                   "status": "unexpected"
                 }
               ],
-              "id": "c332cd3ecb49b7ee1132-900cf1a00d3fd373367c",
-              "file": "phase-slice1-foundation-shell.spec.ts",
-              "line": 79,
-              "column": 9
-            }
-          ]
-        },
-        {
-          "title": "Slice-1 contracts — /foundation/reference-data",
-          "file": "phase-slice1-foundation-shell.spec.ts",
-          "line": 44,
-          "column": 8,
-          "specs": [
+              "id": "bdf94da1d30640e78532-1231aedb69f12bbd8a47",
+              "file": "m1-marketing-home.spec.ts",
+              "line": 44,
+              "column": 7
+            },
             {
-              "title": "GATE 1 — no `.fallback` undefined-access throw",
-              "ok": false,
+              "title": "Arabic locale flips dir=rtl on the marketing root",
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -420,62 +286,27 @@
                   "results": [
                     {
                       "workerIndex": 3,
-                      "status": "failed",
-                      "duration": 268,
-                      "error": {
-                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:4200/foundation/reference-data\nCall log:\n\u001b[2m  - navigating to \"http://localhost:4200/foundation/reference-data\", waiting until \"domcontentloaded\"\u001b[22m\n",
-                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:4200/foundation/reference-data\nCall log:\n\u001b[2m  - navigating to \"http://localhost:4200/foundation/reference-data\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at /root/DOS-Platform/platform/config-center/test/tests/e2e/phase-slice1-foundation-shell.spec.ts:53:18",
-                        "location": {
-                          "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/phase-slice1-foundation-shell.spec.ts",
-                          "column": 18,
-                          "line": 53
-                        },
-                        "snippet": "  51 |       page.on('pageerror', (e) => { pageErrors.push(String(e?.message ?? e)); });\n  52 |\n> 53 |       await page.goto(route.url, { waitUntil: 'domcontentloaded' });\n     |                  ^\n  54 |       await page.waitForTimeout(4000);\n  55 |\n  56 |       const hits = [...consoleErrors, ...pageErrors].filter((s) => FALLBACK_THROW_RX.test(s));"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/phase-slice1-foundation-shell.spec.ts",
-                            "column": 18,
-                            "line": 53
-                          },
-                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:4200/foundation/reference-data\nCall log:\n\u001b[2m  - navigating to \"http://localhost:4200/foundation/reference-data\", waiting until \"domcontentloaded\"\u001b[22m\n\n\n  51 |       page.on('pageerror', (e) => { pageErrors.push(String(e?.message ?? e)); });\n  52 |\n> 53 |       await page.goto(route.url, { waitUntil: 'domcontentloaded' });\n     |                  ^\n  54 |       await page.waitForTimeout(4000);\n  55 |\n  56 |       const hits = [...consoleErrors, ...pageErrors].filter((s) => FALLBACK_THROW_RX.test(s));\n    at /root/DOS-Platform/platform/config-center/test/tests/e2e/phase-slice1-foundation-shell.spec.ts:53:18"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 4241,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-05T02:16:19.288Z",
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/root/DOS-Platform/platform/config-center/test/playwright-results/phase-slice1-foundation-sh-89243-back-undefined-access-throw-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "/root/DOS-Platform/platform/config-center/test/playwright-results/phase-slice1-foundation-sh-89243-back-undefined-access-throw-chromium/video.webm"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/phase-slice1-foundation-shell.spec.ts",
-                        "column": 18,
-                        "line": 53
-                      }
+                      "startTime": "2026-05-05T06:19:54.571Z",
+                      "attachments": []
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
-              "id": "c332cd3ecb49b7ee1132-a8b6b3cc01e6409d1bfd",
-              "file": "phase-slice1-foundation-shell.spec.ts",
-              "line": 45,
-              "column": 9
+              "id": "bdf94da1d30640e78532-01b03fd1702af0c3f52a",
+              "file": "m1-marketing-home.spec.ts",
+              "line": 57,
+              "column": 7
             },
             {
-              "title": "GATE 2 — single brand stamp in workspace header",
-              "ok": false,
+              "title": "public surface — no credential forms and login/register are bridges",
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -487,62 +318,27 @@
                   "results": [
                     {
                       "workerIndex": 4,
-                      "status": "failed",
-                      "duration": 271,
-                      "error": {
-                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:4200/foundation/reference-data\nCall log:\n\u001b[2m  - navigating to \"http://localhost:4200/foundation/reference-data\", waiting until \"domcontentloaded\"\u001b[22m\n",
-                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:4200/foundation/reference-data\nCall log:\n\u001b[2m  - navigating to \"http://localhost:4200/foundation/reference-data\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at /root/DOS-Platform/platform/config-center/test/tests/e2e/phase-slice1-foundation-shell.spec.ts:61:18",
-                        "location": {
-                          "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/phase-slice1-foundation-shell.spec.ts",
-                          "column": 18,
-                          "line": 61
-                        },
-                        "snippet": "  59 |\n  60 |     test('GATE 2 — single brand stamp in workspace header', async ({ page }) => {\n> 61 |       await page.goto(route.url, { waitUntil: 'domcontentloaded' });\n     |                  ^\n  62 |       await page.waitForTimeout(1500);\n  63 |       // Anonymous visitors redirect to /login (workspaceShellGuard). The\n  64 |       // dual-stamp regression cannot manifest on the login surface, so the"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/phase-slice1-foundation-shell.spec.ts",
-                            "column": 18,
-                            "line": 61
-                          },
-                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:4200/foundation/reference-data\nCall log:\n\u001b[2m  - navigating to \"http://localhost:4200/foundation/reference-data\", waiting until \"domcontentloaded\"\u001b[22m\n\n\n  59 |\n  60 |     test('GATE 2 — single brand stamp in workspace header', async ({ page }) => {\n> 61 |       await page.goto(route.url, { waitUntil: 'domcontentloaded' });\n     |                  ^\n  62 |       await page.waitForTimeout(1500);\n  63 |       // Anonymous visitors redirect to /login (workspaceShellGuard). The\n  64 |       // dual-stamp regression cannot manifest on the login surface, so the\n    at /root/DOS-Platform/platform/config-center/test/tests/e2e/phase-slice1-foundation-shell.spec.ts:61:18"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 4501,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-05T02:16:19.309Z",
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/root/DOS-Platform/platform/config-center/test/playwright-results/phase-slice1-foundation-sh-4839a-d-stamp-in-workspace-header-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "/root/DOS-Platform/platform/config-center/test/playwright-results/phase-slice1-foundation-sh-4839a-d-stamp-in-workspace-header-chromium/video.webm"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/phase-slice1-foundation-shell.spec.ts",
-                        "column": 18,
-                        "line": 61
-                      }
+                      "startTime": "2026-05-05T06:19:54.593Z",
+                      "attachments": []
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
-              "id": "c332cd3ecb49b7ee1132-67161a8aa8b438a8b16e",
-              "file": "phase-slice1-foundation-shell.spec.ts",
-              "line": 60,
-              "column": 9
+              "id": "bdf94da1d30640e78532-d61748eef40a42a43eb6",
+              "file": "m1-marketing-home.spec.ts",
+              "line": 64,
+              "column": 7
             },
             {
-              "title": "GATE 3 — migration props.title rendered",
-              "ok": false,
+              "title": "/platform resolves and renders marketing.platform.page",
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -554,57 +350,86 @@
                   "results": [
                     {
                       "workerIndex": 5,
-                      "status": "failed",
-                      "duration": 309,
-                      "error": {
-                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:4200/foundation/reference-data\nCall log:\n\u001b[2m  - navigating to \"http://localhost:4200/foundation/reference-data\", waiting until \"domcontentloaded\"\u001b[22m\n",
-                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:4200/foundation/reference-data\nCall log:\n\u001b[2m  - navigating to \"http://localhost:4200/foundation/reference-data\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at /root/DOS-Platform/platform/config-center/test/tests/e2e/phase-slice1-foundation-shell.spec.ts:80:18",
-                        "location": {
-                          "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/phase-slice1-foundation-shell.spec.ts",
-                          "column": 18,
-                          "line": 80
-                        },
-                        "snippet": "  78 |\n  79 |     test('GATE 3 — migration props.title rendered', async ({ page }) => {\n> 80 |       await page.goto(route.url, { waitUntil: 'domcontentloaded' });\n     |                  ^\n  81 |       // Wait briefly for client-side guard redirect to settle.\n  82 |       await page.waitForTimeout(1500);\n  83 |       if (!page.url().includes(route.url)) test.skip(true, `redirected to ${page.url()}`);"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/phase-slice1-foundation-shell.spec.ts",
-                            "column": 18,
-                            "line": 80
-                          },
-                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:4200/foundation/reference-data\nCall log:\n\u001b[2m  - navigating to \"http://localhost:4200/foundation/reference-data\", waiting until \"domcontentloaded\"\u001b[22m\n\n\n  78 |\n  79 |     test('GATE 3 — migration props.title rendered', async ({ page }) => {\n> 80 |       await page.goto(route.url, { waitUntil: 'domcontentloaded' });\n     |                  ^\n  81 |       // Wait briefly for client-side guard redirect to settle.\n  82 |       await page.waitForTimeout(1500);\n  83 |       if (!page.url().includes(route.url)) test.skip(true, `redirected to ${page.url()}`);\n    at /root/DOS-Platform/platform/config-center/test/tests/e2e/phase-slice1-foundation-shell.spec.ts:80:18"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 4436,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-05T02:16:19.273Z",
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/root/DOS-Platform/platform/config-center/test/playwright-results/phase-slice1-foundation-sh-bc043-ration-props-title-rendered-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "/root/DOS-Platform/platform/config-center/test/playwright-results/phase-slice1-foundation-sh-bc043-ration-props-title-rendered-chromium/video.webm"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/phase-slice1-foundation-shell.spec.ts",
-                        "column": 18,
-                        "line": 80
-                      }
+                      "startTime": "2026-05-05T06:19:54.669Z",
+                      "attachments": []
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
-              "id": "c332cd3ecb49b7ee1132-df3cdf293de041a271dc",
-              "file": "phase-slice1-foundation-shell.spec.ts",
-              "line": 79,
+              "id": "bdf94da1d30640e78532-85fc192e66be8bbe8b3a",
+              "file": "m1-marketing-home.spec.ts",
+              "line": 80,
+              "column": 9
+            },
+            {
+              "title": "/resources resolves and renders marketing.resources.page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "status": "passed",
+                      "duration": 4327,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-05T06:19:54.600Z",
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "bdf94da1d30640e78532-9a55ffbfcc7f40f2034a",
+              "file": "m1-marketing-home.spec.ts",
+              "line": 80,
+              "column": 9
+            },
+            {
+              "title": "/resources/executive-kit resolves and renders marketing.executive-kit.page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "status": "passed",
+                      "duration": 4450,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-05T06:19:54.552Z",
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "bdf94da1d30640e78532-acb16e8c8df14e425877",
+              "file": "m1-marketing-home.spec.ts",
+              "line": 80,
               "column": 9
             }
           ]
@@ -614,11 +439,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-05-05T02:16:18.592Z",
-    "duration": 1209.058,
-    "expected": 0,
+    "startTime": "2026-05-05T06:19:53.603Z",
+    "duration": 10926.323999999999,
+    "expected": 7,
     "skipped": 0,
-    "unexpected": 7,
+    "unexpected": 1,
     "flaky": 0
   }
 }

@@ -3,15 +3,59 @@
 //
 // Returns: { statements: [{ sql, params, name }], rowsByTable: {...} }
 
+import { getApprovedPageEntry } from './approved-page-roster.mjs';
+
 function lit(v) {
   // Used only inside emitted comments (never for parameterised values).
   return JSON.stringify(v);
+}
+
+function titleCase(segment) {
+  return String(segment ?? '')
+    .split(/[_-]+/)
+    .filter(Boolean)
+    .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' ');
+}
+
+function roleDisplayName(roleCode, moduleName) {
+  const raw = String(roleCode ?? '').split('.').pop() ?? roleCode;
+  return `${moduleName} ${titleCase(raw)}`.trim();
 }
 
 export function emit(contract, { tenantIds = null } = {}) {
   const stmts = [];
   const rowsByTable = {};
   const inc = (t, n = 1) => { rowsByTable[t] = (rowsByTable[t] ?? 0) + n; };
+
+  const moduleCode = String(contract.module?.code ?? '');
+  const moduleName = String(contract.module?.name_en ?? moduleCode);
+  const navByRoute = new Map(
+    (contract.navigation ?? [])
+      .filter(n => n.route)
+      .map(n => [n.route, n]),
+  );
+
+  // ─── module → dos.module_registry ────────────────────────────────────────
+  if (moduleCode) {
+    stmts.push({
+      name: `module:${moduleCode}`,
+      sql: `INSERT INTO dos.module_registry
+              (module_code, product_key, display_name, status)
+            VALUES ($1, $2, $3, $4)
+            ON CONFLICT (module_code) DO UPDATE SET
+              product_key = EXCLUDED.product_key,
+              display_name = EXCLUDED.display_name,
+              status = EXCLUDED.status`,
+      params: [
+        moduleCode,
+        contract.module?.product_key ?? null,
+        moduleName,
+        'active',
+      ],
+    });
+    inc('dos.module_registry');
+  }
 
   // ─── components → dos.dynamic_ui_component_registry ──────────────────────
   for (const c of contract.components ?? []) {
@@ -62,6 +106,111 @@ export function emit(contract, { tenantIds = null } = {}) {
       params: [permId, p.code, moduleCode, resourceType, actionType, p.description ?? p.code],
     });
     inc('platform_dauth.permissions');
+  }
+
+  // ─── roles → platform_dauth.functional_roles + role_permissions ─────────
+  for (const role of contract.roles ?? []) {
+    const displayName = roleDisplayName(role.code, moduleName.replace(/\s+—.*$/, ''));
+    const description = `${moduleName} role (${role.archetype ?? 'custom'})`;
+    stmts.push({
+      name: `role:${role.code}`,
+      sql: `INSERT INTO platform_dauth.functional_roles
+              (role_id, role_code, display_name, description, permissions)
+            VALUES ($1, $2, $3, $4, $5)
+            ON CONFLICT (role_id) DO UPDATE SET
+              role_code = EXCLUDED.role_code,
+              display_name = EXCLUDED.display_name,
+              description = EXCLUDED.description,
+              permissions = EXCLUDED.permissions`,
+      params: [role.code, role.code, displayName, description, role.permissions ?? []],
+    });
+    inc('platform_dauth.functional_roles');
+
+    for (const permCode of role.permissions ?? []) {
+      stmts.push({
+        name: `roleperm:${role.code}:${permCode}`,
+        sql: `INSERT INTO platform_dauth.role_permissions (role_id, permission_id)
+              SELECT $1::varchar, p.permission_id
+                FROM platform_dauth.permissions p
+               WHERE p.permission_code = $2::varchar
+                 AND NOT EXISTS (
+                   SELECT 1 FROM platform_dauth.role_permissions rp
+                    WHERE rp.role_id = $1::varchar
+                      AND rp.permission_id = p.permission_id
+                 )`,
+        params: [role.code, permCode],
+      });
+      inc('platform_dauth.role_permissions');
+    }
+  }
+
+  // ─── navigation → dos.navigation_registry ────────────────────────────────
+  for (const nav of contract.navigation ?? []) {
+    stmts.push({
+      name: `nav:${nav.nav_item_code}`,
+      sql: `INSERT INTO dos.navigation_registry
+              (module_code, nav_item_code, label_en, label_ar, icon, route, parent_code, sort_order)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+            ON CONFLICT DO NOTHING`,
+      params: [
+        moduleCode,
+        nav.nav_item_code,
+        nav.label_en,
+        nav.label_ar,
+        nav.icon ?? null,
+        nav.route ?? null,
+        nav.parent_code ?? null,
+        nav.sort_order ?? 0,
+      ],
+    });
+    inc('dos.navigation_registry');
+  }
+
+  // ─── pages → dos.ui_route_template_binding + dos.dynamic_ui_routes ──────
+  for (const [index, page] of (contract.pages ?? []).entries()) {
+    const nav = navByRoute.get(page.route);
+    const approved = getApprovedPageEntry(page.archetype);
+    stmts.push({
+      name: `binding:${page.route}`,
+      sql: `INSERT INTO dos.ui_route_template_binding
+              (route, archetype, template_export, props, title_en, title_ar)
+            VALUES ($1, $2, $3, $4::jsonb, $5, $6)
+            ON CONFLICT (route) DO UPDATE SET
+              archetype = EXCLUDED.archetype,
+              template_export = EXCLUDED.template_export,
+              props = EXCLUDED.props,
+              title_en = EXCLUDED.title_en,
+              title_ar = EXCLUDED.title_ar`,
+      params: [
+        page.route,
+        page.archetype,
+        page.template_export,
+        JSON.stringify(page.props ?? {}),
+        nav?.label_en ?? titleCase(page.page_code.split('.').pop()),
+        nav?.label_ar ?? null,
+      ],
+    });
+    inc('dos.ui_route_template_binding');
+
+    stmts.push({
+      name: `route:${page.route}`,
+      sql: `INSERT INTO dos.dynamic_ui_routes
+              (path_pattern, component_key, permission_key, module_code, sort_order, tenant_id)
+            VALUES ($1, $2, $3, $4, $5, $6)
+            ON CONFLICT (module_code, path_pattern) WHERE tenant_id IS NULL DO UPDATE SET
+              component_key = EXCLUDED.component_key,
+              permission_key = EXCLUDED.permission_key,
+              sort_order = EXCLUDED.sort_order`,
+      params: [
+        page.route,
+        approved?.componentKey ?? page.template_export,
+        page.permission ?? null,
+        moduleCode,
+        nav?.sort_order ?? (index + 1) * 10,
+        null,
+      ],
+    });
+    inc('dos.dynamic_ui_routes');
   }
 
   // ─── i18n → dos.workspace_shell_i18n (workspace-shell module only) ───────

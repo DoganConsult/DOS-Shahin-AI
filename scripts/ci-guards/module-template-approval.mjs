@@ -15,7 +15,9 @@ import {
 import {
   APPROVED_PAGE_ARCHETYPE_COUNT,
   getApprovedPageEntry,
+  getApprovedPageTemplateExports,
   isApprovedPageComponentKey,
+  isApprovedPageTemplateExport,
   shouldEnforceApprovedPageRoster,
 } from '../module/lib/approved-page-roster.mjs';
 
@@ -28,8 +30,8 @@ const TEMPLATE_BINDING_REGISTRY = resolve(
 );
 
 const TEMPLATE_EXPORTS = new Set(
-  [...readFileSync(TEMPLATE_BINDING_REGISTRY, 'utf8').matchAll(/^[ \t]+([A-Z][A-Za-z0-9]+TemplateComponent)\s*:/gm)]
-    .map(match => match[1]),
+  [...readFileSync(TEMPLATE_BINDING_REGISTRY, 'utf8').matchAll(/^[ \t]+(?:([A-Z][A-Za-z0-9]+TemplateComponent)|['"]([^'"]+)['"])\s*:/gm)]
+    .map(match => match[1] ?? match[2]),
 );
 
 const files = readdirSync(SEED_DIR);
@@ -89,9 +91,10 @@ for (const code of published) {
       failures.push(
         `${code}: pages.${page.page_code}.template_export '${page.template_export}' is not in template-binding.registry.ts`,
       );
-    } else if (enforceApprovedPages && approved && page.template_export !== approved.templateExport) {
+    } else if (enforceApprovedPages && approved && !isApprovedPageTemplateExport(page.archetype, page.template_export)) {
+      const allowed = getApprovedPageTemplateExports(page.archetype).join("', '");
       failures.push(
-        `${code}: pages.${page.page_code}.template_export '${page.template_export}' must be '${approved.templateExport}' for archetype '${page.archetype}'`,
+        `${code}: pages.${page.page_code}.template_export '${page.template_export}' must be one of '${allowed}' for archetype '${page.archetype}'`,
       );
     }
   }

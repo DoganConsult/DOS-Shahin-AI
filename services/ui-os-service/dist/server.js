@@ -15,7 +15,10 @@ if (!DATABASE_URL) {
     process.exit(1);
 }
 const pool = createPool(DATABASE_URL);
-const publicMarketingTemplateRoutes = new Set(['/', '/pricing', '/trust', '/security', '/contact', '/about', '/legal']);
+const publicMarketingTemplateRoutes = new Set([
+    '/', '/pricing', '/trust', '/security', '/contact', '/about', '/legal',
+    '/platform', '/resources', '/resources/executive-kit',
+]);
 const publicTemplateBindingRouter = createTemplateBindingRouter(pool);
 const app = express();
 app.disable('x-powered-by');

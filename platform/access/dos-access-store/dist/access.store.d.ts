@@ -80,7 +80,7 @@ export declare class AccessStore {
     readonly decisionAuthorities: import("@angular/core").Signal<readonly string[]>;
     /** Compat: allowed dashboards — empty until dashboard registry lands. */
     readonly allowedDashboards: import("@angular/core").Signal<readonly string[]>;
-    /** Compat: legacy `landingPage()` function shape. */
+    /** Compat: legacy `landingPage()` function shape. Updated to use DB-driven tenant/member landing routes. */
     landingPage(): string;
     /** Compat: legacy `hasAuthority(code)` — proxy to permission check. */
     hasAuthority(code: string): boolean;

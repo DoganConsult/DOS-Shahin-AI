@@ -20,7 +20,9 @@ import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
   getApprovedPageEntry,
+  getApprovedPageTemplateExports,
   isApprovedPageComponentKey,
+  isApprovedPageTemplateExport,
   shouldEnforceApprovedPageRoster,
 } from './approved-page-roster.mjs';
 
@@ -31,8 +33,8 @@ const TEMPLATE_BINDING_REGISTRY = resolve(
 );
 
 const TEMPLATE_EXPORTS = new Set(
-  [...readFileSync(TEMPLATE_BINDING_REGISTRY, 'utf8').matchAll(/^[ \t]+([A-Z][A-Za-z0-9]+TemplateComponent)\s*:/gm)]
-    .map(match => match[1]),
+  [...readFileSync(TEMPLATE_BINDING_REGISTRY, 'utf8').matchAll(/^[ \t]+(?:([A-Z][A-Za-z0-9]+TemplateComponent)|['"]([^'"]+)['"])\s*:/gm)]
+    .map(match => match[1] ?? match[2]),
 );
 
 /** Publisher-owned seed tables (whitelist). Exported for reconcile / tooling. */
@@ -103,10 +105,11 @@ export async function crossRefAgainstDb(client, contract) {
           error_path: `pages.${p.page_code}.template_export`,
           message: `template_export '${p.template_export}' not in template-binding.registry.ts`,
           severity: 'BLOCKER' });
-      } else if (enforceApprovedPages && approved && p.template_export !== approved.templateExport) {
+      } else if (enforceApprovedPages && approved && !isApprovedPageTemplateExport(p.archetype, p.template_export)) {
+        const allowed = getApprovedPageTemplateExports(p.archetype).join("', '");
         errors.push({ error_type: 'NON_CANONICAL_TEMPLATE_EXPORT',
           error_path: `pages.${p.page_code}.template_export`,
-          message: `template_export '${p.template_export}' must be '${approved.templateExport}' for archetype '${p.archetype}'`,
+          message: `template_export '${p.template_export}' must be one of '${allowed}' for archetype '${p.archetype}'`,
           severity: 'BLOCKER' });
       }
     }

@@ -37,6 +37,10 @@
     "./vault": {
       "types": "./dist/vault.d.ts",
       "default": "./dist/vault.js"
+    },
+    "./secrets": {
+      "types": "./dist/secrets.d.ts",
+      "default": "./dist/secrets.js"
     }
   },
   "files": [

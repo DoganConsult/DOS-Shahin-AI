@@ -173,15 +173,16 @@ export class DynamicTemplatePageComponent {
     //    sections; nav/footer/flags come from the same config signal bundle.
     if (b.archetype === 'marketing-landing') {
       const cfg = this.marketingCfg;
+      const locale = this.currentLocale();
       out['brandCode']        = 'shahin-ai';
-      out['locale']           = 'en';
-      out['homeContent']      = cfg.marketingHomeContent();
-      out['navItems']         = cfg.marketingNavItems();
-      out['navGroups']        = cfg.marketingNavGroups();
-      out['footerGroups']     = cfg.marketingFooterGroups();
-      out['agentStripState']  = 'ready';
-      out['agentStripSummary'] = null;
-      out['downloadAssets']   = [];
+      out['locale']           = locale;
+      out['homeContent']      = p['homeContent'] ?? cfg.marketingHomeContent();
+      out['navItems']         = p['navItems'] ?? cfg.marketingNavItems();
+      out['navGroups']        = p['navGroups'] ?? cfg.marketingNavGroups();
+      out['footerGroups']     = p['footerGroups'] ?? cfg.marketingFooterGroups();
+      out['agentStripState']  = p['agentStripState'] ?? 'ready';
+      out['agentStripSummary'] = p['agentStripSummary'] ?? null;
+      out['downloadAssets']   = p['downloadAssets'] ?? [];
     }
 
     // 6. Always last — never let a template-supplied prop override
@@ -226,7 +227,8 @@ export class DynamicTemplatePageComponent {
           // Marketing-landing: eagerly hydrate config + brand so tplInputs()
           // signals are populated before the component is created.
           if (b.archetype === 'marketing-landing') {
-            this.marketingCfg.init('shahin-ai', 'en').catch(
+            const locale = this.currentLocale();
+            this.marketingCfg.init('shahin-ai', locale).catch(
               (e) => console.warn('[dynamic-template] marketing cfg init failed', e),
             );
             this.brandResolver.init('shahin-ai').catch(
@@ -255,5 +257,12 @@ export class DynamicTemplatePageComponent {
     const q = url.indexOf('?');
     const u = q === -1 ? url : url.slice(0, q);
     return u.length > 1 && u.endsWith('/') ? u.slice(0, -1) : u;
+  }
+
+  private currentLocale(): 'en' | 'ar' {
+    if (typeof window === 'undefined') return 'en';
+    const queryLocale = new URLSearchParams(window.location.search).get('locale');
+    const storedLocale = window.localStorage.getItem('locale');
+    return queryLocale === 'ar' || storedLocale === 'ar' ? 'ar' : 'en';
   }
 }

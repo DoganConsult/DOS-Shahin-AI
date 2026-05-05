@@ -520,6 +520,7 @@ if (UI_OS_SERVICE_URL) {
     // skips authGuard. Any other route still requires JWT.
     const publicMarketingRoutes = new Set([
         '/', '/pricing', '/trust', '/security', '/contact', '/about', '/legal',
+        '/platform', '/resources', '/resources/executive-kit',
     ]);
     const publicUiOsProxy = (0, http_proxy_middleware_1.createProxyMiddleware)({
         target: UI_OS_SERVICE_URL,
@@ -801,16 +802,16 @@ const PHASE2_OS = [
     ['notification-os', 4020],
     ['integration-os', 4021],
     ['data-governance-os', 4022],
-    ['billing-os', 4023],
-    ['feature-flag-os', 4024],
-    ['security-secrets-os', 4025],
-    ['telemetry-os', 4026],
+    ['billing-os', 4048],
+    ['feature-flag-os', 4049],
+    ['security-secrets-os', 4050],
+    ['telemetry-os', 4051],
     ['schema-authoring-os', 4027],
     ['deployment-os', 4028],
     ['release-os', 4029],
     ['vendor-risk-os', 4034],
-    ['marketplace-os', 4031],
-    ['dr-os', 4032],
+    ['marketplace-os', 4052],
+    ['dr-os', 4053],
 ];
 for (const [code, port] of PHASE2_OS) {
     const envKey = `DOS_${code.toUpperCase().replace(/-/g, '_')}_SERVICE_URL`;

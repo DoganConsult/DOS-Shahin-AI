@@ -11,6 +11,7 @@ import viewPreferencesRouter from './routes/view-preferences.routes';
 import { invitationsRouter } from './routes/invitations.routes';
 import { auditTrailRouter } from './routes/audit-trail.routes';
 import { profilesRouter } from './routes/profiles.routes';
+import { roleProfileRouter } from './routes/role-profile.routes';
 import { privacyOpsRouter } from './routes/privacy-ops.routes';
 import { healthFoundationRouter } from './routes/health.foundation';
 import {
@@ -184,6 +185,8 @@ async function main() {
       { path: '/api/invitations', router: invitationsRouter },
       { path: '/api/audit-trail', router: auditTrailRouter },
       { path: '/api/profiles', router: profilesRouter },
+      // Wave F-Build — canonical role-profile surface (sole URA writer).
+      { path: '/api/role-profile', router: roleProfileRouter },
       { path: '/api/privacy-ops', router: privacyOpsRouter },
       // V2b — Foundation aggregator: Shahin calls /api/foundation/users,
       // /api/foundation/teams, /api/foundation/dashboard etc. against the

@@ -1,0 +1,291 @@
+{
+  "contractKey": "module.audit-shelf.bundle",
+  "version": "1.0.0",
+  "tenant_id": "tenant_test_foundation",
+  "generated_at": "2026-05-05T04:28:37.730Z",
+  "generated_by": "cli@dos.local",
+  "sections": {
+    "role_profile_sync_ledger": [],
+    "ura_projection_state": [
+      {
+        "assignment_id": "ea6da57e-e265-4312-b887-ce0c3c0518f7",
+        "tenant_id": "tenant_test_foundation",
+        "user_id": "test+foundation+admin@dos.local",
+        "role_code": "tenant-admin",
+        "scope": "tenant",
+        "granted_by": "fixtures-seeder",
+        "granted_at": "2026-05-05T04:11:47.772Z",
+        "is_active": true
+      },
+      {
+        "assignment_id": "c99775ba-97f8-4faa-92d6-2f48c6c85399",
+        "tenant_id": "tenant_test_foundation",
+        "user_id": "test+foundation+auditor@dos.local",
+        "role_code": "auditor",
+        "scope": "tenant",
+        "granted_by": "fixtures-seeder",
+        "granted_at": "2026-05-05T04:11:47.770Z",
+        "is_active": true
+      },
+      {
+        "assignment_id": "873d7c54-06c0-448d-ab0e-50e93dbf3964",
+        "tenant_id": "tenant_test_foundation",
+        "user_id": "test+foundation+user@dos.local",
+        "role_code": "user",
+        "scope": "tenant",
+        "granted_by": "fixtures-seeder",
+        "granted_at": "2026-05-05T04:11:47.768Z",
+        "is_active": true
+      },
+      {
+        "assignment_id": "005e15a7-bb77-4795-b7ce-f4aa715a0d36",
+        "tenant_id": "tenant_test_foundation",
+        "user_id": "test+foundation+viewer@dos.local",
+        "role_code": "viewer",
+        "scope": "tenant",
+        "granted_by": "fixtures-seeder",
+        "granted_at": "2026-05-05T04:11:47.752Z",
+        "is_active": true
+      }
+    ],
+    "drift_telemetry_window": [
+      {
+        "id": "30",
+        "sampled_at": "2026-05-05T04:26:15.787Z",
+        "metric_key": "telemetry.sampler_heartbeat",
+        "value_num": "1",
+        "severity": "info"
+      },
+      {
+        "id": "29",
+        "sampled_at": "2026-05-05T04:26:15.787Z",
+        "metric_key": "tenants.active_count",
+        "value_num": "36",
+        "severity": "info"
+      },
+      {
+        "id": "28",
+        "sampled_at": "2026-05-05T04:26:15.787Z",
+        "metric_key": "ui.carbon_key_orphans",
+        "value_num": "0",
+        "severity": "info"
+      },
+      {
+        "id": "27",
+        "sampled_at": "2026-05-05T04:26:15.787Z",
+        "metric_key": "rbac.functional_roles.dual_naming_collisions",
+        "value_num": "0",
+        "severity": "info"
+      },
+      {
+        "id": "26",
+        "sampled_at": "2026-05-05T04:26:15.787Z",
+        "metric_key": "shell.binding_rowcount_drift",
+        "value_num": "0",
+        "severity": "info"
+      },
+      {
+        "id": "21",
+        "sampled_at": "2026-05-05T04:26:15.787Z",
+        "metric_key": "rbac.role_permissions.mismatch_count",
+        "value_num": "0",
+        "severity": "info"
+      },
+      {
+        "id": "25",
+        "sampled_at": "2026-05-05T04:26:15.787Z",
+        "metric_key": "shell.perms_ungrantable",
+        "value_num": "0",
+        "severity": "info"
+      },
+      {
+        "id": "24",
+        "sampled_at": "2026-05-05T04:26:15.787Z",
+        "metric_key": "tenants.product_activation_duplicates",
+        "value_num": "0",
+        "severity": "info"
+      },
+      {
+        "id": "23",
+        "sampled_at": "2026-05-05T04:26:15.787Z",
+        "metric_key": "tenants.active_no_migration_ledger",
+        "value_num": "0",
+        "severity": "info"
+      },
+      {
+        "id": "22",
+        "sampled_at": "2026-05-05T04:26:15.787Z",
+        "metric_key": "tenants.schema_orphans_unaccounted",
+        "value_num": "1",
+        "severity": "critical"
+      },
+      {
+        "id": "16",
+        "sampled_at": "2026-05-05T03:36:56.024Z",
+        "metric_key": "shell.binding_rowcount_drift",
+        "value_num": "0",
+        "severity": "info"
+      },
+      {
+        "id": "11",
+        "sampled_at": "2026-05-05T03:36:56.024Z",
+        "metric_key": "rbac.role_permissions.mismatch_count",
+        "value_num": "0",
+        "severity": "info"
+      },
+      {
+        "id": "12",
+        "sampled_at": "2026-05-05T03:36:56.024Z",
+        "metric_key": "tenants.schema_orphans_unaccounted",
+        "value_num": "0",
+        "severity": "info"
+      },
+      {
+        "id": "13",
+        "sampled_at": "2026-05-05T03:36:56.024Z",
+        "metric_key": "tenants.active_no_migration_ledger",
+        "value_num": "0",
+        "severity": "info"
+      },
+      {
+        "id": "14",
+        "sampled_at": "2026-05-05T03:36:56.024Z",
+        "metric_key": "tenants.product_activation_duplicates",
+        "value_num": "0",
+        "severity": "info"
+      },
+      {
+        "id": "15",
+        "sampled_at": "2026-05-05T03:36:56.024Z",
+        "metric_key": "shell.perms_ungrantable",
+        "value_num": "0",
+        "severity": "info"
+      },
+      {
+        "id": "17",
+        "sampled_at": "2026-05-05T03:36:56.024Z",
+        "metric_key": "rbac.functional_roles.dual_naming_collisions",
+        "value_num": "0",
+        "severity": "info"
+      },
+      {
+        "id": "18",
+        "sampled_at": "2026-05-05T03:36:56.024Z",
+        "metric_key": "ui.carbon_key_orphans",
+        "value_num": "0",
+        "severity": "info"
+      },
+      {
+        "id": "19",
+        "sampled_at": "2026-05-05T03:36:56.024Z",
+        "metric_key": "tenants.active_count",
+        "value_num": "36",
+        "severity": "info"
+      },
+      {
+        "id": "20",
+        "sampled_at": "2026-05-05T03:36:56.024Z",
+        "metric_key": "telemetry.sampler_heartbeat",
+        "value_num": "1",
+        "severity": "info"
+      },
+      {
+        "id": "1",
+        "sampled_at": "2026-05-05T03:31:58.266Z",
+        "metric_key": "rbac.role_permissions.mismatch_count",
+        "value_num": "0",
+        "severity": "info"
+      },
+      {
+        "id": "10",
+        "sampled_at": "2026-05-05T03:31:58.266Z",
+        "metric_key": "telemetry.sampler_heartbeat",
+        "value_num": "1",
+        "severity": "info"
+      },
+      {
+        "id": "9",
+        "sampled_at": "2026-05-05T03:31:58.266Z",
+        "metric_key": "tenants.active_count",
+        "value_num": "36",
+        "severity": "info"
+      },
+      {
+        "id": "8",
+        "sampled_at": "2026-05-05T03:31:58.266Z",
+        "metric_key": "ui.carbon_key_orphans",
+        "value_num": "0",
+        "severity": "info"
+      },
+      {
+        "id": "7",
+        "sampled_at": "2026-05-05T03:31:58.266Z",
+        "metric_key": "rbac.functional_roles.dual_naming_collisions",
+        "value_num": "0",
+        "severity": "info"
+      },
+      {
+        "id": "6",
+        "sampled_at": "2026-05-05T03:31:58.266Z",
+        "metric_key": "shell.binding_rowcount_drift",
+        "value_num": "0",
+        "severity": "info"
+      },
+      {
+        "id": "5",
+        "sampled_at": "2026-05-05T03:31:58.266Z",
+        "metric_key": "shell.perms_ungrantable",
+        "value_num": "0",
+        "severity": "info"
+      },
+      {
+        "id": "4",
+        "sampled_at": "2026-05-05T03:31:58.266Z",
+        "metric_key": "tenants.product_activation_duplicates",
+        "value_num": "0",
+        "severity": "info"
+      },
+      {
+        "id": "3",
+        "sampled_at": "2026-05-05T03:31:58.266Z",
+        "metric_key": "tenants.active_no_migration_ledger",
+        "value_num": "0",
+        "severity": "info"
+      },
+      {
+        "id": "2",
+        "sampled_at": "2026-05-05T03:31:58.266Z",
+        "metric_key": "tenants.schema_orphans_unaccounted",
+        "value_num": "0",
+        "severity": "info"
+      }
+    ],
+    "tenant_migration_ledger": [],
+    "audit_signoff_ledger": [
+      {
+        "bundle_id": "3",
+        "generated_at": "2026-05-05T04:26:09.441Z",
+        "generated_by": "cli@dos.local",
+        "bundle_hash": "6c87f69f37154181c063b13fca7202dfc6738a0a803193a0713e3a51fbab29d9",
+        "signed_by": null,
+        "signed_at": null
+      },
+      {
+        "bundle_id": "2",
+        "generated_at": "2026-05-05T04:24:14.587Z",
+        "generated_by": "cli@dos.local",
+        "bundle_hash": "d7f686e276c8940832dadc6889c5e938da82accc7942ccbae314c0563b427d1e",
+        "signed_by": null,
+        "signed_at": null
+      },
+      {
+        "bundle_id": "1",
+        "generated_at": "2026-05-05T04:23:14.201Z",
+        "generated_by": "cli@dos.local",
+        "bundle_hash": "3d04e4da0940805572895757060c0107b5695885fc8c2104f6609f7c6ffbedb5",
+        "signed_by": null,
+        "signed_at": null
+      }
+    ]
+  }
+}

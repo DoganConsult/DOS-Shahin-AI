@@ -1,0 +1,38 @@
+{
+  "$schema": "../../platform/contracts/module/module.manifest.schema.json",
+  "schemaVersion": 1,
+  "kind": "platform",
+  "moduleCode": "audit-shelf",
+  "displayName": "Audit Shelf",
+  "description": "Always-on regulator-handover module. Bundles role-profile sync ledger, URA gate proofs, RBAC matrix snapshots, drift telemetry samples, and tenant migration ledgers into a single signed deliverable any auditor can pull on demand.",
+  "version": "1.0.0",
+  "extractable": true,
+  "selfContained": true,
+  "lifecycle": {
+    "stage": "ga",
+    "owner": "dogan-consult",
+    "entitlementKey": "module.audit-shelf",
+    "featureFlag": "module.audit-shelf.enabled",
+    "alwaysOn": true,
+    "minTenantStage": "ga"
+  },
+  "doctrine": {
+    "principle": "Audit Shelf is a built-in handover surface — every tenant is implicitly entitled. Auditors with the 'auditor' role can run on-demand bundle exports without operator intervention.",
+    "alwaysOnRationale": "Regulator handover must never depend on whether the customer purchased a module."
+  },
+  "contracts": {
+    "manifest": "module.manifest.json",
+    "bundle":   "contracts/audit-bundle.contract.json"
+  },
+  "owns": {
+    "ledger":    "dos.audit_signoff_ledger",
+    "acceptors": ["regulator.export", "internal.audit-team"]
+  },
+  "permissions": [
+    { "code": "audit_shelf.run",     "default": "auditor",      "description": "Trigger an audit-shelf bundle export." },
+    { "code": "audit_shelf.signoff", "default": "tenant-admin", "description": "Counter-sign an audit bundle for handover." }
+  ],
+  "scripts": {
+    "bundle": "scripts/audit-shelf-bundle.mjs"
+  }
+}

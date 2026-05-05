@@ -1,24 +1,19 @@
-/**
- * Phase M1 — `marketing.home.page` runtime spec.
- *
- * Asserts the unauthenticated public landing surface resolves through
- * Dynamic-UI, renders the locked 19-region public page contract, keeps
- * login/register as bridge links, renders the agentic-proof strip, and
- * supports Arabic RTL.
- *
- * Companion contract test (passes today, no DOM):
- *   tests/contract/marketing-home-contract.test.ts
- */
 import { test, expect, type Page } from '@playwright/test';
 
 const REGIONS = [
   'public-header','breadcrumb-row','hero','trust-pills','value-props',
   'agentic-proof','download-kit','platform-overview','modules','industries',
-  'architecture','ai-and-agents','pricing-teaser','testimonials','logos',
+  'architecture','ai-and-agents','grc-sandbox','pricing-teaser','testimonials','logos',
   'resources','faq','cta-banner','footer',
 ];
 
 const AGENT_CODES = ['A01','A02','A04','A05','A06','A07','A08','A09','A10'];
+
+const PUBLIC_ROUTE_COMPONENTS = [
+  { route: '/platform', templateExport: 'marketing.platform.page', selector: 'dos-marketing-platform' },
+  { route: '/resources', templateExport: 'marketing.resources.page', selector: 'dos-marketing-resources' },
+  { route: '/resources/executive-kit', templateExport: 'marketing.executive-kit.page', selector: 'dos-marketing-executive-kit-page' },
+];
 
 async function goto(page: Page, url: string) {
   await page.goto(url, { waitUntil: 'domcontentloaded' });
@@ -32,12 +27,12 @@ test.describe('M1 — marketing.home.page renders without auth', () => {
     const body = await binding.json();
     expect(body.route).toBe('/');
     expect(body.archetype).toBe('marketing-landing');
-    expect(body.template_export).toBe('MarketingHomeTemplateComponent');
+    expect(body.template_export).toBe('marketing.home.page');
     expect(body.props?.brandCode).toBe('shahin-ai');
     expect(body.props?.homeContent?.hero?.title).toBeTruthy();
   });
 
-  test('all 19 public regions present in DOM order', async ({ page }) => {
+  test('all 20 public regions present in DOM order', async ({ page }) => {
     await goto(page, '/');
     const ids = await page.$$eval(
       '[data-section-id]',
@@ -80,4 +75,18 @@ test.describe('M1 — marketing.home.page renders without auth', () => {
     expect(new Set(bridgeHrefs)).toEqual(new Set(['/login', '/register']));
     expect(authProbes, `landing must not auth-probe (${authProbes.join(', ')})`).toEqual([]);
   });
+
+  for (const publicRoute of PUBLIC_ROUTE_COMPONENTS) {
+    test(`${publicRoute.route} resolves and renders ${publicRoute.templateExport}`, async ({ page }) => {
+      const binding = await page.request.get(`/api/ui-os/template-binding?route=${encodeURIComponent(publicRoute.route)}`);
+      expect(binding.ok(), `${publicRoute.route} template-binding endpoint must resolve`).toBe(true);
+      const body = await binding.json();
+      expect(body.route).toBe(publicRoute.route);
+      expect(body.archetype).toBe('marketing-landing');
+      expect(body.template_export).toBe(publicRoute.templateExport);
+      await goto(page, publicRoute.route);
+      await expect(page.locator(publicRoute.selector)).toHaveCount(1);
+      await expect(page.locator('text=/No template binding|No widget configured|Template unavailable/i')).toHaveCount(0);
+    });
+  }
 });

@@ -437,7 +437,7 @@ export interface MarketingAgentTile {
                 @for (t of agentTiles; track t.agentCode) {
                   <dos-carbon-col [columnNumbers]="{ sm: 4, md: 4, lg: 3 }">
                     <dos-carbon-tile [clickable]="true">
-                      <div class="dos-mh-agent-tile">
+                      <div class="dos-mh-agent-tile" [attr.data-agent-code]="t.agentCode">
                         @if (tileAssetUrl(t.agentCode); as src) {
                           <img
                             class="dos-mh-agent-img"

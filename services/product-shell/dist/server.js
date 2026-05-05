@@ -149,9 +149,10 @@ app.get(CONTROLLED_404_PATHS, (_req, res) => {
     applyNoStoreHeaders(res);
     res.status(404).type('text/plain').send('not found');
 });
-// Resolve index.html once at boot; avoids a syscall per SPA navigation.
+// Wave 7: INDEX_PATH resolved once at boot (no syscall cost); existsSync
+// is checked lazily per-request so a SPA build that finishes after server
+// startup is picked up automatically without a manual pm2 restart.
 const INDEX_PATH = path_1.default.join(SPA_DIR, 'index.html');
-const INDEX_EXISTS = fs_1.default.existsSync(INDEX_PATH);
 // Stale hashed-asset requests (old bundle hashes after a deploy) MUST NOT
 // be answered with index.html — browsers would try to execute HTML as JS
 // and silently replay the old SPA shell on top of the new one. 404 them.
@@ -162,7 +163,7 @@ app.get('*', (req, res) => {
         res.status(404).type('text/plain').send('not found');
         return;
     }
-    if (!INDEX_EXISTS) {
+    if (!fs_1.default.existsSync(INDEX_PATH)) {
         res.status(503).type('text/plain').send('SPA build missing. Run pnpm --filter @shahin/spa build.');
         return;
     }

@@ -79,7 +79,7 @@
           "page_code":       { "type": "string" },
           "route":           { "type": "string", "pattern": "^/(?:[a-z0-9_:-]+(?:/[a-z0-9_:-]+)+|/?)$" },
           "archetype":       { "type": "string" },
-          "template_export": { "type": "string", "pattern": ".*TemplateComponent$" },
+          "template_export": { "type": "string", "pattern": "^(?:[A-Z][A-Za-z0-9]+TemplateComponent|[a-z][a-z0-9_.-]+)$" },
           "permission":      { "type": ["string", "null"] },
           "props":           { "type": "object" }
         }

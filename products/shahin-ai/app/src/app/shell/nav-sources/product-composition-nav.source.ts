@@ -15,7 +15,7 @@ import { Injectable } from '@angular/core';
 import { DNA_MODULE_CODES } from '@dos/access-store';
 import type { DosNavItem } from '@dos/ui-contracts';
 import type { NavCtx, NavSource, NavSourceResult } from '@dos/access-store';
-import productManifest from '../../../../../product.manifest.json';
+import productManifest from '../../../../../manifest/product.manifest.json';
 
 interface ManifestNavItem {
   id: string;

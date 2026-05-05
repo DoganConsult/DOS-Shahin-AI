@@ -2,7 +2,7 @@
  * Shared archetype/template mapping used by ui-registry:{import,diff,seed:dev}.
  *
  * Maps a Dynamic-UI component_key to one of the 32 canonical archetypes and
- * its ESM export from `@platform/shell/templates`. Mirrors:
+ * its runtime template_export loader key. Mirrors:
  *   - chk_archetype constraint in 20260503_0017_phase_f_ui_route_template_binding.sql
  *   - ARCHETYPE_EXPORTS in scripts/ci-guards/template-coverage.mjs
  *   - REGISTRY_COMPONENT_MAP / archetype routing in platform/dos/registry/component-map.ts
@@ -17,86 +17,104 @@ export function mapComponentKeyToArchetype(componentKey, route = '') {
 
   // ── Universal `module.*` slugs (preferred per universal seed standard) ────
   if (/^module\.(entry|overview)\.page$/.test(k))
-    return { archetype: 'command-home', template_export: 'ModuleOverviewTemplateComponent' };
+    return { archetype: 'command-home', template_export: k };
   if (k === 'module.posture.page')
-    return { archetype: 'posture-overview', template_export: 'PostureOverviewTemplateComponent' };
+    return { archetype: 'posture-overview', template_export: 'module.posture.page' };
   if (k === 'module.records.page')
-    return { archetype: 'intelligent-register', template_export: 'ModuleRecordsTemplateComponent' };
+    return { archetype: 'intelligent-register', template_export: 'module.records.page' };
   if (k === 'module.heatmap.page')
-    return { archetype: 'risk-landscape', template_export: 'ModuleHeatmapTemplateComponent' };
+    return { archetype: 'risk-landscape', template_export: 'module.heatmap.page' };
   if (k === 'module.workflows.page')
-    return { archetype: 'workflow-control', template_export: 'ModuleAssessmentsTemplateComponent' };
+    return { archetype: 'workflow-control', template_export: 'module.workflows.page' };
   if (k === 'module.trends.page')
-    return { archetype: 'trend-intelligence', template_export: 'TrendIntelligenceTemplateComponent' };
+    return { archetype: 'trend-intelligence', template_export: 'module.trends.page' };
   if (k === 'module.reports.page')
-    return { archetype: 'evidence-reports', template_export: 'ModuleReportsTemplateComponent' };
+    return { archetype: 'evidence-reports', template_export: 'module.reports.page' };
   if (k === 'module.work_queue' || k === 'module.workqueue.page' || k === 'module.queue.page')
-    return { archetype: 'action-queue', template_export: 'ModuleWorkQueueTemplateComponent' };
+    return { archetype: 'action-queue', template_export: k };
   if (k === 'module.settings.page')
-    return { archetype: 'module-settings', template_export: 'ModuleSettingsTemplateComponent' };
+    return { archetype: 'module-settings', template_export: 'module.settings.page' };
   // Universal slugs use `.page` suffix (e.g. module.record.detail.page).
   if (
     k === 'module.record.detail' ||
     k === 'module.record.detail.page' ||
     /\.detail\.page$/.test(k)
   )
-    return { archetype: 'record-story', template_export: 'RecordStoryTemplateComponent' };
+    return {
+      archetype: 'record-story',
+      template_export: k === 'module.record.detail' || k === 'module.record.detail.page'
+        ? k
+        : 'module.record.detail.page',
+    };
   if (
     k === 'module.record.create' ||
     k === 'module.record.create.page' ||
     /\.create\.page$/.test(k)
   )
-    return { archetype: 'guided-create', template_export: 'GuidedCreateTemplateComponent' };
+    return {
+      archetype: 'guided-create',
+      template_export: k === 'module.record.create' || k === 'module.record.create.page'
+        ? k
+        : 'module.record.create.page',
+    };
   if (
     k === 'module.ai.advisor' ||
     k === 'module.ai.advisor.page' ||
     /\.advisor\.page$/.test(k)
   )
-    return { archetype: 'ai-advisor', template_export: 'AiAdvisorTemplateComponent' };
+    return {
+      archetype: 'ai-advisor',
+      template_export: k === 'module.ai.advisor' || k === 'module.ai.advisor.page'
+        ? k
+        : 'module.ai.advisor.page',
+    };
   if (k === 'product-wc.checklist' || /onboarding|activation/i.test(k))
-    return { archetype: 'activation-journey', template_export: 'ActivationJourneyTemplateComponent' };
+    return {
+      archetype: 'activation-journey',
+      template_export: k === 'product-wc.checklist' ? 'product-wc.checklist' : 'module.activation.page',
+    };
 
   // ── Extended archetype roster (PHASE F / WS patches; sync ARCHETYPE_COUNT) ──
   // Each pair mirrors ARCHETYPE_REGISTRY in
   // platform/core/platform/shell/templates/module-template.types.ts.
   if (k === 'module.dashboard.page')
-    return { archetype: 'decision-dashboard', template_export: 'DecisionDashboardTemplateComponent' };
+    return { archetype: 'decision-dashboard', template_export: 'module.dashboard.page' };
   if (k === 'module.command_dashboard.page')
-    return { archetype: 'command-dashboard', template_export: 'CommandDashboardTemplateComponent' };
+    return { archetype: 'command-dashboard', template_export: 'module.command_dashboard.page' };
   if (k === 'module.workflow_timeline.page')
-    return { archetype: 'workflow-timeline', template_export: 'WorkflowTimelineTemplateComponent' };
+    return { archetype: 'workflow-timeline', template_export: 'module.workflow_timeline.page' };
   if (k === 'module.followup_center.page')
-    return { archetype: 'follow-up-center', template_export: 'FollowUpCenterTemplateComponent' };
+    return { archetype: 'follow-up-center', template_export: 'module.followup_center.page' };
   if (k === 'module.export.page')
-    return { archetype: 'export-center', template_export: 'ExportCenterTemplateComponent' };
+    return { archetype: 'export-center', template_export: 'module.export.page' };
   if (k === 'module.audit_trail' || k === 'module.audit_trail.page')
-    return { archetype: 'audit-trail', template_export: 'AuditTrailTemplateComponent' };
+    return { archetype: 'audit-trail', template_export: k };
   if (k === 'module.audit_trail_ledger.page')
-    return { archetype: 'audit-trail-ledger', template_export: 'AuditTrailLedgerTemplateComponent' };
+    return { archetype: 'audit-trail-ledger', template_export: 'module.audit_trail_ledger.page' };
   if (k === 'module.audit_evidence.page')
-    return { archetype: 'audit-trail-evidence', template_export: 'AuditTrailEvidenceTemplateComponent' };
+    return { archetype: 'audit-trail-evidence', template_export: 'module.audit_evidence.page' };
   if (k === 'module.calendar.page')
-    return { archetype: 'calendar-timeline', template_export: 'CalendarTimelineTemplateComponent' };
+    return { archetype: 'calendar-timeline', template_export: 'module.calendar.page' };
   if (k === 'module.compliance_calendar.page')
-    return { archetype: 'compliance-calendar', template_export: 'ComplianceCalendarTemplateComponent' };
+    return { archetype: 'compliance-calendar', template_export: 'module.compliance_calendar.page' };
   if (k === 'module.roadmap.page')
-    return { archetype: 'remediation-roadmap', template_export: 'RemediationRoadmapTemplateComponent' };
+    return { archetype: 'remediation-roadmap', template_export: 'module.roadmap.page' };
   if (k === 'module.org_chart.page')
-    return { archetype: 'org-chart', template_export: 'OrgChartTemplateComponent' };
+    return { archetype: 'org-chart', template_export: 'module.org_chart.page' };
   if (k === 'module.ownership_map.page')
-    return { archetype: 'ownership-map', template_export: 'OwnershipMapTemplateComponent' };
+    return { archetype: 'ownership-map', template_export: 'module.ownership_map.page' };
   if (k === 'module.delegation_center.page')
-    return { archetype: 'delegation-center', template_export: 'DelegationCenterTemplateComponent' };
+    return { archetype: 'delegation-center', template_export: 'module.delegation_center.page' };
   if (k === 'module.agent_flow.page')
-    return { archetype: 'agent-flow', template_export: 'AgentFlowTemplateComponent' };
+    return { archetype: 'agent-flow', template_export: 'module.agent_flow.page' };
   if (k === 'module.agent_registry.page')
-    return { archetype: 'agent-registry', template_export: 'AgentRegistryTemplateComponent' };
+    return { archetype: 'agent-registry', template_export: 'module.agent_registry.page' };
   if (k === 'module.user_agent_workbench.page')
-    return { archetype: 'user-agent-workbench', template_export: 'UserAgentWorkbenchTemplateComponent' };
+    return { archetype: 'user-agent-workbench', template_export: 'module.user_agent_workbench.page' };
   if (k === 'module.incident_response.page')
-    return { archetype: 'incident-response', template_export: 'IncidentResponseTemplateComponent' };
+    return { archetype: 'incident-response', template_export: 'module.incident_response.page' };
   if (k === 'module.case_finalization.page')
-    return { archetype: 'case-finalization', template_export: 'CaseFinalizationTemplateComponent' };
+    return { archetype: 'case-finalization', template_export: 'module.case_finalization.page' };
 
   // ── Utility-pages seed (20260503_0022) — 8 dedicated surfaces ────────────
   if (k === 'module.user_profile.page' || k === 'module.tenant_profile.page')
@@ -132,17 +150,17 @@ export function mapComponentKeyToArchetype(componentKey, route = '') {
 
   // ── Phase M1 — Marketing-OS landing surface ─────────────────────────────
   if (k === 'marketing.home.page')
-    return { archetype: 'command-home', template_export: 'ModuleOverviewTemplateComponent' };
+    return { archetype: 'command-home', template_export: 'marketing.home.page' };
   // ── Phase M1.5 — Download-Kit components (sit inside marketing.home.page).
   if (k === 'marketing.download-kit-card'
    || k === 'marketing.gated-download-modal'
    || k === 'marketing.download-success')
-    return { archetype: 'command-home', template_export: 'ModuleOverviewTemplateComponent' };
+    return { archetype: 'command-home', template_export: 'marketing.home.page' };
   // ── Phase M2 — Public marketing pages (pricing/trust/security/contact/about/legal).
   if (k === 'marketing.pricing.page' || k === 'marketing.trust.page'
    || k === 'marketing.security.page' || k === 'marketing.contact.page'
    || k === 'marketing.about.page' || k === 'marketing.legal.page')
-    return { archetype: 'command-home', template_export: 'ModuleOverviewTemplateComponent' };
+    return { archetype: 'command-home', template_export: k };
 
   // ── Phase M1.6 — Carbon Auth Pages Pack ─────────────────────────────────
   // Auth pages and their composing primitives all map to the command-home

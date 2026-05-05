@@ -1,0 +1,32 @@
+{
+  "date": "2026-05-05",
+  "module": "foundation",
+  "steps": [
+    {
+      "id": "F0",
+      "name": "foundation-activation-check",
+      "ok": true,
+      "lines": 11
+    },
+    {
+      "id": "F1",
+      "name": "role-profile-only-writer-guard",
+      "ok": true,
+      "lines": 2
+    },
+    {
+      "id": "F2",
+      "name": "seed-test-users-foundation",
+      "ok": true,
+      "lines": 4
+    },
+    {
+      "id": "F3",
+      "name": "foundation-rbac-matrix",
+      "ok": true,
+      "lines": 23
+    }
+  ],
+  "passed": 4,
+  "failed": 0
+}

@@ -16,6 +16,7 @@ const view_preferences_routes_1 = __importDefault(require("./routes/view-prefere
 const invitations_routes_1 = require("./routes/invitations.routes");
 const audit_trail_routes_1 = require("./routes/audit-trail.routes");
 const profiles_routes_1 = require("./routes/profiles.routes");
+const role_profile_routes_1 = require("./routes/role-profile.routes");
 const privacy_ops_routes_1 = require("./routes/privacy-ops.routes");
 const health_foundation_1 = require("./routes/health.foundation");
 const foundation_1 = require("./domain/foundation");
@@ -164,6 +165,8 @@ async function main() {
             { path: '/api/invitations', router: invitations_routes_1.invitationsRouter },
             { path: '/api/audit-trail', router: audit_trail_routes_1.auditTrailRouter },
             { path: '/api/profiles', router: profiles_routes_1.profilesRouter },
+            // Wave F-Build — canonical role-profile surface (sole URA writer).
+            { path: '/api/role-profile', router: role_profile_routes_1.roleProfileRouter },
             { path: '/api/privacy-ops', router: privacy_ops_routes_1.privacyOpsRouter },
             // V2b — Foundation aggregator: Shahin calls /api/foundation/users,
             // /api/foundation/teams, /api/foundation/dashboard etc. against the

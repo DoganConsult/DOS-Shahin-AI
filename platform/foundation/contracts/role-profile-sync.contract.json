@@ -1,0 +1,60 @@
+{
+  "$schema": "https://dos-platform.local/schemas/role-profile-sync.contract.v1.json",
+  "schemaVersion": 1,
+  "contractKey": "platform.role-profile-sync",
+  "version": "1.0.0",
+  "doctrine": {
+    "principle": "RoleProfile is the SINGLE orchestration spine for identity-to-permission binding across the DOS Platform. No code path may mutate platform_dauth.user_role_assignments except via RoleProfileService.upsert(profile). All stakeholder integrations (HRIS, SCIM, Okta, AzureAD) participate as registered acceptors in dos.role_profile_acceptors.",
+    "enforcement": [
+      "DB trigger trg_ura_via_role_profile_only rejects any URA write missing app.via_role_profile=true",
+      "CI guard role-profile-only-writer.mjs scans the codebase for forbidden direct INSERT/UPDATE/DELETE on user_role_assignments",
+      "Trigger trg_role_profile_project mirrors role_profile_sync changes to URA atomically"
+    ]
+  },
+  "canonicalShape": {
+    "table": "dos.role_profile_sync",
+    "naturalKey": ["tenant_id","user_id","role_code","scope"],
+    "fields": {
+      "profile_id":         { "type": "uuid",      "generated": true },
+      "tenant_id":          { "type": "string",    "maxLength": 64, "required": true },
+      "user_id":            { "type": "string",    "maxLength": 64, "required": true },
+      "role_code":          { "type": "string",    "maxLength": 64, "required": true, "ref": "platform_dauth.functional_roles.role_code" },
+      "scope":              { "type": "enum",      "values": ["platform","tenant","business_unit","location","record"], "default": "tenant" },
+      "permissions":        { "type": "string[]",  "doc": "denormalised cache of effective perms; resolved from role_code by service" },
+      "business_unit_id":   { "type": "string",    "maxLength": 64, "nullable": true },
+      "location_id":        { "type": "string",    "maxLength": 64, "nullable": true },
+      "lifecycle_state":    { "type": "enum",      "values": ["pending","active","suspended","offboarding","terminated"], "default": "active" },
+      "external_idp_refs":  { "type": "jsonb",     "doc": "{azuread:objectId, okta:userId, scim:externalId, hris:employeeId}" },
+      "source_system":      { "type": "string",    "maxLength": 64, "default": "role-profile-service" },
+      "version":            { "type": "integer",   "auto": true }
+    }
+  },
+  "acceptors": {
+    "table": "dos.role_profile_acceptors",
+    "directions": ["pull","push","two-way"],
+    "registered": [
+      { "acceptor_id": "internal.role-profile-service", "direction": "two-way", "always_on": true },
+      { "acceptor_id": "platform.audit-shelf",          "direction": "pull",    "always_on": true }
+    ],
+    "extension_points": {
+      "scim_v2":    { "endpoint": "/api/role-profile/scim/v2/Users",     "direction": "two-way" },
+      "azure_ad":   { "endpoint": "/api/role-profile/aad/users",         "direction": "two-way" },
+      "okta":       { "endpoint": "/api/role-profile/okta/users",        "direction": "two-way" },
+      "hris":       { "endpoint": "/api/role-profile/hris/employees",    "direction": "pull"    }
+    }
+  },
+  "ledger": {
+    "table": "dos.role_profile_sync_log",
+    "retention_days": 365,
+    "regulator_export": true
+  },
+  "service": {
+    "implementation": "services/user-service/src/domain/foundation/role-profile.service.ts",
+    "guc_flag": "app.via_role_profile",
+    "operations": ["upsert","revoke","reconcile","push","pull"]
+  },
+  "ciGuards": [
+    "scripts/ci-guards/role-profile-only-writer.mjs",
+    "scripts/ci-guards/role-profile-acceptor-coverage.mjs"
+  ]
+}
