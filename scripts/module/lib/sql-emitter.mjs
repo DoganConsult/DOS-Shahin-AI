@@ -36,8 +36,9 @@ export function emit(contract, { tenantIds = null } = {}) {
       .map(n => [n.route, n]),
   );
 
-  // ─── module → dos.module_registry ────────────────────────────────────────
+  // ─── module → dos.module_registry + dos.dynamic_ui_modules ───────────────
   if (moduleCode) {
+    const productKey = contract.module?.product_key ?? 'platform';
     stmts.push({
       name: `module:${moduleCode}`,
       sql: `INSERT INTO dos.module_registry
@@ -49,12 +50,40 @@ export function emit(contract, { tenantIds = null } = {}) {
               status = EXCLUDED.status`,
       params: [
         moduleCode,
-        contract.module?.product_key ?? null,
+        productKey,
         moduleName,
         'active',
       ],
     });
     inc('dos.module_registry');
+
+    stmts.push({
+      name: `dynamic-module:${moduleCode}`,
+      sql: `INSERT INTO dos.dynamic_ui_modules
+              (module_code, product_key, display_name, default_route,
+               registry_status, default_tenant_enrollment_status,
+               canonical_source, platform_key)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+            ON CONFLICT (module_code) DO UPDATE SET
+              product_key = EXCLUDED.product_key,
+              display_name = EXCLUDED.display_name,
+              default_route = EXCLUDED.default_route,
+              registry_status = EXCLUDED.registry_status,
+              canonical_source = EXCLUDED.canonical_source,
+              platform_key = EXCLUDED.platform_key,
+              updated_at = now()`,
+      params: [
+        moduleCode,
+        productKey,
+        moduleName,
+        contract.module?.route_base ?? `/${moduleCode}`,
+        'active',
+        'not_enrolled',
+        'contract_publisher_v1',
+        'dos',
+      ],
+    });
+    inc('dos.dynamic_ui_modules');
   }
 
   // ─── components → dos.dynamic_ui_component_registry ──────────────────────

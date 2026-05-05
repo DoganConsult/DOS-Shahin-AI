@@ -126,7 +126,7 @@
       "page_code": "dynamic-ui.overview",
       "route": "/dynamic-ui/overview",
       "archetype": "command-home",
-      "template_export": "ModuleOverviewTemplateComponent",
+      "template_export": "module.entry.page",
       "permission": "dynamic_ui.module.read",
       "props": {}
     },
@@ -134,7 +134,7 @@
       "page_code": "dynamic-ui.routes",
       "route": "/dynamic-ui/routes",
       "archetype": "intelligent-register",
-      "template_export": "ModuleRecordsTemplateComponent",
+      "template_export": "module.records.page",
       "permission": "dynamic_ui.routes.read",
       "props": {}
     },
@@ -142,7 +142,7 @@
       "page_code": "dynamic-ui.components",
       "route": "/dynamic-ui/components",
       "archetype": "intelligent-register",
-      "template_export": "ModuleRecordsTemplateComponent",
+      "template_export": "module.records.page",
       "permission": "dynamic_ui.components.read",
       "props": {}
     },
@@ -150,7 +150,7 @@
       "page_code": "dynamic-ui.contracts",
       "route": "/dynamic-ui/contracts",
       "archetype": "intelligent-register",
-      "template_export": "ModuleRecordsTemplateComponent",
+      "template_export": "module.records.page",
       "permission": "dynamic_ui.contracts.read",
       "props": {}
     }

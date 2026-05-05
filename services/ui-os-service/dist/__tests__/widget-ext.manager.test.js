@@ -11,11 +11,16 @@ import { describe, it, expect, vi } from 'vitest';
 import { UiOsWidgetExtManager } from '../managers/ui-os-widget-ext.manager.js';
 function mockPool(rows = [], rowCount = rows.length) {
     const calls = [];
+    const query = vi.fn(async (sql, params = []) => {
+        calls.push({ sql, params });
+        return { rows, rowCount };
+    });
     const pool = {
-        query: vi.fn(async (sql, params) => {
-            calls.push({ sql, params });
-            return { rows, rowCount };
-        }),
+        query,
+        connect: vi.fn(async () => ({
+            query,
+            release: vi.fn(),
+        })),
     };
     return { pool, calls };
 }
@@ -73,7 +78,7 @@ describe('UiOsWidgetExtManager — binding / refresh / errors', () => {
         const { pool, calls } = mockPool([{ id: 'r' }]);
         const m = new UiOsWidgetExtManager(pool);
         await m.upsertRefreshPolicy(TENANT, USER, INST_UUID, { interval_seconds: 60 });
-        expect(calls[0].sql).toMatch(/ON CONFLICT \(widget_instance_id\)/);
+        expect(calls.some(call => /ON CONFLICT \(widget_instance_id\)/.test(call.sql))).toBe(true);
     });
     it('upsertErrorState casts retry_strategy ENUM', async () => {
         const { pool, calls } = mockPool([{ id: 'e' }]);

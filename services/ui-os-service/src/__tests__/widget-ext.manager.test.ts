@@ -13,11 +13,16 @@ import type { DbPool } from '../db.js';
 
 function mockPool(rows: unknown[] = [], rowCount = rows.length): { pool: DbPool; calls: { sql: string; params: unknown[] }[] } {
   const calls: { sql: string; params: unknown[] }[] = [];
+  const query = vi.fn(async (sql: string, params: unknown[] = []) => {
+    calls.push({ sql, params });
+    return { rows, rowCount };
+  });
   const pool = {
-    query: vi.fn(async (sql: string, params: unknown[]) => {
-      calls.push({ sql, params });
-      return { rows, rowCount };
-    }),
+    query,
+    connect: vi.fn(async () => ({
+      query,
+      release: vi.fn(),
+    })),
   } as unknown as DbPool;
   return { pool, calls };
 }
@@ -83,7 +88,7 @@ describe('UiOsWidgetExtManager — binding / refresh / errors', () => {
     const { pool, calls } = mockPool([{ id: 'r' }]);
     const m = new UiOsWidgetExtManager(pool);
     await m.upsertRefreshPolicy(TENANT, USER, INST_UUID, { interval_seconds: 60 });
-    expect(calls[0].sql).toMatch(/ON CONFLICT \(widget_instance_id\)/);
+    expect(calls.some(call => /ON CONFLICT \(widget_instance_id\)/.test(call.sql))).toBe(true);
   });
 
   it('upsertErrorState casts retry_strategy ENUM', async () => {
