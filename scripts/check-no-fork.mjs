@@ -3,7 +3,7 @@
  * check-no-fork.mjs
  *
  * CI guard for the 5-brain architecture cleanup (see
- * /root/.claude/plans/need-to-clean-the-swift-trinket.md).
+ * docs/plans/need-to-clean-the-swift-trinket.md).
  *
  * Fails if any of the known forked DAuth/SoD/access-snapshot trees reintroduce
  * real implementations instead of remaining as re-export shims to the canonical

@@ -8,7 +8,7 @@
  * not about authorization. Authz behavior is covered by the Phase G port
  * tests and by the lifecycle-proof scripts.
  *
- * Plan: /root/.claude/plans/need-to-clean-the-swift-trinket.md (Phase H-1)
+ * Plan: docs/plans/need-to-clean-the-swift-trinket.md (Phase H-1)
  */
 import express, { type Express, type Request, type Response, type NextFunction, type RequestHandler } from 'express';
 import { setAuthMiddleware, type AuthMiddleware } from '@dos/dauth-shared';

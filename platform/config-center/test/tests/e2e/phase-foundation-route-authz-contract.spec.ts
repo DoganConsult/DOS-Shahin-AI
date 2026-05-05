@@ -20,7 +20,11 @@
  */
 import { expect, request as pwRequest, test, type APIRequestContext } from '@playwright/test';
 import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { Client } from 'pg';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 interface ContractPage {
   route: string;
@@ -49,7 +53,10 @@ interface PermissionSnapshot {
 
 const UI_OS_BASE = process.env.UI_OS_BASE_URL || 'http://localhost:4015';
 const TENANT_BASE = process.env.TENANT_SERVICE_BASE_URL || 'http://localhost:4002';
-const CONTRACT_PATH = '/root/DOS-Platform/platform/ui-system/module_complete_direct_seed_pack/foundation-complete-direct-seed.json';
+const CONTRACT_PATH = join(
+  __dirname,
+  '../../../../ui-system/module_complete_direct_seed_pack/foundation-complete-direct-seed.json',
+);
 const CONTRACT = JSON.parse(
   readFileSync(
     CONTRACT_PATH,

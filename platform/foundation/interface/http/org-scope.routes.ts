@@ -6,7 +6,7 @@
  * chain + organization ancestor chain) computed from dos.* (Foundation's
  * source of truth for hierarchy).
  *
- * Plan: /root/.claude/plans/need-to-clean-the-swift-trinket.md (Phase B-1)
+ * Plan: docs/plans/need-to-clean-the-swift-trinket.md (Phase B-1)
  */
 import { Router, Request, Response } from 'express';
 import { authenticate, requireAnyPermission, requireTenantId } from '../../infrastructure/auth.adapter';

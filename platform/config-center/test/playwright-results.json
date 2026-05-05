@@ -1,7 +1,7 @@
 {
   "config": {
-    "configFile": "/root/DOS-Platform/platform/config-center/test/playwright.config.ts",
-    "rootDir": "/root/DOS-Platform/platform/config-center/test/tests/e2e",
+    "configFile": "platform/config-center/test/playwright.config.ts",
+    "rootDir": "platform/config-center/test/tests/e2e",
     "forbidOnly": false,
     "fullyParallel": true,
     "globalSetup": null,
@@ -39,13 +39,13 @@
     "quiet": false,
     "projects": [
       {
-        "outputDir": "/root/DOS-Platform/platform/config-center/test/playwright-results",
+        "outputDir": "platform/config-center/test/playwright-results",
         "repeatEach": 1,
         "retries": 0,
         "metadata": {},
         "id": "chromium",
         "name": "chromium",
-        "testDir": "/root/DOS-Platform/platform/config-center/test/tests/e2e",
+        "testDir": "platform/config-center/test/tests/e2e",
         "testIgnore": [],
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
@@ -53,13 +53,13 @@
         "timeout": 30000
       },
       {
-        "outputDir": "/root/DOS-Platform/platform/config-center/test/playwright-results",
+        "outputDir": "platform/config-center/test/playwright-results",
         "repeatEach": 1,
         "retries": 0,
         "metadata": {},
         "id": "firefox",
         "name": "firefox",
-        "testDir": "/root/DOS-Platform/platform/config-center/test/tests/e2e",
+        "testDir": "platform/config-center/test/tests/e2e",
         "testIgnore": [],
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
@@ -67,13 +67,13 @@
         "timeout": 30000
       },
       {
-        "outputDir": "/root/DOS-Platform/platform/config-center/test/playwright-results",
+        "outputDir": "platform/config-center/test/playwright-results",
         "repeatEach": 1,
         "retries": 0,
         "metadata": {},
         "id": "webkit",
         "name": "webkit",
-        "testDir": "/root/DOS-Platform/platform/config-center/test/tests/e2e",
+        "testDir": "platform/config-center/test/tests/e2e",
         "testIgnore": [],
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
@@ -81,13 +81,13 @@
         "timeout": 30000
       },
       {
-        "outputDir": "/root/DOS-Platform/platform/config-center/test/playwright-results",
+        "outputDir": "platform/config-center/test/playwright-results",
         "repeatEach": 1,
         "retries": 0,
         "metadata": {},
         "id": "Mobile Chrome",
         "name": "Mobile Chrome",
-        "testDir": "/root/DOS-Platform/platform/config-center/test/tests/e2e",
+        "testDir": "platform/config-center/test/tests/e2e",
         "testIgnore": [],
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
@@ -95,13 +95,13 @@
         "timeout": 30000
       },
       {
-        "outputDir": "/root/DOS-Platform/platform/config-center/test/playwright-results",
+        "outputDir": "platform/config-center/test/playwright-results",
         "repeatEach": 1,
         "retries": 0,
         "metadata": {},
         "id": "Mobile Safari",
         "name": "Mobile Safari",
-        "testDir": "/root/DOS-Platform/platform/config-center/test/tests/e2e",
+        "testDir": "platform/config-center/test/tests/e2e",
         "testIgnore": [],
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"

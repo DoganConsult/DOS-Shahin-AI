@@ -1,5 +1,12 @@
 import fs from 'node:fs';
-const src = fs.readFileSync('/root/DOS-Platform/products/shahin-ai/app/src/app/shell/workspace-resolver.service.ts','utf8');
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const repoRoot = join(dirname(fileURLToPath(import.meta.url)), '../..');
+const src = fs.readFileSync(
+  join(repoRoot, 'products/shahin-ai/app/src/app/shell/workspace-resolver.service.ts'),
+  'utf8',
+);
 const lines = src.split('\n');
 const startIdx = lines.findIndex(l => l.startsWith('const I18N'));
 if (startIdx < 0) { console.error('I18N not found'); process.exit(1); }

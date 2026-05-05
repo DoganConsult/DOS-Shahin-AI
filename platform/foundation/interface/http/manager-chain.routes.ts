@@ -6,7 +6,7 @@
  * the current active holder of each position attached. Foundation owns this
  * structure; DAuth, OpenFGA, and DOS orchestration consume it via this API.
  *
- * Plan: /root/.claude/plans/need-to-clean-the-swift-trinket.md (Phase B-1)
+ * Plan: docs/plans/need-to-clean-the-swift-trinket.md (Phase B-1)
  */
 import { Router, Request, Response } from 'express';
 import { authenticate, requireAnyPermission, requireTenantId } from '../../infrastructure/auth.adapter';

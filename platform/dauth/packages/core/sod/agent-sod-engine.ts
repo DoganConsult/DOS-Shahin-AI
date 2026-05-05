@@ -8,7 +8,7 @@
  * zero direct importers — `core/sod/index.ts` does not re-export it.
  *
  * Slated for deletion once scripts/check-no-fork.mjs has been green for one
- * CI cycle. Plan: /root/.claude/plans/need-to-clean-the-swift-trinket.md
+ * CI cycle. Plan: docs/plans/need-to-clean-the-swift-trinket.md
  */
 export {
   evaluateAgentSod,

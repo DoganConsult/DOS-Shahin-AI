@@ -5,7 +5,7 @@
  * position, BU ancestor chain, and organization ancestor chain — all
  * derived from dos.* (Foundation's source of truth).
  *
- * Plan: /root/.claude/plans/need-to-clean-the-swift-trinket.md (Phase H-1)
+ * Plan: docs/plans/need-to-clean-the-swift-trinket.md (Phase H-1)
  */
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import request from 'supertest';

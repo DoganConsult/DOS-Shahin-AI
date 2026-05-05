@@ -1,7 +1,7 @@
 # Modules/ Isolation Audit (Stage 1)
 
 Snapshot date: 2026-05-02
-Source tree: `/root/DOS-Platform`
+Source tree: `<repo>`
 Snapshot: `.modules-isolation/snapshot-modules.tar` (51 MB tar of `modules/`, excludes node_modules/dist/.angular)
 
 ## 1. Footprint

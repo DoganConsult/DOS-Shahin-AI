@@ -4,7 +4,7 @@ This is a self-contained mirror of the live `modules/` tree, plus shim packages
 that replace the 4 external `@dos/*` dependencies the live tree pulls from
 `platform/`. Built by Stage 3 of the modules-isolation refactor.
 
-- `modules/`      — copy of `/root/DOS-Platform/modules` minus build artifacts.
+- `modules/`      — copy of `<repo>/modules` minus build artifacts.
 - `vendor-shims/` — `@dos/dauth-shared`, `@dos/ui-system`, `@dos/ai-gateway`, `@dos/auth`.
 - `package.json`  — root scripts.
 - `pnpm-workspace.yaml` — workspace declarations.
@@ -19,8 +19,8 @@ pnpm build
 pnpm verify:imports
 ```
 
-If anything fails it fails HERE; the live `/root/DOS-Platform/modules/` and
-`/root/DOS-Platform/platform/` trees are untouched.
+If anything fails it fails HERE; the live `<repo>/modules/` and
+`<repo>/platform/` trees are untouched.
 
 ## Important caveats
 

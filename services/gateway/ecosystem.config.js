@@ -1,3 +1,8 @@
+const path = require('node:path');
+
+/** Repo root: services/gateway → .. → services → .. → repo */
+const repoRoot = path.join(__dirname, '..', '..');
+
 module.exports = {
   apps: [{
     name: 'gateway',
@@ -11,9 +16,9 @@ module.exports = {
       AUTH_SERVICE_URL: 'https://127.0.0.1:4001',
       // L34 (Phase 4) — tenant-zone mTLS (separate CA from admin zone).
       TENANT_MTLS_ENFORCE: '1',
-      TENANT_MTLS_CA: '/root/DOS-Platform/platform/config-center/secrets/tenant-mtls/ca.crt',
-      TENANT_MTLS_GATEWAY_CERT: '/root/DOS-Platform/platform/config-center/secrets/tenant-mtls/gateway-client.crt',
-      TENANT_MTLS_GATEWAY_KEY: '/root/DOS-Platform/platform/config-center/secrets/tenant-mtls/gateway-client.key',
+      TENANT_MTLS_CA: path.join(repoRoot, 'platform/config-center/secrets/tenant-mtls/ca.crt'),
+      TENANT_MTLS_GATEWAY_CERT: path.join(repoRoot, 'platform/config-center/secrets/tenant-mtls/gateway-client.crt'),
+      TENANT_MTLS_GATEWAY_KEY: path.join(repoRoot, 'platform/config-center/secrets/tenant-mtls/gateway-client.key'),
       TENANT_MTLS_REJECT_UNAUTHORIZED: '1',
       // L37-C (Phase 4) — per-tenant Redis sliding-window rate limiter.
       // Reads dos.platform_session_policy.rate_limit_per_minute (60s window).
@@ -39,9 +44,9 @@ module.exports = {
       // L29 (Phase 3 D2) — admin-zone mTLS (ops-approved flip 2026-05-04).
       // Agent only attaches once admin upstream URLs flip to https://.
       MTLS_ENFORCE: '1',
-      ADMIN_MTLS_CA: '/root/DOS-Platform/platform/config-center/secrets/admin-mtls/ca.crt',
-      ADMIN_MTLS_GATEWAY_CERT: '/root/DOS-Platform/platform/config-center/secrets/admin-mtls/gateway-client.crt',
-      ADMIN_MTLS_GATEWAY_KEY: '/root/DOS-Platform/platform/config-center/secrets/admin-mtls/gateway-client.key',
+      ADMIN_MTLS_CA: path.join(repoRoot, 'platform/config-center/secrets/admin-mtls/ca.crt'),
+      ADMIN_MTLS_GATEWAY_CERT: path.join(repoRoot, 'platform/config-center/secrets/admin-mtls/gateway-client.crt'),
+      ADMIN_MTLS_GATEWAY_KEY: path.join(repoRoot, 'platform/config-center/secrets/admin-mtls/gateway-client.key'),
       MTLS_REJECT_UNAUTHORIZED: '1',
       // L31 (Phase 3 D4) — admin upstreams flipped to HTTPS so the staged
       // HttpsAgent activates (ca.crt SAN includes IP:127.0.0.1 + DNS).

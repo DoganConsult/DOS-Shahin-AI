@@ -14,7 +14,7 @@
  * augments those fields with Foundation's hierarchy data and presents the
  * unified shape the FE consumes.
  *
- * Plan: /root/.claude/plans/need-to-clean-the-swift-trinket.md (Phase B-1)
+ * Plan: docs/plans/need-to-clean-the-swift-trinket.md (Phase B-1)
  */
 import { withTenantClient } from '../../ports/database.port';
 import { userMetrics } from '../../infrastructure/observability/metrics';

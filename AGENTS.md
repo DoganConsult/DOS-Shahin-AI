@@ -793,7 +793,7 @@ gateway → services → DAuth/AccessStore → DB schema/search_path → RLS →
 
 **[platform/docs/DOS_MASTER_PLAN.md](./platform/docs/DOS_MASTER_PLAN.md)** —
 **LOCKED 2026-05-04. Force-binding.** Supersedes
-`/root/.claude/plans/you-are-taking-over-joyful-wave.md`. Codifies the 11-
+`docs/plans/you-are-taking-over-joyful-wave.md`. Codifies the 11-
 article DOS Master Doctrine, 3 trust zones, 9 locked decisions, 14
 milestones (M1–M14, 45 engineer-days), 48 controlled DDL tables, 47 CI
 guards, 37 CLI↔UI parity commands, 50-path deletion ledger, 39-capability

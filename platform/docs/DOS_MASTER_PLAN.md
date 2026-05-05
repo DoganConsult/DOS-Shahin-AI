@@ -8,7 +8,7 @@
 > bypass DOS Master are CI-rejected by `dos-master-only.mjs` and DB-rejected
 > by `trg_dos_master_only`.
 
-Status: **LOCKED 2026-05-04.** Supersedes `/root/.claude/plans/you-are-taking-over-joyful-wave.md`.
+Status: **LOCKED 2026-05-04.** Supersedes `docs/plans/you-are-taking-over-joyful-wave.md`.
 
 > **2026-05-04 (PM) — M15 Preflight amendment (admin trust-zone hardening).**
 > Discovery on baseline check: `admin-console-bff` is **already on PM2**

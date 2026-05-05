@@ -10,7 +10,7 @@
 // Optional:
 //   DATABASE_URL     — to attach decision-ledger trace
 //
-// Plan: /root/.claude/plans/need-to-clean-the-swift-trinket.md (Phase G-3)
+// Plan: docs/plans/need-to-clean-the-swift-trinket.md (Phase G-3)
 
 import { Runner } from '../_lib/runner.mjs';
 

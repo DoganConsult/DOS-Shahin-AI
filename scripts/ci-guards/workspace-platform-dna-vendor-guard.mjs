@@ -3,7 +3,7 @@
  * workspace-platform-dna-vendor-guard
  *
  * Single-vendor rule scoped to the workspace evolution scope locked in
- * /root/.claude/plans/we-need-to-deovle-iridescent-sifakis.md:
+ * docs/plans/we-need-to-deovle-iridescent-sifakis.md:
  *
  *   IBM Carbon (`carbon-components-angular`, `@carbon/icons-angular`,
  *   `@carbon/charts-angular`) is the ONLY UI vendor allowed inside:

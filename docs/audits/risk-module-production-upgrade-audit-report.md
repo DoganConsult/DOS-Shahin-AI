@@ -71,7 +71,7 @@ export const createInputValidation = inputValidation;
 
 **Evidence:**
 ```bash
-cd /root/DOS-Platform/modules/risk
+cd <repo>/modules/risk
 pnpm build
 # Result: PASSED (0 errors)
 ```
@@ -312,7 +312,7 @@ SELECT COUNT(*) FROM platform_dos.product_modules WHERE product_code='shahin-ai'
 
 **Command:**
 ```bash
-cd /root/DOS-Platform/platform/config-center
+cd <repo>/platform/config-center
 pnpm module:publish risk
 ```
 
@@ -353,7 +353,7 @@ SELECT attributes FROM platform_dos.products_registry WHERE product_code='shahin
 
 **Build:**
 ```bash
-cd /root/DOS-Platform/products/shahin-ai
+cd <repo>/products/shahin-ai
 pnpm build
 # Result: SUCCESS
 ```
@@ -410,7 +410,7 @@ Permissions Verified: 18 risk permissions present
 
 ### 3.4 Build Verification
 ```bash
-cd /root/DOS-Platform/modules/risk
+cd <repo>/modules/risk
 pnpm build
 # Result: PASSED (0 errors)
 ```
@@ -452,7 +452,7 @@ See Section 2 (Solution Approach) for detailed solutions to each blocker.
 
 ### 5.1 Verify TypeScript Build
 ```bash
-cd /root/DOS-Platform/modules/risk
+cd <repo>/modules/risk
 pnpm build
 ```
 
@@ -483,13 +483,13 @@ PGPASSWORD=dos_auth_pass_2026 psql -h localhost -U dos_auth -d shahin_grc -c "SE
 
 ### 5.7 Verify Git History
 ```bash
-cd /root/DOS-Platform
+cd <repo>
 git log --oneline -2
 ```
 
 ### 5.8 Verify Remote Push
 ```bash
-cd /root/DOS-Platform
+cd <repo>
 git log origin/main --oneline -2
 ```
 
@@ -525,16 +525,16 @@ The risk module is now fully operational and ready for production deployment in 
 ## 7. References
 
 ### 7.1 Specification Document
-- `/root/DOS-Platform/platform/ui-system/module_ui_os_contract-pack/risk-complete-direct-seed.md`
+- `<repo>/platform/ui-system/module_ui_os_contract-pack/risk-complete-direct-seed.md`
 
 ### 7.2 Migration File
-- `/root/DOS-Platform/platform/dos/migrations/public/20260505_risk_contract_pack_seed.sql`
+- `<repo>/platform/dos/migrations/public/20260505_risk_contract_pack_seed.sql`
 
 ### 7.3 Contract Pack JSON
-- `/root/DOS-Platform/platform/ui-system/module_complete_direct_seed_pack/risk-complete-direct-seed.json`
+- `<repo>/platform/ui-system/module_complete_direct_seed_pack/risk-complete-direct-seed.json`
 
 ### 7.4 AS-BUILT Documentation
-- `/root/DOS-Platform/modules/risk/AS-BUILT.md`
+- `<repo>/modules/risk/AS-BUILT.md`
 
 ---
 

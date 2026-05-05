@@ -1,7 +1,7 @@
 # Dogan-AI OS Platform Operating Manifest
 
 > **The constitution.** Every decision must protect this model. Do not invent a local shortcut that violates it.
-> Companion: [`/root/.claude/plans/you-are-taking-over-joyful-wave.md`](../../../.claude/plans/you-are-taking-over-joyful-wave.md) (active phased plan A–T) and [`docs/architecture.md`](../../docs/architecture.md) (canonical rules).
+> Companion: [`docs/plans/you-are-taking-over-joyful-wave.md`](../../../.claude/plans/you-are-taking-over-joyful-wave.md) (active phased plan A–T) and [`docs/architecture.md`](../../docs/architecture.md) (canonical rules).
 
 ## Purpose
 

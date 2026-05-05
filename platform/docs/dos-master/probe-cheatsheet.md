@@ -48,7 +48,7 @@ curl -sSf 'http://127.0.0.1:4014/api/tenant-admin/composer-bootstrap?tenant_id=1
 ## 3. Admin-zone services (HTTPS + mTLS REQUIRED)
 
 ```bash
-CERTS=/root/DOS-Platform/platform/config-center/secrets/admin-mtls
+CERTS=<repo>/platform/config-center/secrets/admin-mtls
 MTLS=( --cacert "$CERTS/ca.crt" --cert "$CERTS/gateway-client.crt" --key "$CERTS/gateway-client.key" --resolve admin-console-bff:4013:127.0.0.1 --resolve rollout-service:4017:127.0.0.1 --resolve publish-service:4012:127.0.0.1 )
 
 # admin-console-bff :4013  — admin trust zone (M11 + Platform Admin SPA)

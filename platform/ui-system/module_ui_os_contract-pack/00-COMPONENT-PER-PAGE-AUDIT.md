@@ -39,7 +39,7 @@ SELECT archetype, count(*) FROM dos.ui_route_template_binding GROUP BY archetype
 | `export-center` | 1 | tile · structured-list |
 | `agent-flow` | 1 | structured-list · timeline |
 
-All archetypes resolve to a `*TemplateComponent` registered in `@/root/DOS-Platform/platform/core/platform/shell/template-binding.registry.ts:15` (47 LOADERS).
+All archetypes resolve to a `*TemplateComponent` registered in `@<repo>/platform/core/platform/shell/template-binding.registry.ts:15` (47 LOADERS).
 
 ## Coverage of rich props
 
@@ -50,7 +50,7 @@ with_any_rich_prop=   2   (kpis OR nbaActions OR pillars OR tabs)
 empty_command_home= 44    (command-home + posture-overview + module-settings with empty props)
 ```
 
-**Implication**: 44 of 46 command-home-style pages render the `fallbackPillars` from `@/root/DOS-Platform/platform/core/platform/shell/dynamic-template-page.component.ts:171` ("Live overview — content updates automatically. · Powered by the Shahin-AI evidence engine."). The masthead and KPI strip are empty.
+**Implication**: 44 of 46 command-home-style pages render the `fallbackPillars` from `@<repo>/platform/core/platform/shell/dynamic-template-page.component.ts:171` ("Live overview — content updates automatically. · Powered by the Shahin-AI evidence engine."). The masthead and KPI strip are empty.
 
 The phrasing is **user-safe** (no developer jargon — fixed in Phase F-F11). What's missing is **per-route content authoring**.
 
@@ -59,7 +59,7 @@ The phrasing is **user-safe** (no developer jargon — fixed in Phase F-F11). Wh
 Three options to fill the 44 empty pages:
 
 ### (1) Per-route SQL (best for a few key pages)
-Same pattern as `@/root/DOS-Platform/platform/dos/migrations/public/20260505_0300_workspace_home_command_home.sql`:
+Same pattern as `@<repo>/platform/dos/migrations/public/20260505_0300_workspace_home_command_home.sql`:
 ```sql
 UPDATE dos.ui_route_template_binding
    SET props = jsonb_build_object(
@@ -118,4 +118,4 @@ Author `props` for the top-5 most-traveled empty routes:
 4. `/foundation/business-units`
 5. `/foundation/users`
 
-Pattern: copy the `/workspace-home` props in `@/root/DOS-Platform/platform/dos/migrations/public/20260505_0300_workspace_home_command_home.sql`, swap KPI labels and routes per page. ~10 minutes per page. After each migration, the page lights up with 4 KPIs + 2-3 NBAs + 5-pillar insight bar.
+Pattern: copy the `/workspace-home` props in `@<repo>/platform/dos/migrations/public/20260505_0300_workspace_home_command_home.sql`, swap KPI labels and routes per page. ~10 minutes per page. After each migration, the page lights up with 4 KPIs + 2-3 NBAs + 5-pillar insight bar.

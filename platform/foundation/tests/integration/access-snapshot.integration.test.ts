@@ -5,7 +5,7 @@
  * hierarchy data (org-scope, manager-chain, current position) into the
  * unified shape the FE consumes. The 9 required keys must be present.
  *
- * Plan: /root/.claude/plans/need-to-clean-the-swift-trinket.md (Phase H-1)
+ * Plan: docs/plans/need-to-clean-the-swift-trinket.md (Phase H-1)
  */
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import request from 'supertest';

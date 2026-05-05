@@ -18,7 +18,7 @@
  * is the consumer's responsibility (DAuth for SoD/security baseline, DOS for
  * SLA, etc.). Foundation only owns "what is inherited from where."
  *
- * Plan: /root/.claude/plans/need-to-clean-the-swift-trinket.md (Phase B-1)
+ * Plan: docs/plans/need-to-clean-the-swift-trinket.md (Phase B-1)
  */
 import { withTenantClient } from '../../ports/database.port';
 import { userMetrics } from '../../infrastructure/observability/metrics';

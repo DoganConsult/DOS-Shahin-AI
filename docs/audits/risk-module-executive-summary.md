@@ -223,10 +223,10 @@ The risk module is production-ready with strong foundations but requires signifi
 
 ## Supporting Documents
 
-1. **Capabilities Documentation:** `/root/DOS-Platform/docs/audits/risk-module-capabilities-documentation.md`
-2. **Feature Comparison Matrix:** `/root/DOS-Platform/docs/audits/risk-module-market-leader-comparison-matrix.md`
-3. **Gap Analysis Report:** `/root/DOS-Platform/docs/audits/risk-module-gap-analysis-report.md`
-4. **Prioritized Roadmap:** `/root/DOS-Platform/docs/audits/risk-module-prioritized-roadmap.md`
+1. **Capabilities Documentation:** `<repo>/docs/audits/risk-module-capabilities-documentation.md`
+2. **Feature Comparison Matrix:** `<repo>/docs/audits/risk-module-market-leader-comparison-matrix.md`
+3. **Gap Analysis Report:** `<repo>/docs/audits/risk-module-gap-analysis-report.md`
+4. **Prioritized Roadmap:** `<repo>/docs/audits/risk-module-prioritized-roadmap.md`
 
 ---
 

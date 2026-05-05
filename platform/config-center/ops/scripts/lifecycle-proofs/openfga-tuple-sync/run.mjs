@@ -14,7 +14,7 @@
 //   TENANT_ID
 //   USER_JWT         — admin user that can publish foundation.* events
 //
-// Plan: /root/.claude/plans/need-to-clean-the-swift-trinket.md (Phase G-3)
+// Plan: docs/plans/need-to-clean-the-swift-trinket.md (Phase G-3)
 
 import { Runner } from '../_lib/runner.mjs';
 

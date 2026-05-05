@@ -6,7 +6,7 @@
  * tightening, governance for policy stacking, DOS for SLA) decide how to
  * apply the items.
  *
- * Plan: /root/.claude/plans/need-to-clean-the-swift-trinket.md (Phase B-1)
+ * Plan: docs/plans/need-to-clean-the-swift-trinket.md (Phase B-1)
  */
 import { Router, Request, Response } from 'express';
 import { authenticate, requireAnyPermission, requireTenantId } from '../../infrastructure/auth.adapter';

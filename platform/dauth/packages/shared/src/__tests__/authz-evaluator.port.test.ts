@@ -4,7 +4,7 @@
  * relies on — the registry MUST honor the registered evaluator and fall back
  * to the legacy claim impl only when nothing is registered.
  *
- * Plan: /root/.claude/plans/need-to-clean-the-swift-trinket.md (Phase G-1)
+ * Plan: docs/plans/need-to-clean-the-swift-trinket.md (Phase G-1)
  */
 import { describe, expect, it, beforeEach } from 'vitest';
 import {

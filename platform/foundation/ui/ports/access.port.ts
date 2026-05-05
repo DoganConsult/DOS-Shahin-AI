@@ -5,7 +5,7 @@
  * The host product binds the real AccessStore at app bootstrap via:
  *   { provide: FOUNDATION_ACCESS_STORE, useExisting: AccessStore }
  *
- * Plan: /root/.claude/plans/need-to-clean-the-swift-trinket.md (Phase I-2)
+ * Plan: docs/plans/need-to-clean-the-swift-trinket.md (Phase I-2)
  */
 import { InjectionToken } from '@angular/core';
 

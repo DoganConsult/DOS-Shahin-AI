@@ -132,10 +132,10 @@ Phase 2B-S2 — Staging rehearsal of migration 0002 only
 All commands must run from:
 
 ```bash
-cd "/root/DOS-Platform"
+cd "<repo>"
 ```
 
-Do not use stale repo-root folders outside `/root/DOS-Platform` unless explicitly required for evidence.
+Do not use stale repo-root folders outside `<repo>` unless explicitly required for evidence.
 
 ### 2.2 Canonical DBs
 
@@ -1519,7 +1519,7 @@ no edits during window
 ## Production Apply Sequence Template
 
 ```bash
-cd "/root/DOS-Platform"
+cd "<repo>"
 git rev-parse HEAD
 sha256sum ops/migrations/20260430_000*.sql
 # backup confirmation here

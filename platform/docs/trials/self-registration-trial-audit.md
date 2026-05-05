@@ -3,7 +3,7 @@
 **Date**: 2026-05-01
 **Author**: platform team (auto-generated)
 **Manifest section**: §G (Trial Lifecycle), §H (Billing OS) — see `platform/docs/PLATFORM_OPERATING_MANIFEST.md`
-**Plan ref**: `/root/.claude/plans/you-are-taking-over-joyful-wave.md` lines 1284–1446
+**Plan ref**: `docs/plans/you-are-taking-over-joyful-wave.md` lines 1284–1446
 **Status**: Foundation present, trial layer is **GREENFIELD**.
 
 ---

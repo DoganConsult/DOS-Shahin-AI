@@ -1,7 +1,7 @@
 /**
  * Page Registry — Dynamic binding.
  *
- * LEGACY STATE (archived to /root/DOS-Platform-Legacy-Archive/runtime/):
+ * LEGACY STATE (archived to <repo>/legacy-archive/):
  *   PAGE_REGISTRY was a static array of 373 hardcoded PageRegistryEntry objects
  *   covering every page (foundation, governance, risk, compliance, audit,
  *   evidence, workflow, incidents, bcp, vendor, training, qiyas, ai, etc).

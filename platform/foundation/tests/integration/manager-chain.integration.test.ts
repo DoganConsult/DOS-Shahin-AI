@@ -8,7 +8,7 @@
  * Skips the suite cleanly when DATABASE_URL is unset or the DB is unreachable
  * so unit-only CI passes without a Postgres dependency.
  *
- * Plan: /root/.claude/plans/need-to-clean-the-swift-trinket.md (Phase H-1)
+ * Plan: docs/plans/need-to-clean-the-swift-trinket.md (Phase H-1)
  */
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import request from 'supertest';

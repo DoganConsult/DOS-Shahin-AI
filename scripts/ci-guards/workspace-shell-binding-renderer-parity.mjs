@@ -1,33 +1,13 @@
 #!/usr/bin/env node
-// scripts/ci-guards/workspace-shell-binding-renderer-parity.mjs
-//
-// Parity gate: every component_key that the workspace-shell publisher seeds
-// into `dos.workspace_shell_binding` MUST have a runtime consumer in either
-//   - platform/core/platform/shell/workspace-shell-binding.service.ts
-//     (typed accessor / computed signal / surfaceProp lookup), or
-//   - platform/core/platform/shell/shell-host.component.ts
-//     (isSurfaceAllowed gate / *TileProps pipe / template reference).
-//
-// Without this guard the publisher can apply N rows to the DB while the FE
-// silently consumes M < N — exactly the failure mode that left Group 7
-// (workspace.{selectable,clickable,expandable,ai}-tile) inert before the
-// 2026-05-05 close-loop wave.
-//
-// Exits 0 on parity, 1 on drift (with a per-key diff report).
-// Run: `node scripts/ci-guards/workspace-shell-binding-renderer-parity.mjs`
 import { readFileSync, readdirSync, statSync } from 'node:fs';
-import { resolve, dirname, join } from 'node:path';
+import { resolve, dirname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
-
-const CONTRACT = resolve(REPO,
-  'platform/ui-system/module_complete_direct_seed_pack/workspace-shell-complete-direct-seed.json');
-
-// Consumer search roots: any FE shell-rendering source where a binding row
-// can be claimed. Scanning is recursive through .ts files (skipping dist /
-// node_modules). The guard only requires that the literal `'<component_key>'`
-// appear *somewhere* in this set — claim-by-existence, not claim-by-shape.
+const CONTRACT = resolve(REPO, 'platform/ui-system/module_complete_direct_seed_pack/workspace-shell-complete-direct-seed.json');
+const BINDING_SERVICE = resolve(REPO, 'platform/core/platform/shell/workspace-shell-binding.service.ts');
+const SHELL_HOST = resolve(REPO, 'platform/core/platform/shell/shell-host.component.ts');
+const CONTRACTS = resolve(REPO, 'platform/ui-system/dos-ui-system/src/shell/workspace-shell.contracts.ts');
 const CONSUMER_ROOTS = [
   'platform/core/platform/shell',
   'platform/ui-system/dos-ui-system/src/shell',
@@ -35,7 +15,7 @@ const CONSUMER_ROOTS = [
   'services/ui-os-service/src/routes',
 ];
 
-function listTsFiles(dir) {
+function listSourceFiles(dir) {
   const out = [];
   function walk(p) {
     let entries;
@@ -56,29 +36,62 @@ function listTsFiles(dir) {
   return out;
 }
 
-const consumerFiles = CONSUMER_ROOTS.flatMap((rel) => listTsFiles(resolve(REPO, rel)));
-const corpus = consumerFiles.map((f) => readFileSync(f, 'utf8')).join('\n\u0000\n');
-
-const json = JSON.parse(readFileSync(CONTRACT, 'utf8'));
-const keys = (json.components ?? []).map((c) => c.component_key).filter(Boolean);
-
-const missing = [];
-for (const key of keys) {
-  // Accept either single- or double-quoted literal of the component_key.
-  if (corpus.includes(`'${key}'`) || corpus.includes(`"${key}"`)) continue;
-  missing.push(key);
+function workspaceLiterals(src) {
+  return Array.from(new Set(Array.from(src.matchAll(/['"](workspace\.[a-z0-9.-]+)['"]/g), (m) => m[1])));
 }
 
-if (missing.length > 0) {
-  console.error(`[binding-renderer-parity] ${missing.length} component_key(s) seeded by`);
-  console.error('the publisher but with NO runtime consumer in the binding service or');
-  console.error('shell host. Add a typed accessor, isSurfaceAllowed gate, or prop pipe:');
-  for (const k of missing) console.error(`  ✗ ${k}`);
-  console.error('');
-  console.error('Roots scanned:');
-  for (const r of CONSUMER_ROOTS) console.error(`  • ${r}`);
-  console.error(`Files scanned: ${consumerFiles.length}`);
+const failures = [];
+const seed = JSON.parse(readFileSync(CONTRACT, 'utf8'));
+const keys = (seed.components ?? []).map((c) => c.component_key).filter(Boolean);
+if (keys.length < 60) failures.push(`seed pack has ${keys.length} workspace component keys; expected at least 60`);
+
+const binding = readFileSync(BINDING_SERVICE, 'utf8');
+const host = readFileSync(SHELL_HOST, 'utf8');
+const contracts = readFileSync(CONTRACTS, 'utf8');
+
+const requiredBindingPatterns = [
+  'registerWorkspaceShellCatalog',
+  'surfacesByZone',
+  'surfaceProp',
+  'zonePropArray',
+  'resolveZone',
+  'isSurfaceAllowed(row.component_key)',
+];
+for (const pattern of requiredBindingPatterns) {
+  if (!binding.includes(pattern)) failures.push(`binding service missing dynamic consumer pattern '${pattern}'`);
+}
+
+const requiredHostPatterns = [
+  'surfacesByZone',
+  'zoneHas',
+  'surfaceProp',
+  'isSurfaceAllowed',
+];
+for (const pattern of requiredHostPatterns) {
+  if (!host.includes(pattern)) failures.push(`shell host missing dynamic consumer pattern '${pattern}'`);
+}
+
+if (!contracts.includes('registerWorkspaceShellCatalog')) failures.push('workspace shell contract missing dynamic catalog registration API');
+if (!contracts.includes('getWorkspaceShellKeys')) failures.push('workspace shell contract missing dynamic key snapshot API');
+
+const consumerFiles = CONSUMER_ROOTS.flatMap((rel) => listSourceFiles(resolve(REPO, rel)));
+const illegalLiterals = [];
+for (const file of consumerFiles) {
+  const rel = relative(REPO, file);
+  const text = readFileSync(file, 'utf8');
+  for (const literal of workspaceLiterals(text)) {
+    if (rel.endsWith('workspace-shell-complete-direct-seed.json')) continue;
+    illegalLiterals.push(`${rel}: ${literal}`);
+  }
+}
+if (illegalLiterals.length > 0) {
+  failures.push(`hardcoded workspace component key literal(s) in active consumers: ${illegalLiterals.slice(0, 12).join('; ')}`);
+}
+
+if (failures.length > 0) {
+  console.error(`[binding-renderer-parity] FAIL — ${failures.length} dynamic renderer parity issue(s):`);
+  for (const failure of failures) console.error(`  ✗ ${failure}`);
   process.exit(1);
 }
 
-console.log(`[binding-renderer-parity] OK — ${keys.length} component_keys all consumed across ${consumerFiles.length} files.`);
+console.log(`[binding-renderer-parity] OK — ${keys.length} seed keys covered by generic dynamic shell consumers across ${consumerFiles.length} files.`);

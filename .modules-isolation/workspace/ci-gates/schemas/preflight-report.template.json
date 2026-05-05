@@ -11,7 +11,7 @@
     ]
   },
   "canonical_path": {
-    "repo_root": "/root/DOS-Platform",
+    "repo_root": "<repo-root>",
     "canonical_package_path": "modules/<module>",
     "package_name": "@dos/module-<module>",
     "build_command": "pnpm --filter @dos/module-<module> build",

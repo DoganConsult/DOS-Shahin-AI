@@ -15,7 +15,7 @@
  * full pipeline (membership → tenant-active → RBAC → entitlement → ABAC →
  * ReBAC → SoD → delegation → lifecycle → SLA → ledger).
  *
- * Plan: /root/.claude/plans/need-to-clean-the-swift-trinket.md
+ * Plan: docs/plans/need-to-clean-the-swift-trinket.md
  */
 import type {
   AuthzEvaluator,

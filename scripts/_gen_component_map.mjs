@@ -1,4 +1,8 @@
 import fs from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const repoRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
 
 const lines = fs.readFileSync('/tmp/registry_after.txt', 'utf8').trim().split('\n');
 const rows = lines.map(l => {
@@ -255,7 +259,7 @@ out.push('  ...REGISTRY_COMPONENT_MAP,');
 out.push('};');
 out.push('');
 
-fs.writeFileSync('/root/DOS-Platform/platform/dos/registry/component-map.ts', out.join('\n'));
+fs.writeFileSync(join(repoRoot, 'platform/dos/registry/component-map.ts'), out.join('\n'));
 
 const distinctCk = [...new Set(rows.map(r => r.carbon_key))].sort();
 const placeholders = distinctCk.filter(ck => !CK_MAP[ck]);

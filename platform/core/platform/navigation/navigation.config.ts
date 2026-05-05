@@ -3,7 +3,7 @@ import { NavItem, QuickActionItem, ProductOwner } from './navigation.models';
 // ═══════════════════════════════════════════════════════════════════════
 // DYNAMIC NAVIGATION — all module nav items come from the DB.
 //
-// Legacy state (archived to /root/DOS-Platform-Legacy-Archive/runtime/):
+// Legacy state (archived to <repo>/legacy-archive/):
 //   - STATIC_FOUNDATION_NAV_CHILDREN: 20 hardcoded NavItem[]
 //   - SHAHIN_NAV: 650+ lines of hardcoded module navigation
 //   - PLATFORM_NAV_BOTTOM: static nav groups

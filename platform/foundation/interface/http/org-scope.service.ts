@@ -7,7 +7,7 @@
  * Source of truth is dos.* (canonical hierarchy). This file does NOT
  * compute permissions — that is DAuth's job.
  *
- * Plan: /root/.claude/plans/need-to-clean-the-swift-trinket.md (Phase B-1)
+ * Plan: docs/plans/need-to-clean-the-swift-trinket.md (Phase B-1)
  */
 import { withTenantClient } from '../../ports/database.port';
 import { userMetrics } from '../../infrastructure/observability/metrics';

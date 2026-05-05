@@ -13,9 +13,10 @@
  * Idempotent: skips a service whose repo already exports `evaluateRecord`.
  */
 import { readFileSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const ROOT = '/root/DOS-Platform';
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const OSES = [
   { code: 'ai-os',                 prefix: 'ai',                 router: 'aiOsRouter' },
   { code: 'notification-os',       prefix: 'notification',       router: 'notificationOsRouter' },

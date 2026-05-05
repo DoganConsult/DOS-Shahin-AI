@@ -1,6 +1,6 @@
 # Keycloak Authoritative Cutover — In-Code Closure Report
 
-**Plan executed**: `/root/.claude/plans/verdict-not-enforced-now-scalable-popcorn.md`
+**Plan executed**: `docs/plans/ (see project plans)`
 **Scope**: repo-wide code changes for backend-first Keycloak enforcement
 **HEAD at start**: `2b70e19b` → auto-sync has advanced during the pass
 **Final test state**: `test:unit` 341 files, **2973 pass**, 1 skip (baseline was 2951); `test:contracts` 531 pass. Zero regressions.

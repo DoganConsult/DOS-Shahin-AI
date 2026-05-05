@@ -5,7 +5,7 @@
  * the ancestor chain from the seeded scope upward, plus shape of
  * `inheritedItems[]` (currently empty until governance fetchers register).
  *
- * Plan: /root/.claude/plans/need-to-clean-the-swift-trinket.md (Phase H-1)
+ * Plan: docs/plans/need-to-clean-the-swift-trinket.md (Phase H-1)
  */
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import request from 'supertest';

@@ -1,6 +1,6 @@
 # DOS-AIO Architecture — Four-Tier Reference (canonical)
 
-> **The constitution lives at [platform/docs/PLATFORM_OPERATING_MANIFEST.md](../platform/docs/PLATFORM_OPERATING_MANIFEST.md) (28 sections).** This file is the rules-quick-reference. The integrated multi-phase plan is at `/root/.claude/plans/you-are-taking-over-joyful-wave.md`. All three stay in sync.
+> **The constitution lives at [platform/docs/PLATFORM_OPERATING_MANIFEST.md](../platform/docs/PLATFORM_OPERATING_MANIFEST.md) (28 sections).** This file is the rules-quick-reference. The integrated multi-phase plan is at `docs/plans/you-are-taking-over-joyful-wave.md`. All three stay in sync.
 
 
 Canonical reference for the four-tier ownership model. Every file/folder in the repo
@@ -177,7 +177,7 @@ No hardcoded cloud endpoints. No required external model provider. Service URLs 
 env/Config OS. Model providers via secret refs. Local observability/DB/Keycloak options
 supported. Deterministic upgrade/migration scripts.
 
-Full Phase E spec: `/root/.claude/plans/you-are-taking-over-joyful-wave.md` § Phase E.
+Full Phase E spec: `docs/plans/you-are-taking-over-joyful-wave.md` § Phase E.
 
 ## Configuration is platform DNA
 
@@ -248,7 +248,7 @@ Disabled reasons cumulative across phases: `'not-entitled' | 'trial-expired' |
 'trial-limit-reached' | 'subscription-suspended' | 'missing-permission' |
 'backend-offline' | 'route-not-wired'`. Foundation never `'not-entitled'`.
 
-Full Phase G + H specs: `/root/.claude/plans/you-are-taking-over-joyful-wave.md`
+Full Phase G + H specs: `docs/plans/you-are-taking-over-joyful-wave.md`
 § Phases G + H.
 
 ## DB-driven UI Management (Phase F, locked spec)
@@ -272,7 +272,7 @@ validated against `dos.ui_component_registry`.
 Versioning: `draft → validated → published → archived`. Runtime uses latest
 published. Rollback switches active version.
 
-Full Phase F spec: `/root/.claude/plans/you-are-taking-over-joyful-wave.md` § Phase F.
+Full Phase F spec: `docs/plans/you-are-taking-over-joyful-wave.md` § Phase F.
 
 ## Source-of-truth files
 

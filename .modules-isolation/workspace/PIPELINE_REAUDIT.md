@@ -1,4 +1,4 @@
-# Pipeline Re-Audit — Live Tree (`/root/DOS-Platform/`)
+# Pipeline Re-Audit — Live Tree (`<repo>/`)
 
 Scope: how production-ready is the *runtime pipeline* that the workspace's
 enrolment artefacts will plug into. Audited subsystems: UI-System, PM2 fleet,

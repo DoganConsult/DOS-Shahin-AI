@@ -6,7 +6,7 @@
  * cleanup runs by tenant_id at the start so prior failures do not leave
  * dangling rows. All ids are stable so each test can assert against them.
  *
- * Plan: /root/.claude/plans/need-to-clean-the-swift-trinket.md (Phase H-1)
+ * Plan: docs/plans/need-to-clean-the-swift-trinket.md (Phase H-1)
  */
 import { query as safeQuery, getPool } from '@dos/db';
 

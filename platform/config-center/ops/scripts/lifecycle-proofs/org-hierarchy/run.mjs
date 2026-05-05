@@ -10,7 +10,7 @@
 //   TENANT_ID
 //   USER_JWT
 //
-// Plan: /root/.claude/plans/need-to-clean-the-swift-trinket.md (Phase G-3)
+// Plan: docs/plans/need-to-clean-the-swift-trinket.md (Phase G-3)
 
 import { Runner } from '../_lib/runner.mjs';
 
