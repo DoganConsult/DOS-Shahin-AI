@@ -11,7 +11,7 @@
     "grepInvert": null,
     "maxFailures": 0,
     "metadata": {
-      "actualWorkers": 8
+      "actualWorkers": 7
     },
     "preserveOutput": "always",
     "reporter": [
@@ -117,333 +117,389 @@
   },
   "suites": [
     {
-      "title": "m1-marketing-home.spec.ts",
-      "file": "m1-marketing-home.spec.ts",
+      "title": "product-clean-route-topology.spec.ts",
+      "file": "product-clean-route-topology.spec.ts",
       "column": 0,
       "line": 0,
-      "specs": [],
-      "suites": [
+      "specs": [
         {
-          "title": "M1 — marketing.home.page renders without auth",
-          "file": "m1-marketing-home.spec.ts",
-          "line": 23,
-          "column": 6,
-          "specs": [
+          "title": "product route table uses one clean workspace wildcard path",
+          "ok": true,
+          "tags": [],
+          "tests": [
             {
-              "title": "root route resolves the marketing-landing Dynamic-UI binding",
-              "ok": true,
-              "tags": [],
-              "tests": [
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
                 {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "status": "passed",
-                      "duration": 400,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-05-05T06:19:54.568Z",
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
+                  "workerIndex": 0,
+                  "status": "passed",
+                  "duration": 44,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-05-05T07:20:41.078Z",
+                  "attachments": []
                 }
               ],
-              "id": "bdf94da1d30640e78532-610111feb505d36bd3af",
-              "file": "m1-marketing-home.spec.ts",
-              "line": 24,
-              "column": 7
-            },
-            {
-              "title": "all 20 public regions present in DOM order",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 1,
-                      "status": "passed",
-                      "duration": 4483,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-05-05T06:19:54.593Z",
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "bdf94da1d30640e78532-e0b7c36c8d937692fcbb",
-              "file": "m1-marketing-home.spec.ts",
-              "line": 35,
-              "column": 7
-            },
-            {
-              "title": "brand eagle pictogram + 9 agent tiles render in agentic-proof",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 2,
-                      "status": "failed",
-                      "duration": 9664,
-                      "error": {
-                        "message": "Error: agent tile A01 should render\n\n\u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('[data-section-id=\"agentic-proof\"] [data-agent-code=\"A01\"]')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - agent tile A01 should render with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-section-id=\"agentic-proof\"] [data-agent-code=\"A01\"]')\u001b[22m\n",
-                        "stack": "Error: agent tile A01 should render\n\n\u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('[data-section-id=\"agentic-proof\"] [data-agent-code=\"A01\"]')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - agent tile A01 should render with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-section-id=\"agentic-proof\"] [data-agent-code=\"A01\"]')\u001b[22m\n\n    at /root/DOS-Platform/platform/config-center/test/tests/e2e/m1-marketing-home.spec.ts:53:9",
-                        "matcherResult": {
-                          "message": "\u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('[data-section-id=\"agentic-proof\"] [data-agent-code=\"A01\"]')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - agent tile A01 should render with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-section-id=\"agentic-proof\"] [data-agent-code=\"A01\"]')\u001b[22m\n",
-                          "pass": false,
-                          "actual": "hidden",
-                          "name": "toBeVisible",
-                          "expected": "visible",
-                          "log": [
-                            "  - agent tile A01 should render with timeout 5000ms",
-                            "  - waiting for locator('[data-section-id=\"agentic-proof\"] [data-agent-code=\"A01\"]')"
-                          ],
-                          "timeout": 5000
-                        },
-                        "location": {
-                          "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/m1-marketing-home.spec.ts",
-                          "column": 9,
-                          "line": 53
-                        },
-                        "snippet": "  51 |         page.locator(`[data-section-id=\"agentic-proof\"] [data-agent-code=\"${code}\"]`),\n  52 |         `agent tile ${code} should render`,\n> 53 |       ).toBeVisible();\n     |         ^\n  54 |     }\n  55 |   });\n  56 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/m1-marketing-home.spec.ts",
-                            "column": 9,
-                            "line": 53
-                          },
-                          "message": "Error: agent tile A01 should render\n\n\u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('[data-section-id=\"agentic-proof\"] [data-agent-code=\"A01\"]')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - agent tile A01 should render with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-section-id=\"agentic-proof\"] [data-agent-code=\"A01\"]')\u001b[22m\n\n\n  51 |         page.locator(`[data-section-id=\"agentic-proof\"] [data-agent-code=\"${code}\"]`),\n  52 |         `agent tile ${code} should render`,\n> 53 |       ).toBeVisible();\n     |         ^\n  54 |     }\n  55 |   });\n  56 |\n    at /root/DOS-Platform/platform/config-center/test/tests/e2e/m1-marketing-home.spec.ts:53:9"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-05-05T06:19:54.625Z",
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/root/DOS-Platform/platform/config-center/test/playwright-results/m1-marketing-home-M1-—-mar-081d5-les-render-in-agentic-proof-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "/root/DOS-Platform/platform/config-center/test/playwright-results/m1-marketing-home-M1-—-mar-081d5-les-render-in-agentic-proof-chromium/video.webm"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/m1-marketing-home.spec.ts",
-                        "column": 9,
-                        "line": 53
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "bdf94da1d30640e78532-1231aedb69f12bbd8a47",
-              "file": "m1-marketing-home.spec.ts",
-              "line": 44,
-              "column": 7
-            },
-            {
-              "title": "Arabic locale flips dir=rtl on the marketing root",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 3,
-                      "status": "passed",
-                      "duration": 4241,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-05-05T06:19:54.571Z",
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "bdf94da1d30640e78532-01b03fd1702af0c3f52a",
-              "file": "m1-marketing-home.spec.ts",
-              "line": 57,
-              "column": 7
-            },
-            {
-              "title": "public surface — no credential forms and login/register are bridges",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 4,
-                      "status": "passed",
-                      "duration": 4501,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-05-05T06:19:54.593Z",
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "bdf94da1d30640e78532-d61748eef40a42a43eb6",
-              "file": "m1-marketing-home.spec.ts",
-              "line": 64,
-              "column": 7
-            },
-            {
-              "title": "/platform resolves and renders marketing.platform.page",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 5,
-                      "status": "passed",
-                      "duration": 4436,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-05-05T06:19:54.669Z",
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "bdf94da1d30640e78532-85fc192e66be8bbe8b3a",
-              "file": "m1-marketing-home.spec.ts",
-              "line": 80,
-              "column": 9
-            },
-            {
-              "title": "/resources resolves and renders marketing.resources.page",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 6,
-                      "status": "passed",
-                      "duration": 4327,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-05-05T06:19:54.600Z",
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "bdf94da1d30640e78532-9a55ffbfcc7f40f2034a",
-              "file": "m1-marketing-home.spec.ts",
-              "line": 80,
-              "column": 9
-            },
-            {
-              "title": "/resources/executive-kit resolves and renders marketing.executive-kit.page",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 7,
-                      "status": "passed",
-                      "duration": 4450,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-05-05T06:19:54.552Z",
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "bdf94da1d30640e78532-acb16e8c8df14e425877",
-              "file": "m1-marketing-home.spec.ts",
-              "line": 80,
-              "column": 9
+              "status": "expected"
             }
-          ]
+          ],
+          "id": "8f83c9cc8f3e58f878f7-cbd2d41d1a712fccb98c",
+          "file": "product-clean-route-topology.spec.ts",
+          "line": 15,
+          "column": 5
+        },
+        {
+          "title": "public route remains reachable: /",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "status": "failed",
+                  "duration": 55,
+                  "error": {
+                    "message": "Error: expect: Property 'toHaveHeader' not found.",
+                    "stack": "Error: expect: Property 'toHaveHeader' not found.\n    at /root/DOS-Platform/platform/config-center/test/tests/e2e/product-clean-route-topology.spec.ts:40:27",
+                    "location": {
+                      "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/product-clean-route-topology.spec.ts",
+                      "column": 27,
+                      "line": 40
+                    },
+                    "snippet": "  38 |     const response = await request.get(route);\n  39 |     expect(response.status()).toBe(200);\n> 40 |     await expect(response).toHaveHeader(/content-type/i, /text\\/html/i);\n     |                           ^\n  41 |   });\n  42 | }\n  43 |"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/product-clean-route-topology.spec.ts",
+                        "column": 27,
+                        "line": 40
+                      },
+                      "message": "Error: expect: Property 'toHaveHeader' not found.\n\n  38 |     const response = await request.get(route);\n  39 |     expect(response.status()).toBe(200);\n> 40 |     await expect(response).toHaveHeader(/content-type/i, /text\\/html/i);\n     |                           ^\n  41 |   });\n  42 | }\n  43 |\n    at /root/DOS-Platform/platform/config-center/test/tests/e2e/product-clean-route-topology.spec.ts:40:27"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-05-05T07:20:41.067Z",
+                  "attachments": [],
+                  "errorLocation": {
+                    "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/product-clean-route-topology.spec.ts",
+                    "column": 27,
+                    "line": 40
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "8f83c9cc8f3e58f878f7-0346c5340208df46e643",
+          "file": "product-clean-route-topology.spec.ts",
+          "line": 37,
+          "column": 7
+        },
+        {
+          "title": "public route remains reachable: /login",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "status": "failed",
+                  "duration": 46,
+                  "error": {
+                    "message": "Error: expect: Property 'toHaveHeader' not found.",
+                    "stack": "Error: expect: Property 'toHaveHeader' not found.\n    at /root/DOS-Platform/platform/config-center/test/tests/e2e/product-clean-route-topology.spec.ts:40:27",
+                    "location": {
+                      "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/product-clean-route-topology.spec.ts",
+                      "column": 27,
+                      "line": 40
+                    },
+                    "snippet": "  38 |     const response = await request.get(route);\n  39 |     expect(response.status()).toBe(200);\n> 40 |     await expect(response).toHaveHeader(/content-type/i, /text\\/html/i);\n     |                           ^\n  41 |   });\n  42 | }\n  43 |"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/product-clean-route-topology.spec.ts",
+                        "column": 27,
+                        "line": 40
+                      },
+                      "message": "Error: expect: Property 'toHaveHeader' not found.\n\n  38 |     const response = await request.get(route);\n  39 |     expect(response.status()).toBe(200);\n> 40 |     await expect(response).toHaveHeader(/content-type/i, /text\\/html/i);\n     |                           ^\n  41 |   });\n  42 | }\n  43 |\n    at /root/DOS-Platform/platform/config-center/test/tests/e2e/product-clean-route-topology.spec.ts:40:27"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-05-05T07:20:41.089Z",
+                  "attachments": [],
+                  "errorLocation": {
+                    "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/product-clean-route-topology.spec.ts",
+                    "column": 27,
+                    "line": 40
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "8f83c9cc8f3e58f878f7-0835e918e6bca82f9890",
+          "file": "product-clean-route-topology.spec.ts",
+          "line": 37,
+          "column": 7
+        },
+        {
+          "title": "protected dynamic route is served by the SPA shell path: /workspace-home",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "status": "failed",
+                  "duration": 45,
+                  "error": {
+                    "message": "Error: expect: Property 'toHaveHeader' not found.",
+                    "stack": "Error: expect: Property 'toHaveHeader' not found.\n    at /root/DOS-Platform/platform/config-center/test/tests/e2e/product-clean-route-topology.spec.ts:48:27",
+                    "location": {
+                      "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/product-clean-route-topology.spec.ts",
+                      "column": 27,
+                      "line": 48
+                    },
+                    "snippet": "  46 |     const response = await request.get(route);\n  47 |     expect(response.status()).toBe(200);\n> 48 |     await expect(response).toHaveHeader(/content-type/i, /text\\/html/i);\n     |                           ^\n  49 |   });\n  50 | }\n  51 |"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/product-clean-route-topology.spec.ts",
+                        "column": 27,
+                        "line": 48
+                      },
+                      "message": "Error: expect: Property 'toHaveHeader' not found.\n\n  46 |     const response = await request.get(route);\n  47 |     expect(response.status()).toBe(200);\n> 48 |     await expect(response).toHaveHeader(/content-type/i, /text\\/html/i);\n     |                           ^\n  49 |   });\n  50 | }\n  51 |\n    at /root/DOS-Platform/platform/config-center/test/tests/e2e/product-clean-route-topology.spec.ts:48:27"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-05-05T07:20:41.165Z",
+                  "attachments": [],
+                  "errorLocation": {
+                    "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/product-clean-route-topology.spec.ts",
+                    "column": 27,
+                    "line": 48
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "8f83c9cc8f3e58f878f7-e385a974809f2309018b",
+          "file": "product-clean-route-topology.spec.ts",
+          "line": 45,
+          "column": 7
+        },
+        {
+          "title": "protected dynamic route is served by the SPA shell path: /foundation/delegations",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "status": "failed",
+                  "duration": 55,
+                  "error": {
+                    "message": "Error: expect: Property 'toHaveHeader' not found.",
+                    "stack": "Error: expect: Property 'toHaveHeader' not found.\n    at /root/DOS-Platform/platform/config-center/test/tests/e2e/product-clean-route-topology.spec.ts:48:27",
+                    "location": {
+                      "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/product-clean-route-topology.spec.ts",
+                      "column": 27,
+                      "line": 48
+                    },
+                    "snippet": "  46 |     const response = await request.get(route);\n  47 |     expect(response.status()).toBe(200);\n> 48 |     await expect(response).toHaveHeader(/content-type/i, /text\\/html/i);\n     |                           ^\n  49 |   });\n  50 | }\n  51 |"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/product-clean-route-topology.spec.ts",
+                        "column": 27,
+                        "line": 48
+                      },
+                      "message": "Error: expect: Property 'toHaveHeader' not found.\n\n  46 |     const response = await request.get(route);\n  47 |     expect(response.status()).toBe(200);\n> 48 |     await expect(response).toHaveHeader(/content-type/i, /text\\/html/i);\n     |                           ^\n  49 |   });\n  50 | }\n  51 |\n    at /root/DOS-Platform/platform/config-center/test/tests/e2e/product-clean-route-topology.spec.ts:48:27"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-05-05T07:20:41.090Z",
+                  "attachments": [],
+                  "errorLocation": {
+                    "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/product-clean-route-topology.spec.ts",
+                    "column": 27,
+                    "line": 48
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "8f83c9cc8f3e58f878f7-862d52d557a495c64cd1",
+          "file": "product-clean-route-topology.spec.ts",
+          "line": 45,
+          "column": 7
+        },
+        {
+          "title": "protected dynamic route is served by the SPA shell path: /compliance/overview",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "status": "failed",
+                  "duration": 49,
+                  "error": {
+                    "message": "Error: expect: Property 'toHaveHeader' not found.",
+                    "stack": "Error: expect: Property 'toHaveHeader' not found.\n    at /root/DOS-Platform/platform/config-center/test/tests/e2e/product-clean-route-topology.spec.ts:48:27",
+                    "location": {
+                      "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/product-clean-route-topology.spec.ts",
+                      "column": 27,
+                      "line": 48
+                    },
+                    "snippet": "  46 |     const response = await request.get(route);\n  47 |     expect(response.status()).toBe(200);\n> 48 |     await expect(response).toHaveHeader(/content-type/i, /text\\/html/i);\n     |                           ^\n  49 |   });\n  50 | }\n  51 |"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/product-clean-route-topology.spec.ts",
+                        "column": 27,
+                        "line": 48
+                      },
+                      "message": "Error: expect: Property 'toHaveHeader' not found.\n\n  46 |     const response = await request.get(route);\n  47 |     expect(response.status()).toBe(200);\n> 48 |     await expect(response).toHaveHeader(/content-type/i, /text\\/html/i);\n     |                           ^\n  49 |   });\n  50 | }\n  51 |\n    at /root/DOS-Platform/platform/config-center/test/tests/e2e/product-clean-route-topology.spec.ts:48:27"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-05-05T07:20:41.027Z",
+                  "attachments": [],
+                  "errorLocation": {
+                    "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/product-clean-route-topology.spec.ts",
+                    "column": 27,
+                    "line": 48
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "8f83c9cc8f3e58f878f7-c0ff2bb280c2e47ff656",
+          "file": "product-clean-route-topology.spec.ts",
+          "line": 45,
+          "column": 7
+        },
+        {
+          "title": "protected dynamic route is served by the SPA shell path: /risk/register",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "status": "failed",
+                  "duration": 51,
+                  "error": {
+                    "message": "Error: expect: Property 'toHaveHeader' not found.",
+                    "stack": "Error: expect: Property 'toHaveHeader' not found.\n    at /root/DOS-Platform/platform/config-center/test/tests/e2e/product-clean-route-topology.spec.ts:48:27",
+                    "location": {
+                      "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/product-clean-route-topology.spec.ts",
+                      "column": 27,
+                      "line": 48
+                    },
+                    "snippet": "  46 |     const response = await request.get(route);\n  47 |     expect(response.status()).toBe(200);\n> 48 |     await expect(response).toHaveHeader(/content-type/i, /text\\/html/i);\n     |                           ^\n  49 |   });\n  50 | }\n  51 |"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/product-clean-route-topology.spec.ts",
+                        "column": 27,
+                        "line": 48
+                      },
+                      "message": "Error: expect: Property 'toHaveHeader' not found.\n\n  46 |     const response = await request.get(route);\n  47 |     expect(response.status()).toBe(200);\n> 48 |     await expect(response).toHaveHeader(/content-type/i, /text\\/html/i);\n     |                           ^\n  49 |   });\n  50 | }\n  51 |\n    at /root/DOS-Platform/platform/config-center/test/tests/e2e/product-clean-route-topology.spec.ts:48:27"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-05-05T07:20:41.048Z",
+                  "attachments": [],
+                  "errorLocation": {
+                    "file": "/root/DOS-Platform/platform/config-center/test/tests/e2e/product-clean-route-topology.spec.ts",
+                    "column": 27,
+                    "line": 48
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "8f83c9cc8f3e58f878f7-2c3b592a3fbe6790c94b",
+          "file": "product-clean-route-topology.spec.ts",
+          "line": 45,
+          "column": 7
         }
       ]
     }
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-05-05T06:19:53.603Z",
-    "duration": 10926.323999999999,
-    "expected": 7,
+    "startTime": "2026-05-05T07:20:40.226Z",
+    "duration": 1023.775,
+    "expected": 1,
     "skipped": 0,
-    "unexpected": 1,
+    "unexpected": 6,
     "flaky": 0
   }
 }

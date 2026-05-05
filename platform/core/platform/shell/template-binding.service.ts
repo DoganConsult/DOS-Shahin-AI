@@ -38,6 +38,7 @@ export interface TemplateBinding {
   route: string;
   archetype: string | null;
   template_export: string | null;
+  permission_key?: string | null;
   props: TemplateBindingProps;
   version: number;
 }
@@ -46,6 +47,7 @@ const NULL_BINDING = (route: string): TemplateBinding => ({
   route,
   archetype: null,
   template_export: null,
+  permission_key: null,
   props: {},
   version: 0,
 });

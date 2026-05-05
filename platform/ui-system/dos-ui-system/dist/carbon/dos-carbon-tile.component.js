@@ -48,6 +48,7 @@ DosCarbonTileComponent = __decorate([
         imports: [CommonModule],
         changeDetection: ChangeDetectionStrategy.OnPush,
         template: `
+    <ng-template #tileContent><ng-content></ng-content></ng-template>
     @if (clickable) {
       <a
         class="cds--tile cds--tile--clickable"
@@ -55,11 +56,11 @@ DosCarbonTileComponent = __decorate([
         [attr.role]="route ? null : 'button'"
         (click)="onActivate($event)"
       >
-        <ng-content></ng-content>
+        <ng-container [ngTemplateOutlet]="tileContent"></ng-container>
       </a>
     } @else {
       <div class="cds--tile">
-        <ng-content></ng-content>
+        <ng-container [ngTemplateOutlet]="tileContent"></ng-container>
       </div>
     }
   `,

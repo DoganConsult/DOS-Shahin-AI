@@ -21,7 +21,8 @@ export type ResolveSecretOptions = {
   timeoutMs?: number;
 };
 
-function trimSecret(raw: string): string {
+/** Normalize vault/HTTP JSON wrappers and plain-text secret payloads. */
+export function trimSecret(raw: string): string {
   const s = raw.trim();
   try {
     const parsed = JSON.parse(s) as { value?: string; secret?: string; data?: string };
@@ -35,37 +36,64 @@ function trimSecret(raw: string): string {
 }
 
 /** Join base URL with a logical secret path; encode each segment so slashes stay path separators. */
-function buildHttpSecretUrl(baseRaw: string, httpPath: string): string {
+export function buildHttpSecretUrl(baseRaw: string, httpPath: string): string {
   const base = baseRaw.replace(/\/$/, '');
   const trimmed = httpPath.replace(/^\//, '');
   const segments = trimmed.split('/').filter(Boolean).map((s) => encodeURIComponent(s));
   return segments.length ? `${base}/${segments.join('/')}` : base;
 }
 
-async function fetchHttpSecret(httpPath: string, timeoutMs: number): Promise<string | undefined> {
-  const base = process.env.DOS_SECRET_HTTP_BASE_URL?.trim();
-  if (!base) return undefined;
+export type HttpSecretProviderOptions = {
+  /** Overrides `DOS_SECRET_HTTP_BASE_URL` when set. */
+  baseUrl?: string;
+  /** Overrides `DOS_SECRET_HTTP_BEARER` when set. */
+  bearer?: string;
+};
 
-  const url = buildHttpSecretUrl(base, httpPath);
-  const bearer = process.env.DOS_SECRET_HTTP_BEARER?.trim();
+/**
+ * Injectable HTTP secret backend for tests and services that need an explicit
+ * base URL instead of process env alone. Defaults match {@link resolveSecret} HTTP stage.
+ */
+export class HttpSecretProvider {
+  constructor(private readonly opts: HttpSecretProviderOptions = {}) {}
 
-  const ctrl = new AbortController();
-  const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+  async fetchSecret(httpPath: string, timeoutMs: number): Promise<string | undefined> {
+    const base = (this.opts.baseUrl ?? process.env.DOS_SECRET_HTTP_BASE_URL)?.trim();
+    if (!base) return undefined;
 
-  try {
-    const res = await fetch(url, {
-      method: 'GET',
-      signal: ctrl.signal,
-      headers: bearer ? { Authorization: `Bearer ${bearer}` } : undefined,
-    });
-    if (!res.ok) return undefined;
-    const text = await res.text();
-    return trimSecret(text) || undefined;
-  } catch {
-    return undefined;
-  } finally {
-    clearTimeout(timer);
+    const url = buildHttpSecretUrl(base, httpPath);
+    const bearer = (this.opts.bearer ?? process.env.DOS_SECRET_HTTP_BEARER)?.trim();
+
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+
+    try {
+      const res = await fetch(url, {
+        method: 'GET',
+        signal: ctrl.signal,
+        headers: bearer ? { Authorization: `Bearer ${bearer}` } : undefined,
+      });
+      if (!res.ok) return undefined;
+      const text = await res.text();
+      return trimSecret(text) || undefined;
+    } catch {
+      return undefined;
+    } finally {
+      clearTimeout(timer);
+    }
   }
+}
+
+let defaultHttpProvider: HttpSecretProvider | undefined;
+
+/** Singleton used by {@link resolveSecret} for the HTTP stage (env-backed by default). */
+export function getDefaultHttpSecretProvider(): HttpSecretProvider {
+  if (!defaultHttpProvider) defaultHttpProvider = new HttpSecretProvider();
+  return defaultHttpProvider;
+}
+
+async function fetchHttpSecret(httpPath: string, timeoutMs: number): Promise<string | undefined> {
+  return getDefaultHttpSecretProvider().fetchSecret(httpPath, timeoutMs);
 }
 
 /**
@@ -99,4 +127,45 @@ export async function resolveSecret(opts: ResolveSecretOptions): Promise<string 
   }
 
   return undefined;
+}
+
+/**
+ * Cached bearer token for OpenFGA HTTP writes/checks.
+ *
+ * Uses {@link resolveSecret} with:
+ * - Vault path `openfga/api_token` (when Vault enabled)
+ * - HTTP `openfga/api_token` under {@link DOS_SECRET_HTTP_BASE_URL}
+ * - Env `OPENFGA_API_TOKEN`
+ *
+ * Env:
+ * - `OPENFGA_SECRET_CACHE_TTL_MS` — cache TTL in ms (default 300000). Set `0` to disable caching.
+ */
+let openFgaApiTokenCache: { token: string; fetchedAt: number } | null = null;
+
+export async function resolveOpenFgaApiToken(timeoutMs = 8000): Promise<string | undefined> {
+  const ttlRaw = process.env.OPENFGA_SECRET_CACHE_TTL_MS;
+  const ttlMs = ttlRaw === undefined ? 300_000 : Number(ttlRaw);
+  const now = Date.now();
+  if (ttlMs > 0 && openFgaApiTokenCache && now - openFgaApiTokenCache.fetchedAt < ttlMs) {
+    return openFgaApiTokenCache.token || undefined;
+  }
+
+  const token = await resolveSecret({
+    key: 'OPENFGA_API_TOKEN',
+    vaultPath: 'openfga/api_token',
+    env: 'OPENFGA_API_TOKEN',
+    httpPath: 'openfga/api_token',
+    timeoutMs,
+  });
+
+  if (token && ttlMs > 0) {
+    openFgaApiTokenCache = { token, fetchedAt: now };
+  }
+
+  return token;
+}
+
+/** Drop cached OpenFGA token (e.g. after rotation or failed auth). */
+export function invalidateOpenFgaApiTokenCache(): void {
+  openFgaApiTokenCache = null;
 }

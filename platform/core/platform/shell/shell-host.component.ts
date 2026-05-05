@@ -68,7 +68,7 @@ import {
 } from '@dos/access-store';
 import type { DosNavGroup, DosNavItem, ShellAccountMenuEntry } from '@dos/ui-contracts';
 import { BreadcrumbService } from './breadcrumb.service';
-import { WorkspaceShellBindingService } from './workspace-shell-binding.service';
+import { WorkspaceShellBindingService, type WorkspaceShellZone } from './workspace-shell-binding.service';
 import { ShellPreferencesService } from './shell-preferences.service';
 import { ShellErrorStateService } from './shell-error-state.service';
 import { ToastService } from '../../../dos/shell/toast.service';
@@ -404,18 +404,24 @@ const FALLBACK_ITEM_ICON  = 'dot';
     @if (isMobile() && showShellMobile()) {
       <!-- Mobile chrome: dos-mobile-shell + dos-mobile-drawer + dos-mobile-bottom-nav. -->
       <dos-mobile-shell>
-        <ng-container *ngTemplateOutlet="headerTpl"></ng-container>
-        <ng-container *ngTemplateOutlet="breadcrumbTpl"></ng-container>
-        @if (shellBanners().length > 0) {
+        @if (zoneHas('header')) {
+          <ng-container *ngTemplateOutlet="headerTpl"></ng-container>
+        }
+        @if (zoneHas('main')) {
+          <ng-container *ngTemplateOutlet="breadcrumbTpl"></ng-container>
+        }
+        @if (zoneHas('top-banners') && shellBanners().length > 0) {
           <dos-shell-banner-strip [banners]="shellBanners()"
                                   (action)="onBannerAction($event)"
                                   (dismiss)="onBannerDismiss($event)">
           </dos-shell-banner-strip>
         }
-        <ng-container *ngTemplateOutlet="titleTpl"></ng-container>
-        <ng-container *ngTemplateOutlet="mainTpl"></ng-container>
+        @if (zoneHas('main')) {
+          <ng-container *ngTemplateOutlet="titleTpl"></ng-container>
+          <ng-container *ngTemplateOutlet="mainTpl"></ng-container>
+        }
 
-        @if (mobileBottomItems().length > 0) {
+        @if (zoneHas('mobile-nav') && mobileBottomItems().length > 0) {
           <dos-mobile-bottom-nav shellBottomNav
                                  [items]="mobileBottomItems()"
                                  [dir]="sidebarDir()"
@@ -424,29 +430,33 @@ const FALLBACK_ITEM_ICON  = 'dot';
           </dos-mobile-bottom-nav>
         }
 
-        <dos-mobile-drawer shellDrawer
-                           [open]="sideNavActive()"
-                           [title]="drawerTitle()"
-                           [dir]="sidebarDir()"
-                           [closeLabel]="drawerCloseLabel()"
-                           (closed)="closeSideNav()">
-          @if (sidebarItems().length > 0) {
-            <dos-workspace-sidebar
-              [items]="sidebarItems()"
-              [collapsed]="false"
-              [dir]="sidebarDir()"
-              [ariaLabel]="sideNavAriaLabel()"
-              (navigate)="onSidebarNavigate($event)">
-            </dos-workspace-sidebar>
-          }
-        </dos-mobile-drawer>
+        @if (zoneHas('mobile-drawer')) {
+          <dos-mobile-drawer shellDrawer
+                             [open]="sideNavActive()"
+                             [title]="drawerTitle()"
+                             [dir]="sidebarDir()"
+                             [closeLabel]="drawerCloseLabel()"
+                             (closed)="closeSideNav()">
+            @if (sidebarItems().length > 0) {
+              <dos-workspace-sidebar
+                [items]="sidebarItems()"
+                [collapsed]="false"
+                [dir]="sidebarDir()"
+                [ariaLabel]="sideNavAriaLabel()"
+                (navigate)="onSidebarNavigate($event)">
+              </dos-workspace-sidebar>
+            }
+          </dos-mobile-drawer>
+        }
       </dos-mobile-shell>
     } @else if (showShellDesktop()) {
       <!-- Desktop chrome: dos-app-shell + dos-workspace-sidebar. -->
       <dos-app-shell [mobile]="false">
-        <ng-container *ngTemplateOutlet="headerTpl"></ng-container>
+        @if (zoneHas('header')) {
+          <ng-container *ngTemplateOutlet="headerTpl"></ng-container>
+        }
 
-        @if (sidebarItems().length > 0 && sideNavActive()) {
+        @if (zoneHas('sidebar') && sidebarItems().length > 0 && sideNavActive()) {
           <!-- §B.9 #16 — sidebar search/filter input. -->
           @if (!isRail()) {
             <div class="shell-sidebar-search">
@@ -466,20 +476,24 @@ const FALLBACK_ITEM_ICON  = 'dot';
           </dos-workspace-sidebar>
         }
 
-        <ng-container *ngTemplateOutlet="breadcrumbTpl"></ng-container>
-        @if (shellBanners().length > 0) {
+        @if (zoneHas('main')) {
+          <ng-container *ngTemplateOutlet="breadcrumbTpl"></ng-container>
+        }
+        @if (zoneHas('top-banners') && shellBanners().length > 0) {
           <dos-shell-banner-strip [banners]="shellBanners()"
                                   (action)="onBannerAction($event)"
                                   (dismiss)="onBannerDismiss($event)">
           </dos-shell-banner-strip>
         }
-        <ng-container *ngTemplateOutlet="titleTpl"></ng-container>
-        <ng-container *ngTemplateOutlet="mainTpl"></ng-container>
+        @if (zoneHas('main')) {
+          <ng-container *ngTemplateOutlet="titleTpl"></ng-container>
+          <ng-container *ngTemplateOutlet="mainTpl"></ng-container>
+        }
       </dos-app-shell>
     }
 
     <!-- Global action surfaces — DB-gated via workspace_shell_binding. -->
-    @if (showInbox()) {
+    @if (zoneHas('right-rail') && showInbox()) {
       <dos-inbox-center [open]="inboxOpen()"
                         [mobileMode]="isMobile()"
                         [messages]="inboxMessages()"
@@ -492,7 +506,7 @@ const FALLBACK_ITEM_ICON  = 'dot';
       </dos-inbox-center>
     }
 
-    @if (showQuickCreate() && quickCreateActions().length > 0) {
+    @if (zoneHas('fab') && showQuickCreate() && quickCreateActions().length > 0) {
       <dos-quick-create [actions]="quickCreateActions()"
                         [mobileMode]="isMobile()"
                         [ariaLabel]="quickCreateAria()"
@@ -505,7 +519,7 @@ const FALLBACK_ITEM_ICON  = 'dot';
          (dos.workspace_shell_binding.enabled + perms_required). Content is
          hidden on mobile to avoid overlap with bottom-nav; the strip itself
          still respects the DB enabled flag on desktop. -->
-    @if (!isMobile() && showActionQueue() && actionQueueItems().length > 0) {
+    @if (zoneHas('bottom-status') && !isMobile() && showActionQueue() && actionQueueItems().length > 0) {
       <div class="shell-aux-strip shell-aux-strip--top">
         <dos-action-queue [items]="actionQueueItems()"
                           [mobileMode]="false"
@@ -518,7 +532,7 @@ const FALLBACK_ITEM_ICON  = 'dot';
     }
 
     <!-- Wave F — GAP-SURF-3 agent-activity-strip. DB-gated. -->
-    @if (!isMobile() && showAgentStrip() && agentActivities().length > 0) {
+    @if (zoneHas('bottom-status') && !isMobile() && showAgentStrip() && agentActivities().length > 0) {
       <div class="shell-aux-strip shell-aux-strip--bottom">
         <dos-agent-activity-strip [activities]="agentActivities()"
                                   [mobileMode]="false"
@@ -530,7 +544,7 @@ const FALLBACK_ITEM_ICON  = 'dot';
     <!-- Wave F — GAP-SURF-4 context-panel. DB-gated — rendered only when
          the per-tenant binding enables it AND the session holds the required
          permissions. The wrapper itself is [open]-gated internally. -->
-    @if (showContextPanel()) {
+    @if (zoneHas('right-rail') && showContextPanel()) {
       <dos-context-panel [views]="contextViews()"
                          [activeTab]="contextTab()"
                          [open]="contextOpen()"
@@ -541,7 +555,7 @@ const FALLBACK_ITEM_ICON  = 'dot';
     }
 
     <!-- Wave F — GAP-SURF-1 status-bar. DB-gated. -->
-    @if (showStatusBar() && statusBarSignals().length > 0) {
+    @if (zoneHas('bottom-status') && showStatusBar() && statusBarSignals().length > 0) {
       <div class="shell-statusbar-fixed">
         <dos-workspace-status-bar [signals]="statusBarSignals()"
                                   [mobileMode]="isMobile()"
@@ -551,7 +565,7 @@ const FALLBACK_ITEM_ICON  = 'dot';
     }
 
     <!-- GAP-HDR-3 — mobile command-search full-screen overlay. -->
-    @if (isMobile() && mobileCmdOpen()) {
+    @if (zoneHas('header') && isMobile() && mobileCmdOpen()) {
       <div class="shell-mobile-cmd" role="dialog" [attr.aria-label]="commandAria()">
         <div class="shell-mobile-cmd__bar">
           <button type="button"
@@ -571,9 +585,11 @@ const FALLBACK_ITEM_ICON  = 'dot';
     }
 
     <!-- §B.9 #32 — toast outlet (singleton, not workspace.* gated). -->
-    <dos-toast-outlet [messages]="toastMessages()"
-                      (dismissed)="onToastDismissed($event)">
-    </dos-toast-outlet>
+    @if (zoneHas('toast')) {
+      <dos-toast-outlet [messages]="toastMessages()"
+                        (dismissed)="onToastDismissed($event)">
+      </dos-toast-outlet>
+    }
   `,
 })
 export class ShellHostComponent {
@@ -768,6 +784,7 @@ export class ShellHostComponent {
   readonly showInbox            = computed(() => this.shellBinding.isSurfaceAllowed('workspace.inbox-center'));
   readonly showQuickCreate      = computed(() => this.shellBinding.isSurfaceAllowed('workspace.quick-create'));
   readonly showCommandSearch    = computed(() => this.shellBinding.isSurfaceAllowed('workspace.command-search'));
+  readonly zoneHas              = (zone: WorkspaceShellZone) => this.shellBinding.zoneHas(zone);
 
   // ── Group 7 — tile-variant render gates + props pipes ─────────────────────
   // The four `workspace.*-tile` keys are Carbon tile primitive variants

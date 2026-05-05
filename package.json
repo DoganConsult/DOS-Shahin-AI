@@ -16,7 +16,7 @@
     "lint": "pnpm -r run lint",
     "clean": "find . -name node_modules -type d -prune -exec rm -rf {} + ; find . -name dist -type d -prune -exec rm -rf {} +",
     "foundation:gate": "pnpm --filter @dos/module-foundation build && pnpm --filter shahin-ai-grc-frontend build && bash scripts/ci-guards/foundation-gate.sh",
-    "dynamic-ui:gates": "node scripts/ci-guards/carbon-dynamic-ui-coherence.mjs && node scripts/ci-guards/dynamic-ui-loader-resolvability.mjs && COMPONENT_MAP_ENFORCE=1 node scripts/ci-guards/component-map-coverage.mjs && TEMPLATE_COVERAGE_ENFORCE=1 node scripts/ci-guards/template-coverage.mjs && UI_REGISTRY_ENFORCE=1 node scripts/ui-registry/verify.mjs && AUTH_PAGES_COVERAGE_ENFORCE=1 node scripts/ci-guards/auth-pages-coverage.mjs",
+    "dynamic-ui:gates": "node scripts/ci-guards/carbon-dynamic-ui-coherence.mjs && node scripts/ci-guards/carbon-key-component-map-strict.mjs && node scripts/ci-guards/dynamic-ui-loader-resolvability.mjs && COMPONENT_MAP_ENFORCE=1 node scripts/ci-guards/component-map-coverage.mjs && TEMPLATE_COVERAGE_ENFORCE=1 node scripts/ci-guards/template-coverage.mjs && UI_REGISTRY_ENFORCE=1 node scripts/ui-registry/verify.mjs && AUTH_PAGES_COVERAGE_ENFORCE=1 node scripts/ci-guards/auth-pages-coverage.mjs",
     "ui-registry:verify": "node scripts/ui-registry/verify.mjs",
     "ui-registry:diff":   "node scripts/ui-registry/diff.mjs",
     "ui-registry:import": "node scripts/ui-registry/import.mjs",

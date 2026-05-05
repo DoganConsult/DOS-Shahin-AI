@@ -96,6 +96,7 @@ interface TemplateBinding {
   route: string;
   archetype: string;
   template_export: string;
+  permission_key?: string | null;
   props: Record<string, unknown>;
   version: number;
 }
@@ -345,8 +346,16 @@ export function createTemplateBindingRouter(pool: DbPool): Router {
   router.get('/template-binding/all', async (_req, res) => {
     try {
       const { rows } = await pool.query(
-        `SELECT route, archetype, template_export, version
-           FROM dos.ui_route_template_binding
+        `SELECT b.route, b.archetype, b.template_export, b.version,
+                (
+                  SELECT r.permission_key
+                    FROM dos.dynamic_ui_routes r
+                   WHERE r.path_pattern = b.route
+                     AND r.tenant_id IS NULL
+                   ORDER BY r.sort_order NULLS LAST, r.id
+                   LIMIT 1
+                ) AS permission_key
+           FROM dos.ui_route_template_binding b
            ORDER BY route`,
       );
       res.json({ bindings: rows });
@@ -368,16 +377,25 @@ export function createTemplateBindingRouter(pool: DbPool): Router {
         `SELECT route, archetype, template_export, props, version,
                 title_en, title_ar, subtitle_en, subtitle_ar,
                 eyebrow_en, eyebrow_ar, ai_headline_en, ai_headline_ar,
-                status_tags, primary_action
+                status_tags, primary_action,
+                (
+                  SELECT r.permission_key
+                    FROM dos.dynamic_ui_routes r
+                   WHERE r.path_pattern = $1
+                     AND r.tenant_id IS NULL
+                   ORDER BY r.sort_order NULLS LAST, r.id
+                   LIMIT 1
+                ) AS permission_key
            FROM dos.ui_route_template_binding WHERE route=$1`,
         [route],
       );
       if (rows.length === 0) {
         return res.json({
-          route, archetype: null, template_export: null, props: {}, version: 0,
+          route, archetype: null, template_export: null, permission_key: null, props: {}, version: 0,
         } satisfies Partial<TemplateBinding>);
       }
       const row = rows[0] as TemplateBinding & {
+        permission_key?: string | null;
         title_en?: string; title_ar?: string;
         subtitle_en?: string; subtitle_ar?: string;
         eyebrow_en?: string; eyebrow_ar?: string;
@@ -420,6 +438,7 @@ export function createTemplateBindingRouter(pool: DbPool): Router {
         route: row.route,
         archetype: row.archetype,
         template_export: row.template_export,
+        permission_key: row.permission_key ?? null,
         version: row.version,
         props: merged,
         // Diagnostic — opt-in. Lets the SPA / debugger see which layers

@@ -37,6 +37,10 @@ const TEMPLATE_EXPORTS = new Set(
     .map(match => match[1] ?? match[2]),
 );
 
+function isPublicCarbonBoundaryComponent(component) {
+  return component?.metadata?.public_contract === 'dynamic-ui-carbon-boundary-v1';
+}
+
 /** Publisher-owned seed tables (whitelist). Exported for reconcile / tooling. */
 export const ALLOWED_SEED_TABLES = new Set([
   'dos.workspace_shell_binding',
@@ -71,7 +75,7 @@ export async function crossRefAgainstDb(client, contract) {
       errors.push({ error_type: 'INACTIVE_CARBON_KEY', error_path: `components.${c.component_key}.carbon_key`,
         message: `carbon_key '${c.carbon_key}' is inactive`, severity: 'WARNING' });
     }
-    if (enforceApprovedPages && !isApprovedPageComponentKey(c.component_key)) {
+    if (enforceApprovedPages && !isPublicCarbonBoundaryComponent(c) && !isApprovedPageComponentKey(c.component_key)) {
       errors.push({ error_type: 'NON_APPROVED_PAGE_COMPONENT', error_path: `components.${c.component_key}`,
         message: `component_key '${c.component_key}' is outside the approved 32 archetype page roster`, severity: 'BLOCKER' });
     }

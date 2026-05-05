@@ -57,6 +57,7 @@ export { createCsrfMiddleware } from './csrf';
 export { createBreaker, getBreaker, listBreakerStates } from './circuit-breaker';
 export { acquireLock, withLock, getRedlock } from './distributed-lock';
 export { getSecret, vaultEnabled, clearSecretCache } from './vault';
+export { resolveSecret, resolveOpenFgaApiToken, invalidateOpenFgaApiTokenCache, type ResolveSecretOptions, } from './secrets';
 export declare function bootstrapService(serviceCode: string, opts: {
     mountBase: string;
     router: any;

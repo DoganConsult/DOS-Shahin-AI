@@ -25,6 +25,21 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO = resolve(__dirname, '..', '..');
 const COMPONENT_MAP_FILE = join(REPO, 'platform/dos/registry/component-map.ts');
 const PLACEHOLDER = 'CarbonCatalogPlaceholderRenderer';
+const REQUIRED_PUBLIC_CARBON_KEYS = [
+  'ui_shell', 'header', 'header_name', 'header_navigation', 'header_menu',
+  'header_menu_item', 'header_global_bar', 'header_global_action', 'side_nav',
+  'side_nav_items', 'side_nav_menu', 'side_nav_menu_item', 'side_nav_link',
+  'content', 'grid', 'column', 'layer', 'breadcrumb', 'tabs', 'tab', 'tile',
+  'clickable_tile', 'expandable_tile', 'tag', 'data_table', 'table_toolbar',
+  'table_toolbar_search', 'table_toolbar_actions', 'table_batch_actions',
+  'pagination', 'structured_list', 'search', 'dropdown', 'combo_box',
+  'multi_select', 'date_picker', 'text_input', 'text_area', 'number_input',
+  'select', 'checkbox', 'radio', 'toggle', 'button', 'icon_button',
+  'overflow_menu', 'overflow_menu_option', 'modal', 'inline_notification',
+  'toast_notification', 'tooltip', 'toggletip', 'popover', 'progress_bar',
+  'inline_loading', 'skeleton_text', 'skeleton_placeholder', 'context_menu',
+  'file_uploader', 'accordion',
+];
 
 function psql(sql) {
   const env = { ...process.env, PGPASSWORD: process.env.PGPASSWORD || 'dos_auth_pass_2026' };
@@ -110,8 +125,26 @@ for (const { component_key, carbon_key } of pairs) {
 }
 const distinctCarbon = [...new Set(pairs.map(p => p.carbon_key))];
 const missingNative = distinctCarbon.filter(ck => !carbonHasNative.get(ck));
+const registryComponentKeys = new Set(pairs.map(p => p.component_key));
+const registryCarbonKeys = new Set(pairs.map(p => p.carbon_key));
+
+const requiredCatalogRows = psql(`
+  SELECT carbon_key
+    FROM dos.ui_carbon_components
+   WHERE carbon_key = ANY(ARRAY[${REQUIRED_PUBLIC_CARBON_KEYS.map(k => `'${k}'`).join(',')}])
+     AND vendor = 'ibm-carbon'
+     AND is_active = true
+     AND runtime_status IN ('active','wrapper-required')
+   ORDER BY carbon_key;
+`).trim().split('\n').filter(Boolean);
+const requiredCatalogKeys = new Set(requiredCatalogRows);
 
 const errors = [...dbErrors];
+for (const key of REQUIRED_PUBLIC_CARBON_KEYS) {
+  if (!requiredCatalogKeys.has(key)) errors.push(`required public carbon_key '${key}' missing from approved Carbon catalog`);
+  if (!registryCarbonKeys.has(key) || !registryComponentKeys.has(key)) errors.push(`required public carbon_key '${key}' missing from approved Dynamic UI registry as component_key='${key}'`);
+  if (!mapBindings.has(key)) errors.push(`required public carbon_key '${key}' missing from COMPONENT_MAP`);
+}
 if (feErrors.length) errors.push(...feErrors);
 if (missingNative.length) {
   for (const ck of missingNative) {
@@ -125,6 +158,10 @@ const summary = {
   carbon_keys_with_real_renderer: distinctCarbon.length - missingNative.length,
   carbon_keys_placeholder_only: missingNative.length,
   component_map_entries: mapBindings.size,
+  required_public_carbon_keys: REQUIRED_PUBLIC_CARBON_KEYS.length,
+  required_public_catalog_keys: requiredCatalogKeys.size,
+  required_public_registry_keys: REQUIRED_PUBLIC_CARBON_KEYS.filter(k => registryCarbonKeys.has(k) && registryComponentKeys.has(k)).length,
+  required_public_component_map_keys: REQUIRED_PUBLIC_CARBON_KEYS.filter(k => mapBindings.has(k)).length,
   db_violations: dbErrors.length,
   fe_missing_entries: feErrors.length,
 };

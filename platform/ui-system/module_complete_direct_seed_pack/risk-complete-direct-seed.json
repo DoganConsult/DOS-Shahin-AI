@@ -9,22 +9,71 @@
     "owner_service": "risk-incident-service",
     "name_en": "Risk Management",
     "name_ar": "إدارة المخاطر",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "is_platform_dna": false,
     "route_base": "/risk"
   },
   "permissions": [
-    { "code": "risk.record.read", "description": "Read risk records", "sensitive": false },
-    { "code": "risk.record.write", "description": "Edit risk records", "sensitive": true },
-    { "code": "risk.record.update", "description": "Update risk records", "sensitive": true },
-    { "code": "risk.record.submit", "description": "Submit risk records", "sensitive": true },
-    { "code": "risk.record.configure", "description": "Configure risk module", "sensitive": true },
-    { "code": "risk.assessment.create", "description": "Create risk assessments", "sensitive": true },
-    { "code": "risk.assessment.approve", "description": "Approve risk assessments", "sensitive": true },
-    { "code": "risk.treatment.assign", "description": "Assign risk treatments", "sensitive": true },
-    { "code": "risk.register.read", "description": "Read risk register", "sensitive": false },
-    { "code": "risk.workflow.manage", "description": "Manage risk workflows/settings", "sensitive": true },
-    { "code": "risk.workflow.approve", "description": "Approve risk workflow", "sensitive": true }
+    {
+      "code": "risk.record.read",
+      "description": "Read risk records",
+      "sensitive": false
+    },
+    {
+      "code": "risk.record.write",
+      "description": "Edit risk records",
+      "sensitive": true
+    },
+    {
+      "code": "risk.record.update",
+      "description": "Update risk records",
+      "sensitive": true
+    },
+    {
+      "code": "risk.record.submit",
+      "description": "Submit risk records",
+      "sensitive": true
+    },
+    {
+      "code": "risk.record.configure",
+      "description": "Configure risk records",
+      "sensitive": true
+    },
+    {
+      "code": "risk.record.approve",
+      "description": "Approve risk record workflow decisions",
+      "sensitive": true
+    },
+    {
+      "code": "risk.assessment.create",
+      "description": "Create risk assessments",
+      "sensitive": true
+    },
+    {
+      "code": "risk.assessment.approve",
+      "description": "Approve risk assessments",
+      "sensitive": true
+    },
+    {
+      "code": "risk.treatment.assign",
+      "description": "Assign risk treatments",
+      "sensitive": true
+    },
+    {
+      "code": "risk.register.read",
+      "description": "Read risk register",
+      "sensitive": false
+    },
+    {
+      "code": "risk.workflow.manage",
+      "description": "Manage risk workflows and settings",
+      "sensitive": true
+    },
+    {
+      "code": "risk.workflow.approve",
+      "description": "Approve risk workflow decisions",
+      "sensitive": true
+    }
   ],
   "roles": [
     {
@@ -41,6 +90,8 @@
       "permissions": [
         "risk.record.read",
         "risk.record.write",
+        "risk.record.update",
+        "risk.record.submit",
         "risk.register.read"
       ]
     },
@@ -53,6 +104,7 @@
         "risk.record.update",
         "risk.record.submit",
         "risk.record.configure",
+        "risk.record.approve",
         "risk.assessment.create",
         "risk.assessment.approve",
         "risk.treatment.assign",
@@ -63,52 +115,726 @@
     }
   ],
   "navigation": [
-    { "nav_item_code": "grc.risk", "parent_code": "grc", "route": "/risk", "label_en": "Risk Management", "label_ar": "إدارة المخاطر", "sort_order": 30, "icon": "warning", "permission": "risk.record.read" },
-    { "nav_item_code": "risk.overview", "parent_code": "grc.risk", "route": "/risk/overview", "label_en": "Overview", "label_ar": "نظرة عامة", "sort_order": 10, "icon": "layout-dashboard", "permission": "risk.record.read" },
-    { "nav_item_code": "risk.register", "parent_code": "grc.risk", "route": "/risk/register", "label_en": "Risk Register", "label_ar": "سجل المخاطر", "sort_order": 20, "icon": "table", "permission": "risk.register.read" },
-    { "nav_item_code": "risk.assessments", "parent_code": "grc.risk", "route": "/risk/assessments", "label_en": "Assessments", "label_ar": "التقييمات", "sort_order": 30, "icon": "checklist", "permission": "risk.assessment.create" },
-    { "nav_item_code": "risk.heatmap", "parent_code": "grc.risk", "route": "/risk/heatmap", "label_en": "Heatmap", "label_ar": "الخريطة الحرارية", "sort_order": 40, "icon": "grid", "permission": "risk.record.read" },
-    { "nav_item_code": "risk.treatments", "parent_code": "grc.risk", "route": "/risk/treatments", "label_en": "Treatments", "label_ar": "المعالجات", "sort_order": 50, "icon": "shield", "permission": "risk.treatment.assign" },
-    { "nav_item_code": "risk.records", "parent_code": "grc.risk", "route": "/risk/records", "label_en": "Records", "label_ar": "السجلات", "sort_order": 60, "icon": "list", "permission": "risk.record.read" },
-    { "nav_item_code": "risk.workflows", "parent_code": "grc.risk", "route": "/risk/workflows", "label_en": "Workflows", "label_ar": "سير العمل", "sort_order": 70, "icon": "arrow-cycle", "permission": "risk.workflow.manage" },
-    { "nav_item_code": "risk.reports", "parent_code": "grc.risk", "route": "/risk/reports", "label_en": "Reports", "label_ar": "التقارير", "sort_order": 80, "icon": "document", "permission": "risk.record.read" },
-    { "nav_item_code": "risk.settings", "parent_code": "grc.risk", "route": "/risk/settings", "label_en": "Settings", "label_ar": "الإعدادات", "sort_order": 90, "icon": "settings", "permission": "risk.workflow.manage" }
+    {
+      "nav_item_code": "grc.risk",
+      "parent_code": "grc",
+      "route": "/risk",
+      "label_en": "Risk Management",
+      "label_ar": "إدارة المخاطر",
+      "sort_order": 30,
+      "icon": "warning",
+      "permission": "risk.record.read"
+    },
+    {
+      "nav_item_code": "risk.overview",
+      "parent_code": "grc.risk",
+      "route": "/risk/overview",
+      "label_en": "Overview",
+      "label_ar": "نظرة عامة",
+      "sort_order": 10,
+      "icon": "layout-dashboard",
+      "permission": "risk.record.read"
+    },
+    {
+      "nav_item_code": "risk.register",
+      "parent_code": "grc.risk",
+      "route": "/risk/register",
+      "label_en": "Risk Register",
+      "label_ar": "سجل المخاطر",
+      "sort_order": 20,
+      "icon": "table",
+      "permission": "risk.register.read"
+    },
+    {
+      "nav_item_code": "risk.assessments",
+      "parent_code": "grc.risk",
+      "route": "/risk/assessments",
+      "label_en": "Assessments",
+      "label_ar": "التقييمات",
+      "sort_order": 30,
+      "icon": "checklist",
+      "permission": "risk.assessment.create"
+    },
+    {
+      "nav_item_code": "risk.heatmap",
+      "parent_code": "grc.risk",
+      "route": "/risk/heatmap",
+      "label_en": "Heatmap",
+      "label_ar": "الخريطة الحرارية",
+      "sort_order": 40,
+      "icon": "grid",
+      "permission": "risk.record.read"
+    },
+    {
+      "nav_item_code": "risk.treatments",
+      "parent_code": "grc.risk",
+      "route": "/risk/treatments",
+      "label_en": "Treatments",
+      "label_ar": "المعالجات",
+      "sort_order": 50,
+      "icon": "shield",
+      "permission": "risk.treatment.assign"
+    },
+    {
+      "nav_item_code": "risk.records",
+      "parent_code": "grc.risk",
+      "route": "/risk/records",
+      "label_en": "Records",
+      "label_ar": "السجلات",
+      "sort_order": 60,
+      "icon": "list",
+      "permission": "risk.record.read"
+    },
+    {
+      "nav_item_code": "risk.workflows",
+      "parent_code": "grc.risk",
+      "route": "/risk/workflows",
+      "label_en": "Workflows",
+      "label_ar": "سير العمل",
+      "sort_order": 70,
+      "icon": "arrow-cycle",
+      "permission": "risk.workflow.manage"
+    },
+    {
+      "nav_item_code": "risk.reports",
+      "parent_code": "grc.risk",
+      "route": "/risk/reports",
+      "label_en": "Reports",
+      "label_ar": "التقارير",
+      "sort_order": 80,
+      "icon": "document",
+      "permission": "risk.record.read"
+    },
+    {
+      "nav_item_code": "risk.settings",
+      "parent_code": "grc.risk",
+      "route": "/risk/settings",
+      "label_en": "Settings",
+      "label_ar": "الإعدادات",
+      "sort_order": 90,
+      "icon": "settings",
+      "permission": "risk.workflow.manage"
+    }
   ],
   "pages": [
-    { "page_code": "risk.overview", "route": "/risk/overview", "archetype": "command-home", "template_export": "ModuleOverviewTemplateComponent", "permission": "risk.record.read", "props": {} },
-    { "page_code": "risk.register", "route": "/risk/register", "archetype": "intelligent-register", "template_export": "ModuleRecordsTemplateComponent", "permission": "risk.register.read", "props": {} },
-    { "page_code": "risk.assessments", "route": "/risk/assessments", "archetype": "workflow-control", "template_export": "ModuleAssessmentsTemplateComponent", "permission": "risk.assessment.create", "props": {} },
-    { "page_code": "risk.heatmap", "route": "/risk/heatmap", "archetype": "posture-overview", "template_export": "PostureOverviewTemplateComponent", "permission": "risk.record.read", "props": {} },
-    { "page_code": "risk.treatments", "route": "/risk/treatments", "archetype": "intelligent-register", "template_export": "ModuleRecordsTemplateComponent", "permission": "risk.treatment.assign", "props": {} },
-    { "page_code": "risk.records", "route": "/risk/records", "archetype": "intelligent-register", "template_export": "ModuleRecordsTemplateComponent", "permission": "risk.record.read", "props": {} },
-    { "page_code": "risk.workflows", "route": "/risk/workflows", "archetype": "workflow-timeline", "template_export": "WorkflowTimelineTemplateComponent", "permission": "risk.workflow.manage", "props": {} },
-    { "page_code": "risk.reports", "route": "/risk/reports", "archetype": "command-home", "template_export": "ModuleOverviewTemplateComponent", "permission": "risk.record.read", "props": {} },
-    { "page_code": "risk.settings", "route": "/risk/settings", "archetype": "module-settings", "template_export": "ModuleSettingsTemplateComponent", "permission": "risk.workflow.manage", "props": {} }
+    {
+      "page_code": "risk.home",
+      "route": "/risk",
+      "archetype": "command-home",
+      "template_export": "module.entry.page",
+      "permission": "risk.record.read",
+      "props": {
+        "eyebrow": "Risk",
+        "title": "Risk Command Home",
+        "subtitle": "Dynamic risk workspace resolved by UI-OS from tenant entitlement, role permission, and page binding rows.",
+        "loading": false,
+        "kpis": [],
+        "actions": [
+          {
+            "label": "Open register",
+            "labelAr": "افتح السجل",
+            "route": "/risk/register",
+            "permission": "risk.register.read"
+          },
+          {
+            "label": "Review treatments",
+            "labelAr": "راجع المعالجات",
+            "route": "/risk/treatments",
+            "permission": "risk.treatment.assign"
+          }
+        ],
+        "pillars": {
+          "whatChanged": "Risk posture updates from the UI-OS resolver and risk service feed.",
+          "whyItMatters": "Risk owners need one governed view before assessment, treatment, and board reporting decisions.",
+          "riskOrOpportunity": "Unowned critical risks and stale treatments are escalated before they become audit findings.",
+          "nextAction": {
+            "label": "Review risk register",
+            "labelAr": "راجع سجل المخاطر",
+            "route": "/risk/register",
+            "permission": "risk.record.read"
+          },
+          "evidence": "Risk command-home contract and module entitlement overlay."
+        }
+      }
+    },
+    {
+      "page_code": "risk.overview",
+      "route": "/risk/overview",
+      "archetype": "command-home",
+      "template_export": "module.entry.page",
+      "permission": "risk.record.read",
+      "props": {
+        "eyebrow": "Risk",
+        "title": "Risk Overview",
+        "subtitle": "Executive posture, high-priority exposure, and current decision queue.",
+        "loading": false,
+        "kpis": [],
+        "actions": [
+          {
+            "label": "Open heatmap",
+            "labelAr": "افتح الخريطة الحرارية",
+            "route": "/risk/heatmap",
+            "permission": "risk.record.read"
+          }
+        ],
+        "pillars": {
+          "whatChanged": "Risk posture updates from the UI-OS resolver and risk service feed.",
+          "whyItMatters": "Risk owners need one governed view before assessment, treatment, and board reporting decisions.",
+          "riskOrOpportunity": "Unowned critical risks and stale treatments are escalated before they become audit findings.",
+          "nextAction": {
+            "label": "Review risk register",
+            "labelAr": "راجع سجل المخاطر",
+            "route": "/risk/register",
+            "permission": "risk.record.read"
+          },
+          "evidence": "Risk overview summary endpoint and UI-OS page props."
+        }
+      }
+    },
+    {
+      "page_code": "risk.register",
+      "route": "/risk/register",
+      "archetype": "intelligent-register",
+      "template_export": "module.records.page",
+      "permission": "risk.register.read",
+      "props": {
+        "eyebrow": "Risk",
+        "title": "Risk Register",
+        "subtitle": "Searchable governed list of enterprise risks and ownership.",
+        "loading": false,
+        "columns": [
+          {
+            "key": "riskId",
+            "label": "Risk ID",
+            "labelAr": "معرّف الخطر",
+            "sortable": true
+          },
+          {
+            "key": "title",
+            "label": "Risk",
+            "labelAr": "الخطر",
+            "sortable": true,
+            "type": "link"
+          },
+          {
+            "key": "owner",
+            "label": "Owner",
+            "labelAr": "المالك"
+          },
+          {
+            "key": "severity",
+            "label": "Severity",
+            "labelAr": "الشدة",
+            "type": "tag"
+          },
+          {
+            "key": "status",
+            "label": "Status",
+            "labelAr": "الحالة",
+            "type": "tag"
+          }
+        ],
+        "records": [],
+        "searchPlaceholder": "Search risks",
+        "filterLabel": "Severity",
+        "emptyState": {
+          "titleEn": "No risks yet",
+          "titleAr": "لا توجد مخاطر بعد",
+          "bodyEn": "Create or import risks to start the governed register.",
+          "bodyAr": "أنشئ أو استورد المخاطر لبدء السجل المحكوم."
+        },
+        "pillars": {
+          "whatChanged": "Risk posture updates from the UI-OS resolver and risk service feed.",
+          "whyItMatters": "Risk owners need one governed view before assessment, treatment, and board reporting decisions.",
+          "riskOrOpportunity": "Unowned critical risks and stale treatments are escalated before they become audit findings.",
+          "nextAction": {
+            "label": "Review risk register",
+            "labelAr": "راجع سجل المخاطر",
+            "route": "/risk/register",
+            "permission": "risk.record.write"
+          },
+          "evidence": "Risk register records endpoint."
+        }
+      }
+    },
+    {
+      "page_code": "risk.assessments",
+      "route": "/risk/assessments",
+      "archetype": "workflow-control",
+      "template_export": "module.workflows.page",
+      "permission": "risk.assessment.create",
+      "props": {
+        "eyebrow": "Risk",
+        "title": "Assessments",
+        "subtitle": "Assessment pipeline for scoring, review, and approval.",
+        "loading": false,
+        "tabs": [
+          {
+            "id": "queued",
+            "label": "Queued",
+            "labelAr": "في الانتظار"
+          },
+          {
+            "id": "in-review",
+            "label": "In review",
+            "labelAr": "قيد المراجعة"
+          },
+          {
+            "id": "approved",
+            "label": "Approved",
+            "labelAr": "معتمد"
+          }
+        ],
+        "progressSteps": [
+          {
+            "label": "Scope"
+          },
+          {
+            "label": "Score"
+          },
+          {
+            "label": "Approve"
+          }
+        ],
+        "currentStage": 0,
+        "pillars": {
+          "whatChanged": "Risk posture updates from the UI-OS resolver and risk service feed.",
+          "whyItMatters": "Risk owners need one governed view before assessment, treatment, and board reporting decisions.",
+          "riskOrOpportunity": "Unowned critical risks and stale treatments are escalated before they become audit findings.",
+          "nextAction": {
+            "label": "Review risk register",
+            "labelAr": "راجع سجل المخاطر",
+            "route": "/risk/assessments",
+            "permission": "risk.assessment.create"
+          },
+          "evidence": "Risk assessment workflow endpoint."
+        }
+      }
+    },
+    {
+      "page_code": "risk.heatmap",
+      "route": "/risk/heatmap",
+      "archetype": "risk-landscape",
+      "template_export": "module.heatmap.page",
+      "permission": "risk.record.read",
+      "props": {
+        "eyebrow": "Risk",
+        "title": "Risk Heatmap",
+        "subtitle": "Likelihood and impact landscape for current enterprise exposure.",
+        "loading": false,
+        "heatmapCells": [],
+        "bubbles": [],
+        "axes": {
+          "x": "Likelihood",
+          "y": "Impact"
+        },
+        "pillars": {
+          "whatChanged": "Risk posture updates from the UI-OS resolver and risk service feed.",
+          "whyItMatters": "Risk owners need one governed view before assessment, treatment, and board reporting decisions.",
+          "riskOrOpportunity": "Unowned critical risks and stale treatments are escalated before they become audit findings.",
+          "nextAction": {
+            "label": "Review risk register",
+            "labelAr": "راجع سجل المخاطر",
+            "route": "/risk/heatmap",
+            "permission": "risk.record.read"
+          },
+          "evidence": "Risk heatmap projection from scored records."
+        }
+      }
+    },
+    {
+      "page_code": "risk.treatments",
+      "route": "/risk/treatments",
+      "archetype": "workflow-control",
+      "template_export": "module.workflows.page",
+      "permission": "risk.treatment.assign",
+      "props": {
+        "eyebrow": "Risk",
+        "title": "Treatments",
+        "subtitle": "Treatment assignment and mitigation workflow.",
+        "loading": false,
+        "tabs": [
+          {
+            "id": "open",
+            "label": "Open",
+            "labelAr": "مفتوحة"
+          },
+          {
+            "id": "assigned",
+            "label": "Assigned",
+            "labelAr": "مُسندة"
+          },
+          {
+            "id": "verified",
+            "label": "Verified",
+            "labelAr": "متحقق منها"
+          }
+        ],
+        "progressSteps": [
+          {
+            "label": "Plan"
+          },
+          {
+            "label": "Assign"
+          },
+          {
+            "label": "Verify"
+          }
+        ],
+        "currentStage": 0,
+        "pillars": {
+          "whatChanged": "Risk posture updates from the UI-OS resolver and risk service feed.",
+          "whyItMatters": "Risk owners need one governed view before assessment, treatment, and board reporting decisions.",
+          "riskOrOpportunity": "Unowned critical risks and stale treatments are escalated before they become audit findings.",
+          "nextAction": {
+            "label": "Review risk register",
+            "labelAr": "راجع سجل المخاطر",
+            "route": "/risk/treatments",
+            "permission": "risk.treatment.assign"
+          },
+          "evidence": "Risk treatment plan endpoint."
+        }
+      }
+    },
+    {
+      "page_code": "risk.records",
+      "route": "/risk/records",
+      "archetype": "intelligent-register",
+      "template_export": "module.records.page",
+      "permission": "risk.record.read",
+      "props": {
+        "eyebrow": "Risk",
+        "title": "Records",
+        "subtitle": "Operational risk records and evidence-backed status.",
+        "loading": false,
+        "columns": [
+          {
+            "key": "riskId",
+            "label": "Risk ID",
+            "labelAr": "معرّف الخطر",
+            "sortable": true
+          },
+          {
+            "key": "title",
+            "label": "Risk",
+            "labelAr": "الخطر",
+            "sortable": true,
+            "type": "link"
+          },
+          {
+            "key": "owner",
+            "label": "Owner",
+            "labelAr": "المالك"
+          },
+          {
+            "key": "severity",
+            "label": "Severity",
+            "labelAr": "الشدة",
+            "type": "tag"
+          },
+          {
+            "key": "status",
+            "label": "Status",
+            "labelAr": "الحالة",
+            "type": "tag"
+          }
+        ],
+        "records": [],
+        "searchPlaceholder": "Search records",
+        "filterLabel": "Status",
+        "pillars": {
+          "whatChanged": "Risk posture updates from the UI-OS resolver and risk service feed.",
+          "whyItMatters": "Risk owners need one governed view before assessment, treatment, and board reporting decisions.",
+          "riskOrOpportunity": "Unowned critical risks and stale treatments are escalated before they become audit findings.",
+          "nextAction": {
+            "label": "Review risk register",
+            "labelAr": "راجع سجل المخاطر",
+            "route": "/risk/records",
+            "permission": "risk.record.write"
+          },
+          "evidence": "Risk records service feed."
+        }
+      }
+    },
+    {
+      "page_code": "risk.workflows",
+      "route": "/risk/workflows",
+      "archetype": "workflow-timeline",
+      "template_export": "module.workflow_timeline.page",
+      "permission": "risk.workflow.manage",
+      "props": {
+        "eyebrow": "Risk",
+        "title": "Workflows",
+        "subtitle": "Lifecycle timeline for risk decisions and approvals.",
+        "loading": false,
+        "steps": [],
+        "pillars": {
+          "whatChanged": "Risk posture updates from the UI-OS resolver and risk service feed.",
+          "whyItMatters": "Risk owners need one governed view before assessment, treatment, and board reporting decisions.",
+          "riskOrOpportunity": "Unowned critical risks and stale treatments are escalated before they become audit findings.",
+          "nextAction": {
+            "label": "Review risk register",
+            "labelAr": "راجع سجل المخاطر",
+            "route": "/risk/workflows",
+            "permission": "risk.workflow.manage"
+          },
+          "evidence": "Risk workflow timeline feed."
+        }
+      }
+    },
+    {
+      "page_code": "risk.reports",
+      "route": "/risk/reports",
+      "archetype": "evidence-reports",
+      "template_export": "module.reports.page",
+      "permission": "risk.record.read",
+      "props": {
+        "eyebrow": "Risk",
+        "title": "Reports",
+        "subtitle": "Board and audit-ready risk reporting packages.",
+        "loading": false,
+        "reports": [],
+        "pillars": {
+          "whatChanged": "Risk posture updates from the UI-OS resolver and risk service feed.",
+          "whyItMatters": "Risk owners need one governed view before assessment, treatment, and board reporting decisions.",
+          "riskOrOpportunity": "Unowned critical risks and stale treatments are escalated before they become audit findings.",
+          "nextAction": {
+            "label": "Review risk register",
+            "labelAr": "راجع سجل المخاطر",
+            "route": "/risk/reports",
+            "permission": "risk.record.read"
+          },
+          "evidence": "Risk report export inventory."
+        }
+      }
+    },
+    {
+      "page_code": "risk.settings",
+      "route": "/risk/settings",
+      "archetype": "module-settings",
+      "template_export": "module.settings.page",
+      "permission": "risk.workflow.manage",
+      "props": {
+        "eyebrow": "Risk",
+        "title": "Settings",
+        "subtitle": "Risk model, heatmap dimensions, scoring weights, and treatment thresholds.",
+        "loading": false,
+        "saving": false,
+        "sections": [
+          {
+            "id": "scoring",
+            "label": "Scoring",
+            "labelAr": "التقييم"
+          },
+          {
+            "id": "thresholds",
+            "label": "Thresholds",
+            "labelAr": "العتبات"
+          },
+          {
+            "id": "workflow",
+            "label": "Workflow",
+            "labelAr": "سير العمل"
+          }
+        ],
+        "pillars": {
+          "whatChanged": "Risk posture updates from the UI-OS resolver and risk service feed.",
+          "whyItMatters": "Risk owners need one governed view before assessment, treatment, and board reporting decisions.",
+          "riskOrOpportunity": "Unowned critical risks and stale treatments are escalated before they become audit findings.",
+          "nextAction": {
+            "label": "Review risk register",
+            "labelAr": "راجع سجل المخاطر",
+            "route": "/risk/settings",
+            "permission": "risk.workflow.manage"
+          },
+          "evidence": "Risk settings contract and role-gated write controls."
+        }
+      }
+    }
   ],
   "components": [
-    { "component_key": "module.entry.page", "vendor": "ibm-carbon", "carbon_key": "tiles", "schema_version": 1, "selector": "dos-page-layout", "approval_status": "approved", "metadata": { "source": "risk-module", "archetype": "command-home" } },
-    { "component_key": "module.records.page", "vendor": "ibm-carbon", "carbon_key": "table", "schema_version": 1, "selector": "dos-page-layout", "approval_status": "approved", "metadata": { "source": "risk-module", "archetype": "intelligent-register" } },
-    { "component_key": "module.heatmap.page", "vendor": "ibm-carbon", "carbon_key": "tiles", "schema_version": 1, "selector": "dos-page-layout", "approval_status": "approved", "metadata": { "source": "risk-module", "archetype": "risk-landscape" } },
-    { "component_key": "module.workflows.page", "vendor": "ibm-carbon", "carbon_key": "tabs", "schema_version": 1, "selector": "dos-page-layout", "approval_status": "approved", "metadata": { "source": "risk-module", "archetype": "workflow-control" } },
-    { "component_key": "module.reports.page", "vendor": "ibm-carbon", "carbon_key": "tiles", "schema_version": 1, "selector": "dos-page-layout", "approval_status": "approved", "metadata": { "source": "risk-module", "archetype": "evidence-reports" } },
-    { "component_key": "module.settings.page", "vendor": "ibm-carbon", "carbon_key": "tabs", "schema_version": 1, "selector": "dos-page-layout", "approval_status": "approved", "metadata": { "source": "risk-module", "archetype": "module-settings" } }
+    {
+      "component_key": "module.entry.page",
+      "vendor": "ibm-carbon",
+      "carbon_key": "grid",
+      "schema_version": 1,
+      "selector": "dos-page-layout",
+      "approval_status": "approved",
+      "metadata": {
+        "source": "risk-module",
+        "archetype": "command-home"
+      }
+    },
+    {
+      "component_key": "module.records.page",
+      "vendor": "ibm-carbon",
+      "carbon_key": "table",
+      "schema_version": 1,
+      "selector": "dos-page-layout",
+      "approval_status": "approved",
+      "metadata": {
+        "source": "risk-module",
+        "archetype": "intelligent-register"
+      }
+    },
+    {
+      "component_key": "module.workflows.page",
+      "vendor": "ibm-carbon",
+      "carbon_key": "tabs",
+      "schema_version": 1,
+      "selector": "dos-page-layout",
+      "approval_status": "approved",
+      "metadata": {
+        "source": "risk-module",
+        "archetype": "workflow-control"
+      }
+    },
+    {
+      "component_key": "module.heatmap.page",
+      "vendor": "ibm-carbon",
+      "carbon_key": "grid",
+      "schema_version": 1,
+      "selector": "dos-page-layout",
+      "approval_status": "approved",
+      "metadata": {
+        "source": "risk-module",
+        "archetype": "risk-landscape"
+      }
+    },
+    {
+      "component_key": "module.workflow_timeline.page",
+      "vendor": "ibm-carbon",
+      "carbon_key": "progress-indicator",
+      "schema_version": 1,
+      "selector": "dos-page-layout",
+      "approval_status": "approved",
+      "metadata": {
+        "source": "risk-module",
+        "archetype": "workflow-timeline"
+      }
+    },
+    {
+      "component_key": "module.reports.page",
+      "vendor": "ibm-carbon",
+      "carbon_key": "tiles",
+      "schema_version": 1,
+      "selector": "dos-page-layout",
+      "approval_status": "approved",
+      "metadata": {
+        "source": "risk-module",
+        "archetype": "evidence-reports"
+      }
+    },
+    {
+      "component_key": "module.settings.page",
+      "vendor": "ibm-carbon",
+      "carbon_key": "tabs",
+      "schema_version": 1,
+      "selector": "dos-page-layout",
+      "approval_status": "approved",
+      "metadata": {
+        "source": "risk-module",
+        "archetype": "module-settings"
+      }
+    }
   ],
   "apis": [
-    { "method": "GET", "path": "/api/ui-os/template-binding", "owner_service": "ui-os-service", "permission": "risk.record.read" },
-    { "method": "GET", "path": "/api/ui-os/template-binding/all", "owner_service": "ui-os-service", "permission": "risk.record.read" },
-    { "method": "GET", "path": "/api/risks", "owner_service": "risk-incident-service", "permission": "risk.record.read" },
-    { "method": "POST", "path": "/api/risks", "owner_service": "risk-incident-service", "permission": "risk.record.write" },
-    { "method": "PUT", "path": "/api/risks/:id", "owner_service": "risk-incident-service", "permission": "risk.record.update" },
-    { "method": "DELETE", "path": "/api/risks/:id", "owner_service": "risk-incident-service", "permission": "risk.record.configure" },
-    { "method": "GET", "path": "/api/risk/register", "owner_service": "risk-incident-service", "permission": "risk.register.read" },
-    { "method": "GET", "path": "/api/risk/assessments", "owner_service": "risk-incident-service", "permission": "risk.assessment.create" },
-    { "method": "GET", "path": "/api/risk/heatmap", "owner_service": "risk-incident-service", "permission": "risk.record.read" },
-    { "method": "GET", "path": "/api/risk/treatments", "owner_service": "risk-incident-service", "permission": "risk.treatment.assign" }
+    {
+      "method": "GET",
+      "path": "/api/ui-os/template-binding",
+      "owner_service": "ui-os-service",
+      "permission": "risk.record.read"
+    },
+    {
+      "method": "GET",
+      "path": "/api/ui-os/template-binding/all",
+      "owner_service": "ui-os-service",
+      "permission": "risk.record.read"
+    },
+    {
+      "method": "GET",
+      "path": "/api/risk/stats",
+      "owner_service": "risk-incident-service",
+      "permission": "risk.record.read"
+    },
+    {
+      "method": "GET",
+      "path": "/api/risk",
+      "owner_service": "risk-incident-service",
+      "permission": "risk.record.read"
+    },
+    {
+      "method": "POST",
+      "path": "/api/risk",
+      "owner_service": "risk-incident-service",
+      "permission": "risk.record.write"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/risk/:id",
+      "owner_service": "risk-incident-service",
+      "permission": "risk.record.update"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/risk/:id",
+      "owner_service": "risk-incident-service",
+      "permission": "risk.record.configure"
+    },
+    {
+      "method": "GET",
+      "path": "/api/risk/register",
+      "owner_service": "risk-incident-service",
+      "permission": "risk.register.read"
+    },
+    {
+      "method": "GET",
+      "path": "/api/risk/assessments",
+      "owner_service": "risk-incident-service",
+      "permission": "risk.assessment.create"
+    },
+    {
+      "method": "GET",
+      "path": "/api/risk/heatmap",
+      "owner_service": "risk-incident-service",
+      "permission": "risk.record.read"
+    },
+    {
+      "method": "GET",
+      "path": "/api/risk/treatments",
+      "owner_service": "risk-incident-service",
+      "permission": "risk.treatment.assign"
+    },
+    {
+      "method": "GET",
+      "path": "/api/audit/entries",
+      "owner_service": "risk-incident-service",
+      "permission": "risk.workflow.manage"
+    },
+    {
+      "method": "GET",
+      "path": "/api/health/risk",
+      "owner_service": "risk-incident-service",
+      "permission": null
+    }
   ],
   "i18n": {
-    "en": { "risk.module.title": "Risk Management" },
-    "ar": { "risk.module.title": "إدارة المخاطر" }
+    "en": {
+      "risk.module.title": "Risk Management"
+    },
+    "ar": {
+      "risk.module.title": "إدارة المخاطر"
+    }
   },
-  "tables_owned": ["dos.risks"],
-  "depends_on": ["platform.access-store"]
+  "tables_owned": [
+    "dos.risks",
+    "dos.risk_assessments",
+    "dos.risk_treatments"
+  ],
+  "depends_on": [
+    "platform.access-store",
+    "workspace-shell",
+    "ui-os-service",
+    "risk-incident-service"
+  ]
 }

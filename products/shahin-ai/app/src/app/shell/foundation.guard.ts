@@ -9,7 +9,7 @@ import { AccessStore } from '@dos/access-store';
  * Resolves three checks against the loaded AccessStore snapshot:
  *   1. session loaded (delegates to AccessStore.load() on first hit)
  *   2. tenant entitled to the foundation module
- *   3. caller has at least foundation.read
+ *   3. caller has at least foundation.module.read
  *
  * Failure modes route to /workspace-home with a denied=<reason> query
  * param so the shell renders a clean denied state instead of a broken
@@ -27,8 +27,8 @@ export const foundationGuard: CanActivateFn = async () => {
     return router.createUrlTree(['/workspace-home'], { queryParams: { denied: 'foundation-not-entitled' } });
   }
 
-  if (!access.hasPermission('foundation.read')) {
-    return router.createUrlTree(['/workspace-home'], { queryParams: { denied: 'foundation-read' } });
+  if (!access.hasPermission('foundation.module.read')) {
+    return router.createUrlTree(['/workspace-home'], { queryParams: { denied: 'foundation-module-read' } });
   }
 
   return true;

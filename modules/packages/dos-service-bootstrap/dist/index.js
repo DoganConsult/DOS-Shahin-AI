@@ -36,7 +36,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.clearSecretCache = exports.vaultEnabled = exports.getSecret = exports.getRedlock = exports.withLock = exports.acquireLock = exports.listBreakerStates = exports.getBreaker = exports.createBreaker = exports.createCsrfMiddleware = exports.getFlagString = exports.getFlagBool = exports.getFlag = exports.getFlagClient = exports.initFeatureFlags = exports.sentry = exports.captureMessage = exports.captureException = exports.initErrorTelemetry = exports.enforceEnvValidation = exports.validateCriticalEnv = exports.setupServiceOpenApi = exports.rollbackServiceMigrations = exports.runServiceMigrations = exports.modulesDiagnosticRouter = exports.getModuleLoadResults = exports.loadModuleExports = exports.loadModuleRoute = exports.eventBusHealthCheck = exports.redisHealthCheck = exports.dbHealthCheck = exports.createHealthRouter = void 0;
+exports.invalidateOpenFgaApiTokenCache = exports.resolveOpenFgaApiToken = exports.resolveSecret = exports.clearSecretCache = exports.vaultEnabled = exports.getSecret = exports.getRedlock = exports.withLock = exports.acquireLock = exports.listBreakerStates = exports.getBreaker = exports.createBreaker = exports.createCsrfMiddleware = exports.getFlagString = exports.getFlagBool = exports.getFlag = exports.getFlagClient = exports.initFeatureFlags = exports.sentry = exports.captureMessage = exports.captureException = exports.initErrorTelemetry = exports.enforceEnvValidation = exports.validateCriticalEnv = exports.setupServiceOpenApi = exports.rollbackServiceMigrations = exports.runServiceMigrations = exports.modulesDiagnosticRouter = exports.getModuleLoadResults = exports.loadModuleExports = exports.loadModuleRoute = exports.eventBusHealthCheck = exports.redisHealthCheck = exports.dbHealthCheck = exports.createHealthRouter = void 0;
 exports.createServiceServer = createServiceServer;
 exports.createLogger = createLogger;
 exports.bootstrapService = bootstrapService;
@@ -813,6 +813,10 @@ var vault_1 = require("./vault");
 Object.defineProperty(exports, "getSecret", { enumerable: true, get: function () { return vault_1.getSecret; } });
 Object.defineProperty(exports, "vaultEnabled", { enumerable: true, get: function () { return vault_1.vaultEnabled; } });
 Object.defineProperty(exports, "clearSecretCache", { enumerable: true, get: function () { return vault_1.clearSecretCache; } });
+var secrets_1 = require("./secrets");
+Object.defineProperty(exports, "resolveSecret", { enumerable: true, get: function () { return secrets_1.resolveSecret; } });
+Object.defineProperty(exports, "resolveOpenFgaApiToken", { enumerable: true, get: function () { return secrets_1.resolveOpenFgaApiToken; } });
+Object.defineProperty(exports, "invalidateOpenFgaApiTokenCache", { enumerable: true, get: function () { return secrets_1.invalidateOpenFgaApiTokenCache; } });
 // bootstrapService — convenience wrapper used by services
 async function bootstrapService(serviceCode, opts) {
     const envPort = parseInt(process.env.PORT || '0', 10);

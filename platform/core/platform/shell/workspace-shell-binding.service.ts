@@ -34,16 +34,78 @@ import type {
 import type { ShellAccountMenuEntry } from '@dos/ui-contracts';
 import { AccessStore } from '@dos/access-store';
 
+export type WorkspaceShellZone =
+  | 'header'
+  | 'sidebar'
+  | 'mobile-drawer'
+  | 'mobile-nav'
+  | 'top-banners'
+  | 'main'
+  | 'right-rail'
+  | 'bottom-status'
+  | 'fab'
+  | 'toast';
+
+export interface WorkspaceShellSurface extends WorkspaceShellBindingRow {
+  zone?: WorkspaceShellZone;
+}
+
 interface WorkspaceShellResponse {
   tenantId: string;
   version: number;
-  surfaces: WorkspaceShellBindingRow[];
+  surfaces?: WorkspaceShellSurface[];
+  zones?: Partial<Record<WorkspaceShellZone, WorkspaceShellSurface[]>>;
   knownKeys?: readonly string[];
+  shell?: {
+    version: number;
+    surfaces: WorkspaceShellSurface[];
+    zones?: Partial<Record<WorkspaceShellZone, WorkspaceShellSurface[]>>;
+    knownKeys?: readonly string[];
+  };
 }
 
-type SurfaceMap = ReadonlyMap<WorkspaceShellKey, WorkspaceShellBindingRow>;
+type SurfaceMap = ReadonlyMap<WorkspaceShellKey, WorkspaceShellSurface>;
 
 const EMPTY_MAP: SurfaceMap = new Map();
+
+const WORKSPACE_SHELL_ZONES = new Set<WorkspaceShellZone>([
+  'header',
+  'sidebar',
+  'mobile-drawer',
+  'mobile-nav',
+  'top-banners',
+  'main',
+  'right-rail',
+  'bottom-status',
+  'fab',
+  'toast',
+]);
+
+const DEFAULT_SURFACE_ZONES: Partial<Record<WorkspaceShellKey, WorkspaceShellZone>> = {
+  'workspace.header': 'header',
+  'workspace.command-search': 'header',
+  'shell.account-menu': 'header',
+  'workspace.sidebar': 'sidebar',
+  'shell.desktop-sidebar': 'sidebar',
+  'shell.workspace-nav': 'sidebar',
+  'shell.nav-section': 'sidebar',
+  'shell.nav-item': 'sidebar',
+  'shell.mobile-drawer': 'mobile-drawer',
+  'workspace.mobile-nav': 'mobile-nav',
+  'shell.banner-strip': 'top-banners',
+  'page.layout': 'main',
+  'page.masthead': 'main',
+  'page.header': 'main',
+  'page.tabs': 'main',
+  'page.widget-frame': 'main',
+  'workspace.context-panel': 'right-rail',
+  'workspace.inbox-center': 'right-rail',
+  'workspace.status-bar': 'bottom-status',
+  'workspace.action-queue': 'bottom-status',
+  'workspace.agent-strip': 'bottom-status',
+  'workspace.quick-create': 'fab',
+  'shell.toast-outlet': 'toast',
+};
 
 @Injectable({ providedIn: 'root' })
 export class WorkspaceShellBindingService {
@@ -210,6 +272,24 @@ export class WorkspaceShellBindingService {
     return row && typeof row.position === 'number' ? row.position : 0;
   }
 
+  surfacesByZone(zone: WorkspaceShellZone): WorkspaceShellSurface[] {
+    return Array.from(this._surfaces().values())
+      .filter((row) => this.resolveZone(row) === zone && this.isSurfaceAllowed(row.component_key as WorkspaceShellKey))
+      .sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
+  }
+
+  zoneHas(zone: WorkspaceShellZone): boolean {
+    return this.surfacesByZone(zone).length > 0 || !this._loaded();
+  }
+
+  private resolveZone(row: WorkspaceShellSurface): WorkspaceShellZone | null {
+    if (row.zone && WORKSPACE_SHELL_ZONES.has(row.zone)) return row.zone;
+    const props = row.props as Record<string, unknown> | undefined;
+    const propZone = props && typeof props['zone'] === 'string' ? props['zone'] as WorkspaceShellZone : null;
+    if (propZone && WORKSPACE_SHELL_ZONES.has(propZone)) return propZone;
+    return DEFAULT_SURFACE_ZONES[row.component_key as WorkspaceShellKey] ?? null;
+  }
+
   // Auto-refresh when the active tenant flips. AccessStore may publish
   // `null` during sign-out; we clear the map in that case.
   private readonly tenantEffect = effect(() => {
@@ -230,7 +310,7 @@ export class WorkspaceShellBindingService {
   async refresh(): Promise<void> {
     const tenantId = this._tenantId() ?? this.access.tenantId();
     if (!tenantId) return;
-    const url = `/api/ui-os/workspace-shell/${encodeURIComponent(tenantId)}`;
+    const url = `/api/ui-os/workspace-runtime?tenantId=${encodeURIComponent(tenantId)}`;
     let transientAuth = false;
     const resp = await new Promise<WorkspaceShellResponse | null>((resolve) => {
       this.http.get<WorkspaceShellResponse>(url).pipe(
@@ -250,7 +330,10 @@ export class WorkspaceShellBindingService {
         }),
       ).subscribe((r) => resolve(r ?? null));
     });
-    if (!resp || !Array.isArray(resp.surfaces)) {
+    const shell = resp?.shell;
+    const surfaces = shell?.surfaces ?? resp?.surfaces;
+    const version = shell?.version ?? resp?.version;
+    if (!resp || !Array.isArray(surfaces)) {
       // On transient 401/403 keep the previous map (or pre-load grace) so the
       // shell does not flash to empty chrome. On any other failure, fail-closed.
       if (!transientAuth) {
@@ -260,8 +343,8 @@ export class WorkspaceShellBindingService {
       }
       return;
     }
-    const next = new Map<WorkspaceShellKey, WorkspaceShellBindingRow>();
-    for (const row of resp.surfaces) {
+    const next = new Map<WorkspaceShellKey, WorkspaceShellSurface>();
+    for (const row of surfaces) {
       if (!row || typeof row.component_key !== 'string') continue;
       // NOTE: disabled rows are retained so `isSurfaceAllowed()` can read
       // the DB enabled flag. Per dynamic-UI policy the render host gates on
@@ -269,7 +352,7 @@ export class WorkspaceShellBindingService {
       next.set(row.component_key as WorkspaceShellKey, row);
     }
     this._surfaces.set(next);
-    this._version.set(Number(resp.version) || 0);
+    this._version.set(Number(version) || 0);
     this._loaded.set(true);
   }
 

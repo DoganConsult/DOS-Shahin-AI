@@ -3719,6 +3719,9 @@ importers:
 
   services/tenant-service:
     dependencies:
+      '@dos/service-bootstrap':
+        specifier: workspace:*
+        version: link:../../modules/packages/dos-service-bootstrap
       express:
         specifier: ^4.21.0
         version: 4.22.1
@@ -3802,6 +3805,9 @@ importers:
 
   services/ui-os-service:
     dependencies:
+      '@dos/service-bootstrap':
+        specifier: workspace:*
+        version: link:../../modules/packages/dos-service-bootstrap
       express:
         specifier: ^4.21.0
         version: 4.22.1

@@ -14,12 +14,36 @@
     "route_base": "/dynamic-ui"
   },
   "permissions": [
-    { "code": "dynamic_ui.module.read", "description": "Browse Dynamic UI module and read registry metadata", "sensitive": false },
-    { "code": "dynamic_ui.routes.read", "description": "Read route catalog and bindings", "sensitive": false },
-    { "code": "dynamic_ui.components.read", "description": "Read component registry entries", "sensitive": false },
-    { "code": "dynamic_ui.contracts.read", "description": "Read Dynamic UI contracts", "sensitive": false },
-    { "code": "dynamic_ui.module.write", "description": "Modify routes, bindings, or registry records where permitted", "sensitive": true },
-    { "code": "dynamic_ui.module.admin", "description": "Administer Dynamic UI module and policy-gated writes", "sensitive": true }
+    {
+      "code": "dynamic_ui.module.read",
+      "description": "Browse Dynamic UI module and read registry metadata",
+      "sensitive": false
+    },
+    {
+      "code": "dynamic_ui.routes.read",
+      "description": "Read route catalog and bindings",
+      "sensitive": false
+    },
+    {
+      "code": "dynamic_ui.components.read",
+      "description": "Read component registry entries",
+      "sensitive": false
+    },
+    {
+      "code": "dynamic_ui.contracts.read",
+      "description": "Read Dynamic UI contracts",
+      "sensitive": false
+    },
+    {
+      "code": "dynamic_ui.module.write",
+      "description": "Modify routes, bindings, or registry records where permitted",
+      "sensitive": true
+    },
+    {
+      "code": "dynamic_ui.module.admin",
+      "description": "Administer Dynamic UI module and policy-gated writes",
+      "sensitive": true
+    }
   ],
   "roles": [
     {
@@ -142,7 +166,9 @@
       "metadata": {
         "source": "wave1-dynamic-ui-seed-roster",
         "archetype": "command-home",
-        "pages": ["dynamic-ui.overview"]
+        "pages": [
+          "dynamic-ui.overview"
+        ]
       }
     },
     {
@@ -155,7 +181,911 @@
       "metadata": {
         "source": "wave1-dynamic-ui-seed-roster",
         "archetype": "intelligent-register",
-        "pages": ["dynamic-ui.routes", "dynamic-ui.components", "dynamic-ui.contracts"]
+        "pages": [
+          "dynamic-ui.routes",
+          "dynamic-ui.components",
+          "dynamic-ui.contracts"
+        ]
+      }
+    },
+    {
+      "component_key": "ui_shell",
+      "vendor": "ibm-carbon",
+      "carbon_key": "ui_shell",
+      "schema_version": 1,
+      "selector": "dos-carbon-ui-shell",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "UIShell",
+        "boundary_level": "workspace",
+        "family": "workspace-shell-frame",
+        "sort_order": 1,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "header",
+      "vendor": "ibm-carbon",
+      "carbon_key": "header",
+      "schema_version": 1,
+      "selector": "dos-carbon-header",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "Header",
+        "boundary_level": "workspace",
+        "family": "workspace-shell-frame",
+        "sort_order": 2,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "header_name",
+      "vendor": "ibm-carbon",
+      "carbon_key": "header_name",
+      "schema_version": 1,
+      "selector": "dos-carbon-header-name",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "HeaderName",
+        "boundary_level": "workspace",
+        "family": "workspace-shell-frame",
+        "sort_order": 3,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "header_navigation",
+      "vendor": "ibm-carbon",
+      "carbon_key": "header_navigation",
+      "schema_version": 1,
+      "selector": "dos-carbon-header-navigation",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "HeaderNavigation",
+        "boundary_level": "workspace",
+        "family": "workspace-shell-frame",
+        "sort_order": 4,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "header_menu",
+      "vendor": "ibm-carbon",
+      "carbon_key": "header_menu",
+      "schema_version": 1,
+      "selector": "dos-carbon-header-menu",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "HeaderMenu",
+        "boundary_level": "workspace",
+        "family": "workspace-shell-frame",
+        "sort_order": 5,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "header_menu_item",
+      "vendor": "ibm-carbon",
+      "carbon_key": "header_menu_item",
+      "schema_version": 1,
+      "selector": "dos-carbon-header-menu-item",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "HeaderMenuItem",
+        "boundary_level": "workspace",
+        "family": "workspace-shell-frame",
+        "sort_order": 6,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "header_global_bar",
+      "vendor": "ibm-carbon",
+      "carbon_key": "header_global_bar",
+      "schema_version": 1,
+      "selector": "dos-carbon-header-global-bar",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "HeaderGlobalBar",
+        "boundary_level": "workspace",
+        "family": "workspace-shell-frame",
+        "sort_order": 7,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "header_global_action",
+      "vendor": "ibm-carbon",
+      "carbon_key": "header_global_action",
+      "schema_version": 1,
+      "selector": "dos-carbon-header-global-action",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "HeaderGlobalAction",
+        "boundary_level": "workspace",
+        "family": "workspace-shell-frame",
+        "sort_order": 8,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "side_nav",
+      "vendor": "ibm-carbon",
+      "carbon_key": "side_nav",
+      "schema_version": 1,
+      "selector": "dos-carbon-side-nav",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "SideNav",
+        "boundary_level": "workspace",
+        "family": "workspace-shell-frame",
+        "sort_order": 9,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "side_nav_items",
+      "vendor": "ibm-carbon",
+      "carbon_key": "side_nav_items",
+      "schema_version": 1,
+      "selector": "dos-carbon-side-nav-items",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "SideNavItems",
+        "boundary_level": "workspace",
+        "family": "workspace-shell-frame",
+        "sort_order": 10,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "side_nav_menu",
+      "vendor": "ibm-carbon",
+      "carbon_key": "side_nav_menu",
+      "schema_version": 1,
+      "selector": "dos-carbon-side-nav-menu",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "SideNavMenu",
+        "boundary_level": "workspace",
+        "family": "workspace-shell-frame",
+        "sort_order": 11,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "side_nav_menu_item",
+      "vendor": "ibm-carbon",
+      "carbon_key": "side_nav_menu_item",
+      "schema_version": 1,
+      "selector": "dos-carbon-side-nav-menu-item",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "SideNavMenuItem",
+        "boundary_level": "workspace",
+        "family": "workspace-shell-frame",
+        "sort_order": 12,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "side_nav_link",
+      "vendor": "ibm-carbon",
+      "carbon_key": "side_nav_link",
+      "schema_version": 1,
+      "selector": "dos-carbon-side-nav-link",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "SideNavLink",
+        "boundary_level": "workspace",
+        "family": "workspace-shell-frame",
+        "sort_order": 13,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "content",
+      "vendor": "ibm-carbon",
+      "carbon_key": "content",
+      "schema_version": 1,
+      "selector": "dos-carbon-content",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "Content",
+        "boundary_level": "workspace",
+        "family": "workspace-shell-frame",
+        "sort_order": 14,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "grid",
+      "vendor": "ibm-carbon",
+      "carbon_key": "grid",
+      "schema_version": 1,
+      "selector": "dos-carbon-grid",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "Grid",
+        "boundary_level": "page",
+        "family": "layout",
+        "sort_order": 15,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "column",
+      "vendor": "ibm-carbon",
+      "carbon_key": "column",
+      "schema_version": 1,
+      "selector": "dos-carbon-column",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "Column",
+        "boundary_level": "page",
+        "family": "layout",
+        "sort_order": 16,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "layer",
+      "vendor": "ibm-carbon",
+      "carbon_key": "layer",
+      "schema_version": 1,
+      "selector": "dos-carbon-layer",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "Layer",
+        "boundary_level": "page",
+        "family": "layout",
+        "sort_order": 17,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "breadcrumb",
+      "vendor": "ibm-carbon",
+      "carbon_key": "breadcrumb",
+      "schema_version": 1,
+      "selector": "dos-carbon-breadcrumb",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "Breadcrumb",
+        "boundary_level": "page",
+        "family": "navigation-context",
+        "sort_order": 18,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "tabs",
+      "vendor": "ibm-carbon",
+      "carbon_key": "tabs",
+      "schema_version": 1,
+      "selector": "dos-carbon-tabs",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "Tabs",
+        "boundary_level": "page",
+        "family": "tabs",
+        "sort_order": 19,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "tab",
+      "vendor": "ibm-carbon",
+      "carbon_key": "tab",
+      "schema_version": 1,
+      "selector": "dos-carbon-tab",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "Tab",
+        "boundary_level": "page",
+        "family": "tabs",
+        "sort_order": 20,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "tile",
+      "vendor": "ibm-carbon",
+      "carbon_key": "tile",
+      "schema_version": 1,
+      "selector": "dos-carbon-tile",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "Tile",
+        "boundary_level": "page",
+        "family": "panel",
+        "sort_order": 21,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "clickable_tile",
+      "vendor": "ibm-carbon",
+      "carbon_key": "clickable_tile",
+      "schema_version": 1,
+      "selector": "dos-carbon-clickable-tile",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "ClickableTile",
+        "boundary_level": "page",
+        "family": "panel",
+        "sort_order": 22,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "expandable_tile",
+      "vendor": "ibm-carbon",
+      "carbon_key": "expandable_tile",
+      "schema_version": 1,
+      "selector": "dos-carbon-expandable-tile",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "ExpandableTile",
+        "boundary_level": "page",
+        "family": "panel",
+        "sort_order": 23,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "tag",
+      "vendor": "ibm-carbon",
+      "carbon_key": "tag",
+      "schema_version": 1,
+      "selector": "dos-carbon-tag",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "Tag",
+        "boundary_level": "page",
+        "family": "status-label",
+        "sort_order": 24,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "data_table",
+      "vendor": "ibm-carbon",
+      "carbon_key": "data_table",
+      "schema_version": 1,
+      "selector": "dos-carbon-data-table",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "DataTable",
+        "boundary_level": "page",
+        "family": "data",
+        "sort_order": 25,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "table_toolbar",
+      "vendor": "ibm-carbon",
+      "carbon_key": "table_toolbar",
+      "schema_version": 1,
+      "selector": "dos-carbon-table-toolbar",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "TableToolbar",
+        "boundary_level": "page",
+        "family": "data",
+        "sort_order": 26,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "table_toolbar_search",
+      "vendor": "ibm-carbon",
+      "carbon_key": "table_toolbar_search",
+      "schema_version": 1,
+      "selector": "dos-carbon-table-toolbar-search",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "TableToolbarSearch",
+        "boundary_level": "page",
+        "family": "data",
+        "sort_order": 27,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "table_toolbar_actions",
+      "vendor": "ibm-carbon",
+      "carbon_key": "table_toolbar_actions",
+      "schema_version": 1,
+      "selector": "dos-carbon-table-toolbar-actions",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "TableToolbarActions",
+        "boundary_level": "page",
+        "family": "data",
+        "sort_order": 28,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "table_batch_actions",
+      "vendor": "ibm-carbon",
+      "carbon_key": "table_batch_actions",
+      "schema_version": 1,
+      "selector": "dos-carbon-table-batch-actions",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "TableBatchActions",
+        "boundary_level": "page",
+        "family": "data",
+        "sort_order": 29,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "pagination",
+      "vendor": "ibm-carbon",
+      "carbon_key": "pagination",
+      "schema_version": 1,
+      "selector": "dos-carbon-pagination",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "Pagination",
+        "boundary_level": "page",
+        "family": "data",
+        "sort_order": 30,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "structured_list",
+      "vendor": "ibm-carbon",
+      "carbon_key": "structured_list",
+      "schema_version": 1,
+      "selector": "dos-carbon-structured-list",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "StructuredList",
+        "boundary_level": "page",
+        "family": "data",
+        "sort_order": 31,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "search",
+      "vendor": "ibm-carbon",
+      "carbon_key": "search",
+      "schema_version": 1,
+      "selector": "dos-carbon-search",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "Search",
+        "boundary_level": "page",
+        "family": "input",
+        "sort_order": 32,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "dropdown",
+      "vendor": "ibm-carbon",
+      "carbon_key": "dropdown",
+      "schema_version": 1,
+      "selector": "dos-carbon-dropdown",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "Dropdown",
+        "boundary_level": "page",
+        "family": "input",
+        "sort_order": 33,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "combo_box",
+      "vendor": "ibm-carbon",
+      "carbon_key": "combo_box",
+      "schema_version": 1,
+      "selector": "dos-carbon-combo-box",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "ComboBox",
+        "boundary_level": "page",
+        "family": "input",
+        "sort_order": 34,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "multi_select",
+      "vendor": "ibm-carbon",
+      "carbon_key": "multi_select",
+      "schema_version": 1,
+      "selector": "dos-carbon-multi-select",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "MultiSelect",
+        "boundary_level": "page",
+        "family": "input",
+        "sort_order": 35,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "date_picker",
+      "vendor": "ibm-carbon",
+      "carbon_key": "date_picker",
+      "schema_version": 1,
+      "selector": "dos-carbon-date-picker",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "DatePicker",
+        "boundary_level": "page",
+        "family": "input",
+        "sort_order": 36,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "text_input",
+      "vendor": "ibm-carbon",
+      "carbon_key": "text_input",
+      "schema_version": 1,
+      "selector": "dos-carbon-text-input",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "TextInput",
+        "boundary_level": "page",
+        "family": "input",
+        "sort_order": 37,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "text_area",
+      "vendor": "ibm-carbon",
+      "carbon_key": "text_area",
+      "schema_version": 1,
+      "selector": "dos-carbon-text-area",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "TextArea",
+        "boundary_level": "page",
+        "family": "input",
+        "sort_order": 38,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "number_input",
+      "vendor": "ibm-carbon",
+      "carbon_key": "number_input",
+      "schema_version": 1,
+      "selector": "dos-carbon-number-input",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "NumberInput",
+        "boundary_level": "page",
+        "family": "input",
+        "sort_order": 39,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "select",
+      "vendor": "ibm-carbon",
+      "carbon_key": "select",
+      "schema_version": 1,
+      "selector": "dos-carbon-select",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "Select",
+        "boundary_level": "page",
+        "family": "input",
+        "sort_order": 40,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "checkbox",
+      "vendor": "ibm-carbon",
+      "carbon_key": "checkbox",
+      "schema_version": 1,
+      "selector": "dos-carbon-checkbox",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "Checkbox",
+        "boundary_level": "page",
+        "family": "input",
+        "sort_order": 41,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "radio",
+      "vendor": "ibm-carbon",
+      "carbon_key": "radio",
+      "schema_version": 1,
+      "selector": "dos-carbon-radio",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "Radio",
+        "boundary_level": "page",
+        "family": "input",
+        "sort_order": 42,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "toggle",
+      "vendor": "ibm-carbon",
+      "carbon_key": "toggle",
+      "schema_version": 1,
+      "selector": "dos-carbon-toggle",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "Toggle",
+        "boundary_level": "page",
+        "family": "input",
+        "sort_order": 43,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "button",
+      "vendor": "ibm-carbon",
+      "carbon_key": "button",
+      "schema_version": 1,
+      "selector": "dos-carbon-button",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "Button",
+        "boundary_level": "page",
+        "family": "action",
+        "sort_order": 44,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "icon_button",
+      "vendor": "ibm-carbon",
+      "carbon_key": "icon_button",
+      "schema_version": 1,
+      "selector": "dos-carbon-icon-button",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "IconButton",
+        "boundary_level": "page",
+        "family": "action",
+        "sort_order": 45,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "overflow_menu",
+      "vendor": "ibm-carbon",
+      "carbon_key": "overflow_menu",
+      "schema_version": 1,
+      "selector": "dos-carbon-overflow-menu",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "OverflowMenu",
+        "boundary_level": "page",
+        "family": "action",
+        "sort_order": 46,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "overflow_menu_option",
+      "vendor": "ibm-carbon",
+      "carbon_key": "overflow_menu_option",
+      "schema_version": 1,
+      "selector": "dos-carbon-overflow-menu-option",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "OverflowMenuOption",
+        "boundary_level": "page",
+        "family": "action",
+        "sort_order": 47,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "modal",
+      "vendor": "ibm-carbon",
+      "carbon_key": "modal",
+      "schema_version": 1,
+      "selector": "dos-carbon-modal",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "Modal",
+        "boundary_level": "page",
+        "family": "overlay",
+        "sort_order": 48,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "inline_notification",
+      "vendor": "ibm-carbon",
+      "carbon_key": "inline_notification",
+      "schema_version": 1,
+      "selector": "dos-carbon-inline-notification",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "InlineNotification",
+        "boundary_level": "page",
+        "family": "feedback",
+        "sort_order": 49,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "toast_notification",
+      "vendor": "ibm-carbon",
+      "carbon_key": "toast_notification",
+      "schema_version": 1,
+      "selector": "dos-carbon-toast-notification",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "ToastNotification",
+        "boundary_level": "page",
+        "family": "feedback",
+        "sort_order": 50,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "tooltip",
+      "vendor": "ibm-carbon",
+      "carbon_key": "tooltip",
+      "schema_version": 1,
+      "selector": "dos-carbon-tooltip",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "Tooltip",
+        "boundary_level": "page",
+        "family": "polish",
+        "sort_order": 51,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "toggletip",
+      "vendor": "ibm-carbon",
+      "carbon_key": "toggletip",
+      "schema_version": 1,
+      "selector": "dos-carbon-toggletip",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "Toggletip",
+        "boundary_level": "page",
+        "family": "polish",
+        "sort_order": 52,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "popover",
+      "vendor": "ibm-carbon",
+      "carbon_key": "popover",
+      "schema_version": 1,
+      "selector": "dos-carbon-popover",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "Popover",
+        "boundary_level": "page",
+        "family": "polish",
+        "sort_order": 53,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "progress_bar",
+      "vendor": "ibm-carbon",
+      "carbon_key": "progress_bar",
+      "schema_version": 1,
+      "selector": "dos-carbon-progress-bar",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "ProgressBar",
+        "boundary_level": "page",
+        "family": "polish",
+        "sort_order": 54,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "inline_loading",
+      "vendor": "ibm-carbon",
+      "carbon_key": "inline_loading",
+      "schema_version": 1,
+      "selector": "dos-carbon-inline-loading",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "InlineLoading",
+        "boundary_level": "page",
+        "family": "polish",
+        "sort_order": 55,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "skeleton_text",
+      "vendor": "ibm-carbon",
+      "carbon_key": "skeleton_text",
+      "schema_version": 1,
+      "selector": "dos-carbon-skeleton-text",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "SkeletonText",
+        "boundary_level": "page",
+        "family": "polish",
+        "sort_order": 56,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "skeleton_placeholder",
+      "vendor": "ibm-carbon",
+      "carbon_key": "skeleton_placeholder",
+      "schema_version": 1,
+      "selector": "dos-carbon-skeleton-placeholder",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "SkeletonPlaceholder",
+        "boundary_level": "page",
+        "family": "polish",
+        "sort_order": 57,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "context_menu",
+      "vendor": "ibm-carbon",
+      "carbon_key": "context_menu",
+      "schema_version": 1,
+      "selector": "dos-carbon-context-menu",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "ContextMenu",
+        "boundary_level": "page",
+        "family": "polish",
+        "sort_order": 58,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "file_uploader",
+      "vendor": "ibm-carbon",
+      "carbon_key": "file_uploader",
+      "schema_version": 1,
+      "selector": "dos-carbon-file-uploader",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "FileUploader",
+        "boundary_level": "page",
+        "family": "polish",
+        "sort_order": 59,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
+      }
+    },
+    {
+      "component_key": "accordion",
+      "vendor": "ibm-carbon",
+      "carbon_key": "accordion",
+      "schema_version": 1,
+      "selector": "dos-carbon-accordion",
+      "approval_status": "approved",
+      "metadata": {
+        "componentUse": "Accordion",
+        "boundary_level": "page",
+        "family": "polish",
+        "sort_order": 60,
+        "public_contract": "dynamic-ui-carbon-boundary-v1"
       }
     }
   ],
@@ -216,5 +1146,7 @@
     "dos.dynamic_ui_component_registry",
     "dos.dynamic_ui_contracts"
   ],
-  "depends_on": ["platform.access-store"]
+  "depends_on": [
+    "platform.access-store"
+  ]
 }

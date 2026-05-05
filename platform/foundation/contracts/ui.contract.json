@@ -11,40 +11,40 @@
   "dataResources": [
     { "resourceKey": "foundation.users.list", "resourceType": "rest", "urlOrQuery": "/api/users", "permission": "foundation.user.read", "cacheTtlSec": 30, "pagination": "offset", "shapeRef": "FoundationUserListShape" },
     { "resourceKey": "foundation.users.detail", "resourceType": "rest", "urlOrQuery": "/api/users/:id", "permission": "foundation.user.read", "cacheTtlSec": 0 },
-    { "resourceKey": "foundation.organizations", "resourceType": "rest", "urlOrQuery": "/api/organizations", "permission": "foundation.read", "cacheTtlSec": 60 },
-    { "resourceKey": "foundation.business-units", "resourceType": "rest", "urlOrQuery": "/api/business-units", "permission": "foundation.read", "cacheTtlSec": 60 },
-    { "resourceKey": "foundation.departments", "resourceType": "rest", "urlOrQuery": "/api/foundation/departments", "permission": "foundation.read", "cacheTtlSec": 60 },
-    { "resourceKey": "foundation.teams", "resourceType": "rest", "urlOrQuery": "/api/foundation/teams", "permission": "foundation.read", "cacheTtlSec": 60 },
-    { "resourceKey": "foundation.roles", "resourceType": "rest", "urlOrQuery": "/api/profiles/roles", "permission": "foundation.admin.read", "cacheTtlSec": 60 },
-    { "resourceKey": "foundation.role.detail", "resourceType": "rest", "urlOrQuery": "/api/profiles/roles/:id", "permission": "foundation.admin.read", "cacheTtlSec": 0 },
-    { "resourceKey": "foundation.permissions", "resourceType": "rest", "urlOrQuery": "/api/permissions", "permission": "foundation.admin.read", "cacheTtlSec": 60 },
-    { "resourceKey": "foundation.locations", "resourceType": "rest", "urlOrQuery": "/api/locations", "permission": "foundation.read", "cacheTtlSec": 120 },
-    { "resourceKey": "foundation.positions", "resourceType": "rest", "urlOrQuery": "/api/positions", "permission": "foundation.read", "cacheTtlSec": 60 },
-    { "resourceKey": "foundation.committees", "resourceType": "rest", "urlOrQuery": "/api/committees", "permission": "foundation.read", "cacheTtlSec": 60 },
-    { "resourceKey": "foundation.delegations", "resourceType": "rest", "urlOrQuery": "/api/delegations", "permission": "governance:read", "cacheTtlSec": 30 },
-    { "resourceKey": "foundation.ownership-mapping", "resourceType": "rest", "urlOrQuery": "/api/ownership-mappings", "permission": "foundation.read", "cacheTtlSec": 60 },
-    { "resourceKey": "foundation.access-review", "resourceType": "rest", "urlOrQuery": "/api/access-reviews", "permission": "foundation.read", "cacheTtlSec": 30 },
-    { "resourceKey": "foundation.policies", "resourceType": "rest", "urlOrQuery": "/api/policies?scope=foundation", "permission": "governance:read", "cacheTtlSec": 60 },
-    { "resourceKey": "foundation.data-processing", "resourceType": "rest", "urlOrQuery": "/api/data-processing", "permission": "privacy:read", "cacheTtlSec": 60 },
-    { "resourceKey": "foundation.reference-data", "resourceType": "rest", "urlOrQuery": "/api/reference-data", "permission": "foundation.read", "cacheTtlSec": 300 },
-    { "resourceKey": "foundation.operations-readiness", "resourceType": "rest", "urlOrQuery": "/api/foundation/operations-readiness", "permission": "foundation.admin.read", "cacheTtlSec": 60 },
-    { "resourceKey": "foundation.audit", "resourceType": "rest", "urlOrQuery": "/api/audit-trail?limit=50", "permission": "audit_trail.read", "cacheTtlSec": 15 },
-    { "resourceKey": "foundation.settings", "resourceType": "rest", "urlOrQuery": "/api/tenants/settings", "permission": "foundation.admin.read", "cacheTtlSec": 60 },
-    { "resourceKey": "foundation.overview", "resourceType": "rest", "urlOrQuery": "/api/tenants/home/overview", "permission": "foundation.read", "cacheTtlSec": 30 },
+    { "resourceKey": "foundation.organizations", "resourceType": "rest", "urlOrQuery": "/api/organizations", "permission": "foundation.data.read", "cacheTtlSec": 60 },
+    { "resourceKey": "foundation.business-units", "resourceType": "rest", "urlOrQuery": "/api/business-units", "permission": "foundation.data.read", "cacheTtlSec": 60 },
+    { "resourceKey": "foundation.departments", "resourceType": "rest", "urlOrQuery": "/api/foundation/departments", "permission": "foundation.data.read", "cacheTtlSec": 60 },
+    { "resourceKey": "foundation.teams", "resourceType": "rest", "urlOrQuery": "/api/foundation/teams", "permission": "foundation.data.read", "cacheTtlSec": 60 },
+    { "resourceKey": "foundation.roles", "resourceType": "rest", "urlOrQuery": "/api/profiles/roles", "permission": "foundation.rbac.read", "cacheTtlSec": 60 },
+    { "resourceKey": "foundation.role.detail", "resourceType": "rest", "urlOrQuery": "/api/profiles/roles/:id", "permission": "foundation.rbac.read", "cacheTtlSec": 0 },
+    { "resourceKey": "foundation.permissions", "resourceType": "rest", "urlOrQuery": "/api/permissions", "permission": "foundation.rbac.read", "cacheTtlSec": 60 },
+    { "resourceKey": "foundation.locations", "resourceType": "rest", "urlOrQuery": "/api/locations", "permission": "foundation.data.read", "cacheTtlSec": 120 },
+    { "resourceKey": "foundation.positions", "resourceType": "rest", "urlOrQuery": "/api/positions", "permission": "foundation.data.read", "cacheTtlSec": 60 },
+    { "resourceKey": "foundation.committees", "resourceType": "rest", "urlOrQuery": "/api/committees", "permission": "foundation.data.read", "cacheTtlSec": 60 },
+    { "resourceKey": "foundation.delegations", "resourceType": "rest", "urlOrQuery": "/api/delegations", "permission": "foundation.data.read", "cacheTtlSec": 30 },
+    { "resourceKey": "foundation.ownership-mapping", "resourceType": "rest", "urlOrQuery": "/api/ownership-mappings", "permission": "foundation.data.read", "cacheTtlSec": 60 },
+    { "resourceKey": "foundation.access-review", "resourceType": "rest", "urlOrQuery": "/api/access-reviews", "permission": "foundation.review.read", "cacheTtlSec": 30 },
+    { "resourceKey": "foundation.policies", "resourceType": "rest", "urlOrQuery": "/api/policies?scope=foundation", "permission": "foundation.data.read", "cacheTtlSec": 60 },
+    { "resourceKey": "foundation.data-processing", "resourceType": "rest", "urlOrQuery": "/api/data-processing", "permission": "foundation.data.read", "cacheTtlSec": 60 },
+    { "resourceKey": "foundation.reference-data", "resourceType": "rest", "urlOrQuery": "/api/reference-data", "permission": "foundation.data.read", "cacheTtlSec": 300 },
+    { "resourceKey": "foundation.operations-readiness", "resourceType": "rest", "urlOrQuery": "/api/foundation/operations-readiness", "permission": "foundation.module.read", "cacheTtlSec": 60 },
+    { "resourceKey": "foundation.audit", "resourceType": "rest", "urlOrQuery": "/api/audit-trail?limit=50", "permission": "foundation.audit.read", "cacheTtlSec": 15 },
+    { "resourceKey": "foundation.settings", "resourceType": "rest", "urlOrQuery": "/api/tenants/settings", "permission": "foundation.module.admin", "cacheTtlSec": 60 },
+    { "resourceKey": "foundation.overview", "resourceType": "rest", "urlOrQuery": "/api/tenants/home/overview", "permission": "foundation.module.read", "cacheTtlSec": 30 },
     { "resourceKey": "foundation.realtime", "resourceType": "sse", "urlOrQuery": "/api/foundation/events", "realtimeTopic": "foundation.*", "cacheTtlSec": 0 }
   ],
   "kpis": [
     { "kpiKey": "users.total",          "labelKey": "foundation.kpi.users.total",          "scope": "module-overview", "format": "number",     "dataResource": "foundation.users.list",        "permission": "foundation.user.read" },
-    { "kpiKey": "departments.total",    "labelKey": "foundation.kpi.departments.total",    "scope": "module-overview", "format": "number",     "dataResource": "foundation.departments",       "permission": "foundation.read" },
-    { "kpiKey": "teams.total",          "labelKey": "foundation.kpi.teams.total",          "scope": "module-overview", "format": "number",     "dataResource": "foundation.teams",             "permission": "foundation.read" },
-    { "kpiKey": "vacancies",            "labelKey": "foundation.kpi.vacancies",            "scope": "module-overview", "format": "number",     "dataResource": "foundation.overview",          "permission": "foundation.read" },
-    { "kpiKey": "complianceRate",       "labelKey": "foundation.kpi.complianceRate",       "scope": "module-overview", "format": "percentage", "dataResource": "foundation.overview",          "permission": "foundation.read", "trendEnabled": true },
-    { "kpiKey": "ownership.gaps",       "labelKey": "foundation.kpi.ownership.gaps",       "scope": "module-overview", "format": "number",     "dataResource": "foundation.overview",          "permission": "foundation.read" }
+    { "kpiKey": "departments.total",    "labelKey": "foundation.kpi.departments.total",    "scope": "module-overview", "format": "number",     "dataResource": "foundation.departments",       "permission": "foundation.data.read" },
+    { "kpiKey": "teams.total",          "labelKey": "foundation.kpi.teams.total",          "scope": "module-overview", "format": "number",     "dataResource": "foundation.teams",             "permission": "foundation.data.read" },
+    { "kpiKey": "vacancies",            "labelKey": "foundation.kpi.vacancies",            "scope": "module-overview", "format": "number",     "dataResource": "foundation.overview",          "permission": "foundation.module.read" },
+    { "kpiKey": "complianceRate",       "labelKey": "foundation.kpi.complianceRate",       "scope": "module-overview", "format": "percentage", "dataResource": "foundation.overview",          "permission": "foundation.module.read", "trendEnabled": true },
+    { "kpiKey": "ownership.gaps",       "labelKey": "foundation.kpi.ownership.gaps",       "scope": "module-overview", "format": "number",     "dataResource": "foundation.overview",          "permission": "foundation.module.read" }
   ],
   "intents": [
     { "intentKey": "foundation.users.risky",     "utteranceEn": "Show users with risky access",            "utteranceAr": "اعرض المستخدمين ذوي الصلاحيات عالية الخطورة", "route": "/foundation/users",        "actionId": "filter:risk=high",   "permission": "foundation.user.read" },
-    { "intentKey": "foundation.policies.expiring","utteranceEn": "Find policies expiring this month",      "utteranceAr": "اعرض السياسات التي ستنتهي هذا الشهر",         "route": "/foundation/policies",     "actionId": "filter:expiry=30d",  "permission": "foundation.read" },
-    { "intentKey": "foundation.access-review.start","utteranceEn": "Start access review campaign",         "utteranceAr": "ابدأ حملة مراجعة الصلاحيات",                 "route": "/foundation/access-review","actionId": "open:create",        "permission": "access_review:create" }
+    { "intentKey": "foundation.policies.expiring","utteranceEn": "Find policies expiring this month",      "utteranceAr": "اعرض السياسات التي ستنتهي هذا الشهر",         "route": "/foundation/policies",     "actionId": "filter:expiry=30d",  "permission": "foundation.data.read" },
+    { "intentKey": "foundation.access-review.start","utteranceEn": "Start access review campaign",         "utteranceAr": "ابدأ حملة مراجعة الصلاحيات",                 "route": "/foundation/access-review","actionId": "open:create",        "permission": "foundation.review.read" }
   ],
   "i18nKeys": [
     { "keyPath": "modules.foundation.title",       "en": "Foundation",                   "ar": "الأساس" },
@@ -81,18 +81,28 @@
     { "keyPath": "foundation.committees.subtitle",     "en": "Decision rooms and minutes","ar": "غرف القرار والمحاضر" },
     { "keyPath": "foundation.delegations.title",       "en": "Delegations",         "ar": "التفويضات" },
     { "keyPath": "foundation.delegations.subtitle",    "en": "Authority transfer and approvals","ar": "نقل الصلاحيات والموافقات" },
+    { "keyPath": "foundation.ownership.title",         "en": "Ownership",           "ar": "الملكية" },
+    { "keyPath": "foundation.ownership.subtitle",      "en": "Control ownership and accountability","ar": "ملكية الضوابط والمساءلة" },
     { "keyPath": "foundation.ownershipMapping.title",   "en": "Ownership Mapping",  "ar": "خريطة الملكية" },
     { "keyPath": "foundation.ownershipMapping.subtitle","en": "Org-unit ownership coverage","ar": "تغطية ملكية الوحدات التنظيمية" },
     { "keyPath": "foundation.accessReview.title",      "en": "Access Review",       "ar": "مراجعة الصلاحيات" },
     { "keyPath": "foundation.accessReview.subtitle",   "en": "Periodic access review campaigns","ar": "حملات مراجعة الصلاحيات الدورية" },
     { "keyPath": "foundation.policies.title",          "en": "Policies",            "ar": "السياسات" },
     { "keyPath": "foundation.policies.subtitle",       "en": "Policy lifecycle and governance","ar": "دورة حياة السياسات وحوكمتها" },
+    { "keyPath": "foundation.sod.title",               "en": "Segregation of Duties", "ar": "فصل الواجبات" },
+    { "keyPath": "foundation.sod.subtitle",            "en": "Conflict rules and exception handling","ar": "قواعد التعارض ومعالجة الاستثناءات" },
+    { "keyPath": "foundation.hierarchyViz.title",      "en": "Hierarchy Visualization", "ar": "التصور الهرمي" },
+    { "keyPath": "foundation.hierarchyViz.subtitle",   "en": "Interactive reporting-line exploration","ar": "استكشاف تفاعلي لخطوط التبعية" },
+    { "keyPath": "foundation.userLifecycle.title",     "en": "User Lifecycle",      "ar": "دورة حياة المستخدم" },
+    { "keyPath": "foundation.userLifecycle.subtitle",  "en": "Joiner, mover, and leaver workflows","ar": "سير عمل الانضمام والتنقل والمغادرة" },
     { "keyPath": "foundation.dataProcessing.title",    "en": "Data Processing",     "ar": "معالجة البيانات" },
     { "keyPath": "foundation.dataProcessing.subtitle", "en": "Records of processing activity (RoPA)","ar": "سجلات نشاط المعالجة" },
     { "keyPath": "foundation.referenceData.title",     "en": "Reference Data",      "ar": "البيانات المرجعية" },
     { "keyPath": "foundation.referenceData.subtitle",  "en": "Taxonomies and lookup tables","ar": "التصنيفات وجداول البحث" },
     { "keyPath": "foundation.operationsReadiness.title","en": "Operations Readiness","ar": "جاهزية العمليات" },
     { "keyPath": "foundation.operationsReadiness.subtitle","en": "Foundation-level readiness scorecard","ar": "بطاقة الجاهزية على مستوى الأساس" },
+    { "keyPath": "foundation.diagnostics.title",       "en": "Diagnostics",         "ar": "التشخيص" },
+    { "keyPath": "foundation.diagnostics.subtitle",    "en": "Operational readiness and control-health posture","ar": "جاهزية التشغيل ووضع صحة الضوابط" },
     { "keyPath": "foundation.audit.title",             "en": "Audit Log",           "ar": "سجل التدقيق" },
     { "keyPath": "foundation.audit.subtitle",          "en": "Forensic timeline of foundation events","ar": "الخط الزمني الجنائي لأحداث الأساس" },
     { "keyPath": "foundation.settings.title",          "en": "Settings",            "ar": "الإعدادات" },
@@ -132,7 +142,7 @@
       "dataResourceKey": "foundation.organizations",
       "auditEnabled": true,
       "realtimeEnabled": true,
-      "visibleWhenPerm": ["foundation.read"]
+      "visibleWhenPerm": ["foundation.data.read"]
     },
     {
       "route": "/foundation/business-units",
@@ -145,7 +155,7 @@
       "signatureWidget": "business-units-grid",
       "dataResourceKey": "foundation.business-units",
       "auditEnabled": true,
-      "visibleWhenPerm": ["foundation.read"]
+      "visibleWhenPerm": ["foundation.data.read"]
     },
     {
       "route": "/foundation/departments",
@@ -158,7 +168,34 @@
       "signatureWidget": "departments-grid",
       "dataResourceKey": "foundation.departments",
       "auditEnabled": true,
-      "visibleWhenPerm": ["foundation.read"]
+      "visibleWhenPerm": ["foundation.data.read"]
+    },
+    {
+      "route": "/foundation/positions",
+      "pageType": "list",
+      "layout": "full-page",
+      "kpiScope": "none",
+      "userIntent": "manage",
+      "titleKey": "foundation.positions.title",
+      "subtitleKey": "foundation.positions.subtitle",
+      "signatureWidget": "positions-board",
+      "dataResourceKey": "foundation.positions",
+      "auditEnabled": true,
+      "visibleWhenPerm": ["foundation.data.read"]
+    },
+    {
+      "route": "/foundation/locations",
+      "pageType": "list",
+      "layout": "full-page",
+      "kpiScope": "none",
+      "userIntent": "manage",
+      "titleKey": "foundation.locations.title",
+      "subtitleKey": "foundation.locations.subtitle",
+      "signatureWidget": "geo-coverage-map",
+      "dataResourceKey": "foundation.locations",
+      "auditEnabled": true,
+      "nbaEnabled": true,
+      "visibleWhenPerm": ["foundation.data.read"]
     },
     {
       "route": "/foundation/users",
@@ -178,6 +215,19 @@
       "visibleWhenPerm": ["foundation.user.read","foundation.user.write"]
     },
     {
+      "route": "/foundation/teams",
+      "pageType": "list",
+      "layout": "full-page",
+      "kpiScope": "none",
+      "userIntent": "manage",
+      "titleKey": "foundation.teams.title",
+      "subtitleKey": "foundation.teams.subtitle",
+      "signatureWidget": "raci-canvas",
+      "dataResourceKey": "foundation.teams",
+      "auditEnabled": true,
+      "visibleWhenPerm": ["foundation.data.read"]
+    },
+    {
       "route": "/foundation/roles",
       "pageType": "list",
       "layout": "full-page",
@@ -190,47 +240,20 @@
       "signatureWidget": "permission-matrix",
       "dataResourceKey": "foundation.roles",
       "auditEnabled": true,
-      "visibleWhenPerm": ["foundation.admin.read"]
+      "visibleWhenPerm": ["foundation.rbac.read"]
     },
     {
-      "route": "/foundation/teams",
+      "route": "/foundation/permissions",
       "pageType": "list",
       "layout": "full-page",
       "kpiScope": "none",
-      "userIntent": "manage",
-      "titleKey": "foundation.teams.title",
-      "subtitleKey": "foundation.teams.subtitle",
-      "signatureWidget": "raci-canvas",
-      "dataResourceKey": "foundation.teams",
+      "userIntent": "review",
+      "titleKey": "foundation.permissions.title",
+      "subtitleKey": "foundation.permissions.subtitle",
+      "signatureWidget": "permission-matrix",
+      "dataResourceKey": "foundation.permissions",
       "auditEnabled": true,
-      "visibleWhenPerm": ["foundation.read"]
-    },
-    {
-      "route": "/foundation/locations",
-      "pageType": "list",
-      "layout": "full-page",
-      "kpiScope": "none",
-      "userIntent": "manage",
-      "titleKey": "foundation.locations.title",
-      "subtitleKey": "foundation.locations.subtitle",
-      "signatureWidget": "geo-coverage-map",
-      "dataResourceKey": "foundation.locations",
-      "auditEnabled": true,
-      "nbaEnabled": true,
-      "visibleWhenPerm": ["foundation.read"]
-    },
-    {
-      "route": "/foundation/positions",
-      "pageType": "list",
-      "layout": "full-page",
-      "kpiScope": "none",
-      "userIntent": "manage",
-      "titleKey": "foundation.positions.title",
-      "subtitleKey": "foundation.positions.subtitle",
-      "signatureWidget": "positions-board",
-      "dataResourceKey": "foundation.positions",
-      "auditEnabled": true,
-      "visibleWhenPerm": ["foundation.read"]
+      "visibleWhenPerm": ["foundation.rbac.read"]
     },
     {
       "route": "/foundation/committees",
@@ -245,7 +268,7 @@
       "agentExperienceMode": "side-panel",
       "primaryAgentId": "foundation-committee-agent",
       "auditEnabled": true,
-      "visibleWhenPerm": ["foundation.read"]
+      "visibleWhenPerm": ["foundation.data.read"]
     },
     {
       "route": "/foundation/delegations",
@@ -261,20 +284,20 @@
       "dataResourceKey": "foundation.delegations",
       "auditEnabled": true,
       "realtimeEnabled": true,
-      "visibleWhenPerm": ["governance:read"]
+      "visibleWhenPerm": ["foundation.data.read"]
     },
     {
-      "route": "/foundation/ownership-mapping",
+      "route": "/foundation/ownership",
       "pageType": "analytics",
       "layout": "full-page",
       "kpiScope": "page-local",
       "userIntent": "review",
-      "titleKey": "foundation.ownershipMapping.title",
-      "subtitleKey": "foundation.ownershipMapping.subtitle",
+      "titleKey": "foundation.ownership.title",
+      "subtitleKey": "foundation.ownership.subtitle",
       "signatureWidget": "ownership-heatmap",
       "dataResourceKey": "foundation.ownership-mapping",
       "auditEnabled": true,
-      "visibleWhenPerm": ["foundation.read"]
+      "visibleWhenPerm": ["foundation.data.read"]
     },
     {
       "route": "/foundation/access-review",
@@ -290,7 +313,7 @@
       "dataResourceKey": "foundation.access-review",
       "auditEnabled": true,
       "realtimeEnabled": true,
-      "visibleWhenPerm": ["foundation.read"]
+      "visibleWhenPerm": ["foundation.review.read"]
     },
     {
       "route": "/foundation/policies",
@@ -303,33 +326,7 @@
       "signatureWidget": "lifecycle-board",
       "dataResourceKey": "foundation.policies",
       "auditEnabled": true,
-      "visibleWhenPerm": ["governance:read"]
-    },
-    {
-      "route": "/foundation/data-processing",
-      "pageType": "list",
-      "layout": "full-page",
-      "kpiScope": "none",
-      "userIntent": "manage",
-      "titleKey": "foundation.dataProcessing.title",
-      "subtitleKey": "foundation.dataProcessing.subtitle",
-      "signatureWidget": "ropa-map",
-      "dataResourceKey": "foundation.data-processing",
-      "auditEnabled": true,
-      "visibleWhenPerm": ["privacy:read"]
-    },
-    {
-      "route": "/foundation/reference-data",
-      "pageType": "settings",
-      "layout": "full-page",
-      "kpiScope": "none",
-      "userIntent": "configure",
-      "titleKey": "foundation.referenceData.title",
-      "subtitleKey": "foundation.referenceData.subtitle",
-      "signatureWidget": "taxonomy-editor",
-      "dataResourceKey": "foundation.reference-data",
-      "auditEnabled": true,
-      "visibleWhenPerm": ["foundation.read"]
+      "visibleWhenPerm": ["foundation.data.read"]
     },
     {
       "route": "/foundation/audit",
@@ -343,62 +340,70 @@
       "dataResourceKey": "foundation.audit",
       "auditEnabled": true,
       "realtimeEnabled": true,
-      "visibleWhenPerm": ["audit_trail.read"]
+      "visibleWhenPerm": ["foundation.audit.read"]
     },
     {
-      "route": "/foundation/settings",
+      "route": "/foundation/sod",
       "pageType": "settings",
       "layout": "full-page",
       "kpiScope": "none",
       "userIntent": "configure",
-      "titleKey": "foundation.settings.title",
-      "subtitleKey": "foundation.settings.subtitle",
-      "signatureWidget": "tenant-control-center",
-      "dataResourceKey": "foundation.settings",
+      "titleKey": "foundation.sod.title",
+      "subtitleKey": "foundation.sod.subtitle",
       "auditEnabled": true,
-      "visibleWhenProfile": ["tenant_owner","platform_admin","foundation_admin"],
-      "visibleWhenPerm": ["foundation.admin.read"]
+      "visibleWhenPerm": ["foundation.sod.write"]
     },
     {
-      "route": "/foundation/roles/:id",
+      "route": "/foundation/hierarchy-viz",
       "pageType": "object",
-      "layout": "object-page",
+      "layout": "split-view",
       "kpiScope": "none",
       "userIntent": "review",
-      "titleKey": "foundation.roles.detail.title",
-      "subtitleKey": "foundation.roles.detail.subtitle",
-      "agentExperienceMode": "side-panel",
-      "primaryAgentId": "foundation-access-agent",
-      "signatureWidget": "permission-matrix",
-      "dataResourceKey": "foundation.role.detail",
+      "titleKey": "foundation.hierarchyViz.title",
+      "subtitleKey": "foundation.hierarchyViz.subtitle",
+      "signatureWidget": "org-graph-canvas",
+      "dataResourceKey": "foundation.organizations",
       "auditEnabled": true,
-      "visibleWhenPerm": ["foundation.admin.read"]
+      "realtimeEnabled": true,
+      "visibleWhenPerm": ["foundation.hierarchy.read"]
     },
     {
-      "route": "/foundation/permissions",
-      "pageType": "list",
+      "route": "/foundation/user-lifecycle",
+      "pageType": "workflow",
+      "layout": "full-page",
+      "kpiScope": "page-local",
+      "userIntent": "manage",
+      "titleKey": "foundation.userLifecycle.title",
+      "subtitleKey": "foundation.userLifecycle.subtitle",
+      "signatureWidget": "lifecycle-board",
+      "auditEnabled": true,
+      "visibleWhenPerm": ["foundation.user.write"]
+    },
+    {
+      "route": "/foundation/reference-data",
+      "pageType": "settings",
       "layout": "full-page",
       "kpiScope": "none",
-      "userIntent": "review",
-      "titleKey": "foundation.permissions.title",
-      "subtitleKey": "foundation.permissions.subtitle",
-      "signatureWidget": "permission-matrix",
-      "dataResourceKey": "foundation.permissions",
+      "userIntent": "configure",
+      "titleKey": "foundation.referenceData.title",
+      "subtitleKey": "foundation.referenceData.subtitle",
+      "signatureWidget": "taxonomy-editor",
+      "dataResourceKey": "foundation.reference-data",
       "auditEnabled": true,
-      "visibleWhenPerm": ["foundation.admin.read"]
+      "visibleWhenPerm": ["foundation.data.read"]
     },
     {
-      "route": "/foundation/operations-readiness",
+      "route": "/foundation/diagnostics",
       "pageType": "analytics",
       "layout": "full-page",
       "kpiScope": "page-local",
       "userIntent": "monitor",
-      "titleKey": "foundation.operationsReadiness.title",
-      "subtitleKey": "foundation.operationsReadiness.subtitle",
+      "titleKey": "foundation.diagnostics.title",
+      "subtitleKey": "foundation.diagnostics.subtitle",
       "signatureWidget": "ownership-heatmap",
       "dataResourceKey": "foundation.operations-readiness",
       "auditEnabled": true,
-      "visibleWhenPerm": ["foundation.admin.read"]
+      "visibleWhenPerm": ["foundation.module.read"]
     },
     {
       "route": "/workspace-home",

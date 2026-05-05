@@ -6,11 +6,12 @@
  * but exposes a `writeTuples()` op so /register can seed the canonical
  * tenant-admin / tenant-member / ui_os_tenant.ui_admin relations atomically.
  *
- * Configuration (read once at module load):
+ * Configuration:
  *   OPENFGA_API_URL     — base URL, e.g. http://127.0.0.1:8080
  *   OPENFGA_STORE_ID
  *   OPENFGA_MODEL_ID
- *   OPENFGA_API_TOKEN   — optional bearer
+ *   OPENFGA_API_TOKEN   — optional bearer (or resolved via Vault / HTTP secret backend — see @dos/service-bootstrap secrets)
+ *   OPENFGA_SECRET_CACHE_TTL_MS — optional cache for resolved token (default 300000; 0 = no cache)
  *   OPENFGA_TIMEOUT_MS  — optional, defaults to 500 (writes are slower than checks)
  *   TENANT_SERVICE_OPENFGA_ENFORCE — 'true' to fail closed when OpenFGA
  *                                    is unavailable; defaults 'false'.
@@ -20,10 +21,11 @@
  * rollout pattern used everywhere else in the platform.
  */
 
+import { resolveOpenFgaApiToken } from '@dos/service-bootstrap';
+
 const API_URL    = (process.env.OPENFGA_API_URL || '').replace(/\/$/, '');
 const STORE_ID   = process.env.OPENFGA_STORE_ID || '';
 const MODEL_ID   = process.env.OPENFGA_MODEL_ID || '';
-const API_TOKEN  = process.env.OPENFGA_API_TOKEN || '';
 const TIMEOUT_MS = Number(process.env.OPENFGA_TIMEOUT_MS || 500);
 const ENFORCE    = String(process.env.TENANT_SERVICE_OPENFGA_ENFORCE || 'false').toLowerCase() === 'true';
 
@@ -64,6 +66,8 @@ export async function writeTuples(tuples: FgaTuple[]): Promise<FgaWriteResult> {
   if (tuples.length === 0) {
     return { outcome: 'ok', written: 0, skipped: 0, failed: 0 };
   }
+
+  const API_TOKEN = (await resolveOpenFgaApiToken(Math.max(TIMEOUT_MS, 8000))) || '';
 
   let written = 0;
   let skipped = 0;

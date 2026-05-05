@@ -5,11 +5,12 @@
  * used by platform/dauth/packages/shared/src/adapters/openfga-rebac.adapter.ts
  * but trimmed to the single `check()` op needed by UI-OS routes.
  *
- * Configuration (read once at module load):
+ * Configuration:
  *   OPENFGA_API_URL    — base URL, e.g. http://127.0.0.1:8080
  *   OPENFGA_STORE_ID
  *   OPENFGA_MODEL_ID
- *   OPENFGA_API_TOKEN  — optional bearer
+ *   OPENFGA_API_TOKEN  — optional bearer (or Vault / HTTP secret backend via @dos/service-bootstrap)
+ *   OPENFGA_SECRET_CACHE_TTL_MS — optional token cache TTL ms (default 300000; 0 = no cache)
  *   OPENFGA_TIMEOUT_MS — optional, defaults to 250
  *   UI_OS_OPENFGA_ENFORCE — 'true' to deny on unavailable; defaults 'false'
  *
@@ -18,11 +19,11 @@
  * UI_OS_OPENFGA_ENFORCE=true to fail closed in production.
  */
 import type { Request, Response, NextFunction, RequestHandler } from 'express';
+import { resolveOpenFgaApiToken } from '@dos/service-bootstrap';
 
 const API_URL    = (process.env.OPENFGA_API_URL || '').replace(/\/$/, '');
 const STORE_ID   = process.env.OPENFGA_STORE_ID || '';
 const MODEL_ID   = process.env.OPENFGA_MODEL_ID || '';
-const API_TOKEN  = process.env.OPENFGA_API_TOKEN || '';
 const TIMEOUT_MS = Number(process.env.OPENFGA_TIMEOUT_MS || 250);
 const ENFORCE    = String(process.env.UI_OS_OPENFGA_ENFORCE || 'false').toLowerCase() === 'true';
 
@@ -44,6 +45,8 @@ export async function fgaCheck(t: FgaTuple): Promise<FgaCheckOutcome> {
     }
     return 'disabled';
   }
+  const API_TOKEN = (await resolveOpenFgaApiToken(Math.max(TIMEOUT_MS, 8000))) || '';
+
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
   try {

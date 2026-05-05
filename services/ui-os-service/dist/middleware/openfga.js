@@ -1,7 +1,7 @@
+import { resolveOpenFgaApiToken } from '@dos/service-bootstrap';
 const API_URL = (process.env.OPENFGA_API_URL || '').replace(/\/$/, '');
 const STORE_ID = process.env.OPENFGA_STORE_ID || '';
 const MODEL_ID = process.env.OPENFGA_MODEL_ID || '';
-const API_TOKEN = process.env.OPENFGA_API_TOKEN || '';
 const TIMEOUT_MS = Number(process.env.OPENFGA_TIMEOUT_MS || 250);
 const ENFORCE = String(process.env.UI_OS_OPENFGA_ENFORCE || 'false').toLowerCase() === 'true';
 let warnedDisabled = false;
@@ -13,6 +13,7 @@ export async function fgaCheck(t) {
         }
         return 'disabled';
     }
+    const API_TOKEN = (await resolveOpenFgaApiToken(Math.max(TIMEOUT_MS, 8000))) || '';
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
     try {

@@ -20,7 +20,28 @@ Production apply: NOT APPROVED
 Next allowed action: staging rehearsal of 0002 only
 ```
 
+Parallel runtime/UI-OS truth as of 2026-05-05:
+
+```text
+Foundation direct-seed publisher/runtime reconciliation: CLOSED
+Verified live after publish/verify:
+- platform_dauth.functional_roles = 8
+- platform_dauth.role_permissions = 79
+- dos.navigation_registry (module_code='foundation') = 22
+- dos.dynamic_ui_routes (module_code='foundation', tenant_id IS NULL) = 21
+- dos.ui_route_template_binding (/foundation/*) = 21
+- empty Foundation binding props = 0
+
+Remaining runtime blocker:
+- Shahin foundationGuard is now aligned to `foundation.module.read` for /foundation/**.
+- Page-level permission enforcement exists in the dynamic template host and live baseline roles now carry the direct-seed Foundation permission set via `20260508_0001_grant_foundation_direct_seed_perms_baseline_roles.sql`.
+- Route-level AuthZ proof is GREEN: `phase-foundation-route-authz-contract.spec.ts` passed `22/22` against live Postgres + tenant-service + ui-os-service.
+- Remaining open item: per-page backend API/network-call proof against the broader `apis[]` inventory.
+```
+
 This plan is the baseline operating manual for the remaining Foundation reconciliation work.
+
+The DB reconciliation track and the direct-seed/runtime track are related but not identical. The accepted Phase 2B status above still governs DB migration rehearsal. The runtime/UI-OS closure above does not imply Foundation DB production readiness.
 
 The work must proceed through explicit phases and gates:
 
@@ -111,10 +132,10 @@ Phase 2B-S2 — Staging rehearsal of migration 0002 only
 All commands must run from:
 
 ```bash
-cd "/root/DOS-AIO/DOS Platform"
+cd "/root/DOS-Platform"
 ```
 
-Do not use stale repo-root folders outside `DOS Platform` unless explicitly required for evidence.
+Do not use stale repo-root folders outside `/root/DOS-Platform` unless explicitly required for evidence.
 
 ### 2.2 Canonical DBs
 
@@ -1391,6 +1412,8 @@ AUDIT_LEDGER_READY = YES
 
 # Phase 8 — Foundation Publisher Backfill and Event Proof
 
+This phase covers Foundation domain-event proof only. It does not represent the already-closed 2026-05-05 direct-seed/runtime reconciliation slice, which was completed by the contract publisher path in `scripts/module/lib/sql-emitter.mjs` and verified live via `module:publish` / `module:verify`.
+
 ## Purpose
 
 Ensure Foundation emits domain events for downstream modules and agent workflows.
@@ -1496,7 +1519,7 @@ no edits during window
 ## Production Apply Sequence Template
 
 ```bash
-cd "/root/DOS-AIO/DOS Platform"
+cd "/root/DOS-Platform"
 git rev-parse HEAD
 sha256sum ops/migrations/20260430_000*.sql
 # backup confirmation here

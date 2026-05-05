@@ -84,7 +84,7 @@ function buildMarketingHomeContent(brandCode: string, locale: string, tx: Tx, ro
       ),
       heroEvidenceReceipt: tx('Evidence receipt', 'إيصال الأدلة'),
       heroProofStatusItems: [
-        { id: 'agents',     label: tx('Agents',     'الوكلاء'),    value: tx('9 active', '٩ نشطون'),     tone: 'live'    as const },
+        { id: 'agents',     label: tx('Agents',     'الوكلاء'),    value: tx('10 active', '١٠ نشطون'),    tone: 'live'    as const },
         { id: 'approvals',  label: tx('Approvals',  'الموافقات'),  value: tx('All in flight', 'كلها قيد التنفيذ'), tone: 'pending' as const },
         { id: 'evidence',   label: tx('Evidence',   'الأدلة'),     value: tx('Synced',  'متزامن'),       tone: 'synced'  as const },
       ],
@@ -102,8 +102,8 @@ function buildMarketingHomeContent(brandCode: string, locale: string, tx: Tx, ro
       eyebrow: tx('Purpose-built for regulated enterprises', 'مصمم خصيصًا للمؤسسات الخاضعة للتنظيم'),
       title: tx('Governance, Risk & Compliance — fully autonomous.', 'الحوكمة والمخاطر والامتثال — مستقلة بالكامل.'),
       sub: tx(
-        'Nine specialised AI agents observe, decide, and act across your GRC lifecycle — every step approved, cryptographically logged, and fully reversible.',
-        'تسعة وكلاء ذكاء متخصصون يراقبون ويقررون ويتصرفون عبر دورة حياة الحوكمة — كل خطوة معتمدة ومسجلة بتشفير وقابلة للعكس.',
+        'Ten specialised AI agents observe, decide, and act across your GRC lifecycle — every step approved, cryptographically logged, and fully reversible.',
+        'عشرة وكلاء ذكاء متخصصون يراقبون ويقررون ويتصرفون عبر دورة حياة الحوكمة — كل خطوة معتمدة ومسجلة بتشفير وقابلة للعكس.',
       ),
       microcopy: tx(
         '14-day free trial · No credit card required · Full EN/AR bilingual · On-prem available',
@@ -132,7 +132,7 @@ function buildMarketingHomeContent(brandCode: string, locale: string, tx: Tx, ro
     ],
     agentic: {
       eyebrow: tx('Agentic proof', 'إثبات وكيل'),
-      title: tx('Nine agents already at work.', 'تسعة وكلاء يعملون بالفعل.'),
+      title: tx('Ten agents already at work.', 'عشرة وكلاء يعملون بالفعل.'),
       readinessPercent: 90,
       // Wave 1 — labels consumed by DosAgentStatusStripComponent + DosProgressBarComponent.
       emptyLabel:       tx('No agents active', 'لا توجد وكلاء نشطون'),
@@ -142,9 +142,6 @@ function buildMarketingHomeContent(brandCode: string, locale: string, tx: Tx, ro
       tiles: [
         { agentCode: 'A01', displayName: 'Onboarding Agent',      displayNameAr: 'وكيل التهيئة',            role: 'onboarding' },
         { agentCode: 'A02', displayName: 'Identity Provisioning', displayNameAr: 'وكيل توفير الهوية',       role: 'identity' },
-        // A03 intentionally omitted — this agent slot was retired before launch.
-        // The code A03 (Compliance Mapping) was merged into A04 Control Authoring.
-        // Do NOT reuse A03; next new agent should be A11.
         { agentCode: 'A04', displayName: 'Control Authoring',     displayNameAr: 'وكيل تأليف الضوابط',     role: 'controls' },
         { agentCode: 'A05', displayName: 'Evidence Collection',   displayNameAr: 'وكيل جمع الأدلة',         role: 'evidence' },
         { agentCode: 'A06', displayName: 'Gap Remediation',       displayNameAr: 'وكيل معالجة الفجوات',     role: 'remediation' },
@@ -152,6 +149,7 @@ function buildMarketingHomeContent(brandCode: string, locale: string, tx: Tx, ro
         { agentCode: 'A08', displayName: 'Policy Lifecycle',      displayNameAr: 'وكيل دورة حياة السياسات', role: 'policy' },
         { agentCode: 'A09', displayName: 'Third-Party Risk',      displayNameAr: 'وكيل مخاطر الأطراف',     role: 'vendor' },
         { agentCode: 'A10', displayName: 'Audit Reporting',       displayNameAr: 'وكيل تقارير التدقيق',     role: 'audit' },
+        { agentCode: 'A13', displayName: 'Landing Copilot Agent', displayNameAr: 'وكيل المساعد في الصفحة الرئيسية', role: 'landing' },
       ],
     },
     downloadKit: {

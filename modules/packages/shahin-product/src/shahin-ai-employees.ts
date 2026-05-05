@@ -11,9 +11,9 @@
  * Operational metadata (governance, tools, escalation) remains in
  * agrc-agents.ts — that file is the runtime gate. This file is the HR view.
  *
- * Manager role codes match the canonical RBAC catalogue
- * (packages/shahin-product/src/canonical-roles.ts) so every agent reports
- * to a real human role that can be impersonated by a real Keycloak user.
+ * Manager role codes match the canonical DAuth RBAC catalogue
+ * (platform/dauth/packages/core/access/rbac/canonical-roles.ts — CANONICAL_ROLES)
+ * so every agent reports to a real human role that can be granted in Keycloak.
  */
 
 import type { AgentEmployeeRecord } from '@dos/types';
@@ -59,7 +59,7 @@ export const SHAHIN_AI_EMPLOYEES: Record<string, AgentEmployeeRecord> = {
   A02: {
     jobTitle: 'IAM & Access Governance Officer',
     jobTitleAr: 'مسؤول إدارة الهويات وحوكمة الوصول',
-    managerRoleCode: 'platform_admin',
+    managerRoleCode: 'security_admin',
     managerLabel: 'IT Security Manager',
     managerLabelAr: 'مدير أمن المعلومات',
     missionStatement: 'Maintain least-privilege access, detect anomalies, enforce MFA across the workforce.',
@@ -222,7 +222,7 @@ export const SHAHIN_AI_EMPLOYEES: Record<string, AgentEmployeeRecord> = {
   A07: {
     jobTitle: 'Risk Register Analyst',
     jobTitleAr: 'محلل سجل المخاطر',
-    managerRoleCode: 'platform_admin',
+    managerRoleCode: 'risk_manager',
     managerLabel: 'Chief Risk Officer',
     managerLabelAr: 'رئيس قسم المخاطر',
     missionStatement: 'Maintain a living risk register where every material risk is identified, scored, treated, and monitored.',
@@ -291,7 +291,7 @@ export const SHAHIN_AI_EMPLOYEES: Record<string, AgentEmployeeRecord> = {
   A09: {
     jobTitle: 'Third-Party Risk Officer',
     jobTitleAr: 'مسؤول مخاطر الأطراف الثالثة',
-    managerRoleCode: 'platform_admin',
+    managerRoleCode: 'vendor_manager',
     managerLabel: 'Vendor Risk Lead',
     managerLabelAr: 'قائد مخاطر الموردين',
     missionStatement: 'Treat every vendor as an extension of the customer\'s control surface — assess, monitor, and exit on time.',
@@ -324,7 +324,7 @@ export const SHAHIN_AI_EMPLOYEES: Record<string, AgentEmployeeRecord> = {
   A10: {
     jobTitle: 'Audit Reporting Specialist',
     jobTitleAr: 'أخصائي تقارير التدقيق',
-    managerRoleCode: 'platform_admin',
+    managerRoleCode: 'auditor',
     managerLabel: 'Head of Internal Audit',
     managerLabelAr: 'رئيس التدقيق الداخلي',
     missionStatement: 'Produce regulator-ready audit packs and executive dashboards that pass external scrutiny.',
@@ -357,7 +357,7 @@ export const SHAHIN_AI_EMPLOYEES: Record<string, AgentEmployeeRecord> = {
   A11: {
     jobTitle: 'Business Continuity Coordinator',
     jobTitleAr: 'منسق استمرارية الأعمال',
-    managerRoleCode: 'platform_admin',
+    managerRoleCode: 'workflow_admin',
     managerLabel: 'BCP Manager',
     managerLabelAr: 'مدير استمرارية الأعمال',
     missionStatement: 'Keep the organization\'s ability to recover ahead of its actual exposure to disruption.',
@@ -388,7 +388,7 @@ export const SHAHIN_AI_EMPLOYEES: Record<string, AgentEmployeeRecord> = {
   A12: {
     jobTitle: 'Security Awareness & Training Coordinator',
     jobTitleAr: 'منسق التوعية والتدريب الأمني',
-    managerRoleCode: 'platform_admin',
+    managerRoleCode: 'security_admin',
     managerLabel: 'HR Learning Manager',
     managerLabelAr: 'مدير التعلم في الموارد البشرية',
     missionStatement: 'Lift the workforce\'s security IQ on a measurable curve, programme by programme.',
@@ -421,7 +421,7 @@ export const SHAHIN_AI_EMPLOYEES: Record<string, AgentEmployeeRecord> = {
   A13: {
     jobTitle: 'Sales Development Representative (Public Copilot)',
     jobTitleAr: 'مندوب تطوير المبيعات (المساعد العام)',
-    managerRoleCode: 'platform_admin',
+    managerRoleCode: 'platform_super_admin',
     managerLabel: 'Marketing & Growth Lead',
     managerLabelAr: 'قائد التسويق والنمو',
     missionStatement: 'Convert anonymous landing-page visitors into qualified pipeline through informed product Q&A and demo bookings.',

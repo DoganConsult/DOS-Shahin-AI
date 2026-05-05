@@ -7,7 +7,7 @@ const REGIONS = [
   'resources','faq','cta-banner','footer',
 ];
 
-const AGENT_CODES = ['A01','A02','A04','A05','A06','A07','A08','A09','A10'];
+const AGENT_CODES = ['A01','A02','A04','A05','A06','A07','A08','A09','A10','A13'];
 
 const PUBLIC_ROUTE_COMPONENTS = [
   { route: '/platform', templateExport: 'marketing.platform.page', selector: 'dos-marketing-platform' },
@@ -41,7 +41,7 @@ test.describe('M1 — marketing.home.page renders without auth', () => {
     expect(ids).toEqual(REGIONS);
   });
 
-  test('brand eagle pictogram + 9 agent tiles render in agentic-proof', async ({ page }) => {
+  test('brand eagle pictogram + 10 agent tiles render in agentic-proof', async ({ page }) => {
     await goto(page, '/');
     await expect(page.locator('dos-brand-eagle').first()).toBeVisible();
     const strip = page.locator('dos-agent-status-strip').first();
@@ -74,6 +74,27 @@ test.describe('M1 — marketing.home.page renders without auth', () => {
     );
     expect(new Set(bridgeHrefs)).toEqual(new Set(['/login', '/register']));
     expect(authProbes, `landing must not auth-probe (${authProbes.join(', ')})`).toEqual([]);
+  });
+
+  test('A13 is registered in UI-OS and runnable through the public copilot API', async ({ page }) => {
+    const registry = await page.request.get('/api/ui-os/agentic/registry');
+    expect(registry.ok(), 'UI-OS agent registry must resolve').toBe(true);
+    const registryBody = await registry.json();
+    expect(registryBody.agents.map((a: { agentCode: string }) => a.agentCode)).toContain('A13');
+    expect(registryBody.bindings).toContainEqual(expect.objectContaining({ agentCode: 'A13', moduleCode: 'marketing', enabled: true }));
+
+    const publicAgents = await page.request.get('/api/copilot/public-agents');
+    expect(publicAgents.ok(), 'public copilot agents endpoint must resolve').toBe(true);
+    const publicAgentsBody = await publicAgents.json();
+    expect(publicAgentsBody.agents.map((a: { id: string }) => a.id)).toContain('A13');
+
+    const chat = await page.request.post('/api/copilot/public-chat', {
+      data: { agentId: 'A13', message: 'What is Shahin-AI?' },
+    });
+    expect(chat.ok(), 'A13 public chat must run without authentication').toBe(true);
+    const chatBody = await chat.json();
+    expect(chatBody.agentId).toBe('A13');
+    expect(chatBody.sessionId).toBeTruthy();
   });
 
   for (const publicRoute of PUBLIC_ROUTE_COMPONENTS) {

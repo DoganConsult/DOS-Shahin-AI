@@ -19,6 +19,7 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
+    <ng-template #tileContent><ng-content></ng-content></ng-template>
     @if (clickable) {
       <a
         class="cds--tile cds--tile--clickable"
@@ -26,11 +27,11 @@ import { CommonModule } from '@angular/common';
         [attr.role]="route ? null : 'button'"
         (click)="onActivate($event)"
       >
-        <ng-content></ng-content>
+        <ng-container [ngTemplateOutlet]="tileContent"></ng-container>
       </a>
     } @else {
       <div class="cds--tile">
-        <ng-content></ng-content>
+        <ng-container [ngTemplateOutlet]="tileContent"></ng-container>
       </div>
     }
   `,

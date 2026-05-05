@@ -109,6 +109,15 @@ export function emit(contract, { tenantIds = null } = {}) {
   }
 
   // ─── roles → platform_dauth.functional_roles + role_permissions ─────────
+  if ((contract.roles ?? []).length) {
+    stmts.push({
+      name: `roleperm-clean:${moduleCode}`,
+      sql: `DELETE FROM platform_dauth.role_permissions
+            WHERE role_id = ANY($1::varchar[])`,
+      params: [(contract.roles ?? []).map(role => role.code)],
+    });
+  }
+
   for (const role of contract.roles ?? []) {
     const displayName = roleDisplayName(role.code, moduleName.replace(/\s+—.*$/, ''));
     const description = `${moduleName} role (${role.archetype ?? 'custom'})`;
@@ -145,6 +154,15 @@ export function emit(contract, { tenantIds = null } = {}) {
   }
 
   // ─── navigation → dos.navigation_registry ────────────────────────────────
+  if ((contract.navigation ?? []).length) {
+    stmts.push({
+      name: `nav-clean:${moduleCode}`,
+      sql: `DELETE FROM dos.navigation_registry
+            WHERE module_code = $1`,
+      params: [moduleCode],
+    });
+  }
+
   for (const nav of contract.navigation ?? []) {
     stmts.push({
       name: `nav:${nav.nav_item_code}`,
@@ -167,6 +185,26 @@ export function emit(contract, { tenantIds = null } = {}) {
   }
 
   // ─── pages → dos.ui_route_template_binding + dos.dynamic_ui_routes ──────
+  if ((contract.pages ?? []).length) {
+    stmts.push({
+      name: `route-clean:${moduleCode}`,
+      sql: `DELETE FROM dos.dynamic_ui_routes
+            WHERE module_code = $1
+              AND tenant_id IS NULL`,
+      params: [moduleCode],
+    });
+  }
+
+  if ((contract.pages ?? []).length && contract.module?.route_base && contract.module.route_base !== '/') {
+    stmts.push({
+      name: `binding-clean:${moduleCode}`,
+      sql: `DELETE FROM dos.ui_route_template_binding
+            WHERE route = $1
+               OR route LIKE $1 || '/%'`,
+      params: [contract.module.route_base],
+    });
+  }
+
   for (const [index, page] of (contract.pages ?? []).entries()) {
     const nav = navByRoute.get(page.route);
     const approved = getApprovedPageEntry(page.archetype);

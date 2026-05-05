@@ -2,7 +2,7 @@
 
 **Authoritative contract:** `foundation-complete-direct-seed.json`
 
-> **Status:** Reflects actual code, Shahin SPA routing, direct-seed JSON, user-service mounts, and DB migrations as of **2026-05-05**. If this file diverges from code or `foundation-complete-direct-seed.json`, **code + JSON win** — update this MD to match.
+> **Status:** Reflects actual code, Shahin SPA routing, direct-seed JSON, user-service mounts, and live direct-seed publish state as of **2026-05-05**. Verified live after `pnpm module:publish foundation` / `pnpm module:verify foundation`: `platform_dauth.functional_roles=8`, `platform_dauth.role_permissions=79`, `dos.navigation_registry=22`, `dos.dynamic_ui_routes=21`, `dos.ui_route_template_binding=21`, empty Foundation binding props=`0`. If this file diverges from code or `foundation-complete-direct-seed.json`, **code + JSON win** — update this MD to match.
 
 ## 0. Provenance map (where each fact lives)
 
@@ -23,7 +23,7 @@
 | Deprecated page components (not route targets) | `platform/foundation/ui/pages/*.component.ts` |
 | Owned tables (DDL) | `platform/foundation/db/migrations/*.sql` |
 | Tenant-schema tables | `db/canonical/tenant/*.sql` |
-| Dynamic-UI / template binding + registry (live) | `dos.ui_route_template_binding`, `dos.dynamic_ui_component_registry`; migrations e.g. `20260504_0130_foundation_masthead_seed.sql`, `20260505_0100_wave1_complete_direct_seed_registry.sql` |
+| Dynamic-UI / template binding + registry (live) | `dos.ui_route_template_binding`, `dos.dynamic_ui_component_registry`; reconciled by `scripts/module/lib/sql-emitter.mjs` during `pnpm module:publish foundation` |
 
 ## 1. Module identity
 
@@ -85,19 +85,19 @@ public aliases peer modules MUST import (not hardcode):
 > `access_review.read`, `audit_trail.read`. All of these are valid and seeded
 > via DAuth from `module.manifest.json#goldenReady.rbac`.
 
-### 2.3 Direct-seed manifest vs Shahin guard vs DAuth (alignment gap)
+### 2.3 Direct-seed manifest vs Shahin guard vs DAuth (current live alignment)
 
 | Layer | What it uses today | Notes |
 |------|---------------------|--------|
-| **`foundation-complete-direct-seed.json`** | Per-nav and per-page codes such as `foundation.module.read`, `foundation.data.read`, `foundation.rbac.read`, … | Canonical for **template-binding** rows and **customer-gate** props coverage when those codes exist in AccessStore / RBAC. |
-| **`foundationGuard` (Shahin)** | Module `foundation` in `AccessStore.modules()` and **single** check `access.hasPermission('foundation.read')` | Any user who passes the guard can open **any** `/foundation/**` path; finer rules must come from **route-level** or **resolver** permission checks, not this guard alone. |
-| **TypeScript `FOUNDATION_CONTRACT` / aggregators** | Mix of `foundation.read`, `foundation.user.read`, `audit_trail.read`, `organization.read`, … | Still true for **backend** `requirePermission`; does not automatically match the **JSON** `foundation.*` matrix. |
+| **`foundation-complete-direct-seed.json`** | Per-nav and per-page codes such as `foundation.module.read`, `foundation.data.read`, `foundation.rbac.read`, … | Canonical for publisher output into `platform_dauth.permissions`, `platform_dauth.functional_roles`, `platform_dauth.role_permissions`, `dos.navigation_registry`, `dos.dynamic_ui_routes`, and `dos.ui_route_template_binding`. |
+| **Live publish state** | Contract-applied rows verified on 2026-05-05 | Current live counts are `8` module roles, `79` role-permission joins, `22` nav rows, `21` dynamic-ui routes, and `21` non-empty Foundation bindings. The publish reconciler removes prior Foundation residue before reinserting the contract rows. |
+| **`foundationGuard` (Shahin)** | Module `foundation` in `AccessStore.modules()` and **single** check `access.hasPermission('foundation.module.read')` | Outer gate is now aligned to the direct-seed route contract. Fine-grained page enforcement remains in `DynamicTemplatePageComponent`, which denies rendering when either route data `permission` or resolved `permission_key` from `dos.dynamic_ui_routes` is missing from the caller's `AccessStore` snapshot. |
+| **TypeScript `FOUNDATION_CONTRACT` / aggregators** | Mix of `foundation.read`, `foundation.user.read`, `audit_trail.read`, `organization.read`, … | Still true for **backend** `requirePermission`; backend route auth should continue to be audited separately from the direct-seed page permission matrix. |
 
-**Work to complete (next):**
+**Remaining work:**
 
-1. Seed or map DAuth / `platform_dauth.permissions` so **every** code in `foundation-complete-direct-seed.json` `permissions[]` exists and is assignable to roles.
-2. Either **narrow `foundationGuard`** (e.g. require `foundation.module.read` or equivalent) or **document** that `foundation.read` is the sole coarse gate and per-page enforcement is deferred.
-3. Align **nav resolver / Dynamic UI** so displayed nav items use the same permission strings as the JSON (avoid silent mismatches).
+1. Route-level AuthZ alignment is now live: `foundationGuard` uses `foundation.module.read`, baseline roles are granted the full direct-seed Foundation permission surface by `20260508_0001_grant_foundation_direct_seed_perms_baseline_roles.sql`, and `phase-foundation-route-authz-contract.spec.ts` passes `22/22` against live Postgres + tenant-service + ui-os-service.
+2. Backend page-to-API proof remains open: the route contract is proven, but the full per-page network-call audit against the `apis[]` inventory in §5/§6 is still a follow-up slice.
 
 ## 3. Roles (`FOUNDATION_MODULE_ROLES` — 8 module roles)
 
@@ -147,6 +147,8 @@ Under `path: 'foundation'`, **all** child paths are served by a single wildcard 
 
 ## 5. Page matrix (21 pages — `pages[]` in JSON + runtime behavior)
 
+All 21 routes below are now published as live `dos.ui_route_template_binding` rows with non-empty `props` and reconciled `dos.dynamic_ui_routes` rows under `module_code='foundation'`.
+
 | # | page_code | route | archetype | template_export (loader) | permission (JSON) | Primary data APIs (see §6) |
 |---:|---|---|---|---|---|---|
 | 1 | `foundation.overview` | `/foundation/overview` | command-home | `module.overview.page` | `foundation.module.read` | `/api/foundation/dashboard`, `/api/foundation/lookups` |
@@ -183,9 +185,8 @@ The JSON `apis[]` now carries **27** rows, not the earlier minimal 8-path snapsh
 
 | Gap | Severity | Detail |
 |-----|----------|--------|
-| **Per-page AuthZ in SPA** | P1 | `foundationGuard` only checks `foundation.read`; pages that need `foundation.sod.write`, `foundation.user.write`, etc. should enforce via **route `data.permission`**, shell mutator, or **401/403 on API** — verify end-to-end for each row in §5. |
-| **DAuth codes from JSON** | P1 | Ensure all `foundation-complete-direct-seed.json` permission codes exist in DAuth and are included in tenant role bundles; until then nav may show items users cannot legally use. |
-| **Direct-seed `apis[]` completeness** | P2 | JSON lists 8 paths; §6.1–6.2 list many more — extend `apis[]` if the pack must be self-contained for auditors. |
+| **Per-page backend API proof** | P1 | Route-level AuthZ proof is now GREEN (`phase-foundation-route-authz-contract.spec.ts`, `22/22` pass), but the Foundation slice still needs a page-by-page network-call audit proving each rendered archetype reaches the intended backend API from `apis[]`. |
+| **Direct-seed `apis[]` completeness** | P2 | JSON `apis[]` now covers the main route set, but §6.1–6.2 still remain the fuller runtime mount inventory because `user-service` exposes alias mounts and aggregator sub-routers beyond the minimal page contract. |
 | **Archetype → live widget data** | P2 | Template loaders render shell; each archetype must still bind to **real** list/detail APIs — track gaps per page in module vertical-slice DoD. |
 | **Legacy `Foundation*Component` removal** | P3 | Blocked until DynamicTemplate parity + E2E sign-off (see §10). |
 
@@ -345,7 +346,7 @@ Additional governance / audit tables created by foundation migrations:
 - [ ] `GET /api/ui-os/template-binding` returns correct archetype + props for all 21 paths (vertical-slice or manual spot-check)
 - [ ] `dos.dynamic_ui_component_registry` rows for foundation roster have valid `carbon_key` (DB + carbon catalog)
 - [ ] DAuth: all JSON `permissions[]` codes exist and are assignable; **or** JSON is rolled back to match live DAuth
-- [ ] `foundationGuard` policy documented: either align guard with `foundation.module.read` or accept `foundation.read` as coarse gate and enforce fine permissions elsewhere
+- [x] `foundationGuard` aligned to `foundation.module.read` and baseline tenant roles grant the direct-seed Foundation permission set
 - [ ] `requirePermission` on each **user-service** sub-route still matches manifest / OpenAPI (§6)
 - [ ] All 8 `FOUNDATION_MODULE_ROLES` (or successor role model) exist where product still uses them
 - [ ] All 28 owned `dos.*` tables created by `platform/foundation/db/migrations/*.sql`

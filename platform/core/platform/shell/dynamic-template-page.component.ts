@@ -30,26 +30,37 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgComponentOutlet } from '@angular/common';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd, ActivatedRoute, type ActivatedRouteSnapshot } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter, startWith } from 'rxjs/operators';
 import { TemplateBindingService, type TemplateBinding } from './template-binding.service';
 import { loadArchetypeTemplate } from './template-binding.registry';
 import { DosInsightBarComponent } from './templates/dos-insight-bar.component';
 import type { ModuleInsightPillars } from './templates/module-template.types';
+import { AccessStore } from '@dos/access-store';
 // Marketing-landing archetype — config + brand services injected here so
 // DosMarketingHomePageComponent receives homeContent/nav/footer/agentStrip
 // inputs via tplInputs() without needing a bespoke wrapper component.
-import { MarketingPublicConfigService } from '@dos/ui-system';
-import { BrandResolverService } from '@dos/ui-system';
+import { BrandResolverService, DosEmptyStateComponent, MarketingPublicConfigService } from '@dos/ui-system';
 
 @Component({
   selector: 'dos-dynamic-template-page',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, NgComponentOutlet, DosInsightBarComponent],
+  imports: [CommonModule, NgComponentOutlet, DosEmptyStateComponent, DosInsightBarComponent],
   template: `
-    @if (template(); as tpl) {
+    @if (deniedPermission(); as deniedPermission) {
+      <dos-empty-state
+        data-testid="dos-tpl-denied"
+        title="Access denied"
+        description="You do not have the required permission to open this page."
+        icon="lock"
+        tone="warning"
+      ></dos-empty-state>
+      <p class="dos-tpl-fallback__msg">
+        Required permission: <code>{{ deniedPermission }}</code>
+      </p>
+    } @else if (template(); as tpl) {
       <ng-container
         *ngComponentOutlet="tpl; injector: tplInjector(); inputs: tplInputs()"
       ></ng-container>
@@ -75,6 +86,8 @@ import { BrandResolverService } from '@dos/ui-system';
 })
 export class DynamicTemplatePageComponent {
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+  private readonly access = inject(AccessStore);
   private readonly bindings = inject(TemplateBindingService);
   private readonly envInjector = inject(EnvironmentInjector);
   // Marketing-landing archetype hydration — injected lazily-safe; Angular
@@ -86,6 +99,7 @@ export class DynamicTemplatePageComponent {
   readonly currentRoute = signal<string>(this.normalize(this.router.url));
   readonly binding = signal<TemplateBinding | null>(null);
   readonly template = signal<Type<unknown> | null>(null);
+  readonly deniedPermission = signal<string | null>(null);
   readonly loading = signal<boolean>(true);
 
   readonly tplInjector = computed(() => this.envInjector);
@@ -217,9 +231,16 @@ export class DynamicTemplatePageComponent {
       this.loading.set(true);
       this.binding.set(null);
       this.template.set(null);
+      this.deniedPermission.set(null);
       runInInjectionContext(this.envInjector, () => {
         this.bindings.resolve(route).subscribe(async (b) => {
           this.binding.set(b);
+          const requiredPermission = this.resolveRequiredPermission(b);
+          if (requiredPermission && !this.access.hasPermission(requiredPermission)) {
+            this.deniedPermission.set(requiredPermission);
+            this.loading.set(false);
+            return;
+          }
           if (!b?.template_export) {
             this.loading.set(false);
             return;
@@ -257,6 +278,18 @@ export class DynamicTemplatePageComponent {
     const q = url.indexOf('?');
     const u = q === -1 ? url : url.slice(0, q);
     return u.length > 1 && u.endsWith('/') ? u.slice(0, -1) : u;
+  }
+
+  private resolveRequiredPermission(binding: TemplateBinding | null): string | null {
+    return this.routePermission(this.router.routerState.snapshot.root) ?? binding?.permission_key ?? null;
+  }
+
+  private routePermission(snapshot: ActivatedRouteSnapshot | null): string | null {
+    if (!snapshot) return null;
+    const childPermission = snapshot.firstChild ? this.routePermission(snapshot.firstChild) : null;
+    if (childPermission) return childPermission;
+    const value = snapshot.data?.['permission'];
+    return typeof value === 'string' && value.trim() ? value.trim() : null;
   }
 
   private currentLocale(): 'en' | 'ar' {
