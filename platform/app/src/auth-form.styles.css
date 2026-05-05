@@ -1,0 +1,425 @@
+/* ============================================
+   Shahin-AI GRC — Shared Auth Form Styles
+   Consumed by login, register, and onboarding
+   components for consistent form styling.
+   All values reference design-tokens.css.
+   ============================================ */
+
+/* ── Page Layout ── */
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+}
+.auth-page.rtl {
+  direction: rtl;
+  flex-direction: row-reverse;
+}
+
+/* ── Form Side ── */
+.auth-form-side {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, var(--surface) 0%, var(--surface-ice) 100%);
+  padding: var(--space-2xl);
+}
+.auth-form-container {
+  width: 100%;
+  max-width: 480px;
+}
+
+/* ── Top Bar (back link + lang switch) ── */
+.auth-top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-xl);
+}
+.auth-back-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-medium);
+  color: var(--primary);
+  text-decoration: none;
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border-primary);
+  background: var(--surface);
+  transition: all 200ms;
+}
+.auth-back-home:hover {
+  background: var(--surface-ice);
+  border-color: var(--primary);
+}
+.rtl .auth-back-home .pi-arrow-left {
+  transform: scaleX(-1);
+}
+
+/* ── Language Dropdown ── */
+.auth-lang-dropdown {
+  padding: 5px 16px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border-primary);
+  background: var(--surface);
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-medium);
+  cursor: pointer;
+  transition: all 200ms;
+  appearance: auto;
+  -webkit-appearance: menulist;
+}
+.auth-lang-dropdown:hover {
+  border-color: var(--primary);
+}
+.auth-lang-dropdown:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--primary);
+}
+
+/* ── Headings ── */
+.auth-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-black);
+  color: var(--text-heading);
+  margin: 0 0 var(--space-sm);
+  letter-spacing: -0.02em;
+}
+.auth-subtitle {
+  font-size: var(--font-size-base);
+  color: var(--text-muted);
+  margin: 0 0 var(--space-xl);
+}
+
+/* ── Form Fields ── */
+.auth-field {
+  margin-bottom: 20px;
+}
+.auth-field label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-medium);
+  color: var(--text-body);
+  margin-bottom: 6px;
+}
+.auth-field label .pi {
+  font-size: var(--font-size-base);
+  color: var(--primary);
+}
+
+/* ── Input Styling (core shared tokens) ── */
+.auth-input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border-primary);
+  background: var(--surface);
+  color: var(--text-body);
+  font-size: var(--font-size-base);
+  font-family: inherit;
+  outline: none;
+  transition: border-color 200ms, box-shadow 200ms;
+  box-sizing: border-box;
+}
+.auth-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(var(--module-accent-sky-rgb), 0.1);
+}
+.auth-input::placeholder {
+  color: var(--text-muted);
+}
+
+/* PrimeNG input overrides — ensures pInputText and p-password
+   match the shared auth-input styling exactly. */
+.auth-field input.p-inputtext,
+.auth-field .p-password input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border-primary);
+  background: var(--surface);
+  color: var(--text-body);
+  font-size: var(--font-size-base);
+  font-family: inherit;
+  outline: none;
+  transition: border-color 200ms, box-shadow 200ms;
+  box-sizing: border-box;
+}
+.auth-field input.p-inputtext:focus,
+.auth-field .p-password input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(var(--module-accent-sky-rgb), 0.1);
+}
+.auth-field input.p-inputtext::placeholder,
+.auth-field .p-password input::placeholder {
+  color: var(--text-muted);
+}
+
+/* ── Password Wrapper ── */
+.auth-password-wrapper {
+  position: relative;
+}
+.auth-password-wrapper .auth-input {
+  padding-inline-end: 44px;
+}
+.rtl .auth-password-wrapper .auth-input {
+  padding-inline-end: 14px;
+  padding-inline-start: 44px;
+}
+.auth-toggle-pw {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: var(--font-size-md);
+  padding: var(--space-xs);
+}
+.auth-toggle-pw:hover {
+  color: var(--primary);
+}
+.rtl .auth-toggle-pw {
+  right: auto;
+  left: 12px;
+}
+
+/* ── Password Strength Meter ── */
+.auth-pw-strength {
+  margin-top: 10px;
+}
+.auth-pw-bar {
+  height: 4px;
+  background: var(--border-subtle);
+  border-radius: var(--space-xs);
+  overflow: hidden;
+}
+.auth-pw-fill {
+  height: 100%;
+  border-radius: var(--space-xs);
+  transition: width 300ms, background 300ms;
+}
+.auth-pw-fill.weak   { background: var(--error); }
+.auth-pw-fill.fair    { background: var(--warning); }
+.auth-pw-fill.good    { background: var(--primary); }
+.auth-pw-fill.strong  { background: var(--success); }
+
+.auth-pw-hints {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  margin-top: var(--space-sm);
+}
+.auth-pw-hint {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  transition: color 200ms;
+}
+.auth-pw-hint .pi {
+  font-size: var(--font-size-sm);
+}
+.auth-pw-hint.met {
+  color: var(--success);
+}
+.auth-pw-hint.met .pi {
+  color: var(--success);
+}
+
+/* ── Form Options (remember me, etc.) ── */
+.auth-form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.auth-remember-me {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+  cursor: pointer;
+}
+.auth-remember-me input[type="checkbox"] {
+  accent-color: var(--primary);
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+/* ── Error Message ── */
+.auth-error {
+  color: var(--error);
+  font-size: var(--font-size-sm);
+  margin: 0 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #fef2f2;
+  padding: var(--space-sm) 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid #fecaca;
+}
+
+/* ── Submit Button (gradient) ── */
+.auth-submit-btn {
+  width: 100%;
+  padding: 13px;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: var(--text-on-primary);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-bold);
+  cursor: pointer;
+  transition: all 250ms;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  box-shadow: 0 4px 12px rgba(var(--module-accent-sky-rgb), 0.2);
+}
+.auth-submit-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(var(--module-accent-sky-rgb), 0.3);
+}
+.auth-submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* PrimeNG p-button override for register-style submit */
+.auth-field .auth-submit-btn.p-button,
+.auth-submit-btn.p-button {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark)) !important;
+  border: none !important;
+  border-radius: var(--radius-sm) !important;
+  font-weight: var(--font-bold) !important;
+  box-shadow: 0 4px 12px rgba(var(--module-accent-sky-rgb), 0.2);
+}
+.auth-submit-btn.p-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(var(--module-accent-sky-rgb), 0.3);
+}
+
+/* ── Footer Link ── */
+.auth-footer-link {
+  text-align: center;
+  margin-top: var(--space-lg);
+  font-size: var(--font-size-base);
+  color: var(--text-muted);
+}
+.auth-footer-link a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: var(--font-bold);
+}
+.auth-footer-link a:hover {
+  text-decoration: underline;
+}
+
+/* ── Brand Side Panel ── */
+.auth-brand-side {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--primary-darker) 0%, var(--primary-dark) 40%, var(--primary) 100%);
+  padding: var(--space-2xl);
+  position: relative;
+  overflow: hidden;
+}
+.auth-brand-side::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(var(--glass-subtle) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+.auth-brand-content {
+  text-align: center;
+  color: var(--text-on-primary);
+  position: relative;
+  z-index: var(--z-base);
+}
+.auth-brand-logo {
+  margin-bottom: var(--space-lg);
+}
+.auth-brand-logo img {
+  border-radius: var(--radius-pill);
+  filter: drop-shadow(0 8px 32px rgba(var(--module-accent-sky-rgb), 0.5));
+  object-fit: cover;
+}
+.auth-brand-content h2 {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-black);
+  margin: 0 0 12px;
+  letter-spacing: -0.02em;
+  color: var(--text-on-primary);
+}
+.auth-brand-tagline {
+  font-size: var(--font-size-md);
+  color: rgba(var(--color-white-rgb), 0.85);
+  margin: 0 0 var(--space-sm);
+  max-width: 340px;
+  margin-inline-start: auto;
+  margin-inline-end: auto;
+  line-height: 1.6;
+}
+.auth-brand-sub {
+  font-size: var(--font-size-sm);
+  color: rgba(var(--color-white-rgb), 0.5);
+  margin: 0 0 var(--space-xl);
+}
+.auth-brand-features {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.auth-brand-feature {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-medium);
+  color: rgba(var(--color-white-rgb), 0.8);
+  background: var(--glass-medium);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-pill);
+  backdrop-filter: blur(8px);
+}
+.auth-brand-feature .pi {
+  font-size: var(--font-size-md);
+  color: var(--primary-light);
+}
+
+/* ── Responsive: hide brand side on mobile ── */
+@media (max-width: 768px) {
+  .auth-page {
+    flex-direction: column !important;
+  }
+  .auth-brand-side {
+    display: none;
+  }
+  .auth-form-side {
+    padding: var(--space-lg);
+  }
+  .auth-input,
+  .auth-btn,
+  .auth-btn-outline {
+    min-height: 44px;
+  }
+}

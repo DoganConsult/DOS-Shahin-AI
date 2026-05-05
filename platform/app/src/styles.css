@@ -1,0 +1,336 @@
+/* ============================================
+   Dogan-AI Platform — IBM Carbon Enterprise Theme
+   by Dogan Consult
+   ============================================ */
+
+/* Design System — single source of truth for all visual tokens */
+@import 'design-tokens.css';
+
+/* Premium animations — keyframes & reduced-motion overrides */
+@import './styles/premium-animations.css';
+
+/* IBM Carbon component patterns — reusable utility classes */
+@import './styles/carbon-components.css';
+
+/* Shared auth form styles — consumed by login, register, and onboarding */
+@import 'auth-form.styles.css';
+
+/* GRC design tokens — extended palette for Dogan-AI Platform modules */
+@import './styles/grc-tokens.css';
+
+/* WCAG 2.1 AA accessibility overrides — F13 gap closure */
+@import './styles/wcag-a11y.css';
+
+/* RTL depth — logical properties, Arabic typography — F14 gap closure */
+@import './styles/rtl-depth.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-family: 'Inter Variable', 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif !important;
+  font-family: 'Inter Variable', 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif !important;
+  /* Legacy aliases — mapped to Carbon design tokens for backward compatibility.
+     New code should use the design-tokens.css custom properties directly. */
+  --primary-lighter: var(--carbon-blue-30);
+  --primary-bg: var(--surface-ice);
+  --secondary: var(--carbon-purple-60);
+  --accent: var(--carbon-green-60);
+  --bg: var(--surface-ice);
+  --text: var(--text-body);
+  --border: var(--border-primary);
+  --risk-low: var(--success);
+  --risk-medium: var(--warning);
+  --risk-high: var(--error);
+  --risk-critical: var(--carbon-red-80);
+  --shadow: var(--shadow-card);
+  --text-caption: var(--text-muted);
+  --shadow-glow: 0 0 0 3px rgba(15, 98, 254, 0.16);
+  --gradient-primary: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  --glass-bg: var(--glass-medium);
+  --glass-blur: blur(16px);
+  --transition-fast: var(--duration-moderate-01, 150ms) var(--ease-productive-standard, cubic-bezier(0.2, 0, 0.38, 0.9));
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: var(--line-height-normal, 1.5);
+  font-feature-settings: 'kern';
+  letter-spacing: var(--letter-spacing-body, 0.16px);
+}
+
+/* Premium scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--carbon-gray-30); border-radius: var(--radius-pill); }
+::-webkit-scrollbar-thumb:hover { background: var(--carbon-gray-50); }
+
+a {
+  color: var(--carbon-link, var(--primary));
+  text-decoration: none;
+  transition: color var(--duration-fast-02, 110ms) var(--ease-productive-standard, cubic-bezier(0.2, 0, 0.38, 0.9));
+}
+a:hover { color: var(--carbon-link-hover, var(--primary-light)); text-decoration: none; }
+a:visited { color: var(--carbon-link-visited, var(--primary)); }
+
+/* Buttons — Carbon structured with productive motion */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 11px 16px; border-radius: 0; border: none;
+  font-size: var(--font-size-base); font-weight: var(--font-regular); cursor: pointer;
+  letter-spacing: var(--letter-spacing-body, 0.16px);
+  font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
+  transition: all var(--duration-fast-02, 110ms) var(--ease-productive-standard, cubic-bezier(0.2, 0, 0.38, 0.9));
+  position: relative; overflow: hidden;
+}
+.btn::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(rgba(255,255,255,0), rgba(255,255,255,0.08));
+  opacity: 0; transition: opacity var(--duration-fast-02, 110ms);
+}
+.btn:hover::after { opacity: 1; }
+.btn:active { transform: scale(0.99); }
+.btn-primary { background: var(--carbon-button-primary, var(--primary)); color: var(--text-on-primary); }
+.btn-primary:hover { background: var(--carbon-button-primary-hover); }
+.btn-secondary { background: var(--carbon-button-secondary, var(--secondary)); color: var(--text-on-primary); }
+.btn-accent { background: var(--accent); color: var(--text-on-primary); }
+.btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
+.btn-outline:hover { background: rgba(15, 98, 254, 0.08); }
+.btn-lg { padding: 14px 24px; font-size: var(--font-size-md); min-height: 48px; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+.btn:focus-visible {
+  outline: 2px solid var(--carbon-focus, var(--primary));
+  outline-offset: -2px;
+}
+
+/* Cards — Carbon elevated tile with productive motion */
+.card {
+  background: var(--surface); border-radius: var(--radius);
+  box-shadow: var(--shadow-card); padding: 24px;
+  border: 1px solid var(--border-subtle);
+  transition: box-shadow var(--duration-moderate-02, 240ms) var(--ease-productive-standard, cubic-bezier(0.2, 0, 0.38, 0.9)),
+              transform var(--duration-moderate-02, 240ms) var(--ease-productive-standard, cubic-bezier(0.2, 0, 0.38, 0.9));
+}
+.card:hover {
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-2px);
+}
+
+/* Glass-morphism icon — reusable utility for frosted-glass icon containers */
+.glass-icon {
+  background: var(--glass-icon-bg);
+  backdrop-filter: blur(var(--glass-icon-blur));
+  -webkit-backdrop-filter: blur(var(--glass-icon-blur));
+  border: 1px solid var(--glass-icon-border);
+  box-shadow: var(--glass-icon-shadow);
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.glass-icon:hover,
+*:hover > .glass-icon {
+  background: rgba(14, 165, 233, 0.14);
+  border-color: rgba(14, 165, 233, 0.28);
+  box-shadow: 0 6px 24px rgba(14, 165, 233, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.30);
+  transform: scale(1.08);
+}
+[data-theme="dark"] .glass-icon:hover,
+[data-theme="dark"] *:hover > .glass-icon {
+  background: rgba(56, 189, 248, 0.16);
+  border-color: rgba(56, 189, 248, 0.30);
+  box-shadow: 0 6px 24px rgba(56, 189, 248, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.10);
+}
+
+/* Inputs — Carbon field with focus ring */
+.input {
+  width: 100%; padding: 0 16px; height: 40px;
+  border: none; border-bottom: 1px solid var(--carbon-border-strong, var(--border));
+  font-size: var(--font-size-base); font-family: inherit;
+  background: var(--carbon-field, var(--surface)); color: var(--text);
+  letter-spacing: var(--letter-spacing-body, 0.16px);
+  transition: border-color var(--duration-fast-01, 70ms) var(--ease-productive-standard, cubic-bezier(0.2, 0, 0.38, 0.9)),
+              outline var(--duration-fast-01, 70ms) var(--ease-productive-standard, cubic-bezier(0.2, 0, 0.38, 0.9));
+}
+.input:hover { border-bottom-color: var(--text-heading); }
+.input:focus {
+  outline: 2px solid var(--carbon-focus, var(--primary));
+  outline-offset: -2px;
+  border-bottom-color: transparent;
+}
+.input::placeholder { color: var(--text-caption); }
+
+/* Badges — Carbon tag style */
+.badge {
+  display: inline-flex; align-items: center; padding: 4px 8px; border-radius: var(--radius-xl);
+  font-size: var(--font-size-sm); font-weight: var(--font-regular);
+  letter-spacing: var(--letter-spacing-wide, 0.32px);
+}
+.badge-green { background: var(--carbon-tag-green-bg); color: var(--carbon-tag-green-text); }
+.badge-yellow { background: var(--status-warning-bg, var(--surface-amber)); color: var(--carbon-yellow-50); }
+.badge-red { background: var(--carbon-tag-red-bg); color: var(--carbon-tag-red-text); }
+.badge-blue { background: var(--carbon-tag-blue-bg); color: var(--carbon-tag-blue-text); }
+.badge-purple { background: var(--carbon-tag-purple-bg); color: var(--carbon-tag-purple-text); }
+.badge-teal { background: var(--carbon-tag-teal-bg); color: var(--carbon-tag-teal-text); }
+.badge-magenta { background: var(--carbon-tag-magenta-bg); color: var(--carbon-tag-magenta-text); }
+.badge-cyan { background: var(--carbon-tag-cyan-bg); color: var(--carbon-tag-cyan-text); }
+.badge-high-contrast { background: var(--carbon-tag-high-contrast-bg); color: var(--carbon-tag-high-contrast-text); }
+
+/* Section headings — Carbon productive type */
+h1, h2, h3, h4 {
+  color: var(--text-heading);
+  font-weight: var(--font-light, 300);
+  letter-spacing: var(--letter-spacing-heading, 0);
+  line-height: var(--line-height-tight, 1.125);
+}
+h1 { font-size: var(--font-size-display-01, 42px); }
+h2 { font-size: var(--font-size-2xl, 36px); }
+h3 { font-size: var(--font-size-xl, 28px); }
+h4 { font-size: var(--font-size-lg, 20px); font-weight: var(--font-regular, 400); }
+
+/* Code blocks — IBM Plex Mono */
+code {
+  font-family: 'IBM Plex Mono', 'Menlo', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', Courier, monospace;
+  font-size: var(--font-size-sm); color: var(--primary); background: var(--primary-bg);
+  padding: 2px 8px; border-radius: var(--radius-xs); font-weight: 500;
+}
+
+/* Utility: glass panel */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+}
+
+/* Utility: glassmorphism icon containers */
+.icon-glass {
+  background: rgba(14, 165, 233, 0.08);
+  backdrop-filter: blur(12px) saturate(1.4);
+  -webkit-backdrop-filter: blur(12px) saturate(1.4);
+  border: 1px solid rgba(14, 165, 233, 0.15);
+  box-shadow: 0 4px 16px rgba(14, 165, 233, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.icon-glass:hover {
+  background: rgba(14, 165, 233, 0.14);
+  border-color: rgba(14, 165, 233, 0.25);
+  box-shadow: 0 8px 24px rgba(14, 165, 233, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+[data-theme="dark"] .icon-glass {
+  background: rgba(56, 189, 248, 0.10);
+  border: 1px solid rgba(56, 189, 248, 0.18);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.20), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+[data-theme="dark"] .icon-glass:hover {
+  background: rgba(56, 189, 248, 0.18);
+  border-color: rgba(56, 189, 248, 0.28);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.30), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+/* ============================================
+   RTL / Arabic-First Support
+   ============================================ */
+
+[dir="rtl"] body,
+[lang="ar"] body {
+  font-family: 'IBM Plex Sans Arabic', 'Tajawal', 'Cairo', 'Noto Sans Arabic', 'IBM Plex Sans', sans-serif;
+}
+
+/* Legacy .sidebar/.main-content removed — Carbon UIShell cds-sidenav
+   handles positioning natively. */
+
+[dir="rtl"] .flex-row { flex-direction: row-reverse; }
+
+.text-start { text-align: start; }
+
+.ps-4 { padding-inline-start: 1rem; padding-inline-end: 0; }
+
+.input { text-align: start; }
+
+/* PrimeNG dropdown overrides removed — workspace uses Carbon cds-dropdown. */
+
+/* Offline connectivity banner — logical properties */
+.offline-banner {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline: 0;
+  z-index: 10000;
+  padding: var(--cds-spacing-02) var(--cds-spacing-05);
+  background: var(--cds-support-warning);
+  color: var(--cds-text-on-color);
+  border-bottom: 1px solid var(--cds-border-subtle-00);
+  text-align: center;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* ── WCAG 2.1 AA: Skip navigation link — logical properties ── */
+.skip-link {
+  position: absolute;
+  inset-block-start: -50px;
+  inset-inline-start: 0;
+  background: var(--cds-background-inverse);
+  color: var(--cds-text-inverse);
+  padding: var(--cds-spacing-02) var(--cds-spacing-05);
+  z-index: 100000;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 0;
+  transition: inset-block-start 0.2s ease;
+}
+.skip-link:focus {
+  inset-block-start: 0;
+  outline: 2px solid var(--cds-focus);
+  outline-offset: 2px;
+}
+
+/* ── WCAG 2.1 AA: Focus visibility for all interactive elements ── */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--primary, #4f46e5);
+  outline-offset: 2px;
+}
+
+/* ── WCAG 2.1 AA: Ensure sufficient color contrast for muted/secondary text ── */
+.text-color-secondary,
+.text-muted {
+  color: var(--text-muted-aa, #596673);
+}
+
+/* ── WCAG 2.1 AA: Screen-reader-only utility class ── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── WCAG 2.1 AA: Prefers reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
