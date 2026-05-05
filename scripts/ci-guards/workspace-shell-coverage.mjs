@@ -1,93 +1,92 @@
 #!/usr/bin/env node
 /**
- * Phase WS-6 — workspace-shell-coverage gate.
+ * Phase WS-7 — workspace-shell-coverage gate (60-key taxonomy v3.0).
  *
- * Asserts that the 10 workspace.* component_keys registered in
- * dos.dynamic_ui_component_registry by 20260504_0010_workspace_shell_registry.sql
- * each have:
- *   1. A corresponding selector-shipping component file under
- *      platform/ui-system/dos-ui-system/src/shell/
- *   2. A barrel re-export from platform/ui-system/dos-ui-system/src/index.ts
- *   3. An entry in WORKSPACE_SHELL_KEYS const in workspace-shell.contracts.ts
+ * Asserts parity across the three sources of truth for the 60 workspace-shell keys:
+ *   1. workspace-shell.contracts.ts  (WORKSPACE_SHELL_KEYS)
+ *   2. workspace-shell-complete-direct-seed.json (components[].component_key)
+ *   3. workspace-shell.routes.ts (WORKSPACE_SHELL_KEYS)
  *
  * Read-only static check (no DB).
  *
  * Set WORKSPACE_SHELL_COVERAGE_ENFORCE=1 to fail CI; otherwise SHADOW.
  */
-import { readFileSync, existsSync, readdirSync } from 'node:fs';
+import { readFileSync, existsSync } from 'node:fs';
 import { resolve, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
-const SHELL_DIR = join(REPO, 'platform/ui-system/dos-ui-system/src/shell');
-const BARREL = join(REPO, 'platform/ui-system/dos-ui-system/src/index.ts');
-const CONTRACTS = join(SHELL_DIR, 'workspace-shell.contracts.ts');
-const REG_MIG = join(REPO, 'platform/dos/migrations/public/20260504_0010_workspace_shell_registry.sql');
+const CONTRACTS = join(REPO, 'platform/ui-system/dos-ui-system/src/shell/workspace-shell.contracts.ts');
+const SEED_JSON = join(REPO, 'platform/ui-system/module_complete_direct_seed_pack/workspace-shell-complete-direct-seed.json');
+const ROUTES    = join(REPO, 'services/ui-os-service/src/routes/workspace-shell.routes.ts');
 
-const SURFACES = [
-  { key: 'workspace.header',         selector: 'dos-workspace-header' },
-  { key: 'workspace.sidebar',        selector: 'dos-workspace-sidebar' },
-  { key: 'workspace.mobile-nav',     selector: 'dos-mobile-bottom-nav' },
-  { key: 'workspace.command-search', selector: 'dos-command-search' },
-  { key: 'workspace.status-bar',     selector: 'dos-workspace-status-bar' },
-  { key: 'workspace.action-queue',   selector: 'dos-action-queue' },
-  { key: 'workspace.agent-strip',    selector: 'dos-agent-activity-strip' },
-  { key: 'workspace.inbox-center',   selector: 'dos-inbox-center' },
-  { key: 'workspace.context-panel',  selector: 'dos-context-panel' },
-  { key: 'workspace.quick-create',   selector: 'dos-quick-create' },
-];
-
+const EXPECTED_COUNT = 60;
 const failures = [];
 
-if (!existsSync(SHELL_DIR)) {
-  console.error('[workspace-shell-coverage] missing shell dir');
-  process.exit(1);
+// ── 1. Extract keys from contracts TS ──────────────────────────────────────
+function extractQuotedKeys(src) {
+  const keys = [];
+  for (const m of src.matchAll(/'(workspace\.[a-z]+\.[a-z0-9-]+)'/g)) {
+    if (!keys.includes(m[1])) keys.push(m[1]);
+  }
+  return keys;
 }
 
-const shellFiles = readdirSync(SHELL_DIR).filter(f => f.endsWith('.ts'));
-const shellSrc = Object.fromEntries(
-  shellFiles.map(f => [f, readFileSync(join(SHELL_DIR, f), 'utf8')]),
-);
-const barrelSrc = existsSync(BARREL) ? readFileSync(BARREL, 'utf8') : '';
-const contractsSrc = existsSync(CONTRACTS) ? readFileSync(CONTRACTS, 'utf8') : '';
-const migSrc = existsSync(REG_MIG) ? readFileSync(REG_MIG, 'utf8') : '';
-
-for (const s of SURFACES) {
-  // 1. selector exists in shell src
-  const hasSelector = Object.values(shellSrc).some(src =>
-    src.includes(`selector: '${s.selector}'`),
-  );
-  if (!hasSelector) failures.push({ key: s.key, reason: `no component declares selector '${s.selector}' under src/shell/` });
-
-  // 2. WORKSPACE_SHELL_KEYS contains the key
-  if (!contractsSrc.includes(`'${s.key}'`)) {
-    failures.push({ key: s.key, reason: 'missing from WORKSPACE_SHELL_KEYS const' });
+if (!existsSync(CONTRACTS)) {
+  failures.push({ source: 'contracts', reason: 'file not found' });
+} else {
+  const contractsSrc = readFileSync(CONTRACTS, 'utf8');
+  const contractKeys = extractQuotedKeys(contractsSrc);
+  if (contractKeys.length !== EXPECTED_COUNT) {
+    failures.push({ source: 'contracts', reason: `expected ${EXPECTED_COUNT} keys, found ${contractKeys.length}` });
   }
+}
 
-  // 3. registry migration mentions the key
-  if (!migSrc.includes(`'${s.key}'`)) {
-    failures.push({ key: s.key, reason: 'missing from 20260504_0010 registry migration' });
+// ── 2. Extract keys from seed JSON ─────────────────────────────────────────
+let seedKeys = [];
+if (!existsSync(SEED_JSON)) {
+  failures.push({ source: 'seed-json', reason: 'file not found' });
+} else {
+  const json = JSON.parse(readFileSync(SEED_JSON, 'utf8'));
+  seedKeys = (json.components ?? []).map(c => c.component_key).filter(Boolean);
+  if (seedKeys.length !== EXPECTED_COUNT) {
+    failures.push({ source: 'seed-json', reason: `expected ${EXPECTED_COUNT} components, found ${seedKeys.length}` });
   }
+}
 
-  // 4. barrel re-exports the file containing the selector
-  const owner = Object.entries(shellSrc).find(([, src]) =>
-    src.includes(`selector: '${s.selector}'`),
-  );
-  if (owner) {
-    const fileNoExt = owner[0].replace(/\.ts$/, '');
-    if (!barrelSrc.includes(`./shell/${fileNoExt}`)) {
-      failures.push({ key: s.key, reason: `barrel index.ts does not re-export ./shell/${fileNoExt}` });
+// ── 3. Extract keys from routes TS ─────────────────────────────────────────
+if (!existsSync(ROUTES)) {
+  failures.push({ source: 'routes', reason: 'file not found' });
+} else {
+  const routesSrc = readFileSync(ROUTES, 'utf8');
+  const routeKeys = extractQuotedKeys(routesSrc);
+  if (routeKeys.length < EXPECTED_COUNT) {
+    failures.push({ source: 'routes', reason: `expected >=${EXPECTED_COUNT} keys, found ${routeKeys.length}` });
+  }
+}
+
+// ── 4. Cross-check: every seed key must appear in contracts + routes ───────
+if (seedKeys.length === EXPECTED_COUNT) {
+  const contractsSrc = existsSync(CONTRACTS) ? readFileSync(CONTRACTS, 'utf8') : '';
+  const routesSrc    = existsSync(ROUTES) ? readFileSync(ROUTES, 'utf8') : '';
+
+  for (const key of seedKeys) {
+    if (!contractsSrc.includes(`'${key}'`)) {
+      failures.push({ source: 'cross-check', reason: `seed key '${key}' missing from contracts` });
+    }
+    if (!routesSrc.includes(`'${key}'`)) {
+      failures.push({ source: 'cross-check', reason: `seed key '${key}' missing from routes` });
     }
   }
 }
 
 const enforce = process.env.WORKSPACE_SHELL_COVERAGE_ENFORCE === '1';
-console.log(`[workspace-shell-coverage] surfaces=${SURFACES.length} failures=${failures.length}`);
+console.log(`[workspace-shell-coverage] expected=${EXPECTED_COUNT} failures=${failures.length}`);
 if (failures.length) {
-  for (const f of failures) console.error(`  ✗ ${f.key} — ${f.reason}`);
+  for (const f of failures) console.error(`  ✗ [${f.source}] ${f.reason}`);
   if (enforce) process.exit(1);
   console.error('[workspace-shell-coverage] SHADOW (set WORKSPACE_SHELL_COVERAGE_ENFORCE=1 to fail CI).');
   process.exit(0);
 }
-console.log('[workspace-shell-coverage] PASS — every workspace.* surface has selector + barrel + contract + migration entry.');
+console.log(`[workspace-shell-coverage] PASS — ${EXPECTED_COUNT} keys in parity across contracts + seed-json + routes.`);
 process.exit(0);

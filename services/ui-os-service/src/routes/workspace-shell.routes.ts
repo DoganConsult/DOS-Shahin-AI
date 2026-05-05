@@ -1,51 +1,86 @@
-// Phase WS-5 — Workspace-shell binding resolver.
+// Phase WS-7 — Workspace-shell binding resolver (60-key taxonomy v3.0).
 //
 //   GET /workspace-shell/:tenantId
-//     → { tenantId, version, surfaces: [{ component_key, enabled, position,
-//                                         perms_required, props }] }
+//     → { tenantId, version, surfaces[], zones{}, knownKeys[] }
 //
-// Reads dos.workspace_shell_binding (created by Phase WS-1 migration
-// 20260504_0010_workspace_shell_registry.sql). The 10 default surfaces are:
-//   workspace.{header, sidebar, mobile-nav, command-search, status-bar,
-//              action-queue, agent-strip, inbox-center, context-panel,
-//              quick-create}
+// Reads dos.workspace_shell_binding. The 60 workspace-shell keys span 6 bands:
+//   A (Frame 14), B (Navigation/Layout 10), C (Tables/Lists 7),
+//   D (Search/Filters/Inputs 12), E (Actions/Feedback/Overlays 7),
+//   F (Enterprise Polish 10).
 //
+// All keys are resolver-driven from DB — no hardcoded shell slots.
 // Wired via services/ui-os-service/src/routes/index.ts.
 
 import { Router } from 'express';
 import type { DbPool } from '../db.js';
 
 const WORKSPACE_SHELL_KEYS = [
-  'shell.app',
-  'shell.desktop',
-  'shell.mobile',
-  'shell.desktop-sidebar',
-  'workspace.header',
-  'workspace.sidebar',
-  'workspace.mobile-nav',
-  'shell.mobile-drawer',
-  'shell.workspace-nav',
-  'shell.nav-section',
-  'shell.nav-item',
-  'workspace.command-search',
-  'workspace.inbox-center',
-  'workspace.quick-create',
-  'workspace.context-panel',
-  'shell.account-menu',
-  'workspace.status-bar',
-  'workspace.action-queue',
-  'workspace.agent-strip',
-  'shell.banner-strip',
-  'shell.toast-outlet',
-  'page.layout',
-  'page.masthead',
-  'page.header',
-  'page.tabs',
-  'page.widget-frame',
-  'workspace.selectable-tile',
-  'workspace.clickable-tile',
-  'workspace.expandable-tile',
-  'workspace.ai-tile',
+  // Band A — Workspace Shell Frame (14)
+  'workspace.frame.ui-shell',
+  'workspace.frame.header',
+  'workspace.frame.header-name',
+  'workspace.frame.header-navigation',
+  'workspace.frame.header-menu',
+  'workspace.frame.header-menu-item',
+  'workspace.frame.header-global-bar',
+  'workspace.frame.header-global-action',
+  'workspace.frame.side-nav',
+  'workspace.frame.side-nav-items',
+  'workspace.frame.side-nav-menu',
+  'workspace.frame.side-nav-menu-item',
+  'workspace.frame.side-nav-link',
+  'workspace.frame.content',
+  // Band B — Navigation / Layout (10)
+  'workspace.nav.grid',
+  'workspace.nav.column',
+  'workspace.nav.layer',
+  'workspace.nav.breadcrumb',
+  'workspace.nav.tabs',
+  'workspace.nav.tab',
+  'workspace.nav.tile',
+  'workspace.nav.clickable-tile',
+  'workspace.nav.expandable-tile',
+  'workspace.nav.tag',
+  // Band C — Tables / Lists / Data (7)
+  'workspace.data.data-table',
+  'workspace.data.table-toolbar',
+  'workspace.data.table-toolbar-search',
+  'workspace.data.table-toolbar-actions',
+  'workspace.data.table-batch-actions',
+  'workspace.data.pagination',
+  'workspace.data.structured-list',
+  // Band D — Search / Filters / Inputs (12)
+  'workspace.input.search',
+  'workspace.input.dropdown',
+  'workspace.input.combo-box',
+  'workspace.input.multi-select',
+  'workspace.input.date-picker',
+  'workspace.input.text-input',
+  'workspace.input.text-area',
+  'workspace.input.number-input',
+  'workspace.input.select',
+  'workspace.input.checkbox',
+  'workspace.input.radio',
+  'workspace.input.toggle',
+  // Band E — Actions / Feedback / Overlays (7)
+  'workspace.action.button',
+  'workspace.action.icon-button',
+  'workspace.action.overflow-menu',
+  'workspace.action.overflow-menu-option',
+  'workspace.action.modal',
+  'workspace.action.inline-notification',
+  'workspace.action.toast-notification',
+  // Band F — Enterprise Polish (10)
+  'workspace.polish.tooltip',
+  'workspace.polish.toggletip',
+  'workspace.polish.popover',
+  'workspace.polish.progress-bar',
+  'workspace.polish.inline-loading',
+  'workspace.polish.skeleton-text',
+  'workspace.polish.skeleton-placeholder',
+  'workspace.polish.context-menu',
+  'workspace.polish.file-uploader',
+  'workspace.polish.accordion',
 ] as const;
 
 type WorkspaceShellKey = typeof WORKSPACE_SHELL_KEYS[number];
@@ -59,7 +94,8 @@ type WorkspaceRuntimeZone =
   | 'right-rail'
   | 'bottom-status'
   | 'fab'
-  | 'toast';
+  | 'toast'
+  | 'content';
 
 interface WorkspaceShellRow {
   component_key: string;
@@ -82,32 +118,27 @@ const WORKSPACE_RUNTIME_ZONES: readonly WorkspaceRuntimeZone[] = [
   'bottom-status',
   'fab',
   'toast',
+  'content',
 ];
 
+// Zone mapping applies to Band A (frame primitives) which have fixed
+// layout positions. Bands B-F are zone-agnostic — they render wherever
+// their parent composition places them (resolved by props.zone override).
 const DEFAULT_SURFACE_ZONES: Partial<Record<WorkspaceShellKey, WorkspaceRuntimeZone>> = {
-  'workspace.header': 'header',
-  'workspace.command-search': 'header',
-  'shell.account-menu': 'header',
-  'workspace.sidebar': 'sidebar',
-  'shell.desktop-sidebar': 'sidebar',
-  'shell.workspace-nav': 'sidebar',
-  'shell.nav-section': 'sidebar',
-  'shell.nav-item': 'sidebar',
-  'shell.mobile-drawer': 'mobile-drawer',
-  'workspace.mobile-nav': 'mobile-nav',
-  'shell.banner-strip': 'top-banners',
-  'page.layout': 'main',
-  'page.masthead': 'main',
-  'page.header': 'main',
-  'page.tabs': 'main',
-  'page.widget-frame': 'main',
-  'workspace.context-panel': 'right-rail',
-  'workspace.inbox-center': 'right-rail',
-  'workspace.status-bar': 'bottom-status',
-  'workspace.action-queue': 'bottom-status',
-  'workspace.agent-strip': 'bottom-status',
-  'workspace.quick-create': 'fab',
-  'shell.toast-outlet': 'toast',
+  'workspace.frame.ui-shell':            'main',
+  'workspace.frame.header':              'header',
+  'workspace.frame.header-name':         'header',
+  'workspace.frame.header-navigation':   'header',
+  'workspace.frame.header-menu':         'header',
+  'workspace.frame.header-menu-item':    'header',
+  'workspace.frame.header-global-bar':   'header',
+  'workspace.frame.header-global-action':'header',
+  'workspace.frame.side-nav':            'sidebar',
+  'workspace.frame.side-nav-items':      'sidebar',
+  'workspace.frame.side-nav-menu':       'sidebar',
+  'workspace.frame.side-nav-menu-item':  'sidebar',
+  'workspace.frame.side-nav-link':       'sidebar',
+  'workspace.frame.content':             'content',
 };
 
 function zoneForSurface(row: WorkspaceShellRow): WorkspaceRuntimeZone | null {
