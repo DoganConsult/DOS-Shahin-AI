@@ -9,7 +9,9 @@ Do NOT declare a capability missing without first running the verification
 command listed beside it.
 
 LIVE INFRASTRUCTURE (verified via pm2 list + curl + psql):
-- Gateway: PORT=4000 (cluster x2), responding HTTP. Verify: `curl -sI http://localhost:4000/`
+- Gateway: PORT=4000 (cluster x2). Health JSON: GET `/health` or `/api/health` (no `/api/v1/health`; `/` may 404). Verify: `curl -s http://localhost:4000/health`
+- Rollout-service: PORT=4017 (admin). With `MTLS_HTTPS_LISTEN=1`, plain HTTP returns empty reply — probe HTTPS + mTLS. Verify from repo root: `curl -s --cert platform/config-center/secrets/admin-mtls/rollout-service.crt --key platform/config-center/secrets/admin-mtls/rollout-service.key --cacert platform/config-center/secrets/admin-mtls/ca.crt https://127.0.0.1:4017/api/admin/rollout/health`
+- Redis: :6379 requires AUTH when `requirepass` is set (`NOAUTH` without credentials is expected). Verify using `REDIS_URL` or `REDIS_PASSWORD` from `platform/config-center/env/platform.secrets.env`, e.g. `redis-cli -u "$REDIS_URL" ping`.
 - Product-shell: PORT=3000, responding (currently 500 root, but live). Verify: `curl -sI http://localhost:3000/`
 - Online PM2 processes: gateway, auth-service, tenant-service, user-service, ui-os-service, ai-engine-service, product-shell. Verify: `pm2 list`
 
@@ -1520,7 +1522,7 @@ Companion documents (sync together — never fork):
 - `pnpm test:ci` — runs `dynamic-ui:gates` (hard-gates, page-quality, lint variants) then `pnpm test`.
 - `pnpm boot` / `pnpm start` / `pnpm stop` / `pnpm reload` / `pnpm logs` — PM2 fleet lifecycle via `ops/ecosystem.platform.config.js`.
 - `pnpm migrate[:plan|:status|:reconcile|:normalize-drift]` — DB migrations through `migration/migration-runner.ts`.
-- `pnpm validate:ports` — enforce `ops/ports.allocation.json`.
+- `pnpm validate:ports` — runs `scripts/ci-guards/validate-ports-allocation.mjs` against `platform/config-center/ops/ports.allocation.json` (may fail until stale service rows / missing env paths are reconciled).
 
 ## Coding Style & Naming Conventions
 - TypeScript 5.4, `tsconfig.base.json`: `strict: true` (with `strictNullChecks: false`), `module/moduleResolution: NodeNext`, `target: ES2022`, `isolatedModules`, `forceConsistentCasingInFileNames`. No `paths` aliases — depend on workspace packages via their built `dist` (`pnpm --filter @dos/<pkg> build` first).
