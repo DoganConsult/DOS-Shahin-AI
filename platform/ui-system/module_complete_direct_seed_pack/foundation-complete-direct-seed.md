@@ -30,7 +30,7 @@
 | Field | Value |
 |---|---|
 | `module_code` | `foundation` |
-| `version` | `2.0.0` |
+| `version` | `2.1.0` |
 | `nameEn` | `Foundation — Organization Hierarchy` |
 | `nameAr` | `الأساس — الهيكل التنظيمي` |
 | `tier` | `platform` |
