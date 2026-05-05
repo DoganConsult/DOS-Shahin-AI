@@ -162,7 +162,24 @@
         "label_ar": "قوائم الهيدر",
         "use_en": "Menu groups in header",
         "family": "workspace-shell",
-        "zone": "header"
+        "zone": "header",
+        "accountMenu": [
+          {
+            "id": "profile",
+            "labelKey": "shell.account.menu.profile",
+            "route": "/profile"
+          },
+          {
+            "id": "settings",
+            "labelKey": "shell.account.menu.settings",
+            "route": "/settings"
+          },
+          {
+            "id": "logout",
+            "labelKey": "shell.account.menu.logout",
+            "destructive": true
+          }
+        ]
       }
     },
     {

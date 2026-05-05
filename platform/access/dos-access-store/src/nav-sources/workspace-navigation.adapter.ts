@@ -14,7 +14,8 @@
 //      `enabled` and `disabledReason`. Lower layers fill missing metadata
 //      (icon/route/permission/group/order/labels).
 //   3. L6 (survival fallback) runs ONLY when every L1..L5 returned null
-//      AND `!access.loaded()`.
+//      AND `!access.loaded()`. It contributes no stub rows — merge yields empty
+//      nav until other layers contribute once bootstrap/session resolves.
 //   4. Per-item filter pipeline (tier-aware):
 //      - missing required permission → disabled, 'missing-permission'
 //      - tier='dna': never 'not-entitled'; only 'backend-offline' (probe
@@ -47,11 +48,8 @@ interface MergedItem extends DosNavItem {
   __tier?: 'dna' | 'module' | 'product';
 }
 
-const DEFAULT_ACCOUNT_MENU: ReadonlyArray<ShellAccountMenuEntry> = [
-  { id: 'profile',  labelKey: 'shell.account.menu.profile',  route: '/profile' },
-  { id: 'settings', labelKey: 'shell.account.menu.settings', route: '/settings' },
-  { id: 'logout',   labelKey: 'shell.account.menu.logout',   destructive: true },
-];
+// Account menu is 100% DB-driven — seeded in dos.workspace_shell_binding
+// props.accountMenu for workspace.frame.header-menu. No hardcoded fallback.
 
 @Injectable({ providedIn: 'root' })
 export class WorkspaceNavigationAdapter {
@@ -71,7 +69,7 @@ export class WorkspaceNavigationAdapter {
   private readonly _config = signal<DosShellNavConfig>({ groups: [] });
   readonly navConfig = this._config.asReadonly();
 
-  private readonly _account = signal<ReadonlyArray<ShellAccountMenuEntry>>(DEFAULT_ACCOUNT_MENU);
+  private readonly _account = signal<ReadonlyArray<ShellAccountMenuEntry>>([]);
   readonly accountMenuConfig = this._account.asReadonly();
 
   /** Resolve and publish nav config. Idempotent; safe to call from multiple consumers. */
