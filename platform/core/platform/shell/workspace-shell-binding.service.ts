@@ -27,9 +27,9 @@ import { AccessStore } from '@dos/access-store';
  */
 export type WorkspaceShellZone = string;
 
-export interface WorkspaceShellSurface extends WorkspaceShellBindingRow {
+export type WorkspaceShellSurface = Omit<WorkspaceShellBindingRow, 'zone'> & {
   zone?: WorkspaceShellZone;
-}
+};
 
 interface WorkspaceShellResponse {
   tenantId: string;
