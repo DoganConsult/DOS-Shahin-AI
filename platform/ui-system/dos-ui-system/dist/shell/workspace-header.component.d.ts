@@ -7,7 +7,7 @@
  * Token stack:
  *   --cds-*           (Carbon role tokens — @carbon/styles)
  *   --shell-*         (structural aliases — carbon-shell-tokens.scss)
- *   --brand-accent    (Shahin product accent — design-tokens.css)
+ *   --brand-accent    (product accent token — design-tokens.css)
  *   breathing-glow    (premium animation — design-tokens.css)
  */
 import { EventEmitter } from '@angular/core';
@@ -15,6 +15,7 @@ import type { WorkspaceHeaderContext, WorkspaceHeaderAction } from './workspace-
 export declare class DosWorkspaceHeaderComponent {
     /** Full WorkspaceHeaderContext — optional; individual @Inputs also accepted */
     set context(v: WorkspaceHeaderContext | null | undefined);
+    /** Primary chrome brand line (resolver / tenant / i18n); empty when unknown — no product literals. */
     title: string;
     tenantName: string;
     logoUri: string | null;
@@ -35,6 +36,7 @@ export declare class DosWorkspaceHeaderComponent {
     avatarClick: EventEmitter<void>;
     actionClick: EventEmitter<WorkspaceHeaderAction>;
     get resolvedBrand(): string;
+    /** Carbon `cds-header` [brand] slot — short label only; empty hides fake acronyms. */
     get resolvedBrandShort(): string;
     get initials(): string;
 }

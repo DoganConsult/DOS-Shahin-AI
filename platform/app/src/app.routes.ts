@@ -15,6 +15,8 @@
  */
 import { Routes } from '@angular/router';
 
+import { workspaceShellGuard } from './workspace-shell.guard';
+
 const dynamicPageRoute = () => import('@platform/shell').then(m => m.DynamicTemplatePageComponent);
 const shellHostRoute   = () => import('@platform/shell').then(m => m.ShellHostComponent);
 
@@ -64,6 +66,7 @@ export const routes: Routes = [
   {
     path: '',
     loadComponent: shellHostRoute,
+    canActivate: [workspaceShellGuard],
     children: [
       {
         path: '**',

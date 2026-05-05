@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
-const routeFile = resolve(process.cwd(), '../../../products/shahin-ai/app/src/app/app.routes.ts');
+const routeFile = resolve(process.cwd(), '../../../platform/app/src/app.routes.ts');
 
 const publicRoutes = ['/', '/login'] as const;
 const protectedRoutes = [
@@ -15,10 +15,9 @@ const protectedRoutes = [
 test('product route table uses one clean workspace wildcard path', async () => {
   const source = readFileSync(routeFile, 'utf8');
 
-  expect(source).toContain("path: 'platform-admin'");
+  expect(source).toContain('PUBLIC_PATHS');
   expect(source).toContain("path: 'login'");
   expect(source).toContain("path: 'register'");
-  expect(source).toContain('MARKETING_PUBLIC_ROUTES');
   expect(source).toContain('workspaceShellGuard');
   expect(source).toContain("path: '**'");
 

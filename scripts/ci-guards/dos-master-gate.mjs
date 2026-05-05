@@ -39,6 +39,8 @@ const GUARDS = [
   'tenant-completeness.mjs',
   // 2026-05-05 Wave 7.5 — product composition-only enforcement.
   'product-no-runtime.mjs',
+  // Canonical SPA (@dos/platform-app) + nav roots — no static nav as runtime truth.
+  'lint-no-static-nav-fallback.mjs',
 ];
 
 let pass = 0, fail = 0;

@@ -1,38 +1,26 @@
 import { Injectable, inject } from '@angular/core';
-import type { DosNavItem } from '@dos/ui-contracts';
 import { AccessStore } from '../access.store';
 import type { NavCtx, NavSource, NavSourceResult } from './nav-source';
 
 /**
- * L6 — Survival fallback.
+ * L6 — Survival fallback (dynamic-nav posture).
  *
- * Returns the 5 core workspace routes ONLY when:
- *   (a) every higher source (L1..L5) returned null, AND
- *   (b) `!access.loaded()` — i.e. no real session yet.
+ * While `!access.loaded()`, returns an empty list so no hardcoded sidebar
+ * stubs appear before bootstrap/session resolves (workspace bootstrap / DB is
+ * the source of truth for nav rows).
  *
- * Once any real source contributes anything, this source is suppressed.
+ * Once loaded, returns `null` so merge prefers contributions from L1..L5 only.
  *
- * Constant name MUST be `CORE_WORKSPACE_NAV` — the lint guard
- * `lint-no-static-nav-fallback.mjs` rejects `STATIC_*_NAV_CHILDREN`.
+ * Anonymous visitors must not enter workspace chrome without passing shell
+ * guards; sidebar stays empty until navigation adapters contribute rows.
  */
-export const CORE_WORKSPACE_NAV: ReadonlyArray<DosNavItem> = [
-  { id: 'workspace.home', label: 'Workspace', route: '/workspace-home', enabled: true, group: 'core' },
-  { id: 'workspace.profile', label: 'Profile', route: '/profile', enabled: true, group: 'core' },
-  { id: 'workspace.settings', label: 'Settings', route: '/settings', enabled: true, group: 'core' },
-  { id: 'workspace.tenant-profile', label: 'Tenant Profile', route: '/tenant-profile', enabled: true, group: 'core' },
-  { id: 'workspace.tenant-settings', label: 'Tenant Settings', route: '/tenant-settings', enabled: true, group: 'core' },
-];
-
 @Injectable({ providedIn: 'root' })
 export class SurvivalFallbackNavSource implements NavSource {
   readonly id = 'survival-fallback';
   private readonly access = inject(AccessStore);
 
   async resolve(_ctx: NavCtx): Promise<NavSourceResult> {
-    if (this.access.loaded()) return null;
-    return CORE_WORKSPACE_NAV.map((it) => ({
-      ...it,
-      ...({ __tier: 'product' } as Record<string, unknown>),
-    } as DosNavItem));
+    if (!this.access.loaded()) return [];
+    return null;
   }
 }

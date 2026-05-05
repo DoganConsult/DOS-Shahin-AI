@@ -7,7 +7,7 @@
  * Token stack:
  *   --cds-*           (Carbon role tokens — @carbon/styles)
  *   --shell-*         (structural aliases — carbon-shell-tokens.scss)
- *   --brand-accent    (Shahin product accent — design-tokens.css)
+ *   --brand-accent    (product accent token — design-tokens.css)
  *   breathing-glow    (premium animation — design-tokens.css)
  */
 import {
@@ -290,7 +290,8 @@ export class DosWorkspaceHeaderComponent {
     this.trailingActions = v.trailingActions ?? [];
   }
 
-  @Input() title = 'Shahin-AI';
+  /** Primary chrome brand line (resolver / tenant / i18n); empty when unknown — no product literals. */
+  @Input() title = '';
   @Input() tenantName = '';
   @Input() logoUri: string | null = null;
   @Input() logoHref = '/'; // DB-driven logo destination from workspace.header.props.logoHref
@@ -312,11 +313,15 @@ export class DosWorkspaceHeaderComponent {
   @Output() actionClick      = new EventEmitter<WorkspaceHeaderAction>();
 
   get resolvedBrand(): string {
-    return this.title || 'Shahin-AI';
+    return (this.title ?? '').trim();
   }
 
+  /** Carbon `cds-header` [brand] slot — short label only; empty hides fake acronyms. */
   get resolvedBrandShort(): string {
-    return this.title ? this.title.split(/\s/)[0] : 'SAI';
+    const t = this.resolvedBrand;
+    if (!t) return '';
+    const parts = t.split(/\s+/).filter(Boolean);
+    return parts[0] ?? '';
   }
 
   get initials(): string {

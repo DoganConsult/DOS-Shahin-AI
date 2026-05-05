@@ -525,9 +525,10 @@ if (UI_OS_SERVICE_URL) {
     const publicMarketingRoutes = new Set([
         '/', '/pricing', '/trust', '/security', '/contact', '/about', '/legal',
         '/platform', '/resources', '/resources/executive-kit',
-        // Auth pages — public, unauthenticated (Phase P2 canonical /auth/* paths).
+        // Auth pages — public, unauthenticated. Migration 20260508_0330
+        // renamed these from /auth/<page> back to clean /<page> paths.
         // Mirrors services/ui-os-service/src/server.ts#publicMarketingTemplateRoutes.
-        '/auth/login', '/auth/register', '/auth/forgot-password', '/auth/mfa', '/auth/reset-password',
+        '/login', '/register', '/forgot-password', '/mfa', '/reset-password',
     ]);
     const publicUiOsProxy = (0, http_proxy_middleware_1.createProxyMiddleware)({
         target: UI_OS_SERVICE_URL,

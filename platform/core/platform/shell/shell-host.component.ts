@@ -264,7 +264,7 @@ const FALLBACK_ITEM_ICON  = 'dot';
          No raw cds-* tags. -->
 
     <ng-template #headerTpl>
-      <dos-workspace-header shellHeader [title]="headerWorkspaceTitle()" [logoHref]="headerLogoHref()">
+      <dos-workspace-header shellHeader [title]="headerBrand()" [tenantName]="headerTenantSubtitle()" [logoHref]="headerLogoHref()">
         <ng-container headerStart>
           <button type="button"
                   class="shell-header-toggle"
@@ -685,6 +685,15 @@ export class ShellHostComponent {
     return this.shellBinding.headerWorkspaceTitle()
         ?? this.labelResolver?.shellChromeString?.('shell.header.workspace_title')
         ?? '';
+  });
+  /** Tenant line after `/` only when binding supplied a distinct brand/product from session tenant. */
+  readonly headerTenantSubtitle = computed(() => {
+    const fromBinding = this.shellBinding.headerBrandLabel();
+    const brandLine = (fromBinding ?? '').trim();
+    const tn = (this.access.tenant()?.name ?? this.access.tenant()?.code ?? '').trim();
+    if (!brandLine || !tn) return '';
+    if (brandLine.toLowerCase() === tn.toLowerCase()) return '';
+    return tn;
   });
   readonly selectedModuleLabel = computed<string | null>(() => {
     // 1. Prefer the active sidenav group label.

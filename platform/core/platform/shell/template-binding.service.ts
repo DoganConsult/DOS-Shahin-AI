@@ -12,8 +12,13 @@
  * Caching:
  *   - In-memory map keyed by route. Warmed by `prefetchAll()` (used by SPA
  *     bootstrap).
- *   - Fail-soft: any HTTP error resolves to a null-binding so the host can
- *     fall back to the legacy component-map renderer.
+ *   - Fail-soft: HTTP/network failures resolve to a synthetic binding with
+ *     empty archetype/template_export and `error: true` so callers distinguish
+ *     transient resolver outage from “route genuinely unbound”.
+ *
+ * Page UX (`DynamicTemplatePageComponent`): permission denial renders
+ * `dos-empty-state`; missing binding after resolution renders insight-bar +
+ * message (“No template binding for …”). There is no component-map fallback.
  */
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';

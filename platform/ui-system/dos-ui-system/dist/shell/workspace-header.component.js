@@ -16,7 +16,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
  * Token stack:
  *   --cds-*           (Carbon role tokens — @carbon/styles)
  *   --shell-*         (structural aliases — carbon-shell-tokens.scss)
- *   --brand-accent    (Shahin product accent — design-tokens.css)
+ *   --brand-accent    (product accent token — design-tokens.css)
  *   breathing-glow    (premium animation — design-tokens.css)
  */
 import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, } from '@angular/core';
@@ -37,7 +37,8 @@ let DosWorkspaceHeaderComponent = class DosWorkspaceHeaderComponent {
         this.userAvatarUri = v.user?.avatarUri ?? v.user?.avatarUrl ?? null;
         this.trailingActions = v.trailingActions ?? [];
     }
-    title = 'Shahin-AI';
+    /** Primary chrome brand line (resolver / tenant / i18n); empty when unknown — no product literals. */
+    title = '';
     tenantName = '';
     logoUri = null;
     logoHref = '/'; // DB-driven logo destination from workspace.header.props.logoHref
@@ -57,10 +58,15 @@ let DosWorkspaceHeaderComponent = class DosWorkspaceHeaderComponent {
     avatarClick = new EventEmitter();
     actionClick = new EventEmitter();
     get resolvedBrand() {
-        return this.title || 'Shahin-AI';
+        return (this.title ?? '').trim();
     }
+    /** Carbon `cds-header` [brand] slot — short label only; empty hides fake acronyms. */
     get resolvedBrandShort() {
-        return this.title ? this.title.split(/\s/)[0] : 'SAI';
+        const t = this.resolvedBrand;
+        if (!t)
+            return '';
+        const parts = t.split(/\s+/).filter(Boolean);
+        return parts[0] ?? '';
     }
     get initials() {
         return this.userDisplayName

@@ -82,7 +82,9 @@ const CANONICAL_SIGNATURE_WIDGET_MAP: Record<string, LazyComponent> = {
   'foundation-coi-declarations': () =>
     import('@foundation-module/ui').then(m => m.FoundationCoiDeclarationsComponent as unknown as Type<unknown>),
   'risk-heatmap': () =>
-    import('@risk-module/ui/features/risk/pages/risk-heatmap.component').then(m => m.RiskHeatmapPageComponent as unknown as Type<unknown>),
+    import('../../../widgets/chart-infra/echart-components/heatmap/risk-heatmap-echart.component').then(
+      m => m.RiskHeatmapEchartComponent as unknown as Type<unknown>,
+    ),
   'controls-coverage-grid': () =>
     import('../../../board-report/features/controls/pages/controls-library/controls-library.component').then(m => m.ControlsLibraryComponent as unknown as Type<unknown>),
   'policy-lifecycle-board': () =>

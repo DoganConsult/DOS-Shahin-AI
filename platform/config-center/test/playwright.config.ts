@@ -47,7 +47,7 @@ export default defineConfig({
   // Reuse the already-running product-shell (PM2). Set
   // E2E_AUTOSTART=1 to opt back into a managed dev server.
   webServer: process.env.E2E_AUTOSTART === '1' ? {
-    command: 'pnpm --filter shahin-ai-grc-frontend start',
+    command: 'pnpm --filter @dos/platform-app start',
     url: process.env.E2E_BASE_URL || 'http://localhost:4200',
     reuseExistingServer: true,
     timeout: 120_000,

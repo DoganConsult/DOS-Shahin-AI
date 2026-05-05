@@ -28,8 +28,10 @@
  *      `visibleNavigation` / `effectivePageRegistry` / `foundationNavChildren`
  *      bodies (FAIL).
  *
- * Scope:
- *   - products/shahin-ai/app/src/app/blueprint -- recursive .ts files
+ * Scope (canonical @dos/platform-app + nav composition roots):
+ *   - platform/app/src — SPA source
+ *   - platform/access/dos-access-store/src/nav-sources — L6 composition
+ *   - platform/core/platform/navigation — nav helpers
  *
  * Allowlist (NOT flagged):
  *   - The DEFINITION of `STATIC_<X>_NAV_CHILDREN` itself.
@@ -48,7 +50,14 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
-const SPA_SRC = path.join(REPO_ROOT, 'products/shahin-ai/app/src/app');
+
+/** Primary SPA (canonical); guard fails if missing. */
+const SPA_PRIMARY_SRC = path.join(REPO_ROOT, 'platform/app/src');
+/** Additional trees where nav must stay dynamic-only. */
+const NAV_EXTRA_ROOTS = [
+  path.join(REPO_ROOT, 'platform/access/dos-access-store/src/nav-sources'),
+  path.join(REPO_ROOT, 'platform/core/platform/navigation'),
+];
 
 // Patterns to detect.
 const STATIC_NAV_NAME_RE = /\bSTATIC_[A-Z][A-Z0-9_]*_NAV_CHILDREN\b/;
@@ -98,7 +107,7 @@ function isEnrichmentLookup(line) {
 }
 
 function scanFile(file) {
-  const rel = path.relative(SPA_SRC, file).split(path.sep).join('/');
+  const rel = path.relative(REPO_ROOT, file).split(path.sep).join('/');
   const content = readFileSync(file, 'utf-8');
   const findings = [];
 
@@ -202,15 +211,27 @@ function scanFile(file) {
 }
 
 function main() {
-  if (!existsSync(SPA_SRC)) {
-    console.error(`[lint-no-static-nav-fallback] SPA src not found at ${SPA_SRC}`);
+  if (!existsSync(SPA_PRIMARY_SRC)) {
+    console.error(
+      `[lint-no-static-nav-fallback] Canonical SPA src not found at ${SPA_PRIMARY_SRC}`,
+    );
     process.exit(2);
   }
-  const files = walk(SPA_SRC);
+  const files = [];
+  walk(SPA_PRIMARY_SRC, files);
+  for (const root of NAV_EXTRA_ROOTS) {
+    if (existsSync(root)) walk(root, files);
+    else
+      console.warn(
+        `[lint-no-static-nav-fallback] optional scan root missing (skipped): ${root}`,
+      );
+  }
   const all = [];
   for (const f of files) all.push(...scanFile(f));
 
-  console.log(`[lint-no-static-nav-fallback] scanned ${files.length} TS files`);
+  console.log(
+    `[lint-no-static-nav-fallback] scanned ${files.length} TS files under platform/app + nav roots`,
+  );
 
   const fails = all.filter((f) => f.severity === 'FAIL');
   const warns = all.filter((f) => f.severity === 'WARN');
