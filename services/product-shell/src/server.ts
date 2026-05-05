@@ -184,6 +184,26 @@ const INDEX_PATH = path.join(SPA_DIR, 'index.html');
 // be answered with index.html — browsers would try to execute HTML as JS
 // and silently replay the old SPA shell on top of the new one. 404 them.
 const ASSET_EXT = /\.(?:js|css|map|woff2?|ttf|otf|eot|png|jpe?g|gif|svg|ico|webp|wasm)$/i;
+
+// Legacy auth-path → canonical /auth/* redirect (Phase P2). Bookmarks,
+// stale tabs, and external links pointing at /login, /register, /mfa,
+// /forgot-password, /reset-password get 301'd to the canonical
+// /auth/<page> route so the SPA never asks template-binding for the
+// legacy path (which has no DB binding and no public allowlist entry).
+const LEGACY_AUTH_REDIRECTS: Record<string, string> = {
+  '/login': '/auth/login',
+  '/register': '/auth/register',
+  '/forgot-password': '/auth/forgot-password',
+  '/mfa': '/auth/mfa',
+  '/reset-password': '/auth/reset-password',
+};
+app.get(Object.keys(LEGACY_AUTH_REDIRECTS), (req: Request, res: Response) => {
+  const target = LEGACY_AUTH_REDIRECTS[req.path];
+  if (!target) { res.status(404).type('text/plain').send('not found'); return; }
+  const qs = req.originalUrl.includes('?') ? req.originalUrl.slice(req.originalUrl.indexOf('?')) : '';
+  res.redirect(301, `${target}${qs}`);
+});
+
 app.get('*', (req: Request, res: Response) => {
   if (ASSET_EXT.test(req.path)) {
     applyNoStoreHeaders(res);
