@@ -451,13 +451,13 @@ export async function writeRegulatorResponse(
 function mapRowToEvidence(row: Record<string, unknown>): Evidence {
   return {
 
-    evidenceId: row.evidence_id,
+    evidenceId: row.evidence_id as string,
 
-    title: row.title || '',
+    title: (row.title as string) || '',
 
-    type: row.type || '',
+    type: (row.type as string) || '',
 
-    status: row.status || '',
+    status: (row.status as string) || '',
     linkedControl: row.linked_control || null,
     uploadedAt: row.uploaded_at ? new Date((row as any).uploaded_at).toISOString() : new Date().toISOString(),
     fileUrl: row.file_url || null,
@@ -466,14 +466,14 @@ function mapRowToEvidence(row: Record<string, unknown>): Evidence {
 
 function mapRowToInquiry(row: Record<string, unknown>): Inquiry {
   return {
-    requestId: row.request_id,
-    regulatorUserId: row.regulator_user_id,
-    requestType: row.request_type,
+    requestId: row.request_id as string,
+    regulatorUserId: row.regulator_user_id as string,
+    requestType: row.request_type as string,
 
-    subject: row.subject,
-    body: row.body,
+    subject: row.subject as string,
+    body: row.body as string,
 
-    status: row.status || 'pending',
+    status: (row.status as string) || 'pending',
     response: row.response || null,
     respondedBy: row.responded_by || null,
     respondedAt: row.responded_at ? new Date((row as any).responded_at).toISOString() : null,
@@ -483,23 +483,23 @@ function mapRowToInquiry(row: Record<string, unknown>): Inquiry {
 
 function mapRowToAuditEntry(row: Record<string, unknown>): AuditEntry {
   return {
-    entryId: row.entry_id,
+    entryId: row.entry_id as string,
 
-    action: row.action || '',
+    action: (row.action as string) || '',
 
-    actor: row.actor || '',
-    details: row.details || '',
+    actor: (row.actor as string) || '',
+    details: row.details as string || '',
     timestamp: row.timestamp ? new Date((row as any).timestamp).toISOString() : new Date().toISOString(),
   };
 }
 
 function mapRowToFramework(row: Record<string, unknown>): Framework {
   return {
-    frameworkId: row.framework_id,
+    frameworkId: row.framework_id as string,
 
-    name: row.name || '',
+    name: (row.name as string) || '',
 
-    version: row.version || '',
+    version: (row.version as string) || '',
     controlCount: Number(row.control_count ?? 0),
     coveragePercent: Number(row.coverage_percent ?? 0),
   };

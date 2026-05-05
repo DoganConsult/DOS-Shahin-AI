@@ -124,7 +124,7 @@ The uploaded `00-universal-module-seed-standard.md` and `00-CONSOLIDATED-DIRECT-
 | `qiyas` | GENERIC MD / blocked | 4 | 3 | 3 | 5 | 5 | 0 | 2 | 3 | 1 | missing §1a; missing §7; vague RBAC; 3 carbon VERIFY; 1 invalid 2-seg route perms |
 | `remediation` | GENERIC MD / blocked | 4 | 3 | 3 | 4 | 5 | 0 | 2 | 3 | 1 | missing §1a; missing §7; vague RBAC; 3 carbon VERIFY; 1 invalid 2-seg route perms |
 | `reporting` | GENERIC MD / blocked | 4 | 3 | 3 | 4 | 5 | 0 | 2 | 3 | 2 | missing §1a; missing §7; vague RBAC; 3 carbon VERIFY; 2 invalid 2-seg route perms |
-| `risk` | GENERIC MD / blocked | 10 | 0 | 9 | 11 | 5 | 0 | 3 | 0 | 0 | missing §1a; missing §7; vague RBAC |
+| `risk` | PUBLISHER-CONTROLLED / active | 10 | 10 | 10 | 12 | 3 | 10 | 3 | 0 | 0 | v1.1.0 publisher contract; UI-OS wildcard only; no static product routes |
 | `training` | GENERIC MD / blocked | 4 | 3 | 3 | 4 | 5 | 0 | 2 | 3 | 1 | missing §1a; missing §7; vague RBAC; 3 carbon VERIFY; 1 invalid 2-seg route perms |
 | `vendor` | GENERIC MD / blocked | 5 | 4 | 4 | 5 | 5 | 0 | 3 | 4 | 1 | missing §1a; missing §7; vague RBAC; 4 carbon VERIFY; 1 invalid 2-seg route perms |
 | `workflow` | GENERIC MD / blocked | 5 | 4 | 4 | 6 | 5 | 0 | 3 | 4 | 1 | missing §1a; missing §7; vague RBAC; 4 carbon VERIFY; 1 invalid 2-seg route perms |
@@ -486,8 +486,9 @@ Use this order. Do not expand scope.
 
 - **File:** `risk-complete-direct-seed.md`
 - **Owner service text:** `risk-incident-service (resolved via gateway prefix; not a column)`
-- **Counts:** nav=10, dynamicRows=0, pages=9, permissions=11, roles=5, explicitBindings=0, businessTables=3.
-- **Blocking findings:** missing §1a, missing §7, vague RBAC.
+- **Counts:** nav=10, dynamicRows=10, pages=10, permissions=12, roles=3, explicitBindings=10, businessTables=3.
+- **Status:** publisher-controlled v1.1.0 contract; UI-OS wildcard render path only; no product-level risk route hardcoding.
+- **Required gates:** `module:validate risk`, `module:dry-run risk`, `module:publish risk`, `module:verify risk`, `template-only-routing`, `dynamic-ui:gates`, Shahin frontend build.
 
 ### `training`
 

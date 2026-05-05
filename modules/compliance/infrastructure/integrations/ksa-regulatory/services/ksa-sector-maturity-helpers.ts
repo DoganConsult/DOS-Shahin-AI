@@ -51,7 +51,7 @@ export async function getTenantSector(
 
   const row = getFirstRow(sectorRes)!;
 
-  if (row) return { sectorCode: row.sector_code, sectorName: row.sector_name };
+  if (row) return { sectorCode: row.sector_code as string, sectorName: row.sector_name as string };
 
   const wpRes = await swallowDefault(EC.FALLBACK_QUERY, emptyResult(), safeQuery(
     `SELECT industry FROM "${schema}".workspace_profile WHERE tenant_id = $1`,
@@ -60,10 +60,8 @@ export async function getTenantSector(
 
   const wp = getFirstRow(wpRes)!;
   return {
-
-    sectorCode: wp?.industry || 'general',
-
-    sectorName: wp?.industry || 'General',
+    sectorCode: (wp?.industry as string) || 'general',
+    sectorName: (wp?.industry as string) || 'General',
   };
 }
 

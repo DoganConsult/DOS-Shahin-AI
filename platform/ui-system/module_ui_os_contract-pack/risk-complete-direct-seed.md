@@ -44,63 +44,60 @@
 Permission keys are NOT stored on nav rows; they are resolved via
 `dos.dynamic_ui_routes.permission_key` for the matching `route`.
 
-### `dos.dynamic_ui_routes` (canonical, 10 rows live)
+### `dos.dynamic_ui_routes` (publisher-controlled, 10 rows live)
 
 | route | component_key | permission_key | module_code |
 |---|---|---|---|
 | `/risk` | `module.entry.page` | `risk.record.read` | `risk` |
-| `/risk/overview` | `module.overview.page` | `risk.record.read` | `risk` |
-| `/risk/register` | `RiskRegisterPage` | `risk.record.read` | `risk` |
-| `/risk/assessments` | `RiskAssessmentsPage` | `risk.assessment.create` | `risk` |
-| `/risk/heatmap` | `RiskHeatmapPage` | `risk.record.read` | `risk` |
-| `/risk/treatments` | `RiskTreatmentsPage` | `risk.treatment.assign` | `risk` |
+| `/risk/overview` | `module.entry.page` | `risk.record.read` | `risk` |
+| `/risk/register` | `module.records.page` | `risk.register.read` | `risk` |
+| `/risk/assessments` | `module.workflows.page` | `risk.assessment.create` | `risk` |
+| `/risk/heatmap` | `module.heatmap.page` | `risk.record.read` | `risk` |
+| `/risk/treatments` | `module.workflows.page` | `risk.treatment.assign` | `risk` |
 | `/risk/records` | `module.records.page` | `risk.record.read` | `risk` |
-| `/risk/workflows` | `module.workflows.page` | `risk.manage` | `risk` |
+| `/risk/workflows` | `module.workflow_timeline.page` | `risk.workflow.manage` | `risk` |
 | `/risk/reports` | `module.reports.page` | `risk.record.read` | `risk` |
-| `/risk/settings` | `module.settings.page` | `risk.manage` | `risk` |
+| `/risk/settings` | `module.settings.page` | `risk.workflow.manage` | `risk` |
 
 ### `dos.dynamic_ui_component_registry` (Carbon-only trigger enforced)
 
 | component_key | vendor | carbon_key | approval_status |
 |---|---|---|---|
-| `module.entry.page` | `ibm-carbon` | `tiles` | `approved` |
-| `module.overview.page` | `ibm-carbon` | `tiles` | `approved` |
+| `module.entry.page` | `ibm-carbon` | `grid` | `approved` |
 | `module.records.page` | `ibm-carbon` | `table` | `approved` |
 | `module.workflows.page` | `ibm-carbon` | `tabs` | `approved` |
+| `module.heatmap.page` | `ibm-carbon` | `grid` | `approved` |
+| `module.workflow_timeline.page` | `ibm-carbon` | `progress-indicator` | `approved` |
 | `module.reports.page` | `ibm-carbon` | `tiles` | `approved` |
 | `module.settings.page` | `ibm-carbon` | `tabs` | `approved` |
-| `RiskRegisterPage` | `ibm-carbon` | `tiles` | `approved` |
-| `RiskAssessmentsPage` | `ibm-carbon` | `tiles` | `approved` |
-| `RiskHeatmapPage` | `ibm-carbon` | `tiles` | `approved` |
-| `RiskTreatmentsPage` | `ibm-carbon` | `tiles` | `approved` |
 
 ### Permissions (catalog `<module>.<entity>.<verb>` form, FK to `platform_dauth.permissions`)
 
 | permission_code | notes |
 |---|---|
-| `risk.record.read` | base read for records/overview/register/heatmap |
+| `risk.record.read` | base read for module entry, overview, records, and heatmap |
 | `risk.record.write` | record edit |
 | `risk.record.update` | record updates |
-| `risk.record.submit` | standard_user contribution |
-| `risk.record.configure` | admin-only configuration |
-| `risk.assessment.create` | assessments page |
-| `risk.assessment.approve` | assessment workflow |
-| `risk.treatment.assign` | treatments page |
+| `risk.record.submit` | record submission |
+| `risk.record.configure` | admin-only record configuration |
+| `risk.record.approve` | record approval workflow |
+| `risk.assessment.create` | assessments page and assessment creation |
+| `risk.assessment.approve` | assessment approval workflow |
+| `risk.treatment.assign` | treatments page and treatment assignment |
 | `risk.register.read` | register list |
-| `risk.manage` | workflows/settings |
-| `risk.approve` | approval workflow |
+| `risk.workflow.manage` | workflows/settings management |
+| `risk.workflow.approve` | workflow approval decisions |
 
-The 2-segment shorthands (`risk.read`/`risk.write`/`risk.admin`) are NOT in the
+The 2-segment shorthands (`risk.read`/`risk.write`/`risk.admin`/`risk.manage`/`risk.approve`) are NOT in the
 catalog and would fail `chk_perm_dot_form_dynamic_ui_routes`.
 
-### Roles and bindings (existing role IDs only — do NOT INSERT new ids)
+### Roles and bindings (publisher-created functional roles)
 
-| role_id | risk permissions bound |
-|---|---|
-| `platform_super_admin` / `role_platform_super_admin` | all `risk.*` |
-| `tenant_admin` / `role_tenant_owner` | all `risk.*` for the tenant |
-| `risk_manager` / `role_risk_manager` | read/write/manage/approve/treatment.assign/assessment.* |
-| `standard_user` | `risk.record.submit`, `risk.record.update` |
+| role_code | archetype | risk permissions bound |
+|---|---|---|
+| `risk_viewer` | `viewer` | `risk.record.read`, `risk.register.read` |
+| `risk_operator` | `operator` | `risk.record.read`, `risk.record.write`, `risk.record.update`, `risk.record.submit`, `risk.register.read` |
+| `risk_admin` | `module_lead` | all 12 `risk.*` permissions |
 
 ## 3. Provisioning group per tenant
 
@@ -121,200 +118,93 @@ catalog and would fail `chk_perm_dot_form_dynamic_ui_routes`.
 | `dos.risk_treatments` | page data / API backing | `tenant_id` required where applicable |
 | `dos.risks` | page data / API backing | `tenant_id` required where applicable |
 
-## 5. Page seed matrix (verified vs shipped Angular bundle 2026-05-03)
+## 5. Page seed matrix (UI-OS publisher source of truth)
 
-| # | page_key | route | label_en | Angular component | gateway prefix → service | DB tables | permission | status |
-|---|---|---|---|---|---|---|---|---|
-| 1 | `risk.overview` | `/risk/overview` | Overview | `RiskOverviewComponent` | `/api/risk/*` → `risk-incident-service` | `dos.risks` | `risk.record.read` | `COMPLETE` |
-| 2 | `risk.register` | `/risk/register` | Risk Register | `RiskRegisterPageComponent` | `/api/risk/*` | `dos.risks` | `risk.record.read` | `COMPLETE` |
-| 3 | `risk.assessments` | `/risk/assessments` | Assessments | `RiskAssessmentsPageComponent` | `/api/risk/*` | `dos.risk_assessments` | `risk.assessment.create` | `COMPLETE` |
-| 4 | `risk.heatmap` | `/risk/heatmap` | Heatmap | `RiskHeatmapPageComponent` | `/api/risk/*` | `dos.risks` | `risk.record.read` | `COMPLETE` |
-| 5 | `risk.treatments` | `/risk/treatments` | Treatments | `RiskTreatmentsPageComponent` | `/api/risk/*` | `dos.risk_treatments` | `risk.treatment.assign` | `COMPLETE` |
-| 6 | `risk.records` | `/risk/records` | Records | (generic `module.records.page` host) | `/api/risk/*` | `dos.risks` | `risk.record.read` | `COMPONENT_MISSING` |
-| 7 | `risk.workflows` | `/risk/workflows` | Workflows | (generic `module.workflows.page` host) | `/api/risk/*` | workflow tables | `risk.manage` | `COMPONENT_MISSING` |
-| 8 | `risk.reports` | `/risk/reports` | Reports | (generic `module.reports.page` host) | `/api/risk/*` | `dos.risks` | `risk.record.read` | `COMPONENT_MISSING` |
-| 9 | `risk.settings` | `/risk/settings` | Settings | (generic `module.settings.page` host) | `/api/risk/*` | settings tables | `risk.manage` | `COMPONENT_MISSING` |
+| # | page_key | route | label_en | archetype | template_export | gateway prefix → service | DB tables | permission | status |
+|---|---|---|---|---|---|---|---|---|---|
+| 1 | `risk.home` | `/risk` | Risk Management | `command-home` | `module.entry.page` | `/api/ui-os/template-binding` → `ui-os-service` | `dos.risks` | `risk.record.read` | `ACTIVE` |
+| 2 | `risk.overview` | `/risk/overview` | Overview | `command-home` | `module.entry.page` | `/api/risk/*` → `risk-incident-service` | `dos.risks` | `risk.record.read` | `ACTIVE` |
+| 3 | `risk.register` | `/risk/register` | Risk Register | `intelligent-register` | `module.records.page` | `/api/risk/*` | `dos.risks` | `risk.register.read` | `ACTIVE` |
+| 4 | `risk.assessments` | `/risk/assessments` | Assessments | `workflow-control` | `module.workflows.page` | `/api/risk/*` | `dos.risk_assessments` | `risk.assessment.create` | `ACTIVE` |
+| 5 | `risk.heatmap` | `/risk/heatmap` | Heatmap | `risk-landscape` | `module.heatmap.page` | `/api/risk/*` | `dos.risks` | `risk.record.read` | `ACTIVE` |
+| 6 | `risk.treatments` | `/risk/treatments` | Treatments | `workflow-control` | `module.workflows.page` | `/api/risk/*` | `dos.risk_treatments` | `risk.treatment.assign` | `ACTIVE` |
+| 7 | `risk.records` | `/risk/records` | Records | `intelligent-register` | `module.records.page` | `/api/risk/*` | `dos.risks` | `risk.record.read` | `ACTIVE` |
+| 8 | `risk.workflows` | `/risk/workflows` | Workflows | `workflow-timeline` | `module.workflow_timeline.page` | `/api/risk/*` | workflow tables | `risk.workflow.manage` | `ACTIVE` |
+| 9 | `risk.reports` | `/risk/reports` | Reports | `evidence-reports` | `module.reports.page` | `/api/risk/*` | `dos.risks` | `risk.record.read` | `ACTIVE` |
+| 10 | `risk.settings` | `/risk/settings` | Settings | `module-settings` | `module.settings.page` | `/api/risk/*` | settings tables | `risk.workflow.manage` | `ACTIVE` |
 
-## 6. Direct SQL seed skeleton
+## 6. Publisher activation path
 
-```sql
-BEGIN;
+The executable contract is `platform/ui-system/module_complete_direct_seed_pack/risk-complete-direct-seed.json`. Direct DB mutation is forbidden for this module slice. Activation must run only through:
 
--- UPSERT risk into dos.module_registry
--- UPSERT parent and child rows into dos.navigation_registry
--- UPSERT Dynamic UI rows only after carbon_key verification
--- UPSERT permissions into platform_dauth.permissions
--- UPSERT role bindings into platform_dauth.role_permissions
--- UPSERT tenant entitlements only for selected tenant
+1. `pnpm module:validate risk`
+2. `pnpm module:dry-run risk`
+3. `pnpm module:publish risk`
+4. `pnpm module:verify risk`
 
-COMMIT;
-```
+The publisher must create or confirm the module registry row, entitlement path, navigation order, route template bindings, approved permissions, approved Carbon component keys, and approved page archetype/template mapping.
 
-## 7. Validation checklist (status as of 2026-05-03)
+## 7. Validation checklist (status as of 2026-05-05)
 
 - [x] `dos.module_registry` row exists (`risk` / `agrc` / active)
 - [x] `dos.navigation_registry` parent + 9 children exist under `grc.risk`
 - [x] `dos.dynamic_ui_routes` 10 rows resolve `permission_key` against `platform_dauth.permissions`
-- [x] `dos.dynamic_ui_component_registry` 10 rows, all `vendor='ibm-carbon'`, `approval_status='approved'`
-- [x] Angular routes wired in `products/shahin-ai/app/src/app/app.routes.ts` (`/risk` block, 5 child loadComponents)
-- [x] Angular components compile (`pnpm --filter shahin-ai-frontend build` green; risk-register / risk-overview / risk-assessments / risk-heatmap / risk-treatments lazy chunks emitted)
-- [x] product-shell PM2 restarted with new bundle (`main-FPYUSA2P.js`); `/risk` and `/risk/overview` return HTTP 200
-- [x] Gateway `/api/risk/*` proxies to `risk-incident-service` (PM2 online)
-- [x] Permission keys exist in `platform_dauth.permissions` (3-segment form)
-- [x] Role bindings present on existing role IDs (no new roles invented)
-- [x] Tenant entitlement rows present (5 tenants on `shahin-ai`)
-- [ ] Real Angular components for `records` / `workflows` / `reports` / `settings` (currently generic Carbon hosts)
+- [x] `dos.ui_route_template_binding` 10 rows resolve approved archetype/template exports
+- [x] `dos.dynamic_ui_component_registry` 7 approved shared `module.*.page` keys, all `vendor='ibm-carbon'`
+- [x] product `app.routes.ts` does not define risk pages directly; workspace wildcard hosts `DynamicTemplatePageComponent`
+- [x] Gateway `/api/risk/*` proxies to `risk-incident-service` through the service registry path
+- [x] Permission keys are 3-segment `risk.<entity>.<verb>` values
+- [x] Functional roles are publisher-managed as `risk_viewer`, `risk_operator`, and `risk_admin`
+- [x] Tenant visibility remains entitlement-driven; product shell does not hardcode module visibility
+- [x] `template-only-routing` reports zero non-archetype, missing-binding, unknown-export, or SPA-bypass findings for risk
 - [ ] Negative-path test: unauthorized role blocked at `/risk/treatments`
-- [ ] No mock/static data in shipped pages (audit pending)
+- [ ] Runtime visual smoke: authenticated entitled tenant resolves `/risk` and `/risk/register` from UI-OS DTOs
 
-## 8. Drift reconciliation (verified 2026-05-03 against live `shahin_grc` DB)
+## 8. Drift prevention rule (locked 2026-05-05)
 
-The original spec sections 1–7 above are **aspirational**. The live database
-disagrees in several places. When applying this seed, use the values in the
-**Actual** column — they match what the runtime resolver, gateway, and FE
-already accept.
+Risk now follows the professional UI-OS hierarchy:
 
-### 8.1 Schema column drift
-
-| Spec column                  | Actual column in `dos.navigation_registry` |
-|------------------------------|---------------------------------------------|
-| `nav_key`                    | `nav_item_code`                             |
-| `route_path`                 | `route`                                     |
-| `title_en` / `title_ar`      | `label_en` / `label_ar`                     |
-| `permission`                 | (not stored on nav row — resolved via `dynamic_ui_routes.permission_key`) |
-| `order`                      | `sort_order`                                |
-
-`dos.module_registry` has **no `owner_service` column**; only
-`module_code`, `product_key`, `display_name`, `status`, `created_at`.
-
-### 8.2 Identity drift
-
-| Field           | Spec value     | Actual DB value | Action                |
-|-----------------|----------------|-----------------|-----------------------|
-| `product_key`   | `shahin-ai`    | `agrc`          | Use `agrc` (catalog), entitlements use `shahin-ai` per tenant |
-| Parent nav key  | `risk`         | `grc.risk`      | Use `grc.risk`        |
-| `display_name`  | `Risk`         | `Risk Management` | Use `Risk Management` |
-
-### 8.3 Permission key drift (BLOCKING for `chk_perm_dot_form_dynamic_ui_routes`)
-
-The catalog convention is `<module>.<entity>.<verb>` (3+ segments). The spec
-keys are 2-segment (`risk.read`) and **violate the regex check** on
-`dynamic_ui_routes.permission_key`. Use the catalog keys instead.
-
-| Spec key             | Actual catalog key(s)                                    |
-|----------------------|----------------------------------------------------------|
-| `risk.read`          | `risk.record.read`, `risk.register.read`                 |
-| `risk.write`         | `risk.record.write`, `risk.record.update`                |
-| `risk.admin`         | `risk.manage`, `risk.record.configure`, `risk.approve`   |
-| `risk.assessment.read` | `risk.assessment.create`, `risk.assessment.approve`    |
-| `risk.treatment.read`  | `risk.treatment.assign`                                |
-
-`risk.audit.read`, `risk.assessment.read`, `risk.treatment.read`,
-`risk.access_review.read`, `risk.policies.read` **do not exist** in
-`platform_dauth.permissions` and would fail the FK
-`fk_perm_catalog_dynamic_ui_routes`.
-
-### 8.4 Role drift (and duplicate IDs in the wild)
-
-Catalog has both legacy and `role_*`-prefixed copies. Treat them as aliases
-until consolidation; do not `INSERT` new role IDs.
-
-| Spec role          | Actual role IDs in DB                              |
-|--------------------|----------------------------------------------------|
-| `tenant_owner`     | `role_tenant_owner`, `tenant_admin`                |
-| `risk_admin`       | `risk_manager`, `role_risk_manager`                |
-| `risk_operator`    | (not present — fold into `risk_manager`)           |
-| `risk_auditor`     | (not present — fold into `role_risk_manager`)      |
-| `standard_user`    | `standard_user` (only `risk.record.submit/update`) |
-| Platform super     | `platform_super_admin`, `role_platform_super_admin`|
-
-### 8.5 Component-registry rule (Carbon-only trigger)
-
-`dos.dynamic_ui_component_registry` has trigger `trg_carbon_only_runtime`
-which **rejects any `vendor != 'ibm-carbon'`** on INSERT/UPDATE, and `carbon_key`
-is FK-checked against `dos.ui_carbon_components`.
-
-Only ~5 layout-style carbon keys are usable as page-level wrappers today:
-`grid`, `tiles`, `layout`, `asset.grid`, `asset.layout`. Page-level
-component_keys map to `tiles` (or `grid` for entry/overview shells, `table`
-for record lists, `tabs` for workflow/settings).
-
-The shared `module.*` keys are already approved and reusable:
-`module.entry.page`, `module.overview.page`, `module.records.page`,
-`module.workflows.page`, `module.reports.page`, `module.settings.page`,
-plus 20 layout primitives (`module.kpi_grid`, `module.work_queue`,
-`module.empty_state`, `module.copilot_panel`, etc.).
-
-### 8.6 Route surface drift (THREE inconsistent specs)
-
-| Source                                                     | Routes declared |
-|------------------------------------------------------------|------------------|
-| Seed spec (this file §5)                                   | overview, register, assessments, treatments (4) |
-| `dos.dynamic_ui_routes` (DB)                               | + heatmap, records, workflows, reports, settings, /risk entry (10) |
-| `risk-module-integrity.test.ts` (`platform-manifests/risk.module.routes.ts`) | home, work-queue, register, register/:id, assessments, indicators, treatment, issues, scenarios, reports, admin (11) |
-
-**Resolution rule**: the runtime contract is whatever lives in
-`dos.dynamic_ui_routes`. Both this spec and the FE manifest must converge on
-that table. The FE Angular routes file
-(`modules/risk/source/frontend/risk/risk.routes.ts`) is now wired against
-the DB (overview/register/assessments/heatmap/treatments) as of 2026-05-03;
-records/workflows/reports/settings still need real Angular components.
-
-### 8.7 What's still missing per "fully active" definition
-
-After this DB seed + Angular route wiring, `risk` is at **YELLOW**:
-
-- ✅ nav children rows present (9 children under `grc.risk`)
-- ✅ all 10 route component_keys resolve to approved Carbon-vendor rows
-- ✅ all permission_keys resolve in `platform_dauth.permissions`
-- ✅ tenant entitlements present (5 tenants on `shahin-ai`)
-- ✅ backend `risk-incident-service` online, gateway proxies 13 prefixes
-- ✅ Angular `RISK_ROUTES` wires 6 of 10 paths to existing components
-- ⚠ shahin SPA `app.routes.ts` does **not** `loadChildren` `RISK_ROUTES`;
-  risk is not in `SHAHIN_DNA_MODULE_PACKS` either → `/risk` path is **not
-  reachable from the SPA** even though all backend pieces are aligned.
-- ⚠ records / workflows / reports / settings paths have no Angular page
-  component yet (only the carbon shell wrapper).
-
-### 8.8 Generic "apply to all 34 modules" template (use these column names)
-
-```sql
-BEGIN;
-
--- 1. module_registry (column set: module_code, product_key, display_name, status)
-INSERT INTO dos.module_registry (module_code, product_key, display_name, status)
-VALUES ('<MODULE>', '<PRODUCT_KEY>', '<Display Name>', 'active')
-ON CONFLICT (module_code) DO UPDATE SET status='active';
-
--- 2. navigation_registry parent (real columns)
-INSERT INTO dos.navigation_registry (module_code, nav_item_code, label_en, label_ar, route, parent_code, sort_order)
-VALUES ('<MODULE>', '<group>.<MODULE>', '<Label EN>', '<Label AR>', '/<MODULE>', NULL, <ORDER>);
-
--- 3. navigation_registry children
--- one row per child page, parent_code = '<group>.<MODULE>'
-
--- 4. dynamic_ui_routes — permission_key MUST be 3+ dotted segments and exist in catalog
--- prefer reusing module.entry.page / module.overview.page / module.records.page / module.workflows.page / module.reports.page / module.settings.page
-
--- 5. dynamic_ui_component_registry — INSERT only with vendor='ibm-carbon' and a real carbon_key
--- (else trg_carbon_only_runtime + FK will reject)
-
--- 6. permissions — only insert if missing; respect <module>.<entity>.<verb> 3-segment convention
-
--- 7. role_permissions — bind to existing roles
--- (platform_super_admin / role_platform_super_admin / tenant_admin / role_tenant_owner / standard_user / role_<module>_manager)
-
--- 8. tenant_module_entitlements — per tenant, product_code='shahin-ai' (or product owning the entitlement)
-
-COMMIT;
+```text
+module_ui_os_contract-pack / review spec
+  → module contract
+    → publisher validate/dry-run/publish/verify
+      → DB runtime rows
+        → UI-OS workspace-runtime
+          → product shell render
 ```
 
-### 8.9 Apply-to-all preflight (run BEFORE every per-module seed PR)
+### 8.1 Source-of-truth rule
 
-1. `\d` the target table — never trust the spec column name without verifying.
-2. Check the permission catalog for the keys the spec asks for; rewrite to 3-segment form if missing.
-3. Check `dos.ui_carbon_components` for an `active` `carbon_key` matching each component's intent.
-4. Reuse `module.*` shared component_keys where the page is a generic shell.
-5. Run `BEGIN; … ROLLBACK;` first; only commit after the verification SELECTs return the expected joins.
-6. Wire the Angular route file in the same PR — DB seed without FE wiring stays YELLOW (not GREEN).
-7. SPA composition (`shahin-ai/app/src/app/app.routes.ts` or DNA pack) must `loadChildren` the module routes — this is the missing piece for every `risk`-class module today.
+Module names, module order, page names, page order, and page status come only from this source spec and `dos_module_seed_pack_full_review_2026-05-05.md`. The executable JSON contract must be regenerated or edited to match this spec. If the executable contract disagrees with this spec, fix the contract. If this spec is wrong, change this spec first, then publish through the module publisher.
+
+### 8.2 Product routing rule
+
+`products/shahin-ai/app/src/app/app.routes.ts` must stay limited to public marketing routes, auth routes, `platform-admin`, and one workspace wildcard. It must not define risk pages, risk child routes, risk-specific lazy components, or risk-specific module ordering.
+
+### 8.3 Activation rule
+
+Risk becomes visible/renderable only when the contract is published and activated. Activation must create or confirm:
+
+- `dos.module_registry` row for `risk`
+- entitlement path through tenant product/module entitlement rows
+- nav groups/items/order under `grc.risk`
+- route template bindings for all 10 risk pages
+- approved 3-segment permissions
+- approved IBM Carbon component keys
+- approved page archetype/template mapping
+
+### 8.4 Conflict rule
+
+Do not invent parallel product-level order or route composition. Tenant, role, and product variation must be expressed as overlays resolved by UI-OS, not by product shell hardcoding.
+
+### 8.5 CI enforcement
+
+Risk is not publish-ready unless these gates stay green:
+
+1. `pnpm module:validate risk`
+2. `pnpm module:dry-run risk`
+3. `pnpm module:publish risk`
+4. `pnpm module:verify risk`
+5. `TEMPLATE_ONLY_ROUTING_ENFORCE=1 node scripts/ci-guards/template-only-routing.mjs`
+6. `pnpm dynamic-ui:gates`
+7. `pnpm --filter shahin-ai-grc-frontend build`

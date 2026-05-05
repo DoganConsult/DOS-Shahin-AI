@@ -139,6 +139,54 @@ function groupSurfacesByZone(rows: WorkspaceShellRow[]): Record<WorkspaceRuntime
   return grouped;
 }
 
+interface ModuleOrderRow {
+  module_code: string;
+  sort_order: number | null;
+  enabled: boolean | null;
+}
+
+interface PageOrderRow {
+  module_code: string;
+  item_id: string;
+  group_id: string | null;
+  sort_order: number | null;
+  route: string | null;
+  permission: string | null;
+  enabled: boolean | null;
+}
+
+function buildModuleOrder(groups: ModuleOrderRow[], items: PageOrderRow[]) {
+  const modules = new Map<string, { moduleCode: string; sortOrder: number; enabled: boolean }>();
+  const register = (moduleCode: string, sortOrder: number, enabled: boolean) => {
+    const existing = modules.get(moduleCode);
+    if (!existing || sortOrder < existing.sortOrder) modules.set(moduleCode, { moduleCode, sortOrder, enabled });
+  };
+  for (const group of groups) {
+    if (!group.module_code) continue;
+    register(group.module_code, Number(group.sort_order) || 0, group.enabled !== false);
+  }
+  for (const item of items) {
+    if (!item.module_code) continue;
+    register(item.module_code, Number(item.sort_order) || 0, item.enabled !== false);
+  }
+  return Array.from(modules.values()).sort((a, b) => a.sortOrder - b.sortOrder || a.moduleCode.localeCompare(b.moduleCode));
+}
+
+function buildPageOrder(items: PageOrderRow[]) {
+  return items
+    .filter((item) => item.module_code && item.item_id)
+    .map((item) => ({
+      moduleCode: item.module_code,
+      itemId: item.item_id,
+      groupId: item.group_id,
+      sortOrder: Number(item.sort_order) || 0,
+      route: item.route,
+      permission: item.permission,
+      enabled: item.enabled !== false,
+    }))
+    .sort((a, b) => a.moduleCode.localeCompare(b.moduleCode) || a.sortOrder - b.sortOrder || a.itemId.localeCompare(b.itemId));
+}
+
 async function loadWorkspaceSurfaces(pool: DbPool, tenantId: string): Promise<WorkspaceShellRow[]> {
   const result = await pool.query<WorkspaceShellRow>(
     `SELECT component_key, enabled, position, perms_required, props, version
@@ -243,6 +291,8 @@ export function createWorkspaceShellRouter(pool: DbPool): Router {
           [tenantId, userId],
         ),
       ]);
+      const moduleOrder = buildModuleOrder(navGroups.rows as ModuleOrderRow[], navItems.rows as PageOrderRow[]);
+      const pageOrder = buildPageOrder(navItems.rows as PageOrderRow[]);
       const catalogVersion = {
         shell: shellVersion,
         nav: [...navGroups.rows, ...navItems.rows].reduce((acc, r) => acc + (Number(r.version) || 0), 0),
@@ -264,6 +314,10 @@ export function createWorkspaceShellRouter(pool: DbPool): Router {
         navigation: {
           groups: navGroups.rows,
           items: navItems.rows,
+          productWorkspace: {
+            moduleOrder,
+            pageOrder,
+          },
         },
         routes: {
           bindings: routeBindings.rows,

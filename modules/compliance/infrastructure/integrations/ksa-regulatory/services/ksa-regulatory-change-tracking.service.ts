@@ -186,25 +186,25 @@ export async function trackRegulatoryChanges(tenantId: string): Promise<ChangeTr
       const affectedControls = Array.isArray(row.affected_controls) ? row.affected_controls : [];
       allChanges.push({
 
-        changeId: row.change_id,
+        changeId: row.change_id as string,
 
-        frameworkCode: row.framework_code || '',
+        frameworkCode: (row.framework_code as string) || '',
 
-        regulatorId: row.regulator_id || '',
+        regulatorId: (row.regulator_id as string) || '',
 
-        changeType: row.change_type || 'amendment',
+        changeType: (row.change_type as string) || 'amendment',
 
-        title: row.regulation_name || row.change_summary?.slice(0, 80) || 'Regulatory Change',
+        title: (row.regulation_name as string) || ((row.change_summary as string)?.slice(0, 80) || 'Regulatory Change'),
 
-        summary: row.change_summary || '',
+        summary: (row.change_summary as string) || '',
 
-        impactLevel: row.impact_level || 'medium',
+        impactLevel: (row.impact_level as 'low' | 'medium' | 'high' | 'critical') || 'medium',
         affectedControlsCount: affectedControls.length,
         complianceGapDelta: estimateGapDelta((row as any).impact_level, affectedControls.length),
 
         effectiveDate: row.effective_date || null,
 
-        status: row.response_status || 'pending_review',
+        status: (row.response_status as string) || 'pending_review',
 
         detectedAt: row.detected_at || detectedAt,
       });
@@ -218,23 +218,23 @@ export async function trackRegulatoryChanges(tenantId: string): Promise<ChangeTr
       const affectedFrameworks = parseJsonArraySafe(row.affected_frameworks);
       allChanges.push({
 
-        changeId: row.change_id,
+        changeId: row.change_id as string,
         frameworkCode: affectedFrameworks[0] || '',
 
-        regulatorId: row.regulator_id || '',
+        regulatorId: (row.regulator_id as string) || '',
 
-        changeType: row.change_type || 'amendment',
+        changeType: (row.change_type as string) || 'amendment',
 
-        title: row.title || 'Regulatory Change',
+        title: (row.title as string) || 'Regulatory Change',
 
-        summary: row.change_summary || '',
+        summary: (row.change_summary as string) || '',
         impactLevel: classifyImpactLevel(affectedControls.length),
         affectedControlsCount: affectedControls.length,
         complianceGapDelta: estimateGapDelta(classifyImpactLevel(affectedControls.length), affectedControls.length),
 
         effectiveDate: row.effective_date || null,
 
-        status: row.status || 'identified',
+        status: (row.status as string) || 'identified',
 
         detectedAt: row.detected_at || detectedAt,
       });
@@ -806,13 +806,13 @@ async function detectFrameworkVersionChanges(
 
       if (existingRes.rows.length === 0 && row.last_updated) {
         changes.push({
-          changeId: `auto-${row.framework_code}-${row.version || 'latest'}`,
+          changeId: `auto-${row.framework_code as string}-${row.version as string || 'latest'}`,
 
-          frameworkCode: row.framework_code,
+          frameworkCode: row.framework_code as string,
           regulatorId: '',
           changeType: 'amendment',
-          title: `Framework ${row.framework_code} updated to version ${row.version || 'latest'}`,
-          summary: `Framework ${row.framework_code} has been updated. Review required.`,
+          title: `Framework ${row.framework_code as string} updated to version ${row.version as string || 'latest'}`,
+          summary: `Framework ${row.framework_code as string} has been updated. Review required.`,
           impactLevel: 'medium',
           affectedControlsCount: 0,
           complianceGapDelta: 0,
