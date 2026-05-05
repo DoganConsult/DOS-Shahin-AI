@@ -13,11 +13,12 @@ import { DOS_LANGUAGE_SWITCHER_I18N } from '@dos/ui-system';
 import {
   provideAccessStore,
   WORKSPACE_NAV_LABEL_RESOLVER,
-  WORKSPACE_NAV_PRODUCT_SOURCE,
 } from '@dos/access-store';
 import { I18nService } from '@app/core/services/ui-infra/i18n.service';
 import { provideShellIcons } from './shell/icon-registration';
-import { ProductCompositionNavSource } from './shell/product-composition-nav.source';
+// Legacy ProductCompositionNavSource removed — it had getNavItems() not
+// resolve(), crashing WorkspaceNavigationAdapter. Nav is fully DB-driven
+// via DynamicUiNavSource (L1). The adapter handles l4=null gracefully.
 import { WorkspaceResolverService } from './shell/workspace-resolver.service';
 import { COCKPIT_CONFIG, type CockpitConfigContract } from '@app/dos/contracts/cockpit-config.contract';
 import { FOUNDATION_I18N } from '@foundation-module/ui/ports/i18n.port';
@@ -52,10 +53,9 @@ export const appConfig: ApplicationConfig = {
     { provide: DOS_LANGUAGE_SWITCHER_I18N, useExisting: I18nService },
     // @dos/access-store — single canonical session/access store for this product.
     provideAccessStore(),
-    // L4 nav source — product-owned, registered against the platform-side DI
-    // token so the platform WorkspaceNavigationAdapter (in @dos/access-store)
-    // can pull product-composition items without importing product code.
-    { provide: WORKSPACE_NAV_PRODUCT_SOURCE, useExisting: ProductCompositionNavSource },
+    // L4 nav source — removed. ProductCompositionNavSource was a legacy stub
+    // (getNavItems() not resolve()). Nav is now 100% DB-driven via
+    // DynamicUiNavSource (L1). WorkspaceNavigationAdapter skips l4 when null.
     // Product-side nav label resolver — the platform shell uses this to turn
     // Dynamic-UI/module title keys into real locale-aware labels.
     { provide: WORKSPACE_NAV_LABEL_RESOLVER, useExisting: WorkspaceResolverService },
