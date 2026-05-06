@@ -11,13 +11,13 @@
       {
         "id": "inventory_runs",
         "status": "GREEN",
-        "ms": 58,
+        "ms": 55,
         "snippet": ""
       },
       {
         "id": "evidence_pack_present",
         "status": "GREEN",
-        "ms": 1,
+        "ms": 2,
         "snippet": ""
       },
       {
@@ -28,6 +28,6 @@
       }
     ]
   },
-  "emittedAt": "2026-05-06T19:35:29.702Z",
-  "hash": "sha256:32d5a566f7b922374e5c01fa3e7df9c728af1294bba169ca3f90bae9b6848679"
+  "emittedAt": "2026-05-06T19:38:55.492Z",
+  "hash": "sha256:7759b03e8cb847f427e37de0ad8a196edb1bbaf27d9d8ef706b2954ac9a2f7b9"
 }

@@ -2,18 +2,88 @@
   "contractKey": "module.audit-shelf.bundle",
   "version": "1.0.0",
   "tenant_id": "00000000-0000-0000-0000-000000000000",
-  "generated_at": "2026-05-06T19:33:14.951Z",
+  "generated_at": "2026-05-06T19:38:54.898Z",
   "generated_by": "cli@dos.local",
   "sections": {
     "role_profile_sync_ledger": [],
     "ura_projection_state": [],
     "drift_telemetry_window": [
       {
-        "id": "51",
-        "sampled_at": "2026-05-06T19:27:10.266Z",
+        "id": "61",
+        "sampled_at": "2026-05-06T19:36:10.706Z",
         "metric_key": "rbac.role_permissions.mismatch_count",
         "value_num": "0",
         "severity": "info"
+      },
+      {
+        "id": "69",
+        "sampled_at": "2026-05-06T19:36:10.706Z",
+        "metric_key": "tenants.active_count",
+        "value_num": "38",
+        "severity": "info"
+      },
+      {
+        "id": "68",
+        "sampled_at": "2026-05-06T19:36:10.706Z",
+        "metric_key": "ui.carbon_key_orphans",
+        "value_num": "0",
+        "severity": "info"
+      },
+      {
+        "id": "67",
+        "sampled_at": "2026-05-06T19:36:10.706Z",
+        "metric_key": "rbac.functional_roles.dual_naming_collisions",
+        "value_num": "0",
+        "severity": "info"
+      },
+      {
+        "id": "66",
+        "sampled_at": "2026-05-06T19:36:10.706Z",
+        "metric_key": "shell.binding_rowcount_drift",
+        "value_num": "38",
+        "severity": "critical"
+      },
+      {
+        "id": "70",
+        "sampled_at": "2026-05-06T19:36:10.706Z",
+        "metric_key": "telemetry.sampler_heartbeat",
+        "value_num": "1",
+        "severity": "info"
+      },
+      {
+        "id": "65",
+        "sampled_at": "2026-05-06T19:36:10.706Z",
+        "metric_key": "shell.perms_ungrantable",
+        "value_num": "0",
+        "severity": "info"
+      },
+      {
+        "id": "64",
+        "sampled_at": "2026-05-06T19:36:10.706Z",
+        "metric_key": "tenants.product_activation_duplicates",
+        "value_num": "0",
+        "severity": "info"
+      },
+      {
+        "id": "63",
+        "sampled_at": "2026-05-06T19:36:10.706Z",
+        "metric_key": "tenants.active_no_migration_ledger",
+        "value_num": "0",
+        "severity": "info"
+      },
+      {
+        "id": "62",
+        "sampled_at": "2026-05-06T19:36:10.706Z",
+        "metric_key": "tenants.schema_orphans_unaccounted",
+        "value_num": "0",
+        "severity": "info"
+      },
+      {
+        "id": "56",
+        "sampled_at": "2026-05-06T19:27:10.266Z",
+        "metric_key": "shell.binding_rowcount_drift",
+        "value_num": "38",
+        "severity": "critical"
       },
       {
         "id": "60",
@@ -44,13 +114,6 @@
         "severity": "info"
       },
       {
-        "id": "56",
-        "sampled_at": "2026-05-06T19:27:10.266Z",
-        "metric_key": "shell.binding_rowcount_drift",
-        "value_num": "38",
-        "severity": "critical"
-      },
-      {
         "id": "55",
         "sampled_at": "2026-05-06T19:27:10.266Z",
         "metric_key": "shell.perms_ungrantable",
@@ -75,6 +138,13 @@
         "id": "52",
         "sampled_at": "2026-05-06T19:27:10.266Z",
         "metric_key": "tenants.schema_orphans_unaccounted",
+        "value_num": "0",
+        "severity": "info"
+      },
+      {
+        "id": "51",
+        "sampled_at": "2026-05-06T19:27:10.266Z",
+        "metric_key": "rbac.role_permissions.mismatch_count",
         "value_num": "0",
         "severity": "info"
       },
@@ -114,6 +184,13 @@
         "severity": "info"
       },
       {
+        "id": "41",
+        "sampled_at": "2026-05-06T19:26:55.291Z",
+        "metric_key": "rbac.role_permissions.mismatch_count",
+        "value_num": "0",
+        "severity": "info"
+      },
+      {
         "id": "46",
         "sampled_at": "2026-05-06T19:26:55.291Z",
         "metric_key": "shell.binding_rowcount_drift",
@@ -142,16 +219,9 @@
         "severity": "info"
       },
       {
-        "id": "41",
-        "sampled_at": "2026-05-06T19:26:55.291Z",
-        "metric_key": "rbac.role_permissions.mismatch_count",
-        "value_num": "0",
-        "severity": "info"
-      },
-      {
-        "id": "38",
+        "id": "36",
         "sampled_at": "2026-05-05T04:28:37.989Z",
-        "metric_key": "ui.carbon_key_orphans",
+        "metric_key": "shell.binding_rowcount_drift",
         "value_num": "0",
         "severity": "info"
       },
@@ -191,16 +261,16 @@
         "severity": "info"
       },
       {
-        "id": "36",
+        "id": "37",
         "sampled_at": "2026-05-05T04:28:37.989Z",
-        "metric_key": "shell.binding_rowcount_drift",
+        "metric_key": "rbac.functional_roles.dual_naming_collisions",
         "value_num": "0",
         "severity": "info"
       },
       {
-        "id": "37",
+        "id": "38",
         "sampled_at": "2026-05-05T04:28:37.989Z",
-        "metric_key": "rbac.functional_roles.dual_naming_collisions",
+        "metric_key": "ui.carbon_key_orphans",
         "value_num": "0",
         "severity": "info"
       },
@@ -289,9 +359,9 @@
         "severity": "critical"
       },
       {
-        "id": "16",
+        "id": "12",
         "sampled_at": "2026-05-05T03:36:56.024Z",
-        "metric_key": "shell.binding_rowcount_drift",
+        "metric_key": "tenants.schema_orphans_unaccounted",
         "value_num": "0",
         "severity": "info"
       },
@@ -324,6 +394,13 @@
         "severity": "info"
       },
       {
+        "id": "16",
+        "sampled_at": "2026-05-05T03:36:56.024Z",
+        "metric_key": "shell.binding_rowcount_drift",
+        "value_num": "0",
+        "severity": "info"
+      },
+      {
         "id": "15",
         "sampled_at": "2026-05-05T03:36:56.024Z",
         "metric_key": "shell.perms_ungrantable",
@@ -345,17 +422,24 @@
         "severity": "info"
       },
       {
-        "id": "12",
+        "id": "11",
         "sampled_at": "2026-05-05T03:36:56.024Z",
+        "metric_key": "rbac.role_permissions.mismatch_count",
+        "value_num": "0",
+        "severity": "info"
+      },
+      {
+        "id": "2",
+        "sampled_at": "2026-05-05T03:31:58.266Z",
         "metric_key": "tenants.schema_orphans_unaccounted",
         "value_num": "0",
         "severity": "info"
       },
       {
-        "id": "11",
-        "sampled_at": "2026-05-05T03:36:56.024Z",
-        "metric_key": "rbac.role_permissions.mismatch_count",
-        "value_num": "0",
+        "id": "10",
+        "sampled_at": "2026-05-05T03:31:58.266Z",
+        "metric_key": "telemetry.sampler_heartbeat",
+        "value_num": "1",
         "severity": "info"
       },
       {
@@ -366,9 +450,37 @@
         "severity": "info"
       },
       {
-        "id": "2",
+        "id": "8",
         "sampled_at": "2026-05-05T03:31:58.266Z",
-        "metric_key": "tenants.schema_orphans_unaccounted",
+        "metric_key": "ui.carbon_key_orphans",
+        "value_num": "0",
+        "severity": "info"
+      },
+      {
+        "id": "7",
+        "sampled_at": "2026-05-05T03:31:58.266Z",
+        "metric_key": "rbac.functional_roles.dual_naming_collisions",
+        "value_num": "0",
+        "severity": "info"
+      },
+      {
+        "id": "6",
+        "sampled_at": "2026-05-05T03:31:58.266Z",
+        "metric_key": "shell.binding_rowcount_drift",
+        "value_num": "0",
+        "severity": "info"
+      },
+      {
+        "id": "5",
+        "sampled_at": "2026-05-05T03:31:58.266Z",
+        "metric_key": "shell.perms_ungrantable",
+        "value_num": "0",
+        "severity": "info"
+      },
+      {
+        "id": "4",
+        "sampled_at": "2026-05-05T03:31:58.266Z",
+        "metric_key": "tenants.product_activation_duplicates",
         "value_num": "0",
         "severity": "info"
       },
@@ -385,51 +497,26 @@
         "metric_key": "rbac.role_permissions.mismatch_count",
         "value_num": "0",
         "severity": "info"
-      },
-      {
-        "id": "4",
-        "sampled_at": "2026-05-05T03:31:58.266Z",
-        "metric_key": "tenants.product_activation_duplicates",
-        "value_num": "0",
-        "severity": "info"
-      },
-      {
-        "id": "10",
-        "sampled_at": "2026-05-05T03:31:58.266Z",
-        "metric_key": "telemetry.sampler_heartbeat",
-        "value_num": "1",
-        "severity": "info"
-      },
-      {
-        "id": "5",
-        "sampled_at": "2026-05-05T03:31:58.266Z",
-        "metric_key": "shell.perms_ungrantable",
-        "value_num": "0",
-        "severity": "info"
-      },
-      {
-        "id": "6",
-        "sampled_at": "2026-05-05T03:31:58.266Z",
-        "metric_key": "shell.binding_rowcount_drift",
-        "value_num": "0",
-        "severity": "info"
-      },
-      {
-        "id": "7",
-        "sampled_at": "2026-05-05T03:31:58.266Z",
-        "metric_key": "rbac.functional_roles.dual_naming_collisions",
-        "value_num": "0",
-        "severity": "info"
-      },
-      {
-        "id": "8",
-        "sampled_at": "2026-05-05T03:31:58.266Z",
-        "metric_key": "ui.carbon_key_orphans",
-        "value_num": "0",
-        "severity": "info"
       }
     ],
     "tenant_migration_ledger": [],
-    "audit_signoff_ledger": []
+    "audit_signoff_ledger": [
+      {
+        "bundle_id": "6",
+        "generated_at": "2026-05-06T19:35:29.110Z",
+        "generated_by": "cli@dos.local",
+        "bundle_hash": "5d23dc28049068f3bdaedf2b791b96939c8e39791e8f1a3a956f36418a9fd9e2",
+        "signed_by": null,
+        "signed_at": null
+      },
+      {
+        "bundle_id": "5",
+        "generated_at": "2026-05-06T19:33:14.951Z",
+        "generated_by": "cli@dos.local",
+        "bundle_hash": "ccf6a53efd4b7e0dfdb60b79d3e07317a22028ab5a56c70593fc3afd2d1492e4",
+        "signed_by": null,
+        "signed_at": null
+      }
+    ]
   }
 }

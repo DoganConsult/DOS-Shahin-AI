@@ -12,18 +12,18 @@
       {
         "id": "audit-shelf-bundle",
         "status": "GREEN",
-        "ms": 656,
-        "tail": "  tenant_migration_ledger: 0\n  audit_signoff_ledger: 1\n[audit-shelf] bundle → ops/handover/2026-05-06/audit-shelf/00000000-0000-0000-0000-000000000000/bundle.json\n[audit-shelf] sha256  5d23dc28049068f3bdaedf2b791b96939c8e39791e8f1a3a956f36418a9fd9e2\n"
+        "ms": 660,
+        "tail": "  tenant_migration_ledger: 0\n  audit_signoff_ledger: 2\n[audit-shelf] bundle → ops/handover/2026-05-06/audit-shelf/00000000-0000-0000-0000-000000000000/bundle.json\n[audit-shelf] sha256  9bc41c46c26b58d275e94af214f7ea432eacfed26fca58caa774e53d176312bf\n"
       },
       {
         "id": "emit-evidence-pack",
         "status": "GREEN",
-        "ms": 34,
+        "ms": 35,
         "tail": ""
       }
     ],
     "dryRun": false
   },
-  "emittedAt": "2026-05-06T19:35:29.232Z",
-  "hash": "sha256:fbb06ae5eccb7bef3f4ce251b6d474a5aef46b64960882ac8db3b0d2e503e284"
+  "emittedAt": "2026-05-06T19:38:55.021Z",
+  "hash": "sha256:e9b432331696c2ce838b74ff6b6f4a99fc9c5299b2001fab61bef4fb88019fbe"
 }
