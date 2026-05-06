@@ -11,23 +11,23 @@
       {
         "id": "inventory_runs",
         "status": "GREEN",
-        "ms": 53,
+        "ms": 55,
         "snippet": ""
       },
       {
         "id": "residency_marker_present",
         "status": "GREEN",
-        "ms": 2,
+        "ms": 1,
         "snippet": ""
       },
       {
         "id": "zerodirt",
         "status": "GREEN",
-        "ms": 321,
+        "ms": 327,
         "snippet": "  }\n}\n"
       }
     ]
   },
-  "emittedAt": "2026-05-06T19:36:03.827Z",
-  "hash": "sha256:cc24d756a249c8e8c847dc23e3ddd68b58cf96909e1eccfdff60dd252b772455"
+  "emittedAt": "2026-05-06T19:39:17.504Z",
+  "hash": "sha256:ec176d8e6414400bed291b20c9fea2efc70620514ced83508e87e6d928fa045a"
 }
