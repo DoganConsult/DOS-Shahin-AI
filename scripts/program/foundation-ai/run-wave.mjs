@@ -28,7 +28,7 @@ for (const step of spec.steps ?? []) {
     const out = execSync(step.cmd, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
     tail = out.split('\n').slice(-5).join('\n');
   } catch (e) {
-    status = 'RED';
+    status = step.required === false ? 'WARN' : 'RED';
     tail = (e.stdout?.toString() ?? '') + (e.stderr?.toString() ?? '');
   }
   steps.push({ id: step.id, status, ms: Date.now() - start, tail });

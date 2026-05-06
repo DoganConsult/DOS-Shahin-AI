@@ -1,0 +1,36 @@
+{
+  "schema": "foundation-ai.proof.v1",
+  "phase": "P0",
+  "wave": 0,
+  "name": "structure-emit",
+  "status": "GREEN",
+  "payload": {
+    "schema": "foundation-ai.structure.v1",
+    "pages": 21,
+    "groups": 3,
+    "internalRoutes": 16,
+    "apiRoutes": 27,
+    "agents": 4,
+    "provenance": [
+      {
+        "source": "navigation/navigation.json",
+        "hash": "sha256:7ca67a0edc7f6bfa4f48f1ae9a2a0c34954dd23ed550e43fb2b91bbd00c6d2bf"
+      },
+      {
+        "source": "routing/routes.json",
+        "hash": "sha256:0718a3fe44d6af1df115865f52cd3eba5cf7780724dedbede5be6b117a150265"
+      },
+      {
+        "source": "agent.contract.json",
+        "hash": "sha256:34eac5f71a0a37262c05c9fd58840b67ef0604b8fc0fdf1a1290d2d2ef4e5794"
+      },
+      {
+        "source": "agents/agents.json",
+        "hash": "sha256:55055e8be867725358febdecd7ad9e377e6eaeba4f0f67760b13189b383c84af"
+      }
+    ],
+    "bytes": 10698
+  },
+  "emittedAt": "2026-05-06T18:05:18.026Z",
+  "hash": "sha256:cd53e9f8f9689403983ccef004fca5157f05c3e0190d27b4386259479af20544"
+}

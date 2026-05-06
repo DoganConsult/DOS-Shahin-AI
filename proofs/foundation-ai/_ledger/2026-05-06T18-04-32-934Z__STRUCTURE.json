@@ -1,0 +1,14 @@
+{
+  "runId": "b53f4019-e4e9-4301-a226-23e0513883f2",
+  "phase": "P0",
+  "wave": 0,
+  "kind": "STRUCTURE",
+  "inputsHash": "sha256:501497ff6ea87eb5516e17a602b62ec373c4a6edb9cf062443710549f8f967d3",
+  "outputsHash": "sha256:7fe561f9876d154df470ae23598808bea26e50d20b633b9b3e2ffb1ba1a213d6",
+  "parentHash": "sha256:bbe932b5dba090833f16b8c1e60e6d806c22e73fc64d9457d6ff470d782b1671",
+  "signer": "dev-1",
+  "status": "GREEN",
+  "evidenceUri": "/root/DOS-Platform/proofs/foundation-ai/wave-0/structure-emit.proof.json",
+  "createdAt": "2026-05-06T18:04:32.934Z",
+  "hash": "sha256:fcb7f435d024b769f3697efa8a835de2a84fff8495c34313d6d8a87416c04d7e"
+}
