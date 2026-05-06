@@ -832,7 +832,9 @@ export class ShellHostComponent {
         message: this.shellBinding.chromeString(messageKey),
         dismissible: tpl['dismissible'] === true,
         actionLabel: actionKey ? this.shellBinding.chromeString(actionKey) : undefined,
-        actionRoute: typeof tpl['actionRoute'] === 'string' ? tpl['actionRoute'] as string : undefined,
+        action: typeof tpl['actionRoute'] === 'string'
+          ? { kind: 'navigate' as const, path: tpl['actionRoute'] as string }
+          : undefined,
       });
     }
 
@@ -866,7 +868,7 @@ export class ShellHostComponent {
   // via WorkspaceShellBindingService) over the platform-default adapter
   // constant. Both sources are signals so the UI reacts to either flipping.
   readonly accountMenuEntries = computed<ReadonlyArray<ShellAccountMenuEntry>>(
-    () => this.shellBinding.accountMenuEntries() ?? this.nav.accountMenuConfig(),
+    () => this.shellBinding.accountMenuEntries() ?? [],
   );
   // Map platform-owned ShellAccountMenuEntry → DosAccountMenuItem shape
   // consumed by the @dos/ui-system primitive. Labels are i18n-resolved via
@@ -1112,7 +1114,9 @@ export class ShellHostComponent {
 
   // §B.9 #34–37, #25 — banner strip handlers.
   onBannerAction(banner: ShellBanner): void {
-    if (banner.actionRoute) void this.router.navigateByUrl(banner.actionRoute);
+    if (!banner.action) return;
+    if (banner.action.kind === 'navigate') void this.router.navigateByUrl(banner.action.path);
+    if (banner.action.kind === 'open_external' && this.isBrowser) window.open(banner.action.url, '_blank', 'noopener');
   }
 
   onBannerDismiss(banner: ShellBanner): void {

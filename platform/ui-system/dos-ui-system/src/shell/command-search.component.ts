@@ -294,7 +294,7 @@ export class DosCommandSearchComponent {
     if (!isPlatformBrowser(this.platformId)) return;
     queueMicrotask(() => {
       const root = this.hostRef.nativeElement;
-      const input = root.querySelector<HTMLInputElement>('input.cds--search-input');
+      const input = root.querySelector('input.cds--search-input') as HTMLInputElement | null;
       input?.focus?.();
     });
   }

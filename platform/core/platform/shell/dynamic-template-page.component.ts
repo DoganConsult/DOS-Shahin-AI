@@ -37,7 +37,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter, startWith } from 'rxjs/operators';
 import { TemplateBindingService, type TemplateBinding } from './template-binding.service';
 import { loadArchetypeTemplate } from './template-binding.registry';
-import { DosInsightBarComponent } from './templates/dos-insight-bar.component';
+
 import type { ModuleInsightPillars } from './templates/module-template.types';
 import { AccessStore } from '@dos/access-store';
 // Marketing-landing archetype — config + brand services injected here so
@@ -49,7 +49,7 @@ import { BrandResolverService, DosEmptyStateComponent, MarketingPublicConfigServ
   selector: 'dos-dynamic-template-page',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, DosEmptyStateComponent, DosInsightBarComponent],
+  imports: [CommonModule, DosEmptyStateComponent],
   template: `
     @if (deniedPermission(); as deniedPermission) {
       <dos-empty-state
