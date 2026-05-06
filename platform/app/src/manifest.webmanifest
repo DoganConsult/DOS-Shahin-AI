@@ -3,11 +3,23 @@
   "short_name": "Shahin-AI",
   "description": "The first AI-powered GRC platform built for Saudi Arabia — by Dogan Consult",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#0a1628",
-  "theme_color": "#0c1a2e",
+  "background_color": "#0f172a",
+  "theme_color": "#0f4c81",
   "orientation": "any",
   "icons": [
-    { "src": "logoiconapphero.png", "sizes": "any", "type": "image/png", "purpose": "any maskable" }
+    {
+      "src": "/assets/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
   ]
 }
