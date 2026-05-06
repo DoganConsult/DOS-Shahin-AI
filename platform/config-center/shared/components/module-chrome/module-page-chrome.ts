@@ -24,9 +24,10 @@ import { RouterLink } from '@angular/router';
 import {
   BreadcrumbModule, TilesModule, TagModule, GridModule,
   NotificationModule, SkeletonModule, IconModule, ButtonModule,
-  TooltipModule, ProgressBarModule, SearchModule,
+  TooltipModule, ProgressBarModule,
   ModalModule, AccordionModule,
 } from 'carbon-components-angular';
+import { DosCarbonSearchComponent } from '@dos/ui-system';
 
 // ─── 1. ModulePageHeader ────────────────────────────────────────────
 @Component({
@@ -345,11 +346,15 @@ export class ModuleRecentActivityComponent {
   selector: 'app-module-audit-trail-panel',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, TagModule, SearchModule, SkeletonModule, ModalModule],
+  imports: [CommonModule, TagModule, SkeletonModule, ModalModule, DosCarbonSearchComponent],
   template: `
     <div class="matp">
       <div class="matp-toolbar">
-        <cds-search [placeholder]="'Search audit...'" size="sm" (valueChange)="searchChange.emit($event)"></cds-search>
+        <dos-carbon-search
+          ariaLabelKey="shell.module-page-chrome.search.ariaLabel"
+          size="sm"
+          (valueChange)="searchChange.emit($event)">
+        </dos-carbon-search>
       </div>
       @if (loading) {
         <cds-skeleton-text [lines]="5"></cds-skeleton-text>

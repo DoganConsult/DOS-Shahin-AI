@@ -44,6 +44,9 @@ const GUARDS = [
   // Hard-kill legacy mode — no DB DTOs, no legacy adapters in frontend shell.
   'lint-no-legacy-uios-shell.mjs',
   'lint-no-hardcoded-shell-labels.mjs',
+  // Phase 3B — block hardcoded 'Search' labels in shell/foundation/module
+  // search components; labels must come from DB chrome keys via UI-OS resolver.
+  'lint-no-hardcoded-search-labels.mjs',
   // 2026-05-06 — block hardcoded GRC/demo placeholder strings from leaking
   // into live workspace runtime (binding.props, override.patch, source).
   'lint-no-demo-placeholder-runtime.mjs',

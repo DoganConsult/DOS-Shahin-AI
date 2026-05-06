@@ -292,11 +292,11 @@ re-run confirmed clean.
 | DB migration + seed for config-center chrome panel (1 key) | **DONE** |
 | DB migration + seed for foundation page i18n labels (2 keys) | **DONE** |
 | DB migration + seed for `dos-carbon-search` label (1 key) | **DONE** |
-| UI-OS resolver wiring to emit new keys as surface props | **PENDING (Phase 3B)** |
-| Component wiring to consume runtime-emitted ariaLabel | **PENDING (Phase 3B)** |
-| Hardcoded fallback string removal | **PENDING (Phase 3B, after resolver+component wired)** |
+| UI-OS resolver wiring to emit new keys as surface props | **DONE (Phase 3B)** — `loadChrome()` returns raw JSONB; FE `runtimeChromeLocalized()` selects locale |
+| Component wiring to consume runtime-emitted ariaLabel | **DONE (Phase 3B)** — all 7 callers wired via `<dos-carbon-search ariaLabelKey>` |
+| Hardcoded fallback string removal | **DONE (Phase 3B)** — `dos-carbon-search` `'Search'` default removed; CI guard active |
 
-**Phase 3B is now UNBLOCKED.** No DB prerequisite work remains.
+**Phase 3B is COMPLETE.** Verdict: `PHASE_3B_SEARCH_ARIA_LABEL_PASS`.
 
 ### Phase 3B Resolver Wiring Path (per caller)
 

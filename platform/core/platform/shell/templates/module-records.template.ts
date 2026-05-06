@@ -19,10 +19,11 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import {
   TilesModule, TagModule, NotificationModule, SkeletonModule,
-  ButtonModule, ComboButtonModule, DropdownModule, SearchModule,
+  ButtonModule, ComboButtonModule, DropdownModule,
   ContentSwitcherModule, PaginationModule, ProgressBarModule,
   TableModule, GridModule, BreadcrumbModule, LinkModule, IconModule
 } from 'carbon-components-angular';
+import { DosCarbonSearchComponent } from '@dos/ui-system';
 import {
   ModuleColumn, ModuleRecord, ModuleKpi, ModuleNotification,
   ModuleInsightPillars, ModuleRole, resolveViewMode, RoleViewMode
@@ -38,9 +39,10 @@ import { DosInsightBarComponent } from './dos-insight-bar.component';
   imports: [
     CommonModule, RouterModule,
     TilesModule, TagModule, NotificationModule, SkeletonModule,
-    ButtonModule, ComboButtonModule, DropdownModule, SearchModule,
+    ButtonModule, ComboButtonModule, DropdownModule,
     ContentSwitcherModule, PaginationModule, ProgressBarModule,
     TableModule, GridModule, BreadcrumbModule, LinkModule, IconModule,
+    DosCarbonSearchComponent,
   ],
   template: `
     <!-- Notification -->
@@ -90,12 +92,13 @@ import { DosInsightBarComponent } from './dos-insight-bar.component';
 
     <!-- Toolbar -->
     <div class="dmt-toolbar">
-      <cds-search
+      <dos-carbon-search
+        ariaLabelKey="shell.module-records.search.ariaLabel"
         [placeholder]="searchPlaceholder"
         (valueChange)="onSearch($event)"
         size="md"
         class="dmt-search">
-      </cds-search>
+      </dos-carbon-search>
 
       @if (filterOptions.length) {
         <cds-dropdown
@@ -266,7 +269,7 @@ export class ModuleRecordsTemplateComponent {
   @Input() rows: ModuleRecord[] = [];
   @Input() totalItems = 0;
   @Input() pageSize = 25;
-  @Input() searchPlaceholder = 'Search...';
+  @Input() searchPlaceholder = '';
   @Input() filterLabel = 'Filter';
   @Input() filterOptions: Array<{ content: string; value: string }> = [];
   @Input() viewSwitcher: Array<{ id: string; label: string }> = [];

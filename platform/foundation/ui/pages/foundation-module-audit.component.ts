@@ -15,8 +15,9 @@ import { catchError, of } from 'rxjs';
 import {
   BreadcrumbModule, TilesModule, TagModule, GridModule,
   SkeletonModule, NotificationModule, IconModule, ButtonModule,
-  SearchModule, ModalModule, TooltipModule,
+  ModalModule, TooltipModule,
 } from 'carbon-components-angular';
+import { DosCarbonSearchComponent } from '@dos/ui-system';
 import { HttpClient } from '@angular/common/http';
 import { FOUNDATION_I18N, type FoundationI18n, NoopFoundationI18n } from '../ports/i18n.port';
 
@@ -33,7 +34,8 @@ interface AuditEvent {
     CommonModule, FormsModule,
     BreadcrumbModule, TilesModule, TagModule, GridModule,
     SkeletonModule, NotificationModule, IconModule, ButtonModule,
-    SearchModule, ModalModule, TooltipModule,
+    ModalModule, TooltipModule,
+    DosCarbonSearchComponent,
   ],
   template: `
     <!-- Breadcrumb -->
@@ -45,11 +47,11 @@ interface AuditEvent {
 
     <!-- Filters -->
     <div class="fa-filters">
-      <cds-search
-        [placeholder]="i18n.tr('foundation.audit.searchPlaceholder', 'Search events...')"
+      <dos-carbon-search
+        ariaLabelKey="shell.foundation-module-audit.search.ariaLabel"
         size="sm"
         (valueChange)="searchTerm = $event; load()">
-      </cds-search>
+      </dos-carbon-search>
       <div class="cds--select cds--select--sm cds--select--inline">
         <select class="cds--select-input" [(ngModel)]="eventTypeFilter" (change)="load()">
           <option value="">{{ i18n.tr('foundation.audit.allEvents', 'All events') }}</option>

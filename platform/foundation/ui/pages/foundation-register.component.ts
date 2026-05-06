@@ -6,7 +6,7 @@
  * Permission gate: foundation.read.
  */
 import {
-  Component, ChangeDetectionStrategy, inject, signal, computed, OnInit, DestroyRef,
+  Component, ChangeDetectionStrategy, inject, signal, OnInit, DestroyRef,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -15,9 +15,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, of } from 'rxjs';
 import {
   BreadcrumbModule, TagModule, GridModule, SkeletonModule,
-  NotificationModule, IconModule, ButtonModule, SearchModule,
+  NotificationModule, IconModule, ButtonModule,
   TooltipModule,
 } from 'carbon-components-angular';
+import { DosCarbonSearchComponent } from '@dos/ui-system';
 import { FoundationApiService } from '../services/foundation-api.service';
 import { FOUNDATION_I18N, type FoundationI18n, NoopFoundationI18n } from '../ports/i18n.port';
 
@@ -33,8 +34,9 @@ interface RegisterRow {
   imports: [
     CommonModule, FormsModule, RouterLink,
     BreadcrumbModule, TagModule, GridModule, SkeletonModule,
-    NotificationModule, IconModule, ButtonModule, SearchModule,
+    NotificationModule, IconModule, ButtonModule,
     TooltipModule,
+    DosCarbonSearchComponent,
   ],
   template: `
     <!-- Breadcrumb -->
@@ -46,11 +48,11 @@ interface RegisterRow {
 
     <!-- Toolbar: Search + Filter + Batch actions stub -->
     <div class="fr-toolbar">
-      <cds-search
-        [placeholder]="i18n.tr('foundation.register.search', 'Search users...')"
+      <dos-carbon-search
+        ariaLabelKey="shell.foundation-register.search.ariaLabel"
         size="sm"
         (valueChange)="onSearch($event)">
-      </cds-search>
+      </dos-carbon-search>
       <div class="fr-toolbar-actions">
         <div class="cds--select cds--select--sm cds--select--inline">
           <select class="cds--select-input" (change)="onStatusFilter($any($event.target).value)">

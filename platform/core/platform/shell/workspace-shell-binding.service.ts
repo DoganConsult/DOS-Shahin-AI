@@ -490,6 +490,30 @@ export class WorkspaceShellBindingService {
     return '';
   }
 
+  /**
+   * Locale-aware resolution of a chrome key whose JSONB value is shaped
+   * `{ "en": "...", "ar": "..." }` (Phase 3B contract for bilingual
+   * runtime aria-label keys seeded under `dos.ui_workspace_chrome`).
+   *
+   * Fail-closed contract:
+   *   - returns '' when the key is absent;
+   *   - returns '' when the value is an object but the requested locale
+   *     entry is missing or empty (no English fallback);
+   *   - never invents text. Caller is responsible for not rendering the
+   *     enabled control when the resolved value is empty.
+   */
+  runtimeChromeLocalized(key: string, locale: string): string {
+    const v = this._chrome()[key];
+    if (v && typeof v === 'object' && !Array.isArray(v)) {
+      const rec = v as Record<string, unknown>;
+      const direct = rec[locale];
+      if (typeof direct === 'string' && direct.trim()) return direct.trim();
+      return '';
+    }
+    if (typeof v === 'string' && v.trim()) return v.trim();
+    return '';
+  }
+
   /** Banner templates from the canonical banners[] envelope. */
   readonly bannerTemplates = computed<WorkspaceShellBannerTemplate[]>(
     () => this._bannersRaw().map((row) => this.bannerToTemplate(row)).filter(Boolean) as WorkspaceShellBannerTemplate[],
@@ -692,7 +716,7 @@ export class WorkspaceShellBindingService {
   }
 
   /** Read a chrome value that should be a plain string. */
-  private chromeStringFirst(key: string): string | null {
+  chromeStringFirst(key: string): string | null {
     const v = this._chrome()[key];
     if (typeof v === 'string' && v.trim()) return v;
     if (v && typeof v === 'object' && !Array.isArray(v)) {

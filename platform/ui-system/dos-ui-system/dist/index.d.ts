@@ -50,6 +50,7 @@ export * from './components/module-switcher.component';
 export * from './components/workspace-switcher.component';
 export * from './components/icon.component';
 export * from './layout/responsive-grid.component';
+export * from './shell/chrome-aria-label-resolver';
 export * from './shell/quick-create.component';
 export * from './shell/workspace-shell.contracts';
 export * from './shell/toast-outlet.component';

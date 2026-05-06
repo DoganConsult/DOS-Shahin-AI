@@ -8,16 +8,18 @@
  * must flow from the Dynamic UI OS pipeline (DB → API → FE). If DB data
  * is missing, components must show honest empty states — never fake content.
  */
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, inject, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { correlationIdInterceptor } from '@platform/shell/correlation-id.interceptor';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { DOS_LANGUAGE_SWITCHER_I18N } from '@dos/ui-system';
+import { CHROME_ARIA_LABEL_RESOLVER, DOS_LANGUAGE_SWITCHER_I18N, type ChromeAriaLabelResolver } from '@dos/ui-system';
 import { provideAccessStore } from '@dos/access-store';
 import { I18nService } from '@app/core/services/ui-infra/i18n.service';
+import { WorkspaceShellBindingService } from '@platform/shell/workspace-shell-binding.service';
 import { provideShellIcons } from './shell/icon-registration';
 import { FOUNDATION_I18N } from '@foundation-module/ui/ports/i18n.port';
+import { FOUNDATION_WORKSPACE_CHROME, type FoundationWorkspaceChrome } from '@foundation-module/ui/ports/workspace-chrome.port';
 import { routes } from './app.routes';
 
 // DELETED: WorkspaceResolverService — was a passthrough stub (resolve(key) { return key }).
@@ -42,5 +44,35 @@ export const appConfig: ApplicationConfig = {
     provideShellIcons(),
     // Foundation i18n — workspace-home uses this for all labels.
     { provide: FOUNDATION_I18N, useExisting: I18nService },
+    // Phase 3B — DB chrome aria-label resolver. Bridges
+    // `<dos-carbon-search>` (and any other @dos/ui-system consumer) to
+    // the runtime workspace chrome bag (DB → UI-OS → binding service).
+    // Locale-aware: extracts the active language from `{en,ar}` JSONB
+    // chrome values. Returns '' when missing — wrapper fail-closes.
+    {
+      provide: CHROME_ARIA_LABEL_RESOLVER,
+      useFactory: (): ChromeAriaLabelResolver => {
+        const binding = inject(WorkspaceShellBindingService);
+        const i18n = inject(I18nService);
+        return {
+          resolve: (key: string) => binding.runtimeChromeLocalized(key, i18n.currentLang()),
+        };
+      },
+    },
+    // Phase 3B — Foundation pages bridge: read DB chrome scalars without
+    // depending on @platform/shell. Locale-aware via I18nService.
+    {
+      provide: FOUNDATION_WORKSPACE_CHROME,
+      useFactory: (): FoundationWorkspaceChrome => {
+        const binding = inject(WorkspaceShellBindingService);
+        const i18n = inject(I18nService);
+        return {
+          read: (key: string) => {
+            const v = binding.runtimeChromeLocalized(key, i18n.currentLang());
+            return v && v.length ? v : null;
+          },
+        };
+      },
+    },
   ],
 };

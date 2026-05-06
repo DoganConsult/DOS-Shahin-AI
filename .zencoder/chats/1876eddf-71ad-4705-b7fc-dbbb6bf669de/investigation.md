@@ -666,7 +666,62 @@ Full audit: `.zencoder/chats/1876eddf-71ad-4705-b7fc-dbbb6bf669de/command-search
 
 4. **Phase 3B is BLOCKED** per user decision #4 — 7 callers need DB migration + seed before TS fix.
 
+### Phase 3B — Search Aria-Label Resolver+Wiring (2026-05-06)
+
+**Status: PHASE_3B_SEARCH_ARIA_LABEL_PASS**
+
+Implementation notes:
+
+1. **Server resolver** (`services/ui-os-service/src/routes/workspace-shell.routes.ts`):
+   `loadChrome()` returns the raw `value_json` JSONB. Locale resolution is performed
+   downstream via `runtimeChromeLocalized(key, locale)` in the binding service so the
+   server emits the unaltered `{en,ar}` JSONB shape; the FE picks the active locale.
+   Fail-closed: when key absent or locale entry empty, no string is emitted.
+
+2. **`dos-carbon-search`** (`platform/ui-system/dos-ui-system/src/carbon/dos-carbon-search.component.ts`):
+   Hardcoded `@Input() label = 'Search'` removed. Wrapper now resolves its label
+   through `CHROME_ARIA_LABEL_RESOLVER` using `ariaLabelKey` (defaulting to
+   `shell.dos-carbon-search.search.ariaLabel`). `<cds-search>` renders only when
+   the resolved label is non-empty (`@if (resolvedAriaLabel())`).
+
+3. **CHROME_ARIA_LABEL_RESOLVER** wired in `platform/app/src/app.config.ts` to
+   `WorkspaceShellBindingService.runtimeChromeLocalized(key, i18n.currentLang())`.
+
+4. **Foundation port** (`platform/foundation/ui/ports/workspace-chrome.port.ts`):
+   `FOUNDATION_WORKSPACE_CHROME` token + `NoopFoundationWorkspaceChrome` (returns null).
+   Provider in `app.config.ts` bridges to the same binding service.
+
+5. **All 7 callers wired**:
+   - `module-audit-trail.template.ts` → `<dos-carbon-search ariaLabelKey="shell.module-audit-trail.search.ariaLabel">`
+   - `module-heatmap.template.ts` → `<dos-carbon-search ariaLabelKey="shell.module-heatmap.search.ariaLabel">`
+   - `module-records.template.ts` → `<dos-carbon-search ariaLabelKey="shell.module-records.search.ariaLabel">`
+   - `module-page-chrome.ts` (`ModuleAuditTrailPanelComponent`) → `<dos-carbon-search ariaLabelKey="shell.module-page-chrome.search.ariaLabel">`
+   - `foundation-register.component.ts` → `<dos-carbon-search ariaLabelKey="shell.foundation-register.search.ariaLabel">`
+   - `foundation-module-audit.component.ts` → `<dos-carbon-search ariaLabelKey="shell.foundation-module-audit.search.ariaLabel">`
+   - `dos-carbon-search.component.ts` self default → `shell.dos-carbon-search.search.ariaLabel`
+
+6. **CI guard** `scripts/ci-guards/lint-no-hardcoded-search-labels.mjs` added to
+   `dos-master-gate.mjs`. Rejects `'Search'`, `'Search…'`, `'Search (Ctrl+K)'`
+   in 9 watched files; whitelists `i18n.tr/t/translate(...)` fallbacks (legitimate
+   translation pipeline) and JSDoc comment lines.
+
+7. **Build/guard results**:
+   - `@dos/ui-system` build PASS
+   - `@dos/platform-core` build PASS
+   - `@dos/ui-os-service` build PASS
+   - `@dos/platform-app` build PASS
+   - `lint-no-static-nav-fallback` PASS
+   - `lint-no-legacy-uios-shell` PASS
+   - `lint-no-hardcoded-shell-labels` PASS
+   - `lint-no-hardcoded-search-labels` PASS
+
+8. **Grep proof**: only 2 hits across the 9 watched files —
+   `foundation-register.component.ts:77` (i18n.tr fallback chip caption — whitelisted)
+   and `dos-carbon-search.component.ts:15` (JSDoc comment — whitelisted).
+   Zero raw-literal violations in active code.
+
 ### Final Verdict
 
 `PHASE_2_5_PASS` — LATENT-32-NO-FLAGS resolved. Phase 3A audit complete.
-Phase 3B blocked pending DB data (see command-search-audit.md §4 / §6).
+`PHASE_3B_SEARCH_ARIA_LABEL_PASS` — 7 search aria-label callers fully wired
+through DB → UI-OS → CHROME_ARIA_LABEL_RESOLVER / FOUNDATION_WORKSPACE_CHROME.

@@ -15,9 +15,10 @@ import { RouterModule } from '@angular/router';
 import {
   TilesModule, TagModule, NotificationModule, SkeletonModule,
   BreadcrumbModule, ButtonModule, ContainedListModule,
-  StructuredListModule, LinkModule, SearchModule,
+  StructuredListModule, LinkModule,
   DatePickerModule, DatePickerInputModule, DropdownModule
 } from 'carbon-components-angular';
+import { DosCarbonSearchComponent } from '@dos/ui-system';
 import { DosInsightBarComponent } from './dos-insight-bar.component';
 import {
   ModuleNotification, ModuleInsightPillars, ModuleRole, resolveViewMode
@@ -59,8 +60,9 @@ export interface AuditFilter {
     CommonModule, RouterModule,
     TilesModule, TagModule, NotificationModule, SkeletonModule,
     BreadcrumbModule, ButtonModule, ContainedListModule,
-    StructuredListModule, LinkModule, SearchModule,
+    StructuredListModule, LinkModule,
     DatePickerModule, DatePickerInputModule, DropdownModule,
+    DosCarbonSearchComponent,
     DosInsightBarComponent,
   ],
   template: `
@@ -107,9 +109,11 @@ export interface AuditFilter {
 
     <!-- Filter bar -->
     <div class="dat-filter-bar">
-      <cds-search id="audit-trail-search" placeholder="Search actor, entity, action..."
+      <dos-carbon-search
+        ariaLabelKey="shell.module-audit-trail.search.ariaLabel"
+        size="md"
         (valueChange)="onSearch($event)">
-      </cds-search>
+      </dos-carbon-search>
       <cds-dropdown id="audit-event-type" placeholder="Event type"
         (selected)="onFilterChange('eventType', $event)">
         @for (opt of eventTypeOptions; track opt.content) {

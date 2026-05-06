@@ -12,10 +12,11 @@ import {
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import {
-  TilesModule, ContentSwitcherModule, SearchModule, TagModule,
+  TilesModule, ContentSwitcherModule, TagModule,
   NotificationModule, ModalModule, TooltipModule, StructuredListModule,
   SkeletonModule, BreadcrumbModule, ButtonModule, LinkModule
 } from 'carbon-components-angular';
+import { DosCarbonSearchComponent } from '@dos/ui-system';
 import type { ModuleNotification, ModuleInsightPillars } from './module-template.types';
 import { DosInsightBarComponent } from './dos-insight-bar.component';
 
@@ -34,9 +35,10 @@ export interface HeatmapCell {
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
     CommonModule, RouterModule,
-    TilesModule, ContentSwitcherModule, SearchModule, TagModule,
+    TilesModule, ContentSwitcherModule, TagModule,
     NotificationModule, ModalModule, TooltipModule, StructuredListModule,
     SkeletonModule, BreadcrumbModule, ButtonModule, LinkModule,
+    DosCarbonSearchComponent,
     DosInsightBarComponent,
   ],
   template: `
@@ -73,7 +75,12 @@ export interface HeatmapCell {
 
     <!-- Toolbar -->
     <div class="dmt-toolbar">
-      <cds-search [placeholder]="'Find item...'" (valueChange)="searchChange.emit($event)" size="md"></cds-search>
+      <dos-carbon-search
+        ariaLabelKey="shell.module-heatmap.search.ariaLabel"
+        [placeholder]="'Find item...'"
+        (valueChange)="searchChange.emit($event)"
+        size="md">
+      </dos-carbon-search>
       @if (viewOptions.length) {
         <cds-content-switcher (selected)="viewSwitch.emit($event)">
           @for (v of viewOptions; track v.id) {
