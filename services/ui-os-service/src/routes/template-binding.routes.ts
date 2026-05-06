@@ -301,6 +301,133 @@ const ARCHETYPE_EXTENSIONS: Record<string, Array<{ key: string; sql: string }>> 
   ],
 };
 
+// ─── Workspace-home enrichment (DEFERRED) ─────────────────────────────
+// The previous wave attempted to materialize real per-tenant nbaActions
+// + KPIs for /workspace-home from tenant_product_activation ∪
+// tenant_module_entitlements joined to ui_module_nav_item. That output
+// was rejected because the workspace-home contract is not yet approved
+// — emitting any masthead/KPI strip on a non-canonical landing surface
+// creates a starter/demo experience that the doctrine forbids.
+//
+// The function below is retained as a reference implementation for the
+// future canonical contract. It is NOT invoked from the resolver path.
+// The /workspace-home binding row is deleted (migration 0550) so the
+// resolver returns 404 and the SPA renders DosEmptyStateComponent.
+//
+// (Original docstring preserved below.)
+//
+// `/workspace-home` is the single landing route every authenticated user
+// hits. Its template-binding row is intentionally empty (no demo content
+// per Dynamic-UI doctrine), so we materialize real per-tenant content
+// here from the same entitlement source that tenant-service /permissions
+// uses, joined to ui_module_nav_item for the routes.
+//
+// Returned shape (deep-merged into props by caller):
+//   {
+//     kpis: [{ label, value, status, link? }],
+//     nbaActions: [{ label, route, actionKey, severity? }],
+//     notification?: { type, title, subtitle }   // when no entitled modules
+//   }
+//
+// Empty-state strings come from dos.workspace_shell_i18n
+// (publisher-owned). Module display names come from dos.module_registry;
+// nav routes come from the smallest sort_order ui_module_nav_item per
+// module. Foundation is included unconditionally (platform DNA).
+async function loadWorkspaceHomeProps(
+  pool: DbPool,
+  tenantId: string,
+  locale: 'en' | 'ar',
+): Promise<Record<string, unknown>> {
+  if (!tenantId) return {};
+  const [modulesRes, i18nRes] = await Promise.all([
+    pool.query<{
+      module_code: string;
+      display_name: string | null;
+      route: string | null;
+      label_en: string | null;
+      label_ar: string | null;
+    }>(
+      `WITH entitled AS (
+         SELECT m.module_code, m.display_name
+           FROM dos.tenant_product_activation tpa
+           JOIN dos.module_registry m ON m.product_key = tpa.product_key
+          WHERE tpa.tenant_id = $1 AND tpa.status = 'active' AND m.status = 'active'
+         UNION
+         SELECT tme.module_code, mr.display_name
+           FROM dos.tenant_module_entitlements tme
+           LEFT JOIN dos.module_registry mr ON mr.module_code = tme.module_code
+          WHERE tme.tenant_id = $1 AND tme.entitlement_status = 'active'
+         UNION
+         SELECT 'foundation', COALESCE((SELECT display_name FROM dos.module_registry WHERE module_code='foundation'), 'Foundation')
+       ),
+       overview AS (
+         -- Prefer canonical landing items (overview/dashboard/home) when
+         -- present; otherwise fall back to the lowest-sort-order item.
+         SELECT DISTINCT ON (module_code)
+                module_code, route, label_en, label_ar
+           FROM dos.ui_module_nav_item
+          WHERE enabled = true AND route IS NOT NULL
+          ORDER BY module_code,
+                   CASE
+                     WHEN item_id ~ '\.(overview|dashboard|home|landing)$' THEN 0
+                     ELSE 1
+                   END,
+                   sort_order ASC,
+                   item_id ASC
+       )
+       SELECT e.module_code, e.display_name, o.route, o.label_en, o.label_ar
+         FROM entitled e
+         LEFT JOIN overview o ON o.module_code = e.module_code
+        ORDER BY e.module_code`,
+      [tenantId],
+    ),
+    pool.query<{ key: string; locale: string; value: string }>(
+      `SELECT key, locale, value FROM dos.workspace_shell_i18n
+        WHERE key IN ('workspace.home.empty.title','workspace.home.empty.description','workspace.home.kpi.modules')
+          AND locale IN ('en','ar')`,
+    ),
+  ]);
+  const i18n = new Map<string, string>();
+  for (const r of i18nRes.rows) i18n.set(`${r.key}::${r.locale}`, r.value);
+  const t = (key: string): string =>
+    i18n.get(`${key}::${locale}`) ?? i18n.get(`${key}::en`) ?? '';
+
+  const out: Record<string, unknown> = {};
+  const moduleRows = modulesRes.rows.filter((r) => r.route && r.route.trim());
+
+  if (moduleRows.length === 0) {
+    out['notification'] = {
+      type: 'info',
+      title:    t('workspace.home.empty.title')       || 'Nothing here yet',
+      subtitle: t('workspace.home.empty.description') || 'Content will appear as data becomes available.',
+    };
+    return out;
+  }
+
+  const nbaActions = moduleRows.map((r) => {
+    const label = (locale === 'ar' ? r.label_ar : r.label_en)
+      ?? r.display_name
+      ?? r.module_code;
+    return {
+      label,
+      labelAr: r.label_ar ?? undefined,
+      route: r.route!,
+      actionKey: 'workspace.module.open',
+      severity: 'info' as const,
+    };
+  });
+
+  out['nbaActions'] = nbaActions;
+  out['kpis'] = [
+    {
+      label: t('workspace.home.kpi.modules') || 'Modules entitled',
+      value: moduleRows.length,
+      status: 'info',
+    },
+  ];
+  return out;
+}
+
 async function loadProps(
   pool: DbPool,
   route: string,
@@ -389,22 +516,15 @@ export function createTemplateBindingRouter(pool: DbPool): Router {
         `SELECT route, archetype, template_export, props, version,
                 title_en, title_ar, subtitle_en, subtitle_ar,
                 eyebrow_en, eyebrow_ar, ai_headline_en, ai_headline_ar,
-                status_tags, primary_action,
-                (
-                  SELECT r.permission_key
-                    FROM dos.dynamic_ui_routes r
-                   WHERE r.path_pattern = $1
-                     AND r.tenant_id IS NULL
-                   ORDER BY r.sort_order NULLS LAST, r.id
-                   LIMIT 1
-                ) AS permission_key
+                status_tags, primary_action
            FROM dos.ui_route_template_binding WHERE route=$1`,
         [route],
       );
       if (rows.length === 0) {
-        return res.json({
-          route, archetype: null, template_export: null, permission_key: null, props: {}, version: 0,
-        } satisfies Partial<TemplateBinding>);
+        // Dynamic-UI contract: no row → typed 404, never silently 200
+        // a null binding (which made the SPA chase /workspace-home, /,
+        // and other unbound routes via the catch-all forever).
+        return res.status(404).json({ error: 'TEMPLATE_BINDING_NOT_FOUND', route });
       }
       const row = rows[0] as TemplateBinding & {
         permission_key?: string | null;
@@ -414,6 +534,11 @@ export function createTemplateBindingRouter(pool: DbPool): Router {
         ai_headline_en?: string; ai_headline_ar?: string;
         status_tags?: unknown; primary_action?: unknown;
       };
+      // Workspace-home enrichment was deferred — until a real
+      // workspace-home contract is approved + published, the binding
+      // row is intentionally absent (deleted by migration 0550) and
+      // this resolver returns 404 above. Do not synthesize starter
+      // KPIs/nbaActions on the FE's behalf.
       const [dynamicProps, layers] = await Promise.all([
         loadProps(pool, route, row.archetype),
         loadOverrideLayers(pool, route, productCode, moduleCode, tenantId, userId),
@@ -467,7 +592,10 @@ export function createTemplateBindingRouter(pool: DbPool): Router {
         },
       });
     } catch (e) {
-      res.status(500).json({ error: 'template_binding_fetch_failed', detail: String(e) });
+      // Never leak SQL detail/stack to the browser. Server log only.
+      // eslint-disable-next-line no-console
+      console.error('[template-binding] fetch failed', { route, err: String(e) });
+      res.status(500).json({ error: 'TEMPLATE_BINDING_FETCH_FAILED' });
     }
   });
 
@@ -580,7 +708,9 @@ export function createTemplateBindingRouter(pool: DbPool): Router {
         },
       });
     } catch (e) {
-      res.status(500).json({ error: 'module_nav_fetch_failed', detail: String(e) });
+      // eslint-disable-next-line no-console
+      console.error('[module-nav] fetch failed', { moduleCode, err: String(e) });
+      res.status(500).json({ error: 'MODULE_NAV_FETCH_FAILED' });
     }
   });
 
@@ -653,7 +783,9 @@ export function createTemplateBindingRouter(pool: DbPool): Router {
         bindings: bundle,
       });
     } catch (e) {
-      res.status(500).json({ error: 'template_binding_export_failed', detail: String(e) });
+      // eslint-disable-next-line no-console
+      console.error('[template-binding/export] fetch failed', { scope, err: String(e) });
+      res.status(500).json({ error: 'TEMPLATE_BINDING_EXPORT_FAILED' });
     }
   });
 

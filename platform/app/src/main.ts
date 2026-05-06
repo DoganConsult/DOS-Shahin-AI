@@ -12,4 +12,6 @@ try {
   /* index.html defaults win */
 }
 
-bootstrapApplication(AppComponent, appConfig).catch((err) => console.error(err));
+bootstrapApplication(AppComponent, appConfig)
+  .then(() => console.info('[platform-app] APP_BOOTSTRAPPED'))
+  .catch((err) => console.error(err));

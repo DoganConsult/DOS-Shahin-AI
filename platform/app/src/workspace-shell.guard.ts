@@ -26,8 +26,9 @@ export const workspaceShellGuard: CanActivateFn = async () => {
   if (tenantId == null || String(tenantId).trim() === '') {
     return router.parseUrl('/login?reason=no-tenant');
   }
-  if (access.modules().length === 0) {
-    return router.parseUrl('/login?reason=no-modules');
-  }
+  // Empty module entitlement is NOT an auth failure. The shell mounts;
+  // the runtime envelope renders an empty entitled-modules state. Do
+  // not redirect to /login on entitlement emptiness — that conflates
+  // an auth/session failure with an empty-state condition.
   return true;
 };

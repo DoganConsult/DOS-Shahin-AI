@@ -13,6 +13,6 @@ export { DynamicUiNavSource } from './nav-sources/dynamic-ui-nav.source';
 export { PlatformDnaNavSource, DNA_NAV_CONTRACT_LOADERS, provideDnaNavContractLoaders, } from './nav-sources/platform-dna-nav.source';
 export { ModuleLibraryNavSource } from './nav-sources/module-library-nav.source';
 export { AccessStoreNavSource } from './nav-sources/access-store-nav.source';
-export { SurvivalFallbackNavSource, CORE_WORKSPACE_NAV } from './nav-sources/survival-fallback.source';
+export { SurvivalFallbackNavSource } from './nav-sources/survival-fallback.source';
 export { WorkspaceNavigationAdapter } from './nav-sources/workspace-navigation.adapter';
 //# sourceMappingURL=index.js.map

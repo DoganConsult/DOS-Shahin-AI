@@ -35,7 +35,7 @@ export class TenantLandingConfigService {
   readonly loaded = this._loaded.asReadonly();
 
   // Computed properties for convenience
-  readonly authenticatedRoute = computed(() => this._config()?.authenticatedRoute ?? '/workspace-home');
+  readonly authenticatedRoute = computed(() => this._config()?.authenticatedRoute);
   readonly unauthenticatedRoute = computed(() => this._config()?.unauthenticatedRoute ?? '/');
   readonly sessionExpiredRoute = computed(() => this._config()?.sessionExpiredRoute ?? '/');
   readonly postAuthRoute = computed(() => this._config()?.postAuthRoute ?? this.authenticatedRoute());

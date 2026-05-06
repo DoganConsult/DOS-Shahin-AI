@@ -49,30 +49,43 @@ const binding = readFileSync(BINDING_SERVICE, 'utf8');
 const host = readFileSync(SHELL_HOST, 'utf8');
 const contracts = readFileSync(CONTRACTS, 'utf8');
 
+// Post-cutover doctrine: the binding service consumes the canonical envelope
+// (WorkspaceShellResolverResponse) emitted by /api/ui-os/workspace-runtime,
+// keys surfaces by zone+position (anonymous), and exposes first-class
+// chrome / shortcuts / banners / policies state. Catalog (knownKeys +
+// componentRegistry) lives behind a separate /workspace-shell-catalog
+// endpoint and is no longer registered into the contract module.
 const requiredBindingPatterns = [
-  'registerWorkspaceShellCatalog',
+  'WorkspaceShellResolverResponse',
   'surfacesByZone',
-  'surfaceProp',
   'zonePropArray',
-  'resolveZone',
-  'isSurfaceAllowed(row.component_key)',
+  'isSurfaceAllowed',
+  'shell.chrome',
+  'shell.policies',
+  'shell.shortcuts',
+  'shell.banners',
 ];
 for (const pattern of requiredBindingPatterns) {
   if (!binding.includes(pattern)) failures.push(`binding service missing dynamic consumer pattern '${pattern}'`);
 }
 
 const requiredHostPatterns = [
-  'surfacesByZone',
-  'zoneHas',
-  'surfaceProp',
-  'isSurfaceAllowed',
+  'WorkspaceShellBindingService',
+  'ShellAction',
 ];
 for (const pattern of requiredHostPatterns) {
   if (!host.includes(pattern)) failures.push(`shell host missing dynamic consumer pattern '${pattern}'`);
 }
 
-if (!contracts.includes('registerWorkspaceShellCatalog')) failures.push('workspace shell contract missing dynamic catalog registration API');
-if (!contracts.includes('getWorkspaceShellKeys')) failures.push('workspace shell contract missing dynamic key snapshot API');
+const requiredContractExports = [
+  'WorkspaceShellResolverResponse',
+  'WorkspaceRuntimeBanner',
+  'WorkspaceRuntimeShortcut',
+  'WorkspaceShellBindingRow',
+];
+for (const pattern of requiredContractExports) {
+  if (!contracts.includes(pattern)) failures.push(`workspace shell contract missing canonical envelope export '${pattern}'`);
+}
 
 const consumerFiles = CONSUMER_ROOTS.flatMap((rel) => listSourceFiles(resolve(REPO, rel)));
 const illegalLiterals = [];

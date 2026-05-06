@@ -19,67 +19,10 @@ export type WorkspaceKnownRuntimeZone = (typeof WORKSPACE_SHELL_ZONES)[number];
 export type WorkspaceRuntimeZone = WorkspaceKnownRuntimeZone | (string & {});
 export type WorkspaceShellZone = WorkspaceRuntimeZone;
 
-export interface WorkspaceShellCatalogEntry {
-  readonly componentKey: string;
-  readonly carbonKey?: string | null;
-  readonly vendor?: string | null;
-  readonly schemaVersion?: string | null;
-  readonly metadata?: Readonly<Record<string, unknown>> | null;
-  readonly approvalStatus?: string | null;
-  readonly approvedAt?: string | null;
-  readonly zone?: WorkspaceRuntimeZone | null;
-}
-
-const workspaceShellKeySet = new Set<string>();
-const workspaceShellCarbonMap = new Map<string, string>();
-const workspaceShellCatalog = new Map<string, WorkspaceShellCatalogEntry>();
-
-export const WORKSPACE_SHELL_KEYS: readonly WorkspaceShellKey[] = [];
-export const WORKSPACE_SHELL_KEY_COUNT = 0;
-export const WORKSPACE_SHELL_CARBON_MAP: Readonly<Record<string, string>> = Object.freeze({});
-export const WORKSPACE_SHELL_BANDS: readonly WorkspaceShellBand[] = Object.freeze([]);
-
-export interface WorkspaceShellBand {
-  readonly band: string;
-  readonly label: string;
-  readonly keys: readonly WorkspaceShellKey[];
-  readonly count: number;
-}
-
-export function registerWorkspaceShellCatalog(entries: readonly WorkspaceShellCatalogEntry[]): void {
-  workspaceShellKeySet.clear();
-  workspaceShellCarbonMap.clear();
-  workspaceShellCatalog.clear();
-  for (const entry of entries) {
-    const key = entry.componentKey;
-    if (!key) continue;
-    workspaceShellKeySet.add(key);
-    workspaceShellCatalog.set(key, entry);
-    if (entry.carbonKey) workspaceShellCarbonMap.set(key, entry.carbonKey);
-  }
-}
-
-export function getWorkspaceShellCatalog(): readonly WorkspaceShellCatalogEntry[] {
-  return Array.from(workspaceShellCatalog.values());
-}
-
-export function getWorkspaceShellKeys(): readonly WorkspaceShellKey[] {
-  return Array.from(workspaceShellKeySet.values());
-}
-
-export function isWorkspaceShellKey(value: string): value is WorkspaceShellKey {
-  return workspaceShellKeySet.has(value);
-}
-
-export function assertWorkspaceShellKey(value: string): asserts value is WorkspaceShellKey {
-  if (!isWorkspaceShellKey(value)) {
-    throw new Error(`Invalid workspace-shell key: '${value}'. The key was not returned by the workspace-shell resolver catalog.`);
-  }
-}
-
-export function carbonKeyFor(key: string): string | undefined {
-  return workspaceShellCarbonMap.get(key);
-}
+// Catalog cache machinery removed — use the HTTP `/api/ui-os/workspace-shell-catalog`
+// endpoint when the catalog is needed (see services/ui-os-service/src/routes/
+// workspace-shell.routes.ts). The runtime envelope (/workspace-runtime) does
+// not carry catalog rows — it carries only the per-tenant binding.
 
 export interface WorkspaceShellActionItem {
   id: string;
@@ -98,9 +41,12 @@ export interface WorkspaceShellBannerTemplate {
   gate?: 'always' | 'trial-expired' | 'offline' | 'session-expiry' | 'impersonation' | 'error' | string;
   kind?: string;
   titleKey?: string;
+  titleFallback?: string;
   messageKey?: string;
+  messageFallback?: string;
   dismissible?: boolean;
   actionLabelKey?: string;
+  actionLabelFallback?: string;
   action?: ShellAction;
 }
 
@@ -176,25 +122,55 @@ export interface WorkspaceRuntimeNavigation {
   items: readonly WorkspaceRuntimeNavItemRow[];
 }
 
-/** Surface binding row — camelCase only, no DB DTOs. */
+/** Surface binding row — camelCase only, no DB DTOs. componentKey and permsRequired are internal to resolver. */
 export interface WorkspaceShellBindingRow {
-  readonly componentKey: string;
-  readonly carbonKey?: string;
   readonly enabled: boolean;
   readonly position: number;
-  readonly permsRequired: readonly string[];
   readonly props: Readonly<Record<string, unknown>>;
   readonly version: number;
   readonly zone?: WorkspaceRuntimeZone;
 }
 
+/** Shortcut emitted by UI-OS resolver — typed action only. */
+export interface WorkspaceRuntimeShortcut {
+  readonly id: string;
+  readonly combo: string;
+  readonly action: ShellAction;
+  readonly when?: string;
+}
+
+/** Banner emitted by UI-OS resolver — nested i18n labels only. */
+export interface WorkspaceRuntimeBanner {
+  readonly id: string;
+  readonly gate: string;
+  readonly kind: 'info' | 'warning' | 'error' | 'success' | 'danger' | string;
+  readonly title: WorkspaceI18nLabel;
+  readonly message: WorkspaceI18nLabel;
+  readonly actionLabel?: WorkspaceI18nLabel;
+  readonly action?: ShellAction;
+  readonly dismissible: boolean;
+  readonly version: number;
+}
+
+/** Canonical UI-OS workspace-runtime envelope. Single normalization boundary. */
 export interface WorkspaceShellResolverResponse {
   readonly tenantId: string;
+  readonly userId: string | null;
+  readonly productCode: string;
   readonly version: number;
-  readonly surfaces: readonly WorkspaceShellBindingRow[];
-  readonly zones: Readonly<Record<string, readonly WorkspaceShellBindingRow[]>>;
-  readonly knownKeys: readonly string[];
-  readonly componentRegistry?: readonly WorkspaceShellCatalogEntry[];
+  readonly shell: {
+    readonly version: number;
+    readonly surfaces: readonly WorkspaceShellBindingRow[];
+    readonly zones: Readonly<Record<string, readonly WorkspaceShellBindingRow[]>>;
+    readonly nav: {
+      readonly groups: readonly WorkspaceRuntimeNavGroupRow[];
+      readonly items: readonly WorkspaceRuntimeNavItemRow[];
+    };
+    readonly chrome: Readonly<Record<string, unknown>>;
+    readonly shortcuts: readonly WorkspaceRuntimeShortcut[];
+    readonly banners: readonly WorkspaceRuntimeBanner[];
+    readonly policies: Readonly<Record<string, unknown>>;
+  };
 }
 
 export interface WorkspaceHeaderContext {

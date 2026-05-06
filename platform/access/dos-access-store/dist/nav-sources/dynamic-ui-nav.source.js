@@ -32,14 +32,11 @@ function isWorkspaceNavItem(item) {
     const group = typeof item.group === 'string' ? item.group.trim() : '';
     const moduleCode = typeof item.moduleCode === 'string' ? item.moduleCode.trim() : '';
     const permission = item.requiredPermission ?? item.permission ?? undefined;
-    const labelKey = typeof item.labelKey === 'string' ? item.labelKey : '';
     if (!route || NON_WORKSPACE_PATHS.has(route))
         return false;
     if (route.startsWith('/admin/'))
         return false;
     if (group === 'marketing' || moduleCode === 'marketing')
-        return false;
-    if (labelKey.startsWith('auth.') || labelKey.startsWith('marketing.'))
         return false;
     if (!permission)
         return false;
@@ -62,11 +59,8 @@ let DynamicUiNavSource = class DynamicUiNavSource {
         if (!result || !Array.isArray(result.items))
             return null;
         return result.items.map((it) => {
-            const rawLabel = typeof it.label === 'string' ? it.label.trim() : '';
-            const labelLooksLikeKey = rawLabel.includes('.') && !rawLabel.includes(' ');
             return {
                 ...it,
-                labelKey: it.labelKey ?? (labelLooksLikeKey ? rawLabel : undefined),
                 requiredPermission: it.requiredPermission ?? it.permission ?? undefined,
                 group: it.group ?? this.id,
             };

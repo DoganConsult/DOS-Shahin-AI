@@ -19,9 +19,7 @@ export const bootstrapGuard: CanActivateFn = () => {
       // Onboarding-flow redirect disabled until services/onboarding-service
       // is mounted on the gateway. The /onboarding shell would 404 on every
       // API call (config/stages, questions, sessions, …) and render the
-      // hard error overlay. Cookie-authenticated users go to /workspace-home
-      // regardless of pending_onboarding/registered/awaiting_provisioning
-      // tenant status.
+      // hard error overlay. Landing page comes from UI-OS runtime.
       void bootstrap.tenantStatus;
 
       // First-login checklist also routes through onboarding-only APIs;
@@ -32,13 +30,16 @@ export const bootstrapGuard: CanActivateFn = () => {
       const cockpitKey = tenantId ? `grc_cockpit_shown_${tenantId}` : 'grc_cockpit_shown';
       if (!_storage.get(cockpitKey)) {
         _storage.set(cockpitKey, 'true');
-        return router.createUrlTree(['/workspace-home']);
       }
 
       const userRole = _storage.get('grc_role') ?? 'viewer';
       const roleHome = entitlements.ui.homeRouteByRole?.[userRole]
-        ?? entitlements.ui.defaultHomeRoute
-        ?? '/workspace-home';
+        ?? entitlements.ui.defaultHomeRoute;
+
+      if (!roleHome) {
+        // No landing page configured - router will handle empty navigation
+        return true;
+      }
 
       return router.createUrlTree([roleHome]);
     }),

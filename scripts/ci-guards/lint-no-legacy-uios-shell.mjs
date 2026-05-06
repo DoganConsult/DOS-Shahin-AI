@@ -33,6 +33,10 @@ const FORBIDDEN = [
   { pattern: /\bparent_code\b/g, label: 'parent_code DB field leaked to frontend' },
   { pattern: /\bmodule_code\b/g, label: 'module_code DB field leaked to frontend' },
   { pattern: /\bsort_order\b/g, label: 'sort_order DB field leaked to frontend' },
+  { pattern: /\bcomponent_key\b/g, label: 'component_key DB field leaked to frontend' },
+  { pattern: /\bperms_required\b/g, label: 'perms_required DB field leaked to frontend' },
+  { pattern: /\bdetail_route\b/g, label: 'detail_route DB field leaked to frontend' },
+  { pattern: /\bevidence_uri\b/g, label: 'evidence_uri DB field leaked to frontend' },
 
   // Old runtime aliases
   { pattern: /\bchromeStrings\b/g, label: 'chromeStrings old flat key' },
@@ -41,11 +45,27 @@ const FORBIDDEN = [
   { pattern: /\blabelKey\b/g, label: 'labelKey legacy field name (use i18nKey)' },
   { pattern: /\blabelEn\b/g, label: 'labelEn legacy field (use i18n contract)' },
   { pattern: /\blabelAr\b/g, label: 'labelAr legacy field (use i18n contract)' },
+  { pattern: /\bdetailRoute\b/g, label: 'detailRoute legacy field (use ShellAction)' },
+  { pattern: /\bevidenceUri\b/g, label: 'evidenceUri legacy field (use ShellAction)' },
+
+  // Envelope drift — UI-OS runtime envelope is the single normalization boundary
+  { pattern: /\bWorkspaceShellCatalogEntry\b/g, label: 'WorkspaceShellCatalogEntry — catalog moved to /workspace-shell-catalog' },
+  { pattern: /registerWorkspaceShellCatalog\s*\(/g, label: 'registerWorkspaceShellCatalog runtime register (catalog endpoint owns this)' },
+  { pattern: /resp\??\.\s*navigation\b/g, label: 'resp.navigation legacy alias (use resp.shell.nav)' },
+  { pattern: /resp\??\.\s*surfaces\b/g, label: 'resp.surfaces legacy alias (use resp.shell.surfaces)' },
+  { pattern: /resp\??\.\s*componentRegistry\b/g, label: 'resp.componentRegistry legacy alias' },
+  { pattern: /\bglobalPropArray\s*\(/g, label: 'globalPropArray dot-path scan (read shell.{chrome,banners,policies,shortcuts})' },
+  { pattern: /\bnestedRecordProp\s*\(/g, label: 'nestedRecordProp dot-path scan (use first-class envelope reads)' },
+  { pattern: /\bnestedNumberProp\s*\(/g, label: 'nestedNumberProp dot-path scan (use first-class envelope reads)' },
+  { pattern: /\bwalkNested\s*\(/g, label: 'walkNested dot-path scan (use first-class envelope reads)' },
+  { pattern: /shell\.chrome\.labels/g, label: 'shell.chrome.labels dot-path (chrome is flat KV)' },
+  { pattern: /shell\.surfaces\.[A-Za-z]+/g, label: 'shell.surfaces.X dot-path scan (use first-class envelope reads)' },
 
   // Static nav builders/fallbacks
   { pattern: /\bbuildPlatformNav\b/g, label: 'buildPlatformNav static nav builder' },
   { pattern: /\bbuildFoundationNavChildren\b/g, label: 'buildFoundationNavChildren frontend nav mapper/fallback' },
   { pattern: /\bbuildFoundationGroup\b/g, label: 'buildFoundationGroup static nav builder' },
+  { pattern: /\blabelFromKey\b/g, label: 'labelFromKey synthesised label (use resolver i18n)' },
   { pattern: /fallback\s+to\s+static/gi, label: 'fallback to static comment/code' },
   { pattern: /static\s+SPA\s+list/gi, label: 'static SPA list comment/code' },
   { pattern: /static\s+nav/gi, label: 'static nav comment/code' },
@@ -56,6 +76,7 @@ const FORBIDDEN = [
   { pattern: /CARBON_BREAKPOINT_LARGE_PX/g, label: 'CARBON_BREAKPOINT_LARGE_PX' },
   { pattern: /document\.querySelector/g, label: 'document.querySelector shell DOM coupling' },
   { pattern: /\/settings\/subscription/g, label: '/settings/subscription hardcoded product route' },
+  { pattern: /\/workspace-home/g, label: '/workspace-home hardcoded fallback route' },
 
   // CSS fallback values forbidden in shell inline styles
   { pattern: /var\([^)]*,[^)]*\)/g, label: 'CSS var fallback value var(..., ...)' },
@@ -106,13 +127,18 @@ for (const dir of SCAN_DIRS) {
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
 
+        // Skip pure comment lines — JSDoc/inline doctrine citations are
+        // documentation, not code. We only care about code-level drift.
+        const trimmed = line.trim();
+        if (trimmed.startsWith('//') || trimmed.startsWith('*') || trimmed.startsWith('/*')) continue;
+
         pattern.lastIndex = 0;
         if (pattern.test(line)) {
           hits.push({
             file: rel,
             line: i + 1,
             label,
-            text: line.trim().slice(0, 160),
+            text: trimmed.slice(0, 160),
           });
         }
       }

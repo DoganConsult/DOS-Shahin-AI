@@ -43,6 +43,9 @@ const GUARDS = [
   'lint-no-static-nav-fallback.mjs',
   // Hard-kill legacy mode — no DB DTOs, no legacy adapters in frontend shell.
   'lint-no-legacy-uios-shell.mjs',
+  // 2026-05-06 — block hardcoded GRC/demo placeholder strings from leaking
+  // into live workspace runtime (binding.props, override.patch, source).
+  'lint-no-demo-placeholder-runtime.mjs',
 ];
 
 let pass = 0, fail = 0;

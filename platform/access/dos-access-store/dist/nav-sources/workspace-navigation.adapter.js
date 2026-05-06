@@ -14,7 +14,8 @@
 //      `enabled` and `disabledReason`. Lower layers fill missing metadata
 //      (icon/route/permission/group/order/labels).
 //   3. L6 (survival fallback) runs ONLY when every L1..L5 returned null
-//      AND `!access.loaded()`.
+//      AND `!access.loaded()`. It contributes no stub rows — merge yields empty
+//      nav until other layers contribute once bootstrap/session resolves.
 //   4. Per-item filter pipeline (tier-aware):
 //      - missing required permission → disabled, 'missing-permission'
 //      - tier='dna': never 'not-entitled'; only 'backend-offline' (probe
@@ -40,11 +41,8 @@ import { ModuleLibraryNavSource } from './module-library-nav.source';
 import { AccessStoreNavSource } from './access-store-nav.source';
 import { SurvivalFallbackNavSource } from './survival-fallback.source';
 import { WORKSPACE_NAV_PRODUCT_SOURCE } from './nav-source';
-const DEFAULT_ACCOUNT_MENU = [
-    { id: 'profile', labelKey: 'shell.account.menu.profile', route: '/profile' },
-    { id: 'settings', labelKey: 'shell.account.menu.settings', route: '/settings' },
-    { id: 'logout', labelKey: 'shell.account.menu.logout', destructive: true },
-];
+// Account menu is 100% DB-driven — seeded in dos.workspace_shell_binding
+// props.accountMenu for workspace.frame.header-menu. No hardcoded fallback.
 let WorkspaceNavigationAdapter = class WorkspaceNavigationAdapter {
     access = inject(AccessStore);
     readiness = inject(PlatformReadinessService);
@@ -59,7 +57,7 @@ let WorkspaceNavigationAdapter = class WorkspaceNavigationAdapter {
     l6 = inject(SurvivalFallbackNavSource);
     _config = signal({ groups: [] });
     navConfig = this._config.asReadonly();
-    _account = signal(DEFAULT_ACCOUNT_MENU);
+    _account = signal([]);
     accountMenuConfig = this._account.asReadonly();
     /** Resolve and publish nav config. Idempotent; safe to call from multiple consumers. */
     async refresh() {
@@ -97,7 +95,6 @@ let WorkspaceNavigationAdapter = class WorkspaceNavigationAdapter {
                             ...existing,
                             icon: existing.icon ?? it.icon,
                             route: existing.route ?? it.route,
-                            labelKey: existing.labelKey ?? it.labelKey,
                             requiredPermission: existing.requiredPermission ?? it.requiredPermission,
                             moduleCode: existing.moduleCode ?? it.moduleCode,
                             group: existing.group ?? it.group,

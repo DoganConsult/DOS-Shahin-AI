@@ -296,7 +296,7 @@ export type DosLayoutKind = 'dashboard' | 'full-page' | 'split-view' | 'object-p
 export type DosKpiScope   = 'module-overview' | 'page-local' | 'none';
 
 export interface ResolvedRouteContract {
-  route:            string;            // e.g. '/workspace-home'
+  route:            string;            // resolver-emitted route path
   moduleCode:       string;            // owning module (e.g. 'foundation')
   pageType:         DosPageType;
   layout:           DosLayoutKind;

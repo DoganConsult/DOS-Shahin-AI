@@ -1,21 +1,30 @@
 /**
- * Phase WS-7 — Workspace-shell binding consumer (fully dynamic, 60-key v3.0).
+ * Phase WS-7 — Workspace-shell binding consumer (canonical envelope, v3.1).
  *
- * Consumes `GET /api/ui-os/workspace-shell/:tenantId` and exposes surfaces
- * keyed by whatever component_key strings the resolver returns.
+ * Consumes `GET /api/ui-os/workspace-runtime?tenantId=…` and exposes the
+ * normalized envelope to the shell host. The surfaces map is anonymous —
+ * keyed by `${zone}#${position}` because the resolver no longer emits
+ * `component_key` / `perms_required` (server enforces RBAC; FE only checks
+ * the `enabled` flag and reads zone/position).
  *
- * RULE: This file has ZERO hardcoded component_key literals. Every surface
- * name flows from the resolver response. The FE never decides which keys
- * exist — the DB does.
+ * First-class envelope state:
+ *   shell.surfaces   → _surfaces (Map<string, WorkspaceShellSurface>)
+ *   shell.nav        → _navGroupsRaw / _navItemsRaw
+ *   shell.chrome     → _chrome      (flat Record)
+ *   shell.shortcuts  → _shortcutsRaw
+ *   shell.banners    → _bannersRaw
+ *   shell.policies   → _policies    (flat Record)
  *
- * Fail-soft: any HTTP error resolves to an empty surface map so the shell
+ * Catalog (knownKeys + componentRegistry) lives behind a separate endpoint:
+ *   GET /api/ui-os/workspace-shell-catalog
+ *
+ * Fail-soft: any HTTP error resolves to an empty envelope so the shell
  * continues to render empty/placeholder states instead of throwing.
  */
 import { Injectable, computed, effect, inject, signal } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { catchError, of } from 'rxjs';
+import { catchError, firstValueFrom, of } from 'rxjs';
 import {
-  registerWorkspaceShellCatalog,
   type ActionQueueItem,
   type AgentActivity,
   type CommandSearchResult,
@@ -24,55 +33,56 @@ import {
   type QuickCreateAction,
   type StatusBarSignal,
   type WorkspaceI18nLabel,
-  type WorkspaceRuntimeNavigation,
+  type WorkspaceRuntimeBanner,
   type WorkspaceRuntimeNavGroupRow,
   type WorkspaceRuntimeNavItemRow,
+  type WorkspaceRuntimeShortcut,
   type WorkspaceShellActionItem,
   type WorkspaceShellBannerTemplate,
   type WorkspaceShellBindingRow,
-  type WorkspaceShellCatalogEntry,
+  type WorkspaceShellResolverResponse,
   type WorkspaceShellShortcut,
   type WorkspaceShellZone,
+  WORKSPACE_SHELL_ZONES,
 } from '@dos/ui-system';
 import type {
   DosNavGroup,
   DosNavItem,
   DosShellNavConfig,
   ShellAccountMenuEntry,
-  ShellAction,
   ShellBanner,
 } from '@dos/ui-contracts';
 import { parseShellAction } from '@dos/ui-contracts';
 import { AccessStore } from '@dos/access-store';
 import { ShellConnectivityService } from './shell-connectivity.service';
 import { ShellErrorStateService } from './shell-error-state.service';
-import { ShellPreferencesService } from './shell-preferences.service';
 
-export type WorkspaceShellSurface = Omit<WorkspaceShellBindingRow, 'zone'> & {
-  zone?: WorkspaceShellZone;
-};
+/** Anonymous surface row — no component_key, no perms_required. */
+export type WorkspaceShellSurface = WorkspaceShellBindingRow;
 
-interface WorkspaceShellResponse {
-  tenantId: string;
-  version: number;
-  surfaces?: WorkspaceShellSurface[];
-  zones?: Partial<Record<WorkspaceShellZone, WorkspaceShellSurface[]>>;
-  knownKeys?: readonly string[];
-  componentRegistry?: readonly WorkspaceShellCatalogEntry[];
-  navigation?: WorkspaceRuntimeNavigation;
-  shell?: {
-    version: number;
-    surfaces: WorkspaceShellSurface[];
-    zones?: Partial<Record<WorkspaceShellZone, WorkspaceShellSurface[]>>;
-    knownKeys?: readonly string[];
-    componentRegistry?: readonly WorkspaceShellCatalogEntry[];
-  };
-}
-
-/** Fully dynamic surface map — key type is string, not a union literal. */
+/**
+ * Surface map key — prefer the resolver-emitted stable id (`surfaceId` /
+ * `slotKey`), otherwise fall back to a deterministic composite of
+ * `zone#position#index`. The legacy `${zone}#${position}` form is dropped
+ * because it collapsed multiple surfaces sharing a slot.
+ */
 type SurfaceMap = ReadonlyMap<string, WorkspaceShellSurface>;
 
 const EMPTY_MAP: SurfaceMap = new Map();
+const EMPTY_RECORD: Readonly<Record<string, unknown>> = Object.freeze({});
+
+const VALID_ZONES: ReadonlySet<string> = new Set<string>(WORKSPACE_SHELL_ZONES as readonly string[]);
+
+function readStableSurfaceId(row: unknown): string | null {
+  if (!row || typeof row !== 'object') return null;
+  const r = row as Record<string, unknown>;
+  const id = r['surfaceId'] ?? r['slotKey'];
+  return typeof id === 'string' && id.trim() ? id.trim() : null;
+}
+
+function compositeSurfaceKey(zone: string, position: number, index: number): string {
+  return `${zone}#${position}#${index}`;
+}
 
 @Injectable({ providedIn: 'root' })
 export class WorkspaceShellBindingService {
@@ -80,18 +90,25 @@ export class WorkspaceShellBindingService {
   private readonly access = inject(AccessStore);
   private readonly connectivity = inject(ShellConnectivityService);
   private readonly shellError = inject(ShellErrorStateService);
-  private readonly prefs = inject(ShellPreferencesService);
 
   private readonly _surfaces = signal<SurfaceMap>(EMPTY_MAP);
   private readonly _navGroupsRaw = signal<readonly WorkspaceRuntimeNavGroupRow[]>([]);
   private readonly _navItemsRaw = signal<readonly WorkspaceRuntimeNavItemRow[]>([]);
+  private readonly _chrome = signal<Readonly<Record<string, unknown>>>(EMPTY_RECORD);
+  private readonly _shortcutsRaw = signal<readonly WorkspaceRuntimeShortcut[]>([]);
+  private readonly _bannersRaw = signal<readonly WorkspaceRuntimeBanner[]>([]);
+  private readonly _policies = signal<Readonly<Record<string, unknown>>>(EMPTY_RECORD);
   private readonly _version  = signal(0);
   private readonly _loaded   = signal(false);
   private readonly _tenantId = signal<string | null>(null);
+  /** Monotonic refresh token — used to discard stale resolver responses. */
+  private _refreshSeq = 0;
 
   readonly surfaces = this._surfaces.asReadonly();
   readonly navGroupsRaw = this._navGroupsRaw.asReadonly();
   readonly navItemsRaw = this._navItemsRaw.asReadonly();
+  readonly chrome = this._chrome.asReadonly();
+  readonly policies = this._policies.asReadonly();
   readonly version  = this._version.asReadonly();
   readonly loaded   = this._loaded.asReadonly();
 
@@ -116,7 +133,7 @@ export class WorkspaceShellBindingService {
     for (const item of this._navItemsRaw()) {
       if (item.enabled === false) continue;
       if (!item.action) continue;
-      if (item.permission && !this.access.hasPermission(item.permission)) continue;
+      // Server is the RBAC authority — do NOT re-filter by permission here.
 
       const groupKey = `${item.moduleCode}:${item.groupId ?? 'ungrouped'}`;
       const targetGroup = groupsByKey.get(groupKey) ?? {
@@ -147,45 +164,21 @@ export class WorkspaceShellBindingService {
       targetGroup.items.push(navItem);
     }
 
+    // Preserve resolver-emitted sortOrder; the resolver already returns
+    // groups + items pre-sorted by `sort_order` per `loadNav` SQL. Items
+    // were appended in iteration order, so do not re-sort by label.
     const groups = Array.from(groupsByKey.values())
-      .map((group) => ({
-        ...group,
-        items: group.items.sort((a, b) => a.label.localeCompare(b.label)),
-      }))
       .filter((group) => group.items.length > 0)
-      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0) || a.label.localeCompare(b.label));
+      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 
     return { groups };
   });
 
-  // ── Fully dynamic per-surface getters ─────────────────────────────────────
-  // Every getter resolves by reading props from whatever key the resolver
-  // placed into the surface map. Callers pass a key string at call-time;
-  // no hardcoded literals live in this file.
+  // ── Anonymous surface readers ────────────────────────────────────────────
+  // Surfaces are keyed by zone+position. Callers fetch by zone (preferred)
+  // or by composite key. No component_key literals.
 
-  /** Read a typed array prop from a surface's props bag. */
-  surfaceProp<T>(key: string, propName: string): T | null {
-    const row = this._surfaces().get(key);
-    if (!row) return null;
-    const props = row.props as Record<string, unknown> | undefined;
-    const v = props?.[propName];
-    return Array.isArray(v) ? (v as unknown as T) : null;
-  }
-
-  /**
-   * Resolve a string-valued prop. Accepts either a bare string or a
-   * contracted runtime string value.
-   */
-  stringProp(key: string, propName: string): string | null {
-    const row = this._surfaces().get(key);
-    if (!row) return null;
-    const props = row.props as Record<string, unknown> | undefined;
-    const v = props?.[propName];
-    if (typeof v === 'string' && v.trim()) return v;
-    return null;
-  }
-
-  /** Read the full props bag of a surface, typed as T. Returns null when absent. */
+  /** Read the full props bag of a surface (by zone#position key). */
   tileProps<T>(key: string): T | null {
     const row = this._surfaces().get(key);
     if (!row || row.enabled === false) return null;
@@ -194,92 +187,77 @@ export class WorkspaceShellBindingService {
     return props as unknown as T;
   }
 
-  // ── Dynamic convenience signals (computed from zone-based surface lookups) ─
-  // These read props dynamically via zone membership. The shell-host consumes
-  // these without knowing which specific component_key provides the data.
+  // ── Zone-scoped convenience signals ─────────────────────────────────────
+  // Read flat prop names from each surface inside the zone. Server-side
+  // RBAC has already filtered the enabled set.
 
   readonly statusBarSignals = computed<StatusBarSignal[]>(
-    () => this.zonePropArray('bottom-status', 'shell.surfaces.statusBar.signals').map((row) => this.normalizeStatusBarSignal(row)).filter(Boolean) as StatusBarSignal[],
+    () => this.zonePropArray('bottom-status', 'signals').map((row) => this.normalizeStatusBarSignal(row)).filter(Boolean) as StatusBarSignal[],
   );
   readonly actionQueueItems = computed<ActionQueueItem[]>(
-    () => this.zonePropArray('bottom-status', 'shell.surfaces.actionQueue.items').map((row) => this.normalizeActionQueueItem(row)).filter(Boolean) as ActionQueueItem[],
+    () => this.zonePropArray('bottom-status', 'items').map((row) => this.normalizeActionQueueItem(row)).filter(Boolean) as ActionQueueItem[],
   );
   readonly agentActivities = computed<AgentActivity[]>(
-    () => this.zonePropArray('bottom-status', 'shell.surfaces.agentStrip.activities').map((row) => this.normalizeAgentActivity(row)).filter(Boolean) as AgentActivity[],
+    () => this.zonePropArray('bottom-status', 'activities').map((row) => this.normalizeAgentActivity(row)).filter(Boolean) as AgentActivity[],
   );
   readonly contextViews = computed<ContextPanelView[]>(
-    () => this.zonePropArray('right-rail', 'shell.surfaces.contextPanel.views').map((row) => this.normalizeContextView(row)).filter(Boolean) as ContextPanelView[],
+    () => this.zonePropArray('right-rail', 'views').map((row) => this.normalizeContextView(row)).filter(Boolean) as ContextPanelView[],
   );
   readonly inboxMessages = computed<InboxMessage[]>(
-    () => this.zonePropArray('right-rail', 'shell.surfaces.inbox.messages').map((row) => this.normalizeInboxMessage(row)).filter(Boolean) as InboxMessage[],
+    () => this.zonePropArray('right-rail', 'messages').map((row) => this.normalizeInboxMessage(row)).filter(Boolean) as InboxMessage[],
   );
   readonly quickCreateActions = computed<QuickCreateAction[]>(
-    () => this.zonePropArray('fab', 'shell.surfaces.quickCreate.actions').map((row) => this.normalizeQuickCreateAction(row)).filter(Boolean) as QuickCreateAction[],
+    () => this.zonePropArray('fab', 'actions').map((row) => this.normalizeQuickCreateAction(row)).filter(Boolean) as QuickCreateAction[],
   );
   readonly commandResults = computed<CommandSearchResult[]>(
-    () => this.zonePropArray('header', 'shell.surfaces.commandSearch.results').map((row) => this.normalizeCommandResult(row)).filter(Boolean) as CommandSearchResult[],
+    () => this.zonePropArray('header', 'results').map((row) => this.normalizeCommandResult(row)).filter(Boolean) as CommandSearchResult[],
   );
 
-  // ── Header chrome props (dynamic) ───────────────────────────────────────
-  // Reads from the first header-zone surface that has brand/homeRoute etc.
+  // ── Header props — chrome KV is canonical; zone surface is fallback ─────
   readonly headerBrandLabel = computed<string | null>(
-    () => this.zoneStringProp('header', 'brand'),
+    () => this.chromeStringFirst('brand') ?? this.zoneStringProp('header', 'brand'),
   );
   readonly headerHomeRoute = computed<string | null>(
-    () => this.zoneStringProp('header', 'homeRoute'),
+    () => this.chromeStringFirst('homeRoute') ?? this.zoneStringProp('header', 'homeRoute'),
   );
   readonly headerWorkspaceTitle = computed<string | null>(
-    () => this.zoneStringProp('header', 'workspaceTitle'),
+    () => this.chromeStringFirst('workspaceTitle') ?? this.zoneStringProp('header', 'workspaceTitle'),
   );
   readonly headerLogoHref = computed<string | null>(
-    () => this.zoneStringProp('header', 'logoHref'),
+    () => this.chromeStringFirst('logoHref') ?? this.zoneStringProp('header', 'logoHref'),
   );
 
-  /** Dynamic account menu entries from shell.chrome.accountMenu in any surface. */
-  readonly accountMenuEntries = computed<ShellAccountMenuEntry[] | null>(
-    () => {
-      const raw = this.globalPropArray('shell.chrome.accountMenu');
-      if (raw.length === 0) return null;
-      const out: ShellAccountMenuEntry[] = [];
-      for (const item of raw) {
-        if (!item || typeof item !== 'object') continue;
-        const e = item as Record<string, unknown>;
-        const id = typeof e['id'] === 'string' ? (e['id'] as string) : null;
-        const i18nKey = typeof e['i18nKey'] === 'string' ? (e['i18nKey'] as string) : null;
-        if (!id || !i18nKey) continue;
-        const entry: ShellAccountMenuEntry = { id, i18nKey };
-        const action = parseShellAction(e['action']);
-        if (action) entry.action = action;
-        if (e['destructive'] === true) entry.destructive = true;
-        if (typeof e['requiresAdmin'] === 'boolean') entry.requiresAdmin = e['requiresAdmin'] as boolean;
-        out.push(entry);
-      }
-      return out.length > 0 ? out : null;
-    },
-  );
+  /** Account menu entries from chrome.accountMenu (first-class). */
+  readonly accountMenuEntries = computed<ShellAccountMenuEntry[] | null>(() => {
+    const raw = this._chrome()['accountMenu'];
+    if (!Array.isArray(raw) || raw.length === 0) return null;
+    const out: ShellAccountMenuEntry[] = [];
+    for (const item of raw) {
+      if (!item || typeof item !== 'object') continue;
+      const e = item as Record<string, unknown>;
+      const id = typeof e['id'] === 'string' ? (e['id'] as string) : null;
+      const i18nKey = typeof e['i18nKey'] === 'string' ? (e['i18nKey'] as string) : null;
+      if (!id || !i18nKey) continue;
+      const entry: ShellAccountMenuEntry = { id, i18nKey };
+      const action = parseShellAction(e['action']);
+      if (action) entry.action = action;
+      if (e['destructive'] === true) entry.destructive = true;
+      if (typeof e['requiresAdmin'] === 'boolean') entry.requiresAdmin = e['requiresAdmin'] as boolean;
+      out.push(entry);
+    }
+    return out.length > 0 ? out : null;
+  });
 
-  // ── Render gates — DB enabled flag + perms_required ─────────────────────
-  /**
-   * True iff the surface is present in the binding, `enabled=true`, AND the
-   * current session holds every permission listed in `perms_required`.
-   * Missing rows evaluate to false (fail-closed) — but pre-load grace
-   * returns true until the first binding load completes.
-   */
+  // ── Render gates — server-side RBAC trusted; FE checks `enabled` only ───
+  // Default-deny once a tenant has been selected and the envelope has loaded.
+  // While bootstrapping (no tenant yet) we allow placeholder rendering.
   isSurfaceAllowed(key: string): boolean {
     const row = this._surfaces().get(key);
-    if (!row) {
-      // Pre-load grace: treat unknown as allowed until loaded flips true.
-      return !this._loaded();
-    }
-    if (row.enabled === false) return false;
-    const perms = Array.isArray(row.permsRequired) ? row.permsRequired : [];
-    for (const p of perms) {
-      if (!this.access.hasPermission(p)) return false;
-    }
+    if (row) return row.enabled !== false;
+    if (this._tenantId() && this._loaded()) return false;
     return true;
   }
 
-  /** DB-driven render position (for ordering multiple strips). */
   surfacePosition(key: string): number {
     const row = this._surfaces().get(key);
     return row && typeof row.position === 'number' ? row.position : 0;
@@ -287,7 +265,7 @@ export class WorkspaceShellBindingService {
 
   surfacesByZone(zone: WorkspaceShellZone): WorkspaceShellSurface[] {
     return Array.from(this._surfaces().values())
-      .filter((row) => row.zone === zone && this.isSurfaceAllowed(row.componentKey))
+      .filter((row) => row.zone === zone && row.enabled !== false)
       .sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
   }
 
@@ -295,116 +273,166 @@ export class WorkspaceShellBindingService {
     return this.surfacesByZone(zone).length > 0 || !this._loaded();
   }
 
-  // Zone is fully resolver-driven — no browser-side fallback resolution.
+  /** Reset every envelope signal back to its empty form. */
+  private clearEnvelope(loaded: boolean): void {
+    this._surfaces.set(EMPTY_MAP);
+    this._navGroupsRaw.set([]);
+    this._navItemsRaw.set([]);
+    this._chrome.set(EMPTY_RECORD);
+    this._shortcutsRaw.set([]);
+    this._bannersRaw.set([]);
+    this._policies.set(EMPTY_RECORD);
+    this._version.set(0);
+    this._loaded.set(loaded);
+  }
 
-  // Auto-refresh when the active tenant flips.
+  // Auto-refresh when the active tenant flips. ALWAYS clear stale envelope
+  // state synchronously before the new tenant's resolver call, so the FE
+  // never renders a previous tenant's chrome/nav/banners.
   private readonly tenantEffect = effect(() => {
     const tid = this.access.tenantId();
     if (!tid) {
-      this._surfaces.set(EMPTY_MAP);
-      this._navGroupsRaw.set([]);
-      this._navItemsRaw.set([]);
-      this._version.set(0);
-      this._loaded.set(false);
+      this.clearEnvelope(false);
       this._tenantId.set(null);
+      this._refreshSeq += 1; // invalidate any in-flight refresh
       return;
     }
     if (tid === this._tenantId()) return;
+    // Tenant switch: drop prior envelope IMMEDIATELY.
+    this.clearEnvelope(false);
     this._tenantId.set(tid);
+    this._refreshSeq += 1;
     queueMicrotask(() => { void this.refresh(); });
   }, { allowSignalWrites: true });
 
-  /** Fetch the binding once for the active tenant. Idempotent. */
+  /**
+   * Fetch the canonical envelope for the active tenant. Idempotent.
+   * The backend resolves tenantId from the session principal — no
+   * `?tenantId=` query string is sent. Stale responses (those whose
+   * tenant is no longer active by the time the response lands) are
+   * discarded via `_refreshSeq` + tenant equality check.
+   */
   async refresh(): Promise<void> {
-    const tenantId = this._tenantId() ?? this.access.tenantId();
-    if (!tenantId) return;
-    const url = `/api/ui-os/workspace-runtime?tenantId=${encodeURIComponent(tenantId)}`;
+    const tenantAtStart = this._tenantId();
+    if (!tenantAtStart) return;
+    const seqAtStart = ++this._refreshSeq;
+    const url = `/api/ui-os/workspace-runtime`;
+    // eslint-disable-next-line no-console
+    console.info('[workspace-shell-binding] RUNTIME_REFRESH_CALLED', tenantAtStart);
+
     let transientAuth = false;
-    const resp = await new Promise<WorkspaceShellResponse | null>((resolve) => {
-      this.http.get<WorkspaceShellResponse>(url).pipe(
+    const resp = await firstValueFrom(
+      this.http.get<WorkspaceShellResolverResponse>(url).pipe(
         catchError((err: HttpErrorResponse) => {
           if (err.status === 401 || err.status === 403) {
             transientAuth = true;
           } else {
             // eslint-disable-next-line no-console
-            console.warn('[workspace-shell-binding] resolve failed', tenantId, err.status);
+            console.warn('[workspace-shell-binding] resolve failed', tenantAtStart, err.status);
           }
           return of(null);
         }),
-      ).subscribe((r) => resolve(r ?? null));
-    });
-    const shell = resp?.shell;
-    const surfaces = shell?.surfaces ?? resp?.surfaces;
-    const navigation = resp?.navigation;
-    const version = shell?.version ?? resp?.version;
-    const componentRegistry = shell?.componentRegistry ?? resp?.componentRegistry ?? [];
-    registerWorkspaceShellCatalog(componentRegistry);
-    if (!resp || !Array.isArray(surfaces)) {
-      if (!transientAuth) {
-        this._surfaces.set(EMPTY_MAP);
-        this._navGroupsRaw.set([]);
-        this._navItemsRaw.set([]);
-        this._version.set(0);
-        this._loaded.set(true);
-      }
+      ),
+    );
+
+    // Stale-refresh guard — if the active tenant changed mid-flight, drop.
+    if (this._tenantId() !== tenantAtStart || this._refreshSeq !== seqAtStart) return;
+
+    // 401/403 ⇒ clear envelope so no prior tenant data leaks.
+    if (transientAuth) {
+      this.clearEnvelope(false);
       return;
     }
-    const next = new Map<string, WorkspaceShellSurface>();
-    for (const row of surfaces) {
-      if (!row || typeof row !== 'object') continue;
-      const legacy = row as WorkspaceShellSurface & { component_key?: string };
-      const key =
-        typeof legacy.componentKey === 'string' && legacy.componentKey.trim()
-          ? legacy.componentKey.trim()
-          : typeof legacy.component_key === 'string' && legacy.component_key.trim()
-            ? legacy.component_key.trim()
-            : '';
-      if (!key) continue;
-      next.set(key, { ...legacy, componentKey: key });
+
+    const shell = resp?.shell;
+    if (!resp || !shell || !Array.isArray(shell.surfaces)) {
+      this.clearEnvelope(true);
+      return;
     }
+
+    const next = new Map<string, WorkspaceShellSurface>();
+    let anonIndex = 0;
+    for (const row of shell.surfaces) {
+      if (!row || typeof row !== 'object') continue;
+      const zone = (row as { zone?: unknown }).zone;
+      // Reject surfaces with a missing or non-canonical zone — there is
+      // no longer a `#0` catch-all.
+      if (typeof zone !== 'string' || !zone.trim()) {
+        // eslint-disable-next-line no-console
+        console.warn('[workspace-shell-binding] dropping surface with missing zone', row);
+        continue;
+      }
+      if (!VALID_ZONES.has(zone)) {
+        // eslint-disable-next-line no-console
+        console.warn('[workspace-shell-binding] dropping surface with non-canonical zone', zone);
+        continue;
+      }
+      const position = typeof row.position === 'number' ? row.position : 0;
+      const surface: WorkspaceShellSurface = {
+        enabled: row.enabled !== false,
+        position,
+        props: row.props ?? {},
+        version: typeof row.version === 'number' ? row.version : 0,
+        zone,
+      };
+      const stableId = readStableSurfaceId(row);
+      if (!stableId) {
+        // eslint-disable-next-line no-console
+        console.warn('[workspace-shell-binding] surface missing stable surfaceId/slotKey; using composite key', { zone, position });
+      }
+      const key = stableId ?? compositeSurfaceKey(zone, position, anonIndex++);
+      if (next.has(key)) {
+        // eslint-disable-next-line no-console
+        console.warn('[workspace-shell-binding] duplicate surface key dropped', key);
+        continue;
+      }
+      next.set(key, surface);
+    }
+
     this._surfaces.set(next);
-    this._navGroupsRaw.set(Array.isArray(navigation?.groups) ? navigation.groups : []);
-    this._navItemsRaw.set(Array.isArray(navigation?.items) ? navigation.items : []);
-    this._version.set(Number(version) || 0);
+    this._navGroupsRaw.set(Array.isArray(shell.nav?.groups) ? shell.nav.groups : []);
+    this._navItemsRaw.set(Array.isArray(shell.nav?.items) ? shell.nav.items : []);
+    this._chrome.set(shell.chrome && typeof shell.chrome === 'object' ? shell.chrome : EMPTY_RECORD);
+    this._shortcutsRaw.set(Array.isArray(shell.shortcuts) ? shell.shortcuts : []);
+    this._bannersRaw.set(Array.isArray(shell.banners) ? shell.banners : []);
+    this._policies.set(shell.policies && typeof shell.policies === 'object' ? shell.policies : EMPTY_RECORD);
+    this._version.set(Number(shell.version ?? resp.version) || 0);
     this._loaded.set(true);
+    // eslint-disable-next-line no-console
+    console.info('[workspace-shell-binding] WORKSPACE_RUNTIME_LOADED', { tenant: tenantAtStart, surfaces: next.size, version: this._version() });
   }
 
-  // COMPLIANCE: All data must flow from DB in the contracted shape.
-
-  // ── UI-OS runtime config — shell-host reads these instead of hardcoding ──
+  // ── First-class envelope reads ──────────────────────────────────────────
 
   /**
-   * Resolve a chrome string from header-zone surfaces.
-   * DB key path: workspace_shell_binding → props.shell.chrome.labels.{key}
-   * Returns '' when absent — never returns a hardcoded English fallback.
+   * Resolve a chrome string by key. Chrome is a flat KV bag whose values
+   * are JSON; for label keys the value is typically a string.
+   * Returns '' when absent — no English fallback.
    */
   runtimeChromeLabel(key: string): string {
-    for (const row of Array.from(this._surfaces().values())) {
-      const props = row.props as Record<string, unknown> | undefined;
-      const labels = this.nestedRecordProp(props, 'shell.chrome.labels');
-      if (labels && typeof labels[key] === 'string') return labels[key] as string;
+    const v = this._chrome()[key];
+    if (typeof v === 'string') return v;
+    if (v && typeof v === 'object' && !Array.isArray(v)) {
+      const rec = v as Record<string, unknown>;
+      const inner = rec['label'] ?? rec['fallback'] ?? rec['value'];
+      if (typeof inner === 'string') return inner;
     }
     return '';
   }
 
-  /**
-   * Banner templates from UI-OS runtime.
-   * DB key path: workspace_shell_binding → props.shell.banners[]
-   */
+  /** Banner templates from the canonical banners[] envelope. */
   readonly bannerTemplates = computed<WorkspaceShellBannerTemplate[]>(
-    () => this.globalPropArray('shell.banners')
-      .map((row) => this.normalizeBannerTemplate(row))
-      .filter(Boolean) as WorkspaceShellBannerTemplate[],
+    () => this._bannersRaw().map((row) => this.bannerToTemplate(row)).filter(Boolean) as WorkspaceShellBannerTemplate[],
   );
 
-  /** Mobile bottom nav max items from runtime config. */
-  readonly mobileBottomNavMaxItems = computed<number>(() => {
-    return this.runtimeNumber('shell.layout.mobileBottomNav.maxItems');
-  });
+  /** Mobile bottom-nav max items from policies. */
+  readonly mobileBottomNavMaxItems = computed<number>(
+    () => this.policyNumber('layout.mobileBottomNav.maxItems'),
+  );
 
-  /** Session expiry policy from runtime. */
+  /** Session expiry policy from policies. */
   readonly sessionExpiryPolicy = computed<{ warningMinutes: number; dangerMinutes: number }>(() => {
-    const policy = this.runtimePolicy('shell.policies.sessionExpiry');
+    const policy = this.policyRecord('sessionExpiry');
     if (policy) {
       return {
         warningMinutes: typeof policy['warningMinutes'] === 'number' ? policy['warningMinutes'] as number : 0,
@@ -414,11 +442,33 @@ export class WorkspaceShellBindingService {
     return { warningMinutes: 0, dangerMinutes: 0 };
   });
 
-  /**
-   * Resolved banner rows from UI-OS templates merged with live session, connectivity,
-   * impersonation, and programmatic shell error state.
-   * Shell-host applies only local dismissed-id filtering.
-   */
+  /** Responsive breakpoint from policies. */
+  readonly desktopMinPx = computed<number>(
+    () => this.policyNumber('layout.breakpoints.desktopMinPx'),
+  );
+
+  /** Keyboard shortcuts from canonical shortcuts[] envelope. */
+  readonly shellShortcuts = computed<WorkspaceShellShortcut[]>(() => {
+    const out: WorkspaceShellShortcut[] = [];
+    for (const row of this._shortcutsRaw()) {
+      if (!row || typeof row !== 'object') continue;
+      const combo = typeof row.combo === 'string' ? row.combo.trim() : '';
+      const action = parseShellAction(row.action);
+      if (!combo || !action) continue;
+      const shortcut: WorkspaceShellShortcut = { combo, action };
+      if (typeof row.when === 'string' && row.when.trim()) shortcut.when = row.when;
+      out.push(shortcut);
+    }
+    return out;
+  });
+
+  /** Account menu actions from chrome.accountMenuActions. */
+  readonly accountMenuActions = computed<WorkspaceShellActionItem[]>(() => {
+    const raw = this._chrome()['accountMenuActions'];
+    if (!Array.isArray(raw)) return [];
+    return raw.map((row) => this.normalizeActionItem(row)).filter(Boolean) as WorkspaceShellActionItem[];
+  });
+
   readonly shellBannerCandidates = computed<ShellBanner[]>(() => {
     const banners: ShellBanner[] = [];
     const templates = this.bannerTemplates();
@@ -450,13 +500,19 @@ export class WorkspaceShellBindingService {
           continue;
         }
       }
-      if (gate === 'error' && this.shellError.error()) continue;
+      // `error` banners only appear when there IS a shell error.
+      if (gate === 'error' && !this.shellError.error()) continue;
+
+      const title = this.bannerLabel(tpl.titleKey, tpl.titleFallback);
+      const message = this.bannerLabel(tpl.messageKey, tpl.messageFallback);
+      // Drop banners with no resolvable title at all.
+      if (!title) continue;
 
       banners.push({
         id: tpl.id,
         kind: (tpl.kind ?? 'info') as ShellBanner['kind'],
-        title: this.runtimeChromeLabel(tpl.titleKey ?? ''),
-        message: this.runtimeChromeLabel(tpl.messageKey ?? ''),
+        title,
+        message,
         dismissible: !!tpl.dismissible,
         actionLabel: tpl.actionLabelKey ? this.runtimeChromeLabel(tpl.actionLabelKey) : undefined,
         action: tpl.action,
@@ -477,119 +533,47 @@ export class WorkspaceShellBindingService {
     return banners;
   });
 
+  // ── Private helpers ──────────────────────────────────────────────────────
 
-
-  /** Responsive breakpoint from runtime. */
-  readonly desktopMinPx = computed<number>(() => this.runtimeNumber('shell.layout.breakpoints.desktopMinPx'));
-
-  /** Keyboard shortcuts from runtime. */
-  readonly shellShortcuts = computed<WorkspaceShellShortcut[]>(() => {
-    const rows = this.globalPropArray('shell.chrome.shortcuts');
-    const out: WorkspaceShellShortcut[] = [];
-    for (const row of rows) {
-      if (!row || typeof row !== 'object') continue;
-      const rec = row as Record<string, unknown>;
-      const combo = typeof rec['combo'] === 'string' ? rec['combo'].trim() : '';
-      const action = parseShellAction(rec['action']);
-      if (!combo || !action) continue;
-      const shortcut: WorkspaceShellShortcut = { combo, action };
-      if (typeof rec['when'] === 'string' && rec['when'].trim()) shortcut.when = rec['when'] as string;
-      out.push(shortcut);
-    }
-    return out;
-  });
-
-  /** Account menu actions (language/theme toggles) from runtime. */
-  readonly accountMenuActions = computed<WorkspaceShellActionItem[]>(
-    () => this.globalPropArray('shell.chrome.accountMenuActions')
-      .map((row) => this.normalizeActionItem(row))
-      .filter(Boolean) as WorkspaceShellActionItem[],
-  );
-
-  /**
-   * Generic numeric limit from any zone's props.
-   * Searches all surfaces in all zones for a dot-path key (e.g. 'shell.layout.mobileBottomNav.maxItems').
-   * Returns 0 when absent — never a hardcoded default.
-   */
-  runtimeNumber(key: string): number {
-    for (const row of Array.from(this._surfaces().values())) {
+  /** Read an array prop by flat name from any surface in a zone. */
+  private zonePropArray(zone: WorkspaceShellZone, propName: string): unknown[] {
+    for (const row of this.surfacesByZone(zone)) {
       const props = row.props as Record<string, unknown> | undefined;
-      const v = this.nestedNumberProp(props, key);
-      if (v != null) return v;
+      const v = props?.[propName];
+      if (Array.isArray(v)) return v;
     }
-    return 0;
+    return [];
   }
 
-  /**
-   * Generic structured policy from any zone's props.
-   * Searches all surfaces for a dot-path key returning a Record.
-   * Returns null when absent.
-   */
-  runtimePolicy(key: string): Record<string, unknown> | null {
-    for (const row of Array.from(this._surfaces().values())) {
+  private zoneStringProp(zone: WorkspaceShellZone, propName: string): string | null {
+    for (const row of this.surfacesByZone(zone)) {
       const props = row.props as Record<string, unknown> | undefined;
-      const v = this.nestedRecordProp(props, key);
-      if (v) return v;
+      const v = props?.[propName];
+      if (typeof v === 'string' && v.trim()) return v;
     }
     return null;
   }
 
-  // ── Private prop helpers ─────────────────────────────────────────────────
-  // All reads use dot-path resolution only. No flat key fallbacks.
-
-  private zonePropArray(zone: WorkspaceShellZone, dotPath: string): unknown[] {
-    for (const row of this.surfacesByZone(zone)) {
-      const props = row.props as Record<string, unknown> | undefined;
-      const v = this.walkNested(props, dotPath);
-      if (Array.isArray(v)) return v;
-    }
-    return [];
+  /** Number reader inside the policies bag (dot-path scoped to _policies). */
+  private policyNumber(path: string): number {
+    const v = this.walkPolicy(path);
+    return typeof v === 'number' ? v : 0;
   }
 
-  /** Read an array from any surface's props via dot-path. */
-  private globalPropArray(dotPath: string): unknown[] {
-    for (const row of Array.from(this._surfaces().values())) {
-      const props = row.props as Record<string, unknown> | undefined;
-      const v = this.walkNested(props, dotPath);
-      if (Array.isArray(v)) return v;
-    }
-    return [];
+  private policyRecord(path: string): Record<string, unknown> | null {
+    const v = this.walkPolicy(path);
+    return v && typeof v === 'object' && !Array.isArray(v) ? (v as Record<string, unknown>) : null;
   }
 
-  /** Dot-path read under props (e.g. shell.layout.mobileBottomNav.maxItems). */
-  private nestedNumberProp(
-    props: Record<string, unknown> | undefined,
-    path: string,
-  ): number | null {
-    const v = this.walkNested(props, path);
-    return typeof v === 'number' ? v : null;
-  }
-
-  private nestedRecordProp(
-    props: Record<string, unknown> | undefined,
-    path: string,
-  ): Record<string, unknown> | undefined {
-    const v = this.walkNested(props, path);
-    return v && typeof v === 'object' && !Array.isArray(v) ? (v as Record<string, unknown>) : undefined;
-  }
-
-  private walkNested(props: Record<string, unknown> | undefined, path: string): unknown {
-    if (!props || !path.trim()) return undefined;
+  private walkPolicy(path: string): unknown {
+    if (!path.trim()) return undefined;
     const parts = path.split('.');
-    let cur: unknown = props;
+    let cur: unknown = this._policies();
     for (const p of parts) {
       if (!cur || typeof cur !== 'object' || Array.isArray(cur)) return undefined;
       cur = (cur as Record<string, unknown>)[p];
     }
     return cur;
-  }
-
-  private zoneStringProp(zone: WorkspaceShellZone, propName: string): string | null {
-    for (const row of this.surfacesByZone(zone)) {
-      const result = this.stringProp(row.componentKey, propName);
-      if (result) return result;
-    }
-    return null;
   }
 
   private toLabel(raw: unknown): WorkspaceI18nLabel {
@@ -603,6 +587,59 @@ export class WorkspaceShellBindingService {
       };
     }
     return {};
+  }
+
+  private bannerToTemplate(row: WorkspaceRuntimeBanner): WorkspaceShellBannerTemplate | null {
+    if (!row || typeof row !== 'object' || !row.id) return null;
+    const tpl: WorkspaceShellBannerTemplate = { id: row.id };
+    if (typeof row.gate === 'string') tpl.gate = row.gate;
+    if (typeof row.kind === 'string') tpl.kind = row.kind;
+
+    const titleKey = row.title?.i18nKey;
+    if (typeof titleKey === 'string' && titleKey.trim()) tpl.titleKey = titleKey.trim();
+    const titleFallback = row.title?.label ?? row.title?.fallback;
+    if (typeof titleFallback === 'string' && titleFallback.trim()) tpl.titleFallback = titleFallback.trim();
+
+    const messageKey = row.message?.i18nKey;
+    if (typeof messageKey === 'string' && messageKey.trim()) tpl.messageKey = messageKey.trim();
+    const messageFallback = row.message?.label ?? row.message?.fallback;
+    if (typeof messageFallback === 'string' && messageFallback.trim()) tpl.messageFallback = messageFallback.trim();
+
+    const actionLabelKey = row.actionLabel?.i18nKey;
+    if (typeof actionLabelKey === 'string' && actionLabelKey.trim()) tpl.actionLabelKey = actionLabelKey.trim();
+    const actionLabelFallback = row.actionLabel?.label ?? row.actionLabel?.fallback;
+    if (typeof actionLabelFallback === 'string' && actionLabelFallback.trim()) tpl.actionLabelFallback = actionLabelFallback.trim();
+
+    // Drop the row if NO label resolution is possible (no key AND no fallback).
+    if (!tpl.titleKey && !tpl.titleFallback) return null;
+
+    if (row.dismissible === true) tpl.dismissible = true;
+    // Always run the action through parseShellAction so the host receives
+    // a typed ShellAction (or no action at all), never raw JSON.
+    const action = parseShellAction(row.action as unknown);
+    if (action) tpl.action = action;
+    return tpl;
+  }
+
+  /** Read a chrome value that should be a plain string. */
+  private chromeStringFirst(key: string): string | null {
+    const v = this._chrome()[key];
+    if (typeof v === 'string' && v.trim()) return v;
+    if (v && typeof v === 'object' && !Array.isArray(v)) {
+      const rec = v as Record<string, unknown>;
+      const inner = rec['label'] ?? rec['fallback'] ?? rec['value'];
+      if (typeof inner === 'string' && inner.trim()) return inner;
+    }
+    return null;
+  }
+
+  /** Resolve a banner label — prefer chrome[i18nKey], fall back to fallback. */
+  private bannerLabel(key: string | undefined, fallback: string | undefined): string {
+    if (key) {
+      const resolved = this.runtimeChromeLabel(key);
+      if (resolved) return resolved;
+    }
+    return fallback ?? '';
   }
 
   private normalizeStatusBarSignal(raw: unknown): StatusBarSignal | null {
@@ -737,27 +774,5 @@ export class WorkspaceShellBindingService {
     const action = parseShellAction(record['action']);
     if (action) item.action = action;
     return item;
-  }
-
-  private normalizeIcon(icon?: string): string | undefined {
-    const t = icon?.trim();
-    return t ? t : undefined;
-  }
-
-  private normalizeBannerTemplate(raw: unknown): WorkspaceShellBannerTemplate | null {
-    if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return null;
-    const record = raw as Record<string, unknown>;
-    const id = typeof record['id'] === 'string' ? record['id'] as string : '';
-    if (!id) return null;
-    const banner: WorkspaceShellBannerTemplate = { id };
-    if (typeof record['gate'] === 'string') banner.gate = record['gate'] as string;
-    if (typeof record['kind'] === 'string') banner.kind = record['kind'] as string;
-    if (typeof record['titleKey'] === 'string') banner.titleKey = record['titleKey'] as string;
-    if (typeof record['messageKey'] === 'string') banner.messageKey = record['messageKey'] as string;
-    if (record['dismissible'] === true) banner.dismissible = true;
-    if (typeof record['actionLabelKey'] === 'string') banner.actionLabelKey = record['actionLabelKey'] as string;
-    const action = parseShellAction(record['action']);
-    if (action) banner.action = action;
-    return banner;
   }
 }

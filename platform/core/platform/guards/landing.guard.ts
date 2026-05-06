@@ -26,15 +26,19 @@ export const landingGuard: CanActivateFn = async () => {
     ),
   ]).catch(err => {
     console.warn(err);
-    // Fallback to /workspace-home - DB-driven config is in orchestrator
-    return '/workspace-home';
+    // No fallback - empty route means router will handle empty navigation
+    return '';
   });
-  if (route === '/workspace-home') {
-    const tenantId = authService.tenantId() || '';
-    const cockpitKey = tenantId ? `grc_cockpit_shown_${tenantId}` : 'grc_cockpit_shown';
-    if (!storage.get(cockpitKey)) {
-      storage.set(cockpitKey, 'true');
-    }
+
+  if (!route) {
+    // No landing page configured - router will handle empty navigation
+    return true;
+  }
+
+  const tenantId = authService.tenantId() || '';
+  const cockpitKey = tenantId ? `grc_cockpit_shown_${tenantId}` : 'grc_cockpit_shown';
+  if (!storage.get(cockpitKey)) {
+    storage.set(cockpitKey, 'true');
   }
 
   router.navigateByUrl(route);

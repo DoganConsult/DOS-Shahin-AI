@@ -267,9 +267,14 @@ export class AiAdvisorTemplateComponent {
   @Input() recommendations: AiRecommendation[] = [];
   @Input() patterns: AiPattern[] = [];
   @Input() confidenceMetrics: Array<{ label: string; value: string | number; subtitle?: string; confidence?: number }> = [];
-  @Input() modelName = 'DOS AI Engine';
-  @Input() modelVersion = 'v2.1';
-  @Input() modelBasis = 'Based on 47 risk records, 3 assessments';
+  // Defaults intentionally empty — Dynamic-UI doctrine forbids fake/demo
+  // strings ("DOS AI Engine", "v2.1", "Based on 47 risk records ...") in
+  // live runtime. Real values must come from the DB-backed binding props
+  // for whichever route mounts this template; otherwise the model strip
+  // renders empty (controlled empty state).
+  @Input() modelName = '';
+  @Input() modelVersion = '';
+  @Input() modelBasis = '';
   @Input() modelConfidence = 0;
   @Input() lastRunAt = '';
   @Input() currentRole: ModuleRole = 'standard_user';

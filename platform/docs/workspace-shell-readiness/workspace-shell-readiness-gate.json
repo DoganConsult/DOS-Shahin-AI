@@ -1,0 +1,761 @@
+{
+  "repo": "/root/DOS-Platform",
+  "enforce": true,
+  "expectedMinCount": 60,
+  "expectedTenantMin": 40,
+  "validZones": [
+    "assistant",
+    "command",
+    "content",
+    "drawer",
+    "footer",
+    "header",
+    "main",
+    "rail",
+    "sidebar",
+    "topbar"
+  ],
+  "requiredEnvelopeTables": [
+    "ui_workspace_chrome",
+    "ui_workspace_shortcut",
+    "ui_workspace_banner",
+    "ui_workspace_policy"
+  ],
+  "seed": {
+    "path": "platform/ui-system/module_complete_direct_seed_pack/workspace-shell-complete-direct-seed.json",
+    "keys": [
+      "workspace.action.button",
+      "workspace.action.icon-button",
+      "workspace.action.inline-notification",
+      "workspace.action.modal",
+      "workspace.action.overflow-menu",
+      "workspace.action.overflow-menu-option",
+      "workspace.action.toast-notification",
+      "workspace.data.data-table",
+      "workspace.data.pagination",
+      "workspace.data.structured-list",
+      "workspace.data.table-batch-actions",
+      "workspace.data.table-toolbar",
+      "workspace.data.table-toolbar-actions",
+      "workspace.data.table-toolbar-search",
+      "workspace.frame.content",
+      "workspace.frame.header",
+      "workspace.frame.header-global-action",
+      "workspace.frame.header-global-bar",
+      "workspace.frame.header-menu",
+      "workspace.frame.header-menu-item",
+      "workspace.frame.header-name",
+      "workspace.frame.header-navigation",
+      "workspace.frame.side-nav",
+      "workspace.frame.side-nav-items",
+      "workspace.frame.side-nav-link",
+      "workspace.frame.side-nav-menu",
+      "workspace.frame.side-nav-menu-item",
+      "workspace.frame.ui-shell",
+      "workspace.input.checkbox",
+      "workspace.input.combo-box",
+      "workspace.input.date-picker",
+      "workspace.input.dropdown",
+      "workspace.input.multi-select",
+      "workspace.input.number-input",
+      "workspace.input.radio",
+      "workspace.input.search",
+      "workspace.input.select",
+      "workspace.input.text-area",
+      "workspace.input.text-input",
+      "workspace.input.toggle",
+      "workspace.nav.breadcrumb",
+      "workspace.nav.clickable-tile",
+      "workspace.nav.column",
+      "workspace.nav.expandable-tile",
+      "workspace.nav.grid",
+      "workspace.nav.layer",
+      "workspace.nav.tab",
+      "workspace.nav.tabs",
+      "workspace.nav.tag",
+      "workspace.nav.tile",
+      "workspace.polish.accordion",
+      "workspace.polish.context-menu",
+      "workspace.polish.file-uploader",
+      "workspace.polish.inline-loading",
+      "workspace.polish.popover",
+      "workspace.polish.progress-bar",
+      "workspace.polish.skeleton-placeholder",
+      "workspace.polish.skeleton-text",
+      "workspace.polish.toggletip",
+      "workspace.polish.tooltip"
+    ],
+    "duplicates": [],
+    "invalidRows": []
+  },
+  "dbRegistry": {
+    "keys": [
+      "workspace.action.button",
+      "workspace.action.icon-button",
+      "workspace.action.inline-notification",
+      "workspace.action.modal",
+      "workspace.action.overflow-menu",
+      "workspace.action.overflow-menu-option",
+      "workspace.action.toast-notification",
+      "workspace.data.data-table",
+      "workspace.data.pagination",
+      "workspace.data.structured-list",
+      "workspace.data.table-batch-actions",
+      "workspace.data.table-toolbar",
+      "workspace.data.table-toolbar-actions",
+      "workspace.data.table-toolbar-search",
+      "workspace.frame.content",
+      "workspace.frame.header",
+      "workspace.frame.header-global-action",
+      "workspace.frame.header-global-bar",
+      "workspace.frame.header-menu",
+      "workspace.frame.header-menu-item",
+      "workspace.frame.header-name",
+      "workspace.frame.header-navigation",
+      "workspace.frame.side-nav",
+      "workspace.frame.side-nav-items",
+      "workspace.frame.side-nav-link",
+      "workspace.frame.side-nav-menu",
+      "workspace.frame.side-nav-menu-item",
+      "workspace.frame.ui-shell",
+      "workspace.input.checkbox",
+      "workspace.input.combo-box",
+      "workspace.input.date-picker",
+      "workspace.input.dropdown",
+      "workspace.input.multi-select",
+      "workspace.input.number-input",
+      "workspace.input.radio",
+      "workspace.input.search",
+      "workspace.input.select",
+      "workspace.input.text-area",
+      "workspace.input.text-input",
+      "workspace.input.toggle",
+      "workspace.nav.breadcrumb",
+      "workspace.nav.clickable-tile",
+      "workspace.nav.column",
+      "workspace.nav.expandable-tile",
+      "workspace.nav.grid",
+      "workspace.nav.layer",
+      "workspace.nav.tab",
+      "workspace.nav.tabs",
+      "workspace.nav.tag",
+      "workspace.nav.tile",
+      "workspace.polish.accordion",
+      "workspace.polish.context-menu",
+      "workspace.polish.file-uploader",
+      "workspace.polish.inline-loading",
+      "workspace.polish.popover",
+      "workspace.polish.progress-bar",
+      "workspace.polish.skeleton-placeholder",
+      "workspace.polish.skeleton-text",
+      "workspace.polish.toggletip",
+      "workspace.polish.tooltip"
+    ],
+    "duplicates": [],
+    "invalidRows": [],
+    "extraKeys": [],
+    "missingKeys": []
+  },
+  "binding": {
+    "tenantCount": 43,
+    "rowCount": 2580,
+    "missingZoneCount": 0,
+    "invalidZoneCount": 0,
+    "samples": [],
+    "activeTenantCount": 38
+  },
+  "envelope": {
+    "ui_workspace_chrome": {
+      "exists": true,
+      "rowCount": 608,
+      "tenantCount": 38,
+      "missingTenantCount": 0,
+      "missingTenantSamples": []
+    },
+    "ui_workspace_shortcut": {
+      "exists": true,
+      "rowCount": 152,
+      "tenantCount": 38,
+      "missingTenantCount": 0,
+      "missingTenantSamples": []
+    },
+    "ui_workspace_banner": {
+      "exists": true,
+      "rowCount": 114,
+      "tenantCount": 38,
+      "missingTenantCount": 0,
+      "missingTenantSamples": []
+    },
+    "ui_workspace_policy": {
+      "exists": true,
+      "rowCount": 76,
+      "tenantCount": 38,
+      "missingTenantCount": 0,
+      "missingTenantSamples": []
+    }
+  },
+  "sourceScan": {
+    "filesScanned": 9099,
+    "literals": [
+      {
+        "file": "modules/compliance/_inbound/packs-package/ports/platform.ts",
+        "literal": "workspace.created",
+        "line": 182,
+        "column": 5
+      },
+      {
+        "file": "modules/compliance/_inbound/packs-package/ports/platform.ts",
+        "literal": "workspace.archived",
+        "line": 183,
+        "column": 5
+      },
+      {
+        "file": "modules/compliance/interface/http/workspaces.routes.ts",
+        "literal": "workspace.workspace.read",
+        "line": 55,
+        "column": 34
+      },
+      {
+        "file": "modules/compliance/interface/http/workspaces.routes.ts",
+        "literal": "workspace.workspace.read",
+        "line": 77,
+        "column": 34
+      },
+      {
+        "file": "modules/compliance/interface/http/workspaces.routes.ts",
+        "literal": "workspace.workspace.write",
+        "line": 94,
+        "column": 34
+      },
+      {
+        "file": "modules/compliance/interface/http/workspaces.routes.ts",
+        "literal": "workspace.create",
+        "line": 108,
+        "column": 41
+      },
+      {
+        "file": "modules/compliance/interface/http/workspaces.routes.ts",
+        "literal": "workspace.workspace.write",
+        "line": 126,
+        "column": 34
+      },
+      {
+        "file": "modules/compliance/interface/http/workspaces.routes.ts",
+        "literal": "workspace.status",
+        "line": 141,
+        "column": 41
+      },
+      {
+        "file": "modules/compliance/interface/http/workspaces.routes.ts",
+        "literal": "workspace.workspace.write",
+        "line": 158,
+        "column": 34
+      },
+      {
+        "file": "modules/compliance/interface/http/workspaces.routes.ts",
+        "literal": "workspace.delete",
+        "line": 171,
+        "column": 41
+      },
+      {
+        "file": "modules/compliance/tests/integration/workspaces-vertical.test.mjs",
+        "literal": "workspace.create",
+        "line": 142,
+        "column": 49
+      },
+      {
+        "file": "modules/packages/dos-contracts/src/events/journey-v1.d.ts",
+        "literal": "workspace.ready",
+        "line": 188,
+        "column": 29
+      },
+      {
+        "file": "modules/packages/dos-contracts/src/events/journey-v1.d.ts",
+        "literal": "workspace.ready",
+        "line": 197,
+        "column": 17
+      },
+      {
+        "file": "modules/packages/dos-contracts/src/events/journey-v1.d.ts",
+        "literal": "workspace.ready",
+        "line": 204,
+        "column": 17
+      },
+      {
+        "file": "modules/packages/dos-contracts/src/events/journey-v1.d.ts",
+        "literal": "workspace.ready",
+        "line": 398,
+        "column": 29
+      },
+      {
+        "file": "modules/packages/dos-contracts/src/events/journey-v1.d.ts",
+        "literal": "workspace.ready",
+        "line": 407,
+        "column": 17
+      },
+      {
+        "file": "modules/packages/dos-contracts/src/events/journey-v1.d.ts",
+        "literal": "workspace.ready",
+        "line": 414,
+        "column": 17
+      },
+      {
+        "file": "modules/packages/dos-contracts/src/events/journey-v1.js",
+        "literal": "workspace.ready",
+        "line": 83,
+        "column": 32
+      },
+      {
+        "file": "modules/packages/dos-contracts/src/events/journey-v1.ts",
+        "literal": "workspace.ready",
+        "line": 94,
+        "column": 24
+      },
+      {
+        "file": "modules/packages/dos-platform-core/src/settings/unified-config.service.js",
+        "literal": "workspace.strict_mode",
+        "line": 201,
+        "column": 13
+      },
+      {
+        "file": "modules/packages/dos-platform-core/src/settings/unified-config.service.ts",
+        "literal": "workspace.strict_mode",
+        "line": 254,
+        "column": 7
+      },
+      {
+        "file": "modules/packages/dos-types/src/platform.d.ts",
+        "literal": "workspace.created",
+        "line": 122,
+        "column": 656
+      },
+      {
+        "file": "modules/packages/dos-types/src/platform.d.ts",
+        "literal": "workspace.archived",
+        "line": 122,
+        "column": 678
+      },
+      {
+        "file": "modules/packages/dos-types/src/platform.ts",
+        "literal": "workspace.created",
+        "line": 182,
+        "column": 5
+      },
+      {
+        "file": "modules/packages/dos-types/src/platform.ts",
+        "literal": "workspace.archived",
+        "line": 183,
+        "column": 5
+      },
+      {
+        "file": "modules/packages/modules/agrc-engine/ports/platform.ts",
+        "literal": "workspace.created",
+        "line": 182,
+        "column": 5
+      },
+      {
+        "file": "modules/packages/modules/agrc-engine/ports/platform.ts",
+        "literal": "workspace.archived",
+        "line": 183,
+        "column": 5
+      },
+      {
+        "file": "modules/packages/modules/provisioning/provisioning.controller.js",
+        "literal": "workspace.provision",
+        "line": 135,
+        "column": 29
+      },
+      {
+        "file": "modules/packages/modules/provisioning/provisioning.controller.ts",
+        "literal": "workspace.provision",
+        "line": 153,
+        "column": 23
+      },
+      {
+        "file": "modules/packages/shahin-product/src/agrc-events.ts",
+        "literal": "workspace.preview.generated",
+        "line": 68,
+        "column": 3
+      },
+      {
+        "file": "modules/packages/shahin-product/src/agrc-events.ts",
+        "literal": "workspace.activated",
+        "line": 70,
+        "column": 3
+      },
+      {
+        "file": "modules/packages/shahin-product/src/agrc-routes.ts",
+        "literal": "workspace.config.read",
+        "line": 42,
+        "column": 63
+      },
+      {
+        "file": "modules/packages/shahin-product/src/agrc-routes.ts",
+        "literal": "workspace.config.read",
+        "line": 43,
+        "column": 60
+      },
+      {
+        "file": "modules/packages/shahin-product/src/product-config/agrc-nav.ts",
+        "literal": "workspace.config.read",
+        "line": 4,
+        "column": 97
+      },
+      {
+        "file": "modules/packages/shahin-product/src/product-config/agrc-nav.ts",
+        "literal": "workspace.config.read",
+        "line": 5,
+        "column": 101
+      },
+      {
+        "file": "modules/packages/shahin-product/src/product-config/agrc-nav.ts",
+        "literal": "workspace.config.read",
+        "line": 6,
+        "column": 113
+      },
+      {
+        "file": "modules/packages/shahin-product/src/product-config/agrc-nav.ts",
+        "literal": "workspace.config.read",
+        "line": 7,
+        "column": 105
+      },
+      {
+        "file": "modules/packages/shahin-product/src/product-config/agrc-nav.ts",
+        "literal": "workspace.config.read",
+        "line": 8,
+        "column": 109
+      },
+      {
+        "file": "modules/packages/shahin-product/src/product-config/agrc-nav.ts",
+        "literal": "workspace.config.read",
+        "line": 9,
+        "column": 115
+      },
+      {
+        "file": "modules/packages/shahin-product/src/product-config/agrc-nav.ts",
+        "literal": "workspace.config.read",
+        "line": 10,
+        "column": 113
+      },
+      {
+        "file": "modules/packages/shahin-product/src/product-config/agrc-nav.ts",
+        "literal": "workspace.config.read",
+        "line": 11,
+        "column": 113
+      },
+      {
+        "file": "modules/packages/shahin-product/src/product-config/agrc-nav.ts",
+        "literal": "workspace.config.read",
+        "line": 12,
+        "column": 119
+      },
+      {
+        "file": "modules/packages/shahin-product/src/product-config/agrc-nav.ts",
+        "literal": "workspace.config.read",
+        "line": 41,
+        "column": 3
+      },
+      {
+        "file": "modules/packages/shahin-product/src/product-config/agrc-nav.ts",
+        "literal": "workspace.config.read",
+        "line": 49,
+        "column": 5
+      },
+      {
+        "file": "modules/packages/shahin-product/src/product-config/agrc-nav.ts",
+        "literal": "workspace.config.read",
+        "line": 55,
+        "column": 5
+      },
+      {
+        "file": "modules/packages/shahin-product/src/product-config/agrc-nav.ts",
+        "literal": "workspace.config.read",
+        "line": 67,
+        "column": 5
+      },
+      {
+        "file": "modules/packages/shahin-product/src/product-config/agrc-nav.ts",
+        "literal": "workspace.config.read",
+        "line": 80,
+        "column": 5
+      },
+      {
+        "file": "modules/packages/shahin-product/src/product-config/agrc-nav.ts",
+        "literal": "workspace.config.read",
+        "line": 89,
+        "column": 5
+      },
+      {
+        "file": "modules/packages/shahin-product/src/product-config/agrc-nav.ts",
+        "literal": "workspace.config.read",
+        "line": 98,
+        "column": 5
+      },
+      {
+        "file": "modules/packages/shahin-product/src/product-config/agrc-nav.ts",
+        "literal": "workspace.config.read",
+        "line": 105,
+        "column": 5
+      },
+      {
+        "file": "modules/packages/shahin-product/src/product-config/agrc-nav.ts",
+        "literal": "workspace.config.read",
+        "line": 111,
+        "column": 5
+      },
+      {
+        "file": "modules/packages/shahin-product/src/product-config/agrc-nav.ts",
+        "literal": "workspace.config.read",
+        "line": 121,
+        "column": 5
+      },
+      {
+        "file": "modules/packages/shahin-product/src/product-config/agrc-nav.ts",
+        "literal": "workspace.config.read",
+        "line": 129,
+        "column": 29
+      },
+      {
+        "file": "modules/packages/shahin-product/src/routing/agrc-routes.ts",
+        "literal": "workspace.config.read",
+        "line": 42,
+        "column": 63
+      },
+      {
+        "file": "modules/packages/shahin-product/src/routing/agrc-routes.ts",
+        "literal": "workspace.config.read",
+        "line": 43,
+        "column": 60
+      },
+      {
+        "file": "modules/packages/shahin-product/src/shahin-ai-asset-catalog.ts",
+        "literal": "workspace.config.write",
+        "line": 175,
+        "column": 148
+      },
+      {
+        "file": "modules/packages/shahin-product/src/shahin-module-crud-catalog.ts",
+        "literal": "workspace.config.read",
+        "line": 209,
+        "column": 15
+      },
+      {
+        "file": "modules/packages/shahin-product/src/shahin-module-crud-catalog.ts",
+        "literal": "workspace.config.write",
+        "line": 209,
+        "column": 51
+      },
+      {
+        "file": "modules/packages/shahin-product/src/shahin-module-crud-catalog.ts",
+        "literal": "workspace.config.write",
+        "line": 209,
+        "column": 89
+      },
+      {
+        "file": "modules/shared/layout/scope-filters/workspace-switcher.component.ts",
+        "literal": "workspace.workspace",
+        "line": 35,
+        "column": 37
+      },
+      {
+        "file": "modules/shared/layout/scope-filters/workspace-switcher.component.ts",
+        "literal": "workspace.noWorkspace",
+        "line": 47,
+        "column": 33
+      },
+      {
+        "file": "modules/shared/layout/scope-filters/workspace-switcher.component.ts",
+        "literal": "workspace.switchWorkspace",
+        "line": 53,
+        "column": 37
+      },
+      {
+        "file": "modules/shared/layout/scope-filters/workspace-switcher.component.ts",
+        "literal": "workspace.selectWorkspace",
+        "line": 59,
+        "column": 39
+      },
+      {
+        "file": "modules/shared/layout/sidebar/sidebar.pbt.ts",
+        "literal": "workspace.config.read",
+        "line": 26,
+        "column": 341
+      },
+      {
+        "file": "modules/shared/layout/sidebar/sidebar.pbt.ts",
+        "literal": "workspace.config.read",
+        "line": 27,
+        "column": 256
+      },
+      {
+        "file": "modules/shared/layout/sidebar/sidebar.pbt.ts",
+        "literal": "workspace.config.read",
+        "line": 28,
+        "column": 250
+      },
+      {
+        "file": "modules/shared/layout/sidebar/sidebar.pbt.ts",
+        "literal": "workspace.config.read",
+        "line": 29,
+        "column": 226
+      },
+      {
+        "file": "modules/shared/layout/sidebar/sidebar.pbt.ts",
+        "literal": "workspace.config.read",
+        "line": 56,
+        "column": 99
+      },
+      {
+        "file": "modules/shared/layout/sidebar/sidebar.pbt.ts",
+        "literal": "workspace.config.read",
+        "line": 57,
+        "column": 111
+      },
+      {
+        "file": "modules/shared/layout/sidebar/sidebar.pbt.ts",
+        "literal": "workspace.config.read",
+        "line": 58,
+        "column": 106
+      },
+      {
+        "file": "modules/shared/layout/sidebar/sidebar.pbt.ts",
+        "literal": "workspace.config.read",
+        "line": 65,
+        "column": 93
+      },
+      {
+        "file": "modules/shared/layout/sidebar/sidebar.pbt.ts",
+        "literal": "workspace.config.read",
+        "line": 66,
+        "column": 87
+      },
+      {
+        "file": "modules/shared/layout/sidebar/sidebar.pbt.ts",
+        "literal": "workspace.config.read",
+        "line": 79,
+        "column": 81
+      },
+      {
+        "file": "modules/shared/layout/sidebar/sidebar.pbt.ts",
+        "literal": "workspace.config.read",
+        "line": 80,
+        "column": 102
+      },
+      {
+        "file": "modules/shared/layout/sidebar/sidebar.pbt.ts",
+        "literal": "workspace.config.read",
+        "line": 85,
+        "column": 96
+      },
+      {
+        "file": "modules/shared/layout/sidebar/sidebar.pbt.ts",
+        "literal": "workspace.config.read",
+        "line": 86,
+        "column": 94
+      },
+      {
+        "file": "modules/shared/layout/sidebar/sidebar.pbt.ts",
+        "literal": "workspace.config.read",
+        "line": 87,
+        "column": 102
+      },
+      {
+        "file": "modules/shared/layout/sidebar/sidebar.utils.ts",
+        "literal": "workspace.config.read",
+        "line": 26,
+        "column": 130
+      },
+      {
+        "file": "modules/shared/layout/sidebar/sidebar.utils.ts",
+        "literal": "workspace.config.read",
+        "line": 27,
+        "column": 126
+      },
+      {
+        "file": "modules/shared/layout/sidebar/sidebar.utils.ts",
+        "literal": "workspace.config.read",
+        "line": 28,
+        "column": 126
+      },
+      {
+        "file": "modules/shared/layout/sidebar/sidebar.utils.ts",
+        "literal": "workspace.config.read",
+        "line": 29,
+        "column": 126
+      },
+      {
+        "file": "modules/shared/layout/sidebar/sidebar.utils.ts",
+        "literal": "workspace.config.read",
+        "line": 30,
+        "column": 128
+      },
+      {
+        "file": "modules/shared/layout/sidebar/sidebar.utils.ts",
+        "literal": "workspace.config.read",
+        "line": 31,
+        "column": 126
+      },
+      {
+        "file": "modules/shared/layout/sidebar/sidebar.utils.ts",
+        "literal": "workspace.config.read",
+        "line": 32,
+        "column": 126
+      },
+      {
+        "file": "modules/shared/layout/sidebar/sidebar.utils.ts",
+        "literal": "workspace.config.read",
+        "line": 33,
+        "column": 120
+      },
+      {
+        "file": "modules/shared/layout/sidebar/sidebar.utils.ts",
+        "literal": "workspace.config.read",
+        "line": 37,
+        "column": 135
+      },
+      {
+        "file": "modules/shared/layout/sidebar/sidebar.utils.ts",
+        "literal": "workspace.config.read",
+        "line": 40,
+        "column": 131
+      },
+      {
+        "file": "modules/shared/layout/sidebar/sidebar.utils.ts",
+        "literal": "workspace.config.read",
+        "line": 41,
+        "column": 136
+      },
+      {
+        "file": "modules/shared/layout/sidebar/sidebar.utils.ts",
+        "literal": "workspace.config.read",
+        "line": 42,
+        "column": 120
+      },
+      {
+        "file": "services/ui-os-service/src/routes/workspace-shell.routes.ts",
+        "literal": "workspace.frame.",
+        "line": 258,
+        "column": 60
+      }
+    ],
+    "componentKeyLiterals": [],
+    "ignoredLiteralCount": 90,
+    "componentKeySetSize": 60
+  },
+  "catalogEndpoint": {
+    "expected": "/workspace-shell-catalog",
+    "routeSource": "services/ui-os-service/src/routes/workspace-shell.routes.ts",
+    "detected": true
+  },
+  "permFilter": {
+    "required": false,
+    "detected": false
+  },
+  "warnings": [
+    {
+      "source": "perm-filter",
+      "reason": "server-side permission filter not enforced by this run; set WORKSPACE_SHELL_REQUIRE_PERM_FILTER=1 for production cutover Gate B"
+    }
+  ],
+  "failures": []
+}
