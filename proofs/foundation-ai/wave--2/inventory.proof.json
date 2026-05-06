@@ -6,7 +6,7 @@
   "status": "GREEN",
   "payload": {
     "schema": "foundation-ai.inventory.v1",
-    "capturedAt": "2026-05-06T19:27:31.953Z",
+    "capturedAt": "2026-05-06T19:27:49.177Z",
     "workspaces": {
       "foundation": true,
       "uiOsService": true,
@@ -79,6 +79,6 @@
     ],
     "gapCount": 1
   },
-  "emittedAt": "2026-05-06T19:27:31.958Z",
-  "hash": "sha256:017fae933bcda513ce9d55abee8768ecb2ea82ce1d07efba79aa22826b6aba03"
+  "emittedAt": "2026-05-06T19:27:49.183Z",
+  "hash": "sha256:d98ef53c3d69a964561625608312a7e10774e2e79aa8690e2ba414d72b1b5175"
 }
