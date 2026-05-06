@@ -1,0 +1,8 @@
+{
+  "schema": "foundation-ai.gate.v1",
+  "wave": 11,
+  "checks": [
+    { "id": "inventory_runs", "cmd": "node scripts/program/foundation-ai/inventory.mjs > /dev/null" },
+    { "id": "zerodirt", "cmd": "PROGRAM_WAVE=11 node scripts/program/foundation-ai/zerodirt.mjs", "required": false }
+  ]
+}

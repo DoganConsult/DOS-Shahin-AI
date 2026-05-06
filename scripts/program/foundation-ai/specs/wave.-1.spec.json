@@ -1,0 +1,18 @@
+{
+  "schema": "foundation-ai.wave.v1",
+  "wave": -1,
+  "phase": "P-1",
+  "title": "Charter, signing keys, Foundation Quad registration",
+  "commitType": "feat",
+  "preconditions": ["wave--2.green"],
+  "steps": [
+    { "id": "charter", "cmd": "node scripts/program/foundation-ai/inventory.mjs" }
+  ],
+  "scopeAllowlist": [
+    "scripts/program/foundation-ai/**",
+    "proofs/foundation-ai/**",
+    "platform/foundation/contracts/**",
+    "platform/foundation/db/migrations/**",
+    "platform/foundation/db/seeds/**"
+  ]
+}

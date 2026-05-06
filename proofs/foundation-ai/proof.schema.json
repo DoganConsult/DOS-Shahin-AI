@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "foundation-ai.proof.v1",
+  "type": "object",
+  "required": ["schema", "phase", "wave", "name", "status", "emittedAt", "hash"],
+  "properties": {
+    "schema": { "const": "foundation-ai.proof.v1" },
+    "phase": { "type": ["string", "number"] },
+    "wave": { "type": "number" },
+    "name": { "type": "string" },
+    "status": { "enum": ["GREEN", "RED", "WARN", "DRY"] },
+    "payload": { "type": ["object", "array", "null"] },
+    "emittedAt": { "type": "string", "format": "date-time" },
+    "hash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+  },
+  "additionalProperties": false
+}

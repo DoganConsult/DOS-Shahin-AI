@@ -1,0 +1,23 @@
+{
+  "schema": "foundation-ai.proof.v1",
+  "phase": "P-2",
+  "wave": -2,
+  "name": "run",
+  "status": "GREEN",
+  "payload": {
+    "schema": "foundation-ai.wave.v1",
+    "wave": -2,
+    "title": "Autopilot Pre-Program scaffold",
+    "steps": [
+      {
+        "id": "inventory",
+        "status": "GREEN",
+        "ms": 65,
+        "tail": "    \"mirror shell live (must be re-export only)\"\n  ],\n  \"gapCount\": 2\n}\n"
+      }
+    ],
+    "dryRun": false
+  },
+  "emittedAt": "2026-05-06T17:58:13.947Z",
+  "hash": "sha256:a91b0b02c94e502c174448d7722df1ab8214c86710ad0909e9892f4a7a8c2067"
+}

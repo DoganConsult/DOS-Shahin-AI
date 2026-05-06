@@ -1,0 +1,18 @@
+{
+  "schema": "foundation-ai.wave.v1",
+  "wave": 5,
+  "phase": "P5",
+  "title": "Wave 5 (placeholder; will be auto-sized by program:autosize)",
+  "commitType": "feat",
+  "preconditions": ["wave-4.green"],
+  "steps": [
+    { "id": "inventory", "cmd": "node scripts/program/foundation-ai/inventory.mjs" }
+  ],
+  "scopeAllowlist": [
+    "scripts/program/foundation-ai/**",
+    "proofs/foundation-ai/**",
+    "platform/foundation/**",
+    "platform/ui-system/dos-ui-contracts/**",
+    "services/ui-os-service/**"
+  ]
+}

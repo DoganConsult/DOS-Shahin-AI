@@ -50,7 +50,16 @@
     "ci-guard:playbook-fresh":  "node scripts/ci-guards/playbook-code-references-fresh.mjs",
     "drift:sample":             "node scripts/ops/drift-telemetry-sample.mjs",
     "verify:no-archive-imports": "node scripts/ci-guards/no-archive-imports.mjs",
-    "build:legacy-check":       "node scripts/ci-guards/archive-legacy-build-check.mjs"
+    "build:legacy-check":       "node scripts/ci-guards/archive-legacy-build-check.mjs",
+    "program:autopilot":        "node scripts/program/foundation-ai/autopilot.mjs",
+    "program:wave":             "node scripts/program/foundation-ai/run-wave.mjs",
+    "program:gate":             "node scripts/program/foundation-ai/quality-gate.mjs",
+    "program:drift":            "node scripts/program/foundation-ai/drift-check.mjs",
+    "program:zerodirt":         "node scripts/program/foundation-ai/zerodirt.mjs",
+    "program:archive":          "node scripts/program/foundation-ai/archive-phase.mjs",
+    "program:commit":           "node scripts/program/foundation-ai/commit-wave.mjs",
+    "program:status":           "node scripts/program/foundation-ai/status.mjs",
+    "program:inventory":        "node scripts/program/foundation-ai/inventory.mjs"
   },
   "devDependencies": {
     "ajv": "^8.20.0",

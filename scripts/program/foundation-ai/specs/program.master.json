@@ -1,0 +1,33 @@
+{
+  "schema": "foundation-ai.program.master.v1",
+  "module": "foundation",
+  "doctrine": [
+    "zero static",
+    "zero legacy",
+    "zero fallback",
+    "zero mirror",
+    "zero browser normalization",
+    "Dynamic UI-OS only",
+    "DB-driven by published contracts",
+    "no turn-around / no temp / no jump"
+  ],
+  "phases": [
+    { "phase": "P-2", "title": "Autopilot Pre-Program", "waves": [-2] },
+    { "phase": "P-1", "title": "Charter & Quad Registration", "waves": [-1] },
+    { "phase": "P0",  "title": "Inventory & Bindings", "waves": [0] },
+    { "phase": "P1",  "title": "Cross-cutting Contracts v2", "waves": [1] },
+    { "phase": "P2",  "title": "DB & Idempotent Seeds", "waves": [2] },
+    { "phase": "P3",  "title": "Renderers & Agent UI", "waves": [3] },
+    { "phase": "P4",  "title": "Foundation Page Cutover", "waves": [4] },
+    { "phase": "P5",  "title": "Edge & Ops Hygiene", "waves": [5] },
+    { "phase": "P6",  "title": "AI Master Gate", "waves": [6] },
+    { "phase": "P7",  "title": "Republish & Production Deploy", "waves": [7] },
+    { "phase": "P8",  "title": "Composability Activation", "waves": [8] },
+    { "phase": "P9",  "title": "Regulator Evidence Packs", "waves": [9] },
+    { "phase": "P10", "title": "AI-Native Foundation Activation", "waves": [10] },
+    { "phase": "P11", "title": "Edge / Offline / PWA / Capacitor", "waves": [11] },
+    { "phase": "P12", "title": "Multi-Region & Sovereignty", "waves": [12] },
+    { "phase": "P13", "title": "Public Contract Ecosystem", "waves": [13] },
+    { "phase": "P14", "title": "Market Launch", "waves": [14] }
+  ]
+}

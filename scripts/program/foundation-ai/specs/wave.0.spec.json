@@ -1,0 +1,21 @@
+{
+  "schema": "foundation-ai.wave.v1",
+  "wave": 0,
+  "phase": "P0",
+  "title": "Inventory + archetype/persona/agent bindings for 24 Foundation surfaces",
+  "commitType": "feat",
+  "preconditions": ["wave--1.green"],
+  "steps": [
+    { "id": "inventory", "cmd": "node scripts/program/foundation-ai/inventory.mjs" },
+    { "id": "module-list", "cmd": "pnpm module:list", "required": false },
+    { "id": "module-validate", "cmd": "pnpm module:validate -- --module=foundation", "required": false }
+  ],
+  "scopeAllowlist": [
+    "scripts/program/foundation-ai/**",
+    "proofs/foundation-ai/**",
+    "platform/foundation/contracts/**",
+    "platform/foundation/db/migrations/**",
+    "platform/foundation/db/seeds/**",
+    "STRUCTURE.md"
+  ]
+}

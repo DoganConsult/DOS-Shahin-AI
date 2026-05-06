@@ -1,0 +1,79 @@
+{
+  "schema": "foundation-ai.proof.v1",
+  "phase": -2,
+  "wave": -2,
+  "name": "inventory",
+  "status": "GREEN",
+  "payload": {
+    "schema": "foundation-ai.inventory.v1",
+    "capturedAt": "2026-05-06T18:02:43.047Z",
+    "workspaces": {
+      "foundation": true,
+      "uiOsService": true,
+      "uiContracts": true,
+      "uiSystem": true,
+      "aiEngine": true,
+      "platformApp": true
+    },
+    "contracts": [
+      "action-contract.ts",
+      "capability-registry.ts",
+      "component-keys.ts",
+      "index.ts",
+      "nav-contract.ts",
+      "navigation-contract.ts",
+      "page-contract.ts",
+      "responsive-contract.ts",
+      "shell-action.contract.ts",
+      "workspace-gate-attributes.ts",
+      "workspace-resolver-contract.ts"
+    ],
+    "shellMirrorLive": true,
+    "foundationDocs": [
+      {
+        "name": "AS-BUILT.md",
+        "present": true
+      },
+      {
+        "name": "PROVISIONING.md",
+        "present": true
+      },
+      {
+        "name": "README.md",
+        "present": true
+      }
+    ],
+    "structureMd": false,
+    "programScripts": [
+      "archive-phase.mjs",
+      "autopilot.mjs",
+      "commit-wave.mjs",
+      "drift-check.mjs",
+      "inventory.mjs",
+      "quality-gate.mjs",
+      "run-wave.mjs",
+      "status.mjs",
+      "zerodirt.mjs"
+    ],
+    "proofsDir": true,
+    "archiveDir": true,
+    "programPnpmScripts": [
+      "program:autopilot",
+      "program:wave",
+      "program:gate",
+      "program:drift",
+      "program:zerodirt",
+      "program:archive",
+      "program:commit",
+      "program:status",
+      "program:inventory"
+    ],
+    "gaps": [
+      "STRUCTURE.md missing",
+      "mirror shell live (must be re-export only)"
+    ],
+    "gapCount": 2
+  },
+  "emittedAt": "2026-05-06T18:02:43.053Z",
+  "hash": "sha256:8e4275d8e8098841476c8f5b306619ba4ca7941e05b6f6861fd1c531a4c14a8f"
+}

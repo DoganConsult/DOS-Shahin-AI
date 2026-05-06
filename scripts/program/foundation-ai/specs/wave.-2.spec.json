@@ -1,0 +1,17 @@
+{
+  "schema": "foundation-ai.wave.v1",
+  "wave": -2,
+  "phase": "P-2",
+  "title": "Autopilot Pre-Program scaffold",
+  "commitType": "chore",
+  "preconditions": [],
+  "steps": [
+    { "id": "inventory", "cmd": "node scripts/program/foundation-ai/inventory.mjs" }
+  ],
+  "scopeAllowlist": [
+    "scripts/program/foundation-ai/**",
+    "proofs/foundation-ai/**",
+    "archive/foundation-ai/**",
+    "package.json"
+  ]
+}
