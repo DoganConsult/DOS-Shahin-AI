@@ -1,20 +1,23 @@
 /**
- * Visual shell surface components — Carbon-tokenized.
+ * Visual shell surface components — Carbon-native (UIShell + Dialog + Tile).
  *
  * Six prop-driven, standalone components that back the canonical
  * `workspace.shell.*` surfaces resolved through the hybrid-static
- * COMPONENT_MAP. Each component renders Carbon UI-Shell primitive
- * markup so the surfaces inherit Carbon design tokens (height,
- * typography, focus ring, hover, spacing) automatically when the host
- * zone carries the matching Carbon container class.
+ * COMPONENT_MAP. Each component composes IBM Carbon Angular primitives
+ * (`cds-header-action`, `cds-sidenav-item`, `[cdsOverflowMenu]`,
+ * `cds-overflow-menu-pane`, `cds-overflow-menu-option`) or @dos/ui-system
+ * Carbon wrappers (`dos-carbon-tile`) for visible affordances. Hand-rolled
+ * `<button>`, `<ul role="menu">`, raw popovers, and bespoke focus/hover
+ * styles are forbidden — Carbon owns the *how*, Dynamic UI owns the *what*.
  *
  * Doctrine compliance:
- *   - Render-only. Every label, icon name, item list, badge value,
- *     aria-label, action shape arrives via @Input from the resolver-
- *     emitted binding props bag. NO hardcoded literal, NO i18n
- *     fallback, NO local data fetch, NO CSS var(...,fallback) literals.
+ *   - Render-only. Every label, icon, item list, badge, aria-label, and
+ *     action shape arrives via @Input from the resolver-emitted props
+ *     bag. NO hardcoded literal, NO i18n fallback, NO local data fetch,
+ *     NO non-token CSS values.
  *   - Icon-only controls always emit aria-label.
- *   - Disclosure-style buttons emit aria-haspopup + aria-expanded.
+ *   - Disclosure-style buttons emit aria-haspopup + aria-expanded via
+ *     Carbon's `cds-header-action` + `[cdsOverflowMenu]` semantics.
  *   - Navigation flows through Angular Router for ShellAction
  *     {kind:'navigate'}; other action kinds bubble through
  *     dispatchShellAction() to the same shape consumed by ShellHost.
@@ -28,6 +31,8 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { UIShellModule, DialogModule } from '../carbon';
+import { DosCarbonTileComponent } from '../carbon/dos-carbon-tile.component';
 
 export interface ShellSidebarNavItem {
   id: string;
@@ -84,7 +89,7 @@ function dispatchShellAction(router: Router, action: RawShellAction | null | und
   }
 }
 
-// ── Brand ────────────────────────────────────────────────────────────
+// ── Brand (Carbon header__name CSS class) ────────────────────────────
 @Component({
   selector: 'dos-shell-brand',
   standalone: true,
@@ -106,15 +111,6 @@ function dispatchShellAction(router: Router, action: RawShellAction | null | und
   `,
   styles: [`
     :host { display: inline-flex; align-items: stretch; height: 100%; }
-    .cds--header__name {
-      display: inline-flex; align-items: center; gap: var(--cds-spacing-03);
-      padding: 0 var(--cds-spacing-05);
-      text-decoration: none;
-      color: var(--cds-text-primary);
-      font-size: var(--cds-heading-compact-02-font-size);
-      font-weight: 600;
-    }
-    .cds--header__name:hover { background: var(--cds-background-hover); }
     .dos-shell-brand__logo { height: 1.25rem; width: auto; }
   `],
 })
@@ -132,7 +128,7 @@ export class DosShellBrandComponent {
   }
 }
 
-// ── Workspace title (header menu item) ───────────────────────────────
+// ── Workspace title (Carbon header__menu-bar CSS class) ──────────────
 @Component({
   selector: 'dos-shell-workspace-title',
   standalone: true,
@@ -155,11 +151,6 @@ export class DosShellBrandComponent {
     .cds--header__menu-bar { display: inline-flex; align-items: stretch; }
     .dos-shell-workspace-title {
       display: inline-flex; flex-direction: column; justify-content: center;
-      padding: 0 var(--cds-spacing-05);
-      color: var(--cds-text-secondary);
-      font-size: var(--cds-body-compact-01-font-size);
-      line-height: var(--cds-body-compact-01-line-height);
-      letter-spacing: var(--cds-body-compact-01-letter-spacing);
     }
     .dos-shell-workspace-title__eyebrow {
       font-size: var(--cds-label-01-font-size);
@@ -174,102 +165,51 @@ export class DosShellWorkspaceTitleComponent {
   @Input() eyebrow = '';
 }
 
-// ── User menu (header global action with disclosure semantics) ───────
+// ── User menu (Carbon header-action + cdsOverflowMenu) ───────────────
 @Component({
   selector: 'dos-shell-user-menu',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, UIShellModule, DialogModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="dos-shell-user-menu"
-         [attr.data-renderer-key]="'shell.user-menu'">
-      <button type="button"
-              class="cds--header__action"
-              [attr.aria-label]="resolvedAriaLabel()"
-              aria-haspopup="menu"
-              [attr.aria-expanded]="open()"
-              (click)="toggle()">
-        <span class="dos-shell-user-menu__inner">
-          @if (avatarUri) {
-            <img class="dos-shell-user-menu__avatar" [src]="avatarUri" alt="" />
-          } @else {
-            <svg class="dos-shell-user-menu__glyph" viewBox="0 0 32 32" width="20" height="20"
-                 aria-hidden="true" focusable="false" fill="currentColor">
-              <path d="M16 4a6 6 0 1 1 0 12 6 6 0 0 1 0-12zm0 14c5 0 10 2.5 10 7v3H6v-3c0-4.5 5-7 10-7z"/>
-            </svg>
-          }
-        </span>
-      </button>
-      @if (open() && menu?.length) {
-        <ul class="dos-shell-user-menu__list" role="menu">
-          @for (entry of menu; track entry.id) {
-            <li role="none">
-              <button type="button"
-                      class="dos-shell-user-menu__item"
-                      role="menuitem"
-                      [attr.data-entry-id]="entry.id"
-                      [attr.data-action-type]="entry.actionType || null"
-                      [attr.data-route-exists]="entry.routeExists === null || entry.routeExists === undefined ? null : (entry.routeExists ? 'true' : 'false')"
-                      [attr.aria-label]="entry.ariaLabel || null"
-                      [attr.aria-disabled]="entry.enabled === false ? 'true' : null"
-                      [disabled]="entry.enabled === false ? true : null"
-                      [class.dos-shell-user-menu__item--destructive]="entry.destructive === true"
-                      [class.dos-shell-user-menu__item--disabled]="entry.enabled === false"
-                      (click)="activate(entry)">
-                {{ entry.label || entry.i18nKey || entry.id }}
-              </button>
-            </li>
-          }
-        </ul>
+    <cds-header-action
+      [description]="resolvedAriaLabel()"
+      [active]="open()"
+      [cdsOverflowMenu]="userMenuPane"
+      [flip]="true"
+      (selected)="toggle()"
+      [attr.aria-label]="resolvedAriaLabel()"
+      [attr.data-renderer-key]="'shell.user-menu'"
+    >
+      @if (avatarUri) {
+        <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+          <image href="{{ avatarUri }}" width="20" height="20" />
+        </svg>
+      } @else {
+        <svg viewBox="0 0 32 32" width="20" height="20"
+             aria-hidden="true" focusable="false" fill="currentColor">
+          <path d="M16 4a6 6 0 1 1 0 12 6 6 0 0 1 0-12zm0 14c5 0 10 2.5 10 7v3H6v-3c0-4.5 5-7 10-7z"/>
+        </svg>
       }
-    </div>
+    </cds-header-action>
+    <ng-template #userMenuPane>
+      <cds-overflow-menu-pane>
+        @for (entry of menu ?? []; track entry.id) {
+          <cds-overflow-menu-option
+            [disabled]="entry.enabled === false"
+            [type]="entry.destructive ? 'danger' : null"
+            [innerClass]="entry.id"
+            [attr.data-entry-id]="entry.id"
+            [attr.data-action-type]="entry.actionType || null"
+            [attr.data-route-exists]="entry.routeExists === null || entry.routeExists === undefined ? null : (entry.routeExists ? 'true' : 'false')"
+            (selected)="activate(entry)"
+          >{{ entry.label || entry.i18nKey || entry.id }}</cds-overflow-menu-option>
+        }
+      </cds-overflow-menu-pane>
+    </ng-template>
   `,
   styles: [`
     :host { display: inline-flex; align-items: stretch; height: 100%; }
-    .dos-shell-user-menu { position: relative; display: inline-flex; align-items: stretch; }
-    .cds--header__action {
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 3rem; height: 100%;
-      background: transparent; border: 0; cursor: pointer;
-      color: var(--cds-icon-primary);
-    }
-    .cds--header__action:focus-visible {
-      outline: 2px solid var(--cds-focus);
-      outline-offset: -2px;
-    }
-    .cds--header__action:hover { background: var(--cds-background-hover); }
-    .dos-shell-user-menu__inner {
-      display: inline-flex; align-items: center; gap: var(--cds-spacing-02);
-    }
-    .dos-shell-user-menu__avatar {
-      width: 1.5rem; height: 1.5rem; border-radius: 50%; object-fit: cover;
-    }
-    .dos-shell-user-menu__list {
-      position: absolute; top: 100%; right: 0;
-      list-style: none; padding: var(--cds-spacing-02) 0; margin: 0;
-      min-width: 14rem;
-      background: var(--cds-layer);
-      border: 1px solid var(--cds-border-subtle);
-      box-shadow: 0 2px 6px rgba(0,0,0,.16);
-      z-index: 9000;
-    }
-    .dos-shell-user-menu__item {
-      width: 100%; text-align: start;
-      background: transparent; border: 0; cursor: pointer;
-      padding: var(--cds-spacing-04) var(--cds-spacing-05);
-      font-size: var(--cds-body-compact-01-font-size);
-      color: var(--cds-text-primary);
-    }
-    .dos-shell-user-menu__item:hover { background: var(--cds-background-hover); }
-    .dos-shell-user-menu__item--destructive { color: var(--cds-text-error); }
-    .dos-shell-user-menu__item--disabled,
-    .dos-shell-user-menu__item[disabled] {
-      color: var(--cds-text-disabled);
-      cursor: not-allowed;
-      background: transparent;
-    }
-    .dos-shell-user-menu__item--disabled:hover,
-    .dos-shell-user-menu__item[disabled]:hover { background: transparent; }
   `],
 })
 export class DosShellUserMenuComponent {
@@ -297,41 +237,29 @@ export class DosShellUserMenuComponent {
   }
 }
 
-// ── Settings action (header global icon-button) ──────────────────────
+// ── Settings action (Carbon header-action) ───────────────────────────
 @Component({
   selector: 'dos-shell-settings-action',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, UIShellModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <button type="button"
-            class="cds--header__action"
-            [attr.aria-label]="resolvedAriaLabel()"
-            [attr.data-renderer-key]="'shell.settings-action'"
-            [attr.data-route-exists]="routeExists === null ? null : (routeExists ? 'true' : 'false')"
-            [attr.aria-disabled]="enabled === false ? 'true' : null"
-            [disabled]="enabled === false ? true : null"
-            (click)="onClick()">
-      <svg class="dos-shell-settings-action__glyph"
-           viewBox="0 0 32 32" width="20" height="20"
+    <cds-header-action
+      [description]="resolvedAriaLabel()"
+      (selected)="onClick()"
+      [attr.aria-label]="resolvedAriaLabel()"
+      [attr.data-renderer-key]="'shell.settings-action'"
+      [attr.data-route-exists]="routeExists === null ? null : (routeExists ? 'true' : 'false')"
+      [attr.aria-disabled]="enabled === false ? 'true' : null"
+    >
+      <svg viewBox="0 0 32 32" width="20" height="20"
            aria-hidden="true" focusable="false" fill="currentColor">
         <path d="M27 16.76v-1.53l1.92-1.68A2 2 0 0 0 29.3 11l-2.36-4.07a2 2 0 0 0-2.31-.92l-2.4.86a11.92 11.92 0 0 0-2.66-1.53L19 2.84A2 2 0 0 0 17 1h-2a2 2 0 0 0-2 1.84l-.55 2.5a11.99 11.99 0 0 0-2.66 1.53l-2.4-.86a2 2 0 0 0-2.32.92L2.7 11a2 2 0 0 0 .38 2.5L5 15.24v1.53l-1.92 1.68A2 2 0 0 0 2.7 21l2.37 4.07a2 2 0 0 0 2.31.92l2.4-.86a11.92 11.92 0 0 0 2.66 1.53L13 29.16A2 2 0 0 0 15 31h2a2 2 0 0 0 2-1.84l.55-2.5a11.99 11.99 0 0 0 2.66-1.53l2.4.86a2 2 0 0 0 2.32-.92L29.3 21a2 2 0 0 0-.38-2.5zM16 22a6 6 0 1 1 6-6 6 6 0 0 1-6 6z"/>
       </svg>
-    </button>
+    </cds-header-action>
   `,
   styles: [`
     :host { display: inline-flex; align-items: stretch; height: 100%; }
-    .cds--header__action {
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 3rem; height: 100%;
-      background: transparent; border: 0; cursor: pointer;
-      color: var(--cds-icon-primary);
-    }
-    .cds--header__action:focus-visible {
-      outline: 2px solid var(--cds-focus);
-      outline-offset: -2px;
-    }
-    .cds--header__action:hover { background: var(--cds-background-hover); }
   `],
 })
 export class DosShellSettingsActionComponent {
@@ -353,11 +281,11 @@ export class DosShellSettingsActionComponent {
   }
 }
 
-// ── Sidebar nav (Carbon side-nav primitive markup) ───────────────────
+// ── Sidebar nav (Carbon cds-sidenav-item) ────────────────────────────
 @Component({
   selector: 'dos-shell-sidebar-nav',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, UIShellModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <nav class="cds--side-nav__navigation"
@@ -366,21 +294,18 @@ export class DosShellSettingsActionComponent {
       @if (items?.length) {
         <ul class="cds--side-nav__items">
           @for (item of items; track item.id) {
-            <li class="cds--side-nav__item">
-              <a class="cds--side-nav__link"
-                 [attr.href]="item.route || null"
-                 [attr.data-nav-id]="item.id"
-                 [attr.data-module-code]="item.moduleCode || null"
-                 (click)="onClick($event, item)">
-                @if (item.icon) {
-                  <span class="cds--side-nav__icon" aria-hidden="true">{{ item.icon }}</span>
-                }
-                <span class="cds--side-nav__link-text">{{ item.label }}</span>
-                @if (item.badge !== undefined && item.badge !== null && item.badge !== '') {
-                  <span class="dos-shell-sidebar-nav__badge" aria-label="badge">{{ item.badge }}</span>
-                }
-              </a>
-            </li>
+            <cds-sidenav-item
+              [href]="item.route || ''"
+              [title]="item.label"
+              [attr.data-nav-id]="item.id"
+              [attr.data-module-code]="item.moduleCode || null"
+              (navigation)="onNavigated($event, item)"
+            >
+              {{ item.label }}
+              @if (item.badge !== undefined && item.badge !== null && item.badge !== '') {
+                <span class="dos-shell-sidebar-nav__badge" aria-label="badge">{{ item.badge }}</span>
+              }
+            </cds-sidenav-item>
           }
         </ul>
       } @else if (emptyMessage) {
@@ -402,23 +327,6 @@ export class DosShellSettingsActionComponent {
       background: var(--cds-background);
     }
     .cds--side-nav__items { list-style: none; padding: 0; margin: 0; }
-    .cds--side-nav__link {
-      display: flex; align-items: center; gap: var(--cds-spacing-04);
-      padding: var(--cds-spacing-04) var(--cds-spacing-05);
-      text-decoration: none;
-      color: var(--cds-text-secondary);
-      font-size: var(--cds-heading-compact-01-font-size);
-      line-height: var(--cds-heading-compact-01-line-height);
-      min-height: 2rem;
-    }
-    .cds--side-nav__link:hover {
-      background: var(--cds-background-hover);
-      color: var(--cds-text-primary);
-    }
-    .cds--side-nav__link:focus-visible {
-      outline: 2px solid var(--cds-focus);
-      outline-offset: -2px;
-    }
     .dos-shell-sidebar-nav__badge {
       margin-inline-start: auto;
       font-size: var(--cds-label-01-font-size);
@@ -437,19 +345,19 @@ export class DosShellSidebarNavComponent {
   @Input() emptyMessage = '';
   @Input() ariaLabel = '';
 
-  onClick(ev: MouseEvent, item: ShellSidebarNavItem): void {
+  onNavigated(_navPromise: Promise<boolean>, item: ShellSidebarNavItem): void {
     if (!item.route) return;
-    if (ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.button !== 0) return;
-    ev.preventDefault();
+    // Carbon's cds-sidenav-item performs its own anchor navigation; re-route
+    // through the Angular router so the SPA outlet swaps without a full reload.
     void this.router.navigateByUrl(item.route);
   }
 }
 
-// ── Module cards (entitled-module grid in main zone) ─────────────────
+// ── Module cards (Carbon dos-carbon-tile clickable grid) ─────────────
 @Component({
   selector: 'dos-shell-module-cards',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, DosCarbonTileComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     @if (items?.length) {
@@ -459,15 +367,17 @@ export class DosShellSidebarNavComponent {
         <ul class="dos-shell-module-cards__grid">
           @for (item of items; track item.id) {
             <li>
-              <a class="cds--tile cds--tile--clickable dos-shell-module-cards__tile"
-                 [attr.href]="item.route || '#'"
-                 [attr.data-module-id]="item.id"
-                 (click)="onClick($event, item)">
+              <dos-carbon-tile
+                [clickable]="true"
+                [route]="item.route"
+                (activated)="onActivate($event, item)"
+                [attr.data-module-id]="item.id"
+              >
                 <strong class="dos-shell-module-cards__title">{{ item.title }}</strong>
                 @if (item.productCode) {
                   <span class="dos-shell-module-cards__product">{{ item.productCode }}</span>
                 }
-              </a>
+              </dos-carbon-tile>
             </li>
           }
         </ul>
@@ -482,27 +392,13 @@ export class DosShellSidebarNavComponent {
       grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
       gap: var(--cds-spacing-05);
     }
-    .dos-shell-module-cards__tile {
-      display: flex; flex-direction: column; gap: var(--cds-spacing-02);
-      padding: var(--cds-spacing-06);
-      text-decoration: none;
-      background: var(--cds-layer);
-      color: var(--cds-text-primary);
-      border: 1px solid var(--cds-border-subtle);
-      min-height: 6rem;
-    }
-    .dos-shell-module-cards__tile:hover {
-      background: var(--cds-layer-hover);
-    }
-    .dos-shell-module-cards__tile:focus-visible {
-      outline: 2px solid var(--cds-focus);
-      outline-offset: -2px;
-    }
     .dos-shell-module-cards__title {
+      display: block;
       font-size: var(--cds-heading-compact-02-font-size);
       line-height: var(--cds-heading-compact-02-line-height);
     }
     .dos-shell-module-cards__product {
+      display: block;
       font-size: var(--cds-label-01-font-size);
       color: var(--cds-text-helper);
       letter-spacing: var(--cds-label-01-letter-spacing);
@@ -515,7 +411,7 @@ export class DosShellModuleCardsComponent {
   @Input() items: ShellModuleCard[] | null = [];
   @Input() ariaLabel = '';
 
-  onClick(ev: MouseEvent, item: ShellModuleCard): void {
+  onActivate(ev: MouseEvent, item: ShellModuleCard): void {
     if (!item.route) return;
     if (ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.button !== 0) return;
     ev.preventDefault();

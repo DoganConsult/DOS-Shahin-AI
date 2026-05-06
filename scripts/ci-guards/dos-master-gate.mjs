@@ -46,6 +46,10 @@ const GUARDS = [
   // 2026-05-06 — block hardcoded GRC/demo placeholder strings from leaking
   // into live workspace runtime (binding.props, override.patch, source).
   'lint-no-demo-placeholder-runtime.mjs',
+  // 2026-05-08 — Carbon-native shell adoption. Visual shell surfaces
+  // and ShellHost must compose Carbon UIShell + Tile primitives, not
+  // hand-rolled <button>/<ul role="menu">/<input>/<select>.
+  'lint-no-raw-shell-primitives.mjs',
 ];
 
 let pass = 0, fail = 0;
