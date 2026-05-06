@@ -1,8 +1,22 @@
 {
-  "schema": "foundation-ai.gate.v1",
+  "schema": "foundation-ai.gate.v2",
   "wave": -2,
+  "phase": "P-2",
+  "derivedFrom": "program.master.json",
   "checks": [
-    { "id": "inventory_runs", "cmd": "node scripts/program/foundation-ai/inventory.mjs > /dev/null" },
-    { "id": "zerodirt", "cmd": "PROGRAM_WAVE=-2 node scripts/program/foundation-ai/zerodirt.mjs", "required": false }
-  ]
+    {
+      "id": "inventory_runs",
+      "cmd": "node scripts/program/foundation-ai/inventory.mjs > /dev/null"
+    },
+    {
+      "id": "scripts_present",
+      "cmd": "test -f scripts/program/foundation-ai/autopilot.mjs && test -f scripts/program/foundation-ai/lib/ledger.mjs"
+    },
+    {
+      "id": "zerodirt",
+      "cmd": "PROGRAM_WAVE=-2 node scripts/program/foundation-ai/zerodirt.mjs",
+      "required": false
+    }
+  ],
+  "hash": "sha256:75ecdf1b497890bcbef7883f0c8aac33358a3d2b95e2e8dcd3adf4ee2524e4f0"
 }

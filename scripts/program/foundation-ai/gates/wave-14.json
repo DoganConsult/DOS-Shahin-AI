@@ -1,8 +1,22 @@
 {
-  "schema": "foundation-ai.gate.v1",
+  "schema": "foundation-ai.gate.v2",
   "wave": 14,
+  "phase": "P14",
+  "derivedFrom": "program.master.json",
   "checks": [
-    { "id": "inventory_runs", "cmd": "node scripts/program/foundation-ai/inventory.mjs > /dev/null" },
-    { "id": "zerodirt", "cmd": "PROGRAM_WAVE=14 node scripts/program/foundation-ai/zerodirt.mjs", "required": false }
-  ]
+    {
+      "id": "inventory_runs",
+      "cmd": "node scripts/program/foundation-ai/inventory.mjs > /dev/null"
+    },
+    {
+      "id": "release_gate_green",
+      "cmd": "pnpm platform:release-gate"
+    },
+    {
+      "id": "zerodirt",
+      "cmd": "PROGRAM_WAVE=14 node scripts/program/foundation-ai/zerodirt.mjs",
+      "required": true
+    }
+  ],
+  "hash": "sha256:1e0c8abb5360bfccf1582cf5fa8df2896561127607e3c1fd7081cce156a0fd2e"
 }

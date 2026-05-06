@@ -1,0 +1,39 @@
+{
+  "schema": "foundation-ai.proof.v1",
+  "phase": -2,
+  "wave": 1,
+  "name": "quality-gate",
+  "status": "GREEN",
+  "payload": {
+    "schema": "foundation-ai.gate.v1",
+    "wave": 1,
+    "results": [
+      {
+        "id": "inventory_runs",
+        "status": "GREEN",
+        "ms": 55,
+        "snippet": ""
+      },
+      {
+        "id": "shell_action_contract_exists",
+        "status": "GREEN",
+        "ms": 3,
+        "snippet": ""
+      },
+      {
+        "id": "no_shellActionFromLegacyRecord",
+        "status": "GREEN",
+        "ms": 3,
+        "snippet": ""
+      },
+      {
+        "id": "zerodirt",
+        "status": "GREEN",
+        "ms": 331,
+        "snippet": "  }\n}\n"
+      }
+    ]
+  },
+  "emittedAt": "2026-05-06T18:23:47.713Z",
+  "hash": "sha256:51163de329c86cf738fb12911830d2303d0791c313fedf38f48b270759ffe4c5"
+}

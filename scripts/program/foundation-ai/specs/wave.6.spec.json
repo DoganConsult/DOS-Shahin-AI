@@ -1,24 +1,39 @@
 {
-  "schema": "foundation-ai.wave.v1",
+  "schema": "foundation-ai.wave.v2",
   "wave": 6,
   "phase": "P6",
-  "title": "Wave 6 (placeholder; will be auto-sized by program:autosize)",
-  "commitType": "feat",
+  "title": "AI Master Gate — runtime proof",
+  "commitType": "test",
+  "objective": "Run all platform gates GREEN; capture signed runtime proof from /api/ui-os/workspace-runtime.",
   "preconditions": [
     "wave-5.green"
   ],
+  "deliverables": [
+    "proofs/foundation-ai/wave-6/runtime.proof.json"
+  ],
   "steps": [
     {
-      "id": "inventory",
-      "cmd": "node scripts/program/foundation-ai/inventory.mjs"
+      "id": "platform-release-gate",
+      "cmd": "pnpm platform:release-gate"
+    },
+    {
+      "id": "audit-full",
+      "cmd": "pnpm audit:full",
+      "required": false
+    }
+  ],
+  "acceptanceChecks": [
+    {
+      "id": "runtime_proof_exists",
+      "cmd": "test -f proofs/foundation-ai/wave-6/runtime.proof.json"
     }
   ],
   "scopeAllowlist": [
     "scripts/program/foundation-ai/**",
     "proofs/foundation-ai/**",
-    "platform/foundation/**",
-    "platform/ui-system/dos-ui-contracts/**",
-    "services/ui-os-service/**",
     "archive/foundation-ai/**"
-  ]
+  ],
+  "rollback": null,
+  "derivedFrom": "program.master.json",
+  "hash": "sha256:e1f31df744c9bdf2650dda60bfe91df1d97c4719d29b310b861ed848ef2a0f00"
 }

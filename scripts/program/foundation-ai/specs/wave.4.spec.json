@@ -1,24 +1,47 @@
 {
-  "schema": "foundation-ai.wave.v1",
+  "schema": "foundation-ai.wave.v2",
   "wave": 4,
   "phase": "P4",
-  "title": "Wave 4 (placeholder; will be auto-sized by program:autosize)",
-  "commitType": "feat",
+  "title": "Foundation Page Cutover — UI-OS only",
+  "commitType": "refactor",
+  "objective": "Cut all 21 Foundation pages to UI-OS runtime; collapse mirror shell; remove static nav arrays.",
   "preconditions": [
     "wave-3.green"
   ],
+  "deliverables": [
+    "platform/foundation/application/**",
+    "modules/core/platform/shell/index.ts (re-export only)"
+  ],
   "steps": [
     {
-      "id": "inventory",
-      "cmd": "node scripts/program/foundation-ai/inventory.mjs"
+      "id": "foundation-build",
+      "cmd": "pnpm --filter @dos/module-foundation build"
+    },
+    {
+      "id": "platform-app-build",
+      "cmd": "pnpm --filter @dos/platform-app build"
+    },
+    {
+      "id": "foundation-gate",
+      "cmd": "pnpm foundation:gate"
+    }
+  ],
+  "acceptanceChecks": [
+    {
+      "id": "mirror_shell_collapsed",
+      "cmd": "test $(find modules/core/platform/shell -maxdepth 1 -type f -name '*.ts' | xargs -I {} wc -l {} 2>/dev/null | awk '$1>50{print}' | wc -l) -eq 0"
     }
   ],
   "scopeAllowlist": [
     "scripts/program/foundation-ai/**",
     "proofs/foundation-ai/**",
-    "platform/foundation/**",
-    "platform/ui-system/dos-ui-contracts/**",
-    "services/ui-os-service/**",
+    "platform/foundation/application/**",
+    "platform/foundation/dist/**",
+    "modules/core/platform/shell/**",
+    "modules/foundation/**",
     "archive/foundation-ai/**"
-  ]
+  ],
+  "rollback": "git revert <wave-4-commit>",
+  "derivedFrom": "program.master.json",
+  "hash": "sha256:b58c3997a1fcc789f72773e93b06180b2e74d1a2331de850dc0c7cd45ede4deb"
 }

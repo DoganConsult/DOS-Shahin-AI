@@ -2,7 +2,7 @@
  * Phase WS-2 + Carbon-Wiring — workspace.context-panel wrapper.
  * Selector: dos-context-panel
  * Carbon primitive: accordion (AccordionModule → cds-accordion) + tabs (cds-tabs CSS)
- * DB: dos.dynamic_ui_component_registry component_key=workspace.context-panel carbon_key=accordion
+ * Runtime: componentKey=workspace.context-panel (carbon=accordion) — DB schema reference removed (resolved by UI-OS service).
  *
  * Token stack:
  *   --cds-accordion-*  (Carbon accordion tokens)

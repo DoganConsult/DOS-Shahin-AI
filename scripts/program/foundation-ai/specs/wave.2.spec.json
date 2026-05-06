@@ -1,24 +1,38 @@
 {
-  "schema": "foundation-ai.wave.v1",
+  "schema": "foundation-ai.wave.v2",
   "wave": 2,
   "phase": "P2",
-  "title": "Wave 2 (placeholder; will be auto-sized by program:autosize)",
+  "title": "DB Migrations & Idempotent Seeds — page archetype/persona/agent tables",
   "commitType": "feat",
+  "objective": "Add idempotent migrations + seeds for dynamic_ui_page_archetype, page_persona, page_agent.",
   "preconditions": [
     "wave-1.green"
   ],
+  "deliverables": [
+    "platform/foundation/db/migrations/*_dynamic_ui_page_archetype.sql",
+    "platform/foundation/db/migrations/*_dynamic_ui_page_archetype_down.sql",
+    "platform/foundation/db/seeds/foundation-page-archetype.sql"
+  ],
   "steps": [
     {
-      "id": "inventory",
-      "cmd": "node scripts/program/foundation-ai/inventory.mjs"
+      "id": "lint-migrations",
+      "cmd": "pnpm module:lint-migrations"
+    }
+  ],
+  "acceptanceChecks": [
+    {
+      "id": "down_migrations_present",
+      "cmd": "ls platform/foundation/db/migrations/*_down.sql >/dev/null"
     }
   ],
   "scopeAllowlist": [
     "scripts/program/foundation-ai/**",
     "proofs/foundation-ai/**",
-    "platform/foundation/**",
-    "platform/ui-system/dos-ui-contracts/**",
-    "services/ui-os-service/**",
+    "platform/foundation/db/migrations/**",
+    "platform/foundation/db/seeds/**",
     "archive/foundation-ai/**"
-  ]
+  ],
+  "rollback": "apply *_down.sql in reverse order",
+  "derivedFrom": "program.master.json",
+  "hash": "sha256:5d36497f11159bde4161c94475c247f1fc2fe9722b313e04b6ac0b78ada44ab1"
 }

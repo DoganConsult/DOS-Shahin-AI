@@ -1,24 +1,37 @@
 {
-  "schema": "foundation-ai.wave.v1",
+  "schema": "foundation-ai.wave.v2",
   "wave": 10,
   "phase": "P10",
-  "title": "Wave 10 (placeholder; will be auto-sized by program:autosize)",
+  "title": "AI-Native Foundation Activation",
   "commitType": "feat",
+  "objective": "Activate Foundation Quad agents in autonomy L2/L3 (analyze + draft).",
   "preconditions": [
     "wave-9.green"
   ],
+  "deliverables": [
+    "platform/ai/services/ai-engine-service/dist/**"
+  ],
   "steps": [
     {
-      "id": "inventory",
-      "cmd": "node scripts/program/foundation-ai/inventory.mjs"
+      "id": "ai-engine-build",
+      "cmd": "pnpm --filter @dos/ai-engine-service build",
+      "required": false
+    }
+  ],
+  "acceptanceChecks": [
+    {
+      "id": "agent_contract_valid",
+      "cmd": "node -e \"JSON.parse(require('fs').readFileSync('platform/foundation/contracts/agent.contract.json','utf8'))\""
     }
   ],
   "scopeAllowlist": [
     "scripts/program/foundation-ai/**",
     "proofs/foundation-ai/**",
-    "platform/foundation/**",
-    "platform/ui-system/dos-ui-contracts/**",
-    "services/ui-os-service/**",
+    "platform/ai/**",
+    "platform/foundation/contracts/agent.contract.json",
     "archive/foundation-ai/**"
-  ]
+  ],
+  "rollback": "disable agents in DB; redeploy",
+  "derivedFrom": "program.master.json",
+  "hash": "sha256:d826f9e39260395a64141d95cf77a0877cdb0c5ff8ec35440e990c0e2a121818"
 }

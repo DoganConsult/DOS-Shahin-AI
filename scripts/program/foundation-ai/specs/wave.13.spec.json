@@ -1,24 +1,35 @@
 {
-  "schema": "foundation-ai.wave.v1",
+  "schema": "foundation-ai.wave.v2",
   "wave": 13,
   "phase": "P13",
-  "title": "Wave 13 (placeholder; will be auto-sized by program:autosize)",
+  "title": "Public Contract Ecosystem",
   "commitType": "feat",
+  "objective": "Publish public, versioned contracts for ecosystem partners.",
   "preconditions": [
     "wave-12.green"
   ],
+  "deliverables": [
+    "platform/foundation/contracts/v1/**"
+  ],
   "steps": [
     {
-      "id": "inventory",
-      "cmd": "node scripts/program/foundation-ai/inventory.mjs"
+      "id": "contracts-build",
+      "cmd": "pnpm --filter @dos/ui-contracts build"
+    }
+  ],
+  "acceptanceChecks": [
+    {
+      "id": "v1_contracts_present",
+      "cmd": "test -d platform/foundation/contracts/v1"
     }
   ],
   "scopeAllowlist": [
     "scripts/program/foundation-ai/**",
     "proofs/foundation-ai/**",
-    "platform/foundation/**",
-    "platform/ui-system/dos-ui-contracts/**",
-    "services/ui-os-service/**",
+    "platform/foundation/contracts/v1/**",
     "archive/foundation-ai/**"
-  ]
+  ],
+  "rollback": null,
+  "derivedFrom": "program.master.json",
+  "hash": "sha256:3b73aa612307c6d2d3191a42f97d779e893450b1d5276ece4a147edd6b600c52"
 }

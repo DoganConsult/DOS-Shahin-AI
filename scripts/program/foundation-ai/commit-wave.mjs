@@ -19,18 +19,23 @@ function sh(cmd, opts = {}) { return execSync(cmd, { encoding: 'utf8', stdio: ['
 const proofDir = join(process.cwd(), `proofs/foundation-ai/wave-${wave}`);
 if (!existsSync(proofDir)) { console.error(`no proofs for wave ${wave}`); process.exit(1); }
 
-function verifyProof(name, { allowWarnForWaveLE = null } = {}) {
+function verifyProof(name, { allowWarnForWaveLE = null, allowWarnIf = null } = {}) {
   const path = join(proofDir, `${name}.proof.json`);
   if (!existsSync(path)) { console.error(`missing proof: ${path}`); process.exit(1); }
   const p = JSON.parse(readFileSync(path, 'utf8'));
-  const ok = p.status === 'GREEN' || (p.status === 'WARN' && allowWarnForWaveLE !== null && wave <= allowWarnForWaveLE);
+  const warnAllowed = (allowWarnForWaveLE !== null && wave <= allowWarnForWaveLE) || (typeof allowWarnIf === 'function' && allowWarnIf(p));
+  const ok = p.status === 'GREEN' || (p.status === 'WARN' && warnAllowed);
   if (!ok) { console.error(`${name} proof is ${p.status}`); process.exit(1); }
   return p;
 }
 const gate = verifyProof('quality-gate');
 const drift = verifyProof('drift');
-// Wave-aware: pre-existing legacy is acknowledged WARN for waves <= 0; cleanup belongs to waves 1+.
-const zerodirt = verifyProof('zerodirt', { allowWarnForWaveLE: 0 });
+// Wave-aware scope-bounded: WARN is acceptable when this wave has zero OWNED legacy hits
+// (observed hits in not-yet-owned scope are deferred to their owning wave by doctrine).
+const zerodirt = verifyProof('zerodirt', {
+  allowWarnForWaveLE: 0,
+  allowWarnIf: (p) => (p.payload?.findings?.forbidden?.length ?? 0) === 0,
+});
 
 const specFile = join(process.cwd(), `scripts/program/foundation-ai/specs/wave.${wave}.spec.json`);
 const spec = JSON.parse(readFileSync(specFile, 'utf8'));

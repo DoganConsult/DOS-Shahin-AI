@@ -35,6 +35,9 @@ console.log(`\n── Foundation-AI autopilot · advancing to wave ${wave} ─�
 try {
   process.env.PROGRAM_WAVE = String(wave);
   run(`node scripts/program/foundation-ai/inventory.mjs > /dev/null`);
+  // Preflight: auto-correct safe legacy patterns before run-wave (only if explicitly approved).
+  // Without approval, preflight is dry-run and surfaces a flag; autopilot continues.
+  try { run(`node scripts/program/foundation-ai/preflight.mjs --wave=${wave}${process.env.PROGRAM_PREFLIGHT_APPROVED === '1' ? ' --apply' : ''}`); } catch {}
   run(`node scripts/program/foundation-ai/run-wave.mjs --wave=${wave}`);
   run(`node scripts/program/foundation-ai/quality-gate.mjs --wave=${wave}`);
   run(`node scripts/program/foundation-ai/drift-check.mjs --wave=${wave}`);

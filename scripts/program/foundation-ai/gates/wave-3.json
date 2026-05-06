@@ -1,8 +1,22 @@
 {
-  "schema": "foundation-ai.gate.v1",
+  "schema": "foundation-ai.gate.v2",
   "wave": 3,
+  "phase": "P3",
+  "derivedFrom": "program.master.json",
   "checks": [
-    { "id": "inventory_runs", "cmd": "node scripts/program/foundation-ai/inventory.mjs > /dev/null" },
-    { "id": "zerodirt", "cmd": "PROGRAM_WAVE=3 node scripts/program/foundation-ai/zerodirt.mjs", "required": false }
-  ]
+    {
+      "id": "inventory_runs",
+      "cmd": "node scripts/program/foundation-ai/inventory.mjs > /dev/null"
+    },
+    {
+      "id": "archetypes_dir_exists",
+      "cmd": "test -d platform/ui-system/dos-ui-system/src/archetypes"
+    },
+    {
+      "id": "zerodirt",
+      "cmd": "PROGRAM_WAVE=3 node scripts/program/foundation-ai/zerodirt.mjs",
+      "required": true
+    }
+  ],
+  "hash": "sha256:f4fc6da39f9ea40d18726d4e938718f7c49c8ba002124fe3b2dcd37af0d0e095"
 }

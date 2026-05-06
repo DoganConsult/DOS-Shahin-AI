@@ -1,24 +1,44 @@
 {
-  "schema": "foundation-ai.wave.v1",
+  "schema": "foundation-ai.wave.v2",
   "wave": 7,
   "phase": "P7",
-  "title": "Wave 7 (placeholder; will be auto-sized by program:autosize)",
-  "commitType": "feat",
+  "title": "Republish & Production Deploy",
+  "commitType": "release",
+  "objective": "Publish foundation module manifest; produce handover bundle; run production smoke probe.",
   "preconditions": [
     "wave-6.green"
   ],
+  "deliverables": [
+    "modules/foundation/dist/**",
+    "handover bundle"
+  ],
   "steps": [
     {
-      "id": "inventory",
-      "cmd": "node scripts/program/foundation-ai/inventory.mjs"
+      "id": "module-publish",
+      "cmd": "node scripts/module/publish.mjs --module=foundation"
+    },
+    {
+      "id": "handover-foundation",
+      "cmd": "pnpm handover:foundation"
+    },
+    {
+      "id": "handover-bundle",
+      "cmd": "pnpm handover:bundle"
+    }
+  ],
+  "acceptanceChecks": [
+    {
+      "id": "module_published",
+      "cmd": "node scripts/module/verify.mjs --module=foundation"
     }
   ],
   "scopeAllowlist": [
     "scripts/program/foundation-ai/**",
     "proofs/foundation-ai/**",
-    "platform/foundation/**",
-    "platform/ui-system/dos-ui-contracts/**",
-    "services/ui-os-service/**",
+    "modules/foundation/**",
     "archive/foundation-ai/**"
-  ]
+  ],
+  "rollback": "module:deactivate",
+  "derivedFrom": "program.master.json",
+  "hash": "sha256:ec32828bcd1adcfca897513e31a9881748194f6fbbf9a4fc13f5cac78efb6126"
 }

@@ -1,24 +1,35 @@
 {
-  "schema": "foundation-ai.wave.v1",
+  "schema": "foundation-ai.wave.v2",
   "wave": 8,
   "phase": "P8",
-  "title": "Wave 8 (placeholder; will be auto-sized by program:autosize)",
+  "title": "Composability Activation",
   "commitType": "feat",
+  "objective": "Enable cross-module composability and shared registries.",
   "preconditions": [
     "wave-7.green"
   ],
+  "deliverables": [
+    "platform/foundation/contracts/registries/**"
+  ],
   "steps": [
     {
-      "id": "inventory",
-      "cmd": "node scripts/program/foundation-ai/inventory.mjs"
+      "id": "registry-verify",
+      "cmd": "pnpm ui-registry:verify"
+    }
+  ],
+  "acceptanceChecks": [
+    {
+      "id": "registry_green",
+      "cmd": "pnpm ui-registry:verify"
     }
   ],
   "scopeAllowlist": [
     "scripts/program/foundation-ai/**",
     "proofs/foundation-ai/**",
-    "platform/foundation/**",
-    "platform/ui-system/dos-ui-contracts/**",
-    "services/ui-os-service/**",
+    "platform/foundation/contracts/registries/**",
     "archive/foundation-ai/**"
-  ]
+  ],
+  "rollback": "git revert <wave-8-commit>",
+  "derivedFrom": "program.master.json",
+  "hash": "sha256:b79a8e3d86a08a3f062b46156a693284101c4fbc93aab803c83ae89f4d48a2a1"
 }

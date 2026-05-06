@@ -1,11 +1,16 @@
 {
-  "schema": "foundation-ai.wave.v1",
+  "schema": "foundation-ai.wave.v2",
   "wave": -1,
   "phase": "P-1",
-  "title": "Charter, signing keys, Foundation Quad registration",
+  "title": "Charter & Foundation Quad Registration",
   "commitType": "feat",
+  "objective": "Register Foundation Quad agents and signing-key envelope.",
   "preconditions": [
     "wave--2.green"
+  ],
+  "deliverables": [
+    "platform/foundation/contracts/agent.contract.json",
+    "platform/foundation/contracts/agents/agents.json"
   ],
   "steps": [
     {
@@ -13,12 +18,24 @@
       "cmd": "node scripts/program/foundation-ai/inventory.mjs"
     }
   ],
+  "acceptanceChecks": [
+    {
+      "id": "agent_contract_present",
+      "cmd": "test -f platform/foundation/contracts/agent.contract.json"
+    },
+    {
+      "id": "agents_registry_present",
+      "cmd": "test -f platform/foundation/contracts/agents/agents.json"
+    }
+  ],
   "scopeAllowlist": [
     "scripts/program/foundation-ai/**",
     "proofs/foundation-ai/**",
-    "platform/foundation/contracts/**",
-    "platform/foundation/db/migrations/**",
-    "platform/foundation/db/seeds/**",
+    "platform/foundation/contracts/agent.contract.json",
+    "platform/foundation/contracts/agents/**",
     "archive/foundation-ai/**"
-  ]
+  ],
+  "rollback": null,
+  "derivedFrom": "program.master.json",
+  "hash": "sha256:658a56296026fd2eab971d4f45c90e1ac4b9fc471a3365526efce587c75bb99a"
 }

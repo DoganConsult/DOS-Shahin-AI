@@ -1,8 +1,22 @@
 {
-  "schema": "foundation-ai.gate.v1",
+  "schema": "foundation-ai.gate.v2",
   "wave": 10,
+  "phase": "P10",
+  "derivedFrom": "program.master.json",
   "checks": [
-    { "id": "inventory_runs", "cmd": "node scripts/program/foundation-ai/inventory.mjs > /dev/null" },
-    { "id": "zerodirt", "cmd": "PROGRAM_WAVE=10 node scripts/program/foundation-ai/zerodirt.mjs", "required": false }
-  ]
+    {
+      "id": "inventory_runs",
+      "cmd": "node scripts/program/foundation-ai/inventory.mjs > /dev/null"
+    },
+    {
+      "id": "agent_contract_valid",
+      "cmd": "node -e \"JSON.parse(require('fs').readFileSync('platform/foundation/contracts/agent.contract.json','utf8'))\""
+    },
+    {
+      "id": "zerodirt",
+      "cmd": "PROGRAM_WAVE=10 node scripts/program/foundation-ai/zerodirt.mjs",
+      "required": true
+    }
+  ],
+  "hash": "sha256:0a57a2a051918f19588d1a9f037709bb43f25d8f8936361425dccd0fef4f14ad"
 }

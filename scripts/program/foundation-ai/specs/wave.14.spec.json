@@ -1,24 +1,38 @@
 {
-  "schema": "foundation-ai.wave.v1",
+  "schema": "foundation-ai.wave.v2",
   "wave": 14,
   "phase": "P14",
-  "title": "Wave 14 (placeholder; will be auto-sized by program:autosize)",
-  "commitType": "feat",
+  "title": "Market Launch",
+  "commitType": "release",
+  "objective": "GA — production cutover, comms, and monitoring.",
   "preconditions": [
     "wave-13.green"
   ],
+  "deliverables": [
+    "proofs/foundation-ai/wave-14/launch.proof.json"
+  ],
   "steps": [
     {
-      "id": "inventory",
-      "cmd": "node scripts/program/foundation-ai/inventory.mjs"
+      "id": "platform-release-gate",
+      "cmd": "pnpm platform:release-gate"
+    },
+    {
+      "id": "drift-sample",
+      "cmd": "pnpm drift:sample"
+    }
+  ],
+  "acceptanceChecks": [
+    {
+      "id": "release_gate_green",
+      "cmd": "pnpm platform:release-gate"
     }
   ],
   "scopeAllowlist": [
     "scripts/program/foundation-ai/**",
     "proofs/foundation-ai/**",
-    "platform/foundation/**",
-    "platform/ui-system/dos-ui-contracts/**",
-    "services/ui-os-service/**",
     "archive/foundation-ai/**"
-  ]
+  ],
+  "rollback": "feature flag rollback",
+  "derivedFrom": "program.master.json",
+  "hash": "sha256:c2f85167fdef9a28b8ccf00958d3ed96b4ac90a7a57d42239e9c60d691a81ba5"
 }

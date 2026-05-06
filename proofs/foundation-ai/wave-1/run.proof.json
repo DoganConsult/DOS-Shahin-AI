@@ -1,0 +1,35 @@
+{
+  "schema": "foundation-ai.proof.v1",
+  "phase": "P1",
+  "wave": 1,
+  "name": "run",
+  "status": "GREEN",
+  "payload": {
+    "schema": "foundation-ai.wave.v1",
+    "wave": 1,
+    "title": "Cross-cutting Contracts v2 — i18n + ShellAction + Tokens",
+    "steps": [
+      {
+        "id": "build-contracts",
+        "status": "GREEN",
+        "ms": 2013,
+        "tail": "\n> @dos/ui-contracts@1.0.0 build /root/DOS-Platform/platform/ui-system/dos-ui-contracts\n> tsc -p tsconfig.build.json\n\n"
+      },
+      {
+        "id": "build-ui-system",
+        "status": "GREEN",
+        "ms": 3628,
+        "tail": "\n> @dos/ui-system@1.0.0 build /root/DOS-Platform/platform/ui-system/dos-ui-system\n> tsc -p tsconfig.build.json\n\n"
+      },
+      {
+        "id": "no-legacy-tokens",
+        "status": "GREEN",
+        "ms": 63,
+        "tail": "[lint-no-static-nav-fallback] scanned 16 TS files under platform/app + nav roots\n[lint-no-static-nav-fallback] PASS — SPA does not use static nav as source of truth\n"
+      }
+    ],
+    "dryRun": false
+  },
+  "emittedAt": "2026-05-06T18:22:22.798Z",
+  "hash": "sha256:6fe41955aeb1b5707b84ab032efea69969c8d4ac778d11b9631d2e99ece4a468"
+}

@@ -1,8 +1,26 @@
 {
-  "schema": "foundation-ai.gate.v1",
+  "schema": "foundation-ai.gate.v2",
   "wave": 1,
+  "phase": "P1",
+  "derivedFrom": "program.master.json",
   "checks": [
-    { "id": "inventory_runs", "cmd": "node scripts/program/foundation-ai/inventory.mjs > /dev/null" },
-    { "id": "zerodirt", "cmd": "PROGRAM_WAVE=1 node scripts/program/foundation-ai/zerodirt.mjs", "required": false }
-  ]
+    {
+      "id": "inventory_runs",
+      "cmd": "node scripts/program/foundation-ai/inventory.mjs > /dev/null"
+    },
+    {
+      "id": "shell_action_contract_exists",
+      "cmd": "test -f platform/ui-system/dos-ui-contracts/src/shell-action.contract.ts"
+    },
+    {
+      "id": "no_shellActionFromLegacyRecord",
+      "cmd": "! grep -RIn --exclude-dir=node_modules --exclude-dir=dist -e 'shellActionFromLegacyRecord' platform/ui-system/dos-ui-contracts/src"
+    },
+    {
+      "id": "zerodirt",
+      "cmd": "PROGRAM_WAVE=1 node scripts/program/foundation-ai/zerodirt.mjs",
+      "required": true
+    }
+  ],
+  "hash": "sha256:e9a7e1d99e639b908fd823f03c568d00558ca3e65014f4d51351a4f40c5a1ce0"
 }

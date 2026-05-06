@@ -1,24 +1,36 @@
 {
-  "schema": "foundation-ai.wave.v1",
+  "schema": "foundation-ai.wave.v2",
   "wave": 9,
   "phase": "P9",
-  "title": "Wave 9 (placeholder; will be auto-sized by program:autosize)",
+  "title": "Regulator Evidence Packs",
   "commitType": "feat",
+  "objective": "Emit regulator-grade evidence packs (audit, lineage, SoD).",
   "preconditions": [
     "wave-8.green"
   ],
+  "deliverables": [
+    "modules/audit-shelf/dist/**",
+    "proofs/foundation-ai/wave-9/evidence-pack.json"
+  ],
   "steps": [
     {
-      "id": "inventory",
-      "cmd": "node scripts/program/foundation-ai/inventory.mjs"
+      "id": "audit-shelf-bundle",
+      "cmd": "pnpm handover:audit-shelf"
+    }
+  ],
+  "acceptanceChecks": [
+    {
+      "id": "evidence_pack_present",
+      "cmd": "test -f proofs/foundation-ai/wave-9/evidence-pack.json"
     }
   ],
   "scopeAllowlist": [
     "scripts/program/foundation-ai/**",
     "proofs/foundation-ai/**",
-    "platform/foundation/**",
-    "platform/ui-system/dos-ui-contracts/**",
-    "services/ui-os-service/**",
+    "modules/audit-shelf/**",
     "archive/foundation-ai/**"
-  ]
+  ],
+  "rollback": null,
+  "derivedFrom": "program.master.json",
+  "hash": "sha256:6ded696ec0cc8c4907670dd38a18f6bcdc7acb4828f9f97e6d9cc134af983661"
 }

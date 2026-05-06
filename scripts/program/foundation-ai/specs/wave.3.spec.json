@@ -1,24 +1,40 @@
 {
-  "schema": "foundation-ai.wave.v1",
+  "schema": "foundation-ai.wave.v2",
   "wave": 3,
   "phase": "P3",
-  "title": "Wave 3 (placeholder; will be auto-sized by program:autosize)",
+  "title": "Renderers & Agent UI components",
   "commitType": "feat",
+  "objective": "Implement 14 archetype renderers + reusable Agent UI components (Workbench, Recommendation, Receipt).",
   "preconditions": [
     "wave-2.green"
   ],
+  "deliverables": [
+    "platform/ui-system/dos-ui-system/src/components/agent/**",
+    "platform/ui-system/dos-ui-system/src/archetypes/**"
+  ],
   "steps": [
     {
-      "id": "inventory",
-      "cmd": "node scripts/program/foundation-ai/inventory.mjs"
+      "id": "build-ui-system",
+      "cmd": "pnpm --filter @dos/ui-system build"
+    },
+    {
+      "id": "registry-verify",
+      "cmd": "pnpm ui-registry:verify"
+    }
+  ],
+  "acceptanceChecks": [
+    {
+      "id": "archetypes_dir_exists",
+      "cmd": "test -d platform/ui-system/dos-ui-system/src/archetypes"
     }
   ],
   "scopeAllowlist": [
     "scripts/program/foundation-ai/**",
     "proofs/foundation-ai/**",
-    "platform/foundation/**",
-    "platform/ui-system/dos-ui-contracts/**",
-    "services/ui-os-service/**",
+    "platform/ui-system/dos-ui-system/src/**",
     "archive/foundation-ai/**"
-  ]
+  ],
+  "rollback": "git revert <wave-3-commit>",
+  "derivedFrom": "program.master.json",
+  "hash": "sha256:303afcf7fe5c5e8d625adc231aac93b3a16ad6d4a293de605f0a1de9815ebeb2"
 }

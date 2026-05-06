@@ -1,17 +1,43 @@
 {
-  "schema": "foundation-ai.wave.v1",
+  "schema": "foundation-ai.wave.v2",
   "wave": -2,
   "phase": "P-2",
-  "title": "Autopilot Pre-Program scaffold",
+  "title": "Autopilot Pre-Program",
   "commitType": "chore",
+  "objective": "Scaffold autopilot, ledger, proofs, archive, gates.",
   "preconditions": [],
+  "deliverables": [
+    "scripts/program/foundation-ai/autopilot.mjs",
+    "scripts/program/foundation-ai/run-wave.mjs",
+    "scripts/program/foundation-ai/quality-gate.mjs",
+    "scripts/program/foundation-ai/drift-check.mjs",
+    "scripts/program/foundation-ai/zerodirt.mjs",
+    "scripts/program/foundation-ai/archive-phase.mjs",
+    "scripts/program/foundation-ai/commit-wave.mjs",
+    "scripts/program/foundation-ai/inventory.mjs",
+    "scripts/program/foundation-ai/lib/ledger.mjs",
+    "scripts/program/foundation-ai/lib/proof.mjs",
+    "scripts/program/foundation-ai/lib/scope.mjs"
+  ],
   "steps": [
-    { "id": "inventory", "cmd": "node scripts/program/foundation-ai/inventory.mjs" }
+    {
+      "id": "inventory",
+      "cmd": "node scripts/program/foundation-ai/inventory.mjs"
+    }
+  ],
+  "acceptanceChecks": [
+    {
+      "id": "scripts_present",
+      "cmd": "test -f scripts/program/foundation-ai/autopilot.mjs && test -f scripts/program/foundation-ai/lib/ledger.mjs"
+    }
   ],
   "scopeAllowlist": [
     "scripts/program/foundation-ai/**",
     "proofs/foundation-ai/**",
     "archive/foundation-ai/**",
     "package.json"
-  ]
+  ],
+  "rollback": null,
+  "derivedFrom": "program.master.json",
+  "hash": "sha256:6d0daf5e290719fd98baec635017c64d97982956b2a39906386f4b394cf14f6a"
 }

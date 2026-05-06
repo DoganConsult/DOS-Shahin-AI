@@ -1,0 +1,315 @@
+{
+  "schema": "foundation-ai.proof.v1",
+  "phase": "P1",
+  "wave": 1,
+  "name": "preflight",
+  "status": "GREEN",
+  "payload": {
+    "schema": "foundation-ai.preflight.v1",
+    "wave": 1,
+    "scan": {
+      "ownedHits": 10,
+      "observedHits": 50,
+      "status": "RED"
+    },
+    "proposals": [
+      {
+        "classifierId": "jsdoc-db-mapping",
+        "autoFix": true,
+        "filePath": "platform/ui-system/dos-ui-system/src/shell/shell-banner-strip.component.ts",
+        "lineNo": 5,
+        "original": " * DB: dos.dynamic_ui_component_registry component_key='shell.banner-strip' carbon_key='notification'",
+        "replacement": " * Runtime: componentKey=shell.banner-strip (carbon=notification) — DB schema reference removed (resolved by UI-OS service).",
+        "justification": "JSDoc comment documenting DB columns leaks snake_case schema into browser-facing code, violating \"no comment drift\" and \"DB names belong inside UI-OS resolver only\" rules.",
+        "consequences": {
+          "pros": [
+            "restores doctrine: DB schema references stay inside UI-OS service boundary",
+            "unblocks wave 1 contract freeze without fake green",
+            "comments still useful: runtime contract field name is preserved"
+          ],
+          "cons": [
+            "developers must consult UI-OS resolver to find originating DB column name"
+          ],
+          "risk": "low — comment-only edit, no runtime behavior change",
+          "value": "enforces single-source-of-truth for runtime field naming; eliminates drift between comment and contract"
+        },
+        "lessonLearned": "Forbidden tokens scan must include comments. Documenting DB columns inside browser-facing components encourages developers to import snake_case mental model. Move all DB-column docs to the UI-OS resolver file (services/ui-os-service/src/routes/workspace-shell.routes.ts) as the single allowed boundary."
+      },
+      {
+        "classifierId": "jsdoc-db-mapping",
+        "autoFix": true,
+        "filePath": "platform/ui-system/dos-ui-system/src/shell/workspace-action-queue.component.ts",
+        "lineNo": 5,
+        "original": " * DB: dos.dynamic_ui_component_registry component_key=workspace.action-queue carbon_key=tiles",
+        "replacement": " * Runtime: componentKey=workspace.action-queue (carbon=tiles) — DB schema reference removed (resolved by UI-OS service).",
+        "justification": "JSDoc comment documenting DB columns leaks snake_case schema into browser-facing code, violating \"no comment drift\" and \"DB names belong inside UI-OS resolver only\" rules.",
+        "consequences": {
+          "pros": [
+            "restores doctrine: DB schema references stay inside UI-OS service boundary",
+            "unblocks wave 1 contract freeze without fake green",
+            "comments still useful: runtime contract field name is preserved"
+          ],
+          "cons": [
+            "developers must consult UI-OS resolver to find originating DB column name"
+          ],
+          "risk": "low — comment-only edit, no runtime behavior change",
+          "value": "enforces single-source-of-truth for runtime field naming; eliminates drift between comment and contract"
+        },
+        "lessonLearned": "Forbidden tokens scan must include comments. Documenting DB columns inside browser-facing components encourages developers to import snake_case mental model. Move all DB-column docs to the UI-OS resolver file (services/ui-os-service/src/routes/workspace-shell.routes.ts) as the single allowed boundary."
+      },
+      {
+        "classifierId": "jsdoc-db-mapping",
+        "autoFix": true,
+        "filePath": "platform/ui-system/dos-ui-system/src/shell/workspace-status-bar.component.ts",
+        "lineNo": 5,
+        "original": " * DB: dos.dynamic_ui_component_registry component_key=workspace.status-bar carbon_key=tag",
+        "replacement": " * Runtime: componentKey=workspace.status-bar (carbon=tag) — DB schema reference removed (resolved by UI-OS service).",
+        "justification": "JSDoc comment documenting DB columns leaks snake_case schema into browser-facing code, violating \"no comment drift\" and \"DB names belong inside UI-OS resolver only\" rules.",
+        "consequences": {
+          "pros": [
+            "restores doctrine: DB schema references stay inside UI-OS service boundary",
+            "unblocks wave 1 contract freeze without fake green",
+            "comments still useful: runtime contract field name is preserved"
+          ],
+          "cons": [
+            "developers must consult UI-OS resolver to find originating DB column name"
+          ],
+          "risk": "low — comment-only edit, no runtime behavior change",
+          "value": "enforces single-source-of-truth for runtime field naming; eliminates drift between comment and contract"
+        },
+        "lessonLearned": "Forbidden tokens scan must include comments. Documenting DB columns inside browser-facing components encourages developers to import snake_case mental model. Move all DB-column docs to the UI-OS resolver file (services/ui-os-service/src/routes/workspace-shell.routes.ts) as the single allowed boundary."
+      },
+      {
+        "classifierId": "jsdoc-db-mapping",
+        "autoFix": true,
+        "filePath": "platform/ui-system/dos-ui-system/src/shell/agent-activity-strip.component.ts",
+        "lineNo": 5,
+        "original": " * DB: dos.dynamic_ui_component_registry component_key=workspace.agent-strip carbon_key=tiles",
+        "replacement": " * Runtime: componentKey=workspace.agent-strip (carbon=tiles) — DB schema reference removed (resolved by UI-OS service).",
+        "justification": "JSDoc comment documenting DB columns leaks snake_case schema into browser-facing code, violating \"no comment drift\" and \"DB names belong inside UI-OS resolver only\" rules.",
+        "consequences": {
+          "pros": [
+            "restores doctrine: DB schema references stay inside UI-OS service boundary",
+            "unblocks wave 1 contract freeze without fake green",
+            "comments still useful: runtime contract field name is preserved"
+          ],
+          "cons": [
+            "developers must consult UI-OS resolver to find originating DB column name"
+          ],
+          "risk": "low — comment-only edit, no runtime behavior change",
+          "value": "enforces single-source-of-truth for runtime field naming; eliminates drift between comment and contract"
+        },
+        "lessonLearned": "Forbidden tokens scan must include comments. Documenting DB columns inside browser-facing components encourages developers to import snake_case mental model. Move all DB-column docs to the UI-OS resolver file (services/ui-os-service/src/routes/workspace-shell.routes.ts) as the single allowed boundary."
+      },
+      {
+        "classifierId": "jsdoc-db-mapping",
+        "autoFix": true,
+        "filePath": "platform/ui-system/dos-ui-system/src/shell/command-search.component.ts",
+        "lineNo": 5,
+        "original": " * DB: dos.dynamic_ui_component_registry component_key=workspace.command-search carbon_key=search",
+        "replacement": " * Runtime: componentKey=workspace.command-search (carbon=search) — DB schema reference removed (resolved by UI-OS service).",
+        "justification": "JSDoc comment documenting DB columns leaks snake_case schema into browser-facing code, violating \"no comment drift\" and \"DB names belong inside UI-OS resolver only\" rules.",
+        "consequences": {
+          "pros": [
+            "restores doctrine: DB schema references stay inside UI-OS service boundary",
+            "unblocks wave 1 contract freeze without fake green",
+            "comments still useful: runtime contract field name is preserved"
+          ],
+          "cons": [
+            "developers must consult UI-OS resolver to find originating DB column name"
+          ],
+          "risk": "low — comment-only edit, no runtime behavior change",
+          "value": "enforces single-source-of-truth for runtime field naming; eliminates drift between comment and contract"
+        },
+        "lessonLearned": "Forbidden tokens scan must include comments. Documenting DB columns inside browser-facing components encourages developers to import snake_case mental model. Move all DB-column docs to the UI-OS resolver file (services/ui-os-service/src/routes/workspace-shell.routes.ts) as the single allowed boundary."
+      },
+      {
+        "classifierId": "jsdoc-db-mapping",
+        "autoFix": true,
+        "filePath": "platform/ui-system/dos-ui-system/src/shell/context-panel.component.ts",
+        "lineNo": 5,
+        "original": " * DB: dos.dynamic_ui_component_registry component_key=workspace.context-panel carbon_key=accordion",
+        "replacement": " * Runtime: componentKey=workspace.context-panel (carbon=accordion) — DB schema reference removed (resolved by UI-OS service).",
+        "justification": "JSDoc comment documenting DB columns leaks snake_case schema into browser-facing code, violating \"no comment drift\" and \"DB names belong inside UI-OS resolver only\" rules.",
+        "consequences": {
+          "pros": [
+            "restores doctrine: DB schema references stay inside UI-OS service boundary",
+            "unblocks wave 1 contract freeze without fake green",
+            "comments still useful: runtime contract field name is preserved"
+          ],
+          "cons": [
+            "developers must consult UI-OS resolver to find originating DB column name"
+          ],
+          "risk": "low — comment-only edit, no runtime behavior change",
+          "value": "enforces single-source-of-truth for runtime field naming; eliminates drift between comment and contract"
+        },
+        "lessonLearned": "Forbidden tokens scan must include comments. Documenting DB columns inside browser-facing components encourages developers to import snake_case mental model. Move all DB-column docs to the UI-OS resolver file (services/ui-os-service/src/routes/workspace-shell.routes.ts) as the single allowed boundary."
+      },
+      {
+        "classifierId": "jsdoc-db-mapping",
+        "autoFix": true,
+        "filePath": "platform/ui-system/dos-ui-system/src/shell/inbox-center.component.ts",
+        "lineNo": 5,
+        "original": " * DB: dos.dynamic_ui_component_registry component_key=workspace.inbox-center carbon_key=modal",
+        "replacement": " * Runtime: componentKey=workspace.inbox-center (carbon=modal) — DB schema reference removed (resolved by UI-OS service).",
+        "justification": "JSDoc comment documenting DB columns leaks snake_case schema into browser-facing code, violating \"no comment drift\" and \"DB names belong inside UI-OS resolver only\" rules.",
+        "consequences": {
+          "pros": [
+            "restores doctrine: DB schema references stay inside UI-OS service boundary",
+            "unblocks wave 1 contract freeze without fake green",
+            "comments still useful: runtime contract field name is preserved"
+          ],
+          "cons": [
+            "developers must consult UI-OS resolver to find originating DB column name"
+          ],
+          "risk": "low — comment-only edit, no runtime behavior change",
+          "value": "enforces single-source-of-truth for runtime field naming; eliminates drift between comment and contract"
+        },
+        "lessonLearned": "Forbidden tokens scan must include comments. Documenting DB columns inside browser-facing components encourages developers to import snake_case mental model. Move all DB-column docs to the UI-OS resolver file (services/ui-os-service/src/routes/workspace-shell.routes.ts) as the single allowed boundary."
+      },
+      {
+        "classifierId": "jsdoc-db-mapping",
+        "autoFix": true,
+        "filePath": "platform/ui-system/dos-ui-system/src/shell/quick-create.component.ts",
+        "lineNo": 5,
+        "original": " * DB: dos.dynamic_ui_component_registry component_key=workspace.quick-create carbon_key=button",
+        "replacement": " * Runtime: componentKey=workspace.quick-create (carbon=button) — DB schema reference removed (resolved by UI-OS service).",
+        "justification": "JSDoc comment documenting DB columns leaks snake_case schema into browser-facing code, violating \"no comment drift\" and \"DB names belong inside UI-OS resolver only\" rules.",
+        "consequences": {
+          "pros": [
+            "restores doctrine: DB schema references stay inside UI-OS service boundary",
+            "unblocks wave 1 contract freeze without fake green",
+            "comments still useful: runtime contract field name is preserved"
+          ],
+          "cons": [
+            "developers must consult UI-OS resolver to find originating DB column name"
+          ],
+          "risk": "low — comment-only edit, no runtime behavior change",
+          "value": "enforces single-source-of-truth for runtime field naming; eliminates drift between comment and contract"
+        },
+        "lessonLearned": "Forbidden tokens scan must include comments. Documenting DB columns inside browser-facing components encourages developers to import snake_case mental model. Move all DB-column docs to the UI-OS resolver file (services/ui-os-service/src/routes/workspace-shell.routes.ts) as the single allowed boundary."
+      },
+      {
+        "classifierId": "jsdoc-db-mapping",
+        "autoFix": true,
+        "filePath": "platform/ui-system/dos-ui-system/src/shell/workspace-header.component.ts",
+        "lineNo": 5,
+        "original": " * DB: dos.dynamic_ui_component_registry component_key=workspace.header carbon_key=ui-shell",
+        "replacement": " * Runtime: componentKey=workspace.header (carbon=ui-shell) — DB schema reference removed (resolved by UI-OS service).",
+        "justification": "JSDoc comment documenting DB columns leaks snake_case schema into browser-facing code, violating \"no comment drift\" and \"DB names belong inside UI-OS resolver only\" rules.",
+        "consequences": {
+          "pros": [
+            "restores doctrine: DB schema references stay inside UI-OS service boundary",
+            "unblocks wave 1 contract freeze without fake green",
+            "comments still useful: runtime contract field name is preserved"
+          ],
+          "cons": [
+            "developers must consult UI-OS resolver to find originating DB column name"
+          ],
+          "risk": "low — comment-only edit, no runtime behavior change",
+          "value": "enforces single-source-of-truth for runtime field naming; eliminates drift between comment and contract"
+        },
+        "lessonLearned": "Forbidden tokens scan must include comments. Documenting DB columns inside browser-facing components encourages developers to import snake_case mental model. Move all DB-column docs to the UI-OS resolver file (services/ui-os-service/src/routes/workspace-shell.routes.ts) as the single allowed boundary."
+      },
+      {
+        "classifierId": "jsdoc-db-mapping",
+        "autoFix": true,
+        "filePath": "platform/ui-system/dos-ui-system/src/shell/workspace-sidebar.component.ts",
+        "lineNo": 5,
+        "original": " * DB: dos.dynamic_ui_component_registry component_key=workspace.sidebar carbon_key=ui-shell",
+        "replacement": " * Runtime: componentKey=workspace.sidebar (carbon=ui-shell) — DB schema reference removed (resolved by UI-OS service).",
+        "justification": "JSDoc comment documenting DB columns leaks snake_case schema into browser-facing code, violating \"no comment drift\" and \"DB names belong inside UI-OS resolver only\" rules.",
+        "consequences": {
+          "pros": [
+            "restores doctrine: DB schema references stay inside UI-OS service boundary",
+            "unblocks wave 1 contract freeze without fake green",
+            "comments still useful: runtime contract field name is preserved"
+          ],
+          "cons": [
+            "developers must consult UI-OS resolver to find originating DB column name"
+          ],
+          "risk": "low — comment-only edit, no runtime behavior change",
+          "value": "enforces single-source-of-truth for runtime field naming; eliminates drift between comment and contract"
+        },
+        "lessonLearned": "Forbidden tokens scan must include comments. Documenting DB columns inside browser-facing components encourages developers to import snake_case mental model. Move all DB-column docs to the UI-OS resolver file (services/ui-os-service/src/routes/workspace-shell.routes.ts) as the single allowed boundary."
+      }
+    ],
+    "unhandled": [],
+    "apply": true,
+    "applied": [
+      {
+        "filePath": "platform/ui-system/dos-ui-system/src/shell/shell-banner-strip.component.ts",
+        "lineNo": 5,
+        "classifierId": "jsdoc-db-mapping"
+      },
+      {
+        "filePath": "platform/ui-system/dos-ui-system/src/shell/workspace-action-queue.component.ts",
+        "lineNo": 5,
+        "classifierId": "jsdoc-db-mapping"
+      },
+      {
+        "filePath": "platform/ui-system/dos-ui-system/src/shell/workspace-status-bar.component.ts",
+        "lineNo": 5,
+        "classifierId": "jsdoc-db-mapping"
+      },
+      {
+        "filePath": "platform/ui-system/dos-ui-system/src/shell/agent-activity-strip.component.ts",
+        "lineNo": 5,
+        "classifierId": "jsdoc-db-mapping"
+      },
+      {
+        "filePath": "platform/ui-system/dos-ui-system/src/shell/command-search.component.ts",
+        "lineNo": 5,
+        "classifierId": "jsdoc-db-mapping"
+      },
+      {
+        "filePath": "platform/ui-system/dos-ui-system/src/shell/context-panel.component.ts",
+        "lineNo": 5,
+        "classifierId": "jsdoc-db-mapping"
+      },
+      {
+        "filePath": "platform/ui-system/dos-ui-system/src/shell/inbox-center.component.ts",
+        "lineNo": 5,
+        "classifierId": "jsdoc-db-mapping"
+      },
+      {
+        "filePath": "platform/ui-system/dos-ui-system/src/shell/quick-create.component.ts",
+        "lineNo": 5,
+        "classifierId": "jsdoc-db-mapping"
+      },
+      {
+        "filePath": "platform/ui-system/dos-ui-system/src/shell/workspace-header.component.ts",
+        "lineNo": 5,
+        "classifierId": "jsdoc-db-mapping"
+      },
+      {
+        "filePath": "platform/ui-system/dos-ui-system/src/shell/workspace-sidebar.component.ts",
+        "lineNo": 5,
+        "classifierId": "jsdoc-db-mapping"
+      }
+    ],
+    "failed": [],
+    "postScan": {
+      "status": "WARN",
+      "ownedHits": 0
+    },
+    "relatedWaves": [
+      {
+        "wave": 3,
+        "phase": "P3",
+        "title": "Renderers & Agent UI components"
+      }
+    ],
+    "flag": {
+      "raised": true,
+      "severity": "YELLOW",
+      "message": "wave 1: 10/10 owned hits are auto-fixable. Approve via --apply or PROGRAM_PREFLIGHT_APPROVED=1.",
+      "programAdjustment": null
+    },
+    "lessonsLearned": [
+      "Forbidden tokens scan must include comments. Documenting DB columns inside browser-facing components encourages developers to import snake_case mental model. Move all DB-column docs to the UI-OS resolver file (services/ui-os-service/src/routes/workspace-shell.routes.ts) as the single allowed boundary."
+    ]
+  },
+  "emittedAt": "2026-05-06T18:21:27.575Z",
+  "hash": "sha256:2808b099ed8f19ed2118811ea4ad8f38d22e7acfe19c56b948a522cb7e9a396e"
+}

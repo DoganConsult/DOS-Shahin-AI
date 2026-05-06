@@ -2,7 +2,7 @@
  * Phase WS-2 + Carbon-Wiring — shell.banner-strip wrapper.
  * Selector: dos-shell-banner-strip
  * Carbon primitive: notification (NotificationModule → cds-actionable-notification)
- * DB: dos.dynamic_ui_component_registry component_key='shell.banner-strip' carbon_key='notification'
+ * Runtime: componentKey=shell.banner-strip (carbon=notification) — DB schema reference removed (resolved by UI-OS service).
  *
  * Token stack:
  *   --cds-notification-*  (Carbon notification tokens)

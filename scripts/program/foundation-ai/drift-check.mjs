@@ -28,13 +28,20 @@ const dirty = gitDirtyFiles();
 const outOfScope = dirty.filter((f) => !withinAllowlist(f, allowlist));
 detectors.D_scope_dirty = { count: outOfScope.length, status: outOfScope.length === 0 ? 'GREEN' : 'RED', samples: outOfScope.slice(0, 20) };
 
-// D-tokens: forbidden tokens (delegates to grep already in zerodirt; we replay summary)
-let forbidden = 0;
+// D-tokens: delegate to zerodirt (scope-bounded, single source of truth).
+let zerodirtSummary = { ownedHits: 0, observedHits: 0, status: 'GREEN' };
 try {
-  const out = execSync(`grep -RIn -e "shellActionFromLegacyRecord" -e "label_key" -e "label_fallback" -e "labelKey" -e "labelEn" -e "labelAr" -e "component_key" -e "perms_required" -e "buildPlatformNav" -e "buildFoundationGroup" -e "/workspace-home" platform/core/platform/shell platform/core/platform/navigation platform/ui-system/dos-ui-contracts/src platform/ui-system/dos-ui-system/src/shell 2>/dev/null || true`, { encoding: 'utf8' });
-  forbidden = out.split('\n').filter(Boolean).length;
+  let out = '';
+  try { out = execSync(`PROGRAM_WAVE=${wave} node scripts/program/foundation-ai/zerodirt.mjs`, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }); }
+  catch (e) { out = e.stdout?.toString() ?? ''; }
+  const z = JSON.parse(out);
+  zerodirtSummary = {
+    ownedHits: (z.findings?.forbidden ?? []).length,
+    observedHits: (z.findings?.forbiddenObserved ?? []).length,
+    status: z.checks?.Z4_no_forbidden_tokens ?? 'GREEN',
+  };
 } catch {}
-detectors.D_tokens = { count: forbidden, status: forbidden === 0 ? 'GREEN' : (wave < 1 ? 'WARN' : 'RED') };
+detectors.D_tokens = { ...zerodirtSummary, status: zerodirtSummary.status === 'RED' ? 'RED' : zerodirtSummary.status === 'WARN' ? 'WARN' : 'GREEN' };
 
 const status = Object.values(detectors).every((d) => d.status !== 'RED') ? 'GREEN' : 'RED';
 const payload = { schema: 'foundation-ai.drift.v1', wave, detectors };

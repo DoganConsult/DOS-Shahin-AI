@@ -2,7 +2,7 @@
  * Phase WS-2 + Carbon-Wiring — workspace.inbox-center wrapper.
  * Selector: dos-inbox-center
  * Carbon primitive: modal (ModalModule → cds-modal) + contained-list
- * DB: dos.dynamic_ui_component_registry component_key=workspace.inbox-center carbon_key=modal
+ * Runtime: componentKey=workspace.inbox-center (carbon=modal) — DB schema reference removed (resolved by UI-OS service).
  *
  * Token stack:
  *   --cds-modal-*         (Carbon modal tokens)

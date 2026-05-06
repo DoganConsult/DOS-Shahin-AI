@@ -1,24 +1,53 @@
 {
-  "schema": "foundation-ai.wave.v1",
+  "schema": "foundation-ai.wave.v2",
   "wave": 1,
   "phase": "P1",
-  "title": "Wave 1 (placeholder; will be auto-sized by program:autosize)",
+  "title": "Cross-cutting Contracts v2 — i18n + ShellAction + Tokens",
   "commitType": "feat",
+  "objective": "Freeze WorkspaceI18nLabel, ShellAction discriminated union, and design-token contract; remove legacy aliases.",
   "preconditions": [
     "wave-0.green"
   ],
+  "deliverables": [
+    "platform/ui-system/dos-ui-contracts/src/shell-action.contract.ts",
+    "platform/ui-system/dos-ui-contracts/src/nav-contract.ts",
+    "platform/ui-system/dos-ui-system/src/shell/workspace-shell.contracts.ts"
+  ],
   "steps": [
     {
-      "id": "inventory",
-      "cmd": "node scripts/program/foundation-ai/inventory.mjs"
+      "id": "build-contracts",
+      "cmd": "pnpm --filter @dos/ui-contracts build"
+    },
+    {
+      "id": "build-ui-system",
+      "cmd": "pnpm --filter @dos/ui-system build"
+    },
+    {
+      "id": "no-legacy-tokens",
+      "cmd": "node scripts/ci-guards/lint-no-static-nav-fallback.mjs"
+    }
+  ],
+  "acceptanceChecks": [
+    {
+      "id": "shell_action_contract_exists",
+      "cmd": "test -f platform/ui-system/dos-ui-contracts/src/shell-action.contract.ts"
+    },
+    {
+      "id": "no_shellActionFromLegacyRecord",
+      "cmd": "! grep -RIn --exclude-dir=node_modules --exclude-dir=dist -e 'shellActionFromLegacyRecord' platform/ui-system/dos-ui-contracts/src"
     }
   ],
   "scopeAllowlist": [
     "scripts/program/foundation-ai/**",
     "proofs/foundation-ai/**",
-    "platform/foundation/**",
-    "platform/ui-system/dos-ui-contracts/**",
-    "services/ui-os-service/**",
-    "archive/foundation-ai/**"
-  ]
+    "platform/ui-system/dos-ui-contracts/src/**",
+    "platform/ui-system/dos-ui-contracts/dist/**",
+    "platform/ui-system/dos-ui-system/src/shell/**",
+    "platform/ui-system/dos-ui-system/dist/shell/**",
+    "archive/foundation-ai/**",
+    "package.json"
+  ],
+  "rollback": "git revert <wave-1-commit>",
+  "derivedFrom": "program.master.json",
+  "hash": "sha256:da355ef34b3c937b94c6162c45971f63ef00a2262fe5590142119157c0c09f9a"
 }

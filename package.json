@@ -59,7 +59,9 @@
     "program:archive":          "node scripts/program/foundation-ai/archive-phase.mjs",
     "program:commit":           "node scripts/program/foundation-ai/commit-wave.mjs",
     "program:status":           "node scripts/program/foundation-ai/status.mjs",
-    "program:inventory":        "node scripts/program/foundation-ai/inventory.mjs"
+    "program:inventory":        "node scripts/program/foundation-ai/inventory.mjs",
+    "program:plan-sync":        "node scripts/program/foundation-ai/plan-sync.mjs",
+    "program:preflight":        "node scripts/program/foundation-ai/preflight.mjs"
   },
   "devDependencies": {
     "ajv": "^8.20.0",

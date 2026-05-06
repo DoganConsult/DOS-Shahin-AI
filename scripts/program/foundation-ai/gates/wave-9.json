@@ -1,8 +1,22 @@
 {
-  "schema": "foundation-ai.gate.v1",
+  "schema": "foundation-ai.gate.v2",
   "wave": 9,
+  "phase": "P9",
+  "derivedFrom": "program.master.json",
   "checks": [
-    { "id": "inventory_runs", "cmd": "node scripts/program/foundation-ai/inventory.mjs > /dev/null" },
-    { "id": "zerodirt", "cmd": "PROGRAM_WAVE=9 node scripts/program/foundation-ai/zerodirt.mjs", "required": false }
-  ]
+    {
+      "id": "inventory_runs",
+      "cmd": "node scripts/program/foundation-ai/inventory.mjs > /dev/null"
+    },
+    {
+      "id": "evidence_pack_present",
+      "cmd": "test -f proofs/foundation-ai/wave-9/evidence-pack.json"
+    },
+    {
+      "id": "zerodirt",
+      "cmd": "PROGRAM_WAVE=9 node scripts/program/foundation-ai/zerodirt.mjs",
+      "required": true
+    }
+  ],
+  "hash": "sha256:b0c4461949fc9071f861abf23bf04b0c767dd860f6d352248d3ac327322049c0"
 }

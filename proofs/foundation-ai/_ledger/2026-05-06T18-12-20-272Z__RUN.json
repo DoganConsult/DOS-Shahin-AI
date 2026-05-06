@@ -1,0 +1,14 @@
+{
+  "runId": "5c7de916-08f7-4e9d-95dd-5ecd19ea19c9",
+  "phase": "P1",
+  "wave": 1,
+  "kind": "RUN",
+  "inputsHash": "sha256:dea5b0470c98fce5192fad69c642855b509f8409a136df1fb34e462ab37af27f",
+  "outputsHash": "sha256:4dfa067ac589d5738e60cbc8146e2b852067d3df124c214b2e85e4807cb595a7",
+  "parentHash": "sha256:a1bcbee7e6f9ad6ecc9d58446535b1595425ab952bbe325942f3f101c8d3130e",
+  "signer": "dev-1",
+  "status": "GREEN",
+  "evidenceUri": "/root/DOS-Platform/proofs/foundation-ai/wave-1/run.proof.json",
+  "createdAt": "2026-05-06T18:12:20.272Z",
+  "hash": "sha256:8b32982a27159a77acf62ac5cd0a366df88209feb7dfab58f1f4975b6bb23e17"
+}

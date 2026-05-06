@@ -1,11 +1,16 @@
 {
-  "schema": "foundation-ai.wave.v1",
+  "schema": "foundation-ai.wave.v2",
   "wave": 0,
   "phase": "P0",
-  "title": "Inventory + archetype/persona/agent bindings for 24 Foundation surfaces",
+  "title": "Inventory & Bindings — STRUCTURE.md emission",
   "commitType": "feat",
+  "objective": "Derive STRUCTURE.md from canonical contracts; bind 21 nav items × archetype × persona × agent.",
   "preconditions": [
     "wave--1.green"
+  ],
+  "deliverables": [
+    "STRUCTURE.md",
+    "scripts/program/foundation-ai/emit-structure.mjs"
   ],
   "steps": [
     {
@@ -27,13 +32,23 @@
       "required": false
     }
   ],
+  "acceptanceChecks": [
+    {
+      "id": "structure_md_exists",
+      "cmd": "test -f STRUCTURE.md"
+    },
+    {
+      "id": "structure_has_provenance",
+      "cmd": "grep -q 'Provenance' STRUCTURE.md"
+    }
+  ],
   "scopeAllowlist": [
     "scripts/program/foundation-ai/**",
     "proofs/foundation-ai/**",
-    "platform/foundation/contracts/**",
-    "platform/foundation/db/migrations/**",
-    "platform/foundation/db/seeds/**",
     "STRUCTURE.md",
     "archive/foundation-ai/**"
-  ]
+  ],
+  "rollback": null,
+  "derivedFrom": "program.master.json",
+  "hash": "sha256:38d14e2a32d62e97782cab3bf45482cc60febe27bf295eb4688dcecc00aaed0a"
 }

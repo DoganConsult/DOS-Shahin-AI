@@ -6,7 +6,7 @@
   "status": "GREEN",
   "payload": {
     "schema": "foundation-ai.inventory.v1",
-    "capturedAt": "2026-05-06T18:05:18.939Z",
+    "capturedAt": "2026-05-06T18:23:47.359Z",
     "workspaces": {
       "foundation": true,
       "uiOsService": true,
@@ -51,6 +51,8 @@
       "drift-check.mjs",
       "emit-structure.mjs",
       "inventory.mjs",
+      "plan-sync.mjs",
+      "preflight.mjs",
       "quality-gate.mjs",
       "run-wave.mjs",
       "status.mjs",
@@ -67,13 +69,15 @@
       "program:archive",
       "program:commit",
       "program:status",
-      "program:inventory"
+      "program:inventory",
+      "program:plan-sync",
+      "program:preflight"
     ],
     "gaps": [
       "mirror shell live (must be re-export only)"
     ],
     "gapCount": 1
   },
-  "emittedAt": "2026-05-06T18:05:18.944Z",
-  "hash": "sha256:4fb393a7e708e42b9de9b4729da6b4609cc0b5ada21994de3b4a8f11abbba889"
+  "emittedAt": "2026-05-06T18:23:47.365Z",
+  "hash": "sha256:e3f414185d92a8e1ef2cba15ae29f1e15d4423b73bc4a701a404ffc6fbed0ece"
 }

@@ -1,24 +1,35 @@
 {
-  "schema": "foundation-ai.wave.v1",
+  "schema": "foundation-ai.wave.v2",
   "wave": 12,
   "phase": "P12",
-  "title": "Wave 12 (placeholder; will be auto-sized by program:autosize)",
+  "title": "Multi-Region & Sovereignty",
   "commitType": "feat",
+  "objective": "Region-pinned data residency + sovereignty controls.",
   "preconditions": [
     "wave-11.green"
   ],
+  "deliverables": [
+    "platform/foundation/db/migrations/*_residency.sql"
+  ],
   "steps": [
     {
-      "id": "inventory",
-      "cmd": "node scripts/program/foundation-ai/inventory.mjs"
+      "id": "lint-migrations",
+      "cmd": "pnpm module:lint-migrations"
+    }
+  ],
+  "acceptanceChecks": [
+    {
+      "id": "residency_columns_present",
+      "cmd": "grep -q 'region' platform/foundation/db/migrations/*.sql 2>/dev/null"
     }
   ],
   "scopeAllowlist": [
     "scripts/program/foundation-ai/**",
     "proofs/foundation-ai/**",
-    "platform/foundation/**",
-    "platform/ui-system/dos-ui-contracts/**",
-    "services/ui-os-service/**",
+    "platform/foundation/db/**",
     "archive/foundation-ai/**"
-  ]
+  ],
+  "rollback": "apply *_down.sql",
+  "derivedFrom": "program.master.json",
+  "hash": "sha256:82b2b333284818f993613efcc3f98930e1f05d77254232c93adf1c89f219319d"
 }

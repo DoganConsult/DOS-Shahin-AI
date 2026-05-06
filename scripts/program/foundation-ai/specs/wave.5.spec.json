@@ -1,24 +1,45 @@
 {
-  "schema": "foundation-ai.wave.v1",
+  "schema": "foundation-ai.wave.v2",
   "wave": 5,
   "phase": "P5",
-  "title": "Wave 5 (placeholder; will be auto-sized by program:autosize)",
-  "commitType": "feat",
+  "title": "Edge & Ops Hygiene — RED severity flip",
+  "commitType": "chore",
+  "objective": "Eliminate residual forbidden tokens; flip zerodirt to RED severity; expand CI guards.",
   "preconditions": [
     "wave-4.green"
   ],
+  "deliverables": [
+    "scripts/ci-guards/lint-no-legacy-uios-shell.mjs"
+  ],
   "steps": [
     {
-      "id": "inventory",
-      "cmd": "node scripts/program/foundation-ai/inventory.mjs"
+      "id": "dynamic-ui-gates",
+      "cmd": "pnpm dynamic-ui:gates"
+    },
+    {
+      "id": "platform-customer-gate",
+      "cmd": "pnpm platform:customer-gate"
+    },
+    {
+      "id": "drift-sample",
+      "cmd": "pnpm drift:sample"
+    }
+  ],
+  "acceptanceChecks": [
+    {
+      "id": "zero_forbidden_tokens",
+      "cmd": "PROGRAM_WAVE=5 node scripts/program/foundation-ai/zerodirt.mjs"
     }
   ],
   "scopeAllowlist": [
     "scripts/program/foundation-ai/**",
     "proofs/foundation-ai/**",
-    "platform/foundation/**",
-    "platform/ui-system/dos-ui-contracts/**",
-    "services/ui-os-service/**",
+    "scripts/ci-guards/**",
+    "platform/core/platform/shell/**",
+    "platform/core/platform/navigation/**",
     "archive/foundation-ai/**"
-  ]
+  ],
+  "rollback": "git revert <wave-5-commit>",
+  "derivedFrom": "program.master.json",
+  "hash": "sha256:b33fc6755636c8a02c20b6cb01faf5d59f4b33c044888121ff3148cf13e645cd"
 }

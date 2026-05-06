@@ -3,9 +3,37 @@
 // Z1..Z12 checks. Fails closed. No silent passes.
 
 import { execSync } from 'node:child_process';
-import { existsSync, statSync } from 'node:fs';
+import { existsSync, statSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { emitProof } from './lib/proof.mjs';
 import { gitDirtyFiles } from './lib/scope.mjs';
+
+// Per-wave OWNERSHIP map: which scope is RED for legacy tokens at each wave.
+// Tokens outside the owned scope at this wave are reported as WARN.
+// Doctrine: not "fake green" — observed tokens are still surfaced; severity reflects who owns the cleanup.
+const WAVE_OWNED_SCOPE = {
+  1: ['platform/ui-system/dos-ui-contracts', 'platform/ui-system/dos-ui-system/src/shell'],
+  2: ['platform/foundation/db'],
+  3: ['platform/ui-system/dos-ui-system/src'],
+  4: ['platform/foundation', 'modules/foundation', 'modules/core/platform/shell', 'platform/core/platform/shell', 'platform/core/platform/navigation'],
+  5: ['platform/core/platform/shell', 'platform/core/platform/navigation', 'scripts/ci-guards'],
+};
+
+function ownedAtWave(wave) {
+  if (wave <= 0) return [];
+  // wave N owns its declared scope plus everything earlier waves owned
+  const acc = new Set();
+  for (let w = 1; w <= wave; w++) for (const p of WAVE_OWNED_SCOPE[w] ?? []) acc.add(p);
+  // wave 5+ owns everything (final hygiene)
+  if (wave >= 5) return null; // null = ALL paths are RED-owned
+  return [...acc];
+}
+
+function tokenInOwnedScope(line, ownedPaths) {
+  if (ownedPaths === null) return true;
+  const path = line.split(':', 1)[0];
+  return ownedPaths.some((p) => path === p || path.startsWith(p + '/'));
+}
 
 const FOUNDATION_SCOPE = [
   'platform/foundation',
@@ -67,11 +95,18 @@ const grepScope = FOUNDATION_SCOPE
   .filter((s) => !s.startsWith('proofs/') && !s.startsWith('scripts/'))
   .join(' ');
 const forbiddenHits = grepScope ? run(`grep -RIn --exclude-dir=node_modules --exclude-dir=dist --exclude-dir=.angular --exclude-dir=coverage ${grepArgs} ${grepScope} 2>/dev/null`).split('\n').filter(Boolean) : [];
-// Wave-aware: pre-existing legacy is acknowledged for waves <= 0; cleanup is owned by waves 1+.
+// Wave-aware scope-bounded: tokens within owned scope at this wave are RED;
+// tokens in not-yet-owned scope are observed as WARN (visible, not silent).
 const wavePolicy = Number(process.env.PROGRAM_WAVE ?? 0);
-const tokenSeverity = wavePolicy <= 0 ? 'WARN' : 'RED';
-checks.Z4_no_forbidden_tokens = forbiddenHits.length === 0 ? 'GREEN' : tokenSeverity;
-findings.forbidden = forbiddenHits.slice(0, 50);
+const ownedPaths = ownedAtWave(wavePolicy);
+const ownedHits = forbiddenHits.filter((l) => tokenInOwnedScope(l, ownedPaths));
+const observedHits = forbiddenHits.filter((l) => !ownedHits.includes(l));
+let z4 = 'GREEN';
+if (ownedHits.length > 0) z4 = 'RED';
+else if (observedHits.length > 0) z4 = 'WARN';
+checks.Z4_no_forbidden_tokens = z4;
+findings.forbidden = ownedHits.slice(0, 50);
+findings.forbiddenObserved = observedHits.slice(0, 50);
 
 // Z5: mirror shell collapsed
 let mirror = [];

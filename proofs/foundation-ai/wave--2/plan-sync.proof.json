@@ -1,0 +1,136 @@
+{
+  "schema": "foundation-ai.proof.v1",
+  "phase": "P-2",
+  "wave": -2,
+  "name": "plan-sync",
+  "status": "GREEN",
+  "payload": {
+    "schema": "foundation-ai.plan-sync.v1",
+    "masterHash": "sha256:a39da26f8ebaacb4f970c1299e113bdd32af6c14e2f526e1ec35b47904fa50c7",
+    "phases": 17,
+    "written": [
+      {
+        "wave": -2,
+        "specFile": "/root/DOS-Platform/scripts/program/foundation-ai/specs/wave.-2.spec.json",
+        "gateFile": "/root/DOS-Platform/scripts/program/foundation-ai/gates/wave--2.json",
+        "specHash": "sha256:6d0daf5e290719fd98baec635017c64d97982956b2a39906386f4b394cf14f6a",
+        "gateHash": "sha256:75ecdf1b497890bcbef7883f0c8aac33358a3d2b95e2e8dcd3adf4ee2524e4f0"
+      },
+      {
+        "wave": -1,
+        "specFile": "/root/DOS-Platform/scripts/program/foundation-ai/specs/wave.-1.spec.json",
+        "gateFile": "/root/DOS-Platform/scripts/program/foundation-ai/gates/wave--1.json",
+        "specHash": "sha256:658a56296026fd2eab971d4f45c90e1ac4b9fc471a3365526efce587c75bb99a",
+        "gateHash": "sha256:a109739e1e579a4f90009b455ff124c9b3b6738ee52f11a1a094e0405137a317"
+      },
+      {
+        "wave": 0,
+        "specFile": "/root/DOS-Platform/scripts/program/foundation-ai/specs/wave.0.spec.json",
+        "gateFile": "/root/DOS-Platform/scripts/program/foundation-ai/gates/wave-0.json",
+        "specHash": "sha256:38d14e2a32d62e97782cab3bf45482cc60febe27bf295eb4688dcecc00aaed0a",
+        "gateHash": "sha256:8898ebdf6db30ec8101adaced1bd9d70f35b969ea2d62ad39b25fbcfc253280e"
+      },
+      {
+        "wave": 1,
+        "specFile": "/root/DOS-Platform/scripts/program/foundation-ai/specs/wave.1.spec.json",
+        "gateFile": "/root/DOS-Platform/scripts/program/foundation-ai/gates/wave-1.json",
+        "specHash": "sha256:da355ef34b3c937b94c6162c45971f63ef00a2262fe5590142119157c0c09f9a",
+        "gateHash": "sha256:e9a7e1d99e639b908fd823f03c568d00558ca3e65014f4d51351a4f40c5a1ce0"
+      },
+      {
+        "wave": 2,
+        "specFile": "/root/DOS-Platform/scripts/program/foundation-ai/specs/wave.2.spec.json",
+        "gateFile": "/root/DOS-Platform/scripts/program/foundation-ai/gates/wave-2.json",
+        "specHash": "sha256:5d36497f11159bde4161c94475c247f1fc2fe9722b313e04b6ac0b78ada44ab1",
+        "gateHash": "sha256:fe6891cd24b8e61236db2d98feb0596c4def335d3906aa891e5ffd33e601990f"
+      },
+      {
+        "wave": 3,
+        "specFile": "/root/DOS-Platform/scripts/program/foundation-ai/specs/wave.3.spec.json",
+        "gateFile": "/root/DOS-Platform/scripts/program/foundation-ai/gates/wave-3.json",
+        "specHash": "sha256:303afcf7fe5c5e8d625adc231aac93b3a16ad6d4a293de605f0a1de9815ebeb2",
+        "gateHash": "sha256:f4fc6da39f9ea40d18726d4e938718f7c49c8ba002124fe3b2dcd37af0d0e095"
+      },
+      {
+        "wave": 4,
+        "specFile": "/root/DOS-Platform/scripts/program/foundation-ai/specs/wave.4.spec.json",
+        "gateFile": "/root/DOS-Platform/scripts/program/foundation-ai/gates/wave-4.json",
+        "specHash": "sha256:b58c3997a1fcc789f72773e93b06180b2e74d1a2331de850dc0c7cd45ede4deb",
+        "gateHash": "sha256:27edafb3e06cbbe2a2957609bee3a42e5bd097cce86c49acd2aaaf7519f0f928"
+      },
+      {
+        "wave": 5,
+        "specFile": "/root/DOS-Platform/scripts/program/foundation-ai/specs/wave.5.spec.json",
+        "gateFile": "/root/DOS-Platform/scripts/program/foundation-ai/gates/wave-5.json",
+        "specHash": "sha256:b33fc6755636c8a02c20b6cb01faf5d59f4b33c044888121ff3148cf13e645cd",
+        "gateHash": "sha256:fd24e89483ff98bba0357108e010e64d4fedbeecb487321da898f224380ed0be"
+      },
+      {
+        "wave": 6,
+        "specFile": "/root/DOS-Platform/scripts/program/foundation-ai/specs/wave.6.spec.json",
+        "gateFile": "/root/DOS-Platform/scripts/program/foundation-ai/gates/wave-6.json",
+        "specHash": "sha256:e1f31df744c9bdf2650dda60bfe91df1d97c4719d29b310b861ed848ef2a0f00",
+        "gateHash": "sha256:3d5cccd7725f94359894f95d33e451500d1cc85186223d9a2bd9bee3bfbe447a"
+      },
+      {
+        "wave": 7,
+        "specFile": "/root/DOS-Platform/scripts/program/foundation-ai/specs/wave.7.spec.json",
+        "gateFile": "/root/DOS-Platform/scripts/program/foundation-ai/gates/wave-7.json",
+        "specHash": "sha256:ec32828bcd1adcfca897513e31a9881748194f6fbbf9a4fc13f5cac78efb6126",
+        "gateHash": "sha256:dfe7ddc7cab3c9671b2eaca6f0055afbc2b2a409e1a070a0a89b512dd7e7008d"
+      },
+      {
+        "wave": 8,
+        "specFile": "/root/DOS-Platform/scripts/program/foundation-ai/specs/wave.8.spec.json",
+        "gateFile": "/root/DOS-Platform/scripts/program/foundation-ai/gates/wave-8.json",
+        "specHash": "sha256:b79a8e3d86a08a3f062b46156a693284101c4fbc93aab803c83ae89f4d48a2a1",
+        "gateHash": "sha256:3b32a33dd14a2284449e36c0611c140780e9f60e53aff8f34e0a42221304c611"
+      },
+      {
+        "wave": 9,
+        "specFile": "/root/DOS-Platform/scripts/program/foundation-ai/specs/wave.9.spec.json",
+        "gateFile": "/root/DOS-Platform/scripts/program/foundation-ai/gates/wave-9.json",
+        "specHash": "sha256:6ded696ec0cc8c4907670dd38a18f6bcdc7acb4828f9f97e6d9cc134af983661",
+        "gateHash": "sha256:b0c4461949fc9071f861abf23bf04b0c767dd860f6d352248d3ac327322049c0"
+      },
+      {
+        "wave": 10,
+        "specFile": "/root/DOS-Platform/scripts/program/foundation-ai/specs/wave.10.spec.json",
+        "gateFile": "/root/DOS-Platform/scripts/program/foundation-ai/gates/wave-10.json",
+        "specHash": "sha256:d826f9e39260395a64141d95cf77a0877cdb0c5ff8ec35440e990c0e2a121818",
+        "gateHash": "sha256:0a57a2a051918f19588d1a9f037709bb43f25d8f8936361425dccd0fef4f14ad"
+      },
+      {
+        "wave": 11,
+        "specFile": "/root/DOS-Platform/scripts/program/foundation-ai/specs/wave.11.spec.json",
+        "gateFile": "/root/DOS-Platform/scripts/program/foundation-ai/gates/wave-11.json",
+        "specHash": "sha256:18445c53b3f7696a54fd5ae5f366c30b256fa3ab86808f30a4a66b2fc15a0402",
+        "gateHash": "sha256:5e6dd4198da8859370f74f84c73686eb6cfc38ef1f3757e995668dffc8dd92ad"
+      },
+      {
+        "wave": 12,
+        "specFile": "/root/DOS-Platform/scripts/program/foundation-ai/specs/wave.12.spec.json",
+        "gateFile": "/root/DOS-Platform/scripts/program/foundation-ai/gates/wave-12.json",
+        "specHash": "sha256:82b2b333284818f993613efcc3f98930e1f05d77254232c93adf1c89f219319d",
+        "gateHash": "sha256:4b5b20e83a3a84407df59ba7eb263e07df60d1a69fd8c44dda68b78b8df47a96"
+      },
+      {
+        "wave": 13,
+        "specFile": "/root/DOS-Platform/scripts/program/foundation-ai/specs/wave.13.spec.json",
+        "gateFile": "/root/DOS-Platform/scripts/program/foundation-ai/gates/wave-13.json",
+        "specHash": "sha256:3b73aa612307c6d2d3191a42f97d779e893450b1d5276ece4a147edd6b600c52",
+        "gateHash": "sha256:cac5beff1e3965e0515a67016c425ce9d67020687e32870229131f36e126baf1"
+      },
+      {
+        "wave": 14,
+        "specFile": "/root/DOS-Platform/scripts/program/foundation-ai/specs/wave.14.spec.json",
+        "gateFile": "/root/DOS-Platform/scripts/program/foundation-ai/gates/wave-14.json",
+        "specHash": "sha256:c2f85167fdef9a28b8ccf00958d3ed96b4ac90a7a57d42239e9c60d691a81ba5",
+        "gateHash": "sha256:1e0c8abb5360bfccf1582cf5fa8df2896561127607e3c1fd7081cce156a0fd2e"
+      }
+    ],
+    "errors": []
+  },
+  "emittedAt": "2026-05-06T18:23:35.854Z",
+  "hash": "sha256:f9b0d8a4cae5653d0671e763e9ed8fa0cb0407b4ba8d4826e249ed4e81fc2bc5"
+}

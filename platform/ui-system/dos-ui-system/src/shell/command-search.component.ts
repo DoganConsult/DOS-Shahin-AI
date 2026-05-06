@@ -2,7 +2,7 @@
  * Phase WS-2 + Carbon-Wiring — workspace.command-search wrapper.
  * Selector: dos-command-search
  * Carbon primitive: search (SearchModule → cds-search)
- * DB: dos.dynamic_ui_component_registry component_key=workspace.command-search carbon_key=search
+ * Runtime: componentKey=workspace.command-search (carbon=search) — DB schema reference removed (resolved by UI-OS service).
  *
  * Token stack:
  *   --cds-field-*     (Carbon field tokens for search input)

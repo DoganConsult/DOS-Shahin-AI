@@ -1,5 +1,5 @@
 {
-  "schema": "foundation-ai.program.master.v1",
+  "schema": "foundation-ai.program.master.v2",
   "module": "foundation",
   "doctrine": [
     "zero static",
@@ -11,23 +11,467 @@
     "DB-driven by published contracts",
     "no turn-around / no temp / no jump"
   ],
+  "bestPractices": [
+    "single source of truth — this file generates wave specs + gates",
+    "least-privilege scopeAllowlist per wave",
+    "acceptanceChecks are machine-evaluable",
+    "deliverables are file paths or migration ids",
+    "every DB-touching wave declares rollback",
+    "preconditions reference prior wave proofs (DAG)",
+    "conventional commits with proof-hash trailers",
+    "phase boundary triggers archive sweep",
+    "zerodirt severity ramps RED for wave >= 1",
+    "idempotent: re-running a wave emits the same proof hash"
+  ],
   "phases": [
-    { "phase": "P-2", "title": "Autopilot Pre-Program", "waves": [-2] },
-    { "phase": "P-1", "title": "Charter & Quad Registration", "waves": [-1] },
-    { "phase": "P0",  "title": "Inventory & Bindings", "waves": [0] },
-    { "phase": "P1",  "title": "Cross-cutting Contracts v2", "waves": [1] },
-    { "phase": "P2",  "title": "DB & Idempotent Seeds", "waves": [2] },
-    { "phase": "P3",  "title": "Renderers & Agent UI", "waves": [3] },
-    { "phase": "P4",  "title": "Foundation Page Cutover", "waves": [4] },
-    { "phase": "P5",  "title": "Edge & Ops Hygiene", "waves": [5] },
-    { "phase": "P6",  "title": "AI Master Gate", "waves": [6] },
-    { "phase": "P7",  "title": "Republish & Production Deploy", "waves": [7] },
-    { "phase": "P8",  "title": "Composability Activation", "waves": [8] },
-    { "phase": "P9",  "title": "Regulator Evidence Packs", "waves": [9] },
-    { "phase": "P10", "title": "AI-Native Foundation Activation", "waves": [10] },
-    { "phase": "P11", "title": "Edge / Offline / PWA / Capacitor", "waves": [11] },
-    { "phase": "P12", "title": "Multi-Region & Sovereignty", "waves": [12] },
-    { "phase": "P13", "title": "Public Contract Ecosystem", "waves": [13] },
-    { "phase": "P14", "title": "Market Launch", "waves": [14] }
+    {
+      "phase": "P-2",
+      "title": "Autopilot Pre-Program",
+      "wave": -2,
+      "commitType": "chore",
+      "objective": "Scaffold autopilot, ledger, proofs, archive, gates.",
+      "preconditions": [],
+      "deliverables": [
+        "scripts/program/foundation-ai/autopilot.mjs",
+        "scripts/program/foundation-ai/run-wave.mjs",
+        "scripts/program/foundation-ai/quality-gate.mjs",
+        "scripts/program/foundation-ai/drift-check.mjs",
+        "scripts/program/foundation-ai/zerodirt.mjs",
+        "scripts/program/foundation-ai/archive-phase.mjs",
+        "scripts/program/foundation-ai/commit-wave.mjs",
+        "scripts/program/foundation-ai/inventory.mjs",
+        "scripts/program/foundation-ai/lib/ledger.mjs",
+        "scripts/program/foundation-ai/lib/proof.mjs",
+        "scripts/program/foundation-ai/lib/scope.mjs"
+      ],
+      "steps": [
+        { "id": "inventory", "cmd": "node scripts/program/foundation-ai/inventory.mjs" }
+      ],
+      "acceptanceChecks": [
+        { "id": "scripts_present", "cmd": "test -f scripts/program/foundation-ai/autopilot.mjs && test -f scripts/program/foundation-ai/lib/ledger.mjs" }
+      ],
+      "scopeAllowlist": [
+        "scripts/program/foundation-ai/**",
+        "proofs/foundation-ai/**",
+        "archive/foundation-ai/**",
+        "package.json"
+      ],
+      "rollback": null
+    },
+    {
+      "phase": "P-1",
+      "title": "Charter & Foundation Quad Registration",
+      "wave": -1,
+      "commitType": "feat",
+      "objective": "Register Foundation Quad agents and signing-key envelope.",
+      "preconditions": ["wave--2.green"],
+      "deliverables": [
+        "platform/foundation/contracts/agent.contract.json",
+        "platform/foundation/contracts/agents/agents.json"
+      ],
+      "steps": [
+        { "id": "charter", "cmd": "node scripts/program/foundation-ai/inventory.mjs" }
+      ],
+      "acceptanceChecks": [
+        { "id": "agent_contract_present", "cmd": "test -f platform/foundation/contracts/agent.contract.json" },
+        { "id": "agents_registry_present", "cmd": "test -f platform/foundation/contracts/agents/agents.json" }
+      ],
+      "scopeAllowlist": [
+        "scripts/program/foundation-ai/**",
+        "proofs/foundation-ai/**",
+        "platform/foundation/contracts/agent.contract.json",
+        "platform/foundation/contracts/agents/**",
+        "archive/foundation-ai/**"
+      ],
+      "rollback": null
+    },
+    {
+      "phase": "P0",
+      "title": "Inventory & Bindings — STRUCTURE.md emission",
+      "wave": 0,
+      "commitType": "feat",
+      "objective": "Derive STRUCTURE.md from canonical contracts; bind 21 nav items × archetype × persona × agent.",
+      "preconditions": ["wave--1.green"],
+      "deliverables": [
+        "STRUCTURE.md",
+        "scripts/program/foundation-ai/emit-structure.mjs"
+      ],
+      "steps": [
+        { "id": "inventory", "cmd": "node scripts/program/foundation-ai/inventory.mjs" },
+        { "id": "structure-emit", "cmd": "node scripts/program/foundation-ai/emit-structure.mjs" },
+        { "id": "module-list", "cmd": "pnpm module:list", "required": false },
+        { "id": "module-validate", "cmd": "node scripts/module/validate.mjs --module=foundation", "required": false }
+      ],
+      "acceptanceChecks": [
+        { "id": "structure_md_exists", "cmd": "test -f STRUCTURE.md" },
+        { "id": "structure_has_provenance", "cmd": "grep -q 'Provenance' STRUCTURE.md" }
+      ],
+      "scopeAllowlist": [
+        "scripts/program/foundation-ai/**",
+        "proofs/foundation-ai/**",
+        "STRUCTURE.md",
+        "archive/foundation-ai/**"
+      ],
+      "rollback": null
+    },
+    {
+      "phase": "P1",
+      "title": "Cross-cutting Contracts v2 — i18n + ShellAction + Tokens",
+      "wave": 1,
+      "commitType": "feat",
+      "objective": "Freeze WorkspaceI18nLabel, ShellAction discriminated union, and design-token contract; remove legacy aliases.",
+      "preconditions": ["wave-0.green"],
+      "deliverables": [
+        "platform/ui-system/dos-ui-contracts/src/shell-action.contract.ts",
+        "platform/ui-system/dos-ui-contracts/src/nav-contract.ts",
+        "platform/ui-system/dos-ui-system/src/shell/workspace-shell.contracts.ts"
+      ],
+      "steps": [
+        { "id": "build-contracts", "cmd": "pnpm --filter @dos/ui-contracts build" },
+        { "id": "build-ui-system", "cmd": "pnpm --filter @dos/ui-system build" },
+        { "id": "no-legacy-tokens", "cmd": "node scripts/ci-guards/lint-no-static-nav-fallback.mjs" }
+      ],
+      "acceptanceChecks": [
+        { "id": "shell_action_contract_exists", "cmd": "test -f platform/ui-system/dos-ui-contracts/src/shell-action.contract.ts" },
+        { "id": "no_shellActionFromLegacyRecord", "cmd": "! grep -RIn --exclude-dir=node_modules --exclude-dir=dist -e 'shellActionFromLegacyRecord' platform/ui-system/dos-ui-contracts/src" }
+      ],
+      "scopeAllowlist": [
+        "scripts/program/foundation-ai/**",
+        "proofs/foundation-ai/**",
+        "platform/ui-system/dos-ui-contracts/src/**",
+        "platform/ui-system/dos-ui-contracts/dist/**",
+        "platform/ui-system/dos-ui-system/src/shell/**",
+        "platform/ui-system/dos-ui-system/dist/shell/**",
+        "archive/foundation-ai/**",
+        "package.json"
+      ],
+      "rollback": "git revert <wave-1-commit>"
+    },
+    {
+      "phase": "P2",
+      "title": "DB Migrations & Idempotent Seeds — page archetype/persona/agent tables",
+      "wave": 2,
+      "commitType": "feat",
+      "objective": "Add idempotent migrations + seeds for dynamic_ui_page_archetype, page_persona, page_agent.",
+      "preconditions": ["wave-1.green"],
+      "deliverables": [
+        "platform/foundation/db/migrations/*_dynamic_ui_page_archetype.sql",
+        "platform/foundation/db/migrations/*_dynamic_ui_page_archetype_down.sql",
+        "platform/foundation/db/seeds/foundation-page-archetype.sql"
+      ],
+      "steps": [
+        { "id": "lint-migrations", "cmd": "pnpm module:lint-migrations" }
+      ],
+      "acceptanceChecks": [
+        { "id": "down_migrations_present", "cmd": "ls platform/foundation/db/migrations/*_down.sql >/dev/null" }
+      ],
+      "scopeAllowlist": [
+        "scripts/program/foundation-ai/**",
+        "proofs/foundation-ai/**",
+        "platform/foundation/db/migrations/**",
+        "platform/foundation/db/seeds/**",
+        "archive/foundation-ai/**"
+      ],
+      "rollback": "apply *_down.sql in reverse order"
+    },
+    {
+      "phase": "P3",
+      "title": "Renderers & Agent UI components",
+      "wave": 3,
+      "commitType": "feat",
+      "objective": "Implement 14 archetype renderers + reusable Agent UI components (Workbench, Recommendation, Receipt).",
+      "preconditions": ["wave-2.green"],
+      "deliverables": [
+        "platform/ui-system/dos-ui-system/src/components/agent/**",
+        "platform/ui-system/dos-ui-system/src/archetypes/**"
+      ],
+      "steps": [
+        { "id": "build-ui-system", "cmd": "pnpm --filter @dos/ui-system build" },
+        { "id": "registry-verify", "cmd": "pnpm ui-registry:verify" }
+      ],
+      "acceptanceChecks": [
+        { "id": "archetypes_dir_exists", "cmd": "test -d platform/ui-system/dos-ui-system/src/archetypes" }
+      ],
+      "scopeAllowlist": [
+        "scripts/program/foundation-ai/**",
+        "proofs/foundation-ai/**",
+        "platform/ui-system/dos-ui-system/src/**",
+        "archive/foundation-ai/**"
+      ],
+      "rollback": "git revert <wave-3-commit>"
+    },
+    {
+      "phase": "P4",
+      "title": "Foundation Page Cutover — UI-OS only",
+      "wave": 4,
+      "commitType": "refactor",
+      "objective": "Cut all 21 Foundation pages to UI-OS runtime; collapse mirror shell; remove static nav arrays.",
+      "preconditions": ["wave-3.green"],
+      "deliverables": [
+        "platform/foundation/application/**",
+        "modules/core/platform/shell/index.ts (re-export only)"
+      ],
+      "steps": [
+        { "id": "foundation-build", "cmd": "pnpm --filter @dos/module-foundation build" },
+        { "id": "platform-app-build", "cmd": "pnpm --filter @dos/platform-app build" },
+        { "id": "foundation-gate", "cmd": "pnpm foundation:gate" }
+      ],
+      "acceptanceChecks": [
+        { "id": "mirror_shell_collapsed", "cmd": "test $(find modules/core/platform/shell -maxdepth 1 -type f -name '*.ts' | xargs -I {} wc -l {} 2>/dev/null | awk '$1>50{print}' | wc -l) -eq 0" }
+      ],
+      "scopeAllowlist": [
+        "scripts/program/foundation-ai/**",
+        "proofs/foundation-ai/**",
+        "platform/foundation/application/**",
+        "platform/foundation/dist/**",
+        "modules/core/platform/shell/**",
+        "modules/foundation/**",
+        "archive/foundation-ai/**"
+      ],
+      "rollback": "git revert <wave-4-commit>"
+    },
+    {
+      "phase": "P5",
+      "title": "Edge & Ops Hygiene — RED severity flip",
+      "wave": 5,
+      "commitType": "chore",
+      "objective": "Eliminate residual forbidden tokens; flip zerodirt to RED severity; expand CI guards.",
+      "preconditions": ["wave-4.green"],
+      "deliverables": [
+        "scripts/ci-guards/lint-no-legacy-uios-shell.mjs"
+      ],
+      "steps": [
+        { "id": "dynamic-ui-gates", "cmd": "pnpm dynamic-ui:gates" },
+        { "id": "platform-customer-gate", "cmd": "pnpm platform:customer-gate" },
+        { "id": "drift-sample", "cmd": "pnpm drift:sample" }
+      ],
+      "acceptanceChecks": [
+        { "id": "zero_forbidden_tokens", "cmd": "PROGRAM_WAVE=5 node scripts/program/foundation-ai/zerodirt.mjs" }
+      ],
+      "scopeAllowlist": [
+        "scripts/program/foundation-ai/**",
+        "proofs/foundation-ai/**",
+        "scripts/ci-guards/**",
+        "platform/core/platform/shell/**",
+        "platform/core/platform/navigation/**",
+        "archive/foundation-ai/**"
+      ],
+      "rollback": "git revert <wave-5-commit>"
+    },
+    {
+      "phase": "P6",
+      "title": "AI Master Gate — runtime proof",
+      "wave": 6,
+      "commitType": "test",
+      "objective": "Run all platform gates GREEN; capture signed runtime proof from /api/ui-os/workspace-runtime.",
+      "preconditions": ["wave-5.green"],
+      "deliverables": [
+        "proofs/foundation-ai/wave-6/runtime.proof.json"
+      ],
+      "steps": [
+        { "id": "platform-release-gate", "cmd": "pnpm platform:release-gate" },
+        { "id": "audit-full", "cmd": "pnpm audit:full", "required": false }
+      ],
+      "acceptanceChecks": [
+        { "id": "runtime_proof_exists", "cmd": "test -f proofs/foundation-ai/wave-6/runtime.proof.json" }
+      ],
+      "scopeAllowlist": [
+        "scripts/program/foundation-ai/**",
+        "proofs/foundation-ai/**",
+        "archive/foundation-ai/**"
+      ],
+      "rollback": null
+    },
+    {
+      "phase": "P7",
+      "title": "Republish & Production Deploy",
+      "wave": 7,
+      "commitType": "release",
+      "objective": "Publish foundation module manifest; produce handover bundle; run production smoke probe.",
+      "preconditions": ["wave-6.green"],
+      "deliverables": [
+        "modules/foundation/dist/**",
+        "handover bundle"
+      ],
+      "steps": [
+        { "id": "module-publish", "cmd": "node scripts/module/publish.mjs --module=foundation" },
+        { "id": "handover-foundation", "cmd": "pnpm handover:foundation" },
+        { "id": "handover-bundle", "cmd": "pnpm handover:bundle" }
+      ],
+      "acceptanceChecks": [
+        { "id": "module_published", "cmd": "node scripts/module/verify.mjs --module=foundation" }
+      ],
+      "scopeAllowlist": [
+        "scripts/program/foundation-ai/**",
+        "proofs/foundation-ai/**",
+        "modules/foundation/**",
+        "archive/foundation-ai/**"
+      ],
+      "rollback": "module:deactivate"
+    },
+    {
+      "phase": "P8",
+      "title": "Composability Activation",
+      "wave": 8,
+      "commitType": "feat",
+      "objective": "Enable cross-module composability and shared registries.",
+      "preconditions": ["wave-7.green"],
+      "deliverables": ["platform/foundation/contracts/registries/**"],
+      "steps": [
+        { "id": "registry-verify", "cmd": "pnpm ui-registry:verify" }
+      ],
+      "acceptanceChecks": [
+        { "id": "registry_green", "cmd": "pnpm ui-registry:verify" }
+      ],
+      "scopeAllowlist": [
+        "scripts/program/foundation-ai/**",
+        "proofs/foundation-ai/**",
+        "platform/foundation/contracts/registries/**",
+        "archive/foundation-ai/**"
+      ],
+      "rollback": "git revert <wave-8-commit>"
+    },
+    {
+      "phase": "P9",
+      "title": "Regulator Evidence Packs",
+      "wave": 9,
+      "commitType": "feat",
+      "objective": "Emit regulator-grade evidence packs (audit, lineage, SoD).",
+      "preconditions": ["wave-8.green"],
+      "deliverables": [
+        "modules/audit-shelf/dist/**",
+        "proofs/foundation-ai/wave-9/evidence-pack.json"
+      ],
+      "steps": [
+        { "id": "audit-shelf-bundle", "cmd": "pnpm handover:audit-shelf" }
+      ],
+      "acceptanceChecks": [
+        { "id": "evidence_pack_present", "cmd": "test -f proofs/foundation-ai/wave-9/evidence-pack.json" }
+      ],
+      "scopeAllowlist": [
+        "scripts/program/foundation-ai/**",
+        "proofs/foundation-ai/**",
+        "modules/audit-shelf/**",
+        "archive/foundation-ai/**"
+      ],
+      "rollback": null
+    },
+    {
+      "phase": "P10",
+      "title": "AI-Native Foundation Activation",
+      "wave": 10,
+      "commitType": "feat",
+      "objective": "Activate Foundation Quad agents in autonomy L2/L3 (analyze + draft).",
+      "preconditions": ["wave-9.green"],
+      "deliverables": [
+        "platform/ai/services/ai-engine-service/dist/**"
+      ],
+      "steps": [
+        { "id": "ai-engine-build", "cmd": "pnpm --filter @dos/ai-engine-service build", "required": false }
+      ],
+      "acceptanceChecks": [
+        { "id": "agent_contract_valid", "cmd": "node -e \"JSON.parse(require('fs').readFileSync('platform/foundation/contracts/agent.contract.json','utf8'))\"" }
+      ],
+      "scopeAllowlist": [
+        "scripts/program/foundation-ai/**",
+        "proofs/foundation-ai/**",
+        "platform/ai/**",
+        "platform/foundation/contracts/agent.contract.json",
+        "archive/foundation-ai/**"
+      ],
+      "rollback": "disable agents in DB; redeploy"
+    },
+    {
+      "phase": "P11",
+      "title": "Edge / Offline / PWA / Capacitor",
+      "wave": 11,
+      "commitType": "feat",
+      "objective": "Enable offline-first PWA + Capacitor edge build for Foundation.",
+      "preconditions": ["wave-10.green"],
+      "deliverables": ["platform/app/dist/**"],
+      "steps": [
+        { "id": "platform-app-build", "cmd": "pnpm --filter @dos/platform-app build" }
+      ],
+      "acceptanceChecks": [
+        { "id": "pwa_manifest_present", "cmd": "test -f platform/app/dist/manifest.webmanifest || test -f platform/app/dist/manifest.json" }
+      ],
+      "scopeAllowlist": [
+        "scripts/program/foundation-ai/**",
+        "proofs/foundation-ai/**",
+        "platform/app/**",
+        "archive/foundation-ai/**"
+      ],
+      "rollback": "git revert <wave-11-commit>"
+    },
+    {
+      "phase": "P12",
+      "title": "Multi-Region & Sovereignty",
+      "wave": 12,
+      "commitType": "feat",
+      "objective": "Region-pinned data residency + sovereignty controls.",
+      "preconditions": ["wave-11.green"],
+      "deliverables": ["platform/foundation/db/migrations/*_residency.sql"],
+      "steps": [
+        { "id": "lint-migrations", "cmd": "pnpm module:lint-migrations" }
+      ],
+      "acceptanceChecks": [
+        { "id": "residency_columns_present", "cmd": "grep -q 'region' platform/foundation/db/migrations/*.sql 2>/dev/null" }
+      ],
+      "scopeAllowlist": [
+        "scripts/program/foundation-ai/**",
+        "proofs/foundation-ai/**",
+        "platform/foundation/db/**",
+        "archive/foundation-ai/**"
+      ],
+      "rollback": "apply *_down.sql"
+    },
+    {
+      "phase": "P13",
+      "title": "Public Contract Ecosystem",
+      "wave": 13,
+      "commitType": "feat",
+      "objective": "Publish public, versioned contracts for ecosystem partners.",
+      "preconditions": ["wave-12.green"],
+      "deliverables": [
+        "platform/foundation/contracts/v1/**"
+      ],
+      "steps": [
+        { "id": "contracts-build", "cmd": "pnpm --filter @dos/ui-contracts build" }
+      ],
+      "acceptanceChecks": [
+        { "id": "v1_contracts_present", "cmd": "test -d platform/foundation/contracts/v1" }
+      ],
+      "scopeAllowlist": [
+        "scripts/program/foundation-ai/**",
+        "proofs/foundation-ai/**",
+        "platform/foundation/contracts/v1/**",
+        "archive/foundation-ai/**"
+      ],
+      "rollback": null
+    },
+    {
+      "phase": "P14",
+      "title": "Market Launch",
+      "wave": 14,
+      "commitType": "release",
+      "objective": "GA — production cutover, comms, and monitoring.",
+      "preconditions": ["wave-13.green"],
+      "deliverables": [
+        "proofs/foundation-ai/wave-14/launch.proof.json"
+      ],
+      "steps": [
+        { "id": "platform-release-gate", "cmd": "pnpm platform:release-gate" },
+        { "id": "drift-sample", "cmd": "pnpm drift:sample" }
+      ],
+      "acceptanceChecks": [
+        { "id": "release_gate_green", "cmd": "pnpm platform:release-gate" }
+      ],
+      "scopeAllowlist": [
+        "scripts/program/foundation-ai/**",
+        "proofs/foundation-ai/**",
+        "archive/foundation-ai/**"
+      ],
+      "rollback": "feature flag rollback"
+    }
   ]
 }
