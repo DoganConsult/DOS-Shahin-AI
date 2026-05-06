@@ -14,24 +14,65 @@
 --
 -- Does NOT mutate dos.ui_route_template_binding.
 --
+-- Preflight: RAISE NOTICE binding counts, existing metadata counts, gaps.
 -- Forward-only, idempotent.
+--
+-- Apply via canonical migration runner only.
 
 BEGIN;
 
 DO $$
 DECLARE
-  missing integer;
-  hub_mode  text;
-  hub_pub   boolean;
-  hub_meta  boolean;
+  missing      integer;
+
+  cnt_bindings integer;
+  meta_before  integer;
+  missing_bf   integer;
+  root_binding boolean;
+
+  hub_mode text;
+  hub_pub  boolean;
+  hub_meta boolean;
 BEGIN
   IF NOT EXISTS (
     SELECT 1 FROM information_schema.tables
      WHERE table_schema = 'dos' AND table_name = 'ui_route_template_binding'
   ) THEN
-    RAISE NOTICE 'P0-2: dos.ui_route_template_binding missing — skip inserts and assertions';
+    RAISE NOTICE '[P0-2 preflight] dos.ui_route_template_binding missing — skip inserts and assertions';
     RETURN;
   END IF;
+
+  SELECT count(*) INTO cnt_bindings
+    FROM dos.ui_route_template_binding b
+   WHERE b.route = '/foundation' OR b.route LIKE '/foundation/%';
+
+  SELECT EXISTS (
+           SELECT 1 FROM dos.ui_route_template_binding b
+            WHERE b.route = '/foundation'
+         )
+    INTO root_binding;
+
+  SELECT count(*) INTO meta_before
+    FROM dos.dynamic_ui_route_metadata m
+   WHERE EXISTS (
+           SELECT 1 FROM dos.ui_route_template_binding b
+            WHERE (b.route = '/foundation' OR b.route LIKE '/foundation/%')
+              AND b.route = m.route
+         );
+
+  SELECT count(*) INTO missing_bf
+    FROM dos.ui_route_template_binding b
+   WHERE (b.route = '/foundation' OR b.route LIKE '/foundation/%')
+     AND NOT EXISTS (
+           SELECT 1 FROM dos.dynamic_ui_route_metadata m WHERE m.route = b.route
+         );
+
+  RAISE NOTICE '[P0-2 preflight] foundation bindings (ui_route_template_binding) rows=%',
+      cnt_bindings;
+  RAISE NOTICE '[P0-2 preflight] foundation route_metadata rows already present=% (matching binding routes)',
+      meta_before;
+  RAISE NOTICE '[P0-2 preflight] bindings missing metadata before upsert=%', missing_bf;
+  RAISE NOTICE '[P0-2 preflight] /foundation binding exists=%', root_binding;
 
   INSERT INTO dos.dynamic_ui_route_metadata (
     route,
@@ -62,26 +103,24 @@ BEGIN
   WHERE b.route = '/foundation'
      OR b.route LIKE '/foundation/%'
   ON CONFLICT (route) DO UPDATE
-    SET render_mode                = EXCLUDED.render_mode,
-        template_binding_required  = EXCLUDED.template_binding_required,
-        is_public                  = EXCLUDED.is_public,
-        metadata_public            = EXCLUDED.metadata_public,
-        metadata                   = EXCLUDED.metadata,
-        notes                      = EXCLUDED.notes,
-        version                    = dos.dynamic_ui_route_metadata.version + 1,
-        updated_at                 = now();
+    SET render_mode               = EXCLUDED.render_mode,
+        template_binding_required = EXCLUDED.template_binding_required,
+        is_public                 = EXCLUDED.is_public,
+        metadata_public           = EXCLUDED.metadata_public,
+        metadata                  = EXCLUDED.metadata,
+        notes                     = EXCLUDED.notes,
+        version                   = dos.dynamic_ui_route_metadata.version + 1,
+        updated_at                = now();
 
   SELECT count(*) INTO missing
     FROM dos.ui_route_template_binding b
    WHERE (b.route = '/foundation' OR b.route LIKE '/foundation/%')
      AND NOT EXISTS (
-           SELECT 1
-             FROM dos.dynamic_ui_route_metadata m
-            WHERE m.route = b.route
+           SELECT 1 FROM dos.dynamic_ui_route_metadata m WHERE m.route = b.route
          );
 
   IF missing <> 0 THEN
-    RAISE EXCEPTION 'P0-2 assertion: % foundation bindings lack dynamic_ui_route_metadata row', missing;
+    RAISE EXCEPTION 'P0-2 assertion: % foundation bindings still lack dynamic_ui_route_metadata row', missing;
   END IF;
 
   SELECT render_mode, is_public, metadata_public
@@ -102,6 +141,16 @@ BEGIN
      IS DISTINCT FROM TRUE THEN
     RAISE EXCEPTION 'assertion failed: /foundation template_binding_required must be true';
   END IF;
+
+  RAISE NOTICE '[P0-2 post] foundation route_metadata rows for binding routes=% (should equal bindings=%)',
+      (SELECT count(*) FROM dos.dynamic_ui_route_metadata m
+        WHERE EXISTS (
+                SELECT 1 FROM dos.ui_route_template_binding b
+                 WHERE (b.route = '/foundation' OR b.route LIKE '/foundation/%')
+                   AND b.route = m.route
+              )),
+      cnt_bindings;
+  RAISE NOTICE '[P0-2 done] all foundation bindings have route_metadata; /foundation contract verified';
 END $$;
 
 COMMIT;

@@ -1,0 +1,214 @@
+{
+  "timestamp": "2026-05-06T15:36:52.974Z",
+  "routes": {
+    "anon-root": {
+      "initialStatus": 200,
+      "finalUrl": "http://localhost:3000/login",
+      "hasEmptyState": 0,
+      "bodyTextPreview": "Skip to main content\nShahin-AI\n\nAI-native GRC for the GCC.\n\nTLS 1.3 in transit · AES-256 at rest · audit-logged.\n\nالعربية\nSign in to Shahin-AI\n\nAccess your governed AI workspace.\n\nWork email\nPassword\n"
+    },
+    "anon-marketing": {
+      "initialStatus": 200,
+      "finalUrl": "http://localhost:3000/marketing",
+      "oidcRedirect": false,
+      "hasEmptyState": 0,
+      "bodyTextPreview": "Skip to main content\nShahin-AI\nPlatform\nPricing\nTrust\nAbout\nContact\nSign in\nCreate account\nNew · Agentic GRC\n\nAGENTIC GRC, BROUGHT TO LIFE\n\nThe operating system for agentic enterprises.\n\nObserve, suggest, approve, execute, verify, log — every action accounted for.\n\nStart free trial\nSee the platform\n\nFree 14-day trial · No credit card · Bilingual EN/AR\n\nTrusted for: ISO 27001 · SOC 2 Type II · GDPR"
+    },
+    "anon-login": {
+      "initialStatus": 200,
+      "finalUrl": "http://localhost:3000/login",
+      "hasEmptyState": 0,
+      "bodyTextPreview": "Skip to main content\nShahin-AI\n\nAI-native GRC for the GCC.\n\nTLS 1.3 in transit · AES-256 at rest · audit-logged.\n\nالعربية\nSign in to Shahin-AI\n\nAccess your governed AI workspace.\n\nWork email\nPassword\nShow\nRemember me\nSign in\n\nForgot password?\nCreate an account\n\nI do not have an account\nForgot passwo"
+    },
+    "root-no-template-binding": {
+      "allTemplateCalls": [
+        "http://localhost:3000/api/ui-os/template-binding?route=/login"
+      ],
+      "routeMetadataCalls": [
+        "http://localhost:3000/api/ui-os/route-metadata?route=/",
+        "http://localhost:3000/api/ui-os/route-metadata?route=/login"
+      ],
+      "prohibitedRootCalls": [],
+      "hasProhibitedCalls": false
+    }
+  },
+  "network": {
+    "anon-root": [
+      {
+        "type": "request",
+        "method": "GET",
+        "url": "http://localhost:3000/api/ui-os/route-metadata?route=/"
+      },
+      {
+        "type": "response",
+        "status": 200,
+        "url": "http://localhost:3000/api/ui-os/route-metadata?route=/"
+      },
+      {
+        "type": "request",
+        "method": "GET",
+        "url": "http://localhost:3000/api/ui-os/route-metadata?route=/login"
+      },
+      {
+        "type": "response",
+        "status": 200,
+        "url": "http://localhost:3000/api/ui-os/route-metadata?route=/login"
+      },
+      {
+        "type": "request",
+        "method": "GET",
+        "url": "http://localhost:3000/api/ui-os/template-binding?route=/login"
+      },
+      {
+        "type": "response",
+        "status": 200,
+        "url": "http://localhost:3000/api/ui-os/template-binding?route=/login"
+      }
+    ],
+    "anon-marketing": [
+      {
+        "type": "request",
+        "method": "GET",
+        "url": "http://localhost:3000/api/ui-os/route-metadata?route=/marketing"
+      },
+      {
+        "type": "response",
+        "status": 200,
+        "url": "http://localhost:3000/api/ui-os/route-metadata?route=/marketing"
+      },
+      {
+        "type": "request",
+        "method": "GET",
+        "url": "http://localhost:3000/api/ui-os/template-binding?route=/marketing"
+      },
+      {
+        "type": "response",
+        "status": 200,
+        "url": "http://localhost:3000/api/ui-os/template-binding?route=/marketing"
+      },
+      {
+        "type": "request",
+        "method": "GET",
+        "url": "http://localhost:3000/api/ui-os/marketing/config?brand=shahin-ai&locale=en"
+      },
+      {
+        "type": "request",
+        "method": "GET",
+        "url": "http://localhost:3000/api/ui-os/brand?brand_code=shahin-ai"
+      },
+      {
+        "type": "request",
+        "method": "GET",
+        "url": "http://localhost:3000/api/ui-os/brand?brand_code=shahin-ai"
+      },
+      {
+        "type": "request",
+        "method": "GET",
+        "url": "http://localhost:3000/api/ui-os/grc-sandbox/frameworks"
+      },
+      {
+        "type": "request",
+        "method": "GET",
+        "url": "http://localhost:3000/api/ui-os/grc-sandbox/controls"
+      },
+      {
+        "type": "request",
+        "method": "GET",
+        "url": "http://localhost:3000/api/ui-os/grc-sandbox/requirements"
+      },
+      {
+        "type": "request",
+        "method": "GET",
+        "url": "http://localhost:3000/api/ui-os/grc-sandbox/summary"
+      },
+      {
+        "type": "response",
+        "status": 200,
+        "url": "http://localhost:3000/api/ui-os/marketing/config?brand=shahin-ai&locale=en"
+      },
+      {
+        "type": "response",
+        "status": 200,
+        "url": "http://localhost:3000/api/ui-os/brand?brand_code=shahin-ai"
+      },
+      {
+        "type": "response",
+        "status": 200,
+        "url": "http://localhost:3000/api/ui-os/brand?brand_code=shahin-ai"
+      },
+      {
+        "type": "response",
+        "status": 200,
+        "url": "http://localhost:3000/api/ui-os/grc-sandbox/controls"
+      },
+      {
+        "type": "response",
+        "status": 200,
+        "url": "http://localhost:3000/api/ui-os/grc-sandbox/frameworks"
+      },
+      {
+        "type": "response",
+        "status": 200,
+        "url": "http://localhost:3000/api/ui-os/grc-sandbox/summary"
+      },
+      {
+        "type": "response",
+        "status": 200,
+        "url": "http://localhost:3000/api/ui-os/grc-sandbox/requirements"
+      }
+    ],
+    "anon-login": [
+      {
+        "type": "request",
+        "method": "GET",
+        "url": "http://localhost:3000/api/ui-os/route-metadata?route=/login"
+      },
+      {
+        "type": "response",
+        "status": 200,
+        "url": "http://localhost:3000/api/ui-os/route-metadata?route=/login"
+      },
+      {
+        "type": "request",
+        "method": "GET",
+        "url": "http://localhost:3000/api/ui-os/template-binding?route=/login"
+      },
+      {
+        "type": "response",
+        "status": 200,
+        "url": "http://localhost:3000/api/ui-os/template-binding?route=/login"
+      }
+    ]
+  },
+  "accessibility": {
+    "anon-marketing": {
+      "violations": [],
+      "counts": {
+        "labelCount": 0,
+        "searchInputCount": 0,
+        "ariaUndefinedCount": 0,
+        "buttonCount": 37,
+        "horizontalOverflow": false,
+        "bodyScrollWidth": 1440,
+        "windowWidth": 1440
+      }
+    },
+    "anon-login": {
+      "violations": [],
+      "counts": {
+        "labelCount": 3,
+        "searchInputCount": 0,
+        "ariaUndefinedCount": 0,
+        "buttonCount": 3,
+        "horizontalOverflow": false,
+        "bodyScrollWidth": 1440,
+        "windowWidth": 1440
+      }
+    }
+  },
+  "console": {
+    "anon-root": [],
+    "anon-marketing": [],
+    "anon-login": []
+  }
+}

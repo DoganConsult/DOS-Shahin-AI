@@ -1,0 +1,48 @@
+{
+  "timestamp": "2026-05-06T15:49:00.962Z",
+  "authAttempt": {
+    "method": "oidc-direct",
+    "success": false,
+    "reason": "All credentials failed"
+  },
+  "routes": {
+    "code-level-rootworkspace-home": {
+      "route": "/workspace-home",
+      "renderMode": "shell-only",
+      "templateBindingRequired": false,
+      "isPublic": false,
+      "metadataPublic": true,
+      "metadata": {
+        "redirect": {
+          "anonymous": "/login"
+        },
+        "renderMode": "shell-only",
+        "templateBindingRequired": false
+      },
+      "version": 5
+    },
+    "code-level-root": {
+      "route": "/",
+      "renderMode": "redirect",
+      "templateBindingRequired": false,
+      "isPublic": true,
+      "metadataPublic": true,
+      "metadata": {
+        "redirect": {
+          "default": "/login",
+          "anonymous": "/login",
+          "authenticated": "/workspace-home"
+        },
+        "renderMode": "redirect",
+        "templateBindingRequired": false
+      },
+      "version": 4
+    },
+    "workspace-runtime-unauthed": {
+      "status": 401
+    }
+  },
+  "network": {},
+  "console": {},
+  "accessibility": {}
+}
