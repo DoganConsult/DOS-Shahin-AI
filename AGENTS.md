@@ -715,3 +715,36 @@ componentKeycomponentTyperendererKeyzonecategory: catalog-only / structural / vi
 وملخص إلزامي:
 total contract itemspublished DB rowsclean/duplicate checkmissing rendererKeymissing COMPONENT_MAPblocked by permissionblocked by entitlementcatalog-only countstructural countvisual countruntime emitted countDOM rendered countbrowser visible count
 القاعدة الجديدة: لا تنفيذ جديد قبل إثبات أن كل contract items منشورة ونظيفة ومفهومة.
+
+====================================================
+PROGRAM STATE MEMORY — Foundation-AI (as of 2026-05-07)
+====================================================
+
+WHERE WE ARE
+- 17/17 waves committed and tagged: foundation-ai/wave--2 … foundation-ai/wave-14
+- All tags + branch fix/p0-foundation-nav-route-metadata pushed to origin
+- Local proofs GREEN: zerodirt scope-bounded, drift-check GREEN per wave, quality-gate GREEN
+- Doctrine artifacts committed: contracts v2, archetypes, agent contracts, foundation page cutover, ops/handover bundles, wave proofs
+- Live runtime SPA already served by gateway on :3000 (built dist exists). /foundation, /foundation/access-review return 200 HTML
+- Auth pipeline live: /api/auth/password/login returns INVALID_CREDENTIALS (not 404). Keycloak realm "dogan" on :8180 with JWKS configured
+- DB connectivity verified: dos_migrator @ shahin_grc reachable, dynamic_ui_* + workspace_shell_* tables already present from earlier deploys
+
+WHAT IS PENDING (full activation gap)
+1. Apply DB migrations + seeds — 23 foundation migrations not yet executed against shahin_grc
+   • foundation_schema_migrations table missing
+   • only foundation_cat_reference + organizations exist; 21+ foundation tables missing
+   • blocker doctrine: requires snapshot before mutating shared DB
+2. Build platform-app + contracts (real builds, not the .republished marker)
+3. Publish foundation module via scripts/module/publish.mjs foundation
+4. Start SPA on :4200 (currently served from gateway-bundled dist on :3000 only)
+5. Provision tenant/user + verify end-to-end login (Keycloak user creation pending)
+6. Probe /api/ui-os/workspace-runtime authenticated (currently 401 unauth)
+
+WHY STOPPED
+- Doctrine: "create backup/snapshot before migration; no destructive drops; document every mutation"
+- Need explicit go to either (a) snapshot shahin_grc + apply migrations, or (b) target an isolated test DB
+- Migrator credentials confirmed: postgresql://dos_migrator:dos_migrator_pass_2026@localhost:5432/shahin_grc
+
+NEXT ACTION ON RESUME
+- Await user choice: snapshot+apply on shahin_grc, OR target separate DB
+- Then execute todo items 1→6 in order, with proofs emitted under proofs/foundation-ai/post-launch/
