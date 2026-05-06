@@ -18,24 +18,20 @@
       "untracked": [
         "proofs/foundation-ai/_ledger/HEAD",
         "proofs/foundation-ai/wave--2/inventory.proof.json",
-        "proofs/foundation-ai/wave--2/plan-sync.proof.json",
-        "proofs/foundation-ai/wave-7/autopilot.proof.json",
         "proofs/foundation-ai/wave-7/drift.proof.json",
         "proofs/foundation-ai/wave-7/preflight.proof.json",
         "proofs/foundation-ai/wave-7/quality-gate.proof.json",
         "proofs/foundation-ai/wave-7/run.proof.json",
         "proofs/foundation-ai/wave-7/zerodirt.proof.json",
-        "proofs/foundation-ai/_ledger/2026-05-06T19-37-54-105Z__PLAN_SYNC.json",
-        "proofs/foundation-ai/_ledger/2026-05-06T19-37-54-204Z__INVENTORY.json",
-        "proofs/foundation-ai/_ledger/2026-05-06T19-37-54-618Z__ZERODIRT.json",
-        "proofs/foundation-ai/_ledger/2026-05-06T19-37-54-633Z__PREFLIGHT.json",
-        "proofs/foundation-ai/_ledger/2026-05-06T19-37-57-227Z__RUN.json",
-        "proofs/foundation-ai/_ledger/2026-05-06T19-37-57-323Z__INVENTORY.json",
-        "proofs/foundation-ai/_ledger/2026-05-06T19-37-57-686Z__ZERODIRT.json",
-        "proofs/foundation-ai/_ledger/2026-05-06T19-37-57-697Z__GATE.json",
-        "proofs/foundation-ai/_ledger/2026-05-06T19-37-58-250Z__ZERODIRT.json",
-        "proofs/foundation-ai/_ledger/2026-05-06T19-37-58-261Z__DRIFT.json",
-        "proofs/foundation-ai/_ledger/2026-05-06T19-37-58-269Z__AUTOPILOT.json"
+        "proofs/foundation-ai/_ledger/2026-05-06T19-38-48-860Z__INVENTORY.json",
+        "proofs/foundation-ai/_ledger/2026-05-06T19-38-49-272Z__ZERODIRT.json",
+        "proofs/foundation-ai/_ledger/2026-05-06T19-38-49-286Z__PREFLIGHT.json",
+        "proofs/foundation-ai/_ledger/2026-05-06T19-38-51-905Z__RUN.json",
+        "proofs/foundation-ai/_ledger/2026-05-06T19-38-51-998Z__INVENTORY.json",
+        "proofs/foundation-ai/_ledger/2026-05-06T19-38-52-370Z__ZERODIRT.json",
+        "proofs/foundation-ai/_ledger/2026-05-06T19-38-52-382Z__GATE.json",
+        "proofs/foundation-ai/_ledger/2026-05-06T19-38-52-916Z__ZERODIRT.json",
+        "proofs/foundation-ai/_ledger/2026-05-06T19-38-52-927Z__DRIFT.json"
       ],
       "backups": [],
       "forbidden": [],
@@ -61,6 +57,6 @@
       "forbiddenObserved": []
     }
   },
-  "emittedAt": "2026-05-06T19:38:02.821Z",
-  "hash": "sha256:856e693b8e7929b563a52cf7fd7c9a5bd28b9cb6e0ab105444b6b3a0bfb59599"
+  "emittedAt": "2026-05-06T19:38:53.250Z",
+  "hash": "sha256:c0be7ebacd681cb293749b76bbd9641e2118623f9dd49eae235041a483f04df3"
 }

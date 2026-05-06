@@ -3,18 +3,15 @@
   "phase": -2,
   "wave": 7,
   "name": "drift",
-  "status": "RED",
+  "status": "GREEN",
   "payload": {
     "schema": "foundation-ai.drift.v1",
     "wave": 7,
     "detectors": {
       "D_scope_dirty": {
-        "count": 2,
-        "status": "RED",
-        "samples": [
-          "ops/handover/2026-05-06.tar.gz.sha256",
-          "ops/handover/2026-05-06/MANIFEST.txt"
-        ]
+        "count": 0,
+        "status": "GREEN",
+        "samples": []
       },
       "D_tokens": {
         "ownedHits": 0,
@@ -23,6 +20,6 @@
       }
     }
   },
-  "emittedAt": "2026-05-06T19:38:02.836Z",
-  "hash": "sha256:278bc10f6922f2a85aa5edbfaef60b602ea3685e1320350af29f481b73ced728"
+  "emittedAt": "2026-05-06T19:38:52.925Z",
+  "hash": "sha256:46856fcd454016bdf95670ea6912e49375751dcee8aa4f6afbd3a7719faec7f6"
 }

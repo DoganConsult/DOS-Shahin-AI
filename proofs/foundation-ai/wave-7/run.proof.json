@@ -12,30 +12,30 @@
       {
         "id": "module-publish",
         "status": "WARN",
-        "ms": 276,
+        "ms": 308,
         "tail": "file:///root/DOS-Platform/scripts/module/publish.mjs:64\n        throw new Error(`publish failed at ${s.name}: ${e.message}`);\n              ^\n\nError: publish failed at dynamic-module:foundation: relation \"dos.dynamic_ui_modules\" does not exist\n    at file:///root/DOS-Platform/scripts/module/publish.mjs:64:15\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async withPublisherTx (file:///root/DOS-Platform/scripts/module/lib/db.mjs:39:17)\n    at async file:///root/DOS-Platform/scripts/module/publish.mjs:59:3\n\nNode.js v20.18.2\n"
       },
       {
         "id": "handover-foundation",
         "status": "WARN",
-        "ms": 1661,
+        "ms": 1654,
         "tail": "\n> dos-platform@0.0.0 handover:foundation /root/DOS-Platform\n> node scripts/handover/foundation-handover.mjs\n\n\n=== F0 foundation-activation-check ===\n✗ A1 module.foundation entitlement  — tenant=tenant_test_foundation not entitled (test-tenant okay if dev)\n✔ A2 16 foundation UI routes registered  — db=24 contract=16\n✔ A3 14 foundation permissions present  — db=14 contract=14\n✔ A4 4 foundation default roles  — db=4 contract=4 (viewer,user,auditor,tenant-admin)\n✗ A5 foundation nav items  — relation \"dos.dynamic_ui_navigation\" does not exist\n✔ A6 foundation owned tables in tenant schema  — 26 tables in tenant_test_foundation\n✔ A7 foundation API substrate (cat_reference)\n✔ A8 workspace shell binding parity  — keys=0/30 (0 acceptable for test tenant pre-bind)\n\n[F0] 6/8 cells PASS\nFailed cells: A1,A5\n\n=== F1 role-profile-only-writer-guard ===\n✅ role-profile-only-writer — no forbidden direct URA writes detected\n\n=== F2 seed-test-users-foundation ===\n[seed-test-users] module=foundation tenant=tenant_test_foundation\n  ✔ users:    4\n  ✔ profiles: 4\n\n=== F3 foundation-rbac-matrix ===\n| route | viewer | user | auditor | tenant-admin |\n|---|---|---|---|---|\n| /foundation | ✓ | ✓ | ✓ | ✓ |\n| /foundation/overview | ✓ | ✓ | ✓ | ✓ |\n| /foundation/organization | ✓ | ✓ | ✓ | ✓ |\n| /foundation/business-units | ✓ | ✓ | ✓ | ✓ |\n| /foundation/departments | ✓ | ✓ | ✓ | ✓ |\n| /foundation/positions | ✓ | ✓ | ✓ | ✓ |\n| /foundation/locations | ✓ | ✓ | ✓ | ✓ |\n| /foundation/users | ✓ | ✓ | ✓ | ✓ |\n| /foundation/users/:id | ✓ | ✓ | ✓ | ✓ |\n| /foundation/teams | ✓ | ✓ | ✓ | ✓ |\n| /foundation/roles | ✗ | ✗ | ✓ | ✓ |\n| /foundation/committees | ✓ | ✓ | ✓ | ✓ |\n| /foundation/delegations | ✗ | ✓ | ✗ | ✓ |\n| /foundation/access-review | ✗ | ✗ | ✗ | ✓ |\n| /foundation/policies | ✗ | ✗ | ✓ | ✓ |\n| /foundation/audit | ✗ | ✗ | ✓ | ✓ |\n\n[F3] 4 roles × 16 routes = 64 cells\n[F3] allowed=53 denied=11 violations=0\n[F3] report → ops/handover/2026-05-06/foundation-rbac-matrix.json\n\n[F4] 3/4 steps green\n[F4] reports → ops/handover/2026-05-06\n ELIFECYCLE  Command failed with exit code 1.\n✗ F0 failed (exit 1)\n"
       },
       {
         "id": "handover-bundle",
         "status": "GREEN",
-        "ms": 586,
-        "tail": "[produce-bundle] files:   5\n[produce-bundle] bytes:   22100\n[produce-bundle] tar:     ops/handover/2026-05-06.tar.gz\n[produce-bundle] sha256:  0bc6121a8ee3cdb9907d3d02860201586197709cb5dcefaad3a3dec0d309b794\n"
+        "ms": 597,
+        "tail": "[produce-bundle] files:   5\n[produce-bundle] bytes:   22100\n[produce-bundle] tar:     ops/handover/2026-05-06.tar.gz\n[produce-bundle] sha256:  59b250fd1357f8ea136304d479f54c7a3d1ad5d01eb0744807f08a29008e5630\n"
       },
       {
         "id": "ensure-dist",
         "status": "GREEN",
-        "ms": 4,
+        "ms": 5,
         "tail": ""
       }
     ],
     "dryRun": false
   },
-  "emittedAt": "2026-05-06T19:37:57.224Z",
-  "hash": "sha256:5de3c1bcf02c53247cf6bdc77455956f8847cd1a1ada2e129e34d6d145fcf9ca"
+  "emittedAt": "2026-05-06T19:38:51.901Z",
+  "hash": "sha256:384f1e1c4b6ce0b2450f732f5c7c93b5f13d8b012175597d321c659992045b50"
 }

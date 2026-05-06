@@ -1,0 +1,14 @@
+{
+  "runId": "d5ed2c55-421b-4b56-9b3d-4e7482fd5703",
+  "phase": -2,
+  "wave": 7,
+  "kind": "DRIFT",
+  "inputsHash": "sha256:71291a8d12a2d9dbba6a5188c5ea9234bf260cace0f469021720d015195b4742",
+  "outputsHash": "sha256:46856fcd454016bdf95670ea6912e49375751dcee8aa4f6afbd3a7719faec7f6",
+  "parentHash": "sha256:3dd4a5fef7cd498c7eb661f1610a3507ae5050112157e55eed3061999a07ad9b",
+  "signer": "dev-1",
+  "status": "GREEN",
+  "evidenceUri": "/root/DOS-Platform/proofs/foundation-ai/wave-7/drift.proof.json",
+  "createdAt": "2026-05-06T19:38:52.927Z",
+  "hash": "sha256:daea82eb248d825a0404749b9defe10a88e4e32b8838e81392254167d13ad960"
+}
