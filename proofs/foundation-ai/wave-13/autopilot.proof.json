@@ -1,0 +1,12 @@
+{
+  "schema": "foundation-ai.proof.v1",
+  "phase": -2,
+  "wave": 13,
+  "name": "autopilot",
+  "status": "RED",
+  "payload": {
+    "error": "Command failed: node scripts/program/foundation-ai/quality-gate.mjs --wave=13"
+  },
+  "emittedAt": "2026-05-06T19:28:12.480Z",
+  "hash": "sha256:b1b468eec150ebafbd413fe2d66cf39e23a66926676c34492dc7764a77683cd7"
+}

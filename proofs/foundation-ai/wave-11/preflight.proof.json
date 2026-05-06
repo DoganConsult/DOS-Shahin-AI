@@ -1,0 +1,32 @@
+{
+  "schema": "foundation-ai.proof.v1",
+  "phase": "P11",
+  "wave": 11,
+  "name": "preflight",
+  "status": "GREEN",
+  "payload": {
+    "schema": "foundation-ai.preflight.v1",
+    "wave": 11,
+    "scan": {
+      "ownedHits": 0,
+      "observedHits": 50,
+      "status": "WARN"
+    },
+    "proposals": [],
+    "unhandled": [],
+    "apply": false,
+    "applied": [],
+    "failed": [],
+    "postScan": null,
+    "relatedWaves": [],
+    "flag": {
+      "raised": false,
+      "severity": "GREEN",
+      "message": "wave 11 has no owned legacy hits — no preflight needed.",
+      "programAdjustment": null
+    },
+    "lessonsLearned": []
+  },
+  "emittedAt": "2026-05-06T19:27:51.561Z",
+  "hash": "sha256:69f2cacd8cb63b00087ed1e60c16d5e7a4a0b3cc385b56c379b127469ad6011d"
+}

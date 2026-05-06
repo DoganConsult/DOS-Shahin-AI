@@ -1,0 +1,12 @@
+{
+  "schema": "foundation-ai.proof.v1",
+  "phase": -2,
+  "wave": 10,
+  "name": "autopilot",
+  "status": "GREEN",
+  "payload": {
+    "advancedTo": 10
+  },
+  "emittedAt": "2026-05-06T19:27:51.042Z",
+  "hash": "sha256:530bb46620590768ba8ebe906379fb92c111ebfa81f94e82256940edf4dfb575"
+}

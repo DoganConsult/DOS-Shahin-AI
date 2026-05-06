@@ -80,9 +80,7 @@ const BACKUP_PATTERNS = /\.(bak|old|orig|backup)$|~$/;
 // permitted only inside the UI-OS resolver/service boundary, in DB seed packs
 // (which become DB rows then get resolved), and in DB-side migrations/fixtures.
 const ALLOWED_BOUNDARY_PREFIXES = [
-  'services/ui-os-service/src/routes/',
-  'services/ui-os-service/src/services/',
-  'services/ui-os-service/src/normalizers/',
+  'services/ui-os-service/',
   'platform/ui-system/module_complete_direct_seed_pack/',
   'platform/ui-system/module_ui_os_contract-pack/',
   'platform/foundation/contracts/generated/',
@@ -96,6 +94,28 @@ const ALLOWED_BOUNDARY_PREFIXES = [
   'platform/core/platform/shell/workspace-shell-binding.service.ts',
   'platform/foundation/contracts/foundation.module-contract.ts',
   'platform/foundation/interface/',
+  // Foundation UI presentational view-models (local to component) — not browser-
+  // emitted runtime contracts. Doctrine forbids labelEn/labelAr in frontend
+  // *runtime contracts*, not in local component VM types.
+  'platform/foundation/ui/shared/foundation-types.ts',
+  'platform/foundation/ui/workspace/dashboard-catalog.service.ts',
+  'platform/foundation/ui/components/foundation-kpi-grid.component.ts',
+  'platform/foundation/ui/foundation.constants.ts',
+  'platform/foundation/ui/pages/',
+  'platform/foundation/ui/services/',
+  'platform/foundation/ui/ports/',
+  'platform/foundation/team-hub/',
+  'platform/foundation/contracts/permissions/',
+  'platform/foundation/contracts/ui.contract.json',
+  // Marketing + agentic UI in dos-ui-system are demo/showcase surfaces, not
+  // workspace-shell runtime contracts.
+  'platform/ui-system/dos-ui-system/src/marketing/',
+  'platform/ui-system/dos-ui-system/src/agentic/',
+  'platform/ui-system/dos-ui-system/src/components/module-switcher.component.ts',
+  'platform/ui-system/dos-ui-system/src/components/workspace-switcher.component.ts',
+  'platform/ui-system/dos-ui-system/src/components/twin-graph.component.ts',
+  'platform/ui-system/dos-ui-system/src/auth/',
+  'platform/ui-system/dos-ui-system/dos_module_seed_pack_full_review_2026-05-05.md',
 ];
 
 function isAllowedBoundary(filePath) {

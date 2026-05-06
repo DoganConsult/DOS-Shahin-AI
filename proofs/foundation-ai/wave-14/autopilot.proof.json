@@ -1,0 +1,12 @@
+{
+  "schema": "foundation-ai.proof.v1",
+  "phase": -2,
+  "wave": 14,
+  "name": "autopilot",
+  "status": "RED",
+  "payload": {
+    "error": "Command failed: node scripts/program/foundation-ai/run-wave.mjs --wave=14"
+  },
+  "emittedAt": "2026-05-06T19:28:14.700Z",
+  "hash": "sha256:e26852c0f76e9056e289fe6f2d2fc0ab19b4345eec50d9c8574a379f01bf5a93"
+}
