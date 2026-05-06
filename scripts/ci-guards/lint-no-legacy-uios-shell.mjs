@@ -15,14 +15,17 @@ const ROOT = process.cwd();
 const SCAN_DIRS = [
   'platform/core/platform/shell',
   'platform/core/platform/navigation',
+  'platform/core/services/platform',
+  'platform/ui-system/dos-ui-system/src/shell',
+  'platform/ui-system/dos-ui-contracts/src',
 ].map((d) => join(ROOT, d)).filter((d) => existsSync(d));
 
 const FORBIDDEN = [
   // Legacy action adapters
   { pattern: /shellActionFromLegacyRecord/g, label: 'shellActionFromLegacyRecord' },
 
-  // DB DTO fields forbidden in frontend shell/navigation (snake_case)
-  // Note: component_key and perms_required are structural keys, allowed
+  // DB DTO fields forbidden in frontend shell/navigation/ui-system (snake_case)
+  // Note: component_key and perms_required are structural keys, allowed ONLY in binding service
   { pattern: /\blabel_key\b/g, label: 'label_key DB field leaked to frontend' },
   { pattern: /\blabel_fallback\b/g, label: 'label_fallback DB field leaked to frontend' },
   { pattern: /\bgroup_id\b/g, label: 'group_id DB field leaked to frontend' },
@@ -36,6 +39,8 @@ const FORBIDDEN = [
   { pattern: /props\[['"]accountMenu['"]\]/g, label: 'props accountMenu flat prop read' },
   { pattern: /\bDynamicFoundationNavRow\b/g, label: 'DynamicFoundationNavRow legacy DTO' },
   { pattern: /\blabelKey\b/g, label: 'labelKey legacy field name (use i18nKey)' },
+  { pattern: /\blabelEn\b/g, label: 'labelEn legacy field (use i18n contract)' },
+  { pattern: /\blabelAr\b/g, label: 'labelAr legacy field (use i18n contract)' },
 
   // Static nav builders/fallbacks
   { pattern: /\bbuildPlatformNav\b/g, label: 'buildPlatformNav static nav builder' },
@@ -60,9 +65,12 @@ const FORBIDDEN = [
 const SKIP_PATTERNS = [
   /\.spec\./,
   /\.test\./,
-  /\.d\.ts$/,
+  /\.mock\./,
   /node_modules/,
-  /dist\//,
+  /dist/,
+  /\.git/,
+  /platform-mode\.service\.ts/, // Platform mode service uses labelAr for i18n enum
+  /command-palette\.registry\.ts/, // Command palette consumes DB DTOs from DynamicUiBootstrapService
   /module-template\.types\.ts$/,
 ];
 

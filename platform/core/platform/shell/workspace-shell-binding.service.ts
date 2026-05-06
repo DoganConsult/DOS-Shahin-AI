@@ -103,7 +103,11 @@ export class WorkspaceShellBindingService {
       const key = `${group.moduleCode}:${group.groupId}`;
       groupsByKey.set(key, {
         id: key,
-        label: group.label ?? group.fallback ?? group.i18nKey ?? '',
+        label:
+          group.label?.label ??
+          group.label?.fallback ??
+          group.label?.i18nKey ??
+          '',
         order: Number(group.sortOrder) || 0,
         items: [],
       });
@@ -127,7 +131,11 @@ export class WorkspaceShellBindingService {
       const badge = typeof rawBadge === 'number' && Number.isFinite(rawBadge) ? String(rawBadge) : typeof rawBadge === 'string' && rawBadge.trim() ? rawBadge.trim() : undefined;
       const navItem: DosNavItem = {
         id: item.itemId,
-        label: item.label ?? item.fallback ?? item.i18nKey ?? '',
+        label:
+          item.label?.label ??
+          item.label?.fallback ??
+          item.label?.i18nKey ??
+          '',
         route: item.action.kind === 'navigate' ? item.action.path : undefined,
         icon: item.icon?.trim() || undefined,
         badge,
@@ -695,7 +703,7 @@ export class WorkspaceShellBindingService {
       id,
       label: this.toLabel(record['label']),
     };
-    actionItem.icon = this.normalizeIcon(typeof record['icon'] === 'string' ? record['icon'] as string : undefined);
+    actionItem.icon = typeof record['icon'] === 'string' && (record['icon'] as string).trim() ? (record['icon'] as string).trim() : undefined;
     if (typeof record['hotkey'] === 'string') actionItem.hotkey = record['hotkey'] as string;
     const action = parseShellAction(record['action']);
     if (action) actionItem.action = action;
@@ -711,7 +719,8 @@ export class WorkspaceShellBindingService {
       id,
       label: this.toLabel(record['label']),
     };
-    result.icon = this.normalizeIcon(typeof record['icon'] === 'string' ? record['icon'] as string : undefined);
+    const rawIcon = typeof record['icon'] === 'string' ? (record['icon'] as string).trim() : undefined;
+    result.icon = rawIcon || undefined;
     if (typeof record['category'] === 'string') result.category = record['category'] as string;
     const action = parseShellAction(record['action']);
     if (action) result.action = action;
@@ -728,6 +737,11 @@ export class WorkspaceShellBindingService {
     const action = parseShellAction(record['action']);
     if (action) item.action = action;
     return item;
+  }
+
+  private normalizeIcon(icon?: string): string | undefined {
+    const t = icon?.trim();
+    return t ? t : undefined;
   }
 
   private normalizeBannerTemplate(raw: unknown): WorkspaceShellBannerTemplate | null {

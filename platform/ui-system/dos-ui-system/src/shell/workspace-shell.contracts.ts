@@ -149,12 +149,8 @@ export interface WorkspaceRuntimeNavGroupRow {
   moduleCode: string;
   groupId: string;
   sortOrder?: number | null;
-  /** Pre-resolved display label from UI-OS resolver. */
-  label?: string;
-  /** i18n key for client-side translation override. */
-  i18nKey?: string | null;
-  /** English fallback when i18n lookup misses. */
-  fallback?: string | null;
+  /** Nested WorkspaceI18nLabel — UI-OS fills `label.label` from Accept-Language. */
+  label?: WorkspaceI18nLabel;
   enabled?: boolean | null;
   version?: number | null;
 }
@@ -168,12 +164,8 @@ export interface WorkspaceRuntimeNavItemRow {
   action?: ShellAction | null;
   icon?: string | null;
   permission?: string | null;
-  /** Pre-resolved display label from UI-OS resolver. */
-  label?: string;
-  /** i18n key for client-side translation override. */
-  i18nKey?: string | null;
-  /** English fallback when i18n lookup misses. */
-  fallback?: string | null;
+  /** Nested WorkspaceI18nLabel — UI-OS fills `label.label` from Accept-Language. */
+  label?: WorkspaceI18nLabel;
   badge?: number | string | null;
   enabled?: boolean | null;
   version?: number | null;

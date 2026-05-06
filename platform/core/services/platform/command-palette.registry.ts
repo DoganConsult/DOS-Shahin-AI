@@ -38,19 +38,24 @@ export class CommandPaletteRegistry {
     const out: CommandPaletteEntry[] = [];
 
     for (const r of routes) {
-      const exp = expMap.get(r.path_pattern);
+      const moduleCode = r.module_code;
+      const pathPattern = r.path_pattern;
+      const permissionKey = r.permission_key;
+      const sortOrder = r.sort_order;
+
+      const exp = expMap.get(pathPattern);
       if (exp && !exp.visibleForCurrentUser) continue;
-      if (r.permission_key && ctx && !ctx.permissions.has(r.permission_key)) continue;
+      if (permissionKey && ctx && !ctx.permissions.has(permissionKey)) continue;
 
       out.push({
-        id: `nav:${r.module_code}:${r.path_pattern}`,
+        id: `nav:${moduleCode}:${pathPattern}`,
         kind: 'navigation',
-        label: this.humanize(r.path_pattern),
-        hint: r.module_code,
-        route: r.path_pattern,
-        permission: r.permission_key ?? null,
-        moduleCode: r.module_code,
-        rank: r.sort_order ?? 0,
+        label: this.humanize(pathPattern),
+        hint: moduleCode,
+        route: pathPattern,
+        permission: permissionKey ?? null,
+        moduleCode,
+        rank: sortOrder ?? 0,
       });
     }
 
