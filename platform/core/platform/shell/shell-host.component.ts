@@ -1159,8 +1159,7 @@ export class ShellHostComponent {
     return '';
   }
 
-  // COMPLIANCE: labelFromKey DELETED — no prettifying of missing keys.
-  // Missing label = empty string. Observable gap for telemetry.
+
 
   // ── Private helpers ───────────────────────────────────────────────────────
   private _user() {

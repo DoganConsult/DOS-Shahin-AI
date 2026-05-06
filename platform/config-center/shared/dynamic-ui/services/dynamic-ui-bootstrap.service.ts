@@ -11,16 +11,13 @@ import { firstValueFrom } from 'rxjs';
 import { COMPONENT_MAP } from '../../../../dos/registry/component-map';
 import { notifyRenderMiss } from '../telemetry/render-miss.sink';
 // COMPONENT_MAP is also referenced in loadAllEnrolled() for route filtering.
-import {
-  buildFoundationNavChildren,
-  type DynamicFoundationNavRow,
-} from '../../../../core/platform/navigation/navigation.config';
+
 import {
   buildEffectivePageRegistry,
   type DynamicFoundationRouteRow,
   type PageRegistryEntry,
 } from '../../../../registries/page.registry';
-import type { NavItem } from '../../../../core/platform/navigation/navigation.models';
+
 
 export interface DynamicUiNavItem {
   module_code: string;
@@ -162,13 +159,7 @@ export class DynamicUiBootstrapService {
     return this.agentActions().filter(a => a.route === route);
   }
 
-  // W9.D9.2 — Foundation nav children from Dynamic-UI contract rows only.
-  // `buildFoundationNavChildren` returns [] when the bundle is missing or has
-  // no nav rows (no static SPA fallback). Consumers: sidebar, nav derivation,
-  // command palette.
-  readonly foundationNavChildren = computed<NavItem[]>(() =>
-    buildFoundationNavChildren(this.visibleNavigation() as DynamicFoundationNavRow[]),
-  );
+
 
   // W9.D9.3 — full page registry composed by replacing the foundation slice
   // with the dynamic-ui route catalog. Consumers can read this signal and
