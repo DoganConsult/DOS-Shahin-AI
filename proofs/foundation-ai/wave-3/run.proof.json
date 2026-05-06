@@ -1,0 +1,29 @@
+{
+  "schema": "foundation-ai.proof.v1",
+  "phase": "P3",
+  "wave": 3,
+  "name": "run",
+  "status": "GREEN",
+  "payload": {
+    "schema": "foundation-ai.wave.v1",
+    "wave": 3,
+    "title": "Renderers & Agent UI components",
+    "steps": [
+      {
+        "id": "build-ui-system",
+        "status": "GREEN",
+        "ms": 3274,
+        "tail": "\n> @dos/ui-system@1.0.0 build /root/DOS-Platform/platform/ui-system/dos-ui-system\n> tsc -p tsconfig.build.json\n\n"
+      },
+      {
+        "id": "registry-verify",
+        "status": "GREEN",
+        "ms": 594,
+        "tail": "> node scripts/ui-registry/verify.mjs\n\n[ui-registry:verify] routes=90 bindings=187 exempt=9 missing=0 bad-archetype=0\n[ui-registry:verify] PASS — every active route is bound to a canonical archetype.\n"
+      }
+    ],
+    "dryRun": false
+  },
+  "emittedAt": "2026-05-06T18:34:05.692Z",
+  "hash": "sha256:e98cca773e6cce20f31841a0c88b43f5c38a03a64d09812ce90e4ca0d7ccc574"
+}

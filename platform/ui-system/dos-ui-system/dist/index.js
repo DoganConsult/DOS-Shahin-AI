@@ -8,6 +8,8 @@
  */
 // I18n
 export * from './i18n/dos-language-switcher.component';
+// Archetypes (Wave-3): 14 page archetype renderers + registry
+export * from './archetypes';
 // Components
 export * from './components/account-menu.component';
 export * from './components/bottom-sheet.component';

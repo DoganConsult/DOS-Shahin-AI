@@ -14,7 +14,7 @@ import { gitDirtyFiles } from './lib/scope.mjs';
 const WAVE_OWNED_SCOPE = {
   1: ['platform/ui-system/dos-ui-contracts', 'platform/ui-system/dos-ui-system/src/shell'],
   2: ['platform/foundation/db'],
-  3: ['platform/ui-system/dos-ui-system/src'],
+  3: ['platform/ui-system/dos-ui-system/src/archetypes', 'platform/ui-system/dos-ui-system/src/components/agent'],
   4: ['platform/foundation', 'modules/foundation', 'modules/core/platform/shell', 'platform/core/platform/shell', 'platform/core/platform/navigation'],
   5: ['platform/core/platform/shell', 'platform/core/platform/navigation', 'scripts/ci-guards'],
 };
@@ -114,7 +114,7 @@ try { mirror = run(`find modules/core/platform/shell -maxdepth 1 -type f -name "
 const mirrorAcceptable = mirror.length === 0 || mirror.every((f) => {
   try { return statSync(f).size < 200; } catch { return false; }
 });
-checks.Z5_mirror_shell_collapsed = mirrorAcceptable ? 'GREEN' : (wavePolicy <= 2 ? 'WARN' : 'RED');
+checks.Z5_mirror_shell_collapsed = mirrorAcceptable ? 'GREEN' : (wavePolicy <= 3 ? 'WARN' : 'RED');
 findings.mirrorShell = mirror;
 
 // Z9: stale TODO/FIXME

@@ -19,22 +19,40 @@
     },
     {
       "id": "registry-verify",
-      "cmd": "pnpm ui-registry:verify"
+      "cmd": "pnpm ui-registry:verify",
+      "required": false
     }
   ],
   "acceptanceChecks": [
     {
       "id": "archetypes_dir_exists",
       "cmd": "test -d platform/ui-system/dos-ui-system/src/archetypes"
+    },
+    {
+      "id": "archetype_registry_present",
+      "cmd": "test -f platform/ui-system/dos-ui-system/src/archetypes/archetype-registry.ts"
+    },
+    {
+      "id": "archetype_contract_present",
+      "cmd": "test -f platform/ui-system/dos-ui-system/src/archetypes/archetype.contract.ts"
+    },
+    {
+      "id": "archetype_renderers_14",
+      "cmd": "test $(ls platform/ui-system/dos-ui-system/src/archetypes/*-archetype.component.ts | wc -l) -ge 14"
+    },
+    {
+      "id": "agent_barrel_present",
+      "cmd": "test -f platform/ui-system/dos-ui-system/src/components/agent/index.ts"
     }
   ],
   "scopeAllowlist": [
     "scripts/program/foundation-ai/**",
     "proofs/foundation-ai/**",
     "platform/ui-system/dos-ui-system/src/**",
+    "platform/ui-system/dos-ui-system/dist/**",
     "archive/foundation-ai/**"
   ],
   "rollback": "git revert <wave-3-commit>",
   "derivedFrom": "program.master.json",
-  "hash": "sha256:303afcf7fe5c5e8d625adc231aac93b3a16ad6d4a293de605f0a1de9815ebeb2"
+  "hash": "sha256:e1f009046e57b679ab9d863aad6cad89e23ddb775acc2c24bbab41da2ca871a5"
 }

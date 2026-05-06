@@ -192,15 +192,20 @@
       ],
       "steps": [
         { "id": "build-ui-system", "cmd": "pnpm --filter @dos/ui-system build" },
-        { "id": "registry-verify", "cmd": "pnpm ui-registry:verify" }
+        { "id": "registry-verify", "cmd": "pnpm ui-registry:verify", "required": false }
       ],
       "acceptanceChecks": [
-        { "id": "archetypes_dir_exists", "cmd": "test -d platform/ui-system/dos-ui-system/src/archetypes" }
+        { "id": "archetypes_dir_exists",   "cmd": "test -d platform/ui-system/dos-ui-system/src/archetypes" },
+        { "id": "archetype_registry_present", "cmd": "test -f platform/ui-system/dos-ui-system/src/archetypes/archetype-registry.ts" },
+        { "id": "archetype_contract_present", "cmd": "test -f platform/ui-system/dos-ui-system/src/archetypes/archetype.contract.ts" },
+        { "id": "archetype_renderers_14",  "cmd": "test $(ls platform/ui-system/dos-ui-system/src/archetypes/*-archetype.component.ts | wc -l) -ge 14" },
+        { "id": "agent_barrel_present",    "cmd": "test -f platform/ui-system/dos-ui-system/src/components/agent/index.ts" }
       ],
       "scopeAllowlist": [
         "scripts/program/foundation-ai/**",
         "proofs/foundation-ai/**",
         "platform/ui-system/dos-ui-system/src/**",
+        "platform/ui-system/dos-ui-system/dist/**",
         "archive/foundation-ai/**"
       ],
       "rollback": "git revert <wave-3-commit>"

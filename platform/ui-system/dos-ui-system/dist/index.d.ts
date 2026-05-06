@@ -7,6 +7,7 @@
  * shadow these primitives.
  */
 export * from './i18n/dos-language-switcher.component';
+export * from './archetypes';
 export * from './components/account-menu.component';
 export * from './components/bottom-sheet.component';
 export * from './components/desktop-dialog.component';

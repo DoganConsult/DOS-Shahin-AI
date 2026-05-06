@@ -13,10 +13,26 @@
       "cmd": "test -d platform/ui-system/dos-ui-system/src/archetypes"
     },
     {
+      "id": "archetype_registry_present",
+      "cmd": "test -f platform/ui-system/dos-ui-system/src/archetypes/archetype-registry.ts"
+    },
+    {
+      "id": "archetype_contract_present",
+      "cmd": "test -f platform/ui-system/dos-ui-system/src/archetypes/archetype.contract.ts"
+    },
+    {
+      "id": "archetype_renderers_14",
+      "cmd": "test $(ls platform/ui-system/dos-ui-system/src/archetypes/*-archetype.component.ts | wc -l) -ge 14"
+    },
+    {
+      "id": "agent_barrel_present",
+      "cmd": "test -f platform/ui-system/dos-ui-system/src/components/agent/index.ts"
+    },
+    {
       "id": "zerodirt",
       "cmd": "PROGRAM_WAVE=3 node scripts/program/foundation-ai/zerodirt.mjs",
       "required": true
     }
   ],
-  "hash": "sha256:f4fc6da39f9ea40d18726d4e938718f7c49c8ba002124fe3b2dcd37af0d0e095"
+  "hash": "sha256:dd4a5a04b82cfd1aaaaa3b760b152b55c7e1e1e2be33cec92d5d6a6fc2085732"
 }
