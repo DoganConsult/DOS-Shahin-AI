@@ -61,8 +61,11 @@ async function resolveMfaConfig(): Promise<ResolvedConfig> {
   ]);
   return {
     pepper:            pepper            || process.env.SECRETS_ENCRYPTION_KEY || '',
-    sender:            sender            || 'info@shahin-ai.com',
-    fromLabel:         fromLabel         || 'Shahin-AI',
+    // Sender + fromLabel come from secrets store (mfa.sender / mfa.fromLabel)
+    // or env (MFA_SENDER / MFA_FROM_LABEL). No hardcoded brand fallback —
+    // brand display strings live in dos.tenant_branding (resolver).
+    sender:            sender            || '',
+    fromLabel:         fromLabel         || '',
     graphEndpoint:     graphEndpoint     || 'https://graph.microsoft.com/v1.0',
     azureTenantId:     azTenant          || '',
     azureClientId:     azClient          || '',

@@ -5,7 +5,7 @@ export const workspaceModuleRouteGroup: ModuleRouteGroup = {
 };
 
 export const workspaceStandaloneRoutes: Record<string, StandaloneRouteEntry> = {
-  'workspace-home': { loadComponent: () => import('../../pages/workspace-home/workspace-home.component').then(m => m.WorkspaceHomeComponent), moduleCode: 'workspace', data: { preload: true } },
+  'workspace-home': { loadComponent: () => import('../../../../core/platform/shell/dynamic-template-page.component').then(m => m.DynamicTemplatePageComponent), moduleCode: 'workspace', data: { preload: true } },
   'dashboard': { redirectTo: 'workspace-home', pathMatch: 'full' },
   'profile': { loadComponent: () => import('../../pages/profile/profile.component').then(m => m.ProfileComponent), requiredPermission: 'profile:read', moduleCode: 'workspace' },
   'policies': { redirectTo: 'governance/policies', pathMatch: 'full' },

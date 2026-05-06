@@ -33,7 +33,7 @@ export const JOURNEY_PHASES: PhaseItem[] = [
       <!-- Phase navigation bar -->
       <nav class="phase-nav" role="navigation" [attr.aria-label]="i18n.translate('journey.phases')">
         <div class="phase-nav-top">
-          <a routerLink="/workspace-home" class="btn-back">{{ i18n.translate('journey.backHome') }}</a>
+          <!-- Back-home link removed: landing route is DB-owned (dos.tenant_landing_config via UI-OS). NO FRONTEND INVENTION. -->
         </div>
         <div class="phase-track">
           @for (phase of phases; track phase.id; let idx = $index) {

@@ -41,7 +41,10 @@ export interface HubMeta {
 export const HUB_REGISTRY: Record<string, HubMeta> = {
   'workspace': {
     key: 'workspace', labelEn: 'Workspace Home', labelAr: 'الصفحة الرئيسية',
-    route: '/workspace-home', icon: 'pi-th-large', color: '#0d9488',
+    // DB-driven landing route (dos.tenant_landing_config via UI-OS).
+    // Empty string = consumer must read tenant landing route at runtime
+    // (NO FRONTEND INVENTION per AGENTS.md).
+    route: '', icon: 'pi-th-large', color: '#0d9488',
     phaseEn: 'Plan', phaseAr: 'التخطيط', agentId: 'A04',
     connectedHubs: ['risk', 'governance', 'compliance', 'audit', 'evidence', 'framework', 'vendor', 'workflow', 'incident', 'privacy', 'intelligence', 'operations', 'analytics', 'reporting', 'connector', 'team', 'automation', 'ai-suite', 'advanced', 'admin', 'knowledge'],
     flows: ['assessment-cycle', 'policy-lifecycle', 'risk-to-remediation'],

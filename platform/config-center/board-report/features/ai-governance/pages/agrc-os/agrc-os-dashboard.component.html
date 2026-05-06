@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="cc-header-right">
-      <a routerLink="/workspace-home" class="cc-btn-nav" [attr.aria-label]="i18n.translate('common.backToDashboard')">
+      <a *ngIf="workspaceShellPath as wsp" [routerLink]="wsp" class="cc-btn-nav" [attr.aria-label]="i18n.translate('common.backToDashboard')">
         <i class="pi pi-home"></i>
         <span>{{ i18n.translate('common.home') }}</span>
       </a>

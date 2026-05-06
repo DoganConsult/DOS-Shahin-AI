@@ -56,7 +56,7 @@ describe('getAccessProfiles', () => {
     const result = await getAccessProfiles('t1');
     expect(result).toHaveLength(1);
     expect(result[0].profileCode).toBe('admin_profile');
-    expect(result[0].defaultLandingPage).toBe('/admin');
+    expect(result[0].tenantLandingRoute).toBe('/admin');
     expect(result[0].allowedModules).toEqual(['risk', 'audit']);
     expect(result[0].isSystem).toBe(true);
   });
@@ -85,7 +85,9 @@ describe('getAccessProfiles', () => {
     const result = await getAccessProfiles('t1');
     expect(result[0].nameEn).toBe('');
     expect(result[0].nameAr).toBe('');
-    expect(result[0].defaultLandingPage).toBe('/workspace-home');
+    // No frontend fallback: missing default_landing_page → null.
+    // Operator must seed dos.tenant_landing_config; consumer renders empty.
+    expect(result[0].tenantLandingRoute).toBeNull();
     expect(result[0].allowedModules).toEqual([]);
   });
 
@@ -139,7 +141,8 @@ describe('getAccessProfile', () => {
 
     const result = await getAccessProfile('t1', 'p1');
     expect(result!.nameEn).toBe('');
-    expect(result!.defaultLandingPage).toBe('/workspace-home');
+    // No frontend fallback: missing default_landing_page → null.
+    expect(result!.tenantLandingRoute).toBeNull();
     expect(result!.allowedModules).toEqual([]);
   });
 });

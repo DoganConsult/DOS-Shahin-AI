@@ -24,7 +24,10 @@ const MODULE_DEFS: ModuleEntry[] = [
     labelEn: 'GRC',
     labelAr: 'الحوكمة والمخاطر',
     icon: 'pi-shield',
-    rootRoute: '/workspace-home',
+    // DB-driven landing route (dos.tenant_landing_config via UI-OS).
+    // Empty string = consumer must read tenant landing route at runtime
+    // (NO FRONTEND INVENTION per AGENTS.md).
+    rootRoute: '',
     color: '#0ea5e9',
   },
   {

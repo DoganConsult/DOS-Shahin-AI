@@ -62,7 +62,7 @@ accessRouter.get('/my-permissions', async (req: Request, res: Response) => {
       roles: perms.roles || [],
       modules: perms.modules || [],
       dashboards: [] as unknown[],
-      landingPage: me.membership?.landingRoute || '/workspace-home',
+      landingPage: me.membership?.landingRoute ?? null,
       scopeBindings: [] as unknown[],
       decisionAuthorities: [] as unknown[],
       accessProfiles: [] as unknown[],

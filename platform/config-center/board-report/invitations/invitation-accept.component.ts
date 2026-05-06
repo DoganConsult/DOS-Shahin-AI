@@ -40,18 +40,24 @@ interface AcceptRegisterResponse {
   userId: string;
   role: string;
   tenantId: string;
-  defaultLandingPage?: string;
+  // DB-resolved landing route (dos.tenant_landing_config via UI-OS).
+  // null = operator has not seeded; SPA must render empty/no-op (NO
+  // FRONTEND INVENTION).
+  tenantLandingRoute?: string | null;
 }
 
 const EXTERNAL_ROLES = new Set(['vendor_contact', 'regulator_inspector', 'consultant_admin', 'external_auditor']);
 
-function portalRedirect(role: string): string {
+// Portal redirect map for external auth-boundary roles. Returns null
+// for non-portal roles so the caller defers to the DB-resolved landing
+// route (dos.tenant_landing_config via UI-OS) — NO FRONTEND INVENTION.
+function portalRedirect(role: string): string | null {
   switch (role) {
     case 'vendor_contact':       return '/vendor-portal';
     case 'regulator_inspector':  return '/regulator-portal';
     case 'consultant_admin':     return '/consultant-center';
     case 'external_auditor':     return '/audit-hub';
-    default:                     return '/workspace-home';
+    default:                     return null;
   }
 }
 
@@ -422,7 +428,9 @@ export class InvitationAcceptComponent implements OnInit {
   jobTitle = '';
   department = '';
   roleModules: string[] = [];
-  defaultLandingPage = '/workspace-home';
+  // DB-resolved landing route from invitation profile (UI-OS resolver).
+  // null = operator has not seeded; SPA must render empty/no-op.
+  tenantLandingRoute: string | null = null;
 
   // Registration form fields
   regName = '';
@@ -505,9 +513,9 @@ export class InvitationAcceptComponent implements OnInit {
             m.replace(/_/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase())
           );
 
-          this.defaultLandingPage = typeof roleProfile['defaultLandingPage'] === 'string'
-            ? roleProfile['defaultLandingPage']
-            : '/workspace-home';
+          this.tenantLandingRoute = typeof roleProfile['tenantLandingRoute'] === 'string'
+            ? roleProfile['tenantLandingRoute']
+            : null;
 
           if (typeof metadata['name'] === 'string') {
             this.regName = metadata['name'];
@@ -637,8 +645,10 @@ export class InvitationAcceptComponent implements OnInit {
           localStorage.setItem('grc_userName', this.regName.trim());
           localStorage.setItem('grc_orgName', this.organizationName);
 
-          const landingPage = res.defaultLandingPage || this.defaultLandingPage || '/login';
-          setTimeout(() => this.router.navigate([landingPage]), 1500);
+          // Landing route is DB-owned (dos.tenant_landing_config via UI-OS).
+          // null on every source = render empty/no-op; do not invent a route.
+          const landingPage = res.tenantLandingRoute || this.tenantLandingRoute;
+          if (landingPage) setTimeout(() => this.router.navigate([landingPage]), 1500);
         },
         error: (err) => {
           this.accepting = false;

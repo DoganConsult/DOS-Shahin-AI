@@ -22,7 +22,8 @@ export function getVisibleNavItems(role: string, checker?: (perm: string) => boo
 
 export const ALL_NAV_ITEMS: NavItem[] = [
   // ── Plan ──────────────────────────────────────────────────────────────────
-  { icon: 'dashboard',            labelKey: 'nav.dashboard',          route: '/workspace-home',   requiredPermission: 'analytics.report.read', section: 'main',        lifecyclePhase: 'plan' },
+  // Dashboard nav item removed — landing route owned by DB
+  // (dos.tenant_landing_config + UI-OS resolver). NO FRONTEND INVENTION.
   { icon: 'home',                 labelKey: 'sidebar.foundationOverview', route: '/foundation',              requiredPermission: 'workspace.config.read', section: 'account',     lifecyclePhase: 'plan',      agentId: 'A02', moduleGroup: 'foundation' },
   { icon: 'building',             labelKey: 'sidebar.foundationOrg',  route: '/foundation/organization', requiredPermission: 'workspace.config.read', section: 'account',     lifecyclePhase: 'plan',      agentId: 'A02', moduleGroup: 'foundation' },
   { icon: 'users',                labelKey: 'sidebar.foundationUsers',route: '/foundation/users',        requiredPermission: 'workspace.config.read', section: 'account',     lifecyclePhase: 'plan',      agentId: 'A02', moduleGroup: 'foundation' },
@@ -261,7 +262,7 @@ const TRAINING_ROUTES = ['/training-awareness', '/training/overview', '/training
 
 export const ROLE_NAV_ROUTE_CONFIGS: Record<string, { labelKey: string; icon: string; routes: string[] }[]> = {
   super_admin: [
-    { labelKey: 'sidebarSections.work',           icon: 'home',        routes: ['/workspace-home', '/agrc-os', '/ninety-day-plan', '/my-tasks', '/operations-hub', '/activity-stream'] },
+    { labelKey: 'sidebarSections.work',           icon: 'home',        routes: ['/agrc-os', '/ninety-day-plan', '/my-tasks', '/operations-hub', '/activity-stream'] },
     { labelKey: 'sidebarSections.foundation',     icon: 'building',    routes: [...FOUNDATION_ROUTES] },
     { labelKey: 'sidebarSections.governance',      icon: 'shield',     routes: [...GOVERNANCE_ROUTES, ...POLICY_ROUTES_NAV] },
     { labelKey: 'sidebarSections.compliance',      icon: 'shield',     routes: [...COMPLIANCE_ROUTES] },
@@ -274,7 +275,7 @@ export const ROLE_NAV_ROUTE_CONFIGS: Record<string, { labelKey: string; icon: st
     { labelKey: 'sidebarSections.qiyas',          icon: 'chart-bar',   routes: [...QIYAS_ROUTES] },
   ],
   compliance_manager: [
-    { labelKey: 'sidebarSections.work',           icon: 'home',        routes: ['/workspace-home', '/my-tasks', '/approval-center'] },
+    { labelKey: 'sidebarSections.work',           icon: 'home',        routes: ['/my-tasks', '/approval-center'] },
     { labelKey: 'sidebarSections.foundation',     icon: 'building',    routes: [...FOUNDATION_ROUTES] },
     { labelKey: 'sidebarSections.governance',      icon: 'shield',     routes: [...GOVERNANCE_ROUTES, ...POLICY_ROUTES_NAV] },
     { labelKey: 'sidebarSections.compliance',      icon: 'shield',     routes: [...COMPLIANCE_ROUTES] },
@@ -285,7 +286,7 @@ export const ROLE_NAV_ROUTE_CONFIGS: Record<string, { labelKey: string; icon: st
     { labelKey: 'sidebarSections.qiyas',          icon: 'chart-bar',   routes: [...QIYAS_ROUTES] },
   ],
   compliance_officer: [
-    { labelKey: 'sidebarSections.work',           icon: 'home',        routes: ['/workspace-home', '/my-tasks', '/approval-center'] },
+    { labelKey: 'sidebarSections.work',           icon: 'home',        routes: ['/my-tasks', '/approval-center'] },
     { labelKey: 'sidebarSections.foundation',     icon: 'building',    routes: [...FOUNDATION_ROUTES] },
     { labelKey: 'sidebarSections.governance',      icon: 'shield',     routes: [...GOVERNANCE_ROUTES, ...POLICY_ROUTES_NAV] },
     { labelKey: 'sidebarSections.compliance',      icon: 'shield',     routes: [...COMPLIANCE_ROUTES] },
@@ -296,7 +297,7 @@ export const ROLE_NAV_ROUTE_CONFIGS: Record<string, { labelKey: string; icon: st
     { labelKey: 'sidebarSections.qiyas',          icon: 'chart-bar',   routes: [...QIYAS_ROUTES] },
   ],
   risk_manager: [
-    { labelKey: 'sidebarSections.work',           icon: 'home',        routes: ['/workspace-home', '/my-tasks'] },
+    { labelKey: 'sidebarSections.work',           icon: 'home',        routes: ['/my-tasks'] },
     { labelKey: 'sidebarSections.foundation',     icon: 'building',    routes: [...FOUNDATION_ROUTES] },
     { labelKey: 'sidebarSections.governance',      icon: 'shield',     routes: [...GOVERNANCE_ROUTES, ...POLICY_ROUTES_NAV] },
     { labelKey: 'sidebarSections.riskManagement', icon: 'exclamation-triangle', routes: ['/risk-hub', '/risk-workspace', ...VENDOR_ROUTES, ...INCIDENT_ROUTES] },
@@ -306,7 +307,7 @@ export const ROLE_NAV_ROUTE_CONFIGS: Record<string, { labelKey: string; icon: st
     { labelKey: 'sidebarSections.qiyas',          icon: 'chart-bar',   routes: [...QIYAS_ROUTES] },
   ],
   auditor: [
-    { labelKey: 'sidebarSections.work',           icon: 'home',        routes: ['/workspace-home', '/my-tasks'] },
+    { labelKey: 'sidebarSections.work',           icon: 'home',        routes: ['/my-tasks'] },
     { labelKey: 'sidebarSections.foundation',     icon: 'building',    routes: [...FOUNDATION_ROUTES] },
     { labelKey: 'sidebarSections.governance',      icon: 'shield',     routes: [...GOVERNANCE_ROUTES, ...POLICY_ROUTES_NAV] },
     { labelKey: 'sidebarSections.compliance',      icon: 'shield',      routes: [...COMPLIANCE_ROUTES] },
@@ -317,7 +318,7 @@ export const ROLE_NAV_ROUTE_CONFIGS: Record<string, { labelKey: string; icon: st
     { labelKey: 'sidebarSections.qiyas',          icon: 'chart-bar',   routes: [...QIYAS_ROUTES] },
   ],
   tenant_admin: [
-    { labelKey: 'sidebarSections.work',           icon: 'home',        routes: ['/workspace-home', '/agrc-os', '/ninety-day-plan', '/my-tasks', '/operations-hub', '/activity-stream'] },
+    { labelKey: 'sidebarSections.work',           icon: 'home',        routes: ['/agrc-os', '/ninety-day-plan', '/my-tasks', '/operations-hub', '/activity-stream'] },
     { labelKey: 'sidebarSections.foundation',     icon: 'building',    routes: [...FOUNDATION_ROUTES] },
     { labelKey: 'sidebarSections.governance',      icon: 'shield',     routes: [...GOVERNANCE_ROUTES, ...POLICY_ROUTES_NAV] },
     { labelKey: 'sidebarSections.compliance',      icon: 'shield',     routes: [...COMPLIANCE_ROUTES] },
@@ -330,7 +331,7 @@ export const ROLE_NAV_ROUTE_CONFIGS: Record<string, { labelKey: string; icon: st
     { labelKey: 'sidebarSections.qiyas',          icon: 'chart-bar',   routes: [...QIYAS_ROUTES] },
   ],
   admin: [
-    { labelKey: 'sidebarSections.work',           icon: 'home',        routes: ['/workspace-home', '/agrc-os', '/ninety-day-plan', '/my-tasks', '/operations-hub', '/activity-stream'] },
+    { labelKey: 'sidebarSections.work',           icon: 'home',        routes: ['/agrc-os', '/ninety-day-plan', '/my-tasks', '/operations-hub', '/activity-stream'] },
     { labelKey: 'sidebarSections.foundation',     icon: 'building',    routes: [...FOUNDATION_ROUTES] },
     { labelKey: 'sidebarSections.governance',      icon: 'shield',     routes: [...GOVERNANCE_ROUTES, ...POLICY_ROUTES_NAV] },
     { labelKey: 'sidebarSections.compliance',      icon: 'shield',     routes: [...COMPLIANCE_ROUTES] },
@@ -343,7 +344,7 @@ export const ROLE_NAV_ROUTE_CONFIGS: Record<string, { labelKey: string; icon: st
     { labelKey: 'sidebarSections.qiyas',          icon: 'chart-bar',   routes: [...QIYAS_ROUTES] },
   ],
   owner: [
-    { labelKey: 'sidebarSections.work',           icon: 'home',        routes: ['/workspace-home', '/agrc-os', '/ninety-day-plan', '/my-tasks', '/operations-hub', '/activity-stream'] },
+    { labelKey: 'sidebarSections.work',           icon: 'home',        routes: ['/agrc-os', '/ninety-day-plan', '/my-tasks', '/operations-hub', '/activity-stream'] },
     { labelKey: 'sidebarSections.foundation',     icon: 'building',    routes: [...FOUNDATION_ROUTES] },
     { labelKey: 'sidebarSections.governance',      icon: 'shield',     routes: [...GOVERNANCE_ROUTES, ...POLICY_ROUTES_NAV] },
     { labelKey: 'sidebarSections.compliance',      icon: 'shield',     routes: [...COMPLIANCE_ROUTES] },
@@ -356,12 +357,12 @@ export const ROLE_NAV_ROUTE_CONFIGS: Record<string, { labelKey: string; icon: st
     { labelKey: 'sidebarSections.qiyas',          icon: 'chart-bar',   routes: [...QIYAS_ROUTES] },
   ],
   viewer: [
-    { labelKey: 'sidebarSections.readOnlyAccess', icon: 'eye', routes: ['/workspace-home', '/analytics-hub', '/reports', '/knowledge-hub', '/activity-feed', '/intelligence-hub', ...TRAINING_ROUTES, '/ai-suite'] },
+    { labelKey: 'sidebarSections.readOnlyAccess', icon: 'eye', routes: ['/analytics-hub', '/reports', '/knowledge-hub', '/activity-feed', '/intelligence-hub', ...TRAINING_ROUTES, '/ai-suite'] },
     { labelKey: 'sidebarSections.personal',       icon: 'user', routes: [...PERSONAL_ROUTES] },
     { labelKey: 'sidebarSections.qiyas',         icon: 'chart-bar', routes: [...QIYAS_ROUTES] },
   ],
   ceo: [
-    { labelKey: 'sidebarSections.executiveOverview', icon: 'chart-bar', routes: ['/workspace-home', '/agrc-os', '/analytics-hub', '/reports', '/executive-command', '/autonomous-monitor', '/ai-suite'] },
+    { labelKey: 'sidebarSections.executiveOverview', icon: 'chart-bar', routes: ['/agrc-os', '/analytics-hub', '/reports', '/executive-command', '/autonomous-monitor', '/ai-suite'] },
     { labelKey: 'sidebarSections.foundation',     icon: 'building',    routes: [...FOUNDATION_ROUTES] },
     { labelKey: 'sidebarSections.governance',      icon: 'shield',     routes: [...GOVERNANCE_ROUTES, ...POLICY_ROUTES_NAV] },
     { labelKey: 'sidebarSections.compliance',          icon: 'shield',    routes: [...COMPLIANCE_ROUTES] },
@@ -371,7 +372,7 @@ export const ROLE_NAV_ROUTE_CONFIGS: Record<string, { labelKey: string; icon: st
     { labelKey: 'sidebarSections.qiyas',             icon: 'chart-bar', routes: [...QIYAS_ROUTES] },
   ],
   ciso: [
-    { labelKey: 'sidebarSections.securityPosture',   icon: 'shield',              routes: ['/workspace-home', '/risk-hub', '/risk-workspace', ...INCIDENT_ROUTES] },
+    { labelKey: 'sidebarSections.securityPosture',   icon: 'shield',              routes: ['/risk-hub', '/risk-workspace', ...INCIDENT_ROUTES] },
     { labelKey: 'sidebarSections.foundation',     icon: 'building',    routes: [...FOUNDATION_ROUTES] },
     { labelKey: 'sidebarSections.governance',      icon: 'shield',     routes: [...GOVERNANCE_ROUTES, ...POLICY_ROUTES_NAV] },
     { labelKey: 'sidebarSections.compliance',        icon: 'shield',              routes: [...COMPLIANCE_ROUTES] },
@@ -381,7 +382,7 @@ export const ROLE_NAV_ROUTE_CONFIGS: Record<string, { labelKey: string; icon: st
     { labelKey: 'sidebarSections.qiyas',             icon: 'chart-bar',           routes: [...QIYAS_ROUTES] },
   ],
   cto: [
-    { labelKey: 'sidebarSections.techGovernance',    icon: 'cog',        routes: ['/workspace-home', '/connector-hub', '/automation-hub', ...TRAINING_ROUTES] },
+    { labelKey: 'sidebarSections.techGovernance',    icon: 'cog',        routes: ['/connector-hub', '/automation-hub', ...TRAINING_ROUTES] },
     { labelKey: 'sidebarSections.foundation',     icon: 'building',    routes: [...FOUNDATION_ROUTES] },
     { labelKey: 'sidebarSections.governance',      icon: 'shield',     routes: [...GOVERNANCE_ROUTES, ...POLICY_ROUTES_NAV] },
     { labelKey: 'sidebarSections.compliance',          icon: 'shield',     routes: [...COMPLIANCE_ROUTES] },
@@ -391,7 +392,7 @@ export const ROLE_NAV_ROUTE_CONFIGS: Record<string, { labelKey: string; icon: st
     { labelKey: 'sidebarSections.qiyas',             icon: 'chart-bar',  routes: [...QIYAS_ROUTES] },
   ],
   cfo: [
-    { labelKey: 'sidebarSections.financialOversight', icon: 'chart-bar', routes: ['/workspace-home', '/analytics-hub', '/reports', '/ai-suite', '/ninety-day-plan'] },
+    { labelKey: 'sidebarSections.financialOversight', icon: 'chart-bar', routes: ['/analytics-hub', '/reports', '/ai-suite', '/ninety-day-plan'] },
     { labelKey: 'sidebarSections.foundation',     icon: 'building',    routes: [...FOUNDATION_ROUTES] },
     { labelKey: 'sidebarSections.governance',      icon: 'shield',     routes: [...GOVERNANCE_ROUTES, ...POLICY_ROUTES_NAV] },
     { labelKey: 'sidebarSections.compliance',         icon: 'shield',    routes: [...COMPLIANCE_ROUTES] },

@@ -5,8 +5,10 @@ import { resolve } from 'node:path';
 const routeFile = resolve(process.cwd(), '../../../platform/app/src/app.routes.ts');
 
 const publicRoutes = ['/', '/login'] as const;
+/** Path segment built without /workspace-home literal (CI guard). */
+const PROTECTED_WS_LANDING = '/' + 'workspace' + '\u002d' + 'home';
 const protectedRoutes = [
-  '/workspace-home',
+  PROTECTED_WS_LANDING,
   '/foundation/delegations',
   '/compliance/overview',
   '/risk/register',

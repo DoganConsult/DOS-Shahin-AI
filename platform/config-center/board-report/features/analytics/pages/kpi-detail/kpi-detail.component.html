@@ -20,7 +20,7 @@
       </div>
     </div>
     <div class="kpi-hero-right">
-      <button class="back-btn" routerLink="/workspace-home">
+      <button *ngIf="workspaceShellPath as wsp" class="back-btn" [routerLink]="wsp">
         <i class="pi" [ngClass]="i18n.translate('kpiDetail.backArrowIcon')"></i>
         {{ i18n.translate('kpiDetail.backToDashboard') }}
       </button>

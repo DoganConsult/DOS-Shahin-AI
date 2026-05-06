@@ -191,12 +191,8 @@ export class MobileTabBarComponent {
   );
 
   readonly tabs: TabItem[] = [
-    {
-      label: 'Home',
-      labelAr: 'الرئيسية',
-      icon: 'dashboard',
-      route: '/workspace-home',
-    },
+    // Home tab removed — landing route is DB-owned (dos.tenant_landing_config
+    // via UI-OS resolver). NO FRONTEND INVENTION (AGENTS.md).
     {
       label: 'Risks',
       labelAr: 'المخاطر',

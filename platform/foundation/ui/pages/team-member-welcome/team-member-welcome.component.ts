@@ -167,7 +167,8 @@ export class TeamMemberWelcomeComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     if (this._storage.get('grc_member_onboarded') === 'true') {
-      this.router.navigate(['/workspace-home']);
+      // Landing route is owned by dos.tenant_landing_config (UI-OS resolver).
+      // No frontend invention: leave routing to the outer landing guard.
       return;
     }
     const profile = this.auth.userProfile();
@@ -239,7 +240,8 @@ export class TeamMemberWelcomeComponent implements OnInit, OnDestroy {
   dismiss() {
     this.dismissed.set(true);
     this.markOnboarded();
-    this.router.navigate(['/workspace-home']);
+    // No frontend invention: outer landing guard (DB-resolved via
+    // TenantLandingConfigService) owns the post-dismiss target.
   }
 
   goToTasks() {
@@ -249,7 +251,8 @@ export class TeamMemberWelcomeComponent implements OnInit, OnDestroy {
 
   goToDashboard() {
     this.markOnboarded();
-    this.router.navigate(['/workspace-home']);
+    // No frontend invention: outer landing guard (DB-resolved via
+    // TenantLandingConfigService) owns the dashboard target.
   }
 
 }

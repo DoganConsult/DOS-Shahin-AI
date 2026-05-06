@@ -11,8 +11,11 @@ export interface PlatformBootstrapConfig {
 
 export interface BootstrapContextEntitlements {
   ui: {
-    homeRouteByRole?: Record<string, string>;
-    defaultHomeRoute?: string;
+    // DB-resolved (dos.tenant_landing_config) per-role landing overrides.
+    tenantLandingRouteByRole?: Record<string, string>;
+    // DB-resolved tenant landing route. null = operator has not seeded;
+    // SPA must render empty/no-op (NO FRONTEND INVENTION).
+    tenantLandingRoute?: string | null;
   };
 }
 
@@ -56,8 +59,8 @@ export class PlatformBootstrapService {
       map(({ config, entitlements }) => ({
         entitlements: {
           ui: {
-            homeRouteByRole: (entitlements['ui'] as Record<string, unknown>)?.['homeRouteByRole'] as Record<string, string> | undefined,
-            defaultHomeRoute: ((entitlements['ui'] as Record<string, unknown>)?.['defaultHomeRoute'] as string) ?? undefined,
+            tenantLandingRouteByRole: (entitlements['ui'] as Record<string, unknown>)?.['tenantLandingRouteByRole'] as Record<string, string> | undefined,
+            tenantLandingRoute: ((entitlements['ui'] as Record<string, unknown>)?.['tenantLandingRoute'] as string | null | undefined) ?? null,
           },
         },
         bootstrap: {

@@ -30,7 +30,6 @@ const ROUTE_MAP: Record<string, string> = {
   finding: '/findings',
   asset: '/assets',
   assessment: '/audit',
-  workspace: '/workspace-home',
   remediation_task: '/workflows',
 };
 
@@ -54,7 +53,7 @@ const ROUTE_MAP: Record<string, string> = {
             [selected]="true">
             <ul class="rel-list">
               <li *ngFor="let item of group.items" class="rel-item">
-                <a [routerLink]="getRoute(item.type)" class="rel-link">
+                <a *ngIf="getRoute(item.type) as r" [routerLink]="r" class="rel-link">
                   <i class="pi" [ngClass]="getIcon(item.type)"></i>
                   <span class="rel-type">{{ formatTypeName(item.type) }}</span>
                   <span class="rel-id">#{{ item.id | slice:0:8 }}</span>
@@ -112,8 +111,9 @@ export class RelationshipViewComponent implements OnChanges {
     }
   }
 
-  getRoute(type: string): string[] {
-    return [ROUTE_MAP[type] || '/workspace-home'];
+  getRoute(type: string): string[] | null {
+    const route = ROUTE_MAP[type];
+    return route ? [route] : null;
   }
 
   getIcon(type: string): string {

@@ -33,15 +33,18 @@ export const bootstrapGuard: CanActivateFn = () => {
       }
 
       const userRole = _storage.get('grc_role') ?? 'viewer';
-      const roleHome = entitlements.ui.homeRouteByRole?.[userRole]
-        ?? entitlements.ui.defaultHomeRoute;
+      // DB-resolved landing route only (dos.tenant_landing_config via
+      // UI-OS resolver). null = operator has not seeded; allow nav to
+      // current route so SPA renders empty/no-op (NO FRONTEND INVENTION).
+      const tenantLandingRoute = entitlements.ui.tenantLandingRouteByRole?.[userRole]
+        ?? entitlements.ui.tenantLandingRoute
+        ?? null;
 
-      if (!roleHome) {
-        // No landing page configured - router will handle empty navigation
+      if (!tenantLandingRoute) {
         return true;
       }
 
-      return router.createUrlTree([roleHome]);
+      return router.createUrlTree([tenantLandingRoute]);
     }),
     catchError(() => of(router.createUrlTree(['/auth/login'])))
   );

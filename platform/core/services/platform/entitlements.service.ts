@@ -15,8 +15,12 @@ export interface EntitlementModules {
 }
 
 export interface EntitlementUi {
-  homeRouteByRole?: Record<string, string>;
-  defaultHomeRoute?: string;
+  // DB-resolved per-role landing overrides (dos.tenant_landing_config
+  // + per-role rows). UI-OS resolver normalizes shape.
+  tenantLandingRouteByRole?: Record<string, string>;
+  // DB-resolved tenant landing route. null = operator has not seeded;
+  // SPA must render empty/no-op (NO FRONTEND INVENTION).
+  tenantLandingRoute?: string | null;
 }
 
 export interface EntitlementData {

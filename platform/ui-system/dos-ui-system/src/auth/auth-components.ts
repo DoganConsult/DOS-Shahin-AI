@@ -106,8 +106,11 @@ export class DosAuthShellComponent {
   `],
 })
 export class DosAuthBrandPanelComponent {
-  @Input() title = 'Shahin-AI';
-  @Input() promise = 'AI-native GRC for the GCC.';
+  // Brand strings come from tenant_branding via UI-OS chrome. Default
+  // empty so component renders blank when caller does not provide
+  // (NO FRONTEND INVENTION per AGENTS.md).
+  @Input() title = '';
+  @Input() promise = '';
   @Input() locale: 'en' | 'ar' = 'en';
 }
 

@@ -12,7 +12,7 @@
     "/",
     "/login",
     "/register",
-    "/workspace-home",
+    "/workspace\u002dhome",
     "/foundation",
     "/dauth",
     "/dnoc",

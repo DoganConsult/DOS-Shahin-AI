@@ -203,11 +203,9 @@ export class OnboardingProvisioningService {
       const tid = this.platform.auth.tenantId() || '';
       const cockpitKey = tid ? `grc_cockpit_shown_${tid}` : 'grc_cockpit_shown';
       this.platform.storage.set(cockpitKey, 'true');
-      this.platform.productsConfig.load().then(() => {
-        this.router.navigate(['/workspace-home']);
-      }).catch(() => {
-        this.router.navigate(['/workspace-home']);
-      });
+      // Landing route is owned by dos.tenant_landing_config (UI-OS resolver).
+      // No frontend invention: outer landing guard owns the redirect.
+      this.platform.productsConfig.load().catch(() => undefined);
     };
     finalize();
   }

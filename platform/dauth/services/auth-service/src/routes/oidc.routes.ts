@@ -150,7 +150,12 @@ oidcRouter.get('/callback', async (req: Request, res: Response) => {
     // on login -> GET /me (recovers old users via email-fallback). Any
     // non-2xx response must fail closed back to a real auth entry route so
     // the SPA never boots the workspace with a half-resolved session.
-    let landing = stored.returnUrl || DEFAULT_LANDING;
+    // Landing resolution chain:
+    //   1. caller-supplied returnUrl from cookie state (already validated)
+    //   2. tenant-service /me → landingRoute (DB-resolved per tenant)
+    //   3. null → typed 422 LANDING_NOT_SEEDED (operator must seed
+    //      dos.tenant_landing_config; auth callback never invents a route)
+    let landing: string | null = stored.returnUrl || DEFAULT_LANDING;
     try {
       if (TENANT_SERVICE_URL) {
         const mode = stored.mode === 'register' ? 'register' : 'login';
@@ -267,9 +272,11 @@ oidcRouter.get('/callback', async (req: Request, res: Response) => {
             );
             const mfaRequired = polR.rows[0]?.mfa_required === true;
             if (mfaRequired) {
-              res.cookie('dos_mfa_return', landing, {
-                ...cookieOpts, maxAge: 10 * 60 * 1000,
-              });
+              if (landing) {
+                res.cookie('dos_mfa_return', landing, {
+                  ...cookieOpts, maxAge: 10 * 60 * 1000,
+                });
+              }
               landing = '/mfa';
             }
           }
@@ -288,6 +295,12 @@ oidcRouter.get('/callback', async (req: Request, res: Response) => {
       );
     }
 
+    if (!landing) {
+      // Operator must seed dos.tenant_landing_config — auth callback
+      // never invents a route. SPA shows a typed empty/no-op state.
+      res.status(422).json({ error: 'LANDING_NOT_SEEDED', tenantId: tenant.id });
+      return;
+    }
     res.redirect(302, landing);
   } catch (err: any) {
     console.error('[oidc/callback] token exchange failed', err?.response?.data || err.message);
@@ -344,7 +357,10 @@ oidcRouter.get('/session', async (req: Request, res: Response) => {
     slug: typeof claims['tenantCode'] === 'string' ? (claims['tenantCode'] as string) : null,
   };
   let permissions: string[] = [];
-  let landingRoute = '/workspace-home';
+  // Landing route is owned by dos.tenant_landing_config (resolved by
+  // ui-os-service /api/ui-os/tenant-landing-config). The OIDC callback
+  // does not invent a default — null means the SPA renders empty/no-op.
+  let landingRoute: string | null = null;
   let role: string | null = typeof claims['role'] === 'string' ? (claims['role'] as string) : null;
   let isSuperAdmin = claims['isSuperAdmin'] === true;
 

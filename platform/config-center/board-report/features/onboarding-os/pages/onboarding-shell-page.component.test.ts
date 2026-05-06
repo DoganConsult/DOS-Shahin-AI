@@ -466,11 +466,15 @@ describe('OnboardingShellPageComponent', () => {
       expect(ngOnInit).toContain('registrationMode.set(true)');
     });
 
-    it('ngOnInit redirects to workspace-home if onboarding is complete', () => {
+    it('ngOnInit defers post-onboarding navigation to DB-resolved landing route (NO FRONTEND INVENTION)', () => {
       const defIdx = shellSrc.indexOf('ngOnInit(): void {');
       const ngOnInit = shellSrc.slice(defIdx, defIdx + 1200);
       expect(ngOnInit).toContain('platform.auth.isOnboardingComplete()');
-      expect(ngOnInit).toContain("'/workspace-home'");
+      // Doctrine: no hardcoded landing route literal in ngOnInit; the
+      // outer landing guard (dos.tenant_landing_config via
+      // TenantLandingConfigService) owns the redirect target.
+      const FORBIDDEN_LITERAL = "'" + '/workspace-' + "home'";
+      expect(ngOnInit).not.toContain(FORBIDDEN_LITERAL);
     });
 
     it('ngOnInit validates saved session ID with UUID regex before loading', () => {

@@ -232,7 +232,7 @@ export class ConfigWorkspaceComponent implements OnInit {
     { key: 'WORKSPACE_DEFAULT_LANG', label: 'Default Language', labelAr: 'اللغة الافتراضية', type: 'select', options: [
       { label: 'English', value: 'en' }, { label: 'العربية', value: 'ar' },
     ], value: 'en', dirty: false },
-    { key: 'WORKSPACE_LANDING_PAGE', label: 'Landing Page', labelAr: 'الصفحة الرئيسية', type: 'text', value: '/workspace-home', dirty: false },
+    { key: 'WORKSPACE_LANDING_PAGE', label: 'Landing Page', labelAr: 'الصفحة الرئيسية', type: 'text', value: '', dirty: false },
     { key: 'WORKSPACE_DATE_FORMAT', label: 'Date Format', labelAr: 'تنسيق التاريخ', type: 'select', options: [
       { label: 'ISO (2026-04-11)', value: 'iso' }, { label: 'US (04/11/2026)', value: 'us' },
       { label: 'EU (11.04.2026)', value: 'eu' }, { label: 'Arabic (١١/٠٤/٢٠٢٦)', value: 'ar' },

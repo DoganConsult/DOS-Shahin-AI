@@ -168,7 +168,9 @@ export class ConsultantCenterComponent implements OnInit {
         // Store the client-scoped JWT and navigate to the internal dashboard
         this._storage.set('scopedJwt', r.scopedJwt);
         this.switchingContext = false;
-        this.router.navigate(['/workspace-home']);
+        // Landing route is owned by dos.tenant_landing_config (UI-OS
+        // resolver). No frontend invention: outer landing guard owns the
+        // post-context-switch redirect.
       },
       error: () => { this.switchingContext = false; },
     });

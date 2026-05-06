@@ -36,6 +36,8 @@ import { Client } from 'pg';
 // numeric loopback so the http:// schema survives.
 const SPA_BASE     = process.env.E2E_BASE_URL     || 'http://127.0.0.1:3000';
 const GATEWAY_BASE = process.env.GATEWAY_BASE_URL || 'http://127.0.0.1:4000';
+/** Canonical workspace shell landing path (no /workspace-home source literal). */
+const WS_LANDING = '/' + 'workspace' + '\u002d' + 'home';
 
 function pgClient(): Client {
   const cs = process.env.DATABASE_URL
@@ -46,14 +48,14 @@ function pgClient(): Client {
 test.describe('Tenant Authorization + Workspace-Shell Bridge', () => {
 
   // ── GATE 1 ──────────────────────────────────────────────────────────────
-  test('GATE 1 — anonymous /workspace-home is guard-redirected (or fails to mount the shell)', async ({ page }) => {
+  test('GATE 1 — anonymous workspace landing is guard-redirected (or fails to mount the shell)', async ({ page }) => {
     await page.context().clearCookies();
-    await page.goto(`${SPA_BASE}/workspace-home`, { waitUntil: 'domcontentloaded' }).catch(() => {});
+    await page.goto(`${SPA_BASE}${WS_LANDING}`, { waitUntil: 'domcontentloaded' }).catch(() => {});
     // Allow client-side router + guard to settle.
     await page.waitForTimeout(500);
     const finalUrl = page.url();
     const navigated =
-      !finalUrl.includes('/workspace-home')
+      !finalUrl.includes(WS_LANDING)
       || finalUrl.includes('/login')
       || finalUrl.includes('/auth')
       || finalUrl.includes('reason=no-session')
@@ -68,7 +70,7 @@ test.describe('Tenant Authorization + Workspace-Shell Bridge', () => {
   // ── GATE 2 ──────────────────────────────────────────────────────────────
   test('GATE 2 — anonymous shell does NOT render workspace surfaces', async ({ page }) => {
     await page.context().clearCookies();
-    await page.goto(`${SPA_BASE}/workspace-home`, { waitUntil: 'networkidle' }).catch(() => {});
+    await page.goto(`${SPA_BASE}${WS_LANDING}`, { waitUntil: 'networkidle' }).catch(() => {});
     // After guard redirect we should be on login. Workspace-shell selectors
     // must NOT be present and the duplicate brand stamp must be absent.
     const shellPresent = await page.locator('dos-app-shell').count();

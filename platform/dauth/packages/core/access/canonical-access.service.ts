@@ -163,18 +163,12 @@ export async function resolveAccessSnapshot(
     resolverErrors.push('enterprise_authz');
   }
 
-  let landingPage = '/workspace-home';
-  let dashboardWidgets: string[] = [];
-  let defaultDashboard: string | null = null;
-  try {
-    // Decoupled BootstrapService per Law 15. The UI calls /api/me/bootstrap independently.
-    // We provide basic defaults here to satisfy snapshot interfaces without reverse imports.
-    landingPage = '/workspace-home';
-    dashboardWidgets = [];
-    defaultDashboard = null;
-  } catch {
-    // legacy block, kept strictly structured
-  }
+  // Landing page is owned by dos.tenant_landing_config (resolved by
+  // ui-os-service /api/ui-os/tenant-landing-config). canonical-access
+  // does not invent a default — null forces SPA empty/no-op state.
+  const landingPage: string | null = null;
+  const dashboardWidgets: string[] = [];
+  const defaultDashboard: string | null = null;
 
   if (resolverErrors.length > 0) {
     const critical = resolverErrors.filter(e =>

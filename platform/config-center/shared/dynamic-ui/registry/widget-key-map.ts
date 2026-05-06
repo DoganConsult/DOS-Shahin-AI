@@ -93,8 +93,9 @@ const CANONICAL_SIGNATURE_WIDGET_MAP: Record<string, LazyComponent> = {
     import('../../../board-report/features/evidence/pages/evidence/evidence-overview.component').then(m => m.EvidenceOverviewComponent as unknown as Type<unknown>),
   'vendor-risk-portfolio': () =>
     import('../../../board-report/features/vendor-risk/pages/vendor-sub-pages').then(m => m.VendorOverviewComponent as unknown as Type<unknown>),
-  'workspace-home-cockpit': () =>
-    import('../../../../foundation/ui/workspace/workspace-home.component').then(m => m.WorkspaceHomeComponent as unknown as Type<unknown>),
+  // workspace-home-cockpit removed — workspace-home is shell-only (DB
+  // classification via dos.dynamic_ui_route_metadata). NO FRONTEND
+  // INVENTION (AGENTS.md).
 };
 
 export const WIDGET_KEY_MAP: Record<string, LazyComponent> = {

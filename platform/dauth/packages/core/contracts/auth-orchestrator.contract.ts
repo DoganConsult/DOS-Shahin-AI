@@ -35,7 +35,10 @@ export interface LoginResponsePayload {
   orgName: string;
   userName: string;
   isSuperAdmin: boolean;
-  defaultLandingPage: string;
+  // Landing route owned by dos.tenant_landing_config (UI-OS resolver).
+  // Bootstrap response no longer fabricates a default — null forces
+  // SPA empty/no-op state.
+  tenantLandingRoute: string | null;
   roleModules: string[];
   dashboardWidgets: string[];
   _moduleAuthority: string;

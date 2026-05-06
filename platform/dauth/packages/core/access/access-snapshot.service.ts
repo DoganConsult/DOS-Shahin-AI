@@ -148,9 +148,12 @@ export async function getAccessSnapshot(
     allowedModules,
     allowedProducts: [],
     allowedDashboards: [],
+    // Landing hint: super-admins go to /admin (auth-boundary route).
+    // Tenant-scoped users get null; SPA must read chrome.landingRoute
+    // from /api/ui-os/workspace-runtime (DB-resolved). No fallback.
     landingHint: {
-      landingPage: isSuperAdmin ? '/admin' : '/workspace-home',
-      fallbackPage: '/workspace-home',
+      landingPage: isSuperAdmin ? '/admin' : null,
+      fallbackPage: null,
     },
     audit: auditTrace,
   };

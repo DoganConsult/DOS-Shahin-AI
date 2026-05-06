@@ -90,7 +90,8 @@ export class OnboardingShellPageComponent implements OnInit, OnDestroy {
       return;
     }
     if (this.platform.auth.isOnboardingComplete()) {
-      this.router.navigate(['/workspace-home']);
+      // Landing route is owned by dos.tenant_landing_config (UI-OS resolver).
+      // No frontend invention: outer landing guard owns the redirect.
       return;
     }
     this.sessionSvc.loadConfiguration();

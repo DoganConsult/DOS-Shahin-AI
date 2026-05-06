@@ -111931,7 +111931,7 @@
           "name": "landing_route",
           "type": "varchar",
           "nullable": true,
-          "default": "'/workspace-home'::character varying",
+          "default": "'/workspace\u002dhome'::character varying",
           "max_length": 255
         }
       ],

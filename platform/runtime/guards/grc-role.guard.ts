@@ -1,11 +1,10 @@
 import { inject } from '@angular/core';
-import { CanActivateFn, Router, ActivatedRouteSnapshot } from '@angular/router';
+import { CanActivateFn, ActivatedRouteSnapshot } from '@angular/router';
 import { GrcAuthService } from '../../core/services/grc-auth.service';
 import { normalizePermission } from '@app/runtime/utils/permission-normalizer';
 
 export const grcRoleGuard: CanActivateFn = async (route: ActivatedRouteSnapshot) => {
   const authService = inject(GrcAuthService);
-  const router = inject(Router);
   const requiredPermission = route.data['requiredPermission'] as string;
   const requiredFunction = route.data['requiredFunction'] as string | undefined;
 
@@ -13,7 +12,10 @@ export const grcRoleGuard: CanActivateFn = async (route: ActivatedRouteSnapshot)
     // Normalize permission format (dot → colon) for migration safety
     const normalizedPerm = normalizePermission(requiredPermission);
     if (!authService.hasPermission(normalizedPerm)) {
-      router.navigate(['/workspace-home']);
+      // No frontend invention: do not redirect to a hardcoded landing.
+      // Returning false blocks the navigation; the outer landing-config
+      // guard (DB-resolved via TenantLandingConfigService) is the only
+      // legitimate source for any redirect target.
       return false;
     }
   }
@@ -21,7 +23,6 @@ export const grcRoleGuard: CanActivateFn = async (route: ActivatedRouteSnapshot)
   if (requiredFunction) {
     const hasFunction = await authService.hasFunction(requiredFunction);
     if (!hasFunction) {
-      router.navigate(['/workspace-home']);
       return false;
     }
   }

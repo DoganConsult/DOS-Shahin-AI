@@ -33,7 +33,7 @@ import { FOUNDATION_I18N, type FoundationI18n, NoopFoundationI18n } from '../por
   template: `
     <!-- Breadcrumb + Status Tag -->
     <cds-breadcrumb>
-      <cds-breadcrumb-item [href]="'/workspace-home'">{{ i18n.tr('breadcrumb.workspace', 'Workspace') }}</cds-breadcrumb-item>
+      <cds-breadcrumb-item [href]="workspaceHref()">{{ i18n.tr('breadcrumb.workspace', 'Workspace') }}</cds-breadcrumb-item>
       <cds-breadcrumb-item [href]="'/foundation'">{{ i18n.tr('foundation.name', 'Foundation') }}</cds-breadcrumb-item>
       <cds-breadcrumb-item [href]="'/foundation/users'">{{ i18n.tr('foundation.register.title', 'Register') }}</cds-breadcrumb-item>
       <cds-breadcrumb-item>{{ recordId() | slice:0:8 }}</cds-breadcrumb-item>
@@ -196,6 +196,9 @@ export class FoundationDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private api = inject(FoundationApiService);
   i18n: FoundationI18n = inject(FOUNDATION_I18N, { optional: true }) ?? new NoopFoundationI18n();
+
+  /** DB-resolved breadcrumb href (NO FRONTEND INVENTION). */
+  workspaceHref(): string | null { return null; }
 
   loading = signal(true);
   recordId = signal('');

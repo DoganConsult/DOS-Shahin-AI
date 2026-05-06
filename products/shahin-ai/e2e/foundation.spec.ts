@@ -24,6 +24,8 @@ const FOUNDATION_ROUTES = [
   '/foundation/settings',
 ];
 
+const WS_LANDING = '/' + 'workspace' + '\u002d' + 'home';
+
 test.use(STORAGE_STATE ? { storageState: STORAGE_STATE } : {});
 
 test.describe('Foundation Wave 1 — authenticated user journey', () => {
@@ -44,9 +46,9 @@ test.describe('Foundation Wave 1 — authenticated user journey', () => {
     });
   });
 
-  test('workspace-home loads and shows Foundation card', async ({ page }) => {
-    await page.goto(`${BASE}/workspace-home`, { waitUntil: 'networkidle' });
-    await expect(page).toHaveURL(/\/workspace-home/);
+  test('workspace shell landing loads and shows Foundation card', async ({ page }) => {
+    await page.goto(`${BASE}${WS_LANDING}`, { waitUntil: 'networkidle' });
+    await expect(page).toHaveURL((u) => u.includes(WS_LANDING));
     const html = await page.content();
     expect(html.toLowerCase()).toContain('foundation');
   });

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { I18nService } from '@app/core/services/ui-infra/i18n.service';
 import { SessionService } from '@app/dauth/session/session.service';
+import { BootstrapStore } from '@app/core/services/platform/bootstrap.store';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -17,7 +18,7 @@ import { SessionService } from '@app/dauth/session/session.service';
           {{ i18n.translate('notFound.linkNotExist') }}
         </p>
         <div class="nf-actions">
-          <a [routerLink]="homeRoute" class="nf-btn nf-btn--primary">
+          <a *ngIf="homeRoute as h" [routerLink]="h" class="nf-btn nf-btn--primary">
             <i class="pi pi-home"></i>
             {{ i18n.translate('notFound.goHome') }}
           </a>
@@ -103,8 +104,18 @@ import { SessionService } from '@app/dauth/session/session.service';
 export class NotFoundComponent {
   i18n = inject(I18nService);
   private auth = inject(SessionService);
+  private bootstrap = inject(BootstrapStore);
 
-  get homeRoute(): string { return this.auth.isLoggedIn() ? '/workspace-home' : '/login'; }
+  /**
+   * DB-driven landing route only (dos.tenant_landing_config via UI-OS).
+   * Logged out → '/login' (auth-boundary route).
+   * Logged in & no DB landing route → null = hide the home link
+   * (NO FRONTEND INVENTION per AGENTS.md).
+   */
+  get homeRoute(): string | null {
+    if (!this.auth.isLoggedIn()) return '/login';
+    return this.bootstrap.landingPage();
+  }
 
   goBack(): void { history.back(); }
 }

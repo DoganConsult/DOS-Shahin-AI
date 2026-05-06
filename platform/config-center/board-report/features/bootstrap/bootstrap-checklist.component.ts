@@ -149,7 +149,8 @@ export class BootstrapChecklistComponent implements OnInit {
     if (!this._storage.get(cockpitKey)) {
       this._storage.set(cockpitKey, 'true');
     }
-    this.router.navigateByUrl('/workspace-home');
+    // Landing route is owned by dos.tenant_landing_config (UI-OS resolver).
+    // No frontend invention: defer to outer landing guard for redirect.
   }
 
 }

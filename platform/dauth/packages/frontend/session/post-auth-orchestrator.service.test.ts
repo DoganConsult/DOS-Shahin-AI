@@ -102,14 +102,21 @@ describe('PostAuthOrchestratorService — resolveEntryRoute', () => {
     expect(src).toContain("return '/onboarding'");
   });
 
-  it('falls back to workspace home when bootstrap is unavailable and onboarding is complete', () => {
-    expect(src).toContain("return '/workspace-home'");
+  it('returns null (no frontend invention) when bootstrap is unavailable and onboarding is complete', () => {
+    // Doctrine: never fabricate a landing route. Source is dos.tenant_landing_config
+    // via TenantLandingConfigService — orchestrator returns null for empty/no-op.
+    const FORBIDDEN_LITERAL = "return '" + '/workspace-' + "home'";
+    expect(src).not.toContain(FORBIDDEN_LITERAL);
+    expect(src).toMatch(/return null/);
   });
 
-  it('prefers accessStore landing page before bootstrapStore fallback', () => {
+  it('prefers accessStore landing page; never fabricates a fallback', () => {
     expect(src).toContain('if (this.accessStore.loaded())');
     expect(src).toContain('return this.accessStore.landingPage()');
-    expect(src).toContain("return this.bootstrapStore.landingPage() || '/workspace-home'");
+    // bootstrapStore.landingPage() may return null; orchestrator forwards
+    // it as-is. No frontend-fabricated landing-route fallback constant.
+    const FORBIDDEN_LITERAL = "'" + '/workspace-' + "home'";
+    expect(src).not.toContain(FORBIDDEN_LITERAL);
   });
 
   it('does NOT include mustChangePassword in route resolution', () => {

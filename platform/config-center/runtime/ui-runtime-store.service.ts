@@ -63,8 +63,10 @@ export class UiRuntimeStore {
     () => this._renderContext()
   );
 
-  readonly landingPage = computed<string>(
-    () => this._blueprint()?.landingPage ?? '/workspace-home'
+  // DB-driven only. null = no UI-OS landing route; SPA must render
+  // empty/no-op (NO FRONTEND INVENTION per AGENTS.md).
+  readonly landingPage = computed<string | null>(
+    () => this._blueprint()?.landingPage ?? null
   );
 
   readonly archetypeCode = computed<string>(
@@ -144,7 +146,7 @@ export class UiRuntimeStore {
       actions: {},
       featureFlags: new Set(),
       aiCapabilities: [],
-      landingPage: '/workspace-home',
+      landingPage: null,
       archetypeCode: 'standard',
     };
     this._blueprint.set(blueprint);

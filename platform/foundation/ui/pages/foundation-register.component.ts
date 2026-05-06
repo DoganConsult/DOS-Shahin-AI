@@ -41,7 +41,7 @@ interface RegisterRow {
   template: `
     <!-- Breadcrumb -->
     <cds-breadcrumb>
-      <cds-breadcrumb-item [href]="'/workspace-home'">{{ i18n.tr('breadcrumb.workspace', 'Workspace') }}</cds-breadcrumb-item>
+      <cds-breadcrumb-item [href]="workspaceHref()">{{ i18n.tr('breadcrumb.workspace', 'Workspace') }}</cds-breadcrumb-item>
       <cds-breadcrumb-item [href]="'/foundation'">{{ i18n.tr('foundation.name', 'Foundation') }}</cds-breadcrumb-item>
       <cds-breadcrumb-item>{{ i18n.tr('foundation.register.title', 'Register') }}</cds-breadcrumb-item>
     </cds-breadcrumb>
@@ -167,6 +167,9 @@ export class FoundationRegisterComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
   private api = inject(FoundationApiService);
   i18n: FoundationI18n = inject(FOUNDATION_I18N, { optional: true }) ?? new NoopFoundationI18n();
+
+  /** DB-resolved breadcrumb href (NO FRONTEND INVENTION). */
+  workspaceHref(): string | null { return null; }
 
   loading = signal(true);
   rows = signal<RegisterRow[]>([]);

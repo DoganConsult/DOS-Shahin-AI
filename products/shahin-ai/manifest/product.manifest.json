@@ -3,8 +3,8 @@
   "schemaVersion": 1,
   "kind": "product",
   "product_code": "shahin-ai",
-  "display_name": "Shahin-AI",
-  "description": "Shahin-AI is the first product composed on top of Dogan-AI OS. Owns its UI shell, navigation, theme, and assets; consumes platform contracts and enrolls canonical modules.",
+  "display_name": "",
+  "description": "Product composed on top of Dogan-AI OS. Owns its UI shell, navigation, theme, and assets; consumes platform contracts and enrolls canonical modules. Display name is sourced from dos.tenant_branding via UI-OS chrome (NO FRONTEND INVENTION).",
   "hosts": [
     "shahin.local",
     "shahin-ai.dogan-ai.os"
@@ -62,7 +62,6 @@
       "/",
       "/login",
       "/register",
-      "/workspace-home",
       "/foundation",
       "/compliance",
       "/dauth",
@@ -83,10 +82,7 @@
     "redirects": []
   },
   "navigation_composition": {
-    "primary": [
-      { "id": "workspace-home", "label": "Workspace",  "route": "/workspace-home",     "icon": "home"    },
-      { "id": "foundation",     "label": "Foundation", "route": "/foundation/overview", "icon": "layers", "module_ref": "foundation" }
-    ],
+    "primary": [],
     "secondary": []
   },
   "dynamic_ui_enrollment": {

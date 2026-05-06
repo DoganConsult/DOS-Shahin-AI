@@ -37,7 +37,9 @@ export interface RouteCatalogResponse {
   roleCode: string | null;
   modules: string[];
   dashboardWidgets: string[];
-  defaultLandingPage: string;
+  // DB-resolved landing route from upstream catalog. null = operator
+  // has not seeded; SPA must render empty/no-op (NO FRONTEND INVENTION).
+  tenantLandingRoute: string | null;
   navigation: {
     primary: unknown[];
     secondary: unknown[];
@@ -92,8 +94,11 @@ export class RouteRegistryStore {
   /** Tenant entitlements */
   readonly entitlements = computed(() => this._catalog()?.entitlements ?? null);
 
-  /** Default landing page */
-  readonly landingPage = computed(() => this._catalog()?.defaultLandingPage ?? '/workspace-home');
+  /** Default landing page — DB-resolved only. Returns null when the
+   *  bootstrap catalog omits a landing route; SPA must render empty/no-op
+   *  (NO FRONTEND INVENTION). Source of truth: dos.tenant_landing_config
+   *  via UI-OS resolver. */
+  readonly landingPage = computed<string | null>(() => this._catalog()?.tenantLandingRoute ?? null);
 
   /** Full catalog (raw) */
   readonly catalog = computed(() => this._catalog());

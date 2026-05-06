@@ -13,11 +13,12 @@ export class AppHomeRedirectComponent implements OnInit {
   private store = inject(BootstrapStore);
 
   async ngOnInit(): Promise<void> {
+    // DB-driven landing route only (dos.tenant_landing_config via UI-OS).
+    // null/'/' = operator has not seeded; render empty/no-op (NO FRONTEND
+    // INVENTION per AGENTS.md). Do not fabricate a fallback route.
     const landing = this.store.landingPage();
     if (landing && landing !== '/') {
       await this.router.navigateByUrl(landing);
-    } else {
-      await this.router.navigateByUrl('/dashboard');
     }
   }
 }

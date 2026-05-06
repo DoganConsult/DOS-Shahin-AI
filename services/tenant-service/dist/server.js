@@ -32,7 +32,10 @@ const DATABASE_URL = process.env.DATABASE_URL;
 if (!DATABASE_URL)
     throw new Error('Required environment variable DATABASE_URL is not set');
 const PLATFORM_VERSION = process.env.PLATFORM_VERSION || require('../package.json').version || '0.0.0';
-const DEFAULT_HOME_FALLBACK = process.env.DEFAULT_HOME_ROUTE || '/workspace-home';
+// Doctrine: no static landing fallback. Landing route is owned by
+// dos.tenant_landing_config (resolved by ui-os-service). When the row
+// is absent, downstream consumers MUST render empty/no-op (never
+// invent a default). See AGENTS.md NO STATIC RULE.
 // Self-registration role policy (Patch 1):
 // The self-registered user is the workspace ADMIN, not the owner. Owner
 // is reserved for the legal representative / billing principal and is
@@ -793,8 +796,12 @@ app.get('/bootstrap', async (req, res) => {
         // Real entitlement-derived home route.
         const { rows: settings } = await pool.query(`SELECT settings FROM dos.tenants WHERE tenant_id = $1 LIMIT 1`, [m.tenant_id]);
         const tenantSettings = settings[0]?.settings || {};
-        const defaultHome = tenantSettings.defaultHomeRoute ||
-            DEFAULT_HOME_FALLBACK;
+        // Landing route comes from dos.tenant_landing_config via ui-os-service.
+        // tenant-service only echoes whatever the operator stored in the
+        // tenant settings blob; absent/empty stays absent/null.
+        const tenantLandingRoute = typeof tenantSettings.tenantLandingRoute === 'string' && tenantSettings.tenantLandingRoute.trim()
+            ? tenantSettings.tenantLandingRoute.trim()
+            : null;
         // Maintenance flag (feature flag of platform scope).
         const { rows: flags } = await pool.query(`SELECT enabled FROM dos.feature_flags WHERE flag_code = 'platform.maintenance' AND is_active = true LIMIT 1`);
         const maintenance = !!(flags[0]?.enabled);
@@ -807,7 +814,7 @@ app.get('/bootstrap', async (req, res) => {
             firstLoginCompleted: true, // membership exists ⇒ workspace was created at registration
             platformVersion: PLATFORM_VERSION,
             maintenance,
-            defaultHomeRoute: defaultHome,
+            tenantLandingRoute,
         });
     }
     catch (err) {
@@ -835,8 +842,15 @@ app.get('/entitlements', async (req, res) => {
         ORDER BY m.module_code`, [tenantId]);
         const { rows: settings } = await pool.query(`SELECT settings FROM dos.tenants WHERE tenant_id = $1 LIMIT 1`, [tenantId]);
         const ts = settings[0]?.settings || {};
-        const defaultHomeRoute = ts.defaultHomeRoute || DEFAULT_HOME_FALLBACK;
-        const homeRouteByRole = ts.homeRouteByRole || {};
+        // Landing route is owned by dos.tenant_landing_config (resolved by
+        // ui-os-service). tenant-service exposes only whatever role-keyed
+        // overrides the operator stored; no static fallback.
+        const tenantLandingRoute = typeof ts.tenantLandingRoute === 'string' && ts.tenantLandingRoute.trim()
+            ? ts.tenantLandingRoute.trim()
+            : null;
+        const tenantLandingRouteByRole = (ts.tenantLandingRouteByRole && typeof ts.tenantLandingRouteByRole === 'object')
+            ? ts.tenantLandingRouteByRole
+            : {};
         // Feature flags for this tenant (overrides + platform defaults).
         const { rows: flagRows } = await pool.query(`SELECT flag_code, enabled FROM dos.feature_flags WHERE is_active = true`);
         const features = {};
@@ -845,7 +859,7 @@ app.get('/entitlements', async (req, res) => {
         res.json({
             tenantId,
             modules: modules.map(m => ({ code: m.module_code, productKey: m.product_key, displayName: m.display_name, status: m.status })),
-            ui: { defaultHomeRoute, homeRouteByRole },
+            ui: { tenantLandingRoute, tenantLandingRouteByRole },
             features,
         });
     }
@@ -1137,7 +1151,7 @@ app.get('/tenant-home/overview', async (req, res) => {
                 setup: setupPending
                     ? { status: 'pending', message: 'Workspace is ready. No modules activated yet.' }
                     : { status: 'active' },
-                defaultHomeRoute: DEFAULT_HOME_FALLBACK,
+                tenantLandingRoute: null,
             },
             // ── FIX E ──────────────────────────────────────────────────────────
             // Populate the spec-conformant `kpis` envelope. The FE

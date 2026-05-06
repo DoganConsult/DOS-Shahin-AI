@@ -140,10 +140,13 @@ interface FinalizeArgs {
 }
 
 async function finalizeLogin({ res, tok, mode, orgNameEn, orgNameAr }: FinalizeArgs):
-  Promise<{ ok: true; redirect: string; mfaRequired: boolean }> {
+  Promise<{ ok: true; redirect: string | null; mfaRequired: boolean }> {
   setSessionCookies(res, tok);
 
-  let landing = DEFAULT_LANDING;
+  // Landing route is owned by dos.tenant_landing_config (resolved by
+  // ui-os-service). password flow does not invent a fallback; null
+  // forces the SPA to render empty/no-op (NO FRONTEND INVENTION).
+  let landing: string | null = DEFAULT_LANDING;
   let mfaRequired = false;
 
   if (TENANT_SERVICE_URL) {
@@ -244,7 +247,9 @@ async function finalizeLogin({ res, tok, mode, orgNameEn, orgNameAr }: FinalizeA
       const cookieOpts = {
         httpOnly: true, secure: SECURE, sameSite: SAMESITE, domain: COOKIE_DOMAIN, path: '/',
       } as const;
-      res.cookie('dos_mfa_return', landing, { ...cookieOpts, maxAge: 10 * 60 * 1000 });
+      if (landing) {
+        res.cookie('dos_mfa_return', landing, { ...cookieOpts, maxAge: 10 * 60 * 1000 });
+      }
       landing = '/mfa';
     }
   }

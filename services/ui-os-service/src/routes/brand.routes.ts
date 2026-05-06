@@ -47,7 +47,11 @@ function buildBreadcrumb(
 }
 
 function buildMarketingHomeContent(brandCode: string, locale: string, tx: Tx, routePath = '/') {
-  const brandLabel = brandCode === 'shahin-ai' ? 'Shahin-AI' : 'Dogan-AI';
+  // Brand label is owned by dos.tenant_branding (resolver). brand-routes
+  // here is a presentation helper for marketing pages; the brand display
+  // string must be supplied by the resolver — NEVER hardcoded. When the
+  // tenant branding row is absent, downstream UIs render empty/no-op.
+  const brandLabel = '';
   return {
     brandLabel,
     copyright: tx(

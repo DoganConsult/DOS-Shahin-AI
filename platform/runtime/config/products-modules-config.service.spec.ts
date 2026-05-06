@@ -56,11 +56,11 @@ describe('ProductsModulesConfigService (Phase 4 hardening)', () => {
       const req = httpMock.expectOne(`${environment.apiUrl}/config/products-modules`);
       req.flush({
         platform: { key: 'agrc-os', labelEn: 'AGRC-OS', labelAr: 'AGRC-OS' },
-        products: [{ internalKey: 'agrc', businessLabel: 'Shahin-AI' }],
+        products: [{ internalKey: 'agrc', businessLabel: 'Test Brand' }],
         modulesByProduct: { agrc: ['foundation', 'qiyas'] },
         visibleModules: ['foundation', 'qiyas'],
         sharedServices: [],
-        internalKeyToBusinessLabel: { agrc: 'Shahin-AI' },
+        internalKeyToBusinessLabel: { agrc: 'Test Brand' },
       });
       await Promise.resolve();
       expect(service.isModuleVisible('foundation')).toBe(true);

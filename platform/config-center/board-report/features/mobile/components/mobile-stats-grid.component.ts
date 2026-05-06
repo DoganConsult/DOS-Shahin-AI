@@ -23,7 +23,8 @@ export interface MobileDashStats {
     template: `
     <div class="mob-section-header">
       <span>{{ isRtl() ? 'المقاييس الرئيسية' : 'Key Metrics' }}</span>
-      <button class="mob-see-all" (click)="navigate.emit('/workspace-home')">{{ isRtl() ? 'عرض الكل' : 'See All' }}</button>
+      <!-- See-All target removed: landing route is DB-owned (dos.tenant_landing_config via UI-OS). NO FRONTEND INVENTION. -->
+      <button class="mob-see-all" (click)="navigate.emit('')">{{ isRtl() ? 'عرض الكل' : 'See All' }}</button>
     </div>
 
     <div class="mob-metrics-scroll">

@@ -15,9 +15,12 @@ import { AccessStore } from '../access/access.store';
 
 interface TenantLandingConfigResponse {
   tenantId: string;
-  authenticatedRoute: string;
-  unauthenticatedRoute: string;
-  sessionExpiredRoute: string;
+  // All route fields are nullable: ui-os-service returns 404
+  // LANDING_CONFIG_NOT_SEEDED when the operator has not seeded
+  // dos.tenant_landing_config. SPA must render empty/no-op when null.
+  authenticatedRoute: string | null;
+  unauthenticatedRoute: string | null;
+  sessionExpiredRoute: string | null;
   postAuthRoute: string | null;
   enabled: boolean;
 }
@@ -34,11 +37,14 @@ export class TenantLandingConfigService {
   readonly config = this._config.asReadonly();
   readonly loaded = this._loaded.asReadonly();
 
-  // Computed properties for convenience
-  readonly authenticatedRoute = computed(() => this._config()?.authenticatedRoute ?? '/workspace-home');
-  readonly unauthenticatedRoute = computed(() => this._config()?.unauthenticatedRoute ?? '/');
-  readonly sessionExpiredRoute = computed(() => this._config()?.sessionExpiredRoute ?? '/');
-  readonly postAuthRoute = computed(() => this._config()?.postAuthRoute ?? this.authenticatedRoute());
+  // Computed properties for convenience.
+  // No frontend fallback: when the resolver returned 404 / no row,
+  // these are null and callers MUST render empty/no-op (NO FRONTEND
+  // INVENTION). Operator must seed dos.tenant_landing_config.
+  readonly authenticatedRoute = computed<string | null>(() => this._config()?.authenticatedRoute ?? null);
+  readonly unauthenticatedRoute = computed<string | null>(() => this._config()?.unauthenticatedRoute ?? null);
+  readonly sessionExpiredRoute = computed<string | null>(() => this._config()?.sessionExpiredRoute ?? null);
+  readonly postAuthRoute = computed<string | null>(() => this._config()?.postAuthRoute ?? this.authenticatedRoute());
 
   // Auto-refresh when the active tenant flips
   private readonly tenantEffect = computed(() => {

@@ -98,7 +98,7 @@ function humanizeContextToken(value: string | null | undefined): string {
     } @else {
       <div class="shell" [dir]="i18n.direction()">
         <nav class="crumbs" aria-label="breadcrumb">
-          <a [routerLink]="'/workspace-home'">{{ i18n.translate('foundation.nav.overview') }}</a>
+          <a [routerLink]="workspaceHref()">{{ i18n.translate('foundation.nav.overview') }}</a>
           <span class="sep">/</span>
           <a [routerLink]="'/foundation/overview'">{{ i18n.translate('foundation.module.title') }}</a>
           <span class="sep">/</span>
@@ -170,6 +170,9 @@ export class FoundationPageShellComponent implements OnInit, OnDestroy {
   private platformId = inject(PLATFORM_ID);
   private http = inject(HttpClient);
   i18n: FoundationI18n = inject(FOUNDATION_I18N, { optional: true }) ?? new NoopFoundationI18n();
+
+  /** DB-resolved breadcrumb routerLink (NO FRONTEND INVENTION). */
+  workspaceHref(): string | null { return null; }
 
   whyOpen = signal(false);
 

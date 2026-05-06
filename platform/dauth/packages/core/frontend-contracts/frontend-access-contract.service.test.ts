@@ -48,9 +48,10 @@ const createSnapshot = (overrides?: Partial<AccessSnapshot>): AccessSnapshot => 
   allowedModules: ['risk', 'compliance', 'audit', 'evidence'],
   allowedProducts: ['shahin-ai'],
   allowedDashboards: ['executive', 'risk_overview'],
+  // Landing hint: page from DB (resolver). No frontend fallback route.
   landingHint: {
     landingPage: '/dashboard',
-    fallbackPage: '/workspace-home',
+    fallbackPage: null,
   },
   audit: {
     snapshotGeneratedAt: '2026-01-01T00:00:00.000Z',
@@ -132,7 +133,7 @@ describe('FrontendAccessContract — getLandingPage', () => {
     const snapshot = createSnapshot({
       landingHint: {
         landingPage: '/risk/overview',
-        fallbackPage: '/workspace-home',
+        fallbackPage: null,
       },
     });
     expect(getLandingPage(snapshot)).toBe('/risk/overview');

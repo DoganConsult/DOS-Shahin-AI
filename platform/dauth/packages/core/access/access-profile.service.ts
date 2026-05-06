@@ -7,7 +7,11 @@ export interface AccessProfile {
   nameAr: string;
   isSystem: boolean;
   isActive: boolean;
-  defaultLandingPage: string;
+  // Landing route is owned by dos.tenant_landing_config (resolved by
+  // ui-os-service). access_profiles.default_landing_page is a legacy
+  // column kept for migration safety; null means "no profile-level
+  // override; consume tenant landing config instead".
+  tenantLandingRoute: string | null;
   allowedModules: string[];
 }
 
@@ -26,7 +30,9 @@ export async function getAccessProfiles(tenantId: string): Promise<AccessProfile
     nameAr: r.name_ar ?? '',
     isSystem: r.is_system === true,
     isActive: r.is_active === true,
-    defaultLandingPage: r.default_landing_page ?? '/workspace-home',
+    tenantLandingRoute: typeof r.default_landing_page === 'string' && r.default_landing_page.trim()
+      ? r.default_landing_page.trim()
+      : null,
     allowedModules: r.allowed_modules ?? [],
   }));
 }
@@ -56,7 +62,9 @@ export async function getAccessProfile(tenantId: string, profileCode: string): P
     nameAr: r.name_ar ?? '',
     isSystem: r.is_system === true,
     isActive: r.is_active === true,
-    defaultLandingPage: r.default_landing_page ?? '/workspace-home',
+    tenantLandingRoute: typeof r.default_landing_page === 'string' && r.default_landing_page.trim()
+      ? r.default_landing_page.trim()
+      : null,
     allowedModules: r.allowed_modules ?? [],
   };
 }

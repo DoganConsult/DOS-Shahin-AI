@@ -91,7 +91,9 @@ export const ProductConfigSchema = z.object({
   hosts: z.array(z.string()).default([]),
   authMode: z.enum(['cookie-session', 'bearer', 'mtls']).optional(),
   themeOverride: z.string().optional(), // theme id or path
-  defaultRoute: z.string().default('/workspace-home'),
+  // DB-driven only (dos.tenant_landing_config via UI-OS resolver). No
+  // schema-level fallback — absence is representable.
+  defaultRoute: z.string().nullable().optional(),
   enabledModules: z.array(z.object({
     moduleCode: z.string().min(1),
     version: z.string().min(1),

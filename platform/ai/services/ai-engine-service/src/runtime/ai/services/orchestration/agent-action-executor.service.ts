@@ -36,6 +36,8 @@ import type { AgentAction } from '../agents/core/agent-runner.types';
 import { swallowNull, swallowDefault, EC } from '@dos/platform-core/resilience/resilient-catch';
 import type { GenericRow as _GenericRow } from '../../ports/platform.port';
 
+
+
 // ── Resolve which user to notify (first user with matching role) ────────────
 
 export async function resolveAssignee(tenantId: string, role?: string): Promise<string | null> {
@@ -227,7 +229,7 @@ export async function executeAction(
           type: `agent_${agentId.toLowerCase()}`,
           title: `[${agentId}] ${action.title}`,
           body: action.description,
-          link: action.entityType ? `/${action.entityType}s` : '/workspace-home',
+          link: action.entityType ? `/${action.entityType}s` : null,
         });
       }
       break;
@@ -326,7 +328,7 @@ export async function executeAction(
         type: 'escalation',
         title: `🚨 [${agentId}] ESCALATION: ${action.title}`,
         body: action.description,
-        link: action.entityType ? `/${action.entityType}s/${action.entityId}` : '/workspace-home',
+        link: action.entityType ? `/${action.entityType}s/${action.entityId}` : null,
       });
       await eventBus.publish(({
               eventType: `agent.escalation`,

@@ -25,6 +25,7 @@ import { FormsModule } from '@angular/forms';
 import { AppDatePipe } from '../../../../../shared/pipes';
 import { GrcRecord } from '@app/core/models/shared.types';
 import { GrcOperationsService } from '@app/api';
+import { BootstrapStore } from '@app/core/services/platform/bootstrap.store';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -42,6 +43,11 @@ import { GrcOperationsService } from '@app/api';
   styleUrls: ['./kpi-detail.component.css'],
 })
 export class KpiDetailComponent implements OnInit {
+  // DB-driven landing route only (dos.tenant_landing_config via UI-OS).
+  // null = operator has not seeded; template hides the "back" link
+  // (NO FRONTEND INVENTION per AGENTS.md).
+  private bootstrap = inject(BootstrapStore);
+  readonly workspaceShellPath = this.bootstrap.landingPage();
     private operationsSvc = inject(GrcOperationsService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);

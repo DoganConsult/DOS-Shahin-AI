@@ -178,15 +178,14 @@ export class AccessStore {
   /** Compat: allowed dashboards — empty until dashboard registry lands. */
   readonly allowedDashboards = computed<ReadonlyArray<string>>(() => []);
 
-  /** Compat: legacy `landingPage()` function shape. Updated to use DB-driven tenant/member landing routes. */
-  landingPage(): string {
-    // Priority: member override > tenant default > role-based fallback
-    // Note: The actual DB-driven landing routes (dos.tenants.default_landing_route,
-    // dos.memberships.landing_route_override) need to be surfaced through the
-    // /api/access/my-permissions API response. Once the backend API is updated
-    // to include these fields, this method should read them from the _me() or
-    // permissions payload instead of using role-based logic.
-    // For now, keep the role-based logic as fallback until the API is updated.
+  /** Compat: legacy `landingPage()` function shape. DB-driven only.
+   *  Returns null when the access snapshot has no DB-resolved landing
+   *  route. SPA must render empty/no-op (NO FRONTEND INVENTION). The
+   *  authoritative source is dos.tenant_landing_config via UI-OS
+   *  resolver — see TenantLandingConfigService. The /admin-hub branch
+   *  is an auth-boundary route owned by the platform-admin product.
+   */
+  landingPage(): string | null {
     if (this.isTenantAdmin()) {
       const isPlatformAdmin = this._roles().some((r) => {
         const n = String(r).toLowerCase().trim();
@@ -194,7 +193,7 @@ export class AccessStore {
       });
       if (isPlatformAdmin) return '/admin-hub';
     }
-    return '/workspace-home';
+    return null;
   }
 
   /** Compat: legacy `hasAuthority(code)` — proxy to permission check. */

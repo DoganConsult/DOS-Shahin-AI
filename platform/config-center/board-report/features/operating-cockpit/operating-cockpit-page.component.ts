@@ -164,6 +164,7 @@ export class OperatingCockpitPageComponent implements OnInit {
   }
 
   goToDashboard(): void {
-    this.router.navigateByUrl('/workspace-home');
+    // Landing route is owned by dos.tenant_landing_config (UI-OS resolver).
+    // No frontend invention: outer landing guard owns the redirect.
   }
 }

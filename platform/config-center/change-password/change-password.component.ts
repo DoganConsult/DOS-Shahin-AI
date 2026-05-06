@@ -21,6 +21,7 @@ import { I18nService } from '@app/infrastructure/i18n/i18n.service';
 import { GrcAuthService } from '@app/core/services/grc-auth.service';
 import { SessionService } from '../../dauth/session/session.service';
 import { StorageService } from '@app/infrastructure';
+import { BootstrapStore } from '@app/core/services/platform/bootstrap.store';
 
 @Component({
   selector: 'app-change-password',
@@ -111,6 +112,7 @@ export class ChangePasswordComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private http = inject(HttpClient);
   private authService = inject(GrcAuthService);
+  private bootstrap = inject(BootstrapStore);
 
   isForced = false;
   currentPassword = '';
@@ -174,7 +176,10 @@ export class ChangePasswordComponent implements OnInit {
   }
 
   onContinue(): void {
-    const landingPage = localStorage.getItem('grc_landing_page') || '/workspace-home';
-    this.router.navigate([landingPage]);
+    // DB-driven landing route only (dos.tenant_landing_config via UI-OS).
+    // null on every source = render empty/no-op; do not invent a route
+    // (NO FRONTEND INVENTION per AGENTS.md).
+    const landingPage = localStorage.getItem('grc_landing_page') || this.bootstrap.landingPage();
+    if (landingPage) this.router.navigate([landingPage]);
   }
 }

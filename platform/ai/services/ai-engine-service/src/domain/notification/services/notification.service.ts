@@ -11,7 +11,7 @@ export interface NotificationInput {
   type: string;
   title: string;
   body?: string;
-  link?: string;
+  link?: string | null;
   entityType?: string;
   entityId?: string;
   module?: string;

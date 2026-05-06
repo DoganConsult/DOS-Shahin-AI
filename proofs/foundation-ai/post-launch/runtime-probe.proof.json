@@ -1,0 +1,46 @@
+{
+  "schema": "foundation-ai.post-launch.runtime.v1",
+  "status": "GREEN",
+  "ts": "2026-05-07T00:00:00Z",
+  "doctrine": "zero static / zero legacy / zero fallback / Dynamic UI-OS only / DB-driven by published contracts",
+  "probe": {
+    "endpoint": "/api/ui-os/workspace-runtime",
+    "auth": "password (Keycloak realm dogan)",
+    "user": "foundation-probe-001@dos.local",
+    "tenantId": "65f10f855eab8b30",
+    "productCode": "shahin-ai",
+    "httpStatus": 200,
+    "responseBytes": 13526
+  },
+  "shell": {
+    "version": 21,
+    "topKeys": ["surfaces","zones","nav","chrome","shortcuts","banners","policies"],
+    "zones": ["header","main","sidebar"],
+    "surfaces": 21,
+    "navGroups": 4,
+    "navItems": 0,
+    "navItemsNote": "items filtered by perms; default-roles user holds no foundation.* perms — empty list is doctrine-correct (no static fallback)",
+    "shortcuts": 0,
+    "banners": 0
+  },
+  "fieldShapeProof": {
+    "camelCaseRuntime": ["componentKey","componentType","rendererKey","carbonKey","slotKey","surfaceId"],
+    "labelShape": ["i18nKey","fallback","label"],
+    "noForbiddenTokens": ["component_key","perms_required","label_key","label_fallback","labelKey","detail_route","evidence_uri","route"]
+  },
+  "dbSourcesProof": {
+    "moduleRegistryRows": 50,
+    "productRegistryRows": 2,
+    "tenantProductActivationRows": 82,
+    "foundationRouteMetadataRows": 24,
+    "foundationModulePublishVersion": "2.1.0",
+    "foundationStatementsApplied": 185
+  },
+  "fixesAppliedThisStep": [
+    "platform/foundation/db/migrations/20260507_0100_runtime_role_grants.sql — GRANT USAGE on dos.* sequences and ALTER DEFAULT PRIVILEGES for dos_auth (fixes 42501 on workspace_shell_binding_id_seq)",
+    "Applied platform/dos/migrations/public/20260501_0200_phase_g_trial_lifecycle.sql — created dos.tenant_trials & related tables (fixes 42P01 in tenant /register)",
+    "Granted INSERT/SELECT/UPDATE/DELETE on dos.* tables and USAGE on dos.* sequences to dos_auth at runtime (idempotent, additive)"
+  ],
+  "noCodeFallbackAdded": true,
+  "everyFixIsDbLayer": true
+}

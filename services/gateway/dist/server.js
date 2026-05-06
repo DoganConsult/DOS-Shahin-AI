@@ -141,6 +141,34 @@ async function resolveTenantId(sub, email) {
     tenantCache.set(key, { tenantId, expiresAt: now + TENANT_CACHE_TTL_MS });
     return tenantId;
 }
+// DB-backed role enrichment. Keycloak tokens carry only realm/resource roles
+// (e.g. `default-roles-dogan`). The platform's authorization model lives in
+// `platform_dauth.user_role_assignments` (functional roles like `tenant_admin`).
+// UI-OS resolver filters nav by these functional role permissions, so the
+// gateway must merge them into the gateway-origin token.
+const roleCache = new Map();
+async function resolveDbRoles(sub, tenantId) {
+    if (!tenantPool || !sub || !tenantId)
+        return [];
+    const key = `${sub}:${tenantId}`;
+    const now = Date.now();
+    const hit = roleCache.get(key);
+    if (hit && hit.expiresAt > now)
+        return hit.roles;
+    let roles = [];
+    try {
+        const r = await tenantPool.query(`SELECT DISTINCT role_code FROM platform_dauth.user_role_assignments
+        WHERE user_id = $1 AND tenant_id = $2 AND is_active = true
+          AND (revoked_at IS NULL)
+          AND (expires_at IS NULL OR expires_at > NOW())`, [sub, tenantId]);
+        roles = r.rows.map((x) => x.role_code).filter(Boolean);
+    }
+    catch (e) {
+        console.warn('[gateway] db-role resolve failed', e.message);
+    }
+    roleCache.set(key, { roles, expiresAt: now + TENANT_CACHE_TTL_MS });
+    return roles;
+}
 const ALLOWED_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS || '').split(',').map(s => s.trim()).filter(Boolean);
 function required(name) {
     const v = process.env[name];
@@ -288,7 +316,7 @@ const TENANT_OPTIONAL_PREFIXES = [
     '/api/site',
     '/api/marketing',
 ];
-function injectIdentityHeaders(req, res, next) {
+async function injectIdentityHeaders(req, res, next) {
     const u = req.user || {};
     const sub = u.sub ? String(u.sub) : '';
     const email = u.email ? String(u.email) : '';
@@ -313,7 +341,8 @@ function injectIdentityHeaders(req, res, next) {
     const resourceRoles = Object.values(u?.resource_access ?? {})
         .flatMap((entry) => (Array.isArray(entry?.roles) ? entry.roles : []));
     const directRoles = Array.isArray(u?.roles) ? u.roles : [];
-    const roles = Array.from(new Set([...realmRoles, ...resourceRoles, ...directRoles]
+    const dbRoles = sub && tenantId ? await resolveDbRoles(sub, tenantId) : [];
+    const roles = Array.from(new Set([...realmRoles, ...resourceRoles, ...directRoles, ...dbRoles]
         .filter((r) => typeof r === 'string' && r.length > 0)));
     const PLATFORM_SUPER_ADMIN_ROLES = new Set(['platform-super-admin']);
     if (roles.some((r) => PLATFORM_SUPER_ADMIN_ROLES.has(r))) {
@@ -995,7 +1024,7 @@ const tenantHomeProxyError = (req, res) => {
     return res.json({
         summary: { tenantId: null, workspaceId: null, tenantName: '', moduleCount: 0, memberCount: 0, setupPending: true },
         quickStats: [],
-        context: { tenantId: null, workspaceId: null, modules: [], setup: { status: 'unavailable' }, defaultHomeRoute: '/workspace-home' },
+        context: { tenantId: null, workspaceId: null, modules: [], setup: { status: 'unavailable' }, tenantLandingRoute: null },
         kpis: { users: { total: 0 }, departments: { total: 0 }, teams: { total: 0 }, vacancies: 0, complianceRate: 0, ownership: { gaps: 0, total: 0 } },
         vacancies: 0,
         complianceRate: 0,

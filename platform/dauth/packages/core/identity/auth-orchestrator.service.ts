@@ -64,7 +64,10 @@ export interface LoginResponsePayload {
   orgName: string;
   userName: string;
   isSuperAdmin: boolean;
-  defaultLandingPage: string;
+  // Landing route owned by dos.tenant_landing_config (UI-OS resolver).
+  // Bootstrap response no longer fabricates a default — null forces
+  // SPA empty/no-op state.
+  tenantLandingRoute: string | null;
   roleModules: string[];
   dashboardWidgets: string[];
   _moduleAuthority: string;
@@ -281,7 +284,10 @@ export function buildLoginResponse(
     userName: user.name || '',
     isSuperAdmin: user.is_super_admin === true,
     /** @deprecated @removal-date Phase 2 (DAuth access core) @owner DAuth @replacement /api/me/access-snapshot */
-    defaultLandingPage: '/workspace-home',
+    // Landing route owned by dos.tenant_landing_config (UI-OS resolver).
+    // Bootstrap response no longer fabricates a default — null forces
+    // SPA empty/no-op state.
+    tenantLandingRoute: null as string | null,
     /** @deprecated @removal-date Phase 2 (DAuth access core) @owner DAuth @replacement /api/me/access-snapshot navigation.visibleModules */
     roleModules: [],
     /** @deprecated @removal-date Phase 2 (DAuth access core) @owner DAuth @replacement /api/me/access-snapshot navigation.dashboardWidgets */

@@ -51,7 +51,10 @@ export interface TenantEntitlements {
   licensedModules?: string[];
   ui: {
     visibleModules: string[];
-    homeRouteByRole: Record<string, string>;
-    defaultHomeRoute?: string;
+    // DB-resolved per-role landing overrides (dos.tenant_landing_config).
+    tenantLandingRouteByRole: Record<string, string>;
+    // DB-resolved tenant landing route. null = operator has not seeded;
+    // SPA must render empty/no-op (NO FRONTEND INVENTION).
+    tenantLandingRoute?: string | null;
   };
 }

@@ -272,7 +272,8 @@ export class AppBootstrapService {
         roleCode: resolvedRoleCode,
         modules: visibleModules,
         dashboardWidgets,
-        defaultLandingPage: landingPage,
+        // Landing route is DB-resolved (dos.tenant_landing_config via UI-OS).
+        tenantLandingRoute: landingPage,
       },
     };
   }

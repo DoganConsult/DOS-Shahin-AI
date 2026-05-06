@@ -13,7 +13,7 @@ function assert(condition: boolean, message: string) {
 }
 
 // Simulate the component's helper methods
-function getRoute(type: string): string[] {
+function getRoute(type: string): string[] | null {
   const ROUTE_MAP: Record<string, string> = {
     risk: '/risks',
     policy: '/policies',
@@ -26,10 +26,10 @@ function getRoute(type: string): string[] {
     finding: '/findings',
     asset: '/assets',
     assessment: '/audit',
-    workspace: '/workspace-home',
     remediation_task: '/workflows',
   };
-  return [ROUTE_MAP[type] || '/workspace-home'];
+  const r = ROUTE_MAP[type];
+  return r ? [r] : null;
 }
 
 function getIcon(type: string): string {
@@ -89,8 +89,8 @@ assert(getRoute('framework')[0] === '/frameworks', 'framework maps to /framework
 assert(getRoute('exception')[0] === '/exceptions', 'exception maps to /exceptions');
 assert(getRoute('finding')[0] === '/findings', 'finding maps to /findings');
 assert(getRoute('asset')[0] === '/assets', 'asset maps to /assets');
-assert(getRoute('remediation_task')[0] === '/workflows', 'remediation_task maps to /workflows');
-assert(getRoute('unknown_type')[0] === '/workspace-home', 'any type defaults to /workspace-home');
+assert(getRoute('remediation_task')?.[0] === '/workflows', 'remediation_task maps to /workflows');
+assert(getRoute('unknown_type') === null, 'unknown type returns null (no fallback fabrication)');
 
 // Test icon mapping
 console.log('\nIcon mapping tests:');

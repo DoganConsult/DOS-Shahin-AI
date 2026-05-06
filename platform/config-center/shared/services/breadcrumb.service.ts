@@ -47,9 +47,12 @@ export class BreadcrumbService {
 
   buildFromUrl(url: string): Breadcrumb[] {
     const segments = url.split('?')[0].split('/').filter(Boolean);
-    const crumbs: Breadcrumb[] = [
-      { label: 'Home', labelAr: 'الرئيسية', url: '/workspace-home', icon: 'pi pi-home' },
-    ];
+    // No static "Home" crumb — the workspace breadcrumb (label + href)
+    // is published by UI-OS via shell.chrome.breadcrumbs.workspace
+    // (dos.workspace_shell_i18n + dos.tenant_landing_config). The
+    // shell-host renders that crumb separately; this service only
+    // builds the URL-segment-derived trail (NO FRONTEND INVENTION).
+    const crumbs: Breadcrumb[] = [];
     let path = '';
     for (const seg of segments) {
       path += `/${seg}`;

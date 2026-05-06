@@ -18,7 +18,7 @@
  * 11. ModuleCopilotPanel    — AI copilot placeholder tile
  * 12. ModuleEmptyState      — Carbon tile + notification for empty data
  */
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import {
@@ -28,6 +28,7 @@ import {
   ModalModule, AccordionModule,
 } from 'carbon-components-angular';
 import { DosCarbonSearchComponent } from '@dos/ui-system';
+import { BootstrapStore } from '@app/core/services/platform/bootstrap.store';
 
 // ─── 1. ModulePageHeader ────────────────────────────────────────────
 @Component({
@@ -38,7 +39,7 @@ import { DosCarbonSearchComponent } from '@dos/ui-system';
   template: `
     <div class="mph">
       <cds-breadcrumb>
-        <cds-breadcrumb-item [href]="'/workspace-home'">Workspace</cds-breadcrumb-item>
+        <cds-breadcrumb-item *ngIf="workspaceShellHref as wsh" [href]="wsh">{{ workspaceCrumbLabel }}</cds-breadcrumb-item>
         @for (crumb of breadcrumbs; track crumb.label) {
           <cds-breadcrumb-item [href]="crumb.route || null">{{ crumb.label }}</cds-breadcrumb-item>
         }
@@ -62,6 +63,14 @@ import { DosCarbonSearchComponent } from '@dos/ui-system';
   `],
 })
 export class ModulePageHeaderComponent {
+  private readonly bootstrap = inject(BootstrapStore);
+  // DB-driven landing route only (dos.tenant_landing_config via UI-OS).
+  // null = operator has not seeded; *ngIf hides the workspace breadcrumb
+  // (NO FRONTEND INVENTION per AGENTS.md).
+  readonly workspaceShellHref = this.bootstrap.landingPage() ?? null;
+  // TODO(uios-chrome): bind label from shell.chrome.breadcrumbs.workspace
+  // once chrome breadcrumb signal is exposed on BootstrapStore.
+  readonly workspaceCrumbLabel = '';
   @Input() breadcrumbs: { label: string; route?: string }[] = [];
   @Input() title = '';
   @Input() subtitle = '';

@@ -433,7 +433,7 @@ export class MobileDashboardComponent implements OnInit {
       ] as MobileRiskItem[],
       activity: [
         { id: '1', type: 'policy', title: 'Information Security Policy approved', titleAr: 'اعتماد سياسة أمن المعلومات', time: '5m ago', user: 'Dogan Consult', icon: '📋' },
-        { id: '2', type: 'ai', title: 'AI detected anomaly in access logs', titleAr: 'الذكاء الاصطناعي اكتشف شذوذاً', time: '12m ago', user: 'Shahin-AI', icon: '🤖' },
+        { id: '2', type: 'ai', title: 'AI detected anomaly in access logs', titleAr: 'الذكاء الاصطناعي اكتشف شذوذاً', time: '12m ago', user: 'AI Agent', icon: '🤖' },
         { id: '3', type: 'evidence', title: 'Control evidence uploaded — ISO 27001', titleAr: 'تم رفع أدلة الضبط — ISO 27001', time: '1h ago', user: 'M. Al-Ghamdi', icon: '📎' },
         { id: '4', type: 'risk', title: 'Risk re-assessed: Vendor Access', titleAr: 'إعادة تقييم مخاطر وصول المورّد', time: '2h ago', user: 'Risk Team', icon: '⚠️' },
         { id: '5', type: 'control', title: 'Control implemented: MFA enforcement', titleAr: 'تنفيذ الضبط: إلزام المصادقة المتعددة', time: '3h ago', user: 'IT Security', icon: '🛡️' },

@@ -12,7 +12,7 @@
      (mouseenter)="sidebarService.onHoverEnter()"
      (mouseleave)="sidebarService.onHoverLeave()">
   <div class="sidebar-brand">
-    <img loading="eager" src="logoiconapphero.png" alt="Shahin-AI" class="brand-icon-img" width="28" height="28" />
+    <img loading="eager" src="logoiconapphero.png" [attr.alt]="brandLogoAlt" class="brand-icon-img" width="28" height="28" />
     <div class="brand-text" *ngIf="sidebarService.isVisuallyExpanded()">
       <div class="brand-name">{{ i18n.translate('app.name') }}</div>
       <div class="brand-sub">{{ i18n.translate('app.subtitle') }}</div>

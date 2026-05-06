@@ -340,10 +340,11 @@ export class GlobalSearchComponent implements OnDestroy {
       const segments = item.url.split('/').filter(Boolean);
       this.router.navigate(segments);
     } else {
-      // Fallback: navigate to module root if URL not provided
+      // DB-driven module routes only. Unknown module → no nav, render
+      // empty/no-op (NO FRONTEND INVENTION per AGENTS.md).
       const mod = item.entity_type || item.module || 'other';
-      const route = MODULE_ROUTES[mod] || '/workspace-home';
-      this.router.navigate([route]);
+      const route = MODULE_ROUTES[mod];
+      if (route) this.router.navigate([route]);
     }
   }
 

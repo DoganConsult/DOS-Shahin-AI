@@ -58,9 +58,12 @@ import type { AuthEvent } from './auth.contract';
 })
 export class DosAuthLoginPageComponent {
   @Input() locale: 'en' | 'ar' = 'en';
-  @Input() brandTitle = 'Shahin-AI';
-  @Input() brandPromise = 'AI-native GRC for the GCC.';
-  @Input() securityMessage = 'TLS 1.3 in transit · AES-256 at rest · audit-logged.';
+  // Brand strings come from tenant_branding via UI-OS chrome. Default
+  // empty so caller (product shell) must inject from runtime
+  // (NO FRONTEND INVENTION per AGENTS.md).
+  @Input() brandTitle = '';
+  @Input() brandPromise = '';
+  @Input() securityMessage = '';
   @Input() helpItems: ReadonlyArray<{ q: string; a: string }> = [
     { q: 'I do not have an account', a: 'Reach out to your workspace admin or register a new workspace.' },
     { q: 'Forgot password?',         a: 'Use the recovery link from the sign-in card.' },

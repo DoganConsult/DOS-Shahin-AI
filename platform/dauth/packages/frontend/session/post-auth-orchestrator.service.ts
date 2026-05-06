@@ -165,17 +165,21 @@ export class PostAuthOrchestratorService {
       return;
     }
 
-    // 14. Resolve landing page: returnUrl > accessStore > bootstrapStore > fallback
+    // 14. Resolve landing page from DB-owned sources only:
+    //   returnUrl > accessStore > bootstrapStore > tenantLandingConfig
+    // No frontend invention. If every source is null, do not navigate —
+    // the SPA stays on the current route and renders empty/no-op state
+    // (NO FRONTEND INVENTION per AGENTS.md).
     const returnUrl = this.sanitizeReturnUrl(response.returnUrl ?? null);
-    const landing = returnUrl
+    const landing: string | null = returnUrl
       || (this.accessStore.loaded()
         ? this.accessStore.landingPage()
         : this.bootstrapStore.landingPage());
 
-    this.router.navigateByUrl(landing);
+    if (landing) this.router.navigateByUrl(landing);
   }
 
-  async resolveEntryRoute(returnUrl?: string | null): Promise<string> {
+  async resolveEntryRoute(returnUrl?: string | null): Promise<string | null> {
     try {
       const bootstrap = await firstValueFrom(this.bootstrapApi.loadSessionBootstrap());
       if (bootstrap?.next?.blocking) return bootstrap.next.route;
@@ -185,20 +189,20 @@ export class PostAuthOrchestratorService {
         const mapped = this.sanitizeReturnUrl(bootstrap.next.route);
         if (mapped) return mapped;
       }
-    } catch (err) {
+    } catch {
       if (!this.accessStore.loaded() && !this.bootstrapStore.landingPage()) {
         if (!this.session.isOnboardingComplete()) {
           return '/onboarding';
         }
-        // DB-driven fallback: use tenant landing config or default /workspace-home
-        return this.landingConfig.postAuthRoute();
+        // DB-driven landing route only — null forces SPA empty/no-op.
+        return this.landingConfig.postAuthRoute() ?? null;
       }
     }
     if (this.accessStore.loaded()) {
       return this.accessStore.landingPage();
     }
-    // DB-driven fallback: use tenant landing config or default /workspace-home
-    return this.bootstrapStore.landingPage() || this.landingConfig.postAuthRoute();
+    // DB-driven landing route only — null forces SPA empty/no-op.
+    return this.bootstrapStore.landingPage() || this.landingConfig.postAuthRoute() || null;
   }
 
   /**

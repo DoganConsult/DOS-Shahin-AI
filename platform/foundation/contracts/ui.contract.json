@@ -406,7 +406,7 @@
       "visibleWhenPerm": ["foundation.module.read"]
     },
     {
-      "route": "/workspace-home",
+      "route": null,
       "pageType": "overview",
       "layout": "dashboard",
       "kpiScope": "module-overview",

@@ -37,7 +37,7 @@ interface ActivityRow { id: string; time: string; actor: string; action: string;
   template: `
     <!-- Breadcrumb + Status Tag -->
     <cds-breadcrumb>
-      <cds-breadcrumb-item [href]="'/workspace-home'">{{ i18n.tr('breadcrumb.workspace', 'Workspace') }}</cds-breadcrumb-item>
+      <cds-breadcrumb-item [href]="workspaceHref()">{{ i18n.tr('breadcrumb.workspace', 'Workspace') }}</cds-breadcrumb-item>
       <cds-breadcrumb-item>{{ i18n.tr('foundation.name', 'Foundation') }}</cds-breadcrumb-item>
     </cds-breadcrumb>
     <cds-tag type="green" size="sm" class="fh-status-tag">{{ i18n.tr('foundation.status.active', 'Active') }}</cds-tag>
@@ -164,6 +164,11 @@ export class FoundationHomeComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
   private api = inject(FoundationApiService);
   i18n: FoundationI18n = inject(FOUNDATION_I18N, { optional: true }) ?? new NoopFoundationI18n();
+
+  /** Workspace breadcrumb href is DB-resolved (chrome.breadcrumbs from
+   *  UI-OS runtime). Returning null suppresses the link until the DB
+   *  emits a value (NO FRONTEND INVENTION per AGENTS.md). */
+  workspaceHref(): string | null { return null; }
 
   loading = signal(true);
   kpis = signal<KpiCard[]>([]);

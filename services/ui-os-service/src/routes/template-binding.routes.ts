@@ -363,100 +363,11 @@ const ARCHETYPE_EXTENSIONS: Record<string, Array<{ key: string; sql: string }>> 
 // (publisher-owned). Module display names come from dos.module_registry;
 // nav routes come from the smallest sort_order ui_module_nav_item per
 // module. Foundation is included unconditionally (platform DNA).
-async function loadWorkspaceHomeProps(
-  pool: DbPool,
-  tenantId: string,
-  locale: 'en' | 'ar',
-): Promise<Record<string, unknown>> {
-  if (!tenantId) return {};
-  const [modulesRes, i18nRes] = await Promise.all([
-    pool.query<{
-      module_code: string;
-      display_name: string | null;
-      route: string | null;
-      label_en: string | null;
-      label_ar: string | null;
-    }>(
-      `WITH entitled AS (
-         SELECT m.module_code, m.display_name
-           FROM dos.tenant_product_activation tpa
-           JOIN dos.module_registry m ON m.product_key = tpa.product_key
-          WHERE tpa.tenant_id = $1 AND tpa.status = 'active' AND m.status = 'active'
-         UNION
-         SELECT tme.module_code, mr.display_name
-           FROM dos.tenant_module_entitlements tme
-           LEFT JOIN dos.module_registry mr ON mr.module_code = tme.module_code
-          WHERE tme.tenant_id = $1 AND tme.entitlement_status = 'active'
-         UNION
-         SELECT 'foundation', COALESCE((SELECT display_name FROM dos.module_registry WHERE module_code='foundation'), 'Foundation')
-       ),
-       overview AS (
-         -- Prefer canonical landing items (overview/dashboard/home) when
-         -- present; otherwise fall back to the lowest-sort-order item.
-         SELECT DISTINCT ON (module_code)
-                module_code, route, label_en, label_ar
-           FROM dos.ui_module_nav_item
-          WHERE enabled = true AND route IS NOT NULL
-          ORDER BY module_code,
-                   CASE
-                     WHEN item_id ~ '\.(overview|dashboard|home|landing)$' THEN 0
-                     ELSE 1
-                   END,
-                   sort_order ASC,
-                   item_id ASC
-       )
-       SELECT e.module_code, e.display_name, o.route, o.label_en, o.label_ar
-         FROM entitled e
-         LEFT JOIN overview o ON o.module_code = e.module_code
-        ORDER BY e.module_code`,
-      [tenantId],
-    ),
-    pool.query<{ key: string; locale: string; value: string }>(
-      `SELECT key, locale, value FROM dos.workspace_shell_i18n
-        WHERE key IN ('workspace.home.empty.title','workspace.home.empty.description','workspace.home.kpi.modules')
-          AND locale IN ('en','ar')`,
-    ),
-  ]);
-  const i18n = new Map<string, string>();
-  for (const r of i18nRes.rows) i18n.set(`${r.key}::${r.locale}`, r.value);
-  const t = (key: string): string =>
-    i18n.get(`${key}::${locale}`) ?? i18n.get(`${key}::en`) ?? '';
-
-  const out: Record<string, unknown> = {};
-  const moduleRows = modulesRes.rows.filter((r) => r.route && r.route.trim());
-
-  if (moduleRows.length === 0) {
-    out['notification'] = {
-      type: 'info',
-      title:    t('workspace.home.empty.title')       || 'Nothing here yet',
-      subtitle: t('workspace.home.empty.description') || 'Content will appear as data becomes available.',
-    };
-    return out;
-  }
-
-  const nbaActions = moduleRows.map((r) => {
-    const label = (locale === 'ar' ? r.label_ar : r.label_en)
-      ?? r.display_name
-      ?? r.module_code;
-    return {
-      label,
-      labelAr: r.label_ar ?? undefined,
-      route: r.route!,
-      actionKey: 'workspace.module.open',
-      severity: 'info' as const,
-    };
-  });
-
-  out['nbaActions'] = nbaActions;
-  out['kpis'] = [
-    {
-      label: t('workspace.home.kpi.modules') || 'Modules entitled',
-      value: moduleRows.length,
-      status: 'info',
-    },
-  ];
-  return out;
-}
+// Removed: legacy reference loader for the deleted landing template
+// binding. Landing route + content are now resolved exclusively from
+// dos.tenant_landing_config + dos.workspace_shell_i18n via
+// services/ui-os-service/src/routes/workspace-shell.routes.ts. Frontend
+// renders empty/no-op when DB rows are absent (NO FRONTEND INVENTION).
 
 async function loadProps(
   pool: DbPool,

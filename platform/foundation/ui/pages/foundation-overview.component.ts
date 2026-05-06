@@ -436,8 +436,12 @@ export class FoundationOverviewComponent implements OnInit, OnDestroy {
   });
   helpKey = computed(() => this.experience()?.helpKey ?? null);
 
+  // Breadcrumb routes are DB-resolved (chrome.breadcrumbs from UI-OS
+  // runtime). Workspace crumb has no static route — null forces the
+  // shell to skip rendering an href when DB has no value (NO FRONTEND
+  // INVENTION per AGENTS.md).
   breadcrumbs = computed<CrumbItem[]>(() => [
-    { i18nKey: 'foundation.nav.overview', route: '/workspace-home' },
+    { i18nKey: 'foundation.nav.overview' },
     { i18nKey: 'foundation.module.title', route: '/foundation/overview' },
     { i18nKey: 'foundation.overview.title' },
   ]);

@@ -38,7 +38,8 @@ function hasPermission(role: string, permission: string): boolean {
 }
 
 const ALL_NAV_ITEMS: NavItem[] = [
-  { icon: 'dashboard', labelKey: 'nav.dashboard', route: '/workspace-home', requiredPermission: 'analytics.report.read', section: 'main', lifecyclePhase: 'plan' },
+  // 'dashboard' nav entry removed: route comes from DB (dos.tenant_landing_config
+  // via UI-OS runtime). No static fallback nav (NO FRONTEND INVENTION per AGENTS.md).
   { icon: 'governance', labelKey: 'nav.governance', route: '/governance', requiredPermission: 'policy.document.read', section: 'grc', lifecyclePhase: 'plan' },
   { icon: 'frameworks', labelKey: 'nav.frameworks', route: '/frameworks', requiredPermission: 'framework.record.read', section: 'grc', lifecyclePhase: 'plan' },
   { icon: 'risks', labelKey: 'nav.risks', route: '/risks', requiredPermission: 'risk.record.read', section: 'grc', lifecyclePhase: 'assess' },

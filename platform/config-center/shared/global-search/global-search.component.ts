@@ -63,8 +63,10 @@ const SEARCH_ROUTE_MAP: Record<string, string> = {
   taxonomy:       '/taxonomy',
 };
 
-function resolveSearchRoute(type: string): string {
-  return SEARCH_ROUTE_MAP[type] ?? SEARCH_ROUTE_MAP[type.replace(/_/g, '-')] ?? '/workspace-home';
+// DB-driven search routes only. Unknown type → null = caller must
+// render empty/no-op (NO FRONTEND INVENTION per AGENTS.md).
+function resolveSearchRoute(type: string): string | null {
+  return SEARCH_ROUTE_MAP[type] ?? SEARCH_ROUTE_MAP[type.replace(/_/g, '-')] ?? null;
 }
 
 @Component({
@@ -245,7 +247,7 @@ export class GlobalSearchComponent implements OnInit, OnDestroy {
 
   openResult(result: SearchResult): void {
     const route = resolveSearchRoute(result.type);
-    this.router.navigate([route], { queryParams: { id: result.id } });
+    if (route) this.router.navigate([route], { queryParams: { id: result.id } });
     this.showResults = false;
     this.addToRecent(this.query);
   }
@@ -255,7 +257,7 @@ export class GlobalSearchComponent implements OnInit, OnDestroy {
   executeAction(action: GrcRecord, result: SearchResult, event: Event): void {
     event.stopPropagation();
     const route = resolveSearchRoute(result.type);
-    this.router.navigate([route], { queryParams: { id: result.id, action: action.action } });
+    if (route) this.router.navigate([route], { queryParams: { id: result.id, action: action.action } });
     this.showResults = false;
   }
 

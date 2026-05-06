@@ -93,7 +93,9 @@ export interface EffectiveUiState {
   actions: Record<string, EffectiveActionState>;
   featureFlags: Set<string>;
   aiCapabilities: AiModuleCapability[];
-  landingPage: string;
+  // DB-resolved landing route (dos.tenant_landing_config via UI-OS).
+  // null = operator has not seeded; SPA renders empty/no-op.
+  landingPage: string | null;
   archetypeCode: ArchetypeCode;
 }
 

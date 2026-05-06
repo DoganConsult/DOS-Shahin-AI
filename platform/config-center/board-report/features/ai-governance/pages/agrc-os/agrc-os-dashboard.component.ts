@@ -38,6 +38,7 @@ import { AppDatePipe, AppNumberPipe} from '@app/shared/pipes';
 import { GrcRecord } from '@app/core/models/shared.types';
 import { GrcOperationsService } from '@app/api';
 import { ApiClientService } from "@app/core/services/api-client.service";
+import { BootstrapStore } from '@app/core/services/platform/bootstrap.store';
 
 interface TabDef { key: string; labelKey: string; icon: string; }
 interface SubsystemDef { nameEn: string; nameAr: string; icon: string; route: string | undefined; active: boolean; }
@@ -62,6 +63,11 @@ interface SubsystemDef { nameEn: string; nameAr: string; icon: string; route: st
     styleUrls: ['./agrc-os-dashboard.component.css']
 })
 export class AGRCOSDashboardComponent implements OnInit {
+  // DB-driven landing route only (dos.tenant_landing_config via UI-OS).
+  // null = operator has not seeded; template hides the "back" link
+  // (NO FRONTEND INVENTION per AGENTS.md).
+  private bootstrap = inject(BootstrapStore);
+  readonly workspaceShellPath = this.bootstrap.landingPage();
     private apiclientSvc = inject(ApiClientService);
     private operationsSvc = inject(GrcOperationsService);
   i18n = inject(I18nService);

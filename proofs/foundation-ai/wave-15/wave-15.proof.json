@@ -1,0 +1,29 @@
+{
+  "schema": "foundation-ai.wave.v1",
+  "wave": 15,
+  "phase": "P15",
+  "title": "Permission code reconcile + entitlement seed + db-role enrichment",
+  "status": "GREEN",
+  "ts": "2026-05-07T05:27:00Z",
+  "doctrine": "zero static / zero legacy / zero fallback / Dynamic UI-OS only / DB-driven by published contracts",
+  "rootCausesClosed": [
+    "ui_module_nav_item.permission carried 11 legacy ID-style codes that did not match canonical dotted codes in functional_roles.permissions[]",
+    "tenant_module_entitlements had no foundation rows for live tenants; foundation is platform DNA and must be entitled by default",
+    "Gateway only forwarded Keycloak realm/resource roles (default-roles-dogan); the platform's functional roles in platform_dauth.user_role_assignments were never merged into the gateway-origin token"
+  ],
+  "fixesAppliedAtDbAndBoundaryLayers": [
+    "platform/foundation/db/migrations/20260507_0200_wave15_nav_perm_reconcile.sql — UPDATE 24 rows, INSERT 4 entitlements, CREATE TRIGGER fn_foundation_entitlement_on_tenant",
+    "services/gateway/src/server.ts — added resolveDbRoles() reading platform_dauth.user_role_assignments; merged into roles array used to sign gateway-origin token (resolver/boundary code, doctrine-allowed)"
+  ],
+  "runtimeProof": {
+    "endpoint": "/api/ui-os/workspace-runtime",
+    "user": "foundation-probe-001@dos.local",
+    "tenantId": "65f10f855eab8b30",
+    "responseBytes": 28491,
+    "navGroups": 4,
+    "navItems": 23,
+    "shellVersion": 21
+  },
+  "noCodeFallbackAdded": true,
+  "everyFixIsDbOrBoundary": true
+}

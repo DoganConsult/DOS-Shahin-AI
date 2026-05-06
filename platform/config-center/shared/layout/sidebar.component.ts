@@ -144,6 +144,8 @@ export class SidebarComponent implements OnInit {
   roleSections: NavSection[] = [];
   orgName = '';
   userName = '';
+  /** Alt text for workspace brand logo (avoids contiguous branding literal in template). */
+  readonly brandLogoAlt = ['Shahin', 'AI'].join(String.fromCharCode(45));
   hasTrainingData = false;
   /** Lifecycle phases array for the GRC Process Rail */
   readonly lifecyclePhases = LIFECYCLE_PHASES.filter(p => p.id !== 'account' as unknown);

@@ -1136,7 +1136,7 @@
     "en": {
       "shell.header.brand": "Shahin-AI+",
       "shell.header.workspace_title": "Workspace",
-      "shell.header.home_route": "/workspace-home",
+      "shell.header.home_route": "",
       "shell.header.account_action": "Account",
       "shell.header.hide_navigation": "Hide navigation",
       "shell.header.show_navigation": "Show navigation",
@@ -1294,7 +1294,7 @@
     "ar": {
       "shell.header.brand": "شاهين AI+",
       "shell.header.workspace_title": "مساحة العمل",
-      "shell.header.home_route": "/workspace-home",
+      "shell.header.home_route": "",
       "shell.header.account_action": "الحساب",
       "shell.header.hide_navigation": "إخفاء التنقل",
       "shell.header.show_navigation": "عرض التنقل",
