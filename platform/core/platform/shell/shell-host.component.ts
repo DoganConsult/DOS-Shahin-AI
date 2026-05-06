@@ -616,11 +616,11 @@ export class ShellHostComponent {
   readonly navConfig = computed(() => this.shellBinding.navConfig());
 
   readonly navGroups = computed(() => {
-    const groups = this.navConfig()?.groups ?? [];
+    const groups = this.navConfig()?.groups || [];
     return groups
       .map((group: DosNavGroup) => ({
         ...group,
-        items: (group.items ?? []).filter(
+        items: (group.items || []).filter(
           (item: DosNavItem) => !!item.route,
         ),
       }))
@@ -630,14 +630,13 @@ export class ShellHostComponent {
   // ── W-A: auto-expand active group ─────────────────────────────────────────
   readonly activeGroupId = computed(() => {
     const url = this.router.url.split('?')[0];
-    return (
-      this.navGroups().find((g) =>
-        g.items.some((i: DosNavItem) => {
-          const r = i.route?.split('?')[0];
-          return r && (url === r || url.startsWith(`${r}/`));
-        }),
-      )?.id ?? null
+    const found = this.navGroups().find((g) =>
+      g.items.some((i: DosNavItem) => {
+        const r = i.route?.split('?')[0];
+        return r && (url === r || url.startsWith(`${r}/`));
+      }),
     );
+    return found?.id || null;
   });
 
   // ── W-D: filtered groups for search ──────────────────────────────────────
@@ -659,7 +658,7 @@ export class ShellHostComponent {
   // No hardcoded fallbacks - empty if missing (observable gap for telemetry).
   readonly headerBrand = computed(
     () => this.shellBinding.headerBrandLabel()
-       ?? this.shellBinding.chromeString('shell.header.brand'),
+       || this.shellBinding.chromeString('shell.header.brand'),
   );
   // Step 2.5 — Selected module label sourced from existing nav state.
   // Falls back to the resolver-owned chrome string when no module is active,
@@ -668,13 +667,13 @@ export class ShellHostComponent {
     const sel = this.selectedModuleLabel();
     if (sel) return sel;
     return this.shellBinding.headerWorkspaceTitle()
-        ?? this.shellBinding.chromeString('shell.header.workspace_title');
+        || this.shellBinding.chromeString('shell.header.workspace_title');
   });
   /** Tenant line after `/` only when binding supplied a distinct brand/product from session tenant. */
   readonly headerTenantSubtitle = computed(() => {
     const fromBinding = this.shellBinding.headerBrandLabel();
-    const brandLine = (fromBinding ?? '').trim();
-    const tn = (this.access.tenant()?.name ?? this.access.tenant()?.code ?? '').trim();
+    const brandLine = (fromBinding || '').trim();
+    const tn = (this.access.tenant()?.name || this.access.tenant()?.code || '').trim();
     if (!brandLine || !tn) return '';
     if (brandLine.toLowerCase() === tn.toLowerCase()) return '';
     return tn;
@@ -729,7 +728,7 @@ export class ShellHostComponent {
   );
   readonly drawerTitle = computed(
     () => this.selectedModuleLabel()
-       ?? this.shellBinding.chromeString('shell.drawer.title'),
+       || this.shellBinding.chromeString('shell.drawer.title'),
   );
   readonly drawerCloseLabel = computed(
     () => this.shellBinding.chromeString('shell.drawer.close'),
