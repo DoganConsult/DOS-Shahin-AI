@@ -55,32 +55,15 @@ import { DosCarbonSearchComponent } from '@dos/ui-system';
 import {
   AccessStore as PlatformAccessStore,
 } from '@dos/access-store';
-import type { DosNavGroup, DosNavItem, ShellAccountMenuEntry } from '@dos/ui-contracts';
+import type { DosNavGroup, DosNavItem, ShellAccountMenuEntry, ShellAction } from '@dos/ui-contracts';
 import { shellActionFromLegacyRecord } from '@dos/ui-contracts';
 import { BreadcrumbService } from './breadcrumb.service';
 import { WorkspaceShellBindingService } from './workspace-shell-binding.service';
 import type { WorkspaceShellZone } from '@dos/ui-system';
 import { ShellPreferencesService } from './shell-preferences.service';
 import { ShellErrorStateService } from './shell-error-state.service';
+import { ShellConnectivityService } from './shell-connectivity.service';
 import { ToastService } from '../../../dos/shell/toast.service';
-
-type ShellAction = {
-  type:
-    | 'navigate'
-    | 'open_external'
-    | 'toggle_language'
-    | 'toggle_theme'
-    | 'open_context_tab'
-    | 'open_command'
-    | 'close_overlay'
-    | 'clear_error'
-    | 'dispatch_event';
-  route?: string;
-  url?: string;
-  tab?: string;
-  eventName?: string;
-  payload?: Record<string, unknown>;
-};
 
 type ShellActionCarrier = {
   action?: ShellAction | null;
@@ -422,12 +405,12 @@ type RuntimeShellAdapter = {
               <code class="shell-error-frame__corr-id">{{ errorState.error()?.correlationId }}</code>
             }
             <button type="button" class="shell-error-frame__action" (click)="errorState.clearError()">
-              {{ shellBinding.chromeString('shell.error.dismiss') }}
+              {{ shellText('shell.error.dismiss') }}
             </button>
           </div>
         } @else if (isNavigating()) {
           <div class="shell-skeleton" id="shell-nav-skeleton" aria-busy="true" [attr.aria-label]="ariaLoadingPage()">
-            <dos-skeleton shape="line" [rows]="6" [ariaLabel]="ariaLoadingPage()"></dos-skeleton>
+            <dos-skeleton shape="line" [rows]="skeletonRows()" [ariaLabel]="ariaLoadingPage()"></dos-skeleton>
           </div>
         } @else {
           <router-outlet />
@@ -636,6 +619,7 @@ export class ShellHostComponent {
   protected readonly shellBinding = inject(WorkspaceShellBindingService);
   private readonly prefs = inject(ShellPreferencesService);
   readonly errorState = inject(ShellErrorStateService);
+  private readonly connectivity = inject(ShellConnectivityService);
   private readonly toastSvc = inject(ToastService);
 
   /** Desktop Cmd/Ctrl+K focuses this component — never toggles mobile overlay on desktop. */
@@ -831,20 +815,17 @@ export class ShellHostComponent {
     this.shellBinding.isSurfaceAllowed(key);
 
   /**
-   * Banners shown in chrome: resolver-fed candidates minus locally dismissed ids.
-   * Templates, gates, chrome strings, connectivity, and synthetic shell-error are
-   * owned by WorkspaceShellBindingService.shellBannerCandidates.
+   * Banners shown in chrome: UI-OS runtime-driven via resolveRuntimeBanners.
+   * All banner logic (trial, offline, session, impersonation, errors) moved to runtime.
    */
-  readonly shellBanners = computed<ShellBanner[]>(() => {
-    const dismissed = this.dismissedBannerIds();
-    return this.shellBinding.shellBannerCandidates().filter((b) => !dismissed.has(b.id));
-  });
+  readonly shellBanners = computed<ShellBanner[]>(() => this.resolveRuntimeBanners());
 
   // §B.9 #25 — blocking errors replace content slot with error frame.
   readonly isBlockingError = computed(() => {
     const err = this.errorState.error();
     if (!err) return false;
-    return err.kind === 'unauthorized' || err.kind === 'forbidden' || err.kind === 'maintenance';
+    const blockingKinds = this.runtimeStringList('blockingErrorKinds');
+    return blockingKinds.includes(err.kind);
   });
 
   // ── Wave F — new header/overlay UI state ──────────────────────────────────
@@ -858,23 +839,15 @@ export class ShellHostComponent {
     },
   );
   readonly accountMenuItems = computed<DosAccountMenuItem[]>(() => {
-    const base = this.accountMenuEntries().map((e) => ({
-      id: e.id,
-      label: this.accountLabel(e),
-      destructive: !!e.destructive,
+    const entries = this.accountMenuEntries().map((entry) => ({
+      id: entry.id,
+      label: this.accountLabel(entry),
+      destructive: !!entry.destructive,
+      action: this.actionFromAccountEntry(entry),
     }));
-    // Runtime-driven actions (language toggle, theme toggle, etc.)
-    const runtimeActions = this.shellBinding.accountMenuActions();
-    for (const action of runtimeActions) {
-      if (!action.id) continue;
-      const labelKey = typeof action.labelKey === 'string' ? action.labelKey : '';
-      base.push({
-        id: action.id,
-        label: labelKey ? this.shellBinding.chromeString(labelKey) : '',
-        destructive: !!action.destructive,
-      });
-    }
-    return base;
+    // Runtime-driven preference items (language toggle, theme toggle, etc.)
+    const runtimeItems = this.runtimeAccountMenuItems();
+    return [...entries, ...runtimeItems] as DosAccountMenuItem[];
   });
   readonly userDisplayName = computed<string>(() => {
     const u = this._user();
@@ -977,52 +950,31 @@ export class ShellHostComponent {
 
   onCommandQuery(q: string): void { this.commandQuery.set(q); }
 
-  onCommandSelect(r: Record<string, unknown>): void {
-    this.dispatchShellAction(shellActionFromLegacyRecord(r));
+  onCommandSelect(result: Record<string, unknown>): void {
+    this.executeShellAction(this.actionFromCarrier(result as ShellActionCarrier));
   }
 
-  onInboxSelect(m: Record<string, unknown>): void {
-    const action = shellActionFromLegacyRecord(m);
-    if (action) {
-      this.dispatchShellAction(action);
-      this.closeInbox();
-    }
+  onInboxSelect(message: Record<string, unknown>): void {
+    const executed = this.executeShellAction(this.actionFromCarrier(message as ShellActionCarrier));
+    if (executed) this.closeInbox();
   }
 
-  onQuickCreate(a: Record<string, unknown>): void {
-    this.dispatchShellAction(shellActionFromLegacyRecord(a));
+  onQuickCreate(action: Record<string, unknown>): void {
+    this.executeShellAction(this.actionFromCarrier(action as ShellActionCarrier));
   }
 
   // ── Wave F handlers ──────────────────────────────────────────────────────
   onAccountEntry(entry: ShellAccountMenuEntry): void {
-    if (entry.action) {
-      this.dispatchShellAction(entry.action);
-      return;
-    }
-    if (entry.route) {
-      void this.router.navigateByUrl(entry.route);
-      return;
-    }
-    // Routeless logout / custom action: emit a DOM-level custom event so
-    // products can opt in without requiring a platform-wide logout bus here.
-    if (this.isBrowser) {
-      window.dispatchEvent(new CustomEvent('dos:shell-account-action', {
-        detail: { id: entry.id },
-      }));
-    }
+    this.executeShellAction(this.actionFromAccountEntry(entry));
   }
 
   /** Bridge DosAccountMenu `action` emission → platform ShellAccountMenuEntry. */
   onAccountMenuAction(item: DosAccountMenuItem): void {
-    // Runtime-driven account actions — dispatch typed ShellAction.
-    const runtimeActions = this.shellBinding.accountMenuActions();
-    const runtimeAction = runtimeActions.find(a => a.id === item.id);
-    if (runtimeAction?.action) {
-      this.dispatchShellAction(runtimeAction.action);
-      return;
-    }
-    const entry = this.accountMenuEntries().find((e) => e.id === item.id);
-    if (entry) this.onAccountEntry(entry);
+    const action = this.actionFromCarrier(item as unknown as ShellActionCarrier)
+      || this.accountMenuEntries()
+        .map((entry) => this.actionFromAccountEntry(entry))
+        .find((candidate, index) => this.accountMenuEntries()[index]?.id === item.id);
+    this.executeShellAction(action);
   }
 
   accountLabel(entry: ShellAccountMenuEntry): string {
@@ -1039,70 +991,16 @@ export class ShellHostComponent {
     this.closeMobileCmd();
   }
 
-  // ── Typed ShellAction dispatch — single ingest point ────────────────────
-
-  /**
-   * Central dispatch for all ShellAction values.
-   * Shell-host executes routing, external opens, preference toggles.
-   * Everything else is a no-op until the DB provides a handler.
-   */
-  private dispatchShellAction(action: ShellAction | null | undefined): void {
-    if (!action) return;
-    switch (action.kind) {
-      case 'navigate':
-        void this.router.navigateByUrl(action.path);
-        break;
-      case 'open_external':
-        if (this.isBrowser) window.open(action.url, '_blank', 'noopener');
-        break;
-      case 'toggle_language':
-        this.prefs.toggleLanguage();
-        break;
-      case 'toggle_theme':
-        this.prefs.toggleTheme();
-        break;
-      case 'open_command':
-        if (this.isMobile()) {
-          this.mobileCmdOpen.set(true);
-        } else {
-          const cmd = this.desktopCmdSearch();
-          queueMicrotask(() => cmd?.focusSearch());
-        }
-        break;
-      case 'open_context_tab':
-        this.contextTab.set(action.tab);
-        this.contextOpen.set(true);
-        break;
-      case 'close_overlay': {
-        const o = action.overlay;
-        if (o === 'context') this.contextOpen.set(false);
-        if (o === 'inbox') this.inboxOpen.set(false);
-        if (o === 'command' || o === 'mobile-command') this.mobileCmdOpen.set(false);
-        break;
-      }
-      case 'clear_error':
-        this.errorState.clearError();
-        break;
-      case 'dispatch_event':
-        if (this.isBrowser) {
-          window.dispatchEvent(new CustomEvent(action.name, { detail: action.detail }));
-        }
-        break;
-      default:
-        break;
-    }
-  }
-
-  onStatusSignal(s: Record<string, unknown>): void {
-    this.dispatchShellAction(shellActionFromLegacyRecord(s));
+  onStatusSignal(signal: Record<string, unknown>): void {
+    this.executeShellAction(this.actionFromCarrier(signal as ShellActionCarrier));
   }
 
   onActionQueueOpen(item: Record<string, unknown>): void {
-    this.dispatchShellAction(shellActionFromLegacyRecord(item));
+    this.executeShellAction(this.actionFromCarrier(item as ShellActionCarrier));
   }
 
-  onAgentSelect(a: Record<string, unknown>): void {
-    this.dispatchShellAction(shellActionFromLegacyRecord(a));
+  onAgentSelect(activity: Record<string, unknown>): void {
+    this.executeShellAction(this.actionFromCarrier(activity as ShellActionCarrier));
   }
 
   onContextTabChange(tab: string): void {
@@ -1125,8 +1023,7 @@ export class ShellHostComponent {
 
   // §B.9 #34–37, #25 — banner strip handlers.
   dispatchShellActionFromBanner(banner: ShellBanner): void {
-    if (!banner.action) return;
-    this.dispatchShellAction(banner.action);
+    this.executeShellAction(banner.action);
   }
 
   onBannerClose(banner: ShellBanner): void {
@@ -1191,6 +1088,7 @@ export class ShellHostComponent {
           route: it.route,
           active: this.isActive(it),
           group: groupName,
+          action: { kind: 'navigate', path: it.route } satisfies ShellAction,
         };
         if (it.requiredPermission) item.permission = it.requiredPermission;
         if (Number.isFinite(badgeNum) && badgeNum > 0) item.badgeCount = badgeNum;
@@ -1220,14 +1118,13 @@ export class ShellHostComponent {
   });
 
   onSidebarNavigate(item: Record<string, unknown>): void {
-    if (!item['route']) return;
-    void this.router.navigateByUrl(item['route'] as string);
+    this.executeShellAction(this.actionFromCarrier(item as ShellActionCarrier));
     if (this.isMobile()) this.sideNavActive.set(false);
   }
 
   onMobileNavSelect(item: DosBottomNavItem): void {
     if (!item.route) return;
-    void this.router.navigateByUrl(item.route);
+    this.executeShellAction({ kind: 'navigate', path: item.route });
   }
 
   // W-A: router-exact active state
@@ -1272,6 +1169,128 @@ export class ShellHostComponent {
       user?: { displayName?: string; name?: string; email?: string } | null;
     } | null;
     return me?.user;
+  }
+
+  shellText(key: string): string {
+    const runtime = this.runtimeAdapter().chromeString?.(key);
+    if (runtime != null) return runtime;
+    return this.shellBinding.chromeString(key) || '';
+  }
+
+  readonly skeletonRows = computed(() => this.shellNumber('skeletonRows') || 6);
+
+  readonly shellIconSize = computed(() => this.shellNumber('iconSize') || 20);
+
+  private runtimeAdapter(): RuntimeShellAdapter {
+    return this.shellBinding as unknown as RuntimeShellAdapter;
+  }
+
+  private shellNumber(key: string): number | null {
+    const direct = this.runtimeAdapter().shellNumber?.(key);
+    if (typeof direct === 'number' && Number.isFinite(direct)) return direct;
+    if (!this.isBrowser) return null;
+    const raw = getComputedStyle(document.documentElement)
+      .getPropertyValue(`--dos-shell-${key.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`)}`)
+      .trim();
+    if (!raw) return null;
+    const parsed = Number.parseFloat(raw);
+    return Number.isFinite(parsed) ? parsed : null;
+  }
+
+  private runtimeStringList(key: string): readonly string[] {
+    return this.runtimeAdapter().shellStringList?.(key) || [];
+  }
+
+  private runtimeShellAction(key: string): ShellAction | null {
+    return this.runtimeAdapter().shellAction?.(key) || null;
+  }
+
+  private runtimeAccountMenuItems(): readonly (DosAccountMenuItem & ShellActionCarrier)[] {
+    return this.runtimeAdapter().accountPreferenceMenuItems?.() || [];
+  }
+
+  private resolveRuntimeBanners(): ShellBanner[] {
+    return [
+      ...(this.runtimeAdapter().shellBanners?.({
+        offline: this.connectivity.isOffline(),
+        trialExpiredModules: this.access.trialExpiredModules() as readonly string[],
+        sessionExpiresAt: this.access.sessionExpiresAt(),
+        impersonating: this.access.isImpersonating(),
+        dismissedIds: Array.from(this.dismissedBannerIds()),
+        error: this.errorState.error(),
+      }) || []),
+    ];
+  }
+
+  private actionFromAccountEntry(entry: ShellAccountMenuEntry): ShellAction | null {
+    const maybeAction = (entry as ShellAccountMenuEntry & ShellActionCarrier).action;
+    if (maybeAction) return maybeAction;
+    return entry.route ? { kind: 'navigate', path: entry.route } : null;
+  }
+
+  private actionFromCarrier(carrier: ShellActionCarrier | null | undefined): ShellAction | null {
+    return carrier?.action || null;
+  }
+
+  private executeShellAction(action: ShellAction | null | undefined): boolean {
+    if (!action) return false;
+
+    switch (action.kind) {
+      case 'navigate':
+        void this.router.navigateByUrl(action.path);
+        return true;
+
+      case 'open_external':
+        if (!this.isBrowser) return false;
+        window.open(action.url, '_blank', 'noopener');
+        return true;
+
+      case 'toggle_language':
+        this.prefs.toggleLanguage();
+        return true;
+
+      case 'toggle_theme':
+        this.prefs.toggleTheme();
+        return true;
+
+      case 'open_context_tab':
+        this.contextTab.set(action.tab);
+        this.contextOpen.set(true);
+        return true;
+
+      case 'open_command':
+        this.mobileCmdOpen.set(true);
+        return true;
+
+      case 'close_overlay':
+        this.mobileCmdOpen.set(false);
+        return true;
+
+      case 'clear_error':
+        this.errorState.clearError();
+        return true;
+
+      case 'dispatch_event':
+        if (!this.isBrowser) return false;
+        window.dispatchEvent(new CustomEvent(action.name, { detail: action.detail }));
+        return true;
+
+      default:
+        return false;
+    }
+  }
+
+  private shortcutActionForEvent(ev: KeyboardEvent): ShellAction | null {
+    const shortcuts = this.runtimeAdapter().shellShortcuts?.();
+    if (!shortcuts) return null;
+    return shortcuts.find(s => {
+      if (s.key.toLowerCase() !== ev.key.toLowerCase()) return false;
+      if (s.meta && !ev.metaKey) return false;
+      if (s.ctrl && !ev.ctrlKey) return false;
+      if (s.shift && !ev.shiftKey) return false;
+      if (s.alt && !ev.altKey) return false;
+      return true;
+    })?.action || null;
   }
 
   private _syncTitle(): void {
