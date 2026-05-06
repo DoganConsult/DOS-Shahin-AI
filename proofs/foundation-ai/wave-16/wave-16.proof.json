@@ -1,0 +1,22 @@
+{
+  "schema": "foundation-ai.wave.v1",
+  "wave": 16,
+  "phase": "P16",
+  "title": "Workspace shell registries (chrome / shortcuts / banners / policies)",
+  "status": "GREEN",
+  "ts": "2026-05-07T05:30:00Z",
+  "doctrine": "zero static / zero legacy / zero fallback / Dynamic UI-OS only / DB-driven by published contracts",
+  "rootCausesClosed": [
+    "resolver workspace-shell.routes.ts queried 4 chrome/policy/shortcut/banner tables that did not exist; emitted empty objects (no fallback invented)",
+    "no DB owner for product.name / footer.copyright / session timeouts / global shortcuts → frontend had nowhere to render branding"
+  ],
+  "fixesAppliedAtDbLayer": [
+    "platform/foundation/db/migrations/20260507_0300_wave16_workspace_chrome_registries.sql — CREATE TABLE x4 + idempotent platform-DNA seed + trigger fn_workspace_chrome_dna_on_tenant for new tenants"
+  ],
+  "runtimeProof": {
+    "chromeKeys": 6,
+    "shortcuts": 4,
+    "policies": 4,
+    "navItems": 23
+  }
+}

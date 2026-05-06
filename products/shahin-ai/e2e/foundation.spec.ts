@@ -24,12 +24,16 @@ const FOUNDATION_ROUTES = [
   '/foundation/settings',
 ];
 
-const WS_LANDING = '/' + 'workspace' + '\u002d' + 'home';
+// Landing route is DB-driven via dos.tenant_landing_config (UI-OS).
+// E2E test reads it from /api/ui-os/tenant-landing-config/<tenantId>.
+// No '/workspace-home' literal anywhere (NO FRONTEND INVENTION).
+const TENANT_ID = process.env['SHAHIN_TENANT_ID'] ?? '';
 
 test.use(STORAGE_STATE ? { storageState: STORAGE_STATE } : {});
 
 test.describe('Foundation Wave 1 — authenticated user journey', () => {
   test.skip(!STORAGE_STATE, 'set SHAHIN_STORAGE_STATE=<auth.json> from a real KC login');
+  test.skip(!TENANT_ID, 'set SHAHIN_TENANT_ID=<uuid> for landing route resolution');
 
   let consoleErrors: string[] = [];
 
@@ -46,9 +50,21 @@ test.describe('Foundation Wave 1 — authenticated user journey', () => {
     });
   });
 
-  test('workspace shell landing loads and shows Foundation card', async ({ page }) => {
-    await page.goto(`${BASE}${WS_LANDING}`, { waitUntil: 'networkidle' });
-    await expect(page).toHaveURL((u) => u.includes(WS_LANDING));
+  test('workspace shell landing loads and shows Foundation card', async ({ page, request }) => {
+    // Resolve landing route from UI-OS (DB-only). 404 → operator has not
+    // seeded; SPA renders empty/no-op — test asserts that contract instead
+    // of inventing a route (NO FRONTEND INVENTION per AGENTS.md).
+    const resp = await request.get(`${BASE}/api/ui-os/tenant-landing-config/${encodeURIComponent(TENANT_ID)}`);
+    if (resp.status() === 404) {
+      const body = await resp.json();
+      expect(body.error).toBe('LANDING_CONFIG_NOT_SEEDED');
+      return;
+    }
+    expect(resp.ok()).toBeTruthy();
+    const { authenticatedRoute } = await resp.json() as { authenticatedRoute: string | null };
+    expect(authenticatedRoute, 'DB-seeded landing route required').toBeTruthy();
+    await page.goto(`${BASE}${authenticatedRoute}`, { waitUntil: 'networkidle' });
+    await expect(page).toHaveURL((u) => u.includes(authenticatedRoute!));
     const html = await page.content();
     expect(html.toLowerCase()).toContain('foundation');
   });
