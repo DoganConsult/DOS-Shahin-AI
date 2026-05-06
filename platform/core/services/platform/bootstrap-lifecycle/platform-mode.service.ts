@@ -65,17 +65,18 @@ export interface ShadowAgentConfig {
 export interface PlatformModeDisplay {
   key: PlatformMode;
   label: string;
-  labelAr: string;
+  /** i18n key for translation — resolved at render time, not hardcoded bilingual. */
+  i18nKey: string;
   icon: string;
   color: string;
   description?: string;
 }
 
 export const PLATFORM_MODES: readonly PlatformModeDisplay[] = [
-  { key: 'human', label: 'Human', labelAr: 'يدوي', icon: 'pi-user', color: 'var(--text-body)' },
-  { key: 'hybrid', label: 'Hybrid', labelAr: 'هجين', icon: 'pi-users', color: 'var(--primary)' },
-  { key: 'shadow_agent', label: 'Shadow Agent', labelAr: 'وكيل ظل', icon: 'pi-eye', color: 'var(--warning)' },
-  { key: 'full_autonomous', label: 'Autonomous', labelAr: 'مستقل', icon: 'pi-bolt', color: 'var(--danger)' },
+  { key: 'human', label: 'Human', i18nKey: 'platform.mode.human', icon: 'user', color: 'var(--cds-text-primary)' },
+  { key: 'hybrid', label: 'Hybrid', i18nKey: 'platform.mode.hybrid', icon: 'group', color: 'var(--cds-link-primary)' },
+  { key: 'shadow_agent', label: 'Shadow Agent', i18nKey: 'platform.mode.shadow_agent', icon: 'view', color: 'var(--cds-support-warning)' },
+  { key: 'full_autonomous', label: 'Autonomous', i18nKey: 'platform.mode.autonomous', icon: 'lightning', color: 'var(--cds-support-error)' },
 ] as const;
 
 // ── Service ──────────────────────────────────────────────────────────────

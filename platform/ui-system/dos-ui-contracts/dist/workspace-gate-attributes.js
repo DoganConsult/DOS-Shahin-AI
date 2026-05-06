@@ -19,7 +19,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.DOS_GATE_FAILED_EVENT = exports.DOS_GATE_READY_EVENT = exports.WORKSPACE_GATE_REQUIRED_ATTRS = exports.WORKSPACE_GATE_ATTRIBUTES = void 0;
 exports.WORKSPACE_GATE_ATTRIBUTES = [
     // §10 hard gates — required on every enrolled route.
-    { attr: 'data-route', required: true, spec: '§10', description: 'Route this surface implements (e.g. /workspace-home)' },
+    { attr: 'data-route', required: true, spec: '§10', description: 'Route this surface implements (e.g. /foundation/overview)' },
     { attr: 'data-module', required: true, spec: '§10', description: 'Owning moduleCode from ui.contract.json' },
     { attr: 'data-page-type', required: true, spec: '§10/§21#2', description: 'overview|list|object|workflow|analytics|audit|settings|report|builder' },
     { attr: 'data-layout', required: true, spec: '§10/§21#3', description: 'dashboard|full-page|split-view|object-page|wizard|report|canvas' },

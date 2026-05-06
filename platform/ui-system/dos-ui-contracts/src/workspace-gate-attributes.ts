@@ -28,7 +28,7 @@ export interface WorkspaceGateAttribute {
 
 export const WORKSPACE_GATE_ATTRIBUTES: ReadonlyArray<WorkspaceGateAttribute> = [
   // §10 hard gates — required on every enrolled route.
-  { attr: 'data-route',             required: true,  spec: '§10',     description: 'Route this surface implements (e.g. /workspace-home)' },
+  { attr: 'data-route',             required: true,  spec: '§10',     description: 'Route this surface implements (e.g. /foundation/overview)' },
   { attr: 'data-module',            required: true,  spec: '§10',     description: 'Owning moduleCode from ui.contract.json' },
   { attr: 'data-page-type',         required: true,  spec: '§10/§21#2',description: 'overview|list|object|workflow|analytics|audit|settings|report|builder' },
   { attr: 'data-layout',            required: true,  spec: '§10/§21#3',description: 'dashboard|full-page|split-view|object-page|wizard|report|canvas' },
