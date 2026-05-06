@@ -1,0 +1,53 @@
+{
+  "generatedAt": "2026-05-06T14:33:57.868Z",
+  "base": "http://localhost:3000",
+  "routes": [
+    "/",
+    "/login",
+    "/workspace-home"
+  ],
+  "cleanProfile": true,
+  "strict": true,
+  "totalIssues": 0,
+  "routeResults": [
+    {
+      "route": "/",
+      "url": "http://localhost:3000/",
+      "httpStatus": 200,
+      "landedAt": "http://localhost:3000/login",
+      "elapsedMs": 1738,
+      "htmlLength": 11134,
+      "title": "Shahin-AI by Dogan Consult — The KSA GRC Painkiller",
+      "issueCount": 0,
+      "issues": [],
+      "consoleErrors": []
+    },
+    {
+      "route": "/login",
+      "url": "http://localhost:3000/login",
+      "httpStatus": 200,
+      "landedAt": "http://localhost:3000/login",
+      "elapsedMs": 1508,
+      "htmlLength": 11134,
+      "title": "Shahin-AI by Dogan Consult — The KSA GRC Painkiller",
+      "issueCount": 0,
+      "issues": [],
+      "consoleErrors": []
+    },
+    {
+      "route": "/workspace-home",
+      "url": "http://localhost:3000/workspace-home",
+      "httpStatus": 200,
+      "landedAt": "chrome-error://chromewebdata/",
+      "elapsedMs": 1480,
+      "htmlLength": 39,
+      "title": "",
+      "issueCount": 0,
+      "issues": [],
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+        "Failed to load resource: the server responded with a status of 401 (Unauthorized)"
+      ]
+    }
+  ]
+}

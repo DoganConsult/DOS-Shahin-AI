@@ -242,6 +242,25 @@ export class DynamicTemplatePageComponent {
         // entirely so no demo/empty-state placeholder ever renders.
         this.routeMetadata.resolve(route).subscribe((meta) => {
           if (this.currentRoute() !== route) return;
+          // Redirect render-mode — typed DB-stored navigation contract.
+          // FE NEVER calls /api/ui-os/template-binding for these routes.
+          if (meta?.renderMode === 'redirect') {
+            const target = this.resolveRedirectTarget(meta);
+            if (target && target !== route) {
+              // eslint-disable-next-line no-console
+              console.info('[dynamic-template] REDIRECT', { route, target });
+              this.shellOnly.set(true);
+              this.loading.set(false);
+              this.router.navigateByUrl(target);
+              return;
+            }
+            // No DB-declared target → render nothing (fail-closed).
+            // eslint-disable-next-line no-console
+            console.warn('[dynamic-template] REDIRECT_MISSING_TARGET', route);
+            this.shellOnly.set(true);
+            this.loading.set(false);
+            return;
+          }
           if (meta?.renderMode === 'shell-only' || meta?.templateBindingRequired === false) {
             // eslint-disable-next-line no-console
             console.info('[dynamic-template] SHELL_ONLY_ROUTE', route);
@@ -408,6 +427,25 @@ export class DynamicTemplatePageComponent {
         }
       });
     }
+  }
+
+  /**
+   * Resolve the typed redirect target for a route flagged
+   * `render_mode='redirect'`. Reads metadata.redirect from the
+   * DB-stored row; selects between `anonymous` / `authenticated`
+   * based on the live AccessStore session, falling back to
+   * `default`. Returns null when the row carries no redirect
+   * contract (the FE then renders nothing — fail-closed).
+   */
+  private resolveRedirectTarget(meta: { metadata?: { redirect?: { anonymous?: string; authenticated?: string; default?: string } } }): string | null {
+    const r = meta?.metadata?.redirect;
+    if (!r || typeof r !== 'object') return null;
+    const snapshot = this.access.snapshot();
+    const isAuthenticated = snapshot.loaded && snapshot.user !== null;
+    const target = isAuthenticated
+      ? (r.authenticated ?? r.default ?? null)
+      : (r.anonymous ?? r.default ?? null);
+    return typeof target === 'string' && target.length > 0 ? target : null;
   }
 
   private normalize(url: string): string {

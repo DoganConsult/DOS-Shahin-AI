@@ -123,6 +123,29 @@ interface OverrideLayers {
   userWildcard:   LayerPatch | null;
   userRoute:      LayerPatch | null;
 }
+
+// Phase 1 — per-sub-query error envelope. Surfaced on the response as
+// `_errors: [{ stage, code }]`. Reserved 500 only for pool/connection
+// failures; sub-query failures degrade gracefully (the layer becomes
+// null and the route still resolves).
+export interface SubQueryError { stage: string; code: string }
+
+async function safeQuery<T>(
+  stage: string,
+  errors: SubQueryError[],
+  fn: () => Promise<{ rows: T[] }>,
+): Promise<{ rows: T[] }> {
+  try {
+    return await fn();
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e);
+    // eslint-disable-next-line no-console
+    console.error('[template-binding] sub-query failed', { stage, err: msg });
+    errors.push({ stage, code: 'SUBQUERY_FAILED' });
+    return { rows: [] };
+  }
+}
+
 async function loadOverrideLayers(
   pool: DbPool,
   route: string,
@@ -130,26 +153,33 @@ async function loadOverrideLayers(
   moduleCode: string,
   tenantId: string,
   userId: string,
+  errors: SubQueryError[],
 ): Promise<OverrideLayers> {
   const [prod, mod, tenW, tenR, usrW, usrR] = await Promise.all([
     productCode
-      ? pool.query<LayerPatch>(`SELECT patch, version FROM dos.ui_override_product WHERE product_code=$1`, [productCode])
-      : Promise.resolve({ rows: [] }),
+      ? safeQuery<LayerPatch>('override.product', errors, () =>
+          pool.query<LayerPatch>(`SELECT patch, version FROM dos.ui_override_product WHERE product_code=$1`, [productCode]))
+      : Promise.resolve({ rows: [] as LayerPatch[] }),
     moduleCode
-      ? pool.query<LayerPatch>(`SELECT patch, version FROM dos.ui_override_module WHERE module_code=$1`, [moduleCode])
-      : Promise.resolve({ rows: [] }),
+      ? safeQuery<LayerPatch>('override.module', errors, () =>
+          pool.query<LayerPatch>(`SELECT patch, version FROM dos.ui_override_module WHERE module_code=$1`, [moduleCode]))
+      : Promise.resolve({ rows: [] as LayerPatch[] }),
     tenantId
-      ? pool.query<LayerPatch>(`SELECT patch, version FROM dos.ui_override_tenant WHERE tenant_id=$1 AND route='*'`, [tenantId])
-      : Promise.resolve({ rows: [] }),
+      ? safeQuery<LayerPatch>('override.tenantWildcard', errors, () =>
+          pool.query<LayerPatch>(`SELECT patch, version FROM dos.ui_override_tenant WHERE tenant_id=$1 AND route='*'`, [tenantId]))
+      : Promise.resolve({ rows: [] as LayerPatch[] }),
     tenantId
-      ? pool.query<LayerPatch>(`SELECT patch, version FROM dos.ui_override_tenant WHERE tenant_id=$1 AND route=$2`, [tenantId, route])
-      : Promise.resolve({ rows: [] }),
+      ? safeQuery<LayerPatch>('override.tenantRoute', errors, () =>
+          pool.query<LayerPatch>(`SELECT patch, version FROM dos.ui_override_tenant WHERE tenant_id=$1 AND route=$2`, [tenantId, route]))
+      : Promise.resolve({ rows: [] as LayerPatch[] }),
     userId
-      ? pool.query<LayerPatch>(`SELECT patch, version FROM dos.ui_override_user WHERE user_id=$1 AND route='*'`, [userId])
-      : Promise.resolve({ rows: [] }),
+      ? safeQuery<LayerPatch>('override.userWildcard', errors, () =>
+          pool.query<LayerPatch>(`SELECT patch, version FROM dos.ui_override_user WHERE user_id=$1 AND route='*'`, [userId]))
+      : Promise.resolve({ rows: [] as LayerPatch[] }),
     userId
-      ? pool.query<LayerPatch>(`SELECT patch, version FROM dos.ui_override_user WHERE user_id=$1 AND route=$2`, [userId, route])
-      : Promise.resolve({ rows: [] }),
+      ? safeQuery<LayerPatch>('override.userRoute', errors, () =>
+          pool.query<LayerPatch>(`SELECT patch, version FROM dos.ui_override_user WHERE user_id=$1 AND route=$2`, [userId, route]))
+      : Promise.resolve({ rows: [] as LayerPatch[] }),
   ]);
   const pick = (r: { rows: LayerPatch[] }): LayerPatch | null =>
     r.rows[0] ? { patch: (r.rows[0].patch ?? {}) as Record<string, unknown>, version: r.rows[0].version } : null;
@@ -431,25 +461,34 @@ async function loadWorkspaceHomeProps(
 async function loadProps(
   pool: DbPool,
   route: string,
-  archetype?: string | null,
+  archetype: string | null | undefined,
+  errors: SubQueryError[],
 ): Promise<Record<string, unknown>> {
   const [kpis, cols, tabs, nbas, sections, reports, groups, axes] = await Promise.all([
-    pool.query(`SELECT sort_order, label_en, label_ar, source_path, format, ai_insight, status, link
-                  FROM dos.ui_route_kpi WHERE route=$1 ORDER BY sort_order`, [route]),
-    pool.query(`SELECT sort_order, field_key, label_en, label_ar, type, sortable
-                  FROM dos.ui_route_column WHERE route=$1 ORDER BY sort_order`, [route]),
-    pool.query(`SELECT tab_id, sort_order, label_en, label_ar, permission
-                  FROM dos.ui_route_tab WHERE route=$1 ORDER BY sort_order`, [route]),
-    pool.query(`SELECT sort_order, label_en, label_ar, description, ai_score, target_route, permission, severity
-                  FROM dos.ui_route_nba WHERE route=$1 ORDER BY sort_order`, [route]),
-    pool.query(`SELECT section_id, sort_order, label_en, label_ar, icon
-                  FROM dos.ui_route_setting_section WHERE route=$1 ORDER BY sort_order`, [route]),
-    pool.query(`SELECT report_id, sort_order, title_en, title_ar, description, status, tag, ai_generated, download_url
-                  FROM dos.ui_route_report_card WHERE route=$1 ORDER BY sort_order`, [route]),
-    pool.query(`SELECT group_id, sort_order, label_en, label_ar, urgency, filter_expr
-                  FROM dos.ui_route_workqueue_group WHERE route=$1 ORDER BY sort_order`, [route]),
-    pool.query(`SELECT axis, sort_order, label_en, label_ar, bucket_key
-                  FROM dos.ui_route_heatmap_axis WHERE route=$1 ORDER BY axis, sort_order`, [route]),
+    safeQuery('props.kpi', errors, () => pool.query(
+      `SELECT sort_order, label_en, label_ar, source_path, format, ai_insight, status, link
+         FROM dos.ui_route_kpi WHERE route=$1 ORDER BY sort_order`, [route])),
+    safeQuery('props.column', errors, () => pool.query(
+      `SELECT sort_order, field_key, label_en, label_ar, type, sortable
+         FROM dos.ui_route_column WHERE route=$1 ORDER BY sort_order`, [route])),
+    safeQuery('props.tab', errors, () => pool.query(
+      `SELECT tab_id, sort_order, label_en, label_ar, permission
+         FROM dos.ui_route_tab WHERE route=$1 ORDER BY sort_order`, [route])),
+    safeQuery('props.nba', errors, () => pool.query(
+      `SELECT sort_order, label_en, label_ar, description, ai_score, target_route, permission, severity
+         FROM dos.ui_route_nba WHERE route=$1 ORDER BY sort_order`, [route])),
+    safeQuery('props.settingSection', errors, () => pool.query(
+      `SELECT section_id, sort_order, label_en, label_ar, icon
+         FROM dos.ui_route_setting_section WHERE route=$1 ORDER BY sort_order`, [route])),
+    safeQuery('props.reportCard', errors, () => pool.query(
+      `SELECT report_id, sort_order, title_en, title_ar, description, status, tag, ai_generated, download_url
+         FROM dos.ui_route_report_card WHERE route=$1 ORDER BY sort_order`, [route])),
+    safeQuery('props.workqueueGroup', errors, () => pool.query(
+      `SELECT group_id, sort_order, label_en, label_ar, urgency, filter_expr
+         FROM dos.ui_route_workqueue_group WHERE route=$1 ORDER BY sort_order`, [route])),
+    safeQuery('props.heatmapAxis', errors, () => pool.query(
+      `SELECT axis, sort_order, label_en, label_ar, bucket_key
+         FROM dos.ui_route_heatmap_axis WHERE route=$1 ORDER BY axis, sort_order`, [route])),
   ]);
   // Only emit a key when the dedicated table has rows. Empty arrays are
   // omitted so they don't clobber pre-shaped arrays already stored in
@@ -469,7 +508,9 @@ async function loadProps(
   if (axes.rows.length)     base['heatmapAxes']      = axes.rows;
   const ext = archetype ? ARCHETYPE_EXTENSIONS[archetype] : undefined;
   if (ext && ext.length) {
-    const results = await Promise.all(ext.map(e => pool.query(e.sql, [route])));
+    const results = await Promise.all(
+      ext.map(e => safeQuery(`props.ext.${archetype}.${e.key}`, errors, () => pool.query(e.sql, [route]))),
+    );
     ext.forEach((e, i) => {
       if (results[i].rows.length) base[e.key] = results[i].rows;
     });
@@ -511,8 +552,10 @@ export function createTemplateBindingRouter(pool: DbPool): Router {
     const productCode = readProductCode(req);
     const moduleCode  = deriveModuleCode(route);
     const { tenantId, userId } = readPrincipal(req);
+    const errors: SubQueryError[] = [];
+    let rows: unknown[] = [];
     try {
-      const { rows } = await pool.query(
+      const r = await pool.query(
         `SELECT route, archetype, template_export, props, version,
                 title_en, title_ar, subtitle_en, subtitle_ar,
                 eyebrow_en, eyebrow_ar, ai_headline_en, ai_headline_ar,
@@ -520,6 +563,18 @@ export function createTemplateBindingRouter(pool: DbPool): Router {
            FROM dos.ui_route_template_binding WHERE route=$1`,
         [route],
       );
+      rows = r.rows;
+    } catch (e) {
+      // Pool / connection-class failure — typed 503, never opaque 500.
+      // eslint-disable-next-line no-console
+      console.error('[template-binding] base SELECT failed', { route, err: String(e) });
+      return res.status(503).json({
+        error: 'TEMPLATE_BINDING_DB_UNAVAILABLE',
+        stage: 'binding.select',
+        route,
+      });
+    }
+    try {
       if (rows.length === 0) {
         // Dynamic-UI contract: no row → typed 404, never silently 200
         // a null binding (which made the SPA chase /workspace-home, /,
@@ -540,8 +595,8 @@ export function createTemplateBindingRouter(pool: DbPool): Router {
       // this resolver returns 404 above. Do not synthesize starter
       // KPIs/nbaActions on the FE's behalf.
       const [dynamicProps, layers] = await Promise.all([
-        loadProps(pool, route, row.archetype),
-        loadOverrideLayers(pool, route, productCode, moduleCode, tenantId, userId),
+        loadProps(pool, route, row.archetype, errors),
+        loadOverrideLayers(pool, route, productCode, moduleCode, tenantId, userId, errors),
       ]);
       // Phase F-F7-2 — derive `masthead` object the host reads.
       const pickStr = (en?: string, ar?: string) =>
@@ -590,12 +645,23 @@ export function createTemplateBindingRouter(pool: DbPool): Router {
           userWildcard:   layers.userWildcard   ? { user_id:   userId,   version: layers.userWildcard.version }   : null,
           userRoute:      layers.userRoute      ? { user_id:   userId,   version: layers.userRoute.version }      : null,
         },
+        // Phase 1 — partial-failure envelope. When non-empty, callers
+        // know one or more enrichment sub-queries failed but the
+        // binding itself resolved. Never includes SQL detail/stack.
+        _errors: errors,
       });
     } catch (e) {
-      // Never leak SQL detail/stack to the browser. Server log only.
+      // Reachable only on a synchronous defect inside the merge/shape
+      // path (NOT a sub-query failure — those are caught by safeQuery).
+      // Typed code; never opaque 500.
       // eslint-disable-next-line no-console
-      console.error('[template-binding] fetch failed', { route, err: String(e) });
-      res.status(500).json({ error: 'TEMPLATE_BINDING_FETCH_FAILED' });
+      console.error('[template-binding] post-fetch shape failed', { route, err: String(e) });
+      res.status(500).json({
+        error: 'TEMPLATE_BINDING_SHAPE_FAILED',
+        stage: 'binding.shape',
+        route,
+        _errors: errors,
+      });
     }
   });
 
@@ -743,9 +809,10 @@ export function createTemplateBindingRouter(pool: DbPool): Router {
       );
       const bundle = await Promise.all(rows.map(async (row) => {
         const moduleCode = deriveModuleCode(row.route);
+        const exportErrors: SubQueryError[] = [];
         const [dyn, layers] = await Promise.all([
-          loadProps(pool, row.route, row.archetype),
-          loadOverrideLayers(pool, row.route, productCode, moduleCode, tenantId, userId),
+          loadProps(pool, row.route, row.archetype, exportErrors),
+          loadOverrideLayers(pool, row.route, productCode, moduleCode, tenantId, userId, exportErrors),
         ]);
         const masthead = {
           title:         row.title_en      ?? row.title_ar      ?? null,

@@ -256,6 +256,12 @@ async function loadSurfaces(
         AND r.approval_status = 'approved'
         AND r.vendor = 'ibm-carbon'
         AND r.carbon_key IS NOT NULL
+        -- Catalog-only / non-shell-renderable Carbon vocabulary primitives
+        -- (e.g. workspace.action.*, workspace.data.*) MUST NOT be emitted
+        -- as workspace shell surfaces, even when residual tenant bindings
+        -- exist. Source of truth: dynamic_ui_component_registry.metadata.
+        AND COALESCE(r.metadata->>'catalog_only',     'false') <> 'true'
+        AND COALESCE(r.metadata->>'shell_renderable', 'true')  <> 'false'
         AND (
           COALESCE(array_length(b.perms_required, 1), 0) = 0
           OR b.perms_required <@ cp.perms
@@ -522,15 +528,27 @@ async function loadBanners(pool: DbPool, tenantId: string, localePrimary: string
   }));
 }
 
-// ─── Route-binding existence loader ──────────────────────────────────
-// Loads the set of routes that have a real `ui_route_template_binding`
-// row. The resolver uses this to flip `enabled=false` on any account-
-// menu / nav-item entry whose `kind:'navigate'` action targets a route
-// without a backing template — preventing the FE from offering a click
-// path that lands on a 404 / blank page.
-async function loadKnownRoutes(pool: DbPool): Promise<ReadonlySet<string>> {
+// ─── Navigate-eligible route loader ────────────────────────────────────
+// Account-menu / settings-action `navigate` entries must not be enabled from
+// template binding alone. A path is eligible iff:
+//   * a `dynamic_ui_route_metadata` row exists;
+//   * `render_mode` is one of the CHECK values; and
+//   * when `template_binding_required` is true, a matching
+//     `ui_route_template_binding` row exists.
+// Missing metadata => fail-close (disabled action, no sham "route exists").
+async function loadNavigateEligibleRoutes(pool: DbPool): Promise<ReadonlySet<string>> {
   const r = await pool.query<{ route: string }>(
-    `SELECT route FROM dos.ui_route_template_binding`,
+    `SELECT m.route
+       FROM dos.dynamic_ui_route_metadata m
+      WHERE m.render_mode IN ('template', 'shell-only', 'redirect')
+        AND (
+             COALESCE(m.template_binding_required, false) = false
+          OR EXISTS (
+               SELECT 1
+                 FROM dos.ui_route_template_binding b
+                WHERE b.route = m.route
+             )
+           )`,
   );
   const out = new Set<string>();
   for (const row of r.rows) {
@@ -612,7 +630,7 @@ function enrichVisualShellProps(
   nav: { groups: Array<Record<string, unknown>>; items: Array<Record<string, unknown>> },
   chrome: Record<string, unknown>,
   moduleCards: Array<Record<string, unknown>>,
-  knownRoutes: ReadonlySet<string>,
+  navigateEligibleRoutes: ReadonlySet<string>,
 ): void {
   // 1) Build a flat nav-item list keyed by visual ordering.
   const sidebarItems: Array<Record<string, unknown>> = [];
@@ -645,16 +663,15 @@ function enrichVisualShellProps(
       const resolved = chrome[key];
       if (typeof resolved === 'string' && resolved.trim()) out['label'] = resolved.trim();
     }
-    // Route-existence gate — disable any navigate action whose path has
-    // no matching `ui_route_template_binding` row. Non-navigate typed
-    // actions (toggle_*, open_external, dispatch_event …) are exempt.
+    // Navigate contract gate — metadata (+ binding when required), not
+    // template-binding alone. Non-navigate typed actions are exempt.
     const action = entry['action'];
     let routeExists: boolean | null = null;
     if (action && typeof action === 'object') {
       const a = action as Record<string, unknown>;
       if (a['kind'] === 'navigate' && typeof a['path'] === 'string') {
         const path = (a['path'] as string).trim();
-        routeExists = knownRoutes.has(path);
+        routeExists = navigateEligibleRoutes.has(path);
         if (!routeExists) {
           out['enabled'] = false;
         }
@@ -740,8 +757,8 @@ function enrichVisualShellProps(
       }
       case 'workspace.shell.settings-action': {
         const next: Record<string, unknown> = { ...props, placement: 'trailing' };
-        // Only wire the action if the settings entry is enabled (i.e.
-        // its route exists in `ui_route_template_binding`).
+        // Only wire if settings navigate path is metadata-eligible (and
+        // binding-present when required); mirrors account-menu enrichment.
         const enabled = settingsEntry?.['enabled'] !== false;
         if (settingsEntry?.['action'] && enabled) next['action'] = settingsEntry['action'];
         next['enabled'] = enabled;
@@ -846,14 +863,14 @@ export function createWorkspaceShellRouter(pool: DbPool): Router {
       const catalog = await loadCatalog(pool);
       const surfaceRows = await loadSurfaces(pool, tenantId, catalog, callerRoles);
 
-      const [nav, chrome, shortcuts, banners, policies, moduleCards, knownRoutes] = await Promise.all([
+      const [nav, chrome, shortcuts, banners, policies, moduleCards, navigateEligibleRoutes] = await Promise.all([
         loadNav(pool, localePrimary, tenantId, callerRoles),
         loadChrome(pool, tenantId),
         loadShortcuts(pool, tenantId),
         loadBanners(pool, tenantId, localePrimary),
         loadPolicies(pool, tenantId),
         loadEntitledModuleCards(pool, tenantId, callerRoles, localePrimary),
-        loadKnownRoutes(pool),
+        loadNavigateEligibleRoutes(pool),
       ]);
 
       // Live-enrich the visual shell surfaces' props from the resolver
@@ -864,7 +881,7 @@ export function createWorkspaceShellRouter(pool: DbPool): Router {
         nav as { groups: Array<Record<string, unknown>>; items: Array<Record<string, unknown>> },
         chrome,
         moduleCards,
-        knownRoutes,
+        navigateEligibleRoutes,
       );
 
       const surfaces = surfaceRows.map(toFrontendSurface);

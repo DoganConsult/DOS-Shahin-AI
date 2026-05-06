@@ -707,3 +707,11 @@ If bootstrap invents, legacy is alive.
 If shell normalizes DB fields, legacy is alive.
 If missing data is fixed with code instead of DB, legacy is alive.
 ```
+Updated memoryThought for 6sتم. حفظت القاعدة.
+من الآن قبل أي section / wave / module / page جديد، لازم أولًا نطلب:
+FULL CONTRACT INVENTORY + PUBLICATION PROOF
+يعني الوكيل لا يبدأ تنفيذ قبل ما يطلع جدول كامل:
+componentKeycomponentTyperendererKeyzonecategory: catalog-only / structural / visual / action / data-bindinghasTenantBindingtenantAllowedpermissionAllowedmoduleEntitledcomponentMapHitemittedByRuntimerenderedInDOMvisibleInBrowserreasonIfNotVisible
+وملخص إلزامي:
+total contract itemspublished DB rowsclean/duplicate checkmissing rendererKeymissing COMPONENT_MAPblocked by permissionblocked by entitlementcatalog-only countstructural countvisual countruntime emitted countDOM rendered countbrowser visible count
+القاعدة الجديدة: لا تنفيذ جديد قبل إثبات أن كل contract items منشورة ونظيفة ومفهومة.

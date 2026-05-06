@@ -7,6 +7,8 @@ import { createAgenticRouter } from './routes/agentic.routes.js';
 import { createMarketingDownloadsRouter } from './routes/marketing-downloads.routes.js';
 import { createTemplateBindingRouter } from './routes/template-binding.routes.js';
 import { createGrcSandboxRouter } from './routes/grc-sandbox.routes.js';
+import { createPublicRouteMetadataRouter } from './routes/route-metadata.routes.js';
+import { createPublicRouteAllowlist } from './middleware/public-route-allowlist.js';
 import { requireGatewayOrigin } from './middleware/gateway-origin.js';
 const PORT = Number(process.env.PORT || 4015);
 const DATABASE_URL = process.env.DATABASE_URL;
@@ -15,14 +17,12 @@ if (!DATABASE_URL) {
     process.exit(1);
 }
 const pool = createPool(DATABASE_URL);
-const publicMarketingTemplateRoutes = new Set([
-    '/', '/pricing', '/trust', '/security', '/contact', '/about', '/legal',
-    '/platform', '/resources', '/resources/executive-kit',
-    // Auth pages — public, unauthenticated. Migration 20260508_0330
-    // renamed these from /auth/<page> back to clean /<page> paths.
-    '/login', '/register', '/forgot-password', '/mfa', '/reset-password',
-]);
+// Phase 1 — DB-driven public-route allowlist. Source of truth:
+//   dos.dynamic_ui_route_metadata WHERE is_public = true
+// (migration 20260509_0100). No TS literal. No hardcoded fallback.
+const publicAllowlist = createPublicRouteAllowlist(pool);
 const publicTemplateBindingRouter = createTemplateBindingRouter(pool);
+const publicRouteMetadataRouter = createPublicRouteMetadataRouter(pool);
 const app = express();
 app.disable('x-powered-by');
 app.use(express.json({ limit: '1mb' }));
@@ -57,9 +57,18 @@ app.use('/api/ui-os/grc-sandbox', createGrcSandboxRouter(pool));
 // Legacy alias — kept so any internal caller hitting the original root path
 // keeps working during the cut-over. Safe to remove after one deploy cycle.
 app.use('/grc-sandbox', createGrcSandboxRouter(pool));
+// Phase 1 — public route-metadata. Anonymous callers must be able to
+// resolve the typed redirect/render-mode contract for "/" and the
+// declared public surfaces (login, register, marketing pages, etc.)
+// WITHOUT a gateway token. Source of truth = is_public flag in
+// dos.dynamic_ui_route_metadata. The full (authenticated) route table
+// is still served by createUiOsRouter inside the gateway-origin gate.
+app.use('/api/ui-os', publicRouteMetadataRouter);
+// Phase 1 — public template-binding bypass. The set of routes routed
+// through here is loaded from the same DB allowlist. No TS literal.
 app.use('/api/ui-os', (req, res, next) => {
     const route = String(req.query.route ?? '');
-    if (req.method === 'GET' && req.path === '/template-binding' && publicMarketingTemplateRoutes.has(route)) {
+    if (req.method === 'GET' && req.path === '/template-binding' && publicAllowlist.has(route)) {
         return publicTemplateBindingRouter(req, res, next);
     }
     next();
@@ -123,6 +132,7 @@ const server = app.listen(PORT, () => {
 });
 const shutdown = (signal) => {
     console.log(`[ui-os-service] received ${signal}, shutting down`);
+    publicAllowlist.stop();
     server.close(() => {
         pool.end().finally(() => process.exit(0));
     });

@@ -517,19 +517,45 @@ if (UI_OS_SERVICE_URL) {
         // and every SQL is scoped to tenant_id='sandbox' — no real tenant data
         // can leak via this surface.
         '/api/ui-os/grc-sandbox',
+        // Phase 1 — public route-metadata. Anonymous SPA boot must resolve
+        // the typed redirect contract for "/" and read render-mode for the
+        // declared public surfaces without a JWT. ui-os-service's public
+        // route-metadata router enforces is_public filtering at source.
+        '/api/ui-os/route-metadata',
     ];
-    // Phase M3.1 — anonymous template-binding for the 7 marketing-landing routes.
-    // ui-os-service mirrors this allowlist (publicMarketingTemplateRoutes) so the
-    // bypass is symmetrical: only `GET /api/ui-os/template-binding?route=<one>`
-    // skips authGuard. Any other route still requires JWT.
-    const publicMarketingRoutes = new Set([
-        '/', '/pricing', '/trust', '/security', '/contact', '/about', '/legal',
-        '/platform', '/resources', '/resources/executive-kit',
-        // Auth pages — public, unauthenticated. Migration 20260508_0330
-        // renamed these from /auth/<page> back to clean /<page> paths.
-        // Mirrors services/ui-os-service/src/server.ts#publicMarketingTemplateRoutes.
-        '/login', '/register', '/forgot-password', '/mfa', '/reset-password',
-    ]);
+    // Phase 1 — DB-driven public template-binding allowlist. Source of truth:
+    //   GET /api/ui-os/route-metadata (anonymous, public-only) → routes[].route
+    // No TS literal. Periodically refreshed (TTL 30s). The same DB column
+    // (dos.dynamic_ui_route_metadata.is_public) gates ui-os-service's
+    // public bypass; the gateway mirrors that decision via the public
+    // route-metadata endpoint so the two layers cannot drift.
+    const PUBLIC_ALLOWLIST_TTL_MS = 30_000;
+    const publicMarketingRoutes = new Set();
+    const refreshPublicAllowlist = async () => {
+        try {
+            const url = `${UI_OS_SERVICE_URL}/api/ui-os/route-metadata`;
+            const resp = await fetch(url, { method: 'GET' });
+            if (!resp.ok)
+                return;
+            const body = await resp.json();
+            const next = new Set();
+            for (const r of body?.routes ?? []) {
+                if (typeof r?.route === 'string' && r.route.length > 0)
+                    next.add(r.route);
+            }
+            publicMarketingRoutes.clear();
+            for (const r of next)
+                publicMarketingRoutes.add(r);
+        }
+        catch (err) {
+            // eslint-disable-next-line no-console
+            console.warn('[gateway public-allowlist] refresh failed', String(err));
+        }
+    };
+    void refreshPublicAllowlist();
+    const allowlistTimer = setInterval(() => { void refreshPublicAllowlist(); }, PUBLIC_ALLOWLIST_TTL_MS);
+    if (typeof allowlistTimer.unref === 'function')
+        allowlistTimer.unref();
     const publicUiOsProxy = (0, http_proxy_middleware_1.createProxyMiddleware)({
         target: UI_OS_SERVICE_URL,
         changeOrigin: true,

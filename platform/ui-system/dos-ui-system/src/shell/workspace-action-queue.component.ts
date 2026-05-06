@@ -22,6 +22,12 @@ import { sanitizeAccessibleText } from './shell-accessible-text';
 type ItemSeverity = Exclude<ActionQueueItem['severity'], undefined>;
 type ItemStatus   = ActionQueueItem['status'];
 
+export interface DueDateLabels {
+  today: string;
+  overduePattern: string;
+  futurePattern: string;
+}
+
 const SEVERITY_TAG: Record<ItemSeverity, DosCarbonTagType> = {
   critical: 'red',
   high:     'magenta',
@@ -51,9 +57,9 @@ const SEVERITY_TAG: Record<ItemSeverity, DosCarbonTagType> = {
             {{ items.length }}
           </dos-carbon-tag>
         }
-        @if (overdueCount > 0) {
+        @if (overdueCount > 0 && overdueChrome()) {
           <dos-carbon-tag type="red" size="sm" class="dos-action-queue__overdue">
-            {{ overdueCount }} overdue
+            {{ overdueCount }} {{ sanitizedOverdueLabel() }}
           </dos-carbon-tag>
         }
       </header>
@@ -98,9 +104,11 @@ const SEVERITY_TAG: Record<ItemSeverity, DosCarbonTagType> = {
                             [class.dos-aq-due--overdue]="isOverdue(item)"
                             [attr.datetime]="item.dueAt">
                         @if (isOverdue(item)) {
-                          <dos-carbon-tag type="red" size="sm">
-                            {{ daysLabel(item.dueAt) }}
-                          </dos-carbon-tag>
+                          @if (daysLabel(item.dueAt)) {
+                            <dos-carbon-tag type="red" size="sm">
+                              {{ daysLabel(item.dueAt) }}
+                            </dos-carbon-tag>
+                          }
                         } @else {
                           {{ item.dueAt | date:'shortDate' }}
                         }
@@ -121,7 +129,7 @@ const SEVERITY_TAG: Record<ItemSeverity, DosCarbonTagType> = {
             </li>
           }
         </ul>
-      } @else {
+      } @else if (emptyTextChrome()) {
         <div class="dos-action-queue__empty">
           <p>{{ emptyText }}</p>
         </div>
@@ -266,6 +274,8 @@ export class DosActionQueueComponent {
   @Input() ariaLabel = '';
   @Input() title = '';
   @Input() emptyText = '';
+  @Input() overdueLabel = '';
+  @Input() dueDateLabels: DueDateLabels | null = null;
   @Output() open = new EventEmitter<ActionQueueItem>();
 
   queueAsideChrome(): boolean {
@@ -285,6 +295,18 @@ export class DosActionQueueComponent {
     return sanitizeAccessibleText(this.title);
   }
 
+  overdueChrome(): boolean {
+    return sanitizeAccessibleText(this.overdueLabel).length > 0;
+  }
+
+  sanitizedOverdueLabel(): string {
+    return sanitizeAccessibleText(this.overdueLabel);
+  }
+
+  emptyTextChrome(): boolean {
+    return sanitizeAccessibleText(this.emptyText).length > 0;
+  }
+
   get overdueCount(): number {
     return this.items.filter(i => this.isOverdue(i)).length;
   }
@@ -295,10 +317,11 @@ export class DosActionQueueComponent {
   }
 
   daysLabel(dueAt: string): string {
+    if (!this.dueDateLabels) return '';
     const diff = Math.round((new Date(dueAt).getTime() - Date.now()) / 86_400_000);
-    if (diff === 0) return 'due today';
-    if (diff < 0) return `${Math.abs(diff)}d overdue`;
-    return `due in ${diff}d`;
+    if (diff === 0) return sanitizeAccessibleText(this.dueDateLabels.today);
+    if (diff < 0) return sanitizeAccessibleText(this.dueDateLabels.overduePattern.replace('{n}', String(Math.abs(diff))));
+    return sanitizeAccessibleText(this.dueDateLabels.futurePattern.replace('{n}', String(diff)));
   }
 
   severityTag(severity: ItemSeverity): DosCarbonTagType {

@@ -111,7 +111,7 @@ const PRIORITY_TAG: Record<MsgPriority, DosCarbonTagType> = {
                 </cds-contained-list-item>
               }
             </cds-contained-list>
-          } @else {
+          } @else if (emptyTextChrome()) {
             <div class="dos-inbox-empty">
               <p>{{ emptyText }}</p>
             </div>
@@ -371,5 +371,9 @@ export class DosInboxCenterComponent {
   closeLabelAttr(): string | null {
     const s = sanitizeAccessibleText(this.closeLabel ?? '');
     return s.length ? s : null;
+  }
+
+  emptyTextChrome(): boolean {
+    return sanitizeAccessibleText(this.emptyText).length > 0;
   }
 }

@@ -25,12 +25,22 @@ const shellHostRoute   = () => import('@platform/shell').then(m => m.ShellHostCo
  * Marketing landing, auth pages, and info pages.
  */
 const PUBLIC_PATHS: Routes = [
-  // Root → marketing home
+  // Root "/" — render_mode='redirect' contract.
+  //
+  // The DB row in dos.dynamic_ui_route_metadata (route='/', render_mode='redirect')
+  // owns the typed redirect target (anonymous → /login, authenticated →
+  // /workspace-home, default → /login). DynamicTemplatePageComponent calls
+  // RouteMetadataService.resolve('/') and short-circuits to router.navigateByUrl(target);
+  // it NEVER calls /api/ui-os/template-binding for "/".
+  //
+  // No `data: { componentKey: ... }` is attached here on purpose — assigning
+  // a hardcoded componentKey to "/" would imply a static landing component
+  // and contradict the DB-stored redirect contract (Zero Static / Zero
+  // Legacy doctrine).
   {
     path: '',
     loadComponent: dynamicPageRoute,
     pathMatch: 'full',
-    data: { contractRoute: '/', componentKey: 'marketing.home.page' },
   },
   // Auth pages — public, unauthenticated
   { path: 'login',           loadComponent: dynamicPageRoute },
@@ -39,6 +49,7 @@ const PUBLIC_PATHS: Routes = [
   { path: 'mfa',             loadComponent: dynamicPageRoute },
   { path: 'reset-password',  loadComponent: dynamicPageRoute },
   // Marketing pages
+  { path: 'marketing',       loadComponent: dynamicPageRoute },
   { path: 'pricing',         loadComponent: dynamicPageRoute },
   { path: 'trust',           loadComponent: dynamicPageRoute },
   { path: 'security',        loadComponent: dynamicPageRoute },

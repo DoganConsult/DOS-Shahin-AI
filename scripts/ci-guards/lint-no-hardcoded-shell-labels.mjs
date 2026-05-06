@@ -53,6 +53,10 @@ const BANNED = [
   { name: 'hardcoded audit-trail title',             re: /['"]Audit Trail['"]/g },
   { name: 'hardcoded ai-loading text',               re: /AI insights are loading/g },
   { name: 'hardcoded tab labels map',                re: /TAB_LABELS\s*:\s*Record/g },
+  { name: 'hardcoded overdue template suffix',       re: /\}\}\s+overdue\b/g },
+  { name: 'hardcoded due-today string',              re: /['"`]due today['"`]/g },
+  { name: 'hardcoded d-overdue pattern',             re: /['"`][^'"]*d overdue['"`]/g },
+  { name: 'hardcoded due-in pattern',                re: /['"`]due in [^'"]*['"`]/g },
 ];
 
 // Lines that are ONLY comments/docstrings — skip these so documentation

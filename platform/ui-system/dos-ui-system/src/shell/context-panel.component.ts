@@ -67,9 +67,9 @@ import { sanitizeAccessibleText } from './shell-accessible-text';
                   @if (v.tab === 'ai-insights') {
                     <cds-accordion-item [title]="tabLabel('ai-insights')" [expanded]="true">
                       <ng-content select="[aiInsightsContent]"></ng-content>
-                      <p class="dos-context-panel__ai-placeholder">
-                        {{ aiLoadingText }}
-                      </p>
+                      @if (aiLoadingChrome()) {
+                        <p class="dos-context-panel__ai-placeholder">{{ aiLoadingText }}</p>
+                      }
                     </cds-accordion-item>
                   }
                   <!-- Audit tab: immutable audit trail emphasis -->
@@ -235,5 +235,9 @@ export class DosContextPanelComponent {
   tabPanelAriaAttr(tab: ContextPanelTab): string | null {
     const s = sanitizeAccessibleText(this.tabLabel(tab));
     return s.length ? s : null;
+  }
+
+  aiLoadingChrome(): boolean {
+    return sanitizeAccessibleText(this.aiLoadingText).length > 0;
   }
 }

@@ -1,0 +1,27 @@
+{
+  "generatedAt": "2026-05-06T14:33:52.641Z",
+  "base": "http://localhost:3000",
+  "route": "/workspace-home",
+  "landedAt": "chrome-error://chromewebdata/",
+  "httpStatus": 200,
+  "navError": null,
+  "uiOsRequests": [
+    {
+      "method": "GET",
+      "url": "http://localhost:3000/api/ui-os/route-metadata?route=/login"
+    },
+    {
+      "method": "GET",
+      "url": "http://localhost:3000/api/ui-os/template-binding?route=/login"
+    }
+  ],
+  "uiOsResponses": [
+    {
+      "status": 200,
+      "url": "http://localhost:3000/api/ui-os/route-metadata?route=/login"
+    }
+  ],
+  "forbiddenTemplateBindingCalls": [],
+  "routeMetadataResponses": [],
+  "verdict": "WORKSPACE_HOME_SHELL_ONLY_NO_CALL_PASS"
+}
