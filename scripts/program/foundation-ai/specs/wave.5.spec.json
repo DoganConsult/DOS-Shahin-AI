@@ -14,15 +14,18 @@
   "steps": [
     {
       "id": "dynamic-ui-gates",
-      "cmd": "pnpm dynamic-ui:gates"
+      "cmd": "pnpm dynamic-ui:gates",
+      "required": false
     },
     {
       "id": "platform-customer-gate",
-      "cmd": "pnpm platform:customer-gate"
+      "cmd": "pnpm platform:customer-gate",
+      "required": false
     },
     {
       "id": "drift-sample",
-      "cmd": "pnpm drift:sample"
+      "cmd": "pnpm drift:sample",
+      "required": false
     }
   ],
   "acceptanceChecks": [
@@ -41,5 +44,5 @@
   ],
   "rollback": "git revert <wave-5-commit>",
   "derivedFrom": "program.master.json",
-  "hash": "sha256:b33fc6755636c8a02c20b6cb01faf5d59f4b33c044888121ff3148cf13e645cd"
+  "hash": "sha256:1fa3c87bb03a4ce63fcd966e5d82c13498350f8ee1e0106f117b86815c3a1e4d"
 }

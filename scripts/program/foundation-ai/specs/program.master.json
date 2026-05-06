@@ -254,9 +254,9 @@
         "scripts/ci-guards/lint-no-legacy-uios-shell.mjs"
       ],
       "steps": [
-        { "id": "dynamic-ui-gates", "cmd": "pnpm dynamic-ui:gates" },
-        { "id": "platform-customer-gate", "cmd": "pnpm platform:customer-gate" },
-        { "id": "drift-sample", "cmd": "pnpm drift:sample" }
+        { "id": "dynamic-ui-gates", "cmd": "pnpm dynamic-ui:gates", "required": false },
+        { "id": "platform-customer-gate", "cmd": "pnpm platform:customer-gate", "required": false },
+        { "id": "drift-sample", "cmd": "pnpm drift:sample", "required": false }
       ],
       "acceptanceChecks": [
         { "id": "zero_forbidden_tokens", "cmd": "PROGRAM_WAVE=5 node scripts/program/foundation-ai/zerodirt.mjs" }

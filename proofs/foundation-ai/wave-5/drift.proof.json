@@ -1,0 +1,32 @@
+{
+  "schema": "foundation-ai.proof.v1",
+  "phase": -2,
+  "wave": 5,
+  "name": "drift",
+  "status": "RED",
+  "payload": {
+    "schema": "foundation-ai.drift.v1",
+    "wave": 5,
+    "detectors": {
+      "D_scope_dirty": {
+        "count": 6,
+        "status": "RED",
+        "samples": [
+          "platform/foundation/config/detail.config.ts",
+          "platform/foundation/config/filters.config.ts",
+          "platform/foundation/config/form.config.ts",
+          "platform/foundation/config/list.config.ts",
+          "platform/foundation/config/views.config.ts",
+          "platform/foundation/ui/foundation.constants.ts"
+        ]
+      },
+      "D_tokens": {
+        "ownedHits": 0,
+        "observedHits": 50,
+        "status": "WARN"
+      }
+    }
+  },
+  "emittedAt": "2026-05-06T19:26:56.696Z",
+  "hash": "sha256:7a3c87b54aa1fb8ad014f717ebfd7225f4ea09e6915f9d7908a24c5e8d36dd3d"
+}

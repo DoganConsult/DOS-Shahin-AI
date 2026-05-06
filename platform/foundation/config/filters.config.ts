@@ -7,21 +7,21 @@
 import { FOUNDATION_PERMISSION_CODES } from '../contracts/foundation.permissions';
 
 export const FOUNDATION_STATUS_FILTER_OPTIONS = [
-  { value: 'draft',     labelKey: 'foundation.status.draft' },
-  { value: 'in_review', labelKey: 'foundation.status.in_review' },
-  { value: 'approved',  labelKey: 'foundation.status.approved' },
-  { value: 'published', labelKey: 'foundation.status.published' },
-  { value: 'active',    labelKey: 'foundation.status.active' },
-  { value: 'suspended', labelKey: 'foundation.status.suspended' },
-  { value: 'archived',  labelKey: 'foundation.status.archived' },
+  { value: 'draft',     i18nKey: 'foundation.status.draft' },
+  { value: 'in_review', i18nKey: 'foundation.status.in_review' },
+  { value: 'approved',  i18nKey: 'foundation.status.approved' },
+  { value: 'published', i18nKey: 'foundation.status.published' },
+  { value: 'active',    i18nKey: 'foundation.status.active' },
+  { value: 'suspended', i18nKey: 'foundation.status.suspended' },
+  { value: 'archived',  i18nKey: 'foundation.status.archived' },
 ] as const;
 
 export const FOUNDATION_ENTITY_TYPE_FILTER_OPTIONS = [
-  { value: 'organization',  labelKey: 'foundation.nav.organization' },
-  { value: 'business_unit', labelKey: 'foundation.nav.businessUnits' },
-  { value: 'department',    labelKey: 'foundation.nav.departments' },
-  { value: 'position',      labelKey: 'foundation.nav.positions' },
-  { value: 'legal_entity',  labelKey: 'foundation.nav.organization' },
+  { value: 'organization',  i18nKey: 'foundation.nav.organization' },
+  { value: 'business_unit', i18nKey: 'foundation.nav.businessUnits' },
+  { value: 'department',    i18nKey: 'foundation.nav.departments' },
+  { value: 'position',      i18nKey: 'foundation.nav.positions' },
+  { value: 'legal_entity',  i18nKey: 'foundation.nav.organization' },
 ] as const;
 
 export const FOUNDATION_PERMISSION_FILTER_VALUES =

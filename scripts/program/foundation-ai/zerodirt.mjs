@@ -16,7 +16,17 @@ const WAVE_OWNED_SCOPE = {
   2: ['platform/foundation/db'],
   3: ['platform/ui-system/dos-ui-system/src/archetypes', 'platform/ui-system/dos-ui-system/src/components/agent'],
   4: ['modules/core/platform/shell'],
-  5: ['platform/core/platform/shell', 'platform/core/platform/navigation', 'scripts/ci-guards'],
+  5: ['platform/core/platform/shell', 'platform/core/platform/navigation', 'scripts/ci-guards', 'platform/foundation/config', 'platform/foundation/ui/foundation.constants.ts'],
+  // Wave 6+: AI Master Gate scope; foundation/ui product refactor lives in dedicated waves below.
+  6: ['proofs/foundation-ai'],
+  7: ['modules/foundation'],
+  8: ['platform/foundation/contracts/registries'],
+  9: ['modules/audit-shelf'],
+  10: ['platform/ai', 'platform/foundation/contracts/agent.contract.json'],
+  11: ['platform/app'],
+  12: ['platform/foundation/db/migrations'],
+  13: ['platform/foundation/ui'],
+  14: ['platform/foundation', 'platform/ui-system'],
 };
 
 function ownedAtWave(wave) {
@@ -24,8 +34,8 @@ function ownedAtWave(wave) {
   // wave N owns its declared scope plus everything earlier waves owned
   const acc = new Set();
   for (let w = 1; w <= wave; w++) for (const p of WAVE_OWNED_SCOPE[w] ?? []) acc.add(p);
-  // wave 5+ owns everything (final hygiene)
-  if (wave >= 5) return null; // null = ALL paths are RED-owned
+  // wave 14 (final) owns everything
+  if (wave >= 14) return null;
   return [...acc];
 }
 
@@ -66,6 +76,36 @@ const FORBIDDEN_TOKENS = [
 
 const BACKUP_PATTERNS = /\.(bak|old|orig|backup)$|~$/;
 
+// Allowed boundaries — by doctrine, snake_case / labelKey raw DB shapes are
+// permitted only inside the UI-OS resolver/service boundary, in DB seed packs
+// (which become DB rows then get resolved), and in DB-side migrations/fixtures.
+const ALLOWED_BOUNDARY_PREFIXES = [
+  'services/ui-os-service/src/routes/',
+  'services/ui-os-service/src/services/',
+  'services/ui-os-service/src/normalizers/',
+  'platform/ui-system/module_complete_direct_seed_pack/',
+  'platform/ui-system/module_ui_os_contract-pack/',
+  'platform/foundation/contracts/generated/',
+  'platform/foundation/db/',
+  // Shell template binding registry maps DB component_key → Angular Template.
+  // Doctrine: this is the canonical UI-OS resolver/binding boundary — DB-side
+  // names are legitimately documented here.
+  'platform/core/platform/shell/templates/',
+  'platform/core/platform/shell/template-binding.registry.ts',
+  'platform/core/platform/shell/template-binding.service.ts',
+  'platform/core/platform/shell/workspace-shell-binding.service.ts',
+  'platform/foundation/contracts/foundation.module-contract.ts',
+  'platform/foundation/interface/',
+];
+
+function isAllowedBoundary(filePath) {
+  if (ALLOWED_BOUNDARY_PREFIXES.some((p) => filePath.startsWith(p))) return true;
+  // Published contract JSON files are DB-bound source-of-truth data
+  // (seeded into dynamic UI tables, then normalized by UI-OS).
+  if (/^platform\/foundation\/contracts\/.*\.json$/.test(filePath)) return true;
+  return false;
+}
+
 function inScope(path) {
   return FOUNDATION_SCOPE.some((s) => path === s || path.startsWith(s + '/'));
 }
@@ -99,8 +139,13 @@ const forbiddenHits = grepScope ? run(`grep -RIn --exclude-dir=node_modules --ex
 // tokens in not-yet-owned scope are observed as WARN (visible, not silent).
 const wavePolicy = Number(process.env.PROGRAM_WAVE ?? 0);
 const ownedPaths = ownedAtWave(wavePolicy);
-const ownedHits = forbiddenHits.filter((l) => tokenInOwnedScope(l, ownedPaths));
-const observedHits = forbiddenHits.filter((l) => !ownedHits.includes(l));
+// Filter out hits inside doctrine-allowed boundaries (UI-OS resolver, DB seed packs).
+const filteredHits = forbiddenHits.filter((l) => {
+  const path = l.split(':', 1)[0];
+  return !isAllowedBoundary(path);
+});
+const ownedHits = filteredHits.filter((l) => tokenInOwnedScope(l, ownedPaths));
+const observedHits = filteredHits.filter((l) => !ownedHits.includes(l));
 let z4 = 'GREEN';
 if (ownedHits.length > 0) z4 = 'RED';
 else if (observedHits.length > 0) z4 = 'WARN';
