@@ -90,11 +90,10 @@ function resolveSurfaceZone(
 }
 
 // ── Frontend-facing surface DTO (camelCase only) ───────────────────────
+// No componentKey or permsRequired cross this boundary - these are internal to resolver
 interface FrontendSurface {
-  componentKey: string;
   enabled: boolean;
   position: number;
-  permsRequired: readonly string[];
   props: Record<string, unknown>;
   version: number;
   zone?: string;
@@ -115,10 +114,8 @@ function normalizeSurface(
 /** Map DB row → camelCase-only frontend surface. No snake_case crosses this boundary. */
 function toFrontendSurface(row: WorkspaceShellRow): FrontendSurface {
   return {
-    componentKey: row.component_key,
     enabled: row.enabled,
     position: row.position,
-    permsRequired: Array.isArray(row.perms_required) ? row.perms_required : [],
     props: row.props ?? {},
     version: row.version,
     ...(row.zone ? { zone: row.zone } : {}),
@@ -444,46 +441,14 @@ export function createWorkspaceShellRouter(pool: DbPool): Router {
         userId: userId || null,
         productCode,
         version: shellVersion + catalogVersion.nav + catalogVersion.routes,
-        catalogVersion,
         shell: {
           version: shellVersion,
           surfaces: feSurfaces,
           zones: groupSurfacesByZone(surfaces, catalog),
-          knownKeys: catalog.knownKeys,
-          componentRegistry,
         },
-        componentRegistry,
         navigation: {
           groups: feNavGroups,
           items: feNavItems,
-          productWorkspace: {
-            moduleOrder,
-            pageOrder,
-          },
-        },
-        routes: {
-          bindings: routeBindings.rows,
-        },
-        product: {
-          overlays: productOverrides.rows,
-        },
-        tenant: {
-          overlays: tenantOverrides.rows,
-        },
-        user: {
-          overlays: userId ? userOverrides.rows : [],
-        },
-        i18n: {
-          locales: ['en', 'ar'],
-        },
-        rolePermissions: rolePermissions.rows,
-        serviceHealth: {
-          services: services.rows,
-          endpoints: endpoints.rows,
-          probes: probes.rows,
-        },
-        pageInfrastructure: {
-          surfaces: surfaces.filter((s) => (s.zone ?? resolveSurfaceZone(s, catalog)) === 'main').map(toFrontendSurface),
         },
       });
     } catch (e) {
