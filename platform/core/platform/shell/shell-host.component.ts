@@ -8,6 +8,7 @@ import {
   effect,
   inject,
   signal,
+  viewChild,
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
@@ -57,7 +58,8 @@ import {
   WORKSPACE_NAV_LABEL_RESOLVER,
   type WorkspaceNavLabelResolver,
 } from '@dos/access-store';
-import type { DosNavGroup, DosNavItem, ShellAccountMenuEntry } from '@dos/ui-contracts';
+import type { DosNavGroup, DosNavItem, ShellAccountMenuEntry, ShellAction } from '@dos/ui-contracts';
+import { parseShellAction, shellActionFromLegacyRecord } from '@dos/ui-contracts';
 import { BreadcrumbService } from './breadcrumb.service';
 import { WorkspaceShellBindingService, type WorkspaceShellZone } from './workspace-shell-binding.service';
 import { ShellPreferencesService } from './shell-preferences.service';
@@ -278,7 +280,8 @@ import { ToastService } from '../../../dos/shell/toast.service';
         </ng-container>
         <ng-container headerEnd>
           @if (!isMobile() && showCommandSearch()) {
-            <dos-command-search class="shell-header-cmd"
+            <dos-command-search #desktopCmdSearch
+                                class="shell-header-cmd"
                                 [results]="commandResults()"
                                 [placeholder]="commandPlaceholder()"
                                 [ariaLabel]="commandAria()"
@@ -401,7 +404,7 @@ import { ToastService } from '../../../dos/shell/toast.service';
         }
         @if (zoneHas('top-banners') && shellBanners().length > 0) {
           <dos-shell-banner-strip [banners]="shellBanners()"
-                                  (action)="onBannerAction($event)"
+                                  (action)="dispatchShellActionFromBanner($event)"
                                   (dismiss)="onBannerDismiss($event)">
           </dos-shell-banner-strip>
         }
@@ -410,7 +413,7 @@ import { ToastService } from '../../../dos/shell/toast.service';
           <ng-container *ngTemplateOutlet="mainTpl"></ng-container>
         }
 
-        @if (zoneHas('mobile-nav') && mobileBottomItems().length > 0) {
+        @if (zoneHas('mobile-nav')) {
           <dos-mobile-bottom-nav shellBottomNav
                                  [items]="mobileBottomItems()"
                                  [dir]="sidebarDir()"
@@ -470,7 +473,7 @@ import { ToastService } from '../../../dos/shell/toast.service';
         }
         @if (zoneHas('top-banners') && shellBanners().length > 0) {
           <dos-shell-banner-strip [banners]="shellBanners()"
-                                  (action)="onBannerAction($event)"
+                                  (action)="dispatchShellActionFromBanner($event)"
                                   (dismiss)="onBannerDismiss($event)">
           </dos-shell-banner-strip>
         }
@@ -593,6 +596,12 @@ export class ShellHostComponent {
   private readonly prefs = inject(ShellPreferencesService);
   readonly errorState = inject(ShellErrorStateService);
   private readonly toastSvc = inject(ToastService);
+
+  /** Desktop Cmd/Ctrl+K focuses this component — never toggles mobile overlay on desktop. */
+  private readonly desktopCmdSearch = viewChild<DosCommandSearchComponent>('desktopCmdSearch');
+
+  // Nav label resolver — optional; used for navItemLabel/navGroupLabel.
+  // Chrome strings go through shellBinding.chromeString() directly.
   protected readonly labelResolver = inject<WorkspaceNavLabelResolver | null>(
     WORKSPACE_NAV_LABEL_RESOLVER, { optional: true },
   );
@@ -725,14 +734,14 @@ export class ShellHostComponent {
 
   // Phase H — chrome aria/labels resolved through WorkspaceNavLabelResolver.
   readonly ariaToggleNav = computed(
-    () => this.labelResolver?.shellChromeString?.(
+    () => this.shellBinding.chromeString(
       this.sideNavActive() ? 'shell.header.hide_navigation' : 'shell.header.show_navigation',
-    ) || '',
+    ),
   );
   readonly ariaToggleRail = computed(
-    () => this.labelResolver?.shellChromeString?.(
+    () => this.shellBinding.chromeString(
       this.isRail() ? 'shell.header.expand_sidebar' : 'shell.header.collapse_to_rail',
-    ) || '',
+    ),
   );
   readonly ariaBreadcrumb = computed(
     () => this.shellBinding.chromeString('shell.breadcrumb.aria'),
@@ -742,7 +751,7 @@ export class ShellHostComponent {
   );
   readonly drawerTitle = computed(
     () => this.selectedModuleLabel()
-       ?? this.labelResolver?.shellChromeString?.('shell.drawer.title')
+       ?? this.shellBinding.chromeString('shell.drawer.title')
        ?? this.headerBrand(),
   );
   readonly drawerCloseLabel = computed(
@@ -794,6 +803,22 @@ export class ShellHostComponent {
   readonly isSurfaceAllowed = (key: string): boolean =>
     this.shellBinding.isSurfaceAllowed(key);
 
+  /**
+   * DB banner template → ShellAction. Prefer legacy shell-action fields via
+   * {@link shellActionFromLegacyRecord}; only then fall back to `actionRoute`
+   * → `{ kind: 'navigate', path }` when legacy parsing yields nothing.
+   */
+  private bannerActionFromTemplate(tpl: Record<string, unknown>): ShellAction | undefined {
+    const fromLegacy = shellActionFromLegacyRecord(tpl);
+    if (fromLegacy) return fromLegacy;
+    const route = tpl['actionRoute'];
+    if (typeof route === 'string') {
+      const path = route.trim();
+      if (path) return { kind: 'navigate', path };
+    }
+    return undefined;
+  }
+
   // §B.9 P4 — banner multiplex — fully runtime-driven.
   // shell-host passes live state only. Banner templates, IDs, kinds, routes,
   // thresholds all come from UI-OS runtime (shellBinding.bannerTemplates).
@@ -815,11 +840,20 @@ export class ShellHostComponent {
       if (gate === 'offline' && !this.isOffline()) continue;
       if (gate === 'impersonation' && !this.access.isImpersonating()) continue;
       if (gate === 'session-expiry') {
-        if (!expiresAt || policy.warningMinutes <= 0) continue;
+        if (!expiresAt) continue;
         const minsLeft = Math.max(0, Math.floor((new Date(expiresAt).getTime() - Date.now()) / 60000));
-        if (minsLeft > policy.warningMinutes) continue;
+        const warn = policy.warningMinutes;
+        const danger = policy.dangerMinutes;
+        if (warn > 0) {
+          if (minsLeft > warn) continue;
+        } else if (danger > 0) {
+          if (minsLeft > danger) continue;
+        } else {
+          continue;
+        }
       }
-      if (gate === 'error' && !this.errorState.error()) continue;
+      // Skip DB error-gate rows when a live programmatic error is shown (dedupe with shell-error banner).
+      if (gate === 'error' && this.errorState.error()) continue;
 
       const titleKey = typeof tpl['titleKey'] === 'string' ? tpl['titleKey'] as string : '';
       const messageKey = typeof tpl['messageKey'] === 'string' ? tpl['messageKey'] as string : '';
@@ -832,9 +866,7 @@ export class ShellHostComponent {
         message: this.shellBinding.chromeString(messageKey),
         dismissible: tpl['dismissible'] === true,
         actionLabel: actionKey ? this.shellBinding.chromeString(actionKey) : undefined,
-        action: typeof tpl['actionRoute'] === 'string'
-          ? { kind: 'navigate' as const, path: tpl['actionRoute'] as string }
-          : undefined,
+        action: this.bannerActionFromTemplate(tpl),
       });
     }
 
@@ -925,7 +957,7 @@ export class ShellHostComponent {
     () => this.shellBinding.chromeString('shell.quick.aria'),
   );
   readonly quickCreateGlyph = computed(
-    () => this.shellBinding.chromeString('shell.quick.fab_glyph') || '+',
+    () => this.shellBinding.chromeString('shell.quick.fab_glyph'),
   );
   readonly accountAria = computed(
     () => this.shellBinding.chromeString('shell.header.account_action'),
@@ -1070,28 +1102,70 @@ export class ShellHostComponent {
     this.closeMobileCmd();
   }
 
-  onStatusSignal(s: Record<string, unknown>): void {
-    const action = s['action'] as Record<string, unknown> | undefined;
-    if (action?.['type'] === 'navigate' && typeof action['route'] === 'string') {
-      void this.router.navigateByUrl(action['route'] as string);
+  // ── Typed ShellAction dispatch — single ingest point ────────────────────
+
+  /**
+   * Central dispatch for all ShellAction values.
+   * Shell-host executes routing, external opens, preference toggles.
+   * Everything else is a no-op until the DB provides a handler.
+   */
+  private dispatchShellAction(action: ShellAction | null | undefined): void {
+    if (!action) return;
+    switch (action.kind) {
+      case 'navigate':
+        void this.router.navigateByUrl(action.path);
+        break;
+      case 'open_external':
+        if (this.isBrowser) window.open(action.url, '_blank', 'noopener');
+        break;
+      case 'toggle_language':
+        this.prefs.toggleLanguage();
+        break;
+      case 'toggle_theme':
+        this.prefs.toggleTheme();
+        break;
+      case 'open_command':
+        if (this.isMobile()) {
+          this.mobileCmdOpen.set(true);
+        } else {
+          const cmd = this.desktopCmdSearch();
+          queueMicrotask(() => cmd?.focusSearch());
+        }
+        break;
+      case 'open_context_tab':
+        this.contextTab.set(action.tab);
+        this.contextOpen.set(true);
+        break;
+      case 'close_overlay': {
+        const o = action.overlay;
+        if (o === 'context') this.contextOpen.set(false);
+        if (o === 'inbox') this.inboxOpen.set(false);
+        if (o === 'command' || o === 'mobile-command') this.mobileCmdOpen.set(false);
+        break;
+      }
+      case 'clear_error':
+        this.errorState.clearError();
+        break;
+      case 'dispatch_event':
+        if (this.isBrowser) {
+          window.dispatchEvent(new CustomEvent(action.name, { detail: action.detail }));
+        }
+        break;
+      default:
+        break;
     }
+  }
+
+  onStatusSignal(s: Record<string, unknown>): void {
+    this.dispatchShellAction(shellActionFromLegacyRecord(s));
   }
 
   onActionQueueOpen(item: Record<string, unknown>): void {
-    const action = item['action'] as Record<string, unknown> | undefined;
-    if (action?.['type'] === 'navigate' && typeof action['route'] === 'string') {
-      void this.router.navigateByUrl(action['route'] as string);
-    }
+    this.dispatchShellAction(shellActionFromLegacyRecord(item));
   }
 
   onAgentSelect(a: Record<string, unknown>): void {
-    const action = a['action'] as Record<string, unknown> | undefined;
-    if (action?.['type'] === 'navigate' && typeof action['route'] === 'string') {
-      void this.router.navigateByUrl(action['route'] as string);
-    }
-    if (action?.['type'] === 'open_external' && typeof action['url'] === 'string') {
-      if (this.isBrowser) window.open(action['url'] as string, '_blank', 'noopener');
-    }
+    this.dispatchShellAction(shellActionFromLegacyRecord(a));
   }
 
   onContextTabChange(tab: string): void {
@@ -1103,7 +1177,8 @@ export class ShellHostComponent {
 
   // §B.9 #33 — help entry opens context panel on 'help' tab.
   openContextHelp(): void {
-    this.contextTab.set('help');
+    const defaultTab = this.shellBinding.chromeString('shell.context.default_tab') || 'help';
+    this.contextTab.set(defaultTab);
     this.contextOpen.set(true);
   }
 
@@ -1113,10 +1188,9 @@ export class ShellHostComponent {
   }
 
   // §B.9 #34–37, #25 — banner strip handlers.
-  onBannerAction(banner: ShellBanner): void {
+  dispatchShellActionFromBanner(banner: ShellBanner): void {
     if (!banner.action) return;
-    if (banner.action.kind === 'navigate') void this.router.navigateByUrl(banner.action.path);
-    if (banner.action.kind === 'open_external' && this.isBrowser) window.open(banner.action.url, '_blank', 'noopener');
+    this.dispatchShellAction(banner.action);
   }
 
   onBannerDismiss(banner: ShellBanner): void {
@@ -1138,8 +1212,8 @@ export class ShellHostComponent {
         this.mobileCmdOpen.set(true);
         return;
       }
-      // Open command search via signal — no DOM querySelector.
-      this.mobileCmdOpen.set(true);
+      const cmd = this.desktopCmdSearch();
+      queueMicrotask(() => cmd?.focusSearch());
     }
     if (ev.key === 'Escape') {
       if (this.mobileCmdOpen()) { this.mobileCmdOpen.set(false); return; }
@@ -1172,7 +1246,10 @@ export class ShellHostComponent {
         const badgeNum = it.badge != null ? Number(it.badge) : NaN;
         const item: Record<string, unknown> = {
           id: it.id,
-          label: { i18nKey: it.labelKey || it.id, fallback: this.label(it) },
+          label: {
+            i18nKey: it.labelKey || it.id,
+            fallback: this.sidebarNavItemFallback(it),
+          },
           icon: this.itemIcon(it, group.id),
           route: it.route,
           active: this.isActive(it),
@@ -1186,19 +1263,31 @@ export class ShellHostComponent {
     return out;
   });
 
+  /** Sidebar binding fallback: `shell.*` keys use tenant chrome before resolver-only label(). */
+  private sidebarNavItemFallback(it: DosNavItem): string {
+    const key = (it.labelKey || it.id || '').toString();
+    if (key.startsWith('shell.')) {
+      const chrome = this.shellBinding.chromeString(key);
+      if (chrome) return chrome;
+    }
+    return this.label(it);
+  }
+
   readonly mobileBottomItems = computed<DosBottomNavItem[]>(() => {
+    const max = this.shellBinding.mobileBottomNavMaxItems();
+    if (max <= 0) return [];
     const out: DosBottomNavItem[] = [];
     for (const group of this.navGroups()) {
       const first = group.items.find((i: DosNavItem) => !!i.route && i.enabled !== false);
       if (!first) continue;
       out.push({
         id: first.id,
-        label: this.label(first),
+        label: this.sidebarNavItemFallback(first),
         icon: this.itemIcon(first, group.id),
         route: first.route,
         active: this.isActive(first),
       });
-      if (out.length >= (this.shellBinding.mobileBottomNavMaxItems() || 4)) break;
+      if (out.length >= max) break;
     }
     return out;
   });
@@ -1227,7 +1316,7 @@ export class ShellHostComponent {
     const reason = (item as DosNavItem & { disabledReason?: string }).disabledReason;
     if (!reason) return this.label(item);
     const key = `shell.nav.disabled.${reason.replace(/-/g, '_')}`;
-    const txt = this.labelResolver?.shellChromeString?.(key);
+    const txt = this.shellBinding.chromeString(key);
     return txt ? `${this.label(item)} — ${txt}` : this.label(item);
   }
 
@@ -1248,14 +1337,14 @@ export class ShellHostComponent {
 
   groupIcon(groupId: string): string {
     const key = `shell.group.icon.${groupId}`;
-    return this.labelResolver?.shellChromeString?.(key) || '';
+    return this.shellBinding.chromeString(key) || '';
   }
 
   itemIcon(item: DosNavItem, groupId: string): string {
     const direct = (item.icon || '').toString().trim();
     if (direct) return direct;
     const key = `shell.item.icon.${item.id}`;
-    const resolved = this.labelResolver?.shellChromeString?.(key);
+    const resolved = this.shellBinding.chromeString(key);
     if (resolved) return resolved;
     const grp = this.groupIcon(groupId);
     return grp || '';
@@ -1273,15 +1362,18 @@ export class ShellHostComponent {
   }
 
   private _syncTitle(): void {
-    // W-G: sync document <title> from active route data.title or breadcrumb
+    // W-G: sync document <title> from active route data.title or breadcrumb.
+    // Template from runtime: shell.chrome.titleTemplate (e.g. '{title} — {brand}').
+    const template = this.shellBinding.chromeString('shell.chrome.titleTemplate') || '{title} — {brand}';
+    const brand = this.headerBrand();
     const crumbs = this.breadcrumbs();
     if (crumbs.length > 0) {
       const last = crumbs[crumbs.length - 1];
       this.pageTitle.set(last.label);
-      this.titleSvc.setTitle(`${last.label} — ${this.headerBrand()}`);
+      this.titleSvc.setTitle(template.replace('{title}', last.label).replace('{brand}', brand));
     } else {
       this.pageTitle.set(null);
-      this.titleSvc.setTitle(this.headerBrand());
+      this.titleSvc.setTitle(brand);
     }
   }
 

@@ -357,6 +357,34 @@ export class WorkspaceShellBindingService {
     () => this.zonePropArray('header', 'accountMenuActions'),
   );
 
+  /**
+   * Generic numeric limit from any zone's props.
+   * Searches all surfaces in all zones for a dot-path key (e.g. 'shell.layout.mobileBottomNav.maxItems').
+   * Returns 0 when absent — never a hardcoded default.
+   */
+  shellLimit(key: string): number {
+    for (const row of Array.from(this._surfaces().values())) {
+      const props = row.props as Record<string, unknown> | undefined;
+      const v = this.nestedNumberProp(props, key);
+      if (v != null) return v;
+    }
+    return 0;
+  }
+
+  /**
+   * Generic structured policy from any zone's props.
+   * Searches all surfaces for a dot-path key returning a Record.
+   * Returns null when absent.
+   */
+  shellPolicy(key: string): Record<string, unknown> | null {
+    for (const row of Array.from(this._surfaces().values())) {
+      const props = row.props as Record<string, unknown> | undefined;
+      const v = this.nestedRecordProp(props, key);
+      if (v) return v;
+    }
+    return null;
+  }
+
   // ── Private zone-prop helpers ─────────────────────────────────────────────
   // Read from the FIRST surface in a zone that has the requested prop.
 

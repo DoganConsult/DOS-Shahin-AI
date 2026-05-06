@@ -23,4 +23,5 @@ __exportStar(require("./page-contract.js"), exports);
 __exportStar(require("./capability-registry.js"), exports);
 __exportStar(require("./workspace-resolver-contract.js"), exports);
 __exportStar(require("./workspace-gate-attributes.js"), exports);
+__exportStar(require("./shell-action.contract.js"), exports);
 //# sourceMappingURL=index.js.map

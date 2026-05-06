@@ -1,5 +1,29 @@
+import type { ShellAction } from '@dos/ui-contracts';
+
 export type WorkspaceShellKey = string;
 export type WorkspaceRuntimeZone = string;
+
+/**
+ * Canonical zone values used by shell-host for zoneHas() gating.
+ * DB source: dos.workspace_shell_binding → metadata.zone or props.zone.
+ * Known zones: header, sidebar, main, fab, right-rail, bottom-status,
+ * mobile-nav, mobile-drawer, toast, top-banners.
+ * Extensible via DB without FE release.
+ */
+export const WORKSPACE_SHELL_ZONES = [
+  'header',
+  'sidebar',
+  'main',
+  'top-banners',
+  'bottom-status',
+  'right-rail',
+  'fab',
+  'toast',
+  'mobile-nav',
+  'mobile-drawer',
+] as const;
+
+export type WorkspaceKnownRuntimeZone = (typeof WORKSPACE_SHELL_ZONES)[number];
 
 export interface WorkspaceShellCatalogEntry {
   readonly component_key: string;
@@ -64,6 +88,89 @@ export function carbonKeyFor(key: string): string | undefined {
   return workspaceShellCarbonMap.get(key);
 }
 
+// ── Runtime config types ──────────────────────────────────────────────────
+
+export interface WorkspaceShellActionItem {
+  id: string;
+  labelKey?: string;
+  destructive?: boolean;
+  action?: ShellAction;
+}
+
+export interface WorkspaceShellBannerTemplate {
+  id: string;
+  gate?: 'always' | 'trial-expired' | 'offline' | 'session-expiry' | 'impersonation' | 'error' | string;
+  kind?: string;
+  titleKey?: string;
+  messageKey?: string;
+  dismissible?: boolean;
+  actionLabelKey?: string;
+  action?: ShellAction;
+}
+
+export interface WorkspaceShellSessionExpiryPolicy {
+  warningMinutes?: number;
+  dangerMinutes?: number;
+}
+
+export interface WorkspaceShellRuntimeLayoutConfig {
+  mobileBottomNav?: { maxItems?: number };
+  breakpoints?: { largePx?: number };
+}
+
+export interface WorkspaceShellRuntimePolicyConfig {
+  sessionExpiry?: WorkspaceShellSessionExpiryPolicy;
+}
+
+export interface WorkspaceShellRuntimeChromeConfig {
+  strings?: Readonly<Record<string, string>>;
+  shortcuts?: Readonly<Record<string, string>>;
+  accountMenuActions?: readonly WorkspaceShellActionItem[];
+}
+
+export interface WorkspaceShellRuntimeConfig {
+  chrome?: WorkspaceShellRuntimeChromeConfig;
+  layout?: WorkspaceShellRuntimeLayoutConfig;
+  policies?: WorkspaceShellRuntimePolicyConfig;
+  bannerTemplates?: readonly WorkspaceShellBannerTemplate[];
+}
+
+// ── Nav row types (resolver response) ─────────────────────────────────────
+
+export interface WorkspaceRuntimeNavGroupRow {
+  module_code: string;
+  group_id: string;
+  sort_order?: number | null;
+  label_key?: string | null;
+  label_en?: string | null;
+  label_ar?: string | null;
+  enabled?: boolean | null;
+  version?: number | null;
+}
+
+export interface WorkspaceRuntimeNavItemRow {
+  module_code: string;
+  item_id: string;
+  group_id?: string | null;
+  sort_order?: number | null;
+  route?: string | null;
+  icon?: string | null;
+  permission?: string | null;
+  label_key?: string | null;
+  label_en?: string | null;
+  label_ar?: string | null;
+  badge?: number | string | null;
+  enabled?: boolean | null;
+  version?: number | null;
+}
+
+export interface WorkspaceRuntimeNavigation {
+  groups: readonly WorkspaceRuntimeNavGroupRow[];
+  items: readonly WorkspaceRuntimeNavItemRow[];
+}
+
+// ── Shell surface/binding types ───────────────────────────────────────────
+
 export interface PermissionAware {
   readonly perms_required: readonly string[];
 }
@@ -88,6 +195,8 @@ export interface WorkspaceShellResolverResponse {
   readonly componentRegistry?: readonly WorkspaceShellCatalogEntry[];
 }
 
+// ── UI item contracts (all use typed ShellAction) ─────────────────────────
+
 export interface WorkspaceI18nLabel {
   i18nKey: string;
   fallback?: string;
@@ -107,6 +216,7 @@ export interface WorkspaceHeaderAction {
   label: WorkspaceI18nLabel;
   icon?: string;
   ariaLabel?: string;
+  action?: ShellAction;
 }
 
 export interface WorkspaceNavItem {
@@ -116,7 +226,10 @@ export interface WorkspaceNavItem {
   route?: string;
   active?: boolean;
   badge?: number;
+  badgeCount?: number;
+  permission?: string;
   group?: string;
+  action?: ShellAction;
 }
 
 export interface StatusBarSignal {
@@ -125,7 +238,7 @@ export interface StatusBarSignal {
   kind?: string;
   level?: string;
   value?: string | number;
-  detailRoute?: string;
+  action?: ShellAction;
 }
 
 export interface ActionQueueItem {
@@ -134,7 +247,7 @@ export interface ActionQueueItem {
   origin: WorkspaceI18nLabel;
   status?: string;
   severity?: string;
-  route?: string;
+  action?: ShellAction;
   timestamp?: string;
   dueAt?: string;
 }
@@ -146,15 +259,18 @@ export interface AgentActivity {
   step: WorkspaceI18nLabel;
   state?: AgentActivityState;
   status?: AgentActivityState;
-  evidenceUri?: string;
+  agentId?: string;
+  avatarUri?: string;
+  action?: ShellAction;
 }
 
 export interface CommandSearchResult {
   id: string;
   label: WorkspaceI18nLabel;
-  route?: string;
+  action?: ShellAction;
   icon?: string;
-  category?: string;
+  category: 'route' | 'record' | 'action' | 'agent' | 'help';
+  hotkey?: string;
 }
 
 export interface ContextPanelView {
@@ -175,17 +291,18 @@ export interface InboxMessage {
   preview: WorkspaceI18nLabel;
   source?: InboxSource;
   priority?: InboxPriority;
-  route?: string;
+  action?: ShellAction;
   read?: boolean;
   unread?: boolean;
   timestamp?: string;
+  receivedAt?: string;
 }
 
 export interface QuickCreateAction {
   id: string;
   label: WorkspaceI18nLabel;
   icon?: string;
-  route?: string;
+  action?: ShellAction;
 }
 
 export interface SelectableTileProps { variant?: string; tone?: string; density?: string; }
