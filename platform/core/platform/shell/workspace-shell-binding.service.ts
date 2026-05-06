@@ -310,16 +310,23 @@ export class WorkspaceShellBindingService {
 
   /** Mobile bottom nav max items from runtime config. */
   readonly mobileBottomNavMaxItems = computed<number>(() => {
-    const v = this.zoneNumberProp('mobile-nav', 'maxItems');
-    return v != null && v > 0 ? v : 0;
+    for (const row of this.surfacesByZone('mobile-nav')) {
+      const props = row.props as Record<string, unknown> | undefined;
+      const nested = this.nestedNumberProp(props, 'shell.layout.mobileBottomNav.maxItems');
+      if (nested != null) return nested;
+      const flat = props?.['maxItems'];
+      if (typeof flat === 'number') return flat;
+    }
+    return 0;
   });
 
   /** Session expiry policy from runtime. */
   readonly sessionExpiryPolicy = computed<{ warningMinutes: number; dangerMinutes: number }>(() => {
     for (const row of this.surfacesByZone('top-banners')) {
       const props = row.props as Record<string, unknown> | undefined;
-      const policy = props?.['sessionExpiryPolicy'] as Record<string, unknown> | undefined;
-      if (policy) {
+      const nested = this.nestedRecordProp(props, 'shell.policies.sessionExpiry');
+      const policy = (nested ?? props?.['sessionExpiryPolicy']) as Record<string, unknown> | undefined;
+      if (policy && typeof policy === 'object') {
         return {
           warningMinutes: typeof policy['warningMinutes'] === 'number' ? policy['warningMinutes'] as number : 0,
           dangerMinutes: typeof policy['dangerMinutes'] === 'number' ? policy['dangerMinutes'] as number : 0,
@@ -369,6 +376,34 @@ export class WorkspaceShellBindingService {
       if (typeof v === 'number') return v;
     }
     return null;
+  }
+
+  /** Dot-path read under props (e.g. shell.layout.mobileBottomNav.maxItems). */
+  private nestedNumberProp(
+    props: Record<string, unknown> | undefined,
+    path: string,
+  ): number | null {
+    const v = this.walkNested(props, path);
+    return typeof v === 'number' ? v : null;
+  }
+
+  private nestedRecordProp(
+    props: Record<string, unknown> | undefined,
+    path: string,
+  ): Record<string, unknown> | undefined {
+    const v = this.walkNested(props, path);
+    return v && typeof v === 'object' && !Array.isArray(v) ? (v as Record<string, unknown>) : undefined;
+  }
+
+  private walkNested(props: Record<string, unknown> | undefined, path: string): unknown {
+    if (!props || !path.trim()) return undefined;
+    const parts = path.split('.');
+    let cur: unknown = props;
+    for (const p of parts) {
+      if (!cur || typeof cur !== 'object' || Array.isArray(cur)) return undefined;
+      cur = (cur as Record<string, unknown>)[p];
+    }
+    return cur;
   }
 
   private zoneStringProp(zone: WorkspaceShellZone, propName: string): string | null {
