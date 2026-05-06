@@ -41,6 +41,8 @@ const GUARDS = [
   'product-no-runtime.mjs',
   // Canonical SPA (@dos/platform-app) + nav roots — no static nav as runtime truth.
   'lint-no-static-nav-fallback.mjs',
+  // Hard-kill legacy mode — no DB DTOs, no legacy adapters in frontend shell.
+  'lint-no-legacy-uios-shell.mjs',
 ];
 
 let pass = 0, fail = 0;

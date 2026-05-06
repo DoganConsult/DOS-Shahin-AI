@@ -64,7 +64,7 @@ const TAB_LABELS: Record<ContextPanelTab, string> = {
                 </div>
               } @else if (!v.payload) {
                 <div class="dos-context-panel__empty">
-                  <p>{{ v.emptyMessage?.fallback ?? v.emptyMessage?.i18nKey ?? 'No context available.' }}</p>
+                  <p>{{ v.emptyMessage?.fallback ?? v.emptyMessage?.i18nKey ?? '' }}</p>
                 </div>
               } @else {
                 <!-- Real payload: use cds-accordion for collapsible sub-sections -->

@@ -20,13 +20,13 @@ export type WorkspaceRuntimeZone = WorkspaceKnownRuntimeZone | (string & {});
 export type WorkspaceShellZone = WorkspaceRuntimeZone;
 
 export interface WorkspaceShellCatalogEntry {
-  readonly component_key: string;
-  readonly carbon_key?: string | null;
+  readonly componentKey: string;
+  readonly carbonKey?: string | null;
   readonly vendor?: string | null;
-  readonly schema_version?: string | null;
+  readonly schemaVersion?: string | null;
   readonly metadata?: Readonly<Record<string, unknown>> | null;
-  readonly approval_status?: string | null;
-  readonly approved_at?: string | null;
+  readonly approvalStatus?: string | null;
+  readonly approvedAt?: string | null;
   readonly zone?: WorkspaceRuntimeZone | null;
 }
 
@@ -41,8 +41,7 @@ export const WORKSPACE_SHELL_BANDS: readonly WorkspaceShellBand[] = Object.freez
 
 export interface WorkspaceShellBand {
   readonly band: string;
-  readonly labelEn: string;
-  readonly labelAr: string;
+  readonly label: string;
   readonly keys: readonly WorkspaceShellKey[];
   readonly count: number;
 }
@@ -52,11 +51,11 @@ export function registerWorkspaceShellCatalog(entries: readonly WorkspaceShellCa
   workspaceShellCarbonMap.clear();
   workspaceShellCatalog.clear();
   for (const entry of entries) {
-    const key = entry.component_key;
+    const key = entry.componentKey;
     if (!key) continue;
     workspaceShellKeySet.add(key);
     workspaceShellCatalog.set(key, entry);
-    if (entry.carbon_key) workspaceShellCarbonMap.set(key, entry.carbon_key);
+    if (entry.carbonKey) workspaceShellCarbonMap.set(key, entry.carbonKey);
   }
 }
 
@@ -80,10 +79,6 @@ export function assertWorkspaceShellKey(value: string): asserts value is Workspa
 
 export function carbonKeyFor(key: string): string | undefined {
   return workspaceShellCarbonMap.get(key);
-}
-
-export interface PermissionAware {
-  readonly perms_required: readonly string[];
 }
 
 export interface WorkspaceShellActionItem {
@@ -142,18 +137,29 @@ export interface WorkspaceShellRuntimeConfig {
   banners?: readonly WorkspaceShellBannerTemplate[];
 }
 
+/** UI-OS runtime nav label — no DB fields. */
+export interface WorkspaceI18nLabel {
+  label?: string;
+  i18nKey?: string;
+  fallback?: string;
+}
+
+/** Nav group as emitted by UI-OS resolver (camelCase only). */
 export interface WorkspaceRuntimeNavGroupRow {
   moduleCode: string;
   groupId: string;
   sortOrder?: number | null;
+  /** Pre-resolved display label from UI-OS resolver. */
+  label?: string;
+  /** i18n key for client-side translation override. */
   i18nKey?: string | null;
+  /** English fallback when i18n lookup misses. */
   fallback?: string | null;
-  labelEn?: string | null;
-  labelAr?: string | null;
   enabled?: boolean | null;
   version?: number | null;
 }
 
+/** Nav item as emitted by UI-OS resolver (camelCase only). */
 export interface WorkspaceRuntimeNavItemRow {
   moduleCode: string;
   itemId: string;
@@ -162,10 +168,12 @@ export interface WorkspaceRuntimeNavItemRow {
   action?: ShellAction | null;
   icon?: string | null;
   permission?: string | null;
+  /** Pre-resolved display label from UI-OS resolver. */
+  label?: string;
+  /** i18n key for client-side translation override. */
   i18nKey?: string | null;
+  /** English fallback when i18n lookup misses. */
   fallback?: string | null;
-  labelEn?: string | null;
-  labelAr?: string | null;
   badge?: number | string | null;
   enabled?: boolean | null;
   version?: number | null;
@@ -176,12 +184,13 @@ export interface WorkspaceRuntimeNavigation {
   items: readonly WorkspaceRuntimeNavItemRow[];
 }
 
+/** Surface binding row — camelCase only, no DB DTOs. */
 export interface WorkspaceShellBindingRow {
-  readonly component_key: string;
-  readonly carbon_key?: string;
+  readonly componentKey: string;
+  readonly carbonKey?: string;
   readonly enabled: boolean;
   readonly position: number;
-  readonly perms_required: readonly string[];
+  readonly permsRequired: readonly string[];
   readonly props: Readonly<Record<string, unknown>>;
   readonly version: number;
   readonly zone?: WorkspaceRuntimeZone;
@@ -194,11 +203,6 @@ export interface WorkspaceShellResolverResponse {
   readonly zones: Readonly<Record<string, readonly WorkspaceShellBindingRow[]>>;
   readonly knownKeys: readonly string[];
   readonly componentRegistry?: readonly WorkspaceShellCatalogEntry[];
-}
-
-export interface WorkspaceI18nLabel {
-  i18nKey: string;
-  fallback?: string;
 }
 
 export interface WorkspaceHeaderContext {

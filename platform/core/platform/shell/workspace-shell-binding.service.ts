@@ -96,15 +96,14 @@ export class WorkspaceShellBindingService {
   readonly loaded   = this._loaded.asReadonly();
 
   readonly navConfig = computed<DosShellNavConfig>(() => {
-    const language = this.prefs.language();
     const groupsByKey = new Map<string, DosNavGroup>();
 
     for (const group of this._navGroupsRaw()) {
       if (group.enabled === false) continue;
-      const key = this.navGroupKey(group.moduleCode, group.groupId);
+      const key = `${group.moduleCode}:${group.groupId}`;
       groupsByKey.set(key, {
         id: key,
-        label: this.resolveRuntimeLabel(group.i18nKey, group.fallback, group.labelEn, group.labelAr, language),
+        label: group.label ?? group.fallback ?? group.i18nKey ?? '',
         order: Number(group.sortOrder) || 0,
         items: [],
       });
@@ -115,7 +114,7 @@ export class WorkspaceShellBindingService {
       if (!item.action) continue;
       if (item.permission && !this.access.hasPermission(item.permission)) continue;
 
-      const groupKey = this.navGroupKey(item.moduleCode, item.groupId ?? 'ungrouped');
+      const groupKey = `${item.moduleCode}:${item.groupId ?? 'ungrouped'}`;
       const targetGroup = groupsByKey.get(groupKey) ?? {
         id: groupKey,
         label: '',
@@ -124,12 +123,13 @@ export class WorkspaceShellBindingService {
       };
       if (!groupsByKey.has(groupKey)) groupsByKey.set(groupKey, targetGroup);
 
-      const badge = this.normalizeNavBadge(item.badge);
+      const rawBadge = item.badge;
+      const badge = typeof rawBadge === 'number' && Number.isFinite(rawBadge) ? String(rawBadge) : typeof rawBadge === 'string' && rawBadge.trim() ? rawBadge.trim() : undefined;
       const navItem: DosNavItem = {
         id: item.itemId,
-        label: this.resolveRuntimeLabel(item.i18nKey, item.fallback, item.labelEn, item.labelAr, language),
+        label: item.label ?? item.fallback ?? item.i18nKey ?? '',
         route: item.action.kind === 'navigate' ? item.action.path : undefined,
-        icon: this.normalizeIcon(item.icon),
+        icon: item.icon?.trim() || undefined,
         badge,
         requiredPermission: item.permission ?? undefined,
         moduleCode: item.moduleCode,
@@ -264,7 +264,7 @@ export class WorkspaceShellBindingService {
       return !this._loaded();
     }
     if (row.enabled === false) return false;
-    const perms = Array.isArray(row.perms_required) ? row.perms_required : [];
+    const perms = Array.isArray(row.permsRequired) ? row.permsRequired : [];
     for (const p of perms) {
       if (!this.access.hasPermission(p)) return false;
     }
@@ -279,7 +279,7 @@ export class WorkspaceShellBindingService {
 
   surfacesByZone(zone: WorkspaceShellZone): WorkspaceShellSurface[] {
     return Array.from(this._surfaces().values())
-      .filter((row) => this.resolveZone(row) === zone && this.isSurfaceAllowed(row.component_key))
+      .filter((row) => row.zone === zone && this.isSurfaceAllowed(row.componentKey))
       .sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
   }
 
@@ -287,15 +287,7 @@ export class WorkspaceShellBindingService {
     return this.surfacesByZone(zone).length > 0 || !this._loaded();
   }
 
-  private resolveZone(row: WorkspaceShellSurface): WorkspaceShellZone | null {
-    // Zone is fully resolver-driven. The resolver already merged
-    // registry metadata.zone with per-tenant props.zone overrides.
-    if (row.zone && typeof row.zone === 'string' && row.zone.trim()) return row.zone;
-    const props = row.props as Record<string, unknown> | undefined;
-    const propZone = props && typeof props['zone'] === 'string' ? props['zone'] as string : null;
-    if (propZone && propZone.trim()) return propZone;
-    return null;
-  }
+  // Zone is fully resolver-driven — no browser-side fallback resolution.
 
   // Auto-refresh when the active tenant flips.
   private readonly tenantEffect = effect(() => {
@@ -351,8 +343,16 @@ export class WorkspaceShellBindingService {
     }
     const next = new Map<string, WorkspaceShellSurface>();
     for (const row of surfaces) {
-      if (!row || typeof row.component_key !== 'string') continue;
-      next.set(row.component_key, row);
+      if (!row || typeof row !== 'object') continue;
+      const legacy = row as WorkspaceShellSurface & { component_key?: string };
+      const key =
+        typeof legacy.componentKey === 'string' && legacy.componentKey.trim()
+          ? legacy.componentKey.trim()
+          : typeof legacy.component_key === 'string' && legacy.component_key.trim()
+            ? legacy.component_key.trim()
+            : '';
+      if (!key) continue;
+      next.set(key, { ...legacy, componentKey: key });
     }
     this._surfaces.set(next);
     this._navGroupsRaw.set(Array.isArray(navigation?.groups) ? navigation.groups : []);
@@ -370,7 +370,7 @@ export class WorkspaceShellBindingService {
    * DB key path: workspace_shell_binding → props.shell.chrome.labels.{key}
    * Returns '' when absent — never returns a hardcoded English fallback.
    */
-  chromeString(key: string): string {
+  runtimeChromeLabel(key: string): string {
     for (const row of Array.from(this._surfaces().values())) {
       const props = row.props as Record<string, unknown> | undefined;
       const labels = this.nestedRecordProp(props, 'shell.chrome.labels');
@@ -391,12 +391,12 @@ export class WorkspaceShellBindingService {
 
   /** Mobile bottom nav max items from runtime config. */
   readonly mobileBottomNavMaxItems = computed<number>(() => {
-    return this.shellLimit('shell.layout.mobileBottomNav.maxItems');
+    return this.runtimeNumber('shell.layout.mobileBottomNav.maxItems');
   });
 
   /** Session expiry policy from runtime. */
   readonly sessionExpiryPolicy = computed<{ warningMinutes: number; dangerMinutes: number }>(() => {
-    const policy = this.shellPolicy('shell.policies.sessionExpiry');
+    const policy = this.runtimePolicy('shell.policies.sessionExpiry');
     if (policy) {
       return {
         warningMinutes: typeof policy['warningMinutes'] === 'number' ? policy['warningMinutes'] as number : 0,
@@ -447,10 +447,10 @@ export class WorkspaceShellBindingService {
       banners.push({
         id: tpl.id,
         kind: (tpl.kind ?? 'info') as ShellBanner['kind'],
-        title: this.chromeString(tpl.titleKey ?? ''),
-        message: this.chromeString(tpl.messageKey ?? ''),
+        title: this.runtimeChromeLabel(tpl.titleKey ?? ''),
+        message: this.runtimeChromeLabel(tpl.messageKey ?? ''),
         dismissible: !!tpl.dismissible,
-        actionLabel: tpl.actionLabelKey ? this.chromeString(tpl.actionLabelKey) : undefined,
+        actionLabel: tpl.actionLabelKey ? this.runtimeChromeLabel(tpl.actionLabelKey) : undefined,
         action: tpl.action,
       });
     }
@@ -472,7 +472,7 @@ export class WorkspaceShellBindingService {
 
 
   /** Responsive breakpoint from runtime. */
-  readonly desktopMinPx = computed<number>(() => this.shellLimit('shell.layout.breakpoints.desktopMinPx'));
+  readonly desktopMinPx = computed<number>(() => this.runtimeNumber('shell.layout.breakpoints.desktopMinPx'));
 
   /** Keyboard shortcuts from runtime. */
   readonly shellShortcuts = computed<WorkspaceShellShortcut[]>(() => {
@@ -503,7 +503,7 @@ export class WorkspaceShellBindingService {
    * Searches all surfaces in all zones for a dot-path key (e.g. 'shell.layout.mobileBottomNav.maxItems').
    * Returns 0 when absent — never a hardcoded default.
    */
-  shellLimit(key: string): number {
+  runtimeNumber(key: string): number {
     for (const row of Array.from(this._surfaces().values())) {
       const props = row.props as Record<string, unknown> | undefined;
       const v = this.nestedNumberProp(props, key);
@@ -517,7 +517,7 @@ export class WorkspaceShellBindingService {
    * Searches all surfaces for a dot-path key returning a Record.
    * Returns null when absent.
    */
-  shellPolicy(key: string): Record<string, unknown> | null {
+  runtimePolicy(key: string): Record<string, unknown> | null {
     for (const row of Array.from(this._surfaces().values())) {
       const props = row.props as Record<string, unknown> | undefined;
       const v = this.nestedRecordProp(props, key);
@@ -578,56 +578,23 @@ export class WorkspaceShellBindingService {
 
   private zoneStringProp(zone: WorkspaceShellZone, propName: string): string | null {
     for (const row of this.surfacesByZone(zone)) {
-      const result = this.stringProp(row.component_key, propName);
+      const result = this.stringProp(row.componentKey, propName);
       if (result) return result;
     }
     return null;
   }
 
-  private navGroupKey(moduleCode: string, groupId: string): string {
-    return `${moduleCode}:${groupId}`;
-  }
-
-  private normalizeNavBadge(raw: number | string | null | undefined): string | undefined {
-    if (typeof raw === 'number' && Number.isFinite(raw)) return String(raw);
-    if (typeof raw === 'string' && raw.trim()) return raw.trim();
-    return undefined;
-  }
-
-  private normalizeIcon(raw: string | null | undefined): string | undefined {
-    return typeof raw === 'string' && raw.trim() ? raw.trim() : undefined;
-  }
-
-  private resolveRuntimeLabel(
-    i18nKey: string | null | undefined,
-    fallback: string | null | undefined,
-    labelEn: string | null | undefined,
-    labelAr: string | null | undefined,
-    language: 'en' | 'ar',
-  ): string {
-    if (language === 'ar' && typeof labelAr === 'string' && labelAr.trim()) return labelAr.trim();
-    if (language === 'en' && typeof labelEn === 'string' && labelEn.trim()) return labelEn.trim();
-    if (typeof labelEn === 'string' && labelEn.trim()) return labelEn.trim();
-    if (typeof labelAr === 'string' && labelAr.trim()) return labelAr.trim();
-    if (typeof fallback === 'string' && fallback.trim()) return fallback.trim();
-    if (typeof i18nKey === 'string' && i18nKey.trim()) return this.chromeString(i18nKey.trim());
-    return '';
-  }
-
-  private normalizeLabel(raw: unknown, fallbackKey?: string): WorkspaceI18nLabel {
-    if (typeof raw === 'string') {
-      return { i18nKey: '', fallback: raw.trim() || undefined };
-    }
+  private toLabel(raw: unknown): WorkspaceI18nLabel {
+    if (typeof raw === 'string') return { fallback: raw.trim() || undefined };
     if (raw && typeof raw === 'object' && !Array.isArray(raw)) {
-      const record = raw as Record<string, unknown>;
-      const i18nKey = typeof record['i18nKey'] === 'string' ? (record['i18nKey'] as string) : '';
-      const fallback = typeof record['fallback'] === 'string' ? (record['fallback'] as string) : undefined;
+      const r = raw as Record<string, unknown>;
       return {
-        i18nKey: i18nKey || fallbackKey || '',
-        fallback: fallback?.trim() || undefined,
+        label: typeof r['label'] === 'string' ? r['label'] as string : undefined,
+        i18nKey: typeof r['i18nKey'] === 'string' ? r['i18nKey'] as string : undefined,
+        fallback: typeof r['fallback'] === 'string' ? r['fallback'] as string : undefined,
       };
     }
-    return { i18nKey: fallbackKey ?? '', fallback: undefined };
+    return {};
   }
 
   private normalizeStatusBarSignal(raw: unknown): StatusBarSignal | null {
@@ -637,7 +604,7 @@ export class WorkspaceShellBindingService {
     if (!id) return null;
     const signal: StatusBarSignal = {
       id,
-      label: this.normalizeLabel(record['label'], id),
+      label: this.toLabel(record['label']),
     };
     if (typeof record['kind'] === 'string') signal.kind = record['kind'] as string;
     if (typeof record['level'] === 'string') signal.level = record['level'] as string;
@@ -654,8 +621,8 @@ export class WorkspaceShellBindingService {
     if (!id) return null;
     const item: ActionQueueItem = {
       id,
-      title: this.normalizeLabel(record['title'], id),
-      origin: this.normalizeLabel(record['origin']),
+      title: this.toLabel(record['title']),
+      origin: this.toLabel(record['origin']),
     };
     if (typeof record['status'] === 'string') item.status = record['status'] as string;
     if (typeof record['severity'] === 'string') item.severity = record['severity'] as string;
@@ -669,11 +636,11 @@ export class WorkspaceShellBindingService {
   private normalizeAgentActivity(raw: unknown): AgentActivity | null {
     if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return null;
     const record = raw as Record<string, unknown>;
-    const name = this.normalizeLabel(record['agentName'], '');
-    if (!name.i18nKey && !name.fallback) return null;
+    const name = this.toLabel(record['agentName']);
+    if (!name.i18nKey && !name.fallback && !name.label) return null;
     const activity: AgentActivity = {
       agentName: name,
-      step: this.normalizeLabel(record['step']),
+      step: this.toLabel(record['step']),
     };
     if (typeof record['agentId'] === 'string') activity.agentId = record['agentId'] as string;
     if (typeof record['avatarUri'] === 'string') activity.avatarUri = record['avatarUri'] as string;
@@ -691,9 +658,9 @@ export class WorkspaceShellBindingService {
     if (!id) return null;
     const view: ContextPanelView = {
       id,
-      title: this.normalizeLabel(record['title'], id),
+      title: this.toLabel(record['title']),
     };
-    if (record['emptyMessage'] != null) view.emptyMessage = this.normalizeLabel(record['emptyMessage']);
+    if (record['emptyMessage'] != null) view.emptyMessage = this.toLabel(record['emptyMessage']);
     if (typeof record['tab'] === 'string') view.tab = record['tab'] as string;
     return view;
   }
@@ -705,8 +672,8 @@ export class WorkspaceShellBindingService {
     if (!id) return null;
     const message: InboxMessage = {
       id,
-      subject: this.normalizeLabel(record['subject'], id),
-      preview: this.normalizeLabel(record['preview']),
+      subject: this.toLabel(record['subject']),
+      preview: this.toLabel(record['preview']),
     };
     if (typeof record['source'] === 'string') message.source = record['source'] as string;
     if (typeof record['priority'] === 'string') message.priority = record['priority'] as string;
@@ -726,7 +693,7 @@ export class WorkspaceShellBindingService {
     if (!id) return null;
     const actionItem: QuickCreateAction = {
       id,
-      label: this.normalizeLabel(record['label'], id),
+      label: this.toLabel(record['label']),
     };
     actionItem.icon = this.normalizeIcon(typeof record['icon'] === 'string' ? record['icon'] as string : undefined);
     if (typeof record['hotkey'] === 'string') actionItem.hotkey = record['hotkey'] as string;
@@ -742,7 +709,7 @@ export class WorkspaceShellBindingService {
     if (!id) return null;
     const result: CommandSearchResult = {
       id,
-      label: this.normalizeLabel(record['label'], id),
+      label: this.toLabel(record['label']),
     };
     result.icon = this.normalizeIcon(typeof record['icon'] === 'string' ? record['icon'] as string : undefined);
     if (typeof record['category'] === 'string') result.category = record['category'] as string;

@@ -89,6 +89,17 @@ function resolveSurfaceZone(
   return catalog.zoneByKey.get(row.component_key) ?? null;
 }
 
+// ── Frontend-facing surface DTO (camelCase only) ───────────────────────
+interface FrontendSurface {
+  componentKey: string;
+  enabled: boolean;
+  position: number;
+  permsRequired: readonly string[];
+  props: Record<string, unknown>;
+  version: number;
+  zone?: string;
+}
+
 function normalizeSurface(
   row: WorkspaceShellRow,
   catalog: WorkspaceShellCatalog,
@@ -101,19 +112,30 @@ function normalizeSurface(
   };
 }
 
+/** Map DB row → camelCase-only frontend surface. No snake_case crosses this boundary. */
+function toFrontendSurface(row: WorkspaceShellRow): FrontendSurface {
+  return {
+    componentKey: row.component_key,
+    enabled: row.enabled,
+    position: row.position,
+    permsRequired: Array.isArray(row.perms_required) ? row.perms_required : [],
+    props: row.props ?? {},
+    version: row.version,
+    ...(row.zone ? { zone: row.zone } : {}),
+  };
+}
+
 function groupSurfacesByZone(
   rows: WorkspaceShellRow[],
   catalog: WorkspaceShellCatalog,
-): Record<string, WorkspaceShellRow[]> {
-  // Seed with every distinct zone observed in the registry plus any
-  // zone introduced by tenant-level binding overrides (props.zone).
-  const grouped: Record<string, WorkspaceShellRow[]> = {};
+): Record<string, FrontendSurface[]> {
+  const grouped: Record<string, FrontendSurface[]> = {};
   for (const zone of catalog.runtimeZones) grouped[zone] = [];
   for (const row of rows) {
     const zone = row.zone ?? resolveSurfaceZone(row, catalog);
     if (!zone) continue;
     if (!grouped[zone]) grouped[zone] = [];
-    grouped[zone].push(row);
+    grouped[zone].push(toFrontendSurface(row));
   }
   for (const zone of Object.keys(grouped)) {
     grouped[zone].sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
@@ -127,6 +149,14 @@ interface ModuleOrderRow {
   enabled: boolean | null;
 }
 
+interface ModuleNavGroupRow extends ModuleOrderRow {
+  group_id: string;
+  label_key: string | null;
+  label_en: string | null;
+  label_ar: string | null;
+  version: number | null;
+}
+
 interface PageOrderRow {
   module_code: string;
   item_id: string;
@@ -135,6 +165,15 @@ interface PageOrderRow {
   route: string | null;
   permission: string | null;
   enabled: boolean | null;
+}
+
+interface ModuleNavItemRow extends PageOrderRow {
+  icon: string | null;
+  label_key: string | null;
+  label_en: string | null;
+  label_ar: string | null;
+  badge: string | number | null;
+  version: number | null;
 }
 
 function buildModuleOrder(groups: ModuleOrderRow[], items: PageOrderRow[]) {
@@ -169,6 +208,69 @@ function buildPageOrder(items: PageOrderRow[]) {
     .sort((a, b) => a.moduleCode.localeCompare(b.moduleCode) || a.sortOrder - b.sortOrder || a.itemId.localeCompare(b.itemId));
 }
 
+/** First language tag from Accept-Language (strip quality, primary subtag only). */
+function primaryLocale(acceptLanguage: string): string {
+  const raw = acceptLanguage.trim();
+  if (!raw) return 'en';
+  const first = raw.split(',')[0]?.trim() ?? 'en';
+  const tag = first.split(';')[0]?.trim().toLowerCase() ?? 'en';
+  return tag.split('-')[0] || 'en';
+}
+
+/** Resolve a display label from DB bilingual fields using primary locale tag (e.g. ar, en). */
+function resolveLabel(labelEn: string | null, labelAr: string | null, localePrimary: string): string {
+  if (localePrimary.startsWith('ar') && labelAr) return labelAr;
+  return labelEn ?? labelAr ?? '';
+}
+
+/** Nav row shape: single nested label (WorkspaceI18nLabel); server fills label.label from Accept-Language. */
+function buildNavI18nLabel(
+  labelEn: string | null,
+  labelAr: string | null,
+  labelKey: string | null,
+  localePrimary: string,
+): { label: { i18nKey?: string; fallback?: string; label?: string } } {
+  const resolved = resolveLabel(labelEn, labelAr, localePrimary).trim();
+  const fallback = typeof labelEn === 'string' && labelEn.trim() ? labelEn.trim() : undefined;
+  const i18nKey = typeof labelKey === 'string' && labelKey.trim() ? labelKey.trim() : undefined;
+  return {
+    label: {
+      ...(i18nKey ? { i18nKey } : {}),
+      ...(fallback ? { fallback } : {}),
+      ...(resolved ? { label: resolved } : {}),
+    },
+  };
+}
+
+interface DynamicUiRegistryRow {
+  component_key: string;
+  vendor: string | null;
+  carbon_key: string | null;
+  schema_version: string | null;
+  metadata: Record<string, unknown> | null;
+  approval_status: string | null;
+  approved_at: string | null;
+}
+
+/** DB registry row → camelCase WorkspaceShellCatalogEntry shape for SPA + registerWorkspaceShellCatalog. */
+function mapRegistryRowToCatalogEntry(row: DynamicUiRegistryRow) {
+  const meta = row.metadata ?? {};
+  const zone =
+    typeof meta.zone === 'string' && meta.zone.trim()
+      ? (meta.zone as WorkspaceRuntimeZone)
+      : null;
+  return {
+    componentKey: row.component_key,
+    carbonKey: row.carbon_key,
+    vendor: row.vendor,
+    schemaVersion: row.schema_version,
+    metadata: row.metadata,
+    approvalStatus: row.approval_status,
+    approvedAt: row.approved_at ? String(row.approved_at) : null,
+    zone,
+  };
+}
+
 async function loadWorkspaceSurfaces(
   pool: DbPool,
   tenantId: string,
@@ -196,17 +298,29 @@ export function createWorkspaceShellRouter(pool: DbPool): Router {
     try {
       const catalog = await loadWorkspaceShellCatalog(pool);
       const surfaces = await loadWorkspaceSurfaces(pool, tenantId, catalog);
+      const feSurfaces = surfaces.map(toFrontendSurface);
       const aggregateVersion = surfaces.reduce(
         (acc, r) => acc + (r.version ?? 0),
         0,
       );
+      const componentRegistry = catalog.registry.map((r) =>
+        mapRegistryRowToCatalogEntry({
+          component_key: r.component_key,
+          vendor: r.vendor,
+          carbon_key: r.carbon_key,
+          schema_version: r.schema_version,
+          metadata: r.metadata,
+          approval_status: r.approval_status,
+          approved_at: r.approved_at,
+        }),
+      );
       res.json({
         tenantId,
         version: aggregateVersion,
-        surfaces,
+        surfaces: feSurfaces,
         zones: groupSurfacesByZone(surfaces, catalog),
         knownKeys: catalog.knownKeys,
-        componentRegistry: catalog.registry,
+        componentRegistry,
       });
     } catch (e) {
       res.status(500).json({
@@ -233,6 +347,8 @@ export function createWorkspaceShellRouter(pool: DbPool): Router {
         ?? '',
     ).trim();
     const productCode = String(req.header('x-product-code') ?? req.query.productCode ?? 'shahin-ai').trim() || 'shahin-ai';
+    const acceptLang = String(req.header('accept-language') ?? 'en').trim();
+    const localePrimary = primaryLocale(acceptLang);
     if (!tenantId) {
       res.status(400).json({ error: 'tenantId is required' });
       return;
@@ -241,6 +357,7 @@ export function createWorkspaceShellRouter(pool: DbPool): Router {
     try {
       const catalog = await loadWorkspaceShellCatalog(pool);
       const surfaces = await loadWorkspaceSurfaces(pool, tenantId, catalog);
+      const feSurfaces = surfaces.map(toFrontendSurface);
       const shellVersion = surfaces.reduce((acc, r) => acc + (r.version ?? 0), 0);
       const [
         navGroups,
@@ -280,14 +397,48 @@ export function createWorkspaceShellRouter(pool: DbPool): Router {
           [tenantId, userId],
         ),
       ]);
-      const moduleOrder = buildModuleOrder(navGroups.rows as ModuleOrderRow[], navItems.rows as PageOrderRow[]);
-      const pageOrder = buildPageOrder(navItems.rows as PageOrderRow[]);
+      const moduleOrder = buildModuleOrder(
+        navGroups.rows as ModuleNavGroupRow[],
+        navItems.rows as ModuleNavItemRow[],
+      );
+      const pageOrder = buildPageOrder(navItems.rows as ModuleNavItemRow[]);
       const catalogVersion = {
         shell: shellVersion,
         nav: [...navGroups.rows, ...navItems.rows].reduce((acc, r) => acc + (Number(r.version) || 0), 0),
         routes: routeBindings.rows.reduce((acc, r) => acc + (Number(r.version) || 0), 0),
         registryCount: registry.rowCount,
       };
+
+      // ── Normalize nav groups: nested label only (WorkspaceI18nLabel) ──
+      const feNavGroups = (navGroups.rows as ModuleNavGroupRow[]).map((r) => ({
+        moduleCode: r.module_code,
+        groupId: r.group_id,
+        sortOrder: r.sort_order ?? null,
+        ...buildNavI18nLabel(r.label_en, r.label_ar, r.label_key, localePrimary),
+        enabled: r.enabled ?? true,
+        version: r.version ?? null,
+      }));
+
+      // ── Normalize nav items: DB route → typed ShellAction ──────────
+      const feNavItems = (navItems.rows as ModuleNavItemRow[]).map((r) => {
+        const route = r.route ?? null;
+        return {
+          moduleCode: r.module_code,
+          itemId: r.item_id,
+          groupId: r.group_id ?? null,
+          sortOrder: r.sort_order ?? null,
+          action: route ? { kind: 'navigate' as const, path: route } : null,
+          icon: r.icon ?? null,
+          permission: r.permission ?? null,
+          ...buildNavI18nLabel(r.label_en, r.label_ar, r.label_key, localePrimary),
+          badge: r.badge ?? null,
+          enabled: r.enabled ?? true,
+          version: r.version ?? null,
+        };
+      });
+
+      const componentRegistry = (registry.rows as DynamicUiRegistryRow[]).map(mapRegistryRowToCatalogEntry);
+
       res.json({
         tenantId,
         userId: userId || null,
@@ -296,42 +447,15 @@ export function createWorkspaceShellRouter(pool: DbPool): Router {
         catalogVersion,
         shell: {
           version: shellVersion,
-          surfaces,
+          surfaces: feSurfaces,
           zones: groupSurfacesByZone(surfaces, catalog),
           knownKeys: catalog.knownKeys,
-          componentRegistry: catalog.registry,
+          componentRegistry,
         },
+        componentRegistry,
         navigation: {
-          groups: (navGroups.rows as any[]).map((r) => ({
-            moduleCode: r.module_code,
-            groupId: r.group_id,
-            sortOrder: r.sort_order ?? null,
-            i18nKey: r.label_key ?? null,
-            fallback: r.label_en ?? null,
-            labelEn: r.label_en ?? null,
-            labelAr: r.label_ar ?? null,
-            enabled: r.enabled ?? true,
-            version: r.version ?? null,
-          })),
-          items: (navItems.rows as any[]).map((r) => {
-            const route = r.route ?? null;
-            return {
-              moduleCode: r.module_code,
-              itemId: r.item_id,
-              groupId: r.group_id ?? null,
-              sortOrder: r.sort_order ?? null,
-              action: route ? { kind: 'navigate' as const, path: route } : null,
-              icon: r.icon ?? null,
-              permission: r.permission ?? null,
-              i18nKey: r.label_key ?? null,
-              fallback: r.label_en ?? null,
-              labelEn: r.label_en ?? null,
-              labelAr: r.label_ar ?? null,
-              badge: r.badge ?? null,
-              enabled: r.enabled ?? true,
-              version: r.version ?? null,
-            };
-          }),
+          groups: feNavGroups,
+          items: feNavItems,
           productWorkspace: {
             moduleOrder,
             pageOrder,
@@ -359,7 +483,7 @@ export function createWorkspaceShellRouter(pool: DbPool): Router {
           probes: probes.rows,
         },
         pageInfrastructure: {
-          surfaces: surfaces.filter((s) => (s.zone ?? resolveSurfaceZone(s, catalog)) === 'main'),
+          surfaces: surfaces.filter((s) => (s.zone ?? resolveSurfaceZone(s, catalog)) === 'main').map(toFrontendSurface),
         },
       });
     } catch (e) {

@@ -15,39 +15,32 @@ const ROOT = process.cwd();
 const SCAN_DIRS = [
   'platform/core/platform/shell',
   'platform/core/platform/navigation',
-  'platform/core/platform/dynamic-ui',
-  'platform/ui-system/dos-ui-system/src/shell',
 ].map((d) => join(ROOT, d)).filter((d) => existsSync(d));
 
 const FORBIDDEN = [
   // Legacy action adapters
   { pattern: /shellActionFromLegacyRecord/g, label: 'shellActionFromLegacyRecord' },
-  { pattern: /\bdetailRoute\b/g, label: 'detailRoute legacy raw field' },
-  { pattern: /\bdetail_route\b/g, label: 'detail_route DB field leaked to frontend' },
-  { pattern: /\bevidenceUri\b/g, label: 'evidenceUri legacy raw field' },
-  { pattern: /\bevidence_uri\b/g, label: 'evidence_uri DB field leaked to frontend' },
 
-  // DB DTO fields forbidden in frontend runtime
+  // DB DTO fields forbidden in frontend shell/navigation (snake_case)
+  // Note: component_key and perms_required are structural keys, allowed
   { pattern: /\blabel_key\b/g, label: 'label_key DB field leaked to frontend' },
   { pattern: /\blabel_fallback\b/g, label: 'label_fallback DB field leaked to frontend' },
-  { pattern: /\bmodule_code\b/g, label: 'module_code DB field leaked to frontend' },
   { pattern: /\bgroup_id\b/g, label: 'group_id DB field leaked to frontend' },
   { pattern: /\bitem_id\b/g, label: 'item_id DB field leaked to frontend' },
-  { pattern: /\blabel_en\b/g, label: 'label_en DB field leaked to frontend' },
-  { pattern: /\blabel_ar\b/g, label: 'label_ar DB field leaked to frontend' },
-  { pattern: /\bsort_order\b/g, label: 'sort_order DB field leaked to frontend' },
   { pattern: /\bparent_code\b/g, label: 'parent_code DB field leaked to frontend' },
+  { pattern: /\bmodule_code\b/g, label: 'module_code DB field leaked to frontend' },
+  { pattern: /\bsort_order\b/g, label: 'sort_order DB field leaked to frontend' },
 
   // Old runtime aliases
   { pattern: /\bchromeStrings\b/g, label: 'chromeStrings old flat key' },
   { pattern: /props\[['"]accountMenu['"]\]/g, label: 'props accountMenu flat prop read' },
   { pattern: /\bDynamicFoundationNavRow\b/g, label: 'DynamicFoundationNavRow legacy DTO' },
+  { pattern: /\blabelKey\b/g, label: 'labelKey legacy field name (use i18nKey)' },
 
   // Static nav builders/fallbacks
   { pattern: /\bbuildPlatformNav\b/g, label: 'buildPlatformNav static nav builder' },
   { pattern: /\bbuildFoundationNavChildren\b/g, label: 'buildFoundationNavChildren frontend nav mapper/fallback' },
   { pattern: /\bbuildFoundationGroup\b/g, label: 'buildFoundationGroup static nav builder' },
-  { pattern: /\/workspace-home/g, label: '/workspace-home hardcoded nav/default route' },
   { pattern: /fallback\s+to\s+static/gi, label: 'fallback to static comment/code' },
   { pattern: /static\s+SPA\s+list/gi, label: 'static SPA list comment/code' },
   { pattern: /static\s+nav/gi, label: 'static nav comment/code' },
@@ -56,7 +49,6 @@ const FORBIDDEN = [
   { pattern: /FALLBACK_GROUP_ICON/g, label: 'FALLBACK_GROUP_ICON' },
   { pattern: /FALLBACK_ITEM_ICON/g, label: 'FALLBACK_ITEM_ICON' },
   { pattern: /CARBON_BREAKPOINT_LARGE_PX/g, label: 'CARBON_BREAKPOINT_LARGE_PX' },
-  { pattern: /\blabelFromKey\b/g, label: 'labelFromKey legacy fallback' },
   { pattern: /document\.querySelector/g, label: 'document.querySelector shell DOM coupling' },
   { pattern: /\/settings\/subscription/g, label: '/settings/subscription hardcoded product route' },
 

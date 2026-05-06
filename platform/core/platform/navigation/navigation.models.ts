@@ -17,8 +17,10 @@ export type ProductOwner = 'platform' | 'shahin';
 export interface NavItem {
   id: string;
   navKey?: string;
-  labelEn: string;
-  labelAr: string;
+  /** i18n-resolved label (resolved by adapter, not raw DB field). */
+  label: string;
+  /** i18n key for runtime translation. */
+  i18nKey?: string;
   route?: string;
   icon?: string;
   module?: CanonicalModuleCode;
@@ -30,8 +32,10 @@ export interface NavItem {
 
 export interface QuickActionItem {
   id: string;
-  labelEn: string;
-  labelAr: string;
+  /** i18n-resolved label. */
+  label: string;
+  /** i18n key for runtime translation. */
+  i18nKey?: string;
   route: string;
   icon?: string;
   module?: CanonicalModuleCode;
