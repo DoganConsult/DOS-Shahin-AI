@@ -1,0 +1,56 @@
+{
+  "date": "2026-05-06",
+  "summary": {
+    "total": 10,
+    "passed": 10,
+    "failed": 0
+  },
+  "results": [
+    {
+      "name": "rbac-permissions-source-of-truth",
+      "status": "pass"
+    },
+    {
+      "name": "functional-roles-no-zero-join",
+      "status": "pass"
+    },
+    {
+      "name": "functional-roles-no-dual-naming",
+      "status": "pass"
+    },
+    {
+      "name": "tenant-migration-ledger-coverage",
+      "status": "pass"
+    },
+    {
+      "name": "tenant-product-activation-uniqueness",
+      "status": "pass"
+    },
+    {
+      "name": "compliance-substrate-non-empty",
+      "status": "pass"
+    },
+    {
+      "name": "per-tenant-schema-orphan-detector",
+      "status": "pass"
+    },
+    {
+      "name": "dos-required-triggers-present",
+      "status": "pass"
+    },
+    {
+      "name": "empty-perms_required-on-protected-surface",
+      "status": "pass"
+    },
+    {
+      "name": "shell-perm-grantability",
+      "status": "pass"
+    }
+  ],
+  "deltas": {
+    "passed_delta": 0,
+    "failed_delta": 0,
+    "new_failures": [],
+    "fixed_failures": []
+  }
+}

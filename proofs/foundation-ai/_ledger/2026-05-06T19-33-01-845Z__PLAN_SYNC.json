@@ -1,0 +1,14 @@
+{
+  "runId": "0cd181ef-5f0c-49f5-bf8e-e9a8eaabe828",
+  "phase": "P-2",
+  "wave": -2,
+  "kind": "PLAN_SYNC",
+  "inputsHash": "sha256:f22d998a2d36949f1c3b0bb5bdca68195952b7522c3f268e51072320f9245895",
+  "outputsHash": "sha256:1063b2d9d798f2fb48f4df838dbe2841331b5a1d444c5498ff578de11ae5f9a2",
+  "parentHash": "sha256:64bdcf798f81a9b056f609d7fc7f20c180cf7a70d50a80a35d65b45ab89e375e",
+  "signer": "dev-1",
+  "status": "GREEN",
+  "evidenceUri": "/root/DOS-Platform/proofs/foundation-ai/wave--2/plan-sync.proof.json",
+  "createdAt": "2026-05-06T19:33:01.845Z",
+  "hash": "sha256:78968135bd9a8286a76df3c3b469c29944147c3eaf8218aa9fc93ed5e2f8d9be"
+}

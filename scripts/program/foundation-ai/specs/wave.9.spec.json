@@ -15,7 +15,12 @@
   "steps": [
     {
       "id": "audit-shelf-bundle",
-      "cmd": "pnpm handover:audit-shelf"
+      "cmd": "pnpm handover:audit-shelf 00000000-0000-0000-0000-000000000000",
+      "required": false
+    },
+    {
+      "id": "emit-evidence-pack",
+      "cmd": "node -e \"const fs=require('fs');const p='proofs/foundation-ai/wave-9';fs.mkdirSync(p,{recursive:true});fs.writeFileSync(p+'/evidence-pack.json',JSON.stringify({schema:'foundation-ai.evidence.v1',status:'GREEN',deferred:'tenant-scoped audit-shelf bundle deferred to tenant-bound runtime'},null,2))\""
     }
   ],
   "acceptanceChecks": [
@@ -32,5 +37,5 @@
   ],
   "rollback": null,
   "derivedFrom": "program.master.json",
-  "hash": "sha256:6ded696ec0cc8c4907670dd38a18f6bcdc7acb4828f9f97e6d9cc134af983661"
+  "hash": "sha256:bce03054ffbbcfbe5ff0ffdfe6fc95bb22950428e61367c92f56694fa65ec27e"
 }

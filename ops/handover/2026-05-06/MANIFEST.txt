@@ -1,0 +1,5 @@
+# DOS Handover Manifest — 2026-05-06
+# files: 3  total bytes: 9827
+5ec1185fe7ce919d9b35b9f6621da65c887098ae303bf1ee3e5c73d63a9dcbc1  309  foundation-handover.md
+8820422a587772b843b1a83ec02a3c1be666b48fbda42838fd7bc4322be36664  544  foundation-handover.json
+a220f0f86686b30b8b6cbcc49098669d0bdbffe1e2a74f87e3ba368693c99758  8974  foundation-rbac-matrix.json

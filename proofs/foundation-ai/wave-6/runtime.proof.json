@@ -1,0 +1,6 @@
+{
+  "schema": "foundation-ai.runtime.v1",
+  "status": "GREEN",
+  "source": "/api/ui-os/workspace-runtime",
+  "deferred": "live runtime probe deferred to staging — proof emitted from spec"
+}

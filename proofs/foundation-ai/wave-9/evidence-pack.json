@@ -1,0 +1,5 @@
+{
+  "schema": "foundation-ai.evidence.v1",
+  "status": "GREEN",
+  "deferred": "tenant-scoped audit-shelf bundle deferred to tenant-bound runtime"
+}

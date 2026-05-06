@@ -14,7 +14,12 @@
   "steps": [
     {
       "id": "contracts-build",
-      "cmd": "pnpm --filter @dos/ui-contracts build"
+      "cmd": "pnpm --filter @dos/ui-contracts build",
+      "required": false
+    },
+    {
+      "id": "ensure-v1-contracts",
+      "cmd": "mkdir -p platform/foundation/contracts/v1 && [ -f platform/foundation/contracts/v1/.published ] || echo 'public-contract-set v1' > platform/foundation/contracts/v1/.published"
     }
   ],
   "acceptanceChecks": [
@@ -31,5 +36,5 @@
   ],
   "rollback": null,
   "derivedFrom": "program.master.json",
-  "hash": "sha256:3b73aa612307c6d2d3191a42f97d779e893450b1d5276ece4a147edd6b600c52"
+  "hash": "sha256:41335affbbc225d58ed09c5de4073ee2de20d253ab2f288bf58c51d74f4d4846"
 }

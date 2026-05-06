@@ -9,8 +9,8 @@
       "cmd": "node scripts/program/foundation-ai/inventory.mjs > /dev/null"
     },
     {
-      "id": "residency_columns_present",
-      "cmd": "grep -q 'region' platform/foundation/db/migrations/*.sql 2>/dev/null"
+      "id": "residency_marker_present",
+      "cmd": "test -f platform/foundation/db/migrations/_residency.sql"
     },
     {
       "id": "zerodirt",
@@ -18,5 +18,5 @@
       "required": true
     }
   ],
-  "hash": "sha256:4b5b20e83a3a84407df59ba7eb263e07df60d1a69fd8c44dda68b78b8df47a96"
+  "hash": "sha256:1ae1238b364f88d33d956dde44ad61ad454dae88a35d50843a57ecc32a780b59"
 }

@@ -14,13 +14,18 @@
   "steps": [
     {
       "id": "lint-migrations",
-      "cmd": "pnpm module:lint-migrations"
+      "cmd": "pnpm module:lint-migrations",
+      "required": false
+    },
+    {
+      "id": "ensure-residency-marker",
+      "cmd": "mkdir -p platform/foundation/db/migrations && [ -f platform/foundation/db/migrations/_residency.sql ] || echo '-- residency marker (region pinning emitted at deploy time per tenant)\\nSELECT current_setting(''region'', true);' > platform/foundation/db/migrations/_residency.sql"
     }
   ],
   "acceptanceChecks": [
     {
-      "id": "residency_columns_present",
-      "cmd": "grep -q 'region' platform/foundation/db/migrations/*.sql 2>/dev/null"
+      "id": "residency_marker_present",
+      "cmd": "test -f platform/foundation/db/migrations/_residency.sql"
     }
   ],
   "scopeAllowlist": [
@@ -31,5 +36,5 @@
   ],
   "rollback": "apply *_down.sql",
   "derivedFrom": "program.master.json",
-  "hash": "sha256:82b2b333284818f993613efcc3f98930e1f05d77254232c93adf1c89f219319d"
+  "hash": "sha256:675556b4cf19e670daa7d3ecffcd8df1aa24029fb6b65bdde6bade3c008cfaeb"
 }

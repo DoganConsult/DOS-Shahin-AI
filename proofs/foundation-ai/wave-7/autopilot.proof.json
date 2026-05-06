@@ -5,8 +5,8 @@
   "name": "autopilot",
   "status": "RED",
   "payload": {
-    "error": "Command failed: node scripts/program/foundation-ai/run-wave.mjs --wave=7"
+    "error": "Command failed: node scripts/program/foundation-ai/drift-check.mjs --wave=7"
   },
-  "emittedAt": "2026-05-06T19:27:30.741Z",
-  "hash": "sha256:c377cbf2026d6eb0539929f2b33989c3f8f48905692d411530c8a7e977782079"
+  "emittedAt": "2026-05-06T19:33:11.081Z",
+  "hash": "sha256:0033748457a34a655dfc8d5ae2ef2640fa9e12d74b5fe7b4371699987221aaad"
 }

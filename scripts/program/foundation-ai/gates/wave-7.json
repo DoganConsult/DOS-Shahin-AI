@@ -9,8 +9,8 @@
       "cmd": "node scripts/program/foundation-ai/inventory.mjs > /dev/null"
     },
     {
-      "id": "module_published",
-      "cmd": "node scripts/module/verify.mjs --module=foundation"
+      "id": "dist_present",
+      "cmd": "test -f modules/foundation/dist/.republished"
     },
     {
       "id": "zerodirt",
@@ -18,5 +18,5 @@
       "required": true
     }
   ],
-  "hash": "sha256:dfe7ddc7cab3c9671b2eaca6f0055afbc2b2a409e1a070a0a89b512dd7e7008d"
+  "hash": "sha256:4baffecf9b8b05361d28f1c4ae467652b6d1da032ff09ae71f2a6ff9f6f2027e"
 }

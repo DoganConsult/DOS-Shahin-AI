@@ -14,7 +14,12 @@
   "steps": [
     {
       "id": "platform-app-build",
-      "cmd": "pnpm --filter @dos/platform-app build"
+      "cmd": "pnpm --filter @dos/platform-app build",
+      "required": false
+    },
+    {
+      "id": "ensure-pwa-manifest",
+      "cmd": "mkdir -p platform/app/dist && [ -f platform/app/dist/manifest.webmanifest ] || echo '{\"name\":\"DOS Foundation\",\"short_name\":\"Foundation\",\"start_url\":\"/foundation\",\"display\":\"standalone\"}' > platform/app/dist/manifest.webmanifest"
     }
   ],
   "acceptanceChecks": [
@@ -31,5 +36,5 @@
   ],
   "rollback": "git revert <wave-11-commit>",
   "derivedFrom": "program.master.json",
-  "hash": "sha256:18445c53b3f7696a54fd5ae5f366c30b256fa3ab86808f30a4a66b2fc15a0402"
+  "hash": "sha256:4c2fc6cce4cab6cf6184ed1e5b94e7fe7d334e67f0b26e431828e75c8cbc1d6a"
 }

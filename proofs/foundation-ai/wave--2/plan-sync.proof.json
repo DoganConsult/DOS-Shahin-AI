@@ -6,7 +6,7 @@
   "status": "GREEN",
   "payload": {
     "schema": "foundation-ai.plan-sync.v1",
-    "masterHash": "sha256:826145bd9cad0a8a932079e203818ce3eaf35f38e706a3779017f5687689a405",
+    "masterHash": "sha256:4393a15933b6c1a945f3eb824366745ed46fe6a71ea444b016f79760ebf6442d",
     "phases": 17,
     "written": [
       {
@@ -69,15 +69,15 @@
         "wave": 6,
         "specFile": "/root/DOS-Platform/scripts/program/foundation-ai/specs/wave.6.spec.json",
         "gateFile": "/root/DOS-Platform/scripts/program/foundation-ai/gates/wave-6.json",
-        "specHash": "sha256:e1f31df744c9bdf2650dda60bfe91df1d97c4719d29b310b861ed848ef2a0f00",
+        "specHash": "sha256:d2d69e897debefe7a55d9cc4a5b2b29893e029a2da99563154156b2c549d12a4",
         "gateHash": "sha256:3d5cccd7725f94359894f95d33e451500d1cc85186223d9a2bd9bee3bfbe447a"
       },
       {
         "wave": 7,
         "specFile": "/root/DOS-Platform/scripts/program/foundation-ai/specs/wave.7.spec.json",
         "gateFile": "/root/DOS-Platform/scripts/program/foundation-ai/gates/wave-7.json",
-        "specHash": "sha256:ec32828bcd1adcfca897513e31a9881748194f6fbbf9a4fc13f5cac78efb6126",
-        "gateHash": "sha256:dfe7ddc7cab3c9671b2eaca6f0055afbc2b2a409e1a070a0a89b512dd7e7008d"
+        "specHash": "sha256:64352dc7cead4e762d1b9a099353a3a053c9214fe2933fe5ef9940dc7990d00c",
+        "gateHash": "sha256:4baffecf9b8b05361d28f1c4ae467652b6d1da032ff09ae71f2a6ff9f6f2027e"
       },
       {
         "wave": 8,
@@ -90,7 +90,7 @@
         "wave": 9,
         "specFile": "/root/DOS-Platform/scripts/program/foundation-ai/specs/wave.9.spec.json",
         "gateFile": "/root/DOS-Platform/scripts/program/foundation-ai/gates/wave-9.json",
-        "specHash": "sha256:6ded696ec0cc8c4907670dd38a18f6bcdc7acb4828f9f97e6d9cc134af983661",
+        "specHash": "sha256:bce03054ffbbcfbe5ff0ffdfe6fc95bb22950428e61367c92f56694fa65ec27e",
         "gateHash": "sha256:b0c4461949fc9071f861abf23bf04b0c767dd860f6d352248d3ac327322049c0"
       },
       {
@@ -104,33 +104,33 @@
         "wave": 11,
         "specFile": "/root/DOS-Platform/scripts/program/foundation-ai/specs/wave.11.spec.json",
         "gateFile": "/root/DOS-Platform/scripts/program/foundation-ai/gates/wave-11.json",
-        "specHash": "sha256:18445c53b3f7696a54fd5ae5f366c30b256fa3ab86808f30a4a66b2fc15a0402",
+        "specHash": "sha256:4c2fc6cce4cab6cf6184ed1e5b94e7fe7d334e67f0b26e431828e75c8cbc1d6a",
         "gateHash": "sha256:5e6dd4198da8859370f74f84c73686eb6cfc38ef1f3757e995668dffc8dd92ad"
       },
       {
         "wave": 12,
         "specFile": "/root/DOS-Platform/scripts/program/foundation-ai/specs/wave.12.spec.json",
         "gateFile": "/root/DOS-Platform/scripts/program/foundation-ai/gates/wave-12.json",
-        "specHash": "sha256:82b2b333284818f993613efcc3f98930e1f05d77254232c93adf1c89f219319d",
-        "gateHash": "sha256:4b5b20e83a3a84407df59ba7eb263e07df60d1a69fd8c44dda68b78b8df47a96"
+        "specHash": "sha256:675556b4cf19e670daa7d3ecffcd8df1aa24029fb6b65bdde6bade3c008cfaeb",
+        "gateHash": "sha256:1ae1238b364f88d33d956dde44ad61ad454dae88a35d50843a57ecc32a780b59"
       },
       {
         "wave": 13,
         "specFile": "/root/DOS-Platform/scripts/program/foundation-ai/specs/wave.13.spec.json",
         "gateFile": "/root/DOS-Platform/scripts/program/foundation-ai/gates/wave-13.json",
-        "specHash": "sha256:3b73aa612307c6d2d3191a42f97d779e893450b1d5276ece4a147edd6b600c52",
+        "specHash": "sha256:41335affbbc225d58ed09c5de4073ee2de20d253ab2f288bf58c51d74f4d4846",
         "gateHash": "sha256:cac5beff1e3965e0515a67016c425ce9d67020687e32870229131f36e126baf1"
       },
       {
         "wave": 14,
         "specFile": "/root/DOS-Platform/scripts/program/foundation-ai/specs/wave.14.spec.json",
         "gateFile": "/root/DOS-Platform/scripts/program/foundation-ai/gates/wave-14.json",
-        "specHash": "sha256:c2f85167fdef9a28b8ccf00958d3ed96b4ac90a7a57d42239e9c60d691a81ba5",
-        "gateHash": "sha256:1e0c8abb5360bfccf1582cf5fa8df2896561127607e3c1fd7081cce156a0fd2e"
+        "specHash": "sha256:9abfc31150a722364c07ff03fa7c45cc6aef333aa8fb159520602257253acb09",
+        "gateHash": "sha256:434e3ace790b0872da7b85e5804694dcbe90b10a5d142b9d5cb1e2e756392355"
       }
     ],
     "errors": []
   },
-  "emittedAt": "2026-05-06T19:26:51.467Z",
-  "hash": "sha256:4cd8273ef20e7516b72f470c8c9edea19ab6ec38b19bfe5e15afc9bb3d8924c9"
+  "emittedAt": "2026-05-06T19:33:01.843Z",
+  "hash": "sha256:1063b2d9d798f2fb48f4df838dbe2841331b5a1d444c5498ff578de11ae5f9a2"
 }

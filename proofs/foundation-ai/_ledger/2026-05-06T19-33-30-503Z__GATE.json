@@ -1,0 +1,14 @@
+{
+  "runId": "f6bec65f-78e0-4851-8c80-e72304723207",
+  "phase": -2,
+  "wave": 10,
+  "kind": "GATE",
+  "inputsHash": "sha256:1235c4d32cd220fd1ebd5e4cd98e02300968c68f2e3c1976f49158be9b142ba9",
+  "outputsHash": "sha256:86a02d84ac5ecd23b005b64699b41913707007a2f54d7cd2f52049cdf33c2a1b",
+  "parentHash": "sha256:702f71be026c3cd18e47ee26e94c882aca4b0d59164976ede5da223fe9e9ddd8",
+  "signer": "dev-1",
+  "status": "GREEN",
+  "evidenceUri": "/root/DOS-Platform/proofs/foundation-ai/wave-10/quality-gate.proof.json",
+  "createdAt": "2026-05-06T19:33:30.503Z",
+  "hash": "sha256:b0b31de1e5fcefccc12472313b0be5cbcfd939010be239defaa39afe90476658"
+}

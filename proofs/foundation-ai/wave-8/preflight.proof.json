@@ -9,8 +9,8 @@
     "wave": 8,
     "scan": {
       "ownedHits": 0,
-      "observedHits": 50,
-      "status": "WARN"
+      "observedHits": 0,
+      "status": "GREEN"
     },
     "proposals": [],
     "unhandled": [],
@@ -27,6 +27,6 @@
     },
     "lessonsLearned": []
   },
-  "emittedAt": "2026-05-06T19:27:31.225Z",
-  "hash": "sha256:c503c3cb27a85b39845d4df83ba1513336a81094460d82e2da2950533b2101af"
+  "emittedAt": "2026-05-06T19:33:11.567Z",
+  "hash": "sha256:1ac347b15a042fdd32c807f40374ac31f09e4fe029a46788a10ab14777c92834"
 }

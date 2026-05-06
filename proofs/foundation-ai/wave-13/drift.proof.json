@@ -1,0 +1,35 @@
+{
+  "schema": "foundation-ai.proof.v1",
+  "phase": -2,
+  "wave": 13,
+  "name": "drift",
+  "status": "RED",
+  "payload": {
+    "schema": "foundation-ai.drift.v1",
+    "wave": 13,
+    "detectors": {
+      "D_scope_dirty": {
+        "count": 9,
+        "status": "RED",
+        "samples": [
+          "ops/handover/2026-05-06.tar.gz.sha256",
+          "ops/handover/2026-05-06/MANIFEST.txt",
+          "ops/handover/2026-05-06/audit-shelf/00000000-0000-0000-0000-000000000000/bundle.json",
+          "ops/handover/2026-05-06/audit-shelf/00000000-0000-0000-0000-000000000000/bundle.sha256",
+          "ops/handover/2026-05-06/foundation-handover.json",
+          "ops/handover/2026-05-06/foundation-handover.md",
+          "ops/handover/2026-05-06/foundation-rbac-matrix.json",
+          "platform/foundation/db/migrations/_residency.sql",
+          "reports/audit/2026-05-06.json"
+        ]
+      },
+      "D_tokens": {
+        "ownedHits": 0,
+        "observedHits": 0,
+        "status": "GREEN"
+      }
+    }
+  },
+  "emittedAt": "2026-05-06T19:33:54.367Z",
+  "hash": "sha256:25da6a097ff2f289e147b3d6bba7c881578c913c756ad4ca6749b1bd2371bd1a"
+}

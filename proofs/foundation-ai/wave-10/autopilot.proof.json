@@ -3,10 +3,10 @@
   "phase": -2,
   "wave": 10,
   "name": "autopilot",
-  "status": "GREEN",
+  "status": "RED",
   "payload": {
-    "advancedTo": 10
+    "error": "Command failed: node scripts/program/foundation-ai/drift-check.mjs --wave=10"
   },
-  "emittedAt": "2026-05-06T19:27:51.042Z",
-  "hash": "sha256:530bb46620590768ba8ebe906379fb92c111ebfa81f94e82256940edf4dfb575"
+  "emittedAt": "2026-05-06T19:33:31.072Z",
+  "hash": "sha256:6a8d9f8ad08d2c02a47a51770803e1752446b433c0d2982e9f3f2364f56da0b7"
 }

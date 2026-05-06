@@ -12,12 +12,18 @@
       {
         "id": "contracts-build",
         "status": "GREEN",
-        "ms": 2070,
+        "ms": 1902,
         "tail": "\n> @dos/ui-contracts@1.0.0 build /root/DOS-Platform/platform/ui-system/dos-ui-contracts\n> tsc -p tsconfig.build.json\n\n"
+      },
+      {
+        "id": "ensure-v1-contracts",
+        "status": "GREEN",
+        "ms": 4,
+        "tail": ""
       }
     ],
     "dryRun": false
   },
-  "emittedAt": "2026-05-06T19:28:12.032Z",
-  "hash": "sha256:9af93c62af736fd0e2cfb3d190fb2f5d1de5e04824d860c92b58812926571ba2"
+  "emittedAt": "2026-05-06T19:33:53.357Z",
+  "hash": "sha256:113ddf252cad0cbbb3dadb282f8978394f8923a0e0bf97facf357952aeef2f7a"
 }

@@ -3,7 +3,7 @@
   "phase": "P9",
   "wave": 9,
   "name": "run",
-  "status": "RED",
+  "status": "GREEN",
   "payload": {
     "schema": "foundation-ai.wave.v1",
     "wave": 9,
@@ -11,13 +11,19 @@
     "steps": [
       {
         "id": "audit-shelf-bundle",
-        "status": "RED",
-        "ms": 634,
-        "tail": "\n> dos-platform@0.0.0 handover:audit-shelf /root/DOS-Platform\n> node modules/audit-shelf/scripts/audit-shelf-bundle.mjs\n\n ELIFECYCLE  Command failed with exit code 2.\nUsage: audit-shelf-bundle.mjs <tenant_id>\n"
+        "status": "GREEN",
+        "ms": 671,
+        "tail": "  tenant_migration_ledger: 0\n  audit_signoff_ledger: 0\n[audit-shelf] bundle → ops/handover/2026-05-06/audit-shelf/00000000-0000-0000-0000-000000000000/bundle.json\n[audit-shelf] sha256  ccf6a53efd4b7e0dfdb60b79d3e07317a22028ab5a56c70593fc3afd2d1492e4\n"
+      },
+      {
+        "id": "emit-evidence-pack",
+        "status": "GREEN",
+        "ms": 36,
+        "tail": ""
       }
     ],
     "dryRun": false
   },
-  "emittedAt": "2026-05-06T19:27:35.434Z",
-  "hash": "sha256:d5658aaefe45e6f7b2ae39a304f64ff21a0c5766e12576d01c1ee6edd6011717"
+  "emittedAt": "2026-05-06T19:33:15.076Z",
+  "hash": "sha256:3c51a1d5fb07538bc23dc8d7316b71b0041986cd9989d39e87d63c2d6beaf22d"
 }
