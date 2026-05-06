@@ -1,0 +1,18 @@
+{
+  "schema": "foundation-ai.post-launch.v1",
+  "status": "GREEN",
+  "phase": "post-launch",
+  "step": "db-activation",
+  "timestamp": "2026-05-06T20:24:58Z",
+  "database": "shahin_grc",
+  "snapshot": "ops/db-snapshots/shahin_grc_dos_pre-foundation_20260506T200945Z.sql.gz",
+  "migrations_applied": 23,
+  "foundation_tables": 29,
+  "product_registry_rows": 2,
+  "module_registry_rows": 50,
+  "tenant_product_activation_rows": 82,
+  "foundation_route_metadata_rows": 24,
+  "auth_pipeline": "live (401 unauthenticated, gateway routing OK)",
+  "spa_route": "/foundation = 200",
+  "doctrine": "snapshot before mutation; idempotent fixes only; no destructive drops"
+}

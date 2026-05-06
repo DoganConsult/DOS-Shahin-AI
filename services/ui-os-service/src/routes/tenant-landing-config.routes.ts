@@ -1,11 +1,18 @@
-// Phase 1: DB-Driven Logo/Home-Link Configuration
-// Backend API for tenant landing page configuration
+// ZERO-LEGACY tenant landing-config resolver.
 //
 //   GET /tenant-landing-config/:tenantId
-//     → { tenantId, authenticatedRoute, unauthenticatedRoute, sessionExpiredRoute, postAuthRoute, enabled }
+//     200 → { tenantId, authenticatedRoute, unauthenticatedRoute,
+//             sessionExpiredRoute, postAuthRoute, enabled }
+//     404 → { error: 'LANDING_CONFIG_NOT_SEEDED', tenantId }
+//
+// Doctrine: DB stores. Resolver returns DB row only. No fallback object,
+// no '/workspace-home' literal, no '/' literal. If the operator has not
+// seeded a row for the tenant, the resolver returns a typed 404 and the
+// frontend renders empty / no-op (per AGENTS.md NO FRONTEND INVENTION).
 //
 // Reads dos.tenant_landing_config (created by migration
-// 20260505_0903_tenant_landing_config.sql).
+// 20260505_0903_tenant_landing_config.sql; defaults stripped by
+// 20260510_0300_zero_legacy_landing_route_and_chrome_strings.sql).
 //
 // Wired via services/ui-os-service/src/routes/index.ts.
 
@@ -14,9 +21,9 @@ import type { DbPool } from '../db.js';
 
 interface TenantLandingConfigRow {
   tenant_id: string;
-  authenticated_route: string;
-  unauthenticated_route: string;
-  session_expired_route: string;
+  authenticated_route: string | null;
+  unauthenticated_route: string | null;
+  session_expired_route: string | null;
   post_auth_route: string | null;
   enabled: boolean;
 }
@@ -27,7 +34,7 @@ export function createTenantLandingConfigRouter(pool: DbPool): Router {
   router.get('/tenant-landing-config/:tenantId', async (req, res) => {
     const tenantId = String(req.params.tenantId ?? '').trim();
     if (!tenantId) {
-      res.status(400).json({ error: 'tenantId is required' });
+      res.status(400).json({ error: 'TENANT_ID_REQUIRED' });
       return;
     }
     try {
@@ -39,28 +46,24 @@ export function createTenantLandingConfigRouter(pool: DbPool): Router {
       );
       const row = result.rows[0];
       if (!row) {
-        // Return default config if not found
-        res.json({
+        res.status(404).json({
+          error: 'LANDING_CONFIG_NOT_SEEDED',
           tenantId,
-          authenticatedRoute: '/workspace-home',
-          unauthenticatedRoute: '/',
-          sessionExpiredRoute: '/',
-          postAuthRoute: '/workspace-home',
-          enabled: true,
+          hint: 'Operator must seed dos.tenant_landing_config for this tenant. Frontend must render empty / no-op when this resolver returns 404.',
         });
         return;
       }
       res.json({
         tenantId: row.tenant_id,
-        authenticatedRoute: row.authenticated_route,
+        authenticatedRoute:   row.authenticated_route,
         unauthenticatedRoute: row.unauthenticated_route,
-        sessionExpiredRoute: row.session_expired_route,
-        postAuthRoute: row.post_auth_route,
-        enabled: row.enabled,
+        sessionExpiredRoute:  row.session_expired_route,
+        postAuthRoute:        row.post_auth_route,
+        enabled:              row.enabled,
       });
     } catch (e) {
       res.status(500).json({
-        error: 'tenant-landing-config resolver failed',
+        error: 'TENANT_LANDING_CONFIG_RESOLVER_FAILED',
         detail: e instanceof Error ? e.message : String(e),
       });
     }

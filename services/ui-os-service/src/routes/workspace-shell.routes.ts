@@ -487,6 +487,77 @@ async function loadPolicies(pool: DbPool, tenantId: string): Promise<Record<stri
   return out;
 }
 
+// ─── Landing-route loader (DB → chrome.landingRoute) ──────────────────
+// Reads dos.tenant_landing_config (defaults stripped by migration
+// 20260510_0300). Returns null when no row is seeded — frontend MUST
+// render empty / no-op (NO FRONTEND INVENTION).
+async function loadLandingRoute(pool: DbPool, tenantId: string): Promise<string | null> {
+  const r = await pool.query<{ authenticated_route: string | null }>(
+    `SELECT authenticated_route
+       FROM dos.tenant_landing_config
+      WHERE tenant_id = $1 AND enabled = true`,
+    [tenantId],
+  );
+  const row = r.rows[0];
+  if (!row) return null;
+  const v = row.authenticated_route;
+  return typeof v === 'string' && v.trim() ? v.trim() : null;
+}
+
+// ─── Shell-tpl strings loader (DB → chrome.tplStrings) ────────────────
+// Pulls publisher-owned shell.tpl.* keys for the caller's primary locale
+// from dos.workspace_shell_i18n. Used by DynamicTemplatePageComponent
+// to render Access denied / Loading / Empty / Required-permission text
+// without any frontend constants.
+async function loadShellTplStrings(
+  pool: DbPool,
+  localePrimary: string,
+): Promise<Record<string, string>> {
+  const r = await pool.query<{ key: string; value: string }>(
+    `SELECT key, value
+       FROM dos.workspace_shell_i18n
+      WHERE locale = $1
+        AND ns = 'shell.tpl'`,
+    [localePrimary === 'ar' ? 'ar' : 'en'],
+  );
+  const out: Record<string, string> = {};
+  for (const row of r.rows) {
+    if (typeof row.key === 'string' && typeof row.value === 'string') out[row.key] = row.value;
+  }
+  return out;
+}
+
+// ─── Shell-breadcrumb labels loader (DB → chrome.breadcrumbs) ─────────
+// Replaces hardcoded "Workspace" breadcrumb labels in foundation pages
+// and module-page-chrome. The href is derived from the landing route so
+// the entire breadcrumb is DB-driven.
+async function loadShellBreadcrumbs(
+  pool: DbPool,
+  localePrimary: string,
+  landingRoute: string | null,
+): Promise<Record<string, { label: string | null; href: string | null }>> {
+  const r = await pool.query<{ key: string; value: string }>(
+    `SELECT key, value
+       FROM dos.workspace_shell_i18n
+      WHERE locale = $1
+        AND ns = 'shell.breadcrumb'`,
+    [localePrimary === 'ar' ? 'ar' : 'en'],
+  );
+  const out: Record<string, { label: string | null; href: string | null }> = {};
+  for (const row of r.rows) {
+    // strip "shell.breadcrumb." namespace prefix to get the camelCase id
+    const id = String(row.key).replace(/^shell\.breadcrumb\./, '');
+    out[id] = {
+      label: typeof row.value === 'string' ? row.value : null,
+      // 'workspace' breadcrumb points at the landing route. Other
+      // breadcrumb ids may be added by future migrations and will not
+      // get an href until they declare one (DB-only contract).
+      href: id === 'workspace' ? landingRoute : null,
+    };
+  }
+  return out;
+}
+
 async function loadShortcuts(pool: DbPool, tenantId: string) {
   const r = await pool.query<ShortcutRow>(
     `SELECT shortcut_id, combo, action_json, when_clause, sort_order
@@ -863,7 +934,7 @@ export function createWorkspaceShellRouter(pool: DbPool): Router {
       const catalog = await loadCatalog(pool);
       const surfaceRows = await loadSurfaces(pool, tenantId, catalog, callerRoles);
 
-      const [nav, chrome, shortcuts, banners, policies, moduleCards, navigateEligibleRoutes] = await Promise.all([
+      const [nav, chrome, shortcuts, banners, policies, moduleCards, navigateEligibleRoutes, landingRoute, tplStrings] = await Promise.all([
         loadNav(pool, localePrimary, tenantId, callerRoles),
         loadChrome(pool, tenantId),
         loadShortcuts(pool, tenantId),
@@ -871,7 +942,17 @@ export function createWorkspaceShellRouter(pool: DbPool): Router {
         loadPolicies(pool, tenantId),
         loadEntitledModuleCards(pool, tenantId, callerRoles, localePrimary),
         loadNavigateEligibleRoutes(pool),
+        loadLandingRoute(pool, tenantId),
+        loadShellTplStrings(pool, localePrimary),
       ]);
+      // Breadcrumbs depend on landingRoute for the 'workspace' href.
+      const breadcrumbs = await loadShellBreadcrumbs(pool, localePrimary, landingRoute);
+      // DB-driven chrome additions. landingRoute / tplStrings /
+      // breadcrumbs are emitted only if DB rows exist; absence stays
+      // absent (NO FRONTEND INVENTION).
+      if (landingRoute !== null) chrome['landingRoute'] = landingRoute;
+      if (Object.keys(tplStrings).length > 0) chrome['tplStrings'] = tplStrings;
+      if (Object.keys(breadcrumbs).length > 0) chrome['breadcrumbs'] = breadcrumbs;
 
       // Live-enrich the visual shell surfaces' props from the resolver
       // outputs above (sidebar nav, account menu, module cards). Mutates

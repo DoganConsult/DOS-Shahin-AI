@@ -774,3 +774,37 @@ Doctrine sustained:
 - ZERO STATIC / ZERO LEGACY / ZERO FALLBACK / Dynamic UI-OS only / DB-driven by published contracts
 - Snapshot-before-mutate honored
 - Idempotent fixes only; no destructive drops
+
+====================================================
+PROGRAM STATE MEMORY — Authenticated Runtime Probe
+(updated 2026-05-07)
+====================================================
+
+AUTHENTICATED RUNTIME PROBE — GREEN
+- Probe user: foundation-probe-001@dos.local (Keycloak realm "dogan")
+- Tenant: 65f10f855eab8b30 (auto-provisioned via /tenant /register)
+- /api/ui-os/workspace-runtime → HTTP 200, 13526 bytes
+- shell.version: 21 · zones: [header,main,sidebar] · surfaces: 21 · nav.groups: 4
+- nav.items: 0 (perms-filtered; default-roles user holds no foundation.* perms — DOCTRINE-CORRECT, no static fallback invented)
+- camelCase shape verified: componentKey/componentType/rendererKey/carbonKey/slotKey/surfaceId
+- label shape verified: { i18nKey, fallback, label } only
+- forbidden token scan: zero hits on component_key/perms_required/label_key/label_fallback/labelKey/route in payload
+
+DB FIXES THIS STEP (no frontend invention)
+- platform/foundation/db/migrations/20260507_0100_runtime_role_grants.sql
+  GRANT USAGE on dos.* SEQUENCES + ALTER DEFAULT PRIVILEGES for dos_auth
+  Fixes: 42501 permission denied for sequence workspace_shell_binding_id_seq
+- platform/dos/migrations/public/20260501_0200_phase_g_trial_lifecycle.sql applied
+  Creates: dos.tenant_trials + related lifecycle tables
+  Fixes: 42P01 relation "dos.tenant_trials" does not exist in tenant /register
+- Runtime grants applied as postgres superuser (additive, idempotent)
+
+PROOFS
+- proofs/foundation-ai/post-launch/runtime-probe.proof.json
+- proofs/foundation-ai/post-launch/workspace-runtime.sample.json (raw payload)
+- proofs/foundation-ai/post-launch/db-activation.proof.json (prior step)
+
+DOCTRINE SUSTAINED
+- ZERO STATIC / ZERO LEGACY / ZERO FALLBACK / Dynamic UI-OS only / DB-driven by published contracts
+- Every missing-data fix landed in DB migrations, not in TS code
+- No static nav fallback added; empty user perms produce empty nav (correct)
