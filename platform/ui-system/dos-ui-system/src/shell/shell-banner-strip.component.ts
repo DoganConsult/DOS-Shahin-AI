@@ -58,7 +58,7 @@ export type { ShellBanner } from '@dos/ui-contracts';
       gap: 0;
       position: sticky;
       inset-block-start: 3rem; /* below 48px Carbon header */
-      z-index: var(--shell-z-sticky, 6000);
+      z-index: var(--shell-z-sticky);
     }
 
     /* Full-width banners — override Carbon's max-width */

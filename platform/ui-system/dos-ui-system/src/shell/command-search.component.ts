@@ -111,18 +111,18 @@ const CATEGORY_TAG_TYPE: Record<ResultCategory, DosCarbonTagType> = {
 
     /* Carbon cds-search inner overrides for inverse header context */
     :host ::ng-deep .cds--search-input {
-      background: var(--cds-field-02, rgba(255,255,255,0.08));
-      color: var(--cds-text-on-color, #fff);
+      background: var(--cds-field-02));
+      color: var(--cds-text-on-color);
       border-block-end-color: transparent;
     }
 
     :host ::ng-deep .cds--search-input::placeholder {
-      color: var(--cds-text-on-color-disabled, rgba(255,255,255,0.55));
+      color: var(--cds-text-on-color-disabled));
     }
 
     :host ::ng-deep .cds--search-magnifier-icon,
     :host ::ng-deep .cds--search-close {
-      fill: var(--cds-icon-on-color, #fff);
+      fill: var(--cds-icon-on-color);
     }
 
     /* ── Results dropdown ────────────────────────────── */
@@ -131,15 +131,15 @@ const CATEGORY_TAG_TYPE: Record<ResultCategory, DosCarbonTagType> = {
       inset-block-start: calc(100% + 2px);
       inset-inline-start: 0;
       inset-inline-end: 0;
-      background: var(--cds-layer-01, #f4f4f4);
-      border: 1px solid var(--cds-border-subtle-01, #e0e0e0);
-      box-shadow: var(--shadow-premium-md, 0 6px 16px rgba(0,0,0,0.16));
+      background: var(--cds-layer-01);
+      border: 1px solid var(--cds-border-subtle-01);
+      box-shadow: var(--shadow-premium-md));
       list-style: none;
       margin: 0;
-      padding: var(--cds-spacing-02, 0.25rem);
+      padding: var(--cds-spacing-02);
       max-block-size: 60vh;
       overflow-y: auto;
-      z-index: var(--shell-z-dropdown, 9100);
+      z-index: var(--shell-z-dropdown);
       animation: slide-in-left 0.15s ease-out both;
     }
 
@@ -151,8 +151,8 @@ const CATEGORY_TAG_TYPE: Record<ResultCategory, DosCarbonTagType> = {
     .dos-command-search__result {
       display: flex;
       align-items: center;
-      gap: var(--cds-spacing-03, 0.5rem);
-      padding: var(--cds-spacing-03, 0.5rem);
+      gap: var(--cds-spacing-03);
+      padding: var(--cds-spacing-03);
       cursor: pointer;
       border-radius: 0;
       transition: background 0.1s;
@@ -160,7 +160,7 @@ const CATEGORY_TAG_TYPE: Record<ResultCategory, DosCarbonTagType> = {
 
     .dos-command-search__result:hover,
     .dos-command-search__result:focus {
-      background: var(--cds-layer-hover, #e8e8e8);
+      background: var(--cds-layer-hover);
       outline: none;
     }
 
@@ -170,7 +170,7 @@ const CATEGORY_TAG_TYPE: Record<ResultCategory, DosCarbonTagType> = {
 
     .dos-command-search__icon {
       flex: 0 0 auto;
-      color: var(--cds-icon-secondary, #525252);
+      color: var(--cds-icon-secondary);
     }
 
     .dos-command-search__label {
@@ -180,47 +180,47 @@ const CATEGORY_TAG_TYPE: Record<ResultCategory, DosCarbonTagType> = {
       text-overflow: ellipsis;
       white-space: nowrap;
       font-size: 0.875rem;
-      color: var(--cds-text-primary, #161616);
+      color: var(--cds-text-primary);
     }
 
     .dos-command-search__route {
       font-size: 0.75rem;
-      color: var(--cds-text-secondary, #525252);
+      color: var(--cds-text-secondary);
       margin-inline-start: auto;
-      font-family: var(--cds-code-01-font-family, monospace);
+      font-family: var(--cds-code-01-font-family);
     }
 
     /* ── Empty state ──────────────────────────────────── */
     .dos-command-search__empty {
       display: flex;
       align-items: center;
-      gap: var(--cds-spacing-03, 0.5rem);
-      padding: var(--cds-spacing-05, 1rem);
+      gap: var(--cds-spacing-03);
+      padding: var(--cds-spacing-05);
       font-size: 0.875rem;
-      color: var(--cds-text-secondary, #525252);
-      background: var(--cds-layer-01, #f4f4f4);
-      border: 1px solid var(--cds-border-subtle-01, #e0e0e0);
+      color: var(--cds-text-secondary);
+      background: var(--cds-layer-01);
+      border: 1px solid var(--cds-border-subtle-01);
       position: absolute;
       inset-block-start: calc(100% + 2px);
       inset-inline: 0;
-      z-index: var(--shell-z-dropdown, 9100);
+      z-index: var(--shell-z-dropdown);
     }
 
     .dos-command-search__empty-icon {
       flex: 0 0 auto;
-      color: var(--cds-icon-secondary, #525252);
+      color: var(--cds-icon-secondary);
     }
 
     /* ── Mobile full-screen overlay ────────────────────── */
     .dos-command-search--mobile.dos-command-search--open {
       position: fixed;
       inset: 0;
-      background: var(--cds-background, var(--cds-white, #ffffff));
-      z-index: var(--shell-z-modal, 9000);
+      background: var(--cds-background));
+      z-index: var(--shell-z-modal);
       display: flex;
       flex-direction: column;
-      padding: var(--cds-spacing-05, 1rem);
-      gap: var(--cds-spacing-04, 0.75rem);
+      padding: var(--cds-spacing-05);
+      gap: var(--cds-spacing-04);
       animation: premium-fade-up 0.2s ease-out both;
     }
 
@@ -228,7 +228,7 @@ const CATEGORY_TAG_TYPE: Record<ResultCategory, DosCarbonTagType> = {
       position: static;
       box-shadow: none;
       border: 0;
-      border-block-start: 1px solid var(--cds-border-subtle-01, #e0e0e0);
+      border-block-start: 1px solid var(--cds-border-subtle-01);
       flex: 1;
       max-block-size: none;
     }

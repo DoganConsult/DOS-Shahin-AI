@@ -132,14 +132,14 @@ import type { WorkspaceNavItem } from './workspace-shell.contracts';
     .dos-sidebar-item-inner {
       display: flex;
       align-items: center;
-      gap: var(--cds-spacing-03, 0.5rem);
+      gap: var(--cds-spacing-03);
       width: 100%;
       min-width: 0;
     }
 
     .dos-sidebar-icon {
       flex: 0 0 auto;
-      color: var(--cds-icon-secondary, #525252);
+      color: var(--cds-icon-secondary);
       transition: color 0.12s;
     }
 
@@ -147,8 +147,8 @@ import type { WorkspaceNavItem } from './workspace-shell.contracts';
        handle routerLinkActive class for programmatic activation */
     :host ::ng-deep .dos-sidebar-item--active .cds--side-nav__link,
     :host ::ng-deep .cds--side-nav__link--current {
-      background: var(--shell-nav-active-bg, var(--cds-background-selected));
-      border-inline-start: var(--dos-sidebar-active-border-width, 3px) solid var(--cds-border-interactive);
+      background: var(--shell-nav-active-bg));
+      border-inline-start: var(--dos-sidebar-active-border-width) solid var(--cds-border-interactive);
       color: var(--cds-text-primary);
       font-weight: 600;
     }
@@ -181,13 +181,13 @@ import type { WorkspaceNavItem } from './workspace-shell.contracts';
     /* ── Footer ──────────────────────────────────────── */
     .dos-sidebar-footer {
       margin-block-start: auto;
-      padding: var(--cds-spacing-03, 0.5rem) var(--cds-spacing-05, 1rem);
-      border-block-start: 1px solid var(--cds-border-subtle-00, #e0e0e0);
+      padding: var(--cds-spacing-03) var(--cds-spacing-05);
+      border-block-start: 1px solid var(--cds-border-subtle-00);
     }
 
     .dos-sidebar-footer__text {
       font-size: 0.6875rem;
-      color: var(--cds-text-disabled, #c6c6c6);
+      color: var(--cds-text-disabled);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;

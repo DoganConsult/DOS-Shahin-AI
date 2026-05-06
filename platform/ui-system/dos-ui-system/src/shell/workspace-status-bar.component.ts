@@ -79,11 +79,11 @@ const LEVEL_TAG_TYPE: Record<SignalLevel, DosCarbonTagType> = {
     .dos-status-bar {
       display: flex;
       align-items: center;
-      gap: var(--cds-spacing-02, 0.25rem);
-      padding: var(--cds-spacing-02, 0.25rem) var(--cds-spacing-05, 1rem);
+      gap: var(--cds-spacing-02);
+      padding: var(--cds-spacing-02) var(--cds-spacing-05);
       min-block-size: 2rem;
-      background: var(--cds-layer-01, #f4f4f4);
-      border-block-start: 1px solid var(--cds-border-subtle-01, #e0e0e0);
+      background: var(--cds-layer-01);
+      border-block-start: 1px solid var(--cds-border-subtle-01);
       overflow-x: auto;
       scrollbar-width: none;
     }
@@ -94,22 +94,22 @@ const LEVEL_TAG_TYPE: Record<SignalLevel, DosCarbonTagType> = {
     .dos-status-bar__chip {
       display: inline-flex;
       align-items: center;
-      gap: var(--cds-spacing-02, 0.25rem);
+      gap: var(--cds-spacing-02);
       background: none;
       border: none;
       cursor: pointer;
-      padding: var(--cds-spacing-01, 0.125rem) var(--cds-spacing-02, 0.25rem);
-      border-radius: var(--cds-spacing-02, 0.25rem);
+      padding: var(--cds-spacing-01) var(--cds-spacing-02);
+      border-radius: var(--cds-spacing-02);
       transition: background 0.12s;
       white-space: nowrap;
     }
 
     .dos-status-bar__chip:hover {
-      background: var(--cds-layer-hover, #e8e8e8);
+      background: var(--cds-layer-hover);
     }
 
     .dos-status-bar__chip:focus-visible {
-      outline: 2px solid var(--cds-focus, #0f62fe);
+      outline: 2px solid var(--cds-focus);
       outline-offset: 1px;
     }
 
@@ -125,15 +125,15 @@ const LEVEL_TAG_TYPE: Record<SignalLevel, DosCarbonTagType> = {
       height: 0.5rem;
       border-radius: 50%;
       flex: 0 0 auto;
-      background: var(--cds-support-info, #0f62fe);
+      background: var(--cds-support-info);
       transition: background 0.2s;
     }
 
-    .dos-status-bar__dot--ok     { background: var(--cds-support-success, #24a148); }
-    .dos-status-bar__dot--warn   { background: var(--cds-support-warning, #f1c21b); }
-    .dos-status-bar__dot--error  { background: var(--cds-support-error, #da1e28); }
+    .dos-status-bar__dot--ok     { background: var(--cds-support-success); }
+    .dos-status-bar__dot--warn   { background: var(--cds-support-warning); }
+    .dos-status-bar__dot--error  { background: var(--cds-support-error); }
     .dos-status-bar__dot--critical {
-      background: var(--cds-support-error, #da1e28);
+      background: var(--cds-support-error);
       animation: premium-pulse-ring 1.4s ease-out infinite;
     }
 
@@ -144,7 +144,7 @@ const LEVEL_TAG_TYPE: Record<SignalLevel, DosCarbonTagType> = {
 
     .dos-status-bar__value {
       font-weight: 700;
-      margin-inline-start: var(--cds-spacing-02, 0.25rem);
+      margin-inline-start: var(--cds-spacing-02);
     }
 
     /* ── Mobile: hide labels, show dots only ─────────── */

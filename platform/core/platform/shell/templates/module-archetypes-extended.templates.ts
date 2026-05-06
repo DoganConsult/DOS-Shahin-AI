@@ -109,7 +109,7 @@ const DAX_STYLES = `
   .dax-tile { padding: 1rem; }
   .dax-kpi-label { font-size: 0.75rem; color: var(--cds-text-secondary); text-transform: uppercase; letter-spacing: 0.04em; margin: 0 0 .25rem; }
   .dax-kpi-value { font-size: 1.75rem; font-weight: 300; margin: 0; }
-  .dax-mono { font-family: var(--cds-code-01-font-family, monospace); font-size: .75rem; }
+  .dax-mono { font-family: var(--cds-code-01-font-family); font-size: .75rem; }
   @media (max-width: 1024px) { .dax-grid--3 { grid-template-columns: 1fr 1fr; } }
   @media (max-width: 768px)  { .dax-grid--3, .dax-grid--2 { grid-template-columns: 1fr; } }
 `;

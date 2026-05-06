@@ -1,20 +1,29 @@
-import type { NavItem, QuickActionItem } from './navigation.models';
+import { NavItem, QuickActionItem, ProductOwner } from './navigation.models';
 
 // ═══════════════════════════════════════════════════════════════════════
-// DYNAMIC NAVIGATION — ALL nav comes from UI-OS runtime.
+// UI-OS ONLY NAVIGATION — all nav items come from UI-OS runtime.
 //
-// Source of truth: WorkspaceShellBindingService.navConfig()
-// API: GET /api/ui-os/workspace-shell/:tenantId → navigation.groups/items
+// Legacy state (archived to <repo>/legacy-archive/):
+//   - STATIC_FOUNDATION_NAV_CHILDREN: 20 hardcoded NavItem[]
+//   - SHAHIN_NAV: 650+ lines of hardcoded module navigation
+//   - PLATFORM_NAV_BOTTOM: nav groups
+//   - WIDGET_TO_QUICK_ACTION: hardcoded quick actions
 //
-// HARD RULE: No static Home, Foundation, or module nav items.
-// Empty DB = empty nav (maintenance mode). Not a frontend fallback.
+// Current state:
+//   - DB source: dos.workspace_shell_binding + dos.ui_route_template_binding
+//   - API: GET /api/ui-os/workspace-runtime
+//   - FE consumer: WorkspaceShellBindingService.navConfig()
 // ═══════════════════════════════════════════════════════════════════════
 
-// All module nav comes from DB via UI-OS runtime.
-// These empty arrays are kept only for backwards compile-compat with
-// consumers that destructure them (e.g. route guards). They are never
-// populated — all runtime nav flows through WorkspaceShellBindingService.
+// Empty by default — populated from UI-OS runtime via WorkspaceShellBindingService.
 export const PLATFORM_NAV: NavItem[] = [];
+
+// No SHAHIN_NAV — all module nav comes from UI-OS runtime.
 export const SHAHIN_NAV: NavItem[] = [];
+
+// No bottom nav — UI-OS runtime-driven.
 export const PLATFORM_NAV_BOTTOM: NavItem[] = [];
+
+// Widget-to-quick-action map — empty by default, populated from
+// dos.dynamic_ui_widgets at runtime.
 export const WIDGET_TO_QUICK_ACTION: Record<string, QuickActionItem> = {};

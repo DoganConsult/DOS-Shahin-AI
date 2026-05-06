@@ -128,13 +128,13 @@ import type { QuickCreateAction } from './workspace-shell.contracts';
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: var(--shadow-premium-md, 0 6px 16px rgba(15,98,254,0.30));
+      box-shadow: var(--shadow-premium-md));
       transition: box-shadow 0.2s, transform 0.15s;
     }
 
     .dos-quick-create__fab:hover {
       transform: scale(1.06);
-      box-shadow: var(--shadow-premium-lg, 0 12px 28px rgba(15,98,254,0.38));
+      box-shadow: var(--shadow-premium-lg));
     }
 
     .dos-quick-create--open .dos-quick-create__fab {
@@ -144,16 +144,16 @@ import type { QuickCreateAction } from './workspace-shell.contracts';
     /* ── Ghost action menu (desktop) ────────────────── */
     .dos-quick-create__menu {
       position: absolute;
-      inset-block-end: calc(100% + var(--cds-spacing-03, 0.5rem));
+      inset-block-end: calc(100% + var(--cds-spacing-03));
       inset-inline-end: 0;
       min-inline-size: 16rem;
-      background: var(--cds-layer, #fff);
-      border: 1px solid var(--cds-border-subtle-01, #e0e0e0);
-      box-shadow: var(--shadow-premium-lg, 0 12px 32px rgba(0,0,0,0.16));
+      background: var(--cds-layer);
+      border: 1px solid var(--cds-border-subtle-01);
+      box-shadow: var(--shadow-premium-lg));
       list-style: none;
       margin: 0;
-      padding: var(--cds-spacing-02, 0.25rem) 0;
-      z-index: var(--shell-z-dropdown, 9100);
+      padding: var(--cds-spacing-02) 0;
+      z-index: var(--shell-z-dropdown);
       animation: scale-pop 0.18s ease-out both;
     }
 
@@ -166,7 +166,7 @@ import type { QuickCreateAction } from './workspace-shell.contracts';
       width: 100%;
       display: flex;
       align-items: center;
-      gap: var(--cds-spacing-03, 0.5rem);
+      gap: var(--cds-spacing-03);
       /* Carbon ghost button handles base styles */
     }
 
@@ -179,12 +179,12 @@ import type { QuickCreateAction } from './workspace-shell.contracts';
 
     .dos-quick-create__hotkey {
       font-size: 0.625rem;
-      font-family: var(--cds-code-01-font-family, monospace);
-      color: var(--cds-text-secondary, #525252);
-      background: var(--cds-layer-02, #e0e0e0);
-      border: 1px solid var(--cds-border-subtle, #c6c6c6);
+      font-family: var(--cds-code-01-font-family);
+      color: var(--cds-text-secondary);
+      background: var(--cds-layer-02);
+      border: 1px solid var(--cds-border-subtle);
       border-radius: 3px;
-      padding: var(--cds-spacing-01, 1px) var(--cds-spacing-02, 4px);
+      padding: var(--cds-spacing-01) var(--cds-spacing-02);
       white-space: nowrap;
       margin-inline-start: auto;
     }
@@ -192,10 +192,10 @@ import type { QuickCreateAction } from './workspace-shell.contracts';
     /* ── Mobile sticky bottom ────────────────────────── */
     .dos-quick-create--mobile {
       position: fixed;
-      inset-block-end: calc(var(--shell-mobile-bottom-padding, 5.5rem) + env(safe-area-inset-bottom, 0px));
+      inset-block-end: calc(var(--shell-mobile-bottom-padding) + env(safe-area-inset-bottom, 0px));
       inset-inline: 0;
-      padding-inline: var(--cds-spacing-05, 1rem);
-      z-index: var(--shell-z-sticky, 6000);
+      padding-inline: var(--cds-spacing-05);
+      z-index: var(--shell-z-sticky);
     }
 
     .dos-quick-create__mobile-btn {
@@ -203,25 +203,25 @@ import type { QuickCreateAction } from './workspace-shell.contracts';
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: var(--cds-spacing-03, 0.5rem);
+      gap: var(--cds-spacing-03);
     }
 
     .dos-quick-create__mobile-menu {
       position: fixed;
-      inset-block-end: calc(var(--shell-mobile-bottom-padding, var(--cds-spacing-13, 5.5rem)) + var(--cds-spacing-09, 3.5rem) + env(safe-area-inset-bottom, 0px));
-      inset-inline: var(--cds-spacing-05, 1rem);
-      background: var(--cds-layer, #fff);
-      border: 1px solid var(--cds-border-subtle-01, #e0e0e0);
-      box-shadow: var(--shadow-premium-lg, 0 12px 32px rgba(0,0,0,0.16));
-      padding: var(--cds-spacing-03, 0.5rem) 0;
-      z-index: var(--shell-z-dropdown, 9100);
+      inset-block-end: calc(var(--shell-mobile-bottom-padding)) + var(--cds-spacing-09) + env(safe-area-inset-bottom, 0px));
+      inset-inline: var(--cds-spacing-05);
+      background: var(--cds-layer);
+      border: 1px solid var(--cds-border-subtle-01);
+      box-shadow: var(--shadow-premium-lg));
+      padding: var(--cds-spacing-03) 0;
+      z-index: var(--shell-z-dropdown);
       animation: premium-fade-up 0.18s ease-out both;
     }
 
     .dos-quick-create__action--mobile {
       width: 100%;
       justify-content: flex-start;
-      padding-inline: var(--cds-spacing-05, 1rem);
+      padding-inline: var(--cds-spacing-05);
     }
 
     /* ── Keyframes ─────────────────────────────────────── */

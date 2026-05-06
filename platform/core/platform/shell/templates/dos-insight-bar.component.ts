@@ -146,7 +146,7 @@ import { ModuleInsightPillars } from './module-template.types';
       .dib-root { grid-template-columns: 1fr 1fr; }
       .dib-pillar--action { grid-column: 1 / -1; }
     }
-    @media (max-width: 480px) {
+    @media (max-width: 33rem) {
       .dib-root { grid-template-columns: 1fr; }
     }
   `]

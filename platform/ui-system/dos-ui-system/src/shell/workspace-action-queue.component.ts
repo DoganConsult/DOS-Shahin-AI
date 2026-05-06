@@ -131,22 +131,22 @@ const SEVERITY_TAG: Record<ItemSeverity, DosCarbonTagType> = {
     .dos-action-queue {
       display: flex;
       flex-direction: column;
-      gap: var(--cds-spacing-03, 0.5rem);
-      padding: var(--cds-spacing-03, 0.5rem) 0;
+      gap: var(--cds-spacing-03);
+      padding: var(--cds-spacing-03) 0;
     }
 
     /* ── Header ──────────────────────────────────────── */
     .dos-action-queue__hdr {
       display: flex;
       align-items: center;
-      gap: var(--cds-spacing-03, 0.5rem);
-      padding-inline: var(--cds-spacing-05, 1rem);
+      gap: var(--cds-spacing-03);
+      padding-inline: var(--cds-spacing-05);
     }
 
     .dos-action-queue__title {
       font-size: 0.875rem;
       font-weight: 600;
-      color: var(--cds-text-primary, #161616);
+      color: var(--cds-text-primary);
     }
 
     .dos-action-queue__count,
@@ -171,17 +171,17 @@ const SEVERITY_TAG: Record<ItemSeverity, DosCarbonTagType> = {
     }
 
     :host ::ng-deep .dos-action-queue__tile .cds--tile {
-      padding: var(--cds-spacing-03, 0.5rem) var(--cds-spacing-05, 1rem);
-      border-block-end: 1px solid var(--cds-border-subtle-00, #e0e0e0);
+      padding: var(--cds-spacing-03) var(--cds-spacing-05);
+      border-block-end: 1px solid var(--cds-border-subtle-00);
     }
 
     :host ::ng-deep .dos-action-queue__tile .cds--tile:hover {
-      background: var(--cds-layer-hover, #e8e8e8);
+      background: var(--cds-layer-hover);
     }
 
     /* Overdue tile: data-flash + error border */
     .dos-action-queue__item--overdue :host ::ng-deep .cds--tile {
-      border-inline-start: 3px solid var(--cds-support-error, #da1e28);
+      border-inline-start: 3px solid var(--cds-support-error);
       animation: premium-data-flash 1.5s ease-out 1;
     }
 
@@ -189,29 +189,29 @@ const SEVERITY_TAG: Record<ItemSeverity, DosCarbonTagType> = {
     .dos-aq-tile-inner {
       display: flex;
       flex-direction: column;
-      gap: var(--cds-spacing-02, 0.25rem);
+      gap: var(--cds-spacing-02);
     }
 
     .dos-aq-tile-header {
       display: flex;
       align-items: flex-start;
-      gap: var(--cds-spacing-03, 0.5rem);
+      gap: var(--cds-spacing-03);
     }
 
     .dos-aq-severity-bar {
       flex: 0 0 3px;
       align-self: stretch;
       border-radius: 2px;
-      background: var(--cds-border-subtle, #e0e0e0);
+      background: var(--cds-border-subtle);
     }
-    .dos-aq-severity-bar[data-severity='critical'] { background: var(--cds-support-error, #da1e28); }
-    .dos-aq-severity-bar[data-severity='high']     { background: var(--cds-support-warning, #f1c21b); }
-    .dos-aq-severity-bar[data-severity='med']      { background: var(--cds-support-info, #0f62fe); }
+    .dos-aq-severity-bar[data-severity='critical'] { background: var(--cds-support-error); }
+    .dos-aq-severity-bar[data-severity='high']     { background: var(--cds-support-warning); }
+    .dos-aq-severity-bar[data-severity='med']      { background: var(--cds-support-info); }
 
     .dos-aq-title {
       font-size: 0.875rem;
       font-weight: 400;
-      color: var(--cds-text-primary, #161616);
+      color: var(--cds-text-primary);
       flex: 1;
       min-width: 0;
     }
@@ -219,27 +219,27 @@ const SEVERITY_TAG: Record<ItemSeverity, DosCarbonTagType> = {
     .dos-aq-tile-meta {
       display: flex;
       align-items: center;
-      gap: var(--cds-spacing-03, 0.5rem);
+      gap: var(--cds-spacing-03);
       flex-wrap: wrap;
     }
 
     .dos-aq-origin {
       font-size: 0.75rem;
-      color: var(--cds-text-secondary, #6f6f6f);
+      color: var(--cds-text-secondary);
     }
 
     .dos-aq-due {
       font-size: 0.75rem;
-      color: var(--cds-text-secondary, #6f6f6f);
+      color: var(--cds-text-secondary);
       margin-inline-start: auto;
     }
 
-    .dos-aq-due--overdue { color: var(--cds-support-error, #da1e28); font-weight: 600; }
+    .dos-aq-due--overdue { color: var(--cds-support-error); font-weight: 600; }
 
     /* ── Empty state ─────────────────────────────────── */
     .dos-action-queue__empty {
-      padding: var(--cds-spacing-05, 1rem);
-      color: var(--cds-text-secondary, #6f6f6f);
+      padding: var(--cds-spacing-05);
+      color: var(--cds-text-secondary);
       font-size: 0.875rem;
     }
 

@@ -41,8 +41,8 @@ export const WORKSPACE_SHELL_BANDS: readonly WorkspaceShellBand[] = Object.freez
 
 export interface WorkspaceShellBand {
   readonly band: string;
-  readonly label_en: string;
-  readonly label_ar: string;
+  readonly labelEn: string;
+  readonly labelAr: string;
   readonly keys: readonly WorkspaceShellKey[];
   readonly count: number;
 }
@@ -147,7 +147,8 @@ export interface WorkspaceRuntimeNavGroupRow {
   moduleCode: string;
   groupId: string;
   sortOrder?: number | null;
-  labelKey?: string | null;
+  i18nKey?: string | null;
+  fallback?: string | null;
   labelEn?: string | null;
   labelAr?: string | null;
   enabled?: boolean | null;
@@ -159,10 +160,11 @@ export interface WorkspaceRuntimeNavItemRow {
   itemId: string;
   groupId?: string | null;
   sortOrder?: number | null;
-  route?: string | null;
+  action?: ShellAction | null;
   icon?: string | null;
   permission?: string | null;
-  labelKey?: string | null;
+  i18nKey?: string | null;
+  fallback?: string | null;
   labelEn?: string | null;
   labelAr?: string | null;
   badge?: number | string | null;
@@ -222,7 +224,7 @@ export interface WorkspaceNavItem {
   id: string;
   label: WorkspaceI18nLabel;
   icon?: string;
-  route?: string;
+  action?: ShellAction;
   active?: boolean;
   badge?: number;
   badgeCount?: number;
@@ -267,7 +269,6 @@ export interface CommandSearchResult {
   label: WorkspaceI18nLabel;
   icon?: string;
   category?: string;
-  route?: string;
   action?: ShellAction;
 }
 

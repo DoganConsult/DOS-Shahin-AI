@@ -55,14 +55,14 @@ export interface DosToastMessage {
     :host { position: fixed;
             inset-block-end: calc(env(safe-area-inset-bottom, 0) + var(--cds-spacing-05));
             inset-inline-end: var(--cds-spacing-05);
-            z-index: var(--dos-z-toast, 9500);
+            z-index: var(--dos-z-toast);
             pointer-events: none; }
     .dos-toast-outlet { display: flex; flex-direction: column; gap: var(--cds-spacing-02); max-width: 22rem; }
     .dos-toast {
       position: relative;
       pointer-events: auto;
       padding: var(--cds-spacing-04) var(--cds-spacing-08) var(--cds-spacing-04) var(--cds-spacing-05);
-      border-inline-start: var(--dos-sidebar-active-border-width, 3px) solid var(--cds-link-primary);
+      border-inline-start: var(--dos-sidebar-active-border-width) solid var(--cds-link-primary);
       background: var(--cds-layer);
       color: var(--cds-text-primary);
       box-shadow: var(--cds-shadow);
@@ -83,8 +83,8 @@ export interface DosToastMessage {
       line-height: 1; border-radius: var(--cds-border-radius);
     }
     .dos-toast__close:hover { background: var(--cds-layer-hover); }
-    @media (max-width: 480px) {
-      :host { inset-inline: var(--cds-spacing-05); inset-block-end: calc(env(safe-area-inset-bottom, 0) + var(--dos-mobile-nav-height, 56px) + var(--cds-spacing-05)); }
+    @media (max-width: 33rem) {
+      :host { inset-inline: var(--cds-spacing-05); inset-block-end: calc(env(safe-area-inset-bottom, 0) + var(--dos-mobile-nav-height) + var(--cds-spacing-05)); }
       .dos-toast-outlet { max-width: none; }
     }
   `],

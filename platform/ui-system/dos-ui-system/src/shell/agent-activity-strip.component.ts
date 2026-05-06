@@ -158,7 +158,7 @@ const STATE_LABEL: Record<AgentState, string> = {
 
     /* ══ The signature differentiator: running agent breathing glow ══ */
     .dos-agent-strip__item--running :host ::ng-deep .cds--tile {
-      border-inline-start: var(--dos-sidebar-active-border-width, 3px) solid var(--cds-support-info);
+      border-inline-start: var(--dos-sidebar-active-border-width) solid var(--cds-support-info);
       animation: running-tile-glow 2.4s ease-in-out infinite;
       background: linear-gradient(
         90deg,
@@ -169,12 +169,12 @@ const STATE_LABEL: Record<AgentState, string> = {
 
     /* Awaiting approval: magenta accent */
     .dos-agent-strip__item--awaiting :host ::ng-deep .cds--tile {
-      border-inline-start: var(--dos-sidebar-active-border-width, 3px) solid var(--cds-support-warning);
+      border-inline-start: var(--dos-sidebar-active-border-width) solid var(--cds-support-warning);
     }
 
     /* Error: red accent */
     .dos-agent-strip__item--error :host ::ng-deep .cds--tile {
-      border-inline-start: var(--dos-sidebar-active-border-width, 3px) solid var(--cds-support-error);
+      border-inline-start: var(--dos-sidebar-active-border-width) solid var(--cds-support-error);
     }
 
     /* ── Agent avatar ────────────────────────────────── */
@@ -252,8 +252,8 @@ const STATE_LABEL: Record<AgentState, string> = {
       overflow-x: auto;
       scroll-snap-type: x mandatory;
       scrollbar-width: none;
-      gap: var(--cds-spacing-02, 0.25rem);
-      padding-inline: var(--cds-spacing-03, 0.5rem);
+      gap: var(--cds-spacing-02);
+      padding-inline: var(--cds-spacing-03);
     }
 
     .dos-agent-strip--mobile .dos-agent-strip__item {
@@ -266,8 +266,8 @@ const STATE_LABEL: Record<AgentState, string> = {
     .dos-agent-strip__empty {
       display: flex;
       align-items: center;
-      gap: var(--cds-spacing-03, 0.5rem);
-      padding: var(--cds-spacing-05, 1rem);
+      gap: var(--cds-spacing-03);
+      padding: var(--cds-spacing-05);
       color: var(--cds-text-secondary);
       font-size: var(--cds-body-short-01-font-size);
     }
@@ -279,8 +279,8 @@ const STATE_LABEL: Record<AgentState, string> = {
 
     /* ── Keyframes ─────────────────────────────────────── */
     @keyframes running-tile-glow {
-      0%, 100% { box-shadow: inset var(--dos-sidebar-active-border-width, 3px) 0 12px color-mix(in srgb, var(--cds-support-info) 8%, transparent); }
-      50%      { box-shadow: inset var(--dos-sidebar-active-border-width, 3px) 0 20px color-mix(in srgb, var(--cds-support-info) 20%, transparent); }
+      0%, 100% { box-shadow: inset var(--dos-sidebar-active-border-width) 0 12px color-mix(in srgb, var(--cds-support-info) 8%, transparent); }
+      50%      { box-shadow: inset var(--dos-sidebar-active-border-width) 0 20px color-mix(in srgb, var(--cds-support-info) 20%, transparent); }
     }
     @keyframes premium-fade-up {
       0%   { opacity: 0; transform: translateY(10px) scale(0.99); }

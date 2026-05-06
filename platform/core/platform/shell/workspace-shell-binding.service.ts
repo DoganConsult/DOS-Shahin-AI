@@ -104,8 +104,8 @@ export class WorkspaceShellBindingService {
       const key = this.navGroupKey(group.moduleCode, group.groupId);
       groupsByKey.set(key, {
         id: key,
-        labelKey: group.labelKey ?? undefined,
-        label: this.resolveRuntimeLabel(group.labelKey, group.labelEn, group.labelAr, language),
+        labelKey: group.i18nKey ?? undefined,
+        label: this.resolveRuntimeLabel(group.i18nKey, group.fallback, group.labelEn, group.labelAr, language),
         order: Number(group.sortOrder) || 0,
         items: [],
       });
@@ -113,8 +113,7 @@ export class WorkspaceShellBindingService {
 
     for (const item of this._navItemsRaw()) {
       if (item.enabled === false) continue;
-      const route = typeof item.route === 'string' ? item.route.trim() : '';
-      if (!route) continue;
+      if (!item.action) continue;
       if (item.permission && !this.access.hasPermission(item.permission)) continue;
 
       const groupKey = this.navGroupKey(item.moduleCode, item.groupId ?? 'ungrouped');
@@ -129,9 +128,9 @@ export class WorkspaceShellBindingService {
       const badge = this.normalizeNavBadge(item.badge);
       const navItem: DosNavItem = {
         id: item.itemId,
-        labelKey: item.labelKey ?? undefined,
-        label: this.resolveRuntimeLabel(item.labelKey, item.labelEn, item.labelAr, language),
-        route,
+        labelKey: item.i18nKey ?? undefined,
+        label: this.resolveRuntimeLabel(item.i18nKey, item.fallback, item.labelEn, item.labelAr, language),
+        route: item.action.kind === 'navigate' ? item.action.path : undefined,
         icon: this.normalizeIcon(item.icon),
         badge,
         requiredPermission: item.permission ?? undefined,
@@ -602,7 +601,8 @@ export class WorkspaceShellBindingService {
   }
 
   private resolveRuntimeLabel(
-    labelKey: string | null | undefined,
+    i18nKey: string | null | undefined,
+    fallback: string | null | undefined,
     labelEn: string | null | undefined,
     labelAr: string | null | undefined,
     language: 'en' | 'ar',
@@ -611,7 +611,8 @@ export class WorkspaceShellBindingService {
     if (language === 'en' && typeof labelEn === 'string' && labelEn.trim()) return labelEn.trim();
     if (typeof labelEn === 'string' && labelEn.trim()) return labelEn.trim();
     if (typeof labelAr === 'string' && labelAr.trim()) return labelAr.trim();
-    if (typeof labelKey === 'string' && labelKey.trim()) return this.chromeString(labelKey.trim());
+    if (typeof fallback === 'string' && fallback.trim()) return fallback.trim();
+    if (typeof i18nKey === 'string' && i18nKey.trim()) return this.chromeString(i18nKey.trim());
     return '';
   }
 
@@ -747,7 +748,6 @@ export class WorkspaceShellBindingService {
     };
     result.icon = this.normalizeIcon(typeof record['icon'] === 'string' ? record['icon'] as string : undefined);
     if (typeof record['category'] === 'string') result.category = record['category'] as string;
-    if (typeof record['route'] === 'string') result.route = record['route'] as string;
     const action = parseShellAction(record['action']);
     if (action) result.action = action;
     return result;

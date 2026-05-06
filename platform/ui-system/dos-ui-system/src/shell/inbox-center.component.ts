@@ -158,22 +158,22 @@ const PRIORITY_TAG: Record<MsgPriority, DosCarbonTagType> = {
     :host { display: block; }
 
     /* ── Unread count badge in modal header ────────────── */
-    .dos-inbox-count { margin-inline-start: var(--cds-spacing-03, 0.5rem); vertical-align: middle; }
+    .dos-inbox-count { margin-inline-start: var(--cds-spacing-03); vertical-align: middle; }
 
     /* ── Skeleton loading ────────────────────────────── */
     .dos-inbox-skeleton {
       display: flex;
       flex-direction: column;
-      gap: var(--cds-spacing-05, 1rem);
-      padding: var(--cds-spacing-05, 1rem);
+      gap: var(--cds-spacing-05);
+      padding: var(--cds-spacing-05);
     }
 
     /* ── Message row ─────────────────────────────────── */
     .dos-inbox-msg {
       display: flex;
       flex-direction: column;
-      gap: var(--cds-spacing-02, 0.25rem);
-      padding: var(--cds-spacing-03, 0.5rem) 0;
+      gap: var(--cds-spacing-02);
+      padding: var(--cds-spacing-03) 0;
       width: 100%;
       transition: background 0.1s;
     }
@@ -181,7 +181,7 @@ const PRIORITY_TAG: Record<MsgPriority, DosCarbonTagType> = {
     .dos-inbox-msg__header {
       display: flex;
       align-items: center;
-      gap: var(--cds-spacing-02, 0.25rem);
+      gap: var(--cds-spacing-02);
       flex-wrap: wrap;
     }
 
@@ -190,7 +190,7 @@ const PRIORITY_TAG: Record<MsgPriority, DosCarbonTagType> = {
       width: 0.5rem;
       height: 0.5rem;
       border-radius: 50%;
-      background: var(--cds-support-info, #0f62fe);
+      background: var(--cds-support-info);
       flex: 0 0 auto;
       animation: premium-pulse-ring 1.8s ease-out infinite;
     }
@@ -198,23 +198,23 @@ const PRIORITY_TAG: Record<MsgPriority, DosCarbonTagType> = {
     .dos-inbox-msg__time {
       margin-inline-start: auto;
       font-size: 0.75rem;
-      color: var(--cds-text-secondary, #525252);
+      color: var(--cds-text-secondary);
     }
 
     .dos-inbox-msg__subject {
       font-size: 0.875rem;
       font-weight: 600;
-      color: var(--cds-text-primary, #161616);
+      color: var(--cds-text-primary);
       display: block;
     }
 
     .dos-inbox-msg--unread .dos-inbox-msg__subject {
-      color: var(--cds-link-primary, #0f62fe);
+      color: var(--cds-link-primary);
     }
 
     .dos-inbox-msg__preview {
       font-size: 0.8125rem;
-      color: var(--cds-text-secondary, #525252);
+      color: var(--cds-text-secondary);
       margin: 0;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -223,16 +223,16 @@ const PRIORITY_TAG: Record<MsgPriority, DosCarbonTagType> = {
 
     /* High priority: breathing glow border */
     .dos-inbox-msg--high {
-      border-inline-start: var(--dos-inbox-error-border-width, 3px) solid var(--cds-support-error, #da1e28);
-      padding-inline-start: var(--cds-spacing-03, 0.5rem);
+      border-inline-start: var(--dos-inbox-error-border-width) solid var(--cds-support-error);
+      padding-inline-start: var(--cds-spacing-03);
       animation: breathing-glow 2s ease-in-out infinite;
     }
 
     /* ── Empty state ──────────────────────────────────── */
     .dos-inbox-empty {
-      padding: var(--cds-spacing-07, 2rem) var(--cds-spacing-05, 1rem);
+      padding: var(--cds-spacing-07) var(--cds-spacing-05);
       text-align: center;
-      color: var(--cds-text-secondary, #525252);
+      color: var(--cds-text-secondary);
     }
 
     /* ── Mobile drawer ───────────────────────────────── */
@@ -241,10 +241,10 @@ const PRIORITY_TAG: Record<MsgPriority, DosCarbonTagType> = {
       inset-block-end: 0;
       inset-inline: 0;
       max-block-size: 80vh;
-      background: var(--cds-layer, var(--cds-white, #ffffff));
-      border-block-start: 1px solid var(--cds-border-subtle, #e0e0e0);
-      border-radius: var(--cds-spacing-03, 0.5rem) var(--cds-spacing-03, 0.5rem) 0 0;
-      z-index: var(--shell-z-modal, 9000);
+      background: var(--cds-layer));
+      border-block-start: 1px solid var(--cds-border-subtle);
+      border-radius: var(--cds-spacing-03) var(--cds-spacing-03) 0 0;
+      z-index: var(--shell-z-modal);
       display: flex;
       flex-direction: column;
       animation: premium-fade-up 0.2s ease-out both;
@@ -254,18 +254,18 @@ const PRIORITY_TAG: Record<MsgPriority, DosCarbonTagType> = {
     .dos-inbox-drawer__handle {
       width: 2.5rem;
       height: 0.25rem;
-      background: var(--cds-border-subtle, #e0e0e0);
+      background: var(--cds-border-subtle);
       border-radius: 999px;
-      margin: var(--cds-spacing-03, 0.5rem) auto;
+      margin: var(--cds-spacing-03) auto;
       flex: 0 0 auto;
     }
 
     .dos-inbox-drawer__hdr {
       display: flex;
       align-items: center;
-      gap: var(--cds-spacing-03, 0.5rem);
-      padding: var(--cds-spacing-03, 0.5rem) var(--cds-spacing-05, 1rem);
-      border-block-end: 1px solid var(--cds-border-subtle, #e0e0e0);
+      gap: var(--cds-spacing-03);
+      padding: var(--cds-spacing-03) var(--cds-spacing-05);
+      border-block-end: 1px solid var(--cds-border-subtle);
       flex: 0 0 auto;
     }
 
@@ -273,28 +273,28 @@ const PRIORITY_TAG: Record<MsgPriority, DosCarbonTagType> = {
 
     .dos-inbox-drawer__close {
       background: none; border: none; cursor: pointer;
-      color: var(--cds-icon-secondary, #525252);
-      padding: var(--cds-spacing-02, 0.25rem);
+      color: var(--cds-icon-secondary);
+      padding: var(--cds-spacing-02);
       font-size: 1rem;
     }
 
     .dos-inbox-drawer__body {
       overflow-y: auto;
       flex: 1;
-      padding: var(--cds-spacing-03, 0.5rem) var(--cds-spacing-05, 1rem);
+      padding: var(--cds-spacing-03) var(--cds-spacing-05);
     }
 
     .dos-inbox-drawer__item {
       display: flex;
       flex-direction: column;
-      gap: var(--cds-spacing-02, 0.25rem);
+      gap: var(--cds-spacing-02);
       width: 100%;
       text-align: start;
       background: none;
       border: none;
       cursor: pointer;
-      padding: var(--cds-spacing-03, 0.5rem) 0;
-      border-block-end: 1px solid var(--cds-border-subtle-00, #e0e0e0);
+      padding: var(--cds-spacing-03) 0;
+      border-block-end: 1px solid var(--cds-border-subtle-00);
     }
 
     /* ── Keyframes ─────────────────────────────────────── */

@@ -1270,7 +1270,7 @@ export class ShellHostComponent {
 
       case 'dispatch_event':
         if (!this.isBrowser) return false;
-        window.dispatchEvent(new CustomEvent(action.name, { detail: action.detail }));
+        window.dispatchEvent(new CustomEvent(action.eventName, { detail: action.payload }));
         return true;
 
       default:

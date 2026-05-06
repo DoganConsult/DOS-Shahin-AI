@@ -10,9 +10,9 @@ export type ShellAction =
   | { kind: 'toggle_theme' }
   | { kind: 'open_context_tab'; tab: string }
   | { kind: 'open_command' }
-  | { kind: 'close_overlay'; overlay: string }
+  | { kind: 'close_overlay' }
   | { kind: 'clear_error' }
-  | { kind: 'dispatch_event'; name: string; detail?: unknown };
+  | { kind: 'dispatch_event'; eventName: string; payload?: Record<string, unknown> };
 
 /** Banner row after UI-OS chrome resolution + live merge (title/message are resolved strings). */
 export interface ShellBanner {
@@ -57,40 +57,18 @@ export function parseShellAction(raw: unknown): ShellAction | null {
     }
     case 'open_command':
       return { kind: 'open_command' };
-    case 'close_overlay': {
-      const overlay = raw['overlay'];
-      return typeof overlay === 'string' && overlay.trim()
-        ? { kind: 'close_overlay', overlay }
-        : null;
-    }
+    case 'close_overlay':
+      return { kind: 'close_overlay' };
     case 'clear_error':
       return { kind: 'clear_error' };
     case 'dispatch_event': {
-      const name = raw['name'];
-      return typeof name === 'string' && name.trim()
-        ? { kind: 'dispatch_event', name, detail: raw['detail'] }
+      const eventName = raw['eventName'];
+      const payload = raw['payload'];
+      return typeof eventName === 'string' && eventName.trim()
+        ? { kind: 'dispatch_event', eventName, payload: (payload && typeof payload === 'object' && !Array.isArray(payload)) ? payload as Record<string, unknown> : undefined }
         : null;
     }
     default:
       return null;
   }
-}
-
-/**
- * Normalize legacy route/detailRoute/evidenceUri blobs → ShellAction (single ingest point).
- */
-export function shellActionFromLegacyRecord(rec: Record<string, unknown>): ShellAction | null {
-  const direct = parseShellAction(rec['action']);
-  if (direct) return direct;
-  const route = rec['route'];
-  if (typeof route === 'string' && route.trim()) return { kind: 'navigate', path: route };
-  const detailRoute = rec['detailRoute'];
-  if (typeof detailRoute === 'string' && detailRoute.trim()) {
-    return { kind: 'navigate', path: detailRoute };
-  }
-  const evidenceUri = rec['evidenceUri'];
-  if (typeof evidenceUri === 'string' && evidenceUri.trim()) {
-    return { kind: 'open_external', url: evidenceUri };
-  }
-  return null;
 }

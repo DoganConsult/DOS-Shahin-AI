@@ -109,7 +109,7 @@ const TAB_LABELS: Record<ContextPanelTab, string> = {
       inline-size: min(360px, 100vw);
       background: var(--cds-layer-01);
       border-inline-start: 1px solid var(--cds-border-subtle-01);
-      z-index: var(--dos-z-panel, 6000);
+      z-index: var(--dos-z-panel);
       display: flex;
       flex-direction: column;
       box-shadow: var(--cds-shadow);
@@ -136,7 +136,7 @@ const TAB_LABELS: Record<ContextPanelTab, string> = {
     /* ── Tabs ────────────────────────────────────────── */
     .dos-context-panel__tabs {
       flex: 0 0 auto;
-      border-block-end: 1px solid var(--cds-border-subtle-01, #e0e0e0);
+      border-block-end: 1px solid var(--cds-border-subtle-01);
     }
 
     /* ── Body ────────────────────────────────────────── */
@@ -157,15 +157,15 @@ const TAB_LABELS: Record<ContextPanelTab, string> = {
     }
 
     :host ::ng-deep .dos-context-panel__accordion .cds--accordion__content {
-      padding-inline: var(--cds-spacing-05, 1rem);
+      padding-inline: var(--cds-spacing-05);
     }
 
     /* ── Skeleton ─────────────────────────────────────── */
     .dos-context-panel__skeleton {
       display: flex;
       flex-direction: column;
-      gap: var(--cds-spacing-05, 1rem);
-      padding: var(--cds-spacing-05, 1rem);
+      gap: var(--cds-spacing-05);
+      padding: var(--cds-spacing-05);
     }
 
     /* ── Empty state ──────────────────────────────────── */
