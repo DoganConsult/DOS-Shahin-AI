@@ -144,27 +144,27 @@ export interface WorkspaceShellRuntimeConfig {
 }
 
 export interface WorkspaceRuntimeNavGroupRow {
-  module_code: string;
-  group_id: string;
-  sort_order?: number | null;
-  label_key?: string | null;
-  label_en?: string | null;
-  label_ar?: string | null;
+  moduleCode: string;
+  groupId: string;
+  sortOrder?: number | null;
+  labelKey?: string | null;
+  labelEn?: string | null;
+  labelAr?: string | null;
   enabled?: boolean | null;
   version?: number | null;
 }
 
 export interface WorkspaceRuntimeNavItemRow {
-  module_code: string;
-  item_id: string;
-  group_id?: string | null;
-  sort_order?: number | null;
+  moduleCode: string;
+  itemId: string;
+  groupId?: string | null;
+  sortOrder?: number | null;
   route?: string | null;
   icon?: string | null;
   permission?: string | null;
-  label_key?: string | null;
-  label_en?: string | null;
-  label_ar?: string | null;
+  labelKey?: string | null;
+  labelEn?: string | null;
+  labelAr?: string | null;
   badge?: number | string | null;
   enabled?: boolean | null;
   version?: number | null;

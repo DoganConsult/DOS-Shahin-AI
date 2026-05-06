@@ -24,7 +24,6 @@ import {
   type QuickCreateAction,
   type StatusBarSignal,
   type WorkspaceI18nLabel,
-  type WorkspaceNavItem,
   type WorkspaceRuntimeNavigation,
   type WorkspaceRuntimeNavGroupRow,
   type WorkspaceRuntimeNavItemRow,
@@ -43,7 +42,7 @@ import type {
   ShellAction,
   ShellBanner,
 } from '@dos/ui-contracts';
-import { parseShellAction, shellActionFromLegacyRecord } from '@dos/ui-contracts';
+import { parseShellAction } from '@dos/ui-contracts';
 import { AccessStore } from '@dos/access-store';
 import { ShellConnectivityService } from './shell-connectivity.service';
 import { ShellErrorStateService } from './shell-error-state.service';
@@ -102,12 +101,12 @@ export class WorkspaceShellBindingService {
 
     for (const group of this._navGroupsRaw()) {
       if (group.enabled === false) continue;
-      const key = this.navGroupKey(group.module_code, group.group_id);
+      const key = this.navGroupKey(group.moduleCode, group.groupId);
       groupsByKey.set(key, {
         id: key,
-        labelKey: group.label_key ?? undefined,
-        label: this.resolveRuntimeLabel(group.label_key, group.label_en, group.label_ar, language),
-        order: Number(group.sort_order) || 0,
+        labelKey: group.labelKey ?? undefined,
+        label: this.resolveRuntimeLabel(group.labelKey, group.labelEn, group.labelAr, language),
+        order: Number(group.sortOrder) || 0,
         items: [],
       });
     }
@@ -118,25 +117,25 @@ export class WorkspaceShellBindingService {
       if (!route) continue;
       if (item.permission && !this.access.hasPermission(item.permission)) continue;
 
-      const groupKey = this.navGroupKey(item.module_code, item.group_id ?? 'ungrouped');
+      const groupKey = this.navGroupKey(item.moduleCode, item.groupId ?? 'ungrouped');
       const targetGroup = groupsByKey.get(groupKey) ?? {
         id: groupKey,
         label: '',
-        order: Number(item.sort_order) || 0,
+        order: Number(item.sortOrder) || 0,
         items: [],
       };
       if (!groupsByKey.has(groupKey)) groupsByKey.set(groupKey, targetGroup);
 
       const badge = this.normalizeNavBadge(item.badge);
       const navItem: DosNavItem = {
-        id: item.item_id,
-        labelKey: item.label_key ?? undefined,
-        label: this.resolveRuntimeLabel(item.label_key, item.label_en, item.label_ar, language),
+        id: item.itemId,
+        labelKey: item.labelKey ?? undefined,
+        label: this.resolveRuntimeLabel(item.labelKey, item.labelEn, item.labelAr, language),
         route,
         icon: this.normalizeIcon(item.icon),
         badge,
         requiredPermission: item.permission ?? undefined,
-        moduleCode: item.module_code,
+        moduleCode: item.moduleCode,
         enabled: true,
         group: groupKey,
       };
@@ -170,7 +169,7 @@ export class WorkspaceShellBindingService {
 
   /**
    * Resolve a string-valued prop. Accepts either a bare string or a
-   * `{ i18nKey, fallback }` shape.
+   * contracted runtime string value.
    */
   stringProp(key: string, propName: string): string | null {
     const row = this._surfaces().get(key);
@@ -178,11 +177,6 @@ export class WorkspaceShellBindingService {
     const props = row.props as Record<string, unknown> | undefined;
     const v = props?.[propName];
     if (typeof v === 'string' && v.trim()) return v;
-    if (v && typeof v === 'object') {
-      const obj = v as Record<string, unknown>;
-      const fb = obj['fallback'];
-      if (typeof fb === 'string' && fb.trim()) return fb;
-    }
     return null;
   }
 
@@ -200,33 +194,31 @@ export class WorkspaceShellBindingService {
   // these without knowing which specific component_key provides the data.
 
   readonly statusBarSignals = computed<StatusBarSignal[]>(
-    () => this.zonePropArray('bottom-status', 'signals').map((row) => this.normalizeStatusBarSignal(row)).filter(Boolean) as StatusBarSignal[],
+    () => this.zonePropArray('bottom-status', 'shell.surfaces.statusBar.signals').map((row) => this.normalizeStatusBarSignal(row)).filter(Boolean) as StatusBarSignal[],
   );
   readonly actionQueueItems = computed<ActionQueueItem[]>(
-    () => this.zonePropArray('bottom-status', 'items').map((row) => this.normalizeActionQueueItem(row)).filter(Boolean) as ActionQueueItem[],
+    () => this.zonePropArray('bottom-status', 'shell.surfaces.actionQueue.items').map((row) => this.normalizeActionQueueItem(row)).filter(Boolean) as ActionQueueItem[],
   );
   readonly agentActivities = computed<AgentActivity[]>(
-    () => this.zonePropArray('bottom-status', 'activities').map((row) => this.normalizeAgentActivity(row)).filter(Boolean) as AgentActivity[],
+    () => this.zonePropArray('bottom-status', 'shell.surfaces.agentStrip.activities').map((row) => this.normalizeAgentActivity(row)).filter(Boolean) as AgentActivity[],
   );
   readonly contextViews = computed<ContextPanelView[]>(
-    () => this.zonePropArray('right-rail', 'views').map((row) => this.normalizeContextView(row)).filter(Boolean) as ContextPanelView[],
+    () => this.zonePropArray('right-rail', 'shell.surfaces.contextPanel.views').map((row) => this.normalizeContextView(row)).filter(Boolean) as ContextPanelView[],
   );
   readonly inboxMessages = computed<InboxMessage[]>(
-    () => this.zonePropArray('right-rail', 'messages').map((row) => this.normalizeInboxMessage(row)).filter(Boolean) as InboxMessage[],
+    () => this.zonePropArray('right-rail', 'shell.surfaces.inbox.messages').map((row) => this.normalizeInboxMessage(row)).filter(Boolean) as InboxMessage[],
   );
   readonly quickCreateActions = computed<QuickCreateAction[]>(
-    () => this.zonePropArray('fab', 'actions').map((row) => this.normalizeQuickCreateAction(row)).filter(Boolean) as QuickCreateAction[],
+    () => this.zonePropArray('fab', 'shell.surfaces.quickCreate.actions').map((row) => this.normalizeQuickCreateAction(row)).filter(Boolean) as QuickCreateAction[],
   );
   readonly commandResults = computed<CommandSearchResult[]>(
-    () => this.zonePropArray('header', 'results').map((row) => this.normalizeCommandResult(row)).filter(Boolean) as CommandSearchResult[],
+    () => this.zonePropArray('header', 'shell.surfaces.commandSearch.results').map((row) => this.normalizeCommandResult(row)).filter(Boolean) as CommandSearchResult[],
   );
 
   // ── Header chrome props (dynamic) ───────────────────────────────────────
   // Reads from the first header-zone surface that has brand/homeRoute etc.
   readonly headerBrandLabel = computed<string | null>(
-    () => this.zoneStringProp('header', 'brand')
-       ?? this.zoneStringProp('header', 'productName')
-       ?? this.zoneStringProp('header', 'tenantName'),
+    () => this.zoneStringProp('header', 'brand'),
   );
   readonly headerHomeRoute = computed<string | null>(
     () => this.zoneStringProp('header', 'homeRoute'),
@@ -238,31 +230,26 @@ export class WorkspaceShellBindingService {
     () => this.zoneStringProp('header', 'logoHref'),
   );
 
-  /** Dynamic account menu entries from any header-zone surface. */
+  /** Dynamic account menu entries from shell.chrome.accountMenu in any surface. */
   readonly accountMenuEntries = computed<ShellAccountMenuEntry[] | null>(
     () => {
-      for (const row of this.surfacesByZone('header')) {
-        const props = row.props as Record<string, unknown> | undefined;
-        const raw = this.walkNested(props, 'shell.chrome.accountMenu') ?? props?.['accountMenu'];
-        if (!Array.isArray(raw)) continue;
-        const out: ShellAccountMenuEntry[] = [];
-        for (const item of raw) {
-          if (!item || typeof item !== 'object') continue;
-          const e = item as Record<string, unknown>;
-          const id = typeof e['id'] === 'string' ? (e['id'] as string) : null;
-          const labelKey = typeof e['labelKey'] === 'string' ? (e['labelKey'] as string) : null;
-          if (!id || !labelKey) continue;
-          const entry: ShellAccountMenuEntry = { id, labelKey };
-          if (typeof e['route'] === 'string') entry.route = e['route'] as string;
-          const action = parseShellAction(e['action']);
-          if (action) entry.action = action;
-          if (e['destructive'] === true) entry.destructive = true;
-          if (typeof e['requiresAdmin'] === 'boolean') entry.requiresAdmin = e['requiresAdmin'] as boolean;
-          out.push(entry);
-        }
-        if (out.length > 0) return out;
+      const raw = this.globalPropArray('shell.chrome.accountMenu');
+      if (raw.length === 0) return null;
+      const out: ShellAccountMenuEntry[] = [];
+      for (const item of raw) {
+        if (!item || typeof item !== 'object') continue;
+        const e = item as Record<string, unknown>;
+        const id = typeof e['id'] === 'string' ? (e['id'] as string) : null;
+        const labelKey = typeof e['labelKey'] === 'string' ? (e['labelKey'] as string) : null;
+        if (!id || !labelKey) continue;
+        const entry: ShellAccountMenuEntry = { id, labelKey };
+        const action = parseShellAction(e['action']);
+        if (action) entry.action = action;
+        if (e['destructive'] === true) entry.destructive = true;
+        if (typeof e['requiresAdmin'] === 'boolean') entry.requiresAdmin = e['requiresAdmin'] as boolean;
+        out.push(entry);
       }
-      return null;
+      return out.length > 0 ? out : null;
     },
   );
 
@@ -377,9 +364,7 @@ export class WorkspaceShellBindingService {
     this._loaded.set(true);
   }
 
-  // COMPLIANCE: coerceItems DELETED — legacy compatibility shim that
-  // converted snake_case label_key/label_fallback into i18nKey/fallback.
-  // All data must flow from DB in the contracted shape. Zero consumers.
+  // COMPLIANCE: All data must flow from DB in the contracted shape.
 
   // ── UI-OS runtime config — shell-host reads these instead of hardcoding ──
 
@@ -392,8 +377,7 @@ export class WorkspaceShellBindingService {
     for (const row of Array.from(this._surfaces().values())) {
       const props = row.props as Record<string, unknown> | undefined;
       const labels = this.nestedRecordProp(props, 'shell.chrome.labels');
-      const strings = labels ?? (props?.['chromeStrings'] as Record<string, unknown> | undefined);
-      if (strings && typeof strings[key] === 'string') return strings[key] as string;
+      if (labels && typeof labels[key] === 'string') return labels[key] as string;
     }
     return '';
   }
@@ -403,7 +387,7 @@ export class WorkspaceShellBindingService {
    * DB key path: workspace_shell_binding → props.shell.banners[]
    */
   readonly bannerTemplates = computed<WorkspaceShellBannerTemplate[]>(
-    () => this.zonePropArray('top-banners', 'banners', 'shell.banners')
+    () => this.globalPropArray('shell.banners')
       .map((row) => this.normalizeBannerTemplate(row))
       .filter(Boolean) as WorkspaceShellBannerTemplate[],
   );
@@ -495,7 +479,7 @@ export class WorkspaceShellBindingService {
 
   /** Keyboard shortcuts from runtime. */
   readonly shellShortcuts = computed<WorkspaceShellShortcut[]>(() => {
-    const rows = this.zonePropArray('header', 'shortcuts', 'shell.chrome.shortcuts');
+    const rows = this.globalPropArray('shell.chrome.shortcuts');
     const out: WorkspaceShellShortcut[] = [];
     for (const row of rows) {
       if (!row || typeof row !== 'object') continue;
@@ -512,7 +496,7 @@ export class WorkspaceShellBindingService {
 
   /** Account menu actions (language/theme toggles) from runtime. */
   readonly accountMenuActions = computed<WorkspaceShellActionItem[]>(
-    () => this.zonePropArray('header', 'accountMenuActions', 'shell.chrome.accountMenuActions')
+    () => this.globalPropArray('shell.chrome.accountMenuActions')
       .map((row) => this.normalizeActionItem(row))
       .filter(Boolean) as WorkspaceShellActionItem[],
   );
@@ -545,26 +529,26 @@ export class WorkspaceShellBindingService {
     return null;
   }
 
-  // ── Private zone-prop helpers ─────────────────────────────────────────────
-  // Read from the FIRST surface in a zone that has the requested prop.
+  // ── Private prop helpers ─────────────────────────────────────────────────
+  // All reads use dot-path resolution only. No flat key fallbacks.
 
-  private zonePropArray(zone: WorkspaceShellZone, propName: string, dotPath?: string): unknown[] {
+  private zonePropArray(zone: WorkspaceShellZone, dotPath: string): unknown[] {
     for (const row of this.surfacesByZone(zone)) {
       const props = row.props as Record<string, unknown> | undefined;
-      const nested = dotPath ? this.walkNested(props, dotPath) : undefined;
-      const v = nested ?? props?.[propName];
+      const v = this.walkNested(props, dotPath);
       if (Array.isArray(v)) return v;
     }
     return [];
   }
 
-  private zoneNumberProp(zone: WorkspaceShellZone, propName: string): number | null {
-    for (const row of this.surfacesByZone(zone)) {
+  /** Read an array from any surface's props via dot-path. */
+  private globalPropArray(dotPath: string): unknown[] {
+    for (const row of Array.from(this._surfaces().values())) {
       const props = row.props as Record<string, unknown> | undefined;
-      const v = props?.[propName];
-      if (typeof v === 'number') return v;
+      const v = this.walkNested(props, dotPath);
+      if (Array.isArray(v)) return v;
     }
-    return null;
+    return [];
   }
 
   /** Dot-path read under props (e.g. shell.layout.mobileBottomNav.maxItems). */
@@ -638,15 +622,10 @@ export class WorkspaceShellBindingService {
     if (raw && typeof raw === 'object' && !Array.isArray(raw)) {
       const record = raw as Record<string, unknown>;
       const i18nKey = typeof record['i18nKey'] === 'string' ? (record['i18nKey'] as string) : '';
-      const fallback = typeof record['fallback'] === 'string'
-        ? (record['fallback'] as string)
-        : typeof record['label_fallback'] === 'string'
-          ? (record['label_fallback'] as string)
-          : undefined;
-      const legacyKey = typeof record['label_key'] === 'string' ? (record['label_key'] as string) : undefined;
+      const fallback = typeof record['fallback'] === 'string' ? (record['fallback'] as string) : undefined;
       return {
-        i18nKey: i18nKey || legacyKey || fallbackKey || '',
-        fallback: fallback && fallback.trim() ? fallback.trim() : undefined,
+        i18nKey: i18nKey || fallbackKey || '',
+        fallback: fallback?.trim() || undefined,
       };
     }
     return { i18nKey: fallbackKey ?? '', fallback: undefined };
@@ -664,7 +643,7 @@ export class WorkspaceShellBindingService {
     if (typeof record['kind'] === 'string') signal.kind = record['kind'] as string;
     if (typeof record['level'] === 'string') signal.level = record['level'] as string;
     if (typeof record['value'] === 'string' || typeof record['value'] === 'number') signal.value = record['value'] as string | number;
-    const action = shellActionFromLegacyRecord(record);
+    const action = parseShellAction(record['action']);
     if (action) signal.action = action;
     return signal;
   }
@@ -683,7 +662,7 @@ export class WorkspaceShellBindingService {
     if (typeof record['severity'] === 'string') item.severity = record['severity'] as string;
     if (typeof record['timestamp'] === 'string') item.timestamp = record['timestamp'] as string;
     if (typeof record['dueAt'] === 'string') item.dueAt = record['dueAt'] as string;
-    const action = shellActionFromLegacyRecord(record);
+    const action = parseShellAction(record['action']);
     if (action) item.action = action;
     return item;
   }
@@ -701,7 +680,7 @@ export class WorkspaceShellBindingService {
     if (typeof record['avatarUri'] === 'string') activity.avatarUri = record['avatarUri'] as string;
     if (typeof record['state'] === 'string') activity.state = record['state'] as string;
     if (typeof record['status'] === 'string') activity.status = record['status'] as string;
-    const action = shellActionFromLegacyRecord(record);
+    const action = parseShellAction(record['action']);
     if (action) activity.action = action;
     return activity;
   }
@@ -736,7 +715,7 @@ export class WorkspaceShellBindingService {
     if (typeof record['unread'] === 'boolean') message.unread = record['unread'] as boolean;
     if (typeof record['timestamp'] === 'string') message.timestamp = record['timestamp'] as string;
     if (typeof record['receivedAt'] === 'string') message.receivedAt = record['receivedAt'] as string;
-    const action = shellActionFromLegacyRecord(record);
+    const action = parseShellAction(record['action']);
     if (action) message.action = action;
     return message;
   }
@@ -752,7 +731,7 @@ export class WorkspaceShellBindingService {
     };
     actionItem.icon = this.normalizeIcon(typeof record['icon'] === 'string' ? record['icon'] as string : undefined);
     if (typeof record['hotkey'] === 'string') actionItem.hotkey = record['hotkey'] as string;
-    const action = shellActionFromLegacyRecord(record);
+    const action = parseShellAction(record['action']);
     if (action) actionItem.action = action;
     return actionItem;
   }
@@ -769,7 +748,7 @@ export class WorkspaceShellBindingService {
     result.icon = this.normalizeIcon(typeof record['icon'] === 'string' ? record['icon'] as string : undefined);
     if (typeof record['category'] === 'string') result.category = record['category'] as string;
     if (typeof record['route'] === 'string') result.route = record['route'] as string;
-    const action = shellActionFromLegacyRecord(record);
+    const action = parseShellAction(record['action']);
     if (action) result.action = action;
     return result;
   }
@@ -782,7 +761,7 @@ export class WorkspaceShellBindingService {
     const item: WorkspaceShellActionItem = { id };
     if (typeof record['labelKey'] === 'string') item.labelKey = record['labelKey'] as string;
     if (record['destructive'] === true) item.destructive = true;
-    const action = parseShellAction(record['action']) ?? shellActionFromLegacyRecord(record);
+    const action = parseShellAction(record['action']);
     if (action) item.action = action;
     return item;
   }
@@ -799,7 +778,7 @@ export class WorkspaceShellBindingService {
     if (typeof record['messageKey'] === 'string') banner.messageKey = record['messageKey'] as string;
     if (record['dismissible'] === true) banner.dismissible = true;
     if (typeof record['actionLabelKey'] === 'string') banner.actionLabelKey = record['actionLabelKey'] as string;
-    const action = parseShellAction(record['action']) ?? shellActionFromLegacyRecord(record);
+    const action = parseShellAction(record['action']);
     if (action) banner.action = action;
     return banner;
   }

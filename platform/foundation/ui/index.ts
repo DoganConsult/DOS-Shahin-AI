@@ -63,7 +63,7 @@ export { FoundationAuditComponent as FoundationAuditTrailPage } from './pages/fo
 export { FoundationPageShellComponent } from './components/foundation-page-shell.component';
 
 // Services
-export { FoundationApiService } from './services/foundation-api.service';
+export { FoundationApiService, type FoundationLookups } from './services/foundation-api.service';
 
 // Dynamic UI signature widgets (stubs — replace with full implementations)
 export {

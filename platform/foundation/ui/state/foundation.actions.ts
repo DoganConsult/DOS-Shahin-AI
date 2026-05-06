@@ -1,4 +1,6 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
+import type { FoundationLookups } from '../services/foundation-api.service';
+
 export const FoundationActions = createActionGroup({
   source: 'Foundation',
   events: {
@@ -6,7 +8,7 @@ export const FoundationActions = createActionGroup({
     'Dashboard Loaded': props<{ dashboard: any }>(),
     'Dashboard Load Failed': props<{ error: string }>(),
     'Load Configs': emptyProps(),
-    'Configs Loaded': props<{ items: any[]; total: number }>(),
+    'Configs Loaded': props<{ lookups: FoundationLookups }>(),
     'Configs Load Failed': props<{ error: string }>(),
     'Load All': emptyProps(),
     'Reset': emptyProps(),

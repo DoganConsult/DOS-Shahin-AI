@@ -162,10 +162,10 @@ export class DynamicUiBootstrapService {
     return this.agentActions().filter(a => a.route === route);
   }
 
-  // W9.D9.2 — Foundation nav children resolved from live dynamic-ui rows when
-  // available, falling back to the static SPA list. Consumers (sidebar,
-  // navigation derivation service, command palette) can read this signal to
-  // get a readiness-filtered, sort_order-aware list.
+  // W9.D9.2 — Foundation nav children from Dynamic-UI contract rows only.
+  // `buildFoundationNavChildren` returns [] when the bundle is missing or has
+  // no nav rows (no static SPA fallback). Consumers: sidebar, nav derivation,
+  // command palette.
   readonly foundationNavChildren = computed<NavItem[]>(() =>
     buildFoundationNavChildren(this.visibleNavigation() as DynamicFoundationNavRow[]),
   );

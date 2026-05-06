@@ -1,18 +1,18 @@
 import { createReducer, on, createFeature } from '@ngrx/store';
+import type { FoundationLookups } from '../../services/foundation-api.service';
 import { FoundationActions } from './foundation.actions';
 
 export interface FoundationState {
   dashboard: any | null;
-  items: any[];
-  total: number;
+  /** From GET …/foundation/lookups via FoundationApiService.getLookups(). */
+  lookups: FoundationLookups | null;
   loading: boolean;
   error: string | null;
 }
 
 const initialState: FoundationState = {
   dashboard: null,
-  items: [],
-  total: 0,
+  lookups: null,
   loading: false,
   error: null,
 };
@@ -25,7 +25,7 @@ export const foundationFeature = createFeature({
       (state) => ({ ...state, loading: true, error: null })),
     on(FoundationActions.dashboardLoaded, (state, { dashboard }) => ({ ...state, dashboard, loading: false })),
     on(FoundationActions.dashboardLoadFailed, (state, { error }) => ({ ...state, error, loading: false })),
-    on(FoundationActions.configsLoaded, (state, { items, total }) => ({ ...state, items, total, loading: false })),
+    on(FoundationActions.configsLoaded, (state, { lookups }) => ({ ...state, lookups, loading: false })),
     on(FoundationActions.configsLoadFailed, (state, { error }) => ({ ...state, error, loading: false })),
     on(FoundationActions.reset, () => initialState),
   ),
@@ -33,8 +33,7 @@ export const foundationFeature = createFeature({
 
 export const {
   selectDashboard: selectFoundationDashboard,
-  selectItems: selectFoundationItems,
-  selectTotal: selectFoundationTotal,
+  selectLookups: selectFoundationLookups,
   selectLoading: selectFoundationLoading,
   selectError: selectFoundationError,
 } = foundationFeature;

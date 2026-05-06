@@ -3,6 +3,8 @@
 Canonical copy-paste source for Cursor agents.  
 **Do not edit** `.cursor/plans/*.plan.md` — update this file if the pack changes.
 
+**DOS-Platform — repo-grounded Pass 1–3 ledgers (routes, gaps, QA):** [execution/README.md](./execution/README.md)
+
 ## How to use
 
 - Run **one module only** per agent session (or one pass only for smaller steps).
