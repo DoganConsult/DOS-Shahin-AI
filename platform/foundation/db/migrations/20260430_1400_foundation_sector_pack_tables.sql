@@ -49,7 +49,7 @@ CREATE INDEX IF NOT EXISTS ix_foundation_cat_position_templates_sector ON dos.fo
 
 CREATE TABLE IF NOT EXISTS dos.foundation_cat_role_templates (
   role_code       TEXT NOT NULL,
-  sector_code     TEXT,                           -- NULL = applies to all sectors
+  sector_code     TEXT NOT NULL DEFAULT '*',      -- '*' = applies to all sectors
   name_en         TEXT NOT NULL,
   name_ar         TEXT,
   description_en  TEXT,
@@ -57,13 +57,13 @@ CREATE TABLE IF NOT EXISTS dos.foundation_cat_role_templates (
   applies_to_profiles TEXT[],                     -- profile types this role can be assigned to
   is_platform_default BOOLEAN NOT NULL DEFAULT false,
   is_active       BOOLEAN NOT NULL DEFAULT true,
-  CONSTRAINT pk_foundation_cat_role_templates PRIMARY KEY NULLS NOT DISTINCT (role_code, sector_code)
+  CONSTRAINT pk_foundation_cat_role_templates PRIMARY KEY (role_code, sector_code)
 );
 CREATE INDEX IF NOT EXISTS ix_foundation_cat_role_templates_sector ON dos.foundation_cat_role_templates (sector_code) WHERE is_active = true;
 
 CREATE TABLE IF NOT EXISTS dos.foundation_cat_committee_templates (
   template_code   TEXT NOT NULL,
-  sector_code     TEXT,                           -- NULL = applies to all sectors
+  sector_code     TEXT NOT NULL DEFAULT '*',      -- '*' = applies to all sectors
   name_en         TEXT NOT NULL,
   name_ar         TEXT,
   charter_en      TEXT,
@@ -75,6 +75,6 @@ CREATE TABLE IF NOT EXISTS dos.foundation_cat_committee_templates (
   is_mandatory    BOOLEAN NOT NULL DEFAULT false,
   required_by_frameworks TEXT[],
   is_active       BOOLEAN NOT NULL DEFAULT true,
-  CONSTRAINT pk_foundation_cat_committee_templates PRIMARY KEY NULLS NOT DISTINCT (template_code, sector_code)
+  CONSTRAINT pk_foundation_cat_committee_templates PRIMARY KEY (template_code, sector_code)
 );
 CREATE INDEX IF NOT EXISTS ix_foundation_cat_committee_templates_sector ON dos.foundation_cat_committee_templates (sector_code) WHERE is_active = true;

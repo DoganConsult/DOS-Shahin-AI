@@ -198,7 +198,7 @@ CREATE INDEX IF NOT EXISTS idx_dos_audit_module ON dos.audit_trail(tenant_id, mo
 -- 2. Permissions catalogue (source of truth: dos.permissions)
 --    platform_dauth.permissions is a VIEW over dos.permissions.
 -- ---------------------------------------------------------------------
-INSERT INTO dos.permissions (permission_id, permission_code, module_code, resource_type, action_type, description)
+INSERT INTO platform_dauth.permissions (permission_id, permission_code, module_code, resource_type, action_type, description)
 VALUES
   ('perm_platform_tenant_read',     'platform.tenant.read',      'platform',   'tenant',        'read',    'Read tenant config'),
   ('perm_platform_tenant_write',    'platform.tenant.write',     'platform',   'tenant',        'update',  'Write tenant config'),
@@ -240,9 +240,8 @@ VALUES
   ('perm_risk_record_read',         'risk.record.read',          'risk',       'record',        'read',    'Read risks'),
   ('perm_audit_record_read',        'audit.record.read',         'audit',      'record',        'read',    'Read audit records'),
   ('perm_evidence_item_read',       'evidence.item.read',        'evidence',   'item',          'read',    'Read evidence')
-ON CONFLICT (permission_id) DO UPDATE
-   SET permission_code = EXCLUDED.permission_code,
-       module_code     = EXCLUDED.module_code,
+ON CONFLICT (permission_code) DO UPDATE
+   SET module_code     = EXCLUDED.module_code,
        resource_type   = EXCLUDED.resource_type,
        action_type     = EXCLUDED.action_type,
        description     = EXCLUDED.description;
@@ -250,7 +249,7 @@ ON CONFLICT (permission_id) DO UPDATE
 -- ---------------------------------------------------------------------
 -- 3. Functional roles (source of truth: dos.functional_roles)
 -- ---------------------------------------------------------------------
-INSERT INTO dos.functional_roles (role_id, role_code, display_name, description, permissions)
+INSERT INTO platform_dauth.functional_roles (role_id, role_code, display_name, description, permissions)
 VALUES
   ('role_platform_super_admin', 'platform_super_admin', 'Platform Super Admin', 'Global platform administrator',
      (SELECT array_agg(permission_code) FROM dos.permissions)),

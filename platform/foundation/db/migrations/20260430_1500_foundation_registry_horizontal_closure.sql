@@ -23,12 +23,22 @@ BEGIN;
 -- ── 1. Reconcile dos.product_registry column shape ────────────────────
 ALTER TABLE dos.product_registry ADD COLUMN IF NOT EXISTS product_key   TEXT;
 ALTER TABLE dos.product_registry ADD COLUMN IF NOT EXISTS display_name  TEXT;
+ALTER TABLE dos.product_registry ADD COLUMN IF NOT EXISTS code          TEXT;
+ALTER TABLE dos.product_registry ADD COLUMN IF NOT EXISTS name_en       TEXT;
+ALTER TABLE dos.product_registry ADD COLUMN IF NOT EXISTS name_ar       TEXT;
+ALTER TABLE dos.product_registry ADD COLUMN IF NOT EXISTS description   TEXT;
+ALTER TABLE dos.product_registry ADD COLUMN IF NOT EXISTS version       TEXT;
+ALTER TABLE dos.product_registry ADD COLUMN IF NOT EXISTS updated_at    TIMESTAMPTZ DEFAULT NOW();
 UPDATE dos.product_registry
    SET product_key  = COALESCE(product_key,  code),
-       display_name = COALESCE(display_name, name_en)
- WHERE product_key IS NULL OR display_name IS NULL;
+       display_name = COALESCE(display_name, name_en),
+       code         = COALESCE(code,         product_key),
+       name_en      = COALESCE(name_en,      display_name)
+ WHERE product_key IS NULL OR display_name IS NULL OR code IS NULL OR name_en IS NULL;
 CREATE UNIQUE INDEX IF NOT EXISTS uq_product_registry_product_key
   ON dos.product_registry(product_key);
+CREATE UNIQUE INDEX IF NOT EXISTS uq_product_registry_code
+  ON dos.product_registry(code);
 
 CREATE OR REPLACE FUNCTION dos.product_registry_alias_sync()
 RETURNS trigger LANGUAGE plpgsql AS $$
@@ -49,15 +59,27 @@ CREATE TRIGGER trg_product_registry_alias_sync
 ALTER TABLE dos.module_registry ADD COLUMN IF NOT EXISTS module_code   TEXT;
 ALTER TABLE dos.module_registry ADD COLUMN IF NOT EXISTS product_key   TEXT;
 ALTER TABLE dos.module_registry ADD COLUMN IF NOT EXISTS display_name  TEXT;
+ALTER TABLE dos.module_registry ADD COLUMN IF NOT EXISTS code          TEXT;
+ALTER TABLE dos.module_registry ADD COLUMN IF NOT EXISTS product_code  TEXT;
+ALTER TABLE dos.module_registry ADD COLUMN IF NOT EXISTS name_en       TEXT;
+ALTER TABLE dos.module_registry ADD COLUMN IF NOT EXISTS name_ar       TEXT;
+ALTER TABLE dos.module_registry ADD COLUMN IF NOT EXISTS description   TEXT;
+ALTER TABLE dos.module_registry ADD COLUMN IF NOT EXISTS tier          TEXT;
+ALTER TABLE dos.module_registry ADD COLUMN IF NOT EXISTS updated_at    TIMESTAMPTZ DEFAULT NOW();
 UPDATE dos.module_registry
    SET module_code  = COALESCE(module_code,  code),
        product_key  = COALESCE(product_key,  product_code),
-       display_name = COALESCE(display_name, name_en)
- WHERE module_code IS NULL OR product_key IS NULL OR display_name IS NULL;
+       display_name = COALESCE(display_name, name_en),
+       code         = COALESCE(code,         module_code),
+       product_code = COALESCE(product_code, product_key),
+       name_en      = COALESCE(name_en,      display_name)
+ WHERE module_code IS NULL OR product_key IS NULL OR display_name IS NULL OR code IS NULL OR product_code IS NULL OR name_en IS NULL;
 CREATE UNIQUE INDEX IF NOT EXISTS uq_module_registry_module_code
   ON dos.module_registry(module_code);
 CREATE INDEX IF NOT EXISTS ix_module_registry_product_key
   ON dos.module_registry(product_key);
+CREATE UNIQUE INDEX IF NOT EXISTS uq_module_registry_code
+  ON dos.module_registry(code);
 
 CREATE OR REPLACE FUNCTION dos.module_registry_alias_sync()
 RETURNS trigger LANGUAGE plpgsql AS $$
@@ -78,10 +100,15 @@ CREATE TRIGGER trg_module_registry_alias_sync
 
 -- ── 3. Reconcile dos.tenant_product_activation column shape ───────────
 ALTER TABLE dos.tenant_product_activation
-  ADD COLUMN IF NOT EXISTS product_key TEXT;
+  ADD COLUMN IF NOT EXISTS product_key  TEXT;
+ALTER TABLE dos.tenant_product_activation
+  ADD COLUMN IF NOT EXISTS product_code TEXT;
 UPDATE dos.tenant_product_activation
-   SET product_key = COALESCE(product_key, product_code)
- WHERE product_key IS NULL;
+   SET product_key  = COALESCE(product_key,  product_code),
+       product_code = COALESCE(product_code, product_key)
+ WHERE product_key IS NULL OR product_code IS NULL;
+CREATE UNIQUE INDEX IF NOT EXISTS uq_tenant_product_activation_tpc
+  ON dos.tenant_product_activation(tenant_id, product_code);
 
 CREATE OR REPLACE FUNCTION dos.tpa_alias_sync()
 RETURNS trigger LANGUAGE plpgsql AS $$

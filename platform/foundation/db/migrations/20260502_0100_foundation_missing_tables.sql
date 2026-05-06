@@ -108,6 +108,9 @@ CREATE TABLE IF NOT EXISTS dos.user_roles (
   created_at    TIMESTAMPTZ   NOT NULL DEFAULT NOW(),
   updated_at    TIMESTAMPTZ   NOT NULL DEFAULT NOW()
 );
+-- Pre-existing live deploys may already have dos.user_roles in a slimmer
+-- canonical shape; ensure 'ended_at' is present before referencing it.
+ALTER TABLE dos.user_roles ADD COLUMN IF NOT EXISTS ended_at TIMESTAMPTZ;
 
 CREATE INDEX IF NOT EXISTS idx_dos_user_roles_user
   ON dos.user_roles(tenant_id, user_id) WHERE ended_at IS NULL;
@@ -116,24 +119,34 @@ CREATE INDEX IF NOT EXISTS idx_dos_user_roles_user
 -- 5. dos.user_role_assignments                                        --
 --    Role assignment ledger used by SoD-check service.               --
 -- ------------------------------------------------------------------ --
-CREATE TABLE IF NOT EXISTS dos.user_role_assignments (
-  id            UUID          PRIMARY KEY DEFAULT gen_random_uuid(),
-  tenant_id     VARCHAR(64)   NOT NULL,
-  user_id       VARCHAR(64)   NOT NULL,
-  role_code     VARCHAR(100)  NOT NULL,
-  granted_by    VARCHAR(64),
-  granted_at    TIMESTAMPTZ   NOT NULL DEFAULT NOW(),
-  revoked_at    TIMESTAMPTZ,
-  revoked_by    VARCHAR(64),
-  created_at    TIMESTAMPTZ   NOT NULL DEFAULT NOW(),
-  updated_at    TIMESTAMPTZ   NOT NULL DEFAULT NOW()
-);
-
-CREATE INDEX IF NOT EXISTS idx_dos_user_role_assignments_user
-  ON dos.user_role_assignments(tenant_id, user_id) WHERE revoked_at IS NULL;
-
-CREATE UNIQUE INDEX IF NOT EXISTS idx_dos_user_role_assignments_active
-  ON dos.user_role_assignments(tenant_id, user_id, role_code) WHERE revoked_at IS NULL;
+-- Pre-existing live deploys may already expose dos.user_role_assignments as a
+-- VIEW over platform_dauth.user_role_assignments. Skip table/index creation
+-- when relation already exists as a view (canonical-by-view doctrine).
+DO $$
+DECLARE r_kind CHAR;
+BEGIN
+  SELECT c.relkind INTO r_kind FROM pg_class c
+    JOIN pg_namespace n ON n.oid = c.relnamespace
+   WHERE n.nspname = 'dos' AND c.relname = 'user_role_assignments';
+  IF r_kind IS NULL OR r_kind = 'r' THEN
+    CREATE TABLE IF NOT EXISTS dos.user_role_assignments (
+      id            UUID          PRIMARY KEY DEFAULT gen_random_uuid(),
+      tenant_id     VARCHAR(64)   NOT NULL,
+      user_id       VARCHAR(64)   NOT NULL,
+      role_code     VARCHAR(100)  NOT NULL,
+      granted_by    VARCHAR(64),
+      granted_at    TIMESTAMPTZ   NOT NULL DEFAULT NOW(),
+      revoked_at    TIMESTAMPTZ,
+      revoked_by    VARCHAR(64),
+      created_at    TIMESTAMPTZ   NOT NULL DEFAULT NOW(),
+      updated_at    TIMESTAMPTZ   NOT NULL DEFAULT NOW()
+    );
+    CREATE INDEX IF NOT EXISTS idx_dos_user_role_assignments_user
+      ON dos.user_role_assignments(tenant_id, user_id) WHERE revoked_at IS NULL;
+    CREATE UNIQUE INDEX IF NOT EXISTS idx_dos_user_role_assignments_active
+      ON dos.user_role_assignments(tenant_id, user_id, role_code) WHERE revoked_at IS NULL;
+  END IF;
+END$$;
 
 -- ------------------------------------------------------------------ --
 -- 6. dos.role_assignments                                             --
@@ -169,6 +182,10 @@ CREATE TABLE IF NOT EXISTS dos.module_sla_defaults (
   created_at     TIMESTAMPTZ   NOT NULL DEFAULT NOW(),
   updated_at     TIMESTAMPTZ   NOT NULL DEFAULT NOW()
 );
+-- Pre-existing live deploys may have a slimmer module_sla_defaults; ensure
+-- columns referenced below are present (additive, idempotent).
+ALTER TABLE dos.module_sla_defaults ADD COLUMN IF NOT EXISTS description TEXT;
+ALTER TABLE dos.module_sla_defaults ADD COLUMN IF NOT EXISTS updated_at  TIMESTAMPTZ NOT NULL DEFAULT NOW();
 
 CREATE UNIQUE INDEX IF NOT EXISTS idx_dos_module_sla_defaults_module_type
   ON dos.module_sla_defaults(module_code, sla_type);

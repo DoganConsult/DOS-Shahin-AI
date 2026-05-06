@@ -73,7 +73,7 @@ BEGIN
     ('perm_foundation_record_approve', 'foundation.record.approve', 'foundation', 'foundation_record',  'approve', 'Approve foundation records.'),
     ('perm_foundation_record_delete',  'foundation.record.delete',  'foundation', 'foundation_record',  'delete',  'Delete foundation records.'),
     ('perm_audit_trail_read',          'audit_trail.read',          'foundation', 'audit_trail',        'read',    'Read foundation audit trail entries.')
-  ON CONFLICT (permission_id) DO UPDATE
+  ON CONFLICT (permission_code) DO UPDATE
     SET permission_code = EXCLUDED.permission_code,
         module_code     = EXCLUDED.module_code,
         resource_type   = EXCLUDED.resource_type,

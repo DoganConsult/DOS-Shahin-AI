@@ -105,54 +105,42 @@ UPDATE platform_dauth.permissions
                     WHERE permission_code = 'foundation.admin');
 
 -- 2. Hard-replace colon-form codes on every UI-contract column.
---    Single mapping table, applied uniformly.
-WITH m(colon, dot) AS (VALUES
-  ('foundation:read',     'foundation.read'),
-  ('foundation:admin',    'foundation.admin'),
-  ('foundation:write',    'foundation.record.write'),
-  ('admin:read',          'foundation.admin'),
-  ('users:manage',        'foundation.user.write'),
-  ('users:read',          'foundation.user.read'),
-  ('audit:read',          'audit_trail.read'),
-  ('privacy:read',        'privacy.record.read'),
-  ('governance:read',     'governance.record.read'),
-  ('governance:write',    'governance.record.write'),
-  ('risk:read',           'risk.record.read'),
-  ('workflow:read',       'workflow.record.read'),
-  ('workflow:write',      'workflow.record.write'),
-  ('access_review:read',  'access_review.read'),
-  ('access_review:create','access_review.write'),
-  ('ai_os:read',          'ai_os.read'),
-  ('compliance:read',     'compliance.record.read')
-)
-UPDATE dos.dynamic_ui_widgets w SET permission = m.dot
-  FROM m WHERE w.permission = m.colon;
-
-WITH m(colon, dot) AS (VALUES
-  ('foundation:read','foundation.read'),('foundation:admin','foundation.admin'),
-  ('foundation:write','foundation.record.write'),('admin:read','foundation.admin'),
-  ('users:manage','foundation.user.write'),('users:read','foundation.user.read'),
-  ('audit:read','audit_trail.read'),('privacy:read','privacy.record.read'),
-  ('governance:read','governance.record.read'),('governance:write','governance.record.write'),
-  ('risk:read','risk.record.read'),('workflow:read','workflow.record.read'),
-  ('workflow:write','workflow.record.write'),('access_review:read','access_review.read'),
-  ('access_review:create','access_review.write'),('ai_os:read','ai_os.read'),
-  ('compliance:read','compliance.record.read'))
-UPDATE dos.dynamic_ui_routes r SET permission_key = m.dot
-  FROM m WHERE r.permission_key = m.colon;
-
-WITH m(colon, dot) AS (VALUES
-  ('foundation:read','foundation.read'),('foundation:admin','foundation.admin'),
-  ('foundation:write','foundation.record.write'),('admin:read','foundation.admin'),
-  ('users:manage','foundation.user.write'),('users:read','foundation.user.read'),
-  ('audit:read','audit_trail.read'),('privacy:read','privacy.record.read'),
-  ('governance:read','governance.record.read'),('governance:write','governance.record.write'),
-  ('risk:read','risk.record.read'),('workflow:read','workflow.record.read'),
-  ('workflow:write','workflow.record.write'),('access_review:read','access_review.read'),
-  ('access_review:create','access_review.write'),('ai_os:read','ai_os.read'),
-  ('compliance:read','compliance.record.read'))
-UPDATE dos.dynamic_ui_actions a SET permission = m.dot
-  FROM m WHERE a.permission = m.colon;
+--    Each table guarded — runtime DBs may not have every dynamic_ui_* table yet.
+DO $reconcile$
+DECLARE
+  t TEXT; col TEXT;
+BEGIN
+  FOR t, col IN VALUES
+    ('dynamic_ui_widgets','permission'),
+    ('dynamic_ui_routes','permission_key'),
+    ('dynamic_ui_actions','permission')
+  LOOP
+    IF EXISTS (SELECT 1 FROM information_schema.columns
+                WHERE table_schema='dos' AND table_name=t AND column_name=col) THEN
+      EXECUTE format($sql$
+        WITH m(colon, dot) AS (VALUES
+          ('foundation:read',     'foundation.read'),
+          ('foundation:admin',    'foundation.admin'),
+          ('foundation:write',    'foundation.record.write'),
+          ('admin:read',          'foundation.admin'),
+          ('users:manage',        'foundation.user.write'),
+          ('users:read',          'foundation.user.read'),
+          ('audit:read',          'audit_trail.read'),
+          ('privacy:read',        'privacy.record.read'),
+          ('governance:read',     'governance.record.read'),
+          ('governance:write',    'governance.record.write'),
+          ('risk:read',           'risk.record.read'),
+          ('workflow:read',       'workflow.record.read'),
+          ('workflow:write',      'workflow.record.write'),
+          ('access_review:read',  'access_review.read'),
+          ('access_review:create','access_review.write'),
+          ('ai_os:read',          'ai_os.read'),
+          ('compliance:read',     'compliance.record.read'))
+        UPDATE dos.%I x SET %I = m.dot FROM m WHERE x.%I = m.colon
+      $sql$, t, col, col);
+    END IF;
+  END LOOP;
+END$reconcile$;
 
 DO $$
 BEGIN
@@ -287,14 +275,19 @@ END$$;
 
 -- 6. Self-test: the run is invalid if any colon code survives anywhere.
 DO $$
-DECLARE n INT;
+DECLARE n INT; t TEXT; col TEXT;
 BEGIN
-  SELECT count(*) INTO n FROM dos.dynamic_ui_widgets WHERE permission ~ ':';
-  IF n > 0 THEN RAISE EXCEPTION 'reconcile failed: % colon perms in dynamic_ui_widgets', n; END IF;
-  SELECT count(*) INTO n FROM dos.dynamic_ui_routes WHERE permission_key ~ ':';
-  IF n > 0 THEN RAISE EXCEPTION 'reconcile failed: % colon perms in dynamic_ui_routes', n; END IF;
-  SELECT count(*) INTO n FROM dos.dynamic_ui_actions WHERE permission ~ ':';
-  IF n > 0 THEN RAISE EXCEPTION 'reconcile failed: % colon perms in dynamic_ui_actions', n; END IF;
+  FOR t, col IN VALUES
+    ('dynamic_ui_widgets','permission'),
+    ('dynamic_ui_routes','permission_key'),
+    ('dynamic_ui_actions','permission')
+  LOOP
+    IF EXISTS (SELECT 1 FROM information_schema.columns
+                WHERE table_schema='dos' AND table_name=t AND column_name=col) THEN
+      EXECUTE format('SELECT count(*) FROM dos.%I WHERE %I ~ '':''', t, col) INTO n;
+      IF n > 0 THEN RAISE EXCEPTION 'reconcile failed: % colon perms in %.%', n, t, col; END IF;
+    END IF;
+  END LOOP;
 END$$;
 
 COMMIT;

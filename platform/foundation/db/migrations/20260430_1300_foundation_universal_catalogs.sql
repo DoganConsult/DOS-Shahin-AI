@@ -147,4 +147,8 @@ CREATE TABLE IF NOT EXISTS dos.foundation_cat_tenant_defaults (
   CONSTRAINT pk_foundation_cat_tenant_defaults PRIMARY KEY (region_code, sector_code)
 );
 ALTER TABLE dos.foundation_cat_tenant_defaults DROP CONSTRAINT IF EXISTS pk_foundation_cat_tenant_defaults;
-ALTER TABLE dos.foundation_cat_tenant_defaults ADD CONSTRAINT uq_foundation_cat_tenant_defaults UNIQUE NULLS NOT DISTINCT (region_code, sector_code);
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'uq_foundation_cat_tenant_defaults') THEN
+    ALTER TABLE dos.foundation_cat_tenant_defaults ADD CONSTRAINT uq_foundation_cat_tenant_defaults UNIQUE NULLS NOT DISTINCT (region_code, sector_code);
+  END IF;
+END $$;
