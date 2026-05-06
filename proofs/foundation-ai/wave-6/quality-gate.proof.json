@@ -11,23 +11,23 @@
       {
         "id": "inventory_runs",
         "status": "GREEN",
-        "ms": 59,
+        "ms": 54,
         "snippet": ""
       },
       {
         "id": "runtime_proof_exists",
         "status": "GREEN",
-        "ms": 3,
+        "ms": 2,
         "snippet": ""
       },
       {
         "id": "zerodirt",
         "status": "GREEN",
-        "ms": 344,
+        "ms": 377,
         "snippet": "  }\n}\n"
       }
     ]
   },
-  "emittedAt": "2026-05-06T19:33:06.278Z",
-  "hash": "sha256:6e6898a9ce78c42c8c815664f5ef0936a82c324b2cecce0e0509803c1a86c29b"
+  "emittedAt": "2026-05-06T19:35:19.673Z",
+  "hash": "sha256:3898a62760f298e949cb9c1819140519047a41ec9a31eaaaf828c67d66de2e2b"
 }

@@ -12,24 +12,24 @@
       {
         "id": "platform-release-gate",
         "status": "WARN",
-        "ms": 1545,
+        "ms": 1600,
         "tail": "\n> dos-platform@0.0.0 platform:release-gate /root/DOS-Platform\n> pnpm dynamic-ui:gates && pnpm --filter @dos/platform-app build && pnpm --filter @dos/module-foundation build\n\n\n> dos-platform@0.0.0 dynamic-ui:gates /root/DOS-Platform\n> node scripts/ci-guards/carbon-dynamic-ui-coherence.mjs && node scripts/ci-guards/carbon-key-component-map-strict.mjs && node scripts/ci-guards/dynamic-ui-loader-resolvability.mjs && COMPONENT_MAP_ENFORCE=1 node scripts/ci-guards/component-map-coverage.mjs && TEMPLATE_COVERAGE_ENFORCE=1 node scripts/ci-guards/template-coverage.mjs && UI_REGISTRY_ENFORCE=1 node scripts/ui-registry/verify.mjs && AUTH_PAGES_COVERAGE_ENFORCE=1 node scripts/ci-guards/auth-pages-coverage.mjs && node scripts/ci-guards/lint-no-hardcoded-shell-labels.mjs\n\n[carbon-dynamic-ui-coherence] OK — catalog 315 carbon keys, 186 approved registry rows, 86 active route keys, 18 widget keys, COMPONENT_MAP 586 entries\n[carbon-dynamic-ui-coherence] note: 25 bare registry INSERT patterns detected (expect backfill migration)\n[carbon-key-component-map-strict] summary: {\n  \"registry_total\": 554,\n  \"registry_distinct_carbon_keys\": 180,\n  \"carbon_keys_with_real_renderer\": 180,\n  \"carbon_keys_placeholder_only\": 0,\n  \"component_map_entries\": 646,\n  \"required_public_carbon_keys\": 60,\n  \"required_public_catalog_keys\": 60,\n  \"required_public_registry_keys\": 60,\n  \"required_public_component_map_keys\": 60,\n  \"db_violations\": 0,\n  \"fe_missing_entries\": 7\n}\n ELIFECYCLE  Command failed with exit code 1.\n ELIFECYCLE  Command failed with exit code 1.\n[carbon-key-component-map-strict] FAIL — 7 violation(s):\n  ✗ component_key 'workspace.shell.settings-action' (carbon_key='header-global-action') has NO entry in COMPONENT_MAP\n  ✗ component_key 'workspace.shell.user-menu' (carbon_key='header-global-action') has NO entry in COMPONENT_MAP\n  ✗ component_key 'workspace.shell.brand' (carbon_key='header-name') has NO entry in COMPONENT_MAP\n  ✗ component_key 'workspace.shell.workspace-title' (carbon_key='header-name') has NO entry in COMPONENT_MAP\n  ✗ component_key 'workspace.shell.sidebar-nav' (carbon_key='side-nav-items') has NO entry in COMPONENT_MAP\n  ✗ component_key 'workspace.shell.empty-state' (carbon_key='tile') has NO entry in COMPONENT_MAP\n  ✗ component_key 'workspace.shell.module-cards' (carbon_key='tile') has NO entry in COMPONENT_MAP\n"
       },
       {
         "id": "audit-full",
         "status": "GREEN",
-        "ms": 1766,
+        "ms": 1748,
         "tail": "  Failed delta: 0\n\n[audit:full] Report written to: /root/DOS-Platform/reports/audit/2026-05-06.json\n[audit:full] All guards passed\n"
       },
       {
         "id": "emit-runtime-proof",
         "status": "GREEN",
-        "ms": 34,
+        "ms": 39,
         "tail": ""
       }
     ],
     "dryRun": false
   },
-  "emittedAt": "2026-05-06T19:33:05.800Z",
-  "hash": "sha256:be5a31eb8eeff50d874c7392d9fd8a21eda6493f07609a5a44a18fdd7a12f161"
+  "emittedAt": "2026-05-06T19:35:19.182Z",
+  "hash": "sha256:233aee6230142944c6c5420b1927f90defd8b849459fb0d4a5dbca6f4003031a"
 }
