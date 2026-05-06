@@ -1,0 +1,33 @@
+{
+  "schema": "foundation-ai.proof.v1",
+  "phase": -2,
+  "wave": 8,
+  "name": "quality-gate",
+  "status": "GREEN",
+  "payload": {
+    "schema": "foundation-ai.gate.v1",
+    "wave": 8,
+    "results": [
+      {
+        "id": "inventory_runs",
+        "status": "GREEN",
+        "ms": 55,
+        "snippet": ""
+      },
+      {
+        "id": "registry_green",
+        "status": "GREEN",
+        "ms": 606,
+        "snippet": "[ui-registry:verify] routes=90 bindings=187 exempt=9 missing=0 bad-archetype=0\n[ui-registry:verify] PASS — every active route is bound to a canonical archetype.\n"
+      },
+      {
+        "id": "zerodirt",
+        "status": "GREEN",
+        "ms": 337,
+        "snippet": "  }\n}\n"
+      }
+    ]
+  },
+  "emittedAt": "2026-05-06T19:27:32.913Z",
+  "hash": "sha256:fde11c1f497e9fd74f49cb6a6f67b537ddc9630bcccf023a6fb5a111db325175"
+}

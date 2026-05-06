@@ -1,0 +1,23 @@
+{
+  "schema": "foundation-ai.proof.v1",
+  "phase": "P7",
+  "wave": 7,
+  "name": "run",
+  "status": "RED",
+  "payload": {
+    "schema": "foundation-ai.wave.v1",
+    "wave": 7,
+    "title": "Republish & Production Deploy",
+    "steps": [
+      {
+        "id": "module-publish",
+        "status": "RED",
+        "ms": 149,
+        "tail": "[publisher] contract not found: /root/DOS-Platform/platform/ui-system/module_complete_direct_seed_pack/--module=foundation-complete-direct-seed.json\n"
+      }
+    ],
+    "dryRun": false
+  },
+  "emittedAt": "2026-05-06T19:27:30.733Z",
+  "hash": "sha256:8df736a9485d8b22ec079c0e1d8d80ec34289ea39bb265fadd99c6f4d4649651"
+}

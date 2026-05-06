@@ -1,0 +1,25 @@
+{
+  "schema": "foundation-ai.proof.v1",
+  "phase": -2,
+  "wave": 8,
+  "name": "drift",
+  "status": "GREEN",
+  "payload": {
+    "schema": "foundation-ai.drift.v1",
+    "wave": 8,
+    "detectors": {
+      "D_scope_dirty": {
+        "count": 0,
+        "status": "GREEN",
+        "samples": []
+      },
+      "D_tokens": {
+        "ownedHits": 0,
+        "observedHits": 50,
+        "status": "WARN"
+      }
+    }
+  },
+  "emittedAt": "2026-05-06T19:27:33.475Z",
+  "hash": "sha256:ea192b0a9b84df977926637fc21660106913e2238e6ed2532435363db8288ad4"
+}

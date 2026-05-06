@@ -1,0 +1,32 @@
+{
+  "schema": "foundation-ai.proof.v1",
+  "phase": "P8",
+  "wave": 8,
+  "name": "preflight",
+  "status": "GREEN",
+  "payload": {
+    "schema": "foundation-ai.preflight.v1",
+    "wave": 8,
+    "scan": {
+      "ownedHits": 0,
+      "observedHits": 50,
+      "status": "WARN"
+    },
+    "proposals": [],
+    "unhandled": [],
+    "apply": false,
+    "applied": [],
+    "failed": [],
+    "postScan": null,
+    "relatedWaves": [],
+    "flag": {
+      "raised": false,
+      "severity": "GREEN",
+      "message": "wave 8 has no owned legacy hits — no preflight needed.",
+      "programAdjustment": null
+    },
+    "lessonsLearned": []
+  },
+  "emittedAt": "2026-05-06T19:27:31.225Z",
+  "hash": "sha256:c503c3cb27a85b39845d4df83ba1513336a81094460d82e2da2950533b2101af"
+}
