@@ -6,7 +6,7 @@
   "status": "GREEN",
   "payload": {
     "schema": "foundation-ai.plan-sync.v1",
-    "masterHash": "sha256:a39da26f8ebaacb4f970c1299e113bdd32af6c14e2f526e1ec35b47904fa50c7",
+    "masterHash": "sha256:b030c201130ab1027311db10a788d9f94070c6e028b488639d5da53bb9ec924d",
     "phases": 17,
     "written": [
       {
@@ -41,8 +41,8 @@
         "wave": 2,
         "specFile": "/root/DOS-Platform/scripts/program/foundation-ai/specs/wave.2.spec.json",
         "gateFile": "/root/DOS-Platform/scripts/program/foundation-ai/gates/wave-2.json",
-        "specHash": "sha256:5d36497f11159bde4161c94475c247f1fc2fe9722b313e04b6ac0b78ada44ab1",
-        "gateHash": "sha256:fe6891cd24b8e61236db2d98feb0596c4def335d3906aa891e5ffd33e601990f"
+        "specHash": "sha256:16c7257c41d506252818274dd915126f15d2da379a4d6f9a49ee935cf10ce043",
+        "gateHash": "sha256:cc628fb82043839dffc38ec2c2cd41444df9af8643278d8df3cb6652afb8cd44"
       },
       {
         "wave": 3,
@@ -131,6 +131,6 @@
     ],
     "errors": []
   },
-  "emittedAt": "2026-05-06T18:23:35.854Z",
-  "hash": "sha256:f9b0d8a4cae5653d0671e763e9ed8fa0cb0407b4ba8d4826e249ed4e81fc2bc5"
+  "emittedAt": "2026-05-06T18:29:11.481Z",
+  "hash": "sha256:da0db94d8b665ddbe93a015cf1332767fc14ededffdb151c96940d7de217a3b7"
 }

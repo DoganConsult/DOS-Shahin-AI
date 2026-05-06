@@ -9,8 +9,20 @@
       "cmd": "node scripts/program/foundation-ai/inventory.mjs > /dev/null"
     },
     {
-      "id": "down_migrations_present",
-      "cmd": "ls platform/foundation/db/migrations/*_down.sql >/dev/null"
+      "id": "up_migration_present",
+      "cmd": "test -f platform/foundation/db/migrations/20260507_0100_dynamic_ui_page_archetype.sql"
+    },
+    {
+      "id": "down_migration_present",
+      "cmd": "test -f platform/foundation/db/migrations/20260507_0100_dynamic_ui_page_archetype_down.sql"
+    },
+    {
+      "id": "seed_present",
+      "cmd": "test -f platform/foundation/db/seeds/foundation-page-archetype.sql"
+    },
+    {
+      "id": "self_assertion_block",
+      "cmd": "grep -q 'RAISE EXCEPTION' platform/foundation/db/migrations/20260507_0100_dynamic_ui_page_archetype.sql"
     },
     {
       "id": "zerodirt",
@@ -18,5 +30,5 @@
       "required": true
     }
   ],
-  "hash": "sha256:fe6891cd24b8e61236db2d98feb0596c4def335d3906aa891e5ffd33e601990f"
+  "hash": "sha256:cc628fb82043839dffc38ec2c2cd41444df9af8643278d8df3cb6652afb8cd44"
 }

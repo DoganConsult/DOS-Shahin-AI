@@ -6,7 +6,7 @@
   "status": "GREEN",
   "payload": {
     "schema": "foundation-ai.inventory.v1",
-    "capturedAt": "2026-05-06T18:23:47.359Z",
+    "capturedAt": "2026-05-06T18:29:30.076Z",
     "workspaces": {
       "foundation": true,
       "uiOsService": true,
@@ -49,6 +49,7 @@
       "autopilot.mjs",
       "commit-wave.mjs",
       "drift-check.mjs",
+      "emit-seed.mjs",
       "emit-structure.mjs",
       "inventory.mjs",
       "plan-sync.mjs",
@@ -78,6 +79,6 @@
     ],
     "gapCount": 1
   },
-  "emittedAt": "2026-05-06T18:23:47.365Z",
-  "hash": "sha256:e3f414185d92a8e1ef2cba15ae29f1e15d4423b73bc4a701a404ffc6fbed0ece"
+  "emittedAt": "2026-05-06T18:29:30.082Z",
+  "hash": "sha256:94ee433abf47995fad1db2b442ba044df3f2c30ba9dd8bb5b238b454a8bc38a0"
 }

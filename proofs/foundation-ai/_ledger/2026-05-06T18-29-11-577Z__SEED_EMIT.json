@@ -1,0 +1,14 @@
+{
+  "runId": "9321033a-e88d-4d1d-a5a7-6b527324562b",
+  "phase": "P2",
+  "wave": 2,
+  "kind": "SEED_EMIT",
+  "inputsHash": "sha256:34cc60ddb3152e43c68441fb41e80b15a6f2c57d8322bd806cbdf4305366f4ed",
+  "outputsHash": "sha256:456eb762469054879d72c27127f032c9abfd1f4b8ea1e7a443eec83a4c6dfca1",
+  "parentHash": "sha256:affc351bb241d0508015734ab29d333b15cb87097b876967dc380ab5254bd35d",
+  "signer": "dev-1",
+  "status": "GREEN",
+  "evidenceUri": "/root/DOS-Platform/proofs/foundation-ai/wave-2/emit-seed.proof.json",
+  "createdAt": "2026-05-06T18:29:11.577Z",
+  "hash": "sha256:eb5edd48576c751adfa44aeafe46dff570d4f416f71a8315b769e53f1dec9eee"
+}

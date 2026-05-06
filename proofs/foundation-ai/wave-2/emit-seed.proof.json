@@ -1,0 +1,22 @@
+{
+  "schema": "foundation-ai.proof.v1",
+  "phase": "P2",
+  "wave": 2,
+  "name": "emit-seed",
+  "status": "GREEN",
+  "payload": {
+    "schema": "foundation-ai.seed-emit.v1",
+    "module": "foundation",
+    "pages": 21,
+    "personaRows": 40,
+    "agentRows": 6,
+    "outputFile": "/root/DOS-Platform/platform/foundation/db/seeds/foundation-page-archetype.sql",
+    "outputHash": "sha256:ea048c520c2a4e7ac290538480115a06a945b7e99756531d49816c6523e1599a",
+    "derivedFrom": [
+      "platform/foundation/contracts/navigation/navigation.json",
+      "platform/foundation/contracts/agent.contract.json"
+    ]
+  },
+  "emittedAt": "2026-05-06T18:29:11.576Z",
+  "hash": "sha256:456eb762469054879d72c27127f032c9abfd1f4b8ea1e7a443eec83a4c6dfca1"
+}

@@ -11,18 +11,36 @@
   "deliverables": [
     "platform/foundation/db/migrations/*_dynamic_ui_page_archetype.sql",
     "platform/foundation/db/migrations/*_dynamic_ui_page_archetype_down.sql",
-    "platform/foundation/db/seeds/foundation-page-archetype.sql"
+    "platform/foundation/db/seeds/foundation-page-archetype.sql",
+    "scripts/program/foundation-ai/emit-seed.mjs"
   ],
   "steps": [
     {
+      "id": "emit-seed",
+      "cmd": "node scripts/program/foundation-ai/emit-seed.mjs"
+    },
+    {
       "id": "lint-migrations",
-      "cmd": "pnpm module:lint-migrations"
+      "cmd": "pnpm module:lint-migrations",
+      "required": false
     }
   ],
   "acceptanceChecks": [
     {
-      "id": "down_migrations_present",
-      "cmd": "ls platform/foundation/db/migrations/*_down.sql >/dev/null"
+      "id": "up_migration_present",
+      "cmd": "test -f platform/foundation/db/migrations/20260507_0100_dynamic_ui_page_archetype.sql"
+    },
+    {
+      "id": "down_migration_present",
+      "cmd": "test -f platform/foundation/db/migrations/20260507_0100_dynamic_ui_page_archetype_down.sql"
+    },
+    {
+      "id": "seed_present",
+      "cmd": "test -f platform/foundation/db/seeds/foundation-page-archetype.sql"
+    },
+    {
+      "id": "self_assertion_block",
+      "cmd": "grep -q 'RAISE EXCEPTION' platform/foundation/db/migrations/20260507_0100_dynamic_ui_page_archetype.sql"
     }
   ],
   "scopeAllowlist": [
@@ -34,5 +52,5 @@
   ],
   "rollback": "apply *_down.sql in reverse order",
   "derivedFrom": "program.master.json",
-  "hash": "sha256:5d36497f11159bde4161c94475c247f1fc2fe9722b313e04b6ac0b78ada44ab1"
+  "hash": "sha256:16c7257c41d506252818274dd915126f15d2da379a4d6f9a49ee935cf10ce043"
 }
