@@ -12,18 +12,18 @@
       {
         "id": "platform-app-build",
         "status": "GREEN",
-        "ms": 16063,
-        "tail": "Application bundle generation complete. [13.988 seconds] - 2026-05-06T19:33:47.412Z\n\nOutput location: /root/DOS-Platform/platform/app/dist/platform-app\n\n"
+        "ms": 16027,
+        "tail": "Application bundle generation complete. [14.029 seconds] - 2026-05-06T19:36:00.958Z\n\nOutput location: /root/DOS-Platform/platform/app/dist/platform-app\n\n"
       },
       {
         "id": "ensure-pwa-manifest",
         "status": "GREEN",
-        "ms": 4,
+        "ms": 3,
         "tail": ""
       }
     ],
     "dryRun": false
   },
-  "emittedAt": "2026-05-06T19:33:47.684Z",
-  "hash": "sha256:7aa3226ae7b9d4b60386b524ab740de32ea2a13a7582fd3c869a1332ba4f381b"
+  "emittedAt": "2026-05-06T19:36:01.213Z",
+  "hash": "sha256:bac403fd552e53a5b75e4f7a4a5a7e4899b57f9d668a8cc9fbfb7f34c5133c63"
 }

@@ -12,12 +12,12 @@
       {
         "id": "registry-verify",
         "status": "GREEN",
-        "ms": 572,
+        "ms": 581,
         "tail": "> node scripts/ui-registry/verify.mjs\n\n[ui-registry:verify] routes=90 bindings=187 exempt=9 missing=0 bad-archetype=0\n[ui-registry:verify] PASS — every active route is bound to a canonical archetype.\n"
       }
     ],
     "dryRun": false
   },
-  "emittedAt": "2026-05-06T19:33:12.196Z",
-  "hash": "sha256:37f59d4dfe87b081b19c2d4c911388ffbc6bad46db34ee2acd4e5f8b665a2ed4"
+  "emittedAt": "2026-05-06T19:35:26.341Z",
+  "hash": "sha256:0fd654089e6eda9f4e5c940c756061a9e6b16bf989cd53da7a0f5620e07a4262"
 }

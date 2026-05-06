@@ -1,0 +1,14 @@
+{
+  "runId": "148f3615-cd50-4e15-ae58-9a5a6ba252c7",
+  "phase": -2,
+  "wave": 9,
+  "kind": "ZERODIRT",
+  "inputsHash": "sha256:25dc436fe59f5e51d4624342865117a8435ffabbde712895eb12de1553c6c8db",
+  "outputsHash": "sha256:b1149556964a373f480d24f4a062af069559f495995de1d44ce02afe05b39993",
+  "parentHash": "sha256:2e732eba2d09f10ef1cd6a79272deb2526750c8c2c0e1a84118ceb2e96cc6b19",
+  "signer": "dev-1",
+  "status": "GREEN",
+  "evidenceUri": "/root/DOS-Platform/proofs/foundation-ai/wave-9/zerodirt.proof.json",
+  "createdAt": "2026-05-06T19:35:28.477Z",
+  "hash": "sha256:515f10e3e24e12a55698df5d423a6c479ed9da133f64558d2798a85f3908a488"
+}

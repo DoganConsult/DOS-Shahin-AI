@@ -1,0 +1,14 @@
+{
+  "runId": "f640b3b3-2af0-4c65-bdc3-f962cfef39b0",
+  "phase": "P14",
+  "wave": 14,
+  "kind": "PREFLIGHT",
+  "inputsHash": "sha256:7813c50dd82110527fa749816a97be5b1f5506002bd24e423ad74d83705343f1",
+  "outputsHash": "sha256:d776b929d05cb7f16e482414e95862f84298d44b734aff399399307be709403e",
+  "parentHash": "sha256:a7e6c2c2811d98b099393276d87eb68fb11ab9e4e9e36b370153d813f04e37e1",
+  "signer": "dev-1",
+  "status": "GREEN",
+  "evidenceUri": "/root/DOS-Platform/proofs/foundation-ai/wave-14/preflight.proof.json",
+  "createdAt": "2026-05-06T19:36:08.478Z",
+  "hash": "sha256:7e6bd99f9611bf6ef6a01e76ac713bf692f9e520a6204bcd4db6dabecdcf3453"
+}

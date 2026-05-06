@@ -11,23 +11,23 @@
       {
         "id": "inventory_runs",
         "status": "GREEN",
-        "ms": 58,
+        "ms": 56,
         "snippet": ""
       },
       {
         "id": "registry_green",
         "status": "GREEN",
-        "ms": 595,
+        "ms": 608,
         "snippet": "[ui-registry:verify] routes=90 bindings=187 exempt=9 missing=0 bad-archetype=0\n[ui-registry:verify] PASS — every active route is bound to a canonical archetype.\n"
       },
       {
         "id": "zerodirt",
         "status": "GREEN",
-        "ms": 327,
+        "ms": 337,
         "snippet": "  }\n}\n"
       }
     ]
   },
-  "emittedAt": "2026-05-06T19:33:13.245Z",
-  "hash": "sha256:89ec5d6f8e85aca63b1c8f1a9ea27a65d9a01efff9261700316f64459182f0dd"
+  "emittedAt": "2026-05-06T19:35:27.395Z",
+  "hash": "sha256:319161e328a39f674f5564d3f5492edae363b25309972f21e9cea02c735720f1"
 }

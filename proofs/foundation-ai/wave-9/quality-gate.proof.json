@@ -11,23 +11,23 @@
       {
         "id": "inventory_runs",
         "status": "GREEN",
-        "ms": 57,
+        "ms": 58,
         "snippet": ""
       },
       {
         "id": "evidence_pack_present",
         "status": "GREEN",
-        "ms": 2,
+        "ms": 1,
         "snippet": ""
       },
       {
         "id": "zerodirt",
         "status": "GREEN",
-        "ms": 332,
+        "ms": 360,
         "snippet": "  }\n}\n"
       }
     ]
   },
-  "emittedAt": "2026-05-06T19:33:15.522Z",
-  "hash": "sha256:da5afa0cdaca6b44cfbb56a97b96c01a989fbad038e455f63dea03e46238392d"
+  "emittedAt": "2026-05-06T19:35:29.702Z",
+  "hash": "sha256:32d5a566f7b922374e5c01fa3e7df9c728af1294bba169ca3f90bae9b6848679"
 }

@@ -7,6 +7,6 @@
   "payload": {
     "error": "Command failed: node scripts/program/foundation-ai/drift-check.mjs --wave=9"
   },
-  "emittedAt": "2026-05-06T19:33:16.129Z",
-  "hash": "sha256:50578d35dbaf0784c6fbac66994f55ab7f349f8d96dbf25b9c8e8dfc234a83d6"
+  "emittedAt": "2026-05-06T19:35:30.344Z",
+  "hash": "sha256:091aabdcb736fcdaf54bd852127df4f5eb7caa99992a4915b147a7ee4d4c3587"
 }
