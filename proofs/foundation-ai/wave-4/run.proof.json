@@ -1,0 +1,35 @@
+{
+  "schema": "foundation-ai.proof.v1",
+  "phase": "P4",
+  "wave": 4,
+  "name": "run",
+  "status": "GREEN",
+  "payload": {
+    "schema": "foundation-ai.wave.v1",
+    "wave": 4,
+    "title": "Foundation Page Cutover — UI-OS only",
+    "steps": [
+      {
+        "id": "foundation-build",
+        "status": "GREEN",
+        "ms": 5767,
+        "tail": "\n> @dos/module-foundation@2.0.0 build /root/DOS-Platform/platform/foundation\n> tsc -p tsconfig.build.json\n\n"
+      },
+      {
+        "id": "platform-app-build",
+        "status": "GREEN",
+        "ms": 16121,
+        "tail": "Application bundle generation complete. [13.935 seconds] - 2026-05-06T18:46:40.455Z\n\nOutput location: /root/DOS-Platform/platform/app/dist/platform-app\n\n"
+      },
+      {
+        "id": "foundation-gate",
+        "status": "WARN",
+        "ms": 23097,
+        "tail": "\n> dos-platform@0.0.0 foundation:gate /root/DOS-Platform\n> pnpm --filter @dos/module-foundation build && pnpm --filter @dos/platform-app build && bash scripts/ci-guards/foundation-gate.sh\n\n\n> @dos/module-foundation@2.0.0 build /root/DOS-Platform/platform/foundation\n> tsc -p tsconfig.build.json\n\n\n> @dos/platform-app@1.0.0 prebuild /root/DOS-Platform/platform/app\n> echo 'prebuild: no-op (route fragments generated at platform level)'\n\nprebuild: no-op (route fragments generated at platform level)\n\n> @dos/platform-app@1.0.0 build /root/DOS-Platform/platform/app\n> ng build && sed -i 's/<script src=\"\\([^\"]*\\)\" type=\"module\"><\\/script>/<script src=\"\\1\" type=\"module\" data-cfasync=\"false\"><\\/script>/g' dist/platform-app/browser/index.html\n\n❯ Building...\n✔ Building...\nInitial chunk files   | Names                                |  Raw size | Estimated transfer size\nchunk-BKPBRDDD.js     | -                                    |   1.29 MB |               188.41 kB\nstyles-KVVONCDH.css   | styles                               | 890.40 kB |                67.75 kB\nchunk-VZQDKWX4.js     | -                                    | 283.60 kB |                66.44 kB\nchunk-4POK3OZV.js     | -                                    | 173.88 kB |                50.58 kB\nchunk-RQHDRLCV.js     | -                                    | 139.59 kB |                29.77 kB\nchunk-6KH2TSRL.js     | -                                    |  34.74 kB |                 6.81 kB\npolyfills-IOO3XMUJ.js | polyfills                            |  34.59 kB |                11.33 kB\nchunk-GPJLTDGJ.js     | -                                    |  31.14 kB |                 7.19 kB\nchunk-WHHFBWRO.js     | -                                    |  29.39 kB |                 6.95 kB\nchunk-CXGOUS7J.js     | -                                    |  28.77 kB |                 7.26 kB\nchunk-DX6RFBIN.js     | -                                    |  16.97 kB |                 4.36 kB\nchunk-TWVAA3HV.js     | -                                    |  14.51 kB |                 3.77 kB\nchunk-L4T3RDRO.js     | -                                    |  12.08 kB |                 3.39 kB\nmain-OMYJLSNK.js      | main                                 |  10.12 kB |                 3.35 kB\nchunk-XGHQFXIR.js     | -                                    |   6.79 kB |                 2.16 kB\nchunk-2P5GHMEF.js     | -                                    |   6.23 kB |                 1.76 kB\nchunk-QXC7C5DS.js     | -                                    |   5.53 kB |                 1.64 kB\nchunk-MUH43VF4.js     | -                                    |   5.42 kB |                 1.36 kB\nchunk-XWIZ4MJR.js     | -                                    |   4.44 kB |                 1.40 kB\nchunk-N6NOW6CQ.js     | -                                    |   4.07 kB |                 1.48 kB\nchunk-2RRB2EAU.js     | -                                    |   3.84 kB |                 1.48 kB\nchunk-F5BD6R7P.js     | -                                    |   3.53 kB |                 1.28 kB\nchunk-24RU64S6.js     | -                                    |   3.41 kB |                 1.08 kB\nchunk-WO243FJA.js     | -                                    |   1.42 kB |               599 bytes\nchunk-WEVJJ4MH.js     | -                                    |   1.33 kB |               557 bytes\nchunk-NKMIRHAY.js     | -                                    | 334 bytes |               334 bytes\n\n                      | Initial total                        |   3.03 MB |               472.48 kB\n\nLazy chunk files      | Names                                |  Raw size | Estimated transfer size\nchunk-BEZAHWWQ.js     | browser                              |  67.75 kB |                17.80 kB\nchunk-T7WMKZ5H.js     | module-archetypes-extended-templates |  51.76 kB |                 5.77 kB\nchunk-3PGLKFP7.js     | -                                    |  38.28 kB |                 6.76 kB\nchunk-DNHHDO3U.js     | index                                |  28.48 kB |                 6.93 kB\nchunk-GHMGXOKR.js     | module-extra-templates               |  20.17 kB |                 4.44 kB\nchunk-GYA5L4SG.js     | module-calendar-timeline-template    |  14.35 kB |                 3.91 kB\nchunk-PCPTWDCT.js     | module-decision-dashboard-template   |  14.10 kB |                 3.84 kB\nchunk-DJVGCJDX.js     | module-audit-trail-template          |  14.05 kB |                 4.04 kB\nchunk-Z376Y4QF.js     | module-records-template              |  13.13 kB |                 3.79 kB\nchunk-GNI6ENTO.js     | -                                    |  12.60 kB |                 3.66 kB\nchunk-RXDMG4T6.js     | module-ai-advisor-template           |  12.13 kB |                 3.58 kB\nchunk-YESA5L3F.js     | module-workqueue-template            |  11.18 kB |                 3.26 kB\nchunk-TI2L2YGM.js     | module-heatmap-template              |  11.18 kB |                 3.36 kB\nchunk-QG3ALH3X.js     | module-posture-overview-template     |  10.91 kB |                 3.26 kB\nchunk-RCKYTDNB.js     | module-overview-template             |  10.86 kB |                 3.24 kB\n...and 7 more lazy chunks files. Use \"--verbose\" to show all the files.\n\nApplication bundle generation complete. [14.568 seconds] - 2026-05-06T18:47:03.366Z\n\nOutput location: /root/DOS-Platform/platform/app/dist/platform-app\n\n[foundation-gate] G1 contract catalogue\n  ✓ permissions=40\n ELIFECYCLE  Command failed with exit code 1.\nERROR:  relation \"dos.dynamic_ui_navigation\" does not exist\nLINE 1: SELECT count(*) FROM dos.dynamic_ui_navigation WHERE module_...\n                             ^\n"
+      }
+    ],
+    "dryRun": false
+  },
+  "emittedAt": "2026-05-06T18:47:03.819Z",
+  "hash": "sha256:55d0e7f604747f436d4e299fe9f4db34f2790a350289ec93ba9bf837248433f3"
+}

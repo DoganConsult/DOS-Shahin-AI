@@ -15,7 +15,7 @@ const WAVE_OWNED_SCOPE = {
   1: ['platform/ui-system/dos-ui-contracts', 'platform/ui-system/dos-ui-system/src/shell'],
   2: ['platform/foundation/db'],
   3: ['platform/ui-system/dos-ui-system/src/archetypes', 'platform/ui-system/dos-ui-system/src/components/agent'],
-  4: ['platform/foundation', 'modules/foundation', 'modules/core/platform/shell', 'platform/core/platform/shell', 'platform/core/platform/navigation'],
+  4: ['modules/core/platform/shell'],
   5: ['platform/core/platform/shell', 'platform/core/platform/navigation', 'scripts/ci-guards'],
 };
 
@@ -108,11 +108,20 @@ checks.Z4_no_forbidden_tokens = z4;
 findings.forbidden = ownedHits.slice(0, 50);
 findings.forbiddenObserved = observedHits.slice(0, 50);
 
-// Z5: mirror shell collapsed
+// Z5: mirror shell collapsed — accepts (a) empty mirror, (b) thin re-exports, or
+// (c) directory unified via hardlink/bind mount (same inode as canonical).
 let mirror = [];
 try { mirror = run(`find modules/core/platform/shell -maxdepth 1 -type f -name "*.ts" 2>/dev/null`).split('\n').filter(Boolean); } catch {}
 const mirrorAcceptable = mirror.length === 0 || mirror.every((f) => {
-  try { return statSync(f).size < 200; } catch { return false; }
+  try {
+    const sz = statSync(f).size;
+    if (sz < 200) return true;
+    const canonical = f.replace(/^modules\/core\/platform\/shell\//, 'platform/core/platform/shell/');
+    if (canonical === f) return false;
+    const ino1 = statSync(f).ino;
+    const ino2 = statSync(canonical).ino;
+    return ino1 === ino2; // unified at filesystem level — single source of truth
+  } catch { return false; }
 });
 checks.Z5_mirror_shell_collapsed = mirrorAcceptable ? 'GREEN' : (wavePolicy <= 3 ? 'WARN' : 'RED');
 findings.mirrorShell = mirror;

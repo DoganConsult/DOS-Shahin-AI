@@ -1,0 +1,18 @@
+{
+  "schema": "foundation-ai.proof.v1",
+  "phase": -2,
+  "wave": 4,
+  "name": "archive",
+  "status": "GREEN",
+  "payload": {
+    "schema": "foundation-ai.archive.v1",
+    "phase": "P4",
+    "wave": 4,
+    "capturedAt": "2026-05-06T18:47:26.114Z",
+    "moves": [],
+    "dryRun": false,
+    "hash": "sha256:6afdd34806098d9528c1ddbb26c07479a6f06b19a2de570f4ea12f4d5b1cd86c"
+  },
+  "emittedAt": "2026-05-06T18:47:26.119Z",
+  "hash": "sha256:b82de3e6b5980338fe1f78f30191f2cc092dc850cf48b72c56f273a59bd07e7e"
+}

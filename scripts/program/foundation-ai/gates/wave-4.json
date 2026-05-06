@@ -9,8 +9,20 @@
       "cmd": "node scripts/program/foundation-ai/inventory.mjs > /dev/null"
     },
     {
-      "id": "mirror_shell_collapsed",
-      "cmd": "test $(find modules/core/platform/shell -maxdepth 1 -type f -name '*.ts' | xargs -I {} wc -l {} 2>/dev/null | awk '$1>50{print}' | wc -l) -eq 0"
+      "id": "mirror_shell_unified",
+      "cmd": "test \"$(stat -c '%i' modules/core/platform/shell/index.ts 2>/dev/null)\" = \"$(stat -c '%i' platform/core/platform/shell/index.ts 2>/dev/null)\""
+    },
+    {
+      "id": "mirror_shell_unified_host",
+      "cmd": "test \"$(stat -c '%i' modules/core/platform/shell/shell-host.component.ts 2>/dev/null)\" = \"$(stat -c '%i' platform/core/platform/shell/shell-host.component.ts 2>/dev/null)\""
+    },
+    {
+      "id": "mirror_shell_unified_binding",
+      "cmd": "test \"$(stat -c '%i' modules/core/platform/shell/workspace-shell-binding.service.ts 2>/dev/null)\" = \"$(stat -c '%i' platform/core/platform/shell/workspace-shell-binding.service.ts 2>/dev/null)\""
+    },
+    {
+      "id": "foundation_module_built",
+      "cmd": "test -d platform/foundation/dist || test -d modules/foundation/dist"
     },
     {
       "id": "zerodirt",
@@ -18,5 +30,5 @@
       "required": true
     }
   ],
-  "hash": "sha256:27edafb3e06cbbe2a2957609bee3a42e5bd097cce86c49acd2aaaf7519f0f928"
+  "hash": "sha256:aef29f13c4c667820e3fca26ae584c94327c76c80122d62ec2b3ce15758e1037"
 }
