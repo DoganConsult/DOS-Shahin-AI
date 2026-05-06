@@ -1,0 +1,23 @@
+{
+  "schema": "foundation-ai.proof.v1",
+  "phase": "P-1",
+  "wave": -1,
+  "name": "run",
+  "status": "GREEN",
+  "payload": {
+    "schema": "foundation-ai.wave.v1",
+    "wave": -1,
+    "title": "Charter, signing keys, Foundation Quad registration",
+    "steps": [
+      {
+        "id": "charter",
+        "status": "GREEN",
+        "ms": 59,
+        "tail": "    \"mirror shell live (must be re-export only)\"\n  ],\n  \"gapCount\": 2\n}\n"
+      }
+    ],
+    "dryRun": false
+  },
+  "emittedAt": "2026-05-06T18:03:16.206Z",
+  "hash": "sha256:acf35de2d7ce8692e7714d69a6347aa2d32a3440cc08b5d89209d55b4d474d92"
+}

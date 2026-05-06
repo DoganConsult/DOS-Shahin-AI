@@ -44,9 +44,9 @@ const message = `${spec.commitType ?? 'chore'}(foundation/wave-${wave}): ${spec.
 
 Wave: ${wave}
 Phase: ${spec.phase}
-Quality-Gate: GREEN (${gate.hash})
-Drift: 0 (${drift.hash})
-Zero-Dirt: GREEN (${zerodirt.hash})
+Quality-Gate: ${gate.status} (${gate.hash})
+Drift: ${drift.status} (${drift.hash})
+Zero-Dirt: ${zerodirt.status} (${zerodirt.hash})
 Proof: proofs/foundation-ai/wave-${wave}/
 Doctrine: zero static / zero legacy / Dynamic UI-OS only / DB-driven by published contracts
 `;
