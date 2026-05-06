@@ -8,7 +8,6 @@ import {
   effect,
   inject,
   signal,
-  viewChild,
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
@@ -53,13 +52,14 @@ import {
 } from '@dos/ui-system';
 import { DosCarbonSearchComponent } from '@dos/ui-system';
 import {
+  WorkspaceNavigationAdapter,
   AccessStore as PlatformAccessStore,
+  WORKSPACE_NAV_LABEL_RESOLVER,
+  type WorkspaceNavLabelResolver,
 } from '@dos/access-store';
 import type { DosNavGroup, DosNavItem, ShellAccountMenuEntry } from '@dos/ui-contracts';
-import { shellActionFromLegacyRecord } from '@dos/ui-contracts';
 import { BreadcrumbService } from './breadcrumb.service';
-import { WorkspaceShellBindingService } from './workspace-shell-binding.service';
-import type { WorkspaceShellZone } from '@dos/ui-system';
+import { WorkspaceShellBindingService, type WorkspaceShellZone } from './workspace-shell-binding.service';
 import { ShellPreferencesService } from './shell-preferences.service';
 import { ShellErrorStateService } from './shell-error-state.service';
 import { ToastService } from '../../../dos/shell/toast.service';
@@ -111,7 +111,6 @@ type RuntimeShellAdapter = {
   titleTemplate?: () => string | null | undefined;
 };
 
-// COMPLIANCE: No hardcoded constants. Breakpoint, icons, labels — all from UI-OS runtime.
 
 @Component({
   selector: 'app-shell-host',
@@ -142,7 +141,7 @@ type RuntimeShellAdapter = {
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [`
-    :host { display: block; min-height: 100vh; }
+    :host { display: block; min-height: var(--dos-shell-min-height); }
 
     /* Header chrome — owned by dos-workspace-header projection slots. */
     .shell-header-toggle {
@@ -212,7 +211,7 @@ type RuntimeShellAdapter = {
     .shell-mobile-cmd__bar { display: flex; align-items: center; gap: var(--cds-spacing-03); }
     .shell-mobile-cmd__close {
       flex: 0 0 auto;
-      width: 2rem; height: 2rem;
+      width: var(--cds-spacing-07); height: var(--cds-spacing-07);
       background: none; border: 0; cursor: pointer;
       color: var(--cds-text-primary);
     }
@@ -226,14 +225,13 @@ type RuntimeShellAdapter = {
     /* Wave F — status-bar fixed bottom strip with mobile safe-area padding. */
     .shell-statusbar-fixed {
       position: fixed;
-      inset-block-end: 0;
+      inset-block-end: var(--dos-shell-statusbar-offset);
       inset-inline: 0;
       z-index: var(--dos-z-statusbar);
       background: var(--cds-layer);
       border-block-start: 1px solid var(--cds-border-subtle-01);
       padding-block-end: env(safe-area-inset-bottom, 0);
     }
-    .shell-statusbar-fixed--mobile { inset-block-end: var(--dos-mobile-nav-height); }
 
     /* §B.9 #38 — skip-link for keyboard/screen-reader a11y. */
     .shell-skip-link {
@@ -296,7 +294,7 @@ type RuntimeShellAdapter = {
   template: `
     <!-- §B.9 #38 — skip-link for keyboard/screen-reader accessibility. -->
     <a class="shell-skip-link" href="#main-content">
-      {{ shellBinding.chromeString('shell.a11y.skip_to_main') }}
+      {{ shellText('shell.a11y.skip_to_main') }}
     </a>
 
     <!-- Phase H — workspace-host-kit consumer mount.
@@ -306,7 +304,7 @@ type RuntimeShellAdapter = {
          No raw cds-* tags. -->
 
     <ng-template #headerTpl>
-      <dos-workspace-header shellHeader [title]="headerBrand()" [tenantName]="headerTenantSubtitle()" [logoHref]="headerLogoHref()">
+      <dos-workspace-header shellHeader [title]="headerWorkspaceTitle()" [logoHref]="headerLogoHref()">
         <ng-container headerStart>
           <button type="button"
                   class="shell-header-toggle"
@@ -322,8 +320,7 @@ type RuntimeShellAdapter = {
         </ng-container>
         <ng-container headerEnd>
           @if (!isMobile() && showCommandSearch()) {
-            <dos-command-search #desktopCmdSearch
-                                class="shell-header-cmd"
+            <dos-command-search class="shell-header-cmd"
                                 [results]="commandResults()"
                                 [placeholder]="commandPlaceholder()"
                                 [ariaLabel]="commandAria()"
@@ -361,11 +358,11 @@ type RuntimeShellAdapter = {
           @if (showContextPanel()) {
             <button type="button"
                     class="shell-header-toggle"
-                    [attr.aria-label]="shellBinding.chromeString('shell.header.help')"
+                    [attr.aria-label]="shellText('shell.header.help')"
                     [attr.aria-expanded]="contextOpen()"
-                    (click)="openContextPanel()">
+                    (click)="openContextHelp()">
               <dos-icon name="help" [size]="shellIconSize()"
-                        [ariaLabel]="shellBinding.chromeString('shell.header.help')">
+                        [ariaLabel]="shellText('shell.header.help')">
               </dos-icon>
             </button>
           }
@@ -422,12 +419,12 @@ type RuntimeShellAdapter = {
               <code class="shell-error-frame__corr-id">{{ errorState.error()?.correlationId }}</code>
             }
             <button type="button" class="shell-error-frame__action" (click)="errorState.clearError()">
-              {{ shellBinding.chromeString('shell.error.dismiss') }}
+              {{ shellText('shell.error.dismiss') }}
             </button>
           </div>
         } @else if (isNavigating()) {
           <div class="shell-skeleton" id="shell-nav-skeleton" aria-busy="true" [attr.aria-label]="ariaLoadingPage()">
-            <dos-skeleton shape="line" [rows]="6" [ariaLabel]="ariaLoadingPage()"></dos-skeleton>
+            <dos-skeleton shape="line" [rows]="skeletonRows()" [ariaLabel]="ariaLoadingPage()"></dos-skeleton>
           </div>
         } @else {
           <router-outlet />
@@ -446,8 +443,8 @@ type RuntimeShellAdapter = {
         }
         @if (zoneHas('top-banners') && shellBanners().length > 0) {
           <dos-shell-banner-strip [banners]="shellBanners()"
-                                  (action)="dispatchShellActionFromBanner($event)"
-                                  (dismiss)="onBannerClose($event)">
+                                  (action)="onBannerAction($event)"
+                                  (dismiss)="onBannerDismiss($event)">
           </dos-shell-banner-strip>
         }
         @if (zoneHas('main')) {
@@ -455,7 +452,7 @@ type RuntimeShellAdapter = {
           <ng-container *ngTemplateOutlet="mainTpl"></ng-container>
         }
 
-        @if (zoneHas('mobile-nav')) {
+        @if (zoneHas('mobile-nav') && mobileBottomItems().length > 0) {
           <dos-mobile-bottom-nav shellBottomNav
                                  [items]="mobileBottomItems()"
                                  [dir]="sidebarDir()"
@@ -495,7 +492,7 @@ type RuntimeShellAdapter = {
           @if (!isRail()) {
             <div class="shell-sidebar-search">
               <dos-carbon-search size="sm"
-                                 [placeholder]="shellBinding.chromeString('shell.sidebar.search_placeholder')"
+                                 [placeholder]="shellText('shell.sidebar.search_placeholder')"
                                  [value]="navSearch()"
                                  (valueChange)="navSearch.set($event)">
               </dos-carbon-search>
@@ -515,8 +512,8 @@ type RuntimeShellAdapter = {
         }
         @if (zoneHas('top-banners') && shellBanners().length > 0) {
           <dos-shell-banner-strip [banners]="shellBanners()"
-                                  (action)="dispatchShellActionFromBanner($event)"
-                                  (dismiss)="onBannerClose($event)">
+                                  (action)="onBannerAction($event)"
+                                  (dismiss)="onBannerDismiss($event)">
           </dos-shell-banner-strip>
         }
         @if (zoneHas('main')) {
@@ -590,7 +587,7 @@ type RuntimeShellAdapter = {
 
     <!-- Wave F — GAP-SURF-1 status-bar. DB-gated. -->
     @if (zoneHas('bottom-status') && showStatusBar() && statusBarSignals().length > 0) {
-      <div class="shell-statusbar-fixed" [class.shell-statusbar-fixed--mobile]="isMobile()">
+      <div class="shell-statusbar-fixed">
         <dos-workspace-status-bar [signals]="statusBarSignals()"
                                   [mobileMode]="isMobile()"
                                   (signalClick)="onStatusSignal($event)">
@@ -621,25 +618,26 @@ type RuntimeShellAdapter = {
     <!-- §B.9 #32 — toast outlet (singleton, not workspace.* gated). -->
     @if (zoneHas('toast')) {
       <dos-toast-outlet [messages]="toastMessages()"
-                        (dismissed)="onToastClosed($event)">
+                        (dismissed)="onToastDismissed($event)">
       </dos-toast-outlet>
     }
   `,
 })
 export class ShellHostComponent {
+  private readonly nav         = inject(WorkspaceNavigationAdapter);
   private readonly access      = inject(PlatformAccessStore);
   private readonly router      = inject(Router);
   private readonly platformId  = inject(PLATFORM_ID);
   private readonly titleSvc    = inject(Title);
   private readonly destroyRef  = inject(DestroyRef);
   private readonly breadcrumbSvc = inject(BreadcrumbService);
-  protected readonly shellBinding = inject(WorkspaceShellBindingService);
+  private readonly shellBinding = inject(WorkspaceShellBindingService);
   private readonly prefs = inject(ShellPreferencesService);
   readonly errorState = inject(ShellErrorStateService);
   private readonly toastSvc = inject(ToastService);
-
-  /** Desktop Cmd/Ctrl+K focuses this component — never toggles mobile overlay on desktop. */
-  private readonly desktopCmdSearch = viewChild<DosCommandSearchComponent>('desktopCmdSearch');
+  protected readonly labelResolver = inject<WorkspaceNavLabelResolver | null>(
+    WORKSPACE_NAV_LABEL_RESOLVER, { optional: true },
+  );
 
   private readonly isBrowser = isPlatformBrowser(this.platformId);
 
@@ -649,8 +647,9 @@ export class ShellHostComponent {
   readonly isRail       = signal(false);   // W-E: rail mode
   readonly navSearch    = signal('');       // W-D: filter
 
-  // ── §B.9 P2/P4 — toast + local banner dismiss state (candidates from binding) ─
+  // ── §B.9 P2/P4 — toast, offline, banner state ─────────────────────────────
   readonly toastMessages = signal<DosToastMessage[]>([]);
+  readonly isOffline     = signal(false);
   private readonly dismissedBannerIds = signal<Set<string>>(new Set());
 
   // ── W-C: skeleton + title ─────────────────────────────────────────────────
@@ -661,30 +660,31 @@ export class ShellHostComponent {
   readonly breadcrumbs  = signal<Array<{ label: string; route?: string }>>([]);
 
   // ── Nav config ────────────────────────────────────────────────────────────
-  readonly navConfig = computed(() => this.shellBinding.navConfig());
+  readonly navConfig = computed(() => this.nav.navConfig());
 
   readonly navGroups = computed(() => {
-    const groups = this.navConfig().groups;
+    const groups = this.navConfig()?.groups ?? [];
     return groups
-      .map((group: DosNavGroup) => ({
+      .map((group) => ({
         ...group,
-        items: (group.items || []).filter(
+        items: (group.items ?? []).filter(
           (item: DosNavItem) => !!item.route,
         ),
       }))
-      .filter((group: DosNavGroup) => group.items.length > 0);
+      .filter((group) => group.items.length > 0);
   });
 
   // ── W-A: auto-expand active group ─────────────────────────────────────────
   readonly activeGroupId = computed(() => {
     const url = this.router.url.split('?')[0];
-    const found = this.navGroups().find((g) =>
-      g.items.some((i: DosNavItem) => {
-        const r = i.route?.split('?')[0];
-        return r && (url === r || url.startsWith(`${r}/`));
-      }),
+    return (
+      this.navGroups().find((g) =>
+        g.items.some((i: DosNavItem) => {
+          const r = i.route?.split('?')[0];
+          return r && (url === r || url.startsWith(`${r}/`));
+        }),
+      )?.id ?? null
     );
-    return found ? found.id : null;
   });
 
   // ── W-D: filtered groups for search ──────────────────────────────────────
@@ -695,97 +695,94 @@ export class ShellHostComponent {
       .map((g) => ({
         ...g,
         items: g.items.filter((i: DosNavItem) =>
-          this.navItemLabel(i).toLowerCase().includes(q),
+          this.label(i).toLowerCase().includes(q),
         ),
       }))
       .filter((g) => g.items.length > 0);
   });
 
   // ── Header labels ─────────────────────────────────────────────────────────
-  // Dynamic-UI policy: chrome strings flow from UI-OS runtime only.
-  // No hardcoded fallbacks - empty if missing (observable gap for telemetry).
-  readonly headerBrand = computed(() => {
-    const bindingBrand = this.shellBinding.headerBrandLabel();
-    if (bindingBrand) return bindingBrand;
-    const chromeBrand = this.shellBinding.chromeString('shell.header.brand');
-    if (chromeBrand) return chromeBrand;
-    return '';
-  });
-
+  // Wave F / Dynamic-UI policy: chrome strings flow dynamic-first, catalog-
+  // last. Priority order for every header label is:
+  //   1. workspace.header.props.* from `dos.workspace_shell_binding` (live
+  //      per-tenant, served by GET /api/ui-os/workspace-shell/:tenantId).
+  //   2. tenant name/code from AccessStore (dynamic per-tenant fallback).
+  //   3. product-level i18n catalog (`WorkspaceNavLabelResolver`).
+  //   4. empty string (observable gap, per Phase H policy — no fake defaults).
+  readonly headerBrand = computed(
+    () => this.shellBinding.headerBrandLabel()
+       ?? this.access.tenant()?.name
+       ?? this.access.tenant()?.code
+       ?? this.labelResolver?.shellChromeString?.('shell.header.brand')
+       ?? '',
+  );
+  // Step 2.5 — Selected module label sourced from existing nav state.
+  // Falls back to the resolver-owned chrome string when no module is active,
+  // and ultimately to the binding-served workspace title if present.
   readonly headerWorkspaceTitle = computed(() => {
     const sel = this.selectedModuleLabel();
     if (sel) return sel;
-    const title = this.shellBinding.headerWorkspaceTitle();
-    if (title) return title;
-    return '';
-  });
-  /** Tenant line after `/` only when binding supplied a distinct brand/product from session tenant. */
-  readonly headerTenantSubtitle = computed(() => {
-    const fromBinding = this.shellBinding.headerBrandLabel();
-    const brandLine = typeof fromBinding === 'string' ? fromBinding.trim() : '';
-    const tenant = this.access.tenant();
-    const tenantName = typeof tenant?.name === 'string' ? tenant.name.trim() : '';
-    const tenantCode = typeof tenant?.code === 'string' ? tenant.code.trim() : '';
-    const tn = tenantName || tenantCode;
-    if (!brandLine || !tn) return '';
-    if (brandLine.toLowerCase() === tn.toLowerCase()) return '';
-    return tn;
+    return this.shellBinding.headerWorkspaceTitle()
+        ?? this.labelResolver?.shellChromeString?.('shell.header.workspace_title')
+        ?? '';
   });
   readonly selectedModuleLabel = computed<string | null>(() => {
+    // 1. Prefer the active sidenav group label.
     const id = this.activeGroupId();
     if (id) {
       const g = this.navGroups().find((g) => g.id === id);
       if (g) {
-        const lbl = this.navGroupLabel(g);
+        const lbl = this.groupLabel(g.id, g.label);
         if (lbl) return lbl;
       }
+    }
+    // 2. Fall back to the first breadcrumb segment after the home crumb.
+    const crumbs = this.breadcrumbs();
+    if (crumbs.length >= 2) {
+      const seg = (crumbs[1]?.label ?? '').toString().trim();
+      if (seg) return seg;
     }
     return null;
   });
   readonly headerHomeRoute = computed((): string[] => {
-    const raw = this.shellBinding.headerHomeRoute();
-    if (!raw) return [];
+    const raw = this.shellBinding.headerHomeRoute() ?? '';
     const parts = raw.replace(/^\/+/, '').split('/').filter(Boolean);
     return parts;
   });
   readonly headerLogoHref = computed((): string => {
-    const href = this.shellBinding.headerLogoHref();
-    return typeof href === 'string' ? href : '';
+    return this.shellBinding.headerLogoHref() ?? '';
   });
   readonly sideNavAriaLabel = computed(
-    () => this.shellBinding.chromeString('shell.sidenav.aria_label'),
+    () => this.labelResolver?.shellChromeString?.('shell.sidenav.aria_label') ?? '',
   );
 
+  // Phase H — chrome aria/labels resolved through WorkspaceNavLabelResolver.
   readonly ariaToggleNav = computed(
-    () => this.shellBinding.chromeString(
+    () => this.labelResolver?.shellChromeString?.(
       this.sideNavActive() ? 'shell.header.hide_navigation' : 'shell.header.show_navigation',
-    ),
+    ) ?? '',
   );
   readonly ariaToggleRail = computed(
-    () => this.shellBinding.chromeString(
+    () => this.labelResolver?.shellChromeString?.(
       this.isRail() ? 'shell.header.expand_sidebar' : 'shell.header.collapse_to_rail',
-    ),
+    ) ?? '',
   );
   readonly ariaBreadcrumb = computed(
-    () => this.shellBinding.chromeString('shell.breadcrumb.aria'),
+    () => this.labelResolver?.shellChromeString?.('shell.breadcrumb.aria') ?? '',
   );
   readonly ariaLoadingPage = computed(
-    () => this.shellBinding.chromeString('shell.skeleton.loading_page'),
+    () => this.labelResolver?.shellChromeString?.('shell.skeleton.loading_page') ?? '',
   );
-  readonly drawerTitle = computed(() => {
-    const selectedLabel = this.selectedModuleLabel();
-    if (selectedLabel) return selectedLabel;
-    const runtimeTitle = this.shellBinding.headerWorkspaceTitle();
-    if (runtimeTitle) return runtimeTitle;
-    const brand = this.headerBrand();
-    if (brand) return brand;
-    return '';
-  });
+  readonly drawerTitle = computed(
+    () => this.selectedModuleLabel()
+       ?? this.labelResolver?.shellChromeString?.('shell.drawer.title')
+       ?? this.headerBrand(),
+  );
   readonly drawerCloseLabel = computed(
-    () => this.shellBinding.chromeString('shell.drawer.close'),
+    () => this.labelResolver?.shellChromeString?.('shell.drawer.close') ?? '',
   );
   readonly mobileBottomNavAria = computed(
-    () => this.shellBinding.chromeString('shell.mobile_bottom_nav.aria'),
+    () => this.labelResolver?.shellChromeString?.('shell.mobile_bottom_nav.aria') ?? '',
   );
 
   // ── Global action surfaces — command-search / inbox-center / quick-create ─
@@ -830,93 +827,82 @@ export class ShellHostComponent {
   readonly isSurfaceAllowed = (key: string): boolean =>
     this.shellBinding.isSurfaceAllowed(key);
 
-  /**
-   * Banners shown in chrome: resolver-fed candidates minus locally dismissed ids.
-   * Templates, gates, chrome strings, connectivity, and synthetic shell-error are
-   * owned by WorkspaceShellBindingService.shellBannerCandidates.
-   */
-  readonly shellBanners = computed<ShellBanner[]>(() => {
-    const dismissed = this.dismissedBannerIds();
-    return this.shellBinding.shellBannerCandidates().filter((b) => !dismissed.has(b.id));
-  });
+  // ── §B.9 P4 — banner multiplex (#25, #34–37) ──────────────────────────────
+  readonly shellBanners = computed<ShellBanner[]>(() => this.resolveRuntimeBanners());
 
   // §B.9 #25 — blocking errors replace content slot with error frame.
   readonly isBlockingError = computed(() => {
     const err = this.errorState.error();
     if (!err) return false;
-    return err.kind === 'unauthorized' || err.kind === 'forbidden' || err.kind === 'maintenance';
+    const blockingKinds = this.runtimeStringList('blockingErrorKinds');
+    return blockingKinds.includes(err.kind);
   });
 
   // ── Wave F — new header/overlay UI state ──────────────────────────────────
   readonly mobileCmdOpen = signal(false);
   readonly contextOpen   = signal(false);
-  readonly contextTab    = signal<string>('record');
+  readonly contextTab    = signal<string>('');
+  // Dynamic-first account menu: prefer DB (workspace.header.props.accountMenu
+  // via WorkspaceShellBindingService) over the platform-default adapter
+  // constant. Both sources are signals so the UI reacts to either flipping.
   readonly accountMenuEntries = computed<ReadonlyArray<ShellAccountMenuEntry>>(
-    () => {
-      const entries = this.shellBinding.accountMenuEntries();
-      return entries ? entries : [];
-    },
+    () => this.shellBinding.accountMenuEntries() ?? this.nav.accountMenuConfig(),
   );
+  // Map platform-owned ShellAccountMenuEntry → DosAccountMenuItem shape
+  // consumed by the @dos/ui-system primitive. Labels are i18n-resolved via
+  // WorkspaceNavLabelResolver; the `ShellAccountMenuEntry.route` is carried
+  // into an internal map (see `accountRouteById`) because DosAccountMenuItem
+  // has no route field — only `action` emits the id on click.
   readonly accountMenuItems = computed<DosAccountMenuItem[]>(() => {
-    const base = this.accountMenuEntries().map((e) => ({
-      id: e.id,
-      label: this.accountLabel(e),
-      destructive: !!e.destructive,
+    const entries = this.accountMenuEntries().map((entry) => ({
+      id: entry.id,
+      label: this.accountLabel(entry),
+      destructive: !!entry.destructive,
+      action: this.actionFromAccountEntry(entry),
     }));
-    // Runtime-driven actions (language toggle, theme toggle, etc.)
-    const runtimeActions = this.shellBinding.accountMenuActions();
-    for (const action of runtimeActions) {
-      if (!action.id) continue;
-      const labelKey = typeof action.labelKey === 'string' ? action.labelKey : '';
-      base.push({
-        id: action.id,
-        label: labelKey ? this.shellBinding.chromeString(labelKey) : '',
-        destructive: !!action.destructive,
-      });
-    }
-    return base;
+    return [...entries, ...this.runtimeAccountMenuItems()] as DosAccountMenuItem[];
   });
   readonly userDisplayName = computed<string>(() => {
     const u = this._user();
-    return (u?.displayName || u?.name) as string;
+    return (u?.displayName || u?.name || '') as string;
   });
-  readonly userEmail = computed<string>(() => (this._user()?.email) as string);
+  readonly userEmail = computed<string>(() => (this._user()?.email || '') as string);
 
   readonly commandAria = computed(
-    () => this.shellBinding.chromeString('shell.command.aria'),
+    () => this.labelResolver?.shellChromeString?.('shell.command.aria') ?? '',
   );
   readonly commandPlaceholder = computed(
-    () => this.shellBinding.chromeString('shell.command.placeholder'),
+    () => this.labelResolver?.shellChromeString?.('shell.command.placeholder') ?? '',
   );
   readonly inboxTitle = computed(
-    () => this.shellBinding.chromeString('shell.inbox.title'),
+    () => this.labelResolver?.shellChromeString?.('shell.inbox.title') ?? '',
   );
   readonly inboxAria = computed(
-    () => this.shellBinding.chromeString('shell.inbox.aria'),
+    () => this.labelResolver?.shellChromeString?.('shell.inbox.aria') ?? '',
   );
   readonly inboxEmpty = computed(
-    () => this.shellBinding.chromeString('shell.inbox.empty'),
+    () => this.labelResolver?.shellChromeString?.('shell.inbox.empty') ?? '',
   );
   readonly inboxToggleAria = computed(
-    () => this.shellBinding.chromeString('shell.inbox.toggle'),
+    () => this.labelResolver?.shellChromeString?.('shell.inbox.toggle') ?? '',
   );
   readonly quickCreateAria = computed(
-    () => this.shellBinding.chromeString('shell.quick.aria'),
+    () => this.labelResolver?.shellChromeString?.('shell.quick.aria') ?? '',
   );
   readonly quickCreateGlyph = computed(
-    () => this.shellBinding.chromeString('shell.quick.fab_glyph'),
+    () => this.shellText('shell.quick.fab_glyph'),
   );
   readonly accountAria = computed(
-    () => this.shellBinding.chromeString('shell.header.account_action'),
+    () => this.labelResolver?.shellChromeString?.('shell.header.account_action') ?? '',
   );
   readonly actionQueueAria = computed(
-    () => this.shellBinding.chromeString('shell.action_queue.aria'),
+    () => this.labelResolver?.shellChromeString?.('shell.action_queue.aria') ?? '',
   );
   readonly actionQueueTitle = computed(
-    () => this.shellBinding.chromeString('shell.action_queue.title'),
+    () => this.labelResolver?.shellChromeString?.('shell.action_queue.title') ?? '',
   );
   readonly actionQueueEmpty = computed(
-    () => this.shellBinding.chromeString('shell.action_queue.empty'),
+    () => this.labelResolver?.shellChromeString?.('shell.action_queue.empty') ?? '',
   );
 
   // ── Effects ───────────────────────────────────────────────────────────────
@@ -927,8 +913,10 @@ export class ShellHostComponent {
       this.access.permissions();
       this.access.trialExpiredModules();
       queueMicrotask(() => {
-        // W-B: feed updated groups to breadcrumb service
-        this.breadcrumbSvc.setGroups(this.navGroups() as unknown as ReadonlyArray<DosNavGroup>);
+        void this.nav.refresh().then(() => {
+          // W-B: feed updated groups to breadcrumb service
+          this.breadcrumbSvc.setGroups(this.navGroups() as unknown as ReadonlyArray<DosNavGroup>);
+        });
       });
     },
     { allowSignalWrites: false },
@@ -957,6 +945,19 @@ export class ShellHostComponent {
     const unsub = this.breadcrumbSvc.subscribe((crumbs) => this.breadcrumbs.set(crumbs));
     this.destroyRef.onDestroy(unsub);
 
+    // §B.9 #37 — offline/reconnect signal.
+    if (this.isBrowser) {
+      this.isOffline.set(!navigator.onLine);
+      const goOnline  = () => this.isOffline.set(false);
+      const goOffline = () => this.isOffline.set(true);
+      window.addEventListener('online',  goOnline);
+      window.addEventListener('offline', goOffline);
+      this.destroyRef.onDestroy(() => {
+        window.removeEventListener('online',  goOnline);
+        window.removeEventListener('offline', goOffline);
+      });
+    }
+
     // §B.9 #32 — sync platform ToastService messages into shell-host outlet signal.
     effect(() => {
       this.toastMessages.set(this.toastSvc.messages() as DosToastMessage[]);
@@ -977,58 +978,36 @@ export class ShellHostComponent {
 
   onCommandQuery(q: string): void { this.commandQuery.set(q); }
 
-  onCommandSelect(r: Record<string, unknown>): void {
-    this.dispatchShellAction(shellActionFromLegacyRecord(r));
+  onCommandSelect(result: Record<string, unknown>): void {
+    this.executeShellAction(this.actionFromCarrier(result as ShellActionCarrier));
   }
 
-  onInboxSelect(m: Record<string, unknown>): void {
-    const action = shellActionFromLegacyRecord(m);
-    if (action) {
-      this.dispatchShellAction(action);
-      this.closeInbox();
-    }
+  onInboxSelect(message: Record<string, unknown>): void {
+    const executed = this.executeShellAction(this.actionFromCarrier(message as ShellActionCarrier));
+    if (executed) this.closeInbox();
   }
 
-  onQuickCreate(a: Record<string, unknown>): void {
-    this.dispatchShellAction(shellActionFromLegacyRecord(a));
+  onQuickCreate(action: Record<string, unknown>): void {
+    this.executeShellAction(this.actionFromCarrier(action as ShellActionCarrier));
   }
 
   // ── Wave F handlers ──────────────────────────────────────────────────────
   onAccountEntry(entry: ShellAccountMenuEntry): void {
-    if (entry.action) {
-      this.dispatchShellAction(entry.action);
-      return;
-    }
-    if (entry.route) {
-      void this.router.navigateByUrl(entry.route);
-      return;
-    }
-    // Routeless logout / custom action: emit a DOM-level custom event so
-    // products can opt in without requiring a platform-wide logout bus here.
-    if (this.isBrowser) {
-      window.dispatchEvent(new CustomEvent('dos:shell-account-action', {
-        detail: { id: entry.id },
-      }));
-    }
+    this.executeShellAction(this.actionFromAccountEntry(entry));
   }
 
-  /** Bridge DosAccountMenu `action` emission → platform ShellAccountMenuEntry. */
+  /** Bridge DosAccountMenu `action` emission → runtime ShellAction. */
   onAccountMenuAction(item: DosAccountMenuItem): void {
-    // Runtime-driven account actions — dispatch typed ShellAction.
-    const runtimeActions = this.shellBinding.accountMenuActions();
-    const runtimeAction = runtimeActions.find(a => a.id === item.id);
-    if (runtimeAction?.action) {
-      this.dispatchShellAction(runtimeAction.action);
-      return;
-    }
-    const entry = this.accountMenuEntries().find((e) => e.id === item.id);
-    if (entry) this.onAccountEntry(entry);
+    const action = this.actionFromCarrier(item as unknown as ShellActionCarrier)
+      ?? this.accountMenuEntries()
+        .map((entry) => this.actionFromAccountEntry(entry))
+        .find((candidate, index) => this.accountMenuEntries()[index]?.id === item.id);
+    this.executeShellAction(action);
   }
 
   accountLabel(entry: ShellAccountMenuEntry): string {
-    const key = typeof entry.labelKey === 'string' ? entry.labelKey.trim() : '';
-    if (!key) return '';
-    return this.shellBinding.chromeString(key);
+    const key = entry.labelKey || `shell.account.menu.${entry.id}`;
+    return this.shellText(key);
   }
 
   toggleMobileCmd(): void { this.mobileCmdOpen.update((v) => !v); }
@@ -1039,70 +1018,16 @@ export class ShellHostComponent {
     this.closeMobileCmd();
   }
 
-  // ── Typed ShellAction dispatch — single ingest point ────────────────────
-
-  /**
-   * Central dispatch for all ShellAction values.
-   * Shell-host executes routing, external opens, preference toggles.
-   * Everything else is a no-op until the DB provides a handler.
-   */
-  private dispatchShellAction(action: ShellAction | null | undefined): void {
-    if (!action) return;
-    switch (action.kind) {
-      case 'navigate':
-        void this.router.navigateByUrl(action.path);
-        break;
-      case 'open_external':
-        if (this.isBrowser) window.open(action.url, '_blank', 'noopener');
-        break;
-      case 'toggle_language':
-        this.prefs.toggleLanguage();
-        break;
-      case 'toggle_theme':
-        this.prefs.toggleTheme();
-        break;
-      case 'open_command':
-        if (this.isMobile()) {
-          this.mobileCmdOpen.set(true);
-        } else {
-          const cmd = this.desktopCmdSearch();
-          queueMicrotask(() => cmd?.focusSearch());
-        }
-        break;
-      case 'open_context_tab':
-        this.contextTab.set(action.tab);
-        this.contextOpen.set(true);
-        break;
-      case 'close_overlay': {
-        const o = action.overlay;
-        if (o === 'context') this.contextOpen.set(false);
-        if (o === 'inbox') this.inboxOpen.set(false);
-        if (o === 'command' || o === 'mobile-command') this.mobileCmdOpen.set(false);
-        break;
-      }
-      case 'clear_error':
-        this.errorState.clearError();
-        break;
-      case 'dispatch_event':
-        if (this.isBrowser) {
-          window.dispatchEvent(new CustomEvent(action.name, { detail: action.detail }));
-        }
-        break;
-      default:
-        break;
-    }
-  }
-
-  onStatusSignal(s: Record<string, unknown>): void {
-    this.dispatchShellAction(shellActionFromLegacyRecord(s));
+  onStatusSignal(signal: Record<string, unknown>): void {
+    this.executeShellAction(this.actionFromCarrier(signal as ShellActionCarrier));
   }
 
   onActionQueueOpen(item: Record<string, unknown>): void {
-    this.dispatchShellAction(shellActionFromLegacyRecord(item));
+    this.executeShellAction(this.actionFromCarrier(item as ShellActionCarrier));
   }
 
-  onAgentSelect(a: Record<string, unknown>): void {
-    this.dispatchShellAction(shellActionFromLegacyRecord(a));
+  onAgentSelect(activity: Record<string, unknown>): void {
+    this.executeShellAction(this.actionFromCarrier(activity as ShellActionCarrier));
   }
 
   onContextTabChange(tab: string): void {
@@ -1112,24 +1037,24 @@ export class ShellHostComponent {
   toggleContext(): void { this.contextOpen.update((v) => !v); }
   closeContext(): void  { this.contextOpen.set(false); }
 
-  openContextPanel(): void {
-    const defaultTab = this.shellBinding.chromeString('shell.context.default_tab');
-    if (defaultTab) this.contextTab.set(defaultTab);
-    this.contextOpen.set(true);
+  // §B.9 #33 — help entry opens context panel on 'help' tab.
+  openContextHelp(): void {
+    const action = this.runtimeShellAction('shell.header.help.action')
+      ?? ({ type: 'open_context_tab', tab: this.shellText('shell.context.help_tab') } satisfies ShellAction);
+    this.executeShellAction(action);
   }
 
   // §B.9 #32 — toast outlet handlers.
-  onToastClosed(msg: DosToastMessage): void {
+  onToastDismissed(msg: DosToastMessage): void {
     this.toastMessages.update((msgs) => msgs.filter((m) => m !== msg));
   }
 
   // §B.9 #34–37, #25 — banner strip handlers.
-  dispatchShellActionFromBanner(banner: ShellBanner): void {
-    if (!banner.action) return;
-    this.dispatchShellAction(banner.action);
+  onBannerAction(banner: ShellBanner): void {
+    this.executeShellAction(this.actionFromCarrier(banner as unknown as ShellActionCarrier));
   }
 
-  onBannerClose(banner: ShellBanner): void {
+  onBannerDismiss(banner: ShellBanner): void {
     this.dismissedBannerIds.update((s) => {
       const next = new Set(s);
       next.add(banner.id);
@@ -1138,22 +1063,13 @@ export class ShellHostComponent {
     if (banner.id === 'shell-error') this.errorState.clearError();
   }
 
-  // cmd-K / ctrl-K — focus command-search input.
+  // Keyboard shortcuts are supplied by UI-OS runtime config.
   @HostListener('document:keydown', ['$event'])
   onGlobalKeydown(ev: KeyboardEvent): void {
-    if ((ev.metaKey || ev.ctrlKey) && (ev.key === 'k' || ev.key === 'K')) {
-      ev.preventDefault();
-      if (!this.isBrowser) return;
-      if (this.isMobile()) {
-        this.mobileCmdOpen.set(true);
-        return;
-      }
-      const cmd = this.desktopCmdSearch();
-      queueMicrotask(() => cmd?.focusSearch());
-    }
-    if (ev.key === 'Escape') {
-      if (this.mobileCmdOpen()) { this.mobileCmdOpen.set(false); return; }
-    }
+    const action = this.shortcutActionForEvent(ev);
+    if (!action) return;
+    ev.preventDefault();
+    this.executeShellAction(action);
   }
 
   toggleRail(): void {
@@ -1175,20 +1091,17 @@ export class ShellHostComponent {
   readonly sidebarItems = computed<Record<string, unknown>[]>(() => {
     const out: Record<string, unknown>[] = [];
     for (const group of this.filteredGroups()) {
-      const groupName = this.navGroupLabel(group);
+      const groupName = this.groupLabel(group.id, group.label);
       for (const it of group.items) {
         if (!it.route) continue;
         if (it.enabled === false) continue;
         const badgeNum = it.badge != null ? Number(it.badge) : NaN;
-        const labelKey = typeof it.labelKey === 'string' ? it.labelKey : '';
         const item: Record<string, unknown> = {
           id: it.id,
-          label: {
-            i18nKey: labelKey,
-            fallback: this.navItemLabel(it),
-          },
-          icon: this.navItemIcon(it),
+          label: { i18nKey: it.labelKey || it.id, fallback: this.label(it) },
+          icon: this.itemIcon(it, group.id),
           route: it.route,
+          action: { type: 'navigate', route: it.route } satisfies ShellAction,
           active: this.isActive(it),
           group: groupName,
         };
@@ -1201,33 +1114,31 @@ export class ShellHostComponent {
   });
 
   readonly mobileBottomItems = computed<DosBottomNavItem[]>(() => {
-    const max = this.shellBinding.mobileBottomNavMaxItems();
-    if (max <= 0) return [];
     const out: DosBottomNavItem[] = [];
     for (const group of this.navGroups()) {
       const first = group.items.find((i: DosNavItem) => !!i.route && i.enabled !== false);
       if (!first) continue;
       out.push({
         id: first.id,
-        label: this.navItemLabel(first),
-        icon: this.navItemIcon(first),
+        label: this.label(first),
+        icon: this.itemIcon(first, group.id),
         route: first.route,
         active: this.isActive(first),
-      });
-      if (out.length >= max) break;
+        action: { type: 'navigate', route: first.route } satisfies ShellAction,
+      } as DosBottomNavItem & ShellActionCarrier);
+      const maxItems = this.shellNumber('mobileBottomNavMaxItems');
+      if (maxItems != null && out.length >= maxItems) break;
     }
     return out;
   });
 
   onSidebarNavigate(item: Record<string, unknown>): void {
-    if (!item['route']) return;
-    void this.router.navigateByUrl(item['route'] as string);
-    if (this.isMobile()) this.sideNavActive.set(false);
+    const executed = this.executeShellAction(this.actionFromCarrier(item as ShellActionCarrier));
+    if (executed && this.isMobile()) this.sideNavActive.set(false);
   }
 
   onMobileNavSelect(item: DosBottomNavItem): void {
-    if (!item.route) return;
-    void this.router.navigateByUrl(item.route);
+    this.executeShellAction(this.actionFromCarrier(item as unknown as ShellActionCarrier));
   }
 
   // W-A: router-exact active state
@@ -1241,32 +1152,162 @@ export class ShellHostComponent {
   // W-I: disabled item tooltip — reason text resolved through resolver.
   disabledTitle(item: DosNavItem): string {
     const reason = (item as DosNavItem & { disabledReason?: string }).disabledReason;
-    if (!reason) return this.navItemLabel(item);
+    if (!reason) return this.label(item);
     const key = `shell.nav.disabled.${reason.replace(/-/g, '_')}`;
-    const txt = this.shellBinding.chromeString(key);
-    return txt ? `${this.navItemLabel(item)} — ${txt}` : this.navItemLabel(item);
+    const txt = this.labelResolver?.shellChromeString?.(key);
+    return txt ? `${this.label(item)} — ${txt}` : this.label(item);
   }
 
-  navItemLabel(item: DosNavItem): string {
+  label(item: DosNavItem): string {
     const direct = (item.label || '').toString().trim();
-    if (direct) return direct;
-    return '';
+    const key = (item.labelKey || item.id || '').toString();
+    return this.labelResolver?.navItemLabel(direct || key, item.id) ?? direct ?? '';
   }
 
-  navGroupLabel(group: DosNavGroup): string {
-    return typeof group.label === 'string' ? group.label.trim() : '';
+  groupLabel(id: string, label?: string): string {
+    return this.labelResolver?.navGroupLabel(label || id) ?? label ?? '';
   }
 
-  navItemIcon(item: DosNavItem): string {
+  groupIcon(groupId: string): string {
+    return this.shellText(`shell.group.icon.${groupId}`);
+  }
+
+  itemIcon(item: DosNavItem, groupId: string): string {
     const direct = (item.icon || '').toString().trim();
-    if (direct) return direct;
-    return '';
+    return direct || this.shellText(`shell.item.icon.${item.id}`) || this.groupIcon(groupId);
   }
-
-  // COMPLIANCE: labelFromKey DELETED — no prettifying of missing keys.
-  // Missing label = empty string. Observable gap for telemetry.
 
   // ── Private helpers ───────────────────────────────────────────────────────
+
+  shellText(key: string): string {
+    const runtime = this.runtimeAdapter().chromeString?.(key);
+    if (runtime != null) return runtime;
+    return this.labelResolver?.shellChromeString?.(key) ?? '';
+  }
+
+  readonly skeletonRows = computed(() => this.shellNumber('skeletonRows') ?? 0);
+
+  readonly shellIconSize = computed(() => this.shellNumber('iconSize') ?? 0);
+
+  private runtimeAdapter(): RuntimeShellAdapter {
+    return this.shellBinding as unknown as RuntimeShellAdapter;
+  }
+
+  private shellNumber(key: string): number | null {
+    const direct = this.runtimeAdapter().shellNumber?.(key);
+    if (typeof direct === 'number' && Number.isFinite(direct)) return direct;
+    if (!this.isBrowser) return null;
+    const raw = getComputedStyle(document.documentElement)
+      .getPropertyValue(`--dos-shell-${key.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`)}`)
+      .trim();
+    if (!raw) return null;
+    const parsed = Number.parseFloat(raw);
+    return Number.isFinite(parsed) ? parsed : null;
+  }
+
+  private runtimeStringList(key: string): readonly string[] {
+    return this.runtimeAdapter().shellStringList?.(key) ?? [];
+  }
+
+  private runtimeShellAction(key: string): ShellAction | null {
+    return this.runtimeAdapter().shellAction?.(key) ?? null;
+  }
+
+  private runtimeAccountMenuItems(): readonly (DosAccountMenuItem & ShellActionCarrier)[] {
+    return this.runtimeAdapter().accountPreferenceMenuItems?.() ?? [];
+  }
+
+  private resolveRuntimeBanners(): ShellBanner[] {
+    return [
+      ...(this.runtimeAdapter().shellBanners?.({
+        offline: this.isOffline(),
+        trialExpiredModules: this.access.trialExpiredModules() as readonly string[],
+        sessionExpiresAt: this.access.sessionExpiresAt(),
+        impersonating: this.access.isImpersonating(),
+        dismissedIds: Array.from(this.dismissedBannerIds()),
+        error: this.errorState.error(),
+      }) ?? []),
+    ];
+  }
+
+  private actionFromAccountEntry(entry: ShellAccountMenuEntry): ShellAction | null {
+    const maybeAction = (entry as ShellAccountMenuEntry & ShellActionCarrier).action;
+    if (maybeAction) return maybeAction;
+    return entry.route ? { type: 'navigate', route: entry.route } : null;
+  }
+
+  private actionFromCarrier(carrier: ShellActionCarrier | null | undefined): ShellAction | null {
+    return carrier?.action ?? null;
+  }
+
+  private executeShellAction(action: ShellAction | null | undefined): boolean {
+    if (!action) return false;
+
+    switch (action.type) {
+      case 'navigate':
+        if (!action.route) return false;
+        void this.router.navigateByUrl(action.route);
+        return true;
+
+      case 'open_external':
+        if (!this.isBrowser || !action.url) return false;
+        window.open(action.url, '_blank', 'noopener');
+        return true;
+
+      case 'toggle_language':
+        this.prefs.toggleLanguage();
+        return true;
+
+      case 'toggle_theme':
+        this.prefs.toggleTheme();
+        return true;
+
+      case 'open_context_tab':
+        this.contextTab.set(action.tab ?? '');
+        this.contextOpen.set(true);
+        return true;
+
+      case 'open_command':
+        this.mobileCmdOpen.set(true);
+        return true;
+
+      case 'close_overlay':
+        this.mobileCmdOpen.set(false);
+        return true;
+
+      case 'clear_error':
+        this.errorState.clearError();
+        return true;
+
+      case 'dispatch_event':
+        if (!this.isBrowser || !action.eventName) return false;
+        window.dispatchEvent(new CustomEvent(action.eventName, { detail: action.payload ?? {} }));
+        return true;
+    }
+  }
+
+  private shortcutActionForEvent(ev: KeyboardEvent): ShellAction | null {
+    for (const shortcut of this.runtimeAdapter().shellShortcuts?.() ?? []) {
+      if (shortcut.key !== ev.key) continue;
+      if (!!shortcut.meta !== !!ev.metaKey) continue;
+      if (!!shortcut.ctrl !== !!ev.ctrlKey) continue;
+      if (!!shortcut.shift !== !!ev.shiftKey) continue;
+      if (!!shortcut.alt !== !!ev.altKey) continue;
+      return shortcut.action;
+    }
+    return null;
+  }
+
+  private formatShellTitle(pageTitle: string, brand: string): string {
+    const template = this.runtimeAdapter().titleTemplate?.();
+    if (template) {
+      return template
+        .replace('{pageTitle}', pageTitle)
+        .replace('{brand}', brand);
+    }
+    return [pageTitle, brand].filter(Boolean).join(' ');
+  }
+
   private _user() {
     const me = this.access.me() as {
       user?: { displayName?: string; name?: string; email?: string } | null;
@@ -1275,20 +1316,15 @@ export class ShellHostComponent {
   }
 
   private _syncTitle(): void {
-    const template = this.shellBinding.chromeString('shell.chrome.titleTemplate');
-    const brand = this.headerBrand();
+    // W-G: sync document <title> from active route data.title or breadcrumb
     const crumbs = this.breadcrumbs();
     if (crumbs.length > 0) {
       const last = crumbs[crumbs.length - 1];
       this.pageTitle.set(last.label);
-      if (template) {
-        this.titleSvc.setTitle(template.replace('{title}', last.label).replace('{brand}', brand));
-        return;
-      }
-      this.titleSvc.setTitle(last.label);
+      this.titleSvc.setTitle(this.formatShellTitle(last.label, this.headerBrand()));
     } else {
       this.pageTitle.set(null);
-      this.titleSvc.setTitle(brand);
+      this.titleSvc.setTitle(this.headerBrand());
     }
   }
 
@@ -1298,8 +1334,8 @@ export class ShellHostComponent {
       this.sideNavActive.set(true);
       return;
     }
-    const bp = this.shellBinding.desktopMinPx();
-    const mobile = window.innerWidth < bp;
+    const desktopMinPx = this.shellNumber('desktopMinPx');
+    const mobile = desktopMinPx != null ? window.innerWidth < desktopMinPx : false;
     this.isMobile.set(mobile);
     this.sideNavActive.set(!mobile);
     if (mobile) this.isRail.set(false);

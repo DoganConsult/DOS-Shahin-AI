@@ -1,0 +1,813 @@
+--- shell-host.component.ts.before	2026-05-06 02:33:24.540903819 +0000
++++ shell-host.component.ts.patched	2026-05-06 02:33:24.541815900 +0000
+@@ -64,9 +64,53 @@
+ import { ShellErrorStateService } from './shell-error-state.service';
+ import { ToastService } from '../../../dos/shell/toast.service';
+ 
+-const CARBON_BREAKPOINT_LARGE_PX = 1056;
+-const FALLBACK_GROUP_ICON = 'layout-dashboard';
+-const FALLBACK_ITEM_ICON  = 'dot';
++type ShellAction = {
++  type:
++    | 'navigate'
++    | 'open_external'
++    | 'toggle_language'
++    | 'toggle_theme'
++    | 'open_context_tab'
++    | 'open_command'
++    | 'close_overlay'
++    | 'clear_error'
++    | 'dispatch_event';
++  route?: string;
++  url?: string;
++  tab?: string;
++  eventName?: string;
++  payload?: Record<string, unknown>;
++};
++
++type ShellActionCarrier = {
++  action?: ShellAction | null;
++};
++
++type RuntimeShellAdapter = {
++  chromeString?: (key: string) => string | null | undefined;
++  shellNumber?: (key: string) => number | null | undefined;
++  shellStringList?: (key: string) => readonly string[] | null | undefined;
++  shellAction?: (key: string) => ShellAction | null | undefined;
++  shellShortcuts?: () => ReadonlyArray<{
++    key: string;
++    meta?: boolean;
++    ctrl?: boolean;
++    shift?: boolean;
++    alt?: boolean;
++    action: ShellAction;
++  }> | null | undefined;
++  shellBanners?: (state: {
++    offline: boolean;
++    trialExpiredModules: readonly string[];
++    sessionExpiresAt?: string | null;
++    impersonating: boolean;
++    dismissedIds: readonly string[];
++    error: unknown;
++  }) => readonly ShellBanner[] | null | undefined;
++  accountPreferenceMenuItems?: () => readonly (DosAccountMenuItem & ShellActionCarrier)[] | null | undefined;
++  titleTemplate?: () => string | null | undefined;
++};
++
+ 
+ @Component({
+   selector: 'app-shell-host',
+@@ -97,7 +141,7 @@
+   ],
+   changeDetection: ChangeDetectionStrategy.OnPush,
+   styles: [`
+-    :host { display: block; min-height: 100vh; }
++    :host { display: block; min-height: var(--dos-shell-min-height); }
+ 
+     /* Header chrome — owned by dos-workspace-header projection slots. */
+     .shell-header-toggle {
+@@ -110,14 +154,14 @@
+       border: 0;
+       cursor: pointer;
+       color: var(--cds-text-on-color);
+-      border-radius: var(--cds-border-radius, 2px);
++      border-radius: var(--cds-border-radius);
+       transition: background 0.15s;
+     }
+     .shell-header-toggle:hover { background: var(--cds-layer-hover); }
+     .shell-header-brand {
+       display: inline-flex;
+       align-items: center;
+-      gap: var(--cds-spacing-03, 0.5rem);
++      gap: var(--cds-spacing-03);
+       color: inherit;
+       text-decoration: none;
+       font-weight: 600;
+@@ -135,63 +179,59 @@
+     .shell-breadcrumb__sep { margin-inline-start: var(--cds-spacing-03); color: var(--cds-text-secondary); }
+ 
+     /* Page title strip. */
+-    .shell-page-header { padding: var(--cds-spacing-05, 1rem) var(--cds-spacing-06, 1.5rem) 0; max-width: 1600px; }
+-    .shell-page-title { margin: 0; font-size: 1.75rem; font-weight: 400; line-height: 1.25; color: var(--cds-text-primary, #161616); }
++    .shell-page-header { padding: var(--cds-spacing-05) var(--cds-spacing-06) 0; max-width: var(--dos-shell-content-max-width); }
++    .shell-page-title { margin: 0; font-size: 1.75rem; font-weight: 400; line-height: 1.25; color: var(--cds-text-primary); }
+ 
+     /* Skeleton container. */
+-    .shell-skeleton { padding: var(--cds-spacing-07, 2rem) var(--cds-spacing-06, 1.5rem); display: grid; gap: var(--cds-spacing-05, 1rem); }
++    .shell-skeleton { padding: var(--cds-spacing-07) var(--cds-spacing-06); display: grid; gap: var(--cds-spacing-05); }
+ 
+     /* Header-mounted command-search — keep narrow inside the inverse bar. */
+-    .shell-header-cmd { display: inline-block; min-width: 12rem; max-width: 22rem; }
++    .shell-header-cmd { display: inline-block; min-width: var(--dos-shell-cmd-min-width); max-width: var(--dos-shell-cmd-max-width); }
+     .shell-header-cmd ::ng-deep .dos-command-search__input {
+       background: var(--cds-field-02);
+       color: var(--cds-text-on-color);
+       border: 1px solid transparent;
+-      height: var(--cds-size-small, 32px);
++      height: var(--cds-size-small);
+       padding: 0 var(--cds-spacing-03);
+       font-size: var(--cds-body-short-01-font-size);
+     }
+     .shell-header-cmd ::ng-deep .dos-command-search__input::placeholder {
+-      color: var(--cds-text-placeholder-on-color, rgba(255,255,255,0.6));
++      color: var(--cds-text-placeholder-on-color);
+     }
+ 
+     /* Wave F — mobile full-screen command-search overlay. */
+     .shell-mobile-cmd {
+       position: fixed; inset: 0;
+       background: var(--cds-background);
+-      z-index: var(--dos-z-overlay, 90);
++      z-index: var(--dos-z-overlay);
+       display: flex; flex-direction: column;
+       padding: var(--cds-spacing-05);
+       gap: var(--cds-spacing-05);
+     }
+-    .shell-mobile-cmd__bar { display: flex; align-items: center; gap: var(--cds-spacing-03, .5rem); }
++    .shell-mobile-cmd__bar { display: flex; align-items: center; gap: var(--cds-spacing-03); }
+     .shell-mobile-cmd__close {
+       flex: 0 0 auto;
+-      width: 2rem; height: 2rem;
++      width: var(--cds-spacing-07); height: var(--cds-spacing-07);
+       background: none; border: 0; cursor: pointer;
+-      color: var(--cds-text-primary, #161616);
++      color: var(--cds-text-primary);
+     }
+     .shell-mobile-cmd__body { flex: 1; overflow: auto; }
+ 
+     /* Wave F — action-queue + agent-strip in-flow placement (desktop only). */
+-    .shell-aux-strip { max-width: 1600px; padding-inline: var(--cds-spacing-06, 1.5rem); }
+-    .shell-aux-strip--top    { padding-block-start: var(--cds-spacing-03, .5rem); }
+-    .shell-aux-strip--bottom { padding-block-end:   var(--cds-spacing-03, .5rem); }
++    .shell-aux-strip { max-width: var(--dos-shell-content-max-width); padding-inline: var(--cds-spacing-06); }
++    .shell-aux-strip--top    { padding-block-start: var(--cds-spacing-03); }
++    .shell-aux-strip--bottom { padding-block-end:   var(--cds-spacing-03); }
+ 
+     /* Wave F — status-bar fixed bottom strip with mobile safe-area padding. */
+     .shell-statusbar-fixed {
+       position: fixed;
+-      inset-block-end: 0;
++      inset-block-end: var(--dos-shell-statusbar-offset);
+       inset-inline: 0;
+-      z-index: var(--dos-z-statusbar, 60);
++      z-index: var(--dos-z-statusbar);
+       background: var(--cds-layer);
+       border-block-start: 1px solid var(--cds-border-subtle-01);
+       padding-block-end: env(safe-area-inset-bottom, 0);
+     }
+-    @media (max-width: 480px) {
+-      /* Avoid overlap with DosMobileBottomNav and DosQuickCreate FAB. */
+-      .shell-statusbar-fixed { inset-block-end: var(--dos-mobile-nav-height, 56px); }
+-    }
+ 
+     /* §B.9 #38 — skip-link for keyboard/screen-reader a11y. */
+     .shell-skip-link {
+@@ -201,7 +241,7 @@
+       background: var(--cds-background);
+       color: var(--cds-link-primary);
+       padding: var(--cds-spacing-03) var(--cds-spacing-05);
+-      z-index: var(--dos-z-skiplink, 999);
++      z-index: var(--dos-z-skiplink);
+       font-size: var(--cds-body-short-01-font-size);
+       text-decoration: none;
+     }
+@@ -210,7 +250,7 @@
+     /* §B.9 #25 — blocking error frame (401/403/maintenance). */
+     .shell-error-frame {
+       padding: var(--cds-spacing-07) var(--cds-spacing-06);
+-      max-width: var(--dos-content-max-width-narrow, 600px);
++      max-width: var(--dos-content-max-width-narrow);
+       margin: 0 auto;
+       text-align: center;
+     }
+@@ -247,14 +287,14 @@
+ 
+     /* §B.9 #16 — sidebar search wrapper. */
+     .shell-sidebar-search {
+-      padding: var(--cds-spacing-03, .5rem) var(--cds-spacing-04, .75rem);
+-      border-block-end: 1px solid var(--cds-border-subtle-01, #e0e0e0);
++      padding: var(--cds-spacing-03) var(--cds-spacing-04);
++      border-block-end: 1px solid var(--cds-border-subtle-01);
+     }
+   `],
+   template: `
+     <!-- §B.9 #38 — skip-link for keyboard/screen-reader accessibility. -->
+     <a class="shell-skip-link" href="#main-content">
+-      {{ labelResolver?.shellChromeString?.('shell.a11y.skip_to_main') ?? 'Skip to main content' }}
++      {{ shellText('shell.a11y.skip_to_main') }}
+     </a>
+ 
+     <!-- Phase H — workspace-host-kit consumer mount.
+@@ -270,7 +310,7 @@
+                   class="shell-header-toggle"
+                   [attr.aria-label]="ariaToggleNav()"
+                   (click)="toggleSideNav()">
+-            <dos-icon name="menu" [size]="20" [ariaLabel]="ariaToggleNav()"></dos-icon>
++            <dos-icon name="menu" [size]="shellIconSize()" [ariaLabel]="ariaToggleNav()"></dos-icon>
+           </button>
+           <!-- 2026-05-05 Slice-1: brand is now rendered exactly once by
+                dos-workspace-header via the .dos-wh-brand-name projection.
+@@ -295,7 +335,7 @@
+                     [attr.aria-label]="commandAria()"
+                     [attr.aria-expanded]="mobileCmdOpen()"
+                     (click)="toggleMobileCmd()">
+-              <dos-icon name="search" [size]="20" [ariaLabel]="commandAria()"></dos-icon>
++              <dos-icon name="search" [size]="shellIconSize()" [ariaLabel]="commandAria()"></dos-icon>
+             </button>
+           }
+           @if (showInbox()) {
+@@ -304,13 +344,13 @@
+                     [attr.aria-label]="inboxToggleAria()"
+                     [attr.aria-expanded]="inboxOpen()"
+                     (click)="toggleInbox()">
+-              <dos-icon name="bell" [size]="20" [ariaLabel]="inboxToggleAria()"></dos-icon>
++              <dos-icon name="bell" [size]="shellIconSize()" [ariaLabel]="inboxToggleAria()"></dos-icon>
+             </button>
+           }
+           <!-- GAP-HDR-2 — account menu (Carbon header action + overflow menu). -->
+           <dos-account-menu [userName]="userDisplayName()"
+                             [userEmail]="userEmail()"
+-                            [buttonLabel]="accountAria() || 'Account menu'"
++                            [buttonLabel]="accountAria()"
+                             [items]="accountMenuItems()"
+                             (action)="onAccountMenuAction($event)">
+           </dos-account-menu>
+@@ -318,11 +358,11 @@
+           @if (showContextPanel()) {
+             <button type="button"
+                     class="shell-header-toggle"
+-                    [attr.aria-label]="labelResolver?.shellChromeString?.('shell.header.help') ?? 'Help'"
++                    [attr.aria-label]="shellText('shell.header.help')"
+                     [attr.aria-expanded]="contextOpen()"
+                     (click)="openContextHelp()">
+-              <dos-icon name="help" [size]="20"
+-                        [ariaLabel]="labelResolver?.shellChromeString?.('shell.header.help') ?? 'Help'">
++              <dos-icon name="help" [size]="shellIconSize()"
++                        [ariaLabel]="shellText('shell.header.help')">
+               </dos-icon>
+             </button>
+           }
+@@ -333,7 +373,7 @@
+                     [attr.aria-label]="ariaToggleRail()"
+                     (click)="toggleRail()">
+               <dos-icon [name]="isRail() ? 'chevron-right' : 'chevron-left'"
+-                        [size]="20"
++                        [size]="shellIconSize()"
+                         [ariaLabel]="ariaToggleRail()"></dos-icon>
+             </button>
+           }
+@@ -379,12 +419,12 @@
+               <code class="shell-error-frame__corr-id">{{ errorState.error()?.correlationId }}</code>
+             }
+             <button type="button" class="shell-error-frame__action" (click)="errorState.clearError()">
+-              {{ labelResolver?.shellChromeString?.('shell.error.dismiss') ?? 'Dismiss' }}
++              {{ shellText('shell.error.dismiss') }}
+             </button>
+           </div>
+         } @else if (isNavigating()) {
+           <div class="shell-skeleton" id="shell-nav-skeleton" aria-busy="true" [attr.aria-label]="ariaLoadingPage()">
+-            <dos-skeleton shape="line" [rows]="6" [ariaLabel]="ariaLoadingPage()"></dos-skeleton>
++            <dos-skeleton shape="line" [rows]="skeletonRows()" [ariaLabel]="ariaLoadingPage()"></dos-skeleton>
+           </div>
+         } @else {
+           <router-outlet />
+@@ -452,7 +492,7 @@
+           @if (!isRail()) {
+             <div class="shell-sidebar-search">
+               <dos-carbon-search size="sm"
+-                                 [placeholder]="labelResolver?.shellChromeString?.('shell.sidebar.search_placeholder') ?? 'Filter navigation…'"
++                                 [placeholder]="shellText('shell.sidebar.search_placeholder')"
+                                  [value]="navSearch()"
+                                  (valueChange)="navSearch.set($event)">
+               </dos-carbon-search>
+@@ -563,7 +603,7 @@
+                   class="shell-mobile-cmd__close"
+                   [attr.aria-label]="drawerCloseLabel()"
+                   (click)="closeMobileCmd()">
+-            <dos-icon name="close" [size]="20" [ariaLabel]="drawerCloseLabel()"></dos-icon>
++            <dos-icon name="close" [size]="shellIconSize()" [ariaLabel]="drawerCloseLabel()"></dos-icon>
+           </button>
+           <dos-command-search [results]="commandResults()"
+                               [placeholder]="commandPlaceholder()"
+@@ -710,7 +750,7 @@
+     return parts;
+   });
+   readonly headerLogoHref = computed((): string => {
+-    return this.shellBinding.headerLogoHref() ?? '/';
++    return this.shellBinding.headerLogoHref() ?? '';
+   });
+   readonly sideNavAriaLabel = computed(
+     () => this.labelResolver?.shellChromeString?.('shell.sidenav.aria_label') ?? '',
+@@ -788,90 +828,20 @@
+     this.shellBinding.isSurfaceAllowed(key);
+ 
+   // ── §B.9 P4 — banner multiplex (#25, #34–37) ──────────────────────────────
+-  readonly shellBanners = computed<ShellBanner[]>(() => {
+-    const banners: ShellBanner[] = [];
+-    const dismissed = this.dismissedBannerIds();
+-
+-    // #36 — trial/subscription banner
+-    const expired = this.access.trialExpiredModules() as string[];
+-    if (expired.length > 0 && !dismissed.has('trial-expired')) {
+-      banners.push({
+-        id: 'trial-expired',
+-        kind: 'warning',
+-        title: this.labelResolver?.shellChromeString?.('shell.banner.trial_expired.title') ?? 'Trial Expired',
+-        message: (this.labelResolver?.shellChromeString?.('shell.banner.trial_expired.message') ?? 'Modules expired: ') + expired.join(', '),
+-        dismissible: true,
+-        actionLabel: this.labelResolver?.shellChromeString?.('shell.banner.trial_expired.action') ?? 'Upgrade',
+-        actionRoute: '/settings/subscription',
+-      });
+-    }
+-
+-    // #37 — offline/reconnect banner
+-    if (this.isOffline() && !dismissed.has('offline')) {
+-      banners.push({
+-        id: 'offline',
+-        kind: 'danger',
+-        title: this.labelResolver?.shellChromeString?.('shell.banner.offline.title') ?? 'Offline',
+-        message: this.labelResolver?.shellChromeString?.('shell.banner.offline.message') ?? 'You are offline. Some features may be unavailable.',
+-        dismissible: false,
+-      });
+-    }
+-
+-    // #25 — global error frame (from ShellErrorStateService + #40 correlation-id)
+-    const err = this.errorState.error();
+-    if (err && !dismissed.has('shell-error')) {
+-      const corrId = err.correlationId;
+-      banners.push({
+-        id: 'shell-error',
+-        kind: 'danger',
+-        title: err.kind,
+-        message: err.message + (corrId ? ` (ID: ${corrId})` : ''),
+-        dismissible: true,
+-      });
+-    }
+-
+-    // #34 — session-expiry warning
+-    const expiresAt = this.access.sessionExpiresAt();
+-    if (expiresAt && !dismissed.has('session-expiry')) {
+-      const expiryDate = new Date(expiresAt);
+-      const now = new Date();
+-      const minsLeft = Math.max(0, Math.floor((expiryDate.getTime() - now.getTime()) / 60000));
+-      if (minsLeft <= 5) {
+-        banners.push({
+-          id: 'session-expiry',
+-          kind: minsLeft <= 1 ? 'danger' : 'warning',
+-          title: this.labelResolver?.shellChromeString?.('shell.banner.session_expiry.title') ?? 'Session Expiring',
+-          message: (this.labelResolver?.shellChromeString?.('shell.banner.session_expiry.message') ?? 'Your session expires in ') + minsLeft + ' minute' + (minsLeft !== 1 ? 's' : '') + '.',
+-          dismissible: false,
+-        });
+-      }
+-    }
+-
+-    // #35 — impersonation banner
+-    if (this.access.isImpersonating() && !dismissed.has('impersonation')) {
+-      banners.push({
+-        id: 'impersonation',
+-        kind: 'warning',
+-        title: this.labelResolver?.shellChromeString?.('shell.banner.impersonation.title') ?? 'Impersonation Mode',
+-        message: this.labelResolver?.shellChromeString?.('shell.banner.impersonation.message') ?? 'You are viewing this workspace as another user.',
+-        dismissible: false,
+-      });
+-    }
+-
+-    return banners;
+-  });
++  readonly shellBanners = computed<ShellBanner[]>(() => this.resolveRuntimeBanners());
+ 
+   // §B.9 #25 — blocking errors replace content slot with error frame.
+   readonly isBlockingError = computed(() => {
+     const err = this.errorState.error();
+     if (!err) return false;
+-    return err.kind === 'unauthorized' || err.kind === 'forbidden' || err.kind === 'maintenance';
++    const blockingKinds = this.runtimeStringList('blockingErrorKinds');
++    return blockingKinds.includes(err.kind);
+   });
+ 
+   // ── Wave F — new header/overlay UI state ──────────────────────────────────
+   readonly mobileCmdOpen = signal(false);
+   readonly contextOpen   = signal(false);
+-  readonly contextTab    = signal<string>('record');
++  readonly contextTab    = signal<string>('');
+   // Dynamic-first account menu: prefer DB (workspace.header.props.accountMenu
+   // via WorkspaceShellBindingService) over the platform-default adapter
+   // constant. Both sources are signals so the UI reacts to either flipping.
+@@ -884,22 +854,13 @@
+   // into an internal map (see `accountRouteById`) because DosAccountMenuItem
+   // has no route field — only `action` emits the id on click.
+   readonly accountMenuItems = computed<DosAccountMenuItem[]>(() => {
+-    const base = this.accountMenuEntries().map((e) => ({
+-      id: e.id,
+-      label: this.accountLabel(e),
+-      destructive: !!e.destructive,
++    const entries = this.accountMenuEntries().map((entry) => ({
++      id: entry.id,
++      label: this.accountLabel(entry),
++      destructive: !!entry.destructive,
++      action: this.actionFromAccountEntry(entry),
+     }));
+-    // #7 — language toggle (EN/AR)
+-    const langLabel = this.prefs.language() === 'ar'
+-      ? (this.labelResolver?.shellChromeString?.('shell.account.menu.switch_to_english') ?? 'English')
+-      : (this.labelResolver?.shellChromeString?.('shell.account.menu.switch_to_arabic') ?? 'العربية');
+-    base.push({ id: '__prefs_language', label: langLabel, destructive: false });
+-    // #8 — theme toggle (light/dark)
+-    const themeLabel = this.prefs.isDark()
+-      ? (this.labelResolver?.shellChromeString?.('shell.account.menu.light_theme') ?? 'Light Theme')
+-      : (this.labelResolver?.shellChromeString?.('shell.account.menu.dark_theme') ?? 'Dark Theme');
+-    base.push({ id: '__prefs_theme', label: themeLabel, destructive: false });
+-    return base;
++    return [...entries, ...this.runtimeAccountMenuItems()] as DosAccountMenuItem[];
+   });
+   readonly userDisplayName = computed<string>(() => {
+     const u = this._user();
+@@ -929,7 +890,7 @@
+     () => this.labelResolver?.shellChromeString?.('shell.quick.aria') ?? '',
+   );
+   readonly quickCreateGlyph = computed(
+-    () => this.labelResolver?.shellChromeString?.('shell.quick.fab_glyph') || '+',
++    () => this.shellText('shell.quick.fab_glyph'),
+   );
+   readonly accountAria = computed(
+     () => this.labelResolver?.shellChromeString?.('shell.header.account_action') ?? '',
+@@ -1017,50 +978,36 @@
+ 
+   onCommandQuery(q: string): void { this.commandQuery.set(q); }
+ 
+-  onCommandSelect(r: Record<string, unknown>): void {
+-    if (r['route']) void this.router.navigateByUrl(r['route'] as string);
++  onCommandSelect(result: Record<string, unknown>): void {
++    this.executeShellAction(this.actionFromCarrier(result as ShellActionCarrier));
+   }
+ 
+-  onInboxSelect(m: Record<string, unknown>): void {
+-    if (m['route']) {
+-      void this.router.navigateByUrl(m['route'] as string);
+-      this.closeInbox();
+-    }
++  onInboxSelect(message: Record<string, unknown>): void {
++    const executed = this.executeShellAction(this.actionFromCarrier(message as ShellActionCarrier));
++    if (executed) this.closeInbox();
+   }
+ 
+-  onQuickCreate(a: Record<string, unknown>): void {
+-    if (a['route']) void this.router.navigateByUrl(a['route'] as string);
++  onQuickCreate(action: Record<string, unknown>): void {
++    this.executeShellAction(this.actionFromCarrier(action as ShellActionCarrier));
+   }
+ 
+   // ── Wave F handlers ──────────────────────────────────────────────────────
+   onAccountEntry(entry: ShellAccountMenuEntry): void {
+-    if (entry.route) {
+-      void this.router.navigateByUrl(entry.route);
+-      return;
+-    }
+-    // Routeless logout / custom action: emit a DOM-level custom event so
+-    // products can opt in without requiring a platform-wide logout bus here.
+-    if (this.isBrowser) {
+-      window.dispatchEvent(new CustomEvent('dos:shell-account-action', {
+-        detail: { id: entry.id },
+-      }));
+-    }
++    this.executeShellAction(this.actionFromAccountEntry(entry));
+   }
+ 
+-  /** Bridge DosAccountMenu `action` emission → platform ShellAccountMenuEntry. */
++  /** Bridge DosAccountMenu `action` emission → runtime ShellAction. */
+   onAccountMenuAction(item: DosAccountMenuItem): void {
+-    // §B.9 #7/#8 — intercept synthetic preference toggles.
+-    if (item.id === '__prefs_language') { this.prefs.toggleLanguage(); return; }
+-    if (item.id === '__prefs_theme')    { this.prefs.toggleTheme();    return; }
+-    const entry = this.accountMenuEntries().find((e) => e.id === item.id);
+-    if (entry) this.onAccountEntry(entry);
++    const action = this.actionFromCarrier(item as unknown as ShellActionCarrier)
++      ?? this.accountMenuEntries()
++        .map((entry) => this.actionFromAccountEntry(entry))
++        .find((candidate, index) => this.accountMenuEntries()[index]?.id === item.id);
++    this.executeShellAction(action);
+   }
+ 
+   accountLabel(entry: ShellAccountMenuEntry): string {
+     const key = entry.labelKey || `shell.account.menu.${entry.id}`;
+-    const resolved = this.labelResolver?.shellChromeString?.(key);
+-    if (resolved) return resolved;
+-    return this.labelFromKey(key);
++    return this.shellText(key);
+   }
+ 
+   toggleMobileCmd(): void { this.mobileCmdOpen.update((v) => !v); }
+@@ -1071,18 +1018,16 @@
+     this.closeMobileCmd();
+   }
+ 
+-  onStatusSignal(s: Record<string, unknown>): void {
+-    if (s['detailRoute']) void this.router.navigateByUrl(s['detailRoute'] as string);
++  onStatusSignal(signal: Record<string, unknown>): void {
++    this.executeShellAction(this.actionFromCarrier(signal as ShellActionCarrier));
+   }
+ 
+   onActionQueueOpen(item: Record<string, unknown>): void {
+-    if (item['route']) void this.router.navigateByUrl(item['route'] as string);
++    this.executeShellAction(this.actionFromCarrier(item as ShellActionCarrier));
+   }
+ 
+-  onAgentSelect(a: Record<string, unknown>): void {
+-    if (a['evidenceUri']) {
+-      if (this.isBrowser) window.open(a['evidenceUri'] as string, '_blank', 'noopener');
+-    }
++  onAgentSelect(activity: Record<string, unknown>): void {
++    this.executeShellAction(this.actionFromCarrier(activity as ShellActionCarrier));
+   }
+ 
+   onContextTabChange(tab: string): void {
+@@ -1094,8 +1039,9 @@
+ 
+   // §B.9 #33 — help entry opens context panel on 'help' tab.
+   openContextHelp(): void {
+-    this.contextTab.set('help');
+-    this.contextOpen.set(true);
++    const action = this.runtimeShellAction('shell.header.help.action')
++      ?? ({ type: 'open_context_tab', tab: this.shellText('shell.context.help_tab') } satisfies ShellAction);
++    this.executeShellAction(action);
+   }
+ 
+   // §B.9 #32 — toast outlet handlers.
+@@ -1105,7 +1051,7 @@
+ 
+   // §B.9 #34–37, #25 — banner strip handlers.
+   onBannerAction(banner: ShellBanner): void {
+-    if (banner.actionRoute) void this.router.navigateByUrl(banner.actionRoute);
++    this.executeShellAction(this.actionFromCarrier(banner as unknown as ShellActionCarrier));
+   }
+ 
+   onBannerDismiss(banner: ShellBanner): void {
+@@ -1117,25 +1063,13 @@
+     if (banner.id === 'shell-error') this.errorState.clearError();
+   }
+ 
+-  // cmd-K / ctrl-K — focus command-search input.
++  // Keyboard shortcuts are supplied by UI-OS runtime config.
+   @HostListener('document:keydown', ['$event'])
+   onGlobalKeydown(ev: KeyboardEvent): void {
+-    if ((ev.metaKey || ev.ctrlKey) && (ev.key === 'k' || ev.key === 'K')) {
+-      ev.preventDefault();
+-      if (!this.isBrowser) return;
+-      if (this.isMobile()) {
+-        this.mobileCmdOpen.set(true);
+-        return;
+-      }
+-      const el = document.querySelector<HTMLInputElement>(
+-        '.shell-header-cmd .dos-command-search__input',
+-      );
+-      el?.focus();
+-      el?.select?.();
+-    }
+-    if (ev.key === 'Escape') {
+-      if (this.mobileCmdOpen()) { this.mobileCmdOpen.set(false); return; }
+-    }
++    const action = this.shortcutActionForEvent(ev);
++    if (!action) return;
++    ev.preventDefault();
++    this.executeShellAction(action);
+   }
+ 
+   toggleRail(): void {
+@@ -1167,6 +1101,7 @@
+           label: { i18nKey: it.labelKey || it.id, fallback: this.label(it) },
+           icon: this.itemIcon(it, group.id),
+           route: it.route,
++          action: { type: 'navigate', route: it.route } satisfies ShellAction,
+           active: this.isActive(it),
+           group: groupName,
+         };
+@@ -1189,21 +1124,21 @@
+         icon: this.itemIcon(first, group.id),
+         route: first.route,
+         active: this.isActive(first),
+-      });
+-      if (out.length === 4) break;
++        action: { type: 'navigate', route: first.route } satisfies ShellAction,
++      } as DosBottomNavItem & ShellActionCarrier);
++      const maxItems = this.shellNumber('mobileBottomNavMaxItems');
++      if (maxItems != null && out.length >= maxItems) break;
+     }
+     return out;
+   });
+ 
+   onSidebarNavigate(item: Record<string, unknown>): void {
+-    if (!item['route']) return;
+-    void this.router.navigateByUrl(item['route'] as string);
+-    if (this.isMobile()) this.sideNavActive.set(false);
++    const executed = this.executeShellAction(this.actionFromCarrier(item as ShellActionCarrier));
++    if (executed && this.isMobile()) this.sideNavActive.set(false);
+   }
+ 
+   onMobileNavSelect(item: DosBottomNavItem): void {
+-    if (!item.route) return;
+-    void this.router.navigateByUrl(item.route);
++    this.executeShellAction(this.actionFromCarrier(item as unknown as ShellActionCarrier));
+   }
+ 
+   // W-A: router-exact active state
+@@ -1225,46 +1160,154 @@
+ 
+   label(item: DosNavItem): string {
+     const direct = (item.label || '').toString().trim();
+-    const key    = (item.labelKey || item.id || '').toString();
+-    const resolved = this.labelResolver?.navItemLabel(direct || key, item.id);
+-    if (resolved) return resolved;
+-    if (direct) return direct;
+-    return this.labelFromKey(key);
++    const key = (item.labelKey || item.id || '').toString();
++    return this.labelResolver?.navItemLabel(direct || key, item.id) ?? direct ?? '';
+   }
+ 
+   groupLabel(id: string, label?: string): string {
+-    const resolved = this.labelResolver?.navGroupLabel(label || id);
+-    if (resolved) return resolved;
+-    return label || this.labelFromKey(id);
++    return this.labelResolver?.navGroupLabel(label || id) ?? label ?? '';
+   }
+ 
+   groupIcon(groupId: string): string {
+-    const key = `shell.group.icon.${groupId}`;
+-    return this.labelResolver?.shellChromeString?.(key) || FALLBACK_GROUP_ICON;
++    return this.shellText(`shell.group.icon.${groupId}`);
+   }
+ 
+   itemIcon(item: DosNavItem, groupId: string): string {
+     const direct = (item.icon || '').toString().trim();
+-    if (direct) return direct;
+-    const key = `shell.item.icon.${item.id}`;
+-    const resolved = this.labelResolver?.shellChromeString?.(key);
+-    if (resolved) return resolved;
+-    const grp = this.groupIcon(groupId);
+-    return grp || FALLBACK_ITEM_ICON;
+-  }
+-
+-  labelFromKey(key: string): string {
+-    const raw = (key || '').toString().trim();
+-    const seg = raw.split('.').pop() || raw;
+-    return seg
+-      .replace(/[-_]+/g, ' ')
+-      .replace(/([a-z])([A-Z])/g, '$1 $2')
+-      .replace(/\s+/g, ' ')
+-      .trim()
+-      .replace(/\b\w/g, (c) => c.toUpperCase());
++    return direct || this.shellText(`shell.item.icon.${item.id}`) || this.groupIcon(groupId);
+   }
+ 
+   // ── Private helpers ───────────────────────────────────────────────────────
++
++  shellText(key: string): string {
++    const runtime = this.runtimeAdapter().chromeString?.(key);
++    if (runtime != null) return runtime;
++    return this.labelResolver?.shellChromeString?.(key) ?? '';
++  }
++
++  readonly skeletonRows = computed(() => this.shellNumber('skeletonRows') ?? 0);
++
++  readonly shellIconSize = computed(() => this.shellNumber('iconSize') ?? 0);
++
++  private runtimeAdapter(): RuntimeShellAdapter {
++    return this.shellBinding as unknown as RuntimeShellAdapter;
++  }
++
++  private shellNumber(key: string): number | null {
++    const direct = this.runtimeAdapter().shellNumber?.(key);
++    if (typeof direct === 'number' && Number.isFinite(direct)) return direct;
++    if (!this.isBrowser) return null;
++    const raw = getComputedStyle(document.documentElement)
++      .getPropertyValue(`--dos-shell-${key.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`)}`)
++      .trim();
++    if (!raw) return null;
++    const parsed = Number.parseFloat(raw);
++    return Number.isFinite(parsed) ? parsed : null;
++  }
++
++  private runtimeStringList(key: string): readonly string[] {
++    return this.runtimeAdapter().shellStringList?.(key) ?? [];
++  }
++
++  private runtimeShellAction(key: string): ShellAction | null {
++    return this.runtimeAdapter().shellAction?.(key) ?? null;
++  }
++
++  private runtimeAccountMenuItems(): readonly (DosAccountMenuItem & ShellActionCarrier)[] {
++    return this.runtimeAdapter().accountPreferenceMenuItems?.() ?? [];
++  }
++
++  private resolveRuntimeBanners(): ShellBanner[] {
++    return [
++      ...(this.runtimeAdapter().shellBanners?.({
++        offline: this.isOffline(),
++        trialExpiredModules: this.access.trialExpiredModules() as readonly string[],
++        sessionExpiresAt: this.access.sessionExpiresAt(),
++        impersonating: this.access.isImpersonating(),
++        dismissedIds: Array.from(this.dismissedBannerIds()),
++        error: this.errorState.error(),
++      }) ?? []),
++    ];
++  }
++
++  private actionFromAccountEntry(entry: ShellAccountMenuEntry): ShellAction | null {
++    const maybeAction = (entry as ShellAccountMenuEntry & ShellActionCarrier).action;
++    if (maybeAction) return maybeAction;
++    return entry.route ? { type: 'navigate', route: entry.route } : null;
++  }
++
++  private actionFromCarrier(carrier: ShellActionCarrier | null | undefined): ShellAction | null {
++    return carrier?.action ?? null;
++  }
++
++  private executeShellAction(action: ShellAction | null | undefined): boolean {
++    if (!action) return false;
++
++    switch (action.type) {
++      case 'navigate':
++        if (!action.route) return false;
++        void this.router.navigateByUrl(action.route);
++        return true;
++
++      case 'open_external':
++        if (!this.isBrowser || !action.url) return false;
++        window.open(action.url, '_blank', 'noopener');
++        return true;
++
++      case 'toggle_language':
++        this.prefs.toggleLanguage();
++        return true;
++
++      case 'toggle_theme':
++        this.prefs.toggleTheme();
++        return true;
++
++      case 'open_context_tab':
++        this.contextTab.set(action.tab ?? '');
++        this.contextOpen.set(true);
++        return true;
++
++      case 'open_command':
++        this.mobileCmdOpen.set(true);
++        return true;
++
++      case 'close_overlay':
++        this.mobileCmdOpen.set(false);
++        return true;
++
++      case 'clear_error':
++        this.errorState.clearError();
++        return true;
++
++      case 'dispatch_event':
++        if (!this.isBrowser || !action.eventName) return false;
++        window.dispatchEvent(new CustomEvent(action.eventName, { detail: action.payload ?? {} }));
++        return true;
++    }
++  }
++
++  private shortcutActionForEvent(ev: KeyboardEvent): ShellAction | null {
++    for (const shortcut of this.runtimeAdapter().shellShortcuts?.() ?? []) {
++      if (shortcut.key !== ev.key) continue;
++      if (!!shortcut.meta !== !!ev.metaKey) continue;
++      if (!!shortcut.ctrl !== !!ev.ctrlKey) continue;
++      if (!!shortcut.shift !== !!ev.shiftKey) continue;
++      if (!!shortcut.alt !== !!ev.altKey) continue;
++      return shortcut.action;
++    }
++    return null;
++  }
++
++  private formatShellTitle(pageTitle: string, brand: string): string {
++    const template = this.runtimeAdapter().titleTemplate?.();
++    if (template) {
++      return template
++        .replace('{pageTitle}', pageTitle)
++        .replace('{brand}', brand);
++    }
++    return [pageTitle, brand].filter(Boolean).join(' ');
++  }
++
+   private _user() {
+     const me = this.access.me() as {
+       user?: { displayName?: string; name?: string; email?: string } | null;
+@@ -1278,7 +1321,7 @@
+     if (crumbs.length > 0) {
+       const last = crumbs[crumbs.length - 1];
+       this.pageTitle.set(last.label);
+-      this.titleSvc.setTitle(`${last.label} — ${this.headerBrand()}`);
++      this.titleSvc.setTitle(this.formatShellTitle(last.label, this.headerBrand()));
+     } else {
+       this.pageTitle.set(null);
+       this.titleSvc.setTitle(this.headerBrand());
+@@ -1291,7 +1334,8 @@
+       this.sideNavActive.set(true);
+       return;
+     }
+-    const mobile = window.innerWidth < CARBON_BREAKPOINT_LARGE_PX;
++    const desktopMinPx = this.shellNumber('desktopMinPx');
++    const mobile = desktopMinPx != null ? window.innerWidth < desktopMinPx : false;
+     this.isMobile.set(mobile);
+     this.sideNavActive.set(!mobile);
+     if (mobile) this.isRail.set(false);

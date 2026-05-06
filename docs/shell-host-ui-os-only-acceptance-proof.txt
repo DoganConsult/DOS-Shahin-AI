@@ -1,0 +1,32 @@
+Acceptance proof for patched shell-host.component.ts
+
+Removed exact literals / patterns:
+PASS CARBON_BREAKPOINT_LARGE_PX
+PASS FALLBACK_GROUP_ICON
+PASS FALLBACK_ITEM_ICON
+PASS labelFromKey
+PASS '/settings/subscription'
+PASS 'Skip to main content'
+PASS 'Account menu'
+PASS 'Help'
+PASS 'Dismiss'
+PASS 'Filter navigation…'
+PASS 60000
+PASS minsLeft
+PASS @media (max-width: 480px)
+PASS var(--cds-text-primary, #161616)
+PASS var(--cds-border-subtle-01, #e0e0e0)
+PASS var(--cds-spacing-03, 0.5rem)
+PASS var(--cds-spacing-03, .5rem)
+PASS var(--cds-spacing-05, 1rem)
+PASS var(--cds-spacing-06, 1.5rem)
+PASS var(--cds-spacing-07, 2rem)
+PASS var(--cds-size-small, 32px)
+PASS var(--dos-mobile-nav-height, 56px)
+PASS var(--dos-content-max-width-narrow, 600px)
+PASS document.querySelector
+PASS __prefs_language
+PASS __prefs_theme
+PASS ['route']
+PASS ['detailRoute']
+PASS ['evidenceUri']
