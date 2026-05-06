@@ -56,7 +56,6 @@ import {
   AccessStore as PlatformAccessStore,
 } from '@dos/access-store';
 import type { DosNavGroup, DosNavItem, ShellAccountMenuEntry, ShellAction } from '@dos/ui-contracts';
-import { shellActionFromLegacyRecord } from '@dos/ui-contracts';
 import { BreadcrumbService } from './breadcrumb.service';
 import { WorkspaceShellBindingService } from './workspace-shell-binding.service';
 import type { WorkspaceShellZone } from '@dos/ui-system';
