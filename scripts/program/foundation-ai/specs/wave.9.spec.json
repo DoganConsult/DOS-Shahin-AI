@@ -33,9 +33,10 @@
     "scripts/program/foundation-ai/**",
     "proofs/foundation-ai/**",
     "modules/audit-shelf/**",
+    "ops/handover/**",
     "archive/foundation-ai/**"
   ],
   "rollback": null,
   "derivedFrom": "program.master.json",
-  "hash": "sha256:bce03054ffbbcfbe5ff0ffdfe6fc95bb22950428e61367c92f56694fa65ec27e"
+  "hash": "sha256:77fe021755212b7e9cb42f40330a0755278595b350c6bee8ce716a83b2a44224"
 }

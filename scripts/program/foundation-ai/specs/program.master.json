@@ -320,6 +320,7 @@
         "scripts/program/foundation-ai/**",
         "proofs/foundation-ai/**",
         "modules/foundation/**",
+        "ops/handover/**",
         "archive/foundation-ai/**"
       ],
       "rollback": "module:deactivate"
@@ -368,6 +369,7 @@
         "scripts/program/foundation-ai/**",
         "proofs/foundation-ai/**",
         "modules/audit-shelf/**",
+        "ops/handover/**",
         "archive/foundation-ai/**"
       ],
       "rollback": null

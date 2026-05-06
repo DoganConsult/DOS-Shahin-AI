@@ -43,9 +43,10 @@
     "scripts/program/foundation-ai/**",
     "proofs/foundation-ai/**",
     "modules/foundation/**",
+    "ops/handover/**",
     "archive/foundation-ai/**"
   ],
   "rollback": "module:deactivate",
   "derivedFrom": "program.master.json",
-  "hash": "sha256:64352dc7cead4e762d1b9a099353a3a053c9214fe2933fe5ef9940dc7990d00c"
+  "hash": "sha256:caf9294f6e8a0f1e2db2687600b442cc9009ef6d5b1748a461453a6ef52022de"
 }
