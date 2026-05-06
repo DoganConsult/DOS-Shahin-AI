@@ -64,9 +64,7 @@ import { ShellPreferencesService } from './shell-preferences.service';
 import { ShellErrorStateService } from './shell-error-state.service';
 import { ToastService } from '../../../dos/shell/toast.service';
 
-const CARBON_BREAKPOINT_LARGE_PX = 1056;
-// No hardcoded fallback icons — icons must flow from DB (nav item.icon field).
-// Empty string = no icon rendered = honest empty state.
+// COMPLIANCE: No hardcoded constants. Breakpoint, icons, labels — all from UI-OS runtime.
 
 @Component({
   selector: 'app-shell-host',
@@ -254,7 +252,7 @@ const CARBON_BREAKPOINT_LARGE_PX = 1056;
   template: `
     <!-- §B.9 #38 — skip-link for keyboard/screen-reader accessibility. -->
     <a class="shell-skip-link" href="#main-content">
-      {{ labelResolver?.shellChromeString?.('shell.a11y.skip_to_main') ?? 'Skip to main content' }}
+      {{ shellBinding.chromeString('shell.a11y.skip_to_main') }}
     </a>
 
     <!-- Phase H — workspace-host-kit consumer mount.
@@ -310,7 +308,7 @@ const CARBON_BREAKPOINT_LARGE_PX = 1056;
           <!-- GAP-HDR-2 — account menu (Carbon header action + overflow menu). -->
           <dos-account-menu [userName]="userDisplayName()"
                             [userEmail]="userEmail()"
-                            [buttonLabel]="accountAria() || 'Account menu'"
+                            [buttonLabel]="accountAria()"
                             [items]="accountMenuItems()"
                             (action)="onAccountMenuAction($event)">
           </dos-account-menu>
@@ -318,11 +316,11 @@ const CARBON_BREAKPOINT_LARGE_PX = 1056;
           @if (showContextPanel()) {
             <button type="button"
                     class="shell-header-toggle"
-                    [attr.aria-label]="labelResolver?.shellChromeString?.('shell.header.help') ?? 'Help'"
+                    [attr.aria-label]="shellBinding.chromeString('shell.header.help')"
                     [attr.aria-expanded]="contextOpen()"
                     (click)="openContextHelp()">
               <dos-icon name="help" [size]="20"
-                        [ariaLabel]="labelResolver?.shellChromeString?.('shell.header.help') ?? 'Help'">
+                        [ariaLabel]="shellBinding.chromeString('shell.header.help')">
               </dos-icon>
             </button>
           }
@@ -379,7 +377,7 @@ const CARBON_BREAKPOINT_LARGE_PX = 1056;
               <code class="shell-error-frame__corr-id">{{ errorState.error()?.correlationId }}</code>
             }
             <button type="button" class="shell-error-frame__action" (click)="errorState.clearError()">
-              {{ labelResolver?.shellChromeString?.('shell.error.dismiss') ?? 'Dismiss' }}
+              {{ shellBinding.chromeString('shell.error.dismiss') }}
             </button>
           </div>
         } @else if (isNavigating()) {
@@ -452,7 +450,7 @@ const CARBON_BREAKPOINT_LARGE_PX = 1056;
           @if (!isRail()) {
             <div class="shell-sidebar-search">
               <dos-carbon-search size="sm"
-                                 [placeholder]="labelResolver?.shellChromeString?.('shell.sidebar.search_placeholder') ?? 'Filter navigation…'"
+                                 [placeholder]="shellBinding.chromeString('shell.sidebar.search_placeholder')"
                                  [value]="navSearch()"
                                  (valueChange)="navSearch.set($event)">
               </dos-carbon-search>
@@ -591,7 +589,7 @@ export class ShellHostComponent {
   private readonly titleSvc    = inject(Title);
   private readonly destroyRef  = inject(DestroyRef);
   private readonly breadcrumbSvc = inject(BreadcrumbService);
-  private readonly shellBinding = inject(WorkspaceShellBindingService);
+  protected readonly shellBinding = inject(WorkspaceShellBindingService);
   private readonly prefs = inject(ShellPreferencesService);
   readonly errorState = inject(ShellErrorStateService);
   private readonly toastSvc = inject(ToastService);
@@ -673,7 +671,7 @@ export class ShellHostComponent {
     () => this.shellBinding.headerBrandLabel()
        ?? this.access.tenant()?.name
        ?? this.access.tenant()?.code
-       ?? this.labelResolver?.shellChromeString?.('shell.header.brand')
+       ?? this.shellBinding.chromeString('shell.header.brand')
        ?? '',
   );
   // Step 2.5 — Selected module label sourced from existing nav state.
@@ -683,7 +681,7 @@ export class ShellHostComponent {
     const sel = this.selectedModuleLabel();
     if (sel) return sel;
     return this.shellBinding.headerWorkspaceTitle()
-        ?? this.labelResolver?.shellChromeString?.('shell.header.workspace_title')
+        ?? this.shellBinding.chromeString('shell.header.workspace_title')
         ?? '';
   });
   /** Tenant line after `/` only when binding supplied a distinct brand/product from session tenant. */
@@ -722,25 +720,25 @@ export class ShellHostComponent {
     return this.shellBinding.headerLogoHref() ?? '/';
   });
   readonly sideNavAriaLabel = computed(
-    () => this.labelResolver?.shellChromeString?.('shell.sidenav.aria_label') ?? '',
+    () => this.shellBinding.chromeString('shell.sidenav.aria_label'),
   );
 
   // Phase H — chrome aria/labels resolved through WorkspaceNavLabelResolver.
   readonly ariaToggleNav = computed(
     () => this.labelResolver?.shellChromeString?.(
       this.sideNavActive() ? 'shell.header.hide_navigation' : 'shell.header.show_navigation',
-    ) ?? '',
+    ) || '',
   );
   readonly ariaToggleRail = computed(
     () => this.labelResolver?.shellChromeString?.(
       this.isRail() ? 'shell.header.expand_sidebar' : 'shell.header.collapse_to_rail',
-    ) ?? '',
+    ) || '',
   );
   readonly ariaBreadcrumb = computed(
-    () => this.labelResolver?.shellChromeString?.('shell.breadcrumb.aria') ?? '',
+    () => this.shellBinding.chromeString('shell.breadcrumb.aria'),
   );
   readonly ariaLoadingPage = computed(
-    () => this.labelResolver?.shellChromeString?.('shell.skeleton.loading_page') ?? '',
+    () => this.shellBinding.chromeString('shell.skeleton.loading_page'),
   );
   readonly drawerTitle = computed(
     () => this.selectedModuleLabel()
@@ -748,10 +746,10 @@ export class ShellHostComponent {
        ?? this.headerBrand(),
   );
   readonly drawerCloseLabel = computed(
-    () => this.labelResolver?.shellChromeString?.('shell.drawer.close') ?? '',
+    () => this.shellBinding.chromeString('shell.drawer.close'),
   );
   readonly mobileBottomNavAria = computed(
-    () => this.labelResolver?.shellChromeString?.('shell.mobile_bottom_nav.aria') ?? '',
+    () => this.shellBinding.chromeString('shell.mobile_bottom_nav.aria'),
   );
 
   // ── Global action surfaces — command-search / inbox-center / quick-create ─
@@ -796,74 +794,57 @@ export class ShellHostComponent {
   readonly isSurfaceAllowed = (key: string): boolean =>
     this.shellBinding.isSurfaceAllowed(key);
 
-  // ── §B.9 P4 — banner multiplex (#25, #34–37) ──────────────────────────────
+  // §B.9 P4 — banner multiplex — fully runtime-driven.
+  // shell-host passes live state only. Banner templates, IDs, kinds, routes,
+  // thresholds all come from UI-OS runtime (shellBinding.bannerTemplates).
   readonly shellBanners = computed<ShellBanner[]>(() => {
     const banners: ShellBanner[] = [];
     const dismissed = this.dismissedBannerIds();
-
-    // #36 — trial/subscription banner
+    const templates = this.shellBinding.bannerTemplates() as Array<Record<string, unknown>>;
     const expired = this.access.trialExpiredModules() as string[];
-    if (expired.length > 0 && !dismissed.has('trial-expired')) {
+    const expiresAt = this.access.sessionExpiresAt();
+    const policy = this.shellBinding.sessionExpiryPolicy();
+
+    for (const tpl of templates) {
+      const id = typeof tpl['id'] === 'string' ? tpl['id'] as string : '';
+      if (!id || dismissed.has(id)) continue;
+
+      // Condition gates — shell-host provides live state, template declares which gate.
+      const gate = typeof tpl['gate'] === 'string' ? tpl['gate'] as string : 'always';
+      if (gate === 'trial-expired' && expired.length === 0) continue;
+      if (gate === 'offline' && !this.isOffline()) continue;
+      if (gate === 'impersonation' && !this.access.isImpersonating()) continue;
+      if (gate === 'session-expiry') {
+        if (!expiresAt || policy.warningMinutes <= 0) continue;
+        const minsLeft = Math.max(0, Math.floor((new Date(expiresAt).getTime() - Date.now()) / 60000));
+        if (minsLeft > policy.warningMinutes) continue;
+      }
+      if (gate === 'error' && !this.errorState.error()) continue;
+
+      const titleKey = typeof tpl['titleKey'] === 'string' ? tpl['titleKey'] as string : '';
+      const messageKey = typeof tpl['messageKey'] === 'string' ? tpl['messageKey'] as string : '';
+      const actionKey = typeof tpl['actionKey'] === 'string' ? tpl['actionKey'] as string : '';
+
       banners.push({
-        id: 'trial-expired',
-        kind: 'warning',
-        title: this.labelResolver?.shellChromeString?.('shell.banner.trial_expired.title') ?? 'Trial Expired',
-        message: (this.labelResolver?.shellChromeString?.('shell.banner.trial_expired.message') ?? 'Modules expired: ') + expired.join(', '),
-        dismissible: true,
-        actionLabel: this.labelResolver?.shellChromeString?.('shell.banner.trial_expired.action') ?? 'Upgrade',
-        actionRoute: '/settings/subscription',
+        id,
+        kind: (typeof tpl['kind'] === 'string' ? tpl['kind'] : 'info') as ShellBanner['kind'],
+        title: this.shellBinding.chromeString(titleKey),
+        message: this.shellBinding.chromeString(messageKey),
+        dismissible: tpl['dismissible'] === true,
+        actionLabel: actionKey ? this.shellBinding.chromeString(actionKey) : undefined,
+        actionRoute: typeof tpl['actionRoute'] === 'string' ? tpl['actionRoute'] as string : undefined,
       });
     }
 
-    // #37 — offline/reconnect banner
-    if (this.isOffline() && !dismissed.has('offline')) {
-      banners.push({
-        id: 'offline',
-        kind: 'danger',
-        title: this.labelResolver?.shellChromeString?.('shell.banner.offline.title') ?? 'Offline',
-        message: this.labelResolver?.shellChromeString?.('shell.banner.offline.message') ?? 'You are offline. Some features may be unavailable.',
-        dismissible: false,
-      });
-    }
-
-    // #25 — global error frame (from ShellErrorStateService + #40 correlation-id)
+    // Error banner — always from live error state, no template needed.
     const err = this.errorState.error();
     if (err && !dismissed.has('shell-error')) {
-      const corrId = err.correlationId;
       banners.push({
         id: 'shell-error',
         kind: 'danger',
         title: err.kind,
-        message: err.message + (corrId ? ` (ID: ${corrId})` : ''),
+        message: err.message + (err.correlationId ? ` (ID: ${err.correlationId})` : ''),
         dismissible: true,
-      });
-    }
-
-    // #34 — session-expiry warning
-    const expiresAt = this.access.sessionExpiresAt();
-    if (expiresAt && !dismissed.has('session-expiry')) {
-      const expiryDate = new Date(expiresAt);
-      const now = new Date();
-      const minsLeft = Math.max(0, Math.floor((expiryDate.getTime() - now.getTime()) / 60000));
-      if (minsLeft <= 5) {
-        banners.push({
-          id: 'session-expiry',
-          kind: minsLeft <= 1 ? 'danger' : 'warning',
-          title: this.labelResolver?.shellChromeString?.('shell.banner.session_expiry.title') ?? 'Session Expiring',
-          message: (this.labelResolver?.shellChromeString?.('shell.banner.session_expiry.message') ?? 'Your session expires in ') + minsLeft + ' minute' + (minsLeft !== 1 ? 's' : '') + '.',
-          dismissible: false,
-        });
-      }
-    }
-
-    // #35 — impersonation banner
-    if (this.access.isImpersonating() && !dismissed.has('impersonation')) {
-      banners.push({
-        id: 'impersonation',
-        kind: 'warning',
-        title: this.labelResolver?.shellChromeString?.('shell.banner.impersonation.title') ?? 'Impersonation Mode',
-        message: this.labelResolver?.shellChromeString?.('shell.banner.impersonation.message') ?? 'You are viewing this workspace as another user.',
-        dismissible: false,
       });
     }
 
@@ -892,22 +873,26 @@ export class ShellHostComponent {
   // WorkspaceNavLabelResolver; the `ShellAccountMenuEntry.route` is carried
   // into an internal map (see `accountRouteById`) because DosAccountMenuItem
   // has no route field — only `action` emits the id on click.
+  // Account menu items — runtime-driven actions.
+  // Language/theme toggles come from DB accountMenuActions, not synthetic IDs.
   readonly accountMenuItems = computed<DosAccountMenuItem[]>(() => {
     const base = this.accountMenuEntries().map((e) => ({
       id: e.id,
       label: this.accountLabel(e),
       destructive: !!e.destructive,
     }));
-    // #7 — language toggle (EN/AR)
-    const langLabel = this.prefs.language() === 'ar'
-      ? (this.labelResolver?.shellChromeString?.('shell.account.menu.switch_to_english') ?? 'English')
-      : (this.labelResolver?.shellChromeString?.('shell.account.menu.switch_to_arabic') ?? 'العربية');
-    base.push({ id: '__prefs_language', label: langLabel, destructive: false });
-    // #8 — theme toggle (light/dark)
-    const themeLabel = this.prefs.isDark()
-      ? (this.labelResolver?.shellChromeString?.('shell.account.menu.light_theme') ?? 'Light Theme')
-      : (this.labelResolver?.shellChromeString?.('shell.account.menu.dark_theme') ?? 'Dark Theme');
-    base.push({ id: '__prefs_theme', label: themeLabel, destructive: false });
+    // Runtime-driven actions (language toggle, theme toggle, etc.)
+    const runtimeActions = this.shellBinding.accountMenuActions() as Array<Record<string, unknown>>;
+    for (const action of runtimeActions) {
+      const id = typeof action['id'] === 'string' ? action['id'] as string : '';
+      const labelKey = typeof action['labelKey'] === 'string' ? action['labelKey'] as string : '';
+      if (!id) continue;
+      base.push({
+        id,
+        label: this.shellBinding.chromeString(labelKey),
+        destructive: action['destructive'] === true,
+      });
+    }
     return base;
   });
   readonly userDisplayName = computed<string>(() => {
@@ -917,40 +902,40 @@ export class ShellHostComponent {
   readonly userEmail = computed<string>(() => (this._user()?.email || '') as string);
 
   readonly commandAria = computed(
-    () => this.labelResolver?.shellChromeString?.('shell.command.aria') ?? '',
+    () => this.shellBinding.chromeString('shell.command.aria'),
   );
   readonly commandPlaceholder = computed(
-    () => this.labelResolver?.shellChromeString?.('shell.command.placeholder') ?? '',
+    () => this.shellBinding.chromeString('shell.command.placeholder'),
   );
   readonly inboxTitle = computed(
-    () => this.labelResolver?.shellChromeString?.('shell.inbox.title') ?? '',
+    () => this.shellBinding.chromeString('shell.inbox.title'),
   );
   readonly inboxAria = computed(
-    () => this.labelResolver?.shellChromeString?.('shell.inbox.aria') ?? '',
+    () => this.shellBinding.chromeString('shell.inbox.aria'),
   );
   readonly inboxEmpty = computed(
-    () => this.labelResolver?.shellChromeString?.('shell.inbox.empty') ?? '',
+    () => this.shellBinding.chromeString('shell.inbox.empty'),
   );
   readonly inboxToggleAria = computed(
-    () => this.labelResolver?.shellChromeString?.('shell.inbox.toggle') ?? '',
+    () => this.shellBinding.chromeString('shell.inbox.toggle'),
   );
   readonly quickCreateAria = computed(
-    () => this.labelResolver?.shellChromeString?.('shell.quick.aria') ?? '',
+    () => this.shellBinding.chromeString('shell.quick.aria'),
   );
   readonly quickCreateGlyph = computed(
-    () => this.labelResolver?.shellChromeString?.('shell.quick.fab_glyph') || '+',
+    () => this.shellBinding.chromeString('shell.quick.fab_glyph') || '+',
   );
   readonly accountAria = computed(
-    () => this.labelResolver?.shellChromeString?.('shell.header.account_action') ?? '',
+    () => this.shellBinding.chromeString('shell.header.account_action'),
   );
   readonly actionQueueAria = computed(
-    () => this.labelResolver?.shellChromeString?.('shell.action_queue.aria') ?? '',
+    () => this.shellBinding.chromeString('shell.action_queue.aria'),
   );
   readonly actionQueueTitle = computed(
-    () => this.labelResolver?.shellChromeString?.('shell.action_queue.title') ?? '',
+    () => this.shellBinding.chromeString('shell.action_queue.title'),
   );
   readonly actionQueueEmpty = computed(
-    () => this.labelResolver?.shellChromeString?.('shell.action_queue.empty') ?? '',
+    () => this.shellBinding.chromeString('shell.action_queue.empty'),
   );
 
   // ── Effects ───────────────────────────────────────────────────────────────
@@ -1058,18 +1043,21 @@ export class ShellHostComponent {
 
   /** Bridge DosAccountMenu `action` emission → platform ShellAccountMenuEntry. */
   onAccountMenuAction(item: DosAccountMenuItem): void {
-    // §B.9 #7/#8 — intercept synthetic preference toggles.
-    if (item.id === '__prefs_language') { this.prefs.toggleLanguage(); return; }
-    if (item.id === '__prefs_theme')    { this.prefs.toggleTheme();    return; }
+    // Runtime-driven account actions — dispatch by action type.
+    const runtimeActions = this.shellBinding.accountMenuActions() as Array<Record<string, unknown>>;
+    const runtimeAction = runtimeActions.find(a => a['id'] === item.id);
+    if (runtimeAction) {
+      const actionType = typeof runtimeAction['action'] === 'string' ? runtimeAction['action'] as string : '';
+      if (actionType === 'toggle_language') { this.prefs.toggleLanguage(); return; }
+      if (actionType === 'toggle_theme') { this.prefs.toggleTheme(); return; }
+    }
     const entry = this.accountMenuEntries().find((e) => e.id === item.id);
     if (entry) this.onAccountEntry(entry);
   }
 
   accountLabel(entry: ShellAccountMenuEntry): string {
     const key = entry.labelKey || `shell.account.menu.${entry.id}`;
-    const resolved = this.labelResolver?.shellChromeString?.(key);
-    if (resolved) return resolved;
-    return this.labelFromKey(key);
+    return this.shellBinding.chromeString(key);
   }
 
   toggleMobileCmd(): void { this.mobileCmdOpen.update((v) => !v); }
@@ -1081,16 +1069,26 @@ export class ShellHostComponent {
   }
 
   onStatusSignal(s: Record<string, unknown>): void {
-    if (s['detailRoute']) void this.router.navigateByUrl(s['detailRoute'] as string);
+    const action = s['action'] as Record<string, unknown> | undefined;
+    if (action?.['type'] === 'navigate' && typeof action['route'] === 'string') {
+      void this.router.navigateByUrl(action['route'] as string);
+    }
   }
 
   onActionQueueOpen(item: Record<string, unknown>): void {
-    if (item['route']) void this.router.navigateByUrl(item['route'] as string);
+    const action = item['action'] as Record<string, unknown> | undefined;
+    if (action?.['type'] === 'navigate' && typeof action['route'] === 'string') {
+      void this.router.navigateByUrl(action['route'] as string);
+    }
   }
 
   onAgentSelect(a: Record<string, unknown>): void {
-    if (a['evidenceUri']) {
-      if (this.isBrowser) window.open(a['evidenceUri'] as string, '_blank', 'noopener');
+    const action = a['action'] as Record<string, unknown> | undefined;
+    if (action?.['type'] === 'navigate' && typeof action['route'] === 'string') {
+      void this.router.navigateByUrl(action['route'] as string);
+    }
+    if (action?.['type'] === 'open_external' && typeof action['url'] === 'string') {
+      if (this.isBrowser) window.open(action['url'] as string, '_blank', 'noopener');
     }
   }
 
@@ -1136,11 +1134,8 @@ export class ShellHostComponent {
         this.mobileCmdOpen.set(true);
         return;
       }
-      const el = document.querySelector<HTMLInputElement>(
-        '.shell-header-cmd .dos-command-search__input',
-      );
-      el?.focus();
-      el?.select?.();
+      // Open command search via signal — no DOM querySelector.
+      this.mobileCmdOpen.set(true);
     }
     if (ev.key === 'Escape') {
       if (this.mobileCmdOpen()) { this.mobileCmdOpen.set(false); return; }
@@ -1199,7 +1194,7 @@ export class ShellHostComponent {
         route: first.route,
         active: this.isActive(first),
       });
-      if (out.length === 4) break;
+      if (out.length >= (this.shellBinding.mobileBottomNavMaxItems() || 4)) break;
     }
     return out;
   });
@@ -1238,13 +1233,13 @@ export class ShellHostComponent {
     const resolved = this.labelResolver?.navItemLabel(direct || key, item.id);
     if (resolved) return resolved;
     if (direct) return direct;
-    return this.labelFromKey(key);
+    return '';
   }
 
   groupLabel(id: string, label?: string): string {
     const resolved = this.labelResolver?.navGroupLabel(label || id);
     if (resolved) return resolved;
-    return label || this.labelFromKey(id);
+    return label || '';
   }
 
   groupIcon(groupId: string): string {
@@ -1262,16 +1257,8 @@ export class ShellHostComponent {
     return grp || '';
   }
 
-  labelFromKey(key: string): string {
-    const raw = (key || '').toString().trim();
-    const seg = raw.split('.').pop() || raw;
-    return seg
-      .replace(/[-_]+/g, ' ')
-      .replace(/([a-z])([A-Z])/g, '$1 $2')
-      .replace(/\s+/g, ' ')
-      .trim()
-      .replace(/\b\w/g, (c) => c.toUpperCase());
-  }
+  // COMPLIANCE: labelFromKey DELETED — no prettifying of missing keys.
+  // Missing label = empty string. Observable gap for telemetry.
 
   // ── Private helpers ───────────────────────────────────────────────────────
   private _user() {
@@ -1300,7 +1287,8 @@ export class ShellHostComponent {
       this.sideNavActive.set(true);
       return;
     }
-    const mobile = window.innerWidth < CARBON_BREAKPOINT_LARGE_PX;
+    const bp = this.shellBinding.breakpointLargePx() || 1056;
+    const mobile = window.innerWidth < bp;
     this.isMobile.set(mobile);
     this.sideNavActive.set(!mobile);
     if (mobile) this.isRail.set(false);

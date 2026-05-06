@@ -10,9 +10,18 @@
  *   slide-in-left/right (result list animation — design-tokens.css)
  */
 import {
-  Component, ChangeDetectionStrategy, Input, Output, EventEmitter, signal, HostListener,
+  Component,
+  ChangeDetectionStrategy,
+  ElementRef,
+  HostListener,
+  inject,
+  Input,
+  Output,
+  EventEmitter,
+  PLATFORM_ID,
+  signal,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { SearchModule } from 'carbon-components-angular';
 import { DosCarbonTagComponent, type DosCarbonTagType } from '../carbon/dos-carbon-tag.component';
 import { DosIconComponent } from '../components/icon.component';
@@ -240,6 +249,9 @@ const CATEGORY_TAG_TYPE: Record<ResultCategory, DosCarbonTagType> = {
   `],
 })
 export class DosCommandSearchComponent {
+  private readonly hostRef = inject(ElementRef<HTMLElement>);
+  private readonly platformId = inject(PLATFORM_ID);
+
   @Input() results: CommandSearchResult[] = [];
   @Input() placeholder = 'Search…';
   @Input() ariaLabel: string | null = null;
@@ -275,6 +287,16 @@ export class DosCommandSearchComponent {
     this.select.emit(r);
     this.open.set(false);
     this.query = '';
+  }
+
+  /** Focus the Carbon search input (desktop Cmd-K); scoped to this component only. */
+  focusSearch(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+    queueMicrotask(() => {
+      const root = this.hostRef.nativeElement;
+      const input = root.querySelector<HTMLInputElement>('input.cds--search-input');
+      input?.focus?.();
+    });
   }
 
   @HostListener('document:click', ['$event'])

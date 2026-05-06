@@ -1,3 +1,5 @@
+import type { ShellAction } from './shell-action.contract.js';
+
 /**
  * Workspace navigation contract — Dos-prefixed types.
  *
@@ -117,7 +119,10 @@ export interface DosShellNavConfig {
 export interface ShellAccountMenuEntry {
   id: string;
   labelKey: string;
+  /** Legacy navigate — prefer `action`. Normalized at ingest when absent. */
   route?: string;
+  /** UI-OS typed action (preferred over `route`). */
+  action?: ShellAction;
   destructive?: boolean;
   requiresAdmin?: boolean;
 }

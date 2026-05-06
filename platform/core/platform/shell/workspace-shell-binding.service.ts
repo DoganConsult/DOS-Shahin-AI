@@ -283,6 +283,73 @@ export class WorkspaceShellBindingService {
   // converted snake_case label_key/label_fallback into i18nKey/fallback.
   // All data must flow from DB in the contracted shape. Zero consumers.
 
+  // ── UI-OS runtime config — shell-host reads these instead of hardcoding ──
+
+  /**
+   * Resolve a chrome string from header-zone surfaces.
+   * DB key path: workspace_shell_binding → header surface → props.chromeStrings.{key}
+   * Returns '' when absent — never returns a hardcoded English fallback.
+   */
+  chromeString(key: string): string {
+    for (const row of this.surfacesByZone('header')) {
+      const props = row.props as Record<string, unknown> | undefined;
+      const strings = props?.['chromeStrings'] as Record<string, string> | undefined;
+      if (strings && typeof strings[key] === 'string') return strings[key];
+    }
+    return '';
+  }
+
+  /**
+   * Banner templates from UI-OS runtime.
+   * DB key path: workspace_shell_binding → top-banners surface → props.bannerTemplates
+   * Each template: { id, kind, titleKey, messageKey, dismissible, actionKey?, actionRoute? }
+   */
+  readonly bannerTemplates = computed<unknown[]>(
+    () => this.zonePropArray('top-banners', 'bannerTemplates'),
+  );
+
+  /** Mobile bottom nav max items from runtime config. */
+  readonly mobileBottomNavMaxItems = computed<number>(() => {
+    const v = this.zoneNumberProp('mobile-nav', 'maxItems');
+    return v != null && v > 0 ? v : 0;
+  });
+
+  /** Session expiry policy from runtime. */
+  readonly sessionExpiryPolicy = computed<{ warningMinutes: number; dangerMinutes: number }>(() => {
+    for (const row of this.surfacesByZone('top-banners')) {
+      const props = row.props as Record<string, unknown> | undefined;
+      const policy = props?.['sessionExpiryPolicy'] as Record<string, unknown> | undefined;
+      if (policy) {
+        return {
+          warningMinutes: typeof policy['warningMinutes'] === 'number' ? policy['warningMinutes'] as number : 0,
+          dangerMinutes: typeof policy['dangerMinutes'] === 'number' ? policy['dangerMinutes'] as number : 0,
+        };
+      }
+    }
+    return { warningMinutes: 0, dangerMinutes: 0 };
+  });
+
+  /** Responsive breakpoint from runtime. */
+  readonly breakpointLargePx = computed<number>(() => {
+    const v = this.zoneNumberProp('header', 'breakpointLargePx');
+    return v != null && v > 0 ? v : 0;
+  });
+
+  /** Keyboard shortcuts from runtime (e.g. { command: 'Meta+k' }). */
+  readonly shellShortcuts = computed<Record<string, string>>(() => {
+    for (const row of this.surfacesByZone('header')) {
+      const props = row.props as Record<string, unknown> | undefined;
+      const shortcuts = props?.['shortcuts'] as Record<string, string> | undefined;
+      if (shortcuts && typeof shortcuts === 'object') return shortcuts;
+    }
+    return {};
+  });
+
+  /** Account menu actions (language/theme toggles) from runtime. */
+  readonly accountMenuActions = computed<unknown[]>(
+    () => this.zonePropArray('header', 'accountMenuActions'),
+  );
+
   // ── Private zone-prop helpers ─────────────────────────────────────────────
   // Read from the FIRST surface in a zone that has the requested prop.
 
@@ -293,6 +360,15 @@ export class WorkspaceShellBindingService {
       if (Array.isArray(v)) return v;
     }
     return [];
+  }
+
+  private zoneNumberProp(zone: WorkspaceShellZone, propName: string): number | null {
+    for (const row of this.surfacesByZone(zone)) {
+      const props = row.props as Record<string, unknown> | undefined;
+      const v = props?.[propName];
+      if (typeof v === 'number') return v;
+    }
+    return null;
   }
 
   private zoneStringProp(zone: WorkspaceShellZone, propName: string): string | null {

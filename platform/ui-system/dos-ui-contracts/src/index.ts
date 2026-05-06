@@ -7,3 +7,4 @@ export * from './page-contract.js';
 export * from './capability-registry.js';
 export * from './workspace-resolver-contract.js';
 export * from './workspace-gate-attributes.js';
+export * from './shell-action.contract.js';

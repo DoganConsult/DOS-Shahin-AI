@@ -14,19 +14,10 @@ import {
 import { CommonModule } from '@angular/common';
 import { NotificationModule } from 'carbon-components-angular';
 import type { DosCarbonNotificationKind } from '../carbon/dos-carbon-notification.component';
+import type { ShellBanner } from '@dos/ui-contracts';
 
-export interface ShellBanner {
-  id: string;
-  kind: DosCarbonNotificationKind | 'danger';
-  title: string;
-  /** Optional body text rendered as notification subtitle. */
-  message?: string;
-  subtitle?: string;
-  actionLabel?: string;
-  /** Internal route to navigate to when action button is clicked. */
-  actionRoute?: string;
-  dismissible?: boolean;
-}
+/** @deprecated Import ShellBanner from @dos/ui-contracts */
+export type { ShellBanner } from '@dos/ui-contracts';
 
 @Component({
   selector: 'dos-shell-banner-strip',
