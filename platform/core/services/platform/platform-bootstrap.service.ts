@@ -57,7 +57,7 @@ export class PlatformBootstrapService {
         entitlements: {
           ui: {
             homeRouteByRole: (entitlements['ui'] as Record<string, unknown>)?.['homeRouteByRole'] as Record<string, string> | undefined,
-            defaultHomeRoute: ((entitlements['ui'] as Record<string, unknown>)?.['defaultHomeRoute'] as string) ?? '/workspace-home',
+            defaultHomeRoute: ((entitlements['ui'] as Record<string, unknown>)?.['defaultHomeRoute'] as string) ?? undefined,
           },
         },
         bootstrap: {

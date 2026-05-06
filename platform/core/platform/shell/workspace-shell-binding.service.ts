@@ -104,7 +104,6 @@ export class WorkspaceShellBindingService {
       const key = this.navGroupKey(group.moduleCode, group.groupId);
       groupsByKey.set(key, {
         id: key,
-        labelKey: group.i18nKey ?? undefined,
         label: this.resolveRuntimeLabel(group.i18nKey, group.fallback, group.labelEn, group.labelAr, language),
         order: Number(group.sortOrder) || 0,
         items: [],
@@ -128,7 +127,6 @@ export class WorkspaceShellBindingService {
       const badge = this.normalizeNavBadge(item.badge);
       const navItem: DosNavItem = {
         id: item.itemId,
-        labelKey: item.i18nKey ?? undefined,
         label: this.resolveRuntimeLabel(item.i18nKey, item.fallback, item.labelEn, item.labelAr, language),
         route: item.action.kind === 'navigate' ? item.action.path : undefined,
         icon: this.normalizeIcon(item.icon),
@@ -239,9 +237,9 @@ export class WorkspaceShellBindingService {
         if (!item || typeof item !== 'object') continue;
         const e = item as Record<string, unknown>;
         const id = typeof e['id'] === 'string' ? (e['id'] as string) : null;
-        const labelKey = typeof e['labelKey'] === 'string' ? (e['labelKey'] as string) : null;
-        if (!id || !labelKey) continue;
-        const entry: ShellAccountMenuEntry = { id, labelKey };
+        const i18nKey = typeof e['i18nKey'] === 'string' ? (e['i18nKey'] as string) : null;
+        if (!id || !i18nKey) continue;
+        const entry: ShellAccountMenuEntry = { id, i18nKey };
         const action = parseShellAction(e['action']);
         if (action) entry.action = action;
         if (e['destructive'] === true) entry.destructive = true;
@@ -759,7 +757,6 @@ export class WorkspaceShellBindingService {
     const id = typeof record['id'] === 'string' ? record['id'] as string : '';
     if (!id) return null;
     const item: WorkspaceShellActionItem = { id };
-    if (typeof record['labelKey'] === 'string') item.labelKey = record['labelKey'] as string;
     if (record['destructive'] === true) item.destructive = true;
     const action = parseShellAction(record['action']);
     if (action) item.action = action;

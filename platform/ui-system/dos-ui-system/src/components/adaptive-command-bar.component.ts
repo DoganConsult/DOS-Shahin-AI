@@ -16,7 +16,7 @@ import type { ActionContract } from '@dos/ui-contracts';
           [class.dos-command-bar__btn--primary]="a.priority === 'primary'"
           (click)="invoke.emit(a)"
         >
-          {{ a.labelKey }}
+          {{ a.i18nKey }}
         </button>
       }
       @if (overflowActions().length > 0) {
@@ -27,7 +27,7 @@ import type { ActionContract } from '@dos/ui-contracts';
       <div class="dos-account-menu" role="menu">
         @for (a of overflowActions(); track a.id) {
           <button type="button" role="menuitem" class="dos-bottom-nav__item" (click)="invoke.emit(a)">
-            {{ a.labelKey }}
+            {{ a.i18nKey }}
           </button>
         }
       </div>

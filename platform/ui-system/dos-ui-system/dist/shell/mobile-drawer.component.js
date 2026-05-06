@@ -80,29 +80,29 @@ DosMobileDrawerComponent = __decorate([
         styles: [`
     :host { display: contents; }
     .dos-mobile-drawer__scrim {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: var(--dos-z-drawer, 90);
+      position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: var(--dos-z-drawer);
       animation: dos-drawer-fade .15s ease-out;
     }
     .dos-mobile-drawer {
       position: fixed; inset-block: 0; inset-inline-start: 0;
-      width: min(86vw, var(--dos-drawer-width, 320px)); max-width: 100vw;
-      background: var(--cds-layer-01, #f4f4f4);
+      width: min(86vw, var(--dos-drawer-width)); max-width: 100vw;
+      background: var(--cds-layer-01);
       box-shadow: 0 0 24px rgba(0,0,0,0.15);
-      z-index: var(--dos-z-modal, 100); display: flex; flex-direction: column;
+      z-index: var(--dos-z-modal); display: flex; flex-direction: column;
       animation: dos-drawer-slide .18s ease-out;
     }
     .dos-mobile-drawer__header {
       display: flex; align-items: center; justify-content: space-between;
-      padding: var(--cds-spacing-04, .75rem) var(--cds-spacing-05, 1rem);
-      border-block-end: 1px solid var(--cds-border-subtle-01, #e0e0e0);
-      background: var(--cds-layer-02, var(--cds-white, #ffffff));
+      padding: var(--cds-spacing-04) var(--cds-spacing-05);
+      border-block-end: 1px solid var(--cds-border-subtle-01);
+      background: var(--cds-layer-02));
     }
     .dos-mobile-drawer__close {
       width: 2rem; height: 2rem; border: 0; background: transparent;
       font-size: 1.5rem; line-height: 1; cursor: pointer;
-      color: var(--cds-text-primary, #161616); border-radius: 2px;
+      color: var(--cds-text-primary); border-radius: 2px;
     }
-    .dos-mobile-drawer__close:hover { background: var(--cds-layer-hover, #e8e8e8); }
+    .dos-mobile-drawer__close:hover { background: var(--cds-layer-hover); }
     .dos-mobile-drawer__body { flex: 1 1 auto; min-height: 0; overflow-y: auto; }
     @keyframes dos-drawer-fade  { from { opacity: 0; } to { opacity: 1; } }
     @keyframes dos-drawer-slide { from { transform: translateX(-100%); } to { transform: translateX(0); } }

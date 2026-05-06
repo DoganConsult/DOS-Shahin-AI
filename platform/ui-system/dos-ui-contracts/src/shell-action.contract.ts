@@ -1,6 +1,6 @@
 /**
  * Typed shell actions — UI-OS runtime emits these; shell-host dispatches only.
- * No raw route/detailRoute/evidenceUri reads in consumers — normalize at ingest.
+ * No raw route reads in consumers — normalize at ingest.
  */
 
 export type ShellAction =

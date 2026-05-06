@@ -276,10 +276,10 @@ export class FoundationOverviewPageComponent {
 
   readonly breadcrumbs = [{ label: 'Platform DNA' }, { label: 'Foundation' }];
   readonly pageActions: ActionContract[] = [
-    { id: 'records', labelKey: 'Open records', priority: 'primary', mobile: 'visible' },
-    { id: 'workflows', labelKey: 'Open workflows', priority: 'secondary', mobile: 'visible' },
-    { id: 'reports', labelKey: 'Open reports', priority: 'secondary', mobile: 'visible' },
-    { id: 'settings', labelKey: 'Open settings', priority: 'overflow', mobile: 'overflow' },
+    { id: 'records', i18nKey: 'Open records', priority: 'primary', mobile: 'visible' },
+    { id: 'workflows', i18nKey: 'Open workflows', priority: 'secondary', mobile: 'visible' },
+    { id: 'reports', i18nKey: 'Open reports', priority: 'secondary', mobile: 'visible' },
+    { id: 'settings', i18nKey: 'Open settings', priority: 'overflow', mobile: 'overflow' },
   ];
   readonly routeItems: OverviewRouteItem[] = [
     {

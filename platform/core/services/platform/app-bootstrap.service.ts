@@ -238,7 +238,7 @@ export class AppBootstrapService {
     const dashboardWidgets = accessLoaded ? this.accessStore.allowedDashboards() : [];
     const landingPage = accessLoaded
       ? this.accessStore.landingPage()
-      : session?.next?.route ?? '/workspace-home';
+      : session?.next?.route ?? undefined;
     const resolvedRoleCode = session?.auth?.roleCode ?? storedRole;
 
     return {

@@ -45,9 +45,7 @@ export class EntitlementsService {
     }
     return {
       modules,
-      ui: {
-        defaultHomeRoute: '/workspace-home',
-      },
+      ui: {},
     };
   });
 

@@ -367,7 +367,7 @@ export interface ReadinessScore {
   band: 'critical' | 'at-risk' | 'on-track' | 'leading';
   computedAt: string;
   drivers: Array<{ label: string; weight: number; status?: string }>;
-  evidenceUri?: string;
+  action?: { kind: 'open_external'; url: string };
 }
 
 /** Single-step explainability trace for `<dos-why-tooltip>`. */
@@ -376,7 +376,7 @@ export interface ExplainTrace {
   factorAr?: string;
   contribution: number;   // signed
   source?: string;        // dataset / rule / model id
-  evidenceUri?: string;
+  action?: { kind: 'open_external'; url: string };
 }
 
 /** Per-role priority weighting consumed by `<dos-role-priority-switcher>`. */

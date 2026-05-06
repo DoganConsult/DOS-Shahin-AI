@@ -37,7 +37,7 @@ import { KpiCardVM } from '../shared/foundation-types';
 
 interface NbaItem { id: string; titleKey: string; route: string; priority: 'critical'|'attention'|'recommended'; }
 interface RailItem { id: string; titleKey: string; count: number; route: string; }
-interface CrumbItem { labelKey: string; route?: string; }
+interface CrumbItem { i18nKey: string; route?: string; }
 
 const FOUNDATION_REALTIME_EVENTS = [
   'ready',
@@ -147,9 +147,9 @@ const FOUNDATION_REALTIME_EVENTS = [
               <!-- Masthead: Carbon breadcrumb + title + status tag + actions -->
               <cds-tile>
                 <cds-breadcrumb [ariaLabel]="i18n.translate('foundation.overview.contextRail')">
-                  @for (c of breadcrumbs(); track c.labelKey; let last = $last) {
+                  @for (c of breadcrumbs(); track c.i18nKey; let last = $last) {
                     <cds-breadcrumb-item [href]="c.route || null" [current]="last">
-                      {{ i18n.translate(c.labelKey) }}
+                      {{ i18n.translate(c.i18nKey) }}
                     </cds-breadcrumb-item>
                   }
                 </cds-breadcrumb>
@@ -234,9 +234,9 @@ const FOUNDATION_REALTIME_EVENTS = [
                           @for (t of quickTiles(); track t.key) {
                             <cds-list-row>
                               <cds-list-column>
-                                <a [routerLink]="t.route" [attr.aria-label]="i18n.translate(t.labelKey)"
+                                <a [routerLink]="t.route" [attr.aria-label]="i18n.translate(t.i18nKey)"
                                    style="text-decoration:none;color:inherit;display:block;">
-                                  <span class="fo-quick-tile-label">{{ i18n.translate(t.labelKey) }}</span>
+                                  <span class="fo-quick-tile-label">{{ i18n.translate(t.i18nKey) }}</span>
                                   <span class="fo-quick-tile-value">{{ t.value }}</span>
                                 </a>
                               </cds-list-column>
@@ -367,7 +367,7 @@ export class FoundationOverviewComponent implements OnInit, OnDestroy {
   loadWarnings = signal<string[]>([]);
   recentAudit = signal<Record<string, unknown>[]>([]);
   kpis = signal<KpiCardVM[]>([]);
-  quickTiles = signal<{ key: string; labelKey: string; value: number; route: string }[]>([]);
+  quickTiles = signal<{ key: string; i18nKey: string; value: number; route: string }[]>([]);
   view = signal<'command-center' | 'recent'>('command-center');
   agentOpen = signal(false);
   whyOpen = signal(false);
@@ -437,9 +437,9 @@ export class FoundationOverviewComponent implements OnInit, OnDestroy {
   helpKey = computed(() => this.experience()?.helpKey ?? null);
 
   breadcrumbs = computed<CrumbItem[]>(() => [
-    { labelKey: 'foundation.nav.overview', route: '/workspace-home' },
-    { labelKey: 'foundation.module.title', route: '/foundation/overview' },
-    { labelKey: 'foundation.overview.title' },
+    { i18nKey: 'foundation.nav.overview', route: '/workspace-home' },
+    { i18nKey: 'foundation.module.title', route: '/foundation/overview' },
+    { i18nKey: 'foundation.overview.title' },
   ]);
 
   // ── Agent experience (spec §3.2 primaryAgentId) ──────────────────────
@@ -614,20 +614,20 @@ export class FoundationOverviewComponent implements OnInit, OnDestroy {
     };
 
     const tiles = [
-      { key: 'users',         labelKey: 'foundation.kpi.users.total',          value: arr(d.users, 'users').length,                          route: '/foundation/users' },
-      { key: 'departments',   labelKey: 'foundation.kpi.departments.total',    value: arr(d.departments, 'departments').length,              route: '/foundation/departments' },
-      { key: 'businessUnits', labelKey: 'foundation.nav.businessUnits',        value: arr(d.businessUnits, 'businessUnits').length,          route: '/foundation/business-units' },
-      { key: 'teams',         labelKey: 'foundation.kpi.teams.total',          value: arr(d.teams, 'teams').length,                          route: '/foundation/teams' },
-      { key: 'roles',         labelKey: 'foundation.nav.roles',                value: arr(d.roles, 'profiles', 'roles').length,              route: '/foundation/roles' },
-      { key: 'positions',     labelKey: 'foundation.nav.positions',            value: arr(d.positions, 'positions').length,                  route: '/foundation/positions' },
-      { key: 'locations',     labelKey: 'foundation.nav.locations',            value: arr(d.locations, 'locations', 'rows').length,          route: '/foundation/locations' },
-      { key: 'committees',    labelKey: 'foundation.nav.committees',           value: arr(d.committees, 'committees').length,                route: '/foundation/committees' },
-      { key: 'organizations', labelKey: 'foundation.nav.organization',         value: arr(d.organizations, 'organizations').length,          route: '/foundation/organization' },
+      { key: 'users',         i18nKey: 'foundation.kpi.users.total',          value: arr(d.users, 'users').length,                          route: '/foundation/users' },
+      { key: 'departments',   i18nKey: 'foundation.kpi.departments.total',    value: arr(d.departments, 'departments').length,              route: '/foundation/departments' },
+      { key: 'businessUnits', i18nKey: 'foundation.nav.businessUnits',        value: arr(d.businessUnits, 'businessUnits').length,          route: '/foundation/business-units' },
+      { key: 'teams',         i18nKey: 'foundation.kpi.teams.total',          value: arr(d.teams, 'teams').length,                          route: '/foundation/teams' },
+      { key: 'roles',         i18nKey: 'foundation.nav.roles',                value: arr(d.roles, 'profiles', 'roles').length,              route: '/foundation/roles' },
+      { key: 'positions',     i18nKey: 'foundation.nav.positions',            value: arr(d.positions, 'positions').length,                  route: '/foundation/positions' },
+      { key: 'locations',     i18nKey: 'foundation.nav.locations',            value: arr(d.locations, 'locations', 'rows').length,          route: '/foundation/locations' },
+      { key: 'committees',    i18nKey: 'foundation.nav.committees',           value: arr(d.committees, 'committees').length,                route: '/foundation/committees' },
+      { key: 'organizations', i18nKey: 'foundation.nav.organization',         value: arr(d.organizations, 'organizations').length,          route: '/foundation/organization' },
     ];
     if (this.workflowEnabled()) {
       tiles.push(
-        { key: 'delegations', labelKey: 'foundation.nav.delegations', value: arr(d.delegations, 'delegations').length, route: '/foundation/delegations' },
-        { key: 'policies', labelKey: 'foundation.nav.policies', value: arr(d.policies, 'policies').length, route: '/foundation/policies' },
+        { key: 'delegations', i18nKey: 'foundation.nav.delegations', value: arr(d.delegations, 'delegations').length, route: '/foundation/delegations' },
+        { key: 'policies', i18nKey: 'foundation.nav.policies', value: arr(d.policies, 'policies').length, route: '/foundation/policies' },
       );
     }
     this.quickTiles.set(tiles);

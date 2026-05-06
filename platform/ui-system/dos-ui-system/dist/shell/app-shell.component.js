@@ -66,14 +66,14 @@ DosAppShellComponent = __decorate([
     /* ── Shell frame ── all tokens from @carbon/styles + carbon-shell-tokens.scss ── */
     .dos-app-shell {
       min-height: 100vh;
-      background: var(--cds-background, #f4f4f4);
+      background: var(--cds-background);
     }
 
     /* Desktop: Carbon side-nav owns its own width; we respect it via the token */
     .dos-app-shell--desktop {
       display: grid;
-      grid-template-columns: var(--cds-side-nav-width, 16rem) 1fr;
-      grid-template-rows: var(--shell-header-stack-height, 3rem) 1fr;
+      grid-template-columns: var(--cds-side-nav-width) 1fr;
+      grid-template-rows: var(--shell-header-stack-height) 1fr;
       grid-template-areas:
         "header header"
         "sidebar main";
@@ -81,7 +81,7 @@ DosAppShellComponent = __decorate([
 
     .dos-app-shell--mobile {
       display: grid;
-      grid-template-rows: var(--shell-header-stack-height, 3rem) 1fr auto;
+      grid-template-rows: var(--shell-header-stack-height) 1fr auto;
       grid-template-areas:
         "header"
         "main"
@@ -93,7 +93,7 @@ DosAppShellComponent = __decorate([
       grid-area: header;
       position: sticky;
       inset-block-start: 0;
-      z-index: var(--shell-z-sticky, var(--cds-z-index-overlay, 6000));
+      z-index: var(--shell-z-sticky));
     }
 
     /* Sidebar: Carbon layer token for background */
@@ -102,10 +102,10 @@ DosAppShellComponent = __decorate([
       min-height: 0;
       overflow-y: auto;
       overflow-x: hidden;
-      border-inline-end: var(--shell-border-width, 1px) solid var(--cds-border-subtle-01, #e0e0e0);
-      background: var(--cds-layer-01, #f4f4f4);
+      border-inline-end: var(--shell-border-width) solid var(--cds-border-subtle-01);
+      background: var(--cds-layer-01);
       scrollbar-width: thin;
-      scrollbar-color: var(--cds-border-subtle-01, #e0e0e0) transparent;
+      scrollbar-color: var(--cds-border-subtle-01) transparent;
     }
 
     /* Main: route-change entry animation */
@@ -113,7 +113,7 @@ DosAppShellComponent = __decorate([
       grid-area: main;
       min-width: 0;
       overflow-x: hidden;
-      background: var(--shell-page-bg, var(--cds-layer-01, #f4f4f4));
+      background: var(--shell-page-bg));
       animation: premium-fade-up 0.2s ease-out both;
     }
 
@@ -122,9 +122,9 @@ DosAppShellComponent = __decorate([
       grid-area: bottom;
       position: sticky;
       inset-block-end: 0;
-      z-index: var(--shell-z-sticky, 6000);
-      border-block-start: var(--shell-border-width, 1px) solid var(--cds-border-subtle-01, #e0e0e0);
-      background: var(--cds-layer-01, #f4f4f4);
+      z-index: var(--shell-z-sticky);
+      border-block-start: var(--shell-border-width) solid var(--cds-border-subtle-01);
+      background: var(--cds-layer-01);
       padding-block-end: env(safe-area-inset-bottom, 0);
     }
 

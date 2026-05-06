@@ -112,7 +112,6 @@ export class WorkspaceNavigationAdapter {
               ...existing,
               icon:               existing.icon ?? it.icon,
               route:              existing.route ?? it.route,
-              labelKey:           existing.labelKey ?? it.labelKey,
               requiredPermission: existing.requiredPermission ?? it.requiredPermission,
               moduleCode:         existing.moduleCode ?? it.moduleCode,
               group:              existing.group ?? it.group,

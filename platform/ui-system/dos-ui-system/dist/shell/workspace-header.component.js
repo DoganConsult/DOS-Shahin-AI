@@ -272,9 +272,9 @@ DosWorkspaceHeaderComponent = __decorate([
     .dos-wh-brand {
       display: inline-flex;
       align-items: center;
-      gap: var(--cds-spacing-03, 0.5rem);
-      padding-inline: var(--cds-spacing-05, 1rem);
-      color: var(--cds-text-on-color, var(--cds-white, #ffffff));
+      gap: var(--cds-spacing-03);
+      padding-inline: var(--cds-spacing-05);
+      color: var(--cds-text-on-color));
       text-decoration: none;
       font-weight: 600;
       font-size: 0.875rem;
@@ -297,17 +297,17 @@ DosWorkspaceHeaderComponent = __decorate([
     .dos-wh-brand-name {
       font-weight: 700;
       letter-spacing: -0.01em;
-      color: var(--cds-text-on-color, var(--cds-white, #ffffff));
+      color: var(--cds-text-on-color));
     }
 
     .dos-wh-tenant-sep {
-      color: var(--cds-text-on-color-disabled, rgba(255,255,255,0.4));
+      color: var(--cds-text-on-color-disabled));
       font-weight: 300;
-      padding-inline: var(--cds-spacing-02, 0.25rem);
+      padding-inline: var(--cds-spacing-02);
     }
 
     .dos-wh-tenant-name {
-      color: var(--cds-text-on-color-disabled, rgba(255,255,255,0.65));
+      color: var(--cds-text-on-color-disabled));
       font-weight: 400;
       font-size: 0.8125rem;
       overflow: hidden;
@@ -326,17 +326,17 @@ DosWorkspaceHeaderComponent = __decorate([
       background: none;
       border: none;
       cursor: pointer;
-      color: var(--cds-text-on-color, var(--cds-white, #ffffff));
+      color: var(--cds-text-on-color));
       transition: background 0.12s ease;
       flex: 0 0 auto;
     }
 
     .dos-wh-action:hover {
-      background: var(--cds-layer-hover-inverse, rgba(255,255,255,0.08));
+      background: var(--cds-layer-hover-inverse));
     }
 
     .dos-wh-action:focus-visible {
-      outline: 2px solid var(--cds-focus, var(--cds-white, #ffffff));
+      outline: 2px solid var(--cds-focus));
       outline-offset: -2px;
     }
 
@@ -353,8 +353,8 @@ DosWorkspaceHeaderComponent = __decorate([
       font-weight: 700;
       line-height: 1rem;
       text-align: center;
-      background: var(--cds-support-error, #da1e28);
-      color: var(--cds-text-on-color, var(--cds-white, #ffffff));
+      background: var(--cds-support-error);
+      color: var(--cds-text-on-color));
       pointer-events: none;
       animation: scale-pop 0.2s ease-out both;
     }
@@ -369,23 +369,23 @@ DosWorkspaceHeaderComponent = __decorate([
       background: none;
       border: none;
       cursor: pointer;
-      color: var(--cds-text-on-color, var(--cds-white, #ffffff));
+      color: var(--cds-text-on-color));
       transition: background 0.12s ease;
     }
 
     .dos-wh-avatar:hover {
-      background: var(--cds-layer-hover-inverse, rgba(255,255,255,0.08));
+      background: var(--cds-layer-hover-inverse));
     }
 
     .dos-wh-avatar:focus-visible {
-      outline: 2px solid var(--cds-focus, var(--cds-white, #ffffff));
+      outline: 2px solid var(--cds-focus));
       outline-offset: -2px;
     }
 
     .dos-wh-avatar__img {
       border-radius: 50%;
       object-fit: cover;
-      border: 1.5px solid var(--cds-border-inverse, rgba(255,255,255,0.2));
+      border: 1.5px solid var(--cds-border-inverse));
     }
 
     .dos-wh-avatar__initials {
@@ -395,8 +395,8 @@ DosWorkspaceHeaderComponent = __decorate([
       width: 1.5rem;
       height: 1.5rem;
       border-radius: 50%;
-      background: var(--brand-accent, var(--cds-button-primary, #0f62fe));
-      color: var(--cds-text-on-color, var(--cds-white, #ffffff));
+      background: var(--brand-accent));
+      color: var(--cds-text-on-color));
       font-size: 0.625rem;
       font-weight: 700;
       letter-spacing: 0.04em;

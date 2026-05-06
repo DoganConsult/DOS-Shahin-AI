@@ -88,7 +88,6 @@ export interface PermissionAware {
 
 export interface WorkspaceShellActionItem {
   id: string;
-  labelKey?: string;
   destructive?: boolean;
   action?: ShellAction;
 }

@@ -2,7 +2,7 @@ import type { ResponsiveContract } from './responsive-contract.js';
 
 export interface NavigationItemContract {
   id: string;
-  labelKey: string;
+  i18nKey: string;
   icon?: string;
   route: string;
   /** Module entitlement required for visibility. */

@@ -8,7 +8,7 @@ export interface DosReadinessInput {
   band: DosReadinessBand;
   computedAt: string;
   drivers: DosReadinessDriver[];
-  evidenceUri?: string;
+  evidenceUrl?: string;
 }
 
 @Component({
@@ -39,7 +39,7 @@ export interface DosReadinessInput {
         </ul>
         <footer class="dos-rdy__foot">
           <span>Computed {{ readiness.computedAt }}</span>
-          @if (readiness.evidenceUri) { <a [href]="readiness.evidenceUri">Evidence</a> }
+          @if (readiness.evidenceUrl) { <a [href]="readiness.evidenceUrl">Evidence</a> }
         </footer>
       </section>
     }

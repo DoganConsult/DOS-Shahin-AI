@@ -71,7 +71,7 @@ const ResponsiveBehaviorSchema = z.object({
 
 const ActionContractSchema = z.object({
   id: z.string().min(1),
-  labelKey: z.string().min(1),
+  i18nKey: z.string().min(1),
   icon: z.string().optional(),
   priority: z.enum(['primary', 'secondary', 'tertiary', 'overflow']),
   permissions: z.array(z.string().regex(/^[a-z0-9.-]+$/)).optional(),
@@ -176,7 +176,7 @@ export type ModuleApp = z.infer<typeof ModuleAppSchema>;
 // ─── SideNav root entry — NavigationItemContract shape ────────────────────
 const SideNavSchema = z.object({
   id: z.string().regex(/^[a-z][a-z0-9-]+$/),
-  labelKey: z.string().min(1),
+  i18nKey: z.string().min(1),
   /** Canonical icon system: lucide / material-icons-outlined per DosNavItem.
    *  No `pi-*` / `mdi-*` allowed by the UI-system guard. */
   icon: z.string().regex(/^[a-z][a-z0-9-]+$/, 'lucide/mio key, no pi-* / mdi-*'),

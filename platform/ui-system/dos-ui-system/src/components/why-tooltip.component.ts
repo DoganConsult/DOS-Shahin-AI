@@ -6,7 +6,7 @@ export interface DosExplainTraceInput {
   factorAr?: string;
   contribution: number;
   source?: string;
-  evidenceUri?: string;
+  evidenceUrl?: string;
 }
 
 /**
@@ -34,7 +34,7 @@ export interface DosExplainTraceInput {
                   {{ t.contribution > 0 ? '+' : '' }}{{ t.contribution }}
                 </span>
                 @if (t.source) { <span class="dos-why-tt__source">{{ t.source }}</span> }
-                @if (t.evidenceUri) { <a [href]="t.evidenceUri">evidence</a> }
+                @if (t.evidenceUrl) { <a [href]="t.evidenceUrl">evidence</a> }
               </li>
             }
           </ul>

@@ -71,21 +71,21 @@ DosMobileBottomNavComponent = __decorate([
     :host { display: block; }
     .dos-bottom-nav {
       display: grid; grid-auto-flow: column; grid-auto-columns: 1fr;
-      align-items: stretch; min-height: var(--cds-spacing-14, 56px);
-      background: var(--cds-layer-01, #f4f4f4);
+      align-items: stretch; min-height: var(--cds-spacing-14);
+      background: var(--cds-layer-01);
     }
     .dos-bottom-nav__item {
       display: flex; flex-direction: column; gap: .125rem;
       align-items: center; justify-content: center;
       border: 0; background: transparent; cursor: pointer; padding: .5rem .25rem;
-      color: var(--cds-text-secondary, #6f6f6f); position: relative;
+      color: var(--cds-text-secondary); position: relative;
       border-block-start: 2px solid transparent;
       transition: color .12s, border-color .12s, background .12s;
     }
-    .dos-bottom-nav__item:hover { background: var(--cds-layer-hover, #e8e8e8); }
+    .dos-bottom-nav__item:hover { background: var(--cds-layer-hover); }
     .dos-bottom-nav__item--active {
-      color: var(--cds-link-primary, #0f62fe);
-      border-block-start-color: var(--cds-link-primary, #0f62fe);
+      color: var(--cds-link-primary);
+      border-block-start-color: var(--cds-link-primary);
     }
     .dos-bottom-nav__icon { color: currentColor; }
     .dos-bottom-nav__label { font-size: .6875rem; line-height: 1; }
@@ -93,7 +93,7 @@ DosMobileBottomNavComponent = __decorate([
       position: absolute; top: .25rem; inset-inline-end: 25%;
       min-width: 1rem; padding: 0 .25rem; border-radius: 999px;
       font-size: .625rem; line-height: 1rem; text-align: center;
-      background: var(--cds-support-error, #da1e28); color: var(--cds-text-on-color, var(--cds-white, #ffffff));
+      background: var(--cds-support-error); color: var(--cds-text-on-color));
     }
   `],
     })

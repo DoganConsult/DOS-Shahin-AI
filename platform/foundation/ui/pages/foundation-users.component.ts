@@ -379,9 +379,9 @@ export class FoundationUsersComponent implements OnInit {
   i18n: FoundationI18n = inject(FOUNDATION_I18N, { optional: true }) ?? new NoopFoundationI18n();
 
   readonly pageActions: ActionContract[] = [
-    { id: 'add', labelKey: 'Add user', priority: 'primary', mobile: 'visible' },
-    { id: 'refresh', labelKey: 'Refresh', priority: 'secondary', mobile: 'visible' },
-    { id: 'clear', labelKey: 'Clear filters', priority: 'overflow', mobile: 'overflow' },
+    { id: 'add', i18nKey: 'Add user', priority: 'primary', mobile: 'visible' },
+    { id: 'refresh', i18nKey: 'Refresh', priority: 'secondary', mobile: 'visible' },
+    { id: 'clear', i18nKey: 'Clear filters', priority: 'overflow', mobile: 'overflow' },
   ];
 
   loading = signal(true); saving = signal(false); error = signal<string | null>(null);

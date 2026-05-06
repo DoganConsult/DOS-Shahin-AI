@@ -57,7 +57,7 @@ export class BootstrapStore {
   readonly tenant = computed(() => this._data()?.tenant ?? null);
   readonly workspace = computed(() => this._data()?.workspace ?? null);
   readonly modules = computed(() => this._data()?.modules ?? []);
-  readonly landingPage = computed(() => this._data()?.landingPage ?? '/workspace-home');
+  readonly landingPage = computed(() => this._data()?.landingPage ?? undefined);
 
   readonly roleProfile = computed<BootstrapRoleProfile | null>(() => {
     const u = this._data()?.user;

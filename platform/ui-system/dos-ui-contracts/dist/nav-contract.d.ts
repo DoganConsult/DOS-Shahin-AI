@@ -21,8 +21,6 @@ export type DosNavDisabledReason = 'not-entitled' | 'missing-permission' | 'back
 export interface DosNavItem {
     /** Stable id; used for tracking, telemetry, and routerLinkActive. */
     id: string;
-    /** i18n key. When present, takes precedence over `label` at render time. */
-    labelKey?: string;
     /** Plain English fallback label (also acts as default if no i18n). */
     label: string;
     /** Angular route. May be omitted for items that are pure group placeholders. */
@@ -60,8 +58,6 @@ export interface DosNavItem {
 export interface DosNavGroup {
     /** Stable id. */
     id: string;
-    /** i18n key for the group header. */
-    labelKey?: string;
     /** Plain English fallback label. */
     label: string;
     /** Optional sort order; lower = earlier. */
@@ -77,16 +73,14 @@ export interface DosShellNavConfig {
     groups: DosNavGroup[];
 }
 /**
- * Account-menu entry shape. Labels resolve from `labelKey` via the host's
+ * Account-menu entry shape. Labels resolve from `i18nKey` via the host's
  * I18nService at render time; rows with `requiresAdmin: true` are filtered
  * by the host against AccessStore.isTenantAdmin().
  */
 export interface ShellAccountMenuEntry {
     id: string;
-    labelKey: string;
-    /** Legacy navigate — prefer `action`. Normalized at ingest when absent. */
-    route?: string;
-    /** UI-OS typed action (preferred over `route`). */
+    i18nKey: string;
+    /** UI-OS typed action. */
     action?: ShellAction;
     destructive?: boolean;
     requiresAdmin?: boolean;
@@ -104,7 +98,6 @@ export interface DosWorkspaceShellConfig {
     accountMenuItems?: ReadonlyArray<{
         id: string;
         label: string;
-        labelKey?: string;
         icon?: string;
         destructive?: boolean;
     }>;
