@@ -45,7 +45,7 @@ import type { WorkspaceHeaderContext, WorkspaceHeaderAction } from './workspace-
       ></cds-hamburger>
 
       <!-- Brand logo slot -->
-      <a class="dos-wh-brand" [attr.aria-label]="resolvedBrand" [attr.href]="logoHref">
+      <a class="dos-wh-brand" [attr.aria-label]="resolvedBrand || null" [attr.href]="logoHref">
         @if (logoUri) {
           <img class="dos-wh-logo"
                [src]="logoUri"
@@ -65,7 +65,7 @@ import type { WorkspaceHeaderContext, WorkspaceHeaderAction } from './workspace-
         @if (showCommandSearch) {
           <button type="button"
                   class="dos-wh-action"
-                  [attr.aria-label]="commandSearchLabel"
+                  [attr.aria-label]="commandSearchLabel || null"
                   (click)="commandSearchOpen.emit()">
             <dos-icon name="search" [size]="20" [ariaLabel]="commandSearchLabel"></dos-icon>
           </button>
@@ -76,7 +76,7 @@ import type { WorkspaceHeaderContext, WorkspaceHeaderAction } from './workspace-
           <button type="button"
                   class="dos-wh-action"
                   [class.dos-wh-action--badge]="inboxCount > 0"
-                  [attr.aria-label]="inboxLabel"
+                  [attr.aria-label]="inboxLabel || null"
                   [attr.data-badge-count]="inboxCount > 0 ? inboxCount : null"
                   (click)="inboxOpen.emit()">
             <dos-icon name="notification" [size]="20" [ariaLabel]="inboxLabel"></dos-icon>
@@ -108,7 +108,7 @@ import type { WorkspaceHeaderContext, WorkspaceHeaderAction } from './workspace-
         @if (userDisplayName) {
           <button type="button"
                   class="dos-wh-avatar"
-                  [attr.aria-label]="userDisplayName"
+                  [attr.aria-label]="userDisplayName || null"
                   [attr.data-testid]="'dos-workspace-header-avatar'"
                   (click)="avatarClick.emit()">
             @if (userAvatarUri) {
@@ -302,8 +302,8 @@ export class DosWorkspaceHeaderComponent {
   @Input() showCommandSearch = true;
   @Input() showInbox = true;
   @Input() inboxCount = 0;
-  @Input() commandSearchLabel = 'Search (Ctrl+K)';
-  @Input() inboxLabel = 'Inbox';
+  @Input() commandSearchLabel = '';
+  @Input() inboxLabel = '';
   @Input() trailingActions: WorkspaceHeaderAction[] = [];
 
   @Output() sideNavToggled   = new EventEmitter<boolean>();

@@ -26,13 +26,20 @@ import {
   ChangeDetectionStrategy,
   Component,
   Input,
+  OnInit,
   inject,
   signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { UIShellModule, DialogModule } from '../carbon';
+import { UIShellModule, DialogModule, ButtonModule } from '../carbon';
 import { DosCarbonTileComponent } from '../carbon/dos-carbon-tile.component';
+
+let __dosShellMenuIdCounter = 0;
+function nextMenuId(prefix: string): string {
+  __dosShellMenuIdCounter += 1;
+  return `${prefix}-${__dosShellMenuIdCounter}`;
+}
 
 export interface ShellSidebarNavItem {
   id: string;
@@ -47,7 +54,7 @@ export interface ShellAccountMenuEntry {
   id: string;
   i18nKey?: string;
   label?: string;
-  ariaLabel?: string;
+  ariaLabel?: string | null;
   actionType?: string;
   action?: { kind: string; path?: string; url?: string } | null;
   enabled?: boolean;
@@ -165,20 +172,27 @@ export class DosShellWorkspaceTitleComponent {
   @Input() eyebrow = '';
 }
 
-// ── User menu (Carbon header-action + cdsOverflowMenu) ───────────────
+// ── User menu (Carbon icon-button + cdsOverflowMenu) ─────────────────
 @Component({
   selector: 'dos-shell-user-menu',
   standalone: true,
-  imports: [CommonModule, UIShellModule, DialogModule],
+  imports: [CommonModule, ButtonModule, DialogModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <cds-header-action
-      [description]="resolvedAriaLabel()"
-      [active]="open()"
+    @if (resolvedAriaLabel()) {
+    <cds-icon-button
+      kind="ghost"
+      size="lg"
+      [description]="resolvedTooltip()"
+      [isOpen]="open()"
       [cdsOverflowMenu]="userMenuPane"
       [flip]="true"
-      (selected)="toggle()"
-      [attr.aria-label]="resolvedAriaLabel()"
+      (click)="toggle()"
+      [buttonNgClass]="{
+        'cds--header__action': true,
+        'cds--header__action--active': open()
+      }"
+      [buttonAttributes]="triggerAttrs()"
       [attr.data-renderer-key]="'shell.user-menu'"
     >
       @if (avatarUri) {
@@ -191,28 +205,30 @@ export class DosShellWorkspaceTitleComponent {
           <path d="M16 4a6 6 0 1 1 0 12 6 6 0 0 1 0-12zm0 14c5 0 10 2.5 10 7v3H6v-3c0-4.5 5-7 10-7z"/>
         </svg>
       }
-    </cds-header-action>
+    </cds-icon-button>
     <ng-template #userMenuPane>
-      <cds-overflow-menu-pane>
+      <cds-overflow-menu-pane [attr.id]="menuId" role="menu" [attr.aria-label]="resolvedAriaLabel() || null">
         @for (entry of menu ?? []; track entry.id) {
           <cds-overflow-menu-option
             [disabled]="entry.enabled === false"
             [type]="entry.destructive ? 'danger' : null"
             [innerClass]="entry.id"
             [attr.data-entry-id]="entry.id"
-            [attr.data-action-type]="entry.actionType || null"
+            [attr.data-action-type]="entry.actionType ? entry.actionType : null"
             [attr.data-route-exists]="entry.routeExists === null || entry.routeExists === undefined ? null : (entry.routeExists ? 'true' : 'false')"
+            [attr.aria-label]="entry.ariaLabel || entry.label || entry.i18nKey || null"
             (selected)="activate(entry)"
           >{{ entry.label || entry.i18nKey || entry.id }}</cds-overflow-menu-option>
         }
       </cds-overflow-menu-pane>
     </ng-template>
+    }
   `,
   styles: [`
     :host { display: inline-flex; align-items: stretch; height: 100%; }
   `],
 })
-export class DosShellUserMenuComponent {
+export class DosShellUserMenuComponent implements OnInit {
   private readonly router = inject(Router);
   @Input() label = '';
   @Input() avatarUri: string | null = null;
@@ -221,9 +237,32 @@ export class DosShellUserMenuComponent {
   @Input() menu: ShellAccountMenuEntry[] | null = [];
 
   readonly open = signal(false);
+  readonly menuId = nextMenuId('dos-shell-user-menu');
+
+  ngOnInit(): void {
+    if (!this.resolvedAriaLabel()) {
+      // eslint-disable-next-line no-console
+      console.warn('[shell.user-menu] MISSING_REQUIRED_PROP ariaLabel — control fail-closed, not rendered');
+    }
+  }
 
   resolvedAriaLabel(): string {
     return this.ariaLabel || this.label || '';
+  }
+
+  resolvedTooltip(): string {
+    return this.label || this.ariaLabel || '';
+  }
+
+  triggerAttrs(): Record<string, string> {
+    const attrs: Record<string, string> = {
+      'aria-haspopup': 'menu',
+      'aria-expanded': this.open() ? 'true' : 'false',
+    };
+    const aria = this.resolvedAriaLabel();
+    if (aria) attrs['aria-label'] = aria;
+    if (this.open()) attrs['aria-controls'] = this.menuId;
+    return attrs;
   }
 
   toggle(): void {
@@ -237,32 +276,37 @@ export class DosShellUserMenuComponent {
   }
 }
 
-// ── Settings action (Carbon header-action) ───────────────────────────
+// ── Settings action (Carbon icon-button) ─────────────────────────────
 @Component({
   selector: 'dos-shell-settings-action',
   standalone: true,
-  imports: [CommonModule, UIShellModule],
+  imports: [CommonModule, ButtonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <cds-header-action
-      [description]="resolvedAriaLabel()"
-      (selected)="onClick()"
-      [attr.aria-label]="resolvedAriaLabel()"
+    @if (resolvedAriaLabel()) {
+    <cds-icon-button
+      kind="ghost"
+      size="lg"
+      [description]="resolvedTooltip()"
+      [disabled]="enabled === false"
+      (click)="onClick()"
+      [buttonNgClass]="{ 'cds--header__action': true }"
+      [buttonAttributes]="triggerAttrs()"
       [attr.data-renderer-key]="'shell.settings-action'"
       [attr.data-route-exists]="routeExists === null ? null : (routeExists ? 'true' : 'false')"
-      [attr.aria-disabled]="enabled === false ? 'true' : null"
     >
       <svg viewBox="0 0 32 32" width="20" height="20"
            aria-hidden="true" focusable="false" fill="currentColor">
         <path d="M27 16.76v-1.53l1.92-1.68A2 2 0 0 0 29.3 11l-2.36-4.07a2 2 0 0 0-2.31-.92l-2.4.86a11.92 11.92 0 0 0-2.66-1.53L19 2.84A2 2 0 0 0 17 1h-2a2 2 0 0 0-2 1.84l-.55 2.5a11.99 11.99 0 0 0-2.66 1.53l-2.4-.86a2 2 0 0 0-2.32.92L2.7 11a2 2 0 0 0 .38 2.5L5 15.24v1.53l-1.92 1.68A2 2 0 0 0 2.7 21l2.37 4.07a2 2 0 0 0 2.31.92l2.4-.86a11.92 11.92 0 0 0 2.66 1.53L13 29.16A2 2 0 0 0 15 31h2a2 2 0 0 0 2-1.84l.55-2.5a11.99 11.99 0 0 0 2.66-1.53l2.4.86a2 2 0 0 0 2.32-.92L29.3 21a2 2 0 0 0-.38-2.5zM16 22a6 6 0 1 1 6-6 6 6 0 0 1-6 6z"/>
       </svg>
-    </cds-header-action>
+    </cds-icon-button>
+    }
   `,
   styles: [`
     :host { display: inline-flex; align-items: stretch; height: 100%; }
   `],
 })
-export class DosShellSettingsActionComponent {
+export class DosShellSettingsActionComponent implements OnInit {
   private readonly router = inject(Router);
   @Input() label = '';
   @Input() icon = '';
@@ -271,8 +315,27 @@ export class DosShellSettingsActionComponent {
   @Input() enabled: boolean | null = null;
   @Input() routeExists: boolean | null = null;
 
+  ngOnInit(): void {
+    if (!this.resolvedAriaLabel()) {
+      // eslint-disable-next-line no-console
+      console.warn('[shell.settings-action] MISSING_REQUIRED_PROP ariaLabel — control fail-closed, not rendered');
+    }
+  }
+
   resolvedAriaLabel(): string {
     return this.ariaLabel || this.label || '';
+  }
+
+  resolvedTooltip(): string {
+    return this.label || this.ariaLabel || '';
+  }
+
+  triggerAttrs(): Record<string, string> {
+    const attrs: Record<string, string> = {};
+    const aria = this.resolvedAriaLabel();
+    if (aria) attrs['aria-label'] = aria;
+    if (this.enabled === false) attrs['aria-disabled'] = 'true';
+    return attrs;
   }
 
   onClick(): void {
@@ -289,7 +352,7 @@ export class DosShellSettingsActionComponent {
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <nav class="cds--side-nav__navigation"
-         [attr.aria-label]="ariaLabel || 'Primary navigation'"
+         [attr.aria-label]="ariaLabel || null"
          [attr.data-renderer-key]="'shell.sidebar-nav'">
       @if (items?.length) {
         <ul class="cds--side-nav__items">
@@ -303,7 +366,7 @@ export class DosShellSettingsActionComponent {
             >
               {{ item.label }}
               @if (item.badge !== undefined && item.badge !== null && item.badge !== '') {
-                <span class="dos-shell-sidebar-nav__badge" aria-label="badge">{{ item.badge }}</span>
+                <span class="dos-shell-sidebar-nav__badge" [attr.aria-label]="badgeLabel || null">{{ item.badge }}</span>
               }
             </cds-sidenav-item>
           }
@@ -344,6 +407,7 @@ export class DosShellSidebarNavComponent {
   @Input() items: ShellSidebarNavItem[] | null = [];
   @Input() emptyMessage = '';
   @Input() ariaLabel = '';
+  @Input() badgeLabel = '';
 
   onNavigated(_navPromise: Promise<boolean>, item: ShellSidebarNavItem): void {
     if (!item.route) return;
@@ -362,7 +426,7 @@ export class DosShellSidebarNavComponent {
   template: `
     @if (items?.length) {
       <section class="dos-shell-module-cards"
-               [attr.aria-label]="ariaLabel || 'Modules'"
+               [attr.aria-label]="ariaLabel || null"
                [attr.data-renderer-key]="'shell.module-cards'">
         <ul class="dos-shell-module-cards__grid">
           @for (item of items; track item.id) {

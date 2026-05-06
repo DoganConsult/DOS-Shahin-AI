@@ -90,9 +90,9 @@ import type { WorkspaceNavItem } from './workspace-shell.contracts';
       }
 
       <!-- Sidebar footer: brand attribution -->
-      @if (!collapsed) {
+      @if (!collapsed && poweredByLabel) {
         <div class="dos-sidebar-footer">
-          <span class="dos-sidebar-footer__text">Powered by Dogan-AI OS</span>
+          <span class="dos-sidebar-footer__text">{{ poweredByLabel }}</span>
         </div>
       }
     </cds-sidenav>
@@ -199,6 +199,7 @@ export class DosWorkspaceSidebarComponent {
   @Input() collapsed = false;
   @Input() dir: 'ltr' | 'rtl' = 'ltr';
   @Input() ariaLabel: string | null = null;
+  @Input() poweredByLabel = '';
   @Output() navigate = new EventEmitter<WorkspaceNavItem>();
 
   private expandedGroups = signal<Set<string>>(new Set());

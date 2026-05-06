@@ -18,6 +18,7 @@ import { ModalModule, ContainedListModule } from 'carbon-components-angular';
 import { DosCarbonTagComponent, type DosCarbonTagType } from '../carbon/dos-carbon-tag.component';
 import { DosCarbonSkeletonComponent } from '../carbon/dos-carbon-skeleton.component';
 import type { InboxMessage } from './workspace-shell.contracts';
+import { sanitizeAccessibleText } from './shell-accessible-text';
 
 type MsgSource = InboxMessage['source'];
 type MsgPriority = Exclude<InboxMessage['priority'], undefined>;
@@ -47,7 +48,7 @@ const PRIORITY_TAG: Record<MsgPriority, DosCarbonTagType> = {
         [open]="open"
         size="sm"
         [hasScrollingContent]="true"
-        [attr.aria-label]="ariaLabel || title"
+        [attr.aria-label]="inboxSurfaceAria()"
         data-testid="dos-inbox-center"
         (close)="closed.emit()"
       >
@@ -90,7 +91,9 @@ const PRIORITY_TAG: Record<MsgPriority, DosCarbonTagType> = {
                           size="sm">{{ m.priority }}</dos-carbon-tag>
                       }
                       @if (m.unread) {
-                        <span class="dos-inbox-msg__dot" aria-label="Unread"></span>
+                        <span class="dos-inbox-msg__dot"
+                              [attr.aria-label]="unreadDotAria()"
+                              [attr.aria-hidden]="unreadDotAriaHidden()"></span>
                       }
                       <time class="dos-inbox-msg__time">
                         {{ m.receivedAt | date:'shortTime' }}
@@ -110,7 +113,7 @@ const PRIORITY_TAG: Record<MsgPriority, DosCarbonTagType> = {
             </cds-contained-list>
           } @else {
             <div class="dos-inbox-empty">
-              <p>{{ emptyText || 'Your inbox is empty.' }}</p>
+              <p>{{ emptyText }}</p>
             </div>
           }
         </section>
@@ -121,7 +124,7 @@ const PRIORITY_TAG: Record<MsgPriority, DosCarbonTagType> = {
     @if (mobileMode && open) {
       <div class="dos-inbox-drawer"
            role="dialog"
-           [attr.aria-label]="ariaLabel || title"
+           [attr.aria-label]="inboxSurfaceAria()"
            data-testid="dos-inbox-center"
            data-cds-component="modal">
         <div class="dos-inbox-drawer__handle" aria-hidden="true"></div>
@@ -132,7 +135,7 @@ const PRIORITY_TAG: Record<MsgPriority, DosCarbonTagType> = {
           }
           <button type="button"
                   class="dos-inbox-drawer__close"
-                  [attr.aria-label]="closeLabel || 'Close'"
+                  [attr.aria-label]="closeLabelAttr()"
                   (click)="closed.emit()">
             <span aria-hidden="true">✕</span>
           </button>
@@ -145,7 +148,11 @@ const PRIORITY_TAG: Record<MsgPriority, DosCarbonTagType> = {
                     (click)="onMessageClick(m)">
               <div class="dos-inbox-msg__header">
                 <dos-carbon-tag [type]="sourceTag(m.source)" size="sm">{{ m.source }}</dos-carbon-tag>
-                @if (m.unread) { <span class="dos-inbox-msg__dot" aria-label="Unread"></span> }
+                @if (m.unread) {
+                  <span class="dos-inbox-msg__dot"
+                        [attr.aria-label]="unreadDotAria()"
+                        [attr.aria-hidden]="unreadDotAriaHidden()"></span>
+                }
               </div>
               <span class="dos-inbox-msg__subject">{{ m.subject?.fallback ?? m.subject?.i18nKey ?? '' }}</span>
             </button>
@@ -241,7 +248,7 @@ const PRIORITY_TAG: Record<MsgPriority, DosCarbonTagType> = {
       inset-block-end: 0;
       inset-inline: 0;
       max-block-size: 80vh;
-      background: var(--cds-layer));
+      background: var(--cds-layer);
       border-block-start: 1px solid var(--cds-border-subtle);
       border-radius: var(--cds-spacing-03) var(--cds-spacing-03) 0 0;
       z-index: var(--shell-z-modal);
@@ -318,10 +325,11 @@ export class DosInboxCenterComponent {
   @Input() open = false;
   @Input() mobileMode = false;
   @Input() loading = false;
-  @Input() title = 'Inbox';
+  @Input() title = '';
   @Input() ariaLabel: string | null = null;
   @Input() closeLabel: string | null = null;
   @Input() emptyText = '';
+  @Input() unreadLabel = '';
 
   @Output() select = new EventEmitter<InboxMessage>();
   @Output() closed = new EventEmitter<void>();
@@ -340,5 +348,28 @@ export class DosInboxCenterComponent {
 
   onMessageClick(m: InboxMessage): void {
     this.select.emit(m);
+  }
+
+  /** Modal / drawer accessible name: prefer runtime ariaLabel, else sanitized title. */
+  inboxSurfaceAria(): string | null {
+    const a = sanitizeAccessibleText(this.ariaLabel ?? '');
+    if (a.length) return a;
+    const t = sanitizeAccessibleText(this.title);
+    return t.length ? t : null;
+  }
+
+  unreadDotAria(): string | null {
+    const s = sanitizeAccessibleText(this.unreadLabel);
+    return s.length ? s : null;
+  }
+
+  /** Decorative unread indicator when no runtime unreadLabel — avoids unnamed control warnings. */
+  unreadDotAriaHidden(): boolean | null {
+    return this.unreadDotAria() ? null : true;
+  }
+
+  closeLabelAttr(): string | null {
+    const s = sanitizeAccessibleText(this.closeLabel ?? '');
+    return s.length ? s : null;
   }
 }

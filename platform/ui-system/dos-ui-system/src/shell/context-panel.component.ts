@@ -17,13 +17,7 @@ import { AccordionModule } from 'carbon-components-angular';
 import { DosCarbonTabsComponent, type DosCarbonTabItem } from '../carbon/dos-carbon-tabs.component';
 import { DosCarbonSkeletonComponent } from '../carbon/dos-carbon-skeleton.component';
 import type { ContextPanelView, ContextPanelTab } from './workspace-shell.contracts';
-
-const TAB_LABELS: Record<ContextPanelTab, string> = {
-  'record':      'Record',
-  'help':        'Help',
-  'audit':       'Audit',
-  'ai-insights': 'AI Insights',
-};
+import { sanitizeAccessibleText } from './shell-accessible-text';
 
 @Component({
   selector: 'dos-context-panel',
@@ -31,12 +25,12 @@ const TAB_LABELS: Record<ContextPanelTab, string> = {
   imports: [CommonModule, AccordionModule, DosCarbonTabsComponent, DosCarbonSkeletonComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    @if (open) {
+    @if (open && panelAriaChrome()) {
       <aside class="dos-context-panel"
              [class.dos-context-panel--mobile]="mobileMode"
              [attr.dir]="dir"
              role="complementary"
-             aria-label="Context panel"
+             [attr.aria-label]="panelAsideAriaAttr()"
              data-testid="dos-context-panel"
              data-cds-component="accordion">
 
@@ -54,7 +48,7 @@ const TAB_LABELS: Record<ContextPanelTab, string> = {
             <section class="dos-context-panel__body"
                      role="tabpanel"
                      [class.dos-context-panel__body--rtl]="dir === 'rtl'"
-                     [attr.aria-label]="TAB_LABELS[v.tab]">
+                     [attr.aria-label]="tabPanelAriaAttr(v.tab)">
 
               @if (v.loading) {
                 <!-- cds-skeleton-text while loading -->
@@ -71,22 +65,22 @@ const TAB_LABELS: Record<ContextPanelTab, string> = {
                 <cds-accordion size="md" align="end" class="dos-context-panel__accordion">
                   <!-- AI-Insights tab: special agentic header -->
                   @if (v.tab === 'ai-insights') {
-                    <cds-accordion-item title="Agent Insights" [expanded]="true">
+                    <cds-accordion-item [title]="tabLabel('ai-insights')" [expanded]="true">
                       <ng-content select="[aiInsightsContent]"></ng-content>
                       <p class="dos-context-panel__ai-placeholder">
-                        AI insights are loading from the agent context…
+                        {{ aiLoadingText }}
                       </p>
                     </cds-accordion-item>
                   }
                   <!-- Audit tab: immutable audit trail emphasis -->
                   @if (v.tab === 'audit') {
-                    <cds-accordion-item title="Audit Trail" [expanded]="true">
+                    <cds-accordion-item [title]="tabLabel('audit')" [expanded]="true">
                       <ng-content select="[auditContent]"></ng-content>
                     </cds-accordion-item>
                   }
                   <!-- Record / Help: generic content projection -->
                   @if (v.tab !== 'ai-insights' && v.tab !== 'audit') {
-                    <cds-accordion-item [title]="TAB_LABELS[v.tab]" [expanded]="true">
+                    <cds-accordion-item [title]="tabLabel(v.tab)" [expanded]="true">
                       <ng-content></ng-content>
                     </cds-accordion-item>
                   }
@@ -203,8 +197,9 @@ const TAB_LABELS: Record<ContextPanelTab, string> = {
   `],
 })
 export class DosContextPanelComponent {
-  /** Expose TAB_LABELS to template */
-  protected readonly TAB_LABELS = TAB_LABELS;
+  @Input() ariaLabel = '';
+  @Input() tabLabels: Record<string, string> = {};
+  @Input() aiLoadingText = '';
 
   @Input() views: ContextPanelView[] = [];
   @Input() activeTab: ContextPanelTab = 'record';
@@ -216,11 +211,29 @@ export class DosContextPanelComponent {
   get tabItems(): DosCarbonTabItem[] {
     return this.views.map(v => ({
       id:    v.tab,
-      label: TAB_LABELS[v.tab],
+      label: this.tabLabel(v.tab),
     }));
+  }
+
+  tabLabel(tab: ContextPanelTab): string {
+    return this.tabLabels[tab] ?? '';
   }
 
   onTabChange(id: string): void {
     this.tabChange.emit(id as ContextPanelTab);
+  }
+
+  panelAriaChrome(): boolean {
+    return sanitizeAccessibleText(this.ariaLabel).length > 0;
+  }
+
+  panelAsideAriaAttr(): string | null {
+    const s = sanitizeAccessibleText(this.ariaLabel);
+    return s.length ? s : null;
+  }
+
+  tabPanelAriaAttr(tab: ContextPanelTab): string | null {
+    const s = sanitizeAccessibleText(this.tabLabel(tab));
+    return s.length ? s : null;
   }
 }

@@ -17,6 +17,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { TilesModule } from 'carbon-components-angular';
 import { DosCarbonTagComponent, type DosCarbonTagType } from '../carbon/dos-carbon-tag.component';
 import type { ActionQueueItem } from './workspace-shell.contracts';
+import { sanitizeAccessibleText } from './shell-accessible-text';
 
 type ItemSeverity = Exclude<ActionQueueItem['severity'], undefined>;
 type ItemStatus   = ActionQueueItem['status'];
@@ -34,14 +35,17 @@ const SEVERITY_TAG: Record<ItemSeverity, DosCarbonTagType> = {
   imports: [CommonModule, DatePipe, TilesModule, DosCarbonTagComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
+    @if (queueAsideChrome()) {
     <aside class="dos-action-queue"
            [class.dos-action-queue--mobile]="mobileMode"
-           [attr.aria-label]="ariaLabel || null"
+           [attr.aria-label]="queueAsideAriaAttr()"
            data-testid="dos-action-queue">
 
       <!-- Queue header -->
       <header class="dos-action-queue__hdr">
-        <strong class="dos-action-queue__title">{{ title }}</strong>
+        @if (titleChrome()) {
+        <strong class="dos-action-queue__title">{{ sanitizedTitle() }}</strong>
+        }
         @if (items.length > 0) {
           <dos-carbon-tag type="blue" size="sm" class="dos-action-queue__count">
             {{ items.length }}
@@ -119,10 +123,11 @@ const SEVERITY_TAG: Record<ItemSeverity, DosCarbonTagType> = {
         </ul>
       } @else {
         <div class="dos-action-queue__empty">
-          <p>{{ emptyText || 'No pending actions.' }}</p>
+          <p>{{ emptyText }}</p>
         </div>
       }
     </aside>
+    }
   `,
   styles: [`
     :host { display: block; }
@@ -259,9 +264,26 @@ export class DosActionQueueComponent {
   @Input() items: ActionQueueItem[] = [];
   @Input() mobileMode = false;
   @Input() ariaLabel = '';
-  @Input() title = 'Action Queue';
+  @Input() title = '';
   @Input() emptyText = '';
   @Output() open = new EventEmitter<ActionQueueItem>();
+
+  queueAsideChrome(): boolean {
+    return sanitizeAccessibleText(this.ariaLabel).length > 0;
+  }
+
+  queueAsideAriaAttr(): string | null {
+    const s = sanitizeAccessibleText(this.ariaLabel);
+    return s.length ? s : null;
+  }
+
+  titleChrome(): boolean {
+    return sanitizeAccessibleText(this.title).length > 0;
+  }
+
+  sanitizedTitle(): string {
+    return sanitizeAccessibleText(this.title);
+  }
 
   get overdueCount(): number {
     return this.items.filter(i => this.isOverdue(i)).length;

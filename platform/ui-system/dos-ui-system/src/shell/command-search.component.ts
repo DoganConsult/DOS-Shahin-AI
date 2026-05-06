@@ -26,6 +26,7 @@ import { SearchModule } from 'carbon-components-angular';
 import { DosCarbonTagComponent, type DosCarbonTagType } from '../carbon/dos-carbon-tag.component';
 import { DosIconComponent } from '../components/icon.component';
 import type { CommandSearchResult } from './workspace-shell.contracts';
+import { sanitizeAccessibleText } from './shell-accessible-text';
 
 type ResultCategory = CommandSearchResult['category'];
 
@@ -48,18 +49,20 @@ const CATEGORY_TAG_TYPE: Record<ResultCategory, DosCarbonTagType> = {
          [class.dos-command-search--open]="open()"
          data-testid="dos-command-search">
 
-      <!-- Real cds-search (carbon_key=search, SearchModule) -->
-      <cds-search
-        [size]="size"
-        [theme]="theme"
-        [placeholder]="placeholder"
-        [label]="ariaLabel || placeholder"
-        [expandable]="expandable"
-        [value]="query"
-        [autocomplete]="'off'"
-        (valueChange)="onQueryChange($event)"
-        (clear)="onClear()"
-      ></cds-search>
+      <!-- Real cds-search only when runtime placeholder is present (fail-closed). -->
+      @if (hasSearchChrome()) {
+        <cds-search
+          [size]="size"
+          [theme]="theme"
+          [placeholder]="sanitizedPlaceholder()"
+          [label]="searchCarbonLabel()"
+          [expandable]="expandable"
+          [value]="query"
+          [autocomplete]="'off'"
+          (valueChange)="onQueryChange($event)"
+          (clear)="onClear()"
+        ></cds-search>
+      }
 
       <!-- Results dropdown -->
       @if (open() && results.length) {
@@ -92,11 +95,10 @@ const CATEGORY_TAG_TYPE: Record<ResultCategory, DosCarbonTagType> = {
         </ul>
       }
 
-      <!-- No results state -->
+      <!-- No results state: icon only — no hardcoded copy -->
       @if (open() && query.length > 0 && results.length === 0) {
         <div class="dos-command-search__empty">
           <dos-icon name="search" [size]="20" class="dos-command-search__empty-icon"></dos-icon>
-          <span>No results for "<strong>{{ query }}</strong>"</span>
         </div>
       }
     </div>
@@ -111,13 +113,13 @@ const CATEGORY_TAG_TYPE: Record<ResultCategory, DosCarbonTagType> = {
 
     /* Carbon cds-search inner overrides for inverse header context */
     :host ::ng-deep .cds--search-input {
-      background: var(--cds-field-02));
+      background: var(--cds-field-02);
       color: var(--cds-text-on-color);
       border-block-end-color: transparent;
     }
 
     :host ::ng-deep .cds--search-input::placeholder {
-      color: var(--cds-text-on-color-disabled));
+      color: var(--cds-text-on-color-disabled);
     }
 
     :host ::ng-deep .cds--search-magnifier-icon,
@@ -133,7 +135,7 @@ const CATEGORY_TAG_TYPE: Record<ResultCategory, DosCarbonTagType> = {
       inset-inline-end: 0;
       background: var(--cds-layer-01);
       border: 1px solid var(--cds-border-subtle-01);
-      box-shadow: var(--shadow-premium-md));
+      box-shadow: var(--shadow-premium-md);
       list-style: none;
       margin: 0;
       padding: var(--cds-spacing-02);
@@ -215,7 +217,7 @@ const CATEGORY_TAG_TYPE: Record<ResultCategory, DosCarbonTagType> = {
     .dos-command-search--mobile.dos-command-search--open {
       position: fixed;
       inset: 0;
-      background: var(--cds-background));
+      background: var(--cds-background);
       z-index: var(--shell-z-modal);
       display: flex;
       flex-direction: column;
@@ -253,7 +255,7 @@ export class DosCommandSearchComponent {
   private readonly platformId = inject(PLATFORM_ID);
 
   @Input() results: CommandSearchResult[] = [];
-  @Input() placeholder = 'Search…';
+  @Input() placeholder = '';
   @Input() ariaLabel: string | null = null;
   @Input() mobileMode = false;
   @Input() dir: 'ltr' | 'rtl' = 'ltr';
@@ -269,6 +271,20 @@ export class DosCommandSearchComponent {
 
   categoryTagType(cat: ResultCategory): DosCarbonTagType {
     return CATEGORY_TAG_TYPE[cat] ?? 'gray';
+  }
+
+  sanitizedPlaceholder(): string {
+    return sanitizeAccessibleText(this.placeholder);
+  }
+
+  hasSearchChrome(): boolean {
+    return this.sanitizedPlaceholder().length > 0;
+  }
+
+  /** Carbon visible label: only when runtime ariaLabel is non-empty after sanitize. */
+  searchCarbonLabel(): string | undefined {
+    const a = sanitizeAccessibleText(this.ariaLabel ?? '');
+    return a.length > 0 ? a : undefined;
   }
 
   onQueryChange(value: string): void {
@@ -291,6 +307,7 @@ export class DosCommandSearchComponent {
 
   /** Focus the Carbon search input (desktop Cmd-K); scoped to this component only. */
   focusSearch(): void {
+    if (!this.hasSearchChrome()) return;
     if (!isPlatformBrowser(this.platformId)) return;
     queueMicrotask(() => {
       const root = this.hostRef.nativeElement;

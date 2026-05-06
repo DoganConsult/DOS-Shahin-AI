@@ -698,6 +698,10 @@ function enrichVisualShellProps(
   const chromeUserMenuLabel   = typeof chrome['shell.user-menu.label']      === 'string' ? (chrome['shell.user-menu.label']      as string).trim() : '';
   const chromeUserMenuAria    = typeof chrome['shell.user-menu.aria-label'] === 'string' ? (chrome['shell.user-menu.aria-label'] as string).trim() : '';
   const chromeSettingsAria    = typeof chrome['shell.settings.aria-label']  === 'string' ? (chrome['shell.settings.aria-label']  as string).trim() : '';
+  const chromeModuleCardsAria = typeof chrome['shell.module-cards.aria-label'] === 'string' ? (chrome['shell.module-cards.aria-label'] as string).trim() : '';
+  const chromePoweredByLabel  = typeof chrome['shell.sidebar.poweredByLabel']  === 'string' ? (chrome['shell.sidebar.poweredByLabel']  as string).trim() : '';
+  const chromeCmdSearchLabel  = typeof chrome['shell.header.commandSearch.label'] === 'string' ? (chrome['shell.header.commandSearch.label'] as string).trim() : '';
+  const chromeInboxLabel      = typeof chrome['shell.header.inbox.label']     === 'string' ? (chrome['shell.header.inbox.label']     as string).trim() : '';
 
   for (const s of surfaces) {
     const props = (s.props ?? {}) as Record<string, unknown>;
@@ -721,20 +725,21 @@ function enrichVisualShellProps(
           ...props,
           items: sidebarItems,
         };
-        if (chromeSidebarAria)  next['ariaLabel']    = chromeSidebarAria;
-        if (chromeSidebarEmpty) next['emptyMessage'] = chromeSidebarEmpty;
+        if (chromeSidebarAria)   next['ariaLabel']      = chromeSidebarAria;
+        if (chromeSidebarEmpty)  next['emptyMessage']   = chromeSidebarEmpty;
+        if (chromePoweredByLabel) next['poweredByLabel'] = chromePoweredByLabel;
         s.props = next;
         break;
       }
       case 'workspace.shell.user-menu': {
-        const next: Record<string, unknown> = { ...props, menu: accountMenu };
+        const next: Record<string, unknown> = { ...props, menu: accountMenu, placement: 'trailing' };
         if (chromeUserMenuLabel) next['label']     = chromeUserMenuLabel;
         if (chromeUserMenuAria)  next['ariaLabel'] = chromeUserMenuAria;
         s.props = next;
         break;
       }
       case 'workspace.shell.settings-action': {
-        const next: Record<string, unknown> = { ...props };
+        const next: Record<string, unknown> = { ...props, placement: 'trailing' };
         // Only wire the action if the settings entry is enabled (i.e.
         // its route exists in `ui_route_template_binding`).
         const enabled = settingsEntry?.['enabled'] !== false;
@@ -746,7 +751,16 @@ function enrichVisualShellProps(
         break;
       }
       case 'workspace.shell.module-cards': {
-        s.props = { ...props, items: moduleCards };
+        const next: Record<string, unknown> = { ...props, items: moduleCards };
+        if (chromeModuleCardsAria) next['ariaLabel'] = chromeModuleCardsAria;
+        s.props = next;
+        break;
+      }
+      case 'workspace.header': {
+        const next: Record<string, unknown> = { ...props };
+        if (chromeCmdSearchLabel) next['commandSearchLabel'] = chromeCmdSearchLabel;
+        if (chromeInboxLabel)    next['inboxLabel']          = chromeInboxLabel;
+        s.props = next;
         break;
       }
       default:

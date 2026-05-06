@@ -49,8 +49,8 @@ let DosWorkspaceHeaderComponent = class DosWorkspaceHeaderComponent {
     showCommandSearch = true;
     showInbox = true;
     inboxCount = 0;
-    commandSearchLabel = 'Search (Ctrl+K)';
-    inboxLabel = 'Inbox';
+    commandSearchLabel = '';
+    inboxLabel = '';
     trailingActions = [];
     sideNavToggled = new EventEmitter();
     commandSearchOpen = new EventEmitter();
@@ -186,7 +186,7 @@ DosWorkspaceHeaderComponent = __decorate([
       ></cds-hamburger>
 
       <!-- Brand logo slot -->
-      <a class="dos-wh-brand" [attr.aria-label]="resolvedBrand" [attr.href]="logoHref">
+      <a class="dos-wh-brand" [attr.aria-label]="resolvedBrand || null" [attr.href]="logoHref">
         @if (logoUri) {
           <img class="dos-wh-logo"
                [src]="logoUri"
@@ -206,7 +206,7 @@ DosWorkspaceHeaderComponent = __decorate([
         @if (showCommandSearch) {
           <button type="button"
                   class="dos-wh-action"
-                  [attr.aria-label]="commandSearchLabel"
+                  [attr.aria-label]="commandSearchLabel || null"
                   (click)="commandSearchOpen.emit()">
             <dos-icon name="search" [size]="20" [ariaLabel]="commandSearchLabel"></dos-icon>
           </button>
@@ -217,7 +217,7 @@ DosWorkspaceHeaderComponent = __decorate([
           <button type="button"
                   class="dos-wh-action"
                   [class.dos-wh-action--badge]="inboxCount > 0"
-                  [attr.aria-label]="inboxLabel"
+                  [attr.aria-label]="inboxLabel || null"
                   [attr.data-badge-count]="inboxCount > 0 ? inboxCount : null"
                   (click)="inboxOpen.emit()">
             <dos-icon name="notification" [size]="20" [ariaLabel]="inboxLabel"></dos-icon>
@@ -249,7 +249,7 @@ DosWorkspaceHeaderComponent = __decorate([
         @if (userDisplayName) {
           <button type="button"
                   class="dos-wh-avatar"
-                  [attr.aria-label]="userDisplayName"
+                  [attr.aria-label]="userDisplayName || null"
                   [attr.data-testid]="'dos-workspace-header-avatar'"
                   (click)="avatarClick.emit()">
             @if (userAvatarUri) {

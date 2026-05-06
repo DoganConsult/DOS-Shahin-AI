@@ -1,5 +1,6 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { sanitizeAccessibleText } from './shell-accessible-text';
 
 @Component({
   selector: 'dos-desktop-sidebar',
@@ -7,9 +8,22 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <nav class="dos-app-shell__sidebar" aria-label="Primary">
+    @if (sidebarAriaChrome()) {
+    <nav class="dos-app-shell__sidebar" [attr.aria-label]="sidebarAriaAttr()">
       <ng-content></ng-content>
     </nav>
+    }
   `,
 })
-export class DosDesktopSidebarComponent {}
+export class DosDesktopSidebarComponent {
+  @Input() ariaLabel = '';
+
+  sidebarAriaChrome(): boolean {
+    return sanitizeAccessibleText(this.ariaLabel).length > 0;
+  }
+
+  sidebarAriaAttr(): string | null {
+    const s = sanitizeAccessibleText(this.ariaLabel);
+    return s.length ? s : null;
+  }
+}

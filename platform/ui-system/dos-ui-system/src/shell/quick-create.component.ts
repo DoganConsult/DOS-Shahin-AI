@@ -16,6 +16,7 @@ import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'carbon-components-angular';
 import { DosIconComponent } from '../components/icon.component';
 import type { QuickCreateAction } from './workspace-shell.contracts';
+import { sanitizeAccessibleText } from './shell-accessible-text';
 
 @Component({
   selector: 'dos-quick-create',
@@ -23,6 +24,7 @@ import type { QuickCreateAction } from './workspace-shell.contracts';
   imports: [CommonModule, ButtonModule, DosIconComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
+    @if (fabChrome()) {
     <div class="dos-quick-create"
          [class.dos-quick-create--mobile]="mobileMode"
          [class.dos-quick-create--open]="menuOpen()"
@@ -35,18 +37,18 @@ import type { QuickCreateAction } from './workspace-shell.contracts';
           size="md"
           type="button"
           class="dos-quick-create__fab"
-          [attr.aria-label]="fabLabel || 'Create'"
+          [attr.aria-label]="fabLabelAttr()"
           [attr.aria-expanded]="menuOpen()"
           (click)="toggleMenu()">
-          <dos-icon name="add" [size]="20" [ariaLabel]="fabLabel || 'Create'"></dos-icon>
+          <dos-icon name="add" [size]="20" [ariaLabel]="fabIconAriaLabel()"></dos-icon>
         </button>
       }
 
       <!-- Ghost action menu (shown when FAB is open) -->
-      @if (menuOpen() && actions.length) {
+      @if (menuOpen() && actions.length && menuLabelChrome()) {
         <ul class="dos-quick-create__menu"
             role="menu"
-            [attr.aria-label]="menuLabel || 'Create options'"
+            [attr.aria-label]="menuLabelAttr()"
             [class.dos-quick-create__menu--rtl]="dir === 'rtl'">
           @for (action of actions; track action.id) {
             <li role="none">
@@ -81,15 +83,15 @@ import type { QuickCreateAction } from './workspace-shell.contracts';
           size="lg"
           type="button"
           class="dos-quick-create__mobile-btn"
-          [attr.aria-label]="fabLabel || 'Create'"
+          [attr.aria-label]="fabLabelAttr()"
           [attr.aria-expanded]="menuOpen()"
           (click)="toggleMenu()">
-          <dos-icon name="add" [size]="20"></dos-icon>
-          <span>{{ fabLabel || 'Create' }}</span>
+          <dos-icon name="add" [size]="20" [ariaLabel]="fabIconAriaLabel()"></dos-icon>
+          <span>{{ fabLabel }}</span>
         </button>
 
-        @if (menuOpen() && actions.length) {
-          <div class="dos-quick-create__mobile-menu" role="menu">
+        @if (menuOpen() && actions.length && menuLabelChrome()) {
+          <div class="dos-quick-create__mobile-menu" role="menu" [attr.aria-label]="menuLabelAttr()">
             @for (action of actions; track action.id) {
               <button
                 cdsButton="ghost"
@@ -109,6 +111,7 @@ import type { QuickCreateAction } from './workspace-shell.contracts';
         }
       }
     </div>
+    }
   `,
   styles: [`
     :host { display: block; }
@@ -240,15 +243,45 @@ export class DosQuickCreateComponent {
   @Input() actions: QuickCreateAction[] = [];
   @Input() mobileMode = false;
   @Input() dir: 'ltr' | 'rtl' = 'ltr';
-  @Input() fabLabel = 'Create';
-  @Input() menuLabel = 'Create options';
+  @Input() fabLabel = '';
+  @Input() menuLabel = '';
 
   menuOpen = signal(false);
 
   @Output() create = new EventEmitter<QuickCreateAction>();
 
+  fabChrome(): boolean {
+    return sanitizeAccessibleText(this.fabLabel).length > 0;
+  }
+
+  fabLabelAttr(): string | null {
+    const s = sanitizeAccessibleText(this.fabLabel);
+    return s.length ? s : null;
+  }
+
+  fabIconAriaLabel(): string | null {
+    const s = sanitizeAccessibleText(this.fabLabel);
+    return s.length ? s : null;
+  }
+
+  menuLabelChrome(): boolean {
+    return sanitizeAccessibleText(this.menuLabel).length > 0;
+  }
+
+  menuLabelAttr(): string | null {
+    const s = sanitizeAccessibleText(this.menuLabel);
+    return s.length ? s : null;
+  }
+
   toggleMenu(): void {
-    this.menuOpen.update(v => !v);
+    if (!this.fabChrome()) return;
+    if (this.menuOpen()) {
+      this.menuOpen.set(false);
+      return;
+    }
+    if (!this.actions.length) return;
+    if (!this.menuLabelChrome()) return;
+    this.menuOpen.set(true);
   }
 
   onAction(action: QuickCreateAction): void {

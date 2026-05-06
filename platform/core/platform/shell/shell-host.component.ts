@@ -163,18 +163,15 @@ export class ShellHostComponent {
   );
 
   /**
-   * Trailing-edge classification — driven by resolver-emitted rendererKey
-   * (NOT by hardcoded id list, NOT by surfaceId regex). Header global
-   * actions (settings, user-menu, etc.) anchor right; brand/title anchor
-   * left. Anything unknown falls back to leading edge so it stays visible.
+   * Trailing-edge classification — driven by resolver-emitted
+   * `props.placement` metadata (NOT by hardcoded rendererKey list).
+   * The DB seed/enricher sets `placement: 'trailing'` on header
+   * surfaces that anchor to the trailing edge (settings, user-menu,
+   * etc.). Anything without an explicit placement falls to leading.
    */
   private isTrailingHeaderSurface(s: WorkspaceShellSurface): boolean {
-    const key = s.rendererKey ?? '';
-    return (
-      key === 'shell.user-menu' ||
-      key === 'shell.settings-action' ||
-      key.startsWith('shell.header-action')
-    );
+    const props = (s.props ?? {}) as Record<string, unknown>;
+    return props['placement'] === 'trailing';
   }
   readonly visualSidebarSurfaces = computed<WorkspaceShellSurface[]>(
     () => this.shell.visualSurfacesByZone('sidebar'),

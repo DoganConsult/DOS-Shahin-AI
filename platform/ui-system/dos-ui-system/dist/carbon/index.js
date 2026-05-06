@@ -59,6 +59,12 @@ export * from './dos-carbon-layer.component';
 export * from './dos-carbon-aspect-ratio.component';
 // ── WAVE 4 — Charts (1 facade, 21 kinds) ──────────────────────────
 export * from './dos-carbon-chart.component';
+// ── Re-exports of Carbon NgModules used by @dos/ui-system shell ────
+// Allows internal shell components (visual-shell-surfaces, etc.) to
+// import Carbon NgModules through the carbon-boundary-guard-approved
+// barrel instead of reaching into `carbon-components-angular` directly
+// (which the guard would flag outside src/carbon/).
+export { UIShellModule, DialogModule, ButtonModule } from 'carbon-components-angular';
 // ── Carbon-only enforcement — Layer 5 (WC registry patrol) ─────────
 export { armCarbonOnlyCustomElementRegistry, isCarbonOnlyArmed, } from './wc-registry-allowlist';
 //# sourceMappingURL=index.js.map

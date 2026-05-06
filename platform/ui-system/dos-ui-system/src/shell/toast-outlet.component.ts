@@ -45,7 +45,7 @@ export interface DosToastMessage {
           @if (t.detail) { <div class="dos-toast__detail">{{ t.detail }}</div> }
           <button type="button"
                   class="dos-toast__close"
-                  aria-label="dismiss"
+                  [attr.aria-label]="dismissLabel || null"
                   (click)="dismiss(t)">&times;</button>
         </div>
       }
@@ -91,6 +91,7 @@ export interface DosToastMessage {
 })
 export class DosToastOutletComponent {
   @Input() messages: readonly DosToastMessage[] = [];
+  @Input() dismissLabel = '';
   @Output() dismissed = new EventEmitter<DosToastMessage>();
   dismiss(t: DosToastMessage): void { this.dismissed.emit(t); }
 }

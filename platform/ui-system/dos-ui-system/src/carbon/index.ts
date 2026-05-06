@@ -69,7 +69,7 @@ export * from './dos-carbon-chart.component';
 // import Carbon NgModules through the carbon-boundary-guard-approved
 // barrel instead of reaching into `carbon-components-angular` directly
 // (which the guard would flag outside src/carbon/).
-export { UIShellModule, DialogModule } from 'carbon-components-angular';
+export { UIShellModule, DialogModule, ButtonModule } from 'carbon-components-angular';
 
 // ── Carbon-only enforcement — Layer 5 (WC registry patrol) ─────────
 export {
