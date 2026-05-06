@@ -222,7 +222,7 @@ export interface RecordTab {
     .drs-dot--update  { background: var(--cds-interactive); }
     .drs-dot--escalate { background: var(--cds-support-error); }
     .drs-dot--approve { background: var(--cds-support-success); }
-    .drs-dot--ai-action { background: var(--cds-ai-border, #6929c4); }
+    .drs-dot--ai-action { background: var(--cds-ai-border); }
     .drs-dot--close   { background: var(--cds-text-disabled); }
     .drs-event-content { flex: 1; }
     .drs-event-text { font-size: 0.8125rem; margin: 0; }

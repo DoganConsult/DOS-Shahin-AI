@@ -206,8 +206,8 @@ export interface WorkTask {
     .dmt-toolbar { display: flex; align-items: center; gap: 1rem; padding: 0.75rem 1rem; background: var(--cds-layer); border-bottom: 1px solid var(--cds-border-subtle); }
     .dmt-sort { min-width: 160px; }
     .dmt-task-group { margin-top: 1rem; }
-    .dmt-group--overdue { --cds-layer: var(--cds-notification-error-background, #fff1f1); }
-    .dmt-group--today { --cds-layer: var(--cds-notification-warning-background, #fdf6dd); }
+    .dmt-group--overdue { --cds-layer: var(--cds-notification-error-background); }
+    .dmt-group--today { --cds-layer: var(--cds-notification-warning-background); }
     .dmt-group--upcoming { opacity: 0.85; }
     .dmt-task-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; padding: 0.75rem 0; }
     .dmt-task-main { flex: 1; }

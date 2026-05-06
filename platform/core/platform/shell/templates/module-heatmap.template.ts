@@ -192,7 +192,7 @@ export interface HeatmapCell {
     .dmt-heatmap-cell:hover { opacity: 0.85; }
     .dmt-cell--critical { background: var(--cds-support-error); color: #fff; }
     .dmt-cell--high     { background: var(--cds-support-warning); color: #000; }
-    .dmt-cell--medium   { background: var(--cds-support-warning-inverse, #f1c21b); color: #000; }
+    .dmt-cell--medium   { background: var(--cds-support-warning-inverse); color: #000; }
     .dmt-cell--low      { background: var(--cds-support-success); color: #fff; }
     .dmt-cell--none     { background: var(--cds-layer); color: var(--cds-text-disabled); }
     .dmt-cell-hint { font-size: 0.625rem; opacity: 0.7; }

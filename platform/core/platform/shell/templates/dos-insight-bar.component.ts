@@ -130,7 +130,7 @@ import { ModuleInsightPillars } from './module-template.types';
       font-weight: 400;
     }
 
-    .dib-value--warning  { color: var(--cds-support-warning-inverse, #f1c21b); font-weight: 500; }
+    .dib-value--warning  { color: var(--cds-support-warning-inverse); font-weight: 500; }
     .dib-value--critical { color: var(--cds-support-error); font-weight: 500; }
     .dib-value--muted    { color: var(--cds-text-secondary); font-size: 0.75rem; }
 

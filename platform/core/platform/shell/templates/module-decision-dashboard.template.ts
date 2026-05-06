@@ -328,7 +328,7 @@ export interface ActivityEvent {
     .ddd-urgent-title { font-size: 0.875rem; font-weight: 500; margin: 0 0 0.25rem; }
     .ddd-urgent-meta { display: flex; gap: 0.25rem; flex-wrap: wrap; align-items: center; }
     .ddd-meta-chip { font-size: 0.6875rem; background: var(--cds-layer-accent); padding: 0.125rem 0.5rem; border-radius: 9999px; color: var(--cds-text-secondary); }
-    .ddd-meta-chip--due { background: var(--cds-support-warning-inverse, #f1c21b22); color: var(--cds-support-warning-text, #f1c21b); }
+    .ddd-meta-chip--due { background: var(--cds-support-warning-inverse); color: var(--cds-support-warning-text); }
 
     /* Agent tile */
     .ddd-agent-tile { padding: 1rem; }
@@ -342,7 +342,7 @@ export interface ActivityEvent {
     .ddd-dot--create   { background: var(--cds-support-success); }
     .ddd-dot--approve  { background: var(--cds-support-success); }
     .ddd-dot--escalate { background: var(--cds-support-error); }
-    .ddd-dot--ai       { background: var(--cds-ai-border, #6929c4); }
+    .ddd-dot--ai       { background: var(--cds-ai-border); }
     .ddd-act-time { font-size: 0.75rem; color: var(--cds-text-disabled); min-width: 80px; text-align: right; }
     .ddd-empty { font-size: 0.875rem; color: var(--cds-text-secondary); padding: 0.5rem 0; }
 

@@ -283,7 +283,7 @@ export interface AuditFilter {
     .dat-log-stream { }
     .dat-event-row { display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 0; flex-wrap: wrap; }
     .dat-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; background: var(--cds-interactive); }
-    .dat-dot--agent  { background: var(--cds-ai-border, #6929c4); }
+    .dat-dot--agent  { background: var(--cds-ai-border); }
     .dat-dot--system { background: var(--cds-text-disabled); }
     .dat-dot--api    { background: var(--cds-support-info); }
 

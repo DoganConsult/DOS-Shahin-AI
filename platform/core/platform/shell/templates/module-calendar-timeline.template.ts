@@ -270,8 +270,8 @@ export interface CalendarEvent {
     .dct-dot--assessment  { background: var(--cds-support-info); }
     .dct-dot--review      { background: var(--cds-support-warning); }
     .dct-dot--audit       { background: var(--cds-interactive); }
-    .dct-dot--regulatory  { background: #6929c4; }
-    .dct-dot--agent-run   { background: var(--cds-ai-border, #6929c4); }
+    .dct-dot--regulatory  { background: var(--cds-interactive); }
+    .dct-dot--agent-run   { background: var(--cds-ai-border); }
     .dct-event-date { font-size: 0.75rem; color: var(--cds-text-secondary); min-width: 80px; font-family: monospace; }
     .dct-event-body { flex: 1; }
     .dct-event-title { font-size: 0.875rem; font-weight: 500; margin: 0; }

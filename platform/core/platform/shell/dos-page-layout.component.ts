@@ -111,17 +111,17 @@ export class DosPageRailDirective {
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.1em;
-      color: var(--cds-text-secondary, #525252);
+      color: var(--cds-text-secondary);
     }
     .dpl-title {
       margin: var(--cds-spacing-03) 0 0;
-      font: 400 var(--cds-productive-heading-05-font-size, 2rem)/1.2 var(--cds-font-family-sans);
-      color: var(--cds-text-primary, #161616);
+      font: 400 var(--cds-productive-heading-05-font-size)/1.2 var(--cds-font-family-sans);
+      color: var(--cds-text-primary);
     }
     .dpl-subtitle {
       margin: var(--cds-spacing-02) 0 0;
-      font: 400 var(--cds-body-compact-01-font-size, 0.875rem)/1.4 var(--cds-font-family-sans);
-      color: var(--cds-text-secondary, #525252);
+      font: 400 var(--cds-body-compact-01-font-size)/1.4 var(--cds-font-family-sans);
+      color: var(--cds-text-secondary);
     }
     .dpl-actions-row {
       display: flex;
@@ -163,7 +163,7 @@ export class DosPageRailDirective {
 
     /* ── Section title (matches fo-section-title) ────────────────────── */
     .dpl-section-title {
-      font: 600 var(--cds-heading-03-font-size, 1.25rem)/1.4 var(--cds-font-family-sans);
+      font: 600 var(--cds-heading-03-font-size)/1.4 var(--cds-font-family-sans);
       color: var(--cds-text-primary);
       margin: 0 0 var(--cds-spacing-04);
     }

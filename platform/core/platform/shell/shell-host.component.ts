@@ -53,15 +53,13 @@ import {
 } from '@dos/ui-system';
 import { DosCarbonSearchComponent } from '@dos/ui-system';
 import {
-  WorkspaceNavigationAdapter,
   AccessStore as PlatformAccessStore,
-  WORKSPACE_NAV_LABEL_RESOLVER,
-  type WorkspaceNavLabelResolver,
 } from '@dos/access-store';
 import type { DosNavGroup, DosNavItem, ShellAccountMenuEntry, ShellAction } from '@dos/ui-contracts';
-import { parseShellAction, shellActionFromLegacyRecord } from '@dos/ui-contracts';
+import { shellActionFromLegacyRecord } from '@dos/ui-contracts';
 import { BreadcrumbService } from './breadcrumb.service';
-import { WorkspaceShellBindingService, type WorkspaceShellZone } from './workspace-shell-binding.service';
+import { WorkspaceShellBindingService } from './workspace-shell-binding.service';
+import type { WorkspaceShellZone } from '@dos/ui-system';
 import { ShellPreferencesService } from './shell-preferences.service';
 import { ShellErrorStateService } from './shell-error-state.service';
 import { ToastService } from '../../../dos/shell/toast.service';
@@ -110,14 +108,14 @@ import { ToastService } from '../../../dos/shell/toast.service';
       border: 0;
       cursor: pointer;
       color: var(--cds-text-on-color);
-      border-radius: var(--cds-border-radius, 2px);
+      border-radius: var(--cds-border-radius);
       transition: background 0.15s;
     }
     .shell-header-toggle:hover { background: var(--cds-layer-hover); }
     .shell-header-brand {
       display: inline-flex;
       align-items: center;
-      gap: var(--cds-spacing-03, 0.5rem);
+      gap: var(--cds-spacing-03);
       color: inherit;
       text-decoration: none;
       font-weight: 600;
@@ -135,62 +133,58 @@ import { ToastService } from '../../../dos/shell/toast.service';
     .shell-breadcrumb__sep { margin-inline-start: var(--cds-spacing-03); color: var(--cds-text-secondary); }
 
     /* Page title strip. */
-    .shell-page-header { padding: var(--cds-spacing-05, 1rem) var(--cds-spacing-06, 1.5rem) 0; max-width: var(--dos-shell-content-max-width, 100%); }
-    .shell-page-title { margin: 0; font-size: 1.75rem; font-weight: 400; line-height: 1.25; color: var(--cds-text-primary, #161616); }
+    .shell-page-header { padding: var(--cds-spacing-05) var(--cds-spacing-06) 0; max-width: var(--dos-shell-content-max-width); }
+    .shell-page-title { margin: 0; font-size: 1.75rem; font-weight: 400; line-height: 1.25; color: var(--cds-text-primary); }
 
     /* Skeleton container. */
-    .shell-skeleton { padding: var(--cds-spacing-07, 2rem) var(--cds-spacing-06, 1.5rem); display: grid; gap: var(--cds-spacing-05, 1rem); }
+    .shell-skeleton { padding: var(--cds-spacing-07) var(--cds-spacing-06); display: grid; gap: var(--cds-spacing-05); }
 
     /* Header-mounted command-search — keep narrow inside the inverse bar. */
-    .shell-header-cmd { display: inline-block; min-width: var(--dos-shell-cmd-min-width, 12rem); max-width: var(--dos-shell-cmd-max-width, 22rem); }
+    .shell-header-cmd { display: inline-block; min-width: var(--dos-shell-cmd-min-width); max-width: var(--dos-shell-cmd-max-width); }
     .shell-header-cmd ::ng-deep .dos-command-search__input {
       background: var(--cds-field-02);
       color: var(--cds-text-on-color);
       border: 1px solid transparent;
-      height: var(--cds-size-small, 32px);
+      height: var(--cds-size-small);
       padding: 0 var(--cds-spacing-03);
       font-size: var(--cds-body-short-01-font-size);
     }
     .shell-header-cmd ::ng-deep .dos-command-search__input::placeholder {
-      color: var(--cds-text-placeholder-on-color, rgba(255,255,255,0.6));
+      color: var(--cds-text-placeholder-on-color);
     }
 
     /* Wave F — mobile full-screen command-search overlay. */
     .shell-mobile-cmd {
       position: fixed; inset: 0;
       background: var(--cds-background);
-      z-index: var(--dos-z-overlay, 90);
+      z-index: var(--dos-z-overlay);
       display: flex; flex-direction: column;
       padding: var(--cds-spacing-05);
       gap: var(--cds-spacing-05);
     }
-    .shell-mobile-cmd__bar { display: flex; align-items: center; gap: var(--cds-spacing-03, .5rem); }
+    .shell-mobile-cmd__bar { display: flex; align-items: center; gap: var(--cds-spacing-03); }
     .shell-mobile-cmd__close {
       flex: 0 0 auto;
       width: 2rem; height: 2rem;
       background: none; border: 0; cursor: pointer;
-      color: var(--cds-text-primary, #161616);
+      color: var(--cds-text-primary);
     }
     .shell-mobile-cmd__body { flex: 1; overflow: auto; }
 
     /* Wave F — action-queue + agent-strip in-flow placement (desktop only). */
-    .shell-aux-strip { max-width: var(--dos-shell-content-max-width, 100%); padding-inline: var(--cds-spacing-06, 1.5rem); }
-    .shell-aux-strip--top    { padding-block-start: var(--cds-spacing-03, .5rem); }
-    .shell-aux-strip--bottom { padding-block-end:   var(--cds-spacing-03, .5rem); }
+    .shell-aux-strip { max-width: var(--dos-shell-content-max-width); padding-inline: var(--cds-spacing-06); }
+    .shell-aux-strip--top    { padding-block-start: var(--cds-spacing-03); }
+    .shell-aux-strip--bottom { padding-block-end:   var(--cds-spacing-03); }
 
     /* Wave F — status-bar fixed bottom strip with mobile safe-area padding. */
     .shell-statusbar-fixed {
       position: fixed;
       inset-block-end: 0;
       inset-inline: 0;
-      z-index: var(--dos-z-statusbar, 60);
+      z-index: var(--dos-z-statusbar);
       background: var(--cds-layer);
       border-block-start: 1px solid var(--cds-border-subtle-01);
       padding-block-end: env(safe-area-inset-bottom, 0);
-    }
-    @media (max-width: 480px) {
-      /* Avoid overlap with DosMobileBottomNav and DosQuickCreate FAB. */
-      .shell-statusbar-fixed { inset-block-end: var(--dos-mobile-nav-height, 56px); }
     }
 
     /* §B.9 #38 — skip-link for keyboard/screen-reader a11y. */
@@ -201,7 +195,7 @@ import { ToastService } from '../../../dos/shell/toast.service';
       background: var(--cds-background);
       color: var(--cds-link-primary);
       padding: var(--cds-spacing-03) var(--cds-spacing-05);
-      z-index: var(--dos-z-skiplink, 999);
+      z-index: var(--dos-z-skiplink);
       font-size: var(--cds-body-short-01-font-size);
       text-decoration: none;
     }
@@ -210,7 +204,7 @@ import { ToastService } from '../../../dos/shell/toast.service';
     /* §B.9 #25 — blocking error frame (401/403/maintenance). */
     .shell-error-frame {
       padding: var(--cds-spacing-07) var(--cds-spacing-06);
-      max-width: var(--dos-content-max-width-narrow, 600px);
+      max-width: var(--dos-content-max-width-narrow);
       margin: 0 auto;
       text-align: center;
     }
@@ -247,8 +241,8 @@ import { ToastService } from '../../../dos/shell/toast.service';
 
     /* §B.9 #16 — sidebar search wrapper. */
     .shell-sidebar-search {
-      padding: var(--cds-spacing-03, .5rem) var(--cds-spacing-04, .75rem);
-      border-block-end: 1px solid var(--cds-border-subtle-01, #e0e0e0);
+      padding: var(--cds-spacing-03) var(--cds-spacing-04);
+      border-block-end: 1px solid var(--cds-border-subtle-01);
     }
   `],
   template: `
@@ -585,7 +579,6 @@ import { ToastService } from '../../../dos/shell/toast.service';
   `,
 })
 export class ShellHostComponent {
-  private readonly nav         = inject(WorkspaceNavigationAdapter);
   private readonly access      = inject(PlatformAccessStore);
   private readonly router      = inject(Router);
   private readonly platformId  = inject(PLATFORM_ID);
@@ -600,12 +593,6 @@ export class ShellHostComponent {
   /** Desktop Cmd/Ctrl+K focuses this component — never toggles mobile overlay on desktop. */
   private readonly desktopCmdSearch = viewChild<DosCommandSearchComponent>('desktopCmdSearch');
 
-  // Nav label resolver — optional; used for navItemLabel/navGroupLabel.
-  // Chrome strings go through shellBinding.chromeString() directly.
-  protected readonly labelResolver = inject<WorkspaceNavLabelResolver | null>(
-    WORKSPACE_NAV_LABEL_RESOLVER, { optional: true },
-  );
-
   private readonly isBrowser = isPlatformBrowser(this.platformId);
 
   // ── Viewport / nav state ──────────────────────────────────────────────────
@@ -614,9 +601,8 @@ export class ShellHostComponent {
   readonly isRail       = signal(false);   // W-E: rail mode
   readonly navSearch    = signal('');       // W-D: filter
 
-  // ── §B.9 P2/P4 — toast, offline, banner state ─────────────────────────────
+  // ── §B.9 P2/P4 — toast + local banner dismiss state (candidates from binding) ─
   readonly toastMessages = signal<DosToastMessage[]>([]);
-  readonly isOffline     = signal(false);
   private readonly dismissedBannerIds = signal<Set<string>>(new Set());
 
   // ── W-C: skeleton + title ─────────────────────────────────────────────────
@@ -627,18 +613,18 @@ export class ShellHostComponent {
   readonly breadcrumbs  = signal<Array<{ label: string; route?: string }>>([]);
 
   // ── Nav config ────────────────────────────────────────────────────────────
-  readonly navConfig = computed(() => this.nav.navConfig());
+  readonly navConfig = computed(() => this.shellBinding.navConfig());
 
   readonly navGroups = computed(() => {
     const groups = this.navConfig()?.groups ?? [];
     return groups
-      .map((group) => ({
+      .map((group: DosNavGroup) => ({
         ...group,
         items: (group.items ?? []).filter(
           (item: DosNavItem) => !!item.route,
         ),
       }))
-      .filter((group) => group.items.length > 0);
+      .filter((group: DosNavGroup) => group.items.length > 0);
   });
 
   // ── W-A: auto-expand active group ─────────────────────────────────────────
@@ -669,19 +655,11 @@ export class ShellHostComponent {
   });
 
   // ── Header labels ─────────────────────────────────────────────────────────
-  // Wave F / Dynamic-UI policy: chrome strings flow dynamic-first, catalog-
-  // last. Priority order for every header label is:
-  //   1. workspace.header.props.* from `dos.workspace_shell_binding` (live
-  //      per-tenant, served by GET /api/ui-os/workspace-shell/:tenantId).
-  //   2. tenant name/code from AccessStore (dynamic per-tenant fallback).
-  //   3. product-level i18n catalog (`WorkspaceNavLabelResolver`).
-  //   4. empty string (observable gap, per Phase H policy — no fake defaults).
+  // Dynamic-UI policy: chrome strings flow from UI-OS runtime only.
+  // No hardcoded fallbacks - empty if missing (observable gap for telemetry).
   readonly headerBrand = computed(
     () => this.shellBinding.headerBrandLabel()
-       ?? this.access.tenant()?.name
-       ?? this.access.tenant()?.code
-       ?? this.shellBinding.chromeString('shell.header.brand')
-       ?? '',
+       ?? this.shellBinding.chromeString('shell.header.brand'),
   );
   // Step 2.5 — Selected module label sourced from existing nav state.
   // Falls back to the resolver-owned chrome string when no module is active,
@@ -690,8 +668,7 @@ export class ShellHostComponent {
     const sel = this.selectedModuleLabel();
     if (sel) return sel;
     return this.shellBinding.headerWorkspaceTitle()
-        ?? this.shellBinding.chromeString('shell.header.workspace_title')
-        ?? '';
+        ?? this.shellBinding.chromeString('shell.header.workspace_title');
   });
   /** Tenant line after `/` only when binding supplied a distinct brand/product from session tenant. */
   readonly headerTenantSubtitle = computed(() => {
@@ -715,18 +692,19 @@ export class ShellHostComponent {
     // 2. Fall back to the first breadcrumb segment after the home crumb.
     const crumbs = this.breadcrumbs();
     if (crumbs.length >= 2) {
-      const seg = (crumbs[1]?.label ?? '').toString().trim();
+      const seg = (crumbs[1]?.label).toString().trim();
       if (seg) return seg;
     }
     return null;
   });
   readonly headerHomeRoute = computed((): string[] => {
-    const raw = this.shellBinding.headerHomeRoute() ?? '';
+    const raw = this.shellBinding.headerHomeRoute();
+    if (!raw) return [];
     const parts = raw.replace(/^\/+/, '').split('/').filter(Boolean);
     return parts;
   });
   readonly headerLogoHref = computed((): string => {
-    return this.shellBinding.headerLogoHref() ?? '/';
+    return this.shellBinding.headerLogoHref() || '/';
   });
   readonly sideNavAriaLabel = computed(
     () => this.shellBinding.chromeString('shell.sidenav.aria_label'),
@@ -751,8 +729,7 @@ export class ShellHostComponent {
   );
   readonly drawerTitle = computed(
     () => this.selectedModuleLabel()
-       ?? this.shellBinding.chromeString('shell.drawer.title')
-       ?? this.headerBrand(),
+       ?? this.shellBinding.chromeString('shell.drawer.title'),
   );
   readonly drawerCloseLabel = computed(
     () => this.shellBinding.chromeString('shell.drawer.close'),
@@ -804,85 +781,13 @@ export class ShellHostComponent {
     this.shellBinding.isSurfaceAllowed(key);
 
   /**
-   * DB banner template → ShellAction. Prefer legacy shell-action fields via
-   * {@link shellActionFromLegacyRecord}; only then fall back to `actionRoute`
-   * → `{ kind: 'navigate', path }` when legacy parsing yields nothing.
+   * Banners shown in chrome: resolver-fed candidates minus locally dismissed ids.
+   * Templates, gates, chrome strings, connectivity, and synthetic shell-error are
+   * owned by WorkspaceShellBindingService.shellBannerCandidates.
    */
-  private bannerActionFromTemplate(tpl: Record<string, unknown>): ShellAction | undefined {
-    const fromLegacy = shellActionFromLegacyRecord(tpl);
-    if (fromLegacy) return fromLegacy;
-    const route = tpl['actionRoute'];
-    if (typeof route === 'string') {
-      const path = route.trim();
-      if (path) return { kind: 'navigate', path };
-    }
-    return undefined;
-  }
-
-  // §B.9 P4 — banner multiplex — fully runtime-driven.
-  // shell-host passes live state only. Banner templates, IDs, kinds, routes,
-  // thresholds all come from UI-OS runtime (shellBinding.bannerTemplates).
   readonly shellBanners = computed<ShellBanner[]>(() => {
-    const banners: ShellBanner[] = [];
     const dismissed = this.dismissedBannerIds();
-    const templates = this.shellBinding.bannerTemplates() as Array<Record<string, unknown>>;
-    const expired = this.access.trialExpiredModules() as string[];
-    const expiresAt = this.access.sessionExpiresAt();
-    const policy = this.shellBinding.sessionExpiryPolicy();
-
-    for (const tpl of templates) {
-      const id = typeof tpl['id'] === 'string' ? tpl['id'] as string : '';
-      if (!id || dismissed.has(id)) continue;
-
-      // Condition gates — shell-host provides live state, template declares which gate.
-      const gate = typeof tpl['gate'] === 'string' ? tpl['gate'] as string : 'always';
-      if (gate === 'trial-expired' && expired.length === 0) continue;
-      if (gate === 'offline' && !this.isOffline()) continue;
-      if (gate === 'impersonation' && !this.access.isImpersonating()) continue;
-      if (gate === 'session-expiry') {
-        if (!expiresAt) continue;
-        const minsLeft = Math.max(0, Math.floor((new Date(expiresAt).getTime() - Date.now()) / 60000));
-        const warn = policy.warningMinutes;
-        const danger = policy.dangerMinutes;
-        if (warn > 0) {
-          if (minsLeft > warn) continue;
-        } else if (danger > 0) {
-          if (minsLeft > danger) continue;
-        } else {
-          continue;
-        }
-      }
-      // Skip DB error-gate rows when a live programmatic error is shown (dedupe with shell-error banner).
-      if (gate === 'error' && this.errorState.error()) continue;
-
-      const titleKey = typeof tpl['titleKey'] === 'string' ? tpl['titleKey'] as string : '';
-      const messageKey = typeof tpl['messageKey'] === 'string' ? tpl['messageKey'] as string : '';
-      const actionKey = typeof tpl['actionKey'] === 'string' ? tpl['actionKey'] as string : '';
-
-      banners.push({
-        id,
-        kind: (typeof tpl['kind'] === 'string' ? tpl['kind'] : 'info') as ShellBanner['kind'],
-        title: this.shellBinding.chromeString(titleKey),
-        message: this.shellBinding.chromeString(messageKey),
-        dismissible: tpl['dismissible'] === true,
-        actionLabel: actionKey ? this.shellBinding.chromeString(actionKey) : undefined,
-        action: this.bannerActionFromTemplate(tpl),
-      });
-    }
-
-    // Error banner — always from live error state, no template needed.
-    const err = this.errorState.error();
-    if (err && !dismissed.has('shell-error')) {
-      banners.push({
-        id: 'shell-error',
-        kind: 'danger',
-        title: err.kind,
-        message: err.message + (err.correlationId ? ` (ID: ${err.correlationId})` : ''),
-        dismissible: true,
-      });
-    }
-
-    return banners;
+    return this.shellBinding.shellBannerCandidates().filter((b) => !dismissed.has(b.id));
   });
 
   // §B.9 #25 — blocking errors replace content slot with error frame.
@@ -900,7 +805,7 @@ export class ShellHostComponent {
   // via WorkspaceShellBindingService) over the platform-default adapter
   // constant. Both sources are signals so the UI reacts to either flipping.
   readonly accountMenuEntries = computed<ReadonlyArray<ShellAccountMenuEntry>>(
-    () => this.shellBinding.accountMenuEntries() ?? [],
+    () => this.shellBinding.accountMenuEntries() || [],
   );
   // Map platform-owned ShellAccountMenuEntry → DosAccountMenuItem shape
   // consumed by the @dos/ui-system primitive. Labels are i18n-resolved via
@@ -916,24 +821,22 @@ export class ShellHostComponent {
       destructive: !!e.destructive,
     }));
     // Runtime-driven actions (language toggle, theme toggle, etc.)
-    const runtimeActions = this.shellBinding.accountMenuActions() as Array<Record<string, unknown>>;
+    const runtimeActions = this.shellBinding.accountMenuActions();
     for (const action of runtimeActions) {
-      const id = typeof action['id'] === 'string' ? action['id'] as string : '';
-      const labelKey = typeof action['labelKey'] === 'string' ? action['labelKey'] as string : '';
-      if (!id) continue;
+      if (!action.id) continue;
       base.push({
-        id,
-        label: this.shellBinding.chromeString(labelKey),
-        destructive: action['destructive'] === true,
+        id: action.id,
+        label: this.shellBinding.chromeString(action.labelKey || ''),
+        destructive: !!action.destructive,
       });
     }
     return base;
   });
   readonly userDisplayName = computed<string>(() => {
     const u = this._user();
-    return (u?.displayName || u?.name || '') as string;
+    return (u?.displayName || u?.name) as string;
   });
-  readonly userEmail = computed<string>(() => (this._user()?.email || '') as string);
+  readonly userEmail = computed<string>(() => (this._user()?.email) as string);
 
   readonly commandAria = computed(
     () => this.shellBinding.chromeString('shell.command.aria'),
@@ -980,10 +883,8 @@ export class ShellHostComponent {
       this.access.permissions();
       this.access.trialExpiredModules();
       queueMicrotask(() => {
-        void this.nav.refresh().then(() => {
-          // W-B: feed updated groups to breadcrumb service
-          this.breadcrumbSvc.setGroups(this.navGroups() as unknown as ReadonlyArray<DosNavGroup>);
-        });
+        // W-B: feed updated groups to breadcrumb service
+        this.breadcrumbSvc.setGroups(this.navGroups() as unknown as ReadonlyArray<DosNavGroup>);
       });
     },
     { allowSignalWrites: false },
@@ -1011,19 +912,6 @@ export class ShellHostComponent {
     // W-B: subscribe to breadcrumb updates
     const unsub = this.breadcrumbSvc.subscribe((crumbs) => this.breadcrumbs.set(crumbs));
     this.destroyRef.onDestroy(unsub);
-
-    // §B.9 #37 — offline/reconnect signal.
-    if (this.isBrowser) {
-      this.isOffline.set(!navigator.onLine);
-      const goOnline  = () => this.isOffline.set(false);
-      const goOffline = () => this.isOffline.set(true);
-      window.addEventListener('online',  goOnline);
-      window.addEventListener('offline', goOffline);
-      this.destroyRef.onDestroy(() => {
-        window.removeEventListener('online',  goOnline);
-        window.removeEventListener('offline', goOffline);
-      });
-    }
 
     // §B.9 #32 — sync platform ToastService messages into shell-host outlet signal.
     effect(() => {
@@ -1077,13 +965,12 @@ export class ShellHostComponent {
 
   /** Bridge DosAccountMenu `action` emission → platform ShellAccountMenuEntry. */
   onAccountMenuAction(item: DosAccountMenuItem): void {
-    // Runtime-driven account actions — dispatch by action type.
-    const runtimeActions = this.shellBinding.accountMenuActions() as Array<Record<string, unknown>>;
-    const runtimeAction = runtimeActions.find(a => a['id'] === item.id);
-    if (runtimeAction) {
-      const actionType = typeof runtimeAction['action'] === 'string' ? runtimeAction['action'] as string : '';
-      if (actionType === 'toggle_language') { this.prefs.toggleLanguage(); return; }
-      if (actionType === 'toggle_theme') { this.prefs.toggleTheme(); return; }
+    // Runtime-driven account actions — dispatch typed ShellAction.
+    const runtimeActions = this.shellBinding.accountMenuActions();
+    const runtimeAction = runtimeActions.find(a => a.id === item.id);
+    if (runtimeAction?.action) {
+      this.dispatchShellAction(runtimeAction.action);
+      return;
     }
     const entry = this.accountMenuEntries().find((e) => e.id === item.id);
     if (entry) this.onAccountEntry(entry);
@@ -1322,16 +1209,11 @@ export class ShellHostComponent {
 
   label(item: DosNavItem): string {
     const direct = (item.label || '').toString().trim();
-    const key    = (item.labelKey || item.id || '').toString();
-    const resolved = this.labelResolver?.navItemLabel(direct || key, item.id);
-    if (resolved) return resolved;
     if (direct) return direct;
     return '';
   }
 
   groupLabel(id: string, label?: string): string {
-    const resolved = this.labelResolver?.navGroupLabel(label || id);
-    if (resolved) return resolved;
     return label || '';
   }
 
@@ -1383,7 +1265,7 @@ export class ShellHostComponent {
       this.sideNavActive.set(true);
       return;
     }
-    const bp = this.shellBinding.breakpointLargePx() || 1056;
+    const bp = this.shellBinding.desktopMinPx() || 1056;
     const mobile = window.innerWidth < bp;
     this.isMobile.set(mobile);
     this.sideNavActive.set(!mobile);

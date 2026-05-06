@@ -78,10 +78,10 @@ import { BrandResolverService, DosEmptyStateComponent, MarketingPublicConfigServ
   `,
   styles: [`
     :host { display: block; }
-    .dos-tpl-loading { padding: 2rem; color: var(--cds-text-secondary, #6f6f6f); }
+    .dos-tpl-loading { padding: 2rem; color: var(--cds-text-secondary); }
     .dos-tpl-fallback { padding: 1rem 0; }
     .dos-tpl-fallback__msg {
-      margin: 1rem; font-size: 0.875rem; color: var(--cds-text-secondary, #6f6f6f);
+      margin: 1rem; font-size: 0.875rem; color: var(--cds-text-secondary);
     }
   `],
 })

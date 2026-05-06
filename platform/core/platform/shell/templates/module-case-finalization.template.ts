@@ -79,8 +79,8 @@ export interface CaseFinalizationRow {
   styles: [`
     :host { display: block; }
     .dos-case-row { display: flex; gap: .5rem; align-items: center; padding: .5rem 0; }
-    .dos-case-owner { color: var(--cds-text-secondary, #6f6f6f); }
-    .dos-case-empty { padding: 1rem; color: var(--cds-text-secondary, #6f6f6f); }
+    .dos-case-owner { color: var(--cds-text-secondary); }
+    .dos-case-empty { padding: 1rem; color: var(--cds-text-secondary); }
   `],
 })
 export class CaseFinalizationTemplateComponent {
