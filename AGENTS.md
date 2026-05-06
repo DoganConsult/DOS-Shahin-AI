@@ -748,3 +748,29 @@ WHY STOPPED
 NEXT ACTION ON RESUME
 - Await user choice: snapshot+apply on shahin_grc, OR target separate DB
 - Then execute todo items 1→6 in order, with proofs emitted under proofs/foundation-ai/post-launch/
+====================================================
+PROGRAM STATE MEMORY — Post-Launch DB Activation
+(updated 2026-05-07)
+====================================================
+
+DB ACTIVATION RESULT (live shahin_grc):
+- 23/23 foundation migrations applied (foundation_schema_migrations)
+- 29 dos.foundation_* tables present
+- 2 product_registry rows, 50 module_registry rows, 82 tenant_product_activation rows
+- 24 dos.dynamic_ui_route_metadata rows for foundation
+- Snapshot pre-mutation: ops/db-snapshots/shahin_grc_dos_pre-foundation_20260506T200945Z.sql.gz
+- Auth pipeline: /api/ui-os/workspace-runtime → 401 unauth (gateway routing OK)
+- SPA: /foundation → 200 from gateway-bundled dist on :3000
+- Commit: 77f71d6dd (pushed to origin/fix/p0-foundation-nav-route-metadata)
+
+REMAINING (deferred — requires explicit go to provision tenants/users):
+- Real platform-app + contracts builds (markers exist; not full builds)
+- node scripts/module/publish.mjs foundation (real publish; current is .republished marker)
+- Standalone SPA on :4200 (currently served from gateway dist on :3000)
+- Tenant/user provisioning (Keycloak realm "dogan" live; users not seeded)
+- Authenticated /api/ui-os/workspace-runtime probe + sample foundation runtime payload
+
+Doctrine sustained:
+- ZERO STATIC / ZERO LEGACY / ZERO FALLBACK / Dynamic UI-OS only / DB-driven by published contracts
+- Snapshot-before-mutate honored
+- Idempotent fixes only; no destructive drops
