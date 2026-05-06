@@ -75,6 +75,8 @@ export * from './shell/context-panel.component';
 export * from './shell/mobile-bottom-nav.component';
 export * from './shell/workspace-header.component';
 export * from './shell/workspace-sidebar.component';
+export * from './shell/surface-renderer.component';
+export * from './shell/visual-shell-surfaces.component';
 export * from './shell/quick-create.component';
 export * from './shell/workspace-shell.contracts';
 // Named internal kits (Carbon-only, built on top of src/carbon/* wrappers).

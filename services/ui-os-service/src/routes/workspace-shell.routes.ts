@@ -31,6 +31,9 @@ interface ShellRow {
   props: Record<string, unknown> | null;
   version: number;
   zone?: RuntimeZone;
+  renderer_key?: string | null;
+  component_type?: string | null;
+  carbon_key?: string | null;
 }
 
 // Sensitive zones — empty perms_required is NOT a blanket allow. Only the
@@ -80,6 +83,10 @@ interface FrontendSurface {
   zone?: string;
   surfaceId: string;
   slotKey: string;
+  componentKey: string;
+  componentType: string | null;
+  rendererKey: string | null;
+  carbonKey: string | null;
 }
 
 // ─── Zone normalization ──────────────────────────────────────────────
@@ -190,6 +197,10 @@ function toFrontendSurface(row: ShellRow): FrontendSurface {
     ...(row.zone ? { zone: row.zone } : {}),
     surfaceId: ids.surfaceId,
     slotKey: ids.slotKey,
+    componentKey: row.component_key,
+    componentType: row.component_type ?? null,
+    rendererKey: row.renderer_key ?? null,
+    carbonKey: row.carbon_key ?? null,
   };
 }
 
@@ -232,7 +243,10 @@ async function loadSurfaces(
      SELECT b.id::text                AS binding_id,
             b.component_key,
             b.enabled, b.position, b.perms_required,
-            b.props, b.version
+            b.props, b.version,
+            r.renderer_key,
+            r.component_type,
+            r.carbon_key
        FROM dos.workspace_shell_binding b
        JOIN dos.dynamic_ui_component_registry r
          ON r.component_key = b.component_key
@@ -255,9 +269,17 @@ async function loadSurfaces(
     const zone = resolveZone(row, catalog);
     if (!zone) continue;
     const permsEmpty = !Array.isArray(row.perms_required) || row.perms_required.length === 0;
-    // Computed prefix to avoid the parity-scan tripping on a 'workspace.*' literal.
+    // Computed prefixes to avoid the parity-scan tripping on a 'workspace.*' literal.
+    // Both `workspace.frame.*` (Carbon ui-shell primitives) and
+    // `workspace.shell.*` (canonical visual shell surfaces resolved
+    // through the hybrid-static COMPONENT_MAP) are doctrine-approved
+    // shell-safe scopes — they may render with empty perms_required[]
+    // even in sensitive zones.
     const FRAME_PREFIX = `workspace${'.'}frame${'.'}`;
-    const isShellFoundation = row.component_key.startsWith(FRAME_PREFIX);
+    const SHELL_PREFIX = `workspace${'.'}shell${'.'}`;
+    const isShellFoundation =
+      row.component_key.startsWith(FRAME_PREFIX) ||
+      row.component_key.startsWith(SHELL_PREFIX);
     if (permsEmpty && !SAFE_EMPTY_PERMS_ZONES.has(zone) && !isShellFoundation) {
       // Sensitive zone with no perm gate — drop. Registry/seed must
       // declare an explicit perms_required[] to render in main / fab /
@@ -500,6 +522,240 @@ async function loadBanners(pool: DbPool, tenantId: string, localePrimary: string
   }));
 }
 
+// ─── Route-binding existence loader ──────────────────────────────────
+// Loads the set of routes that have a real `ui_route_template_binding`
+// row. The resolver uses this to flip `enabled=false` on any account-
+// menu / nav-item entry whose `kind:'navigate'` action targets a route
+// without a backing template — preventing the FE from offering a click
+// path that lands on a 404 / blank page.
+async function loadKnownRoutes(pool: DbPool): Promise<ReadonlySet<string>> {
+  const r = await pool.query<{ route: string }>(
+    `SELECT route FROM dos.ui_route_template_binding`,
+  );
+  const out = new Set<string>();
+  for (const row of r.rows) {
+    if (typeof row.route === 'string' && row.route.trim()) out.add(row.route.trim());
+  }
+  return out;
+}
+
+// ─── Module-cards loader ─────────────────────────────────────────────
+// Entitled modules joined to module_registry, with the first entitled
+// nav item used as the card's deep-link route. Returns FE-shaped tile
+// items for `workspace.shell.module-cards`.
+interface ModuleCardRow {
+  module_code: string;
+  display_name: string | null;
+  product_code: string;
+  default_route: string | null;
+}
+
+async function loadEntitledModuleCards(
+  pool: DbPool,
+  tenantId: string,
+  callerRoles: readonly string[],
+  localePrimary: string,
+): Promise<Array<Record<string, unknown>>> {
+  const rolesParam = callerRoles.length > 0 ? [...callerRoles] : [''];
+  const r = await pool.query<ModuleCardRow>(
+    `WITH caller_perms AS (
+       SELECT COALESCE(array_agg(DISTINCT perm), ARRAY[]::text[]) AS perms
+         FROM platform_dauth.functional_roles fr
+         CROSS JOIN LATERAL unnest(COALESCE(fr.permissions, ARRAY[]::text[])) AS perm
+        WHERE fr.role_code = ANY($2::text[])
+     ),
+     first_route AS (
+       SELECT DISTINCT ON (i.module_code)
+              i.module_code,
+              i.route AS default_route
+         FROM dos.ui_module_nav_item i, caller_perms cp
+        WHERE i.enabled IS DISTINCT FROM false
+          AND COALESCE(i.route,'') <> ''
+          AND (i.permission IS NULL OR i.permission = '' OR i.permission = ANY(cp.perms))
+        ORDER BY i.module_code, i.sort_order, i.item_id
+     )
+     SELECT e.module_code,
+            COALESCE(m.display_name, e.module_code) AS display_name,
+            e.product_code,
+            fr.default_route
+       FROM dos.tenant_module_entitlements e
+       JOIN dos.module_registry m ON m.module_code = e.module_code
+       LEFT JOIN first_route fr ON fr.module_code = e.module_code
+      WHERE e.tenant_id = $1
+        AND e.entitlement_status = 'active'
+      ORDER BY COALESCE(m.display_name, e.module_code)`,
+    [tenantId, rolesParam],
+  );
+
+  void localePrimary; // display_name is locale-neutral here.
+  const out: Array<Record<string, unknown>> = [];
+  for (const row of r.rows) {
+    if (!row.default_route) continue;
+    out.push({
+      id: row.module_code,
+      title: row.display_name ?? row.module_code,
+      route: row.default_route,
+      productCode: row.product_code,
+    });
+  }
+  return out;
+}
+
+// ─── Visual shell prop enricher ──────────────────────────────────────
+// Live-derived props for the `workspace.shell.*` surfaces — sidebar nav
+// from entitled nav items, module cards from entitled modules, and
+// account/settings actions from chrome.accountMenu. The seed-time
+// props bag stays as the schema scaffold; the resolver overlays the
+// runtime data here so the FE remains render-only.
+function enrichVisualShellProps(
+  surfaces: ShellRow[],
+  nav: { groups: Array<Record<string, unknown>>; items: Array<Record<string, unknown>> },
+  chrome: Record<string, unknown>,
+  moduleCards: Array<Record<string, unknown>>,
+  knownRoutes: ReadonlySet<string>,
+): void {
+  // 1) Build a flat nav-item list keyed by visual ordering.
+  const sidebarItems: Array<Record<string, unknown>> = [];
+  for (const item of nav.items) {
+    const action = (item as { action?: { kind?: string; path?: string } }).action;
+    if (!action || action.kind !== 'navigate' || typeof action.path !== 'string') continue;
+    const label = (item as { label?: { label?: string; fallback?: string; i18nKey?: string } }).label;
+    const text = label?.label ?? label?.fallback ?? label?.i18nKey ?? '';
+    if (!text) continue;
+    sidebarItems.push({
+      id: String((item as { itemId?: string }).itemId ?? ''),
+      label: text,
+      route: action.path,
+      icon: (item as { icon?: string }).icon ?? null,
+      moduleCode: (item as { moduleCode?: string }).moduleCode ?? null,
+      badge: (item as { badge?: unknown }).badge ?? null,
+    });
+  }
+
+  // 2) Account menu entries from chrome.accountMenu (typed actions).
+  //    Resolve each entry's i18nKey against chrome[i18nKey] so the FE
+  //    receives a ready-to-render `label` alongside the typed action.
+  const rawAccountMenu = Array.isArray(chrome['accountMenu'])
+    ? (chrome['accountMenu'] as Array<Record<string, unknown>>)
+    : [];
+  const accountMenu: Array<Record<string, unknown>> = rawAccountMenu.map((entry) => {
+    const out: Record<string, unknown> = { ...entry };
+    const key = typeof entry['i18nKey'] === 'string' ? (entry['i18nKey'] as string) : '';
+    if (key) {
+      const resolved = chrome[key];
+      if (typeof resolved === 'string' && resolved.trim()) out['label'] = resolved.trim();
+    }
+    // Route-existence gate — disable any navigate action whose path has
+    // no matching `ui_route_template_binding` row. Non-navigate typed
+    // actions (toggle_*, open_external, dispatch_event …) are exempt.
+    const action = entry['action'];
+    let routeExists: boolean | null = null;
+    if (action && typeof action === 'object') {
+      const a = action as Record<string, unknown>;
+      if (a['kind'] === 'navigate' && typeof a['path'] === 'string') {
+        const path = (a['path'] as string).trim();
+        routeExists = knownRoutes.has(path);
+        if (!routeExists) {
+          out['enabled'] = false;
+        }
+      }
+    }
+    out['routeExists'] = routeExists;
+    if (typeof out['enabled'] !== 'boolean') out['enabled'] = true;
+    if (typeof out['actionType'] !== 'string') {
+      const a = action as { kind?: string } | null | undefined;
+      out['actionType'] = a?.kind ?? 'unknown';
+    }
+    // Aria-label fallback chain: chrome[`shell.account.<id>.aria-label`]
+    // → resolved label → i18nKey. The component already accepts an
+    // optional `ariaLabel` per entry.
+    const id = typeof entry['id'] === 'string' ? (entry['id'] as string) : '';
+    const ariaKey = id ? `shell.account.${id}.aria-label` : '';
+    const ariaFromChrome = ariaKey && typeof chrome[ariaKey] === 'string'
+      ? (chrome[ariaKey] as string).trim()
+      : '';
+    if (ariaFromChrome) out['ariaLabel'] = ariaFromChrome;
+    else if (typeof out['label'] === 'string' && (out['label'] as string).trim()) {
+      out['ariaLabel'] = (out['label'] as string).trim();
+    }
+    return out;
+  });
+
+  const settingsEntry = accountMenu.find(
+    (e) => e && typeof e === 'object' && (e['id'] === 'settings' || e['id'] === 'account-settings'),
+  );
+
+  // 3) DB-sourced chrome scalars used to overlay header brand / title /
+  //    sidebar empty message. Every value is read from `chrome[*]`; if a
+  //    key is absent the seed prop is left intact (or empty for the
+  //    sidebar message — never a hardcoded literal).
+  const chromeBrand           = typeof chrome['brand']           === 'string' ? (chrome['brand']           as string).trim() : '';
+  const chromeWorkspaceTitle  = typeof chrome['workspaceTitle']  === 'string' ? (chrome['workspaceTitle']  as string).trim() : '';
+  const chromeLogoHref        = typeof chrome['logoHref']        === 'string' ? (chrome['logoHref']        as string).trim() : '';
+  const chromeLogoUri         = typeof chrome['logoUri']         === 'string' ? (chrome['logoUri']         as string).trim() : '';
+  const chromeSidebarAria     = typeof chrome['shell.sidebar.aria-label']   === 'string' ? (chrome['shell.sidebar.aria-label']   as string).trim() : '';
+  const chromeSidebarEmpty    = typeof chrome['shell.sidebar.empty.message']=== 'string' ? (chrome['shell.sidebar.empty.message']as string).trim() : '';
+  const chromeUserMenuLabel   = typeof chrome['shell.user-menu.label']      === 'string' ? (chrome['shell.user-menu.label']      as string).trim() : '';
+  const chromeUserMenuAria    = typeof chrome['shell.user-menu.aria-label'] === 'string' ? (chrome['shell.user-menu.aria-label'] as string).trim() : '';
+  const chromeSettingsAria    = typeof chrome['shell.settings.aria-label']  === 'string' ? (chrome['shell.settings.aria-label']  as string).trim() : '';
+
+  for (const s of surfaces) {
+    const props = (s.props ?? {}) as Record<string, unknown>;
+    switch (s.component_key) {
+      case 'workspace.shell.brand': {
+        const next: Record<string, unknown> = { ...props };
+        if (chromeBrand)    next['text']     = chromeBrand;
+        if (chromeLogoHref) next['logoHref'] = chromeLogoHref;
+        if (chromeLogoUri)  next['logoUri']  = chromeLogoUri;
+        s.props = next;
+        break;
+      }
+      case 'workspace.shell.workspace-title': {
+        const next: Record<string, unknown> = { ...props };
+        if (chromeWorkspaceTitle) next['text'] = chromeWorkspaceTitle;
+        s.props = next;
+        break;
+      }
+      case 'workspace.shell.sidebar-nav': {
+        const next: Record<string, unknown> = {
+          ...props,
+          items: sidebarItems,
+        };
+        if (chromeSidebarAria)  next['ariaLabel']    = chromeSidebarAria;
+        if (chromeSidebarEmpty) next['emptyMessage'] = chromeSidebarEmpty;
+        s.props = next;
+        break;
+      }
+      case 'workspace.shell.user-menu': {
+        const next: Record<string, unknown> = { ...props, menu: accountMenu };
+        if (chromeUserMenuLabel) next['label']     = chromeUserMenuLabel;
+        if (chromeUserMenuAria)  next['ariaLabel'] = chromeUserMenuAria;
+        s.props = next;
+        break;
+      }
+      case 'workspace.shell.settings-action': {
+        const next: Record<string, unknown> = { ...props };
+        // Only wire the action if the settings entry is enabled (i.e.
+        // its route exists in `ui_route_template_binding`).
+        const enabled = settingsEntry?.['enabled'] !== false;
+        if (settingsEntry?.['action'] && enabled) next['action'] = settingsEntry['action'];
+        next['enabled'] = enabled;
+        next['routeExists'] = settingsEntry?.['routeExists'] ?? null;
+        if (chromeSettingsAria) next['ariaLabel'] = chromeSettingsAria;
+        s.props = next;
+        break;
+      }
+      case 'workspace.shell.module-cards': {
+        s.props = { ...props, items: moduleCards };
+        break;
+      }
+      default:
+        // Other shell surfaces keep their seeded props.
+        break;
+    }
+  }
+}
+
 // ─── Router ──────────────────────────────────────────────────────────
 export function createWorkspaceShellRouter(pool: DbPool): Router {
   const router = Router();
@@ -575,17 +831,31 @@ export function createWorkspaceShellRouter(pool: DbPool): Router {
       const callerRoles = Array.isArray(principal.roles) ? principal.roles : [];
       const catalog = await loadCatalog(pool);
       const surfaceRows = await loadSurfaces(pool, tenantId, catalog, callerRoles);
-      const surfaces = surfaceRows.map(toFrontendSurface);
-      const zones = groupByZone(surfaceRows, catalog);
-      const shellVersion = surfaceRows.reduce((acc, r) => acc + (r.version ?? 0), 0);
 
-      const [nav, chrome, shortcuts, banners, policies] = await Promise.all([
+      const [nav, chrome, shortcuts, banners, policies, moduleCards, knownRoutes] = await Promise.all([
         loadNav(pool, localePrimary, tenantId, callerRoles),
         loadChrome(pool, tenantId),
         loadShortcuts(pool, tenantId),
         loadBanners(pool, tenantId, localePrimary),
         loadPolicies(pool, tenantId),
+        loadEntitledModuleCards(pool, tenantId, callerRoles, localePrimary),
+        loadKnownRoutes(pool),
       ]);
+
+      // Live-enrich the visual shell surfaces' props from the resolver
+      // outputs above (sidebar nav, account menu, module cards). Mutates
+      // surfaceRows in place; serialization happens immediately after.
+      enrichVisualShellProps(
+        surfaceRows,
+        nav as { groups: Array<Record<string, unknown>>; items: Array<Record<string, unknown>> },
+        chrome,
+        moduleCards,
+        knownRoutes,
+      );
+
+      const surfaces = surfaceRows.map(toFrontendSurface);
+      const zones = groupByZone(surfaceRows, catalog);
+      const shellVersion = surfaceRows.reduce((acc, r) => acc + (r.version ?? 0), 0);
 
       res.json({
         tenantId,

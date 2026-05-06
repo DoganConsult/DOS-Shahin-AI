@@ -122,13 +122,25 @@ export interface WorkspaceRuntimeNavigation {
   items: readonly WorkspaceRuntimeNavItemRow[];
 }
 
-/** Surface binding row — camelCase only, no DB DTOs. componentKey and permsRequired are internal to resolver. */
+/** Surface binding row — camelCase only, no DB DTOs. */
 export interface WorkspaceShellBindingRow {
   readonly enabled: boolean;
   readonly position: number;
   readonly props: Readonly<Record<string, unknown>>;
   readonly version: number;
   readonly zone?: WorkspaceRuntimeZone;
+  /** Stable surface identifier from resolver (e.g., workspace.header.brand.b123) */
+  readonly surfaceId?: string;
+  /** Slot key for positioning (e.g., header#0#b123) */
+  readonly slotKey?: string;
+  /** Component key from registry (e.g., workspace.header) */
+  readonly componentKey?: string;
+  /** Bucket / structural type (e.g., 'shell-frame', 'action', 'data', 'input', 'nav'). */
+  readonly componentType?: string | null;
+  /** Hybrid-static renderer key — drives surface-renderer COMPONENT_MAP lookup. */
+  readonly rendererKey?: string | null;
+  /** Carbon primitive key (e.g., 'ui-shell', 'tile', 'button'). */
+  readonly carbonKey?: string | null;
 }
 
 /** Shortcut emitted by UI-OS resolver — typed action only. */

@@ -34,6 +34,7 @@ import { createAgenticRouter } from './agentic.routes.js';
 import { createMarketingDownloadsRouter } from './marketing-downloads.routes.js';
 import { createTenantLandingConfigRouter } from './tenant-landing-config.routes.js';
 import { createI18nFallbacksRouter } from './i18n-fallbacks.routes.js';
+import { createRouteMetadataRouter } from './route-metadata.routes.js';
 import type { DbPool } from '../db.js';
 
 export function createUiOsRouter(pool: DbPool): Router {
@@ -88,6 +89,8 @@ export function createUiOsRouter(pool: DbPool): Router {
   router.use('/', createTenantLandingConfigRouter(pool));
   // Phase 1 — DB-driven i18n fallback values
   router.use('/', createI18nFallbacksRouter(pool));
+  // 2026-05-06 — per-route render mode metadata (shell-only vs template).
+  router.use('/', createRouteMetadataRouter(pool));
 
   return router;
 }

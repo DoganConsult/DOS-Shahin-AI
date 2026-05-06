@@ -368,12 +368,25 @@ export class WorkspaceShellBindingService {
         continue;
       }
       const position = typeof row.position === 'number' ? row.position : 0;
+      const r = row as Record<string, unknown>;
+      const componentKey = typeof r['componentKey'] === 'string' ? (r['componentKey'] as string) : undefined;
+      const componentType = typeof r['componentType'] === 'string' ? (r['componentType'] as string) : (r['componentType'] === null ? null : undefined);
+      const rendererKey = typeof r['rendererKey'] === 'string' ? (r['rendererKey'] as string) : (r['rendererKey'] === null ? null : undefined);
+      const carbonKey = typeof r['carbonKey'] === 'string' ? (r['carbonKey'] as string) : (r['carbonKey'] === null ? null : undefined);
+      const surfaceIdRaw = typeof r['surfaceId'] === 'string' ? (r['surfaceId'] as string) : undefined;
+      const slotKeyRaw = typeof r['slotKey'] === 'string' ? (r['slotKey'] as string) : undefined;
       const surface: WorkspaceShellSurface = {
         enabled: row.enabled !== false,
         position,
         props: row.props ?? {},
         version: typeof row.version === 'number' ? row.version : 0,
         zone,
+        ...(surfaceIdRaw ? { surfaceId: surfaceIdRaw } : {}),
+        ...(slotKeyRaw ? { slotKey: slotKeyRaw } : {}),
+        ...(componentKey ? { componentKey } : {}),
+        ...(componentType !== undefined ? { componentType } : {}),
+        ...(rendererKey !== undefined ? { rendererKey } : {}),
+        ...(carbonKey !== undefined ? { carbonKey } : {}),
       };
       const stableId = readStableSurfaceId(row);
       if (!stableId) {
@@ -400,6 +413,63 @@ export class WorkspaceShellBindingService {
     this._loaded.set(true);
     // eslint-disable-next-line no-console
     console.info('[workspace-shell-binding] WORKSPACE_RUNTIME_LOADED', { tenant: tenantAtStart, surfaces: next.size, version: this._version() });
+
+    // RUNTIME_APPLIED — per-zone surface count + count of surfaces that
+    // did/did not present a stable resolver-emitted surfaceId/slotKey.
+    // `unsupported` surfaces fell through to the composite zone#pos#idx
+    // key; downstream surface-renderer waves cannot hydrate Carbon
+    // components for those rows because there is no stable identity to
+    // bind to.
+    let header = 0, sidebar = 0, main = 0, rendered = 0, unsupported = 0;
+    let frame = 0, visual = 0;
+    for (const [key, row] of next) {
+      if (row.zone === 'header') header++;
+      else if (row.zone === 'sidebar') sidebar++;
+      else if (row.zone === 'main') main++;
+      if (key.includes('#')) unsupported++;
+      else rendered++;
+      // STRUCTURAL vs VISUAL split is now driven by the resolver-emitted
+      // componentType ('shell-frame' = structural; everything else is
+      // visual). Pattern matching on surfaceId is no longer used.
+      const isFrame = (row.componentType ?? '') === 'shell-frame';
+      if (isFrame) frame++; else visual++;
+      // Per-surface diagnostic — zone, surfaceId, slotKey, componentKey,
+      // componentType, rendererKey, carbonKey, props keys.
+      // eslint-disable-next-line no-console
+      console.info('[workspace-shell-binding] SURFACE', {
+        zone: row.zone,
+        surfaceId: row.surfaceId ?? key,
+        slotKey: row.slotKey ?? null,
+        componentKey: row.componentKey ?? null,
+        componentType: row.componentType ?? null,
+        rendererKey: row.rendererKey ?? null,
+        carbonKey: row.carbonKey ?? null,
+        position: row.position,
+        propKeys: Object.keys((row.props ?? {}) as Record<string, unknown>),
+        isFrame,
+      });
+    }
+    // eslint-disable-next-line no-console
+    console.info('[workspace-shell-binding] RUNTIME_APPLIED', {
+      total: next.size,
+      header,
+      sidebar,
+      main,
+      rendered,
+      unsupported,
+      frame,
+      visual,
+    });
+  }
+
+  /**
+   * Visual (non-frame) surfaces in a zone. Structural shell-frame
+   * primitives (componentType='shell-frame') are dropped — ShellHost
+   * may consume them for layout policy but they are NOT visual content
+   * and surface-renderer never hydrates them.
+   */
+  visualSurfacesByZone(zone: WorkspaceShellZone): WorkspaceShellSurface[] {
+    return this.surfacesByZone(zone).filter((row) => (row.componentType ?? '') !== 'shell-frame');
   }
 
   // ── First-class envelope reads ──────────────────────────────────────────

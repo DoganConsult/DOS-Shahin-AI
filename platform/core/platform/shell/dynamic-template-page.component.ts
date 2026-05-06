@@ -37,6 +37,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter, startWith } from 'rxjs/operators';
 import { TemplateBindingService, type TemplateBinding } from './template-binding.service';
 import { loadArchetypeTemplate } from './template-binding.registry';
+import { RouteMetadataService } from './route-metadata.service';
 
 import type { ModuleInsightPillars } from './templates/module-template.types';
 import { AccessStore } from '@dos/access-store';
@@ -64,6 +65,13 @@ import { BrandResolverService, DosEmptyStateComponent, MarketingPublicConfigServ
       </p>
     } @else if (loading() && !template()) {
       <div class="dos-tpl-loading" data-testid="dos-tpl-loading">Loading…</div>
+    } @else if (shellOnly()) {
+      <!--
+        shell-only route — workspace runtime envelope is the sole
+        content authority for this URL. The component intentionally
+        renders nothing so the host's <router-outlet /> mount stays
+        empty (no masthead, no empty-state placeholder, no demo).
+      -->
     } @else if (!template() && !loading()) {
       <div class="dos-tpl-fallback" data-testid="dos-tpl-fallback">
         <dos-empty-state
@@ -90,6 +98,7 @@ export class DynamicTemplatePageComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly access = inject(AccessStore);
   private readonly bindings = inject(TemplateBindingService);
+  private readonly routeMetadata = inject(RouteMetadataService);
   private readonly envInjector = inject(EnvironmentInjector);
   // Marketing-landing archetype hydration — injected lazily-safe; Angular
   // will create these as singletons via the DI tree without pulling
@@ -102,6 +111,7 @@ export class DynamicTemplatePageComponent {
   readonly template = signal<Type<unknown> | null>(null);
   readonly deniedPermission = signal<string | null>(null);
   readonly loading = signal<boolean>(true);
+  readonly shellOnly = signal<boolean>(false);
 
   @ViewChild('tplHost', { read: ViewContainerRef, static: true })
   private tplHost!: ViewContainerRef;
@@ -222,9 +232,32 @@ export class DynamicTemplatePageComponent {
       this.binding.set(null);
       this.template.set(null);
       this.deniedPermission.set(null);
+      this.shellOnly.set(false);
       this.disposeMounted();
       runInInjectionContext(this.envInjector, () => {
-        this.bindings.resolve(route).subscribe(async (b) => {
+        // Shell-only gate — for routes flagged
+        // dos.dynamic_ui_route_metadata.render_mode='shell-only', the
+        // workspace runtime envelope (loaded by ShellHostComponent) is
+        // the sole content source. Skip the template-binding HTTP call
+        // entirely so no demo/empty-state placeholder ever renders.
+        this.routeMetadata.resolve(route).subscribe((meta) => {
+          if (this.currentRoute() !== route) return;
+          if (meta?.renderMode === 'shell-only' || meta?.templateBindingRequired === false) {
+            // eslint-disable-next-line no-console
+            console.info('[dynamic-template] SHELL_ONLY_ROUTE', route);
+            this.shellOnly.set(true);
+            this.loading.set(false);
+            return;
+          }
+          this.resolveTemplateBinding(route);
+        });
+      });
+    });
+  }
+
+  private resolveTemplateBinding(route: string): void {
+    runInInjectionContext(this.envInjector, () => {
+      this.bindings.resolve(route).subscribe(async (b) => {
           this.binding.set(b);
           const requiredPermission = this.resolveRequiredPermission(b);
           if (requiredPermission && !this.access.hasPermission(requiredPermission)) {
@@ -262,7 +295,6 @@ export class DynamicTemplatePageComponent {
             this.loading.set(false);
           }
         });
-      });
     });
   }
 
