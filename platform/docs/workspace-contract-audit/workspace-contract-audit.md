@@ -1,19 +1,19 @@
 # Workspace Contract Audit Report (v2)
 
-Generated: 2026-05-06T14:34:00.912Z
+Generated: 2026-05-07T02:49:36.044Z
 
 ## Resolved Inputs
 
 - Tenant: `14f273cf260a4736` (status=active, source=auto-first-active)
 - Caller user: `70dd0034-bb20-4f9b-a9df-a308cd902efa` (member=true, source=auto-first-member)
-- Product: `foundation` (active=true, source=auto-first-active)
+- Product: `foundation` (active=true, source=cli)
 
 ## Runtime Probe
 
 - URL: `http://localhost:4015/api/ui-os/workspace-runtime?tenant_id=14f273cf260a4736&user_id=70dd0034-bb20-4f9b-a9df-a308cd902efa&product_code=foundation`
 - HTTP status: 200
 - ok: true
-- surfaces emitted: 21
+- surfaces emitted: 20
 
 ## DOM Probe
 
@@ -22,10 +22,10 @@ Generated: 2026-05-06T14:34:00.912Z
 
 ## Summary
 
-- seedKeyCount: 60
+- seedKeyCount: 67
 - registryKeyCount: 67
 - tenantBindingCount: 67
-- runtimeEmittedCount: 21
+- runtimeEmittedCount: 20
 - catalogOnly: 46
 - structural: 14
 - visual: 7
@@ -40,12 +40,12 @@ Generated: 2026-05-06T14:34:00.912Z
 ## Set Comparisons
 
 - onlyInSeed (0)
-- onlyInRegistry (7): `workspace.shell.brand`, `workspace.shell.empty-state`, `workspace.shell.module-cards`, `workspace.shell.settings-action`, `workspace.shell.sidebar-nav`, `workspace.shell.user-menu`, `workspace.shell.workspace-title`
-- seedAndRegistry (60): `workspace.action.button`, `workspace.action.icon-button`, `workspace.action.inline-notification`, `workspace.action.modal`, `workspace.action.overflow-menu`, `workspace.action.overflow-menu-option`, `workspace.action.toast-notification`, `workspace.data.data-table`, `workspace.data.pagination`, `workspace.data.structured-list`, `workspace.data.table-batch-actions`, `workspace.data.table-toolbar`, `workspace.data.table-toolbar-actions`, `workspace.data.table-toolbar-search`, `workspace.frame.content`, `workspace.frame.header`, `workspace.frame.header-global-action`, `workspace.frame.header-global-bar`, `workspace.frame.header-menu`, `workspace.frame.header-menu-item`, `workspace.frame.header-name`, `workspace.frame.header-navigation`, `workspace.frame.side-nav`, `workspace.frame.side-nav-items`, `workspace.frame.side-nav-link`, `workspace.frame.side-nav-menu`, `workspace.frame.side-nav-menu-item`, `workspace.frame.ui-shell`, `workspace.input.checkbox`, `workspace.input.combo-box`, `workspace.input.date-picker`, `workspace.input.dropdown`, `workspace.input.multi-select`, `workspace.input.number-input`, `workspace.input.radio`, `workspace.input.search`, `workspace.input.select`, `workspace.input.text-area`, `workspace.input.text-input`, `workspace.input.toggle`, `workspace.nav.breadcrumb`, `workspace.nav.clickable-tile`, `workspace.nav.column`, `workspace.nav.expandable-tile`, `workspace.nav.grid`, `workspace.nav.layer`, `workspace.nav.tab`, `workspace.nav.tabs`, `workspace.nav.tag`, `workspace.nav.tile`, `workspace.polish.accordion`, `workspace.polish.context-menu`, `workspace.polish.file-uploader`, `workspace.polish.inline-loading`, `workspace.polish.popover`, `workspace.polish.progress-bar`, `workspace.polish.skeleton-placeholder`, `workspace.polish.skeleton-text`, `workspace.polish.toggletip`, `workspace.polish.tooltip`
+- onlyInRegistry (0)
+- seedAndRegistry (67): `workspace.action.button`, `workspace.action.icon-button`, `workspace.action.inline-notification`, `workspace.action.modal`, `workspace.action.overflow-menu`, `workspace.action.overflow-menu-option`, `workspace.action.toast-notification`, `workspace.data.data-table`, `workspace.data.pagination`, `workspace.data.structured-list`, `workspace.data.table-batch-actions`, `workspace.data.table-toolbar`, `workspace.data.table-toolbar-actions`, `workspace.data.table-toolbar-search`, `workspace.frame.content`, `workspace.frame.header`, `workspace.frame.header-global-action`, `workspace.frame.header-global-bar`, `workspace.frame.header-menu`, `workspace.frame.header-menu-item`, `workspace.frame.header-name`, `workspace.frame.header-navigation`, `workspace.frame.side-nav`, `workspace.frame.side-nav-items`, `workspace.frame.side-nav-link`, `workspace.frame.side-nav-menu`, `workspace.frame.side-nav-menu-item`, `workspace.frame.ui-shell`, `workspace.input.checkbox`, `workspace.input.combo-box`, `workspace.input.date-picker`, `workspace.input.dropdown`, `workspace.input.multi-select`, `workspace.input.number-input`, `workspace.input.radio`, `workspace.input.search`, `workspace.input.select`, `workspace.input.text-area`, `workspace.input.text-input`, `workspace.input.toggle`, `workspace.nav.breadcrumb`, `workspace.nav.clickable-tile`, `workspace.nav.column`, `workspace.nav.expandable-tile`, `workspace.nav.grid`, `workspace.nav.layer`, `workspace.nav.tab`, `workspace.nav.tabs`, `workspace.nav.tag`, `workspace.nav.tile`, `workspace.polish.accordion`, `workspace.polish.context-menu`, `workspace.polish.file-uploader`, `workspace.polish.inline-loading`, `workspace.polish.popover`, `workspace.polish.progress-bar`, `workspace.polish.skeleton-placeholder`, `workspace.polish.skeleton-text`, `workspace.polish.toggletip`, `workspace.polish.tooltip`, `workspace.shell.brand`, `workspace.shell.empty-state`, `workspace.shell.module-cards`, `workspace.shell.settings-action`, `workspace.shell.sidebar-nav`, `workspace.shell.user-menu`, `workspace.shell.workspace-title`
 - onlyInBinding (0)
 - registryNotBound (0)
 - onlyInRuntime (0)
-- bindingNotEmittedByRuntime (46): `workspace.action.button`, `workspace.action.icon-button`, `workspace.action.inline-notification`, `workspace.action.modal`, `workspace.action.overflow-menu`, `workspace.action.overflow-menu-option`, `workspace.action.toast-notification`, `workspace.data.data-table`, `workspace.data.pagination`, `workspace.data.structured-list`, `workspace.data.table-batch-actions`, `workspace.data.table-toolbar`, `workspace.data.table-toolbar-actions`, `workspace.data.table-toolbar-search`, `workspace.input.checkbox`, `workspace.input.combo-box`, `workspace.input.date-picker`, `workspace.input.dropdown`, `workspace.input.multi-select`, `workspace.input.number-input`, `workspace.input.radio`, `workspace.input.search`, `workspace.input.select`, `workspace.input.text-area`, `workspace.input.text-input`, `workspace.input.toggle`, `workspace.nav.breadcrumb`, `workspace.nav.clickable-tile`, `workspace.nav.column`, `workspace.nav.expandable-tile`, `workspace.nav.grid`, `workspace.nav.layer`, `workspace.nav.tab`, `workspace.nav.tabs`, `workspace.nav.tag`, `workspace.nav.tile`, `workspace.polish.accordion`, `workspace.polish.context-menu`, `workspace.polish.file-uploader`, `workspace.polish.inline-loading`, `workspace.polish.popover`, `workspace.polish.progress-bar`, `workspace.polish.skeleton-placeholder`, `workspace.polish.skeleton-text`, `workspace.polish.toggletip`, `workspace.polish.tooltip`
+- bindingNotEmittedByRuntime (47): `workspace.action.button`, `workspace.action.icon-button`, `workspace.action.inline-notification`, `workspace.action.modal`, `workspace.action.overflow-menu`, `workspace.action.overflow-menu-option`, `workspace.action.toast-notification`, `workspace.data.data-table`, `workspace.data.pagination`, `workspace.data.structured-list`, `workspace.data.table-batch-actions`, `workspace.data.table-toolbar`, `workspace.data.table-toolbar-actions`, `workspace.data.table-toolbar-search`, `workspace.input.checkbox`, `workspace.input.combo-box`, `workspace.input.date-picker`, `workspace.input.dropdown`, `workspace.input.multi-select`, `workspace.input.number-input`, `workspace.input.radio`, `workspace.input.search`, `workspace.input.select`, `workspace.input.text-area`, `workspace.input.text-input`, `workspace.input.toggle`, `workspace.nav.breadcrumb`, `workspace.nav.clickable-tile`, `workspace.nav.column`, `workspace.nav.expandable-tile`, `workspace.nav.grid`, `workspace.nav.layer`, `workspace.nav.tab`, `workspace.nav.tabs`, `workspace.nav.tag`, `workspace.nav.tile`, `workspace.polish.accordion`, `workspace.polish.context-menu`, `workspace.polish.file-uploader`, `workspace.polish.inline-loading`, `workspace.polish.popover`, `workspace.polish.progress-bar`, `workspace.polish.skeleton-placeholder`, `workspace.polish.skeleton-text`, `workspace.polish.toggletip`, `workspace.polish.tooltip`, `workspace.shell.empty-state`
 
 ## Failures (0)
 
@@ -117,10 +117,10 @@ OK — no evidence-backed failures.
 | workspace.polish.skeleton-text | polish | - | skeleton-text | main | catalog-only | seed | Y | Y | Y | no-renderer-key | N | OK |
 | workspace.polish.toggletip | polish | - | toggletip | main | catalog-only | seed | Y | Y | Y | no-renderer-key | N | OK |
 | workspace.polish.tooltip | polish | - | tooltip | main | catalog-only | seed | Y | Y | Y | no-renderer-key | N | OK |
-| workspace.shell.brand | shell.brand | shell.brand | header-name | header | visual-shell | registry | Y | Y | Y | visual-mapped | Y | OK |
-| workspace.shell.empty-state | shell.empty-state | shell.empty-state | tile | main | visual-main | registry | Y | Y | Y | visual-mapped | Y | OK |
-| workspace.shell.module-cards | shell.module-cards | shell.module-cards | tile | main | visual-main | registry | Y | Y | Y | visual-mapped | Y | OK |
-| workspace.shell.settings-action | shell.settings-action | shell.settings-action | header-global-action | header | visual-shell | registry | Y | Y | Y | visual-mapped | Y | OK |
-| workspace.shell.sidebar-nav | shell.sidebar-nav | shell.sidebar-nav | side-nav-items | sidebar | visual-nav | registry | Y | Y | Y | visual-mapped | Y | OK |
-| workspace.shell.user-menu | shell.user-menu | shell.user-menu | header-global-action | header | visual-shell | registry | Y | Y | Y | visual-mapped | Y | OK |
-| workspace.shell.workspace-title | shell.workspace-title | shell.workspace-title | header-name | header | visual-shell | registry | Y | Y | Y | visual-mapped | Y | OK |
+| workspace.shell.brand | shell.brand | shell.brand | header-name | header | visual-shell | seed | Y | Y | Y | visual-mapped | Y | OK |
+| workspace.shell.empty-state | shell.empty-state | shell.empty-state | tile | main | visual-main | seed | Y | Y | N | visual-mapped | N | OK |
+| workspace.shell.module-cards | shell.module-cards | shell.module-cards | tile | main | visual-main | seed | Y | Y | Y | visual-mapped | Y | OK |
+| workspace.shell.settings-action | shell.settings-action | shell.settings-action | header-global-action | header | visual-shell | seed | Y | Y | Y | visual-mapped | Y | OK |
+| workspace.shell.sidebar-nav | shell.sidebar-nav | shell.sidebar-nav | side-nav-items | sidebar | visual-nav | seed | Y | Y | Y | visual-mapped | Y | OK |
+| workspace.shell.user-menu | shell.user-menu | shell.user-menu | header-global-action | header | visual-shell | seed | Y | Y | Y | visual-mapped | Y | OK |
+| workspace.shell.workspace-title | shell.workspace-title | shell.workspace-title | header-name | header | visual-shell | seed | Y | Y | Y | visual-mapped | Y | OK |

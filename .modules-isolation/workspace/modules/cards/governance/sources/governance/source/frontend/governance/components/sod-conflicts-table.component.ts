@@ -39,7 +39,7 @@ export interface SodConflictRow {
         [rows]="10"
         [selectionMode]="'checkbox'"
         [(selection)]="selection"
-        (selectionChange)="selectionChange.emit($any(selection))"
+        (selectionChange)="selectionChange.emit(selection)"
         styleClass="p-datatable-striped p-datatable-sm"
         [loading]="loading">
         <ng-template pTemplate="header">

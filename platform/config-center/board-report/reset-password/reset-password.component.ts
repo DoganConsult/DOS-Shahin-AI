@@ -18,7 +18,7 @@ import { GrcRecord } from '@app/core/models/shared.types';
     <div class="reset-page">
       <div class="auth-top-bar">
         <a routerLink="/">{{ i18n.translate('resetPassword.home') }}</a>
-        <select class="auth-lang-dropdown" [value]="i18n.currentLang()" (change)="i18n.switchLanguage($any($event.target).value)">
+        <select class="auth-lang-dropdown" [value]="i18n.currentLang()" (change)="i18n.switchLanguage(($event.target as HTMLSelectElement).value)">
           <option value="en">EN</option>
           <option value="ar">عربي</option>
         </select>

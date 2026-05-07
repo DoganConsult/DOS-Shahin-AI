@@ -31,7 +31,7 @@ import { BootstrapStore } from '@app/core/services/platform/bootstrap.store';
     <div class="change-pw-page">
       <div class="auth-top-bar">
         <a *ngIf="!isForced" routerLink="/">{{ i18n.translate('changePassword.home') || 'Home' }}</a>
-        <select class="auth-lang-dropdown" [value]="i18n.currentLang()" (change)="i18n.switchLanguage($any($event.target).value)">
+        <select class="auth-lang-dropdown" [value]="i18n.currentLang()" (change)="i18n.switchLanguage(($event.target as HTMLSelectElement).value)">
           <option value="en">EN</option>
           <option value="ar">عربي</option>
         </select>

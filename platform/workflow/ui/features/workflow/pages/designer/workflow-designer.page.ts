@@ -131,7 +131,7 @@ export function validateWorkflowDesigner(nodes: WorkflowNodeDto[]): { valid: boo
                 <label class="block text-xs text-[var(--text-1)] mb-1">Title</label>
                 <input type="text" class="w-full rounded-lg border border-[var(--border)] bg-[var(--bg-2)] px-3 py-2 text-sm"
                   [value]="selectedNode()!.title"
-                  (input)="updateSelectedTitle($any($event.target).value)" />
+                  (input)="updateSelectedTitle(($event.target as HTMLInputElement).value)" />
               </div>
               <div>
                 <label class="block text-xs text-[var(--text-1)] mb-1">Type</label>

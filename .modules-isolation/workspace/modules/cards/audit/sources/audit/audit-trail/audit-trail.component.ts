@@ -96,8 +96,8 @@ import { ApiClientService } from "@app/core/services/api-client.service";
             <tr tabindex="0" role="button" (keyup.enter)="selectEntry(e)" (click)="selectEntry(e)" [class.at-selected]="selectedEntry() === e" style="cursor:pointer">
               <td class="ts-cell">{{ e.timestamp | appDate:'medium' }}</td>
               <td>{{ e.user_email || e.user_id || '—' }}</td>
-              <td><p-tag [value]="e.module || '—'" [severity]="$any(moduleSeverity(e.module))" /></td>
-              <td><p-tag [value]="e.action || '—'" [severity]="$any(actionSeverity(e.action))" /></td>
+              <td><p-tag [value]="e.module || '—'" [severity]="moduleSeverity(e.module)" /></td>
+              <td><p-tag [value]="e.action || '—'" [severity]="actionSeverity(e.action)" /></td>
               <td>{{ e.entity_type || '—' }}</td>
               <td class="id-cell"><code>{{ e.entity_id || '—' }}</code></td>
               <td>

@@ -5,12 +5,12 @@
     subtitle="مركز التقارير"
     [backLink]="{ routerLink: '/dashboard', label: '← Dashboard' }">
     <!-- Language -->
-    <select [value]="lang()" (change)="setLang($any($event.target).value)"
+    <select [value]="lang()" (change)="setLang(($event.target as HTMLSelectElement).value)"
             class="rounded-xl bg-[var(--bg-1)] border border-[var(--border)] text-sm px-3 py-1.5 text-[var(--text-0)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)]">
       <option value="en">EN</option>
       <option value="ar">عربي</option>
     </select>
-    <select (change)="setCategory($any($event.target).value)"
+    <select (change)="setCategory(($event.target as HTMLSelectElement).value)"
             class="rounded-xl bg-[var(--bg-1)] border border-[var(--border)] text-sm px-3 py-1.5 text-[var(--text-0)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)]">
       <option value="all">All Categories</option>
       <option value="executive">Executive</option>
@@ -22,7 +22,7 @@
     </select>
     <input type="text"
            [value]="search()"
-           (input)="setSearch($any($event.target).value)"
+           (input)="setSearch(($event.target as HTMLInputElement).value)"
            placeholder="Search reports..." aria-label="Search reports..."
            class="w-48 rounded-xl bg-[var(--bg-1)] border border-[var(--border)] text-sm px-3 py-1.5 text-[var(--text-0)] placeholder:text-[var(--text-2)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)]" />
   </app-app-header>

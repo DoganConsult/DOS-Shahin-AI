@@ -71,7 +71,7 @@ import { ApiClientService } from "@app/core/services/api-client.service";
           <tr>
             <td><strong>{{ d.name ?? d.title ?? d.dashboard_name ?? d.code ?? '-' }}</strong></td>
             <td>
-              <p-tag [value]="d.dashboard_type ?? d.type ?? 'standard'" [severity]="$any(getTypeSeverity(d.dashboard_type ?? d.type))" />
+              <p-tag [value]="d.dashboard_type ?? d.type ?? 'standard'" [severity]="getTypeSeverity(d.dashboard_type ?? d.type)" />
             </td>
             <td>
               <app-status-badge [status]="d.visibility ?? 'private'" />

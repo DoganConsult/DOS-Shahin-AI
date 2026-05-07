@@ -52,11 +52,11 @@
           <div class="preview-card-data" *ngIf="sec.data">
             <!-- List type -->
             <div *ngIf="sec.display_type === 'list'" class="preview-list">
-              <span *ngFor="let item of $any(sec.data)" class="preview-tag">{{ item.name || item.code || item }}</span>
+              <span *ngFor="let item of (sec.data as GrcRecord[])" class="preview-tag">{{ item.name || item.code || item }}</span>
             </div>
             <!-- Count grid type -->
             <div *ngIf="sec.display_type === 'count_grid'" class="preview-counts">
-              <div *ngFor="let item of $any(sec.data)" class="preview-count-item">
+              <div *ngFor="let item of (sec.data as GrcRecord[])" class="preview-count-item">
                 <span class="preview-count-val" [appCountUp]="item.control_count || item.count || 0">0</span>
                 <span class="preview-count-label">{{ item.framework_code || item.label || '' }}</span>
               </div>
@@ -66,7 +66,7 @@
               <ng-container *ngIf="isObject(sec.data)">
                 <div *ngFor="let key of objectKeys(sec.data)" class="preview-kv-row">
                   <span class="preview-kv-key">{{ key }}</span>
-                  <span class="preview-kv-val">{{ formatValue($any(sec.data)[key]) }}</span>
+                  <span class="preview-kv-val">{{ formatValue((sec.data as GrcRecord)[key]) }}</span>
                 </div>
               </ng-container>
             </div>

@@ -57,7 +57,7 @@
             <select
               class="sidebar-select"
               [value]="categoryFilter()"
-              (change)="setCategory($any($event.target).value)"
+              (change)="setCategory(($event.target as HTMLSelectElement).value)"
               [attr.aria-label]="i18n.translate('reportHub.filterByCategory')">
               <option value="">{{ i18n.translate('reportHub.allCategories') || 'All Categories' }}</option>
               @for (cat of categories(); track cat) {
@@ -71,7 +71,7 @@
               type="text"
               class="sidebar-input"
               [value]="searchFilter()"
-              (input)="setSearch($any($event.target).value)"
+              (input)="setSearch(($event.target as HTMLInputElement).value)"
               [placeholder]="i18n.translate('reportHub.searchFrameworks') || 'Search frameworks'"
               [attr.aria-label]="i18n.translate('reportHub.search')"
             />

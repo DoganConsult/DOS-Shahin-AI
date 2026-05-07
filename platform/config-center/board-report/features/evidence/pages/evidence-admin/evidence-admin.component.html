@@ -32,7 +32,7 @@
   <!-- Content -->
   @if (hasPermission() && !loading()) {
     <div class="page-body">
-      <p-tabView [activeIndex]="activeTabIndex()" (activeIndexChange)="onTabChange($any($event))">
+      <p-tabView [activeIndex]="activeTabIndex()" (activeIndexChange)="onTabChange($event)">
 
         <!-- Tab 1: Evidence Types -->
         <p-tabPanel [header]="isAr() ? 'أنواع الأدلة' : 'Evidence Types'">
@@ -317,14 +317,14 @@
     <div class="dialog-form">
       <div class="form-field">
         <grc-form-field [label]="isAr() ? 'الرمز' : 'Code'" [required]="true">
-          <input pInputText [value]="addForm().code" (input)="updateAddForm('code', $any($event.target).value)" [placeholder]="isAr() ? 'رمز فريد' : 'Unique code'" />
+          <input pInputText [value]="addForm().code" (input)="updateAddForm('code', ($event.target as HTMLInputElement).value)" [placeholder]="isAr() ? 'رمز فريد' : 'Unique code'" />
         </grc-form-field>
       </div>
 
       @if (addDialogType() === 'quality-rules') {
         <div class="form-field">
           <grc-form-field [label]="isAr() ? 'الاسم' : 'Name'" [required]="true">
-            <input pInputText [value]="addForm().labelEn" (input)="updateAddForm('labelEn', $any($event.target).value)" [placeholder]="isAr() ? 'اسم القاعدة' : 'Rule name'" />
+            <input pInputText [value]="addForm().labelEn" (input)="updateAddForm('labelEn', ($event.target as HTMLInputElement).value)" [placeholder]="isAr() ? 'اسم القاعدة' : 'Rule name'" />
           </grc-form-field>
         </div>
         <div class="form-field">
@@ -334,18 +334,18 @@
         </div>
         <div class="form-field">
           <grc-form-field [label]="isAr() ? 'الوزن' : 'Weight'">
-            <input pInputText [value]="addForm().weight" (input)="updateAddForm('weight', +$any($event.target).value)" type="number" min="0" max="10" step="0.1" />
+            <input pInputText [value]="addForm().weight" (input)="updateAddForm('weight', +($event.target as HTMLInputElement).value)" type="number" min="0" max="10" step="0.1" />
           </grc-form-field>
         </div>
       } @else {
         <div class="form-field">
           <grc-form-field [label]="isAr() ? 'الاسم (EN)' : 'Label (EN)'" [required]="true">
-            <input pInputText [value]="addForm().labelEn" (input)="updateAddForm('labelEn', $any($event.target).value)" [placeholder]="isAr() ? 'الاسم بالإنجليزية' : 'English label'" />
+            <input pInputText [value]="addForm().labelEn" (input)="updateAddForm('labelEn', ($event.target as HTMLInputElement).value)" [placeholder]="isAr() ? 'الاسم بالإنجليزية' : 'English label'" />
           </grc-form-field>
         </div>
         <div class="form-field">
           <grc-form-field [label]="isAr() ? 'الاسم (AR)' : 'Label (AR)'">
-            <input pInputText [value]="addForm().labelAr" (input)="updateAddForm('labelAr', $any($event.target).value)" [placeholder]="isAr() ? 'الاسم بالعربية' : 'Arabic label'" />
+            <input pInputText [value]="addForm().labelAr" (input)="updateAddForm('labelAr', ($event.target as HTMLInputElement).value)" [placeholder]="isAr() ? 'الاسم بالعربية' : 'Arabic label'" />
           </grc-form-field>
         </div>
         @if (addDialogType() === 'evidence-types') {
@@ -356,14 +356,14 @@
           </div>
           <div class="form-field">
             <grc-form-field [label]="isAr() ? 'مدة الاحتفاظ (أيام)' : 'Default Retention (days)'">
-              <input pInputText [value]="addForm().defaultRetention" (input)="updateAddForm('defaultRetention', +$any($event.target).value)" type="number" min="1" />
+              <input pInputText [value]="addForm().defaultRetention" (input)="updateAddForm('defaultRetention', +($event.target as HTMLInputElement).value)" type="number" min="1" />
             </grc-form-field>
           </div>
         }
         @if (addDialogType() === 'confidentiality-levels') {
           <div class="form-field">
             <grc-form-field [label]="isAr() ? 'الترتيب' : 'Sort Order'">
-              <input pInputText [value]="addForm().sortOrder" (input)="updateAddForm('sortOrder', +$any($event.target).value)" type="number" min="0" />
+              <input pInputText [value]="addForm().sortOrder" (input)="updateAddForm('sortOrder', +($event.target as HTMLInputElement).value)" type="number" min="0" />
             </grc-form-field>
           </div>
         }

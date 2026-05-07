@@ -55,7 +55,7 @@ interface RegisterRow {
       </dos-carbon-search>
       <div class="fr-toolbar-actions">
         <div class="cds--select cds--select--sm cds--select--inline">
-          <select class="cds--select-input" (change)="onStatusFilter($any($event.target).value)">
+          <select class="cds--select-input" (change)="onStatusFilter(($event.target as HTMLSelectElement).value)">
             <option value="">{{ i18n.tr('foundation.register.allStatuses', 'All statuses') }}</option>
             <option value="active">{{ i18n.tr('foundation.register.active', 'Active') }}</option>
             <option value="inactive">{{ i18n.tr('foundation.register.inactive', 'Inactive') }}</option>

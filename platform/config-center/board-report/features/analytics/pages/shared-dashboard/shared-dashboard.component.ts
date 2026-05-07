@@ -63,7 +63,7 @@ import { ApiClientService } from "@app/core/services/api-client.service";
           <div class="card-body">
             <h4 class="card-name">{{ d.name ?? d.title ?? d.dashboard_name ?? d.code ?? '-' }}</h4>
             <p-tag [value]="d.dashboard_type ?? d.type ?? 'standard'"
-                   [severity]="$any(getTypeSeverity(d.dashboard_type ?? d.type))" class="card-tag" />
+                   [severity]="getTypeSeverity(d.dashboard_type ?? d.type)" class="card-tag" />
             <p class="card-desc">{{ d.description ?? d.category ?? '-' }}</p>
             <div class="card-meta">
               <span *ngIf="d.role ?? d.bound_role">

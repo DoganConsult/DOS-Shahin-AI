@@ -13,7 +13,7 @@
     [dir]="dir()" />
 
   <div class="page-body">
-    <p-tabView [activeIndex]="activeTabIndex()" (activeIndexChange)="onTabChange($any($event))">
+    <p-tabView [activeIndex]="activeTabIndex()" (activeIndexChange)="onTabChange($event)">
 
       <!-- Tab 1: Aging -->
       <p-tabPanel [header]="isAr() ? 'تقادم الأدلة' : 'Aging'">

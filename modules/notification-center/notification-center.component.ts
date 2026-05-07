@@ -89,7 +89,7 @@ import { GrcOperationsService } from '@app/api';
                 <div class="nc-title">{{ n.title }}</div>
                 <div class="nc-message">{{ n.message }}</div>
                 <div class="nc-meta">
-                  <p-tag [value]="n.type || 'info'" [severity]="$any(typeSeverity(n.type))" />
+                  <p-tag [value]="n.type || 'info'" [severity]="typeSeverity(n.type)" />
                   <span class="nc-time">{{ n.created_at | appDate:'short' }}</span>
                   @if (n.module) {
                     <p-tag [value]="n.module" severity="secondary" />

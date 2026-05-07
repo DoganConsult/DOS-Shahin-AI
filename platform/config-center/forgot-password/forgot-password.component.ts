@@ -17,7 +17,7 @@ import { I18nService } from '@app/infrastructure/i18n/i18n.service';
     <div class="forgot-page">
       <div class="auth-top-bar">
         <a routerLink="/">{{ i18n.translate('forgotPassword.home') }}</a>
-        <select class="auth-lang-dropdown" [value]="i18n.currentLang()" (change)="i18n.switchLanguage($any($event.target).value)">
+        <select class="auth-lang-dropdown" [value]="i18n.currentLang()" (change)="i18n.switchLanguage(($event.target as HTMLSelectElement).value)">
           <option value="en">EN</option>
           <option value="ar">عربي</option>
         </select>

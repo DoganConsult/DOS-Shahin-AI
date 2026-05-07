@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-05-06T14:34:00.912Z",
+  "generatedAt": "2026-05-07T02:49:36.044Z",
   "tenant": {
     "tenantId": "14f273cf260a4736",
     "status": "active",
@@ -15,7 +15,7 @@
   "product": {
     "productCode": "foundation",
     "active": true,
-    "source": "auto-first-active"
+    "source": "cli"
   },
   "runtime": {
     "baseUrl": "http://localhost:4015",
@@ -23,14 +23,14 @@
     "httpStatus": 200,
     "ok": true,
     "error": null,
-    "surfaceCount": 21,
+    "surfaceCount": 20,
     "body": {
       "tenantId": "14f273cf260a4736",
       "userId": "70dd0034-bb20-4f9b-a9df-a308cd902efa",
       "productCode": "shahin-ai",
-      "version": 31,
+      "version": 29,
       "shell": {
-        "version": 31,
+        "version": 29,
         "surfaces": [
           {
             "enabled": true,
@@ -414,7 +414,152 @@
             "position": 110,
             "props": {
               "zone": "sidebar",
-              "items": [],
+              "items": [
+                {
+                  "id": "foundation.committees",
+                  "label": "Committees",
+                  "route": "/foundation/committees",
+                  "icon": "gavel",
+                  "moduleCode": "foundation",
+                  "badge": null
+                },
+                {
+                  "id": "foundation.delegations",
+                  "label": "Delegations",
+                  "route": "/foundation/delegations",
+                  "icon": "share",
+                  "moduleCode": "foundation",
+                  "badge": null
+                },
+                {
+                  "id": "foundation.ownership-mapping",
+                  "label": "Ownership mapping",
+                  "route": "/foundation/ownership-mapping",
+                  "icon": "link",
+                  "moduleCode": "foundation",
+                  "badge": null
+                },
+                {
+                  "id": "foundation.policies",
+                  "label": "Policies",
+                  "route": "/foundation/policies",
+                  "icon": "file-shield",
+                  "moduleCode": "foundation",
+                  "badge": null
+                },
+                {
+                  "id": "foundation.data-processing",
+                  "label": "Data processing",
+                  "route": "/foundation/data-processing",
+                  "icon": "database",
+                  "moduleCode": "foundation",
+                  "badge": null
+                },
+                {
+                  "id": "foundation.reference-data",
+                  "label": "Reference data",
+                  "route": "/foundation/reference-data",
+                  "icon": "list",
+                  "moduleCode": "foundation",
+                  "badge": null
+                },
+                {
+                  "id": "foundation.audit",
+                  "label": "Audit",
+                  "route": "/foundation/audit",
+                  "icon": "history",
+                  "moduleCode": "foundation",
+                  "badge": null
+                },
+                {
+                  "id": "foundation.settings",
+                  "label": "Settings",
+                  "route": "/foundation/settings",
+                  "icon": "settings",
+                  "moduleCode": "foundation",
+                  "badge": null
+                },
+                {
+                  "id": "foundation.users",
+                  "label": "Users",
+                  "route": "/foundation/users",
+                  "icon": "user",
+                  "moduleCode": "foundation",
+                  "badge": null
+                },
+                {
+                  "id": "foundation.teams",
+                  "label": "Teams",
+                  "route": "/foundation/teams",
+                  "icon": "users-group",
+                  "moduleCode": "foundation",
+                  "badge": null
+                },
+                {
+                  "id": "foundation.roles",
+                  "label": "Roles",
+                  "route": "/foundation/roles",
+                  "icon": "key",
+                  "moduleCode": "foundation",
+                  "badge": null
+                },
+                {
+                  "id": "foundation.user-lifecycle",
+                  "label": "User lifecycle",
+                  "route": "/foundation/user-lifecycle",
+                  "icon": "arrow-cycle",
+                  "moduleCode": "foundation",
+                  "badge": null
+                },
+                {
+                  "id": "foundation.overview",
+                  "label": "Overview",
+                  "route": "/foundation/overview",
+                  "icon": "layout-dashboard",
+                  "moduleCode": "foundation",
+                  "badge": null
+                },
+                {
+                  "id": "foundation.organization",
+                  "label": "Organization",
+                  "route": "/foundation/organization",
+                  "icon": "sitemap",
+                  "moduleCode": "foundation",
+                  "badge": null
+                },
+                {
+                  "id": "foundation.business-units",
+                  "label": "Business units",
+                  "route": "/foundation/business-units",
+                  "icon": "building",
+                  "moduleCode": "foundation",
+                  "badge": null
+                },
+                {
+                  "id": "foundation.departments",
+                  "label": "Departments",
+                  "route": "/foundation/departments",
+                  "icon": "users",
+                  "moduleCode": "foundation",
+                  "badge": null
+                },
+                {
+                  "id": "foundation.positions",
+                  "label": "Positions",
+                  "route": "/foundation/positions",
+                  "icon": "id-card",
+                  "moduleCode": "foundation",
+                  "badge": null
+                },
+                {
+                  "id": "foundation.locations",
+                  "label": "Locations",
+                  "route": "/foundation/locations",
+                  "icon": "map-pin",
+                  "moduleCode": "foundation",
+                  "badge": null
+                }
+              ],
               "ariaLabel": "Primary navigation",
               "emptyMessage": "No navigation entries available.",
               "poweredByLabel": "Powered by Dogan-AI OS"
@@ -430,27 +575,17 @@
           },
           {
             "enabled": true,
-            "position": 120,
-            "props": {
-              "zone": "main",
-              "title": "Workspace ready",
-              "description": "Module surfaces will appear here once activated."
-            },
-            "version": 2,
-            "zone": "main",
-            "surfaceId": "workspace.main.shell.empty-state.b14626",
-            "slotKey": "main#120#b14626",
-            "componentKey": "workspace.shell.empty-state",
-            "componentType": "shell.empty-state",
-            "rendererKey": "shell.empty-state",
-            "carbonKey": "tile"
-          },
-          {
-            "enabled": true,
             "position": 121,
             "props": {
               "zone": "main",
-              "items": [],
+              "items": [
+                {
+                  "id": "foundation",
+                  "title": "Foundation — Organization Hierarchy",
+                  "route": "/foundation/committees",
+                  "productCode": "shahin-ai"
+                }
+              ],
               "ariaLabel": "Modules"
             },
             "version": 1,
@@ -775,27 +910,17 @@
             },
             {
               "enabled": true,
-              "position": 120,
-              "props": {
-                "zone": "main",
-                "title": "Workspace ready",
-                "description": "Module surfaces will appear here once activated."
-              },
-              "version": 2,
-              "zone": "main",
-              "surfaceId": "workspace.main.shell.empty-state.b14626",
-              "slotKey": "main#120#b14626",
-              "componentKey": "workspace.shell.empty-state",
-              "componentType": "shell.empty-state",
-              "rendererKey": "shell.empty-state",
-              "carbonKey": "tile"
-            },
-            {
-              "enabled": true,
               "position": 121,
               "props": {
                 "zone": "main",
-                "items": [],
+                "items": [
+                  {
+                    "id": "foundation",
+                    "title": "Foundation — Organization Hierarchy",
+                    "route": "/foundation/committees",
+                    "productCode": "shahin-ai"
+                  }
+                ],
                 "ariaLabel": "Modules"
               },
               "version": 1,
@@ -885,7 +1010,152 @@
               "position": 110,
               "props": {
                 "zone": "sidebar",
-                "items": [],
+                "items": [
+                  {
+                    "id": "foundation.committees",
+                    "label": "Committees",
+                    "route": "/foundation/committees",
+                    "icon": "gavel",
+                    "moduleCode": "foundation",
+                    "badge": null
+                  },
+                  {
+                    "id": "foundation.delegations",
+                    "label": "Delegations",
+                    "route": "/foundation/delegations",
+                    "icon": "share",
+                    "moduleCode": "foundation",
+                    "badge": null
+                  },
+                  {
+                    "id": "foundation.ownership-mapping",
+                    "label": "Ownership mapping",
+                    "route": "/foundation/ownership-mapping",
+                    "icon": "link",
+                    "moduleCode": "foundation",
+                    "badge": null
+                  },
+                  {
+                    "id": "foundation.policies",
+                    "label": "Policies",
+                    "route": "/foundation/policies",
+                    "icon": "file-shield",
+                    "moduleCode": "foundation",
+                    "badge": null
+                  },
+                  {
+                    "id": "foundation.data-processing",
+                    "label": "Data processing",
+                    "route": "/foundation/data-processing",
+                    "icon": "database",
+                    "moduleCode": "foundation",
+                    "badge": null
+                  },
+                  {
+                    "id": "foundation.reference-data",
+                    "label": "Reference data",
+                    "route": "/foundation/reference-data",
+                    "icon": "list",
+                    "moduleCode": "foundation",
+                    "badge": null
+                  },
+                  {
+                    "id": "foundation.audit",
+                    "label": "Audit",
+                    "route": "/foundation/audit",
+                    "icon": "history",
+                    "moduleCode": "foundation",
+                    "badge": null
+                  },
+                  {
+                    "id": "foundation.settings",
+                    "label": "Settings",
+                    "route": "/foundation/settings",
+                    "icon": "settings",
+                    "moduleCode": "foundation",
+                    "badge": null
+                  },
+                  {
+                    "id": "foundation.users",
+                    "label": "Users",
+                    "route": "/foundation/users",
+                    "icon": "user",
+                    "moduleCode": "foundation",
+                    "badge": null
+                  },
+                  {
+                    "id": "foundation.teams",
+                    "label": "Teams",
+                    "route": "/foundation/teams",
+                    "icon": "users-group",
+                    "moduleCode": "foundation",
+                    "badge": null
+                  },
+                  {
+                    "id": "foundation.roles",
+                    "label": "Roles",
+                    "route": "/foundation/roles",
+                    "icon": "key",
+                    "moduleCode": "foundation",
+                    "badge": null
+                  },
+                  {
+                    "id": "foundation.user-lifecycle",
+                    "label": "User lifecycle",
+                    "route": "/foundation/user-lifecycle",
+                    "icon": "arrow-cycle",
+                    "moduleCode": "foundation",
+                    "badge": null
+                  },
+                  {
+                    "id": "foundation.overview",
+                    "label": "Overview",
+                    "route": "/foundation/overview",
+                    "icon": "layout-dashboard",
+                    "moduleCode": "foundation",
+                    "badge": null
+                  },
+                  {
+                    "id": "foundation.organization",
+                    "label": "Organization",
+                    "route": "/foundation/organization",
+                    "icon": "sitemap",
+                    "moduleCode": "foundation",
+                    "badge": null
+                  },
+                  {
+                    "id": "foundation.business-units",
+                    "label": "Business units",
+                    "route": "/foundation/business-units",
+                    "icon": "building",
+                    "moduleCode": "foundation",
+                    "badge": null
+                  },
+                  {
+                    "id": "foundation.departments",
+                    "label": "Departments",
+                    "route": "/foundation/departments",
+                    "icon": "users",
+                    "moduleCode": "foundation",
+                    "badge": null
+                  },
+                  {
+                    "id": "foundation.positions",
+                    "label": "Positions",
+                    "route": "/foundation/positions",
+                    "icon": "id-card",
+                    "moduleCode": "foundation",
+                    "badge": null
+                  },
+                  {
+                    "id": "foundation.locations",
+                    "label": "Locations",
+                    "route": "/foundation/locations",
+                    "icon": "map-pin",
+                    "moduleCode": "foundation",
+                    "badge": null
+                  }
+                ],
                 "ariaLabel": "Primary navigation",
                 "emptyMessage": "No navigation entries available.",
                 "poweredByLabel": "Powered by Dogan-AI OS"
@@ -986,7 +1256,367 @@
               "version": 1
             }
           ],
-          "items": []
+          "items": [
+            {
+              "moduleCode": "foundation",
+              "itemId": "foundation.committees",
+              "groupId": "foundation.group.governance",
+              "sortOrder": 10,
+              "action": {
+                "kind": "navigate",
+                "path": "/foundation/committees"
+              },
+              "icon": "gavel",
+              "permission": "foundation.read",
+              "label": {
+                "i18nKey": "modules.foundation.nav.committees",
+                "fallback": "Committees",
+                "label": "Committees"
+              },
+              "badge": null,
+              "enabled": true,
+              "version": 6
+            },
+            {
+              "moduleCode": "foundation",
+              "itemId": "foundation.delegations",
+              "groupId": "foundation.group.governance",
+              "sortOrder": 20,
+              "action": {
+                "kind": "navigate",
+                "path": "/foundation/delegations"
+              },
+              "icon": "share",
+              "permission": "foundation.read",
+              "label": {
+                "i18nKey": "modules.foundation.nav.delegations",
+                "fallback": "Delegations",
+                "label": "Delegations"
+              },
+              "badge": null,
+              "enabled": true,
+              "version": 6
+            },
+            {
+              "moduleCode": "foundation",
+              "itemId": "foundation.ownership-mapping",
+              "groupId": "foundation.group.governance",
+              "sortOrder": 30,
+              "action": {
+                "kind": "navigate",
+                "path": "/foundation/ownership-mapping"
+              },
+              "icon": "link",
+              "permission": "foundation.read",
+              "label": {
+                "i18nKey": "modules.foundation.nav.ownershipMapping",
+                "fallback": "Ownership mapping",
+                "label": "Ownership mapping"
+              },
+              "badge": null,
+              "enabled": true,
+              "version": 4
+            },
+            {
+              "moduleCode": "foundation",
+              "itemId": "foundation.policies",
+              "groupId": "foundation.group.governance",
+              "sortOrder": 50,
+              "action": {
+                "kind": "navigate",
+                "path": "/foundation/policies"
+              },
+              "icon": "file-shield",
+              "permission": "foundation.read",
+              "label": {
+                "i18nKey": "modules.foundation.nav.policies",
+                "fallback": "Policies",
+                "label": "Policies"
+              },
+              "badge": null,
+              "enabled": true,
+              "version": 6
+            },
+            {
+              "moduleCode": "foundation",
+              "itemId": "foundation.data-processing",
+              "groupId": "foundation.group.governance",
+              "sortOrder": 60,
+              "action": {
+                "kind": "navigate",
+                "path": "/foundation/data-processing"
+              },
+              "icon": "database",
+              "permission": "foundation.read",
+              "label": {
+                "i18nKey": "modules.foundation.nav.dataProcessing",
+                "fallback": "Data processing",
+                "label": "Data processing"
+              },
+              "badge": null,
+              "enabled": true,
+              "version": 4
+            },
+            {
+              "moduleCode": "foundation",
+              "itemId": "foundation.reference-data",
+              "groupId": "foundation.group.governance",
+              "sortOrder": 70,
+              "action": {
+                "kind": "navigate",
+                "path": "/foundation/reference-data"
+              },
+              "icon": "list",
+              "permission": "foundation.read",
+              "label": {
+                "i18nKey": "modules.foundation.nav.referenceData",
+                "fallback": "Reference data",
+                "label": "Reference data"
+              },
+              "badge": null,
+              "enabled": true,
+              "version": 6
+            },
+            {
+              "moduleCode": "foundation",
+              "itemId": "foundation.audit",
+              "groupId": "foundation.group.governance",
+              "sortOrder": 80,
+              "action": {
+                "kind": "navigate",
+                "path": "/foundation/audit"
+              },
+              "icon": "history",
+              "permission": "audit_trail.read",
+              "label": {
+                "i18nKey": "modules.foundation.nav.audit",
+                "fallback": "Audit",
+                "label": "Audit"
+              },
+              "badge": null,
+              "enabled": true,
+              "version": 6
+            },
+            {
+              "moduleCode": "foundation",
+              "itemId": "foundation.settings",
+              "groupId": "foundation.group.governance",
+              "sortOrder": 90,
+              "action": {
+                "kind": "navigate",
+                "path": "/foundation/settings"
+              },
+              "icon": "settings",
+              "permission": "foundation.admin",
+              "label": {
+                "i18nKey": "modules.foundation.nav.settings",
+                "fallback": "Settings",
+                "label": "Settings"
+              },
+              "badge": null,
+              "enabled": true,
+              "version": 4
+            },
+            {
+              "moduleCode": "foundation",
+              "itemId": "foundation.users",
+              "groupId": "foundation.group.identity",
+              "sortOrder": 10,
+              "action": {
+                "kind": "navigate",
+                "path": "/foundation/users"
+              },
+              "icon": "user",
+              "permission": "foundation.user.read",
+              "label": {
+                "i18nKey": "modules.foundation.nav.users",
+                "fallback": "Users",
+                "label": "Users"
+              },
+              "badge": null,
+              "enabled": true,
+              "version": 6
+            },
+            {
+              "moduleCode": "foundation",
+              "itemId": "foundation.teams",
+              "groupId": "foundation.group.identity",
+              "sortOrder": 20,
+              "action": {
+                "kind": "navigate",
+                "path": "/foundation/teams"
+              },
+              "icon": "users-group",
+              "permission": "foundation.read",
+              "label": {
+                "i18nKey": "modules.foundation.nav.teams",
+                "fallback": "Teams",
+                "label": "Teams"
+              },
+              "badge": null,
+              "enabled": true,
+              "version": 6
+            },
+            {
+              "moduleCode": "foundation",
+              "itemId": "foundation.roles",
+              "groupId": "foundation.group.identity",
+              "sortOrder": 30,
+              "action": {
+                "kind": "navigate",
+                "path": "/foundation/roles"
+              },
+              "icon": "key",
+              "permission": "foundation.admin",
+              "label": {
+                "i18nKey": "modules.foundation.nav.roles",
+                "fallback": "Roles",
+                "label": "Roles"
+              },
+              "badge": null,
+              "enabled": true,
+              "version": 6
+            },
+            {
+              "moduleCode": "foundation",
+              "itemId": "foundation.user-lifecycle",
+              "groupId": "foundation.group.main",
+              "sortOrder": 190,
+              "action": {
+                "kind": "navigate",
+                "path": "/foundation/user-lifecycle"
+              },
+              "icon": "arrow-cycle",
+              "permission": "foundation.user.write",
+              "label": {
+                "fallback": "User lifecycle",
+                "label": "User lifecycle"
+              },
+              "badge": null,
+              "enabled": true,
+              "version": 4
+            },
+            {
+              "moduleCode": "foundation",
+              "itemId": "foundation.overview",
+              "groupId": "foundation.group.organization",
+              "sortOrder": 10,
+              "action": {
+                "kind": "navigate",
+                "path": "/foundation/overview"
+              },
+              "icon": "layout-dashboard",
+              "permission": "foundation.read",
+              "label": {
+                "i18nKey": "modules.foundation.nav.overview",
+                "fallback": "Overview",
+                "label": "Overview"
+              },
+              "badge": null,
+              "enabled": true,
+              "version": 6
+            },
+            {
+              "moduleCode": "foundation",
+              "itemId": "foundation.organization",
+              "groupId": "foundation.group.organization",
+              "sortOrder": 20,
+              "action": {
+                "kind": "navigate",
+                "path": "/foundation/organization"
+              },
+              "icon": "sitemap",
+              "permission": "foundation.read",
+              "label": {
+                "i18nKey": "modules.foundation.nav.organization",
+                "fallback": "Organization",
+                "label": "Organization"
+              },
+              "badge": null,
+              "enabled": true,
+              "version": 6
+            },
+            {
+              "moduleCode": "foundation",
+              "itemId": "foundation.business-units",
+              "groupId": "foundation.group.organization",
+              "sortOrder": 30,
+              "action": {
+                "kind": "navigate",
+                "path": "/foundation/business-units"
+              },
+              "icon": "building",
+              "permission": "foundation.read",
+              "label": {
+                "i18nKey": "modules.foundation.nav.businessUnits",
+                "fallback": "Business units",
+                "label": "Business units"
+              },
+              "badge": null,
+              "enabled": true,
+              "version": 6
+            },
+            {
+              "moduleCode": "foundation",
+              "itemId": "foundation.departments",
+              "groupId": "foundation.group.organization",
+              "sortOrder": 40,
+              "action": {
+                "kind": "navigate",
+                "path": "/foundation/departments"
+              },
+              "icon": "users",
+              "permission": "foundation.read",
+              "label": {
+                "i18nKey": "modules.foundation.nav.departments",
+                "fallback": "Departments",
+                "label": "Departments"
+              },
+              "badge": null,
+              "enabled": true,
+              "version": 6
+            },
+            {
+              "moduleCode": "foundation",
+              "itemId": "foundation.positions",
+              "groupId": "foundation.group.organization",
+              "sortOrder": 50,
+              "action": {
+                "kind": "navigate",
+                "path": "/foundation/positions"
+              },
+              "icon": "id-card",
+              "permission": "foundation.read",
+              "label": {
+                "i18nKey": "modules.foundation.nav.positions",
+                "fallback": "Positions",
+                "label": "Positions"
+              },
+              "badge": null,
+              "enabled": true,
+              "version": 6
+            },
+            {
+              "moduleCode": "foundation",
+              "itemId": "foundation.locations",
+              "groupId": "foundation.group.organization",
+              "sortOrder": 60,
+              "action": {
+                "kind": "navigate",
+                "path": "/foundation/locations"
+              },
+              "icon": "map-pin",
+              "permission": "foundation.read",
+              "label": {
+                "i18nKey": "modules.foundation.nav.locations",
+                "fallback": "Locations",
+                "label": "Locations"
+              },
+              "badge": null,
+              "enabled": true,
+              "version": 6
+            }
+          ]
         },
         "chrome": {
           "accountMenu": [
@@ -1060,7 +1690,33 @@
             }
           ],
           "brand": "Shahin AI",
+          "footer.copyright": {
+            "i18nKey": "chrome.footer.copyright",
+            "fallback": "© Dogan Consulting"
+          },
+          "header.brand": {
+            "i18nKey": "chrome.header.brand",
+            "fallback": "Shahin AI"
+          },
+          "locale.default": {
+            "rtl": [
+              "ar"
+            ],
+            "primary": "en",
+            "supported": [
+              "en",
+              "ar"
+            ]
+          },
           "logoHref": "/",
+          "product.name": {
+            "i18nKey": "chrome.product.name",
+            "fallback": "Shahin AI"
+          },
+          "product.tagline": {
+            "i18nKey": "chrome.product.tagline",
+            "fallback": "Enterprise GRC, AI-native"
+          },
           "shell.account.language": "Language",
           "shell.account.profile": "Profile",
           "shell.account.settings": "Settings",
@@ -1084,10 +1740,38 @@
             "ai-insights": "AI Insights"
           },
           "shell.desktopSidebar.ariaLabel": "Primary",
+          "shell.dos-carbon-search.search.ariaLabel": {
+            "ar": "بحث",
+            "en": "Search"
+          },
+          "shell.foundation-module-audit.search.ariaLabel": {
+            "ar": "البحث عن الأحداث",
+            "en": "Search events"
+          },
+          "shell.foundation-register.search.ariaLabel": {
+            "ar": "البحث عن المستخدمين",
+            "en": "Search users"
+          },
           "shell.header.commandSearch.label": "Search (Ctrl+K)",
           "shell.header.inbox.label": "Inbox",
           "shell.inbox.unreadLabel": "Unread",
+          "shell.module-audit-trail.search.ariaLabel": {
+            "ar": "البحث في سجل التدقيق",
+            "en": "Search audit trail"
+          },
           "shell.module-cards.aria-label": "Modules",
+          "shell.module-heatmap.search.ariaLabel": {
+            "ar": "البحث في عناصر خريطة الحرارة",
+            "en": "Search heatmap items"
+          },
+          "shell.module-page-chrome.search.ariaLabel": {
+            "ar": "البحث في سجل التدقيق",
+            "en": "Search audit log"
+          },
+          "shell.module-records.search.ariaLabel": {
+            "ar": "البحث في السجلات",
+            "en": "Search records"
+          },
           "shell.quickCreate.fabLabel": "Create",
           "shell.quickCreate.menuLabel": "Create options",
           "shell.settings.aria-label": "Settings",
@@ -1098,14 +1782,53 @@
           "shell.toast.dismissLabel": "dismiss",
           "shell.user-menu.aria-label": "Account menu",
           "shell.user-menu.label": "Account",
-          "workspaceTitle": "Workspace"
+          "theme.default": {
+            "mode": "dark",
+            "name": "carbon-g100"
+          },
+          "workspaceTitle": "Workspace",
+          "tplStrings": {
+            "shell.tpl.access_denied.title": "Access denied",
+            "shell.tpl.access_denied.description": "You do not have the required permission to open this page.",
+            "shell.tpl.required_permission_prefix": "Required permission:",
+            "shell.tpl.loading": "Loading…",
+            "shell.tpl.empty.title": "",
+            "shell.tpl.empty.description": "",
+            "shell.tpl.skip_to_main": "Skip to main content",
+            "shell.tpl.aria.header": "Workspace header",
+            "shell.tpl.aria.sidebar": "Workspace sidebar",
+            "shell.tpl.aria.main": "Main content",
+            "shell.tpl.aria.banners": "Notifications",
+            "shell.tpl.dph.empty.title": "No widgets to display",
+            "shell.tpl.dph.empty.body": "Content appears when widgets are assigned to this route in your workspace."
+          },
+          "breadcrumbs": {
+            "workspace": {
+              "label": "Workspace",
+              "href": null
+            }
+          }
         },
         "shortcuts": [
+          {
+            "id": "command.open",
+            "combo": "mod+k",
+            "action": {
+              "kind": "open_command"
+            }
+          },
           {
             "id": "open-command-palette",
             "combo": "mod+k",
             "action": {
               "kind": "open_command"
+            }
+          },
+          {
+            "id": "lang.toggle",
+            "combo": "mod+shift+l",
+            "action": {
+              "kind": "toggle_language"
             }
           },
           {
@@ -1125,12 +1848,26 @@
             "when": "workspace"
           },
           {
+            "id": "theme.toggle",
+            "combo": "mod+shift+t",
+            "action": {
+              "kind": "toggle_theme"
+            }
+          },
+          {
             "id": "close-overlay",
             "combo": "escape",
             "action": {
               "kind": "close_overlay"
             },
             "when": "overlay-open"
+          },
+          {
+            "id": "overlay.close",
+            "combo": "escape",
+            "action": {
+              "kind": "close_overlay"
+            }
           }
         ],
         "banners": [
@@ -1187,6 +1924,9 @@
           }
         ],
         "policies": {
+          "autosave.interval_ms": {
+            "value": 15000
+          },
           "layout": {
             "breakpoints": {
               "desktopMinPx": 1056
@@ -1194,6 +1934,15 @@
             "mobileBottomNav": {
               "maxItems": 4
             }
+          },
+          "rtl.enabled": {
+            "value": true
+          },
+          "session.idle_timeout_seconds": {
+            "value": 1800
+          },
+          "session.warning_seconds": {
+            "value": 300
           },
           "sessionExpiry": {
             "dangerMinutes": 1,
@@ -1208,10 +1957,10 @@
     "reason": "option-B: DOM/visible columns removed pending Playwright probe for /workspace-home"
   },
   "summary": {
-    "seedKeyCount": 60,
+    "seedKeyCount": 67,
     "registryKeyCount": 67,
     "tenantBindingCount": 67,
-    "runtimeEmittedCount": 21,
+    "runtimeEmittedCount": 20,
     "catalogOnly": 46,
     "structural": 14,
     "visual": 7,
@@ -1225,15 +1974,7 @@
   },
   "comparisons": {
     "onlyInSeed": [],
-    "onlyInRegistry": [
-      "workspace.shell.brand",
-      "workspace.shell.empty-state",
-      "workspace.shell.module-cards",
-      "workspace.shell.settings-action",
-      "workspace.shell.sidebar-nav",
-      "workspace.shell.user-menu",
-      "workspace.shell.workspace-title"
-    ],
+    "onlyInRegistry": [],
     "seedAndRegistry": [
       "workspace.action.button",
       "workspace.action.icon-button",
@@ -1294,7 +2035,14 @@
       "workspace.polish.skeleton-placeholder",
       "workspace.polish.skeleton-text",
       "workspace.polish.toggletip",
-      "workspace.polish.tooltip"
+      "workspace.polish.tooltip",
+      "workspace.shell.brand",
+      "workspace.shell.empty-state",
+      "workspace.shell.module-cards",
+      "workspace.shell.settings-action",
+      "workspace.shell.sidebar-nav",
+      "workspace.shell.user-menu",
+      "workspace.shell.workspace-title"
     ],
     "onlyInBinding": [],
     "registryNotBound": [],
@@ -1345,7 +2093,8 @@
       "workspace.polish.skeleton-placeholder",
       "workspace.polish.skeleton-text",
       "workspace.polish.toggletip",
-      "workspace.polish.tooltip"
+      "workspace.polish.tooltip",
+      "workspace.shell.empty-state"
     ]
   },
   "failures": [],
@@ -2770,7 +3519,7 @@
       "carbonKey": "header-name",
       "zone": "header",
       "category": "visual-shell",
-      "source": "registry",
+      "source": "seed",
       "registryApproved": true,
       "bindingId": "14621",
       "surfaceId": "workspace.header.shell.brand.b14621",
@@ -2792,16 +3541,16 @@
       "carbonKey": "tile",
       "zone": "main",
       "category": "visual-main",
-      "source": "registry",
+      "source": "seed",
       "registryApproved": true,
       "bindingId": "14626",
       "surfaceId": "workspace.main.shell.empty-state.b14626",
       "slotKey": "main#120#b14626",
       "hasBinding": true,
-      "enabled": true,
+      "enabled": false,
       "permsRequired": [],
       "componentMapStatus": "visual-mapped",
-      "emittedByRuntime": true,
+      "emittedByRuntime": false,
       "catalogOnly": false,
       "reasons": [],
       "warnings": [],
@@ -2814,7 +3563,7 @@
       "carbonKey": "tile",
       "zone": "main",
       "category": "visual-main",
-      "source": "registry",
+      "source": "seed",
       "registryApproved": true,
       "bindingId": "14674",
       "surfaceId": "workspace.main.shell.module-cards.b14674",
@@ -2836,7 +3585,7 @@
       "carbonKey": "header-global-action",
       "zone": "header",
       "category": "visual-shell",
-      "source": "registry",
+      "source": "seed",
       "registryApproved": true,
       "bindingId": "14623",
       "surfaceId": "workspace.header.shell.settings-action.b14623",
@@ -2858,7 +3607,7 @@
       "carbonKey": "side-nav-items",
       "zone": "sidebar",
       "category": "visual-nav",
-      "source": "registry",
+      "source": "seed",
       "registryApproved": true,
       "bindingId": "14625",
       "surfaceId": "workspace.sidebar.shell.sidebar-nav.b14625",
@@ -2880,7 +3629,7 @@
       "carbonKey": "header-global-action",
       "zone": "header",
       "category": "visual-shell",
-      "source": "registry",
+      "source": "seed",
       "registryApproved": true,
       "bindingId": "14624",
       "surfaceId": "workspace.header.shell.user-menu.b14624",
@@ -2902,7 +3651,7 @@
       "carbonKey": "header-name",
       "zone": "header",
       "category": "visual-shell",
-      "source": "registry",
+      "source": "seed",
       "registryApproved": true,
       "bindingId": "14622",
       "surfaceId": "workspace.header.shell.workspace-title.b14622",

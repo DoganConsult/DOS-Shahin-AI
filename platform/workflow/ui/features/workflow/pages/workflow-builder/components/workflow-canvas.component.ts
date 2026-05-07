@@ -49,7 +49,7 @@ import {
       </div>
 
       <!-- SVG Canvas -->
-      <div tabindex="0" role="button" (keyup.enter)="onCanvasClick($any($event))"
+      <div tabindex="0" role="button" (keyup.enter)="onCanvasClick($event)"
         class="canvas-viewport"
         (dragover)="onCanvasDragOver($event)"
         (drop)="onCanvasDrop($event)"

@@ -62,7 +62,7 @@ import { GrcRecord } from '../shared/foundation-types';
         <p-button [label]="isAr() ? 'إضافة مستخدم' : 'Add User'" icon="pi pi-plus" (onClick)="createClick.emit()" severity="secondary" styleClass="ms-2" />
         <span class="p-input-icon-left ms-3">
           <i class="pi pi-search"></i>
-          <input type="text" pInputText [value]="searchTerm()" (input)="searchInput.emit($any($event.target).value)"
+          <input type="text" pInputText [value]="searchTerm()" (input)="searchInput.emit(($event.target as HTMLInputElement).value)"
             [placeholder]="isAr() ? 'بحث بالاسم أو البريد...' : 'Search name or email...'" [attr.aria-label]="isAr() ? 'بحث بالاسم أو البريد...' : 'Search name or email...'" style="width:240px" />
         </span>
       </ng-template>

@@ -75,7 +75,7 @@ const NODE_DISPLAY_LABELS: Record<string, string> = {
                 type="text"
                 class="w-full rounded-lg border border-[var(--border)] bg-[var(--bg-2)] px-3 py-2 text-sm"
                 [value]="selectedNode()!.title"
-                (input)="updateSelectedTitle($any($event.target).value)" />
+                (input)="updateSelectedTitle(($event.target as HTMLInputElement).value)" />
             </div>
           } @else {
             <p class="text-xs text-[var(--text-1)]">Select a node to edit.</p>

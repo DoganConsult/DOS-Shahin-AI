@@ -7,7 +7,7 @@
       }
     </div>
     @if (canRefresh || canExport || canPin) {
-      <select (change)="onAction($any($event.target).value); $any($event.target).value=''"
+      <select (change)="onAction(($event.target as HTMLSelectElement).value); ($event.target as HTMLSelectElement).value=''"
               class="px-2.5 py-1.5 text-xs rounded-xl bg-[var(--bg-2)] border border-[var(--border)] hover:opacity-90 cursor-pointer appearance-auto pr-7"
               [attr.aria-label]="i18n.translate('common.actions')">
         <option value="">{{ i18n.translate('common.actions') }}</option>

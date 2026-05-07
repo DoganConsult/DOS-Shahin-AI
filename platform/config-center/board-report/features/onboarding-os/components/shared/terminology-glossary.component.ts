@@ -16,7 +16,7 @@ import { RegionalTerm } from '../../models/onboarding.models';
       </button>
       <div class="glossary-panel" id="glossary-panel" *ngIf="open()">
         <input class="glossary-search" [placeholder]="lang === 'ar' ? 'بحث...' : 'Search...'"
-          (input)="filter.set($any($event.target).value)" />
+          (input)="filter.set(($event.target as HTMLInputElement).value)" />
         <div class="glossary-list">
           <div *ngFor="let t of filteredTerms()" class="glossary-item">
             <span class="glossary-en">{{ t.term_en }}</span>

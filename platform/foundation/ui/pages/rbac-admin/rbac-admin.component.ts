@@ -90,7 +90,7 @@ import { ApiClientService } from '@app/core/services/api-client.service';
               <i class="pi" [ngClass]="item.can_approve ? 'pi-check-circle text-green' : 'pi-times-circle text-muted'"></i>
             </td>
             <td>
-              <p-tag [value]="item.max_risk_level || 'medium'" [severity]="$any(getRiskSeverity(item.max_risk_level))" />
+              <p-tag [value]="item.max_risk_level || 'medium'" [severity]="getRiskSeverity(item.max_risk_level)" />
             </td>
             <td>
               <p-tag *ngIf="item.is_system" value="System" severity="secondary" />

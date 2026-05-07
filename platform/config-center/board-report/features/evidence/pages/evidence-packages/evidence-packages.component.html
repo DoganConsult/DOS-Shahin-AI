@@ -134,7 +134,7 @@
         <grc-form-field [label]="isAr() ? 'الاسم' : 'Name'" [required]="true">
           <input pInputText
             [value]="createForm().name"
-            (input)="updateForm('name', $any($event.target).value)"
+            (input)="updateForm('name', ($event.target as HTMLInputElement).value)"
             [placeholder]="isAr() ? 'اسم الحزمة' : 'Package name'" />
         </grc-form-field>
       </div>
@@ -142,7 +142,7 @@
         <label>{{ isAr() ? 'الوصف' : 'Description' }}</label>
         <textarea pInputTextarea
           [value]="createForm().description"
-          (input)="updateForm('description', $any($event.target).value)"
+          (input)="updateForm('description', ($event.target as HTMLTextAreaElement).value)"
           [placeholder]="isAr() ? 'وصف الحزمة' : 'Package description'"
           rows="3">
         </textarea>
