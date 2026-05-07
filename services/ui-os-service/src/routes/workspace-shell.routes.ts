@@ -14,7 +14,7 @@
 // All DB snake_case stays inside this file. Nothing raw leaves.
 // Forbidden in payload: component_key, perms_required, label_key,
 // label_fallback, labelKey, labelEn, labelAr, route, detailRoute,
-// evidenceUri, navigation.* alias, surface.componentKey.
+// evidenceUri, navigation.* alias.
 
 import { Router } from 'express';
 import type { DbPool } from '../db.js';
@@ -106,6 +106,7 @@ interface FrontendSurface {
   surfaceId: string;
   slotKey: string;
   componentKey: string;
+  permsRequired: string[];
   componentType: string | null;
   rendererKey: string | null;
   carbonKey: string | null;
@@ -220,6 +221,7 @@ function toFrontendSurface(row: ShellRow): FrontendSurface {
     surfaceId: ids.surfaceId,
     slotKey: ids.slotKey,
     componentKey: row.component_key,
+    permsRequired: Array.isArray(row.perms_required) ? row.perms_required : [],
     componentType: row.component_type ?? null,
     rendererKey: row.renderer_key ?? null,
     carbonKey: row.carbon_key ?? null,

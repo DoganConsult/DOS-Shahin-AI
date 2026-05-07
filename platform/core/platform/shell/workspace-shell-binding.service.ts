@@ -55,7 +55,6 @@ import type {
 import { parseShellAction } from '@dos/ui-contracts';
 import { AccessStore } from '@dos/access-store';
 import { ShellConnectivityService } from './shell-connectivity.service';
-import { ShellErrorStateService } from './shell-error-state.service';
 
 /** Anonymous surface row — no component_key, no perms_required. */
 export type WorkspaceShellSurface = WorkspaceShellBindingRow;
@@ -89,7 +88,6 @@ export class WorkspaceShellBindingService {
   private readonly http = inject(HttpClient);
   private readonly access = inject(AccessStore);
   private readonly connectivity = inject(ShellConnectivityService);
-  private readonly shellError = inject(ShellErrorStateService);
 
   private readonly _surfaces = signal<SurfaceMap>(EMPTY_MAP);
   private readonly _navGroupsRaw = signal<readonly WorkspaceRuntimeNavGroupRow[]>([]);
@@ -153,6 +151,7 @@ export class WorkspaceShellBindingService {
           item.label?.fallback ??
           item.label?.i18nKey ??
           '',
+        action: item.action ?? undefined,
         route: item.action.kind === 'navigate' ? item.action.path : undefined,
         icon: item.icon?.trim() || undefined,
         badge,
@@ -524,18 +523,6 @@ export class WorkspaceShellBindingService {
     () => this.policyNumber('layout.mobileBottomNav.maxItems'),
   );
 
-  /** Session expiry policy from policies. */
-  readonly sessionExpiryPolicy = computed<{ warningMinutes: number; dangerMinutes: number }>(() => {
-    const policy = this.policyRecord('sessionExpiry');
-    if (policy) {
-      return {
-        warningMinutes: typeof policy['warningMinutes'] === 'number' ? policy['warningMinutes'] as number : 0,
-        dangerMinutes: typeof policy['dangerMinutes'] === 'number' ? policy['dangerMinutes'] as number : 0,
-      };
-    }
-    return { warningMinutes: 0, dangerMinutes: 0 };
-  });
-
   /** Responsive breakpoint from policies. */
   readonly desktopMinPx = computed<number>(
     () => this.policyNumber('layout.breakpoints.desktopMinPx'),
@@ -566,36 +553,11 @@ export class WorkspaceShellBindingService {
   readonly shellBannerCandidates = computed<ShellBanner[]>(() => {
     const banners: ShellBanner[] = [];
     const templates = this.bannerTemplates();
-    const expired = this.access.trialExpiredModules() as string[];
-    const expiresAt = this.access.sessionExpiresAt();
-    const policy = this.sessionExpiryPolicy();
     const isOffline = this.connectivity.isOffline();
 
     for (const tpl of templates) {
       if (!tpl.id) continue;
-
-      const gate = tpl.gate ?? 'always';
-      if (gate === 'trial-expired' && expired.length === 0) continue;
-      if (gate === 'offline' && !isOffline) continue;
-      if (gate === 'impersonation' && !this.access.isImpersonating()) continue;
-      if (gate === 'session-expiry') {
-        if (!expiresAt) continue;
-        const minsLeft = Math.max(
-          0,
-          Math.floor((new Date(expiresAt).getTime() - Date.now()) / 60000),
-        );
-        const warn = policy.warningMinutes;
-        const danger = policy.dangerMinutes;
-        if (warn > 0) {
-          if (minsLeft > warn) continue;
-        } else if (danger > 0) {
-          if (minsLeft > danger) continue;
-        } else {
-          continue;
-        }
-      }
-      // `error` banners only appear when there IS a shell error.
-      if (gate === 'error' && !this.shellError.error()) continue;
+      if (tpl.gate === 'offline' && !isOffline) continue;
 
       const title = this.bannerLabel(tpl.titleKey, tpl.titleFallback);
       const message = this.bannerLabel(tpl.messageKey, tpl.messageFallback);
@@ -610,17 +572,6 @@ export class WorkspaceShellBindingService {
         dismissible: !!tpl.dismissible,
         actionLabel: tpl.actionLabelKey ? this.runtimeChromeLabel(tpl.actionLabelKey) : undefined,
         action: tpl.action,
-      });
-    }
-
-    const err = this.shellError.error();
-    if (err) {
-      banners.push({
-        id: 'shell-error',
-        kind: 'danger',
-        title: err.kind,
-        message: err.message + (err.correlationId ? ` (ID: ${err.correlationId})` : ''),
-        dismissible: true,
       });
     }
 
@@ -652,11 +603,6 @@ export class WorkspaceShellBindingService {
   private policyNumber(path: string): number {
     const v = this.walkPolicy(path);
     return typeof v === 'number' ? v : 0;
-  }
-
-  private policyRecord(path: string): Record<string, unknown> | null {
-    const v = this.walkPolicy(path);
-    return v && typeof v === 'object' && !Array.isArray(v) ? (v as Record<string, unknown>) : null;
   }
 
   private walkPolicy(path: string): unknown {
