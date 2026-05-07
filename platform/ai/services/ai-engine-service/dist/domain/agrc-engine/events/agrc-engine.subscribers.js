@@ -7,10 +7,10 @@
  * Law 12: All event-driven actions are auditable.
  * Law 2: Consumes events via DOS event bus, does not own other modules' truth.
  */
-import { safeQuery, tenantSchema } from '../ports/database.port';
-import { logger } from '../ports/logger.port';
-import { eventBus, emitEvent } from '../ports/events.port';
-import { SYSTEM_JOB_ACTOR } from '../ports/platform.port';
+import { safeQuery, tenantSchema } from '../ports/database.port.js';
+import { logger } from '../ports/logger.port.js';
+import { eventBus, emitEvent } from '../ports/events.port.js';
+import { SYSTEM_JOB_ACTOR } from '../ports/platform.port.js';
 import { catchHandler, EC } from '@dos/platform-core/resilience/resilient-catch';
 // ── Consumed Events ──────────────────────────────────────────────
 const _CONSUMED_EVENTS = [

@@ -3,17 +3,17 @@
  * @module ai-os/signals
  */
 import { Router } from 'express';
-import { authenticate, requirePermission } from '../../ports/auth.port';
-import { NotFoundError } from '../../../../errors';
-import { aiReadLimiter, aiWriteLimiter, daysBackQuery, setCacheHeaders, setNoCacheHeaders } from './shared';
-import { aiOsObservationsIdAcknowledgePostBody, aiOsObservationsIdResolvePostBody, aiOsObservationsIdDismissPostBody, aiOsAlertsIdAcknowledgePostBody, aiOsAlertsIdResolvePostBody, aiOsAlertsIdEscalatePostBody, aiOsAlertsIdDismissPostBody, aiOsActivityAlertsEvaluatePostBody, aiOsActivityAlertsRulesPostBody, aiOsActivityAlertsAlertIdAcknowledgePostBody, } from './ai-os-schemas';
-import { getLatestSignals, getSignalHistory, getSignalStats, getSignalTrend } from '../../services/cockpit/ai-cockpit-signal.service';
-import { listObservations, getObservationsForEntity, acknowledgeObservation, resolveObservation, dismissObservation, getObservationStats } from '../../services/observability/ai-observation.service';
-import { listAlerts, getAlertsForEntity, acknowledgeAlert, resolveAlert, escalateAlert, dismissAlert, getAlertStats } from '../../services/governance/compliance/ai-alert.service';
-import { getNextBestActions } from '../../../workflow/services/ai/next-best-action.service';
-import { getRuntimeHealthSummary, validateRuntimeConfigIntegrity } from '../../services/agents/core/ai-agent-runtime.service';
-import { detectPolicyConflicts } from '../../services/governance/ai-policy-rule.service';
-import { auditMiddleware, asyncHandler, validate, moduleStack, mutationEventHook } from '../../ports/middleware.port';
+import { authenticate, requirePermission } from '../../ports/auth.port.js';
+import { NotFoundError } from '../../../../errors/index.js';
+import { aiReadLimiter, aiWriteLimiter, daysBackQuery, setCacheHeaders, setNoCacheHeaders } from './shared.js';
+import { aiOsObservationsIdAcknowledgePostBody, aiOsObservationsIdResolvePostBody, aiOsObservationsIdDismissPostBody, aiOsAlertsIdAcknowledgePostBody, aiOsAlertsIdResolvePostBody, aiOsAlertsIdEscalatePostBody, aiOsAlertsIdDismissPostBody, aiOsActivityAlertsEvaluatePostBody, aiOsActivityAlertsRulesPostBody, aiOsActivityAlertsAlertIdAcknowledgePostBody, } from './ai-os-schemas.js';
+import { getLatestSignals, getSignalHistory, getSignalStats, getSignalTrend } from '../../services/cockpit/ai-cockpit-signal.service.js';
+import { listObservations, getObservationsForEntity, acknowledgeObservation, resolveObservation, dismissObservation, getObservationStats } from '../../services/observability/ai-observation.service.js';
+import { listAlerts, getAlertsForEntity, acknowledgeAlert, resolveAlert, escalateAlert, dismissAlert, getAlertStats } from '../../services/governance/compliance/ai-alert.service.js';
+import { getNextBestActions } from '../../../workflow/services/ai/next-best-action.service.js';
+import { getRuntimeHealthSummary, validateRuntimeConfigIntegrity } from '../../services/agents/core/ai-agent-runtime.service.js';
+import { detectPolicyConflicts } from '../../services/governance/ai-policy-rule.service.js';
+import { auditMiddleware, asyncHandler, validate, moduleStack, mutationEventHook } from '../../ports/middleware.port.js';
 import { z } from "zod";
 const router = Router();
 router.use(moduleStack('ai'));
@@ -150,7 +150,7 @@ router.post('/ai-os/alerts/:id/dismiss', authenticate, aiWriteLimiter, requirePe
 }));
 // ── Activity Feed & Correlation ─────────────────────────────────────────────
 router.get('/ai-os/activity-feed', authenticate, aiReadLimiter, requirePermission('ai.agent.read'), validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
-    const { getUnifiedActivityFeed } = await import('../../services/activity/unified-activity-feed.service');
+    const { getUnifiedActivityFeed } = await import('../../services/activity/unified-activity-feed.service.js');
     const filter = {
         modules: req.query.modules ? req.query.modules.split(',') : undefined,
         entityTypes: req.query.entityTypes ? req.query.entityTypes.split(',') : undefined,
@@ -170,14 +170,14 @@ router.get('/ai-os/activity-feed', authenticate, aiReadLimiter, requirePermissio
     res.ok(result);
 }));
 router.get('/ai-os/activity-timeline/:entityType/:entityId', authenticate, aiReadLimiter, requirePermission('ai.agent.read'), validate({ query: daysBackQuery }), asyncHandler(async (req, res) => {
-    const { getActivityTimeline } = await import('../../services/activity/activity-correlation.service');
+    const { getActivityTimeline } = await import('../../services/activity/activity-correlation.service.js');
     const daysBack = Number(req.query.daysBack) || 7;
     const timeline = await getActivityTimeline(req.tenantId, req.params.entityType, req.params.entityId, daysBack);
     setCacheHeaders(res, 15);
     res.ok({ items: timeline, total: timeline.length });
 }));
 router.get('/ai-os/activity-correlation/:entityType/:entityId', authenticate, aiReadLimiter, requirePermission('ai.agent.read'), validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
-    const { findCorrelatedActivities } = await import('../../services/activity/activity-correlation.service');
+    const { findCorrelatedActivities } = await import('../../services/activity/activity-correlation.service.js');
     const timeWindowMs = Number(req.query.timeWindowMs) || 5 * 60 * 1000;
     const groups = await findCorrelatedActivities(req.tenantId, req.params.entityType, req.params.entityId, timeWindowMs);
     setCacheHeaders(res, 15);
@@ -185,26 +185,26 @@ router.get('/ai-os/activity-correlation/:entityType/:entityId', authenticate, ai
 }));
 // ── Activity-Based Alerts ───────────────────────────────────────────────────
 router.get('/ai-os/activity-alerts', authenticate, aiReadLimiter, requirePermission('ai.agent.read'), validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
-    const { getActiveAlerts } = await import('../../services/activity/activity-alerts.service');
+    const { getActiveAlerts } = await import('../../services/activity/activity-alerts.service.js');
     const severity = req.query.severity;
     const alerts = await getActiveAlerts(req.tenantId, severity);
     setCacheHeaders(res, 15);
     res.ok({ items: alerts, total: alerts.length });
 }));
 router.post('/ai-os/activity-alerts/evaluate', authenticate, aiWriteLimiter, requirePermission('ai.agent.configure'), validate({ body: aiOsActivityAlertsEvaluatePostBody }), asyncHandler(async (req, res) => {
-    const { evaluateAlertRules } = await import('../../services/activity/activity-alerts.service');
+    const { evaluateAlertRules } = await import('../../services/activity/activity-alerts.service.js');
     const alerts = await evaluateAlertRules(req.tenantId);
     setNoCacheHeaders(res);
     res.ok({ items: alerts, total: alerts.length });
 }));
 router.post('/ai-os/activity-alerts/rules', authenticate, aiWriteLimiter, requirePermission('ai.agent.configure'), validate({ body: aiOsActivityAlertsRulesPostBody }), asyncHandler(async (req, res) => {
-    const { upsertAlertRule } = await import('../../services/activity/activity-alerts.service');
+    const { upsertAlertRule } = await import('../../services/activity/activity-alerts.service.js');
     await upsertAlertRule(req.tenantId, req.body);
     setNoCacheHeaders(res);
     res.created({ success: true });
 }));
 router.post('/ai-os/activity-alerts/:alertId/acknowledge', authenticate, aiWriteLimiter, requirePermission('ai.agent.write'), validate({ body: aiOsActivityAlertsAlertIdAcknowledgePostBody }), asyncHandler(async (req, res) => {
-    const { acknowledgeAlert: ackActivityAlert } = await import('../../services/activity/activity-alerts.service');
+    const { acknowledgeAlert: ackActivityAlert } = await import('../../services/activity/activity-alerts.service.js');
     await ackActivityAlert(req.tenantId, req.params.alertId, req.userId || 'any');
     setNoCacheHeaders(res);
     res.ok({ acknowledged: true });

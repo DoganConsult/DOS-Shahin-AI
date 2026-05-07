@@ -1,4 +1,4 @@
-import { safeQuery, tenantSchema } from '../ports/database.port';
+import { safeQuery, tenantSchema } from '../ports/database.port.js';
 export async function logExecution(tenantId, toolName, agentId, userId, inputArgs, outputResult, isError, errorMessage, durationMs, traceId, handlerKey, executionType, providerKey) {
     const schema = tenantSchema(tenantId);
     const status = isError ? 'failed' : 'succeeded';

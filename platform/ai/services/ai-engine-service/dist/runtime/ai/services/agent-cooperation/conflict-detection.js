@@ -1,4 +1,4 @@
-import { logger } from '../../ports/logger.port';
+import { logger } from '../../ports/logger.port.js';
 import { swallow, EC } from '@dos/platform-core/resilience/resilient-catch';
 // ============================================
 // AGRC-OS — Multi-Agent Conflict Detection
@@ -6,12 +6,12 @@ import { swallow, EC } from '@dos/platform-core/resilience/resilient-catch';
 // disagreements, and action conflicts between
 // agents operating on the same entity.
 // ============================================
-import { safeQuery, tenantSchema } from '../../ports/database.port';
-import { eventBus } from '../../ports/events.port';
+import { safeQuery, tenantSchema } from '../../ports/database.port.js';
+import { eventBus } from '../../ports/events.port.js';
 import { toErrorMessage } from '@dos/module-sdk';
 import { getFirstRow } from '@dos/db';
-import { activeCycleContexts } from './cycle-context';
-import { SYSTEM_JOB_ACTOR } from '../../ports/platform.port';
+import { activeCycleContexts } from './cycle-context.js';
+import { SYSTEM_JOB_ACTOR } from '../../ports/platform.port.js';
 // ── Multi-Agent Conflict Detection (Feature 17) ─────────────────────────────
 /**
  * Detect conflicts: same entity flagged by 2+ agents with contradictory outcomes

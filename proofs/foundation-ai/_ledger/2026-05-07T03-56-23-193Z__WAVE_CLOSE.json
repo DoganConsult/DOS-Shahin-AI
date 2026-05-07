@@ -1,0 +1,14 @@
+{
+  "runId": "a618fd21-6936-40e5-bd3e-d4b2fc5cc2f0",
+  "phase": "WAVE-1-CLOSE",
+  "wave": 1,
+  "kind": "WAVE_CLOSE",
+  "inputsHash": "sha256:beed892ab0e9aa280d4cf40167e89b7984a3bf6473c3b3871f7c99c7f412de2a",
+  "outputsHash": "sha256:2aeb293e712a5f5f907c0d056121949b4c92df12f8ad645df4877cd628f3f29b",
+  "parentHash": "sha256:f35c77940039c1fb0702fc03a6c19d4d66ce85e7039019743c6de472614e9136",
+  "signer": "dev-1",
+  "status": "RED",
+  "evidenceUri": "/root/DOS-Platform/proofs/foundation-ai/wave-1/wave-close.proof.json",
+  "createdAt": "2026-05-07T03:56:23.193Z",
+  "hash": "sha256:6c342aca9abc7bc6b80a823dabb8bc92a158b6501303e31fba39c48292d219aa"
+}

@@ -6,8 +6,8 @@ import { catchHandler, EC } from '@dos/platform-core/resilience/resilient-catch'
 // NOTE: This is an AGRC product service residing
 // in the agrc-engine directory. Law 2 ownership: agrc.
 // ============================================
-import { safeQuery, tenantSchema } from '../ports/database.port';
-import { getLatestAnswers } from '../ports/platform.port';
+import { safeQuery, tenantSchema } from '../ports/database.port.js';
+import { getLatestAnswers } from '../ports/platform.port.js';
 import { getFirstRow } from '@dos/db';
 // ── Repo: workspace profile ─────────────────────────────────────────────────
 export async function getWorkspaceProfile(tenantId) {

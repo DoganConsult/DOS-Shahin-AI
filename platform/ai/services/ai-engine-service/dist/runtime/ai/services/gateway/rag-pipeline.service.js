@@ -1,4 +1,4 @@
-import { safeQuery, tenantSchema } from '../../ports/database.port';
+import { safeQuery, tenantSchema } from '../../ports/database.port.js';
 import * as https from 'https';
 async function searchAzureAISearch(query, topK = 5) {
     const endpoint = process.env.AZURE_SEARCH_ENDPOINT;

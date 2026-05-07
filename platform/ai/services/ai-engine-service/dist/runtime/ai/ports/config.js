@@ -1,5 +1,5 @@
 import { readFileSync } from 'fs';
-import { getLogger as getDbLogger } from './logger';
+import { getLogger as getDbLogger } from './logger.js';
 const isProduction = process.env.NODE_ENV === 'production';
 const LEGACY_KEYS = ['PG_HOST', 'PG_PORT', 'PG_DATABASE', 'PG_USER', 'PG_PASSWORD'];
 function parseConnectionString(url) {

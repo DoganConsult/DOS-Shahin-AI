@@ -1,4 +1,4 @@
-import { logger } from '../../ports/logger.port';
+import { logger } from '../../ports/logger.port.js';
 /**
  * Personal Agent Cache Service — Production-Grade Performance Layer
  *

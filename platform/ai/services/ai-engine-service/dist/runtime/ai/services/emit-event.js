@@ -6,7 +6,7 @@
  * Uses platform eventBus.publish directly. Product automation rules
  * are triggered via event subscribers, not direct import coupling.
  */
-import { eventBus } from '../ports/events.port';
+import { eventBus } from '../ports/events.port.js';
 import { catchHandler, EC } from '@dos/platform-core/resilience/resilient-catch';
 export async function emitModuleEvent(event) {
     await eventBus.publish({

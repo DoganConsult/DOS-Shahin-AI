@@ -1,10 +1,10 @@
 import { Router } from 'express';
 import express from 'express';
 import path from 'path';
-import { correlationMiddleware } from '../middleware/correlation';
-import { rateLimitMiddleware } from '../middleware/rate-limit';
-import { csrfMiddleware } from '../middleware/csrf';
-import { proxyRouter } from './proxy';
+import { correlationMiddleware } from '../middleware/correlation.js';
+import { rateLimitMiddleware } from '../middleware/rate-limit.js';
+import { csrfMiddleware } from '../middleware/csrf.js';
+import { proxyRouter } from './proxy.js';
 export const routes = Router();
 // ---- Layer 1: Correlation & IP rate-limiting (stateless, no auth needed) ----
 routes.use(correlationMiddleware);

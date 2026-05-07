@@ -2,8 +2,8 @@
 // AI Post-Market Monitoring Service — Phase 5, Step 5.2
 // EU AI Act Art. 72-73, ISO 42001 Cl. 9, NIST AI RMF
 // ============================================
-import { safeQuery, tenantSchema } from '../../../ports/database.port';
-import { eventBus } from '../../../ports/events.port';
+import { safeQuery, tenantSchema } from '../../../ports/database.port.js';
+import { eventBus } from '../../../ports/events.port.js';
 import { swallow, EC } from '@dos/platform-core/resilience/resilient-catch';
 // 1. createMonitoringPlan
 export async function createMonitoringPlan(tenantId, plan) {

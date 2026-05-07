@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { authenticate, requirePermission } from '../ports/auth.port';
-import { asyncHandler, moduleStack } from '../ports/middleware.port';
-import * as serverService from '../services/mcp-server.service';
-import * as executionService from '../services/mcp-execution.service';
-import { validate } from "../ports/middleware.port";
+import { authenticate, requirePermission } from '../ports/auth.port.js';
+import { asyncHandler, moduleStack } from '../ports/middleware.port.js';
+import * as serverService from '../services/mcp-server.service.js';
+import * as executionService from '../services/mcp-execution.service.js';
+import { validate } from "../ports/middleware.port.js";
 import { z } from "zod";
 const router = Router();
 router.use(moduleStack('mcp'));

@@ -1,10 +1,10 @@
 // @ts-nocheck
 import { Router } from 'express';
 // AGRC-OS — Guided Experience Layer + Agent Capabilities Playbook
-import { asyncHandler } from '../../ports/middleware.port';
-import { authenticate, requirePermission } from '../../ports/auth.port';
-import { errMsg } from '../../../../i18n/error-messages';
-import { validate } from "../ports/middleware.port";
+import { asyncHandler } from '../../ports/middleware.port.js';
+import { authenticate, requirePermission } from '../../ports/auth.port.js';
+import { errMsg } from '../../../../i18n/error-messages.js';
+import { validate } from "../ports/middleware.port.js";
 import { z } from "zod";
 const router = Router();
 router.get('/guided/setup-progress', authenticate, requirePermission('platform.agent.read'), validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
@@ -57,7 +57,7 @@ router.get('/guided/faq', authenticate, requirePermission('platform.agent.read')
 // ── Agent Capabilities Playbook ──────────────────────────────────────────────
 router.get('/guided/agent-capabilities', validate({ query: z.record(z.unknown()) }), authenticate, requirePermission('platform.agent.read'), async (_req, res) => {
     const { getAgentRbacEntries, AGENT_RBAC_MAP: _AGENT_RBAC_MAP } = await import('@dos/platform-core/settings/platform-mode-gate.service');
-    const { computeHyperRole, mapModeToAutonomy } = await import('../../runtime/ai/services/orchestration/agent-orchestration.service');
+    const { computeHyperRole, mapModeToAutonomy } = await import('../../runtime/ai/services/orchestration/agent-orchestration.service.js');
     const modes = ['human', 'hybrid', 'shadow_agent', 'full_autonomous'];
     const actionTypes = [
         'CREATE_TASK', 'SEND_NOTIFICATION', 'PUBLISH_EVENT', 'FLAG_RISK',

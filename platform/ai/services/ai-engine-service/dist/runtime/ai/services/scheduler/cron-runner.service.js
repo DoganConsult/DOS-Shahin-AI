@@ -16,8 +16,8 @@
  *
  * Activated when env CRON_SCHEDULER_ENABLED=true (default: false).
  */
-import { logger } from '../../ports/logger.port';
-import { safeQuery } from '../../ports/database.port';
+import { logger } from '../../ports/logger.port.js';
+import { safeQuery } from '../../ports/database.port.js';
 let intervalHandle = null;
 let isTicking = false;
 function fieldMatches(field, current, min, max) {
@@ -99,7 +99,7 @@ async function fireTrigger(trigger) {
         'A01';
     const query = trigger.rule?.query || `Scheduled run: ${trigger.signal || trigger.workflow_code || 'autonomous'}`;
     try {
-        const { runAgent } = await import('../agents/core/agent-runner.service');
+        const { runAgent } = await import('../agents/core/agent-runner.service.js');
         // Wave 4: attribute the run to the cron scheduler so DNOC/DSOC can filter
         // worker-driven agent runs from user-driven ones. The agent's own
         // surface:agent-<id> trace is preserved; we only enrich attribution.

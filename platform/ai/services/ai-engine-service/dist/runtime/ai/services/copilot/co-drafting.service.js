@@ -4,9 +4,9 @@
 // Agent generates first draft with inline questions,
 // human resolves uncertain sections, agent learns style.
 // ============================================================
-import { safeQuery, tenantSchema } from '../../ports/database.port';
-import { eventBus } from '../../ports/events.port';
-import { recordAudit } from '../../../audit/services/audit/core/audit-trail.service';
+import { safeQuery, tenantSchema } from '../../ports/database.port.js';
+import { eventBus } from '../../ports/events.port.js';
+import { recordAudit } from '../../../audit/services/audit/core/audit-trail.service.js';
 import { randomUUID } from 'crypto';
 import { getFirstRow } from '@dos/db';
 // ── Start Co-Draft Session ─────────────────────────────────────────────────

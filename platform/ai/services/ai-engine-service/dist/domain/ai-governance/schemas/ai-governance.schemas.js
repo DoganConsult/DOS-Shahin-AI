@@ -3,7 +3,7 @@
  * Used with validate() middleware in ai-governance route files.
  */
 import { z } from 'zod';
-import { paginationQuery, statusFilter } from '../../../schemas/common.schemas';
+import { paginationQuery, statusFilter } from '../../../schemas/common.schemas.js';
 // -- Model Registration -------------------------------------------------------
 export const createModelRegistrationBody = z.object({
     model_name: z.string().min(1).max(255),

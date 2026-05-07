@@ -3,8 +3,8 @@
 // Implements individual circuit breakers per agent
 // Requirements: ai-os-6.4
 // ============================================
-import { safeQuery, tenantSchema } from '../../../ports/database.port';
-import { eventBus } from '../../../ports/events.port';
+import { safeQuery, tenantSchema } from '../../../ports/database.port.js';
+import { eventBus } from '../../../ports/events.port.js';
 import { getFirstRow } from '@dos/db';
 import { swallow, EC, catchHandler } from '@dos/platform-core/resilience/resilient-catch';
 const DEFAULT_CONFIG = {

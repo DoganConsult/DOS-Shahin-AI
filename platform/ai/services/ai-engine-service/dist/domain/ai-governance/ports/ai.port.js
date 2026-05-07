@@ -1,2 +1,2 @@
-export { claudeJSON } from '../../../config/claude-client';
+export { claudeJSON } from '../../../config/claude-client.js';
 //# sourceMappingURL=ai.port.js.map

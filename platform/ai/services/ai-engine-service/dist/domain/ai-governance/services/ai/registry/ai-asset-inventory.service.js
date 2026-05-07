@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { safeQuery, tenantSchema } from '../../../ports/database.port';
+import { safeQuery, tenantSchema } from '../../../ports/database.port.js';
 import { getFirstRow } from '@dos/db';
 const VALID_ASSET_TYPES = ['agent', 'model', 'prompt', 'tool', 'provider', 'workflow', 'binding'];
 const VALID_SCOPE_TYPES = ['global', 'tenant'];

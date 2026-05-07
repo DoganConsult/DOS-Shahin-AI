@@ -60,7 +60,7 @@ import { DosInsightBarComponent } from './dos-insight-bar.component';
     </cds-tile>
 
     <dos-insight-bar [pillars]="pillars" archetype="evidence-reports"
-      (actionClick)="pillars?.nextAction?.action?.()"></dos-insight-bar>
+      (actionClick)="triggerAction(pillars?.nextAction ?? null)"></dos-insight-bar>
 
     <div class="dmt-toolbar">
       <cds-content-switcher (selected)="viewSwitch.emit($event)">
@@ -80,7 +80,11 @@ import { DosInsightBarComponent } from './dos-insight-bar.component';
             id="report-date-end" kind="to" label="To">
           </cds-date-picker-input>
         </cds-date-picker>
-        <cds-combo-button [buttons]="exportActions" size="sm">Export</cds-combo-button>
+        @for (action of exportActions; track action.actionKey || action.commandKey || action.route || action.label) {
+          <button cdsButton="tertiary" size="sm" (click)="triggerAction(action)">
+            {{ action.label }}
+          </button>
+        }
       }
     </div>
 
@@ -161,20 +165,32 @@ export class ModuleReportsTemplateComponent {
   @Input() showAiReports = true;
   @Input() currentRole: ModuleRole = 'standard_user';
   @Input() writeRoles: ModuleRole[] = [];
-  @Input() exportActions: Array<{ content: string; click: () => void }> = [
-    { content: 'Export PDF', click: () => {} },
-    { content: 'Export Excel', click: () => {} },
-    { content: 'Export CSV', click: () => {} },
-  ];
+  @Input() exportActions: ModuleAction[] = [];
 
   @Output() reportClick = new EventEmitter<ModuleReport>();
   @Output() downloadClick = new EventEmitter<ModuleReport>();
   @Output() viewSwitch = new EventEmitter<unknown>();
+  @Output() actionTriggered = new EventEmitter<{ key: string; payload?: Record<string, unknown> }>();
 
   viewMode = computed(() => resolveViewMode(this.currentRole, this.writeRoles));
 
   statusTagType(status: string): string {
     return ({ ready: 'green', generating: 'blue', scheduled: 'teal', failed: 'red' } as Record<string, string>)[status] ?? 'gray';
+  }
+
+  triggerAction(action: ModuleAction | null, payload?: Record<string, unknown>): void {
+    if (!action) return;
+    if (action.actionKey) {
+      this.actionTriggered.emit({ key: action.actionKey, payload });
+      return;
+    }
+    if (action.commandKey) {
+      this.actionTriggered.emit({ key: action.commandKey, payload });
+      return;
+    }
+    if (action.route) {
+      this.actionTriggered.emit({ key: 'navigate', payload: { path: action.route, ...(payload ?? {}) } });
+    }
   }
 }
 

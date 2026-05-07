@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import { authenticate, requirePermission } from '../../ports/auth.port';
-import * as ModelRiskService from '../../services/governance/ai-model-risk.service';
+import { authenticate, requirePermission } from '../../ports/auth.port.js';
+import * as ModelRiskService from '../../services/governance/ai-model-risk.service.js';
 import { toErrorMessage } from '@dos/module-sdk';
 // ── Zod Schemas ──────────────────────────────────────────────────────────
-import { auditMiddleware, validate, moduleStack, mutationEventHook } from '../../ports/middleware.port';
-import { modelsModelVersionIdRiskScorePostBody, modelsModelVersionIdLifecyclePostBody, lifecycleLifecycleIdApprovePostBody, modelsModelVersionIdAssessmentsPostBody } from "../../schemas/ai.schemas";
+import { auditMiddleware, validate, moduleStack, mutationEventHook } from '../../ports/middleware.port.js';
+import { modelsModelVersionIdRiskScorePostBody, modelsModelVersionIdLifecyclePostBody, lifecycleLifecycleIdApprovePostBody, modelsModelVersionIdAssessmentsPostBody } from "../../schemas/ai.schemas.js";
 import { z } from "zod";
 const router = Router();
 router.use(moduleStack('ai'));

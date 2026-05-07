@@ -1,7 +1,7 @@
 import { v4 as uuid } from "uuid";
-import { safeQuery, tenantSchema } from '../ports/database.port';
+import { safeQuery, tenantSchema } from '../ports/database.port.js';
 import { getFirstRow } from "@dos/db";
-import { SYSTEM_JOB_ACTOR } from '../ports/platform.port';
+import { SYSTEM_JOB_ACTOR } from '../ports/platform.port.js';
 export class AiGovernanceRepository {
     schema;
     constructor(tenantId) { this.schema = tenantSchema(tenantId); }

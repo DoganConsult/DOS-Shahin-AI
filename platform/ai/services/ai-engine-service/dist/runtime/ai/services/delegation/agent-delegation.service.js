@@ -1,3 +1,3 @@
 /** @deprecated @removal-date 2026-09-30 @owner DAuth @replacement platform/dauth/delegation/delegation.service.ts — Canonical delegation moved to DAuth (Law 1, Law 8). */
-export { createDelegationGrant, revokeDelegationGrant, validateDelegation, generateDelegatedToken, requireExplicitGrant, executeDelegatedAction, recordDelegatedAction, getActiveGrants, getDelegationHistory, ACTION_TYPE_TO_SCOPE, } from '../../ports/auth.port';
+export { createDelegationGrant, revokeDelegationGrant, validateDelegation, generateDelegatedToken, requireExplicitGrant, executeDelegatedAction, recordDelegatedAction, getActiveGrants, getDelegationHistory, ACTION_TYPE_TO_SCOPE, } from '../../ports/auth.port.js';
 //# sourceMappingURL=agent-delegation.service.js.map

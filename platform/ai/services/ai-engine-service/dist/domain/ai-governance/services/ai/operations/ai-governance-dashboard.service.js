@@ -1,5 +1,5 @@
-import { safeQuery, tenantSchema } from '../../../ports/database.port';
-import { logger } from '../../../ports/logger.port';
+import { safeQuery, tenantSchema } from '../../../ports/database.port.js';
+import { logger } from '../../../ports/logger.port.js';
 import { toErrorMessage } from '@dos/module-sdk';
 export async function getAiGovernanceDashboard(tenantId) {
     const schema = tenantSchema(tenantId);

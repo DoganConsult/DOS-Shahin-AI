@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { safeQuery, tenantSchema } from '../ports/database.port';
+import { safeQuery, tenantSchema } from '../ports/database.port.js';
 export async function listTools(tenantId, filter = {}) {
     const { status, agentId, moduleCode, domainCode, category, riskLevel, search, page = 1, pageSize = 50, sortBy = 'sort_order', sortDir = 'ASC' } = filter;
     const conditions = [];

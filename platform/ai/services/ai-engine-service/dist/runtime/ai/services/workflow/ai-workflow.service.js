@@ -1,5 +1,5 @@
-import { safeQuery, tenantSchema } from '../../ports/database.port';
-import { emitAiEvent } from './ai-event.service';
+import { safeQuery, tenantSchema } from '../../ports/database.port.js';
+import { emitAiEvent } from './ai-event.service.js';
 import { randomUUID } from 'crypto';
 import { catchHandler, EC } from '@dos/platform-core/resilience';
 export const ALLOWED_TRANSITIONS = { draft: ['in_review'], in_review: ['approved', 'draft'], approved: ['active'], active: ['suspended', 'decommissioned'], suspended: ['active', 'decommissioned', 'archived'], decommissioned: ['archived'], archived: [], configured: ['testing'] };

@@ -1,17 +1,17 @@
 // @ts-nocheck
 import { Router } from 'express';
 import { catchHandler, EC } from '@dos/platform-core/resilience/resilient-catch';
-import { logger } from '../../ports/logger.port';
+import { logger } from '../../ports/logger.port.js';
 // AGRC-OS — Agent Orchestration routes
 // Covers: agent runs, run graph, node ask, run events, run stats,
 //         proposals (approve/reject), shadow agents, hyper-role check, autonomy policy
-import { authenticate, requirePermission } from '../../ports/auth.port';
-import { validate, auditMiddleware, setAuditData } from '../../ports/middleware.port';
-import { errMsg } from '../../../../i18n/error-messages';
-import { emitEvent } from '../../ports/events.port';
+import { authenticate, requirePermission } from '../../ports/auth.port.js';
+import { validate, auditMiddleware, setAuditData } from '../../ports/middleware.port.js';
+import { errMsg } from '../../../../i18n/error-messages.js';
+import { emitEvent } from '../../ports/events.port.js';
 import { toErrorMessage } from '@dos/module-sdk';
-import { writeLimiter } from './shared';
-import { createAskBody, createApproveBody, createRejectBody, updateShadowAgentsBody, createCheckBody } from '../../schemas/agrc-engine.schemas';
+import { writeLimiter } from './shared.js';
+import { createAskBody, createApproveBody, createRejectBody, updateShadowAgentsBody, createCheckBody } from '../../schemas/agrc-engine.schemas.js';
 import { z } from "zod";
 const genericPayloadSchema = z.record(z.unknown());
 const router = Router();
@@ -22,7 +22,7 @@ router.use(auditMiddleware('agrc-engine'));
 // GET /api/agrc-os/agent-runs — List agent runs
 router.get('/agent-runs', validate({ query: z.record(z.unknown()) }), authenticate, requirePermission('platform.agent.read'), async (req, res) => {
     try {
-        const { listAgentRuns } = await import('../../runtime/ai/services/orchestration/agent-orchestration.service');
+        const { listAgentRuns } = await import('../../runtime/ai/services/orchestration/agent-orchestration.service.js');
         const runs = await listAgentRuns(req.tenantId, {
             status: req.query.status,
             agentId: req.query.agentId,
@@ -37,7 +37,7 @@ router.get('/agent-runs', validate({ query: z.record(z.unknown()) }), authentica
 // GET /api/agrc-os/agent-runs/:runId — Get single run state
 router.get('/agent-runs/:runId', validate({ query: z.record(z.unknown()) }), authenticate, requirePermission('platform.agent.read'), async (req, res) => {
     try {
-        const { getAgentRun } = await import('../../runtime/ai/services/orchestration/agent-orchestration.service');
+        const { getAgentRun } = await import('../../runtime/ai/services/orchestration/agent-orchestration.service.js');
         const run = await getAgentRun(req.tenantId, req.params.runId);
         if (!run) {
             res.status(404).json({ error: errMsg('NOT_FOUND', req) });
@@ -52,7 +52,7 @@ router.get('/agent-runs/:runId', validate({ query: z.record(z.unknown()) }), aut
 // GET /api/agrc-os/agent-runs/:runId/graph — Get run graph (nodes + edges + state)
 router.get('/agent-runs/:runId/graph', validate({ query: z.record(z.unknown()) }), authenticate, requirePermission('platform.agent.read'), async (req, res) => {
     try {
-        const { getRunGraph } = await import('../../runtime/ai/services/orchestration/agent-orchestration.service');
+        const { getRunGraph } = await import('../../runtime/ai/services/orchestration/agent-orchestration.service.js');
         const graph = await getRunGraph(req.tenantId, req.params.runId);
         res.json(graph);
     }
@@ -70,8 +70,8 @@ router.post('/agent-runs/:runId/node/:nodeId/ask', authenticate, requirePermissi
             res.status(400).json({ error: errMsg('MISSING_FIELDS', req) });
             return;
         }
-        const { getRunGraph, getAgentRun, recordAgentEvent } = await import('../../runtime/ai/services/orchestration/agent-orchestration.service');
-        const { claudeChat } = await import('../../../../config/claude-client');
+        const { getRunGraph, getAgentRun, recordAgentEvent } = await import('../../runtime/ai/services/orchestration/agent-orchestration.service.js');
+        const { claudeChat } = await import('../../../../config/claude-client.js');
         const run = await getAgentRun(tenantId, runId);
         if (!run) {
             res.status(404).json({ error: errMsg('NOT_FOUND', req) });
@@ -135,7 +135,7 @@ Respond with JSON: { "answer": "...", "actions": [{ "type": "...", "payload": {.
 // GET /api/agrc-os/agent-runs/:runId/events — Get run events (for playback)
 router.get('/agent-runs/:runId/events', validate({ query: z.record(z.unknown()) }), authenticate, requirePermission('platform.agent.read'), async (req, res) => {
     try {
-        const { getRunEvents } = await import('../../runtime/ai/services/orchestration/agent-orchestration.service');
+        const { getRunEvents } = await import('../../runtime/ai/services/orchestration/agent-orchestration.service.js');
         const events = await getRunEvents(req.tenantId, req.params.runId, req.query.limit ? parseInt(req.query.limit, 10) : 100);
         res.json({ events, count: events.length });
     }
@@ -146,7 +146,7 @@ router.get('/agent-runs/:runId/events', validate({ query: z.record(z.unknown()) 
 // GET /api/agrc-os/agent-run-stats — Dashboard stats
 router.get('/agent-run-stats', validate({ query: z.record(z.unknown()) }), authenticate, requirePermission('platform.agent.read'), async (req, res) => {
     try {
-        const { getAgentRunStats } = await import('../../runtime/ai/services/orchestration/agent-orchestration.service');
+        const { getAgentRunStats } = await import('../../runtime/ai/services/orchestration/agent-orchestration.service.js');
         const stats = await getAgentRunStats(req.tenantId);
         res.json(stats);
     }
@@ -158,7 +158,7 @@ router.get('/agent-run-stats', validate({ query: z.record(z.unknown()) }), authe
 // GET /api/agrc-os/proposals — List proposals
 router.get('/proposals', validate({ query: z.record(z.unknown()) }), authenticate, requirePermission('platform.agent.read'), async (req, res) => {
     try {
-        const { listProposals } = await import('../../runtime/ai/services/orchestration/agent-orchestration.service');
+        const { listProposals } = await import('../../runtime/ai/services/orchestration/agent-orchestration.service.js');
         const proposals = await listProposals(req.tenantId, {
             status: req.query.status,
             agentId: req.query.agentId,
@@ -174,8 +174,8 @@ router.get('/proposals', validate({ query: z.record(z.unknown()) }), authenticat
 // POST /api/agrc-os/proposals/:id/approve
 router.post('/proposals/:id/approve', authenticate, requirePermission('platform.agent.write'), writeLimiter, validate({ body: createApproveBody }), async (req, res) => {
     try {
-        const { approveProposal } = await import('../../runtime/ai/services/orchestration/agent-orchestration.service');
-        const { executeAction } = await import('../../runtime/ai/services/agents/core/agent-runner.service');
+        const { approveProposal } = await import('../../runtime/ai/services/orchestration/agent-orchestration.service.js');
+        const { executeAction } = await import('../../runtime/ai/services/agents/core/agent-runner.service.js');
         const tenantId = req.tenantId;
         const userId = req.user?.userId;
         const result = await approveProposal(tenantId, req.params.id, userId, req.body.comment);
@@ -215,7 +215,7 @@ router.post('/proposals/:id/approve', authenticate, requirePermission('platform.
 // POST /api/agrc-os/proposals/:id/reject
 router.post('/proposals/:id/reject', authenticate, requirePermission('platform.agent.write'), writeLimiter, validate({ body: createRejectBody }), async (req, res) => {
     try {
-        const { rejectProposal } = await import('../../runtime/ai/services/orchestration/agent-orchestration.service');
+        const { rejectProposal } = await import('../../runtime/ai/services/orchestration/agent-orchestration.service.js');
         const userId = req.user?.userId;
         const result = await rejectProposal(req.tenantId, req.params.id, userId, req.body.comment);
         if (!result.success) {
@@ -237,7 +237,7 @@ router.post('/proposals/:id/reject', authenticate, requirePermission('platform.a
 // GET /api/agrc-os/shadow-agents — List all shadow agent configs
 router.get('/shadow-agents', validate({ query: z.record(z.unknown()) }), authenticate, requirePermission('delegation.chain.read'), async (req, res) => {
     try {
-        const { listShadowAgents } = await import('../../runtime/ai/services/orchestration/agent-orchestration.service');
+        const { listShadowAgents } = await import('../../runtime/ai/services/orchestration/agent-orchestration.service.js');
         const configs = await listShadowAgents(req.tenantId, {
             enabledOnly: req.query.enabledOnly === 'true',
         });
@@ -250,7 +250,7 @@ router.get('/shadow-agents', validate({ query: z.record(z.unknown()) }), authent
 // GET /api/agrc-os/shadow-agents/:userId — Get shadow agent config for user
 router.get('/shadow-agents/:userId', validate({ query: z.record(z.unknown()) }), authenticate, requirePermission('delegation.chain.read'), async (req, res) => {
     try {
-        const { getShadowAgentConfig } = await import('../../runtime/ai/services/orchestration/agent-orchestration.service');
+        const { getShadowAgentConfig } = await import('../../runtime/ai/services/orchestration/agent-orchestration.service.js');
         const config = await getShadowAgentConfig(req.tenantId, req.params.userId);
         res.json({ config: config || null });
     }
@@ -261,7 +261,7 @@ router.get('/shadow-agents/:userId', validate({ query: z.record(z.unknown()) }),
 // PUT /api/agrc-os/shadow-agents/:userId — Create/update shadow agent config
 router.put('/shadow-agents/:userId', authenticate, requirePermission('delegation.chain.manage'), writeLimiter, validate({ body: updateShadowAgentsBody }), async (req, res) => {
     try {
-        const { upsertShadowAgentConfig } = await import('../../runtime/ai/services/orchestration/agent-orchestration.service');
+        const { upsertShadowAgentConfig } = await import('../../runtime/ai/services/orchestration/agent-orchestration.service.js');
         const config = await upsertShadowAgentConfig(req.tenantId, req.params.userId, req.body);
         setAuditData(res, {
             action: 'update', entityType: 'shadow_agent_config', entityId: req.params.userId,
@@ -278,7 +278,7 @@ router.put('/shadow-agents/:userId', authenticate, requirePermission('delegation
 // POST /api/agrc-os/hyper-role/check — Check if action is allowed by Hyper-Role
 router.post('/hyper-role/check', authenticate, requirePermission('platform.agent.read'), validate({ body: createCheckBody }), async (req, res) => {
     try {
-        const { computeHyperRole, mapModeToAutonomy } = await import('../../runtime/ai/services/orchestration/agent-orchestration.service');
+        const { computeHyperRole, mapModeToAutonomy } = await import('../../runtime/ai/services/orchestration/agent-orchestration.service.js');
         const { getTenantPlatformMode } = await import('@dos/platform-core/settings/platform-mode-gate.service');
         const tenantId = req.tenantId;
         const { agentId, actionType, userPermissions, autonomyLevel } = req.body;
@@ -301,7 +301,7 @@ router.post('/hyper-role/check', authenticate, requirePermission('platform.agent
 // GET /api/agrc-os/autonomy-policy — Get autonomy policy for an action type
 router.get('/autonomy-policy', validate({ query: z.record(z.unknown()) }), authenticate, requirePermission('platform.agent.read'), async (req, res) => {
     try {
-        const { getAutonomyPolicy } = await import('../../runtime/ai/services/orchestration/agent-orchestration.service');
+        const { getAutonomyPolicy } = await import('../../runtime/ai/services/orchestration/agent-orchestration.service.js');
         const actionType = req.query.actionType;
         if (!actionType) {
             res.status(400).json({ error: errMsg('MISSING_FIELDS', req) });

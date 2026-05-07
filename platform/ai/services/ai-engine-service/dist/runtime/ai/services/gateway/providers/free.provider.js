@@ -1,6 +1,6 @@
 import * as https from 'https';
 import { toErrorMessage } from '@dos/module-sdk';
-export { DEFAULT_FREE_ORDER, FREE_PROVIDER_DEFAULTS, buildFreeProvider } from './llm-config';
+export { DEFAULT_FREE_ORDER, FREE_PROVIDER_DEFAULTS, buildFreeProvider } from './llm-config.js';
 export function callOpenAICompatible(endpoint, apiKey, model, messages, maxTokens, providerName, extraHeaders) {
     return new Promise((resolve, reject) => {
         const url = new URL(endpoint);

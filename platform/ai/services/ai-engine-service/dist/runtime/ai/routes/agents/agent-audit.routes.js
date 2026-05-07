@@ -1,13 +1,13 @@
 import { Router } from 'express';
-import { logger } from '../../ports/logger.port';
+import { logger } from '../../ports/logger.port.js';
 // ============================================================
 // Agent Audit Routes
 // Provides endpoints for viewing agent audit history, actions, predictions, and tool calls
 // ============================================================
 import { toErrorMessage } from '@dos/module-sdk';
-import { authenticate, requirePermission } from '../../ports/auth.port';
-import { safeQuery, tenantSchema } from '../../ports/database.port';
-import { validate } from "../ports/middleware.port";
+import { authenticate, requirePermission } from '../../ports/auth.port.js';
+import { safeQuery, tenantSchema } from '../../ports/database.port.js';
+import { validate } from "../ports/middleware.port.js";
 import { z } from "zod";
 const router = Router();
 router.use(authenticate);

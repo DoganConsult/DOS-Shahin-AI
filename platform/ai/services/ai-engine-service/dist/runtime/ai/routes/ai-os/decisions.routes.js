@@ -7,15 +7,15 @@
  * @module ai-os/decisions
  */
 import { Router } from 'express';
-import { authenticate, requirePermission } from '../../ports/auth.port';
-import { NotFoundError } from '../../../../errors';
-import { paginationQuery, agentFilterQuery, entityFilterQuery, hoursQuery, extractPagination, setCacheHeaders, setNoCacheHeaders, aiReadLimiter, aiApproveLimiter, aiExportLimiter, } from './shared';
-import { aiOsRecommendationsDecisionIdAcceptPostBody, aiOsRecommendationsDecisionIdRejectPostBody, aiOsRecommendationsBatchAcceptPostBody, aiOsRecommendationsBatchRejectPostBody, } from './ai-os-schemas';
-import { listDecisions, getDecisionById, getRunTrace, getDecisionStats, getDecisionTrend, getExplainabilityChain, getDecisionsByEntityForApi, } from '../../services/reasoning/ai-decision-engine.service';
-import { listRecommendations, acceptRecommendation, rejectRecommendation, batchAcceptRecommendations, batchRejectRecommendations, getRecommendationStats, } from '../../services/reasoning/ai-recommendation-engine.service';
-import { tenantSchema, safeQuery } from '../../ports/database.port';
+import { authenticate, requirePermission } from '../../ports/auth.port.js';
+import { NotFoundError } from '../../../../errors/index.js';
+import { paginationQuery, agentFilterQuery, entityFilterQuery, hoursQuery, extractPagination, setCacheHeaders, setNoCacheHeaders, aiReadLimiter, aiApproveLimiter, aiExportLimiter, } from './shared.js';
+import { aiOsRecommendationsDecisionIdAcceptPostBody, aiOsRecommendationsDecisionIdRejectPostBody, aiOsRecommendationsBatchAcceptPostBody, aiOsRecommendationsBatchRejectPostBody, } from './ai-os-schemas.js';
+import { listDecisions, getDecisionById, getRunTrace, getDecisionStats, getDecisionTrend, getExplainabilityChain, getDecisionsByEntityForApi, } from '../../services/reasoning/ai-decision-engine.service.js';
+import { listRecommendations, acceptRecommendation, rejectRecommendation, batchAcceptRecommendations, batchRejectRecommendations, getRecommendationStats, } from '../../services/reasoning/ai-recommendation-engine.service.js';
+import { tenantSchema, safeQuery } from '../../ports/database.port.js';
 import { z } from 'zod';
-import { auditMiddleware, asyncHandler, validate, moduleStack, mutationEventHook } from '../../ports/middleware.port';
+import { auditMiddleware, asyncHandler, validate, moduleStack, mutationEventHook } from '../../ports/middleware.port.js';
 const router = Router();
 router.use(moduleStack('ai'));
 router.use(auditMiddleware('ai'));
@@ -200,11 +200,11 @@ router.get('/ai-os/decisions/:decisionId/explain', authenticate, requirePermissi
 router.get('/ai-os/runs/batch/trace', authenticate, requirePermission('ai.agent.read'), aiReadLimiter, validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
     const { runIds, initialLimit = '10' } = req.query;
     if (!runIds || typeof runIds !== 'string') {
-        throw new (await import('../../../../errors')).ValidationError([{ path: 'runIds', message: 'runIds query parameter required (comma-separated)' }]);
+        throw new (await import('../../../../errors/index.js')).ValidationError([{ path: 'runIds', message: 'runIds query parameter required (comma-separated)' }]);
     }
     const runIdList = runIds.split(',').filter((id) => id.trim());
     const limitNum = Number(initialLimit) || 10;
-    const { getReasoningChain, getReasoningChainSummary } = await import('../../services/reasoning/reasoning-chain.service');
+    const { getReasoningChain, getReasoningChainSummary } = await import('../../services/reasoning/reasoning-chain.service.js');
     const chains = await Promise.all(runIdList.map(async (runId) => {
         try {
             const allSteps = await getReasoningChain(req.tenantId, runId);
@@ -253,7 +253,7 @@ router.get('/ai-os/runs/:runId/trace', authenticate, requirePermission('ai.agent
     // Include reasoning chain if available
     let reasoningChain = [];
     try {
-        const { getReasoningChain } = await import('../../services/reasoning/reasoning-chain.service');
+        const { getReasoningChain } = await import('../../services/reasoning/reasoning-chain.service.js');
         const allSteps = await getReasoningChain(req.tenantId, runId);
         // Support pagination for lazy loading
         const offsetNum = Number(offset) || 0;
@@ -286,7 +286,7 @@ router.get('/ai-os/runs/:runId/trace', authenticate, requirePermission('ai.agent
  */
 router.get('/ai-os/runs/:runId/trace/summary', authenticate, requirePermission('ai.agent.read'), aiReadLimiter, validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
     const runId = req.params.runId;
-    const { getReasoningChainSummary } = await import('../../services/reasoning/reasoning-chain.service');
+    const { getReasoningChainSummary } = await import('../../services/reasoning/reasoning-chain.service.js');
     const summary = await getReasoningChainSummary(req.tenantId, runId);
     if (!summary)
         throw new NotFoundError('ReasoningChainSummary', runId);
@@ -360,7 +360,7 @@ router.get('/ai-os/runs/:runId/entities', authenticate, requirePermission('ai.ag
 router.get('/ai-os/runs/:runId/trace/export', authenticate, requirePermission('ai.agent.read'), aiExportLimiter, validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
     const runId = req.params.runId;
     const { format = 'json' } = req.query;
-    const { getReasoningChain, getReasoningChainSummary } = await import('../../services/reasoning/reasoning-chain.service');
+    const { getReasoningChain, getReasoningChainSummary } = await import('../../services/reasoning/reasoning-chain.service.js');
     const steps = await getReasoningChain(req.tenantId, runId);
     const summary = await getReasoningChainSummary(req.tenantId, runId);
     if (format === 'json') {
@@ -414,7 +414,7 @@ router.get('/ai-os/runs/:runId/trace/export', authenticate, requirePermission('a
         doc.end();
     }
     else {
-        throw new (await import('../../../../errors')).ValidationError([{ path: 'format', message: 'Invalid format. Use "json" or "pdf"' }]);
+        throw new (await import('../../../../errors/index.js')).ValidationError([{ path: 'format', message: 'Invalid format. Use "json" or "pdf"' }]);
     }
 }));
 // ══════════════════════════════════════════════════════════════════════════

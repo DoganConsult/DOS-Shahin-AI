@@ -1,4 +1,4 @@
-import { safeQuery, tenantSchema } from '../../ports/database.port';
+import { safeQuery, tenantSchema } from '../../ports/database.port.js';
 import { v4 as uuid } from 'uuid';
 import { getFirstRow } from '@dos/db';
 export function createTraceId() {

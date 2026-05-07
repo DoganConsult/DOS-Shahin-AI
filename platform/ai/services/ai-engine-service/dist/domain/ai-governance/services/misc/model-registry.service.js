@@ -1,9 +1,9 @@
 // @ts-nocheck
-import { safeQuery, tenantSchema } from '../../ports/database.port';
-import { getAssetById } from '../../runtime/ai/registry/ai-asset-inventory.service';
-import { assertNotSeededGlobalMutation, emitRegistryAudit, nextRegistryVersionNumber, validateRollbackTarget, validateDeletePreConditions, validateParentForRollback, } from '../ai-governance-lifecycle.service';
+import { safeQuery, tenantSchema } from '../../ports/database.port.js';
+import { getAssetById } from '../../runtime/ai/registry/ai-asset-inventory.service.js';
+import { assertNotSeededGlobalMutation, emitRegistryAudit, nextRegistryVersionNumber, validateRollbackTarget, validateDeletePreConditions, validateParentForRollback, } from '../ai-governance-lifecycle.service.js';
 import { getFirstRow } from '@dos/db';
-import { SYSTEM_JOB_ACTOR } from '../../ports/platform.port';
+import { SYSTEM_JOB_ACTOR } from '../../ports/platform.port.js';
 const AUDIT_MODULE = 'ai-model-registry';
 const AUDIT_ENTITY_TYPE = 'model_version';
 const TABLE_NAME = 'ai_model_registry';

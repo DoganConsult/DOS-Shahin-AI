@@ -5,5 +5,5 @@
  * All exports are preserved for backward compatibility with consumers
  * that import from this path.
  */
-export * from '../../../../runtime/ai/index';
+export * from '../../../../runtime/ai/index.js';
 //# sourceMappingURL=contextual-ai.service.js.map

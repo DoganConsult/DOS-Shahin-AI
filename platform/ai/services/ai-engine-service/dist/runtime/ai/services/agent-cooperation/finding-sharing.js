@@ -3,7 +3,7 @@
 // Cooperation chains, finding sharing, evidence
 // requests, and cooperation audit log queries.
 // ============================================
-import { safeQuery, tenantSchema } from '../../ports/database.port';
+import { safeQuery, tenantSchema } from '../../ports/database.port.js';
 // ── Cooperation Chains ──────────────────────────────────────────────────────
 // Defines which agents can cooperate and the expected data flow direction.
 export const COOPERATION_CHAINS = {

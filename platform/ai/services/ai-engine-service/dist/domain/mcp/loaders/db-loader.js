@@ -5,8 +5,8 @@
  * them into the DbAgent format expected by the MCP server and
  * dynamic tool executor.
  */
-import { safeQuery, tenantSchema } from '../ports/database.port';
-import { logger } from '../ports/logger.port';
+import { safeQuery, tenantSchema } from '../ports/database.port.js';
+import { logger } from '../ports/logger.port.js';
 /**
  * Load all agent definitions from the tenant's database.
  * Returns a Map keyed by agentId.

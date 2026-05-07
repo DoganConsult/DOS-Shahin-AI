@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import { authenticate, requirePermission } from '../../ports/auth.port';
-import * as DPIAService from '../../services/governance/compliance/ai-dpia.service';
+import { authenticate, requirePermission } from '../../ports/auth.port.js';
+import * as DPIAService from '../../services/governance/compliance/ai-dpia.service.js';
 import { toErrorMessage } from '@dos/module-sdk';
 // ── Zod Schemas ──────────────────────────────────────────────────────────
-import { auditMiddleware, validate, moduleStack, mutationEventHook } from '../../ports/middleware.port';
-import { systemsSystemIdDpiaPostBody, dpiaDpiaIdRiskFactorsPostBody, dpiaDpiaIdSubmitPostBody, dpiaDpiaIdReviewPostBody } from "../../schemas/ai.schemas";
+import { auditMiddleware, validate, moduleStack, mutationEventHook } from '../../ports/middleware.port.js';
+import { systemsSystemIdDpiaPostBody, dpiaDpiaIdRiskFactorsPostBody, dpiaDpiaIdSubmitPostBody, dpiaDpiaIdReviewPostBody } from "../../schemas/ai.schemas.js";
 import { z } from "zod";
 const router = Router();
 router.use(moduleStack('ai'));

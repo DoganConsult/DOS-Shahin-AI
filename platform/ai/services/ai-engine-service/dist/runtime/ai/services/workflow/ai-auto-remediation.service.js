@@ -1,6 +1,6 @@
-import { safeQuery, tenantSchema } from '../../ports/database.port';
-import { logger } from '../../ports/logger.port';
-import { eventBus } from '../../ports/events.port';
+import { safeQuery, tenantSchema } from '../../ports/database.port.js';
+import { logger } from '../../ports/logger.port.js';
+import { eventBus } from '../../ports/events.port.js';
 import { swallow, EC } from '@dos/platform-core/resilience/resilient-catch';
 const LOG_TAG = '[AI-AutoRemediation]';
 const UNUSED_DAYS_THRESHOLD = parseInt(process.env.PERM_UNUSED_DAYS_THRESHOLD || '30', 10);

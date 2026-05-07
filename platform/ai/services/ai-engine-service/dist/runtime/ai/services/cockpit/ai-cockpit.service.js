@@ -3,8 +3,8 @@
 // AI OS Cockpit — Aggregated health, signals, and operational metrics
 // for the AI operating layer. Consumed by /api/ai-os/cockpit endpoint.
 // ============================================
-import { safeQuery, tenantSchema } from '../../ports/database.port';
-import { getAgentCatalog, getTenantPlatformMode } from '../../ports/platform.port';
+import { safeQuery, tenantSchema } from '../../ports/database.port.js';
+import { getAgentCatalog, getTenantPlatformMode } from '../../ports/platform.port.js';
 import { getFirstRow } from '@dos/db';
 export async function getCockpitSnapshot(tenantId) {
     const schema = tenantSchema(tenantId);

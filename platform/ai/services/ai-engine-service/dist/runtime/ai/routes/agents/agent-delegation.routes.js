@@ -1,11 +1,11 @@
 // @ts-nocheck
 import { Router } from 'express';
-import { authenticate, requirePermission } from '../../ports/auth.port';
-import { createDelegationGrant, revokeDelegationGrant, getActiveGrants, getDelegationHistory, } from '../../services/delegation/agent-delegation.service';
+import { authenticate, requirePermission } from '../../ports/auth.port.js';
+import { createDelegationGrant, revokeDelegationGrant, getActiveGrants, getDelegationHistory, } from '../../services/delegation/agent-delegation.service.js';
 import { executeOnboardingAsAgent } from '../../services/agents/lifecycle/agent-onboarding-executor.service';
-import { emitModuleEvent } from '../../services/emit-event';
+import { emitModuleEvent } from '../../services/emit-event.js';
 import { toErrorMessage } from '@dos/module-sdk';
-import { safeQuery, tenantSchema } from '../../ports/database.port';
+import { safeQuery, tenantSchema } from '../../ports/database.port.js';
 /** Log delegation action to authz_decision_log (DAuth step 14). */
 async function auditDelegation(tenantId, userId, data, action, ip) {
     const schema = tenantSchema(tenantId);
@@ -15,9 +15,9 @@ async function auditDelegation(tenantId, userId, data, action, ip) {
         JSON.stringify({ ...data, ip, action })]);
 }
 // ── Zod Schemas ──────────────────────────────────────────────────────────
-import { validate, auditMiddleware, setAuditData, automationMiddleware, moduleStack } from '../../ports/middleware.port';
+import { validate, auditMiddleware, setAuditData, automationMiddleware, moduleStack } from '../../ports/middleware.port.js';
 import { swallow, EC, catchHandler } from '@dos/platform-core/resilience/resilient-catch';
-import { grantPostBody, onboardPostBody } from "../../schemas/ai.schemas";
+import { grantPostBody, onboardPostBody } from "../../schemas/ai.schemas.js";
 import { z } from "zod";
 const router = Router();
 router.use(moduleStack('ai'));

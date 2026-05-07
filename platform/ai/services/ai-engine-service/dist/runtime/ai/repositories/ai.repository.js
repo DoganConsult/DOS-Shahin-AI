@@ -4,7 +4,7 @@
 // agent_memories, llm_usage_log, and tenant_llm_budgets.
 // Services call these methods instead of raw safeQuery().
 // ============================================
-import { safeQuery, tenantSchema } from '../ports/database.port';
+import { safeQuery, tenantSchema } from '../ports/database.port.js';
 import { getFirstRow } from '@dos/db';
 // ── Repository ───────────────────────────────────────
 export class AIRepository {

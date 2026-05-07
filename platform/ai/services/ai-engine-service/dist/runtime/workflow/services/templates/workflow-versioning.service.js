@@ -1,8 +1,8 @@
 // Runtime variant — delegates to the canonical domain implementation,
 // preserves the legacy `listGraphVersions` / `restoreGraphVersion` names
 // expected by historical callers.
-import { snapshotGraph as domainSnapshotGraph, getGraphVersions, } from '../../../../domain/workflow/services/templates/workflow-versioning.service';
-export { snapshotGraph, getGraphVersions, getGraphVersion } from '../../../../domain/workflow/services/templates/workflow-versioning.service';
+import { snapshotGraph as domainSnapshotGraph, getGraphVersions, } from '../../../../domain/workflow/services/templates/workflow-versioning.service.js';
+export { snapshotGraph, getGraphVersions, getGraphVersion } from '../../../../domain/workflow/services/templates/workflow-versioning.service.js';
 export async function listGraphVersions(tenantId, runId) {
     return getGraphVersions(tenantId, runId);
 }

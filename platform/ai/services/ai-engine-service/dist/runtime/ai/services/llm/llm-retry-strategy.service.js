@@ -1,4 +1,4 @@
-import { logger } from '../../ports/logger.port';
+import { logger } from '../../ports/logger.port.js';
 export const DEFAULT_RETRY_CONFIG = {
     maxRetries: 3,
     baseDelayMs: 1000,

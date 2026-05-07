@@ -1,4 +1,4 @@
-import { safeQuery, tenantSchema } from '../ports/database.port';
+import { safeQuery, tenantSchema } from '../ports/database.port.js';
 export class AgrcEngineQueryRepository {
     schema;
     constructor(tenantId) { this.schema = tenantSchema(tenantId); }

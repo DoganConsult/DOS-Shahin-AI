@@ -1,9 +1,9 @@
-import { logger } from '../../ports/logger.port';
+import { logger } from '../../ports/logger.port.js';
 import { readFileSync, existsSync } from 'fs';
 import { resolve } from 'path';
-import { CLAUDE_MODEL } from '../../ports/ai.port';
+import { CLAUDE_MODEL } from '../../ports/ai.port.js';
 import { toErrorMessage } from '@dos/module-sdk';
-import { DEFAULT_FREE_ORDER, buildFreeProvider, callClaude, callAzureOpenAI, callFreeProvider as callFree, callOllama, } from './llm-providers';
+import { DEFAULT_FREE_ORDER, buildFreeProvider, callClaude, callAzureOpenAI, callFreeProvider as callFree, callOllama, } from './llm-providers.js';
 function loadConfig() {
     const configPath = resolve(__dirname, '../../../config/llm-config.json');
     if (existsSync(configPath)) {
@@ -227,7 +227,7 @@ export async function enhancedChatCompletion(messages, opts) {
     const agentId = opts?.agentId;
     if (tenantId) {
         try {
-            const { checkBudgetAllowance } = await import('./llm-usage-tracker.service');
+            const { checkBudgetAllowance } = await import('./llm-usage-tracker.service.js');
             const budget = await checkBudgetAllowance(tenantId);
             if (!budget.allowed) {
                 return { content: budget.reason || 'Budget exceeded', provider: 'none', model: 'none', latencyMs: 0 };
@@ -236,7 +236,7 @@ export async function enhancedChatCompletion(messages, opts) {
         catch { /* non-fatal */ }
     }
     try {
-        const { getCachedLLMResponse } = await import('../llm/llm-cache.service');
+        const { getCachedLLMResponse } = await import('../llm/llm-cache.service.js');
         const cached = await getCachedLLMResponse(messages, agentId || 'default');
         if (cached) {
             return { content: cached.content, provider: cached.provider, model: cached.model, latencyMs: 0 };
@@ -249,7 +249,7 @@ export async function enhancedChatCompletion(messages, opts) {
     }
     else if (tenantId && agentId) {
         try {
-            const { getAgentModelConfig, resolveModelForAgent } = await import('./llm-router.service');
+            const { getAgentModelConfig, resolveModelForAgent } = await import('./llm-router.service.js');
             const modelCfg = await getAgentModelConfig(tenantId, agentId);
             if (modelCfg) {
                 const inputTokenEstimate = messages.reduce((s, m) => s + Math.ceil(m.content.length / 4), 0);
@@ -270,7 +270,7 @@ export async function enhancedChatCompletion(messages, opts) {
     const latencyMs = Date.now() - start;
     if (tenantId) {
         try {
-            const { trackUsage } = await import('./llm-usage-tracker.service');
+            const { trackUsage } = await import('./llm-usage-tracker.service.js');
             await trackUsage({
                 tenantId, userId: opts?.userId, agentId, runId: opts?.runId,
                 provider: result.provider, model: result.model,
@@ -281,7 +281,7 @@ export async function enhancedChatCompletion(messages, opts) {
         }
         catch { /* non-fatal */ }
         try {
-            const { recordTrace } = await import('../llm/llm-trace.service');
+            const { recordTrace } = await import('../llm/llm-trace.service.js');
             await recordTrace({
                 traceId, tenantId, agentId, userId: opts?.userId, runId: opts?.runId,
                 operation: 'chat', provider: result.provider, model: result.model,
@@ -296,7 +296,7 @@ export async function enhancedChatCompletion(messages, opts) {
         catch { /* non-fatal */ }
     }
     try {
-        const { setCachedLLMResponse } = await import('../llm/llm-cache.service');
+        const { setCachedLLMResponse } = await import('../llm/llm-cache.service.js');
         await setCachedLLMResponse(messages, agentId || 'default', {
             content: result.content, provider: result.provider, model: result.model,
         });
@@ -313,7 +313,7 @@ export async function agentChat(agentId, userMessage, context, opts) {
     let governedModelOverrides;
     if (opts?.tenantId) {
         try {
-            const { resolveGovernedAgent } = await import('./agent-governance-bridge.service');
+            const { resolveGovernedAgent } = await import('./agent-governance-bridge.service.js');
             const agentResolution = await resolveGovernedAgent(opts.tenantId, agentId);
             if (agentResolution.governed && agentResolution.resolved_system_prompt) {
                 systemPrompt = agentResolution.resolved_system_prompt;
@@ -338,7 +338,7 @@ export async function agentChat(agentId, userMessage, context, opts) {
         }
         if (!systemPrompt) {
             try {
-                const { resolveActivePromptForAgent } = await import('../../../ai-governance/services/misc/prompt-registry.service');
+                const { resolveActivePromptForAgent } = await import('../../../ai-governance/services/misc/prompt-registry.service.js');
                 const activeVersion = await resolveActivePromptForAgent(opts.tenantId, agentId);
                 systemPrompt = activeVersion?.template_text || '';
             }
@@ -352,7 +352,7 @@ export async function agentChat(agentId, userMessage, context, opts) {
             systemPrompt = agent?.systemPrompt || "You are a helpful GRC assistant.";
         }
         try {
-            const { getLanguageAwarePrompt } = await import('../../platform/services/misc/bilingual-prompt.service');
+            const { getLanguageAwarePrompt } = await import('../../platform/services/misc/bilingual-prompt.service.js');
             const bilingualPrompt = getLanguageAwarePrompt(agentId, userMessage);
             if (bilingualPrompt && bilingualPrompt.length > systemPrompt.length) {
                 systemPrompt = bilingualPrompt;
@@ -360,7 +360,7 @@ export async function agentChat(agentId, userMessage, context, opts) {
         }
         catch { /* non-fatal */ }
         try {
-            const { guardInput } = await import('./prompt-injection-guard.service');
+            const { guardInput } = await import('./prompt-injection-guard.service.js');
             const guard = await guardInput(opts.tenantId, userMessage, opts.userId, agentId);
             if (!guard.allowed) {
                 return { content: `Input blocked: ${guard.warning}`, provider: 'guard', model: 'none', latencyMs: 0 };
@@ -378,7 +378,7 @@ export async function agentChat(agentId, userMessage, context, opts) {
     ];
     if (opts?.tenantId) {
         try {
-            const { buildRAGContext, formatRAGForPrompt } = await import('./rag-pipeline.service');
+            const { buildRAGContext, formatRAGForPrompt } = await import('./rag-pipeline.service.js');
             const ragCtx = await buildRAGContext(opts.tenantId, agentId, userMessage, 3);
             const ragText = formatRAGForPrompt(ragCtx);
             if (ragText)

@@ -4,7 +4,7 @@ import { catchHandler, EC } from '@dos/platform-core/resilience/resilient-catch'
 // Tracks and analyzes tool usage patterns
 // Requirements: ai-os-8.3
 // ============================================
-import { safeQuery, tenantSchema } from '../../ports/database.port';
+import { safeQuery, tenantSchema } from '../../ports/database.port.js';
 /**
  * Record tool usage
  */

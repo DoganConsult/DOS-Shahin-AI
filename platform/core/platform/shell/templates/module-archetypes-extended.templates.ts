@@ -411,6 +411,36 @@ export interface OwnershipEdge {
   role: OwnershipRole; sodConflict?: boolean; overloaded?: boolean;
   delegationExpiresAt?: string | null;
 }
+export interface IdentityGraphNode {
+  id: string;
+  label?: { i18nKey?: string; fallback?: string; label?: string };
+  nodeType: string;
+  owner?: string;
+  riskLevel?: string;
+}
+export interface IdentityGraphEdge {
+  id: string;
+  sourceNode: string;
+  targetNode: string;
+  relation: string;
+  confidence?: number;
+}
+export interface PolicySimulationScenario {
+  id: string;
+  title?: { i18nKey?: string; fallback?: string; label?: string };
+  assumptions?: Record<string, unknown>;
+  impacts?: Record<string, unknown>;
+  recommendedAction?: Record<string, unknown> | null;
+  status?: string;
+}
+export interface AiExplainabilityBlock {
+  id: string;
+  title?: { i18nKey?: string; fallback?: string; label?: string };
+  rationale?: { i18nKey?: string; fallback?: string; label?: string };
+  confidence?: number;
+  status?: string;
+  action?: { kind: string; [k: string]: unknown };
+}
 @Component({
   selector: 'dos-ownership-map',
   standalone: true,
@@ -419,6 +449,79 @@ export interface OwnershipEdge {
   imports: DAX_IMPORTS,
   template: DAX_MASTHEAD + `
     @if (!loading) {
+      @if (identityGraphNodes.length || identityGraphEdges.length) {
+        <cds-tile class="dax-tile" style="margin-bottom: 1rem;">
+          <h3 style="margin: 0 0 .5rem;">Identity Graph</h3>
+          <p class="dax-subtitle">Nodes: {{ identityGraphNodes.length }} · Edges: {{ identityGraphEdges.length }}</p>
+          <cds-structured-list>
+            <cds-list-header>
+              <cds-list-column>Node</cds-list-column>
+              <cds-list-column>Type</cds-list-column>
+              <cds-list-column>Owner</cds-list-column>
+              <cds-list-column>Risk</cds-list-column>
+            </cds-list-header>
+            @for (n of identityGraphNodes; track n.id) {
+              <cds-list-row>
+                <cds-list-column>{{ resolveRuntimeLabel(n.label) }}</cds-list-column>
+                <cds-list-column>{{ n.nodeType }}</cds-list-column>
+                <cds-list-column>{{ n.owner || '—' }}</cds-list-column>
+                <cds-list-column>
+                  @if (n.riskLevel) {
+                    <cds-tag [type]="n.riskLevel === 'critical' ? 'red' : n.riskLevel === 'high' ? 'orange' : n.riskLevel === 'medium' ? 'yellow' : 'green'">
+                      {{ n.riskLevel }}
+                    </cds-tag>
+                  } @else { <span>—</span> }
+                </cds-list-column>
+              </cds-list-row>
+            }
+          </cds-structured-list>
+        </cds-tile>
+      }
+
+      @if (policySimulationScenarios.length) {
+        <cds-tile class="dax-tile" style="margin-bottom: 1rem;">
+          <h3 style="margin: 0 0 .5rem;">What-If Simulations</h3>
+          <cds-structured-list>
+            <cds-list-header>
+              <cds-list-column>Scenario</cds-list-column>
+              <cds-list-column>Assumptions</cds-list-column>
+              <cds-list-column>Impact</cds-list-column>
+              <cds-list-column>Status</cds-list-column>
+            </cds-list-header>
+            @for (s of policySimulationScenarios; track s.id) {
+              <cds-list-row>
+                <cds-list-column>{{ resolveRuntimeLabel(s.title) }}</cds-list-column>
+                <cds-list-column><span class="dax-mono">{{ asJson(s.assumptions) }}</span></cds-list-column>
+                <cds-list-column><span class="dax-mono">{{ asJson(s.impacts) }}</span></cds-list-column>
+                <cds-list-column>{{ s.status || '—' }}</cds-list-column>
+              </cds-list-row>
+            }
+          </cds-structured-list>
+        </cds-tile>
+      }
+
+      @if (aiExplainabilityBlocks.length) {
+        <cds-tile class="dax-tile" style="margin-bottom: 1rem;">
+          <h3 style="margin: 0 0 .5rem;">AI Explainability</h3>
+          <cds-structured-list>
+            <cds-list-header>
+              <cds-list-column>Claim</cds-list-column>
+              <cds-list-column>Rationale</cds-list-column>
+              <cds-list-column>Confidence</cds-list-column>
+              <cds-list-column>Status</cds-list-column>
+            </cds-list-header>
+            @for (b of aiExplainabilityBlocks; track b.id) {
+              <cds-list-row>
+                <cds-list-column>{{ resolveRuntimeLabel(b.title) }}</cds-list-column>
+                <cds-list-column>{{ resolveRuntimeLabel(b.rationale) }}</cds-list-column>
+                <cds-list-column>{{ b.confidence ?? '—' }}</cds-list-column>
+                <cds-list-column>{{ b.status || '—' }}</cds-list-column>
+              </cds-list-row>
+            }
+          </cds-structured-list>
+        </cds-tile>
+      }
+
       <cds-tile class="dax-tile">
         <table cdsTable size="md">
           <thead>
@@ -448,6 +551,15 @@ export interface OwnershipEdge {
 export class OwnershipMapTemplateComponent extends ExtendedTemplateBase {
   archetypeKey = 'ownership-map';
   @Input() edges: OwnershipEdge[] = [];
+  @Input() identityGraphNodes: IdentityGraphNode[] = [];
+  @Input() identityGraphEdges: IdentityGraphEdge[] = [];
+  @Input() policySimulationScenarios: PolicySimulationScenario[] = [];
+  @Input() aiExplainabilityBlocks: AiExplainabilityBlock[] = [];
+
+  asJson(v: unknown): string {
+    if (v == null) return '—';
+    try { return JSON.stringify(v); } catch { return '—'; }
+  }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -458,6 +570,12 @@ export interface DelegationRule {
   startsAt: string; expiresAt: string;
   status: 'active' | 'expired' | 'pending' | 'revoked';
   permission?: string;
+  riskLevel?: 'low' | 'medium' | 'high' | 'critical';
+  riskScore?: number;
+  escalationRequired?: boolean;
+  escalationTarget?: string;
+  escalationDueAt?: string;
+  escalationReason?: string;
 }
 @Component({
   selector: 'dos-delegation-center',
@@ -467,9 +585,46 @@ export interface DelegationRule {
   imports: DAX_IMPORTS,
   template: DAX_MASTHEAD + `
     @if (!loading) {
+      <div class="dax-grid dax-grid--3" style="margin-bottom: 1rem;">
+        <cds-tile class="dax-tile">
+          <p class="dax-kpi-label">Expiring In 14 Days</p>
+          <p class="dax-kpi-value">{{ expiringSoonCount() }}</p>
+        </cds-tile>
+        <cds-tile class="dax-tile">
+          <p class="dax-kpi-label">High Risk Rules</p>
+          <p class="dax-kpi-value">{{ highRiskCount() }}</p>
+        </cds-tile>
+        <cds-tile class="dax-tile">
+          <p class="dax-kpi-label">Escalations Open</p>
+          <p class="dax-kpi-value">{{ escalationOpenCount() }}</p>
+        </cds-tile>
+      </div>
+
+      @if (escalationOpenCount() > 0) {
+        <cds-tile class="dax-tile" style="margin-bottom: 1rem;">
+          <h3 style="margin: 0 0 .5rem;">Escalation Queue</h3>
+          <cds-structured-list>
+            <cds-list-header>
+              <cds-list-column>Rule</cds-list-column>
+              <cds-list-column>Target</cds-list-column>
+              <cds-list-column>Due</cds-list-column>
+              <cds-list-column>Reason</cds-list-column>
+            </cds-list-header>
+            @for (r of escalationRules(); track r.id) {
+              <cds-list-row>
+                <cds-list-column>{{ r.delegator }} → {{ r.delegate }}</cds-list-column>
+                <cds-list-column>{{ r.escalationTarget || '—' }}</cds-list-column>
+                <cds-list-column>{{ r.escalationDueAt || '—' }}</cds-list-column>
+                <cds-list-column>{{ r.escalationReason || '—' }}</cds-list-column>
+              </cds-list-row>
+            }
+          </cds-structured-list>
+        </cds-tile>
+      }
+
       <cds-tile class="dax-tile">
         <table cdsTable size="md">
-          <thead><tr><th>Delegator</th><th>Delegate</th><th>Scope</th><th>From</th><th>Until</th><th>Status</th></tr></thead>
+          <thead><tr><th>Delegator</th><th>Delegate</th><th>Scope</th><th>From</th><th>Until</th><th>Risk</th><th>Status</th></tr></thead>
           <tbody>
             @for (r of rules; track r.id) {
               <tr>
@@ -478,11 +633,21 @@ export interface DelegationRule {
                 <td>{{ r.scope }}</td>
                 <td>{{ r.startsAt }}</td>
                 <td>{{ r.expiresAt }}</td>
+                <td>
+                  @if (r.riskLevel) {
+                    <cds-tag [type]="riskTagType(r.riskLevel)">{{ r.riskLevel }}</cds-tag>
+                  } @else {
+                    <span>—</span>
+                  }
+                  @if (r.riskScore !== undefined && r.riskScore !== null) {
+                    <span class="dax-mono" style="margin-inline-start: .5rem;">{{ r.riskScore }}</span>
+                  }
+                </td>
                 <td><cds-tag [type]="r.status === 'active' ? 'green' : r.status === 'expired' ? 'red' : r.status === 'pending' ? 'blue' : 'warm-gray'">{{ r.status }}</cds-tag></td>
               </tr>
             } @empty {
               <tr>
-                <td colspan="6">
+                <td colspan="7">
                   <div class="dax-empty-state">
                     @if (emptyStateTitle) { <h3>{{ emptyStateTitle }}</h3> }
                     @if (emptyStateDescription) { <p>{{ emptyStateDescription }}</p> }
@@ -506,6 +671,32 @@ export interface DelegationRule {
 export class DelegationCenterTemplateComponent extends ExtendedTemplateBase {
   archetypeKey = 'delegation-center';
   @Input() rules: DelegationRule[] = [];
+
+  expiringSoonCount = computed(() => {
+    const now = Date.now();
+    const in14 = now + (14 * 24 * 60 * 60 * 1000);
+    return this.rules.filter((r) => {
+      if (!r.expiresAt) return false;
+      const ts = Date.parse(r.expiresAt);
+      return Number.isFinite(ts) && ts >= now && ts <= in14;
+    }).length;
+  });
+
+  highRiskCount = computed(() =>
+    this.rules.filter((r) => r.riskLevel === 'high' || r.riskLevel === 'critical').length,
+  );
+
+  escalationRules = computed(() => this.rules.filter((r) => r.escalationRequired));
+
+  escalationOpenCount = computed(() => this.escalationRules().length);
+
+  riskTagType(level?: string): string {
+    if (level === 'critical') return 'red';
+    if (level === 'high') return 'orange';
+    if (level === 'medium') return 'yellow';
+    if (level === 'low') return 'green';
+    return 'gray';
+  }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════

@@ -4,7 +4,7 @@
  */
 export interface SavedViewConfig {
     key: string;
-    labelKey: string;
+    i18nKey: string;
     isDefault?: boolean;
     filters?: Record<string, unknown>;
     sort?: {

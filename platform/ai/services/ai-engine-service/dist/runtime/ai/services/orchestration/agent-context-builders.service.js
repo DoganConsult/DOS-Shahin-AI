@@ -7,7 +7,7 @@
  *
  * Split from agent-runner.service.ts for modularity.
  */
-import { query, safeQuery } from '../../ports/database.port';
+import { query, safeQuery } from '../../ports/database.port.js';
 import { getFirstRow } from '@dos/db';
 /** Extract .value from a PromiseSettledResult, returning fallback on rejection */
 function settledValue(result, fallback) {
@@ -301,7 +301,7 @@ async function buildContextA10(tenantId, schema) {
 async function buildContextA11(tenantId, schema) {
     // Feature flag gate: skip if bcp_proactive_enabled is not set
     try {
-        const { isFeatureEnabled } = await import('../../agrc-engine/helpers/feature-flag.helper');
+        const { isFeatureEnabled } = await import('../../agrc-engine/helpers/feature-flag.helper.js');
         const enabled = await isFeatureEnabled(schema, 'bcp_proactive_enabled');
         if (!enabled) {
             return { agent: 'A11 — BCP Continuity', skipped: true, reason: 'bcp_proactive_enabled flag not set' };

@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { logger } from '../ports/logger.port';
+import { logger } from '../ports/logger.port.js';
 export function getServerInfo() {
     try {
         const { getMcpServerInfo, getActiveSessionCount, isDynamicMode } = require('../../../mcp/server');

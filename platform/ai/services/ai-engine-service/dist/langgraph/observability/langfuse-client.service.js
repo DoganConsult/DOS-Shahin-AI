@@ -4,7 +4,7 @@
 // Replaces LangSmith cloud with self-hosted Langfuse
 // ============================================
 import { Langfuse } from 'langfuse';
-import { LANGGRAPH_CONFIG } from '../config/langgraph.config';
+import { LANGGRAPH_CONFIG } from '../config/langgraph.config.js';
 import { toErrorMessage } from '@dos/platform-core/resilience';
 import { logger } from '@dos/platform-core/observability';
 // ── Langfuse Client Singleton ────────────────────────────────────
@@ -177,7 +177,7 @@ export async function flushLangfuse() {
 export async function recordMetricsDualWrite(metrics) {
     // Write to PostgreSQL (existing metrics service)
     try {
-        const { recordAgentMetrics } = await import('./langsmith-metrics.service');
+        const { recordAgentMetrics } = await import('./langsmith-metrics.service.js');
         await recordAgentMetrics({
             ...metrics,
             discoveries: 0, // Add if available

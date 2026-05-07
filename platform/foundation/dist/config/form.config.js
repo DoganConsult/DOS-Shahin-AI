@@ -2,11 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FOUNDATION_FORM_CONFIGS = void 0;
 const baseEntityFields = [
-    { key: 'code', labelKey: 'foundation.fields.code', type: 'text', required: true, pattern: '^[A-Z0-9_-]{2,32}$' },
-    { key: 'nameEn', labelKey: 'foundation.fields.nameEn', type: 'text', required: true },
-    { key: 'nameAr', labelKey: 'foundation.fields.nameAr', type: 'text' },
-    { key: 'parentId', labelKey: 'foundation.fields.parent', type: 'reference', optionsEndpoint: '/api/foundation/organizations?status=active&limit=200' },
-    { key: 'ownerId', labelKey: 'foundation.fields.owner', type: 'reference', optionsEndpoint: '/api/users?status=active&limit=200' },
+    { key: 'code', i18nKey: 'foundation.fields.code', type: 'text', required: true, pattern: '^[A-Z0-9_-]{2,32}$' },
+    { key: 'nameEn', i18nKey: 'foundation.fields.nameEn', type: 'text', required: true },
+    { key: 'nameAr', i18nKey: 'foundation.fields.nameAr', type: 'text' },
+    { key: 'parentId', i18nKey: 'foundation.fields.parent', type: 'reference', optionsEndpoint: '/api/foundation/organizations?status=active&limit=200' },
+    { key: 'ownerId', i18nKey: 'foundation.fields.owner', type: 'reference', optionsEndpoint: '/api/users?status=active&limit=200' },
 ];
 exports.FOUNDATION_FORM_CONFIGS = {
     'organization-create': {

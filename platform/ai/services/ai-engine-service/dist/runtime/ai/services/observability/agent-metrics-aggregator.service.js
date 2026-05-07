@@ -4,9 +4,9 @@
 // circuit breaker health, and cross-agent correlations
 // into a unified fleet dashboard model.
 // ============================================================
-import { safeQuery, tenantSchema } from '../../ports/database.port';
-import { aiCircuitBreaker } from '../governance/circuit/ai-circuit-breaker.service';
-import { eventBus } from '../../ports/events.port';
+import { safeQuery, tenantSchema } from '../../ports/database.port.js';
+import { aiCircuitBreaker } from '../governance/circuit/ai-circuit-breaker.service.js';
+import { eventBus } from '../../ports/events.port.js';
 import { getFirstRow } from '@dos/db';
 // ── Per-Agent Performance ───────────────────────────────────────────────────
 export async function getAgentPerformanceSummaries(tenantId, hours = 24) {

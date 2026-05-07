@@ -2,7 +2,7 @@
 // Quantum Readiness Service — Phase 8, Step 8.1
 // CNSA 2.0, NIST FIPS 203/204/205, ETSI QSC
 // ============================================
-import { safeQuery, tenantSchema } from '../../ports/database.port';
+import { safeQuery, tenantSchema } from '../../ports/database.port.js';
 const QUANTUM_VULNERABLE_ALGORITHMS = [
     'rsa', 'ecdsa', 'ecdh', 'dh', 'dsa', 'eddsa', 'ed25519', 'ed448',
     'p-256', 'p-384', 'p-521', 'secp256k1', 'x25519', 'x448',

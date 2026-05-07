@@ -1,10 +1,10 @@
-import { logger } from '../../ports/logger.port';
+import { logger } from '../../ports/logger.port.js';
 // ============================================
 // AGRC-OS — Agent Dependency Graph
 // Static and runtime dependency configuration
 // controlling execution order and parallelism.
 // ============================================
-import { safeQuery, tenantSchema } from '../../ports/database.port';
+import { safeQuery, tenantSchema } from '../../ports/database.port.js';
 import { toErrorMessage } from '@dos/module-sdk';
 import { getFirstRow } from '@dos/db';
 // ── Agent Dependency Graph (Default/Static) ─────────────────────────────────

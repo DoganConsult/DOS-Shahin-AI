@@ -1,5 +1,5 @@
-import { logger } from '../ports/logger.port';
-import { AI_GOVERNANCE_EVENT_CONTRACT } from './ai-governance.events';
+import { logger } from '../ports/logger.port.js';
+import { AI_GOVERNANCE_EVENT_CONTRACT } from './ai-governance.events.js';
 let _publisher = null;
 export function setPublisher(fn) {
     _publisher = fn;

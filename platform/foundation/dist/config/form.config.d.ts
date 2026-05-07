@@ -4,7 +4,7 @@
  */
 export interface FormFieldConfig {
     key: string;
-    labelKey: string;
+    i18nKey: string;
     type: 'text' | 'textarea' | 'select' | 'date' | 'boolean' | 'number' | 'reference';
     required?: boolean;
     pattern?: string;

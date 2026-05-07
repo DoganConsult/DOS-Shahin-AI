@@ -4,10 +4,10 @@ import { catchHandler, EC } from '@dos/platform-core/resilience/resilient-catch'
 // AI Incident Classifier (NCA ECC, EU AI Act Art. 62)
 // Auto-classifies AI incidents and routes to escalation paths
 // ============================================
-import { safeQuery, tenantSchema } from '../../../ports/database.port';
-import { emitEvent } from '../../../ports/events.port';
-import { claudeJSON } from '../../../ports/ai.port';
-import { SYSTEM_JOB_ACTOR } from '../../../ports/platform.port';
+import { safeQuery, tenantSchema } from '../../../ports/database.port.js';
+import { emitEvent } from '../../../ports/events.port.js';
+import { claudeJSON } from '../../../ports/ai.port.js';
+import { SYSTEM_JOB_ACTOR } from '../../../ports/platform.port.js';
 /** Escalation paths per incident type following NCA ECC guidance */
 const ESCALATION_PATHS = {
     safety_hazard: ['ciso', 'responsible_ai_officer', 'board', 'nca'],

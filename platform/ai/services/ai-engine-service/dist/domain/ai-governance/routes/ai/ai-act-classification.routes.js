@@ -4,10 +4,10 @@ import { Router } from 'express';
 // Risk classification, impact assessment CRUD,
 // and scoring for AI systems under governance
 // ============================================
-import { authenticate, requirePermission } from '../../ports/auth.port';
-import { validate, auditMiddleware, setAuditData, automationMiddleware, asyncHandler, moduleStack, mutationEventHook } from '../../ports/middleware.port';
-import { createClassifyBody, createImpactAssessmentBody, createScoreBody } from '../../schemas/ai-governance.schemas';
-import { classifyAiSystem, createAiImpactAssessment, getAiImpactAssessment, scoreAiImpactAssessment, ensureAiImpactAssessmentsTable, } from '../../services/ai/compliance/ai-act-classification.service';
+import { authenticate, requirePermission } from '../../ports/auth.port.js';
+import { validate, auditMiddleware, setAuditData, automationMiddleware, asyncHandler, moduleStack, mutationEventHook } from '../../ports/middleware.port.js';
+import { createClassifyBody, createImpactAssessmentBody, createScoreBody } from '../../schemas/ai-governance.schemas.js';
+import { classifyAiSystem, createAiImpactAssessment, getAiImpactAssessment, scoreAiImpactAssessment, ensureAiImpactAssessmentsTable, } from '../../services/ai/compliance/ai-act-classification.service.js';
 import { z } from "zod";
 const router = Router();
 router.use(moduleStack('ai-governance'));

@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { eventBus } from '../../ports/events.port';
+import { eventBus } from '../../ports/events.port.js';
 import { randomUUID } from 'crypto';
 export function emitAiEvent(opts) {
     try {

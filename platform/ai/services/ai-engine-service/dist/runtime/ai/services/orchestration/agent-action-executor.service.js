@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { logger } from '../../ports/logger.port';
-import { getAgentRbacEntry } from '../../ports/platform.port';
+import { logger } from '../../ports/logger.port.js';
+import { getAgentRbacEntry } from '../../ports/platform.port.js';
 /**
  * Agent Action Executor Service
  *
@@ -10,7 +10,7 @@ import { getAgentRbacEntry } from '../../ports/platform.port';
  *
  * Extracted from agent-runner.service.ts for maintainability.
  */
-import { emptyResult, safeQuery, tenantSchema } from '../../ports/database.port';
+import { emptyResult, safeQuery, tenantSchema } from '../../ports/database.port.js';
 /** Resolve a role code to the first matching user (DOS foundation scope, per ownership split). */
 async function resolveAssigneeToUserId(tenantId, opts) {
     const schema = tenantSchema(tenantId);
@@ -20,10 +20,10 @@ async function resolveAssigneeToUserId(tenantId, opts) {
      ORDER BY ura.created_at ASC LIMIT 1`, [opts.roleCode]);
     return res.rows[0]?.user_id || null;
 }
-import { createNotification } from '../../../notification/services/notification.service';
-import { eventBus } from '../../ports/events.port';
-import { evaluateDelegation } from '../../../governance/services/misc/delegation-rules.service';
-import { hasOpenConflict } from './agent-cooperation.service';
+import { createNotification } from '../../../notification/services/notification.service.js';
+import { eventBus } from '../../ports/events.port.js';
+import { evaluateDelegation } from '../../../governance/services/misc/delegation-rules.service.js';
+import { hasOpenConflict } from './agent-cooperation.service.js';
 import { toErrorMessage } from '@dos/module-sdk';
 import { getFirstRow } from '@dos/db';
 import { swallowNull, swallowDefault, EC } from '@dos/platform-core/resilience/resilient-catch';
@@ -189,7 +189,7 @@ export async function executeAction(tenantId, agentId, action, runId) {
                     type: `agent_${agentId.toLowerCase()}`,
                     title: `[${agentId}] ${action.title}`,
                     body: action.description,
-                    link: action.entityType ? `/${action.entityType}s` : '/workspace-home',
+                    link: action.entityType ? `/${action.entityType}s` : null,
                 });
             }
             break;
@@ -265,7 +265,7 @@ export async function executeAction(tenantId, agentId, action, runId) {
                 type: 'escalation',
                 title: `🚨 [${agentId}] ESCALATION: ${action.title}`,
                 body: action.description,
-                link: action.entityType ? `/${action.entityType}s/${action.entityId}` : '/workspace-home',
+                link: action.entityType ? `/${action.entityType}s/${action.entityId}` : null,
             });
             await eventBus.publish({
                 eventType: `agent.escalation`,
@@ -279,7 +279,7 @@ export async function executeAction(tenantId, agentId, action, runId) {
             break;
         }
         case 'trigger_sync': {
-            const { syncAllConnections } = await import('../../integrations/services/connector-sync.service');
+            const { syncAllConnections } = await import('../../integrations/services/connector-sync.service.js');
             const connectorType = (action.payload?.connectorType || 'siem');
             await syncAllConnections(tenantId, connectorType).catch((err) => logger.warn(`[AgentRunner] Sync trigger failed: ${toErrorMessage(err)}`));
             break;
@@ -287,7 +287,7 @@ export async function executeAction(tenantId, agentId, action, runId) {
         // ── Vendor Cross-Agent Propagation Actions (A09) ──────────────────────
         case 'propagate_vendor_risk': {
             try {
-                const { propagateVendorRiskToEnterprise } = await import('../../../vendor/services/vendor/vendor-cross-agent.service');
+                const { propagateVendorRiskToEnterprise } = await import('../../../vendor/services/vendor/vendor-cross-agent.service.js');
                 await propagateVendorRiskToEnterprise(tenantId, action.entityId || '', String(action.payload?.vendorName || action.title), (action.payload?.riskScore ?? 30), String(action.payload?.riskTier || 'high'), { reason: action.description });
             }
             catch (err) {
@@ -297,7 +297,7 @@ export async function executeAction(tenantId, agentId, action, runId) {
         }
         case 'propagate_vendor_gap': {
             try {
-                const { propagateVendorGapToRemediation } = await import('../../../vendor/services/vendor/vendor-cross-agent.service');
+                const { propagateVendorGapToRemediation } = await import('../../../vendor/services/vendor/vendor-cross-agent.service.js');
                 await propagateVendorGapToRemediation(tenantId, action.entityId || '', String(action.payload?.vendorName || action.title), action.description, (action.priority) || 'medium', action.payload?.controlId);
             }
             catch (err) {
@@ -307,7 +307,7 @@ export async function executeAction(tenantId, agentId, action, runId) {
         }
         case 'propagate_vendor_evidence': {
             try {
-                const { propagateVendorEvidenceToControls } = await import('../../../vendor/services/vendor/vendor-cross-agent.service');
+                const { propagateVendorEvidenceToControls } = await import('../../../vendor/services/vendor/vendor-cross-agent.service.js');
                 await propagateVendorEvidenceToControls(tenantId, action.entityId || '', String(action.payload?.vendorName || action.title), String(action.payload?.documentType || 'soc2'), String(action.payload?.documentId || ''), (action.payload?.expiryDate));
             }
             catch (err) {
@@ -317,7 +317,7 @@ export async function executeAction(tenantId, agentId, action, runId) {
         }
         case 'propagate_vendor_finding': {
             try {
-                const { propagateVendorFindingToAudit } = await import('../../../vendor/services/vendor/vendor-cross-agent.service');
+                const { propagateVendorFindingToAudit } = await import('../../../vendor/services/vendor/vendor-cross-agent.service.js');
                 await propagateVendorFindingToAudit(tenantId, action.entityId || '', String(action.payload?.vendorName || ''), action.title, action.description, (action.priority) || 'medium');
             }
             catch (err) {
@@ -331,7 +331,7 @@ export async function executeAction(tenantId, agentId, action, runId) {
     }
     // ── AI OS R2: Record observation for every executed action ────────────────
     try {
-        const { recordObservation } = await import('../observability/ai-observation.service');
+        const { recordObservation } = await import('../observability/ai-observation.service.js');
         await recordObservation({
             tenantId,
             agentId,

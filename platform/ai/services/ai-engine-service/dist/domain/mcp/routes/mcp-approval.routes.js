@@ -1,9 +1,9 @@
 // @ts-nocheck
 import { Router } from 'express';
-import { authenticate, requirePermission } from '../ports/auth.port';
-import { auditMiddleware, asyncHandler, moduleStack, validate, setAuditData } from '../ports/middleware.port';
-import * as executionService from '../services/mcp-execution.service';
-import { approvalReviewBody, listApprovalsQuery } from '../schemas/mcp.schemas';
+import { authenticate, requirePermission } from '../ports/auth.port.js';
+import { auditMiddleware, asyncHandler, moduleStack, validate, setAuditData } from '../ports/middleware.port.js';
+import * as executionService from '../services/mcp-execution.service.js';
+import { approvalReviewBody, listApprovalsQuery } from '../schemas/mcp.schemas.js';
 import { z } from "zod";
 const router = Router();
 router.use(moduleStack('mcp'));

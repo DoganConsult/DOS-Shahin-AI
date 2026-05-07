@@ -2,7 +2,7 @@
 // Shahin -- Digital Twin Simulation Service
 // CRUD lifecycle for compliance state simulations
 // ============================================
-import { query, safeQuery, tenantSchema } from '../../ports/database.port';
+import { query, safeQuery, tenantSchema } from '../../ports/database.port.js';
 import { getFirstRow } from '@dos/db';
 export async function createSimulation(tenantId, createdBy, options = {}) {
     const schema = tenantSchema(tenantId);

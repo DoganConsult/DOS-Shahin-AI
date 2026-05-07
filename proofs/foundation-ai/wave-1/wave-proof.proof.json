@@ -1,0 +1,26 @@
+{
+  "schema": "foundation-ai.proof.v1",
+  "phase": "WAVE-1-PROOF",
+  "wave": 1,
+  "name": "wave-proof",
+  "status": "GREEN",
+  "payload": {
+    "runtime": {
+      "status": "GREEN",
+      "runtimeProof": "/root/DOS-Platform/proofs/foundation-ai/post-launch/workspace-runtime.proof.json"
+    },
+    "visual": {
+      "status": "GREEN",
+      "files": [
+        "access-review-1440.png",
+        "access-review-390.png",
+        "access-review-430.png",
+        "access-review-768.png",
+        "delegations-1440.png",
+        "users-1440.png"
+      ]
+    }
+  },
+  "emittedAt": "2026-05-07T04:06:20.584Z",
+  "hash": "sha256:fc0e4d98948f899ea3766129b93648ca45c8c4ad8cab85e440508791af33aca4"
+}

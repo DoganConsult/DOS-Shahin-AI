@@ -1,13 +1,13 @@
 import { Router } from 'express';
-import { authenticate, requirePermission } from '../../ports/auth.port';
-import { safeQuery, tenantSchema } from '../../ports/database.port';
-import { emitModuleEvent } from '../../services/emit-event';
-import { eventBus } from '../../ports/events.port';
+import { authenticate, requirePermission } from '../../ports/auth.port.js';
+import { safeQuery, tenantSchema } from '../../ports/database.port.js';
+import { emitModuleEvent } from '../../services/emit-event.js';
+import { eventBus } from '../../ports/events.port.js';
 import { getFirstRow } from '@dos/db';
 // ── Zod Schemas ──────────────────────────────────────────────────────────
-import { validate, asyncHandler, auditMiddleware, setAuditData, moduleStack } from '../../ports/middleware.port';
+import { validate, asyncHandler, auditMiddleware, setAuditData, moduleStack } from '../../ports/middleware.port.js';
 import { swallow, EC } from '@dos/platform-core/resilience/resilient-catch';
-import { entityTypeEntityIdReviewPostBody, batchReviewPostBody, autoEscalatePostBody } from "../../schemas/ai.schemas";
+import { entityTypeEntityIdReviewPostBody, batchReviewPostBody, autoEscalatePostBody } from "../../schemas/ai.schemas.js";
 import { z } from "zod";
 const router = Router();
 router.use(moduleStack('ai'));

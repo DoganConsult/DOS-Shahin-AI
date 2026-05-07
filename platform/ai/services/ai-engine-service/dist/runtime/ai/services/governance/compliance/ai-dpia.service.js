@@ -1,4 +1,4 @@
-import { safeQuery, tenantSchema } from '../../../ports/database.port';
+import { safeQuery, tenantSchema } from '../../../ports/database.port.js';
 import { getFirstRow } from '@dos/db';
 /**
  * Calculate privacy risk score for DPIA

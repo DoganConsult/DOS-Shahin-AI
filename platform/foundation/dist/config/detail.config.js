@@ -2,25 +2,25 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FOUNDATION_DETAIL_CONFIGS = void 0;
 const baseHeaderFields = [
-    { key: 'code', labelKey: 'foundation.fields.code', type: 'text' },
-    { key: 'nameEn', labelKey: 'foundation.fields.nameEn', type: 'text' },
-    { key: 'nameAr', labelKey: 'foundation.fields.nameAr', type: 'text' },
-    { key: 'status', labelKey: 'foundation.fields.status', type: 'badge' },
+    { key: 'code', i18nKey: 'foundation.fields.code', type: 'text' },
+    { key: 'nameEn', i18nKey: 'foundation.fields.nameEn', type: 'text' },
+    { key: 'nameAr', i18nKey: 'foundation.fields.nameAr', type: 'text' },
+    { key: 'status', i18nKey: 'foundation.fields.status', type: 'badge' },
 ];
 exports.FOUNDATION_DETAIL_CONFIGS = {
     organization: {
         variant: 'organization',
         header: { titleKey: 'foundation.nav.organization' },
         sections: [
-            { key: 'identity', labelKey: 'foundation.module.title', layout: 'two-col', fields: baseHeaderFields },
+            { key: 'identity', i18nKey: 'foundation.module.title', layout: 'two-col', fields: baseHeaderFields },
         ],
         tabs: [
-            { key: 'children', labelKey: 'foundation.nav.businessUnits', loadFromEndpoint: '/api/foundation/organizations/:id/children', permission: 'foundation.org.read' },
-            { key: 'audit', labelKey: 'foundation.nav.audit', loadFromEndpoint: '/api/foundation/audit-trail?entityId=:id', permission: 'foundation.record.read' },
+            { key: 'children', i18nKey: 'foundation.nav.businessUnits', loadFromEndpoint: '/api/foundation/organizations/:id/children', permission: 'foundation.org.read' },
+            { key: 'audit', i18nKey: 'foundation.nav.audit', loadFromEndpoint: '/api/foundation/audit-trail?entityId=:id', permission: 'foundation.record.read' },
         ],
         actions: [
-            { key: 'edit', labelKey: 'foundation.actions.edit', permission: 'foundation.org.write', variant: 'primary' },
-            { key: 'delete', labelKey: 'foundation.actions.delete', permission: 'foundation:delete', variant: 'danger' },
+            { key: 'edit', i18nKey: 'foundation.actions.edit', permission: 'foundation.org.write', variant: 'primary' },
+            { key: 'delete', i18nKey: 'foundation.actions.delete', permission: 'foundation:delete', variant: 'danger' },
         ],
     },
 };

@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { authenticate, requirePermission } from '../../ports/auth.port';
-import { safeQuery, tenantSchema } from '../../ports/database.port';
-import { auditMiddleware, asyncHandler, automationMiddleware, moduleStack } from '../../ports/middleware.port';
-import { validate } from "../ports/middleware.port";
+import { authenticate, requirePermission } from '../../ports/auth.port.js';
+import { safeQuery, tenantSchema } from '../../ports/database.port.js';
+import { auditMiddleware, asyncHandler, automationMiddleware, moduleStack } from '../../ports/middleware.port.js';
+import { validate } from "../ports/middleware.port.js";
 import { z } from "zod";
 const router = Router();
 router.use(moduleStack('ai-governance'));

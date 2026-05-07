@@ -1,15 +1,15 @@
 // @ts-nocheck
-import { logger } from '../../../ports/logger.port';
+import { logger } from '../../../ports/logger.port.js';
 // ============================================
 // Agent-Specific Trigger Evaluators
 // Per-agent functions that evaluate tenant data
 // and return ProactiveTrigger arrays for each
 // agent domain (A01-A12).
 // ============================================
-import { safeQuery, tenantSchema } from '../../../ports/database.port';
+import { safeQuery, tenantSchema } from '../../../ports/database.port.js';
 import { toErrorMessage } from '@dos/module-sdk';
-import { evaluateEvidenceExpiry, evaluateRiskEscalation, evaluateComplianceTrend, } from '../../../../governance-os/services/misc/proactive-signal-evaluators.service';
-import { estimateRemediationTime } from '../../analytics/services/misc/predictive-analytics.service';
+import { evaluateEvidenceExpiry, evaluateRiskEscalation, evaluateComplianceTrend, } from '../../../../governance-os/services/misc/proactive-signal-evaluators.service.js';
+import { estimateRemediationTime } from '../../analytics/services/misc/predictive-analytics.service.js';
 // ── Agent-Specific Trigger Evaluators ────────────────────────────────────────
 /**
  * A01 (Onboarding): New tenant created, incomplete onboarding detected

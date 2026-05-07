@@ -1,5 +1,5 @@
-import { safeQuery, tenantSchema } from '../../ports/database.port';
-import { logger } from '../../ports/logger.port';
+import { safeQuery, tenantSchema } from '../../ports/database.port.js';
+import { logger } from '../../ports/logger.port.js';
 const LOG_TAG = '[AI-PermissionRecommender]';
 const MIN_DENIED_COUNT = 5;
 const LOOKBACK_DAYS = parseInt(process.env.PERM_RECOMMEND_LOOKBACK_DAYS || '7', 10);

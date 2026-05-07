@@ -1,4 +1,4 @@
-import { safeQuery, tenantSchema } from '../../ports/database.port';
+import { safeQuery, tenantSchema } from '../../ports/database.port.js';
 import { getFirstRow } from '@dos/db';
 export async function recordCycleFinding(tenantId, cycleId, agentId, content, memoryType = 'cycle_finding', metadata) {
     const schema = tenantSchema(tenantId);

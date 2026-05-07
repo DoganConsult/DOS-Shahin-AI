@@ -1,11 +1,11 @@
 // @ts-nocheck
 import { Router } from 'express';
-import { authenticate, requirePermission } from '../../ports/auth.port';
-import { getCockpitSnapshot } from '../../services/cockpit/ai-cockpit.service';
+import { authenticate, requirePermission } from '../../ports/auth.port.js';
+import { getCockpitSnapshot } from '../../services/cockpit/ai-cockpit.service.js';
 import { toErrorMessage } from '@dos/module-sdk';
 // ── Zod Schemas ──────────────────────────────────────────────────────────
-import { auditMiddleware, validate, moduleStack, mutationEventHook } from '../../ports/middleware.port';
-import { aiOsAgentsAgentIdDryRunPostBody, aiOsAgentsAgentIdReplayRunIdPostBody } from "../../schemas/ai.schemas";
+import { auditMiddleware, validate, moduleStack, mutationEventHook } from '../../ports/middleware.port.js';
+import { aiOsAgentsAgentIdDryRunPostBody, aiOsAgentsAgentIdReplayRunIdPostBody } from "../../schemas/ai.schemas.js";
 import { z } from "zod";
 const router = Router();
 router.use(moduleStack('ai'));
@@ -32,7 +32,7 @@ router.post('/ai-os/agents/:agentId/dry-run', requirePermission('ai.agent.execut
         if (!tenantId)
             return res.status(400).json({ error: 'Missing tenant context' });
         // Run agent in dry-run mode (propose actions but don't execute)
-        const { runAgent } = await import('../../services/agents/core/agent-runner.service');
+        const { runAgent } = await import('../../services/agents/core/agent-runner.service.js');
         const result = await runAgent(tenantId, agentId, { dryRun: true });
         res.json({ dryRun: true, ...result });
     }
@@ -48,7 +48,7 @@ router.post('/ai-os/agents/:agentId/replay/:runId', requirePermission('ai.agent.
         if (!tenantId)
             return res.status(400).json({ error: 'Missing tenant context' });
         // Re-run the agent (new run, not resume)
-        const { runAgent } = await import('../../services/agents/core/agent-runner.service');
+        const { runAgent } = await import('../../services/agents/core/agent-runner.service.js');
         const result = await runAgent(tenantId, agentId, { replayFromRunId: runId });
         res.json({ replay: true, originalRunId: runId, ...result });
     }

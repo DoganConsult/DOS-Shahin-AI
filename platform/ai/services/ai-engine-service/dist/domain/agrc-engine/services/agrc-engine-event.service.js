@@ -1,4 +1,4 @@
-import { eventBus } from '../ports/events.port';
+import { eventBus } from '../ports/events.port.js';
 import { randomUUID } from 'crypto';
 function severityForAction(act) {
     if (act === 'run_failed' || act === 'ccm_failed')

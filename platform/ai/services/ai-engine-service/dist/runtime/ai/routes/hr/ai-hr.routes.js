@@ -5,8 +5,8 @@
  * /api/ai-hr/* directly. Tenant scope is taken from the authenticated user.
  */
 import { Router } from 'express';
-import { authenticate, requirePermission } from '../../ports/auth.port';
-import { listEmployees, getEmployee, listManagers, listManagerInbox, acknowledgeReport, actionReport, getAgentTimeline, getAgentKpiTrend, runDueShifts, seedShiftsForAllTenants, } from '../../services/hr/ai-hr.service';
+import { authenticate, requirePermission } from '../../ports/auth.port.js';
+import { listEmployees, getEmployee, listManagers, listManagerInbox, acknowledgeReport, actionReport, getAgentTimeline, getAgentKpiTrend, runDueShifts, seedShiftsForAllTenants, } from '../../services/hr/ai-hr.service.js';
 const router = Router();
 router.get('/health', (_req, res) => {
     res.json({ ok: true, module: 'ai-hr', service: 'ai-engine-service' });

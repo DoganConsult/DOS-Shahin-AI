@@ -1,0 +1,44 @@
+{
+  "schema": "foundation-ai.proof.v1",
+  "phase": "WAVE-1-VERIFY",
+  "wave": 1,
+  "name": "wave-verify",
+  "status": "RED",
+  "payload": {
+    "commands": [
+      {
+        "cmd": "pnpm --filter @dos/ui-contracts build",
+        "status": "GREEN",
+        "ms": 2170
+      },
+      {
+        "cmd": "pnpm --filter @dos/ui-system build",
+        "status": "GREEN",
+        "ms": 3962
+      },
+      {
+        "cmd": "pnpm --filter @dos/platform-core build",
+        "status": "GREEN",
+        "ms": 2528
+      },
+      {
+        "cmd": "pnpm --filter @dos/platform-app build",
+        "status": "GREEN",
+        "ms": 16252
+      },
+      {
+        "cmd": "node scripts/ci-guards/lint-no-static-nav-fallback.mjs",
+        "status": "GREEN",
+        "ms": 61
+      },
+      {
+        "cmd": "node scripts/ci-guards/lint-no-legacy-uios-shell.mjs",
+        "status": "RED",
+        "ms": 1814,
+        "error": "Command failed: node scripts/ci-guards/lint-no-legacy-uios-shell.mjs"
+      }
+    ]
+  },
+  "emittedAt": "2026-05-07T04:08:55.767Z",
+  "hash": "sha256:02ae7090574148aff4c1f44cb5a67f81423c90bded72d35fac46436f6f36bb2d"
+}

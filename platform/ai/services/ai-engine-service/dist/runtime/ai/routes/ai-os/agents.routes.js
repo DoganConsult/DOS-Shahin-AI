@@ -3,11 +3,11 @@
  * @module ai-os/agents
  */
 import { Router } from 'express';
-import { authenticate, requirePermission } from '../../ports/auth.port';
-import { aiReadLimiter, aiWriteLimiter, hoursQuery, setCacheHeaders, setNoCacheHeaders } from './shared';
-import { aiOsAgentsAgentIdRuntimePutBody, aiOsAgentsAgentIdEnablePatchBody, aiOsAgentsAgentIdCircuitResetPostBody, aiOsStuckRunsRunIdCancelPostBody, aiOsAgentsAgentIdDisableReasonPostBody, aiOsCircuitBreakersAgentIdResetPostBody, } from './ai-os-schemas';
-import { auditMiddleware, asyncHandler, validate, moduleStack, mutationEventHook } from '../../ports/middleware.port';
-import { setAgentEnabled, detectStuckRuns, getAgentRuntimeConfig, updateRuntimeConfig, cancelStuckRun, getAgentRunStats, listAllRuntimeConfigs, getAgentCircuitState, resetAgentCircuit, isAgentInCooldown, getRuntimeHealthSummary, validateRuntimeConfigIntegrity, setAgentDisableReason, } from '../../services/agents/core/ai-agent-runtime.service';
+import { authenticate, requirePermission } from '../../ports/auth.port.js';
+import { aiReadLimiter, aiWriteLimiter, hoursQuery, setCacheHeaders, setNoCacheHeaders } from './shared.js';
+import { aiOsAgentsAgentIdRuntimePutBody, aiOsAgentsAgentIdEnablePatchBody, aiOsAgentsAgentIdCircuitResetPostBody, aiOsStuckRunsRunIdCancelPostBody, aiOsAgentsAgentIdDisableReasonPostBody, aiOsCircuitBreakersAgentIdResetPostBody, } from './ai-os-schemas.js';
+import { auditMiddleware, asyncHandler, validate, moduleStack, mutationEventHook } from '../../ports/middleware.port.js';
+import { setAgentEnabled, detectStuckRuns, getAgentRuntimeConfig, updateRuntimeConfig, cancelStuckRun, getAgentRunStats, listAllRuntimeConfigs, getAgentCircuitState, resetAgentCircuit, isAgentInCooldown, getRuntimeHealthSummary, validateRuntimeConfigIntegrity, setAgentDisableReason, } from '../../services/agents/core/ai-agent-runtime.service.js';
 import { z } from "zod";
 const router = Router();
 router.use(moduleStack('ai'));
@@ -102,19 +102,19 @@ router.post('/ai-os/stuck-runs/:runId/cancel', authenticate, aiWriteLimiter, req
 }));
 // ── Per-Agent Circuit Breakers ──────────────────────────────────────────────
 router.get('/ai-os/circuit-breakers', authenticate, aiReadLimiter, requirePermission('ai.agent.read'), validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
-    const { getAllCircuitStates } = await import('../../services/governance/circuit/per-agent-circuit-breaker.service');
+    const { getAllCircuitStates } = await import('../../services/governance/circuit/per-agent-circuit-breaker.service.js');
     const states = await getAllCircuitStates(req.tenantId);
     setCacheHeaders(res, 15);
     res.ok({ items: states, total: states.length });
 }));
 router.get('/ai-os/circuit-breakers/:agentId', authenticate, aiReadLimiter, requirePermission('ai.agent.read'), validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
-    const { getAgentCircuitState: getPerAgentState } = await import('../../services/governance/circuit/per-agent-circuit-breaker.service');
+    const { getAgentCircuitState: getPerAgentState } = await import('../../services/governance/circuit/per-agent-circuit-breaker.service.js');
     const state = await getPerAgentState(req.tenantId, req.params.agentId);
     setCacheHeaders(res, 10);
     res.ok(state);
 }));
 router.post('/ai-os/circuit-breakers/:agentId/reset', authenticate, aiWriteLimiter, requirePermission('ai.agent.configure'), validate({ body: aiOsCircuitBreakersAgentIdResetPostBody }), asyncHandler(async (req, res) => {
-    const { resetCircuitBreaker } = await import('../../services/governance/circuit/per-agent-circuit-breaker.service');
+    const { resetCircuitBreaker } = await import('../../services/governance/circuit/per-agent-circuit-breaker.service.js');
     await resetCircuitBreaker(req.tenantId, req.params.agentId);
     setNoCacheHeaders(res);
     res.ok({ reset: true });

@@ -4,11 +4,11 @@
  */
 export interface DetailSection {
     key: string;
-    labelKey: string;
+    i18nKey: string;
     layout: 'one-col' | 'two-col' | 'tabs';
     fields: {
         key: string;
-        labelKey: string;
+        i18nKey: string;
         type: string;
         permission?: string;
     }[];
@@ -22,13 +22,13 @@ export interface DetailVariantConfig {
     sections: DetailSection[];
     tabs?: {
         key: string;
-        labelKey: string;
+        i18nKey: string;
         loadFromEndpoint: string;
         permission?: string;
     }[];
     actions: {
         key: string;
-        labelKey: string;
+        i18nKey: string;
         permission: string;
         variant: 'primary' | 'secondary' | 'danger';
     }[];

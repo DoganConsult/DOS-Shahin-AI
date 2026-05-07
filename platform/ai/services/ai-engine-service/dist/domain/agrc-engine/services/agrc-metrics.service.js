@@ -5,7 +5,7 @@
 // NOTE: This is an AGRC product service residing
 // in the platform directory. Law 2 ownership: agrc.
 // ============================================
-import { safeQuery, tenantSchema } from '../ports/database.port';
+import { safeQuery, tenantSchema } from '../ports/database.port.js';
 import { getFirstRow } from '@dos/db';
 // ── Compute live metrics ───────────────────────────────────────────────────
 export async function computeMetrics(tenantId, hours = 24) {

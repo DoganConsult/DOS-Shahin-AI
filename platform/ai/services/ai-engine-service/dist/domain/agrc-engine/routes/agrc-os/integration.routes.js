@@ -3,14 +3,14 @@ import { Router } from 'express';
 // AGRC-OS — Integration routes (Gaps 1-6)
 // Covers: integration status, run, seed targets, monitoring targets,
 //         monitored controls, feedback, handoffs, mesh
-import { authenticate, requirePermission } from '../../ports/auth.port';
-import { validate, auditMiddleware, setAuditData } from '../../ports/middleware.port';
-import { errMsg } from '../../../../i18n/error-messages';
-import { emitEvent } from '../../ports/events.port';
-import { writeLimiter, heavyOpLimiter } from './shared';
+import { authenticate, requirePermission } from '../../ports/auth.port.js';
+import { validate, auditMiddleware, setAuditData } from '../../ports/middleware.port.js';
+import { errMsg } from '../../../../i18n/error-messages.js';
+import { emitEvent } from '../../ports/events.port.js';
+import { writeLimiter, heavyOpLimiter } from './shared.js';
 import { swallowEmpty, swallowDefault, EC, catchHandler } from '@dos/platform-core/resilience/resilient-catch';
-import { emptyResult } from '../../ports/database.port';
-import { createRunBody, createSeedTargetsBody } from '../../schemas/agrc-engine.schemas';
+import { emptyResult } from '../../ports/database.port.js';
+import { createRunBody, createSeedTargetsBody } from '../../schemas/agrc-engine.schemas.js';
 import { z } from "zod";
 const genericPayloadSchema = z.record(z.unknown());
 const router = Router();
@@ -53,7 +53,7 @@ router.get('/integration/status', validate({ query: z.record(z.unknown()) }), au
 router.post('/integration/run', authenticate, requirePermission('tenant.config.manage'), heavyOpLimiter, validate({ body: createRunBody }), async (req, res) => {
     try {
         const tenantId = req.tenantId;
-        const { runAgrcOsIntegrationCycle } = await import('../../services/agrc-os-integration.service');
+        const { runAgrcOsIntegrationCycle } = await import('../../services/agrc-os-integration.service.js');
         const result = await runAgrcOsIntegrationCycle(tenantId);
         setAuditData(res, { action: 'create', entityType: 'integration_cycle', entityId: 'manual' });
         emitEvent({ tenantId: req.tenantId, userId: req.user.userId, module: 'governance', event: 'created', entityType: 'agrc_os', entityId: req.params.id || '' }).catch(catchHandler(EC.EVENT_BUS, {}));
@@ -67,7 +67,7 @@ router.post('/integration/run', authenticate, requirePermission('tenant.config.m
 router.post('/integration/seed-targets', authenticate, requirePermission('tenant.config.manage'), writeLimiter, validate({ body: createSeedTargetsBody }), async (req, res) => {
     try {
         const tenantId = req.tenantId;
-        const { seedAgentTargetsFromProfile } = await import('../../services/agrc-os-integration.service');
+        const { seedAgentTargetsFromProfile } = await import('../../services/agrc-os-integration.service.js');
         const result = await seedAgentTargetsFromProfile(tenantId);
         setAuditData(res, { action: 'create', entityType: 'agent_monitoring_targets', entityId: 'seed' });
         emitEvent({ tenantId: req.tenantId, userId: req.user.userId, module: 'governance', event: 'created', entityType: 'agrc_os', entityId: req.params.id || '' }).catch(catchHandler(EC.EVENT_BUS, {}));
@@ -95,7 +95,7 @@ router.get('/integration/monitored-controls', validate({ query: z.record(z.unkno
     try {
         const tenantId = req.tenantId;
         const { tenantSchema, safeQuery } = await import('@dos/db');
-        const { getControls } = await import('../../../compliance/services/misc/ucf.service');
+        const { getControls } = await import('../../../compliance/services/misc/ucf.service.js');
         const schema = tenantSchema(tenantId);
         const limit = Math.min(parseInt(String(req.query.limit || '100'), 10), 500);
         const targetsRes = await swallowDefault(EC.FALLBACK_QUERY, emptyResult(), safeQuery(`SELECT agent_id, target_type, target_config FROM "${schema}".agent_monitoring_targets WHERE enabled = TRUE AND target_type = 'framework_focus'`), { tenantId: tenantId, operation: 'query agent_monitoring_targets' });
@@ -161,7 +161,7 @@ router.get('/integration/handoffs', validate({ query: z.record(z.unknown()) }), 
 router.get('/integration/mesh', validate({ query: z.record(z.unknown()) }), authenticate, requirePermission('platform.agent.read'), async (req, res) => {
     try {
         const tenantId = req.tenantId;
-        const { listParticipants } = await import('../../runtime/ai/services/squad/unified-squad-registry.service');
+        const { listParticipants } = await import('../../runtime/ai/services/squad/unified-squad-registry.service.js');
         const { getPendingActions } = await import('@dos/platform-core/settings/platform-mode-gate.service');
         const { tenantSchema, safeQuery } = await import('@dos/db');
         const schema = tenantSchema(tenantId);

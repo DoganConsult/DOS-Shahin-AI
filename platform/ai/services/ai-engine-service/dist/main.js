@@ -4,18 +4,18 @@ import './otel-init.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { bootstrapService } from '@dos/service-bootstrap';
-import { aiEngineRouter, nudgesRouter } from './routes';
+import { aiEngineRouter, nudgesRouter } from './routes.js';
 import { logger, setRecordAudit } from '@dos/platform-core/observability';
 import { setEventBus, toErrorMessage } from '@dos/module-sdk';
 import { loadServiceConfig } from '@dos/runtime-config';
 import { createEventBackbone } from '@dos/event-backbone';
-import { initEventTriggerListener } from './runtime/ai/services/workflow/ai-event-trigger.service';
-import { initAgentToolsRegistry } from './runtime/ai/services/agents/core/agent-tools-registry.service';
-import { mcpGateway } from './runtime/ai/mcp-gateway';
-import { registerAiEventSubscribers } from './runtime/ai/events/ai.subscribers';
-import { startCatchUpProducer } from './runtime/ai/events/ai-catch-up-producer';
-import { startOutboxDispatcher } from './runtime/ai/events/outbox-dispatcher';
-import { startHitlExpiryCron } from './runtime/ai/events/hitl-expiry-cron';
+import { initEventTriggerListener } from './runtime/ai/services/workflow/ai-event-trigger.service.js';
+import { initAgentToolsRegistry } from './runtime/ai/services/agents/core/agent-tools-registry.service.js';
+import { mcpGateway } from './runtime/ai/mcp-gateway.js';
+import { registerAiEventSubscribers } from './runtime/ai/events/ai.subscribers.js';
+import { startCatchUpProducer } from './runtime/ai/events/ai-catch-up-producer.js';
+import { startOutboxDispatcher } from './runtime/ai/events/outbox-dispatcher.js';
+import { startHitlExpiryCron } from './runtime/ai/events/hitl-expiry-cron.js';
 function initSdkEventBus(serviceCode) {
     const config = loadServiceConfig(serviceCode);
     const backbone = createEventBackbone({

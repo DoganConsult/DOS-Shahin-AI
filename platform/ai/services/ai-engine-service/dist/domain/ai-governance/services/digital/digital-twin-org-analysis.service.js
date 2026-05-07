@@ -5,8 +5,8 @@
 // org snapshots, and change impact modeling.
 // Owner: Product — ai-governance module (Law 2)
 // ============================================
-import { safeQuery, tenantSchema } from '../../ports/database.port';
-import { logger } from '../../ports/logger.port';
+import { safeQuery, tenantSchema } from '../../ports/database.port.js';
+import { logger } from '../../ports/logger.port.js';
 // ── Org Structure Snapshot ─────────────────────────────────────────
 /**
  * Capture the current organizational structure for a tenant,

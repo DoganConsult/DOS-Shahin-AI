@@ -1,10 +1,10 @@
-import { logger } from '../../ports/logger.port';
+import { logger } from '../../ports/logger.port.js';
 // ============================================
 // Reasoning Chain Service
 // Records and retrieves step-by-step agent reasoning chains
 // for full decision explainability
 // ============================================
-import { safeQuery, tenantSchema } from '../../ports/database.port';
+import { safeQuery, tenantSchema } from '../../ports/database.port.js';
 import { getFirstRow } from '@dos/db';
 /**
  * Record a reasoning step

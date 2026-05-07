@@ -61,7 +61,13 @@
     "program:status":           "node scripts/program/foundation-ai/status.mjs",
     "program:inventory":        "node scripts/program/foundation-ai/inventory.mjs",
     "program:plan-sync":        "node scripts/program/foundation-ai/plan-sync.mjs",
-    "program:preflight":        "node scripts/program/foundation-ai/preflight.mjs"
+    "program:preflight":        "node scripts/program/foundation-ai/preflight.mjs",
+    "program:wave-control":     "node scripts/program/foundation-ai/wave-control.mjs",
+    "program:wave-entry":       "node scripts/program/foundation-ai/wave-control.mjs --phase=entry",
+    "program:wave-verify":      "node scripts/program/foundation-ai/wave-control.mjs --phase=verify",
+    "program:wave-proof":       "node scripts/program/foundation-ai/wave-control.mjs --phase=proof",
+    "program:wave-close":       "node scripts/program/foundation-ai/wave-control.mjs --phase=close",
+    "program:wave-all":         "node scripts/program/foundation-ai/wave-control.mjs --phase=all"
   },
   "devDependencies": {
     "ajv": "^8.20.0",

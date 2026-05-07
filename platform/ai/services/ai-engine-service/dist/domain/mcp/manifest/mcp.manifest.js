@@ -1,4 +1,4 @@
-import { MCP_MANIFEST } from '../mcp.module';
+import { MCP_MANIFEST } from '../mcp.module.js';
 export { MCP_MANIFEST };
 export const MCP_MANIFEST_META = {
     code: MCP_MANIFEST.code,

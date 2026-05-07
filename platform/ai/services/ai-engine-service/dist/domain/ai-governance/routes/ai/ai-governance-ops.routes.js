@@ -1,11 +1,11 @@
 import { Router } from 'express';
-import { authenticate, requirePermission } from '../../ports/auth.port';
-import { createBreakGlass, revokeBreakGlass, listBreakGlassEntries, recordPromotion, listPromotions, getGovernanceEventSummary, listGovernanceAuditEvents, invalidateSummaryCache, } from '../../services/ai/operations/ai-governance-ops.service';
-import { checkGovernanceHealth, repairAiGovernance } from '../../services/ai/operations/ai-governance-bootstrap.service';
+import { authenticate, requirePermission } from '../../ports/auth.port.js';
+import { createBreakGlass, revokeBreakGlass, listBreakGlassEntries, recordPromotion, listPromotions, getGovernanceEventSummary, listGovernanceAuditEvents, invalidateSummaryCache, } from '../../services/ai/operations/ai-governance-ops.service.js';
+import { checkGovernanceHealth, repairAiGovernance } from '../../services/ai/operations/ai-governance-bootstrap.service.js';
 import { toErrorMessage } from '@dos/module-sdk';
 // ── Zod Schemas ──────────────────────────────────────────────────────────
-import { auditMiddleware, setAuditData, automationMiddleware, validate, moduleStack, mutationEventHook } from '../../ports/middleware.port';
-import { breakGlassPostBody, breakGlassIdRevokePostBody, promotionsPostBody, repairPostBody, optOutConfigSchema } from "../../schemas/ai-governance.schemas";
+import { auditMiddleware, setAuditData, automationMiddleware, validate, moduleStack, mutationEventHook } from '../../ports/middleware.port.js';
+import { breakGlassPostBody, breakGlassIdRevokePostBody, promotionsPostBody, repairPostBody, optOutConfigSchema } from "../../schemas/ai-governance.schemas.js";
 import { z } from "zod";
 const router = Router();
 router.use(moduleStack('ai-governance'));

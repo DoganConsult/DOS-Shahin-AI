@@ -221,10 +221,85 @@ const ARCHETYPE_EXTENSIONS: Record<string, Array<{ key: string; sql: string }>> 
     key: 'ownershipEdges',
     sql: `SELECT edge_id, sort_order, entity_id, entity_label, owner, ownership_role, effective_from, effective_to
             FROM dos.ui_route_ownership_edge WHERE route=$1 ORDER BY sort_order`,
+  },
+  {
+    key: 'identityGraphNodes',
+    sql: `SELECT
+            node_id AS id,
+            sort_order AS "sortOrder",
+            jsonb_build_object(
+              'label', COALESCE(label_en, label_ar),
+              'fallback', COALESCE(label_en, label_ar)
+            ) AS label,
+            node_type AS "nodeType",
+            owner,
+            risk_level AS "riskLevel",
+            metadata
+            FROM dos.ui_route_identity_graph_node WHERE route=$1 ORDER BY sort_order`,
+  },
+  {
+    key: 'identityGraphEdges',
+    sql: `SELECT
+            edge_id AS id,
+            sort_order AS "sortOrder",
+            source_node AS "sourceNode",
+            target_node AS "targetNode",
+            relation,
+            confidence,
+            metadata
+            FROM dos.ui_route_identity_graph_edge WHERE route=$1 ORDER BY sort_order`,
+  },
+  {
+    key: 'policySimulationScenarios',
+    sql: `SELECT
+            scenario_id AS id,
+            sort_order AS "sortOrder",
+            jsonb_build_object(
+              'label', COALESCE(title_en, title_ar),
+              'fallback', COALESCE(title_en, title_ar)
+            ) AS title,
+            assumption_json AS assumptions,
+            impact_json AS impacts,
+            recommended_action AS "recommendedAction",
+            status
+            FROM dos.ui_route_policy_simulation_scenario WHERE route=$1 ORDER BY sort_order`,
+  },
+  {
+    key: 'aiExplainabilityBlocks',
+    sql: `SELECT
+            block_id AS id,
+            sort_order AS "sortOrder",
+            jsonb_build_object(
+              'label', COALESCE(title_en, title_ar),
+              'fallback', COALESCE(title_en, title_ar)
+            ) AS title,
+            jsonb_build_object(
+              'label', COALESCE(rationale_en, rationale_ar),
+              'fallback', COALESCE(rationale_en, rationale_ar)
+            ) AS rationale,
+            confidence,
+            status,
+            action_json AS action
+            FROM dos.ui_route_ai_explainability_block WHERE route=$1 ORDER BY sort_order`,
   }],
   'delegation-center': [{
     key: 'delegationRules',
-    sql: `SELECT rule_id, sort_order, delegator, delegate, scope, permission, starts_at, ends_at, status
+    sql: `SELECT
+            rule_id AS id,
+            sort_order AS "sortOrder",
+            delegator,
+            delegate,
+            scope,
+            permission,
+            starts_at AS "startsAt",
+            ends_at AS "expiresAt",
+            status,
+            risk_level AS "riskLevel",
+            risk_score AS "riskScore",
+            escalation_required AS "escalationRequired",
+            escalation_target AS "escalationTarget",
+            escalation_due_at AS "escalationDueAt",
+            escalation_reason AS "escalationReason"
             FROM dos.ui_route_delegation_rule WHERE route=$1 ORDER BY sort_order`,
   }],
   'agent-registry': [{
@@ -375,7 +450,7 @@ async function loadProps(
   archetype: string | null | undefined,
   errors: SubQueryError[],
 ): Promise<Record<string, unknown>> {
-  const [kpis, cols, tabs, nbas, sections, reports, groups, axes] = await Promise.all([
+  const [kpis, cols, tabs, nbas, sections, reports, groups, axes, filters, tableActions] = await Promise.all([
     safeQuery('props.kpi', errors, () => pool.query(
       `SELECT sort_order, label_en, label_ar, source_path, format, ai_insight, status, link
          FROM dos.ui_route_kpi WHERE route=$1 ORDER BY sort_order`, [route])),
@@ -400,6 +475,34 @@ async function loadProps(
     safeQuery('props.heatmapAxis', errors, () => pool.query(
       `SELECT axis, sort_order, label_en, label_ar, bucket_key
          FROM dos.ui_route_heatmap_axis WHERE route=$1 ORDER BY axis, sort_order`, [route])),
+    safeQuery('props.filter', errors, () => pool.query(
+      `SELECT
+          filter_id AS "filterId",
+          sort_order AS "sortOrder",
+          label_en AS "labelEn",
+          label_ar AS "labelAr",
+          field_key AS "fieldKey",
+          operator,
+          control,
+          options_json AS options,
+          default_value AS "defaultValue",
+          permission
+         FROM dos.ui_route_filter
+        WHERE route=$1
+        ORDER BY sort_order`, [route])),
+    safeQuery('props.tableAction', errors, () => pool.query(
+      `SELECT
+          action_id AS "actionId",
+          scope,
+          sort_order AS "sortOrder",
+          label_en AS "labelEn",
+          label_ar AS "labelAr",
+          action_json AS action,
+          permission,
+          emphasis
+         FROM dos.ui_route_table_action
+        WHERE route=$1
+        ORDER BY sort_order`, [route])),
   ]);
   // Only emit a key when the dedicated table has rows. Empty arrays are
   // omitted so they don't clobber pre-shaped arrays already stored in
@@ -417,6 +520,17 @@ async function loadProps(
   if (reports.rows.length)  base['reportCards']      = reports.rows;
   if (groups.rows.length)   base['workqueueGroups']  = groups.rows;
   if (axes.rows.length)     base['heatmapAxes']      = axes.rows;
+  if (filters.rows.length)  base['filters']          = filters.rows;
+  if (tableActions.rows.length) {
+    const actions = tableActions.rows as Array<Record<string, unknown>>;
+    const byScope = (scope: string) => actions.filter((row) => row['scope'] === scope);
+    const toolbarActions = byScope('toolbar');
+    const rowActions = byScope('row');
+    const batchActions = byScope('batch');
+    if (toolbarActions.length) base['toolbarActions'] = toolbarActions;
+    if (rowActions.length) base['rowActions'] = rowActions;
+    if (batchActions.length) base['batchActions'] = batchActions;
+  }
   const ext = archetype ? ARCHETYPE_EXTENSIONS[archetype] : undefined;
   if (ext && ext.length) {
     const results = await Promise.all(

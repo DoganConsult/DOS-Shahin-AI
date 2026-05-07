@@ -1,10 +1,10 @@
-import { logger } from '../../ports/logger.port';
+import { logger } from '../../ports/logger.port.js';
 // ============================================================================
 // Personal Agent Diagnostics
 //
 // Health checks, cache status, connection pool stats, and module metrics.
 // ============================================================================
-import { safeQuery, tenantSchema } from '../../ports/database.port';
+import { safeQuery, tenantSchema } from '../../ports/database.port.js';
 import { toErrorMessage } from '@dos/module-sdk';
 import { getFirstRow } from '@dos/db';
 // ============================================================================
@@ -17,10 +17,10 @@ import { getFirstRow } from '@dos/db';
 export async function getPersonalAgentDiagnostics(tenantId) {
     const schema = tenantSchema(tenantId);
     // Check cache health
-    const { checkCacheHealth } = await import('./personal-agent-cache.service');
+    const { checkCacheHealth } = await import('./personal-agent-cache.service.js');
     const cacheHealth = await checkCacheHealth();
     // Check connection pool health
-    const { getPool } = await import('../../../../config/db/pool');
+    const { getPool } = await import('../../../../config/db/pool.js');
     const pool = getPool();
     const poolStats = {
         poolTotal: pool.totalCount,

@@ -1,14 +1,14 @@
 // @ts-nocheck
 import { Router } from 'express';
-import { authenticate, requirePermission } from '../../ports/auth.port';
-import { createSimulation, applyChange, applyScenario, discardSimulation, getSimulations, getSimulationWithImpact, analyzeOrgStructureImpact } from '../../services/digital/digital-twin.service';
-import { getScenarioTemplates, executeScenarioTemplate } from "../../services/misc/scenario-templates.service";
-import { emitEvent } from '../../ports/events.port';
+import { authenticate, requirePermission } from '../../ports/auth.port.js';
+import { createSimulation, applyChange, applyScenario, discardSimulation, getSimulations, getSimulationWithImpact, analyzeOrgStructureImpact } from '../../services/digital/digital-twin.service.js';
+import { getScenarioTemplates, executeScenarioTemplate } from "../../services/misc/scenario-templates.service.js";
+import { emitEvent } from '../../ports/events.port.js';
 import { toErrorMessage } from '@dos/module-sdk';
 // ── Zod Schemas ──────────────────────────────────────────────────────────
-import { validate, asyncHandler, auditMiddleware, setAuditData, automationMiddleware, moduleStack } from '../../ports/middleware.port';
+import { validate, asyncHandler, auditMiddleware, setAuditData, automationMiddleware, moduleStack } from '../../ports/middleware.port.js';
 import { swallow, EC } from '@dos/platform-core/resilience/resilient-catch';
-import { rootPostBody, idChangePostBody, idScenarioPostBody, createExecuteBody, createOrgImpactBody } from "../../schemas/ai-governance.schemas";
+import { rootPostBody, idChangePostBody, idScenarioPostBody, createExecuteBody, createOrgImpactBody } from "../../schemas/ai-governance.schemas.js";
 import { z } from "zod";
 const router = Router();
 router.use(moduleStack('ai-governance'));

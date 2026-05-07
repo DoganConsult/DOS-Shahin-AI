@@ -60,8 +60,8 @@ for (const path of FORBIDDEN) {
   } catch {}
   hits = hits.filter((h) => !ALLOWED_FILES.some((re) => re.test(h)));
   if (hits.length) {
-    console.error(`[forbid-direct-bootstrap-fan-out] ${path}: ${hits.length} hit(s)`);
-    hits.slice(0, 5).forEach((h) => console.error('  ' + h));
+    console.log(`[forbid-direct-bootstrap-fan-out] ${path}: ${hits.length} hit(s)`);
+    hits.slice(0, 5).forEach((h) => console.log('  ' + h));
     failures += hits.length;
   }
 }

@@ -1,11 +1,11 @@
 // @ts-nocheck
-import { logger } from '../../../ports/logger.port';
-import { safeQuery, tenantSchema } from '../../../ports/database.port';
+import { logger } from '../../../ports/logger.port.js';
+import { safeQuery, tenantSchema } from '../../../ports/database.port.js';
 import { getFirstRow } from '@dos/db';
-import { eventBus } from '../../../ports/events.port';
-import { createProcessTask } from '../../../ports/lifecycle.port';
-import { recordAudit } from '../../../../audit/services/audit/core/audit-trail.service';
-import { createNotification } from '../../../../notification/services/notification.service';
+import { eventBus } from '../../../ports/events.port.js';
+import { createProcessTask } from '../../../ports/lifecycle.port.js';
+import { recordAudit } from '../../../../audit/services/audit/core/audit-trail.service.js';
+import { createNotification } from '../../../../notification/services/notification.service.js';
 import { swallow, EC, catchHandler } from '@dos/platform-core/resilience/resilient-catch';
 import { Engine as RulesEngine } from 'json-rules-engine';
 import prom from 'prom-client';

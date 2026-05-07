@@ -1,6 +1,6 @@
 import { registerModule } from '@dos/module-sdk';
-import { AI_GOVERNANCE_PERMISSIONS, AI_GOVERNANCE_ROLES, AI_GOVERNANCE_ACTIONS } from './security/ai-governance.security';
-import { AI_GOVERNANCE_APPROVAL_MATRIX } from './security/ai-governance.approval-matrix';
+import { AI_GOVERNANCE_PERMISSIONS, AI_GOVERNANCE_ROLES, AI_GOVERNANCE_ACTIONS } from './security/ai-governance.security.js';
+import { AI_GOVERNANCE_APPROVAL_MATRIX } from './security/ai-governance.approval-matrix.js';
 export const AI_GOVERNANCE_MANIFEST = {
     code: 'ai-governance',
     version: '2.0.0',

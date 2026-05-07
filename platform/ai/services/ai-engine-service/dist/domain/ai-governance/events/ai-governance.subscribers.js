@@ -1,8 +1,8 @@
-import { logger } from '../ports/logger.port';
-import { safeQuery, tenantSchema } from '../ports/database.port';
-import { createProcessTask } from '../ports/lifecycle.port';
-import { eventBus } from '../ports/events.port';
-import { AI_GOVERNANCE_EVENT_CONTRACT } from './ai-governance.events';
+import { logger } from '../ports/logger.port.js';
+import { safeQuery, tenantSchema } from '../ports/database.port.js';
+import { createProcessTask } from '../ports/lifecycle.port.js';
+import { eventBus } from '../ports/events.port.js';
+import { AI_GOVERNANCE_EVENT_CONTRACT } from './ai-governance.events.js';
 import { registerNavigationIntegration } from '@dos/platform-core/shell/navigation/navigation-integration';
 const handlers = new Map();
 async function handleCompliancePostureChanged(event) {

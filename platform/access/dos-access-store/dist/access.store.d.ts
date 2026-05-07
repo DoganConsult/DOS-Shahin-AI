@@ -80,8 +80,14 @@ export declare class AccessStore {
     readonly decisionAuthorities: import("@angular/core").Signal<readonly string[]>;
     /** Compat: allowed dashboards — empty until dashboard registry lands. */
     readonly allowedDashboards: import("@angular/core").Signal<readonly string[]>;
-    /** Compat: legacy `landingPage()` function shape. Updated to use DB-driven tenant/member landing routes. */
-    landingPage(): string;
+    /** Compat: legacy `landingPage()` function shape. DB-driven only.
+     *  Returns null when the access snapshot has no DB-resolved landing
+     *  route. SPA must render empty/no-op (NO FRONTEND INVENTION). The
+     *  authoritative source is dos.tenant_landing_config via UI-OS
+     *  resolver — see TenantLandingConfigService. The /admin-hub branch
+     *  is an auth-boundary route owned by the platform-admin product.
+     */
+    landingPage(): string | null;
     /** Compat: legacy `hasAuthority(code)` — proxy to permission check. */
     hasAuthority(code: string): boolean;
     /** Compat: legacy module access alias. */

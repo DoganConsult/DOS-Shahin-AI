@@ -13,17 +13,10 @@ exports.CORE_FOUNDATION_ROUTES = [
         guards: { module: "foundation" },
         order: 164,
     },
-    {
-        id: "routes_workspace_home_routes",
-        productKey: "shahin-ai",
-        ownerKind: "product",
-        sourceKind: "defaultExport",
-        sourceFile: "modules/platform/routes/tenant/workspace-home.routes",
-        exportName: "default",
-        mountPath: "/api/workspace-home",
-        guards: { module: "foundation" },
-        order: 165,
-    },
+    // Workspace-home route entry intentionally omitted — landing route
+    // is DB-resolved via dos.tenant_landing_config + UI-OS runtime
+    // (NO FRONTEND INVENTION per AGENTS.md). Reinstate only via DB
+    // contract when the route catalog table emits it.
     {
         id: "routes_workspace_lifecycle_routes",
         productKey: "shahin-ai",

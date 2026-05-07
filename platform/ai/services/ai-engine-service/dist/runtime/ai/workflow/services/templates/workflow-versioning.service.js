@@ -4,5 +4,5 @@
  * Re-export barrel — canonical workflow-versioning lives in the workflow module.
  * This AI module path exists for backward compatibility.
  */
-export * from '../../../../workflow/services/templates/workflow-versioning.service';
+export * from '../../../../workflow/services/templates/workflow-versioning.service.js';
 //# sourceMappingURL=workflow-versioning.service.js.map

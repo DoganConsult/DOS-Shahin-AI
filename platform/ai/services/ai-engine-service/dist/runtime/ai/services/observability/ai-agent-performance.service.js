@@ -1,4 +1,4 @@
-import { safeQuery, tenantSchema } from '../../ports/database.port';
+import { safeQuery, tenantSchema } from '../../ports/database.port.js';
 /**
  * Record performance metric for an agent
  */

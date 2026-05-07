@@ -2,7 +2,7 @@
 // Shahin — Digital Twin Impact Engine
 // Change application, cascading effects, and org-wide impact projection
 // ============================================
-import { safeQuery } from '../../ports/database.port';
+import { safeQuery } from '../../ports/database.port.js';
 import { v4 as uuid } from 'uuid';
 export async function applyChange(tenantId, simulationId, change) {
     const result = await safeQuery("SELECT * FROM __TENANT_SCHEMA__.ai_governance_items" + (tenantId ? " WHERE tenant_id = $1" : ""), tenantId ? [tenantId] : []);

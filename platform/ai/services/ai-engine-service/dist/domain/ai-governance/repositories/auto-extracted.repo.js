@@ -1,6 +1,6 @@
 // @ts-nocheck
 // Auto-extracted AiGovernance repository
-import { safeQuery } from '../ports/database.port';
+import { safeQuery } from '../ports/database.port.js';
 export class AiGovernanceAutoRepo {
     static async query1(schema, args) {
         const query = `SELECT COALESCE(MAX(version_number), 0) + 1 AS next_ver

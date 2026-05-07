@@ -7,9 +7,9 @@
 //   ai_profiling_register, ai_training_data_registry,
 //   human_oversight_config
 // ============================================
-import { safeQuery, tenantSchema } from '../../../ports/database.port';
-import { logPolicyDecision } from '../../../../packs/services/blueprint.service';
-import { eventBus } from '../../../ports/events.port';
+import { safeQuery, tenantSchema } from '../../../ports/database.port.js';
+import { logPolicyDecision } from '../../../../packs/services/blueprint.service.js';
+import { eventBus } from '../../../ports/events.port.js';
 import { swallow, EC } from '@dos/platform-core/resilience/resilient-catch';
 // -----------------------------------------------
 // 1. registerPrivacyImpact — GDPR Art. 35 DPIA

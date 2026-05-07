@@ -4,10 +4,10 @@ import { logger } from '@dos/platform-core/observability';
 // Captures agent execution metrics for observability
 // ============================================
 import { BaseCallbackHandler } from '@langchain/core/callbacks/base';
-import { LANGGRAPH_CONFIG } from '../config/langgraph.config';
-import { recordAgentMetrics } from './langsmith-metrics.service';
-import { addToDeadLetterQueue } from './dead-letter-queue.service';
-import { getOpenTelemetryContext, createAgentSpan, recordOtelException, getCorrelationIdFromRequest } from './tracing-correlation.service';
+import { LANGGRAPH_CONFIG } from '../config/langgraph.config.js';
+import { recordAgentMetrics } from './langsmith-metrics.service.js';
+import { addToDeadLetterQueue } from './dead-letter-queue.service.js';
+import { getOpenTelemetryContext, createAgentSpan, recordOtelException, getCorrelationIdFromRequest } from './tracing-correlation.service.js';
 /**
  * Callback handler that captures agent execution metrics
  * for LangSmith observability integration

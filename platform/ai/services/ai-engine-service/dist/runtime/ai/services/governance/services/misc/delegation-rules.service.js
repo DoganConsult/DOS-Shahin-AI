@@ -5,5 +5,5 @@
  * (which itself re-exports from DAuth per Law 1). This nested AI module path
  * exists for backward compatibility.
  */
-export * from '../../../../../governance/services/misc/delegation-rules.service';
+export * from '../../../../../governance/services/misc/delegation-rules.service.js';
 //# sourceMappingURL=delegation-rules.service.js.map

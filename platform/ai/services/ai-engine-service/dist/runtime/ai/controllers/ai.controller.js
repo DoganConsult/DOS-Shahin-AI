@@ -1,13 +1,13 @@
 import { ok, action } from '@dos/module-sdk';
-import { NotFoundError } from '../../../errors/index';
-import { setAuditData } from '../ports/middleware.port';
-import { getProcessTable, getKernelStatus, getSchedulerTable, getIpcMessages, getMemoryPartitions, getKernelLog, killProcess, rebootAgent, adjustAutonomyLevel, getTokenUsage, setGlobalAutonomyLevel, getProcessDetail, getAgentDetail, pauseAgent, resumeAgent, getKernelHealth, saveKernelSnapshot, listKernelSnapshots, } from '../services/orchestration/ai-os-kernel.service';
-import { getAgentHealthStatus, getAgentHealthDashboard, } from '../services/agents/lifecycle/agent-health-visualization.service';
-import { getActiveAlerts, evaluateAlertRules, acknowledgeAlert, } from '../services/activity/activity-alerts.service';
-import { getUnifiedActivityFeed, } from '../services/activity/unified-activity-feed.service';
-import { checkToolPermission, getAgentPermissions, updateToolPermission, } from '../services/governance/agent-governance.service';
+import { NotFoundError } from '../../../errors/index.js';
+import { setAuditData } from '../ports/middleware.port.js';
+import { getProcessTable, getKernelStatus, getSchedulerTable, getIpcMessages, getMemoryPartitions, getKernelLog, killProcess, rebootAgent, adjustAutonomyLevel, getTokenUsage, setGlobalAutonomyLevel, getProcessDetail, getAgentDetail, pauseAgent, resumeAgent, getKernelHealth, saveKernelSnapshot, listKernelSnapshots, } from '../services/orchestration/ai-os-kernel.service.js';
+import { getAgentHealthStatus, getAgentHealthDashboard, } from '../services/agents/lifecycle/agent-health-visualization.service.js';
+import { getActiveAlerts, evaluateAlertRules, acknowledgeAlert, } from '../services/activity/activity-alerts.service.js';
+import { getUnifiedActivityFeed, } from '../services/activity/unified-activity-feed.service.js';
+import { checkToolPermission, getAgentPermissions, updateToolPermission, } from '../services/governance/agent-governance.service.js';
 import { analyzeRbacUsage, } from '../services/core/ai-rbac-optimizer.service.js';
-import { autoAssignAgentsForTenantMode, } from '../services/personal/personal-agent-auto-assign.service';
+import { autoAssignAgentsForTenantMode, } from '../services/personal/personal-agent-auto-assign.service.js';
 export async function processTable(req, res) {
     const result = await getProcessTable(req.tenantId);
     res.json(ok(result, req));

@@ -1,0 +1,14 @@
+{
+  "runId": "b9a5978d-6e5d-4832-8d46-5e813db87d58",
+  "phase": "WAVE-1-VERIFY",
+  "wave": 1,
+  "kind": "WAVE_VERIFY",
+  "inputsHash": "sha256:0f0524fce31c3c5d2480470d581a640c1d7d8a60b6084f987e542285ab286ecb",
+  "outputsHash": "sha256:24b3b8a9bee01260d72333a843fac22a8db903f8cd4db2cb919e4bee45cde39d",
+  "parentHash": "sha256:d90353d18557fb10baae360b383c428a47ace28e43d71f8e6fa9a99df62c4296",
+  "signer": "dev-1",
+  "status": "GREEN",
+  "evidenceUri": "/root/DOS-Platform/proofs/foundation-ai/wave-1/wave-verify.proof.json",
+  "createdAt": "2026-05-07T04:02:55.985Z",
+  "hash": "sha256:1ea32a900f0fbad286f57b686cc7530e6b09d6c70f636ab1e79e925e062a0f28"
+}

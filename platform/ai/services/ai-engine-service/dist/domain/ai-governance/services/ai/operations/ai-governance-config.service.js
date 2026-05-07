@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { safeQuery, tenantSchema } from '../../../ports/database.port';
+import { safeQuery, tenantSchema } from '../../../ports/database.port.js';
 const VALID_MODES = ['audit', 'warn', 'enforce'];
 const CONFIG_KEY = 'ai_governance_enforcement_mode';
 const CACHE_TTL_MS = 60_000;

@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { safeQuery } from '../ports/database.port';
+import { safeQuery } from '../ports/database.port.js';
 export async function listAgents() {
     const result = await safeQuery(`SELECT * FROM public.mcp_agent_registry WHERE is_enabled = TRUE AND status = 'active' ORDER BY sort_order`);
     return result.rows.map(mapAgentRow);

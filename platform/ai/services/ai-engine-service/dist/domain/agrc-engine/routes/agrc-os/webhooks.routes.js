@@ -1,13 +1,13 @@
 // @ts-nocheck
 import { Router } from 'express';
 import { catchHandler, EC } from '@dos/platform-core/resilience/resilient-catch';
-import { authenticate, requirePermission } from '../../ports/auth.port';
-import { errMsg } from '../../../../i18n/error-messages';
-import { emitEvent } from '../../ports/events.port';
-import { webhookLimiter } from './shared';
+import { authenticate, requirePermission } from '../../ports/auth.port.js';
+import { errMsg } from '../../../../i18n/error-messages.js';
+import { emitEvent } from '../../ports/events.port.js';
+import { webhookLimiter } from './shared.js';
 import { toErrorMessage } from '@dos/module-sdk';
-import { validate, validateWebhookPayload, auditMiddleware } from '../../ports/middleware.port';
-import { createTelemetryBody, createExternalBody, createKeysBody } from '../../schemas/agrc-engine.schemas';
+import { validate, validateWebhookPayload, auditMiddleware } from '../../ports/middleware.port.js';
+import { createTelemetryBody, createExternalBody, createKeysBody } from '../../schemas/agrc-engine.schemas.js';
 import { z } from "zod";
 const genericPayloadSchema = z.record(z.unknown());
 const router = Router();

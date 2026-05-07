@@ -12,12 +12,12 @@
  *   (root)   -> ai-act-classification.routes  (EU AI Act classification, AIIA CRUD, scoring)
  */
 import { Router } from 'express';
-import { fieldRbacFilter } from './ports/middleware.port';
-import configRoutes from './routes/ai/ai-governance-config.routes';
-import opsRoutes from './routes/ai/ai-governance-ops.routes';
-import wave1Routes from './routes/ai/ai-governance-wave1.routes';
-import wave2Routes from './routes/ai/ai-governance-wave2.routes';
-import aiActClassificationRoutes from './routes/ai/ai-act-classification.routes';
+import { fieldRbacFilter } from './ports/middleware.port.js';
+import configRoutes from './routes/ai/ai-governance-config.routes.js';
+import opsRoutes from './routes/ai/ai-governance-ops.routes.js';
+import wave1Routes from './routes/ai/ai-governance-wave1.routes.js';
+import wave2Routes from './routes/ai/ai-governance-wave2.routes.js';
+import aiActClassificationRoutes from './routes/ai/ai-act-classification.routes.js';
 const router = Router();
 // Apply field-level RBAC filtering for all ai-governance endpoints
 router.use(fieldRbacFilter('ai-governance'));

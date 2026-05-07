@@ -3,6 +3,12 @@
  * No raw route reads in consumers — normalize at ingest.
  */
 
+export type ShellDispatchEventName =
+  | 'ai.control.open_sod_review'
+  | 'ai.control.open_explainability'
+  | 'ai.control.execute_simulation'
+  | (string & {});
+
 export type ShellAction =
   | { kind: 'navigate'; path: string }
   | { kind: 'open_external'; url: string }
@@ -12,7 +18,7 @@ export type ShellAction =
   | { kind: 'open_command' }
   | { kind: 'close_overlay' }
   | { kind: 'clear_error' }
-  | { kind: 'dispatch_event'; eventName: string; payload?: Record<string, unknown> };
+  | { kind: 'dispatch_event'; eventName: ShellDispatchEventName; payload?: Record<string, unknown> };
 
 /** Banner row after UI-OS chrome resolution + live merge (title/message are resolved strings). */
 export interface ShellBanner {

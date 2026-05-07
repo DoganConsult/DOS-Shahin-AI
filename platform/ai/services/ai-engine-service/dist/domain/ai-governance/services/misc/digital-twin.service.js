@@ -5,10 +5,10 @@
 // any imports targeting the misc/ path.
 // Owner: Product — ai-governance module (Law 2)
 // ============================================
-export * from '../digital/digital-twin.types';
-export * from '../digital/digital-twin-simulation.service';
-export * from '../digital/digital-twin-impact.service';
-export * from '../digital/digital-twin-org-analysis.service';
+export * from '../digital/digital-twin.types.js';
+export * from '../digital/digital-twin-simulation.service.js';
+export * from '../digital/digital-twin-impact.service.js';
+export * from '../digital/digital-twin-org-analysis.service.js';
 // Re-export barrel default exports
-export { analyzeOrgStructureImpact } from '../digital/digital-twin.service';
+export { analyzeOrgStructureImpact } from '../digital/digital-twin.service.js';
 //# sourceMappingURL=digital-twin.service.js.map

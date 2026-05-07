@@ -3,8 +3,8 @@
 // Persistent, queryable alerts with lifecycle (open→acknowledged→resolved).
 // Record-linked via entity_type + entity_id. Supports escalation.
 // ============================================================================
-import { safeQuery, tenantSchema } from '../../../ports/database.port';
-import { eventBus } from '../../../ports/events.port';
+import { safeQuery, tenantSchema } from '../../../ports/database.port.js';
+import { eventBus } from '../../../ports/events.port.js';
 import { getFirstRow } from '@dos/db';
 // ── Core Operations ────────────────────────────────────────────────────────
 export async function createAlert(input) {

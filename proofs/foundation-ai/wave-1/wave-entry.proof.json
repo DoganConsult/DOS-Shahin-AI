@@ -1,0 +1,43 @@
+{
+  "schema": "foundation-ai.proof.v1",
+  "phase": "WAVE-1-ENTRY",
+  "wave": 1,
+  "name": "wave-entry",
+  "status": "GREEN",
+  "payload": {
+    "commands": [
+      {
+        "cmd": "node scripts/ci-guards/lint-no-static-nav-fallback.mjs",
+        "status": "GREEN",
+        "ms": 58
+      },
+      {
+        "cmd": "node scripts/ci-guards/lint-no-legacy-uios-shell.mjs",
+        "status": "GREEN",
+        "ms": 1810
+      },
+      {
+        "cmd": "pnpm --filter @dos/ui-contracts build",
+        "status": "GREEN",
+        "ms": 1800
+      },
+      {
+        "cmd": "pnpm --filter @dos/ui-system build",
+        "status": "GREEN",
+        "ms": 3044
+      },
+      {
+        "cmd": "pnpm --filter @dos/platform-core build",
+        "status": "GREEN",
+        "ms": 2477
+      },
+      {
+        "cmd": "pnpm --filter @dos/platform-app build",
+        "status": "GREEN",
+        "ms": 15614
+      }
+    ]
+  },
+  "emittedAt": "2026-05-07T03:31:58.739Z",
+  "hash": "sha256:fe68d621818149b6ef8c18c8d0ca53f5fd4f6e16ccd6148f8fb8c4fbce96d3dc"
+}

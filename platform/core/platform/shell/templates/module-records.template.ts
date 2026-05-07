@@ -26,7 +26,7 @@ import {
 import { DosCarbonSearchComponent } from '@dos/ui-system';
 import {
   ModuleColumn, ModuleRecord, ModuleKpi, ModuleNotification,
-  ModuleInsightPillars, ModuleRole, resolveViewMode, RoleViewMode
+  ModuleInsightPillars, ModuleRole, ModuleAction, resolveViewMode, RoleViewMode
 } from './module-template.types';
 import { DosInsightBarComponent } from './dos-insight-bar.component';
 
@@ -74,7 +74,7 @@ import { DosInsightBarComponent } from './dos-insight-bar.component';
         <!-- Add button: full role only -->
         @if (viewMode() === 'full' && addAction) {
           <div class="dmt-masthead-actions">
-            <button cdsButton="primary" size="sm" (click)="addAction!.action?.()">
+            <button cdsButton="primary" size="sm" (click)="triggerAction(addAction)">
               + {{ addAction.label }}
             </button>
           </div>
@@ -131,10 +131,14 @@ import { DosInsightBarComponent } from './dos-insight-bar.component';
     @if (!loading) {
       <cds-tile class="dmt-table-tile">
         <!-- Bulk actions (full role only) -->
-        @if (viewMode() === 'full' && selectedIds.length > 0 && bulkActions.length) {
+        @if (viewMode() === 'full' && selectedIds.length > 0 && batchActions.length) {
           <div class="dmt-bulk-bar">
             <span>{{ selectedIds.length }} selected</span>
-            <cds-combo-button [buttons]="bulkActions" size="sm">Bulk Actions</cds-combo-button>
+            @for (a of batchActions; track a.actionKey || a.commandKey || a.route || a.label) {
+              <button cdsButton="tertiary" size="sm" (click)="triggerAction(a, { selectedIds })">
+                {{ a.label }}
+              </button>
+            }
           </div>
         }
 
@@ -190,6 +194,11 @@ import { DosInsightBarComponent } from './dos-insight-bar.component';
                   @if (viewMode() === 'full') {
                     <button cdsButton="ghost" size="sm" (click)="onRowEdit(row)">Edit</button>
                   }
+                  @for (a of rowActions; track a.actionKey || a.commandKey || a.route || a.label) {
+                    <button cdsButton="ghost" size="sm" (click)="triggerAction(a, { rowId: row.id, row })">
+                      {{ a.label }}
+                    </button>
+                  }
                 </td>
               </tr>
             } @empty {
@@ -202,7 +211,7 @@ import { DosInsightBarComponent } from './dos-insight-bar.component';
                     @if (emptyStateTitle) { <h3>{{ emptyStateTitle }}</h3> }
                     @if (emptyStateDescription) { <p>{{ emptyStateDescription }}</p> }
                     @if (viewMode() === 'full' && addAction) {
-                      <button cdsButton="primary" size="sm" (click)="addAction!.action?.()">
+                      <button cdsButton="primary" size="sm" (click)="triggerAction(addAction)">
                         {{ addAction.label }}
                       </button>
                     }
@@ -274,8 +283,12 @@ export class ModuleRecordsTemplateComponent {
   @Input() filterLabel = 'Filter';
   @Input() filterOptions: Array<{ content: string; value: string }> = [];
   @Input() viewSwitcher: Array<{ id: string; label: string }> = [];
-  @Input() bulkActions: Array<{ content: string; click: () => void }> = [];
-  @Input() addAction: { label: string; action: () => void } | null = null;
+  // Deprecated callback-shaped action props are intentionally removed.
+  // Runtime actions must be serializable and routed through actionKey/commandKey/route.
+  @Input() toolbarActions: ModuleAction[] = [];
+  @Input() rowActions: ModuleAction[] = [];
+  @Input() batchActions: ModuleAction[] = [];
+  @Input() addAction: ModuleAction | null = null;
   @Input() emptyStateTitle = '';
   @Input() emptyStateDescription = '';
   @Input() pillars: ModuleInsightPillars | null = null;
@@ -291,6 +304,7 @@ export class ModuleRecordsTemplateComponent {
   @Output() pageChange = new EventEmitter<number>();
   @Output() pageSizeChange = new EventEmitter<number>();
   @Output() selectionChange = new EventEmitter<string[]>();
+  @Output() actionTriggered = new EventEmitter<{ key: string; payload?: Record<string, unknown> }>();
 
   selectedIds: string[] = [];
 
@@ -318,6 +332,23 @@ export class ModuleRecordsTemplateComponent {
   onPageSizeChange(s: number) { this.pageSizeChange.emit(s); }
   onRowClick(row: ModuleRecord) { this.rowClick.emit(row); }
   onRowEdit(row: ModuleRecord) { this.rowEdit.emit(row); }
+  triggerAction(action: ModuleAction | null, payload?: Record<string, unknown>) {
+    if (!action) return;
+    if (action.actionKey) {
+      this.actionTriggered.emit({ key: action.actionKey, payload });
+      return;
+    }
+    if (action.commandKey) {
+      this.actionTriggered.emit({ key: action.commandKey, payload });
+      return;
+    }
+    if (action.route) {
+      this.actionTriggered.emit({
+        key: 'navigate',
+        payload: { path: action.route, ...(payload ?? {}) },
+      });
+    }
+  }
   selectAll(e: Event) {
     this.selectedIds = (e.target as HTMLInputElement).checked ? this.rows.map(r => r.id) : [];
     this.selectionChange.emit(this.selectedIds);

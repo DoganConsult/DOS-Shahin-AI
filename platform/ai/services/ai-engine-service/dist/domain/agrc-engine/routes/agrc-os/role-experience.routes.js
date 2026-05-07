@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { asyncHandler } from '../../ports/middleware.port';
-import { authenticate, requirePermission } from '../../ports/auth.port';
-import { safeQuery, tenantSchema } from '../../ports/database.port';
-import { validate } from "../ports/middleware.port";
+import { asyncHandler } from '../../ports/middleware.port.js';
+import { authenticate, requirePermission } from '../../ports/auth.port.js';
+import { safeQuery, tenantSchema } from '../../ports/database.port.js';
+import { validate } from "../ports/middleware.port.js";
 import { z } from "zod";
 const router = Router();
 router.get('/role-experience/profile', authenticate, requirePermission('platform.agent.read'), validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {

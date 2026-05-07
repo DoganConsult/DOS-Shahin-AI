@@ -2,7 +2,7 @@
 // AI Model Experiments Service — Phase 9, Step 9.1
 // SOC 2 PI1.3 (processing accuracy), A/B testing
 // ============================================
-import { safeQuery, tenantSchema } from '../../../ports/database.port';
+import { safeQuery, tenantSchema } from '../../../ports/database.port.js';
 // 1. createExperiment
 export async function createExperiment(tenantId, experiment) {
     const schema = tenantSchema(tenantId);

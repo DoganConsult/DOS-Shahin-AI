@@ -1,4 +1,4 @@
-import { safeQuery, tenantSchema } from '../ports/database.port';
+import { safeQuery, tenantSchema } from '../ports/database.port.js';
 import { toErrorMessage } from '@dos/module-sdk';
 import { swallowDefault, EC } from '@dos/platform-core/resilience/resilient-catch';
 export async function getAgentRuntimeConfigs(tenantId) {

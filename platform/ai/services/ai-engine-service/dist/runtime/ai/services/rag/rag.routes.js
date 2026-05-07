@@ -6,10 +6,10 @@
  * Mounted at /rag in ai-engine-service.
  */
 import { Router } from 'express';
-import { indexDocumentWithChunking, batchIndexDocuments, semanticSearch, hybridSearch, deleteDocument, getIndexStats } from './vector-store-adapter';
-import { indexDocumentBody, indexBatchBody, searchBody, hybridSearchBody } from './rag.schemas';
-import { authenticate, requirePermission } from '../../../../ports/auth.port';
-import { traceSurfaceCall } from '../../../../domain/agrc-engine/observability/langfuse-bridge';
+import { indexDocumentWithChunking, batchIndexDocuments, semanticSearch, hybridSearch, deleteDocument, getIndexStats } from './vector-store-adapter.js';
+import { indexDocumentBody, indexBatchBody, searchBody, hybridSearchBody } from './rag.schemas.js';
+import { authenticate, requirePermission } from '../../../../ports/auth.port.js';
+import { traceSurfaceCall } from '../../../../domain/agrc-engine/observability/langfuse-bridge.js';
 const router = Router();
 router.use(authenticate);
 // POST /index — Index a document with auto-chunking

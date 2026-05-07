@@ -1,11 +1,11 @@
 // @ts-nocheck
 import { Router } from 'express';
 import { z } from 'zod';
-import { authenticate, requirePermission } from '../../ports/auth.port';
-import { NotFoundError } from '../../../../errors';
-import { aiReadLimiter, aiWriteLimiter, setCacheHeaders, setNoCacheHeaders } from './shared';
-import { auditMiddleware, validate, asyncHandler, moduleStack, mutationEventHook } from '../../ports/middleware.port';
-import { executeCodeSearch, getCodeSearchHealthStatus, getConfiguredEngines, getFullConfig, listEngineRegistry, getEngineByCode, registerEngine, updateEngine, listSurfaceRegistry, registerSurface, getCodeSearchDashboard, } from '../../services/code-search/code-search.service';
+import { authenticate, requirePermission } from '../../ports/auth.port.js';
+import { NotFoundError } from '../../../../errors/index.js';
+import { aiReadLimiter, aiWriteLimiter, setCacheHeaders, setNoCacheHeaders } from './shared.js';
+import { auditMiddleware, validate, asyncHandler, moduleStack, mutationEventHook } from '../../ports/middleware.port.js';
+import { executeCodeSearch, getCodeSearchHealthStatus, getConfiguredEngines, getFullConfig, listEngineRegistry, getEngineByCode, registerEngine, updateEngine, listSurfaceRegistry, registerSurface, getCodeSearchDashboard, } from '../../services/code-search/code-search.service.js';
 const codeSearchQueryBody = z.object({
     query: z.string().min(1).max(2000),
     engine: z.enum(['zoekt', 'hound', 'seagoat', 'all']).optional(),

@@ -3,14 +3,14 @@
  * @module ai-os/policy
  */
 import { Router } from 'express';
-import { authenticate, requirePermission } from '../../ports/auth.port';
-import { NotFoundError } from '../../../../errors';
-import { aiReadLimiter, aiWriteLimiter, aiDeleteLimiter, hoursQuery, setCacheHeaders, setNoCacheHeaders } from './shared';
-import { aiOsPolicyRulesPostBody, aiOsPolicyRulesRuleIdPutBody, aiOsPolicyRulesRuleIdTogglePatchBody, aiOsEventTriggersPostBody, aiOsEventTriggersBindingIdTogglePatchBody, aiOsEventTriggersBindingIdTestFirePostBody, aiOsEventTriggersBindingIdPutBody, aiOsRouteRulesPostBody, aiOsRouteRulesRuleIdTogglePatchBody, aiOsRouteRulesRuleIdPutBody, } from './ai-os-schemas';
-import { listPolicyRules, createPolicyRule, deletePolicyRule, togglePolicyRule, updatePolicyRule, getPolicyEvalStats, detectPolicyConflicts, getBlockedActionLog } from '../../services/governance/ai-policy-rule.service';
-import { listEventTriggerBindings, createEventTriggerBinding, deleteEventTriggerBinding, toggleEventTriggerBinding, testFireBinding, updateEventTriggerBinding, getTriggerFireLog } from '../../services/workflow/ai-event-trigger.service';
-import { listRouteRules, createRouteRule, deleteRouteRule, toggleRouteRule, updateRouteRule } from '../../services/workflow/ai-task-routing.service';
-import { auditMiddleware, asyncHandler, validate, moduleStack, mutationEventHook } from '../../ports/middleware.port';
+import { authenticate, requirePermission } from '../../ports/auth.port.js';
+import { NotFoundError } from '../../../../errors/index.js';
+import { aiReadLimiter, aiWriteLimiter, aiDeleteLimiter, hoursQuery, setCacheHeaders, setNoCacheHeaders } from './shared.js';
+import { aiOsPolicyRulesPostBody, aiOsPolicyRulesRuleIdPutBody, aiOsPolicyRulesRuleIdTogglePatchBody, aiOsEventTriggersPostBody, aiOsEventTriggersBindingIdTogglePatchBody, aiOsEventTriggersBindingIdTestFirePostBody, aiOsEventTriggersBindingIdPutBody, aiOsRouteRulesPostBody, aiOsRouteRulesRuleIdTogglePatchBody, aiOsRouteRulesRuleIdPutBody, } from './ai-os-schemas.js';
+import { listPolicyRules, createPolicyRule, deletePolicyRule, togglePolicyRule, updatePolicyRule, getPolicyEvalStats, detectPolicyConflicts, getBlockedActionLog } from '../../services/governance/ai-policy-rule.service.js';
+import { listEventTriggerBindings, createEventTriggerBinding, deleteEventTriggerBinding, toggleEventTriggerBinding, testFireBinding, updateEventTriggerBinding, getTriggerFireLog } from '../../services/workflow/ai-event-trigger.service.js';
+import { listRouteRules, createRouteRule, deleteRouteRule, toggleRouteRule, updateRouteRule } from '../../services/workflow/ai-task-routing.service.js';
+import { auditMiddleware, asyncHandler, validate, moduleStack, mutationEventHook } from '../../ports/middleware.port.js';
 import { z } from "zod";
 const router = Router();
 router.use(moduleStack('ai'));

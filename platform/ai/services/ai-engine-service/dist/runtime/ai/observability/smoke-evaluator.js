@@ -5,7 +5,7 @@
 // into public.ai_smoke_scores so the platform can compute rolling
 // readiness per agent and gate the Langfuse prompt-label promotion to
 // 'production' on a sustained ≥ 0.7 mean over ≥ 5 evaluations.
-import { logger } from '../ports/logger.port';
+import { logger } from '../ports/logger.port.js';
 const PROMOTION_GATE = {
     minScore: 0.7,
     minSamples: 5,

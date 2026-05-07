@@ -8,10 +8,10 @@
  * Read-only. RBAC: requirePermission('platform.dsoc.read') for views.
  */
 import { Router } from 'express';
-import { authenticate, requirePermission } from '../../ports/auth.port';
+import { authenticate, requirePermission } from '../../ports/auth.port.js';
 import { safeQuery } from '@dos/db';
-import { getGateDecisions, getGateDecisionStats } from '../../services/dsoc-security/gate-decisions.service';
-import { getHITLQueue, getHITLBacklogSummary } from '../../services/dsoc-security/hitl-queue.service';
+import { getGateDecisions, getGateDecisionStats } from '../../services/dsoc-security/gate-decisions.service.js';
+import { getHITLQueue, getHITLBacklogSummary } from '../../services/dsoc-security/hitl-queue.service.js';
 const router = Router();
 const platformQuery = async (text, params = []) => {
     const r = await safeQuery(text, params);

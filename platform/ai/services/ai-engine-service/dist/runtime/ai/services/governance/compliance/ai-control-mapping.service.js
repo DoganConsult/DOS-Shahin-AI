@@ -3,9 +3,9 @@
 // Uses Claude to suggest mappings between controls across frameworks
 // based on semantic similarity of control text.
 // ============================================================================
-import { safeQuery } from '../../../ports/database.port';
-import { eventBus } from '../../../ports/events.port';
-import { SYSTEM_TENANT } from '../../../ports/platform.port';
+import { safeQuery } from '../../../ports/database.port.js';
+import { eventBus } from '../../../ports/events.port.js';
+import { SYSTEM_TENANT } from '../../../ports/platform.port.js';
 /**
  * Generate cross-framework mapping suggestions using text similarity.
  * Uses PostgreSQL trigram similarity (pg_trgm) for fast initial matching,

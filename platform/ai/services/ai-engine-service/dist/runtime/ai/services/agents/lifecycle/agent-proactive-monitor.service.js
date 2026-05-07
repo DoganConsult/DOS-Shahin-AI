@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { logger } from '../../../ports/logger.port';
+import { logger } from '../../../ports/logger.port.js';
 // ============================================
 // Agent Proactive Monitoring Service (Facade)
 // Continuously monitors tenant data and triggers
@@ -11,20 +11,20 @@ import { logger } from '../../../ports/logger.port';
 //   - proactive-signal-evaluators.service.ts  (cross-cutting signal functions + configs)
 //   - agent-trigger-evaluators.service.ts     (per-agent A01-A12 evaluators)
 // ============================================
-import { safeQuery } from '../../../ports/database.port';
-import { eventBus } from '../../../ports/events.port';
-import { recordAudit } from '../../../../audit/services/audit/core/audit-trail.service';
+import { safeQuery } from '../../../ports/database.port.js';
+import { eventBus } from '../../../ports/events.port.js';
+import { recordAudit } from '../../../../audit/services/audit/core/audit-trail.service.js';
 import { toErrorMessage } from '@dos/module-sdk';
-import { AGENT_TRIGGER_EVALUATORS } from './agent-trigger-evaluators.service';
-import { AGENT_MONITORING_CONFIGS } from '../../../../governance-os/services/misc/proactive-signal-evaluators.service';
+import { AGENT_TRIGGER_EVALUATORS } from './agent-trigger-evaluators.service.js';
+import { AGENT_MONITORING_CONFIGS } from '../../../../governance-os/services/misc/proactive-signal-evaluators.service.js';
 import { swallow, EC, catchHandler } from '@dos/platform-core/resilience/resilient-catch';
 // ── Re-export everything from sub-modules ────────────────────────────────────
 // All public types (ProactiveTrigger, AgentMonitoringConfig) and functions
 // (evaluateComplianceTrend, evaluateRiskEscalation, evaluateEvidenceExpiry,
 // evaluateSLAViolations, AGENT_MONITORING_CONFIGS, AGENT_TRIGGER_EVALUATORS)
 // are accessible via this facade for backward compatibility.
-export * from '../../../../governance-os/services/misc/proactive-signal-evaluators.service';
-export * from './agent-trigger-evaluators.service';
+export * from '../../../../governance-os/services/misc/proactive-signal-evaluators.service.js';
+export * from './agent-trigger-evaluators.service.js';
 // ── Monitoring state per tenant per agent ─────────────────────────────────────
 const monitoringState = new Map();
 // ── Main Monitoring Loop ──────────────────────────────────────────────────────

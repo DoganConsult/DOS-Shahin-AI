@@ -1,9 +1,9 @@
-import { logger } from '../../../ports/logger.port';
+import { logger } from '../../../ports/logger.port.js';
 // ============================================================
 // Agent Lessons Learned Tracker
 // Tracks what agents learn from their experiences, patterns, and outcomes
 // ============================================================
-import { safeQuery, tenantSchema } from '../../../ports/database.port';
+import { safeQuery, tenantSchema } from '../../../ports/database.port.js';
 import { toErrorMessage } from '@dos/module-sdk';
 /**
  * Record a lesson learned from an agent experience

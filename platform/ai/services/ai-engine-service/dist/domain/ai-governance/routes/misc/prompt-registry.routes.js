@@ -1,11 +1,11 @@
 // @ts-nocheck
 import { Router } from 'express';
-import { authenticate, requirePermission, requireAnyPermission } from '../../ports/auth.port';
-import { listAssets, } from '../../services/ai/registry/ai-asset-inventory.service';
+import { authenticate, requirePermission, requireAnyPermission } from '../../ports/auth.port.js';
+import { listAssets, } from '../../services/ai/registry/ai-asset-inventory.service.js';
 import { toErrorMessage } from '@dos/module-sdk';
-import { validate, asyncHandler, auditMiddleware, setAuditData, automationMiddleware, moduleStack, mutationEventHook } from '../../ports/middleware.port';
-import { createDraftPromptVersion, updateDraftPromptVersion, submitPromptVersionForApproval, approvePromptVersion, rejectPromptVersion, activatePromptVersion, suspendPromptVersion, retirePromptVersion, rollbackPromptVersion, listPromptVersions, getPromptVersionById, getActivePromptVersionForAsset, deletePromptVersion, } from '../../services/misc/prompt-registry.service';
-import { createVersionsBody, updateVersionsBody, createSubmitBody, createApproveBody, createRejectBody, createActivateBody, createSuspendBody, createRetireBody, createRollbackBody } from "../../schemas/ai-governance.schemas";
+import { validate, asyncHandler, auditMiddleware, setAuditData, automationMiddleware, moduleStack, mutationEventHook } from '../../ports/middleware.port.js';
+import { createDraftPromptVersion, updateDraftPromptVersion, submitPromptVersionForApproval, approvePromptVersion, rejectPromptVersion, activatePromptVersion, suspendPromptVersion, retirePromptVersion, rollbackPromptVersion, listPromptVersions, getPromptVersionById, getActivePromptVersionForAsset, deletePromptVersion, } from '../../services/misc/prompt-registry.service.js';
+import { createVersionsBody, updateVersionsBody, createSubmitBody, createApproveBody, createRejectBody, createActivateBody, createSuspendBody, createRetireBody, createRollbackBody } from "../../schemas/ai-governance.schemas.js";
 import { z } from "zod";
 const router = Router();
 router.use(moduleStack('ai-governance'));

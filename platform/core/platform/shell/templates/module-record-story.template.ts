@@ -93,12 +93,16 @@ export interface RecordTab {
         </div>
         <div class="drs-masthead-actions">
           @if (viewMode() === 'full' && primaryAction) {
-            <button cdsButton="primary" size="sm" (click)="primaryAction!.action?.()">
+            <button cdsButton="primary" size="sm" (click)="triggerAction(primaryAction)">
               {{ primaryAction!.label }}
             </button>
           }
           @if (viewMode() === 'full' && secondaryActions.length) {
-            <cds-combo-button [buttons]="secondaryActions" size="sm">More</cds-combo-button>
+            @for (action of secondaryActions; track action.actionKey || action.commandKey || action.route || action.label) {
+              <button cdsButton="tertiary" size="sm" (click)="triggerAction(action)">
+                {{ action.label }}
+              </button>
+            }
           }
           @if (viewMode() === 'read-only') {
             <cds-tag type="gray">Read-only</cds-tag>
@@ -109,7 +113,7 @@ export interface RecordTab {
 
     <!-- 5-Pillar Insight Bar — the record's story in 5 questions -->
     <dos-insight-bar [pillars]="pillars" archetype="record-story"
-      (actionClick)="pillars?.nextAction?.action?.()">
+      (actionClick)="triggerAction(pillars?.nextAction ?? null)">
     </dos-insight-bar>
 
     <!-- Body: fields + timeline + tabs -->
@@ -254,15 +258,31 @@ export class RecordStoryTemplateComponent {
   @Input() treatment?: number;
   @Input() listRoute = '../';
   @Input() primaryAction: ModuleAction | null = null;
-  @Input() secondaryActions: Array<{ content: string; click: () => void }> = [];
+  @Input() secondaryActions: ModuleAction[] = [];
   @Input() currentRole: ModuleRole = 'standard_user';
   @Input() writeRoles: ModuleRole[] = [];
 
   @Output() edit = new EventEmitter<void>();
+  @Output() actionTriggered = new EventEmitter<{ key: string; payload?: Record<string, unknown> }>();
 
   viewMode = computed(() => resolveViewMode(this.currentRole, this.writeRoles));
 
   tagType(s?: string): string {
     return ({ critical: 'red', high: 'orange', medium: 'yellow', low: 'teal', open: 'blue', closed: 'green' } as Record<string, string>)[s ?? ''] ?? 'gray';
+  }
+
+  triggerAction(action: ModuleAction | null, payload?: Record<string, unknown>): void {
+    if (!action) return;
+    if (action.actionKey) {
+      this.actionTriggered.emit({ key: action.actionKey, payload });
+      return;
+    }
+    if (action.commandKey) {
+      this.actionTriggered.emit({ key: action.commandKey, payload });
+      return;
+    }
+    if (action.route) {
+      this.actionTriggered.emit({ key: 'navigate', payload: { path: action.route, ...(payload ?? {}) } });
+    }
   }
 }

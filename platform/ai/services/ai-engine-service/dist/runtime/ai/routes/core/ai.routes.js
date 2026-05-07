@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import { authenticate, requirePermission } from '../../ports/auth.port';
+import { authenticate, requirePermission } from '../../ports/auth.port.js';
 import { getFirstRow } from '@dos/db';
-import { orchestratedAssessRisk as assessRisk, orchestratedAnalyzeGap as analyzeComplianceGap, orchestratedGeneratePolicy as generatePolicy, orchestratedPrepareAudit as prepareAudit, orchestratedTriageIncident as triageIncident, orchestratedAnalyzeRegulatoryChange as analyzeRegulatoryChange, orchestratedGetProactiveInsights as getProactiveInsights, orchestratedAutoClassifyRisk as autoClassifyRisk, orchestratedAutoClassifyIncident as autoClassifyIncident, } from '../../services/orchestration/ai-os-orchestrator.service';
-import { emitModuleEvent } from '../../services/emit-event';
-import { generatePolicyBody, autoEvalBody } from "../schemas/ai.schemas";
-import { asyncHandler, auditMiddleware, setAuditData, automationMiddleware, fieldRbacFilter, validate, moduleStack } from '../../ports/middleware.port';
+import { orchestratedAssessRisk as assessRisk, orchestratedAnalyzeGap as analyzeComplianceGap, orchestratedGeneratePolicy as generatePolicy, orchestratedPrepareAudit as prepareAudit, orchestratedTriageIncident as triageIncident, orchestratedAnalyzeRegulatoryChange as analyzeRegulatoryChange, orchestratedGetProactiveInsights as getProactiveInsights, orchestratedAutoClassifyRisk as autoClassifyRisk, orchestratedAutoClassifyIncident as autoClassifyIncident, } from '../../services/orchestration/ai-os-orchestrator.service.js';
+import { emitModuleEvent } from '../../services/emit-event.js';
+import { generatePolicyBody, autoEvalBody } from "../schemas/ai.schemas.js";
+import { asyncHandler, auditMiddleware, setAuditData, automationMiddleware, fieldRbacFilter, validate, moduleStack } from '../../ports/middleware.port.js';
 import { swallow, EC } from '@dos/platform-core/resilience/resilient-catch';
 import { z } from "zod";
 const router = Router();
@@ -98,7 +98,7 @@ router.get("/performance", authenticate, requirePermission("admin.config.read"),
 }));
 // ═══ Agent Activity Feed — real-time agent actions for dashboard ═══
 router.get("/agent-activity", authenticate, requirePermission("ai.agent.read"), validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
-    const { getActivityFeed, } = await import('../../services/activity/agent-activity-feed.service');
+    const { getActivityFeed, } = await import('../../services/activity/agent-activity-feed.service.js');
     const feed = await getActivityFeed(req.tenantId, {
         limit: req.query.limit ? parseInt(req.query.limit, 10) : undefined,
         agentId: req.query.agentId,
@@ -109,13 +109,13 @@ router.get("/agent-activity", authenticate, requirePermission("ai.agent.read"), 
 }));
 // ═══ Agent Performance Stats — aggregated stats for all 12 agents ═══
 router.get("/agent-performance", authenticate, requirePermission("ai.agent.read"), validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
-    const { getAgentPerformanceStats, } = await import('../../services/activity/agent-activity-feed.service');
+    const { getAgentPerformanceStats, } = await import('../../services/activity/agent-activity-feed.service.js');
     const stats = await getAgentPerformanceStats(req.tenantId);
     res.json({ stats });
 }));
 // ═══ Agent Cooperation Timeline — cross-agent action chains ═══
 router.get("/agent-cooperation", authenticate, requirePermission("ai.agent.read"), validate({ query: z.record(z.unknown()) }), asyncHandler(async (req, res) => {
-    const { getAgentCooperationTimeline, } = await import('../../services/activity/agent-activity-feed.service');
+    const { getAgentCooperationTimeline, } = await import('../../services/activity/agent-activity-feed.service.js');
     const limit = req.query.limit ? parseInt(req.query.limit, 10) : undefined;
     const timeline = await getAgentCooperationTimeline(req.tenantId, limit);
     res.json({ timeline });
@@ -557,7 +557,7 @@ router.post("/compose/description", authenticate, requirePermission("ai.compose.
     const { context, itemType } = req.body;
     let suggestion = '';
     try {
-        const { gatewayJSON } = await import('../../services/gateway/ai-gateway.service');
+        const { gatewayJSON } = await import('../../services/gateway/ai-gateway.service.js');
         const result = await gatewayJSON({
             tenantId: req.tenantId,
             systemPrompt: `You are a GRC professional. Generate a concise, professional description for a ${itemType || 'record'}. Keep it under 200 words.`,
@@ -586,7 +586,7 @@ router.post("/compose/improve", authenticate, requirePermission("ai.compose.read
     const { text, tone } = req.body;
     let improved = text;
     try {
-        const { gatewayJSON } = await import('../../services/gateway/ai-gateway.service');
+        const { gatewayJSON } = await import('../../services/gateway/ai-gateway.service.js');
         const result = await gatewayJSON({
             tenantId: req.tenantId,
             systemPrompt: `You are a professional editor. Improve the given text to be more ${tone || 'professional'}. Maintain the original meaning. Return only the improved text.`,

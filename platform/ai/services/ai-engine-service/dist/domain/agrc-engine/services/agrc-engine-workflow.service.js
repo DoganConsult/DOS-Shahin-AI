@@ -1,5 +1,5 @@
-import { safeQuery, tenantSchema } from '../ports/database.port';
-import { emitAgrcEngineEvent } from './agrc-engine-event.service';
+import { safeQuery, tenantSchema } from '../ports/database.port.js';
+import { emitAgrcEngineEvent } from './agrc-engine-event.service.js';
 import { randomUUID } from 'crypto';
 import { catchHandler, EC } from '@dos/platform-core/resilience/resilient-catch';
 export const ALLOWED_TRANSITIONS = {

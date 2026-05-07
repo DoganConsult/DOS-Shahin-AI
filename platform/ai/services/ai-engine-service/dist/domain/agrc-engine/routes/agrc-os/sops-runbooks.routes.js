@@ -1,12 +1,12 @@
 // @ts-nocheck
 import { Router } from 'express';
 import { catchHandler, EC } from '@dos/platform-core/resilience/resilient-catch';
-import { authenticate, requirePermission } from '../../ports/auth.port';
-import { auditMiddleware, validate, validateSOP, validateRunbook } from '../../ports/middleware.port';
-import { errMsg } from '../../../../i18n/error-messages';
-import { emitEvent } from '../../ports/events.port';
-import { writeLimiter } from './shared';
-import { createSopsBody, createSeedBody, createStartBody, updateCompletionsBody, createRunbooksBody, createSetupBody } from '../../schemas/agrc-engine.schemas';
+import { authenticate, requirePermission } from '../../ports/auth.port.js';
+import { auditMiddleware, validate, validateSOP, validateRunbook } from '../../ports/middleware.port.js';
+import { errMsg } from '../../../../i18n/error-messages.js';
+import { emitEvent } from '../../ports/events.port.js';
+import { writeLimiter } from './shared.js';
+import { createSopsBody, createSeedBody, createStartBody, updateCompletionsBody, createRunbooksBody, createSetupBody } from '../../schemas/agrc-engine.schemas.js';
 import { z } from "zod";
 const genericPayloadSchema = z.record(z.unknown());
 const router = Router();
@@ -78,24 +78,24 @@ router.get('/sops/compliance-stats', validate({ query: z.record(z.unknown()) }),
 });
 // ── Runbooks ───────────────────────────────────────────────────────────────
 router.get('/runbooks', validate({ query: z.record(z.unknown()) }), authenticate, requirePermission('runbook.record.read'), async (req, res) => {
-    const { getRunbooks } = await import('../../services/agrc-runbook.service');
+    const { getRunbooks } = await import('../../services/agrc-runbook.service.js');
     const result = await getRunbooks(req.tenantId, req.query.triggerEvent);
     res.json(result);
 });
 router.post('/runbooks', authenticate, requirePermission('runbook.record.write'), validateRunbook, validate({ body: createRunbooksBody }), async (req, res) => {
-    const { upsertRunbook } = await import('../../services/agrc-runbook.service');
+    const { upsertRunbook } = await import('../../services/agrc-runbook.service.js');
     const result = await upsertRunbook(req.tenantId, req.body);
     emitEvent({ tenantId: req.tenantId, userId: req.user.userId, module: 'governance', event: 'created', entityType: 'agrc_os', entityId: req.params.id || '' }).catch(catchHandler(EC.AGENT_ACTION, {}));
     res.json(result);
 });
 router.delete('/runbooks/:runbookId', validate({ body: genericPayloadSchema }), authenticate, requirePermission('runbook.record.write'), async (req, res) => {
-    const { deleteRunbook } = await import('../../services/agrc-runbook.service');
+    const { deleteRunbook } = await import('../../services/agrc-runbook.service.js');
     await deleteRunbook(req.tenantId, req.params.runbookId);
     emitEvent({ tenantId: req.tenantId, userId: req.user.userId, module: 'governance', event: 'deleted', entityType: 'agrc_os', entityId: req.params.id || '' }).catch(catchHandler(EC.AGENT_ACTION, {}));
     res.json({ success: true });
 });
 router.post('/runbooks/seed', authenticate, requirePermission('platform.agent.manage'), validate({ body: createSeedBody }), async (req, res) => {
-    const { seedDefaultRunbooks } = await import('../../services/agrc-runbook.service');
+    const { seedDefaultRunbooks } = await import('../../services/agrc-runbook.service.js');
     const count = await seedDefaultRunbooks(req.tenantId);
     emitEvent({ tenantId: req.tenantId, userId: req.user.userId, module: 'governance', event: 'created', entityType: 'agrc_os', entityId: req.params.id || '' }).catch(catchHandler(EC.AGENT_ACTION, {}));
     res.json({ seeded: count });
@@ -103,7 +103,7 @@ router.post('/runbooks/seed', authenticate, requirePermission('platform.agent.ma
 router.post('/setup', authenticate, requirePermission('platform.agent.manage'), writeLimiter, validate({ body: createSetupBody }), async (req, res) => {
     const tenantId = req.tenantId;
     const { getRiskAppetite, upsertRiskAppetite } = await import('../../../modules/governance/services/governance/governance-constitution.service');
-    const { seedDefaultRunbooks } = await import('../../services/agrc-runbook.service');
+    const { seedDefaultRunbooks } = await import('../../services/agrc-runbook.service.js');
     const { seedDefaultSOPs } = await import('@dos/platform-core/services/document-generation/sop-library.service');
     let riskAppetiteSeeded = 0;
     const appetite = await getRiskAppetite(tenantId);
@@ -135,7 +135,7 @@ router.post('/setup', authenticate, requirePermission('platform.agent.manage'), 
     });
 });
 router.get('/runbooks/executions', validate({ query: z.record(z.unknown()) }), authenticate, requirePermission('runbook.record.read'), async (req, res) => {
-    const { getRunbookExecutionHistory } = await import('../../services/agrc-runbook.service');
+    const { getRunbookExecutionHistory } = await import('../../services/agrc-runbook.service.js');
     const result = await getRunbookExecutionHistory(req.tenantId, {
         runbookId: req.query.runbookId,
         status: req.query.status,

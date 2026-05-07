@@ -4,8 +4,8 @@
 // with full audit trail and governance validation.
 // ============================================================
 import { v4 as uuid } from 'uuid';
-import { safeQuery, tenantSchema } from '../../ports/database.port';
-import { emitEvent as publishEvent } from '../../ports/events.port';
+import { safeQuery, tenantSchema } from '../../ports/database.port.js';
+import { emitEvent as publishEvent } from '../../ports/events.port.js';
 // Audit records are emitted as events via the core event bus
 // to prevent cross-module architecture violations.// Memoize table creation per schema to avoid repeated DDL on every call
 const _ensuredSchemas = new Set();
@@ -45,7 +45,7 @@ export async function delegateToAgent(tenantId, sourceAgentId, targetAgentId, ta
         data: { delegationId, sourceAgentId, targetAgentId, taskType: task.taskType, status: 'in_progress' }
     }).catch(() => null);
     // 2. Synchronously invoke the target agent using the AI orchestrator
-    const orchestrator = await import('../agents/core/agent-tool-executor.service').catch(() => null);
+    const orchestrator = await import('../agents/core/agent-tool-executor.service.js').catch(() => null);
     let finalStatus = 'failed';
     let executionResultObj = {};
     let errorMessage = null;

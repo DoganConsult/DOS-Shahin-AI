@@ -22,9 +22,9 @@
  */
 import { createRequire } from 'module';
 import { safeQuery } from '@dos/db';
-import { logger } from '../../ports/logger.port';
+import { logger } from '../../ports/logger.port.js';
 import { SHAHIN_AI_EMPLOYEES as RAW_EMPLOYEES, listAllShifts } from '@shahin-ai/product/shahin-ai-employees';
-import { lookupShiftHandler, listRegisteredShiftHandlers } from './shift-handlers';
+import { lookupShiftHandler, listRegisteredShiftHandlers } from './shift-handlers.js';
 // Engine bundles to ESM. Use createRequire so we can synchronously load CJS
 // peers like cron-parser without paying the cost of a top-level await chain.
 const requireCjs = createRequire(import.meta.url);

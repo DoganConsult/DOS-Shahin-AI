@@ -1,8 +1,8 @@
 // @ts-nocheck
 import { Router } from 'express';
 import { authenticate } from '@dos/module-auth';
-import { evaluateModel, evaluateAgent } from '../controllers/ai-evaluator.controller';
-import { validate } from "../ports/middleware.port";
+import { evaluateModel, evaluateAgent } from '../controllers/ai-evaluator.controller.js';
+import { validate } from "../ports/middleware.port.js";
 import { z } from "zod";
 const router = Router();
 router.use(authenticate);

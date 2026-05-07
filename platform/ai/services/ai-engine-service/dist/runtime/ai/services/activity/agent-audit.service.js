@@ -1,12 +1,12 @@
 // @ts-nocheck
-import { logger } from '../../ports/logger.port';
+import { logger } from '../../ports/logger.port.js';
 // ============================================
 // Agent Audit Service
 // Comprehensive audit entries for all agent operations
 // Extends the base audit-trail.service.ts with agent-specific
 // metadata and structured audit entries
 // ============================================
-import { recordAudit } from '../../../audit/services/audit/core/audit-trail.service';
+import { recordAudit } from '../../../audit/services/audit/core/audit-trail.service.js';
 import { v4 as uuid } from 'uuid';
 import { toErrorMessage } from '@dos/module-sdk';
 /**

@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { logger } from '../../ports/logger.port';
-import { safeQuery, tenantSchema } from '../../ports/database.port';
+import { logger } from '../../ports/logger.port.js';
+import { safeQuery, tenantSchema } from '../../ports/database.port.js';
 import { toErrorMessage } from '@dos/module-sdk';
 const TIER_MODEL_MAP = {
     low: { provider: 'groq', model: 'llama-3.3-70b-versatile' },
@@ -8,7 +8,7 @@ const TIER_MODEL_MAP = {
     high: { provider: 'claude', model: 'claude-sonnet-4-20250514' },
     critical: { provider: 'claude', model: 'claude-sonnet-4-20250514' },
 };
-import { getTaskComplexity as _getRegistryComplexity } from '../../../workflow/services/tasks/task-complexity-registry';
+import { getTaskComplexity as _getRegistryComplexity } from '../../../workflow/services/tasks/task-complexity-registry.js';
 import { getFirstRow } from '@dos/db';
 let _configCache = new Map();
 let _performanceCache = new Map();

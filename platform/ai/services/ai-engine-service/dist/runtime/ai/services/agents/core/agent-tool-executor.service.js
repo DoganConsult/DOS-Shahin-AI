@@ -11,10 +11,10 @@
 // 6. Integrates cooperation (handoffs, discoveries)
 // 7. Records performance and audit trail
 // ================================================================
-import { loadAgentDef, } from '../../../ports/ai.port';
+import { loadAgentDef, } from '../../../ports/ai.port.js';
 import { safeQuery } from "@dos/db";
-import { enforceToolGate } from "../../governance/tool-gate.service";
-import { checkCostCap, tokensToUsd } from "../../governance/cost-cap.service";
+import { enforceToolGate } from "../../governance/tool-gate.service.js";
+import { checkCostCap, tokensToUsd } from "../../governance/cost-cap.service.js";
 import { AGRC_AGENTS } from "@shahin-ai/product";
 // OTEL — explicit LLM-flavoured spans alongside the auto-instrumented http/pg/ioredis.
 // Falls back to no-op tracer when OTEL is disabled.
@@ -92,7 +92,7 @@ export async function runAgentWithTools(tenantId, agentId, context, userMessage,
     let finalText = '';
     let stopReason = 'max_steps';
     // Extract from Anthropic client (decoupled via ports in real deployment)
-    const { callClaude } = await import('../../../config/claude-client');
+    const { callClaude } = await import('../../../config/claude-client.js');
     const agentDef = loadAgentDef(agentId) || { name: agentId };
     // Wave 2 #1.3: DB-first overlay — match agent-runner.service so canonical
     // ai_agent_registry rows (model/temperature/promptName/datasetName) drive

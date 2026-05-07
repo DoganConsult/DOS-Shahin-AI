@@ -9,9 +9,9 @@
  * looked at which lead and what they did with it.
  */
 import { Router } from 'express';
-import { authenticate, requirePermission } from '../../ports/auth.port';
+import { authenticate, requirePermission } from '../../ports/auth.port.js';
 import { safeQuery } from '@dos/db';
-import { logger } from '../../ports/logger.port';
+import { logger } from '../../ports/logger.port.js';
 const router = Router();
 router.get('/health', (_req, res) => {
     res.json({ ok: true, module: 'sales-copilot-leads', service: 'ai-engine-service' });

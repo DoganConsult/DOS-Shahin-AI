@@ -11,8 +11,8 @@
 // Designed to be idempotent: each emit also writes a pending row to
 // <tenant>.event_outbox so the modules/compliance dispatcher can take
 // over once the source-of-truth producers are wired in those services.
-import { logger } from '../ports/logger.port';
-import { eventBus } from '../ports/events.port';
+import { logger } from '../ports/logger.port.js';
+import { eventBus } from '../ports/events.port.js';
 const ENTITIES = [
     { entityType: 'risk', table: 'risks', eventType: 'risk.created', aggregateType: 'risk', idColumn: 'risk_id', titleColumn: 'title', createdAtColumn: 'created_at' },
     { entityType: 'compliance_gap', table: 'compliance_gaps', eventType: 'compliance.gap_detected', aggregateType: 'compliance_gap', idColumn: 'gap_id', titleColumn: 'title', severityColumn: 'severity', createdAtColumn: 'created_at' },

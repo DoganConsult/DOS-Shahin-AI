@@ -1,2 +1,2 @@
-export { default } from './code-search.routes';
+export { default } from './code-search.routes.js';
 //# sourceMappingURL=code-search.js.map

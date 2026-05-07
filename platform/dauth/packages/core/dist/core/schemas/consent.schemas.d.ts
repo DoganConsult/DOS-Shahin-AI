@@ -2,43 +2,67 @@ import { z } from 'zod';
 export declare const grantConsentBody: z.ZodObject<{
     consentType: z.ZodString;
     consentVersion: z.ZodDefault<z.ZodString>;
-    legalBasis: z.ZodDefault<z.ZodEnum<{
-        contract: "contract";
-        consent: "consent";
-        legitimate_interest: "legitimate_interest";
-        legal_obligation: "legal_obligation";
-        vital_interest: "vital_interest";
-        public_interest: "public_interest";
-    }>>;
-    dataCategories: z.ZodDefault<z.ZodArray<z.ZodString>>;
+    legalBasis: z.ZodDefault<z.ZodEnum<["consent", "legitimate_interest", "contract", "legal_obligation", "vital_interest", "public_interest"]>>;
+    dataCategories: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
     retentionPeriodDays: z.ZodDefault<z.ZodNumber>;
     purpose: z.ZodOptional<z.ZodString>;
-}, z.core.$strict>;
+}, "strict", z.ZodTypeAny, {
+    consentType?: string;
+    consentVersion?: string;
+    legalBasis?: "contract" | "consent" | "legitimate_interest" | "legal_obligation" | "vital_interest" | "public_interest";
+    dataCategories?: string[];
+    retentionPeriodDays?: number;
+    purpose?: string;
+}, {
+    consentType?: string;
+    consentVersion?: string;
+    legalBasis?: "contract" | "consent" | "legitimate_interest" | "legal_obligation" | "vital_interest" | "public_interest";
+    dataCategories?: string[];
+    retentionPeriodDays?: number;
+    purpose?: string;
+}>;
 export declare const revokeConsentBody: z.ZodObject<{
     consentType: z.ZodString;
     consentVersion: z.ZodDefault<z.ZodString>;
     reason: z.ZodOptional<z.ZodString>;
-}, z.core.$strict>;
+}, "strict", z.ZodTypeAny, {
+    reason?: string;
+    consentType?: string;
+    consentVersion?: string;
+}, {
+    reason?: string;
+    consentType?: string;
+    consentVersion?: string;
+}>;
 export declare const consentListQuery: z.ZodObject<{
-    page: z.ZodOptional<z.ZodDefault<z.ZodCoercedNumber<unknown>>>;
-    pageSize: z.ZodOptional<z.ZodDefault<z.ZodCoercedNumber<unknown>>>;
+    page: z.ZodOptional<z.ZodDefault<z.ZodNumber>>;
+    pageSize: z.ZodOptional<z.ZodDefault<z.ZodNumber>>;
     consentType: z.ZodOptional<z.ZodOptional<z.ZodString>>;
-    granted: z.ZodOptional<z.ZodOptional<z.ZodEnum<{
-        true: "true";
-        false: "false";
-    }>>>;
-}, z.core.$strip>;
+    granted: z.ZodOptional<z.ZodOptional<z.ZodEnum<["true", "false"]>>>;
+}, "strip", z.ZodTypeAny, {
+    page?: number;
+    pageSize?: number;
+    consentType?: string;
+    granted?: "true" | "false";
+}, {
+    page?: number;
+    pageSize?: number;
+    consentType?: string;
+    granted?: "true" | "false";
+}>;
 export declare const memoryConsentBody: z.ZodObject<{
-    action: z.ZodEnum<{
-        revoke: "revoke";
-        export: "export";
-        grant: "grant";
-        forget: "forget";
-        update_purpose: "update_purpose";
-    }>;
+    action: z.ZodEnum<["grant", "revoke", "forget", "export", "update_purpose"]>;
     purpose: z.ZodOptional<z.ZodString>;
     metadata: z.ZodDefault<z.ZodRecord<z.ZodString, z.ZodUnknown>>;
-}, z.core.$strict>;
+}, "strict", z.ZodTypeAny, {
+    action?: "revoke" | "export" | "grant" | "forget" | "update_purpose";
+    metadata?: Record<string, unknown>;
+    purpose?: string;
+}, {
+    action?: "revoke" | "export" | "grant" | "forget" | "update_purpose";
+    metadata?: Record<string, unknown>;
+    purpose?: string;
+}>;
 export type GrantConsentInput = z.infer<typeof grantConsentBody>;
 export type RevokeConsentInput = z.infer<typeof revokeConsentBody>;
 export type MemoryConsentInput = z.infer<typeof memoryConsentBody>;

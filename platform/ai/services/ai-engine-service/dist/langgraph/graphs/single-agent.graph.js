@@ -16,7 +16,7 @@
  *
  * Falls back to direct callClaude() loop if LangGraph deps are unavailable.
  */
-import { LANGGRAPH_CONFIG, createMetricsCallback } from '../config/langgraph.config';
+import { LANGGRAPH_CONFIG, createMetricsCallback } from '../config/langgraph.config.js';
 import { logger } from '@dos/platform-core/observability';
 import { toErrorMessage } from '@dos/platform-core/resilience';
 export async function runSingleAgentGraph(tenantId, agentId, opts = {}) {
@@ -40,8 +40,8 @@ export async function runSingleAgentGraph(tenantId, agentId, opts = {}) {
 async function runWithStateGraph(tenantId, agentId, runId, opts) {
     const { StateGraph, END } = await import('@langchain/langgraph');
     const { HumanMessage, SystemMessage } = await import('@langchain/core/messages');
-    const { getChatModel } = await import('../adapters/model-adapter');
-    const { getCheckpointSaver } = await import('../adapters/checkpoint-factory');
+    const { getChatModel } = await import('../adapters/model-adapter.js');
+    const { getCheckpointSaver } = await import('../adapters/checkpoint-factory.js');
     const { safeQuery, tenantSchema } = await import('@dos/db');
     const maxIter = opts.maxIterations || LANGGRAPH_CONFIG.maxToolIterations || 5;
     const schema = tenantSchema(tenantId);
@@ -60,8 +60,8 @@ Respond with JSON: { discoveries: [{type, detail, confidence}], proposedActions:
     // Load tools if available
     let tools = [];
     try {
-        const { convertAllTools } = await import('../adapters/tool-adapter');
-        const { getToolsForAgent } = await import('../../runtime/ai/services/agents/core/agent-tools-registry.service');
+        const { convertAllTools } = await import('../adapters/tool-adapter.js');
+        const { getToolsForAgent } = await import('../../runtime/ai/services/agents/core/agent-tools-registry.service.js');
         const agentTools = await getToolsForAgent(tenantId, agentId);
         tools = convertAllTools(agentTools, tenantId);
     }
@@ -176,7 +176,7 @@ async function runWithDirectLoop(tenantId, agentId, runId, opts) {
         iterationCount: 0,
     };
     try {
-        const { callClaude } = await import('../../config/claude-client');
+        const { callClaude } = await import('../../config/claude-client.js');
         const { safeQuery, tenantSchema } = await import('@dos/db');
         const schema = tenantSchema(tenantId);
         const agentRow = await safeQuery(`SELECT agent_id, display_name, system_prompt, tools, domain, specialization

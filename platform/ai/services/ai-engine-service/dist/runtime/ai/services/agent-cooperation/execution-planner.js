@@ -1,14 +1,14 @@
 // @ts-nocheck
-import { logger } from '../../ports/logger.port';
+import { logger } from '../../ports/logger.port.js';
 // ============================================
 // AGRC-OS — Execution Planner & Cycle Persistence
 // Computes parallel execution waves and persists
 // cycle summaries (discoveries, handoffs, correlations).
 // ============================================
-import { safeQuery, tenantSchema } from '../../ports/database.port';
+import { safeQuery, tenantSchema } from '../../ports/database.port.js';
 import { toErrorMessage } from '@dos/module-sdk';
-import { AGENT_DEPENDENCY_GRAPH } from './dependency-graph';
-import { activeCycleContexts } from './cycle-context';
+import { AGENT_DEPENDENCY_GRAPH } from './dependency-graph.js';
+import { activeCycleContexts } from './cycle-context.js';
 // ── Parallel Execution Planner ─────────────────────────────────────────────
 /**
  * Compute parallel execution waves from the dependency graph.

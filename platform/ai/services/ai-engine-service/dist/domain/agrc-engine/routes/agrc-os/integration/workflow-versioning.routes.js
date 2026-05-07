@@ -2,9 +2,9 @@
 import { Router } from 'express';
 // AGRC-OS — Workflow Graph Versioning routes
 // Covers: version list, version diff
-import { authenticate, requirePermission } from '../../../ports/auth.port';
-import { errMsg } from '../../../../../i18n/error-messages';
-import { validate } from "../../../ports/middleware.port";
+import { authenticate, requirePermission } from '../../../ports/auth.port.js';
+import { errMsg } from '../../../../../i18n/error-messages.js';
+import { validate } from "../../../ports/middleware.port.js";
 import { z } from "zod";
 const router = Router();
 // ════════════════════════════════════════════════════════════════
@@ -12,7 +12,7 @@ const router = Router();
 // ════════════════════════════════════════════════════════════════
 router.get('/workflow-versions/:runId', validate({ query: z.record(z.unknown()) }), authenticate, requirePermission('platform.agent.read'), async (req, res) => {
     try {
-        const { getGraphVersions } = await import('../../runtime/ai/workflow/services/templates/workflow-versioning.service');
+        const { getGraphVersions } = await import('../../runtime/ai/workflow/services/templates/workflow-versioning.service.js');
         const versions = await getGraphVersions(req.tenantId, req.params.runId);
         res.json({ versions, count: versions.length });
     }
@@ -22,7 +22,7 @@ router.get('/workflow-versions/:runId', validate({ query: z.record(z.unknown()) 
 });
 router.get('/workflow-versions/:runId/diff', validate({ query: z.record(z.unknown()) }), authenticate, requirePermission('platform.agent.read'), async (req, res) => {
     try {
-        const { diffGraphVersions } = await import('../../runtime/ai/workflow/services/templates/workflow-versioning.service');
+        const { diffGraphVersions } = await import('../../runtime/ai/workflow/services/templates/workflow-versioning.service.js');
         const { versionA, versionB } = req.query;
         if (!versionA || !versionB) {
             res.status(400).json({ error: errMsg('MISSING_FIELDS', req) });

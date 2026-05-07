@@ -1,6 +1,6 @@
-import { CLAUDE_MODEL, CLAUDE_MAX_TOKENS } from '../../../ports/ai.port';
+import { CLAUDE_MODEL, CLAUDE_MAX_TOKENS } from '../../../ports/ai.port.js';
 export async function callClaude(messages, model, maxTokens) {
-    const { getClaudeClient } = await import('../../../../../config/claude-client');
+    const { getClaudeClient } = await import('../../../../../config/claude-client.js');
     const client = getClaudeClient();
     const systemMessages = messages.filter(m => m.role === 'system');
     const chatMessages = messages.filter(m => m.role !== 'system');

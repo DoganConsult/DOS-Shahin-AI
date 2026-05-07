@@ -1,9 +1,9 @@
 import { catchHandler, EC } from '@dos/platform-core/resilience/resilient-catch';
-import { logger } from '../../ports/logger.port';
-import { safeQuery, tenantSchema } from '../../ports/database.port';
-import { eventBus } from '../../ports/events.port';
+import { logger } from '../../ports/logger.port.js';
+import { safeQuery, tenantSchema } from '../../ports/database.port.js';
+import { eventBus } from '../../ports/events.port.js';
 import { getFirstRow } from '@dos/db';
-import { SYSTEM_TENANT, SYSTEM_JOB_ACTOR } from '../../ports/platform.port';
+import { SYSTEM_TENANT, SYSTEM_JOB_ACTOR } from '../../ports/platform.port.js';
 const _cooldownMap = new Map();
 const _seededTenants = new Set();
 async function ensureEventTriggerBindingTable(schema) {
@@ -102,7 +102,7 @@ async function executeBindingAction(tenantId, binding, payload) {
     try {
         switch (binding.action_type) {
             case 'run_agent': {
-                const { runAgent } = await import('../agents/core/agent-runner.service');
+                const { runAgent } = await import('../agents/core/agent-runner.service.js');
                 // Wave 4: attribute the run to the event-trigger so DNOC/DSOC can
                 // filter event-driven runs separately from cron + user-driven ones.
                 await runAgent(tenantId, binding.target_agent_id, {
@@ -112,7 +112,7 @@ async function executeBindingAction(tenantId, binding, payload) {
                 break;
             }
             case 'notify': {
-                const { createNotification } = await import('../../../notification/services/notification.service');
+                const { createNotification } = await import('../../../notification/services/notification.service.js');
                 await createNotification(tenantId, {
                     userId: 'owner',
                     type: 'ai_trigger_fired',
@@ -135,7 +135,7 @@ async function executeBindingAction(tenantId, binding, payload) {
                 break;
             }
             case 'email': {
-                const { createNotification } = await import('../../../notification/services/notification.service');
+                const { createNotification } = await import('../../../notification/services/notification.service.js');
                 await createNotification(tenantId, {
                     userId: 'owner',
                     type: 'ai_trigger_email',

@@ -1,7 +1,7 @@
-import { query, safeQuery } from '../ports/database.port';
-import { canRunDedupAction } from '../helpers/dedup.helper';
-import { createNotification } from '../helpers/notification.helper';
-import { isFeatureEnabled } from '../helpers/feature-flag.helper';
+import { query, safeQuery } from '../ports/database.port.js';
+import { canRunDedupAction } from '../helpers/dedup.helper.js';
+import { createNotification } from '../helpers/notification.helper.js';
+import { isFeatureEnabled } from '../helpers/feature-flag.helper.js';
 import { swallowNull, EC } from '@dos/platform-core/resilience/resilient-catch';
 export class KriBreachWorker {
     async run(ctx) {

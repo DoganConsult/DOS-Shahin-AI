@@ -2,7 +2,7 @@
  * Shared rate limiters and config for AGRC-OS sub-routers.
  * Used by all domain route files under agrc-os/ so limiters are defined once.
  */
-import { rateLimiter } from '../../ports/middleware.port';
+import { rateLimiter } from '../../ports/middleware.port.js';
 export const heavyOpLimiter = rateLimiter({
     windowMs: 60_000,
     maxRequests: 5,

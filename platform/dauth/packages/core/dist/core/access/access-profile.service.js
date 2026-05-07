@@ -19,7 +19,9 @@ async function getAccessProfiles(tenantId) {
         nameAr: r.name_ar ?? '',
         isSystem: r.is_system === true,
         isActive: r.is_active === true,
-        defaultLandingPage: r.default_landing_page ?? '/workspace-home',
+        tenantLandingRoute: typeof r.default_landing_page === 'string' && r.default_landing_page.trim()
+            ? r.default_landing_page.trim()
+            : null,
         allowedModules: r.allowed_modules ?? [],
     }));
 }
@@ -38,7 +40,9 @@ async function getAccessProfile(tenantId, profileCode) {
         nameAr: r.name_ar ?? '',
         isSystem: r.is_system === true,
         isActive: r.is_active === true,
-        defaultLandingPage: r.default_landing_page ?? '/workspace-home',
+        tenantLandingRoute: typeof r.default_landing_page === 'string' && r.default_landing_page.trim()
+            ? r.default_landing_page.trim()
+            : null,
         allowedModules: r.allowed_modules ?? [],
     };
 }

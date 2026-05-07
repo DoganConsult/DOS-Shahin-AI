@@ -3,9 +3,9 @@
 //
 // Detects SLA breaches and triggers agent activities for overdue items.
 // ============================================================================
-import { safeQuery, tenantSchema } from '../../ports/database.port';
-import { mapAssignmentRow } from './personal-agent-assignment.service';
-import { executeAgentActivity } from './personal-agent-activity.service';
+import { safeQuery, tenantSchema } from '../../ports/database.port.js';
+import { mapAssignmentRow } from './personal-agent-assignment.service.js';
+import { executeAgentActivity } from './personal-agent-activity.service.js';
 // ============================================================================
 // SLA-Based Activation
 // ============================================================================

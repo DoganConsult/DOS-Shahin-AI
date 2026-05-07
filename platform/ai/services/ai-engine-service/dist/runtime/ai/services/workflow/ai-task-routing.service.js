@@ -1,8 +1,8 @@
-import { safeQuery, tenantSchema } from '../../ports/database.port';
-import { logger } from '../../ports/logger.port';
+import { safeQuery, tenantSchema } from '../../ports/database.port.js';
+import { logger } from '../../ports/logger.port.js';
 import { toErrorMessage } from '@dos/module-sdk';
 import { getFirstRow } from '@dos/db';
-import { SYSTEM_JOB_ACTOR } from '../../ports/platform.port';
+import { SYSTEM_JOB_ACTOR } from '../../ports/platform.port.js';
 export async function resolveRoute(tenantId, entityType, context) {
     const schema = tenantSchema(tenantId);
     try {

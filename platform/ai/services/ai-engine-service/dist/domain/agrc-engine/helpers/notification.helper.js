@@ -1,4 +1,4 @@
-import { query } from '../ports/database.port';
+import { query } from '../ports/database.port.js';
 import { swallowNull, EC } from '@dos/platform-core/resilience/resilient-catch';
 export async function createNotification(schema, userId, type, title, body, link) {
     await swallowNull(EC.FALLBACK_QUERY, query(`

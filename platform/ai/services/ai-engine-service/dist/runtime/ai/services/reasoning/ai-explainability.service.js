@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { safeQuery, tenantSchema } from '../../ports/database.port';
+import { safeQuery, tenantSchema } from '../../ports/database.port.js';
 /**
  * Create explainability record
  */
@@ -152,7 +152,7 @@ export async function getExplainabilityRequirements(tenantId, agentId, decisionT
  */
 export async function enrichWithArabicExplanation(tenantId, recordId, explanationContent) {
     try {
-        const { claudeJSON } = await import('../../../../config/claude-client');
+        const { claudeJSON } = await import('../../../../config/claude-client.js');
         const arabic = await claudeJSON({
             systemPrompt: `You are a bilingual AI explainability expert. Translate and adapt the following AI decision explanation into professional Arabic.
 Respond with JSON: {explanation_ar: string, key_factors_ar: string[], recommendation_ar: string}`,

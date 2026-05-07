@@ -4,7 +4,7 @@ import { catchHandler, EC } from '@dos/platform-core/resilience/resilient-catch'
 // Manages tool definitions, versions, and metadata
 // Requirements: ai-os-8.1, ai-os-8.2
 // ============================================
-import { safeQuery, tenantSchema } from '../../ports/database.port';
+import { safeQuery, tenantSchema } from '../../ports/database.port.js';
 import { getFirstRow } from '@dos/db';
 /**
  * Register or update a tool definition

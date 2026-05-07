@@ -1,8 +1,8 @@
 // @ts-nocheck
 import { createHash } from 'node:crypto';
-import { logger } from '../../ports/logger.port';
-import { safeQuery, tenantSchema } from '../../ports/database.port';
-import { getAgentRbacEntry } from '../../ports/platform.port';
+import { logger } from '../../ports/logger.port.js';
+import { safeQuery, tenantSchema } from '../../ports/database.port.js';
+import { getAgentRbacEntry } from '../../ports/platform.port.js';
 import { toErrorMessage } from '@dos/module-sdk';
 import { getFirstRow } from '@dos/db';
 import { swallow, EC } from '@dos/platform-core/resilience/resilient-catch';
@@ -195,7 +195,7 @@ export async function recordAgentStep(tenantId, runId, step) {
         ]);
         if (step.status === 'done' || step.status === 'failed') {
             try {
-                const { snapshotGraph } = await import('../../workflow/services/templates/workflow-versioning.service');
+                const { snapshotGraph } = await import('../../workflow/services/templates/workflow-versioning.service.js');
                 const graph = await getRunGraph(tenantId, runId);
                 await snapshotGraph(tenantId, runId, graph, {
                     changeSummary: `Step ${step.nodeId} → ${step.status}`,

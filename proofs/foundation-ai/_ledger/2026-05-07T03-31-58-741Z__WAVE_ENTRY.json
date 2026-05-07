@@ -1,0 +1,14 @@
+{
+  "runId": "b9313034-8a0c-455a-91dc-3cac862533aa",
+  "phase": "WAVE-1-ENTRY",
+  "wave": 1,
+  "kind": "WAVE_ENTRY",
+  "inputsHash": "sha256:278bccae07061e983340a6ae298c4775466a474dc1234e07bf1963bce0c98648",
+  "outputsHash": "sha256:fe68d621818149b6ef8c18c8d0ca53f5fd4f6e16ccd6148f8fb8c4fbce96d3dc",
+  "parentHash": "sha256:226ac117c3340580f29a2934a72dc6e6d41aa15aa64ab6e8d36daa952c954bbc",
+  "signer": "dev-1",
+  "status": "GREEN",
+  "evidenceUri": "/root/DOS-Platform/proofs/foundation-ai/wave-1/wave-entry.proof.json",
+  "createdAt": "2026-05-07T03:31:58.741Z",
+  "hash": "sha256:978ac23f626226014542c52b5891c676da714d979febb7c15dd2d9f560ca73f7"
+}

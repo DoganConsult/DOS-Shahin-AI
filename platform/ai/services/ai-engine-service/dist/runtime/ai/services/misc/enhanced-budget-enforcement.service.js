@@ -1,3 +1,3 @@
 /** Re-export stub — canonical location: modules/platform/services/misc/ */
-export * from './enhanced-budget-enforcement.service';
+export * from './enhanced-budget-enforcement.service.js';
 //# sourceMappingURL=enhanced-budget-enforcement.service.js.map

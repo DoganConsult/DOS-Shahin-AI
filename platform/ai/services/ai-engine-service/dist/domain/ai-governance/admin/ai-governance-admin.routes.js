@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import { authenticate, requirePermission } from '../ports/auth.port';
-import { auditMiddleware, asyncHandler, moduleStack } from '../ports/middleware.port';
-import { safeQuery, tenantSchema } from '../ports/database.port';
-import { getAiGovernanceDiagnostics, getRegistryIntegrityDiagnostics, getMissingDocumentationDiagnostics } from '../diagnostics/ai-governance-diagnostics.service';
-import { getAiGovernanceDashboard, getAiDpiaStatusSummary } from '../services/ai/operations/ai-governance-dashboard.service';
-import { validate } from "../ports/middleware.port";
+import { authenticate, requirePermission } from '../ports/auth.port.js';
+import { auditMiddleware, asyncHandler, moduleStack } from '../ports/middleware.port.js';
+import { safeQuery, tenantSchema } from '../ports/database.port.js';
+import { getAiGovernanceDiagnostics, getRegistryIntegrityDiagnostics, getMissingDocumentationDiagnostics } from '../diagnostics/ai-governance-diagnostics.service.js';
+import { getAiGovernanceDashboard, getAiDpiaStatusSummary } from '../services/ai/operations/ai-governance-dashboard.service.js';
+import { validate } from "../ports/middleware.port.js";
 import { z } from "zod";
 const router = Router();
 router.use(moduleStack('ai-governance'));

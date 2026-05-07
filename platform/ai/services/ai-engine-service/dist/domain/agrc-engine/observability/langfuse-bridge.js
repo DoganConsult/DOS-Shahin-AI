@@ -6,7 +6,7 @@
  *
  * Graceful degradation: if Langfuse is not configured, all methods are no-ops.
  */
-import { logger } from '../ports/logger.port';
+import { logger } from '../ports/logger.port.js';
 // ── Langfuse client (lazy singleton) ─────────────────────────────────
 let _langfuse = null;
 let _initAttempted = false;

@@ -4,9 +4,9 @@
 // Governs AI action autonomy, routing, and
 // escalation based on tenant blueprint policies.
 // ============================================
-import { safeQuery, tenantSchema } from '../../../ports/database.port';
-import { getTenantBlueprint, logPolicyDecision } from '../../../../packs/services/blueprint.service';
-import { isModuleActive } from '../../../ports/platform.port';
+import { safeQuery, tenantSchema } from '../../../ports/database.port.js';
+import { getTenantBlueprint, logPolicyDecision } from '../../../../packs/services/blueprint.service.js';
+import { isModuleActive } from '../../../ports/platform.port.js';
 async function deriveUserPermissions(tenantId, userId) {
     try {
         const schema = tenantSchema(tenantId);

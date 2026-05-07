@@ -2,8 +2,8 @@
 // AI Supply Chain Service — Phase 3, Step 3.2
 // EU AI Act Art. 15/17/18/25/53, NIST AI RMF, AIBOM
 // ============================================
-import { safeQuery, tenantSchema } from '../../../ports/database.port';
-import { eventBus } from '../../../ports/events.port';
+import { safeQuery, tenantSchema } from '../../../ports/database.port.js';
+import { eventBus } from '../../../ports/events.port.js';
 import { swallow, EC } from '@dos/platform-core/resilience/resilient-catch';
 // 1. registerModelProvenance
 export async function registerModelProvenance(tenantId, provenance) {

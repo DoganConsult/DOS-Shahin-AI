@@ -235,6 +235,15 @@ export interface ActionQueueItem {
   action?: ShellAction;
 }
 
+export interface AiExplainabilityBlock {
+  id: string;
+  title: WorkspaceI18nLabel;
+  rationale: WorkspaceI18nLabel;
+  confidence?: number;
+  status?: string;
+  action?: ShellAction;
+}
+
 export type AgentActivityState = 'running' | 'complete' | 'done' | 'error' | 'waiting' | 'awaiting-approval' | string;
 
 export interface AgentActivity {

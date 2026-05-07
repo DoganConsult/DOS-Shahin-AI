@@ -9,8 +9,8 @@
 //  1. Template matching (fast, safe, no LLM cost)
 //  2. LLM-generated SQL (strict guardrails)
 // ============================================
-import { safeQuery, tenantSchema } from '../../ports/database.port';
-import { NL_QUERY_TEMPLATES } from './nl-query-templates';
+import { safeQuery, tenantSchema } from '../../ports/database.port.js';
+import { NL_QUERY_TEMPLATES } from './nl-query-templates.js';
 import { toErrorMessage } from '@dos/module-sdk';
 // ── Pattern matching ─────────────────────────────────────────
 /**
@@ -104,7 +104,7 @@ async function generateSafeSql(tenantId, query, schema) {
         const { rows: tables } = await safeQuery(`SELECT table_name FROM information_schema.tables WHERE table_schema = $1 ORDER BY table_name`, [schema]);
         // Limit table list to keep the prompt within token budget
         const tableNames = tables.map((t) => t.table_name).slice(0, 50);
-        const { gatewayJSON } = await import('../gateway/ai-gateway.service');
+        const { gatewayJSON } = await import('../gateway/ai-gateway.service.js');
         const systemPrompt = `You are a PostgreSQL query generator for a GRC (Governance, Risk, Compliance) platform. Generate safe, read-only SELECT queries.`;
         const userMessage = `Generate a PostgreSQL SELECT query for schema "${schema}".
 

@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { safeQuery, tenantSchema } from '@dos/db';
-import { setAuditData } from '../ports/middleware.port';
+import { setAuditData } from '../ports/middleware.port.js';
 // ── Tool Registry ──
 export async function createTool(tenantId, userId, data) {
     const schema = tenantSchema(tenantId);

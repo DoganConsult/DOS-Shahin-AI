@@ -1,9 +1,9 @@
 // @ts-nocheck
-import { safeQuery, safeQueryWithClient, tenantSchema, withTransaction } from '../../../ports/database.port';
-import { getAssetById, getAssetByKey } from '../../../../../domain/ai-governance/services/ai/registry/ai-asset-inventory.service';
-import { SYSTEM_JOB_ACTOR } from '../../../ports/platform.port';
-import { ServiceError, NotFoundError } from '../../../../../errors';
-import { emitRegistryAudit, nextRegistryVersionNumber } from '../../../../../domain/ai-governance/services/ai-governance-lifecycle.service';
+import { safeQuery, safeQueryWithClient, tenantSchema, withTransaction } from '../../../ports/database.port.js';
+import { getAssetById, getAssetByKey } from '../../../../../domain/ai-governance/services/ai/registry/ai-asset-inventory.service.js';
+import { SYSTEM_JOB_ACTOR } from '../../../ports/platform.port.js';
+import { ServiceError, NotFoundError } from '../../../../../errors/index.js';
+import { emitRegistryAudit, nextRegistryVersionNumber } from '../../../../../domain/ai-governance/services/ai-governance-lifecycle.service.js';
 const AUDIT_MODULE = 'ai-agent-registry';
 const AUDIT_ENTITY_TYPE = 'agent_version';
 const TABLE_NAME = 'ai_agent_registry';

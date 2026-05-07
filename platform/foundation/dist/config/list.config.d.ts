@@ -12,7 +12,7 @@
 import type { FoundationEntityType } from '../contracts/foundation.types';
 export interface ListColumnConfig {
     key: string;
-    labelKey: string;
+    i18nKey: string;
     type: 'text' | 'date' | 'badge' | 'link' | 'boolean' | 'number';
     sortable?: boolean;
     searchable?: boolean;
@@ -21,17 +21,17 @@ export interface ListColumnConfig {
 }
 export interface ListFilterConfig {
     key: string;
-    labelKey: string;
+    i18nKey: string;
     type: 'text' | 'select' | 'date-range' | 'boolean';
     options?: {
         value: string;
-        labelKey: string;
+        i18nKey: string;
     }[];
     optionsEndpoint?: string;
 }
 export interface ListActionConfig {
     key: string;
-    labelKey: string;
+    i18nKey: string;
     variant: 'primary' | 'secondary' | 'danger';
     permission: string;
     scope: 'row' | 'bulk' | 'page';

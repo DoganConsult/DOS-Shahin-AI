@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { catchHandler, EC } from '@dos/platform-core/resilience/resilient-catch';
-import { logger } from '../ports/logger.port';
+import { logger } from '../ports/logger.port.js';
 // ============================================
 // Shahin — AGRC-OS Notification Bridge (Product)
 // Wires EventBus events to the notification
@@ -8,8 +8,8 @@ import { logger } from '../ports/logger.port';
 // NOTE: This is an AGRC product service residing
 // in the platform directory. Law 2 ownership: agrc.
 // ============================================
-import { eventBus } from '../ports/events.port';
-import { safeQuery } from '../ports/database.port';
+import { eventBus } from '../ports/events.port.js';
+import { safeQuery } from '../ports/database.port.js';
 import { getFirstRow } from '@dos/db';
 const NOTIFICATION_DEDUP_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
 const recentNotificationKeys = new Map();
@@ -244,7 +244,7 @@ async function notifyAdmins(event, notif) {
     try {
         if (!shouldSendNotification(event, notif.type))
             return;
-        const { createNotification } = await import('../../notification/services/notification.service');
+        const { createNotification } = await import('../../notification/services/notification.service.js');
         const admins = await safeQuery(`SELECT user_id FROM users WHERE tenant_id=$1 AND role IN ('admin', 'owner', 'compliance_officer', 'risk_manager') LIMIT 10`, [event.tenantId]);
         for (const admin of admins.rows) {
             await createNotification(event.tenantId, { userId: admin.user_id, ...notif }).catch(catchHandler(EC.AGENT_ACTION, {}));
@@ -260,7 +260,7 @@ async function notifyOwners(event, notif) {
     try {
         if (!shouldSendNotification(event, notif.type))
             return;
-        const { createNotification } = await import('../../notification/services/notification.service');
+        const { createNotification } = await import('../../notification/services/notification.service.js');
         const owners = await safeQuery(`SELECT user_id FROM users WHERE tenant_id=$1 AND role='owner' LIMIT 5`, [event.tenantId]);
         for (const owner of owners.rows) {
             await createNotification(event.tenantId, { userId: owner.user_id, ...notif }).catch(catchHandler(EC.AGENT_ACTION, {}));
@@ -337,7 +337,7 @@ async function notifyPlatformAdmins(event, notif) {
     try {
         if (!shouldSendNotification(event, notif.type))
             return;
-        const { createNotification } = await import('../../notification/services/notification.service');
+        const { createNotification } = await import('../../notification/services/notification.service.js');
         // Prefer super admins / owner admins in platform-management tenant context
         let admins = await safeQuery(`SELECT user_id
        FROM users

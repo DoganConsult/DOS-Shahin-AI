@@ -1,11 +1,11 @@
 // @ts-nocheck
 import { Router } from 'express';
-import { authenticate, requirePermission } from '../../ports/auth.port';
-import { validate, auditMiddleware } from '../../ports/middleware.port';
-import { safeQuery, tenantSchema } from '../../ports/database.port';
+import { authenticate, requirePermission } from '../../ports/auth.port.js';
+import { validate, auditMiddleware } from '../../ports/middleware.port.js';
+import { safeQuery, tenantSchema } from '../../ports/database.port.js';
 import { toErrorMessage } from '@dos/module-sdk';
-import { getAllAgentDefinitions, getAgentDefinition, buildDependencyGraph, triggerAgentsForWorkflowTransition } from '../../ports/platform.port';
-import { updateAiBody, createTriggerBody, createCancelBody } from '../../schemas/ai.schemas';
+import { getAllAgentDefinitions, getAgentDefinition, buildDependencyGraph, triggerAgentsForWorkflowTransition } from '../../ports/platform.port.js';
+import { updateAiBody, createTriggerBody, createCancelBody } from '../../schemas/ai.schemas.js';
 import { z } from "zod";
 const router = Router();
 router.use(authenticate);

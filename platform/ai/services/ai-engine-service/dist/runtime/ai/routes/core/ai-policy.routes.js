@@ -1,10 +1,10 @@
 // @ts-nocheck
 import { Router } from 'express';
-import { authenticate, requirePermission } from '../../ports/auth.port';
-import { listPolicyRules, createPolicyRule, deletePolicyRule, togglePolicyRule } from '../../services/governance/ai-policy-rule.service';
+import { authenticate, requirePermission } from '../../ports/auth.port.js';
+import { listPolicyRules, createPolicyRule, deletePolicyRule, togglePolicyRule } from '../../services/governance/ai-policy-rule.service.js';
 // ── Zod Schemas ──────────────────────────────────────────────────────────
-import { auditMiddleware, validate, asyncHandler, moduleStack, mutationEventHook } from '../../ports/middleware.port';
-import { rulesPostBody, rulesRuleIdTogglePatchBody } from "../../schemas/ai.schemas";
+import { auditMiddleware, validate, asyncHandler, moduleStack, mutationEventHook } from '../../ports/middleware.port.js';
+import { rulesPostBody, rulesRuleIdTogglePatchBody } from "../../schemas/ai.schemas.js";
 import { z } from "zod";
 const router = Router();
 router.use(moduleStack('ai'));

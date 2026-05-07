@@ -1,4 +1,4 @@
-import { emptyResult, safeQuery, tenantSchema } from '../ports/database.port';
+import { emptyResult, safeQuery, tenantSchema } from '../ports/database.port.js';
 // Tenant push/active-tenant helpers are not exposed by the AI-engine events port.
 // Provide local no-op fallbacks so callers compile and degrade safely until the
 // canonical websocket fan-out and tenant-registry helpers are wired through.

@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { logger } from '../../ports/logger.port';
+import { logger } from '../../ports/logger.port.js';
 /**
  * AGRC-OS — Agent Cycle Orchestrator
  *
@@ -9,12 +9,12 @@ import { logger } from '../../ports/logger.port';
  *
  * Extracted from agent-runner.service.ts for maintainability.
  */
-import { initCycleContext, closeCycleContext, correlateDiscoveries, computeExecutionWaves, persistCycleSummary, detectConflicts, recordAgentConflicts, getCycleId, } from './agent-cooperation.service';
-import { eventBus } from '../../ports/events.port';
-import { getTenantPlatformMode } from '../../ports/platform.port';
-import { getAgentIds } from './agent-rbac-registry';
+import { initCycleContext, closeCycleContext, correlateDiscoveries, computeExecutionWaves, persistCycleSummary, detectConflicts, recordAgentConflicts, getCycleId, } from './agent-cooperation.service.js';
+import { eventBus } from '../../ports/events.port.js';
+import { getTenantPlatformMode } from '../../ports/platform.port.js';
+import { getAgentIds } from './agent-rbac-registry.js';
 import { toErrorMessage } from '@dos/module-sdk';
-import { runAgent } from '../agents/core/agent-runner.service';
+import { runAgent } from '../agents/core/agent-runner.service.js';
 // ── Run all agents for a single tenant (parallel wave execution) ──────────
 /**
  * Run all agents using dependency-aware execution waves.

@@ -4,10 +4,10 @@
 // Canonical barrel for all digital-twin sub-services.
 // Owner: Product — ai-governance module (Law 2)
 // ============================================
-export * from './digital-twin.types';
-export * from './digital-twin-simulation.service';
-export * from './digital-twin-impact.service';
-export * from './digital-twin-org-analysis.service';
+export * from './digital-twin.types.js';
+export * from './digital-twin-simulation.service.js';
+export * from './digital-twin-impact.service.js';
+export * from './digital-twin-org-analysis.service.js';
 /**
  * Convenience alias: runs analyzeOrgImpact against the current
  * simulation snapshot identified by simulationId.

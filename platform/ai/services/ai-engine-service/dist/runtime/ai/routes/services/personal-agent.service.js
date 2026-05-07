@@ -4,5 +4,5 @@
  * Re-export barrel — canonical personal-agent lives in the services/personal/ directory.
  * This routes/services/ path exists for backward compatibility.
  */
-export * from '../../services/personal/personal-agent.service';
+export * from '../../services/personal/personal-agent.service.js';
 //# sourceMappingURL=personal-agent.service.js.map

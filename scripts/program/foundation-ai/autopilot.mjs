@@ -22,6 +22,16 @@ function which(wave) {
   return existsSync(join(ROOT, `proofs/foundation-ai/wave-${wave}/run.proof.json`));
 }
 
+// Wave-blocking enforcement: a wave is "closed" only when its
+// close.proof.json exists with status=GREEN. Autopilot REFUSES to advance
+// to wave N+1 until wave N has a green close bundle.
+function isClosedGreen(wave) {
+  const f = join(ROOT, `proofs/foundation-ai/wave-${wave}/close.proof.json`);
+  if (!existsSync(f)) return false;
+  try { return JSON.parse(readFileSync(f, 'utf8')).status === 'GREEN'; }
+  catch { return false; }
+}
+
 function nextWave() {
   for (let w = -2; w <= 14; w++) if (!which(w)) return w;
   return null;
@@ -30,20 +40,33 @@ function nextWave() {
 const wave = args.wave !== undefined ? Number(args.wave) : nextWave();
 if (wave === null) { console.log('all waves complete'); process.exit(0); }
 
+// Block N+1 unless N is closed GREEN (skip for the first wave -2 / when no prior exists).
+const prev = wave - 1;
+if (prev >= -2 && !isClosedGreen(prev) && !args['allow-skip-block']) {
+  console.error(`\n✖ autopilot REFUSED — wave ${prev} has no GREEN close.proof.json.`);
+  console.error(`   Run: node scripts/program/foundation-ai/phase-e-close.mjs --wave=${prev}`);
+  console.error(`   Or override with --allow-skip-block (governance break-glass).`);
+  process.exit(2);
+}
+
 console.log(`\n── Foundation-AI autopilot · advancing to wave ${wave} ──`);
 
 try {
   process.env.PROGRAM_WAVE = String(wave);
+  // 5-phase governance runbook (A→E). Each phase is stop-the-line.
+  run(`node scripts/program/foundation-ai/phase-a-entry.mjs --wave=${wave}`);
+  // Implementation legacy pipeline still owns DDL emit; keep for back-compat.
   run(`node scripts/program/foundation-ai/inventory.mjs > /dev/null`);
-  // Preflight: auto-correct safe legacy patterns before run-wave (only if explicitly approved).
-  // Without approval, preflight is dry-run and surfaces a flag; autopilot continues.
   try { run(`node scripts/program/foundation-ai/preflight.mjs --wave=${wave}${process.env.PROGRAM_PREFLIGHT_APPROVED === '1' ? ' --apply' : ''}`); } catch {}
   run(`node scripts/program/foundation-ai/run-wave.mjs --wave=${wave}`);
+  run(`node scripts/program/foundation-ai/phase-b-implement.mjs --wave=${wave}`);
+  run(`node scripts/program/foundation-ai/phase-c-verify.mjs --wave=${wave}`);
   run(`node scripts/program/foundation-ai/quality-gate.mjs --wave=${wave}`);
   run(`node scripts/program/foundation-ai/drift-check.mjs --wave=${wave}`);
   run(`node scripts/program/foundation-ai/zerodirt.mjs`);
+  run(`node scripts/program/foundation-ai/phase-d-runtime.mjs --wave=${wave}`);
   run(`node scripts/program/foundation-ai/archive-phase.mjs --wave=${wave} --phase=${wave < 0 ? 'P-2' : 'P' + wave}`);
-  run(`node scripts/program/foundation-ai/commit-wave.mjs --wave=${wave}`);
+  run(`node scripts/program/foundation-ai/phase-e-close.mjs --wave=${wave}`);
   emitProof({ phase: -2, wave, name: 'autopilot', payload: { advancedTo: wave }, status: 'GREEN', kind: 'AUTOPILOT' });
   console.log(`\n✔ wave ${wave} GREEN. Run again to advance to wave ${wave + 1}.`);
 } catch (e) {

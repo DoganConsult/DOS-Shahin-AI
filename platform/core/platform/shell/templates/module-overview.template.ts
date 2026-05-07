@@ -104,14 +104,16 @@ import { DosInsightBarComponent } from './dos-insight-bar.component';
               <div class="dmt-actions-row">
                 @if (primaryAction) {
                   <button cdsButton="primary" size="sm"
-                    (click)="primaryAction.action?.()">
+                    (click)="triggerAction(primaryAction)">
                     {{ primaryAction.label }}
                   </button>
                 }
                 @if (secondaryActions.length && viewMode() === 'full') {
-                  <cds-combo-button [buttons]="secondaryActions" size="sm">
-                    Actions
-                  </cds-combo-button>
+                  @for (action of secondaryActions; track action.actionKey || action.commandKey || action.route || action.label) {
+                    <button cdsButton="tertiary" size="sm" (click)="triggerAction(action)">
+                      {{ action.label }}
+                    </button>
+                  }
                 }
               </div>
             }
@@ -139,7 +141,7 @@ import { DosInsightBarComponent } from './dos-insight-bar.component';
       <dos-insight-bar
         [pillars]="pillars"
         archetype="command-home"
-        (actionClick)="pillars?.nextAction?.action?.()">
+        (actionClick)="triggerAction(pillars?.nextAction ?? null)">
       </dos-insight-bar>
 
             <!-- ── KPI strip ──────────────────────────────────────────────── -->
@@ -283,11 +285,12 @@ export class ModuleOverviewTemplateComponent implements OnInit {
   @Input() nbaActions: ModuleAction[] = [];
   @Input() statusTags: Array<{ label: string; severity?: string }> = [];
   @Input() primaryAction: ModuleAction | null = null;
-  @Input() secondaryActions: Array<{ content: string; click: () => void }> = [];
+  @Input() secondaryActions: ModuleAction[] = [];
   @Input() currentRole: ModuleRole = 'standard_user';
   @Input() writeRoles: ModuleRole[] = [];
   @Input() maxKpis = 4;
   @Input() pillars: ModuleInsightPillars | null = null;
+  @Output() actionTriggered = new EventEmitter<{ key: string; payload?: Record<string, unknown> }>();
 
 
   viewMode = computed<RoleViewMode>(() => resolveViewMode(this.currentRole, this.writeRoles));
@@ -314,5 +317,20 @@ export class ModuleOverviewTemplateComponent implements OnInit {
 
   nbaTagType(severity?: string): string {
     return this.tagType(severity);
+  }
+
+  triggerAction(action: ModuleAction | null, payload?: Record<string, unknown>): void {
+    if (!action) return;
+    if (action.actionKey) {
+      this.actionTriggered.emit({ key: action.actionKey, payload });
+      return;
+    }
+    if (action.commandKey) {
+      this.actionTriggered.emit({ key: action.commandKey, payload });
+      return;
+    }
+    if (action.route) {
+      this.actionTriggered.emit({ key: 'navigate', payload: { path: action.route, ...(payload ?? {}) } });
+    }
   }
 }

@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { providerRouter } from './runtime/ai/routes/gateway/provider.routes';
-import kernelRouter from './runtime/ai/routes/ai-os/kernel.routes';
+import { providerRouter } from './runtime/ai/routes/gateway/provider.routes.js';
+import kernelRouter from './runtime/ai/routes/ai-os/kernel.routes.js';
 export const aiEngineRouter = Router();
 aiEngineRouter.use('/providers', providerRouter);
 // Wave 4.6 — SSE channel. Direct handler ON aiEngineRouter (NOT mounted
@@ -122,7 +122,7 @@ aiEngineRouter.use('/', kernelRouter);
 // AGRC-OS routes — mounted lazily to survive missing exports in schema files
 const mountAgrcOsRoutes = async () => {
     try {
-        const { default: agrcOsRouter } = await import('./domain/agrc-engine/routes/agrc-os/index.routes');
+        const { default: agrcOsRouter } = await import('./domain/agrc-engine/routes/agrc-os/index.routes.js');
         aiEngineRouter.use('/agrc-os', agrcOsRouter);
     }
     catch (e) {
@@ -175,7 +175,7 @@ lazyMountRoutes();
 // ── OpenClaw A2A routes — lazy mount ──
 const mountA2ARoutes = async () => {
     try {
-        const { default: a2aRouter } = await import('./openclaw/a2a/a2a.routes');
+        const { default: a2aRouter } = await import('./openclaw/a2a/a2a.routes.js');
         aiEngineRouter.use('/openclaw/a2a', a2aRouter);
         console.log('[ai-engine] Mounted /openclaw/a2a');
     }
@@ -187,7 +187,7 @@ mountA2ARoutes();
 // ── RAG routes — lazy mount ──
 const mountRagRoutes = async () => {
     try {
-        const { default: ragRouter } = await import('./runtime/ai/services/rag/rag.routes');
+        const { default: ragRouter } = await import('./runtime/ai/services/rag/rag.routes.js');
         aiEngineRouter.use('/rag', ragRouter);
         console.log('[ai-engine] Mounted /rag');
     }
@@ -199,7 +199,7 @@ mountRagRoutes();
 // ── Quantum Security / PQC Readiness routes — lazy mount ──
 const mountQuantumSecurityRoutes = async () => {
     try {
-        const { default: quantumRouter } = await import('./domain/ai-governance/routes/quantum-security.routes');
+        const { default: quantumRouter } = await import('./domain/ai-governance/routes/quantum-security.routes.js');
         aiEngineRouter.use('/security/quantum', quantumRouter);
         console.log('[ai-engine] Mounted /security/quantum');
     }

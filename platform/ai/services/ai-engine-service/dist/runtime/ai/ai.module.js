@@ -1,6 +1,6 @@
 import { registerModule } from '@dos/module-sdk';
-import { AI_PERMISSIONS, AI_ROLES, AI_ACTIONS } from './security/ai.security';
-import { AI_APPROVAL_MATRIX } from './security/ai.approval-matrix';
+import { AI_PERMISSIONS, AI_ROLES, AI_ACTIONS } from './security/ai.security.js';
+import { AI_APPROVAL_MATRIX } from './security/ai.approval-matrix.js';
 export const AI_MANIFEST = {
     code: 'ai',
     version: '2.0.0',

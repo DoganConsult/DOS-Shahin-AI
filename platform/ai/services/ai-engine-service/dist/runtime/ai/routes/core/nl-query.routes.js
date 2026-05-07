@@ -5,10 +5,10 @@ import { Router } from 'express';
 // POST /api/ai/nl/query   — Execute a NL query
 // GET  /api/ai/nl/query/types — List templates
 // ============================================
-import { authenticate, requirePermission } from '../../ports/auth.port';
-import { executeNLQuery, getAvailableQueryTypes } from '../../services/reasoning/nl-query-engine.service';
-import { validate, auditMiddleware, asyncHandler, moduleStack, mutationEventHook } from '../../ports/middleware.port';
-import { createQueryBody } from '../../schemas/ai.schemas';
+import { authenticate, requirePermission } from '../../ports/auth.port.js';
+import { executeNLQuery, getAvailableQueryTypes } from '../../services/reasoning/nl-query-engine.service.js';
+import { validate, auditMiddleware, asyncHandler, moduleStack, mutationEventHook } from '../../ports/middleware.port.js';
+import { createQueryBody } from '../../schemas/ai.schemas.js';
 import { z } from "zod";
 const router = Router();
 router.use(auditMiddleware('ai'));

@@ -5,7 +5,7 @@
  * Registers entity lifecycles with the central LifecycleRegistry (DOS-owned).
  * DAuth evaluateLifecycleTransition() consumes these definitions.
  */
-import { registerLifecycleDefinition } from './ports/lifecycle.port';
+import { registerLifecycleDefinition } from './ports/lifecycle.port.js';
 const RECORD_STATES = [
     'draft',
     'in_review',

@@ -1,9 +1,9 @@
 // @ts-nocheck
-import { safeQuery, tenantSchema } from '../ports/database.port';
-import { emitEvent, notifyDomainChange } from '../ports/events.port';
-import { recordAudit } from '../../audit/services/audit/core/audit-trail.service';
-import { logger } from '../ports/logger.port';
-import { SYSTEM_JOB_ACTOR } from '../ports/platform.port';
+import { safeQuery, tenantSchema } from '../ports/database.port.js';
+import { emitEvent, notifyDomainChange } from '../ports/events.port.js';
+import { recordAudit } from '../../audit/services/audit/core/audit-trail.service.js';
+import { logger } from '../ports/logger.port.js';
+import { SYSTEM_JOB_ACTOR } from '../ports/platform.port.js';
 import { catchHandler, EC } from '@dos/platform-core/resilience/resilient-catch';
 export async function list(tenantId, query_) {
     const schema = tenantSchema(tenantId);

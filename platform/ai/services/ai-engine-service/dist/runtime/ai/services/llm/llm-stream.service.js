@@ -1,8 +1,8 @@
-import { logger } from '../../ports/logger.port';
+import { logger } from '../../ports/logger.port.js';
 import http from 'http';
 import https from 'https';
-import { getClaudeClient, CLAUDE_MODEL, CLAUDE_MAX_TOKENS } from '../../ports/ai.port';
-import { gatewayAcquireSlot, gatewayReleaseSlot } from '../gateway/ai-gateway.service';
+import { getClaudeClient, CLAUDE_MODEL, CLAUDE_MAX_TOKENS } from '../../ports/ai.port.js';
+import { gatewayAcquireSlot, gatewayReleaseSlot } from '../gateway/ai-gateway.service.js';
 import { toErrorMessage } from '@dos/module-sdk';
 export function initSSEResponse(res) {
     res.writeHead(200, {

@@ -17,10 +17,10 @@ Environment Variables:
   FOUNDATION_PAGES_COVERAGE_ENFORCE  Set to 1 to fail CI (default: SHADOW mode)
 
 Checks:
-  ① component_keys matching 'foundation.%.page' exist in dos.dynamic_ui_component_registry
-  ② Each is registered in platform/dos/registry/component-map.ts
-  ③ Each resolves through scripts/ui-registry/lib/archetype-map.mjs
-  ④ dos.dynamic_ui_routes has matching routes with tenant_id IS NULL
+  ① dos.dynamic_ui_routes foundation entries expose component_key values (tenant_id IS NULL)
+  ② Each route component_key exists in dos.dynamic_ui_component_registry (vendor='ibm-carbon')
+  ③ Each route component_key is registered in platform/dos/registry/component-map.ts
+  ④ Each route component_key resolves through scripts/ui-registry/lib/archetype-map.mjs
 
 Exit codes:
   Non-zero if any check fails (when FOUNDATION_PAGES_COVERAGE_ENFORCE=1)
@@ -51,13 +51,20 @@ const violations = [];
 // ─── Read foundation page keys from DB ────────────────────────────────
 let PAGE_KEYS = [];
 let DB_ROUTES = [];
+let REGISTRY_KEYS = [];
 try {
   const pgCmd = `PGPASSWORD=dos_auth_pass_2026 psql -h localhost -U dos_auth -d shahin_grc -t -A -c`;
-  const keysRaw = execSync(
-    `${pgCmd} "SELECT component_key FROM dos.dynamic_ui_component_registry WHERE component_key LIKE 'foundation.%.page' AND vendor='ibm-carbon' ORDER BY component_key"`,
+  const routeKeysRaw = execSync(
+    `${pgCmd} "SELECT DISTINCT component_key FROM dos.dynamic_ui_routes WHERE module_code='foundation' AND tenant_id IS NULL ORDER BY component_key"`,
     { encoding: 'utf8' },
   ).trim();
-  PAGE_KEYS = keysRaw ? keysRaw.split('\n').map(s => s.trim()).filter(Boolean) : [];
+  PAGE_KEYS = routeKeysRaw ? routeKeysRaw.split('\n').map((s) => s.trim()).filter(Boolean) : [];
+
+  const registryRaw = execSync(
+    `${pgCmd} "SELECT component_key FROM dos.dynamic_ui_component_registry WHERE vendor='ibm-carbon' ORDER BY component_key"`,
+    { encoding: 'utf8' },
+  ).trim();
+  REGISTRY_KEYS = registryRaw ? registryRaw.split('\n').map((s) => s.trim()).filter(Boolean) : [];
 
   const routesRaw = execSync(
     `${pgCmd} "SELECT path_pattern FROM dos.dynamic_ui_routes WHERE module_code='foundation' AND tenant_id IS NULL ORDER BY path_pattern"`,
@@ -69,10 +76,16 @@ try {
 }
 
 if (PAGE_KEYS.length === 0 && violations.length === 0) {
-  violations.push('No foundation.*.page keys found in dos.dynamic_ui_component_registry');
+  violations.push('No foundation component keys found in dos.dynamic_ui_routes');
 }
 
 if (violations.length === 0) {
+  // ② dynamic_ui_component_registry coverage for route keys
+  const registrySet = new Set(REGISTRY_KEYS);
+  for (const k of PAGE_KEYS) {
+    if (!registrySet.has(k)) violations.push(`dynamic_ui_component_registry missing '${k}' (from foundation route set)`);
+  }
+
   // ② component-map.ts
   if (!existsSync(COMP_MAP)) {
     violations.push(`component-map.ts missing: ${COMP_MAP}`);

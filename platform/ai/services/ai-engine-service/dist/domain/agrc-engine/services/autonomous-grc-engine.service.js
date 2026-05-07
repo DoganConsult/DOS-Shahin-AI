@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { logger } from '../ports/logger.port';
+import { logger } from '../ports/logger.port.js';
 import { swallow, swallowDefault, EC } from '@dos/platform-core/resilience/resilient-catch';
 // ============================================
 // Shahin — AGRC-OS Autonomous GRC Engine
@@ -24,9 +24,9 @@ import { swallow, swallowDefault, EC } from '@dos/platform-core/resilience/resil
 // Publishes cross-hub events that trigger the
 // cross-hub-integration subscribers automatically.
 // ============================================
-import { emptyResult, safeQuery, tenantSchema } from '../ports/database.port';
-import { eventBus } from '../ports/events.port';
-import { recordAudit } from '../../audit/services/audit/core/audit-trail.service';
+import { emptyResult, safeQuery, tenantSchema } from '../ports/database.port.js';
+import { eventBus } from '../ports/events.port.js';
+import { recordAudit } from '../../audit/services/audit/core/audit-trail.service.js';
 import { toErrorMessage } from '@dos/module-sdk';
 import { getFirstRow } from '@dos/db';
 // ── Circuit breaker ──────────────────────────────────────────────────────────
@@ -139,7 +139,7 @@ async function _runInternal(tenantId) {
     }
     // ── 4. Risk Score Drift Detector ───────────────────────────────────────────
     try {
-        const { checkRiskAgainstAppetite } = await import('../../governance/services/governance/governance-constitution.service');
+        const { checkRiskAgainstAppetite } = await import('../../governance/services/governance/governance-constitution.service.js');
         const risks = await safeQuery(`SELECT risk_id, title, category, risk_score, likelihood, impact, treatment_status, owner
        FROM "${schema}".risks
        WHERE risk_score IS NOT NULL
@@ -334,7 +334,7 @@ async function _runInternal(tenantId) {
        LIMIT 20`);
         for (const inc of staleIncidents.rows) {
             try {
-                const { createTask } = await import('../../workflow/services/tasks/task-board.service');
+                const { createTask } = await import('../../workflow/services/tasks/task-board.service.js');
                 await createTask(tenantId, {
                     title: `[Auto-Remediation] Unresolved incident: ${inc.title}`,
                     description: `Incident "${inc.title}" has been open for >7 days with no remediation task. AGRC-OS auto-created this task.`,
@@ -393,7 +393,7 @@ async function _runInternal(tenantId) {
         }
         if (raciGaps > 0) {
             try {
-                const { createTask } = await import('../../workflow/services/tasks/task-board.service');
+                const { createTask } = await import('../../workflow/services/tasks/task-board.service.js');
                 await createTask(tenantId, {
                     title: `[Auto] ${raciGaps} GRC entities missing RACI ownership`,
                     description: `AGRC-OS detected ${raciGaps} controls/risks/evidence items missing responsible, accountable, user, or team owners. Review at /grc-raci/gaps.`,
@@ -452,7 +452,7 @@ async function _runInternal(tenantId) {
     }
     // ── 13. GRC Integrity Guard — enforce no orphaned artifacts ──────────────
     try {
-        const { runIntegrityGuard } = await import('./grc-integrity-guard.service');
+        const { runIntegrityGuard } = await import('./grc-integrity-guard.service.js');
         const integrityResult = await runIntegrityGuard(tenantId);
         if (integrityResult.totalFixed > 0) {
             remediationsCreated += integrityResult.totalFixed;
@@ -694,7 +694,7 @@ async function _runInternal(tenantId) {
     // ── 24. BCP Single Point of Failure Scanner ─────────────────────────────
     let bcpSpofAlerts = 0;
     try {
-        const { detectSinglePointsOfFailure } = await import('../../bcp/services/bcm-advanced.service');
+        const { detectSinglePointsOfFailure } = await import('../../bcp/services/bcm-advanced.service.js');
         const spofs = await detectSinglePointsOfFailure(tenantId);
         bcpSpofAlerts = spofs.filter((s) => s.risk === 'critical' || s.risk === 'high').length;
         for (const spof of spofs.filter((s) => s.risk === 'critical')) {

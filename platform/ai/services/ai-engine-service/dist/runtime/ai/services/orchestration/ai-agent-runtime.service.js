@@ -4,5 +4,5 @@
  * Re-export barrel — canonical ai-agent-runtime lives in the agents/core/ directory.
  * This orchestration/ path exists for backward compatibility.
  */
-export * from '../agents/core/ai-agent-runtime.service';
+export * from '../agents/core/ai-agent-runtime.service.js';
 //# sourceMappingURL=ai-agent-runtime.service.js.map

@@ -3,10 +3,10 @@
 //
 // Dashboard summary, audit trail, and activity timeline queries with caching.
 // ============================================================================
-import { safeQuery, tenantSchema } from '../../ports/database.port';
+import { safeQuery, tenantSchema } from '../../ports/database.port.js';
 import { getFirstRow } from '@dos/db';
-import { getCachedDashboardSummary, setCachedDashboardSummary, getCachedAuditTrail, setCachedAuditTrail, getCachedTimeline, setCachedTimeline, } from './personal-agent-cache.service';
-import { mapActivityRow } from './personal-agent-approval.service';
+import { getCachedDashboardSummary, setCachedDashboardSummary, getCachedAuditTrail, setCachedAuditTrail, getCachedTimeline, setCachedTimeline, } from './personal-agent-cache.service.js';
+import { mapActivityRow } from './personal-agent-approval.service.js';
 // ============================================================================
 // Dashboard Summary
 // ============================================================================

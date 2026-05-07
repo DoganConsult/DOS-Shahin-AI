@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import { authenticate, requirePermission } from '@dos/dauth-shared';
 import { auditMiddleware, asyncHandler, moduleStack, validate, setAuditData } from '@dos/platform-core/http';
-import { executeWorkflowAutomation, getAutomationStatus, } from '../services/ops/workflow-automation.service';
-import { triggerAutomationBody } from '../schemas/workflow-automation.schemas';
+import { executeWorkflowAutomation, getAutomationStatus, } from '../services/ops/workflow-automation.service.js';
+import { triggerAutomationBody } from '../schemas/workflow-automation.schemas.js';
 const router = Router();
 router.use(moduleStack('workflow'));
 router.use(auditMiddleware('compliance'));

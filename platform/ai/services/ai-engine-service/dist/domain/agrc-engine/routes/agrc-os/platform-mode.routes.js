@@ -1,15 +1,15 @@
 import { Router } from 'express';
 import { catchHandler, EC } from '@dos/platform-core/resilience/resilient-catch';
-import { logger } from '../../ports/logger.port';
+import { logger } from '../../ports/logger.port.js';
 // AGRC-OS — Platform Mode & Pending Actions routes
 // Covers: platform mode, agent roles, pending actions (list/count/review), mode operation log
-import { authenticate, requirePermission } from '../../ports/auth.port';
-import { auditMiddleware, validate, setAuditData } from '../../ports/middleware.port';
-import { errMsg } from '../../../../i18n/error-messages';
-import { emitEvent } from '../../ports/events.port';
+import { authenticate, requirePermission } from '../../ports/auth.port.js';
+import { auditMiddleware, validate, setAuditData } from '../../ports/middleware.port.js';
+import { errMsg } from '../../../../i18n/error-messages.js';
+import { emitEvent } from '../../ports/events.port.js';
 import { toErrorMessage } from '@dos/module-sdk';
-import { writeLimiter } from './shared';
-import { updateReviewBody } from '../../schemas/agrc-engine.schemas';
+import { writeLimiter } from './shared.js';
+import { updateReviewBody } from '../../schemas/agrc-engine.schemas.js';
 import { z } from "zod";
 const genericPayloadSchema = z.record(z.unknown());
 const router = Router();
@@ -65,7 +65,7 @@ router.get('/pending-actions/count', validate({ query: z.record(z.unknown()) }),
 router.put('/pending-actions/:id/review', authenticate, requirePermission('platform.agent.write'), writeLimiter, validate({ body: updateReviewBody }), async (req, res) => {
     try {
         const { reviewPendingAction } = await import('@dos/platform-core/settings/platform-mode-gate.service');
-        const { executeAction } = await import('../../runtime/ai/services/agents/core/agent-runner.service');
+        const { executeAction } = await import('../../runtime/ai/services/agents/core/agent-runner.service.js');
         const tenantId = req.tenantId;
         const userId = req.user?.userId;
         const { approved, reviewNote } = req.body;

@@ -33,7 +33,7 @@ export interface WorkTask {
   aiPriority?: number;     // AI score 0–100
   aiInsight?: string;
   status: 'overdue' | 'due-today' | 'this-week' | 'upcoming' | 'completed';
-  actions?: Array<{ label: string; fn: () => void }>;
+  actions?: ModuleAction[];
 }
 
 @Component({
@@ -80,7 +80,7 @@ export interface WorkTask {
       <dos-insight-bar
         [pillars]="pillars"
         archetype="action-queue"
-        (actionClick)="pillars?.nextAction?.action?.()">
+        (actionClick)="triggerAction(pillars?.nextAction ?? null)">
       </dos-insight-bar>
 
     <!-- Toolbar -->
@@ -180,14 +180,14 @@ export interface WorkTask {
         <div class="dmt-task-actions">
           @if (task.actions?.length) {
             @for (action of task.actions!.slice(0,1); track action.label) {
-              <button cdsButton="primary" size="sm" (click)="action.fn()">{{ action.label }}</button>
+              <button cdsButton="primary" size="sm" (click)="triggerAction(action, { taskId: task.id })">{{ action.label }}</button>
             }
             @if (task.actions!.length > 1) {
-              <cds-combo-button
-                [buttons]="task.actions!.slice(1).map(a => ({ content: a.label, click: a.fn }))"
-                size="sm">
-                More
-              </cds-combo-button>
+              @for (action of task.actions!.slice(1); track action.actionKey || action.commandKey || action.route || action.label) {
+                <button cdsButton="tertiary" size="sm" (click)="triggerAction(action, { taskId: task.id })">
+                  {{ action.label }}
+                </button>
+              }
             }
           }
           <button cdsButton="ghost" size="sm" (click)="taskClick.emit(task)">View</button>
@@ -248,6 +248,7 @@ export class ModuleWorkQueueTemplateComponent {
   @Output() taskClick = new EventEmitter<WorkTask>();
   @Output() viewSwitch = new EventEmitter<unknown>();
   @Output() sort = new EventEmitter<string>();
+  @Output() actionTriggered = new EventEmitter<{ key: string; payload?: Record<string, unknown> }>();
 
   viewMode = computed(() => resolveViewMode(this.currentRole, this.writeRoles));
 
@@ -270,4 +271,18 @@ export class ModuleWorkQueueTemplateComponent {
   }
   onViewSwitch(v: unknown) { this.viewSwitch.emit(v); }
   onSort(v: unknown) { this.sort.emit((v as { value: string }).value); }
+  triggerAction(action: ModuleAction | null, payload?: Record<string, unknown>): void {
+    if (!action) return;
+    if (action.actionKey) {
+      this.actionTriggered.emit({ key: action.actionKey, payload });
+      return;
+    }
+    if (action.commandKey) {
+      this.actionTriggered.emit({ key: action.commandKey, payload });
+      return;
+    }
+    if (action.route) {
+      this.actionTriggered.emit({ key: 'navigate', payload: { path: action.route, ...(payload ?? {}) } });
+    }
+  }
 }

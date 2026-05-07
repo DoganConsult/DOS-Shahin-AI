@@ -3,7 +3,7 @@
  * Query schemas, pagination helpers, cache headers, rate limiters.
  */
 import { z } from 'zod';
-import { moduleRateLimiter } from '../../ports/middleware.port';
+import { moduleRateLimiter } from '../../ports/middleware.port.js';
 // ── Reusable Zod Query Schemas ──────────────────────────────────────────────
 export const paginationQuery = z.object({
     page: z.coerce.number().int().min(1).default(1),

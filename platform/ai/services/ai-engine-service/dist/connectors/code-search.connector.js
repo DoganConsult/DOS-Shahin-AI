@@ -4,7 +4,7 @@ import { request as httpRequest } from 'node:http';
 import { request as httpsRequest } from 'node:https';
 import { safeQuery } from '@dos/db';
 import { toErrorMessage } from '@dos/module-sdk';
-import { getCodeSearchConfig, getEnabledEngines } from '../config/code-search';
+import { getCodeSearchConfig, getEnabledEngines } from '../config/code-search.js';
 let localIndex = null;
 function findRepoRoot(startDir) {
     let dir = startDir;

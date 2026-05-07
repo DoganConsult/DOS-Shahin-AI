@@ -2,28 +2,28 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FOUNDATION_LIST_CONFIGS = void 0;
 const baseColumns = [
-    { key: 'code', labelKey: 'foundation.fields.code', type: 'text', sortable: true, searchable: true },
-    { key: 'nameEn', labelKey: 'foundation.fields.nameEn', type: 'text', sortable: true, searchable: true },
-    { key: 'nameAr', labelKey: 'foundation.fields.nameAr', type: 'text', sortable: true },
-    { key: 'status', labelKey: 'foundation.fields.status', type: 'badge', sortable: true },
-    { key: 'updatedAt', labelKey: 'foundation.fields.updatedAt', type: 'date', sortable: true },
+    { key: 'code', i18nKey: 'foundation.fields.code', type: 'text', sortable: true, searchable: true },
+    { key: 'nameEn', i18nKey: 'foundation.fields.nameEn', type: 'text', sortable: true, searchable: true },
+    { key: 'nameAr', i18nKey: 'foundation.fields.nameAr', type: 'text', sortable: true },
+    { key: 'status', i18nKey: 'foundation.fields.status', type: 'badge', sortable: true },
+    { key: 'updatedAt', i18nKey: 'foundation.fields.updatedAt', type: 'date', sortable: true },
 ];
 const baseFilters = [
-    { key: 'q', labelKey: 'foundation.actions.search', type: 'text' },
-    { key: 'status', labelKey: 'foundation.fields.status', type: 'select',
+    { key: 'q', i18nKey: 'foundation.actions.search', type: 'text' },
+    { key: 'status', i18nKey: 'foundation.fields.status', type: 'select',
         options: [
-            { value: 'draft', labelKey: 'foundation.status.draft' },
-            { value: 'in_review', labelKey: 'foundation.status.in_review' },
-            { value: 'active', labelKey: 'foundation.status.active' },
-            { value: 'suspended', labelKey: 'foundation.status.suspended' },
-            { value: 'archived', labelKey: 'foundation.status.archived' },
+            { value: 'draft', i18nKey: 'foundation.status.draft' },
+            { value: 'in_review', i18nKey: 'foundation.status.in_review' },
+            { value: 'active', i18nKey: 'foundation.status.active' },
+            { value: 'suspended', i18nKey: 'foundation.status.suspended' },
+            { value: 'archived', i18nKey: 'foundation.status.archived' },
         ] },
 ];
 const baseActions = [
-    { key: 'create', labelKey: 'foundation.actions.create', variant: 'primary', permission: 'foundation.org.write', scope: 'page' },
-    { key: 'edit', labelKey: 'foundation.actions.edit', variant: 'secondary', permission: 'foundation.org.write', scope: 'row' },
-    { key: 'delete', labelKey: 'foundation.actions.delete', variant: 'danger', permission: 'foundation:delete', scope: 'row' },
-    { key: 'export', labelKey: 'foundation.actions.export', variant: 'secondary', permission: 'foundation.org.read', scope: 'page' },
+    { key: 'create', i18nKey: 'foundation.actions.create', variant: 'primary', permission: 'foundation.org.write', scope: 'page' },
+    { key: 'edit', i18nKey: 'foundation.actions.edit', variant: 'secondary', permission: 'foundation.org.write', scope: 'row' },
+    { key: 'delete', i18nKey: 'foundation.actions.delete', variant: 'danger', permission: 'foundation:delete', scope: 'row' },
+    { key: 'export', i18nKey: 'foundation.actions.export', variant: 'secondary', permission: 'foundation.org.read', scope: 'page' },
 ];
 // NOTE: only export modes whose backend handler exists today are advertised.
 // Foundation list /export endpoints are CSV-only (sendCsv util in csv.util.ts).

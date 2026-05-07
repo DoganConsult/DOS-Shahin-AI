@@ -1,11 +1,11 @@
 import { Router } from 'express';
-import { authenticate, requirePermission } from '../../ports/auth.port';
-import { executeRedTeamRun, getRedTeamRuns, getRedTeamSummary } from '../../services/misc/red-team.service';
-import { emitEvent } from '../../ports/events.port';
+import { authenticate, requirePermission } from '../../ports/auth.port.js';
+import { executeRedTeamRun, getRedTeamRuns, getRedTeamSummary } from '../../services/misc/red-team.service.js';
+import { emitEvent } from '../../ports/events.port.js';
 // ── Zod Schemas ──────────────────────────────────────────────────────────
-import { validate, asyncHandler, auditMiddleware, setAuditData, automationMiddleware, moduleStack } from '../../ports/middleware.port';
+import { validate, asyncHandler, auditMiddleware, setAuditData, automationMiddleware, moduleStack } from '../../ports/middleware.port.js';
 import { swallow, EC } from '@dos/platform-core/resilience/resilient-catch';
-import { runPostBody } from "../../schemas/ai-governance.schemas";
+import { runPostBody } from "../../schemas/ai-governance.schemas.js";
 import { z } from "zod";
 const router = Router();
 router.use(moduleStack('ai-governance'));

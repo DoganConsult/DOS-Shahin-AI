@@ -1,4 +1,4 @@
-import { safeQuery, tenantSchema, emptyResult } from '../../ports/database.port';
+import { safeQuery, tenantSchema, emptyResult } from '../../ports/database.port.js';
 import { swallowDefault, EC } from '@dos/platform-core/resilience/resilient-catch';
 export async function getAiDiagnosticsSnapshot(tenantId) {
     const schema = tenantSchema(tenantId);

@@ -1,6 +1,6 @@
 import { registerModule } from '@dos/module-sdk';
-import { AGRC_ENGINE_PERMISSIONS, AGRC_ENGINE_ROLES, AGRC_ENGINE_ACTIONS } from './security/agrc-engine.security';
-import { AGRC_ENGINE_APPROVAL_MATRIX } from './security/agrc-engine.approval-matrix';
+import { AGRC_ENGINE_PERMISSIONS, AGRC_ENGINE_ROLES, AGRC_ENGINE_ACTIONS } from './security/agrc-engine.security.js';
+import { AGRC_ENGINE_APPROVAL_MATRIX } from './security/agrc-engine.approval-matrix.js';
 export const AGRC_ENGINE_MANIFEST = {
     code: 'agrc-engine',
     version: '1.0.0',

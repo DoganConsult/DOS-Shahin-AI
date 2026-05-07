@@ -2,10 +2,10 @@
 // Product-specific asset catalogs are registered via registerAiGovernanceSeedProvider()
 // in ai-governance-seed-registry.ts.
 // This file must NOT hardcode Shahin-specific agents, tools, prompts, or workflows.
-import { upsertAsset } from './ai-asset-inventory.service';
-import { getAggregatedCatalog } from '../../../../ai-governance/services/ai/registry/ai-governance-seed-registry';
+import { upsertAsset } from './ai-asset-inventory.service.js';
+import { getAggregatedCatalog } from '../../../../ai-governance/services/ai/registry/ai-governance-seed-registry.js';
 import { toErrorMessage } from '@dos/module-sdk';
-export { registerAiGovernanceSeedProvider, getRegisteredSeedProviders } from '../../../../ai-governance/services/ai/registry/ai-governance-seed-registry';
+export { registerAiGovernanceSeedProvider, getRegisteredSeedProviders } from '../../../../ai-governance/services/ai/registry/ai-governance-seed-registry.js';
 export async function discoverAndSeedAssets(tenantId) {
     const result = {
         tenantId,

@@ -1,4 +1,4 @@
-import { safeQuery, tenantSchema } from '../../ports/database.port';
+import { safeQuery, tenantSchema } from '../../ports/database.port.js';
 const INJECTION_PATTERNS = [
     { name: 'system_override', regex: /\b(ignore\s+(all\s+)?previous|disregard\s+(all\s+)?instructions|forget\s+(everything|all|prior))\b/i, severity: 'high' },
     { name: 'role_hijack', regex: /\b(you\s+are\s+now|act\s+as\s+if|pretend\s+(to\s+be|you're)|new\s+instructions?:)\b/i, severity: 'high' },

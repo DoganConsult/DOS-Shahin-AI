@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import { authenticate, requirePermission } from '../../ports/auth.port';
-import { assignPersonalAgent, getPersonalAgentAssignment, updatePersonalAgentAssignment, executeAgentActivity, getAgentActivity, approveAgentActivity, rejectAgentActivity, checkSlaAndActivateAgent, getAgentDashboardSummary, getAgentAuditTrail, getAgentActivityTimeline, confirmAgentActivity, } from '../../services/personal/personal-agent.service';
+import { authenticate, requirePermission } from '../../ports/auth.port.js';
+import { assignPersonalAgent, getPersonalAgentAssignment, updatePersonalAgentAssignment, executeAgentActivity, getAgentActivity, approveAgentActivity, rejectAgentActivity, checkSlaAndActivateAgent, getAgentDashboardSummary, getAgentAuditTrail, getAgentActivityTimeline, confirmAgentActivity, } from '../../services/personal/personal-agent.service.js';
 import { toErrorMessage } from '@dos/module-sdk';
 import { getFirstRow } from '@dos/db';
-import { auditMiddleware, validate, requireTenant, moduleStack, mutationEventHook } from '../../ports/middleware.port';
-import { assignPostBody, myAgentAgentIdPatchBody, consentPostBody, executePostBody, activitiesActivityIdApprovePostBody, activitiesActivityIdRejectPostBody, checkSlaPostBody, activitiesActivityIdConfirmPostBody } from "../../schemas/ai.schemas";
+import { auditMiddleware, validate, requireTenant, moduleStack, mutationEventHook } from '../../ports/middleware.port.js';
+import { assignPostBody, myAgentAgentIdPatchBody, consentPostBody, executePostBody, activitiesActivityIdApprovePostBody, activitiesActivityIdRejectPostBody, checkSlaPostBody, activitiesActivityIdConfirmPostBody } from "../../schemas/ai.schemas.js";
 import { z } from "zod";
 const router = Router();
 router.use(moduleStack('ai'));
@@ -422,7 +422,7 @@ router.get('/health', validate({ query: z.record(z.unknown()) }), authenticate, 
     try {
         const tenantId = req.tenantId;
         // Import diagnostics function
-        const { getPersonalAgentDiagnostics } = await import('../services/personal-agent.service');
+        const { getPersonalAgentDiagnostics } = await import('../services/personal-agent.service.js');
         const diagnostics = await getPersonalAgentDiagnostics(tenantId);
         res.json(diagnostics);
     }

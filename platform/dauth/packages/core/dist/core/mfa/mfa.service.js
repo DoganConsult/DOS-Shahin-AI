@@ -98,7 +98,7 @@ async function enableTotp(userId, _tenantId) {
      ON CONFLICT (user_id) DO UPDATE SET mfa_type = 'totp', secret = EXCLUDED.secret, enabled = FALSE`, [userId, secret]);
     let qrCodeUrl = otpauthUrl;
     try {
-        // @ts-ignore - optional runtime-resolved peer module
+        // @ts-ignore -- justified: optional runtime-resolved peer module
         const { generateQRCodeDataURL } = await import('../../dos/services/document-generation/qrcode.service.js');
         const dataUrl = await generateQRCodeDataURL(otpauthUrl, { width: 300 });
         if (dataUrl)

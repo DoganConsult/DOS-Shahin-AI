@@ -18,9 +18,9 @@
 //  9. Enable auto-eval continuous monitoring
 // 10. Activate contextual AI assistant
 // ============================================
-import { safeQuery, tenantSchema } from '../ports/database.port';
-import { recordAudit } from '../../audit/services/audit/core/audit-trail.service';
-import { eventBus } from '../ports/events.port';
+import { safeQuery, tenantSchema } from '../ports/database.port.js';
+import { recordAudit } from '../../audit/services/audit/core/audit-trail.service.js';
+import { eventBus } from '../ports/events.port.js';
 import { toErrorMessage } from '@dos/module-sdk';
 import { getFirstRow } from '@dos/db';
 // ── Action Definitions ─────────────────────────────────────────────────────
@@ -367,7 +367,7 @@ async function executeSeedControls(tenantId, userId) {
     return { actionId: 'seed-controls', success: true, message: `Seeded ${seededCount} controls from registry`, details: { seededCount } };
 }
 async function executeGenerateRaci(tenantId, _userId) {
-    const { generateRaciMatrix, recommendTeamStructure } = await import('../../governance/services/misc/raci-generator.service');
+    const { generateRaciMatrix, recommendTeamStructure } = await import('../../governance/services/misc/raci-generator.service.js');
     const { getCompanyProfile } = await import('../../../platform/dos/provisioning/setup-wizard.service');
     const profile = await getCompanyProfile(tenantId);
     const profileRaci = (profile ?? {});
@@ -444,7 +444,7 @@ async function executeGapAssessment(tenantId, userId) {
     };
 }
 async function executeWorkflowAutomation(tenantId, userId) {
-    const { executeWorkflowAutomation: runWorkflowAutomation } = await import('../../workflow/services/ops/workflow-automation.service');
+    const { executeWorkflowAutomation: runWorkflowAutomation } = await import('../../workflow/services/ops/workflow-automation.service.js');
     return runWorkflowAutomation(tenantId, userId);
 }
 async function executeJourneyRoadmap(tenantId, userId) {

@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import { authenticate, requirePermission } from '../../ports/auth.port';
-import { getModuleConfig, updateModuleConfig, reseedModule, getModuleHealth, reindexModule, backfillModule, getSlaConfig, getEscalationPolicy, getRunbookLinks, } from '../../controllers/ai-admin.controller';
-import { getAiDiagnosticsSnapshot, getFailedRunAnalysis, getBlockedToolInvocations } from '../../diagnostics/ai-diagnostics.service';
+import { authenticate, requirePermission } from '../../ports/auth.port.js';
+import { getModuleConfig, updateModuleConfig, reseedModule, getModuleHealth, reindexModule, backfillModule, getSlaConfig, getEscalationPolicy, getRunbookLinks, } from '../../controllers/ai-admin.controller.js';
+import { getAiDiagnosticsSnapshot, getFailedRunAnalysis, getBlockedToolInvocations } from '../../diagnostics/ai-diagnostics.service.js';
 import { getAiDashboard, getAiCostUsage } from '../../services/core/ai-dashboard.service.js';
-import { validate, auditMiddleware, asyncHandler, rateLimiter, moduleStack, mutationEventHook } from '../../ports/middleware.port';
-import { updateConfigBody, createReseedBody, createReindexBody, createBackfillBody } from '../../schemas/ai.schemas';
+import { validate, auditMiddleware, asyncHandler, rateLimiter, moduleStack, mutationEventHook } from '../../ports/middleware.port.js';
+import { updateConfigBody, createReseedBody, createReindexBody, createBackfillBody } from '../../schemas/ai.schemas.js';
 import { z } from "zod";
 const router = Router();
 router.use(moduleStack('ai'));

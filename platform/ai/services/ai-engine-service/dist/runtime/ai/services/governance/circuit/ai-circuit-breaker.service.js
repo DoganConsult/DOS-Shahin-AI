@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { logger } from '../../../ports/logger.port';
+import { logger } from '../../../ports/logger.port.js';
 import { toErrorMessage } from '@dos/module-sdk';
 import { getOrCreateBreaker, } from '@dos/module-sdk';
 const DEFAULT_CONFIG = {

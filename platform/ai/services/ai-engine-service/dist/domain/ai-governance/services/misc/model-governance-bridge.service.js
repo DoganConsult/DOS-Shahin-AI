@@ -1,12 +1,12 @@
 // @ts-nocheck
-import { safeQuery, tenantSchema } from '../../ports/database.port';
-import { getAssetByKey } from '../../runtime/ai/registry/ai-asset-inventory.service';
-import { isAssetAllowlistedForTenant } from '../../runtime/ai/compliance/ai-binding-governance.service';
-import { getActiveModelVersionForAsset } from '../../services/misc/model-registry.service';
-import { getAgentModelConfig, resolveModelForAgent, } from '../../runtime/ai/services/gateway/llm-router.service';
-import { recordAudit } from '../../../audit/services/audit/core/audit-trail.service';
-import { getTenantEnforcementMode, getGlobalFallbackMode, setGlobalFallbackMode, } from '../../runtime/ai/operations/ai-governance-config.service';
-import { SYSTEM_JOB_ACTOR } from '../../ports/platform.port';
+import { safeQuery, tenantSchema } from '../../ports/database.port.js';
+import { getAssetByKey } from '../../runtime/ai/registry/ai-asset-inventory.service.js';
+import { isAssetAllowlistedForTenant } from '../../runtime/ai/compliance/ai-binding-governance.service.js';
+import { getActiveModelVersionForAsset } from '../../services/misc/model-registry.service.js';
+import { getAgentModelConfig, resolveModelForAgent, } from '../../runtime/ai/services/gateway/llm-router.service.js';
+import { recordAudit } from '../../../audit/services/audit/core/audit-trail.service.js';
+import { getTenantEnforcementMode, getGlobalFallbackMode, setGlobalFallbackMode, } from '../../runtime/ai/operations/ai-governance-config.service.js';
+import { SYSTEM_JOB_ACTOR } from '../../ports/platform.port.js';
 const AUDIT_MODULE = 'model-governance-bridge';
 export function getEnforcementMode() {
     return getGlobalFallbackMode();
