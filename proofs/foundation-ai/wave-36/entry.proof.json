@@ -18,9 +18,8 @@
       },
       {
         "name": "dos-master-gate-pre",
-        "status": "WARN",
-        "cmd": "node scripts/ci-guards/dos-master-gate.mjs --pre",
-        "error": "Command failed: node scripts/ci-guards/dos-master-gate.mjs --pre"
+        "status": "PASS",
+        "cmd": "node scripts/ci-guards/dos-master-gate.mjs --pre"
       },
       {
         "name": "previous-wave-close",
@@ -30,11 +29,11 @@
       {
         "name": "git-clean",
         "status": "FAIL",
-        "detail": "M platform/core/platform/shell/dynamic-template-page.component.ts\n M platform/core/platform/shell/templates/dos-insight-bar.component.ts\n M platform/core/platform/shell/templates/module-extra.templates.ts\n M platform/core/platform/shell/templates/module-template.types.ts\n M platform/foundation/db/tenant/migrations/002_foundation_tenant_extended.sql\n M platform/foundation/interface/http/foundation-aggregator.routes.ts\n M proofs/foundation-shell-recovery/runtime/workspace-runtime.ar.json\n M services/ui-os-service/src/routes/template-binding.routes.ts\n M services/ui-os-service/src/routes/workspace-shell.routes.ts\n?? .ai-module-proof/\n?? platform/dos/migrations/public/20260511_1450_dynamic_ui_navigation_align_for_ai_phases.sql\n?? platform/dos/migrations/public/20260511_1455_seed_ai_agent_catalog_a01_a13.sql\n?? platform/dos/migrations/public/20260511_1461_ai_governance_policies_data_resource.sql\n?? platform/dos/migrations/public/20260511_1513_ai_permissions_real_seed.sql\n?? platform/dos/migrations/public/20260511_1514_ai_i18n_real_seed.sql\n?? platform/dos/migrations/public/20260512_0910_foundation_sod_enterprise_seed.sql\n?? platform/dos/migrations/public/20260512_0930_foundation_sod_role_and_action_layers.sql\n?? platform/dos/migrations/public/20260512_1000_workspace_shell_overlay_contracts.sql\n?? platform/dos/migrations/public/20260512_1010_account_route_family.sql\n?? platform/dos/migrations/public/20260512_1020_foundation_nav_subroutes.sql"
+        "detail": "M platform/foundation/db/migrations/20260512_1010_module_sod_rules_canonical.sql\n?? platform/ai/services/ai-governance-service/contracts/"
       }
     ],
     "blocker": "git-dirty"
   },
-  "emittedAt": "2026-05-07T06:48:50.555Z",
-  "hash": "sha256:26b54926c5898580ddd1972c14b83cbee8b73a1cf13e5ebc53085b61bfe3dea6"
+  "emittedAt": "2026-05-07T06:51:07.761Z",
+  "hash": "sha256:b86021e65613311a31f1b60632af721ec21e063b8e46bec9c2700b4818b923ce"
 }

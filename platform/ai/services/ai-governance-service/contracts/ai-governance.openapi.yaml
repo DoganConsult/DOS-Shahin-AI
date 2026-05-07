@@ -1,0 +1,207 @@
+openapi: 3.1.0
+info:
+  title: AI Governance Service
+  version: 1.0.0
+  description: >
+    Per-service contract for the AI Governance plane. Owns policies,
+    model registry, assessments, bias/fairness/ethical/impact reviews,
+    audit log, data lineage, explainability, transparency, use cases,
+    validation, inventory, monitoring alerts, and risk assessments.
+    Mounted at /api/ai-governance.
+servers:
+  - url: /api/ai-governance
+    description: AI Governance base
+tags:
+  - { name: ops,        description: Health and readiness }
+  - { name: policies,   description: Governance policies }
+  - { name: models,     description: Model registry + model cards }
+  - { name: assessments,description: Governance assessments }
+  - { name: bias,       description: Bias detection reports }
+  - { name: fairness,   description: Fairness metrics }
+  - { name: ethical,    description: Ethical reviews }
+  - { name: impact,     description: Impact assessments }
+  - { name: audit,      description: Governance audit log }
+  - { name: lineage,    description: Data lineage }
+  - { name: explain,    description: Explainability reports }
+  - { name: transparency, description: Transparency reports }
+  - { name: use_cases,  description: Use case inventory }
+  - { name: validation, description: Validation results }
+  - { name: inventory,  description: Governance inventory }
+  - { name: monitoring, description: Monitoring alerts }
+  - { name: risk,       description: Risk assessments }
+paths:
+  /health:
+    get:
+      summary: Health probe
+      tags: [ops]
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/Health' } } } }
+  /ready:
+    get:
+      summary: Readiness probe
+      tags: [ops]
+      responses:
+        '200': { description: Ready, content: { application/json: { schema: { $ref: '#/components/schemas/Health' } } } }
+  /policies:
+    get:
+      summary: List governance policies
+      tags: [policies]
+      responses:
+        '200':
+          description: Policy list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: '#/components/schemas/PolicyDTO' }
+    post:
+      summary: Author a governance policy (workflow ai_governance_model_approval analog)
+      tags: [policies]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: '#/components/schemas/PolicyDTO' } } }
+      responses:
+        '202': { description: Accepted }
+  /models:
+    get:
+      summary: Model registry
+      tags: [models]
+      responses:
+        '200': { description: Models, content: { application/json: { schema: { type: object, properties: { data: { type: array, items: { $ref: '#/components/schemas/ModelCardDTO' } } } } } } }
+    post:
+      summary: Register a model (workflow ai_governance_model_approval — HITL)
+      tags: [models]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: '#/components/schemas/ModelCardDTO' } } }
+      responses:
+        '202': { description: Accepted }
+  /assessments:
+    get:
+      summary: List assessments
+      tags: [assessments]
+      responses:
+        '200': { description: List }
+    post:
+      summary: Run an assessment (workflow ai_governance_assessment)
+      tags: [assessments]
+      responses:
+        '202': { description: Accepted }
+  /bias:
+    get:
+      summary: List bias reports
+      tags: [bias]
+      responses:
+        '200': { description: List }
+  /fairness:
+    get:
+      summary: List fairness metric snapshots
+      tags: [fairness]
+      responses:
+        '200': { description: List }
+  /ethical:
+    get:
+      summary: List ethical reviews
+      tags: [ethical]
+      responses:
+        '200': { description: List }
+    post:
+      summary: Request ethical review (workflow ai_governance_ethical_review — HITL)
+      tags: [ethical]
+      responses:
+        '202': { description: Accepted }
+  /impact:
+    get:
+      summary: List impact assessments
+      tags: [impact]
+      responses:
+        '200': { description: List }
+  /audit:
+    get:
+      summary: Governance audit log
+      tags: [audit]
+      responses:
+        '200': { description: Audit entries }
+  /data-lineage:
+    get:
+      summary: Data lineage records
+      tags: [lineage]
+      responses:
+        '200': { description: Lineage entries }
+  /explainability:
+    get:
+      summary: Explainability reports
+      tags: [explain]
+      responses:
+        '200': { description: Reports }
+  /transparency:
+    get:
+      summary: Transparency reports
+      tags: [transparency]
+      responses:
+        '200': { description: Reports }
+  /use-cases:
+    get:
+      summary: Use case inventory
+      tags: [use_cases]
+      responses:
+        '200': { description: Use cases }
+  /validation:
+    get:
+      summary: Validation results
+      tags: [validation]
+      responses:
+        '200': { description: Results }
+  /inventory:
+    get:
+      summary: Governance asset inventory
+      tags: [inventory]
+      responses:
+        '200': { description: Inventory }
+  /monitoring:
+    get:
+      summary: Monitoring alerts
+      tags: [monitoring]
+      responses:
+        '200': { description: Alerts }
+  /risk:
+    get:
+      summary: Risk assessments
+      tags: [risk]
+      responses:
+        '200': { description: Risk records }
+components:
+  schemas:
+    Health:
+      type: object
+      properties:
+        status:    { type: string, enum: [ok, degraded, down] }
+        version:   { type: string }
+        uptimeSec: { type: number }
+    PolicyDTO:
+      type: object
+      required: [name, policyType, enforcementMode, status]
+      properties:
+        id:              { type: string, format: uuid }
+        name:            { type: string }
+        description:     { type: string }
+        policyType:      { type: string, enum: [usage, safety, compliance, fairness, transparency] }
+        scope:           { type: string }
+        rules:           { type: array, items: { type: object, additionalProperties: true } }
+        enforcementMode: { type: string, enum: [advisory, blocking, logging] }
+        version:         { type: integer, minimum: 1 }
+        status:          { type: string, enum: [draft, active, deprecated] }
+    ModelCardDTO:
+      type: object
+      required: [modelId, name, provider, status]
+      properties:
+        modelId:    { type: string }
+        name:       { type: string }
+        provider:   { type: string }
+        version:    { type: string }
+        capabilities: { type: array, items: { type: string } }
+        risk:       { type: string, enum: [low, medium, high] }
+        status:     { type: string, enum: [registered, approved, deprecated, retired] }
