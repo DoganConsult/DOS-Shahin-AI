@@ -5,8 +5,8 @@
   "name": "autopilot",
   "status": "RED",
   "payload": {
-    "error": "Command failed: node scripts/program/foundation-ai/run-wave.mjs --wave=31"
+    "error": "Command failed: node scripts/program/foundation-ai/quality-gate.mjs --wave=31"
   },
-  "emittedAt": "2026-05-07T04:51:40.560Z",
-  "hash": "sha256:532f7a98ac2ad41d2072fe3aa4788884b16c1d0c6b4017b4c8e4216c9cedb401"
+  "emittedAt": "2026-05-07T04:55:36.802Z",
+  "hash": "sha256:a2a40d6824bd89f192cf9f195aa52e26ab445de1182b94b9bc471f9f0d931cdb"
 }

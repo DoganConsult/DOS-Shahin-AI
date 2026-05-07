@@ -20,9 +20,9 @@
         "proofs/foundation-ai/wave--2/inventory.proof.json",
         "proofs/foundation-ai/wave--2/plan-sync.proof.json",
         "proofs/foundation-ai/wave-31/entry.proof.json",
-        "proofs/foundation-ai/_ledger/2026-05-07T04-51-28-035Z__PLAN_SYNC.json",
-        "proofs/foundation-ai/_ledger/2026-05-07T04-51-39-969Z__PHASE-A.json",
-        "proofs/foundation-ai/_ledger/2026-05-07T04-51-40-052Z__INVENTORY.json"
+        "proofs/foundation-ai/_ledger/2026-05-07T04-54-56-916Z__PLAN_SYNC.json",
+        "proofs/foundation-ai/_ledger/2026-05-07T04-55-09-085Z__PHASE-A.json",
+        "proofs/foundation-ai/_ledger/2026-05-07T04-55-09-144Z__INVENTORY.json"
       ],
       "backups": [],
       "forbidden": [],
@@ -48,6 +48,6 @@
       "forbiddenObserved": []
     }
   },
-  "emittedAt": "2026-05-07T04:51:40.472Z",
-  "hash": "sha256:86226f1295b6794ddcf5d2b20c294862e70b89e48fabf609a4ba608407287aa6"
+  "emittedAt": "2026-05-07T04:55:09.522Z",
+  "hash": "sha256:3512434d3275c5604c215bcb6888e27df19470c4e0646120a3d05ce1c98aa1f9"
 }
