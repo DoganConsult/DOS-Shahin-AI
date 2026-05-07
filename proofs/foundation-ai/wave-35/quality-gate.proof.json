@@ -1,0 +1,33 @@
+{
+  "schema": "foundation-ai.proof.v1",
+  "phase": -2,
+  "wave": 35,
+  "name": "quality-gate",
+  "status": "GREEN",
+  "payload": {
+    "schema": "foundation-ai.gate.v1",
+    "wave": 35,
+    "results": [
+      {
+        "id": "inventory_runs",
+        "status": "GREEN",
+        "ms": 56,
+        "snippet": ""
+      },
+      {
+        "id": "run_proof_present",
+        "status": "GREEN",
+        "ms": 2,
+        "snippet": ""
+      },
+      {
+        "id": "zerodirt",
+        "status": "GREEN",
+        "ms": 325,
+        "snippet": "  }\n}\n"
+      }
+    ]
+  },
+  "emittedAt": "2026-05-07T05:07:59.973Z",
+  "hash": "sha256:47665ac6ca87d45a228d181cfcb73826343fb12d903eb812d93828e9f78e2aa2"
+}

@@ -1,0 +1,66 @@
+{
+  "schema": "foundation-ai.proof.v1",
+  "phase": "C",
+  "wave": 35,
+  "name": "verification",
+  "status": "GREEN",
+  "payload": {
+    "checks": [
+      {
+        "name": "build-ui-contracts",
+        "status": "PASS",
+        "cmd": "pnpm --filter @dos/ui-contracts build"
+      },
+      {
+        "name": "build-ui-system",
+        "status": "PASS",
+        "cmd": "pnpm --filter @dos/ui-system build"
+      },
+      {
+        "name": "build-platform-core",
+        "status": "PASS",
+        "cmd": "pnpm --filter @dos/platform-core build"
+      },
+      {
+        "name": "build-platform-app",
+        "status": "PASS",
+        "cmd": "pnpm --filter @dos/platform-app build"
+      },
+      {
+        "name": "lint-no-static-nav-fallback",
+        "status": "PASS",
+        "cmd": "node scripts/ci-guards/lint-no-static-nav-fallback.mjs"
+      },
+      {
+        "name": "lint-no-legacy-uios-shell",
+        "status": "PASS",
+        "cmd": "node scripts/ci-guards/lint-no-legacy-uios-shell.mjs"
+      },
+      {
+        "name": "grep-proof",
+        "status": "PASS",
+        "hits": 0,
+        "scanned": [
+          "platform/core/platform/shell",
+          "platform/core/platform/navigation",
+          "platform/core/services/platform",
+          "platform/ui-system/dos-ui-contracts/src",
+          "platform/ui-system/dos-ui-system/src/shell"
+        ]
+      },
+      {
+        "name": "workspace-home-grep",
+        "status": "WARN",
+        "hits": 4,
+        "sample": [
+          "platform/core/platform/shell/route-metadata.service.ts:17: *       \"authenticated\": \"/workspace-home\",",
+          "platform/ui-system/dos-ui-contracts/src/workspace-resolver-contract.ts:5: * a product asks \"what should /workspace-home (or /tenant-settings, or",
+          "platform/ui-system/dos-ui-contracts/src/workspace-resolver-contract.ts:236:// Module row (for the /workspace-home module-launcher table)",
+          "platform/ui-system/dos-ui-contracts/src/workspace-resolver-contract.ts:323:// Composed workspace surface (the /workspace-home payload)"
+        ]
+      }
+    ]
+  },
+  "emittedAt": "2026-05-07T05:07:59.531Z",
+  "hash": "sha256:d633649c8149d7ec1f71bfb200145d53562f9de924b98c029a84d7f972d15b2e"
+}
