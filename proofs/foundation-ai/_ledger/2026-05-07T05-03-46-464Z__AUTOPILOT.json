@@ -1,0 +1,14 @@
+{
+  "runId": "ca4d9568-3024-4489-9a7d-dba9b5fa3161",
+  "phase": -2,
+  "wave": 32,
+  "kind": "AUTOPILOT",
+  "inputsHash": "sha256:f18e87431811ee94325887410814bfd4d237947055e03021bcb8d46bcf9651e9",
+  "outputsHash": "sha256:409f158c0b56ad736f93f343ed98c516381104090801a88451b9ca77c32c3920",
+  "parentHash": "sha256:e63956563b96dcca9ea18478324ecd485de8bb893e98c9dcc9892a7a68b207e7",
+  "signer": "dev-1",
+  "status": "GREEN",
+  "evidenceUri": "/root/DOS-Platform/proofs/foundation-ai/wave-32/autopilot.proof.json",
+  "createdAt": "2026-05-07T05:03:46.464Z",
+  "hash": "sha256:78fe7d037bf687c0420f104fec886551e6aa785862b72164a61972ac4e3648be"
+}

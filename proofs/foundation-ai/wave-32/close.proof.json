@@ -1,0 +1,39 @@
+{
+  "schema": "foundation-ai.proof.v1",
+  "phase": "E",
+  "wave": 32,
+  "name": "close",
+  "status": "GREEN",
+  "payload": {
+    "bundle": {
+      "wave": 32,
+      "phases": {
+        "entry": {
+          "status": "GREEN",
+          "hash": "sha256:15692afa5f4a07543a3587c7f5371e998c17fdb37773c5cc05528cf112a4ba49",
+          "file": "/root/DOS-Platform/proofs/foundation-ai/wave-32/entry.proof.json"
+        },
+        "implementation": {
+          "status": "GREEN",
+          "hash": "sha256:a57d3556d20ffcc0b571ab2478e587802c07a54c2cb7471d3b7c4177d185aa50",
+          "file": "/root/DOS-Platform/proofs/foundation-ai/wave-32/implementation.proof.json"
+        },
+        "verification": {
+          "status": "GREEN",
+          "hash": "sha256:1612a562d75965ba0f45cc02298b93f0f5dde50fc6b1d20eaae84012f965218e",
+          "file": "/root/DOS-Platform/proofs/foundation-ai/wave-32/verification.proof.json"
+        },
+        "runtime": {
+          "status": "GREEN",
+          "hash": "sha256:a6728dcbfbc96028945c8046d3e8f6bc80f8fcb92d06e81d1e45cce6960313ba",
+          "file": "/root/DOS-Platform/proofs/foundation-ai/wave-32/runtime.proof.json"
+        }
+      }
+    },
+    "commitSha": "2381804fcd2e1f9e94343c177ddb97fd60fc4956",
+    "tag": "wave-32-closed",
+    "doctrine": "wave-closed"
+  },
+  "emittedAt": "2026-05-07T05:03:46.449Z",
+  "hash": "sha256:26ff7bbfc50b865080fdc4f5198e10c364ea3d499e4340c74ce81f3787f6de20"
+}
