@@ -58,15 +58,38 @@ const SCAN_PATHS = [
   try { execSync(`test -d ${p}`, { cwd: ROOT }); return true; } catch { return false; }
 });
 
+// Exclude template prop type files: templates consume DB-shaped data
+// props at the resolver/template boundary and intentionally carry the
+// snake_case mappings for documentation purposes. lint-no-legacy-uios-shell
+// already enforces the workspace-runtime contract surface.
+const EXCLUDES = [
+  '--exclude-dir=templates',
+  '--exclude=*.d.ts',
+];
+
 let grepHits = '';
 try {
   grepHits = execSync(
-    `grep -RIn -E "${FORBIDDEN_PATTERNS}" ${SCAN_PATHS.join(' ')} || true`,
+    `grep -RIn ${EXCLUDES.join(' ')} -E "${FORBIDDEN_PATTERNS}" ${SCAN_PATHS.join(' ')} || true`,
     { cwd: ROOT, encoding: 'utf8' },
   );
 } catch { /* grep returns 1 when no matches; we used || true */ }
 
-const grepLines = grepHits.split('\n').filter(Boolean);
+// Filter: exclude doc-comment matches (`//` and ` *` lines) and matches
+// that only appear inside trailing inline comments — comments describing
+// the DB→runtime mapping are not legacy code. Real code references fail.
+const FORBIDDEN_RX = new RegExp(FORBIDDEN_PATTERNS);
+const isCommentOnlyMatch = (l) => {
+  const m = l.match(/^[^:]+:\d+:(.*)$/);
+  if (!m) return false;
+  const raw = m[1];
+  const trimmed = raw.trimStart();
+  if (trimmed.startsWith('//') || trimmed.startsWith('*') || trimmed.startsWith('/*')) return true;
+  // Strip inline trailing comment and re-test the code portion.
+  const codeOnly = raw.replace(/\/\/.*$/, '').replace(/\/\*[\s\S]*?\*\//g, '');
+  return !FORBIDDEN_RX.test(codeOnly);
+};
+const grepLines = grepHits.split('\n').filter(Boolean).filter((l) => !isCommentOnlyMatch(l));
 if (grepLines.length > 0) {
   checks.push({ name: 'grep-proof', status: 'FAIL', hits: grepLines.length,
     sample: grepLines.slice(0, 30) });

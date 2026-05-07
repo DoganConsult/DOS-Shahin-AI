@@ -9,45 +9,50 @@
       {
         "cmd": "pnpm --filter @dos/ui-contracts build",
         "status": "GREEN",
-        "ms": 2016
+        "ms": 1807
       },
       {
         "cmd": "pnpm --filter @dos/ui-system build",
         "status": "GREEN",
-        "ms": 3406
+        "ms": 3099
       },
       {
         "cmd": "pnpm --filter @dos/platform-core build",
         "status": "GREEN",
-        "ms": 2524
+        "ms": 2447
       },
       {
         "cmd": "pnpm --filter @dos/platform-app build",
         "status": "GREEN",
-        "ms": 15909
+        "ms": 16179
       },
       {
         "cmd": "node scripts/ci-guards/lint-no-static-nav-fallback.mjs",
         "status": "GREEN",
-        "ms": 74
+        "ms": 59
       },
       {
         "cmd": "node scripts/ci-guards/lint-no-legacy-uios-shell.mjs",
         "status": "GREEN",
-        "ms": 1853
+        "ms": 1825
       },
       {
         "cmd": "FOUNDATION_PAGES_COVERAGE_ENFORCE=1 node scripts/ci-guards/foundation-pages-coverage.mjs",
         "status": "GREEN",
-        "ms": 260
+        "ms": 271
       },
       {
         "cmd": "node scripts/ci-guards/foundation-access-review-lineage-guard.mjs",
         "status": "GREEN",
-        "ms": 87
+        "ms": 80
+      },
+      {
+        "cmd": "node scripts/program/foundation-ai/pilot-kpi-snapshot.mjs",
+        "status": "GREEN",
+        "ms": 278
       }
     ]
   },
-  "emittedAt": "2026-05-07T04:15:38.812Z",
-  "hash": "sha256:da6557ec4d21aaf043ada2a2d6d5412c9e2263170ebc594f153651c8fb3316b8"
+  "emittedAt": "2026-05-07T04:18:03.805Z",
+  "hash": "sha256:8a3cec8872a83f5f91986b8e5254e4c8e309178b638dcdfdc106904b08fb713e"
 }

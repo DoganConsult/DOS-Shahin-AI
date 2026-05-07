@@ -193,6 +193,7 @@ function phaseCommands(kind) {
       'node scripts/ci-guards/lint-no-legacy-uios-shell.mjs',
       'FOUNDATION_PAGES_COVERAGE_ENFORCE=1 node scripts/ci-guards/foundation-pages-coverage.mjs',
       'node scripts/ci-guards/foundation-access-review-lineage-guard.mjs',
+      'node scripts/program/foundation-ai/pilot-kpi-snapshot.mjs',
     ];
   }
   return [];

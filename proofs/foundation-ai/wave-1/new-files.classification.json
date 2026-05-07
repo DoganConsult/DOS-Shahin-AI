@@ -6,6 +6,8 @@
     { "prefix": "proofs/foundation-ai/wave-1/", "classification": "in_wave", "note": "Auto-classify wave-1 proof files as in-wave artifacts." },
     { "prefix": "proofs/foundation-ai/wave-", "classification": "in_wave", "note": "Auto-classify generated wave proof directories as in-wave artifacts." },
     { "prefix": "proofs/foundation-ai/post-launch/", "classification": "in_wave", "note": "Auto-classify post-launch visual/runtime proof artifacts as in-wave." },
+    { "prefix": "docs/foundation-ai/", "classification": "in_wave", "note": "Auto-classify Foundation AI launch/reporting docs as in-wave artifacts." },
+    { "prefix": "docs/foundation-ai/launch/", "classification": "in_wave", "note": "Auto-classify wave11 launch package artifacts as in-wave deliverables." },
     { "prefix": ".governance-proof/", "classification": "flagged_followup_not_applied", "note": "Auto-flag external governance proof artifacts outside active foundation wave scope." },
     { "prefix": "scripts/program/foundation-ai/phase-", "classification": "flagged_followup_not_applied", "note": "Auto-flag unexpected phase helper scripts detected outside this wave scope." }
   ],
@@ -17,6 +19,7 @@
     { "path": "platform/dos/migrations/public/20260511_0900_foundation_identity_graph_simulation_contracts.sql", "classification": "in_wave", "note": "Wave 07 identity graph + policy simulation contracts and seeds." },
     { "path": "platform/dos/migrations/public/20260511_1000_ai_explainability_blocks.sql", "classification": "in_wave", "note": "Wave 08 AI explainability blocks with typed command/control actions." },
     { "path": "platform/dos/migrations/public/20260511_1100_wave09_ksa_localization_and_compliance_exports.sql", "classification": "in_wave", "note": "Wave 09 Arabic-first localization keys and bilingual compliance export artifacts." },
+    { "path": "scripts/program/foundation-ai/pilot-kpi-snapshot.mjs", "classification": "in_wave", "note": "Wave 10 pilot KPI instrumentation snapshot generator." },
     { "path": "scripts/ci-guards/foundation-access-review-lineage-guard.mjs", "classification": "in_wave", "note": "Wave 04 lineage drift guard." },
     { "path": "scripts/program/foundation-ai/wave-control.mjs", "classification": "in_wave", "note": "Wave sequencing/phase enforcement controller." },
     { "path": "proofs/foundation-ai/wave-1/wave-entry.proof.json", "classification": "in_wave", "note": "Wave proof artifact." },
