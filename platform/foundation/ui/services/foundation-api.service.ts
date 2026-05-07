@@ -283,6 +283,16 @@ export class FoundationApiService {
     return this.http.delete(`${this.api}/organizations/${orgId}`);
   }
 
+  /** Organization hierarchy tree (primary for /foundation/organization archetype). */
+  getOrgHierarchyTree(): Observable<{ success?: boolean; data?: unknown[] }> {
+    return this.http.get<{ success?: boolean; data?: unknown[] }>(`${this.api}/org-hierarchy/tree`);
+  }
+
+  /** Organization hierarchy subtree by node id. */
+  getOrgHierarchySubtree(nodeId: string): Observable<{ success?: boolean; data?: unknown[] }> {
+    return this.http.get<{ success?: boolean; data?: unknown[] }>(`${this.api}/org-hierarchy/subtree/${encodeURIComponent(nodeId)}`);
+  }
+
   // ---------- Reference Data ----------
   /** Generic reference data getter for various entity types (frameworks, controls, etc.). */
   getReferenceData(endpoint: string): Observable<any> {

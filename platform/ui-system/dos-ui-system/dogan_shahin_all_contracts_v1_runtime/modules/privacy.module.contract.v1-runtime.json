@@ -1,0 +1,644 @@
+{
+  "$schema": "https://dogan-ai.local/schemas/module-contract.v1-runtime.schema.json",
+  "contractKind": "module",
+  "generatedAt": "2026-05-07T13:18:19.248054+00:00",
+  "contractVersion": "1.0.0",
+  "runtimeModel": "v1-archetype-runtime",
+  "rule": "Current runtime is route -> one archetype template. dos.* semantic components are requiredRegions only, not fake DB component_key rows, until V2 surface renderer exists.",
+  "forbidden": [
+    "fake_component_map_closure",
+    "register_dos_semantic_components_as_full_page_templates",
+    "static_nav_fallback",
+    "hardcoded_workspace_modules",
+    "hardcoded_workspace_routes",
+    "prime_ng_workspace_shell",
+    "material_workspace_shell",
+    "localStorage_auth_token",
+    "sessionStorage_auth_token",
+    "silent_renderer_fallback",
+    "random_css_mobile_patch"
+  ],
+  "productKey": "shahin-ai",
+  "moduleCode": "privacy",
+  "moduleName": {
+    "en": "Privacy",
+    "ar": "الخصوصية"
+  },
+  "category": "privacy",
+  "routeBase": "/privacy",
+  "ownerService": "privacy-service",
+  "status": "active",
+  "defaultEnabled": false,
+  "uiVendor": "ibm-carbon",
+  "renderingMode": "dynamic-ui-contract-first-v1-archetype",
+  "pageCount": 6,
+  "pages": [
+    {
+      "pageKey": "privacy.overview",
+      "route": "/privacy/overview",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "overview",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "privacy.overview.archetype",
+      "rendererKey": "ModuleOverviewTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "status-banner",
+          "semanticComponent": "dos.status-banner",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "metric-grid",
+          "semanticComponent": "dos.metric-grid",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "structured-summary-card",
+          "semanticComponent": "dos.structured-summary-card",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "readiness-panel",
+          "semanticComponent": "dos.readiness-panel",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "recommendation-list",
+          "semanticComponent": "dos.recommendation-list",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "privacy-service",
+      "apiEndpoint": "/api/privacy/overview",
+      "dbEntities": [
+        "dos.privacy_overview"
+      ],
+      "readPermission": "privacy.overview.read",
+      "writePermissions": [],
+      "columns": [],
+      "titleKey": "privacy.overview.title",
+      "subtitleKey": "privacy.overview.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "privacy.overview.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "privacy.overview.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "privacy.overview.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "privacy.records",
+      "route": "/privacy/records",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "records_table",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "privacy.records_table.archetype",
+      "rendererKey": "ModuleRecordsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "status-banner",
+          "semanticComponent": "dos.status-banner",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "metric-grid",
+          "semanticComponent": "dos.metric-grid",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "records-table",
+          "semanticComponent": "dos.records-table",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "form-modal",
+          "semanticComponent": "dos.form-modal",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "empty-state",
+          "semanticComponent": "dos.empty-state",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "privacy-service",
+      "apiEndpoint": "/api/privacy/records",
+      "dbEntities": [
+        "dos.privacy_records"
+      ],
+      "readPermission": "privacy.records.read",
+      "writePermissions": [
+        "privacy.records.create",
+        "privacy.records.update",
+        "privacy.records.delete"
+      ],
+      "columns": [
+        "name",
+        "owner",
+        "status",
+        "risk",
+        "updated_at"
+      ],
+      "titleKey": "privacy.records.title",
+      "subtitleKey": "privacy.records.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "privacy.records.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "privacy.records.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "privacy.records.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "privacy.workflows",
+      "route": "/privacy/workflows",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "workflow",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "privacy.workflow.archetype",
+      "rendererKey": "WorkflowRecordsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "metric-grid",
+          "semanticComponent": "dos.metric-grid",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "workflow-panel",
+          "semanticComponent": "dos.workflow-panel",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "records-table",
+          "semanticComponent": "dos.records-table",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "status-banner",
+          "semanticComponent": "dos.status-banner",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "privacy-service",
+      "apiEndpoint": "/api/privacy/workflows",
+      "dbEntities": [
+        "dos.privacy_workflows"
+      ],
+      "readPermission": "privacy.workflows.read",
+      "writePermissions": [
+        "privacy.workflows.create",
+        "privacy.workflows.update",
+        "privacy.workflows.delete"
+      ],
+      "columns": [
+        "name",
+        "owner",
+        "status",
+        "risk",
+        "updated_at"
+      ],
+      "titleKey": "privacy.workflows.title",
+      "subtitleKey": "privacy.workflows.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "privacy.workflows.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "privacy.workflows.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "privacy.workflows.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "privacy.reports",
+      "route": "/privacy/reports",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "reports",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "privacy.reports.archetype",
+      "rendererKey": "ModuleReportsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "metric-grid",
+          "semanticComponent": "dos.metric-grid",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "records-table",
+          "semanticComponent": "dos.records-table",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "form-modal",
+          "semanticComponent": "dos.form-modal",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "privacy-service",
+      "apiEndpoint": "/api/privacy/reports",
+      "dbEntities": [
+        "dos.privacy_reports"
+      ],
+      "readPermission": "privacy.reports.read",
+      "writePermissions": [
+        "privacy.reports.create",
+        "privacy.reports.update",
+        "privacy.reports.delete"
+      ],
+      "columns": [
+        "name",
+        "owner",
+        "status",
+        "risk",
+        "updated_at"
+      ],
+      "titleKey": "privacy.reports.title",
+      "subtitleKey": "privacy.reports.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "privacy.reports.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "privacy.reports.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "privacy.reports.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "privacy.settings",
+      "route": "/privacy/settings",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "settings",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "privacy.settings.archetype",
+      "rendererKey": "ModuleSettingsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "tabs",
+          "semanticComponent": "dos.tabs",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "settings-panel",
+          "semanticComponent": "dos.settings-panel",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "status-banner",
+          "semanticComponent": "dos.status-banner",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "privacy-service",
+      "apiEndpoint": "/api/privacy/settings",
+      "dbEntities": [
+        "dos.privacy_settings"
+      ],
+      "readPermission": "privacy.settings.read",
+      "writePermissions": [
+        "privacy.settings.create",
+        "privacy.settings.update",
+        "privacy.settings.delete"
+      ],
+      "columns": [],
+      "titleKey": "privacy.settings.title",
+      "subtitleKey": "privacy.settings.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "privacy.settings.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "privacy.settings.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "privacy.settings.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "privacy.ai-insights",
+      "route": "/privacy/ai-insights",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "ai_insights",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "privacy.ai_insights.archetype",
+      "rendererKey": "AiInsightsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "ai-insight-panel",
+          "semanticComponent": "dos.ai-insight-panel",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "records-table",
+          "semanticComponent": "dos.records-table",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "recommendation-list",
+          "semanticComponent": "dos.recommendation-list",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "privacy-service",
+      "apiEndpoint": "/api/privacy/ai-insights",
+      "dbEntities": [
+        "dos.privacy_ai_insights"
+      ],
+      "readPermission": "privacy.ai_insights.read",
+      "writePermissions": [],
+      "columns": [],
+      "titleKey": "privacy.ai-insights.title",
+      "subtitleKey": "privacy.ai-insights.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "privacy.ai-insights.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "privacy.ai-insights.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "privacy.ai-insights.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    }
+  ],
+  "permissions": [
+    {
+      "permissionCode": "privacy.ai_insights.read",
+      "moduleCode": "privacy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "privacy.overview.read",
+      "moduleCode": "privacy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "privacy.records.create",
+      "moduleCode": "privacy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "privacy.records.delete",
+      "moduleCode": "privacy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "privacy.records.read",
+      "moduleCode": "privacy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "privacy.records.update",
+      "moduleCode": "privacy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "privacy.reports.create",
+      "moduleCode": "privacy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "privacy.reports.delete",
+      "moduleCode": "privacy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "privacy.reports.read",
+      "moduleCode": "privacy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "privacy.reports.update",
+      "moduleCode": "privacy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "privacy.settings.create",
+      "moduleCode": "privacy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "privacy.settings.delete",
+      "moduleCode": "privacy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "privacy.settings.read",
+      "moduleCode": "privacy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "privacy.settings.update",
+      "moduleCode": "privacy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "privacy.workflows.create",
+      "moduleCode": "privacy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "privacy.workflows.delete",
+      "moduleCode": "privacy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "privacy.workflows.read",
+      "moduleCode": "privacy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "privacy.workflows.update",
+      "moduleCode": "privacy",
+      "status": "required"
+    }
+  ],
+  "dbOnlyRoutesToReconcile": [],
+  "publicationTargets": {
+    "routes": "dos.dynamic_ui_routes / route template binding",
+    "navigation": "dos.navigation_registry",
+    "archetypeKeys": "dos.dynamic_ui_component_registry existing archetype keys only",
+    "permissions": "platform_dauth.permissions or dos.permissions",
+    "roleBindings": "role_permissions",
+    "i18n": "dos.i18n_catalog"
+  },
+  "acceptance": [
+    "route_exists_or_marked_missing_in_db",
+    "archetype_renderer_exists_in_template_registry",
+    "permissions_exist_and_role_bound",
+    "api_returns_401_not_404_when_unauthenticated",
+    "semantic_regions_render_with_carbon",
+    "mobile_no_horizontal_overflow",
+    "rtl_pass",
+    "no_static_fallback"
+  ]
+}

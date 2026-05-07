@@ -1,0 +1,222 @@
+{
+  "schema": "foundation-ai.phase-1-resolver.v1",
+  "status": "GREEN",
+  "ts": "2026-05-08T00:00:00Z",
+  "doctrine": "ZERO STATIC / ZERO LEGACY / ZERO FALLBACK — Dynamic UI-OS only / DB-driven / Single normalization boundary",
+
+  "resolverAudit": {
+    "file": "services/ui-os-service/src/routes/workspace-shell.routes.ts",
+    "totalLines": 1624,
+    "functionsAudited": [
+      {
+        "fn": "sanitizeProps",
+        "status": "CLEAN",
+        "notes": "Strips all snake_case keys and forbidden camelCase keys (labelKey, labelEn, labelAr, detailRoute, evidenceUri, chromeStrings, accountMenu) from surface props."
+      },
+      {
+        "fn": "loadCatalog",
+        "status": "CLEAN",
+        "notes": "Internal use only; never emitted raw."
+      },
+      {
+        "fn": "loadSurfaces",
+        "status": "CLEAN",
+        "notes": "Server-side RBAC + catalog filter. Emits only FrontendSurface shape (componentKey, permsRequired, componentType, rendererKey, carbonKey, surfaceId, slotKey). No raw DB fields."
+      },
+      {
+        "fn": "toFrontendSurface",
+        "status": "CLEAN",
+        "notes": "Maps ShellRow → FrontendSurface (camelCase). No snake_case in output."
+      },
+      {
+        "fn": "loadNav / feGroups",
+        "status": "CLEAN",
+        "notes": "Emits moduleCode, groupId, sortOrder, label (i18nLabel shape), enabled, version. No snake_case, no forbidden fields."
+      },
+      {
+        "fn": "loadNav / feItems",
+        "status": "FIXED",
+        "forbiddenFieldFound": "permission",
+        "fix": "Removed `permission: r.permission ?? null` from feItems mapping. Server-side SQL already gates items by permission; emitting the raw permission string to the FE violates doctrine.",
+        "lineFixed": 526
+      },
+      {
+        "fn": "loadNav / feModules",
+        "status": "CLEAN",
+        "notes": "Emits moduleCode, sortOrder, label only."
+      },
+      {
+        "fn": "loadChrome / scrubChromeForResponse",
+        "status": "CLEAN",
+        "notes": "scrubChromeForResponse strips chromeStrings, accountMenu, labelKey, labelEn, labelAr, detailRoute, evidenceUri, route and all snake_case keys before emission."
+      },
+      {
+        "fn": "loadShellMenus / project",
+        "status": "CLEAN",
+        "notes": "Emits id, label, action (normalized ShellAction), icon, enabled, version. perms_required never leaves resolver."
+      },
+      {
+        "fn": "normalizeShellAction",
+        "status": "CLEAN",
+        "notes": "Accepts only canonical ShellAction kinds: navigate, open_external, toggle_language, toggle_theme, open_command, close_overlay, clear_error, open_context_tab, dispatch_event."
+      },
+      {
+        "fn": "loadBreakpoints",
+        "status": "CLEAN",
+        "notes": "Emits breakpointKey, minPx, maxPx, defaultBehavior, isActive (camelCase)."
+      },
+      {
+        "fn": "loadTouchTargets",
+        "status": "CLEAN",
+        "notes": "Emits minSizePx, minSpacingPx, hapticFeedbackEnabled, gestureBindings (camelCase)."
+      },
+      {
+        "fn": "loadVariants",
+        "status": "CLEAN",
+        "notes": "Emits variants[componentKey][] with variantName, breakpoint, propsOverride, layoutOverride, isDefault. tenantSurfaceVariants[componentKey]=variantName."
+      },
+      {
+        "fn": "enrichVisualShellProps",
+        "status": "CLEAN",
+        "notes": "Live-enriches surfaces props from nav/chrome/moduleCards. No raw DB fields leak. accountMenu chrome key stripped by scrubChromeForResponse before final emit."
+      },
+      {
+        "fn": "loadBanners",
+        "status": "CLEAN",
+        "notes": "Emits id, gate, kind, title/message/actionLabel as i18nLabel shape, action (normalized), dismissible, version."
+      },
+      {
+        "fn": "loadShortcuts",
+        "status": "CLEAN",
+        "notes": "Emits id, combo, action (normalized ShellAction), when. No forbidden fields."
+      },
+      {
+        "fn": "loadPolicies",
+        "status": "CLEAN",
+        "notes": "Emits key→value_json map scrubbed via scrubChromeForResponse."
+      },
+      {
+        "fn": "authorizeCaller",
+        "status": "CLEAN",
+        "notes": "SQL-side tenant/member/product gate. Never emits raw data."
+      },
+      {
+        "fn": "loadNavigateEligibleRoutes",
+        "status": "CLEAN",
+        "notes": "Internal set used for navigate action gating. Never emitted directly."
+      },
+      {
+        "fn": "loadEntitledModuleCards",
+        "status": "CLEAN",
+        "notes": "Emits id, title, action { kind: navigate, path }, productCode. No raw route field."
+      }
+    ]
+  },
+
+  "fixesApplied": [
+    {
+      "file": "services/ui-os-service/src/routes/workspace-shell.routes.ts",
+      "line": 526,
+      "pattern": "permission: r.permission ?? null",
+      "action": "DELETED",
+      "reason": "Raw DB permission string must never leave the UI-OS resolver boundary. Server-side SQL already gates nav items by permission; emitting the string to FE is both redundant and a doctrine violation."
+    }
+  ],
+
+  "probe": {
+    "endpoint": "http://localhost:4015/api/ui-os/workspace-runtime",
+    "auth": "LEGACY_HEADER_TRUST (x-user-sub + x-tenant-id headers, internal port)",
+    "user": "foundation-probe-001@dos.local",
+    "userId": "1f2b4b0b-551c-40a4-b150-896745818334",
+    "tenantId": "65f10f855eab8b30",
+    "productCode": "shahin-ai",
+    "httpStatus": 200,
+    "responseBytes": 40352
+  },
+
+  "shellShape": {
+    "topKeys": ["tenantId", "userId", "productCode", "version", "shell"],
+    "shellKeys": ["version", "surfaces", "zones", "nav", "chrome", "shortcuts", "banners", "policies", "breakpoints", "touchTargets", "variants", "tenantSurfaceVariants"],
+    "version": 24,
+    "surfacesCount": 21,
+    "navGroupsCount": 28,
+    "navItemsCount": 0,
+    "navItemsNote": "zero items — default-roles user holds no foundation.* perms; DOCTRINE-CORRECT, no static fallback invented",
+    "navModulesCount": 20,
+    "zones": ["header", "main", "sidebar"],
+    "shortcuts": 8,
+    "banners": 3,
+    "breakpoints": 3,
+    "hasTouchTargets": true,
+    "hasVariants": true,
+    "hasTenantSurfaceVariants": true,
+    "noNavigationAlias": true,
+    "noRawRouteOnNavItems": true
+  },
+
+  "sampleSurface0": {
+    "componentKey": "workspace.frame.ui-shell",
+    "rendererKey": "shell.frame.ui-shell",
+    "carbonKey": "ui-shell",
+    "surfaceId": "workspace.main.frame.ui-shell.b14770",
+    "hasComponentType": true,
+    "hasSlotKey": true,
+    "hasPermsRequired": true,
+    "permsRequiredIsArray": true
+  },
+
+  "forbiddenTokenScan": {
+    "method": "grep + python3 deep-key scan on full 40352-byte JSON response",
+    "scannedFor": [
+      "component_key", "perms_required", "label_key", "label_fallback",
+      "label_en", "label_ar", "labelKey", "labelEn", "labelAr",
+      "detailRoute", "detail_route", "evidenceUri", "evidence_uri",
+      "chromeStrings", "navigation (alias)", "module_code", "group_id",
+      "item_id", "sort_order", "permission", "route (raw, outside action.path)"
+    ],
+    "result": "ZERO HITS",
+    "status": "GREEN"
+  },
+
+  "buildResult": {
+    "package": "@dos/ui-os-service",
+    "command": "pnpm --filter @dos/ui-os-service build",
+    "exitCode": 0,
+    "tool": "tsc -p tsconfig.json",
+    "errors": 0
+  },
+
+  "guardResults": [
+    {
+      "guard": "lint-no-static-nav-fallback.mjs",
+      "exitCode": 0,
+      "summary": "PASS — SPA does not use static nav as source of truth (16 TS files scanned)"
+    },
+    {
+      "guard": "lint-no-legacy-uios-shell.mjs",
+      "exitCode": 0,
+      "summary": "PASS — 0 forbidden legacy patterns across 27 scan dirs"
+    }
+  ],
+
+  "pm2Status": {
+    "ui-os-service": "online",
+    "pid": 618793,
+    "restarts": 78,
+    "uptime": "stable after restart"
+  },
+
+  "doctrineVerification": {
+    "noStaticNav": true,
+    "noLegacyFallback": true,
+    "noForbiddenFieldsInPayload": true,
+    "noNavigationAlias": true,
+    "allFieldsCamelCase": true,
+    "labelShapeCorrect": true,
+    "actionShapeCorrect": true,
+    "singleNormalizationBoundary": true,
+    "dbDrivenOnly": true
+  },
+
+  "remainingBlockers": []
+}

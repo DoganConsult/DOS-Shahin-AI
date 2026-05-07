@@ -1,0 +1,1481 @@
+{
+  "$schema": "https://dogan-ai.local/schemas/module-runtime.v1-1.schema.json",
+  "contractKind": "module",
+  "contractVersion": "1.1.0",
+  "runtimeModel": "v1-1-operating-runtime",
+  "generatedAt": "2026-05-07T16:50:00+03:00",
+  "supersedes": "dogan_shahin_all_contracts_v1_runtime/modules/dashboard.module.contract.v1-runtime.json",
+  "selfContained": true,
+  "rule": "Each module declares its full v1 surface PLUS a moduleRuntime layer with canonical pageOrder, chrome, navGroups, navItems, widgets, actions, carbonUsage, permissions, and defaultRoute. Foundation is no longer special.",
+  "doctrine": [
+    "ZERO_STATIC",
+    "ZERO_LEGACY",
+    "ZERO_FALLBACK",
+    "DB_AS_SOURCE_OF_TRUTH"
+  ],
+  "forbidden": [
+    "fake_component_map_closure",
+    "register_dos_semantic_components_as_full_page_templates",
+    "static_nav_fallback",
+    "hardcoded_workspace_modules",
+    "hardcoded_workspace_routes",
+    "prime_ng_workspace_shell",
+    "material_workspace_shell",
+    "localStorage_auth_token",
+    "sessionStorage_auth_token",
+    "silent_renderer_fallback",
+    "random_css_mobile_patch"
+  ],
+  "productKey": "shahin-ai",
+  "moduleCode": "dashboard",
+  "moduleName": {
+    "en": "Dashboard",
+    "ar": "لوحات المؤشرات"
+  },
+  "category": "analytics",
+  "routeBase": "/dashboard",
+  "ownerService": "dashboard-widgets-service",
+  "status": "active",
+  "defaultEnabled": false,
+  "uiVendor": "ibm-carbon",
+  "renderingMode": "dynamic-ui-contract-first-v1-archetype",
+  "pageCount": 6,
+  "pages": [
+    {
+      "pageKey": "dashboard.overview",
+      "route": "/dashboard/overview",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "overview",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "dashboard.overview.archetype",
+      "rendererKey": "ModuleOverviewTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "status-banner",
+          "semanticComponent": "dos.status-banner",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "metric-grid",
+          "semanticComponent": "dos.metric-grid",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "structured-summary-card",
+          "semanticComponent": "dos.structured-summary-card",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "readiness-panel",
+          "semanticComponent": "dos.readiness-panel",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "recommendation-list",
+          "semanticComponent": "dos.recommendation-list",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "dashboard-widgets-service",
+      "apiEndpoint": "/api/dashboard/overview",
+      "dbEntities": [
+        "dos.dashboard_overview"
+      ],
+      "readPermission": "dashboard.overview.read",
+      "writePermissions": [],
+      "columns": [],
+      "titleKey": "dashboard.overview.title",
+      "subtitleKey": "dashboard.overview.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "dashboard.overview.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "dashboard.overview.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "dashboard.overview.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "dashboard.records",
+      "route": "/dashboard/records",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "records_table",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "dashboard.records_table.archetype",
+      "rendererKey": "ModuleRecordsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "status-banner",
+          "semanticComponent": "dos.status-banner",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "metric-grid",
+          "semanticComponent": "dos.metric-grid",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "records-table",
+          "semanticComponent": "dos.records-table",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "form-modal",
+          "semanticComponent": "dos.form-modal",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "empty-state",
+          "semanticComponent": "dos.empty-state",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "dashboard-widgets-service",
+      "apiEndpoint": "/api/dashboard/records",
+      "dbEntities": [
+        "dos.dashboard_records"
+      ],
+      "readPermission": "dashboard.records.read",
+      "writePermissions": [
+        "dashboard.records.create",
+        "dashboard.records.update",
+        "dashboard.records.delete"
+      ],
+      "columns": [
+        "name",
+        "owner",
+        "status",
+        "risk",
+        "updated_at"
+      ],
+      "titleKey": "dashboard.records.title",
+      "subtitleKey": "dashboard.records.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "dashboard.records.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "dashboard.records.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "dashboard.records.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "dashboard.workflows",
+      "route": "/dashboard/workflows",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "workflow",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "dashboard.workflow.archetype",
+      "rendererKey": "WorkflowRecordsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "metric-grid",
+          "semanticComponent": "dos.metric-grid",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "workflow-panel",
+          "semanticComponent": "dos.workflow-panel",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "records-table",
+          "semanticComponent": "dos.records-table",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "status-banner",
+          "semanticComponent": "dos.status-banner",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "dashboard-widgets-service",
+      "apiEndpoint": "/api/dashboard/workflows",
+      "dbEntities": [
+        "dos.dashboard_workflows"
+      ],
+      "readPermission": "dashboard.workflows.read",
+      "writePermissions": [
+        "dashboard.workflows.create",
+        "dashboard.workflows.update",
+        "dashboard.workflows.delete"
+      ],
+      "columns": [
+        "name",
+        "owner",
+        "status",
+        "risk",
+        "updated_at"
+      ],
+      "titleKey": "dashboard.workflows.title",
+      "subtitleKey": "dashboard.workflows.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "dashboard.workflows.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "dashboard.workflows.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "dashboard.workflows.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "dashboard.reports",
+      "route": "/dashboard/reports",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "reports",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "dashboard.reports.archetype",
+      "rendererKey": "ModuleReportsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "metric-grid",
+          "semanticComponent": "dos.metric-grid",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "records-table",
+          "semanticComponent": "dos.records-table",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "form-modal",
+          "semanticComponent": "dos.form-modal",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "dashboard-widgets-service",
+      "apiEndpoint": "/api/dashboard/reports",
+      "dbEntities": [
+        "dos.dashboard_reports"
+      ],
+      "readPermission": "dashboard.reports.read",
+      "writePermissions": [
+        "dashboard.reports.create",
+        "dashboard.reports.update",
+        "dashboard.reports.delete"
+      ],
+      "columns": [
+        "name",
+        "owner",
+        "status",
+        "risk",
+        "updated_at"
+      ],
+      "titleKey": "dashboard.reports.title",
+      "subtitleKey": "dashboard.reports.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "dashboard.reports.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "dashboard.reports.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "dashboard.reports.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "dashboard.settings",
+      "route": "/dashboard/settings",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "settings",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "dashboard.settings.archetype",
+      "rendererKey": "ModuleSettingsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "tabs",
+          "semanticComponent": "dos.tabs",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "settings-panel",
+          "semanticComponent": "dos.settings-panel",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "status-banner",
+          "semanticComponent": "dos.status-banner",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "dashboard-widgets-service",
+      "apiEndpoint": "/api/dashboard/settings",
+      "dbEntities": [
+        "dos.dashboard_settings"
+      ],
+      "readPermission": "dashboard.settings.read",
+      "writePermissions": [
+        "dashboard.settings.create",
+        "dashboard.settings.update",
+        "dashboard.settings.delete"
+      ],
+      "columns": [],
+      "titleKey": "dashboard.settings.title",
+      "subtitleKey": "dashboard.settings.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "dashboard.settings.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "dashboard.settings.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "dashboard.settings.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "dashboard.ai-insights",
+      "route": "/dashboard/ai-insights",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "ai_insights",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "dashboard.ai_insights.archetype",
+      "rendererKey": "AiInsightsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "ai-insight-panel",
+          "semanticComponent": "dos.ai-insight-panel",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "records-table",
+          "semanticComponent": "dos.records-table",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "recommendation-list",
+          "semanticComponent": "dos.recommendation-list",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "dashboard-widgets-service",
+      "apiEndpoint": "/api/dashboard/ai-insights",
+      "dbEntities": [
+        "dos.dashboard_ai_insights"
+      ],
+      "readPermission": "dashboard.ai_insights.read",
+      "writePermissions": [],
+      "columns": [],
+      "titleKey": "dashboard.ai-insights.title",
+      "subtitleKey": "dashboard.ai-insights.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "dashboard.ai-insights.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "dashboard.ai-insights.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "dashboard.ai-insights.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    }
+  ],
+  "permissions": [
+    {
+      "permissionCode": "dashboard.ai_insights.read",
+      "moduleCode": "dashboard",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dashboard.overview.read",
+      "moduleCode": "dashboard",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dashboard.records.create",
+      "moduleCode": "dashboard",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dashboard.records.delete",
+      "moduleCode": "dashboard",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dashboard.records.read",
+      "moduleCode": "dashboard",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dashboard.records.update",
+      "moduleCode": "dashboard",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dashboard.reports.create",
+      "moduleCode": "dashboard",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dashboard.reports.delete",
+      "moduleCode": "dashboard",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dashboard.reports.read",
+      "moduleCode": "dashboard",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dashboard.reports.update",
+      "moduleCode": "dashboard",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dashboard.settings.create",
+      "moduleCode": "dashboard",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dashboard.settings.delete",
+      "moduleCode": "dashboard",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dashboard.settings.read",
+      "moduleCode": "dashboard",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dashboard.settings.update",
+      "moduleCode": "dashboard",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dashboard.workflows.create",
+      "moduleCode": "dashboard",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dashboard.workflows.delete",
+      "moduleCode": "dashboard",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dashboard.workflows.read",
+      "moduleCode": "dashboard",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dashboard.workflows.update",
+      "moduleCode": "dashboard",
+      "status": "required"
+    }
+  ],
+  "dbOnlyRoutesToReconcile": [],
+  "publicationTargets": {
+    "routes": "dos.dynamic_ui_routes / route template binding",
+    "navigation": "dos.navigation_registry",
+    "archetypeKeys": "dos.dynamic_ui_component_registry existing archetype keys only",
+    "permissions": "platform_dauth.permissions or dos.permissions",
+    "roleBindings": "role_permissions",
+    "i18n": "dos.i18n_catalog"
+  },
+  "acceptance": [
+    "route_exists_or_marked_missing_in_db",
+    "archetype_renderer_exists_in_template_registry",
+    "permissions_exist_and_role_bound",
+    "api_returns_401_not_404_when_unauthenticated",
+    "semantic_regions_render_with_carbon",
+    "mobile_no_horizontal_overflow",
+    "rtl_pass",
+    "no_static_fallback"
+  ],
+  "moduleRuntime": {
+    "moduleCode": "dashboard",
+    "moduleName": {
+      "en": "Dashboard",
+      "ar": "لوحات المؤشرات"
+    },
+    "category": "analytics",
+    "routeBase": "/dashboard",
+    "ownerService": "dashboard-widgets-service",
+    "status": "active",
+    "chrome": {
+      "brand": null,
+      "header": null,
+      "footer": null,
+      "banners": []
+    },
+    "navGroups": [
+      {
+        "groupKey": "dashboard.primary",
+        "label": {
+          "i18nKey": "dashboard.nav.primary",
+          "fallback": null,
+          "label": null
+        },
+        "sortOrder": 1,
+        "permission": null,
+        "entitlement": null
+      }
+    ],
+    "navItems": [
+      {
+        "itemKey": "dashboard.overview",
+        "groupKey": "dashboard.primary",
+        "label": {
+          "i18nKey": "dashboard.overview.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/dashboard/overview"
+        },
+        "sortOrder": 1,
+        "permission": "dashboard.overview.read",
+        "entitlement": null,
+        "iconRef": null
+      },
+      {
+        "itemKey": "dashboard.records",
+        "groupKey": "dashboard.primary",
+        "label": {
+          "i18nKey": "dashboard.records.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/dashboard/records"
+        },
+        "sortOrder": 2,
+        "permission": "dashboard.records.read",
+        "entitlement": null,
+        "iconRef": null
+      },
+      {
+        "itemKey": "dashboard.workflows",
+        "groupKey": "dashboard.primary",
+        "label": {
+          "i18nKey": "dashboard.workflows.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/dashboard/workflows"
+        },
+        "sortOrder": 3,
+        "permission": "dashboard.workflows.read",
+        "entitlement": null,
+        "iconRef": null
+      },
+      {
+        "itemKey": "dashboard.reports",
+        "groupKey": "dashboard.primary",
+        "label": {
+          "i18nKey": "dashboard.reports.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/dashboard/reports"
+        },
+        "sortOrder": 4,
+        "permission": "dashboard.reports.read",
+        "entitlement": null,
+        "iconRef": null
+      },
+      {
+        "itemKey": "dashboard.settings",
+        "groupKey": "dashboard.primary",
+        "label": {
+          "i18nKey": "dashboard.settings.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/dashboard/settings"
+        },
+        "sortOrder": 5,
+        "permission": "dashboard.settings.read",
+        "entitlement": null,
+        "iconRef": null
+      },
+      {
+        "itemKey": "dashboard.ai-insights",
+        "groupKey": "dashboard.primary",
+        "label": {
+          "i18nKey": "dashboard.ai-insights.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/dashboard/ai-insights"
+        },
+        "sortOrder": 6,
+        "permission": "dashboard.ai_insights.read",
+        "entitlement": null,
+        "iconRef": null
+      }
+    ],
+    "pages": [
+      {
+        "pageKey": "dashboard.overview",
+        "route": "/dashboard/overview",
+        "aliases": [],
+        "dbRouteStatus": "contracted",
+        "pageType": "overview",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "dashboard.overview.archetype",
+        "rendererKey": "ModuleOverviewTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "status-banner",
+            "semanticComponent": "dos.status-banner",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "metric-grid",
+            "semanticComponent": "dos.metric-grid",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "structured-summary-card",
+            "semanticComponent": "dos.structured-summary-card",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "readiness-panel",
+            "semanticComponent": "dos.readiness-panel",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "recommendation-list",
+            "semanticComponent": "dos.recommendation-list",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "dashboard-widgets-service",
+        "apiEndpoint": "/api/dashboard/overview",
+        "dbEntities": [
+          "dos.dashboard_overview"
+        ],
+        "readPermission": "dashboard.overview.read",
+        "writePermissions": [],
+        "columns": [],
+        "titleKey": "dashboard.overview.title",
+        "subtitleKey": "dashboard.overview.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "dashboard.overview.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "dashboard.overview.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "dashboard.overview.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      },
+      {
+        "pageKey": "dashboard.records",
+        "route": "/dashboard/records",
+        "aliases": [],
+        "dbRouteStatus": "contracted",
+        "pageType": "records_table",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "dashboard.records_table.archetype",
+        "rendererKey": "ModuleRecordsTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "status-banner",
+            "semanticComponent": "dos.status-banner",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "metric-grid",
+            "semanticComponent": "dos.metric-grid",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "records-table",
+            "semanticComponent": "dos.records-table",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "form-modal",
+            "semanticComponent": "dos.form-modal",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "empty-state",
+            "semanticComponent": "dos.empty-state",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "dashboard-widgets-service",
+        "apiEndpoint": "/api/dashboard/records",
+        "dbEntities": [
+          "dos.dashboard_records"
+        ],
+        "readPermission": "dashboard.records.read",
+        "writePermissions": [
+          "dashboard.records.create",
+          "dashboard.records.update",
+          "dashboard.records.delete"
+        ],
+        "columns": [
+          "name",
+          "owner",
+          "status",
+          "risk",
+          "updated_at"
+        ],
+        "titleKey": "dashboard.records.title",
+        "subtitleKey": "dashboard.records.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "dashboard.records.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "dashboard.records.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "dashboard.records.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      },
+      {
+        "pageKey": "dashboard.workflows",
+        "route": "/dashboard/workflows",
+        "aliases": [],
+        "dbRouteStatus": "contracted",
+        "pageType": "workflow",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "dashboard.workflow.archetype",
+        "rendererKey": "WorkflowRecordsTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "metric-grid",
+            "semanticComponent": "dos.metric-grid",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "workflow-panel",
+            "semanticComponent": "dos.workflow-panel",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "records-table",
+            "semanticComponent": "dos.records-table",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "status-banner",
+            "semanticComponent": "dos.status-banner",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "dashboard-widgets-service",
+        "apiEndpoint": "/api/dashboard/workflows",
+        "dbEntities": [
+          "dos.dashboard_workflows"
+        ],
+        "readPermission": "dashboard.workflows.read",
+        "writePermissions": [
+          "dashboard.workflows.create",
+          "dashboard.workflows.update",
+          "dashboard.workflows.delete"
+        ],
+        "columns": [
+          "name",
+          "owner",
+          "status",
+          "risk",
+          "updated_at"
+        ],
+        "titleKey": "dashboard.workflows.title",
+        "subtitleKey": "dashboard.workflows.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "dashboard.workflows.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "dashboard.workflows.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "dashboard.workflows.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      },
+      {
+        "pageKey": "dashboard.reports",
+        "route": "/dashboard/reports",
+        "aliases": [],
+        "dbRouteStatus": "contracted",
+        "pageType": "reports",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "dashboard.reports.archetype",
+        "rendererKey": "ModuleReportsTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "metric-grid",
+            "semanticComponent": "dos.metric-grid",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "records-table",
+            "semanticComponent": "dos.records-table",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "form-modal",
+            "semanticComponent": "dos.form-modal",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "dashboard-widgets-service",
+        "apiEndpoint": "/api/dashboard/reports",
+        "dbEntities": [
+          "dos.dashboard_reports"
+        ],
+        "readPermission": "dashboard.reports.read",
+        "writePermissions": [
+          "dashboard.reports.create",
+          "dashboard.reports.update",
+          "dashboard.reports.delete"
+        ],
+        "columns": [
+          "name",
+          "owner",
+          "status",
+          "risk",
+          "updated_at"
+        ],
+        "titleKey": "dashboard.reports.title",
+        "subtitleKey": "dashboard.reports.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "dashboard.reports.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "dashboard.reports.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "dashboard.reports.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      },
+      {
+        "pageKey": "dashboard.settings",
+        "route": "/dashboard/settings",
+        "aliases": [],
+        "dbRouteStatus": "contracted",
+        "pageType": "settings",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "dashboard.settings.archetype",
+        "rendererKey": "ModuleSettingsTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "tabs",
+            "semanticComponent": "dos.tabs",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "settings-panel",
+            "semanticComponent": "dos.settings-panel",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "status-banner",
+            "semanticComponent": "dos.status-banner",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "dashboard-widgets-service",
+        "apiEndpoint": "/api/dashboard/settings",
+        "dbEntities": [
+          "dos.dashboard_settings"
+        ],
+        "readPermission": "dashboard.settings.read",
+        "writePermissions": [
+          "dashboard.settings.create",
+          "dashboard.settings.update",
+          "dashboard.settings.delete"
+        ],
+        "columns": [],
+        "titleKey": "dashboard.settings.title",
+        "subtitleKey": "dashboard.settings.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "dashboard.settings.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "dashboard.settings.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "dashboard.settings.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      },
+      {
+        "pageKey": "dashboard.ai-insights",
+        "route": "/dashboard/ai-insights",
+        "aliases": [],
+        "dbRouteStatus": "contracted",
+        "pageType": "ai_insights",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "dashboard.ai_insights.archetype",
+        "rendererKey": "AiInsightsTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "ai-insight-panel",
+            "semanticComponent": "dos.ai-insight-panel",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "records-table",
+            "semanticComponent": "dos.records-table",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "recommendation-list",
+            "semanticComponent": "dos.recommendation-list",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "dashboard-widgets-service",
+        "apiEndpoint": "/api/dashboard/ai-insights",
+        "dbEntities": [
+          "dos.dashboard_ai_insights"
+        ],
+        "readPermission": "dashboard.ai_insights.read",
+        "writePermissions": [],
+        "columns": [],
+        "titleKey": "dashboard.ai-insights.title",
+        "subtitleKey": "dashboard.ai-insights.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "dashboard.ai-insights.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "dashboard.ai-insights.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "dashboard.ai-insights.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      }
+    ],
+    "widgets": [],
+    "actions": [],
+    "pageOrder": [
+      {
+        "pageKey": "dashboard.overview",
+        "sortOrder": 1
+      },
+      {
+        "pageKey": "dashboard.records",
+        "sortOrder": 2
+      },
+      {
+        "pageKey": "dashboard.workflows",
+        "sortOrder": 3
+      },
+      {
+        "pageKey": "dashboard.reports",
+        "sortOrder": 4
+      },
+      {
+        "pageKey": "dashboard.settings",
+        "sortOrder": 5
+      },
+      {
+        "pageKey": "dashboard.ai-insights",
+        "sortOrder": 6
+      }
+    ],
+    "defaultRoute": "/dashboard/overview",
+    "carbonUsage": {
+      "shell": [
+        "UIShell",
+        "Header",
+        "HeaderName",
+        "HeaderNavigation",
+        "HeaderMenu",
+        "HeaderMenuItem",
+        "HeaderGlobalBar",
+        "HeaderGlobalAction",
+        "SideNav",
+        "SideNavItems",
+        "SideNavMenu",
+        "SideNavMenuItem",
+        "SideNavLink",
+        "Content"
+      ],
+      "overview": [
+        "Grid",
+        "Column",
+        "Breadcrumb",
+        "Tile",
+        "Tag",
+        "ProgressBar",
+        "StructuredList",
+        "Tabs",
+        "InlineNotification",
+        "SkeletonText",
+        "SkeletonPlaceholder"
+      ],
+      "records": [
+        "DataTable",
+        "TableToolbar",
+        "TableToolbarSearch",
+        "TableToolbarActions",
+        "TableBatchActions",
+        "Pagination",
+        "OverflowMenu",
+        "OverflowMenuOption",
+        "SkeletonText",
+        "SkeletonPlaceholder",
+        "InlineNotification",
+        "Tile",
+        "Button",
+        "StructuredList",
+        "Tag",
+        "ProgressBar"
+      ],
+      "forms": [
+        "Tabs",
+        "StructuredList",
+        "Toggle",
+        "Dropdown",
+        "TextInput",
+        "Button",
+        "InlineNotification",
+        "Modal"
+      ]
+    },
+    "permissions": [
+      {
+        "permissionCode": "dashboard.ai_insights.read",
+        "moduleCode": "dashboard",
+        "status": "required"
+      },
+      {
+        "permissionCode": "dashboard.overview.read",
+        "moduleCode": "dashboard",
+        "status": "required"
+      },
+      {
+        "permissionCode": "dashboard.records.create",
+        "moduleCode": "dashboard",
+        "status": "required"
+      },
+      {
+        "permissionCode": "dashboard.records.delete",
+        "moduleCode": "dashboard",
+        "status": "required"
+      },
+      {
+        "permissionCode": "dashboard.records.read",
+        "moduleCode": "dashboard",
+        "status": "required"
+      },
+      {
+        "permissionCode": "dashboard.records.update",
+        "moduleCode": "dashboard",
+        "status": "required"
+      },
+      {
+        "permissionCode": "dashboard.reports.create",
+        "moduleCode": "dashboard",
+        "status": "required"
+      },
+      {
+        "permissionCode": "dashboard.reports.delete",
+        "moduleCode": "dashboard",
+        "status": "required"
+      },
+      {
+        "permissionCode": "dashboard.reports.read",
+        "moduleCode": "dashboard",
+        "status": "required"
+      },
+      {
+        "permissionCode": "dashboard.reports.update",
+        "moduleCode": "dashboard",
+        "status": "required"
+      },
+      {
+        "permissionCode": "dashboard.settings.create",
+        "moduleCode": "dashboard",
+        "status": "required"
+      },
+      {
+        "permissionCode": "dashboard.settings.delete",
+        "moduleCode": "dashboard",
+        "status": "required"
+      },
+      {
+        "permissionCode": "dashboard.settings.read",
+        "moduleCode": "dashboard",
+        "status": "required"
+      },
+      {
+        "permissionCode": "dashboard.settings.update",
+        "moduleCode": "dashboard",
+        "status": "required"
+      },
+      {
+        "permissionCode": "dashboard.workflows.create",
+        "moduleCode": "dashboard",
+        "status": "required"
+      },
+      {
+        "permissionCode": "dashboard.workflows.delete",
+        "moduleCode": "dashboard",
+        "status": "required"
+      },
+      {
+        "permissionCode": "dashboard.workflows.read",
+        "moduleCode": "dashboard",
+        "status": "required"
+      },
+      {
+        "permissionCode": "dashboard.workflows.update",
+        "moduleCode": "dashboard",
+        "status": "required"
+      }
+    ],
+    "publication": {
+      "pages_table": "dos.dynamic_ui_routes",
+      "nav_groups_table": "dos.ui_module_nav_group",
+      "nav_items_table": "dos.ui_module_nav_item",
+      "widgets_table": "dos.ui_widget_binding",
+      "actions_table": "dos.ui_action_binding",
+      "permissions_table": "platform_dauth.permissions",
+      "preflight_dependency_for_foundation": null
+    }
+  },
+  "resolverContract": {
+    "endpoint": "/api/ui-os/module-runtime/dashboard",
+    "auth": "session_cookie",
+    "tenancy_scope": "tenant",
+    "snake_case_fields_allowed_only_inside_resolver": true,
+    "browser_facing_camelCase": true,
+    "envelope_ref": "envelopes/module-runtime.envelope.v1-1.json"
+  }
+}

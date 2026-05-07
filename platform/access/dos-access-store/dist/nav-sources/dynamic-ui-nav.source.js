@@ -28,7 +28,7 @@ const NON_WORKSPACE_PATHS = new Set([
     '/trust',
 ]);
 function isWorkspaceNavItem(item) {
-    const route = typeof item.route === 'string' ? item.route.trim() : '';
+    const route = item.action?.kind === 'navigate' ? item.action.path.trim() : '';
     const group = typeof item.group === 'string' ? item.group.trim() : '';
     const moduleCode = typeof item.moduleCode === 'string' ? item.moduleCode.trim() : '';
     const permission = item.requiredPermission ?? item.permission ?? undefined;

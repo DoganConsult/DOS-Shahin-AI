@@ -46,14 +46,15 @@ exports.organizationsRouter = router;
 router.use(auth_adapter_1.authenticate);
 router.use(auth_adapter_1.requireTenantId);
 router.use((0, middleware_port_1.auditMiddleware)('organization'));
-router.get('/', (0, auth_adapter_1.requireAnyPermission)('admin', 'org_admin', 'org_read', 'member'), (0, middleware_port_1.asyncHandler)(async (req, res) => {
+const ORG_READ_PERMS = ['foundation.data.read', 'admin', 'org_admin', 'org_read', 'member'];
+router.get('/', (0, auth_adapter_1.requireAnyPermission)(...ORG_READ_PERMS), (0, middleware_port_1.asyncHandler)(async (req, res) => {
     const page = parseInt(req.query.page || '1', 10);
     const pageSize = parseInt(req.query.pageSize || '25', 10);
     const search = req.query.search;
     const result = await svc.listOrganizations(req.tenantId, { page, pageSize, search });
     res.json({ success: true, data: result.data, total: result.total, page, pageSize });
 }));
-router.get('/:id', (0, auth_adapter_1.requireAnyPermission)('admin', 'org_admin', 'org_read', 'member'), (0, middleware_port_1.asyncHandler)(async (req, res) => {
+router.get('/:id', (0, auth_adapter_1.requireAnyPermission)(...ORG_READ_PERMS), (0, middleware_port_1.asyncHandler)(async (req, res) => {
     const row = await svc.getOrganization(req.tenantId, req.params.id);
     if (!row)
         throw new user_errors_1.UserServiceError('FOUNDATION_ENTITY_NOT_FOUND', undefined, { entity: 'organization', id: req.params.id });

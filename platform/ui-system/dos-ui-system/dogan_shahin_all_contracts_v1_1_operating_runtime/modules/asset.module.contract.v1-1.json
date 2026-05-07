@@ -1,0 +1,1481 @@
+{
+  "$schema": "https://dogan-ai.local/schemas/module-runtime.v1-1.schema.json",
+  "contractKind": "module",
+  "contractVersion": "1.1.0",
+  "runtimeModel": "v1-1-operating-runtime",
+  "generatedAt": "2026-05-07T16:50:00+03:00",
+  "supersedes": "dogan_shahin_all_contracts_v1_runtime/modules/asset.module.contract.v1-runtime.json",
+  "selfContained": true,
+  "rule": "Each module declares its full v1 surface PLUS a moduleRuntime layer with canonical pageOrder, chrome, navGroups, navItems, widgets, actions, carbonUsage, permissions, and defaultRoute. Foundation is no longer special.",
+  "doctrine": [
+    "ZERO_STATIC",
+    "ZERO_LEGACY",
+    "ZERO_FALLBACK",
+    "DB_AS_SOURCE_OF_TRUTH"
+  ],
+  "forbidden": [
+    "fake_component_map_closure",
+    "register_dos_semantic_components_as_full_page_templates",
+    "static_nav_fallback",
+    "hardcoded_workspace_modules",
+    "hardcoded_workspace_routes",
+    "prime_ng_workspace_shell",
+    "material_workspace_shell",
+    "localStorage_auth_token",
+    "sessionStorage_auth_token",
+    "silent_renderer_fallback",
+    "random_css_mobile_patch"
+  ],
+  "productKey": "shahin-ai",
+  "moduleCode": "asset",
+  "moduleName": {
+    "en": "Asset",
+    "ar": "الأصول"
+  },
+  "category": "operations-risk",
+  "routeBase": "/asset",
+  "ownerService": "asset-service",
+  "status": "active",
+  "defaultEnabled": false,
+  "uiVendor": "ibm-carbon",
+  "renderingMode": "dynamic-ui-contract-first-v1-archetype",
+  "pageCount": 6,
+  "pages": [
+    {
+      "pageKey": "asset.overview",
+      "route": "/asset/overview",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "overview",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "asset.overview.archetype",
+      "rendererKey": "ModuleOverviewTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "status-banner",
+          "semanticComponent": "dos.status-banner",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "metric-grid",
+          "semanticComponent": "dos.metric-grid",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "structured-summary-card",
+          "semanticComponent": "dos.structured-summary-card",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "readiness-panel",
+          "semanticComponent": "dos.readiness-panel",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "recommendation-list",
+          "semanticComponent": "dos.recommendation-list",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "asset-service",
+      "apiEndpoint": "/api/asset/overview",
+      "dbEntities": [
+        "dos.asset_overview"
+      ],
+      "readPermission": "asset.overview.read",
+      "writePermissions": [],
+      "columns": [],
+      "titleKey": "asset.overview.title",
+      "subtitleKey": "asset.overview.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "asset.overview.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "asset.overview.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "asset.overview.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "asset.records",
+      "route": "/asset/records",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "records_table",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "asset.records_table.archetype",
+      "rendererKey": "ModuleRecordsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "status-banner",
+          "semanticComponent": "dos.status-banner",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "metric-grid",
+          "semanticComponent": "dos.metric-grid",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "records-table",
+          "semanticComponent": "dos.records-table",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "form-modal",
+          "semanticComponent": "dos.form-modal",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "empty-state",
+          "semanticComponent": "dos.empty-state",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "asset-service",
+      "apiEndpoint": "/api/asset/records",
+      "dbEntities": [
+        "dos.asset_records"
+      ],
+      "readPermission": "asset.records.read",
+      "writePermissions": [
+        "asset.records.create",
+        "asset.records.update",
+        "asset.records.delete"
+      ],
+      "columns": [
+        "name",
+        "owner",
+        "status",
+        "risk",
+        "updated_at"
+      ],
+      "titleKey": "asset.records.title",
+      "subtitleKey": "asset.records.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "asset.records.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "asset.records.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "asset.records.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "asset.workflows",
+      "route": "/asset/workflows",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "workflow",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "asset.workflow.archetype",
+      "rendererKey": "WorkflowRecordsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "metric-grid",
+          "semanticComponent": "dos.metric-grid",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "workflow-panel",
+          "semanticComponent": "dos.workflow-panel",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "records-table",
+          "semanticComponent": "dos.records-table",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "status-banner",
+          "semanticComponent": "dos.status-banner",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "asset-service",
+      "apiEndpoint": "/api/asset/workflows",
+      "dbEntities": [
+        "dos.asset_workflows"
+      ],
+      "readPermission": "asset.workflows.read",
+      "writePermissions": [
+        "asset.workflows.create",
+        "asset.workflows.update",
+        "asset.workflows.delete"
+      ],
+      "columns": [
+        "name",
+        "owner",
+        "status",
+        "risk",
+        "updated_at"
+      ],
+      "titleKey": "asset.workflows.title",
+      "subtitleKey": "asset.workflows.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "asset.workflows.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "asset.workflows.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "asset.workflows.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "asset.reports",
+      "route": "/asset/reports",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "reports",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "asset.reports.archetype",
+      "rendererKey": "ModuleReportsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "metric-grid",
+          "semanticComponent": "dos.metric-grid",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "records-table",
+          "semanticComponent": "dos.records-table",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "form-modal",
+          "semanticComponent": "dos.form-modal",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "asset-service",
+      "apiEndpoint": "/api/asset/reports",
+      "dbEntities": [
+        "dos.asset_reports"
+      ],
+      "readPermission": "asset.reports.read",
+      "writePermissions": [
+        "asset.reports.create",
+        "asset.reports.update",
+        "asset.reports.delete"
+      ],
+      "columns": [
+        "name",
+        "owner",
+        "status",
+        "risk",
+        "updated_at"
+      ],
+      "titleKey": "asset.reports.title",
+      "subtitleKey": "asset.reports.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "asset.reports.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "asset.reports.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "asset.reports.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "asset.settings",
+      "route": "/asset/settings",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "settings",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "asset.settings.archetype",
+      "rendererKey": "ModuleSettingsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "tabs",
+          "semanticComponent": "dos.tabs",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "settings-panel",
+          "semanticComponent": "dos.settings-panel",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "status-banner",
+          "semanticComponent": "dos.status-banner",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "asset-service",
+      "apiEndpoint": "/api/asset/settings",
+      "dbEntities": [
+        "dos.asset_settings"
+      ],
+      "readPermission": "asset.settings.read",
+      "writePermissions": [
+        "asset.settings.create",
+        "asset.settings.update",
+        "asset.settings.delete"
+      ],
+      "columns": [],
+      "titleKey": "asset.settings.title",
+      "subtitleKey": "asset.settings.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "asset.settings.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "asset.settings.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "asset.settings.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "asset.ai-insights",
+      "route": "/asset/ai-insights",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "ai_insights",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "asset.ai_insights.archetype",
+      "rendererKey": "AiInsightsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "ai-insight-panel",
+          "semanticComponent": "dos.ai-insight-panel",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "records-table",
+          "semanticComponent": "dos.records-table",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "recommendation-list",
+          "semanticComponent": "dos.recommendation-list",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "asset-service",
+      "apiEndpoint": "/api/asset/ai-insights",
+      "dbEntities": [
+        "dos.asset_ai_insights"
+      ],
+      "readPermission": "asset.ai_insights.read",
+      "writePermissions": [],
+      "columns": [],
+      "titleKey": "asset.ai-insights.title",
+      "subtitleKey": "asset.ai-insights.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "asset.ai-insights.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "asset.ai-insights.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "asset.ai-insights.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    }
+  ],
+  "permissions": [
+    {
+      "permissionCode": "asset.ai_insights.read",
+      "moduleCode": "asset",
+      "status": "required"
+    },
+    {
+      "permissionCode": "asset.overview.read",
+      "moduleCode": "asset",
+      "status": "required"
+    },
+    {
+      "permissionCode": "asset.records.create",
+      "moduleCode": "asset",
+      "status": "required"
+    },
+    {
+      "permissionCode": "asset.records.delete",
+      "moduleCode": "asset",
+      "status": "required"
+    },
+    {
+      "permissionCode": "asset.records.read",
+      "moduleCode": "asset",
+      "status": "required"
+    },
+    {
+      "permissionCode": "asset.records.update",
+      "moduleCode": "asset",
+      "status": "required"
+    },
+    {
+      "permissionCode": "asset.reports.create",
+      "moduleCode": "asset",
+      "status": "required"
+    },
+    {
+      "permissionCode": "asset.reports.delete",
+      "moduleCode": "asset",
+      "status": "required"
+    },
+    {
+      "permissionCode": "asset.reports.read",
+      "moduleCode": "asset",
+      "status": "required"
+    },
+    {
+      "permissionCode": "asset.reports.update",
+      "moduleCode": "asset",
+      "status": "required"
+    },
+    {
+      "permissionCode": "asset.settings.create",
+      "moduleCode": "asset",
+      "status": "required"
+    },
+    {
+      "permissionCode": "asset.settings.delete",
+      "moduleCode": "asset",
+      "status": "required"
+    },
+    {
+      "permissionCode": "asset.settings.read",
+      "moduleCode": "asset",
+      "status": "required"
+    },
+    {
+      "permissionCode": "asset.settings.update",
+      "moduleCode": "asset",
+      "status": "required"
+    },
+    {
+      "permissionCode": "asset.workflows.create",
+      "moduleCode": "asset",
+      "status": "required"
+    },
+    {
+      "permissionCode": "asset.workflows.delete",
+      "moduleCode": "asset",
+      "status": "required"
+    },
+    {
+      "permissionCode": "asset.workflows.read",
+      "moduleCode": "asset",
+      "status": "required"
+    },
+    {
+      "permissionCode": "asset.workflows.update",
+      "moduleCode": "asset",
+      "status": "required"
+    }
+  ],
+  "dbOnlyRoutesToReconcile": [],
+  "publicationTargets": {
+    "routes": "dos.dynamic_ui_routes / route template binding",
+    "navigation": "dos.navigation_registry",
+    "archetypeKeys": "dos.dynamic_ui_component_registry existing archetype keys only",
+    "permissions": "platform_dauth.permissions or dos.permissions",
+    "roleBindings": "role_permissions",
+    "i18n": "dos.i18n_catalog"
+  },
+  "acceptance": [
+    "route_exists_or_marked_missing_in_db",
+    "archetype_renderer_exists_in_template_registry",
+    "permissions_exist_and_role_bound",
+    "api_returns_401_not_404_when_unauthenticated",
+    "semantic_regions_render_with_carbon",
+    "mobile_no_horizontal_overflow",
+    "rtl_pass",
+    "no_static_fallback"
+  ],
+  "moduleRuntime": {
+    "moduleCode": "asset",
+    "moduleName": {
+      "en": "Asset",
+      "ar": "الأصول"
+    },
+    "category": "operations-risk",
+    "routeBase": "/asset",
+    "ownerService": "asset-service",
+    "status": "active",
+    "chrome": {
+      "brand": null,
+      "header": null,
+      "footer": null,
+      "banners": []
+    },
+    "navGroups": [
+      {
+        "groupKey": "asset.primary",
+        "label": {
+          "i18nKey": "asset.nav.primary",
+          "fallback": null,
+          "label": null
+        },
+        "sortOrder": 1,
+        "permission": null,
+        "entitlement": null
+      }
+    ],
+    "navItems": [
+      {
+        "itemKey": "asset.overview",
+        "groupKey": "asset.primary",
+        "label": {
+          "i18nKey": "asset.overview.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/asset/overview"
+        },
+        "sortOrder": 1,
+        "permission": "asset.overview.read",
+        "entitlement": null,
+        "iconRef": null
+      },
+      {
+        "itemKey": "asset.records",
+        "groupKey": "asset.primary",
+        "label": {
+          "i18nKey": "asset.records.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/asset/records"
+        },
+        "sortOrder": 2,
+        "permission": "asset.records.read",
+        "entitlement": null,
+        "iconRef": null
+      },
+      {
+        "itemKey": "asset.workflows",
+        "groupKey": "asset.primary",
+        "label": {
+          "i18nKey": "asset.workflows.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/asset/workflows"
+        },
+        "sortOrder": 3,
+        "permission": "asset.workflows.read",
+        "entitlement": null,
+        "iconRef": null
+      },
+      {
+        "itemKey": "asset.reports",
+        "groupKey": "asset.primary",
+        "label": {
+          "i18nKey": "asset.reports.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/asset/reports"
+        },
+        "sortOrder": 4,
+        "permission": "asset.reports.read",
+        "entitlement": null,
+        "iconRef": null
+      },
+      {
+        "itemKey": "asset.settings",
+        "groupKey": "asset.primary",
+        "label": {
+          "i18nKey": "asset.settings.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/asset/settings"
+        },
+        "sortOrder": 5,
+        "permission": "asset.settings.read",
+        "entitlement": null,
+        "iconRef": null
+      },
+      {
+        "itemKey": "asset.ai-insights",
+        "groupKey": "asset.primary",
+        "label": {
+          "i18nKey": "asset.ai-insights.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/asset/ai-insights"
+        },
+        "sortOrder": 6,
+        "permission": "asset.ai_insights.read",
+        "entitlement": null,
+        "iconRef": null
+      }
+    ],
+    "pages": [
+      {
+        "pageKey": "asset.overview",
+        "route": "/asset/overview",
+        "aliases": [],
+        "dbRouteStatus": "contracted",
+        "pageType": "overview",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "asset.overview.archetype",
+        "rendererKey": "ModuleOverviewTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "status-banner",
+            "semanticComponent": "dos.status-banner",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "metric-grid",
+            "semanticComponent": "dos.metric-grid",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "structured-summary-card",
+            "semanticComponent": "dos.structured-summary-card",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "readiness-panel",
+            "semanticComponent": "dos.readiness-panel",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "recommendation-list",
+            "semanticComponent": "dos.recommendation-list",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "asset-service",
+        "apiEndpoint": "/api/asset/overview",
+        "dbEntities": [
+          "dos.asset_overview"
+        ],
+        "readPermission": "asset.overview.read",
+        "writePermissions": [],
+        "columns": [],
+        "titleKey": "asset.overview.title",
+        "subtitleKey": "asset.overview.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "asset.overview.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "asset.overview.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "asset.overview.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      },
+      {
+        "pageKey": "asset.records",
+        "route": "/asset/records",
+        "aliases": [],
+        "dbRouteStatus": "contracted",
+        "pageType": "records_table",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "asset.records_table.archetype",
+        "rendererKey": "ModuleRecordsTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "status-banner",
+            "semanticComponent": "dos.status-banner",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "metric-grid",
+            "semanticComponent": "dos.metric-grid",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "records-table",
+            "semanticComponent": "dos.records-table",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "form-modal",
+            "semanticComponent": "dos.form-modal",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "empty-state",
+            "semanticComponent": "dos.empty-state",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "asset-service",
+        "apiEndpoint": "/api/asset/records",
+        "dbEntities": [
+          "dos.asset_records"
+        ],
+        "readPermission": "asset.records.read",
+        "writePermissions": [
+          "asset.records.create",
+          "asset.records.update",
+          "asset.records.delete"
+        ],
+        "columns": [
+          "name",
+          "owner",
+          "status",
+          "risk",
+          "updated_at"
+        ],
+        "titleKey": "asset.records.title",
+        "subtitleKey": "asset.records.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "asset.records.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "asset.records.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "asset.records.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      },
+      {
+        "pageKey": "asset.workflows",
+        "route": "/asset/workflows",
+        "aliases": [],
+        "dbRouteStatus": "contracted",
+        "pageType": "workflow",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "asset.workflow.archetype",
+        "rendererKey": "WorkflowRecordsTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "metric-grid",
+            "semanticComponent": "dos.metric-grid",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "workflow-panel",
+            "semanticComponent": "dos.workflow-panel",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "records-table",
+            "semanticComponent": "dos.records-table",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "status-banner",
+            "semanticComponent": "dos.status-banner",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "asset-service",
+        "apiEndpoint": "/api/asset/workflows",
+        "dbEntities": [
+          "dos.asset_workflows"
+        ],
+        "readPermission": "asset.workflows.read",
+        "writePermissions": [
+          "asset.workflows.create",
+          "asset.workflows.update",
+          "asset.workflows.delete"
+        ],
+        "columns": [
+          "name",
+          "owner",
+          "status",
+          "risk",
+          "updated_at"
+        ],
+        "titleKey": "asset.workflows.title",
+        "subtitleKey": "asset.workflows.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "asset.workflows.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "asset.workflows.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "asset.workflows.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      },
+      {
+        "pageKey": "asset.reports",
+        "route": "/asset/reports",
+        "aliases": [],
+        "dbRouteStatus": "contracted",
+        "pageType": "reports",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "asset.reports.archetype",
+        "rendererKey": "ModuleReportsTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "metric-grid",
+            "semanticComponent": "dos.metric-grid",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "records-table",
+            "semanticComponent": "dos.records-table",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "form-modal",
+            "semanticComponent": "dos.form-modal",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "asset-service",
+        "apiEndpoint": "/api/asset/reports",
+        "dbEntities": [
+          "dos.asset_reports"
+        ],
+        "readPermission": "asset.reports.read",
+        "writePermissions": [
+          "asset.reports.create",
+          "asset.reports.update",
+          "asset.reports.delete"
+        ],
+        "columns": [
+          "name",
+          "owner",
+          "status",
+          "risk",
+          "updated_at"
+        ],
+        "titleKey": "asset.reports.title",
+        "subtitleKey": "asset.reports.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "asset.reports.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "asset.reports.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "asset.reports.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      },
+      {
+        "pageKey": "asset.settings",
+        "route": "/asset/settings",
+        "aliases": [],
+        "dbRouteStatus": "contracted",
+        "pageType": "settings",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "asset.settings.archetype",
+        "rendererKey": "ModuleSettingsTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "tabs",
+            "semanticComponent": "dos.tabs",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "settings-panel",
+            "semanticComponent": "dos.settings-panel",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "status-banner",
+            "semanticComponent": "dos.status-banner",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "asset-service",
+        "apiEndpoint": "/api/asset/settings",
+        "dbEntities": [
+          "dos.asset_settings"
+        ],
+        "readPermission": "asset.settings.read",
+        "writePermissions": [
+          "asset.settings.create",
+          "asset.settings.update",
+          "asset.settings.delete"
+        ],
+        "columns": [],
+        "titleKey": "asset.settings.title",
+        "subtitleKey": "asset.settings.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "asset.settings.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "asset.settings.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "asset.settings.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      },
+      {
+        "pageKey": "asset.ai-insights",
+        "route": "/asset/ai-insights",
+        "aliases": [],
+        "dbRouteStatus": "contracted",
+        "pageType": "ai_insights",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "asset.ai_insights.archetype",
+        "rendererKey": "AiInsightsTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "ai-insight-panel",
+            "semanticComponent": "dos.ai-insight-panel",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "records-table",
+            "semanticComponent": "dos.records-table",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "recommendation-list",
+            "semanticComponent": "dos.recommendation-list",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "asset-service",
+        "apiEndpoint": "/api/asset/ai-insights",
+        "dbEntities": [
+          "dos.asset_ai_insights"
+        ],
+        "readPermission": "asset.ai_insights.read",
+        "writePermissions": [],
+        "columns": [],
+        "titleKey": "asset.ai-insights.title",
+        "subtitleKey": "asset.ai-insights.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "asset.ai-insights.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "asset.ai-insights.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "asset.ai-insights.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      }
+    ],
+    "widgets": [],
+    "actions": [],
+    "pageOrder": [
+      {
+        "pageKey": "asset.overview",
+        "sortOrder": 1
+      },
+      {
+        "pageKey": "asset.records",
+        "sortOrder": 2
+      },
+      {
+        "pageKey": "asset.workflows",
+        "sortOrder": 3
+      },
+      {
+        "pageKey": "asset.reports",
+        "sortOrder": 4
+      },
+      {
+        "pageKey": "asset.settings",
+        "sortOrder": 5
+      },
+      {
+        "pageKey": "asset.ai-insights",
+        "sortOrder": 6
+      }
+    ],
+    "defaultRoute": "/asset/overview",
+    "carbonUsage": {
+      "shell": [
+        "UIShell",
+        "Header",
+        "HeaderName",
+        "HeaderNavigation",
+        "HeaderMenu",
+        "HeaderMenuItem",
+        "HeaderGlobalBar",
+        "HeaderGlobalAction",
+        "SideNav",
+        "SideNavItems",
+        "SideNavMenu",
+        "SideNavMenuItem",
+        "SideNavLink",
+        "Content"
+      ],
+      "overview": [
+        "Grid",
+        "Column",
+        "Breadcrumb",
+        "Tile",
+        "Tag",
+        "ProgressBar",
+        "StructuredList",
+        "Tabs",
+        "InlineNotification",
+        "SkeletonText",
+        "SkeletonPlaceholder"
+      ],
+      "records": [
+        "DataTable",
+        "TableToolbar",
+        "TableToolbarSearch",
+        "TableToolbarActions",
+        "TableBatchActions",
+        "Pagination",
+        "OverflowMenu",
+        "OverflowMenuOption",
+        "SkeletonText",
+        "SkeletonPlaceholder",
+        "InlineNotification",
+        "Tile",
+        "Button",
+        "StructuredList",
+        "Tag",
+        "ProgressBar"
+      ],
+      "forms": [
+        "Tabs",
+        "StructuredList",
+        "Toggle",
+        "Dropdown",
+        "TextInput",
+        "Button",
+        "InlineNotification",
+        "Modal"
+      ]
+    },
+    "permissions": [
+      {
+        "permissionCode": "asset.ai_insights.read",
+        "moduleCode": "asset",
+        "status": "required"
+      },
+      {
+        "permissionCode": "asset.overview.read",
+        "moduleCode": "asset",
+        "status": "required"
+      },
+      {
+        "permissionCode": "asset.records.create",
+        "moduleCode": "asset",
+        "status": "required"
+      },
+      {
+        "permissionCode": "asset.records.delete",
+        "moduleCode": "asset",
+        "status": "required"
+      },
+      {
+        "permissionCode": "asset.records.read",
+        "moduleCode": "asset",
+        "status": "required"
+      },
+      {
+        "permissionCode": "asset.records.update",
+        "moduleCode": "asset",
+        "status": "required"
+      },
+      {
+        "permissionCode": "asset.reports.create",
+        "moduleCode": "asset",
+        "status": "required"
+      },
+      {
+        "permissionCode": "asset.reports.delete",
+        "moduleCode": "asset",
+        "status": "required"
+      },
+      {
+        "permissionCode": "asset.reports.read",
+        "moduleCode": "asset",
+        "status": "required"
+      },
+      {
+        "permissionCode": "asset.reports.update",
+        "moduleCode": "asset",
+        "status": "required"
+      },
+      {
+        "permissionCode": "asset.settings.create",
+        "moduleCode": "asset",
+        "status": "required"
+      },
+      {
+        "permissionCode": "asset.settings.delete",
+        "moduleCode": "asset",
+        "status": "required"
+      },
+      {
+        "permissionCode": "asset.settings.read",
+        "moduleCode": "asset",
+        "status": "required"
+      },
+      {
+        "permissionCode": "asset.settings.update",
+        "moduleCode": "asset",
+        "status": "required"
+      },
+      {
+        "permissionCode": "asset.workflows.create",
+        "moduleCode": "asset",
+        "status": "required"
+      },
+      {
+        "permissionCode": "asset.workflows.delete",
+        "moduleCode": "asset",
+        "status": "required"
+      },
+      {
+        "permissionCode": "asset.workflows.read",
+        "moduleCode": "asset",
+        "status": "required"
+      },
+      {
+        "permissionCode": "asset.workflows.update",
+        "moduleCode": "asset",
+        "status": "required"
+      }
+    ],
+    "publication": {
+      "pages_table": "dos.dynamic_ui_routes",
+      "nav_groups_table": "dos.ui_module_nav_group",
+      "nav_items_table": "dos.ui_module_nav_item",
+      "widgets_table": "dos.ui_widget_binding",
+      "actions_table": "dos.ui_action_binding",
+      "permissions_table": "platform_dauth.permissions",
+      "preflight_dependency_for_foundation": null
+    }
+  },
+  "resolverContract": {
+    "endpoint": "/api/ui-os/module-runtime/asset",
+    "auth": "session_cookie",
+    "tenancy_scope": "tenant",
+    "snake_case_fields_allowed_only_inside_resolver": true,
+    "browser_facing_camelCase": true,
+    "envelope_ref": "envelopes/module-runtime.envelope.v1-1.json"
+  }
+}

@@ -1,0 +1,135 @@
+{
+  "$schema": "https://dogan-ai.local/schemas/contract-index.v1-1.schema.json",
+  "contractKind": "contract-index",
+  "contractVersion": "1.1.0",
+  "runtimeModel": "v1-1-operating-runtime",
+  "packName": "dogan-shahin-all-contracts-v1-1-operating-runtime",
+  "supersedes": "dogan_shahin_all_contracts_v1_runtime/contract.index.json",
+  "v1FrozenArchive": "platform/ui-system/dos-ui-system/dogan_shahin_all_contracts_v1_runtime/",
+  "generatedAt": "2026-05-07T16:50:00+03:00",
+  "purpose": "Self-contained operating runtime contract pack. Carries the v1 surface PLUS 10 new operating layers (shell operating contract, product runtime, module runtime, tenant runtime, integration runtime, theme runtime, Carbon implementation map, DB publication map, resolver envelope map, frontend consumption map). Resolver loads v1.1 only.",
+  "doctrine": [
+    "ZERO_STATIC",
+    "ZERO_LEGACY",
+    "ZERO_FALLBACK",
+    "ZERO_BROWSER_NORMALIZATION",
+    "DB_AS_SOURCE_OF_TRUTH"
+  ],
+  "criticalRule": "Do not fake V2 surface renderer by mapping dos.* semantic components to whole-page archetype renderers. Carbon usage must follow registries/carbon.implementation.map.v1-1.json. Frontend renders only what UI-OS resolver emits per envelopes/*.envelope.v1-1.json.",
+  "boundary": {
+    "scope": "pack-authoring only",
+    "noDbExecution": true,
+    "noResolverEdits": true,
+    "noFrontendEdits": true,
+    "noCiAutoWiring": true,
+    "v1FrozenUntouched": true
+  },
+  "files": {
+    "root": [
+      "README.md",
+      "contract.index.v1-1.json"
+    ],
+    "platform": [
+      "platform/dogan-ai-os.platform.contract.v1-1.json"
+    ],
+    "product": [
+      "product/shahin.product.contract.v1-1.json"
+    ],
+    "workspace": [
+      "workspace/shahin.workspace.contract.v1-1.json"
+    ],
+    "tenant": [
+      "tenant/tenant.runtime.contract.v1-1.json"
+    ],
+    "theme": [
+      "theme/theme.system.contract.v1-1.json"
+    ],
+    "integrations": [
+      "integrations/integration.runtime.contract.v1-1.json"
+    ],
+    "modules": [
+      "modules/ai.module.contract.v1-1.json",
+      "modules/asset.module.contract.v1-1.json",
+      "modules/audit.module.contract.v1-1.json",
+      "modules/bcp.module.contract.v1-1.json",
+      "modules/compliance.module.contract.v1-1.json",
+      "modules/config-center.module.contract.v1-1.json",
+      "modules/dashboard.module.contract.v1-1.json",
+      "modules/dauth.module.contract.v1-1.json",
+      "modules/dnoc.module.contract.v1-1.json",
+      "modules/dora.module.contract.v1-1.json",
+      "modules/dsoc.module.contract.v1-1.json",
+      "modules/dynamic-ui.module.contract.v1-1.json",
+      "modules/evidence.module.contract.v1-1.json",
+      "modules/foundation.module.contract.v1-1.json",
+      "modules/incident.module.contract.v1-1.json",
+      "modules/policy.module.contract.v1-1.json",
+      "modules/privacy.module.contract.v1-1.json",
+      "modules/qiyas.module.contract.v1-1.json",
+      "modules/remediation.module.contract.v1-1.json",
+      "modules/reports.module.contract.v1-1.json",
+      "modules/risk.module.contract.v1-1.json",
+      "modules/training.module.contract.v1-1.json",
+      "modules/vendor.module.contract.v1-1.json",
+      "modules/workflow.module.contract.v1-1.json"
+    ],
+    "registries": [
+      "registries/component-capability-registry.v1-1.json",
+      "registries/route-catalog.v1-1.json",
+      "registries/permission-catalog.v1-1.json",
+      "registries/carbon.implementation.map.v1-1.json"
+    ],
+    "envelopes": [
+      "envelopes/workspace-runtime.envelope.v1-1.json",
+      "envelopes/product-runtime.envelope.v1-1.json",
+      "envelopes/module-runtime.envelope.v1-1.json",
+      "envelopes/tenant-runtime.envelope.v1-1.json",
+      "envelopes/integration-runtime.envelope.v1-1.json",
+      "envelopes/theme-runtime.envelope.v1-1.json"
+    ],
+    "publicationMap": [
+      "publication-map/db-publication.map.v1-1.json",
+      "publication-map/publication.lockstep.json"
+    ],
+    "consumptionMap": [
+      "consumption-map/frontend.consumption.map.v1-1.json"
+    ],
+    "preflight": [
+      "preflight/blockers.contract.v1-1.json",
+      "preflight/migrations/01_fix_mobile_component_variants_is_default.sql",
+      "preflight/migrations/02_normalize_foundation_item_id.sql",
+      "preflight/migrations/03_align_product_registry_tier.sql",
+      "preflight/migrations/04_canonical_dos_tenants_ddl.sql",
+      "preflight/lockstep.proof.json"
+    ],
+    "ci": [
+      "ci/ci.manifest.v1-1.json"
+    ]
+  },
+  "summary": {
+    "moduleContractCount": 24,
+    "envelopeCount": 6,
+    "preflightBlockerCount": 4,
+    "ciGuardCount": 6,
+    "operatingLayers": [
+      "shell-operating-contract",
+      "product-runtime-contract",
+      "module-runtime-contract",
+      "tenant-runtime-contract",
+      "integration-runtime-contract",
+      "theme-system-contract",
+      "carbon-implementation-map",
+      "db-publication-map",
+      "resolver-envelope-map",
+      "frontend-consumption-map"
+    ]
+  },
+  "acceptance": [
+    "all 24 module contracts present",
+    "all 6 envelope files present",
+    "all 4 preflight SQL files present",
+    "all 6 CI guard specs declared in ci/ci.manifest.v1-1.json",
+    "v1 frozen archive untouched",
+    "no resolver / frontend / CI files mutated"
+  ]
+}

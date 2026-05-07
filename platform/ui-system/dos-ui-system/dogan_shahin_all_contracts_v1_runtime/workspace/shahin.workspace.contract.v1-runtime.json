@@ -1,0 +1,211 @@
+{
+  "$schema": "https://dogan-ai.local/schemas/workspace-contract.v1-runtime.schema.json",
+  "contractKind": "workspace",
+  "generatedAt": "2026-05-07T13:18:19.248054+00:00",
+  "contractVersion": "1.0.0",
+  "runtimeModel": "v1-archetype-runtime",
+  "rule": "Current runtime is route -> one archetype template. dos.* semantic components are requiredRegions only, not fake DB component_key rows, until V2 surface renderer exists.",
+  "forbidden": [
+    "fake_component_map_closure",
+    "register_dos_semantic_components_as_full_page_templates",
+    "static_nav_fallback",
+    "hardcoded_workspace_modules",
+    "hardcoded_workspace_routes",
+    "prime_ng_workspace_shell",
+    "material_workspace_shell",
+    "localStorage_auth_token",
+    "sessionStorage_auth_token",
+    "silent_renderer_fallback",
+    "random_css_mobile_patch"
+  ],
+  "workspaceKey": "shahin.workspace",
+  "productKey": "shahin-ai",
+  "route": "/workspace-home",
+  "authRequired": true,
+  "bootstrapEndpoint": "/api/workspace/bootstrap",
+  "accessStore": {
+    "mustExpose": [
+      "actor",
+      "tenant",
+      "workspace",
+      "roles",
+      "permissions",
+      "modules",
+      "routes",
+      "nav",
+      "widgets",
+      "actions",
+      "shell",
+      "trialState"
+    ],
+    "methods": [
+      "hasPermission",
+      "hasRole",
+      "canAccessModule",
+      "canRenderRoute",
+      "canRenderWidget",
+      "canExecuteAction"
+    ],
+    "forbiddenSources": [
+      "static_module_list",
+      "static_nav_array",
+      "localStorage_token",
+      "sessionStorage_token"
+    ]
+  },
+  "shellFrame": {
+    "source": "workspace_shell_binding",
+    "structuralOnly": true,
+    "surfaces": [
+      {
+        "surfaceKey": "workspace.shell.root",
+        "slot": "shell.root",
+        "carbonKeys": [
+          "ui-shell",
+          "content"
+        ],
+        "required": true
+      },
+      {
+        "surfaceKey": "workspace.header",
+        "slot": "shell.header",
+        "carbonKeys": [
+          "header",
+          "header-name",
+          "header-navigation",
+          "header-global-bar",
+          "header-global-action"
+        ],
+        "required": true
+      },
+      {
+        "surfaceKey": "workspace.sidebar",
+        "slot": "shell.sidebar",
+        "carbonKeys": [
+          "side-nav",
+          "side-nav-items",
+          "side-nav-menu",
+          "side-nav-menu-item",
+          "side-nav-link"
+        ],
+        "required": true
+      },
+      {
+        "surfaceKey": "workspace.mobile.drawer",
+        "slot": "shell.mobile.drawer",
+        "carbonKeys": [
+          "side-nav",
+          "side-nav-items"
+        ],
+        "required": true
+      },
+      {
+        "surfaceKey": "workspace.mobile.bottomNav",
+        "slot": "shell.mobile.bottomNav",
+        "carbonKeys": [
+          "button",
+          "tag"
+        ],
+        "required": true
+      },
+      {
+        "surfaceKey": "workspace.accountMenu",
+        "slot": "shell.header.account",
+        "carbonKeys": [
+          "popover",
+          "structured-list",
+          "button"
+        ],
+        "required": true
+      },
+      {
+        "surfaceKey": "workspace.statusBanner",
+        "slot": "shell.banner",
+        "carbonKeys": [
+          "inline-notification",
+          "tag"
+        ],
+        "required": false
+      }
+    ]
+  },
+  "workspaceHomePage": {
+    "important": "workspace home actionQueue and ai are page content, not shell frame, unless explicitly promoted to global shell.",
+    "pageKey": "workspace.home",
+    "route": "/workspace-home",
+    "pageType": "overview",
+    "componentKey": "workspace.home.archetype",
+    "rendererKey": "WorkspaceHomeTemplateComponent",
+    "permission": "shahin.workspace.read",
+    "semanticRegions": [
+      {
+        "regionKey": "page_header",
+        "semanticComponent": "dos.page-header"
+      },
+      {
+        "regionKey": "module_cards",
+        "semanticComponent": "dos.metric-grid"
+      },
+      {
+        "regionKey": "action_queue",
+        "semanticComponent": "dos.records-table"
+      },
+      {
+        "regionKey": "ai_insights",
+        "semanticComponent": "dos.ai-insight-panel"
+      }
+    ],
+    "dataSources": {
+      "moduleCards": "/api/ui-os/workspace-runtime/modules",
+      "actionQueue": "/api/workspace/action-queue",
+      "aiInsights": "/api/ai/workspace/insights"
+    }
+  },
+  "navigationPolicy": {
+    "source": "/api/ui-os/workspace/nav",
+    "filters": [
+      "tenant_entitlement",
+      "module_status",
+      "route_contract",
+      "permission"
+    ],
+    "fallbackAfterAuth": "forbidden"
+  },
+  "responsivePolicy": {
+    "mobile": {
+      "layout": "single_column",
+      "overflowX": "forbidden",
+      "sideNav": "drawer_or_bottom_nav",
+      "cards": "full_width",
+      "tables": "card_list_preferred",
+      "tabs": "scrollable_or_stacked",
+      "actions": "overflow_menu_or_bottom_sheet",
+      "rightAside": "below_main",
+      "safeArea": "required"
+    },
+    "tablet": {
+      "layout": "two_column_when_space",
+      "tables": "compact_data_table",
+      "sideNav": "drawer_or_collapsed"
+    },
+    "desktop": {
+      "layout": "carbon_grid",
+      "sideNav": "visible",
+      "tables": "full_data_table",
+      "actions": "toolbar"
+    },
+    "rtl": {
+      "required": true,
+      "logicalCssOnly": true,
+      "directionSource": "i18n_runtime"
+    }
+  },
+  "acceptance": [
+    "workspace_shell_binding_structural_surfaces_exist",
+    "workspace_home_content_not_inserted_into_shell_binding_unless_global",
+    "access_store_controls_visibility",
+    "mobile_no_horizontal_overflow",
+    "rtl_pass",
+    "desktop_pass"
+  ]
+}

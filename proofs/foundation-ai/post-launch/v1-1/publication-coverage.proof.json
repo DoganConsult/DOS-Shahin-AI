@@ -1,0 +1,9 @@
+{
+  "guardId": "lint-v1-1-publication-coverage",
+  "status": "PASS",
+  "publicationEntries": 67,
+  "lockstepRows": 67,
+  "failureCount": 0,
+  "failures": [],
+  "generatedAt": "2026-05-07T17:07:20.404Z"
+}

@@ -1,0 +1,125 @@
+{
+  "$schema": "https://dogan-ai.local/schemas/theme-system-contract.v1-1.schema.json",
+  "contractKind": "theme-system",
+  "contractVersion": "1.1.0",
+  "runtimeModel": "v1-1-operating-runtime",
+  "generatedAt": "2026-05-07T16:50:00+03:00",
+  "rule": "Theme tokens flow DB -> UI-OS resolver -> Carbon CSS variables. Frontend never invents, hardcodes, or mutates theme tokens.",
+  "doctrine": [
+    "ZERO_STATIC",
+    "ZERO_LEGACY",
+    "ZERO_FALLBACK",
+    "ZERO_BROWSER_NORMALIZATION",
+    "DB_AS_SOURCE_OF_TRUTH"
+  ],
+  "forbidden": [
+    "hardcoded_hex_in_components",
+    "random_css_color_overrides",
+    "localStorage_as_theme_source_of_truth",
+    "frontend_only_theme_switching_without_db_runtime_sync",
+    "css_var_with_literal_fallback",
+    "static_theme_tokens_in_ts",
+    "module_specific_color_palette_in_frontend",
+    "branded_hex_in_carbon_overrides_scss"
+  ],
+  "themeRuntime": {
+    "fieldList": [
+      "themeId",
+      "themeName",
+      "carbonTheme",
+      "tokens",
+      "carbonCssVariables",
+      "rtl",
+      "appliedFrom",
+      "version"
+    ],
+    "sourcePriority": [
+      { "rank": 1, "source": "tenant_brand_tokens",   "table": "dos.ui_tenant_branding",  "scope": "tenant" },
+      { "rank": 2, "source": "product_brand_tokens",  "table": "dos.ui_product_branding", "scope": "product" },
+      { "rank": 3, "source": "platform_default_tokens", "table": "dos.brand_config",      "scope": "platform" },
+      { "rank": 4, "source": "ibm_carbon_default_theme", "table": null,                   "scope": "carbon-builtin" }
+    ],
+    "supportedCarbonThemes": [
+      { "key": "white", "kind": "light",   "carbonClass": "cds--white" },
+      { "key": "g10",   "kind": "light",   "carbonClass": "cds--g10" },
+      { "key": "g90",   "kind": "dark",    "carbonClass": "cds--g90" },
+      { "key": "g100",  "kind": "dark",    "carbonClass": "cds--g100" }
+    ],
+    "requiredTokens": [
+      { "token": "background",     "carbonVar": "--cds-background",      "purpose": "page background" },
+      { "token": "layer",          "carbonVar": "--cds-layer",           "purpose": "first elevation layer (tile, panel)" },
+      { "token": "layerAccent",    "carbonVar": "--cds-layer-accent",    "purpose": "secondary layer accents" },
+      { "token": "field",          "carbonVar": "--cds-field",           "purpose": "input field background" },
+      { "token": "borderSubtle",   "carbonVar": "--cds-border-subtle",   "purpose": "subtle dividers" },
+      { "token": "borderStrong",   "carbonVar": "--cds-border-strong",   "purpose": "strong dividers, focus rings" },
+      { "token": "textPrimary",    "carbonVar": "--cds-text-primary",    "purpose": "body text" },
+      { "token": "textSecondary",  "carbonVar": "--cds-text-secondary",  "purpose": "secondary text" },
+      { "token": "linkPrimary",    "carbonVar": "--cds-link-primary",    "purpose": "primary link" },
+      { "token": "supportError",   "carbonVar": "--cds-support-error",   "purpose": "error semantic" },
+      { "token": "supportSuccess", "carbonVar": "--cds-support-success", "purpose": "success semantic" },
+      { "token": "supportWarning", "carbonVar": "--cds-support-warning", "purpose": "warning semantic" },
+      { "token": "supportInfo",    "carbonVar": "--cds-support-info",    "purpose": "informational semantic" },
+      { "token": "brandPrimary",   "carbonVar": "--dos-brand-primary",   "purpose": "tenant/product primary brand color" },
+      { "token": "brandSecondary", "carbonVar": "--dos-brand-secondary", "purpose": "tenant/product secondary brand color" },
+      { "token": "brandAccent",    "carbonVar": "--dos-brand-accent",    "purpose": "tenant/product accent" }
+    ],
+    "frontendRule": [
+      "Shell receives theme tokens from workspace-runtime / product-runtime / tenant-runtime envelopes (resolver merges per sourcePriority).",
+      "Carbon CSS variables are applied from runtime tokens.",
+      "Theme switch dispatches an action to the resolver; result is persisted to DB and re-emitted via runtime envelopes.",
+      "If runtime tokens are absent, frontend renders an empty themed shell (Carbon default theme via class only)."
+    ],
+    "resolverContract": {
+      "endpoint": "/api/ui-os/theme-runtime",
+      "auth": "session_cookie",
+      "tenancy_scope": "tenant",
+      "merge_strategy": "deep_merge_by_source_priority_rank",
+      "emit_shape": {
+        "themeId": "string",
+        "themeName": "string",
+        "carbonTheme": "white|g10|g90|g100",
+        "tokens": "Record<token,string-color-or-token-ref>",
+        "carbonCssVariables": "Record<--cds-*,--var-value>",
+        "rtl": "boolean",
+        "appliedFrom": "Array<{rank:number, source:string}>",
+        "version": "integer"
+      },
+      "snake_case_fields_allowed_only_inside_resolver": true,
+      "browser_facing_camelCase": true
+    },
+    "publication": {
+      "primary_table": "dos.brand_config",
+      "tenant_overrides_table": "dos.ui_tenant_branding",
+      "product_overrides_table": "dos.ui_product_branding",
+      "tokens_jsonb_path": "theme_tokens",
+      "css_overrides_jsonb_path": "css_overrides",
+      "idempotency_rule": "ON CONFLICT (scope_key) DO UPDATE SET theme_tokens = EXCLUDED.theme_tokens",
+      "audit_table": "dos.audit_trail",
+      "validation_query_id": "publication.theme.coverage.v1_1"
+    }
+  },
+  "carbonImplementationMap": {
+    "shellSurfaceClassMap": {
+      "shell.root":   "cds--theme",
+      "shell.header": "cds--theme",
+      "shell.sidebar": "cds--theme"
+    },
+    "scopeOrder": [
+      "tenant.themeTokens",
+      "product.themeTokens",
+      "platform.themeTokens",
+      "carbon.builtinTheme"
+    ],
+    "rtlClassMap": {
+      "ltr": "cds--ltr",
+      "rtl": "cds--rtl"
+    }
+  },
+  "acceptance": [
+    "themeRuntime.requiredTokens length matches 16",
+    "themeRuntime.supportedCarbonThemes contains white, g10, g90, g100",
+    "themeRuntime.sourcePriority is monotone increasing rank with no gaps",
+    "frontendRule contains no hardcoded color values",
+    "publication.primary_table exists and is populated by 20260515_1500_seed_shahin_brand_config.sql"
+  ]
+}

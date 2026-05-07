@@ -87,6 +87,7 @@ export * from './shell/mobile-bottom-nav.component';
 export * from './shell/workspace-header.component';
 export * from './shell/surface-renderer.component';
 export * from './shell/visual-shell-surfaces.component';
+export * from './shell/frame-shell-surfaces.component';
 export * from './shell/shell-state.service';
 export * from './shell/quick-create.component';
 export * from './shell/workspace-shell.contracts';

@@ -27,17 +27,17 @@ export interface MobileShellConfig {
     </div>
   `,
   styles: [`
-    :host { display: block; min-height: 100vh; }
+    :host { display: block; min-block-size: 100dvh; }
     .dos-mobile-shell {
       display: grid; grid-template-rows: auto 1fr auto;
-      min-height: 100vh; background: var(--cds-background);
+      min-block-size: 100dvh; background: var(--cds-background);
     }
     .dos-mobile-shell--compact {
       --mobile-padding: 8px;
     }
-    .dos-mobile-shell__header { position: sticky; top: 0; z-index: var(--dos-z-sticky); }
-    .dos-mobile-shell__main   { min-width: 0; overflow-x: hidden; padding-bottom: var(--cds-spacing-14); }
-    .dos-mobile-shell__bottom { position: sticky; bottom: 0; z-index: var(--dos-z-sticky);
+    .dos-mobile-shell__header { position: sticky; inset-block-start: 0; z-index: var(--dos-z-sticky); }
+    .dos-mobile-shell__main   { min-width: 0; overflow-x: hidden; padding-block-end: var(--cds-spacing-14); }
+    .dos-mobile-shell__bottom { position: sticky; inset-block-end: 0; z-index: var(--dos-z-sticky);
                                 border-block-start: 1px solid var(--cds-border-subtle-01); }
   `],
 })

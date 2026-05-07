@@ -84,7 +84,12 @@ export class DosMobileBottomNavComponent {
   @Input() ariaLabel: string | null = null;
   @Input() maxItems = 5;
   @Input() touchEnabled = true;
-  @Input() touchTargetSize = 44;
+  // Sentinel 0 — parent must pass shell.touchTargets.minSizePx from
+  // the workspace-runtime envelope. The [style.min-height.px] binding
+  // emits "0px" when the runtime value has not yet arrived, leaving
+  // the inherent CSS min-height (cds--spacing-14) as the layout
+  // primitive. There is no static 44 fallback here.
+  @Input() touchTargetSize = 0;
   @Input() iconSize = 22;
   @Input() hapticFeedback = true;
   @Output() select = new EventEmitter<DosBottomNavItem>();

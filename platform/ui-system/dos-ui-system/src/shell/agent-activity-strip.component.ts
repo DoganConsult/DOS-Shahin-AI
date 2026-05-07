@@ -32,13 +32,6 @@ const STATE_TAG: Record<AgentState, DosCarbonTagType> = {
   idle:              'gray',
 };
 
-const STATE_LABEL: Record<AgentState, string> = {
-  running:           'Running',
-  'awaiting-approval': 'Approval needed',
-  done:              'Done',
-  error:             'Error',
-  idle:              'Idle',
-};
 
 @Component({
   selector: 'dos-agent-activity-strip',
@@ -96,22 +89,22 @@ const STATE_LABEL: Record<AgentState, string> = {
                   }
                 </div>
 
-                <!-- State tag -->
+                <!-- State tag — label from DB-emitted step.label; tag colour from state -->
                 <dos-carbon-tag
                   [type]="stateTag(a.state)"
                   size="sm"
                   class="dos-agent-tile__state"
                   [class.dos-agent-tile__state--awaiting]="a.state === 'awaiting-approval'">
-                  {{ STATE_LABEL[a.state] }}
+                  {{ a.step?.label ?? a.step?.fallback ?? a.step?.i18nKey ?? '' }}
                 </dos-carbon-tag>
               </cds-clickable-tile>
             </li>
           }
         </ul>
-      } @else if (!loading) {
+      } @else if (!loading && emptyText) {
         <div class="dos-agent-strip__empty">
           <dos-icon name="bot" [size]="20" class="dos-agent-strip__empty-icon"></dos-icon>
-          <span>{{ emptyText || 'No active agents.' }}</span>
+          <span>{{ emptyText }}</span>
         </div>
       }
     </nav>
@@ -298,8 +291,6 @@ const STATE_LABEL: Record<AgentState, string> = {
   `],
 })
 export class DosAgentActivityStripComponent {
-  protected readonly STATE_LABEL = STATE_LABEL;
-
   @Input() agents: AgentActivity[] = [];
   @Input() mobileMode = false;
   @Input() loading = false;

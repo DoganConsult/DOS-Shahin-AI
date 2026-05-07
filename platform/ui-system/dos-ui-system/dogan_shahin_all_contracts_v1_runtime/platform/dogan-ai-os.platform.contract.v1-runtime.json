@@ -1,0 +1,353 @@
+{
+  "$schema": "https://dogan-ai.local/schemas/platform-contract.v1-runtime.schema.json",
+  "contractKind": "platform",
+  "generatedAt": "2026-05-07T13:18:19.248054+00:00",
+  "contractVersion": "1.0.0",
+  "runtimeModel": "v1-archetype-runtime",
+  "rule": "Current runtime is route -> one archetype template. dos.* semantic components are requiredRegions only, not fake DB component_key rows, until V2 surface renderer exists.",
+  "forbidden": [
+    "fake_component_map_closure",
+    "register_dos_semantic_components_as_full_page_templates",
+    "static_nav_fallback",
+    "hardcoded_workspace_modules",
+    "hardcoded_workspace_routes",
+    "prime_ng_workspace_shell",
+    "material_workspace_shell",
+    "localStorage_auth_token",
+    "sessionStorage_auth_token",
+    "silent_renderer_fallback",
+    "random_css_mobile_patch"
+  ],
+  "platformKey": "dogan-ai-os",
+  "owner": "Dogan Consult",
+  "products": [
+    "shahin-ai"
+  ],
+  "sourceOfTruthPolicy": {
+    "workspaceAfterAuth": "DB/runtime resolver only",
+    "staticRoutesAllowed": "public/pre-auth only",
+    "componentRegistry": "archetype template keys in V1; semantic dos.* components are requiredRegions only",
+    "v2Target": "true surface renderer with dos.* component keys as real renderable component keys"
+  },
+  "coreRegistries": [
+    "dos.product_registry",
+    "dos.module_registry",
+    "dos.dynamic_ui_routes",
+    "dos.dynamic_ui_component_registry",
+    "dos.navigation_registry",
+    "dos.ui_widget_binding",
+    "dos.ui_action_binding",
+    "dos.ui_carbon_components",
+    "platform_dauth.permissions",
+    "platform_dauth.role_permissions",
+    "dos.i18n_catalog"
+  ],
+  "moduleCount": 24,
+  "modules": [
+    {
+      "code": "foundation",
+      "name": {
+        "en": "Foundation",
+        "ar": "التأسيس"
+      },
+      "category": "platform-base",
+      "owner": "user-service",
+      "routeBase": "/foundation",
+      "status": "active",
+      "default": true
+    },
+    {
+      "code": "risk",
+      "name": {
+        "en": "Risk",
+        "ar": "المخاطر"
+      },
+      "category": "grc-core",
+      "owner": "risk-incident-service",
+      "routeBase": "/risk",
+      "status": "active",
+      "default": false
+    },
+    {
+      "code": "compliance",
+      "name": {
+        "en": "Compliance",
+        "ar": "الامتثال"
+      },
+      "category": "grc-core",
+      "owner": "compliance-controls-service",
+      "routeBase": "/compliance",
+      "status": "active",
+      "default": false
+    },
+    {
+      "code": "policy",
+      "name": {
+        "en": "Policy",
+        "ar": "السياسات"
+      },
+      "category": "grc-core",
+      "owner": "governance-policy-service",
+      "routeBase": "/policy",
+      "status": "active",
+      "default": false
+    },
+    {
+      "code": "incident",
+      "name": {
+        "en": "Incident",
+        "ar": "الحوادث"
+      },
+      "category": "grc-core",
+      "owner": "risk-incident-service",
+      "routeBase": "/incident",
+      "status": "active",
+      "default": false
+    },
+    {
+      "code": "workflow",
+      "name": {
+        "en": "Workflow",
+        "ar": "سير العمل"
+      },
+      "category": "platform-workflow",
+      "owner": "workflow-service",
+      "routeBase": "/workflow",
+      "status": "active",
+      "default": true
+    },
+    {
+      "code": "audit",
+      "name": {
+        "en": "Audit",
+        "ar": "التدقيق"
+      },
+      "category": "assurance",
+      "owner": "audit-service",
+      "routeBase": "/audit",
+      "status": "active",
+      "default": false
+    },
+    {
+      "code": "evidence",
+      "name": {
+        "en": "Evidence",
+        "ar": "الأدلة"
+      },
+      "category": "assurance",
+      "owner": "evidence-audit-reporting-service",
+      "routeBase": "/evidence",
+      "status": "active",
+      "default": false
+    },
+    {
+      "code": "vendor",
+      "name": {
+        "en": "Vendor",
+        "ar": "الموردون"
+      },
+      "category": "third-party-risk",
+      "owner": "vendor-service",
+      "routeBase": "/vendor",
+      "status": "active",
+      "default": false
+    },
+    {
+      "code": "asset",
+      "name": {
+        "en": "Asset",
+        "ar": "الأصول"
+      },
+      "category": "operations-risk",
+      "owner": "asset-service",
+      "routeBase": "/asset",
+      "status": "active",
+      "default": false
+    },
+    {
+      "code": "privacy",
+      "name": {
+        "en": "Privacy",
+        "ar": "الخصوصية"
+      },
+      "category": "privacy",
+      "owner": "privacy-service",
+      "routeBase": "/privacy",
+      "status": "active",
+      "default": false
+    },
+    {
+      "code": "bcp",
+      "name": {
+        "en": "BCP",
+        "ar": "استمرارية الأعمال"
+      },
+      "category": "resilience",
+      "owner": "bcp-service",
+      "routeBase": "/bcp",
+      "status": "active",
+      "default": false
+    },
+    {
+      "code": "dora",
+      "name": {
+        "en": "DORA",
+        "ar": "DORA"
+      },
+      "category": "regulatory",
+      "owner": "dora-service",
+      "routeBase": "/dora",
+      "status": "active",
+      "default": false
+    },
+    {
+      "code": "qiyas",
+      "name": {
+        "en": "Qiyas",
+        "ar": "قياس"
+      },
+      "category": "regulatory",
+      "owner": "qiyas-service",
+      "routeBase": "/qiyas",
+      "status": "active",
+      "default": false
+    },
+    {
+      "code": "training",
+      "name": {
+        "en": "Training",
+        "ar": "التدريب"
+      },
+      "category": "awareness",
+      "owner": "training-service",
+      "routeBase": "/training",
+      "status": "active",
+      "default": false
+    },
+    {
+      "code": "remediation",
+      "name": {
+        "en": "Remediation",
+        "ar": "المعالجة"
+      },
+      "category": "grc-core",
+      "owner": "remediation-service",
+      "routeBase": "/remediation",
+      "status": "active",
+      "default": false
+    },
+    {
+      "code": "reports",
+      "name": {
+        "en": "Reports",
+        "ar": "التقارير"
+      },
+      "category": "analytics",
+      "owner": "analytics-reporting-service",
+      "routeBase": "/reports",
+      "status": "active",
+      "default": false
+    },
+    {
+      "code": "dashboard",
+      "name": {
+        "en": "Dashboard",
+        "ar": "لوحات المؤشرات"
+      },
+      "category": "analytics",
+      "owner": "dashboard-widgets-service",
+      "routeBase": "/dashboard",
+      "status": "active",
+      "default": false
+    },
+    {
+      "code": "config-center",
+      "name": {
+        "en": "Config Center",
+        "ar": "مركز الإعدادات"
+      },
+      "category": "platform-admin",
+      "owner": "tenant-service",
+      "routeBase": "/config-center",
+      "status": "platform_shared",
+      "default": true
+    },
+    {
+      "code": "dynamic-ui",
+      "name": {
+        "en": "Dynamic UI",
+        "ar": "الواجهة الديناميكية"
+      },
+      "category": "platform-runtime",
+      "owner": "dynamic-ui-service",
+      "routeBase": "/dynamic-ui",
+      "status": "platform_shared",
+      "default": true
+    },
+    {
+      "code": "ai",
+      "name": {
+        "en": "AI",
+        "ar": "الذكاء الاصطناعي"
+      },
+      "category": "platform-ai",
+      "owner": "ai-engine-service",
+      "routeBase": "/ai",
+      "status": "platform_shared",
+      "default": true
+    },
+    {
+      "code": "dauth",
+      "name": {
+        "en": "DAuth",
+        "ar": "الهوية والصلاحيات"
+      },
+      "category": "identity-access",
+      "owner": "auth-service",
+      "routeBase": "/dauth",
+      "status": "platform_shared",
+      "default": true
+    },
+    {
+      "code": "dsoc",
+      "name": {
+        "en": "DSOC",
+        "ar": "مركز عمليات الأمن"
+      },
+      "category": "security-ops",
+      "owner": "security-ops-service",
+      "routeBase": "/dsoc",
+      "status": "active",
+      "default": false
+    },
+    {
+      "code": "dnoc",
+      "name": {
+        "en": "DNOC",
+        "ar": "مركز عمليات الشبكات"
+      },
+      "category": "network-ops",
+      "owner": "network-ops-service",
+      "routeBase": "/dnoc",
+      "status": "active",
+      "default": false
+    }
+  ],
+  "runtimeEndpoints": {
+    "session": "/api/auth/oidc/session",
+    "workspaceBootstrap": "/api/workspace/bootstrap",
+    "permissions": "/api/access/my-permissions",
+    "workspaceNav": "/api/ui-os/workspace/nav",
+    "workspaceRuntime": "/api/ui-os/workspace-runtime",
+    "pageExperience": "/api/dynamic-ui/page-experience?route=:route"
+  },
+  "acceptanceGates": [
+    "contracts_validate_against_schema",
+    "routes_reconciled_contract_vs_db",
+    "archetype_keys_exist_in_template_registry",
+    "permissions_bound_to_roles",
+    "gateway_protected_mounts_return_401_not_404",
+    "workspace_bootstrap_loads_actor_tenant_access_ui",
+    "mobile_desktop_rtl_visual_proof"
+  ]
+}

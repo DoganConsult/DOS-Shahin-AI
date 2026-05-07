@@ -151,7 +151,7 @@ export class CarbonDialogRenderer {
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, UIShellModule],
-  template: `<a class="cds--skip-to-content" href="#main-content">{{ label || 'Skip to content' }}</a>`,
+  template: `<a class="cds--skip-to-content" href="#main-content">{{ label }}</a>`,
 })
 export class CarbonSkipToContentRenderer {
   @Input() label = '';

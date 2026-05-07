@@ -1,0 +1,59 @@
+{
+  "$schema": "https://dogan-ai.local/schemas/runtime-envelope.v1-1.schema.json",
+  "contractKind": "runtime-envelope",
+  "envelopeKey": "theme-runtime",
+  "contractVersion": "1.1.0",
+  "runtimeModel": "v1-1-operating-runtime",
+  "endpoint": "/api/ui-os/theme-runtime",
+  "method": "GET",
+  "auth": "session_cookie",
+  "tenancy_scope": "tenant",
+  "rule": "Theme tokens flow DB -> UI-OS resolver -> Carbon CSS variables. Two valid implementation shapes are specified; resolver implementation chooses one in a later step.",
+  "doctrine": ["ZERO_STATIC","ZERO_LEGACY","ZERO_FALLBACK"],
+  "shapeStandalone": {
+    "tenantId":     "string",
+    "version":      "integer",
+    "themeRuntime": {
+      "themeId":            "string",
+      "themeName":          "string",
+      "carbonTheme":        "enum<white|g10|g90|g100>",
+      "tokens":             "Record<token,string>",
+      "carbonCssVariables": "Record<--cds-*,string>",
+      "rtl":                "boolean",
+      "appliedFrom":        "Array<{rank,source}>",
+      "version":            "integer"
+    }
+  },
+  "shapeFolded": {
+    "rule": "When folded, themeRuntime is delivered inside workspace-runtime.shell.themeTokens AND product-runtime.productRuntime.theme AND tenant-runtime.tenantRuntime.themeTokens. Frontend merges by themeRuntime.appliedFrom rank order.",
+    "deliveredBy": [
+      "envelopes/workspace-runtime.envelope.v1-1.json#shell.theme (resolver-computed merged)",
+      "envelopes/product-runtime.envelope.v1-1.json#productRuntime.theme",
+      "envelopes/tenant-runtime.envelope.v1-1.json#tenantRuntime.themeTokens"
+    ]
+  },
+  "forbiddenFields": [
+    "themeRuntime.theme_id (use themeId)",
+    "themeRuntime.css_variables (use carbonCssVariables)",
+    "themeRuntime.tokens.<key> as hex literal in frontend constants"
+  ],
+  "exampleStandaloneResponse": {
+    "tenantId": "00000000-0000-0000-0000-000000000000",
+    "version": 1,
+    "themeRuntime": {
+      "themeId": "default",
+      "themeName": "Carbon G10",
+      "carbonTheme": "g10",
+      "tokens": {},
+      "carbonCssVariables": {},
+      "rtl": false,
+      "appliedFrom": [],
+      "version": 1
+    }
+  },
+  "consumers": [
+    "platform/core/platform/shell/shell-host.component.ts",
+    "platform/ui-system/dos-ui-system/src/carbon/dos-carbon-header-shell.component.ts"
+  ],
+  "publishedBy": "theme/theme.system.contract.v1-1.json"
+}

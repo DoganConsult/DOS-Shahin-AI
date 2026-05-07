@@ -1,0 +1,644 @@
+{
+  "$schema": "https://dogan-ai.local/schemas/module-contract.v1-runtime.schema.json",
+  "contractKind": "module",
+  "generatedAt": "2026-05-07T13:18:19.248054+00:00",
+  "contractVersion": "1.0.0",
+  "runtimeModel": "v1-archetype-runtime",
+  "rule": "Current runtime is route -> one archetype template. dos.* semantic components are requiredRegions only, not fake DB component_key rows, until V2 surface renderer exists.",
+  "forbidden": [
+    "fake_component_map_closure",
+    "register_dos_semantic_components_as_full_page_templates",
+    "static_nav_fallback",
+    "hardcoded_workspace_modules",
+    "hardcoded_workspace_routes",
+    "prime_ng_workspace_shell",
+    "material_workspace_shell",
+    "localStorage_auth_token",
+    "sessionStorage_auth_token",
+    "silent_renderer_fallback",
+    "random_css_mobile_patch"
+  ],
+  "productKey": "shahin-ai",
+  "moduleCode": "audit",
+  "moduleName": {
+    "en": "Audit",
+    "ar": "التدقيق"
+  },
+  "category": "assurance",
+  "routeBase": "/audit",
+  "ownerService": "audit-service",
+  "status": "active",
+  "defaultEnabled": false,
+  "uiVendor": "ibm-carbon",
+  "renderingMode": "dynamic-ui-contract-first-v1-archetype",
+  "pageCount": 6,
+  "pages": [
+    {
+      "pageKey": "audit.overview",
+      "route": "/audit/overview",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "overview",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "audit.overview.archetype",
+      "rendererKey": "ModuleOverviewTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "status-banner",
+          "semanticComponent": "dos.status-banner",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "metric-grid",
+          "semanticComponent": "dos.metric-grid",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "structured-summary-card",
+          "semanticComponent": "dos.structured-summary-card",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "readiness-panel",
+          "semanticComponent": "dos.readiness-panel",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "recommendation-list",
+          "semanticComponent": "dos.recommendation-list",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "audit-service",
+      "apiEndpoint": "/api/audit/overview",
+      "dbEntities": [
+        "dos.audit_overview"
+      ],
+      "readPermission": "audit.overview.read",
+      "writePermissions": [],
+      "columns": [],
+      "titleKey": "audit.overview.title",
+      "subtitleKey": "audit.overview.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "audit.overview.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "audit.overview.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "audit.overview.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "audit.records",
+      "route": "/audit/records",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "records_table",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "audit.records_table.archetype",
+      "rendererKey": "ModuleRecordsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "status-banner",
+          "semanticComponent": "dos.status-banner",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "metric-grid",
+          "semanticComponent": "dos.metric-grid",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "records-table",
+          "semanticComponent": "dos.records-table",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "form-modal",
+          "semanticComponent": "dos.form-modal",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "empty-state",
+          "semanticComponent": "dos.empty-state",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "audit-service",
+      "apiEndpoint": "/api/audit/records",
+      "dbEntities": [
+        "dos.audit_records"
+      ],
+      "readPermission": "audit.records.read",
+      "writePermissions": [
+        "audit.records.create",
+        "audit.records.update",
+        "audit.records.delete"
+      ],
+      "columns": [
+        "name",
+        "owner",
+        "status",
+        "risk",
+        "updated_at"
+      ],
+      "titleKey": "audit.records.title",
+      "subtitleKey": "audit.records.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "audit.records.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "audit.records.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "audit.records.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "audit.workflows",
+      "route": "/audit/workflows",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "workflow",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "audit.workflow.archetype",
+      "rendererKey": "WorkflowRecordsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "metric-grid",
+          "semanticComponent": "dos.metric-grid",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "workflow-panel",
+          "semanticComponent": "dos.workflow-panel",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "records-table",
+          "semanticComponent": "dos.records-table",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "status-banner",
+          "semanticComponent": "dos.status-banner",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "audit-service",
+      "apiEndpoint": "/api/audit/workflows",
+      "dbEntities": [
+        "dos.audit_workflows"
+      ],
+      "readPermission": "audit.workflows.read",
+      "writePermissions": [
+        "audit.workflows.create",
+        "audit.workflows.update",
+        "audit.workflows.delete"
+      ],
+      "columns": [
+        "name",
+        "owner",
+        "status",
+        "risk",
+        "updated_at"
+      ],
+      "titleKey": "audit.workflows.title",
+      "subtitleKey": "audit.workflows.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "audit.workflows.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "audit.workflows.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "audit.workflows.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "audit.reports",
+      "route": "/audit/reports",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "reports",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "audit.reports.archetype",
+      "rendererKey": "ModuleReportsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "metric-grid",
+          "semanticComponent": "dos.metric-grid",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "records-table",
+          "semanticComponent": "dos.records-table",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "form-modal",
+          "semanticComponent": "dos.form-modal",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "audit-service",
+      "apiEndpoint": "/api/audit/reports",
+      "dbEntities": [
+        "dos.audit_reports"
+      ],
+      "readPermission": "audit.reports.read",
+      "writePermissions": [
+        "audit.reports.create",
+        "audit.reports.update",
+        "audit.reports.delete"
+      ],
+      "columns": [
+        "name",
+        "owner",
+        "status",
+        "risk",
+        "updated_at"
+      ],
+      "titleKey": "audit.reports.title",
+      "subtitleKey": "audit.reports.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "audit.reports.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "audit.reports.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "audit.reports.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "audit.settings",
+      "route": "/audit/settings",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "settings",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "audit.settings.archetype",
+      "rendererKey": "ModuleSettingsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "tabs",
+          "semanticComponent": "dos.tabs",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "settings-panel",
+          "semanticComponent": "dos.settings-panel",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "status-banner",
+          "semanticComponent": "dos.status-banner",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "audit-service",
+      "apiEndpoint": "/api/audit/settings",
+      "dbEntities": [
+        "dos.audit_settings"
+      ],
+      "readPermission": "audit.settings.read",
+      "writePermissions": [
+        "audit.settings.create",
+        "audit.settings.update",
+        "audit.settings.delete"
+      ],
+      "columns": [],
+      "titleKey": "audit.settings.title",
+      "subtitleKey": "audit.settings.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "audit.settings.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "audit.settings.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "audit.settings.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "audit.ai-insights",
+      "route": "/audit/ai-insights",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "ai_insights",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "audit.ai_insights.archetype",
+      "rendererKey": "AiInsightsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "ai-insight-panel",
+          "semanticComponent": "dos.ai-insight-panel",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "records-table",
+          "semanticComponent": "dos.records-table",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "recommendation-list",
+          "semanticComponent": "dos.recommendation-list",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "audit-service",
+      "apiEndpoint": "/api/audit/ai-insights",
+      "dbEntities": [
+        "dos.audit_ai_insights"
+      ],
+      "readPermission": "audit.ai_insights.read",
+      "writePermissions": [],
+      "columns": [],
+      "titleKey": "audit.ai-insights.title",
+      "subtitleKey": "audit.ai-insights.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "audit.ai-insights.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "audit.ai-insights.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "audit.ai-insights.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    }
+  ],
+  "permissions": [
+    {
+      "permissionCode": "audit.ai_insights.read",
+      "moduleCode": "audit",
+      "status": "required"
+    },
+    {
+      "permissionCode": "audit.overview.read",
+      "moduleCode": "audit",
+      "status": "required"
+    },
+    {
+      "permissionCode": "audit.records.create",
+      "moduleCode": "audit",
+      "status": "required"
+    },
+    {
+      "permissionCode": "audit.records.delete",
+      "moduleCode": "audit",
+      "status": "required"
+    },
+    {
+      "permissionCode": "audit.records.read",
+      "moduleCode": "audit",
+      "status": "required"
+    },
+    {
+      "permissionCode": "audit.records.update",
+      "moduleCode": "audit",
+      "status": "required"
+    },
+    {
+      "permissionCode": "audit.reports.create",
+      "moduleCode": "audit",
+      "status": "required"
+    },
+    {
+      "permissionCode": "audit.reports.delete",
+      "moduleCode": "audit",
+      "status": "required"
+    },
+    {
+      "permissionCode": "audit.reports.read",
+      "moduleCode": "audit",
+      "status": "required"
+    },
+    {
+      "permissionCode": "audit.reports.update",
+      "moduleCode": "audit",
+      "status": "required"
+    },
+    {
+      "permissionCode": "audit.settings.create",
+      "moduleCode": "audit",
+      "status": "required"
+    },
+    {
+      "permissionCode": "audit.settings.delete",
+      "moduleCode": "audit",
+      "status": "required"
+    },
+    {
+      "permissionCode": "audit.settings.read",
+      "moduleCode": "audit",
+      "status": "required"
+    },
+    {
+      "permissionCode": "audit.settings.update",
+      "moduleCode": "audit",
+      "status": "required"
+    },
+    {
+      "permissionCode": "audit.workflows.create",
+      "moduleCode": "audit",
+      "status": "required"
+    },
+    {
+      "permissionCode": "audit.workflows.delete",
+      "moduleCode": "audit",
+      "status": "required"
+    },
+    {
+      "permissionCode": "audit.workflows.read",
+      "moduleCode": "audit",
+      "status": "required"
+    },
+    {
+      "permissionCode": "audit.workflows.update",
+      "moduleCode": "audit",
+      "status": "required"
+    }
+  ],
+  "dbOnlyRoutesToReconcile": [],
+  "publicationTargets": {
+    "routes": "dos.dynamic_ui_routes / route template binding",
+    "navigation": "dos.navigation_registry",
+    "archetypeKeys": "dos.dynamic_ui_component_registry existing archetype keys only",
+    "permissions": "platform_dauth.permissions or dos.permissions",
+    "roleBindings": "role_permissions",
+    "i18n": "dos.i18n_catalog"
+  },
+  "acceptance": [
+    "route_exists_or_marked_missing_in_db",
+    "archetype_renderer_exists_in_template_registry",
+    "permissions_exist_and_role_bound",
+    "api_returns_401_not_404_when_unauthenticated",
+    "semantic_regions_render_with_carbon",
+    "mobile_no_horizontal_overflow",
+    "rtl_pass",
+    "no_static_fallback"
+  ]
+}

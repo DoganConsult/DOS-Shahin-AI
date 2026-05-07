@@ -6,7 +6,6 @@
  *
  * Token stack:
  *   --cds-notification-*  (Carbon notification tokens)
- *   --shell-z-sticky      (z-index)
  */
 import {
   Component, ChangeDetectionStrategy, Input, Output, EventEmitter,
@@ -56,9 +55,6 @@ export type { ShellBanner } from '@dos/ui-contracts';
       display: flex;
       flex-direction: column;
       gap: 0;
-      position: sticky;
-      inset-block-start: 3rem; /* below 48px Carbon header */
-      z-index: var(--shell-z-sticky);
     }
 
     /* Full-width banners — override Carbon's max-width */

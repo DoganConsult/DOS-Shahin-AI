@@ -1,0 +1,271 @@
+{
+  "$schema": "https://dogan-ai.local/schemas/product-contract.v1-runtime.schema.json",
+  "contractKind": "product",
+  "generatedAt": "2026-05-07T13:18:19.248054+00:00",
+  "contractVersion": "1.0.0",
+  "runtimeModel": "v1-archetype-runtime",
+  "rule": "Current runtime is route -> one archetype template. dos.* semantic components are requiredRegions only, not fake DB component_key rows, until V2 surface renderer exists.",
+  "forbidden": [
+    "fake_component_map_closure",
+    "register_dos_semantic_components_as_full_page_templates",
+    "static_nav_fallback",
+    "hardcoded_workspace_modules",
+    "hardcoded_workspace_routes",
+    "prime_ng_workspace_shell",
+    "material_workspace_shell",
+    "localStorage_auth_token",
+    "sessionStorage_auth_token",
+    "silent_renderer_fallback",
+    "random_css_mobile_patch"
+  ],
+  "productKey": "shahin-ai",
+  "productName": {
+    "en": "Shahin AI",
+    "ar": "شاهين AI"
+  },
+  "platformKey": "dogan-ai-os",
+  "workspaceRoute": "/workspace-home",
+  "auth": {
+    "mode": "oidc_cookie_session",
+    "sessionEndpoint": "/api/auth/oidc/session",
+    "forbidden": [
+      "localStorage_token",
+      "sessionStorage_token",
+      "frontend_bearer_injection"
+    ]
+  },
+  "tenantModel": {
+    "requiresTenant": true,
+    "requiresMembership": true,
+    "requiresEntitlements": true,
+    "bootstrapEndpoint": "/api/workspace/bootstrap",
+    "permissionsEndpoint": "/api/access/my-permissions"
+  },
+  "modules": [
+    {
+      "moduleCode": "foundation",
+      "routeBase": "/foundation",
+      "ownerService": "user-service",
+      "category": "platform-base",
+      "status": "active",
+      "defaultEnabled": true,
+      "contractFile": "modules/foundation.module.contract.v1-runtime.json"
+    },
+    {
+      "moduleCode": "risk",
+      "routeBase": "/risk",
+      "ownerService": "risk-incident-service",
+      "category": "grc-core",
+      "status": "active",
+      "defaultEnabled": false,
+      "contractFile": "modules/risk.module.contract.v1-runtime.json"
+    },
+    {
+      "moduleCode": "compliance",
+      "routeBase": "/compliance",
+      "ownerService": "compliance-controls-service",
+      "category": "grc-core",
+      "status": "active",
+      "defaultEnabled": false,
+      "contractFile": "modules/compliance.module.contract.v1-runtime.json"
+    },
+    {
+      "moduleCode": "policy",
+      "routeBase": "/policy",
+      "ownerService": "governance-policy-service",
+      "category": "grc-core",
+      "status": "active",
+      "defaultEnabled": false,
+      "contractFile": "modules/policy.module.contract.v1-runtime.json"
+    },
+    {
+      "moduleCode": "incident",
+      "routeBase": "/incident",
+      "ownerService": "risk-incident-service",
+      "category": "grc-core",
+      "status": "active",
+      "defaultEnabled": false,
+      "contractFile": "modules/incident.module.contract.v1-runtime.json"
+    },
+    {
+      "moduleCode": "workflow",
+      "routeBase": "/workflow",
+      "ownerService": "workflow-service",
+      "category": "platform-workflow",
+      "status": "active",
+      "defaultEnabled": true,
+      "contractFile": "modules/workflow.module.contract.v1-runtime.json"
+    },
+    {
+      "moduleCode": "audit",
+      "routeBase": "/audit",
+      "ownerService": "audit-service",
+      "category": "assurance",
+      "status": "active",
+      "defaultEnabled": false,
+      "contractFile": "modules/audit.module.contract.v1-runtime.json"
+    },
+    {
+      "moduleCode": "evidence",
+      "routeBase": "/evidence",
+      "ownerService": "evidence-audit-reporting-service",
+      "category": "assurance",
+      "status": "active",
+      "defaultEnabled": false,
+      "contractFile": "modules/evidence.module.contract.v1-runtime.json"
+    },
+    {
+      "moduleCode": "vendor",
+      "routeBase": "/vendor",
+      "ownerService": "vendor-service",
+      "category": "third-party-risk",
+      "status": "active",
+      "defaultEnabled": false,
+      "contractFile": "modules/vendor.module.contract.v1-runtime.json"
+    },
+    {
+      "moduleCode": "asset",
+      "routeBase": "/asset",
+      "ownerService": "asset-service",
+      "category": "operations-risk",
+      "status": "active",
+      "defaultEnabled": false,
+      "contractFile": "modules/asset.module.contract.v1-runtime.json"
+    },
+    {
+      "moduleCode": "privacy",
+      "routeBase": "/privacy",
+      "ownerService": "privacy-service",
+      "category": "privacy",
+      "status": "active",
+      "defaultEnabled": false,
+      "contractFile": "modules/privacy.module.contract.v1-runtime.json"
+    },
+    {
+      "moduleCode": "bcp",
+      "routeBase": "/bcp",
+      "ownerService": "bcp-service",
+      "category": "resilience",
+      "status": "active",
+      "defaultEnabled": false,
+      "contractFile": "modules/bcp.module.contract.v1-runtime.json"
+    },
+    {
+      "moduleCode": "dora",
+      "routeBase": "/dora",
+      "ownerService": "dora-service",
+      "category": "regulatory",
+      "status": "active",
+      "defaultEnabled": false,
+      "contractFile": "modules/dora.module.contract.v1-runtime.json"
+    },
+    {
+      "moduleCode": "qiyas",
+      "routeBase": "/qiyas",
+      "ownerService": "qiyas-service",
+      "category": "regulatory",
+      "status": "active",
+      "defaultEnabled": false,
+      "contractFile": "modules/qiyas.module.contract.v1-runtime.json"
+    },
+    {
+      "moduleCode": "training",
+      "routeBase": "/training",
+      "ownerService": "training-service",
+      "category": "awareness",
+      "status": "active",
+      "defaultEnabled": false,
+      "contractFile": "modules/training.module.contract.v1-runtime.json"
+    },
+    {
+      "moduleCode": "remediation",
+      "routeBase": "/remediation",
+      "ownerService": "remediation-service",
+      "category": "grc-core",
+      "status": "active",
+      "defaultEnabled": false,
+      "contractFile": "modules/remediation.module.contract.v1-runtime.json"
+    },
+    {
+      "moduleCode": "reports",
+      "routeBase": "/reports",
+      "ownerService": "analytics-reporting-service",
+      "category": "analytics",
+      "status": "active",
+      "defaultEnabled": false,
+      "contractFile": "modules/reports.module.contract.v1-runtime.json"
+    },
+    {
+      "moduleCode": "dashboard",
+      "routeBase": "/dashboard",
+      "ownerService": "dashboard-widgets-service",
+      "category": "analytics",
+      "status": "active",
+      "defaultEnabled": false,
+      "contractFile": "modules/dashboard.module.contract.v1-runtime.json"
+    },
+    {
+      "moduleCode": "config-center",
+      "routeBase": "/config-center",
+      "ownerService": "tenant-service",
+      "category": "platform-admin",
+      "status": "platform_shared",
+      "defaultEnabled": true,
+      "contractFile": "modules/config-center.module.contract.v1-runtime.json"
+    },
+    {
+      "moduleCode": "dynamic-ui",
+      "routeBase": "/dynamic-ui",
+      "ownerService": "dynamic-ui-service",
+      "category": "platform-runtime",
+      "status": "platform_shared",
+      "defaultEnabled": true,
+      "contractFile": "modules/dynamic-ui.module.contract.v1-runtime.json"
+    },
+    {
+      "moduleCode": "ai",
+      "routeBase": "/ai",
+      "ownerService": "ai-engine-service",
+      "category": "platform-ai",
+      "status": "platform_shared",
+      "defaultEnabled": true,
+      "contractFile": "modules/ai.module.contract.v1-runtime.json"
+    },
+    {
+      "moduleCode": "dauth",
+      "routeBase": "/dauth",
+      "ownerService": "auth-service",
+      "category": "identity-access",
+      "status": "platform_shared",
+      "defaultEnabled": true,
+      "contractFile": "modules/dauth.module.contract.v1-runtime.json"
+    },
+    {
+      "moduleCode": "dsoc",
+      "routeBase": "/dsoc",
+      "ownerService": "security-ops-service",
+      "category": "security-ops",
+      "status": "active",
+      "defaultEnabled": false,
+      "contractFile": "modules/dsoc.module.contract.v1-runtime.json"
+    },
+    {
+      "moduleCode": "dnoc",
+      "routeBase": "/dnoc",
+      "ownerService": "network-ops-service",
+      "category": "network-ops",
+      "status": "active",
+      "defaultEnabled": false,
+      "contractFile": "modules/dnoc.module.contract.v1-runtime.json"
+    }
+  ],
+  "routeCatalogFile": "registries/route-catalog.v1-runtime.json",
+  "workspaceContractFile": "workspace/shahin.workspace.contract.v1-runtime.json",
+  "acceptance": [
+    "all_module_contract_files_exist",
+    "workspace_contract_exists",
+    "route_catalog_generated",
+    "no_static_nav_after_auth",
+    "module_visibility_from_access_store_only"
+  ]
+}

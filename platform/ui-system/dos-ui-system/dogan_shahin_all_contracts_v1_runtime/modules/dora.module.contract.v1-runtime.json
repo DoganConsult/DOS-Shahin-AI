@@ -1,0 +1,644 @@
+{
+  "$schema": "https://dogan-ai.local/schemas/module-contract.v1-runtime.schema.json",
+  "contractKind": "module",
+  "generatedAt": "2026-05-07T13:18:19.248054+00:00",
+  "contractVersion": "1.0.0",
+  "runtimeModel": "v1-archetype-runtime",
+  "rule": "Current runtime is route -> one archetype template. dos.* semantic components are requiredRegions only, not fake DB component_key rows, until V2 surface renderer exists.",
+  "forbidden": [
+    "fake_component_map_closure",
+    "register_dos_semantic_components_as_full_page_templates",
+    "static_nav_fallback",
+    "hardcoded_workspace_modules",
+    "hardcoded_workspace_routes",
+    "prime_ng_workspace_shell",
+    "material_workspace_shell",
+    "localStorage_auth_token",
+    "sessionStorage_auth_token",
+    "silent_renderer_fallback",
+    "random_css_mobile_patch"
+  ],
+  "productKey": "shahin-ai",
+  "moduleCode": "dora",
+  "moduleName": {
+    "en": "DORA",
+    "ar": "DORA"
+  },
+  "category": "regulatory",
+  "routeBase": "/dora",
+  "ownerService": "dora-service",
+  "status": "active",
+  "defaultEnabled": false,
+  "uiVendor": "ibm-carbon",
+  "renderingMode": "dynamic-ui-contract-first-v1-archetype",
+  "pageCount": 6,
+  "pages": [
+    {
+      "pageKey": "dora.overview",
+      "route": "/dora/overview",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "overview",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "dora.overview.archetype",
+      "rendererKey": "ModuleOverviewTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "status-banner",
+          "semanticComponent": "dos.status-banner",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "metric-grid",
+          "semanticComponent": "dos.metric-grid",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "structured-summary-card",
+          "semanticComponent": "dos.structured-summary-card",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "readiness-panel",
+          "semanticComponent": "dos.readiness-panel",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "recommendation-list",
+          "semanticComponent": "dos.recommendation-list",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "dora-service",
+      "apiEndpoint": "/api/dora/overview",
+      "dbEntities": [
+        "dos.dora_overview"
+      ],
+      "readPermission": "dora.overview.read",
+      "writePermissions": [],
+      "columns": [],
+      "titleKey": "dora.overview.title",
+      "subtitleKey": "dora.overview.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "dora.overview.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "dora.overview.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "dora.overview.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "dora.records",
+      "route": "/dora/records",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "records_table",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "dora.records_table.archetype",
+      "rendererKey": "ModuleRecordsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "status-banner",
+          "semanticComponent": "dos.status-banner",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "metric-grid",
+          "semanticComponent": "dos.metric-grid",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "records-table",
+          "semanticComponent": "dos.records-table",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "form-modal",
+          "semanticComponent": "dos.form-modal",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "empty-state",
+          "semanticComponent": "dos.empty-state",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "dora-service",
+      "apiEndpoint": "/api/dora/records",
+      "dbEntities": [
+        "dos.dora_records"
+      ],
+      "readPermission": "dora.records.read",
+      "writePermissions": [
+        "dora.records.create",
+        "dora.records.update",
+        "dora.records.delete"
+      ],
+      "columns": [
+        "name",
+        "owner",
+        "status",
+        "risk",
+        "updated_at"
+      ],
+      "titleKey": "dora.records.title",
+      "subtitleKey": "dora.records.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "dora.records.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "dora.records.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "dora.records.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "dora.workflows",
+      "route": "/dora/workflows",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "workflow",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "dora.workflow.archetype",
+      "rendererKey": "WorkflowRecordsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "metric-grid",
+          "semanticComponent": "dos.metric-grid",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "workflow-panel",
+          "semanticComponent": "dos.workflow-panel",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "records-table",
+          "semanticComponent": "dos.records-table",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "status-banner",
+          "semanticComponent": "dos.status-banner",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "dora-service",
+      "apiEndpoint": "/api/dora/workflows",
+      "dbEntities": [
+        "dos.dora_workflows"
+      ],
+      "readPermission": "dora.workflows.read",
+      "writePermissions": [
+        "dora.workflows.create",
+        "dora.workflows.update",
+        "dora.workflows.delete"
+      ],
+      "columns": [
+        "name",
+        "owner",
+        "status",
+        "risk",
+        "updated_at"
+      ],
+      "titleKey": "dora.workflows.title",
+      "subtitleKey": "dora.workflows.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "dora.workflows.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "dora.workflows.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "dora.workflows.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "dora.reports",
+      "route": "/dora/reports",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "reports",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "dora.reports.archetype",
+      "rendererKey": "ModuleReportsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "metric-grid",
+          "semanticComponent": "dos.metric-grid",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "records-table",
+          "semanticComponent": "dos.records-table",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "form-modal",
+          "semanticComponent": "dos.form-modal",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "dora-service",
+      "apiEndpoint": "/api/dora/reports",
+      "dbEntities": [
+        "dos.dora_reports"
+      ],
+      "readPermission": "dora.reports.read",
+      "writePermissions": [
+        "dora.reports.create",
+        "dora.reports.update",
+        "dora.reports.delete"
+      ],
+      "columns": [
+        "name",
+        "owner",
+        "status",
+        "risk",
+        "updated_at"
+      ],
+      "titleKey": "dora.reports.title",
+      "subtitleKey": "dora.reports.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "dora.reports.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "dora.reports.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "dora.reports.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "dora.settings",
+      "route": "/dora/settings",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "settings",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "dora.settings.archetype",
+      "rendererKey": "ModuleSettingsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "tabs",
+          "semanticComponent": "dos.tabs",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "settings-panel",
+          "semanticComponent": "dos.settings-panel",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "status-banner",
+          "semanticComponent": "dos.status-banner",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "dora-service",
+      "apiEndpoint": "/api/dora/settings",
+      "dbEntities": [
+        "dos.dora_settings"
+      ],
+      "readPermission": "dora.settings.read",
+      "writePermissions": [
+        "dora.settings.create",
+        "dora.settings.update",
+        "dora.settings.delete"
+      ],
+      "columns": [],
+      "titleKey": "dora.settings.title",
+      "subtitleKey": "dora.settings.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "dora.settings.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "dora.settings.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "dora.settings.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "dora.ai-insights",
+      "route": "/dora/ai-insights",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "ai_insights",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "dora.ai_insights.archetype",
+      "rendererKey": "AiInsightsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "ai-insight-panel",
+          "semanticComponent": "dos.ai-insight-panel",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "records-table",
+          "semanticComponent": "dos.records-table",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "recommendation-list",
+          "semanticComponent": "dos.recommendation-list",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "dora-service",
+      "apiEndpoint": "/api/dora/ai-insights",
+      "dbEntities": [
+        "dos.dora_ai_insights"
+      ],
+      "readPermission": "dora.ai_insights.read",
+      "writePermissions": [],
+      "columns": [],
+      "titleKey": "dora.ai-insights.title",
+      "subtitleKey": "dora.ai-insights.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "dora.ai-insights.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "dora.ai-insights.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "dora.ai-insights.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    }
+  ],
+  "permissions": [
+    {
+      "permissionCode": "dora.ai_insights.read",
+      "moduleCode": "dora",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dora.overview.read",
+      "moduleCode": "dora",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dora.records.create",
+      "moduleCode": "dora",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dora.records.delete",
+      "moduleCode": "dora",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dora.records.read",
+      "moduleCode": "dora",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dora.records.update",
+      "moduleCode": "dora",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dora.reports.create",
+      "moduleCode": "dora",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dora.reports.delete",
+      "moduleCode": "dora",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dora.reports.read",
+      "moduleCode": "dora",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dora.reports.update",
+      "moduleCode": "dora",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dora.settings.create",
+      "moduleCode": "dora",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dora.settings.delete",
+      "moduleCode": "dora",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dora.settings.read",
+      "moduleCode": "dora",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dora.settings.update",
+      "moduleCode": "dora",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dora.workflows.create",
+      "moduleCode": "dora",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dora.workflows.delete",
+      "moduleCode": "dora",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dora.workflows.read",
+      "moduleCode": "dora",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dora.workflows.update",
+      "moduleCode": "dora",
+      "status": "required"
+    }
+  ],
+  "dbOnlyRoutesToReconcile": [],
+  "publicationTargets": {
+    "routes": "dos.dynamic_ui_routes / route template binding",
+    "navigation": "dos.navigation_registry",
+    "archetypeKeys": "dos.dynamic_ui_component_registry existing archetype keys only",
+    "permissions": "platform_dauth.permissions or dos.permissions",
+    "roleBindings": "role_permissions",
+    "i18n": "dos.i18n_catalog"
+  },
+  "acceptance": [
+    "route_exists_or_marked_missing_in_db",
+    "archetype_renderer_exists_in_template_registry",
+    "permissions_exist_and_role_bound",
+    "api_returns_401_not_404_when_unauthenticated",
+    "semantic_regions_render_with_carbon",
+    "mobile_no_horizontal_overflow",
+    "rtl_pass",
+    "no_static_fallback"
+  ]
+}

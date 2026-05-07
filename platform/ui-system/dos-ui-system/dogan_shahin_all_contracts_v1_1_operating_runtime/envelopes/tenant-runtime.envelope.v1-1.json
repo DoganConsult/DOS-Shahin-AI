@@ -1,0 +1,79 @@
+{
+  "$schema": "https://dogan-ai.local/schemas/runtime-envelope.v1-1.schema.json",
+  "contractKind": "runtime-envelope",
+  "envelopeKey": "tenant-runtime",
+  "contractVersion": "1.1.0",
+  "runtimeModel": "v1-1-operating-runtime",
+  "endpoint": "/api/ui-os/tenant-runtime",
+  "method": "GET",
+  "auth": "session_cookie",
+  "tenancy_scope": "tenant",
+  "rule": "Tenant identity, branding, entitlements, quotas, locale, rtl resolved into ONE envelope. Frontend never reads local theme/branding/locale state as the source of truth.",
+  "doctrine": ["ZERO_STATIC","ZERO_LEGACY","ZERO_FALLBACK"],
+  "shape": {
+    "version":       "integer",
+    "tenantRuntime": {
+      "tenantId":            "string (uuid)",
+      "tenantCode":          "string",
+      "displayName":         "string",
+      "status":              "enum<active|suspended|archived|pending|trial>",
+      "parentTenantId":      "string|null",
+      "primaryDomain":       "string|null",
+      "customDomain":        "string|null",
+      "locale":              "string",
+      "rtl":                 "boolean",
+      "tier":                "enum|null",
+      "productActivations":  "Array<{productKey,status,activatedAt,deactivatedAt|null,tier|null}>",
+      "moduleEntitlements":  "Array<{moduleCode,status,source,expiresAt|null}>",
+      "featureFlags":        "Record<flagKey,{enabled,source,rolloutBucket?,ttlSeconds?}>",
+      "quotas":              "Record<quotaKey,{used,limit,unit,period}>",
+      "limits":              "Record<limitKey,{value,unit,source}>",
+      "branding": {
+        "brandName":   "string|null",
+        "logoUrl":     "string|null",
+        "faviconUrl":  "string|null",
+        "iconUrl":     "string|null",
+        "primaryColor":"string|null",
+        "accentColor": "string|null",
+        "background":  "string|null",
+        "cssOverrides":"Record<string,string>"
+      },
+      "themeTokens":         "object<{carbonTheme,tokens}>",
+      "version":             "integer"
+    }
+  },
+  "forbiddenFields": [
+    "tenantRuntime.tenant_id (use tenantId)",
+    "tenantRuntime.product_key (use productActivations[].productKey)",
+    "tenantRuntime.feature_flags (use featureFlags)"
+  ],
+  "exampleResponse": {
+    "version": 1,
+    "tenantRuntime": {
+      "tenantId": "00000000-0000-0000-0000-000000000000",
+      "tenantCode": "tenant-example",
+      "displayName": "Example Tenant",
+      "status": "active",
+      "parentTenantId": null,
+      "primaryDomain": null,
+      "customDomain": null,
+      "locale": "en",
+      "rtl": false,
+      "tier": null,
+      "productActivations": [],
+      "moduleEntitlements": [],
+      "featureFlags": {},
+      "quotas": {},
+      "limits": {},
+      "branding": { "brandName": null, "logoUrl": null, "faviconUrl": null, "iconUrl": null, "primaryColor": null, "accentColor": null, "background": null, "cssOverrides": {} },
+      "themeTokens": { "carbonTheme": "g10", "tokens": {} },
+      "version": 1
+    }
+  },
+  "consumers": [
+    "platform/core/services/grc-auth.service.ts",
+    "platform/core/platform/shell/shell-host.component.ts",
+    "platform/core/platform/shell/workspace-shell-binding.service.ts"
+  ],
+  "publishedBy": "tenant/tenant.runtime.contract.v1-1.json"
+}

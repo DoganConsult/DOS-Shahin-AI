@@ -3,4 +3,5 @@ export declare class DosMetricCardComponent {
     value: string | number;
     delta: number | null;
     deltaSuffix: string;
+    route: string | null;
 }

@@ -9,11 +9,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { DosCarbonTileComponent } from '../carbon/dos-carbon-tile.component';
 let DosMetricCardComponent = class DosMetricCardComponent {
     label = '';
     value = '';
     delta = null;
     deltaSuffix = '%';
+    route = null;
 };
 __decorate([
     Input(),
@@ -31,27 +33,43 @@ __decorate([
     Input(),
     __metadata("design:type", Object)
 ], DosMetricCardComponent.prototype, "deltaSuffix", void 0);
+__decorate([
+    Input(),
+    __metadata("design:type", String)
+], DosMetricCardComponent.prototype, "route", void 0);
 DosMetricCardComponent = __decorate([
     Component({
         selector: 'dos-metric-card',
         standalone: true,
-        imports: [CommonModule],
+        imports: [CommonModule, DosCarbonTileComponent],
         changeDetection: ChangeDetectionStrategy.OnPush,
         template: `
-    <article class="dos-metric-card">
-      <span class="dos-metric-card__label">{{ label }}</span>
-      <span class="dos-metric-card__value">{{ value }}</span>
-      @if (delta !== null && delta !== undefined) {
-        <span
-          class="dos-metric-card__delta"
-          [class.dos-metric-card__delta--up]="delta > 0"
-          [class.dos-metric-card__delta--down]="delta < 0"
-        >
-          {{ delta > 0 ? '+' : '' }}{{ delta }}{{ deltaSuffix }}
-        </span>
-      }
-    </article>
+    <dos-carbon-tile [clickable]="!!route" [route]="route">
+      <div class="dos-metric-card">
+        <span class="dos-metric-card__label">{{ label }}</span>
+        <span class="dos-metric-card__value">{{ value }}</span>
+        @if (delta !== null && delta !== undefined) {
+          <span
+            class="dos-metric-card__delta"
+            [class.dos-metric-card__delta--up]="delta > 0"
+            [class.dos-metric-card__delta--down]="delta < 0"
+          >
+            {{ delta > 0 ? '↑' : '↓' }} {{ delta }}{{ deltaSuffix }}
+          </span>
+        }
+      </div>
+    </dos-carbon-tile>
   `,
+        styles: [`
+    :host { display: block; }
+    /* Overriding base card styles to work within the Carbon tile container */
+    .dos-metric-card {
+      padding: 0;
+      background: transparent;
+      border: 0;
+      box-shadow: none;
+    }
+  `]
     })
 ], DosMetricCardComponent);
 export { DosMetricCardComponent };

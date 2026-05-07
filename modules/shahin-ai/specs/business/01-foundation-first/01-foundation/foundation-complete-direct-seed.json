@@ -1,0 +1,1410 @@
+{
+  "$schema": "./00-universal-module-contract.schema.json",
+  "schemaVersion": 1,
+  "module": {
+    "code": "foundation",
+    "product_key": "shahin-ai",
+    "tier": "platform",
+    "category": "platform",
+    "owner_service": "user-service",
+    "name_en": "Foundation — Organization Hierarchy",
+    "name_ar": "الأساس — الهيكل التنظيمي",
+    "version": "2.1.0",
+    "is_platform_dna": true,
+    "route_base": "/foundation"
+  },
+  "permissions": [
+    {
+      "code": "foundation.module.read",
+      "description": "Access Foundation module navigation and overview",
+      "sensitive": false
+    },
+    {
+      "code": "foundation.data.read",
+      "description": "Read org structure, records, policies (default list surfaces)",
+      "sensitive": false
+    },
+    {
+      "code": "foundation.data.write",
+      "description": "Create or update foundation-owned records where allowed",
+      "sensitive": true
+    },
+    {
+      "code": "foundation.user.read",
+      "description": "View users directory",
+      "sensitive": true
+    },
+    {
+      "code": "foundation.user.write",
+      "description": "Manage user lifecycle workflows",
+      "sensitive": true
+    },
+    {
+      "code": "foundation.rbac.read",
+      "description": "View roles and permission maps",
+      "sensitive": true
+    },
+    {
+      "code": "foundation.review.read",
+      "description": "Run access review campaigns",
+      "sensitive": true
+    },
+    {
+      "code": "foundation.audit.read",
+      "description": "View foundation audit trail",
+      "sensitive": true
+    },
+    {
+      "code": "foundation.sod.write",
+      "description": "Configure segregation of duties",
+      "sensitive": true
+    },
+    {
+      "code": "foundation.hierarchy.read",
+      "description": "View org hierarchy visualization",
+      "sensitive": false
+    },
+    {
+      "code": "foundation.module.admin",
+      "description": "Full Foundation administration",
+      "sensitive": true
+    },
+    {
+      "code": "foundation.record.read",
+      "description": "Read foundation records (MD §2.2 RECORD_READ alias)",
+      "sensitive": false
+    },
+    {
+      "code": "foundation.record.write",
+      "description": "Write foundation records (MD §2.1 canonical)",
+      "sensitive": false
+    },
+    {
+      "code": "foundation.record.delete",
+      "description": "Delete foundation records (MD §2.1 canonical)",
+      "sensitive": true
+    },
+    {
+      "code": "foundation.record.approve",
+      "description": "Approve foundation changes (MD §2.1 canonical)",
+      "sensitive": true
+    },
+    {
+      "code": "foundation.org.read",
+      "description": "Read organization hierarchy (MD §2.2 ORG_READ alias)",
+      "sensitive": false
+    },
+    {
+      "code": "foundation.org.write",
+      "description": "Write organization hierarchy (MD §2.2 ORG_WRITE alias)",
+      "sensitive": true
+    },
+    {
+      "code": "foundation.system.manage",
+      "description": "Manage foundation system configuration (MD §2.2 SYSTEM_MANAGE alias)",
+      "sensitive": true
+    }
+  ],
+  "roles": [
+    {
+      "code": "foundation.viewer",
+      "archetype": "viewer",
+      "permissions": [
+        "foundation.module.read",
+        "foundation.data.read",
+        "foundation.record.read",
+        "foundation.org.read",
+        "foundation.hierarchy.read"
+      ]
+    },
+    {
+      "code": "foundation.reviewer",
+      "archetype": "reviewer",
+      "permissions": [
+        "foundation.module.read",
+        "foundation.data.read",
+        "foundation.record.read",
+        "foundation.org.read",
+        "foundation.review.read",
+        "foundation.audit.read",
+        "foundation.hierarchy.read"
+      ]
+    },
+    {
+      "code": "foundation.auditor",
+      "archetype": "auditor",
+      "permissions": [
+        "foundation.module.read",
+        "foundation.data.read",
+        "foundation.record.read",
+        "foundation.org.read",
+        "foundation.audit.read",
+        "foundation.review.read",
+        "foundation.rbac.read",
+        "foundation.hierarchy.read"
+      ]
+    },
+    {
+      "code": "foundation.contributor",
+      "archetype": "contributor",
+      "permissions": [
+        "foundation.module.read",
+        "foundation.data.read",
+        "foundation.data.write",
+        "foundation.record.read",
+        "foundation.record.write",
+        "foundation.hierarchy.read"
+      ]
+    },
+    {
+      "code": "foundation.operator",
+      "archetype": "operator",
+      "permissions": [
+        "foundation.module.read",
+        "foundation.data.read",
+        "foundation.data.write",
+        "foundation.record.read",
+        "foundation.record.write",
+        "foundation.org.read",
+        "foundation.user.read",
+        "foundation.rbac.read",
+        "foundation.review.read",
+        "foundation.audit.read",
+        "foundation.hierarchy.read"
+      ]
+    },
+    {
+      "code": "foundation.approver",
+      "archetype": "approver",
+      "permissions": [
+        "foundation.module.read",
+        "foundation.data.read",
+        "foundation.record.read",
+        "foundation.record.approve",
+        "foundation.org.read",
+        "foundation.review.read",
+        "foundation.audit.read",
+        "foundation.hierarchy.read"
+      ]
+    },
+    {
+      "code": "foundation.module_lead",
+      "archetype": "module_lead",
+      "permissions": [
+        "foundation.module.read",
+        "foundation.data.read",
+        "foundation.data.write",
+        "foundation.record.read",
+        "foundation.record.write",
+        "foundation.record.approve",
+        "foundation.org.read",
+        "foundation.org.write",
+        "foundation.user.read",
+        "foundation.user.write",
+        "foundation.rbac.read",
+        "foundation.review.read",
+        "foundation.audit.read",
+        "foundation.sod.write",
+        "foundation.hierarchy.read",
+        "foundation.module.admin"
+      ]
+    },
+    {
+      "code": "foundation.executive_owner",
+      "archetype": "executive_owner",
+      "permissions": [
+        "foundation.module.read",
+        "foundation.module.admin",
+        "foundation.data.read",
+        "foundation.data.write",
+        "foundation.record.read",
+        "foundation.record.write",
+        "foundation.record.delete",
+        "foundation.record.approve",
+        "foundation.org.read",
+        "foundation.org.write",
+        "foundation.user.read",
+        "foundation.user.write",
+        "foundation.rbac.read",
+        "foundation.review.read",
+        "foundation.audit.read",
+        "foundation.sod.write",
+        "foundation.hierarchy.read",
+        "foundation.system.manage"
+      ]
+    }
+  ],
+  "navigation": [
+    {
+      "nav_item_code": "foundation",
+      "parent_code": null,
+      "route": null,
+      "label_en": "Foundation",
+      "label_ar": "الأساس",
+      "sort_order": 5,
+      "icon": "building",
+      "permission": "foundation.module.read"
+    },
+    {
+      "nav_item_code": "foundation.overview",
+      "parent_code": "foundation",
+      "route": "/foundation/overview",
+      "label_en": "Overview",
+      "label_ar": "نظرة عامة",
+      "sort_order": 10,
+      "icon": "layout-dashboard",
+      "permission": "foundation.module.read"
+    },
+    {
+      "nav_item_code": "foundation.organization",
+      "parent_code": "foundation",
+      "route": "/foundation/organization",
+      "label_en": "Organization",
+      "label_ar": "المنظمة",
+      "sort_order": 20,
+      "icon": "sitemap",
+      "permission": "foundation.data.read"
+    },
+    {
+      "nav_item_code": "foundation.business-units",
+      "parent_code": "foundation",
+      "route": "/foundation/business-units",
+      "label_en": "Business units",
+      "label_ar": "الوحدات",
+      "sort_order": 30,
+      "icon": "briefcase",
+      "permission": "foundation.data.read"
+    },
+    {
+      "nav_item_code": "foundation.departments",
+      "parent_code": "foundation",
+      "route": "/foundation/departments",
+      "label_en": "Departments",
+      "label_ar": "الإدارات",
+      "sort_order": 40,
+      "icon": "building-community",
+      "permission": "foundation.data.read"
+    },
+    {
+      "nav_item_code": "foundation.positions",
+      "parent_code": "foundation",
+      "route": "/foundation/positions",
+      "label_en": "Positions",
+      "label_ar": "المناصب",
+      "sort_order": 50,
+      "icon": "badge",
+      "permission": "foundation.data.read"
+    },
+    {
+      "nav_item_code": "foundation.locations",
+      "parent_code": "foundation",
+      "route": "/foundation/locations",
+      "label_en": "Locations",
+      "label_ar": "المواقع",
+      "sort_order": 60,
+      "icon": "map-pin",
+      "permission": "foundation.data.read"
+    },
+    {
+      "nav_item_code": "foundation.users",
+      "parent_code": "foundation",
+      "route": "/foundation/users",
+      "label_en": "Users",
+      "label_ar": "المستخدمون",
+      "sort_order": 70,
+      "icon": "users",
+      "permission": "foundation.user.read"
+    },
+    {
+      "nav_item_code": "foundation.teams",
+      "parent_code": "foundation",
+      "route": "/foundation/teams",
+      "label_en": "Teams",
+      "label_ar": "الفرق",
+      "sort_order": 80,
+      "icon": "users-group",
+      "permission": "foundation.data.read"
+    },
+    {
+      "nav_item_code": "foundation.roles",
+      "parent_code": "foundation",
+      "route": "/foundation/roles",
+      "label_en": "Roles",
+      "label_ar": "الأدوار",
+      "sort_order": 90,
+      "icon": "shield",
+      "permission": "foundation.rbac.read"
+    },
+    {
+      "nav_item_code": "foundation.permissions",
+      "parent_code": "foundation",
+      "route": "/foundation/permissions",
+      "label_en": "Permissions",
+      "label_ar": "الصلاحيات",
+      "sort_order": 100,
+      "icon": "key",
+      "permission": "foundation.rbac.read"
+    },
+    {
+      "nav_item_code": "foundation.committees",
+      "parent_code": "foundation",
+      "route": "/foundation/committees",
+      "label_en": "Committees",
+      "label_ar": "اللجان",
+      "sort_order": 110,
+      "icon": "assembly",
+      "permission": "foundation.data.read"
+    },
+    {
+      "nav_item_code": "foundation.delegations",
+      "parent_code": "foundation",
+      "route": "/foundation/delegations",
+      "label_en": "Delegations",
+      "label_ar": "التفويضات",
+      "sort_order": 120,
+      "icon": "share",
+      "permission": "foundation.data.read"
+    },
+    {
+      "nav_item_code": "foundation.access-review",
+      "parent_code": "foundation",
+      "route": "/foundation/access-review",
+      "label_en": "Access review",
+      "label_ar": "مراجعة الوصول",
+      "sort_order": 130,
+      "icon": "checklist",
+      "permission": "foundation.review.read"
+    },
+    {
+      "nav_item_code": "foundation.policies",
+      "parent_code": "foundation",
+      "route": "/foundation/policies",
+      "label_en": "Policies",
+      "label_ar": "السياسات",
+      "sort_order": 140,
+      "icon": "book",
+      "permission": "foundation.data.read"
+    },
+    {
+      "nav_item_code": "foundation.audit",
+      "parent_code": "foundation",
+      "route": "/foundation/audit",
+      "label_en": "Audit trail",
+      "label_ar": "سجل التدقيق",
+      "sort_order": 150,
+      "icon": "history",
+      "permission": "foundation.audit.read"
+    },
+    {
+      "nav_item_code": "foundation.ownership",
+      "parent_code": "foundation",
+      "route": "/foundation/ownership",
+      "label_en": "Ownership",
+      "label_ar": "الملكية",
+      "sort_order": 160,
+      "icon": "chart-arcs",
+      "permission": "foundation.data.read"
+    },
+    {
+      "nav_item_code": "foundation.sod",
+      "parent_code": "foundation",
+      "route": "/foundation/sod",
+      "label_en": "Segregation of duties",
+      "label_ar": "فصل الواجبات",
+      "sort_order": 170,
+      "icon": "shield-lock",
+      "permission": "foundation.sod.write"
+    },
+    {
+      "nav_item_code": "foundation.hierarchy-viz",
+      "parent_code": "foundation",
+      "route": "/foundation/hierarchy-viz",
+      "label_en": "Hierarchy",
+      "label_ar": "التسلسل",
+      "sort_order": 180,
+      "icon": "binary-tree",
+      "permission": "foundation.hierarchy.read"
+    },
+    {
+      "nav_item_code": "foundation.user-lifecycle",
+      "parent_code": "foundation",
+      "route": "/foundation/user-lifecycle",
+      "label_en": "User lifecycle",
+      "label_ar": "دورة حياة المستخدم",
+      "sort_order": 190,
+      "icon": "arrow-cycle",
+      "permission": "foundation.user.write"
+    },
+    {
+      "nav_item_code": "foundation.reference-data",
+      "parent_code": "foundation",
+      "route": "/foundation/reference-data",
+      "label_en": "Reference data",
+      "label_ar": "البيانات المرجعية",
+      "sort_order": 200,
+      "icon": "database",
+      "permission": "foundation.data.read"
+    },
+    {
+      "nav_item_code": "foundation.diagnostics",
+      "parent_code": "foundation",
+      "route": "/foundation/diagnostics",
+      "label_en": "Diagnostics",
+      "label_ar": "التشخيص",
+      "sort_order": 210,
+      "icon": "stethoscope",
+      "permission": "foundation.module.read"
+    }
+  ],
+  "pages": [
+    {
+      "page_code": "foundation.overview",
+      "route": "/foundation/overview",
+      "archetype": "command-home",
+      "template_export": "ModuleOverviewTemplateComponent",
+      "permission": "foundation.module.read",
+      "props": {
+        "eyebrow": "Foundation",
+        "title": "Foundation Overview",
+        "subtitle": "Organization structure, access governance, and operational posture.",
+        "loading": false,
+        "zones": [
+          {
+            "zone": "header",
+            "surfaces": [
+              {
+                "componentKey": "ui.page-header",
+                "props": {
+                  "title": "Foundation Overview",
+                  "description": "Organization structure, access governance, and operational posture."
+                }
+              }
+            ]
+          },
+          {
+            "zone": "main",
+            "surfaces": [
+              {
+                "componentKey": "ui.metric-card",
+                "props": {
+                  "label": "Total Employees",
+                  "value": "1,248",
+                  "delta": 12,
+                  "deltaSuffix": "%"
+                }
+              },
+              {
+                "componentKey": "ui.metric-card",
+                "props": {
+                  "label": "Active Departments",
+                  "value": "24",
+                  "delta": 0,
+                  "deltaSuffix": ""
+                }
+              },
+              {
+                "componentKey": "ui.metric-card",
+                "props": {
+                  "label": "Open Access Reviews",
+                  "value": "3",
+                  "delta": -2,
+                  "deltaSuffix": ""
+                }
+              }
+            ]
+          }
+        ],
+        "pillars": {
+          "evidence": "Live foundation dashboard and resolver contract."
+        }
+      }
+    },
+    {
+      "page_code": "foundation.organization",
+      "route": "/foundation/organization",
+      "archetype": "org-chart",
+      "template_export": "OrgChartTemplateComponent",
+      "permission": "foundation.data.read",
+      "props": {
+        "eyebrow": "Foundation",
+        "title": "Organization",
+        "subtitle": "Top-level legal entities and their reporting structure.",
+        "loading": false,
+        "nodes": [],
+        "pillars": {
+          "evidence": "Organization hierarchy service."
+        }
+      }
+    },
+    {
+      "page_code": "foundation.business-units",
+      "route": "/foundation/business-units",
+      "archetype": "org-chart",
+      "template_export": "OrgChartTemplateComponent",
+      "permission": "foundation.data.read",
+      "props": {
+        "eyebrow": "Foundation",
+        "title": "Business Units",
+        "subtitle": "Operational business units and accountability lines.",
+        "loading": false,
+        "nodes": [],
+        "pillars": {
+          "evidence": "Business-unit registry."
+        }
+      }
+    },
+    {
+      "page_code": "foundation.departments",
+      "route": "/foundation/departments",
+      "archetype": "org-chart",
+      "template_export": "OrgChartTemplateComponent",
+      "permission": "foundation.data.read",
+      "props": {
+        "eyebrow": "Foundation",
+        "title": "Departments",
+        "subtitle": "Department structure for governance and staffing oversight.",
+        "loading": false,
+        "nodes": [],
+        "pillars": {
+          "evidence": "Department registry."
+        }
+      }
+    },
+    {
+      "page_code": "foundation.positions",
+      "route": "/foundation/positions",
+      "archetype": "intelligent-register",
+      "template_export": "ModuleRecordsTemplateComponent",
+      "permission": "foundation.data.read",
+      "props": {
+        "eyebrow": "Foundation",
+        "title": "Positions",
+        "subtitle": "Approved positions and reporting relationships.",
+        "loading": false,
+        "columns": [
+          {
+            "key": "code",
+            "label": "Code",
+            "labelAr": "الرمز",
+            "sortable": true
+          },
+          {
+            "key": "name",
+            "label": "Position",
+            "labelAr": "المنصب",
+            "sortable": true
+          },
+          {
+            "key": "department",
+            "label": "Department",
+            "labelAr": "الإدارة"
+          },
+          {
+            "key": "status",
+            "label": "Status",
+            "labelAr": "الحالة",
+            "type": "tag"
+          }
+        ],
+        "records": [],
+        "searchPlaceholder": "Search positions",
+        "filterLabel": "Status",
+        "pillars": {
+          "evidence": "Position catalog."
+        }
+      }
+    },
+    {
+      "page_code": "foundation.locations",
+      "route": "/foundation/locations",
+      "archetype": "intelligent-register",
+      "template_export": "ModuleRecordsTemplateComponent",
+      "permission": "foundation.data.read",
+      "props": {
+        "eyebrow": "Foundation",
+        "title": "Locations",
+        "subtitle": "Sites, branches, and operating locations.",
+        "loading": false,
+        "columns": [
+          {
+            "key": "code",
+            "label": "Code",
+            "labelAr": "الرمز",
+            "sortable": true
+          },
+          {
+            "key": "name",
+            "label": "Location",
+            "labelAr": "الموقع",
+            "sortable": true
+          },
+          {
+            "key": "region",
+            "label": "Region",
+            "labelAr": "المنطقة"
+          },
+          {
+            "key": "status",
+            "label": "Status",
+            "labelAr": "الحالة",
+            "type": "tag"
+          }
+        ],
+        "records": [],
+        "searchPlaceholder": "Search locations",
+        "filterLabel": "Region",
+        "pillars": {
+          "evidence": "Location registry."
+        }
+      }
+    },
+    {
+      "page_code": "foundation.users",
+      "route": "/foundation/users",
+      "archetype": "intelligent-register",
+      "template_export": "ModuleRecordsTemplateComponent",
+      "permission": "foundation.user.read",
+      "props": {
+        "eyebrow": "Foundation",
+        "title": "Users",
+        "subtitle": "Directory of active users and account ownership.",
+        "loading": false,
+        "zones": [
+          {
+            "zone": "header",
+            "surfaces": [
+              {
+                "componentKey": "ui.page-header",
+                "props": {
+                  "title": "Users",
+                  "description": "Directory of active users and account ownership."
+                }
+              }
+            ]
+          },
+          {
+            "zone": "main",
+            "surfaces": [
+              {
+                "componentKey": "ui.data-table",
+                "rendererKey": "ui.data-table",
+                "props": {
+                  "title": "User Registry",
+                  "columns": [
+                    { "key": "username", "label": "User" },
+                    { "key": "email", "label": "Email" },
+                    { "key": "department", "label": "Department" },
+                    { "key": "status", "label": "Status", "type": "tag" }
+                  ],
+                  "records": [
+                    { "id": "1", "username": "admin", "email": "admin@dos.local", "department": "Security", "status": "active" },
+                    { "id": "2", "username": "reviewer", "email": "reviewer@dos.local", "department": "Audit", "status": "active" }
+                  ]
+                }
+              }
+            ]
+          }
+        ],
+        "pillars": {
+          "evidence": "User-service directory."
+        }
+      }
+    },
+    {
+      "page_code": "foundation.teams",
+      "route": "/foundation/teams",
+      "archetype": "org-chart",
+      "template_export": "OrgChartTemplateComponent",
+      "permission": "foundation.data.read",
+      "props": {
+        "eyebrow": "Foundation",
+        "title": "Teams",
+        "subtitle": "Cross-functional teams and line managers.",
+        "loading": false,
+        "nodes": [],
+        "pillars": {
+          "evidence": "Team assignment registry."
+        }
+      }
+    },
+    {
+      "page_code": "foundation.roles",
+      "route": "/foundation/roles",
+      "archetype": "intelligent-register",
+      "template_export": "ModuleRecordsTemplateComponent",
+      "permission": "foundation.rbac.read",
+      "props": {
+        "eyebrow": "Foundation",
+        "title": "Roles",
+        "subtitle": "Functional roles and access bundles.",
+        "loading": false,
+        "columns": [
+          {
+            "key": "code",
+            "label": "Role Code",
+            "labelAr": "رمز الدور",
+            "sortable": true
+          },
+          {
+            "key": "name",
+            "label": "Role",
+            "labelAr": "الدور",
+            "sortable": true
+          },
+          {
+            "key": "scope",
+            "label": "Scope",
+            "labelAr": "النطاق"
+          },
+          {
+            "key": "status",
+            "label": "Status",
+            "labelAr": "الحالة",
+            "type": "tag"
+          }
+        ],
+        "records": [],
+        "searchPlaceholder": "Search roles",
+        "filterLabel": "Scope",
+        "pillars": {
+          "evidence": "DAuth functional role catalog."
+        }
+      }
+    },
+    {
+      "page_code": "foundation.permissions",
+      "route": "/foundation/permissions",
+      "archetype": "ownership-map",
+      "template_export": "OwnershipMapTemplateComponent",
+      "permission": "foundation.rbac.read",
+      "props": {
+        "eyebrow": "Foundation",
+        "title": "Permission Ownership",
+        "subtitle": "Permission stewardship and assignment accountability.",
+        "loading": false,
+        "edges": [],
+        "pillars": {
+          "evidence": "Permission catalog and ownership links."
+        }
+      }
+    },
+    {
+      "page_code": "foundation.committees",
+      "route": "/foundation/committees",
+      "archetype": "intelligent-register",
+      "template_export": "ModuleRecordsTemplateComponent",
+      "permission": "foundation.data.read",
+      "props": {
+        "eyebrow": "Foundation",
+        "title": "Committees",
+        "subtitle": "Committees, charters, and membership oversight.",
+        "loading": false,
+        "columns": [
+          {
+            "key": "name",
+            "label": "Committee",
+            "labelAr": "اللجنة",
+            "sortable": true
+          },
+          {
+            "key": "chair",
+            "label": "Chair",
+            "labelAr": "الرئيس"
+          },
+          {
+            "key": "cadence",
+            "label": "Cadence",
+            "labelAr": "الدورية"
+          },
+          {
+            "key": "status",
+            "label": "Status",
+            "labelAr": "الحالة",
+            "type": "tag"
+          }
+        ],
+        "records": [],
+        "searchPlaceholder": "Search committees",
+        "filterLabel": "Cadence",
+        "pillars": {
+          "evidence": "Governance committee registry."
+        }
+      }
+    },
+    {
+      "page_code": "foundation.delegations",
+      "route": "/foundation/delegations",
+      "archetype": "delegation-center",
+      "template_export": "DelegationCenterTemplateComponent",
+      "permission": "foundation.data.read",
+      "props": {
+        "eyebrow": "Foundation",
+        "title": "Delegations",
+        "subtitle": "Active delegation rules and expiry.",
+        "loading": false,
+        "rules": [],
+        "pillars": {
+          "evidence": "Delegation workflow and authority matrix."
+        },
+        "emptyState": {
+          "titleEn": "No delegations yet",
+          "titleAr": "لا توجد تفويضات بعد",
+          "bodyEn": "When you delegate authority, active rules will appear here.",
+          "bodyAr": "عند تفويض الصلاحيات ستظهر القواعد النشطة هنا."
+        }
+      }
+    },
+    {
+      "page_code": "foundation.access-review",
+      "route": "/foundation/access-review",
+      "archetype": "workflow-control",
+      "template_export": "ModuleAssessmentsTemplateComponent",
+      "permission": "foundation.review.read",
+      "props": {
+        "eyebrow": "Foundation",
+        "title": "Access Review",
+        "subtitle": "Campaign progress for periodic access attestations.",
+        "loading": false,
+        "tabs": [
+          {
+            "id": "campaigns",
+            "label": "Campaigns",
+            "labelAr": "الحملات"
+          }
+        ],
+        "progressSteps": [
+          {
+            "label": "Queued"
+          },
+          {
+            "label": "In Review"
+          },
+          {
+            "label": "Complete"
+          }
+        ],
+        "currentStage": 0,
+        "pillars": {
+          "evidence": "Access review campaign status."
+        }
+      }
+    },
+    {
+      "page_code": "foundation.policies",
+      "route": "/foundation/policies",
+      "archetype": "intelligent-register",
+      "template_export": "ModuleRecordsTemplateComponent",
+      "permission": "foundation.data.read",
+      "props": {
+        "eyebrow": "Foundation",
+        "title": "Policies",
+        "subtitle": "Core governance policies mapped to accountable owners.",
+        "loading": false,
+        "columns": [
+          {
+            "key": "name",
+            "label": "Policy",
+            "labelAr": "السياسة",
+            "sortable": true
+          },
+          {
+            "key": "owner",
+            "label": "Owner",
+            "labelAr": "المالك"
+          },
+          {
+            "key": "reviewDate",
+            "label": "Review Date",
+            "labelAr": "تاريخ المراجعة",
+            "type": "date"
+          },
+          {
+            "key": "status",
+            "label": "Status",
+            "labelAr": "الحالة",
+            "type": "tag"
+          }
+        ],
+        "records": [],
+        "searchPlaceholder": "Search policies",
+        "filterLabel": "Status",
+        "pillars": {
+          "evidence": "Governance policy register."
+        }
+      }
+    },
+    {
+      "page_code": "foundation.audit",
+      "route": "/foundation/audit",
+      "archetype": "audit-trail-ledger",
+      "template_export": "AuditTrailLedgerTemplateComponent",
+      "permission": "foundation.audit.read",
+      "props": {
+        "eyebrow": "Foundation",
+        "title": "Audit Trail",
+        "subtitle": "Administrative and governance events affecting Foundation data.",
+        "loading": false,
+        "rows": [],
+        "pillars": {
+          "evidence": "Foundation audit ledger."
+        }
+      }
+    },
+    {
+      "page_code": "foundation.ownership",
+      "route": "/foundation/ownership",
+      "archetype": "ownership-map",
+      "template_export": "OwnershipMapTemplateComponent",
+      "permission": "foundation.data.read",
+      "props": {
+        "eyebrow": "Foundation",
+        "title": "Ownership",
+        "subtitle": "Control ownership, accountability, and delegation visibility.",
+        "loading": false,
+        "edges": [],
+        "pillars": {
+          "evidence": "Ownership mapping service."
+        }
+      }
+    },
+    {
+      "page_code": "foundation.sod",
+      "route": "/foundation/sod",
+      "archetype": "module-settings",
+      "template_export": "ModuleSettingsTemplateComponent",
+      "permission": "foundation.sod.write",
+      "props": {
+        "eyebrow": "Foundation",
+        "title": "Segregation of Duties",
+        "subtitle": "Conflict rules, exception handling, and review settings.",
+        "loading": false,
+        "saving": false,
+        "sections": [
+          {
+            "id": "rules",
+            "label": "Conflict Rules",
+            "labelAr": "قواعد التعارض"
+          },
+          {
+            "id": "exceptions",
+            "label": "Exceptions",
+            "labelAr": "الاستثناءات"
+          }
+        ],
+        "pillars": {
+          "evidence": "SoD configuration baseline."
+        }
+      }
+    },
+    {
+      "page_code": "foundation.hierarchy-viz",
+      "route": "/foundation/hierarchy-viz",
+      "archetype": "org-chart",
+      "template_export": "OrgChartTemplateComponent",
+      "permission": "foundation.hierarchy.read",
+      "props": {
+        "eyebrow": "Foundation",
+        "title": "Hierarchy Visualization",
+        "subtitle": "Interactive reporting lines across the organization.",
+        "loading": false,
+        "nodes": [],
+        "pillars": {
+          "evidence": "Organization graph projection."
+        }
+      }
+    },
+    {
+      "page_code": "foundation.user-lifecycle",
+      "route": "/foundation/user-lifecycle",
+      "archetype": "workflow-timeline",
+      "template_export": "WorkflowTimelineTemplateComponent",
+      "permission": "foundation.user.write",
+      "props": {
+        "eyebrow": "Foundation",
+        "title": "User Lifecycle",
+        "subtitle": "Joiner, mover, and leaver workflow progression.",
+        "loading": false,
+        "steps": [],
+        "pillars": {
+          "evidence": "Lifecycle workflow timeline."
+        }
+      }
+    },
+    {
+      "page_code": "foundation.reference-data",
+      "route": "/foundation/reference-data",
+      "archetype": "intelligent-register",
+      "template_export": "ModuleRecordsTemplateComponent",
+      "permission": "foundation.data.read",
+      "props": {
+        "eyebrow": "Foundation",
+        "title": "Reference Data",
+        "subtitle": "Lookup lists and code tables.",
+        "loading": false,
+        "columns": [
+          {
+            "key": "code",
+            "label": "Code",
+            "labelAr": "الرمز",
+            "sortable": true
+          },
+          {
+            "key": "name",
+            "label": "Name",
+            "labelAr": "الاسم",
+            "sortable": true
+          },
+          {
+            "key": "category",
+            "label": "Category",
+            "labelAr": "الفئة"
+          },
+          {
+            "key": "status",
+            "label": "Status",
+            "labelAr": "الحالة",
+            "type": "tag"
+          }
+        ],
+        "records": [],
+        "searchPlaceholder": "Search reference data",
+        "filterLabel": "Category",
+        "pillars": {
+          "evidence": "Reference data catalog."
+        },
+        "emptyState": {
+          "titleEn": "No reference data sets yet",
+          "titleAr": "لا توجد بيانات مرجعية بعد",
+          "bodyEn": "Import or define a code table to start managing controlled vocabulary.",
+          "bodyAr": "استورد جدول رموز أو عرّف قائمة لبدء إدارة المصطلحات المعتمدة."
+        }
+      }
+    },
+    {
+      "page_code": "foundation.diagnostics",
+      "route": "/foundation/diagnostics",
+      "archetype": "posture-overview",
+      "template_export": "PostureOverviewTemplateComponent",
+      "permission": "foundation.module.read",
+      "props": {
+        "eyebrow": "Foundation",
+        "title": "Diagnostics",
+        "subtitle": "Operational readiness and control-health posture for Foundation.",
+        "loading": false,
+        "scoreKpis": [],
+        "maturityDomains": [],
+        "evidenceBasis": "Foundation operational baseline",
+        "pillars": {
+          "evidence": "Diagnostics snapshot and control-health feed."
+        }
+      }
+    }
+  ],
+  "components": [
+    {
+      "component_key": "module.entry.page",
+      "vendor": "ibm-carbon",
+      "carbon_key": "grid",
+      "schema_version": 1,
+      "selector": "dos-page-layout",
+      "approval_status": "approved",
+      "metadata": {
+        "source": "wave1-foundation-roster",
+        "archetype": "command-home"
+      }
+    },
+    {
+      "component_key": "module.org_chart.page",
+      "vendor": "ibm-carbon",
+      "carbon_key": "structured-list",
+      "schema_version": 1,
+      "selector": "dos-page-layout",
+      "approval_status": "approved",
+      "metadata": {
+        "source": "wave1-foundation-roster",
+        "archetype": "org-chart"
+      }
+    },
+    {
+      "component_key": "module.records.page",
+      "vendor": "ibm-carbon",
+      "carbon_key": "table",
+      "schema_version": 1,
+      "selector": "dos-page-layout",
+      "approval_status": "approved",
+      "metadata": {
+        "source": "wave1-foundation-roster",
+        "archetype": "intelligent-register"
+      }
+    },
+    {
+      "component_key": "module.ownership_map.page",
+      "vendor": "ibm-carbon",
+      "carbon_key": "table",
+      "schema_version": 1,
+      "selector": "dos-page-layout",
+      "approval_status": "approved",
+      "metadata": {
+        "source": "wave1-foundation-roster",
+        "archetype": "ownership-map"
+      }
+    },
+    {
+      "component_key": "module.delegation_center.page",
+      "vendor": "ibm-carbon",
+      "carbon_key": "table",
+      "schema_version": 1,
+      "selector": "dos-page-layout",
+      "approval_status": "approved",
+      "metadata": {
+        "source": "wave1-foundation-roster",
+        "archetype": "delegation-center"
+      }
+    },
+    {
+      "component_key": "module.workflows.page",
+      "vendor": "ibm-carbon",
+      "carbon_key": "tabs",
+      "schema_version": 1,
+      "selector": "dos-page-layout",
+      "approval_status": "approved",
+      "metadata": {
+        "source": "wave1-foundation-roster",
+        "archetype": "workflow-control"
+      }
+    },
+    {
+      "component_key": "module.audit_trail_ledger.page",
+      "vendor": "ibm-carbon",
+      "carbon_key": "table",
+      "schema_version": 1,
+      "selector": "dos-page-layout",
+      "approval_status": "approved",
+      "metadata": {
+        "source": "wave1-foundation-roster",
+        "archetype": "audit-trail-ledger"
+      }
+    },
+    {
+      "component_key": "module.settings.page",
+      "vendor": "ibm-carbon",
+      "carbon_key": "tabs",
+      "schema_version": 1,
+      "selector": "dos-page-layout",
+      "approval_status": "approved",
+      "metadata": {
+        "source": "wave1-foundation-roster",
+        "archetype": "module-settings"
+      }
+    },
+    {
+      "component_key": "module.workflow_timeline.page",
+      "vendor": "ibm-carbon",
+      "carbon_key": "progress-indicator",
+      "schema_version": 1,
+      "selector": "dos-page-layout",
+      "approval_status": "approved",
+      "metadata": {
+        "source": "wave1-foundation-roster",
+        "archetype": "workflow-timeline"
+      }
+    },
+    {
+      "component_key": "module.posture.page",
+      "vendor": "ibm-carbon",
+      "carbon_key": "grid",
+      "schema_version": 1,
+      "selector": "dos-page-layout",
+      "approval_status": "approved",
+      "metadata": {
+        "source": "wave1-foundation-roster",
+        "archetype": "posture-overview"
+      }
+    }
+  ],
+  "apis": [
+    {
+      "method": "GET",
+      "path": "/api/ui-os/template-binding",
+      "owner_service": "ui-os-service",
+      "permission": "foundation.module.read"
+    },
+    {
+      "method": "GET",
+      "path": "/api/ui-os/template-binding/all",
+      "owner_service": "ui-os-service",
+      "permission": "foundation.module.read"
+    },
+    {
+      "method": "GET",
+      "path": "/api/foundation/dashboard",
+      "owner_service": "user-service",
+      "permission": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/foundation/lookups",
+      "owner_service": "user-service",
+      "permission": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/organizations",
+      "owner_service": "user-service",
+      "permission": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/users",
+      "owner_service": "user-service",
+      "permission": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/audit-trail",
+      "owner_service": "user-service",
+      "permission": "foundation.audit.read"
+    },
+    {
+      "method": "GET",
+      "path": "/api/health/foundation",
+      "owner_service": "user-service",
+      "permission": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/teams",
+      "owner_service": "user-service",
+      "permission": "foundation.data.read"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roles",
+      "owner_service": "user-service",
+      "permission": "foundation.rbac.read"
+    },
+    {
+      "method": "GET",
+      "path": "/api/departments",
+      "owner_service": "user-service",
+      "permission": "foundation.data.read"
+    },
+    {
+      "method": "GET",
+      "path": "/api/positions",
+      "owner_service": "user-service",
+      "permission": "foundation.data.read"
+    },
+    {
+      "method": "GET",
+      "path": "/api/locations",
+      "owner_service": "user-service",
+      "permission": "foundation.data.read"
+    },
+    {
+      "method": "GET",
+      "path": "/api/business-units",
+      "owner_service": "user-service",
+      "permission": "foundation.data.read"
+    },
+    {
+      "method": "GET",
+      "path": "/api/org-hierarchy",
+      "owner_service": "user-service",
+      "permission": "foundation.hierarchy.read"
+    },
+    {
+      "method": "GET",
+      "path": "/api/committees",
+      "owner_service": "user-service",
+      "permission": "foundation.data.read"
+    },
+    {
+      "method": "GET",
+      "path": "/api/governance/committees",
+      "owner_service": "user-service",
+      "permission": "foundation.data.read"
+    },
+    {
+      "method": "GET",
+      "path": "/api/governance/delegations",
+      "owner_service": "user-service",
+      "permission": "foundation.data.read"
+    },
+    {
+      "method": "GET",
+      "path": "/api/governance/policies",
+      "owner_service": "user-service",
+      "permission": "foundation.data.read"
+    },
+    {
+      "method": "GET",
+      "path": "/api/delegations",
+      "owner_service": "user-service",
+      "permission": "foundation.data.read"
+    },
+    {
+      "method": "GET",
+      "path": "/api/access-reviews",
+      "owner_service": "user-service",
+      "permission": "foundation.review.read"
+    },
+    {
+      "method": "GET",
+      "path": "/api/access-review",
+      "owner_service": "user-service",
+      "permission": "foundation.review.read"
+    },
+    {
+      "method": "GET",
+      "path": "/api/sod",
+      "owner_service": "user-service",
+      "permission": "foundation.sod.write"
+    },
+    {
+      "method": "GET",
+      "path": "/api/user-lifecycle",
+      "owner_service": "user-service",
+      "permission": "foundation.user.write"
+    },
+    {
+      "method": "GET",
+      "path": "/api/ownership-mappings",
+      "owner_service": "user-service",
+      "permission": "foundation.data.read"
+    },
+    {
+      "method": "GET",
+      "path": "/api/permissions",
+      "owner_service": "user-service",
+      "permission": "foundation.rbac.read"
+    },
+    {
+      "method": "GET",
+      "path": "/api/profiles",
+      "owner_service": "user-service",
+      "permission": "foundation.user.read"
+    }
+  ],
+  "i18n": {
+    "en": {
+      "foundation.module.title": "Foundation"
+    },
+    "ar": {
+      "foundation.module.title": "الأساس"
+    }
+  },
+  "tables_owned": [
+    "dos.module_registry",
+    "dos.navigation_registry",
+    "dos.dynamic_ui_routes",
+    "dos.ui_route_template_binding",
+    "dos.dynamic_ui_component_registry",
+    "platform_dauth.permissions",
+    "platform_dauth.functional_roles",
+    "platform_dauth.role_permissions"
+  ],
+  "depends_on": [
+    "platform.access-store"
+  ]
+}

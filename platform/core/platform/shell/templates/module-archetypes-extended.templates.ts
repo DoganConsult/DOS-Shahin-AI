@@ -148,6 +148,22 @@ abstract class ExtendedTemplateBase {
     };
     return map[severity ?? 'info'] ?? 'gray';
   }
+
+  /**
+   * Canonical UI-OS label resolver.
+   * Source of truth: WorkspaceI18nLabel { i18nKey?, fallback?, label? }.
+   * Resolution order: `label.label` (resolver-localized) → `label.fallback`
+   * (publisher-supplied) → empty string. NEVER returns the i18nKey as
+   * display text; that is a translation handle, not a label. There is
+   * no labelFromKey legacy branch — the resolver is the only authority.
+   */
+  resolveRuntimeLabel(label: { i18nKey?: string; fallback?: string; label?: string } | null | undefined): string {
+    if (!label) return '';
+    const resolved = typeof label.label === 'string' ? label.label.trim() : '';
+    if (resolved) return resolved;
+    const fallback = typeof label.fallback === 'string' ? label.fallback.trim() : '';
+    return fallback;
+  }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════

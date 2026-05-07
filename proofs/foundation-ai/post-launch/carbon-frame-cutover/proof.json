@@ -1,0 +1,92 @@
+{
+  "title": "Carbon UIShell Frame Cutover — Option A (Frame-via-renderer)",
+  "timestamp": "2026-05-07T18:44:00Z",
+  "doctrine": "ZERO STATIC / ZERO LEGACY / ZERO FALLBACK — DB stores, Dynamic UI declares, UI-OS resolves, frontend renders only normalized runtime",
+  "filesChanged": [
+    {
+      "path": "platform/ui-system/dos-ui-system/src/shell/frame-shell-surfaces.component.ts",
+      "kind": "create",
+      "summary": "DosShellFrameStructuralComponent — render-only diagnostic for shell.frame.* structural primitives (hidden marker span; data-frame-* attrs)"
+    },
+    {
+      "path": "platform/ui-system/dos-ui-system/src/shell/surface-renderer.component.ts",
+      "kind": "edit",
+      "summary": "Removed 'shell.frame': null entry. Added 14 explicit shell.frame.* entries mapping to DosShellFrameStructuralComponent"
+    },
+    {
+      "path": "platform/ui-system/dos-ui-system/src/shell/visual-shell-surfaces.component.ts",
+      "kind": "edit",
+      "summary": "DosShellSidebarNavComponent now wraps inner items in real <cds-sidenav>. Dropped raw <ul class='cds--side-nav__items'> fallback list. DosShellModuleCardsComponent rewritten to use real <cds-clickable-tile> from TilesModule (no longer goes through DosCarbonTileComponent)"
+    },
+    {
+      "path": "platform/ui-system/dos-ui-system/src/carbon/dos-carbon-tile.component.ts",
+      "kind": "rewrite",
+      "summary": "Rewritten to compose <cds-tile> / <cds-clickable-tile> from real Carbon TilesModule. No more hand-rolled <a class='cds--tile'>. clickable=false renders <cds-tile>; clickable=true renders <cds-clickable-tile> with router navigation via (click)"
+    },
+    {
+      "path": "platform/ui-system/dos-ui-system/src/index.ts",
+      "kind": "edit",
+      "summary": "Export ./shell/frame-shell-surfaces.component"
+    },
+    {
+      "path": "platform/core/platform/shell/shell-host.component.ts",
+      "kind": "edit",
+      "summary": "Removed class='cds--header' from outer <header> and class='cds--content' from outer <main>. Added isShellOnlyRoute() computed (sourced from chrome.landingRoute, no hardcoded literal). Added .dos-page-container--full-bleed class binding + CSS modifier (max-inline-size:none; margin-inline:0; inline-size:100%)"
+    },
+    {
+      "path": "scripts/ci-guards/lint-no-legacy-uios-shell.mjs",
+      "kind": "edit",
+      "summary": "Added 3 forbidden patterns: raw <header class='cds--header'>, raw <main class='cds--content'>, 'shell.frame':null COMPONENT_MAP entry"
+    }
+  ],
+  "componentMapDelta": {
+    "removed": ["'shell.frame': null"],
+    "added": [
+      "'shell.frame.ui-shell' -> DosShellFrameStructuralComponent",
+      "'shell.frame.header' -> DosShellFrameStructuralComponent",
+      "'shell.frame.header-name' -> DosShellFrameStructuralComponent",
+      "'shell.frame.header-navigation' -> DosShellFrameStructuralComponent",
+      "'shell.frame.header-menu' -> DosShellFrameStructuralComponent",
+      "'shell.frame.header-menu-item' -> DosShellFrameStructuralComponent",
+      "'shell.frame.header-global-bar' -> DosShellFrameStructuralComponent",
+      "'shell.frame.header-global-action' -> DosShellFrameStructuralComponent",
+      "'shell.frame.side-nav' -> DosShellFrameStructuralComponent",
+      "'shell.frame.side-nav-items' -> DosShellFrameStructuralComponent",
+      "'shell.frame.side-nav-menu' -> DosShellFrameStructuralComponent",
+      "'shell.frame.side-nav-menu-item' -> DosShellFrameStructuralComponent",
+      "'shell.frame.side-nav-link' -> DosShellFrameStructuralComponent",
+      "'shell.frame.content' -> DosShellFrameStructuralComponent"
+    ]
+  },
+  "dbMigration": {
+    "file": "platform/dos/migrations/public/20260507_2700_workspace_frame_renderer_keys.sql",
+    "status": "applied + recorded prior to frontend cutover",
+    "summary": "dos.dynamic_ui_component_registry.renderer_key for the 14 workspace.frame.* rows is now per-component"
+  },
+  "buildResults": {
+    "@dos/ui-contracts": "PASS (tsc -p tsconfig.build.json)",
+    "@dos/ui-system": "PASS (tsc -p tsconfig.build.json)",
+    "@dos/platform-core": "PASS (tsc -p tsconfig.build.json)",
+    "@dos/platform-app": "PASS (ng build, 14.958s, dist/platform-app)"
+  },
+  "guardResults": {
+    "lint-no-static-nav-fallback": { "exit": 0, "status": "PASS — SPA does not use static nav as source of truth" },
+    "lint-no-legacy-uios-shell":   { "exit": 0, "status": "PASS — 0 forbidden legacy patterns across 27 scan dirs" }
+  },
+  "pm2": {
+    "command": "pm2 restart all",
+    "status": "all online",
+    "services": ["auth-service","gateway(2)","product-shell","signup-bff","tenant-service","ui-os-service","user-service","workspace-bff"]
+  },
+  "runtimeProbe": {
+    "url": "http://localhost:3000/workspace-home",
+    "method": "HEAD",
+    "expected": 200,
+    "actual": 200
+  },
+  "notes": [
+    "Frame surfaces are catalog-observable but render only a hidden marker; visible Carbon UIShell DOM is painted by DosWorkspaceHeaderComponent (cds-header), DosShellSidebarNavComponent (cds-sidenav), DosShellModuleCardsComponent (cds-clickable-tile)",
+    "isShellOnlyRoute is sourced from UI-OS chrome.landingRoute (DB-driven). No /workspace-home literal added to shell/nav/bootstrap source.",
+    "DosCarbonTileComponent rewritten to compose real Carbon primitives but module cards now bypass the wrapper to use cds-clickable-tile directly (per cutover spec)."
+  ]
+}

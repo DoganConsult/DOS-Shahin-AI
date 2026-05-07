@@ -62,6 +62,25 @@ interface BrandAssetRow {
   version: number;
 }
 
+interface BrandConfigRow {
+  brand_color_primary: string;
+  brand_color_accent: string;
+  brand_color_background: string;
+  brand_color_surface: string;
+  brand_color_text: string;
+  brand_color_muted: string;
+  brand_icon: string;
+  brand_token_prefix: string;
+  dogan_meaning_en: string;
+  dogan_meaning_ar: string;
+}
+
+interface MarketingPageRow {
+  slug: string;
+  title_en: string;
+  title_ar: string;
+}
+
 export function createBrandRouter(pool: DbPool): Router {
   const router = Router();
 
@@ -139,7 +158,7 @@ export function createBrandRouter(pool: DbPool): Router {
 
     try {
       // ── DB-driven nav + footer ────────────────────────────────────────────
-      const [navQ, navGroupQ, footerGroupQ, footerItemQ] = await Promise.all([
+      const [navQ, navGroupQ, footerGroupQ, footerItemQ, brandConfigQ, legalPagesQ] = await Promise.all([
         pool.query(
           `SELECT id, label_en, label_ar, label_key, href, variant, carbon_key,
                   hide_for_locales, nav_group
@@ -168,6 +187,19 @@ export function createBrandRouter(pool: DbPool): Router {
             WHERE brand_code = $1 AND is_active = TRUE
             ORDER BY group_id, sort_order`,
           [brandCode],
+        ),
+        pool.query<BrandConfigRow>(
+          `SELECT brand_color_primary, brand_color_accent, brand_color_background,
+                  brand_color_surface, brand_color_text, brand_color_muted,
+                  brand_icon, brand_token_prefix, dogan_meaning_en, dogan_meaning_ar
+             FROM dos.brand_config
+            WHERE domain = $1`,
+          [brandCode],
+        ),
+        pool.query<MarketingPageRow>(
+          `SELECT slug, title_en, title_ar
+             FROM dos.marketing_pages
+            ORDER BY slug`,
         ),
       ]);
 
@@ -207,6 +239,34 @@ export function createBrandRouter(pool: DbPool): Router {
         })),
       }));
 
+      // ── Brand config (from Branding.docx) ────────────────────────────────
+      const brandConfig = brandConfigQ.rows.length > 0 ? {
+        brandColorPrimary: brandConfigQ.rows[0].brand_color_primary,
+        brandColorAccent: brandConfigQ.rows[0].brand_color_accent,
+        brandColorBackground: brandConfigQ.rows[0].brand_color_background,
+        brandColorSurface: brandConfigQ.rows[0].brand_color_surface,
+        brandColorText: brandConfigQ.rows[0].brand_color_text,
+        brandColorMuted: brandConfigQ.rows[0].brand_color_muted,
+        brandIcon: brandConfigQ.rows[0].brand_icon,
+        brandTokenPrefix: brandConfigQ.rows[0].brand_token_prefix,
+        doganMeaningEn: brandConfigQ.rows[0].dogan_meaning_en,
+        doganMeaningAr: brandConfigQ.rows[0].dogan_meaning_ar,
+      } : null;
+
+      // ── Legal pages (from legal and terms .docx) ───────────────────────────
+      const legalPages = legalPagesQ.rows.map((r) => ({
+        slug: r.slug,
+        title_en: r.title_en,
+        title_ar: r.title_ar,
+      }));
+
+      // ── Footer config with ecosystem notice ────────────────────────────────
+      const footerConfig = {
+        legalPages,
+        ecosystemNoticeEn: 'Part of the Dogan ecosystem. Each product, platform, initiative, portal, service, or profile may operate under its own purpose, scope, terms, privacy notice, and commercial structure. Dogan / Doğan is a Turkish name meaning falcon. It is not related to the English word dog.',
+        ecosystemNoticeAr: 'جزء من منظومة Dogan. قد يكون لكل منتج أو منصة أو مبادرة أو بوابة أو خدمة أو ملف شخصي غرضه ونطاقه وشروطه وإشعار الخصوصية والهيكل التجاري الخاص به. Dogan / Doğan اسم تركي معناه الصقر أو الشاهين، ولا يرتبط بكلمة Dog الإنجليزية.',
+      };
+
       // ── DB-driven homeContent (ZERO static fallback) ──────────────────────
       const homeContent = await loadHomeContentFromDb(pool, routePath);
 
@@ -224,6 +284,18 @@ export function createBrandRouter(pool: DbPool): Router {
           landingAgenticProof:   true,
         },
         homeContent, // null if DB has no row → frontend renders empty state
+        brandConfig, // from dos.brand_config
+        legalConfig: {
+          legalEntityName: 'Dogan Consult',
+          commercialRegistrationNumber: '[COMMERCIAL_REGISTRATION_NUMBER]',
+          vatNumber: '[VAT_NUMBER]',
+          registeredAddress: '[REGISTERED_ADDRESS]',
+          supportEmail: '[SUPPORT_EMAIL]',
+          billingEmail: '[BILLING_EMAIL]',
+          country: 'Saudi Arabia',
+          lastUpdated: '2026-05-15',
+        },
+        footerConfig, // from dos.marketing_pages + ecosystem notice
       });
     } catch (e) {
       res.status(500).json({ error: 'marketing_config_failed', message: (e as Error).message });

@@ -1,11 +1,12 @@
 import { EventEmitter } from '@angular/core';
-export interface DosTabItem {
-    id: string;
-    label: string;
-}
+import { DosCarbonTabItem } from '../carbon/dos-carbon-tabs.component';
+/**
+ * DosTabs — tabbed navigation.
+ * Refined to use Carbon Tabs policies.
+ */
 export declare class DosTabsComponent {
-    items: DosTabItem[];
+    items: DosCarbonTabItem[];
     selectedId: string;
     selectedIdChange: EventEmitter<string>;
-    select(t: DosTabItem): void;
+    select(id: string): void;
 }

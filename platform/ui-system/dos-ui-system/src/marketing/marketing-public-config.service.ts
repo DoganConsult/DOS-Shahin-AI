@@ -95,6 +95,40 @@ export interface MarketingHomeContent {
   brandLabel: string;
   copyright: string;
   logoHref: string;
+  // Brand configuration from Branding.docx
+  brandConfig: {
+    brandColorPrimary: string;
+    brandColorAccent: string;
+    brandColorBackground: string;
+    brandColorSurface: string;
+    brandColorText: string;
+    brandColorMuted: string;
+    brandIcon: string; // falcon icon
+    brandTokenPrefix: string; // --shahin-*
+    doganMeaningEn: string; // "Falcon"
+    doganMeaningAr: string; // "الصقر / الشاهين"
+  };
+  // Legal configuration from legal and terms .docx
+  legalConfig: {
+    legalEntityName: string;
+    commercialRegistrationNumber: string;
+    vatNumber: string;
+    registeredAddress: string;
+    supportEmail: string;
+    billingEmail: string;
+    country: string;
+    lastUpdated: string;
+  };
+  // Footer configuration
+  footerConfig: {
+    legalPages: ReadonlyArray<{
+      slug: string;
+      title_en: string;
+      title_ar: string;
+    }>;
+    ecosystemNoticeEn: string;
+    ecosystemNoticeAr: string;
+  };
   uiLabels: {
     headerMenuLabel: string;
     mobileMenuLabel: string;
@@ -443,6 +477,33 @@ const EMPTY_MARKETING_HOME_CONTENT: MarketingHomeContent = {
   brandLabel: '',
   copyright: '',
   logoHref: '/',
+  brandConfig: {
+    brandColorPrimary: '',
+    brandColorAccent: '',
+    brandColorBackground: '',
+    brandColorSurface: '',
+    brandColorText: '',
+    brandColorMuted: '',
+    brandIcon: '',
+    brandTokenPrefix: '',
+    doganMeaningEn: '',
+    doganMeaningAr: '',
+  },
+  legalConfig: {
+    legalEntityName: '',
+    commercialRegistrationNumber: '',
+    vatNumber: '',
+    registeredAddress: '',
+    supportEmail: '',
+    billingEmail: '',
+    country: '',
+    lastUpdated: '',
+  },
+  footerConfig: {
+    legalPages: [],
+    ecosystemNoticeEn: '',
+    ecosystemNoticeAr: '',
+  },
   uiLabels: {
     headerMenuLabel: '',
     mobileMenuLabel: '',

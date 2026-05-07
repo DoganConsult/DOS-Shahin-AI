@@ -1,0 +1,330 @@
+{
+  "$schema": "https://dogan-ai.local/schemas/workspace-shell-operating.v1-1.schema.json",
+  "contractKind": "workspace",
+  "contractVersion": "1.1.0",
+  "runtimeModel": "v1-1-operating-runtime",
+  "generatedAt": "2026-05-07T16:50:00+03:00",
+  "supersedes": "dogan_shahin_all_contracts_v1_runtime/workspace/shahin.workspace.contract.v1-runtime.json",
+  "selfContained": true,
+  "rule": "Workspace shell operating contract: surfaces, zones, nav, chrome, shortcuts, banners, policies, breakpoints, touchTargets, variants, and tenantSurfaceVariants are all resolved into ONE workspace-runtime envelope. Mobile config is folded in here. There is no second mobile truth channel.",
+  "doctrine": [
+    "ZERO_STATIC",
+    "ZERO_LEGACY",
+    "ZERO_FALLBACK",
+    "ZERO_BROWSER_NORMALIZATION",
+    "DB_AS_SOURCE_OF_TRUTH",
+    "ONE_SOURCE_RULE",
+    "NO_MIRROR_RULE",
+    "NO_LOCAL_POLICY_RULE"
+  ],
+  "forbidden": [
+    "fake_component_map_closure",
+    "register_dos_semantic_components_as_full_page_templates",
+    "static_nav_fallback",
+    "hardcoded_workspace_modules",
+    "hardcoded_workspace_routes",
+    "prime_ng_workspace_shell",
+    "material_workspace_shell",
+    "localStorage_auth_token",
+    "sessionStorage_auth_token",
+    "silent_renderer_fallback",
+    "random_css_mobile_patch",
+    "shellActionFromLegacyRecord",
+    "label_key_in_frontend",
+    "labelKey_in_frontend_runtime",
+    "labelEn_in_frontend_runtime",
+    "labelAr_in_frontend_runtime",
+    "component_key_in_frontend_runtime",
+    "perms_required_in_frontend_runtime",
+    "route_field_as_nav_action_fallback",
+    "detailRoute_in_frontend_runtime",
+    "evidenceUri_in_frontend_runtime",
+    "chromeStrings_in_frontend",
+    "props_accountMenu_in_frontend",
+    "buildPlatformNav",
+    "buildFoundationGroup",
+    "buildFoundationNavChildren",
+    "second_mobile_truth_channel",
+    "frontend_breakpoint_constants",
+    "DEFAULT_TABLET_MIN_PX",
+    "DEFAULT_DESKTOP_MIN_PX",
+    "touchTargetSize_literal_in_frontend",
+    "media_query_max_width_767_98px_in_frontend",
+    "var_with_literal_fallback_in_shell"
+  ],
+  "workspaceKey": "shahin.workspace",
+  "productKey": "shahin-ai",
+  "platformKey": "dogan-ai-os",
+  "route": "/workspace-home",
+  "authRequired": true,
+  "bootstrapEndpoint": "/api/workspace/bootstrap",
+  "accessStore": {
+    "mustExpose": [
+      "actor", "tenant", "workspace", "roles", "permissions",
+      "modules", "routes", "nav", "widgets", "actions",
+      "shell", "trialState"
+    ],
+    "methods": [
+      "hasPermission", "hasRole", "canAccessModule",
+      "canRenderRoute", "canRenderWidget", "canExecuteAction"
+    ],
+    "forbiddenSources": [
+      "static_module_list",
+      "static_nav_array",
+      "localStorage_token",
+      "sessionStorage_token"
+    ]
+  },
+  "shellOperating": {
+    "envelopeRoot": "shell",
+    "fieldList": [
+      "version",
+      "surfaces",
+      "zones",
+      "nav",
+      "chrome",
+      "shortcuts",
+      "banners",
+      "policies",
+      "breakpoints",
+      "touchTargets",
+      "variants",
+      "tenantSurfaceVariants"
+    ],
+    "version": {
+      "type": "integer",
+      "publication": { "table": "dos.workspace_shell_binding", "column": "version_seq", "tenancy": "tenant" }
+    },
+    "surfaces": {
+      "type": "array<{surfaceKey, slot, carbonKeys[], required, structuralOnly}>",
+      "publication": { "table": "dos.workspace_shell_binding", "tenancy": "tenant" },
+      "structuralOnly": true,
+      "carriedForwardFromV1": [
+        { "surfaceKey": "workspace.shell.root",      "slot": "shell.root",                "carbonKeys": ["ui-shell","content"],                                                                  "required": true },
+        { "surfaceKey": "workspace.header",          "slot": "shell.header",              "carbonKeys": ["header","header-name","header-navigation","header-global-bar","header-global-action"], "required": true },
+        { "surfaceKey": "workspace.sidebar",         "slot": "shell.sidebar",             "carbonKeys": ["side-nav","side-nav-items","side-nav-menu","side-nav-menu-item","side-nav-link"],     "required": true },
+        { "surfaceKey": "workspace.mobile.drawer",   "slot": "shell.mobile.drawer",       "carbonKeys": ["side-nav","side-nav-items"],                                                            "required": true },
+        { "surfaceKey": "workspace.mobile.bottomNav","slot": "shell.mobile.bottomNav",    "carbonKeys": ["button","tag"],                                                                         "required": true },
+        { "surfaceKey": "workspace.accountMenu",     "slot": "shell.header.account",      "carbonKeys": ["popover","structured-list","button"],                                                   "required": true },
+        { "surfaceKey": "workspace.statusBanner",    "slot": "shell.banner",              "carbonKeys": ["inline-notification","tag"],                                                            "required": false }
+      ]
+    },
+    "zones": {
+      "type": "object<{header, main, sidebar, mobile.drawer, mobile.bottomNav, banner, account}>",
+      "publication": { "derivedFromSurfaces": true },
+      "rule": "zones[zoneKey] is the result of grouping surfaces[].slot prefixes; resolver emits the grouping, frontend never re-derives from raw surfaces"
+    },
+    "nav": {
+      "type": "object<{groups[], items[]}>",
+      "publication": {
+        "groups_table":  "dos.ui_module_nav_group",
+        "items_table":   "dos.ui_module_nav_item",
+        "ordering_column": "sort_order"
+      },
+      "actionShape": {
+        "kind": "navigate|open_external|toggle_language|toggle_theme|open_context_tab|open_command|close_overlay|clear_error|dispatch_event",
+        "path_field_for_navigate": "action.path",
+        "url_field_for_open_external": "action.url",
+        "tab_field_for_open_context_tab": "action.tab",
+        "eventName_field_for_dispatch_event": "action.eventName"
+      },
+      "labelShape": {
+        "i18nKey": "string|null",
+        "fallback": "string|null",
+        "label": "string|null",
+        "rule": "frontend resolves label.label -> label.fallback -> empty string; label_key/labelKey forbidden"
+      },
+      "preflight_dependency_for_foundation": "preflight/blockers.contract.v1-1.json#B2"
+    },
+    "chrome": {
+      "type": "object<{brand, logoHref, productSwitcher, accountMenu, statusBar, footer}>",
+      "publication": { "table": "dos.ui_workspace_chrome", "tenancy": "tenant" },
+      "rule": "chromeStrings field is forbidden; values are typed objects, not flat string maps"
+    },
+    "shortcuts": {
+      "type": "array<{shortcutKey, keyCombo[], action, contextScope}>",
+      "publication": { "table": "dos.ui_workspace_shortcuts", "tenancy": "tenant_or_global" }
+    },
+    "banners": {
+      "type": "array<{bannerId, kind, severity, label, action|null, dismissible, scope}>",
+      "publication": { "table": "dos.ui_workspace_banner", "tenancy": "tenant" },
+      "rule": "session-expiry, trial, offline banners are policy-driven from DB rows; shell-host MUST NOT own banner copy or thresholds"
+    },
+    "policies": {
+      "type": "object<{layout, expandActiveOnly, sessionExpiry, trial, offline, defaultModuleCode, defaultRoute}>",
+      "publication": {
+        "tables": [
+          "dos.workspace_shell_binding",
+          "dos.ui_workspace_policy"
+        ],
+        "tenancy": "tenant"
+      },
+      "rule": "all policy values come from DB; shell-host MUST NOT own session expiry thresholds, trial copy, offline copy, subscription route, shortcut keys, or disabled tooltip text"
+    },
+    "breakpoints": {
+      "type": "array<{breakpointKey, minPx, maxPx, defaultBehavior, isActive}>",
+      "publication": {
+        "table": "dos.mobile_breakpoint_config",
+        "tenancy": "tenant_or_global",
+        "merge_strategy": "tenant_overrides_then_global"
+      },
+      "rule": "Breakpoints are emitted INSIDE shell.breakpoints in workspace-runtime. The mobile.routes.ts channel becomes a removal target; this contract REPLACES it.",
+      "carriedForwardSeed": [
+        { "breakpointKey": "mobile",  "minPx": 0,    "maxPx": 480 ,  "defaultBehavior": "stacked",     "isActive": true },
+        { "breakpointKey": "tablet",  "minPx": 481,  "maxPx": 1024 , "defaultBehavior": "sidebar",     "isActive": true },
+        { "breakpointKey": "desktop", "minPx": 1025, "maxPx": 9999 , "defaultBehavior": "sidebar",     "isActive": true }
+      ]
+    },
+    "touchTargets": {
+      "type": "object<{minSizePx, minSpacingPx, hapticFeedbackEnabled, gestureBindings[]}>",
+      "publication": {
+        "tables": [
+          "dos.mobile_touch_gestures",
+          "dos.ui_touch_target_config"
+        ],
+        "tenancy": "tenant_or_global"
+      },
+      "carbonAlignment": "Carbon recommends a 44x44 minimum touch target; value MUST come from DB, not from a frontend constant",
+      "frontendBindings": [
+        { "carbonComponent": "button",        "minSizeBindingFromRuntime": "shell.touchTargets.minSizePx" },
+        { "carbonComponent": "side-nav-item", "minSizeBindingFromRuntime": "shell.touchTargets.minSizePx" }
+      ]
+    },
+    "variants": {
+      "type": "Record<surfaceKey, Array<{variantName, breakpoint, propsOverride, layoutOverride, isDefault}>>",
+      "publication": {
+        "table": "dos.mobile_component_variants",
+        "tenancy": "tenant_or_global",
+        "preflight_dependency": "preflight/blockers.contract.v1-1.json#B1"
+      },
+      "rule": "Variants are emitted INSIDE shell.variants in workspace-runtime; the mobile.routes.ts side channel becomes a removal target",
+      "uniqueness_rule_per_B1": "exactly one isDefault=true row per (coalesce(tenant_id,'__global__'), component_key, breakpoint)"
+    },
+    "tenantSurfaceVariants": {
+      "type": "Record<tenantId, Record<surfaceKey, variantName>>",
+      "publication": {
+        "table": "dos.workspace_shell_binding",
+        "key": ["tenant_id","surface_key"],
+        "tenancy": "tenant"
+      },
+      "rule": "Per-tenant surface variant binding (e.g. tenant A uses workspace.header.compact while tenant B uses workspace.header.brand-heavy)"
+    }
+  },
+  "shellFrame": {
+    "source": "workspace_shell_binding",
+    "structuralOnly": true,
+    "supersededBy": "shellOperating.surfaces",
+    "carriedForwardFromV1": "see shellOperating.surfaces.carriedForwardFromV1"
+  },
+  "workspaceHomePage": {
+    "important": "workspace home actionQueue and ai are page content, not shell frame, unless explicitly promoted to global shell.",
+    "pageKey": "workspace.home",
+    "route": "/workspace-home",
+    "pageType": "overview",
+    "componentKey": "workspace.home.archetype",
+    "rendererKey": "WorkspaceHomeTemplateComponent",
+    "permission": "shahin.workspace.read",
+    "semanticRegions": [
+      { "regionKey": "page_header",   "semanticComponent": "dos.page-header" },
+      { "regionKey": "module_cards",  "semanticComponent": "dos.metric-grid" },
+      { "regionKey": "action_queue",  "semanticComponent": "dos.records-table" },
+      { "regionKey": "ai_insights",   "semanticComponent": "dos.ai-insight-panel" }
+    ],
+    "dataSources": {
+      "moduleCards":  "/api/ui-os/workspace-runtime/modules",
+      "actionQueue":  "/api/workspace/action-queue",
+      "aiInsights":   "/api/ai/workspace/insights"
+    }
+  },
+  "navigationPolicy": {
+    "source": "/api/ui-os/workspace/nav",
+    "filters": ["tenant_entitlement","module_status","route_contract","permission"],
+    "fallbackAfterAuth": "forbidden"
+  },
+  "responsivePolicy": {
+    "ref": "shellOperating.breakpoints + shellOperating.touchTargets + shellOperating.variants",
+    "mobile": {
+      "layout": "single_column",
+      "overflowX": "forbidden",
+      "sideNav": "drawer_or_bottom_nav",
+      "cards": "full_width",
+      "tables": "card_list_preferred",
+      "tabs": "scrollable_or_stacked",
+      "actions": "overflow_menu_or_bottom_sheet",
+      "rightAside": "below_main",
+      "safeArea": "required"
+    },
+    "tablet": {
+      "layout": "two_column_when_space",
+      "tables": "compact_data_table",
+      "sideNav": "drawer_or_collapsed"
+    },
+    "desktop": {
+      "layout": "carbon_grid",
+      "sideNav": "visible",
+      "tables": "full_data_table",
+      "actions": "toolbar"
+    },
+    "rtl": {
+      "required": true,
+      "logicalCssOnly": true,
+      "directionSource": "i18n_runtime"
+    }
+  },
+  "resolverContract": {
+    "endpoint": "/api/ui-os/workspace-runtime",
+    "auth": "session_cookie",
+    "tenancy_scope": "tenant",
+    "snake_case_fields_allowed_only_inside_resolver": true,
+    "browser_facing_camelCase": true,
+    "envelope_ref": "envelopes/workspace-runtime.envelope.v1-1.json"
+  },
+  "frontendConsumption": {
+    "ref": "consumption-map/frontend.consumption.map.v1-1.json",
+    "consumers": [
+      "platform/core/platform/shell/shell-host.component.ts",
+      "platform/core/platform/shell/workspace-shell-binding.service.ts",
+      "platform/ui-system/dos-ui-system/src/shell/shell-state.service.ts",
+      "platform/ui-system/dos-ui-system/src/shell/mobile-bottom-nav.component.ts",
+      "platform/ui-system/dos-ui-system/src/shell/mobile-drawer.component.ts"
+    ],
+    "hardcodedSymbolsToPurge": [
+      { "symbol": "DEFAULT_TABLET_MIN_PX = 768",  "site": "platform/ui-system/dos-ui-system/src/shell/shell-state.service.ts",        "replaceWith": "shell.breakpoints[breakpointKey='tablet'].minPx" },
+      { "symbol": "DEFAULT_DESKTOP_MIN_PX = 1200","site": "platform/ui-system/dos-ui-system/src/shell/shell-state.service.ts",        "replaceWith": "shell.breakpoints[breakpointKey='desktop'].minPx" },
+      { "symbol": "touchTargetSize = 44",         "site": "platform/ui-system/dos-ui-system/src/shell/mobile-bottom-nav.component.ts","replaceWith": "shell.touchTargets.minSizePx" },
+      { "symbol": "@media (max-width: 767.98px)", "site": "platform/core/platform/shell/shell-host.component.ts",                     "replaceWith": "container query bound to shell.breakpoints" },
+      { "symbol": "@media (max-width: 1199.98px)","site": "platform/core/platform/shell/shell-host.component.ts",                     "replaceWith": "container query bound to shell.breakpoints" },
+      { "symbol": "var(--workspace-sidebar-width, ...)", "site": "platform/core/platform/shell/shell-host.component.ts",              "replaceWith": "design token with no literal fallback" }
+    ]
+  },
+  "publication": {
+    "primary_tables": [
+      "dos.workspace_shell_binding",
+      "dos.ui_workspace_chrome",
+      "dos.ui_workspace_shortcuts",
+      "dos.ui_workspace_banner",
+      "dos.ui_workspace_policy",
+      "dos.ui_module_nav_group",
+      "dos.ui_module_nav_item",
+      "dos.mobile_breakpoint_config",
+      "dos.mobile_touch_gestures",
+      "dos.ui_touch_target_config",
+      "dos.mobile_component_variants"
+    ],
+    "preflight_dependencies": [
+      "preflight/blockers.contract.v1-1.json#B1",
+      "preflight/blockers.contract.v1-1.json#B2"
+    ],
+    "validation_query_id": "publication.workspace_shell.coverage.v1_1"
+  },
+  "acceptance": [
+    "shellOperating.fieldList contains 12 entries",
+    "shellOperating.surfaces.carriedForwardFromV1 length is 7",
+    "shellOperating.breakpoints.publication.table is dos.mobile_breakpoint_config",
+    "shellOperating.variants.preflight_dependency points to B1",
+    "shellOperating.nav.preflight_dependency_for_foundation points to B2",
+    "no field references shellActionFromLegacyRecord",
+    "no field references chromeStrings",
+    "no field references second_mobile_truth_channel"
+  ]
+}

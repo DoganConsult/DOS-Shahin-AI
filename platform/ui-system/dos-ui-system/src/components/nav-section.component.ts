@@ -15,7 +15,7 @@ import { DosNavItemComponent } from './nav-item.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     @if (group.items?.length) {
-      <cds-sidenav-menu [title]="group.label" [expanded]="true">
+      <cds-sidenav-menu [title]="group.label" [expanded]="isGroupActive()">
         @for (item of group.items; track item.id) {
           <dos-nav-item
             [item]="item"
@@ -37,9 +37,19 @@ export class DosNavSectionComponent {
 
   @Output() select = new EventEmitter<DosNavItem>();
 
+  isGroupActive(): boolean {
+    return (this.group.items ?? []).some((item) => this.isActive(item) || this.hasActiveChild(item));
+  }
+
   isActive(item: DosNavItem): boolean {
-    if (!this.activeRoute || !item.route) return false;
-    if (this.activeRoute === item.route) return true;
-    return this.activeRoute.startsWith(item.route + '/');
+    if (!this.activeRoute) return false;
+    const itemPath = item.action?.kind === 'navigate' ? item.action.path : null;
+    if (!itemPath) return false;
+    if (this.activeRoute === itemPath) return true;
+    return this.activeRoute.startsWith(itemPath + '/');
+  }
+
+  private hasActiveChild(item: DosNavItem): boolean {
+    return (item.children ?? []).some((child) => this.isActive(child) || this.hasActiveChild(child));
   }
 }

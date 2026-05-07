@@ -34,10 +34,12 @@ import {
   type StatusBarSignal,
   type WorkspaceI18nLabel,
   type WorkspaceRuntimeBanner,
+  type WorkspaceRuntimeBreakpoint,
   type WorkspaceRuntimeNavGroupRow,
   type WorkspaceRuntimeNavItemRow,
   type WorkspaceRuntimeShortcut,
-  type WorkspaceShellActionItem,
+  type WorkspaceRuntimeTouchTargets,
+  type WorkspaceRuntimeVariant,
   type WorkspaceShellBannerTemplate,
   type WorkspaceShellBindingRow,
   type WorkspaceShellResolverResponse,
@@ -48,12 +50,12 @@ import type {
   DosNavGroup,
   DosNavItem,
   DosShellNavConfig,
-  ShellAccountMenuEntry,
   ShellBanner,
 } from '@dos/ui-contracts';
 import { parseShellAction } from '@dos/ui-contracts';
 import { AccessStore } from '@dos/access-store';
 import { ShellConnectivityService } from './shell-connectivity.service';
+import { ShellPreferencesService } from './shell-preferences.service';
 
 /** Anonymous surface row — no component_key, no perms_required. */
 export type WorkspaceShellSurface = WorkspaceShellBindingRow;
@@ -111,6 +113,7 @@ export class WorkspaceShellBindingService {
   private readonly http = inject(HttpClient);
   private readonly access = inject(AccessStore);
   private readonly connectivity = inject(ShellConnectivityService);
+  private readonly prefs = inject(ShellPreferencesService);
 
   private readonly _surfaces = signal<SurfaceMap>(EMPTY_MAP);
   private readonly _navGroupsRaw = signal<readonly WorkspaceRuntimeNavGroupRow[]>([]);
@@ -119,6 +122,13 @@ export class WorkspaceShellBindingService {
   private readonly _shortcutsRaw = signal<readonly WorkspaceRuntimeShortcut[]>([]);
   private readonly _bannersRaw = signal<readonly WorkspaceRuntimeBanner[]>([]);
   private readonly _policies = signal<Readonly<Record<string, unknown>>>(EMPTY_RECORD);
+  // v1.1 operating-runtime envelope fields. Populated from
+  // shell.breakpoints / shell.touchTargets / shell.variants /
+  // shell.tenantSurfaceVariants in setRuntimeResponse.
+  private readonly _breakpoints = signal<readonly WorkspaceRuntimeBreakpoint[]>([]);
+  private readonly _touchTargets = signal<WorkspaceRuntimeTouchTargets | null>(null);
+  private readonly _variants = signal<Readonly<Record<string, readonly WorkspaceRuntimeVariant[]>>>(EMPTY_RECORD as Readonly<Record<string, readonly WorkspaceRuntimeVariant[]>>);
+  private readonly _tenantSurfaceVariants = signal<Readonly<Record<string, string>>>(EMPTY_RECORD as Readonly<Record<string, string>>);
   private readonly _version  = signal(0);
   private readonly _loaded   = signal(false);
   private readonly _tenantId = signal<string | null>(null);
@@ -130,6 +140,25 @@ export class WorkspaceShellBindingService {
   readonly navItemsRaw = this._navItemsRaw.asReadonly();
   readonly chrome = this._chrome.asReadonly();
   readonly policies = this._policies.asReadonly();
+  // v1.1 readonly accessors for shell.breakpoints / touchTargets / variants.
+  readonly breakpoints = this._breakpoints.asReadonly();
+  readonly touchTargets = this._touchTargets.asReadonly();
+  readonly variants = this._variants.asReadonly();
+  readonly tenantSurfaceVariants = this._tenantSurfaceVariants.asReadonly();
+  /** Tablet pivot in pixels — sourced from shell.breakpoints[breakpointKey='tablet'].minPx. */
+  readonly tabletMinPx = computed<number>(() => {
+    const row = this._breakpoints().find((b) => b.breakpointKey === 'tablet' && b.isActive);
+    return row?.minPx ?? 0;
+  });
+  /** Desktop pivot in pixels — sourced from shell.breakpoints[breakpointKey='desktop'].minPx. */
+  readonly desktopMinPxFromBreakpoints = computed<number>(() => {
+    const row = this._breakpoints().find((b) => b.breakpointKey === 'desktop' && b.isActive);
+    return row?.minPx ?? 0;
+  });
+  /** Touch target min-size in pixels — sourced from shell.touchTargets.minSizePx. */
+  readonly touchTargetMinSizePx = computed<number>(() => this._touchTargets()?.minSizePx ?? 0);
+  /** Touch target min-spacing in pixels — sourced from shell.touchTargets.minSpacingPx. */
+  readonly touchTargetMinSpacingPx = computed<number>(() => this._touchTargets()?.minSpacingPx ?? 0);
   readonly version  = this._version.asReadonly();
   readonly loaded   = this._loaded.asReadonly();
 
@@ -175,7 +204,6 @@ export class WorkspaceShellBindingService {
           item.label?.i18nKey ??
           '',
         action: item.action ?? undefined,
-        route: item.action.kind === 'navigate' ? item.action.path : undefined,
         icon: item.icon?.trim() || undefined,
         badge,
         requiredPermission: item.permission ?? undefined,
@@ -249,27 +277,6 @@ export class WorkspaceShellBindingService {
     () => this.chromeStringFirst('logoHref') ?? this.zoneStringProp('header', 'logoHref'),
   );
 
-  /** Account menu entries from chrome.accountMenu (first-class). */
-  readonly accountMenuEntries = computed<ShellAccountMenuEntry[] | null>(() => {
-    const raw = this._chrome()['accountMenu'];
-    if (!Array.isArray(raw) || raw.length === 0) return null;
-    const out: ShellAccountMenuEntry[] = [];
-    for (const item of raw) {
-      if (!item || typeof item !== 'object') continue;
-      const e = item as Record<string, unknown>;
-      const id = typeof e['id'] === 'string' ? (e['id'] as string) : null;
-      const i18nKey = typeof e['i18nKey'] === 'string' ? (e['i18nKey'] as string) : null;
-      if (!id || !i18nKey) continue;
-      const entry: ShellAccountMenuEntry = { id, i18nKey };
-      const action = parseShellAction(e['action']);
-      if (action) entry.action = action;
-      if (e['destructive'] === true) entry.destructive = true;
-      if (typeof e['requiresAdmin'] === 'boolean') entry.requiresAdmin = e['requiresAdmin'] as boolean;
-      out.push(entry);
-    }
-    return out.length > 0 ? out : null;
-  });
-
   // ── Render gates — server-side RBAC trusted; FE checks `enabled` only ───
   // Default-deny once a tenant has been selected and the envelope has loaded.
   // While bootstrapping (no tenant yet) we allow placeholder rendering.
@@ -304,6 +311,10 @@ export class WorkspaceShellBindingService {
     this._shortcutsRaw.set([]);
     this._bannersRaw.set([]);
     this._policies.set(EMPTY_RECORD);
+    this._breakpoints.set([]);
+    this._touchTargets.set(null);
+    this._variants.set(EMPTY_RECORD as Readonly<Record<string, readonly WorkspaceRuntimeVariant[]>>);
+    this._tenantSurfaceVariants.set(EMPTY_RECORD as Readonly<Record<string, string>>);
     this._version.set(0);
     this._loaded.set(loaded);
   }
@@ -372,37 +383,6 @@ export class WorkspaceShellBindingService {
       return;
     }
 
-    // #region agent log
-    try {
-      const raw = shell.surfaces;
-      const perZone: Record<string, number> = {};
-      const perComponentType: Record<string, number> = {};
-      const perRenderer: Record<string, number> = {};
-      const sample: Array<Record<string, unknown>> = [];
-      for (const r of raw) {
-        const rec = (r ?? {}) as Record<string, unknown>;
-        const z = String(rec['zone'] ?? '∅');
-        perZone[z] = (perZone[z] ?? 0) + 1;
-        const ct = String(rec['componentType'] ?? '∅');
-        perComponentType[ct] = (perComponentType[ct] ?? 0) + 1;
-        const rk = String(rec['rendererKey'] ?? '∅');
-        perRenderer[rk] = (perRenderer[rk] ?? 0) + 1;
-        if (sample.length < 8) sample.push({ zone: rec['zone'], componentKey: rec['componentKey'], surfaceId: rec['surfaceId'], rendererKey: rec['rendererKey'], componentType: rec['componentType'] });
-      }
-      fetch('http://localhost:7837/ingest/4a9598a0-2068-40f6-a025-5dfbf60e9c19', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '409426' },
-        body: JSON.stringify({
-          sessionId: '409426', runId: 'post-fix', hypothesisId: 'H1+H2+H5',
-          location: 'workspace-shell-binding.service.ts:refresh:RAW',
-          message: 'resolver raw surfaces (pre-gate)',
-          data: { totalRaw: raw.length, perZone, perComponentType, perRenderer, sample,
-                  spaScript: typeof document !== 'undefined' ? (document.querySelector('script[src*="main"]') as HTMLScriptElement | null)?.src : null },
-          timestamp: Date.now(),
-        }),
-      }).catch(() => {});
-    } catch { /* no-op */ }
-    // #endregion
     const next = new Map<string, WorkspaceShellSurface>();
     const dropped: Array<{ reason: string; row: unknown }> = [];
     for (const row of shell.surfaces) {
@@ -456,14 +436,21 @@ export class WorkspaceShellBindingService {
     this._chrome.set(shell.chrome && typeof shell.chrome === 'object' ? shell.chrome : EMPTY_RECORD);
     this._shortcutsRaw.set(Array.isArray(shell.shortcuts) ? shell.shortcuts : []);
     this._bannersRaw.set(Array.isArray(shell.banners) ? shell.banners : []);
-    // #region agent log
-    try {
-      const banners = Array.isArray(shell.banners) ? shell.banners : [];
-      // eslint-disable-next-line no-console
-      console.info('[DOS_DEBUG] BANNERS_RAW', { count: banners.length, rows: banners.map((b: WorkspaceRuntimeBanner) => ({ id: b?.id ?? null, kind: (b as { kind?: string })?.kind ?? null, titleKey: (b as { titleKey?: string })?.titleKey ?? null, titleFallback: (b as { titleFallback?: string })?.titleFallback ?? null, messageKey: (b as { messageKey?: string })?.messageKey ?? null, messageFallback: (b as { messageFallback?: string })?.messageFallback ?? null })) });
-    } catch { /* no-op */ }
-    // #endregion
     this._policies.set(shell.policies && typeof shell.policies === 'object' ? shell.policies : EMPTY_RECORD);
+    // v1.1 operating-runtime fields. Optional in the envelope; absent =
+    // empty signal (no static fallback).
+    this._breakpoints.set(Array.isArray(shell.breakpoints) ? shell.breakpoints : []);
+    this._touchTargets.set(shell.touchTargets ?? null);
+    this._variants.set(
+      shell.variants && typeof shell.variants === 'object'
+        ? shell.variants
+        : (EMPTY_RECORD as Readonly<Record<string, readonly WorkspaceRuntimeVariant[]>>),
+    );
+    this._tenantSurfaceVariants.set(
+      shell.tenantSurfaceVariants && typeof shell.tenantSurfaceVariants === 'object'
+        ? shell.tenantSurfaceVariants
+        : (EMPTY_RECORD as Readonly<Record<string, string>>),
+    );
     this._version.set(Number(shell.version ?? resp.version) || 0);
     this._loaded.set(true);
     // eslint-disable-next-line no-console
@@ -526,30 +513,6 @@ export class WorkspaceShellBindingService {
       // eslint-disable-next-line no-console
       console.warn('[workspace-shell-binding] STRUCTURAL_CONTRACT_GATE_DROPPED', dropped);
     }
-    // #region agent log
-    try {
-      const dropReason: Record<string, number> = {};
-      const droppedZones: Record<string, number> = {};
-      for (const d of dropped) {
-        dropReason[d.reason] = (dropReason[d.reason] ?? 0) + 1;
-        const r = (d.row ?? {}) as Record<string, unknown>;
-        const z = String(r['zone'] ?? '∅');
-        droppedZones[z] = (droppedZones[z] ?? 0) + 1;
-      }
-      const perZoneAfter = { header, banner, sidebar, main, pageActions, pageContent };
-      fetch('http://localhost:7837/ingest/4a9598a0-2068-40f6-a025-5dfbf60e9c19', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '409426' },
-        body: JSON.stringify({
-          sessionId: '409426', runId: 'post-fix', hypothesisId: 'H1+H2',
-          location: 'workspace-shell-binding.service.ts:refresh:POST_GATE',
-          message: 'after structural contract gate',
-          data: { perZoneAfter, frame, visual, kept: next.size, dropped: dropped.length, dropReason, droppedZones },
-          timestamp: Date.now(),
-        }),
-      }).catch(() => {});
-    } catch { /* no-op */ }
-    // #endregion
   }
 
   /**
@@ -644,13 +607,6 @@ export class WorkspaceShellBindingService {
       out.push(shortcut);
     }
     return out;
-  });
-
-  /** Account menu actions from chrome.accountMenuActions. */
-  readonly accountMenuActions = computed<WorkspaceShellActionItem[]>(() => {
-    const raw = this._chrome()['accountMenuActions'];
-    if (!Array.isArray(raw)) return [];
-    return raw.map((row) => this.normalizeActionItem(row)).filter(Boolean) as WorkspaceShellActionItem[];
   });
 
   readonly shellBannerCandidates = computed<ShellBanner[]>(() => {
@@ -934,15 +890,4 @@ export class WorkspaceShellBindingService {
     return result;
   }
 
-  private normalizeActionItem(raw: unknown): WorkspaceShellActionItem | null {
-    if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return null;
-    const record = raw as Record<string, unknown>;
-    const id = typeof record['id'] === 'string' ? record['id'] as string : '';
-    if (!id) return null;
-    const item: WorkspaceShellActionItem = { id };
-    if (record['destructive'] === true) item.destructive = true;
-    const action = parseShellAction(record['action']);
-    if (action) item.action = action;
-    return item;
-  }
 }

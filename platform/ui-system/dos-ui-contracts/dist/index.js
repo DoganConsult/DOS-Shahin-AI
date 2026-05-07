@@ -24,4 +24,10 @@ __exportStar(require("./capability-registry.js"), exports);
 __exportStar(require("./workspace-resolver-contract.js"), exports);
 __exportStar(require("./workspace-gate-attributes.js"), exports);
 __exportStar(require("./shell-action.contract.js"), exports);
+// Phase F — mobile component contract removed. The DB-shaped (snake_case)
+// interfaces are dead now that /api/ui-os/mobile-* is gone. Mobile config
+// is normalized to camelCase WorkspaceRuntimeBreakpoint /
+// WorkspaceRuntimeTouchGesture / WorkspaceRuntimeTouchTargets /
+// WorkspaceRuntimeVariant inside @dos/ui-system's workspace-shell
+// contracts and consumed via WorkspaceShellBindingService.
 //# sourceMappingURL=index.js.map

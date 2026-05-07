@@ -8,13 +8,23 @@ export interface DosBottomNavItem {
     id: string;
     label: string;
     icon?: string;
-    route?: string;
-    active?: boolean;
     badgeCount?: number;
+    active?: boolean;
 }
 export declare class DosMobileBottomNavComponent {
     items: DosBottomNavItem[];
     dir: 'ltr' | 'rtl';
     ariaLabel: string | null;
+    maxItems: number;
+    touchEnabled: boolean;
+    touchTargetSize: number;
+    iconSize: number;
+    hapticFeedback: boolean;
     select: EventEmitter<DosBottomNavItem>;
+    itemSwipe: EventEmitter<{
+        itemId: string;
+        direction: string;
+    }>;
+    handleSelect(item: DosBottomNavItem): void;
+    private triggerHaptic;
 }

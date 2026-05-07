@@ -99,6 +99,13 @@ const SKIP_PATTERNS = [
   // Approved DB boundary — SQL migration files under platform/dos/migrations
   // (where the DB schema/defaults/seeds are authored).
   /platform\/dos\/migrations\//,
+  // Approved contract authoring boundary — the v1 / v1.1 contract packs
+  // are doctrine declaration artifacts (envelope shapes, publication maps,
+  // consumption maps, page route metadata) and not live frontend code.
+  // /workspace-home values inside these packs describe what UI-OS emits
+  // from DB, not a frontend fallback.
+  /platform\/ui-system\/dos-ui-system\/dogan_shahin_all_contracts_v1_runtime\//,
+  /platform\/ui-system\/dos-ui-system\/dogan_shahin_all_contracts_v1_1_operating_runtime\//,
   // Doctrine guard itself self-references forbidden tokens.
   /scripts\/ci-guards\//,
   // Pre-approved exceptions (carry-overs from previous guard versions).
@@ -182,6 +189,13 @@ const FORBIDDEN_FE = [
   // CSS fallback values forbidden in shell inline styles
   { pattern: /var\([^)]*,[^)]*\)/g, label: 'CSS var fallback value var(..., ...)' },
   { pattern: /@media\s*\(\s*max-width\s*:\s*480px\s*\)/g, label: 'hardcoded 480px media query' },
+
+  // Carbon UIShell frame doctrine — frame DOM must come from real
+  // Carbon components (cds-header / cds-sidenav / cds-content), not
+  // raw shell wrappers slapped with Carbon class names.
+  { pattern: /<header[^>]*class=["'][^"']*\bcds--header\b/g, label: 'raw <header class="cds--header"> shell wrapper (use real <cds-header>)' },
+  { pattern: /<main[^>]*class=["'][^"']*\bcds--content\b/g, label: 'raw <main class="cds--content"> shell wrapper' },
+  { pattern: /'shell\.frame'\s*:\s*null/g, label: 'shell.frame null COMPONENT_MAP entry (must be per-key explicit)' },
 ];
 
 // Wide kill-zone: hardcoded /workspace-home literal, fallback constants,

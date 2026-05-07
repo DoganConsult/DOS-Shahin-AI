@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.complianceFabricRouter = exports.authoritySodRouter = exports.employeeLifecycleRouter = exports.delegationRouter = exports.accessReviewRouter = exports.bulkInviteRouter = exports.userLifecycleRouter = exports.foundationGovernanceRouter = exports.sodCheckRouter = exports.ownershipMappingRouter = exports.committeeManagementRouter = exports.orgHierarchyRouter = exports.locationsRouter = exports.positionsRouter = exports.businessUnitsRouter = exports.organizationsRouter = void 0;
+exports.complianceFabricRouter = exports.authoritySodRouter = exports.employeeLifecycleRouter = exports.delegationRouter = exports.accessReviewRouter = exports.bulkInviteRouter = exports.userLifecycleRouter = exports.foundationGovernanceRouter = exports.sodReviewRouter = exports.sodExceptionRouter = exports.sodCheckRouter = exports.ownershipMappingRouter = exports.committeeManagementRouter = exports.orgHierarchyRouter = exports.locationsRouter = exports.positionsRouter = exports.businessUnitsRouter = exports.organizationsRouter = void 0;
 exports.createFoundationAggregatorRouter = createFoundationAggregatorRouter;
 const express_1 = require("express");
 const auth_adapter_1 = require("../../infrastructure/auth.adapter");
@@ -22,6 +22,10 @@ const ownership_mapping_routes_1 = require("./ownership-mapping.routes");
 Object.defineProperty(exports, "ownershipMappingRouter", { enumerable: true, get: function () { return ownership_mapping_routes_1.ownershipMappingRouter; } });
 const sod_check_routes_1 = require("./sod-check.routes");
 Object.defineProperty(exports, "sodCheckRouter", { enumerable: true, get: function () { return sod_check_routes_1.sodCheckRouter; } });
+const sod_exception_routes_1 = require("./sod-exception.routes");
+Object.defineProperty(exports, "sodExceptionRouter", { enumerable: true, get: function () { return sod_exception_routes_1.sodExceptionRouter; } });
+const sod_review_routes_1 = require("./sod-review.routes");
+Object.defineProperty(exports, "sodReviewRouter", { enumerable: true, get: function () { return sod_review_routes_1.sodReviewRouter; } });
 const foundation_governance_routes_1 = require("./foundation-governance.routes");
 Object.defineProperty(exports, "foundationGovernanceRouter", { enumerable: true, get: function () { return foundation_governance_routes_1.foundationGovernanceRouter; } });
 const user_lifecycle_routes_1 = require("./user-lifecycle.routes");
@@ -175,7 +179,22 @@ function createFoundationAggregatorRouter(deps) {
     foundationRouter.use('/ownership-mappings', ownership_mapping_routes_1.ownershipMappingRouter);
     // Singular alias — historical FE callers (foundation-api.service.ts) hit /ownership-mapping
     foundationRouter.use('/ownership-mapping', ownership_mapping_routes_1.ownershipMappingRouter);
+    // Authority + SoD live router MUST be mounted BEFORE the legacy /sod
+    // sodCheckRouter, otherwise /sod/violations and /sod/violations/:id/resolve
+    // get audited twice (the legacy router runs auditMiddleware('sod') even when
+    // it has no matching route, then falls through). Authority router owns
+    // /sod/rules, /sod/check, /sod/violations, /sod/violations/:id/resolve.
+    foundationRouter.use('/', authority_sod_routes_1.authoritySodRouter); // mounts /authority and /sod sub-paths directly
+    // Legacy sodCheckRouter remains for SoD rules CRUD (POST/DELETE /sod/rules)
+    // not yet provided by authority-sod. Mounted after to avoid duplicate audits
+    // on shared paths.
     foundationRouter.use('/sod', sod_check_routes_1.sodCheckRouter);
+    // SoD exceptions + reviews — Wave 1 backend completion (live tables in
+    // dos.foundation_sod_exception, dos.foundation_sod_review_cycle,
+    // dos.foundation_sod_review_attestation). Mounted under /sod for the
+    // standard /api/foundation/sod/{exceptions,reviews,attestations} surface.
+    foundationRouter.use('/sod/exceptions', sod_exception_routes_1.sodExceptionRouter);
+    foundationRouter.use('/sod/reviews', sod_review_routes_1.sodReviewRouter);
     foundationRouter.use('/governance', foundation_governance_routes_1.foundationGovernanceRouter);
     foundationRouter.use('/user-lifecycle', user_lifecycle_routes_1.userLifecycleRouter);
     foundationRouter.use('/bulk-invite', bulk_invite_routes_1.bulkInviteRouter);
@@ -184,7 +203,6 @@ function createFoundationAggregatorRouter(deps) {
     foundationRouter.use('/access-review', access_review_routes_1.accessReviewRouter);
     foundationRouter.use('/delegations', delegation_routes_1.delegationRouter);
     foundationRouter.use('/employee-lifecycle', employee_lifecycle_routes_1.employeeLifecycleRouter);
-    foundationRouter.use('/', authority_sod_routes_1.authoritySodRouter); // mounts /authority and /sod sub-paths directly
     foundationRouter.use('/', compliance_fabric_routes_1.complianceFabricRouter); // mounts /policy-acks, /training, /coi
     // Phase B-1 — 5-brain architecture endpoints. Foundation owns enterprise
     // structure; these are the canonical entry points for it.

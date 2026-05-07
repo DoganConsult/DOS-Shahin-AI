@@ -1,0 +1,292 @@
+{
+  "$schema": "https://dogan-ai.local/schemas/preflight-blockers.v1-1.schema.json",
+  "contractKind": "preflight-blockers",
+  "contractVersion": "1.1.0",
+  "runtimeModel": "v1-1-operating-runtime",
+  "packName": "dogan-shahin-all-contracts-v1-1-operating-runtime",
+  "generatedAt": "2026-05-07T16:50:00+03:00",
+  "rule": "Pack ships SQL as ready-for-review. Do not auto-execute. Every blocker_id MUST have a matching SQL file (sql_file). Every SQL file MUST be referenced by a blocker_id. CI guard lint-v1-1-preflight-lockstep enforces both directions plus checksum match, idempotency markers, and destructive flag consistency.",
+  "doctrine": [
+    "ZERO_STATIC",
+    "ZERO_LEGACY",
+    "ZERO_FALLBACK",
+    "DB_AS_SOURCE_OF_TRUTH",
+    "PACK_SHIPS_SQL_FOR_REVIEW_NOT_FOR_AUTOEXEC"
+  ],
+  "lockstepProof": "preflight/lockstep.proof.json",
+  "blockers": [
+    {
+      "blocker_id": "B1",
+      "title": "dos.mobile_component_variants.is_default schema/query mismatch",
+      "category": "schema_query_drift",
+      "severity": "blocking",
+      "table": "dos.mobile_component_variants",
+      "tenancy_scope": "tenant_or_global",
+      "evidence": {
+        "query_site": "services/ui-os-service/src/routes/mobile.routes.ts",
+        "ddl_site": "platform/dos/migrations/public/20260515_0300_mobile_component_variants.sql",
+        "runtime_failure_mode": "PostgreSQL 42703 column \"is_default\" does not exist"
+      },
+      "required_columns": [
+        {
+          "name": "is_default",
+          "type": "boolean",
+          "nullable": false,
+          "default": false,
+          "purpose": "marks the single default variant per (tenant, component, breakpoint)"
+        }
+      ],
+      "required_indexes": [
+        {
+          "name": "uq_mobile_component_variants_default",
+          "kind": "partial_unique",
+          "key": ["coalesce(tenant_id, '__global__')", "component_key", "breakpoint"],
+          "where": "is_default = true",
+          "rationale": "tenant_id NULL is treated as global via coalesce; variant_name intentionally excluded from key"
+        }
+      ],
+      "required_constraints": [],
+      "required_normalizations": [],
+      "sql_file": "preflight/migrations/01_fix_mobile_component_variants_is_default.sql",
+      "sql_checksum_sha256": "0db40ca7fbbd5c6e54b6d4aa1913d11b6c8f59cbecd11cb274209c0285e430e6",
+      "idempotent": true,
+      "destructive": false,
+      "review_required": false,
+      "auto_execute": false,
+      "post_apply_assertions": [
+        "information_schema.columns has dos.mobile_component_variants.is_default",
+        "pg_indexes has uq_mobile_component_variants_default"
+      ]
+    },
+    {
+      "blocker_id": "B2",
+      "title": "Foundation item_id hyphen/underscore drift",
+      "category": "data_normalization",
+      "severity": "blocking",
+      "table": "dos.ui_module_nav_item",
+      "tenancy_scope": "global",
+      "evidence": {
+        "hyphen_site": "platform/dos/migrations/public/20260514_0400_workspace_canonical_module_page_order.sql",
+        "underscore_site": "platform/dos/migrations/public/20260507_2200_deploy_dogan_contracts_v1.sql",
+        "runtime_failure_mode": "UPDATE WHERE item_id = '<canonical>' silently misses rows whose item_id uses the legacy spelling"
+      },
+      "normalization_mode": "explicit_map",
+      "normalization_forbidden": [
+        "replace(item_id, '-', '.')",
+        "replace(item_id, '_', '.')",
+        "regexp_replace(item_id, '[-_]', '.', 'g')"
+      ],
+      "normalization_rationale": "Generic replace would corrupt 'foundation.business-units' into 'foundation.business.units'. Explicit canonical mapping is the only safe normalization.",
+      "required_columns": [],
+      "required_indexes": [],
+      "required_constraints": [],
+      "required_normalizations": [
+        {
+          "name": "foundation_item_id_map",
+          "shape": "(legacy_id text, canonical_id text)",
+          "rows": [
+            { "legacy_id": "foundation.overview",          "canonical_id": "foundation.overview" },
+            { "legacy_id": "foundation.organization",      "canonical_id": "foundation.organization" },
+            { "legacy_id": "foundation.departments",       "canonical_id": "foundation.departments" },
+            { "legacy_id": "foundation.positions",         "canonical_id": "foundation.positions" },
+            { "legacy_id": "foundation.users",             "canonical_id": "foundation.users" },
+            { "legacy_id": "foundation.teams",             "canonical_id": "foundation.teams" },
+            { "legacy_id": "foundation.roles",             "canonical_id": "foundation.roles" },
+            { "legacy_id": "foundation.locations",         "canonical_id": "foundation.locations" },
+            { "legacy_id": "foundation.committees",        "canonical_id": "foundation.committees" },
+            { "legacy_id": "foundation.delegations",       "canonical_id": "foundation.delegations" },
+            { "legacy_id": "foundation.policies",          "canonical_id": "foundation.policies" },
+            { "legacy_id": "foundation.audit",             "canonical_id": "foundation.audit" },
+            { "legacy_id": "foundation.settings",          "canonical_id": "foundation.settings" },
+            { "legacy_id": "foundation.permissions",       "canonical_id": "foundation.permissions" },
+            { "legacy_id": "foundation.ownership",         "canonical_id": "foundation.ownership" },
+            { "legacy_id": "foundation.sod",               "canonical_id": "foundation.sod" },
+            { "legacy_id": "foundation.diagnostics",       "canonical_id": "foundation.diagnostics" },
+            { "legacy_id": "foundation.business-units",    "canonical_id": "foundation.business_units" },
+            { "legacy_id": "foundation.business_units",    "canonical_id": "foundation.business_units" },
+            { "legacy_id": "foundation.access-review",     "canonical_id": "foundation.access_review" },
+            { "legacy_id": "foundation.access_review",     "canonical_id": "foundation.access_review" },
+            { "legacy_id": "foundation.data-processing",   "canonical_id": "foundation.data_processing" },
+            { "legacy_id": "foundation.data_processing",   "canonical_id": "foundation.data_processing" },
+            { "legacy_id": "foundation.reference-data",    "canonical_id": "foundation.reference_data" },
+            { "legacy_id": "foundation.reference_data",    "canonical_id": "foundation.reference_data" },
+            { "legacy_id": "foundation.hierarchy-viz",     "canonical_id": "foundation.hierarchy_viz" },
+            { "legacy_id": "foundation.hierarchy_viz",     "canonical_id": "foundation.hierarchy_viz" },
+            { "legacy_id": "foundation.user-lifecycle",    "canonical_id": "foundation.user_lifecycle" },
+            { "legacy_id": "foundation.user_lifecycle",    "canonical_id": "foundation.user_lifecycle" },
+            { "legacy_id": "foundation.ownership-mapping", "canonical_id": "foundation.ownership_mapping" },
+            { "legacy_id": "foundation.ownership_mapping", "canonical_id": "foundation.ownership_mapping" }
+          ],
+          "alias_notes": [
+            "foundation.ownership and foundation.ownership_mapping are intentionally distinct nav items in the canonical 24 set: 'ownership' is the matrix archetype page, 'ownership_mapping' is the nav alias entry produced by 20260514_0400 sort_order list."
+          ]
+        }
+      ],
+      "sql_file": "preflight/migrations/02_normalize_foundation_item_id.sql",
+      "sql_checksum_sha256": "9fb5f26e2120433e2ce1685dd3f39058d51642abf25b481917736c5d1c4d8432",
+      "idempotent": true,
+      "destructive": false,
+      "review_required": true,
+      "review_required_rationale": "Touches existing rows; alias decisions (ownership vs ownership_mapping) must be confirmed by Foundation owner before apply.",
+      "auto_execute": false,
+      "post_apply_assertions": [
+        "Zero Foundation rows with hyphenated compound ids",
+        "Every Foundation row has an item_id present in foundation_item_id_map.canonical_id"
+      ]
+    },
+    {
+      "blocker_id": "B2b",
+      "title": "Foundation canonical 24 missing seed (6 rows)",
+      "category": "data_seed_gap",
+      "severity": "blocking",
+      "table": "dos.ui_module_nav_item",
+      "tenancy_scope": "global",
+      "evidence": {
+        "contract_site": "modules/foundation.module.contract.v1-1.json#moduleRuntime.pageOrder (24 entries)",
+        "live_state_at_authoring": "dos.ui_module_nav_item has 18 of 24 canonical Foundation rows; 6 missing: foundation.permissions, foundation.ownership, foundation.sod, foundation.hierarchy_viz, foundation.user_lifecycle, foundation.diagnostics",
+        "runtime_failure_mode": "Foundation sidebar renders only 18 items; canonical 24 ordering broken; ZERO_STATIC doctrine forbids inventing the missing 6 in the frontend"
+      },
+      "required_columns": [],
+      "required_indexes": [],
+      "required_constraints": [],
+      "required_seeds": [
+        { "item_id": "foundation.permissions",     "group_id": "main", "sort_order": 190, "route": "/foundation/permissions",     "icon": "Identification",     "permission": "foundation.permissions.read",     "label_en": "Permissions" },
+        { "item_id": "foundation.ownership",       "group_id": "main", "sort_order": 200, "route": "/foundation/ownership",       "icon": "OwnerPersonal",      "permission": "foundation.ownership.read",       "label_en": "Ownership" },
+        { "item_id": "foundation.sod",             "group_id": "main", "sort_order": 210, "route": "/foundation/sod",             "icon": "RuleDataAnalytics",  "permission": "foundation.sod.read",             "label_en": "Segregation of Duties" },
+        { "item_id": "foundation.hierarchy_viz",   "group_id": "main", "sort_order": 220, "route": "/foundation/hierarchy-viz",   "icon": "ChartTreeMap",       "permission": "foundation.hierarchy_viz.read",   "label_en": "Hierarchy Visualization" },
+        { "item_id": "foundation.user_lifecycle",  "group_id": "main", "sort_order": 230, "route": "/foundation/user-lifecycle",  "icon": "UserActivity",       "permission": "foundation.user_lifecycle.read",  "label_en": "User Lifecycle" },
+        { "item_id": "foundation.diagnostics",     "group_id": "main", "sort_order": 240, "route": "/foundation/diagnostics",     "icon": "Stethoscope",        "permission": "foundation.diagnostics.read",     "label_en": "Diagnostics" }
+      ],
+      "required_normalizations": [],
+      "sql_file": "preflight/migrations/02b_seed_foundation_canonical_24.sql",
+      "sql_checksum_sha256": "acae22a4d1eba563fd48fd15bc09901aa9c4bebc9089086cdde467cdf2710cd0",
+      "idempotent": true,
+      "destructive": false,
+      "review_required": true,
+      "review_required_rationale": "Introduces new visible nav items; Foundation owner must approve labels, icons, and permissions before apply.",
+      "auto_execute": false,
+      "post_apply_assertions": [
+        "dos.ui_module_nav_item has all 24 canonical Foundation rows",
+        "no row from required_seeds is missing"
+      ]
+    },
+    {
+      "blocker_id": "B3",
+      "title": "dos.product_registry tier seed/DDL drift",
+      "category": "schema_seed_drift",
+      "severity": "blocking",
+      "table": "dos.product_registry",
+      "tenancy_scope": "global",
+      "evidence": {
+        "seed_site": "platform/config-center/ops/scripts/seed-platform-complete.ts",
+        "ddl_site": "(no canonical DDL declares tier in tracked SQL)",
+        "runtime_failure_mode": "PostgreSQL 42703 column \"tier\" does not exist on INSERT"
+      },
+      "required_columns": [
+        {
+          "name": "tier",
+          "type": "text",
+          "nullable": true,
+          "default": null,
+          "purpose": "product subscription tier; nullable so existing rows are not invalidated"
+        }
+      ],
+      "required_indexes": [],
+      "required_constraints": [
+        {
+          "name": "product_registry_tier_chk",
+          "kind": "check",
+          "expression": "tier IS NULL OR tier IN ('free','starter','professional','enterprise','custom')",
+          "addition_mode": "pg_constraint_guarded_do_block",
+          "addition_mode_rationale": "ALTER TABLE ... ADD CONSTRAINT IF NOT EXISTS is not portable across Postgres versions; must use DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname='...') THEN ... END IF; END $$;"
+        }
+      ],
+      "required_normalizations": [],
+      "sql_file": "preflight/migrations/03_align_product_registry_tier.sql",
+      "sql_checksum_sha256": "e57d8b227c623b9174e41d053b3f87646ac40416178ac86c568fbae518b8598a",
+      "idempotent": true,
+      "destructive": false,
+      "review_required": false,
+      "auto_execute": false,
+      "post_apply_assertions": [
+        "information_schema.columns has dos.product_registry.tier",
+        "pg_constraint has product_registry_tier_chk on dos.product_registry"
+      ]
+    },
+    {
+      "blocker_id": "B4",
+      "title": "dos.tenants has no canonical CREATE TABLE in tracked SQL",
+      "category": "missing_canonical_ddl",
+      "severity": "blocking",
+      "table": "dos.tenants",
+      "tenancy_scope": "global",
+      "evidence": {
+        "reference_sites": [
+          "modules/foundation contract dbEntities: dos.tenants",
+          "tenant-service code paths reading dos.tenants",
+          "workspace_shell_binding tenant scoping"
+        ],
+        "ddl_site": "(absent in tracked monorepo SQL)",
+        "runtime_failure_mode": "Schema drift between environments; out-of-band table risks type mismatch and silent data loss"
+      },
+      "required_columns": [
+        { "name": "tenant_id",        "type": "uuid",        "nullable": false, "default": "gen_random_uuid()", "primary_key": true },
+        { "name": "tenant_code",      "type": "text",        "nullable": false, "unique": true },
+        { "name": "display_name",     "type": "text",        "nullable": false },
+        { "name": "status",           "type": "text",        "nullable": false, "default": "'active'" },
+        { "name": "parent_tenant_id", "type": "uuid",        "nullable": true,  "fk": "dos.tenants(tenant_id) ON DELETE RESTRICT" },
+        { "name": "primary_domain",   "type": "text",        "nullable": true  },
+        { "name": "custom_domain",    "type": "text",        "nullable": true,  "unique_partial": "WHERE custom_domain IS NOT NULL" },
+        { "name": "default_locale",   "type": "text",        "nullable": false, "default": "'en'" },
+        { "name": "default_rtl",      "type": "boolean",     "nullable": false, "default": "false" },
+        { "name": "product_key",      "type": "text",        "nullable": true  },
+        { "name": "tier",             "type": "text",        "nullable": true  },
+        { "name": "created_at",       "type": "timestamptz", "nullable": false, "default": "now()" },
+        { "name": "updated_at",       "type": "timestamptz", "nullable": false, "default": "now()" },
+        { "name": "archived_at",      "type": "timestamptz", "nullable": true  },
+        { "name": "metadata",         "type": "jsonb",       "nullable": false, "default": "'{}'::jsonb" }
+      ],
+      "required_indexes": [
+        { "name": "uq_dos_tenants_tenant_code",   "kind": "unique",         "key": ["tenant_code"] },
+        { "name": "uq_dos_tenants_custom_domain", "kind": "partial_unique", "key": ["custom_domain"], "where": "custom_domain IS NOT NULL" },
+        { "name": "ix_dos_tenants_parent",        "kind": "btree_partial",  "key": ["parent_tenant_id"], "where": "parent_tenant_id IS NOT NULL" },
+        { "name": "ix_dos_tenants_status",        "kind": "btree",          "key": ["status"] }
+      ],
+      "required_constraints": [
+        { "name": "dos_tenants_status_chk", "kind": "check", "expression": "status IN ('active','suspended','archived','pending','trial')", "addition_mode": "pg_constraint_guarded_do_block" },
+        { "name": "dos_tenants_tier_chk",   "kind": "check", "expression": "tier IS NULL OR tier IN ('free','starter','professional','enterprise','custom')", "addition_mode": "pg_constraint_guarded_do_block" }
+      ],
+      "required_normalizations": [],
+      "sql_file": "preflight/migrations/04_canonical_dos_tenants_ddl.sql",
+      "sql_checksum_sha256": "d97951186ae090cfff1875280d58be93fcb4945684d96d42d685dba6be0addb4",
+      "live_schema_adapted": true,
+      "live_schema_notes": [
+        "tenant_id kept as varchar(64) to preserve 7 FK dependants",
+        "tenant_code is non-unique btree index (10 of 44 rows have duplicate codes from email-derived test data; tenant_id remains the canonical unique key)",
+        "status check expanded to include 'inactive' to match live data (4 of 44 rows)",
+        "display_name added as v1.1 envelope name; backfilled from live tenant_name",
+        "parent_tenant_id self-FK uses varchar(64) to match live tenant_id type"
+      ],
+      "idempotent": true,
+      "destructive": false,
+      "review_required": true,
+      "review_required_rationale": "Audit must confirm no shadow dos.tenants exists with conflicting column types before applying.",
+      "auto_execute": false,
+      "post_apply_assertions": [
+        "information_schema.tables has dos.tenants",
+        "dos.tenants has a primary key constraint",
+        "uq_dos_tenants_tenant_code exists",
+        "dos_tenants_status_chk exists",
+        "dos_tenants_tier_chk exists"
+      ]
+    }
+  ],
+  "lockstep_invariants": [
+    "every blockers[].blocker_id has a matching SQL file at blockers[].sql_file",
+    "every SQL file under preflight/migrations/ is referenced by exactly one blockers[].blocker_id",
+    "blockers[].sql_checksum_sha256 matches the on-disk sha256 of blockers[].sql_file",
+    "blockers[].idempotent === true (every preflight SQL must be idempotent)",
+    "blockers[].destructive === false unless review_required === true",
+    "blockers[].auto_execute === false (pack never auto-executes)"
+  ]
+}

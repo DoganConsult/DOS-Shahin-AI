@@ -8,7 +8,6 @@ import { createMarketingDownloadsRouter } from './routes/marketing-downloads.rou
 import { createTemplateBindingRouter } from './routes/template-binding.routes.js';
 import { createGrcSandboxRouter } from './routes/grc-sandbox.routes.js';
 import { createPublicRouteMetadataRouter } from './routes/route-metadata.routes.js';
-import { createMobileRoutes } from './routes/mobile.routes.js';
 import { createPublicRouteAllowlist } from './middleware/public-route-allowlist.js';
 import { requireGatewayOrigin } from './middleware/gateway-origin.js';
 
@@ -111,8 +110,13 @@ app.use('/api/ui-os', (req, _res, next) => {
 
 app.use('/api/ui-os', createUiOsRouter(pool));
 
-// Mobile Experience Enhancement — Mobile configuration endpoints
-app.use('/api/ui-os', createMobileRoutes(pool));
+// Phase F — mobile route channel killed.
+// All mobile config (breakpoints, touch targets, component variants) is
+// now folded into the workspace-runtime envelope under shell.breakpoints,
+// shell.touchTargets, shell.variants, and shell.tenantSurfaceVariants.
+// There is exactly ONE workspace runtime channel; no /api/ui-os/mobile-*
+// duplicates. See platform/ui-system/dos-ui-system/dogan_shahin_all_contracts_v1_1_operating_runtime/
+// for the v1.1 doctrine.
 
 // W8 — Spec §10: canonical /api/dynamic-ui/contract/{moduleCode} and
 // /api/dynamic-ui/route-catalog must resolve through the gateway. We

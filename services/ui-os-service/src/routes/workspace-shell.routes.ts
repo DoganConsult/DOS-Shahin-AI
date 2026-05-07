@@ -417,6 +417,11 @@ function normalizeShellAction(raw: unknown): Record<string, unknown> | null {
 }
 
 // ─── Nav loaders (snake_case stays inside) ───────────────────────────
+interface ModuleRegistryRow {
+  module_code: string; sort_order: number | null;
+  name_en: string | null; name_ar: string | null;
+}
+
 interface ModuleNavGroupRow {
   module_code: string; group_id: string; sort_order: number | null;
   label_key: string | null; label_en: string | null; label_ar: string | null;
@@ -440,7 +445,7 @@ async function loadNav(
   // Entitlement + permission filtering server-side. The FE never sees a
   // nav item it could not navigate to.
   const rolesParam = callerRoles.length > 0 ? [...callerRoles] : [''];
-  const [groups, items] = await Promise.all([
+  const [groups, items, modules] = await Promise.all([
     pool.query<ModuleNavGroupRow>(
       `SELECT g.module_code, g.group_id, g.sort_order, g.label_key,
               g.label_en, g.label_ar, g.enabled, g.version
@@ -488,6 +493,18 @@ async function loadNav(
                  i.item_id`,
       [tenantId, rolesParam],
     ),
+    pool.query<ModuleRegistryRow>(
+      `SELECT m.module_code, m.sort_order, m.name_en, m.name_ar
+         FROM dos.module_registry m
+        WHERE EXISTS (
+          SELECT 1 FROM dos.tenant_module_entitlements e
+           WHERE e.tenant_id = $1
+             AND e.module_code = m.module_code
+             AND e.entitlement_status = 'active'
+        )
+        ORDER BY m.sort_order, m.module_code`,
+      [tenantId],
+    ),
   ]);
 
   const feGroups = groups.rows.map((r) => ({
@@ -506,14 +523,19 @@ async function loadNav(
     sortOrder: r.sort_order ?? null,
     action: r.route && r.route.trim() ? { kind: 'navigate' as const, path: r.route.trim() } : null,
     icon: r.icon ?? null,
-    permission: r.permission ?? null,
     label: buildI18nLabel(r.label_en, r.label_ar, r.label_key, localePrimary),
     badge: r.badge ?? null,
     enabled: r.enabled ?? true,
     version: r.version ?? null,
   }));
 
-  return { groups: feGroups, items: feItems };
+  const feModules = modules.rows.map((r) => ({
+    moduleCode: r.module_code,
+    sortOrder: r.sort_order ?? null,
+    label: buildI18nLabel(r.name_en, r.name_ar, null, localePrimary),
+  }));
+
+  return { modules: feModules, groups: feGroups, items: feItems };
 }
 
 // ─── Chrome / Shortcuts / Banners / Policies loaders ─────────────────
@@ -773,6 +795,157 @@ async function loadShellMenus(
   };
 }
 
+// ─── v1.1 shell extension loaders ────────────────────────────────────
+// Per dogan_shahin_all_contracts_v1_1_operating_runtime/envelopes/
+// workspace-runtime.envelope.v1-1.json, the workspace-runtime
+// envelope must carry shell.breakpoints, shell.touchTargets,
+// shell.variants, and shell.tenantSurfaceVariants. Source of truth
+// stays DB; the resolver normalizes snake_case -> camelCase.
+
+interface BreakpointRow {
+  breakpoint_key: string;
+  min_px: number;
+  max_px: number;
+  default_behavior: string | null;
+  is_active: boolean | null;
+}
+
+async function loadBreakpoints(pool: DbPool, tenantId: string): Promise<Array<Record<string, unknown>>> {
+  // Tenant-scoped overrides win when present; otherwise fall back to
+  // the global rows (tenant_id IS NULL). DB rows are read in min_px
+  // order so the FE receives a deterministic ascending list.
+  const r = await pool.query<BreakpointRow>(
+    `WITH tenant_rows AS (
+       SELECT breakpoint_key, min_px, max_px, default_behavior, is_active
+         FROM dos.mobile_breakpoint_config
+        WHERE tenant_id = $1
+     ),
+     global_rows AS (
+       SELECT breakpoint_key, min_px, max_px, default_behavior, is_active
+         FROM dos.mobile_breakpoint_config
+        WHERE tenant_id IS NULL
+          AND breakpoint_key NOT IN (SELECT breakpoint_key FROM tenant_rows)
+     )
+     SELECT * FROM tenant_rows
+     UNION ALL
+     SELECT * FROM global_rows
+     ORDER BY min_px`,
+    [tenantId],
+  );
+  return r.rows.map((row) => ({
+    breakpointKey:   row.breakpoint_key,
+    minPx:           row.min_px,
+    maxPx:           row.max_px,
+    defaultBehavior: row.default_behavior ?? null,
+    isActive:        row.is_active ?? true,
+  }));
+}
+
+interface TouchTargetRow {
+  min_size_px: number;
+  min_spacing_px: number;
+  haptic_feedback_enabled: boolean | null;
+}
+
+interface TouchGestureRow {
+  gesture_id: string;
+  gesture_type: string;
+  component_key: string | null;
+  action_config: Record<string, unknown>;
+  haptic_feedback: boolean | null;
+}
+
+async function loadTouchTargets(pool: DbPool, tenantId: string): Promise<Record<string, unknown>> {
+  // Tenant-scoped row wins; otherwise the global row (tenant_id IS NULL).
+  // Gestures are appended from dos.mobile_touch_gestures.
+  const [tt, gestures] = await Promise.all([
+    pool.query<TouchTargetRow>(
+      `SELECT min_size_px, min_spacing_px, haptic_feedback_enabled
+         FROM dos.ui_touch_target_config
+        WHERE enabled = true
+          AND (tenant_id = $1 OR tenant_id IS NULL)
+        ORDER BY (tenant_id IS NULL) ASC, updated_at DESC
+        LIMIT 1`,
+      [tenantId],
+    ),
+    pool.query<TouchGestureRow>(
+      `SELECT gesture_id::text AS gesture_id, gesture_type, component_key,
+              action_config, haptic_feedback
+         FROM dos.mobile_touch_gestures
+        WHERE is_active IS DISTINCT FROM false
+          AND (tenant_id = $1 OR tenant_id IS NULL)
+        ORDER BY component_key NULLS LAST, gesture_type`,
+      [tenantId],
+    ),
+  ]);
+
+  const t = tt.rows[0];
+  const minSizePx = t?.min_size_px ?? null;
+  const minSpacingPx = t?.min_spacing_px ?? null;
+  const hapticFeedbackEnabled = t?.haptic_feedback_enabled ?? false;
+
+  const gestureBindings = gestures.rows.map((g) => ({
+    gestureId:      g.gesture_id,
+    gestureType:    g.gesture_type,
+    componentKey:   g.component_key ?? null,
+    actionConfig:   g.action_config ?? {},
+    hapticFeedback: g.haptic_feedback ?? false,
+  }));
+
+  return {
+    minSizePx,
+    minSpacingPx,
+    hapticFeedbackEnabled,
+    gestureBindings,
+  };
+}
+
+interface VariantRow {
+  variant_id: string;
+  tenant_id: string | null;
+  component_key: string;
+  variant_name: string;
+  breakpoint: string;
+  props_override: Record<string, unknown> | null;
+  layout_override: Record<string, unknown> | null;
+  is_default: boolean | null;
+}
+
+async function loadVariants(pool: DbPool, tenantId: string): Promise<{
+  variants: Record<string, Array<Record<string, unknown>>>;
+  tenantSurfaceVariants: Record<string, string>;
+}> {
+  const r = await pool.query<VariantRow>(
+    `SELECT variant_id::text AS variant_id,
+            tenant_id, component_key, variant_name, breakpoint,
+            props_override, layout_override, is_default
+       FROM dos.mobile_component_variants
+      WHERE tenant_id = $1 OR tenant_id IS NULL
+      ORDER BY component_key, breakpoint, variant_name`,
+    [tenantId],
+  );
+
+  const variants: Record<string, Array<Record<string, unknown>>> = {};
+  const tenantSurfaceVariants: Record<string, string> = {};
+
+  for (const row of r.rows) {
+    const k = row.component_key;
+    if (!variants[k]) variants[k] = [];
+    variants[k].push({
+      variantName:    row.variant_name,
+      breakpoint:     row.breakpoint,
+      propsOverride:  row.props_override ?? {},
+      layoutOverride: row.layout_override ?? {},
+      isDefault:      row.is_default ?? false,
+    });
+    if (row.is_default && row.tenant_id === tenantId) {
+      tenantSurfaceVariants[k] = row.variant_name;
+    }
+  }
+
+  return { variants, tenantSurfaceVariants };
+}
+
 async function loadShortcuts(pool: DbPool, tenantId: string) {
   const r = await pool.query<ShortcutRow>(
     `SELECT shortcut_id, combo, action_json, when_clause, sort_order
@@ -922,7 +1095,11 @@ async function loadEntitledModuleCards(
 // runtime data here so the FE remains render-only.
 function enrichVisualShellProps(
   surfaces: ShellRow[],
-  nav: { groups: Array<Record<string, unknown>>; items: Array<Record<string, unknown>> },
+  nav: {
+    modules?: Array<Record<string, unknown>>;
+    groups: Array<Record<string, unknown>>;
+    items: Array<Record<string, unknown>>;
+  },
   chrome: Record<string, unknown>,
   moduleCards: Array<Record<string, unknown>>,
   navigateEligibleRoutes: ReadonlySet<string>,
@@ -996,6 +1173,51 @@ function enrichVisualShellProps(
     groupId: entry.groupId,
     badge: entry.badge,
   }));
+
+  // Sidebar hierarchy projection — modules + groups visible only when at
+  // least one entitled item flows under them. The frontend renderer
+  // groups items by moduleCode → groupId using these arrays so the side
+  // nav can render `cds-sidenav-menu` (module) → `cds-sidenav-item`
+  // (item) with collapsibles, instead of a flat list.
+  const referencedModules = new Set<string>();
+  const referencedGroups = new Set<string>();
+  for (const it of sidebarDraft) {
+    if (it.moduleCode) referencedModules.add(it.moduleCode);
+    if (it.moduleCode && it.groupId) referencedGroups.add(`${it.moduleCode}:${it.groupId}`);
+  }
+
+  const moduleSortMap = new Map<string, number>();
+  const moduleLabelMap = new Map<string, { i18nKey?: string; fallback?: string; label?: string }>();
+  for (const m of nav.modules ?? []) {
+    const code = String((m as { moduleCode?: string }).moduleCode ?? '').trim();
+    if (!code) continue;
+    moduleSortMap.set(code, Number((m as { sortOrder?: unknown }).sortOrder ?? 0) || 0);
+    const lbl = (m as { label?: { i18nKey?: string; fallback?: string; label?: string } }).label ?? {};
+    moduleLabelMap.set(code, lbl);
+  }
+
+  const sidebarModules = Array.from(referencedModules).map((code) => ({
+    moduleCode: code,
+    sortOrder: moduleSortMap.get(code) ?? Number.MAX_SAFE_INTEGER,
+    label: moduleLabelMap.get(code) ?? { fallback: code, label: code },
+  })).sort((a, b) => {
+    if (a.sortOrder !== b.sortOrder) return a.sortOrder - b.sortOrder;
+    return a.moduleCode.localeCompare(b.moduleCode);
+  });
+
+  const sidebarGroups: Array<Record<string, unknown>> = [];
+  for (const g of nav.groups) {
+    const moduleCode = String((g as { moduleCode?: string }).moduleCode ?? '').trim();
+    const groupId = String((g as { groupId?: string }).groupId ?? '').trim();
+    if (!moduleCode || !groupId) continue;
+    if (!referencedGroups.has(`${moduleCode}:${groupId}`)) continue;
+    sidebarGroups.push({
+      moduleCode,
+      groupId,
+      sortOrder: Number((g as { sortOrder?: unknown }).sortOrder ?? 0) || 0,
+      label: (g as { label?: unknown }).label ?? null,
+    });
+  }
 
   // 2) Account menu entries from chrome.accountMenu (typed actions).
   //    Resolve each entry's i18nKey against chrome[i18nKey] so the FE
@@ -1110,6 +1332,8 @@ function enrichVisualShellProps(
         const next: Record<string, unknown> = {
           ...props,
           items: sidebarItems,
+          modules: sidebarModules,
+          groups: sidebarGroups,
         };
         if (chromeSidebarAria)   next['ariaLabel']      = chromeSidebarAria;
         if (chromeSidebarEmpty)  next['emptyMessage']   = chromeSidebarEmpty;
@@ -1158,6 +1382,27 @@ function enrichVisualShellProps(
         if (chromeCmdSearchAction) next['commandSearchAction'] = chromeCmdSearchAction;
         if (chromeInboxAction) next['inboxAction'] = chromeInboxAction;
         if (chromeQuickActionItems.length > 0) next['items'] = chromeQuickActionItems;
+        // Icon-key projection — the frontend renderer no longer hardcodes
+        // `notification`/`search`. Pull icon names from the typed
+        // global-quick-action item rows (workspace_global_quick_actions),
+        // falling back to chrome scalar overrides, then to deterministic
+        // canonical names.
+        const findItem = (id: string) => chromeQuickActionItems.find(
+          (it) => (it as Record<string, unknown>)['id'] === id,
+        );
+        const iconFromItem = (id: string) => {
+          const it = findItem(id);
+          const icon = it && typeof (it as Record<string, unknown>)['icon'] === 'string'
+            ? ((it as Record<string, unknown>)['icon'] as string).trim()
+            : '';
+          return icon || null;
+        };
+        const cmdIconFromChrome = typeof chrome['shell.header.commandSearch.icon'] === 'string'
+          ? (chrome['shell.header.commandSearch.icon'] as string).trim() : '';
+        const inboxIconFromChrome = typeof chrome['shell.header.inbox.icon'] === 'string'
+          ? (chrome['shell.header.inbox.icon'] as string).trim() : '';
+        next['commandIcon'] = iconFromItem('command') || cmdIconFromChrome || 'search';
+        next['inboxIcon']   = iconFromItem('inbox')   || inboxIconFromChrome || 'inbox';
         s.props = next;
         break;
       }
@@ -1243,8 +1488,18 @@ export function createWorkspaceShellRouter(pool: DbPool): Router {
     // Product code may come from a header set by the gateway; default
     // value is the only one the platform currently runs.
     const productCode = String(req.header('x-product-code') ?? 'shahin-ai').trim() || 'shahin-ai';
+    // Locale resolution doctrine — single decision path:
+    //   1) explicit query (`?locale=ar`) — set by the frontend so a
+    //      language toggle propagates without depending on the browser's
+    //      Accept-Language header.
+    //   2) Accept-Language header (default browser channel).
+    //   3) 'en' fallback.
+    // The resolver re-emits the chosen locale via chrome.locale/chrome.dir
+    // so every shell zone (header brand AND nav AND banners) renders in
+    // the SAME language without a second decision in the frontend.
+    const queryLocale = typeof req.query.locale === 'string' ? String(req.query.locale).trim() : '';
     const acceptLang = String(req.header('accept-language') ?? 'en').trim();
-    const localePrimary = primaryLocale(acceptLang);
+    const localePrimary = queryLocale ? primaryLocale(queryLocale) : primaryLocale(acceptLang);
 
     try {
       const denial = await authorizeCaller(pool, tenantId, userId, productCode);
@@ -1257,7 +1512,7 @@ export function createWorkspaceShellRouter(pool: DbPool): Router {
       const catalog = await loadCatalog(pool);
       const surfaceRows = await loadSurfaces(pool, tenantId, catalog, callerRoles);
 
-      const [nav, chrome, shortcuts, banners, policies, moduleCards, navigateEligibleRoutes, landingRoute, tplStrings, shellMenus] = await Promise.all([
+      const [nav, chrome, shortcuts, banners, policies, moduleCards, navigateEligibleRoutes, landingRoute, tplStrings, shellMenus, breakpoints, touchTargets, variantMap] = await Promise.all([
         loadNav(pool, localePrimary, tenantId, callerRoles),
         loadChrome(pool, tenantId),
         loadShortcuts(pool, tenantId),
@@ -1268,6 +1523,10 @@ export function createWorkspaceShellRouter(pool: DbPool): Router {
         loadLandingRoute(pool, tenantId),
         loadShellTplStrings(pool, localePrimary),
         loadShellMenus(pool, tenantId, localePrimary, callerRoles),
+        // v1.1 shell extension fields (DB-driven, tenant-scoped fallback to global).
+        loadBreakpoints(pool, tenantId),
+        loadTouchTargets(pool, tenantId),
+        loadVariants(pool, tenantId),
       ]);
       // Breadcrumbs depend on landingRoute for the 'workspace' href.
       const breadcrumbs = await loadShellBreadcrumbs(pool, localePrimary, landingRoute);
@@ -1285,12 +1544,41 @@ export function createWorkspaceShellRouter(pool: DbPool): Router {
       if (shellMenus.settingsMenu.length > 0) chrome['shell.settings.items']             = shellMenus.settingsMenu;
       if (shellMenus.quickActions.length > 0) chrome['shell.global-quick-actions.items'] = shellMenus.quickActions;
 
+      // Locale handshake — emit the resolver-decided locale + dir back to
+      // the frontend so EVERY shell zone (header brand, workspace title,
+      // nav, banners, account menu) reads the same active locale. The
+      // frontend never re-decides; it consumes chrome.locale/chrome.dir.
+      // DB-stored chrome.locale (when present) is treated as a tenant
+      // forced-locale and preferred over the request locale.
+      const dbForcedLocale = typeof chrome['locale'] === 'string'
+        ? primaryLocale(chrome['locale'] as string) : '';
+      const activeLocale = dbForcedLocale || localePrimary || 'en';
+      const activeDir = activeLocale.startsWith('ar') ? 'rtl' : 'ltr';
+      chrome['locale'] = activeLocale;
+      chrome['dir']    = activeDir;
+
+      // Locale-aware chrome scalars — pick `${key}.<locale>` override when
+      // present, else fall back to the canonical key. This lets DB seed
+      // either a single brand/workspaceTitle or a per-locale variant
+      // without forking the contract.
+      const chromeLocaleKeys = ['brand', 'workspaceTitle'];
+      for (const k of chromeLocaleKeys) {
+        const localeKey = `${k}.${activeLocale}`;
+        if (typeof chrome[localeKey] === 'string' && (chrome[localeKey] as string).trim()) {
+          chrome[k] = chrome[localeKey];
+        }
+      }
+
       // Live-enrich the visual shell surfaces' props from the resolver
       // outputs above (sidebar nav, account menu, module cards). Mutates
       // surfaceRows in place; serialization happens immediately after.
       enrichVisualShellProps(
         surfaceRows,
-        nav as { groups: Array<Record<string, unknown>>; items: Array<Record<string, unknown>> },
+        nav as {
+          modules?: Array<Record<string, unknown>>;
+          groups: Array<Record<string, unknown>>;
+          items: Array<Record<string, unknown>>;
+        },
         chrome,
         moduleCards,
         navigateEligibleRoutes,
@@ -1315,6 +1603,12 @@ export function createWorkspaceShellRouter(pool: DbPool): Router {
           shortcuts,
           banners,
           policies,
+          // v1.1 operating runtime fields. Fold mobile config into
+          // workspace-runtime; no second mobile truth channel.
+          breakpoints,
+          touchTargets,
+          variants: variantMap.variants,
+          tenantSurfaceVariants: variantMap.tenantSurfaceVariants,
         },
       });
     } catch (e) {

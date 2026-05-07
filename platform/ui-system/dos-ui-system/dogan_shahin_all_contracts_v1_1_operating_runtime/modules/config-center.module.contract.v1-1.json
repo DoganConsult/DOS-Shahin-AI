@@ -1,0 +1,1481 @@
+{
+  "$schema": "https://dogan-ai.local/schemas/module-runtime.v1-1.schema.json",
+  "contractKind": "module",
+  "contractVersion": "1.1.0",
+  "runtimeModel": "v1-1-operating-runtime",
+  "generatedAt": "2026-05-07T16:50:00+03:00",
+  "supersedes": "dogan_shahin_all_contracts_v1_runtime/modules/config-center.module.contract.v1-runtime.json",
+  "selfContained": true,
+  "rule": "Each module declares its full v1 surface PLUS a moduleRuntime layer with canonical pageOrder, chrome, navGroups, navItems, widgets, actions, carbonUsage, permissions, and defaultRoute. Foundation is no longer special.",
+  "doctrine": [
+    "ZERO_STATIC",
+    "ZERO_LEGACY",
+    "ZERO_FALLBACK",
+    "DB_AS_SOURCE_OF_TRUTH"
+  ],
+  "forbidden": [
+    "fake_component_map_closure",
+    "register_dos_semantic_components_as_full_page_templates",
+    "static_nav_fallback",
+    "hardcoded_workspace_modules",
+    "hardcoded_workspace_routes",
+    "prime_ng_workspace_shell",
+    "material_workspace_shell",
+    "localStorage_auth_token",
+    "sessionStorage_auth_token",
+    "silent_renderer_fallback",
+    "random_css_mobile_patch"
+  ],
+  "productKey": "shahin-ai",
+  "moduleCode": "config-center",
+  "moduleName": {
+    "en": "Config Center",
+    "ar": "مركز الإعدادات"
+  },
+  "category": "platform-admin",
+  "routeBase": "/config-center",
+  "ownerService": "tenant-service",
+  "status": "platform_shared",
+  "defaultEnabled": true,
+  "uiVendor": "ibm-carbon",
+  "renderingMode": "dynamic-ui-contract-first-v1-archetype",
+  "pageCount": 6,
+  "pages": [
+    {
+      "pageKey": "config-center.overview",
+      "route": "/config-center/overview",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "overview",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "config-center.overview.archetype",
+      "rendererKey": "ModuleOverviewTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "status-banner",
+          "semanticComponent": "dos.status-banner",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "metric-grid",
+          "semanticComponent": "dos.metric-grid",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "structured-summary-card",
+          "semanticComponent": "dos.structured-summary-card",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "readiness-panel",
+          "semanticComponent": "dos.readiness-panel",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "recommendation-list",
+          "semanticComponent": "dos.recommendation-list",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "tenant-service",
+      "apiEndpoint": "/api/config-center/overview",
+      "dbEntities": [
+        "dos.config_center_overview"
+      ],
+      "readPermission": "config-center.overview.read",
+      "writePermissions": [],
+      "columns": [],
+      "titleKey": "config-center.overview.title",
+      "subtitleKey": "config-center.overview.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "config-center.overview.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "config-center.overview.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "config-center.overview.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "config-center.records",
+      "route": "/config-center/records",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "records_table",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "config-center.records_table.archetype",
+      "rendererKey": "ModuleRecordsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "status-banner",
+          "semanticComponent": "dos.status-banner",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "metric-grid",
+          "semanticComponent": "dos.metric-grid",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "records-table",
+          "semanticComponent": "dos.records-table",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "form-modal",
+          "semanticComponent": "dos.form-modal",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "empty-state",
+          "semanticComponent": "dos.empty-state",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "tenant-service",
+      "apiEndpoint": "/api/config-center/records",
+      "dbEntities": [
+        "dos.config_center_records"
+      ],
+      "readPermission": "config-center.records.read",
+      "writePermissions": [
+        "config-center.records.create",
+        "config-center.records.update",
+        "config-center.records.delete"
+      ],
+      "columns": [
+        "name",
+        "owner",
+        "status",
+        "risk",
+        "updated_at"
+      ],
+      "titleKey": "config-center.records.title",
+      "subtitleKey": "config-center.records.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "config-center.records.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "config-center.records.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "config-center.records.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "config-center.workflows",
+      "route": "/config-center/workflows",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "workflow",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "config-center.workflow.archetype",
+      "rendererKey": "WorkflowRecordsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "metric-grid",
+          "semanticComponent": "dos.metric-grid",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "workflow-panel",
+          "semanticComponent": "dos.workflow-panel",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "records-table",
+          "semanticComponent": "dos.records-table",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "status-banner",
+          "semanticComponent": "dos.status-banner",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "tenant-service",
+      "apiEndpoint": "/api/config-center/workflows",
+      "dbEntities": [
+        "dos.config_center_workflows"
+      ],
+      "readPermission": "config-center.workflows.read",
+      "writePermissions": [
+        "config-center.workflows.create",
+        "config-center.workflows.update",
+        "config-center.workflows.delete"
+      ],
+      "columns": [
+        "name",
+        "owner",
+        "status",
+        "risk",
+        "updated_at"
+      ],
+      "titleKey": "config-center.workflows.title",
+      "subtitleKey": "config-center.workflows.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "config-center.workflows.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "config-center.workflows.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "config-center.workflows.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "config-center.reports",
+      "route": "/config-center/reports",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "reports",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "config-center.reports.archetype",
+      "rendererKey": "ModuleReportsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "metric-grid",
+          "semanticComponent": "dos.metric-grid",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "records-table",
+          "semanticComponent": "dos.records-table",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "form-modal",
+          "semanticComponent": "dos.form-modal",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "tenant-service",
+      "apiEndpoint": "/api/config-center/reports",
+      "dbEntities": [
+        "dos.config_center_reports"
+      ],
+      "readPermission": "config-center.reports.read",
+      "writePermissions": [
+        "config-center.reports.create",
+        "config-center.reports.update",
+        "config-center.reports.delete"
+      ],
+      "columns": [
+        "name",
+        "owner",
+        "status",
+        "risk",
+        "updated_at"
+      ],
+      "titleKey": "config-center.reports.title",
+      "subtitleKey": "config-center.reports.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "config-center.reports.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "config-center.reports.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "config-center.reports.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "config-center.settings",
+      "route": "/config-center/settings",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "settings",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "config-center.settings.archetype",
+      "rendererKey": "ModuleSettingsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "tabs",
+          "semanticComponent": "dos.tabs",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "settings-panel",
+          "semanticComponent": "dos.settings-panel",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "status-banner",
+          "semanticComponent": "dos.status-banner",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "tenant-service",
+      "apiEndpoint": "/api/config-center/settings",
+      "dbEntities": [
+        "dos.config_center_settings"
+      ],
+      "readPermission": "config-center.settings.read",
+      "writePermissions": [
+        "config-center.settings.create",
+        "config-center.settings.update",
+        "config-center.settings.delete"
+      ],
+      "columns": [],
+      "titleKey": "config-center.settings.title",
+      "subtitleKey": "config-center.settings.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "config-center.settings.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "config-center.settings.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "config-center.settings.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "config-center.ai-insights",
+      "route": "/config-center/ai-insights",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "ai_insights",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "config-center.ai_insights.archetype",
+      "rendererKey": "AiInsightsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "ai-insight-panel",
+          "semanticComponent": "dos.ai-insight-panel",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "records-table",
+          "semanticComponent": "dos.records-table",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "recommendation-list",
+          "semanticComponent": "dos.recommendation-list",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "tenant-service",
+      "apiEndpoint": "/api/config-center/ai-insights",
+      "dbEntities": [
+        "dos.config_center_ai_insights"
+      ],
+      "readPermission": "config-center.ai_insights.read",
+      "writePermissions": [],
+      "columns": [],
+      "titleKey": "config-center.ai-insights.title",
+      "subtitleKey": "config-center.ai-insights.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "config-center.ai-insights.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "config-center.ai-insights.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "config-center.ai-insights.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    }
+  ],
+  "permissions": [
+    {
+      "permissionCode": "config-center.ai_insights.read",
+      "moduleCode": "config-center",
+      "status": "required"
+    },
+    {
+      "permissionCode": "config-center.overview.read",
+      "moduleCode": "config-center",
+      "status": "required"
+    },
+    {
+      "permissionCode": "config-center.records.create",
+      "moduleCode": "config-center",
+      "status": "required"
+    },
+    {
+      "permissionCode": "config-center.records.delete",
+      "moduleCode": "config-center",
+      "status": "required"
+    },
+    {
+      "permissionCode": "config-center.records.read",
+      "moduleCode": "config-center",
+      "status": "required"
+    },
+    {
+      "permissionCode": "config-center.records.update",
+      "moduleCode": "config-center",
+      "status": "required"
+    },
+    {
+      "permissionCode": "config-center.reports.create",
+      "moduleCode": "config-center",
+      "status": "required"
+    },
+    {
+      "permissionCode": "config-center.reports.delete",
+      "moduleCode": "config-center",
+      "status": "required"
+    },
+    {
+      "permissionCode": "config-center.reports.read",
+      "moduleCode": "config-center",
+      "status": "required"
+    },
+    {
+      "permissionCode": "config-center.reports.update",
+      "moduleCode": "config-center",
+      "status": "required"
+    },
+    {
+      "permissionCode": "config-center.settings.create",
+      "moduleCode": "config-center",
+      "status": "required"
+    },
+    {
+      "permissionCode": "config-center.settings.delete",
+      "moduleCode": "config-center",
+      "status": "required"
+    },
+    {
+      "permissionCode": "config-center.settings.read",
+      "moduleCode": "config-center",
+      "status": "required"
+    },
+    {
+      "permissionCode": "config-center.settings.update",
+      "moduleCode": "config-center",
+      "status": "required"
+    },
+    {
+      "permissionCode": "config-center.workflows.create",
+      "moduleCode": "config-center",
+      "status": "required"
+    },
+    {
+      "permissionCode": "config-center.workflows.delete",
+      "moduleCode": "config-center",
+      "status": "required"
+    },
+    {
+      "permissionCode": "config-center.workflows.read",
+      "moduleCode": "config-center",
+      "status": "required"
+    },
+    {
+      "permissionCode": "config-center.workflows.update",
+      "moduleCode": "config-center",
+      "status": "required"
+    }
+  ],
+  "dbOnlyRoutesToReconcile": [],
+  "publicationTargets": {
+    "routes": "dos.dynamic_ui_routes / route template binding",
+    "navigation": "dos.navigation_registry",
+    "archetypeKeys": "dos.dynamic_ui_component_registry existing archetype keys only",
+    "permissions": "platform_dauth.permissions or dos.permissions",
+    "roleBindings": "role_permissions",
+    "i18n": "dos.i18n_catalog"
+  },
+  "acceptance": [
+    "route_exists_or_marked_missing_in_db",
+    "archetype_renderer_exists_in_template_registry",
+    "permissions_exist_and_role_bound",
+    "api_returns_401_not_404_when_unauthenticated",
+    "semantic_regions_render_with_carbon",
+    "mobile_no_horizontal_overflow",
+    "rtl_pass",
+    "no_static_fallback"
+  ],
+  "moduleRuntime": {
+    "moduleCode": "config-center",
+    "moduleName": {
+      "en": "Config Center",
+      "ar": "مركز الإعدادات"
+    },
+    "category": "platform-admin",
+    "routeBase": "/config-center",
+    "ownerService": "tenant-service",
+    "status": "platform_shared",
+    "chrome": {
+      "brand": null,
+      "header": null,
+      "footer": null,
+      "banners": []
+    },
+    "navGroups": [
+      {
+        "groupKey": "config-center.primary",
+        "label": {
+          "i18nKey": "config-center.nav.primary",
+          "fallback": null,
+          "label": null
+        },
+        "sortOrder": 1,
+        "permission": null,
+        "entitlement": null
+      }
+    ],
+    "navItems": [
+      {
+        "itemKey": "config-center.overview",
+        "groupKey": "config-center.primary",
+        "label": {
+          "i18nKey": "config-center.overview.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/config-center/overview"
+        },
+        "sortOrder": 1,
+        "permission": "config-center.overview.read",
+        "entitlement": null,
+        "iconRef": null
+      },
+      {
+        "itemKey": "config-center.records",
+        "groupKey": "config-center.primary",
+        "label": {
+          "i18nKey": "config-center.records.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/config-center/records"
+        },
+        "sortOrder": 2,
+        "permission": "config-center.records.read",
+        "entitlement": null,
+        "iconRef": null
+      },
+      {
+        "itemKey": "config-center.workflows",
+        "groupKey": "config-center.primary",
+        "label": {
+          "i18nKey": "config-center.workflows.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/config-center/workflows"
+        },
+        "sortOrder": 3,
+        "permission": "config-center.workflows.read",
+        "entitlement": null,
+        "iconRef": null
+      },
+      {
+        "itemKey": "config-center.reports",
+        "groupKey": "config-center.primary",
+        "label": {
+          "i18nKey": "config-center.reports.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/config-center/reports"
+        },
+        "sortOrder": 4,
+        "permission": "config-center.reports.read",
+        "entitlement": null,
+        "iconRef": null
+      },
+      {
+        "itemKey": "config-center.settings",
+        "groupKey": "config-center.primary",
+        "label": {
+          "i18nKey": "config-center.settings.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/config-center/settings"
+        },
+        "sortOrder": 5,
+        "permission": "config-center.settings.read",
+        "entitlement": null,
+        "iconRef": null
+      },
+      {
+        "itemKey": "config-center.ai-insights",
+        "groupKey": "config-center.primary",
+        "label": {
+          "i18nKey": "config-center.ai-insights.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/config-center/ai-insights"
+        },
+        "sortOrder": 6,
+        "permission": "config-center.ai_insights.read",
+        "entitlement": null,
+        "iconRef": null
+      }
+    ],
+    "pages": [
+      {
+        "pageKey": "config-center.overview",
+        "route": "/config-center/overview",
+        "aliases": [],
+        "dbRouteStatus": "contracted",
+        "pageType": "overview",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "config-center.overview.archetype",
+        "rendererKey": "ModuleOverviewTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "status-banner",
+            "semanticComponent": "dos.status-banner",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "metric-grid",
+            "semanticComponent": "dos.metric-grid",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "structured-summary-card",
+            "semanticComponent": "dos.structured-summary-card",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "readiness-panel",
+            "semanticComponent": "dos.readiness-panel",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "recommendation-list",
+            "semanticComponent": "dos.recommendation-list",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "tenant-service",
+        "apiEndpoint": "/api/config-center/overview",
+        "dbEntities": [
+          "dos.config_center_overview"
+        ],
+        "readPermission": "config-center.overview.read",
+        "writePermissions": [],
+        "columns": [],
+        "titleKey": "config-center.overview.title",
+        "subtitleKey": "config-center.overview.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "config-center.overview.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "config-center.overview.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "config-center.overview.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      },
+      {
+        "pageKey": "config-center.records",
+        "route": "/config-center/records",
+        "aliases": [],
+        "dbRouteStatus": "contracted",
+        "pageType": "records_table",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "config-center.records_table.archetype",
+        "rendererKey": "ModuleRecordsTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "status-banner",
+            "semanticComponent": "dos.status-banner",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "metric-grid",
+            "semanticComponent": "dos.metric-grid",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "records-table",
+            "semanticComponent": "dos.records-table",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "form-modal",
+            "semanticComponent": "dos.form-modal",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "empty-state",
+            "semanticComponent": "dos.empty-state",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "tenant-service",
+        "apiEndpoint": "/api/config-center/records",
+        "dbEntities": [
+          "dos.config_center_records"
+        ],
+        "readPermission": "config-center.records.read",
+        "writePermissions": [
+          "config-center.records.create",
+          "config-center.records.update",
+          "config-center.records.delete"
+        ],
+        "columns": [
+          "name",
+          "owner",
+          "status",
+          "risk",
+          "updated_at"
+        ],
+        "titleKey": "config-center.records.title",
+        "subtitleKey": "config-center.records.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "config-center.records.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "config-center.records.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "config-center.records.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      },
+      {
+        "pageKey": "config-center.workflows",
+        "route": "/config-center/workflows",
+        "aliases": [],
+        "dbRouteStatus": "contracted",
+        "pageType": "workflow",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "config-center.workflow.archetype",
+        "rendererKey": "WorkflowRecordsTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "metric-grid",
+            "semanticComponent": "dos.metric-grid",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "workflow-panel",
+            "semanticComponent": "dos.workflow-panel",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "records-table",
+            "semanticComponent": "dos.records-table",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "status-banner",
+            "semanticComponent": "dos.status-banner",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "tenant-service",
+        "apiEndpoint": "/api/config-center/workflows",
+        "dbEntities": [
+          "dos.config_center_workflows"
+        ],
+        "readPermission": "config-center.workflows.read",
+        "writePermissions": [
+          "config-center.workflows.create",
+          "config-center.workflows.update",
+          "config-center.workflows.delete"
+        ],
+        "columns": [
+          "name",
+          "owner",
+          "status",
+          "risk",
+          "updated_at"
+        ],
+        "titleKey": "config-center.workflows.title",
+        "subtitleKey": "config-center.workflows.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "config-center.workflows.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "config-center.workflows.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "config-center.workflows.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      },
+      {
+        "pageKey": "config-center.reports",
+        "route": "/config-center/reports",
+        "aliases": [],
+        "dbRouteStatus": "contracted",
+        "pageType": "reports",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "config-center.reports.archetype",
+        "rendererKey": "ModuleReportsTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "metric-grid",
+            "semanticComponent": "dos.metric-grid",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "records-table",
+            "semanticComponent": "dos.records-table",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "form-modal",
+            "semanticComponent": "dos.form-modal",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "tenant-service",
+        "apiEndpoint": "/api/config-center/reports",
+        "dbEntities": [
+          "dos.config_center_reports"
+        ],
+        "readPermission": "config-center.reports.read",
+        "writePermissions": [
+          "config-center.reports.create",
+          "config-center.reports.update",
+          "config-center.reports.delete"
+        ],
+        "columns": [
+          "name",
+          "owner",
+          "status",
+          "risk",
+          "updated_at"
+        ],
+        "titleKey": "config-center.reports.title",
+        "subtitleKey": "config-center.reports.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "config-center.reports.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "config-center.reports.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "config-center.reports.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      },
+      {
+        "pageKey": "config-center.settings",
+        "route": "/config-center/settings",
+        "aliases": [],
+        "dbRouteStatus": "contracted",
+        "pageType": "settings",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "config-center.settings.archetype",
+        "rendererKey": "ModuleSettingsTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "tabs",
+            "semanticComponent": "dos.tabs",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "settings-panel",
+            "semanticComponent": "dos.settings-panel",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "status-banner",
+            "semanticComponent": "dos.status-banner",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "tenant-service",
+        "apiEndpoint": "/api/config-center/settings",
+        "dbEntities": [
+          "dos.config_center_settings"
+        ],
+        "readPermission": "config-center.settings.read",
+        "writePermissions": [
+          "config-center.settings.create",
+          "config-center.settings.update",
+          "config-center.settings.delete"
+        ],
+        "columns": [],
+        "titleKey": "config-center.settings.title",
+        "subtitleKey": "config-center.settings.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "config-center.settings.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "config-center.settings.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "config-center.settings.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      },
+      {
+        "pageKey": "config-center.ai-insights",
+        "route": "/config-center/ai-insights",
+        "aliases": [],
+        "dbRouteStatus": "contracted",
+        "pageType": "ai_insights",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "config-center.ai_insights.archetype",
+        "rendererKey": "AiInsightsTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "ai-insight-panel",
+            "semanticComponent": "dos.ai-insight-panel",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "records-table",
+            "semanticComponent": "dos.records-table",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "recommendation-list",
+            "semanticComponent": "dos.recommendation-list",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "tenant-service",
+        "apiEndpoint": "/api/config-center/ai-insights",
+        "dbEntities": [
+          "dos.config_center_ai_insights"
+        ],
+        "readPermission": "config-center.ai_insights.read",
+        "writePermissions": [],
+        "columns": [],
+        "titleKey": "config-center.ai-insights.title",
+        "subtitleKey": "config-center.ai-insights.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "config-center.ai-insights.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "config-center.ai-insights.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "config-center.ai-insights.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      }
+    ],
+    "widgets": [],
+    "actions": [],
+    "pageOrder": [
+      {
+        "pageKey": "config-center.overview",
+        "sortOrder": 1
+      },
+      {
+        "pageKey": "config-center.records",
+        "sortOrder": 2
+      },
+      {
+        "pageKey": "config-center.workflows",
+        "sortOrder": 3
+      },
+      {
+        "pageKey": "config-center.reports",
+        "sortOrder": 4
+      },
+      {
+        "pageKey": "config-center.settings",
+        "sortOrder": 5
+      },
+      {
+        "pageKey": "config-center.ai-insights",
+        "sortOrder": 6
+      }
+    ],
+    "defaultRoute": "/config-center/overview",
+    "carbonUsage": {
+      "shell": [
+        "UIShell",
+        "Header",
+        "HeaderName",
+        "HeaderNavigation",
+        "HeaderMenu",
+        "HeaderMenuItem",
+        "HeaderGlobalBar",
+        "HeaderGlobalAction",
+        "SideNav",
+        "SideNavItems",
+        "SideNavMenu",
+        "SideNavMenuItem",
+        "SideNavLink",
+        "Content"
+      ],
+      "overview": [
+        "Grid",
+        "Column",
+        "Breadcrumb",
+        "Tile",
+        "Tag",
+        "ProgressBar",
+        "StructuredList",
+        "Tabs",
+        "InlineNotification",
+        "SkeletonText",
+        "SkeletonPlaceholder"
+      ],
+      "records": [
+        "DataTable",
+        "TableToolbar",
+        "TableToolbarSearch",
+        "TableToolbarActions",
+        "TableBatchActions",
+        "Pagination",
+        "OverflowMenu",
+        "OverflowMenuOption",
+        "SkeletonText",
+        "SkeletonPlaceholder",
+        "InlineNotification",
+        "Tile",
+        "Button",
+        "StructuredList",
+        "Tag",
+        "ProgressBar"
+      ],
+      "forms": [
+        "Tabs",
+        "StructuredList",
+        "Toggle",
+        "Dropdown",
+        "TextInput",
+        "Button",
+        "InlineNotification",
+        "Modal"
+      ]
+    },
+    "permissions": [
+      {
+        "permissionCode": "config-center.ai_insights.read",
+        "moduleCode": "config-center",
+        "status": "required"
+      },
+      {
+        "permissionCode": "config-center.overview.read",
+        "moduleCode": "config-center",
+        "status": "required"
+      },
+      {
+        "permissionCode": "config-center.records.create",
+        "moduleCode": "config-center",
+        "status": "required"
+      },
+      {
+        "permissionCode": "config-center.records.delete",
+        "moduleCode": "config-center",
+        "status": "required"
+      },
+      {
+        "permissionCode": "config-center.records.read",
+        "moduleCode": "config-center",
+        "status": "required"
+      },
+      {
+        "permissionCode": "config-center.records.update",
+        "moduleCode": "config-center",
+        "status": "required"
+      },
+      {
+        "permissionCode": "config-center.reports.create",
+        "moduleCode": "config-center",
+        "status": "required"
+      },
+      {
+        "permissionCode": "config-center.reports.delete",
+        "moduleCode": "config-center",
+        "status": "required"
+      },
+      {
+        "permissionCode": "config-center.reports.read",
+        "moduleCode": "config-center",
+        "status": "required"
+      },
+      {
+        "permissionCode": "config-center.reports.update",
+        "moduleCode": "config-center",
+        "status": "required"
+      },
+      {
+        "permissionCode": "config-center.settings.create",
+        "moduleCode": "config-center",
+        "status": "required"
+      },
+      {
+        "permissionCode": "config-center.settings.delete",
+        "moduleCode": "config-center",
+        "status": "required"
+      },
+      {
+        "permissionCode": "config-center.settings.read",
+        "moduleCode": "config-center",
+        "status": "required"
+      },
+      {
+        "permissionCode": "config-center.settings.update",
+        "moduleCode": "config-center",
+        "status": "required"
+      },
+      {
+        "permissionCode": "config-center.workflows.create",
+        "moduleCode": "config-center",
+        "status": "required"
+      },
+      {
+        "permissionCode": "config-center.workflows.delete",
+        "moduleCode": "config-center",
+        "status": "required"
+      },
+      {
+        "permissionCode": "config-center.workflows.read",
+        "moduleCode": "config-center",
+        "status": "required"
+      },
+      {
+        "permissionCode": "config-center.workflows.update",
+        "moduleCode": "config-center",
+        "status": "required"
+      }
+    ],
+    "publication": {
+      "pages_table": "dos.dynamic_ui_routes",
+      "nav_groups_table": "dos.ui_module_nav_group",
+      "nav_items_table": "dos.ui_module_nav_item",
+      "widgets_table": "dos.ui_widget_binding",
+      "actions_table": "dos.ui_action_binding",
+      "permissions_table": "platform_dauth.permissions",
+      "preflight_dependency_for_foundation": null
+    }
+  },
+  "resolverContract": {
+    "endpoint": "/api/ui-os/module-runtime/config-center",
+    "auth": "session_cookie",
+    "tenancy_scope": "tenant",
+    "snake_case_fields_allowed_only_inside_resolver": true,
+    "browser_facing_camelCase": true,
+    "envelope_ref": "envelopes/module-runtime.envelope.v1-1.json"
+  }
+}

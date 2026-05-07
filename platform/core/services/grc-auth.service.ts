@@ -106,7 +106,13 @@ export class GrcAuthService {
     }
   }
 
-  getProductKey(): string { return this._storage.get('grc_productKey') || 'agrc'; }
+  getProductKey(): string {
+    // Return ONLY the storage-cached value (set from /api/auth/profile
+    // when the SPA bootstraps). No `'agrc'` fallback — if the value is
+    // missing, callers must read tenantRuntime.productActivations[0]
+    // .productKey or productRuntime.productKey from UI-OS instead.
+    return this._storage.get('grc_productKey') || '';
+  }
 
   async init(): Promise<void> {
     if (!this._isLoggedIn()) {

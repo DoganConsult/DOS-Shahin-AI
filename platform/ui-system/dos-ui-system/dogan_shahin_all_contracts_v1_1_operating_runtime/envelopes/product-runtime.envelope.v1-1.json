@@ -1,0 +1,59 @@
+{
+  "$schema": "https://dogan-ai.local/schemas/runtime-envelope.v1-1.schema.json",
+  "contractKind": "runtime-envelope",
+  "envelopeKey": "product-runtime",
+  "contractVersion": "1.1.0",
+  "runtimeModel": "v1-1-operating-runtime",
+  "endpoint": "/api/ui-os/product-runtime",
+  "method": "GET",
+  "auth": "session_cookie",
+  "tenancy_scope": "tenant",
+  "rule": "Product identity and capabilities resolved into one envelope. Frontend never infers product from local constants.",
+  "doctrine": ["ZERO_STATIC","ZERO_LEGACY","ZERO_FALLBACK"],
+  "shape": {
+    "tenantId":   "string",
+    "version":    "integer",
+    "productRuntime": {
+      "productKey":        "string",
+      "productName":       "object<{en,ar}>",
+      "tier":              "enum|null",
+      "chrome":            "object<{brand,logoHref,productSwitcher,accountMenu,statusBar,footer}>",
+      "theme":             "object (ref theme.system.contract.v1-1)",
+      "brandTokens":       "Record<tokenKey,string>",
+      "enabledModules":    "Array<{moduleCode,status,defaultEnabled,contractRef}>",
+      "featureFlags":      "Record<flagKey,{enabled,source,defaultRolloutBucket?}>",
+      "limits":            "Record<limitKey,{value,unit,source}>",
+      "dashboardWidgets":  "Array<{widgetKey,surface,displayNameKey,dataSource,refreshIntervalSeconds,carbonKeys[],requiredPermission?,requiredEntitlement?}>",
+      "productNav":        "object<{groups[],items[]}>",
+      "version":           "integer"
+    }
+  },
+  "forbiddenFields": [
+    "productRuntime.product_key (use productKey)",
+    "productRuntime.dashboardWidgets[].component_key (use carbonKeys array)",
+    "productRuntime.dashboardWidgets[].perms_required (use requiredPermission)"
+  ],
+  "exampleResponse": {
+    "tenantId": "00000000-0000-0000-0000-000000000000",
+    "version": 1,
+    "productRuntime": {
+      "productKey": "shahin-ai",
+      "productName": { "en": "Shahin AI", "ar": "شاهين AI" },
+      "tier": null,
+      "chrome": { "brand": null, "logoHref": null, "productSwitcher": null, "accountMenu": null, "statusBar": null, "footer": null },
+      "theme": { "carbonTheme": "g10", "tokens": {} },
+      "brandTokens": {},
+      "enabledModules": [],
+      "featureFlags": {},
+      "limits": {},
+      "dashboardWidgets": [],
+      "productNav": { "groups": [], "items": [] },
+      "version": 1
+    }
+  },
+  "consumers": [
+    "platform/core/services/grc-auth.service.ts",
+    "platform/ui-system/dos-ui-system/src/carbon/dos-carbon-header-shell.component.ts"
+  ],
+  "publishedBy": "product/shahin.product.contract.v1-1.json"
+}

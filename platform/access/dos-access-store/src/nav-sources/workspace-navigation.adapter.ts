@@ -48,6 +48,12 @@ interface MergedItem extends DosNavItem {
   __tier?: 'dna' | 'module' | 'product';
 }
 
+function navPath(item: DosNavItem): string | null {
+  if (item.action?.kind !== 'navigate') return null;
+  const path = item.action.path.trim();
+  return path.length > 0 ? path : null;
+}
+
 // Account menu is 100% DB-driven — seeded in dos.workspace_shell_binding
 // props.accountMenu for workspace.frame.header-menu. No hardcoded fallback.
 
@@ -111,7 +117,7 @@ export class WorkspaceNavigationAdapter {
               ...it,
               ...existing,
               icon:               existing.icon ?? it.icon,
-              route:              existing.route ?? it.route,
+              action:             existing.action ?? it.action,
               requiredPermission: existing.requiredPermission ?? it.requiredPermission,
               moduleCode:         existing.moduleCode ?? it.moduleCode,
               group:              existing.group ?? it.group,
@@ -133,7 +139,7 @@ export class WorkspaceNavigationAdapter {
 
       if (tier === 'dna') {
         const moduleCode = it.moduleCode || it.id.split('.')[0];
-        const r = this.readiness.disabledReason(moduleCode, !!it.route);
+        const r = this.readiness.disabledReason(moduleCode, !!navPath(it));
         if (r === 'backend-offline') reasons.push('backend-offline');
         else if (r === 'route-not-wired') reasons.push('route-not-wired');
       } else if (tier === 'module') {
@@ -148,9 +154,9 @@ export class WorkspaceNavigationAdapter {
             && !this.access.trialExpiredModules().includes(moduleCode)) {
           reasons.push('not-entitled');
         }
-        if (!it.route) reasons.push('route-not-wired');
+        if (!navPath(it)) reasons.push('route-not-wired');
       } else {
-        if (!it.route) reasons.push('route-not-wired');
+        if (!navPath(it)) reasons.push('route-not-wired');
       }
 
       const PRECEDENCE: DosNavDisabledReason[] = [

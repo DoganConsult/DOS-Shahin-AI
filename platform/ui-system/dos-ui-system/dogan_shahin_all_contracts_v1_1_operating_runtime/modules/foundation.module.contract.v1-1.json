@@ -1,0 +1,5013 @@
+{
+  "$schema": "https://dogan-ai.local/schemas/module-runtime.v1-1.schema.json",
+  "contractKind": "module",
+  "contractVersion": "1.1.0",
+  "runtimeModel": "v1-1-operating-runtime",
+  "generatedAt": "2026-05-07T16:50:00+03:00",
+  "supersedes": "dogan_shahin_all_contracts_v1_runtime/modules/foundation.module.contract.v1-runtime.json",
+  "selfContained": true,
+  "rule": "Each module declares its full v1 surface PLUS a moduleRuntime layer with canonical pageOrder, chrome, navGroups, navItems, widgets, actions, carbonUsage, permissions, and defaultRoute. Foundation is no longer special.",
+  "doctrine": [
+    "ZERO_STATIC",
+    "ZERO_LEGACY",
+    "ZERO_FALLBACK",
+    "DB_AS_SOURCE_OF_TRUTH"
+  ],
+  "forbidden": [
+    "fake_component_map_closure",
+    "register_dos_semantic_components_as_full_page_templates",
+    "static_nav_fallback",
+    "hardcoded_workspace_modules",
+    "hardcoded_workspace_routes",
+    "prime_ng_workspace_shell",
+    "material_workspace_shell",
+    "localStorage_auth_token",
+    "sessionStorage_auth_token",
+    "silent_renderer_fallback",
+    "random_css_mobile_patch"
+  ],
+  "productKey": "shahin-ai",
+  "moduleCode": "foundation",
+  "moduleName": {
+    "en": "Foundation",
+    "ar": "التأسيس"
+  },
+  "category": "platform-base",
+  "routeBase": "/foundation",
+  "ownerService": "user-service",
+  "status": "active",
+  "defaultEnabled": true,
+  "uiVendor": "ibm-carbon",
+  "renderingMode": "dynamic-ui-contract-first-v1-archetype",
+  "pageCount": 18,
+  "pages": [
+    {
+      "pageKey": "foundation.overview",
+      "route": "/foundation/overview",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "overview",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "foundation.overview.archetype",
+      "rendererKey": "ModuleOverviewTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "status-banner",
+          "semanticComponent": "dos.status-banner",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "metric-grid",
+          "semanticComponent": "dos.metric-grid",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "structured-summary-card",
+          "semanticComponent": "dos.structured-summary-card",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "readiness-panel",
+          "semanticComponent": "dos.readiness-panel",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "recommendation-list",
+          "semanticComponent": "dos.recommendation-list",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "user-service",
+      "apiEndpoint": "/api/foundation/overview",
+      "dbEntities": [
+        "dos.tenants",
+        "dos.users",
+        "dos.tenant_memberships"
+      ],
+      "readPermission": "foundation.overview.read",
+      "writePermissions": [],
+      "columns": [],
+      "titleKey": "foundation.overview.title",
+      "subtitleKey": "foundation.overview.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "foundation.overview.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "foundation.overview.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "foundation.overview.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "foundation.organization",
+      "route": "/foundation/organization",
+      "aliases": [],
+      "dbRouteStatus": "missing_in_db_template_binding",
+      "pageType": "org_tree_detail",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "foundation.org_tree_detail.archetype",
+      "rendererKey": "OrgChartTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "org-tree",
+          "semanticComponent": "dos.org-tree",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "detail-card",
+          "semanticComponent": "dos.detail-card",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "action-bar",
+          "semanticComponent": "dos.action-bar",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "user-service",
+      "apiEndpoint": "/api/organizations",
+      "dbEntities": [
+        "dos.organizations"
+      ],
+      "readPermission": "foundation.organization.read",
+      "writePermissions": [
+        "foundation.organization.create",
+        "foundation.organization.update",
+        "foundation.organization.delete"
+      ],
+      "columns": [],
+      "titleKey": "foundation.organization.title",
+      "subtitleKey": "foundation.organization.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "foundation.organization.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "foundation.organization.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "foundation.organization.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "foundation.business-units",
+      "route": "/foundation/business-units",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "records_table",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "foundation.records_table.archetype",
+      "rendererKey": "ModuleRecordsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "status-banner",
+          "semanticComponent": "dos.status-banner",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "metric-grid",
+          "semanticComponent": "dos.metric-grid",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "records-table",
+          "semanticComponent": "dos.records-table",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "form-modal",
+          "semanticComponent": "dos.form-modal",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "empty-state",
+          "semanticComponent": "dos.empty-state",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "user-service",
+      "apiEndpoint": "/api/business-units",
+      "dbEntities": [
+        "dos.business_units"
+      ],
+      "readPermission": "foundation.business_units.read",
+      "writePermissions": [
+        "foundation.business_units.create",
+        "foundation.business_units.update",
+        "foundation.business_units.delete"
+      ],
+      "columns": [
+        "name",
+        "code",
+        "organization",
+        "owner",
+        "status"
+      ],
+      "titleKey": "foundation.business-units.title",
+      "subtitleKey": "foundation.business-units.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "foundation.business-units.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "foundation.business-units.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "foundation.business-units.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "foundation.departments",
+      "route": "/foundation/departments",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "records_table",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "foundation.records_table.archetype",
+      "rendererKey": "ModuleRecordsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "status-banner",
+          "semanticComponent": "dos.status-banner",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "metric-grid",
+          "semanticComponent": "dos.metric-grid",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "records-table",
+          "semanticComponent": "dos.records-table",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "form-modal",
+          "semanticComponent": "dos.form-modal",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "empty-state",
+          "semanticComponent": "dos.empty-state",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "user-service",
+      "apiEndpoint": "/api/departments",
+      "dbEntities": [
+        "dos.departments"
+      ],
+      "readPermission": "foundation.departments.read",
+      "writePermissions": [
+        "foundation.departments.create",
+        "foundation.departments.update",
+        "foundation.departments.delete"
+      ],
+      "columns": [
+        "department_name",
+        "business_unit",
+        "manager",
+        "headcount",
+        "status"
+      ],
+      "titleKey": "foundation.departments.title",
+      "subtitleKey": "foundation.departments.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "foundation.departments.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "foundation.departments.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "foundation.departments.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "foundation.users",
+      "route": "/foundation/users",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "records_table",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "foundation.records_table.archetype",
+      "rendererKey": "ModuleRecordsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "status-banner",
+          "semanticComponent": "dos.status-banner",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "metric-grid",
+          "semanticComponent": "dos.metric-grid",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "records-table",
+          "semanticComponent": "dos.records-table",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "form-modal",
+          "semanticComponent": "dos.form-modal",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "empty-state",
+          "semanticComponent": "dos.empty-state",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "user-service",
+      "apiEndpoint": "/api/users",
+      "dbEntities": [
+        "dos.users",
+        "dos.tenant_memberships",
+        "dos.user_role_assignments"
+      ],
+      "readPermission": "foundation.users.read",
+      "writePermissions": [
+        "foundation.users.create",
+        "foundation.users.update",
+        "foundation.users.delete"
+      ],
+      "columns": [
+        "display_name",
+        "email",
+        "status",
+        "roles",
+        "department",
+        "last_login"
+      ],
+      "titleKey": "foundation.users.title",
+      "subtitleKey": "foundation.users.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "foundation.users.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "foundation.users.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "foundation.users.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "foundation.roles",
+      "route": "/foundation/roles",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "records_table",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "foundation.records_table.archetype",
+      "rendererKey": "ModuleRecordsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "status-banner",
+          "semanticComponent": "dos.status-banner",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "metric-grid",
+          "semanticComponent": "dos.metric-grid",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "records-table",
+          "semanticComponent": "dos.records-table",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "form-modal",
+          "semanticComponent": "dos.form-modal",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "empty-state",
+          "semanticComponent": "dos.empty-state",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "user-service",
+      "apiEndpoint": "/api/profiles/roles",
+      "dbEntities": [
+        "dos.functional_roles",
+        "dos.role_permissions"
+      ],
+      "readPermission": "foundation.roles.read",
+      "writePermissions": [
+        "foundation.roles.create",
+        "foundation.roles.update",
+        "foundation.roles.delete"
+      ],
+      "columns": [
+        "role_code",
+        "role_name",
+        "permission_count",
+        "user_count",
+        "status"
+      ],
+      "titleKey": "foundation.roles.title",
+      "subtitleKey": "foundation.roles.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "foundation.roles.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "foundation.roles.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "foundation.roles.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "foundation.teams",
+      "route": "/foundation/teams",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "records_table",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "foundation.records_table.archetype",
+      "rendererKey": "ModuleRecordsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "status-banner",
+          "semanticComponent": "dos.status-banner",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "metric-grid",
+          "semanticComponent": "dos.metric-grid",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "records-table",
+          "semanticComponent": "dos.records-table",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "form-modal",
+          "semanticComponent": "dos.form-modal",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "empty-state",
+          "semanticComponent": "dos.empty-state",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "user-service",
+      "apiEndpoint": "/api/teams",
+      "dbEntities": [
+        "dos.teams",
+        "dos.team_members"
+      ],
+      "readPermission": "foundation.teams.read",
+      "writePermissions": [
+        "foundation.teams.create",
+        "foundation.teams.update",
+        "foundation.teams.delete"
+      ],
+      "columns": [
+        "team_name",
+        "owner",
+        "member_count",
+        "status"
+      ],
+      "titleKey": "foundation.teams.title",
+      "subtitleKey": "foundation.teams.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "foundation.teams.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "foundation.teams.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "foundation.teams.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "foundation.locations",
+      "route": "/foundation/locations",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "records_table",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "foundation.records_table.archetype",
+      "rendererKey": "ModuleRecordsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "status-banner",
+          "semanticComponent": "dos.status-banner",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "metric-grid",
+          "semanticComponent": "dos.metric-grid",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "records-table",
+          "semanticComponent": "dos.records-table",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "form-modal",
+          "semanticComponent": "dos.form-modal",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "empty-state",
+          "semanticComponent": "dos.empty-state",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "user-service",
+      "apiEndpoint": "/api/locations",
+      "dbEntities": [
+        "dos.locations"
+      ],
+      "readPermission": "foundation.locations.read",
+      "writePermissions": [
+        "foundation.locations.create",
+        "foundation.locations.update",
+        "foundation.locations.delete"
+      ],
+      "columns": [
+        "location_name",
+        "country",
+        "city",
+        "type",
+        "owner",
+        "status"
+      ],
+      "titleKey": "foundation.locations.title",
+      "subtitleKey": "foundation.locations.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "foundation.locations.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "foundation.locations.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "foundation.locations.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "foundation.positions",
+      "route": "/foundation/positions",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "records_table",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "foundation.records_table.archetype",
+      "rendererKey": "ModuleRecordsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "status-banner",
+          "semanticComponent": "dos.status-banner",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "metric-grid",
+          "semanticComponent": "dos.metric-grid",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "records-table",
+          "semanticComponent": "dos.records-table",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "form-modal",
+          "semanticComponent": "dos.form-modal",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "empty-state",
+          "semanticComponent": "dos.empty-state",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "user-service",
+      "apiEndpoint": "/api/positions",
+      "dbEntities": [
+        "dos.positions"
+      ],
+      "readPermission": "foundation.positions.read",
+      "writePermissions": [
+        "foundation.positions.create",
+        "foundation.positions.update",
+        "foundation.positions.delete"
+      ],
+      "columns": [
+        "position_title",
+        "department",
+        "grade",
+        "reports_to",
+        "assigned_user",
+        "status"
+      ],
+      "titleKey": "foundation.positions.title",
+      "subtitleKey": "foundation.positions.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "foundation.positions.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "foundation.positions.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "foundation.positions.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "foundation.committees",
+      "route": "/foundation/committees",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "records_table",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "foundation.records_table.archetype",
+      "rendererKey": "ModuleRecordsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "status-banner",
+          "semanticComponent": "dos.status-banner",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "metric-grid",
+          "semanticComponent": "dos.metric-grid",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "records-table",
+          "semanticComponent": "dos.records-table",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "form-modal",
+          "semanticComponent": "dos.form-modal",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "empty-state",
+          "semanticComponent": "dos.empty-state",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "user-service",
+      "apiEndpoint": "/api/committees",
+      "dbEntities": [
+        "dos.committees",
+        "dos.committee_members"
+      ],
+      "readPermission": "foundation.committees.read",
+      "writePermissions": [
+        "foundation.committees.create",
+        "foundation.committees.update",
+        "foundation.committees.delete"
+      ],
+      "columns": [
+        "committee_name",
+        "type",
+        "chair",
+        "member_count",
+        "status"
+      ],
+      "titleKey": "foundation.committees.title",
+      "subtitleKey": "foundation.committees.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "foundation.committees.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "foundation.committees.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "foundation.committees.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "foundation.delegations",
+      "route": "/foundation/delegations",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "workflow",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "foundation.workflow.archetype",
+      "rendererKey": "WorkflowRecordsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "metric-grid",
+          "semanticComponent": "dos.metric-grid",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "workflow-panel",
+          "semanticComponent": "dos.workflow-panel",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "records-table",
+          "semanticComponent": "dos.records-table",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "status-banner",
+          "semanticComponent": "dos.status-banner",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "user-service",
+      "apiEndpoint": "/api/delegations",
+      "dbEntities": [
+        "dos.delegations"
+      ],
+      "readPermission": "foundation.delegations.read",
+      "writePermissions": [
+        "foundation.delegations.create",
+        "foundation.delegations.update",
+        "foundation.delegations.delete"
+      ],
+      "columns": [
+        "delegator",
+        "delegate",
+        "scope",
+        "start_date",
+        "end_date",
+        "status"
+      ],
+      "titleKey": "foundation.delegations.title",
+      "subtitleKey": "foundation.delegations.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "foundation.delegations.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "foundation.delegations.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "foundation.delegations.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "foundation.ownership",
+      "route": "/foundation/ownership",
+      "aliases": [
+        "/foundation/ownership-mapping"
+      ],
+      "dbRouteStatus": "contracted",
+      "pageType": "matrix",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "foundation.matrix.archetype",
+      "rendererKey": "OwnershipMatrixTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "ownership-matrix",
+          "semanticComponent": "dos.ownership-matrix",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "sod-result",
+          "semanticComponent": "dos.sod-result",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "recommendation-list",
+          "semanticComponent": "dos.recommendation-list",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "user-service",
+      "apiEndpoint": "/api/ownership-mapping",
+      "dbEntities": [
+        "dos.ownership_assignments"
+      ],
+      "readPermission": "foundation.ownership.read",
+      "writePermissions": [
+        "foundation.ownership.create",
+        "foundation.ownership.update",
+        "foundation.ownership.delete"
+      ],
+      "columns": [],
+      "titleKey": "foundation.ownership.title",
+      "subtitleKey": "foundation.ownership.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "foundation.ownership.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "foundation.ownership.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "foundation.ownership.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "foundation.access-review",
+      "route": "/foundation/access-review",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "workflow",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "foundation.workflow.archetype",
+      "rendererKey": "WorkflowRecordsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "metric-grid",
+          "semanticComponent": "dos.metric-grid",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "workflow-panel",
+          "semanticComponent": "dos.workflow-panel",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "records-table",
+          "semanticComponent": "dos.records-table",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "status-banner",
+          "semanticComponent": "dos.status-banner",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "auth-service",
+      "apiEndpoint": "/api/access-review",
+      "dbEntities": [
+        "platform_dauth.access_reviews",
+        "platform_dauth.user_role_assignments"
+      ],
+      "readPermission": "foundation.access_review.read",
+      "writePermissions": [
+        "foundation.access_review.create",
+        "foundation.access_review.update",
+        "foundation.access_review.delete"
+      ],
+      "columns": [
+        "review_name",
+        "reviewer",
+        "scope",
+        "due_date",
+        "completion",
+        "risk",
+        "status"
+      ],
+      "titleKey": "foundation.access-review.title",
+      "subtitleKey": "foundation.access-review.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "foundation.access-review.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "foundation.access-review.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "foundation.access-review.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "foundation.policies",
+      "route": "/foundation/policies",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "workflow",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "foundation.workflow.archetype",
+      "rendererKey": "WorkflowRecordsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "metric-grid",
+          "semanticComponent": "dos.metric-grid",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "workflow-panel",
+          "semanticComponent": "dos.workflow-panel",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "records-table",
+          "semanticComponent": "dos.records-table",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "status-banner",
+          "semanticComponent": "dos.status-banner",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "governance-policy-service",
+      "apiEndpoint": "/api/policies",
+      "dbEntities": [
+        "dos.policies"
+      ],
+      "readPermission": "foundation.policies.read",
+      "writePermissions": [
+        "foundation.policies.create",
+        "foundation.policies.update",
+        "foundation.policies.delete"
+      ],
+      "columns": [
+        "policy_name",
+        "owner",
+        "version",
+        "status",
+        "review_due"
+      ],
+      "titleKey": "foundation.policies.title",
+      "subtitleKey": "foundation.policies.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "foundation.policies.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "foundation.policies.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "foundation.policies.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "foundation.data-processing",
+      "route": "/foundation/data-processing",
+      "aliases": [],
+      "dbRouteStatus": "missing_in_db_template_binding",
+      "pageType": "records_table",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "foundation.records_table.archetype",
+      "rendererKey": "ModuleRecordsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "status-banner",
+          "semanticComponent": "dos.status-banner",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "metric-grid",
+          "semanticComponent": "dos.metric-grid",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "records-table",
+          "semanticComponent": "dos.records-table",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "form-modal",
+          "semanticComponent": "dos.form-modal",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "empty-state",
+          "semanticComponent": "dos.empty-state",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "privacy-service",
+      "apiEndpoint": "/api/privacy/data-processing",
+      "dbEntities": [
+        "dos.data_processing_activities"
+      ],
+      "readPermission": "foundation.data_processing.read",
+      "writePermissions": [
+        "foundation.data_processing.create",
+        "foundation.data_processing.update",
+        "foundation.data_processing.delete"
+      ],
+      "columns": [
+        "activity_name",
+        "owner",
+        "lawful_basis",
+        "data_category",
+        "retention",
+        "status"
+      ],
+      "titleKey": "foundation.data-processing.title",
+      "subtitleKey": "foundation.data-processing.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "foundation.data-processing.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "foundation.data-processing.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "foundation.data-processing.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "foundation.reference-data",
+      "route": "/foundation/reference-data",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "records_table",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "foundation.records_table.archetype",
+      "rendererKey": "ModuleRecordsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "status-banner",
+          "semanticComponent": "dos.status-banner",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "metric-grid",
+          "semanticComponent": "dos.metric-grid",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "records-table",
+          "semanticComponent": "dos.records-table",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "form-modal",
+          "semanticComponent": "dos.form-modal",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "empty-state",
+          "semanticComponent": "dos.empty-state",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "user-service",
+      "apiEndpoint": "/api/lookups",
+      "dbEntities": [
+        "dos.reference_data",
+        "dos.lookup_values"
+      ],
+      "readPermission": "foundation.reference_data.read",
+      "writePermissions": [
+        "foundation.reference_data.create",
+        "foundation.reference_data.update",
+        "foundation.reference_data.delete"
+      ],
+      "columns": [
+        "group",
+        "key",
+        "label_en",
+        "label_ar",
+        "status"
+      ],
+      "titleKey": "foundation.reference-data.title",
+      "subtitleKey": "foundation.reference-data.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "foundation.reference-data.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "foundation.reference-data.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "foundation.reference-data.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "foundation.audit",
+      "route": "/foundation/audit",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "audit_log",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "foundation.audit_log.archetype",
+      "rendererKey": "AuditLogTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "structured-summary-card",
+          "semanticComponent": "dos.structured-summary-card",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "audit-log-table",
+          "semanticComponent": "dos.audit-log-table",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "audit-service",
+      "apiEndpoint": "/api/audit-trail",
+      "dbEntities": [
+        "dos.audit_trail"
+      ],
+      "readPermission": "foundation.audit.read",
+      "writePermissions": [],
+      "columns": [
+        "timestamp",
+        "actor",
+        "action",
+        "entity",
+        "decision",
+        "correlation_id"
+      ],
+      "titleKey": "foundation.audit.title",
+      "subtitleKey": "foundation.audit.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "foundation.audit.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "foundation.audit.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "foundation.audit.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "foundation.settings",
+      "route": "/foundation/settings",
+      "aliases": [
+        "/foundation/sod"
+      ],
+      "dbRouteStatus": "contract_alias_needed",
+      "pageType": "settings",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "foundation.settings.archetype",
+      "rendererKey": "ModuleSettingsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "tabs",
+          "semanticComponent": "dos.tabs",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "settings-panel",
+          "semanticComponent": "dos.settings-panel",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "status-banner",
+          "semanticComponent": "dos.status-banner",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "user-service",
+      "apiEndpoint": "/api/foundation/settings",
+      "dbEntities": [
+        "dos.module_settings",
+        "dos.tenant_module_config"
+      ],
+      "readPermission": "foundation.settings.read",
+      "writePermissions": [
+        "foundation.settings.create",
+        "foundation.settings.update",
+        "foundation.settings.delete"
+      ],
+      "columns": [],
+      "titleKey": "foundation.settings.title",
+      "subtitleKey": "foundation.settings.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "foundation.settings.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "foundation.settings.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "foundation.settings.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    }
+  ],
+  "permissions": [
+    {
+      "permissionCode": "foundation.access_review.create",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.access_review.delete",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.access_review.read",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.access_review.update",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.audit.read",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.business_units.create",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.business_units.delete",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.business_units.read",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.business_units.update",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.committees.create",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.committees.delete",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.committees.read",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.committees.update",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.data_processing.create",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.data_processing.delete",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.data_processing.read",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.data_processing.update",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.delegations.create",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.delegations.delete",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.delegations.read",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.delegations.update",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.departments.create",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.departments.delete",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.departments.read",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.departments.update",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.locations.create",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.locations.delete",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.locations.read",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.locations.update",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.organization.create",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.organization.delete",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.organization.read",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.organization.update",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.overview.read",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.ownership.create",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.ownership.delete",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.ownership.read",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.ownership.update",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.policies.create",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.policies.delete",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.policies.read",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.policies.update",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.positions.create",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.positions.delete",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.positions.read",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.positions.update",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.reference_data.create",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.reference_data.delete",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.reference_data.read",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.reference_data.update",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.roles.create",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.roles.delete",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.roles.read",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.roles.update",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.settings.create",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.settings.delete",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.settings.read",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.settings.update",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.teams.create",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.teams.delete",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.teams.read",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.teams.update",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.users.create",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.users.delete",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.users.read",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.users.update",
+      "moduleCode": "foundation",
+      "status": "required"
+    }
+  ],
+  "dbOnlyRoutesToReconcile": [
+    {
+      "route": "/foundation/hierarchy-viz",
+      "status": "db_only_orphan",
+      "requiredAction": "contract_or_quarantine"
+    },
+    {
+      "route": "/foundation/user-lifecycle",
+      "status": "db_only_orphan",
+      "requiredAction": "contract_or_quarantine"
+    },
+    {
+      "route": "/foundation/permissions",
+      "status": "db_only_orphan",
+      "requiredAction": "contract_or_quarantine"
+    },
+    {
+      "route": "/foundation/diagnostics",
+      "status": "db_only_orphan",
+      "requiredAction": "map_to_posture_overview_or_quarantine"
+    }
+  ],
+  "publicationTargets": {
+    "routes": "dos.dynamic_ui_routes / route template binding",
+    "navigation": "dos.navigation_registry",
+    "archetypeKeys": "dos.dynamic_ui_component_registry existing archetype keys only",
+    "permissions": "platform_dauth.permissions or dos.permissions",
+    "roleBindings": "role_permissions",
+    "i18n": "dos.i18n_catalog"
+  },
+  "acceptance": [
+    "route_exists_or_marked_missing_in_db",
+    "archetype_renderer_exists_in_template_registry",
+    "permissions_exist_and_role_bound",
+    "api_returns_401_not_404_when_unauthenticated",
+    "semantic_regions_render_with_carbon",
+    "mobile_no_horizontal_overflow",
+    "rtl_pass",
+    "no_static_fallback"
+  ],
+  "moduleRuntime": {
+    "moduleCode": "foundation",
+    "moduleName": {
+      "en": "Foundation",
+      "ar": "التأسيس"
+    },
+    "category": "platform-base",
+    "routeBase": "/foundation",
+    "ownerService": "user-service",
+    "status": "active",
+    "chrome": {
+      "brand": null,
+      "header": null,
+      "footer": null,
+      "banners": []
+    },
+    "navGroups": [
+      {
+        "groupKey": "foundation.primary",
+        "label": {
+          "i18nKey": "foundation.nav.primary",
+          "fallback": null,
+          "label": null
+        },
+        "sortOrder": 1,
+        "permission": null,
+        "entitlement": null
+      }
+    ],
+    "navItems": [
+      {
+        "itemKey": "foundation.overview",
+        "groupKey": "foundation.primary",
+        "label": {
+          "i18nKey": "foundation.overview.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/foundation/overview"
+        },
+        "sortOrder": 1,
+        "permission": "foundation.overview.read",
+        "entitlement": null,
+        "iconRef": null
+      },
+      {
+        "itemKey": "foundation.organization",
+        "groupKey": "foundation.primary",
+        "label": {
+          "i18nKey": "foundation.organization.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/foundation/organization"
+        },
+        "sortOrder": 2,
+        "permission": "foundation.organization.read",
+        "entitlement": null,
+        "iconRef": null
+      },
+      {
+        "itemKey": "foundation.business_units",
+        "groupKey": "foundation.primary",
+        "label": {
+          "i18nKey": "foundation.business-units.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/foundation/business-units"
+        },
+        "sortOrder": 3,
+        "permission": "foundation.business_units.read",
+        "entitlement": null,
+        "iconRef": null
+      },
+      {
+        "itemKey": "foundation.departments",
+        "groupKey": "foundation.primary",
+        "label": {
+          "i18nKey": "foundation.departments.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/foundation/departments"
+        },
+        "sortOrder": 4,
+        "permission": "foundation.departments.read",
+        "entitlement": null,
+        "iconRef": null
+      },
+      {
+        "itemKey": "foundation.users",
+        "groupKey": "foundation.primary",
+        "label": {
+          "i18nKey": "foundation.users.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/foundation/users"
+        },
+        "sortOrder": 6,
+        "permission": "foundation.users.read",
+        "entitlement": null,
+        "iconRef": null
+      },
+      {
+        "itemKey": "foundation.roles",
+        "groupKey": "foundation.primary",
+        "label": {
+          "i18nKey": "foundation.roles.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/foundation/roles"
+        },
+        "sortOrder": 8,
+        "permission": "foundation.roles.read",
+        "entitlement": null,
+        "iconRef": null
+      },
+      {
+        "itemKey": "foundation.teams",
+        "groupKey": "foundation.primary",
+        "label": {
+          "i18nKey": "foundation.teams.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/foundation/teams"
+        },
+        "sortOrder": 7,
+        "permission": "foundation.teams.read",
+        "entitlement": null,
+        "iconRef": null
+      },
+      {
+        "itemKey": "foundation.locations",
+        "groupKey": "foundation.primary",
+        "label": {
+          "i18nKey": "foundation.locations.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/foundation/locations"
+        },
+        "sortOrder": 9,
+        "permission": "foundation.locations.read",
+        "entitlement": null,
+        "iconRef": null
+      },
+      {
+        "itemKey": "foundation.positions",
+        "groupKey": "foundation.primary",
+        "label": {
+          "i18nKey": "foundation.positions.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/foundation/positions"
+        },
+        "sortOrder": 5,
+        "permission": "foundation.positions.read",
+        "entitlement": null,
+        "iconRef": null
+      },
+      {
+        "itemKey": "foundation.committees",
+        "groupKey": "foundation.primary",
+        "label": {
+          "i18nKey": "foundation.committees.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/foundation/committees"
+        },
+        "sortOrder": 10,
+        "permission": "foundation.committees.read",
+        "entitlement": null,
+        "iconRef": null
+      },
+      {
+        "itemKey": "foundation.delegations",
+        "groupKey": "foundation.primary",
+        "label": {
+          "i18nKey": "foundation.delegations.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/foundation/delegations"
+        },
+        "sortOrder": 11,
+        "permission": "foundation.delegations.read",
+        "entitlement": null,
+        "iconRef": null
+      },
+      {
+        "itemKey": "foundation.ownership",
+        "groupKey": "foundation.primary",
+        "label": {
+          "i18nKey": "foundation.ownership.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/foundation/ownership"
+        },
+        "sortOrder": 20,
+        "permission": "foundation.ownership.read",
+        "entitlement": null,
+        "iconRef": null
+      },
+      {
+        "itemKey": "foundation.access_review",
+        "groupKey": "foundation.primary",
+        "label": {
+          "i18nKey": "foundation.access-review.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/foundation/access-review"
+        },
+        "sortOrder": 13,
+        "permission": "foundation.access_review.read",
+        "entitlement": null,
+        "iconRef": null
+      },
+      {
+        "itemKey": "foundation.policies",
+        "groupKey": "foundation.primary",
+        "label": {
+          "i18nKey": "foundation.policies.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/foundation/policies"
+        },
+        "sortOrder": 14,
+        "permission": "foundation.policies.read",
+        "entitlement": null,
+        "iconRef": null
+      },
+      {
+        "itemKey": "foundation.data_processing",
+        "groupKey": "foundation.primary",
+        "label": {
+          "i18nKey": "foundation.data-processing.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/foundation/data-processing"
+        },
+        "sortOrder": 15,
+        "permission": "foundation.data_processing.read",
+        "entitlement": null,
+        "iconRef": null
+      },
+      {
+        "itemKey": "foundation.reference_data",
+        "groupKey": "foundation.primary",
+        "label": {
+          "i18nKey": "foundation.reference-data.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/foundation/reference-data"
+        },
+        "sortOrder": 16,
+        "permission": "foundation.reference_data.read",
+        "entitlement": null,
+        "iconRef": null
+      },
+      {
+        "itemKey": "foundation.audit",
+        "groupKey": "foundation.primary",
+        "label": {
+          "i18nKey": "foundation.audit.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/foundation/audit"
+        },
+        "sortOrder": 17,
+        "permission": "foundation.audit.read",
+        "entitlement": null,
+        "iconRef": null
+      },
+      {
+        "itemKey": "foundation.settings",
+        "groupKey": "foundation.primary",
+        "label": {
+          "i18nKey": "foundation.settings.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/foundation/settings"
+        },
+        "sortOrder": 18,
+        "permission": "foundation.settings.read",
+        "entitlement": null,
+        "iconRef": null
+      },
+      {
+        "itemKey": "foundation.permissions",
+        "groupKey": "foundation.primary",
+        "label": {
+          "i18nKey": "foundation.permissions.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/foundation/permissions"
+        },
+        "sortOrder": 19,
+        "permission": "foundation.permissions.read",
+        "entitlement": null,
+        "iconRef": null
+      },
+      {
+        "itemKey": "foundation.sod",
+        "groupKey": "foundation.primary",
+        "label": {
+          "i18nKey": "foundation.sod.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/foundation/sod"
+        },
+        "sortOrder": 21,
+        "permission": "foundation.sod.read",
+        "entitlement": null,
+        "iconRef": null
+      },
+      {
+        "itemKey": "foundation.hierarchy_viz",
+        "groupKey": "foundation.primary",
+        "label": {
+          "i18nKey": "foundation.hierarchy_viz.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/foundation/hierarchy-viz"
+        },
+        "sortOrder": 22,
+        "permission": "foundation.hierarchy_viz.read",
+        "entitlement": null,
+        "iconRef": null
+      },
+      {
+        "itemKey": "foundation.user_lifecycle",
+        "groupKey": "foundation.primary",
+        "label": {
+          "i18nKey": "foundation.user_lifecycle.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/foundation/user-lifecycle"
+        },
+        "sortOrder": 23,
+        "permission": "foundation.user_lifecycle.read",
+        "entitlement": null,
+        "iconRef": null
+      },
+      {
+        "itemKey": "foundation.diagnostics",
+        "groupKey": "foundation.primary",
+        "label": {
+          "i18nKey": "foundation.diagnostics.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/foundation/diagnostics"
+        },
+        "sortOrder": 24,
+        "permission": "foundation.diagnostics.read",
+        "entitlement": null,
+        "iconRef": null
+      },
+      {
+        "itemKey": "foundation.ownership_mapping",
+        "groupKey": "foundation.primary",
+        "label": {
+          "i18nKey": "foundation.ownership_mapping.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/foundation/ownership-mapping"
+        },
+        "sortOrder": 12,
+        "permission": "foundation.ownership_mapping.read",
+        "entitlement": null,
+        "iconRef": null
+      }
+    ],
+    "pages": [
+      {
+        "pageKey": "foundation.overview",
+        "route": "/foundation/overview",
+        "aliases": [],
+        "dbRouteStatus": "contracted",
+        "pageType": "overview",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "foundation.overview.archetype",
+        "rendererKey": "ModuleOverviewTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "status-banner",
+            "semanticComponent": "dos.status-banner",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "metric-grid",
+            "semanticComponent": "dos.metric-grid",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "structured-summary-card",
+            "semanticComponent": "dos.structured-summary-card",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "readiness-panel",
+            "semanticComponent": "dos.readiness-panel",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "recommendation-list",
+            "semanticComponent": "dos.recommendation-list",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "user-service",
+        "apiEndpoint": "/api/foundation/overview",
+        "dbEntities": [
+          "dos.tenants",
+          "dos.users",
+          "dos.tenant_memberships"
+        ],
+        "readPermission": "foundation.overview.read",
+        "writePermissions": [],
+        "columns": [],
+        "titleKey": "foundation.overview.title",
+        "subtitleKey": "foundation.overview.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "foundation.overview.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "foundation.overview.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "foundation.overview.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      },
+      {
+        "pageKey": "foundation.organization",
+        "route": "/foundation/organization",
+        "aliases": [],
+        "dbRouteStatus": "missing_in_db_template_binding",
+        "pageType": "org_tree_detail",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "foundation.org_tree_detail.archetype",
+        "rendererKey": "OrgChartTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "org-tree",
+            "semanticComponent": "dos.org-tree",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "detail-card",
+            "semanticComponent": "dos.detail-card",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "action-bar",
+            "semanticComponent": "dos.action-bar",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "user-service",
+        "apiEndpoint": "/api/organizations",
+        "dbEntities": [
+          "dos.organizations"
+        ],
+        "readPermission": "foundation.organization.read",
+        "writePermissions": [
+          "foundation.organization.create",
+          "foundation.organization.update",
+          "foundation.organization.delete"
+        ],
+        "columns": [],
+        "titleKey": "foundation.organization.title",
+        "subtitleKey": "foundation.organization.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "foundation.organization.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "foundation.organization.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "foundation.organization.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      },
+      {
+        "pageKey": "foundation.business_units",
+        "route": "/foundation/business-units",
+        "aliases": [],
+        "dbRouteStatus": "contracted",
+        "pageType": "records_table",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "foundation.records_table.archetype",
+        "rendererKey": "ModuleRecordsTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "status-banner",
+            "semanticComponent": "dos.status-banner",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "metric-grid",
+            "semanticComponent": "dos.metric-grid",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "records-table",
+            "semanticComponent": "dos.records-table",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "form-modal",
+            "semanticComponent": "dos.form-modal",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "empty-state",
+            "semanticComponent": "dos.empty-state",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "user-service",
+        "apiEndpoint": "/api/business-units",
+        "dbEntities": [
+          "dos.business_units"
+        ],
+        "readPermission": "foundation.business_units.read",
+        "writePermissions": [
+          "foundation.business_units.create",
+          "foundation.business_units.update",
+          "foundation.business_units.delete"
+        ],
+        "columns": [
+          "name",
+          "code",
+          "organization",
+          "owner",
+          "status"
+        ],
+        "titleKey": "foundation.business-units.title",
+        "subtitleKey": "foundation.business-units.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "foundation.business-units.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "foundation.business-units.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "foundation.business-units.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      },
+      {
+        "pageKey": "foundation.departments",
+        "route": "/foundation/departments",
+        "aliases": [],
+        "dbRouteStatus": "contracted",
+        "pageType": "records_table",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "foundation.records_table.archetype",
+        "rendererKey": "ModuleRecordsTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "status-banner",
+            "semanticComponent": "dos.status-banner",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "metric-grid",
+            "semanticComponent": "dos.metric-grid",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "records-table",
+            "semanticComponent": "dos.records-table",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "form-modal",
+            "semanticComponent": "dos.form-modal",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "empty-state",
+            "semanticComponent": "dos.empty-state",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "user-service",
+        "apiEndpoint": "/api/departments",
+        "dbEntities": [
+          "dos.departments"
+        ],
+        "readPermission": "foundation.departments.read",
+        "writePermissions": [
+          "foundation.departments.create",
+          "foundation.departments.update",
+          "foundation.departments.delete"
+        ],
+        "columns": [
+          "department_name",
+          "business_unit",
+          "manager",
+          "headcount",
+          "status"
+        ],
+        "titleKey": "foundation.departments.title",
+        "subtitleKey": "foundation.departments.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "foundation.departments.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "foundation.departments.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "foundation.departments.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      },
+      {
+        "pageKey": "foundation.users",
+        "route": "/foundation/users",
+        "aliases": [],
+        "dbRouteStatus": "contracted",
+        "pageType": "records_table",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "foundation.records_table.archetype",
+        "rendererKey": "ModuleRecordsTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "status-banner",
+            "semanticComponent": "dos.status-banner",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "metric-grid",
+            "semanticComponent": "dos.metric-grid",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "records-table",
+            "semanticComponent": "dos.records-table",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "form-modal",
+            "semanticComponent": "dos.form-modal",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "empty-state",
+            "semanticComponent": "dos.empty-state",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "user-service",
+        "apiEndpoint": "/api/users",
+        "dbEntities": [
+          "dos.users",
+          "dos.tenant_memberships",
+          "dos.user_role_assignments"
+        ],
+        "readPermission": "foundation.users.read",
+        "writePermissions": [
+          "foundation.users.create",
+          "foundation.users.update",
+          "foundation.users.delete"
+        ],
+        "columns": [
+          "display_name",
+          "email",
+          "status",
+          "roles",
+          "department",
+          "last_login"
+        ],
+        "titleKey": "foundation.users.title",
+        "subtitleKey": "foundation.users.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "foundation.users.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "foundation.users.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "foundation.users.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      },
+      {
+        "pageKey": "foundation.roles",
+        "route": "/foundation/roles",
+        "aliases": [],
+        "dbRouteStatus": "contracted",
+        "pageType": "records_table",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "foundation.records_table.archetype",
+        "rendererKey": "ModuleRecordsTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "status-banner",
+            "semanticComponent": "dos.status-banner",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "metric-grid",
+            "semanticComponent": "dos.metric-grid",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "records-table",
+            "semanticComponent": "dos.records-table",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "form-modal",
+            "semanticComponent": "dos.form-modal",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "empty-state",
+            "semanticComponent": "dos.empty-state",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "user-service",
+        "apiEndpoint": "/api/profiles/roles",
+        "dbEntities": [
+          "dos.functional_roles",
+          "dos.role_permissions"
+        ],
+        "readPermission": "foundation.roles.read",
+        "writePermissions": [
+          "foundation.roles.create",
+          "foundation.roles.update",
+          "foundation.roles.delete"
+        ],
+        "columns": [
+          "role_code",
+          "role_name",
+          "permission_count",
+          "user_count",
+          "status"
+        ],
+        "titleKey": "foundation.roles.title",
+        "subtitleKey": "foundation.roles.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "foundation.roles.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "foundation.roles.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "foundation.roles.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      },
+      {
+        "pageKey": "foundation.teams",
+        "route": "/foundation/teams",
+        "aliases": [],
+        "dbRouteStatus": "contracted",
+        "pageType": "records_table",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "foundation.records_table.archetype",
+        "rendererKey": "ModuleRecordsTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "status-banner",
+            "semanticComponent": "dos.status-banner",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "metric-grid",
+            "semanticComponent": "dos.metric-grid",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "records-table",
+            "semanticComponent": "dos.records-table",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "form-modal",
+            "semanticComponent": "dos.form-modal",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "empty-state",
+            "semanticComponent": "dos.empty-state",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "user-service",
+        "apiEndpoint": "/api/teams",
+        "dbEntities": [
+          "dos.teams",
+          "dos.team_members"
+        ],
+        "readPermission": "foundation.teams.read",
+        "writePermissions": [
+          "foundation.teams.create",
+          "foundation.teams.update",
+          "foundation.teams.delete"
+        ],
+        "columns": [
+          "team_name",
+          "owner",
+          "member_count",
+          "status"
+        ],
+        "titleKey": "foundation.teams.title",
+        "subtitleKey": "foundation.teams.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "foundation.teams.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "foundation.teams.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "foundation.teams.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      },
+      {
+        "pageKey": "foundation.locations",
+        "route": "/foundation/locations",
+        "aliases": [],
+        "dbRouteStatus": "contracted",
+        "pageType": "records_table",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "foundation.records_table.archetype",
+        "rendererKey": "ModuleRecordsTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "status-banner",
+            "semanticComponent": "dos.status-banner",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "metric-grid",
+            "semanticComponent": "dos.metric-grid",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "records-table",
+            "semanticComponent": "dos.records-table",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "form-modal",
+            "semanticComponent": "dos.form-modal",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "empty-state",
+            "semanticComponent": "dos.empty-state",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "user-service",
+        "apiEndpoint": "/api/locations",
+        "dbEntities": [
+          "dos.locations"
+        ],
+        "readPermission": "foundation.locations.read",
+        "writePermissions": [
+          "foundation.locations.create",
+          "foundation.locations.update",
+          "foundation.locations.delete"
+        ],
+        "columns": [
+          "location_name",
+          "country",
+          "city",
+          "type",
+          "owner",
+          "status"
+        ],
+        "titleKey": "foundation.locations.title",
+        "subtitleKey": "foundation.locations.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "foundation.locations.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "foundation.locations.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "foundation.locations.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      },
+      {
+        "pageKey": "foundation.positions",
+        "route": "/foundation/positions",
+        "aliases": [],
+        "dbRouteStatus": "contracted",
+        "pageType": "records_table",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "foundation.records_table.archetype",
+        "rendererKey": "ModuleRecordsTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "status-banner",
+            "semanticComponent": "dos.status-banner",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "metric-grid",
+            "semanticComponent": "dos.metric-grid",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "records-table",
+            "semanticComponent": "dos.records-table",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "form-modal",
+            "semanticComponent": "dos.form-modal",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "empty-state",
+            "semanticComponent": "dos.empty-state",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "user-service",
+        "apiEndpoint": "/api/positions",
+        "dbEntities": [
+          "dos.positions"
+        ],
+        "readPermission": "foundation.positions.read",
+        "writePermissions": [
+          "foundation.positions.create",
+          "foundation.positions.update",
+          "foundation.positions.delete"
+        ],
+        "columns": [
+          "position_title",
+          "department",
+          "grade",
+          "reports_to",
+          "assigned_user",
+          "status"
+        ],
+        "titleKey": "foundation.positions.title",
+        "subtitleKey": "foundation.positions.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "foundation.positions.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "foundation.positions.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "foundation.positions.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      },
+      {
+        "pageKey": "foundation.committees",
+        "route": "/foundation/committees",
+        "aliases": [],
+        "dbRouteStatus": "contracted",
+        "pageType": "records_table",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "foundation.records_table.archetype",
+        "rendererKey": "ModuleRecordsTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "status-banner",
+            "semanticComponent": "dos.status-banner",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "metric-grid",
+            "semanticComponent": "dos.metric-grid",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "records-table",
+            "semanticComponent": "dos.records-table",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "form-modal",
+            "semanticComponent": "dos.form-modal",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "empty-state",
+            "semanticComponent": "dos.empty-state",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "user-service",
+        "apiEndpoint": "/api/committees",
+        "dbEntities": [
+          "dos.committees",
+          "dos.committee_members"
+        ],
+        "readPermission": "foundation.committees.read",
+        "writePermissions": [
+          "foundation.committees.create",
+          "foundation.committees.update",
+          "foundation.committees.delete"
+        ],
+        "columns": [
+          "committee_name",
+          "type",
+          "chair",
+          "member_count",
+          "status"
+        ],
+        "titleKey": "foundation.committees.title",
+        "subtitleKey": "foundation.committees.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "foundation.committees.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "foundation.committees.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "foundation.committees.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      },
+      {
+        "pageKey": "foundation.delegations",
+        "route": "/foundation/delegations",
+        "aliases": [],
+        "dbRouteStatus": "contracted",
+        "pageType": "workflow",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "foundation.workflow.archetype",
+        "rendererKey": "WorkflowRecordsTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "metric-grid",
+            "semanticComponent": "dos.metric-grid",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "workflow-panel",
+            "semanticComponent": "dos.workflow-panel",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "records-table",
+            "semanticComponent": "dos.records-table",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "status-banner",
+            "semanticComponent": "dos.status-banner",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "user-service",
+        "apiEndpoint": "/api/delegations",
+        "dbEntities": [
+          "dos.delegations"
+        ],
+        "readPermission": "foundation.delegations.read",
+        "writePermissions": [
+          "foundation.delegations.create",
+          "foundation.delegations.update",
+          "foundation.delegations.delete"
+        ],
+        "columns": [
+          "delegator",
+          "delegate",
+          "scope",
+          "start_date",
+          "end_date",
+          "status"
+        ],
+        "titleKey": "foundation.delegations.title",
+        "subtitleKey": "foundation.delegations.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "foundation.delegations.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "foundation.delegations.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "foundation.delegations.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      },
+      {
+        "pageKey": "foundation.ownership",
+        "route": "/foundation/ownership",
+        "aliases": [
+          "/foundation/ownership-mapping"
+        ],
+        "dbRouteStatus": "contracted",
+        "pageType": "matrix",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "foundation.matrix.archetype",
+        "rendererKey": "OwnershipMatrixTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "ownership-matrix",
+            "semanticComponent": "dos.ownership-matrix",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "sod-result",
+            "semanticComponent": "dos.sod-result",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "recommendation-list",
+            "semanticComponent": "dos.recommendation-list",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "user-service",
+        "apiEndpoint": "/api/ownership-mapping",
+        "dbEntities": [
+          "dos.ownership_assignments"
+        ],
+        "readPermission": "foundation.ownership.read",
+        "writePermissions": [
+          "foundation.ownership.create",
+          "foundation.ownership.update",
+          "foundation.ownership.delete"
+        ],
+        "columns": [],
+        "titleKey": "foundation.ownership.title",
+        "subtitleKey": "foundation.ownership.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "foundation.ownership.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "foundation.ownership.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "foundation.ownership.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      },
+      {
+        "pageKey": "foundation.access_review",
+        "route": "/foundation/access-review",
+        "aliases": [],
+        "dbRouteStatus": "contracted",
+        "pageType": "workflow",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "foundation.workflow.archetype",
+        "rendererKey": "WorkflowRecordsTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "metric-grid",
+            "semanticComponent": "dos.metric-grid",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "workflow-panel",
+            "semanticComponent": "dos.workflow-panel",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "records-table",
+            "semanticComponent": "dos.records-table",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "status-banner",
+            "semanticComponent": "dos.status-banner",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "auth-service",
+        "apiEndpoint": "/api/access-review",
+        "dbEntities": [
+          "platform_dauth.access_reviews",
+          "platform_dauth.user_role_assignments"
+        ],
+        "readPermission": "foundation.access_review.read",
+        "writePermissions": [
+          "foundation.access_review.create",
+          "foundation.access_review.update",
+          "foundation.access_review.delete"
+        ],
+        "columns": [
+          "review_name",
+          "reviewer",
+          "scope",
+          "due_date",
+          "completion",
+          "risk",
+          "status"
+        ],
+        "titleKey": "foundation.access-review.title",
+        "subtitleKey": "foundation.access-review.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "foundation.access-review.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "foundation.access-review.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "foundation.access-review.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      },
+      {
+        "pageKey": "foundation.policies",
+        "route": "/foundation/policies",
+        "aliases": [],
+        "dbRouteStatus": "contracted",
+        "pageType": "workflow",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "foundation.workflow.archetype",
+        "rendererKey": "WorkflowRecordsTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "metric-grid",
+            "semanticComponent": "dos.metric-grid",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "workflow-panel",
+            "semanticComponent": "dos.workflow-panel",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "records-table",
+            "semanticComponent": "dos.records-table",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "status-banner",
+            "semanticComponent": "dos.status-banner",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "governance-policy-service",
+        "apiEndpoint": "/api/policies",
+        "dbEntities": [
+          "dos.policies"
+        ],
+        "readPermission": "foundation.policies.read",
+        "writePermissions": [
+          "foundation.policies.create",
+          "foundation.policies.update",
+          "foundation.policies.delete"
+        ],
+        "columns": [
+          "policy_name",
+          "owner",
+          "version",
+          "status",
+          "review_due"
+        ],
+        "titleKey": "foundation.policies.title",
+        "subtitleKey": "foundation.policies.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "foundation.policies.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "foundation.policies.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "foundation.policies.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      },
+      {
+        "pageKey": "foundation.data_processing",
+        "route": "/foundation/data-processing",
+        "aliases": [],
+        "dbRouteStatus": "missing_in_db_template_binding",
+        "pageType": "records_table",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "foundation.records_table.archetype",
+        "rendererKey": "ModuleRecordsTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "status-banner",
+            "semanticComponent": "dos.status-banner",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "metric-grid",
+            "semanticComponent": "dos.metric-grid",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "records-table",
+            "semanticComponent": "dos.records-table",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "form-modal",
+            "semanticComponent": "dos.form-modal",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "empty-state",
+            "semanticComponent": "dos.empty-state",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "privacy-service",
+        "apiEndpoint": "/api/privacy/data-processing",
+        "dbEntities": [
+          "dos.data_processing_activities"
+        ],
+        "readPermission": "foundation.data_processing.read",
+        "writePermissions": [
+          "foundation.data_processing.create",
+          "foundation.data_processing.update",
+          "foundation.data_processing.delete"
+        ],
+        "columns": [
+          "activity_name",
+          "owner",
+          "lawful_basis",
+          "data_category",
+          "retention",
+          "status"
+        ],
+        "titleKey": "foundation.data-processing.title",
+        "subtitleKey": "foundation.data-processing.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "foundation.data-processing.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "foundation.data-processing.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "foundation.data-processing.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      },
+      {
+        "pageKey": "foundation.reference_data",
+        "route": "/foundation/reference-data",
+        "aliases": [],
+        "dbRouteStatus": "contracted",
+        "pageType": "records_table",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "foundation.records_table.archetype",
+        "rendererKey": "ModuleRecordsTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "status-banner",
+            "semanticComponent": "dos.status-banner",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "metric-grid",
+            "semanticComponent": "dos.metric-grid",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "records-table",
+            "semanticComponent": "dos.records-table",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "form-modal",
+            "semanticComponent": "dos.form-modal",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "empty-state",
+            "semanticComponent": "dos.empty-state",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "user-service",
+        "apiEndpoint": "/api/lookups",
+        "dbEntities": [
+          "dos.reference_data",
+          "dos.lookup_values"
+        ],
+        "readPermission": "foundation.reference_data.read",
+        "writePermissions": [
+          "foundation.reference_data.create",
+          "foundation.reference_data.update",
+          "foundation.reference_data.delete"
+        ],
+        "columns": [
+          "group",
+          "key",
+          "label_en",
+          "label_ar",
+          "status"
+        ],
+        "titleKey": "foundation.reference-data.title",
+        "subtitleKey": "foundation.reference-data.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "foundation.reference-data.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "foundation.reference-data.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "foundation.reference-data.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      },
+      {
+        "pageKey": "foundation.audit",
+        "route": "/foundation/audit",
+        "aliases": [],
+        "dbRouteStatus": "contracted",
+        "pageType": "audit_log",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "foundation.audit_log.archetype",
+        "rendererKey": "AuditLogTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "structured-summary-card",
+            "semanticComponent": "dos.structured-summary-card",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "audit-log-table",
+            "semanticComponent": "dos.audit-log-table",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "audit-service",
+        "apiEndpoint": "/api/audit-trail",
+        "dbEntities": [
+          "dos.audit_trail"
+        ],
+        "readPermission": "foundation.audit.read",
+        "writePermissions": [],
+        "columns": [
+          "timestamp",
+          "actor",
+          "action",
+          "entity",
+          "decision",
+          "correlation_id"
+        ],
+        "titleKey": "foundation.audit.title",
+        "subtitleKey": "foundation.audit.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "foundation.audit.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "foundation.audit.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "foundation.audit.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      },
+      {
+        "pageKey": "foundation.settings",
+        "route": "/foundation/settings",
+        "aliases": [
+          "/foundation/sod"
+        ],
+        "dbRouteStatus": "contract_alias_needed",
+        "pageType": "settings",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "foundation.settings.archetype",
+        "rendererKey": "ModuleSettingsTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "tabs",
+            "semanticComponent": "dos.tabs",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "settings-panel",
+            "semanticComponent": "dos.settings-panel",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "status-banner",
+            "semanticComponent": "dos.status-banner",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "user-service",
+        "apiEndpoint": "/api/foundation/settings",
+        "dbEntities": [
+          "dos.module_settings",
+          "dos.tenant_module_config"
+        ],
+        "readPermission": "foundation.settings.read",
+        "writePermissions": [
+          "foundation.settings.create",
+          "foundation.settings.update",
+          "foundation.settings.delete"
+        ],
+        "columns": [],
+        "titleKey": "foundation.settings.title",
+        "subtitleKey": "foundation.settings.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "foundation.settings.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "foundation.settings.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "foundation.settings.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      },
+      {
+        "pageKey": "foundation.permissions",
+        "route": "/foundation/permissions",
+        "aliases": [],
+        "dbRouteStatus": "db_only_orphan_promoted_to_canonical",
+        "pageType": "records_table",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "foundation.records_table.archetype",
+        "rendererKey": "ModuleRecordsTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "records-table",
+            "semanticComponent": "dos.records-table",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "empty-state",
+            "semanticComponent": "dos.empty-state",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "auth-service",
+        "apiEndpoint": "/api/dauth/permissions",
+        "dbEntities": [
+          "platform_dauth.permissions",
+          "platform_dauth.role_permissions"
+        ],
+        "readPermission": "foundation.permissions.read",
+        "writePermissions": [
+          "foundation.permissions.update"
+        ],
+        "columns": [
+          "permission_code",
+          "module_code",
+          "description",
+          "status"
+        ],
+        "titleKey": "foundation.permissions.title",
+        "subtitleKey": "foundation.permissions.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "foundation.permissions.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "foundation.permissions.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "foundation.permissions.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      },
+      {
+        "pageKey": "foundation.sod",
+        "route": "/foundation/sod",
+        "aliases": [],
+        "dbRouteStatus": "contract_alias_settings_to_sod",
+        "pageType": "matrix",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "foundation.matrix.archetype",
+        "rendererKey": "OwnershipMatrixTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "sod-result",
+            "semanticComponent": "dos.sod-result",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "recommendation-list",
+            "semanticComponent": "dos.recommendation-list",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "user-service",
+        "apiEndpoint": "/api/sod-rules",
+        "dbEntities": [
+          "dos.sod_rules",
+          "dos.sod_violations"
+        ],
+        "readPermission": "foundation.sod.read",
+        "writePermissions": [
+          "foundation.sod.create",
+          "foundation.sod.update",
+          "foundation.sod.delete"
+        ],
+        "columns": [],
+        "titleKey": "foundation.sod.title",
+        "subtitleKey": "foundation.sod.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "foundation.sod.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "foundation.sod.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "foundation.sod.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      },
+      {
+        "pageKey": "foundation.hierarchy_viz",
+        "route": "/foundation/hierarchy-viz",
+        "aliases": [],
+        "dbRouteStatus": "db_only_orphan_promoted_to_canonical",
+        "pageType": "org_tree_detail",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "foundation.org_tree_detail.archetype",
+        "rendererKey": "OrgChartTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "org-tree",
+            "semanticComponent": "dos.org-tree",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "detail-card",
+            "semanticComponent": "dos.detail-card",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "user-service",
+        "apiEndpoint": "/api/organizations/hierarchy",
+        "dbEntities": [
+          "dos.organizations",
+          "dos.business_units",
+          "dos.departments"
+        ],
+        "readPermission": "foundation.hierarchy_viz.read",
+        "writePermissions": [],
+        "columns": [],
+        "titleKey": "foundation.hierarchy_viz.title",
+        "subtitleKey": "foundation.hierarchy_viz.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "foundation.hierarchy_viz.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "foundation.hierarchy_viz.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "foundation.hierarchy_viz.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      },
+      {
+        "pageKey": "foundation.user_lifecycle",
+        "route": "/foundation/user-lifecycle",
+        "aliases": [],
+        "dbRouteStatus": "db_only_orphan_promoted_to_canonical",
+        "pageType": "workflow",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "foundation.workflow.archetype",
+        "rendererKey": "WorkflowRecordsTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "workflow-panel",
+            "semanticComponent": "dos.workflow-panel",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "records-table",
+            "semanticComponent": "dos.records-table",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "user-service",
+        "apiEndpoint": "/api/users/lifecycle",
+        "dbEntities": [
+          "dos.users",
+          "dos.user_lifecycle_events"
+        ],
+        "readPermission": "foundation.user_lifecycle.read",
+        "writePermissions": [
+          "foundation.user_lifecycle.update"
+        ],
+        "columns": [
+          "user_id",
+          "event_type",
+          "effective_at",
+          "status"
+        ],
+        "titleKey": "foundation.user_lifecycle.title",
+        "subtitleKey": "foundation.user_lifecycle.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "foundation.user_lifecycle.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "foundation.user_lifecycle.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "foundation.user_lifecycle.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      },
+      {
+        "pageKey": "foundation.diagnostics",
+        "route": "/foundation/diagnostics",
+        "aliases": [],
+        "dbRouteStatus": "db_only_orphan_promoted_to_canonical",
+        "pageType": "posture_overview",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "foundation.posture_overview.archetype",
+        "rendererKey": "PostureOverviewTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "metric-grid",
+            "semanticComponent": "dos.metric-grid",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "structured-summary-card",
+            "semanticComponent": "dos.structured-summary-card",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "user-service",
+        "apiEndpoint": "/api/foundation/diagnostics",
+        "dbEntities": [
+          "dos.foundation_health_checks"
+        ],
+        "readPermission": "foundation.diagnostics.read",
+        "writePermissions": [],
+        "columns": [],
+        "titleKey": "foundation.diagnostics.title",
+        "subtitleKey": "foundation.diagnostics.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "foundation.diagnostics.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "foundation.diagnostics.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "foundation.diagnostics.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      },
+      {
+        "pageKey": "foundation.ownership_mapping",
+        "route": "/foundation/ownership-mapping",
+        "aliases": [
+          "/foundation/ownership"
+        ],
+        "dbRouteStatus": "canonical_alias_of_ownership",
+        "pageType": "matrix",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "foundation.matrix.archetype",
+        "rendererKey": "OwnershipMatrixTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "ownership-matrix",
+            "semanticComponent": "dos.ownership-matrix",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "recommendation-list",
+            "semanticComponent": "dos.recommendation-list",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "user-service",
+        "apiEndpoint": "/api/ownership-mapping",
+        "dbEntities": [
+          "dos.ownership_assignments"
+        ],
+        "readPermission": "foundation.ownership_mapping.read",
+        "writePermissions": [
+          "foundation.ownership_mapping.create",
+          "foundation.ownership_mapping.update",
+          "foundation.ownership_mapping.delete"
+        ],
+        "columns": [],
+        "titleKey": "foundation.ownership_mapping.title",
+        "subtitleKey": "foundation.ownership_mapping.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "foundation.ownership_mapping.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "foundation.ownership_mapping.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "foundation.ownership_mapping.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      }
+    ],
+    "widgets": [],
+    "actions": [],
+    "pageOrder": [
+      {
+        "pageKey": "foundation.overview",
+        "sortOrder": 1
+      },
+      {
+        "pageKey": "foundation.organization",
+        "sortOrder": 2
+      },
+      {
+        "pageKey": "foundation.business_units",
+        "sortOrder": 3
+      },
+      {
+        "pageKey": "foundation.departments",
+        "sortOrder": 4
+      },
+      {
+        "pageKey": "foundation.positions",
+        "sortOrder": 5
+      },
+      {
+        "pageKey": "foundation.users",
+        "sortOrder": 6
+      },
+      {
+        "pageKey": "foundation.teams",
+        "sortOrder": 7
+      },
+      {
+        "pageKey": "foundation.roles",
+        "sortOrder": 8
+      },
+      {
+        "pageKey": "foundation.locations",
+        "sortOrder": 9
+      },
+      {
+        "pageKey": "foundation.committees",
+        "sortOrder": 10
+      },
+      {
+        "pageKey": "foundation.delegations",
+        "sortOrder": 11
+      },
+      {
+        "pageKey": "foundation.ownership_mapping",
+        "sortOrder": 12
+      },
+      {
+        "pageKey": "foundation.access_review",
+        "sortOrder": 13
+      },
+      {
+        "pageKey": "foundation.policies",
+        "sortOrder": 14
+      },
+      {
+        "pageKey": "foundation.data_processing",
+        "sortOrder": 15
+      },
+      {
+        "pageKey": "foundation.reference_data",
+        "sortOrder": 16
+      },
+      {
+        "pageKey": "foundation.audit",
+        "sortOrder": 17
+      },
+      {
+        "pageKey": "foundation.settings",
+        "sortOrder": 18
+      },
+      {
+        "pageKey": "foundation.permissions",
+        "sortOrder": 19
+      },
+      {
+        "pageKey": "foundation.ownership",
+        "sortOrder": 20
+      },
+      {
+        "pageKey": "foundation.sod",
+        "sortOrder": 21
+      },
+      {
+        "pageKey": "foundation.hierarchy_viz",
+        "sortOrder": 22
+      },
+      {
+        "pageKey": "foundation.user_lifecycle",
+        "sortOrder": 23
+      },
+      {
+        "pageKey": "foundation.diagnostics",
+        "sortOrder": 24
+      }
+    ],
+    "defaultRoute": "/foundation/overview",
+    "carbonUsage": {
+      "shell": [
+        "UIShell",
+        "Header",
+        "HeaderName",
+        "HeaderNavigation",
+        "HeaderMenu",
+        "HeaderMenuItem",
+        "HeaderGlobalBar",
+        "HeaderGlobalAction",
+        "SideNav",
+        "SideNavItems",
+        "SideNavMenu",
+        "SideNavMenuItem",
+        "SideNavLink",
+        "Content"
+      ],
+      "overview": [
+        "Grid",
+        "Column",
+        "Breadcrumb",
+        "Tile",
+        "Tag",
+        "ProgressBar",
+        "StructuredList",
+        "Tabs",
+        "InlineNotification",
+        "SkeletonText",
+        "SkeletonPlaceholder",
+        "Button"
+      ],
+      "records": [
+        "DataTable",
+        "TableToolbar",
+        "TableToolbarSearch",
+        "TableToolbarActions",
+        "TableBatchActions",
+        "Pagination",
+        "OverflowMenu",
+        "OverflowMenuOption",
+        "SkeletonText",
+        "SkeletonPlaceholder",
+        "InlineNotification",
+        "Tile",
+        "Button",
+        "StructuredList",
+        "Tag",
+        "ProgressBar",
+        "Tooltip"
+      ],
+      "forms": [
+        "Tabs",
+        "StructuredList",
+        "Toggle",
+        "Dropdown",
+        "TextInput",
+        "Button",
+        "InlineNotification",
+        "Modal"
+      ]
+    },
+    "permissions": [
+      {
+        "permissionCode": "foundation.access_review.create",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.access_review.delete",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.access_review.read",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.access_review.update",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.audit.read",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.business_units.create",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.business_units.delete",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.business_units.read",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.business_units.update",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.committees.create",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.committees.delete",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.committees.read",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.committees.update",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.data_processing.create",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.data_processing.delete",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.data_processing.read",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.data_processing.update",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.delegations.create",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.delegations.delete",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.delegations.read",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.delegations.update",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.departments.create",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.departments.delete",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.departments.read",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.departments.update",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.locations.create",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.locations.delete",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.locations.read",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.locations.update",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.organization.create",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.organization.delete",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.organization.read",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.organization.update",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.overview.read",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.ownership.create",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.ownership.delete",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.ownership.read",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.ownership.update",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.policies.create",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.policies.delete",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.policies.read",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.policies.update",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.positions.create",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.positions.delete",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.positions.read",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.positions.update",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.reference_data.create",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.reference_data.delete",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.reference_data.read",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.reference_data.update",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.roles.create",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.roles.delete",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.roles.read",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.roles.update",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.settings.create",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.settings.delete",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.settings.read",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.settings.update",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.teams.create",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.teams.delete",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.teams.read",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.teams.update",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.users.create",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.users.delete",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.users.read",
+        "moduleCode": "foundation",
+        "status": "required"
+      },
+      {
+        "permissionCode": "foundation.users.update",
+        "moduleCode": "foundation",
+        "status": "required"
+      }
+    ],
+    "publication": {
+      "pages_table": "dos.dynamic_ui_routes",
+      "nav_groups_table": "dos.ui_module_nav_group",
+      "nav_items_table": "dos.ui_module_nav_item",
+      "widgets_table": "dos.ui_widget_binding",
+      "actions_table": "dos.ui_action_binding",
+      "permissions_table": "platform_dauth.permissions",
+      "preflight_dependency_for_foundation": "preflight/blockers.contract.v1-1.json#B2"
+    }
+  },
+  "resolverContract": {
+    "endpoint": "/api/ui-os/module-runtime/foundation",
+    "auth": "session_cookie",
+    "tenancy_scope": "tenant",
+    "snake_case_fields_allowed_only_inside_resolver": true,
+    "browser_facing_camelCase": true,
+    "envelope_ref": "envelopes/module-runtime.envelope.v1-1.json"
+  }
+}

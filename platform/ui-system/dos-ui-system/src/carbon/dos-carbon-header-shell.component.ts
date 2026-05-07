@@ -41,9 +41,16 @@ export interface DosCarbonHeaderAction {
   `,
 })
 export class DosCarbonHeaderShellComponent {
-  @Input() brand = 'DOS Platform';
-  @Input() brandShort = 'DOS';
-  @Input() ariaLabel = 'Application header';
+  // ZERO_LEGACY: brand / brandShort / ariaLabel default to empty so the
+  // parent shell MUST pipe in resolver-emitted values:
+  //   brand        ← productRuntime.chrome.brand || tenantRuntime.branding.brandName
+  //   brandShort   ← productRuntime.chrome.brandShort || tenantRuntime.branding.brandShort
+  //   ariaLabel    ← shell.chrome.headerAriaLabel
+  // Empty inputs => Carbon's <cds-header> renders without label text;
+  // it never invents 'DOS Platform'.
+  @Input() brand = '';
+  @Input() brandShort = '';
+  @Input() ariaLabel = '';
   @Input() showHamburger = true;
   @Input() showHeaderNav = false;
   @Input() sideNavOpen = false;

@@ -42,10 +42,11 @@ const router = (0, express_1.Router)();
 exports.orgHierarchyRouter = router;
 router.use(auth_adapter_1.authenticate);
 router.use(auth_adapter_1.requireTenantId);
-router.get('/tree', (0, auth_adapter_1.requireAnyPermission)('admin', 'org_admin', 'member'), (0, middleware_port_1.asyncHandler)(async (req, res) => {
+const ORG_HIERARCHY_READ_PERMS = ['foundation.data.read', 'foundation.hierarchy.read', 'admin', 'org_admin', 'member'];
+router.get('/tree', (0, auth_adapter_1.requireAnyPermission)(...ORG_HIERARCHY_READ_PERMS), (0, middleware_port_1.asyncHandler)(async (req, res) => {
     res.json({ success: true, data: await svc.getOrgTree(req.tenantId) });
 }));
-router.get('/subtree/:id', (0, auth_adapter_1.requireAnyPermission)('admin', 'org_admin', 'member'), (0, middleware_port_1.asyncHandler)(async (req, res) => {
+router.get('/subtree/:id', (0, auth_adapter_1.requireAnyPermission)(...ORG_HIERARCHY_READ_PERMS), (0, middleware_port_1.asyncHandler)(async (req, res) => {
     res.json({ success: true, data: await svc.getSubtree(req.tenantId, req.params.id) });
 }));
 //# sourceMappingURL=org-hierarchy.routes.js.map

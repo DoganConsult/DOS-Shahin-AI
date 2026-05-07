@@ -7,6 +7,8 @@ import { orgHierarchyRouter } from './org-hierarchy.routes';
 import { committeeManagementRouter } from './committee-management.routes';
 import { ownershipMappingRouter } from './ownership-mapping.routes';
 import { sodCheckRouter } from './sod-check.routes';
+import { sodExceptionRouter } from './sod-exception.routes';
+import { sodReviewRouter } from './sod-review.routes';
 import { foundationGovernanceRouter } from './foundation-governance.routes';
 import { userLifecycleRouter } from './user-lifecycle.routes';
 import { bulkInviteRouter } from './bulk-invite.routes';
@@ -21,4 +23,4 @@ export interface FoundationAggregatorDeps {
     departmentRouter: ExpressRouter;
 }
 export declare function createFoundationAggregatorRouter(deps: FoundationAggregatorDeps): ExpressRouter;
-export { organizationsRouter, businessUnitsRouter, positionsRouter, locationsRouter, orgHierarchyRouter, committeeManagementRouter, ownershipMappingRouter, sodCheckRouter, foundationGovernanceRouter, userLifecycleRouter, bulkInviteRouter, accessReviewRouter, delegationRouter, employeeLifecycleRouter, authoritySodRouter, complianceFabricRouter, };
+export { organizationsRouter, businessUnitsRouter, positionsRouter, locationsRouter, orgHierarchyRouter, committeeManagementRouter, ownershipMappingRouter, sodCheckRouter, sodExceptionRouter, sodReviewRouter, foundationGovernanceRouter, userLifecycleRouter, bulkInviteRouter, accessReviewRouter, delegationRouter, employeeLifecycleRouter, authoritySodRouter, complianceFabricRouter, };

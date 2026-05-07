@@ -1,0 +1,1481 @@
+{
+  "$schema": "https://dogan-ai.local/schemas/module-runtime.v1-1.schema.json",
+  "contractKind": "module",
+  "contractVersion": "1.1.0",
+  "runtimeModel": "v1-1-operating-runtime",
+  "generatedAt": "2026-05-07T16:50:00+03:00",
+  "supersedes": "dogan_shahin_all_contracts_v1_runtime/modules/dsoc.module.contract.v1-runtime.json",
+  "selfContained": true,
+  "rule": "Each module declares its full v1 surface PLUS a moduleRuntime layer with canonical pageOrder, chrome, navGroups, navItems, widgets, actions, carbonUsage, permissions, and defaultRoute. Foundation is no longer special.",
+  "doctrine": [
+    "ZERO_STATIC",
+    "ZERO_LEGACY",
+    "ZERO_FALLBACK",
+    "DB_AS_SOURCE_OF_TRUTH"
+  ],
+  "forbidden": [
+    "fake_component_map_closure",
+    "register_dos_semantic_components_as_full_page_templates",
+    "static_nav_fallback",
+    "hardcoded_workspace_modules",
+    "hardcoded_workspace_routes",
+    "prime_ng_workspace_shell",
+    "material_workspace_shell",
+    "localStorage_auth_token",
+    "sessionStorage_auth_token",
+    "silent_renderer_fallback",
+    "random_css_mobile_patch"
+  ],
+  "productKey": "shahin-ai",
+  "moduleCode": "dsoc",
+  "moduleName": {
+    "en": "DSOC",
+    "ar": "مركز عمليات الأمن"
+  },
+  "category": "security-ops",
+  "routeBase": "/dsoc",
+  "ownerService": "security-ops-service",
+  "status": "active",
+  "defaultEnabled": false,
+  "uiVendor": "ibm-carbon",
+  "renderingMode": "dynamic-ui-contract-first-v1-archetype",
+  "pageCount": 6,
+  "pages": [
+    {
+      "pageKey": "dsoc.overview",
+      "route": "/dsoc/overview",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "overview",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "dsoc.overview.archetype",
+      "rendererKey": "ModuleOverviewTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "status-banner",
+          "semanticComponent": "dos.status-banner",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "metric-grid",
+          "semanticComponent": "dos.metric-grid",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "structured-summary-card",
+          "semanticComponent": "dos.structured-summary-card",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "readiness-panel",
+          "semanticComponent": "dos.readiness-panel",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "recommendation-list",
+          "semanticComponent": "dos.recommendation-list",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "security-ops-service",
+      "apiEndpoint": "/api/dsoc/overview",
+      "dbEntities": [
+        "dos.dsoc_overview"
+      ],
+      "readPermission": "dsoc.overview.read",
+      "writePermissions": [],
+      "columns": [],
+      "titleKey": "dsoc.overview.title",
+      "subtitleKey": "dsoc.overview.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "dsoc.overview.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "dsoc.overview.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "dsoc.overview.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "dsoc.records",
+      "route": "/dsoc/records",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "records_table",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "dsoc.records_table.archetype",
+      "rendererKey": "ModuleRecordsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "status-banner",
+          "semanticComponent": "dos.status-banner",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "metric-grid",
+          "semanticComponent": "dos.metric-grid",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "records-table",
+          "semanticComponent": "dos.records-table",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "form-modal",
+          "semanticComponent": "dos.form-modal",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "empty-state",
+          "semanticComponent": "dos.empty-state",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "security-ops-service",
+      "apiEndpoint": "/api/dsoc/records",
+      "dbEntities": [
+        "dos.dsoc_records"
+      ],
+      "readPermission": "dsoc.records.read",
+      "writePermissions": [
+        "dsoc.records.create",
+        "dsoc.records.update",
+        "dsoc.records.delete"
+      ],
+      "columns": [
+        "name",
+        "owner",
+        "status",
+        "risk",
+        "updated_at"
+      ],
+      "titleKey": "dsoc.records.title",
+      "subtitleKey": "dsoc.records.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "dsoc.records.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "dsoc.records.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "dsoc.records.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "dsoc.workflows",
+      "route": "/dsoc/workflows",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "workflow",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "dsoc.workflow.archetype",
+      "rendererKey": "WorkflowRecordsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "metric-grid",
+          "semanticComponent": "dos.metric-grid",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "workflow-panel",
+          "semanticComponent": "dos.workflow-panel",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "records-table",
+          "semanticComponent": "dos.records-table",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "status-banner",
+          "semanticComponent": "dos.status-banner",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "security-ops-service",
+      "apiEndpoint": "/api/dsoc/workflows",
+      "dbEntities": [
+        "dos.dsoc_workflows"
+      ],
+      "readPermission": "dsoc.workflows.read",
+      "writePermissions": [
+        "dsoc.workflows.create",
+        "dsoc.workflows.update",
+        "dsoc.workflows.delete"
+      ],
+      "columns": [
+        "name",
+        "owner",
+        "status",
+        "risk",
+        "updated_at"
+      ],
+      "titleKey": "dsoc.workflows.title",
+      "subtitleKey": "dsoc.workflows.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "dsoc.workflows.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "dsoc.workflows.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "dsoc.workflows.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "dsoc.reports",
+      "route": "/dsoc/reports",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "reports",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "dsoc.reports.archetype",
+      "rendererKey": "ModuleReportsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "metric-grid",
+          "semanticComponent": "dos.metric-grid",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "records-table",
+          "semanticComponent": "dos.records-table",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "form-modal",
+          "semanticComponent": "dos.form-modal",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "security-ops-service",
+      "apiEndpoint": "/api/dsoc/reports",
+      "dbEntities": [
+        "dos.dsoc_reports"
+      ],
+      "readPermission": "dsoc.reports.read",
+      "writePermissions": [
+        "dsoc.reports.create",
+        "dsoc.reports.update",
+        "dsoc.reports.delete"
+      ],
+      "columns": [
+        "name",
+        "owner",
+        "status",
+        "risk",
+        "updated_at"
+      ],
+      "titleKey": "dsoc.reports.title",
+      "subtitleKey": "dsoc.reports.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "dsoc.reports.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "dsoc.reports.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "dsoc.reports.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "dsoc.settings",
+      "route": "/dsoc/settings",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "settings",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "dsoc.settings.archetype",
+      "rendererKey": "ModuleSettingsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "tabs",
+          "semanticComponent": "dos.tabs",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "settings-panel",
+          "semanticComponent": "dos.settings-panel",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "status-banner",
+          "semanticComponent": "dos.status-banner",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "security-ops-service",
+      "apiEndpoint": "/api/dsoc/settings",
+      "dbEntities": [
+        "dos.dsoc_settings"
+      ],
+      "readPermission": "dsoc.settings.read",
+      "writePermissions": [
+        "dsoc.settings.create",
+        "dsoc.settings.update",
+        "dsoc.settings.delete"
+      ],
+      "columns": [],
+      "titleKey": "dsoc.settings.title",
+      "subtitleKey": "dsoc.settings.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "dsoc.settings.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "dsoc.settings.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "dsoc.settings.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    },
+    {
+      "pageKey": "dsoc.ai-insights",
+      "route": "/dsoc/ai-insights",
+      "aliases": [],
+      "dbRouteStatus": "contracted",
+      "pageType": "ai_insights",
+      "runtimeMode": "single_archetype_template",
+      "componentKey": "dsoc.ai_insights.archetype",
+      "rendererKey": "AiInsightsTemplateComponent",
+      "semanticRegions": [
+        {
+          "regionKey": "page-header",
+          "semanticComponent": "dos.page-header",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "ai-insight-panel",
+          "semanticComponent": "dos.ai-insight-panel",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "records-table",
+          "semanticComponent": "dos.records-table",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        },
+        {
+          "regionKey": "recommendation-list",
+          "semanticComponent": "dos.recommendation-list",
+          "role": "required_region",
+          "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+        }
+      ],
+      "ownerService": "security-ops-service",
+      "apiEndpoint": "/api/dsoc/ai-insights",
+      "dbEntities": [
+        "dos.dsoc_ai_insights"
+      ],
+      "readPermission": "dsoc.ai_insights.read",
+      "writePermissions": [],
+      "columns": [],
+      "titleKey": "dsoc.ai-insights.title",
+      "subtitleKey": "dsoc.ai-insights.subtitle",
+      "states": {
+        "loading": {
+          "carbonKeys": [
+            "skeleton-text",
+            "skeleton-placeholder"
+          ],
+          "messageKey": "dsoc.ai-insights.state.loading"
+        },
+        "empty": {
+          "carbonKeys": [
+            "tile",
+            "button"
+          ],
+          "messageKey": "dsoc.ai-insights.state.empty"
+        },
+        "error": {
+          "carbonKeys": [
+            "inline-notification"
+          ],
+          "messageKey": "dsoc.ai-insights.state.error"
+        },
+        "unauthorized": {
+          "policy": "hide_route_from_access_store"
+        }
+      },
+      "responsivePolicyRef": "global.responsive.v1"
+    }
+  ],
+  "permissions": [
+    {
+      "permissionCode": "dsoc.ai_insights.read",
+      "moduleCode": "dsoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dsoc.overview.read",
+      "moduleCode": "dsoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dsoc.records.create",
+      "moduleCode": "dsoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dsoc.records.delete",
+      "moduleCode": "dsoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dsoc.records.read",
+      "moduleCode": "dsoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dsoc.records.update",
+      "moduleCode": "dsoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dsoc.reports.create",
+      "moduleCode": "dsoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dsoc.reports.delete",
+      "moduleCode": "dsoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dsoc.reports.read",
+      "moduleCode": "dsoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dsoc.reports.update",
+      "moduleCode": "dsoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dsoc.settings.create",
+      "moduleCode": "dsoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dsoc.settings.delete",
+      "moduleCode": "dsoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dsoc.settings.read",
+      "moduleCode": "dsoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dsoc.settings.update",
+      "moduleCode": "dsoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dsoc.workflows.create",
+      "moduleCode": "dsoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dsoc.workflows.delete",
+      "moduleCode": "dsoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dsoc.workflows.read",
+      "moduleCode": "dsoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dsoc.workflows.update",
+      "moduleCode": "dsoc",
+      "status": "required"
+    }
+  ],
+  "dbOnlyRoutesToReconcile": [],
+  "publicationTargets": {
+    "routes": "dos.dynamic_ui_routes / route template binding",
+    "navigation": "dos.navigation_registry",
+    "archetypeKeys": "dos.dynamic_ui_component_registry existing archetype keys only",
+    "permissions": "platform_dauth.permissions or dos.permissions",
+    "roleBindings": "role_permissions",
+    "i18n": "dos.i18n_catalog"
+  },
+  "acceptance": [
+    "route_exists_or_marked_missing_in_db",
+    "archetype_renderer_exists_in_template_registry",
+    "permissions_exist_and_role_bound",
+    "api_returns_401_not_404_when_unauthenticated",
+    "semantic_regions_render_with_carbon",
+    "mobile_no_horizontal_overflow",
+    "rtl_pass",
+    "no_static_fallback"
+  ],
+  "moduleRuntime": {
+    "moduleCode": "dsoc",
+    "moduleName": {
+      "en": "DSOC",
+      "ar": "مركز عمليات الأمن"
+    },
+    "category": "security-ops",
+    "routeBase": "/dsoc",
+    "ownerService": "security-ops-service",
+    "status": "active",
+    "chrome": {
+      "brand": null,
+      "header": null,
+      "footer": null,
+      "banners": []
+    },
+    "navGroups": [
+      {
+        "groupKey": "dsoc.primary",
+        "label": {
+          "i18nKey": "dsoc.nav.primary",
+          "fallback": null,
+          "label": null
+        },
+        "sortOrder": 1,
+        "permission": null,
+        "entitlement": null
+      }
+    ],
+    "navItems": [
+      {
+        "itemKey": "dsoc.overview",
+        "groupKey": "dsoc.primary",
+        "label": {
+          "i18nKey": "dsoc.overview.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/dsoc/overview"
+        },
+        "sortOrder": 1,
+        "permission": "dsoc.overview.read",
+        "entitlement": null,
+        "iconRef": null
+      },
+      {
+        "itemKey": "dsoc.records",
+        "groupKey": "dsoc.primary",
+        "label": {
+          "i18nKey": "dsoc.records.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/dsoc/records"
+        },
+        "sortOrder": 2,
+        "permission": "dsoc.records.read",
+        "entitlement": null,
+        "iconRef": null
+      },
+      {
+        "itemKey": "dsoc.workflows",
+        "groupKey": "dsoc.primary",
+        "label": {
+          "i18nKey": "dsoc.workflows.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/dsoc/workflows"
+        },
+        "sortOrder": 3,
+        "permission": "dsoc.workflows.read",
+        "entitlement": null,
+        "iconRef": null
+      },
+      {
+        "itemKey": "dsoc.reports",
+        "groupKey": "dsoc.primary",
+        "label": {
+          "i18nKey": "dsoc.reports.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/dsoc/reports"
+        },
+        "sortOrder": 4,
+        "permission": "dsoc.reports.read",
+        "entitlement": null,
+        "iconRef": null
+      },
+      {
+        "itemKey": "dsoc.settings",
+        "groupKey": "dsoc.primary",
+        "label": {
+          "i18nKey": "dsoc.settings.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/dsoc/settings"
+        },
+        "sortOrder": 5,
+        "permission": "dsoc.settings.read",
+        "entitlement": null,
+        "iconRef": null
+      },
+      {
+        "itemKey": "dsoc.ai-insights",
+        "groupKey": "dsoc.primary",
+        "label": {
+          "i18nKey": "dsoc.ai-insights.title",
+          "fallback": null,
+          "label": null
+        },
+        "action": {
+          "kind": "navigate",
+          "path": "/dsoc/ai-insights"
+        },
+        "sortOrder": 6,
+        "permission": "dsoc.ai_insights.read",
+        "entitlement": null,
+        "iconRef": null
+      }
+    ],
+    "pages": [
+      {
+        "pageKey": "dsoc.overview",
+        "route": "/dsoc/overview",
+        "aliases": [],
+        "dbRouteStatus": "contracted",
+        "pageType": "overview",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "dsoc.overview.archetype",
+        "rendererKey": "ModuleOverviewTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "status-banner",
+            "semanticComponent": "dos.status-banner",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "metric-grid",
+            "semanticComponent": "dos.metric-grid",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "structured-summary-card",
+            "semanticComponent": "dos.structured-summary-card",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "readiness-panel",
+            "semanticComponent": "dos.readiness-panel",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "recommendation-list",
+            "semanticComponent": "dos.recommendation-list",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "security-ops-service",
+        "apiEndpoint": "/api/dsoc/overview",
+        "dbEntities": [
+          "dos.dsoc_overview"
+        ],
+        "readPermission": "dsoc.overview.read",
+        "writePermissions": [],
+        "columns": [],
+        "titleKey": "dsoc.overview.title",
+        "subtitleKey": "dsoc.overview.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "dsoc.overview.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "dsoc.overview.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "dsoc.overview.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      },
+      {
+        "pageKey": "dsoc.records",
+        "route": "/dsoc/records",
+        "aliases": [],
+        "dbRouteStatus": "contracted",
+        "pageType": "records_table",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "dsoc.records_table.archetype",
+        "rendererKey": "ModuleRecordsTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "status-banner",
+            "semanticComponent": "dos.status-banner",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "metric-grid",
+            "semanticComponent": "dos.metric-grid",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "records-table",
+            "semanticComponent": "dos.records-table",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "form-modal",
+            "semanticComponent": "dos.form-modal",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "empty-state",
+            "semanticComponent": "dos.empty-state",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "security-ops-service",
+        "apiEndpoint": "/api/dsoc/records",
+        "dbEntities": [
+          "dos.dsoc_records"
+        ],
+        "readPermission": "dsoc.records.read",
+        "writePermissions": [
+          "dsoc.records.create",
+          "dsoc.records.update",
+          "dsoc.records.delete"
+        ],
+        "columns": [
+          "name",
+          "owner",
+          "status",
+          "risk",
+          "updated_at"
+        ],
+        "titleKey": "dsoc.records.title",
+        "subtitleKey": "dsoc.records.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "dsoc.records.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "dsoc.records.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "dsoc.records.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      },
+      {
+        "pageKey": "dsoc.workflows",
+        "route": "/dsoc/workflows",
+        "aliases": [],
+        "dbRouteStatus": "contracted",
+        "pageType": "workflow",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "dsoc.workflow.archetype",
+        "rendererKey": "WorkflowRecordsTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "metric-grid",
+            "semanticComponent": "dos.metric-grid",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "workflow-panel",
+            "semanticComponent": "dos.workflow-panel",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "records-table",
+            "semanticComponent": "dos.records-table",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "status-banner",
+            "semanticComponent": "dos.status-banner",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "security-ops-service",
+        "apiEndpoint": "/api/dsoc/workflows",
+        "dbEntities": [
+          "dos.dsoc_workflows"
+        ],
+        "readPermission": "dsoc.workflows.read",
+        "writePermissions": [
+          "dsoc.workflows.create",
+          "dsoc.workflows.update",
+          "dsoc.workflows.delete"
+        ],
+        "columns": [
+          "name",
+          "owner",
+          "status",
+          "risk",
+          "updated_at"
+        ],
+        "titleKey": "dsoc.workflows.title",
+        "subtitleKey": "dsoc.workflows.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "dsoc.workflows.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "dsoc.workflows.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "dsoc.workflows.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      },
+      {
+        "pageKey": "dsoc.reports",
+        "route": "/dsoc/reports",
+        "aliases": [],
+        "dbRouteStatus": "contracted",
+        "pageType": "reports",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "dsoc.reports.archetype",
+        "rendererKey": "ModuleReportsTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "metric-grid",
+            "semanticComponent": "dos.metric-grid",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "records-table",
+            "semanticComponent": "dos.records-table",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "form-modal",
+            "semanticComponent": "dos.form-modal",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "security-ops-service",
+        "apiEndpoint": "/api/dsoc/reports",
+        "dbEntities": [
+          "dos.dsoc_reports"
+        ],
+        "readPermission": "dsoc.reports.read",
+        "writePermissions": [
+          "dsoc.reports.create",
+          "dsoc.reports.update",
+          "dsoc.reports.delete"
+        ],
+        "columns": [
+          "name",
+          "owner",
+          "status",
+          "risk",
+          "updated_at"
+        ],
+        "titleKey": "dsoc.reports.title",
+        "subtitleKey": "dsoc.reports.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "dsoc.reports.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "dsoc.reports.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "dsoc.reports.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      },
+      {
+        "pageKey": "dsoc.settings",
+        "route": "/dsoc/settings",
+        "aliases": [],
+        "dbRouteStatus": "contracted",
+        "pageType": "settings",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "dsoc.settings.archetype",
+        "rendererKey": "ModuleSettingsTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "tabs",
+            "semanticComponent": "dos.tabs",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "settings-panel",
+            "semanticComponent": "dos.settings-panel",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "status-banner",
+            "semanticComponent": "dos.status-banner",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "security-ops-service",
+        "apiEndpoint": "/api/dsoc/settings",
+        "dbEntities": [
+          "dos.dsoc_settings"
+        ],
+        "readPermission": "dsoc.settings.read",
+        "writePermissions": [
+          "dsoc.settings.create",
+          "dsoc.settings.update",
+          "dsoc.settings.delete"
+        ],
+        "columns": [],
+        "titleKey": "dsoc.settings.title",
+        "subtitleKey": "dsoc.settings.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "dsoc.settings.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "dsoc.settings.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "dsoc.settings.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      },
+      {
+        "pageKey": "dsoc.ai-insights",
+        "route": "/dsoc/ai-insights",
+        "aliases": [],
+        "dbRouteStatus": "contracted",
+        "pageType": "ai_insights",
+        "runtimeMode": "single_archetype_template",
+        "componentKey": "dsoc.ai_insights.archetype",
+        "rendererKey": "AiInsightsTemplateComponent",
+        "semanticRegions": [
+          {
+            "regionKey": "page-header",
+            "semanticComponent": "dos.page-header",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "ai-insight-panel",
+            "semanticComponent": "dos.ai-insight-panel",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "records-table",
+            "semanticComponent": "dos.records-table",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          },
+          {
+            "regionKey": "recommendation-list",
+            "semanticComponent": "dos.recommendation-list",
+            "role": "required_region",
+            "dbComponentKeyPolicy": "semantic_only_not_dynamic_ui_component_registry_key_in_v1"
+          }
+        ],
+        "ownerService": "security-ops-service",
+        "apiEndpoint": "/api/dsoc/ai-insights",
+        "dbEntities": [
+          "dos.dsoc_ai_insights"
+        ],
+        "readPermission": "dsoc.ai_insights.read",
+        "writePermissions": [],
+        "columns": [],
+        "titleKey": "dsoc.ai-insights.title",
+        "subtitleKey": "dsoc.ai-insights.subtitle",
+        "states": {
+          "loading": {
+            "carbonKeys": [
+              "skeleton-text",
+              "skeleton-placeholder"
+            ],
+            "messageKey": "dsoc.ai-insights.state.loading"
+          },
+          "empty": {
+            "carbonKeys": [
+              "tile",
+              "button"
+            ],
+            "messageKey": "dsoc.ai-insights.state.empty"
+          },
+          "error": {
+            "carbonKeys": [
+              "inline-notification"
+            ],
+            "messageKey": "dsoc.ai-insights.state.error"
+          },
+          "unauthorized": {
+            "policy": "hide_route_from_access_store"
+          }
+        },
+        "responsivePolicyRef": "global.responsive.v1"
+      }
+    ],
+    "widgets": [],
+    "actions": [],
+    "pageOrder": [
+      {
+        "pageKey": "dsoc.overview",
+        "sortOrder": 1
+      },
+      {
+        "pageKey": "dsoc.records",
+        "sortOrder": 2
+      },
+      {
+        "pageKey": "dsoc.workflows",
+        "sortOrder": 3
+      },
+      {
+        "pageKey": "dsoc.reports",
+        "sortOrder": 4
+      },
+      {
+        "pageKey": "dsoc.settings",
+        "sortOrder": 5
+      },
+      {
+        "pageKey": "dsoc.ai-insights",
+        "sortOrder": 6
+      }
+    ],
+    "defaultRoute": "/dsoc/overview",
+    "carbonUsage": {
+      "shell": [
+        "UIShell",
+        "Header",
+        "HeaderName",
+        "HeaderNavigation",
+        "HeaderMenu",
+        "HeaderMenuItem",
+        "HeaderGlobalBar",
+        "HeaderGlobalAction",
+        "SideNav",
+        "SideNavItems",
+        "SideNavMenu",
+        "SideNavMenuItem",
+        "SideNavLink",
+        "Content"
+      ],
+      "overview": [
+        "Grid",
+        "Column",
+        "Breadcrumb",
+        "Tile",
+        "Tag",
+        "ProgressBar",
+        "StructuredList",
+        "Tabs",
+        "InlineNotification",
+        "SkeletonText",
+        "SkeletonPlaceholder"
+      ],
+      "records": [
+        "DataTable",
+        "TableToolbar",
+        "TableToolbarSearch",
+        "TableToolbarActions",
+        "TableBatchActions",
+        "Pagination",
+        "OverflowMenu",
+        "OverflowMenuOption",
+        "SkeletonText",
+        "SkeletonPlaceholder",
+        "InlineNotification",
+        "Tile",
+        "Button",
+        "StructuredList",
+        "Tag",
+        "ProgressBar"
+      ],
+      "forms": [
+        "Tabs",
+        "StructuredList",
+        "Toggle",
+        "Dropdown",
+        "TextInput",
+        "Button",
+        "InlineNotification",
+        "Modal"
+      ]
+    },
+    "permissions": [
+      {
+        "permissionCode": "dsoc.ai_insights.read",
+        "moduleCode": "dsoc",
+        "status": "required"
+      },
+      {
+        "permissionCode": "dsoc.overview.read",
+        "moduleCode": "dsoc",
+        "status": "required"
+      },
+      {
+        "permissionCode": "dsoc.records.create",
+        "moduleCode": "dsoc",
+        "status": "required"
+      },
+      {
+        "permissionCode": "dsoc.records.delete",
+        "moduleCode": "dsoc",
+        "status": "required"
+      },
+      {
+        "permissionCode": "dsoc.records.read",
+        "moduleCode": "dsoc",
+        "status": "required"
+      },
+      {
+        "permissionCode": "dsoc.records.update",
+        "moduleCode": "dsoc",
+        "status": "required"
+      },
+      {
+        "permissionCode": "dsoc.reports.create",
+        "moduleCode": "dsoc",
+        "status": "required"
+      },
+      {
+        "permissionCode": "dsoc.reports.delete",
+        "moduleCode": "dsoc",
+        "status": "required"
+      },
+      {
+        "permissionCode": "dsoc.reports.read",
+        "moduleCode": "dsoc",
+        "status": "required"
+      },
+      {
+        "permissionCode": "dsoc.reports.update",
+        "moduleCode": "dsoc",
+        "status": "required"
+      },
+      {
+        "permissionCode": "dsoc.settings.create",
+        "moduleCode": "dsoc",
+        "status": "required"
+      },
+      {
+        "permissionCode": "dsoc.settings.delete",
+        "moduleCode": "dsoc",
+        "status": "required"
+      },
+      {
+        "permissionCode": "dsoc.settings.read",
+        "moduleCode": "dsoc",
+        "status": "required"
+      },
+      {
+        "permissionCode": "dsoc.settings.update",
+        "moduleCode": "dsoc",
+        "status": "required"
+      },
+      {
+        "permissionCode": "dsoc.workflows.create",
+        "moduleCode": "dsoc",
+        "status": "required"
+      },
+      {
+        "permissionCode": "dsoc.workflows.delete",
+        "moduleCode": "dsoc",
+        "status": "required"
+      },
+      {
+        "permissionCode": "dsoc.workflows.read",
+        "moduleCode": "dsoc",
+        "status": "required"
+      },
+      {
+        "permissionCode": "dsoc.workflows.update",
+        "moduleCode": "dsoc",
+        "status": "required"
+      }
+    ],
+    "publication": {
+      "pages_table": "dos.dynamic_ui_routes",
+      "nav_groups_table": "dos.ui_module_nav_group",
+      "nav_items_table": "dos.ui_module_nav_item",
+      "widgets_table": "dos.ui_widget_binding",
+      "actions_table": "dos.ui_action_binding",
+      "permissions_table": "platform_dauth.permissions",
+      "preflight_dependency_for_foundation": null
+    }
+  },
+  "resolverContract": {
+    "endpoint": "/api/ui-os/module-runtime/dsoc",
+    "auth": "session_cookie",
+    "tenancy_scope": "tenant",
+    "snake_case_fields_allowed_only_inside_resolver": true,
+    "browser_facing_camelCase": true,
+    "envelope_ref": "envelopes/module-runtime.envelope.v1-1.json"
+  }
+}

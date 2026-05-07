@@ -15,10 +15,11 @@
  * the eagle SVG anywhere else — it must always come through the resolver
  * so brand updates land everywhere on a single DB write.
  *
- * Static eager fallback (added M3.2): `STATIC_EAGLE_FALLBACK` maps
- * brandCode → the official master PNG path so the logo renders on first
- * paint before the async BrandResolverService bundle returns from the API.
- * Once the bundle resolves, the @if (asset()) branch takes over.
+ * ZERO_LEGACY: there is NO static brandCode→PNG map and NO localized
+ * "Shahin-AI+" / "Dogan AI OS" string fallback. Pre-resolve render uses
+ * the `iconUrl` and `brandName` already supplied by tenantRuntime
+ * (BrandRuntimeService). Empty tenantRuntime => no eagle. Tenant
+ * branding is the only source.
  */
 import {
   ChangeDetectionStrategy,
@@ -33,19 +34,10 @@ import type { DosBrandCode } from '@dos/design-tokens';
 import { BrandResolverService } from './brand-resolver.service';
 import type { DosBrandAssetTheme } from './brand-asset.contract';
 
-// ─── Static eager fallback ────────────────────────────────────────────────────
-// Paths are relative to the Angular app's base-href (/assets/…).
-// These PNGs are bundled via the angular.json shahin_agent_assets_crop glob
-// and served at /assets/shahin-kit/… with HTTP 200 from product-shell.
-const STATIC_EAGLE_FALLBACK: Readonly<Partial<Record<string, string>>> = {
-  'shahin-ai':   'assets/shahin-kit/master_logo/master_shahin_ai_original.png',
-  'dogan-ai-os': 'assets/shahin-kit/master_logo/master_shahin_ai_original.png',
-};
-
-const STATIC_EAGLE_ALT: Readonly<Partial<Record<string, { en: string; ar: string }>>> = {
-  'shahin-ai':   { en: 'Shahin-AI+ — Agentic GRC Platform', ar: 'شاهين AI+ — منصة الحوكمة الذكية' },
-  'dogan-ai-os': { en: 'Dogan AI OS', ar: 'دوغان AI' },
-};
+// ZERO_LEGACY: deleted STATIC_EAGLE_FALLBACK and STATIC_EAGLE_ALT.
+// Pre-resolve render is done via tenantRuntime.branding.iconUrl /
+// brandName supplied through @Input() preIconUrl + preIconAlt — both
+// resolved by the parent shell from UI-OS, never invented here.
 
 @Component({
   selector: 'dos-brand-eagle',
@@ -75,14 +67,15 @@ const STATIC_EAGLE_ALT: Readonly<Partial<Record<string, { en: string; ar: string
           fetchpriority="high"
         />
       }
-    } @else if (staticSrc()) {
-      <!-- Static fallback: official master PNG shown before async bundle resolves -->
+    } @else if (preIconUrl) {
+      <!-- Pre-resolve render: tenantRuntime.branding.iconUrl piped in by
+           the parent shell. Empty preIconUrl => no eagle rendered. -->
       <img
-        class="dos-brand-eagle dos-brand-eagle--static"
-        [src]="staticSrc()!"
+        class="dos-brand-eagle dos-brand-eagle--pre"
+        [src]="preIconUrl"
         [width]="size"
         [height]="size"
-        [alt]="staticAlt()"
+        [alt]="preIconAlt"
         loading="eager"
         decoding="async"
         fetchpriority="high"
@@ -93,8 +86,9 @@ const STATIC_EAGLE_ALT: Readonly<Partial<Record<string, { en: string; ar: string
     :host { display: inline-flex; align-items: center; }
     .dos-brand-eagle { display: inline-block; line-height: 0; }
     .dos-brand-eagle :where(svg) { inline-size: 100%; block-size: 100%; }
-    /* Static fallback: aspect-ratio keeps the 1:1 master PNG at any given size */
-    .dos-brand-eagle--static { block-size: auto; aspect-ratio: 1 / 1; object-fit: contain; }
+    /* Pre-resolve render: aspect-ratio keeps the supplied iconUrl
+       at the same square footprint regardless of intrinsic size. */
+    .dos-brand-eagle--pre { block-size: auto; aspect-ratio: 1 / 1; object-fit: contain; }
   `],
 })
 export class DosBrandEagleComponent {
@@ -108,6 +102,17 @@ export class DosBrandEagleComponent {
   /** Render at a target block size (px). Width derived from intrinsic ratio. */
   @Input() size: number = 32;
 
+  /**
+   * UI-OS pre-resolve render. Parent shell passes
+   * `tenantRuntime.branding.iconUrl` (and `brandName` as alt) so the
+   * eagle paints on first frame without any local brandCode→PNG map.
+   * Empty preIconUrl => the @else if branch in the template renders
+   * nothing; once `BrandResolverService.asset(...)` returns the SVG
+   * record, the @if (asset()) branch takes over.
+   */
+  @Input() preIconUrl = '';
+  @Input() preIconAlt = '';
+
   readonly asset = computed(() =>
     this.resolver.asset({
       brandCode: this.brandCode,
@@ -117,16 +122,6 @@ export class DosBrandEagleComponent {
       direction: this.direction,
     }),
   );
-
-  /** Static fallback URL — renders immediately before the async bundle resolves. */
-  readonly staticSrc = computed((): string | null =>
-    STATIC_EAGLE_FALLBACK[this.brandCode as string] ?? null,
-  );
-
-  readonly staticAlt = computed((): string => {
-    const entry = STATIC_EAGLE_ALT[this.brandCode as string];
-    return entry ? (this.locale === 'ar' ? entry.ar : entry.en) : 'Shahin-AI+';
-  });
 
   readonly renderHeight = computed(() => this.size);
   readonly renderWidth = computed(() => {

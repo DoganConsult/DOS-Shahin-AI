@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
   template: `
     <div class="dos-app-shell dos-app-shell--desktop">
       <aside class="dos-app-shell__sidebar"><ng-content select="[shellSidebar]"></ng-content></aside>
-      <header class="dos-app-shell__header"><ng-content select="[shellHeader]"></ng-content></header>
+      <div class="dos-app-shell__header"><ng-content select="[shellHeader]"></ng-content></div>
       <main class="dos-app-shell__main"><ng-content></ng-content></main>
     </div>
   `,

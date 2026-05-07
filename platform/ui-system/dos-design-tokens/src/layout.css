@@ -16,6 +16,11 @@
   --dos-z-overlay: 300;
   --dos-z-modal: 400;
   --dos-z-toast: 500;
+
+  --shell-z-sticky:   var(--dos-z-sticky);
+  --shell-z-dropdown: var(--dos-z-fixed);
+  --shell-z-overlay:  var(--dos-z-overlay);
+  --shell-z-modal:    var(--dos-z-modal);
 }
 
 html, body {

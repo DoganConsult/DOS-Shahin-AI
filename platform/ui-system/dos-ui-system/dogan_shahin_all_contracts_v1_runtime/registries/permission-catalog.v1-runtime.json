@@ -1,0 +1,2407 @@
+{
+  "$schema": "https://dogan-ai.local/schemas/permission-catalog.v1-runtime.schema.json",
+  "generatedAt": "2026-05-07T13:18:19.248054+00:00",
+  "permissionCount": 480,
+  "permissions": [
+    {
+      "permissionCode": "foundation.access_review.create",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.access_review.delete",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.access_review.read",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.access_review.update",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.audit.read",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.business_units.create",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.business_units.delete",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.business_units.read",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.business_units.update",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.committees.create",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.committees.delete",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.committees.read",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.committees.update",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.data_processing.create",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.data_processing.delete",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.data_processing.read",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.data_processing.update",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.delegations.create",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.delegations.delete",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.delegations.read",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.delegations.update",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.departments.create",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.departments.delete",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.departments.read",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.departments.update",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.locations.create",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.locations.delete",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.locations.read",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.locations.update",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.organization.create",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.organization.delete",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.organization.read",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.organization.update",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.overview.read",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.ownership.create",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.ownership.delete",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.ownership.read",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.ownership.update",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.policies.create",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.policies.delete",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.policies.read",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.policies.update",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.positions.create",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.positions.delete",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.positions.read",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.positions.update",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.reference_data.create",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.reference_data.delete",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.reference_data.read",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.reference_data.update",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.roles.create",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.roles.delete",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.roles.read",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.roles.update",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.settings.create",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.settings.delete",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.settings.read",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.settings.update",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.teams.create",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.teams.delete",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.teams.read",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.teams.update",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.users.create",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.users.delete",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.users.read",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "foundation.users.update",
+      "moduleCode": "foundation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "risk.ai_insights.read",
+      "moduleCode": "risk",
+      "status": "required"
+    },
+    {
+      "permissionCode": "risk.overview.read",
+      "moduleCode": "risk",
+      "status": "required"
+    },
+    {
+      "permissionCode": "risk.records.create",
+      "moduleCode": "risk",
+      "status": "required"
+    },
+    {
+      "permissionCode": "risk.records.delete",
+      "moduleCode": "risk",
+      "status": "required"
+    },
+    {
+      "permissionCode": "risk.records.read",
+      "moduleCode": "risk",
+      "status": "required"
+    },
+    {
+      "permissionCode": "risk.records.update",
+      "moduleCode": "risk",
+      "status": "required"
+    },
+    {
+      "permissionCode": "risk.reports.create",
+      "moduleCode": "risk",
+      "status": "required"
+    },
+    {
+      "permissionCode": "risk.reports.delete",
+      "moduleCode": "risk",
+      "status": "required"
+    },
+    {
+      "permissionCode": "risk.reports.read",
+      "moduleCode": "risk",
+      "status": "required"
+    },
+    {
+      "permissionCode": "risk.reports.update",
+      "moduleCode": "risk",
+      "status": "required"
+    },
+    {
+      "permissionCode": "risk.settings.create",
+      "moduleCode": "risk",
+      "status": "required"
+    },
+    {
+      "permissionCode": "risk.settings.delete",
+      "moduleCode": "risk",
+      "status": "required"
+    },
+    {
+      "permissionCode": "risk.settings.read",
+      "moduleCode": "risk",
+      "status": "required"
+    },
+    {
+      "permissionCode": "risk.settings.update",
+      "moduleCode": "risk",
+      "status": "required"
+    },
+    {
+      "permissionCode": "risk.workflows.create",
+      "moduleCode": "risk",
+      "status": "required"
+    },
+    {
+      "permissionCode": "risk.workflows.delete",
+      "moduleCode": "risk",
+      "status": "required"
+    },
+    {
+      "permissionCode": "risk.workflows.read",
+      "moduleCode": "risk",
+      "status": "required"
+    },
+    {
+      "permissionCode": "risk.workflows.update",
+      "moduleCode": "risk",
+      "status": "required"
+    },
+    {
+      "permissionCode": "compliance.ai_insights.read",
+      "moduleCode": "compliance",
+      "status": "required"
+    },
+    {
+      "permissionCode": "compliance.overview.read",
+      "moduleCode": "compliance",
+      "status": "required"
+    },
+    {
+      "permissionCode": "compliance.records.create",
+      "moduleCode": "compliance",
+      "status": "required"
+    },
+    {
+      "permissionCode": "compliance.records.delete",
+      "moduleCode": "compliance",
+      "status": "required"
+    },
+    {
+      "permissionCode": "compliance.records.read",
+      "moduleCode": "compliance",
+      "status": "required"
+    },
+    {
+      "permissionCode": "compliance.records.update",
+      "moduleCode": "compliance",
+      "status": "required"
+    },
+    {
+      "permissionCode": "compliance.reports.create",
+      "moduleCode": "compliance",
+      "status": "required"
+    },
+    {
+      "permissionCode": "compliance.reports.delete",
+      "moduleCode": "compliance",
+      "status": "required"
+    },
+    {
+      "permissionCode": "compliance.reports.read",
+      "moduleCode": "compliance",
+      "status": "required"
+    },
+    {
+      "permissionCode": "compliance.reports.update",
+      "moduleCode": "compliance",
+      "status": "required"
+    },
+    {
+      "permissionCode": "compliance.settings.create",
+      "moduleCode": "compliance",
+      "status": "required"
+    },
+    {
+      "permissionCode": "compliance.settings.delete",
+      "moduleCode": "compliance",
+      "status": "required"
+    },
+    {
+      "permissionCode": "compliance.settings.read",
+      "moduleCode": "compliance",
+      "status": "required"
+    },
+    {
+      "permissionCode": "compliance.settings.update",
+      "moduleCode": "compliance",
+      "status": "required"
+    },
+    {
+      "permissionCode": "compliance.workflows.create",
+      "moduleCode": "compliance",
+      "status": "required"
+    },
+    {
+      "permissionCode": "compliance.workflows.delete",
+      "moduleCode": "compliance",
+      "status": "required"
+    },
+    {
+      "permissionCode": "compliance.workflows.read",
+      "moduleCode": "compliance",
+      "status": "required"
+    },
+    {
+      "permissionCode": "compliance.workflows.update",
+      "moduleCode": "compliance",
+      "status": "required"
+    },
+    {
+      "permissionCode": "policy.ai_insights.read",
+      "moduleCode": "policy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "policy.overview.read",
+      "moduleCode": "policy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "policy.records.create",
+      "moduleCode": "policy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "policy.records.delete",
+      "moduleCode": "policy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "policy.records.read",
+      "moduleCode": "policy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "policy.records.update",
+      "moduleCode": "policy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "policy.reports.create",
+      "moduleCode": "policy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "policy.reports.delete",
+      "moduleCode": "policy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "policy.reports.read",
+      "moduleCode": "policy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "policy.reports.update",
+      "moduleCode": "policy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "policy.settings.create",
+      "moduleCode": "policy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "policy.settings.delete",
+      "moduleCode": "policy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "policy.settings.read",
+      "moduleCode": "policy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "policy.settings.update",
+      "moduleCode": "policy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "policy.workflows.create",
+      "moduleCode": "policy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "policy.workflows.delete",
+      "moduleCode": "policy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "policy.workflows.read",
+      "moduleCode": "policy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "policy.workflows.update",
+      "moduleCode": "policy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "incident.ai_insights.read",
+      "moduleCode": "incident",
+      "status": "required"
+    },
+    {
+      "permissionCode": "incident.overview.read",
+      "moduleCode": "incident",
+      "status": "required"
+    },
+    {
+      "permissionCode": "incident.records.create",
+      "moduleCode": "incident",
+      "status": "required"
+    },
+    {
+      "permissionCode": "incident.records.delete",
+      "moduleCode": "incident",
+      "status": "required"
+    },
+    {
+      "permissionCode": "incident.records.read",
+      "moduleCode": "incident",
+      "status": "required"
+    },
+    {
+      "permissionCode": "incident.records.update",
+      "moduleCode": "incident",
+      "status": "required"
+    },
+    {
+      "permissionCode": "incident.reports.create",
+      "moduleCode": "incident",
+      "status": "required"
+    },
+    {
+      "permissionCode": "incident.reports.delete",
+      "moduleCode": "incident",
+      "status": "required"
+    },
+    {
+      "permissionCode": "incident.reports.read",
+      "moduleCode": "incident",
+      "status": "required"
+    },
+    {
+      "permissionCode": "incident.reports.update",
+      "moduleCode": "incident",
+      "status": "required"
+    },
+    {
+      "permissionCode": "incident.settings.create",
+      "moduleCode": "incident",
+      "status": "required"
+    },
+    {
+      "permissionCode": "incident.settings.delete",
+      "moduleCode": "incident",
+      "status": "required"
+    },
+    {
+      "permissionCode": "incident.settings.read",
+      "moduleCode": "incident",
+      "status": "required"
+    },
+    {
+      "permissionCode": "incident.settings.update",
+      "moduleCode": "incident",
+      "status": "required"
+    },
+    {
+      "permissionCode": "incident.workflows.create",
+      "moduleCode": "incident",
+      "status": "required"
+    },
+    {
+      "permissionCode": "incident.workflows.delete",
+      "moduleCode": "incident",
+      "status": "required"
+    },
+    {
+      "permissionCode": "incident.workflows.read",
+      "moduleCode": "incident",
+      "status": "required"
+    },
+    {
+      "permissionCode": "incident.workflows.update",
+      "moduleCode": "incident",
+      "status": "required"
+    },
+    {
+      "permissionCode": "workflow.ai_insights.read",
+      "moduleCode": "workflow",
+      "status": "required"
+    },
+    {
+      "permissionCode": "workflow.overview.read",
+      "moduleCode": "workflow",
+      "status": "required"
+    },
+    {
+      "permissionCode": "workflow.records.create",
+      "moduleCode": "workflow",
+      "status": "required"
+    },
+    {
+      "permissionCode": "workflow.records.delete",
+      "moduleCode": "workflow",
+      "status": "required"
+    },
+    {
+      "permissionCode": "workflow.records.read",
+      "moduleCode": "workflow",
+      "status": "required"
+    },
+    {
+      "permissionCode": "workflow.records.update",
+      "moduleCode": "workflow",
+      "status": "required"
+    },
+    {
+      "permissionCode": "workflow.reports.create",
+      "moduleCode": "workflow",
+      "status": "required"
+    },
+    {
+      "permissionCode": "workflow.reports.delete",
+      "moduleCode": "workflow",
+      "status": "required"
+    },
+    {
+      "permissionCode": "workflow.reports.read",
+      "moduleCode": "workflow",
+      "status": "required"
+    },
+    {
+      "permissionCode": "workflow.reports.update",
+      "moduleCode": "workflow",
+      "status": "required"
+    },
+    {
+      "permissionCode": "workflow.settings.create",
+      "moduleCode": "workflow",
+      "status": "required"
+    },
+    {
+      "permissionCode": "workflow.settings.delete",
+      "moduleCode": "workflow",
+      "status": "required"
+    },
+    {
+      "permissionCode": "workflow.settings.read",
+      "moduleCode": "workflow",
+      "status": "required"
+    },
+    {
+      "permissionCode": "workflow.settings.update",
+      "moduleCode": "workflow",
+      "status": "required"
+    },
+    {
+      "permissionCode": "workflow.workflows.create",
+      "moduleCode": "workflow",
+      "status": "required"
+    },
+    {
+      "permissionCode": "workflow.workflows.delete",
+      "moduleCode": "workflow",
+      "status": "required"
+    },
+    {
+      "permissionCode": "workflow.workflows.read",
+      "moduleCode": "workflow",
+      "status": "required"
+    },
+    {
+      "permissionCode": "workflow.workflows.update",
+      "moduleCode": "workflow",
+      "status": "required"
+    },
+    {
+      "permissionCode": "audit.ai_insights.read",
+      "moduleCode": "audit",
+      "status": "required"
+    },
+    {
+      "permissionCode": "audit.overview.read",
+      "moduleCode": "audit",
+      "status": "required"
+    },
+    {
+      "permissionCode": "audit.records.create",
+      "moduleCode": "audit",
+      "status": "required"
+    },
+    {
+      "permissionCode": "audit.records.delete",
+      "moduleCode": "audit",
+      "status": "required"
+    },
+    {
+      "permissionCode": "audit.records.read",
+      "moduleCode": "audit",
+      "status": "required"
+    },
+    {
+      "permissionCode": "audit.records.update",
+      "moduleCode": "audit",
+      "status": "required"
+    },
+    {
+      "permissionCode": "audit.reports.create",
+      "moduleCode": "audit",
+      "status": "required"
+    },
+    {
+      "permissionCode": "audit.reports.delete",
+      "moduleCode": "audit",
+      "status": "required"
+    },
+    {
+      "permissionCode": "audit.reports.read",
+      "moduleCode": "audit",
+      "status": "required"
+    },
+    {
+      "permissionCode": "audit.reports.update",
+      "moduleCode": "audit",
+      "status": "required"
+    },
+    {
+      "permissionCode": "audit.settings.create",
+      "moduleCode": "audit",
+      "status": "required"
+    },
+    {
+      "permissionCode": "audit.settings.delete",
+      "moduleCode": "audit",
+      "status": "required"
+    },
+    {
+      "permissionCode": "audit.settings.read",
+      "moduleCode": "audit",
+      "status": "required"
+    },
+    {
+      "permissionCode": "audit.settings.update",
+      "moduleCode": "audit",
+      "status": "required"
+    },
+    {
+      "permissionCode": "audit.workflows.create",
+      "moduleCode": "audit",
+      "status": "required"
+    },
+    {
+      "permissionCode": "audit.workflows.delete",
+      "moduleCode": "audit",
+      "status": "required"
+    },
+    {
+      "permissionCode": "audit.workflows.read",
+      "moduleCode": "audit",
+      "status": "required"
+    },
+    {
+      "permissionCode": "audit.workflows.update",
+      "moduleCode": "audit",
+      "status": "required"
+    },
+    {
+      "permissionCode": "evidence.ai_insights.read",
+      "moduleCode": "evidence",
+      "status": "required"
+    },
+    {
+      "permissionCode": "evidence.overview.read",
+      "moduleCode": "evidence",
+      "status": "required"
+    },
+    {
+      "permissionCode": "evidence.records.create",
+      "moduleCode": "evidence",
+      "status": "required"
+    },
+    {
+      "permissionCode": "evidence.records.delete",
+      "moduleCode": "evidence",
+      "status": "required"
+    },
+    {
+      "permissionCode": "evidence.records.read",
+      "moduleCode": "evidence",
+      "status": "required"
+    },
+    {
+      "permissionCode": "evidence.records.update",
+      "moduleCode": "evidence",
+      "status": "required"
+    },
+    {
+      "permissionCode": "evidence.reports.create",
+      "moduleCode": "evidence",
+      "status": "required"
+    },
+    {
+      "permissionCode": "evidence.reports.delete",
+      "moduleCode": "evidence",
+      "status": "required"
+    },
+    {
+      "permissionCode": "evidence.reports.read",
+      "moduleCode": "evidence",
+      "status": "required"
+    },
+    {
+      "permissionCode": "evidence.reports.update",
+      "moduleCode": "evidence",
+      "status": "required"
+    },
+    {
+      "permissionCode": "evidence.settings.create",
+      "moduleCode": "evidence",
+      "status": "required"
+    },
+    {
+      "permissionCode": "evidence.settings.delete",
+      "moduleCode": "evidence",
+      "status": "required"
+    },
+    {
+      "permissionCode": "evidence.settings.read",
+      "moduleCode": "evidence",
+      "status": "required"
+    },
+    {
+      "permissionCode": "evidence.settings.update",
+      "moduleCode": "evidence",
+      "status": "required"
+    },
+    {
+      "permissionCode": "evidence.workflows.create",
+      "moduleCode": "evidence",
+      "status": "required"
+    },
+    {
+      "permissionCode": "evidence.workflows.delete",
+      "moduleCode": "evidence",
+      "status": "required"
+    },
+    {
+      "permissionCode": "evidence.workflows.read",
+      "moduleCode": "evidence",
+      "status": "required"
+    },
+    {
+      "permissionCode": "evidence.workflows.update",
+      "moduleCode": "evidence",
+      "status": "required"
+    },
+    {
+      "permissionCode": "vendor.ai_insights.read",
+      "moduleCode": "vendor",
+      "status": "required"
+    },
+    {
+      "permissionCode": "vendor.overview.read",
+      "moduleCode": "vendor",
+      "status": "required"
+    },
+    {
+      "permissionCode": "vendor.records.create",
+      "moduleCode": "vendor",
+      "status": "required"
+    },
+    {
+      "permissionCode": "vendor.records.delete",
+      "moduleCode": "vendor",
+      "status": "required"
+    },
+    {
+      "permissionCode": "vendor.records.read",
+      "moduleCode": "vendor",
+      "status": "required"
+    },
+    {
+      "permissionCode": "vendor.records.update",
+      "moduleCode": "vendor",
+      "status": "required"
+    },
+    {
+      "permissionCode": "vendor.reports.create",
+      "moduleCode": "vendor",
+      "status": "required"
+    },
+    {
+      "permissionCode": "vendor.reports.delete",
+      "moduleCode": "vendor",
+      "status": "required"
+    },
+    {
+      "permissionCode": "vendor.reports.read",
+      "moduleCode": "vendor",
+      "status": "required"
+    },
+    {
+      "permissionCode": "vendor.reports.update",
+      "moduleCode": "vendor",
+      "status": "required"
+    },
+    {
+      "permissionCode": "vendor.settings.create",
+      "moduleCode": "vendor",
+      "status": "required"
+    },
+    {
+      "permissionCode": "vendor.settings.delete",
+      "moduleCode": "vendor",
+      "status": "required"
+    },
+    {
+      "permissionCode": "vendor.settings.read",
+      "moduleCode": "vendor",
+      "status": "required"
+    },
+    {
+      "permissionCode": "vendor.settings.update",
+      "moduleCode": "vendor",
+      "status": "required"
+    },
+    {
+      "permissionCode": "vendor.workflows.create",
+      "moduleCode": "vendor",
+      "status": "required"
+    },
+    {
+      "permissionCode": "vendor.workflows.delete",
+      "moduleCode": "vendor",
+      "status": "required"
+    },
+    {
+      "permissionCode": "vendor.workflows.read",
+      "moduleCode": "vendor",
+      "status": "required"
+    },
+    {
+      "permissionCode": "vendor.workflows.update",
+      "moduleCode": "vendor",
+      "status": "required"
+    },
+    {
+      "permissionCode": "asset.ai_insights.read",
+      "moduleCode": "asset",
+      "status": "required"
+    },
+    {
+      "permissionCode": "asset.overview.read",
+      "moduleCode": "asset",
+      "status": "required"
+    },
+    {
+      "permissionCode": "asset.records.create",
+      "moduleCode": "asset",
+      "status": "required"
+    },
+    {
+      "permissionCode": "asset.records.delete",
+      "moduleCode": "asset",
+      "status": "required"
+    },
+    {
+      "permissionCode": "asset.records.read",
+      "moduleCode": "asset",
+      "status": "required"
+    },
+    {
+      "permissionCode": "asset.records.update",
+      "moduleCode": "asset",
+      "status": "required"
+    },
+    {
+      "permissionCode": "asset.reports.create",
+      "moduleCode": "asset",
+      "status": "required"
+    },
+    {
+      "permissionCode": "asset.reports.delete",
+      "moduleCode": "asset",
+      "status": "required"
+    },
+    {
+      "permissionCode": "asset.reports.read",
+      "moduleCode": "asset",
+      "status": "required"
+    },
+    {
+      "permissionCode": "asset.reports.update",
+      "moduleCode": "asset",
+      "status": "required"
+    },
+    {
+      "permissionCode": "asset.settings.create",
+      "moduleCode": "asset",
+      "status": "required"
+    },
+    {
+      "permissionCode": "asset.settings.delete",
+      "moduleCode": "asset",
+      "status": "required"
+    },
+    {
+      "permissionCode": "asset.settings.read",
+      "moduleCode": "asset",
+      "status": "required"
+    },
+    {
+      "permissionCode": "asset.settings.update",
+      "moduleCode": "asset",
+      "status": "required"
+    },
+    {
+      "permissionCode": "asset.workflows.create",
+      "moduleCode": "asset",
+      "status": "required"
+    },
+    {
+      "permissionCode": "asset.workflows.delete",
+      "moduleCode": "asset",
+      "status": "required"
+    },
+    {
+      "permissionCode": "asset.workflows.read",
+      "moduleCode": "asset",
+      "status": "required"
+    },
+    {
+      "permissionCode": "asset.workflows.update",
+      "moduleCode": "asset",
+      "status": "required"
+    },
+    {
+      "permissionCode": "privacy.ai_insights.read",
+      "moduleCode": "privacy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "privacy.overview.read",
+      "moduleCode": "privacy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "privacy.records.create",
+      "moduleCode": "privacy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "privacy.records.delete",
+      "moduleCode": "privacy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "privacy.records.read",
+      "moduleCode": "privacy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "privacy.records.update",
+      "moduleCode": "privacy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "privacy.reports.create",
+      "moduleCode": "privacy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "privacy.reports.delete",
+      "moduleCode": "privacy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "privacy.reports.read",
+      "moduleCode": "privacy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "privacy.reports.update",
+      "moduleCode": "privacy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "privacy.settings.create",
+      "moduleCode": "privacy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "privacy.settings.delete",
+      "moduleCode": "privacy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "privacy.settings.read",
+      "moduleCode": "privacy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "privacy.settings.update",
+      "moduleCode": "privacy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "privacy.workflows.create",
+      "moduleCode": "privacy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "privacy.workflows.delete",
+      "moduleCode": "privacy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "privacy.workflows.read",
+      "moduleCode": "privacy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "privacy.workflows.update",
+      "moduleCode": "privacy",
+      "status": "required"
+    },
+    {
+      "permissionCode": "bcp.ai_insights.read",
+      "moduleCode": "bcp",
+      "status": "required"
+    },
+    {
+      "permissionCode": "bcp.overview.read",
+      "moduleCode": "bcp",
+      "status": "required"
+    },
+    {
+      "permissionCode": "bcp.records.create",
+      "moduleCode": "bcp",
+      "status": "required"
+    },
+    {
+      "permissionCode": "bcp.records.delete",
+      "moduleCode": "bcp",
+      "status": "required"
+    },
+    {
+      "permissionCode": "bcp.records.read",
+      "moduleCode": "bcp",
+      "status": "required"
+    },
+    {
+      "permissionCode": "bcp.records.update",
+      "moduleCode": "bcp",
+      "status": "required"
+    },
+    {
+      "permissionCode": "bcp.reports.create",
+      "moduleCode": "bcp",
+      "status": "required"
+    },
+    {
+      "permissionCode": "bcp.reports.delete",
+      "moduleCode": "bcp",
+      "status": "required"
+    },
+    {
+      "permissionCode": "bcp.reports.read",
+      "moduleCode": "bcp",
+      "status": "required"
+    },
+    {
+      "permissionCode": "bcp.reports.update",
+      "moduleCode": "bcp",
+      "status": "required"
+    },
+    {
+      "permissionCode": "bcp.settings.create",
+      "moduleCode": "bcp",
+      "status": "required"
+    },
+    {
+      "permissionCode": "bcp.settings.delete",
+      "moduleCode": "bcp",
+      "status": "required"
+    },
+    {
+      "permissionCode": "bcp.settings.read",
+      "moduleCode": "bcp",
+      "status": "required"
+    },
+    {
+      "permissionCode": "bcp.settings.update",
+      "moduleCode": "bcp",
+      "status": "required"
+    },
+    {
+      "permissionCode": "bcp.workflows.create",
+      "moduleCode": "bcp",
+      "status": "required"
+    },
+    {
+      "permissionCode": "bcp.workflows.delete",
+      "moduleCode": "bcp",
+      "status": "required"
+    },
+    {
+      "permissionCode": "bcp.workflows.read",
+      "moduleCode": "bcp",
+      "status": "required"
+    },
+    {
+      "permissionCode": "bcp.workflows.update",
+      "moduleCode": "bcp",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dora.ai_insights.read",
+      "moduleCode": "dora",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dora.overview.read",
+      "moduleCode": "dora",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dora.records.create",
+      "moduleCode": "dora",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dora.records.delete",
+      "moduleCode": "dora",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dora.records.read",
+      "moduleCode": "dora",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dora.records.update",
+      "moduleCode": "dora",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dora.reports.create",
+      "moduleCode": "dora",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dora.reports.delete",
+      "moduleCode": "dora",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dora.reports.read",
+      "moduleCode": "dora",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dora.reports.update",
+      "moduleCode": "dora",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dora.settings.create",
+      "moduleCode": "dora",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dora.settings.delete",
+      "moduleCode": "dora",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dora.settings.read",
+      "moduleCode": "dora",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dora.settings.update",
+      "moduleCode": "dora",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dora.workflows.create",
+      "moduleCode": "dora",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dora.workflows.delete",
+      "moduleCode": "dora",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dora.workflows.read",
+      "moduleCode": "dora",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dora.workflows.update",
+      "moduleCode": "dora",
+      "status": "required"
+    },
+    {
+      "permissionCode": "qiyas.ai_insights.read",
+      "moduleCode": "qiyas",
+      "status": "required"
+    },
+    {
+      "permissionCode": "qiyas.overview.read",
+      "moduleCode": "qiyas",
+      "status": "required"
+    },
+    {
+      "permissionCode": "qiyas.records.create",
+      "moduleCode": "qiyas",
+      "status": "required"
+    },
+    {
+      "permissionCode": "qiyas.records.delete",
+      "moduleCode": "qiyas",
+      "status": "required"
+    },
+    {
+      "permissionCode": "qiyas.records.read",
+      "moduleCode": "qiyas",
+      "status": "required"
+    },
+    {
+      "permissionCode": "qiyas.records.update",
+      "moduleCode": "qiyas",
+      "status": "required"
+    },
+    {
+      "permissionCode": "qiyas.reports.create",
+      "moduleCode": "qiyas",
+      "status": "required"
+    },
+    {
+      "permissionCode": "qiyas.reports.delete",
+      "moduleCode": "qiyas",
+      "status": "required"
+    },
+    {
+      "permissionCode": "qiyas.reports.read",
+      "moduleCode": "qiyas",
+      "status": "required"
+    },
+    {
+      "permissionCode": "qiyas.reports.update",
+      "moduleCode": "qiyas",
+      "status": "required"
+    },
+    {
+      "permissionCode": "qiyas.settings.create",
+      "moduleCode": "qiyas",
+      "status": "required"
+    },
+    {
+      "permissionCode": "qiyas.settings.delete",
+      "moduleCode": "qiyas",
+      "status": "required"
+    },
+    {
+      "permissionCode": "qiyas.settings.read",
+      "moduleCode": "qiyas",
+      "status": "required"
+    },
+    {
+      "permissionCode": "qiyas.settings.update",
+      "moduleCode": "qiyas",
+      "status": "required"
+    },
+    {
+      "permissionCode": "qiyas.workflows.create",
+      "moduleCode": "qiyas",
+      "status": "required"
+    },
+    {
+      "permissionCode": "qiyas.workflows.delete",
+      "moduleCode": "qiyas",
+      "status": "required"
+    },
+    {
+      "permissionCode": "qiyas.workflows.read",
+      "moduleCode": "qiyas",
+      "status": "required"
+    },
+    {
+      "permissionCode": "qiyas.workflows.update",
+      "moduleCode": "qiyas",
+      "status": "required"
+    },
+    {
+      "permissionCode": "training.ai_insights.read",
+      "moduleCode": "training",
+      "status": "required"
+    },
+    {
+      "permissionCode": "training.overview.read",
+      "moduleCode": "training",
+      "status": "required"
+    },
+    {
+      "permissionCode": "training.records.create",
+      "moduleCode": "training",
+      "status": "required"
+    },
+    {
+      "permissionCode": "training.records.delete",
+      "moduleCode": "training",
+      "status": "required"
+    },
+    {
+      "permissionCode": "training.records.read",
+      "moduleCode": "training",
+      "status": "required"
+    },
+    {
+      "permissionCode": "training.records.update",
+      "moduleCode": "training",
+      "status": "required"
+    },
+    {
+      "permissionCode": "training.reports.create",
+      "moduleCode": "training",
+      "status": "required"
+    },
+    {
+      "permissionCode": "training.reports.delete",
+      "moduleCode": "training",
+      "status": "required"
+    },
+    {
+      "permissionCode": "training.reports.read",
+      "moduleCode": "training",
+      "status": "required"
+    },
+    {
+      "permissionCode": "training.reports.update",
+      "moduleCode": "training",
+      "status": "required"
+    },
+    {
+      "permissionCode": "training.settings.create",
+      "moduleCode": "training",
+      "status": "required"
+    },
+    {
+      "permissionCode": "training.settings.delete",
+      "moduleCode": "training",
+      "status": "required"
+    },
+    {
+      "permissionCode": "training.settings.read",
+      "moduleCode": "training",
+      "status": "required"
+    },
+    {
+      "permissionCode": "training.settings.update",
+      "moduleCode": "training",
+      "status": "required"
+    },
+    {
+      "permissionCode": "training.workflows.create",
+      "moduleCode": "training",
+      "status": "required"
+    },
+    {
+      "permissionCode": "training.workflows.delete",
+      "moduleCode": "training",
+      "status": "required"
+    },
+    {
+      "permissionCode": "training.workflows.read",
+      "moduleCode": "training",
+      "status": "required"
+    },
+    {
+      "permissionCode": "training.workflows.update",
+      "moduleCode": "training",
+      "status": "required"
+    },
+    {
+      "permissionCode": "remediation.ai_insights.read",
+      "moduleCode": "remediation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "remediation.overview.read",
+      "moduleCode": "remediation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "remediation.records.create",
+      "moduleCode": "remediation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "remediation.records.delete",
+      "moduleCode": "remediation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "remediation.records.read",
+      "moduleCode": "remediation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "remediation.records.update",
+      "moduleCode": "remediation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "remediation.reports.create",
+      "moduleCode": "remediation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "remediation.reports.delete",
+      "moduleCode": "remediation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "remediation.reports.read",
+      "moduleCode": "remediation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "remediation.reports.update",
+      "moduleCode": "remediation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "remediation.settings.create",
+      "moduleCode": "remediation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "remediation.settings.delete",
+      "moduleCode": "remediation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "remediation.settings.read",
+      "moduleCode": "remediation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "remediation.settings.update",
+      "moduleCode": "remediation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "remediation.workflows.create",
+      "moduleCode": "remediation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "remediation.workflows.delete",
+      "moduleCode": "remediation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "remediation.workflows.read",
+      "moduleCode": "remediation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "remediation.workflows.update",
+      "moduleCode": "remediation",
+      "status": "required"
+    },
+    {
+      "permissionCode": "reports.ai_insights.read",
+      "moduleCode": "reports",
+      "status": "required"
+    },
+    {
+      "permissionCode": "reports.overview.read",
+      "moduleCode": "reports",
+      "status": "required"
+    },
+    {
+      "permissionCode": "reports.records.create",
+      "moduleCode": "reports",
+      "status": "required"
+    },
+    {
+      "permissionCode": "reports.records.delete",
+      "moduleCode": "reports",
+      "status": "required"
+    },
+    {
+      "permissionCode": "reports.records.read",
+      "moduleCode": "reports",
+      "status": "required"
+    },
+    {
+      "permissionCode": "reports.records.update",
+      "moduleCode": "reports",
+      "status": "required"
+    },
+    {
+      "permissionCode": "reports.reports.create",
+      "moduleCode": "reports",
+      "status": "required"
+    },
+    {
+      "permissionCode": "reports.reports.delete",
+      "moduleCode": "reports",
+      "status": "required"
+    },
+    {
+      "permissionCode": "reports.reports.read",
+      "moduleCode": "reports",
+      "status": "required"
+    },
+    {
+      "permissionCode": "reports.reports.update",
+      "moduleCode": "reports",
+      "status": "required"
+    },
+    {
+      "permissionCode": "reports.settings.create",
+      "moduleCode": "reports",
+      "status": "required"
+    },
+    {
+      "permissionCode": "reports.settings.delete",
+      "moduleCode": "reports",
+      "status": "required"
+    },
+    {
+      "permissionCode": "reports.settings.read",
+      "moduleCode": "reports",
+      "status": "required"
+    },
+    {
+      "permissionCode": "reports.settings.update",
+      "moduleCode": "reports",
+      "status": "required"
+    },
+    {
+      "permissionCode": "reports.workflows.create",
+      "moduleCode": "reports",
+      "status": "required"
+    },
+    {
+      "permissionCode": "reports.workflows.delete",
+      "moduleCode": "reports",
+      "status": "required"
+    },
+    {
+      "permissionCode": "reports.workflows.read",
+      "moduleCode": "reports",
+      "status": "required"
+    },
+    {
+      "permissionCode": "reports.workflows.update",
+      "moduleCode": "reports",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dashboard.ai_insights.read",
+      "moduleCode": "dashboard",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dashboard.overview.read",
+      "moduleCode": "dashboard",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dashboard.records.create",
+      "moduleCode": "dashboard",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dashboard.records.delete",
+      "moduleCode": "dashboard",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dashboard.records.read",
+      "moduleCode": "dashboard",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dashboard.records.update",
+      "moduleCode": "dashboard",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dashboard.reports.create",
+      "moduleCode": "dashboard",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dashboard.reports.delete",
+      "moduleCode": "dashboard",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dashboard.reports.read",
+      "moduleCode": "dashboard",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dashboard.reports.update",
+      "moduleCode": "dashboard",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dashboard.settings.create",
+      "moduleCode": "dashboard",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dashboard.settings.delete",
+      "moduleCode": "dashboard",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dashboard.settings.read",
+      "moduleCode": "dashboard",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dashboard.settings.update",
+      "moduleCode": "dashboard",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dashboard.workflows.create",
+      "moduleCode": "dashboard",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dashboard.workflows.delete",
+      "moduleCode": "dashboard",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dashboard.workflows.read",
+      "moduleCode": "dashboard",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dashboard.workflows.update",
+      "moduleCode": "dashboard",
+      "status": "required"
+    },
+    {
+      "permissionCode": "config-center.ai_insights.read",
+      "moduleCode": "config-center",
+      "status": "required"
+    },
+    {
+      "permissionCode": "config-center.overview.read",
+      "moduleCode": "config-center",
+      "status": "required"
+    },
+    {
+      "permissionCode": "config-center.records.create",
+      "moduleCode": "config-center",
+      "status": "required"
+    },
+    {
+      "permissionCode": "config-center.records.delete",
+      "moduleCode": "config-center",
+      "status": "required"
+    },
+    {
+      "permissionCode": "config-center.records.read",
+      "moduleCode": "config-center",
+      "status": "required"
+    },
+    {
+      "permissionCode": "config-center.records.update",
+      "moduleCode": "config-center",
+      "status": "required"
+    },
+    {
+      "permissionCode": "config-center.reports.create",
+      "moduleCode": "config-center",
+      "status": "required"
+    },
+    {
+      "permissionCode": "config-center.reports.delete",
+      "moduleCode": "config-center",
+      "status": "required"
+    },
+    {
+      "permissionCode": "config-center.reports.read",
+      "moduleCode": "config-center",
+      "status": "required"
+    },
+    {
+      "permissionCode": "config-center.reports.update",
+      "moduleCode": "config-center",
+      "status": "required"
+    },
+    {
+      "permissionCode": "config-center.settings.create",
+      "moduleCode": "config-center",
+      "status": "required"
+    },
+    {
+      "permissionCode": "config-center.settings.delete",
+      "moduleCode": "config-center",
+      "status": "required"
+    },
+    {
+      "permissionCode": "config-center.settings.read",
+      "moduleCode": "config-center",
+      "status": "required"
+    },
+    {
+      "permissionCode": "config-center.settings.update",
+      "moduleCode": "config-center",
+      "status": "required"
+    },
+    {
+      "permissionCode": "config-center.workflows.create",
+      "moduleCode": "config-center",
+      "status": "required"
+    },
+    {
+      "permissionCode": "config-center.workflows.delete",
+      "moduleCode": "config-center",
+      "status": "required"
+    },
+    {
+      "permissionCode": "config-center.workflows.read",
+      "moduleCode": "config-center",
+      "status": "required"
+    },
+    {
+      "permissionCode": "config-center.workflows.update",
+      "moduleCode": "config-center",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dynamic-ui.ai_insights.read",
+      "moduleCode": "dynamic-ui",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dynamic-ui.overview.read",
+      "moduleCode": "dynamic-ui",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dynamic-ui.records.create",
+      "moduleCode": "dynamic-ui",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dynamic-ui.records.delete",
+      "moduleCode": "dynamic-ui",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dynamic-ui.records.read",
+      "moduleCode": "dynamic-ui",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dynamic-ui.records.update",
+      "moduleCode": "dynamic-ui",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dynamic-ui.reports.create",
+      "moduleCode": "dynamic-ui",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dynamic-ui.reports.delete",
+      "moduleCode": "dynamic-ui",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dynamic-ui.reports.read",
+      "moduleCode": "dynamic-ui",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dynamic-ui.reports.update",
+      "moduleCode": "dynamic-ui",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dynamic-ui.settings.create",
+      "moduleCode": "dynamic-ui",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dynamic-ui.settings.delete",
+      "moduleCode": "dynamic-ui",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dynamic-ui.settings.read",
+      "moduleCode": "dynamic-ui",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dynamic-ui.settings.update",
+      "moduleCode": "dynamic-ui",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dynamic-ui.workflows.create",
+      "moduleCode": "dynamic-ui",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dynamic-ui.workflows.delete",
+      "moduleCode": "dynamic-ui",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dynamic-ui.workflows.read",
+      "moduleCode": "dynamic-ui",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dynamic-ui.workflows.update",
+      "moduleCode": "dynamic-ui",
+      "status": "required"
+    },
+    {
+      "permissionCode": "ai.ai_insights.read",
+      "moduleCode": "ai",
+      "status": "required"
+    },
+    {
+      "permissionCode": "ai.overview.read",
+      "moduleCode": "ai",
+      "status": "required"
+    },
+    {
+      "permissionCode": "ai.records.create",
+      "moduleCode": "ai",
+      "status": "required"
+    },
+    {
+      "permissionCode": "ai.records.delete",
+      "moduleCode": "ai",
+      "status": "required"
+    },
+    {
+      "permissionCode": "ai.records.read",
+      "moduleCode": "ai",
+      "status": "required"
+    },
+    {
+      "permissionCode": "ai.records.update",
+      "moduleCode": "ai",
+      "status": "required"
+    },
+    {
+      "permissionCode": "ai.reports.create",
+      "moduleCode": "ai",
+      "status": "required"
+    },
+    {
+      "permissionCode": "ai.reports.delete",
+      "moduleCode": "ai",
+      "status": "required"
+    },
+    {
+      "permissionCode": "ai.reports.read",
+      "moduleCode": "ai",
+      "status": "required"
+    },
+    {
+      "permissionCode": "ai.reports.update",
+      "moduleCode": "ai",
+      "status": "required"
+    },
+    {
+      "permissionCode": "ai.settings.create",
+      "moduleCode": "ai",
+      "status": "required"
+    },
+    {
+      "permissionCode": "ai.settings.delete",
+      "moduleCode": "ai",
+      "status": "required"
+    },
+    {
+      "permissionCode": "ai.settings.read",
+      "moduleCode": "ai",
+      "status": "required"
+    },
+    {
+      "permissionCode": "ai.settings.update",
+      "moduleCode": "ai",
+      "status": "required"
+    },
+    {
+      "permissionCode": "ai.workflows.create",
+      "moduleCode": "ai",
+      "status": "required"
+    },
+    {
+      "permissionCode": "ai.workflows.delete",
+      "moduleCode": "ai",
+      "status": "required"
+    },
+    {
+      "permissionCode": "ai.workflows.read",
+      "moduleCode": "ai",
+      "status": "required"
+    },
+    {
+      "permissionCode": "ai.workflows.update",
+      "moduleCode": "ai",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dauth.ai_insights.read",
+      "moduleCode": "dauth",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dauth.overview.read",
+      "moduleCode": "dauth",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dauth.records.create",
+      "moduleCode": "dauth",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dauth.records.delete",
+      "moduleCode": "dauth",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dauth.records.read",
+      "moduleCode": "dauth",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dauth.records.update",
+      "moduleCode": "dauth",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dauth.reports.create",
+      "moduleCode": "dauth",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dauth.reports.delete",
+      "moduleCode": "dauth",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dauth.reports.read",
+      "moduleCode": "dauth",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dauth.reports.update",
+      "moduleCode": "dauth",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dauth.settings.create",
+      "moduleCode": "dauth",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dauth.settings.delete",
+      "moduleCode": "dauth",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dauth.settings.read",
+      "moduleCode": "dauth",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dauth.settings.update",
+      "moduleCode": "dauth",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dauth.workflows.create",
+      "moduleCode": "dauth",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dauth.workflows.delete",
+      "moduleCode": "dauth",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dauth.workflows.read",
+      "moduleCode": "dauth",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dauth.workflows.update",
+      "moduleCode": "dauth",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dsoc.ai_insights.read",
+      "moduleCode": "dsoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dsoc.overview.read",
+      "moduleCode": "dsoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dsoc.records.create",
+      "moduleCode": "dsoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dsoc.records.delete",
+      "moduleCode": "dsoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dsoc.records.read",
+      "moduleCode": "dsoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dsoc.records.update",
+      "moduleCode": "dsoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dsoc.reports.create",
+      "moduleCode": "dsoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dsoc.reports.delete",
+      "moduleCode": "dsoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dsoc.reports.read",
+      "moduleCode": "dsoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dsoc.reports.update",
+      "moduleCode": "dsoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dsoc.settings.create",
+      "moduleCode": "dsoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dsoc.settings.delete",
+      "moduleCode": "dsoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dsoc.settings.read",
+      "moduleCode": "dsoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dsoc.settings.update",
+      "moduleCode": "dsoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dsoc.workflows.create",
+      "moduleCode": "dsoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dsoc.workflows.delete",
+      "moduleCode": "dsoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dsoc.workflows.read",
+      "moduleCode": "dsoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dsoc.workflows.update",
+      "moduleCode": "dsoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dnoc.ai_insights.read",
+      "moduleCode": "dnoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dnoc.overview.read",
+      "moduleCode": "dnoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dnoc.records.create",
+      "moduleCode": "dnoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dnoc.records.delete",
+      "moduleCode": "dnoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dnoc.records.read",
+      "moduleCode": "dnoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dnoc.records.update",
+      "moduleCode": "dnoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dnoc.reports.create",
+      "moduleCode": "dnoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dnoc.reports.delete",
+      "moduleCode": "dnoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dnoc.reports.read",
+      "moduleCode": "dnoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dnoc.reports.update",
+      "moduleCode": "dnoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dnoc.settings.create",
+      "moduleCode": "dnoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dnoc.settings.delete",
+      "moduleCode": "dnoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dnoc.settings.read",
+      "moduleCode": "dnoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dnoc.settings.update",
+      "moduleCode": "dnoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dnoc.workflows.create",
+      "moduleCode": "dnoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dnoc.workflows.delete",
+      "moduleCode": "dnoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dnoc.workflows.read",
+      "moduleCode": "dnoc",
+      "status": "required"
+    },
+    {
+      "permissionCode": "dnoc.workflows.update",
+      "moduleCode": "dnoc",
+      "status": "required"
+    }
+  ]
+}

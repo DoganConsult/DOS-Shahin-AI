@@ -2,16 +2,19 @@ import { EventEmitter } from '@angular/core';
 /**
  * Carbon Tile / ClickableTile wrapper.
  *
- * NOTE: emits plain `cds--tile` markup so we sidestep
- * `cds-clickable-tile`'s internal `[routerLink]` binding which crashes when
- * `route` is null and triggers the recursive `template` ContentChildren
- * resolution loop observed at runtime. Carbon CSS (`@carbon/styles`) styles
- * `.cds--tile` and `.cds--tile--clickable` directly.
+ * Composes the real Carbon Angular primitives (`cds-tile` /
+ * `cds-clickable-tile`) so wrappers benefit from Carbon's built-in
+ * keyboard/focus/hover semantics and theming. The previous hand-rolled
+ * `<a class="cds--tile">` markup is removed — it skipped Carbon's
+ * controller and emitted a flat anchor with no Carbon DOM.
  *
- * - `clickable=false` renders `<div class="cds--tile">`.
- * - `clickable=true`  renders `<a class="cds--tile cds--tile--clickable">`.
+ * - `clickable=false` → `<cds-tile>`.
+ * - `clickable=true`  → `<cds-clickable-tile>` with click navigation
+ *   delegated to Angular Router (we deliberately do NOT bind
+ *   `[route]` because Carbon's directive crashes when route is null).
  */
 export declare class DosCarbonTileComponent {
+    private readonly router;
     clickable: boolean;
     route: string | null;
     activated: EventEmitter<MouseEvent>;

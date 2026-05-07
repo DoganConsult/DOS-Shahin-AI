@@ -1,0 +1,48 @@
+{
+  "ts_utc": "2026-05-07T17:47:10Z",
+  "snapshot": "ops/db-snapshots/shahin_grc_dos_pre-stale-flush_20260507T173327Z.sql.gz",
+  "foundation_migrations": {
+    "files_on_disk": 58,
+    "applied_before": 38,
+    "applied_after": 44,
+    "forward_applied_this_step": 6,
+    "down_files_skipped": 14,
+    "applied_filenames": [
+      "20260507_1300_wave30_foundation_page_experience_enhanced.sql",
+      "20260507_1400_wave31_foundation_structural_surfaces.sql",
+      "20260507_1500_wave32_enable_carbon_components.sql",
+      "20260507_1600_wave33_foundation_kpi_tiles.sql",
+      "20260507_2000_wave34_fix_empty_state_mobile.sql",
+      "20260507_2200_wave35_foundation_full_content.sql"
+    ],
+    "last_applied_at": "2026-05-07T17:44:44Z"
+  },
+  "platform_dos_migrations": {
+    "applied_before": 703,
+    "applied_after": 709,
+    "forward_applied_this_step": 6,
+    "applied_filenames": [
+      "20260507_2000_phase_b_v1_1_runtime_seed.sql",
+      "20260507_2000_shahin_nav_contract_v2_full_entitlement.sql",
+      "20260507_2200_b4b_dedupe_tenant_code_unique.sql",
+      "20260507_2200_deploy_dogan_contracts_v1.sql",
+      "20260507_2300_phase_h_grant_dos_auth_master_tables.sql",
+      "20260507_2400_phase_h_workspace_shell_binding_mobile_keys.sql"
+    ],
+    "last_applied_at": "2026-05-07T17:45:34Z",
+    "notes": "Last 2 required postgres superuser (ALTER DEFAULT PRIVILEGES); applied via sudo -u postgres."
+  },
+  "dist_rebuild": {
+    "ui_contracts": "OK (tsc, fresh)",
+    "ui_system":    "OK (tsc, 2026-05-08 01:45:57)",
+    "platform_core":"OK (tsc, incremental — no source changes)",
+    "platform_app": "OK (Angular bundle, 2026-05-08 01:46:22, 3.08 MB initial)",
+    "module_foundation": "OK (tsc, 2026-05-08 01:46:37)"
+  },
+  "runtime_probe": {
+    "spa_foundation_http": 200,
+    "ui_os_workspace_runtime_http_unauth": 401,
+    "auth_pipeline_alive": true
+  },
+  "doctrine": "ZERO STATIC / ZERO LEGACY / ZERO FALLBACK sustained — all fixes via DB migrations + idempotent inserts; no frontend invention."
+}

@@ -40,11 +40,11 @@ import { CommonModule } from '@angular/common';
     </div>
   `,
   styles: [`
-    :host { display: block; min-height: 100vh; }
+    :host { display: block; min-block-size: 100dvh; }
 
     /* ── Shell frame ── all tokens from @carbon/styles + carbon-shell-tokens.scss ── */
     .dos-app-shell {
-      min-height: 100vh;
+      min-block-size: 100dvh;
       background: var(--cds-background);
     }
 
@@ -67,12 +67,8 @@ import { CommonModule } from '@angular/common';
         "bottom";
     }
 
-    /* Header: sticky, Carbon z-index */
     .dos-app-shell__header {
       grid-area: header;
-      position: sticky;
-      inset-block-start: 0;
-      z-index: var(--shell-z-sticky));
     }
 
     /* Sidebar: Carbon layer token for background */
@@ -92,7 +88,7 @@ import { CommonModule } from '@angular/common';
       grid-area: main;
       min-width: 0;
       overflow-x: hidden;
-      background: var(--shell-page-bg));
+      background: var(--shell-page-bg);
       animation: premium-fade-up 0.2s ease-out both;
     }
 

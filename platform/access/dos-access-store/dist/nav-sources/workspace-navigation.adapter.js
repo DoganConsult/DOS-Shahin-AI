@@ -41,6 +41,12 @@ import { ModuleLibraryNavSource } from './module-library-nav.source';
 import { AccessStoreNavSource } from './access-store-nav.source';
 import { SurvivalFallbackNavSource } from './survival-fallback.source';
 import { WORKSPACE_NAV_PRODUCT_SOURCE } from './nav-source';
+function navPath(item) {
+    if (item.action?.kind !== 'navigate')
+        return null;
+    const path = item.action.path.trim();
+    return path.length > 0 ? path : null;
+}
 // Account menu is 100% DB-driven — seeded in dos.workspace_shell_binding
 // props.accountMenu for workspace.frame.header-menu. No hardcoded fallback.
 let WorkspaceNavigationAdapter = class WorkspaceNavigationAdapter {
@@ -94,7 +100,7 @@ let WorkspaceNavigationAdapter = class WorkspaceNavigationAdapter {
                             ...it,
                             ...existing,
                             icon: existing.icon ?? it.icon,
-                            route: existing.route ?? it.route,
+                            action: existing.action ?? it.action,
                             requiredPermission: existing.requiredPermission ?? it.requiredPermission,
                             moduleCode: existing.moduleCode ?? it.moduleCode,
                             group: existing.group ?? it.group,
@@ -113,7 +119,7 @@ let WorkspaceNavigationAdapter = class WorkspaceNavigationAdapter {
             }
             if (tier === 'dna') {
                 const moduleCode = it.moduleCode || it.id.split('.')[0];
-                const r = this.readiness.disabledReason(moduleCode, !!it.route);
+                const r = this.readiness.disabledReason(moduleCode, !!navPath(it));
                 if (r === 'backend-offline')
                     reasons.push('backend-offline');
                 else if (r === 'route-not-wired')
@@ -131,11 +137,11 @@ let WorkspaceNavigationAdapter = class WorkspaceNavigationAdapter {
                     && !this.access.trialExpiredModules().includes(moduleCode)) {
                     reasons.push('not-entitled');
                 }
-                if (!it.route)
+                if (!navPath(it))
                     reasons.push('route-not-wired');
             }
             else {
-                if (!it.route)
+                if (!navPath(it))
                     reasons.push('route-not-wired');
             }
             const PRECEDENCE = [

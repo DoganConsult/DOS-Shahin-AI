@@ -131,13 +131,13 @@ import { sanitizeAccessibleText } from './shell-accessible-text';
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: var(--shadow-premium-md));
+      box-shadow: var(--shadow-premium-md);
       transition: box-shadow 0.2s, transform 0.15s;
     }
 
     .dos-quick-create__fab:hover {
       transform: scale(1.06);
-      box-shadow: var(--shadow-premium-lg));
+      box-shadow: var(--shadow-premium-lg);
     }
 
     .dos-quick-create--open .dos-quick-create__fab {
@@ -152,7 +152,7 @@ import { sanitizeAccessibleText } from './shell-accessible-text';
       min-inline-size: 16rem;
       background: var(--cds-layer);
       border: 1px solid var(--cds-border-subtle-01);
-      box-shadow: var(--shadow-premium-lg));
+      box-shadow: var(--shadow-premium-lg);
       list-style: none;
       margin: 0;
       padding: var(--cds-spacing-02) 0;
@@ -211,11 +211,11 @@ import { sanitizeAccessibleText } from './shell-accessible-text';
 
     .dos-quick-create__mobile-menu {
       position: fixed;
-      inset-block-end: calc(var(--shell-mobile-bottom-padding)) + var(--cds-spacing-09) + env(safe-area-inset-bottom, 0px));
+      inset-block-end: calc(var(--shell-mobile-bottom-padding) + var(--cds-spacing-09) + env(safe-area-inset-bottom, 0px));
       inset-inline: var(--cds-spacing-05);
       background: var(--cds-layer);
       border: 1px solid var(--cds-border-subtle-01);
-      box-shadow: var(--shadow-premium-lg));
+      box-shadow: var(--shadow-premium-lg);
       padding: var(--cds-spacing-03) 0;
       z-index: var(--shell-z-dropdown);
       animation: premium-fade-up 0.18s ease-out both;

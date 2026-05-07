@@ -1,0 +1,192 @@
+{
+  "$schema": "https://dogan-ai.local/schemas/product-runtime.v1-1.schema.json",
+  "contractKind": "product",
+  "contractVersion": "1.1.0",
+  "runtimeModel": "v1-1-operating-runtime",
+  "generatedAt": "2026-05-07T16:50:00+03:00",
+  "supersedes": "dogan_shahin_all_contracts_v1_runtime/product/shahin.product.contract.v1-runtime.json",
+  "selfContained": true,
+  "rule": "Product identity, chrome, theme, brand tokens, enabled modules, feature flags, limits, dashboard widgets, and product nav are resolved into ONE productRuntime envelope. Product identity does not rely solely on workspace-runtime.",
+  "doctrine": ["ZERO_STATIC","ZERO_LEGACY","ZERO_FALLBACK","DB_AS_SOURCE_OF_TRUTH"],
+  "forbidden": [
+    "fake_component_map_closure",
+    "register_dos_semantic_components_as_full_page_templates",
+    "static_nav_fallback",
+    "hardcoded_workspace_modules",
+    "hardcoded_workspace_routes",
+    "prime_ng_workspace_shell",
+    "material_workspace_shell",
+    "localStorage_auth_token",
+    "sessionStorage_auth_token",
+    "silent_renderer_fallback",
+    "random_css_mobile_patch",
+    "frontend_default_product_key_constant",
+    "agrc_default_product_key_in_frontend",
+    "static_dashboard_widgets_in_frontend",
+    "static_product_nav_in_frontend"
+  ],
+  "productKey": "shahin-ai",
+  "productName": { "en": "Shahin AI", "ar": "شاهين AI" },
+  "platformKey": "dogan-ai-os",
+  "workspaceRoute": "/workspace-home",
+  "auth": {
+    "mode": "oidc_cookie_session",
+    "sessionEndpoint": "/api/auth/oidc/session",
+    "forbidden": ["localStorage_token","sessionStorage_token","frontend_bearer_injection"]
+  },
+  "tenantModel": {
+    "requiresTenant": true,
+    "requiresMembership": true,
+    "requiresEntitlements": true,
+    "bootstrapEndpoint": "/api/workspace/bootstrap",
+    "permissionsEndpoint": "/api/access/my-permissions"
+  },
+  "productRuntime": {
+    "fieldList": [
+      "productKey",
+      "productName",
+      "tier",
+      "chrome",
+      "theme",
+      "brandTokens",
+      "enabledModules",
+      "featureFlags",
+      "limits",
+      "dashboardWidgets",
+      "productNav",
+      "version"
+    ],
+    "productKey": { "type": "string", "publication": { "table": "dos.product_registry", "column": "product_key" } },
+    "productName": { "type": "object<{en, ar}>", "publication": { "table": "dos.product_registry", "columns": ["display_name_en","display_name_ar"] } },
+    "tier": {
+      "type": "enum|null",
+      "values": ["free","starter","professional","enterprise","custom","null"],
+      "publication": { "table": "dos.product_registry", "column": "tier" },
+      "preflight_dependency": "preflight/blockers.contract.v1-1.json#B3"
+    },
+    "chrome": {
+      "type": "object<{brand, logoHref, productSwitcher, accountMenu, statusBar, footer}>",
+      "publication": { "table": "dos.ui_product_chrome", "key": ["product_key"], "tenancy": "global_with_tenant_overrides" },
+      "rule": "Product-level chrome is the seed defaults; tenant-level chrome (workspace-runtime.shell.chrome) overrides per tenant"
+    },
+    "theme": {
+      "type": "object",
+      "ref": "theme/theme.system.contract.v1-1.json",
+      "carbonTheme": "white|g10|g90|g100",
+      "tokens": "Record<token,string>",
+      "publication": { "table": "dos.ui_product_branding", "key": ["product_key"], "jsonbPath": "theme_tokens" }
+    },
+    "brandTokens": {
+      "type": "Record<tokenKey,string>",
+      "publication": { "table": "dos.brand_config", "key": ["domain"] }
+    },
+    "enabledModules": {
+      "type": "array<{moduleCode, status, defaultEnabled, contractRef}>",
+      "publication": { "table": "dos.product_module_registry", "key": ["product_key","module_code"] }
+    },
+    "featureFlags": {
+      "type": "Record<flagKey,{enabled, source, defaultRolloutBucket|null}>",
+      "publication": { "table": "dos.product_feature_flags", "key": ["product_key","flag_key"], "tenancy": "global_with_tenant_overrides" }
+    },
+    "limits": {
+      "type": "Record<limitKey,{value, unit, source}>",
+      "publication": { "table": "dos.product_limits", "key": ["product_key","limit_key"] }
+    },
+    "dashboardWidgets": {
+      "type": "array<{widgetKey, surface, displayNameKey, dataSource, refreshIntervalSeconds, carbonKeys[], requiredPermission|null, requiredEntitlement|null}>",
+      "publication": { "table": "dos.product_dashboard_widget_catalog", "key": ["product_key","widget_key"] },
+      "carbonAlignment": [
+        "tile","clickable-tile","tag","progress-bar","structured-list","inline-notification","skeleton-text","skeleton-placeholder","grid","column"
+      ]
+    },
+    "productNav": {
+      "type": "object<{groups[], items[]}>",
+      "publication": {
+        "groups_table": "dos.product_nav_group",
+        "items_table":  "dos.product_nav_item",
+        "ordering_column": "sort_order",
+        "key": ["product_key"]
+      },
+      "rule": "Product-level navigation overlay (e.g. App Switcher entries, top-of-shell launcher) — NOT the same as tenant module navigation"
+    },
+    "version": { "type": "integer" }
+  },
+  "modules": [
+    { "moduleCode": "foundation",     "routeBase": "/foundation",     "ownerService": "user-service",                    "category": "platform-base",     "status": "active",          "defaultEnabled": true,  "contractFile": "modules/foundation.module.contract.v1-1.json" },
+    { "moduleCode": "risk",           "routeBase": "/risk",           "ownerService": "risk-incident-service",           "category": "grc-core",          "status": "active",          "defaultEnabled": false, "contractFile": "modules/risk.module.contract.v1-1.json" },
+    { "moduleCode": "compliance",     "routeBase": "/compliance",     "ownerService": "compliance-controls-service",     "category": "grc-core",          "status": "active",          "defaultEnabled": false, "contractFile": "modules/compliance.module.contract.v1-1.json" },
+    { "moduleCode": "policy",         "routeBase": "/policy",         "ownerService": "governance-policy-service",       "category": "grc-core",          "status": "active",          "defaultEnabled": false, "contractFile": "modules/policy.module.contract.v1-1.json" },
+    { "moduleCode": "incident",       "routeBase": "/incident",       "ownerService": "risk-incident-service",           "category": "grc-core",          "status": "active",          "defaultEnabled": false, "contractFile": "modules/incident.module.contract.v1-1.json" },
+    { "moduleCode": "workflow",       "routeBase": "/workflow",       "ownerService": "workflow-service",                "category": "platform-workflow", "status": "active",          "defaultEnabled": true,  "contractFile": "modules/workflow.module.contract.v1-1.json" },
+    { "moduleCode": "audit",          "routeBase": "/audit",          "ownerService": "audit-service",                   "category": "assurance",         "status": "active",          "defaultEnabled": false, "contractFile": "modules/audit.module.contract.v1-1.json" },
+    { "moduleCode": "evidence",       "routeBase": "/evidence",       "ownerService": "evidence-audit-reporting-service","category": "assurance",         "status": "active",          "defaultEnabled": false, "contractFile": "modules/evidence.module.contract.v1-1.json" },
+    { "moduleCode": "vendor",         "routeBase": "/vendor",         "ownerService": "vendor-service",                  "category": "third-party-risk",  "status": "active",          "defaultEnabled": false, "contractFile": "modules/vendor.module.contract.v1-1.json" },
+    { "moduleCode": "asset",          "routeBase": "/asset",          "ownerService": "asset-service",                   "category": "operations-risk",   "status": "active",          "defaultEnabled": false, "contractFile": "modules/asset.module.contract.v1-1.json" },
+    { "moduleCode": "privacy",        "routeBase": "/privacy",        "ownerService": "privacy-service",                 "category": "privacy",           "status": "active",          "defaultEnabled": false, "contractFile": "modules/privacy.module.contract.v1-1.json" },
+    { "moduleCode": "bcp",            "routeBase": "/bcp",            "ownerService": "bcp-service",                     "category": "resilience",        "status": "active",          "defaultEnabled": false, "contractFile": "modules/bcp.module.contract.v1-1.json" },
+    { "moduleCode": "dora",           "routeBase": "/dora",           "ownerService": "dora-service",                    "category": "regulatory",        "status": "active",          "defaultEnabled": false, "contractFile": "modules/dora.module.contract.v1-1.json" },
+    { "moduleCode": "qiyas",          "routeBase": "/qiyas",          "ownerService": "qiyas-service",                   "category": "regulatory",        "status": "active",          "defaultEnabled": false, "contractFile": "modules/qiyas.module.contract.v1-1.json" },
+    { "moduleCode": "training",       "routeBase": "/training",       "ownerService": "training-service",                "category": "awareness",         "status": "active",          "defaultEnabled": false, "contractFile": "modules/training.module.contract.v1-1.json" },
+    { "moduleCode": "remediation",    "routeBase": "/remediation",    "ownerService": "remediation-service",             "category": "grc-core",          "status": "active",          "defaultEnabled": false, "contractFile": "modules/remediation.module.contract.v1-1.json" },
+    { "moduleCode": "reports",        "routeBase": "/reports",        "ownerService": "analytics-reporting-service",     "category": "analytics",         "status": "active",          "defaultEnabled": false, "contractFile": "modules/reports.module.contract.v1-1.json" },
+    { "moduleCode": "dashboard",      "routeBase": "/dashboard",      "ownerService": "dashboard-widgets-service",       "category": "analytics",         "status": "active",          "defaultEnabled": false, "contractFile": "modules/dashboard.module.contract.v1-1.json" },
+    { "moduleCode": "config-center",  "routeBase": "/config-center",  "ownerService": "tenant-service",                  "category": "platform-admin",    "status": "platform_shared", "defaultEnabled": true,  "contractFile": "modules/config-center.module.contract.v1-1.json" },
+    { "moduleCode": "dynamic-ui",     "routeBase": "/dynamic-ui",     "ownerService": "dynamic-ui-service",              "category": "platform-runtime",  "status": "platform_shared", "defaultEnabled": true,  "contractFile": "modules/dynamic-ui.module.contract.v1-1.json" },
+    { "moduleCode": "ai",             "routeBase": "/ai",             "ownerService": "ai-engine-service",               "category": "platform-ai",       "status": "platform_shared", "defaultEnabled": true,  "contractFile": "modules/ai.module.contract.v1-1.json" },
+    { "moduleCode": "dauth",          "routeBase": "/dauth",          "ownerService": "auth-service",                    "category": "identity-access",   "status": "platform_shared", "defaultEnabled": true,  "contractFile": "modules/dauth.module.contract.v1-1.json" },
+    { "moduleCode": "dsoc",           "routeBase": "/dsoc",           "ownerService": "security-ops-service",            "category": "security-ops",      "status": "active",          "defaultEnabled": false, "contractFile": "modules/dsoc.module.contract.v1-1.json" },
+    { "moduleCode": "dnoc",           "routeBase": "/dnoc",           "ownerService": "network-ops-service",             "category": "network-ops",       "status": "active",          "defaultEnabled": false, "contractFile": "modules/dnoc.module.contract.v1-1.json" }
+  ],
+  "routeCatalogFile": "registries/route-catalog.v1-1.json",
+  "workspaceContractFile": "workspace/shahin.workspace.contract.v1-1.json",
+  "tenantContractFile": "tenant/tenant.runtime.contract.v1-1.json",
+  "themeContractFile": "theme/theme.system.contract.v1-1.json",
+  "integrationContractFile": "integrations/integration.runtime.contract.v1-1.json",
+  "resolverContract": {
+    "endpoint": "/api/ui-os/product-runtime",
+    "auth": "session_cookie",
+    "tenancy_scope": "tenant",
+    "snake_case_fields_allowed_only_inside_resolver": true,
+    "browser_facing_camelCase": true,
+    "envelope_ref": "envelopes/product-runtime.envelope.v1-1.json"
+  },
+  "frontendConsumption": {
+    "ref": "consumption-map/frontend.consumption.map.v1-1.json",
+    "consumers": [
+      "platform/core/services/grc-auth.service.ts",
+      "platform/ui-system/dos-ui-system/src/carbon/dos-carbon-header-shell.component.ts",
+      "platform/ui-system/dos-ui-system/src/brand/dos-brand-eagle.component.ts"
+    ],
+    "hardcodedSymbolsToPurge": [
+      { "symbol": "DEFAULT_PRODUCT_KEY 'agrc'",                   "site": "platform/core/services/grc-auth.service.ts",                                       "replaceWith": "productRuntime.productKey" },
+      { "symbol": "brand = 'DOS Platform' default",               "site": "platform/ui-system/dos-ui-system/src/carbon/dos-carbon-header-shell.component.ts","replaceWith": "productRuntime.chrome.brand" },
+      { "symbol": "logoHref = '/' default",                       "site": "platform/ui-system/dos-ui-system/src/carbon/dos-carbon-header-shell.component.ts","replaceWith": "productRuntime.chrome.logoHref" },
+      { "symbol": "hardcoded brand-code -> PNG mapping",          "site": "platform/ui-system/dos-ui-system/src/brand/dos-brand-eagle.component.ts",         "replaceWith": "productRuntime.brandTokens.iconUrl" }
+    ]
+  },
+  "publication": {
+    "primary_tables": [
+      "dos.product_registry",
+      "dos.ui_product_chrome",
+      "dos.ui_product_branding",
+      "dos.product_module_registry",
+      "dos.product_feature_flags",
+      "dos.product_limits",
+      "dos.product_dashboard_widget_catalog",
+      "dos.product_nav_group",
+      "dos.product_nav_item"
+    ],
+    "preflight_dependencies": ["preflight/blockers.contract.v1-1.json#B3"],
+    "validation_query_id": "publication.product.coverage.v1_1"
+  },
+  "acceptance": [
+    "all_module_contract_files_exist_for_v1_1",
+    "workspace_contract_v1_1_exists",
+    "route_catalog_v1_1_generated",
+    "no_static_nav_after_auth",
+    "module_visibility_from_access_store_only",
+    "productRuntime.fieldList contains 12 entries",
+    "productRuntime.tier.preflight_dependency points to B3",
+    "modules length is 24"
+  ]
+}

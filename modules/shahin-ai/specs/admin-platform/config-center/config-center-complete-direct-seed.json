@@ -1,0 +1,334 @@
+{
+  "$schema": "./00-universal-module-contract.schema.json",
+  "schemaVersion": 1,
+  "module": {
+    "code": "config-center",
+    "product_key": "shahin-ai",
+    "tier": "platform",
+    "category": "platform",
+    "owner_service": "ui-os-service",
+    "name_en": "Config Center",
+    "name_ar": "مركز الإعدادات",
+    "version": "1.0.0",
+    "is_platform_dna": true,
+    "route_base": "/admin/config-center"
+  },
+  "permissions": [
+    { "code": "platform.config_center.read", "description": "Read Config Center admin surfaces, settings listings, and operational views", "sensitive": false },
+    { "code": "platform.config_center.admin", "description": "Create, publish, or manage configuration and feature flags where permitted", "sensitive": true },
+    { "code": "platform.audit.read", "description": "Read audit trail exports and forensic views tied to Config Center", "sensitive": true }
+  ],
+  "roles": [
+    {
+      "code": "config_center_viewer",
+      "archetype": "viewer",
+      "permissions": ["platform.config_center.read"]
+    },
+    {
+      "code": "config_center_operator",
+      "archetype": "operator",
+      "permissions": ["platform.config_center.read", "platform.audit.read"]
+    },
+    {
+      "code": "config_center_admin",
+      "archetype": "module_lead",
+      "permissions": ["platform.config_center.read", "platform.config_center.admin", "platform.audit.read"]
+    }
+  ],
+  "navigation": [
+    {
+      "nav_item_code": "config-center",
+      "parent_code": null,
+      "route": null,
+      "label_en": "Config Center",
+      "label_ar": "مركز الإعدادات",
+      "sort_order": 30,
+      "icon": "settings",
+      "permission": "platform.config_center.read"
+    },
+    {
+      "nav_item_code": "config-center.hub",
+      "parent_code": "config-center",
+      "route": "/admin/config-center",
+      "label_en": "Overview",
+      "label_ar": "نظرة عامة",
+      "sort_order": 10,
+      "icon": "layout-dashboard",
+      "permission": "platform.config_center.read"
+    },
+    {
+      "nav_item_code": "config-center.settings",
+      "parent_code": "config-center",
+      "route": "/admin/config-center/settings",
+      "label_en": "Settings",
+      "label_ar": "الإعدادات",
+      "sort_order": 20,
+      "icon": "adjustments",
+      "permission": "platform.config_center.read"
+    },
+    {
+      "nav_item_code": "config-center.flags",
+      "parent_code": "config-center",
+      "route": "/admin/config-center/flags",
+      "label_en": "Feature flags",
+      "label_ar": "ميزات التجربة",
+      "sort_order": 30,
+      "icon": "flag",
+      "permission": "platform.config_center.read"
+    },
+    {
+      "nav_item_code": "config-center.tokens",
+      "parent_code": "config-center",
+      "route": "/admin/config-center/tokens",
+      "label_en": "Tokens",
+      "label_ar": "الرموز",
+      "sort_order": 40,
+      "icon": "key",
+      "permission": "platform.config_center.read"
+    },
+    {
+      "nav_item_code": "config-center.audit",
+      "parent_code": "config-center",
+      "route": "/admin/config-center/audit",
+      "label_en": "Audit trail",
+      "label_ar": "سجل التدقيق",
+      "sort_order": 50,
+      "icon": "history",
+      "permission": "platform.config_center.read"
+    },
+    {
+      "nav_item_code": "config-center.compare",
+      "parent_code": "config-center",
+      "route": "/admin/config-center/compare",
+      "label_en": "Compare",
+      "label_ar": "المقارنة",
+      "sort_order": 60,
+      "icon": "git-compare",
+      "permission": "platform.config_center.read"
+    },
+    {
+      "nav_item_code": "config-center.resolve",
+      "parent_code": "config-center",
+      "route": "/admin/config-center/resolve",
+      "label_en": "Resolve",
+      "label_ar": "الحل",
+      "sort_order": 70,
+      "icon": "git-merge",
+      "permission": "platform.config_center.read"
+    },
+    {
+      "nav_item_code": "config-center.workspace",
+      "parent_code": "config-center",
+      "route": "/admin/config-center/workspace",
+      "label_en": "Workspace",
+      "label_ar": "مساحة العمل",
+      "sort_order": 80,
+      "icon": "layout-grid",
+      "permission": "platform.config_center.read"
+    },
+    {
+      "nav_item_code": "config-center.gateway",
+      "parent_code": "config-center",
+      "route": "/admin/config-center/gateway",
+      "label_en": "Gateway",
+      "label_ar": "البوابة",
+      "sort_order": 90,
+      "icon": "cloud",
+      "permission": "platform.config_center.read"
+    },
+    {
+      "nav_item_code": "config-center.health",
+      "parent_code": "config-center",
+      "route": "/admin/config-center/health",
+      "label_en": "Health",
+      "label_ar": "الصحة",
+      "sort_order": 100,
+      "icon": "heart-rate-monitor",
+      "permission": "platform.config_center.read"
+    }
+  ],
+  "pages": [
+    {
+      "page_code": "platform.config-center.hub",
+      "route": "/admin/config-center",
+      "archetype": "decision-dashboard",
+      "template_export": "DecisionDashboardTemplateComponent",
+      "permission": "platform.config_center.read",
+      "props": {}
+    },
+    {
+      "page_code": "platform.config-center.settings",
+      "route": "/admin/config-center/settings",
+      "archetype": "intelligent-register",
+      "template_export": "ModuleRecordsTemplateComponent",
+      "permission": "platform.config_center.read",
+      "props": {}
+    },
+    {
+      "page_code": "platform.config-center.flags",
+      "route": "/admin/config-center/flags",
+      "archetype": "intelligent-register",
+      "template_export": "ModuleRecordsTemplateComponent",
+      "permission": "platform.config_center.read",
+      "props": {}
+    },
+    {
+      "page_code": "platform.config-center.tokens",
+      "route": "/admin/config-center/tokens",
+      "archetype": "intelligent-register",
+      "template_export": "ModuleRecordsTemplateComponent",
+      "permission": "platform.config_center.read",
+      "props": {}
+    },
+    {
+      "page_code": "platform.config-center.audit",
+      "route": "/admin/config-center/audit",
+      "archetype": "audit-trail-ledger",
+      "template_export": "AuditTrailLedgerTemplateComponent",
+      "permission": "platform.config_center.read",
+      "props": {}
+    },
+    {
+      "page_code": "platform.config-center.compare",
+      "route": "/admin/config-center/compare",
+      "archetype": "module-settings",
+      "template_export": "ModuleSettingsTemplateComponent",
+      "permission": "platform.config_center.read",
+      "props": {}
+    },
+    {
+      "page_code": "platform.config-center.resolve",
+      "route": "/admin/config-center/resolve",
+      "archetype": "module-settings",
+      "template_export": "ModuleSettingsTemplateComponent",
+      "permission": "platform.config_center.read",
+      "props": {}
+    },
+    {
+      "page_code": "platform.config-center.workspace",
+      "route": "/admin/config-center/workspace",
+      "archetype": "module-settings",
+      "template_export": "ModuleSettingsTemplateComponent",
+      "permission": "platform.config_center.read",
+      "props": {}
+    },
+    {
+      "page_code": "platform.config-center.gateway",
+      "route": "/admin/config-center/gateway",
+      "archetype": "trend-intelligence",
+      "template_export": "TrendIntelligenceTemplateComponent",
+      "permission": "platform.config_center.read",
+      "props": {}
+    },
+    {
+      "page_code": "platform.config-center.health",
+      "route": "/admin/config-center/health",
+      "archetype": "trend-intelligence",
+      "template_export": "TrendIntelligenceTemplateComponent",
+      "permission": "platform.config_center.read",
+      "props": {}
+    }
+  ],
+  "components": [
+    {
+      "component_key": "module.dashboard.page",
+      "vendor": "ibm-carbon",
+      "carbon_key": "grid",
+      "schema_version": 1,
+      "selector": "dos-page-layout",
+      "approval_status": "approved",
+      "metadata": { "source": "wave1-config-center-roster", "archetype": "decision-dashboard", "page": "platform.config-center.hub" }
+    },
+    {
+      "component_key": "module.records.page",
+      "vendor": "ibm-carbon",
+      "carbon_key": "table",
+      "schema_version": 1,
+      "selector": "dos-page-layout",
+      "approval_status": "approved",
+      "metadata": {
+        "source": "wave1-config-center-roster",
+        "archetype": "intelligent-register",
+        "pages": ["settings", "flags", "tokens"]
+      }
+    },
+    {
+      "component_key": "module.audit_trail_ledger.page",
+      "vendor": "ibm-carbon",
+      "carbon_key": "table",
+      "schema_version": 1,
+      "selector": "dos-page-layout",
+      "approval_status": "approved",
+      "metadata": { "source": "wave1-config-center-roster", "archetype": "audit-trail-ledger", "page": "audit" }
+    },
+    {
+      "component_key": "module.settings.page",
+      "vendor": "ibm-carbon",
+      "carbon_key": "tabs",
+      "schema_version": 1,
+      "selector": "dos-page-layout",
+      "approval_status": "approved",
+      "metadata": {
+        "source": "wave1-config-center-roster",
+        "archetype": "module-settings",
+        "pages": ["compare", "resolve", "workspace"]
+      }
+    },
+    {
+      "component_key": "module.trends.page",
+      "vendor": "ibm-carbon",
+      "carbon_key": "tiles",
+      "schema_version": 1,
+      "selector": "dos-page-layout",
+      "approval_status": "approved",
+      "metadata": {
+        "source": "wave1-config-center-roster",
+        "archetype": "trend-intelligence",
+        "pages": ["gateway", "health"]
+      }
+    }
+  ],
+  "apis": [
+    { "method": "GET", "path": "/api/config-center/resolve/:key", "owner_service": "tenant-service", "permission": "platform.config_center.read" },
+    { "method": "POST", "path": "/api/config-center/resolve/batch", "owner_service": "tenant-service", "permission": "platform.config_center.read" },
+    { "method": "GET", "path": "/api/config-center/explain/:key", "owner_service": "tenant-service", "permission": "platform.config_center.read" },
+    { "method": "GET", "path": "/api/config-center/settings", "owner_service": "tenant-service", "permission": "platform.config_center.read" },
+    { "method": "GET", "path": "/api/config-center/settings/:key", "owner_service": "tenant-service", "permission": "platform.config_center.read" },
+    { "method": "PUT", "path": "/api/config-center/settings/:key", "owner_service": "tenant-service", "permission": "platform.config_center.admin" },
+    { "method": "GET", "path": "/api/config-center/compare/tenants", "owner_service": "tenant-service", "permission": "platform.config_center.read" },
+    { "method": "GET", "path": "/api/config-center/compare/defaults", "owner_service": "tenant-service", "permission": "platform.config_center.read" },
+    { "method": "GET", "path": "/api/config-center/export", "owner_service": "tenant-service", "permission": "platform.config_center.admin" },
+    { "method": "POST", "path": "/api/config-center/import", "owner_service": "tenant-service", "permission": "platform.config_center.admin" },
+    { "method": "GET", "path": "/api/config-center/audit", "owner_service": "tenant-service", "permission": "platform.config_center.read" },
+    { "method": "GET", "path": "/api/config-center/audit/:key", "owner_service": "tenant-service", "permission": "platform.audit.read" },
+    { "method": "GET", "path": "/api/config-center/health/env", "owner_service": "tenant-service", "permission": "platform.config_center.read" },
+    { "method": "GET", "path": "/api/config-center/health/secrets", "owner_service": "tenant-service", "permission": "platform.config_center.admin" },
+    { "method": "GET", "path": "/api/config-center/health/drift", "owner_service": "tenant-service", "permission": "platform.config_center.read" },
+    { "method": "GET", "path": "/api/config-center/health/diagnostics", "owner_service": "tenant-service", "permission": "platform.config_center.read" },
+    { "method": "GET", "path": "/api/config-center/gateway/inventory", "owner_service": "tenant-service", "permission": "platform.config_center.read" },
+    { "method": "GET", "path": "/api/config-center/gateway/overrides", "owner_service": "tenant-service", "permission": "platform.config_center.read" },
+    { "method": "PUT", "path": "/api/config-center/gateway/override/:key", "owner_service": "tenant-service", "permission": "platform.config_center.admin" },
+    { "method": "DELETE", "path": "/api/config-center/gateway/override/:key", "owner_service": "tenant-service", "permission": "platform.config_center.admin" },
+    { "method": "POST", "path": "/api/config-center/gateway/invalidate", "owner_service": "tenant-service", "permission": "platform.config_center.admin" },
+    { "method": "GET", "path": "/api/config-center/gateway/workspace-config", "owner_service": "tenant-service", "permission": "platform.config_center.read" },
+    { "method": "GET", "path": "/api/config-center/gateway/shell-override", "owner_service": "tenant-service", "permission": "platform.config_center.read" },
+    { "method": "PUT", "path": "/api/config-center/gateway/workspace-batch", "owner_service": "tenant-service", "permission": "platform.config_center.admin" },
+    { "method": "GET", "path": "/api/ui-os/template-binding", "owner_service": "ui-os-service", "permission": "platform.config_center.read" }
+  ],
+  "i18n": {
+    "en": {
+      "platform.config-center.hub.title": "Config Center — Overview",
+      "platform.config-center.audit.title": "Config Center — Audit"
+    },
+    "ar": {
+      "platform.config-center.hub.title": "مركز الإعدادات — نظرة عامة",
+      "platform.config-center.audit.title": "مركز الإعدادات — التدقيق"
+    }
+  },
+  "tables_owned": [
+    "dos.dynamic_ui_routes",
+    "dos.dynamic_ui_component_registry",
+    "dos.ui_route_template_binding"
+  ],
+  "depends_on": ["platform.access-store"]
+}

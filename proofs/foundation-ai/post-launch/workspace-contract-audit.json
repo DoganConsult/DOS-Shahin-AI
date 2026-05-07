@@ -1,0 +1,4138 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-05-07T09:32:38.832Z",
+  "tenant": {
+    "tenantId": "14f273cf260a4736",
+    "status": "active",
+    "source": "auto-first-active"
+  },
+  "caller": {
+    "userId": "70dd0034-bb20-4f9b-a9df-a308cd902efa",
+    "member": true,
+    "source": "auto-first-member",
+    "note": null
+  },
+  "product": {
+    "productCode": "foundation",
+    "active": true,
+    "source": "auto-first-active"
+  },
+  "runtime": {
+    "baseUrl": "http://localhost:4015",
+    "requestedUrl": "http://localhost:4015/api/ui-os/workspace-runtime?tenant_id=14f273cf260a4736&user_id=70dd0034-bb20-4f9b-a9df-a308cd902efa&product_code=foundation",
+    "httpStatus": 200,
+    "ok": true,
+    "error": null,
+    "surfaceCount": 22,
+    "body": {
+      "tenantId": "14f273cf260a4736",
+      "userId": "70dd0034-bb20-4f9b-a9df-a308cd902efa",
+      "productCode": "shahin-ai",
+      "version": 43,
+      "shell": {
+        "version": 43,
+        "surfaces": [
+          {
+            "enabled": true,
+            "position": 1,
+            "props": {
+              "homeRoute": "/workspace-home"
+            },
+            "version": 3,
+            "zone": "main",
+            "surfaceId": "workspace.main.frame.ui-shell.b7952",
+            "slotKey": "main#1#b7952",
+            "componentKey": "workspace.frame.ui-shell",
+            "permsRequired": [],
+            "componentType": "shell-frame",
+            "rendererKey": "shell.frame",
+            "carbonKey": "ui-shell"
+          },
+          {
+            "enabled": true,
+            "position": 2,
+            "props": {
+              "brand": "see dxx workspace",
+              "logoHref": "/",
+              "homeRoute": "/workspace-home",
+              "tenantName": "see dxx workspace",
+              "productName": "Shahin AI",
+              "workspaceTitle": "see dxx workspace"
+            },
+            "version": 3,
+            "zone": "header",
+            "surfaceId": "workspace.header.frame.header.b7953",
+            "slotKey": "header#2#b7953",
+            "componentKey": "workspace.frame.header",
+            "permsRequired": [],
+            "componentType": "shell-frame",
+            "rendererKey": "shell.frame",
+            "carbonKey": "header"
+          },
+          {
+            "enabled": true,
+            "position": 3,
+            "props": {},
+            "version": 1,
+            "zone": "header",
+            "surfaceId": "workspace.header.frame.header-name.b7954",
+            "slotKey": "header#3#b7954",
+            "componentKey": "workspace.frame.header-name",
+            "permsRequired": [],
+            "componentType": "shell-frame",
+            "rendererKey": "shell.frame",
+            "carbonKey": "header-name"
+          },
+          {
+            "enabled": true,
+            "position": 4,
+            "props": {},
+            "version": 1,
+            "zone": "header",
+            "surfaceId": "workspace.header.frame.header-navigation.b7955",
+            "slotKey": "header#4#b7955",
+            "componentKey": "workspace.frame.header-navigation",
+            "permsRequired": [],
+            "componentType": "shell-frame",
+            "rendererKey": "shell.frame",
+            "carbonKey": "header-navigation"
+          },
+          {
+            "enabled": true,
+            "position": 5,
+            "props": {
+              "accountMenuActions": [
+                {
+                  "id": "prefs_language",
+                  "action": "toggle_language"
+                },
+                {
+                  "id": "prefs_theme",
+                  "action": "toggle_theme"
+                }
+              ]
+            },
+            "version": 4,
+            "zone": "header",
+            "surfaceId": "workspace.header.frame.header-menu.b7956",
+            "slotKey": "header#5#b7956",
+            "componentKey": "workspace.frame.header-menu",
+            "permsRequired": [],
+            "componentType": "shell-frame",
+            "rendererKey": "shell.frame",
+            "carbonKey": "header-menu"
+          },
+          {
+            "enabled": true,
+            "position": 6,
+            "props": {},
+            "version": 1,
+            "zone": "header",
+            "surfaceId": "workspace.header.frame.header-menu-item.b7957",
+            "slotKey": "header#6#b7957",
+            "componentKey": "workspace.frame.header-menu-item",
+            "permsRequired": [],
+            "componentType": "shell-frame",
+            "rendererKey": "shell.frame",
+            "carbonKey": "header-menu-item"
+          },
+          {
+            "enabled": true,
+            "position": 7,
+            "props": {},
+            "version": 1,
+            "zone": "header",
+            "surfaceId": "workspace.header.frame.header-global-bar.b7958",
+            "slotKey": "header#7#b7958",
+            "componentKey": "workspace.frame.header-global-bar",
+            "permsRequired": [],
+            "componentType": "shell-frame",
+            "rendererKey": "shell.frame",
+            "carbonKey": "header-global-bar"
+          },
+          {
+            "enabled": true,
+            "position": 8,
+            "props": {},
+            "version": 1,
+            "zone": "header",
+            "surfaceId": "workspace.header.frame.header-global-action.b7959",
+            "slotKey": "header#8#b7959",
+            "componentKey": "workspace.frame.header-global-action",
+            "permsRequired": [],
+            "componentType": "shell-frame",
+            "rendererKey": "shell.frame",
+            "carbonKey": "header-global-action"
+          },
+          {
+            "enabled": true,
+            "position": 9,
+            "props": {
+              "ariaLabel": {
+                "i18nKey": "workspace.sidebar.aria",
+                "fallback": "Workspace navigation"
+              },
+              "homeRoute": "/workspace-home"
+            },
+            "version": 3,
+            "zone": "sidebar",
+            "surfaceId": "workspace.sidebar.frame.side-nav.b7960",
+            "slotKey": "sidebar#9#b7960",
+            "componentKey": "workspace.frame.side-nav",
+            "permsRequired": [],
+            "componentType": "shell-frame",
+            "rendererKey": "shell.frame",
+            "carbonKey": "side-nav"
+          },
+          {
+            "enabled": true,
+            "position": 10,
+            "props": {},
+            "version": 1,
+            "zone": "sidebar",
+            "surfaceId": "workspace.sidebar.frame.side-nav-items.b7961",
+            "slotKey": "sidebar#10#b7961",
+            "componentKey": "workspace.frame.side-nav-items",
+            "permsRequired": [],
+            "componentType": "shell-frame",
+            "rendererKey": "shell.frame",
+            "carbonKey": "side-nav-items"
+          },
+          {
+            "enabled": true,
+            "position": 11,
+            "props": {},
+            "version": 1,
+            "zone": "sidebar",
+            "surfaceId": "workspace.sidebar.frame.side-nav-menu.b7962",
+            "slotKey": "sidebar#11#b7962",
+            "componentKey": "workspace.frame.side-nav-menu",
+            "permsRequired": [],
+            "componentType": "shell-frame",
+            "rendererKey": "shell.frame",
+            "carbonKey": "side-nav-menu"
+          },
+          {
+            "enabled": true,
+            "position": 12,
+            "props": {},
+            "version": 1,
+            "zone": "sidebar",
+            "surfaceId": "workspace.sidebar.frame.side-nav-menu-item.b7963",
+            "slotKey": "sidebar#12#b7963",
+            "componentKey": "workspace.frame.side-nav-menu-item",
+            "permsRequired": [],
+            "componentType": "shell-frame",
+            "rendererKey": "shell.frame",
+            "carbonKey": "side-nav-menu-item"
+          },
+          {
+            "enabled": true,
+            "position": 13,
+            "props": {},
+            "version": 1,
+            "zone": "sidebar",
+            "surfaceId": "workspace.sidebar.frame.side-nav-link.b7964",
+            "slotKey": "sidebar#13#b7964",
+            "componentKey": "workspace.frame.side-nav-link",
+            "permsRequired": [],
+            "componentType": "shell-frame",
+            "rendererKey": "shell.frame",
+            "carbonKey": "side-nav-link"
+          },
+          {
+            "enabled": true,
+            "position": 14,
+            "props": {},
+            "version": 1,
+            "zone": "main",
+            "surfaceId": "workspace.main.frame.content.b7965",
+            "slotKey": "main#14#b7965",
+            "componentKey": "workspace.frame.content",
+            "permsRequired": [],
+            "componentType": "shell-frame",
+            "rendererKey": "shell.frame",
+            "carbonKey": "content"
+          },
+          {
+            "enabled": true,
+            "position": 100,
+            "props": {
+              "zone": "header",
+              "homeRoute": "/workspace-home",
+              "text": "Shahin AI",
+              "logoHref": "/"
+            },
+            "version": 3,
+            "zone": "header",
+            "surfaceId": "workspace.header.shell.brand.b14621",
+            "slotKey": "header#100#b14621",
+            "componentKey": "workspace.shell.brand",
+            "permsRequired": [],
+            "componentType": "shell.brand",
+            "rendererKey": "shell.brand",
+            "carbonKey": "header-name"
+          },
+          {
+            "enabled": true,
+            "position": 101,
+            "props": {
+              "zone": "header",
+              "homeRoute": "/workspace-home",
+              "text": "Workspace"
+            },
+            "version": 3,
+            "zone": "header",
+            "surfaceId": "workspace.header.shell.workspace-title.b14622",
+            "slotKey": "header#101#b14622",
+            "componentKey": "workspace.shell.workspace-title",
+            "permsRequired": [],
+            "componentType": "shell.workspace-title",
+            "rendererKey": "shell.workspace-title",
+            "carbonKey": "header-name"
+          },
+          {
+            "enabled": true,
+            "position": 102,
+            "props": {
+              "zone": "header",
+              "placement": "trailing",
+              "commandSearchLabel": "Search (Ctrl+K)",
+              "inboxLabel": "Inbox",
+              "commandSearchAction": {
+                "kind": "open_command"
+              },
+              "inboxAction": {
+                "kind": "open_context_tab",
+                "tab": "activity"
+              },
+              "items": [
+                {
+                  "id": "command",
+                  "label": "Command palette",
+                  "action": {
+                    "kind": "open_command"
+                  },
+                  "icon": "search",
+                  "enabled": true,
+                  "version": 1
+                },
+                {
+                  "id": "inbox",
+                  "label": "Inbox",
+                  "action": {
+                    "kind": "open_context_tab",
+                    "tab": "activity"
+                  },
+                  "icon": "inbox",
+                  "enabled": true,
+                  "version": 1
+                },
+                {
+                  "id": "create",
+                  "label": "Create",
+                  "action": {
+                    "kind": "dispatch_event",
+                    "eventName": "workspace.quickCreate.open"
+                  },
+                  "icon": "plus",
+                  "enabled": true,
+                  "version": 1
+                }
+              ]
+            },
+            "version": 1,
+            "zone": "header",
+            "surfaceId": "workspace.header.shell.global-quick-actions.b14920",
+            "slotKey": "header#102#b14920",
+            "componentKey": "workspace.shell.global-quick-actions",
+            "permsRequired": [],
+            "componentType": "shell.global-quick-actions",
+            "rendererKey": "shell.global-quick-actions",
+            "carbonKey": "header-global-action"
+          },
+          {
+            "enabled": true,
+            "position": 103,
+            "props": {
+              "icon": "settings",
+              "zone": "header",
+              "ariaLabel": "Settings",
+              "placement": "trailing",
+              "action": {
+                "kind": "open_context_tab",
+                "tab": "settings"
+              },
+              "enabled": true,
+              "menu": [
+                {
+                  "id": "settings.workspace",
+                  "label": "Workspace settings",
+                  "action": {
+                    "kind": "navigate",
+                    "path": "/foundation/settings"
+                  },
+                  "icon": "settings",
+                  "enabled": true,
+                  "version": 1
+                },
+                {
+                  "id": "settings.access",
+                  "label": "Access governance",
+                  "action": {
+                    "kind": "navigate",
+                    "path": "/foundation/access-review"
+                  },
+                  "icon": "lock",
+                  "enabled": true,
+                  "version": 1
+                },
+                {
+                  "id": "settings.policies",
+                  "label": "Policies",
+                  "action": {
+                    "kind": "navigate",
+                    "path": "/foundation/policies"
+                  },
+                  "icon": "document",
+                  "enabled": true,
+                  "version": 1
+                },
+                {
+                  "id": "settings.diagnostics",
+                  "label": "Diagnostics",
+                  "action": {
+                    "kind": "navigate",
+                    "path": "/foundation/diagnostics"
+                  },
+                  "icon": "activity",
+                  "enabled": true,
+                  "version": 1
+                },
+                {
+                  "id": "settings.audit",
+                  "label": "Audit trail",
+                  "action": {
+                    "kind": "navigate",
+                    "path": "/foundation/audit"
+                  },
+                  "icon": "history",
+                  "enabled": true,
+                  "version": 1
+                }
+              ]
+            },
+            "version": 2,
+            "zone": "header",
+            "surfaceId": "workspace.header.shell.settings-action.b14623",
+            "slotKey": "header#103#b14623",
+            "componentKey": "workspace.shell.settings-action",
+            "permsRequired": [],
+            "componentType": "shell.settings-action",
+            "rendererKey": "shell.settings-action",
+            "carbonKey": "header-global-action"
+          },
+          {
+            "enabled": true,
+            "position": 104,
+            "props": {
+              "zone": "header",
+              "label": "Account",
+              "ariaLabel": "Account menu",
+              "menu": [
+                {
+                  "id": "profile",
+                  "label": "Profile",
+                  "action": {
+                    "kind": "navigate",
+                    "path": "/account/profile"
+                  },
+                  "icon": "user",
+                  "enabled": true,
+                  "version": 1
+                },
+                {
+                  "id": "preferences",
+                  "label": "Preferences",
+                  "action": {
+                    "kind": "navigate",
+                    "path": "/account/preferences"
+                  },
+                  "icon": "settings",
+                  "enabled": true,
+                  "version": 1
+                },
+                {
+                  "id": "security",
+                  "label": "Security",
+                  "action": {
+                    "kind": "navigate",
+                    "path": "/account/security"
+                  },
+                  "icon": "shield",
+                  "enabled": true,
+                  "version": 1
+                },
+                {
+                  "id": "language",
+                  "label": "Toggle language",
+                  "action": {
+                    "kind": "toggle_language"
+                  },
+                  "icon": "language",
+                  "enabled": true,
+                  "version": 1
+                },
+                {
+                  "id": "theme",
+                  "label": "Toggle theme",
+                  "action": {
+                    "kind": "toggle_theme"
+                  },
+                  "icon": "sun",
+                  "enabled": true,
+                  "version": 1
+                },
+                {
+                  "id": "signout",
+                  "label": "Sign out",
+                  "action": {
+                    "kind": "dispatch_event",
+                    "eventName": "auth.signout"
+                  },
+                  "icon": "logout",
+                  "enabled": true,
+                  "version": 1
+                }
+              ],
+              "placement": "trailing",
+              "action": {
+                "kind": "open_context_tab",
+                "tab": "account"
+              }
+            },
+            "version": 3,
+            "zone": "header",
+            "surfaceId": "workspace.header.shell.user-menu.b14624",
+            "slotKey": "header#104#b14624",
+            "componentKey": "workspace.shell.user-menu",
+            "permsRequired": [],
+            "componentType": "shell.user-menu",
+            "rendererKey": "shell.user-menu",
+            "carbonKey": "header-global-action"
+          },
+          {
+            "enabled": true,
+            "position": 110,
+            "props": {
+              "zone": "sidebar",
+              "items": [
+                {
+                  "id": "foundation.overview",
+                  "label": "Overview",
+                  "action": {
+                    "kind": "navigate",
+                    "path": "/foundation/overview"
+                  },
+                  "icon": "layout-dashboard",
+                  "moduleCode": "foundation",
+                  "groupId": "foundation.group.organization",
+                  "badge": null
+                },
+                {
+                  "id": "foundation.organization",
+                  "label": "Organization",
+                  "action": {
+                    "kind": "navigate",
+                    "path": "/foundation/organization"
+                  },
+                  "icon": "sitemap",
+                  "moduleCode": "foundation",
+                  "groupId": "foundation.group.organization",
+                  "badge": null
+                },
+                {
+                  "id": "foundation.business-units",
+                  "label": "Business units",
+                  "action": {
+                    "kind": "navigate",
+                    "path": "/foundation/business-units"
+                  },
+                  "icon": "building",
+                  "moduleCode": "foundation",
+                  "groupId": "foundation.group.organization",
+                  "badge": null
+                },
+                {
+                  "id": "foundation.departments",
+                  "label": "Departments",
+                  "action": {
+                    "kind": "navigate",
+                    "path": "/foundation/departments"
+                  },
+                  "icon": "users",
+                  "moduleCode": "foundation",
+                  "groupId": "foundation.group.organization",
+                  "badge": null
+                },
+                {
+                  "id": "foundation.positions",
+                  "label": "Positions",
+                  "action": {
+                    "kind": "navigate",
+                    "path": "/foundation/positions"
+                  },
+                  "icon": "id-card",
+                  "moduleCode": "foundation",
+                  "groupId": "foundation.group.organization",
+                  "badge": null
+                },
+                {
+                  "id": "foundation.locations",
+                  "label": "Locations",
+                  "action": {
+                    "kind": "navigate",
+                    "path": "/foundation/locations"
+                  },
+                  "icon": "map-pin",
+                  "moduleCode": "foundation",
+                  "groupId": "foundation.group.organization",
+                  "badge": null
+                },
+                {
+                  "id": "foundation.users",
+                  "label": "Users",
+                  "action": {
+                    "kind": "navigate",
+                    "path": "/foundation/users"
+                  },
+                  "icon": "user",
+                  "moduleCode": "foundation",
+                  "groupId": "foundation.group.identity",
+                  "badge": null
+                },
+                {
+                  "id": "foundation.teams",
+                  "label": "Teams",
+                  "action": {
+                    "kind": "navigate",
+                    "path": "/foundation/teams"
+                  },
+                  "icon": "users-group",
+                  "moduleCode": "foundation",
+                  "groupId": "foundation.group.identity",
+                  "badge": null
+                },
+                {
+                  "id": "foundation.roles",
+                  "label": "Roles",
+                  "action": {
+                    "kind": "navigate",
+                    "path": "/foundation/roles"
+                  },
+                  "icon": "key",
+                  "moduleCode": "foundation",
+                  "groupId": "foundation.group.identity",
+                  "badge": null
+                },
+                {
+                  "id": "foundation.committees",
+                  "label": "Committees",
+                  "action": {
+                    "kind": "navigate",
+                    "path": "/foundation/committees"
+                  },
+                  "icon": "gavel",
+                  "moduleCode": "foundation",
+                  "groupId": "foundation.group.governance",
+                  "badge": null
+                },
+                {
+                  "id": "foundation.delegations",
+                  "label": "Delegations",
+                  "action": {
+                    "kind": "navigate",
+                    "path": "/foundation/delegations"
+                  },
+                  "icon": "share",
+                  "moduleCode": "foundation",
+                  "groupId": "foundation.group.governance",
+                  "badge": null
+                },
+                {
+                  "id": "foundation.ownership-mapping",
+                  "label": "Ownership mapping",
+                  "action": {
+                    "kind": "navigate",
+                    "path": "/foundation/ownership-mapping"
+                  },
+                  "icon": "link",
+                  "moduleCode": "foundation",
+                  "groupId": "foundation.group.governance",
+                  "badge": null
+                },
+                {
+                  "id": "foundation.policies",
+                  "label": "Policies",
+                  "action": {
+                    "kind": "navigate",
+                    "path": "/foundation/policies"
+                  },
+                  "icon": "file-shield",
+                  "moduleCode": "foundation",
+                  "groupId": "foundation.group.governance",
+                  "badge": null
+                },
+                {
+                  "id": "foundation.data-processing",
+                  "label": "Data processing",
+                  "action": {
+                    "kind": "navigate",
+                    "path": "/foundation/data-processing"
+                  },
+                  "icon": "database",
+                  "moduleCode": "foundation",
+                  "groupId": "foundation.group.governance",
+                  "badge": null
+                },
+                {
+                  "id": "foundation.reference-data",
+                  "label": "Reference data",
+                  "action": {
+                    "kind": "navigate",
+                    "path": "/foundation/reference-data"
+                  },
+                  "icon": "list",
+                  "moduleCode": "foundation",
+                  "groupId": "foundation.group.governance",
+                  "badge": null
+                },
+                {
+                  "id": "foundation.audit",
+                  "label": "Audit",
+                  "action": {
+                    "kind": "navigate",
+                    "path": "/foundation/audit"
+                  },
+                  "icon": "history",
+                  "moduleCode": "foundation",
+                  "groupId": "foundation.group.governance",
+                  "badge": null
+                },
+                {
+                  "id": "foundation.settings",
+                  "label": "Settings",
+                  "action": {
+                    "kind": "navigate",
+                    "path": "/foundation/settings"
+                  },
+                  "icon": "settings",
+                  "moduleCode": "foundation",
+                  "groupId": "foundation.group.governance",
+                  "badge": null
+                },
+                {
+                  "id": "foundation.user-lifecycle",
+                  "label": "User lifecycle",
+                  "action": {
+                    "kind": "navigate",
+                    "path": "/foundation/user-lifecycle"
+                  },
+                  "icon": "arrow-cycle",
+                  "moduleCode": "foundation",
+                  "groupId": "foundation.group.main",
+                  "badge": null
+                }
+              ],
+              "policy": {
+                "defaultRoute": "/foundation/overview",
+                "expandActiveOnly": true,
+                "defaultModuleCode": "foundation"
+              },
+              "ariaLabel": "Primary navigation",
+              "emptyMessage": "No navigation entries available.",
+              "poweredByLabel": "Powered by Dogan-AI OS"
+            },
+            "version": 2,
+            "zone": "sidebar",
+            "surfaceId": "workspace.sidebar.shell.sidebar-nav.b14625",
+            "slotKey": "sidebar#110#b14625",
+            "componentKey": "workspace.shell.sidebar-nav",
+            "permsRequired": [],
+            "componentType": "shell.sidebar-nav",
+            "rendererKey": "shell.sidebar-nav",
+            "carbonKey": "side-nav-items"
+          },
+          {
+            "enabled": true,
+            "position": 120,
+            "props": {
+              "zone": "main",
+              "title": "Workspace ready",
+              "description": "Select a module item from the sidebar to view detailed data."
+            },
+            "version": 5,
+            "zone": "main",
+            "surfaceId": "workspace.main.shell.empty-state.b14626",
+            "slotKey": "main#120#b14626",
+            "componentKey": "workspace.shell.empty-state",
+            "permsRequired": [],
+            "componentType": "shell.empty-state",
+            "rendererKey": "shell.empty-state",
+            "carbonKey": "tile"
+          },
+          {
+            "enabled": true,
+            "position": 121,
+            "props": {
+              "zone": "main",
+              "items": [
+                {
+                  "id": "foundation",
+                  "title": "Foundation — Organization Hierarchy",
+                  "action": {
+                    "kind": "navigate",
+                    "path": "/foundation/overview"
+                  },
+                  "productCode": "shahin-ai"
+                }
+              ],
+              "ariaLabel": "Modules"
+            },
+            "version": 1,
+            "zone": "main",
+            "surfaceId": "workspace.main.shell.module-cards.b14674",
+            "slotKey": "main#121#b14674",
+            "componentKey": "workspace.shell.module-cards",
+            "permsRequired": [],
+            "componentType": "shell.module-cards",
+            "rendererKey": "shell.module-cards",
+            "carbonKey": "tile"
+          }
+        ],
+        "zones": {
+          "header": [
+            {
+              "enabled": true,
+              "position": 2,
+              "props": {
+                "brand": "see dxx workspace",
+                "logoHref": "/",
+                "homeRoute": "/workspace-home",
+                "tenantName": "see dxx workspace",
+                "productName": "Shahin AI",
+                "workspaceTitle": "see dxx workspace"
+              },
+              "version": 3,
+              "zone": "header",
+              "surfaceId": "workspace.header.frame.header.b7953",
+              "slotKey": "header#2#b7953",
+              "componentKey": "workspace.frame.header",
+              "permsRequired": [],
+              "componentType": "shell-frame",
+              "rendererKey": "shell.frame",
+              "carbonKey": "header"
+            },
+            {
+              "enabled": true,
+              "position": 3,
+              "props": {},
+              "version": 1,
+              "zone": "header",
+              "surfaceId": "workspace.header.frame.header-name.b7954",
+              "slotKey": "header#3#b7954",
+              "componentKey": "workspace.frame.header-name",
+              "permsRequired": [],
+              "componentType": "shell-frame",
+              "rendererKey": "shell.frame",
+              "carbonKey": "header-name"
+            },
+            {
+              "enabled": true,
+              "position": 4,
+              "props": {},
+              "version": 1,
+              "zone": "header",
+              "surfaceId": "workspace.header.frame.header-navigation.b7955",
+              "slotKey": "header#4#b7955",
+              "componentKey": "workspace.frame.header-navigation",
+              "permsRequired": [],
+              "componentType": "shell-frame",
+              "rendererKey": "shell.frame",
+              "carbonKey": "header-navigation"
+            },
+            {
+              "enabled": true,
+              "position": 5,
+              "props": {
+                "accountMenuActions": [
+                  {
+                    "id": "prefs_language",
+                    "action": "toggle_language"
+                  },
+                  {
+                    "id": "prefs_theme",
+                    "action": "toggle_theme"
+                  }
+                ]
+              },
+              "version": 4,
+              "zone": "header",
+              "surfaceId": "workspace.header.frame.header-menu.b7956",
+              "slotKey": "header#5#b7956",
+              "componentKey": "workspace.frame.header-menu",
+              "permsRequired": [],
+              "componentType": "shell-frame",
+              "rendererKey": "shell.frame",
+              "carbonKey": "header-menu"
+            },
+            {
+              "enabled": true,
+              "position": 6,
+              "props": {},
+              "version": 1,
+              "zone": "header",
+              "surfaceId": "workspace.header.frame.header-menu-item.b7957",
+              "slotKey": "header#6#b7957",
+              "componentKey": "workspace.frame.header-menu-item",
+              "permsRequired": [],
+              "componentType": "shell-frame",
+              "rendererKey": "shell.frame",
+              "carbonKey": "header-menu-item"
+            },
+            {
+              "enabled": true,
+              "position": 7,
+              "props": {},
+              "version": 1,
+              "zone": "header",
+              "surfaceId": "workspace.header.frame.header-global-bar.b7958",
+              "slotKey": "header#7#b7958",
+              "componentKey": "workspace.frame.header-global-bar",
+              "permsRequired": [],
+              "componentType": "shell-frame",
+              "rendererKey": "shell.frame",
+              "carbonKey": "header-global-bar"
+            },
+            {
+              "enabled": true,
+              "position": 8,
+              "props": {},
+              "version": 1,
+              "zone": "header",
+              "surfaceId": "workspace.header.frame.header-global-action.b7959",
+              "slotKey": "header#8#b7959",
+              "componentKey": "workspace.frame.header-global-action",
+              "permsRequired": [],
+              "componentType": "shell-frame",
+              "rendererKey": "shell.frame",
+              "carbonKey": "header-global-action"
+            },
+            {
+              "enabled": true,
+              "position": 100,
+              "props": {
+                "zone": "header",
+                "homeRoute": "/workspace-home",
+                "text": "Shahin AI",
+                "logoHref": "/"
+              },
+              "version": 3,
+              "zone": "header",
+              "surfaceId": "workspace.header.shell.brand.b14621",
+              "slotKey": "header#100#b14621",
+              "componentKey": "workspace.shell.brand",
+              "permsRequired": [],
+              "componentType": "shell.brand",
+              "rendererKey": "shell.brand",
+              "carbonKey": "header-name"
+            },
+            {
+              "enabled": true,
+              "position": 101,
+              "props": {
+                "zone": "header",
+                "homeRoute": "/workspace-home",
+                "text": "Workspace"
+              },
+              "version": 3,
+              "zone": "header",
+              "surfaceId": "workspace.header.shell.workspace-title.b14622",
+              "slotKey": "header#101#b14622",
+              "componentKey": "workspace.shell.workspace-title",
+              "permsRequired": [],
+              "componentType": "shell.workspace-title",
+              "rendererKey": "shell.workspace-title",
+              "carbonKey": "header-name"
+            },
+            {
+              "enabled": true,
+              "position": 102,
+              "props": {
+                "zone": "header",
+                "placement": "trailing",
+                "commandSearchLabel": "Search (Ctrl+K)",
+                "inboxLabel": "Inbox",
+                "commandSearchAction": {
+                  "kind": "open_command"
+                },
+                "inboxAction": {
+                  "kind": "open_context_tab",
+                  "tab": "activity"
+                },
+                "items": [
+                  {
+                    "id": "command",
+                    "label": "Command palette",
+                    "action": {
+                      "kind": "open_command"
+                    },
+                    "icon": "search",
+                    "enabled": true,
+                    "version": 1
+                  },
+                  {
+                    "id": "inbox",
+                    "label": "Inbox",
+                    "action": {
+                      "kind": "open_context_tab",
+                      "tab": "activity"
+                    },
+                    "icon": "inbox",
+                    "enabled": true,
+                    "version": 1
+                  },
+                  {
+                    "id": "create",
+                    "label": "Create",
+                    "action": {
+                      "kind": "dispatch_event",
+                      "eventName": "workspace.quickCreate.open"
+                    },
+                    "icon": "plus",
+                    "enabled": true,
+                    "version": 1
+                  }
+                ]
+              },
+              "version": 1,
+              "zone": "header",
+              "surfaceId": "workspace.header.shell.global-quick-actions.b14920",
+              "slotKey": "header#102#b14920",
+              "componentKey": "workspace.shell.global-quick-actions",
+              "permsRequired": [],
+              "componentType": "shell.global-quick-actions",
+              "rendererKey": "shell.global-quick-actions",
+              "carbonKey": "header-global-action"
+            },
+            {
+              "enabled": true,
+              "position": 103,
+              "props": {
+                "icon": "settings",
+                "zone": "header",
+                "ariaLabel": "Settings",
+                "placement": "trailing",
+                "action": {
+                  "kind": "open_context_tab",
+                  "tab": "settings"
+                },
+                "enabled": true,
+                "menu": [
+                  {
+                    "id": "settings.workspace",
+                    "label": "Workspace settings",
+                    "action": {
+                      "kind": "navigate",
+                      "path": "/foundation/settings"
+                    },
+                    "icon": "settings",
+                    "enabled": true,
+                    "version": 1
+                  },
+                  {
+                    "id": "settings.access",
+                    "label": "Access governance",
+                    "action": {
+                      "kind": "navigate",
+                      "path": "/foundation/access-review"
+                    },
+                    "icon": "lock",
+                    "enabled": true,
+                    "version": 1
+                  },
+                  {
+                    "id": "settings.policies",
+                    "label": "Policies",
+                    "action": {
+                      "kind": "navigate",
+                      "path": "/foundation/policies"
+                    },
+                    "icon": "document",
+                    "enabled": true,
+                    "version": 1
+                  },
+                  {
+                    "id": "settings.diagnostics",
+                    "label": "Diagnostics",
+                    "action": {
+                      "kind": "navigate",
+                      "path": "/foundation/diagnostics"
+                    },
+                    "icon": "activity",
+                    "enabled": true,
+                    "version": 1
+                  },
+                  {
+                    "id": "settings.audit",
+                    "label": "Audit trail",
+                    "action": {
+                      "kind": "navigate",
+                      "path": "/foundation/audit"
+                    },
+                    "icon": "history",
+                    "enabled": true,
+                    "version": 1
+                  }
+                ]
+              },
+              "version": 2,
+              "zone": "header",
+              "surfaceId": "workspace.header.shell.settings-action.b14623",
+              "slotKey": "header#103#b14623",
+              "componentKey": "workspace.shell.settings-action",
+              "permsRequired": [],
+              "componentType": "shell.settings-action",
+              "rendererKey": "shell.settings-action",
+              "carbonKey": "header-global-action"
+            },
+            {
+              "enabled": true,
+              "position": 104,
+              "props": {
+                "zone": "header",
+                "label": "Account",
+                "ariaLabel": "Account menu",
+                "menu": [
+                  {
+                    "id": "profile",
+                    "label": "Profile",
+                    "action": {
+                      "kind": "navigate",
+                      "path": "/account/profile"
+                    },
+                    "icon": "user",
+                    "enabled": true,
+                    "version": 1
+                  },
+                  {
+                    "id": "preferences",
+                    "label": "Preferences",
+                    "action": {
+                      "kind": "navigate",
+                      "path": "/account/preferences"
+                    },
+                    "icon": "settings",
+                    "enabled": true,
+                    "version": 1
+                  },
+                  {
+                    "id": "security",
+                    "label": "Security",
+                    "action": {
+                      "kind": "navigate",
+                      "path": "/account/security"
+                    },
+                    "icon": "shield",
+                    "enabled": true,
+                    "version": 1
+                  },
+                  {
+                    "id": "language",
+                    "label": "Toggle language",
+                    "action": {
+                      "kind": "toggle_language"
+                    },
+                    "icon": "language",
+                    "enabled": true,
+                    "version": 1
+                  },
+                  {
+                    "id": "theme",
+                    "label": "Toggle theme",
+                    "action": {
+                      "kind": "toggle_theme"
+                    },
+                    "icon": "sun",
+                    "enabled": true,
+                    "version": 1
+                  },
+                  {
+                    "id": "signout",
+                    "label": "Sign out",
+                    "action": {
+                      "kind": "dispatch_event",
+                      "eventName": "auth.signout"
+                    },
+                    "icon": "logout",
+                    "enabled": true,
+                    "version": 1
+                  }
+                ],
+                "placement": "trailing",
+                "action": {
+                  "kind": "open_context_tab",
+                  "tab": "account"
+                }
+              },
+              "version": 3,
+              "zone": "header",
+              "surfaceId": "workspace.header.shell.user-menu.b14624",
+              "slotKey": "header#104#b14624",
+              "componentKey": "workspace.shell.user-menu",
+              "permsRequired": [],
+              "componentType": "shell.user-menu",
+              "rendererKey": "shell.user-menu",
+              "carbonKey": "header-global-action"
+            }
+          ],
+          "main": [
+            {
+              "enabled": true,
+              "position": 1,
+              "props": {
+                "homeRoute": "/workspace-home"
+              },
+              "version": 3,
+              "zone": "main",
+              "surfaceId": "workspace.main.frame.ui-shell.b7952",
+              "slotKey": "main#1#b7952",
+              "componentKey": "workspace.frame.ui-shell",
+              "permsRequired": [],
+              "componentType": "shell-frame",
+              "rendererKey": "shell.frame",
+              "carbonKey": "ui-shell"
+            },
+            {
+              "enabled": true,
+              "position": 14,
+              "props": {},
+              "version": 1,
+              "zone": "main",
+              "surfaceId": "workspace.main.frame.content.b7965",
+              "slotKey": "main#14#b7965",
+              "componentKey": "workspace.frame.content",
+              "permsRequired": [],
+              "componentType": "shell-frame",
+              "rendererKey": "shell.frame",
+              "carbonKey": "content"
+            },
+            {
+              "enabled": true,
+              "position": 120,
+              "props": {
+                "zone": "main",
+                "title": "Workspace ready",
+                "description": "Select a module item from the sidebar to view detailed data."
+              },
+              "version": 5,
+              "zone": "main",
+              "surfaceId": "workspace.main.shell.empty-state.b14626",
+              "slotKey": "main#120#b14626",
+              "componentKey": "workspace.shell.empty-state",
+              "permsRequired": [],
+              "componentType": "shell.empty-state",
+              "rendererKey": "shell.empty-state",
+              "carbonKey": "tile"
+            },
+            {
+              "enabled": true,
+              "position": 121,
+              "props": {
+                "zone": "main",
+                "items": [
+                  {
+                    "id": "foundation",
+                    "title": "Foundation — Organization Hierarchy",
+                    "action": {
+                      "kind": "navigate",
+                      "path": "/foundation/overview"
+                    },
+                    "productCode": "shahin-ai"
+                  }
+                ],
+                "ariaLabel": "Modules"
+              },
+              "version": 1,
+              "zone": "main",
+              "surfaceId": "workspace.main.shell.module-cards.b14674",
+              "slotKey": "main#121#b14674",
+              "componentKey": "workspace.shell.module-cards",
+              "permsRequired": [],
+              "componentType": "shell.module-cards",
+              "rendererKey": "shell.module-cards",
+              "carbonKey": "tile"
+            }
+          ],
+          "sidebar": [
+            {
+              "enabled": true,
+              "position": 9,
+              "props": {
+                "ariaLabel": {
+                  "i18nKey": "workspace.sidebar.aria",
+                  "fallback": "Workspace navigation"
+                },
+                "homeRoute": "/workspace-home"
+              },
+              "version": 3,
+              "zone": "sidebar",
+              "surfaceId": "workspace.sidebar.frame.side-nav.b7960",
+              "slotKey": "sidebar#9#b7960",
+              "componentKey": "workspace.frame.side-nav",
+              "permsRequired": [],
+              "componentType": "shell-frame",
+              "rendererKey": "shell.frame",
+              "carbonKey": "side-nav"
+            },
+            {
+              "enabled": true,
+              "position": 10,
+              "props": {},
+              "version": 1,
+              "zone": "sidebar",
+              "surfaceId": "workspace.sidebar.frame.side-nav-items.b7961",
+              "slotKey": "sidebar#10#b7961",
+              "componentKey": "workspace.frame.side-nav-items",
+              "permsRequired": [],
+              "componentType": "shell-frame",
+              "rendererKey": "shell.frame",
+              "carbonKey": "side-nav-items"
+            },
+            {
+              "enabled": true,
+              "position": 11,
+              "props": {},
+              "version": 1,
+              "zone": "sidebar",
+              "surfaceId": "workspace.sidebar.frame.side-nav-menu.b7962",
+              "slotKey": "sidebar#11#b7962",
+              "componentKey": "workspace.frame.side-nav-menu",
+              "permsRequired": [],
+              "componentType": "shell-frame",
+              "rendererKey": "shell.frame",
+              "carbonKey": "side-nav-menu"
+            },
+            {
+              "enabled": true,
+              "position": 12,
+              "props": {},
+              "version": 1,
+              "zone": "sidebar",
+              "surfaceId": "workspace.sidebar.frame.side-nav-menu-item.b7963",
+              "slotKey": "sidebar#12#b7963",
+              "componentKey": "workspace.frame.side-nav-menu-item",
+              "permsRequired": [],
+              "componentType": "shell-frame",
+              "rendererKey": "shell.frame",
+              "carbonKey": "side-nav-menu-item"
+            },
+            {
+              "enabled": true,
+              "position": 13,
+              "props": {},
+              "version": 1,
+              "zone": "sidebar",
+              "surfaceId": "workspace.sidebar.frame.side-nav-link.b7964",
+              "slotKey": "sidebar#13#b7964",
+              "componentKey": "workspace.frame.side-nav-link",
+              "permsRequired": [],
+              "componentType": "shell-frame",
+              "rendererKey": "shell.frame",
+              "carbonKey": "side-nav-link"
+            },
+            {
+              "enabled": true,
+              "position": 110,
+              "props": {
+                "zone": "sidebar",
+                "items": [
+                  {
+                    "id": "foundation.overview",
+                    "label": "Overview",
+                    "action": {
+                      "kind": "navigate",
+                      "path": "/foundation/overview"
+                    },
+                    "icon": "layout-dashboard",
+                    "moduleCode": "foundation",
+                    "groupId": "foundation.group.organization",
+                    "badge": null
+                  },
+                  {
+                    "id": "foundation.organization",
+                    "label": "Organization",
+                    "action": {
+                      "kind": "navigate",
+                      "path": "/foundation/organization"
+                    },
+                    "icon": "sitemap",
+                    "moduleCode": "foundation",
+                    "groupId": "foundation.group.organization",
+                    "badge": null
+                  },
+                  {
+                    "id": "foundation.business-units",
+                    "label": "Business units",
+                    "action": {
+                      "kind": "navigate",
+                      "path": "/foundation/business-units"
+                    },
+                    "icon": "building",
+                    "moduleCode": "foundation",
+                    "groupId": "foundation.group.organization",
+                    "badge": null
+                  },
+                  {
+                    "id": "foundation.departments",
+                    "label": "Departments",
+                    "action": {
+                      "kind": "navigate",
+                      "path": "/foundation/departments"
+                    },
+                    "icon": "users",
+                    "moduleCode": "foundation",
+                    "groupId": "foundation.group.organization",
+                    "badge": null
+                  },
+                  {
+                    "id": "foundation.positions",
+                    "label": "Positions",
+                    "action": {
+                      "kind": "navigate",
+                      "path": "/foundation/positions"
+                    },
+                    "icon": "id-card",
+                    "moduleCode": "foundation",
+                    "groupId": "foundation.group.organization",
+                    "badge": null
+                  },
+                  {
+                    "id": "foundation.locations",
+                    "label": "Locations",
+                    "action": {
+                      "kind": "navigate",
+                      "path": "/foundation/locations"
+                    },
+                    "icon": "map-pin",
+                    "moduleCode": "foundation",
+                    "groupId": "foundation.group.organization",
+                    "badge": null
+                  },
+                  {
+                    "id": "foundation.users",
+                    "label": "Users",
+                    "action": {
+                      "kind": "navigate",
+                      "path": "/foundation/users"
+                    },
+                    "icon": "user",
+                    "moduleCode": "foundation",
+                    "groupId": "foundation.group.identity",
+                    "badge": null
+                  },
+                  {
+                    "id": "foundation.teams",
+                    "label": "Teams",
+                    "action": {
+                      "kind": "navigate",
+                      "path": "/foundation/teams"
+                    },
+                    "icon": "users-group",
+                    "moduleCode": "foundation",
+                    "groupId": "foundation.group.identity",
+                    "badge": null
+                  },
+                  {
+                    "id": "foundation.roles",
+                    "label": "Roles",
+                    "action": {
+                      "kind": "navigate",
+                      "path": "/foundation/roles"
+                    },
+                    "icon": "key",
+                    "moduleCode": "foundation",
+                    "groupId": "foundation.group.identity",
+                    "badge": null
+                  },
+                  {
+                    "id": "foundation.committees",
+                    "label": "Committees",
+                    "action": {
+                      "kind": "navigate",
+                      "path": "/foundation/committees"
+                    },
+                    "icon": "gavel",
+                    "moduleCode": "foundation",
+                    "groupId": "foundation.group.governance",
+                    "badge": null
+                  },
+                  {
+                    "id": "foundation.delegations",
+                    "label": "Delegations",
+                    "action": {
+                      "kind": "navigate",
+                      "path": "/foundation/delegations"
+                    },
+                    "icon": "share",
+                    "moduleCode": "foundation",
+                    "groupId": "foundation.group.governance",
+                    "badge": null
+                  },
+                  {
+                    "id": "foundation.ownership-mapping",
+                    "label": "Ownership mapping",
+                    "action": {
+                      "kind": "navigate",
+                      "path": "/foundation/ownership-mapping"
+                    },
+                    "icon": "link",
+                    "moduleCode": "foundation",
+                    "groupId": "foundation.group.governance",
+                    "badge": null
+                  },
+                  {
+                    "id": "foundation.policies",
+                    "label": "Policies",
+                    "action": {
+                      "kind": "navigate",
+                      "path": "/foundation/policies"
+                    },
+                    "icon": "file-shield",
+                    "moduleCode": "foundation",
+                    "groupId": "foundation.group.governance",
+                    "badge": null
+                  },
+                  {
+                    "id": "foundation.data-processing",
+                    "label": "Data processing",
+                    "action": {
+                      "kind": "navigate",
+                      "path": "/foundation/data-processing"
+                    },
+                    "icon": "database",
+                    "moduleCode": "foundation",
+                    "groupId": "foundation.group.governance",
+                    "badge": null
+                  },
+                  {
+                    "id": "foundation.reference-data",
+                    "label": "Reference data",
+                    "action": {
+                      "kind": "navigate",
+                      "path": "/foundation/reference-data"
+                    },
+                    "icon": "list",
+                    "moduleCode": "foundation",
+                    "groupId": "foundation.group.governance",
+                    "badge": null
+                  },
+                  {
+                    "id": "foundation.audit",
+                    "label": "Audit",
+                    "action": {
+                      "kind": "navigate",
+                      "path": "/foundation/audit"
+                    },
+                    "icon": "history",
+                    "moduleCode": "foundation",
+                    "groupId": "foundation.group.governance",
+                    "badge": null
+                  },
+                  {
+                    "id": "foundation.settings",
+                    "label": "Settings",
+                    "action": {
+                      "kind": "navigate",
+                      "path": "/foundation/settings"
+                    },
+                    "icon": "settings",
+                    "moduleCode": "foundation",
+                    "groupId": "foundation.group.governance",
+                    "badge": null
+                  },
+                  {
+                    "id": "foundation.user-lifecycle",
+                    "label": "User lifecycle",
+                    "action": {
+                      "kind": "navigate",
+                      "path": "/foundation/user-lifecycle"
+                    },
+                    "icon": "arrow-cycle",
+                    "moduleCode": "foundation",
+                    "groupId": "foundation.group.main",
+                    "badge": null
+                  }
+                ],
+                "policy": {
+                  "defaultRoute": "/foundation/overview",
+                  "expandActiveOnly": true,
+                  "defaultModuleCode": "foundation"
+                },
+                "ariaLabel": "Primary navigation",
+                "emptyMessage": "No navigation entries available.",
+                "poweredByLabel": "Powered by Dogan-AI OS"
+              },
+              "version": 2,
+              "zone": "sidebar",
+              "surfaceId": "workspace.sidebar.shell.sidebar-nav.b14625",
+              "slotKey": "sidebar#110#b14625",
+              "componentKey": "workspace.shell.sidebar-nav",
+              "permsRequired": [],
+              "componentType": "shell.sidebar-nav",
+              "rendererKey": "shell.sidebar-nav",
+              "carbonKey": "side-nav-items"
+            }
+          ]
+        },
+        "nav": {
+          "groups": [
+            {
+              "moduleCode": "dynamic-ui",
+              "groupId": "dynamic-ui.group.main",
+              "sortOrder": 10,
+              "label": {
+                "fallback": "Dynamic UI",
+                "label": "Dynamic UI"
+              },
+              "enabled": true,
+              "version": 2
+            },
+            {
+              "moduleCode": "foundation",
+              "groupId": "foundation.group.organization",
+              "sortOrder": 10,
+              "label": {
+                "i18nKey": "modules.foundation.nav.group.organization",
+                "fallback": "Organization",
+                "label": "Organization"
+              },
+              "enabled": true,
+              "version": 4
+            },
+            {
+              "moduleCode": "foundation",
+              "groupId": "foundation.group.identity",
+              "sortOrder": 20,
+              "label": {
+                "i18nKey": "modules.foundation.nav.group.identity",
+                "fallback": "Identity",
+                "label": "Identity"
+              },
+              "enabled": true,
+              "version": 4
+            },
+            {
+              "moduleCode": "foundation",
+              "groupId": "foundation.group.governance",
+              "sortOrder": 30,
+              "label": {
+                "i18nKey": "modules.foundation.nav.group.governance",
+                "fallback": "Governance",
+                "label": "Governance"
+              },
+              "enabled": true,
+              "version": 4
+            },
+            {
+              "moduleCode": "foundation",
+              "groupId": "foundation.group.main",
+              "sortOrder": 40,
+              "label": {
+                "fallback": "Foundation",
+                "label": "Foundation"
+              },
+              "enabled": true,
+              "version": 4
+            },
+            {
+              "moduleCode": "knowledge",
+              "groupId": "knowledge.overview",
+              "sortOrder": 10,
+              "label": {
+                "i18nKey": "module.knowledge.nav.overview",
+                "fallback": "Overview",
+                "label": "Overview"
+              },
+              "enabled": true,
+              "version": 1
+            },
+            {
+              "moduleCode": "knowledge",
+              "groupId": "knowledge.articles",
+              "sortOrder": 20,
+              "label": {
+                "i18nKey": "module.knowledge.nav.articles",
+                "fallback": "Articles",
+                "label": "Articles"
+              },
+              "enabled": true,
+              "version": 1
+            }
+          ],
+          "items": [
+            {
+              "moduleCode": "foundation",
+              "itemId": "foundation.overview",
+              "groupId": "foundation.group.organization",
+              "sortOrder": 1,
+              "action": {
+                "kind": "navigate",
+                "path": "/foundation/overview"
+              },
+              "icon": "layout-dashboard",
+              "permission": "foundation.read",
+              "label": {
+                "i18nKey": "modules.foundation.nav.overview",
+                "fallback": "Overview",
+                "label": "Overview"
+              },
+              "badge": null,
+              "enabled": true,
+              "version": 9
+            },
+            {
+              "moduleCode": "foundation",
+              "itemId": "foundation.organization",
+              "groupId": "foundation.group.organization",
+              "sortOrder": 2,
+              "action": {
+                "kind": "navigate",
+                "path": "/foundation/organization"
+              },
+              "icon": "sitemap",
+              "permission": "foundation.read",
+              "label": {
+                "i18nKey": "modules.foundation.nav.organization",
+                "fallback": "Organization",
+                "label": "Organization"
+              },
+              "badge": null,
+              "enabled": true,
+              "version": 9
+            },
+            {
+              "moduleCode": "foundation",
+              "itemId": "foundation.business-units",
+              "groupId": "foundation.group.organization",
+              "sortOrder": 3,
+              "action": {
+                "kind": "navigate",
+                "path": "/foundation/business-units"
+              },
+              "icon": "building",
+              "permission": "foundation.read",
+              "label": {
+                "i18nKey": "modules.foundation.nav.businessUnits",
+                "fallback": "Business units",
+                "label": "Business units"
+              },
+              "badge": null,
+              "enabled": true,
+              "version": 9
+            },
+            {
+              "moduleCode": "foundation",
+              "itemId": "foundation.departments",
+              "groupId": "foundation.group.organization",
+              "sortOrder": 4,
+              "action": {
+                "kind": "navigate",
+                "path": "/foundation/departments"
+              },
+              "icon": "users",
+              "permission": "foundation.read",
+              "label": {
+                "i18nKey": "modules.foundation.nav.departments",
+                "fallback": "Departments",
+                "label": "Departments"
+              },
+              "badge": null,
+              "enabled": true,
+              "version": 9
+            },
+            {
+              "moduleCode": "foundation",
+              "itemId": "foundation.positions",
+              "groupId": "foundation.group.organization",
+              "sortOrder": 5,
+              "action": {
+                "kind": "navigate",
+                "path": "/foundation/positions"
+              },
+              "icon": "id-card",
+              "permission": "foundation.read",
+              "label": {
+                "i18nKey": "modules.foundation.nav.positions",
+                "fallback": "Positions",
+                "label": "Positions"
+              },
+              "badge": null,
+              "enabled": true,
+              "version": 9
+            },
+            {
+              "moduleCode": "foundation",
+              "itemId": "foundation.locations",
+              "groupId": "foundation.group.organization",
+              "sortOrder": 9,
+              "action": {
+                "kind": "navigate",
+                "path": "/foundation/locations"
+              },
+              "icon": "map-pin",
+              "permission": "foundation.read",
+              "label": {
+                "i18nKey": "modules.foundation.nav.locations",
+                "fallback": "Locations",
+                "label": "Locations"
+              },
+              "badge": null,
+              "enabled": true,
+              "version": 9
+            },
+            {
+              "moduleCode": "foundation",
+              "itemId": "foundation.users",
+              "groupId": "foundation.group.identity",
+              "sortOrder": 6,
+              "action": {
+                "kind": "navigate",
+                "path": "/foundation/users"
+              },
+              "icon": "user",
+              "permission": "foundation.user.read",
+              "label": {
+                "i18nKey": "modules.foundation.nav.users",
+                "fallback": "Users",
+                "label": "Users"
+              },
+              "badge": null,
+              "enabled": true,
+              "version": 9
+            },
+            {
+              "moduleCode": "foundation",
+              "itemId": "foundation.teams",
+              "groupId": "foundation.group.identity",
+              "sortOrder": 7,
+              "action": {
+                "kind": "navigate",
+                "path": "/foundation/teams"
+              },
+              "icon": "users-group",
+              "permission": "foundation.read",
+              "label": {
+                "i18nKey": "modules.foundation.nav.teams",
+                "fallback": "Teams",
+                "label": "Teams"
+              },
+              "badge": null,
+              "enabled": true,
+              "version": 9
+            },
+            {
+              "moduleCode": "foundation",
+              "itemId": "foundation.roles",
+              "groupId": "foundation.group.identity",
+              "sortOrder": 8,
+              "action": {
+                "kind": "navigate",
+                "path": "/foundation/roles"
+              },
+              "icon": "key",
+              "permission": "foundation.admin",
+              "label": {
+                "i18nKey": "modules.foundation.nav.roles",
+                "fallback": "Roles",
+                "label": "Roles"
+              },
+              "badge": null,
+              "enabled": true,
+              "version": 9
+            },
+            {
+              "moduleCode": "foundation",
+              "itemId": "foundation.committees",
+              "groupId": "foundation.group.governance",
+              "sortOrder": 10,
+              "action": {
+                "kind": "navigate",
+                "path": "/foundation/committees"
+              },
+              "icon": "gavel",
+              "permission": "foundation.read",
+              "label": {
+                "i18nKey": "modules.foundation.nav.committees",
+                "fallback": "Committees",
+                "label": "Committees"
+              },
+              "badge": null,
+              "enabled": true,
+              "version": 8
+            },
+            {
+              "moduleCode": "foundation",
+              "itemId": "foundation.delegations",
+              "groupId": "foundation.group.governance",
+              "sortOrder": 11,
+              "action": {
+                "kind": "navigate",
+                "path": "/foundation/delegations"
+              },
+              "icon": "share",
+              "permission": "foundation.read",
+              "label": {
+                "i18nKey": "modules.foundation.nav.delegations",
+                "fallback": "Delegations",
+                "label": "Delegations"
+              },
+              "badge": null,
+              "enabled": true,
+              "version": 9
+            },
+            {
+              "moduleCode": "foundation",
+              "itemId": "foundation.ownership-mapping",
+              "groupId": "foundation.group.governance",
+              "sortOrder": 12,
+              "action": {
+                "kind": "navigate",
+                "path": "/foundation/ownership-mapping"
+              },
+              "icon": "link",
+              "permission": "foundation.read",
+              "label": {
+                "i18nKey": "modules.foundation.nav.ownershipMapping",
+                "fallback": "Ownership mapping",
+                "label": "Ownership mapping"
+              },
+              "badge": null,
+              "enabled": true,
+              "version": 7
+            },
+            {
+              "moduleCode": "foundation",
+              "itemId": "foundation.policies",
+              "groupId": "foundation.group.governance",
+              "sortOrder": 14,
+              "action": {
+                "kind": "navigate",
+                "path": "/foundation/policies"
+              },
+              "icon": "file-shield",
+              "permission": "foundation.read",
+              "label": {
+                "i18nKey": "modules.foundation.nav.policies",
+                "fallback": "Policies",
+                "label": "Policies"
+              },
+              "badge": null,
+              "enabled": true,
+              "version": 9
+            },
+            {
+              "moduleCode": "foundation",
+              "itemId": "foundation.data-processing",
+              "groupId": "foundation.group.governance",
+              "sortOrder": 15,
+              "action": {
+                "kind": "navigate",
+                "path": "/foundation/data-processing"
+              },
+              "icon": "database",
+              "permission": "foundation.read",
+              "label": {
+                "i18nKey": "modules.foundation.nav.dataProcessing",
+                "fallback": "Data processing",
+                "label": "Data processing"
+              },
+              "badge": null,
+              "enabled": true,
+              "version": 7
+            },
+            {
+              "moduleCode": "foundation",
+              "itemId": "foundation.reference-data",
+              "groupId": "foundation.group.governance",
+              "sortOrder": 16,
+              "action": {
+                "kind": "navigate",
+                "path": "/foundation/reference-data"
+              },
+              "icon": "list",
+              "permission": "foundation.read",
+              "label": {
+                "i18nKey": "modules.foundation.nav.referenceData",
+                "fallback": "Reference data",
+                "label": "Reference data"
+              },
+              "badge": null,
+              "enabled": true,
+              "version": 9
+            },
+            {
+              "moduleCode": "foundation",
+              "itemId": "foundation.audit",
+              "groupId": "foundation.group.governance",
+              "sortOrder": 17,
+              "action": {
+                "kind": "navigate",
+                "path": "/foundation/audit"
+              },
+              "icon": "history",
+              "permission": "audit_trail.read",
+              "label": {
+                "i18nKey": "modules.foundation.nav.audit",
+                "fallback": "Audit",
+                "label": "Audit"
+              },
+              "badge": null,
+              "enabled": true,
+              "version": 9
+            },
+            {
+              "moduleCode": "foundation",
+              "itemId": "foundation.settings",
+              "groupId": "foundation.group.governance",
+              "sortOrder": 18,
+              "action": {
+                "kind": "navigate",
+                "path": "/foundation/settings"
+              },
+              "icon": "settings",
+              "permission": "foundation.admin",
+              "label": {
+                "i18nKey": "modules.foundation.nav.settings",
+                "fallback": "Settings",
+                "label": "Settings"
+              },
+              "badge": null,
+              "enabled": true,
+              "version": 7
+            },
+            {
+              "moduleCode": "foundation",
+              "itemId": "foundation.user-lifecycle",
+              "groupId": "foundation.group.main",
+              "sortOrder": 23,
+              "action": {
+                "kind": "navigate",
+                "path": "/foundation/user-lifecycle"
+              },
+              "icon": "arrow-cycle",
+              "permission": "foundation.user.write",
+              "label": {
+                "fallback": "User lifecycle",
+                "label": "User lifecycle"
+              },
+              "badge": null,
+              "enabled": true,
+              "version": 7
+            }
+          ]
+        },
+        "chrome": {
+          "accountMenuActions": [
+            {
+              "id": "toggle-language",
+              "action": {
+                "kind": "toggle_language"
+              }
+            },
+            {
+              "id": "toggle-theme",
+              "action": {
+                "kind": "toggle_theme"
+              }
+            }
+          ],
+          "brand": "Shahin AI",
+          "footer.copyright": {
+            "i18nKey": "chrome.footer.copyright",
+            "fallback": "© Dogan Consulting"
+          },
+          "header.brand": {
+            "i18nKey": "chrome.header.brand",
+            "fallback": "Shahin AI"
+          },
+          "locale.default": {
+            "rtl": [
+              "ar"
+            ],
+            "primary": "en",
+            "supported": [
+              "en",
+              "ar"
+            ]
+          },
+          "logoHref": "/",
+          "product.name": {
+            "i18nKey": "chrome.product.name",
+            "fallback": "Shahin AI"
+          },
+          "product.tagline": {
+            "i18nKey": "chrome.product.tagline",
+            "fallback": "Enterprise GRC, AI-native"
+          },
+          "shell.account.language": "Language",
+          "shell.account.profile": "Profile",
+          "shell.account.settings": "Settings",
+          "shell.account.signout": "Sign out",
+          "shell.account.theme": "Theme",
+          "shell.actionQueue.emptyText": "No pending actions.",
+          "shell.actionQueue.title": "Action Queue",
+          "shell.banner.offline.message": "Some features are unavailable until the connection is restored.",
+          "shell.banner.offline.title": "You're offline",
+          "shell.banner.session-expiry.message": "You'll be signed out shortly. Save your work.",
+          "shell.banner.session-expiry.title": "Session about to expire",
+          "shell.banner.trial-expired.message": "Upgrade to keep using these modules.",
+          "shell.banner.trial-expired.title": "Trial expired",
+          "shell.commandSearch.placeholder": "Search…",
+          "shell.contextPanel.aiLoadingText": "AI insights are loading from the agent context…",
+          "shell.contextPanel.ariaLabel": "Context panel",
+          "shell.contextPanel.tabLabels": {
+            "help": "Help",
+            "audit": "Audit",
+            "record": "Record",
+            "ai-insights": "AI Insights"
+          },
+          "shell.desktopSidebar.ariaLabel": "Primary",
+          "shell.dos-carbon-search.search.ariaLabel": {
+            "ar": "بحث",
+            "en": "Search"
+          },
+          "shell.foundation-module-audit.search.ariaLabel": {
+            "ar": "البحث عن الأحداث",
+            "en": "Search events"
+          },
+          "shell.foundation-register.search.ariaLabel": {
+            "ar": "البحث عن المستخدمين",
+            "en": "Search users"
+          },
+          "shell.header.commandSearch.action": {
+            "kind": "open_command"
+          },
+          "shell.header.commandSearch.label": "Search (Ctrl+K)",
+          "shell.header.inbox.action": {
+            "tab": "activity",
+            "kind": "open_context_tab"
+          },
+          "shell.header.inbox.label": "Inbox",
+          "shell.inbox.unreadLabel": "Unread",
+          "shell.module-audit-trail.search.ariaLabel": {
+            "ar": "البحث في سجل التدقيق",
+            "en": "Search audit trail"
+          },
+          "shell.module-cards.aria-label": "Modules",
+          "shell.module-heatmap.search.ariaLabel": {
+            "ar": "البحث في عناصر خريطة الحرارة",
+            "en": "Search heatmap items"
+          },
+          "shell.module-page-chrome.search.ariaLabel": {
+            "ar": "البحث في سجل التدقيق",
+            "en": "Search audit log"
+          },
+          "shell.module-records.search.ariaLabel": {
+            "ar": "البحث في السجلات",
+            "en": "Search records"
+          },
+          "shell.quickCreate.fabLabel": "Create",
+          "shell.quickCreate.menuLabel": "Create options",
+          "shell.settings.action": {
+            "tab": "settings",
+            "kind": "open_context_tab"
+          },
+          "shell.settings.aria-label": "Settings",
+          "shell.sidebar.aria-label": "Primary navigation",
+          "shell.sidebar.empty.message": "No navigation entries available.",
+          "shell.sidebar.poweredByLabel": "Powered by Dogan-AI OS",
+          "shell.sidebarNav.badgeLabel": "badge",
+          "shell.toast.dismissLabel": "dismiss",
+          "shell.user-menu.action": {
+            "tab": "account",
+            "kind": "open_context_tab"
+          },
+          "shell.user-menu.aria-label": "Account menu",
+          "shell.user-menu.label": "Account",
+          "theme.default": {
+            "mode": "dark",
+            "name": "carbon-g100"
+          },
+          "workspaceTitle": "Workspace",
+          "landingRoute": "/workspace-home",
+          "tplStrings": {
+            "shell.tpl.loading": "Loading…",
+            "shell.tpl.empty.title": "",
+            "shell.tpl.empty.description": "",
+            "shell.tpl.dph.empty.title": "No widgets to display",
+            "shell.tpl.dph.empty.body": "Content appears when widgets are assigned to this route in your workspace.",
+            "shell.tpl.aria.header": "Workspace header",
+            "shell.tpl.aria.sidebar": "Workspace sidebar",
+            "shell.tpl.aria.main": "Main content",
+            "shell.tpl.aria.banners": "Notifications"
+          },
+          "breadcrumbs": {
+            "workspace": {
+              "label": "Workspace",
+              "href": "/workspace-home"
+            }
+          },
+          "shell.user-menu.items": [
+            {
+              "id": "profile",
+              "label": "Profile",
+              "action": {
+                "kind": "navigate",
+                "path": "/account/profile"
+              },
+              "icon": "user",
+              "enabled": true,
+              "version": 1
+            },
+            {
+              "id": "preferences",
+              "label": "Preferences",
+              "action": {
+                "kind": "navigate",
+                "path": "/account/preferences"
+              },
+              "icon": "settings",
+              "enabled": true,
+              "version": 1
+            },
+            {
+              "id": "security",
+              "label": "Security",
+              "action": {
+                "kind": "navigate",
+                "path": "/account/security"
+              },
+              "icon": "shield",
+              "enabled": true,
+              "version": 1
+            },
+            {
+              "id": "language",
+              "label": "Toggle language",
+              "action": {
+                "kind": "toggle_language"
+              },
+              "icon": "language",
+              "enabled": true,
+              "version": 1
+            },
+            {
+              "id": "theme",
+              "label": "Toggle theme",
+              "action": {
+                "kind": "toggle_theme"
+              },
+              "icon": "sun",
+              "enabled": true,
+              "version": 1
+            },
+            {
+              "id": "signout",
+              "label": "Sign out",
+              "action": {
+                "kind": "dispatch_event",
+                "eventName": "auth.signout"
+              },
+              "icon": "logout",
+              "enabled": true,
+              "version": 1
+            }
+          ],
+          "shell.settings.items": [
+            {
+              "id": "settings.workspace",
+              "label": "Workspace settings",
+              "action": {
+                "kind": "navigate",
+                "path": "/foundation/settings"
+              },
+              "icon": "settings",
+              "enabled": true,
+              "version": 1
+            },
+            {
+              "id": "settings.access",
+              "label": "Access governance",
+              "action": {
+                "kind": "navigate",
+                "path": "/foundation/access-review"
+              },
+              "icon": "lock",
+              "enabled": true,
+              "version": 1
+            },
+            {
+              "id": "settings.policies",
+              "label": "Policies",
+              "action": {
+                "kind": "navigate",
+                "path": "/foundation/policies"
+              },
+              "icon": "document",
+              "enabled": true,
+              "version": 1
+            },
+            {
+              "id": "settings.diagnostics",
+              "label": "Diagnostics",
+              "action": {
+                "kind": "navigate",
+                "path": "/foundation/diagnostics"
+              },
+              "icon": "activity",
+              "enabled": true,
+              "version": 1
+            },
+            {
+              "id": "settings.audit",
+              "label": "Audit trail",
+              "action": {
+                "kind": "navigate",
+                "path": "/foundation/audit"
+              },
+              "icon": "history",
+              "enabled": true,
+              "version": 1
+            }
+          ],
+          "shell.global-quick-actions.items": [
+            {
+              "id": "command",
+              "label": "Command palette",
+              "action": {
+                "kind": "open_command"
+              },
+              "icon": "search",
+              "enabled": true,
+              "version": 1
+            },
+            {
+              "id": "inbox",
+              "label": "Inbox",
+              "action": {
+                "kind": "open_context_tab",
+                "tab": "activity"
+              },
+              "icon": "inbox",
+              "enabled": true,
+              "version": 1
+            },
+            {
+              "id": "create",
+              "label": "Create",
+              "action": {
+                "kind": "dispatch_event",
+                "eventName": "workspace.quickCreate.open"
+              },
+              "icon": "plus",
+              "enabled": true,
+              "version": 1
+            }
+          ]
+        },
+        "shortcuts": [
+          {
+            "id": "command.open",
+            "combo": "mod+k",
+            "action": {
+              "kind": "open_command"
+            }
+          },
+          {
+            "id": "open-command-palette",
+            "combo": "mod+k",
+            "action": {
+              "kind": "open_command"
+            }
+          },
+          {
+            "id": "lang.toggle",
+            "combo": "mod+shift+l",
+            "action": {
+              "kind": "toggle_language"
+            }
+          },
+          {
+            "id": "toggle-language",
+            "combo": "mod+l",
+            "action": {
+              "kind": "toggle_language"
+            }
+          },
+          {
+            "id": "go-home",
+            "combo": "g h",
+            "action": {
+              "kind": "navigate",
+              "path": "/"
+            },
+            "when": "workspace"
+          },
+          {
+            "id": "theme.toggle",
+            "combo": "mod+shift+t",
+            "action": {
+              "kind": "toggle_theme"
+            }
+          },
+          {
+            "id": "close-overlay",
+            "combo": "escape",
+            "action": {
+              "kind": "close_overlay"
+            },
+            "when": "overlay-open"
+          },
+          {
+            "id": "overlay.close",
+            "combo": "escape",
+            "action": {
+              "kind": "close_overlay"
+            }
+          }
+        ],
+        "banners": [
+          {
+            "id": "offline",
+            "gate": "offline",
+            "kind": "warning",
+            "title": {
+              "i18nKey": "shell.banner.offline.title",
+              "fallback": "You're offline",
+              "label": "You're offline"
+            },
+            "message": {
+              "i18nKey": "shell.banner.offline.message",
+              "fallback": "Some features are unavailable until the connection is restored.",
+              "label": "Some features are unavailable until the connection is restored."
+            },
+            "dismissible": false,
+            "version": 1
+          },
+          {
+            "id": "session-expiry",
+            "gate": "session-expiry",
+            "kind": "warning",
+            "title": {
+              "i18nKey": "shell.banner.session-expiry.title",
+              "fallback": "Session about to expire",
+              "label": "Session about to expire"
+            },
+            "message": {
+              "i18nKey": "shell.banner.session-expiry.message",
+              "fallback": "You'll be signed out shortly. Save your work.",
+              "label": "You'll be signed out shortly. Save your work."
+            },
+            "dismissible": true,
+            "version": 1
+          },
+          {
+            "id": "trial-expired",
+            "gate": "trial-expired",
+            "kind": "danger",
+            "title": {
+              "i18nKey": "shell.banner.trial-expired.title",
+              "fallback": "Trial expired",
+              "label": "Trial expired"
+            },
+            "message": {
+              "i18nKey": "shell.banner.trial-expired.message",
+              "fallback": "Upgrade to keep using these modules.",
+              "label": "Upgrade to keep using these modules."
+            },
+            "dismissible": false,
+            "version": 1
+          }
+        ],
+        "policies": {
+          "autosave.interval_ms": {
+            "value": 15000
+          },
+          "layout": {
+            "breakpoints": {
+              "desktopMinPx": 1056
+            },
+            "mobileBottomNav": {
+              "maxItems": 4
+            }
+          },
+          "rtl.enabled": {
+            "value": true
+          },
+          "session.idle_timeout_seconds": {
+            "value": 1800
+          },
+          "session.warning_seconds": {
+            "value": 300
+          },
+          "sessionExpiry": {
+            "dangerMinutes": 1,
+            "warningMinutes": 5
+          }
+        }
+      }
+    }
+  },
+  "domProbe": {
+    "mode": "disabled",
+    "reason": "option-B: DOM/visible columns removed pending Playwright probe for /workspace-home"
+  },
+  "summary": {
+    "seedKeyCount": 67,
+    "registryKeyCount": 68,
+    "tenantBindingCount": 68,
+    "runtimeEmittedCount": 22,
+    "catalogOnly": 0,
+    "structural": 14,
+    "visual": 28,
+    "action": 7,
+    "dataBinding": 19,
+    "missingBinding": 0,
+    "missingRendererKeyForRenderable": 0,
+    "visualMappedCount": 54,
+    "structuralNullCount": 14,
+    "unmappedCount": 0
+  },
+  "comparisons": {
+    "onlyInSeed": [],
+    "onlyInRegistry": [
+      "workspace.shell.global-quick-actions"
+    ],
+    "seedAndRegistry": [
+      "workspace.action.button",
+      "workspace.action.icon-button",
+      "workspace.action.inline-notification",
+      "workspace.action.modal",
+      "workspace.action.overflow-menu",
+      "workspace.action.overflow-menu-option",
+      "workspace.action.toast-notification",
+      "workspace.data.data-table",
+      "workspace.data.pagination",
+      "workspace.data.structured-list",
+      "workspace.data.table-batch-actions",
+      "workspace.data.table-toolbar",
+      "workspace.data.table-toolbar-actions",
+      "workspace.data.table-toolbar-search",
+      "workspace.frame.content",
+      "workspace.frame.header",
+      "workspace.frame.header-global-action",
+      "workspace.frame.header-global-bar",
+      "workspace.frame.header-menu",
+      "workspace.frame.header-menu-item",
+      "workspace.frame.header-name",
+      "workspace.frame.header-navigation",
+      "workspace.frame.side-nav",
+      "workspace.frame.side-nav-items",
+      "workspace.frame.side-nav-link",
+      "workspace.frame.side-nav-menu",
+      "workspace.frame.side-nav-menu-item",
+      "workspace.frame.ui-shell",
+      "workspace.input.checkbox",
+      "workspace.input.combo-box",
+      "workspace.input.date-picker",
+      "workspace.input.dropdown",
+      "workspace.input.multi-select",
+      "workspace.input.number-input",
+      "workspace.input.radio",
+      "workspace.input.search",
+      "workspace.input.select",
+      "workspace.input.text-area",
+      "workspace.input.text-input",
+      "workspace.input.toggle",
+      "workspace.nav.breadcrumb",
+      "workspace.nav.clickable-tile",
+      "workspace.nav.column",
+      "workspace.nav.expandable-tile",
+      "workspace.nav.grid",
+      "workspace.nav.layer",
+      "workspace.nav.tab",
+      "workspace.nav.tabs",
+      "workspace.nav.tag",
+      "workspace.nav.tile",
+      "workspace.polish.accordion",
+      "workspace.polish.context-menu",
+      "workspace.polish.file-uploader",
+      "workspace.polish.inline-loading",
+      "workspace.polish.popover",
+      "workspace.polish.progress-bar",
+      "workspace.polish.skeleton-placeholder",
+      "workspace.polish.skeleton-text",
+      "workspace.polish.toggletip",
+      "workspace.polish.tooltip",
+      "workspace.shell.brand",
+      "workspace.shell.empty-state",
+      "workspace.shell.module-cards",
+      "workspace.shell.settings-action",
+      "workspace.shell.sidebar-nav",
+      "workspace.shell.user-menu",
+      "workspace.shell.workspace-title"
+    ],
+    "onlyInBinding": [],
+    "registryNotBound": [],
+    "onlyInRuntime": [],
+    "bindingNotEmittedByRuntime": [
+      "workspace.action.button",
+      "workspace.action.icon-button",
+      "workspace.action.inline-notification",
+      "workspace.action.modal",
+      "workspace.action.overflow-menu",
+      "workspace.action.overflow-menu-option",
+      "workspace.action.toast-notification",
+      "workspace.data.data-table",
+      "workspace.data.pagination",
+      "workspace.data.structured-list",
+      "workspace.data.table-batch-actions",
+      "workspace.data.table-toolbar",
+      "workspace.data.table-toolbar-actions",
+      "workspace.data.table-toolbar-search",
+      "workspace.input.checkbox",
+      "workspace.input.combo-box",
+      "workspace.input.date-picker",
+      "workspace.input.dropdown",
+      "workspace.input.multi-select",
+      "workspace.input.number-input",
+      "workspace.input.radio",
+      "workspace.input.search",
+      "workspace.input.select",
+      "workspace.input.text-area",
+      "workspace.input.text-input",
+      "workspace.input.toggle",
+      "workspace.nav.breadcrumb",
+      "workspace.nav.clickable-tile",
+      "workspace.nav.column",
+      "workspace.nav.expandable-tile",
+      "workspace.nav.grid",
+      "workspace.nav.layer",
+      "workspace.nav.tab",
+      "workspace.nav.tabs",
+      "workspace.nav.tag",
+      "workspace.nav.tile",
+      "workspace.polish.accordion",
+      "workspace.polish.context-menu",
+      "workspace.polish.file-uploader",
+      "workspace.polish.inline-loading",
+      "workspace.polish.popover",
+      "workspace.polish.progress-bar",
+      "workspace.polish.skeleton-placeholder",
+      "workspace.polish.skeleton-text",
+      "workspace.polish.toggletip",
+      "workspace.polish.tooltip"
+    ]
+  },
+  "failures": [],
+  "verdict": "WORKSPACE_CONTRACT_AUDIT_GATE_PASS",
+  "auditData": [
+    {
+      "componentKey": "workspace.action.button",
+      "componentType": "action",
+      "rendererKey": "shell.catalog-action",
+      "carbonKey": "button",
+      "zone": "main",
+      "category": "action",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7995",
+      "surfaceId": "workspace.main.action.button.b7995",
+      "slotKey": "main#44#b7995",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": false,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.action.icon-button",
+      "componentType": "action",
+      "rendererKey": "shell.catalog-action",
+      "carbonKey": "icon_button",
+      "zone": "main",
+      "category": "action",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7996",
+      "surfaceId": "workspace.main.action.icon-button.b7996",
+      "slotKey": "main#45#b7996",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": false,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.action.inline-notification",
+      "componentType": "action",
+      "rendererKey": "shell.catalog-action",
+      "carbonKey": "inline-notification",
+      "zone": "main",
+      "category": "action",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "8000",
+      "surfaceId": "workspace.main.action.inline-notification.b8000",
+      "slotKey": "main#49#b8000",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": false,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.action.modal",
+      "componentType": "action",
+      "rendererKey": "shell.catalog-action",
+      "carbonKey": "modal",
+      "zone": "main",
+      "category": "action",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7999",
+      "surfaceId": "workspace.main.action.modal.b7999",
+      "slotKey": "main#48#b7999",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": false,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.action.overflow-menu",
+      "componentType": "action",
+      "rendererKey": "shell.catalog-action",
+      "carbonKey": "overflow-menu",
+      "zone": "main",
+      "category": "action",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7997",
+      "surfaceId": "workspace.main.action.overflow-menu.b7997",
+      "slotKey": "main#46#b7997",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": false,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.action.overflow-menu-option",
+      "componentType": "action",
+      "rendererKey": "shell.catalog-action",
+      "carbonKey": "overflow-menu-option",
+      "zone": "main",
+      "category": "action",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7998",
+      "surfaceId": "workspace.main.action.overflow-menu-option.b7998",
+      "slotKey": "main#47#b7998",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": false,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.action.toast-notification",
+      "componentType": "action",
+      "rendererKey": "shell.catalog-action",
+      "carbonKey": "toast-notification",
+      "zone": "main",
+      "category": "action",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "8001",
+      "surfaceId": "workspace.main.action.toast-notification.b8001",
+      "slotKey": "main#50#b8001",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": false,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.data.data-table",
+      "componentType": "data",
+      "rendererKey": "shell.catalog-data",
+      "carbonKey": "data_table",
+      "zone": "main",
+      "category": "data-binding",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7976",
+      "surfaceId": "workspace.main.data.data-table.b7976",
+      "slotKey": "main#25#b7976",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": false,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.data.pagination",
+      "componentType": "data",
+      "rendererKey": "shell.catalog-data",
+      "carbonKey": "pagination",
+      "zone": "main",
+      "category": "data-binding",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7981",
+      "surfaceId": "workspace.main.data.pagination.b7981",
+      "slotKey": "main#30#b7981",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": false,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.data.structured-list",
+      "componentType": "data",
+      "rendererKey": "shell.catalog-data",
+      "carbonKey": "structured-list",
+      "zone": "main",
+      "category": "data-binding",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7982",
+      "surfaceId": "workspace.main.data.structured-list.b7982",
+      "slotKey": "main#31#b7982",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": false,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.data.table-batch-actions",
+      "componentType": "data",
+      "rendererKey": "shell.catalog-data",
+      "carbonKey": "table_batch_actions",
+      "zone": "main",
+      "category": "data-binding",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7980",
+      "surfaceId": "workspace.main.data.table-batch-actions.b7980",
+      "slotKey": "main#29#b7980",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": false,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.data.table-toolbar",
+      "componentType": "data",
+      "rendererKey": "shell.catalog-data",
+      "carbonKey": "table_toolbar",
+      "zone": "main",
+      "category": "data-binding",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7977",
+      "surfaceId": "workspace.main.data.table-toolbar.b7977",
+      "slotKey": "main#26#b7977",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": false,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.data.table-toolbar-actions",
+      "componentType": "data",
+      "rendererKey": "shell.catalog-data",
+      "carbonKey": "table_toolbar_actions",
+      "zone": "main",
+      "category": "data-binding",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7979",
+      "surfaceId": "workspace.main.data.table-toolbar-actions.b7979",
+      "slotKey": "main#28#b7979",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": false,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.data.table-toolbar-search",
+      "componentType": "data",
+      "rendererKey": "shell.catalog-data",
+      "carbonKey": "table_toolbar_search",
+      "zone": "main",
+      "category": "data-binding",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7978",
+      "surfaceId": "workspace.main.data.table-toolbar-search.b7978",
+      "slotKey": "main#27#b7978",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": false,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.frame.content",
+      "componentType": "shell-frame",
+      "rendererKey": "shell.frame",
+      "carbonKey": "content",
+      "zone": "main",
+      "category": "structural",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7965",
+      "surfaceId": "workspace.main.frame.content.b7965",
+      "slotKey": "main#14#b7965",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "structural-null",
+      "emittedByRuntime": true,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.frame.header",
+      "componentType": "shell-frame",
+      "rendererKey": "shell.frame",
+      "carbonKey": "header",
+      "zone": "header",
+      "category": "structural",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7953",
+      "surfaceId": "workspace.header.frame.header.b7953",
+      "slotKey": "header#2#b7953",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "structural-null",
+      "emittedByRuntime": true,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.frame.header-global-action",
+      "componentType": "shell-frame",
+      "rendererKey": "shell.frame",
+      "carbonKey": "header-global-action",
+      "zone": "header",
+      "category": "structural",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7959",
+      "surfaceId": "workspace.header.frame.header-global-action.b7959",
+      "slotKey": "header#8#b7959",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "structural-null",
+      "emittedByRuntime": true,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.frame.header-global-bar",
+      "componentType": "shell-frame",
+      "rendererKey": "shell.frame",
+      "carbonKey": "header-global-bar",
+      "zone": "header",
+      "category": "structural",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7958",
+      "surfaceId": "workspace.header.frame.header-global-bar.b7958",
+      "slotKey": "header#7#b7958",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "structural-null",
+      "emittedByRuntime": true,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.frame.header-menu",
+      "componentType": "shell-frame",
+      "rendererKey": "shell.frame",
+      "carbonKey": "header-menu",
+      "zone": "header",
+      "category": "structural",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7956",
+      "surfaceId": "workspace.header.frame.header-menu.b7956",
+      "slotKey": "header#5#b7956",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "structural-null",
+      "emittedByRuntime": true,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.frame.header-menu-item",
+      "componentType": "shell-frame",
+      "rendererKey": "shell.frame",
+      "carbonKey": "header-menu-item",
+      "zone": "header",
+      "category": "structural",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7957",
+      "surfaceId": "workspace.header.frame.header-menu-item.b7957",
+      "slotKey": "header#6#b7957",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "structural-null",
+      "emittedByRuntime": true,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.frame.header-name",
+      "componentType": "shell-frame",
+      "rendererKey": "shell.frame",
+      "carbonKey": "header-name",
+      "zone": "header",
+      "category": "structural",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7954",
+      "surfaceId": "workspace.header.frame.header-name.b7954",
+      "slotKey": "header#3#b7954",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "structural-null",
+      "emittedByRuntime": true,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.frame.header-navigation",
+      "componentType": "shell-frame",
+      "rendererKey": "shell.frame",
+      "carbonKey": "header-navigation",
+      "zone": "header",
+      "category": "structural",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7955",
+      "surfaceId": "workspace.header.frame.header-navigation.b7955",
+      "slotKey": "header#4#b7955",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "structural-null",
+      "emittedByRuntime": true,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.frame.side-nav",
+      "componentType": "shell-frame",
+      "rendererKey": "shell.frame",
+      "carbonKey": "side-nav",
+      "zone": "sidebar",
+      "category": "structural",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7960",
+      "surfaceId": "workspace.sidebar.frame.side-nav.b7960",
+      "slotKey": "sidebar#9#b7960",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "structural-null",
+      "emittedByRuntime": true,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.frame.side-nav-items",
+      "componentType": "shell-frame",
+      "rendererKey": "shell.frame",
+      "carbonKey": "side-nav-items",
+      "zone": "sidebar",
+      "category": "structural",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7961",
+      "surfaceId": "workspace.sidebar.frame.side-nav-items.b7961",
+      "slotKey": "sidebar#10#b7961",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "structural-null",
+      "emittedByRuntime": true,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.frame.side-nav-link",
+      "componentType": "shell-frame",
+      "rendererKey": "shell.frame",
+      "carbonKey": "side-nav-link",
+      "zone": "sidebar",
+      "category": "structural",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7964",
+      "surfaceId": "workspace.sidebar.frame.side-nav-link.b7964",
+      "slotKey": "sidebar#13#b7964",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "structural-null",
+      "emittedByRuntime": true,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.frame.side-nav-menu",
+      "componentType": "shell-frame",
+      "rendererKey": "shell.frame",
+      "carbonKey": "side-nav-menu",
+      "zone": "sidebar",
+      "category": "structural",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7962",
+      "surfaceId": "workspace.sidebar.frame.side-nav-menu.b7962",
+      "slotKey": "sidebar#11#b7962",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "structural-null",
+      "emittedByRuntime": true,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.frame.side-nav-menu-item",
+      "componentType": "shell-frame",
+      "rendererKey": "shell.frame",
+      "carbonKey": "side-nav-menu-item",
+      "zone": "sidebar",
+      "category": "structural",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7963",
+      "surfaceId": "workspace.sidebar.frame.side-nav-menu-item.b7963",
+      "slotKey": "sidebar#12#b7963",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "structural-null",
+      "emittedByRuntime": true,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.frame.ui-shell",
+      "componentType": "shell-frame",
+      "rendererKey": "shell.frame",
+      "carbonKey": "ui-shell",
+      "zone": "main",
+      "category": "structural",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7952",
+      "surfaceId": "workspace.main.frame.ui-shell.b7952",
+      "slotKey": "main#1#b7952",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "structural-null",
+      "emittedByRuntime": true,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.input.checkbox",
+      "componentType": "input",
+      "rendererKey": "shell.catalog-input",
+      "carbonKey": "checkbox",
+      "zone": "main",
+      "category": "data-binding",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7992",
+      "surfaceId": "workspace.main.input.checkbox.b7992",
+      "slotKey": "main#41#b7992",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": false,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.input.combo-box",
+      "componentType": "input",
+      "rendererKey": "shell.catalog-input",
+      "carbonKey": "combo_box",
+      "zone": "main",
+      "category": "data-binding",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7985",
+      "surfaceId": "workspace.main.input.combo-box.b7985",
+      "slotKey": "main#34#b7985",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": false,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.input.date-picker",
+      "componentType": "input",
+      "rendererKey": "shell.catalog-input",
+      "carbonKey": "date_picker",
+      "zone": "main",
+      "category": "data-binding",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7987",
+      "surfaceId": "workspace.main.input.date-picker.b7987",
+      "slotKey": "main#36#b7987",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": false,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.input.dropdown",
+      "componentType": "input",
+      "rendererKey": "shell.catalog-input",
+      "carbonKey": "dropdown",
+      "zone": "main",
+      "category": "data-binding",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7984",
+      "surfaceId": "workspace.main.input.dropdown.b7984",
+      "slotKey": "main#33#b7984",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": false,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.input.multi-select",
+      "componentType": "input",
+      "rendererKey": "shell.catalog-input",
+      "carbonKey": "multi_select",
+      "zone": "main",
+      "category": "data-binding",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7986",
+      "surfaceId": "workspace.main.input.multi-select.b7986",
+      "slotKey": "main#35#b7986",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": false,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.input.number-input",
+      "componentType": "input",
+      "rendererKey": "shell.catalog-input",
+      "carbonKey": "number-input",
+      "zone": "main",
+      "category": "data-binding",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7990",
+      "surfaceId": "workspace.main.input.number-input.b7990",
+      "slotKey": "main#39#b7990",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": false,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.input.radio",
+      "componentType": "input",
+      "rendererKey": "shell.catalog-input",
+      "carbonKey": "radio",
+      "zone": "main",
+      "category": "data-binding",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7993",
+      "surfaceId": "workspace.main.input.radio.b7993",
+      "slotKey": "main#42#b7993",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": false,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.input.search",
+      "componentType": "input",
+      "rendererKey": "shell.catalog-input",
+      "carbonKey": "search",
+      "zone": "main",
+      "category": "data-binding",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7983",
+      "surfaceId": "workspace.main.input.search.b7983",
+      "slotKey": "main#32#b7983",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": false,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.input.select",
+      "componentType": "input",
+      "rendererKey": "shell.catalog-input",
+      "carbonKey": "select",
+      "zone": "main",
+      "category": "data-binding",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7991",
+      "surfaceId": "workspace.main.input.select.b7991",
+      "slotKey": "main#40#b7991",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": false,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.input.text-area",
+      "componentType": "input",
+      "rendererKey": "shell.catalog-input",
+      "carbonKey": "text_area",
+      "zone": "main",
+      "category": "data-binding",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7989",
+      "surfaceId": "workspace.main.input.text-area.b7989",
+      "slotKey": "main#38#b7989",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": false,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.input.text-input",
+      "componentType": "input",
+      "rendererKey": "shell.catalog-input",
+      "carbonKey": "text_input",
+      "zone": "main",
+      "category": "data-binding",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7988",
+      "surfaceId": "workspace.main.input.text-input.b7988",
+      "slotKey": "main#37#b7988",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": false,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.input.toggle",
+      "componentType": "input",
+      "rendererKey": "shell.catalog-input",
+      "carbonKey": "toggle",
+      "zone": "main",
+      "category": "data-binding",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7994",
+      "surfaceId": "workspace.main.input.toggle.b7994",
+      "slotKey": "main#43#b7994",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": false,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.nav.breadcrumb",
+      "componentType": "nav",
+      "rendererKey": "shell.catalog-nav",
+      "carbonKey": "breadcrumb",
+      "zone": "main",
+      "category": "visual-main",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7969",
+      "surfaceId": "workspace.main.nav.breadcrumb.b7969",
+      "slotKey": "main#18#b7969",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": false,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.nav.clickable-tile",
+      "componentType": "nav",
+      "rendererKey": "shell.catalog-nav",
+      "carbonKey": "clickable-tile",
+      "zone": "main",
+      "category": "visual-main",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7973",
+      "surfaceId": "workspace.main.nav.clickable-tile.b7973",
+      "slotKey": "main#22#b7973",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": false,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.nav.column",
+      "componentType": "nav",
+      "rendererKey": "shell.catalog-nav",
+      "carbonKey": "column",
+      "zone": "main",
+      "category": "visual-main",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7967",
+      "surfaceId": "workspace.main.nav.column.b7967",
+      "slotKey": "main#16#b7967",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": false,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.nav.expandable-tile",
+      "componentType": "nav",
+      "rendererKey": "shell.catalog-nav",
+      "carbonKey": "expandable-tile",
+      "zone": "main",
+      "category": "visual-main",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7974",
+      "surfaceId": "workspace.main.nav.expandable-tile.b7974",
+      "slotKey": "main#23#b7974",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": false,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.nav.grid",
+      "componentType": "nav",
+      "rendererKey": "shell.catalog-nav",
+      "carbonKey": "grid",
+      "zone": "main",
+      "category": "visual-main",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7966",
+      "surfaceId": "workspace.main.nav.grid.b7966",
+      "slotKey": "main#15#b7966",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": false,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.nav.layer",
+      "componentType": "nav",
+      "rendererKey": "shell.catalog-nav",
+      "carbonKey": "layer",
+      "zone": "main",
+      "category": "visual-main",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7968",
+      "surfaceId": "workspace.main.nav.layer.b7968",
+      "slotKey": "main#17#b7968",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": false,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.nav.tab",
+      "componentType": "nav",
+      "rendererKey": "shell.catalog-nav",
+      "carbonKey": "tab",
+      "zone": "main",
+      "category": "visual-main",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7971",
+      "surfaceId": "workspace.main.nav.tab.b7971",
+      "slotKey": "main#20#b7971",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": false,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.nav.tabs",
+      "componentType": "nav",
+      "rendererKey": "shell.catalog-nav",
+      "carbonKey": "tabs",
+      "zone": "main",
+      "category": "visual-main",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7970",
+      "surfaceId": "workspace.main.nav.tabs.b7970",
+      "slotKey": "main#19#b7970",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": false,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.nav.tag",
+      "componentType": "nav",
+      "rendererKey": "shell.catalog-nav",
+      "carbonKey": "tag",
+      "zone": "main",
+      "category": "visual-main",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7975",
+      "surfaceId": "workspace.main.nav.tag.b7975",
+      "slotKey": "main#24#b7975",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": false,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.nav.tile",
+      "componentType": "nav",
+      "rendererKey": "shell.catalog-nav",
+      "carbonKey": "tile",
+      "zone": "main",
+      "category": "visual-main",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "7972",
+      "surfaceId": "workspace.main.nav.tile.b7972",
+      "slotKey": "main#21#b7972",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": false,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.polish.accordion",
+      "componentType": "polish",
+      "rendererKey": "shell.catalog-polish",
+      "carbonKey": "accordion",
+      "zone": "main",
+      "category": "visual-main",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "8011",
+      "surfaceId": "workspace.main.polish.accordion.b8011",
+      "slotKey": "main#60#b8011",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": false,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.polish.context-menu",
+      "componentType": "polish",
+      "rendererKey": "shell.catalog-polish",
+      "carbonKey": "context-menu",
+      "zone": "main",
+      "category": "visual-main",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "8009",
+      "surfaceId": "workspace.main.polish.context-menu.b8009",
+      "slotKey": "main#58#b8009",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": false,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.polish.file-uploader",
+      "componentType": "polish",
+      "rendererKey": "shell.catalog-polish",
+      "carbonKey": "file-uploader",
+      "zone": "main",
+      "category": "visual-main",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "8010",
+      "surfaceId": "workspace.main.polish.file-uploader.b8010",
+      "slotKey": "main#59#b8010",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": false,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.polish.inline-loading",
+      "componentType": "polish",
+      "rendererKey": "shell.catalog-polish",
+      "carbonKey": "inline-loading",
+      "zone": "main",
+      "category": "visual-main",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "8006",
+      "surfaceId": "workspace.main.polish.inline-loading.b8006",
+      "slotKey": "main#55#b8006",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": false,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.polish.popover",
+      "componentType": "polish",
+      "rendererKey": "shell.catalog-polish",
+      "carbonKey": "popover",
+      "zone": "main",
+      "category": "visual-main",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "8004",
+      "surfaceId": "workspace.main.polish.popover.b8004",
+      "slotKey": "main#53#b8004",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": false,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.polish.progress-bar",
+      "componentType": "polish",
+      "rendererKey": "shell.catalog-polish",
+      "carbonKey": "progress-bar",
+      "zone": "main",
+      "category": "visual-main",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "8005",
+      "surfaceId": "workspace.main.polish.progress-bar.b8005",
+      "slotKey": "main#54#b8005",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": false,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.polish.skeleton-placeholder",
+      "componentType": "polish",
+      "rendererKey": "shell.catalog-polish",
+      "carbonKey": "skeleton-placeholder",
+      "zone": "main",
+      "category": "visual-main",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "8008",
+      "surfaceId": "workspace.main.polish.skeleton-placeholder.b8008",
+      "slotKey": "main#57#b8008",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": false,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.polish.skeleton-text",
+      "componentType": "polish",
+      "rendererKey": "shell.catalog-polish",
+      "carbonKey": "skeleton-text",
+      "zone": "main",
+      "category": "visual-main",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "8007",
+      "surfaceId": "workspace.main.polish.skeleton-text.b8007",
+      "slotKey": "main#56#b8007",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": false,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.polish.toggletip",
+      "componentType": "polish",
+      "rendererKey": "shell.catalog-polish",
+      "carbonKey": "toggletip",
+      "zone": "main",
+      "category": "visual-main",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "8003",
+      "surfaceId": "workspace.main.polish.toggletip.b8003",
+      "slotKey": "main#52#b8003",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": false,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.polish.tooltip",
+      "componentType": "polish",
+      "rendererKey": "shell.catalog-polish",
+      "carbonKey": "tooltip",
+      "zone": "main",
+      "category": "visual-main",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "8002",
+      "surfaceId": "workspace.main.polish.tooltip.b8002",
+      "slotKey": "main#51#b8002",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": false,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.shell.brand",
+      "componentType": "shell.brand",
+      "rendererKey": "shell.brand",
+      "carbonKey": "header-name",
+      "zone": "header",
+      "category": "visual-shell",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "14621",
+      "surfaceId": "workspace.header.shell.brand.b14621",
+      "slotKey": "header#100#b14621",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": true,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.shell.empty-state",
+      "componentType": "shell.empty-state",
+      "rendererKey": "shell.empty-state",
+      "carbonKey": "tile",
+      "zone": "main",
+      "category": "visual-main",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "14626",
+      "surfaceId": "workspace.main.shell.empty-state.b14626",
+      "slotKey": "main#120#b14626",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": true,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.shell.global-quick-actions",
+      "componentType": "shell.global-quick-actions",
+      "rendererKey": "shell.global-quick-actions",
+      "carbonKey": "header-global-action",
+      "zone": "header",
+      "category": "visual-shell",
+      "source": "registry",
+      "registryApproved": true,
+      "bindingId": "14920",
+      "surfaceId": "workspace.header.shell.global-quick-actions.b14920",
+      "slotKey": "header#102#b14920",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": true,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.shell.module-cards",
+      "componentType": "shell.module-cards",
+      "rendererKey": "shell.module-cards",
+      "carbonKey": "tile",
+      "zone": "main",
+      "category": "visual-main",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "14674",
+      "surfaceId": "workspace.main.shell.module-cards.b14674",
+      "slotKey": "main#121#b14674",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": true,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.shell.settings-action",
+      "componentType": "shell.settings-action",
+      "rendererKey": "shell.settings-action",
+      "carbonKey": "header-global-action",
+      "zone": "header",
+      "category": "visual-shell",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "14623",
+      "surfaceId": "workspace.header.shell.settings-action.b14623",
+      "slotKey": "header#103#b14623",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": true,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.shell.sidebar-nav",
+      "componentType": "shell.sidebar-nav",
+      "rendererKey": "shell.sidebar-nav",
+      "carbonKey": "side-nav-items",
+      "zone": "sidebar",
+      "category": "visual-nav",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "14625",
+      "surfaceId": "workspace.sidebar.shell.sidebar-nav.b14625",
+      "slotKey": "sidebar#110#b14625",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": true,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.shell.user-menu",
+      "componentType": "shell.user-menu",
+      "rendererKey": "shell.user-menu",
+      "carbonKey": "header-global-action",
+      "zone": "header",
+      "category": "visual-shell",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "14624",
+      "surfaceId": "workspace.header.shell.user-menu.b14624",
+      "slotKey": "header#104#b14624",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": true,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    },
+    {
+      "componentKey": "workspace.shell.workspace-title",
+      "componentType": "shell.workspace-title",
+      "rendererKey": "shell.workspace-title",
+      "carbonKey": "header-name",
+      "zone": "header",
+      "category": "visual-shell",
+      "source": "seed",
+      "registryApproved": true,
+      "bindingId": "14622",
+      "surfaceId": "workspace.header.shell.workspace-title.b14622",
+      "slotKey": "header#101#b14622",
+      "hasBinding": true,
+      "enabled": true,
+      "permsRequired": [],
+      "componentMapStatus": "visual-mapped",
+      "emittedByRuntime": true,
+      "catalogOnly": false,
+      "reasons": [],
+      "warnings": [],
+      "reason": "OK"
+    }
+  ]
+}

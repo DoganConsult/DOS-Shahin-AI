@@ -10,9 +10,10 @@ const router = Router();
 router.use(authenticate);
 router.use(requireTenantId);
 router.use(auditMiddleware('organization'));
+const ORG_READ_PERMS = ['foundation.data.read', 'admin', 'org_admin', 'org_read', 'member'] as const;
 
 router.get('/',
-  requireAnyPermission('admin', 'org_admin', 'org_read', 'member'),
+  requireAnyPermission(...ORG_READ_PERMS),
   asyncHandler(async (req: Request, res: Response) => {
     const page = parseInt((req.query.page as string) || '1', 10);
     const pageSize = parseInt((req.query.pageSize as string) || '25', 10);
@@ -23,7 +24,7 @@ router.get('/',
 );
 
 router.get('/:id',
-  requireAnyPermission('admin', 'org_admin', 'org_read', 'member'),
+  requireAnyPermission(...ORG_READ_PERMS),
   asyncHandler(async (req: Request, res: Response) => {
     const row = await svc.getOrganization(req.tenantId!, req.params.id);
     if (!row) throw new UserServiceError('FOUNDATION_ENTITY_NOT_FOUND', undefined, { entity: 'organization', id: req.params.id });

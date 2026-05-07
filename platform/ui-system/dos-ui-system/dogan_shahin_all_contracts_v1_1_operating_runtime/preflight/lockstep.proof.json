@@ -1,0 +1,120 @@
+{
+  "$schema": "https://dogan-ai.local/schemas/preflight-lockstep-proof.v1-1.schema.json",
+  "contractKind": "preflight-lockstep-proof",
+  "contractVersion": "1.1.0",
+  "runtimeModel": "v1-1-operating-runtime",
+  "generatedAt": "2026-05-07T18:55:00+03:00",
+  "appliedAgainst": {
+    "database": "shahin_grc",
+    "host": "localhost:5432",
+    "snapshotPath": "ops/db-snapshots/shahin_grc_dos_pre-v1-1-preflight_20260507T153526Z.sql.gz",
+    "snapshotSha256": "0fb48bf8fc7b4a79058538b6563f1abe04ebbebc969661ac938fd3f9b6b6a992",
+    "snapshotLines": 62006,
+    "applyOrder": ["B1", "B3", "B2", "B2b", "B4"],
+    "appliedBy": "postgres superuser via sudo -u postgres psql"
+  },
+  "blockers": [
+    {
+      "blocker_id": "B1",
+      "manifest_present": true,
+      "sql_present": true,
+      "sql_file": "preflight/migrations/01_fix_mobile_component_variants_is_default.sql",
+      "sql_checksum_match": true,
+      "sql_checksum_sha256": "0db40ca7fbbd5c6e54b6d4aa1913d11b6c8f59cbecd11cb274209c0285e430e6",
+      "idempotency_check_pass": true,
+      "destructive_flag_consistent": true,
+      "applied": true,
+      "applied_at": "2026-05-07T18:35:00+03:00",
+      "post_apply_assertions_pass": true,
+      "live_evidence": [
+        "information_schema.columns has dos.mobile_component_variants.is_default (boolean, NOT NULL DEFAULT false)",
+        "pg_indexes has uq_mobile_component_variants_default with partial WHERE is_default = true on (coalesce(tenant_id,'__global__'),component_key,breakpoint)"
+      ]
+    },
+    {
+      "blocker_id": "B2",
+      "manifest_present": true,
+      "sql_present": true,
+      "sql_file": "preflight/migrations/02_normalize_foundation_item_id.sql",
+      "sql_checksum_match": true,
+      "sql_checksum_sha256": "9fb5f26e2120433e2ce1685dd3f39058d51642abf25b481917736c5d1c4d8432",
+      "idempotency_check_pass": true,
+      "destructive_flag_consistent": true,
+      "applied": true,
+      "applied_at": "2026-05-07T18:42:00+03:00",
+      "post_apply_assertions_pass": true,
+      "rows_updated": 0,
+      "live_evidence": [
+        "Zero hyphenated Foundation item_ids remain",
+        "All 18 pre-existing Foundation rows already in canonical underscored form (UPDATE 0)"
+      ]
+    },
+    {
+      "blocker_id": "B2b",
+      "manifest_present": true,
+      "sql_present": true,
+      "sql_file": "preflight/migrations/02b_seed_foundation_canonical_24.sql",
+      "sql_checksum_match": true,
+      "sql_checksum_sha256": "acae22a4d1eba563fd48fd15bc09901aa9c4bebc9089086cdde467cdf2710cd0",
+      "idempotency_check_pass": true,
+      "destructive_flag_consistent": true,
+      "applied": true,
+      "applied_at": "2026-05-07T18:45:00+03:00",
+      "post_apply_assertions_pass": true,
+      "rows_inserted": 6,
+      "live_evidence": [
+        "dos.ui_module_nav_item module_code='foundation' row count is 24 (was 18 pre-apply)",
+        "All 24 canonical Foundation pageKeys present"
+      ]
+    },
+    {
+      "blocker_id": "B3",
+      "manifest_present": true,
+      "sql_present": true,
+      "sql_file": "preflight/migrations/03_align_product_registry_tier.sql",
+      "sql_checksum_match": true,
+      "sql_checksum_sha256": "e57d8b227c623b9174e41d053b3f87646ac40416178ac86c568fbae518b8598a",
+      "idempotency_check_pass": true,
+      "destructive_flag_consistent": true,
+      "applied": true,
+      "applied_at": "2026-05-07T18:38:00+03:00",
+      "post_apply_assertions_pass": true,
+      "live_evidence": [
+        "information_schema.columns has dos.product_registry.tier (text, NULL allowed)",
+        "pg_constraint has product_registry_tier_chk over (free|starter|professional|enterprise|custom|NULL)"
+      ]
+    },
+    {
+      "blocker_id": "B4",
+      "manifest_present": true,
+      "sql_present": true,
+      "sql_file": "preflight/migrations/04_canonical_dos_tenants_ddl.sql",
+      "sql_checksum_match": true,
+      "sql_checksum_sha256": "d97951186ae090cfff1875280d58be93fcb4945684d96d42d685dba6be0addb4",
+      "idempotency_check_pass": true,
+      "destructive_flag_consistent": true,
+      "applied": true,
+      "applied_at": "2026-05-07T18:54:00+03:00",
+      "post_apply_assertions_pass": true,
+      "live_evidence": [
+        "dos.tenants now has 18 columns (added: display_name, parent_tenant_id, primary_domain, custom_domain, default_locale, default_rtl, product_key, tier, updated_at, archived_at, metadata)",
+        "ix_dos_tenants_tenant_code (non-unique) present; uq_dos_tenants_custom_domain partial unique present; ix_dos_tenants_parent partial present; ix_dos_tenants_status present",
+        "fk_dos_tenants_parent self-FK present (varchar(64) match)",
+        "dos_tenants_status_chk includes 'inactive' to match live data",
+        "dos_tenants_tier_chk over (free|starter|professional|enterprise|custom|NULL)",
+        "trg_dos_tenants_touch_updated_at present",
+        "All 44 rows backfilled (display_name from tenant_name; defaults applied)"
+      ],
+      "deferred_followups": [
+        "B4b: 10 rows have duplicate tenant_code (gmailcom x4, shahinaicom x4, doganconsultcom x2). Test onboarding artifact. Future de-dup migration may promote ix_dos_tenants_tenant_code to unique."
+      ]
+    }
+  ],
+  "summary": {
+    "totalBlockers": 5,
+    "applied": 5,
+    "checksumsMatch": 5,
+    "idempotentAll": true,
+    "anyDestructive": false
+  }
+}

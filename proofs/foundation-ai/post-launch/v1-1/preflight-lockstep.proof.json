@@ -1,0 +1,8 @@
+{
+  "guardId": "lint-v1-1-preflight-lockstep",
+  "status": "PASS",
+  "inspectedBlockerCount": 5,
+  "failureCount": 0,
+  "failures": [],
+  "generatedAt": "2026-05-07T17:05:36.112Z"
+}

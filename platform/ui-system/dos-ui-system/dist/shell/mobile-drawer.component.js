@@ -18,10 +18,43 @@ let DosMobileDrawerComponent = class DosMobileDrawerComponent {
     title = '';
     dir = 'ltr';
     closeLabel = null;
+    touchTargetSize = 44;
+    swipeToNavigate = false;
+    hapticFeedback = true;
     closed = new EventEmitter();
+    swipeEvent = new EventEmitter();
+    startX = 0;
     onEscape() {
         if (this.open)
-            this.closed.emit();
+            this.handleClose();
+    }
+    onTouchStart(event) {
+        if (this.swipeToNavigate) {
+            this.startX = event.touches[0].clientX;
+        }
+    }
+    onTouchEnd(event) {
+        if (this.swipeToNavigate && this.open) {
+            const endX = event.changedTouches[0].clientX;
+            const diffX = endX - this.startX;
+            if (Math.abs(diffX) > 50) {
+                this.swipeEvent.emit({ direction: diffX > 0 ? 'right' : 'left' });
+                if (diffX > 0) {
+                    this.handleClose();
+                }
+            }
+        }
+    }
+    handleClose() {
+        if (this.hapticFeedback) {
+            this.triggerHaptic();
+        }
+        this.closed.emit();
+    }
+    triggerHaptic() {
+        if ('vibrate' in navigator) {
+            navigator.vibrate(15);
+        }
     }
 };
 __decorate([
@@ -41,15 +74,43 @@ __decorate([
     __metadata("design:type", String)
 ], DosMobileDrawerComponent.prototype, "closeLabel", void 0);
 __decorate([
+    Input(),
+    __metadata("design:type", Object)
+], DosMobileDrawerComponent.prototype, "touchTargetSize", void 0);
+__decorate([
+    Input(),
+    __metadata("design:type", Object)
+], DosMobileDrawerComponent.prototype, "swipeToNavigate", void 0);
+__decorate([
+    Input(),
+    __metadata("design:type", Object)
+], DosMobileDrawerComponent.prototype, "hapticFeedback", void 0);
+__decorate([
     Output(),
     __metadata("design:type", Object)
 ], DosMobileDrawerComponent.prototype, "closed", void 0);
+__decorate([
+    Output(),
+    __metadata("design:type", Object)
+], DosMobileDrawerComponent.prototype, "swipeEvent", void 0);
 __decorate([
     HostListener('document:keydown.escape'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], DosMobileDrawerComponent.prototype, "onEscape", null);
+__decorate([
+    HostListener('touchstart', ['$event']),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [TouchEvent]),
+    __metadata("design:returntype", void 0)
+], DosMobileDrawerComponent.prototype, "onTouchStart", null);
+__decorate([
+    HostListener('touchend', ['$event']),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [TouchEvent]),
+    __metadata("design:returntype", void 0)
+], DosMobileDrawerComponent.prototype, "onTouchEnd", null);
 DosMobileDrawerComponent = __decorate([
     Component({
         selector: 'dos-mobile-drawer',
@@ -59,7 +120,7 @@ DosMobileDrawerComponent = __decorate([
         template: `
     @if (open) {
       <div class="dos-mobile-drawer__scrim"
-           (click)="closed.emit()"
+           (click)="handleClose()"
            aria-hidden="true"></div>
       <aside class="dos-mobile-drawer"
              [attr.dir]="dir"
@@ -70,7 +131,9 @@ DosMobileDrawerComponent = __decorate([
           <strong>{{ title }}</strong>
           <button type="button"
                   class="dos-mobile-drawer__close"
-                  (click)="closed.emit()"
+                  (click)="handleClose()"
+                  [style.min-height.px]="touchTargetSize"
+                  [style.min-width.px]="touchTargetSize"
                   [attr.aria-label]="closeLabel || null">×</button>
         </header>
         <div class="dos-mobile-drawer__body"><ng-content></ng-content></div>
@@ -95,12 +158,16 @@ DosMobileDrawerComponent = __decorate([
       display: flex; align-items: center; justify-content: space-between;
       padding: var(--cds-spacing-04) var(--cds-spacing-05);
       border-block-end: 1px solid var(--cds-border-subtle-01);
-      background: var(--cds-layer-02));
+      background: var(--cds-layer-02);
     }
     .dos-mobile-drawer__close {
       width: 2rem; height: 2rem; border: 0; background: transparent;
       font-size: 1.5rem; line-height: 1; cursor: pointer;
       color: var(--cds-text-primary); border-radius: 2px;
+      transition: transform 0.12s ease-out;
+    }
+    .dos-mobile-drawer__close:active {
+      transform: scale(0.9);
     }
     .dos-mobile-drawer__close:hover { background: var(--cds-layer-hover); }
     .dos-mobile-drawer__body { flex: 1 1 auto; min-height: 0; overflow-y: auto; }

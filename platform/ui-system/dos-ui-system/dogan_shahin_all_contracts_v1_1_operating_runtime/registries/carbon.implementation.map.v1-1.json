@@ -1,0 +1,214 @@
+{
+  "$schema": "https://dogan-ai.local/schemas/carbon-implementation-map.v1-1.schema.json",
+  "contractKind": "carbon-implementation-map",
+  "contractVersion": "1.1.0",
+  "runtimeModel": "v1-1-operating-runtime",
+  "generatedAt": "2026-05-07T16:50:00+03:00",
+  "rule": "For every dos.* semantic component declared in the capability registry and every shell surface, this map fixes the exact Carbon Angular component class names per archetype, per state, per breakpoint variant. Encodes the user-supplied per-level mappings (Shell, Product/Workspace dashboard, Module overview, Records, Forms).",
+  "doctrine": ["ZERO_STATIC","ZERO_LEGACY","ZERO_FALLBACK","DB_AS_SOURCE_OF_TRUTH","CARBON_VIA_RESOLVER_ONLY"],
+  "carbonAngularPackage": "carbon-components-angular",
+  "carbonCssPackage": "@carbon/styles",
+  "shell": {
+    "carbonClasses": [
+      "UIShell",
+      "Header",
+      "HeaderName",
+      "HeaderNavigation",
+      "HeaderMenu",
+      "HeaderMenuItem",
+      "HeaderGlobalBar",
+      "HeaderGlobalAction",
+      "HeaderAction",
+      "SideNav",
+      "SideNavItems",
+      "SideNavMenu",
+      "SideNavMenuItem",
+      "SideNavLink",
+      "ContextMenu",
+      "ContextMenuItem",
+      "Content"
+    ],
+    "surfaceBindings": [
+      { "surfaceKey": "workspace.shell.root",         "carbonClasses": ["UIShell","Content"] },
+      { "surfaceKey": "workspace.header",             "carbonClasses": ["Header","HeaderName","HeaderNavigation","HeaderMenu","HeaderMenuItem","HeaderGlobalBar","HeaderGlobalAction","HeaderAction"] },
+      { "surfaceKey": "workspace.sidebar",            "carbonClasses": ["SideNav","SideNavItems","SideNavMenu","SideNavMenuItem","SideNavLink"] },
+      { "surfaceKey": "workspace.mobile.drawer",      "carbonClasses": ["SideNav","SideNavItems"] },
+      { "surfaceKey": "workspace.mobile.bottomNav",   "carbonClasses": ["Button","Tag"] },
+      { "surfaceKey": "workspace.accountMenu",        "carbonClasses": ["HeaderAction","ContextMenu","ContextMenuItem"], "wrapperComponents": ["DosCarbonHeaderAction","DosCarbonContextMenu"] },
+      { "surfaceKey": "workspace.shell.user-menu",    "carbonClasses": ["HeaderAction","ContextMenu","ContextMenuItem"], "wrapperComponents": ["DosCarbonHeaderAction","DosCarbonContextMenu"] },
+      { "surfaceKey": "workspace.shell.settings-action","carbonClasses": ["HeaderAction","ContextMenu","ContextMenuItem"], "wrapperComponents": ["DosCarbonHeaderAction","DosCarbonContextMenu"] },
+      { "surfaceKey": "workspace.statusBanner",       "carbonClasses": ["InlineNotification","Tag"] }
+    ],
+    "rtl": {
+      "supported": true,
+      "logicalCssOnly": true,
+      "carbonClassMap": { "ltr": "cds--ltr", "rtl": "cds--rtl" }
+    },
+    "disclosureRule": "Carbon-native: shell disclosure menus MUST compose `cds-header-action` (trigger) + `cds-context-menu` + `cds-context-menu-item` (panel + items). Hand-rolled `<button>` triggers, `<ul role=\"menu\">` panels, and bespoke popovers are forbidden by lint-no-raw-shell-primitives. Coordinated open/close MUST flow through ShellOverlayService — Carbon's [cdsOverflowMenu] directive is excluded because it owns its own state."
+  },
+  "productWorkspaceDashboard": {
+    "carbonClasses": [
+      "Grid",
+      "Column",
+      "Tile",
+      "ClickableTile",
+      "Tag",
+      "ProgressBar",
+      "StructuredList",
+      "InlineNotification",
+      "SkeletonText",
+      "SkeletonPlaceholder"
+    ],
+    "regionBindings": [
+      { "region": "page_header",     "carbonClasses": ["Grid","Column","Breadcrumb","Tag","Button"] },
+      { "region": "module_cards",    "carbonClasses": ["Grid","Column","ClickableTile","Tag","ProgressBar"] },
+      { "region": "action_queue",    "carbonClasses": ["DataTable","TableToolbar","TableToolbarSearch","Pagination","OverflowMenu"] },
+      { "region": "ai_insights",     "carbonClasses": ["Tile","StructuredList","Tag","Button"] }
+    ]
+  },
+  "moduleOverview": {
+    "carbonClasses": [
+      "Grid",
+      "Column",
+      "Breadcrumb",
+      "Tile",
+      "Tag",
+      "ProgressBar",
+      "StructuredList",
+      "Tabs",
+      "InlineNotification"
+    ],
+    "stateBindings": {
+      "default":      ["Grid","Column","Breadcrumb","Tile","Tag","ProgressBar","StructuredList","Tabs"],
+      "loading":      ["SkeletonText","SkeletonPlaceholder"],
+      "empty":        ["Tile","Button"],
+      "error":        ["InlineNotification"],
+      "unauthorized": []
+    }
+  },
+  "moduleRecords": {
+    "carbonClasses": [
+      "DataTable",
+      "TableToolbar",
+      "TableToolbarSearch",
+      "TableToolbarActions",
+      "TableBatchActions",
+      "Pagination",
+      "OverflowMenu",
+      "OverflowMenuOption"
+    ],
+    "stateBindings": {
+      "default":      ["DataTable","TableToolbar","TableToolbarSearch","TableToolbarActions","Pagination","OverflowMenu","OverflowMenuOption"],
+      "loading":      ["SkeletonText","SkeletonPlaceholder"],
+      "empty":        ["Tile","Button"],
+      "error":        ["InlineNotification"],
+      "unauthorized": []
+    },
+    "responsiveVariants": {
+      "mobile":  { "preferred": "card_list",        "carbonClasses": ["StructuredList","Tile","Tag","Button"] },
+      "tablet":  { "preferred": "compact_data_table","carbonClasses": ["DataTable","Pagination"] },
+      "desktop": { "preferred": "full_data_table",  "carbonClasses": ["DataTable","TableToolbar","TableToolbarSearch","TableToolbarActions","TableBatchActions","Pagination","OverflowMenu"] }
+    }
+  },
+  "moduleForms": {
+    "carbonClasses": [
+      "Modal",
+      "TextInput",
+      "TextArea",
+      "Dropdown",
+      "ComboBox",
+      "MultiSelect",
+      "DatePicker",
+      "NumberInput",
+      "Select",
+      "Checkbox",
+      "Radio",
+      "Toggle",
+      "Button",
+      "InlineLoading"
+    ],
+    "containerBindings": {
+      "page":   ["Grid","Column","Form","Button","InlineLoading"],
+      "panel":  ["StructuredList","Form","Button","InlineLoading"],
+      "modal":  ["Modal","Form","Button","InlineLoading"]
+    },
+    "controlBindings": {
+      "text":         ["TextInput"],
+      "longText":     ["TextArea"],
+      "single":       ["Dropdown","Select"],
+      "single-search":["ComboBox"],
+      "multi":        ["MultiSelect"],
+      "date":         ["DatePicker"],
+      "number":       ["NumberInput"],
+      "boolean":      ["Toggle","Checkbox"],
+      "enumOne":      ["Radio"]
+    }
+  },
+  "mobileCatalogWrappers": {
+    "rendererKey": "shell.catalog-mobile",
+    "componentType": "mobile",
+    "rule": "workspace.mobile.* component_keys are catalog rows that bind to `dos-carbon-mobile-*` standalone wrappers, not to standalone Carbon classes. The wrappers internally compose Carbon primitives sized/spaced for touch using `shell.touchTargets` runtime values. Do NOT bypass the wrapper — frontend must resolve via the renderer registry and never `import` the underlying Carbon class directly outside the carbon barrel.",
+    "wrapperBindings": [
+      { "componentKey": "workspace.mobile.button",     "wrapper": "DosCarbonMobileButton",     "underlyingCarbonClasses": ["Button"] },
+      { "componentKey": "workspace.mobile.input",      "wrapper": "DosCarbonMobileInput",      "underlyingCarbonClasses": ["TextInput"] },
+      { "componentKey": "workspace.mobile.dropdown",   "wrapper": "DosCarbonMobileDropdown",   "underlyingCarbonClasses": ["Dropdown"] },
+      { "componentKey": "workspace.mobile.data-table", "wrapper": "DosCarbonMobileDataTable",  "underlyingCarbonClasses": ["DataTable","Pagination"] },
+      { "componentKey": "workspace.mobile.tabs",       "wrapper": "DosCarbonMobileTabs",       "underlyingCarbonClasses": ["Tabs","Tab"] },
+      { "componentKey": "workspace.mobile.modal",      "wrapper": "DosCarbonMobileModal",      "underlyingCarbonClasses": ["Modal"] },
+      { "componentKey": "workspace.mobile.card",       "wrapper": "DosCarbonMobileCard",       "underlyingCarbonClasses": ["Tile","ClickableTile"] }
+    ]
+  },
+  "semanticToCarbon": {
+    "dos.page-header":             ["Grid","Column","Breadcrumb","Tag","Button"],
+    "dos.status-banner":           ["InlineNotification","Tag"],
+    "dos.metric-grid":             ["Grid","Column","Tile","Tag","ProgressBar","SkeletonText"],
+    "dos.structured-summary-card": ["Tile","StructuredList","Tag"],
+    "dos.records-table":           ["DataTable","TableToolbar","TableToolbarSearch","TableToolbarActions","Pagination","OverflowMenu","OverflowMenuOption"],
+    "dos.form-modal":              ["Modal","TextInput","TextArea","Dropdown","ComboBox","MultiSelect","DatePicker","NumberInput","Select","Checkbox","Radio","Toggle","Button","InlineLoading"],
+    "dos.detail-card":             ["Tile","StructuredList","Tag","Button"],
+    "dos.empty-state":             ["Tile","Button"],
+    "dos.workflow-panel":          ["Tile","StructuredList","Tag","ProgressBar","Button"],
+    "dos.recommendation-list":     ["Tile","StructuredList","Tag","Button"],
+    "dos.ai-insight-panel":        ["Tile","StructuredList","Tag","Button"],
+    "dos.tabs":                    ["Tabs","Tab"],
+    "dos.audit-log-table":         ["DataTable","TableToolbar","Pagination","Tag"],
+    "dos.settings-panel":          ["Tabs","StructuredList","Toggle","Dropdown","TextInput","Button"],
+    "dos.ownership-matrix":        ["DataTable","Tag","Tooltip","Button"],
+    "dos.sod-result":              ["InlineNotification","Tag"],
+    "dos.readiness-panel":         ["ProgressBar","StructuredList","Tag"],
+    "dos.org-tree":                ["StructuredList","Tile","Tag"],
+    "dos.disclosure-menu":         ["HeaderAction","ContextMenu","ContextMenuItem"],
+    "dos.shell.user-menu":         ["HeaderAction","ContextMenu","ContextMenuItem"],
+    "dos.shell.settings-action":   ["HeaderAction","ContextMenu","ContextMenuItem"]
+  },
+  "themeBindings": {
+    "ref": "theme/theme.system.contract.v1-1.json",
+    "carbonThemes": ["white","g10","g90","g100"],
+    "appliedAt": ["shell.root","shell.header","shell.sidebar"]
+  },
+  "consumption": {
+    "rule": "Frontend renderers MUST resolve the Carbon class set from this map indexed by (semanticComponent, archetype, state, breakpoint). Direct hardcoded Carbon class names in renderer templates are forbidden.",
+    "consumerBindings": [
+      { "renderer": "ModuleOverviewTemplateComponent",  "lookup": "moduleOverview.stateBindings + semanticToCarbon" },
+      { "renderer": "ModuleRecordsTemplateComponent",   "lookup": "moduleRecords.stateBindings + responsiveVariants + semanticToCarbon" },
+      { "renderer": "ModuleFormTemplateComponent",      "lookup": "moduleForms.containerBindings + controlBindings + semanticToCarbon" },
+      { "renderer": "WorkflowRecordsTemplateComponent", "lookup": "moduleRecords.stateBindings + semanticToCarbon" },
+      { "renderer": "ModuleSettingsTemplateComponent",  "lookup": "moduleOverview.stateBindings + semanticToCarbon" },
+      { "renderer": "AuditLogTemplateComponent",        "lookup": "moduleRecords.stateBindings + semanticToCarbon (dos.audit-log-table)" },
+      { "renderer": "AiInsightsTemplateComponent",      "lookup": "moduleOverview.stateBindings + semanticToCarbon (dos.ai-insight-panel)" },
+      { "renderer": "OwnershipMatrixTemplateComponent", "lookup": "moduleRecords.stateBindings + semanticToCarbon (dos.ownership-matrix)" },
+      { "renderer": "OrgChartTemplateComponent",        "lookup": "moduleOverview.stateBindings + semanticToCarbon (dos.org-tree)" },
+      { "renderer": "ModuleReportsTemplateComponent",   "lookup": "moduleRecords.stateBindings + semanticToCarbon" },
+      { "renderer": "PostureOverviewTemplateComponent", "lookup": "moduleOverview.stateBindings + semanticToCarbon (dos.readiness-panel)" }
+    ]
+  },
+  "acceptance": [
+    "shell.carbonClasses fully covers UIShell + disclosure pair (HeaderAction, ContextMenu, ContextMenuItem); raw <button>/<ul role=menu> in shell renderers MUST fail lint-no-raw-shell-primitives",
+    "productWorkspaceDashboard.carbonClasses exactly matches user-stated Dashboard list (10 entries)",
+    "moduleOverview.carbonClasses exactly matches user-stated Overview list (9 entries)",
+    "moduleRecords.carbonClasses exactly matches user-stated Records list (8 entries)",
+    "moduleForms.carbonClasses exactly matches user-stated Forms list (14 entries)",
+    "every dos.* semantic component has a semanticToCarbon entry",
+    "every workspace.mobile.* component_key has a wrapperBindings entry under mobileCatalogWrappers and a renderer_key='shell.catalog-mobile' / component_type='mobile' row in dos.dynamic_ui_component_registry"
+  ]
+}

@@ -87,9 +87,6 @@ const CATEGORY_TAG_TYPE: Record<ResultCategory, DosCarbonTagType> = {
                 <dos-icon [name]="r.icon" [size]="16" class="dos-command-search__icon"></dos-icon>
               }
               <span class="dos-command-search__label">{{ r.label?.fallback ?? r.label?.i18nKey ?? '' }}</span>
-              @if (r.route) {
-                <span class="dos-command-search__route" aria-hidden="true">{{ r.route }}</span>
-              }
             </li>
           }
         </ul>
@@ -183,13 +180,6 @@ const CATEGORY_TAG_TYPE: Record<ResultCategory, DosCarbonTagType> = {
       white-space: nowrap;
       font-size: 0.875rem;
       color: var(--cds-text-primary);
-    }
-
-    .dos-command-search__route {
-      font-size: 0.75rem;
-      color: var(--cds-text-secondary);
-      margin-inline-start: auto;
-      font-family: var(--cds-code-01-font-family);
     }
 
     /* ── Empty state ──────────────────────────────────── */

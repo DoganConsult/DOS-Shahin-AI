@@ -9,14 +9,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 import { Component, ChangeDetectionStrategy, EventEmitter, Input, Output, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { UIShellModule } from 'carbon-components-angular';
 import { DosNavSectionComponent } from './nav-section.component';
 /**
  * DosWorkspaceNav — top-level workspace navigation.
- *
- * Composes `<dos-nav-section>` rows from a `DosShellNavConfig` produced
- * by a product navigation adapter (e.g. Shahin's WorkspaceNavigationAdapter).
- * Sorts groups by `order` ascending; falls back to declaration order.
- * Re-emits child select events. Stateless: parent owns activeRoute.
+ * Refined to use Carbon SideNav policies.
  */
 let DosWorkspaceNavComponent = class DosWorkspaceNavComponent {
     set config(value) {
@@ -51,10 +48,10 @@ DosWorkspaceNavComponent = __decorate([
     Component({
         selector: 'dos-workspace-nav',
         standalone: true,
-        imports: [CommonModule, DosNavSectionComponent],
+        imports: [CommonModule, UIShellModule, DosNavSectionComponent],
         changeDetection: ChangeDetectionStrategy.OnPush,
         template: `
-    <nav class="dos-workspace-nav" aria-label="Workspace navigation">
+    <cds-sidenav [expanded]="true" aria-label="Workspace navigation">
       @for (group of orderedGroups(); track group.id) {
         <dos-nav-section
           [group]="group"
@@ -62,8 +59,11 @@ DosWorkspaceNavComponent = __decorate([
           (select)="select.emit($event)"
         ></dos-nav-section>
       }
-    </nav>
+    </cds-sidenav>
   `,
+        styles: [`
+    :host { display: block; }
+  `]
     })
 ], DosWorkspaceNavComponent);
 export { DosWorkspaceNavComponent };

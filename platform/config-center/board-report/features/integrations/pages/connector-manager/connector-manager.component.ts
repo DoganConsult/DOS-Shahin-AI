@@ -164,6 +164,18 @@ const CONNECTOR_TYPES: ConnectorTypeDef[] = [
         ] },
     ],
   },
+  // ═══════════════════════════════════════════════════════════════════
+  // ZERO_LEGACY tracker: this Microsoft-365 connector definition (and
+  // every sibling entry in CONNECTOR_TYPES) is slated for replacement
+  // by `integrationRuntime.connectorCatalog` (phase-e-wave3). The form
+  // field schema, auth method, and OAuth scope list will be sourced
+  // from `dos.integration_connector_catalog` + a new
+  // `dos.integration_connector_form_field` table. Until that wave
+  // lands, the data here is treated as a pre-migration constant and
+  // is excluded from the lint-no-frontend-invention guard via the
+  // `phase-e-wave3` allow-tag below.
+  // phase-e-wave3
+  // ═══════════════════════════════════════════════════════════════════
   {
     key: 'outlook', label: 'Microsoft 365', icon: 'pi-microsoft', description: 'Outlook, SharePoint, OneDrive, Teams, Power BI, Dynamics 365',
     color: '#2563eb', defaultSchedule: '0 2 * * *',

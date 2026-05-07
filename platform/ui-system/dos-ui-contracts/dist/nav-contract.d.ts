@@ -25,8 +25,6 @@ export interface DosNavItem {
     label: string;
     /** Canonical UI-OS action contract (preferred). */
     action?: ShellAction;
-    /** Legacy router path shim; retained temporarily for adapter compatibility. */
-    route?: string;
     /** Icon name (canonical icon system: lucide / material-icons-outlined). */
     icon?: string;
     /** Optional badge text (e.g. "soon", "3", "new"). */

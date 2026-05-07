@@ -12,23 +12,38 @@
  *   breadcrumb · button · combo-button · structured-list · progress-bar
  */
 import {
-  Component, Input, Output, EventEmitter, computed, signal,
-  ChangeDetectionStrategy, CUSTOM_ELEMENTS_SCHEMA, OnInit, inject
+  Component, Input, Output, EventEmitter, computed,
+  ChangeDetectionStrategy, CUSTOM_ELEMENTS_SCHEMA, OnInit
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import {
   TilesModule, TabsModule, TagModule, NotificationModule,
-  SkeletonModule, BreadcrumbModule, ButtonModule, ComboButtonModule,
-  StructuredListModule, ProgressBarModule, GridModule, LayerModule,
-  ContentSwitcherModule, LinkModule, IconModule
+  SkeletonModule, BreadcrumbModule, ButtonModule,
+  StructuredListModule, GridModule, LinkModule
 } from 'carbon-components-angular';
 import {
   ModuleKpi, ModuleAction, ModuleTab, ModuleNotification,
   ModuleRole, resolveViewMode, RoleViewMode, ModuleInsightPillars
 } from './module-template.types';
-import { DosInsightBarComponent } from './dos-insight-bar.component';
 
+interface OverviewTabRow {
+  label: string;
+  value: string | number;
+}
+
+interface OverviewTabPanel {
+  id: string;
+  rows: OverviewTabRow[];
+}
+
+interface WorkspaceCard {
+  id: string;
+  title: string;
+  description: string;
+  route: string | null;
+  badge?: string | number;
+}
 
 @Component({
   selector: 'dos-command-home',
@@ -38,10 +53,8 @@ import { DosInsightBarComponent } from './dos-insight-bar.component';
   imports: [
     CommonModule, RouterModule,
     TilesModule, TabsModule, TagModule, NotificationModule,
-    SkeletonModule, BreadcrumbModule, ButtonModule, ComboButtonModule,
-    StructuredListModule, ProgressBarModule, GridModule, LayerModule,
-    ContentSwitcherModule, LinkModule, IconModule,
-    DosInsightBarComponent,
+    SkeletonModule, BreadcrumbModule, ButtonModule,
+    StructuredListModule, GridModule, LinkModule,
   ],
 
   template: `
@@ -70,180 +83,258 @@ import { DosInsightBarComponent } from './dos-insight-bar.component';
       </cds-notification>
     }
 
-    <!-- ── Compact page header (Carbon page-header pattern) ───────── -->
     @if (!loading) {
-      <header class="dmt-page-header" data-testid="dos-tpl-page-header">
-        <div class="dmt-page-header__row dmt-page-header__row--top">
-          @if (eyebrow) {
-            <cds-breadcrumb [noTrailingSlash]="true" class="dmt-page-header__breadcrumb">
-              <cds-breadcrumb-item>{{ eyebrow }}</cds-breadcrumb-item>
-            </cds-breadcrumb>
-          }
-          @if (aiHeadline) {
-            <cds-ai-label class="dmt-page-header__ai" kind="inline" size="sm">{{ aiHeadline }}</cds-ai-label>
-          }
-          <div class="dmt-page-header__actions">
-            @if (statusTags.length) {
-              @for (tag of statusTags; track tag.label) {
-                <cds-tag [type]="tagType(tag.severity)" size="sm">{{ tag.label }}</cds-tag>
+      @if (isWorkspaceHome()) {
+        <div cdsGrid [fullWidth]="true" class="dmt-carbon-page" data-testid="dos-command-home-workspace">
+          <div cdsRow>
+            <div cdsCol [columnNumbers]="{ lg: 16, md: 8, sm: 4 }">
+              @if (workspaceCards().length) {
+                <section class="dmt-section">
+                  <div cdsGrid [fullWidth]="true" [condensed]="true">
+                    <div cdsRow>
+                      @for (card of workspaceCards(); track card.id) {
+                        <div cdsCol [columnNumbers]="{ lg: 4, md: 4, sm: 4 }">
+                          <cds-clickable-tile class="dmt-summary-tile" [routerLink]="card.route ?? null">
+                            <p class="dmt-tile-eyebrow">{{ card.title }}</p>
+                            <p class="dmt-tile-body">{{ card.description }}</p>
+                            @if (card.badge) {
+                              <cds-tag type="blue" size="sm">{{ card.badge }}</cds-tag>
+                            }
+                          </cds-clickable-tile>
+                        </div>
+                      }
+                    </div>
+                  </div>
+                </section>
+              } @else {
+                <section class="dmt-section">
+                  <cds-tile class="dmt-tabs-tile">
+                    <cds-inline-notification
+                      kind="info"
+                      [title]="title"
+                      [subtitle]="subtitle || ''"
+                      [hideCloseButton]="true"
+                      lowContrast>
+                    </cds-inline-notification>
+                  </cds-tile>
+                </section>
               }
-            }
-            @if (viewMode() !== 'limited') {
-              @if (primaryAction) {
-                <button cdsButton="primary" size="sm"
-                  (click)="triggerAction(primaryAction)">
-                  {{ primaryAction.label }}
-                </button>
-              }
-              @if (secondaryActions.length && viewMode() === 'full') {
-                @for (action of secondaryActions; track action.actionKey || action.commandKey || action.route || action.label) {
-                  <button cdsButton="tertiary" size="sm" (click)="triggerAction(action)">
-                    {{ action.label }}
-                  </button>
-                }
-              }
-            }
+            </div>
           </div>
         </div>
-        <div class="dmt-page-header__row dmt-page-header__row--title">
-          <h1 class="dmt-page-header__title">{{ title }}</h1>
-          @if (subtitle) {
-            <p class="dmt-page-header__subtitle">{{ subtitle }}</p>
-          }
-          @if (heroKpi) {
-            <span class="dmt-page-header__hero">
-              <strong>{{ heroKpi.value }}</strong>
-              @if (heroKpi.label) { <span class="dmt-page-header__hero-label">{{ heroKpi.label }}</span> }
-              @if (heroKpi.delta) { <span class="dmt-page-header__hero-delta">{{ heroKpi.delta }}</span> }
-            </span>
-          }
-        </div>
-      </header>
+      } @else {
+        <div cdsGrid [fullWidth]="true" class="dmt-carbon-page" data-testid="dos-command-home-page">
+          <div cdsRow>
+            <div cdsCol [columnNumbers]="{ lg: 16, md: 8, sm: 4 }">
+              <section class="dmt-page-header" data-testid="dos-tpl-page-header">
+                <div class="dmt-page-header__context">
+                  <cds-breadcrumb [noTrailingSlash]="true" class="dmt-page-header__breadcrumb">
+                    @if (eyebrow) {
+                      <cds-breadcrumb-item>{{ eyebrow }}</cds-breadcrumb-item>
+                    }
+                    @if (title) {
+                      <cds-breadcrumb-item [current]="true">{{ title }}</cds-breadcrumb-item>
+                    }
+                  </cds-breadcrumb>
+                </div>
+                <div class="dmt-page-header__main">
+                  <div class="dmt-page-header__copy">
+                    <h1 class="dmt-page-header__title">{{ title }}</h1>
+                    @if (subtitle) {
+                      <p class="dmt-page-header__subtitle">{{ subtitle }}</p>
+                    }
+                  </div>
+                  <div class="dmt-page-header__actions">
+                    @for (tag of statusTags; track tag.label) {
+                      <cds-tag [type]="tagType(tag.severity)" size="sm">{{ tag.label }}</cds-tag>
+                    }
+                    @if (viewMode() !== 'limited' && primaryAction) {
+                      <button cdsButton="primary" size="sm" type="button" (click)="triggerAction(primaryAction)">
+                        {{ actionLabel(primaryAction) }}
+                      </button>
+                    }
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
 
-      <!-- ── 5-Pillar Insight Bar ────────────────────────────────── -->
-      <dos-insight-bar
-        [pillars]="pillars"
-        archetype="command-home"
-        (actionClick)="triggerAction(pillars?.nextAction ?? null)">
-      </dos-insight-bar>
+          <div cdsRow class="dmt-page-grid-row">
+            <div cdsCol [columnNumbers]="{ lg: 12, md: 8, sm: 4 }">
+              <div class="dmt-main-stack">
+                @if (summaryTiles().length) {
+                  <section class="dmt-section">
+                    <div cdsGrid [fullWidth]="true" class="dmt-summary-grid" [condensed]="true">
+                      <div cdsRow>
+                        @for (tile of summaryTiles(); track tile.label) {
+                          <div cdsCol [columnNumbers]="{ lg: 4, md: 4, sm: 4 }">
+                            <cds-tile class="dmt-summary-tile">
+                              <p class="dmt-tile-eyebrow">{{ tile.label }}</p>
+                              <p class="dmt-tile-body">{{ tile.value }}</p>
+                            </cds-tile>
+                          </div>
+                        }
+                      </div>
+                    </div>
+                  </section>
+                }
 
-            <!-- ── KPI strip ──────────────────────────────────────────────── -->
-      @if (kpis.length) {
-        <div class="dmt-kpi-strip">
-          @for (kpi of visibleKpis(); track kpi.label) {
-            <cds-clickable-tile
-              class="dmt-kpi-card"
-              [routerLink]="kpi.link ?? null">
-              <p class="dmt-kpi-label">{{ kpi.label }}</p>
-              <p class="dmt-kpi-value" [class]="'dmt-kpi-value--' + (kpi.status ?? 'info')">
-                {{ kpi.value }}
-              </p>
-              @if (kpi.delta) {
-                <span class="dmt-kpi-delta" [class]="'dmt-delta--' + (kpi.deltaDirection ?? 'neutral')">
-                  {{ kpi.delta }}
-                </span>
+                @if (visibleKpis().length) {
+                  <section class="dmt-section">
+                    <div cdsGrid [fullWidth]="true" class="dmt-metrics-grid" [condensed]="true">
+                      <div cdsRow>
+                        @for (kpi of visibleKpis(); track kpi.label) {
+                          <div cdsCol [columnNumbers]="{ lg: 3, md: 4, sm: 4 }">
+                            <cds-clickable-tile class="dmt-kpi-card" [routerLink]="kpi.link ?? null">
+                              <p class="dmt-kpi-label">{{ kpiLabel(kpi) }}</p>
+                              <p class="dmt-kpi-value" [class]="'dmt-kpi-value--' + (kpi.status ?? 'info')">
+                                {{ kpi.value }}
+                              </p>
+                              @if (kpi.aiInsight) {
+                                <p class="dmt-kpi-insight">{{ kpi.aiInsight }}</p>
+                              }
+                            </cds-clickable-tile>
+                          </div>
+                        }
+                      </div>
+                    </div>
+                  </section>
+                }
+
+                <section class="dmt-section">
+                  <cds-tile class="dmt-tabs-tile">
+                    @if (visibleTabs().length && hasRenderableTabs()) {
+                      <cds-tabs type="line" [followFocus]="false">
+                        @for (tab of visibleTabs(); track tab.id) {
+                          <cds-tab [id]="tab.id" [heading]="tabLabel(tab)">
+                            @if (tabPanel(tab.id); as panel) {
+                              <cds-structured-list class="dmt-tab-list">
+                                <cds-list-header>
+                                  <cds-list-column>{{ tabLabel(tab) }}</cds-list-column>
+                                  <cds-list-column></cds-list-column>
+                                </cds-list-header>
+                                @for (row of panel.rows; track row.label) {
+                                  <cds-list-row>
+                                    <cds-list-column>{{ row.label }}</cds-list-column>
+                                    <cds-list-column>{{ row.value }}</cds-list-column>
+                                  </cds-list-row>
+                                }
+                              </cds-structured-list>
+                            } @else {
+                              <cds-inline-notification
+                                kind="info"
+                                [title]="tabLabel(tab)"
+                                subtitle=""
+                                [hideCloseButton]="true"
+                                lowContrast>
+                              </cds-inline-notification>
+                            }
+                          </cds-tab>
+                        }
+                      </cds-tabs>
+                    } @else {
+                      <cds-inline-notification
+                        kind="info"
+                        [title]="title"
+                        subtitle=""
+                        [hideCloseButton]="true"
+                        lowContrast>
+                      </cds-inline-notification>
+                    }
+                  </cds-tile>
+                </section>
+              </div>
+            </div>
+
+            <div cdsCol [columnNumbers]="{ lg: 4, md: 8, sm: 4 }">
+              @if ((nbaActions.length && viewMode() !== 'limited')) {
+                <aside class="dmt-insight-panel" [attr.aria-label]="aiHeadline || null">
+                  <cds-tile class="dmt-insight-panel__tile">
+                    @if (aiHeadline) {
+                      <cds-ai-label kind="inline" size="sm">{{ aiHeadline }}</cds-ai-label>
+                    }
+                    <cds-structured-list class="dmt-recommendations-list">
+                      @for (action of nbaActions.slice(0,5); track action.label; let i = $index) {
+                        <cds-list-row>
+                          <cds-list-column>
+                            <cds-tag [type]="nbaTagType(action.severity)">{{ i + 1 }}</cds-tag>
+                          </cds-list-column>
+                          <cds-list-column>
+                            <a cdsLink [routerLink]="action.route ?? null">{{ actionLabel(action) }}</a>
+                            @if (action.aiScore) {
+                              <span class="dmt-score">{{ action.aiScore }}</span>
+                            }
+                          </cds-list-column>
+                        </cds-list-row>
+                      }
+                    </cds-structured-list>
+                  </cds-tile>
+                </aside>
               }
-              @if (kpi.aiInsight) {
-                <cds-ai-label kind="inline" size="sm">{{ kpi.aiInsight }}</cds-ai-label>
-              }
-            </cds-clickable-tile>
-          }
+              <ng-content select="[dosRail]"></ng-content>
+            </div>
+          </div>
         </div>
       }
-
-      <!-- ── Main content: tabs + rail ─────────────────────────────── -->
-      <div class="dmt-body-grid">
-        <!-- Tabs section -->
-        <div class="dmt-tabs-col">
-          @if (tabs.length) {
-            <cds-tile class="dmt-tabs-tile">
-              <cds-tabs type="line" [followFocus]="true">
-                @for (tab of visibleTabs(); track tab.id) {
-                  <cds-tab [id]="tab.id" [heading]="tab.label">
-                    <ng-content [select]="'[dosTab=' + tab.id + ']'"></ng-content>
-                  </cds-tab>
-                }
-              </cds-tabs>
-            </cds-tile>
-          } @else {
-            <!-- No tabs — slot for direct content -->
-            <cds-tile class="dmt-content-tile">
-              <ng-content></ng-content>
-            </cds-tile>
-          }
-        </div>
-
-        <!-- Context rail (role-gated: limited users see minimal rail) -->
-        <div class="dmt-rail-col">
-          <!-- AI Next Best Actions -->
-          @if (nbaActions.length && viewMode() !== 'limited') {
-            <cds-tile class="dmt-rail-tile">
-              <cds-ai-label kind="inline" size="sm">AI Recommendations</cds-ai-label>
-              <cds-structured-list>
-                <cds-list-header>
-                  <cds-list-column>Priority</cds-list-column>
-                  <cds-list-column>Action</cds-list-column>
-                </cds-list-header>
-                @for (action of nbaActions.slice(0,5); track action.label; let i = $index) {
-                  <cds-list-row>
-                    <cds-list-column>
-                      <cds-tag [type]="nbaTagType(action.severity)">{{ i + 1 }}</cds-tag>
-                    </cds-list-column>
-                    <cds-list-column>
-                      <a cdsLink [routerLink]="action.route ?? null">{{ action.label }}</a>
-                      @if (action.aiScore) {
-                        <cds-ai-label kind="inline" size="sm">Score: {{ action.aiScore }}</cds-ai-label>
-                      }
-                    </cds-list-column>
-                  </cds-list-row>
-                }
-              </cds-structured-list>
-            </cds-tile>
-          }
-
-          <!-- Custom rail content -->
-          <ng-content select="[dosRail]"></ng-content>
-        </div>
-      </div>
     }
   `,
   styles: [`
     :host { display: block; padding: 0; }
 
-    /* ── Compact page header (Carbon page-header pattern) ─────────
-       Doctrine: ≤72px desktop; no hero-style empty space; subtitle
-       inline next to title. Page content begins immediately after
-       this header — no large blank area above/below. */
+    .dmt-carbon-page {
+      inline-size: 100%;
+      max-inline-size: 100%;
+      padding-inline: 0;
+    }
+    .dmt-page-grid-row {
+      align-items: start;
+    }
+    .dmt-main-stack {
+      display: flex;
+      flex-direction: column;
+      gap: var(--cds-spacing-04);
+      min-inline-size: 0;
+    }
+    .dmt-section {
+      margin: 0;
+      min-inline-size: 0;
+    }
     .dmt-page-header {
       display: flex;
       flex-direction: column;
-      padding-block: 0.375rem 0.5rem;
-      padding-inline: 1rem;
-      margin-block-end: 0.75rem;
-      background: var(--cds-layer);
+      gap: var(--cds-spacing-03);
+      padding-block-end: var(--cds-spacing-03);
+      margin-block-end: var(--cds-spacing-03);
+      background: transparent;
       border-block-end: 1px solid var(--cds-border-subtle);
     }
-    .dmt-page-header__row {
+    .dmt-page-header__context {
+      min-block-size: var(--cds-spacing-06);
       display: flex;
       align-items: center;
-      gap: 0.75rem;
-      min-inline-size: 0;
     }
-    .dmt-page-header__row--top {
+    .dmt-page-header__breadcrumb {
+      font-size: var(--cds-label-01-font-size);
+      line-height: var(--cds-label-01-line-height);
+    }
+    .dmt-page-header__main {
+      display: flex;
+      align-items: center;
       justify-content: space-between;
-      min-block-size: 1.25rem;
+      gap: var(--cds-spacing-05);
+      min-inline-size: 0;
+      min-block-size: var(--cds-spacing-07);
     }
-    .dmt-page-header__row--title {
-      flex-wrap: wrap;
-      min-block-size: 1.75rem;
+    .dmt-page-header__copy {
+      min-inline-size: 0;
+      flex: 1 1 auto;
     }
-    .dmt-page-header__breadcrumb { font-size: 0.75rem; line-height: 1; }
-    .dmt-page-header__ai { font-size: 0.75rem; }
-    .dmt-page-header__actions {
+    .dmt-page-header__actions,
+    .dmt-insight-panel__actions {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      flex-wrap: nowrap;
+      gap: var(--cds-spacing-03);
+      flex-wrap: wrap;
       margin-inline-start: auto;
     }
     .dmt-page-header__title {
@@ -254,65 +345,106 @@ import { DosInsightBarComponent } from './dos-insight-bar.component';
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      max-inline-size: 40%;
     }
     .dmt-page-header__subtitle {
-      font-size: 0.8125rem;
+      font-size: var(--cds-body-compact-01-font-size);
       color: var(--cds-text-secondary);
       margin: 0;
-      line-height: 1.3;
+      line-height: var(--cds-body-compact-01-line-height);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      flex: 1 1 auto;
-      min-inline-size: 0;
     }
-    .dmt-page-header__hero {
-      display: inline-flex; align-items: baseline; gap: 0.375rem;
-      font-size: 0.875rem;
-    }
-    .dmt-page-header__hero strong { font-size: 1rem; font-weight: 600; }
-    .dmt-page-header__hero-label { color: var(--cds-text-secondary); font-size: 0.75rem; }
-    .dmt-page-header__hero-delta { color: var(--cds-text-secondary); font-size: 0.75rem; }
 
-    /* KPI strip */
-    .dmt-kpi-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1px; margin-bottom: 1rem; }
-    .dmt-kpi-card { padding: 1rem; }
-    .dmt-kpi-label { font-size: 0.75rem; color: var(--cds-text-secondary); margin: 0 0 0.25rem; text-transform: uppercase; letter-spacing: 0.04em; }
-    .dmt-kpi-value { font-size: 2rem; font-weight: 300; margin: 0; line-height: 1; }
+    .dmt-summary-grid,
+    .dmt-metrics-grid {
+      inline-size: 100%;
+      padding-inline: 0;
+    }
+    .dmt-summary-tile,
+    .dmt-kpi-card,
+    .dmt-tabs-tile,
+    .dmt-insight-panel__tile {
+      inline-size: 100%;
+      block-size: 100%;
+    }
+    .dmt-summary-tile,
+    .dmt-kpi-card {
+      padding: var(--cds-spacing-05);
+    }
+    .dmt-tile-eyebrow,
+    .dmt-kpi-label {
+      font-size: var(--cds-label-01-font-size);
+      line-height: var(--cds-label-01-line-height);
+      color: var(--cds-text-secondary);
+      margin: 0 0 var(--cds-spacing-03);
+      text-transform: uppercase;
+      letter-spacing: var(--cds-label-01-letter-spacing);
+    }
+    .dmt-tile-body,
+    .dmt-kpi-insight {
+      color: var(--cds-text-secondary);
+      font-size: var(--cds-body-compact-01-font-size);
+      line-height: var(--cds-body-compact-01-line-height);
+      margin: 0;
+    }
+    .dmt-kpi-value { font-size: 1.75rem; font-weight: 300; margin: 0; line-height: 1; }
     .dmt-kpi-value--critical { color: var(--cds-support-error); }
     .dmt-kpi-value--warning  { color: var(--cds-support-warning); }
     .dmt-kpi-value--success  { color: var(--cds-support-success); }
-    .dmt-kpi-delta { font-size: 0.75rem; }
-    .dmt-delta--up   { color: var(--cds-support-error); }
-    .dmt-delta--down { color: var(--cds-support-success); }
-
-    /* Body grid */
-    .dmt-body-grid { display: grid; grid-template-columns: 1fr 280px; gap: 1rem; align-items: start; }
-    .dmt-tabs-tile { padding: 0; }
-    .dmt-content-tile { padding: 1.5rem; }
-    .dmt-rail-col { display: flex; flex-direction: column; gap: 1rem; }
-    .dmt-rail-tile { padding: 1rem; }
+    .dmt-kpi-insight {
+      margin-block-start: var(--cds-spacing-03);
+    }
+    .dmt-tabs-tile,
+    .dmt-insight-panel__tile {
+      padding: var(--cds-spacing-04);
+    }
+    .dmt-tab-list,
+    .dmt-recommendations-list {
+      margin-block-start: var(--cds-spacing-05);
+    }
+    .dmt-insight-panel {
+      position: sticky;
+      inset-block-start: var(--cds-spacing-05);
+      display: block;
+      min-inline-size: 0;
+    }
+    .dmt-score {
+      display: inline-flex;
+      margin-inline-start: var(--cds-spacing-03);
+      color: var(--cds-text-secondary);
+      font-size: var(--cds-label-01-font-size);
+    }
 
     /* Skeleton */
-    .dmt-overview-skeleton { display: flex; flex-direction: column; gap: 1rem; }
-    .dmt-page-header--skeleton { min-block-size: 56px; }
-    .dmt-kpi-skeleton { height: 100px; }
+    .dmt-overview-skeleton { display: flex; flex-direction: column; gap: var(--cds-spacing-05); }
+    .dmt-page-header--skeleton { min-block-size: var(--cds-spacing-09); }
+    .dmt-kpi-skeleton { block-size: 6rem; }
 
-    @media (max-width: 1024px) {
-      .dmt-body-grid { grid-template-columns: 1fr; }
-      .dmt-rail-col { display: none; }
-    }
-    @media (max-width: 768px) {
-      .dmt-page-header { padding-inline: 0.75rem; }
-      .dmt-page-header__row--title { flex-wrap: wrap; }
-      .dmt-page-header__title { max-inline-size: 100%; font-size: 1rem; }
-      .dmt-page-header__subtitle { white-space: normal; flex-basis: 100%; }
-      .dmt-page-header__hero { display: none; }
+    @media (max-width: 671.98px) {
+      .dmt-page-header__main {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+      .dmt-page-header__actions {
+        margin-inline-start: 0;
+      }
+      .dmt-page-header__subtitle {
+        white-space: normal;
+      }
+      .dmt-insight-panel {
+        position: static;
+      }
     }
   `]
 })
 export class ModuleOverviewTemplateComponent implements OnInit {
+  @Input() route = '';
+  // DB-emitted landing route from `chrome.landingRoute`. Parent shell
+  // passes the resolver-emitted value through. Empty string means the
+  // resolver has not emitted a landing route — `isWorkspaceHome()`
+  // returns false (no static `/workspace-home` literal anywhere).
+  @Input() landingRoute = '';
   @Input() eyebrow = '';
   @Input() title = '';
   @Input() subtitle = '';
@@ -330,6 +462,9 @@ export class ModuleOverviewTemplateComponent implements OnInit {
   @Input() writeRoles: ModuleRole[] = [];
   @Input() maxKpis = 4;
   @Input() pillars: ModuleInsightPillars | null = null;
+  @Input() tabPanels: OverviewTabPanel[] = [];
+  @Input() moduleCards: Array<Record<string, unknown>> = [];
+  @Input() cards: Array<Record<string, unknown>> = [];
   @Output() actionTriggered = new EventEmitter<{ key: string; payload?: Record<string, unknown> }>();
 
 
@@ -344,6 +479,106 @@ export class ModuleOverviewTemplateComponent implements OnInit {
     if (this.viewMode() === 'limited') return this.tabs.filter(t => !t.permission || t.permission.endsWith('.read'));
     return this.tabs;
   });
+
+  workspaceCards = computed<WorkspaceCard[]>(() => {
+    const rawCards = this.moduleCards.length ? this.moduleCards : this.cards;
+    return rawCards
+      .map((raw, idx): WorkspaceCard => {
+        const action = raw['action'] as Record<string, unknown> | undefined;
+        const routeFromAction = action?.['kind'] === 'navigate' ? String(action['path'] ?? '') : '';
+        const route = String(raw['route'] ?? routeFromAction ?? '').trim();
+        return {
+          id: String(raw['id'] ?? raw['moduleCode'] ?? raw['title'] ?? idx),
+          title: String(raw['title'] ?? raw['label'] ?? '').trim(),
+          description: String(raw['description'] ?? raw['subtitle'] ?? '').trim(),
+          route: route.length > 0 ? route : null,
+          badge: (raw['badge'] as string | number | undefined),
+        };
+      })
+      .filter((card) => card.title.length > 0 || card.description.length > 0);
+  });
+
+  summaryTiles = computed<OverviewTabRow[]>(() => {
+    const p = this.pillars;
+    if (!p) return [];
+    const labels = p.labels ?? {};
+    return [
+      { label: labels.whatChanged ?? '', value: p.whatChanged ?? '' },
+      { label: labels.whyItMatters ?? '', value: p.whyItMatters ?? '' },
+      { label: labels.riskOrOpportunity ?? '', value: p.riskOrOpportunity ?? '' },
+      { label: labels.evidence ?? '', value: p.evidence ?? '' },
+    ].filter((row) => String(row.value).length > 0);
+  });
+
+  tabPanel(id: string): OverviewTabPanel | null {
+    const explicit = this.tabPanels.find((panel) => panel.id === id);
+    if (explicit && explicit.rows.length) return explicit;
+
+    const p = this.pillars;
+    const labels = p?.labels ?? {};
+    const tabIndex = this.visibleTabs().findIndex((tab) => tab.id === id);
+    const kpiRows = this.kpis.map((kpi) => ({ label: this.kpiLabel(kpi), value: kpi.value }));
+    const actionRows = this.nbaActions.map((action) => ({
+      label: this.actionLabel(action),
+      value: action.aiScore ?? action.description ?? '',
+    }));
+    const pillarRows = [
+      { label: labels.whatChanged ?? '', value: p?.whatChanged ?? '' },
+      { label: labels.whyItMatters ?? '', value: p?.whyItMatters ?? '' },
+      { label: labels.riskOrOpportunity ?? '', value: p?.riskOrOpportunity ?? '' },
+      { label: labels.evidence ?? '', value: p?.evidence ?? '' },
+    ];
+    const generatedPanels: OverviewTabRow[][] = [
+      pillarRows,
+      kpiRows.slice(0, Math.max(1, Math.ceil(kpiRows.length / 2))),
+      kpiRows.slice(Math.max(1, Math.ceil(kpiRows.length / 2))),
+      actionRows,
+    ];
+    const rows = (generatedPanels[tabIndex] ?? [...pillarRows, ...kpiRows, ...actionRows])
+      .filter((row) => String(row.label).length > 0 || String(row.value).length > 0);
+    return rows.length ? { id, rows } : null;
+  }
+
+  hasRenderableTabs(): boolean {
+    const tabs = this.visibleTabs();
+    if (!tabs.length) return false;
+    return this.tabPanel(tabs[0].id) !== null;
+  }
+
+  isWorkspaceHome(): boolean {
+    // DB-driven landing-route comparison. Returns true only when the
+    // resolver has emitted `chrome.landingRoute` AND the current route
+    // matches it. Empty landingRoute => false (no inferred default).
+    const landing = (this.landingRoute ?? '').trim();
+    if (!landing) return false;
+    return this.normalizeRoute(this.route) === this.normalizeRoute(landing);
+  }
+
+  private normalizeRoute(url: string): string {
+    if (!url) return '';
+    const q = url.indexOf('?');
+    const u = q === -1 ? url : url.slice(0, q);
+    const h = u.indexOf('#');
+    const v = h === -1 ? u : u.slice(0, h);
+    return v.length > 1 && v.endsWith('/') ? v.slice(0, -1) : v;
+  }
+
+  kpiLabel(kpi: ModuleKpi): string {
+    return this.isRtl() ? (kpi.labelAr ?? kpi.label) : kpi.label;
+  }
+
+  tabLabel(tab: ModuleTab): string {
+    return this.isRtl() ? (tab.labelAr ?? tab.label) : tab.label;
+  }
+
+  actionLabel(action: ModuleAction): string {
+    return this.isRtl() ? (action.labelAr ?? action.label) : action.label;
+  }
+
+  private isRtl(): boolean {
+    return typeof document !== 'undefined'
+      && (document.documentElement.dir === 'rtl' || document.documentElement.lang?.startsWith('ar'));
+  }
 
   ngOnInit() {}
 

@@ -180,7 +180,10 @@ const SideNavSchema = z.object({
   /** Canonical icon system: lucide / material-icons-outlined per DosNavItem.
    *  No `pi-*` / `mdi-*` allowed by the UI-system guard. */
   icon: z.string().regex(/^[a-z][a-z0-9-]+$/, 'lucide/mio key, no pi-* / mdi-*'),
-  route: z.string().min(1),
+  action: z.object({
+    kind: z.literal('navigate'),
+    path: z.string().min(1),
+  }),
   moduleCode: z.string().regex(/^[a-z][a-z0-9-]+$/),
   permissions: z.array(z.string().regex(/^[a-z0-9.-]+$/)).min(1),
   order: z.number().int().min(0).optional(),

@@ -1,0 +1,8 @@
+{
+  "guardId": "lint-v1-1-no-auto-execute",
+  "status": "PASS",
+  "preflightSqlCount": 5,
+  "failureCount": 0,
+  "failures": [],
+  "generatedAt": "2026-05-07T17:05:36.268Z"
+}

@@ -1,0 +1,215 @@
+{
+  "$schema": "https://dogan-ai.local/schemas/integration-runtime.v1-1.schema.json",
+  "contractKind": "integration-runtime",
+  "contractVersion": "1.1.0",
+  "runtimeModel": "v1-1-operating-runtime",
+  "generatedAt": "2026-05-07T16:50:00+03:00",
+  "rule": "Connector catalog, tenant connections, auth config, sync status/history, widgets, actions, and evidence sources are DB catalog rows resolved by UI-OS. Frontend never carries a static FALLBACK_CATALOG, hardcoded M365 connector list, or any product-specific connector definitions.",
+  "doctrine": [
+    "ZERO_STATIC",
+    "ZERO_LEGACY",
+    "ZERO_FALLBACK",
+    "DB_AS_SOURCE_OF_TRUTH"
+  ],
+  "forbidden": [
+    "FALLBACK_CATALOG",
+    "static_connector_array_in_frontend",
+    "hardcoded_microsoft_365_connector_constants",
+    "hardcoded_sharepoint_evidence_source",
+    "frontend_credentials_storage",
+    "localStorage_oauth_tokens",
+    "sessionStorage_refresh_tokens",
+    "frontend_only_sync_status_polling_without_db"
+  ],
+  "integrationRuntime": {
+    "fieldList": [
+      "connectorCatalog",
+      "tenantConnections",
+      "authConfig",
+      "syncStatus",
+      "syncHistory",
+      "widgets",
+      "actions",
+      "evidenceSources",
+      "version"
+    ],
+    "connectorCatalog": {
+      "type": "array<{connectorKey, displayName, vendor, kind, capabilities[], authMethods[], categories[], iconRef, description.i18nKey, status, defaultEvidenceTypes[]}>",
+      "publication": {
+        "table": "dos.integration_connector_catalog",
+        "key": ["connector_key"],
+        "tenancy": "global",
+        "idempotency": "INSERT ... ON CONFLICT (connector_key) DO UPDATE"
+      },
+      "seedRows": [
+        { "connector_key": "microsoft.sharepoint",     "vendor": "microsoft", "kind": "bidirectional", "categories": ["evidence","document_management"], "authMethods": ["oauth2_aad","client_credentials"] },
+        { "connector_key": "microsoft.m365.graph",     "vendor": "microsoft", "kind": "bidirectional", "categories": ["identity","collaboration"],         "authMethods": ["oauth2_aad","client_credentials"] },
+        { "connector_key": "microsoft.azure.ad",       "vendor": "microsoft", "kind": "inbound",        "categories": ["identity"],                          "authMethods": ["oauth2_aad","client_credentials"] },
+        { "connector_key": "microsoft.onedrive",       "vendor": "microsoft", "kind": "bidirectional", "categories": ["evidence","document_management"], "authMethods": ["oauth2_aad"] },
+        { "connector_key": "microsoft.teams",          "vendor": "microsoft", "kind": "bidirectional", "categories": ["collaboration","notifications"],     "authMethods": ["oauth2_aad","webhook_signed"] },
+        { "connector_key": "microsoft.outlook",        "vendor": "microsoft", "kind": "bidirectional", "categories": ["notifications"],                     "authMethods": ["oauth2_aad"] },
+        { "connector_key": "microsoft.power_bi",       "vendor": "microsoft", "kind": "outbound",       "categories": ["analytics"],                         "authMethods": ["oauth2_aad","client_credentials"] },
+        { "connector_key": "microsoft.dynamics_365",   "vendor": "microsoft", "kind": "bidirectional", "categories": ["business_data"],                     "authMethods": ["oauth2_aad","client_credentials"] },
+        { "connector_key": "google.workspace",         "vendor": "google",    "kind": "bidirectional", "categories": ["identity","collaboration"],          "authMethods": ["oauth2_google","service_account"] },
+        { "connector_key": "google.drive",             "vendor": "google",    "kind": "bidirectional", "categories": ["evidence","document_management"], "authMethods": ["oauth2_google"] },
+        { "connector_key": "slack.workspace",          "vendor": "slack",     "kind": "bidirectional", "categories": ["notifications","collaboration"],     "authMethods": ["oauth2_slack","webhook_signed"] },
+        { "connector_key": "atlassian.jira",           "vendor": "atlassian", "kind": "bidirectional", "categories": ["ticketing","grc_workflow"],          "authMethods": ["oauth2_atlassian","api_token"] },
+        { "connector_key": "atlassian.confluence",     "vendor": "atlassian", "kind": "bidirectional", "categories": ["evidence","document_management"], "authMethods": ["oauth2_atlassian","api_token"] },
+        { "connector_key": "servicenow.itsm",          "vendor": "servicenow","kind": "bidirectional", "categories": ["ticketing","grc_workflow"],          "authMethods": ["oauth2_servicenow","basic_auth"] },
+        { "connector_key": "github.cloud",             "vendor": "github",    "kind": "inbound",        "categories": ["sdlc","evidence"],                   "authMethods": ["oauth2_github","app_install"] },
+        { "connector_key": "gitlab.cloud",             "vendor": "gitlab",    "kind": "inbound",        "categories": ["sdlc","evidence"],                   "authMethods": ["oauth2_gitlab","personal_access_token"] },
+        { "connector_key": "okta.identity",            "vendor": "okta",      "kind": "inbound",        "categories": ["identity"],                          "authMethods": ["oauth2_okta","scim"] },
+        { "connector_key": "aws.cloudtrail",           "vendor": "aws",       "kind": "inbound",        "categories": ["evidence","cloud_audit"],            "authMethods": ["iam_role"] },
+        { "connector_key": "azure.activity_logs",      "vendor": "microsoft", "kind": "inbound",        "categories": ["evidence","cloud_audit"],            "authMethods": ["oauth2_aad","managed_identity"] },
+        { "connector_key": "gcp.audit_logs",           "vendor": "google",    "kind": "inbound",        "categories": ["evidence","cloud_audit"],            "authMethods": ["service_account"] }
+      ]
+    },
+    "tenantConnections": {
+      "type": "array<{connectionId, tenantId, connectorKey, status, displayName, scopes[], authState, configRef, lastSyncAt|null, nextSyncAt|null, healthCheck}>",
+      "publication": {
+        "table": "dos.integration_tenant_connection",
+        "key": ["connection_id"],
+        "tenancy": "tenant",
+        "idempotency": "ON CONFLICT (tenant_id, connector_key, display_name) DO UPDATE"
+      }
+    },
+    "authConfig": {
+      "type": "object",
+      "shape": {
+        "byConnector": "Record<connectorKey, {authMethod, requiredScopes[], requiredFields[], secretRef, redirectUriTemplate, supportsServiceAccount, supportsClientCredentials}>"
+      },
+      "publication": {
+        "table": "dos.integration_auth_config",
+        "key": ["connector_key","auth_method"],
+        "tenancy": "global"
+      },
+      "secretsForbidden": [
+        "frontend_storage_of_client_secret",
+        "frontend_storage_of_refresh_token",
+        "frontend_storage_of_access_token"
+      ]
+    },
+    "syncStatus": {
+      "type": "Record<connectionId, {state, lastRunStartedAt, lastRunFinishedAt, lastError|null, recordsProcessed, recordsFailed}>",
+      "publication": {
+        "table": "dos.integration_sync_status",
+        "key": ["connection_id"],
+        "tenancy": "tenant"
+      }
+    },
+    "syncHistory": {
+      "type": "array<{eventId, connectionId, runId, startedAt, finishedAt|null, state, recordsProcessed, recordsFailed, errorCode|null, errorMessage|null}>",
+      "publication": {
+        "table": "dos.integration_sync_history",
+        "key": ["event_id"],
+        "tenancy": "tenant",
+        "retention": "30_days_default_per_tenant_policy"
+      }
+    },
+    "widgets": {
+      "type": "array<{widgetKey, surface, displayNameKey, dataSource, refreshIntervalSeconds, carbonKeys[], requiredCapabilities[]}>",
+      "publication": {
+        "table": "dos.integration_widget_catalog",
+        "key": ["widget_key"],
+        "tenancy": "global"
+      },
+      "seedRows": [
+        { "widget_key": "integrations.connection-health.tile",  "surface": "module.integration.overview", "carbonKeys": ["tile","tag","progress-bar"] },
+        { "widget_key": "integrations.sync-status.records",      "surface": "module.integration.records",  "carbonKeys": ["data-table","table-toolbar","pagination"] },
+        { "widget_key": "integrations.connector-marketplace.grid","surface": "module.integration.marketplace","carbonKeys": ["grid","clickable-tile","tag"] },
+        { "widget_key": "integrations.evidence-feed.list",        "surface": "module.evidence.records",      "carbonKeys": ["structured-list","tag","tile"] }
+      ]
+    },
+    "actions": {
+      "type": "array<{actionKey, displayNameKey, requiredPermission, kind, payloadShape}>",
+      "publication": {
+        "table": "dos.integration_action_catalog",
+        "key": ["action_key"],
+        "tenancy": "global"
+      },
+      "seedRows": [
+        { "action_key": "integrations.connect",         "kind": "open_external_oauth_redirect" },
+        { "action_key": "integrations.disconnect",      "kind": "execute_server_action" },
+        { "action_key": "integrations.sync.now",        "kind": "execute_server_action" },
+        { "action_key": "integrations.sync.cancel",     "kind": "execute_server_action" },
+        { "action_key": "integrations.evidence.import", "kind": "execute_server_action" }
+      ]
+    },
+    "evidenceSources": {
+      "type": "array<{evidenceSourceKey, connectorKey, displayNameKey, kind, defaultRetentionDays, requiredCapabilities[]}>",
+      "publication": {
+        "table": "dos.integration_evidence_source",
+        "key": ["evidence_source_key"],
+        "tenancy": "global"
+      },
+      "seedRows": [
+        { "evidence_source_key": "sharepoint.document_library",   "connectorKey": "microsoft.sharepoint",   "kind": "document_library",  "defaultRetentionDays": 365 },
+        { "evidence_source_key": "onedrive.user_drive",            "connectorKey": "microsoft.onedrive",     "kind": "object_storage",     "defaultRetentionDays": 365 },
+        { "evidence_source_key": "azure.activity_log",             "connectorKey": "azure.activity_logs",    "kind": "audit_log",          "defaultRetentionDays": 730 },
+        { "evidence_source_key": "aws.cloudtrail.events",          "connectorKey": "aws.cloudtrail",         "kind": "audit_log",          "defaultRetentionDays": 730 },
+        { "evidence_source_key": "gcp.audit_logs.events",          "connectorKey": "gcp.audit_logs",         "kind": "audit_log",          "defaultRetentionDays": 730 },
+        { "evidence_source_key": "jira.issues.snapshot",           "connectorKey": "atlassian.jira",         "kind": "ticket_snapshot",    "defaultRetentionDays": 365 },
+        { "evidence_source_key": "servicenow.incidents.snapshot",  "connectorKey": "servicenow.itsm",        "kind": "ticket_snapshot",    "defaultRetentionDays": 365 },
+        { "evidence_source_key": "okta.user_lifecycle.events",     "connectorKey": "okta.identity",          "kind": "identity_event",     "defaultRetentionDays": 365 }
+      ]
+    },
+    "version": { "type": "integer", "purpose": "envelope version bumped on any seed/manifest change" }
+  },
+  "resolverContract": {
+    "endpoint": "/api/ui-os/integration-runtime",
+    "auth": "session_cookie",
+    "tenancy_scope": "tenant",
+    "snake_case_fields_allowed_only_inside_resolver": true,
+    "browser_facing_camelCase": true,
+    "merge_strategy": "join_catalog_with_tenant_connections_and_status",
+    "deny_when_no_membership": true,
+    "credentials_never_emitted_to_browser": true
+  },
+  "frontendConsumption": {
+    "consumers": [
+      "platform/config-center/integration-marketplace/integration-marketplace.component.ts",
+      "platform/config-center/board-report/features/integrations/pages/connector-manager/connector-manager.component.ts",
+      "modules/evidence/**"
+    ],
+    "allowedReads": [
+      "integrationRuntime.connectorCatalog",
+      "integrationRuntime.tenantConnections",
+      "integrationRuntime.syncStatus",
+      "integrationRuntime.syncHistory",
+      "integrationRuntime.widgets",
+      "integrationRuntime.actions",
+      "integrationRuntime.evidenceSources"
+    ],
+    "forbiddenReads": [
+      "integrationRuntime.authConfig.byConnector.<key>.secretRef",
+      "any client_secret value",
+      "any refresh_token or access_token value"
+    ],
+    "hardcodedSymbolsToPurge": [
+      { "symbol": "FALLBACK_CATALOG",                          "site": "platform/config-center/integration-marketplace/integration-marketplace.component.ts", "replaceWith": "integrationRuntime.connectorCatalog" },
+      { "symbol": "hardcoded Microsoft 365 / Teams / Power BI / Dynamics connector types", "site": "platform/config-center/board-report/features/integrations/pages/connector-manager/connector-manager.component.ts", "replaceWith": "integrationRuntime.connectorCatalog filtered by vendor='microsoft'" }
+    ]
+  },
+  "publication": {
+    "primary_tables": [
+      "dos.integration_connector_catalog",
+      "dos.integration_auth_config",
+      "dos.integration_widget_catalog",
+      "dos.integration_action_catalog",
+      "dos.integration_evidence_source"
+    ],
+    "tenant_tables": [
+      "dos.integration_tenant_connection",
+      "dos.integration_sync_status",
+      "dos.integration_sync_history"
+    ],
+    "validation_query_id": "publication.integration.coverage.v1_1"
+  },
+  "acceptance": [
+    "integrationRuntime.fieldList covers all camelCase fields",
+    "connectorCatalog.seedRows includes all Microsoft 365 connectors named in the user-stated set",
+    "evidenceSources.seedRows includes sharepoint.document_library and azure.activity_log",
+    "frontendConsumption.hardcodedSymbolsToPurge includes FALLBACK_CATALOG",
+    "credentials_never_emitted_to_browser is enforced in resolver"
+  ]
+}

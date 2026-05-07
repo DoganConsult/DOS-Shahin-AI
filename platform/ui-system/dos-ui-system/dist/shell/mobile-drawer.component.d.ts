@@ -8,6 +8,17 @@ export declare class DosMobileDrawerComponent {
     title: string;
     dir: 'ltr' | 'rtl';
     closeLabel: string | null;
+    touchTargetSize: number;
+    swipeToNavigate: boolean;
+    hapticFeedback: boolean;
     closed: EventEmitter<void>;
+    swipeEvent: EventEmitter<{
+        direction: string;
+    }>;
+    private startX;
     onEscape(): void;
+    onTouchStart(event: TouchEvent): void;
+    onTouchEnd(event: TouchEvent): void;
+    handleClose(): void;
+    private triggerHaptic;
 }

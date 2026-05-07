@@ -13,7 +13,7 @@ import type { DosNavDisabledReason } from '@dos/ui-contracts';
 export declare class PlatformReadinessService {
     private readonly http;
     private readonly _health;
-    readonly health: import("@angular/core").Signal<Record<string, "unknown" | "up" | "down">>;
+    readonly health: import("@angular/core").Signal<Record<string, "down" | "unknown" | "up">>;
     /** Per-DNA-module readiness flag. */
     ready(moduleCode: string, hasRouteCatalog: boolean): boolean;
     /** Disabled reason for a DNA nav item, or null when ready. */

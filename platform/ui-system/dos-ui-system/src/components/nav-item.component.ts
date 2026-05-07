@@ -31,7 +31,7 @@ import type { DosNavItem, DosNavDisabledReason } from '@dos/ui-contracts';
   styles: [`
     :host { display: block; }
     .dos-nav-item__icon {
-      margin-inline-end: var(--cds-spacing-03, 0.5rem);
+      margin-inline-end: var(--cds-spacing-03);
     }
   `]
 })

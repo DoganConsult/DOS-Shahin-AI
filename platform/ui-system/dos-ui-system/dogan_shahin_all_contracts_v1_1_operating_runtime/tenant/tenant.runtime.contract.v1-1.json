@@ -1,0 +1,164 @@
+{
+  "$schema": "https://dogan-ai.local/schemas/tenant-runtime.v1-1.schema.json",
+  "contractKind": "tenant-runtime",
+  "contractVersion": "1.1.0",
+  "runtimeModel": "v1-1-operating-runtime",
+  "generatedAt": "2026-05-07T16:50:00+03:00",
+  "rule": "Tenant identity, branding, entitlements, quotas, locale, and rtl are resolved into one tenantRuntime object. Frontend never reads local theme/branding/locale state as the source of truth.",
+  "doctrine": [
+    "ZERO_STATIC",
+    "ZERO_LEGACY",
+    "ZERO_FALLBACK",
+    "ZERO_BROWSER_NORMALIZATION",
+    "DB_AS_SOURCE_OF_TRUTH"
+  ],
+  "forbidden": [
+    "frontend_local_theme_source_of_truth",
+    "localStorage_tenant_id",
+    "sessionStorage_tenant_id",
+    "frontend_module_entitlement_inference",
+    "frontend_quota_estimation",
+    "static_tenant_branding",
+    "tenant_inference_from_subdomain_in_frontend"
+  ],
+  "tenantRuntime": {
+    "fieldList": [
+      "tenantId",
+      "tenantCode",
+      "displayName",
+      "status",
+      "parentTenantId",
+      "primaryDomain",
+      "customDomain",
+      "locale",
+      "rtl",
+      "tier",
+      "productActivations",
+      "moduleEntitlements",
+      "featureFlags",
+      "quotas",
+      "limits",
+      "branding",
+      "themeTokens",
+      "version"
+    ],
+    "tenantId":         { "type": "uuid",   "publication": { "table": "dos.tenants",                    "column": "tenant_id" } },
+    "tenantCode":       { "type": "string", "publication": { "table": "dos.tenants",                    "column": "tenant_code" } },
+    "displayName":      { "type": "string", "publication": { "table": "dos.tenants",                    "column": "display_name" } },
+    "status":           { "type": "enum",   "values": ["active","suspended","archived","pending","trial"], "publication": { "table": "dos.tenants", "column": "status" } },
+    "parentTenantId":   { "type": "uuid|null", "publication": { "table": "dos.tenants",                "column": "parent_tenant_id" } },
+    "primaryDomain":    { "type": "string|null", "publication": { "table": "dos.tenants",              "column": "primary_domain" } },
+    "customDomain":     { "type": "string|null", "publication": { "table": "dos.tenants",              "column": "custom_domain" } },
+    "locale":           { "type": "string", "publication": { "table": "dos.tenants",                    "column": "default_locale" } },
+    "rtl":              { "type": "boolean","publication": { "table": "dos.tenants",                    "column": "default_rtl" } },
+    "tier":             { "type": "enum|null", "values": ["free","starter","professional","enterprise","custom","null"], "publication": { "table": "dos.tenants", "column": "tier" } },
+    "productActivations": {
+      "type": "array<{productKey, status, activatedAt, deactivatedAt|null, tier|null}>",
+      "publication": { "table": "dos.tenant_product_activation", "key": ["tenant_id","product_key"] }
+    },
+    "moduleEntitlements": {
+      "type": "array<{moduleCode, status, source, expiresAt|null}>",
+      "publication": { "table": "dos.tenant_module_entitlement", "key": ["tenant_id","module_code"] }
+    },
+    "featureFlags": {
+      "type": "Record<flagKey, {enabled, source, rolloutBucket|null, ttlSeconds|null}>",
+      "publication": { "table": "dos.tenant_feature_flags", "key": ["tenant_id","flag_key"] }
+    },
+    "quotas": {
+      "type": "Record<quotaKey, {used, limit, unit, period}>",
+      "publication": { "table": "dos.tenant_quota_usage", "key": ["tenant_id","quota_key"] }
+    },
+    "limits": {
+      "type": "Record<limitKey, {value, unit, source}>",
+      "publication": { "table": "dos.tenant_limits",       "key": ["tenant_id","limit_key"] }
+    },
+    "branding": {
+      "type": "object",
+      "shape": {
+        "brandName":   "string|null",
+        "logoUrl":     "string|null",
+        "faviconUrl":  "string|null",
+        "iconUrl":     "string|null",
+        "primaryColor":"string|null",
+        "accentColor": "string|null",
+        "background":  "string|null",
+        "cssOverrides":"Record<string,string>"
+      },
+      "publication": { "table": "dos.ui_tenant_branding", "key": ["tenant_id"] }
+    },
+    "themeTokens": {
+      "type": "object",
+      "carbonThemeKey": "white|g10|g90|g100",
+      "tokens": "Record<token,string>",
+      "publication": { "table": "dos.ui_tenant_branding", "key": ["tenant_id"], "jsonbPath": "theme_tokens" },
+      "ref": "theme/theme.system.contract.v1-1.json"
+    },
+    "version": { "type": "integer", "publication": { "table": "dos.tenants", "column": "updated_at_version" } }
+  },
+  "resolverContract": {
+    "endpoint": "/api/ui-os/tenant-runtime",
+    "auth": "session_cookie",
+    "tenancy_scope": "tenant",
+    "snake_case_fields_allowed_only_inside_resolver": true,
+    "browser_facing_camelCase": true,
+    "merge_strategy": "left_join_tenants_with_branding_entitlements_flags_quotas",
+    "deny_when_no_membership": true,
+    "errorEnvelope": {
+      "shape": {
+        "code": "string",
+        "message": "string",
+        "tenantId": "string|null"
+      }
+    }
+  },
+  "frontendConsumption": {
+    "consumers": [
+      "platform/core/services/grc-auth.service.ts",
+      "platform/core/platform/shell/shell-host.component.ts",
+      "platform/core/platform/shell/workspace-shell-binding.service.ts"
+    ],
+    "allowedReads": [
+      "tenantRuntime.tenantId",
+      "tenantRuntime.displayName",
+      "tenantRuntime.locale",
+      "tenantRuntime.rtl",
+      "tenantRuntime.branding",
+      "tenantRuntime.themeTokens",
+      "tenantRuntime.moduleEntitlements",
+      "tenantRuntime.featureFlags",
+      "tenantRuntime.limits"
+    ],
+    "forbiddenReads": [
+      "any DB tenant column directly from frontend",
+      "any tenant branding from local module-level constants",
+      "tenant id from URL subdomain inference"
+    ],
+    "hardcodedSymbolsToPurge": [
+      { "symbol": "DEFAULT_PRODUCT_KEY 'agrc'", "site": "platform/core/services/grc-auth.service.ts", "replaceWith": "tenantRuntime.productActivations[0].productKey" },
+      { "symbol": "FALLBACK brand 'DOS Platform'", "site": "platform/ui-system/dos-ui-system/src/carbon/dos-carbon-header-shell.component.ts", "replaceWith": "tenantRuntime.branding.brandName" },
+      { "symbol": "logoHref '/'", "site": "platform/ui-system/dos-ui-system/src/carbon/dos-carbon-header-shell.component.ts", "replaceWith": "shell.chrome.logoHref" },
+      { "symbol": "hardcoded brand-code -> PNG map", "site": "platform/ui-system/dos-ui-system/src/brand/dos-brand-eagle.component.ts", "replaceWith": "tenantRuntime.branding.iconUrl" }
+    ]
+  },
+  "publication": {
+    "primary_table": "dos.tenants",
+    "secondary_tables": [
+      "dos.tenant_product_activation",
+      "dos.tenant_module_entitlement",
+      "dos.tenant_feature_flags",
+      "dos.tenant_quota_usage",
+      "dos.tenant_limits",
+      "dos.ui_tenant_branding"
+    ],
+    "preflight_dependency": "preflight/blockers.contract.v1-1.json#B4",
+    "idempotency_rule": "INSERT ... ON CONFLICT (tenant_id, ...) DO UPDATE",
+    "validation_query_id": "publication.tenant.coverage.v1_1"
+  },
+  "acceptance": [
+    "tenantRuntime.fieldList covers every documented camelCase field",
+    "every field carries a publication.table reference",
+    "frontendConsumption.hardcodedSymbolsToPurge has at least 4 entries",
+    "publication.preflight_dependency points to B4",
+    "no field reads from localStorage or sessionStorage"
+  ]
+}

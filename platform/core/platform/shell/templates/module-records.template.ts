@@ -283,14 +283,14 @@ import { DosInsightBarComponent } from './dos-insight-bar.component';
         height: 1px; width: 1px; overflow: hidden;
       }
       .dmt-data-table tr {
-        border: 1px solid var(--cds-border-subtle, #e0e0e0);
-        margin-block-end: var(--cds-spacing-04, .75rem);
-        padding: var(--cds-spacing-04, .75rem);
-        background: var(--cds-layer, #f4f4f4);
-        border-radius: 4px;
+        border: 1px solid var(--cds-border-subtle);
+        margin-block-end: var(--cds-spacing-04);
+        padding: var(--cds-spacing-04);
+        background: var(--cds-layer);
+        border-radius: 2px;
       }
       .dmt-data-table td {
-        padding: var(--cds-spacing-02, .25rem) 0;
+        padding: var(--cds-spacing-02) 0;
         border: 0;
       }
       .dmt-data-table td[data-col-label]::before {
@@ -302,9 +302,9 @@ import { DosInsightBarComponent } from './dos-insight-bar.component';
         display: inline-block;
         margin-inline-end: .375rem;
       }
-      .dmt-row-actions { flex-wrap: wrap; gap: var(--cds-spacing-02, .25rem); }
+      .dmt-row-actions { flex-wrap: wrap; gap: var(--cds-spacing-02); }
       .dmt-actions-col { width: auto; }
-      .dmt-table-tile { padding: var(--cds-spacing-04, .75rem); }
+      .dmt-table-tile { padding: var(--cds-spacing-04); }
     }
   `]
 })

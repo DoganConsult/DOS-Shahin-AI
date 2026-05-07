@@ -48,17 +48,11 @@ const CATEGORY_MAP: Record<string, string> = {
   vulnerability: 'Vulnerability', cloud: 'Cloud', erp: 'ERP', collaboration: 'Collaboration',
 };
 
-// Static fallback catalog (used only if registry API fails)
-const FALLBACK_CATALOG: CatalogEntry[] = [
-  { id: 'splunk', category: 'SIEM', name: 'Splunk', icon: 'pi-shield', iconColor: '#65a637', description: 'Ingest security alerts and search results from Splunk Enterprise or Cloud.', setupTime: '5 min', tags: ['security', 'monitoring', 'alerts'], connectorType: 'siem', platformValue: 'splunk' },
-  { id: 'sentinel', category: 'SIEM', name: 'Azure Sentinel', icon: 'pi-shield', iconColor: '#0078d4', description: 'Collect incidents and alerts from Microsoft Sentinel SIEM.', setupTime: '10 min', tags: ['azure', 'security', 'cloud'], connectorType: 'siem', platformValue: 'sentinel' },
-  { id: 'azure_ad', category: 'IAM', name: 'Azure AD / Entra ID', icon: 'pi-users', iconColor: '#0078d4', description: 'Sync users, groups, sign-in logs, and access reviews from Entra ID.', setupTime: '10 min', tags: ['identity', 'azure', 'sso'], connectorType: 'iam', platformValue: 'azure_ad' },
-  { id: 'okta', category: 'IAM', name: 'Okta', icon: 'pi-users', iconColor: '#007dc1', description: 'Import users, audit logs, and access events from Okta.', setupTime: '5 min', tags: ['identity', 'sso', 'access'], connectorType: 'iam', platformValue: 'okta' },
-  { id: 'servicenow_itsm', category: 'ITSM', name: 'ServiceNow', icon: 'pi-ticket', iconColor: '#81b541', description: 'Bidirectional sync of change requests, incidents, and problems.', setupTime: '10 min', tags: ['ticketing', 'change', 'incident'], connectorType: 'itsm', platformValue: 'servicenow' },
-  { id: 'qualys', category: 'Vulnerability', name: 'Qualys', icon: 'pi-exclamation-triangle', iconColor: '#ed1c24', description: 'Import vulnerability scan results and patch status from Qualys.', setupTime: '5 min', tags: ['vulnerability', 'scanning', 'cvss'], connectorType: 'vuln', platformValue: 'qualys' },
-  { id: 'tenable', category: 'Vulnerability', name: 'Tenable / Nessus', icon: 'pi-exclamation-triangle', iconColor: '#00a3e0', description: 'Collect vulnerability findings from Tenable.io or Nessus.', setupTime: '5 min', tags: ['vulnerability', 'scanning'], connectorType: 'vuln', platformValue: 'tenable' },
-  { id: 'm365', category: 'Cloud', name: 'Microsoft 365', icon: 'pi-microsoft', iconColor: '#0078d4', description: 'Collect evidence from Outlook, SharePoint, and OneDrive via Graph API.', setupTime: '10 min', tags: ['evidence', 'documents', 'email'], connectorType: 'outlook', platformValue: 'azure_ad' },
-];
+// ZERO_LEGACY: no FALLBACK_CATALOG constant. The connector marketplace
+// renders only rows emitted by /api/grc/connector-registry — itself a
+// normalization of dos.integration_connector_catalog. Empty registry =>
+// empty marketplace (NO FRONTEND INVENTION). Adding a new connector
+// means adding a DB row, never a TypeScript constant.
 
 /** Map a DB connector_registry row into a CatalogEntry */
 function mapRegistryToCatalog(r: GrcRecord): CatalogEntry {
@@ -273,12 +267,12 @@ export class IntegrationMarketplaceComponent implements OnInit {
       registry: this.grc.getConnectorRegistry().pipe(catchError(() => of(null))),
     }).subscribe({
       next: ({ connectors: c, configs: cfg, registry }) => {
-        // Build catalog from DB registry (dynamic) or fallback (static)
+        // Catalog is DB-driven only. Empty registry => empty marketplace.
         if (registry?.connectors?.length) {
           this.catalog = (registry.connectors as unknown[]).map(mapRegistryToCatalog);
           this.registryLoaded = true;
         } else {
-          this.catalog = [...FALLBACK_CATALOG];
+          this.catalog = [];
         }
 
         const connArr = Array.isArray(c) ? c : (c?.connectors ?? []);
@@ -286,7 +280,7 @@ export class IntegrationMarketplaceComponent implements OnInit {
         this.installedConnectors.set(connArr);
         this.installedIntegrationTypes.set(new Set<string>(cfgArr.filter((x) => x.enabled).map((x) => x.type).filter(Boolean)));
       },
-      error: () => { this.catalog = [...FALLBACK_CATALOG]; }
+      error: () => { this.catalog = []; }
     });
   }
 

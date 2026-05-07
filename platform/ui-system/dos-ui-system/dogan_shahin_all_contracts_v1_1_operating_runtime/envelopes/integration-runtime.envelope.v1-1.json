@@ -1,0 +1,56 @@
+{
+  "$schema": "https://dogan-ai.local/schemas/runtime-envelope.v1-1.schema.json",
+  "contractKind": "runtime-envelope",
+  "envelopeKey": "integration-runtime",
+  "contractVersion": "1.1.0",
+  "runtimeModel": "v1-1-operating-runtime",
+  "endpoint": "/api/ui-os/integration-runtime",
+  "method": "GET",
+  "auth": "session_cookie",
+  "tenancy_scope": "tenant",
+  "rule": "Connector catalog, tenant connections, sync status/history, widgets, actions, evidence sources resolved into ONE envelope. Credentials NEVER emitted to browser.",
+  "doctrine": ["ZERO_STATIC","ZERO_LEGACY","ZERO_FALLBACK","CREDENTIALS_NEVER_TO_BROWSER"],
+  "shape": {
+    "tenantId":           "string",
+    "version":            "integer",
+    "integrationRuntime": {
+      "connectorCatalog":   "Array<{connectorKey,displayName,vendor,kind,capabilities[],authMethods[],categories[],iconRef,description:{i18nKey?,fallback?,label?},status,defaultEvidenceTypes[]}>",
+      "tenantConnections":  "Array<{connectionId,connectorKey,status,displayName,scopes[],authState,configRef,lastSyncAt|null,nextSyncAt|null,healthCheck}>",
+      "authConfig":         "object<{byConnector:Record<connectorKey,{authMethod,requiredScopes[],requiredFields[],redirectUriTemplate,supportsServiceAccount,supportsClientCredentials}>}>",
+      "syncStatus":         "Record<connectionId,{state,lastRunStartedAt,lastRunFinishedAt,lastError|null,recordsProcessed,recordsFailed}>",
+      "syncHistory":        "Array<{eventId,connectionId,runId,startedAt,finishedAt|null,state,recordsProcessed,recordsFailed,errorCode|null,errorMessage|null}>",
+      "widgets":            "Array<{widgetKey,surface,displayNameKey,dataSource,refreshIntervalSeconds,carbonKeys[],requiredCapabilities[]}>",
+      "actions":            "Array<{actionKey,displayNameKey,requiredPermission,kind,payloadShape}>",
+      "evidenceSources":    "Array<{evidenceSourceKey,connectorKey,displayNameKey,kind,defaultRetentionDays,requiredCapabilities[]}>",
+      "version":            "integer"
+    }
+  },
+  "forbiddenFields": [
+    "integrationRuntime.authConfig.byConnector.<key>.secretRef (must be a server-side reference, never the actual secret)",
+    "integrationRuntime.tenantConnections[].clientSecret",
+    "integrationRuntime.tenantConnections[].refreshToken",
+    "integrationRuntime.tenantConnections[].accessToken",
+    "any plaintext credential field"
+  ],
+  "exampleResponse": {
+    "tenantId": "00000000-0000-0000-0000-000000000000",
+    "version": 1,
+    "integrationRuntime": {
+      "connectorCatalog": [],
+      "tenantConnections": [],
+      "authConfig": { "byConnector": {} },
+      "syncStatus": {},
+      "syncHistory": [],
+      "widgets": [],
+      "actions": [],
+      "evidenceSources": [],
+      "version": 1
+    }
+  },
+  "consumers": [
+    "platform/config-center/integration-marketplace/integration-marketplace.component.ts",
+    "platform/config-center/board-report/features/integrations/pages/connector-manager/connector-manager.component.ts",
+    "modules/evidence/**"
+  ],
+  "publishedBy": "integrations/integration.runtime.contract.v1-1.json"
+}

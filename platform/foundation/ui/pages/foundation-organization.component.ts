@@ -8,6 +8,8 @@ import { FOUNDATION_I18N, type FoundationI18n, NoopFoundationI18n } from '../por
 // ToastService migrated — use Angular's built-in notification or @dos/ui-system status-banner
 
 import { FoundationPageShellComponent } from '../components/foundation-page-shell.component';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 interface Org {
   id?: string;
   name_en?: string;
@@ -64,6 +66,7 @@ interface Org {
         <button type="button" class="btn-primary" (click)="openCreate()">{{ i18n.t('foundationOrganization.add') }}</button>
       </div>
       @if (error()) { <div class="error-msg" role="alert">{{ error() }}</div> }
+      @if (hierarchyWarning()) { <div class="error-msg" role="status">{{ hierarchyWarning() }}</div> }
       <div class="table-card">
         @if (loading()) {
           <div class="empty-state">{{ i18n.t('foundationOrganization.loading') }}</div>
@@ -169,6 +172,7 @@ export class FoundationOrganizationComponent implements OnInit {
   loading = signal(true);
   saving = signal(false);
   error = signal<string | null>(null);
+  hierarchyWarning = signal<string | null>(null);
   showDialog = signal(false);
   editing = signal<Org | null>(null);
   items = signal<Org[]>([]);
@@ -188,8 +192,18 @@ export class FoundationOrganizationComponent implements OnInit {
 
   private load(): void {
     this.loading.set(true);
-    this.api.getOrganizations().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: (res) => { this.items.set((res.organizations ?? []) as Org[]); this.loading.set(false); },
+    this.hierarchyWarning.set(null);
+    forkJoin({
+      organizations: this.api.getOrganizations(),
+      hierarchy: this.api.getOrgHierarchyTree().pipe(catchError(() => of(null))),
+    }).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: ({ organizations, hierarchy }) => {
+        this.items.set((organizations.organizations ?? []) as Org[]);
+        if (!hierarchy?.success) {
+          this.hierarchyWarning.set(this.i18n.t('foundationOrganization.hierarchyUnavailable'));
+        }
+        this.loading.set(false);
+      },
       error: (err) => { this.error.set(FoundationApiService.formatLoadError(err)); this.loading.set(false); },
     });
   }

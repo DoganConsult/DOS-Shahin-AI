@@ -1,0 +1,197 @@
+{
+  "$schema": "https://dogan-ai.local/schemas/ci-manifest.v1-1.schema.json",
+  "contractKind": "ci-manifest",
+  "contractVersion": "1.1.0",
+  "runtimeModel": "v1-1-operating-runtime",
+  "generatedAt": "2026-05-07T16:50:00+03:00",
+  "rule": "Doc-only declaration of the CI guards that MUST be wired in a later step. This manifest does NOT install, activate, register, or run any guard. No script paths under scripts/ci-guards/ are mutated by authoring this file. The doc/spec lives here so the next step can lift each guard from this declaration into scripts/ci-guards/dos-master-gate.mjs without re-deriving requirements.",
+  "doctrine": [
+    "ZERO_STATIC",
+    "ZERO_LEGACY",
+    "ZERO_FALLBACK",
+    "ZERO_BROWSER_NORMALIZATION",
+    "DB_AS_SOURCE_OF_TRUTH"
+  ],
+  "scope": {
+    "step": "v1.1 pack authoring",
+    "outOfScope": [
+      "writing scripts/ci-guards/lint-v1-1-*.mjs",
+      "wiring guards into scripts/ci-guards/dos-master-gate.mjs",
+      "executing any guard against a real branch",
+      "any DB execution",
+      "any frontend mutation",
+      "any resolver mutation"
+    ]
+  },
+  "guards": [
+    {
+      "guardId": "lint-v1-1-self-contained",
+      "summary": "Every v1.1 contract file carries the v1 surface PLUS the new operating layers. No $ref to v1, no missing v1 fields.",
+      "rationale": "v1 pack is frozen as historical archive. The resolver loads v1.1 only. If any v1.1 file points to v1, regeneration is incomplete.",
+      "scanScope": [
+        "platform/ui-system/dos-ui-system/dogan_shahin_all_contracts_v1_1_operating_runtime/**/*.json"
+      ],
+      "mustFailOn": [
+        "$ref values targeting dogan_shahin_all_contracts_v1_runtime/",
+        "missing carriedForwardFromV1 markers in workspace/product contracts",
+        "module contract file count != 24",
+        "any v1.1 contract missing contractKind/contractVersion/runtimeModel"
+      ],
+      "expectedPassEvidence": [
+        "every contractVersion equals '1.1.0'",
+        "every runtimeModel equals 'v1-1-operating-runtime'",
+        "modules directory contains all 24 module codes listed in platform contract"
+      ],
+      "outputArtifact": "proofs/foundation-ai/post-launch/v1-1/lint-self-contained.proof.json",
+      "lockstepRef": null
+    },
+    {
+      "guardId": "lint-v1-1-preflight-lockstep",
+      "summary": "Bidirectional manifest <-> SQL match. Each blocker entry has a paired SQL file with matching SHA-256 checksum, idempotency markers, and consistent destructive flag.",
+      "rationale": "B1, B2, B3, B4 must not drift between machine-readable manifest and human-reviewable SQL. A typo in either side is a doctrine breach (DB-first principle).",
+      "scanScope": [
+        "platform/ui-system/dos-ui-system/dogan_shahin_all_contracts_v1_1_operating_runtime/preflight/blockers.contract.v1-1.json",
+        "platform/ui-system/dos-ui-system/dogan_shahin_all_contracts_v1_1_operating_runtime/preflight/migrations/*.sql"
+      ],
+      "mustFailOn": [
+        "blocker_id present in manifest but missing SQL file",
+        "SQL file present but missing blocker_id in manifest",
+        "sql_checksum mismatch",
+        "non-idempotent SQL (no IF NOT EXISTS / ON CONFLICT / DO block check)",
+        "destructive flag inconsistent between manifest and SQL DDL semantics",
+        "B2 SQL using generic replace(item_id, '-', '.') instead of explicit VALUES map",
+        "B1 SQL omitting tenant_id from unique index expression",
+        "B3 SQL using ADD CONSTRAINT IF NOT EXISTS instead of pg_constraint guarded DO block",
+        "B4 SQL not marked review_required = true"
+      ],
+      "expectedPassEvidence": [
+        "manifest contains exactly 4 entries (B1, B2, B3, B4)",
+        "preflight/migrations/ contains exactly 4 .sql files",
+        "every sql_checksum in manifest matches sha256sum of the SQL file",
+        "preflight/lockstep.proof.json populated with one row per blocker"
+      ],
+      "outputArtifact": "platform/ui-system/dos-ui-system/dogan_shahin_all_contracts_v1_1_operating_runtime/preflight/lockstep.proof.json",
+      "lockstepRef": "preflight/lockstep.proof.json"
+    },
+    {
+      "guardId": "lint-v1-1-publication-coverage",
+      "summary": "Every contract field across all 6 runtimes has at least one entry in publication-map/db-publication.map.v1-1.json. Zero orphans.",
+      "rationale": "If a contract field has no DB publication target, the resolver cannot emit it from DB. Hidden fallbacks would be the only way to populate it.",
+      "scanScope": [
+        "platform/ui-system/dos-ui-system/dogan_shahin_all_contracts_v1_1_operating_runtime/envelopes/*.json",
+        "platform/ui-system/dos-ui-system/dogan_shahin_all_contracts_v1_1_operating_runtime/publication-map/db-publication.map.v1-1.json",
+        "platform/ui-system/dos-ui-system/dogan_shahin_all_contracts_v1_1_operating_runtime/publication-map/publication.lockstep.json"
+      ],
+      "mustFailOn": [
+        "envelope field with no entry in db-publication.map.v1-1.json",
+        "publication entry with no envelope field reference",
+        "publication entry without table/columns/primaryKey",
+        "publication entry missing tenantScope when envelope is tenant-scoped",
+        "publication entry missing idempotencyRule",
+        "publication entry that uses replace(...,'-','.') for normalizationRule (must be explicit map)"
+      ],
+      "expectedPassEvidence": [
+        "publication.lockstep.json envelopeFieldsTotal equals union of envelope fields",
+        "every envelopeField in lockstep has a publishedFrom pointer that resolves",
+        "every preflightDependency on db-publication.map points to a valid blocker_id"
+      ],
+      "outputArtifact": "proofs/foundation-ai/post-launch/v1-1/publication-coverage.proof.json",
+      "lockstepRef": "publication-map/publication.lockstep.json"
+    },
+    {
+      "guardId": "lint-v1-1-envelope-coverage",
+      "summary": "Every envelope file is referenced by at least one contract (publishedBy) and at least one consumption-map entry (runtimeEnvelope or secondaryEnvelopes).",
+      "rationale": "An orphan envelope means the resolver shape has nothing producing it or nothing consuming it. Either case violates DB->Resolver->Frontend doctrine.",
+      "scanScope": [
+        "platform/ui-system/dos-ui-system/dogan_shahin_all_contracts_v1_1_operating_runtime/envelopes/*.json",
+        "platform/ui-system/dos-ui-system/dogan_shahin_all_contracts_v1_1_operating_runtime/workspace/shahin.workspace.contract.v1-1.json",
+        "platform/ui-system/dos-ui-system/dogan_shahin_all_contracts_v1_1_operating_runtime/product/shahin.product.contract.v1-1.json",
+        "platform/ui-system/dos-ui-system/dogan_shahin_all_contracts_v1_1_operating_runtime/tenant/tenant.runtime.contract.v1-1.json",
+        "platform/ui-system/dos-ui-system/dogan_shahin_all_contracts_v1_1_operating_runtime/integrations/integration.runtime.contract.v1-1.json",
+        "platform/ui-system/dos-ui-system/dogan_shahin_all_contracts_v1_1_operating_runtime/theme/theme.system.contract.v1-1.json",
+        "platform/ui-system/dos-ui-system/dogan_shahin_all_contracts_v1_1_operating_runtime/modules/*.module.contract.v1-1.json",
+        "platform/ui-system/dos-ui-system/dogan_shahin_all_contracts_v1_1_operating_runtime/consumption-map/frontend.consumption.map.v1-1.json"
+      ],
+      "mustFailOn": [
+        "envelope file with publishedBy not pointing to an existing contract",
+        "envelope file with no consumption-map component referencing it",
+        "consumption-map component referencing an envelope file that does not exist",
+        "consumption-map referencing v1 envelope path"
+      ],
+      "expectedPassEvidence": [
+        "6 envelope files (workspace, product, module, tenant, integration, theme)",
+        "every envelope has at least one consumption-map consumer",
+        "every consumption-map consumer references at least one envelope"
+      ],
+      "outputArtifact": "proofs/foundation-ai/post-launch/v1-1/envelope-coverage.proof.json",
+      "lockstepRef": null
+    },
+    {
+      "guardId": "lint-v1-1-no-auto-execute",
+      "summary": "Preflight SQL files are NOT imported, referenced, or executed by scripts/migrate.* or scripts/module/publish.mjs. They are review-only artifacts in this step.",
+      "rationale": "Per plan boundary, no DB execution in this step. Auto-wiring B1..B4 into the migrator pipeline is forbidden until human review approves each preflight SQL.",
+      "scanScope": [
+        "scripts/migrate.*",
+        "scripts/module/publish.mjs",
+        "platform/dos/migrations/**/*.sql"
+      ],
+      "mustFailOn": [
+        "any reference to platform/ui-system/dos-ui-system/dogan_shahin_all_contracts_v1_1_operating_runtime/preflight/migrations/*.sql in migrator entry points",
+        "any include/import of preflight SQL paths in publish pipeline",
+        "any duplicate file copy of preflight SQL into platform/dos/migrations/public/"
+      ],
+      "expectedPassEvidence": [
+        "scripts/migrate.* contains zero hits for the preflight migration filenames",
+        "scripts/module/publish.mjs contains zero hits for the preflight migration filenames",
+        "platform/dos/migrations/public/ does not contain duplicate copies of B1..B4 SQL"
+      ],
+      "outputArtifact": "proofs/foundation-ai/post-launch/v1-1/no-auto-execute.proof.json",
+      "lockstepRef": null
+    },
+    {
+      "guardId": "lint-v1-1-no-frontend-invention",
+      "summary": "Consumption map has zero hardcoded labels/routes/icons left as 'allowed' bindings. Every binding resolves to a runtime envelope field. Every hardcodedSymbolsToPurge.replaceWith points to an envelope field, not another literal.",
+      "rationale": "If the consumption map itself smuggles a literal as the replacement, the doctrine is broken at the contract layer.",
+      "scanScope": [
+        "platform/ui-system/dos-ui-system/dogan_shahin_all_contracts_v1_1_operating_runtime/consumption-map/frontend.consumption.map.v1-1.json"
+      ],
+      "mustFailOn": [
+        "any allowedReads entry that does not start with shell.|productRuntime.|moduleRuntime.|tenantRuntime.|integrationRuntime.|themeRuntime.",
+        "any replaceWith string that contains a hex color, a quoted route literal like '/...'/'@/...', a 'DOS Platform' literal, or a numeric pixel literal",
+        "any reference to v1 (non-v1-1) envelope path",
+        "any component without a carbonRendererClass field",
+        "any component without breakpointBindings (use [] if intentionally none) or themeBindings"
+      ],
+      "expectedPassEvidence": [
+        "components count >= 13",
+        "every component has runtimeEnvelope set",
+        "every hardcodedSymbolsToPurge.replaceWith starts with a runtime envelope path",
+        "globalForbiddenReads contains the localStorage / subdomain / window.* / process.env clauses"
+      ],
+      "outputArtifact": "proofs/foundation-ai/post-launch/v1-1/no-frontend-invention.proof.json",
+      "lockstepRef": null
+    }
+  ],
+  "wiringSpec": {
+    "masterGateScript": "scripts/ci-guards/dos-master-gate.mjs",
+    "addStep": "All 6 guards above are added in a SINGLE later commit, in the order listed. The master gate must short-circuit on the first failing guard.",
+    "ciJob": "DOS / Master Gate (existing job)",
+    "execution": "Each guard is implemented as scripts/ci-guards/lint-v1-1-<guardId-suffix>.mjs and emits its outputArtifact under proofs/foundation-ai/post-launch/v1-1/.",
+    "lockstepProofs": [
+      "preflight/lockstep.proof.json",
+      "publication-map/publication.lockstep.json"
+    ]
+  },
+  "summary": {
+    "guardCount": 6,
+    "lockstepArtifacts": 2,
+    "outOfScopeNote": "This file declares; it does not execute. The next step ports each entry into scripts/ci-guards/ and wires the master gate."
+  },
+  "acceptance": [
+    "guards array contains exactly 6 entries with the canonical guardIds",
+    "every guard declares scanScope, mustFailOn, expectedPassEvidence, outputArtifact",
+    "no script under scripts/ci-guards/ is created or modified by authoring this manifest",
+    "no entry in scripts/migrate.* or scripts/module/publish.mjs is mutated",
+    "lockstepArtifacts list matches the two existing lockstep JSON files in the pack"
+  ]
+}

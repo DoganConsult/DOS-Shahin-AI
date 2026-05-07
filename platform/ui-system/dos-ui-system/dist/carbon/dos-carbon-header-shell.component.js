@@ -16,9 +16,16 @@ import { UIShellModule } from 'carbon-components-angular';
  * for individual actions is delegated to *dosCanRender on the consumer.
  */
 let DosCarbonHeaderShellComponent = class DosCarbonHeaderShellComponent {
-    brand = 'DOS Platform';
-    brandShort = 'DOS';
-    ariaLabel = 'Application header';
+    // ZERO_LEGACY: brand / brandShort / ariaLabel default to empty so the
+    // parent shell MUST pipe in resolver-emitted values:
+    //   brand        ← productRuntime.chrome.brand || tenantRuntime.branding.brandName
+    //   brandShort   ← productRuntime.chrome.brandShort || tenantRuntime.branding.brandShort
+    //   ariaLabel    ← shell.chrome.headerAriaLabel
+    // Empty inputs => Carbon's <cds-header> renders without label text;
+    // it never invents 'DOS Platform'.
+    brand = '';
+    brandShort = '';
+    ariaLabel = '';
     showHamburger = true;
     showHeaderNav = false;
     sideNavOpen = false;

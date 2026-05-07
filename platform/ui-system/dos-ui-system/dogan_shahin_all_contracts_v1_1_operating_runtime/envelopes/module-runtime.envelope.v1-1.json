@@ -1,0 +1,74 @@
+{
+  "$schema": "https://dogan-ai.local/schemas/runtime-envelope.v1-1.schema.json",
+  "contractKind": "runtime-envelope",
+  "envelopeKey": "module-runtime",
+  "contractVersion": "1.1.0",
+  "runtimeModel": "v1-1-operating-runtime",
+  "endpoint": "/api/ui-os/module-runtime/:moduleCode",
+  "method": "GET",
+  "auth": "session_cookie",
+  "tenancy_scope": "tenant",
+  "pathParameters": { "moduleCode": "one of foundation|risk|compliance|policy|incident|workflow|audit|evidence|vendor|asset|privacy|bcp|dora|qiyas|training|remediation|reports|dashboard|config-center|dynamic-ui|ai|dauth|dsoc|dnoc" },
+  "rule": "Each module's runtime context resolved into ONE envelope. Foundation is no longer special; every module returns the same shape, including canonical pageOrder.",
+  "doctrine": ["ZERO_STATIC","ZERO_LEGACY","ZERO_FALLBACK"],
+  "shape": {
+    "tenantId":      "string",
+    "moduleCode":    "string",
+    "version":       "integer",
+    "moduleRuntime": {
+      "moduleCode":   "string",
+      "moduleName":   "object<{en,ar}>",
+      "category":     "string",
+      "routeBase":    "string",
+      "ownerService": "string",
+      "status":       "enum<active|platform_shared|disabled>",
+      "chrome":       "object<{brand?,header?,footer?,banners?}>",
+      "navGroups":    "Array<{groupKey,label:{i18nKey?,fallback?,label?},sortOrder,permission?,entitlement?}>",
+      "navItems":     "Array<{itemKey,groupKey,label:{i18nKey?,fallback?,label?},action:{kind,path?,url?,tab?,eventName?},sortOrder,permission?,entitlement?,iconRef?}>",
+      "pages":        "Array<{pageKey,route,aliases[],pageType,componentKey,rendererKey,readPermission,writePermissions[],semanticRegions[],apiEndpoint,dbEntities[],columns[],titleKey,subtitleKey,states,responsivePolicyRef}>",
+      "widgets":      "Array<{widgetKey,surface,displayNameKey,dataSource,refreshIntervalSeconds,carbonKeys[],requiredPermission?,requiredEntitlement?}>",
+      "actions":      "Array<{actionKey,displayNameKey,requiredPermission?,kind,payloadShape}>",
+      "pageOrder":    "Array<{pageKey,sortOrder}>",
+      "defaultRoute": "string",
+      "carbonUsage":  "object<{shell?:string[],overview?:string[],records?:string[],forms?:string[]}>",
+      "permissions":  "Array<{permissionCode,moduleCode,status}>",
+      "version":      "integer"
+    }
+  },
+  "forbiddenFields": [
+    "moduleRuntime.module_code (use moduleCode)",
+    "moduleRuntime.navItems[].route (use action.path)",
+    "moduleRuntime.navItems[].labelKey (use label.i18nKey)",
+    "moduleRuntime.pages[].label_key (use titleKey)"
+  ],
+  "exampleResponse": {
+    "tenantId": "00000000-0000-0000-0000-000000000000",
+    "moduleCode": "foundation",
+    "version": 1,
+    "moduleRuntime": {
+      "moduleCode": "foundation",
+      "moduleName": { "en": "Foundation", "ar": "التأسيس" },
+      "category": "platform-base",
+      "routeBase": "/foundation",
+      "ownerService": "user-service",
+      "status": "active",
+      "chrome": { "brand": null, "header": null, "footer": null, "banners": [] },
+      "navGroups": [],
+      "navItems": [],
+      "pages": [],
+      "widgets": [],
+      "actions": [],
+      "pageOrder": [],
+      "defaultRoute": "/foundation/overview",
+      "carbonUsage": { "shell": [], "overview": [], "records": [], "forms": [] },
+      "permissions": [],
+      "version": 1
+    }
+  },
+  "consumers": [
+    "platform/core/platform/dynamic-ui/**",
+    "platform/core/services/template-binding.registry.ts",
+    "modules/<moduleCode>/**"
+  ],
+  "publishedBy": "modules/<moduleCode>.module.contract.v1-1.json"
+}

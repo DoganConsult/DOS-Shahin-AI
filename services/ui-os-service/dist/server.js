@@ -103,6 +103,13 @@ app.use('/api/ui-os', (req, _res, next) => {
     next();
 });
 app.use('/api/ui-os', createUiOsRouter(pool));
+// Phase F — mobile route channel killed.
+// All mobile config (breakpoints, touch targets, component variants) is
+// now folded into the workspace-runtime envelope under shell.breakpoints,
+// shell.touchTargets, shell.variants, and shell.tenantSurfaceVariants.
+// There is exactly ONE workspace runtime channel; no /api/ui-os/mobile-*
+// duplicates. See platform/ui-system/dos-ui-system/dogan_shahin_all_contracts_v1_1_operating_runtime/
+// for the v1.1 doctrine.
 // W8 — Spec §10: canonical /api/dynamic-ui/contract/{moduleCode} and
 // /api/dynamic-ui/route-catalog must resolve through the gateway. We
 // mount a narrow contract router (NOT the full ui-os router) under a

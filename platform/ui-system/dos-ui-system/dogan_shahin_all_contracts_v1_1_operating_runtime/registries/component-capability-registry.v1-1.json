@@ -1,0 +1,399 @@
+{
+  "$schema": "https://dogan-ai.local/schemas/component-capability-registry.v1-1.schema.json",
+  "contractKind": "component-capability-registry",
+  "generatedAt": "2026-05-07T13:18:19.248054+00:00",
+  "contractVersion": "1.1.0",
+  "runtimeModel": "v1-1-operating-runtime",
+  "rule": "Current runtime is route -> one archetype template. dos.* semantic components are requiredRegions only, not fake DB component_key rows, until V2 surface renderer exists.",
+  "forbidden": [
+    "fake_component_map_closure",
+    "register_dos_semantic_components_as_full_page_templates",
+    "static_nav_fallback",
+    "hardcoded_workspace_modules",
+    "hardcoded_workspace_routes",
+    "prime_ng_workspace_shell",
+    "material_workspace_shell",
+    "localStorage_auth_token",
+    "sessionStorage_auth_token",
+    "silent_renderer_fallback",
+    "random_css_mobile_patch"
+  ],
+  "semanticComponents": [
+    {
+      "semanticComponent": "dos.page-header",
+      "purpose": "Page masthead, breadcrumb, title, subtitle, status tags, primary action.",
+      "carbonKeys": [
+        "grid",
+        "column",
+        "breadcrumb",
+        "tag",
+        "button"
+      ]
+    },
+    {
+      "semanticComponent": "dos.status-banner",
+      "purpose": "Page/module warning, success, blocking, or runtime status.",
+      "carbonKeys": [
+        "inline-notification",
+        "tag"
+      ]
+    },
+    {
+      "semanticComponent": "dos.metric-grid",
+      "purpose": "KPI tile grid.",
+      "carbonKeys": [
+        "tile",
+        "tag",
+        "progress-bar",
+        "skeleton-text"
+      ]
+    },
+    {
+      "semanticComponent": "dos.structured-summary-card",
+      "purpose": "Label/value summary, posture, details, grouped facts.",
+      "carbonKeys": [
+        "tile",
+        "structured-list",
+        "tag"
+      ]
+    },
+    {
+      "semanticComponent": "dos.records-table",
+      "purpose": "Records list with search, filters, row actions, pagination.",
+      "carbonKeys": [
+        "data-table",
+        "table-toolbar",
+        "table-toolbar-search",
+        "table-toolbar-actions",
+        "pagination",
+        "overflow-menu",
+        "overflow-menu-option"
+      ]
+    },
+    {
+      "semanticComponent": "dos.form-modal",
+      "purpose": "Create/edit form modal.",
+      "carbonKeys": [
+        "modal",
+        "text-input",
+        "text-area",
+        "dropdown",
+        "combo-box",
+        "multi-select",
+        "date-picker",
+        "number-input",
+        "select",
+        "checkbox",
+        "radio",
+        "toggle",
+        "button",
+        "inline-loading"
+      ]
+    },
+    {
+      "semanticComponent": "dos.detail-card",
+      "purpose": "Record detail card/side panel.",
+      "carbonKeys": [
+        "tile",
+        "structured-list",
+        "tag",
+        "button"
+      ]
+    },
+    {
+      "semanticComponent": "dos.empty-state",
+      "purpose": "No data / no permission-safe action prompt.",
+      "carbonKeys": [
+        "tile",
+        "button"
+      ]
+    },
+    {
+      "semanticComponent": "dos.workflow-panel",
+      "purpose": "Workflow stage, tasks, approval actions, history.",
+      "carbonKeys": [
+        "tile",
+        "structured-list",
+        "tag",
+        "progress-bar",
+        "button"
+      ]
+    },
+    {
+      "semanticComponent": "dos.recommendation-list",
+      "purpose": "AI or rule-based recommendations.",
+      "carbonKeys": [
+        "tile",
+        "structured-list",
+        "tag",
+        "button"
+      ]
+    },
+    {
+      "semanticComponent": "dos.ai-insight-panel",
+      "purpose": "AI insight with confidence, evidence, proposed actions.",
+      "carbonKeys": [
+        "tile",
+        "structured-list",
+        "tag",
+        "button"
+      ]
+    },
+    {
+      "semanticComponent": "dos.tabs",
+      "purpose": "Page subviews. Each tab must have real body.",
+      "carbonKeys": [
+        "tabs",
+        "tab"
+      ]
+    },
+    {
+      "semanticComponent": "dos.audit-log-table",
+      "purpose": "Audit trail table.",
+      "carbonKeys": [
+        "data-table",
+        "table-toolbar",
+        "pagination",
+        "tag"
+      ]
+    },
+    {
+      "semanticComponent": "dos.settings-panel",
+      "purpose": "Settings grouped controls.",
+      "carbonKeys": [
+        "tabs",
+        "structured-list",
+        "toggle",
+        "dropdown",
+        "text-input",
+        "button"
+      ]
+    },
+    {
+      "semanticComponent": "dos.ownership-matrix",
+      "purpose": "RACI/ownership grid.",
+      "carbonKeys": [
+        "data-table",
+        "tag",
+        "tooltip",
+        "button"
+      ]
+    },
+    {
+      "semanticComponent": "dos.sod-result",
+      "purpose": "SoD rule result and exception warning.",
+      "carbonKeys": [
+        "inline-notification",
+        "tag"
+      ]
+    },
+    {
+      "semanticComponent": "dos.readiness-panel",
+      "purpose": "Readiness/progress block.",
+      "carbonKeys": [
+        "progress-bar",
+        "structured-list",
+        "tag"
+      ]
+    },
+    {
+      "semanticComponent": "dos.org-tree",
+      "purpose": "Organization hierarchy tree/list.",
+      "carbonKeys": [
+        "structured-list",
+        "tile",
+        "tag"
+      ]
+    }
+  ],
+  "pageArchetypes": {
+    "overview": {
+      "rendererKey": "ModuleOverviewTemplateComponent",
+      "regions": [
+        "dos.page-header",
+        "dos.status-banner",
+        "dos.metric-grid",
+        "dos.structured-summary-card",
+        "dos.readiness-panel",
+        "dos.recommendation-list"
+      ]
+    },
+    "records_table": {
+      "rendererKey": "ModuleRecordsTemplateComponent",
+      "regions": [
+        "dos.page-header",
+        "dos.status-banner",
+        "dos.metric-grid",
+        "dos.records-table",
+        "dos.form-modal",
+        "dos.empty-state"
+      ]
+    },
+    "detail": {
+      "rendererKey": "ModuleDetailTemplateComponent",
+      "regions": [
+        "dos.page-header",
+        "dos.detail-card",
+        "dos.tabs",
+        "dos.records-table",
+        "dos.audit-log-table"
+      ]
+    },
+    "form": {
+      "rendererKey": "ModuleFormTemplateComponent",
+      "regions": [
+        "dos.page-header",
+        "dos.form-modal",
+        "dos.status-banner"
+      ]
+    },
+    "workflow": {
+      "rendererKey": "WorkflowRecordsTemplateComponent",
+      "regions": [
+        "dos.page-header",
+        "dos.metric-grid",
+        "dos.workflow-panel",
+        "dos.records-table",
+        "dos.status-banner"
+      ]
+    },
+    "matrix": {
+      "rendererKey": "OwnershipMatrixTemplateComponent",
+      "regions": [
+        "dos.page-header",
+        "dos.ownership-matrix",
+        "dos.sod-result",
+        "dos.recommendation-list"
+      ]
+    },
+    "audit_log": {
+      "rendererKey": "AuditLogTemplateComponent",
+      "regions": [
+        "dos.page-header",
+        "dos.structured-summary-card",
+        "dos.audit-log-table"
+      ]
+    },
+    "settings": {
+      "rendererKey": "ModuleSettingsTemplateComponent",
+      "regions": [
+        "dos.page-header",
+        "dos.tabs",
+        "dos.settings-panel",
+        "dos.status-banner"
+      ]
+    },
+    "reports": {
+      "rendererKey": "ModuleReportsTemplateComponent",
+      "regions": [
+        "dos.page-header",
+        "dos.metric-grid",
+        "dos.records-table",
+        "dos.form-modal"
+      ]
+    },
+    "ai_insights": {
+      "rendererKey": "AiInsightsTemplateComponent",
+      "regions": [
+        "dos.page-header",
+        "dos.ai-insight-panel",
+        "dos.records-table",
+        "dos.recommendation-list"
+      ]
+    },
+    "org_tree_detail": {
+      "rendererKey": "OrgChartTemplateComponent",
+      "regions": [
+        "dos.page-header",
+        "dos.org-tree",
+        "dos.detail-card",
+        "dos.action-bar"
+      ]
+    },
+    "posture_overview": {
+      "rendererKey": "PostureOverviewTemplateComponent",
+      "regions": [
+        "dos.page-header",
+        "dos.metric-grid",
+        "dos.structured-summary-card",
+        "dos.recommendation-list"
+      ]
+    }
+  },
+  "carbonCatalog": {
+    "shell": [
+      "ui-shell",
+      "header",
+      "header-name",
+      "header-navigation",
+      "header-menu",
+      "header-menu-item",
+      "header-global-bar",
+      "header-global-action",
+      "side-nav",
+      "side-nav-items",
+      "side-nav-menu",
+      "side-nav-menu-item",
+      "side-nav-link",
+      "content"
+    ],
+    "layout": [
+      "grid",
+      "column",
+      "layer",
+      "breadcrumb",
+      "tabs",
+      "tab"
+    ],
+    "content": [
+      "tile",
+      "clickable-tile",
+      "expandable-tile",
+      "structured-list",
+      "tag",
+      "inline-notification",
+      "toast-notification",
+      "progress-bar",
+      "skeleton-text",
+      "skeleton-placeholder",
+      "inline-loading",
+      "accordion"
+    ],
+    "table": [
+      "data-table",
+      "table-toolbar",
+      "table-toolbar-search",
+      "table-toolbar-actions",
+      "table-batch-actions",
+      "pagination",
+      "overflow-menu",
+      "overflow-menu-option"
+    ],
+    "form": [
+      "text-input",
+      "text-area",
+      "dropdown",
+      "combo-box",
+      "multi-select",
+      "date-picker",
+      "number-input",
+      "select",
+      "checkbox",
+      "radio",
+      "toggle",
+      "button",
+      "modal",
+      "file-uploader"
+    ],
+    "overlay": [
+      "tooltip",
+      "toggletip",
+      "popover",
+      "context-menu"
+    ]
+  },
+  "v1Rule": "Only archetype component keys should be checked against dynamic_ui_component_registry/template-binding.registry.ts. Semantic dos.* entries are requiredRegion capabilities.",
+  "v2Rule": "When true surface renderer exists, dos.* can become first-class renderable component keys.",
+  "selfContained": true,
+  "supersedes": "dogan_shahin_all_contracts_v1_runtime/registries/component-capability-registry.v1-runtime.json"
+}

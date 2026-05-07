@@ -1,0 +1,9 @@
+{
+  "guardId": "lint-v1-1-envelope-coverage",
+  "status": "PASS",
+  "envelopeCount": 6,
+  "componentCount": 13,
+  "failureCount": 0,
+  "failures": [],
+  "generatedAt": "2026-05-07T17:07:20.341Z"
+}

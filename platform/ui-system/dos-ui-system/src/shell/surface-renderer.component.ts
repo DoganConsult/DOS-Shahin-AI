@@ -44,6 +44,7 @@ import {
   DosShellModuleCardsComponent,
   DosShellCatalogWidgetComponent,
 } from './visual-shell-surfaces.component';
+import { DosShellFrameStructuralComponent } from './frame-shell-surfaces.component';
 
 export interface WorkspaceSurfaceInput {
   enabled: boolean;
@@ -61,11 +62,31 @@ export interface WorkspaceSurfaceInput {
 
 /**
  * Hybrid-static COMPONENT_MAP — keyed by resolver-emitted rendererKey.
- * `null` entries are intentionally non-visual (shell-frame is structural;
- * ShellHost composes Carbon ui-shell directly, never via this map).
+ *
+ * `shell.frame.*` entries map to the structural diagnostic component
+ * (DosShellFrameStructuralComponent). The visible Carbon UIShell DOM
+ * (cds-header, cds-sidenav, cds-clickable-tile, …) is painted by the
+ * `shell.*` visual surfaces (workspace-header, sidebar-nav, module-cards)
+ * which compose Carbon primitives directly. Frame entries are
+ * catalog-observable but render no chrome of their own — preventing a
+ * double-painted shell.
  */
 export const COMPONENT_MAP: Readonly<Record<string, Type<unknown> | null>> = Object.freeze({
-  'shell.frame': null,
+  // Structural shell.frame.* primitives — catalog-observable diagnostics.
+  'shell.frame.ui-shell': DosShellFrameStructuralComponent as Type<unknown>,
+  'shell.frame.header': DosShellFrameStructuralComponent as Type<unknown>,
+  'shell.frame.header-name': DosShellFrameStructuralComponent as Type<unknown>,
+  'shell.frame.header-navigation': DosShellFrameStructuralComponent as Type<unknown>,
+  'shell.frame.header-menu': DosShellFrameStructuralComponent as Type<unknown>,
+  'shell.frame.header-menu-item': DosShellFrameStructuralComponent as Type<unknown>,
+  'shell.frame.header-global-bar': DosShellFrameStructuralComponent as Type<unknown>,
+  'shell.frame.header-global-action': DosShellFrameStructuralComponent as Type<unknown>,
+  'shell.frame.side-nav': DosShellFrameStructuralComponent as Type<unknown>,
+  'shell.frame.side-nav-items': DosShellFrameStructuralComponent as Type<unknown>,
+  'shell.frame.side-nav-menu': DosShellFrameStructuralComponent as Type<unknown>,
+  'shell.frame.side-nav-menu-item': DosShellFrameStructuralComponent as Type<unknown>,
+  'shell.frame.side-nav-link': DosShellFrameStructuralComponent as Type<unknown>,
+  'shell.frame.content': DosShellFrameStructuralComponent as Type<unknown>,
   'shell.workspace-header': DosWorkspaceHeaderComponent as Type<unknown>,
   'shell.empty-state': DosEmptyStateComponent as Type<unknown>,
   'shell.loading-state': DosLoadingStateComponent as Type<unknown>,

@@ -7,26 +7,39 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { TilesModule } from 'carbon-components-angular';
 /**
  * Carbon Tile / ClickableTile wrapper.
  *
- * NOTE: emits plain `cds--tile` markup so we sidestep
- * `cds-clickable-tile`'s internal `[routerLink]` binding which crashes when
- * `route` is null and triggers the recursive `template` ContentChildren
- * resolution loop observed at runtime. Carbon CSS (`@carbon/styles`) styles
- * `.cds--tile` and `.cds--tile--clickable` directly.
+ * Composes the real Carbon Angular primitives (`cds-tile` /
+ * `cds-clickable-tile`) so wrappers benefit from Carbon's built-in
+ * keyboard/focus/hover semantics and theming. The previous hand-rolled
+ * `<a class="cds--tile">` markup is removed — it skipped Carbon's
+ * controller and emitted a flat anchor with no Carbon DOM.
  *
- * - `clickable=false` renders `<div class="cds--tile">`.
- * - `clickable=true`  renders `<a class="cds--tile cds--tile--clickable">`.
+ * - `clickable=false` → `<cds-tile>`.
+ * - `clickable=true`  → `<cds-clickable-tile>` with click navigation
+ *   delegated to Angular Router (we deliberately do NOT bind
+ *   `[route]` because Carbon's directive crashes when route is null).
  */
 let DosCarbonTileComponent = class DosCarbonTileComponent {
+    router = inject(Router);
     clickable = false;
     route = null;
     activated = new EventEmitter();
     onActivate(ev) {
         this.activated.emit(ev);
+        if (ev.defaultPrevented)
+            return;
+        if (ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.button !== 0)
+            return;
+        if (this.route) {
+            ev.preventDefault();
+            void this.router.navigateByUrl(this.route);
+        }
     }
 };
 __decorate([
@@ -45,23 +58,20 @@ DosCarbonTileComponent = __decorate([
     Component({
         selector: 'dos-carbon-tile',
         standalone: true,
-        imports: [CommonModule],
+        imports: [CommonModule, TilesModule],
         changeDetection: ChangeDetectionStrategy.OnPush,
         template: `
-    <ng-template #tileContent><ng-content></ng-content></ng-template>
     @if (clickable) {
-      <a
-        class="cds--tile cds--tile--clickable"
-        [attr.href]="route || '#'"
-        [attr.role]="route ? null : 'button'"
+      <cds-clickable-tile
+        href="javascript:void(0)"
         (click)="onActivate($event)"
       >
-        <ng-container [ngTemplateOutlet]="tileContent"></ng-container>
-      </a>
+        <ng-content></ng-content>
+      </cds-clickable-tile>
     } @else {
-      <div class="cds--tile">
-        <ng-container [ngTemplateOutlet]="tileContent"></ng-container>
-      </div>
+      <cds-tile>
+        <ng-content></ng-content>
+      </cds-tile>
     }
   `,
     })

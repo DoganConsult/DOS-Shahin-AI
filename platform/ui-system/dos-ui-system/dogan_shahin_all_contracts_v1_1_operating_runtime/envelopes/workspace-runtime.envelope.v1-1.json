@@ -1,0 +1,71 @@
+{
+  "$schema": "https://dogan-ai.local/schemas/runtime-envelope.v1-1.schema.json",
+  "contractKind": "runtime-envelope",
+  "envelopeKey": "workspace-runtime",
+  "contractVersion": "1.1.0",
+  "runtimeModel": "v1-1-operating-runtime",
+  "endpoint": "/api/ui-os/workspace-runtime",
+  "method": "GET",
+  "auth": "session_cookie",
+  "tenancy_scope": "tenant",
+  "rule": "Resolver MUST emit exactly this shape. No legacy aliases (no navigation alias for shell.nav, no component_key for componentKey, no perms_required for permsRequired, no route field on nav items).",
+  "doctrine": ["ZERO_STATIC","ZERO_LEGACY","ZERO_FALLBACK","ZERO_BROWSER_NORMALIZATION"],
+  "shape": {
+    "tenantId":     "string",
+    "userId":       "string",
+    "productCode":  "string",
+    "version":      "integer",
+    "shell": {
+      "version":               "integer",
+      "surfaces":              "Array<{surfaceKey,slot,carbonKeys[],required,structuralOnly}>",
+      "zones":                 "object<{header,main,sidebar,mobile.drawer,mobile.bottomNav,banner,account}>",
+      "nav": {
+        "groups": "Array<{groupKey,label:{i18nKey?,fallback?,label?},sortOrder,permission?,entitlement?}>",
+        "items":  "Array<{itemKey,groupKey,label:{i18nKey?,fallback?,label?},action:{kind,path?,url?,tab?,eventName?,payload?},sortOrder,permission?,entitlement?,iconRef?}>"
+      },
+      "chrome":                "object<{brand,logoHref,productSwitcher,accountMenu,statusBar,footer}>",
+      "shortcuts":             "Array<{shortcutKey,keyCombo[],action:{kind,...},contextScope}>",
+      "banners":               "Array<{bannerId,kind,severity,label:{i18nKey?,fallback?,label?},action?:{kind,...},dismissible,scope}>",
+      "policies":              "object<{layout,expandActiveOnly,sessionExpiry,trial,offline,defaultModuleCode,defaultRoute}>",
+      "breakpoints":           "Array<{breakpointKey,minPx,maxPx,defaultBehavior,isActive}>",
+      "touchTargets":          "object<{minSizePx,minSpacingPx,hapticFeedbackEnabled,gestureBindings:Array<{gestureType,componentKey,actionConfig}>}>",
+      "variants":              "Record<surfaceKey, Array<{variantName,breakpoint,propsOverride,layoutOverride,isDefault}>>",
+      "tenantSurfaceVariants": "Record<surfaceKey,variantName>"
+    }
+  },
+  "forbiddenFields": [
+    "shell.navigation (legacy alias for shell.nav)",
+    "shell.surfaces[].component_key (use componentKey)",
+    "shell.surfaces[].perms_required (use permsRequired)",
+    "shell.nav.items[].route (use action.path)",
+    "shell.nav.items[].labelKey (use label.i18nKey)",
+    "shell.nav.items[].labelEn (use label.fallback or label.label)",
+    "shell.nav.items[].labelAr (use label.fallback or label.label)",
+    "shell.chrome.chromeStrings (chrome is a typed object, not a flat string map)"
+  ],
+  "exampleResponse": {
+    "tenantId": "00000000-0000-0000-0000-000000000000",
+    "userId":   "00000000-0000-0000-0000-000000000000",
+    "productCode": "shahin-ai",
+    "version": 21,
+    "shell": {
+      "version": 21,
+      "surfaces": [],
+      "zones": { "header": [], "main": [], "sidebar": [], "mobile.drawer": [], "mobile.bottomNav": [], "banner": [], "account": [] },
+      "nav": { "groups": [], "items": [] },
+      "chrome": { "brand": null, "logoHref": null, "productSwitcher": null, "accountMenu": null, "statusBar": null, "footer": null },
+      "shortcuts": [],
+      "banners": [],
+      "policies": { "layout": null, "expandActiveOnly": true, "sessionExpiry": null, "trial": null, "offline": null, "defaultModuleCode": null, "defaultRoute": null },
+      "breakpoints": [],
+      "touchTargets": { "minSizePx": null, "minSpacingPx": null, "hapticFeedbackEnabled": false, "gestureBindings": [] },
+      "variants": {},
+      "tenantSurfaceVariants": {}
+    }
+  },
+  "consumers": [
+    "platform/core/platform/shell/shell-host.component.ts",
+    "platform/core/platform/shell/workspace-shell-binding.service.ts"
+  ],
+  "publishedBy": "workspace/shahin.workspace.contract.v1-1.json"
+}

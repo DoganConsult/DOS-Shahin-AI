@@ -79,6 +79,18 @@ const GUARDS = [
   // and ShellHost must compose Carbon UIShell + Tile primitives, not
   // hand-rolled <button>/<ul role="menu">/<input>/<select>.
   'lint-no-raw-shell-primitives.mjs',
+  // 2026-05-07 — v1.1 Operating Runtime Pack (Phase G).
+  // Six guards declared in
+  //   platform/ui-system/dos-ui-system/dogan_shahin_all_contracts_v1_1_operating_runtime/ci/ci.manifest.v1-1.json
+  // Each emits its proof under proofs/foundation-ai/post-launch/v1-1/.
+  // Order matches manifest declaration; the gate short-circuits on the
+  // first failing guard.
+  'lint-v1-1-self-contained.mjs',
+  'lint-v1-1-preflight-lockstep.mjs',
+  'lint-v1-1-publication-coverage.mjs',
+  'lint-v1-1-envelope-coverage.mjs',
+  'lint-v1-1-no-auto-execute.mjs',
+  'lint-v1-1-no-frontend-invention.mjs',
 ];
 
 let pass = 0, fail = 0;

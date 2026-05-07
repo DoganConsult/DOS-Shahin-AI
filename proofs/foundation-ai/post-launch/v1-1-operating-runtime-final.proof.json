@@ -1,0 +1,172 @@
+{
+  "schema": "foundation-ai.post-launch.v1-1.final.v1",
+  "status": "GREEN",
+  "ts": "2026-05-07T16:48:00Z",
+  "doctrine": "ZERO_STATIC / ZERO_LEGACY / ZERO_FALLBACK / ZERO_BROWSER_NORMALIZATION / DB_AS_SOURCE_OF_TRUTH",
+  "summary": "v1.1 Operating Runtime Pack: pack authoring + 5 preflight blockers + lean DB seed + resolver extension + 21/21 frontend purges + mobile route channel killed + 6 CI guards live. All 6 v1.1 guards PASS. Authenticated /api/ui-os/workspace-runtime emits camelCase v1.1 envelope (44 KB, 0 forbidden tokens).",
+
+  "phases": {
+    "A_preflight": {
+      "status": "COMPLETED",
+      "blockersApplied": ["B1", "B2 (no-op on this DB)", "B2b", "B3", "B4 (live-schema-adapted)", "B4b (dedupe + UNIQUE promote)"],
+      "snapshot": "ops/db-snapshots/shahin_grc_dos_pre-foundation_20260506T200945Z.sql.gz"
+    },
+    "B_lean_seed": {
+      "status": "COMPLETED",
+      "migration": "platform/dos/migrations/public/20260507_2000_phase_b_v1_1_runtime_seed.sql",
+      "tablesAdded": ["dos.ui_touch_target_config", "dos.integration_connector_catalog"],
+      "rationale": "Other v1.1 envelope data normalized from EXISTING populated tables (workspace_shell_binding, ui_workspace_chrome, mobile_breakpoint_config, mobile_touch_gestures, mobile_component_variants); no shadow tables created"
+    },
+    "C_resolver": {
+      "status": "COMPLETED",
+      "file": "services/ui-os-service/src/routes/workspace-shell.routes.ts",
+      "loadersAdded": ["loadBreakpoints", "loadTouchTargets", "loadVariants"],
+      "newEnvelopeFields": ["shell.breakpoints", "shell.touchTargets", "shell.variants", "shell.tenantSurfaceVariants"]
+    },
+    "D_loader_verification": {
+      "status": "COMPLETED",
+      "evidence": "psql verified loader queries against live DB; resolver returns 401 for unauth and 200 with v1.1 fields for authenticated requests"
+    },
+    "E_frontend_purge": {
+      "status": "COMPLETED",
+      "wavesCompleted": ["wave-1 (5 symbols)", "wave-2 (16 symbols)"],
+      "totalPurged": 21,
+      "componentsTouched": [
+        "platform/core/platform/shell/shell-host.component.ts (4 @media → class blocks; tabletMinPx + desktopMin pivot routing)",
+        "platform/core/platform/shell/workspace-shell-binding.service.ts (v1.1 signals + computed properties)",
+        "platform/core/platform/shell/templates/module-overview.template.ts (isWorkspaceHome → landingRoute Input)",
+        "platform/core/platform/shell/templates/module-archetypes-extended.templates.ts (resolveRuntimeLabel canonical impl)",
+        "platform/core/services/grc-auth.service.ts (DEFAULT_PRODUCT_KEY 'agrc' → empty)",
+        "platform/ui-system/dos-ui-system/src/shell/workspace-shell.contracts.ts (v1.1 types)",
+        "platform/ui-system/dos-ui-system/src/shell/shell-state.service.ts (DEFAULT_*_PX constants → UNBOUND_PX)",
+        "platform/ui-system/dos-ui-system/src/shell/mobile-bottom-nav.component.ts (touchTargetSize default 44 → 0)",
+        "platform/ui-system/dos-ui-system/src/brand/dos-brand-eagle.component.ts (STATIC_EAGLE_FALLBACK + STATIC_EAGLE_ALT deleted; preIconUrl/preIconAlt @Input)",
+        "platform/ui-system/dos-ui-system/src/carbon/dos-carbon-header-shell.component.ts (brand 'DOS Platform' default → empty)",
+        "platform/config-center/integration-marketplace/integration-marketplace.component.ts (FALLBACK_CATALOG deleted)",
+        "platform/config-center/board-report/features/integrations/pages/integration-marketplace/integration-marketplace.component.ts (FALLBACK_CATALOG deleted)",
+        "platform/config-center/board-report/features/integrations/pages/connector-manager/connector-manager.component.ts (deferred phase-e-wave3 tracker added)"
+      ]
+    },
+    "F_mobile_route_kill": {
+      "status": "COMPLETED",
+      "deleted": [
+        "services/ui-os-service/src/routes/mobile.routes.ts",
+        "platform/ui-system/dos-ui-system/src/services/dos-mobile-tokens.service.ts",
+        "platform/ui-system/dos-ui-system/src/services/dos-responsive-resolver.service.ts",
+        "platform/ui-system/dos-ui-system/src/services/dos-haptic-pattern.service.ts",
+        "platform/ui-system/dos-ui-contracts/src/mobile-component-contract.ts"
+      ],
+      "registrationRemoved": "services/ui-os-service/src/server.ts no longer mounts createMobileRoutes",
+      "rationale": "All mobile config (breakpoints, touch targets, variants, gestures) is folded into workspace-runtime envelope; one channel only"
+    },
+    "G_ci_guards": {
+      "status": "COMPLETED",
+      "guards": [
+        { "id": "lint-v1-1-self-contained",          "result": "PASS", "scanned": "47 files",         "failures": 0 },
+        { "id": "lint-v1-1-preflight-lockstep",      "result": "PASS", "scanned": "5 blockers",       "failures": 0 },
+        { "id": "lint-v1-1-publication-coverage",    "result": "PASS", "scanned": "67 pub entries",   "failures": 0 },
+        { "id": "lint-v1-1-envelope-coverage",       "result": "PASS", "scanned": "6 envelopes / 13 components", "failures": 0 },
+        { "id": "lint-v1-1-no-auto-execute",         "result": "PASS", "scanned": "5 preflight SQL",  "failures": 0 },
+        { "id": "lint-v1-1-no-frontend-invention",   "result": "PASS", "scanned": "13 components",    "failures": 0 }
+      ],
+      "wiredInto": "scripts/ci-guards/dos-master-gate.mjs",
+      "totalMasterGate": "39/44 PASS, 5 FAIL (all pre-existing: 3 DB grant errors, 1 tenant-completeness baseline, 1 carbon-native shell wave)"
+    }
+  },
+
+  "runtimeProof": {
+    "endpoint": "/api/ui-os/workspace-runtime",
+    "auth": "password (Keycloak realm dogan)",
+    "user": "foundation-probe-001@dos.local",
+    "tenantId": "65f10f855eab8b30",
+    "httpStatus": 200,
+    "responseBytes": 44630,
+    "growthVsPreV1_1": "+229% (was 13526 bytes)",
+    "shell": {
+      "version": 24,
+      "zones": ["header", "main", "sidebar"],
+      "surfaces": 21,
+      "navGroups": 28,
+      "navItems": 8,
+      "chromeKeys": ["accountMenuActions", "brand", "footer.copyright", "header.brand", "locale.default", "logoHref", "product.name", "product.tagline"]
+    },
+    "v1_1_fields": {
+      "breakpoints": {
+        "count": 3,
+        "keys": ["mobile", "tablet", "desktop"]
+      },
+      "touchTargets": {
+        "minSizePx": 44,
+        "minSpacingPx": 8,
+        "hapticFeedbackEnabled": false,
+        "gestureBindings": 18
+      },
+      "variants": {
+        "componentCount": 5,
+        "totalVariantCount": 8,
+        "components": ["workspace.mobile.button", "workspace.mobile.card", "workspace.mobile.data-table", "workspace.mobile.dropdown", "workspace.mobile.form"]
+      },
+      "tenantSurfaceVariants": "{} (none for this tenant — empty is correct)"
+    },
+    "forbiddenTokenScan": {
+      "tokensChecked": ["component_key", "perms_required", "label_key", "label_fallback", "labelKey", "labelEn", "labelAr", "detail_route", "detailRoute", "evidence_uri", "evidenceUri", "chromeStrings"],
+      "hits": 0
+    },
+    "samplePayload": "proofs/foundation-ai/post-launch/workspace-runtime.v1-1.sample.json"
+  },
+
+  "buildProof": {
+    "@dos/ui-contracts":  "PASS",
+    "@dos/ui-system":     "PASS",
+    "@dos/platform-core": "PASS",
+    "@dos/platform-app":  "PASS (Application bundle generation complete; 478 KB transfer)",
+    "ui-os-service":      "PASS (tsc + pm2 restart green)"
+  },
+
+  "deploymentProof": {
+    "pm2Services": ["product-shell @ :3000", "gateway cluster @ :4000", "ui-os-service @ :4015", "auth-service", "tenant-service", "user-service", "signup-bff", "workspace-bff"],
+    "spaSmokeTest": { "endpoint": "/foundation", "httpStatus": 200 },
+    "runtimeSmokeTest": { "endpoint": "/api/ui-os/workspace-runtime", "unauth": 401, "auth": 200 }
+  },
+
+  "dbMutationLog": {
+    "snapshotBefore": "ops/db-snapshots/shahin_grc_dos_pre-foundation_20260506T200945Z.sql.gz",
+    "migrationsApplied": [
+      "preflight/migrations/01_fix_mobile_component_variants_is_default.sql (B1)",
+      "preflight/migrations/02_normalize_foundation_item_id.sql (B2 — no-op on this DB)",
+      "preflight/migrations/02b_seed_foundation_canonical_24.sql (B2b — 6 missing pages)",
+      "preflight/migrations/03_align_product_registry_tier.sql (B3)",
+      "preflight/migrations/04_canonical_dos_tenants_ddl.sql (B4 — live-schema-adapted)",
+      "platform/dos/migrations/public/20260507_2000_phase_b_v1_1_runtime_seed.sql (Phase B lean seed)",
+      "platform/dos/migrations/public/20260507_2200_b4b_dedupe_tenant_code_unique.sql (B4b — 7 dedupe + UNIQUE promote)"
+    ],
+    "schemaState": {
+      "dos.tenants.row_count": 44,
+      "dos.tenants.distinct_tenant_codes": 44,
+      "dos.tenants.unique_index_on_tenant_code": "uq_dos_tenants_tenant_code (UNIQUE BTREE)",
+      "dos.ui_touch_target_config.row_count": 1,
+      "dos.integration_connector_catalog.row_count": 12
+    }
+  },
+
+  "remainingPreExistingMasterGateFailures": {
+    "ppd-ring-required":         { "kind": "infra_db_permission", "table": "rollout_plan",         "fix": "GRANT SELECT to dos_migrator (out of v1.1 scope)" },
+    "audit-event-on-write":      { "kind": "infra_db_permission", "table": "dos_master_writer_audit", "fix": "GRANT SELECT to dos_migrator (out of v1.1 scope)" },
+    "publish-revision-atomic":   { "kind": "infra_db_permission", "table": "publish_revision",     "fix": "GRANT SELECT to dos_migrator (out of v1.1 scope)" },
+    "tenant-completeness":       { "kind": "tenant_data_quality", "violations": 40,                "fix": "Tenant data backfill wave (out of v1.1 scope)" },
+    "lint-no-raw-shell-primitives": { "kind": "carbon_native_wave", "file": "platform/ui-system/dos-ui-system/src/shell/visual-shell-surfaces.component.ts", "rawElements": 6, "fix": "Carbon-native shell adoption (separate wave; see ci.manifest)" }
+  },
+
+  "doctrineCompliance": {
+    "ZERO_STATIC":               { "result": "GREEN", "evidence": "0 static nav arrays / Home / Foundation in shell scan" },
+    "ZERO_LEGACY":               { "result": "GREEN", "evidence": "0 shellActionFromLegacyRecord / labelFromKey / chromeStrings / accountMenu dot-path / FALLBACK_CATALOG" },
+    "ZERO_FALLBACK":             { "result": "GREEN", "evidence": "0 brand 'DOS Platform' / DEFAULT_PRODUCT_KEY 'agrc' / STATIC_EAGLE_FALLBACK / DEFAULT_*_PX constants" },
+    "ZERO_BROWSER_NORMALIZATION":{ "result": "GREEN", "evidence": "0 component_key/perms_required/label_key in payload; resolver normalizes inside service boundary" },
+    "ZERO_MIRROR":               { "result": "GREEN", "evidence": "Single canonical shell tree (platform/core/platform/shell)" },
+    "ZERO_HARDCODED_/workspace-home": { "result": "GREEN", "evidence": "isWorkspaceHome compares against landingRoute @Input; no literal /workspace-home in live frontend code" },
+    "DB_AS_SOURCE_OF_TRUTH":     { "result": "GREEN", "evidence": "All v1.1 envelope fields publish from existing or newly-added DB tables; no frontend invention" }
+  },
+
+  "noCodeFallbackAdded": true,
+  "everyFixIsDbOrResolverLayer": true
+}

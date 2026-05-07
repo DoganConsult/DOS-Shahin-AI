@@ -117,7 +117,15 @@ export interface WorkspaceRuntimeNavItemRow {
   version?: number | null;
 }
 
+/** Module-level row for the side-nav hierarchy renderer. */
+export interface WorkspaceRuntimeNavModuleRow {
+  moduleCode: string;
+  sortOrder?: number | null;
+  label?: WorkspaceI18nLabel;
+}
+
 export interface WorkspaceRuntimeNavigation {
+  modules?: readonly WorkspaceRuntimeNavModuleRow[];
   groups: readonly WorkspaceRuntimeNavGroupRow[];
   items: readonly WorkspaceRuntimeNavItemRow[];
 }
@@ -164,6 +172,41 @@ export interface WorkspaceRuntimeBanner {
   readonly version: number;
 }
 
+/** v1.1 — Mobile breakpoint emitted as part of shell.breakpoints[]. */
+export interface WorkspaceRuntimeBreakpoint {
+  readonly breakpointKey: string;
+  readonly minPx: number;
+  readonly maxPx: number;
+  readonly defaultBehavior: string | null;
+  readonly isActive: boolean;
+}
+
+/** v1.1 — Touch gesture binding nested in shell.touchTargets.gestureBindings. */
+export interface WorkspaceRuntimeTouchGesture {
+  readonly gestureId: string;
+  readonly gestureType: string;
+  readonly componentKey: string | null;
+  readonly actionConfig: Readonly<Record<string, unknown>>;
+  readonly hapticFeedback: boolean;
+}
+
+/** v1.1 — Touch target config (one row per tenant scope). */
+export interface WorkspaceRuntimeTouchTargets {
+  readonly minSizePx: number | null;
+  readonly minSpacingPx: number | null;
+  readonly hapticFeedbackEnabled: boolean;
+  readonly gestureBindings: readonly WorkspaceRuntimeTouchGesture[];
+}
+
+/** v1.1 — Component variant entry in shell.variants[componentKey][]. */
+export interface WorkspaceRuntimeVariant {
+  readonly variantName: string;
+  readonly breakpoint: string;
+  readonly propsOverride: Readonly<Record<string, unknown>>;
+  readonly layoutOverride: Readonly<Record<string, unknown>>;
+  readonly isDefault: boolean;
+}
+
 /** Canonical UI-OS workspace-runtime envelope. Single normalization boundary. */
 export interface WorkspaceShellResolverResponse {
   readonly tenantId: string;
@@ -175,6 +218,7 @@ export interface WorkspaceShellResolverResponse {
     readonly surfaces: readonly WorkspaceShellBindingRow[];
     readonly zones: Readonly<Record<string, readonly WorkspaceShellBindingRow[]>>;
     readonly nav: {
+      readonly modules?: readonly WorkspaceRuntimeNavModuleRow[];
       readonly groups: readonly WorkspaceRuntimeNavGroupRow[];
       readonly items: readonly WorkspaceRuntimeNavItemRow[];
     };
@@ -182,6 +226,12 @@ export interface WorkspaceShellResolverResponse {
     readonly shortcuts: readonly WorkspaceRuntimeShortcut[];
     readonly banners: readonly WorkspaceRuntimeBanner[];
     readonly policies: Readonly<Record<string, unknown>>;
+    /** v1.1 operating-runtime fields. Folds mobile config into the
+     *  workspace-runtime envelope; no second mobile truth channel. */
+    readonly breakpoints?: readonly WorkspaceRuntimeBreakpoint[];
+    readonly touchTargets?: WorkspaceRuntimeTouchTargets;
+    readonly variants?: Readonly<Record<string, readonly WorkspaceRuntimeVariant[]>>;
+    readonly tenantSurfaceVariants?: Readonly<Record<string, string>>;
   };
 }
 

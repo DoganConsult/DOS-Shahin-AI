@@ -1,0 +1,471 @@
+{
+  "$schema": "https://dogan-ai.local/schemas/frontend-consumption-map.v1-1.schema.json",
+  "contractKind": "frontend-consumption-map",
+  "contractVersion": "1.1.0",
+  "runtimeModel": "v1-1-operating-runtime",
+  "generatedAt": "2026-05-07T16:50:00+03:00",
+  "rule": "For every Angular shell/page component in the live frontend, declares which runtime envelope feeds it, what reads are allowed, what reads are forbidden, the Carbon renderer class, breakpoint and theme bindings, and which currently hardcoded symbols must be purged. Drives lint-v1-1-no-frontend-invention. Purge work is OUT OF SCOPE for this step; this map only specifies the contract.",
+  "doctrine": [
+    "ZERO_STATIC",
+    "ZERO_LEGACY",
+    "ZERO_FALLBACK",
+    "ZERO_BROWSER_NORMALIZATION",
+    "DB_AS_SOURCE_OF_TRUTH"
+  ],
+  "envelopeRefs": {
+    "workspace-runtime":   "envelopes/workspace-runtime.envelope.v1-1.json",
+    "product-runtime":     "envelopes/product-runtime.envelope.v1-1.json",
+    "module-runtime":      "envelopes/module-runtime.envelope.v1-1.json",
+    "tenant-runtime":      "envelopes/tenant-runtime.envelope.v1-1.json",
+    "integration-runtime": "envelopes/integration-runtime.envelope.v1-1.json",
+    "theme-runtime":       "envelopes/theme-runtime.envelope.v1-1.json"
+  },
+  "carbonImplementationMapRef": "registries/carbon.implementation.map.v1-1.json",
+  "globalForbiddenReads": [
+    "any DB column directly (snake_case must never reach the browser)",
+    "any localStorage / sessionStorage key as source of truth for nav, theme, branding, entitlements, locale, rtl",
+    "any URL subdomain inference for tenant identity",
+    "any window.* global as source of truth for shell config",
+    "any process.env.* as source of truth in the browser bundle"
+  ],
+  "components": [
+    {
+      "componentId": "shell-host",
+      "site": "platform/core/platform/shell/shell-host.component.ts",
+      "runtimeEnvelope": "workspace-runtime",
+      "allowedReads": [
+        "shell.surfaces",
+        "shell.zones",
+        "shell.nav.groups",
+        "shell.nav.items",
+        "shell.chrome.brand",
+        "shell.chrome.logoHref",
+        "shell.chrome.productSwitcher",
+        "shell.chrome.accountMenu",
+        "shell.chrome.statusBar",
+        "shell.chrome.footer",
+        "shell.shortcuts",
+        "shell.banners",
+        "shell.policies.layout",
+        "shell.policies.expandActiveOnly",
+        "shell.policies.sessionExpiry",
+        "shell.policies.trial",
+        "shell.policies.offline",
+        "shell.policies.defaultModuleCode",
+        "shell.policies.defaultRoute",
+        "shell.breakpoints",
+        "shell.touchTargets.minSizePx",
+        "shell.touchTargets.minSpacingPx",
+        "shell.touchTargets.gestureBindings",
+        "shell.variants",
+        "shell.tenantSurfaceVariants"
+      ],
+      "forbiddenReads": [
+        "any literal route fallback to /workspace-home",
+        "any static Foundation/Home nav fabrication",
+        "any chromeStrings dot-path lookup",
+        "shellActionFromLegacyRecord legacy normalization",
+        "props['accountMenu'] indirect access",
+        "document.querySelector for chrome wiring",
+        "any @media query literal that bypasses shell.breakpoints"
+      ],
+      "carbonRendererClass": "DosCarbonShellRenderer (renders cds--header, cds--side-nav, cds--content from shell.zones + shell.surfaces)",
+      "carbonComponents": [
+        "UIShell",
+        "Header",
+        "HeaderName",
+        "HeaderNavigation",
+        "HeaderMenu",
+        "HeaderMenuItem",
+        "HeaderGlobalBar",
+        "HeaderGlobalAction",
+        "SideNav",
+        "SideNavItems",
+        "SideNavMenu",
+        "SideNavMenuItem",
+        "SideNavLink",
+        "Content"
+      ],
+      "breakpointBindings": [
+        { "from": "shell.breakpoints[breakpointKey='mobile'].minPx",  "appliesTo": "container query var --bp-mobile" },
+        { "from": "shell.breakpoints[breakpointKey='tablet'].minPx",  "appliesTo": "container query var --bp-tablet" },
+        { "from": "shell.breakpoints[breakpointKey='desktop'].minPx", "appliesTo": "container query var --bp-desktop" }
+      ],
+      "themeBindings": [
+        { "from": "themeRuntime.carbonTheme",        "appliesTo": "host class binding (cds--white|g10|g90|g100)" },
+        { "from": "themeRuntime.rtl",                "appliesTo": "host class binding (cds--ltr|cds--rtl)" },
+        { "from": "themeRuntime.carbonCssVariables", "appliesTo": "inline :host CSS variable map" }
+      ],
+      "hardcodedSymbolsToPurge": [
+        { "symbol": "@media (max-width: 767.98px)",          "line": "scss block in shell-host.component.ts", "replaceWith": "container query bound to shell.breakpoints" },
+        { "symbol": "@media (max-width: 1199.98px)",         "line": "scss block in shell-host.component.ts", "replaceWith": "container query bound to shell.breakpoints" },
+        { "symbol": "var(--workspace-sidebar-width, ...literal-fallback...)", "line": "scss in shell-host.component.ts", "replaceWith": "design token from themeRuntime.carbonCssVariables, no literal fallback" },
+        { "symbol": "/workspace-home string fallback",       "line": "default route fallback",                "replaceWith": "shell.policies.defaultRoute" },
+        { "symbol": "buildPlatformNav / buildFoundationGroup / buildFoundationNavChildren", "line": "any residual import/use", "replaceWith": "shell.nav.groups + shell.nav.items" },
+        { "symbol": "shellActionFromLegacyRecord",           "line": "any residual import/use",               "replaceWith": "ShellAction typed union from envelope" }
+      ]
+    },
+    {
+      "componentId": "workspace-shell-binding-service",
+      "site": "platform/core/platform/shell/workspace-shell-binding.service.ts",
+      "runtimeEnvelope": "workspace-runtime",
+      "allowedReads": [
+        "shell.surfaces",
+        "shell.zones",
+        "shell.nav",
+        "shell.chrome",
+        "shell.shortcuts",
+        "shell.banners",
+        "shell.policies"
+      ],
+      "forbiddenReads": [
+        "any DB DTO normalization (label_key, label_fallback, component_key, perms_required, route)",
+        "any chromeStrings dot-path lookup",
+        "any local session-expiry policy override",
+        "any local banner copy"
+      ],
+      "carbonRendererClass": "n/a (binding service, not a Carbon renderer)",
+      "carbonComponents": [],
+      "breakpointBindings": [],
+      "themeBindings": [],
+      "hardcodedSymbolsToPurge": [
+        { "symbol": "resolveRuntimeLabel legacy branches",  "line": "label resolution",     "replaceWith": "envelope label.label || label.fallback only" },
+        { "symbol": "props['accountMenu'] dot-path lookup", "line": "chrome resolution",    "replaceWith": "shell.chrome.accountMenu typed object" },
+        { "symbol": "labelFromKey",                          "line": "any residual use",     "replaceWith": "envelope label.label || label.fallback only" }
+      ]
+    },
+    {
+      "componentId": "shell-state-service",
+      "site": "platform/ui-system/dos-ui-system/src/shell/shell-state.service.ts",
+      "runtimeEnvelope": "workspace-runtime",
+      "allowedReads": [
+        "shell.breakpoints",
+        "shell.touchTargets",
+        "shell.variants",
+        "shell.tenantSurfaceVariants"
+      ],
+      "forbiddenReads": [
+        "any literal viewport threshold",
+        "any localStorage-backed breakpoint cache",
+        "any window.matchMedia call with hardcoded media string"
+      ],
+      "carbonRendererClass": "n/a (state service)",
+      "carbonComponents": [],
+      "breakpointBindings": [
+        { "from": "shell.breakpoints[breakpointKey='tablet'].minPx",  "appliesTo": "tabletMinPx signal" },
+        { "from": "shell.breakpoints[breakpointKey='desktop'].minPx", "appliesTo": "desktopMinPx signal" }
+      ],
+      "themeBindings": [],
+      "hardcodedSymbolsToPurge": [
+        { "symbol": "DEFAULT_TABLET_MIN_PX = 768",  "line": "module constant", "replaceWith": "shell.breakpoints[breakpointKey='tablet'].minPx" },
+        { "symbol": "DEFAULT_DESKTOP_MIN_PX = 1200","line": "module constant", "replaceWith": "shell.breakpoints[breakpointKey='desktop'].minPx" },
+        { "symbol": "CARBON_BREAKPOINT_LARGE_PX",   "line": "any residual",     "replaceWith": "shell.breakpoints (full collection)" }
+      ]
+    },
+    {
+      "componentId": "mobile-bottom-nav",
+      "site": "platform/ui-system/dos-ui-system/src/shell/mobile-bottom-nav.component.ts",
+      "runtimeEnvelope": "workspace-runtime",
+      "allowedReads": [
+        "shell.zones['mobile.bottomNav']",
+        "shell.nav.items (filtered to bottomNav)",
+        "shell.touchTargets.minSizePx",
+        "shell.touchTargets.minSpacingPx",
+        "shell.breakpoints[breakpointKey='mobile']"
+      ],
+      "forbiddenReads": [
+        "any second mobile truth channel separate from workspace-runtime",
+        "any literal touch target size constant"
+      ],
+      "carbonRendererClass": "DosCarbonMobileBottomNavRenderer",
+      "carbonComponents": ["Header", "HeaderGlobalBar", "HeaderGlobalAction"],
+      "breakpointBindings": [
+        { "from": "shell.breakpoints[breakpointKey='mobile'].minPx",  "appliesTo": "active-when guard" },
+        { "from": "shell.breakpoints[breakpointKey='mobile'].maxPx",  "appliesTo": "active-when guard" }
+      ],
+      "themeBindings": [
+        { "from": "themeRuntime.carbonCssVariables", "appliesTo": "inline :host CSS variable map" }
+      ],
+      "hardcodedSymbolsToPurge": [
+        { "symbol": "touchTargetSize = 44", "line": "module constant", "replaceWith": "shell.touchTargets.minSizePx" }
+      ]
+    },
+    {
+      "componentId": "mobile-drawer",
+      "site": "platform/ui-system/dos-ui-system/src/shell/mobile-drawer.component.ts",
+      "runtimeEnvelope": "workspace-runtime",
+      "allowedReads": [
+        "shell.zones['mobile.drawer']",
+        "shell.nav.groups",
+        "shell.nav.items",
+        "shell.touchTargets",
+        "shell.breakpoints[breakpointKey='mobile']"
+      ],
+      "forbiddenReads": [
+        "any static drawer items",
+        "any duplicated nav source from a separate mobile endpoint"
+      ],
+      "carbonRendererClass": "DosCarbonSideNavRenderer (drawer mode)",
+      "carbonComponents": ["SideNav", "SideNavItems", "SideNavMenu", "SideNavMenuItem", "SideNavLink"],
+      "breakpointBindings": [
+        { "from": "shell.breakpoints[breakpointKey='mobile'].maxPx", "appliesTo": "active-when guard" }
+      ],
+      "themeBindings": [
+        { "from": "themeRuntime.carbonCssVariables", "appliesTo": "inline :host CSS variable map" }
+      ],
+      "hardcodedSymbolsToPurge": []
+    },
+    {
+      "componentId": "carbon-header-shell",
+      "site": "platform/ui-system/dos-ui-system/src/carbon/dos-carbon-header-shell.component.ts",
+      "runtimeEnvelope": "workspace-runtime",
+      "secondaryEnvelopes": ["product-runtime", "tenant-runtime", "theme-runtime"],
+      "allowedReads": [
+        "shell.chrome.brand",
+        "shell.chrome.logoHref",
+        "shell.chrome.productSwitcher",
+        "shell.chrome.accountMenu",
+        "productRuntime.chrome.brand",
+        "productRuntime.chrome.logoHref",
+        "tenantRuntime.branding.brandName",
+        "tenantRuntime.branding.iconUrl",
+        "themeRuntime.carbonTheme",
+        "themeRuntime.rtl"
+      ],
+      "forbiddenReads": [
+        "any 'DOS Platform' literal fallback",
+        "any logoHref '/' default",
+        "any hardcoded brand-code string"
+      ],
+      "carbonRendererClass": "DosCarbonHeaderRenderer",
+      "carbonComponents": ["Header", "HeaderName", "HeaderNavigation", "HeaderMenu", "HeaderMenuItem", "HeaderGlobalBar", "HeaderGlobalAction"],
+      "breakpointBindings": [],
+      "themeBindings": [
+        { "from": "themeRuntime.carbonTheme", "appliesTo": "host class binding" },
+        { "from": "themeRuntime.rtl",         "appliesTo": "host class binding (cds--ltr|cds--rtl)" }
+      ],
+      "hardcodedSymbolsToPurge": [
+        { "symbol": "brand = 'DOS Platform' default", "line": "input default",      "replaceWith": "productRuntime.chrome.brand || tenantRuntime.branding.brandName" },
+        { "symbol": "logoHref = '/' default",         "line": "input default",      "replaceWith": "productRuntime.chrome.logoHref || shell.chrome.logoHref" }
+      ]
+    },
+    {
+      "componentId": "brand-eagle",
+      "site": "platform/ui-system/dos-ui-system/src/brand/dos-brand-eagle.component.ts",
+      "runtimeEnvelope": "tenant-runtime",
+      "secondaryEnvelopes": ["product-runtime"],
+      "allowedReads": [
+        "tenantRuntime.branding.iconUrl",
+        "productRuntime.brandTokens.iconUrl"
+      ],
+      "forbiddenReads": [
+        "any hardcoded brand-code -> PNG path map",
+        "any local /assets/brands/*.png lookup"
+      ],
+      "carbonRendererClass": "DosBrandImage (img with alt from branding.brandName)",
+      "carbonComponents": [],
+      "breakpointBindings": [],
+      "themeBindings": [],
+      "hardcodedSymbolsToPurge": [
+        { "symbol": "hardcoded brand-code -> PNG mapping", "line": "module constant", "replaceWith": "tenantRuntime.branding.iconUrl || productRuntime.brandTokens.iconUrl" }
+      ]
+    },
+    {
+      "componentId": "grc-auth-service",
+      "site": "platform/core/services/grc-auth.service.ts",
+      "runtimeEnvelope": "tenant-runtime",
+      "secondaryEnvelopes": ["product-runtime"],
+      "allowedReads": [
+        "tenantRuntime.tenantId",
+        "tenantRuntime.productActivations",
+        "tenantRuntime.locale",
+        "tenantRuntime.rtl",
+        "productRuntime.productKey"
+      ],
+      "forbiddenReads": [
+        "URL subdomain inference",
+        "any literal default productKey"
+      ],
+      "carbonRendererClass": "n/a (auth service)",
+      "carbonComponents": [],
+      "breakpointBindings": [],
+      "themeBindings": [],
+      "hardcodedSymbolsToPurge": [
+        { "symbol": "DEFAULT_PRODUCT_KEY = 'agrc'", "line": "module constant", "replaceWith": "tenantRuntime.productActivations[0].productKey || productRuntime.productKey" }
+      ]
+    },
+    {
+      "componentId": "module-page-host",
+      "site": "platform/core/platform/dynamic-ui/dynamic-page.component.ts",
+      "runtimeEnvelope": "module-runtime",
+      "secondaryEnvelopes": ["workspace-runtime", "theme-runtime"],
+      "allowedReads": [
+        "moduleRuntime.moduleCode",
+        "moduleRuntime.chrome",
+        "moduleRuntime.navGroups",
+        "moduleRuntime.navItems",
+        "moduleRuntime.pages",
+        "moduleRuntime.widgets",
+        "moduleRuntime.actions",
+        "moduleRuntime.pageOrder",
+        "moduleRuntime.defaultRoute",
+        "moduleRuntime.carbonUsage",
+        "moduleRuntime.permissions"
+      ],
+      "forbiddenReads": [
+        "any static module page list",
+        "any hardcoded canonical page order",
+        "any literal default route per module"
+      ],
+      "carbonRendererClass": "DosCarbonPageRenderer (resolves archetype overview|records_table|workflow|form to Carbon component composition)",
+      "carbonComponents": [
+        "Grid", "Column", "Breadcrumb", "Tile", "Tag", "ProgressBar", "StructuredList", "Tabs", "InlineNotification",
+        "DataTable", "TableToolbar", "TableToolbarSearch", "TableToolbarActions", "TableBatchActions", "Pagination", "OverflowMenu", "OverflowMenuOption",
+        "Modal", "TextInput", "TextArea", "Dropdown", "ComboBox", "MultiSelect", "DatePicker", "NumberInput", "Select", "Checkbox", "Radio", "Toggle", "Button", "InlineLoading"
+      ],
+      "breakpointBindings": [
+        { "from": "shell.breakpoints", "appliesTo": "responsive Grid column counts" }
+      ],
+      "themeBindings": [
+        { "from": "themeRuntime.carbonCssVariables", "appliesTo": "inline :host CSS variable map" }
+      ],
+      "hardcodedSymbolsToPurge": []
+    },
+    {
+      "componentId": "product-dashboard",
+      "site": "platform/core/platform/dashboard/product-dashboard.component.ts",
+      "runtimeEnvelope": "product-runtime",
+      "secondaryEnvelopes": ["theme-runtime"],
+      "allowedReads": [
+        "productRuntime.productKey",
+        "productRuntime.chrome",
+        "productRuntime.theme",
+        "productRuntime.brandTokens",
+        "productRuntime.enabledModules",
+        "productRuntime.featureFlags",
+        "productRuntime.limits",
+        "productRuntime.dashboardWidgets",
+        "productRuntime.productNav"
+      ],
+      "forbiddenReads": [
+        "any local product widget catalog",
+        "any literal product theme tokens"
+      ],
+      "carbonRendererClass": "DosCarbonDashboardRenderer",
+      "carbonComponents": ["Grid", "Column", "Tile", "ClickableTile", "Tag", "ProgressBar", "StructuredList", "InlineNotification", "SkeletonText", "SkeletonPlaceholder"],
+      "breakpointBindings": [
+        { "from": "shell.breakpoints", "appliesTo": "responsive Grid column counts" }
+      ],
+      "themeBindings": [
+        { "from": "themeRuntime.carbonCssVariables", "appliesTo": "inline :host CSS variable map" }
+      ],
+      "hardcodedSymbolsToPurge": []
+    },
+    {
+      "componentId": "integration-marketplace",
+      "site": "platform/config-center/integration-marketplace/integration-marketplace.component.ts",
+      "runtimeEnvelope": "integration-runtime",
+      "allowedReads": [
+        "integrationRuntime.connectorCatalog",
+        "integrationRuntime.tenantConnections",
+        "integrationRuntime.widgets",
+        "integrationRuntime.actions",
+        "integrationRuntime.evidenceSources"
+      ],
+      "forbiddenReads": [
+        "integrationRuntime.authConfig.byConnector.<key>.secretRef",
+        "any client_secret value",
+        "any refresh_token / access_token value",
+        "any local FALLBACK_CATALOG array"
+      ],
+      "carbonRendererClass": "DosCarbonMarketplaceRenderer",
+      "carbonComponents": ["Grid", "Column", "Tile", "ClickableTile", "Tag", "InlineNotification", "Modal", "Button"],
+      "breakpointBindings": [],
+      "themeBindings": [
+        { "from": "themeRuntime.carbonCssVariables", "appliesTo": "inline :host CSS variable map" }
+      ],
+      "hardcodedSymbolsToPurge": [
+        { "symbol": "FALLBACK_CATALOG", "line": "module constant", "replaceWith": "integrationRuntime.connectorCatalog" }
+      ]
+    },
+    {
+      "componentId": "connector-manager",
+      "site": "platform/config-center/board-report/features/integrations/pages/connector-manager/connector-manager.component.ts",
+      "runtimeEnvelope": "integration-runtime",
+      "allowedReads": [
+        "integrationRuntime.connectorCatalog",
+        "integrationRuntime.tenantConnections",
+        "integrationRuntime.syncStatus",
+        "integrationRuntime.syncHistory",
+        "integrationRuntime.actions"
+      ],
+      "forbiddenReads": [
+        "integrationRuntime.authConfig.byConnector.<key>.secretRef",
+        "any literal Microsoft 365 / Teams / Power BI / Dynamics connector type list"
+      ],
+      "carbonRendererClass": "DosCarbonRecordsRenderer",
+      "carbonComponents": ["DataTable", "TableToolbar", "TableToolbarSearch", "TableToolbarActions", "TableBatchActions", "Pagination", "OverflowMenu", "OverflowMenuOption"],
+      "breakpointBindings": [],
+      "themeBindings": [
+        { "from": "themeRuntime.carbonCssVariables", "appliesTo": "inline :host CSS variable map" }
+      ],
+      "hardcodedSymbolsToPurge": [
+        { "symbol": "hardcoded Microsoft 365 / Teams / Power BI / Dynamics connector types", "line": "module constants", "replaceWith": "integrationRuntime.connectorCatalog filtered by vendor='microsoft'" }
+      ]
+    },
+    {
+      "componentId": "theme-controller",
+      "site": "platform/ui-system/dos-ui-system/src/theme/dos-theme-controller.service.ts",
+      "runtimeEnvelope": "theme-runtime",
+      "allowedReads": [
+        "themeRuntime.themeId",
+        "themeRuntime.themeName",
+        "themeRuntime.carbonTheme",
+        "themeRuntime.tokens",
+        "themeRuntime.carbonCssVariables",
+        "themeRuntime.rtl",
+        "themeRuntime.appliedFrom"
+      ],
+      "forbiddenReads": [
+        "any localStorage-backed theme cache as source of truth",
+        "any hardcoded hex color",
+        "any css var(..., literal-fallback)",
+        "any ts-defined theme token map"
+      ],
+      "carbonRendererClass": "n/a (theme controller service)",
+      "carbonComponents": [],
+      "breakpointBindings": [],
+      "themeBindings": [
+        { "from": "themeRuntime.carbonTheme",        "appliesTo": "document.body class binding (cds--white|g10|g90|g100)" },
+        { "from": "themeRuntime.rtl",                "appliesTo": "document.documentElement dir attribute" },
+        { "from": "themeRuntime.carbonCssVariables", "appliesTo": "documentElement :root CSS variable map" }
+      ],
+      "hardcodedSymbolsToPurge": [
+        { "symbol": "any hardcoded hex in scss components", "line": "scss tree-wide",                "replaceWith": "themeRuntime.carbonCssVariables (--cds-* token reference)" },
+        { "symbol": "var(--token, literal)",                "line": "any css fallback",              "replaceWith": "design token only, no literal fallback" }
+      ]
+    }
+  ],
+  "summary": {
+    "componentCount": 13,
+    "envelopeUsage": {
+      "workspace-runtime":   ["shell-host", "workspace-shell-binding-service", "shell-state-service", "mobile-bottom-nav", "mobile-drawer", "carbon-header-shell"],
+      "product-runtime":     ["carbon-header-shell", "brand-eagle", "grc-auth-service", "product-dashboard"],
+      "module-runtime":      ["module-page-host"],
+      "tenant-runtime":      ["carbon-header-shell", "brand-eagle", "grc-auth-service"],
+      "integration-runtime": ["integration-marketplace", "connector-manager"],
+      "theme-runtime":       ["shell-host", "carbon-header-shell", "module-page-host", "product-dashboard", "mobile-bottom-nav", "mobile-drawer", "integration-marketplace", "connector-manager", "theme-controller"]
+    },
+    "hardcodedSymbolsToPurgeTotal": 21
+  },
+  "purgeOutOfScopeNote": "All 'hardcodedSymbolsToPurge' entries are documentation only in this step. No frontend mutation is performed during v1.1 pack authoring. The actual purge step is gated on resolver implementation of all 6 envelopes plus preflight migration sign-off.",
+  "acceptance": [
+    "every component declares a runtimeEnvelope",
+    "every component declares allowedReads",
+    "every component declares forbiddenReads or 'globalForbiddenReads only'",
+    "every component declares a carbonRendererClass or 'n/a' with reason",
+    "every hardcodedSymbolsToPurge entry has site + replaceWith pointing to a runtime envelope field",
+    "no entry references a v1 (non-v1-1) envelope file",
+    "no entry replaces a hardcoded value with another hardcoded value"
+  ]
+}

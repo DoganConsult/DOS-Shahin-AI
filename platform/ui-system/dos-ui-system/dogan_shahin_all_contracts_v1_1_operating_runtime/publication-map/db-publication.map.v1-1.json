@@ -1,0 +1,228 @@
+{
+  "$schema": "https://dogan-ai.local/schemas/db-publication-map.v1-1.schema.json",
+  "contractKind": "db-publication-map",
+  "contractVersion": "1.1.0",
+  "runtimeModel": "v1-1-operating-runtime",
+  "generatedAt": "2026-05-07T16:50:00+03:00",
+  "rule": "For every contract field across all 5 runtime envelopes (workspace, product, module, tenant, integration) plus theme, this map declares: {table, columns, primaryKey, tenantScope, idempotencyRule, normalizationRule}. CI guard lint-v1-1-publication-coverage MUST find zero orphaned fields.",
+  "doctrine": ["ZERO_STATIC","ZERO_LEGACY","ZERO_FALLBACK","DB_AS_SOURCE_OF_TRUTH"],
+  "tenantScopeValues": ["tenant","tenant_or_global","global","global_with_tenant_overrides"],
+  "idempotencyRulesAllowed": [
+    "ON CONFLICT DO UPDATE",
+    "ON CONFLICT DO NOTHING",
+    "INSERT WHERE NOT EXISTS",
+    "MERGE",
+    "UPDATE WHERE current <> incoming"
+  ],
+  "publication": {
+    "workspace-runtime": [
+      {
+        "envelopeField": "shell.surfaces",
+        "table": "dos.workspace_shell_binding",
+        "columns": ["surface_key","slot","carbon_keys","required","structural_only","tenant_id"],
+        "primaryKey": ["binding_id"],
+        "tenantScope": "tenant",
+        "idempotencyRule": "ON CONFLICT (tenant_id, surface_key) DO UPDATE",
+        "normalizationRule": "snake_case_to_camelCase_in_resolver"
+      },
+      {
+        "envelopeField": "shell.zones",
+        "table": "(derived in resolver from shell.surfaces[].slot)",
+        "columns": [],
+        "primaryKey": [],
+        "tenantScope": "tenant",
+        "idempotencyRule": "n/a (computed)",
+        "normalizationRule": "group_by_slot_prefix"
+      },
+      {
+        "envelopeField": "shell.nav.groups",
+        "table": "dos.ui_module_nav_group",
+        "columns": ["group_id","module_code","label_i18n_key","label_fallback","sort_order","permission","entitlement"],
+        "primaryKey": ["group_id"],
+        "tenantScope": "global_with_tenant_overrides",
+        "idempotencyRule": "ON CONFLICT (group_id) DO UPDATE",
+        "normalizationRule": "label_key/label_fallback_to_label_object_in_resolver"
+      },
+      {
+        "envelopeField": "shell.nav.items",
+        "table": "dos.ui_module_nav_item",
+        "columns": ["item_id","group_id","module_code","label_i18n_key","label_fallback","action_kind","action_path","sort_order","permission","entitlement","icon_ref"],
+        "primaryKey": ["item_id"],
+        "tenantScope": "global_with_tenant_overrides",
+        "idempotencyRule": "ON CONFLICT (item_id) DO UPDATE",
+        "normalizationRule": "route_to_action_path_in_resolver",
+        "preflight_dependency": "preflight/blockers.contract.v1-1.json#B2"
+      },
+      {
+        "envelopeField": "shell.chrome",
+        "table": "dos.ui_workspace_chrome",
+        "columns": ["tenant_id","brand","logo_href","product_switcher","account_menu","status_bar","footer"],
+        "primaryKey": ["tenant_id"],
+        "tenantScope": "tenant",
+        "idempotencyRule": "ON CONFLICT (tenant_id) DO UPDATE",
+        "normalizationRule": "snake_case_to_camelCase_in_resolver"
+      },
+      {
+        "envelopeField": "shell.shortcuts",
+        "table": "dos.ui_workspace_shortcuts",
+        "columns": ["shortcut_id","tenant_id","shortcut_key","key_combo","action_kind","action_payload","context_scope"],
+        "primaryKey": ["shortcut_id"],
+        "tenantScope": "tenant_or_global",
+        "idempotencyRule": "ON CONFLICT (shortcut_id) DO UPDATE",
+        "normalizationRule": "key_combo_array_passthrough"
+      },
+      {
+        "envelopeField": "shell.banners",
+        "table": "dos.ui_workspace_banner",
+        "columns": ["banner_id","tenant_id","kind","severity","label_i18n_key","label_fallback","action_kind","action_payload","dismissible","scope"],
+        "primaryKey": ["banner_id"],
+        "tenantScope": "tenant",
+        "idempotencyRule": "ON CONFLICT (banner_id) DO UPDATE",
+        "normalizationRule": "label_key/label_fallback_to_label_object_in_resolver"
+      },
+      {
+        "envelopeField": "shell.policies",
+        "tables": ["dos.workspace_shell_binding","dos.ui_workspace_policy"],
+        "columns": ["policy_id","tenant_id","layout","expand_active_only","session_expiry","trial","offline","default_module_code","default_route"],
+        "primaryKey": ["policy_id"],
+        "tenantScope": "tenant",
+        "idempotencyRule": "ON CONFLICT (policy_id) DO UPDATE",
+        "normalizationRule": "snake_case_to_camelCase_in_resolver"
+      },
+      {
+        "envelopeField": "shell.breakpoints",
+        "table": "dos.mobile_breakpoint_config",
+        "columns": ["breakpoint_id","tenant_id","breakpoint_key","min_px","max_px","default_behavior","is_active"],
+        "primaryKey": ["breakpoint_id"],
+        "tenantScope": "tenant_or_global",
+        "idempotencyRule": "ON CONFLICT (breakpoint_id) DO UPDATE",
+        "normalizationRule": "tenant_overrides_then_global"
+      },
+      {
+        "envelopeField": "shell.touchTargets",
+        "tables": ["dos.mobile_touch_gestures","dos.ui_touch_target_config"],
+        "columns": ["config_id","tenant_id","min_size_px","min_spacing_px","haptic_feedback_enabled","gesture_bindings"],
+        "primaryKey": ["config_id"],
+        "tenantScope": "tenant_or_global",
+        "idempotencyRule": "ON CONFLICT (config_id) DO UPDATE",
+        "normalizationRule": "merge_gestures_into_touchTargets_object"
+      },
+      {
+        "envelopeField": "shell.variants",
+        "table": "dos.mobile_component_variants",
+        "columns": ["variant_id","tenant_id","component_key","variant_name","breakpoint","props_override","layout_override","is_default"],
+        "primaryKey": ["variant_id"],
+        "tenantScope": "tenant_or_global",
+        "idempotencyRule": "ON CONFLICT (variant_id) DO UPDATE",
+        "normalizationRule": "group_by_component_key",
+        "preflight_dependency": "preflight/blockers.contract.v1-1.json#B1"
+      },
+      {
+        "envelopeField": "shell.tenantSurfaceVariants",
+        "table": "dos.workspace_shell_binding",
+        "columns": ["tenant_id","surface_key","variant_name"],
+        "primaryKey": ["tenant_id","surface_key"],
+        "tenantScope": "tenant",
+        "idempotencyRule": "ON CONFLICT (tenant_id, surface_key) DO UPDATE",
+        "normalizationRule": "two_dim_record_in_resolver"
+      }
+    ],
+    "product-runtime": [
+      { "envelopeField": "productRuntime.productKey",        "table": "dos.product_registry",                   "columns": ["product_key"],                "primaryKey": ["product_key"], "tenantScope": "global", "idempotencyRule": "ON CONFLICT (product_key) DO UPDATE", "normalizationRule": "passthrough" },
+      { "envelopeField": "productRuntime.productName",       "table": "dos.product_registry",                   "columns": ["display_name_en","display_name_ar"], "primaryKey": ["product_key"], "tenantScope": "global", "idempotencyRule": "ON CONFLICT (product_key) DO UPDATE", "normalizationRule": "snake_case_to_camelCase_in_resolver" },
+      { "envelopeField": "productRuntime.tier",              "table": "dos.product_registry",                   "columns": ["tier"],                       "primaryKey": ["product_key"], "tenantScope": "global", "idempotencyRule": "ON CONFLICT (product_key) DO UPDATE", "normalizationRule": "passthrough", "preflight_dependency": "preflight/blockers.contract.v1-1.json#B3" },
+      { "envelopeField": "productRuntime.chrome",            "table": "dos.ui_product_chrome",                  "columns": ["product_key","brand","logo_href","product_switcher","account_menu","status_bar","footer"], "primaryKey": ["product_key"], "tenantScope": "global_with_tenant_overrides", "idempotencyRule": "ON CONFLICT (product_key) DO UPDATE", "normalizationRule": "snake_case_to_camelCase_in_resolver" },
+      { "envelopeField": "productRuntime.theme",             "table": "dos.ui_product_branding",                "columns": ["product_key","theme_tokens"],"primaryKey": ["product_key"], "tenantScope": "global_with_tenant_overrides", "idempotencyRule": "ON CONFLICT (product_key) DO UPDATE", "normalizationRule": "jsonb_passthrough" },
+      { "envelopeField": "productRuntime.brandTokens",       "table": "dos.brand_config",                       "columns": ["domain","brand_tokens"],      "primaryKey": ["domain"], "tenantScope": "global", "idempotencyRule": "ON CONFLICT (domain) DO UPDATE", "normalizationRule": "jsonb_passthrough" },
+      { "envelopeField": "productRuntime.enabledModules",    "table": "dos.product_module_registry",            "columns": ["product_key","module_code","status","default_enabled","contract_ref"], "primaryKey": ["product_key","module_code"], "tenantScope": "global", "idempotencyRule": "ON CONFLICT (product_key, module_code) DO UPDATE", "normalizationRule": "snake_case_to_camelCase_in_resolver" },
+      { "envelopeField": "productRuntime.featureFlags",      "table": "dos.product_feature_flags",              "columns": ["product_key","flag_key","enabled","source","default_rollout_bucket"], "primaryKey": ["product_key","flag_key"], "tenantScope": "global_with_tenant_overrides", "idempotencyRule": "ON CONFLICT (product_key, flag_key) DO UPDATE", "normalizationRule": "snake_case_to_camelCase_in_resolver" },
+      { "envelopeField": "productRuntime.limits",            "table": "dos.product_limits",                     "columns": ["product_key","limit_key","value","unit","source"], "primaryKey": ["product_key","limit_key"], "tenantScope": "global", "idempotencyRule": "ON CONFLICT (product_key, limit_key) DO UPDATE", "normalizationRule": "passthrough" },
+      { "envelopeField": "productRuntime.dashboardWidgets",  "table": "dos.product_dashboard_widget_catalog",   "columns": ["product_key","widget_key","surface","display_name_key","data_source","refresh_interval_seconds","carbon_keys","required_permission","required_entitlement"], "primaryKey": ["product_key","widget_key"], "tenantScope": "global", "idempotencyRule": "ON CONFLICT (product_key, widget_key) DO UPDATE", "normalizationRule": "snake_case_to_camelCase_in_resolver" },
+      { "envelopeField": "productRuntime.productNav.groups", "table": "dos.product_nav_group",                  "columns": ["product_key","group_key","label_i18n_key","label_fallback","sort_order","permission","entitlement"], "primaryKey": ["product_key","group_key"], "tenantScope": "global", "idempotencyRule": "ON CONFLICT (product_key, group_key) DO UPDATE", "normalizationRule": "label_key/label_fallback_to_label_object_in_resolver" },
+      { "envelopeField": "productRuntime.productNav.items",  "table": "dos.product_nav_item",                   "columns": ["product_key","item_key","group_key","label_i18n_key","label_fallback","action_kind","action_path","sort_order","permission","entitlement","icon_ref"], "primaryKey": ["product_key","item_key"], "tenantScope": "global", "idempotencyRule": "ON CONFLICT (product_key, item_key) DO UPDATE", "normalizationRule": "route_to_action_path_in_resolver" }
+    ],
+    "module-runtime": [
+      { "envelopeField": "moduleRuntime.moduleCode",     "table": "dos.module_registry",        "columns": ["module_code","module_name_en","module_name_ar","category","route_base","owner_service","status","default_enabled"], "primaryKey": ["module_code"], "tenantScope": "global", "idempotencyRule": "ON CONFLICT (module_code) DO UPDATE", "normalizationRule": "snake_case_to_camelCase_in_resolver" },
+      { "envelopeField": "moduleRuntime.chrome",         "table": "dos.ui_module_chrome",       "columns": ["module_code","tenant_id","brand","header","footer","banners"], "primaryKey": ["module_code","tenant_id"], "tenantScope": "tenant_or_global", "idempotencyRule": "ON CONFLICT (module_code, tenant_id) DO UPDATE", "normalizationRule": "snake_case_to_camelCase_in_resolver" },
+      { "envelopeField": "moduleRuntime.navGroups",      "table": "dos.ui_module_nav_group",    "columns": ["group_id","module_code","label_i18n_key","label_fallback","sort_order","permission","entitlement"], "primaryKey": ["group_id"], "tenantScope": "global_with_tenant_overrides", "idempotencyRule": "ON CONFLICT (group_id) DO UPDATE", "normalizationRule": "label_key/label_fallback_to_label_object_in_resolver" },
+      { "envelopeField": "moduleRuntime.navItems",       "table": "dos.ui_module_nav_item",     "columns": ["item_id","module_code","group_id","label_i18n_key","label_fallback","action_kind","action_path","sort_order","permission","entitlement","icon_ref"], "primaryKey": ["item_id"], "tenantScope": "global_with_tenant_overrides", "idempotencyRule": "ON CONFLICT (item_id) DO UPDATE", "normalizationRule": "route_to_action_path_in_resolver", "preflight_dependency_for_foundation": "preflight/blockers.contract.v1-1.json#B2" },
+      { "envelopeField": "moduleRuntime.pages",          "table": "dos.dynamic_ui_routes",      "columns": ["route","page_key","module_code","page_type","component_key","renderer_key","read_permission","api_endpoint","db_entities","columns","title_key","subtitle_key","states","responsive_policy_ref"], "primaryKey": ["route"], "tenantScope": "global", "idempotencyRule": "ON CONFLICT (route) DO UPDATE", "normalizationRule": "snake_case_to_camelCase_in_resolver" },
+      { "envelopeField": "moduleRuntime.widgets",        "table": "dos.ui_widget_binding",      "columns": ["widget_key","module_code","surface","display_name_key","data_source","refresh_interval_seconds","carbon_keys","required_permission","required_entitlement"], "primaryKey": ["widget_key","surface"], "tenantScope": "global_with_tenant_overrides", "idempotencyRule": "ON CONFLICT (widget_key, surface) DO UPDATE", "normalizationRule": "snake_case_to_camelCase_in_resolver" },
+      { "envelopeField": "moduleRuntime.actions",        "table": "dos.ui_action_binding",      "columns": ["action_key","module_code","display_name_key","required_permission","kind","payload_shape"], "primaryKey": ["action_key"], "tenantScope": "global", "idempotencyRule": "ON CONFLICT (action_key) DO UPDATE", "normalizationRule": "snake_case_to_camelCase_in_resolver" },
+      { "envelopeField": "moduleRuntime.pageOrder",      "table": "dos.ui_module_nav_item",     "columns": ["item_id","module_code","sort_order"], "primaryKey": ["item_id"], "tenantScope": "global", "idempotencyRule": "ON CONFLICT (item_id) DO UPDATE", "normalizationRule": "project_to_pageKey_sortOrder", "preflight_dependency_for_foundation": "preflight/blockers.contract.v1-1.json#B2" },
+      { "envelopeField": "moduleRuntime.defaultRoute",   "table": "dos.module_registry",        "columns": ["default_route"], "primaryKey": ["module_code"], "tenantScope": "global", "idempotencyRule": "ON CONFLICT (module_code) DO UPDATE", "normalizationRule": "passthrough" },
+      { "envelopeField": "moduleRuntime.carbonUsage",    "table": "(derived in resolver from registries/carbon.implementation.map.v1-1.json + module pages[].pageType)", "columns": [], "primaryKey": [], "tenantScope": "global", "idempotencyRule": "n/a (computed)", "normalizationRule": "group_carbon_classes_per_archetype" },
+      { "envelopeField": "moduleRuntime.permissions",    "table": "platform_dauth.permissions", "columns": ["permission_code","module_code","status"], "primaryKey": ["permission_code"], "tenantScope": "global", "idempotencyRule": "ON CONFLICT (permission_code) DO UPDATE", "normalizationRule": "passthrough" }
+    ],
+    "tenant-runtime": [
+      { "envelopeField": "tenantRuntime.tenantId",           "table": "dos.tenants", "columns": ["tenant_id"],          "primaryKey": ["tenant_id"], "tenantScope": "tenant", "idempotencyRule": "ON CONFLICT (tenant_id) DO UPDATE", "normalizationRule": "passthrough", "preflight_dependency": "preflight/blockers.contract.v1-1.json#B4" },
+      { "envelopeField": "tenantRuntime.tenantCode",         "table": "dos.tenants", "columns": ["tenant_code"],        "primaryKey": ["tenant_id"], "tenantScope": "tenant", "idempotencyRule": "ON CONFLICT (tenant_id) DO UPDATE", "normalizationRule": "snake_case_to_camelCase_in_resolver", "preflight_dependency": "preflight/blockers.contract.v1-1.json#B4" },
+      { "envelopeField": "tenantRuntime.displayName",        "table": "dos.tenants", "columns": ["display_name"],       "primaryKey": ["tenant_id"], "tenantScope": "tenant", "idempotencyRule": "ON CONFLICT (tenant_id) DO UPDATE", "normalizationRule": "snake_case_to_camelCase_in_resolver", "preflight_dependency": "preflight/blockers.contract.v1-1.json#B4" },
+      { "envelopeField": "tenantRuntime.status",             "table": "dos.tenants", "columns": ["status"],             "primaryKey": ["tenant_id"], "tenantScope": "tenant", "idempotencyRule": "ON CONFLICT (tenant_id) DO UPDATE", "normalizationRule": "passthrough", "preflight_dependency": "preflight/blockers.contract.v1-1.json#B4" },
+      { "envelopeField": "tenantRuntime.parentTenantId",     "table": "dos.tenants", "columns": ["parent_tenant_id"],   "primaryKey": ["tenant_id"], "tenantScope": "tenant", "idempotencyRule": "ON CONFLICT (tenant_id) DO UPDATE", "normalizationRule": "snake_case_to_camelCase_in_resolver", "preflight_dependency": "preflight/blockers.contract.v1-1.json#B4" },
+      { "envelopeField": "tenantRuntime.primaryDomain",      "table": "dos.tenants", "columns": ["primary_domain"],     "primaryKey": ["tenant_id"], "tenantScope": "tenant", "idempotencyRule": "ON CONFLICT (tenant_id) DO UPDATE", "normalizationRule": "snake_case_to_camelCase_in_resolver", "preflight_dependency": "preflight/blockers.contract.v1-1.json#B4" },
+      { "envelopeField": "tenantRuntime.customDomain",       "table": "dos.tenants", "columns": ["custom_domain"],      "primaryKey": ["tenant_id"], "tenantScope": "tenant", "idempotencyRule": "ON CONFLICT (tenant_id) DO UPDATE", "normalizationRule": "snake_case_to_camelCase_in_resolver", "preflight_dependency": "preflight/blockers.contract.v1-1.json#B4" },
+      { "envelopeField": "tenantRuntime.locale",             "table": "dos.tenants", "columns": ["default_locale"],     "primaryKey": ["tenant_id"], "tenantScope": "tenant", "idempotencyRule": "ON CONFLICT (tenant_id) DO UPDATE", "normalizationRule": "snake_case_to_camelCase_in_resolver", "preflight_dependency": "preflight/blockers.contract.v1-1.json#B4" },
+      { "envelopeField": "tenantRuntime.rtl",                "table": "dos.tenants", "columns": ["default_rtl"],        "primaryKey": ["tenant_id"], "tenantScope": "tenant", "idempotencyRule": "ON CONFLICT (tenant_id) DO UPDATE", "normalizationRule": "snake_case_to_camelCase_in_resolver", "preflight_dependency": "preflight/blockers.contract.v1-1.json#B4" },
+      { "envelopeField": "tenantRuntime.tier",               "table": "dos.tenants", "columns": ["tier"],               "primaryKey": ["tenant_id"], "tenantScope": "tenant", "idempotencyRule": "ON CONFLICT (tenant_id) DO UPDATE", "normalizationRule": "passthrough", "preflight_dependency": "preflight/blockers.contract.v1-1.json#B4" },
+      { "envelopeField": "tenantRuntime.productActivations", "table": "dos.tenant_product_activation", "columns": ["tenant_id","product_key","status","activated_at","deactivated_at","tier"], "primaryKey": ["tenant_id","product_key"], "tenantScope": "tenant", "idempotencyRule": "ON CONFLICT (tenant_id, product_key) DO UPDATE", "normalizationRule": "snake_case_to_camelCase_in_resolver" },
+      { "envelopeField": "tenantRuntime.moduleEntitlements", "table": "dos.tenant_module_entitlement", "columns": ["tenant_id","module_code","status","source","expires_at"], "primaryKey": ["tenant_id","module_code"], "tenantScope": "tenant", "idempotencyRule": "ON CONFLICT (tenant_id, module_code) DO UPDATE", "normalizationRule": "snake_case_to_camelCase_in_resolver" },
+      { "envelopeField": "tenantRuntime.featureFlags",       "table": "dos.tenant_feature_flags",      "columns": ["tenant_id","flag_key","enabled","source","rollout_bucket","ttl_seconds"], "primaryKey": ["tenant_id","flag_key"], "tenantScope": "tenant", "idempotencyRule": "ON CONFLICT (tenant_id, flag_key) DO UPDATE", "normalizationRule": "snake_case_to_camelCase_in_resolver" },
+      { "envelopeField": "tenantRuntime.quotas",             "table": "dos.tenant_quota_usage",        "columns": ["tenant_id","quota_key","used","limit","unit","period"], "primaryKey": ["tenant_id","quota_key"], "tenantScope": "tenant", "idempotencyRule": "ON CONFLICT (tenant_id, quota_key) DO UPDATE", "normalizationRule": "passthrough" },
+      { "envelopeField": "tenantRuntime.limits",             "table": "dos.tenant_limits",             "columns": ["tenant_id","limit_key","value","unit","source"], "primaryKey": ["tenant_id","limit_key"], "tenantScope": "tenant", "idempotencyRule": "ON CONFLICT (tenant_id, limit_key) DO UPDATE", "normalizationRule": "passthrough" },
+      { "envelopeField": "tenantRuntime.branding",           "table": "dos.ui_tenant_branding",        "columns": ["tenant_id","brand_name","logo_url","favicon_url","icon_url","primary_color","accent_color","background","css_overrides"], "primaryKey": ["tenant_id"], "tenantScope": "tenant", "idempotencyRule": "ON CONFLICT (tenant_id) DO UPDATE", "normalizationRule": "snake_case_to_camelCase_in_resolver" },
+      { "envelopeField": "tenantRuntime.themeTokens",        "table": "dos.ui_tenant_branding",        "columns": ["tenant_id","theme_tokens"], "primaryKey": ["tenant_id"], "tenantScope": "tenant", "idempotencyRule": "ON CONFLICT (tenant_id) DO UPDATE", "normalizationRule": "jsonb_passthrough" }
+    ],
+    "integration-runtime": [
+      { "envelopeField": "integrationRuntime.connectorCatalog",  "table": "dos.integration_connector_catalog",  "columns": ["connector_key","display_name","vendor","kind","capabilities","auth_methods","categories","icon_ref","description_i18n_key","status","default_evidence_types"], "primaryKey": ["connector_key"], "tenantScope": "global", "idempotencyRule": "ON CONFLICT (connector_key) DO UPDATE", "normalizationRule": "snake_case_to_camelCase_in_resolver" },
+      { "envelopeField": "integrationRuntime.tenantConnections", "table": "dos.integration_tenant_connection", "columns": ["connection_id","tenant_id","connector_key","status","display_name","scopes","auth_state","config_ref","last_sync_at","next_sync_at","health_check"], "primaryKey": ["connection_id"], "tenantScope": "tenant", "idempotencyRule": "ON CONFLICT (tenant_id, connector_key, display_name) DO UPDATE", "normalizationRule": "snake_case_to_camelCase_in_resolver" },
+      { "envelopeField": "integrationRuntime.authConfig",        "table": "dos.integration_auth_config",       "columns": ["connector_key","auth_method","required_scopes","required_fields","secret_ref","redirect_uri_template","supports_service_account","supports_client_credentials"], "primaryKey": ["connector_key","auth_method"], "tenantScope": "global", "idempotencyRule": "ON CONFLICT (connector_key, auth_method) DO UPDATE", "normalizationRule": "snake_case_to_camelCase_in_resolver_minus_secret_ref" },
+      { "envelopeField": "integrationRuntime.syncStatus",        "table": "dos.integration_sync_status",       "columns": ["connection_id","state","last_run_started_at","last_run_finished_at","last_error","records_processed","records_failed"], "primaryKey": ["connection_id"], "tenantScope": "tenant", "idempotencyRule": "ON CONFLICT (connection_id) DO UPDATE", "normalizationRule": "snake_case_to_camelCase_in_resolver" },
+      { "envelopeField": "integrationRuntime.syncHistory",       "table": "dos.integration_sync_history",      "columns": ["event_id","connection_id","run_id","started_at","finished_at","state","records_processed","records_failed","error_code","error_message"], "primaryKey": ["event_id"], "tenantScope": "tenant", "idempotencyRule": "ON CONFLICT (event_id) DO NOTHING", "normalizationRule": "snake_case_to_camelCase_in_resolver" },
+      { "envelopeField": "integrationRuntime.widgets",           "table": "dos.integration_widget_catalog",    "columns": ["widget_key","surface","display_name_key","data_source","refresh_interval_seconds","carbon_keys","required_capabilities"], "primaryKey": ["widget_key"], "tenantScope": "global", "idempotencyRule": "ON CONFLICT (widget_key) DO UPDATE", "normalizationRule": "snake_case_to_camelCase_in_resolver" },
+      { "envelopeField": "integrationRuntime.actions",           "table": "dos.integration_action_catalog",    "columns": ["action_key","display_name_key","required_permission","kind","payload_shape"], "primaryKey": ["action_key"], "tenantScope": "global", "idempotencyRule": "ON CONFLICT (action_key) DO UPDATE", "normalizationRule": "snake_case_to_camelCase_in_resolver" },
+      { "envelopeField": "integrationRuntime.evidenceSources",   "table": "dos.integration_evidence_source",   "columns": ["evidence_source_key","connector_key","display_name_key","kind","default_retention_days","required_capabilities"], "primaryKey": ["evidence_source_key"], "tenantScope": "global", "idempotencyRule": "ON CONFLICT (evidence_source_key) DO UPDATE", "normalizationRule": "snake_case_to_camelCase_in_resolver" }
+    ],
+    "theme-runtime": [
+      { "envelopeField": "themeRuntime.themeId",            "tables": ["dos.brand_config","dos.ui_product_branding","dos.ui_tenant_branding"], "columns": ["theme_id"], "primaryKey": ["scope_key"], "tenantScope": "global_with_tenant_overrides", "idempotencyRule": "ON CONFLICT (scope_key) DO UPDATE", "normalizationRule": "merge_by_source_priority_rank" },
+      { "envelopeField": "themeRuntime.themeName",          "tables": ["dos.brand_config","dos.ui_product_branding","dos.ui_tenant_branding"], "columns": ["theme_name"], "primaryKey": ["scope_key"], "tenantScope": "global_with_tenant_overrides", "idempotencyRule": "ON CONFLICT (scope_key) DO UPDATE", "normalizationRule": "merge_by_source_priority_rank" },
+      { "envelopeField": "themeRuntime.carbonTheme",        "tables": ["dos.brand_config","dos.ui_product_branding","dos.ui_tenant_branding"], "columns": ["carbon_theme"], "primaryKey": ["scope_key"], "tenantScope": "global_with_tenant_overrides", "idempotencyRule": "ON CONFLICT (scope_key) DO UPDATE", "normalizationRule": "passthrough" },
+      { "envelopeField": "themeRuntime.tokens",             "tables": ["dos.brand_config","dos.ui_product_branding","dos.ui_tenant_branding"], "columns": ["theme_tokens"], "primaryKey": ["scope_key"], "tenantScope": "global_with_tenant_overrides", "idempotencyRule": "ON CONFLICT (scope_key) DO UPDATE", "normalizationRule": "deep_merge_jsonb_by_source_priority_rank" },
+      { "envelopeField": "themeRuntime.carbonCssVariables", "tables": ["(derived in resolver from themeRuntime.tokens via Carbon var map)"], "columns": [], "primaryKey": [], "tenantScope": "global_with_tenant_overrides", "idempotencyRule": "n/a (computed)", "normalizationRule": "compute_cds_var_map_from_tokens" },
+      { "envelopeField": "themeRuntime.rtl",                "table": "dos.tenants", "columns": ["default_rtl"], "primaryKey": ["tenant_id"], "tenantScope": "tenant", "idempotencyRule": "ON CONFLICT (tenant_id) DO UPDATE", "normalizationRule": "passthrough" },
+      { "envelopeField": "themeRuntime.appliedFrom",        "tables": ["(computed in resolver as audit trail of which scope provided which token)"], "columns": [], "primaryKey": [], "tenantScope": "global_with_tenant_overrides", "idempotencyRule": "n/a (computed)", "normalizationRule": "build_array_of_rank_source_pairs" }
+    ]
+  },
+  "preflightDependencies": {
+    "B1": ["workspace-runtime#shell.variants"],
+    "B2": ["workspace-runtime#shell.nav.items","module-runtime#moduleRuntime.navItems","module-runtime#moduleRuntime.pageOrder"],
+    "B3": ["product-runtime#productRuntime.tier"],
+    "B4": [
+      "tenant-runtime#tenantRuntime.tenantId",
+      "tenant-runtime#tenantRuntime.tenantCode",
+      "tenant-runtime#tenantRuntime.displayName",
+      "tenant-runtime#tenantRuntime.status",
+      "tenant-runtime#tenantRuntime.parentTenantId",
+      "tenant-runtime#tenantRuntime.primaryDomain",
+      "tenant-runtime#tenantRuntime.customDomain",
+      "tenant-runtime#tenantRuntime.locale",
+      "tenant-runtime#tenantRuntime.rtl",
+      "tenant-runtime#tenantRuntime.tier"
+    ]
+  },
+  "validationQueries": [
+    { "id": "publication.workspace_shell.coverage.v1_1",   "scope": "workspace-runtime",   "rule": "every shell.* envelopeField is published in this map" },
+    { "id": "publication.product.coverage.v1_1",           "scope": "product-runtime",     "rule": "every productRuntime.* envelopeField is published in this map" },
+    { "id": "publication.module.coverage.v1_1",            "scope": "module-runtime",      "rule": "every moduleRuntime.* envelopeField is published in this map" },
+    { "id": "publication.tenant.coverage.v1_1",            "scope": "tenant-runtime",      "rule": "every tenantRuntime.* envelopeField is published in this map" },
+    { "id": "publication.integration.coverage.v1_1",       "scope": "integration-runtime", "rule": "every integrationRuntime.* envelopeField is published in this map" },
+    { "id": "publication.theme.coverage.v1_1",             "scope": "theme-runtime",       "rule": "every themeRuntime.* envelopeField is published in this map" }
+  ],
+  "acceptance": [
+    "every contract envelopeField has a publication entry (zero orphans)",
+    "every preflight blocker is referenced by at least one publication entry",
+    "tenantScope is one of the allowed values",
+    "idempotencyRule is one of the allowed values",
+    "no plaintext credential field is published"
+  ]
+}

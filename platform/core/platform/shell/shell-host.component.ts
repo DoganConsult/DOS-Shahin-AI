@@ -17,12 +17,13 @@
  *     the resolver emits zero visual surfaces in a zone, the zone
  *     renders empty (no static fallback).
  */
-import { Component, DestroyRef, computed, effect, inject, signal } from '@angular/core';
+import { Component, DestroyRef, computed, effect, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterOutlet } from '@angular/router';
 import {
   DosSurfaceRendererComponent,
   DosShellBannerStripComponent,
+  ShellStateService,
   type WorkspaceSurfaceInput,
 } from '@dos/ui-system';
 import { WorkspaceShellBindingService, type WorkspaceShellSurface } from './workspace-shell-binding.service';
@@ -45,15 +46,17 @@ import type { ShellAction, ShellBanner } from '@dos/ui-contracts';
       class="dos-shell-host"
       [class.dos-shell-host--rtl]="isRtl()"
       [class.dos-shell-host--mobile]="isMobileViewport()"
-      [class.dos-shell-host--no-sidebar]="visualSidebarSurfaces().length === 0"
+      [class.dos-shell-host--tablet]="isTabletViewport()"
+      [class.dos-shell-host--desktop]="isDesktopViewport()"
+      [class.dos-shell-host--no-sidebar]="visualSidebarSurfaces().length === 0 || isMobileViewport()"
       [attr.data-desktop-min-px]="desktopMinPx() || null"
       [attr.data-viewport-w]="viewportWidth()"
     >
       @if (skipToMainText()) {
-        <a class="dos-shell-skip" href="#main-content">{{ skipToMainText() }}</a>
+        <a class="cds--skip-to-content" href="#main-content">{{ skipToMainText() }}</a>
       }
       <header
-        class="cds--header dos-shell-zone dos-shell-zone--header"
+        class="dos-shell-zone dos-shell-zone--header"
         data-zone="header"
         role="banner"
         [attr.aria-label]="ariaHeaderLabel() || null"
@@ -92,7 +95,7 @@ import type { ShellAction, ShellBanner } from '@dos/ui-contracts';
           }
         </div>
       }
-      @if (visualSidebarSurfaces().length > 0) {
+      @if (visualSidebarSurfaces().length > 0 && !isMobileViewport()) {
         <aside
           class="dos-shell-zone dos-shell-zone--sidebar"
           data-zone="sidebar"
@@ -107,7 +110,7 @@ import type { ShellAction, ShellBanner } from '@dos/ui-contracts';
         </aside>
       }
       <main
-        class="cds--content dos-shell-zone dos-shell-zone--main"
+        class="dos-shell-zone dos-shell-zone--main"
         data-zone="main"
         role="main"
         id="main-content"
@@ -121,24 +124,28 @@ import type { ShellAction, ShellBanner } from '@dos/ui-contracts';
           </div>
         }
         <div class="dos-shell-zone__main-inner">
-          @for (s of visualMainSurfaces(); track surfaceTrack(s, $index)) {
-            <dos-surface-renderer [surface]="asSurfaceInput(s)"></dos-surface-renderer>
-          }
-          @if (visualPageActionsSurfaces().length > 0) {
-            <section class="dos-shell-zone__page-actions" data-zone="page-actions">
-              @for (s of visualPageActionsSurfaces(); track surfaceTrack(s, $index)) {
-                <dos-surface-renderer [surface]="asSurfaceInput(s)"></dos-surface-renderer>
-              }
-            </section>
-          }
-          @if (visualPageContentSurfaces().length > 0) {
-            <section class="dos-shell-zone__page-content" data-zone="page-content">
-              @for (s of visualPageContentSurfaces(); track surfaceTrack(s, $index)) {
-                <dos-surface-renderer [surface]="asSurfaceInput(s)"></dos-surface-renderer>
-              }
-            </section>
-          }
-          <router-outlet />
+          <div class="dos-page-container"
+               data-testid="dos-page-container"
+               [class.dos-page-container--full-bleed]="isShellOnlyRoute()">
+            @for (s of visualMainSurfaces(); track surfaceTrack(s, $index)) {
+              <dos-surface-renderer [surface]="asSurfaceInput(s)"></dos-surface-renderer>
+            }
+            @if (visualPageActionsSurfaces().length > 0) {
+              <section class="dos-shell-zone__page-actions" data-zone="page-actions">
+                @for (s of visualPageActionsSurfaces(); track surfaceTrack(s, $index)) {
+                  <dos-surface-renderer [surface]="asSurfaceInput(s)"></dos-surface-renderer>
+                }
+              </section>
+            }
+            @if (visualPageContentSurfaces().length > 0) {
+              <section class="dos-shell-zone__page-content" data-zone="page-content">
+                @for (s of visualPageContentSurfaces(); track surfaceTrack(s, $index)) {
+                  <dos-surface-renderer [surface]="asSurfaceInput(s)"></dos-surface-renderer>
+                }
+              </section>
+            }
+            <router-outlet />
+          </div>
         </div>
       </main>
     </div>
@@ -165,30 +172,19 @@ import type { ShellAction, ShellBanner } from '@dos/ui-contracts';
       --workspace-topbar-height: 3rem;
       --workspace-sidebar-width: 15rem;
     }
+    /* Viewport pivots are DB-driven (shell.breakpoints) and applied via
+       host class bindings (dos-shell-host--mobile|tablet|desktop) sourced
+       from ShellStateService.viewportMode. No literal @media (max-width)
+       queries — the CSS reacts to the runtime-classified mode, not a
+       hardcoded pixel threshold. */
     /* Tablet rail: collapse expanded sidebar to a 72px icon rail. */
-    @media (max-width: 1199.98px) {
-      :host { --workspace-sidebar-width: 4.5rem; }
+    .dos-shell-host.dos-shell-host--tablet {
+      --workspace-sidebar-width: 4.5rem;
     }
-    /* Mobile: sidebar is hidden; drawer-only. The shell never reserves
-       sidebar width on mobile. */
-    @media (max-width: 767.98px) {
-      :host { --workspace-sidebar-width: 0px; }
-    }
-
-    .dos-shell-skip {
-      position: absolute;
-      inset-inline-start: -9999px;
-      inset-block-start: 0;
-      z-index: 9999;
-      padding: var(--cds-spacing-03) var(--cds-spacing-05);
-      background: var(--cds-background);
-      color: var(--cds-text-primary);
-      text-decoration: none;
-    }
-    .dos-shell-skip:focus {
-      inset-inline-start: var(--cds-spacing-05);
-      inset-block-start: var(--cds-spacing-05);
-      outline: 2px solid var(--cds-focus);
+    /* Mobile: sidebar hidden; topbar at 56px; no sidebar width reserved. */
+    .dos-shell-host.dos-shell-host--mobile {
+      --workspace-sidebar-width: 0px;
+      --workspace-topbar-height: 56px;
     }
 
     /* Canonical workspace grid:
@@ -213,17 +209,16 @@ import type { ShellAction, ShellBanner } from '@dos/ui-contracts';
     }
     /* Mobile: collapse to a single column (no sidebar reservation).
        The drawer overlays the viewport on demand and is mounted only
-       when isMobile && drawerOpen — currently unused in shell-host. */
-    @media (max-width: 767.98px) {
-      .dos-shell-host {
-        grid-template-columns: 1fr;
-        grid-template-areas:
-          'header'
-          'banners'
-          'main';
-      }
-      .dos-shell-zone--sidebar { display: none; }
+       when isMobile && drawerOpen — currently unused in shell-host.
+       Class-targeted (sourced from shell.breakpoints), not @media. */
+    .dos-shell-host.dos-shell-host--mobile {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        'header'
+        'banners'
+        'main';
     }
+    .dos-shell-host.dos-shell-host--mobile .dos-shell-zone--sidebar { display: none; }
     /* Contract Gate: when UI-OS emits zero validated sidebar surfaces,
        collapse the sidebar column so main fills the full width. */
     .dos-shell-host--no-sidebar {
@@ -234,7 +229,10 @@ import type { ShellAction, ShellBanner } from '@dos/ui-contracts';
         'main';
     }
 
-    /* Topbar — fixed height, no padding so embedded surfaces own spacing. */
+    /* Topbar — fixed height, no padding so embedded surfaces own spacing.
+       Logical-only flex layout; RTL is a native flip via direction:rtl
+       on the host. Slot ordering is owned by ShellHostComponent
+       (HEADER_SLOT_ORDER); the template just iterates the sorted list. */
     .dos-shell-zone--header {
       grid-area: header;
       display: flex; align-items: stretch;
@@ -242,15 +240,22 @@ import type { ShellAction, ShellBanner } from '@dos/ui-contracts';
       background: var(--cds-background);
       border-block-end: 1px solid var(--cds-border-subtle);
       padding: 0;
+      gap: 0;
     }
+    /* Leading group: brand + workspace-title. Hugs inline-start. */
     .dos-shell-zone__header-start {
       display: inline-flex; align-items: stretch;
       flex: 0 0 auto;
       gap: var(--cds-spacing-05);
+      padding-inline-start: 0;
     }
+    /* Trailing group: search/actions/notifications/settings/profile.
+       Hugs inline-end via auto inline-start margin (logical), not via
+       physical right/left rules. flex:0 1 auto keeps it content-sized;
+       the spacer between leading and trailing is the auto margin. */
     .dos-shell-zone__header-end {
-      display: inline-flex; align-items: stretch;
-      flex: 1 1 auto;
+      display: inline-flex; align-items: center;
+      flex: 0 1 auto;
       margin-inline-start: auto;
       gap: var(--cds-spacing-03);
       padding-inline-end: var(--cds-spacing-03);
@@ -289,26 +294,86 @@ import type { ShellAction, ShellBanner } from '@dos/ui-contracts';
       padding: var(--cds-spacing-05) var(--cds-spacing-05);
       color: var(--cds-text-secondary);
     }
-    /* Inner main panel: scrollable region. No top padding so the
-       page header sits flush against the topbar — pages own their
-       own internal padding via their template. */
+    /* Inner main panel: scrollable region. No padding — the
+       .dos-page-container child centers content with a max-width
+       and provides responsive inline padding. */
     .dos-shell-zone__main-inner {
       flex: 1 1 auto;
       min-block-size: 0;
       inline-size: 100%;
       overflow: auto;
-      display: flex; flex-direction: column;
-      gap: 0;
+      display: block;
       padding: 0;
     }
+    /* ── Canonical Page Container ────────────────────────────────
+       Every page renders inside this. Centered, max-width capped,
+       responsive inline padding. Pages should NEVER add their own
+       outer max-width or horizontal centering — the shell owns it.
+       Vertical spacing between sections is owned by each
+       .dos-section-container's margin-block-end (single source) so
+       container gap is 0 to avoid a 2× gap. */
+    .dos-page-container {
+      max-inline-size: 1440px;
+      margin-inline: auto;
+      padding-inline: var(--cds-spacing-06);
+      padding-block: var(--cds-spacing-05);
+      display: flex; flex-direction: column;
+      gap: 0;
+      min-inline-size: 0;
+    }
+    /* Shell-only landing route (chrome.landingRoute) — module-cards
+       and other shell-owned visuals fill the available width; remove
+       the 1440px cap and centered margin so the grid hugs the viewport
+       and matches the side-nav's inline-start edge. Inner module
+       routes keep the centered max-width container. */
+    .dos-page-container.dos-page-container--full-bleed {
+      max-inline-size: none;
+      margin-inline: 0;
+      inline-size: 100%;
+    }
+    /* Tablet padding shrink — class-targeted via dos-shell-host--tablet
+       (was @media (max-width: 1199.98px)). */
+    .dos-shell-host.dos-shell-host--tablet .dos-page-container {
+      padding-inline: var(--cds-spacing-05);
+    }
+    /* Mobile layout collapse — class-targeted via dos-shell-host--mobile
+       (was @media (max-width: 767.98px)). */
+    .dos-shell-host.dos-shell-host--mobile .dos-page-container {
+      max-inline-size: none;
+      margin-inline: 0;
+      inline-size: 100%;
+      padding-inline: 12px;
+      padding-block: var(--cds-spacing-04);
+      overflow-x: hidden;
+    }
+    .dos-shell-host.dos-shell-host--mobile .dos-shell-zone--main { overflow-x: hidden; }
+    .dos-shell-host.dos-shell-host--mobile .dos-shell-zone--header {
+      block-size: var(--workspace-topbar-height);
+      overflow: hidden;
+      padding-inline: 0;
+    }
+    .dos-shell-host.dos-shell-host--mobile .dos-shell-zone__header-start {
+      min-inline-size: 0;
+      overflow: hidden;
+      flex: 1 1 auto;
+    }
+    .dos-shell-host.dos-shell-host--mobile .dos-shell-zone__header-end {
+      gap: var(--cds-spacing-02);
+      flex: 0 0 auto;
+      overflow: hidden;
+    }
+    .dos-shell-host.dos-shell-host--mobile .dos-shell-zone__main-inner {
+      scrollbar-width: none;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+    .dos-shell-host.dos-shell-host--mobile .dos-shell-zone__main-inner::-webkit-scrollbar { display: none; }
     .dos-shell-zone__page-actions,
     .dos-shell-zone__page-content {
       display: flex;
       flex-direction: column;
       gap: var(--cds-spacing-04);
       min-inline-size: 0;
-      padding-inline: var(--cds-spacing-05);
-      padding-block: var(--cds-spacing-04);
     }
   `],
 })
@@ -319,6 +384,8 @@ export class ShellHostComponent {
   private readonly shellError = inject(ShellErrorStateService);
   private readonly destroyRef = inject(DestroyRef);
   readonly shell = inject(WorkspaceShellBindingService);
+  /** Single source of truth for viewport / direction / route / overlays. */
+  readonly state = inject(ShellStateService);
 
   /** DB-driven copy from workspace-runtime `chrome.tplStrings` (shell.tpl.*). */
   private readonly tplStrings = computed(() => {
@@ -336,22 +403,21 @@ export class ShellHostComponent {
   readonly isRtl = computed(() => this.prefs.dir() === 'rtl');
 
   /**
-   * Wave 3 — mobile-first responsive shell.
-   * Viewport tracker driven by window.innerWidth + the UI-OS policy
-   * `layout.breakpoints.desktopMinPx`. When width < breakpoint we add
-   * .dos-shell-host--mobile and the grid collapses to a single column
-   * with a sticky sidebar. SSR-safe (defaults to a wide viewport so
-   * server-rendered output assumes desktop and hydrates correctly).
+   * Wave 3 — mobile-first responsive shell. Viewport state is owned
+   * by ShellStateService (single source). Resolver-emitted breakpoint
+   * is pushed into the state service via setBreakpoints() in the
+   * constructor effect so every component sees one consistent answer.
    */
-  readonly viewportWidth = signal<number>(
-    typeof window === 'undefined' ? 1440 : window.innerWidth || 1440,
-  );
+  readonly viewportWidth = this.state.viewportWidth;
   readonly desktopMinPx = computed<number>(() => this.shell.desktopMinPx() || 0);
-  readonly isMobileViewport = computed<boolean>(() => {
-    const min = this.desktopMinPx();
-    if (!min) return false;
-    return this.viewportWidth() < min;
-  });
+  readonly viewportMode = this.state.viewportMode;
+  readonly sidebarMode = this.state.sidebarMode;
+  // Distinct viewport classifiers used to drive class-targeted CSS blocks
+  // in place of literal `@media (max-width: …)` queries. Sourced entirely
+  // from ShellStateService whose pivots come from `shell.breakpoints`.
+  readonly isMobileViewport = computed<boolean>(() => this.state.viewportMode() === 'mobile');
+  readonly isTabletViewport = computed<boolean>(() => this.state.viewportMode() === 'tablet');
+  readonly isDesktopViewport = computed<boolean>(() => this.state.viewportMode() === 'desktop');
 
   readonly headerSurfaces = computed<WorkspaceShellSurface[]>(() => this.shell.structuralSurfacesByZone('header'));
   readonly bannerSurfaces = computed<WorkspaceShellSurface[]>(() => this.shell.structuralSurfacesByZone('banner'));
@@ -365,11 +431,17 @@ export class ShellHostComponent {
   );
   /** Header surfaces that anchor to the leading edge (brand, title, nav). */
   readonly visualHeaderStart = computed<WorkspaceShellSurface[]>(
-    () => this.visualHeaderSurfaces().filter((s) => !this.isTrailingHeaderSurface(s)),
+    () => this.visualHeaderSurfaces()
+      .filter((s) => !this.isTrailingHeaderSurface(s))
+      .slice()
+      .sort((a, b) => this.headerSlotOrder(a) - this.headerSlotOrder(b)),
   );
   /** Header surfaces that anchor to the trailing edge (global actions). */
   readonly visualHeaderEnd = computed<WorkspaceShellSurface[]>(
-    () => this.visualHeaderSurfaces().filter((s) => this.isTrailingHeaderSurface(s)),
+    () => this.visualHeaderSurfaces()
+      .filter((s) => this.isTrailingHeaderSurface(s))
+      .slice()
+      .sort((a, b) => this.headerSlotOrder(a) - this.headerSlotOrder(b)),
   );
 
   /**
@@ -383,6 +455,35 @@ export class ShellHostComponent {
     const props = (s.props ?? {}) as Record<string, unknown>;
     return props['placement'] === 'trailing';
   }
+
+  /**
+   * Canonical topbar slot order (LTR reading order):
+   *   1 brand · 2 workspace-switcher · 3 global-search · 4 command-actions
+   *   · 5 notifications · 6 settings · 7 profile-menu
+   *
+   * The resolver emits a single `workspace.shell.global-quick-actions`
+   * surface that internally bundles search + command actions + inbox
+   * (notifications), so slots 3/4/5 collapse to one DOM node — its
+   * canonical index is 3 (the leading edge of that bundle).
+   *
+   * RTL is achieved by native `direction: rtl` on the host: flexbox
+   * mirrors the inline axis automatically. DOM order stays canonical
+   * in both directions; no template branching, no per-language order.
+   */
+  private static readonly HEADER_SLOT_ORDER: Readonly<Record<string, number>> = Object.freeze({
+    'workspace.shell.brand': 1,
+    'workspace.shell.workspace-title': 2,
+    'workspace.shell.global-quick-actions': 3,
+    'workspace.shell.notifications': 5,
+    'workspace.shell.settings-action': 6,
+    'workspace.shell.user-menu': 7,
+  });
+  private headerSlotOrder(s: WorkspaceShellSurface): number {
+    const key = s.componentKey ?? '';
+    const idx = ShellHostComponent.HEADER_SLOT_ORDER[key];
+    if (typeof idx === 'number') return idx;
+    return Number.MAX_SAFE_INTEGER;
+  }
   readonly visualSidebarSurfaces = computed<WorkspaceShellSurface[]>(
     () => this.shell.visualStructuralSurfacesByZone('sidebar'),
   );
@@ -395,9 +496,51 @@ export class ShellHostComponent {
   readonly visualPageContentSurfaces = computed<WorkspaceShellSurface[]>(
     () => this.shell.visualStructuralSurfacesByZone('page-content'),
   );
-  readonly visualMainSurfaces = computed<WorkspaceShellSurface[]>(
-    () => this.shell.visualStructuralSurfacesByZone('main'),
-  );
+  /**
+   * Main-zone surfaces filtered against the DB-emitted landing route.
+   * Doctrine: `workspace.shell.empty-state` is the workspace-home
+   * placeholder. It must render only on the route that UI-OS emits
+   * as `chrome.landingRoute` — never on inner module routes like
+   * `/foundation/*` where the router-outlet owns the page content.
+   * landingRoute is DB-owned (dos.tenant_landing_config); the active
+   * route comes from ShellStateService (Angular Router NavigationEnd).
+   * No product/route literal is hardcoded here.
+   */
+  /**
+   * Shell-only route — true when the active route equals the
+   * DB-emitted `chrome.landingRoute`. On this route the shell paints
+   * the workspace home (module cards, empty-state, etc.) and there is
+   * no router-outlet child page; the page-container drops its
+   * 1440px cap so module cards hug the viewport. Inner module routes
+   * keep the centered container. The route literal is NEVER hardcoded
+   * here — it is sourced from UI-OS chrome.landingRoute (which itself
+   * comes from `dos.tenant_landing_config`).
+   */
+  readonly isShellOnlyRoute = computed<boolean>(() => {
+    const chrome = this.shell.chrome() as Record<string, unknown>;
+    const landing = typeof chrome['landingRoute'] === 'string'
+      ? this.state.normalize(chrome['landingRoute'] as string)
+      : '';
+    if (landing.length === 0) return false;
+    return this.state.activeRoute() === landing;
+  });
+
+  readonly visualMainSurfaces = computed<WorkspaceShellSurface[]>(() => {
+    const all = this.shell.visualStructuralSurfacesByZone('main');
+    const chrome = this.shell.chrome() as Record<string, unknown>;
+    const landing = typeof chrome['landingRoute'] === 'string'
+      ? this.state.normalize(chrome['landingRoute'] as string)
+      : '';
+    const active = this.state.activeRoute();
+    const onLanding = landing.length > 0 && active === landing;
+    const LANDING_ONLY_SURFACES = new Set([
+      'workspace.shell.empty-state',
+      'workspace.shell.module-cards',
+    ]);
+    return onLanding
+      ? all
+      : all.filter((s) => !LANDING_ONLY_SURFACES.has(s.componentKey ?? ''));
+  });
 
   /**
    * Adapt the binding-row shape to the surface-renderer @Input contract.
@@ -433,96 +576,31 @@ export class ShellHostComponent {
 
   constructor() {
     if (typeof window !== 'undefined') {
-      // STARTUP VERSION MARKER — lets us prove which bundle is loaded
-      // without relying on cross-origin fetch (Chrome's Local Network
-      // Access policy blocks fetch to localhost from https origins).
-      // eslint-disable-next-line no-console
-      console.info('[DOS_DEBUG] shell-host build=fail-closed-banner-gates+empty-strip-filter');
       const handler = (ev: Event) => {
         const detail = (ev as CustomEvent).detail as ShellAction | { kind?: string; eventName?: string } | null | undefined;
         this.executeShellAction(detail as ShellAction | null | undefined);
       };
       window.addEventListener('dos:shell-action', handler);
       this.destroyRef.onDestroy(() => window.removeEventListener('dos:shell-action', handler));
-
-      // Wave 3 — viewport tracker for the policy-driven mobile breakpoint.
-      const onResize = () => this.viewportWidth.set(window.innerWidth || 0);
-      window.addEventListener('resize', onResize, { passive: true });
-      onResize();
-      this.destroyRef.onDestroy(() => window.removeEventListener('resize', onResize));
     }
-    // #region agent log
+    // Push the resolver-emitted shell.breakpoints into the shared
+    // ShellStateService so viewportMode classification is consistent
+    // across every shell consumer (host, sidebar nav, drawer, popovers).
+    // v1.1 source: shell.breakpoints[breakpointKey IN ('tablet','desktop')].minPx;
+    // legacy source `policies.layout.breakpoints.desktopMinPx` is kept
+    // as a tenant-policy-driven override for the desktop pivot only.
     effect(() => {
-      const html = typeof document !== 'undefined' ? document.documentElement : null;
-      const computed = {
-        v: { header: this.visualHeaderSurfaces().length, banner: this.visualBannerSurfaces().length, sidebar: this.visualSidebarSurfaces().length, main: this.visualMainSurfaces().length, pageActions: this.visualPageActionsSurfaces().length, pageContent: this.visualPageContentSurfaces().length },
-        s: { header: this.headerSurfaces().length, banner: this.bannerSurfaces().length, sidebar: this.sidebarSurfaces().length, main: this.mainSurfaces().length, pageActions: this.pageActionsSurfaces().length, pageContent: this.pageContentSurfaces().length },
-        isMobile: this.isMobileViewport(), vw: this.viewportWidth(), desktopMin: this.desktopMinPx(),
-        spaScript: typeof document !== 'undefined' ? (document.querySelector('script[src*="main"]') as HTMLScriptElement | null)?.src ?? null : null,
-        rtl: { isRtl: this.isRtl(), prefsDir: this.prefs.dir(), prefsLang: this.prefs.language(), htmlDir: html?.getAttribute('dir') ?? null, htmlLang: html?.getAttribute('lang') ?? null },
-        bannerCandidates: this.shell.shellBannerCandidates().length,
-      };
-      const reportDom = () => {
-        if (typeof document === 'undefined') return;
-        const headerEl = document.querySelector('.dos-shell-zone--header') as HTMLElement | null;
-        const sidebarEl = document.querySelector('.dos-shell-zone--sidebar') as HTMLElement | null;
-        const bannersEl = document.querySelector('.dos-shell-zone--banners') as HTMLElement | null;
-        const mainEl = document.querySelector('.dos-shell-zone--main') as HTMLElement | null;
-        const headerRect = headerEl?.getBoundingClientRect() ?? null;
-        const sidebarRect = sidebarEl?.getBoundingClientRect() ?? null;
-        const bannersRect = bannersEl?.getBoundingClientRect() ?? null;
-        const mainRect = mainEl?.getBoundingClientRect() ?? null;
-        const dom = {
-          cdsHeaderCount: document.querySelectorAll('.cds--header').length,
-          bannerZoneCount: document.querySelectorAll('.dos-shell-zone--banners').length,
-          cdsBannerCount: document.querySelectorAll('.cds--inline-notification, .cds--toast-notification, .cds--actionable-notification').length,
-          closeButtonCount: document.querySelectorAll('button[aria-label*="lose" i], button[aria-label*="إغلاق"], button.cds--header__action.cds--header__menu-trigger, .cds--inline-notification__close-button, .cds--toast-notification__close-button').length,
-          shellHasRtlClass: !!document.querySelector('.dos-shell-host--rtl'),
-          shellHasMobileClass: !!document.querySelector('.dos-shell-host--mobile'),
-          shellHasNoSidebarClass: !!document.querySelector('.dos-shell-host--no-sidebar'),
-          headerRect: headerRect ? { l: Math.round(headerRect.left), w: Math.round(headerRect.width), h: Math.round(headerRect.height) } : null,
-          bannersRect: bannersRect ? { l: Math.round(bannersRect.left), w: Math.round(bannersRect.width), h: Math.round(bannersRect.height) } : null,
-          sidebarRect: sidebarRect ? { l: Math.round(sidebarRect.left), w: Math.round(sidebarRect.width), r: Math.round(sidebarRect.right) } : null,
-          mainRect: mainRect ? { l: Math.round(mainRect.left), w: Math.round(mainRect.width) } : null,
-          viewportWidthPx: typeof window !== 'undefined' ? window.innerWidth : null,
-          // Capture text fragments inside header to identify the "× × stack" source.
-          headerSnippets: headerEl ? Array.from(headerEl.querySelectorAll('button, a')).slice(0, 8).map((el) => ({ tag: el.tagName, label: el.getAttribute('aria-label'), text: (el.textContent || '').trim().slice(0, 40), cls: el.className.slice(0, 80) })) : [],
-          bannerSnippets: bannersEl ? Array.from(bannersEl.querySelectorAll('button, .cds--actionable-notification__title')).slice(0, 8).map((el) => ({ tag: el.tagName, label: el.getAttribute('aria-label'), text: (el.textContent || '').trim().slice(0, 40), cls: el.className.slice(0, 80) })) : [],
-          // DOM TREE PROBE: count app-shell-host instances and dump direct
-          // children of each .dos-shell-host inner wrapper. Lets us prove
-          // whether the user is seeing a duplicate shell mount, a duplicate
-          // banner zone, or a stray injected node from outside the shell tree.
-          shellHostElCount: document.querySelectorAll('app-shell-host').length,
-          shellInnerCount: document.querySelectorAll('app-shell-host > div.dos-shell-host').length,
-          shellInnerChildren: Array.from(document.querySelectorAll('app-shell-host > div.dos-shell-host')).map((host) => Array.from(host.children).map((c) => ({ tag: c.tagName, cls: (c.className || '').slice(0, 80), id: c.id || null, dataZone: c.getAttribute('data-zone') || null, role: c.getAttribute('role') || null, hidden: (c as HTMLElement).hidden || (c as HTMLElement).offsetParent === null }))),
-          // Same probe but at app-shell-host level: whose direct child is
-          // `<div>`? Reveals if there is a 2nd `<div>` SIBLING outside the
-          // canonical .dos-shell-host wrapper.
-          appShellChildren: Array.from(document.querySelectorAll('app-shell-host')).map((sh) => Array.from(sh.children).map((c) => ({ tag: c.tagName, cls: (c.className || '').slice(0, 80) }))),
-          headerCountInsideShell: document.querySelectorAll('app-shell-host header').length,
-          divCountInsideShellInner: document.querySelectorAll('app-shell-host > div.dos-shell-host > div').length,
-        };
-        // Same-origin debug side-channel: Chrome's Local Network Access
-        // policy blocks fetch() to localhost from https://shahin-ai.com,
-        // so we publish the snapshot to console + window.__dosShellProbe
-        // and the user can `copy(window.__dosShellProbe)` from DevTools.
-        try {
-          const payload = { runId: 'dup-probe', location: 'shell-host.component.ts:effect:VISUAL_SNAPSHOT', data: { ...computed, dom }, t: Date.now() };
-          const w = window as unknown as { __dosShellProbe?: unknown[]; __dosShellProbeLast?: unknown };
-          if (!Array.isArray(w.__dosShellProbe)) w.__dosShellProbe = [];
-          (w.__dosShellProbe as unknown[]).push(payload);
-          w.__dosShellProbeLast = payload;
-          // eslint-disable-next-line no-console
-          console.info('[DOS_DEBUG] shell host snapshot', payload);
-        } catch { /* no-op */ }
-      };
-      if (typeof window !== 'undefined' && typeof window.requestAnimationFrame === 'function') {
-        window.requestAnimationFrame(() => window.requestAnimationFrame(reportDom));
-      } else {
-        reportDom();
-      }
+      const tabletMinFromBreakpoints  = this.shell.tabletMinPx() || 0;
+      const desktopMinFromBreakpoints = this.shell.desktopMinPxFromBreakpoints() || 0;
+      const desktopMinFromPolicy      = this.shell.desktopMinPx() || 0;
+      // Resolved-breakpoint values take precedence; tenant-policy
+      // override (desktopMinPx in policies) wins ONLY when present.
+      const desktopMin = desktopMinFromPolicy > 0 ? desktopMinFromPolicy : desktopMinFromBreakpoints;
+      const opts: { desktopMinPx?: number; tabletMinPx?: number } = {};
+      if (desktopMin > 0)               opts.desktopMinPx = desktopMin;
+      if (tabletMinFromBreakpoints > 0) opts.tabletMinPx  = tabletMinFromBreakpoints;
+      if (opts.desktopMinPx || opts.tabletMinPx) this.state.setBreakpoints(opts);
     });
-    // #endregion
   }
 
   onBannerAction(b: ShellBanner): void {

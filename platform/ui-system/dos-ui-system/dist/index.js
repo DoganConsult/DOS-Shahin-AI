@@ -79,8 +79,13 @@ export * from './shell/mobile-bottom-nav.component';
 export * from './shell/workspace-header.component';
 export * from './shell/surface-renderer.component';
 export * from './shell/visual-shell-surfaces.component';
+export * from './shell/frame-shell-surfaces.component';
+export * from './shell/shell-state.service';
 export * from './shell/quick-create.component';
 export * from './shell/workspace-shell.contracts';
+// Mobile shell components (Phase WS-7 — Mobile Experience Enhancement)
+export * from './shell/mobile-shell.component';
+export * from './shell/mobile-drawer.component';
 // Named internal kits (Carbon-only, built on top of src/carbon/* wrappers).
 // NOT third-party templates — the kits exist solely to formalize the
 // "kit boundary" referenced by the agent operating directive.
@@ -92,6 +97,10 @@ export * from './carbon/index';
 // Permission-gated structural directive (DOM-removal, AccessStore-bound).
 export * from './directives/dos-can-render.directive';
 export * from './directives/dos-gate-probe.directive';
+// Mobile Experience Enhancement — Touch gesture directives
+export * from './directives/index';
+// Mobile Experience Enhancement — Mobile services
+export * from './services/index';
 // Carbon icon allowlist + picker (rule #8 — package-level asset, runtime allowlist).
 export * from './icons/carbon-icon-allowlist.service';
 export * from './icons/carbon-icon-picker.component';
