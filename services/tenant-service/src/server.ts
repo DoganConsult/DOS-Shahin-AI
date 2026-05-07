@@ -28,6 +28,15 @@ import {
 } from './openfga';
 import { startTrialLifecycleSweeper, runTrialLifecycleSweep } from './domain/trial-lifecycle';
 
+import { createHealthRouter, dbHealthCheck, redisHealthCheck, eventBusHealthCheck } from '@dos/service-bootstrap/health';
+
+// Health check router with DB, Redis, and EventBus probes
+app.use(createHealthRouter('tenant', {
+  db: dbHealthCheck,
+  redis: redisHealthCheck,
+  eventBus: eventBusHealthCheck,
+}));
+
 const PORT = Number(process.env.PORT || 4002);
 const DATABASE_URL = process.env.DATABASE_URL;
 if (!DATABASE_URL) throw new Error('Required environment variable DATABASE_URL is not set');
@@ -58,7 +67,7 @@ app.set('trust proxy', 1);
 app.use(express.json({ limit: '256kb' }));
 app.use(morgan(process.env.LOG_FORMAT || 'combined'));
 
-app.get('/health', (_req, res) => res.json({ ok: true, service: 'tenant-service' }));
+// Health check handled by createHealthRouter
 app.get('/ready',  async (_req, res) => {
   try { await pool.query('SELECT 1'); res.json({ ok: true }); }
   catch (e) { res.status(503).json({ ok: false, error: String(e) }); }

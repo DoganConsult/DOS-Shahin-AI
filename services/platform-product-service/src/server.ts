@@ -10,6 +10,15 @@ import { setServiceBus } from './events/publisher';
 import { registerConsumers } from './events/consumer';
 import { authenticate, requireTenantId } from '@dos/dauth-shared';
 
+import { createHealthRouter, dbHealthCheck, redisHealthCheck, eventBusHealthCheck } from '@dos/service-bootstrap/health';
+
+// Health check router with DB, Redis, and EventBus probes
+app.use(createHealthRouter('platform_product', {
+  db: dbHealthCheck,
+  redis: redisHealthCheck,
+  eventBus: eventBusHealthCheck,
+}));
+
 // Phase-12E wire-closure: host modules/operating-cockpit at /api/operating-cockpit.
 // Backed by modules/operating-cockpit route file (health-grid, alerts, slas, ...).
 const operatingCockpitRouter = loadModuleRoute(

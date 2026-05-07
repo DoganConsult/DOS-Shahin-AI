@@ -23,6 +23,15 @@ import http from 'http';
 import { createRateLimiter } from '@dos/platform-core/http';
 import { allAuthOrigins } from '@dos/platform-core/auth-host-policy';
 import {
+
+import { createHealthRouter, dbHealthCheck, redisHealthCheck, eventBusHealthCheck } from '@dos/service-bootstrap/health';
+
+// Health check router with DB, Redis, and EventBus probes
+app.use(createHealthRouter('platform_app_shell', {
+  db: dbHealthCheck,
+  redis: redisHealthCheck,
+  eventBus: eventBusHealthCheck,
+}));
   metricsMiddleware,
   getMetricsText,
   getContentType,

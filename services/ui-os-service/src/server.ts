@@ -11,6 +11,15 @@ import { createPublicRouteMetadataRouter } from './routes/route-metadata.routes.
 import { createPublicRouteAllowlist } from './middleware/public-route-allowlist.js';
 import { requireGatewayOrigin } from './middleware/gateway-origin.js';
 
+import { createHealthRouter, dbHealthCheck, redisHealthCheck, eventBusHealthCheck } from '@dos/service-bootstrap/health';
+
+// Health check router with DB, Redis, and EventBus probes
+app.use(createHealthRouter('ui_os', {
+  db: dbHealthCheck,
+  redis: redisHealthCheck,
+  eventBus: eventBusHealthCheck,
+}));
+
 const PORT = Number(process.env.PORT || 4015);
 const DATABASE_URL = process.env.DATABASE_URL;
 

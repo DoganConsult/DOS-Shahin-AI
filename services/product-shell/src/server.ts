@@ -16,6 +16,15 @@ import cors from 'cors';
 import morgan from 'morgan';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 
+import { createHealthRouter, dbHealthCheck, redisHealthCheck, eventBusHealthCheck } from '@dos/service-bootstrap/health';
+
+// Health check router with DB, Redis, and EventBus probes
+app.use(createHealthRouter('product_shell', {
+  db: dbHealthCheck,
+  redis: redisHealthCheck,
+  eventBus: eventBusHealthCheck,
+}));
+
 const SERVICE = 'product-shell';
 const PORT = Number(process.env.PORT || 3000);
 const GATEWAY_URL = required('GATEWAY_URL');
@@ -119,8 +128,8 @@ app.use(cors({
 }));
 app.use(morgan(process.env.LOG_FORMAT || 'combined'));
 
-app.get('/health', (_req, res) => res.json({ ok: true, service: SERVICE }));
-app.get('/ready',  (_req, res) => res.json({ ok: true, service: SERVICE }));
+// Health check handled by createHealthRouter
+// Ready check handled by createHealthRouter
 
 // Phase M1.6 — auth entry routes (/login, /register, /forgot-password,
 // /mfa, /reset-password) are now owned by the SPA's Carbon Auth Pages

@@ -4,6 +4,15 @@ import { createEventBackbone } from '@dos/event-backbone';
 import { logger } from '@dos/platform-core/observability';
 import { routes } from './routes/index.js';
 
+import { createHealthRouter, dbHealthCheck, redisHealthCheck, eventBusHealthCheck } from '@dos/service-bootstrap/health';
+
+// Health check router with DB, Redis, and EventBus probes
+app.use(createHealthRouter('_service_template', {
+  db: dbHealthCheck,
+  redis: redisHealthCheck,
+  eventBus: eventBusHealthCheck,
+}));
+
 const SERVICE_CODE = 'template-service'; // Replace per service
 
 async function main() {

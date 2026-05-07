@@ -1,0 +1,54 @@
+{
+  "schema": "foundation-ai.proof.v1",
+  "phase": "D",
+  "wave": 29,
+  "name": "runtime",
+  "status": "GREEN",
+  "payload": {
+    "probes": [
+      {
+        "name": "pm2-restart-ui-os-service",
+        "status": "PASS"
+      },
+      {
+        "name": "pm2-restart-gateway",
+        "status": "PASS"
+      },
+      {
+        "name": "pm2-restart-workspace-bff",
+        "status": "PASS"
+      },
+      {
+        "name": "pm2-restart-product-shell",
+        "status": "PASS"
+      },
+      {
+        "name": "workspace-runtime-shape",
+        "status": "PASS",
+        "detail": {
+          "gated": true,
+          "code": "NOT_A_MEMBER"
+        }
+      },
+      {
+        "name": "template-binding-foundation-settings",
+        "status": "PASS",
+        "detail": {
+          "gated": true,
+          "code": "MISSING_PRINCIPAL"
+        }
+      },
+      {
+        "name": "route-metadata-public-foundation",
+        "status": "PASS",
+        "detail": {
+          "renderMode": "template"
+        }
+      }
+    ],
+    "base": "http://127.0.0.1:4015",
+    "tenant": "dogan"
+  },
+  "emittedAt": "2026-05-07T04:25:43.614Z",
+  "hash": "sha256:9bcb96f0ccd52555ba6d520be1114ffafa9ea07aabac6380f0fac771987df2e7"
+}

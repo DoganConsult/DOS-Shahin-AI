@@ -30,6 +30,15 @@ import { adminZoneMtlsAgent, adminZoneMtlsStatus } from './middleware/admin-zone
 import { tenantZoneMtlsAgent, tenantZoneMtlsStatus } from './middleware/tenant-zone-mtls';
 import { tenantRateLimit } from './middleware/tenant-rate-limit';
 
+import { createHealthRouter, dbHealthCheck, redisHealthCheck, eventBusHealthCheck } from '@dos/service-bootstrap/health';
+
+// Health check router with DB, Redis, and EventBus probes
+app.use(createHealthRouter('gateway', {
+  db: dbHealthCheck,
+  redis: redisHealthCheck,
+  eventBus: eventBusHealthCheck,
+}));
+
 const PORT = Number(process.env.PORT || 4000);
 const AUTH_SERVICE_URL = required('AUTH_SERVICE_URL');
 const TENANT_SERVICE_URL = required('TENANT_SERVICE_URL');
@@ -217,10 +226,10 @@ app.use((req: Request, _res: Response, next: NextFunction) => {
   next();
 });
 
-app.get('/health', (_req, res) => res.json({ ok: true, service: 'gateway' }));
-app.get('/ready',  (_req, res) => res.json({ ok: true, service: 'gateway' }));
+// Health check handled by createHealthRouter
+// Ready check handled by createHealthRouter
 // SPA healthbar polls /api/health — alias to the same payload.
-app.get('/api/health', (_req, res) => res.json({ ok: true, service: 'gateway' }));
+// API health check handled by createHealthRouter
 
 // Public auth endpoints — no JWT required (login, callback, refresh, logout, health).
 // CSRF stub removed — see Task 9. The OIDC flow is cookie+PKCE; no XSRF token is exchanged.

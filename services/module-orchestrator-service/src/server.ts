@@ -24,6 +24,15 @@
 import express, { Request, Response, NextFunction } from 'express';
 import pg from 'pg';
 
+import { createHealthRouter, dbHealthCheck, redisHealthCheck, eventBusHealthCheck } from '@dos/service-bootstrap/health';
+
+// Health check router with DB, Redis, and EventBus probes
+app.use(createHealthRouter('module_orchestrator', {
+  db: dbHealthCheck,
+  redis: redisHealthCheck,
+  eventBus: eventBusHealthCheck,
+}));
+
 const PORT = Number(process.env.PORT || 4150);
 const DATABASE_URL = process.env.DATABASE_URL;
 if (!DATABASE_URL) {

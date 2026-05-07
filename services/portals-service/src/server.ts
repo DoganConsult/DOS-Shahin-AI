@@ -7,6 +7,15 @@ import { routes } from './routes/index';
 import { setServiceBus } from './events/publisher';
 import { registerConsumers } from './events/consumer';
 
+import { createHealthRouter, dbHealthCheck, redisHealthCheck, eventBusHealthCheck } from '@dos/service-bootstrap/health';
+
+// Health check router with DB, Redis, and EventBus probes
+app.use(createHealthRouter('portals', {
+  db: dbHealthCheck,
+  redis: redisHealthCheck,
+  eventBus: eventBusHealthCheck,
+}));
+
 const SERVICE_CODE = 'portals-service';
 
 async function main() {

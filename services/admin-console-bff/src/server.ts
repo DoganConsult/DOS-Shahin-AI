@@ -5,6 +5,15 @@ import { routes } from './routes/index.js';
 import { PLATFORM_ADMIN_SPA_HTML } from './lib/platform-admin-spa.js';
 import { loadPlatformOpsRealmConfig, platformOpsRealmGuard } from './lib/platform-ops-realm.js';
 
+import { createHealthRouter, dbHealthCheck, redisHealthCheck, eventBusHealthCheck } from '@dos/service-bootstrap/health';
+
+// Health check router with DB, Redis, and EventBus probes
+app.use(createHealthRouter('admin_console_bff', {
+  db: dbHealthCheck,
+  redis: redisHealthCheck,
+  eventBus: eventBusHealthCheck,
+}));
+
 const SERVICE_CODE = 'admin-console-bff';
 
 async function main() {

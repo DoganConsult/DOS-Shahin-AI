@@ -21,6 +21,15 @@ import {
 import { registerNotificationsAdapter } from './adapters/notifications.adapter';
 import { getInboxCount } from './domain/inbox.service';
 
+import { createHealthRouter, dbHealthCheck, redisHealthCheck, eventBusHealthCheck } from '@dos/service-bootstrap/health';
+
+// Health check router with DB, Redis, and EventBus probes
+app.use(createHealthRouter('notification', {
+  db: dbHealthCheck,
+  redis: redisHealthCheck,
+  eventBus: eventBusHealthCheck,
+}));
+
 const SERVICE_CODE = 'notification-service';
 
 let wsServer: NotificationWsServer | null = null;

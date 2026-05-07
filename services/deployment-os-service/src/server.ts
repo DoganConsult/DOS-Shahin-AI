@@ -2,6 +2,15 @@ import { createServiceServer } from '@dos/service-bootstrap';
 import { loadServiceConfig } from '@dos/runtime-config';
 import { routes } from './routes/index.js';
 
+import { createHealthRouter, dbHealthCheck, redisHealthCheck, eventBusHealthCheck } from '@dos/service-bootstrap/health';
+
+// Health check router with DB, Redis, and EventBus probes
+app.use(createHealthRouter('deployment_os', {
+  db: dbHealthCheck,
+  redis: redisHealthCheck,
+  eventBus: eventBusHealthCheck,
+}));
+
 const SERVICE_CODE = 'deployment-os-service';
 
 async function main() {

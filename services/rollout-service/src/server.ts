@@ -4,6 +4,15 @@ import { routes } from './routes/index.js';
 import { startAutoEvaluator, setSignalReader } from './lib/auto-evaluator.js';
 import { RealSignalReader } from './lib/signal-adapters.js';
 
+import { createHealthRouter, dbHealthCheck, redisHealthCheck, eventBusHealthCheck } from '@dos/service-bootstrap/health';
+
+// Health check router with DB, Redis, and EventBus probes
+app.use(createHealthRouter('rollout', {
+  db: dbHealthCheck,
+  redis: redisHealthCheck,
+  eventBus: eventBusHealthCheck,
+}));
+
 const SERVICE_CODE = 'rollout-service';
 
 async function main() {

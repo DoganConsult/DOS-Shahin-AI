@@ -7,6 +7,15 @@ import { routes } from './routes/index';
 import { setServiceBus } from './events/publisher';
 import { registerConsumers, registerModuleConsumers } from './events/consumer';
 
+import { createHealthRouter, dbHealthCheck, redisHealthCheck, eventBusHealthCheck } from '@dos/service-bootstrap/health';
+
+// Health check router with DB, Redis, and EventBus probes
+app.use(createHealthRouter('analytics_reporting', {
+  db: dbHealthCheck,
+  redis: redisHealthCheck,
+  eventBus: eventBusHealthCheck,
+}));
+
 // ── Wave 2D: Module Lifecycle Hooks ──────────────────────────────────────
 
 async function loadModuleRegistrations(moduleCode: string): Promise<ModuleRegistration[]> {

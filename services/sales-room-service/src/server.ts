@@ -13,6 +13,15 @@ import { AssetsService } from './domain/assets.service';
 import { PgAssetsRepo, InMemoryAssetsRepo, type AssetsRepo } from './domain/assets.repo';
 import { setServiceBus } from './events/publisher';
 
+import { createHealthRouter, dbHealthCheck, redisHealthCheck, eventBusHealthCheck } from '@dos/service-bootstrap/health';
+
+// Health check router with DB, Redis, and EventBus probes
+app.use(createHealthRouter('sales_room', {
+  db: dbHealthCheck,
+  redis: redisHealthCheck,
+  eventBus: eventBusHealthCheck,
+}));
+
 const SERVICE_CODE = 'sales-room-service';
 
 async function buildRepo(): Promise<AssetsRepo> {

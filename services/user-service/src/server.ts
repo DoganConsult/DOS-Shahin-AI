@@ -32,6 +32,15 @@ import {
 } from './domain/foundation';
 import { startConsumer } from './events/consumer';
 
+import { createHealthRouter, dbHealthCheck, redisHealthCheck, eventBusHealthCheck } from '@dos/service-bootstrap/health';
+
+// Health check router with DB, Redis, and EventBus probes
+app.use(createHealthRouter('user', {
+  db: dbHealthCheck,
+  redis: redisHealthCheck,
+  eventBus: eventBusHealthCheck,
+}));
+
 const SERVICE_CODE = 'user-service';
 
 async function checkDatabase(): Promise<boolean> {

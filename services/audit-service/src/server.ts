@@ -8,6 +8,15 @@ import activityFeedRoutes from './routes/activity-feed.routes';
 import { setAuditBus } from './events/publisher';
 import { registerConsumers } from './events/consumer';
 
+import { createHealthRouter, dbHealthCheck, redisHealthCheck, eventBusHealthCheck } from '@dos/service-bootstrap/health';
+
+// Health check router with DB, Redis, and EventBus probes
+app.use(createHealthRouter('audit', {
+  db: dbHealthCheck,
+  redis: redisHealthCheck,
+  eventBus: eventBusHealthCheck,
+}));
+
 const SERVICE_CODE = 'audit-service';
 
 async function main() {

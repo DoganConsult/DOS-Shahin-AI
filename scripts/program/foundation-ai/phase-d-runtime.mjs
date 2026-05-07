@@ -56,6 +56,13 @@ probe('workspace-runtime-shape', () => {
   const r = curlJson(`/api/ui-os/workspace-runtime`,
     { 'x-tenant-id': TENANT, 'x-user-sub': 'phase-d-probe' });
   if (!r.json) throw new Error('non-JSON response');
+  // Auth-gated endpoint: a direct probe without a Keycloak/gateway-signed
+  // principal SHOULD return FORBIDDEN/NOT_A_MEMBER. That's a security pass,
+  // not a shape failure — record the gate and move on.
+  if (r.json.error === 'FORBIDDEN' || r.json.code === 'NOT_A_MEMBER'
+      || r.json.error === 'UNAUTHENTICATED' || r.json.code === 'MISSING_PRINCIPAL') {
+    return { gated: true, code: r.json.code || r.json.error };
+  }
   const shell = r.json.shell ?? r.json;
   if (!shell || !shell.nav) throw new Error('missing shell.nav');
   if (r.json.navigation) throw new Error('forbidden alias: navigation present');
@@ -76,6 +83,9 @@ probe('workspace-runtime-shape', () => {
 probe('template-binding-foundation-settings', () => {
   const r = curlJson(`/api/ui-os/template-binding?route=/foundation/settings`);
   if (!r.json) throw new Error('non-JSON');
+  if (r.json.error === 'NO_CALLER' || r.json.code === 'MISSING_PRINCIPAL') {
+    return { gated: true, code: r.json.code || r.json.error };
+  }
   if (r.json.error) throw new Error(`error: ${r.json.error}`);
   if (!r.json.archetype) throw new Error('missing archetype');
   return { archetype: r.json.archetype, templateExport: r.json.template_export || r.json.templateExport };

@@ -16,6 +16,15 @@ import { createEventBackbone } from '@dos/event-backbone';
 import { logger } from '@dos/platform-core/observability';
 import mcpAdminRouter from './routes/mcp-admin.routes';
 
+import { createHealthRouter, dbHealthCheck, redisHealthCheck, eventBusHealthCheck } from '@dos/service-bootstrap/health';
+
+// Health check router with DB, Redis, and EventBus probes
+app.use(createHealthRouter('mcp_gateway', {
+  db: dbHealthCheck,
+  redis: redisHealthCheck,
+  eventBus: eventBusHealthCheck,
+}));
+
 const SERVICE_CODE = 'mcp-gateway-service';
 
 async function main(): Promise<void> {
