@@ -45,6 +45,7 @@ import type { ShellAction, ShellBanner } from '@dos/ui-contracts';
       class="dos-shell-host"
       [class.dos-shell-host--rtl]="isRtl()"
       [class.dos-shell-host--mobile]="isMobileViewport()"
+      [class.dos-shell-host--no-sidebar]="visualSidebarSurfaces().length === 0"
       [attr.data-desktop-min-px]="desktopMinPx() || null"
       [attr.data-viewport-w]="viewportWidth()"
     >
@@ -91,18 +92,20 @@ import type { ShellAction, ShellBanner } from '@dos/ui-contracts';
           }
         </div>
       }
-      <aside
-        class="dos-shell-zone dos-shell-zone--sidebar"
-        data-zone="sidebar"
-        role="complementary"
-        [attr.aria-label]="ariaSidebarLabel() || null"
-        [attr.data-surface-count]="sidebarSurfaces().length"
-        [attr.data-visual-surface-count]="visualSidebarSurfaces().length"
-      >
-        @for (s of visualSidebarSurfaces(); track surfaceTrack(s, $index)) {
-          <dos-surface-renderer [surface]="asSurfaceInput(s)"></dos-surface-renderer>
-        }
-      </aside>
+      @if (visualSidebarSurfaces().length > 0) {
+        <aside
+          class="dos-shell-zone dos-shell-zone--sidebar"
+          data-zone="sidebar"
+          role="complementary"
+          [attr.aria-label]="ariaSidebarLabel() || null"
+          [attr.data-surface-count]="sidebarSurfaces().length"
+          [attr.data-visual-surface-count]="visualSidebarSurfaces().length"
+        >
+          @for (s of visualSidebarSurfaces(); track surfaceTrack(s, $index)) {
+            <dos-surface-renderer [surface]="asSurfaceInput(s)"></dos-surface-renderer>
+          }
+        </aside>
+      }
       <main
         class="cds--content dos-shell-zone dos-shell-zone--main"
         data-zone="main"
@@ -118,21 +121,23 @@ import type { ShellAction, ShellBanner } from '@dos/ui-contracts';
           </div>
         }
         <div class="dos-shell-zone__main-inner">
-          <section class="dos-shell-zone__page-actions" data-zone="page-actions">
-            @for (s of visualPageActionsSurfaces(); track surfaceTrack(s, $index)) {
-              <dos-surface-renderer [surface]="asSurfaceInput(s)"></dos-surface-renderer>
-            }
-          </section>
-          <section class="dos-shell-zone__page-content" data-zone="page-content">
-            @for (s of visualPageContentSurfaces(); track surfaceTrack(s, $index)) {
-              <dos-surface-renderer [surface]="asSurfaceInput(s)"></dos-surface-renderer>
-            }
-            @if (visualPageContentSurfaces().length === 0) {
-              @for (s of visualMainSurfaces(); track surfaceTrack(s, $index)) {
+          @for (s of visualMainSurfaces(); track surfaceTrack(s, $index)) {
+            <dos-surface-renderer [surface]="asSurfaceInput(s)"></dos-surface-renderer>
+          }
+          @if (visualPageActionsSurfaces().length > 0) {
+            <section class="dos-shell-zone__page-actions" data-zone="page-actions">
+              @for (s of visualPageActionsSurfaces(); track surfaceTrack(s, $index)) {
                 <dos-surface-renderer [surface]="asSurfaceInput(s)"></dos-surface-renderer>
               }
-            }
-          </section>
+            </section>
+          }
+          @if (visualPageContentSurfaces().length > 0) {
+            <section class="dos-shell-zone__page-content" data-zone="page-content">
+              @for (s of visualPageContentSurfaces(); track surfaceTrack(s, $index)) {
+                <dos-surface-renderer [surface]="asSurfaceInput(s)"></dos-surface-renderer>
+              }
+            </section>
+          }
           <router-outlet />
         </div>
       </main>
@@ -171,6 +176,17 @@ import type { ShellAction, ShellBanner } from '@dos/ui-contracts';
         'header header'
         'banners banners'
         'main sidebar';
+    }
+    /* Contract Gate: when UI-OS emits zero validated sidebar surfaces,
+       collapse the sidebar column so main fills the full width. No
+       empty 16rem reservation, no orphan aside. */
+    .dos-shell-host--no-sidebar,
+    .dos-shell-host--no-sidebar.dos-shell-host--rtl {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        'header'
+        'banners'
+        'main';
     }
     /* Mobile-first switch driven by UI-OS policy
        (layout.breakpoints.desktopMinPx). When the JS-detected viewport

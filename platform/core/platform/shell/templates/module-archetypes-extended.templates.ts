@@ -114,6 +114,11 @@ const DAX_STYLES = `
   @media (max-width: 768px)  { .dax-grid--3, .dax-grid--2 { grid-template-columns: 1fr; } }
 `;
 
+// Keep decorator styles statically analyzable for Angular AOT.
+const DAX_STYLES_WITH_EMPTY_STATE = `${DAX_STYLES}
+  .dax-empty-state { padding: 1rem; display: flex; flex-direction: column; gap: 0.75rem; }
+`;
+
 // ─── Shared base: typed inputs every extended renderer accepts ──────────────
 @Directive({ standalone: true })
 abstract class ExtendedTemplateBase {
@@ -664,9 +669,7 @@ export interface DelegationRule {
         </table>
       </cds-tile>
     }`,
-  styles: [DAX_STYLES + `
-    .dax-empty-state { padding: 1rem; display: flex; flex-direction: column; gap: 0.75rem; }
-  `],
+  styles: [DAX_STYLES_WITH_EMPTY_STATE],
 })
 export class DelegationCenterTemplateComponent extends ExtendedTemplateBase {
   archetypeKey = 'delegation-center';
