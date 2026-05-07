@@ -58,7 +58,6 @@ const ROOT       = join(__dirname, '../..');
 const SHELL_COMPONENT_MAP = {
   'shell.frame'              : null,
   'shell.workspace-header'   : 'DosWorkspaceHeaderComponent',
-  'shell.workspace-sidebar'  : 'DosWorkspaceSidebarComponent',
   'shell.empty-state'        : 'DosEmptyStateComponent',
   'shell.brand'              : 'DosShellBrandComponent',
   'shell.workspace-title'    : 'DosShellWorkspaceTitleComponent',

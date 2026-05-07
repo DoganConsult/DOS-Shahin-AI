@@ -28,7 +28,6 @@ import {
 } from '@angular/core';
 import { CommonModule, NgComponentOutlet } from '@angular/common';
 import { DosWorkspaceHeaderComponent } from './workspace-header.component';
-import { DosWorkspaceSidebarComponent } from './workspace-sidebar.component';
 import { DosEmptyStateComponent } from '../components/empty-state.component';
 import {
   DosShellBrandComponent,
@@ -63,7 +62,6 @@ export interface WorkspaceSurfaceInput {
 export const COMPONENT_MAP: Readonly<Record<string, Type<unknown> | null>> = Object.freeze({
   'shell.frame': null,
   'shell.workspace-header': DosWorkspaceHeaderComponent as Type<unknown>,
-  'shell.workspace-sidebar': DosWorkspaceSidebarComponent as Type<unknown>,
   'shell.empty-state': DosEmptyStateComponent as Type<unknown>,
   'shell.brand': DosShellBrandComponent as Type<unknown>,
   'shell.workspace-title': DosShellWorkspaceTitleComponent as Type<unknown>,

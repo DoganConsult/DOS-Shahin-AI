@@ -77,7 +77,6 @@ export * from './shell/inbox-center.component';
 export * from './shell/context-panel.component';
 export * from './shell/mobile-bottom-nav.component';
 export * from './shell/workspace-header.component';
-export * from './shell/workspace-sidebar.component';
 export * from './shell/surface-renderer.component';
 export * from './shell/visual-shell-surfaces.component';
 export * from './shell/quick-create.component';

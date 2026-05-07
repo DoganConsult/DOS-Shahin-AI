@@ -1,0 +1,26 @@
+sort_order	item_id	route	label_key	label_en	label_ar	permission	group_id	group_sort
+10	foundation.overview	/foundation/overview	modules.foundation.nav.overview	Overview	نظرة عامة	foundation.read	foundation.group.organization	10
+20	foundation.organization	/foundation/organization	modules.foundation.nav.organization	Organization	المؤسسة	foundation.read	foundation.group.organization	10
+30	foundation.business-units	/foundation/business-units	modules.foundation.nav.businessUnits	Business units	الوحدات التجارية	foundation.read	foundation.group.organization	10
+40	foundation.departments	/foundation/departments	modules.foundation.nav.departments	Departments	الإدارات	foundation.read	foundation.group.organization	10
+50	foundation.positions	/foundation/positions	modules.foundation.nav.positions	Positions	الوظائف	foundation.read	foundation.group.organization	10
+60	foundation.locations	/foundation/locations	modules.foundation.nav.locations	Locations	المواقع	foundation.read	foundation.group.organization	10
+10	foundation.users	/foundation/users	modules.foundation.nav.users	Users	المستخدمون	foundation.user.read	foundation.group.identity	20
+20	foundation.teams	/foundation/teams	modules.foundation.nav.teams	Teams	الفِرق	foundation.read	foundation.group.identity	20
+30	foundation.roles	/foundation/roles	modules.foundation.nav.roles	Roles	الأدوار	foundation.admin	foundation.group.identity	20
+10	foundation.committees	/foundation/committees	modules.foundation.nav.committees	Committees	اللجان	foundation.read	foundation.group.governance	30
+20	foundation.delegations	/foundation/delegations	modules.foundation.nav.delegations	Delegations	التفويضات	foundation.read	foundation.group.governance	30
+30	foundation.ownership-mapping	/foundation/ownership-mapping	modules.foundation.nav.ownershipMapping	Ownership mapping	خرائط الملكية	foundation.read	foundation.group.governance	30
+40	foundation.access-review	/foundation/access-review	modules.foundation.nav.accessReview	Access review	مراجعة الصلاحيات	access_review.write	foundation.group.governance	30
+50	foundation.policies	/foundation/policies	modules.foundation.nav.policies	Policies	السياسات	foundation.read	foundation.group.governance	30
+60	foundation.data-processing	/foundation/data-processing	modules.foundation.nav.dataProcessing	Data processing	معالجة البيانات	foundation.read	foundation.group.governance	30
+70	foundation.reference-data	/foundation/reference-data	modules.foundation.nav.referenceData	Reference data	البيانات المرجعية	foundation.read	foundation.group.governance	30
+80	foundation.audit	/foundation/audit	modules.foundation.nav.audit	Audit	التدقيق	audit_trail.read	foundation.group.governance	30
+90	foundation.settings	/foundation/settings	modules.foundation.nav.settings	Settings	الإعدادات	foundation.admin	foundation.group.governance	30
+100	foundation.permissions	/foundation/permissions		Permissions	الصلاحيات	foundation.rbac.read	foundation.group.main	40
+160	foundation.ownership	/foundation/ownership		Ownership	الملكية	foundation.data.read	foundation.group.main	40
+170	foundation.sod	/foundation/sod		Segregation of duties	فصل الواجبات	foundation.sod.write	foundation.group.main	40
+180	foundation.hierarchy-viz	/foundation/hierarchy-viz		Hierarchy	التسلسل	foundation.hierarchy.read	foundation.group.main	40
+190	foundation.user-lifecycle	/foundation/user-lifecycle		User lifecycle	دورة حياة المستخدم	foundation.user.write	foundation.group.main	40
+210	foundation.diagnostics	/foundation/diagnostics		Diagnostics	التشخيص	foundation.module.read	foundation.group.main	40
+(24 rows)

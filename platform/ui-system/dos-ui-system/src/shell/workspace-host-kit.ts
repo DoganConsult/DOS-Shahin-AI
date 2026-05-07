@@ -20,7 +20,6 @@ export * from './workspace-shell.contracts';
 
 // 10 workspace-shell surfaces (Phase WS-2..WS-6).
 export * from './workspace-header.component';
-export * from './workspace-sidebar.component';
 export * from './mobile-bottom-nav.component';
 export * from './command-search.component';
 export * from './workspace-status-bar.component';

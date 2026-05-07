@@ -1,16 +1,16 @@
 # Workspace Contract Audit Report (v2)
 
-Generated: 2026-05-07T05:22:30.969Z
+Generated: 2026-05-07T05:44:54.323Z
 
 ## Resolved Inputs
 
-- Tenant: `65f10f855eab8b30` (status=active, source=cli)
-- Caller user: `1f2b4b0b-551c-40a4-b150-896745818334` (member=true, source=cli)
-- Product: `foundation` (active=true, source=cli)
+- Tenant: `14f273cf260a4736` (status=active, source=auto-first-active)
+- Caller user: `70dd0034-bb20-4f9b-a9df-a308cd902efa` (member=true, source=auto-first-member)
+- Product: `foundation` (active=true, source=auto-first-active)
 
 ## Runtime Probe
 
-- URL: `http://localhost:4015/api/ui-os/workspace-runtime?tenant_id=65f10f855eab8b30&user_id=1f2b4b0b-551c-40a4-b150-896745818334&product_code=foundation`
+- URL: `http://localhost:4015/api/ui-os/workspace-runtime?tenant_id=14f273cf260a4736&user_id=70dd0034-bb20-4f9b-a9df-a308cd902efa&product_code=foundation`
 - HTTP status: 200
 - ok: true
 - surfaces emitted: 21

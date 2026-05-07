@@ -1,0 +1,156 @@
+-- AI Module Wave Enforcement - Phase 11
+-- Add all missing Permission keys for AI pages
+-- Owner: ui-os-service
+--
+-- This migration adds permission key references for AI pages.
+-- Note: Actual permission creation is handled by DAuth service.
+-- This migration documents the required permission keys in the access store.
+--
+-- This is a documentation migration - permissions are created in DAuth.
+-- The access store should reference these permission keys.
+
+BEGIN;
+
+-- =====================================================================
+-- DOCUMENTATION: Required Permission Keys
+-- =====================================================================
+-- This migration is for documentation purposes only.
+-- Actual permissions must be created in the DAuth service.
+--
+-- Gateway Permissions:
+-- ai.gateway.read
+-- ai.gateway.write
+-- ai.gateway.admin
+--
+-- Engine Permissions:
+-- ai.engine.read
+-- ai.engine.write
+-- ai.engine.admin
+--
+-- Kernel Permissions:
+-- ai.kernel.read
+-- ai.kernel.write
+-- ai.kernel.admin
+--
+-- Budget Permissions:
+-- ai.budgets.read
+-- ai.budgets.write
+-- ai.budgets.admin
+--
+-- Kill Switch Permissions:
+-- ai.kill_switches.read
+-- ai.kill_switches.write
+-- ai.kill_switches.admin
+--
+-- Prompt Permissions:
+-- ai.prompts.read
+-- ai.prompts.write
+-- ai.prompts.admin
+--
+-- Context Source Permissions:
+-- ai.context_sources.read
+-- ai.context_sources.write
+-- ai.context_sources.admin
+--
+-- Delegation Permissions:
+-- ai.delegations.read
+-- ai.delegations.write
+-- ai.delegations.admin
+--
+-- HITL Permissions:
+-- ai.hitl.read
+-- ai.hitl.write
+-- ai.hitl.admin
+--
+-- Code Search Permissions:
+-- ai.code_search.read
+-- ai.code_search.write
+-- ai.code_search.admin
+--
+-- Governance Policies Permissions:
+-- ai.governance.policies.read
+-- ai.governance.policies.write
+-- ai.governance.policies.admin
+--
+-- Governance Models Permissions:
+-- ai.governance.models.read
+-- ai.governance.models.write
+-- ai.governance.models.admin
+--
+-- Governance Assessments Permissions:
+-- ai.governance.assessments.read
+-- ai.governance.assessments.write
+-- ai.governance.assessments.admin
+--
+-- Governance Bias Permissions:
+-- ai.governance.bias.read
+-- ai.governance.bias.write
+-- ai.governance.bias.admin
+--
+-- Governance Fairness Permissions:
+-- ai.governance.fairness.read
+-- ai.governance.fairness.write
+-- ai.governance.fairness.admin
+--
+-- Governance Ethical Permissions:
+-- ai.governance.ethical.read
+-- ai.governance.ethical.write
+-- ai.governance.ethical.admin
+--
+-- Governance Impact Permissions:
+-- ai.governance.impact.read
+-- ai.governance.impact.write
+-- ai.governance.impact.admin
+--
+-- Governance Audit Permissions:
+-- ai.governance.audit.read
+-- ai.governance.audit.write
+-- ai.governance.audit.admin
+--
+-- Governance Data Lineage Permissions:
+-- ai.governance.data_lineage.read
+-- ai.governance.data_lineage.write
+-- ai.governance.data_lineage.admin
+--
+-- Governance Explainability Permissions:
+-- ai.governance.explainability.read
+-- ai.governance.explainability.write
+-- ai.governance.explainability.admin
+--
+-- Governance Transparency Permissions:
+-- ai.governance.transparency.read
+-- ai.governance.transparency.write
+-- ai.governance.transparency.admin
+--
+-- Governance Use Cases Permissions:
+-- ai.governance.use_cases.read
+-- ai.governance.use_cases.write
+-- ai.governance.use_cases.admin
+--
+-- Governance Validation Permissions:
+-- ai.governance.validation.read
+-- ai.governance.validation.write
+-- ai.governance.validation.admin
+--
+-- Governance Inventory Permissions:
+-- ai.governance.inventory.read
+-- ai.governance.inventory.write
+-- ai.governance.inventory.admin
+--
+-- Governance Monitoring Permissions:
+-- ai.governance.monitoring.read
+-- ai.governance.monitoring.write
+-- ai.governance.monitoring.admin
+
+COMMIT;
+
+-- =====================================================================
+-- VALIDATION
+-- =====================================================================
+-- Verify AI permission patterns in access store:
+-- grep -r "ai\\." platform/access/dos-access-store/src/access.store.ts | head -20
+-- Expected: AI permission patterns present
+
+-- Verify permission keys in routes:
+-- SELECT DISTINCT permission_key FROM dos.dynamic_ui_routes WHERE module_code='ai-os' AND permission_key IS NOT NULL;
+-- Expected: All AI routes have permission keys

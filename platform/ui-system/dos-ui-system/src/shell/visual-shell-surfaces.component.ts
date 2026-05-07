@@ -25,13 +25,16 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   Input,
   OnInit,
   inject,
   signal,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { UIShellModule, DialogModule, ButtonModule } from '../carbon';
 import { DosCarbonTileComponent } from '../carbon/dos-carbon-tile.component';
 import { DosIconComponent } from '../components/icon.component';
@@ -548,27 +551,55 @@ export class DosShellGlobalQuickActionsComponent {
 })
 export class DosShellSidebarNavComponent {
   private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
+
   @Input() items: ShellSidebarNavItem[] | null = [];
   @Input() emptyMessage = '';
   @Input() ariaLabel = '';
   @Input() badgeLabel = '';
 
+  /**
+   * Current normalized URL signal — drives OnPush re-evaluation of
+   * isActive() on every NavigationEnd. Without this signal, the
+   * component renders once at mount and never updates the highlighted
+   * item when the user navigates between routes.
+   */
+  private readonly currentUrl = signal<string>(this.normalizePath(this.router.url));
+
+  constructor() {
+    this.router.events
+      .pipe(
+        filter((ev): ev is NavigationEnd => ev instanceof NavigationEnd),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe((ev) => this.currentUrl.set(this.normalizePath(ev.urlAfterRedirects ?? ev.url)));
+  }
+
   private normalizePath(url: string): string {
     const q = url.indexOf('?');
     const u = q === -1 ? url : url.slice(0, q);
-    return u.length > 1 && u.endsWith('/') ? u.slice(0, -1) : u;
+    const h = u.indexOf('#');
+    const v = h === -1 ? u : u.slice(0, h);
+    return v.length > 1 && v.endsWith('/') ? v.slice(0, -1) : v;
   }
 
+  /**
+   * Active when the navigation path is exactly the current URL or is a
+   * canonical prefix (boundary-checked so '/foundation/users' does not
+   * match '/foundation/users-archive'). Single canonical mechanism — no
+   * label match, no hover, no hardcoded route list.
+   */
   isActive(item: ShellSidebarNavItem): boolean {
     const action = item.action;
-    if (!action || action.kind !== 'navigate') return false;
-    return this.normalizePath(this.router.url) === this.normalizePath(action.path);
+    if (!action || action.kind !== 'navigate' || !action.path) return false;
+    const target = this.normalizePath(action.path);
+    const url = this.currentUrl();
+    if (url === target) return true;
+    return url.startsWith(target + '/');
   }
 
   onNavigated(_navPromise: Promise<boolean>, item: ShellSidebarNavItem): void {
     if (!item.action || item.action.kind !== 'navigate') return;
-    // Carbon's cds-sidenav-item performs its own anchor navigation; re-route
-    // through the Angular router so the SPA outlet swaps without a full reload.
     void this.router.navigateByUrl(item.action.path);
   }
 }

@@ -196,16 +196,22 @@ export class DynamicTemplatePageComponent {
     // 4. Surface masthead scalars from props.masthead (Phase F-F7) so
     //    every template gets a populated header without needing per-
     //    page bespoke wiring. ui-os-service derives `masthead` from the
-    //    new title_en/ar, subtitle_en/ar, eyebrow_en/ar, ai_headline_en/ar,
+    //    title_en/ar, subtitle_en/ar, eyebrow_en/ar, ai_headline_en/ar,
     //    status_tags, primary_action columns on
-    //    `dos.ui_route_template_binding` (migration 0120).
+    //    `dos.ui_route_template_binding`. The resolver picks the locale-
+    //    correct value via pickStr() so the masthead.* fields are the
+    //    authoritative i18n source — they MUST override the legacy
+    //    props.title/subtitle/eyebrow seeds (those are locale-agnostic
+    //    English-only fallbacks left over from the seed JSON).
     const masthead = (p['masthead'] as Record<string, unknown> | undefined) ?? {};
-    if (masthead['title']        !== undefined) out['title']        ??= masthead['title'];
-    if (masthead['subtitle']     !== undefined) out['subtitle']     ??= masthead['subtitle'];
-    if (masthead['eyebrow']      !== undefined) out['eyebrow']      ??= masthead['eyebrow'];
-    if (masthead['aiHeadline']   !== undefined) out['aiHeadline']   ??= masthead['aiHeadline'];
-    if (masthead['statusTags']   !== undefined) out['statusTags']   ??= masthead['statusTags'];
-    if (masthead['primaryAction']!== undefined) out['primaryAction']??= masthead['primaryAction'];
+    const isFilled = (v: unknown): boolean =>
+      v !== undefined && v !== null && (typeof v !== 'string' || v.length > 0);
+    if (isFilled(masthead['title']))         out['title']         = masthead['title'];
+    if (isFilled(masthead['subtitle']))      out['subtitle']      = masthead['subtitle'];
+    if (isFilled(masthead['eyebrow']))       out['eyebrow']       = masthead['eyebrow'];
+    if (isFilled(masthead['aiHeadline']))    out['aiHeadline']    = masthead['aiHeadline'];
+    if (isFilled(masthead['statusTags']))    out['statusTags']    = masthead['statusTags'];
+    if (isFilled(masthead['primaryAction'])) out['primaryAction'] = masthead['primaryAction'];
 
     // 5. Marketing-landing archetype — inject live config signals so that
     //    DosMarketingHomePageComponent receives all required @Input() fields.
