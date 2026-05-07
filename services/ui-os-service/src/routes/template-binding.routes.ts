@@ -790,6 +790,28 @@ export function createTemplateBindingRouter(pool: DbPool): Router {
       // emitting `{ "masthead": { "title": "..." } }` in their patch.
       merged = deepMerge({ masthead }, merged);
 
+      // Locale-aware pillars normalization:
+      // If route props include pillarsAr/pillarsEn variants, expose a single
+      // locale-resolved `props.pillars` payload to browser consumers.
+      const pAr = merged['pillarsAr'];
+      const pEn = merged['pillarsEn'];
+      if (locale === 'ar' && pAr && typeof pAr === 'object') {
+        merged['pillars'] = pAr as Record<string, unknown>;
+      } else if (locale === 'en' && pEn && typeof pEn === 'object') {
+        merged['pillars'] = pEn as Record<string, unknown>;
+      }
+
+      // Keep top-level masthead scalars locale-correct in API output.
+      if (typeof masthead.title === 'string' && masthead.title.length > 0) {
+        merged['title'] = masthead.title;
+      }
+      if (typeof masthead.subtitle === 'string' && masthead.subtitle.length > 0) {
+        merged['subtitle'] = masthead.subtitle;
+      }
+      if (typeof masthead.eyebrow === 'string' && masthead.eyebrow.length > 0) {
+        merged['eyebrow'] = masthead.eyebrow;
+      }
+
       res.json({
         route: row.route,
         archetype: row.archetype,

@@ -655,6 +655,124 @@ async function loadShellBreadcrumbs(
   return out;
 }
 
+// ─── Shell-menu overlays (user / settings / global-quick-actions) ───
+// Each row carries a typed action_json (CHECK-constrained at the table
+// level). The resolver normalizes via normalizeShellAction so the wire
+// shape is the canonical ShellAction union. Empty result = no items.
+interface ShellMenuItemRow {
+  item_id: string;
+  sort_order: number;
+  label_en: string | null;
+  label_ar: string | null;
+  icon: string | null;
+  action_json: Record<string, unknown>;
+  perms_required: string[] | null;
+  badge?: string | null;
+  enabled: boolean;
+  version: number;
+}
+
+async function loadShellMenus(
+  pool: DbPool,
+  tenantId: string,
+  localePrimary: string,
+  callerRoles: readonly string[],
+): Promise<{
+  userMenu: Array<Record<string, unknown>>;
+  settingsMenu: Array<Record<string, unknown>>;
+  quickActions: Array<Record<string, unknown>>;
+}> {
+  const rolesParam = callerRoles.length > 0 ? [...callerRoles] : [''];
+  const [um, sm, qa] = await Promise.all([
+    pool.query<ShellMenuItemRow>(
+      `WITH cp AS (
+         SELECT COALESCE(array_agg(DISTINCT perm), ARRAY[]::text[]) AS perms
+           FROM platform_dauth.functional_roles fr
+           CROSS JOIN LATERAL unnest(COALESCE(fr.permissions, ARRAY[]::text[])) AS perm
+          WHERE fr.role_code = ANY($2::text[])
+       )
+       SELECT i.item_id, i.sort_order, i.label_en, i.label_ar, i.icon,
+              i.action_json, i.perms_required, i.enabled, i.version
+         FROM dos.workspace_user_menu_items i, cp
+        WHERE i.tenant_id = $1 AND i.enabled = true
+          AND (
+            COALESCE(array_length(i.perms_required, 1), 0) = 0
+            OR i.perms_required <@ cp.perms
+          )
+        ORDER BY i.sort_order, i.item_id`,
+      [tenantId, rolesParam],
+    ),
+    pool.query<ShellMenuItemRow>(
+      `WITH cp AS (
+         SELECT COALESCE(array_agg(DISTINCT perm), ARRAY[]::text[]) AS perms
+           FROM platform_dauth.functional_roles fr
+           CROSS JOIN LATERAL unnest(COALESCE(fr.permissions, ARRAY[]::text[])) AS perm
+          WHERE fr.role_code = ANY($2::text[])
+       )
+       SELECT i.item_id, i.sort_order, i.label_en, i.label_ar, i.icon,
+              i.action_json, i.perms_required, i.enabled, i.version
+         FROM dos.workspace_settings_menu_items i, cp
+        WHERE i.tenant_id = $1 AND i.enabled = true
+          AND (
+            COALESCE(array_length(i.perms_required, 1), 0) = 0
+            OR i.perms_required <@ cp.perms
+          )
+        ORDER BY i.sort_order, i.item_id`,
+      [tenantId, rolesParam],
+    ),
+    pool.query<ShellMenuItemRow>(
+      `WITH cp AS (
+         SELECT COALESCE(array_agg(DISTINCT perm), ARRAY[]::text[]) AS perms
+           FROM platform_dauth.functional_roles fr
+           CROSS JOIN LATERAL unnest(COALESCE(fr.permissions, ARRAY[]::text[])) AS perm
+          WHERE fr.role_code = ANY($2::text[])
+       )
+       SELECT i.item_id, i.sort_order, i.label_en, i.label_ar, i.icon,
+              i.action_json, i.perms_required, i.badge, i.enabled, i.version
+         FROM dos.workspace_global_quick_actions i, cp
+        WHERE i.tenant_id = $1 AND i.enabled = true
+          AND (
+            COALESCE(array_length(i.perms_required, 1), 0) = 0
+            OR i.perms_required <@ cp.perms
+          )
+        ORDER BY i.sort_order, i.item_id`,
+      [tenantId, rolesParam],
+    ),
+  ]);
+
+  const localized = (row: ShellMenuItemRow) =>
+    localePrimary === 'ar'
+      ? (row.label_ar ?? row.label_en ?? '')
+      : (row.label_en ?? row.label_ar ?? '');
+
+  const project = (rows: ShellMenuItemRow[], includeBadge = false) => {
+    const out: Array<Record<string, unknown>> = [];
+    for (const r of rows) {
+      const action = normalizeShellAction(r.action_json);
+      if (!action) continue;
+      const label = localized(r).trim();
+      if (!label) continue;
+      const item: Record<string, unknown> = {
+        id: r.item_id,
+        label,
+        action,
+        icon: r.icon ?? null,
+        enabled: r.enabled,
+        version: r.version,
+      };
+      if (includeBadge && r.badge) item['badge'] = r.badge;
+      out.push(item);
+    }
+    return out;
+  };
+
+  return {
+    userMenu: project(um.rows),
+    settingsMenu: project(sm.rows),
+    quickActions: project(qa.rows, true),
+  };
+}
+
 async function loadShortcuts(pool: DbPool, tenantId: string) {
   const r = await pool.query<ShortcutRow>(
     `SELECT shortcut_id, combo, action_json, when_clause, sort_order
@@ -958,6 +1076,18 @@ function enrichVisualShellProps(
   const chromeInboxAria       = typeof chrome['shell.header.inbox.aria-label'] === 'string' ? (chrome['shell.header.inbox.aria-label'] as string).trim() : '';
   const chromeCmdSearchAction = normalizeShellAction(chrome['shell.header.commandSearch.action']);
   const chromeInboxAction     = normalizeShellAction(chrome['shell.header.inbox.action']);
+  // Wave-36 typed shell-control click actions and overlay item lists.
+  const chromeUserMenuAction  = normalizeShellAction(chrome['shell.user-menu.action']);
+  const chromeSettingsAction  = normalizeShellAction(chrome['shell.settings.action']);
+  const chromeUserMenuItems   = Array.isArray(chrome['shell.user-menu.items'])
+    ? (chrome['shell.user-menu.items'] as Array<Record<string, unknown>>)
+    : [];
+  const chromeSettingsItems   = Array.isArray(chrome['shell.settings.items'])
+    ? (chrome['shell.settings.items'] as Array<Record<string, unknown>>)
+    : [];
+  const chromeQuickActionItems = Array.isArray(chrome['shell.global-quick-actions.items'])
+    ? (chrome['shell.global-quick-actions.items'] as Array<Record<string, unknown>>)
+    : [];
 
   for (const s of surfaces) {
     const props = (s.props ?? {}) as Record<string, unknown>;
@@ -988,7 +1118,12 @@ function enrichVisualShellProps(
         break;
       }
       case WS_SHELL_SURFACE.USER_MENU: {
-        const next: Record<string, unknown> = { ...props, menu: accountMenu, placement: 'trailing' };
+        // Wave-36: prefer typed overlay items projected from
+        // dos.workspace_user_menu_items; legacy chrome.accountMenu kept
+        // only as a fallback while binding rolls out.
+        const menu = chromeUserMenuItems.length > 0 ? chromeUserMenuItems : accountMenu;
+        const next: Record<string, unknown> = { ...props, menu, placement: 'trailing' };
+        if (chromeUserMenuAction) next['action'] = chromeUserMenuAction;
         if (chromeUserMenuLabel) next['label']     = chromeUserMenuLabel;
         if (chromeUserMenuAria)  next['ariaLabel'] = chromeUserMenuAria;
         s.props = next;
@@ -996,12 +1131,20 @@ function enrichVisualShellProps(
       }
       case WS_SHELL_SURFACE.SETTINGS_ACTION: {
         const next: Record<string, unknown> = { ...props, placement: 'trailing' };
-        // Only wire if settings navigate path is metadata-eligible (and
-        // binding-present when required); mirrors account-menu enrichment.
-        const enabled = settingsEntry?.['enabled'] !== false;
-        if (settingsEntry?.['action'] && enabled) next['action'] = settingsEntry['action'];
-        next['enabled'] = enabled;
-        next['routeExists'] = settingsEntry?.['routeExists'] ?? null;
+        // Wave-36: settings control now carries a typed click action
+        // (open_context_tab settings) and an overlay menu list. Legacy
+        // accountMenu settingsEntry still feeds enabled/routeExists when
+        // an explicit chrome action is absent.
+        if (chromeSettingsAction) {
+          next['action'] = chromeSettingsAction;
+          next['enabled'] = true;
+        } else {
+          const enabled = settingsEntry?.['enabled'] !== false;
+          if (settingsEntry?.['action'] && enabled) next['action'] = settingsEntry['action'];
+          next['enabled'] = enabled;
+          next['routeExists'] = settingsEntry?.['routeExists'] ?? null;
+        }
+        if (chromeSettingsItems.length > 0) next['menu'] = chromeSettingsItems;
         if (chromeSettingsAria) next['ariaLabel'] = chromeSettingsAria;
         s.props = next;
         break;
@@ -1014,6 +1157,7 @@ function enrichVisualShellProps(
         if (chromeInboxAria) next['inboxAriaLabel'] = chromeInboxAria;
         if (chromeCmdSearchAction) next['commandSearchAction'] = chromeCmdSearchAction;
         if (chromeInboxAction) next['inboxAction'] = chromeInboxAction;
+        if (chromeQuickActionItems.length > 0) next['items'] = chromeQuickActionItems;
         s.props = next;
         break;
       }
@@ -1113,7 +1257,7 @@ export function createWorkspaceShellRouter(pool: DbPool): Router {
       const catalog = await loadCatalog(pool);
       const surfaceRows = await loadSurfaces(pool, tenantId, catalog, callerRoles);
 
-      const [nav, chrome, shortcuts, banners, policies, moduleCards, navigateEligibleRoutes, landingRoute, tplStrings] = await Promise.all([
+      const [nav, chrome, shortcuts, banners, policies, moduleCards, navigateEligibleRoutes, landingRoute, tplStrings, shellMenus] = await Promise.all([
         loadNav(pool, localePrimary, tenantId, callerRoles),
         loadChrome(pool, tenantId),
         loadShortcuts(pool, tenantId),
@@ -1123,6 +1267,7 @@ export function createWorkspaceShellRouter(pool: DbPool): Router {
         loadNavigateEligibleRoutes(pool),
         loadLandingRoute(pool, tenantId),
         loadShellTplStrings(pool, localePrimary),
+        loadShellMenus(pool, tenantId, localePrimary, callerRoles),
       ]);
       // Breadcrumbs depend on landingRoute for the 'workspace' href.
       const breadcrumbs = await loadShellBreadcrumbs(pool, localePrimary, landingRoute);
@@ -1132,6 +1277,13 @@ export function createWorkspaceShellRouter(pool: DbPool): Router {
       if (landingRoute !== null) chrome['landingRoute'] = landingRoute;
       if (Object.keys(tplStrings).length > 0) chrome['tplStrings'] = tplStrings;
       if (Object.keys(breadcrumbs).length > 0) chrome['breadcrumbs'] = breadcrumbs;
+      // Shell-menu overlays — typed ShellAction lists projected from
+      // dos.workspace_user_menu_items / workspace_settings_menu_items /
+      // workspace_global_quick_actions. Empty list = no overlay items
+      // (NO FRONTEND INVENTION).
+      if (shellMenus.userMenu.length > 0)     chrome['shell.user-menu.items']            = shellMenus.userMenu;
+      if (shellMenus.settingsMenu.length > 0) chrome['shell.settings.items']             = shellMenus.settingsMenu;
+      if (shellMenus.quickActions.length > 0) chrome['shell.global-quick-actions.items'] = shellMenus.quickActions;
 
       // Live-enrich the visual shell surfaces' props from the resolver
       // outputs above (sidebar nav, account menu, module cards). Mutates

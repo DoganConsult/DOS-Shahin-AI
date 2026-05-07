@@ -1,0 +1,176 @@
+openapi: 3.1.0
+info:
+  title: AI Engine Service
+  version: 1.0.0
+  description: >
+    Per-service contract for the AI Engine plane. Owns inference
+    orchestration, agents (A01..A13), kernel, Temporal, and LangGraph.
+    Mounted at /api/ai-engine. Aggregated into platform/ai/contracts/ai-os.openapi.yaml.
+servers:
+  - url: /api/ai-engine
+    description: AI Engine base
+tags:
+  - { name: ops,       description: Health and readiness }
+  - { name: agents,    description: Agent invocation and registry (A01..A13) }
+  - { name: kernel,    description: Kernel — process table, scheduler, IPC, memory, log }
+  - { name: temporal,  description: Temporal workflow control plane }
+  - { name: langgraph, description: LangGraph orchestration runs }
+paths:
+  /health:
+    get:
+      summary: Health probe
+      tags: [ops]
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/Health' } } } }
+  /ready:
+    get:
+      summary: Readiness probe
+      tags: [ops]
+      responses:
+        '200': { description: Ready, content: { application/json: { schema: { $ref: '#/components/schemas/Health' } } } }
+  /status:
+    get:
+      summary: Engine status (active inferences, agent executions, uptime)
+      tags: [ops]
+      responses:
+        '200': { description: Status, content: { application/json: { schema: { $ref: '#/components/schemas/EngineStatusDTO' } } } }
+  /agents:
+    get:
+      summary: List canonical agents (A01..A13)
+      tags: [agents]
+      responses:
+        '200':
+          description: Catalog
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: '#/components/schemas/AgentCatalogEntry' }
+  /agents/{agentCode}/invoke:
+    post:
+      summary: Invoke an agent (sync or async / HITL)
+      tags: [agents]
+      parameters:
+        - { name: agentCode, in: path, required: true, schema: { type: string, pattern: '^A(0[1-9]|1[0-3])$' } }
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: '#/components/schemas/AIInvokeRequest' } } }
+      responses:
+        '200': { description: Completed,         content: { application/json: { schema: { $ref: '#/components/schemas/AIInvokeResponse' } } } }
+        '202': { description: Accepted (HITL),   content: { application/json: { schema: { $ref: '#/components/schemas/AIInvokeResponse' } } } }
+        '403': { description: Governance denied, content: { application/json: { schema: { $ref: '#/components/schemas/AIGovernanceDecision' } } } }
+  /agents/{agentCode}/start:
+    post:
+      summary: Start a stopped agent (workflow ai_agent_lifecycle)
+      tags: [agents]
+      parameters:
+        - { name: agentCode, in: path, required: true, schema: { type: string, pattern: '^A(0[1-9]|1[0-3])$' } }
+      responses:
+        '202': { description: Accepted }
+  /agents/{agentCode}/stop:
+    post:
+      summary: Stop an active agent (workflow ai_agent_lifecycle)
+      tags: [agents]
+      parameters:
+        - { name: agentCode, in: path, required: true, schema: { type: string, pattern: '^A(0[1-9]|1[0-3])$' } }
+      responses:
+        '202': { description: Accepted }
+  /kernel/status:
+    get:
+      summary: Kernel status (state, uptime, agent count)
+      tags: [kernel]
+      responses:
+        '200': { description: Kernel status, content: { application/json: { schema: { $ref: '#/components/schemas/KernelStatus' } } } }
+  /kernel/processes:
+    get:
+      summary: Kernel process table
+      tags: [kernel]
+      responses:
+        '200':
+          description: Process list
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/ProcessDTO' }
+  /kernel/restart:
+    post:
+      summary: Restart kernel (workflow ai_kernel_restart — HITL)
+      tags: [kernel]
+      responses:
+        '202': { description: Accepted }
+  /temporal/workflows:
+    get:
+      summary: List Temporal workflows
+      tags: [temporal]
+      responses:
+        '200': { description: List }
+  /langgraph/runs:
+    get:
+      summary: List LangGraph runs
+      tags: [langgraph]
+      responses:
+        '200': { description: List }
+components:
+  schemas:
+    Health:
+      type: object
+      properties:
+        status: { type: string, enum: [ok, degraded, down] }
+        version: { type: string }
+        uptimeSec: { type: number }
+    EngineStatusDTO:
+      type: object
+      additionalProperties: false
+      properties:
+        activeInferences: { type: integer, minimum: 0 }
+        agentExecutions:  { type: integer, minimum: 0 }
+        kernelUptimeSec:  { type: integer, minimum: 0 }
+        processCount:     { type: integer, minimum: 0 }
+    AgentCatalogEntry:
+      type: object
+      properties:
+        agentCode:    { type: string, pattern: '^A(0[1-9]|1[0-3])$' }
+        name:         { type: string }
+        scope:        { type: string }
+        level:        { type: string, enum: [L1, L2] }
+        riskDefault:  { type: string, enum: [low, medium, high] }
+        active:       { type: boolean }
+    AIInvokeRequest:
+      type: object
+      required: [input]
+      properties:
+        input:       { type: string }
+        context:     { type: object, additionalProperties: true }
+        autonomy:    { type: string, enum: [L1, L2] }
+        requestor:   { type: string }
+    AIInvokeResponse:
+      type: object
+      properties:
+        runId:    { type: string }
+        status:   { type: string, enum: [completed, accepted, hitl_pending] }
+        output:   { type: object, additionalProperties: true }
+        decision: { $ref: '#/components/schemas/AIGovernanceDecision' }
+    AIGovernanceDecision:
+      type: object
+      properties:
+        decision: { type: string, enum: [allow, deny, hitl] }
+        reason:   { type: string }
+        policyId: { type: string }
+    KernelStatus:
+      type: object
+      properties:
+        state:     { type: string, enum: [running, paused, stopped, recovering] }
+        uptimeSec: { type: integer }
+        agentCount:{ type: integer }
+    ProcessDTO:
+      type: object
+      properties:
+        pid:       { type: string }
+        agentCode: { type: string }
+        state:     { type: string }
+        cpu:       { type: number }
+        memoryMb:  { type: number }

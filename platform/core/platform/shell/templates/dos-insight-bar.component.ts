@@ -42,7 +42,7 @@ import { ModuleInsightPillars } from './module-template.types';
         @if (pillars.whatChanged) {
           <div class="dib-pillar dib-pillar--change" data-pillar="what-changed">
             <span class="dib-pillar-label">{{ pillarLabel('whatChanged') }}</span>
-            <cds-ai-label kind="inline" size="sm" class="dib-ai-badge">AI</cds-ai-label>
+            <cds-ai-label kind="inline" size="sm" class="dib-ai-badge">{{ uiText(aiLabel, aiLabelAr) }}</cds-ai-label>
             <p class="dib-pillar-value">{{ pillars.whatChanged }}</p>
           </div>
         }
@@ -154,6 +154,8 @@ import { ModuleInsightPillars } from './module-template.types';
 export class DosInsightBarComponent {
   @Input() pillars: ModuleInsightPillars | null = null;
   @Input() archetype = '';
+  @Input() aiLabel = 'AI';
+  @Input() aiLabelAr = 'ذكاء اصطناعي';
   @Output() actionClick = new EventEmitter<unknown>();
 
   pillarLabel(key: keyof NonNullable<ModuleInsightPillars['labels']>): string {
@@ -163,5 +165,13 @@ export class DosInsightBarComponent {
   hasAnyPillar(): boolean {
     return !!(this.pillars?.whatChanged || this.pillars?.whyItMatters ||
       this.pillars?.riskOrOpportunity || this.pillars?.nextAction || this.pillars?.evidence);
+  }
+
+  private isRtl(): boolean {
+    return typeof document !== 'undefined' && document.documentElement.dir === 'rtl';
+  }
+
+  uiText(en: string, ar?: string): string {
+    return this.isRtl() ? (ar ?? en) : en;
   }
 }

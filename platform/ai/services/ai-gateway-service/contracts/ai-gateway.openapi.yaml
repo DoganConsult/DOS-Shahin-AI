@@ -1,0 +1,141 @@
+openapi: 3.1.0
+info:
+  title: AI Gateway Service
+  version: 1.0.0
+  description: >
+    Per-service contract for the AI Gateway plane. Owns provider routing,
+    quota, cost, and rate-limit policy enforcement. Mounted at /api/ai
+    by the gateway. Aggregated into platform/ai/contracts/ai-os.openapi.yaml.
+servers:
+  - url: /api/ai
+    description: AI Gateway base
+tags:
+  - { name: ops,     description: Health and readiness }
+  - { name: gateway, description: Gateway stats, quota, cost, rate-limit, routing }
+paths:
+  /health:
+    get:
+      summary: Health probe
+      tags: [ops]
+      responses:
+        '200':
+          description: OK
+          content: { application/json: { schema: { $ref: '#/components/schemas/Health' } } }
+  /ready:
+    get:
+      summary: Readiness probe
+      tags: [ops]
+      responses:
+        '200':
+          description: Ready
+          content: { application/json: { schema: { $ref: '#/components/schemas/Health' } } }
+  /stats:
+    get:
+      summary: Gateway aggregate stats (request count, latency, error rate)
+      tags: [gateway]
+      responses:
+        '200':
+          description: Stats payload
+          content: { application/json: { schema: { $ref: '#/components/schemas/GatewayStatsDTO' } } }
+        '404':
+          description: Not seeded
+          content: { application/json: { schema: { $ref: '#/components/schemas/NotSeeded' } } }
+  /quota:
+    get:
+      summary: Active quota envelope and consumption
+      tags: [gateway]
+      responses:
+        '200':
+          description: Quota envelope
+          content: { application/json: { schema: { $ref: '#/components/schemas/QuotaDTO' } } }
+        '404':
+          description: Not seeded
+          content: { application/json: { schema: { $ref: '#/components/schemas/NotSeeded' } } }
+    post:
+      summary: Update quota (workflow ai_quota_update — HITL approval)
+      tags: [gateway]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/QuotaUpdateRequest' }
+      responses:
+        '202': { description: Accepted (workflow opened) }
+        '403': { description: Governance denied }
+  /cost:
+    get:
+      summary: Cost rollup (today + projection)
+      tags: [gateway]
+      responses:
+        '200':
+          description: Cost payload
+          content: { application/json: { schema: { $ref: '#/components/schemas/CostDTO' } } }
+        '404':
+          description: Not seeded
+          content: { application/json: { schema: { $ref: '#/components/schemas/NotSeeded' } } }
+  /routing:
+    get:
+      summary: Active provider routing table
+      tags: [gateway]
+      responses:
+        '200': { description: Routing table }
+    post:
+      summary: Configure routing (workflow ai_routing_config — HITL approval)
+      tags: [gateway]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { type: object, additionalProperties: true } } }
+      responses:
+        '202': { description: Accepted }
+  /rate-limit:
+    get:
+      summary: Active rate-limit configuration
+      tags: [gateway]
+      responses:
+        '200': { description: Rate-limit config }
+components:
+  schemas:
+    Health:
+      type: object
+      required: [status]
+      properties:
+        status: { type: string, enum: [ok, degraded, down] }
+        version: { type: string }
+        uptimeSec: { type: number }
+    NotSeeded:
+      type: object
+      required: [error]
+      properties:
+        error: { type: string, example: GATEWAY_RESOURCE_NOT_SEEDED }
+        hint:  { type: string }
+    GatewayStatsDTO:
+      type: object
+      additionalProperties: false
+      properties:
+        totalRequests:   { type: integer, minimum: 0 }
+        requestLatencyMs:{ type: number, minimum: 0 }
+        errorRate:       { type: number, minimum: 0, maximum: 1 }
+        windowSec:       { type: integer, minimum: 1 }
+    QuotaDTO:
+      type: object
+      additionalProperties: false
+      properties:
+        limit:        { type: integer, minimum: 0 }
+        used:         { type: integer, minimum: 0 }
+        remaining:    { type: integer, minimum: 0 }
+        usagePercent: { type: number,  minimum: 0, maximum: 100 }
+        resetAt:      { type: string, format: date-time }
+    QuotaUpdateRequest:
+      type: object
+      required: [limit]
+      properties:
+        limit:    { type: integer, minimum: 0 }
+        reason:   { type: string }
+    CostDTO:
+      type: object
+      additionalProperties: false
+      properties:
+        costToday:       { type: number, minimum: 0 }
+        costMonthToDate: { type: number, minimum: 0 }
+        projectionMonth: { type: number, minimum: 0 }
+        currency:        { type: string, example: USD }

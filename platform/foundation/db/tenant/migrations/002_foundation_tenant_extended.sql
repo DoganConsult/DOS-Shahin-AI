@@ -127,3 +127,57 @@ CREATE TABLE IF NOT EXISTS "__TENANT_SCHEMA__".foundation_sod_violations (
   detected_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   status         TEXT NOT NULL DEFAULT 'open'
 );
+
+-- Tenant SoD rules — canonical table read by foundation sod-check.service.
+-- Mirrors the schema declared by platform/dauth/migrations/public/131_sod_rules.sql
+-- so the foundation service can run on any freshly provisioned tenant
+-- without depending on dauth migrations being applied separately.
+CREATE TABLE IF NOT EXISTS "__TENANT_SCHEMA__".sod_rules (
+  id            BIGSERIAL PRIMARY KEY,
+  tenant_id     UUID NOT NULL,
+  rule_code     TEXT NOT NULL,
+  rule_name     TEXT NOT NULL,
+  description   TEXT,
+  severity      TEXT NOT NULL DEFAULT 'high'
+                  CHECK (severity IN ('low','medium','high','critical')),
+  conflict_a    TEXT[] NOT NULL,
+  conflict_b    TEXT[] NOT NULL,
+  scope         TEXT NOT NULL DEFAULT 'tenant'
+                  CHECK (scope IN ('tenant','workspace','module')),
+  scope_value   TEXT,
+  action        TEXT NOT NULL DEFAULT 'block'
+                  CHECK (action IN ('block','warn','audit')),
+  enabled       BOOLEAN NOT NULL DEFAULT true,
+  metadata      JSONB NOT NULL DEFAULT '{}'::jsonb,
+  created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  CONSTRAINT sod_rules_tenant_code_uk UNIQUE (tenant_id, rule_code)
+);
+
+CREATE INDEX IF NOT EXISTS sod_rules_tenant_enabled_idx
+  ON "__TENANT_SCHEMA__".sod_rules(tenant_id, enabled);
+
+-- Module-level SoD rules per tenant — canonical schema mirroring
+-- platform/dauth/packages/core/registry/module-security-seeder.service.ts
+-- so DAuth evaluateModuleSod() finds the table on every fresh tenant.
+CREATE TABLE IF NOT EXISTS "__TENANT_SCHEMA__".module_sod_rules (
+  id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  module_code         TEXT NOT NULL,
+  action_a            TEXT NOT NULL,
+  action_b            TEXT NOT NULL,
+  conflict_type       TEXT NOT NULL DEFAULT 'hard'
+                        CHECK (conflict_type IN ('hard','soft')),
+  resolution_strategy TEXT NOT NULL DEFAULT 'block'
+                        CHECK (resolution_strategy IN ('block','warn','escalate','allow')),
+  description_en      TEXT,
+  description_ar      TEXT,
+  severity            TEXT NOT NULL DEFAULT 'high'
+                        CHECK (severity IN ('low','medium','high','critical')),
+  active              BOOLEAN NOT NULL DEFAULT true,
+  created_at          TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at          TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  CONSTRAINT uq_tenant_module_sod_rules UNIQUE (module_code, action_a, action_b)
+);
+
+CREATE INDEX IF NOT EXISTS module_sod_rules_module_active_idx
+  ON "__TENANT_SCHEMA__".module_sod_rules(module_code, active);

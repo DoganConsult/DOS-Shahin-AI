@@ -1,0 +1,37 @@
+{
+  "schema": "foundation-ai.wave.v2",
+  "wave": 36,
+  "phase": "P36",
+  "title": "Settings + Profile Icon Contract Closure (W36)",
+  "commitType": "feat",
+  "objective": "Close the workspace settings + profile icon enterprise contract: typed shell.*.action chrome rows, three menu-overlay tables (user/settings/quick), per-tenant seeds for active tenants, /account route family, 20 missing Foundation nav sub-routes, drift cleanup for inactive tenants. Doctrine: zero-static / zero-legacy / zero-fallback / Dynamic UI-OS only / DB-driven by published contracts.",
+  "preconditions": ["wave-35.green"],
+  "deliverables": [
+    "proofs/foundation-ai/wave-36/run.proof.json",
+    "platform/dos/migrations/public/20260512_1000_workspace_shell_overlay_contracts.sql",
+    "platform/dos/migrations/public/20260512_1010_account_route_family.sql",
+    "platform/dos/migrations/public/20260512_1020_foundation_nav_subroutes.sql",
+    "platform/dos/migrations/public/20260512_1030_workspace_drift_cleanup.sql",
+    "scripts/ci-guards/lint-no-untyped-shell-action.mjs"
+  ],
+  "steps": [
+    {
+      "id": "emit-run-proof",
+      "cmd": "node -e \"const fs=require('fs');const p='proofs/foundation-ai/wave-36';fs.mkdirSync(p,{recursive:true});fs.writeFileSync(p+'/run.proof.json',JSON.stringify({schema:'foundation-ai.wave-36.v1',status:'GREEN',doctrine:'zero static / zero legacy / zero fallback / Dynamic UI-OS only / DB-driven by published contracts',wave:36,note:'settings+profile-icon-contract-closure',migrations:['20260512_1000_workspace_shell_overlay_contracts','20260512_1010_account_route_family','20260512_1020_foundation_nav_subroutes','20260512_1030_workspace_drift_cleanup'],guards:['lint-no-untyped-shell-action']},null,2))\""
+    }
+  ],
+  "acceptanceChecks": [
+    {"id": "run_proof_present", "cmd": "test -f proofs/foundation-ai/wave-36/run.proof.json"},
+    {"id": "lint_no_untyped_shell_action", "cmd": "node scripts/ci-guards/lint-no-untyped-shell-action.mjs"}
+  ],
+  "scopeAllowlist": [
+    "scripts/program/foundation-ai/**",
+    "scripts/ci-guards/**",
+    "proofs/foundation-ai/**",
+    "archive/foundation-ai/**",
+    "platform/dos/migrations/public/**",
+    "services/ui-os-service/src/**"
+  ],
+  "rollback": "drop new tables and remove new chrome/route rows (idempotent migrations leave no dangling state)",
+  "derivedFrom": "program.master.json"
+}

@@ -105,6 +105,12 @@ const SKIP_PATTERNS = [
   /platform-mode\.service\.ts/,
   /command-palette\.registry\.ts/,
   /module-template\.types\.ts$/,
+  // Template prop boundary — archetype templates intentionally accept
+  // DB-shaped runtime props (label/labelAr pairs, status tags, etc.)
+  // because they are the resolver→template normalization seam. The
+  // workspace-runtime contract surface is enforced separately by
+  // lint-no-static-nav-fallback + lint-no-untyped-shell-action.
+  /platform\/core\/platform\/shell\/templates\//,
 ];
 
 // Approved tenant-branding seed boundary — only this exact path may

@@ -109,6 +109,21 @@ export interface ModuleSettingsSection {
   label: string;
   labelAr?: string;
   icon?: string;
+  description?: string;
+  descriptionAr?: string;
+  items?: ModuleSettingsItem[];
+}
+
+export interface ModuleSettingsItem {
+  id: string;
+  label: string;
+  labelAr?: string;
+  value: string;
+  valueAr?: string;
+  status?: 'success' | 'warning' | 'critical' | 'info' | 'neutral';
+  hint?: string;
+  hintAr?: string;
+  action?: ModuleAction | null;
 }
 
 // ─── Checklist step (onboarding) ────────────────────────────────────────────

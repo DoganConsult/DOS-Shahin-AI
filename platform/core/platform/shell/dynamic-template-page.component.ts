@@ -213,6 +213,18 @@ export class DynamicTemplatePageComponent {
     if (isFilled(masthead['statusTags']))    out['statusTags']    = masthead['statusTags'];
     if (isFilled(masthead['primaryAction'])) out['primaryAction'] = masthead['primaryAction'];
 
+    // Optional locale-specific pillar variants.
+    // If present, keep a single `pillars` contract for templates by selecting
+    // pillarsAr in Arabic mode or pillarsEn in English mode.
+    const localeForPillars = this.currentLocale();
+    const pillarsAr = p['pillarsAr'];
+    const pillarsEn = p['pillarsEn'];
+    if (localeForPillars === 'ar' && pillarsAr && typeof pillarsAr === 'object') {
+      out['pillars'] = pillarsAr as Record<string, unknown>;
+    } else if (localeForPillars === 'en' && pillarsEn && typeof pillarsEn === 'object') {
+      out['pillars'] = pillarsEn as Record<string, unknown>;
+    }
+
     // 5. Marketing-landing archetype — inject live config signals so that
     //    DosMarketingHomePageComponent receives all required @Input() fields.
     //    homeContent carries hero/trustPills/valueProps/agenticProof/platform
@@ -231,7 +243,17 @@ export class DynamicTemplatePageComponent {
       out['downloadAssets']   = p['downloadAssets'] ?? [];
     }
 
-    // 6. Always last — never let a template-supplied prop override
+    // 6. Role-model defaults (session-driven, never hardcoded in templates).
+    // If DB omits these keys, infer from AccessStore so templates can apply
+    // full/read-only/limited behavior consistently.
+    if (out['currentRole'] === undefined) {
+      out['currentRole'] = this.resolveCurrentRole();
+    }
+    if (out['writeRoles'] === undefined) {
+      out['writeRoles'] = this.defaultWriteRolesForRoute(b.route);
+    }
+
+    // 7. Always last — never let a template-supplied prop override
     //    these contract metadata fields.
     out['archetype'] = b.archetype;
     out['route']     = b.route;
@@ -497,5 +519,45 @@ export class DynamicTemplatePageComponent {
     const queryLocale = new URLSearchParams(window.location.search).get('locale');
     const storedLocale = window.localStorage.getItem('locale');
     return queryLocale === 'ar' || storedLocale === 'ar' ? 'ar' : 'en';
+  }
+
+  private resolveCurrentRole(): string {
+    const roles = this.access.snapshot().roles.map((r) => String(r).toLowerCase().trim());
+    const hasAny = (...aliases: string[]) => aliases.some((a) => roles.includes(a.toLowerCase()));
+    if (hasAny('platform_super_admin', 'role_platform_super_admin', 'platform_admin', 'role_platform_admin')) {
+      return 'platform_super_admin';
+    }
+    if (hasAny('tenant_admin', 'role_tenant_owner', 'tenant_owner')) {
+      return 'tenant_admin';
+    }
+    if (hasAny('foundation_admin', 'role_foundation_admin')) {
+      return 'foundation_admin';
+    }
+    if (hasAny('foundation_operator', 'role_foundation_operator')) {
+      return 'foundation_operator';
+    }
+    if (hasAny('foundation_auditor', 'role_foundation_auditor')) {
+      return 'foundation_auditor';
+    }
+    if (hasAny('risk_manager', 'role_risk_manager')) {
+      return 'risk_manager';
+    }
+    if (hasAny('compliance_manager', 'role_compliance_manager')) {
+      return 'compliance_manager';
+    }
+    if (hasAny('compliance_analyst', 'role_compliance_analyst')) {
+      return 'compliance_analyst';
+    }
+    if (hasAny('compliance_auditor', 'role_compliance_auditor')) {
+      return 'compliance_auditor';
+    }
+    return 'standard_user';
+  }
+
+  private defaultWriteRolesForRoute(route: string): string[] {
+    if (route.startsWith('/foundation/')) {
+      return ['platform_super_admin', 'tenant_admin', 'foundation_admin', 'foundation_operator'];
+    }
+    return ['platform_super_admin', 'tenant_admin'];
   }
 }

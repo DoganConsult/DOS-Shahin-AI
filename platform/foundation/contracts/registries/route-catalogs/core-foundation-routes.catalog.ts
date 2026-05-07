@@ -355,6 +355,44 @@ export const CORE_FOUNDATION_ROUTES: RouteDefinition[] = [
     guards: { module: "foundation" },
     order: 358,
   },
+  // Wave 1 backend completion — authority + sod live router lives in the
+  // foundation aggregator under /api/foundation/sod and /api/foundation/authority.
+  // Catalog entries below mirror the live mount paths so route-catalog
+  // consumers see the same surface the express tree actually exposes.
+  {
+    id: "routes_authority_sod_routes",
+    productKey: "shahin-ai",
+    ownerKind: "product",
+    sourceKind: "namedExport",
+    sourceFile: "modules/foundation/routes/authority-sod.routes",
+    exportName: "authoritySodRouter",
+    mountPath: "/api/foundation",
+    guards: { module: "foundation" },
+    order: 358,
+    intentionalDuplicateGroup: "path:/api/foundation/sod",
+  },
+  {
+    id: "routes_sod_exception_routes",
+    productKey: "shahin-ai",
+    ownerKind: "product",
+    sourceKind: "namedExport",
+    sourceFile: "modules/foundation/routes/sod-exception.routes",
+    exportName: "sodExceptionRouter",
+    mountPath: "/api/foundation/sod/exceptions",
+    guards: { module: "foundation" },
+    order: 358,
+  },
+  {
+    id: "routes_sod_review_routes",
+    productKey: "shahin-ai",
+    ownerKind: "product",
+    sourceKind: "namedExport",
+    sourceFile: "modules/foundation/routes/sod-review.routes",
+    exportName: "sodReviewRouter",
+    mountPath: "/api/foundation/sod/reviews",
+    guards: { module: "foundation" },
+    order: 358,
+  },
   {
     id: "routes_delegation_routes",
     productKey: "shahin-ai",

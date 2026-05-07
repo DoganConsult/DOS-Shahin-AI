@@ -1,0 +1,12 @@
+{
+  "schema": "foundation-ai.gate.v2",
+  "wave": 36,
+  "phase": "P36",
+  "derivedFrom": "program.master.json",
+  "checks": [
+    {"id": "inventory_runs", "cmd": "node scripts/program/foundation-ai/inventory.mjs > /dev/null"},
+    {"id": "run_proof_present", "cmd": "test -f proofs/foundation-ai/wave-36/run.proof.json"},
+    {"id": "lint_no_untyped_shell_action", "cmd": "node scripts/ci-guards/lint-no-untyped-shell-action.mjs", "required": true},
+    {"id": "zerodirt", "cmd": "PROGRAM_WAVE=36 node scripts/program/foundation-ai/zerodirt.mjs", "required": true}
+  ]
+}

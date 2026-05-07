@@ -11,6 +11,8 @@ import { orgHierarchyRouter } from './org-hierarchy.routes';
 import { committeeManagementRouter } from './committee-management.routes';
 import { ownershipMappingRouter } from './ownership-mapping.routes';
 import { sodCheckRouter } from './sod-check.routes';
+import { sodExceptionRouter } from './sod-exception.routes';
+import { sodReviewRouter } from './sod-review.routes';
 import { foundationGovernanceRouter } from './foundation-governance.routes';
 import { userLifecycleRouter } from './user-lifecycle.routes';
 import { bulkInviteRouter } from './bulk-invite.routes';
@@ -208,7 +210,22 @@ export function createFoundationAggregatorRouter(deps: FoundationAggregatorDeps)
   foundationRouter.use('/ownership-mappings', ownershipMappingRouter);
   // Singular alias — historical FE callers (foundation-api.service.ts) hit /ownership-mapping
   foundationRouter.use('/ownership-mapping', ownershipMappingRouter);
+  // Authority + SoD live router MUST be mounted BEFORE the legacy /sod
+  // sodCheckRouter, otherwise /sod/violations and /sod/violations/:id/resolve
+  // get audited twice (the legacy router runs auditMiddleware('sod') even when
+  // it has no matching route, then falls through). Authority router owns
+  // /sod/rules, /sod/check, /sod/violations, /sod/violations/:id/resolve.
+  foundationRouter.use('/', authoritySodRouter);  // mounts /authority and /sod sub-paths directly
+  // Legacy sodCheckRouter remains for SoD rules CRUD (POST/DELETE /sod/rules)
+  // not yet provided by authority-sod. Mounted after to avoid duplicate audits
+  // on shared paths.
   foundationRouter.use('/sod', sodCheckRouter);
+  // SoD exceptions + reviews — Wave 1 backend completion (live tables in
+  // dos.foundation_sod_exception, dos.foundation_sod_review_cycle,
+  // dos.foundation_sod_review_attestation). Mounted under /sod for the
+  // standard /api/foundation/sod/{exceptions,reviews,attestations} surface.
+  foundationRouter.use('/sod/exceptions', sodExceptionRouter);
+  foundationRouter.use('/sod/reviews', sodReviewRouter);
   foundationRouter.use('/governance', foundationGovernanceRouter);
   foundationRouter.use('/user-lifecycle', userLifecycleRouter);
   foundationRouter.use('/bulk-invite', bulkInviteRouter);
@@ -217,7 +234,6 @@ export function createFoundationAggregatorRouter(deps: FoundationAggregatorDeps)
   foundationRouter.use('/access-review', accessReviewRouter);
   foundationRouter.use('/delegations', delegationRouter);
   foundationRouter.use('/employee-lifecycle', employeeLifecycleRouter);
-  foundationRouter.use('/', authoritySodRouter);  // mounts /authority and /sod sub-paths directly
   foundationRouter.use('/', complianceFabricRouter); // mounts /policy-acks, /training, /coi
   // Phase B-1 — 5-brain architecture endpoints. Foundation owns enterprise
   // structure; these are the canonical entry points for it.
@@ -244,6 +260,8 @@ export {
   committeeManagementRouter,
   ownershipMappingRouter,
   sodCheckRouter,
+  sodExceptionRouter,
+  sodReviewRouter,
   foundationGovernanceRouter,
   userLifecycleRouter,
   bulkInviteRouter,

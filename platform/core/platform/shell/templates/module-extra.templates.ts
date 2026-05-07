@@ -227,35 +227,90 @@ export class ModuleReportsTemplateComponent {
       }
       <h1 class="dmt-title">{{ title }}</h1>
       @if (subtitle) { <p class="dmt-subtitle">{{ subtitle }}</p> }
+      @if (statusTags.length) {
+        <div class="dmt-settings-tags">
+          @for (tag of statusTags; track tag.label) {
+            <cds-tag [type]="tagType(tag.severity)">{{ tagLabel(tag) }}</cds-tag>
+          }
+        </div>
+      }
+      @if (primaryAction?.route && primaryAction?.label && viewMode() === 'full') {
+        <div class="dmt-settings-masthead-actions">
+          <button cdsButton="primary" size="sm" [routerLink]="[primaryAction.route]">
+            {{ actionLabel(primaryAction) }}
+          </button>
+        </div>
+      }
       @if (viewMode() === 'read-only' || viewMode() === 'limited') {
-        <cds-tag type="gray">Read-only — write access required</cds-tag>
+        <cds-tag type="gray">{{ uiText(readOnlyLabel, readOnlyLabelAr) }}</cds-tag>
       }
     </cds-tile>
 
     <dos-insight-bar [pillars]="pillars" archetype="module-settings"
-      (actionClick)="pillars?.nextAction?.action?.()"></dos-insight-bar>
+      (actionClick)="triggerAction(nextActionAsModuleAction())"></dos-insight-bar>
 
     <cds-tile class="dmt-settings-tile">
-      <cds-tabs type="contained" [followFocus]="true">
-        @for (section of sections; track section.id) {
-          <cds-tab [id]="section.id" [heading]="section.label">
-            <!-- Custom content per section via ng-content -->
-            <ng-content [select]="'[dosSettingsSection=' + section.id + ']'"></ng-content>
-          </cds-tab>
-        }
-      </cds-tabs>
+      @if (loading) {
+        <div class="dmt-settings-loading">
+          <div cdsSkeletonText [lines]="1" heading></div>
+          <div cdsSkeletonText [lines]="4"></div>
+        </div>
+      } @else if (!sections?.length) {
+        <div class="dmt-settings-empty">
+          <h3>{{ uiText(emptyStateTitle, emptyStateTitleAr) }}</h3>
+          <p>{{ uiText(emptyStateDescription, emptyStateDescriptionAr) }}</p>
+        </div>
+      } @else {
+        <cds-tabs type="contained" [followFocus]="true">
+          @for (section of sections; track section.id) {
+            <cds-tab [id]="section.id" [heading]="sectionLabel(section)">
+              <div class="dmt-settings-section">
+                @if (sectionDescription(section)) {
+                  <p class="dmt-settings-section__desc">{{ sectionDescription(section) }}</p>
+                }
+                @if (section.items?.length) {
+                  <cds-structured-list class="dmt-settings-list">
+                    <cds-list-header>
+                      <cds-list-column>{{ uiText(settingLabelHeader, settingLabelHeaderAr) }}</cds-list-column>
+                      <cds-list-column>{{ uiText(settingValueHeader, settingValueHeaderAr) }}</cds-list-column>
+                      <cds-list-column></cds-list-column>
+                    </cds-list-header>
+                    @for (item of section.items; track item.id) {
+                      <cds-list-row>
+                        <cds-list-column>
+                          <div class="dmt-settings-item__label">{{ settingsItemLabel(item) }}</div>
+                          @if (settingsItemHint(item)) {
+                            <div class="dmt-settings-item__hint">{{ settingsItemHint(item) }}</div>
+                          }
+                        </cds-list-column>
+                        <cds-list-column>{{ settingsItemValue(item) }}</cds-list-column>
+                        <cds-list-column>
+                          @if (item.status) {
+                            <cds-tag [type]="tagType(item.status)">{{ settingsItemStatus(item.status) }}</cds-tag>
+                          }
+                        </cds-list-column>
+                      </cds-list-row>
+                    }
+                  </cds-structured-list>
+                }
+              </div>
+              <ng-content [select]="'[dosSettingsSection=' + section.id + ']'"></ng-content>
+            </cds-tab>
+          }
+        </cds-tabs>
+      }
     </cds-tile>
 
     @if (viewMode() === 'full') {
       <div class="dmt-save-bar">
-        <button cdsButton="primary" [disabled]="saving" (click)="save.emit()">
+        <button cdsButton="primary" [disabled]="saving" (click)="onSaveClick()">
           @if (saving) {
-            <cds-inline-loading description="Saving..."></cds-inline-loading>
+            <cds-inline-loading [description]="uiText(savingLabel, savingLabelAr)"></cds-inline-loading>
           } @else {
-            Save Changes
+            {{ uiText(saveLabel, saveLabelAr) }}
           }
         </button>
-        <button cdsButton="secondary" (click)="discard.emit()">Discard</button>
+        <button cdsButton="secondary" (click)="onDiscardClick()">{{ uiText(discardLabel, discardLabelAr) }}</button>
       </div>
     }
   `,
@@ -266,7 +321,16 @@ export class ModuleReportsTemplateComponent {
     .dmt-ai-headline { margin-bottom: 0.5rem; }
     .dmt-title { font-size: 1.75rem; font-weight: 400; margin: 0.25rem 0; }
     .dmt-subtitle { font-size: 0.875rem; color: var(--cds-text-secondary); margin: 0.25rem 0 0.75rem; }
+    .dmt-settings-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.75rem; }
+    .dmt-settings-masthead-actions { margin-top: 1rem; }
     .dmt-settings-tile { padding: 0; margin-top: 1rem; }
+    .dmt-settings-section { padding: 1rem 1.5rem; }
+    .dmt-settings-section__desc { margin: 0 0 0.75rem; color: var(--cds-text-secondary); }
+    .dmt-settings-list { margin-top: 0.5rem; }
+    .dmt-settings-item__label { font-weight: 600; }
+    .dmt-settings-item__hint { margin-top: 0.25rem; color: var(--cds-text-helper); font-size: var(--cds-label-01-font-size); }
+    .dmt-settings-loading { padding: 1rem 1.5rem; }
+    .dmt-settings-empty { padding: 1rem 1.5rem; color: var(--cds-text-secondary); }
     .dmt-save-bar { display: flex; gap: 0.5rem; padding: 1rem 1.5rem; background: var(--cds-layer); border-top: 1px solid var(--cds-border-subtle); margin-top: 1rem; }
   `]
 })
@@ -281,13 +345,143 @@ export class ModuleSettingsTemplateComponent {
   @Input() saving = false;
   @Input() notification: ModuleNotification | null = null;
   @Input() sections: ModuleSettingsSection[] = [];
+  @Input() statusTags: Array<{ label: string; labelAr?: string; severity?: string }> = [];
+  @Input() primaryAction: ModuleAction | null = null;
+  @Input() readOnlyLabel = 'Read-only - write access required';
+  @Input() readOnlyLabelAr = 'للقراءة فقط - يتطلب صلاحية تعديل';
+  @Input() saveLabel = 'Save changes';
+  @Input() saveLabelAr = 'حفظ التغييرات';
+  @Input() savingLabel = 'Saving...';
+  @Input() savingLabelAr = 'جاري الحفظ...';
+  @Input() discardLabel = 'Discard';
+  @Input() discardLabelAr = 'تجاهل';
+  @Input() settingLabelHeader = 'Setting';
+  @Input() settingLabelHeaderAr = 'الإعداد';
+  @Input() settingValueHeader = 'Current value';
+  @Input() settingValueHeaderAr = 'القيمة الحالية';
+  @Input() emptyStateTitle = 'No settings available';
+  @Input() emptyStateTitleAr = 'لا توجد إعدادات متاحة';
+  @Input() emptyStateDescription = 'No settings contract has been published for this route.';
+  @Input() emptyStateDescriptionAr = 'لم يتم نشر عقد إعدادات لهذه الصفحة.';
   @Input() currentRole: ModuleRole = 'standard_user';
   @Input() writeRoles: ModuleRole[] = [];
 
-  @Output() save = new EventEmitter<void>();
-  @Output() discard = new EventEmitter<void>();
+  @Output() save = new EventEmitter<{ key: string; payload?: Record<string, unknown> }>();
+  @Output() discard = new EventEmitter<{ key: string; payload?: Record<string, unknown> }>();
+  @Output() actionTriggered = new EventEmitter<{ key: string; payload?: Record<string, unknown> }>();
 
   viewMode = computed(() => resolveViewMode(this.currentRole, this.writeRoles));
+
+  private isRtl(): boolean {
+    return typeof document !== 'undefined' && document.documentElement.dir === 'rtl';
+  }
+
+  uiText(en: string, ar?: string): string {
+    return this.isRtl() ? (ar ?? en) : en;
+  }
+
+  sectionLabel(section: ModuleSettingsSection): string {
+    return this.isRtl() ? (section.labelAr ?? section.label) : section.label;
+  }
+
+  sectionDescription(section: ModuleSettingsSection): string {
+    if (this.isRtl()) return section.descriptionAr ?? section.description ?? '';
+    return section.description ?? section.descriptionAr ?? '';
+  }
+
+  settingsItemLabel(item: NonNullable<ModuleSettingsSection['items']>[number]): string {
+    return this.isRtl() ? (item.labelAr ?? item.label) : item.label;
+  }
+
+  settingsItemValue(item: NonNullable<ModuleSettingsSection['items']>[number]): string {
+    return this.isRtl() ? (item.valueAr ?? item.value) : item.value;
+  }
+
+  settingsItemHint(item: NonNullable<ModuleSettingsSection['items']>[number]): string {
+    if (this.isRtl()) return item.hintAr ?? item.hint ?? '';
+    return item.hint ?? item.hintAr ?? '';
+  }
+
+  settingsItemStatus(status?: string): string {
+    if (!status) return '';
+    const labels: Record<string, { en: string; ar: string }> = {
+      success: { en: 'Configured', ar: 'مُفعّل' },
+      warning: { en: 'Review needed', ar: 'يحتاج مراجعة' },
+      critical: { en: 'Action required', ar: 'يتطلب إجراء' },
+      info: { en: 'Info', ar: 'معلومة' },
+      neutral: { en: 'Neutral', ar: 'محايد' },
+    };
+    const hit = labels[status] ?? { en: status, ar: status };
+    return this.isRtl() ? hit.ar : hit.en;
+  }
+
+  tagType(severity?: string): string {
+    const map: Record<string, string> = {
+      critical: 'red',
+      warning: 'warm-gray',
+      success: 'green',
+      high: 'orange',
+      medium: 'yellow',
+      low: 'teal',
+      info: 'blue',
+      neutral: 'gray',
+    };
+    return map[severity ?? 'info'] ?? 'gray';
+  }
+
+  tagLabel(tag: { label: string; labelAr?: string }): string {
+    return this.isRtl() ? (tag.labelAr ?? tag.label) : tag.label;
+  }
+
+  actionLabel(action: ModuleAction): string {
+    return this.isRtl() ? (action.labelAr ?? action.label) : action.label;
+  }
+
+  triggerAction(action: ModuleAction | null, payload?: Record<string, unknown>): void {
+    if (!action) return;
+    if (action.actionKey) {
+      this.actionTriggered.emit({ key: action.actionKey, payload });
+      return;
+    }
+    if (action.commandKey) {
+      this.actionTriggered.emit({ key: action.commandKey, payload });
+      return;
+    }
+    if (action.route) {
+      this.actionTriggered.emit({ key: 'navigate', payload: { path: action.route, ...(payload ?? {}) } });
+    }
+  }
+
+  nextActionAsModuleAction(): ModuleAction | null {
+    const next = this.pillars?.nextAction;
+    if (!next || typeof next !== 'object') return null;
+    return {
+      label: String(next.label ?? ''),
+      labelAr: typeof (next as { labelAr?: unknown }).labelAr === 'string'
+        ? String((next as { labelAr?: unknown }).labelAr)
+        : undefined,
+      route: typeof (next as { route?: unknown }).route === 'string'
+        ? String((next as { route?: unknown }).route)
+        : undefined,
+      actionKey: typeof (next as { actionKey?: unknown }).actionKey === 'string'
+        ? String((next as { actionKey?: unknown }).actionKey)
+        : undefined,
+      commandKey: typeof (next as { commandKey?: unknown }).commandKey === 'string'
+        ? String((next as { commandKey?: unknown }).commandKey)
+        : undefined,
+      severity: typeof (next as { severity?: unknown }).severity === 'string'
+        ? String((next as { severity?: unknown }).severity) as ModuleAction['severity']
+        : undefined,
+    };
+  }
+
+  onSaveClick(): void {
+    this.save.emit({ key: 'settings.save' });
+  }
+
+  onDiscardClick(): void {
+    this.discard.emit({ key: 'settings.discard' });
+  }
 }
 
 
