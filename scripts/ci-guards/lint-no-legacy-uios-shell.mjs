@@ -12,6 +12,8 @@ Hard-kill legacy mode - enforces Dynamic UI / UI-OS freedom pass.
 
 Options:
   --help, -h           Show this help message
+  --stdin              Read file paths from stdin (one per line)
+  --json, -j           Output results as structured JSON
 
 Doctrine:
   DB stores. UI-OS resolves. Frontend renders only normalized runtime.
@@ -30,9 +32,17 @@ Exit codes:
 Examples:
   # Run legacy UI-OS shell check
   node scripts/ci-guards/lint-no-legacy-uios-shell.mjs
+
+  # Output as JSON
+  node scripts/ci-guards/lint-no-legacy-uios-shell.mjs --json
+
+  # Pipe file paths from another command
+  git ls-files '*.ts' | node scripts/ci-guards/lint-no-legacy-uios-shell.mjs --stdin
 `);
   process.exit(0);
 }
+
+const useJson = process.argv.includes('--json') || process.argv.includes('-j');
 
 import { readFileSync, readdirSync, statSync, existsSync } from 'fs';
 import { join, relative } from 'path';

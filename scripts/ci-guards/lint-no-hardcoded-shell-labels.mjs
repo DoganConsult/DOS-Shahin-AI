@@ -12,6 +12,8 @@ Rejects hardcoded visible labels, aria-label fallbacks, or brand text in shell v
 
 Options:
   --help, -h           Show this help message
+  --stdin              Read file paths from stdin (one per line)
+  --json, -j           Output results as structured JSON
 
 Doctrine:
   Visible text must come from DB/runtime/i18n. No Angular @Input default,
@@ -24,9 +26,17 @@ Exit codes:
 Examples:
   # Run hardcoded shell labels check
   node scripts/ci-guards/lint-no-hardcoded-shell-labels.mjs
+
+  # Output as JSON
+  node scripts/ci-guards/lint-no-hardcoded-shell-labels.mjs --json
+
+  # Pipe file paths from another command
+  find platform/ui-system -name '*.ts' | node scripts/ci-guards/lint-no-hardcoded-shell-labels.mjs --stdin
 `);
   process.exit(0);
 }
+
+const useJson = process.argv.includes('--json') || process.argv.includes('-j');
 
 import fs from 'node:fs';
 import path from 'node:path';

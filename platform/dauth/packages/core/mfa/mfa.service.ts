@@ -107,8 +107,7 @@ export async function enableTotp(
   );
   let qrCodeUrl = otpauthUrl;
   try {
-
-    // @ts-ignore - optional runtime-resolved peer module
+    // @ts-ignore -- justified: optional runtime-resolved peer module
     const { generateQRCodeDataURL } = await import('../../dos/services/document-generation/qrcode.service.js');
     const dataUrl = await generateQRCodeDataURL(otpauthUrl, { width: 300 });
     if (dataUrl) qrCodeUrl = dataUrl;

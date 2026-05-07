@@ -15,7 +15,7 @@ import { logger } from '../../ports/logger.port';
 
 import { safeQuery, tenantSchema } from '../../ports/database.port';
 import { eventBus } from '../../ports/events.port';
-// @ts-ignore
+// @ts-ignore -- justified: dynamic MinIO connector import
 import {
   uploadObject,
   getObject as minioGetObject,

@@ -69,7 +69,7 @@ async function generateRiskPosture(tenantId: string, params: Record<string, unkn
   // Phase 3E SQL-injection fix: params.dateRange.from is user input and
   // must NEVER be concatenated into SQL. Bind as $1 timestamptz; the
   // filter clause only appears in the query when the bind is present.
-  // @ts-ignore — params typed as Record<string, unknown>
+  // @ts-ignore -- justified: params typed as Record<string, unknown>
   const dateFrom: string | null = params.dateRange?.from ?? null;
   const dateFilter = dateFrom ? 'AND created_at >= $1' : '';
   const dateFilterArgs = dateFrom ? [dateFrom] : [];

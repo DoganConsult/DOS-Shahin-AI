@@ -69,7 +69,7 @@ test.describe.skip('M0.5 — approval modal does NOT execute locally', () => {
 test.use({ viewport: { width: 390, height: 844 } });
 
 // TODO(M3): unskip when archetype mobile reflow is delivered.
-test.describe.skip('M0.5 — mobile 390px reflow', () => {
+test.describe.skip('M0.5 — mobile 390px reflow', () => { // -- justified: TODO(M3): archetype mobile reflow pending
   test('Modal → bottom-sheet, DataTable → card list', async ({ page }) => {
     await goto(page, '/dev/agentic-harness?component=task-queue');
     await expect(page.locator('dos-agent-task-queue')).toHaveAttribute('data-mobile', 'card-list');

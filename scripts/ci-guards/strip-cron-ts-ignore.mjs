@@ -1,7 +1,32 @@
 #!/usr/bin/env node
 /**
- * Removes obsolete `// @ts-ignore - cron property mismatch` lines from TS sources.
+ * Removes obsolete @ts-ignore lines from TS sources
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/strip-cron-ts-ignore.mjs [OPTIONS]
+
+Removes obsolete // @ts-ignore - cron property mismatch lines from TS sources.
+
+Options:
+  --help, -h           Show this help message
+
+Policy:
+  Strips lines matching: ^\s*// @ts-ignore - cron property mismatch$
+  Scans all .ts/.tsx/.mts/.cts files excluding node_modules, dist, etc.
+
+Exit codes:
+  Always exits 0 (mutates files in place)
+
+Examples:
+  # Run strip cron ts-ignore
+  node scripts/ci-guards/strip-cron-ts-ignore.mjs
+`);
+  process.exit(0);
+}
+
 import fs from 'node:fs';
 import path from 'node:path';
 

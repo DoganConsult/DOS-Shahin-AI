@@ -1,11 +1,39 @@
 #!/usr/bin/env node
 /**
- * DOS Master Doctrine Article 3 — DB owns UI.
- *
- * Forbids new hardcoded primary nav arrays in SPA code. Existing
- * hardcoded arrays are tracked under a baseline so we ratchet down
- * over time. Set STATIC_ROUTE_BAN_ENFORCE=1 to enforce zero.
+ * DOS Master Doctrine Article 3 — DB owns UI
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/static-route-ban.mjs [OPTIONS]
+
+Forbids new hardcoded primary nav arrays in SPA code.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  STATIC_ROUTE_BAN_BASELINE_MAX  Baseline max hits (default: 200)
+  STATIC_ROUTE_BAN_ENFORCE       Set to 1 to enforce zero (default: baseline mode)
+
+Policy:
+  Existing hardcoded arrays are tracked under baseline to ratchet down over time.
+  DB owns UI — all navigation should come from dynamic-ui contract.
+
+Exit codes:
+  Non-zero on static route violation (above baseline or when enforced)
+
+Examples:
+  # Run in baseline mode (default)
+  node scripts/ci-guards/static-route-ban.mjs
+
+  # Run with enforcement
+  STATIC_ROUTE_BAN_ENFORCE=1 node scripts/ci-guards/static-route-ban.mjs
+`);
+  process.exit(0);
+}
+
 import { execSync } from 'node:child_process';
 
 const PATTERNS = [

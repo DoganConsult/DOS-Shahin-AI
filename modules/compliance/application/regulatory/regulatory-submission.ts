@@ -74,7 +74,7 @@ export async function generateAINarrative(
   context: Record<string, unknown>,
 ): Promise<string> {
   try {
-    // @ts-ignore — dynamic import resolved at runtime
+    // @ts-ignore -- justified: dynamic import resolved at runtime
     const { invokeAI } = await import('../../ports/ai.port');
     const prompt = `Generate a concise regulatory compliance narrative based on the following data:\n${JSON.stringify(context, null, 2)}`;
     const result = await invokeAI(tenantId, { prompt, maxTokens: 1000 });
