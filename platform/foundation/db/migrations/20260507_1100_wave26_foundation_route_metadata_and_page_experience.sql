@@ -81,6 +81,11 @@ UPDATE dos.dynamic_ui_routes r
 -- Part 3 — seed canonical i18n labels for every page title/subtitle key
 -- so the FE does not need to invent display copy.
 -- ---------------------------------------------------------------------
+-- workspace_shell_i18n is publisher-owned (trg_published_by_only).
+-- Declare the publisher session GUC so this seed is accepted; the
+-- LOCAL scope means the GUC reverts at COMMIT.
+SET LOCAL dos.publisher_session = 'contract-publisher@v1';
+
 WITH page_labels(key, locale, value) AS (
   VALUES
     -- English page titles

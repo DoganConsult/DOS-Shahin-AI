@@ -41,7 +41,7 @@ import { ModuleInsightPillars } from './module-template.types';
         <!-- Pillar 1: What Changed? -->
         @if (pillars.whatChanged) {
           <div class="dib-pillar dib-pillar--change" data-pillar="what-changed">
-            <span class="dib-pillar-label">What changed?</span>
+            <span class="dib-pillar-label">{{ pillarLabel('whatChanged') }}</span>
             <cds-ai-label kind="inline" size="sm" class="dib-ai-badge">AI</cds-ai-label>
             <p class="dib-pillar-value">{{ pillars.whatChanged }}</p>
           </div>
@@ -50,7 +50,7 @@ import { ModuleInsightPillars } from './module-template.types';
         <!-- Pillar 2: Why It Matters? -->
         @if (pillars.whyItMatters) {
           <div class="dib-pillar dib-pillar--why" data-pillar="why-it-matters">
-            <span class="dib-pillar-label">Why it matters</span>
+            <span class="dib-pillar-label">{{ pillarLabel('whyItMatters') }}</span>
             <p class="dib-pillar-value dib-value--warning">{{ pillars.whyItMatters }}</p>
           </div>
         }
@@ -58,7 +58,7 @@ import { ModuleInsightPillars } from './module-template.types';
         <!-- Pillar 3: Risk / Opportunity -->
         @if (pillars.riskOrOpportunity) {
           <div class="dib-pillar dib-pillar--risk" data-pillar="risk">
-            <span class="dib-pillar-label">Risk / Opportunity</span>
+            <span class="dib-pillar-label">{{ pillarLabel('riskOrOpportunity') }}</span>
             <p class="dib-pillar-value dib-value--critical">{{ pillars.riskOrOpportunity }}</p>
           </div>
         }
@@ -66,7 +66,7 @@ import { ModuleInsightPillars } from './module-template.types';
         <!-- Pillar 4: Next Action (CTA) -->
         @if (pillars.nextAction) {
           <div class="dib-pillar dib-pillar--action" data-pillar="next-action">
-            <span class="dib-pillar-label">What should I do?</span>
+            <span class="dib-pillar-label">{{ pillarLabel('nextAction') }}</span>
             <button cdsButton="primary" size="sm"
               class="dib-cta-btn"
               (click)="pillars!.nextAction!.action?.(); actionClick.emit(pillars!.nextAction)">
@@ -78,7 +78,7 @@ import { ModuleInsightPillars } from './module-template.types';
         <!-- Pillar 5: Evidence Basis -->
         @if (pillars.evidence) {
           <div class="dib-pillar dib-pillar--evidence" data-pillar="evidence">
-            <span class="dib-pillar-label">Evidence basis</span>
+            <span class="dib-pillar-label">{{ pillarLabel('evidence') }}</span>
             <p class="dib-pillar-value dib-value--muted">{{ pillars.evidence }}</p>
           </div>
         }
@@ -155,6 +155,10 @@ export class DosInsightBarComponent {
   @Input() pillars: ModuleInsightPillars | null = null;
   @Input() archetype = '';
   @Output() actionClick = new EventEmitter<unknown>();
+
+  pillarLabel(key: keyof NonNullable<ModuleInsightPillars['labels']>): string {
+    return this.pillars?.labels?.[key] ?? '';
+  }
 
   hasAnyPillar(): boolean {
     return !!(this.pillars?.whatChanged || this.pillars?.whyItMatters ||

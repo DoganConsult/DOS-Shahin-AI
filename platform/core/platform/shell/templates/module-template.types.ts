@@ -125,6 +125,13 @@ export interface ModuleSetupStep {
 // Every page MUST drive: Information → Decision → Action → Evidence
 // These 5 questions must be answerable on every page.
 export interface ModuleInsightPillars {
+  labels?: {
+    whatChanged?: string;
+    whyItMatters?: string;
+    riskOrOpportunity?: string;
+    nextAction?: string;
+    evidence?: string;
+  };
   /** "Risk score dropped 12 pts this week" */
   whatChanged?: string;
   /** "Board review in 8 days — unmitigated critical risks disqualify" */

@@ -45,9 +45,10 @@ export interface ShellSidebarNavItem {
   id: string;
   label: string;
   icon?: string | null;
-  route?: string | null;
+  action?: { kind: 'navigate'; path: string } | null;
   badge?: string | number | null;
   moduleCode?: string | null;
+  groupId?: string | null;
 }
 
 export interface ShellAccountMenuEntry {
@@ -358,10 +359,12 @@ export class DosShellSettingsActionComponent implements OnInit {
         <ul class="cds--side-nav__items">
           @for (item of items; track item.id) {
             <cds-sidenav-item
-              [href]="item.route || ''"
+              [href]="item.action?.kind === 'navigate' ? item.action.path : ''"
               [title]="item.label"
               [attr.data-nav-id]="item.id"
               [attr.data-module-code]="item.moduleCode || null"
+              [class.dos-shell-sidebar-nav__item--active]="isActive(item)"
+              [attr.aria-current]="isActive(item) ? 'page' : null"
               (navigation)="onNavigated($event, item)"
             >
               {{ item.label }}
@@ -395,6 +398,12 @@ export class DosShellSettingsActionComponent implements OnInit {
       font-size: var(--cds-label-01-font-size);
       color: var(--cds-text-helper);
     }
+    :host ::ng-deep .dos-shell-sidebar-nav__item--active .cds--side-nav__link {
+      background-color: var(--cds-layer-selected);
+      border-inline-start: 3px solid var(--cds-border-interactive);
+      color: var(--cds-text-primary);
+      font-weight: 600;
+    }
     .dos-shell-sidebar-nav__empty {
       padding: var(--cds-spacing-05);
       font-size: var(--cds-body-compact-01-font-size);
@@ -409,11 +418,23 @@ export class DosShellSidebarNavComponent {
   @Input() ariaLabel = '';
   @Input() badgeLabel = '';
 
+  private normalizePath(url: string): string {
+    const q = url.indexOf('?');
+    const u = q === -1 ? url : url.slice(0, q);
+    return u.length > 1 && u.endsWith('/') ? u.slice(0, -1) : u;
+  }
+
+  isActive(item: ShellSidebarNavItem): boolean {
+    const action = item.action;
+    if (!action || action.kind !== 'navigate') return false;
+    return this.normalizePath(this.router.url) === this.normalizePath(action.path);
+  }
+
   onNavigated(_navPromise: Promise<boolean>, item: ShellSidebarNavItem): void {
-    if (!item.route) return;
+    if (!item.action || item.action.kind !== 'navigate') return;
     // Carbon's cds-sidenav-item performs its own anchor navigation; re-route
     // through the Angular router so the SPA outlet swaps without a full reload.
-    void this.router.navigateByUrl(item.route);
+    void this.router.navigateByUrl(item.action.path);
   }
 }
 

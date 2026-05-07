@@ -357,6 +357,45 @@ function buildI18nLabel(
   };
 }
 
+function normalizeShellAction(raw: unknown): Record<string, unknown> | null {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return null;
+  const a = raw as Record<string, unknown>;
+  const kind = typeof a['kind'] === 'string' ? a['kind'].trim() : '';
+  if (!kind) return null;
+
+  if (kind === 'navigate') {
+    const path = typeof a['path'] === 'string' ? a['path'].trim() : '';
+    return path ? { kind: 'navigate', path } : null;
+  }
+  if (kind === 'open_external') {
+    const url = typeof a['url'] === 'string' ? a['url'].trim() : '';
+    return url ? { kind: 'open_external', url } : null;
+  }
+  if (
+    kind === 'toggle_language'
+    || kind === 'toggle_theme'
+    || kind === 'open_command'
+    || kind === 'close_overlay'
+    || kind === 'clear_error'
+  ) {
+    return { kind };
+  }
+  if (kind === 'open_context_tab') {
+    const tab = typeof a['tab'] === 'string' ? a['tab'].trim() : '';
+    return tab ? { kind: 'open_context_tab', tab } : null;
+  }
+  if (kind === 'dispatch_event') {
+    const eventName = typeof a['eventName'] === 'string' ? a['eventName'].trim() : '';
+    if (!eventName) return null;
+    const payload = a['payload'];
+    if (payload && typeof payload === 'object' && !Array.isArray(payload)) {
+      return { kind: 'dispatch_event', eventName, payload };
+    }
+    return { kind: 'dispatch_event', eventName };
+  }
+  return null;
+}
+
 // ─── Nav loaders (snake_case stays inside) ───────────────────────────
 interface ModuleNavGroupRow {
   module_code: string; group_id: string; sort_order: number | null;
@@ -406,7 +445,10 @@ async function loadNav(
        SELECT i.module_code, i.item_id, i.group_id, i.sort_order, i.route,
               i.icon, i.permission, i.label_key, i.label_en, i.label_ar,
               i.badge, i.enabled, i.version
-         FROM dos.ui_module_nav_item i, caller_perms cp
+         FROM dos.ui_module_nav_item i
+         CROSS JOIN caller_perms cp
+         LEFT JOIN dos.ui_module_nav_group g
+           ON g.module_code = i.module_code AND g.group_id = i.group_id
         WHERE i.enabled IS DISTINCT FROM false
           AND EXISTS (
             SELECT 1 FROM dos.tenant_module_entitlements e
@@ -419,7 +461,11 @@ async function loadNav(
             OR i.permission = ''
             OR i.permission = ANY(cp.perms)
           )
-        ORDER BY i.module_code, i.group_id, i.sort_order, i.item_id`,
+        ORDER BY i.module_code,
+                 COALESCE(g.sort_order, 9999),
+                 i.group_id,
+                 i.sort_order,
+                 i.item_id`,
       [tenantId, rolesParam],
     ),
   ]);
@@ -569,12 +615,18 @@ async function loadShortcuts(pool: DbPool, tenantId: string) {
       ORDER BY sort_order, shortcut_id`,
     [tenantId],
   );
-  return r.rows.map((row) => ({
-    id: row.shortcut_id,
-    combo: row.combo,
-    action: row.action_json,
-    ...(row.when_clause ? { when: row.when_clause } : {}),
-  }));
+  const out: Array<Record<string, unknown>> = [];
+  for (const row of r.rows) {
+    const action = normalizeShellAction(row.action_json);
+    if (!action) continue;
+    out.push({
+      id: row.shortcut_id,
+      combo: row.combo,
+      action,
+      ...(row.when_clause ? { when: row.when_clause } : {}),
+    });
+  }
+  return out;
 }
 
 async function loadBanners(pool: DbPool, tenantId: string, localePrimary: string) {
@@ -587,19 +639,22 @@ async function loadBanners(pool: DbPool, tenantId: string, localePrimary: string
       ORDER BY sort_order, banner_id`,
     [tenantId],
   );
-  return r.rows.map((row) => ({
-    id: row.banner_id,
-    gate: row.gate,
-    kind: row.kind,
-    title: buildI18nLabel(row.title_fallback, null, row.title_key, localePrimary),
-    message: buildI18nLabel(row.message_fallback, null, row.message_key, localePrimary),
-    ...(row.action_label_key ? {
-      actionLabel: buildI18nLabel(null, null, row.action_label_key, localePrimary),
-    } : {}),
-    ...(row.action_json ? { action: row.action_json } : {}),
-    dismissible: row.dismissible,
-    version: row.version,
-  }));
+  return r.rows.map((row) => {
+    const action = row.action_json ? normalizeShellAction(row.action_json) : null;
+    return {
+      id: row.banner_id,
+      gate: row.gate,
+      kind: row.kind,
+      title: buildI18nLabel(row.title_fallback, null, row.title_key, localePrimary),
+      message: buildI18nLabel(row.message_fallback, null, row.message_key, localePrimary),
+      ...(row.action_label_key ? {
+        actionLabel: buildI18nLabel(null, null, row.action_label_key, localePrimary),
+      } : {}),
+      ...(action ? { action } : {}),
+      dismissible: row.dismissible,
+      version: row.version,
+    };
+  });
 }
 
 // ─── Navigate-eligible route loader ────────────────────────────────────
@@ -706,23 +761,75 @@ function enrichVisualShellProps(
   moduleCards: Array<Record<string, unknown>>,
   navigateEligibleRoutes: ReadonlySet<string>,
 ): void {
-  // 1) Build a flat nav-item list keyed by visual ordering.
-  const sidebarItems: Array<Record<string, unknown>> = [];
+  // 1) Build a deterministic sidebar item list from nav.groups + nav.items.
+  //    Order contract:
+  //      group.sortOrder ASC (tie: groupId ASC)
+  //      then item.sortOrder ASC (tie: itemId ASC)
+  //    This prevents drift from raw SQL/global iteration order.
+  const groupSort = new Map<string, number>();
+  for (const group of nav.groups) {
+    const moduleCode = String((group as { moduleCode?: string }).moduleCode ?? '').trim();
+    const groupId = String((group as { groupId?: string }).groupId ?? '').trim();
+    if (!moduleCode || !groupId) continue;
+    const key = `${moduleCode}:${groupId}`;
+    groupSort.set(key, Number((group as { sortOrder?: unknown }).sortOrder ?? 0) || 0);
+  }
+
+  type SidebarItemDraft = {
+    key: string;
+    groupOrder: number;
+    itemOrder: number;
+    id: string;
+    label: string;
+    action: { kind: 'navigate'; path: string };
+    icon: string | null;
+    moduleCode: string | null;
+    groupId: string | null;
+    badge: unknown;
+  };
+
+  const sidebarDraft: SidebarItemDraft[] = [];
   for (const item of nav.items) {
     const action = (item as { action?: { kind?: string; path?: string } }).action;
     if (!action || action.kind !== 'navigate' || typeof action.path !== 'string') continue;
     const label = (item as { label?: { label?: string; fallback?: string; i18nKey?: string } }).label;
     const text = label?.label ?? label?.fallback ?? label?.i18nKey ?? '';
-    if (!text) continue;
-    sidebarItems.push({
-      id: String((item as { itemId?: string }).itemId ?? ''),
+    const id = String((item as { itemId?: string }).itemId ?? '').trim();
+    if (!text || !id) continue;
+
+    const moduleCode = String((item as { moduleCode?: string }).moduleCode ?? '').trim();
+    const groupId = String((item as { groupId?: string }).groupId ?? '').trim();
+    const groupKey = `${moduleCode}:${groupId || 'ungrouped'}`;
+    sidebarDraft.push({
+      key: groupKey,
+      groupOrder: groupSort.get(groupKey) ?? Number.MAX_SAFE_INTEGER,
+      itemOrder: Number((item as { sortOrder?: unknown }).sortOrder ?? 0) || 0,
+      id,
       label: text,
-      route: action.path,
+      action: { kind: 'navigate', path: action.path },
       icon: (item as { icon?: string }).icon ?? null,
-      moduleCode: (item as { moduleCode?: string }).moduleCode ?? null,
+      moduleCode: moduleCode || null,
+      groupId: groupId || null,
       badge: (item as { badge?: unknown }).badge ?? null,
     });
   }
+
+  sidebarDraft.sort((a, b) => {
+    if (a.groupOrder !== b.groupOrder) return a.groupOrder - b.groupOrder;
+    if (a.key !== b.key) return a.key.localeCompare(b.key);
+    if (a.itemOrder !== b.itemOrder) return a.itemOrder - b.itemOrder;
+    return a.id.localeCompare(b.id);
+  });
+
+  const sidebarItems: Array<Record<string, unknown>> = sidebarDraft.map((entry) => ({
+    id: entry.id,
+    label: entry.label,
+    action: entry.action,
+    icon: entry.icon,
+    moduleCode: entry.moduleCode,
+    groupId: entry.groupId,
+    badge: entry.badge,
+  }));
 
   // 2) Account menu entries from chrome.accountMenu (typed actions).
   //    Resolve each entry's i18nKey against chrome[i18nKey] so the FE
@@ -750,6 +857,12 @@ function enrichVisualShellProps(
           out['enabled'] = false;
         }
       }
+    }
+    const normalizedAction = normalizeShellAction(action);
+    if (normalizedAction) {
+      out['action'] = normalizedAction;
+    } else {
+      delete out['action'];
     }
     out['routeExists'] = routeExists;
     if (typeof out['enabled'] !== 'boolean') out['enabled'] = true;

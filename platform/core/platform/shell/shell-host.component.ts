@@ -80,7 +80,7 @@ import type { ShellAction, ShellBanner } from '@dos/ui-contracts';
         />
       </div>
       <aside
-        class="cds--side-nav cds--side-nav--expanded dos-shell-zone dos-shell-zone--sidebar"
+        class="dos-shell-zone dos-shell-zone--sidebar"
         data-zone="sidebar"
         role="complementary"
         [attr.aria-label]="ariaSidebarLabel() || null"
@@ -188,8 +188,8 @@ import type { ShellAction, ShellBanner } from '@dos/ui-contracts';
       color: var(--cds-text-secondary);
     }
     .dos-shell-zone__main-inner {
-      max-width: 80rem;
-      margin: 0 auto;
+      width: 100%;
+      margin: 0;
       padding: var(--cds-spacing-07) var(--cds-spacing-06);
       display: flex; flex-direction: column;
       gap: var(--cds-spacing-05);
