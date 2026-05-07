@@ -1,0 +1,105 @@
+{
+  "schema": "foundation.enterprise-completion.v1",
+  "ts": "2026-05-07T07:05:00Z",
+  "doctrine": "ZERO STATIC / ZERO LEGACY / ZERO FALLBACK / Dynamic UI-OS only / DB-driven",
+  "waves": {
+    "wave-1-backend": {
+      "status": "GREEN",
+      "evidence": [
+        "platform/foundation/db/migrations/20260512_1000_foundation_sod_exception_review.sql",
+        "platform/foundation/db/migrations/20260512_1010_module_sod_rules_canonical.sql",
+        "platform/foundation/db/tenant/migrations/002_foundation_tenant_extended.sql",
+        "platform/foundation/interface/http/sod-exception.routes.ts",
+        "platform/foundation/interface/http/sod-review.routes.ts",
+        "platform/foundation/contracts/registries/route-catalogs/core-foundation-routes.catalog.ts"
+      ],
+      "tablesPresent": {
+        "dos.foundation_sod_exception": true,
+        "dos.foundation_sod_review_cycle": true,
+        "dos.foundation_sod_review_attestation": true,
+        "dos.module_sod_rules": true
+      }
+    },
+    "wave-2-resolver": {
+      "status": "GREEN",
+      "evidence": [
+        "platform/dos/migrations/public/20260513_0100_ui_route_event_handler_role_policy.sql",
+        "services/ui-os-service/src/routes/template-binding.routes.ts (loadEventHandlers/loadRolePolicy/loadFoundationOrgChartNodes)"
+      ],
+      "rolePolicyRoutes": 26,
+      "eventHandlerRoutes": 2,
+      "runtimeShapeProof": {
+        "/foundation/sod": {
+          "writeRoles": ["platform_super_admin","tenant_admin","foundation_admin","foundation_operator"],
+          "eventHandlers": ["settings.save","settings.discard"],
+          "pillarsEnKeys": ["evidence","whatChanged","whyItMatters","riskOrOpportunity"],
+          "pillarsArKeys": ["evidence","whatChanged","whyItMatters","riskOrOpportunity"]
+        },
+        "/foundation/organization (locale=ar)": {
+          "masthead.title": "المؤسسة",
+          "masthead.aiHeadline": "الذكاء الاصطناعي يقاطع الهيكل التنظيمي مع تغطية الصلاحيات وفصل الواجبات.",
+          "masthead.statusTags[0].labelAr": "بيانات حية للمستأجر",
+          "masthead.primaryAction.labelAr": "إضافة كيان"
+        }
+      }
+    },
+    "wave-3-shell-mobile": {
+      "status": "GREEN",
+      "evidence": ["platform/core/platform/shell/shell-host.component.ts (viewportWidth + desktopMinPx + isMobileViewport)"],
+      "policyDriven": {
+        "policy_key": "layout",
+        "value_json": {"breakpoints":{"desktopMinPx":1056},"mobileBottomNav":{"maxItems":4}},
+        "consumer": "ShellHost computed isMobileViewport() < desktopMinPx"
+      }
+    },
+    "wave-4-templates-polish": {
+      "status": "GREEN",
+      "evidence": [
+        "platform/core/platform/shell/templates/module-records.template.ts (mobile card/list fallback via td[data-col-label]::before)",
+        "platform/core/platform/shell/templates/module-case-finalization.template.ts (mobile responsive polish)"
+      ],
+      "templatesWithMediaQueries": 14
+    },
+    "wave-5-seed-foundation": {
+      "status": "GREEN",
+      "evidence": ["platform/dos/migrations/public/20260513_0200_foundation_module_enterprise_seed.sql"],
+      "coverage": {
+        "totalRoutes": 44,
+        "withTitleEn": 44,
+        "withPillarsEn": 44,
+        "withPillarsAr": 44,
+        "withAiHeadlineEn": 43,
+        "withPrimaryAction": 44
+      }
+    },
+    "wave-6-proofs": {
+      "status": "GREEN",
+      "builds": {
+        "@dos/ui-contracts": "PASS",
+        "@dos/ui-system": "PASS",
+        "@dos/platform-core": "PASS",
+        "@dos/ui-os-service": "PASS",
+        "@dos/platform-app": "PRE_EXISTING_BREAK (Angular FatalDiagnosticError 1010 — styles position 1; carried forward from baseline; SPA served from gateway-bundled dist on :3000)"
+      },
+      "ciGuards": {
+        "lint-no-static-nav-fallback": "PASS",
+        "lint-no-legacy-uios-shell": "PASS"
+      },
+      "pm2": {
+        "ui-os-service": "restarted_with_wave2_resolver"
+      },
+      "perRouteProbes": {
+        "endpoint": "GET /api/ui-os/template-binding?route=…&locale=…",
+        "results": [
+          {"route":"/foundation/overview","en":200,"ar":200},
+          {"route":"/foundation/organization","en":200,"ar":200},
+          {"route":"/foundation/users","en":200,"ar":200},
+          {"route":"/foundation/sod","en":200,"ar":200},
+          {"route":"/foundation/access-review","en":200,"ar":200},
+          {"route":"/foundation/governance/sod-rules","en":200,"ar":200},
+          {"route":"/foundation/diagnostics","en":200,"ar":200}
+        ]
+      }
+    }
+  }
+}

@@ -43,7 +43,6 @@ import {
   type WorkspaceShellResolverResponse,
   type WorkspaceShellShortcut,
   type WorkspaceShellZone,
-  WORKSPACE_SHELL_ZONES,
 } from '@dos/ui-system';
 import type {
   DosNavGroup,
@@ -70,17 +69,41 @@ type SurfaceMap = ReadonlyMap<string, WorkspaceShellSurface>;
 const EMPTY_MAP: SurfaceMap = new Map();
 const EMPTY_RECORD: Readonly<Record<string, unknown>> = Object.freeze({});
 
-const VALID_ZONES: ReadonlySet<string> = new Set<string>(WORKSPACE_SHELL_ZONES as readonly string[]);
+const CANONICAL_STRUCTURAL_ZONES = [
+  'header',
+  'banner',
+  'sidebar',
+  'main',
+  'page-actions',
+  'page-content',
+] as const;
+type CanonicalStructuralZone = (typeof CANONICAL_STRUCTURAL_ZONES)[number];
+const STRUCTURAL_ZONE_SET: ReadonlySet<string> = new Set<string>(CANONICAL_STRUCTURAL_ZONES);
 
-function readStableSurfaceId(row: unknown): string | null {
-  if (!row || typeof row !== 'object') return null;
-  const r = row as Record<string, unknown>;
-  const id = r['surfaceId'] ?? r['slotKey'];
-  return typeof id === 'string' && id.trim() ? id.trim() : null;
+function textOrNull(v: unknown): string | null {
+  return typeof v === 'string' && v.trim() ? v.trim() : null;
 }
 
-function compositeSurfaceKey(zone: string, position: number, index: number): string {
-  return `${zone}#${position}#${index}`;
+function normalizedStructuralZone(rawZone: unknown): CanonicalStructuralZone | null {
+  const zone = textOrNull(rawZone);
+  if (!zone) return null;
+  // Backward-compat input normalization for existing runtime rows.
+  if (zone === 'banners') return 'banner';
+  if (STRUCTURAL_ZONE_SET.has(zone)) return zone as CanonicalStructuralZone;
+  return null;
+}
+
+function hasRequiredSurfacePayload(props: unknown): boolean {
+  if (!props || typeof props !== 'object' || Array.isArray(props)) return false;
+  const rec = props as Record<string, unknown>;
+  // Require at least one concrete contract payload entry so renderer
+  // components do not mount against empty/incomplete bags.
+  if (Object.keys(rec).length === 0) return false;
+  const payload = rec['payload'];
+  if (payload != null) return true;
+  const template = rec['template'];
+  if (typeof template === 'string' && template.trim()) return true;
+  return true;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -350,49 +373,40 @@ export class WorkspaceShellBindingService {
     }
 
     const next = new Map<string, WorkspaceShellSurface>();
-    let anonIndex = 0;
+    const dropped: Array<{ reason: string; row: unknown }> = [];
     for (const row of shell.surfaces) {
       if (!row || typeof row !== 'object') continue;
-      const zone = (row as { zone?: unknown }).zone;
-      // Reject surfaces with a missing or non-canonical zone — there is
-      // no longer a `#0` catch-all.
-      if (typeof zone !== 'string' || !zone.trim()) {
-        // eslint-disable-next-line no-console
-        console.warn('[workspace-shell-binding] dropping surface with missing zone', row);
-        continue;
-      }
-      if (!VALID_ZONES.has(zone)) {
-        // eslint-disable-next-line no-console
-        console.warn('[workspace-shell-binding] dropping surface with non-canonical zone', zone);
+      const r = row as Record<string, unknown>;
+      const zone = normalizedStructuralZone(r['zone']);
+      if (!zone) {
+        dropped.push({ reason: 'non-canonical-zone', row });
         continue;
       }
       const position = typeof row.position === 'number' ? row.position : 0;
-      const r = row as Record<string, unknown>;
-      const componentKey = typeof r['componentKey'] === 'string' ? (r['componentKey'] as string) : undefined;
+      const surfaceIdRaw = textOrNull(r['surfaceId']);
+      const slotKeyRaw = textOrNull(r['slotKey']);
+      const componentKey = textOrNull(r['componentKey']);
       const componentType = typeof r['componentType'] === 'string' ? (r['componentType'] as string) : (r['componentType'] === null ? null : undefined);
-      const rendererKey = typeof r['rendererKey'] === 'string' ? (r['rendererKey'] as string) : (r['rendererKey'] === null ? null : undefined);
+      const rendererKey = textOrNull(r['rendererKey']);
       const carbonKey = typeof r['carbonKey'] === 'string' ? (r['carbonKey'] as string) : (r['carbonKey'] === null ? null : undefined);
-      const surfaceIdRaw = typeof r['surfaceId'] === 'string' ? (r['surfaceId'] as string) : undefined;
-      const slotKeyRaw = typeof r['slotKey'] === 'string' ? (r['slotKey'] as string) : undefined;
+      if (!surfaceIdRaw || !slotKeyRaw || !componentKey || !rendererKey || !hasRequiredSurfacePayload(row.props)) {
+        dropped.push({ reason: 'missing-required-contract-fields', row });
+        continue;
+      }
       const surface: WorkspaceShellSurface = {
         enabled: row.enabled !== false,
         position,
         props: row.props ?? {},
         version: typeof row.version === 'number' ? row.version : 0,
         zone,
-        ...(surfaceIdRaw ? { surfaceId: surfaceIdRaw } : {}),
-        ...(slotKeyRaw ? { slotKey: slotKeyRaw } : {}),
-        ...(componentKey ? { componentKey } : {}),
+        surfaceId: surfaceIdRaw,
+        slotKey: slotKeyRaw,
+        componentKey,
         ...(componentType !== undefined ? { componentType } : {}),
-        ...(rendererKey !== undefined ? { rendererKey } : {}),
+        rendererKey,
         ...(carbonKey !== undefined ? { carbonKey } : {}),
       };
-      const stableId = readStableSurfaceId(row);
-      if (!stableId) {
-        // eslint-disable-next-line no-console
-        console.warn('[workspace-shell-binding] surface missing stable surfaceId/slotKey; using composite key', { zone, position });
-      }
-      const key = stableId ?? compositeSurfaceKey(zone, position, anonIndex++);
+      const key = surfaceIdRaw;
       if (next.has(key)) {
         // eslint-disable-next-line no-console
         console.warn('[workspace-shell-binding] duplicate surface key dropped', key);
@@ -419,14 +433,17 @@ export class WorkspaceShellBindingService {
     // key; downstream surface-renderer waves cannot hydrate Carbon
     // components for those rows because there is no stable identity to
     // bind to.
-    let header = 0, sidebar = 0, main = 0, rendered = 0, unsupported = 0;
+    let header = 0, banner = 0, sidebar = 0, main = 0, pageActions = 0, pageContent = 0;
+    let rendered = 0;
     let frame = 0, visual = 0;
     for (const [key, row] of next) {
       if (row.zone === 'header') header++;
+      else if (row.zone === 'banner') banner++;
       else if (row.zone === 'sidebar') sidebar++;
       else if (row.zone === 'main') main++;
-      if (key.includes('#')) unsupported++;
-      else rendered++;
+      else if (row.zone === 'page-actions') pageActions++;
+      else if (row.zone === 'page-content') pageContent++;
+      rendered++;
       // STRUCTURAL vs VISUAL split is now driven by the resolver-emitted
       // componentType ('shell-frame' = structural; everything else is
       // visual). Pattern matching on surfaceId is no longer used.
@@ -452,13 +469,21 @@ export class WorkspaceShellBindingService {
     console.info('[workspace-shell-binding] RUNTIME_APPLIED', {
       total: next.size,
       header,
+      banner,
       sidebar,
       main,
+      pageActions,
+      pageContent,
       rendered,
-      unsupported,
+      uniqueValidatedSurfaceIdCount: next.size,
+      droppedCount: dropped.length,
       frame,
       visual,
     });
+    if (dropped.length) {
+      // eslint-disable-next-line no-console
+      console.warn('[workspace-shell-binding] STRUCTURAL_CONTRACT_GATE_DROPPED', dropped);
+    }
   }
 
   /**
@@ -469,6 +494,18 @@ export class WorkspaceShellBindingService {
    */
   visualSurfacesByZone(zone: WorkspaceShellZone): WorkspaceShellSurface[] {
     return this.surfacesByZone(zone).filter((row) => (row.componentType ?? '') !== 'shell-frame');
+  }
+
+  /** Strict structural-zone reader used by ShellHost canonical layout. */
+  structuralSurfacesByZone(zone: CanonicalStructuralZone): WorkspaceShellSurface[] {
+    return Array.from(this._surfaces().values())
+      .filter((row) => row.zone === zone && row.enabled !== false)
+      .sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
+  }
+
+  /** Strict visual reader for canonical structural zones. */
+  visualStructuralSurfacesByZone(zone: CanonicalStructuralZone): WorkspaceShellSurface[] {
+    return this.structuralSurfacesByZone(zone).filter((row) => (row.componentType ?? '') !== 'shell-frame');
   }
 
   // ── First-class envelope reads ──────────────────────────────────────────

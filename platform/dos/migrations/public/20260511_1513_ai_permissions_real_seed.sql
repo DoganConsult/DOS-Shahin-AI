@@ -92,7 +92,13 @@ SELECT x.code, x.code, 'ai-os', x.resource, x.action, x.description, NOW()
     ('ai.governance.monitoring.read',                 'governance.monitoring',   'read',  'AI Monitoring alerts: read'),
     -- Governance — risk
     ('ai.governance.risk.read',                       'governance.risk',         'read',  'AI Risk assessments: read'),
-    ('ai.governance.risk.write',                      'governance.risk',         'write', 'AI Risk assessments: author')
+    ('ai.governance.risk.write',                      'governance.risk',         'write', 'AI Risk assessments: author'),
+    -- Cross-cutting catalog reads (referenced by ai-os routes/widgets/kpis/intents)
+    ('ai.read',                                       'ai',                      'read',  'AI plane: read aggregate AI catalog (cross-surface)'),
+    ('ai.agents.read',                                'agents',                  'read',  'AI Agents: read agent registry/catalog'),
+    ('ai.agents.register',                            'agents',                  'write', 'AI Agents: register/update agent definitions'),
+    ('ai.models.read',                                'models',                  'read',  'AI Models: read model registry'),
+    ('ai.models.add',                                 'models',                  'write', 'AI Models: add/register a model in registry')
   ) AS x(code, resource, action, description)
 WHERE NOT EXISTS (
   SELECT 1 FROM dos.permissions p WHERE p.permission_code = x.code

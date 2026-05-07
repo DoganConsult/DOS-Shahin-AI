@@ -528,6 +528,15 @@ async function loadFoundationOrgChartNodes(
   const schema = `tenant_${tenantId}`;
   // Validate schema name to avoid SQL injection (only alnum + underscore).
   if (!/^[a-z0-9_]+$/i.test(schema)) return [];
+  // Existence gate — use to_regclass so missing tables don't produce
+  // log noise. Returns empty rows silently when the tenant schema is
+  // not provisioned yet.
+  const exists = await safeQuery<{ exists: boolean }>(
+    'props.live.orgChart.exists',
+    errors,
+    () => pool.query(`SELECT to_regclass('"${schema}".organizations') IS NOT NULL AS exists`),
+  );
+  if (!exists.rows.length || exists.rows[0].exists !== true) return [];
   const sql = `
     SELECT
       organization_id::text  AS node_id,

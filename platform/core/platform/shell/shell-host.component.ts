@@ -70,18 +70,27 @@ import type { ShellAction, ShellBanner } from '@dos/ui-contracts';
           }
         </div>
       </header>
-      <div
-        class="dos-shell-zone dos-shell-zone--banners"
-        data-zone="banners"
-        role="region"
-        [attr.aria-label]="ariaBannersLabel() || null"
-      >
-        <dos-shell-banner-strip
-          [banners]="shell.shellBannerCandidates()"
-          (action)="onBannerAction($event)"
-          (dismiss)="onBannerDismiss($event)"
-        />
-      </div>
+      @if (visualBannerSurfaces().length > 0 || shell.shellBannerCandidates().length > 0) {
+        <div
+          class="dos-shell-zone dos-shell-zone--banners"
+          data-zone="banner"
+          role="region"
+          [attr.aria-label]="ariaBannersLabel() || null"
+          [attr.data-surface-count]="bannerSurfaces().length"
+          [attr.data-visual-surface-count]="visualBannerSurfaces().length"
+        >
+          @for (s of visualBannerSurfaces(); track surfaceTrack(s, $index)) {
+            <dos-surface-renderer [surface]="asSurfaceInput(s)"></dos-surface-renderer>
+          }
+          @if (shell.shellBannerCandidates().length > 0) {
+            <dos-shell-banner-strip
+              [banners]="shell.shellBannerCandidates()"
+              (action)="onBannerAction($event)"
+              (dismiss)="onBannerDismiss($event)"
+            />
+          }
+        </div>
+      }
       <aside
         class="dos-shell-zone dos-shell-zone--sidebar"
         data-zone="sidebar"
@@ -109,9 +118,21 @@ import type { ShellAction, ShellBanner } from '@dos/ui-contracts';
           </div>
         }
         <div class="dos-shell-zone__main-inner">
-          @for (s of visualMainSurfaces(); track surfaceTrack(s, $index)) {
-            <dos-surface-renderer [surface]="asSurfaceInput(s)"></dos-surface-renderer>
-          }
+          <section class="dos-shell-zone__page-actions" data-zone="page-actions">
+            @for (s of visualPageActionsSurfaces(); track surfaceTrack(s, $index)) {
+              <dos-surface-renderer [surface]="asSurfaceInput(s)"></dos-surface-renderer>
+            }
+          </section>
+          <section class="dos-shell-zone__page-content" data-zone="page-content">
+            @for (s of visualPageContentSurfaces(); track surfaceTrack(s, $index)) {
+              <dos-surface-renderer [surface]="asSurfaceInput(s)"></dos-surface-renderer>
+            }
+            @if (visualPageContentSurfaces().length === 0) {
+              @for (s of visualMainSurfaces(); track surfaceTrack(s, $index)) {
+                <dos-surface-renderer [surface]="asSurfaceInput(s)"></dos-surface-renderer>
+              }
+            }
+          </section>
           <router-outlet />
         </div>
       </main>
@@ -200,6 +221,9 @@ import type { ShellAction, ShellBanner } from '@dos/ui-contracts';
     }
     .dos-shell-zone--banners {
       grid-area: banners;
+      display: flex;
+      flex-direction: column;
+      gap: var(--cds-spacing-03);
     }
     .dos-shell-zone--sidebar {
       grid-area: sidebar;
@@ -223,6 +247,13 @@ import type { ShellAction, ShellBanner } from '@dos/ui-contracts';
       padding: var(--cds-spacing-07) var(--cds-spacing-06);
       display: flex; flex-direction: column;
       gap: var(--cds-spacing-05);
+    }
+    .dos-shell-zone__page-actions,
+    .dos-shell-zone__page-content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--cds-spacing-04);
+      min-width: 0;
     }
   `],
 })
@@ -267,12 +298,15 @@ export class ShellHostComponent {
     return this.viewportWidth() < min;
   });
 
-  readonly headerSurfaces = computed<WorkspaceShellSurface[]>(() => this.shell.surfacesByZone('header'));
-  readonly sidebarSurfaces = computed<WorkspaceShellSurface[]>(() => this.shell.surfacesByZone('sidebar'));
-  readonly mainSurfaces = computed<WorkspaceShellSurface[]>(() => this.shell.surfacesByZone('main'));
+  readonly headerSurfaces = computed<WorkspaceShellSurface[]>(() => this.shell.structuralSurfacesByZone('header'));
+  readonly bannerSurfaces = computed<WorkspaceShellSurface[]>(() => this.shell.structuralSurfacesByZone('banner'));
+  readonly sidebarSurfaces = computed<WorkspaceShellSurface[]>(() => this.shell.structuralSurfacesByZone('sidebar'));
+  readonly mainSurfaces = computed<WorkspaceShellSurface[]>(() => this.shell.structuralSurfacesByZone('main'));
+  readonly pageActionsSurfaces = computed<WorkspaceShellSurface[]>(() => this.shell.structuralSurfacesByZone('page-actions'));
+  readonly pageContentSurfaces = computed<WorkspaceShellSurface[]>(() => this.shell.structuralSurfacesByZone('page-content'));
 
   readonly visualHeaderSurfaces = computed<WorkspaceShellSurface[]>(
-    () => this.shell.visualSurfacesByZone('header'),
+    () => this.shell.visualStructuralSurfacesByZone('header'),
   );
   /** Header surfaces that anchor to the leading edge (brand, title, nav). */
   readonly visualHeaderStart = computed<WorkspaceShellSurface[]>(
@@ -295,10 +329,19 @@ export class ShellHostComponent {
     return props['placement'] === 'trailing';
   }
   readonly visualSidebarSurfaces = computed<WorkspaceShellSurface[]>(
-    () => this.shell.visualSurfacesByZone('sidebar'),
+    () => this.shell.visualStructuralSurfacesByZone('sidebar'),
+  );
+  readonly visualBannerSurfaces = computed<WorkspaceShellSurface[]>(
+    () => this.shell.visualStructuralSurfacesByZone('banner'),
+  );
+  readonly visualPageActionsSurfaces = computed<WorkspaceShellSurface[]>(
+    () => this.shell.visualStructuralSurfacesByZone('page-actions'),
+  );
+  readonly visualPageContentSurfaces = computed<WorkspaceShellSurface[]>(
+    () => this.shell.visualStructuralSurfacesByZone('page-content'),
   );
   readonly visualMainSurfaces = computed<WorkspaceShellSurface[]>(
-    () => this.shell.visualSurfacesByZone('main'),
+    () => this.shell.visualStructuralSurfacesByZone('main'),
   );
 
   /** Adapt the binding-row shape to the surface-renderer @Input contract. */
