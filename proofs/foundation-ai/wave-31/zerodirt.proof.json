@@ -20,9 +20,26 @@
         "proofs/foundation-ai/wave--2/inventory.proof.json",
         "proofs/foundation-ai/wave--2/plan-sync.proof.json",
         "proofs/foundation-ai/wave-31/entry.proof.json",
-        "proofs/foundation-ai/_ledger/2026-05-07T04-54-56-916Z__PLAN_SYNC.json",
-        "proofs/foundation-ai/_ledger/2026-05-07T04-55-09-085Z__PHASE-A.json",
-        "proofs/foundation-ai/_ledger/2026-05-07T04-55-09-144Z__INVENTORY.json"
+        "proofs/foundation-ai/wave-31/implementation.proof.json",
+        "proofs/foundation-ai/wave-31/preflight.proof.json",
+        "proofs/foundation-ai/wave-31/run.proof.json",
+        "proofs/foundation-ai/wave-31/verification.proof.json",
+        "proofs/foundation-ai/wave-31/zerodirt.proof.json",
+        "proofs/foundation-ai/_ledger/2026-05-07T04-56-17-378Z__PLAN_SYNC.json",
+        "proofs/foundation-ai/_ledger/2026-05-07T04-56-29-721Z__PHASE-A.json",
+        "proofs/foundation-ai/_ledger/2026-05-07T04-56-29-778Z__INVENTORY.json",
+        "proofs/foundation-ai/_ledger/2026-05-07T04-56-30-160Z__ZERODIRT.json",
+        "proofs/foundation-ai/_ledger/2026-05-07T04-56-30-173Z__PREFLIGHT.json",
+        "proofs/foundation-ai/_ledger/2026-05-07T04-56-30-262Z__RUN.json",
+        "proofs/foundation-ai/_ledger/2026-05-07T04-56-30-485Z__PHASE-B.json",
+        "proofs/foundation-ai/_ledger/2026-05-07T04-56-57-493Z__PHASE-C.json",
+        "proofs/foundation-ai/_ledger/2026-05-07T04-56-57-597Z__INVENTORY.json",
+        "proofs/foundation-ai/_ledger/2026-05-07T04-56-57-937Z__ZERODIRT.json",
+        "proofs/foundation-ai/_ledger/2026-05-07T04-56-57-948Z__GATE.json",
+        "proofs/foundation-ai/_ledger/2026-05-07T04-56-58-510Z__ZERODIRT.json",
+        "proofs/foundation-ai/_ledger/2026-05-07T04-56-58-522Z__DRIFT.json",
+        "proofs/foundation-ai/wave-31/drift.proof.json",
+        "proofs/foundation-ai/wave-31/quality-gate.proof.json"
       ],
       "backups": [],
       "forbidden": [],
@@ -48,6 +65,6 @@
       "forbiddenObserved": []
     }
   },
-  "emittedAt": "2026-05-07T04:55:09.522Z",
-  "hash": "sha256:3512434d3275c5604c215bcb6888e27df19470c4e0646120a3d05ce1c98aa1f9"
+  "emittedAt": "2026-05-07T04:56:58.854Z",
+  "hash": "sha256:8db5568c86c50e3fac819dd047087e32fe3b8984b36bf232f6855a44cbd0b1fb"
 }
