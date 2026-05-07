@@ -8,7 +8,11 @@
     "declaration": false,
     "sourceMap": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@dos/service-bootstrap/health": [
+        "../../node_modules/@dos/service-bootstrap/dist/health"
+      ]
+    }
   },
   "include": [
     "src/server.ts"

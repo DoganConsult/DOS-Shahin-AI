@@ -5,13 +5,6 @@ import { routes } from './routes/index.js';
 
 import { createHealthRouter, dbHealthCheck, redisHealthCheck, eventBusHealthCheck } from '@dos/service-bootstrap/health';
 
-// Health check router with DB, Redis, and EventBus probes
-app.use(createHealthRouter('workspace_bff', {
-  db: dbHealthCheck,
-  redis: redisHealthCheck,
-  eventBus: eventBusHealthCheck,
-}));
-
 const SERVICE_CODE = 'workspace-bff';
 
 async function main() {
@@ -20,6 +13,11 @@ async function main() {
   // Root /healthz alias for PM2 / Cloudflare / k8s-style probes that
   // hit the service root rather than the /api prefix.
   const rootRouter = Router();
+  rootRouter.use(createHealthRouter('workspace_bff', {
+    db: dbHealthCheck,
+    redis: redisHealthCheck,
+    eventBus: eventBusHealthCheck,
+  }));
   rootRouter.get('/healthz', (_req, res) =>
     res.json({ ok: true, service: 'workspace-bff' }),
   );

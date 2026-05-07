@@ -18,13 +18,6 @@ import { createProxyMiddleware } from 'http-proxy-middleware';
 
 import { createHealthRouter, dbHealthCheck, redisHealthCheck, eventBusHealthCheck } from '@dos/service-bootstrap/health';
 
-// Health check router with DB, Redis, and EventBus probes
-app.use(createHealthRouter('product_shell', {
-  db: dbHealthCheck,
-  redis: redisHealthCheck,
-  eventBus: eventBusHealthCheck,
-}));
-
 const SERVICE = 'product-shell';
 const PORT = Number(process.env.PORT || 3000);
 const GATEWAY_URL = required('GATEWAY_URL');
@@ -102,6 +95,11 @@ function required(name: string): string {
 const app = express();
 app.disable('x-powered-by');
 app.set('trust proxy', 1);
+app.use(createHealthRouter('product_shell', {
+  db: dbHealthCheck,
+  redis: redisHealthCheck,
+  eventBus: eventBusHealthCheck,
+}));
 
 app.use(helmet({
   contentSecurityPolicy: false,           // CSP is owned by nginx (frontend.conf).

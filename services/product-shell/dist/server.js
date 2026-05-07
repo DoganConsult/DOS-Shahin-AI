@@ -20,6 +20,7 @@ const helmet_1 = __importDefault(require("helmet"));
 const cors_1 = __importDefault(require("cors"));
 const morgan_1 = __importDefault(require("morgan"));
 const http_proxy_middleware_1 = require("http-proxy-middleware");
+const health_1 = require("@dos/service-bootstrap/health");
 const SERVICE = 'product-shell';
 const PORT = Number(process.env.PORT || 3000);
 const GATEWAY_URL = required('GATEWAY_URL');
@@ -87,6 +88,11 @@ function required(name) {
 const app = (0, express_1.default)();
 app.disable('x-powered-by');
 app.set('trust proxy', 1);
+app.use((0, health_1.createHealthRouter)('product_shell', {
+    db: health_1.dbHealthCheck,
+    redis: health_1.redisHealthCheck,
+    eventBus: health_1.eventBusHealthCheck,
+}));
 app.use((0, helmet_1.default)({
     contentSecurityPolicy: false, // CSP is owned by nginx (frontend.conf).
     crossOriginEmbedderPolicy: false,
@@ -110,8 +116,8 @@ app.use((0, cors_1.default)({
     credentials: true,
 }));
 app.use((0, morgan_1.default)(process.env.LOG_FORMAT || 'combined'));
-app.get('/health', (_req, res) => res.json({ ok: true, service: SERVICE }));
-app.get('/ready', (_req, res) => res.json({ ok: true, service: SERVICE }));
+// Health check handled by createHealthRouter
+// Ready check handled by createHealthRouter
 // Phase M1.6 — auth entry routes (/login, /register, /forgot-password,
 // /mfa, /reset-password) are now owned by the SPA's Carbon Auth Pages
 // Pack. The SPA's <app-auth-page-host> renders the Carbon login/register

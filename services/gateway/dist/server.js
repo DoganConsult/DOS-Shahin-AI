@@ -29,6 +29,7 @@ const decision_ledger_1 = require("./middleware/decision-ledger");
 const admin_zone_mtls_1 = require("./middleware/admin-zone-mtls");
 const tenant_zone_mtls_1 = require("./middleware/tenant-zone-mtls");
 const tenant_rate_limit_1 = require("./middleware/tenant-rate-limit");
+const health_1 = require("@dos/service-bootstrap/health");
 const PORT = Number(process.env.PORT || 4000);
 const AUTH_SERVICE_URL = required('AUTH_SERVICE_URL');
 const TENANT_SERVICE_URL = required('TENANT_SERVICE_URL');
@@ -182,6 +183,11 @@ const jwks = (0, jose_1.createRemoteJWKSet)(new URL(KC_JWKS_URL), {
 const app = (0, express_1.default)();
 app.disable('x-powered-by');
 app.set('trust proxy', 1);
+app.use((0, health_1.createHealthRouter)('gateway', {
+    db: health_1.dbHealthCheck,
+    redis: health_1.redisHealthCheck,
+    eventBus: health_1.eventBusHealthCheck,
+}));
 app.use((0, helmet_1.default)({
     contentSecurityPolicy: false,
     crossOriginResourcePolicy: { policy: 'same-site' },
@@ -205,10 +211,10 @@ app.use((req, _res, next) => {
     (0, gateway_origin_1.stripInboundIdentityHeaders)(req);
     next();
 });
-app.get('/health', (_req, res) => res.json({ ok: true, service: 'gateway' }));
-app.get('/ready', (_req, res) => res.json({ ok: true, service: 'gateway' }));
+// Health check handled by createHealthRouter
+// Ready check handled by createHealthRouter
 // SPA healthbar polls /api/health — alias to the same payload.
-app.get('/api/health', (_req, res) => res.json({ ok: true, service: 'gateway' }));
+// API health check handled by createHealthRouter
 // Public auth endpoints — no JWT required (login, callback, refresh, logout, health).
 // CSRF stub removed — see Task 9. The OIDC flow is cookie+PKCE; no XSRF token is exchanged.
 const PUBLIC_AUTH_PATHS = new Set([

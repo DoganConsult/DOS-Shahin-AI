@@ -32,13 +32,6 @@ import { tenantRateLimit } from './middleware/tenant-rate-limit';
 
 import { createHealthRouter, dbHealthCheck, redisHealthCheck, eventBusHealthCheck } from '@dos/service-bootstrap/health';
 
-// Health check router with DB, Redis, and EventBus probes
-app.use(createHealthRouter('gateway', {
-  db: dbHealthCheck,
-  redis: redisHealthCheck,
-  eventBus: eventBusHealthCheck,
-}));
-
 const PORT = Number(process.env.PORT || 4000);
 const AUTH_SERVICE_URL = required('AUTH_SERVICE_URL');
 const TENANT_SERVICE_URL = required('TENANT_SERVICE_URL');
@@ -201,6 +194,11 @@ const jwks = createRemoteJWKSet(new URL(KC_JWKS_URL), {
 const app = express();
 app.disable('x-powered-by');
 app.set('trust proxy', 1);
+app.use(createHealthRouter('gateway', {
+  db: dbHealthCheck,
+  redis: redisHealthCheck,
+  eventBus: eventBusHealthCheck,
+}));
 
 app.use(helmet({
   contentSecurityPolicy: false,
