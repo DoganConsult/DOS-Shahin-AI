@@ -29,11 +29,11 @@
       {
         "name": "git-clean",
         "status": "FAIL",
-        "detail": "?? platform/dos/migrations/public/20260511_1240_foundation_partial_route_depth_backfill.sql"
+        "detail": "M platform/ui-system/dos-ui-system/src/components/nav-item.component.ts\n M platform/ui-system/dos-ui-system/src/shell/workspace-sidebar.component.ts"
       }
     ],
     "blocker": "git-dirty"
   },
-  "emittedAt": "2026-05-07T04:48:56.246Z",
-  "hash": "sha256:69e42fc3fefe9c8375d03cb06e1a2ec2a1c791716a37995633278857dab3303b"
+  "emittedAt": "2026-05-07T04:49:46.218Z",
+  "hash": "sha256:4c82ac64554f50b7959eec12378cfb482680560b2538e9ac27e9106e82b109a6"
 }

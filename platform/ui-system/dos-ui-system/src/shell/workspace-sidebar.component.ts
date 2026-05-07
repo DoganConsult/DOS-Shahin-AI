@@ -11,7 +11,7 @@
  */
 import {
   Component, ChangeDetectionStrategy, Input, Output, EventEmitter,
-  computed, signal,
+  signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
@@ -38,7 +38,7 @@ import type { WorkspaceNavItem } from './workspace-shell.contracts';
           <cds-sidenav-menu [title]="group.group" [expanded]="isGroupExpanded(group.group)">
             @for (item of group.items; track item.id) {
               <cds-sidenav-item
-                [routerLink]="item.route ? [item.route] : null"
+                [routerLink]="navigatePath(item)"
                 routerLinkActive="dos-sidebar-item--active"
                 [attr.data-nav-id]="item.id"
                 (selected)="navigate.emit(item)"
@@ -49,7 +49,7 @@ import type { WorkspaceNavItem } from './workspace-shell.contracts';
                     <dos-icon class="dos-sidebar-icon" [name]="item.icon" [size]="16"></dos-icon>
                   }
                   <span class="dos-sidebar-label">
-                    {{ item.label?.fallback ?? item.label?.i18nKey ?? '' }}
+                    {{ item.label?.label ?? item.label?.fallback ?? item.label?.i18nKey ?? '' }}
                   </span>
                   @if (item.badgeCount && item.badgeCount > 0 && !collapsed) {
                     <dos-carbon-tag type="blue" size="sm" class="dos-sidebar-badge">
@@ -64,7 +64,7 @@ import type { WorkspaceNavItem } from './workspace-shell.contracts';
           <!-- Ungrouped items → flat cds-sidenav-item -->
           @for (item of group.items; track item.id) {
             <cds-sidenav-item
-              [routerLink]="item.route ? [item.route] : null"
+              [routerLink]="navigatePath(item)"
               routerLinkActive="dos-sidebar-item--active"
               [attr.data-nav-id]="item.id"
               (selected)="navigate.emit(item)"
@@ -75,7 +75,7 @@ import type { WorkspaceNavItem } from './workspace-shell.contracts';
                 }
                 @if (!collapsed) {
                   <span class="dos-sidebar-label">
-                    {{ item.label?.fallback ?? item.label?.i18nKey ?? '' }}
+                    {{ item.label?.label ?? item.label?.fallback ?? item.label?.i18nKey ?? '' }}
                   </span>
                   @if (item.badgeCount && item.badgeCount > 0) {
                     <dos-carbon-tag type="blue" size="sm" class="dos-sidebar-badge">
@@ -147,7 +147,7 @@ import type { WorkspaceNavItem } from './workspace-shell.contracts';
        handle routerLinkActive class for programmatic activation */
     :host ::ng-deep .dos-sidebar-item--active .cds--side-nav__link,
     :host ::ng-deep .cds--side-nav__link--current {
-      background: var(--shell-nav-active-bg));
+      background: var(--shell-nav-active-bg);
       border-inline-start: var(--dos-sidebar-active-border-width) solid var(--cds-border-interactive);
       color: var(--cds-text-primary);
       font-weight: 600;
@@ -217,5 +217,12 @@ export class DosWorkspaceSidebarComponent {
   isGroupExpanded(group: string): boolean {
     // Default: all groups expanded; collapses on user action (future)
     return !this.expandedGroups().has(`collapsed:${group}`);
+  }
+
+  navigatePath(item: WorkspaceNavItem): string[] | null {
+    if (item.action?.kind === 'navigate' && item.action.path) {
+      return [item.action.path];
+    }
+    return null;
   }
 }
