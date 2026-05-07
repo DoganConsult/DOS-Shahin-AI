@@ -386,6 +386,34 @@ const ARCHETYPE_EXTENSIONS: Record<string, Array<{ key: string; sql: string }>> 
   ],
   'workflow-control': [
     { key: 'progressSteps',   sql: `SELECT step_id AS id, sort_order, label_en, label_ar, state, description, occurred_at, actor FROM dos.ui_route_workflow_timeline_step WHERE route=$1 ORDER BY sort_order` },
+    { key: 'accessReviewCampaigns', sql: `SELECT
+        campaign_id AS id,
+        sort_order,
+        title_en,
+        title_ar,
+        status,
+        sla_due_at AS "slaDueAt",
+        pending_items AS "pendingItems",
+        escalated_items AS "escalatedItems",
+        completed_items AS "completedItems",
+        decision_action AS action
+      FROM dos.ui_route_access_review_campaign
+      WHERE route=$1
+      ORDER BY sort_order` },
+    { key: 'accessReviewEvidence', sql: `SELECT
+        evidence_id AS id,
+        sort_order,
+        occurred_at AS "occurredAt",
+        title_en,
+        title_ar,
+        description_en,
+        description_ar,
+        actor,
+        status,
+        payload_json AS payload
+      FROM dos.ui_route_access_review_evidence
+      WHERE route=$1
+      ORDER BY occurred_at DESC, sort_order` },
   ],
   'audit-trail': [
     { key: 'events',          sql: `SELECT event_id AS id, sort_order, occurred_at, actor, action, source, target, severity, description_en, description_ar FROM dos.ui_route_audit_event WHERE route=$1 ORDER BY occurred_at, sort_order` },
@@ -516,7 +544,29 @@ async function loadProps(
   if (filters.rows.length)  base['filters']          = filters.rows;
   if (tableActions.rows.length) {
     const actions = tableActions.rows as Array<Record<string, unknown>>;
-    const byScope = (scope: string) => actions.filter((row) => row['scope'] === scope);
+    const toModuleAction = (row: Record<string, unknown>) => {
+      const action = (row['action'] && typeof row['action'] === 'object')
+        ? row['action'] as Record<string, unknown>
+        : {};
+      const out: Record<string, unknown> = {
+        id: row['actionId'],
+        label: locale === 'ar'
+          ? String(row['labelAr'] ?? row['labelEn'] ?? '')
+          : String(row['labelEn'] ?? row['labelAr'] ?? ''),
+      };
+      const kind = action['kind'];
+      if (kind === 'navigate' && typeof action['path'] === 'string') {
+        out['route'] = action['path'];
+      } else if (kind === 'dispatch_event' && typeof action['eventName'] === 'string') {
+        out['actionKey'] = action['eventName'];
+      } else if (kind === 'open_command') {
+        out['commandKey'] = 'open_command';
+      } else if (typeof row['actionId'] === 'string') {
+        out['actionKey'] = row['actionId'];
+      }
+      return out;
+    };
+    const byScope = (scope: string) => actions.filter((row) => row['scope'] === scope).map(toModuleAction);
     const toolbarActions = byScope('toolbar');
     const rowActions = byScope('row');
     const batchActions = byScope('batch');
@@ -573,6 +623,56 @@ async function loadProps(
           ...row,
           title: label(row, 'title_en', 'title_ar'),
           rationale: label(row, 'rationale_en', 'rationale_ar'),
+        }));
+        return;
+      }
+      if (e.key === 'accessReviewCampaigns') {
+        const campaigns = rows.map((row) => ({
+          ...row,
+          title: label(row, 'title_en', 'title_ar'),
+          action: row['action'],
+        })) as Array<Record<string, unknown>>;
+        base[e.key] = campaigns;
+        base['queueTabs'] = campaigns.map((row) => ({
+          id: row['id'],
+          label: ((row['title'] as { label?: string } | undefined)?.label) ?? '',
+          status: row['status'],
+          counts: {
+            pending: Number(row['pendingItems'] ?? 0),
+            escalated: Number(row['escalatedItems'] ?? 0),
+            completed: Number(row['completedItems'] ?? 0),
+          },
+        }));
+        base['kpis'] = [
+          {
+            label: locale === 'ar' ? 'العناصر المعلقة' : 'Pending items',
+            value: campaigns.reduce((sum, row) => sum + Number(row['pendingItems'] ?? 0), 0),
+          },
+          {
+            label: locale === 'ar' ? 'العناصر المصعدة' : 'Escalated items',
+            value: campaigns.reduce((sum, row) => sum + Number(row['escalatedItems'] ?? 0), 0),
+          },
+          {
+            label: locale === 'ar' ? 'العناصر المكتملة' : 'Completed items',
+            value: campaigns.reduce((sum, row) => sum + Number(row['completedItems'] ?? 0), 0),
+          },
+        ];
+        return;
+      }
+      if (e.key === 'accessReviewEvidence') {
+        base[e.key] = rows.map((row) => ({
+          ...row,
+          title: label(row, 'title_en', 'title_ar'),
+          description: label(row, 'description_en', 'description_ar'),
+        }));
+        base['evidenceTimeline'] = (base[e.key] as Array<Record<string, unknown>>).map((row) => ({
+          id: row.id,
+          occurredAt: row.occurredAt,
+          actor: row.actor,
+          status: row.status,
+          title: row.title,
+          description: row.description,
+          payload: row.payload,
         }));
         return;
       }

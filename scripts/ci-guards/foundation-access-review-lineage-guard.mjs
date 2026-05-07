@@ -2,11 +2,11 @@
 /**
  * Guard: access-review migration lineage must stay canonical.
  *
- * We currently have historical CREATE TABLE definitions for:
+ * Canonical CREATE TABLE lineage for:
  *   - dos.access_reviews
  *   - dos.access_review_items
- * in two legacy migration files. This guard freezes lineage so no
- * additional duplicate table-creation migrations are introduced.
+ * lives only in DOS public migration 20260425_0005. This guard freezes
+ * lineage so no duplicate table-creation migrations are introduced.
  */
 
 import { readdirSync, readFileSync } from 'node:fs';
@@ -18,7 +18,6 @@ const FOUNDATION = join(ROOT, 'platform', 'foundation', 'db', 'migrations');
 
 const ALLOWLIST = new Set([
   join(DOS_PUBLIC, '20260425_0005_access_review_tables.sql'),
-  join(FOUNDATION, '20260502_0100_foundation_missing_tables.sql'),
 ]);
 
 const NEEDLES = [

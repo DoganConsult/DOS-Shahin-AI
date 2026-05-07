@@ -53,7 +53,7 @@ WITH new_routes(path_pattern, component_key, sort_order, page_type, layout,
     ('/foundation/operations-readiness','module.overview.page',    270, 'dashboard', 'tile-grid',
      'foundation.page.operations-readiness.title','foundation.page.operations-readiness.subtitle',
      'foundation.diagnostics.read'),
-    ('/foundation/workflows',           'module.records.page',     280, 'workflow',  'kanban',
+    ('/foundation/workflows',           'module.workflow_timeline.page',     280, 'workflow',  'kanban',
      'foundation.page.workflows.title',           'foundation.page.workflows.subtitle',
      'foundation.workflows.read')
 )

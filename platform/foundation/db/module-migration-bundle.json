@@ -37,6 +37,78 @@
       "file": "20260425_0600_foundation_demo_seed.sql",
       "description": "P7 — idempotent demo seed: org/BU/positions/locations/committees for active tenants",
       "idempotent": true
+    },
+    {
+      "file": "20260502_0100_foundation_missing_tables.sql",
+      "description": "Create missing foundation operational tables and assert canonical access-review lineage",
+      "idempotent": true,
+      "down": "20260502_0100_foundation_missing_tables_down.sql"
+    },
+    {
+      "file": "20260507_0100_dynamic_ui_page_archetype.sql",
+      "description": "Enable dynamic-ui page archetype and shell runtime alignment for foundation routes",
+      "idempotent": true,
+      "down": "20260507_0100_dynamic_ui_page_archetype_down.sql"
+    },
+    {
+      "file": "20260507_0200_wave15_nav_perm_reconcile.sql",
+      "description": "Reconcile foundation nav permission mapping contracts",
+      "idempotent": true
+    },
+    {
+      "file": "20260507_0300_wave16_workspace_chrome_registries.sql",
+      "description": "Seed workspace chrome registries for foundation dynamic shell surfaces",
+      "idempotent": true
+    },
+    {
+      "file": "20260507_0400_wave17_disable_shell_empty_state.sql",
+      "description": "Disable shell empty-state fallback rows for foundation cutover",
+      "idempotent": true
+    },
+    {
+      "file": "20260507_0500_wave18_tenant_admin_foundation_perms.sql",
+      "description": "Grant tenant-admin foundation permission baseline for runtime parity",
+      "idempotent": true
+    },
+    {
+      "file": "20260507_0600_wave20_tenant_membership_bridge.sql",
+      "description": "Bridge tenant membership source for shell/runtime role resolution",
+      "idempotent": true
+    },
+    {
+      "file": "20260507_0700_wave21_delegations_view_columns.sql",
+      "description": "Align delegations view columns with typed delegation-center contracts",
+      "idempotent": true
+    },
+    {
+      "file": "20260507_0800_wave22_audit_trail_entitlement.sql",
+      "description": "Seed audit trail entitlement bindings for foundation breadth routes",
+      "idempotent": true
+    },
+    {
+      "file": "20260507_0900_wave23_per_tenant_entitlements.sql",
+      "description": "Publish per-tenant module entitlement seeds for foundation routes",
+      "idempotent": true
+    },
+    {
+      "file": "20260507_1000_wave24_per_tenant_role_permission_map.sql",
+      "description": "Publish per-tenant role-permission map for runtime permission filtering",
+      "idempotent": true
+    },
+    {
+      "file": "20260507_1100_wave26_foundation_route_metadata_and_page_experience.sql",
+      "description": "Seed route metadata/title/subtitle/page experience contracts for foundation routes",
+      "idempotent": true
+    },
+    {
+      "file": "20260507_1200_wave27_foundation_route_completion.sql",
+      "description": "Close remaining foundation route coverage and template binding parity",
+      "idempotent": true
+    },
+    {
+      "file": "20260507_1101_fix_tenant_completeness.sql",
+      "description": "Post-wave tenant completeness reconciliation for foundation activation",
+      "idempotent": true
     }
   ],
   "seeds": [

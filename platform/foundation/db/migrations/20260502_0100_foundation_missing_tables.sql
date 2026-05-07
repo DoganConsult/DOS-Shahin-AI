@@ -2,8 +2,6 @@
 -- Foundation missing tables (20260502_0100)
 --
 -- Creates DDL that was referenced in services but had no CREATE TABLE:
---   • dos.access_reviews          — access-review campaign header
---   • dos.access_review_items     — per-user/resource decisions within a campaign
 --   • dos.committee_meetings      — meeting schedule + minutes for committees
 --   • dos.user_roles              — user's active functional role assignment (light)
 --   • dos.user_role_assignments   — role assignment ledger (SoD service uses this)
@@ -18,59 +16,22 @@ BEGIN;
 SET search_path = public;
 
 -- ------------------------------------------------------------------ --
--- 1. dos.access_reviews                                               --
+-- 1. Access-review lineage is canonical in DOS public migration       --
+--    20260425_0005_access_review_tables.sql.                          --
+--    Foundation migration must assert-only (no duplicate CREATE TABLE).--
 -- ------------------------------------------------------------------ --
-CREATE TABLE IF NOT EXISTS dos.access_reviews (
-  review_id     UUID          PRIMARY KEY DEFAULT gen_random_uuid(),
-  tenant_id     VARCHAR(64)   NOT NULL,
-  campaign_name VARCHAR(255)  NOT NULL,
-  description   TEXT,
-  scope         JSONB         NOT NULL DEFAULT '{}'::JSONB,
-  status        VARCHAR(20)   NOT NULL DEFAULT 'draft'
-                              CHECK (status IN ('draft','active','closed','cancelled')),
-  review_type   VARCHAR(30)   NOT NULL DEFAULT 'periodic'
-                              CHECK (review_type IN ('periodic','event_triggered','ad_hoc')),
-  due_date      TIMESTAMPTZ,
-  created_by    VARCHAR(64),
-  created_at    TIMESTAMPTZ   NOT NULL DEFAULT NOW(),
-  updated_at    TIMESTAMPTZ   NOT NULL DEFAULT NOW(),
-  closed_at     TIMESTAMPTZ,
-  deleted_at    TIMESTAMPTZ
-);
-
-CREATE INDEX IF NOT EXISTS idx_dos_access_reviews_tenant
-  ON dos.access_reviews(tenant_id) WHERE deleted_at IS NULL;
-
-CREATE INDEX IF NOT EXISTS idx_dos_access_reviews_status
-  ON dos.access_reviews(tenant_id, status) WHERE deleted_at IS NULL;
+DO $$
+BEGIN
+  IF to_regclass('dos.access_reviews') IS NULL THEN
+    RAISE EXCEPTION 'missing canonical table dos.access_reviews (expected from dos public migration)';
+  END IF;
+  IF to_regclass('dos.access_review_items') IS NULL THEN
+    RAISE EXCEPTION 'missing canonical table dos.access_review_items (expected from dos public migration)';
+  END IF;
+END $$;
 
 -- ------------------------------------------------------------------ --
--- 2. dos.access_review_items                                          --
--- ------------------------------------------------------------------ --
-CREATE TABLE IF NOT EXISTS dos.access_review_items (
-  item_id       UUID          PRIMARY KEY DEFAULT gen_random_uuid(),
-  tenant_id     VARCHAR(64)   NOT NULL,
-  review_id     UUID          NOT NULL REFERENCES dos.access_reviews(review_id) ON DELETE CASCADE,
-  user_id       VARCHAR(64)   NOT NULL,
-  resource_type VARCHAR(100)  NOT NULL,
-  resource_id   VARCHAR(64)   NOT NULL,
-  entitlement   TEXT,
-  decision      VARCHAR(20)   CHECK (decision IN ('approve','revoke','escalate') OR decision IS NULL),
-  decided_by    VARCHAR(64),
-  decided_at    TIMESTAMPTZ,
-  notes         TEXT,
-  created_at    TIMESTAMPTZ   NOT NULL DEFAULT NOW(),
-  updated_at    TIMESTAMPTZ   NOT NULL DEFAULT NOW()
-);
-
-CREATE INDEX IF NOT EXISTS idx_dos_access_review_items_review
-  ON dos.access_review_items(review_id, tenant_id);
-
-CREATE INDEX IF NOT EXISTS idx_dos_access_review_items_user
-  ON dos.access_review_items(tenant_id, user_id);
-
--- ------------------------------------------------------------------ --
--- 3. dos.committee_meetings                                           --
+-- 2. dos.committee_meetings                                           --
 -- ------------------------------------------------------------------ --
 CREATE TABLE IF NOT EXISTS dos.committee_meetings (
   meeting_id    UUID          PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -93,7 +54,7 @@ CREATE INDEX IF NOT EXISTS idx_dos_committee_meetings_committee
   ON dos.committee_meetings(committee_id, tenant_id) WHERE deleted_at IS NULL;
 
 -- ------------------------------------------------------------------ --
--- 4. dos.user_roles                                                   --
+-- 3. dos.user_roles                                                   --
 --    Light snapshot: user's current primary functional role.          --
 --    Used by access-snapshot service for fallback role lookup.        --
 -- ------------------------------------------------------------------ --
@@ -116,7 +77,7 @@ CREATE INDEX IF NOT EXISTS idx_dos_user_roles_user
   ON dos.user_roles(tenant_id, user_id) WHERE ended_at IS NULL;
 
 -- ------------------------------------------------------------------ --
--- 5. dos.user_role_assignments                                        --
+-- 4. dos.user_role_assignments                                        --
 --    Role assignment ledger used by SoD-check service.               --
 -- ------------------------------------------------------------------ --
 -- Pre-existing live deploys may already expose dos.user_role_assignments as a
@@ -149,7 +110,7 @@ BEGIN
 END$$;
 
 -- ------------------------------------------------------------------ --
--- 6. dos.role_assignments                                             --
+-- 5. dos.role_assignments                                             --
 --    Durable role-binding used by user-lifecycle offboarding.        --
 -- ------------------------------------------------------------------ --
 CREATE TABLE IF NOT EXISTS dos.role_assignments (
@@ -170,7 +131,7 @@ CREATE INDEX IF NOT EXISTS idx_dos_role_assignments_user
   ON dos.role_assignments(tenant_id, user_id) WHERE deleted_at IS NULL;
 
 -- ------------------------------------------------------------------ --
--- 7. dos.module_sla_defaults                                          --
+-- 6. dos.module_sla_defaults                                          --
 --    Per-module SLA thresholds for approval breach detection.        --
 -- ------------------------------------------------------------------ --
 CREATE TABLE IF NOT EXISTS dos.module_sla_defaults (

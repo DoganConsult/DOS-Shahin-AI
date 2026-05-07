@@ -13,13 +13,6 @@ import { requireGatewayOrigin } from './middleware/gateway-origin.js';
 
 import { createHealthRouter, dbHealthCheck, redisHealthCheck, eventBusHealthCheck } from '@dos/service-bootstrap/health';
 
-// Health check router with DB, Redis, and EventBus probes
-app.use(createHealthRouter('ui_os', {
-  db: dbHealthCheck,
-  redis: redisHealthCheck,
-  eventBus: eventBusHealthCheck,
-}));
-
 const PORT = Number(process.env.PORT || 4015);
 const DATABASE_URL = process.env.DATABASE_URL;
 
@@ -38,6 +31,12 @@ const publicRouteMetadataRouter   = createPublicRouteMetadataRouter(pool);
 const app = express();
 app.disable('x-powered-by');
 app.use(express.json({ limit: '1mb' }));
+// Health check router with DB, Redis, and EventBus probes
+app.use(createHealthRouter('ui_os', {
+  db: dbHealthCheck,
+  redis: redisHealthCheck,
+  eventBus: eventBusHealthCheck,
+}));
 
 // Wave 10b — DAuth gateway-origin verifier (HMAC-signed `x-dos-gateway-token`).
 // Sole writer of req.principal. Honors LEGACY_HEADER_TRUST=true during
