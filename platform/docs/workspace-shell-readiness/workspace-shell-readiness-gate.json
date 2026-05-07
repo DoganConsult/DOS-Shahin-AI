@@ -83,7 +83,14 @@
       "workspace.polish.skeleton-placeholder",
       "workspace.polish.skeleton-text",
       "workspace.polish.toggletip",
-      "workspace.polish.tooltip"
+      "workspace.polish.tooltip",
+      "workspace.shell.brand",
+      "workspace.shell.empty-state",
+      "workspace.shell.module-cards",
+      "workspace.shell.settings-action",
+      "workspace.shell.sidebar-nav",
+      "workspace.shell.user-menu",
+      "workspace.shell.workspace-title"
     ],
     "duplicates": [],
     "invalidRows": []
@@ -149,7 +156,14 @@
       "workspace.polish.skeleton-placeholder",
       "workspace.polish.skeleton-text",
       "workspace.polish.toggletip",
-      "workspace.polish.tooltip"
+      "workspace.polish.tooltip",
+      "workspace.shell.brand",
+      "workspace.shell.empty-state",
+      "workspace.shell.module-cards",
+      "workspace.shell.settings-action",
+      "workspace.shell.sidebar-nav",
+      "workspace.shell.user-menu",
+      "workspace.shell.workspace-title"
     ],
     "duplicates": [],
     "invalidRows": [],
@@ -157,45 +171,45 @@
     "missingKeys": []
   },
   "binding": {
-    "tenantCount": 43,
-    "rowCount": 2580,
+    "tenantCount": 44,
+    "rowCount": 2948,
     "missingZoneCount": 0,
     "invalidZoneCount": 0,
     "samples": [],
-    "activeTenantCount": 38
+    "activeTenantCount": 39
   },
   "envelope": {
     "ui_workspace_chrome": {
       "exists": true,
-      "rowCount": 608,
-      "tenantCount": 38,
+      "rowCount": 2070,
+      "tenantCount": 44,
       "missingTenantCount": 0,
       "missingTenantSamples": []
     },
     "ui_workspace_shortcut": {
       "exists": true,
-      "rowCount": 152,
-      "tenantCount": 38,
+      "rowCount": 324,
+      "tenantCount": 43,
       "missingTenantCount": 0,
       "missingTenantSamples": []
     },
     "ui_workspace_banner": {
       "exists": true,
-      "rowCount": 114,
-      "tenantCount": 38,
+      "rowCount": 117,
+      "tenantCount": 39,
       "missingTenantCount": 0,
       "missingTenantSamples": []
     },
     "ui_workspace_policy": {
       "exists": true,
-      "rowCount": 76,
-      "tenantCount": 38,
+      "rowCount": 248,
+      "tenantCount": 43,
       "missingTenantCount": 0,
       "missingTenantSamples": []
     }
   },
   "sourceScan": {
-    "filesScanned": 9099,
+    "filesScanned": 9109,
     "literals": [
       {
         "file": "modules/compliance/_inbound/packs-package/ports/platform.ts",
@@ -602,74 +616,68 @@
       {
         "file": "modules/shared/layout/sidebar/sidebar.pbt.ts",
         "literal": "workspace.config.read",
-        "line": 56,
+        "line": 57,
         "column": 99
       },
       {
         "file": "modules/shared/layout/sidebar/sidebar.pbt.ts",
         "literal": "workspace.config.read",
-        "line": 57,
+        "line": 58,
         "column": 111
       },
       {
         "file": "modules/shared/layout/sidebar/sidebar.pbt.ts",
         "literal": "workspace.config.read",
-        "line": 58,
+        "line": 59,
         "column": 106
       },
       {
         "file": "modules/shared/layout/sidebar/sidebar.pbt.ts",
         "literal": "workspace.config.read",
-        "line": 65,
+        "line": 66,
         "column": 93
       },
       {
         "file": "modules/shared/layout/sidebar/sidebar.pbt.ts",
         "literal": "workspace.config.read",
-        "line": 66,
+        "line": 67,
         "column": 87
       },
       {
         "file": "modules/shared/layout/sidebar/sidebar.pbt.ts",
         "literal": "workspace.config.read",
-        "line": 79,
+        "line": 80,
         "column": 81
       },
       {
         "file": "modules/shared/layout/sidebar/sidebar.pbt.ts",
         "literal": "workspace.config.read",
-        "line": 80,
+        "line": 81,
         "column": 102
-      },
-      {
-        "file": "modules/shared/layout/sidebar/sidebar.pbt.ts",
-        "literal": "workspace.config.read",
-        "line": 85,
-        "column": 96
       },
       {
         "file": "modules/shared/layout/sidebar/sidebar.pbt.ts",
         "literal": "workspace.config.read",
         "line": 86,
-        "column": 94
+        "column": 96
       },
       {
         "file": "modules/shared/layout/sidebar/sidebar.pbt.ts",
         "literal": "workspace.config.read",
         "line": 87,
+        "column": 94
+      },
+      {
+        "file": "modules/shared/layout/sidebar/sidebar.pbt.ts",
+        "literal": "workspace.config.read",
+        "line": 88,
         "column": 102
       },
       {
         "file": "modules/shared/layout/sidebar/sidebar.utils.ts",
         "literal": "workspace.config.read",
-        "line": 26,
-        "column": 130
-      },
-      {
-        "file": "modules/shared/layout/sidebar/sidebar.utils.ts",
-        "literal": "workspace.config.read",
         "line": 27,
-        "column": 126
+        "column": 130
       },
       {
         "file": "modules/shared/layout/sidebar/sidebar.utils.ts",
@@ -687,13 +695,13 @@
         "file": "modules/shared/layout/sidebar/sidebar.utils.ts",
         "literal": "workspace.config.read",
         "line": 30,
-        "column": 128
+        "column": 126
       },
       {
         "file": "modules/shared/layout/sidebar/sidebar.utils.ts",
         "literal": "workspace.config.read",
         "line": 31,
-        "column": 126
+        "column": 128
       },
       {
         "file": "modules/shared/layout/sidebar/sidebar.utils.ts",
@@ -705,42 +713,42 @@
         "file": "modules/shared/layout/sidebar/sidebar.utils.ts",
         "literal": "workspace.config.read",
         "line": 33,
+        "column": 126
+      },
+      {
+        "file": "modules/shared/layout/sidebar/sidebar.utils.ts",
+        "literal": "workspace.config.read",
+        "line": 34,
         "column": 120
       },
       {
         "file": "modules/shared/layout/sidebar/sidebar.utils.ts",
         "literal": "workspace.config.read",
-        "line": 37,
+        "line": 38,
         "column": 135
       },
       {
         "file": "modules/shared/layout/sidebar/sidebar.utils.ts",
         "literal": "workspace.config.read",
-        "line": 40,
+        "line": 41,
         "column": 131
       },
       {
         "file": "modules/shared/layout/sidebar/sidebar.utils.ts",
         "literal": "workspace.config.read",
-        "line": 41,
+        "line": 42,
         "column": 136
       },
       {
         "file": "modules/shared/layout/sidebar/sidebar.utils.ts",
         "literal": "workspace.config.read",
-        "line": 42,
+        "line": 43,
         "column": 120
-      },
-      {
-        "file": "services/ui-os-service/src/routes/workspace-shell.routes.ts",
-        "literal": "workspace.frame.",
-        "line": 258,
-        "column": 60
       }
     ],
     "componentKeyLiterals": [],
-    "ignoredLiteralCount": 90,
-    "componentKeySetSize": 60
+    "ignoredLiteralCount": 89,
+    "componentKeySetSize": 67
   },
   "catalogEndpoint": {
     "expected": "/workspace-shell-catalog",

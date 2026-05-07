@@ -1,13 +1,42 @@
 #!/usr/bin/env node
 /**
  * DOS Master Doctrine Article 5 — No fake-green.
- *
- * Scans all TS/JS source for forbidden bypass patterns: blanket `any`
- * casts in tests, `it.skip`/`describe.skip` without TODO refs,
- * `// @ts-ignore` without justification, $any() bypass in templates.
- *
- * Allowlist lives in scripts/ci-guards/ts-suppression-allowlist.json.
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/fake-green-detector.mjs [OPTIONS]
+
+Scans TS/JS source for forbidden bypass patterns.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  FAKE_GREEN_ENFORCE   Set to 1 to enforce ban (default: baseline mode)
+
+Forbidden patterns:
+  - @ts-ignore without justification
+  - it.skip / describe.skip without TODO refs
+  - $any() bypass in templates
+
+Allowlist:
+  scripts/ci-guards/ts-suppression-allowlist.json
+
+Exit codes:
+  Non-zero on pattern violation (above baseline or enforce mode)
+
+Examples:
+  # Run in baseline mode (default)
+  node scripts/ci-guards/fake-green-detector.mjs
+
+  # Run with enforcement
+  FAKE_GREEN_ENFORCE=1 node scripts/ci-guards/fake-green-detector.mjs
+`);
+  process.exit(0);
+}
+
 import { execSync } from 'node:child_process';
 
 const PATTERNS = [

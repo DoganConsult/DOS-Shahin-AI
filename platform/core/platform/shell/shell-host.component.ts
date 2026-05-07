@@ -4,7 +4,7 @@
  *
  * Layout responsibility (Option A):
  *   - Provide ONLY the canonical workspace chrome grid containers:
- *     header / sidebar / main / router-outlet. ShellHost owns NO
+ *     header / banners / sidebar / main / router-outlet. ShellHost owns NO
  *     visual rendering — every visible Carbon component is mounted by
  *     <dos-surface-renderer> off the resolver-emitted rendererKey.
  *   - For each zone, iterate visualSurfacesByZone(zone) and emit one
@@ -17,17 +17,19 @@
  *     the resolver emits zero visual surfaces in a zone, the zone
  *     renders empty (no static fallback).
  */
-import { Component, DestroyRef, ElementRef, computed, inject } from '@angular/core';
+import { Component, DestroyRef, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterOutlet } from '@angular/router';
 import {
   DosSurfaceRendererComponent,
+  DosShellBannerStripComponent,
   type WorkspaceSurfaceInput,
 } from '@dos/ui-system';
 import { WorkspaceShellBindingService, type WorkspaceShellSurface } from './workspace-shell-binding.service';
 import { ShellPreferencesService } from './shell-preferences.service';
 import { AuthLogoutService } from './auth-logout.service';
-import type { ShellAction } from '@dos/ui-contracts';
+import { ShellErrorStateService } from './shell-error-state.service';
+import type { ShellAction, ShellBanner } from '@dos/ui-contracts';
 
 @Component({
   selector: 'app-shell-host',
@@ -36,14 +38,21 @@ import type { ShellAction } from '@dos/ui-contracts';
     CommonModule,
     RouterOutlet,
     DosSurfaceRendererComponent,
+    DosShellBannerStripComponent,
   ],
   template: `
-    <div class="dos-shell-host">
+    <div
+      class="dos-shell-host"
+      [class.dos-shell-host--rtl]="isRtl()"
+    >
+      @if (skipToMainText()) {
+        <a class="dos-shell-skip" href="#main-content">{{ skipToMainText() }}</a>
+      }
       <header
         class="cds--header dos-shell-zone dos-shell-zone--header"
         data-zone="header"
         role="banner"
-        aria-label="Workspace header"
+        [attr.aria-label]="ariaHeaderLabel() || null"
         [attr.data-surface-count]="headerSurfaces().length"
         [attr.data-visual-surface-count]="visualHeaderSurfaces().length"
       >
@@ -58,11 +67,23 @@ import type { ShellAction } from '@dos/ui-contracts';
           }
         </div>
       </header>
+      <div
+        class="dos-shell-zone dos-shell-zone--banners"
+        data-zone="banners"
+        role="region"
+        [attr.aria-label]="ariaBannersLabel() || null"
+      >
+        <dos-shell-banner-strip
+          [banners]="shell.shellBannerCandidates()"
+          (action)="onBannerAction($event)"
+          (dismiss)="onBannerDismiss($event)"
+        />
+      </div>
       <aside
         class="cds--side-nav cds--side-nav--expanded dos-shell-zone dos-shell-zone--sidebar"
         data-zone="sidebar"
         role="complementary"
-        aria-label="Workspace sidebar"
+        [attr.aria-label]="ariaSidebarLabel() || null"
         [attr.data-surface-count]="sidebarSurfaces().length"
         [attr.data-visual-surface-count]="visualSidebarSurfaces().length"
       >
@@ -75,9 +96,15 @@ import type { ShellAction } from '@dos/ui-contracts';
         data-zone="main"
         role="main"
         id="main-content"
+        [attr.aria-label]="ariaMainLabel() || null"
         [attr.data-surface-count]="mainSurfaces().length"
         [attr.data-visual-surface-count]="visualMainSurfaces().length"
       >
+        @if (!shell.loaded() && loadingLabel()) {
+          <div class="dos-shell-loading" role="status" aria-live="polite">
+            {{ loadingLabel() }}
+          </div>
+        }
         <div class="dos-shell-zone__main-inner">
           @for (s of visualMainSurfaces(); track surfaceTrack(s, $index)) {
             <dos-surface-renderer [surface]="asSurfaceInput(s)"></dos-surface-renderer>
@@ -89,14 +116,37 @@ import type { ShellAction } from '@dos/ui-contracts';
   `,
   styles: [`
     :host { display: block; min-height: 100vh; background: var(--cds-background); }
+    .dos-shell-skip {
+      position: absolute;
+      inset-inline-start: -9999px;
+      inset-block-start: 0;
+      z-index: 9999;
+      padding: var(--cds-spacing-03) var(--cds-spacing-05);
+      background: var(--cds-background);
+      color: var(--cds-text-primary);
+      text-decoration: none;
+    }
+    .dos-shell-skip:focus {
+      inset-inline-start: var(--cds-spacing-05);
+      inset-block-start: var(--cds-spacing-05);
+      outline: 2px solid var(--cds-focus);
+    }
     .dos-shell-host {
       display: grid;
       grid-template-columns: 16rem 1fr;
-      grid-template-rows: 3rem 1fr;
+      grid-template-rows: 3rem auto 1fr;
       grid-template-areas:
-        'header  header'
+        'header header'
+        'banners banners'
         'sidebar main';
       min-height: 100vh;
+    }
+    .dos-shell-host--rtl {
+      grid-template-columns: 1fr 16rem;
+      grid-template-areas:
+        'header header'
+        'banners banners'
+        'main sidebar';
     }
     .dos-shell-zone--header {
       grid-area: header;
@@ -113,14 +163,18 @@ import type { ShellAction } from '@dos/ui-contracts';
     }
     .dos-shell-zone__header-end {
       display: inline-flex; align-items: stretch;
-      flex: 1 1 auto; justify-content: flex-end;
+      flex: 1 1 auto;
+      margin-inline-start: auto;
       gap: var(--cds-spacing-03);
       padding-inline-end: var(--cds-spacing-03);
+    }
+    .dos-shell-zone--banners {
+      grid-area: banners;
     }
     .dos-shell-zone--sidebar {
       grid-area: sidebar;
       background: var(--cds-background);
-      border-right: 1px solid var(--cds-border-subtle);
+      border-inline-end: 1px solid var(--cds-border-subtle);
       overflow-y: auto;
     }
     .dos-shell-zone--main {
@@ -128,6 +182,10 @@ import type { ShellAction } from '@dos/ui-contracts';
       padding: 0;
       background: var(--cds-layer);
       overflow: auto;
+    }
+    .dos-shell-loading {
+      padding: var(--cds-spacing-07) var(--cds-spacing-06);
+      color: var(--cds-text-secondary);
     }
     .dos-shell-zone__main-inner {
       max-width: 80rem;
@@ -140,11 +198,26 @@ import type { ShellAction } from '@dos/ui-contracts';
 })
 export class ShellHostComponent {
   private readonly router = inject(Router);
-  private readonly hostRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly prefs = inject(ShellPreferencesService);
   private readonly authLogout = inject(AuthLogoutService);
+  private readonly shellError = inject(ShellErrorStateService);
   private readonly destroyRef = inject(DestroyRef);
   readonly shell = inject(WorkspaceShellBindingService);
+
+  /** DB-driven copy from workspace-runtime `chrome.tplStrings` (shell.tpl.*). */
+  private readonly tplStrings = computed(() => {
+    const chrome = this.shell.chrome() as Record<string, unknown>;
+    const raw = chrome['tplStrings'];
+    return raw && typeof raw === 'object' ? (raw as Record<string, string>) : {};
+  });
+
+  readonly skipToMainText = computed(() => this.tplStrings()['shell.tpl.skip_to_main'] ?? '');
+  readonly loadingLabel = computed(() => this.tplStrings()['shell.tpl.loading'] ?? '');
+  readonly ariaHeaderLabel = computed(() => this.tplStrings()['shell.tpl.aria.header'] ?? '');
+  readonly ariaSidebarLabel = computed(() => this.tplStrings()['shell.tpl.aria.sidebar'] ?? '');
+  readonly ariaMainLabel = computed(() => this.tplStrings()['shell.tpl.aria.main'] ?? '');
+  readonly ariaBannersLabel = computed(() => this.tplStrings()['shell.tpl.aria.banners'] ?? '');
+  readonly isRtl = computed(() => this.prefs.dir() === 'rtl');
 
   readonly headerSurfaces = computed<WorkspaceShellSurface[]>(() => this.shell.surfacesByZone('header'));
   readonly sidebarSurfaces = computed<WorkspaceShellSurface[]>(() => this.shell.surfacesByZone('sidebar'));
@@ -201,18 +274,7 @@ export class ShellHostComponent {
     return s.surfaceId ?? s.slotKey ?? `${s.zone ?? 'z'}#${index}`;
   }
 
-  readonly totalSurfaces = computed<number>(
-    () => this.headerSurfaces().length + this.sidebarSurfaces().length + this.mainSurfaces().length,
-  );
-  readonly visualSurfacesTotal = computed<number>(
-    () => this.visualHeaderSurfaces().length + this.visualSidebarSurfaces().length + this.visualMainSurfaces().length,
-  );
-
   constructor() {
-    // Bridge surface-emitted CustomEvents to canonical service dispatchers.
-    // Visual shell components emit `dos:shell-action` for non-navigate
-    // actions; ShellHost is the single boundary that routes them to the
-    // matching service (preferences, auth, etc.).
     if (typeof window !== 'undefined') {
       const handler = (ev: Event) => {
         const detail = (ev as CustomEvent).detail as ShellAction | { kind?: string; eventName?: string } | null | undefined;
@@ -221,40 +283,16 @@ export class ShellHostComponent {
       window.addEventListener('dos:shell-action', handler);
       this.destroyRef.onDestroy(() => window.removeEventListener('dos:shell-action', handler));
     }
-    // eslint-disable-next-line no-console
-    console.log('[workspace] SHELL_HOST_INIT');
-    // eslint-disable-next-line no-console
-    console.log('[workspace] ROUTER_OUTLET_PRESENT');
-    queueMicrotask(() => {
-      // eslint-disable-next-line no-console
-      console.log('[workspace] SURFACES_RENDER_COUNT', this.totalSurfaces());
-    });
-    if (typeof window !== 'undefined' && typeof requestAnimationFrame === 'function') {
-      requestAnimationFrame(() => {
-        const root = this.hostRef.nativeElement;
-        if (!root) return;
-        const all = root.querySelectorAll('*');
-        let visible = 0, zero = 0;
-        for (const node of Array.from(all)) {
-          const r = (node as HTMLElement).getBoundingClientRect();
-          if (r.width > 0 && r.height > 0) visible++; else zero++;
-        }
-        // Count surface-renderer wrappers that report a non-hit map status.
-        const renderers = root.querySelectorAll('dos-surface-renderer .dos-surface-renderer');
-        let unsupported = 0;
-        for (const r of Array.from(renderers)) {
-          const status = (r as HTMLElement).getAttribute('data-map-hit');
-          if (status === 'miss' || status === 'no-key') unsupported++;
-        }
-        // eslint-disable-next-line no-console
-        console.log('[workspace] SURFACE_DOM_PAINTED', {
-          totalSurfaces: this.totalSurfaces(),
-          visualSurfaces: this.visualSurfacesTotal(),
-          visibleNodes: visible,
-          zeroSizeNodes: zero,
-          unsupportedRendererCount: unsupported,
-        });
-      });
+  }
+
+  onBannerAction(b: ShellBanner): void {
+    const a = b.action;
+    if (a) this.executeShellAction(a);
+  }
+
+  onBannerDismiss(b: ShellBanner): void {
+    if (b.id === 'shell-error') {
+      this.shellError.clearError();
     }
   }
 
@@ -273,6 +311,13 @@ export class ShellHostComponent {
         break;
       case 'toggle_theme':
         this.prefs.toggleTheme();
+        break;
+      case 'clear_error':
+        this.shellError.clearError();
+        break;
+      case 'open_context_tab':
+      case 'open_command':
+      case 'close_overlay':
         break;
       case 'dispatch_event': {
         const evt = (action as { eventName?: string }).eventName ?? '';

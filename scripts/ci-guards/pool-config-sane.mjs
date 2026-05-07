@@ -1,13 +1,35 @@
 #!/usr/bin/env node
 /**
- * CI guard: provisioning blocks must be internally consistent.
- *
- *   - mode=eager        ⇒ pool_target=0, pool_min=0
- *   - mode=on_demand    ⇒ pool_target=0, pool_min=0
- *   - mode=pool_warmed  ⇒ pool_target>=1, pool_min<=pool_target
- *   - build_seconds     between 1 and 600
- *   - idempotency_key   matches ^module:<code>:v<semver>$ AND code matches moduleCode
+ * CI guard: provisioning blocks must be internally consistent
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/pool-config-sane.mjs [OPTIONS]
+
+Ensures provisioning blocks in module manifests are internally consistent.
+
+Options:
+  --help, -h           Show this help message
+
+Policy:
+  - mode=eager        ⇒ pool_target=0, pool_min=0
+  - mode=on_demand    ⇒ pool_target=0, pool_min=0
+  - mode=pool_warmed  ⇒ pool_target>=1, pool_min<=pool_target
+  - build_seconds     between 1 and 600
+  - idempotency_key   matches ^module:<code>:v<semver>$ AND code matches moduleCode
+
+Exit codes:
+  Non-zero on provisioning block inconsistency
+
+Examples:
+  # Run pool config sanity check
+  node scripts/ci-guards/pool-config-sane.mjs
+`);
+  process.exit(0);
+}
+
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { join, dirname, resolve, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';

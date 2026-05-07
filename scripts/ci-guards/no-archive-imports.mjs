@@ -1,16 +1,41 @@
 #!/usr/bin/env node
 /**
- * Forbids imports/references to platform/_archive from the active build tree.
- *
- * Allowed locations for the substring (docs, scripts, archive itself, IDE plans):
- * - platform/_archive/**
- * - docs/**
- * - scripts/**
- * - .cursor/**
- * - platform/docs/** (inventory/ledger prose)
- *
- * Set NO_ARCHIVE_IMPORTS_ENFORCE=0 to warn-only (exit 0). Default: enforce.
+ * Forbids imports/references to platform/_archive from the active build tree
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/no-archive-imports.mjs [OPTIONS]
+
+Forbids imports/references to platform/_archive from the active build tree.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  NO_ARCHIVE_IMPORTS_ENFORCE  Set to 0 to warn-only (default: enforce)
+
+Allowed locations (docs, scripts, archive itself, IDE plans):
+  - platform/_archive/**
+  - docs/**
+  - scripts/**
+  - .cursor/**
+  - platform/docs/**
+
+Exit codes:
+  Non-zero on archive import violation (when enforced)
+
+Examples:
+  # Run with enforcement (default)
+  node scripts/ci-guards/no-archive-imports.mjs
+
+  # Run in warn-only mode
+  NO_ARCHIVE_IMPORTS_ENFORCE=0 node scripts/ci-guards/no-archive-imports.mjs
+`);
+  process.exit(0);
+}
+
 import { execSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 

@@ -1,26 +1,40 @@
 #!/usr/bin/env bash
 # ═══════════════════════════════════════════════════════════════════
 # DOS Platform — local end-to-end bring-up (data plane + build + migrate + PM2)
-#
-# Prerequisites:
-#   - Docker with Compose v2
-#   - pnpm (see package.json packageManager)
-#   - Node >= 24.14.0 on PATH (see ops/scripts/with-engine-node.sh)
-#   - platform/config-center/env/.env.shared with JWT and other non-DB secrets (copy from .env.shared.example)
-#
-# Usage (from repo root):
-#   bash ops/scripts/bring-up-stack.sh --with-docker-db
-#   bash ops/scripts/bring-up-stack.sh                    # uses existing DATABASE_URL
-#   bash ops/scripts/bring-up-stack.sh --skip-build --with-docker-db
-#   SKIP_FRONTEND_HEALTH=1 bash ops/scripts/health-check-all.sh
-#
-# Flags:
-#   --with-docker-db   Start ops/docker/compose.data-plane.yml and write platform/config-center/env/.env.local.docker
-#   --skip-build       Skip pnpm build:* steps
-#   --skip-migrate     Skip pnpm run migrate
-#   --skip-pm2         Skip pm2 start/reload
 # ═══════════════════════════════════════════════════════════════════
 set -euo pipefail
+
+show_help() {
+  cat <<EOF
+Usage: $(basename "$0") [OPTIONS]
+
+Local end-to-end bring-up: data plane + build + migrate + PM2.
+
+Options:
+  --with-docker-db     Start Docker data plane and write .env.local.docker
+  --skip-build         Skip pnpm build:* steps
+  --skip-migrate       Skip pnpm run migrate
+  --skip-pm2           Skip pm2 start/reload
+  --help, -h           Show this help message
+
+Prerequisites:
+  - Docker with Compose v2
+  - pnpm (see package.json packageManager)
+  - Node >= 24.14.0 on PATH
+  - platform/config-center/env/.env.shared with secrets
+
+Examples:
+  # Full bring-up with Docker DB
+  $(basename "$0) --with-docker-db
+
+  # Bring-up using existing DATABASE_URL
+  $(basename "$0)
+
+  # Skip build, use Docker DB
+  $(basename "$0) --skip-build --with-docker-db
+EOF
+  exit 0
+}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
@@ -35,9 +49,10 @@ while [[ $# -gt 0 ]]; do
     --skip-build) SKIP_BUILD=1 ;;
     --skip-migrate) SKIP_MIGRATE=1 ;;
     --skip-pm2) SKIP_PM2=1 ;;
-    -h|--help)
-      head -n 35 "$0" | tail -n +2
-      exit 0
+    --help|-h) show_help ;;
+    *) shift ;;
+  esac
+done
       ;;
     *)
       echo "Unknown option: $1" >&2

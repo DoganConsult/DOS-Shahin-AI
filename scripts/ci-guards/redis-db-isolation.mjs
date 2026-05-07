@@ -1,12 +1,33 @@
 #!/usr/bin/env node
 /**
- * DOS Master Doctrine Article 4 — Redis DB isolation.
- *
- * Public zone = REDIS_DB=0
- * Tenant zone = REDIS_DB=1
- * Admin zone  = REDIS_DB=2
- * Verifies env files do not assign the wrong DB index.
+ * DOS Master Doctrine Article 4 — Redis DB isolation
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/redis-db-isolation.mjs [OPTIONS]
+
+Verifies env files assign correct Redis DB index per trust zone.
+
+Options:
+  --help, -h           Show this help message
+
+Policy:
+  Public zone = REDIS_DB=0
+  Tenant zone = REDIS_DB=1
+  Admin zone  = REDIS_DB=2
+
+Exit codes:
+  Non-zero on wrong DB index assignment
+
+Examples:
+  # Run Redis DB isolation check
+  node scripts/ci-guards/redis-db-isolation.mjs
+`);
+  process.exit(0);
+}
+
 import { existsSync, readFileSync } from 'node:fs';
 
 const MAP = {

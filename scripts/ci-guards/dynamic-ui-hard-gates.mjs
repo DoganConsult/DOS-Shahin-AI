@@ -1,6 +1,55 @@
 #!/usr/bin/env node
 /**
  * dynamic-ui-hard-gates.mjs
+ */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/dynamic-ui-hard-gates.mjs [OPTIONS]
+
+CI gate enforcing 11 Hard Gates from dynamic-ui enrollment spec.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  DYNAMIC_UI_BASE_URL       Dynamic UI service URL (default: http://127.0.0.1:4015)
+  DYNAMIC_UI_STRICT        Set to 1 for fail-closed live mode (no static fallback)
+  STRICT                   Set to 1 to fail on any WARN result
+
+Hard Gates:
+  1.  /api/dynamic-ui/contract/{moduleCode} returns module contract
+  2.  /api/dynamic-ui/route-catalog includes all active routes
+  3.  every route has pageType
+  4.  every route has layout
+  5.  every route has kpiScope
+  6.  every route has titleKey
+  7.  navigation renders from contract
+  8.  overview page shows module KPIs
+  9.  non-overview pages do not show overview KPIs
+  10. permissions filter navigation
+  11. SPA build passes
+
+Modes:
+  LIVE (default): Calls dynamic-ui APIs for every active module
+  STATIC (fallback): Reads seed SQL files statically
+  DYNAMIC_UI_STRICT=1: Live mode mandatory, no static fallback
+
+Examples:
+  # Run with default settings
+  node scripts/ci-guards/dynamic-ui-hard-gates.mjs
+
+  # Run with custom base URL
+  DYNAMIC_UI_BASE_URL=http://127.0.0.1:4015 node scripts/ci-guards/dynamic-ui-hard-gates.mjs
+
+  # Strict mode (fail on any WARN)
+  STRICT=1 node scripts/ci-guards/dynamic-ui-hard-gates.mjs
+`);
+  process.exit(0);
+}
+/**
+ * dynamic-ui-hard-gates.mjs
  *
  * CI gate enforcing the 11 Hard Gates from
  * DOS-AIO-Specs/dynamic-ui-enrollment-page-experience-widgets-spec.md §10

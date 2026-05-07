@@ -1,6 +1,32 @@
 #!/usr/bin/env bash
 set -uo pipefail
 
+show_help() {
+  cat <<EOF
+Usage: $(basename "$0") [OPTIONS]
+
+Builds all TypeScript modules in the modules/ directory.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  None
+
+Examples:
+  # Build all modules
+  $(basename "$0)
+
+Note:
+  Skips modules without tsconfig.json or backend source.
+EOF
+  exit 0
+}
+
+for arg in "$@"; do
+  case "$arg" in --help|-h) show_help ;; esac
+done
+
 MODULES_DIR="$(cd "$(dirname "$0")/../../modules" && pwd)"
 FAILED=()
 SUCCEEDED=0

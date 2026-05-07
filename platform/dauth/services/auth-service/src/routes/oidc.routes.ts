@@ -298,7 +298,7 @@ oidcRouter.get('/callback', async (req: Request, res: Response) => {
     if (!landing) {
       // Operator must seed dos.tenant_landing_config — auth callback
       // never invents a route. SPA shows a typed empty/no-op state.
-      res.status(422).json({ error: 'LANDING_NOT_SEEDED', tenantId: tenant.id });
+      res.status(422).json({ error: 'LANDING_NOT_SEEDED' });
       return;
     }
     res.redirect(302, landing);

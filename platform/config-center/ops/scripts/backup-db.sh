@@ -10,10 +10,47 @@ TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 RETENTION_DAYS=${RETENTION_DAYS:-30}
 MODE="logical"
 
+show_help() {
+  cat <<EOF
+Usage: $(basename "$0") [--base-backup] [OPTIONS]
+
+Creates database backups (logical pg_dump or base backup for PITR).
+
+Options:
+  --base-backup        Create base backup for PITR (requires WAL archiving)
+  --help, -h           Show this help message
+
+Environment Variables:
+  BACKUP_DIR           Backup directory (default: /var/backups/dos-platform)
+  DB_DATABASE          Database name (default: shahin_grc)
+  DB_USER              Database user (default: dos_user)
+  DB_HOST              Database host (default: localhost)
+  DB_PORT              Database port (default: 5432)
+  RETENTION_DAYS       Backup retention in days (default: 30)
+
+Examples:
+  # Create logical backup
+  $(basename "$0)
+
+  # Create base backup for PITR
+  $(basename "$0) --base-backup
+
+  # Custom backup directory
+  BACKUP_DIR=/custom/backups $(basename "$0)
+
+Note:
+  Base backups require WAL archiving to be enabled in PostgreSQL.
+EOF
+  exit 0
+}
+
 # Parse arguments
-if [ "${1:-}" = "--base-backup" ]; then
-  MODE="base"
-fi
+for arg in "$@"; do
+  case "$arg" in
+    --base-backup) MODE="base" ;;
+    --help|-h) show_help ;;
+  esac
+done
 
 mkdir -p "$BACKUP_DIR"
 

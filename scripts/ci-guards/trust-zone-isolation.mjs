@@ -1,12 +1,36 @@
 #!/usr/bin/env node
 /**
  * DOS Master Doctrine Article 4 — Trust-zone isolation.
- *
- * Verifies tenant-zone services (workspace-bff, tenant-admin-bff) do NOT
- * import the platform_admin schema or any platform-admin BFF lib.
- * Verifies admin-zone services (admin-console-bff, publish-service,
- * rollout-service) do NOT import tenant per-tenant schema helpers.
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/trust-zone-isolation.mjs [OPTIONS]
+
+Verifies tenant-zone and admin-zone services do not import each other's schemas.
+
+Options:
+  --help, -h           Show this help message
+
+Policy:
+  Tenant-zone services (workspace-bff, tenant-admin-bff, signup-bff, marketing-shell-service, anti-abuse-service):
+    Must NOT import platform_admin schema or admin-zone BFF libs
+  
+  Admin-zone services (admin-console-bff, publish-service, rollout-service):
+    Must NOT import @dos/db/tenant
+
+Exit codes:
+  1 — Trust-zone isolation violation detected
+  0 — All services isolated
+
+Examples:
+  # Run trust zone isolation check
+  node scripts/ci-guards/trust-zone-isolation.mjs
+`);
+  process.exit(0);
+}
+
 import { execSync } from 'node:child_process';
 
 const TENANT = ['services/workspace-bff', 'services/tenant-admin-bff', 'services/signup-bff', 'services/marketing-shell-service', 'services/anti-abuse-service'];

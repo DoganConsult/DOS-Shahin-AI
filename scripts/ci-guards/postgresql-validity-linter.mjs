@@ -1,17 +1,33 @@
 #!/usr/bin/env node
 /**
  * PostgreSQL Validity Linter
- * 
- * Static check that rejects CHECK (… IN (SELECT … FROM other_table …)) and
- * similar cross-table predicates at PR time. Prevents cross-table predicate bugs.
- * 
- * Usage: node scripts/ci-guards/postgresql-validity-linter.mjs <migration-file>
- * 
- * Exit codes:
- * - 0: No cross-table predicates found
- * - 1: Cross-table predicates detected
- * - 2: Error
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/postgresql-validity-linter.mjs <migration-file> [OPTIONS]
+
+Static check that rejects cross-table predicates at PR time.
+
+Options:
+  --help, -h           Show this help message
+
+Policy:
+  Rejects CHECK (… IN (SELECT … FROM other_table …)) and similar cross-table predicates.
+  Prevents cross-table predicate bugs. Use FK constraints instead.
+
+Exit codes:
+  0 — No cross-table predicates found
+  1 — Cross-table predicates detected
+  2 — Error
+
+Examples:
+  # Run PostgreSQL validity linter on migration file
+  node scripts/ci-guards/postgresql-validity-linter.mjs migration.sql
+`);
+  process.exit(0);
+}
 
 import { readFileSync } from 'node:fs';
 

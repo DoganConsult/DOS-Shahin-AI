@@ -2,25 +2,42 @@
 # ═══════════════════════════════════════════════════════════════════
 # Lifecycle-proof orchestrator — runs every scenario under
 # ops/scripts/lifecycle-proofs/ and reports pass/fail/skip per scenario.
-#
-# Each scenario is a directory containing run.mjs (or run.sh). The runner
-# is permissive: missing required env (TENANT_ID, JWTs, DATABASE_URL) makes
-# the scenario emit a SKIP rather than a FAIL, so this wrapper is safe to
-# include in CI even when only a subset of credentials are wired.
-#
-# Plan: /root/.claude/plans/need-to-clean-the-swift-trinket.md (Phase K-7)
-#
-# Usage:
-#   ./ops/scripts/lifecycle-proofs/run-all.sh
-#   ./ops/scripts/lifecycle-proofs/run-all.sh --only access-snapshot,decision-ledger
-#   ./ops/scripts/lifecycle-proofs/run-all.sh --skip vendor,risk
-#
-# Exit codes:
-#   0 — all selected scenarios pass or self-skip
-#   1 — at least one scenario emitted a hard failure
-#   2 — orchestrator/preflight error
 # ═══════════════════════════════════════════════════════════════════
 set -uo pipefail
+
+show_help() {
+  cat <<EOF
+Usage: $(basename "$0") [OPTIONS]
+
+Runs lifecycle-proof scenarios and reports pass/fail/skip per scenario.
+
+Options:
+  --only <list>         Run only specified scenarios (comma-separated)
+  --skip <list>         Skip specified scenarios (comma-separated)
+  --help, -h           Show this help message
+
+Behavior:
+  - Runs each scenario under ops/scripts/lifecycle-proofs/
+  - Missing env (TENANT_ID, JWTs, DATABASE_URL) emits SKIP not FAIL
+  - Safe to include in CI with partial credentials
+
+Exit codes:
+  0 — all selected scenarios pass or self-skip
+  1 — at least one scenario emitted a hard failure
+  2 — orchestrator/preflight error
+
+Examples:
+  # Run all scenarios
+  $(basename "$0)
+
+  # Run only specific scenarios
+  $(basename "$0) --only access-snapshot,decision-ledger
+
+  # Skip specific scenarios
+  $(basename "$0) --skip vendor,risk
+EOF
+  exit 0
+}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ONLY=""
@@ -30,7 +47,7 @@ while [ $# -gt 0 ]; do
   case "$1" in
     --only) ONLY="$2"; shift 2 ;;
     --skip) SKIP="$2"; shift 2 ;;
-    -h|--help) sed -n '2,30p' "$0"; exit 0 ;;
+    --help|-h) show_help ;;
     *) echo "Unknown arg: $1" >&2; exit 2 ;;
   esac
 done

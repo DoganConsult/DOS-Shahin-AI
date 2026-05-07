@@ -1,18 +1,40 @@
 #!/usr/bin/env node
 /**
  * Migration Privileges Probe
- * 
- * Parses migration file for ALTER TABLE {ADD CONSTRAINT|ENABLE TRIGGER|REFERENCES}
- * and verifies the connecting role holds REFERENCES/TRIGGER/USAGE before publisher tries.
- * Catches permission failures early.
- * 
- * Usage: node scripts/db/probe-privileges.mjs <migration-file>
- * 
- * Exit codes:
- * - 0: All privilege requirements met
- * - 1: Missing privileges detected
- * - 2: Error
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/db/probe-privileges.mjs <migration-file> [OPTIONS]
+
+Parses migration file for privilege requirements and verifies the connecting role holds them.
+
+Arguments:
+  migration-file       Path to migration file to probe
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  DATABASE_URL         PostgreSQL connection string (default: postgresql://dos_auth:dos_auth_pass_2026@localhost:5432/shahin_grc)
+
+Checks:
+  - ALTER TABLE ... ADD CONSTRAINT ... REFERENCES (needs REFERENCES)
+  - ALTER TABLE ... ENABLE TRIGGER (needs TRIGGER)
+  - ALTER TABLE ... ADD CONSTRAINT ... CHECK (IN (SELECT ...)) (needs USAGE)
+
+Exit codes:
+  0 — All privilege requirements met
+  1 — Missing privileges detected
+  2 — Error
+
+Examples:
+  # Probe migration file
+  node scripts/db/probe-privileges.mjs modules/platform-core/db/public/migrations/001_initial.sql
+`);
+  process.exit(0);
+}
 
 import { readFileSync } from 'node:fs';
 import pg from 'pg';

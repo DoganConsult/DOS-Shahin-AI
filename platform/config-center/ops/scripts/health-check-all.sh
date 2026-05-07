@@ -1,6 +1,36 @@
 #!/usr/bin/env bash
 set -uo pipefail
 
+show_help() {
+  cat <<EOF
+Usage: $(basename "$0") [OPTIONS]
+
+Performs health checks on all services defined in the ecosystem configuration.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  ECOSYSTEM_CONFIG     Path to PM2 ecosystem config
+  FRONTEND_HEALTH_URL Frontend URL for smoke test (default: https://shahin-ai.com)
+  FRONTEND_HEALTH_ORIGIN Local origin fallback (default: http://127.0.0.1)
+  FRONTEND_HEALTH_HOST Host header for local origin (default: shahin-ai.com)
+  SKIP_FRONTEND_HEALTH Set to 1 to skip frontend smoke test
+
+Examples:
+  # Check all services
+  $(basename "$0")
+
+  # Skip frontend check
+  SKIP_FRONTEND_HEALTH=1 $(basename "$0)
+EOF
+  exit 0
+}
+
+for arg in "$@"; do
+  case "$arg" in --help|-h) show_help ;; esac
+done
+
 echo "╔══════════════════════════════════════════════════╗"
 echo "║  DOS Platform — Health Check All Services        ║"
 echo "╚══════════════════════════════════════════════════╝"

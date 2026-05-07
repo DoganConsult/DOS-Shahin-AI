@@ -1,16 +1,37 @@
 #!/usr/bin/env node
 /**
  * Compliance Substrate Non-Empty Guard
- * 
- * Fails if any of 11 compliance tables is empty for active tenant with corresponding entitlement.
- * Tables: access_reviews, access_review_items, sso_role_mappings, tenant_kms_config, tenant_kms_keys,
- *         position_assignments, team_raci_assignments, user_org_scope, delegations, access_snapshots, user_mfa
- * 
- * Exit codes:
- * - 0: All compliance tables non-empty for entitled tenants
- * - 1: Empty compliance tables detected
- * - 2: Database connection error
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/compliance-substrate-non-empty.mjs [OPTIONS]
+
+Fails if any compliance table is empty for active tenant with corresponding entitlement.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  DATABASE_URL         PostgreSQL connection string (default: postgresql://dos_auth:dos_auth_pass_2026@localhost:5432/shahin_grc)
+
+Tables checked:
+  sso_role_mappings, tenant_kms_config, access_reviews, access_review_items,
+  tenant_kms_keys, position_assignments, team_raci_assignments, user_org_scope,
+  delegations, access_snapshots, user_mfa
+
+Exit codes:
+  0 — All compliance tables non-empty for entitled tenants
+  1 — Empty compliance tables detected
+  2 — Database connection error
+
+Examples:
+  # Run compliance substrate check
+  node scripts/ci-guards/compliance-substrate-non-empty.mjs
+`);
+  process.exit(0);
+}
 
 import pg from 'pg';
 const { Pool } = pg;

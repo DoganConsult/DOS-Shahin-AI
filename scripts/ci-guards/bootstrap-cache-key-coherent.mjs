@@ -1,12 +1,34 @@
 #!/usr/bin/env node
 /**
  * DOS Master Doctrine — workspace-bff bootstrap cache key coherent.
- *
- * Verifies workspace-bff/src builds its MV cache key from
- * (tenantId, ui_catalog_version[, roleSetHash]) and never from a
- * single tenantId-only string (which would leak permissions across
- * role changes).
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/bootstrap-cache-key-coherent.mjs [OPTIONS]
+
+Verifies workspace-bff cache key is composite (tenantId, roleSetHash, uiCatalogVersion).
+
+Options:
+  --help, -h           Show this help message
+
+Behavior:
+  - Checks workspace-bff/src builds MV cache key from composite tuple
+  - Fails if cache key uses single tenantId-only string (cross-role leak risk)
+  - Skips if workspace-bff sources not found
+
+Exit codes:
+  0 — PASS or skipped
+  1 — FAIL composite cache-key incomplete
+
+Examples:
+  # Run bootstrap cache key coherence check
+  node scripts/ci-guards/bootstrap-cache-key-coherent.mjs
+`);
+  process.exit(0);
+}
+
 import { execSync } from 'node:child_process';
 
 let bad = 0;

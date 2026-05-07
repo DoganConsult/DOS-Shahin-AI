@@ -13,10 +13,49 @@ fi
 
 SERVICE_NAME="${1:-}"
 MIGRATION_NAME="${2:-}"
+DRY_RUN=false
+
+show_help() {
+  cat <<EOF
+Usage: $(basename "$0") <service-name> <migration-filename> [OPTIONS]
+
+Rolls back a service migration using its rollback script.
+
+Arguments:
+  service-name         Name of the service
+  migration-filename    Name of the migration to rollback (e.g., 001_auth_tables.sql)
+
+Options:
+  --dry-run            Show what would be done without executing
+  --help, -h           Show this help message
+
+Environment Variables:
+  DATABASE_URL          PostgreSQL connection string
+
+Examples:
+  # Rollback a service migration
+  $(basename "$0") auth-service 001_auth_tables.sql
+
+  # List applied migrations for a service
+  $(basename "$0") auth-service --list
+
+  # Dry run to preview
+  $(basename "$0") auth-service 001_auth_tables.sql --dry-run
+EOF
+  exit 0
+}
+
+for arg in "$@"; do
+  case "$arg" in
+    --dry-run) DRY_RUN=true ;;
+    --help|-h) show_help ;;
+  esac
+done
 
 if [ -z "$SERVICE_NAME" ] || [ -z "$MIGRATION_NAME" ]; then
-  echo "Usage: $0 <service-name> <migration-filename>"
+  echo "Usage: $0 <service-name> <migration-filename> [--dry-run]"
   echo "  Example: $0 auth-service 001_auth_tables.sql"
+  echo "  Example: $0 auth-service 001_auth_tables.sql --dry-run"
   echo ""
   echo "  Lists applied migrations for a service:"
   echo "    $0 <service-name> --list"
@@ -44,6 +83,13 @@ fi
 echo "  Service:   $SERVICE_NAME"
 echo "  Migration: $MIGRATION_NAME"
 echo ""
+
+if [ "$DRY_RUN" = true ]; then
+  echo "[DRY RUN] Would execute:"
+  echo "  1. Run rollback script: $ROLLBACK_FILE"
+  echo "  2. Remove migration record from dos.service_migrations"
+  exit 0
+fi
 
 ROLLBACK_DIR="$REPO_ROOT/services/$SERVICE_NAME/migrations/rollback"
 ROLLBACK_FILE="$ROLLBACK_DIR/${MIGRATION_NAME%.sql}_rollback.sql"

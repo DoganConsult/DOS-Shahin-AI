@@ -1,20 +1,34 @@
 #!/usr/bin/env node
 /**
  * dynamic-ui-loader-resolvability.mjs — Phase 1 CI gate
- *
- * For every entry in WIDGET_KEY_MAP and COMPONENT_MAP, verify:
- *   - The lazy-import target file exists on disk.
- *   - The named export exists in that file.
- *
- * Catches refactors that rename a component without updating the registry,
- * which would otherwise show up as a silent runtime "No widget configured…"
- * empty-state.
- *
- * Resolves @foundation-module/ui, @workflow-module/ui, etc., via the
- * tsconfig paths block in platform/app/tsconfig.json
- * (the canonical SPA build tsconfig — `@dos/platform-app`). Anything
- * unresolvable hard-fails this gate.
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/dynamic-ui-loader-resolvability.mjs [OPTIONS]
+
+Verifies lazy-import targets in WIDGET_KEY_MAP and COMPONENT_MAP exist.
+
+Options:
+  --help, -h           Show this help message
+
+Behavior:
+  - For every entry in WIDGET_KEY_MAP and COMPONENT_MAP
+  - Verifies lazy-import target file exists on disk
+  - Verifies named export exists in that file
+  - Catches refactors that rename components without updating registry
+  - Resolves @foundation-module/ui, @workflow-module/ui via tsconfig paths
+
+Exit codes:
+  1 — Unresolvable path or missing export detected
+
+Examples:
+  # Run loader resolvability check
+  node scripts/ci-guards/dynamic-ui-loader-resolvability.mjs
+`);
+  process.exit(0);
+}
 
 import { readFileSync, existsSync, statSync } from 'node:fs';
 import { resolve, dirname, join } from 'node:path';

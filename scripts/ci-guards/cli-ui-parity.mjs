@@ -1,13 +1,34 @@
 #!/usr/bin/env node
 /**
  * DOS Master Doctrine Article 9 — CLI ↔ UI parity.
- *
- * Verifies every CLI dispatch entry in scripts/dos-master/dos.mjs has
- * a parity manifest record (planned in M14: dos.cli_ui_parity table).
- * Until the table lands, this guard enumerates the CLI surface and
- * confirms it is ≥ the doctrine minimum (24 commands at M13 close,
- * 29 at M14 D1).
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/cli-ui-parity.mjs [OPTIONS]
+
+Verifies every CLI dispatch entry has a parity manifest record.
+
+Options:
+  --help, -h           Show this help message
+
+Behavior:
+  - Parses scripts/dos-master/dos.mjs for dispatch entries
+  - Confirms CLI surface >= doctrine minimum (57 commands)
+  - Future: checks dos.cli_ui_parity table for parity records
+
+Exit codes:
+  1 — Cannot parse dispatch or CLI surface below minimum
+  0 — CLI surface meets minimum
+
+Examples:
+  # Run CLI UI parity check
+  node scripts/ci-guards/cli-ui-parity.mjs
+`);
+  process.exit(0);
+}
+
 import { readFileSync } from 'node:fs';
 
 const src = readFileSync(new URL('../../scripts/dos-master/dos.mjs', import.meta.url), 'utf8');

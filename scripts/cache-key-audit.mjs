@@ -2,22 +2,42 @@
 /**
  * cache-key-audit.mjs
  *
- * Flags cache-key construction sites across services/ and packages/ that
- * do NOT include a tenantId in the key material. This catches the
- * classic cross-tenant cache-bleed class of bugs called out in AGENTS.md
- * Problem 8.
- *
- * Heuristic:
- *   - Find lines that build a cache key (patterns: `cacheKey`, `cache.set(`,
- *     `cache.get(`, `redis.set(`, `redis.get(`, template strings containing
- *     `moduleCode`, `module:`, `user:`, `list:`).
- *   - For each match, check a small window of surrounding lines for any of:
- *       tenantId, tenant_id, ctx.tenantId, ctx.schema, req.tenantId
- *   - If none found, report as a potential violation.
- *
- * Output: JSON to docs/generated/cache-key-audit.json plus console summary.
- * Exit code 1 if violations > CACHE_KEY_AUDIT_MAX (default 0).
+ * Flags cache-key construction sites that do NOT include tenantId.
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/cache-key-audit.mjs [OPTIONS]
+
+Flags cache-key construction sites missing tenantId (cross-tenant cache-bleed bug).
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  CACHE_KEY_AUDIT_MAX  Max violations before failure (default: 0)
+
+Behavior:
+  - Scans services/, packages/, modules/
+  - Finds cache key construction patterns
+  - Checks for tenantId in key material
+  - Reports violations as potential cross-tenant cache-bleed
+
+Output:
+  JSON to docs/generated/cache-key-audit.json plus console summary.
+  Exit code 1 if violations > CACHE_KEY_AUDIT_MAX.
+
+Examples:
+  # Audit cache keys (fail on any violation)
+  node scripts/cache-key-audit.mjs
+
+  # Audit with tolerance
+  CACHE_KEY_AUDIT_MAX=5 node scripts/cache-key-audit.mjs
+`);
+  process.exit(0);
+}
+
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';

@@ -1,6 +1,37 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+show_help() {
+  cat <<EOF
+Usage: $(basename "$0") [OPTIONS]
+
+Deploys product microservices listed in ops/waves/wave2-product.apps.json.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  WAVE1_ECOSYSTEM_CONFIG  Wave 1 ecosystem config (default: ops/ecosystem.m1.config.js)
+  WAVE1_HEALTH_APPS      Comma-separated Wave 1 apps for health check
+
+Prerequisites:
+  - Wave 1 platform services must be running
+  - wave2-product.apps.json must exist
+
+Examples:
+  # Deploy Wave 2 product services
+  $(basename "$0)
+
+  # With custom Wave 1 ecosystem
+  WAVE1_ECOSYSTEM_CONFIG=/path/to/ecosystem.m1.config.js $(basename "$0)
+EOF
+  exit 0
+}
+
+for arg in "$@"; do
+  case "$arg" in --help|-h) show_help ;; esac
+done
+
 # ── Wave 2: Product Services Deployment ──────────────────────────
 # Deploys product microservices listed in ops/waves/wave2-product.apps.json (ports from ecosystem)
 # Prerequisites: Wave 1 platform services must be running (see WAVE1_HEALTH_APPS + ecosystem.m1).

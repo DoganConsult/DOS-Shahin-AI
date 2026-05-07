@@ -1,20 +1,41 @@
 #!/usr/bin/env node
 /**
  * agentic-ui-coverage.mjs — Phase M0.5 CI gate.
- *
- * Verifies the 10 canonical agent.* component_keys are coherently wired:
- *   ① Each key is seeded in 20260503_0024_agentic_ui_components.sql with
- *      vendor='ibm-carbon' + approval_status='approved'.
- *   ② Each key is registered in platform/dos/registry/component-map.ts.
- *   ③ Each key resolves through scripts/ui-registry/lib/archetype-map.mjs.
- *   ④ Each Dos*Component source file in @dos/ui-system/agentic acknowledges
- *      ALL 9 universal AGENT_STATES (loading, empty, ready, thinking,
- *      running, waiting_approval, blocked, failed, completed).
- *   ⑤ The agent registry tables migration 20260503_0025 exists and
- *      seeds >=9 active agents + agent-tile asset rows.
- *
- * Set AGENTIC_UI_COVERAGE_ENFORCE=1 to fail CI; otherwise SHADOW.
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/agentic-ui-coverage.mjs [OPTIONS]
+
+Verifies the 10 canonical agent.* component_keys are coherently wired.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  AGENTIC_UI_COVERAGE_ENFORCE  Set to 1 to fail CI (default: SHADOW mode)
+
+Checks:
+  ① Each key seeded in 20260503_0024_agentic_ui_components.sql
+  ② Each key registered in platform/dos/registry/component-map.ts
+  ③ Each key resolves through scripts/ui-registry/lib/archetype-map.mjs
+  ④ Each Dos*Component acknowledges all 9 universal AGENT_STATES
+  ⑤ Agent registry migration exists and seeds >=9 active agents
+
+Exit codes:
+  Non-zero if any check fails (when AGENTIC_UI_COVERAGE_ENFORCE=1)
+
+Examples:
+  # Run in shadow mode (default)
+  node scripts/ci-guards/agentic-ui-coverage.mjs
+
+  # Run with enforcement
+  AGENTIC_UI_COVERAGE_ENFORCE=1 node scripts/ci-guards/agentic-ui-coverage.mjs
+`);
+  process.exit(0);
+}
+
 import { readFileSync, existsSync } from 'node:fs';
 import { resolve, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';

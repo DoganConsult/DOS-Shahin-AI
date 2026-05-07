@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# ╔══════════════════════════════════════════════════╗
+# ╔════════════════════════════════════════════════╗
 # ║  DOS Platform — Point-in-Time Recovery (PITR)    ║
 # ║  Restores PostgreSQL to a specific timestamp     ║
 # ║  using base backup + WAL replay.                 ║
@@ -11,12 +11,62 @@ TARGET_TIME="${1:-}"
 BASE_BACKUP_DIR="${2:-}"
 WAL_ARCHIVE_DIR="${WAL_ARCHIVE_DIR:-/var/backups/dos-platform/wal}"
 PG_DATA="${PG_DATA:-/var/lib/postgresql/16/main}"
+FORCE=false
+DRY_RUN=false
+
+show_help() {
+  cat <<EOF
+Usage: $(basename "$0") <target-time> <base-backup-dir> [OPTIONS]
+
+Restores PostgreSQL to a specific timestamp using base backup + WAL replay.
+
+Arguments:
+  target-time          ISO 8601 timestamp (e.g., '2026-04-13 14:30:00 UTC')
+  base-backup-dir      Path to pg_basebackup output directory
+
+Options:
+  --force              Skip confirmation prompt (for automation)
+  --dry-run            Show what would be done without executing
+  --help, -h           Show this help message
+
+Environment Variables:
+  WAL_ARCHIVE_DIR      WAL archive directory (default: /var/backups/dos-platform/wal)
+  PG_DATA              PostgreSQL data directory (default: /var/lib/postgresql/16/main)
+
+Examples:
+  # Restore with confirmation
+  $(basename "$0") '2026-04-13 14:30:00 UTC' /var/backups/dos-platform/base_20260413_020000
+
+  # Force restore without confirmation
+  $(basename "$0") '2026-04-13 14:30:00 UTC' /var/backups/dos-platform/base_20260413_020000 --force
+
+  # Dry run to preview
+  $(basename "$0") '2026-04-13 14:30:00 UTC' /var/backups/dos-platform/base_20260413_020000 --dry-run
+
+Prerequisites:
+  - WAL archiving must be enabled (see ops/postgresql/wal-archiving.conf)
+  - A base backup must exist (created with: bash ops/scripts/backup-db.sh --base-backup)
+  - WAL files must exist in WAL_ARCHIVE_DIR
+EOF
+  exit 0
+}
+
+# Parse arguments
+for arg in "$@"; do
+  case "$arg" in
+    --force) FORCE=true ;;
+    --dry-run) DRY_RUN=true ;;
+    --help|-h) show_help ;;
+  esac
+done
 
 if [ -z "$TARGET_TIME" ] || [ -z "$BASE_BACKUP_DIR" ]; then
-  echo "Usage: $0 <target-time> <base-backup-dir>"
+  echo "Usage: $0 <target-time> <base-backup-dir> [--force] [--dry-run]"
   echo ""
   echo "  target-time:    ISO 8601 timestamp (e.g., '2026-04-13 14:30:00 UTC')"
   echo "  base-backup-dir: Path to pg_basebackup output directory"
+  echo "  --force:        Skip confirmation prompt (for automation)"
+  echo "  --dry-run:      Show what would be done without executing"
   echo ""
   echo "  Example:"
   echo "    $0 '2026-04-13 14:30:00 UTC' /var/backups/dos-platform/base_20260413_020000"
@@ -39,10 +89,28 @@ echo "  PG data dir:   $PG_DATA"
 echo ""
 
 # Safety prompt
-read -p "  ⚠  This will REPLACE the PostgreSQL data directory. Continue? (y/N) " confirm
-if [ "$confirm" != "y" ] && [ "$confirm" != "Y" ]; then
-  echo "  Aborted."
-  exit 1
+if [ "$FORCE" != "true" ]; then
+  read -p "  ⚠  This will REPLACE the PostgreSQL data directory. Continue? (y/N) " confirm
+  if [ "$confirm" != "y" ] && [ "$confirm" != "Y" ]; then
+    echo "  Aborted."
+    exit 1
+  fi
+else
+  echo "  ⚠  Force mode: skipping confirmation"
+fi
+
+if [ "$DRY_RUN" = true ]; then
+  echo "[DRY RUN] Would execute:"
+  echo "  1. Stop all services: pm2 stop all"
+  echo "  2. Stop PostgreSQL: sudo systemctl stop postgresql"
+  echo "  3. Create safety backup: $SAFETY_BACKUP"
+  echo "  4. Restore base backup from: $BASE_BACKUP_DIR"
+  echo "  5. Configure recovery target: $TARGET_TIME"
+  echo "  6. Start PostgreSQL and replay WAL"
+  echo "  7. Run migrations: bash ops/scripts/run-migrations.sh"
+  echo "  8. Start all services: pm2 start ops/ecosystem.all.config.js"
+  echo "  9. Health check: bash ops/scripts/health-check-all.sh"
+  exit 0
 fi
 
 # Verify base backup exists

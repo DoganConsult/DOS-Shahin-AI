@@ -1,13 +1,35 @@
 #!/usr/bin/env node
 /**
  * RBAC Permissions Source of Truth Guard
- *
- * Canonical source (20260505_2900): platform_dauth.role_permissions joined to permissions.
- * Legacy functional_roles.permissions[] must remain identical set-of-IDs until column drop.
- *
- * Same assertion as rbac-role-permissions-sync-check.mjs — duplicated intentionally so each
- * guard stays self-contained for CI wiring.
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/rbac-permissions-source-of-truth.mjs [OPTIONS]
+
+Verifies platform_dauth.role_permissions (canonical) matches functional_roles.permissions[].
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  DATABASE_URL         PostgreSQL connection string (default: postgresql://dos_auth:dos_auth_pass_2026@localhost:5432/shahin_grc)
+
+Policy:
+  Canonical source: platform_dauth.role_permissions joined to permissions.
+  Legacy functional_roles.permissions[] must remain identical set-of-IDs until column drop.
+  Same assertion as rbac-role-permissions-sync-check.mjs (duplicated for CI wiring).
+
+Exit codes:
+  Non-zero on permission sync mismatch
+
+Examples:
+  # Run RBAC permissions source of truth check
+  node scripts/ci-guards/rbac-permissions-source-of-truth.mjs
+`);
+  process.exit(0);
+}
 
 import pg from 'pg';
 const { Pool } = pg;

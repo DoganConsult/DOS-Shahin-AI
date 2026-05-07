@@ -1,8 +1,34 @@
 #!/usr/bin/env node
 /**
- * CI guard: the cross-module capability graph (consumesFrom → providesToOthers)
- * must be acyclic. Cycles cause boot deadlocks in the capability-broker.
+ * CI guard: cross-module capability graph must be acyclic.
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/capability-graph-acyclic.mjs [OPTIONS]
+
+Verifies the cross-module capability graph (consumesFrom → providesToOthers) is acyclic.
+
+Options:
+  --help, -h           Show this help message
+
+Behavior:
+  - Scans module.manifest.json files in modules/ and platform/
+  - Builds edges from consumer → provider module
+  - Detects cycles that would cause boot deadlocks in capability-broker
+
+Exit codes:
+  0 — Graph is acyclic
+  1 — Cycle detected
+
+Examples:
+  # Check capability graph for cycles
+  node scripts/ci-guards/capability-graph-acyclic.mjs
+`);
+  process.exit(0);
+}
+
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';

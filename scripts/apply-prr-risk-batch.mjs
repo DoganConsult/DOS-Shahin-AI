@@ -21,6 +21,35 @@ import { fileURLToPath } from 'node:url';
 
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const ROOT = path.join(REPO_ROOT, 'services/risk-incident-service/src');
+const dryRun = process.argv.includes('--dry-run');
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+
+if (showHelp) {
+  console.log(`
+Usage: node scripts/apply-prr-risk-batch.mjs [OPTIONS]
+
+Batch PRR hardening for risk-incident-service route files.
+
+Options:
+  --dry-run            Show what would be modified without executing
+  --help, -h           Show this help message
+
+For each .routes.ts under services/risk-incident-service/src/domain/risk, this script:
+  1. Ensures \`withTenantClient\` is imported from ports/database.port
+  2. Ensures \`rateLimiter\` is imported from ports/middleware.port
+  3. Adds module-scoped rate limiter bucket and PRR marker
+
+Idempotent — re-running is a no-op if markers already exist.
+
+Examples:
+  # Apply PRR hardening to risk-incident-service
+  node scripts/apply-prr-risk-batch.mjs
+
+  # Dry run to preview
+  node scripts/apply-prr-risk-batch.mjs --dry-run
+`);
+  process.exit(0);
+}
 
 function* walk(dir) {
   for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -47,6 +76,12 @@ for (const file of walk(ROOT)) {
   let src = fs.readFileSync(file, 'utf-8');
   if (src.includes(PRR_MARKER)) {
     skipped += 1;
+    continue;
+  }
+
+  if (dryRun) {
+    console.log(`[DRY RUN] Would modify: ${file}`);
+    modified += 1;
     continue;
   }
 
@@ -120,5 +155,9 @@ for (const file of walk(ROOT)) {
   modified += 1;
 }
 
-console.log(`modified: ${modified}`);
-console.log(`skipped:  ${skipped}`);
+if (dryRun) {
+  console.log(`[DRY RUN] Would modify ${modified} files, ${skipped} already compliant`);
+} else {
+  console.log(`modified: ${modified}`);
+  console.log(`skipped:  ${skipped}`);
+}

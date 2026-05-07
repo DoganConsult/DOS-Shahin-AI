@@ -3,15 +3,44 @@
 # DOS-AIO Platform Master Rebuild Script
 # Builds ALL packages → services → frontend → reloads PM2
 # in strict dependency order. No race conditions. Sequential.
-#
-# Usage:
-#   ./ops/scripts/rebuild-platform.sh           # full rebuild
-#   ./ops/scripts/rebuild-platform.sh --packages-only
-#   ./ops/scripts/rebuild-platform.sh --services-only
-#   ./ops/scripts/rebuild-platform.sh --frontend-only
-#   ./ops/scripts/rebuild-platform.sh --reload-only
 # ============================================================
 set -euo pipefail
+
+show_help() {
+  cat <<EOF
+Usage: $(basename "$0") [OPTIONS]
+
+Builds ALL packages → services → frontend → reloads PM2 in strict dependency order.
+
+Options:
+  --packages-only      Build only packages
+  --services-only      Build only services
+  --frontend-only      Build only frontend
+  --reload-only        Only reload PM2 (skip builds)
+  --help, -h           Show this help message
+
+Examples:
+  # Full rebuild
+  $(basename "$0)
+
+  # Build only packages
+  $(basename "$0) --packages-only
+
+  # Build services and reload
+  $(basename "$0) --services-only --reload-only
+EOF
+  exit 0
+}
+
+for arg in "$@"; do
+  case "$arg" in
+    --packages-only) DO_PACKAGES=true; DO_SERVICES=false; DO_FRONTEND=false; DO_RELOAD=false ;;
+    --services-only) DO_PACKAGES=false; DO_SERVICES=true; DO_FRONTEND=false; DO_RELOAD=false ;;
+    --frontend-only) DO_PACKAGES=false; DO_SERVICES=false; DO_FRONTEND=true; DO_RELOAD=false ;;
+    --reload-only) DO_PACKAGES=false; DO_SERVICES=false; DO_FRONTEND=false; DO_RELOAD=true ;;
+    --help|-h) show_help ;;
+  esac
+done
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 LOG_DIR="$ROOT/ops/logs/rebuild"

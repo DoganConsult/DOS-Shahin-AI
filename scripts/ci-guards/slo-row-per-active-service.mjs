@@ -1,14 +1,38 @@
 #!/usr/bin/env node
 /**
- * DOS Master L36 — SLO row required per active service.
- *
- * Every dos_master.service_registry row with status='active' MUST have
- * a matching dos.platform_slo row. Catches drift where new services
- * land without SLO declarations.
- *
- * Doctrine binding: Article 3 (DB owns runtime contract) + Article 5
- * (no fake-green — services without SLO would silently degrade).
+ * DOS Master L36 — SLO row required per active service
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/slo-row-per-active-service.mjs [OPTIONS]
+
+Every dos_master.service_registry row with status='active' MUST have matching dos.platform_slo row.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  DATABASE_URL         PostgreSQL connection string (default: postgresql://dos_auth:dos_auth_pass_2026@localhost:5432/shahin_grc)
+
+Policy:
+  Catches drift where new services land without SLO declarations.
+  Doctrine binding: Article 3 (DB owns runtime contract) + Article 5 (no fake-green).
+  DB unreachable or table not yet migrated is treated as SKIP (exit 0).
+
+Exit codes:
+  0 — PASS or SKIP
+  1 — Active service(s) lack SLO row
+  2 — ERROR
+
+Examples:
+  # Run SLO row per active service check
+  node scripts/ci-guards/slo-row-per-active-service.mjs
+`);
+  process.exit(0);
+}
+
 import pg from 'pg';
 
 const url = process.env.DATABASE_URL || 'postgresql://dos_auth:dos_auth_pass_2026@localhost:5432/shahin_grc';

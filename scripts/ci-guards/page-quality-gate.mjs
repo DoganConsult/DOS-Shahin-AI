@@ -1,33 +1,46 @@
 #!/usr/bin/env node
 /**
  * page-quality-gate.mjs
- *
- * CI gate enforcing the 30-check Page Quality Gate from
- * DOS-AIO-Specs/dynamic-ui-enrollment-page-experience-widgets-spec.md §21.
- *
- * Every active route must score ≥ THRESHOLD (default 30/30) on the spec's
- * 30 checks. The first 17 checks are statically verifiable from contract
- * data; checks 18–30 require runtime/visual evidence and are surfaced as
- * WARN unless the corresponding evidence file is present in
- * platform/dynamic-ui/.health/<moduleCode>/<route>/.
- *
- * Modes
- * -----
- * - LIVE (DYNAMIC_UI_BASE_URL reachable): score from contract endpoints.
- * - STATIC: score from seeds + migration shape; stricter checks marked WARN.
- *
- * Usage
- * -----
- *   node scripts/ci-guards/page-quality-gate.mjs
- *   THRESHOLD=28 node scripts/ci-guards/page-quality-gate.mjs
- *   STRICT=1 node scripts/ci-guards/page-quality-gate.mjs
- *
- * Exit codes
- * ----------
- *   0 — every active route ≥ THRESHOLD
- *   1 — at least one route below threshold
- *   2 — harness error
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/page-quality-gate.mjs [OPTIONS]
+
+CI gate enforcing 30-check Page Quality Gate from dynamic-ui-enrollment spec §21.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  DYNAMIC_UI_BASE_URL       Dynamic UI service URL (default: http://127.0.0.1:4015)
+  DYNAMIC_UI_TENANT_ID     Tenant ID (default: platform)
+  THRESHOLD                Minimum score (default: 30)
+  STRICT                  Set to 1 for strict mode (default: 0)
+
+Modes:
+  - LIVE (DYNAMIC_UI_BASE_URL reachable): score from contract endpoints
+  - STATIC: score from seeds + migration shape; stricter checks marked WARN
+
+Exit codes:
+  0 — Every active route ≥ THRESHOLD
+  1 — At least one route below threshold
+  2 — Harness error
+
+Examples:
+  # Run page quality gate
+  node scripts/ci-guards/page-quality-gate.mjs
+
+  # Run with custom threshold
+  THRESHOLD=28 node scripts/ci-guards/page-quality-gate.mjs
+
+  # Run in strict mode
+  STRICT=1 node scripts/ci-guards/page-quality-gate.mjs
+`);
+  process.exit(0);
+}
+
 import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';

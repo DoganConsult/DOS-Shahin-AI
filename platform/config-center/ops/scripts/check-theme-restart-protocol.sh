@@ -1,30 +1,44 @@
 #!/usr/bin/env bash
-#
 # Theme restart protocol gate.
-#
-# Fails if any file under ops/keycloak-themes/** has changed in the working
-# tree (or in a commit range) WITHOUT a corresponding bump to
-# ops/keycloak/.theme-version. The version stamp is written by
-# ops/keycloak/build-theme.sh ONLY after a successful deploy + restart, so
-# bumping it without running the script is a footgun the gate cannot detect —
-# but at least it forces an explicit acknowledgment that the deploy ran.
-#
-# Why this exists:
-#   On 2026-04-23 the Dogan theme.properties was edited in the working tree
-#   to fix a `styles=` typo, but never deployed. Keycloak kept serving the
-#   broken file, the registration page rendered unstyled, and the auto-sync
-#   committer landed the change without any deploy. This gate prevents that
-#   class of problem from recurring.
-#
-# Usage:
-#   ops/scripts/check-theme-restart-protocol.sh                 # check working tree
-#   ops/scripts/check-theme-restart-protocol.sh <BASE>..HEAD    # check a commit range
-#
-# Exit codes:
-#   0  no theme files changed, OR theme files changed AND .theme-version bumped
-#   1  theme files changed but .theme-version unchanged
-
 set -euo pipefail
+
+show_help() {
+  cat <<EOF
+Usage: $(basename "$0) [commit-range] [OPTIONS]
+
+CI gate that ensures theme changes are accompanied by .theme-version bump.
+
+Arguments:
+  commit-range          Git commit range (e.g., HEAD~1..HEAD). If omitted, checks working tree.
+
+Options:
+  --help, -h           Show this help message
+
+Behavior:
+  - Fails if theme files changed without .theme-version bump
+  - Version stamp written by ops/keycloak/build-theme.sh after deploy + restart
+  - Prevents landing theme changes without deploy acknowledgment
+
+Exit codes:
+  0 — no theme files changed, OR theme files changed AND .theme-version bumped
+  1 — theme files changed but .theme-version unchanged
+
+Context:
+  On 2026-04-23 a theme change landed without deploy, rendering shahin-ai.com unstyled.
+
+Examples:
+  # Check working tree
+  $(basename "$0)
+
+  # Check a commit range
+  $(basename "$0) HEAD~1..HEAD
+EOF
+  exit 0
+}
+
+for arg in "$@"; do
+  case "$arg" in --help|-h) show_help ;; esac
+done
 
 REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 RANGE="${1:-}"

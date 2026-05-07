@@ -1,12 +1,32 @@
 #!/usr/bin/env node
 /**
  * Phase-1 archetype ↔ template gap report (step 1 workflow).
- * Compares ARCHETYPE_REGISTRY (module-template.types.ts) vs archetype-map.mjs
- * vs template-binding.registry.ts LOADERS keys.
- *
- * Usage: node scripts/archetype-template-gap-report.mjs
- * Optional: --json for JSON stdout only
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/archetype-template-gap-report.mjs [OPTIONS]
+
+Compares ARCHETYPE_REGISTRY vs archetype-map.mjs vs template-binding.registry.ts LOADERS keys.
+
+Options:
+  --json               Output JSON only (default: human-readable)
+  --help, -h           Show this help message
+
+Output:
+  Gap report showing mismatches between archetype registry and template bindings.
+
+Examples:
+  # Generate human-readable report
+  node scripts/archetype-template-gap-report.mjs
+
+  # Generate JSON output
+  node scripts/archetype-template-gap-report.mjs --json
+`);
+  process.exit(0);
+}
+
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';

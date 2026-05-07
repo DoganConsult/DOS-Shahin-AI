@@ -1,15 +1,40 @@
 #!/usr/bin/env node
 /**
  * Dual-Source Publisher Roundtrip Guard
- * 
- * Emits SQL bundle from JSON contract, dry-runs into scratch schema,
- * pg_dump --schema-only and diff against live target. Fails on non-trivial delta.
- * 
- * Exit codes:
- * - 0: Roundtrip verified
- * - 1: Roundtrip delta detected
- * - 2: Error
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/dual-source-publisher-roundtrip.mjs [OPTIONS]
+
+Emits SQL bundle from JSON contract, dry-runs into scratch schema, pg_dump and diff against live target.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  DATABASE_URL         PostgreSQL connection string (default: postgresql://dos_auth:dos_auth_pass_2026@localhost:5432/shahin_grc)
+
+Behavior:
+  - Creates scratch schema
+  - Emits SQL bundle from JSON contract
+  - Dry-runs SQL into scratch schema
+  - pg_dump --schema-only from scratch schema
+  - Diffs against live target
+  - Fails on non-trivial delta
+
+Exit codes:
+  0 — Roundtrip verified
+  1 — Roundtrip delta detected
+  2 — Error
+
+Examples:
+  # Run dual-source publisher roundtrip check
+  node scripts/ci-guards/dual-source-publisher-roundtrip.mjs
+`);
+  process.exit(0);
+}
 
 import { execSync } from 'node:child_process';
 import { existsSync, rmSync } from 'node:fs';

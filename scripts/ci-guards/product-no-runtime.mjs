@@ -1,25 +1,43 @@
 #!/usr/bin/env node
 /**
- * Wave 7.5 — Product-no-runtime guard.
- *
- * Asserts that no `products/<product>/**` directory carries Angular FE
- * runtime code. Products in DOS-Platform compose only — every UI surface
- * resolves through DB rows (workspace-shell + dynamic_ui_routes +
- * ui_route_template_binding) consumed by the single SPA at platform/app.
- *
- * Allowed product file kinds (BE/config/test/asset/manifest):
- *   product.config.ts, jobs/**, agents/**, manifest/**,
- *   composition/**, dynamic-ui/**, e2e/**, *.md, *.json, *.png, *.svg,
- *   *.spec.ts, *.test.ts
- *
- * Forbidden markers anywhere under products/:
- *   - Angular decorators: @Component, @NgModule, @Injectable, @Directive, @Pipe
- *   - HTML/SCSS template files (.html, .scss, .css)
- *   - Angular bootstrap calls: bootstrapApplication, platformBrowserDynamic
- *   - React/Vue framework imports
- *
- * Exit non-zero on any violation.
+ * Wave 7.5 — Product-no-runtime guard
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/product-no-runtime.mjs [OPTIONS]
+
+Asserts that no products/<product>/** directory carries Angular FE runtime code.
+
+Options:
+  --help, -h           Show this help message
+
+Policy:
+  Products in DOS-Platform compose only — every UI surface resolves through DB rows
+  (workspace-shell + dynamic_ui_routes + ui_route_template_binding) consumed by the single SPA.
+
+Allowed product file kinds (BE/config/test/asset/manifest):
+  - product.config.ts, jobs/**, agents/**, manifest/**
+  - composition/**, dynamic-ui/**, e2e/**, *.md, *.json, *.png, *.svg
+  - *.spec.ts, *.test.ts
+
+Forbidden markers anywhere under products/:
+  - Angular decorators: @Component, @NgModule, @Injectable, @Directive, @Pipe
+  - HTML/SCSS template files (.html, .scss, .css)
+  - Angular bootstrap calls: bootstrapApplication, platformBrowserDynamic
+  - React/Vue framework imports
+
+Exit codes:
+  Non-zero on any violation
+
+Examples:
+  # Run product no-runtime check
+  node scripts/ci-guards/product-no-runtime.mjs
+`);
+  process.exit(0);
+}
+
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { resolve, dirname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';

@@ -1,11 +1,38 @@
 #!/usr/bin/env node
 /**
  * DOS Master Doctrine — decision ledger immutable.
- *
- * Verifies dos_master_writer_audit has no UPDATE or DELETE triggers
- * (other than trg_dos_master_only) and that no rows have been mutated
- * (the table is append-only by design).
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/decision-ledger-immutable.mjs [OPTIONS]
+
+Verifies dos_master_writer_audit is append-only with no mutation triggers.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  DATABASE_URL         PostgreSQL connection string (default: postgresql://dos_auth:dos_auth_pass_2026@localhost:5432/shahin_grc)
+
+Behavior:
+  - Verifies no UPDATE or DELETE triggers (except trg_dos_master_only)
+  - Confirms table is append-only by design
+  - DB unreachable is treated as SKIP (exit 0)
+
+Exit codes:
+  0 — PASS or DB unreachable
+  1 — FAIL audit table has non-master triggers
+  2 — ERROR
+
+Examples:
+  # Run decision ledger immutable check
+  node scripts/ci-guards/decision-ledger-immutable.mjs
+`);
+  process.exit(0);
+}
+
 import { Client } from 'pg';
 
 async function main() {

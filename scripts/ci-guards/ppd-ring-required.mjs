@@ -1,11 +1,40 @@
 #!/usr/bin/env node
 /**
  * DOS Master Doctrine Article 7 — Progressive Production Delivery.
- *
- * Verifies the canonical platform-rollout plan has 6 rings (R0..R5),
- * each with at least 5 health gates and at least 1 cohort selector.
- * Used as the PPD substrate readiness gate.
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/ppd-ring-required.mjs [OPTIONS]
+
+Verifies canonical platform-rollout plan has 6 rings with required health gates and cohorts.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  DATABASE_URL         PostgreSQL connection string (default: postgresql://dos_auth:dos_auth_pass_2026@localhost:5432/shahin_grc)
+
+Behavior:
+  - Verifies platform-rollout plan exists
+  - Checks 6 rings (R0..R5) are present
+  - Each ring must have at least 5 health gates
+  - Each ring must have at least 1 cohort selector
+  - DB unreachable is treated as SKIP (exit 0)
+
+Exit codes:
+  0 — PASS or DB unreachable
+  1 — FAIL missing rings or insufficient gates/cohorts
+  2 — ERROR
+
+Examples:
+  # Run PPD ring required check
+  node scripts/ci-guards/ppd-ring-required.mjs
+`);
+  process.exit(0);
+}
+
 import { Client } from 'pg';
 
 async function main() {

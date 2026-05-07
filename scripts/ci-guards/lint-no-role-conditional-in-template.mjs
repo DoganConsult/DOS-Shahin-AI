@@ -1,43 +1,58 @@
 #!/usr/bin/env node
 /**
  * lint-no-role-conditional-in-template.mjs
- *
- * Enforces spec §3.4 "Rendering rule (hard law)":
- *   "Components render from the resolved contract. They do not embed role
- *    logic for visibility decisions."
- *
- * BAD:    *ngIf="user.role === 'admin'"
- *         [hidden]="user.role !== 'auditor'"
- *         <button *ngIf="hasRole('admin')">…</button>
- *
- * GOOD:   *ngIf="visibleActions.includes('approve')"
- *         <button *ngIf="page.visibleActions.approve">…</button>
- *
- * Scope: every Angular component template (.html and inline templates inside
- * .component.ts files within products/shahin-ai/app/src/app/blueprint/).
- *
- * Allowlist:
- *   - blueprint/features/<module>/...           (per-module pages — they MAY
- *     check role IF the gate is also enforced server-side; warn-only)
- *   - blueprint/pages/<module>-.../...          (same)
- *
- * Hard-fail scope:
- *   - blueprint/layout/...
- *   - blueprint/shared/...
- *   - blueprint/core/platform/...
- *   - blueprint/core/runtime/...
- *
- * Patterns flagged:
- *   - user.role === '<x>'   /   user.roles.includes('<x>')
- *   - hasRole('<x>') / hasAnyRole(...)  inside template expressions
- *   - role === '<x>'  in *ngIf or [hidden] or [disabled]
- *   - profileType === '<x>' (profile is a contract concept, not a runtime check)
- *
- * Exit codes: 0 clean / 1 violation / 2 harness error
- *
- * Usage
- *   node scripts/ci-guards/lint-no-role-conditional-in-template.mjs
- *   STRICT=1 node scripts/ci-guards/lint-no-role-conditional-in-template.mjs
+ */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/lint-no-role-conditional-in-template.mjs [OPTIONS]
+
+Enforces spec §3.4: components render from resolved contract, not role logic.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  STRICT               Set to 1 for strict mode (default: lenient)
+
+Policy:
+  Components must render from resolved contract. They do not embed role logic for visibility.
+
+  BAD:    *ngIf="user.role === 'admin'"
+          [hidden]="user.role !== 'auditor'"
+          <button *ngIf="hasRole('admin')">…</button>
+
+  GOOD:   *ngIf="visibleActions.includes('approve')"
+          <button *ngIf="page.visibleActions.approve">…</button>
+
+Scope:
+  Angular templates in products/shahin-ai/app/src/app/blueprint/
+
+Patterns flagged:
+  - user.role === '<x>' / user.roles.includes('<x>')
+  - hasRole('<x>') / hasAnyRole(...) in template expressions
+  - role === '<x>' in *ngIf or [hidden] or [disabled]
+  - profileType === '<x>'
+
+Exit codes:
+  0 — Clean
+  1 — Violation
+  2 — Harness error
+
+Examples:
+  # Run role conditional check
+  node scripts/ci-guards/lint-no-role-conditional-in-template.mjs
+
+  # Run in strict mode
+  STRICT=1 node scripts/ci-guards/lint-no-role-conditional-in-template.mjs
+`);
+  process.exit(0);
+}
+
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
  */
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import path from 'node:path';

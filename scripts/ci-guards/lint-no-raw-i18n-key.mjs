@@ -1,35 +1,49 @@
 #!/usr/bin/env node
 /**
  * lint-no-raw-i18n-key.mjs
- *
- * Enforces spec §4.3 "Titles":
- *   "Page titles are applied from `titleKey` and resolved through i18n. Raw
- *    keys must never render in production UI."
- *
- * Also enforces general spec hygiene (§21 #20, §11.1):
- *   "Avoid rendering raw translation keys (must have localized fallback)."
- *
- * BAD:    {{ 'foundation.overview.title' }}
- *         <h1>{{ pageTitleKey }}</h1>            ← when pageTitleKey resolves to a dotted key
- *         {{ "users.list.empty" }}
- *
- * GOOD:   {{ 'foundation.overview.title' | translate }}
- *         {{ 'foundation.overview.title' | i18n }}
- *         <h1>{{ titleKey | translate }}</h1>
- *
- * Heuristic: look for `{{ '<dotted.key>' }}` or `{{ "<dotted.key>" }}` or
- * `{{ <ident> }}` where `<ident>` ends in `Key|.titleKey|.labelKey|.nameKey|.key`
- * and the expression is NOT followed by `| translate` / `| i18n` / `| t`.
- *
- * Scope: every Angular template (.html and inline templates inside
- * .component.ts) within products/shahin-ai/app/src/app/blueprint/.
- *
- * Exit codes: 0 clean / 1 violation / 2 harness error
- *
- * Usage
- *   node scripts/ci-guards/lint-no-raw-i18n-key.mjs
- *   STRICT=1 node scripts/ci-guards/lint-no-raw-i18n-key.mjs
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/lint-no-raw-i18n-key.mjs [OPTIONS]
+
+Enforces that raw translation keys never render in production UI.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  STRICT               Set to 1 for strict mode (default: lenient)
+
+Policy:
+  Page titles applied from titleKey and resolved through i18n.
+  Raw keys must never render in production UI.
+
+  BAD:    {{ 'foundation.overview.title' }}
+          <h1>{{ pageTitleKey }}</h1> when pageTitleKey resolves to dotted key
+  GOOD:   {{ 'foundation.overview.title' | translate }}
+          {{ 'foundation.overview.title' | i18n }}
+          <h1>{{ titleKey | translate }}</h1>
+
+Scope:
+  Angular templates (.html and inline templates) in products/shahin-ai/app/src/app/blueprint/
+
+Exit codes:
+  0 — Clean
+  1 — Violation
+  2 — Harness error
+
+Examples:
+  # Run raw i18n key check
+  node scripts/ci-guards/lint-no-raw-i18n-key.mjs
+
+  # Run in strict mode
+  STRICT=1 node scripts/ci-guards/lint-no-raw-i18n-key.mjs
+`);
+  process.exit(0);
+}
+
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';

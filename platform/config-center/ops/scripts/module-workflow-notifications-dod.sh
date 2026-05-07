@@ -1,8 +1,33 @@
 #!/usr/bin/env bash
 # Phase 2 / Module 4 (Notifications — workflow events fire) — DoD harness.
-# Phase 1 verified the inbox endpoint; this harness re-probes plus checks
-# the unread + filter shapes the workflow inbox UI consumes.
 set -u
+
+show_help() {
+  cat <<EOF
+Usage: $(basename "$0) [OPTIONS]
+
+DoD harness for Phase 2 / Module 4 (Workflow Notifications).
+
+Options:
+  --help, -h           Show this help message
+
+Output:
+  Creates timestamped proof file at ops/proofs/module-workflow-notifications-dod-<timestamp>.json
+
+Probes:
+  inbox endpoint + unread + filter shapes workflow inbox UI consumes
+
+Examples:
+  # Run workflow-notifications DoD proof
+  $(basename "$0)
+EOF
+  exit 0
+}
+
+for arg in "$@"; do
+  case "$arg" in --help|-h) show_help ;; esac
+done
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 TS=$(date +"%Y%m%d_%H%M%S")

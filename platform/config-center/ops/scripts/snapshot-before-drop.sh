@@ -21,6 +21,39 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 BACKUP_ROOT="${DOS_BACKUP_ROOT:-$REPO_ROOT/ops/backups}"
+DRY_RUN=false
+
+show_help() {
+  cat <<EOF
+Usage: $(basename "$0") [OPTIONS]
+
+Creates pg_dump snapshots of all active tenant schemas before destructive migrations.
+
+Options:
+  --dry-run            Show what would be done without executing
+  --help, -h           Show this help message
+
+Environment Variables:
+  DOS_BACKUP_ROOT      Backup root directory (default: ops/backups)
+  DOS_BACKUP_S3_URI    S3 URI for remote backup upload (requires aws CLI)
+  DATABASE_URL         PostgreSQL connection string
+
+Examples:
+  # Snapshot all tenant schemas
+  $(basename "$0")
+
+  # Dry run to preview
+  $(basename "$0") --dry-run
+EOF
+  exit 0
+}
+
+for arg in "$@"; do
+  case "$arg" in
+    --dry-run) DRY_RUN=true ;;
+    --help|-h) show_help ;;
+  esac
+done
 
 # shellcheck disable=SC1091
 source "$SCRIPT_DIR/lib/load-env.sh"
@@ -36,6 +69,16 @@ PSQL="psql ${DATABASE_URL} -v ON_ERROR_STOP=1"
 TIMESTAMP="$(date -u +%Y-%m-%dT%H-%M-%SZ)"
 TARGET_DIR="$BACKUP_ROOT/$TIMESTAMP"
 mkdir -p "$TARGET_DIR"
+
+if [ "$DRY_RUN" = true ]; then
+  echo "[DRY RUN] Would execute:"
+  echo "  1. Query active tenants from dos.tenants"
+  echo "  2. pg_dump each tenant schema to: $TARGET_DIR/<schema_name>.sql"
+  echo "  3. Upload to S3 if DOS_BACKUP_S3_URI is set"
+  echo "  4. Write receipt to: $TARGET_DIR/RECEIPT"
+  echo "  5. Create symlink: $BACKUP_ROOT/LATEST -> $TIMESTAMP"
+  exit 0
+fi
 
 echo "── Pre-drop snapshot → $TARGET_DIR ──"
 

@@ -3,9 +3,33 @@
  * deca-build-scan-set.mjs
  *
  * Read-only. Builds the canonical file scan-set for the DECA enforcement audit.
- *
- * Output: docs/audits/deca-2026-04-27/scan-set.txt (one absolute path per line, sorted).
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/audits/deca-build-scan-set.mjs [OPTIONS]
+
+Builds the canonical file scan-set for the DECA enforcement audit.
+
+Options:
+  --help, -h           Show this help message
+
+Output:
+  docs/audits/deca-2026-04-27/scan-set.txt (one absolute path per line, sorted)
+
+Behavior:
+  - Scans services/ and DOS Platform/ directories
+  - Excludes node_modules, dist, build, etc.
+  - Includes .ts, .mts, .cts, .js, .mjs, .cjs, .json files
+
+Examples:
+  # Build scan-set
+  node scripts/audits/deca-build-scan-set.mjs
+`);
+  process.exit(0);
+}
+
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 

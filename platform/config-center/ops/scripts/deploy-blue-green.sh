@@ -3,19 +3,53 @@ set -euo pipefail
 
 AUTO_ROLLBACK=true
 SERVICE_NAME=""
+DRY_RUN=false
+
+show_help() {
+  cat <<EOF
+Usage: $(basename "$0") [--no-auto-rollback] [--dry-run] <service-name>
+
+Performs blue-green deployment for the given service.
+
+Arguments:
+  service-name         Name of the service to deploy
+
+Options:
+  --no-auto-rollback  Disable automatic rollback on health failure
+  --dry-run           Show what would be done without executing
+  --help, -h           Show this help message
+
+Environment Variables:
+  DEPLOY_PATH          Deployment path (default: current directory)
+
+Examples:
+  # Deploy with auto-rollback
+  $(basename "$0") auth-service
+
+  # Deploy without auto-rollback
+  $(basename "$0") auth-service --no-auto-rollback
+
+  # Dry run to preview
+  $(basename "$0") auth-service --dry-run
+EOF
+  exit 0
+}
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --no-auto-rollback) AUTO_ROLLBACK=false; shift ;;
+    --dry-run) DRY_RUN=true; shift ;;
+    --help|-h) show_help; shift ;;
     *) SERVICE_NAME="$1"; shift ;;
   esac
 done
 
 if [ -z "$SERVICE_NAME" ]; then
-  echo "Usage: $0 [--no-auto-rollback] <service-name>"
+  echo "Usage: $0 [--no-auto-rollback] [--dry-run] <service-name>"
   echo "  Performs blue-green deployment for the given service."
   echo "  --no-auto-rollback  Disable automatic rollback on health failure"
+  echo "  --dry-run           Show what would be done without executing"
   echo "  Example: $0 auth-service"
   exit 1
 fi
@@ -30,6 +64,19 @@ mkdir -p "$LOG_DIR"
 log_rollback() {
   echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] $*" >> "$ROLLBACK_LOG"
 }
+
+if [ "$DRY_RUN" = true ]; then
+  echo "[DRY RUN] Would execute blue-green deployment for $SERVICE_NAME:"
+  echo "  1. Build new version: pnpm run build"
+  echo "  2. Start green instance on port $GREEN_PORT"
+  echo "  3. Wait for green health check"
+  echo "  4. Stop blue instance"
+  echo "  5. Restart blue with new code on original port"
+  echo "  6. Wait for blue health check"
+  echo "  7. Stop green instance"
+  echo "  8. Post-deploy verification (10s stabilization)"
+  exit 0
+fi
 
 echo "╔══════════════════════════════════════════════════╗"
 echo "║  DOS Platform — Blue-Green Deployment            ║"

@@ -10,6 +10,44 @@
 # Idempotent — safe to re-run.
 set -euo pipefail
 
+show_help() {
+  cat <<EOF
+Usage: $(basename "$0") [OPTIONS]
+
+Platform-wide bootstrap that initializes the entire DOS Platform stack.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  DATABASE_URL         PostgreSQL connection string (required)
+  REDIS_URL            Redis connection string (required)
+
+Steps:
+  1. Validate required environment variables
+  2. Install workspace dependencies
+  3. Build @dos/ports and core packages in dependency order
+  4. Run platform schema migrations
+  5. Reconcile platform catalog
+  6. Start services via PM2
+
+Examples:
+  # Initialize platform
+  $(basename "$0)
+
+  # With explicit env vars
+  DATABASE_URL=postgresql://... REDIS_URL=redis://... $(basename "$0)
+
+Note:
+  Idempotent — safe to re-run.
+EOF
+  exit 0
+}
+
+for arg in "$@"; do
+  case "$arg" in --help|-h) show_help ;; esac
+done
+
 REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 cd "$REPO_ROOT"
 

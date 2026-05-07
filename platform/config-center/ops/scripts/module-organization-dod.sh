@@ -1,9 +1,34 @@
 #!/usr/bin/env bash
 # Module 3 (Organization) — DoD harness.
-# Probes the org-tree CRUD endpoints the Foundation Org pages depend on:
-#   organizations / business-units / departments / positions / locations /
-#   committees / ownership-mappings / org-hierarchy.
 set -u
+
+show_help() {
+  cat <<EOF
+Usage: $(basename "$0) [OPTIONS]
+
+DoD harness for Phase 1 / Module 3 (Organization).
+
+Options:
+  --help, -h           Show this help message
+
+Output:
+  Creates timestamped proof file at ops/proofs/module-organization-dod-<timestamp>.json
+
+Probes:
+  organizations / business-units / departments / positions / locations /
+  committees / ownership-mappings / org-hierarchy
+
+Examples:
+  # Run organization DoD proof
+  $(basename "$0)
+EOF
+  exit 0
+}
+
+for arg in "$@"; do
+  case "$arg" in --help|-h) show_help ;; esac
+done
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 TS=$(date +"%Y%m%d_%H%M%S")

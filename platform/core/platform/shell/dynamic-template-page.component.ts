@@ -45,6 +45,7 @@ import { AccessStore } from '@dos/access-store';
 // DosMarketingHomePageComponent receives homeContent/nav/footer/agentStrip
 // inputs via tplInputs() without needing a bespoke wrapper component.
 import { BrandResolverService, DosEmptyStateComponent, MarketingPublicConfigService } from '@dos/ui-system';
+import { WorkspaceShellBindingService } from './workspace-shell-binding.service';
 
 @Component({
   selector: 'dos-dynamic-template-page',
@@ -55,16 +56,20 @@ import { BrandResolverService, DosEmptyStateComponent, MarketingPublicConfigServ
     @if (deniedPermission(); as deniedPermission) {
       <dos-empty-state
         data-testid="dos-tpl-denied"
-        title="Access denied"
-        description="You do not have the required permission to open this page."
+        [title]="accessDeniedTitle()"
+        [description]="accessDeniedDescription()"
         icon="lock"
         tone="warning"
       ></dos-empty-state>
-      <p class="dos-tpl-fallback__msg">
-        Required permission: <code>{{ deniedPermission }}</code>
-      </p>
+      @if (requiredPermissionPrefix()) {
+        <p class="dos-tpl-fallback__msg">
+          {{ requiredPermissionPrefix() }} <code>{{ deniedPermission }}</code>
+        </p>
+      } @else if (deniedPermission) {
+        <p class="dos-tpl-fallback__msg"><code>{{ deniedPermission }}</code></p>
+      }
     } @else if (loading() && !template()) {
-      <div class="dos-tpl-loading" data-testid="dos-tpl-loading">Loading…</div>
+      <div class="dos-tpl-loading" data-testid="dos-tpl-loading">{{ loadingLabel() }}</div>
     } @else if (shellOnly()) {
       <!--
         shell-only route — workspace runtime envelope is the sole
@@ -75,8 +80,8 @@ import { BrandResolverService, DosEmptyStateComponent, MarketingPublicConfigServ
     } @else if (!template() && !loading()) {
       <div class="dos-tpl-fallback" data-testid="dos-tpl-fallback">
         <dos-empty-state
-          title=""
-          description=""
+          [title]="emptyFallbackTitle()"
+          [description]="emptyFallbackDescription()"
           icon="information"
           tone="info"
         ></dos-empty-state>
@@ -105,6 +110,21 @@ export class DynamicTemplatePageComponent {
   // marketing code into non-marketing route bundles.
   private readonly marketingCfg = inject(MarketingPublicConfigService);
   private readonly brandResolver = inject(BrandResolverService);
+  private readonly shellBinding = inject(WorkspaceShellBindingService);
+
+  /** DB-driven copy from workspace-runtime `chrome.tplStrings` (shell.tpl.*). */
+  private readonly tplStrings = computed(() => {
+    const chrome = this.shellBinding.chrome() as Record<string, unknown>;
+    const raw = chrome['tplStrings'];
+    return raw && typeof raw === 'object' ? (raw as Record<string, string>) : {};
+  });
+
+  readonly accessDeniedTitle = computed(() => this.tplStrings()['shell.tpl.access_denied.title'] ?? '');
+  readonly accessDeniedDescription = computed(() => this.tplStrings()['shell.tpl.access_denied.description'] ?? '');
+  readonly requiredPermissionPrefix = computed(() => this.tplStrings()['shell.tpl.required_permission_prefix'] ?? '');
+  readonly loadingLabel = computed(() => this.tplStrings()['shell.tpl.loading'] ?? '');
+  readonly emptyFallbackTitle = computed(() => this.tplStrings()['shell.tpl.empty.title'] ?? '');
+  readonly emptyFallbackDescription = computed(() => this.tplStrings()['shell.tpl.empty.description'] ?? '');
 
   readonly currentRoute = signal<string>(this.normalize(this.router.url));
   readonly binding = signal<TemplateBinding | null>(null);

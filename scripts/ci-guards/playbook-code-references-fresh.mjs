@@ -1,13 +1,32 @@
 #!/usr/bin/env node
 /**
- * Wave F6 — CI guard: assert the module-build playbook's auto-generated
- * code-reference block is in sync with the current code on disk.
- *
- * Implementation: re-run the refresher in dry mode (we just compare
- * file mtime/length-derived rows) and diff against the current file.
- *
- * Exit: 0 in sync / 1 drift detected / 2 error
+ * Wave F6 — CI guard: assert module-build playbook's auto-generated code-reference block is in sync
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/playbook-code-references-fresh.mjs [OPTIONS]
+
+Asserts the module-build playbook's auto-generated code-reference block is in sync with current code.
+
+Options:
+  --help, -h           Show this help message
+
+Implementation:
+  Re-runs the refresher in dry mode and diffs against the current file.
+
+Exit codes:
+  0 — In sync
+  1 — Drift detected
+  2 — Error
+
+Examples:
+  # Run playbook code references fresh check
+  node scripts/ci-guards/playbook-code-references-fresh.mjs
+`);
+  process.exit(0);
+}
 
 import { execSync } from 'node:child_process';
 import { readFileSync, existsSync, copyFileSync, unlinkSync } from 'node:fs';

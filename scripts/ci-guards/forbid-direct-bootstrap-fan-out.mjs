@@ -1,11 +1,43 @@
 #!/usr/bin/env node
 /**
  * DOS Master Doctrine Article 2 — One BFF for workspace bootstrap.
- *
- * Forbids SPA code from calling /api/access/my-permissions,
- * /api/tenants/me, or /api/trials/current directly. Only the
- * workspace-bff /api/workspace/bootstrap envelope is allowed.
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/forbid-direct-bootstrap-fan-out.mjs [OPTIONS]
+
+Forbids SPA code from calling bootstrap APIs directly.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  BOOTSTRAP_FAN_OUT_ENFORCE  Set to 1 to enforce ban (default: baseline mode)
+
+Forbidden paths:
+  - /api/access/my-permissions
+  - /api/tenants/me
+  - /api/trials/current
+
+Policy:
+  Only workspace-bff /api/workspace/bootstrap envelope is allowed.
+  Services under services/workspace-bff/ and scripts/ci-guards/ are exempt.
+
+Exit codes:
+  Non-zero on forbidden API call (above baseline or enforce mode)
+
+Examples:
+  # Run in baseline mode (default)
+  node scripts/ci-guards/forbid-direct-bootstrap-fan-out.mjs
+
+  # Run with enforcement
+  BOOTSTRAP_FAN_OUT_ENFORCE=1 node scripts/ci-guards/forbid-direct-bootstrap-fan-out.mjs
+`);
+  process.exit(0);
+}
+
 import { execSync } from 'node:child_process';
 
 const FORBIDDEN = [

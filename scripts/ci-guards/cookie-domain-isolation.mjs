@@ -1,12 +1,35 @@
 #!/usr/bin/env node
 /**
  * DOS Master Doctrine Article 4 — cookie domain isolation.
- *
- * Tenant zone cookie name = 'dos_session'.
- * Admin zone cookie name = 'dos_admin_session'.
- * Verifies admin services never set 'dos_session' and tenant services
- * never set 'dos_admin_session'.
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/cookie-domain-isolation.mjs [OPTIONS]
+
+Verifies admin and tenant services use correct cookie names.
+
+Options:
+  --help, -h           Show this help message
+
+Policy:
+  Tenant zone cookie name = 'dos_session'
+  Admin zone cookie name = 'dos_admin_session'
+  Admin services must never set 'dos_session'
+  Tenant services must never set 'dos_admin_session'
+
+Exit codes:
+  1 — Cookie isolation violation detected
+  0 — All services cookie-isolated
+
+Examples:
+  # Run cookie domain isolation check
+  node scripts/ci-guards/cookie-domain-isolation.mjs
+`);
+  process.exit(0);
+}
+
 import { execSync } from 'node:child_process';
 
 const ADMIN  = ['services/admin-console-bff', 'services/publish-service', 'services/rollout-service'];

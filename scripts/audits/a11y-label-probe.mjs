@@ -1,19 +1,5 @@
 #!/usr/bin/env node
-// A11y label probe — enumerates form-label / aria-label violations on
-// the canonical workspace routes. Evidence-only; no fixes here.
-//
-// Usage:
-//   node scripts/audits/a11y-label-probe.mjs \
-//        [--base http://localhost:3000] \
-//        [--routes /,/login,/workspace-home] \
-//        [--auth <jwt>] \
-//        [--out platform/docs/workspace-contract-audit/a11y-label-probe.json]
-//
-// Doctrine:
-//   - no fix attempts; only evidence collection
-//   - reports selectors, accessible-name resolution chain, and the
-//     specific reason each control is unlabeled
-//   - probes both anonymous and authenticated routes when --auth provided
+// A11y label probe — enumerates form-label / aria-label violations.
 
 import { chromium } from 'playwright';
 import { writeFileSync, mkdirSync } from 'fs';
@@ -22,6 +8,41 @@ import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const ROOT = join(dirname(__filename), '../..');
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/audits/a11y-label-probe.mjs [OPTIONS]
+
+Enumerates form-label / aria-label violations on canonical workspace routes.
+
+Options:
+  --base <url>         Base URL (default: http://localhost:3000)
+  --routes <list>      Comma-separated routes to probe (default: /,/login,/workspace-home)
+  --auth <jwt>         JWT token for authenticated routes
+  --tenant <id>        Tenant ID for auth
+  --user <id>          User ID for auth
+  --out <path>         Output JSON path
+  --strict             Enable strict mode
+  --help, -h           Show this help message
+
+Behavior:
+  - Evidence-only: no fixes, only collection
+  - Reports selectors, accessible-name resolution chain, and unlabeled reasons
+  - Probes both anonymous and authenticated routes when --auth provided
+
+Examples:
+  # Probe default routes
+  node scripts/audits/a11y-label-probe.mjs
+
+  # Probe with auth
+  node scripts/audits/a11y-label-probe.mjs --auth <jwt> --tenant <id> --user <id>
+
+  # Custom base and routes
+  node scripts/audits/a11y-label-probe.mjs --base http://localhost:4000 --routes /,/workspace-home
+`);
+  process.exit(0);
+}
 
 function parseArgs(argv) {
   const o = { base: 'http://localhost:3000', routes: '/,/login,/workspace-home', out: null, auth: null, tenant: null, user: null, strict: false };

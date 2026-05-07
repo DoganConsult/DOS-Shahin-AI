@@ -1,14 +1,32 @@
 #!/usr/bin/env node
 /**
  * Per-Tenant Schema Orphan Detector
- * 
- * Fails if any tenant_<id> schema exists for a tenant whose dos.tenants.status != 'active'.
- * 
- * Exit codes:
- * - 0: No orphan schemas detected
- * - 1: Orphan schemas detected
- * - 2: Database connection error
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/per-tenant-schema-orphan-detector.mjs [OPTIONS]
+
+Fails if any tenant_<id> schema exists for a tenant whose dos.tenants.status != 'active'.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  DATABASE_URL         PostgreSQL connection string (default: postgresql://dos_auth:dos_auth_pass_2026@localhost:5432/shahin_grc)
+
+Exit codes:
+  0 — No orphan schemas detected
+  1 — Orphan schemas detected
+  2 — Database connection error
+
+Examples:
+  # Run per-tenant schema orphan detector
+  node scripts/ci-guards/per-tenant-schema-orphan-detector.mjs
+`);
+  process.exit(0);
+}
 
 import pg from 'pg';
 const { Pool } = pg;

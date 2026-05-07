@@ -1,17 +1,40 @@
 #!/usr/bin/env node
 /**
- * foundation-pages-coverage.mjs — Phase F-FOUND CI gate (DYNAMIC).
- *
- * Verifies foundation page coverage by querying the DB directly instead
- * of maintaining a hardcoded list. Checks:
- *   ① component_keys matching 'foundation.%.page' exist in
- *      dos.dynamic_ui_component_registry with vendor='ibm-carbon'.
- *   ② Each is registered in platform/dos/registry/component-map.ts.
- *   ③ Each resolves through scripts/ui-registry/lib/archetype-map.mjs.
- *   ④ dos.dynamic_ui_routes has matching routes with tenant_id IS NULL.
- *
- * Set FOUNDATION_PAGES_COVERAGE_ENFORCE=1 to fail CI; otherwise SHADOW.
+ * foundation-pages-coverage.mjs — Phase F-FOUND CI gate (DYNAMIC)
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/foundation-pages-coverage.mjs [OPTIONS]
+
+Verifies foundation page coverage by querying DB directly.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  FOUNDATION_PAGES_COVERAGE_ENFORCE  Set to 1 to fail CI (default: SHADOW mode)
+
+Checks:
+  ① component_keys matching 'foundation.%.page' exist in dos.dynamic_ui_component_registry
+  ② Each is registered in platform/dos/registry/component-map.ts
+  ③ Each resolves through scripts/ui-registry/lib/archetype-map.mjs
+  ④ dos.dynamic_ui_routes has matching routes with tenant_id IS NULL
+
+Exit codes:
+  Non-zero if any check fails (when FOUNDATION_PAGES_COVERAGE_ENFORCE=1)
+
+Examples:
+  # Run in shadow mode (default)
+  node scripts/ci-guards/foundation-pages-coverage.mjs
+
+  # Run with enforcement
+  FOUNDATION_PAGES_COVERAGE_ENFORCE=1 node scripts/ci-guards/foundation-pages-coverage.mjs
+`);
+  process.exit(0);
+}
+
 import { readFileSync, existsSync } from 'node:fs';
 import { resolve, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';

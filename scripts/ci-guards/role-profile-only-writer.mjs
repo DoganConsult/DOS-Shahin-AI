@@ -1,23 +1,39 @@
 #!/usr/bin/env node
 /**
  * Role-Profile Only Writer Guard (Wave F1)
- *
- * Scans the repo for forbidden direct DML on `platform_dauth.user_role_assignments`.
- * The ONLY allowed writer is the canonical RoleProfileService. All other code
- * paths must go through `dos.role_profile_sync`, whose AFTER trigger projects
- * to URA.
- *
- * Allowed paths (whitelist):
- *   - services/user-service/src/domain/foundation/role-profile.service.{ts,js,mjs}
- *   - platform/dos/migrations/**                  (DDL/seed only, gated by trigger)
- *   - scripts/handover/**                         (read-only orchestrators)
- *   - scripts/fixtures/seed-test-users.mjs        (writes via RoleProfileService client)
- *
- * Exit codes:
- *   0 — no forbidden writes detected
- *   1 — forbidden write(s) detected
- *   2 — error
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/role-profile-only-writer.mjs [OPTIONS]
+
+Scans repo for forbidden direct DML on platform_dauth.user_role_assignments.
+
+Options:
+  --help, -h           Show this help message
+
+Policy:
+  ONLY allowed writer is canonical RoleProfileService.
+  All other code paths must go through dos.role_profile_sync (AFTER trigger projects to URA).
+
+Allowed paths (whitelist):
+  - services/user-service/src/domain/foundation/role-profile.service.{ts,js,mjs}
+  - platform/dos/migrations/** (DDL/seed only, gated by trigger)
+  - scripts/handover/** (read-only orchestrators)
+  - scripts/fixtures/seed-test-users.mjs (writes via RoleProfileService client)
+
+Exit codes:
+  0 — No forbidden writes detected
+  1 — Forbidden write(s) detected
+  2 — Error
+
+Examples:
+  # Run role-profile only-writer check
+  node scripts/ci-guards/role-profile-only-writer.mjs
+`);
+  process.exit(0);
+}
 
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, resolve } from 'node:path';

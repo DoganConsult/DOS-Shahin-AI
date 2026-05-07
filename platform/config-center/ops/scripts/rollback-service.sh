@@ -3,12 +3,51 @@ set -euo pipefail
 
 SERVICE_NAME="${1:-}"
 ROLLBACK_TO="${2:-previous}"
+DRY_RUN=false
+
+show_help() {
+  cat <<EOF
+Usage: $(basename "$0") <service-name> [commit-hash|previous] [OPTIONS]
+
+Rolls back a service to a specific commit or the previous commit.
+
+Arguments:
+  service-name         Name of the service to rollback
+  commit-hash|previous  Target commit hash or 'previous' for last commit
+
+Options:
+  --dry-run            Show what would be done without executing
+  --help, -h           Show this help message
+
+Environment Variables:
+  DEPLOY_PATH          Deployment path (default: current directory)
+
+Examples:
+  # Rollback to previous commit
+  $(basename "$0") auth-service previous
+
+  # Rollback to specific commit
+  $(basename "$0") gateway abc123f
+
+  # Dry run to preview
+  $(basename "$0") auth-service previous --dry-run
+EOF
+  exit 0
+}
+
+for arg in "$@"; do
+  case "$arg" in
+    --dry-run) DRY_RUN=true ;;
+    --help|-h) show_help ;;
+  esac
+done
 
 if [ -z "$SERVICE_NAME" ]; then
-  echo "Usage: $0 <service-name> [commit-hash|previous]"
+  echo "Usage: $0 <service-name> [commit-hash|previous] [--dry-run]"
   echo "  Examples:"
   echo "    $0 auth-service previous"
   echo "    $0 gateway abc123f"
+  echo "    $0 auth-service previous --dry-run"
   exit 1
 fi
 
@@ -39,6 +78,17 @@ fi
 
 echo "  Rolling back to: $ROLLBACK_TO"
 echo ""
+
+if [ "$DRY_RUN" = true ]; then
+  echo "[DRY RUN] Would execute:"
+  echo "  1. Stop service: pm2 stop $SERVICE_NAME"
+  echo "  2. Checkout service files from commit: $ROLLBACK_TO"
+  echo "  3. Rebuild packages: pnpm run build:packages"
+  echo "  4. Build service: pnpm run build (in services/$SERVICE_NAME)"
+  echo "  5. Restart service: pm2 restart $SERVICE_NAME"
+  echo "  6. Health check: curl http://127.0.0.1:<port>/health"
+  exit 0
+fi
 
 echo "→ Step 1: Stop service"
 pm2 stop "$SERVICE_NAME" 2>/dev/null || true

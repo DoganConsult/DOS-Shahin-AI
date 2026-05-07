@@ -1,34 +1,49 @@
 #!/usr/bin/env node
 /**
  * dynamic-ui-runtime-strict.mjs
- *
- * Wave 0.5 — fail-closed runtime enforcement gate.
- *
- * Static gates (Wave 0) only prove that the schema and seeds are well-shaped;
- * they do NOT prove that the platform actually serves a dynamic contract at
- * runtime. This gate proves the contract is live and authoritative.
- *
- * Mandatory probes (each must PASS or exit 1, no WARN allowed)
- *   1.  DYNAMIC_UI_BASE_URL is set                    → otherwise exit 1
- *   2.  GET <BASE>/health                               → 200 OK
- *   3.  GET <BASE>/modules                              → non-empty list
- *   4.  GET <BASE>/contract/foundation                  → non-empty contract
- *   5.  contract.routes is non-empty                   → at least one route
- *   6.  contract.navigation is non-empty                → nav from contract
- *   7.  contract has a route with pageType=overview    → overview present
- *   8.  GET <BASE>/route-catalog                        → contains foundation routes
- *   9.  every route in catalog has pageType+layout+kpiScope+titleKey populated
- *  10.  no route in catalog references a moduleCode not in /modules
- *  11.  contract.widgets defined for at least 1 route   → widget seed present
- *  12.  page-quality-gate runs in strict mode → 0 below threshold
- *
- * Usage
- * -----
- *   DYNAMIC_UI_BASE_URL=http://127.0.0.1:4015 \
- *     node scripts/ci-guards/dynamic-ui-runtime-strict.mjs
- *
- * Exit codes: 0 / 1 / 2 (harness)
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/dynamic-ui-runtime-strict.mjs [OPTIONS]
+
+Fail-closed runtime enforcement gate proving dynamic contract is live.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  DYNAMIC_UI_BASE_URL       Dynamic UI service URL (required)
+  DYNAMIC_UI_TENANT_ID     Tenant ID (default: platform)
+  DYNAMIC_UI_TIMEOUT_MS    Request timeout (default: 5000)
+
+Mandatory probes (each must PASS or exit 1):
+  1.  DYNAMIC_UI_BASE_URL is set
+  2.  GET /health returns 200 OK
+  3.  GET /modules returns non-empty list
+  4.  GET /contract/foundation returns non-empty contract
+  5.  contract.routes is non-empty
+  6.  contract.navigation is non-empty
+  7.  contract has route with pageType=overview
+  8.  GET /route-catalog contains foundation routes
+  9.  every route has pageType+layout+kpiScope+titleKey populated
+  10. no route references moduleCode not in /modules
+  11. contract.widgets defined for at least 1 route
+  12. page-quality-gate runs in strict mode
+
+Exit codes:
+  0 — All probes PASS
+  1 — Any probe FAIL
+  2 — Harness error
+
+Examples:
+  # Run runtime strict check
+  DYNAMIC_UI_BASE_URL=http://127.0.0.1:4015 node scripts/ci-guards/dynamic-ui-runtime-strict.mjs
+`);
+  process.exit(0);
+}
+
 import { execSync } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';

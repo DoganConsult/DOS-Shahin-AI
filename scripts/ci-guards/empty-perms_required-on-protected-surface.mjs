@@ -1,16 +1,35 @@
 #!/usr/bin/env node
 /**
  * Empty perms_required on Protected Surface Guard
- * 
- * For every binding key tagged protected: true in .md doctrine,
- * fails when perms_required[] is empty in the JSON.
- * Forces explicit RBAC declaration on protected surfaces.
- * 
- * Exit codes:
- * - 0: No empty perms_required on protected surfaces
- * - 1: Empty perms_required on protected surfaces detected
- * - 2: Error
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/empty-perms_required-on-protected-surface.mjs [OPTIONS]
+
+Fails when perms_required[] is empty for surfaces tagged protected: true.
+
+Options:
+  --help, -h           Show this help message
+
+Behavior:
+  - Scans module_ui_os_contract-pack/ for .md doctrine files
+  - For every binding key tagged protected: true
+  - Fails when perms_required[] is empty in the JSON
+  - Forces explicit RBAC declaration on protected surfaces
+
+Exit codes:
+  0 — No empty perms_required on protected surfaces
+  1 — Empty perms_required on protected surfaces detected
+  2 — Error
+
+Examples:
+  # Run empty perms_required check
+  node scripts/ci-guards/empty-perms_required-on-protected-surface.mjs
+`);
+  process.exit(0);
+}
 
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { resolve, join, dirname } from 'node:path';

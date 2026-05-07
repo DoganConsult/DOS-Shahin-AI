@@ -3,12 +3,36 @@
 # DOS Platform — Service Warm-up Script
 # Sends a warm-up request to each service to pre-initialize DB connection pools
 # so that subsequent health checks respond within the 5s timeout threshold.
-#
-# Service list: same as PM2 — ops/ecosystem.*.config.js via list-pm2-health-targets.mjs
-# Usage: bash ops/scripts/warmup-services.sh
-# Optional: ECOSYSTEM_CONFIG=/path/to/ecosystem.staging.config.js
-# Run after: pm2 restart all
 # ─────────────────────────────────────────────────────────────────────────────
+
+show_help() {
+  cat <<EOF
+Usage: $(basename "$0") [OPTIONS]
+
+Sends warm-up requests to all services to pre-initialize DB connection pools.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  ECOSYSTEM_CONFIG     Path to PM2 ecosystem config
+
+Examples:
+  # Warm up all services
+  $(basename "$0)
+
+  # With custom ecosystem config
+  ECOSYSTEM_CONFIG=/path/to/ecosystem.staging.config.js $(basename "$0)
+
+Note:
+  Run after: pm2 restart all
+EOF
+  exit 0
+}
+
+for arg in "$@"; do
+  case "$arg" in --help|-h) show_help ;; esac
+done
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"

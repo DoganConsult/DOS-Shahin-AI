@@ -1,8 +1,38 @@
 #!/usr/bin/env node
 /**
- * DOS Master Doctrine — verifies all 11 articles exist in
- * dos_master.doctrine_article and have not been tampered.
+ * DOS Master Doctrine — verifies all 11 articles exist and are acknowledged.
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/doctrine-acknowledged.mjs [OPTIONS]
+
+Verifies all 11 doctrine articles exist and have been acknowledged.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  DATABASE_URL         PostgreSQL connection string (default: postgresql://dos_auth:dos_auth_pass_2026@localhost:5432/shahin_grc)
+
+Behavior:
+  - Checks dos_master.doctrine_article has 11 articles
+  - Checks dos_master.doctrine_acknowledgement has acknowledgements
+  - DB unreachable is treated as SKIP (exit 0)
+
+Exit codes:
+  0 — PASS or DB unreachable
+  1 — FAIL articles missing or not acknowledged
+  2 — ERROR
+
+Examples:
+  # Run doctrine acknowledged check
+  node scripts/ci-guards/doctrine-acknowledged.mjs
+`);
+  process.exit(0);
+}
+
 import { Client } from 'pg';
 
 async function main() {

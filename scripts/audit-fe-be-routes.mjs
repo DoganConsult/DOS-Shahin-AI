@@ -2,23 +2,34 @@
 /**
  * audit-fe-be-routes.mjs
  *
- * Refreshes docs/API-WIRE-AUDIT.md by scanning:
- *   - Every Shahin frontend HttpClient/fetch call site for /api/* URLs
- *   - Every services/** and modules/** routes/*.routes.ts file for
- *     router.<method>('<relative>', ...) declarations
- *   - services/gateway/src/domain/service-registry.ts routeServiceMap for
- *     gateway prefixes that bind FE URL prefixes to target services
- *
- * Output categories (three-way diff):
- *   WIRED   — FE call has a matching BE handler at the gateway-resolved path
- *   BROKEN  — FE call hits no BE handler (runtime 404 risk)
- *   UNUSED  — BE route has no FE caller (candidate for admin-UI surfacing
- *             or S2S-only documentation; do NOT interpret as dead code)
- *
- * Usage:  node scripts/audit-fe-be-routes.mjs [--json status/api-wire.json]
- *
- * No external deps; Node >= 18.
+ * Refreshes docs/API-WIRE-AUDIT.md by scanning FE and BE routes.
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/audit-fe-be-routes.mjs [OPTIONS]
+
+Refreshes docs/API-WIRE-AUDIT.md by scanning FE and BE routes.
+
+Options:
+  --json <path>        Output JSON status to file (default: docs/generated/api-wire.json)
+  --help, -h           Show this help message
+
+Output categories:
+  WIRED   — FE call has matching BE handler
+  BROKEN  — FE call hits no BE handler (runtime 404 risk)
+  UNUSED  — BE route has no FE caller (candidate for admin-UI or S2S-only)
+
+Examples:
+  # Generate audit report
+  node scripts/audit-fe-be-routes.mjs
+
+  # Generate JSON status
+  node scripts/audit-fe-be-routes.mjs --json status/api-wire.json
+`);
+  process.exit(0);
+}
 
 import fs from 'node:fs';
 import path from 'node:path';

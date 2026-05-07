@@ -1,11 +1,32 @@
 #!/usr/bin/env node
 /**
- * DOS Master Doctrine Article 4 — admin-zone services require mTLS.
- *
- * Verifies admin-zone env files declare MTLS_REQUIRED=true (or a
- * baseline-tracked exemption) so the gateway enforces client-cert
- * validation on /api/admin/* upstreams.
+ * DOS Master Doctrine Article 4 — admin-zone services require mTLS
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/mtls-required-on-admin-zone.mjs [OPTIONS]
+
+Verifies admin-zone env files declare MTLS_REQUIRED=true.
+
+Options:
+  --help, -h           Show this help message
+
+Policy:
+  Admin-zone env files must declare MTLS_REQUIRED=true (or baseline-tracked exemption)
+  so gateway enforces client-cert validation on /api/admin/* upstreams.
+
+Exit codes:
+  Non-zero on MTLS_REQUIRED missing
+
+Examples:
+  # Run mTLS required check
+  node scripts/ci-guards/mtls-required-on-admin-zone.mjs
+`);
+  process.exit(0);
+}
+
 import { existsSync, readFileSync } from 'node:fs';
 
 const ADMIN_ENVS = [

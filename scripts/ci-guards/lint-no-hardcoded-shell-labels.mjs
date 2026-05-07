@@ -1,17 +1,33 @@
 #!/usr/bin/env node
 /**
  * lint-no-hardcoded-shell-labels
- *
- * CARBON_WRAPPER_ZERO_HARDCODED_PASS guard. Rejects any hardcoded visible
- * label, aria-label fallback, or brand text inside the canonical shell
- * visual surface files and their supporting components.
- *
- * Doctrine: visible text must come from DB/runtime/i18n. No Angular @Input
- * default, no template literal fallback, no inline English string for any
- * user-facing control in the workspace shell.
- *
- * Exit code: 0 = OK, 1 = violations found.
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/lint-no-hardcoded-shell-labels.mjs [OPTIONS]
+
+Rejects hardcoded visible labels, aria-label fallbacks, or brand text in shell visual surfaces.
+
+Options:
+  --help, -h           Show this help message
+
+Doctrine:
+  Visible text must come from DB/runtime/i18n. No Angular @Input default,
+  no template literal fallback, no inline English string for user-facing controls.
+
+Exit codes:
+  0 — OK
+  1 — Violations found
+
+Examples:
+  # Run hardcoded shell labels check
+  node scripts/ci-guards/lint-no-hardcoded-shell-labels.mjs
+`);
+  process.exit(0);
+}
+
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';

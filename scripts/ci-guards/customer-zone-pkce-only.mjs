@@ -1,14 +1,41 @@
 #!/usr/bin/env node
 /**
  * DOS Master L37 — customer-zone OAuth2 PKCE-only.
- *
- * Doctrine §15: customer-zone token exchange MUST use PKCE
- * (RFC 7636). Forbids implicit-flow / response_type=token / unsafe
- * client_credentials in customer-zone code paths.
- *
- * Pattern scope: customer-zone gateway routes (`/api/auth/*`,
- * `/api/public/*`) and SPA OIDC config files.
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/customer-zone-pkce-only.mjs [OPTIONS]
+
+Enforces customer-zone OAuth2 PKCE-only (RFC 7636).
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  PKCE_BAN_ENFORCE           Set to 1 to enforce ban (default: baseline mode)
+  PKCE_BAN_BASELINE_MAX     Max allowed hits in baseline mode (default: 10)
+
+Behavior:
+  - Forbids implicit-flow / response_type=token / unsafe client_credentials
+  - Scans customer-zone gateway routes and SPA OIDC config files
+  - Excludes scripts/ci-guards/ from hits
+
+Exit codes:
+  1 — Forbidden pattern detected (above baseline or enforce mode)
+  0 — No violations or within baseline
+
+Examples:
+  # Run in baseline mode (default)
+  node scripts/ci-guards/customer-zone-pkce-only.mjs
+
+  # Run with enforcement
+  PKCE_BAN_ENFORCE=1 node scripts/ci-guards/customer-zone-pkce-only.mjs
+`);
+  process.exit(0);
+}
+
 import { execSync } from 'node:child_process';
 
 const FORBIDDEN = [

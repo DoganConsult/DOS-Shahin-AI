@@ -1,12 +1,32 @@
 #!/usr/bin/env bash
 # Customer-doc language lint — closes Phase 12G P2-07.
-#
-# Scans the three Tier-A customer-facing release docs for vocabulary
-# forbidden by the owner brief. Exits non-zero on the first finding.
-#
-# See docs/releases/RELEASE-DOCS-POLICY.md for the full policy.
-
 set -uo pipefail
+
+show_help() {
+  cat <<EOF
+Usage: $(basename "$0") [OPTIONS]
+
+Scans customer-facing release docs for forbidden vocabulary.
+
+Options:
+  --help, -h           Show this help message
+
+Policy:
+  Scans Tier-A customer-facing release docs for vocabulary forbidden by owner brief.
+  Exits non-zero on first finding.
+
+See docs/releases/RELEASE-DOCS-POLICY.md for full policy.
+
+Examples:
+  # Lint customer docs
+  $(basename "$0)
+EOF
+  exit 0
+}
+
+for arg in "$@"; do
+  case "$arg" in --help|-h) show_help ;; esac
+done
 
 FILES=(
   "docs/releases/COMMERCIAL-RELEASE-SHAHIN-v1.0.0.md"

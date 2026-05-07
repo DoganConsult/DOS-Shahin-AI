@@ -1,50 +1,44 @@
 #!/usr/bin/env node
 /**
  * lint-no-static-nav-fallback.mjs
- *
- * Wave 0.5 — enforces that the SPA never uses static Foundation/module
- * navigation as the source of truth for business decisions.
- *
- * Static config MAY exist as a *rendering allowlist* (icon/label enrichment
- * for known routes) but it MUST NOT be returned as the navigation tree when
- * the dynamic-ui contract is unavailable.
- *
- * This guard fires on these patterns inside the SPA src tree:
- *
- *   1. `return STATIC_<X>_NAV_CHILDREN`                         (FAIL)
- *      — direct return of a static const as the nav source of truth.
- *
- *   2. `return STATIC_<X>_NAV_CHILDREN.map(...)` etc.            (FAIL)
- *      — derivative return that ships static items as nav truth.
- *
- *   3. `if (!dynamic ... ) return STATIC_<X>_NAV_CHILDREN`      (FAIL)
- *      — explicit fallback when dynamic contract is empty.
- *
- *   4. Imports of STATIC_<X>_NAV_CHILDREN inside DynamicUi*     (FAIL)
- *      bootstrap/runtime services. Bootstrap services must not depend on
- *      static navigation arrays for their resolution path.
- *
- *   5. `STATIC_<X>_NAV_CHILDREN` referenced inside computed
- *      `visibleNavigation` / `effectivePageRegistry` / `foundationNavChildren`
- *      bodies (FAIL).
- *
- * Scope (canonical @dos/platform-app + nav composition roots):
- *   - platform/app/src — SPA source
- *   - platform/access/dos-access-store/src/nav-sources — L6 composition
- *   - platform/core/platform/navigation — nav helpers
- *
- * Allowlist (NOT flagged):
- *   - The DEFINITION of `STATIC_<X>_NAV_CHILDREN` itself.
- *   - Use of the array as an enrichment lookup map keyed by route, e.g.
- *     `new Map(STATIC_X.map(c => [c.route, c]))` followed by
- *     `staticByRoute.get(row.route)` to enrich a dynamically-arrived item.
- *
- * Exit codes: 0 / 1 / 2 (harness)
- *
- * Usage
- *   node scripts/ci-guards/lint-no-static-nav-fallback.mjs
- *   STRICT=1 node scripts/ci-guards/lint-no-static-nav-fallback.mjs
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/lint-no-static-nav-fallback.mjs [OPTIONS]
+
+Enforces SPA never uses static Foundation/module navigation as source of truth.
+
+Options:
+  --help, -h           Show this help message
+
+Policy:
+  Static config MAY exist as rendering allowlist (icon/label enrichment) but MUST NOT
+  be returned as navigation tree when dynamic-ui contract is unavailable.
+
+Forbidden patterns:
+  1. return STATIC_<X>_NAV_CHILDREN (direct return of static const)
+  2. return STATIC_<X>_NAV_CHILDREN.map(...) (derivative return)
+  3. if (!dynamic ... ) return STATIC_<X>_NAV_CHILDREN (explicit fallback)
+  4. Imports of STATIC_<X>_NAV_CHILDREN inside DynamicUi* bootstrap/runtime services
+  5. STATIC_<X>_NAV_CHILDREN in computed visibleNavigation/effectivePageRegistry bodies
+
+Scope:
+  - platform/app/src (SPA source)
+  - platform/access/dos-access-store/src/nav-sources (L6 composition)
+  - platform/core/platform/navigation (nav helpers)
+
+Exit codes:
+  Non-zero on static nav fallback violation
+
+Examples:
+  # Run static nav fallback check
+  node scripts/ci-guards/lint-no-static-nav-fallback.mjs
+`);
+  process.exit(0);
+}
+
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';

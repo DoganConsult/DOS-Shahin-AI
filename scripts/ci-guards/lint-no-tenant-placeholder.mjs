@@ -1,19 +1,39 @@
 #!/usr/bin/env node
 /**
  * lint-no-tenant-placeholder — CI gate
- *
- * Forbids the legacy `__TENANT_SCHEMA__` placeholder in NEWLY-ADDED tenant
- * migration files. The runtime sets `SET search_path TO "<tenant>", public`
- * before each migration, so unqualified identifiers resolve correctly.
- *
- * Existing files that use the placeholder are grandfathered (any byte-edit
- * would invalidate `dos.tenant_migrations.checksum` for every tenant and
- * force a re-run of 2900+ already-applied migrations).
- *
- * Detection: `git diff --name-only --diff-filter=A` against origin/main.
- * On a fresh checkout without origin/main, this passes (cannot detect
- * additions). CI sets up origin/main as part of checkout.
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/lint-no-tenant-placeholder.mjs [OPTIONS]
+
+Forbids legacy __TENANT_SCHEMA__ placeholder in newly-added tenant migration files.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  LINT_BASE_REF        Git base ref for diff (default: origin/main)
+
+Policy:
+  Runtime sets search_path before each migration, so unqualified identifiers resolve.
+  Existing files using placeholder are grandfathered (checksum preservation).
+  Detection: git diff --name-only --diff-filter=A against base ref.
+
+Exit codes:
+  Non-zero on placeholder in new migration file
+
+Examples:
+  # Run tenant placeholder check
+  node scripts/ci-guards/lint-no-tenant-placeholder.mjs
+
+  # Run with custom base ref
+  LINT_BASE_REF=origin/develop node scripts/ci-guards/lint-no-tenant-placeholder.mjs
+`);
+  process.exit(0);
+}
+
 import { execSync } from 'node:child_process';
 import { readFileSync, existsSync } from 'node:fs';
 

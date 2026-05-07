@@ -1,24 +1,39 @@
 #!/usr/bin/env node
 /**
  * carbon-active-export-truthy.mjs — Catalog truthfulness guard.
- *
- * Contract:
- *   For every row in dos.ui_carbon_components inserted by a migration with
- *     runtime_status='active' AND integration_mode='native-angular'
- *   the row MUST carry source_component_name = '<RealClassName>' AND that
- *   class MUST be exported by node_modules/carbon-components-angular (verified
- *   by grepping `export declare class <Name>` across the package's *.d.ts).
- *
- * For runtime_status='wrapper-required' the row MAY carry source_component_name
- * = NULL (semantic alias) — we do not assert against carbon-components-angular.
- *
- * For integration_mode='react-only-reference' the row MUST be
- * runtime_status='wrapper-required' (a DOS wrapper substitutes; we never load
- * the React variant at runtime).
- *
- * Exit non-zero on any contract failure. Pure migration-text + filesystem
- * walk; no DB connection required.
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/carbon-active-export-truthy.mjs [OPTIONS]
+
+Verifies dos.ui_carbon_components catalog truthfulness against carbon-components-angular exports.
+
+Options:
+  --help, -h           Show this help message
+
+Contract:
+  For every row with runtime_status='active' AND integration_mode='native-angular':
+  - Row MUST carry source_component_name = '<RealClassName>'
+  - Class MUST be exported by carbon-components-angular
+
+  For runtime_status='wrapper-required':
+  - Row MAY carry source_component_name = NULL (semantic alias)
+
+  For integration_mode='react-only-reference':
+  - Row MUST be runtime_status='wrapper-required'
+
+Exit codes:
+  Non-zero on any contract failure
+
+Examples:
+  # Run carbon active export truthy check
+  node scripts/ci-guards/carbon-active-export-truthy.mjs
+`);
+  process.exit(0);
+}
+
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import { join, resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';

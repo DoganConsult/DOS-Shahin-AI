@@ -1,23 +1,43 @@
 #!/usr/bin/env node
 /**
- * marketing-download-kit-coverage.mjs — Phase M1.5 CI gate.
- *
- * Verifies the download-kit system stays coherent:
- *   ① 3 component_keys are seeded in 20260503_0027_marketing_download_kit.sql
- *      with vendor='ibm-carbon' + approval_status='approved'.
- *   ② Each is registered in platform/dos/registry/component-map.ts.
- *   ③ Each resolves through scripts/ui-registry/lib/archetype-map.mjs.
- *   ④ The 3 components source file declares the standalone Dos*Component
- *      classes and references the 3 MARKETING_DOWNLOAD_EVENTS keys.
- *   ⑤ The migration creates dos.marketing_assets + dos.marketing_download_events
- *      and seeds >=6 rows (3 kits × en+ar).
- *   ⑥ marketing-home.page.ts adds the 'download-kit' section literal AND
- *      embeds <dos-download-kit-card>, <dos-gated-download-modal>,
- *      <dos-download-success>.
- *   ⑦ Components do NOT execute (no fetch, no HttpClient).
- *
- * Set MARKETING_DOWNLOAD_KIT_COVERAGE_ENFORCE=1 to fail CI; otherwise SHADOW.
+ * marketing-download-kit-coverage.mjs — Phase M1.5 CI gate
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/marketing-download-kit-coverage.mjs [OPTIONS]
+
+Verifies download-kit system stays coherent across all layers.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  MARKETING_DOWNLOAD_KIT_COVERAGE_ENFORCE  Set to 1 to fail CI (default: SHADOW mode)
+
+Checks:
+  ① 3 component_keys seeded with vendor='ibm-carbon' + approval_status='approved'
+  ② Each registered in platform/dos/registry/component-map.ts
+  ③ Each resolves through scripts/ui-registry/lib/archetype-map.mjs
+  ④ Components declare Dos*Component classes and reference MARKETING_DOWNLOAD_EVENTS keys
+  ⑤ Migration creates dos.marketing_assets + dos.marketing_download_events with >=6 rows
+  ⑥ marketing-home.page.ts adds 'download-kit' section and embeds components
+  ⑦ Components do NOT execute (no fetch, no HttpClient)
+
+Exit codes:
+  Non-zero if any check fails (when MARKETING_DOWNLOAD_KIT_COVERAGE_ENFORCE=1)
+
+Examples:
+  # Run in shadow mode (default)
+  node scripts/ci-guards/marketing-download-kit-coverage.mjs
+
+  # Run with enforcement
+  MARKETING_DOWNLOAD_KIT_COVERAGE_ENFORCE=1 node scripts/ci-guards/marketing-download-kit-coverage.mjs
+`);
+  process.exit(0);
+}
+
 import { readFileSync, existsSync } from 'node:fs';
 import { resolve, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';

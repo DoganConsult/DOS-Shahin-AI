@@ -1,20 +1,34 @@
 #!/usr/bin/env node
 /**
  * dynamic-ui-yaml-coverage.mjs — Phase 2 CI gate
- *
- * Enforces that every entry in platform/dynamic-ui/contracts/registry.yaml
- * is also present in the live SPA registry files with the SAME import path
- * and export name. The YAML is the SoT for migrated modules; the live TS
- * files may still contain extra hand-edited entries for un-migrated
- * modules (subset semantics).
- *
- * Also enforces:
- *   - YAML-declared permissions exist in canonical-permissions.ts (D4)
- *   - YAML-declared permissions are granted by ≥1 role in role-permission-map.ts (D5)
- *
- * Once all modules migrate, flip the SUBSET_OK flag in CI to enforce
- * exact equivalence (live TS == YAML codegen output).
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/dynamic-ui-yaml-coverage.mjs [OPTIONS]
+
+Enforces YAML registry entries are present in live SPA registry files.
+
+Options:
+  --help, -h           Show this help message
+
+Behavior:
+  - Every entry in platform/dynamic-ui/contracts/registry.yaml must be in live TS registry
+  - Same import path and export name required
+  - YAML-declared permissions must exist in canonical-permissions.ts (D4)
+  - YAML-declared permissions must be granted by ≥1 role in role-permission-map.ts (D5)
+  - Once all modules migrate, flip SUBSET_OK to enforce exact equivalence
+
+Exit codes:
+  Non-zero on coverage violation
+
+Examples:
+  # Run YAML coverage check
+  node scripts/ci-guards/dynamic-ui-yaml-coverage.mjs
+`);
+  process.exit(0);
+}
 
 import { readFileSync, existsSync } from 'node:fs';
 import { resolve } from 'node:path';

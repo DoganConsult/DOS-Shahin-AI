@@ -1,11 +1,36 @@
 #!/usr/bin/env node
 /**
  * DOS Master Doctrine Article 4 — Keycloak realm isolation.
- *
- * Verifies admin-zone services reference a separate Keycloak realm
- * (`platform-ops`) and not the tenant realm (`tenants`). Tenant-zone
- * services must reference the tenant realm and not platform-ops.
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/keycloak-realm-isolation.mjs [OPTIONS]
+
+Verifies admin and tenant services reference correct Keycloak realms.
+
+Options:
+  --help, -h           Show this help message
+
+Policy:
+  Admin-zone services (admin-console-bff, publish-service, rollout-service):
+    Must reference platform-ops realm, not tenants realm
+  
+  Tenant-zone services (workspace-bff, tenant-admin-bff):
+    Must reference tenants realm, not platform-ops realm
+
+Exit codes:
+  1 — Realm isolation violation detected
+  0 — All services realm-isolated
+
+Examples:
+  # Run realm isolation check
+  node scripts/ci-guards/keycloak-realm-isolation.mjs
+`);
+  process.exit(0);
+}
+
 import { execSync } from 'node:child_process';
 
 const ADMIN  = ['services/admin-console-bff', 'services/publish-service', 'services/rollout-service'];

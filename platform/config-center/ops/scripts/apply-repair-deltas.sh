@@ -1,10 +1,41 @@
 #!/usr/bin/env bash
-# Repair-before-retry: apply the six new deltas to every tenant out-of-order
-# (deltas have higher numeric prefixes than their target failures, but must
-# run BEFORE the originals are retried). Records each delta in
-# dos.tenant_migrations as 'applied' so the subsequent reconcile pass skips
-# them and proceeds to retry the originals.
+# Repair-before-retry: apply repair deltas to every tenant out-of-order.
 set -euo pipefail
+
+show_help() {
+  cat <<EOF
+Usage: $(basename "$0") [OPTIONS]
+
+Applies repair deltas to every tenant schema before retrying failed migrations.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  PGHOST               PostgreSQL host (default: localhost)
+  PGUSER               PostgreSQL user (default: shahin)
+  PGPASSWORD           PostgreSQL password
+  PGDATABASE           PostgreSQL database (default: shahin_grc)
+
+Behavior:
+  - Applies six repair deltas to every tenant schema
+  - Records each delta in dos.tenant_migrations as 'applied'
+  - Subsequent reconcile pass skips them and retries originals
+
+Examples:
+  # Apply repair deltas with default settings
+  $(basename "$0)
+
+  # With custom PostgreSQL settings
+  PGHOST=db.example.com PGUSER=admin $(basename "$0)
+EOF
+  exit 0
+}
+
+for arg in "$@"; do
+  case "$arg" in --help|-h) show_help ;; esac
+done
+
 export PGPASSWORD=${PGPASSWORD:-shahin_grc_2024}
 PSQL="psql -h ${PGHOST:-localhost} -U ${PGUSER:-shahin} -d ${PGDATABASE:-shahin_grc} -v ON_ERROR_STOP=1 -tA"
 

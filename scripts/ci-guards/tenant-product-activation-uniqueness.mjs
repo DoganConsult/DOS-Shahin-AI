@@ -1,14 +1,32 @@
 #!/usr/bin/env node
 /**
  * Tenant Product Activation Uniqueness Guard
- * 
- * Fails when (tenant_id, product_key) is duplicated in dos.tenant_product_activation.
- * 
- * Exit codes:
- * - 0: No duplicates found
- * - 1: Duplicates detected
- * - 2: Database connection error
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/tenant-product-activation-uniqueness.mjs [OPTIONS]
+
+Fails when (tenant_id, product_key) is duplicated in dos.tenant_product_activation.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  DATABASE_URL         PostgreSQL connection string (default: postgresql://dos_auth:dos_auth_pass_2026@localhost:5432/shahin_grc)
+
+Exit codes:
+  0 — No duplicates found
+  1 — Duplicates detected
+  2 — Database connection error
+
+Examples:
+  # Run tenant product activation uniqueness check
+  node scripts/ci-guards/tenant-product-activation-uniqueness.mjs
+`);
+  process.exit(0);
+}
 
 import pg from 'pg';
 const { Pool } = pg;

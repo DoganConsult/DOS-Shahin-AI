@@ -1,15 +1,35 @@
 #!/usr/bin/env node
 /**
- * CI guard: fail if any tracked *.mjs or *.js script under scripts/ (outside
- * the archive quarantine) writes to *.test.ts files or strips/skips assertions.
- *
- * Enforced patterns (any match = fail):
- *   - fs.writeFileSync(... .test.ts ...)
- *   - .replace(/it\(/g, 'it.skip(')
- *   - .replace(/describe\(/g, 'describe.skip(')
- *   - expect(true).toBe(true)
- *   - strip_expects / skip_failed_tests / fix_test markers
+ * CI guard: fail if any tracked script writes to test files or strips/skips assertions
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/no-test-mutation.mjs [OPTIONS]
+
+Fails if any tracked script under scripts/ writes to test files or strips/skips assertions.
+
+Options:
+  --help, -h           Show this help message
+
+Enforced patterns (any match = fail):
+  - fs.writeFileSync(... .test.ts ...)
+  - .replace(/it\(/g, 'it.skip(')
+  - .replace(/describe\(/g, 'describe.skip(')
+  - expect(true).toBe(true)
+  - strip_expects / skip_failed_tests / fix_test markers
+
+Exit codes:
+  Non-zero on test mutation pattern detected
+
+Examples:
+  # Run test mutation check
+  node scripts/ci-guards/no-test-mutation.mjs
+`);
+  process.exit(0);
+}
+
 import fs from 'node:fs';
 import path from 'node:path';
 

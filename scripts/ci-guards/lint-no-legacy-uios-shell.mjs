@@ -1,30 +1,39 @@
 #!/usr/bin/env node
 /**
  * CI guard: HARD-KILL LEGACY MODE — Dynamic UI / UI-OS freedom pass.
- *
- * Doctrine (AGENTS.md):
- *   DB stores. UI-OS resolves. Frontend renders only normalized runtime.
- *   No `/workspace-home` literal anywhere outside the approved DB
- *   migration/seed boundary. No `DEFAULT_HOME_FALLBACK`, no static
- *   `defaultHomeRoute = '/workspace-home'`, no static `landingRoute =
- *   '/workspace-home'`, no `WorkspaceHomeComponent`, no
- *   `workspace-home-cockpit`, no hardcoded `Shahin-AI` brand outside
- *   tenant-branding seed.
- *
- * Scope is split into two bands:
- *
- *   FE_SCAN_DIRS — strict frontend doctrine: snake_case DB DTOs, legacy
- *     adapter symbols, dot-path scans, static nav builders, CSS
- *     fallback values, hardcoded media queries — all forbidden.
- *
- *   WIDE_SCAN_DIRS — every layer that has ever leaked a hardcoded
- *     `/workspace-home`, brand label, or fallback constant. The literal
- *     patterns (`/workspace-home`, `DEFAULT_HOME_FALLBACK`,
- *     `WorkspaceHomeComponent`, `workspace-home-cockpit`,
- *     `'Shahin-AI'`) are forbidden everywhere in this band.
- *
- * Exit 0 = PASS, Exit 1 = FAIL.
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/lint-no-legacy-uios-shell.mjs [OPTIONS]
+
+Hard-kill legacy mode - enforces Dynamic UI / UI-OS freedom pass.
+
+Options:
+  --help, -h           Show this help message
+
+Doctrine:
+  DB stores. UI-OS resolves. Frontend renders only normalized runtime.
+  No /workspace-home literal outside approved DB migration/seed boundary.
+  No DEFAULT_HOME_FALLBACK, no static defaultHomeRoute, no WorkspaceHomeComponent.
+  No hardcoded Shahin-AI brand outside tenant-branding seed.
+
+Scope:
+  FE_SCAN_DIRS - strict frontend doctrine (snake_case DB DTOs, legacy adapters, static nav)
+  WIDE_SCAN_DIRS - every layer that has leaked hardcoded /workspace-home or brand labels
+
+Exit codes:
+  0 — PASS
+  1 — FAIL
+
+Examples:
+  # Run legacy UI-OS shell check
+  node scripts/ci-guards/lint-no-legacy-uios-shell.mjs
+`);
+  process.exit(0);
+}
+
 import { readFileSync, readdirSync, statSync, existsSync } from 'fs';
 import { join, relative } from 'path';
 

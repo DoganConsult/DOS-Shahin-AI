@@ -1,11 +1,38 @@
 #!/usr/bin/env node
 /**
- * DOS Master Doctrine — publish revisions are atomic.
- *
- * Verifies dos.publish_revision has at most one 'live' status per
- * (target_kind, target_key) tuple and every rolled_back revision has
- * a paired dos.publish_rollback row.
+ * DOS Master Doctrine — publish revisions are atomic
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/publish-revision-atomic.mjs [OPTIONS]
+
+Verifies dos.publish_revision has at most one 'live' status per (target_kind, target_key) tuple.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  DATABASE_URL         PostgreSQL connection string (default: postgresql://dos_auth:dos_auth_pass_2026@localhost:5432/shahin_grc)
+
+Policy:
+  - At most one 'live' status per (target_kind, target_key) tuple
+  - Every rolled_back revision must have a paired dos.publish_rollback row
+  - DB unreachable is treated as SKIP (exit 0)
+
+Exit codes:
+  0 — PASS or DB unreachable
+  1 — Multiple live revisions or orphan rolled_back revisions detected
+  2 — ERROR
+
+Examples:
+  # Run publish revision atomic check
+  node scripts/ci-guards/publish-revision-atomic.mjs
+`);
+  process.exit(0);
+}
+
 import { Client } from 'pg';
 
 async function main() {

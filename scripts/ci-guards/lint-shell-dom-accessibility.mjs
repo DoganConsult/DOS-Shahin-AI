@@ -1,22 +1,37 @@
 #!/usr/bin/env node
 /**
  * lint-shell-dom-accessibility
- *
- * Static analysis guard that scans shell component templates for patterns
- * that would produce invalid DOM accessibility attributes at runtime.
- *
- * Detects template bindings that could emit:
- *   - aria-label="undefined"
- *   - aria-labelledby="undefined"
- *   - id="undefined"
- *   - data-action-type="undefined"
- *
- * Also flags icon-only buttons (cds-icon-button, cds-header-action) whose
- * [description] binding could receive an empty/undefined value without a
- * fail-closed @if guard.
- *
- * Exit code: 0 = OK, 1 = violations found.
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/lint-shell-dom-accessibility.mjs [OPTIONS]
+
+Static analysis guard for invalid DOM accessibility attributes in shell component templates.
+
+Options:
+  --help, -h           Show this help message
+
+Detects template bindings that could emit:
+  - aria-label="undefined"
+  - aria-labelledby="undefined"
+  - id="undefined"
+  - data-action-type="undefined"
+
+Also flags icon-only buttons (cds-icon-button, cds-header-action) without fail-closed @if guard.
+
+Exit codes:
+  0 — OK
+  1 — Violations found
+
+Examples:
+  # Run shell DOM accessibility check
+  node scripts/ci-guards/lint-shell-dom-accessibility.mjs
+`);
+  process.exit(0);
+}
+
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';

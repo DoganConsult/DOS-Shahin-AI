@@ -1,10 +1,33 @@
 #!/usr/bin/env bash
 # Phase 2 / Module 1b (Process Tasks SLA) — DoD harness.
-# Probes the SLA dashboard endpoints the Shahin sla-dashboard.component
-# calls (process-tasks/sla-stats, sla-by-role, sla-breaches, sla-warnings)
-# plus the LIST handler. Pre-fix these returned 60s timeouts (tenantGuard
-# factory mistake + handler bug) — see commit log for the full chain.
 set -u
+
+show_help() {
+  cat <<EOF
+Usage: $(basename "$0) [OPTIONS]
+
+DoD harness for Phase 2 / Module 1b (Process Tasks SLA).
+
+Options:
+  --help, -h           Show this help message
+
+Output:
+  Creates timestamped proof file at ops/proofs/module-process-tasks-dod-<timestamp>.json
+
+Probes:
+  SLA dashboard endpoints: sla-stats, sla-by-role, sla-breaches, sla-warnings
+
+Examples:
+  # Run process-tasks DoD proof
+  $(basename "$0)
+EOF
+  exit 0
+}
+
+for arg in "$@"; do
+  case "$arg" in --help|-h) show_help ;; esac
+done
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 TS=$(date +"%Y%m%d_%H%M%S")

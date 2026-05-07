@@ -2,18 +2,31 @@
 /**
  * broad-table-trace.mjs
  *
- * Final pass: for every unreferenced table, do a broad string search across
- * ALL backend source code (not just SQL context). This catches:
- * - Table names in constants/configs: `const TABLE = 'risk_registers'`
- * - Table names in query builders: `from('workflow_tasks')`
- * - Table names in tests: `truncate workflow_tasks`
- * - Table names in comments referencing table names
- * - Table names in migration filename heuristics (already done but refined here)
- *
- * For each match, record which top-level module directory contains it.
- * Use the WRITE references (INSERT/UPDATE/DELETE patterns or module-owned directories)
- * as the ownership signal.
+ * Final pass: broad string search for unreferenced tables across backend source.
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/broad-table-trace.mjs [OPTIONS]
+
+Performs broad string search for unreferenced tables across all backend source code.
+
+Options:
+  --help, -h           Show this help message
+
+Behavior:
+  - For every unreferenced table, searches across ALL backend source code
+  - Catches table names in constants/configs, query builders, tests, comments
+  - Records which top-level module directory contains each match
+  - Uses WRITE references as ownership signal
+
+Examples:
+  # Run broad table trace
+  node scripts/broad-table-trace.mjs
+`);
+  process.exit(0);
+}
 
 import { readFileSync, writeFileSync, readdirSync, existsSync } from 'node:fs';
 import { join } from 'node:path';

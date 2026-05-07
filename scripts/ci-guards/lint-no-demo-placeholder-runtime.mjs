@@ -1,23 +1,45 @@
 #!/usr/bin/env node
 /**
  * lint-no-demo-placeholder-runtime — CI gate
- *
- * Forbids hardcoded GRC/demo placeholder strings from leaking into the
- * live workspace runtime. These strings have no place in any:
- *   - dos.ui_route_template_binding.props
- *   - dos.ui_override_{product,module,tenant,user}.patch
- *   - dos.workspace_shell_binding.props
- *   - dos.ui_workspace_banner.{title_fallback,message_fallback}
- *   - dos.ui_workspace_chrome.* (text columns)
- *   - source code defaults under platform/core/platform/shell/templates/**
- *
- * If a tenant is explicitly demo (tenant_id LIKE 'demo%' or
- * environment='demo'), the row is exempt — those tenants are allowed
- * to carry sample content for screencasts/sandboxes.
- *
- * The DB scan only runs when DATABASE_URL is exported. Source scan is
- * always on. Runtime production tenants must NEVER see these strings.
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/lint-no-demo-placeholder-runtime.mjs [OPTIONS]
+
+Forbids hardcoded GRC/demo placeholder strings from leaking into live workspace runtime.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  DATABASE_URL         PostgreSQL connection string (optional for DB scan)
+
+Forbidden locations:
+  - dos.ui_route_template_binding.props
+  - dos.ui_override_{product,module,tenant,user}.patch
+  - dos.workspace_shell_binding.props
+  - dos.ui_workspace_banner.{title_fallback,message_fallback}
+  - dos.ui_workspace_chrome.* (text columns)
+  - Source code defaults under platform/core/platform/shell/templates/**
+
+Exemption:
+  Demo tenants (tenant_id LIKE 'demo%' or environment='demo') are exempt
+
+Exit codes:
+  Non-zero on demo placeholder leak
+
+Examples:
+  # Run demo placeholder check
+  node scripts/ci-guards/lint-no-demo-placeholder-runtime.mjs
+
+  # Run with DB scan
+  DATABASE_URL=postgresql://... node scripts/ci-guards/lint-no-demo-placeholder-runtime.mjs
+`);
+  process.exit(0);
+}
+
 import { execSync } from 'node:child_process';
 import { readFileSync, existsSync, statSync } from 'node:fs';
 import { resolve, join } from 'node:path';

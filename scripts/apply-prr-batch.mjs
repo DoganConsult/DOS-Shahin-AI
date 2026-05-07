@@ -20,7 +20,40 @@ import { fileURLToPath } from 'node:url';
 
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const svc = process.argv[2];
-if (!svc) { console.error('usage: node scripts/apply-prr-batch.mjs <service-name>'); process.exit(1); }
+const dryRun = process.argv.includes('--dry-run');
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+
+if (showHelp) {
+  console.log(`
+Usage: node scripts/apply-prr-batch.mjs <service-name> [OPTIONS]
+
+Generalized PRR hardening for any service.
+
+Arguments:
+  service-name         Name of the service to harden
+
+Options:
+  --dry-run            Show what would be modified without executing
+  --help, -h           Show this help message
+
+For each .routes.ts under services/<service>/src, this script:
+  1. Ensures \`withTenantClient\` is imported from @dos/db
+  2. Ensures \`rateLimiter\` is imported from @dos/platform-core/http
+  3. Inserts a module-scoped PRR marker + rate-limit bucket
+
+Additive + idempotent: re-running is a no-op if markers exist.
+
+Examples:
+  # Apply PRR hardening to auth-service
+  node scripts/apply-prr-batch.mjs auth-service
+
+  # Dry run to preview
+  node scripts/apply-prr-batch.mjs auth-service --dry-run
+`);
+  process.exit(0);
+}
+
+if (!svc) { console.error('usage: node scripts/apply-prr-batch.mjs <service-name> [--dry-run]'); process.exit(1); }
 const ROOT = path.join(REPO_ROOT, 'services', svc, 'src');
 if (!fs.existsSync(ROOT)) { console.error(`service not found: ${svc}`); process.exit(1); }
 
@@ -59,6 +92,12 @@ for (const file of walk(ROOT)) {
   let src = fs.readFileSync(file, 'utf-8');
   if (src.includes(PRR_MARKER)) { skipped += 1; continue; }
 
+  if (dryRun) {
+    console.log(`[DRY RUN] Would modify: ${file}`);
+    modified += 1;
+    continue;
+  }
+
   src = ensureImport(src, 'withTenantClient', '@dos/db');
   src = ensureImport(src, 'rateLimiter', '@dos/platform-core/http');
 
@@ -84,4 +123,8 @@ for (const file of walk(ROOT)) {
   modified += 1;
 }
 
-console.log(`${svc}: modified=${modified} skipped=${skipped}`);
+if (dryRun) {
+  console.log(`[DRY RUN] Would modify ${modified} files, ${skipped} already compliant`);
+} else {
+  console.log(`${svc}: modified=${modified} skipped=${skipped}`);
+}

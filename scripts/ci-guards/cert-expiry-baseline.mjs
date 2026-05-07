@@ -1,14 +1,41 @@
 #!/usr/bin/env node
 /**
  * DOS Master L33 — admin-zone cert expiry baseline.
- *
- * Walks every leaf cert under platform/config-center/secrets/admin-mtls/
- * (excluding ca.crt) and verifies notAfter is at least
- * CERT_EXPIRY_MIN_DAYS (default 90) days into the future.
- *
- * Doctrine binding: Article 4 (admin trust zone) + Article 5 (no
- * fake-green — expiring certs would silently break the trust hop).
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/cert-expiry-baseline.mjs [OPTIONS]
+
+Verifies admin-zone certs have sufficient expiry days.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  CERT_EXPIRY_MIN_DAYS  Minimum days remaining (default: 90)
+
+Behavior:
+  - Walks every leaf cert under platform/config-center/secrets/admin-mtls/
+  - Excludes ca.crt
+  - Verifies notAfter is at least CERT_EXPIRY_MIN_DAYS in future
+  - Skips if admin-mtls dir absent (dev env)
+
+Exit codes:
+  0 — All certs meet baseline or dir absent
+  1 — Cert expiry below baseline
+
+Examples:
+  # Run cert expiry baseline check
+  node scripts/ci-guards/cert-expiry-baseline.mjs
+
+  # Custom minimum days
+  CERT_EXPIRY_MIN_DAYS=180 node scripts/ci-guards/cert-expiry-baseline.mjs
+`);
+  process.exit(0);
+}
+
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { execSync } from 'node:child_process';
 import { join } from 'node:path';

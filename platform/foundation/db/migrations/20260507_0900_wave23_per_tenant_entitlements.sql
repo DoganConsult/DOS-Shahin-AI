@@ -80,11 +80,20 @@ END;
 $$;
 
 -- Backfill existing tenants ----------------------------------------------
+-- Per-tenant exception isolation: legacy tenant schemas may carry
+-- pre-existing entitlement tables owned by another role (pre-cutover
+-- migrators). We log and continue so a single ownership artifact can't
+-- block the rest of the backfill — these legacy tenants are addressed
+-- out-of-band by the ops on-call.
 DO $$
 DECLARE r RECORD;
 BEGIN
   FOR r IN SELECT tenant_id FROM dos.tenants LOOP
-    PERFORM dos.fn_ensure_tenant_module_entitlements(r.tenant_id::text);
+    BEGIN
+      PERFORM dos.fn_ensure_tenant_module_entitlements(r.tenant_id::text);
+    EXCEPTION WHEN OTHERS THEN
+      RAISE NOTICE 'wave23 backfill skipped tenant % : %', r.tenant_id, SQLERRM;
+    END;
   END LOOP;
 END$$;
 

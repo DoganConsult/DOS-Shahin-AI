@@ -1,24 +1,36 @@
 #!/usr/bin/env node
 /**
  * Foundation Manifest Ownership Guard
- *
- * Enforces the contract established by the Foundation Reconciliation Gate
- * (Phase 1A). Both `modules/foundation/module.manifest.json` and
- * `platform/foundation/module.manifest.json` must declare:
- *   - non-empty ownedTables
- *   - unique ownedTables / ownedReferenceTables entries
- *   - no overlap between ownedTables and disownedTables
- *   - every contestedTables entry has a declared canonical/shared owner
- *     (i.e. appears in sharedTables or contestedTablesOwners)
- *   - foundation_training_assignments / foundation_training_courses remain
- *     in disownedTables until Training module ownership is decided
- *
- * Exit codes:
- *   0 = all checks passed
- *   1 = at least one violation
- *
- * No DB access. No file mutation. Read-only validation.
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/foundation-manifest-ownership.mjs [OPTIONS]
+
+Enforces foundation manifest ownership contract.
+
+Options:
+  --help, -h           Show this help message
+
+Contract:
+  Both modules/foundation/module.manifest.json and platform/foundation/module.manifest.json must:
+  - Declare non-empty ownedTables
+  - Have unique ownedTables / ownedReferenceTables entries
+  - No overlap between ownedTables and disownedTables
+  - Every contestedTables entry has declared canonical/shared owner
+  - foundation_training_assignments / foundation_training_courses in disownedTables
+
+Exit codes:
+  0 — All checks passed
+  1 — At least one violation
+
+Examples:
+  # Run foundation manifest ownership check
+  node scripts/ci-guards/foundation-manifest-ownership.mjs
+`);
+  process.exit(0);
+}
 
 import { readFileSync, existsSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';

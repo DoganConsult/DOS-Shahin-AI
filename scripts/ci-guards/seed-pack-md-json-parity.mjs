@@ -1,6 +1,38 @@
 #!/usr/bin/env node
-// Asserts every <code>-complete-direct-seed.json has a sibling .md and that
-// neither side carries deletions outside REOPENED blocks (append-only rule).
+/**
+ * Asserts every <code>-complete-direct-seed.json has a sibling .md
+ */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/seed-pack-md-json-parity.mjs [OPTIONS]
+
+Asserts every <code>-complete-direct-seed.json has a sibling .md and no deletions outside REOPENED blocks.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  SEED_PACK_PARITY_ENFORCE  Set to 1 to enforce ban (default: shadow mode)
+
+Policy:
+  Append-only rule: neither side carries deletions outside REOPENED blocks.
+  .md files without .json twin are dropped from DB publisher pipeline.
+
+Exit codes:
+  Non-zero on parity violation (when enforced)
+
+Examples:
+  # Run in shadow mode (default)
+  node scripts/ci-guards/seed-pack-md-json-parity.mjs
+
+  # Run with enforcement
+  SEED_PACK_PARITY_ENFORCE=1 node scripts/ci-guards/seed-pack-md-json-parity.mjs
+`);
+  process.exit(0);
+}
+
 import { readdirSync, existsSync, readFileSync, statSync } from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';

@@ -1,23 +1,46 @@
 #!/usr/bin/env node
 /**
  * brand-coverage.mjs — Phase M0 CI gate.
- *
- * Verifies that every M0 brand declared in DOS_BRAND_CODES has a complete
- * brand DNA registry footprint:
- *
- *   ① At least 1 row in dos.marketing_brand_tokens (semantic overlay).
- *   ② An active row in dos.marketing_brand_assets for EACH required asset
- *      kind: logo-eagle, favicon, og-image.
- *   ③ Every asset row has non-empty altEn / altAr (a11y contract).
- *
- * Source of truth — parses the M0 seed migration
- * `platform/dos/migrations/public/20260503_0023_marketing_brand_registry.sql`
- * because the gate must run pre-DB (in CI) without a live database. When
- * BRAND_COVERAGE_LIVE=1 the gate also runs the same checks against the
- * configured DATABASE_URL.
- *
- * Set BRAND_COVERAGE_ENFORCE=1 to fail CI; otherwise SHADOW.
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/brand-coverage.mjs [OPTIONS]
+
+Verifies every M0 brand declared in DOS_BRAND_CODES has complete brand DNA registry footprint.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  BRAND_COVERAGE_ENFORCE      Set to 1 to fail CI (default: SHADOW mode)
+  BRAND_COVERAGE_LIVE         Set to 1 to run checks against live DATABASE_URL
+
+Checks:
+  ① At least 1 row in dos.marketing_brand_tokens (semantic overlay)
+  ② Active row in dos.marketing_brand_assets for EACH required asset kind
+  ③ Every asset row has non-empty altEn / altAr (a11y contract)
+
+Required brands: shahin-ai, dogan-ai-os
+Required assets: logo-eagle, favicon, og-image
+
+Exit codes:
+  Non-zero if any check fails (when BRAND_COVERAGE_ENFORCE=1)
+
+Examples:
+  # Run in shadow mode (default)
+  node scripts/ci-guards/brand-coverage.mjs
+
+  # Run with enforcement
+  BRAND_COVERAGE_ENFORCE=1 node scripts/ci-guards/brand-coverage.mjs
+
+  # Run against live database
+  BRAND_COVERAGE_LIVE=1 node scripts/ci-guards/brand-coverage.mjs
+`);
+  process.exit(0);
+}
+
 import { readFileSync, existsSync } from 'node:fs';
 import { resolve, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';

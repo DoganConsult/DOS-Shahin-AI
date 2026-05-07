@@ -1,21 +1,43 @@
 #!/usr/bin/env bash
 # ═══════════════════════════════════════════════════════════════════
 # Tenant Isolation — Static Enforcement Check
-#
-# Flags patterns that indicate raw safeQuery usage on tenant-scoped data
-# instead of withTenantClient (per ADR 006). Intended for CI / pre-commit.
-#
-# Current policy:
-#   - `safeQuery(...)` is allowed for platform-scoped queries (dos.*, public.tenants, etc.).
-#   - `safeQuery(...)` is DISCOURAGED when the query text also contains
-#     `WHERE tenant_id = $` or `"${schema}"`, because those markers indicate
-#     the caller is handling tenant scoping manually — which should go
-#     through `withTenantClient` instead.
-#
-# The check is fail-open by default (prints warnings, exit 0). Set
-# TENANT_ISOLATION_STRICT=1 to make it a hard failure in CI.
 # ═══════════════════════════════════════════════════════════════════
 set -euo pipefail
+
+show_help() {
+  cat <<EOF
+Usage: $(basename "$0") [OPTIONS]
+
+Flags patterns indicating raw safeQuery usage on tenant-scoped data.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  TENANT_ISOLATION_STRICT  Set to 1 for hard failure (default: 0, fail-open)
+
+Policy:
+  - safeQuery() allowed for platform-scoped queries (dos.*, public.tenants)
+  - Discouraged when query contains WHERE tenant_id = or "\${schema}"
+  - Those markers indicate manual tenant scoping (should use withTenantClient)
+
+Exit codes:
+  0 — clean (or warnings in fail-open mode)
+  1 — violations found (in strict mode)
+
+Examples:
+  # Check with warnings only (fail-open)
+  $(basename "$0)
+
+  # Check with hard failure
+  TENANT_ISOLATION_STRICT=1 $(basename "$0)
+EOF
+  exit 0
+}
+
+for arg in "$@"; do
+  case "$arg" in --help|-h) show_help ;; esac
+done
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$REPO_ROOT"

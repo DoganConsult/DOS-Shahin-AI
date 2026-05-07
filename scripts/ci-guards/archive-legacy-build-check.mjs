@@ -1,11 +1,31 @@
 #!/usr/bin/env node
 /**
- * Optional: build packages listed under archive-ledger.json#build_excluded
- * (proving a quarantined package still compiles when needed).
- *
- * Usage: pnpm build:legacy-check
- * Empty build_excluded → PASS with no work.
+ * Optional: build packages listed under archive-ledger.json#build_excluded.
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/archive-legacy-build-check.mjs [OPTIONS]
+
+Builds packages listed under archive-ledger.json#build_excluded (proving quarantined packages still compile).
+
+Options:
+  --help, -h           Show this help message
+
+Behavior:
+  - Reads platform/docs/legacy/archive-ledger.json
+  - Builds each package in build_excluded list
+  - PASS if build_excluded is empty (no work needed)
+  - FAIL if any build fails
+
+Examples:
+  # Run legacy build check
+  node scripts/ci-guards/archive-legacy-build-check.mjs
+`);
+  process.exit(0);
+}
+
 import { readFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';

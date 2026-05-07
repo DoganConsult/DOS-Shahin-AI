@@ -1,13 +1,37 @@
 #!/usr/bin/env bash
 # Recreate the validation database pointed at by DATABASE_URL.
-#
-# Mirrors the CI reset at .github/workflows/ci.yml:392-397 so local and CI
-# schema verification run against an identical, guaranteed-empty DB. Used
-# by `pnpm run verify:schema:fresh`.
-#
-# Safety: refuses to touch shared dev (shahin_grc) or anything whose DB
-# name matches prod/production. Parse-only — no wildcard matching.
 set -euo pipefail
+
+show_help() {
+  cat <<EOF
+Usage: $(basename "$0") [OPTIONS]
+
+Recreates the validation database for schema verification.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  DATABASE_URL         PostgreSQL connection string (required)
+
+Safety:
+  - Refuses to touch shared dev DB (shahin_grc)
+  - Refuses to touch any DB with prod/production in name
+  - Parse-only — no wildcard matching
+
+Examples:
+  # Recreate validation DB
+  DATABASE_URL=postgresql://localhost:5432/validation_db $(basename "$0)
+
+Note:
+  Mirrors CI reset at .github/workflows/ci.yml for identical verification.
+EOF
+  exit 0
+}
+
+for arg in "$@"; do
+  case "$arg" in --help|-h) show_help ;; esac
+done
 
 if [[ -z "${DATABASE_URL:-}" ]]; then
   echo "[fresh-validation-db] DATABASE_URL is required." >&2

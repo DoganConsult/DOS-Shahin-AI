@@ -1,24 +1,39 @@
 #!/usr/bin/env node
 /**
- * props-coverage.mjs — Phase F-F6 H5 customer-gate.
- *
- * For every route in dos.ui_route_template_binding whose archetype lives in
- * one of the 14 archetype-props tables, assert that at least one row exists
- * in the matching dos.ui_route_* table. Fails the customer-gate if any
- * customer-bound route is empty (i.e. would render an empty-state to a real
- * tenant).
- *
- * Read-only static check: parses every migration in
- * platform/dos/migrations/public/ and reconciles bindings ↔ inserts. Live DB
- * is NOT consulted (CI-friendly). The DB integrity is enforced by the
- * archetype-props table UNIQUE constraints + chk_archetype.
- *
- * Set PROPS_COVERAGE_ENFORCE=1 to fail CI; otherwise SHADOW.
- *
- * Allow-list (PROPS_COVERAGE_ALLOWED_EMPTY) lets a route declare "intentionally
- * empty in test fixtures" — used during early waves before all 14 archetype
- * tables are seeded.
+ * props-coverage.mjs — Phase F-F6 H5 customer-gate
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/props-coverage.mjs [OPTIONS]
+
+Asserts every route with archetype props has at least one row in matching dos.ui_route_* table.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  PROPS_COVERAGE_ENFORCE  Set to 1 to fail CI (default: SHADOW mode)
+
+Policy:
+  For every route in dos.ui_route_template_binding whose archetype lives in one of the 14 archetype-props tables,
+  assert that at least one row exists in the matching dos.ui_route_* table.
+  Read-only static check: parses migrations, does NOT consult live DB.
+
+Exit codes:
+  Non-zero on customer-bound route empty (when enforced)
+
+Examples:
+  # Run in shadow mode (default)
+  node scripts/ci-guards/props-coverage.mjs
+
+  # Run with enforcement
+  PROPS_COVERAGE_ENFORCE=1 node scripts/ci-guards/props-coverage.mjs
+`);
+  process.exit(0);
+}
+
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { resolve, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';

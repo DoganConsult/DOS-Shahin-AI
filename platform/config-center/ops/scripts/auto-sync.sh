@@ -1,41 +1,55 @@
 #!/bin/bash
 # Auto-sync watcher: commits & pushes any change in the repo, with a
 # build-freshness gate so src/dist drift never makes it into a commit.
-#
-# Why the gate:
-#   pm2 runs services from dist/*.js. If src/ is committed without a
-#   matching dist/ rebuild, pm2 hits stale compiled code with renamed
-#   packages / deleted modules and crash-loops. The canonical symptom
-#   was the `@dos/auth` → `@dos/dauth-shared` rename after the DAuth
-#   extraction: src updated, dist not rebuilt, every service MODULE_NOT_FOUND.
-#   See docs/auth-host-runtime-ops.md §8.
-#
-# Behavior:
-#   1. Watch the repo (inotify), debounce to 10s.
-#   2. Before committing, detect TS workspaces whose src/*.ts is newer
-#      than the newest dist/*.js (or whose dist is missing entirely).
-#   3. Rebuild just those workspaces in parallel via pnpm --filter.
-#   4. If any rebuild fails: log loudly, SKIP the commit (preserve WIP
-#      in the working tree so the author sees the breakage).
-#   5. On success: commit (regenerated dist included) + push.
-#
-# Flags:
-#   --dry-run    Print what would be rebuilt/committed without acting.
-#                Useful for CI or manual audit.
-#   --once       Run one pass and exit (skip the watch loop).
 
 set -u
-REPO="/root/DOS-AIO"
-DEBOUNCE=10
-DRY_RUN=0
-ONCE=0
+
+show_help() {
+  cat <<EOF
+Usage: $(basename "$0") [OPTIONS]
+
+Auto-sync watcher: commits & pushes repo changes with build-freshness gate.
+
+Options:
+  --dry-run            Print what would be rebuilt/committed without acting
+  --once               Run one pass and exit (skip watch loop)
+  --help, -h           Show this help message
+
+Behavior:
+  1. Watch the repo (inotify), debounce to 10s
+  2. Detect TS workspaces with src newer than dist
+  3. Rebuild just those workspaces in parallel
+  4. Commit (with regenerated dist) + push on success
+
+Environment Variables:
+  REPO                 Repository path (default: /root/DOS-AIO)
+  DEBOUNCE             Debounce time in seconds (default: 10)
+
+Examples:
+  # Watch and auto-sync
+  $(basename "$0)
+
+  # One-time check
+  $(basename "$0) --once
+
+  # Dry run to preview
+  $(basename "$0) --dry-run
+EOF
+  exit 0
+}
 
 for arg in "$@"; do
   case "$arg" in
     --dry-run) DRY_RUN=1 ;;
     --once)    ONCE=1 ;;
+    --help|-h) show_help ;;
   esac
 done
+
+REPO="${REPO:-/root/DOS-AIO}"
+DEBOUNCE="${DEBOUNCE:-10}"
+DRY_RUN="${DRY_RUN:-0}"
+ONCE="${ONCE:-0}"
 
 cd "$REPO" || exit 1
 

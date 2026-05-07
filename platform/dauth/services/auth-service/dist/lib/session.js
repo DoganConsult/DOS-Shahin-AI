@@ -20,7 +20,11 @@ exports.COOKIE_STATE = process.env.COOKIE_OIDC_STATE || 'dos_oidc_state';
 exports.COOKIE_DOMAIN = required('COOKIE_DOMAIN');
 exports.SAMESITE = process.env.COOKIE_SAMESITE || 'lax';
 exports.SECURE = (process.env.COOKIE_SECURE || 'true') === 'true';
-exports.DEFAULT_LANDING = process.env.OIDC_DEFAULT_RETURN_URL || '/workspace-home';
+// Doctrine: no static landing fallback. The OIDC callback derives the
+// landing route from dos.tenant_landing_config (resolved by ui-os-service).
+// If absent, the callback responds with 204/empty redirect target and
+// the SPA renders empty/no-op (NO FRONTEND INVENTION).
+exports.DEFAULT_LANDING = process.env.OIDC_DEFAULT_RETURN_URL ?? null;
 exports.KC_ISSUER = process.env.KEYCLOAK_ISSUER || `${exports.KC_BASE}/realms/${exports.KC_REALM}`;
 exports.KC_JWKS_URL = process.env.KEYCLOAK_JWKS_URL || `${exports.KC_INTERNAL}/realms/${exports.KC_REALM}/protocol/openid-connect/certs`;
 exports.KC_AUDIENCE = process.env.KEYCLOAK_AUDIENCE || exports.CLIENT_ID;

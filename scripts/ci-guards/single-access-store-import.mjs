@@ -1,10 +1,33 @@
 #!/usr/bin/env node
 /**
  * DOS Master Doctrine Article 1 — One AccessStore.
- *
- * Verifies every TS source that imports AccessStore uses ONLY
- * '@dos/access-store'. Counts canonical vs non-canonical imports.
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/single-access-store-import.mjs [OPTIONS]
+
+Verifies every TS source that imports AccessStore uses ONLY @dos/access-store.
+
+Options:
+  --help, -h           Show this help message
+
+Policy:
+  Canonical only: @dos/access-store
+  Forbidden: platform/dauth/access/* and platform/dauth/packages/frontend/access/* imports
+
+Exit codes:
+  1 — Legacy AccessStore references detected
+  0 — All imports canonical
+
+Examples:
+  # Run single access store import check
+  node scripts/ci-guards/single-access-store-import.mjs
+`);
+  process.exit(0);
+}
+
 import { execSync } from 'node:child_process';
 
 function grep(re) {

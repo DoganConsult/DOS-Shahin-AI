@@ -1,22 +1,39 @@
 #!/usr/bin/env node
 /**
  * DOS Required Triggers Present Guard
- * 
- * Encodes doctrine list of required triggers as checked manifest.
- * Fails if DBA drops a trigger by hand.
- * 
- * Required triggers:
- * - trg_published_by_only
- * - trg_validate_template_export
- * - trg_validate_carbon_key
- * - trg_carbon_only_runtime
- * - audit-on-write triggers
- * 
- * Exit codes:
- * - 0: All required triggers present
- * - 1: Missing required triggers detected
- * - 2: Database connection error
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/dos-required-triggers-present.mjs [OPTIONS]
+
+Verifies all doctrine-required triggers are present in the database.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  DATABASE_URL         PostgreSQL connection string (default: postgresql://dos_auth:dos_auth_pass_2026@localhost:5432/shahin_grc)
+
+Required triggers:
+  - trg_published_by_only
+  - trg_validate_template_export
+  - trg_validate_carbon_key
+  - trg_carbon_only_runtime
+  - audit-on-write triggers
+
+Exit codes:
+  0 — All required triggers present
+  1 — Missing required triggers detected
+  2 — Database connection error
+
+Examples:
+  # Run required triggers check
+  node scripts/ci-guards/dos-required-triggers-present.mjs
+`);
+  process.exit(0);
+}
 
 import pg from 'pg';
 const { Pool } = pg;

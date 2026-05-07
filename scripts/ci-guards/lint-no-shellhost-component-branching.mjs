@@ -1,14 +1,33 @@
 #!/usr/bin/env node
 /**
  * lint-no-shellhost-component-branching
- *
- * Ensures ShellHost never branches by specific rendererKey or componentKey.
- * ShellHost may only branch by zone, placement, slot, or other runtime
- * metadata — never by the identity of a particular surface component.
- *
- * Also ensures /workspace-home does not trigger template-binding calls
- * by verifying the shell-only guard exists in DynamicTemplatePageComponent.
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/lint-no-shellhost-component-branching.mjs [OPTIONS]
+
+Ensures ShellHost never branches by specific rendererKey or componentKey.
+
+Options:
+  --help, -h           Show this help message
+
+Policy:
+  ShellHost may only branch by zone, placement, slot, or runtime metadata.
+  Never by the identity of a particular surface component.
+  Also verifies /workspace-home does not trigger template-binding calls.
+
+Exit codes:
+  Non-zero on component-specific branching violation
+
+Examples:
+  # Run shellhost component branching check
+  node scripts/ci-guards/lint-no-shellhost-component-branching.mjs
+`);
+  process.exit(0);
+}
+
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';

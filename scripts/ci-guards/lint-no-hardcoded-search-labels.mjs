@@ -1,17 +1,36 @@
 #!/usr/bin/env node
 /**
  * lint-no-hardcoded-search-labels
- *
- * Phase 3B guard. Rejects hardcoded user-facing search labels in any active
- * shell, foundation, or module search component. The seven Phase 3B-0 chrome
- * keys (`shell.*.search.ariaLabel`) are the only sanctioned source for these
- * strings, resolved through:
- *   • UI-OS resolver (services/ui-os-service/src/routes/workspace-shell.routes.ts)
- *   • CHROME_ARIA_LABEL_RESOLVER bridge (platform/app/src/app.config.ts)
- *   • FOUNDATION_WORKSPACE_CHROME port (platform/foundation/ui/ports)
- *
- * Exit code: 0 = OK, 1 = violations found.
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/lint-no-hardcoded-search-labels.mjs [OPTIONS]
+
+Rejects hardcoded user-facing search labels in shell, foundation, or module search components.
+
+Options:
+  --help, -h           Show this help message
+
+Policy:
+  Seven Phase 3B-0 chrome keys (shell.*.search.ariaLabel) are the only sanctioned source.
+  Resolved through:
+  - UI-OS resolver (services/ui-os-service/src/routes/workspace-shell.routes.ts)
+  - CHROME_ARIA_LABEL_RESOLVER bridge (platform/app/src/app.config.ts)
+  - FOUNDATION_WORKSPACE_CHROME port (platform/foundation/ui/ports)
+
+Exit codes:
+  0 — OK
+  1 — Violations found
+
+Examples:
+  # Run hardcoded search labels check
+  node scripts/ci-guards/lint-no-hardcoded-search-labels.mjs
+`);
+  process.exit(0);
+}
+
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';

@@ -1,12 +1,33 @@
 #!/usr/bin/env node
 /**
- * CI guard: every module.manifest.json must validate against
- * platform/contracts/module/module.manifest.schema.json (draft 2020-12).
- *
- * Fails CI on schema violations or unknown top-level properties (the schema
- * is additionalProperties: false). Skips files whose `kind` is `business`
- * but absent goldenReady/provisioning blocks (warns instead).
+ * CI guard: every module.manifest.json must validate against schema
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/module-manifest-shape.mjs [OPTIONS]
+
+Validates every module.manifest.json against module.manifest.schema.json.
+
+Options:
+  --help, -h           Show this help message
+
+Policy:
+  Validates against platform/contracts/module/module.manifest.schema.json (draft 2020-12).
+  Fails CI on schema violations or unknown top-level properties (additionalProperties: false).
+  Skips files with kind='business' but absent goldenReady/provisioning blocks (warns instead).
+
+Exit codes:
+  Non-zero on schema violation
+
+Examples:
+  # Run module manifest shape check
+  node scripts/ci-guards/module-manifest-shape.mjs
+`);
+  process.exit(0);
+}
+
 import { readFileSync, readdirSync, existsSync, statSync } from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';

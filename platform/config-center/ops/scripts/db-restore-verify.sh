@@ -3,6 +3,37 @@
 # WARNING: Drops public+dos objects on target when CLEAN_RESTORE=1 (default for throwaway DBs).
 set -euo pipefail
 
+show_help() {
+  cat <<EOF
+Usage: $(basename "$0") [OPTIONS]
+
+Performs pg_restore into target database and runs row-count proof.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  RESTORE_URL          Target PostgreSQL URL (required)
+  DUMP_FILE            pg_dump -Fc artifact (required)
+  CLEAN_RESTORE        Drop schemas before restore (default: 1)
+
+Warning:
+  Drops public+dos objects on target when CLEAN_RESTORE=1.
+
+Examples:
+  # Restore with clean slate
+  RESTORE_URL=postgresql://... DUMP_FILE=/path/to/dump $(basename "$0)
+
+  # Restore without dropping schemas
+  CLEAN_RESTORE=0 RESTORE_URL=postgresql://... DUMP_FILE=/path/to/dump $(basename "$0)
+EOF
+  exit 0
+}
+
+for arg in "$@"; do
+  case "$arg" in --help|-h) show_help ;; esac
+done
+
 : "${RESTORE_URL:?Set RESTORE_URL to target postgres URL (throwaway DB)}"
 : "${DUMP_FILE:?Set DUMP_FILE to pg_dump -Fc artifact}"
 

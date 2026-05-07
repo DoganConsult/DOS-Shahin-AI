@@ -1,12 +1,41 @@
 #!/usr/bin/env node
 /**
- * CI guard: ensure no legacy/snake_case patterns leak into the frontend shell.
- *
- * Scans platform/core/platform/shell/ for forbidden patterns that indicate
- * DB DTOs leaking past the UI-OS resolver boundary.
- *
- * Exit 0 = PASS, Exit 1 = FAIL.
+ * CI guard: ensure no legacy/snake_case patterns leak into frontend shell.
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/lint-no-shell-legacy.mjs [OPTIONS]
+
+Ensures no legacy/snake_case patterns leak into frontend shell.
+
+Options:
+  --help, -h           Show this help message
+
+Scope:
+  Scans platform/core/platform/shell/ for forbidden patterns indicating DB DTOs leaking past UI-OS resolver.
+
+Forbidden patterns:
+  - shellActionFromLegacyRecord
+  - label_key, label_fallback (snake_case DB fields)
+  - detailRoute, evidenceUri (legacy raw fields)
+  - props['accountMenu'] (flat prop read)
+  - chromeStrings (old flat key)
+  - module_code, group_id, item_id, sort_order (snake_case DB fields)
+  - label_en, label_ar (snake_case DB fields)
+
+Exit codes:
+  0 — PASS
+  1 — FAIL
+
+Examples:
+  # Run shell legacy check
+  node scripts/ci-guards/lint-no-shell-legacy.mjs
+`);
+  process.exit(0);
+}
+
 import { readFileSync, readdirSync, statSync } from 'fs';
 import { join, relative } from 'path';
 

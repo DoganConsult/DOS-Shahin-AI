@@ -1,15 +1,34 @@
 #!/usr/bin/env node
 /**
  * Contract TS Bindings Parity Guard
- * 
- * Generalizes workspace-shell TS binding parity to cover all contract packs
- * under module_complete_direct_seed_pack/. Verifies generated TS matches JSON contract.
- * 
- * Exit codes:
- * - 0: TS bindings parity verified
- * - 1: TS bindings parity mismatch detected
- * - 2: Error
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/contract-ts-bindings-parity.mjs [OPTIONS]
+
+Verifies generated TS matches JSON contract for all contract packs.
+
+Options:
+  --help, -h           Show this help message
+
+Behavior:
+  - Scans module_complete_direct_seed_pack/ directory
+  - Verifies every JSON contract has sibling .md doctrine file
+  - Validates seed-pack pair (.json ↔ .md) publisher input
+
+Exit codes:
+  0 — TS bindings parity verified
+  1 — TS bindings parity mismatch detected
+  2 — Error
+
+Examples:
+  # Run contract TS bindings parity check
+  node scripts/ci-guards/contract-ts-bindings-parity.mjs
+`);
+  process.exit(0);
+}
 
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { resolve, join, dirname } from 'node:path';

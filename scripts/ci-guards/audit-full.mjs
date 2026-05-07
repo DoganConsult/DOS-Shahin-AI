@@ -1,17 +1,32 @@
 #!/usr/bin/env node
 /**
  * Audit Full - Complete Gap-Detection Audit
- * 
- * Wires all gap-detection guards into single entry point.
- * Emits JSON report under reports/audit/<date>.json with deltas vs prior run.
- * 
- * Usage: pnpm audit:full
- * 
- * Exit codes:
- * - 0: All guards passed
- * - 1: One or more guards failed
- * - 2: Error
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/audit-full.mjs [OPTIONS]
+
+Wires all gap-detection guards into single entry point.
+
+Options:
+  --help, -h           Show this help message
+
+Output:
+  JSON report under reports/audit/<date>.json with deltas vs prior run
+
+Exit codes:
+  0 — All guards passed
+  1 — One or more guards failed
+  2 — Error
+
+Examples:
+  # Run full audit
+  node scripts/ci-guards/audit-full.mjs
+`);
+  process.exit(0);
+}
 
 import { execSync } from 'node:child_process';
 import { writeFileSync, existsSync, mkdirSync, readFileSync } from 'node:fs';

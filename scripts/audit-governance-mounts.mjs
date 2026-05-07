@@ -5,6 +5,33 @@
  * services/governance-policy-service/src/routes/index.ts via their
  * source-path fragment (everything after source/backend/<mod>/).
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/audit-governance-mounts.mjs [OPTIONS]
+
+Audits governance module route mounts in governance-policy-service.
+
+Options:
+  --help, -h           Show this help message
+
+Behavior:
+  Walks governance modules and reports which *.routes.ts files are NOT referenced
+  by governance-policy-service/src/routes/index.ts.
+
+Output:
+  - Total module files
+  - Mounted routes
+  - Missing/unmounted routes
+
+Examples:
+  # Audit governance mounts
+  node scripts/audit-governance-mounts.mjs
+`);
+  process.exit(0);
+}
+
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';

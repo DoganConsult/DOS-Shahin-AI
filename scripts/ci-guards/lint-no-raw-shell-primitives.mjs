@@ -1,31 +1,44 @@
 #!/usr/bin/env node
 /**
  * lint-no-raw-shell-primitives
- *
- * Carbon-native shell adoption guard. Rejects raw HTML primitives in the
- * canonical visual shell surface file
- *
- *   platform/ui-system/dos-ui-system/src/shell/visual-shell-surfaces.component.ts
- *
- * and in the workspace ShellHost
- *
- *   platform/core/platform/shell/shell-host.component.ts
- *
- * Doctrine: Dynamic UI decides WHAT, Carbon decides HOW. The visual
- * shell renderers MUST compose Carbon Angular primitives (cds-header-action,
- * cds-sidenav-item, cds-overflow-menu-pane, cds-overflow-menu-option) or
- * @dos/ui-system Carbon wrappers (dos-carbon-tile). Hand-rolled menus,
- * popovers, raw <button>/<ul role="menu">, and bespoke focus/hover styles
- * are forbidden — Carbon owns the affordance shell.
- *
- * Banned tokens (anywhere inside the watched files' template / style strings):
- *   - <button …  (raw HTML button, not wrapped by Carbon component)
- *   - <ul role="menu"  (hand-rolled disclosure popover)
- *   - <select …  (raw HTML select)
- *   - <input …  (raw HTML input — Carbon wrappers must be used)
- *
- * Exit code: 0 = OK, 1 = violations found.
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/lint-no-raw-shell-primitives.mjs [OPTIONS]
+
+Carbon-native shell adoption guard - rejects raw HTML primitives in shell visual surfaces.
+
+Options:
+  --help, -h           Show this help message
+
+Doctrine:
+  Dynamic UI decides WHAT, Carbon decides HOW. Visual shell renderers MUST compose
+  Carbon Angular primitives or @dos/ui-system Carbon wrappers. Hand-rolled menus,
+  popovers, raw <button>/<ul role="menu">, and bespoke focus/hover styles are forbidden.
+
+Watched files:
+  - platform/ui-system/dos-ui-system/src/shell/visual-shell-surfaces.component.ts
+  - platform/core/platform/shell/shell-host.component.ts
+
+Banned tokens:
+  - <button … (raw HTML button)
+  - <ul role="menu" (hand-rolled disclosure popover)
+  - <select … (raw HTML select)
+  - <input … (raw HTML input)
+
+Exit codes:
+  0 — OK
+  1 — Violations found
+
+Examples:
+  # Run raw shell primitives check
+  node scripts/ci-guards/lint-no-raw-shell-primitives.mjs
+`);
+  process.exit(0);
+}
+
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';

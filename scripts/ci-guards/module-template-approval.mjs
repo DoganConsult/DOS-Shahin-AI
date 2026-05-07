@@ -1,7 +1,37 @@
 #!/usr/bin/env node
-// Enforces that only published JSON module contracts participate in the
-// DB publisher pipeline, and that every published page targets an approved
-// template export from the canonical shell loader registry.
+/**
+ * Enforces only published JSON module contracts participate in DB publisher pipeline
+ */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/module-template-approval.mjs [OPTIONS]
+
+Enforces that every published page targets an approved template export from shell loader registry.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  MODULE_TEMPLATE_APPROVAL_ENFORCE  Set to 1 to enforce ban (default: shadow mode)
+
+Policy:
+  Only published JSON module contracts may participate in DB publisher pipeline.
+  Every published page must target approved template export from canonical shell loader registry.
+
+Exit codes:
+  Non-zero on template approval violation (when enforced)
+
+Examples:
+  # Run in shadow mode (default)
+  node scripts/ci-guards/module-template-approval.mjs
+
+  # Run with enforcement
+  MODULE_TEMPLATE_APPROVAL_ENFORCE=1 node scripts/ci-guards/module-template-approval.mjs
+`);
+  process.exit(0);
+}
 
 import { readdirSync, readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';

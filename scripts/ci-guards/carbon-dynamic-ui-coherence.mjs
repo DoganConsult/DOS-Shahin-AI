@@ -1,22 +1,38 @@
 #!/usr/bin/env node
 /**
  * carbon-dynamic-ui-coherence.mjs — Dynamic-UI / IBM Carbon contract gate
- *
- * 1. Parses dos.ui_carbon_components INSERTs under platform/dos/migrations/public
- * 2. Parses dos.dynamic_ui_component_registry (full + legacy bare rows)
- * 3. Parses dos.dynamic_ui_routes (active readiness only) for component_key
- * 4. Parses dos.dynamic_ui_widgets for signature_widget_key / widget_key literals
- * 5. Loads COMPONENT_MAP + WIDGET_KEY_MAP (static regex) and verifies:
- *    - migration string literals in vendor column are exactly ibm-carbon for:
- *      dos.dynamic_ui_component_registry and dos.ui_carbon_components (when vendor
- *      is present), after stripping top-level DO $tag$ blocks (smoke negatives)
- *    - approved ibm-carbon registry rows reference carbon_key in catalog set
- *    - every active route component_key exists in COMPONENT_MAP
- *    - every approved registry component_key exists in COMPONENT_MAP
- *    - every referenced widget key resolves via resolveWidgetComponent rules
- *      (exact key OR documented prefix family in this script — kept in sync
- *      with widget-key-map.ts)
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/carbon-dynamic-ui-coherence.mjs [OPTIONS]
+
+Verifies Dynamic-UI / IBM Carbon contract coherence.
+
+Options:
+  --help, -h           Show this help message
+
+Behavior:
+  1. Parses dos.ui_carbon_components INSERTs under platform/dos/migrations/public
+  2. Parses dos.dynamic_ui_component_registry (full + legacy bare rows)
+  3. Parses dos.dynamic_ui_routes for component_key
+  4. Parses dos.dynamic_ui_widgets for widget keys
+  5. Verifies vendor='ibm-carbon' for registry rows
+  6. Verifies carbon_key references resolve to catalog
+  7. Verifies component_key exists in COMPONENT_MAP
+  8. Verifies widget keys resolve via resolveWidgetComponent rules
+
+Exit codes:
+  Non-zero on any contract violation
+
+Examples:
+  # Run carbon dynamic UI coherence check
+  node scripts/ci-guards/carbon-dynamic-ui-coherence.mjs
+`);
+  process.exit(0);
+}
+
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { resolve, dirname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';

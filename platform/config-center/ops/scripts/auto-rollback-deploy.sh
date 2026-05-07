@@ -3,6 +3,38 @@
 
 set -e
 
+show_help() {
+  cat <<EOF
+Usage: $(basename "$0") [OPTIONS]
+
+Performs PM2 zero-downtime reload with auto-rollback on health check failure.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  ECOSYSTEM_CONFIG     Path to PM2 ecosystem config (default: ops/ecosystem.all.config.js)
+
+Behavior:
+  1. Performs PM2 zero-downtime reload
+  2. Waits 5 seconds for stabilization
+  3. Verifies health check
+  4. On failure: auto-rolls back via git reset, rebuild, and reload
+
+Examples:
+  # Deploy with auto-rollback
+  $(basename "$0)
+
+  # With custom ecosystem config
+  ECOSYSTEM_CONFIG=/path/to/ecosystem.config.js $(basename "$0)
+EOF
+  exit 0
+}
+
+for arg in "$@"; do
+  case "$arg" in --help|-h) show_help ;; esac
+done
+
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 PM2_CONFIG="${ECOSYSTEM_CONFIG:-$ROOT/ops/ecosystem.all.config.js}"
 [[ "${PM2_CONFIG}" != /* ]] && PM2_CONFIG="$ROOT/${PM2_CONFIG#./}"

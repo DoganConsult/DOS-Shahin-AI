@@ -1,27 +1,46 @@
 #!/usr/bin/env node
 /**
  * Pull-mode Keycloak event bridge (fallback for the SPI webhook).
- *
- * Polls the Keycloak Admin API (/admin/realms/{realm}/events and
- * /admin/realms/{realm}/admin-events) and forwards new events to the DAuth
- * webhook receiver at POST /api/keycloak/events. Safe to run under pm2 as a
- * long-lived fork; dedup + replay safety is provided by the webhook receiver
- * via its ON CONFLICT DO NOTHING index.
- *
- * Cursor state is stored in platform_dauth.keycloak_event_bridge_cursor so
- * restarts do not refetch the full history window.
- *
- * Env:
- *   KEYCLOAK_BASE_URL, KEYCLOAK_REALM
- *   KEYCLOAK_ADMIN_WRITE_CLIENT_ID / _SECRET
- *   DAUTH_WEBHOOK_URL                (default http://127.0.0.1:4001/api/keycloak/events)
- *   KEYCLOAK_WEBHOOK_SECRET          (shared with auth-service)
- *   DATABASE_URL                     (for cursor persistence)
- *
- * Usage:
- *   node scripts/bridge-keycloak-events.mjs --once
- *   node scripts/bridge-keycloak-events.mjs --interval 5000
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/bridge-keycloak-events.mjs [OPTIONS]
+
+Polls Keycloak Admin API and forwards events to DAuth webhook receiver.
+
+Options:
+  --once               Run one pass and exit
+  --interval <ms>      Poll interval in milliseconds (default: 5000)
+  --window <ms>        Event window in milliseconds (default: 60000)
+  --help, -h           Show this help message
+
+Environment Variables:
+  KEYCLOAK_BASE_URL                Keycloak base URL
+  KEYCLOAK_REALM                   Keycloak realm name
+  KEYCLOAK_ADMIN_WRITE_CLIENT_ID   Admin client ID
+  KEYCLOAK_ADMIN_WRITE_CLIENT_SECRET Admin client secret
+  DAUTH_WEBHOOK_URL               DAuth webhook URL (default: http://127.0.0.1:4001/api/keycloak/events)
+  KEYCLOAK_WEBHOOK_SECRET         Webhook secret
+  DATABASE_URL                     For cursor persistence
+
+Behavior:
+  - Polls Keycloak Admin API events
+  - Forwards to DAuth webhook receiver
+  - Cursor state stored in platform_dauth.keycloak_event_bridge_cursor
+  - Dedup + replay safety via ON CONFLICT DO NOTHING index
+
+Examples:
+  # Run one pass
+  node scripts/bridge-keycloak-events.mjs --once
+
+  # Poll every 10 seconds
+  node scripts/bridge-keycloak-events.mjs --interval 10000
+`);
+  process.exit(0);
+}
+
 import { Client } from 'pg';
 
 function env(n, f) { const v = process.env[n]; return v && v.length > 0 ? v : f; }

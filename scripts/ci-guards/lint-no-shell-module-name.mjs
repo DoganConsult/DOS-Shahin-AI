@@ -1,48 +1,56 @@
 #!/usr/bin/env node
 /**
  * lint-no-shell-module-name.mjs
- *
- * Enforces spec §1.1 (Shell knowledge boundary):
- *   "The shell must not know 'Foundation', 'Risk', 'Compliance', etc."
- *
- * Fails when shell-tier code (the SPA's app shell, layout, navigation,
- * platform runtime, dynamic-ui host) contains string equality against any
- * registered module code.
- *
- * Allowlisted locations (NOT shell):
- *   - features/<module>/...           (per-module feature code)
- *   - pages/<module>-.../...          (per-module pages)
- *   - core/<module>/...               (per-module core services)
- *   - registries/...                  (catalog data is allowed to mention codes)
- *   - blueprint/products/...          (per-product wiring)
- *   - blueprint/platform-manifests/...
- *   - blueprint/generated/...
- *
- * Shell-scoped locations (CHECKED):
- *   - blueprint/layout/...
- *   - blueprint/core/platform/...
- *   - blueprint/core/runtime/...
- *   - blueprint/core/navigation/...   (generic nav engine; per-module nav configs allowed)
- *   - blueprint/shared/dynamic-ui/...
- *   - blueprint/shared/components/page-chrome/...
- *   - blueprint/shared/components/module-chrome/...
- *
- * Patterns flagged:
- *   - moduleCode === '<known-module>'
- *   - module_code === '<known-module>'
- *   - moduleCode == '<known-module>'
- *   - if (route.startsWith('/<known-module>/'))
- *   - switch on moduleCode with case '<known-module>':
- *
- * Exit codes
- *   0 — clean
- *   1 — at least one violation
- *   2 — harness error
- *
- * Usage
- *   node scripts/ci-guards/lint-no-shell-module-name.mjs
- *   STRICT=1 node scripts/ci-guards/lint-no-shell-module-name.mjs   # fail on any match
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/lint-no-shell-module-name.mjs [OPTIONS]
+
+Enforces spec §1.1: shell must not know module names like 'Foundation', 'Risk', 'Compliance'.
+
+Options:
+  --help, -h           Show this help message
+
+Policy:
+  Shell-tier code must not contain string equality against registered module codes.
+  Shell may only branch by zone, placement, slot, or runtime metadata.
+
+Shell-scoped locations (CHECKED):
+  - blueprint/layout/...
+  - blueprint/core/platform/...
+  - blueprint/core/runtime/...
+  - blueprint/core/navigation/...
+  - blueprint/shared/dynamic-ui/...
+  - blueprint/shared/components/page-chrome/...
+  - blueprint/shared/components/module-chrome/...
+
+Allowlisted locations (NOT checked):
+  - features/<module>/... (per-module feature code)
+  - pages/<module>-.../... (per-module pages)
+  - core/<module>/... (per-module core services)
+  - registries/... (catalog data)
+  - blueprint/products/... (per-product wiring)
+
+Patterns flagged:
+  - moduleCode === '<known-module>'
+  - module_code === '<known-module>'
+  - route.startsWith('/<known-module>/')
+  - switch on moduleCode with case '<known-module>'
+
+Exit codes:
+  0 — Clean
+  1 — At least one violation
+  2 — Harness error
+
+Examples:
+  # Run shell module name check
+  node scripts/ci-guards/lint-no-shell-module-name.mjs
+`);
+  process.exit(0);
+}
+
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';

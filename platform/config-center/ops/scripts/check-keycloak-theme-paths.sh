@@ -1,19 +1,38 @@
 #!/usr/bin/env bash
-#
-# Keycloak theme path gate — fails if any theme.properties `styles=` or
-# `scripts=` entry begins with `resources/`. Keycloak already serves theme
-# files from the theme's resources/ dir, so adding the prefix double-nests
-# the URL (/resources/<ver>/<type>/<name>/resources/css/x.css → 404 with
-# empty Content-Type → browser refuses stylesheet under strict MIME check).
-#
-# Context: on 2026-04-23 this exact bug landed in
-# ops/keycloak-themes/dogan/login/theme.properties via an auto-sync commit
-# and rendered shahin-ai.com's registration page unstyled.
-#
-# Usage: ops/scripts/check-keycloak-theme-paths.sh
-# Exit:  0 clean, 1 violations found.
-
+# Keycloak theme path gate — fails if theme.properties has invalid paths.
 set -euo pipefail
+
+show_help() {
+  cat <<EOF
+Usage: $(basename "$0") [OPTIONS]
+
+CI guard that checks Keycloak theme.properties for invalid resource paths.
+
+Options:
+  --help, -h           Show this help message
+
+Behavior:
+  - Scans theme.properties files for styles= and scripts= entries
+  - Fails if any entry begins with 'resources/' (double-nests URL)
+  - Keycloak already serves from resources/, so prefix causes 404
+
+Exit codes:
+  0 — clean
+  1 — violations found
+
+Context:
+  On 2026-04-23 this bug landed and rendered shahin-ai.com unstyled.
+
+Examples:
+  # Check all theme paths
+  $(basename "$0)
+EOF
+  exit 0
+}
+
+for arg in "$@"; do
+  case "$arg" in --help|-h) show_help ;; esac
+done
 
 REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 VIOLATIONS=0

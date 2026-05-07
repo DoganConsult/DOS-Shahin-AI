@@ -1,9 +1,34 @@
 #!/usr/bin/env node
 /**
- * One-shot hygiene for auto-extracted.repo.ts:
- * - Remove stray // @ts-expect-error / // @ts-ignore lines (including inside SQL templates).
- * - Quote schema identifier: ${schema}.table -> "${schema}".table
+ * One-shot hygiene for auto-extracted.repo.ts
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/fix-auto-extracted-repo-sql.mjs [ROOT]
+
+Hygiene cleanup for auto-extracted.repo.ts files.
+
+Options:
+  --help, -h           Show this help message
+  ROOT                 Repo root (default: ../../)
+
+Behavior:
+  - Removes stray // @ts-expect-error / // @ts-ignore lines
+  - Quotes schema identifier: \${schema}.table -> "\${schema}".table
+  - Finds all auto-extracted.repo.ts files excluding node_modules/dist
+
+Examples:
+  # Run in default repo root
+  node scripts/ci-guards/fix-auto-extracted-repo-sql.mjs
+
+  # Run with custom root
+  node scripts/ci-guards/fix-auto-extracted-repo-sql.mjs /path/to/repo
+`);
+  process.exit(0);
+}
+
 import fs from 'node:fs';
 import path from 'node:path';
 import { execSync } from 'node:child_process';

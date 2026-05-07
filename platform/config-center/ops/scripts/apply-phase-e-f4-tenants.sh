@@ -1,43 +1,48 @@
 #!/usr/bin/env bash
 # ═══════════════════════════════════════════════════════════════════
 # Phase H-3 — Apply Phase E + F-4 migrations to all live tenant schemas.
-#
-# Plan: /root/.claude/plans/need-to-clean-the-swift-trinket.md
-#
-# What it does
-# ────────────
-#   1. Loads platform/config-center/env/migrator.env to get MIGRATOR_DATABASE_URL.
-#   2. Lists every tenant schema (`tenant_*` in pg_namespace) — or, if
-#      `--tenant-filter <name>` is passed, just that one.
-#   3. Pre-flight per tenant: counts rows in legacy team_* structure
-#      tables. Refuses to proceed if any tenant has rows (the F-4 migration
-#      drops empty tables only — a non-empty tenant needs a data migration
-#      first, which is OUT OF SCOPE for this script).
-#   4. For each tenant, in order:
-#        Phase E:  platform/dauth/migrations/public/20260425_0010_consolidate_decision_logs.sql
-#        Phase F-4: modules/team/db/tenant/migrations/028_team_structure_to_dos_views.sql
-#      Each migration is run with TENANT_SCHEMA=$schema substituted via
-#      envsubst (matches the documented pattern in 131_sod_rules.sql).
-#   5. Post-flight: verifies the canonical authz_decision_log table and
-#      the 3 legacy-name views exist.
-#   6. Emits a JSON report to ops/reports/phase-e-f4-<timestamp>.json.
-#   7. Exits non-zero if any tenant failed.
-#
-# Modes
-# ─────
-#   --dry-run                       Print what would happen; touch nothing.
-#   --tenant-filter <name>          Only operate on the named tenant schema.
-#   --rollback                      Run the *_down.sql files in reverse order.
-#   --fail-fast-on-first-tenant     Abort the loop after the first failure
-#                                   instead of trying every tenant. The JSON
-#                                   report still records every tenant that
-#                                   was processed before the abort.
-#
-# Usage
-# ─────
-#   ./ops/scripts/apply-phase-e-f4-tenants.sh --dry-run
-#   ./ops/scripts/apply-phase-e-f4-tenants.sh --tenant-filter tenant_staging
-#   ./ops/scripts/apply-phase-e-f4-tenants.sh
+# ═══════════════════════════════════════════════════════════════════
+set -euo pipefail
+
+show_help() {
+  cat <<EOF
+Usage: $(basename "$0) [OPTIONS]
+
+Applies Phase E + F-4 migrations to all live tenant schemas.
+
+Options:
+  --dry-run                       Print what would happen; touch nothing
+  --tenant-filter <name>          Only operate on the named tenant schema
+  --rollback                      Run the *_down.sql files in reverse order
+  --fail-fast-on-first-tenant     Abort after first failure instead of trying every tenant
+  --help, -h                      Show this help message
+
+Environment Variables:
+  MIGRATOR_DATABASE_URL           Database URL for migrator
+
+Behavior:
+  1. Lists every tenant schema (or filtered by --tenant-filter)
+  2. Pre-flight: counts rows in legacy team_* tables
+  3. For each tenant, applies Phase E and F-4 migrations
+  4. Post-flight: verifies authz_decision_log and views
+  5. Emits JSON report to ops/reports/phase-e-f4-<timestamp>.json
+
+Examples:
+  # Dry run to preview
+  $(basename "$0) --dry-run
+
+  # Apply to specific tenant
+  $(basename "$0) --tenant-filter tenant_staging
+
+  # Apply to all tenants
+  $(basename "$0)
+EOF
+  exit 0
+}
+
+for arg in "$@"; do
+  case "$arg" in --help|-h) show_help ;; esac
+done
 #   ./ops/scripts/apply-phase-e-f4-tenants.sh --rollback --tenant-filter tenant_staging
 #   ./ops/scripts/apply-phase-e-f4-tenants.sh --fail-fast-on-first-tenant
 # ═══════════════════════════════════════════════════════════════════

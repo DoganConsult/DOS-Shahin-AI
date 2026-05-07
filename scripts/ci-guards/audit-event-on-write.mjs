@@ -1,11 +1,41 @@
 #!/usr/bin/env node
 /**
  * DOS Master Doctrine — audit-event on every controlled write.
- *
- * Verifies the dos_master_writer_audit ledger contains entries from
- * every DOS Master service that has performed a controlled write,
- * proving the trg_dos_master_only trigger is firing end-to-end.
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/audit-event-on-write.mjs [OPTIONS]
+
+Verifies dos_master_writer_audit ledger contains entries from every DOS Master service.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  DATABASE_URL         PostgreSQL connection string (default: postgresql://dos_auth:dos_auth_pass_2026@localhost:5432/shahin_grc)
+
+Behavior:
+  - Checks trg_dos_master_only trigger is firing end-to-end
+  - Verifies audit rows exist for expected actors
+  - DB unreachable is treated as SKIP (exit 0)
+
+Exit codes:
+  0 — PASS or DB unreachable
+  1 — FAIL no audit rows for expected actors
+  2 — ERROR
+
+Examples:
+  # Run audit check
+  node scripts/ci-guards/audit-event-on-write.mjs
+
+  # Run with custom DATABASE_URL
+  DATABASE_URL=postgresql://... node scripts/ci-guards/audit-event-on-write.mjs
+`);
+  process.exit(0);
+}
+
 import { Client } from 'pg';
 
 const EXPECTED_ACTORS = ['dos-master'];

@@ -1,15 +1,39 @@
 #!/usr/bin/env node
 /**
- * CI guard: no draft / do-not-apply migration may live on the runtime path.
- *
- * Scope mirrors `migration/migration-runner.ts :: discoverAllMigrations`.
- * Any *.sql file under those roots whose first 1 KiB contains a draft marker
- * (`-- dos:draft`, `DRAFT ONLY`, `DO NOT APPLY`, `MUST NOT be applied`) AND
- * is NOT under a `_draft/`, `_rejected/`, or `_disabled/` segment fails CI.
- *
- * Why: prevents reintroducing the wave-0 lockup we hit on
- * `20260430_0001_foundation_tenant_schema_status.sql` (RED_BLOCKED, P0).
+ * CI guard: no draft migration may live on the runtime path
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/migrations-no-draft-in-runtime.mjs [OPTIONS]
+
+Prevents draft/do-not-apply migrations from living on the runtime path.
+
+Options:
+  --help, -h           Show this help message
+
+Policy:
+  Scope mirrors migration/migration-runner.ts :: discoverAllMigrations.
+  Any *.sql file under runtime roots containing draft markers fails CI
+  unless under _draft/, _rejected/, or _disabled/ segment.
+
+Draft markers:
+  - -- dos:draft
+  - DRAFT ONLY
+  - DO NOT APPLY
+  - MUST NOT be applied
+
+Exit codes:
+  Non-zero on draft migration in runtime path
+
+Examples:
+  # Run migrations no-draft check
+  node scripts/ci-guards/migrations-no-draft-in-runtime.mjs
+`);
+  process.exit(0);
+}
+
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
 

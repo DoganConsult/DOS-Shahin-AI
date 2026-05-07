@@ -1,24 +1,42 @@
 #!/usr/bin/env node
 // WORKSPACE_HOME_SHELL_ONLY_NO_CALL_PASS — network-guard proof.
-//
-// Visits /workspace-home in clean-profile headless chromium and asserts
-// that the SPA does NOT issue a network request to
-//   /api/ui-os/template-binding?route=/workspace-home
-// regardless of whether the SPA bounces to /login (anon path) or
-// reaches the workspace shell (auth path). Route-metadata is allowed
-// (HTTP 200 carries the shell-only classification that drives the
-// short-circuit). The probe also captures the route-metadata response
-// status to prove the contract.
-//
-// Doctrine:
-//   - clean-profile chromium (no extensions, no persisted user-data-dir)
-//   - no fabricated auth; anon bounce to /login is acceptable evidence
-//     because either path proves the FE never hits template-binding
-//   - exits non-zero on any forbidden request
 
 import { chromium } from 'playwright';
 import { writeFileSync, mkdirSync } from 'fs';
 import { dirname } from 'path';
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/audits/workspace-home-no-template-binding-probe.mjs [OPTIONS]
+
+Network-guard proof that SPA does not issue template-binding request for /workspace-home.
+
+Options:
+  --base <url>         Base URL (default: http://localhost:3000)
+  --route <path>       Route to probe (default: /workspace-home)
+  --out <path>         Output JSON path
+  --help, -h           Show this help message
+
+Behavior:
+  - Visits route in clean-profile headless chromium
+  - Asserts SPA does NOT request /api/ui-os/template-binding?route=...
+  - Route-metadata request allowed (HTTP 200 carries shell-only classification)
+  - Clean-profile chromium (no extensions, no persisted user-data-dir)
+  - No fabricated auth; anon bounce to /login is acceptable evidence
+
+Exit codes:
+  Non-zero on any forbidden template-binding request
+
+Examples:
+  # Probe /workspace-home
+  node scripts/audits/workspace-home-no-template-binding-probe.mjs
+
+  # Probe custom route
+  node scripts/audits/workspace-home-no-template-binding-probe.mjs --route /custom-route
+`);
+  process.exit(0);
+}
 
 function parseArgs(argv) {
   const o = { base: 'http://localhost:3000', route: '/workspace-home', out: null };

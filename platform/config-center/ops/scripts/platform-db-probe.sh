@@ -1,25 +1,48 @@
 #!/usr/bin/env bash
-# platform-db-probe.sh — Phase A read-only inventory for the migration
-# rollout plan (deep-investigation-migration-abundant-pizza).
-#
-# Emits a single JSON document per DB describing:
-#   - tracker-table presence + row counts for all 5 ledgers
-#   - column presence for the four drift-sensitive tables
-#   - row counts for the seeded config tables
-#   - classification: canonical+tracked | canonical+untracked | drifted+untracked | ephemeral
-#
-# Usage:
-#   ops/scripts/platform-db-probe.sh <db_name> [--out <path>]
-#   ops/scripts/platform-db-probe.sh --all   [--out-dir <dir>]
-#
-# In --all mode, iterates every DB whose name matches the rollout target
-# set (shahin_*, dos_phase2_test) and writes one JSON file per DB under
-# <dir> (default: ops/reports/db-probe-<date>/).
-#
-# Connection: uses local peer auth as the `postgres` superuser via sudo.
-# Purely read-only — issues only SELECTs (and a session-temp function)
-# and is safe to run against live.
+# platform-db-probe.sh — Phase A read-only inventory for migration rollout.
+
 set -euo pipefail
+
+show_help() {
+  cat <<EOF
+Usage: $(basename "$0) <db_name> [OPTIONS]
+   or $(basename "$0) --all [OPTIONS]
+
+Read-only inventory for migration rollout plan.
+
+Arguments:
+  db_name              Single database name to probe
+
+Options:
+  --all                Probe all DBs matching rollout target set (shahin_*, dos_phase2_test)
+  --out <path>         Output file for single DB probe
+  --out-dir <dir>      Output directory for --all mode (default: ops/reports/db-probe-<date>/)
+  --help, -h           Show this help message
+
+Output:
+  JSON document per DB describing:
+  - Tracker-table presence + row counts for all 5 ledgers
+  - Column presence for drift-sensitive tables
+  - Row counts for seeded config tables
+  - Classification: canonical+tracked | canonical+untracked | drifted+untracked | ephemeral
+
+Connection:
+  Uses local peer auth as postgres superuser via sudo.
+  Purely read-only — safe to run against live.
+
+Examples:
+  # Probe single database
+  $(basename "$0) shahin_grc --out /path/to/probe.json
+
+  # Probe all target databases
+  $(basename "$0) --all --out-dir /custom/output/dir
+EOF
+  exit 0
+}
+
+for arg in "$@"; do
+  case "$arg" in --help|-h) show_help ;; esac
+done
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"

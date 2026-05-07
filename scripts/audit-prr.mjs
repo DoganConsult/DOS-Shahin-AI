@@ -1,23 +1,40 @@
 #!/usr/bin/env node
 /**
  * PRR (Product-Ready Review) gap audit for a single service.
- *
- * Mirrors the bar established by user-service (per
- * project_user_service_prr_2026-04-18 memory):
- *   1. Every handler that touches tenant.* uses withTenantClient — no raw
- *      safeQuery against tenant_<id> string-interpolated schemas.
- *   2. Every mutation handler calls recordAudit / publishEvent.
- *   3. Every route has Zod validation (z.object, validate() middleware, or
- *      a schema import).
- *   4. Rate limiting + ownership checks on mutation routes (look for
- *      rateLimit, requirePermission, requireOwnership).
- *   5. Stryker + vitest coverage 90% (checked separately via test reports).
- *
- * Output: a markdown table per route file with gap flags, plus an overall
- * compliance %.
- *
- * Usage:  node scripts/audit-prr.mjs <service-name>
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/audit-prr.mjs <service-name> [OPTIONS]
+
+PRR (Product-Ready Review) gap audit for a single service.
+
+Arguments:
+  service-name         Name of the service to audit
+
+Options:
+  --help, -h           Show this help message
+
+Audit Checks:
+  1. withTenantClient usage (no raw safeQuery against tenant schemas)
+  2. recordAudit / publishEvent on mutation handlers
+  3. Zod validation on routes
+  4. Rate limiting + ownership checks on mutation routes
+  5. Stryker + vitest coverage 90% (checked separately)
+
+Output:
+  Markdown table per route file with gap flags, plus overall compliance %.
+
+Examples:
+  # Audit user-service
+  node scripts/audit-prr.mjs user-service
+
+  # Audit auth-service
+  node scripts/audit-prr.mjs auth-service
+`);
+  process.exit(0);
+}
 
 import fs from 'node:fs';
 import path from 'node:path';

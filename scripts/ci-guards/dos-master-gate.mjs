@@ -3,6 +3,27 @@
  * DOS Master release gate — runs every DOS Master CI guard in sequence.
  * Exit non-zero if any guard fails.
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/dos-master-gate.mjs [OPTIONS]
+
+DOS Master release gate — runs every DOS Master CI guard in sequence.
+
+Options:
+  --help, -h           Show this help message
+
+Behavior:
+  Runs all DOS Master CI guards in sequence and exits non-zero if any guard fails.
+
+Examples:
+  # Run all master gates
+  node scripts/ci-guards/dos-master-gate.mjs
+`);
+  process.exit(0);
+}
+
 import { spawnSync } from 'node:child_process';
 
 const GUARDS = [

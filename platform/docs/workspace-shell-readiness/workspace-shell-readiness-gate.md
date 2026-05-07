@@ -2,21 +2,21 @@
 
 - Repo: `/root/DOS-Platform`
 - Enforce: `true`
-- Seed keys: `60`
-- DB approved keys: `60`
-- Binding rows: `2580`
-- Binding tenants: `43`
-- Files scanned: `9099`
-- Hardcoded literals: `90`
+- Seed keys: `67`
+- DB approved keys: `67`
+- Binding rows: `2948`
+- Binding tenants: `44`
+- Files scanned: `9109`
+- Hardcoded literals: `89`
 - Failures: `0`
 - Warnings: `1`
 
 ## Envelope tables
 
-- `ui_workspace_chrome`: rows=608, tenants=38, missingTenants=0
-- `ui_workspace_shortcut`: rows=152, tenants=38, missingTenants=0
-- `ui_workspace_banner`: rows=114, tenants=38, missingTenants=0
-- `ui_workspace_policy`: rows=76, tenants=38, missingTenants=0
+- `ui_workspace_chrome`: rows=2070, tenants=44, missingTenants=0
+- `ui_workspace_shortcut`: rows=324, tenants=43, missingTenants=0
+- `ui_workspace_banner`: rows=117, tenants=39, missingTenants=0
+- `ui_workspace_policy`: rows=248, tenants=43, missingTenants=0
 
 ## Failures
 

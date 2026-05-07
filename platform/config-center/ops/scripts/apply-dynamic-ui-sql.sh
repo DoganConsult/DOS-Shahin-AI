@@ -1,13 +1,40 @@
 #!/usr/bin/env bash
 # Apply Dynamic UI SQL migrations and seeds to a PostgreSQL database.
-# Controlled use: set DATABASE_URL (or pass as first argument).
-#
-# Order: migrations 001–006, then seeds 001–011 in lexical order, then
-# Foundation completion seeds 019–022 (not in 001–011 lex range):
-#   019 — route signature_widget fixes + backfill dos.dynamic_ui_widgets from routes
-#   020–022 — G1 lifecycle, G2 authority/SoD, G7 compliance fabric pages + widgets
-# Requires: psql, PostgreSQL 13+ (gen_random_uuid() in core).
 set -euo pipefail
+
+show_help() {
+  cat <<EOF
+Usage: $(basename "$0") [DATABASE_URL] [OPTIONS]
+
+Applies Dynamic UI SQL migrations and seeds to PostgreSQL.
+
+Arguments:
+  DATABASE_URL         PostgreSQL connection string (or set via env)
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  DATABASE_URL         PostgreSQL connection string
+
+Order:
+  1. Migrations 001–006
+  2. Seeds 001–011
+  3. Foundation completion seeds 019–022
+
+Examples:
+  # Apply with DATABASE_URL env
+  DATABASE_URL=postgresql://... $(basename "$0)
+
+  # Pass DATABASE_URL as argument
+  $(basename "$0) 'postgresql://user:pass@host:port/dbname'
+EOF
+  exit 0
+}
+
+for arg in "$@"; do
+  case "$arg" in --help|-h) show_help ;; esac
+done
 
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 DB_URL="${1:-${DATABASE_URL:-}}"

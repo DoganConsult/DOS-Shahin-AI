@@ -1,15 +1,36 @@
 #!/usr/bin/env node
 /**
  * Functional Roles Dual-Naming Guard
- * 
- * Fails when both <x> and role_<x> exist in functional_roles (dual-naming drift).
- * Canonical: prefixed (role_viewer, role_compliance_officer, role_auditor, role_risk_manager).
- * 
- * Exit codes:
- * - 0: No dual-naming violations
- * - 1: Dual-naming violations detected
- * - 2: Database connection error
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/functional-roles-no-dual-naming.mjs [OPTIONS]
+
+Fails when both <x> and role_<x> exist in functional_roles (dual-naming drift).
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  DATABASE_URL         PostgreSQL connection string (default: postgresql://dos_auth:dos_auth_pass_2026@localhost:5432/shahin_grc)
+
+Policy:
+  Canonical: prefixed (role_viewer, role_compliance_officer, role_auditor, role_risk_manager)
+  Fails when unprefixed and prefixed versions both exist
+
+Exit codes:
+  0 — No dual-naming violations
+  1 — Dual-naming violations detected
+  2 — Database connection error
+
+Examples:
+  # Run dual-naming check
+  node scripts/ci-guards/functional-roles-no-dual-naming.mjs
+`);
+  process.exit(0);
+}
 
 import pg from 'pg';
 const { Pool } = pg;

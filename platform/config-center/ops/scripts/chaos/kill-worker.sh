@@ -1,19 +1,39 @@
 #!/usr/bin/env bash
-# Phase 6 chaos test: kill onboarding-service (which hosts the provisioning
-# worker) mid-job and verify:
-#   1. On restart, no step has > 1 `succeeded` row for any job (proves
-#      idempotency via public.provisioning_step_runs.idempotency_key).
-#   2. Stuck-running rows are re-queued by stealStuckJobs() within 60s.
-#
-# Usage:
-#   ops/scripts/chaos/kill-worker.sh [--mode signal|pm2] [--wait-seconds 20]
-#
-# Defaults: --mode pm2 --wait-seconds 20
-#
-# Exits non-zero if the worker fails to come back, or if idempotency is
-# violated (any step with > 1 succeeded row in public.provisioning_step_runs).
+# Phase 6 chaos test: kill onboarding-service mid-job and verify idempotency.
 
 set -euo pipefail
+
+show_help() {
+  cat <<EOF
+Usage: $(basename "$0) [OPTIONS]
+
+Chaos test: kills onboarding-service mid-job and verifies idempotency.
+
+Options:
+  --mode <signal|pm2>    Kill mode (default: pm2)
+  --wait-seconds <n>      Wait time for recovery (default: 20)
+  --help, -h             Show this help message
+
+Behavior:
+  1. Kills onboarding-service (hosts provisioning worker)
+  2. On restart, verifies no step has > 1 succeeded row (idempotency)
+  3. Verifies stuck-running rows are re-queued within 60s
+
+Exit codes:
+  Non-zero if worker fails to come back or idempotency violated
+
+Examples:
+  # Kill with pm2 (default)
+  $(basename "$0)
+
+  # Kill with signal
+  $(basename "$0) --mode signal
+
+  # Custom wait time
+  $(basename "$0) --wait-seconds 30
+EOF
+  exit 0
+}
 
 MODE="pm2"
 WAIT_SECONDS=20
@@ -23,6 +43,7 @@ while [[ $# -gt 0 ]]; do
   case "$1" in
     --mode) MODE="$2"; shift 2 ;;
     --wait-seconds) WAIT_SECONDS="$2"; shift 2 ;;
+    --help|-h) show_help ;;
     *) echo "Unknown flag: $1"; exit 2 ;;
   esac
 done

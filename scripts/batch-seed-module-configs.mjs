@@ -3,12 +3,32 @@
  * batch-seed-module-configs.mjs
  *
  * Generates a module_config seed migration for every module that does not
- * already have one. Uses manifest.ownedTables[0] (when present) as the
- * primary list table, and a conservative default column set.
- *
- * Idempotent: skips modules that already have a *_module_config_seed.sql
- * mentioning their moduleCode.
+ * already have one.
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/batch-seed-module-configs.mjs [OPTIONS]
+
+Generates module_config seed migrations for modules without them.
+
+Options:
+  --help, -h           Show this help message
+
+Behavior:
+  - Scans modules/ directory
+  - Generates module_config seed migration for modules without one
+  - Uses manifest.ownedTables[0] as primary list table
+  - Idempotent: skips modules that already have seed
+
+Examples:
+  # Generate seed migrations for all modules
+  node scripts/batch-seed-module-configs.mjs
+`);
+  process.exit(0);
+}
+
 import fs from 'node:fs';
 import path from 'node:path';
 import { execSync } from 'node:child_process';

@@ -1116,6 +1116,132 @@
         "family": "workspace-shell",
         "zone": "content"
       }
+    },
+    {
+      "component_key": "workspace.shell.brand",
+      "vendor": "ibm-carbon",
+      "carbon_key": "header-name",
+      "schema_version": 1,
+      "selector": "dos-ws-shell-brand",
+      "approval_status": "approved",
+      "metadata": {
+        "band": "A",
+        "position": 100,
+        "label_en": "Shell brand",
+        "label_ar": "علامة الشل",
+        "use_en": "Header brand surface (registry visual shell)",
+        "family": "workspace-shell",
+        "zone": "header",
+        "role": "brand"
+      }
+    },
+    {
+      "component_key": "workspace.shell.workspace-title",
+      "vendor": "ibm-carbon",
+      "carbon_key": "header-name",
+      "schema_version": 1,
+      "selector": "dos-ws-shell-workspace-title",
+      "approval_status": "approved",
+      "metadata": {
+        "band": "A",
+        "position": 101,
+        "label_en": "Shell workspace title",
+        "label_ar": "عنوان مساحة العمل",
+        "use_en": "Workspace title in header",
+        "family": "workspace-shell",
+        "zone": "header",
+        "role": "title"
+      }
+    },
+    {
+      "component_key": "workspace.shell.user-menu",
+      "vendor": "ibm-carbon",
+      "carbon_key": "header-global-action",
+      "schema_version": 1,
+      "selector": "dos-ws-shell-user-menu",
+      "approval_status": "approved",
+      "metadata": {
+        "band": "A",
+        "position": 103,
+        "label_en": "Shell user menu",
+        "label_ar": "قائمة المستخدم",
+        "use_en": "Account / user menu in header",
+        "family": "workspace-shell",
+        "zone": "header",
+        "role": "user-menu"
+      }
+    },
+    {
+      "component_key": "workspace.shell.settings-action",
+      "vendor": "ibm-carbon",
+      "carbon_key": "header-global-action",
+      "schema_version": 1,
+      "selector": "dos-ws-shell-settings-action",
+      "approval_status": "approved",
+      "metadata": {
+        "band": "A",
+        "position": 102,
+        "label_en": "Shell settings action",
+        "label_ar": "إجراء الإعدادات",
+        "use_en": "Settings control in header",
+        "family": "workspace-shell",
+        "zone": "header",
+        "role": "settings"
+      }
+    },
+    {
+      "component_key": "workspace.shell.sidebar-nav",
+      "vendor": "ibm-carbon",
+      "carbon_key": "side-nav-items",
+      "schema_version": 1,
+      "selector": "dos-ws-shell-sidebar-nav",
+      "approval_status": "approved",
+      "metadata": {
+        "band": "A",
+        "position": 110,
+        "label_en": "Shell sidebar navigation",
+        "label_ar": "التنقل الجانبي",
+        "use_en": "Primary workspace navigation list",
+        "family": "workspace-shell",
+        "zone": "sidebar",
+        "role": "primary-nav"
+      }
+    },
+    {
+      "component_key": "workspace.shell.empty-state",
+      "vendor": "ibm-carbon",
+      "carbon_key": "tile",
+      "schema_version": 1,
+      "selector": "dos-ws-shell-empty-state",
+      "approval_status": "approved",
+      "metadata": {
+        "band": "A",
+        "position": 120,
+        "label_en": "Shell empty state",
+        "label_ar": "حالة فارغة",
+        "use_en": "Main-zone empty state surface",
+        "family": "workspace-shell",
+        "zone": "main",
+        "role": "empty-state"
+      }
+    },
+    {
+      "component_key": "workspace.shell.module-cards",
+      "vendor": "ibm-carbon",
+      "carbon_key": "tile",
+      "schema_version": 1,
+      "selector": "dos-ws-shell-module-cards",
+      "approval_status": "approved",
+      "metadata": {
+        "band": "A",
+        "position": 121,
+        "label_en": "Shell module cards",
+        "label_ar": "بطاقات الوحدات",
+        "use_en": "Entitled module cards in main zone",
+        "family": "workspace-shell",
+        "zone": "main",
+        "role": "module-cards"
+      }
     }
   ],
   "apis": [

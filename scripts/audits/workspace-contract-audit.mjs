@@ -1,31 +1,46 @@
 #!/usr/bin/env node
 // WORKSPACE CONTRACT AUDIT — evidence-only edition.
-//
-// Doctrine:
-//   - deterministic tenant selection (CLI arg OR ORDER BY tenant_id LIMIT 1)
-//   - runtime probe uses authenticated headers; non-2xx is surfaced verbatim,
-//     never silently downgraded to "runtime unavailable"
-//   - no hardcoded failure rows; failures only when evidence is collected
-//   - set-based comparisons (onlyInSeed / onlyInRegistry / onlyInBinding /
-//     onlyInRuntime) — no count subtraction
-//   - COMPONENT_MAP `null` means structural/no Angular renderer; not a
-//     "visual map hit"
-//   - missing rendererKey is failure ONLY for visual/action/data-binding
-//     surfaces that are bound or runtime-emitted; catalog-only Carbon
-//     vocabulary is allowed to omit it
-//   - DOM/visible columns removed (option B); add Playwright probe later
-//     if/when /workspace-home is renderable in the harness
-//
-// Usage:
-//   node scripts/audits/workspace-contract-audit.mjs [--tenant <tenantId>]
-//                                                    [--user <userId>]
-//                                                    [--product <productCode>]
-//                                                    [--runtime <baseUrl>]
-//                                                    [--out <dir>]
-//
-// Exit codes:
-//   0   audit produced, gate verdict in JSON.verdict
-//   2   environment failure (DB unreachable, seed missing)
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/audits/workspace-contract-audit.mjs [OPTIONS]
+
+Evidence-only audit of workspace contract compliance.
+
+Options:
+  --tenant <tenantId>   Specific tenant ID to audit (default: deterministic selection)
+  --user <userId>       Specific user ID to audit
+  --product <productCode> Specific product code
+  --runtime <baseUrl>   Runtime base URL
+  --out <dir>          Output directory
+  --help, -h           Show this help message
+
+Environment Variables:
+  DATABASE_URL         PostgreSQL connection string
+
+Exit codes:
+  0 — audit produced, verdict in JSON.verdict
+  2 — environment failure (DB unreachable, seed missing)
+
+Behavior:
+  - Deterministic tenant selection
+  - Runtime probe uses authenticated headers
+  - Set-based comparisons (onlyInSeed / onlyInRegistry / onlyInBinding / onlyInRuntime)
+  - COMPONENT_MAP null means structural (no Angular renderer expected)
+
+Examples:
+  # Audit with deterministic tenant
+  node scripts/audits/workspace-contract-audit.mjs
+
+  # Audit specific tenant
+  node scripts/audits/workspace-contract-audit.mjs --tenant abc-123
+
+  # Audit with custom runtime
+  node scripts/audits/workspace-contract-audit.mjs --runtime http://localhost:4000
+`);
+  process.exit(0);
+}
 
 import pg from 'pg';
 import { readFileSync, existsSync, mkdirSync, writeFileSync } from 'fs';

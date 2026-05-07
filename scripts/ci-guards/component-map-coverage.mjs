@@ -1,13 +1,39 @@
 #!/usr/bin/env node
 /**
  * CI guard: component_key ⊆ COMPONENT_MAP.
- *
- * Scans `platform/dos/migrations/public/*.sql` for active `dynamic_ui_routes`
- * inserts (same heuristics as carbon-dynamic-ui-coherence.mjs) and verifies
- * each component_key exists in `platform/dos/registry/component-map.ts`.
- *
- * SHADOW by default; set COMPONENT_MAP_ENFORCE=1 to fail the build.
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/component-map-coverage.mjs [OPTIONS]
+
+Verifies every component_key in migrations exists in COMPONENT_MAP.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  COMPONENT_MAP_ENFORCE  Set to 1 to fail build (default: SHADOW mode)
+
+Behavior:
+  - Scans platform/dos/migrations/public/*.sql for active dynamic_ui_routes inserts
+  - Verifies each component_key exists in platform/dos/registry/component-map.ts
+  - SHADOW by default
+
+Exit codes:
+  Non-zero if any component_key missing (when COMPONENT_MAP_ENFORCE=1)
+
+Examples:
+  # Run in shadow mode (default)
+  node scripts/ci-guards/component-map-coverage.mjs
+
+  # Run with enforcement
+  COMPONENT_MAP_ENFORCE=1 node scripts/ci-guards/component-map-coverage.mjs
+`);
+  process.exit(0);
+}
+
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { resolve, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';

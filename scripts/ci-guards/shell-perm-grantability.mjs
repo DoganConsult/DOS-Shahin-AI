@@ -1,12 +1,34 @@
 #!/usr/bin/env node
 /**
  * Shell Perm Grantability Guard
- *
- * Every distinct workspace_shell_binding.perms_required must be grantable via ≥1 functional role
- * using CANONICAL RBAC: platform_dauth.role_permissions → permissions.permission_code.
- *
- * Legacy functional_roles.permissions[] alone is not authoritative after 2900.
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/shell-perm-grantability.mjs [OPTIONS]
+
+Every distinct workspace_shell_binding.perms_required must be grantable via ≥1 functional role.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  DATABASE_URL         PostgreSQL connection string (default: postgresql://dos_auth:dos_auth_pass_2026@localhost:5432/shahin_grc)
+
+Policy:
+  Uses CANONICAL RBAC: platform_dauth.role_permissions → permissions.permission_code.
+  Legacy functional_roles.permissions[] alone is not authoritative after 2900.
+
+Exit codes:
+  Non-zero on shell perm not grantable via functional role
+
+Examples:
+  # Run shell perm grantability check
+  node scripts/ci-guards/shell-perm-grantability.mjs
+`);
+  process.exit(0);
+}
 
 import pg from 'pg';
 const { Pool } = pg;

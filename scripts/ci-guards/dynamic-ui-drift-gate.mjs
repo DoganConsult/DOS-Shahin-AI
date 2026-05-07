@@ -1,22 +1,41 @@
 #!/usr/bin/env node
 /**
  * dynamic-ui-drift-gate.mjs — Phase 1 CI gate
- *
- * Enforces zero NEW violations across the 5 dynamic-ui drift classes
- * (D1..D5) tracked by ops/scripts/dynamic-ui-drift-report.mjs.
- *
- *   D1  signature widget permission mismatch      (routes.permission_key vs widgets.permission)
- *   D2  routes.component_key vs SPA COMPONENT_MAP
- *   D3  widgets.widget_key   vs SPA WIDGET_KEY_MAP
- *   D4  permission strings   vs canonical-permissions.ts
- *   D5  permission strings   vs role-permission-map.ts
- *
- * Baseline at scripts/ci-guards/baselines/dynamic-ui-drift-gate.json
- * grandfathers existing debt. Any violation NOT in baseline fails CI.
- *
- * Regenerate explicitly:
- *   UI_GUARD_UPDATE_BASELINE=1 node scripts/ci-guards/dynamic-ui-drift-gate.mjs
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/dynamic-ui-drift-gate.mjs [OPTIONS]
+
+Enforces zero NEW violations across 5 dynamic-ui drift classes.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  UI_GUARD_UPDATE_BASELINE  Set to 1 to regenerate baseline
+
+Drift classes:
+  D1  signature widget permission mismatch
+  D2  routes.component_key vs SPA COMPONENT_MAP
+  D3  widgets.widget_key vs SPA WIDGET_KEY_MAP
+  D4  permission strings vs canonical-permissions.ts
+  D5  permission strings vs role-permission-map.ts
+
+Baseline:
+  scripts/ci-guards/baselines/dynamic-ui-drift-gate.json
+  Grandfathers existing debt. Any violation NOT in baseline fails CI.
+
+Examples:
+  # Run drift gate check
+  node scripts/ci-guards/dynamic-ui-drift-gate.mjs
+
+  # Regenerate baseline
+  UI_GUARD_UPDATE_BASELINE=1 node scripts/ci-guards/dynamic-ui-drift-gate.mjs
+`);
+  process.exit(0);
+}
 
 import { readFileSync, readdirSync, statSync, writeFileSync, existsSync } from 'node:fs';
 import { join, relative, resolve, dirname } from 'node:path';

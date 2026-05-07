@@ -1,21 +1,40 @@
 #!/usr/bin/env node
 /**
  * CI guard: strict Carbon-key ↔ COMPONENT_MAP closure.
- *
- * Enforces the platform rule:
- *   DB/registry: every dos.dynamic_ui_component_registry row MUST
- *     - vendor='ibm-carbon'
- *     - approval_status='approved'
- *     - carbon_key NOT NULL
- *     - carbon_key resolves to an Angular-usable
- *       dos.ui_carbon_components row (runtime_status in
- *       'active' | 'wrapper-required').
- *   Frontend: every distinct carbon_key referenced in the registry MUST
- *     have at least one component_key in COMPONENT_MAP that resolves to
- *     a real Carbon Angular renderer — NOT CarbonCatalogPlaceholderRenderer.
- *
- * Fails the build (exit 1) on any violation. No silent fallback.
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/carbon-key-component-map-strict.mjs [OPTIONS]
+
+Enforces strict Carbon-key ↔ COMPONENT_MAP closure.
+
+Options:
+  --help, -h           Show this help message
+
+Platform rule:
+  DB/registry: every dos.dynamic_ui_component_registry row MUST
+    - vendor='ibm-carbon'
+    - approval_status='approved'
+    - carbon_key NOT NULL
+    - carbon_key resolves to Angular-usable dos.ui_carbon_components row
+
+  Frontend: every distinct carbon_key referenced in registry MUST
+    - Have at least one component_key in COMPONENT_MAP
+    - Resolve to real Carbon Angular renderer (NOT CarbonCatalogPlaceholderRenderer)
+
+Exit codes:
+  1 — Violation detected
+  2 — Error
+
+Examples:
+  # Run carbon key component map strict check
+  node scripts/ci-guards/carbon-key-component-map-strict.mjs
+`);
+  process.exit(0);
+}
+
 import { readFileSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { resolve, dirname, join } from 'node:path';

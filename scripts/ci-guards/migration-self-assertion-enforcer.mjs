@@ -1,17 +1,33 @@
 #!/usr/bin/env node
 /**
  * Migration Self-Assertion Enforcer
- * 
- * Rejects migration files lacking a DO $$ … RAISE EXCEPTION … self-assertion block at the tail.
- * Enforces tail self-assertion pattern for all migrations.
- * 
- * Usage: pnpm module:lint-migrations (or node scripts/ci-guards/migration-self-assertion-enforcer.mjs <migration-file>)
- * 
- * Exit codes:
- * - 0: Self-assertion block present
- * - 1: Self-assertion block missing
- * - 2: Error
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/migration-self-assertion-enforcer.mjs [OPTIONS]
+
+Rejects migration files lacking a DO $$ … RAISE EXCEPTION self-assertion block at the tail.
+
+Options:
+  --help, -h           Show this help message
+
+Policy:
+  Enforces tail self-assertion pattern for all migrations.
+  Checks for DO $$ block and RAISE EXCEPTION near end of file.
+
+Exit codes:
+  0 — Self-assertion block present
+  1 — Self-assertion block missing
+  2 — Error
+
+Examples:
+  # Run migration self-assertion enforcer
+  node scripts/ci-guards/migration-self-assertion-enforcer.mjs
+`);
+  process.exit(0);
+}
 
 import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';

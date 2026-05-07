@@ -1,18 +1,37 @@
 #!/usr/bin/env node
 /**
- * CI guard: permission codes must be canonical dot-form across runtime seeds
- * and manifests. Colon-style codes are forbidden in active grants.
- *
- * Scopes:
- *   platform/dynamic-ui/db/public/seeds/*.sql
- *   platform/foundation/db/seeds/*.sql
- *   modules/* /module.manifest.json (goldenReady.rbac.permissions)
- *   platform/* /module.manifest.json (goldenReady.rbac.permissions)
- *
- * Allow-list (legacy/deprecation residue tolerated in DEPRECATED comments):
- *   `[DEPRECATED` markers, `--`-comment lines, and SQL inside DELETE/UPDATE
- *   normalization migrations are skipped.
+ * CI guard: permission codes must be canonical dot-form across runtime seeds and manifests
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/permission-format.mjs [OPTIONS]
+
+Permission codes must be canonical dot-form. Colon-style codes are forbidden in active grants.
+
+Options:
+  --help, -h           Show this help message
+
+Scopes:
+  - platform/dynamic-ui/db/public/seeds/*.sql
+  - platform/foundation/db/seeds/*.sql
+  - modules/* /module.manifest.json (goldenReady.rbac.permissions)
+  - platform/* /module.manifest.json (goldenReady.rbac.permissions)
+
+Allowlist:
+  [DEPRECATED] markers, --comment lines, and SQL inside DELETE/UPDATE normalization migrations are skipped.
+
+Exit codes:
+  Non-zero on colon-style permission code in active grants
+
+Examples:
+  # Run permission format check
+  node scripts/ci-guards/permission-format.mjs
+`);
+  process.exit(0);
+}
+
 import { readFileSync, readdirSync, existsSync, statSync } from 'node:fs';
 import { join, dirname, resolve, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';

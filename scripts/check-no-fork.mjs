@@ -2,26 +2,42 @@
 /**
  * check-no-fork.mjs
  *
- * CI guard for the 5-brain architecture cleanup (see
- * docs/plans/need-to-clean-the-swift-trinket.md).
- *
- * Fails if any of the known forked DAuth/SoD/access-snapshot trees reintroduce
- * real implementations instead of remaining as re-export shims to the canonical
- * source at platform/dauth/packages/core/*.
- *
- * A shim is any file whose non-comment, non-blank content is either:
- *   - a single `export * from '<canonical>'` / `export { ... } from '<canonical>'`
- *   - or ≤ MAX_SHIM_LOC code lines of type re-exports / trivial wrappers
- *
- * Usage:
- *   node scripts/check-no-fork.mjs
- *   MAX_SHIM_LOC=15 node scripts/check-no-fork.mjs   # ratchet if needed
- *
- * Exit codes:
- *   0 — all fork paths are shims (or absent)
- *   1 — at least one fork reintroduced implementation code
- *   2 — harness error
+ * CI guard for 5-brain architecture cleanup.
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/check-no-fork.mjs [OPTIONS]
+
+CI guard that forked DAuth/SoD/access-snapshot trees remain re-export shims.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  MAX_SHIM_LOC         Max lines for shim files (default: 10)
+
+Behavior:
+  - Fails if fork paths reintroduce implementation code
+  - A shim is a file with only re-exports or trivial wrappers
+  - Checks known fork paths against canonical source
+
+Exit codes:
+  0 — all fork paths are shims (or absent)
+  1 — at least one fork reintroduced implementation code
+  2 — harness error
+
+Examples:
+  # Check fork paths
+  node scripts/check-no-fork.mjs
+
+  # Ratchet shim line limit
+  MAX_SHIM_LOC=15 node scripts/check-no-fork.mjs
+`);
+  process.exit(0);
+}
+
 import { readFileSync, existsSync, statSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';

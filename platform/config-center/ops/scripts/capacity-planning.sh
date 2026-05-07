@@ -1,6 +1,31 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+show_help() {
+  cat <<EOF
+Usage: $(basename "$0") [OPTIONS]
+
+Displays capacity planning report showing system resources and PM2 process usage.
+
+Options:
+  --help, -h           Show this help message
+
+Output:
+  - System resources (CPUs, Memory, Disk)
+  - PM2 process summary
+  - Per-service resource usage
+
+Examples:
+  # Show capacity report
+  $(basename "$0)
+EOF
+  exit 0
+}
+
+for arg in "$@"; do
+  case "$arg" in --help|-h) show_help ;; esac
+done
+
 echo "╔══════════════════════════════════════════════════╗"
 echo "║  DOS Platform — Capacity Planning Report         ║"
 echo "╚══════════════════════════════════════════════════╝"

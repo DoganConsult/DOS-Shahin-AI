@@ -1,10 +1,33 @@
 #!/usr/bin/env node
 /**
- * Fails if @ts-ignore or @ts-expect-error appear in project TypeScript.
- * Optional allowlist: scripts/ci-guards/ts-suppression-allowlist.json
- *   { "expectErrorFiles": ["relative/path.ts"], "allowNocheckFiles": [] }
- * Shrink allowlists to [] for zero-tolerance.
+ * Fails if @ts-ignore or @ts-expect-error appear in project TypeScript
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/no-ts-suppression-comments.mjs [OPTIONS]
+
+Fails if @ts-ignore or @ts-expect-error appear in project TypeScript.
+
+Options:
+  --help, -h           Show this help message
+
+Allowlist:
+  scripts/ci-guards/ts-suppression-allowlist.json
+  { "expectErrorFiles": ["relative/path.ts"], "allowNocheckFiles": [] }
+  Shrink allowlists to [] for zero-tolerance.
+
+Exit codes:
+  Non-zero on TS suppression comment detected
+
+Examples:
+  # Run TS suppression check
+  node scripts/ci-guards/no-ts-suppression-comments.mjs
+`);
+  process.exit(0);
+}
+
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';

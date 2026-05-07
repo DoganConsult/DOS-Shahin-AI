@@ -1,12 +1,40 @@
 #!/usr/bin/env node
 /**
- * CI guard: every ApprovedComponentKey (Dos*) must have a row in
- * dos.ui_dos_component_carbon_map mapping it to a real, Angular-usable
- * IBM Carbon carbon_key in dos.ui_carbon_components.
- *
- * Fails the build if any Dos* key is missing or maps to a
- * blocked-react-only / missing-upstream / deprecated carbon row.
+ * CI guard: every ApprovedComponentKey (Dos*) must map to real Carbon key.
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/dos-component-carbon-map.mjs [OPTIONS]
+
+Verifies every Dos* component key maps to Angular-usable IBM Carbon carbon_key.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  PGHOST               PostgreSQL host (default: localhost)
+  PGUSER               PostgreSQL user (default: dos_auth)
+  PGPASSWORD          PostgreSQL password (default: dos_auth_pass_2026)
+  PGDATABASE           PostgreSQL database (default: shahin_grc)
+
+Behavior:
+  - Reads ApprovedComponentKey from component-keys.ts
+  - Verifies each has row in dos.ui_dos_component_carbon_map
+  - Fails if key missing or maps to blocked-react-only / missing-upstream / deprecated
+
+Exit codes:
+  1 — Violation detected
+  2 — Error
+
+Examples:
+  # Run DOS component carbon map check
+  node scripts/ci-guards/dos-component-carbon-map.mjs
+`);
+  process.exit(0);
+}
+
 import { readFileSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 

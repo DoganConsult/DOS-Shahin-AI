@@ -1,26 +1,6 @@
 #!/usr/bin/env bash
 # ═══════════════════════════════════════════════════════════════════
 # DOS Platform — Per-Tenant Migration Runner
-#
-# Applies SQL migration files from ops/migrations/tenant/*.sql to every
-# active tenant schema recorded in dos.tenants. Tracks applied state in
-# dos.schema_migrations with a qualified filename of the form:
-#
-#   tenant/<schema_name>/<file>.sql
-#
-# Each file is processed with __TENANT_SCHEMA__ substituted to the quoted
-# schema name for the tenant being migrated.
-#
-# Skips already-applied files per (schema, file). Records the ORIGINAL
-# file checksum (pre-substitution) so drift detection matches the file on
-# disk, not the per-tenant rendering.
-#
-# Usage:
-#   ./ops/scripts/run-tenant-migrations.sh              # use DATABASE_URL from env
-#   DATABASE_URL=postgresql://... ./ops/scripts/run-tenant-migrations.sh
-#   ./ops/scripts/run-tenant-migrations.sh --dry-run    # show what would run
-#
-# Invoked automatically as Phase 3 of ./ops/scripts/run-migrations.sh.
 # ═══════════════════════════════════════════════════════════════════
 set -euo pipefail
 
@@ -29,12 +9,48 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 TENANT_MIG_DIR="$REPO_ROOT/ops/migrations/tenant"
 DRY_RUN=false
 
+show_help() {
+  cat <<EOF
+Usage: $(basename "$0") [OPTIONS]
+
+Applies SQL migration files from ops/migrations/tenant/*.sql to every active tenant schema.
+
+Options:
+  --dry-run            Show what would be run without executing
+  --help, -h           Show this help message
+
+Environment Variables:
+  DATABASE_URL         PostgreSQL connection string
+
+Tracking:
+  Applied migrations tracked in dos.schema_migrations with qualified filename:
+  tenant/<schema_name>/<file>.sql
+
+Each file is processed with __TENANT_SCHEMA__ substituted to the quoted schema name.
+
+Examples:
+  # Run tenant migrations
+  $(basename "$0)
+
+  # Dry run to preview
+  $(basename "$0) --dry-run
+
+  # With explicit DATABASE_URL
+  DATABASE_URL=postgresql://... $(basename "$0)
+
+Note:
+  Invoked automatically as Phase 3 of run-migrations.sh.
+EOF
+  exit 0
+}
+
 # shellcheck disable=SC1091
 source "$SCRIPT_DIR/lib/load-env.sh"
 
 for arg in "$@"; do
   case "$arg" in
     --dry-run) DRY_RUN=true ;;
+    --help|-h) show_help ;;
   esac
 done
 

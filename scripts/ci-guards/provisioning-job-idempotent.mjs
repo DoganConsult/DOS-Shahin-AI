@@ -1,11 +1,38 @@
 #!/usr/bin/env node
 /**
- * DOS Master Doctrine — provisioning jobs idempotent.
- *
- * Verifies dos_master.provisioning_job has a UNIQUE constraint that
- * prevents two queued jobs for the same (tenant_id, product_code,
- * edition) tuple. Catches double-clicks on the trial-signup CTA.
+ * DOS Master Doctrine — provisioning jobs idempotent
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/provisioning-job-idempotent.mjs [OPTIONS]
+
+Verifies dos_master.provisioning_job has UNIQUE constraint preventing duplicate active jobs.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  DATABASE_URL         PostgreSQL connection string (default: postgresql://dos_auth:dos_auth_pass_2026@localhost:5432/shahin_grc)
+
+Policy:
+  Prevents two queued jobs for the same (tenant_id, product_code, edition) tuple.
+  Catches double-clicks on the trial-signup CTA.
+  DB unreachable is treated as SKIP (exit 0).
+
+Exit codes:
+  0 — PASS or DB unreachable
+  1 — Duplicate active provisioning jobs detected
+  2 — ERROR
+
+Examples:
+  # Run provisioning job idempotent check
+  node scripts/ci-guards/provisioning-job-idempotent.mjs
+`);
+  process.exit(0);
+}
+
 import { Client } from 'pg';
 
 async function main() {

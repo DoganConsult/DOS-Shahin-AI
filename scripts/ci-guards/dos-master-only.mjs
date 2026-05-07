@@ -1,11 +1,38 @@
 #!/usr/bin/env node
 /**
  * DOS Master Doctrine Article 11 — DOS Master is the only writer.
- *
- * Verifies every controlled table has trg_dos_master_only attached.
- * Hard-fails CI if a controlled table is missing the trigger or if
- * the dos.actor='dos-master' SET is absent from any service repo.
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/dos-master-only.mjs [OPTIONS]
+
+Verifies every controlled table has trg_dos_master_only attached.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  DATABASE_URL         PostgreSQL connection string (default: postgresql://dos_auth:dos_auth_pass_2026@localhost:5432/shahin_grc)
+
+Behavior:
+  - Verifies controlled tables have trg_dos_master_only trigger
+  - Verifies dos.actor='dos-master' SET exists in service repos
+  - DB unreachable is treated as SKIP (exit 0)
+
+Exit codes:
+  0 — PASS or DB unreachable
+  1 — FAIL missing trigger or dos.actor SET
+  2 — ERROR
+
+Examples:
+  # Run DOS Master only check
+  node scripts/ci-guards/dos-master-only.mjs
+`);
+  process.exit(0);
+}
+
 import { Client } from 'pg';
 
 const CONTROLLED = [

@@ -1,31 +1,6 @@
 #!/usr/bin/env bash
 # ═══════════════════════════════════════════════════════════════════
 # DOS Platform — Unified Migration Runner
-#
-# Applies SQL migration files from BOTH of these locations in a single
-# ordered pipeline:
-#
-#   1. Platform-global migrations:  ops/migrations/*.sql
-#      (creates dos schema, platform-wide tables, seeds, etc.)
-#
-#   2. Per-service migrations:      services/<service>/migrations/*.sql
-#      (service-owned schemas, run in deterministic service order after
-#      all platform migrations have been applied)
-#
-#   Pre-tenant guard: before Phase 3, requires dos.workflow_instances (from
-#   workflow-service DDL) — same contract as ops/scripts/validate-migrations.mjs.
-#
-# All applied migrations are tracked in dos.schema_migrations with a
-# fully-qualified filename of the form:
-#   - "platform/<file>.sql"          for ops/migrations/<file>.sql
-#   - "service/<svc>/<file>.sql"     for services/<svc>/migrations/<file>.sql
-#
-# Skips already-applied files. Records checksum to detect drift.
-#
-# Usage:
-#   ./ops/scripts/run-migrations.sh                # use DATABASE_URL from env
-#   DATABASE_URL=postgresql://... ./ops/scripts/run-migrations.sh
-#   ./ops/scripts/run-migrations.sh --dry-run      # show what would run
 # ═══════════════════════════════════════════════════════════════════
 set -euo pipefail
 
@@ -35,12 +10,48 @@ PLATFORM_MIG_DIR="$REPO_ROOT/ops/migrations"
 SERVICES_DIR="$REPO_ROOT/services"
 DRY_RUN=false
 
+show_help() {
+  cat <<EOF
+Usage: $(basename "$0") [OPTIONS]
+
+Applies SQL migration files from platform-global and per-service locations.
+
+Options:
+  --dry-run            Show what would be run without executing
+  --help, -h           Show this help message
+
+Environment Variables:
+  DATABASE_URL         PostgreSQL connection string
+
+Migration Pipeline:
+  1. Platform-global migrations: ops/migrations/*.sql
+  2. Per-service migrations: services/<service>/migrations/*.sql
+
+Tracking:
+  Applied migrations tracked in dos.schema_migrations with qualified filenames:
+  - "platform/<file>.sql" for ops/migrations/<file>.sql
+  - "service/<svc>/<file>.sql" for services/<svc>/migrations/<file>.sql
+
+Examples:
+  # Run all migrations
+  $(basename "$0)
+
+  # Dry run to preview
+  $(basename "$0) --dry-run
+
+  # With explicit DATABASE_URL
+  DATABASE_URL=postgresql://... $(basename "$0)
+EOF
+  exit 0
+}
+
 # shellcheck disable=SC1091
 source "$SCRIPT_DIR/lib/load-env.sh"
 
 for arg in "$@"; do
   case "$arg" in
     --dry-run) DRY_RUN=true ;;
+    --help|-h) show_help ;;
   esac
 done
 

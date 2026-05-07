@@ -1,7 +1,38 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-OUT_DIR="ha-node-report"
+show_help() {
+  cat <<EOF
+Usage: $(basename "$0") [OPTIONS]
+
+Collects HA node report with system info, logs, and configuration.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  OUT_DIR              Output directory (default: ha-node-report)
+
+Output:
+  Creates timestamped directory with:
+  - 00_MASTER.md (collected system info)
+  - Sanitized copies of configuration files
+
+Examples:
+  # Collect HA node report
+  $(basename "$0)
+
+  # Custom output directory
+  OUT_DIR=/custom/path $(basename "$0)
+EOF
+  exit 0
+}
+
+for arg in "$@"; do
+  case "$arg" in --help|-h) show_help ;; esac
+done
+
+OUT_DIR="${OUT_DIR:-ha-node-report}"
 TS="$(date -u +%Y%m%dT%H%M%SZ)"
 ROOT="${OUT_DIR}/${TS}"
 MASTER="${ROOT}/00_MASTER.md"

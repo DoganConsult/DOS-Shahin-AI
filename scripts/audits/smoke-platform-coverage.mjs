@@ -1,23 +1,42 @@
 #!/usr/bin/env node
 /**
- * Smoke runner: tests every backend API the foundation/dynamic-UI specs depend on,
- * then verifies that every signature widget declared in the spec is actually
- * present in the production frontend bundle (designed → installed → registered → loaded).
- *
- * Execution model:
- *  - Calls downstream services directly using LEGACY_HEADER_TRUST headers
- *    (gateway requires Keycloak JWT; downstream services accept legacy headers
- *     when LEGACY_HEADER_TRUST is unset or true, which is the current state).
- *  - Probes the product-shell (port 3000) for static SPA assets and lazy chunks
- *    that contain widget identifiers.
- *
- * Usage:
- *   node scripts/audits/smoke-platform-coverage.mjs
- *
- * Optional environment overrides:
- *   TEST_USER_SUB, TEST_USER_EMAIL, TEST_TENANT_ID, TEST_USER_ROLES
- *   ADMIN_USER_SUB, ADMIN_USER_EMAIL, ADMIN_USER_ROLES
+ * Smoke runner: tests backend APIs and verifies frontend bundle widgets.
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/audits/smoke-platform-coverage.mjs [OPTIONS]
+
+Tests every backend API the foundation/dynamic-UI specs depend on,
+then verifies signature widgets are present in production frontend bundle.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  TEST_USER_SUB        Test user subject
+  TEST_USER_EMAIL      Test user email
+  TEST_TENANT_ID       Test tenant ID
+  TEST_USER_ROLES      Test user roles (comma-separated)
+  ADMIN_USER_SUB       Admin user subject
+  ADMIN_USER_EMAIL     Admin user email
+  ADMIN_USER_ROLES     Admin user roles (comma-separated)
+
+Behavior:
+  - Calls downstream services using LEGACY_HEADER_TRUST headers
+  - Probes product-shell (port 3000) for static SPA assets and lazy chunks
+  - Verifies widget identifiers in bundle
+
+Examples:
+  # Run smoke test with defaults
+  node scripts/audits/smoke-platform-coverage.mjs
+
+  # Run with custom test user
+  TEST_USER_SUB=user123 TEST_TENANT_ID=tenant456 node scripts/audits/smoke-platform-coverage.mjs
+`);
+  process.exit(0);
+}
 
 import { readFile, readdir, stat, writeFile, mkdir } from 'node:fs/promises';
 import { existsSync } from 'node:fs';

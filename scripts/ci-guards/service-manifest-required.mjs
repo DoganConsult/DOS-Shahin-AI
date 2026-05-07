@@ -1,8 +1,39 @@
 #!/usr/bin/env node
 /**
- * DOS Master service guard — every services/* MUST ship a
- * service.manifest.json with serviceCode + trustZone + apiPrefix.
+ * DOS Master service guard — every services/* MUST ship service.manifest.json
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/service-manifest-required.mjs [OPTIONS]
+
+Verifies every services/* has service.manifest.json with required fields.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  MANIFEST_ENFORCE     Set to 1 to enforce ban (default: baseline mode)
+
+Required fields:
+  - serviceCode
+  - trustZone
+  - apiPrefix
+
+Exit codes:
+  Non-zero on manifest violation (above baseline or enforce mode)
+
+Examples:
+  # Run in baseline mode (default)
+  node scripts/ci-guards/service-manifest-required.mjs
+
+  # Run with enforcement
+  MANIFEST_ENFORCE=1 node scripts/ci-guards/service-manifest-required.mjs
+`);
+  process.exit(0);
+}
+
 import { readdirSync, readFileSync, statSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 

@@ -1,20 +1,33 @@
 #!/usr/bin/env node
 /**
  * P1 — Gateway registry sanity lint.
- *
- * Inspects services/gateway/src/domain/service-registry.ts routeServiceMap for:
- *   1. Duplicate prefixes (same prefix appearing twice, possibly pointing at
- *      different services)
- *   2. Sort-order violations (proxy.routes.ts sorts longest-first; a shorter
- *      prefix declared before a longer overlapping one will still work thanks
- *      to the array.sort() at the bottom of service-registry.ts, but an
- *      ambiguous pair is still a review-worthy smell — flag them)
- *   3. Orphan env vars (prefix points at process.env.X_URL with no default,
- *      AND X_URL is not declared in the "required" list inside
- *      validateRequiredServiceUrls)
- *
- * Exit code 0 if clean, 1 if any violation. CI should gate on this.
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/audit-gateway-registry.mjs [OPTIONS]
+
+Inspects gateway service-registry.ts for violations.
+
+Options:
+  --help, -h           Show this help message
+
+Checks:
+  1. Duplicate prefixes (same prefix pointing at different services)
+  2. Sort-order violations (shorter prefix before longer overlapping one)
+  3. Orphan env vars (prefix points at process.env.X_URL with no default)
+
+Exit codes:
+  0 — clean
+  1 — violations found
+
+Examples:
+  # Lint gateway registry
+  node scripts/audit-gateway-registry.mjs
+`);
+  process.exit(0);
+}
 
 import fs from 'node:fs';
 import path from 'node:path';

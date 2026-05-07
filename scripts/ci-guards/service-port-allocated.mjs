@@ -1,9 +1,38 @@
 #!/usr/bin/env node
 /**
- * DOS Master service guard — every service under services/ MUST be
- * allocated a port in platform/config-center/ops/ports.allocation.json
- * AND registered in dos_master.service_registry.
+ * DOS Master service guard — every service must have port allocation and registry entry
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/service-port-allocated.mjs [OPTIONS]
+
+Verifies every service under services/ has port allocation and DB registry entry.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  DATABASE_URL         PostgreSQL connection string (default: postgresql://dos_auth:dos_auth_pass_2026@localhost:5432/shahin_grc)
+
+Behavior:
+  - Checks port allocation in platform/config-center/ops/ports.allocation.json
+  - Verifies DB registration in dos_master.service_registry for core services
+  - DB unreachable is treated as SKIP for registry check (exit 0)
+
+Exit codes:
+  0 — PASS or DB unreachable
+  1 — FAIL missing port allocation or registry entry
+  2 — ERROR
+
+Examples:
+  # Run service port allocated check
+  node scripts/ci-guards/service-port-allocated.mjs
+`);
+  process.exit(0);
+}
+
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { Client } from 'pg';

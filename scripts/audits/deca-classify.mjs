@@ -5,9 +5,33 @@
  * Read-only. Reads the per-layer JSON inventories produced by deca-inventory.mjs
  * and emits the markdown deliverables (per-layer .md, gap tables, cross-cuts,
  * waves, README).
- *
- * No source files are mutated.
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/audits/deca-classify.mjs [OPTIONS]
+
+Reads per-layer JSON inventories and emits markdown deliverables.
+
+Options:
+  --help, -h           Show this help message
+
+Behavior:
+  - Reads JSON inventories from docs/audits/deca-2026-04-27/
+  - Emits per-layer markdown files
+  - Generates gap tables and cross-cuts
+  - Creates README and wave reports
+
+No source files are mutated.
+
+Examples:
+  # Generate markdown deliverables
+  node scripts/audits/deca-classify.mjs
+`);
+  process.exit(0);
+}
+
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 

@@ -1,11 +1,42 @@
 #!/usr/bin/env node
 /**
- * DOS Master Doctrine — RLS policy present.
- *
- * Verifies tenant-scoped tables in the `dos` schema have either
- * row-level security enabled OR an explicit opt-out comment. Tables
- * are considered tenant-scoped when they carry a `tenant_id` column.
+ * DOS Master Doctrine — RLS policy present
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/rls-policy-present.mjs [OPTIONS]
+
+Verifies tenant-scoped tables in dos schema have RLS enabled or explicit opt-out comment.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  DATABASE_URL         PostgreSQL connection string (default: postgresql://dos_auth:dos_auth_pass_2026@localhost:5432/shahin_grc)
+  RLS_BASELINE_MAX     Baseline max tables without RLS (default: 200)
+  RLS_ENFORCE          Set to 1 to enforce ban (default: baseline mode)
+
+Policy:
+  Tables are tenant-scoped when they carry a tenant_id column.
+  DB unreachable is treated as SKIP (exit 0).
+
+Exit codes:
+  0 — PASS or DB unreachable
+  1 — Tenant tables without RLS above baseline or when enforced
+  2 — ERROR
+
+Examples:
+  # Run in baseline mode (default)
+  node scripts/ci-guards/rls-policy-present.mjs
+
+  # Run with enforcement
+  RLS_ENFORCE=1 node scripts/ci-guards/rls-policy-present.mjs
+`);
+  process.exit(0);
+}
+
 import { Client } from 'pg';
 
 async function main() {

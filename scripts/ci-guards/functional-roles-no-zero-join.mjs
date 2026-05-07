@@ -1,14 +1,32 @@
 #!/usr/bin/env node
 /**
  * Functional Roles Zero Join Guard
- * 
- * Fails if any functional_roles.role_code has permissions[] != [] but ZERO rows in role_permissions.
- * 
- * Exit codes:
- * - 0: No zero-join violations
- * - 1: Zero-join violations detected
- * - 2: Database connection error
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/functional-roles-no-zero-join.mjs [OPTIONS]
+
+Fails if any functional role has permissions[] != [] but ZERO rows in role_permissions.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  DATABASE_URL         PostgreSQL connection string (default: postgresql://dos_auth:dos_auth_pass_2026@localhost:5432/shahin_grc)
+
+Exit codes:
+  0 — No zero-join violations
+  1 — Zero-join violations detected
+  2 — Database connection error
+
+Examples:
+  # Run zero-join check
+  node scripts/ci-guards/functional-roles-no-zero-join.mjs
+`);
+  process.exit(0);
+}
 
 import pg from 'pg';
 const { Pool } = pg;

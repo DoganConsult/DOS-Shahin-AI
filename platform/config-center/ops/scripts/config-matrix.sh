@@ -1,6 +1,38 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+show_help() {
+  cat <<EOF
+Usage: $(basename "$0") [root-path] [OPTIONS]
+
+Displays a configuration matrix showing environment variables per service.
+
+Arguments:
+  root-path            Root directory path (default: current directory)
+
+Options:
+  --help, -h           Show this help message
+
+Output:
+  - Environment variables per service
+  - Total service count
+  - Total config keys
+  - Shared config keys
+
+Examples:
+  # Show config matrix for current directory
+  $(basename "$0)
+
+  # Show config matrix for specific path
+  $(basename "$0) /path/to/repo
+EOF
+  exit 0
+}
+
+for arg in "$@"; do
+  case "$arg" in --help|-h) show_help ;; esac
+done
+
 echo "╔══════════════════════════════════════════════════╗"
 echo "║  DOS Platform — Configuration Matrix             ║"
 echo "╚══════════════════════════════════════════════════╝"

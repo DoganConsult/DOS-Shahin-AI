@@ -12,10 +12,48 @@ if [ -z "${DATABASE_URL:-}" ]; then
 fi
 
 MIGRATION_NAME="${1:-}"
+DRY_RUN=false
+
+show_help() {
+  cat <<EOF
+Usage: $(basename "$0") <migration-filename> [OPTIONS]
+
+Rolls back a platform migration using its rollback script.
+
+Arguments:
+  migration-filename    Name of the migration to rollback (e.g., 008_soft_delete_columns.sql)
+
+Options:
+  --dry-run            Show what would be done without executing
+  --help, -h           Show this help message
+
+Environment Variables:
+  DATABASE_URL          PostgreSQL connection string
+
+Examples:
+  # Rollback a migration
+  $(basename "$0") 008_soft_delete_columns.sql
+
+  # Dry run to preview
+  $(basename "$0") 008_soft_delete_columns.sql --dry-run
+
+Note:
+  Rollback scripts must exist in ops/migrations/rollback/<migration-name>
+EOF
+  exit 0
+}
+
+for arg in "$@"; do
+  case "$arg" in
+    --dry-run) DRY_RUN=true ;;
+    --help|-h) show_help ;;
+  esac
+done
 
 if [ -z "$MIGRATION_NAME" ]; then
-  echo "Usage: $0 <migration-filename>"
+  echo "Usage: $0 <migration-filename> [--dry-run]"
   echo "  Example: $0 008_soft_delete_columns.sql"
+  echo "  Example: $0 008_soft_delete_columns.sql --dry-run"
   echo ""
   echo "Applied migrations:"
   psql "${DATABASE_URL}" -t -A -c "SELECT filename, applied_at FROM dos.schema_migrations ORDER BY id DESC LIMIT 10" 2>/dev/null || \
@@ -36,6 +74,14 @@ echo "╔═══════════════════════�
 echo "║  DOS Platform — Migration Rollback               ║"
 echo "╚══════════════════════════════════════════════════╝"
 echo ""
+
+if [ "$DRY_RUN" = true ]; then
+  echo "[DRY RUN] Would execute:"
+  echo "  1. Run rollback script: $ROLLBACK_FILE"
+  echo "  2. Remove migration record from dos.schema_migrations"
+  echo "  3. Remove migration record from dos.platform_migrations"
+  exit 0
+fi
 
 if [ -f "$ROLLBACK_FILE" ]; then
   echo "→ Running rollback script: $ROLLBACK_FILE"

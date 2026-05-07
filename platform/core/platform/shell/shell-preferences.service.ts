@@ -7,7 +7,7 @@
  *
  *   language ('en' | 'ar')
  *     → <html lang="..">
- *     → <html dir="ltr|rtl">  (feeds ShellHostComponent.sidebarDir())
+ *     → <html dir="ltr|rtl">  (ShellHost reads prefs.dir() for RTL layout)
  *
  *   theme ('g10' | 'g100')  (light / dark Carbon themes)
  *     → <html data-carbon-theme="g10|g100">

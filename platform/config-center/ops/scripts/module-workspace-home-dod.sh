@@ -1,35 +1,46 @@
 #!/usr/bin/env bash
 # Module 1 (Workspace Home) — Definition-of-Done harness.
-#
-# Per AGENTS.md §10: "Do not mark a module complete unless proof exists.
-# Validate the actual UI call, actual endpoint, actual backend handler,
-# and actual resulting behavior."
-#
-# This script:
-#   1. Mints a USER-context bearer for tenantadmin@shahin-ai.local
-#      (tenant=shahin_visitors) via KC password-flow on the loopback KC,
-#      forcing the issuer URL to match the auth-service's accepted set
-#      via X-Forwarded-Proto/Host headers (KC hostname-strict=false).
-#   2. Probes the four endpoints Module 1's UI depends on:
-#        /api/access/my-permissions
-#        /api/foundation/access-snapshot
-#        /api/tenant-home/overview
-#        /api/workspaces
-#   3. Shape-validates the overview response against the FE contract
-#      (8 slices + 17 leaf fields read by workspace-home.component.ts).
-#   4. Emits ops/proofs/module-workspace-home-dod-<ts>.json with the
-#      verdict (PASS / FAIL).
-#
-# Reusable env:
-#   KC_BASE        (default http://127.0.0.1:8180)
-#   KC_REALM       (default dogan)
-#   KC_BFF_CLIENT  (default shahin-bff)
-#   KC_BFF_SECRET  (from platform/config-center/env/gateway.env or .env.shared.local)
-#   BASE_URL       (default http://127.0.0.1:4000)
-#   DOD_USER       (default tenantadmin@shahin-ai.local)
-#   DOD_PWD        (from platform/config-center/env/.env.shared.local: WORKSPACE_HOME_DOD_PWD)
 
 set -u
+
+show_help() {
+  cat <<EOF
+Usage: $(basename "$0) [OPTIONS]
+
+DoD harness for Phase 1 / Module 1 (Workspace Home).
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  KC_BASE              Keycloak base URL (default: http://127.0.0.1:8180)
+  KC_REALM             Keycloak realm (default: dogan)
+  KC_BFF_CLIENT        BFF client ID (default: shahin-bff)
+  KC_BFF_SECRET        BFF client secret
+  BASE_URL             API base URL (default: http://127.0.0.1:4000)
+  DOD_USER             Test user (default: tenantadmin@shahin-ai.local)
+  DOD_PWD              Test user password
+
+Output:
+  Creates timestamped proof file at ops/proofs/module-workspace-home-dod-<timestamp>.json
+
+Probes:
+  /api/access/my-permissions
+  /api/foundation/access-snapshot
+  /api/tenant-home/overview
+  /api/workspaces
+
+Examples:
+  # Run workspace-home DoD proof
+  $(basename "$0)
+EOF
+  exit 0
+}
+
+for arg in "$@"; do
+  case "$arg" in --help|-h) show_help ;; esac
+done
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 

@@ -6,9 +6,11 @@ import {
   Type,
   ViewChild,
   ViewContainerRef,
+  computed,
   inject,
   signal,
 } from '@angular/core';
+import { WorkspaceShellBindingService } from '@platform/shell';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -36,8 +38,9 @@ const ZONE_ORDER: ZoneId[] = ['header', 'signature', 'main', 'side', 'footer', '
  * Spec-compliance notes:
  *  - Widgets are filtered by permission/profile at the resolver layer.
  *  - Each zone is an independent ViewContainerRef. If no widget resolves
- *    for a route, the host renders an explicit empty-state so the failure
- *    is visible (not silently a blank page).
+ *    for a route, telemetry records a render miss; optional empty copy comes
+ *    only from workspace-runtime chrome.tplStrings (shell.tpl.dph.*), never
+ *    from hardcoded product text or table names.
  */
 @Component({
   selector: 'app-dynamic-page-host',
@@ -61,10 +64,14 @@ const ZONE_ORDER: ZoneId[] = ['header', 'signature', 'main', 'side', 'footer', '
     <div class="dph-zone dph-zone--side"><ng-container #sideSlot /></div>
     <div class="dph-zone dph-zone--footer"><ng-container #footerSlot /></div>
     <div class="dph-zone dph-zone--context-rail"><ng-container #contextRailSlot /></div>
-    @if (empty()) {
-      <div class="dph-empty">
-        No widget configured for <code>{{ resolvedRoute() || '(unknown route)' }}</code>.
-        Check <code>dos.dynamic_ui_widgets</code> seeds for this route.
+    @if (empty() && (dphEmptyTitle() || dphEmptyBody())) {
+      <div class="dph-empty" data-testid="dph-empty">
+        @if (dphEmptyTitle()) {
+          <div class="dph-empty__title">{{ dphEmptyTitle() }}</div>
+        }
+        @if (dphEmptyBody()) {
+          <div class="dph-empty__body">{{ dphEmptyBody() }}</div>
+        }
       </div>
     }
   `,
@@ -75,6 +82,17 @@ export class DynamicPageHostComponent implements AfterViewInit {
   private readonly resolver = inject(DynamicWidgetResolver);
   private readonly ws = inject(WebSocketService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly shellBinding = inject(WorkspaceShellBindingService);
+
+  private readonly dphTplStrings = computed(() => {
+    const chrome = this.shellBinding.chrome() as Record<string, unknown>;
+    const raw = chrome['tplStrings'];
+    return raw && typeof raw === 'object' ? (raw as Record<string, string>) : {};
+  });
+
+  /** From DB shell.tpl.dph.* via workspace-runtime; empty ⇒ no visible empty banner. */
+  readonly dphEmptyTitle = computed(() => this.dphTplStrings()['shell.tpl.dph.empty.title'] ?? '');
+  readonly dphEmptyBody = computed(() => this.dphTplStrings()['shell.tpl.dph.empty.body'] ?? '');
 
   readonly resolvedRoute = signal<string>('');
   readonly empty = signal(false);

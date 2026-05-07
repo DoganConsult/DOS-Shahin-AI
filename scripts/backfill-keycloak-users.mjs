@@ -1,28 +1,53 @@
 #!/usr/bin/env node
 /**
  * One-shot backfill: DAuth `public.users` → Keycloak realm users.
- *
- * Reads every active DAuth user and upserts them into the Keycloak realm via
- * the Admin API. Idempotent — users who already exist in Keycloak are
- * skipped (dual-write replay safety).
- *
- * Prereqs:
- *   - KEYCLOAK_BASE_URL, KEYCLOAK_REALM, KEYCLOAK_ADMIN_CLIENT_ID/SECRET
- *     OR KEYCLOAK_ADMIN_WRITE_CLIENT_ID/SECRET
- *   - DB reachable via DATABASE_URL / PG* env
- *
- * Usage:
- *   node scripts/backfill-keycloak-users.mjs --tenant <uuid>   # one tenant
- *   node scripts/backfill-keycloak-users.mjs --all             # every tenant
- *   node scripts/backfill-keycloak-users.mjs --all --dry-run   # no writes
- *
- * The script creates users with `emailVerified=false` and no password —
- * users receive a password-reset email on first login (Keycloak RequiredAction
- * UPDATE_PASSWORD). Tenant group membership is applied via /tenants/<tid>.
- *
- * Output: prints per-tenant summary + global totals. Exits non-zero if any
- * tenant had errors so CI/ops can gate the ENFORCE flip on clean backfill.
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/backfill-keycloak-users.mjs --tenant <uuid> | --all [OPTIONS]
+
+One-shot backfill: DAuth public.users → Keycloak realm users.
+
+Arguments:
+  --tenant <uuid>      Backfill single tenant
+  --all                Backfill all tenants
+
+Options:
+  --dry-run            Show what would be done without executing
+  --help, -h           Show this help message
+
+Environment Variables:
+  DATABASE_URL         PostgreSQL connection string
+  KEYCLOAK_BASE_URL    Keycloak base URL
+  KEYCLOAK_REALM       Keycloak realm name
+  KEYCLOAK_ADMIN_CLIENT_ID/SECRET  Admin credentials
+  KEYCLOAK_ADMIN_WRITE_CLIENT_ID/SECRET  Write credentials
+
+Behavior:
+  - Reads active DAuth users
+  - Upserts to Keycloak via Admin API
+  - Idempotent: skips existing users
+  - Creates users with emailVerified=false
+  - Tenant group membership applied
+
+Output:
+  Per-tenant summary + global totals. Exits non-zero on errors.
+
+Examples:
+  # Backfill single tenant
+  node scripts/backfill-keycloak-users.mjs --tenant abc-123
+
+  # Backfill all tenants
+  node scripts/backfill-keycloak-users.mjs --all
+
+  # Dry run to preview
+  node scripts/backfill-keycloak-users.mjs --all --dry-run
+`);
+  process.exit(0);
+}
+
 import { Client } from 'pg';
 
 const FETCH_PAGE_SIZE = 200;

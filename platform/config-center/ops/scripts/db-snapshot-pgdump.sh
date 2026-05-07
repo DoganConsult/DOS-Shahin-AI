@@ -2,6 +2,34 @@
 # Off-box-style pg_dump in custom format (-Fc). Requires DATABASE_URL or PG* vars.
 set -euo pipefail
 
+show_help() {
+  cat <<EOF
+Usage: $(basename "$0") [OPTIONS]
+
+Creates a PostgreSQL dump in custom format (-Fc).
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  BACKUP_DIR           Backup directory (required)
+  DATABASE_URL         PostgreSQL connection string
+  PGDATABASE           Database name (fallback from DATABASE_URL)
+
+Examples:
+  # Create snapshot
+  BACKUP_DIR=/var/backups $(basename "$0)
+
+  # With explicit DATABASE_URL
+  BACKUP_DIR=/var/backups DATABASE_URL=postgresql://... $(basename "$0)
+EOF
+  exit 0
+}
+
+for arg in "$@"; do
+  case "$arg" in --help|-h) show_help ;; esac
+done
+
 : "${BACKUP_DIR:?Set BACKUP_DIR to a directory outside the DB data volume}"
 
 if ! command -v pg_dump >/dev/null 2>&1; then

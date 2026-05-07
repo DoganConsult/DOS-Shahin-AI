@@ -1,6 +1,41 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+show_help() {
+  cat <<EOF
+Usage: $(basename "$0") [concurrency] [duration] [OPTIONS]
+
+Performs load testing on the gateway endpoint.
+
+Arguments:
+  concurrency          Number of concurrent requests (default: 100)
+  duration             Test duration in seconds (default: 30)
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  LOAD_TEST_ECOSYSTEM  Path to ecosystem config (default: ops/ecosystem.all.config.js)
+  E2E_ADMIN_EMAIL      Admin email for auth (default: admin@dogan-ai.com)
+  E2E_ADMIN_PASS       Admin password for auth
+
+Examples:
+  # Default load test (100 concurrent, 30s)
+  $(basename "$0)
+
+  # Custom concurrency and duration
+  $(basename "$0) 200 60
+
+  # With custom ecosystem
+  LOAD_TEST_ECOSYSTEM=/path/to/ecosystem.config.js $(basename "$0) 100 30
+EOF
+  exit 0
+}
+
+for arg in "$@"; do
+  case "$arg" in --help|-h) show_help ;; esac
+done
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 GW_PORT="$(ECO_PATH="${LOAD_TEST_ECOSYSTEM:-$REPO_ROOT/ops/ecosystem.all.config.js}" node -p "const e=require(process.env.ECO_PATH);(e.apps||[]).find(a=>a.name==='gateway')?.port||4000")"

@@ -1,16 +1,37 @@
 #!/usr/bin/env node
 /**
  * RBAC Role Permissions Sync Check
- *
- * Verifies platform_dauth.role_permissions (CANONICAL per 20260505_2900) matches
- * functional_roles.permissions[] as identical sets of permission_id (TEXT).
- * Length-only comparison is insufficient after deprecation (duplicate IDs in array, etc.).
- *
- * Exit codes:
- * - 0: Sync verified
- * - 1: Sync mismatch detected
- * - 2: Database connection error
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/rbac-role-permissions-sync-check.mjs [OPTIONS]
+
+Verifies platform_dauth.role_permissions matches functional_roles.permissions[] as identical sets.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  DATABASE_URL         PostgreSQL connection string (default: postgresql://dos_auth:dos_auth_pass_2026@localhost:5432/shahin_grc)
+
+Policy:
+  Canonical: platform_dauth.role_permissions (per 20260505_2900).
+  Legacy functional_roles.permissions[] must remain identical set-of-IDs.
+  Length-only comparison insufficient after deprecation (duplicate IDs in array, etc.).
+
+Exit codes:
+  0 — Sync verified
+  1 — Sync mismatch detected
+  2 — Database connection error
+
+Examples:
+  # Run RBAC role permissions sync check
+  node scripts/ci-guards/rbac-role-permissions-sync-check.mjs
+`);
+  process.exit(0);
+}
 
 import pg from 'pg';
 const { Pool } = pg;

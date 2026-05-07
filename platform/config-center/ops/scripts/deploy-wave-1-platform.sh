@@ -9,6 +9,52 @@ LOG_DIR="${DOS_LOG_DIR:-/var/log/dos-platform}"
 ECOSYSTEM_CONFIG="${ECOSYSTEM_CONFIG:-$REPO_ROOT/ops/ecosystem.m1.config.js}"
 export ECOSYSTEM_CONFIG
 
+show_help() {
+  cat <<EOF
+Usage: $(basename "$0") [OPTIONS]
+
+Deploys the DOS Platform Wave 1 stack (all services).
+
+Options:
+  --dry-run            Show what would be done without executing
+  --help, -h           Show this help message
+
+Environment Variables:
+  ECOSYSTEM_CONFIG     Path to PM2 ecosystem config (default: ops/ecosystem.m1.config.js)
+  DOS_LOG_DIR          Log directory (default: /var/log/dos-platform)
+  PGUSER, PGDATABASE, PGPASSWORD  PostgreSQL connection details
+
+Examples:
+  # Deploy Wave 1 platform
+  $(basename "$0")
+
+  # Dry run to preview
+  $(basename "$0") --dry-run
+EOF
+  exit 0
+}
+
+DRY_RUN=false
+for arg in "$@"; do
+  case "$arg" in
+    --dry-run) DRY_RUN=true ;;
+    --help|-h) show_help ;;
+  esac
+done
+
+if [ "$DRY_RUN" = true ]; then
+  echo "[DRY RUN] Would execute Wave 1 deployment:"
+  echo "  1. Check prerequisites (node, pnpm, pm2, redis, postgresql)"
+  echo "  2. Ensure log directory: $LOG_DIR"
+  echo "  3. Install dependencies: pnpm install"
+  echo "  4. Build packages: pnpm run build:packages"
+  echo "  5. Build services: pnpm run build:services"
+  echo "  6. Stop existing PM2 processes: pm2 delete all"
+  echo "  7. Start platform services: pm2 start $ECOSYSTEM_CONFIG"
+  echo "  8. Verify health: curl /health endpoints"
+  exit 0
+fi
+
 echo "=== DOS Platform — Wave 1 Deployment ==="
 echo "Started at: $(date -Iseconds)"
 echo "Repo:       $REPO_ROOT"

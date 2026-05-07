@@ -1,20 +1,42 @@
 #!/usr/bin/env bash
-#
-# Tenant isolation gate — fails if bare `safeQuery(` or bare top-level `query(`
-# from @dos/db appears inside a service's src/ tree, because both bypass the
-# per-tenant search_path + app.current_tenant_id session variable set by
-# withTenantClient.
-#
-# Usage: ops/scripts/check-no-bare-safequery.sh <service-src-path>
-# Example: ops/scripts/check-no-bare-safequery.sh services/user-service
-#
-# Allowed:
-#   - `import { withTenantClient } from '@dos/db'` + `c.query(...)` inside
-#   - Infra-only paths (server.ts healthcheck) — add path to ALLOWLIST below.
-#
-# Exit codes: 0 = clean, 1 = violations found, 2 = bad args.
-
+# Tenant isolation gate — fails if bare safeQuery appears in service src.
 set -euo pipefail
+
+show_help() {
+  cat <<EOF
+Usage: $(basename "$0") <service-dir> [OPTIONS]
+
+CI guard that fails if bare safeQuery() or query() appears in service src.
+
+Arguments:
+  service-dir          Service directory to check (e.g., services/user-service)
+
+Options:
+  --help, -h           Show this help message
+
+Behavior:
+  - Fails if bare safeQuery() or query() from @dos/db appears in src/
+  - These bypass per-tenant search_path set by withTenantClient
+  - Allowed: withTenantClient usage and infra-only paths (server.ts healthcheck)
+
+Exit codes:
+  0 — clean
+  1 — violations found
+  2 — bad args
+
+Examples:
+  # Check user-service
+  $(basename "$0) services/user-service
+
+  # Check auth-service
+  $(basename "$0) services/auth-service
+EOF
+  exit 0
+}
+
+for arg in "$@"; do
+  case "$arg" in --help|-h) show_help ;; esac
+done
 
 if [[ $# -lt 1 ]]; then
   echo "Usage: $0 <service-dir>" >&2

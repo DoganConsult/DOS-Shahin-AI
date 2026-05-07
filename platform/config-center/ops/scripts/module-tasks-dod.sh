@@ -1,7 +1,33 @@
 #!/usr/bin/env bash
 # Phase 2 / Module 1 (Tasks) — DoD harness.
-# Probes the workflow + tasks endpoints actually called by Shahin pages.
 set -u
+
+show_help() {
+  cat <<EOF
+Usage: $(basename "$0) [OPTIONS]
+
+DoD harness for Phase 2 / Module 1 (Tasks).
+
+Options:
+  --help, -h           Show this help message
+
+Output:
+  Creates timestamped proof file at ops/proofs/module-tasks-dod-<timestamp>.json
+
+Probes:
+  workflow + tasks endpoints called by Shahin pages
+
+Examples:
+  # Run tasks DoD proof
+  $(basename "$0)
+EOF
+  exit 0
+}
+
+for arg in "$@"; do
+  case "$arg" in --help|-h) show_help ;; esac
+done
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 TS=$(date +"%Y%m%d_%H%M%S")

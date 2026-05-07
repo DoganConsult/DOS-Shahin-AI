@@ -9,6 +9,32 @@
  *
  * No source files are mutated. No mocks. No fake-green.
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/audits/deca-inventory.mjs [OPTIONS]
+
+Read-only DECA enforcement inventory generator.
+
+Options:
+  --help, -h           Show this help message
+
+Behavior:
+  - Reads canonical scan-set from deca-build-scan-set.mjs
+  - Classifies every file across 12 enforcement layers
+  - Emits per-layer JSON+Markdown artifacts
+  - Outputs to docs/audits/deca-2026-04-27/
+
+No source files are mutated. No mocks. No fake-green.
+
+Examples:
+  # Generate DECA inventory
+  node scripts/audits/deca-inventory.mjs
+`);
+  process.exit(0);
+}
+
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 

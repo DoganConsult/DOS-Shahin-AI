@@ -1,23 +1,43 @@
 #!/usr/bin/env node
 /**
  * auth-pages-coverage.mjs — Phase M1.6 CI gate.
- *
- * Verifies the Carbon Auth Pages Pack stays coherent:
- *   ① 5 auth.*.page + 19 auth.* primitive component_keys are seeded in
- *      20260503_0028_auth_pages_pack.sql with vendor='ibm-carbon' +
- *      approval_status='approved'.
- *   ② Each is registered in platform/dos/registry/component-map.ts.
- *   ③ Each resolves through scripts/ui-registry/lib/archetype-map.mjs.
- *   ④ The components source declares all 19 standalone Dos*Component
- *      classes; the page source declares the 5 page composers.
- *   ⑤ Components own NO local executor (no fetch / HttpClient / pool.query
- *      / new XMLHttpRequest / localStorage).
- *   ⑥ The 5 public auth routes are seeded with tenant_id IS NULL.
- *   ⑦ @dos/ui-system index re-exports auth.contract / auth-components /
- *      auth-pages.
- *
- * Set AUTH_PAGES_COVERAGE_ENFORCE=1 to fail CI; otherwise SHADOW.
  */
+
+const showHelp = process.argv.includes('--help') || process.argv.includes('-h');
+if (showHelp) {
+  console.log(`
+Usage: node scripts/ci-guards/auth-pages-coverage.mjs [OPTIONS]
+
+Verifies the Carbon Auth Pages Pack stays coherent.
+
+Options:
+  --help, -h           Show this help message
+
+Environment Variables:
+  AUTH_PAGES_COVERAGE_ENFORCE  Set to 1 to fail CI (default: SHADOW mode)
+
+Checks:
+  ① 5 auth.*.page + 19 auth.* primitive component_keys seeded
+  ② Each registered in platform/dos/registry/component-map.ts
+  ③ Each resolves through scripts/ui-registry/lib/archetype-map.mjs
+  ④ Components declare all 19 Dos*Component classes
+  ⑤ Components own NO local executor (no fetch / HttpClient / pool.query)
+  ⑥ 5 public auth routes seeded with tenant_id IS NULL
+  ⑦ @dos/ui-system index re-exports auth.contract / auth-components / auth-pages
+
+Exit codes:
+  Non-zero if any check fails (when AUTH_PAGES_COVERAGE_ENFORCE=1)
+
+Examples:
+  # Run in shadow mode (default)
+  node scripts/ci-guards/auth-pages-coverage.mjs
+
+  # Run with enforcement
+  AUTH_PAGES_COVERAGE_ENFORCE=1 node scripts/ci-guards/auth-pages-coverage.mjs
+`);
+  process.exit(0);
+}
+
 import { readFileSync, existsSync } from 'node:fs';
 import { resolve, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
